@@ -1,12 +1,13 @@
 import { Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { document, Element, HTMLIFrameElement, HTMLLinkElement, window } from '@ephox/dom-globals';
+import { UnitTest, Assert } from '@ephox/bedrock-client';
+import { document, Element, HTMLIFrameElement, HTMLLinkElement, HTMLMetaElement, window } from '@ephox/dom-globals';
 import { LegacyUnit } from '@ephox/mcagar';
 import Env from 'tinymce/core/api/Env';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Schema from 'tinymce/core/api/html/Schema';
 import Tools from 'tinymce/core/api/util/Tools';
 import * as HtmlUtils from '../../module/test/HtmlUtils';
+import { Testable } from '@ephox/dispute';
 
 UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function (success, failure) {
   const DOM = DOMUtils(document, { keep_values : true, schema : Schema() });
@@ -787,4 +788,65 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function (success, f
     DOM.remove('test');
     success();
   }, failure);
+});
+
+UnitTest.test('DOMUtils.get - by id in head', () => {
+  const DOM = DOMUtils(document, { keep_values : true, schema : Schema() });
+
+  const meta: HTMLMetaElement = document.createElement('meta');
+  meta.setAttribute('id', 'myid');
+  document.head.appendChild(meta);
+
+  try {
+    Assert.eq('get meta', meta, DOM.get('myid'), Testable.tStrict);
+  } finally {
+    document.head.removeChild(meta);
+  }
+});
+
+UnitTest.test('DOMUtils.get - does not find element by name in head', () => {
+  const DOM = DOMUtils(document, { keep_values : true, schema : Schema() });
+
+  const meta: HTMLMetaElement = document.createElement('meta');
+  meta.setAttribute('name', 'myname');
+  document.head.appendChild(meta);
+
+  try {
+    Assert.eq('get meta', null, DOM.get('myname'), Testable.tStrict);
+  } finally {
+    document.head.removeChild(meta);
+  }
+});
+
+UnitTest.test('DOMUtils.get - does not find element by name in body', () => {
+  const DOM = DOMUtils(document, { keep_values : true, schema : Schema() });
+
+  const meta: HTMLMetaElement = document.createElement('meta');
+  meta.setAttribute('name', 'myname');
+  document.body.appendChild(meta);
+
+  try {
+    Assert.eq('get meta', null, DOM.get('myname'), Testable.tStrict);
+  } finally {
+    document.body.removeChild(meta);
+  }
+});
+
+UnitTest.test('DOMUtils.get - finds element by id in body, not element by name in head', () => {
+  const DOM = DOMUtils(document, { keep_values : true, schema : Schema() });
+
+  const meta = document.createElement('meta');
+  meta.setAttribute('name', 'myname');
+  document.head.appendChild(meta);
+
+  const div = document.createElement('div');
+  div.setAttribute('id', 'myname');
+  document.body.appendChild(div);
+
+  try {
+    Assert.eq('get div', div, DOM.get('myname'), Testable.tStrict);
+  } finally {
+    document.head.removeChild(meta);
+    document.body.removeChild(div);
+  }
 });
