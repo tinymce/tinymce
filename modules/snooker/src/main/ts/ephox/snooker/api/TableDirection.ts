@@ -5,7 +5,7 @@ import { BarPositions, ColInfo } from '../resize/BarPositions';
 
 export type TableDirection = BarPositions<ColInfo>;
 
-export default function (directionAt: (e: Element) => { isRtl: () => boolean }): TableDirection {
+export const TableDirection = (directionAt: (e: Element) => { isRtl: () => boolean }): TableDirection => {
   const auto = (table: Element) => directionAt(table).isRtl() ? ResizeDirection.rtl : ResizeDirection.ltr;
 
   const delta = (amount: number, table: Element) => auto(table).delta(amount, table);
@@ -19,4 +19,4 @@ export default function (directionAt: (e: Element) => { isRtl: () => boolean }):
     edge,
     positions
   };
-}
+};

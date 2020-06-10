@@ -10,7 +10,7 @@ import { ResizeWire } from './ResizeWire';
 import * as Sizes from './Sizes';
 import * as Structs from './Structs';
 import * as TableContent from './TableContent';
-import TableDirection from './TableDirection';
+import { TableDirection } from './TableDirection';
 import * as TableFill from './TableFill';
 import * as TableGridSize from './TableGridSize';
 import * as TableLookup from './TableLookup';

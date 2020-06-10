@@ -31,11 +31,11 @@ const cells = (ancestor: Element): Element<HTMLTableCellElement>[] => LayerSelec
 
 const notCell = (element: Element, isRoot?: (e: Element) => boolean) => lookup<DomElement>([ 'caption', 'tr', 'tbody', 'tfoot', 'thead' ], element, isRoot);
 
-const neighbours = (selector: string, element: Element) =>
+const neighbours =  <T extends DomElement = DomElement> (selector: string) => (element: Element): Option<Element<T>[]> =>
   Traverse.parent(element).map((parent) => SelectorFilter.children(parent, selector));
 
-const neighbourCells = Fun.curry(neighbours, 'th,td');
-const neighbourRows  = Fun.curry(neighbours, 'tr');
+const neighbourCells = neighbours<HTMLTableCellElement>('th,td');
+const neighbourRows = neighbours<HTMLTableRowElement>('tr');
 
 const firstCell = (ancestor: Element) => SelectorFind.descendant<HTMLTableCellElement>(ancestor, 'th,td');
 
