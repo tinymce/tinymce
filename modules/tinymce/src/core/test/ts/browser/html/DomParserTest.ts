@@ -760,16 +760,22 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
     blobCache.destroy();
   });
 
-  suite.test('do not extract base64 uris for transparent images used by for example the page break plugin', () => {
+  suite.test('do not extract base64 uris for transparent or placeholder images used by for example the page break plugin', () => {
     const blobCache = BlobCache();
+    const placeholderImg = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mNk+P//PwMRgHFUIX0VAgAE3B3t0SaZ0AAAAABJRU5ErkJggg==';
     const parser = DomParser({ blob_cache: blobCache });
-    const html = `<p><img src="${Env.transparentSrc}" /></p>`;
+    const html = `<p><img src="${Env.transparentSrc}" /><img src="${placeholderImg}" data-mce-placeholder="1"></p>`;
     const root = parser.parse(html);
 
     Assertions.assertEq(
       'Should be the unchanged transparent image source',
       Env.transparentSrc,
       root.getAll('img')[0].attr('src')
+    );
+    Assertions.assertEq(
+      'Should be the unchanged placeholder image source',
+      placeholderImg,
+      root.getAll('img')[1].attr('src')
     );
 
     blobCache.destroy();

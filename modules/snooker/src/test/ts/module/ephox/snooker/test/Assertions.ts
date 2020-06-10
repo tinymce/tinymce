@@ -1,18 +1,16 @@
-/* eslint-disable max-len */
 import { assert } from '@ephox/bedrock-client';
+import { HTMLTableDataCellElement, HTMLTableElement, HTMLTableHeaderCellElement } from '@ephox/dom-globals';
 import { Arr, Fun, Option, Options } from '@ephox/katamari';
-import { Attr, Body, Css, Element, Hierarchy, Html, Insert, Remove, SelectorFilter, SelectorFind, Traverse } from '@ephox/sugar';
+import { PlatformDetection } from '@ephox/sand';
+import { Attr, Body, Css, Element, Hierarchy, Html, Insert, Remove, SelectorFilter, Traverse } from '@ephox/sugar';
+import { Generators, SimpleGenerators } from 'ephox/snooker/api/Generators';
 import { ResizeDirection } from 'ephox/snooker/api/ResizeDirection';
 import { ResizeWire } from 'ephox/snooker/api/ResizeWire';
 import * as TableOperations from 'ephox/snooker/api/TableOperations';
+import { RunOperationOutput, TargetElement, TargetPasteRows, TargetSelection } from 'ephox/snooker/model/RunOperation';
+import { BarPositions, ColInfo } from 'ephox/snooker/resize/BarPositions';
 import * as Bars from 'ephox/snooker/resize/Bars';
 import * as Bridge from 'ephox/snooker/test/Bridge';
-import { BarPositions, ColInfo } from 'ephox/snooker/resize/BarPositions';
-import { PlatformDetection } from '@ephox/sand';
-import { RunOperationOutput, TargetSelection, TargetElement, TargetPasteRows } from 'ephox/snooker/model/RunOperation';
-import { SimpleGenerators, Generators } from 'ephox/snooker/api/Generators';
-import { HTMLTableElement, HTMLTableDataCellElement, HTMLTableHeaderCellElement } from '@ephox/dom-globals';
-/* eslint-enable max-len */
 
 type Op<T> = (
   wire: ResizeWire,
@@ -74,7 +72,7 @@ const checkPaste = (
     table,
     {
       selection: Fun.constant([ Hierarchy.follow(table, [ section, row, column, 0 ]).getOrDie() ]),
-      clipboard: Fun.constant([ SelectorFind.descendant(pasteTable, 'tr').getOrDie() ]),
+      clipboard: Fun.constant(SelectorFilter.descendants(pasteTable, 'tr')),
       // Impossible type! This might work in some restricted circumstances.
       generators: Fun.constant(Bridge.generators as SimpleGenerators)
     },

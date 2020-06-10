@@ -58,6 +58,9 @@ export const getSelectionTargets = (editor: Editor, selections: Selections) => {
 
   const onSetupTable = (api) => onSetup(api, (_) => false);
   const onSetupCellOrRow = (api) => onSetup(api, (targets) => Node.name(targets.element()) === 'caption');
+  const onSetupPasteable = (getClipboardData: () => Option<Element[]>) => (api) => onSetup(api, (targets) =>
+    Node.name(targets.element()) === 'caption' || getClipboardData().isNone()
+  );
   const onSetupMergeable = (api) => onSetup(api, (targets) => targets.mergable().isNone());
   const onSetupUnmergeable = (api) => onSetup(api, (targets) => targets.unmergable().isNone());
 
@@ -66,6 +69,7 @@ export const getSelectionTargets = (editor: Editor, selections: Selections) => {
   return {
     onSetupTable,
     onSetupCellOrRow,
+    onSetupPasteable,
     onSetupMergeable,
     onSetupUnmergeable,
     resetTargets,
