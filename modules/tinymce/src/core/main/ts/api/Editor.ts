@@ -47,8 +47,7 @@ import I18n, { TranslatedString, Untranslated } from './util/I18n';
 import Tools from './util/Tools';
 import URI from './util/URI';
 import WindowManager from './WindowManager';
-import { ShadowDom, Element } from '@ephox/sugar';
-import { StyleSheetLoader } from '../dom/StyleSheetLoader';
+import * as StyleSheetLoaderPicker from '../dom/StyleSheetLoaderPicker';
 
 /**
  * This class contains the core logic for a TinyMCE editor.
@@ -1153,15 +1152,7 @@ class Editor implements EditorObservable {
   }
 
   public getUiStyleSheetLoader() {
-    // TODO: Sideways
-    const element = this.getElement();
-    return Option.from(element)
-      .map(Element.fromDom)
-      .bind(ShadowDom.getShadowRoot)
-      .fold(
-        () => DOMUtils.DOM.styleSheetLoader,
-        (sr) => StyleSheetLoader(sr.dom()) // TODO: do we need to pass any options here?
-      );
+    return StyleSheetLoaderPicker.ui(this.getElement());
   }
 
   public getContentStyleSheetLoader() {
