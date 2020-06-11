@@ -62,28 +62,27 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets, clipbo
     onSetup: selectionTargets.onSetupCellOrRow
   });
 
-  // TODO: TINY-6062 Need icons!!
   editor.ui.registry.addMenuItem('tablecutrow', {
     text: 'Cut row',
-    // icon: 'table-cut-row',
+    icon: 'cut-row',
     onAction: cmd('mceTableCutRow'),
     onSetup: selectionTargets.onSetupCellOrRow
   });
   editor.ui.registry.addMenuItem('tablecopyrow', {
     text: 'Copy row',
-    // icon: 'table-copy-row',
+    icon: 'duplicate-row',
     onAction: cmd('mceTableCopyRow'),
     onSetup: selectionTargets.onSetupCellOrRow
   });
   editor.ui.registry.addMenuItem('tablepasterowbefore', {
     text: 'Paste row before',
-    // icon: 'table-paste-row-before',
+    icon: 'paste-row-before',
     onAction: cmd('mceTablePasteRowBefore'),
     onSetup: selectionTargets.onSetupPasteable(clipboard.getRows)
   });
   editor.ui.registry.addMenuItem('tablepasterowafter', {
     text: 'Paste row after',
-    // icon: 'table-paste-row-after',
+    icon: 'paste-row-after',
     onAction: cmd('mceTablePasteRowAfter'),
     onSetup: selectionTargets.onSetupPasteable(clipboard.getRows)
   });
@@ -113,24 +112,27 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets, clipbo
     onSetup: selectionTargets.onSetupCellOrRow
   });
 
-  // TODO: TINY-6062 Need icons!!
   editor.ui.registry.addMenuItem('tablecutcolumn', {
     text: 'Cut column',
+    icon: 'cut-column',
     onAction: cmd('mceTableCutCol'),
     onSetup: selectionTargets.onSetupCellOrRow
   });
   editor.ui.registry.addMenuItem('tablecopycolumn', {
     text: 'Copy column',
+    icon: 'duplicate-column',
     onAction: cmd('mceTableCopyCol'),
     onSetup: selectionTargets.onSetupCellOrRow
   });
   editor.ui.registry.addMenuItem('tablepastecolumnbefore', {
     text: 'Paste column before',
+    icon: 'paste-column-before',
     onAction: cmd('mceTablePasteColBefore'),
     onSetup: selectionTargets.onSetupPasteable(clipboard.getColumns)
   });
   editor.ui.registry.addMenuItem('tablepastecolumnafter', {
     text: 'Paste column after',
+    icon: 'paste-column-after',
     onAction: cmd('mceTablePasteColAfter'),
     onSetup: selectionTargets.onSetupPasteable(clipboard.getColumns)
   });

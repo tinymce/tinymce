@@ -1,5 +1,6 @@
 Version 5.4.0 (TBD)
     Added Oxide variables for styling the select element and headings in dialog content #TINY-6070
+    Added icons for `table` column and row cut, copy and paste toolbar buttons #TINY-6062
     Added all `table` menu items to the UI registry, so they can be used by name in other menus #TINY-4866
     Added new `table` cut, copy and paste column editor commands and menu items #TINY-6006
     Added additional font related Oxide variables for secondary buttons allowing more specific styling. #TINY-6061
