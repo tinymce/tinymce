@@ -44,7 +44,7 @@ export function StyleSheetLoader(rootNode: Document | ShadowRoot, settings: Part
   };
 
   const load = (url: string, loadedCallback: () => void, errorCallback?: () => void) => {
-    globalLoader.load(Element.fromDom(rootNode), url).get((result) => {
+    globalLoader.load(Element.fromDom(rootNode), url, settings.contentCssCors || false).get((result) => {
       result.fold(
         () => errorCallback && errorCallback(),
         loadedCallback

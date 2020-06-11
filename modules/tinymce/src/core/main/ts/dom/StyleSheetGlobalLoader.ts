@@ -11,11 +11,10 @@ type RootNode = ShadowDom.RootNode;
 
 // Since this is intended to be global, it needs to be mutable
 export interface StyleSheetGlobalLoader {
-  readonly load: (rootNode: RootNode, url: string) => LazyValue<Result<string, string>>;
-  readonly loadAll: (root: RootNode, urls: string[]) => LazyValue<Array<Result<string, string>>>;
+  readonly load: (rootNode: RootNode, url: string, contentCssCors: boolean) => LazyValue<Result<string, string>>;
+  readonly loadAll: (root: RootNode, urls: string[], contentCssCors: boolean) => LazyValue<Array<Result<string, string>>>;
   readonly maxLoadTime: Cell<number>;
   readonly referrerPolicy: Cell<Option<ReferrerPolicy>>;
-  readonly contentCssCors: Cell<boolean>;
 }
 
 const elementEq = <T> (): Eq<Element<T>> =>
@@ -67,13 +66,12 @@ export const create = (): StyleSheetGlobalLoader => {
 
   const maxLoadTime = Cell<number>(5000);
   const referrerPolicy = Cell<Option<ReferrerPolicy>>(Option.none());
-  const contentCssCors = Cell<boolean>(false);
 
   type Rec = Record<string, LazyValue<Result<string, string>>>;
   const registry: MutableEqMap<RootNode, Rec> = MutableEqMap.create(elementEq());
   registry.put(Document.getDocument(), {});
 
-  const load = (root: RootNode, url: string): LazyValue<Result<string, string>> => {
+  const load = (root: RootNode, url: string, contentCssCors: boolean): LazyValue<Result<string, string>> => {
 
     // TODO: would be nice if this could be a Cell
     const finalUrl = Tools._addCacheSuffix(url);
@@ -85,22 +83,21 @@ export const create = (): StyleSheetGlobalLoader => {
     });
 
     return Obj.get(rec, finalUrl).getOrThunk(() => {
-      const lv = rawLoad(root, finalUrl, maxLoadTime.get(), referrerPolicy.get(), contentCssCors.get());
+      const lv = rawLoad(root, finalUrl, maxLoadTime.get(), referrerPolicy.get(), contentCssCors);
       rec[finalUrl] = lv;
       return lv;
     });
   };
 
   // TODO: do we need to turn this into a LazyValue<Result<Array<string>, string>?
-  const loadAll = (root: RootNode, urls: string[]): LazyValue<Array<Result<string, string>>> =>
-    LazyValues.par(Arr.map(urls, (url) => load(root, url)));
+  const loadAll = (root: RootNode, urls: string[], contentCssCors: boolean): LazyValue<Array<Result<string, string>>> =>
+    LazyValues.par(Arr.map(urls, (url) => load(root, url, contentCssCors)));
 
   return {
     load,
     loadAll,
     maxLoadTime,
-    referrerPolicy,
-    contentCssCors
+    referrerPolicy
   };
 };
 
