@@ -39,7 +39,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableFormatsTest', (success, f
 
     const sAssertTableCellStructure = (styles: Record<string, string> = {}, selectedCells: SelectedCells = {}) => {
       const { cell1, cell2, cell3, cell4 } = selectedCells;
-      const mapStyles = (styles: Record<string, string>, str) => Obj.map(styles, (val, _key) => str.is(val));
+      const mapStyles = (styles: Record<string, string>, str: ApproxStructure.StringApi) => Obj.map(styles, (val, _key) => str.is(val));
       return TableTestUtils.sAssertTableStructure(editor, ApproxStructure.build((s, str, _arr) => s.element('table', {
         styles: {
           'width': str.is('100%'),
@@ -101,8 +101,8 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableFormatsTest', (success, f
       })));
     };
 
-    const sApplyFormat = (editor: Editor, formatName: string, vars: Record<string, any>) => Step.sync(() => editor.formatter.apply(formatName, vars));
-    const sRemoveFormat = (editor: Editor, formatName: string, vars: Record<string, any>) => Step.sync(() => editor.formatter.remove(formatName, vars));
+    const sApplyFormat = (editor: Editor, formatName: string, vars: Record<string, string>) => Step.sync(() => editor.formatter.apply(formatName, vars));
+    const sRemoveFormat = (editor: Editor, formatName: string, vars: Record<string, string>) => Step.sync(() => editor.formatter.remove(formatName, vars));
 
     const sTestTableCellFormat = (formatName: string, vars: Record<string, string>, styles: Record<string, string>) =>
       Log.stepsAsStep('TINY-6004', `Table Cell Format: ${formatName}`, [

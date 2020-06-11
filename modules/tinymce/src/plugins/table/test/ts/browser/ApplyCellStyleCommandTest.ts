@@ -23,7 +23,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ApplyCellStyleCommandTest', (s
       '</tbody>' +
       '</table>';
 
-    const mapStyles = (styles: Record<string, string>, str) => Obj.map(styles, (val, _key) => str.is(val));
+    const mapStyles = (styles: Record<string, string>, str: ApproxStructure.StringApi) => Obj.map(styles, (val, _key) => str.is(val));
 
     const sAssertTableCellStructure = (styles: Record<string, string> = {}) =>
       TableTestUtils.sAssertTableStructure(editor, ApproxStructure.build((s, str, _arr) => s.element('table', {
@@ -63,7 +63,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ApplyCellStyleCommandTest', (s
         ]
       })));
 
-    const sApplyCellStyle = (editor: Editor, args: Record<string, any>) => Step.sync(() => editor.execCommand('mceTableApplyCellStyle', false, args));
+    const sApplyCellStyle = (editor: Editor, args: Record<string, string>) => Step.sync(() => editor.execCommand('mceTableApplyCellStyle', false, args));
 
     Pipeline.async({}, [
       tinyApis.sFocus(),
