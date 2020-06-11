@@ -3,25 +3,23 @@ import { Option } from './Option';
 import { setTimeout, clearTimeout } from '@ephox/dom-globals';
 
 export interface LazyValue<T> {
-  get: (callback: (value: T) => void) => void;
-  map: <U> (mapper: (value: T) => U) => LazyValue<U>;
-  isReady: () => boolean;
+  readonly get: (callback: (value: T) => void) => void;
+  readonly map: <U> (mapper: (value: T) => U) => LazyValue<U>;
+  readonly isReady: () => boolean;
 }
 
-const nu = function <T> (baseFn: (completer: (value: T) => void) => void): LazyValue<T> {
+const nu = <T>(baseFn: (completer: (value: T) => void) => void): LazyValue<T> => {
   let data = Option.none<T>();
   let callbacks: ((value: T) => void)[] = [];
 
   /** map :: this LazyValue a -> (a -> b) -> LazyValue b */
-  const map = function <U> (f: (value: T) => U) {
-    return nu(function (nCallback: (value: U) => void) {
-      get(function (data) {
-        nCallback(f(data));
-      });
+  const map = <U>(f: (value: T) => U) => nu((nCallback: (value: U) => void) => {
+    get((data) => {
+      nCallback(f(data));
     });
-  };
+  });
 
-  const get = function (nCallback: (value: T) => void) {
+  const get = (nCallback: (value: T) => void) => {
     if (isReady()) {
       call(nCallback);
     } else {
@@ -29,7 +27,7 @@ const nu = function <T> (baseFn: (completer: (value: T) => void) => void): LazyV
     }
   };
 
-  const set = function (x: T) {
+  const set = (x: T) => {
     if (!isReady()) { // avoid duplicate completions
       data = Option.some(x);
       run(callbacks);
@@ -37,17 +35,15 @@ const nu = function <T> (baseFn: (completer: (value: T) => void) => void): LazyV
     }
   };
 
-  const isReady = function () {
-    return data.isSome();
-  };
+  const isReady = () => data.isSome();
 
-  const run = function (cbs: ((value: T) => void)[]) {
+  const run = (cbs: ((value: T) => void)[]) => {
     Arr.each(cbs, call);
   };
 
-  const call = function (cb: (value: T) => void) {
-    data.each(function (x) {
-      setTimeout(function () {
+  const call = (cb: (value: T) => void) => {
+    data.each((x) => {
+      setTimeout(() => {
         cb(x);
       }, 0);
     });
@@ -63,14 +59,12 @@ const nu = function <T> (baseFn: (completer: (value: T) => void) => void): LazyV
   };
 };
 
-const pure = function <T> (a: T) {
-  return nu(function (callback: (value: T) => void) {
-    callback(a);
-  });
-};
+const pure = <T>(a: T) => nu((callback: (value: T) => void) => {
+  callback(a);
+});
 
-export const withTimeout = <T> (baseFn: (completer: (value: T) => void) => void, ifTimeout: () => T, timeout: number): LazyValue<T> => {
-  return LazyValue.nu((completer) => {
+export const withTimeout = <T> (baseFn: (completer: (value: T) => void) => void, ifTimeout: () => T, timeout: number): LazyValue<T> =>
+  LazyValue.nu((completer) => {
     const done = (r: T) => {
       clearTimeout(timeoutRef);
       completer(r);
@@ -80,7 +74,6 @@ export const withTimeout = <T> (baseFn: (completer: (value: T) => void) => void,
     }, timeout);
     baseFn(done);
   });
-};
 
 export const LazyValue = {
   nu,

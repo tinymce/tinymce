@@ -49,8 +49,8 @@ const rawLoad = (
   maxLoadTime: number,
   referrerPolicy: Option<ReferrerPolicy>,
   contentCssCors: boolean
-): LazyValue<Result<string, string>> => {
-  return LazyValue.withTimeout((completer) => {
+): LazyValue<Result<string, string>> =>
+  LazyValue.withTimeout((completer) => {
     // TODO: would it be better to return errors, rather than the URL?
     const doc = Traverse.documentOrOwner(root);
     const onload = () => {
@@ -62,7 +62,6 @@ const rawLoad = (
     const link = createLinkTag(doc, url, onload, onerror, referrerPolicy, contentCssCors);
     Insert.append(root, link);
   }, () => Result.error(url), maxLoadTime);
-};
 
 export const create = (): StyleSheetGlobalLoader => {
 
@@ -93,9 +92,8 @@ export const create = (): StyleSheetGlobalLoader => {
   };
 
   // TODO: do we need to turn this into a LazyValue<Result<Array<string>, string>?
-  const loadAll = (root: RootNode, urls: string[]): LazyValue<Array<Result<string, string>>> => {
-    return LazyValues.par(Arr.map(urls, (url) => load(root, url)));
-  };
+  const loadAll = (root: RootNode, urls: string[]): LazyValue<Array<Result<string, string>>> =>
+    LazyValues.par(Arr.map(urls, (url) => load(root, url)));
 
   return {
     load,
