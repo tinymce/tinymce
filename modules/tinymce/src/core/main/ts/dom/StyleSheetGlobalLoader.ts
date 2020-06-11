@@ -1,12 +1,9 @@
 import { Attr, Document, DomEvent, Element, Insert, ShadowDom, Traverse } from '@ephox/sugar';
 import { Document as DomDocument } from '@ephox/dom-globals';
-import { MutableEqMap, Result, LazyValue, Obj, LazyValues, Arr, Option, Cell } from '@ephox/katamari';
-import { Eq } from '@ephox/dispute';
+import { Result, LazyValue, Obj, LazyValues, Arr, Option, Cell } from '@ephox/katamari';
 import { ReferrerPolicy } from '../api/SettingsTypes';
 import Tools from '../api/util/Tools';
 
-type Eq<A> = Eq.Eq<A>;
-type MutableEqMap<K, V> = MutableEqMap.MutableEqMap<K, V>;
 type RootNode = ShadowDom.RootNode;
 
 // Since this is intended to be global, it needs to be mutable
@@ -16,9 +13,6 @@ export interface StyleSheetGlobalLoader {
   readonly maxLoadTime: Cell<number>;
   readonly referrerPolicy: Cell<Option<ReferrerPolicy>>;
 }
-
-const elementEq = <T> (): Eq<Element<T>> =>
-  Eq.eq((e1, e2) => e1.dom() === e2.dom());
 
 const createLinkTag = (doc: Element<DomDocument>, url: string, onload: () => void, onerror: () => void, referrerPolicy: Option<ReferrerPolicy>, contentCssCors: boolean) => {
   const link = Element.fromTag('link', doc.dom());
@@ -68,17 +62,17 @@ export const create = (): StyleSheetGlobalLoader => {
   const referrerPolicy = Cell<Option<ReferrerPolicy>>(Option.none());
 
   type Rec = Record<string, LazyValue<Result<string, string>>>;
-  const registry: MutableEqMap<RootNode, Rec> = MutableEqMap.create(elementEq());
-  registry.put(Document.getDocument(), {});
+  const registry: WeakMap<RootNode, Rec> = new WeakMap();
+  registry.set(Document.getDocument(), {});
 
   const load = (root: RootNode, url: string, contentCssCors: boolean): LazyValue<Result<string, string>> => {
 
     // TODO: would be nice if this could be a Cell
     const finalUrl = Tools._addCacheSuffix(url);
 
-    const rec: Rec = registry.get(root).getOrThunk(() => {
+    const rec: Rec = Option.from(registry.get(root)).getOrThunk(() => {
       const r: Rec = {};
-      registry.put(root, r);
+      registry.set(root, r);
       return r;
     });
 
