@@ -1,5 +1,5 @@
 import { Pipeline } from '@ephox/agar';
-import { UnitTest, Assert } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { document, Element, HTMLIFrameElement, HTMLLinkElement, HTMLMetaElement, window } from '@ephox/dom-globals';
 import { LegacyUnit } from '@ephox/mcagar';
 import Env from 'tinymce/core/api/Env';
@@ -22,59 +22,38 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function (success, f
       return 'X' + u + 'Y';
     } });
 
-    LegacyUnit.equal(
-      dom.serializeStyle(dom.parseStyle('border: 1px solid red; color: green')),
-      'border: 1px solid red; color: green;'
-    );
+    Assert.eq('', 'border: 1px solid red; color: green;', dom.serializeStyle(dom.parseStyle('border: 1px solid red; color: green')));
 
-    LegacyUnit.equal(
-      dom.serializeStyle(dom.parseStyle('border: 1px solid rgb(0, 255, 255); color: green')),
-      'border: 1px solid #00ffff; color: green;'
-    );
+    Assert.eq('', 'border: 1px solid #00ffff; color: green;', dom.serializeStyle(dom.parseStyle('border: 1px solid rgb(0, 255, 255); color: green')));
 
-    LegacyUnit.equal(
-      dom.serializeStyle(
-        dom.parseStyle('border-top: 1px solid red; border-left: 1px solid red; border-bottom: 1px solid red; border-right: 1px solid red;')
-      ),
-      'border: 1px solid red;'
-    );
+    Assert.eq('', 'border: 1px solid red;', dom.serializeStyle(
+      dom.parseStyle('border-top: 1px solid red; border-left: 1px solid red; border-bottom: 1px solid red; border-right: 1px solid red;')
+    ));
 
-    LegacyUnit.equal(
-      dom.serializeStyle(
-        dom.parseStyle('border-width: 1pt 1pt 1pt 1pt; border-style: none none none none; border-color: black black black black;')
-      ),
-      'border: 1pt none black;'
-    );
+    Assert.eq('', 'border: 1pt none black;', dom.serializeStyle(
+      dom.parseStyle('border-width: 1pt 1pt 1pt 1pt; border-style: none none none none; border-color: black black black black;')
+    ));
 
-    LegacyUnit.equal(
-      dom.serializeStyle(
-        dom.parseStyle('border-width: 1pt 4pt 2pt 3pt; border-style: solid dashed dotted none; border-color: black red green blue;')
-      ),
-      'border-width: 1pt 4pt 2pt 3pt; border-style: solid dashed dotted none; border-color: black red green blue;'
-    );
+    Assert.eq('', 'border-width: 1pt 4pt 2pt 3pt; border-style: solid dashed dotted none; border-color: black red green blue;', dom.serializeStyle(
+      dom.parseStyle('border-width: 1pt 4pt 2pt 3pt; border-style: solid dashed dotted none; border-color: black red green blue;')
+    ));
 
-    LegacyUnit.equal(
-      dom.serializeStyle(dom.parseStyle('background: transparent url(test.gif);')),
-      `background: transparent url('Xtest.gifY');`
-    );
+    Assert.eq('', `background: transparent url('Xtest.gifY');`, dom.serializeStyle(dom.parseStyle('background: transparent url(test.gif);')));
 
-    LegacyUnit.equal(
-      dom.serializeStyle(dom.parseStyle('background: transparent url(http://www.site.com/test.gif?a=1&b=2);')),
-      `background: transparent url('Xhttp://www.site.com/test.gif?a=1&b=2Y');`
-    );
+    Assert.eq('', `background: transparent url('Xhttp://www.site.com/test.gif?a=1&b=2Y');`, dom.serializeStyle(dom.parseStyle('background: transparent url(http://www.site.com/test.gif?a=1&b=2);')));
 
     dom.setHTML('test', '<span id="test2" style="   margin-left: 1px;    margin-top: 1px;   margin-right: 1px;   margin-bottom: 1px   "></span>');
-    LegacyUnit.equal(dom.getAttrib('test2', 'style'), 'margin: 1px;');
+    Assert.eq('', 'margin: 1px;', dom.getAttrib('test2', 'style'));
 
     dom.setHTML('test', '<span id="test2" style="background-image: url(test.gif);"></span>');
-    LegacyUnit.equal(dom.getAttrib('test2', 'style'), `background-image: url('Xtest.gifY');`);
+    Assert.eq('', `background-image: url('Xtest.gifY');`, dom.getAttrib('test2', 'style'));
 
     // dom.get('test').innerHTML = '<span id="test2" style="border: 1px solid #00ff00"></span>';
-    // LegacyUnit.equal(dom.getAttrib('test2', 'style'), Env.ue && !window.getSelection ?
+    // equal(dom.getAttrib('test2', 'style'), Env.ue && !window.getSelection ?
     // 'border: #00ff00 1px solid;' : 'border: 1px solid #00ff00;'); // IE has a separate output
 
     dom.get('test').innerHTML = '<span id="test2" style="background-image: url(http://www.site.com/test.gif);"></span>';
-    LegacyUnit.equal(dom.getAttrib('test2', 'style'), `background-image: url('Xhttp://www.site.com/test.gifY');`);
+    Assert.eq('', `background-image: url('Xhttp://www.site.com/test.gifY');`, dom.getAttrib('test2', 'style'));
 
     DOM.remove('test');
   });
@@ -84,16 +63,16 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function (success, f
 
     DOM.get('test').className = '';
     DOM.addClass('test', 'abc');
-    LegacyUnit.equal(DOM.get('test').className, 'abc');
+    Assert.eq('', 'abc', DOM.get('test').className);
 
     DOM.addClass('test', '123');
-    LegacyUnit.equal(DOM.get('test').className, 'abc 123');
+    Assert.eq('', 'abc 123', DOM.get('test').className);
 
     DOM.get('test').innerHTML = '<span id="test2"></span><span id="test3"></span><span id="test4"></span>';
     DOM.addClass(DOM.select('span', 'test'), 'abc');
-    LegacyUnit.equal(DOM.get('test2').className, 'abc');
-    LegacyUnit.equal(DOM.get('test3').className, 'abc');
-    LegacyUnit.equal(DOM.get('test4').className, 'abc');
+    Assert.eq('', 'abc', DOM.get('test2').className);
+    Assert.eq('', 'abc', DOM.get('test3').className);
+    Assert.eq('', 'abc', DOM.get('test4').className);
     DOM.get('test').innerHTML = '';
 
     DOM.remove('test');
@@ -104,19 +83,19 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function (success, f
 
     DOM.get('test').className = 'abc 123 xyz';
     DOM.removeClass('test', '123');
-    LegacyUnit.equal(DOM.get('test').className, 'abc xyz');
+    Assert.eq('', 'abc xyz', DOM.get('test').className);
 
     DOM.get('test').innerHTML = (
       '<span id="test2" class="test1"></span><span id="test3" class="test test1 test"></span><span id="test4" class="test1 test"></span>'
     );
     DOM.removeClass(DOM.select('span', 'test'), 'test1');
-    LegacyUnit.equal(DOM.get('test2').className, '');
-    LegacyUnit.equal(DOM.get('test3').className, 'test test');
-    LegacyUnit.equal(DOM.get('test4').className, 'test');
+    Assert.eq('', '', DOM.get('test2').className);
+    Assert.eq('', 'test test', DOM.get('test3').className);
+    Assert.eq('', 'test', DOM.get('test4').className);
 
     DOM.get('test').innerHTML = '<span id="test2" class="test"></span>';
     DOM.removeClass('test2', 'test');
-    LegacyUnit.equal(HtmlUtils.normalizeHtml(DOM.get('test').innerHTML), '<span id="test2"></span>');
+    Assert.eq('', '<span id="test2"></span>', HtmlUtils.normalizeHtml(DOM.get('test').innerHTML));
 
     DOM.remove('test');
   });
@@ -125,19 +104,19 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function (success, f
     DOM.add(document.body, 'div', { id : 'test' });
 
     DOM.get('test').className = 'abc 123 xyz';
-    LegacyUnit.equal(DOM.hasClass('test', 'abc'), true);
-    LegacyUnit.equal(DOM.hasClass('test', '123'), true);
-    LegacyUnit.equal(DOM.hasClass('test', 'xyz'), true);
-    LegacyUnit.equal(DOM.hasClass('test', 'aaa'), false);
+    Assert.eq('', true, DOM.hasClass('test', 'abc'));
+    Assert.eq('', true, DOM.hasClass('test', '123'));
+    Assert.eq('', true, DOM.hasClass('test', 'xyz'));
+    Assert.eq('', false, DOM.hasClass('test', 'aaa'));
 
     DOM.get('test').className = 'abc';
-    LegacyUnit.equal(DOM.hasClass('test', 'abc'), true);
+    Assert.eq('', true, DOM.hasClass('test', 'abc'));
 
     DOM.get('test').className = 'aaa abc';
-    LegacyUnit.equal(DOM.hasClass('test', 'abc'), true);
+    Assert.eq('', true, DOM.hasClass('test', 'abc'));
 
     DOM.get('test').className = 'abc aaa';
-    LegacyUnit.equal(DOM.hasClass('test', 'abc'), true);
+    Assert.eq('', true, DOM.hasClass('test', 'abc'));
 
     DOM.remove('test');
   });
@@ -149,23 +128,23 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function (success, f
 
     DOM.add('test', 'span', { class : 'abc 123' }, 'content <b>abc</b>');
     e = DOM.get('test').getElementsByTagName('span')[0];
-    LegacyUnit.equal(e.className, 'abc 123');
-    LegacyUnit.equal(e.innerHTML.toLowerCase(), 'content <b>abc</b>');
+    Assert.eq('', 'abc 123', e.className);
+    Assert.eq('', 'content <b>abc</b>', e.innerHTML.toLowerCase());
     DOM.remove(e);
 
     DOM.add('test', 'span', { class : 'abc 123' });
     e = DOM.get('test').getElementsByTagName('span')[0];
-    LegacyUnit.equal(e.className, 'abc 123');
+    Assert.eq('', 'abc 123', e.className);
     DOM.remove(e);
 
     DOM.add('test', 'span');
     e = DOM.get('test').getElementsByTagName('span')[0];
-    LegacyUnit.equal(e.nodeName, 'SPAN');
+    Assert.eq('', 'SPAN', e.nodeName);
     DOM.remove(e);
 
     DOM.get('test').innerHTML = '<span id="test2"></span><span id="test3"></span><span id="test4"></span>';
     DOM.add([ 'test2', 'test3', 'test4' ], 'span', { class : 'abc 123' });
-    LegacyUnit.equal(DOM.select('span', 'test').length, 6);
+    Assert.eq('', 6, DOM.select('span', 'test').length);
 
     DOM.remove('test');
   });
@@ -175,38 +154,38 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function (success, f
 
     e = DOM.create('span', { class : 'abc 123' }, 'content <b>abc</b>');
 
-    LegacyUnit.equal(e.nodeName, 'SPAN');
-    LegacyUnit.equal(e.className, 'abc 123');
-    LegacyUnit.equal(e.innerHTML.toLowerCase(), 'content <b>abc</b>');
+    Assert.eq('', 'SPAN', e.nodeName);
+    Assert.eq('', 'abc 123', e.className);
+    Assert.eq('', 'content <b>abc</b>', e.innerHTML.toLowerCase());
   });
 
   suite.test('createHTML', function () {
-    LegacyUnit.equal(
-      DOM.createHTML('span', { id: 'id1', class: 'abc 123' }, 'content <b>abc</b>'),
-      '<span id="id1" class="abc 123">content <b>abc</b></span>'
-    );
-    LegacyUnit.equal(DOM.createHTML('span', { id: 'id1', class: 'abc 123' }), '<span id="id1" class="abc 123" />');
-    LegacyUnit.equal(DOM.createHTML('span', { id: null, class: undefined }), '<span />');
-    LegacyUnit.equal(DOM.createHTML('span'), '<span />');
-    LegacyUnit.equal(DOM.createHTML('span', null, 'content <b>abc</b>'), '<span>content <b>abc</b></span>');
+    Assert.eq('', '<span id="id1" class="abc 123">content <b>abc</b></span>', DOM.createHTML('span', {
+      id: 'id1',
+      class: 'abc 123'
+    }, 'content <b>abc</b>'));
+    Assert.eq('', '<span id="id1" class="abc 123" />', DOM.createHTML('span', { id: 'id1', class: 'abc 123' }));
+    Assert.eq('', '<span />', DOM.createHTML('span', { id: null, class: undefined }));
+    Assert.eq('', '<span />', DOM.createHTML('span'));
+    Assert.eq('', '<span>content <b>abc</b></span>', DOM.createHTML('span', null, 'content <b>abc</b>'));
   });
 
   suite.test('uniqueId', function () {
-    LegacyUnit.equal(DOM.uniqueId(), 'mce_0');
-    LegacyUnit.equal(DOM.uniqueId(), 'mce_1');
-    LegacyUnit.equal(DOM.uniqueId(), 'mce_2');
+    Assert.eq('', 'mce_0', DOM.uniqueId());
+    Assert.eq('', 'mce_1', DOM.uniqueId());
+    Assert.eq('', 'mce_2', DOM.uniqueId());
   });
 
   suite.test('showHide', function () {
     DOM.add(document.body, 'div', { id : 'test' });
 
     DOM.show('test');
-    LegacyUnit.equal(DOM.get('test').style.display, '');
-    LegacyUnit.equal(DOM.isHidden('test'), false);
+    Assert.eq('', '', DOM.get('test').style.display);
+    Assert.eq('', false, DOM.isHidden('test'));
 
     DOM.hide('test');
-    LegacyUnit.equal(DOM.get('test').style.display, 'none');
-    LegacyUnit.equal(DOM.isHidden('test'), true);
+    Assert.eq('', 'none', DOM.get('test').style.display);
+    Assert.eq('', true, DOM.isHidden('test'));
 
     // Cleanup
     DOM.setAttrib('test', 'style', '');
@@ -218,14 +197,14 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function (success, f
     DOM.add(document.body, 'div', { id : 'test' });
 
     DOM.setHTML('test', '<div>test 1</div><div>test 2 <div>test 3</div></div><div>test 4</div>');
-    LegacyUnit.equal(DOM.select('div', 'test').length, 4);
-    LegacyUnit.equal(DOM.select('div', 'test').reverse !== undefined, true);
+    Assert.eq('', 4, DOM.select('div', 'test').length);
+    Assert.eq('', true, DOM.select('div', 'test').reverse !== undefined);
 
     DOM.setHTML('test', '<div class="test1 test2 test3">test 1</div><div class="test2">test 2 <div>test 3</div></div><div>test 4</div>');
-    LegacyUnit.equal(DOM.select('div.test2', 'test').length, 2);
+    Assert.eq('', 2, DOM.select('div.test2', 'test').length);
 
     DOM.setHTML('test', '<div class="test1 test2 test3">test 1</div><div class="test2">test 2 <div>test 3</div></div><div>test 4</div>');
-    LegacyUnit.equal(DOM.select('div div', 'test').length, 1); // Issue: http://bugs.webkit.org/show_bug.cgi?id=17461
+    Assert.eq('', 1, DOM.select('div div', 'test').length); // Issue: http://bugs.webkit.org/show_bug.cgi?id=17461
     // alert(DOM.select('div div', 'test').length +","+DOM.get('test').querySelectorAll('div div').length);
 
     DOM.remove('test');
@@ -235,16 +214,16 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function (success, f
     DOM.add(document.body, 'div', { id : 'test' });
     DOM.setHTML('test', '<div id="textX" class="test">test 1</div>');
 
-    LegacyUnit.equal(DOM.is(DOM.get('textX'), 'div'), true);
-    LegacyUnit.equal(DOM.is(DOM.get('textX'), 'div#textX.test'), true);
-    LegacyUnit.equal(DOM.is(DOM.get('textX'), 'div#textX2'), false);
-    LegacyUnit.equal(DOM.is(null, 'div#textX2'), false);
+    Assert.eq('', true, DOM.is(DOM.get('textX'), 'div'));
+    Assert.eq('', true, DOM.is(DOM.get('textX'), 'div#textX.test'));
+    Assert.eq('', false, DOM.is(DOM.get('textX'), 'div#textX2'));
+    Assert.eq('', false, DOM.is(null, 'div#textX2'));
 
     DOM.remove('test');
   });
 
   suite.test('encode', function () {
-    LegacyUnit.equal(DOM.encode(`abc<>"&'\u00e5\u00e4\u00f6`), 'abc&lt;&gt;&quot;&amp;&#39;\u00e5\u00e4\u00f6');
+    Assert.eq('', 'abc&lt;&gt;&quot;&amp;&#39;\u00e5\u00e4\u00f6', DOM.encode(`abc<>"&'\u00e5\u00e4\u00f6`));
   });
 
   suite.test('setGetAttrib', function () {
@@ -253,38 +232,38 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function (success, f
     DOM.add(document.body, 'div', { id : 'test' });
 
     DOM.setAttrib('test', 'class', 'test 123');
-    LegacyUnit.equal(DOM.getAttrib('test', 'class'), 'test 123');
+    Assert.eq('', 'test 123', DOM.getAttrib('test', 'class'));
 
     DOM.setAttrib('test', 'src', 'url');
-    LegacyUnit.equal(DOM.getAttrib('test', 'src'), 'url');
-    LegacyUnit.equal(DOM.getAttrib('test', 'data-mce-src'), 'url');
-    LegacyUnit.equal(DOM.getAttrib('test', 'abc'), '');
+    Assert.eq('', 'url', DOM.getAttrib('test', 'src'));
+    Assert.eq('', 'url', DOM.getAttrib('test', 'data-mce-src'));
+    Assert.eq('', '', DOM.getAttrib('test', 'abc'));
 
     DOM.setAttribs('test', { class : '123', title : 'abc' });
-    LegacyUnit.equal(DOM.getAttrib('test', 'class'), '123');
-    LegacyUnit.equal(DOM.getAttrib('test', 'title'), 'abc');
+    Assert.eq('', '123', DOM.getAttrib('test', 'class'));
+    Assert.eq('', 'abc', DOM.getAttrib('test', 'title'));
 
     DOM.setAttribs('test', {});
-    LegacyUnit.equal(DOM.getAttrib('test', 'class'), '123');
-    LegacyUnit.equal(DOM.getAttrib('test', 'title'), 'abc');
+    Assert.eq('', '123', DOM.getAttrib('test', 'class'));
+    Assert.eq('', 'abc', DOM.getAttrib('test', 'title'));
 
     dom = DOMUtils(document, { keep_values : true, url_converter(u, n) {
       return '&<>"' + u + '&<>"' + n;
     } });
 
     dom.setAttribs('test', { src : '123', href : 'abc' });
-    LegacyUnit.equal(DOM.getAttrib('test', 'src'), '&<>"123&<>"src');
-    LegacyUnit.equal(DOM.getAttrib('test', 'href'), '&<>"abc&<>"href');
+    Assert.eq('', '&<>"123&<>"src', DOM.getAttrib('test', 'src'));
+    Assert.eq('', '&<>"abc&<>"href', DOM.getAttrib('test', 'href'));
 
-    LegacyUnit.equal(DOM.getAttrib(document, 'test'), '');
-    LegacyUnit.equal(DOM.getAttrib(document, 'test', ''), '');
-    LegacyUnit.equal(DOM.getAttrib(document, 'test', 'x'), 'x');
+    Assert.eq('', '', DOM.getAttrib(document, 'test'));
+    Assert.eq('', '', DOM.getAttrib(document, 'test', ''));
+    Assert.eq('', 'x', DOM.getAttrib(document, 'test', 'x'));
 
     DOM.remove('test');
   });
 
   suite.test('setGetAttrib on null', function () {
-    LegacyUnit.equal(DOM.getAttrib(null, 'test'), '');
+    Assert.eq('', '', DOM.getAttrib(null, 'test'));
     DOM.setAttrib(null, 'test', null);
   });
 
@@ -306,14 +285,10 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function (success, f
     DOM.add(document.body, 'div', { id : 'test' });
 
     DOM.get('test').innerHTML = '<span id="test2" class="test"></span>';
-    LegacyUnit.equal(check(DOM.getAttribs('test2'), 'id,class'), true);
+    Assert.eq('', true, check(DOM.getAttribs('test2'), 'id,class'));
 
     DOM.get('test').innerHTML = '<input id="test2" type="checkbox" name="test" value="1" disabled readonly checked></span>';
-    LegacyUnit.equal(
-      check(DOM.getAttribs('test2'), 'id,type,name,value,disabled,readonly,checked'),
-      true,
-      'Expected attributed: type,name,disabled,readonly,checked'
-    );
+    Assert.eq('', true, check(DOM.getAttribs('test2'), 'id,type,name,value,disabled,readonly,checked'));
 
     DOM.remove('test');
   });
@@ -322,28 +297,28 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function (success, f
     DOM.add(document.body, 'div', { id : 'test' });
 
     DOM.setStyle('test', 'font-size', '20px');
-    LegacyUnit.equal(DOM.getStyle('test', 'font-size'), '20px');
+    Assert.eq('', '20px', DOM.getStyle('test', 'font-size'));
 
     DOM.setStyle('test', 'fontSize', '21px');
-    LegacyUnit.equal(DOM.getStyle('test', 'fontSize'), '21px');
+    Assert.eq('', '21px', DOM.getStyle('test', 'fontSize'));
 
     DOM.setStyles('test', { fontSize : '22px', display : 'inline' });
-    LegacyUnit.equal(DOM.getStyle('test', 'fontSize'), '22px');
-    LegacyUnit.equal(DOM.getStyle('test', 'display'), 'inline');
+    Assert.eq('', '22px', DOM.getStyle('test', 'fontSize'));
+    Assert.eq('', 'inline', DOM.getStyle('test', 'display'));
 
     DOM.setStyle('test', 'fontSize', 23);
-    LegacyUnit.equal(DOM.getStyle('test', 'fontSize'), '23px');
+    Assert.eq('', '23px', DOM.getStyle('test', 'fontSize'));
 
     DOM.setStyle('test', 'fontSize', 23);
     DOM.setStyle('test', 'fontSize', '');
-    LegacyUnit.equal(DOM.getStyle('test', 'fontSize'), '');
+    Assert.eq('', '', DOM.getStyle('test', 'fontSize'));
 
     DOM.setStyle('test', 'fontSize', 23);
     DOM.setStyle('test', 'fontSize', null);
-    LegacyUnit.equal(DOM.getStyle('test', 'fontSize'), '');
+    Assert.eq('', '', DOM.getStyle('test', 'fontSize'));
 
     DOM.setAttrib('test', 'style', '');
-    LegacyUnit.equal(typeof DOM.getStyle(null, 'fontSize'), 'undefined');
+    Assert.eq('', 'undefined', typeof DOM.getStyle(null, 'fontSize'));
 
     DOM.remove('test');
   });
@@ -352,8 +327,8 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function (success, f
     DOM.add(document.body, 'div', { id : 'test' });
 
     DOM.setStyles('test', { position : 'absolute', left : 100, top : 110 });
-    LegacyUnit.equal(Math.round(DOM.getPos('test').x), 100);
-    LegacyUnit.equal(Math.round(DOM.getPos('test').y), 110);
+    Assert.eq('', 100, Math.round(DOM.getPos('test').x));
+    Assert.eq('', 110, Math.round(DOM.getPos('test').y));
 
     DOM.setAttrib('test', 'style', '');
 
@@ -371,12 +346,12 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function (success, f
 
     DOM.get('test').innerHTML = '<div><span>ab<a id="test2" href="">abc</a>c</span></div>';
 
-    LegacyUnit.equal(DOM.getParent('test2', eqNodeName('SPAN')).nodeName, 'SPAN');
-    LegacyUnit.equal(DOM.getParent('test2', eqNodeName('BODY')).nodeName, 'BODY');
-    LegacyUnit.equal(DOM.getParent('test2', eqNodeName('BODY'), document.body), null);
-    LegacyUnit.equal(DOM.getParent('test2', eqNodeName('X')), null);
-    LegacyUnit.equal(DOM.getParent('test2', 'SPAN').nodeName, 'SPAN');
-    LegacyUnit.equal(DOM.getParent('test2', 'body', DOM.get('test')), null);
+    Assert.eq('', 'SPAN', DOM.getParent('test2', eqNodeName('SPAN')).nodeName);
+    Assert.eq('', 'BODY', DOM.getParent('test2', eqNodeName('BODY')).nodeName);
+    Assert.eq('', null, DOM.getParent('test2', eqNodeName('BODY'), document.body));
+    Assert.eq('', null, DOM.getParent('test2', eqNodeName('X')));
+    Assert.eq('', 'SPAN', DOM.getParent('test2', 'SPAN').nodeName);
+    Assert.eq('', null, DOM.getParent('test2', 'body', DOM.get('test')));
 
     DOM.get('test').innerHTML = '';
 
@@ -387,10 +362,10 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function (success, f
     DOM.add(document.body, 'div', { id : 'test' });
     DOM.get('test').innerHTML = '<div><span class="test">ab<span><a id="test2" href="">abc</a>c</span></span></div>';
 
-    LegacyUnit.equal(DOM.getParents('test2', eqNodeName('SPAN')).length, 2);
-    LegacyUnit.equal(DOM.getParents('test2', 'span').length, 2);
-    LegacyUnit.equal(DOM.getParents('test2', 'span.test').length, 1);
-    LegacyUnit.equal(DOM.getParents('test2', 'body', DOM.get('test')).length, 0);
+    Assert.eq('', 2, DOM.getParents('test2', eqNodeName('SPAN')).length);
+    Assert.eq('', 2, DOM.getParents('test2', 'span').length);
+    Assert.eq('', 1, DOM.getParents('test2', 'span.test').length);
+    Assert.eq('', 0, DOM.getParents('test2', 'body', DOM.get('test')).length);
 
     DOM.remove('test');
   });
@@ -399,8 +374,8 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function (success, f
     DOM.add(document.body, 'div', { id : 'test' });
     DOM.get('test').innerHTML = '<div><span class="test">ab<span><a id="test2" href="">abc</a>c</span></span></div>';
 
-    LegacyUnit.equal(DOM.is(DOM.select('span', 'test'), 'span'), true);
-    LegacyUnit.equal(DOM.is(DOM.select('#test2', 'test'), '#test2'), true);
+    Assert.eq('', true, DOM.is(DOM.select('span', 'test'), 'span'));
+    Assert.eq('', true, DOM.is(DOM.select('#test2', 'test'), '#test2'));
 
     DOM.remove('test');
   });
@@ -409,10 +384,10 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function (success, f
     let wp;
 
     wp = DOM.getViewPort();
-    LegacyUnit.equal(wp.x, 0);
-    LegacyUnit.equal(wp.y, 0);
-    LegacyUnit.equal(wp.w > 0, true);
-    LegacyUnit.equal(wp.h > 0, true);
+    Assert.eq('', 0, wp.x);
+    Assert.eq('', 0, wp.y);
+    Assert.eq('', true, wp.w > 0);
+    Assert.eq('', true, wp.h > 0);
   });
 
   suite.test('getRect', function () {
@@ -422,16 +397,16 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function (success, f
 
     DOM.setStyles('test', { position : 'absolute', left : 100, top : 110, width : 320, height : 240 });
     r = DOM.getRect('test');
-    LegacyUnit.equal(Math.round(r.x), 100);
-    LegacyUnit.equal(Math.round(r.y), 110);
-    LegacyUnit.equal(Math.round(r.w), 320);
-    LegacyUnit.equal(Math.round(r.h), 240);
+    Assert.eq('', 100, Math.round(r.x));
+    Assert.eq('', 110, Math.round(r.y));
+    Assert.eq('', 320, Math.round(r.w));
+    Assert.eq('', 240, Math.round(r.h));
 
     DOM.setAttrib('test', 'style', '');
 
     DOM.get('test').innerHTML = '<div style="width:320px;height:240px"><div id="test2" style="width:50%;height:240px"></div></div>';
     r = DOM.getRect('test2');
-    LegacyUnit.equal(r.w, 160);
+    Assert.eq('', 160, r.w);
 
     DOM.remove('test');
   });
@@ -443,11 +418,11 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function (success, f
 
     DOM.get('test').innerHTML = '<div style="width:320px;height:240px"><div id="test2" style="width:50%;height:240px"></div></div>';
     r = DOM.getSize('test2');
-    LegacyUnit.equal(r.w, 160);
+    Assert.eq('', 160, r.w);
 
     DOM.get('test').innerHTML = '<div style="width:320px;height:240px"><div id="test2" style="width:100px;height:240px"></div></div>';
     r = DOM.getSize('test2');
-    LegacyUnit.equal(r.w, 100);
+    Assert.eq('', 100, r.w);
 
     DOM.remove('test');
   });
@@ -456,11 +431,11 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function (success, f
     DOM.add(document.body, 'div', { id : 'test' });
 
     DOM.get('test').innerHTML = '<strong>A</strong><span>B</span><em>C</em>';
-    LegacyUnit.equal(DOM.getNext(DOM.get('test').firstChild, '*').nodeName, 'SPAN');
-    LegacyUnit.equal(DOM.getNext(DOM.get('test').firstChild, 'em').nodeName, 'EM');
-    LegacyUnit.equal(DOM.getNext(DOM.get('test').firstChild, 'div'), null);
-    LegacyUnit.equal(DOM.getNext(null, 'div'), null);
-    LegacyUnit.equal(DOM.getNext(DOM.get('test').firstChild, eqNodeName('EM')).nodeName, 'EM');
+    Assert.eq('', 'SPAN', DOM.getNext(DOM.get('test').firstChild, '*').nodeName);
+    Assert.eq('', 'EM', DOM.getNext(DOM.get('test').firstChild, 'em').nodeName);
+    Assert.eq('', null, DOM.getNext(DOM.get('test').firstChild, 'div'));
+    Assert.eq('', null, DOM.getNext(null, 'div'));
+    Assert.eq('', 'EM', DOM.getNext(DOM.get('test').firstChild, eqNodeName('EM')).nodeName);
 
     DOM.remove('test');
   });
@@ -469,11 +444,11 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function (success, f
     DOM.add(document.body, 'div', { id : 'test' });
 
     DOM.get('test').innerHTML = '<strong>A</strong><span>B</span><em>C</em>';
-    LegacyUnit.equal(DOM.getPrev(DOM.get('test').lastChild, '*').nodeName, 'SPAN');
-    LegacyUnit.equal(DOM.getPrev(DOM.get('test').lastChild, 'strong').nodeName, 'STRONG');
-    LegacyUnit.equal(DOM.getPrev(DOM.get('test').lastChild, 'div'), null);
-    LegacyUnit.equal(DOM.getPrev(null, 'div'), null);
-    LegacyUnit.equal(DOM.getPrev(DOM.get('test').lastChild, eqNodeName('STRONG')).nodeName, 'STRONG');
+    Assert.eq('', 'SPAN', DOM.getPrev(DOM.get('test').lastChild, '*').nodeName);
+    Assert.eq('', 'STRONG', DOM.getPrev(DOM.get('test').lastChild, 'strong').nodeName);
+    Assert.eq('', null, DOM.getPrev(DOM.get('test').lastChild, 'div'));
+    Assert.eq('', null, DOM.getPrev(null, 'div'));
+    Assert.eq('', 'STRONG', DOM.getPrev(DOM.get('test').lastChild, eqNodeName('STRONG')).nodeName);
 
     DOM.remove('test');
   });
@@ -489,7 +464,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function (success, f
       }
     });
 
-    LegacyUnit.equal(c, 3);
+    Assert.eq('', 3, c);
   });
 
   suite.test('loadCSS contentCssCors enabled', function () {
@@ -520,7 +495,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function (success, f
 
     DOM.remove(iframe);
 
-    LegacyUnit.equal(c, 3);
+    Assert.eq('', 3, c);
   });
 
   suite.test('insertAfter', function () {
@@ -528,20 +503,20 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function (success, f
 
     DOM.setHTML('test', '<span id="test2"></span>');
     DOM.insertAfter(DOM.create('br'), 'test2');
-    LegacyUnit.equal(DOM.get('test2').nextSibling.nodeName, 'BR');
+    Assert.eq('', 'BR', DOM.get('test2').nextSibling.nodeName);
 
     DOM.setHTML('test', '<span>test</span><span id="test2"></span><span>test</span>');
     DOM.insertAfter(DOM.create('br'), 'test2');
-    LegacyUnit.equal(DOM.get('test2').nextSibling.nodeName, 'BR');
+    Assert.eq('', 'BR', DOM.get('test2').nextSibling.nodeName);
 
     DOM.remove('test');
   });
 
   suite.test('isBlock', function () {
-    LegacyUnit.equal(DOM.isBlock(DOM.create('div')), true);
-    LegacyUnit.equal(DOM.isBlock('DIV'), true);
-    LegacyUnit.equal(DOM.isBlock('SPAN'), false);
-    LegacyUnit.equal(DOM.isBlock('div'), true);
+    Assert.eq('', true, DOM.isBlock(DOM.create('div')));
+    Assert.eq('', true, DOM.isBlock('DIV'));
+    Assert.eq('', false, DOM.isBlock('SPAN'));
+    Assert.eq('', true, DOM.isBlock('div'));
   });
 
   suite.test('remove', function () {
@@ -549,10 +524,10 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function (success, f
 
     DOM.setHTML('test', '<span id="test2"><span>test</span><span>test2</span></span>');
     DOM.remove('test2', true);
-    LegacyUnit.equal(DOM.get('test').innerHTML.toLowerCase(), '<span>test</span><span>test2</span>');
+    Assert.eq('', '<span>test</span><span>test2</span>', DOM.get('test').innerHTML.toLowerCase());
 
     DOM.setHTML('test', '<span id="test2"><span>test</span><span>test2</span></span>');
-    LegacyUnit.equal(DOM.remove('test2').nodeName, 'SPAN');
+    Assert.eq('', 'SPAN', DOM.remove('test2').nodeName);
 
     DOM.remove('test');
   });
@@ -562,49 +537,46 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function (success, f
 
     DOM.setHTML('test', '<span id="test2"><span>test</span><span>test2</span></span>');
     DOM.replace(DOM.create('div', { id : 'test2' }), 'test2', true);
-    LegacyUnit.equal(DOM.get('test2').innerHTML.toLowerCase(), '<span>test</span><span>test2</span>');
+    Assert.eq('', '<span>test</span><span>test2</span>', DOM.get('test2').innerHTML.toLowerCase());
 
     DOM.setHTML('test', '<span id="test2"><span>test</span><span>test2</span></span>');
     DOM.replace(DOM.create('div', { id : 'test2' }), 'test2');
-    LegacyUnit.equal(DOM.get('test2').innerHTML, '');
+    Assert.eq('', '', DOM.get('test2').innerHTML);
 
     DOM.remove('test');
   });
 
   suite.test('toHex', function () {
-    LegacyUnit.equal(DOM.toHex('rgb(0, 255, 255)'), '#00ffff');
-    LegacyUnit.equal(DOM.toHex('rgb(255, 0, 0)'), '#ff0000');
-    LegacyUnit.equal(DOM.toHex('rgb(0, 0, 255)'), '#0000ff');
-    LegacyUnit.equal(DOM.toHex('rgb  (  0  , 0  , 255  )  '), '#0000ff');
-    LegacyUnit.equal(DOM.toHex('   RGB  (  0  , 0  , 255  )  '), '#0000ff');
+    Assert.eq('', '#00ffff', DOM.toHex('rgb(0, 255, 255)'));
+    Assert.eq('', '#ff0000', DOM.toHex('rgb(255, 0, 0)'));
+    Assert.eq('', '#0000ff', DOM.toHex('rgb(0, 0, 255)'));
+    Assert.eq('', '#0000ff', DOM.toHex('rgb  (  0  , 0  , 255  )  '));
+    Assert.eq('', '#0000ff', DOM.toHex('   RGB  (  0  , 0  , 255  )  '));
   });
 
   suite.test('getOuterHTML', function () {
     DOM.add(document.body, 'div', { id : 'test' });
 
     DOM.setHTML('test', '<span id="test2"><span>test</span><span>test2</span></span>');
-    LegacyUnit.equal(DOM.getOuterHTML('test2').toLowerCase().replace(/\"/g, ''), '<span id=test2><span>test</span><span>test2</span></span>');
+    Assert.eq('', '<span id=test2><span>test</span><span>test2</span></span>', DOM.getOuterHTML('test2').toLowerCase().replace(/\"/g, ''));
 
     DOM.setHTML('test', '<span id="test2"><span>test</span><span>test2</span></span>');
     DOM.setOuterHTML('test2', '<div id="test2">123</div>');
-    LegacyUnit.equal(Tools.trim(DOM.getOuterHTML('test2') || '').toLowerCase().replace(/\"/g, ''), '<div id=test2>123</div>');
+    Assert.eq('', '<div id=test2>123</div>', Tools.trim(DOM.getOuterHTML('test2') || '').toLowerCase().replace(/\"/g, ''));
 
     DOM.setHTML('test', '<span id="test2"><span>test</span><span>test2</span></span>');
     DOM.setOuterHTML('test2', '<div id="test2">123</div><div id="test3">abc</div>');
-    LegacyUnit.equal(
-      Tools.trim(DOM.get('test').innerHTML).toLowerCase().replace(/>\s+</g, '><').replace(/\"/g, ''),
-      '<div id=test2>123</div><div id=test3>abc</div>'
-    );
+    Assert.eq('', '<div id=test2>123</div><div id=test3>abc</div>', Tools.trim(DOM.get('test').innerHTML).toLowerCase().replace(/>\s+</g, '><').replace(/\"/g, ''));
 
     DOM.setHTML('test', 'test');
-    LegacyUnit.equal(Tools.trim(DOM.getOuterHTML(DOM.get('test').firstChild as Element)), 'test');
+    Assert.eq('', 'test', Tools.trim(DOM.getOuterHTML(DOM.get('test').firstChild as Element)));
 
     DOM.remove('test');
   });
 
   suite.test('encodeDecode', function () {
-    LegacyUnit.equal(DOM.encode('\u00e5\u00e4\u00f6&<>"'), '\u00e5\u00e4\u00f6&amp;&lt;&gt;&quot;');
-    LegacyUnit.equal(DOM.decode('&aring;&auml;&ouml;&amp;&lt;&gt;&quot;'), '\u00e5\u00e4\u00f6&<>"');
+    Assert.eq('', '\u00e5\u00e4\u00f6&amp;&lt;&gt;&quot;', DOM.encode('\u00e5\u00e4\u00f6&<>"'));
+    Assert.eq('', '\u00e5\u00e4\u00f6&<>"', DOM.decode('&aring;&auml;&ouml;&amp;&lt;&gt;&quot;'));
   });
 
   suite.test('split', function () {
@@ -615,16 +587,13 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function (success, f
     parent = DOM.select('p', DOM.get('test'))[0];
     point = DOM.select('span', DOM.get('test'))[0];
     DOM.split(parent, point);
-    LegacyUnit.equal(DOM.get('test').innerHTML.toLowerCase().replace(/\s+/g, ''), '<p><b>text1</b></p><span>inner</span><p><b>text2</b></p>');
+    Assert.eq('', '<p><b>text1</b></p><span>inner</span><p><b>text2</b></p>', DOM.get('test').innerHTML.toLowerCase().replace(/\s+/g, ''));
 
     DOM.setHTML('test', '<ul><li>first line<br><ul><li><span>second</span> <span>line</span></li><li>third line<br></li></ul></li></ul>');
     parent = DOM.select('li:nth-child(1)', DOM.get('test'))[0];
     point = DOM.select('ul li:nth-child(2)', DOM.get('test'))[0];
     DOM.split(parent, point);
-    LegacyUnit.equal(
-      HtmlUtils.cleanHtml(DOM.get('test').innerHTML),
-      '<ul><li>first line<br><ul><li><span>second</span> <span>line</span></li></ul></li><li>third line<br></li></ul>'
-    );
+    Assert.eq('', '<ul><li>first line<br><ul><li><span>second</span> <span>line</span></li></ul></li><li>third line<br></li></ul>', HtmlUtils.cleanHtml(DOM.get('test').innerHTML));
 
     DOM.remove('test');
   });
@@ -632,15 +601,15 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function (success, f
   suite.test('nodeIndex', function () {
     DOM.add(document.body, 'div', { id : 'test' }, 'abc<b>abc</b>abc');
 
-    LegacyUnit.equal(DOM.nodeIndex(DOM.get('test').childNodes[0]), 0, 'Index of first child.');
-    LegacyUnit.equal(DOM.nodeIndex(DOM.get('test').childNodes[1]), 1, 'Index of second child.');
-    LegacyUnit.equal(DOM.nodeIndex(DOM.get('test').childNodes[2]), 2, 'Index of third child.');
+    Assert.eq('', 0, DOM.nodeIndex(DOM.get('test').childNodes[0]));
+    Assert.eq('', 1, DOM.nodeIndex(DOM.get('test').childNodes[1]));
+    Assert.eq('', 2, DOM.nodeIndex(DOM.get('test').childNodes[2]));
 
     DOM.get('test').insertBefore(DOM.doc.createTextNode('a'), DOM.get('test').firstChild);
     DOM.get('test').insertBefore(DOM.doc.createTextNode('b'), DOM.get('test').firstChild);
 
-    LegacyUnit.equal(DOM.nodeIndex(DOM.get('test').lastChild), 4, 'Index of last child with fragmented DOM.');
-    LegacyUnit.equal(DOM.nodeIndex(DOM.get('test').lastChild, true), 2, 'Normalized index of last child with fragmented DOM.');
+    Assert.eq('', 4, DOM.nodeIndex(DOM.get('test').lastChild));
+    Assert.eq('', 2, DOM.nodeIndex(DOM.get('test').lastChild, true));
 
     DOM.remove('test');
   });
@@ -651,10 +620,10 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function (success, f
     const domUtils = DOMUtils(document);
 
     DOM.setHTML('test', '<hr>');
-    LegacyUnit.equal(domUtils.isEmpty(DOM.get('test')), false, 'Should be false since hr is something');
+    Assert.eq('', false, domUtils.isEmpty(DOM.get('test')));
 
     DOM.setHTML('test', '<p><br></p>');
-    LegacyUnit.equal(domUtils.isEmpty(DOM.get('test')), true, 'Should be true since the paragraph is empty');
+    Assert.eq('', true, domUtils.isEmpty(DOM.get('test')));
 
     DOM.remove('test');
   });
@@ -663,99 +632,99 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function (success, f
     DOM.schema = Schema(); // A schema will be added when used within a editor instance
     DOM.add(document.body, 'div', { id : 'test' }, '');
 
-    LegacyUnit.equal(DOM.isEmpty(DOM.get('test')), true, 'No children');
+    Assert.eq('', true, DOM.isEmpty(DOM.get('test')));
 
     DOM.setHTML('test', '<br />');
-    LegacyUnit.equal(DOM.isEmpty(DOM.get('test')), true, 'Br child');
+    Assert.eq('', true, DOM.isEmpty(DOM.get('test')));
 
     DOM.setHTML('test', '<br /><br />');
-    LegacyUnit.equal(DOM.isEmpty(DOM.get('test')), false, 'Br children');
+    Assert.eq('', false, DOM.isEmpty(DOM.get('test')));
 
     DOM.setHTML('test', 'text');
-    LegacyUnit.equal(DOM.isEmpty(DOM.get('test')), false, 'Text child');
+    Assert.eq('', false, DOM.isEmpty(DOM.get('test')));
 
     DOM.setHTML('test', '<span>text</span>');
-    LegacyUnit.equal(DOM.isEmpty(DOM.get('test')), false, 'Text child in span');
+    Assert.eq('', false, DOM.isEmpty(DOM.get('test')));
 
     DOM.setHTML('test', '<span></span>');
-    LegacyUnit.equal(DOM.isEmpty(DOM.get('test')), true, 'Empty span child');
+    Assert.eq('', true, DOM.isEmpty(DOM.get('test')));
 
     DOM.setHTML('test', '<div><span><b></b></span><b></b><em></em></div>');
-    LegacyUnit.equal(DOM.isEmpty(DOM.get('test')), true, 'Empty complex HTML');
+    Assert.eq('', true, DOM.isEmpty(DOM.get('test')));
 
     DOM.setHTML('test', '<div><span><b></b></span><b></b><em>X</em></div>');
-    LegacyUnit.equal(DOM.isEmpty(DOM.get('test')), false, 'Non empty complex HTML');
+    Assert.eq('', false, DOM.isEmpty(DOM.get('test')));
 
     DOM.setHTML('test', '<div><span><b></b></span><b></b><em> </em></div>');
-    LegacyUnit.equal(DOM.isEmpty(DOM.get('test')), true, 'Non empty complex HTML with space');
+    Assert.eq('', true, DOM.isEmpty(DOM.get('test')));
 
     DOM.setHTML('test', '<div><span><b></b></span><b></b><em><a name="x"></a></em></div>');
-    LegacyUnit.equal(DOM.isEmpty(DOM.get('test')), false, 'Non empty complex HTML with achor name');
+    Assert.eq('', false, DOM.isEmpty(DOM.get('test')));
 
     DOM.setHTML('test', '<img src="tinymce/ui/img/raster.gif">');
-    LegacyUnit.equal(DOM.isEmpty(DOM.get('test')), false, 'Non empty html with img element');
+    Assert.eq('', false, DOM.isEmpty(DOM.get('test')));
 
     DOM.setHTML('test', '<span data-mce-bookmark="1"></span>');
-    LegacyUnit.equal(DOM.isEmpty(DOM.get('test')), false, 'Span with bookmark attribute.');
+    Assert.eq('', false, DOM.isEmpty(DOM.get('test')));
 
     DOM.setHTML('test', '<span data-mce-style="color:Red"></span>');
-    LegacyUnit.equal(DOM.isEmpty(DOM.get('test')), true, 'Span with data-mce attribute.');
+    Assert.eq('', true, DOM.isEmpty(DOM.get('test')));
 
     DOM.setHTML('test', '<div><!-- comment --></div>');
-    LegacyUnit.equal(DOM.isEmpty(DOM.get('test')), false, 'Element with comment.');
+    Assert.eq('', false, DOM.isEmpty(DOM.get('test')));
 
     DOM.setHTML('test', '<span data-mce-bogus="1"></span>');
-    LegacyUnit.equal(DOM.isEmpty(DOM.get('test')), true, 'Contains just a bogus element.');
+    Assert.eq('', true, DOM.isEmpty(DOM.get('test')));
 
     DOM.setHTML('test', '<span data-mce-bogus="1">a</span>');
-    LegacyUnit.equal(DOM.isEmpty(DOM.get('test')), false, 'Contains a text node in a bogus element.');
+    Assert.eq('', false, DOM.isEmpty(DOM.get('test')));
 
     DOM.setHTML('test', '<span data-mce-bogus="all">a</span>');
-    LegacyUnit.equal(DOM.isEmpty(DOM.get('test')), true, 'Contains just a bogus all element.');
+    Assert.eq('', true, DOM.isEmpty(DOM.get('test')));
 
     DOM.setHTML('test', '<span data-mce-bogus="all">a</span>b');
-    LegacyUnit.equal(DOM.isEmpty(DOM.get('test')), false, 'Contains a bogus all element but some text as well.');
+    Assert.eq('', false, DOM.isEmpty(DOM.get('test')));
 
     DOM.setHTML('test', '<code> </code>');
-    LegacyUnit.equal(DOM.isEmpty(DOM.get('test')), false, 'Contains a code element should be treated as content.');
+    Assert.eq('', false, DOM.isEmpty(DOM.get('test')));
 
     DOM.setHTML('test', '<pre> </pre>');
-    LegacyUnit.equal(DOM.isEmpty(DOM.get('test')), false, 'Contains a pre element should be treated as content.');
+    Assert.eq('', false, DOM.isEmpty(DOM.get('test')));
 
     DOM.setHTML('test', '<code></code>');
-    LegacyUnit.equal(DOM.isEmpty(DOM.get('test')), false, 'Contains a code element should be treated as content.');
+    Assert.eq('', false, DOM.isEmpty(DOM.get('test')));
 
     DOM.setHTML('test', '<pre></pre>');
-    LegacyUnit.equal(DOM.isEmpty(DOM.get('test')), false, 'Contains a pre element should be treated as content.');
+    Assert.eq('', false, DOM.isEmpty(DOM.get('test')));
 
     DOM.remove('test');
   });
 
   suite.test('isEmpty with list of elements considered non-empty', function () {
     const elm = DOM.create('p', null, '<img>');
-    LegacyUnit.equal(false, DOM.isEmpty(elm, { img: true }));
+    Assert.eq('', DOM.isEmpty(elm, { img: true }), false);
   });
 
   suite.test('isEmpty on pre', function () {
     const elm = DOM.create('pre', null, '  ');
-    LegacyUnit.equal(false, DOM.isEmpty(elm));
+    Assert.eq('', DOM.isEmpty(elm), false);
   });
 
   suite.test('isEmpty with list of elements considered non-empty without schema', function () {
     const domWithoutSchema = DOMUtils(document, { keep_values: true });
 
     const elm = domWithoutSchema.create('p', null, '<img>');
-    LegacyUnit.equal(false, domWithoutSchema.isEmpty(elm, { img: true }));
+    Assert.eq('', domWithoutSchema.isEmpty(elm, { img: true }), false);
   });
 
   suite.test('isEmpty on P with BR in EM', function () {
     const elm = DOM.create('p', null, '<em><br></em>');
-    LegacyUnit.equal(DOM.isEmpty(elm), true, 'No children');
+    Assert.eq('', true, DOM.isEmpty(elm));
   });
 
   suite.test('isEmpty on P with two BR in EM', function () {
     const elm = DOM.create('p', null, '<em><br><br></em>');
-    LegacyUnit.equal(false, DOM.isEmpty(elm));
+    Assert.eq('', DOM.isEmpty(elm), false);
   });
 
   suite.test('bind/unbind/fire', function () {
@@ -766,7 +735,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function (success, f
     });
     DOM.fire(document, 'click');
     DOM.unbind(document, 'click');
-    LegacyUnit.equal(count, 1);
+    Assert.eq('', 1, count);
 
     count = 0;
     DOM.bind([ document, window ], 'click', function (e) {
@@ -776,12 +745,12 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function (success, f
     DOM.fire(document, 'click');
     DOM.fire(window, 'click');
     DOM.unbind([ document, window ], 'click');
-    LegacyUnit.equal(count, 2);
+    Assert.eq('', 2, count);
 
     count = 0;
     DOM.fire(document, 'click');
     DOM.fire(window, 'click');
-    LegacyUnit.equal(count, 0);
+    Assert.eq('', 0, count);
   });
 
   Pipeline.async({}, suite.toSteps({}), function () {
