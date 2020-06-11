@@ -273,7 +273,7 @@ UnitTest.test('DOMUtils.getAttribs', () => {
 
     val = val.split(',');
 
-    Tools.each(obj, o => {
+    Tools.each(obj, (o) => {
       if (Tools.inArray(val, o.nodeName.toLowerCase()) !== -1 && o.specified) {
         count++;
       }
@@ -335,7 +335,7 @@ UnitTest.test('DOMUtils.getPos', () => {
   DOM.remove('test');
 });
 
-const eqNodeName = name => n => n.nodeName === name;
+const eqNodeName = (name) => (n) => n.nodeName === name;
 
 UnitTest.test('DOMUtils.getParent', () => {
   DOM.add(document.body, 'div', { id: 'test' });
@@ -735,7 +735,7 @@ UnitTest.test('DOMUtils.bind/unbind/fire', () => {
   Assert.eq('', 1, count);
 
   count = 0;
-  DOM.bind([ document, window ], 'click', e => {
+  DOM.bind([ document, window ], 'click', (e) => {
     e.stopPropagation();
     count++;
   });
