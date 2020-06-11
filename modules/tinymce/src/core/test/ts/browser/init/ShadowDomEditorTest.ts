@@ -32,11 +32,9 @@ UnitTest.asynctest('Skin stylesheets should be loaded in ShadowRoot when editor 
             true,
             Arr.exists(sr.dom().styleSheets, isSkin)
           );
+          Remove.remove(shadowHost);
         })
-      ], () => {
-        Remove.remove(shadowHost);
-        success();
-      }, onFailure);
+      ], onSuccess, onFailure);
     }, {
       toolbar_sticky: false,
       base_url: '/project/tinymce/js/tinymce'
