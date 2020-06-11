@@ -75,7 +75,7 @@ export const withTimeout = <T> (baseFn: (completer: (value: T) => void) => void,
       clearTimeout(timeoutRef);
       completer(r);
     };
-    const timeoutRef = Delay.setTimeout(() => {
+    const timeoutRef = setTimeout(() => {
       done(ifTimeout());
     }, timeout);
     baseFn(done);
