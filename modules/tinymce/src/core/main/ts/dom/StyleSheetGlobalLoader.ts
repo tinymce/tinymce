@@ -1,5 +1,5 @@
-import { Attr, Document, DomEvent, Element, Insert, ShadowDom, Traverse } from '@ephox/sugar';
-import { Document as DomDocument } from '@ephox/dom-globals';
+import { Attr, DomEvent, Element, Insert, ShadowDom, Traverse } from '@ephox/sugar';
+import { Document as DomDocument, document, ShadowRoot } from '@ephox/dom-globals';
 import { Result, LazyValue, Obj, LazyValues, Arr, Option, Cell } from '@ephox/katamari';
 import { ReferrerPolicy } from '../api/SettingsTypes';
 import Tools from '../api/util/Tools';
@@ -62,17 +62,17 @@ export const create = (): StyleSheetGlobalLoader => {
   const referrerPolicy = Cell<Option<ReferrerPolicy>>(Option.none());
 
   type Rec = Record<string, LazyValue<Result<string, string>>>;
-  const registry: WeakMap<RootNode, Rec> = new WeakMap();
-  registry.set(Document.getDocument(), {});
+  const registry: WeakMap<DomDocument | ShadowRoot, Rec> = new WeakMap();
+  registry.set(document, {});
 
   const load = (root: RootNode, url: string, contentCssCors: boolean): LazyValue<Result<string, string>> => {
 
     // TODO: would be nice if this could be a Cell
     const finalUrl = Tools._addCacheSuffix(url);
 
-    const rec: Rec = Option.from(registry.get(root)).getOrThunk(() => {
+    const rec: Rec = Option.from(registry.get(root.dom())).getOrThunk(() => {
       const r: Rec = {};
-      registry.set(root, r);
+      registry.set(root.dom(), r);
       return r;
     });
 
