@@ -19,10 +19,9 @@ export default function () {
     // images_upload_credentials: true,
     skin_url: '../../../../js/tinymce/skins/ui/oxide',
     setup(ed) {
-      ed.addButton('demoButton', {
-        type: 'button',
+      ed.ui.registry.addButton('demoButton', {
         text: 'Demo',
-        onclick() {
+        onAction() {
           ed.insertContent('Hello world!');
         }
       });

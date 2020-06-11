@@ -19,10 +19,13 @@ import * as Body from './node/Body';
 import * as Comment from './node/Comment';
 import * as Comments from './node/Comments';
 import Element from './node/Element';
+import * as Document from './node/Document';
+import * as Head from './node/Head';
 import * as Elements from './node/Elements';
 import * as Fragment from './node/Fragment';
 import * as Node from './node/Node';
 import * as NodeTypes from './node/NodeTypes';
+import * as ShadowDom from './node/ShadowDom';
 import * as Text from './node/Text';
 import * as Alignment from './properties/Alignment';
 import * as Attr from './properties/Attr';
@@ -96,11 +99,14 @@ export {
   Body,
   Comment,
   Comments,
+  Document,
   Element,
   Elements,
   Fragment,
+  Head,
   Node,
   NodeTypes,
+  ShadowDom,
   Text,
   Alignment,
   Attr,

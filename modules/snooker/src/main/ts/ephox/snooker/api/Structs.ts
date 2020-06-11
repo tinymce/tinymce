@@ -41,7 +41,7 @@ export interface DetailExt extends Detail {
   readonly column: () => number;
 }
 
-type Section = 'tfoot' | 'thead' | 'tbody';
+export type Section = 'tfoot' | 'thead' | 'tbody';
 
 export interface RowCells {
   readonly cells: () => ElementNew[];

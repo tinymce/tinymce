@@ -5,14 +5,15 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { HTMLImageElement } from '@ephox/dom-globals';
 import * as LegacyFilter from '../../html/LegacyFilter';
 import * as ParserFilters from '../../html/ParserFilters';
 import { hasOnlyChild, isEmpty, isLineBreakNode, isPaddedWithNbsp, paddEmptyNode } from '../../html/ParserUtils';
+import { BlobCache } from '../file/BlobCache';
 import Tools from '../util/Tools';
 import Node from './Node';
 import SaxParser from './SaxParser';
 import Schema from './Schema';
-import { BlobCache } from '../file/BlobCache';
 
 /**
  * This class parses HTML code into a DOM like structure of nodes it will remove redundant whitespace and make
@@ -64,6 +65,7 @@ export interface DomParserSettings {
   validate?: boolean;
   inline_styles?: boolean;
   blob_cache?: BlobCache;
+  images_dataimg_filter?: (img: HTMLImageElement) => boolean;
 }
 
 interface DomParser {
