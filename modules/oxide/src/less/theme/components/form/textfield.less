@@ -27,6 +27,7 @@
 @textfield-disabled-background-color: darken(@textfield-background-color, 5%);
 @textfield-disabled-text-color: fade(@textfield-text-color, 85%);
 
+@textfield-focus-background-color: @textfield-background-color;
 @textfield-focus-border-color: @color-tint;
 @textfield-focus-box-shadow: none;
 @textfield-focus-outline: none;
@@ -60,6 +61,7 @@
   }
 
   .tox-textfield:focus {
+    background-color: @textfield-focus-background-color;
     border-color: @textfield-focus-border-color;
     box-shadow: @textfield-focus-box-shadow;
     outline: @textfield-focus-outline;
