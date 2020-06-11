@@ -60,7 +60,7 @@ const rawLoad = (
       completer(Result.error(url));
     };
     const link = createLinkTag(doc, url, onload, onerror, referrerPolicy, contentCssCors);
-    Insert.append(root, link);
+    Insert.append(ShadowDom.getStyleContainer(root), link);
   }, () => Result.error(url), maxLoadTime);
 
 export const create = (): StyleSheetGlobalLoader => {
