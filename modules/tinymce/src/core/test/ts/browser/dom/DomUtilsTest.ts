@@ -797,11 +797,8 @@ UnitTest.test('DOMUtils.get - by id in head', () => {
   meta.setAttribute('id', 'myid');
   document.head.appendChild(meta);
 
-  try {
-    Assert.eq('get meta', meta, DOM.get('myid'), Testable.tStrict);
-  } finally {
-    document.head.removeChild(meta);
-  }
+  Assert.eq('get meta', meta, DOM.get('myid'), Testable.tStrict);
+  document.head.removeChild(meta);
 });
 
 UnitTest.test('DOMUtils.get - does not find element by name in head', () => {
@@ -811,11 +808,8 @@ UnitTest.test('DOMUtils.get - does not find element by name in head', () => {
   meta.setAttribute('name', 'myname');
   document.head.appendChild(meta);
 
-  try {
-    Assert.eq('get meta', null, DOM.get('myname'), Testable.tStrict);
-  } finally {
-    document.head.removeChild(meta);
-  }
+  Assert.eq('get meta', null, DOM.get('myname'), Testable.tStrict);
+  document.head.removeChild(meta);
 });
 
 UnitTest.test('DOMUtils.get - does not find element by name in body', () => {
@@ -825,11 +819,8 @@ UnitTest.test('DOMUtils.get - does not find element by name in body', () => {
   meta.setAttribute('name', 'myname');
   document.body.appendChild(meta);
 
-  try {
-    Assert.eq('get meta', null, DOM.get('myname'), Testable.tStrict);
-  } finally {
-    document.body.removeChild(meta);
-  }
+  Assert.eq('get meta', null, DOM.get('myname'), Testable.tStrict);
+  document.body.removeChild(meta);
 });
 
 UnitTest.test('DOMUtils.get - finds element by id in body, not element by name in head', () => {
@@ -843,12 +834,9 @@ UnitTest.test('DOMUtils.get - finds element by id in body, not element by name i
   div.setAttribute('id', 'myname');
   document.body.appendChild(div);
 
-  try {
-    Assert.eq('get div', div, DOM.get('myname'), Testable.tStrict);
-  } finally {
-    document.head.removeChild(meta);
-    document.body.removeChild(div);
-  }
+  Assert.eq('get div', div, DOM.get('myname'), Testable.tStrict);
+  document.head.removeChild(meta);
+  document.body.removeChild(div);
 });
 
 UnitTest.test('DOMUtils.get - returns element', () => {
