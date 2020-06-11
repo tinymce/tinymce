@@ -13,7 +13,6 @@ import * as Jam from './Jam';
 import { LazyValue } from './LazyValue';
 import * as LazyValues from './LazyValues';
 import * as Merger from './Merger';
-import * as MutableEqMap from './MutableEqMap';
 import * as Namespace from './Namespace';
 import * as Obj from './Obj';
 import { Option } from './Option';
@@ -50,7 +49,6 @@ export {
   LazyValue,
   LazyValues,
   Merger,
-  MutableEqMap,
   Namespace,
   Obj,
   Option,
