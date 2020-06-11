@@ -32,11 +32,10 @@ export interface StyleSheetLoaderSettings {
 
 export function StyleSheetLoader(rootNode: Document | ShadowRoot, settings: Partial<StyleSheetLoaderSettings> = {}): StyleSheetLoader {
   const globalLoader = StyleSheetGlobalLoader.instance;
+  const contentCssCors = settings.contentCssCors || false;
 
   Obj.get(settings, 'maxLoadTime').each(globalLoader.maxLoadTime.set);
 
-  // TODO: I think this is wrong - if contentCssCors is for loading contentCss, then it shouldn't be set on the global object and should be passed to globalLoader.load.
-  Obj.get(settings, 'contentCssCors').each(globalLoader.contentCssCors.set);
   globalLoader.referrerPolicy.set(Obj.get(settings, 'referrerPolicy'));
 
   const _setReferrerPolicy = (referrerPolicy: ReferrerPolicy) => {
@@ -44,7 +43,7 @@ export function StyleSheetLoader(rootNode: Document | ShadowRoot, settings: Part
   };
 
   const load = (url: string, loadedCallback: () => void, errorCallback?: () => void) => {
-    globalLoader.load(Element.fromDom(rootNode), url, settings.contentCssCors || false).get((result) => {
+    globalLoader.load(Element.fromDom(rootNode), url, contentCssCors).get((result) => {
       result.fold(
         () => errorCallback && errorCallback(),
         loadedCallback
@@ -53,7 +52,7 @@ export function StyleSheetLoader(rootNode: Document | ShadowRoot, settings: Part
   };
 
   const loadAll = function (urls: string[], success: (urls: string[]) => void, failure: (urls: string[]) => void) {
-    globalLoader.loadAll(Element.fromDom(rootNode), urls).get((result) => {
+    globalLoader.loadAll(Element.fromDom(rootNode), urls, contentCssCors).get((result) => {
       const parts = Arr.partition(result, (r) => r.isValue());
       if (parts.fail.length > 0) {
         failure(parts.fail.map(Results.unite));
