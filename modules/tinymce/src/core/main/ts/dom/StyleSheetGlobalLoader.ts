@@ -38,8 +38,8 @@ const createLinkTag = (doc: Element<DomDocument>, url: string, onload: () => voi
     Attr.set(link, 'crossOrigin', 'anonymous');
   }
 
-  DomEvent.bind(link, 'onload', onload);
-  DomEvent.bind(link, 'onerror', onerror);
+  DomEvent.bind(link, 'load', onload);
+  DomEvent.bind(link, 'error', onerror);
   return link;
 };
 
