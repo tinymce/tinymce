@@ -11,8 +11,8 @@ type RootNode = ShadowDom.RootNode;
 
 // Since this is intended to be global, it needs to be mutable
 export interface StyleSheetGlobalLoader {
-  readonly load: (rootNode: RootNode, url: string) => LazyValue<Result<null, string>>;
-  readonly loadAll: (root: RootNode, urls: string[]) => LazyValue<Array<Result<null, string>>>;
+  readonly load: (rootNode: RootNode, url: string) => LazyValue<Result<string, string>>;
+  readonly loadAll: (root: RootNode, urls: string[]) => LazyValue<Array<Result<string, string>>>;
   readonly maxLoadTime: Cell<number>;
   readonly referrerPolicy: Cell<Option<ReferrerPolicy>>;
   readonly contentCssCors: Cell<boolean>;
@@ -21,12 +21,12 @@ export interface StyleSheetGlobalLoader {
 const elementEq = <T> (): Eq<Element<T>> =>
   Eq.eq((e1, e2) => e1.dom() === e2.dom());
 
-const createLinkTag = (doc: Element<DomDocument>, href: string, onload: () => void, onerror: () => void, referrerPolicy: Option<ReferrerPolicy>, contentCssCors: boolean) => {
+const createLinkTag = (doc: Element<DomDocument>, url: string, onload: () => void, onerror: () => void, referrerPolicy: Option<ReferrerPolicy>, contentCssCors: boolean) => {
   const link = Element.fromTag('link', doc.dom());
   Attr.setAll(link, {
     rel: 'stylesheet',
     type: 'text/css',
-    href,
+    href: url,
     async: false,
     defer: false
   });
@@ -45,22 +45,23 @@ const createLinkTag = (doc: Element<DomDocument>, href: string, onload: () => vo
 
 const rawLoad = (
   root: RootNode,
-  href: string,
+  url: string,
   maxLoadTime: number,
   referrerPolicy: Option<ReferrerPolicy>,
   contentCssCors: boolean
-): LazyValue<Result<null, string>> => {
+): LazyValue<Result<string, string>> => {
   return LazyValue.withTimeout((completer) => {
+    // TODO: would it be better to return errors, rather than the URL?
     const doc = Traverse.documentOrOwner(root);
     const onload = () => {
-      completer(Result.value(null));
+      completer(Result.value(url));
     };
     const onerror = () => {
-      completer(Result.error('Error loading stylesheet'));
+      completer(Result.error(url));
     };
-    const link = createLinkTag(doc, href, onload, onerror, referrerPolicy, contentCssCors);
+    const link = createLinkTag(doc, url, onload, onerror, referrerPolicy, contentCssCors);
     Insert.append(root, link);
-  }, () => Result.error('Error loading stylesheet: timeout'), maxLoadTime);
+  }, () => Result.error(url), maxLoadTime);
 };
 
 export const create = (): StyleSheetGlobalLoader => {
@@ -69,11 +70,11 @@ export const create = (): StyleSheetGlobalLoader => {
   const referrerPolicy = Cell<Option<ReferrerPolicy>>(Option.none());
   const contentCssCors = Cell<boolean>(false);
 
-  type Rec = Record<string, LazyValue<Result<null, string>>>;
+  type Rec = Record<string, LazyValue<Result<string, string>>>;
   const registry: MutableEqMap<RootNode, Rec> = MutableEqMap.create(elementEq());
   registry.put(Document.getDocument(), {});
 
-  const load = (root: RootNode, url: string): LazyValue<Result<null, string>> => {
+  const load = (root: RootNode, url: string): LazyValue<Result<string, string>> => {
 
     // TODO: would be nice if this could be a Cell
     const finalUrl = Tools._addCacheSuffix(url);
@@ -91,8 +92,8 @@ export const create = (): StyleSheetGlobalLoader => {
     });
   };
 
-  // TODO: do we need to turn this into a LazyValue<Result<Array<null>, string>? Or a LazyValue<Result<null>, string>?
-  const loadAll = (root: RootNode, urls: string[]): LazyValue<Array<Result<null, string>>> => {
+  // TODO: do we need to turn this into a LazyValue<Result<Array<string>, string>?
+  const loadAll = (root: RootNode, urls: string[]): LazyValue<Array<Result<string, string>>> => {
     return LazyValues.par(Arr.map(urls, (url) => load(root, url)));
   };
 

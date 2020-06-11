@@ -1,15 +1,14 @@
-import { Option } from '@ephox/katamari';
-import { Element, ShadowDom } from '@ephox/sugar';
-import DOMUtils from '../api/dom/DOMUtils';
+import { Document, Element, ShadowDom } from '@ephox/sugar';
 import { StyleSheetLoader } from './StyleSheetLoader';
 import { Node as DomNode } from '@ephox/dom-globals';
+import { RootNode } from '@ephox/sugar/lib/main/ts/ephox/sugar/api/node/ShadowDom';
 
-export const ui = (referenceElement: DomNode | null): StyleSheetLoader =>
+export const ui = (referenceElement: DomNode | null): StyleSheetLoader => {
   // TODO: can referenceElement ever be null?
-  Option.from(referenceElement)
-    .map(Element.fromDom)
-    .bind(ShadowDom.getShadowRoot)
-    .fold(
-      () => DOMUtils.DOM.styleSheetLoader, // TODO: should we just create one here?
-      (sr) => StyleSheetLoader(sr.dom()) // TODO: do we need to pass any options here?
-    );
+  const root: RootNode =
+    referenceElement
+      ? ShadowDom.getRootNode(Element.fromDom(referenceElement))
+      : Document.getDocument();
+
+  return StyleSheetLoader(root.dom());
+};
