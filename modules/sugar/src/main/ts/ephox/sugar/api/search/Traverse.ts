@@ -1,11 +1,22 @@
-import { HTMLElement, Node as DomNode } from '@ephox/dom-globals';
+import { Document, HTMLElement, Node as DomNode } from '@ephox/dom-globals';
 import { Arr, Fun, Option, Type } from '@ephox/katamari';
 import * as Recurse from '../../alien/Recurse';
 import * as Compare from '../dom/Compare';
 import Element from '../node/Element';
+import * as Node from '../node/Node';
 
-// The document associated with the current element
+/**
+ * The document associated with the current element
+ * NOTE: this will throw if the owner is null.
+ */
 const owner = (element: Element<DomNode>) => Element.fromDom(element.dom().ownerDocument);
+
+/**
+ * If the element is a document, return it. Otherwise, return its ownerDocument.
+ * @param dos
+ */
+const documentOrOwner = (dos: Element<DomNode>): Element<Document> =>
+  Node.isDocument(dos) ? dos : owner(dos);
 
 const documentElement = (element: Element<DomNode>) => Element.fromDom(element.dom().ownerDocument.documentElement);
 
@@ -91,6 +102,7 @@ const leaf = (element: Element<DomNode>, offset: number): ElementAndOffset<DomNo
 
 export {
   owner,
+  documentOrOwner,
   defaultView,
   documentElement,
   parent,

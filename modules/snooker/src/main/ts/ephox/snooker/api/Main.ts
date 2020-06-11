@@ -2,6 +2,7 @@ import { CellLocation } from './CellLocation';
 import * as CellMutations from './CellMutations';
 import * as CellNavigation from './CellNavigation';
 import * as CellProperties from './CellProperties';
+import * as CopyCols from './CopyCols';
 import * as CopyRows from './CopyRows';
 import * as CopySelected from './CopySelected';
 import { Generators } from './Generators';
@@ -10,7 +11,7 @@ import { ResizeWire } from './ResizeWire';
 import * as Sizes from './Sizes';
 import * as Structs from './Structs';
 import * as TableContent from './TableContent';
-import TableDirection from './TableDirection';
+import { TableDirection } from './TableDirection';
 import * as TableFill from './TableFill';
 import * as TableGridSize from './TableGridSize';
 import * as TableLookup from './TableLookup';
@@ -27,6 +28,7 @@ export {
   CellMutations,
   CellNavigation,
   CellProperties,
+  CopyCols,
   CopyRows,
   CopySelected,
   Generators,

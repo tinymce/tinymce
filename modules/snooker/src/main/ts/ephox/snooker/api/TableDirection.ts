@@ -3,26 +3,20 @@ import { Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 import { BarPositions, ColInfo } from '../resize/BarPositions';
 
-export default function (directionAt: (e: Element) => { isRtl: () => boolean }): BarPositions<ColInfo> {
-  const auto = function (table: Element) {
-    return directionAt(table).isRtl() ? ResizeDirection.rtl : ResizeDirection.ltr;
-  };
+export type TableDirection = BarPositions<ColInfo>;
 
-  const delta = function (amount: number, table: Element) {
-    return auto(table).delta(amount, table);
-  };
+export const TableDirection = (directionAt: (e: Element) => { isRtl: () => boolean }): TableDirection => {
+  const auto = (table: Element) => directionAt(table).isRtl() ? ResizeDirection.rtl : ResizeDirection.ltr;
 
-  const positions = function (cols: Option<Element>[], table: Element) {
-    return auto(table).positions(cols, table);
-  };
+  const delta = (amount: number, table: Element) => auto(table).delta(amount, table);
 
-  const edge = function (cell: Element) {
-    return auto(cell).edge(cell);
-  };
+  const positions = (cols: Option<Element>[], table: Element) => auto(table).positions(cols, table);
+
+  const edge = (cell: Element) => auto(cell).edge(cell);
 
   return {
     delta,
     edge,
     positions
   };
-}
+};

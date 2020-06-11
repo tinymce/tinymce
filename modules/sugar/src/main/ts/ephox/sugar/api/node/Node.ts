@@ -1,4 +1,13 @@
-import { Comment, Document, Element as DomElement, HTMLElement as DomHTMLElement, HTMLElementTagNameMap, Node as DomNode, Text } from '@ephox/dom-globals';
+import {
+  Comment,
+  Document,
+  DocumentFragment,
+  Element as DomElement,
+  HTMLElement as DomHTMLElement,
+  HTMLElementTagNameMap,
+  Node as DomNode,
+  Text
+} from '@ephox/dom-globals';
 import { HTMLElement } from '@ephox/sand';
 import Element from './Element';
 import * as NodeTypes from './NodeTypes';
@@ -21,6 +30,7 @@ const isHTMLElement = (element: Element<any>): element is Element<DomHTMLElement
 const isElement = isType<DomElement>(NodeTypes.ELEMENT);
 const isText = isType<Text>(NodeTypes.TEXT);
 const isDocument = isType<Document>(NodeTypes.DOCUMENT);
+const isDocumentFragment = isType<DocumentFragment>(NodeTypes.DOCUMENT_FRAGMENT);
 
 const isTag = <K extends keyof HTMLElementTagNameMap>(tag: K) => (e: Element<any>): e is Element<HTMLElementTagNameMap[K]> => isElement(e) && name(e) === tag;
 
@@ -32,6 +42,7 @@ export {
   isHTMLElement,
   isText,
   isDocument,
+  isDocumentFragment,
   isComment,
   isTag
 };
