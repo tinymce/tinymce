@@ -1,4 +1,4 @@
-import { Assert, assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import * as Insert from 'ephox/sugar/api/dom/Insert';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
 import * as Body from 'ephox/sugar/api/node/Body';
@@ -14,9 +14,9 @@ UnitTest.test('Body.inBody - detached elements and their descendents', () => {
   const text = Element.fromText('hi');
   Insert.append(child, text);
   Insert.append(div, child);
-  assert.eq(false, Body.inBody(div));
-  assert.eq(false, Body.inBody(child));
-  assert.eq(false, Body.inBody(text));
+  Assert.eq('should not be in body', false, Body.inBody(div));
+  Assert.eq('should not be in body', false, Body.inBody(child));
+  Assert.eq('should not be in body', false, Body.inBody(text));
 });
 
 UnitTest.test('Body.inBody - elements in body', () => {
@@ -28,14 +28,11 @@ UnitTest.test('Body.inBody - elements in body', () => {
   Insert.append(child, text);
   Insert.append(div, child);
   Insert.append(body, div);
-  try {
-    assert.eq(true, Body.inBody(div));
-    assert.eq(true, Body.inBody(child));
-    assert.eq(true, Body.inBody(text));
-    assert.eq(true, Body.inBody(body));
-  } finally{
-    Remove.remove(div);
-  }
+  Assert.eq('should be in body', true, Body.inBody(div));
+  Assert.eq('should be in body', true, Body.inBody(child));
+  Assert.eq('should be in body', true, Body.inBody(text));
+  Assert.eq('should be in body', true, Body.inBody(body));
+  Remove.remove(div);
 });
 
 if (ShadowDom.isSupported()) {
@@ -66,16 +63,13 @@ if (ShadowDom.isSupported()) {
     const div4 = document.createElement('div');
     div3.appendChild(div4);
 
-    try {
-      Assert.eq('div1 should be inBody', true, Body.inBody(Element.fromDom(div1)));
-      Assert.eq('div2 should be inBody', true, Body.inBody(Element.fromDom(div2)));
-      Assert.eq('div3 should be inBody', true, Body.inBody(Element.fromDom(div3)));
-      Assert.eq('div4 should be inBody', true, Body.inBody(Element.fromDom(div4)));
+    Assert.eq('div1 should be inBody', true, Body.inBody(Element.fromDom(div1)));
+    Assert.eq('div2 should be inBody', true, Body.inBody(Element.fromDom(div2)));
+    Assert.eq('div3 should be inBody', true, Body.inBody(Element.fromDom(div3)));
+    Assert.eq('div4 should be inBody', true, Body.inBody(Element.fromDom(div4)));
 
-      Assert.eq('sr1 should be inBody', true, Body.inBody(Element.fromDom(sr1)));
-      Assert.eq('sr2 should be inBody', true, Body.inBody(Element.fromDom(sr2)));
-    } finally {
-      document.body.removeChild(div1);
-    }
+    Assert.eq('sr1 should be inBody', true, Body.inBody(Element.fromDom(sr1)));
+    Assert.eq('sr2 should be inBody', true, Body.inBody(Element.fromDom(sr2)));
+    document.body.removeChild(div1);
   });
 }
