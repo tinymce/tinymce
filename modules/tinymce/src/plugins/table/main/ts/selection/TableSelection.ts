@@ -11,6 +11,7 @@ import { Element } from '@ephox/sugar';
 import { TableLookup } from '@ephox/snooker';
 import { Selections } from '../selection/Selections';
 import * as CellOperations from '../queries/CellOperations';
+import * as Ephemera from './Ephemera';
 import Editor from 'tinymce/core/api/Editor';
 
 const getSelectionStartFromSelector = (selector: string) => (editor: Editor) => Option.from(editor.dom.getParent(editor.selection.getStart(), selector)).map(Element.fromDom);
@@ -35,7 +36,7 @@ const getRowsFromSelection = (editor: Editor): HTMLTableRowElement[] => {
     .map((rows) => Arr.map(rows, (row) => row.dom()));
 
   return Options.lift2(cellOpt, rowsOpt, (cell, rows) =>
-    Arr.filter(rows, (row) => Arr.exists(row.cells, (rowCell) => editor.dom.getAttrib(rowCell, 'data-mce-selected') === '1' || rowCell === cell.dom()))
+    Arr.filter(rows, (row) => Arr.exists(row.cells, (rowCell) => editor.dom.getAttrib(rowCell, Ephemera.selected) === '1' || rowCell === cell.dom()))
   ).getOr([]);
 };
 

@@ -7,6 +7,13 @@ import Plugin from 'tinymce/plugins/table/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 import * as TableTestUtils from '../module/test/TableTestUtils';
 
+interface SelectedCells {
+  cell1?: boolean;
+  cell2?: boolean;
+  cell3?: boolean;
+  cell4?: boolean;
+}
+
 UnitTest.asynctest('browser.tinymce.plugins.table.TableFormatsTest', (success, failure) => {
   Plugin();
   SilverTheme();
@@ -14,24 +21,26 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableFormatsTest', (success, f
   TinyLoader.setup((editor: Editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
 
-    const beforeTable = ({ cell1 = false, cell2 = false, cell3 = false, cell4 = false } = {}) =>
-      '<table style="border-collapse: collapse; width: 100%;" border="1">' +
-      '<tbody>' +
-      '<tr>' +
-      `<td style="width: 50%;" ${cell1 ? 'data-mce-selected="1"' : ''}>a</td>` +
-      `<td style="width: 50%;" ${cell2 ? 'data-mce-selected="1"' : ''}>b</td>` +
-      '</tr>' +
-      '<tr>' +
-      `<td style="width: 50%;" ${cell3 ? 'data-mce-selected="1"' : ''}>c</td>` +
-      `<td style="width: 50%;" ${cell4 ? 'data-mce-selected="1"' : ''}>d</td>` +
-      '</tr>' +
-      '</tbody>' +
-      '</table>';
+    const beforeTable = (selectedCells: SelectedCells = {}) => {
+      const { cell1, cell2, cell3, cell4 } = selectedCells;
+      return '<table style="border-collapse: collapse; width: 100%;" border="1">' +
+        '<tbody>' +
+        '<tr>' +
+        `<td style="width: 50%;" ${cell1 ? 'data-mce-selected="1"' : ''}>a</td>` +
+        `<td style="width: 50%;" ${cell2 ? 'data-mce-selected="1"' : ''}>b</td>` +
+        '</tr>' +
+        '<tr>' +
+        `<td style="width: 50%;" ${cell3 ? 'data-mce-selected="1"' : ''}>c</td>` +
+        `<td style="width: 50%;" ${cell4 ? 'data-mce-selected="1"' : ''}>d</td>` +
+        '</tr>' +
+        '</tbody>' +
+        '</table>';
+    };
 
-    const mapStyles = (styles: Record<string, string>, str) => Obj.map(styles, (val, _key) => str.is(val));
-
-    const sAsserTableCellStructure = (styles: Record<string, string> = {}, { cell1 = false, cell2 = false, cell3 = false, cell4 = false } = {}) =>
-      TableTestUtils.sAssertTableStructure(editor, ApproxStructure.build((s, str, _arr) => s.element('table', {
+    const sAssertTableCellStructure = (styles: Record<string, string> = {}, selectedCells: SelectedCells = {}) => {
+      const { cell1, cell2, cell3, cell4 } = selectedCells;
+      const mapStyles = (styles: Record<string, string>, str) => Obj.map(styles, (val, _key) => str.is(val));
+      return TableTestUtils.sAssertTableStructure(editor, ApproxStructure.build((s, str, _arr) => s.element('table', {
         styles: {
           'width': str.is('100%'),
           'border-collapse': str.is('collapse')
@@ -90,11 +99,12 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableFormatsTest', (success, f
           })
         ]
       })));
+    };
 
     const sApplyFormat = (editor: Editor, formatName: string, vars: Record<string, any>) => Step.sync(() => editor.formatter.apply(formatName, vars));
     const sRemoveFormat = (editor: Editor, formatName: string, vars: Record<string, any>) => Step.sync(() => editor.formatter.remove(formatName, vars));
 
-    const stestTableCellFormat = (formatName: string, vars: Record<string, string>, styles: Record<string, string>) =>
+    const sTestTableCellFormat = (formatName: string, vars: Record<string, string>, styles: Record<string, string>) =>
       Log.stepsAsStep('TINY-6004', `Table Cell Format: ${formatName}`, [
         Log.stepsAsStep('TINY-6004', 'Apply format to empty editor', [
           tinyApis.sSetContent(''),
@@ -106,51 +116,51 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableFormatsTest', (success, f
           tinyApis.sSetContent(beforeTable()),
           tinyApis.sSetCursor([ 0, 0, 0, 0, 0 ], 0),
           sApplyFormat(editor, formatName, vars),
-          sAsserTableCellStructure(styles, { cell1: true })
+          sAssertTableCellStructure(styles, { cell1: true })
         ]),
         Log.stepsAsStep('TINY-6004', 'Apply format on single cell selection (cell)', [
           tinyApis.sSetContent(beforeTable({ cell1: true })),
           sApplyFormat(editor, formatName, vars),
-          sAsserTableCellStructure(styles, { cell1: true })
+          sAssertTableCellStructure(styles, { cell1: true })
         ]),
         Log.stepsAsStep('TINY-6004', 'Apply format on multi cell selection (row)', [
           tinyApis.sSetContent(beforeTable({ cell1: true, cell2: true })),
           sApplyFormat(editor, formatName, vars),
-          sAsserTableCellStructure(styles, { cell1: true, cell2: true })
+          sAssertTableCellStructure(styles, { cell1: true, cell2: true })
         ]),
         Log.stepsAsStep('TINY-6004', 'Apply format on multi cell selection (col)', [
           tinyApis.sSetContent(beforeTable({ cell1: true, cell3: true })),
           sApplyFormat(editor, formatName, vars),
-          sAsserTableCellStructure(styles, { cell1: true, cell3: true })
+          sAssertTableCellStructure(styles, { cell1: true, cell3: true })
         ]),
         Log.stepsAsStep('TINY-6004', 'Apply format on multi cell selection (table)', [
           tinyApis.sSetContent(beforeTable({ cell1: true, cell2: true, cell3: true, cell4: true })),
           sApplyFormat(editor, formatName, vars),
-          sAsserTableCellStructure(styles, { cell1: true, cell2: true, cell3: true, cell4: true })
+          sAssertTableCellStructure(styles, { cell1: true, cell2: true, cell3: true, cell4: true })
         ]),
         Log.stepsAsStep('TINY-6004', 'Apply format on single cell with cursor in it then remove format', [
           tinyApis.sSetContent(beforeTable()),
           tinyApis.sSetCursor([ 0, 0, 0, 0, 0 ], 0),
           sApplyFormat(editor, formatName, vars),
-          sAsserTableCellStructure(styles, { cell1: true }),
+          sAssertTableCellStructure(styles, { cell1: true }),
           sRemoveFormat(editor, formatName, vars),
-          sAsserTableCellStructure(),
+          sAssertTableCellStructure(),
         ]),
         Log.stepsAsStep('TINY-6004', 'Apply format on multi cell selection (table) then remove format', [
           tinyApis.sSetContent(beforeTable({ cell1: true, cell2: true, cell3: true, cell4: true })),
           sApplyFormat(editor, formatName, vars),
-          sAsserTableCellStructure(styles, { cell1: true, cell2: true, cell3: true, cell4: true }),
+          sAssertTableCellStructure(styles, { cell1: true, cell2: true, cell3: true, cell4: true }),
           sRemoveFormat(editor, formatName, vars),
-          sAsserTableCellStructure(),
+          sAssertTableCellStructure(),
         ]),
       ]);
 
     Pipeline.async({}, [
       tinyApis.sFocus(),
-      stestTableCellFormat('tablecellbackgroundcolor', { value: 'red'  }, { 'background-color': 'red' }),
-      stestTableCellFormat('tablecellbordercolor', { value: 'red'  }, { 'border-color': 'red' }),
-      stestTableCellFormat('tablecellborderstyle', { value: 'dashed'  }, { 'border-style': 'dashed' }),
-      stestTableCellFormat('tablecellborderwidth', { value: '5px'  }, { 'border-width': '5px' })
+      sTestTableCellFormat('tablecellbackgroundcolor', { value: 'red' }, { 'background-color': 'red' }),
+      sTestTableCellFormat('tablecellbordercolor', { value: 'red' }, { 'border-color': 'red' }),
+      sTestTableCellFormat('tablecellborderstyle', { value: 'dashed' }, { 'border-style': 'dashed' }),
+      sTestTableCellFormat('tablecellborderwidth', { value: '5px' }, { 'border-width': '5px' })
     ], onSuccess, onFailure);
   }, {
     plugins: 'table',
