@@ -121,9 +121,11 @@ const setupContextToolbars = function (editor: Editor) {
             });
             formApi.hide();
           } else {
-            editor.dom.setAttrib(anchor, 'href', value);
-            collapseSelectionToEnd(editor);
-            formApi.hide();
+            editor.undoManager.transact(() => {
+              editor.dom.setAttrib(anchor, 'href', value);
+              collapseSelectionToEnd(editor);
+              formApi.hide();
+            });
           }
         }
       },

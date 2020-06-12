@@ -100,6 +100,53 @@ UnitTest.asynctest('browser.tinymce.plugins.link.QuickLinkTest', (success, failu
         UiFinder.sNotExists(Body.body(), '.tox-pop__dialog')
       ]),
 
+      Log.stepsAsStep('TINY-5952', 'Checking that QuickLink link-creations end up on the undo stack', [
+        tinyApis.sSetContent('<p>Word</p>'),
+        // add link to word
+        tinyApis.sSetSelection([ 0, 0 ], ''.length, [ 0, 0 ], 'Word'.length),
+        sOpenQuickLink,
+        FocusTools.sSetActiveValue(doc, 'http://tiny.cloud/5'),
+        Keyboard.sKeydown(doc, Keys.enter(), { }),
+        // undo
+        tinyApis.sExecCommand('undo'),
+        tinyApis.sAssertContentPresence({
+          'a': 0,
+          'p:contains("Word")': 1
+        })
+      ]),
+
+      Log.stepsAsStep('TINY-5952', 'Checking that QuickLink link-edits end up on the undo stack', [
+        tinyApis.sSetContent('<p><a href="http://tiny.cloud/6">Word</a></p>'),
+        // change the existing link
+        tinyApis.sSetSelection([ 0, 0, 0 ], ''.length, [ 0, 0, 0 ], 'Word'.length),
+        sOpenQuickLink,
+        FocusTools.sSetActiveValue(doc, 'http://tiny.cloud/changed/6'),
+        Keyboard.sKeydown(doc, Keys.enter(), { }),
+        // undo (to old link)
+        tinyApis.sExecCommand('undo'),
+        tinyApis.sAssertContentPresence({
+          'a:contains("http://tiny.cloud/changed/6")': 0,
+          'a[href="http://tiny.cloud/6"]': 1,
+          'a:contains("Word")': 1
+        }),
+      ]),
+
+      Log.stepsAsStep('TINY-5952', 'Checking that QuickLink link-deletes end up on the undo stack', [
+        tinyApis.sSetContent('<p><a href="http://tiny.cloud/7">Word</a></p>'),
+        // remove the link
+        tinyApis.sSetSelection([ 0, 0, 0 ], ''.length, [ 0, 0, 0 ], 'Word'.length),
+        sOpenQuickLink,
+        Keyboard.sKeydown(doc, Keys.tab(), { }),
+        Keyboard.sKeydown(doc, Keys.right(), { }),
+        Keyboard.sKeydown(doc, Keys.enter(), { }),
+        // undo once (bring back link)
+        tinyApis.sExecCommand('undo'),
+        tinyApis.sAssertContentPresence({
+          'a[href="http://tiny.cloud/7"]': 1,
+          'a:contains("Word")': 1
+        }),
+      ]),
+
       TestLinkUi.sClearHistory
     ], onSuccess, onFailure);
   }, {

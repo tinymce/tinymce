@@ -12,6 +12,7 @@ Version 5.4.0 (TBD)
     Fixed `fullscreen` plugin now removes all classes when the editor is closed #TINY-4048
     Fixed handling of mixed-case icon names by having the silver theme downcase them before icon retrieval #TINY-3854
     Fixed leading and trailing spaces lost when using `editor.selection.getContent({ format: 'text' })` #TINY-5986
+    Fixed an issue where changing the URL with the quicklink toolbar caused unexpected undo behavior #TINY-5952
     Fixed an issue where removing formatting in a table cell would cause Internet Explorer 11 to scroll to the end of the table #TINY-6049
 Version 5.3.2 (2020-06-10)
     Fixed a regression introduced in 5.3.0, where `images_dataimg_filter` was no-longer called #TINY-6086
