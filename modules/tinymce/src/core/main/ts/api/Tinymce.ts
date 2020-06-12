@@ -227,6 +227,7 @@ const publicApi = {
     ScriptLoader,
     RangeUtils,
     Serializer: DomSerializer,
+    StyleSheetLoader,
     ControlSelection,
     BookmarkManager,
     Selection,
