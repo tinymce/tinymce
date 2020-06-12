@@ -1,4 +1,4 @@
-import { Assertions, Pipeline, Logger, NamedChain, Chain } from '@ephox/agar';
+import { Assertions, Pipeline, Log, NamedChain } from '@ephox/agar';
 import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Editor as McEditor, ApiChains } from '@ephox/mcagar';
@@ -14,19 +14,23 @@ UnitTest.asynctest('browser.tinymce.core.content.HTMLDataURLsTest', (success, fa
   });
 
   Pipeline.async({}, [
-    Logger.t('Editor should not allow data urls by default', Chain.asStep({}, [ NamedChain.asChain([
-      NamedChain.direct(NamedChain.inputName(), McEditor.cFromSettings(getSettings(false)), 'editor'),
-      NamedChain.read('editor', ApiChains.cSetContent(content)),
-      NamedChain.direct('editor', ApiChains.cGetContent, 'content'),
-      NamedChain.read('content', Assertions.cAssertEq('Href should be removed', '<p><a>Click me</a></p>')),
-      NamedChain.read('editor', McEditor.cRemove),
-    ]) ])),
-    Logger.t('Editor should allow data urls when allow_html_data_urls is true', Chain.asStep({}, [ NamedChain.asChain([
-      NamedChain.direct(NamedChain.inputName(), McEditor.cFromSettings(getSettings(true)), 'editor'),
-      NamedChain.read('editor', ApiChains.cSetContent(content)),
-      NamedChain.direct('editor', ApiChains.cGetContent, 'content'),
-      NamedChain.read('content', Assertions.cAssertEq('Href should not be removed', content)),
-      NamedChain.read('editor', McEditor.cRemove),
-    ]) ])),
+    Log.chainsAsStep('TINY-5951', 'Editor should not allow data urls by default', [
+      NamedChain.asChain([
+        NamedChain.direct(NamedChain.inputName(), McEditor.cFromSettings(getSettings(false)), 'editor'),
+        NamedChain.read('editor', ApiChains.cSetContent(content)),
+        NamedChain.direct('editor', ApiChains.cGetContent, 'content'),
+        NamedChain.read('content', Assertions.cAssertEq('Href should be removed', '<p><a>Click me</a></p>')),
+        NamedChain.read('editor', McEditor.cRemove)
+      ])
+    ]),
+    Log.chainsAsStep('TINY-5951', 'Editor should allow data urls when allow_html_data_urls is true', [
+      NamedChain.asChain([
+        NamedChain.direct(NamedChain.inputName(), McEditor.cFromSettings(getSettings(true)), 'editor'),
+        NamedChain.read('editor', ApiChains.cSetContent(content)),
+        NamedChain.direct('editor', ApiChains.cGetContent, 'content'),
+        NamedChain.read('content', Assertions.cAssertEq('Href should not be removed', content)),
+        NamedChain.read('editor', McEditor.cRemove)
+      ])
+    ])
   ], success, failure);
 });
