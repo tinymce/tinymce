@@ -15,6 +15,7 @@
       "tinymce.core.api.dom.DOMUtils",
       "tinymce.core.api.dom.EventUtils",
       "tinymce.core.api.dom.ScriptLoader",
+      "tinymce.core.api.dom.StyleSheetLoader",
       "tinymce.core.api.dom.Selection",
       "tinymce.core.api.dom.Serializer",
       "tinymce.core.api.dom.Sizzle",
