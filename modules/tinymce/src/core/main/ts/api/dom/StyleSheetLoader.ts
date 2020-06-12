@@ -6,7 +6,7 @@
  */
 
 import { navigator } from '@ephox/dom-globals';
-import { Arr, Fun, Future, Futures, Result } from '@ephox/katamari';
+import { Arr, Fun, Future, Futures, Result, Results } from '@ephox/katamari';
 import { Attr, Element } from '@ephox/sugar';
 import { ReferrerPolicy } from '../SettingsTypes';
 import Delay from '../util/Delay';
@@ -231,10 +231,6 @@ export function StyleSheetLoader(document, settings: Partial<StyleSheetLoaderSet
     });
   };
 
-  const unbox = function (result) {
-    return result.fold(Fun.identity, Fun.identity);
-  };
-
   const loadAll = function (urls: string[], success: Function, failure: Function) {
     Futures.par(Arr.map(urls, loadF)).get(function (result) {
       const parts = Arr.partition(result, function (r) {
@@ -242,9 +238,9 @@ export function StyleSheetLoader(document, settings: Partial<StyleSheetLoaderSet
       });
 
       if (parts.fail.length > 0) {
-        failure(parts.fail.map(unbox));
+        failure(parts.fail.map(Results.unite));
       } else {
-        success(parts.pass.map(unbox));
+        success(parts.pass.map(Results.unite));
       }
     });
   };
