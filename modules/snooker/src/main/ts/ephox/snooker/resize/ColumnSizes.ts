@@ -5,8 +5,8 @@ import * as CellUtils from '../util/CellUtils';
 import * as Util from '../util/Util';
 import * as Sizes from './Sizes';
 import { Warehouse } from '../model/Warehouse';
-import { TableSize } from './Types';
 import { BarPositions, RowInfo, ColInfo } from './BarPositions';
+import { TableSize } from './TableSize';
 
 const getRaw = function (cell: Element, property: string, getter: (e: Element) => number) {
   return Css.getRaw(cell, property).fold(function () {

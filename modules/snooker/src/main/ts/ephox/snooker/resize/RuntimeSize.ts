@@ -1,6 +1,6 @@
 import { HTMLElement } from '@ephox/dom-globals';
 import { PlatformDetection } from '@ephox/sand';
-import { Css, Element, Height, Width } from '@ephox/sugar';
+import { Css, Element, Height } from '@ephox/sugar';
 
 const needManualCalc = function () {
   const platform = PlatformDetection.detect();
@@ -28,15 +28,10 @@ const getCalculatedHeight = function (cell: Element) {
   return boxSizing === 'border-box' ? height : height - paddingTop - paddingBottom - borders;
 };
 
-const getWidth = function (cell: Element) {
-  return getProp(cell, 'width', Width.get(cell));
-};
-
 const getHeight = function (cell: Element) {
   return needManualCalc() ? getCalculatedHeight(cell) : getProp(cell, 'height', Height.get(cell));
 };
 
 export {
-  getWidth,
   getHeight
 };
