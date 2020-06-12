@@ -131,11 +131,9 @@ UnitTest.asynctest('browser.tinymce.core.EditorManagerTest', (success, failure) 
   });
 
   suite.test('overrideDefaults', function () {
-    let oldBaseURI, oldBaseUrl, oldSuffix;
-
-    oldBaseURI = EditorManager.baseURI;
-    oldBaseUrl = EditorManager.baseURL;
-    oldSuffix = EditorManager.suffix;
+    const oldBaseURI = EditorManager.baseURI;
+    const oldBaseUrl = EditorManager.baseURL;
+    const oldSuffix = EditorManager.suffix;
 
     EditorManager.overrideDefaults({
       test: 42,
@@ -186,9 +184,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorManagerTest', (success, failure) 
   });
 
   suite.test('Init inline editor on invalid targets', function () {
-    let invalidNames;
-
-    invalidNames = (
+    const invalidNames = (
       'area base basefont br col frame hr img input isindex link meta param embed source wbr track ' +
       'colgroup option tbody tfoot thead tr script noscript style textarea video audio iframe object menu'
     );

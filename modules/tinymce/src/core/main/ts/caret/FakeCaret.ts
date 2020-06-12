@@ -72,9 +72,9 @@ const getAbsoluteClientRect = (root: HTMLElement, element: HTMLElement, before: 
 };
 
 const trimInlineCaretContainers = (root: HTMLElement): void => {
-  let contentEditableFalseNodes, node, sibling, i, data;
+  let node, sibling, i, data;
 
-  contentEditableFalseNodes = SelectorFilter.descendants(SugarElement.fromDom(root), '*[contentEditable=false]');
+  const contentEditableFalseNodes = SelectorFilter.descendants(SugarElement.fromDom(root), '*[contentEditable=false]');
   for (i = 0; i < contentEditableFalseNodes.length; i++) {
     node = contentEditableFalseNodes[i].dom();
 

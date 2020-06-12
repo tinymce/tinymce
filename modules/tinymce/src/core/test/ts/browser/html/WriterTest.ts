@@ -1,7 +1,7 @@
-import { LegacyUnit } from '@ephox/mcagar';
 import { Pipeline } from '@ephox/agar';
-import Writer from 'tinymce/core/api/html/Writer';
 import { UnitTest } from '@ephox/bedrock-client';
+import { LegacyUnit } from '@ephox/mcagar';
+import Writer from 'tinymce/core/api/html/Writer';
 
 UnitTest.asynctest('browser.tinymce.core.html.WriterTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
@@ -107,9 +107,7 @@ UnitTest.asynctest('browser.tinymce.core.html.WriterTest', function (success, fa
   });
 
   suite.test('End', function () {
-    let writer;
-
-    writer = Writer();
+    const writer = Writer();
     writer.end('b');
     LegacyUnit.equal(writer.getContent(), '</b>');
   });

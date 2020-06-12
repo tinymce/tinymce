@@ -8,11 +8,11 @@
 import { document } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import DOMUtils from './api/dom/DOMUtils';
+import Editor from './api/Editor';
+import Delay from './api/util/Delay';
 import * as MousePosition from './dom/MousePosition';
 import * as NodeType from './dom/NodeType';
-import Delay from './api/util/Delay';
 import * as Predicate from './util/Predicate';
-import Editor from './api/Editor';
 
 /**
  * This module contains logic overriding the drag/drop logic of the editor.
@@ -229,14 +229,13 @@ const removeDragState = function (state) {
 
 const bindFakeDragEvents = function (editor: Editor) {
   const state = {};
-  let pageDom, dragStartHandler, dragHandler, dropHandler, dragEndHandler, rootDocument;
 
-  pageDom = DOMUtils.DOM;
-  rootDocument = document;
-  dragStartHandler = start(state, editor);
-  dragHandler = move(state, editor);
-  dropHandler = drop(state, editor);
-  dragEndHandler = stop(state, editor);
+  const pageDom = DOMUtils.DOM;
+  const rootDocument = document;
+  const dragStartHandler = start(state, editor);
+  const dragHandler = move(state, editor);
+  const dropHandler = drop(state, editor);
+  const dragEndHandler = stop(state, editor);
 
   editor.on('mousedown', dragStartHandler);
   editor.on('mousemove', dragHandler);

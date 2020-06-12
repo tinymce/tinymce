@@ -5,8 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import DomQuery from 'tinymce/core/api/dom/DomQuery';
 import { document, window } from '@ephox/dom-globals';
+import DomQuery from 'tinymce/core/api/dom/DomQuery';
 
 /**
  * Drag/drop helper class.
@@ -27,20 +27,18 @@ import { document, window } from '@ephox/dom-globals';
  */
 
 function getDocumentSize(doc) {
-  let documentElement, body, scrollWidth, clientWidth;
-  let offsetWidth, scrollHeight, clientHeight, offsetHeight;
   const max = Math.max;
 
-  documentElement = doc.documentElement;
-  body = doc.body;
+  const documentElement = doc.documentElement;
+  const body = doc.body;
 
-  scrollWidth = max(documentElement.scrollWidth, body.scrollWidth);
-  clientWidth = max(documentElement.clientWidth, body.clientWidth);
-  offsetWidth = max(documentElement.offsetWidth, body.offsetWidth);
+  const scrollWidth = max(documentElement.scrollWidth, body.scrollWidth);
+  const clientWidth = max(documentElement.clientWidth, body.clientWidth);
+  const offsetWidth = max(documentElement.offsetWidth, body.offsetWidth);
 
-  scrollHeight = max(documentElement.scrollHeight, body.scrollHeight);
-  clientHeight = max(documentElement.clientHeight, body.clientHeight);
-  offsetHeight = max(documentElement.offsetHeight, body.offsetHeight);
+  const scrollHeight = max(documentElement.scrollHeight, body.scrollHeight);
+  const clientHeight = max(documentElement.clientHeight, body.clientHeight);
+  const offsetHeight = max(documentElement.offsetHeight, body.offsetHeight);
 
   return {
     width: scrollWidth < offsetWidth ? clientWidth : scrollWidth,
@@ -63,21 +61,21 @@ export default function (id, settings) {
   let $eventOverlay;
   const doc = settings.document || document;
   let downButton;
-  let start, stop, drag, startX, startY;
+  let startX, startY;
 
   settings = settings || {};
 
   const handleElement = doc.getElementById(settings.handle || id);
 
-  start = function (e) {
+  const start = function (e) {
     const docSize = getDocumentSize(doc);
-    let handleElm, cursor;
+    let cursor;
 
     updateWithTouchData(e);
 
     e.preventDefault();
     downButton = e.button;
-    handleElm = handleElement;
+    const handleElm = handleElement;
     startX = e.screenX;
     startY = e.screenY;
 
@@ -103,7 +101,7 @@ export default function (id, settings) {
     settings.start(e);
   };
 
-  drag = function (e) {
+  const drag = function (e) {
     updateWithTouchData(e);
 
     if (e.button !== downButton) {
@@ -117,7 +115,7 @@ export default function (id, settings) {
     settings.drag(e);
   };
 
-  stop = function (e) {
+  const stop = function (e) {
     updateWithTouchData(e);
 
     DomQuery(doc).off('mousemove touchmove', drag).off('mouseup touchend', stop);

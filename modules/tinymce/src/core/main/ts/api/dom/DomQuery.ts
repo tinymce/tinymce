@@ -173,13 +173,12 @@ const isWindow = function (obj): obj is Window {
 };
 
 const createFragment = function (html, fragDoc) {
-  let frag, node, container;
-
   fragDoc = fragDoc || doc;
-  container = fragDoc.createElement('div');
-  frag = fragDoc.createDocumentFragment();
+  const container = fragDoc.createElement('div');
+  const frag = fragDoc.createDocumentFragment();
   container.innerHTML = html;
 
+  let node;
   while ((node = container.firstChild)) {
     frag.appendChild(node);
   }
@@ -981,11 +980,9 @@ DomQueryConstructor.fn = DomQueryConstructor.prototype = {
       });
     } else {
       self.each(function (index, node) {
-        let existingClassName, classState;
-
-        classState = hasClass(node, className);
+        const classState = hasClass(node, className);
         if (classState !== state) {
-          existingClassName = node.className;
+          const existingClassName = node.className;
 
           if (classState) {
             node.className = trim((' ' + existingClassName + ' ').replace(' ' + className + ' ', ' '));

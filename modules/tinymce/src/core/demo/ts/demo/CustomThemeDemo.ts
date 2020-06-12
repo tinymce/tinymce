@@ -14,9 +14,8 @@ export default function () {
     selector: 'textarea',
     theme(editor, target) {
       const dom = tinymce.DOM;
-      let editorContainer;
 
-      editorContainer = dom.insertAfter(dom.create('div', { style: 'border: 1px solid gray' },
+      const editorContainer = dom.insertAfter(dom.create('div', { style: 'border: 1px solid gray' },
         '<div>' +
         '<button data-mce-command="bold">B</button>' +
         '<button data-mce-command="italic">I</button>' +

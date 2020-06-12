@@ -5,16 +5,16 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Range, document, Attr, Selection as DomSelection } from '@ephox/dom-globals';
+import { Attr, document, Range, Selection as DomSelection } from '@ephox/dom-globals';
+import Selection from '../api/dom/Selection';
+import Editor from '../api/Editor';
 import Env from '../api/Env';
-import * as CaretContainer from '../caret/CaretContainer';
-import * as CaretRangeFromPoint from '../selection/CaretRangeFromPoint';
+import * as Settings from '../api/Settings';
 import Delay from '../api/util/Delay';
 import Tools from '../api/util/Tools';
 import VK from '../api/util/VK';
-import Selection from '../api/dom/Selection';
-import * as Settings from '../api/Settings';
-import Editor from '../api/Editor';
+import * as CaretContainer from '../caret/CaretContainer';
+import * as CaretRangeFromPoint from '../selection/CaretRangeFromPoint';
 
 /**
  * This file includes fixes for various browser quirks it's made to make it easy to add/remove browser specific fixes.
@@ -418,16 +418,16 @@ const Quirks = function (editor: Editor): Quirks {
   const removeBlockQuoteOnBackSpace = function () {
     // Add block quote deletion handler
     editor.on('keydown', function (e) {
-      let rng, container, offset, root, parent;
+      let rng, parent;
 
       if (isDefaultPrevented(e) || e.keyCode !== VK.BACKSPACE) {
         return;
       }
 
       rng = selection.getRng();
-      container = rng.startContainer;
-      offset = rng.startOffset;
-      root = dom.getRoot();
+      const container = rng.startContainer;
+      const offset = rng.startOffset;
+      const root = dom.getRoot();
       parent = container;
 
       if (!rng.collapsed || offset !== 0) {
@@ -763,14 +763,12 @@ const Quirks = function (editor: Editor): Quirks {
   };
 
   const isHidden = function (): boolean {
-    let sel;
-
     if (!isGecko || editor.removed) {
       return false;
     }
 
     // Weird, wheres that cursor selection?
-    sel = editor.selection.getSel();
+    const sel = editor.selection.getSel();
     return (!sel || !sel.rangeCount || sel.rangeCount === 0);
   };
 

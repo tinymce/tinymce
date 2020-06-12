@@ -6,9 +6,9 @@
  */
 
 import { KeyboardEvent } from '@ephox/dom-globals';
-import Tools from './util/Tools';
-import Env from './Env';
 import Editor from './Editor';
+import Env from './Env';
+import Tools from './util/Tools';
 
 /**
  * Contains logic for handling keyboard shortcuts.
@@ -105,11 +105,10 @@ class Shortcuts {
    */
   public add(pattern: string, desc: string, cmdFunc: string | any[] | Function, scope?: {}): boolean {
     const self = this;
-    let cmd;
 
-    cmd = cmdFunc;
+    const cmd = cmdFunc;
 
-    if (typeof cmdFunc === 'string') {
+    if (typeof cmd === 'string') {
       cmdFunc = function () {
         self.editor.execCommand(cmd, false, null);
       };
@@ -146,7 +145,7 @@ class Shortcuts {
   }
 
   private parseShortcut(pattern: string): Shortcut {
-    let id, key;
+    let key;
     const shortcut: any = {};
 
     // Parse modifiers and keys ctrl+alt+b for example
@@ -165,7 +164,7 @@ class Shortcuts {
     });
 
     // Generate unique id for modifier combination and set default state for unused modifiers
-    id = [ shortcut.keyCode ];
+    const id = [ shortcut.keyCode ];
     for (key in modifierNames) {
       if (shortcut[key]) {
         id.push(key);
@@ -200,9 +199,7 @@ class Shortcuts {
   }
 
   private createShortcut(pattern: string, desc?: string, cmdFunc?, scope?) {
-    let shortcuts;
-
-    shortcuts = Tools.map(explode(pattern, '>'), this.parseShortcut);
+    const shortcuts = Tools.map(explode(pattern, '>'), this.parseShortcut);
     shortcuts[shortcuts.length - 1] = Tools.extend(shortcuts[shortcuts.length - 1], {
       func: cmdFunc,
       scope: scope || this.editor

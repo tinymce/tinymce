@@ -5,11 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element, document, HTMLElement, Range } from '@ephox/dom-globals';
+import { document, Element, HTMLElement, Range } from '@ephox/dom-globals';
 import { Cell } from '@ephox/katamari';
-import Tools from 'tinymce/core/api/util/Tools';
-import Env from 'tinymce/core/api/Env';
 import Editor from 'tinymce/core/api/Editor';
+import Env from 'tinymce/core/api/Env';
+import Tools from 'tinymce/core/api/util/Tools';
 
 // We can't attach the pastebin to a H1 inline element on IE since it won't allow H1 or other
 // non valid parents to be pasted into the pastebin so we need to attach it to the body
@@ -34,12 +34,11 @@ const delegatePasteEvents = (editor: Editor, pasteBinElm: Element, pasteBinDefau
  */
 const create = (editor: Editor, lastRngCell, pasteBinDefaultContent: string) => {
   const dom = editor.dom, body = editor.getBody();
-  let pasteBinElm;
 
   lastRngCell.set(editor.selection.getRng());
 
   // Create a pastebin
-  pasteBinElm = editor.dom.add(getPasteBinParent(editor), 'div', {
+  const pasteBinElm = editor.dom.add(getPasteBinParent(editor), 'div', {
     'id': 'mcepastebin',
     'class': 'mce-pastebin',
     'contentEditable': true,
@@ -95,8 +94,6 @@ const getEl = (editor: Editor) => editor.dom.get('mcepastebin');
  * @return {String} Get the contents of the paste bin.
  */
 const getHtml = (editor: Editor): string => {
-  let pasteBinElm, pasteBinClones, i, dirtyWrappers, cleanWrapper;
-
   // Since WebKit/Chrome might clone the paste bin when pasting
   // for example: <img style="float: right"> we need to check if any of them contains some useful html.
   // TODO: Man o man is this ugly. WebKit is the new IE! Remove this if they ever fix it!
@@ -107,10 +104,10 @@ const getHtml = (editor: Editor): string => {
   };
 
   // find only top level elements (there might be more nested inside them as well, see TINY-1162)
-  pasteBinClones = Tools.grep(getPasteBinParent(editor).childNodes, function (elm: Element) {
+  const pasteBinClones = Tools.grep(getPasteBinParent(editor).childNodes, function (elm: Element) {
     return elm.id === 'mcepastebin';
   });
-  pasteBinElm = pasteBinClones.shift();
+  const pasteBinElm = pasteBinClones.shift();
 
   // if clones were found, move their content into the first bin
   Tools.each(pasteBinClones, function (pasteBinClone) {
@@ -121,9 +118,9 @@ const getHtml = (editor: Editor): string => {
   // paste bin (with styles and attributes) and uses it as a default  wrapper for
   // the chunks of the content, here we cycle over the whole paste bin and replace
   // those wrappers with a basic div
-  dirtyWrappers = editor.dom.select('div[id=mcepastebin]', pasteBinElm);
-  for (i = dirtyWrappers.length - 1; i >= 0; i--) {
-    cleanWrapper = editor.dom.create('div');
+  const dirtyWrappers = editor.dom.select('div[id=mcepastebin]', pasteBinElm);
+  for (let i = dirtyWrappers.length - 1; i >= 0; i--) {
+    const cleanWrapper = editor.dom.create('div');
     pasteBinElm.insertBefore(cleanWrapper, dirtyWrappers[i]);
     copyAndRemove(cleanWrapper, dirtyWrappers[i]);
   }

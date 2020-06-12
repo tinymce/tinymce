@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Promise from '../api/util/Promise';
-import { Blob, XMLHttpRequest, FileReader, atob } from '@ephox/dom-globals';
+import { atob, Blob, FileReader, XMLHttpRequest } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
+import Promise from '../api/util/Promise';
 
 /**
  * Converts blob/uris back and forth.
@@ -50,11 +50,11 @@ const blobUriToBlob = function (url: string): Promise<Blob> {
 };
 
 const parseDataUri = function (uri: string) {
-  let type, matches;
+  let type;
 
   const uriParts = decodeURIComponent(uri).split(',');
 
-  matches = /data:([^;]+)/.exec(uriParts[0]);
+  const matches = /data:([^;]+)/.exec(uriParts[0]);
   if (matches) {
     type = matches[1];
   }

@@ -5,15 +5,15 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import * as ArrUtils from '../util/ArrUtils';
+import { Node } from '@ephox/dom-globals';
+import { Fun } from '@ephox/katamari';
 import * as Dimensions from '../dom/Dimensions';
+import * as ClientRect from '../geom/ClientRect';
+import * as ArrUtils from '../util/ArrUtils';
 import * as CaretCandidate from './CaretCandidate';
+import CaretPosition from './CaretPosition';
 import * as CaretUtils from './CaretUtils';
 import { CaretWalker } from './CaretWalker';
-import CaretPosition from './CaretPosition';
-import * as ClientRect from '../geom/ClientRect';
-import { Fun } from '@ephox/katamari';
-import { Node } from '@ephox/dom-globals';
 
 export interface ClientRectLine extends ClientRect.ClientRect {
   line: number;
@@ -36,9 +36,8 @@ const findUntil = (direction: VDirection, root: Node, predicateFn: (node: Node) 
 };
 
 const walkUntil = (direction: VDirection, isAboveFn: PosPredicate, isBeflowFn: PosPredicate, root: Node, predicateFn: RectPredicate, caretPosition: CaretPosition): ClientRectLine[] => {
-  let line = 0, node;
+  let line = 0;
   const result = [];
-  let targetClientRect;
 
   const add = function (node: Node) {
     let i, clientRect, clientRects;
@@ -68,12 +67,12 @@ const walkUntil = (direction: VDirection, isAboveFn: PosPredicate, isBeflowFn: P
     }
   };
 
-  targetClientRect = ArrUtils.last(caretPosition.getClientRects());
+  const targetClientRect = ArrUtils.last(caretPosition.getClientRects());
   if (!targetClientRect) {
     return result;
   }
 
-  node = caretPosition.getNode();
+  const node = caretPosition.getNode();
   add(node);
   findUntil(direction, root, add, node);
 
@@ -90,7 +89,7 @@ const positionsUntil = (direction: VDirection, root: Node, predicateFn: RectPred
   let walkFn, isBelowFn, isAboveFn,
     caretPosition;
   const result = [];
-  let line = 0, clientRect, targetClientRect;
+  let line = 0, clientRect;
 
   const getClientRect = function (caretPosition) {
     if (direction === 1) {
@@ -112,7 +111,7 @@ const positionsUntil = (direction: VDirection, root: Node, predicateFn: RectPred
     caretPosition = CaretPosition.before(node);
   }
 
-  targetClientRect = getClientRect(caretPosition);
+  const targetClientRect = getClientRect(caretPosition);
 
   do {
     if (!caretPosition.isVisible()) {

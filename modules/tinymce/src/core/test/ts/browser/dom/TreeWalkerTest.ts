@@ -1,8 +1,8 @@
 import { Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { LegacyUnit } from '@ephox/mcagar';
 import TreeWalker from 'tinymce/core/api/dom/TreeWalker';
 import ViewBlock from '../../module/test/ViewBlock';
-import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.core.dom.TreeWalkerTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
@@ -62,9 +62,8 @@ UnitTest.asynctest('browser.tinymce.core.dom.TreeWalkerTest', function (success,
 
   suite.test('next', function () {
     const walker = new TreeWalker(nodes[0], viewBlock.get());
-    let actualNodes;
 
-    actualNodes = [ walker.current() ];
+    const actualNodes = [ walker.current() ];
     while ((walker.next())) {
       actualNodes.push(walker.current());
     }

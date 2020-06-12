@@ -11,14 +11,14 @@ import * as Events from '../api/Events';
 import Tools from '../api/util/Tools';
 
 const preProcess = function (editor: Editor, node: Element, args) {
-  let impl, doc, oldDoc;
+  let doc, oldDoc;
   const dom = editor.dom;
 
   node = node.cloneNode(true) as Element;
 
   // Nodes needs to be attached to something in WebKit/Opera
   // This fix will make DOM ranges and make Sizzle happy!
-  impl = document.implementation;
+  const impl = document.implementation;
   if (impl.createHTMLDocument) {
     // Create an empty HTML document
     doc = impl.createHTMLDocument('');

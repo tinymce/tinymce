@@ -34,9 +34,8 @@ export interface StyleSheetLoaderSettings {
 export function StyleSheetLoader(document, settings: Partial<StyleSheetLoaderSettings> = {}): StyleSheetLoader {
   let idCount = 0;
   const loadedStates = {};
-  let maxLoadTime;
 
-  maxLoadTime = settings.maxLoadTime || 5000;
+  const maxLoadTime = settings.maxLoadTime || 5000;
 
   const _setReferrerPolicy = (referrerPolicy: ReferrerPolicy) => {
     settings.referrerPolicy = referrerPolicy;
@@ -55,7 +54,7 @@ export function StyleSheetLoader(document, settings: Partial<StyleSheetLoaderSet
    * @param {Function} errorCallback Callback to be executed when failed loading.
    */
   const load = function (url: string, loadedCallback: Function, errorCallback?: Function) {
-    let link, style, startTime, state;
+    let link, style, state;
 
     const resolve = (status: number) => {
       state.status = status;
@@ -187,7 +186,7 @@ export function StyleSheetLoader(document, settings: Partial<StyleSheetLoaderSet
     link.id = 'u' + (idCount++);
     link.async = false;
     link.defer = false;
-    startTime = new Date().getTime();
+    const startTime = new Date().getTime();
 
     if (settings.contentCssCors) {
       link.crossOrigin = 'anonymous';

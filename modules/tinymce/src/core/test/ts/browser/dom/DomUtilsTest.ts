@@ -2,8 +2,8 @@ import { Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document, Element, HTMLIFrameElement, HTMLLinkElement, window } from '@ephox/dom-globals';
 import { LegacyUnit } from '@ephox/mcagar';
-import Env from 'tinymce/core/api/Env';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+import Env from 'tinymce/core/api/Env';
 import Schema from 'tinymce/core/api/html/Schema';
 import Tools from 'tinymce/core/api/util/Tools';
 import * as HtmlUtils from '../../module/test/HtmlUtils';
@@ -13,11 +13,9 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function (success, f
   const suite = LegacyUnit.createSuite();
 
   suite.test('parseStyle', function () {
-    let dom;
-
     DOM.add(document.body, 'div', { id : 'test' });
 
-    dom = DOMUtils(document, { hex_colors : true, keep_values : true, url_converter(u) {
+    const dom = DOMUtils(document, { hex_colors : true, keep_values : true, url_converter(u) {
       return 'X' + u + 'Y';
     } });
 
@@ -170,9 +168,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function (success, f
   });
 
   suite.test('create', function () {
-    let e;
-
-    e = DOM.create('span', { class : 'abc 123' }, 'content <b>abc</b>');
+    const e = DOM.create('span', { class : 'abc 123' }, 'content <b>abc</b>');
 
     LegacyUnit.equal(e.nodeName, 'SPAN');
     LegacyUnit.equal(e.className, 'abc 123');
@@ -247,8 +243,6 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function (success, f
   });
 
   suite.test('setGetAttrib', function () {
-    let dom;
-
     DOM.add(document.body, 'div', { id : 'test' });
 
     DOM.setAttrib('test', 'class', 'test 123');
@@ -267,7 +261,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function (success, f
     LegacyUnit.equal(DOM.getAttrib('test', 'class'), '123');
     LegacyUnit.equal(DOM.getAttrib('test', 'title'), 'abc');
 
-    dom = DOMUtils(document, { keep_values : true, url_converter(u, n) {
+    const dom = DOMUtils(document, { keep_values : true, url_converter(u, n) {
       return '&<>"' + u + '&<>"' + n;
     } });
 
@@ -405,9 +399,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function (success, f
   });
 
   suite.test('getViewPort', function () {
-    let wp;
-
-    wp = DOM.getViewPort();
+    const wp = DOM.getViewPort();
     LegacyUnit.equal(wp.x, 0);
     LegacyUnit.equal(wp.y, 0);
     LegacyUnit.equal(wp.w > 0, true);

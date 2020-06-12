@@ -59,9 +59,7 @@ const createIframeElement = function (id: string, title: TranslatedString, heigh
 };
 
 const getIframeHtml = function (editor: Editor) {
-  let bodyId, bodyClass, iframeHTML;
-
-  iframeHTML = Settings.getDocType(editor) + '<html><head>';
+  let iframeHTML = Settings.getDocType(editor) + '<html><head>';
 
   // We only need to override paths if we have to
   // IE has a bug where it remove site absolute urls to relative ones if this is specified
@@ -71,8 +69,8 @@ const getIframeHtml = function (editor: Editor) {
 
   iframeHTML += '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />';
 
-  bodyId = Settings.getBodyId(editor);
-  bodyClass = Settings.getBodyClass(editor);
+  const bodyId = Settings.getBodyId(editor);
+  const bodyClass = Settings.getBodyClass(editor);
 
   if (Settings.getContentSecurityPolicy(editor)) {
     iframeHTML += '<meta http-equiv="Content-Security-Policy" content="' + Settings.getContentSecurityPolicy(editor) + '" />';

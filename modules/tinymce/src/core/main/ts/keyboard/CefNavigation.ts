@@ -5,24 +5,24 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Range, Element } from '@ephox/dom-globals';
-import { Fun, Arr } from '@ephox/katamari';
+import { Element, Range } from '@ephox/dom-globals';
+import { Arr, Fun } from '@ephox/katamari';
+import Editor from '../api/Editor';
 import Env from '../api/Env';
+import * as Settings from '../api/Settings';
 import * as CaretContainer from '../caret/CaretContainer';
 import CaretPosition from '../caret/CaretPosition';
+import { isAfterContentEditableFalse, isAfterTable, isBeforeContentEditableFalse, isBeforeTable } from '../caret/CaretPositionPredicates';
 import * as CaretUtils from '../caret/CaretUtils';
-import { HDirection, CaretWalker } from '../caret/CaretWalker';
+import { CaretWalker, HDirection } from '../caret/CaretWalker';
+import { getPositionsUntilNextLine, getPositionsUntilPreviousLine } from '../caret/LineReader';
 import * as LineUtils from '../caret/LineUtils';
 import * as LineWalker from '../caret/LineWalker';
 import * as NodeType from '../dom/NodeType';
-import * as CefUtils from './CefUtils';
+import * as InlineUtils from '../keyboard/InlineUtils';
 import * as RangeNodes from '../selection/RangeNodes';
 import * as ArrUtils from '../util/ArrUtils';
-import * as InlineUtils from '../keyboard/InlineUtils';
-import * as Settings from '../api/Settings';
-import { isBeforeContentEditableFalse, isAfterContentEditableFalse, isBeforeTable, isAfterTable } from '../caret/CaretPositionPredicates';
-import Editor from '../api/Editor';
-import { getPositionsUntilNextLine, getPositionsUntilPreviousLine } from '../caret/LineReader';
+import * as CefUtils from './CefUtils';
 
 const isContentEditableFalse = NodeType.isContentEditableFalse;
 const getSelectedNode = RangeNodes.getSelectedNode;
@@ -76,15 +76,13 @@ const moveToCeFalseHorizontally = (direction: HDirection, editor: Editor, getNex
 type WalkerFunction = (root: Element, pred: (clientRect: LineWalker.ClientRectLine) => boolean, pos: CaretPosition) => LineWalker.ClientRectLine[];
 
 const moveToCeFalseVertically = (direction: LineWalker.VDirection, editor: Editor, walkerFn: WalkerFunction, range: Range) => {
-  let caretPosition, linePositions, nextLinePositions;
-  let closestNextLineRect, caretClientRect, clientX;
-  let dist1, dist2, contentEditableFalseNode;
+  let closestNextLineRect, dist1, dist2, contentEditableFalseNode;
 
   contentEditableFalseNode = getSelectedNode(range);
-  caretPosition = CaretUtils.getNormalizedRangeEndPoint(direction, editor.getBody(), range);
-  linePositions = walkerFn(editor.getBody(), LineWalker.isAboveLine(1), caretPosition);
-  nextLinePositions = Arr.filter(linePositions, LineWalker.isLine(1));
-  caretClientRect = ArrUtils.last(caretPosition.getClientRects());
+  const caretPosition = CaretUtils.getNormalizedRangeEndPoint(direction, editor.getBody(), range);
+  const linePositions = walkerFn(editor.getBody(), LineWalker.isAboveLine(1), caretPosition);
+  const nextLinePositions = Arr.filter(linePositions, LineWalker.isLine(1));
+  const caretClientRect = ArrUtils.last(caretPosition.getClientRects());
 
   if (isBeforeContentEditableFalse(caretPosition) || isBeforeTable(caretPosition)) {
     contentEditableFalseNode = caretPosition.getNode();
@@ -98,7 +96,7 @@ const moveToCeFalseVertically = (direction: LineWalker.VDirection, editor: Edito
     return null;
   }
 
-  clientX = caretClientRect.left;
+  const clientX = caretClientRect.left;
 
   closestNextLineRect = LineUtils.findClosestClientRect(nextLinePositions, clientX);
   if (closestNextLineRect) {

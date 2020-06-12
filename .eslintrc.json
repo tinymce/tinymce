@@ -26,7 +26,6 @@
     "no-underscore-dangle": "off",
     "no-unused-expressions": "off",
     "one-var": "off",
-    "prefer-const": "off",
     "prefer-rest-params": "off",
     "prefer-spread": "off",
     "max-len": ["warn", 260]

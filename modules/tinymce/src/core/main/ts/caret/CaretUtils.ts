@@ -6,12 +6,12 @@
  */
 
 import { Node, Range } from '@ephox/dom-globals';
-import { Option, Fun } from '@ephox/katamari';
+import { Fun, Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 import TreeWalker from '../api/dom/TreeWalker';
 import * as NodeType from '../dom/NodeType';
-import * as CaretContainer from './CaretContainer';
 import * as CaretCandidate from './CaretCandidate';
+import * as CaretContainer from './CaretContainer';
 import { CaretPosition } from './CaretPosition';
 import { HDirection } from './CaretWalker';
 import { isFakeCaretTarget } from './FakeCaret';
@@ -101,14 +101,12 @@ const isInSameBlock = (caretPosition1: CaretPosition, caretPosition2: CaretPosit
 const isInSameEditingHost = (caretPosition1: CaretPosition, caretPosition2: CaretPosition, rootNode?: Node): boolean => getEditingHost(caretPosition1.container(), rootNode) === getEditingHost(caretPosition2.container(), rootNode);
 
 const getChildNodeAtRelativeOffset = (relativeOffset: number, caretPosition: CaretPosition): Node => {
-  let container, offset;
-
   if (!caretPosition) {
     return null;
   }
 
-  container = caretPosition.container();
-  offset = caretPosition.offset();
+  const container = caretPosition.container();
+  const offset = caretPosition.offset();
 
   if (!isElement(container)) {
     return null;
@@ -171,12 +169,12 @@ const before = Fun.curry(beforeAfter, true) as (node: Node) => Range;
 const after = Fun.curry(beforeAfter, false) as (node: Node) => Range;
 
 const normalizeRange = (direction: number, root: Node, range: Range): Range => {
-  let node, container, offset, location;
+  let node, container, location;
   const leanLeft = Fun.curry(lean, true, root);
   const leanRight = Fun.curry(lean, false, root);
 
   container = range.startContainer;
-  offset = range.startOffset;
+  const offset = range.startOffset;
 
   if (CaretContainer.isCaretContainerBlock(container)) {
     if (!isElement(container)) {

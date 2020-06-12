@@ -371,13 +371,11 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', (success, failure) =
   });
 
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
-    let canvas, context;
-
-    canvas = document.createElement('canvas');
+    const canvas = document.createElement('canvas');
     canvas.width = 320;
     canvas.height = 200;
 
-    context = canvas.getContext('2d');
+    const context = canvas.getContext('2d');
     context.fillStyle = '#ff0000';
     context.fillRect(0, 0, 160, 100);
     context.fillStyle = '#00ff00';

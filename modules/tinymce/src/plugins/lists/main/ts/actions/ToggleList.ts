@@ -7,6 +7,7 @@
 
 import { HTMLElement } from '@ephox/dom-globals';
 import BookmarkManager from 'tinymce/core/api/dom/BookmarkManager';
+import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import { fireListEvent } from '../api/Events';
@@ -45,10 +46,8 @@ const removeStyles = (dom, element: HTMLElement, styles: string[]) => {
 };
 
 const getEndPointNode = function (editor, rng, start, root) {
-  let container, offset;
-
-  container = rng[start ? 'startContainer' : 'endContainer'];
-  offset = rng[start ? 'startOffset' : 'endOffset'];
+  let container = rng[start ? 'startContainer' : 'endContainer'];
+  const offset = rng[start ? 'startOffset' : 'endOffset'];
 
   // Resolve node index
   if (container.nodeType === 1) {
@@ -74,7 +73,7 @@ const getEndPointNode = function (editor, rng, start, root) {
   return container;
 };
 
-const getSelectedTextBlocks = function (editor, rng, root) {
+const getSelectedTextBlocks = function (editor: Editor, rng, root) {
   const textBlocks = [], dom = editor.dom;
 
   const startNode = getEndPointNode(editor, rng, true, root);
@@ -126,7 +125,7 @@ const getSelectedTextBlocks = function (editor, rng, root) {
   return textBlocks;
 };
 
-const hasCompatibleStyle = function (dom, sib, detail) {
+const hasCompatibleStyle = function (dom: DOMUtils, sib, detail) {
   const sibStyle = dom.getStyle(sib, 'list-style-type');
   let detailStyle = detail ? detail['list-style-type'] : '';
 
@@ -135,9 +134,8 @@ const hasCompatibleStyle = function (dom, sib, detail) {
   return sibStyle === detailStyle;
 };
 
-const applyList = function (editor, listName: string, detail = {}) {
-  const rng = editor.selection.getRng(true);
-  let bookmark;
+const applyList = function (editor: Editor, listName: string, detail = {}) {
+  const rng = editor.selection.getRng();
   let listItemName = 'LI';
   const root = Selection.getClosestListRootElm(editor, editor.selection.getStart(true));
   const dom = editor.dom;
@@ -152,12 +150,12 @@ const applyList = function (editor, listName: string, detail = {}) {
     listItemName = 'DT';
   }
 
-  bookmark = Bookmark.createBookmark(rng);
+  const bookmark = Bookmark.createBookmark(rng);
 
   Tools.each(getSelectedTextBlocks(editor, rng, root), function (block) {
-    let listBlock, sibling;
+    let listBlock;
 
-    sibling = block.previousSibling;
+    const sibling = block.previousSibling;
     if (sibling && NodeType.isListNode(sibling) && sibling.nodeName === listName && hasCompatibleStyle(dom, sibling, detail)) {
       listBlock = sibling;
       block = dom.rename(block, listItemName);

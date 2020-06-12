@@ -1,6 +1,6 @@
-import { Fun, Arr, Unicode } from '@ephox/katamari';
-import * as NodeType from 'tinymce/core/dom/NodeType';
 import { Range } from '@ephox/dom-globals';
+import { Arr, Fun, Unicode } from '@ephox/katamari';
+import * as NodeType from 'tinymce/core/dom/NodeType';
 
 const charCodeToKeyCode = function (charCode) {
   const lookup = {
@@ -27,7 +27,7 @@ const needsNbsp = (rng: Range, chr: string) => {
 };
 
 const type = function (editor, chr) {
-  let keyCode, charCode, evt, startElm, rng, offset;
+  let keyCode, charCode, evt, rng, offset;
 
   const fakeEvent = function (target, type, evt) {
     editor.dom.fire(target, type, evt);
@@ -63,7 +63,7 @@ const type = function (editor, chr) {
 
   evt = evt || { keyCode, charCode };
 
-  startElm = editor.selection.getStart();
+  const startElm = editor.selection.getStart();
   fakeEvent(startElm, 'keydown', evt);
   fakeEvent(startElm, 'keypress', evt);
 

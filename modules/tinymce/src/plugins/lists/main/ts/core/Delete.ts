@@ -70,9 +70,9 @@ const unwrapSingleBlockChild = function (dom: DOMUtils, elm: Element) {
 };
 
 const moveChildren = function (dom: DOMUtils, fromElm: Element, toElm: Element) {
-  let node, targetElm;
+  let node;
 
-  targetElm = hasOnlyOneBlockChild(dom, toElm) ? toElm.firstChild : toElm;
+  const targetElm = hasOnlyOneBlockChild(dom, toElm) ? toElm.firstChild : toElm;
   unwrapSingleBlockChild(dom, fromElm);
 
   if (!NodeType.isEmpty(dom, fromElm, true)) {
@@ -83,7 +83,7 @@ const moveChildren = function (dom: DOMUtils, fromElm: Element, toElm: Element) 
 };
 
 const mergeLiElements = function (dom: DOMUtils, fromElm: Element, toElm: Element) {
-  let node, listNode;
+  let listNode;
   const ul = fromElm.parentNode;
 
   if (!NodeType.isChildOfBody(dom, fromElm) || !NodeType.isChildOfBody(dom, toElm)) {
@@ -100,7 +100,7 @@ const mergeLiElements = function (dom: DOMUtils, fromElm: Element, toElm: Elemen
     }
   }
 
-  node = toElm.lastChild;
+  const node = toElm.lastChild;
   if (node && NodeType.isBr(node) && fromElm.hasChildNodes()) {
     dom.remove(node);
   }
