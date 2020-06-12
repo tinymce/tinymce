@@ -1,9 +1,9 @@
-import { Assertions, Chain, Guard, Mouse, NamedChain, UiControls, UiFinder } from '@ephox/agar';
-import { Arr, Obj, Result } from '@ephox/katamari';
+import { Assertions, Chain, Guard, Mouse, UiControls, UiFinder } from '@ephox/agar';
 import { document } from '@ephox/dom-globals';
+import { Arr, Obj, Result } from '@ephox/katamari';
+import { TinyUi } from '@ephox/mcagar';
 import { Body, Checked, Element, Focus, Node, SelectTag, Value } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
-import { TinyUi } from '@ephox/mcagar';
 
 export type ImageDialogData = {
   src: {
@@ -99,16 +99,10 @@ const cFillActiveDialog = (data: Partial<ImageDialogData>, hasAdvanced = false) 
     ...hasAdvanced ? updateAdvTabFields : []
   ];
 
-  const cUpdateDialogFields = Arr.map(updateDialogFields, (chain) => NamedChain.direct('parent', chain, '_'));
-
   return Chain.control(
-    NamedChain.asChain([
-      NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
-      NamedChain.direct('editor', cGetTopmostDialog, 'parent'),
-    ].concat(cUpdateDialogFields).concat([
-      NamedChain.outputInput
-    ])
-    ),
+    Chain.fromIsolatedChains([
+      Chain.fromParent(cGetTopmostDialog, updateDialogFields)
+    ]),
     Guard.addLogging('Fill active dialog')
   );
 };
@@ -147,24 +141,19 @@ const cTinyUI = Chain.control(
 );
 
 const cWaitForDialog = () => Chain.control(
-  NamedChain.asChain([
-    NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
-    NamedChain.direct('editor', cTinyUI, 'tinyUi'),
-    // Hmm. We might need an API to handle the case where you need to pass logs through a subchain.
-    NamedChain.direct('tinyUi', Chain.on((tinyUi, next, die, logs) => {
+  Chain.fromIsolatedChains([
+    cTinyUI,
+    Chain.on((tinyUi, next, die, logs) => {
       const subchain = tinyUi.cWaitForPopup('wait for dialog', 'div[role="dialog"]');
       Chain.pipeline([ subchain ], (value, newLogs) => next(value, newLogs), die, logs);
-    }), '_'),
-    NamedChain.outputInput
+    })
   ]),
   Guard.addLogging('Wait for dialog')
 );
 
 const cSubmitDialog = () => Chain.control(
-  NamedChain.asChain([
-    NamedChain.writeValue('body', Body.body()),
-    NamedChain.read('body', Mouse.cClickOn('.tox-button:contains("Save")')),
-    NamedChain.outputInput
+  Chain.fromIsolatedChainsWith(Body.body(), [
+    Mouse.cClickOn('.tox-button:contains("Save")')
   ]),
   Guard.addLogging('Submit dialog')
 );
@@ -172,11 +161,9 @@ const cSubmitDialog = () => Chain.control(
 const cleanHtml = (html: string) => html.replace(/<p>(&nbsp;|<br[^>]+>)<\/p>$/, '');
 
 const cAssertCleanHtml = (label: string, expected: string) => Chain.control(
-  NamedChain.asChain([
-    NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
-    NamedChain.direct('editor', Chain.mapper((editor: Editor) => cleanHtml(editor.getContent())), 'content'),
-    NamedChain.direct('content', Assertions.cAssertHtml(label, expected), 'result'),
-    NamedChain.outputInput
+  Chain.fromIsolatedChains([
+    Chain.mapper((editor: Editor) => cleanHtml(editor.getContent())),
+    Assertions.cAssertHtml(label, expected)
   ]),
   Guard.addLogging('Assert clean html')
 );
