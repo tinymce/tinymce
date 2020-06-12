@@ -1,4 +1,6 @@
-import { ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Log, Pipeline, Touch, UiFinder, Waiter } from '@ephox/agar';
+import {
+  ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Log, Pipeline, Touch, UiFinder, Waiter
+} from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
@@ -202,7 +204,7 @@ UnitTest.asynctest('MobileContextMenuTest', (success, failure) => {
           selectors.column,
           selectors.tableprops,
           selectors.deletetable
-        ]),
+        ])
       ]),
       Log.stepsAsStep('TBA', 'Test context menus on placeholder image inside a table', [
         // Placeholder images shouldn't show the image/image tools options
@@ -216,7 +218,7 @@ UnitTest.asynctest('MobileContextMenuTest', (success, failure) => {
           selectors.column,
           selectors.tableprops,
           selectors.deletetable
-        ]),
+        ])
       ])
     ];
 
@@ -227,7 +229,7 @@ UnitTest.asynctest('MobileContextMenuTest', (success, failure) => {
     toolbar: 'image editimage link table',
     indent: false,
     base_url: '/project/tinymce/js/tinymce',
-    image_caption: true,
+    image_caption: true
   }, () => {
     PlatformDetection.override(detection);
     success();

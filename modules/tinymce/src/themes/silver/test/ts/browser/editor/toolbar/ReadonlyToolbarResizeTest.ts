@@ -151,8 +151,8 @@ UnitTest.asynctest('Toolbar with toolbar drawer readonly mode test', (success, f
           cAssertToolbarDrawerButtonState('Assert the toolbar drawer buttons are enabled', (s, str, arr) => [
             enabledButtonStruct(s, str, arr, 'Superscript'),
             enabledButtonStruct(s, str, arr, 'Clear formatting')
-          ]),
-        ])),
+          ])
+        ]))
       ], onSuccess, onFailure);
     },
     {

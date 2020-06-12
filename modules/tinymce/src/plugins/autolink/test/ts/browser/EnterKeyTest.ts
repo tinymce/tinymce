@@ -1,8 +1,8 @@
-import { Assertions, Keys, Pipeline, Step, Log } from '@ephox/agar';
+import { Assertions, Keys, Log, Pipeline, Step } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
 import AutoLinkPlugin from 'tinymce/plugins/autolink/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.plugins.autolink.EnterKeyTest', (success, failure) => {
 
@@ -25,7 +25,7 @@ UnitTest.asynctest('browser.tinymce.plugins.autolink.EnterKeyTest', (success, fa
           } catch (error) {
             Assertions.assertEq('should not throw error', true, false);
           }
-        }),
+        })
       ]), onSuccess, onFailure);
   }, {
     plugins: 'autolink',

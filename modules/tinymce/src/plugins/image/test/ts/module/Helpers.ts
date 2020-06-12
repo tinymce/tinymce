@@ -1,9 +1,9 @@
 import { Assertions, Chain, Guard, Mouse, NamedChain, UiControls, UiFinder } from '@ephox/agar';
-import { Arr, Obj, Result } from '@ephox/katamari';
 import { document } from '@ephox/dom-globals';
+import { Arr, Obj, Result } from '@ephox/katamari';
+import { TinyUi } from '@ephox/mcagar';
 import { Body, Checked, Element, Focus, Node, SelectTag, Value } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
-import { TinyUi } from '@ephox/mcagar';
 
 export type ImageDialogData = {
   src: {
@@ -42,7 +42,7 @@ export const advancedTabSelectors = {
   style: 'label.tox-label:contains("Style") + input.tox-textfield',
   hspace: 'label.tox-label:contains("Horizontal space") + input.tox-textfield',
   vspace: 'label.tox-label:contains("Vertical space") + input.tox-textfield',
-  borderstyle: 'label.tox-label:contains("Border style") + div.tox-selectfield select',
+  borderstyle: 'label.tox-label:contains("Border style") + div.tox-selectfield select'
 };
 
 const cGetTopmostDialog = Chain.control(
@@ -104,7 +104,7 @@ const cFillActiveDialog = (data: Partial<ImageDialogData>, hasAdvanced = false) 
   return Chain.control(
     NamedChain.asChain([
       NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
-      NamedChain.direct('editor', cGetTopmostDialog, 'parent'),
+      NamedChain.direct('editor', cGetTopmostDialog, 'parent')
     ].concat(cUpdateDialogFields).concat([
       NamedChain.outputInput
     ])

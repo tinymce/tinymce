@@ -1,4 +1,4 @@
-import { Assertions, Chain, StepSequence, Logger, Pipeline, Step, Waiter } from '@ephox/agar';
+import { Assertions, Chain, Logger, Pipeline, Step, StepSequence, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Cell } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
@@ -38,7 +38,7 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationChangedTest', (succe
       Waiter.sTryUntil(
         label,
         sAssertChanges('sTestAnnotationEvents.sAssertChanges', expected)
-      ),
+      )
     ]);
 
     const sTestChanges = <T> () => StepSequence.sequenceSame<T>([
@@ -223,7 +223,7 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationChangedTest', (succe
             { state: false, name: 'delta', uid: null }
           ]
         )
-      ),
+      )
     ]);
 
     Pipeline.runStep({}, sTestChanges<{}>(), onSuccess, onFailure);

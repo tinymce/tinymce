@@ -1,15 +1,4 @@
-import {
-  ApproxStructure,
-  Assertions,
-  FocusTools,
-  GeneralSteps,
-  Logger,
-  Mouse,
-  Pipeline,
-  Step,
-  UiFinder,
-  Waiter,
-} from '@ephox/agar';
+import { ApproxStructure, Assertions, FocusTools, GeneralSteps, Logger, Mouse, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
@@ -108,17 +97,17 @@ UnitTest.asynctest('WindowManager:confirm Test', (success, failure) => {
                               attrs: {
                                 'type': str.is('button'),
                                 'data-alloy-tabstop': str.is('true')
-                              },
+                              }
                             }),
                             s.element('button', {
                               html: str.is('Yes'),
                               classes: [
-                                arr.has('tox-button'),
+                                arr.has('tox-button')
                               ],
                               attrs: {
                                 'type': str.is('button'),
                                 'data-alloy-tabstop': str.is('true')
-                              },
+                              }
                             })
                           ]
                         })

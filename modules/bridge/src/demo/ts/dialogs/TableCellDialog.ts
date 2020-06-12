@@ -110,7 +110,7 @@ export const createTableCellDialog = () => {
                 label: 'Background color'
               }
             ]
-          },
+          }
         ]
       },
       buttons: [

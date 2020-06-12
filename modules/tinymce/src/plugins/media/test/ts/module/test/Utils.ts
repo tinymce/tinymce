@@ -1,6 +1,6 @@
 import { Assertions, Chain, GeneralSteps, Guard, Logger, Mouse, Step, UiControls, UiFinder, Waiter } from '@ephox/agar';
 import { Assert } from '@ephox/bedrock-client';
-import { Event, HTMLElement, document } from '@ephox/dom-globals';
+import { document, Event, HTMLElement } from '@ephox/dom-globals';
 import { Arr, Type } from '@ephox/katamari';
 import { TinyApis, TinyUi } from '@ephox/mcagar';
 import { Body, Element, Focus } from '@ephox/sugar';
@@ -173,7 +173,7 @@ const sPasteTextareaValue = function (ui: TinyUi, value: string) {
       cFindInDialog(selectors.embedButton)(ui),
       Mouse.cClick,
       cFindInDialog(selectors.embed)(ui),
-      UiControls.cSetValue(value),
+      UiControls.cSetValue(value)
     ]),
     cFakeEvent('paste')
   ]));

@@ -5,11 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Types } from '@ephox/bridge';
+import { Option } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { getRowClassList } from '../api/Settings';
 import * as Helpers from './Helpers';
-import { Option } from '@ephox/katamari';
-import { Types } from '@ephox/bridge';
 
 const getClassList = (editor: Editor) => {
   const classes = Helpers.buildListItems(getRowClassList(editor));
@@ -50,7 +50,7 @@ const formChildren: Types.Dialog.BodyComponentApi[] = [
     label: 'Height',
     name: 'height',
     type: 'input'
-  },
+  }
 ];
 
 const getItems = (editor: Editor) => getClassList(editor).fold(

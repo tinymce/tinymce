@@ -1,10 +1,10 @@
-import { Pipeline, Log, Assertions, ApproxStructure } from '@ephox/agar';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import AnchorPlugin from 'tinymce/plugins/anchor/Plugin';
-import SilverTheme from 'tinymce/themes/silver/Theme';
+import { ApproxStructure, Assertions, Log, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
+import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
+import AnchorPlugin from 'tinymce/plugins/anchor/Plugin';
+import SilverTheme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.plugins.anchor.AnchorContentEditableTest', (success, failure) => {
   AnchorPlugin();
@@ -31,7 +31,7 @@ UnitTest.asynctest('browser.tinymce.plugins.anchor.AnchorContentEditableTest', (
             ]
           })),
           Element.fromDom(editor.getBody())
-        ),
+        )
       ]),
       // Note: The next step should pass because of the allow_html_in_named_anchor setting
       Log.stepsAsStep('TINY-2788', 'Anchor: Add anchor with inner html, check contenteditable is not present and inner html is present', [
@@ -52,14 +52,14 @@ UnitTest.asynctest('browser.tinymce.plugins.anchor.AnchorContentEditableTest', (
             ]
           })),
           Element.fromDom(editor.getBody())
-        ),
-      ]),
+        )
+      ])
     ], onSuccess, onFailure);
   }, {
     theme: 'silver',
     plugins: 'anchor',
     toolbar: 'anchor',
     allow_html_in_named_anchor: true,
-    base_url: '/project/tinymce/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

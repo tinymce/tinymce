@@ -69,7 +69,7 @@ export default function () {
 
       {
         title: 'Inline', items: [
-          { title: 'Bold', icon: 'bold', format: 'bold' },
+          { title: 'Bold', icon: 'bold', format: 'bold' }
           // { title: 'Italic', icon: 'italic', format: 'italic' },
           // { title: 'Underline', icon: 'underline', format: 'underline' },
           // { title: 'Strikethrough', icon: 'strikethrough', format: 'strikethrough' },
@@ -86,7 +86,7 @@ export default function () {
           // { title: 'Div', format: 'div' },
           // { title: 'Pre', format: 'pre' }
         ]
-      },
+      }
 
       // {
       //   title: 'Alignment', items: [

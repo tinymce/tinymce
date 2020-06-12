@@ -530,7 +530,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function (success
           ]
         }))),
         tinyApis.sAssertSelection([ 0, 0, 0, 0 ], 2, [ 0, 0, 0, 0 ], 2)
-      ])),
+      ]))
     ], onSuccess, onFailure);
   }, {
     plugins: '',

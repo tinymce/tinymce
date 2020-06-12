@@ -23,7 +23,7 @@ const open = function (editor: Editor, charMap: CharMap[]) {
     },
     {
       type: 'collection',
-      name: 'results',
+      name: 'results'
       // TODO TINY-3229 implement collection columns properly
       // columns: 'auto'
     }

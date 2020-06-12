@@ -26,7 +26,7 @@ UnitTest.asynctest('WindowManager:simple-dialog access Test', (success, failure)
             type: 'input',
             name: 'fieldA',
             label: 'Label'
-          },
+          }
         ]
       },
       buttons: [
@@ -36,7 +36,7 @@ UnitTest.asynctest('WindowManager:simple-dialog access Test', (success, failure)
           text: 'Call api.setData after two seconds',
           align: 'start',
           primary: true
-        },
+        }
       ],
       initialData: {
         fieldA: 'Init Value'

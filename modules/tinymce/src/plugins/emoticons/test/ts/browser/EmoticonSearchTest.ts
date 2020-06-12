@@ -22,7 +22,7 @@ UnitTest.asynctest('browser.tinymce.plugins.emoticons.SearchTest', (success, fai
         tinyApis.sFocus(),
         tinyUi.sClickOnToolbar('click emoticons', 'button'),
         Chain.asStep({}, [
-          tinyUi.cWaitForPopup('wait for popup', 'div[role="dialog"]'),
+          tinyUi.cWaitForPopup('wait for popup', 'div[role="dialog"]')
         ]),
         FocusTools.sTryOnSelector('Focus should start on input', doc, 'input'),
         FocusTools.sSetActiveValue(doc, 'rainbow'),

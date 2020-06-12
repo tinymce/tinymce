@@ -154,7 +154,7 @@ const some = <T>(a: T): Option<T> => {
         Fun.never,
         function (b) { return elementEq(a, b); }
       );
-    },
+    }
   };
   return me;
 };

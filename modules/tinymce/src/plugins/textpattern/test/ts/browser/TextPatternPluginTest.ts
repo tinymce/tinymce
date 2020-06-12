@@ -1,5 +1,6 @@
 import { ApproxStructure, Assertions, GeneralSteps, Keys, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
+import { Unicode } from '@ephox/katamari';
 import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
 
@@ -7,7 +8,6 @@ import TextpatternPlugin from 'tinymce/plugins/textpattern/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
 import * as Utils from '../module/test/Utils';
-import { Unicode } from '@ephox/katamari';
 
 UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextPatternPluginTest', (success, failure) => {
   const detection = PlatformDetection.detect();
@@ -44,7 +44,7 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextPatternPluginTest', 
                       s.text(str.is('a\u00A0 '), true)
                     ]
                   }),
-                  s.text(str.is(Unicode.nbsp), true),
+                  s.text(str.is(Unicode.nbsp), true)
                 ]
               })
             ]);
@@ -56,7 +56,7 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextPatternPluginTest', 
       ])),
       Step.label('Bold format on single word using space', GeneralSteps.sequence([
         Utils.sSetContentAndPressSpace(tinyApis, tinyActions, '**a**'),
-        Step.label('Check bold format was applied', tinyApis.sAssertContentStructure(Utils.inlineStructHelper('strong', 'a'))),
+        Step.label('Check bold format was applied', tinyApis.sAssertContentStructure(Utils.inlineStructHelper('strong', 'a')))
       ])),
       Step.label('Bold/italic format on single word using space', GeneralSteps.sequence([
         Utils.sSetContentAndPressSpace(tinyApis, tinyActions, '***a***'),
@@ -97,7 +97,7 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextPatternPluginTest', 
                   children: [
                     s.element('strong', {
                       children: [
-                        s.text(str.is('a'), true),
+                        s.text(str.is('a'), true)
                       ]
                     })
                   ]

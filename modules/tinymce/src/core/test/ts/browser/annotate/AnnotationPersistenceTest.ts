@@ -118,6 +118,6 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationPersistenceTest', (s
         sSetupSingleAnnotation(tinyApis, ed),
         sContentContains(tinyApis, ed, 'mce-annotation', true)
       ])
-    ),
+    )
   ], () => success(), failure);
 });

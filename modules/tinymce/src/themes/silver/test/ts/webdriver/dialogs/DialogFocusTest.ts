@@ -1,11 +1,11 @@
-import { FocusTools, Pipeline, Step, RealMouse } from '@ephox/agar';
+import { FocusTools, Pipeline, RealMouse, Step } from '@ephox/agar';
+
+import { TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document, window } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
-
-import { TestHelpers } from '@ephox/alloy';
 import TestExtras from '../../module/TestExtras';
 
 UnitTest.asynctest('Dialog Focus Test (webdriver)', (success, failure) => {
@@ -23,7 +23,7 @@ UnitTest.asynctest('Dialog Focus Test (webdriver)', (success, failure) => {
       TestHelpers.GuiSetup.mAddStyles(doc, [
         '[role="dialog"] { border: 1px solid black; padding: 2em; background-color: rgb(131,193,249); top: 40px; position: absolute; }',
 
-        ':focus { outline: 3px solid green; !important; }',
+        ':focus { outline: 3px solid green; !important; }'
       ]),
 
       Step.sync(() => {
@@ -86,7 +86,7 @@ UnitTest.asynctest('Dialog Focus Test (webdriver)', (success, failure) => {
         'focus should move to input after clicking on the dialog footer',
         doc,
         '.tox-textfield'
-      ),
+      )
     ];
 
   Pipeline.async({ }, tests, () => {

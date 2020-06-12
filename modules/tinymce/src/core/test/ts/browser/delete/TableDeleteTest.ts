@@ -348,7 +348,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.TableDeleteTest', (success, fail
           sBackspace(editor),
           tinyApis.sAssertSelection([ 1, 0, 0, 0, 1, 0 ], 0, [ 1, 0, 0, 0, 1, 0 ], 0),
           tinyApis.sAssertContent('<p>x</p><table><tbody><tr><td><table><tbody><tr><td>a</td><td>b</td></tr></tbody></table><p>a</p></td><td>b</td></tr></tbody></table>')
-        ])),
+        ]))
       ]))
     ], onSuccess, onFailure);
   }, {

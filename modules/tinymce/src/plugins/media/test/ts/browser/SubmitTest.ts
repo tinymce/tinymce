@@ -37,7 +37,7 @@ UnitTest.asynctest('browser.core.SubmitTest', (success, failure) => {
     GeneralSteps.sequence([
       Utils.sOpenDialog(ui),
       ui.sClickOnUi('click save button', Utils.selectors.saveButton),
-      Utils.sAssertEditorContent(apis, editor, expected),
+      Utils.sAssertEditorContent(apis, editor, expected)
     ]);
 
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {

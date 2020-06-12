@@ -3,10 +3,10 @@ import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { navigator, Window, window } from '@ephox/dom-globals';
 import { Cell } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import Editor from 'tinymce/core/api/Editor';
 import AutoresizePlugin from 'tinymce/plugins/autoresize/Plugin';
 import FullscreenPlugin from 'tinymce/plugins/fullscreen/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
-import Editor from 'tinymce/core/api/Editor';
 
 UnitTest.asynctest('browser.tinymce.plugins.autoresize.AutoresizePluginTest', (success, failure) => {
 
@@ -121,7 +121,7 @@ UnitTest.asynctest('browser.tinymce.plugins.autoresize.AutoresizePluginTest', (s
             Waiter.sTryUntil('wait for editor height', sAssertEditorContentApproxHeight(editor, 5100), 10, 3000),
             Waiter.sTryUntil('wait for editor height', sAssertEditorHeightAbove(editor, 5100), 10, 3000),
             sAssertScrollPositionGreaterThan(window, 3500)
-          ]),
+          ])
         ] : []
       , onSuccess, onFailure);
   }, {

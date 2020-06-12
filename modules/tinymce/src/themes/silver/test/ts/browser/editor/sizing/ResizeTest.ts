@@ -1,10 +1,10 @@
-import { Assertions, Chain, Guard, NamedChain, Mouse, Pipeline, UiFinder } from '@ephox/agar';
+import { Assertions, Chain, Guard, Mouse, NamedChain, Pipeline, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyLoader } from '@ephox/mcagar';
 import { Body, Element } from '@ephox/sugar';
+import Editor from 'tinymce/core/api/Editor';
 
 import Theme from 'tinymce/themes/silver/Theme';
-import Editor from 'tinymce/core/api/Editor';
 import { cResizeToPos } from '../../../module/UiChainUtils';
 
 UnitTest.asynctest('Editor resize test', (success, failure) => {
@@ -60,7 +60,7 @@ UnitTest.asynctest('Editor resize test', (success, failure) => {
           // Try to enlarge to above max width
           NamedChain.direct('resizeHandle', Mouse.cMouseDown, '_'),
           NamedChain.direct('body', cResizeToPos(300, 500, 550, 500), '_'),
-          NamedChain.direct('container', cAssertEditorSize(500, 500), '_'),
+          NamedChain.direct('container', cAssertEditorSize(500, 500), '_')
         ]))
       ])
     ], onSuccess, onFailure);

@@ -37,7 +37,7 @@ export const createDocumentPropsDialog = () => {
             name: 'encoding',
             type: 'input',
             label: 'Encoding'
-          },
+          }
         ]
       },
       buttons: [

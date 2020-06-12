@@ -50,7 +50,7 @@ const ext = <E, D>(ti: TypedItemAdt<E, D>): TypedItem<E, D> => ({
   isBoundary: () => ti.fold(yes, no, no, no),
   toText: () => ti.fold<Option<E>>(Option.none, Option.none, (i) => Option.some(i), Option.none),
   is: (other) => ti.fold(no, no, (i, u) => u.eq(i, other), no),
-  len: () => ti.fold(zero, one, (i, u) => u.property().getText(i).length, one),
+  len: () => ti.fold(zero, one, (i, u) => u.property().getText(i).length, one)
 });
 
 type TypedItemConstructor = <E, D>(item: E, universe: Universe<E, D>) => TypedItem<E, D>;

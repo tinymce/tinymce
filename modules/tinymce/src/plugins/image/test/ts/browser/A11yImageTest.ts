@@ -21,7 +21,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.A11yImageTest', (success, fail
       api.sSetContent(content),
       api.sSetSelection(cursorPos.elementPath, cursorPos.startOffset, cursorPos.elementPath, cursorPos.endOffset),
       api.sExecCommand('mceImage', true),
-      ui.sWaitForPopup('Wait for Image dialog', 'div[role="dialog"]'),
+      ui.sWaitForPopup('Wait for Image dialog', 'div[role="dialog"]')
     ]);
 
     const createTestOnContent = (name: string, data: Partial<ImageDialogData>, cursorPos: Record<string, number | Array<number>>, initialContent: string, expectedContent: string) => Log.stepsAsStep('TBA', 'Image: ' + name, [
@@ -80,8 +80,8 @@ UnitTest.asynctest('browser.tinymce.plugins.image.A11yImageTest', (success, fail
         {
           alt: 'alt',
           src: {
-            value: 'src',
-          },
+            value: 'src'
+          }
         },
         '<p><img src="src" alt="alt" /></p>'
       ),
@@ -90,7 +90,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.A11yImageTest', (success, fail
         'Decorative image',
         {
           src: {
-            value: 'src',
+            value: 'src'
           },
           decorative: true
         },
@@ -102,7 +102,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.A11yImageTest', (success, fail
         {
           alt: 'alt',
           src: {
-            value: 'src',
+            value: 'src'
           },
           decorative: true
         },
@@ -114,7 +114,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.A11yImageTest', (success, fail
         {
           alt: 'alt',
           src: {
-            value: 'src',
+            value: 'src'
           },
           decorative: false
         },
@@ -128,7 +128,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.A11yImageTest', (success, fail
         {
           alt: 'alt',
           src: {
-            value: 'src',
+            value: 'src'
           },
           decorative: true
         },

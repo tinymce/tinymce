@@ -29,7 +29,7 @@ UnitTest.asynctest('ActionTest', (success, failure) =>  {
         });
       });
     }),
-    cAction(evt.code, evt.modifiers),
+    cAction(evt.code, evt.modifiers)
   ]);
 
   const sTestStep = Chain.asStep({}, [

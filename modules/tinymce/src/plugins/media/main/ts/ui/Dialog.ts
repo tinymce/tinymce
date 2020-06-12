@@ -67,7 +67,7 @@ const wrap = (data: MediaData): MediaDialogData => {
     ...data,
     source: { value: Obj.get(data, 'source').getOr('') },
     altsource: { value: Obj.get(data, 'altsource').getOr('') },
-    poster: { value: Obj.get(data, 'poster').getOr('') },
+    poster: { value: Obj.get(data, 'poster').getOr('') }
   };
 
   // Add additional size values that may or may not have been in the html

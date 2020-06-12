@@ -6,20 +6,8 @@
  */
 
 import {
-  AddEventsBehaviour,
-  AlloyComponent,
-  AlloyEvents,
-  AlloySpec,
-  AlloyTriggers,
-  Behaviour,
-  Container,
-  Disabling,
-  Focusing,
-  Memento,
-  Replacing,
-  Representing,
-  Slider,
-  SliderTypes
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, Container, Disabling, Focusing, Memento, Replacing,
+  Representing, Slider, SliderTypes
 } from '@ephox/alloy';
 import { ImageResult, ImageTransformations } from '@ephox/imagetools';
 import { Fun, Option } from '@ephox/katamari';
@@ -432,7 +420,7 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
     createIconButton('contrast', 'Contrast', getTransformPanelEvent(ContrastPanel, Option.none(), noop), false),
     createIconButton('color-levels', 'Color levels', getTransformPanelEvent(ColorizePanel, Option.none(), noop), false),
     createIconButton('gamma', 'Gamma', getTransformPanelEvent(GammaPanel, Option.none(), noop), false),
-    createIconButton('invert', 'Invert', getTransformPanelEvent(FilterPanel, invertTransform, noop), false),
+    createIconButton('invert', 'Invert', getTransformPanelEvent(FilterPanel, invertTransform, noop), false)
   ];
 
   const ButtonPanel = Container.sketch({

@@ -1,17 +1,4 @@
-import {
-  Assertions,
-  Chain,
-  FocusTools,
-  GeneralSteps,
-  Keyboard,
-  Keys,
-  Logger,
-  Mouse,
-  Pipeline,
-  Step,
-  UiFinder,
-  Waiter,
-} from '@ephox/agar';
+import { Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
@@ -98,7 +85,7 @@ UnitTest.asynctest('WindowManager:custom-dialog Test', (success, failure) => {
             },
             {
               name: 'f4-charmap',
-              type: 'collection',
+              type: 'collection'
               // columns: 'auto'
             },
             {
@@ -300,7 +287,7 @@ UnitTest.asynctest('WindowManager:custom-dialog Test', (success, failure) => {
       Waiter.sTryUntil(
         'Wait for the dialog to disappear',
         UiFinder.sNotExists(Body.body(), '.tox-button--icon[aria-label="Close"]')
-      ),
+      )
     ])
   ], () => {
     helpers.destroy();

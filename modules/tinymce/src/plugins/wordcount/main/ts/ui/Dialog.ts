@@ -32,10 +32,10 @@ const open = (editor: Editor, api: WordCountApi) => {
               'Characters',
               String(api.body.getCharacterCount()),
               String(api.selection.getCharacterCount())
-            ],
+            ]
           ]
         }
-      ],
+      ]
     },
     buttons: [
       {

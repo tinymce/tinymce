@@ -1,8 +1,8 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { Element } from '@ephox/sugar';
-import * as DomModification from 'ephox/alloy/dom/DomModification';
 import { Arr, Obj, Option } from '@ephox/katamari';
+import { Element } from '@ephox/sugar';
 import Jsc from '@ephox/wrap-jsverify';
+import * as DomModification from 'ephox/alloy/dom/DomModification';
 
 interface ModifiationType {
   classes: string[];
@@ -73,7 +73,7 @@ UnitTest.test('DomDefinitionTest', () => {
     (arr: [ string[], Record<string, string>, Record<string, string>]) => ({
       classes: arr[0],
       attributes: arr[1],
-      styles: arr[2],
+      styles: arr[2]
     }),
     (mod: ModifiationType) => [ mod.classes, mod.attributes, mod.styles ],
     (mod: ModifiationType) => JSON.stringify({

@@ -129,17 +129,17 @@ UnitTest.asynctest('Toolbar Buttons Test', (success, failure) => {
                       text: 'Item 1',
                       onAction: (_api: Menu.MenuItemInstanceApi) => {
                         store.adder('onAction.4')();
-                      },
+                      }
                     }
                   ]);
                 },
                 onSetup: (_api: Toolbar.ToolbarMenuButtonInstanceApi) => {
                   store.adder('onSetup.4')();
                   return () => { };
-                },
+                }
               }, 'tox-mbtn', helpers.backstage, Option.none())
             ]
-          },
+          }
         ]
       }
     ),

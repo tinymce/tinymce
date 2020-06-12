@@ -47,6 +47,6 @@ UnitTest.asynctest('TinySetAndDeleteSettingTest', (success, failure) => {
     ], loadSuccess, loadFailure);
 
   }, {
-    base_url: '/project/tinymce/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

@@ -19,7 +19,7 @@ const deriveToggling = (spec, component: AlloyComponent) => {
         return {
           toggleOn: () => { Toggling.on(component); },
           toggleOff: () => { Toggling.off(component); },
-          toggleIsOn: () => { Toggling.isOn(component); },
+          toggleIsOn: () => { Toggling.isOn(component); }
         };
       }
     });
@@ -31,7 +31,7 @@ const deriveRepresenting = (spec, component: AlloyComponent) => {
     const item = Representing.getValue(component);
     return {
       itemValue: () => item.value,
-      itemText: () => item.text,
+      itemText: () => item.text
     };
   }
 };

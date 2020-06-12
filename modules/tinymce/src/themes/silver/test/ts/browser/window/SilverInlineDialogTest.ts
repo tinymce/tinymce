@@ -26,7 +26,7 @@ UnitTest.asynctest('WindowManager:inline-dialog Test', (success, failure) => {
             type: 'input',
             name: 'fred',
             label: 'Freds Input'
-          },
+          }
         ]
       },
       buttons: [
@@ -84,7 +84,7 @@ UnitTest.asynctest('WindowManager:inline-dialog Test', (success, failure) => {
         DialogUtils.sWaitForOpen(dialogSelector),
         store.sAssertEq('Checking onAction called', [ 'onAction' ]),
         Mouse.sTrueClickOn(Body.body(), dialogSelector + ' .tox-dialog__footer button'),
-        Waiter.sTryUntil('Wait for dialog to close', UiFinder.sNotExists(Body.body(), dialogSelector)),
+        Waiter.sTryUntil('Wait for dialog to close', UiFinder.sNotExists(Body.body(), dialogSelector))
       ]);
     };
 

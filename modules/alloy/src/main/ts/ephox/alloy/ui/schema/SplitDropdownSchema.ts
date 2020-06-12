@@ -113,7 +113,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
           dom: {
             tag: 'span',
             styles: {
-              display: 'none',
+              display: 'none'
             },
             attributes: {
               'aria-hidden': 'true'

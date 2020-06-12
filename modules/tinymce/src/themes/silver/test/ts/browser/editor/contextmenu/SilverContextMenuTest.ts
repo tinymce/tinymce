@@ -1,15 +1,15 @@
-import { ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Log, Pipeline, Waiter, UiFinder } from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Log, Pipeline, UiFinder, Waiter } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
-import { TinyApis, TinyLoader, TinyUi, TinyDom, UiChains } from '@ephox/mcagar';
+import { TinyApis, TinyDom, TinyLoader, TinyUi, UiChains } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
 
 import ImagePlugin from 'tinymce/plugins/image/Plugin';
+import ImageToolsPlugin from 'tinymce/plugins/imagetools/Plugin';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
-import ImageToolsPlugin from 'tinymce/plugins/imagetools/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('SilverContextMenuTest', (success, failure) => {
   SilverTheme();
@@ -132,7 +132,7 @@ UnitTest.asynctest('SilverContextMenuTest', (success, failure) => {
         sAssertFocusOnItem('Delete Table', '.tox-collection__item:contains("Delete table")'),
         Keyboard.sKeydown(doc, Keys.up(), {}),
         sPressEnterKey,
-        sWaitForAndCloseDialog,
+        sWaitForAndCloseDialog
       ]),
       Log.stepsAsStep('TBA', 'Test context menus on image inside a table', [
         tinyApis.sSetContent(imageInTableHtml),
@@ -196,7 +196,7 @@ UnitTest.asynctest('SilverContextMenuTest', (success, failure) => {
         sPressDownArrowKey,
         sAssertFocusOnItem('Table Properties', '.tox-collection__item:contains("Table properties")'),
         sPressDownArrowKey,
-        sAssertFocusOnItem('Delete Table', '.tox-collection__item:contains("Delete table")'),
+        sAssertFocusOnItem('Delete Table', '.tox-collection__item:contains("Delete table")')
       ])
     ], onSuccess, onFailure);
   }, {
@@ -205,6 +205,6 @@ UnitTest.asynctest('SilverContextMenuTest', (success, failure) => {
     toolbar: 'image editimage link table',
     indent: false,
     base_url: '/project/tinymce/js/tinymce',
-    image_caption: true,
+    image_caption: true
   }, success, failure);
 });

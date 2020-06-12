@@ -88,7 +88,7 @@ UnitTest.asynctest('browser.tinymce.plugins.searchreplace.SearchReplaceDialogTes
         sAssertFound(0),
         sFindAndAssertFound(2),
         Utils.sCloseDialog(tinyUi)
-      ]),
+      ])
     ], onSuccess, onFailure);
   }, {
     plugins: 'searchreplace',

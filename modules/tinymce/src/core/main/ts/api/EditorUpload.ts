@@ -142,7 +142,7 @@ const EditorUpload = function (editor: Editor): EditorUpload {
             element: image,
             status: uploadInfo.status,
             uploadUri: uploadInfo.url,
-            blobInfo,
+            blobInfo
           };
         });
 

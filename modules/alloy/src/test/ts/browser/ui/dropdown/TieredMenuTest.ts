@@ -132,7 +132,7 @@ UnitTest.asynctest('TieredMenuTest', (success, failure) => {
       }),
       store.sAssertEq('Focus is fired as soon as the tiered menu is active', [
         'onOpenMenu',
-        'menu.events.focus',
+        'menu.events.focus'
       ]),
       Keyboard.sKeydown(doc, Keys.down(), { }),
       Keyboard.sKeydown(doc, Keys.right(), { }),

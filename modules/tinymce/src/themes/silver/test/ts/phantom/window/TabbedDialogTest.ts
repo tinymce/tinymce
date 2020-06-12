@@ -1,4 +1,4 @@
-import { ApproxStructure, Assertions, Chain, Mouse, NamedChain, Pipeline, Step, UiFinder, StructAssert } from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, Mouse, NamedChain, Pipeline, Step, StructAssert, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Body, Element } from '@ephox/sugar';
 import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
@@ -120,7 +120,7 @@ UnitTest.asynctest('WindowManager:tabbed-dialog Test', (success, failure) => {
         NamedChain.direct('dialog', Mouse.cClickOn('button:contains("-> Basic")'), '_'),
         NamedChain.direct('tabview', cAssertFormContents('Clicking Basic button again (not tab)', (s, str, _arr) => s.element('input', {
           value: str.is('First tab value')
-        })), '_'),
+        })), '_')
       ])
     ])
   ], () => {

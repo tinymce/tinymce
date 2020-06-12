@@ -118,7 +118,7 @@ export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Err
   const contextmenu = GuiFactory.build(
     InlineView.sketch({
       dom: {
-        tag: 'div',
+        tag: 'div'
       },
       lazySink,
       onEscape: () => editor.focus(),

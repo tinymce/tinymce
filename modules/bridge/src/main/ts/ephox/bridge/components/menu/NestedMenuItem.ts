@@ -1,6 +1,6 @@
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
-import { Fun, Result, Option } from '@ephox/katamari';
-import { ToggleMenuItemApi, SeparatorMenuItemApi, FancyMenuItemApi, MenuItemApi } from '../../api/Menu';
+import { Fun, Option, Result } from '@ephox/katamari';
+import { FancyMenuItemApi, MenuItemApi, SeparatorMenuItemApi, ToggleMenuItemApi } from '../../api/Menu';
 import { CommonMenuItem, CommonMenuItemApi, commonMenuItemFields, CommonMenuItemInstanceApi } from './CommonMenuItem';
 
 export type NestedMenuItemContents = string | MenuItemApi | NestedMenuItemApi | ToggleMenuItemApi | SeparatorMenuItemApi | FancyMenuItemApi;
@@ -26,7 +26,7 @@ export const nestedMenuItemSchema = ValueSchema.objOf([
   FieldSchema.strictString('type'),
   FieldSchema.strictFunction('getSubmenuItems'),
   FieldSchema.defaultedFunction('onSetup', () => Fun.noop),
-  FieldSchema.optionString('icon'),
+  FieldSchema.optionString('icon')
 ].concat(commonMenuItemFields));
 
 export const createNestedMenuItem = (spec: NestedMenuItemApi): Result<NestedMenuItem, ValueSchema.SchemaError<any>> => ValueSchema.asRaw('nestedmenuitem', nestedMenuItemSchema, spec);

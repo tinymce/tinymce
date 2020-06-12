@@ -18,7 +18,7 @@ export default () => {
         items: [
           {
             name: 'preview',
-            type: 'iframe',
+            type: 'iframe'
           }
         ]
       },

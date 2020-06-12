@@ -6,10 +6,10 @@ import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import PluginManager from 'tinymce/core/api/PluginManager';
-import ViewBlock from '../module/test/ViewBlock';
 import Delay from 'tinymce/core/api/util/Delay';
 import Tools from 'tinymce/core/api/util/Tools';
 import Theme from 'tinymce/themes/silver/Theme';
+import ViewBlock from '../module/test/ViewBlock';
 
 UnitTest.asynctest('browser.tinymce.core.EditorManagerTest', (success, failure) => {
   const suite = LegacyUnit.createSuite();
@@ -54,7 +54,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorManagerTest', (success, failure) 
         EditorManager.init({
           selector: '#' + EditorManager.activeEditor.id,
           skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
-          content_css: '/project/tinymce/js/tinymce/skins/content/default',
+          content_css: '/project/tinymce/js/tinymce/skins/content/default'
         });
 
         LegacyUnit.equal(EditorManager.get().length, 1);

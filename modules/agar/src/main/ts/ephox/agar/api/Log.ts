@@ -29,5 +29,5 @@ export {
   chain,
   chains,
   chainsAsChain,
-  chainsAsStep,
+  chainsAsStep
 };

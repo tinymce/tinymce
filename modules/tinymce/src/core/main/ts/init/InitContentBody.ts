@@ -121,7 +121,7 @@ const mkSerializerSettings = (editor: Editor): SerializerSettings => {
       valid_elements: settings.valid_elements,
       valid_styles: settings.valid_styles,
       verify_html: settings.verify_html,
-      whitespace_elements: settings.whitespace_elements,
+      whitespace_elements: settings.whitespace_elements
     })
   };
 };

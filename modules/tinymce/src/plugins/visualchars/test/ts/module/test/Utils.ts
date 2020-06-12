@@ -13,12 +13,12 @@ const sAssertSpanStruct = sAssertStruct(ApproxStructure.build((s, str) => [
   s.text(str.is('a')),
   s.element('span', {
     children: [
-      s.text(str.is(Unicode.nbsp)),
+      s.text(str.is(Unicode.nbsp))
     ]
   }),
   s.element('span', {
     children: [
-      s.text(str.is(Unicode.nbsp)),
+      s.text(str.is(Unicode.nbsp))
     ]
   }),
   s.text(str.is('b'))

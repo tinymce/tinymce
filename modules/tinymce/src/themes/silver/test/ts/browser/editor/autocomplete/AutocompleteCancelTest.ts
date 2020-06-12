@@ -1,4 +1,4 @@
-import { ApproxStructure, GeneralSteps, Keys, Logger, Pipeline, StructAssert, Waiter, Mouse, Step } from '@ephox/agar';
+import { ApproxStructure, GeneralSteps, Keys, Logger, Mouse, Pipeline, Step, StructAssert, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { TinyActions, TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
@@ -116,7 +116,7 @@ UnitTest.asynctest('Editor Autocompleter Cancel test', (success, failure) => {
       setup: sTriggerAndAssertInitialContent('<p></p></p><p>CONTENT</p><p></p>', [ 1, 0 ], (s, str) => [
         s.element('p', {}),
         expectedAutocompletePara(':a')(s, str),
-        s.element('p', {}),
+        s.element('p', {})
       ]),
       action: sInsertContentAndTrigger('aa'),
       postAction: tinyActions.sContentKeystroke(key, {}),
@@ -135,32 +135,32 @@ UnitTest.asynctest('Editor Autocompleter Cancel test', (success, failure) => {
     const sTestNodeChange = GeneralSteps.sequence([
       sTriggerAndAssertInitialContent('<p>CONTENT</p><p>new node</p>', [ 0, 0 ], (s, str) => [
         expectedAutocompletePara(':a')(s, str),
-        s.element('p', {}),
+        s.element('p', {})
       ]),
       sInsertContentAndTrigger('aa'),
       sSetCursor([ 0, 0, 0 ], 2),
       sWaitForAutocompleteToClose,
       sAssertContent('Check autocompleter was not cancelled', (s, str) => [
         expectedAutocompletePara(':aaa')(s, str),
-        s.element('p', { }),
+        s.element('p', { })
       ]),
       sSetCursor([ 1, 0 ], 0),
       sAssertContent('Check autocompleter was cancelled', (s, str) => [
         expectedSimplePara(':aaa')(s, str),
         s.element('p', { })
-      ]),
+      ])
     ]);
 
     const sTestClickOutsideMenu = sTestAutocompleter({
       setup: sTriggerAndAssertInitialContent('<p>CONTENT</p><p>new node</p>', [ 0, 0 ], (s, str) => [
         expectedAutocompletePara(':a')(s, str),
-        s.element('p', {}),
+        s.element('p', {})
       ]),
       action: Mouse.sTrueClickOn(Element.fromDom(editor.getBody()), 'p:contains(new node)'),
       assertion: (s, str) => [
         expectedSimplePara(':a')(s, str),
         s.element('p', { })
-      ],
+      ]
     });
 
     Pipeline.async({ }, Logger.ts(

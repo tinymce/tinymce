@@ -193,5 +193,5 @@ export {
   getAtPoint,
   findWithin,
   getAsString,
-  isCollapsed,
+  isCollapsed
 };

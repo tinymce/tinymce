@@ -1,4 +1,6 @@
-import { ApproxStructure, Assertions, Chain, Cursors, GeneralSteps, Guard, Logger, Mouse, NamedChain, Step, UiControls, UiFinder, Waiter } from '@ephox/agar';
+import {
+  ApproxStructure, Assertions, Chain, Cursors, GeneralSteps, Guard, Logger, Mouse, NamedChain, Step, UiControls, UiFinder, Waiter
+} from '@ephox/agar';
 import { document, HTMLElement } from '@ephox/dom-globals';
 import { Obj } from '@ephox/katamari';
 import { TinyDom, TinyUi } from '@ephox/mcagar';
@@ -26,7 +28,7 @@ const sOpenTableDialog = (ui: TinyUi) => Logger.t('Open table dialog', GeneralSt
     ui.sClickOnToolbar('Click on toolbar button', 'button:not(.tox-tbtn--disabled)'),
     50, 1000
   ),
-  UiFinder.sWaitForVisible('wait for dialog', TinyDom.fromDom(document.body), '.tox-dialog[role="dialog"]'),
+  UiFinder.sWaitForVisible('wait for dialog', TinyDom.fromDom(document.body), '.tox-dialog[role="dialog"]')
 ]));
 
 const sAssertElementStructure = (editor, selector, expected) => Logger.t('Assert HTML structure of the element ' + expected, Step.sync(() => {

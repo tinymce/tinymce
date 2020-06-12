@@ -25,7 +25,7 @@ export default function () {
       },
       onHide: (_api) => {
         console.log('onHide ' + name);
-      },
+      }
     });
   };
 
@@ -36,7 +36,7 @@ export default function () {
     plugins: [
       'lists', // Required for list functionality (commands),
       'autolink', // Required for turning pasted text into hyperlinks
-      'autosave', // Required to prevent users losing content when they press back
+      'autosave' // Required to prevent users losing content when they press back
     ],
     // statusbar: false,
     resize: 'both',

@@ -5,17 +5,17 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { HTMLElement } from '@ephox/dom-globals';
 import BookmarkManager from 'tinymce/core/api/dom/BookmarkManager';
+import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
+import { fireListEvent } from '../api/Events';
 import * as Bookmark from '../core/Bookmark';
+import { listToggleActionFromListName } from '../core/ListAction';
 import * as NodeType from '../core/NodeType';
 import * as Selection from '../core/Selection';
-import { HTMLElement } from '@ephox/dom-globals';
-import { flattenListSelection } from './Indendation';
-import { fireListEvent } from '../api/Events';
 import { isCustomList } from '../core/Util';
-import Editor from 'tinymce/core/api/Editor';
-import { listToggleActionFromListName } from '../core/ListAction';
+import { flattenListSelection } from './Indendation';
 
 const updateListStyle = function (dom, el, detail) {
   const type = detail['list-style-type'] ? detail['list-style-type'] : null;
@@ -171,7 +171,7 @@ const applyList = function (editor, listName: string, detail = {}) {
 
     removeStyles(dom, block, [
       'margin', 'margin-right', 'margin-bottom', 'margin-left', 'margin-top',
-      'padding', 'padding-right', 'padding-bottom', 'padding-left', 'padding-top',
+      'padding', 'padding-right', 'padding-bottom', 'padding-left', 'padding-top'
     ]);
 
     updateListWithDetails(dom, listBlock, detail);

@@ -42,5 +42,5 @@ const from = function (value: string) {
 
 export const Size = {
   ...adt,
-  from,
+  from
 };

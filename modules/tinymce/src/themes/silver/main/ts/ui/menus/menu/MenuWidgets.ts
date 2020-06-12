@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloySpec, Behaviour, ItemWidget, Keying, Memento, Menu, SimpleOrSketchSpec, MenuTypes } from '@ephox/alloy';
+import { AlloySpec, Behaviour, ItemWidget, Keying, Memento, Menu, MenuTypes, SimpleOrSketchSpec } from '@ephox/alloy';
 import { Id, Option } from '@ephox/katamari';
 
 import { dom as menuDom } from './MenuParts';
@@ -51,7 +51,7 @@ export const renderWidgetMenu = (spec: WidgetMenuSpec): Partial<MenuTypes.MenuSp
               ])
             }
           )
-        ],
+        ]
       }
     ],
     dom: menuDom(false, 1, 'normal'),

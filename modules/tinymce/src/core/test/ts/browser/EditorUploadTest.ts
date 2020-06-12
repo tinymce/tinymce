@@ -401,6 +401,6 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', (success, failure) =
     entities: 'raw',
     indent: false,
     base_url: '/project/tinymce/js/tinymce',
-    images_dataimg_filter: (img) => dataImgFilter ? dataImgFilter(img) : true,
+    images_dataimg_filter: (img) => dataImgFilter ? dataImgFilter(img) : true
   }, success, failure);
 });

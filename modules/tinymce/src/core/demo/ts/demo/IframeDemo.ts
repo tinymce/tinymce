@@ -24,7 +24,7 @@ export default function () {
       },
       onHide: (_api) => {
         console.log('onHide ' + name);
-      },
+      }
     });
   };
 
@@ -40,7 +40,7 @@ export default function () {
     ],
     add_unload_trigger: false,
     autosave_ask_before_unload: false,
-    toolbar: 'undo redo | sidebar1 | print preview media',
+    toolbar: 'undo redo | sidebar1 | print preview media'
   };
 
   tinymce.init(settings);

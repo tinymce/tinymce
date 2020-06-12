@@ -3,9 +3,9 @@ import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
+import Editor from 'tinymce/core/api/Editor';
 import CodePlugin from 'tinymce/plugins/code/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
-import Editor from 'tinymce/core/api/Editor';
 
 UnitTest.asynctest('browser.tinymce.plugins.code.CodeSanityTest', (success, failure) => {
 
@@ -43,7 +43,7 @@ UnitTest.asynctest('browser.tinymce.plugins.code.CodeSanityTest', (success, fail
         sAssertTextareaContent(''),
         sSetTextareaContent('<em>a</em>'),
         sSubmitDialog(docBody),
-        tinyApis.sAssertContent('<p><em>a</em></p>'),
+        tinyApis.sAssertContent('<p><em>a</em></p>')
       ]),
 
       Log.stepsAsStep('TBA', 'Code: Reopen dialog and check textarea content is correct', [
@@ -55,13 +55,13 @@ UnitTest.asynctest('browser.tinymce.plugins.code.CodeSanityTest', (success, fail
       Log.stepsAsStep('TBA', 'Code: Change source code and assert editor content changes', [
         sSetTextareaContent('<strong>b</strong>'),
         sSubmitDialog(docBody),
-        tinyApis.sAssertContent('<p><strong>b</strong></p>'),
-      ]),
+        tinyApis.sAssertContent('<p><strong>b</strong></p>')
+      ])
     ], onSuccess, onFailure);
   }, {
     plugins: 'code',
     theme: 'silver',
     toolbar: 'code',
-    base_url: '/project/tinymce/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

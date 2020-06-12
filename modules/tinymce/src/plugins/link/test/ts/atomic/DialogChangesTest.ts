@@ -1,9 +1,9 @@
 import { Logger } from '@ephox/agar';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { Fun } from '@ephox/katamari';
 
 import { DialogChanges, DialogDelta } from 'tinymce/plugins/link/ui/DialogChanges';
 import { LinkDialogData, ListItem } from 'tinymce/plugins/link/ui/DialogTypes';
-import { Fun } from '@ephox/katamari';
-import { Assert, UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.test('DialogChanges', () => {
 
@@ -12,7 +12,7 @@ UnitTest.test('DialogChanges', () => {
     () => {
       // TODO TINY-2236 re-enable this (support will need to be added to bridge)
       const anchorList: ListItem[] = [
-        { value: 'alpha', text: 'Alpha' },
+        { value: 'alpha', text: 'Alpha' }
         /* {
           text: 'GroupB',
           items: [

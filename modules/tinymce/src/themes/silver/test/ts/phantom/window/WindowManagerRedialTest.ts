@@ -1,12 +1,12 @@
 import { Assertions, Chain, GeneralSteps, Logger, Mouse, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
+
+import { TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Types } from '@ephox/bridge';
 import { console } from '@ephox/dom-globals';
 import { Cell } from '@ephox/katamari';
 import { Body, Value } from '@ephox/sugar';
 import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
-
-import { TestHelpers } from '@ephox/alloy';
 import TestExtras from '../../module/TestExtras';
 
 UnitTest.asynctest('WindowManager:redial Test', (success, failure) => {
@@ -72,7 +72,7 @@ UnitTest.asynctest('WindowManager:redial Test', (success, failure) => {
         type: 'custom',
         name: 'Dest.DialogC',
         text: 'Destination: DialogC'
-      },
+      }
     ],
     initialData: { },
     onSubmit: (api) => {

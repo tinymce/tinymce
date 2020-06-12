@@ -68,11 +68,11 @@ const applyDataToElement = (editor: Editor, tableElm, data: TableData) => {
     for (let i = 0; i < tableElm.children.length; i++) {
       styleTDTH(dom, tableElm.children[i], {
         'border-width': Util.addSizeSuffix(data.border),
-        'padding': Util.addSizeSuffix(data.cellpadding),
+        'padding': Util.addSizeSuffix(data.cellpadding)
       });
       if (hasAdvancedTableTab(editor)) {
         styleTDTH(dom, tableElm.children[i], {
-          'border-color': data.bordercolor,
+          'border-color': data.bordercolor
         });
       }
     }
@@ -210,7 +210,7 @@ const open = (editor: Editor, insertNewTable: boolean) => {
       {
         type: 'cancel',
         name: 'cancel',
-        text: 'Cancel',
+        text: 'Cancel'
       },
       {
         type: 'submit',

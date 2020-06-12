@@ -52,7 +52,7 @@ export const registerDemoContextMenus = () => {
           {
             text: 'word4',
             onAction: () => console.log('word4')
-          },
+          }
         ]
       }
     ]

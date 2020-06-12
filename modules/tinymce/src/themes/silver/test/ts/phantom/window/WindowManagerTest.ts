@@ -1,15 +1,4 @@
-import {
-  ApproxStructure,
-  Assertions,
-  Chain,
-  GeneralSteps,
-  Logger,
-  Mouse,
-  Pipeline,
-  Step,
-  UiFinder,
-  Waiter,
-} from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, GeneralSteps, Logger, Mouse, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Types } from '@ephox/bridge';
 import { document, HTMLInputElement } from '@ephox/dom-globals';
@@ -73,7 +62,7 @@ UnitTest.asynctest('WindowManager:configurations Test', (success, failure) => {
       drag ? sSetupDialogWithDragging(conf) : sSetupDialogWithoutDragging(conf),
       UiFinder.sWaitFor('Waiting for dialog to appear', Body.body(), '.tox-button--icon[aria-label="Close"]'),
       sAssertSinkStructure(asserter),
-      sTeardown,
+      sTeardown
     ])
   );
 
@@ -228,7 +217,7 @@ UnitTest.asynctest('WindowManager:configurations Test', (success, failure) => {
                 name: 'fooname',
                 type: 'input',
                 label: 'Foo Label'
-              },
+              }
             ]
           },
           buttons: [],
@@ -305,7 +294,7 @@ UnitTest.asynctest('WindowManager:configurations Test', (success, failure) => {
     sTestMissingPanelItems,
     sTestMinRequiredConfigWithDragging,
     sTestMinRequiredConfigWithoutDragging,
-    sWindowDataTest,
+    sWindowDataTest
 
   ], function () {
     helpers.destroy();

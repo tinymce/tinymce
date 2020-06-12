@@ -1,11 +1,11 @@
-import { GeneralSteps, Logger, Pipeline, Step, ApproxStructure } from '@ephox/agar';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import Theme from 'tinymce/themes/silver/Theme';
+import { ApproxStructure, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
+import { Document, DocumentFragment, Node } from '@ephox/dom-globals';
+import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import { Elements, Fragment } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { rangeInsertNode } from 'tinymce/core/selection/RangeInsertNode';
-import { Node, DocumentFragment, Document } from '@ephox/dom-globals';
-import { Fragment, Elements } from '@ephox/sugar';
+import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.core.selection.RangeInsertNode', (success, failure) => {
   Theme();
@@ -74,7 +74,7 @@ UnitTest.asynctest('browser.tinymce.core.selection.RangeInsertNode', (success, f
             ]
           }))
         )
-      ])),
+      ]))
     ], onSuccess, onFailure);
   }, {
     indent: false,

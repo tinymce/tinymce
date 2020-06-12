@@ -83,7 +83,7 @@ UnitTest.asynctest('HotspotPositionTest', (success, failure) => {
           PositionTestUtils.cTestSinkWithinBounds('Relative, bounds 50px from top', 'relative', bounds100PixelsFromTop),
           cAssertLayoutDirection('bottom'),
           PositionTestUtils.cTestSinkWithinBounds('Fixed, bounds 50px from top', 'fixed', bounds100PixelsFromTop),
-          cAssertLayoutDirection('bottom'),
+          cAssertLayoutDirection('bottom')
         ])
       ])
     ];

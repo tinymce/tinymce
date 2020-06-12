@@ -45,7 +45,7 @@ const open = function (editor: Editor, database: EmojiDatabase) {
 
   const resultsField: Types.Dialog.BodyComponentApi = {
     type: 'collection',
-    name: 'results',
+    name: 'results'
     // TODO TINY-3229 implement collection columns properly
     // columns: 'auto'
   };

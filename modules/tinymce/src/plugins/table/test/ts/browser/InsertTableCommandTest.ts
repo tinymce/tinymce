@@ -1,4 +1,4 @@
-import { Logger, Pipeline, Step, Log } from '@ephox/agar';
+import { Log, Logger, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 
@@ -18,12 +18,12 @@ UnitTest.asynctest('browser.tinymce.plugins.table.InsertTableCommandTest', (succ
       Log.stepsAsStep('TBA', 'Table: Try to insert table with incorrect data', [
         tinyApis.sSetContent(''),
         sInsertTable(editor, { incorrect: 'data' }),
-        tinyApis.sAssertContent(''),
+        tinyApis.sAssertContent('')
       ]),
       Log.stepsAsStep('TBA', 'Table: Try to insert table with incorrect rows value', [
         tinyApis.sSetContent(''),
         sInsertTable(editor, { rows: 'two' }),
-        tinyApis.sAssertContent(''),
+        tinyApis.sAssertContent('')
       ]),
       Log.stepsAsStep('TBA', 'Table: Insert table 2x2', [
         tinyApis.sSetContent(''),
@@ -120,7 +120,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.InsertTableCommandTest', (succ
           '</table>'
         ),
         tinyApis.sAssertSelection([ 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0 ], 0)
-      ]),
+      ])
     ], onSuccess, onFailure);
   }, {
     plugins: 'table',

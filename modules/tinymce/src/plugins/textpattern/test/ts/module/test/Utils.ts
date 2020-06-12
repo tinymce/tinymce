@@ -11,7 +11,7 @@ const sSetContentAndFireKeystroke = function (key: number) {
         elementPath,
         offset
       ),
-      tinyActions.sContentKeystroke(key, {}),
+      tinyActions.sContentKeystroke(key, {})
     ]));
   };
 };
@@ -24,7 +24,7 @@ const sSetContentAndPressSpace = (tinyApis: TinyApis, tinyActions: TinyActions, 
     offset
   ),
   tinyApis.sExecCommand('mceInsertContent', ' '),
-  tinyActions.sContentKeystroke(32, {}),
+  tinyActions.sContentKeystroke(32, {})
 ]));
 
 const withTeardown = function (steps: Step<any, any>[], teardownStep: Step<any, any>) {
@@ -65,7 +65,7 @@ const inlineBlockStructHelper = function (tag: string, content: string) {
         children: [
           s.element(tag, {
             children: [
-              s.text(str.is(content), true),
+              s.text(str.is(content), true)
             ]
           }),
           s.zeroOrOne(s.text(str.is(''), true))
@@ -113,7 +113,7 @@ const forcedRootBlockStructHelper = function (tag: string, content: string) {
           s.element('br', {}),
           s.element('br', {})
         ]
-      }),
+      })
     ]);
   });
 };

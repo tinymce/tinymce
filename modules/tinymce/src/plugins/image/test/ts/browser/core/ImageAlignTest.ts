@@ -1,7 +1,7 @@
-import { Log, Pipeline, Step, ApproxStructure } from '@ephox/agar';
-import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
+import { ApproxStructure, Log, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr, Obj } from '@ephox/katamari';
+import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import ImagePlugin from 'tinymce/plugins/image/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 
@@ -25,7 +25,7 @@ const figureImageApproxStructure = (alignment: Alignment) => {
         children: [
           s.element('img', {
             attrs: {
-              src: str.is('image.png'),
+              src: str.is('image.png')
             }
           }),
           s.theRest()
@@ -51,10 +51,10 @@ const imageApproxStructure = (alignment: Alignment) => {
         children: [
           s.element('img', {
             attrs: {
-              src: str.is('image.png'),
+              src: str.is('image.png')
             },
             styles: alignStyles(str)[alignment]
-          }),
+          })
         ]
       }),
       s.theRest()
@@ -148,7 +148,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImageAlignTest', (success, fai
     Pipeline.async({}, [
       tinyApis.sFocus(),
       sTestImageAlignment('toolbar', sApplyAlignmentFromToolbar),
-      sTestImageAlignment('menu', sApplyAlignmentFromMenu),
+      sTestImageAlignment('menu', sApplyAlignmentFromMenu)
     ], onSuccess, onFailure);
   }, {
     theme: 'silver',

@@ -147,7 +147,7 @@ const setupDemo = () => {
         const newUrl = Option.from(window.prompt('File browser would show instead of this...', entry.value));
         return Future.pure({ ...entry, value: newUrl.getOr(entry.value) });
       })
-    },
+    }
     // styleselect: StyleFormatsBackstage.init({
     //   on: (name, f) => {
     //     if (name === 'addStyleModifications') {

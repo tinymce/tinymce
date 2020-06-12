@@ -165,7 +165,7 @@ const factory: UiSketcher.SingleSketchFactory<NotificationSketchDetail, Notifica
     {
       dom: {
         tag: 'div',
-        classes: [ 'tox-notification__body' ],
+        classes: [ 'tox-notification__body' ]
       },
       components: [
         memBannerText.asSpec()
