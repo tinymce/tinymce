@@ -100,7 +100,7 @@ const addButton = function (editor: Editor, id, tooltip, cmd, nodeName, _styles)
 };
 
 const addControl = function (editor, id, tooltip, cmd, nodeName, styles) {
-  if (styles.length > 0) {
+  if (styles.length > 1) {
     addSplitButton(editor, id, tooltip, cmd, nodeName, styles);
   } else {
     addButton(editor, id, tooltip, cmd, nodeName, styles);
