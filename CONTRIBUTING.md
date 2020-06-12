@@ -167,3 +167,21 @@ Lerna's publish process is configured to not `git push` in case of failure, so a
 git push
 git push --tags
 ```
+
+## Adding globals
+
+TinyMCE puts a `tinymce` object in the global namespace, and has a tree of objects down from there.
+If you wish to add to this, you need to do the following:
+
+1. Ensure your module is located under `modules/tinymce/src/core/main/ts/api`
+2. Expose any types under `interface TinyMCE` in `modules/tinymce/src/core/main/ts/api/Tinymce.ts`
+3. Expose any objects/functions as part of `const publicApi` in `modules/tinymce/src/core/main/ts/api/Tinymce.ts`
+4. Ensure your values are exposed in `modules/tinymce/src/core/main/json/globals.json`
+
+Ensure the paths all match. e.g. if you're exposing `modules/tinymce/src/core/main/ts/api/dom/StyleSheetLoader.ts`
+
+1. The module is under `.../api/dom/StyleSheetLoader.ts`
+2. The type is `TinyMCE.dom.StyleSheetLoader`
+3. The constructor function is `publicApi.dom.StyleSheetLoader`
+4. globals.json contains `"tinymce.core.api.dom.StyleSheetLoader"`
+
