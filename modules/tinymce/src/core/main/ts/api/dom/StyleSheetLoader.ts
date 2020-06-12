@@ -8,9 +8,9 @@
 import { navigator } from '@ephox/dom-globals';
 import { Arr, Fun, Future, Futures, Result } from '@ephox/katamari';
 import { Attr, Element } from '@ephox/sugar';
-import { ReferrerPolicy } from '../api/SettingsTypes';
-import Delay from '../api/util/Delay';
-import Tools from '../api/util/Tools';
+import { ReferrerPolicy } from '../SettingsTypes';
+import Delay from '../util/Delay';
+import Tools from '../util/Tools';
 
 /**
  * This class handles loading of external stylesheets and fires events when these are loaded.

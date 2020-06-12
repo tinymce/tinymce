@@ -60,6 +60,7 @@ import URI, { URIConstructor } from './util/URI';
 import VK from './util/VK';
 import XHR from './util/XHR';
 import { UndoManager as UndoManagerType } from '../undo/UndoManagerTypes';
+import { StyleSheetLoader } from './dom/StyleSheetLoader';
 
 export interface TinyMCE extends EditorManager {
 
@@ -123,6 +124,7 @@ export interface TinyMCE extends EditorManager {
   Formatter: (editor: Editor) => Formatter;
   NotificationManager: (editor: Editor) => NotificationManager;
   Shortcuts: ShortcutsConstructor;
+  StyleSheetLoader: StyleSheetLoader;
   UndoManager: (editor: Editor) => UndoManagerType;
   WindowManager: (editor: Editor) => WindowManager;
 

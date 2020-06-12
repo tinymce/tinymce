@@ -10,7 +10,7 @@ import { Type } from '@ephox/katamari';
 import { VisualViewport } from '@ephox/sugar';
 import * as NodeType from '../../dom/NodeType';
 import * as Position from '../../dom/Position';
-import { StyleSheetLoader } from '../../dom/StyleSheetLoader';
+import { StyleSheetLoader } from './StyleSheetLoader';
 import * as TrimNode from '../../dom/TrimNode';
 import Env from '../Env';
 import { GeomRect } from '../geom/Rect';
