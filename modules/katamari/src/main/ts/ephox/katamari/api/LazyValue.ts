@@ -30,9 +30,11 @@ const nu = function <T> (baseFn: (completer: (value: T) => void) => void): LazyV
   };
 
   const set = function (x: T) {
-    data = Option.some(x);
-    run(callbacks);
-    callbacks = [];
+    if (!isReady()) {
+      data = Option.some(x);
+      run(callbacks);
+      callbacks = [];
+    }
   };
 
   const isReady = function () {

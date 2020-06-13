@@ -110,3 +110,15 @@ promiseTest('LazyValue: parallel spec', () => fc.assert(fc.asyncProperty(fc.arra
     resolve();
   });
 }))));
+
+promiseTest('LazyValue: TINY-6106: LazyValue should only use the value from the first time the callback is called', () => new Promise((resolve, reject) => {
+  LazyValue.nu((completer) => {
+    // Since lazyvalue kicks off the computation straight away, both completer calls happen before the callback is fired.
+    // If the bug is present, the value will be 3. If the bug is fixed, the value will be 2.
+    completer(2);
+    completer(3);
+  }).get((actual) => {
+    eqAsync('should be 2', 2, actual, reject);
+    resolve();
+  });
+}));
