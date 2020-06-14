@@ -122,3 +122,46 @@ promiseTest('LazyValue: TINY-6106: LazyValue should only use the value from the 
     resolve();
   });
 }));
+
+promiseTest('LazyValue: TINY-6107: LazyValues.withTimeout - never returns', () => new Promise((resolve, reject) => {
+  LazyValues.withTimeout(
+    () => {},
+    () => 7,
+    1
+  ).get((actual) => {
+    eqAsync('should be 7', 7, actual, reject);
+    resolve();
+  });
+}));
+
+promiseTest('LazyValue: TINY-6107: LazyValues.withTimeout - times out before it returns', () => new Promise((resolve, reject) => {
+  LazyValues.withTimeout(
+    (cb) => {
+      setTimeout(() => cb(88), 50);
+    },
+    () => 99,
+    1
+  ).get((actual) => {
+    eqAsync('should be 99', 99, actual, reject);
+    resolve();
+  });
+}));
+
+promiseTest('LazyValue: TINY-6107: LazyValues.withTimeout - times out after it returns', () => new Promise((resolve, reject) => {
+  LazyValues.withTimeout<string>(
+    (cb) => {
+      setTimeout(() => {
+        cb('cat');
+      }, 10);
+    },
+    () => {
+      reject('should not have timed out');
+      return 'wrong';
+    },
+    100,
+  ).get((actual) => {
+    eqAsync('should be 99', 'cat', actual, reject);
+    resolve();
+  });
+}));
+
