@@ -5,16 +5,16 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node, ClientRect, HTMLElement } from '@ephox/dom-globals';
-import { Fun, Arr } from '@ephox/katamari';
-import * as ArrUtils from '../util/ArrUtils';
+import { ClientRect, HTMLElement, Node } from '@ephox/dom-globals';
+import { Arr, Fun } from '@ephox/katamari';
+import { getClientRects, NodeClientRect } from '../dom/Dimensions';
 import * as NodeType from '../dom/NodeType';
-import { NodeClientRect, getClientRects } from '../dom/Dimensions';
 import * as GeomClientRect from '../geom/ClientRect';
-import * as CaretUtils from './CaretUtils';
+import * as ArrUtils from '../util/ArrUtils';
 import * as CaretCandidate from './CaretCandidate';
-import { ClientRectLine, VDirection } from './LineWalker';
+import * as CaretUtils from './CaretUtils';
 import { isFakeCaretTarget } from './FakeCaret';
+import { ClientRectLine, VDirection } from './LineWalker';
 
 export interface CaretInfo {
   node: Node;
@@ -25,7 +25,8 @@ const isContentEditableFalse = NodeType.isContentEditableFalse;
 const findNode = CaretUtils.findNode;
 const distanceToRectLeft = (clientRect: NodeClientRect, clientX: number) => Math.abs(clientRect.left - clientX);
 const distanceToRectRight = (clientRect: NodeClientRect, clientX: number) => Math.abs(clientRect.right - clientX);
-const isInside = (clientX: number, clientRect: ClientRect): boolean => clientX >= clientRect.left && clientX <= clientRect.right;
+const isInsideX = (clientX: number, clientRect: ClientRect): boolean => clientX >= clientRect.left && clientX <= clientRect.right;
+const isInsideY = (clientY: number, clientRect: ClientRect): boolean => clientY >= clientRect.top && clientY <= clientRect.bottom;
 
 const findClosestClientRect = (clientRects: ClientRect[], clientX: number): NodeClientRect => ArrUtils.reduce(clientRects, (oldClientRect, clientRect) => {
   let oldDistance, newDistance;
@@ -33,11 +34,11 @@ const findClosestClientRect = (clientRects: ClientRect[], clientX: number): Node
   oldDistance = Math.min(distanceToRectLeft(oldClientRect, clientX), distanceToRectRight(oldClientRect, clientX));
   newDistance = Math.min(distanceToRectLeft(clientRect, clientX), distanceToRectRight(clientRect, clientX));
 
-  if (isInside(clientX, clientRect)) {
+  if (isInsideX(clientX, clientRect)) {
     return clientRect;
   }
 
-  if (isInside(clientX, oldClientRect)) {
+  if (isInsideX(clientX, oldClientRect)) {
     return oldClientRect;
   }
 
@@ -53,15 +54,16 @@ const findClosestClientRect = (clientRects: ClientRect[], clientX: number): Node
   return oldClientRect;
 });
 
-const walkUntil = (direction: VDirection, root: Node, predicateFn: (node: Node) => boolean, node: Node): void => {
-  while ((node = findNode(node, direction, CaretCandidate.isEditableCaretCandidate, root))) {
-    if (predicateFn(node)) {
+const walkUntil = (direction: VDirection, root: Node, predicateFn: (node: Node) => boolean, startNode: Node, includeChildren: boolean): void => {
+  let node = findNode(startNode, direction, CaretCandidate.isEditableCaretCandidate, root, !includeChildren);
+  do {
+    if (!node || predicateFn(node)) {
       return;
     }
-  }
+  } while ((node = findNode(node, direction, CaretCandidate.isEditableCaretCandidate, root)));
 };
 
-const findLineNodeRects = (root: Node, targetNodeRect: NodeClientRect): ClientRectLine[] => {
+const findLineNodeRects = (root: Node, targetNodeRect: NodeClientRect, includeChildren: boolean = true): ClientRectLine[] => {
   let clientRects = [];
 
   const collect = (checkPosFn, node) => {
@@ -77,8 +79,8 @@ const findLineNodeRects = (root: Node, targetNodeRect: NodeClientRect): ClientRe
   };
 
   clientRects.push(targetNodeRect);
-  walkUntil(VDirection.Up, root, Fun.curry(collect, GeomClientRect.isAbove), targetNodeRect.node);
-  walkUntil(VDirection.Down, root, Fun.curry(collect, GeomClientRect.isBelow), targetNodeRect.node);
+  walkUntil(VDirection.Up, root, Fun.curry(collect, GeomClientRect.isAbove), targetNodeRect.node, includeChildren);
+  walkUntil(VDirection.Down, root, Fun.curry(collect, GeomClientRect.isBelow), targetNodeRect.node, includeChildren);
 
   return clientRects;
 };
@@ -90,15 +92,17 @@ const caretInfo = (clientRect: NodeClientRect, clientX: number): CaretInfo => ({
   before: distanceToRectLeft(clientRect, clientX) < distanceToRectRight(clientRect, clientX)
 });
 
-const closestCaret = (root: HTMLElement, clientX: number, clientY: number): CaretInfo => {
-  let closestNodeRect;
+const closestFakeCaret = (root: HTMLElement, clientX: number, clientY: number): CaretInfo => {
+  const fakeTargetNodeRects = getClientRects(getFakeCaretTargets(root));
+  const targetNodeRects = Arr.filter(fakeTargetNodeRects, Fun.curry(isInsideY, clientY));
 
-  const contentEditableFalseNodeRects = getClientRects(getFakeCaretTargets(root));
-  const targetNodeRects = Arr.filter(contentEditableFalseNodeRects, (rect) => clientY >= rect.top && clientY <= rect.bottom);
-
-  closestNodeRect = findClosestClientRect(targetNodeRects, clientX);
+  let closestNodeRect = findClosestClientRect(targetNodeRects, clientX);
   if (closestNodeRect) {
-    closestNodeRect = findClosestClientRect(findLineNodeRects(root, closestNodeRect), clientX);
+    // TINY-6057: Don't include children nodes within a table when finding the line
+    // rects, as that will never be a valid position for a table fake caret and can
+    // lead to performance issues with large tables.
+    const includeChildren = !NodeType.isTable(closestNodeRect.node);
+    closestNodeRect = findClosestClientRect(findLineNodeRects(root, closestNodeRect, includeChildren), clientX);
     if (closestNodeRect && isFakeCaretTarget(closestNodeRect.node)) {
       return caretInfo(closestNodeRect, clientX);
     }
@@ -110,5 +114,5 @@ const closestCaret = (root: HTMLElement, clientX: number, clientY: number): Care
 export {
   findClosestClientRect,
   findLineNodeRects,
-  closestCaret
+  closestFakeCaret
 };
