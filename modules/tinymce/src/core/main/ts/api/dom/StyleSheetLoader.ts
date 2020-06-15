@@ -9,7 +9,7 @@ import { Document, ShadowRoot } from '@ephox/dom-globals';
 import { Arr, Obj, Results, Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 import { ReferrerPolicy } from '../SettingsTypes';
-import * as StyleSheetGlobalLoader from '../dom/StyleSheetGlobalLoader';
+import * as StyleSheetGlobalLoader from '../../dom/StyleSheetGlobalLoader';
 
 /**
  * This class handles loading of external stylesheets and fires events when these are loaded.
