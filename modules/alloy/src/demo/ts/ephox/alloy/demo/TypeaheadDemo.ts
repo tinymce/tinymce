@@ -1,16 +1,16 @@
-import { document, console } from '@ephox/dom-globals';
+import { console, document } from '@ephox/dom-globals';
 import { Arr, Future, Option, Result, Strings } from '@ephox/katamari';
 import { Class, Element, Value } from '@ephox/sugar';
 
 import { Representing } from 'ephox/alloy/api/behaviour/Representing';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
+import { Container } from 'ephox/alloy/api/ui/Container';
 import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import { Typeahead } from 'ephox/alloy/api/ui/Typeahead';
 import * as DemoSink from 'ephox/alloy/demo/DemoSink';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 import { TypeaheadData } from 'ephox/alloy/ui/types/TypeaheadTypes';
-import { Container } from 'ephox/alloy/api/ui/Container';
 
 import * as DemoRenders from './forms/DemoRenders';
 
@@ -140,19 +140,19 @@ export default (): void => {
         sketchTypeahead({
           selectsOver: true,
           getDisplayText: (itemData) => itemData.meta && itemData.meta.text ? itemData.meta.text : 'No.text',
-          populateFromBrowse: true,
+          populateFromBrowse: true
         }),
 
         sketchTypeahead({
           selectsOver: false,
           getDisplayText: (itemData) => itemData.value,
-          populateFromBrowse: true,
+          populateFromBrowse: true
         }),
 
         sketchTypeahead({
           selectsOver: false,
           getDisplayText: (itemData) => itemData.value,
-          populateFromBrowse: false,
+          populateFromBrowse: false
         })
       ]
     })

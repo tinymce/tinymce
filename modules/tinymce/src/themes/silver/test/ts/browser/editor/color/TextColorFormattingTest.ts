@@ -21,7 +21,7 @@ UnitTest.asynctest('TextColorFormattingTest', (success, failure) => {
                 'background-color': str.is('rgb(224, 62, 45)')
               },
               children: [
-                s.text(str.is('𢫕')),
+                s.text(str.is('𢫕'))
               ]
             })
           ]
@@ -118,7 +118,7 @@ UnitTest.asynctest('TextColorFormattingTest', (success, failure) => {
         tinyUi.sClickOnToolbar('click forecolor', '[aria-label="Text color"] > .tox-tbtn + .tox-split-button__chevron'),
         tinyUi.sWaitForUi('wait for color swatch to open', '.tox-swatches'),
         tinyUi.sClickOnUi('select blue color', 'div[data-mce-color="#3598DB"]'),
-        tinyApis.sAssertContentStructure(forecolorStruct),
+        tinyApis.sAssertContentStructure(forecolorStruct)
       ]),
       Log.stepsAsStep('TBA', 'TextColor: Backcolor on non breaking space', [
         tinyApis.sFocus(),
@@ -127,7 +127,7 @@ UnitTest.asynctest('TextColorFormattingTest', (success, failure) => {
         tinyUi.sClickOnToolbar('click backcolor', '[aria-label="Background color"] > .tox-tbtn + .tox-split-button__chevron'),
         tinyUi.sWaitForUi('wait for color swatch to open', '.tox-swatches'),
         tinyUi.sClickOnUi('select blue color', 'div[data-mce-color="#3598DB"]'),
-        tinyApis.sAssertContentStructure(backcolorStruct),
+        tinyApis.sAssertContentStructure(backcolorStruct)
       ]),
       Log.stepsAsStep('TBA', 'TextColor: Forecolor for a special char', [
         tinyApis.sFocus(),
@@ -136,7 +136,7 @@ UnitTest.asynctest('TextColorFormattingTest', (success, failure) => {
         tinyUi.sClickOnToolbar('click forecolor', '[aria-label="Text color"] > .tox-tbtn + .tox-split-button__chevron'),
         tinyUi.sWaitForUi('wait for color swatch to open', '.tox-swatches'),
         tinyUi.sClickOnUi('click red color', 'div[title="Red"]'),
-        tinyApis.sAssertContentStructure(forecolorTitleStruct),
+        tinyApis.sAssertContentStructure(forecolorTitleStruct)
 
       ]),
       Log.stepsAsStep('TBA', 'TextColor: Backcolor for a special char that is 4-Byte UTF-8', [
@@ -146,7 +146,7 @@ UnitTest.asynctest('TextColorFormattingTest', (success, failure) => {
         tinyUi.sClickOnToolbar('click backcolor', '[aria-label="Background color"] > .tox-tbtn + .tox-split-button__chevron'),
         tinyUi.sWaitForUi('wait for color swatch to open', '.tox-swatches'),
         tinyUi.sClickOnUi('click red color', 'div[title="Red"]'),
-        tinyApis.sAssertContentStructure(backcolorTitleStruct),
+        tinyApis.sAssertContentStructure(backcolorTitleStruct)
       ]),
       Log.stepsAsStep('TINY-4838', 'TextColor: Remove forecolor with collapsed selection', [
         tinyApis.sFocus(),
@@ -166,6 +166,6 @@ UnitTest.asynctest('TextColorFormattingTest', (success, failure) => {
   }, {
     plugins: '',
     toolbar: 'forecolor backcolor fontsizeselect',
-    base_url: '/project/tinymce/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

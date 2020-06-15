@@ -1,25 +1,40 @@
-import * as AriaVoice from '../aria/AriaVoice';
 import * as Boxes from '../alien/Boxes';
 import * as EventRoot from '../alien/EventRoot';
+import * as AriaVoice from '../aria/AriaVoice';
 import { BehaviourState } from '../behaviour/common/BehaviourState';
 import * as Fields from '../data/Fields';
 import * as Debugging from '../debugging/Debugging';
 import * as FunctionAnnotator from '../debugging/FunctionAnnotator';
+import * as DraggingTypes from '../dragging/common/DraggingTypes';
 import {
-  CustomEvent,
-  CustomSimulatedEvent,
-  EventFormat,
-  NativeSimulatedEvent,
-  ReceivingEvent,
-  SimulatedEvent,
+  CustomEvent, CustomSimulatedEvent, EventFormat, NativeSimulatedEvent, ReceivingEvent, SimulatedEvent
 } from '../events/SimulatedEvent';
 import * as TapEvent from '../events/TapEvent';
+import { FocusInsideModes } from '../keying/KeyingModeTypes';
 import * as AlloyLogger from '../log/AlloyLogger';
 import * as AlloyParts from '../parts/AlloyParts';
 import * as PartType from '../parts/PartType';
+import * as Bubble from '../positioning/layout/Bubble';
+
+import * as Layout from '../positioning/layout/Layout';
+import * as LayoutInside from '../positioning/layout/LayoutInside';
+import * as LayoutTypes from '../positioning/layout/LayoutTypes';
+import * as MaxHeight from '../positioning/layout/MaxHeight';
+import * as MaxWidth from '../positioning/layout/MaxWidth';
+import {
+  AnchorSpec, HotspotAnchorSpec, Layouts, MakeshiftAnchorSpec, NodeAnchorSpec, SelectionAnchorSpec, SubmenuAnchorSpec
+} from '../positioning/mode/Anchoring';
+import * as VerticalDir from '../positioning/mode/VerticalDir';
+import * as FormTypes from '../ui/types/FormTypes';
+import * as ItemTypes from '../ui/types/ItemTypes'; // not sure if this is the right thing to expose, but we use it a lot?
+import * as MenuTypes from '../ui/types/MenuTypes';
+import * as SliderTypes from '../ui/types/SliderTypes';
+import * as SlotContainerTypes from '../ui/types/SlotContainerTypes';
+import * as TabbarTypes from '../ui/types/TabbarTypes';
+import * as TieredMenuTypes from '../ui/types/TieredMenuTypes';
 import * as AddEventsBehaviour from './behaviour/AddEventsBehaviour';
-import * as Behaviour from './behaviour/Behaviour';
 import { AllowBubbling } from './behaviour/AllowBubbling';
+import * as Behaviour from './behaviour/Behaviour';
 import { Composing } from './behaviour/Composing';
 import { Coupling } from './behaviour/Coupling';
 import { Disabling } from './behaviour/Disabling';
@@ -45,6 +60,7 @@ import { Toggling } from './behaviour/Toggling';
 import { Tooltipping } from './behaviour/Tooltipping';
 import { Transitioning } from './behaviour/Transitioning';
 import { Unselecting } from './behaviour/Unselecting';
+import { LazySink } from './component/CommonTypes';
 import * as CompBehaviours from './component/CompBehaviours';
 import * as Component from './component/Component';
 import * as ComponentApi from './component/ComponentApi';
@@ -54,15 +70,7 @@ import * as GuiFactory from './component/GuiFactory';
 import * as GuiTemplate from './component/GuiTemplate';
 import * as Memento from './component/Memento';
 import * as SketchBehaviours from './component/SketchBehaviours';
-import {
-  AlloySpec,
-  ComponentSpec,
-  PremadeSpec,
-  RawDomSchema,
-  SimpleOrSketchSpec,
-  SimpleSpec,
-  SketchSpec,
-} from './component/SpecTypes';
+import { AlloySpec, ComponentSpec, PremadeSpec, RawDomSchema, SimpleOrSketchSpec, SimpleSpec, SketchSpec } from './component/SpecTypes';
 import * as Composite from './composite/Parts';
 import * as DragCoord from './data/DragCoord';
 import * as AlloyEvents from './events/AlloyEvents';
@@ -74,12 +82,15 @@ import * as Channels from './messages/Channels';
 import * as Attachment from './system/Attachment';
 import * as ForeignGui from './system/ForeignGui';
 import * as Gui from './system/Gui';
-import * as ItemTypes from '../ui/types/ItemTypes'; // not sure if this is the right thing to expose, but we use it a lot?
+// Test code - should eventually move to a separate project
+import * as TestHelpers from './testhelpers/TestHelpers';
 import { Button } from './ui/Button';
 import { Container } from './ui/Container';
+import { CustomList } from './ui/CustomList';
 import { DataField } from './ui/DataField';
 import { Dropdown } from './ui/Dropdown';
 import { ExpandableForm } from './ui/ExpandableForm';
+import { FloatingToolbarButton } from './ui/FloatingToolbarButton';
 import { Form } from './ui/Form';
 import { FormChooser } from './ui/FormChooser';
 import { FormCoupledInputs } from './ui/FormCoupledInputs';
@@ -102,46 +113,15 @@ import { TabButton } from './ui/TabButton';
 import { TabSection } from './ui/TabSection';
 import { Tabview } from './ui/Tabview';
 import { TieredData, tieredMenu as TieredMenu } from './ui/TieredMenu';
-import * as TieredMenuTypes from '../ui/types/TieredMenuTypes';
-import * as MenuTypes from '../ui/types/MenuTypes';
 import { Toolbar } from './ui/Toolbar';
 import { ToolbarGroup } from './ui/ToolbarGroup';
-import { FloatingToolbarButton } from './ui/FloatingToolbarButton';
 import { TouchMenu } from './ui/TouchMenu';
 import { Typeahead } from './ui/Typeahead';
 import * as UiSketcher from './ui/UiSketcher';
-import * as DraggingTypes from '../dragging/common/DraggingTypes';
-import {
-  AnchorSpec,
-  NodeAnchorSpec,
-  MakeshiftAnchorSpec,
-  SelectionAnchorSpec,
-  HotspotAnchorSpec,
-  SubmenuAnchorSpec,
-  Layouts
-} from '../positioning/mode/Anchoring';
-
-import * as Layout from '../positioning/layout/Layout';
-import * as LayoutInside from '../positioning/layout/LayoutInside';
-import * as LayoutTypes from '../positioning/layout/LayoutTypes';
-import * as Bubble from '../positioning/layout/Bubble';
-import * as MaxHeight from '../positioning/layout/MaxHeight';
-import * as MaxWidth from '../positioning/layout/MaxWidth';
-import { LazySink } from './component/CommonTypes';
-import { FocusInsideModes } from '../keying/KeyingModeTypes';
-import * as SlotContainerTypes from '../ui/types/SlotContainerTypes';
-import * as SliderTypes from '../ui/types/SliderTypes';
-import * as FormTypes from '../ui/types/FormTypes';
-import * as TabbarTypes from '../ui/types/TabbarTypes';
-import { CustomList } from './ui/CustomList';
-import * as VerticalDir from '../positioning/mode/VerticalDir';
 
 type AlloyComponent = ComponentApi.AlloyComponent;
 type MementoRecord = Memento.MementoRecord;
 type Bounds = Boxes.Bounds;
-
-// Test code - should eventually move to a separate project
-import * as TestHelpers from './testhelpers/TestHelpers';
 
 // TODO: naughty non API's being exported
 // Type Def Exports

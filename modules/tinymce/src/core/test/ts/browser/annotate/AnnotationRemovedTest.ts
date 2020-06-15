@@ -1,10 +1,10 @@
-import { GeneralSteps, Pipeline, Step, Waiter, Logger } from '@ephox/agar';
+import { GeneralSteps, Logger, Pipeline, Step, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
-import { sAnnotate, sAssertHtmlContent, sAssertGetAll } from '../../module/test/AnnotationAsserts';
+import { sAnnotate, sAssertGetAll, sAssertHtmlContent } from '../../module/test/AnnotationAsserts';
 
 UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationRemovedTest', (success, failure) => {
   Theme();
@@ -137,7 +137,7 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationRemovedTest', (succe
       Logger.t(
         'There should be no beta annotations',
         sAssertGetAll(editor, { }, 'beta')
-      ),
+      )
     ]);
 
     Pipeline.async({}, [

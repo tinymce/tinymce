@@ -7,11 +7,11 @@ import * as AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviou
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
+import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Menu } from 'ephox/alloy/api/ui/Menu';
 import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import * as MenuEvents from 'ephox/alloy/menu/util/MenuEvents';
 import * as TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 
 UnitTest.asynctest('TieredMenuWithoutImmediateHighlightTest', (success, failure) => {
 
@@ -115,7 +115,7 @@ UnitTest.asynctest('TieredMenuWithoutImmediateHighlightTest', (success, failure)
     }),
     store.sAssertEq('Focus is fired as soon as the tiered menu is highlighted by API', [
       'onOpenMenu',
-      'menu.events.focus',
+      'menu.events.focus'
     ]),
 
     Assertions.sAssertStructure(

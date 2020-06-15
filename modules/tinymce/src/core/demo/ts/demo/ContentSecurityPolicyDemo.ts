@@ -26,7 +26,7 @@ const makeSidebar = (ed, name: string, background: string, width: number) => {
     },
     onHide: (_api) => {
       console.log('onHide ' + name);
-    },
+    }
   });
 };
 

@@ -24,7 +24,7 @@ export default function () {
       },
       onHide: (_api) => {
         console.log('onHide ' + name);
-      },
+      }
     });
   };
 

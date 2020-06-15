@@ -137,7 +137,7 @@ UnitTest.asynctest('IFrame editor ContextToolbar Position test', (success, failu
           tinyApis.sNodeChanged(),
           tinyApis.sSelect('img', []),
           UiFinder.sWaitForVisible('Waiting for toolbar to appear below content', Body.body(), '.tox-pop.tox-pop--top'),
-          sAssertPosition('top', -56),
+          sAssertPosition('top', -56)
         ]),
 
         Log.stepsAsStep('TINY-4586', `Line context toolbar remains inside iframe container and doesn't overlap the header`, [
@@ -181,7 +181,7 @@ UnitTest.asynctest('IFrame editor ContextToolbar Position test', (success, failu
           sAssertFullscreenPosition('top', 470),
           UiFinder.sWaitForVisible('Check toolbar is still visible', Body.body(), '.tox-pop.tox-pop--top'),
           tinyUi.sClickOnToolbar('Press fullscreen button', fullscreenButtonSelector),
-          Waiter.sTryUntil('Wait for fullscreen to turn off', UiFinder.sNotExists(Body.body(), fullscreenSelector)),
+          Waiter.sTryUntil('Wait for fullscreen to turn off', UiFinder.sNotExists(Body.body(), fullscreenSelector))
         ]),
 
         Log.stepsAsStep('TBA', 'Context toolbar should hide when scrolled out of view', [
@@ -197,8 +197,8 @@ UnitTest.asynctest('IFrame editor ContextToolbar Position test', (success, failu
           Step.sync(() => {
             window.scrollTo(0, 2000);
           }),
-          UiFinder.sWaitForHidden('Waiting for toolbar to be hidden', Body.body(), '.tox-pop'),
-        ]),
+          UiFinder.sWaitForHidden('Waiting for toolbar to be hidden', Body.body(), '.tox-pop')
+        ])
       ], onSuccess, onFailure);
     },
     {

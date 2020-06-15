@@ -7,16 +7,7 @@
 
 /* eslint-disable max-len */
 import {
-  AlloySpec,
-  AlloyTriggers,
-  Behaviour,
-  Button,
-  Container,
-  DomFactory,
-  Dragging,
-  GuiFactory,
-  ModalDialog,
-  Reflecting,
+  AlloySpec, AlloyTriggers, Behaviour, Button, Container, DomFactory, Dragging, GuiFactory, ModalDialog, Reflecting
 } from '@ephox/alloy';
 import { Option } from '@ephox/katamari';
 import { SelectorFind } from '@ephox/sugar';
@@ -24,6 +15,7 @@ import { SelectorFind } from '@ephox/sugar';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { formCancelEvent } from '../general/FormEvents';
 import { titleChannel } from './DialogChannels';
+
 /* eslint-enable max-len */
 
 export interface WindowHeaderSpec {
@@ -38,7 +30,7 @@ const renderClose = (providersBackstage: UiFactoryBackstageProviders) => Button.
     attributes: {
       'type': 'button',
       'aria-label': providersBackstage.translate('Close'),
-      'title': providersBackstage.translate('Close'), // TODO tooltips: AP-213
+      'title': providersBackstage.translate('Close') // TODO tooltips: AP-213
     }
   },
   components: [
@@ -111,7 +103,7 @@ const renderInlineHeader = (
         leftAttr: 'data-drag-left',
         topAttr: 'data-drag-top'
       }
-    }),
+    })
   ])
 });
 

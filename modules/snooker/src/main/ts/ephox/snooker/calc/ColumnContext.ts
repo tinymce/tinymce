@@ -35,7 +35,7 @@ const adt: {
   { only: [ 'index' ] },
   { left: [ 'index', 'next' ] },
   { middle: [ 'prev', 'index', 'next' ] },
-  { right: [ 'prev', 'index' ] },
+  { right: [ 'prev', 'index' ] }
 ]);
 
 export const ColumnContext = {

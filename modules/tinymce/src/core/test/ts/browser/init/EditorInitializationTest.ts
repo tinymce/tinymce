@@ -1,9 +1,9 @@
-import { Assertions, GeneralSteps, Logger, Pipeline, Step, ApproxStructure } from '@ephox/agar';
+import { ApproxStructure, Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { console, document, window } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { LegacyUnit } from '@ephox/mcagar';
-import { Element, Attr, SelectorFilter } from '@ephox/sugar';
+import { Attr, Element, SelectorFilter } from '@ephox/sugar';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import Env from 'tinymce/core/api/Env';
 import Tools from 'tinymce/core/api/util/Tools';
@@ -84,7 +84,7 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
     EditorManager.init({
       selector: '#non-existing-id',
       skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
-      content_css: '/project/tinymce/js/tinymce/skins/content/default',
+      content_css: '/project/tinymce/js/tinymce/skins/content/default'
     }).then(function (result) {
       Assertions.assertEq('Should be an result that is zero length', 0, result.length);
       teardown(done);
@@ -100,7 +100,7 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
       EditorManager.init({
         selector: '#elm-2',
         skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
-        content_css: '/project/tinymce/js/tinymce/skins/content/default',
+        content_css: '/project/tinymce/js/tinymce/skins/content/default'
       }).then(function (result) {
         Assertions.assertEq('Should be an result that is zero length', 0, result.length);
         Env.browser.version.major = oldIeValue;
@@ -198,14 +198,14 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
                 s.element('div', {
                   classes: [ arr.has('tox-menubar') ],
                   attrs: {
-                    role: str.is('menubar'),
-                  },
+                    role: str.is('menubar')
+                  }
                 }),
                 s.element('div', {
                   classes: [ arr.has('tox-toolbar') ],
                   attrs: {
-                    role: str.is('group'),
-                  },
+                    role: str.is('group')
+                  }
                 }),
                 s.element('div', {
                   classes: [ arr.has('tox-anchorbar') ]
@@ -282,7 +282,7 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
     ])),
     Logger.t('Initialize on list item with initial content', GeneralSteps.sequence([
       sInitAndAssertContent('<ul><li>Initial Content</li></ul>', 'li', 'Initial Content')
-    ])),
+    ]))
   ], function () {
     viewBlock.detach();
     success();

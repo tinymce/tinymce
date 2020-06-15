@@ -5,11 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node, DocumentFragment, document, Element } from '@ephox/dom-globals';
+import { document, DocumentFragment, Element, Node } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import Entities from '../api/html/Entities';
-import * as Diff from './Diff';
 import * as NodeType from '../dom/NodeType';
+import * as Diff from './Diff';
 
 /**
  * This module reads and applies html fragments from/to dom nodes.
@@ -31,10 +31,10 @@ const getOuterHtml = function (elm: Node): string {
 };
 
 const createFragment = function (html: string): DocumentFragment {
-  let frag, node, container;
+  let  node;
 
-  container = document.createElement('div');
-  frag = document.createDocumentFragment();
+  const container = document.createElement('div');
+  const frag = document.createDocumentFragment();
 
   if (html) {
     container.innerHTML = html;

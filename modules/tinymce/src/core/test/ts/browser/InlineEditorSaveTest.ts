@@ -1,9 +1,9 @@
-import { Pipeline, Logger, Chain, UiFinder } from '@ephox/agar';
-import Theme from 'tinymce/themes/silver/Theme';
+import { Chain, Logger, Pipeline, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Editor as McEditor, ApiChains } from '@ephox/mcagar';
+import { ApiChains, Editor as McEditor } from '@ephox/mcagar';
 import { Body } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
+import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.core.InlineEditorSaveTest', (success, failure) =>  {
   Theme();
@@ -32,7 +32,7 @@ UnitTest.asynctest('browser.tinymce.core.InlineEditorSaveTest', (success, failur
       ApiChains.cSetRawContent('<p data-mce-bogus="all">b</p><p data-mce-bogus="1">b</p>'),
       cSaveEditor,
       cAssertBogusExist,
-      McEditor.cRemove,
+      McEditor.cRemove
     ]),
     )
   ], function () {

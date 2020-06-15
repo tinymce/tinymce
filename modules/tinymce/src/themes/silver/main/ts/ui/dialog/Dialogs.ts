@@ -4,7 +4,10 @@
  * For LGPL see License.txt in the project root for license information.
  * For commercial licenses see https://www.tiny.cloud/
  */
-import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyParts, AlloySpec, Behaviour, Button, Container, DomFactory, Focusing, Keying, ModalDialog, NativeEvents, SystemEvents, Tabstopping } from '@ephox/alloy';
+import {
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyParts, AlloySpec, Behaviour, Button, Container, DomFactory, Focusing, Keying,
+  ModalDialog, NativeEvents, SystemEvents, Tabstopping
+} from '@ephox/alloy';
 import { Option, Result } from '@ephox/katamari';
 import { Body, Class } from '@ephox/sugar';
 import Env from 'tinymce/core/api/Env';
@@ -91,7 +94,7 @@ const pFooter = (buttons: AlloySpec[]) => ModalDialog.parts().footer({
     tag: 'div',
     classes: [ 'tox-dialog__footer' ]
   },
-  components: buttons,
+  components: buttons
 });
 
 const pFooterGroup = (startButtons: AlloySpec[], endButtons: AlloySpec[]) => [
@@ -145,7 +148,7 @@ const renderDialog = (spec: DialogSpec) => {
         styles: {
           position: 'relative',
           ...spec.extraStyles
-        },
+        }
       },
       components: [
         spec.header,
@@ -182,7 +185,7 @@ const renderDialog = (spec: DialogSpec) => {
           }),
           AlloyEvents.runOnDetached(() => {
             Class.remove(Body.body(), scrollLockClass);
-          }),
+          })
         ]),
         ...spec.extraBehaviours
       ]),
@@ -192,7 +195,7 @@ const renderDialog = (spec: DialogSpec) => {
         [SystemEvents.attachedToDom()]: [ 'scroll-lock', 'dialog-events', 'alloy.base.behaviour' ],
         [SystemEvents.detachedFromDom()]: [ 'alloy.base.behaviour', 'dialog-events', 'scroll-lock' ],
         ...spec.eventOrder
-      },
+      }
     }
   );
 };

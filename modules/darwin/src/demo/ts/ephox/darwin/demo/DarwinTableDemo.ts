@@ -1,27 +1,15 @@
-import { document, window, HTMLTableElement, HTMLStyleElement } from '@ephox/dom-globals';
+import { document, HTMLStyleElement, HTMLTableElement, window } from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
 import {
-  Attr,
-  Body,
-  Compare,
-  Direction,
-  DomEvent,
-  Element,
-  Insert,
-  Node,
-  Replication,
-  Selection,
-  SelectorFind,
-  Traverse,
-  WindowSelection,
-  EventArgs,
+  Attr, Body, Compare, Direction, DomEvent, Element, EventArgs, Insert, Node, Replication, Selection, SelectorFind, Traverse,
+  WindowSelection
 } from '@ephox/sugar';
 import { Ephemera } from 'ephox/darwin/api/Ephemera';
 import * as InputHandlers from 'ephox/darwin/api/InputHandlers';
 import { SelectionAnnotation } from 'ephox/darwin/api/SelectionAnnotation';
 import * as SelectionKeys from 'ephox/darwin/api/SelectionKeys';
-import * as Util from 'ephox/darwin/selection/Util';
 import { Response } from 'ephox/darwin/selection/Response';
+import * as Util from 'ephox/darwin/selection/Util';
 
 const ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
 Attr.set(ephoxUi, 'contenteditable', 'true');

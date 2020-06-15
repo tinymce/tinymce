@@ -21,7 +21,7 @@ UnitTest.asynctest('browser.tinymce.plugins.spellchecker.SpellcheckerTest', func
     const ui = TinyUi(editor);
     Pipeline.async({}, Log.steps('TBA', 'Spellchecker: default settings', [
       sTestDefaultLanguage(editor),
-      ui.sWaitForUi('my button', '.tox-split-button'),
+      ui.sWaitForUi('my button', '.tox-split-button')
     ]), onSuccess, onFailure);
   }, {
     theme: 'silver',

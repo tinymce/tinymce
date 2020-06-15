@@ -16,7 +16,7 @@ UnitTest.asynctest('MultipleToolbarTest', (success, failure) => {
       uid: 'multiple-toolbar',
       dom: {
         tag: 'div',
-        classes: [ 'test-multiple-toolbar' ],
+        classes: [ 'test-multiple-toolbar' ]
       },
       shell: true,
       makeItem: () => Toolbar.sketch(

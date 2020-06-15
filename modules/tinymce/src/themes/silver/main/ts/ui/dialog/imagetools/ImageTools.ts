@@ -6,31 +6,23 @@
  */
 
 import {
-  AddEventsBehaviour,
-  AlloyComponent,
-  AlloyEvents,
-  AlloyTriggers,
-  Behaviour,
-  CustomEvent,
-  Disabling,
-  Representing,
-  SimpleSpec,
-  SimulatedEvent,
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, CustomEvent, Disabling, Representing, SimpleSpec,
+  SimulatedEvent
 } from '@ephox/alloy';
+import { Types } from '@ephox/bridge';
 import { Blob, console } from '@ephox/dom-globals';
 import { ImageResult, ResultConversions } from '@ephox/imagetools';
 import { Fun, Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
-import { ComposingConfigs } from 'tinymce/themes/silver/ui/alien/ComposingConfigs';
 
 import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
+import { ComposingConfigs } from 'tinymce/themes/silver/ui/alien/ComposingConfigs';
+import { Omit } from '../../Omit';
 import * as EditPanel from './EditPanel';
 import * as ImagePanel from './ImagePanel';
 import * as ImageToolsEvents from './ImageToolsEvents';
 import * as SideBar from './SideBar';
 import * as ImageToolsState from './state/ImageToolsState';
-import { Types } from '@ephox/bridge';
-import { Omit } from '../../Omit';
 
 type ImageToolsSpec = Omit<Types.ImageTools.ImageTools, 'type'>;
 

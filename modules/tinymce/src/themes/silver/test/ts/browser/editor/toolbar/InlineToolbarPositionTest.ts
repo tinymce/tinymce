@@ -1,4 +1,6 @@
-import { ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Log, NamedChain, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
+import {
+  ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Log, NamedChain, Pipeline, Step, UiFinder, Waiter
+} from '@ephox/agar';
 import { Boxes } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document, HTMLElement } from '@ephox/dom-globals';
@@ -107,11 +109,11 @@ UnitTest.asynctest('Inline Editor Toolbar Position test', (success, failure) => 
         tinyApis,
         header,
         container,
-        contentAreaContainer,
+        contentAreaContainer
       }),
       Step.sync(() => {
         teardownScroll();
-      }),
+      })
     ];
   });
 
@@ -119,7 +121,7 @@ UnitTest.asynctest('Inline Editor Toolbar Position test', (success, failure) => 
     theme: 'silver',
     inline: true,
     menubar: false,
-    base_url: '/project/tinymce/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce'
   };
 
   const getTopPositionSteps = ({
@@ -127,7 +129,7 @@ UnitTest.asynctest('Inline Editor Toolbar Position test', (success, failure) => 
     tinyApis,
     header,
     container,
-    contentAreaContainer,
+    contentAreaContainer
   }) => [
     Log.stepsAsStep('TINY-3621', 'Select item at the start of the content (absolute position)', [
       sScrollToElementAndActivate(tinyApis, contentAreaContainer, ':first-child'),
@@ -173,7 +175,7 @@ UnitTest.asynctest('Inline Editor Toolbar Position test', (success, failure) => 
     tinyApis,
     header,
     container,
-    contentAreaContainer,
+    contentAreaContainer
   }) => [
     Log.stepsAsStep('TINY-3621', 'Select item at the start of the content (docked position) and scroll to bottom', [
       sScrollToElementAndActivate(tinyApis, contentAreaContainer, ':first-child'),
@@ -243,7 +245,7 @@ UnitTest.asynctest('Inline Editor Toolbar Position test', (success, failure) => 
         tinyApis,
         header,
         container,
-        contentAreaContainer,
+        contentAreaContainer
       }) => [
         // Should be the same as top in most cases, it should only switch to the bottom when there's no room
         // in the document to show above the contentAreaContainer which we model here by using a fixed position container
@@ -319,6 +321,6 @@ UnitTest.asynctest('Inline Editor Toolbar Position test', (success, failure) => 
           Remove.remove(toolbar);
         }))
       ])
-    ]),
+    ])
   ], success, failure);
 });

@@ -172,7 +172,7 @@ const open = (editor: Editor, templateList: ExternalTemplate[]) => {
         {
           type: 'cancel',
           name: 'cancel',
-          text: 'Cancel',
+          text: 'Cancel'
         },
         {
           type: 'submit',

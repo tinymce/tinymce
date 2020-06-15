@@ -105,4 +105,4 @@ const scrollBarWidth = () => {
   return w;
 };
 
-export { get, to, by, preserve, capture, intoView, intoViewIfNeeded, setToElement, scrollBarWidth, };
+export { get, to, by, preserve, capture, intoView, intoViewIfNeeded, setToElement, scrollBarWidth };

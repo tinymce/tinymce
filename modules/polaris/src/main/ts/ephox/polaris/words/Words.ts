@@ -1,7 +1,7 @@
+import { Unicode } from '@ephox/katamari';
 import { CharacterMap, classify } from './StringMapper';
 import * as UnicodeData from './UnicodeData';
 import { isWordBoundary } from './WordBoundary';
-import { Unicode } from '@ephox/katamari';
 
 const EMPTY_STRING = UnicodeData.EMPTY_STRING;
 const WHITESPACE = UnicodeData.WHITESPACE;
@@ -72,7 +72,7 @@ export interface WordOptions {
 
 const getDefaultOptions = (): WordOptions => ({
   includeWhitespace: false,
-  includePunctuation: false,
+  includePunctuation: false
 });
 
 const getWords = <T>(chars: T[], extract: (char: T) => string, options?: WordOptions): T[][] => {

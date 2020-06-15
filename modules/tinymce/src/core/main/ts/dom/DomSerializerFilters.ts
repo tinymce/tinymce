@@ -211,15 +211,13 @@ const register = (htmlParser: DomParser, settings: DomSerializerSettings, dom: D
  * Example of what happens: <body>text</body> becomes <body>text<br><br></body>
  */
 const trimTrailingBr = function (rootNode) {
-  let brNode1, brNode2;
-
   const isBr = function (node) {
     return node && node.name === 'br';
   };
 
-  brNode1 = rootNode.lastChild;
+  const brNode1 = rootNode.lastChild;
   if (isBr(brNode1)) {
-    brNode2 = brNode1.prev;
+    const brNode2 = brNode1.prev;
 
     if (isBr(brNode2)) {
       brNode1.remove();

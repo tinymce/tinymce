@@ -1,4 +1,4 @@
-import { GeneralSteps, Pipeline, Logger, Log } from '@ephox/agar';
+import { GeneralSteps, Log, Logger, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 
@@ -68,6 +68,6 @@ UnitTest.asynctest('browser.plugins.media.DataAttributeTest', function (success,
     media_url_resolver(data, resolve) {
       resolve({ html: '<div data-ephox-embed-iri="' + data.url + '" style="max-width: 300px; max-height: 150px"></div>' });
     },
-    base_url: '/project/tinymce/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

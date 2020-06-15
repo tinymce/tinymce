@@ -6,15 +6,7 @@
  */
 
 import {
-  Behaviour,
-  Container,
-  DomFactory,
-  Memento,
-  MementoRecord,
-  ModalDialog,
-  Reflecting,
-  SketchSpec,
-  AlloyComponent,
+  AlloyComponent, Behaviour, Container, DomFactory, Memento, MementoRecord, ModalDialog, Reflecting, SketchSpec
 } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
 import { Arr, Option } from '@ephox/katamari';

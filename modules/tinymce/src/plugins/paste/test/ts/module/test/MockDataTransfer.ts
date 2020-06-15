@@ -16,7 +16,7 @@ const createDataTransferItem = function (mime, content) {
 };
 
 const create = function (inputData) {
-  let data = {}, result;
+  let data = {};
 
   const clearData = function () {
     data = {};
@@ -36,7 +36,7 @@ const create = function (inputData) {
     });
   };
 
-  result = {
+  const result = {
     dropEffect: '',
     effectAllowed: 'all',
     files: [],

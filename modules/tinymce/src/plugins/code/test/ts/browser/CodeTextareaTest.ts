@@ -1,9 +1,9 @@
-import { Pipeline, Log, Chain, Assertions, NamedChain } from '@ephox/agar';
+import { Assertions, Chain, Log, NamedChain, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyLoader, TinyUi, UiChains } from '@ephox/mcagar';
+import Editor from 'tinymce/core/api/Editor';
 import CodePlugin from 'tinymce/plugins/code/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
-import Editor from 'tinymce/core/api/Editor';
 
 UnitTest.asynctest('browser.tinymce.plugins.code.CodeTextareaTest', (success, failure) => {
 
@@ -15,7 +15,7 @@ UnitTest.asynctest('browser.tinymce.plugins.code.CodeTextareaTest', (success, fa
 
     const cOpenDialog = Chain.fromChains([
       Chain.op(() => editor.execCommand('mceCodeEditor')),
-      tinyUi.cWaitForPopup('wait for dialog', 'div[role="dialog"]'),
+      tinyUi.cWaitForPopup('wait for dialog', 'div[role="dialog"]')
     ]);
 
     const cGetWhiteSpace = Chain.injectThunked(() => {
@@ -47,6 +47,6 @@ UnitTest.asynctest('browser.tinymce.plugins.code.CodeTextareaTest', (success, fa
     plugins: 'code',
     theme: 'silver',
     toolbar: 'code',
-    base_url: '/project/tinymce/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

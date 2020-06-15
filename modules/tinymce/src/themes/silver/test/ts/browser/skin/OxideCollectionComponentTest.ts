@@ -1,26 +1,15 @@
 import {
-  ApproxStructure,
-  Assertions,
-  Chain,
-  FocusTools,
-  GeneralSteps,
-  Keyboard,
-  Keys,
-  Logger,
-  Mouse,
-  Pipeline,
-  UiFinder,
-  Log
+  ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Log, Logger, Mouse, Pipeline, UiFinder
 } from '@ephox/agar';
+import { TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document, navigator } from '@ephox/dom-globals';
 import { Arr, Option, Options, Result } from '@ephox/katamari';
 import { TinyLoader, TinyUi } from '@ephox/mcagar';
-import { Body, Element, Attr } from '@ephox/sugar';
+import { Attr, Body, Element } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
-import { TestHelpers } from '@ephox/alloy';
 
 UnitTest.asynctest('OxideCollectionComponentTest', (success, failure) => {
   // TODO TINY-3229 implement collection columns properly
@@ -91,7 +80,7 @@ UnitTest.asynctest('OxideCollectionComponentTest', (success, failure) => {
               Keyboard.sKeydown(doc, Keys.down(), { }),
               FocusTools.sTryOnSelector('Focus should be on B', doc, '.tox-collection__item:contains(B)'),
               Keyboard.sKeydown(doc, Keys.down(), { }),
-              FocusTools.sTryOnSelector('Focus should be on C', doc, '.tox-collection__item:contains(C)'),
+              FocusTools.sTryOnSelector('Focus should be on C', doc, '.tox-collection__item:contains(C)')
             ])
           ),
 
@@ -124,7 +113,7 @@ UnitTest.asynctest('OxideCollectionComponentTest', (success, failure) => {
                 Keyboard.sKeydown(doc, Keys.right(), { }),
                 FocusTools.sTryOnSelector('Focus should be on E', doc, '.tox-collection__item:contains(E)'),
                 Keyboard.sKeydown(doc, Keys.right(), { }),
-                FocusTools.sTryOnSelector('Focus should be on F', doc, '.tox-collection__item:contains(F)'),
+                FocusTools.sTryOnSelector('Focus should be on F', doc, '.tox-collection__item:contains(F)')
               ])
             ),
 
@@ -160,7 +149,7 @@ UnitTest.asynctest('OxideCollectionComponentTest', (success, failure) => {
               Keyboard.sKeydown(doc, Keys.right(), { }),
               FocusTools.sTryOnSelector('Focus should be on H', doc, '.tox-collection__item:contains(H)'),
               Keyboard.sKeydown(doc, Keys.down(), { }),
-              FocusTools.sTryOnSelector('Focus should be on I', doc, '.tox-collection__item:contains(I)'),
+              FocusTools.sTryOnSelector('Focus should be on I', doc, '.tox-collection__item:contains(I)')
             ])
           ),
 

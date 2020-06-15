@@ -6,10 +6,10 @@ import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import PluginManager from 'tinymce/core/api/PluginManager';
-import ViewBlock from '../module/test/ViewBlock';
 import Delay from 'tinymce/core/api/util/Delay';
 import Tools from 'tinymce/core/api/util/Tools';
 import Theme from 'tinymce/themes/silver/Theme';
+import ViewBlock from '../module/test/ViewBlock';
 
 UnitTest.asynctest('browser.tinymce.core.EditorManagerTest', (success, failure) => {
   const suite = LegacyUnit.createSuite();
@@ -54,7 +54,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorManagerTest', (success, failure) 
         EditorManager.init({
           selector: '#' + EditorManager.activeEditor.id,
           skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
-          content_css: '/project/tinymce/js/tinymce/skins/content/default',
+          content_css: '/project/tinymce/js/tinymce/skins/content/default'
         });
 
         LegacyUnit.equal(EditorManager.get().length, 1);
@@ -131,11 +131,9 @@ UnitTest.asynctest('browser.tinymce.core.EditorManagerTest', (success, failure) 
   });
 
   suite.test('overrideDefaults', function () {
-    let oldBaseURI, oldBaseUrl, oldSuffix;
-
-    oldBaseURI = EditorManager.baseURI;
-    oldBaseUrl = EditorManager.baseURL;
-    oldSuffix = EditorManager.suffix;
+    const oldBaseURI = EditorManager.baseURI;
+    const oldBaseUrl = EditorManager.baseURL;
+    const oldSuffix = EditorManager.suffix;
 
     EditorManager.overrideDefaults({
       test: 42,
@@ -186,9 +184,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorManagerTest', (success, failure) 
   });
 
   suite.test('Init inline editor on invalid targets', function () {
-    let invalidNames;
-
-    invalidNames = (
+    const invalidNames = (
       'area base basefont br col frame hr img input isindex link meta param embed source wbr track ' +
       'colgroup option tbody tfoot thead tr script noscript style textarea video audio iframe object menu'
     );

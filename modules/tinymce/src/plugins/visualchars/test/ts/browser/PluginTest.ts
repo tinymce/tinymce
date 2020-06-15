@@ -40,7 +40,7 @@ UnitTest.asynctest('browser.tinymce.plugins.visualchars.PluginTest', (success, f
         tinyApis.sAssertContentStructure(sAssertStruct(ApproxStructure.build((s, str) => [
           s.text(str.is('<img src="image.png">')),
           s.text(str.is(Unicode.nbsp))
-        ]))),
+        ])))
       ])
     ], onSuccess, onFailure);
   }, {

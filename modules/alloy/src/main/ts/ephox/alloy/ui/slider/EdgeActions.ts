@@ -96,5 +96,5 @@ export {
   setToBEdgeXY,
   setToBLEdgeXY,
   setToLEdge,
-  setToLEdgeXY,
+  setToLEdgeXY
 };

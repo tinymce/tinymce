@@ -1,10 +1,10 @@
-import { Arr, FutureResult, Result } from '@ephox/katamari';
-import { UnitTest, assert } from '@ephox/bedrock-client';
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import { console } from '@ephox/dom-globals';
-import * as HttpJwt from 'ephox/jax/core/HttpJwt';
-import { JwtTokenFactory } from 'ephox/jax/core/HttpTypes';
+import { Arr, FutureResult, Result } from '@ephox/katamari';
 import { DataType } from 'ephox/jax/core/DataType';
 import { HttpError } from 'ephox/jax/core/HttpError';
+import * as HttpJwt from 'ephox/jax/core/HttpJwt';
+import { JwtTokenFactory } from 'ephox/jax/core/HttpTypes';
 
 /* tslint:disable:no-console */
 
@@ -56,14 +56,14 @@ UnitTest.asynctest('HttpTest', (success, failure) => {
     expectError('GET on invalid url', HttpJwt.get(
       {
         url: '/custom/jax/sample/token/invalid',
-        responseType: DataType.JSON,
+        responseType: DataType.JSON
       },
       fakeFactory(invalidCalls)
     ), [ 'cached', 'fresh' ], invalidCalls),
     expectValue('GET on valid url', {}, HttpJwt.get(
       {
         url: '/custom/jax/sample/token/valid',
-        responseType: DataType.JSON,
+        responseType: DataType.JSON
       },
       fakeFactory(validCalls)
     ), [ 'cached' ], validCalls)

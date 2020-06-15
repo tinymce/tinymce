@@ -5,17 +5,17 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Behaviour, GuiFactory, ItemTypes, MaxHeight, Tooltipping } from '@ephox/alloy';
+import { InlineContent, Types } from '@ephox/bridge';
 import { HTMLElement } from '@ephox/dom-globals';
-import { UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
-import { Behaviour, GuiFactory, ItemTypes, Tooltipping, MaxHeight } from '@ephox/alloy';
 import { Obj, Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
-import { InlineContent, Types } from '@ephox/bridge';
-import ItemResponse from 'tinymce/themes/silver/ui/menus/item/ItemResponse';
-import { renderItemStructure } from 'tinymce/themes/silver/ui/menus/item/structure/ItemStructure';
-import { buildData, renderCommonItem } from 'tinymce/themes/silver/ui/menus/item/build/CommonMenuItem';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import I18n from 'tinymce/core/api/util/I18n';
+import { UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
+import { buildData, renderCommonItem } from 'tinymce/themes/silver/ui/menus/item/build/CommonMenuItem';
+import ItemResponse from 'tinymce/themes/silver/ui/menus/item/ItemResponse';
+import { renderItemStructure } from 'tinymce/themes/silver/ui/menus/item/structure/ItemStructure';
 
 type ItemValueHandler = (itemValue: string, itemMeta: Record<string, any>) => void;
 type TooltipWorker = (success: (elem: HTMLElement) => void) => void;
@@ -97,7 +97,7 @@ const renderAutocompleteItem = (
     onAction: (_api) => onItemValueHandler(spec.value, spec.meta),
     onSetup: () => () => { },
     triggersSubmenu: false,
-    itemBehaviours: tooltipBehaviour(spec.meta, sharedBackstage),
+    itemBehaviours: tooltipBehaviour(spec.meta, sharedBackstage)
   }, structure, itemResponse, sharedBackstage.providers);
 };
 

@@ -32,7 +32,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImageResizeTest', (success, fa
               Chain.control(
                 cAssertInputValue(generalTabSelectors.width, '5'),
                 Guard.tryUntil('did not find width input with value 5')
-              ),
+              )
             ]
           ),
           tinyUi.cSubmitDialog(),

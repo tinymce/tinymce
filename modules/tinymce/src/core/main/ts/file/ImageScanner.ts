@@ -97,13 +97,11 @@ export function ImageScanner(uploadStatus, blobCache: BlobCache): ImageScanner {
   const cachedPromises: Record<string, Promise<BlobInfoImagePair>> = {};
 
   const findAll = function (elm: HTMLElement, predicate?: (img: HTMLImageElement) => boolean) {
-    let images;
-
     if (!predicate) {
       predicate = Fun.constant(true);
     }
 
-    images = Arr.filter(getAllImages(elm), function (img) {
+    const images = Arr.filter(getAllImages(elm), function (img) {
       const src = img.src;
 
       if (!Env.fileApi) {

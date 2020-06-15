@@ -81,7 +81,7 @@ const normalizePattern = (pattern: RawPattern): Result<Pattern, PatternError> =>
       start: '',
       end: pattern.start,
       cmd: 'mceInsertContent',
-      value: pattern.replacement,
+      value: pattern.replacement
     });
   } else {
     // block pattern
@@ -96,7 +96,7 @@ const normalizePattern = (pattern: RawPattern): Result<Pattern, PatternError> =>
       type: 'block-command',
       start: pattern.start,
       cmd: command,
-      value: commandValue,
+      value: commandValue
     }));
   }
 };
@@ -117,7 +117,7 @@ const denormalizePattern = (pattern: Pattern): RawPattern => {
     if (pattern.cmd === 'mceInsertContent' && pattern.start === '') {
       return {
         start: pattern.end,
-        replacement: pattern.value,
+        replacement: pattern.value
       };
     } else {
       return {
@@ -138,7 +138,7 @@ const denormalizePattern = (pattern: Pattern): RawPattern => {
 
 const createPatternSet = (patterns: Pattern[]): PatternSet => ({
   inlinePatterns: Arr.filter(patterns, isInlinePattern),
-  blockPatterns: sortPatterns(Arr.filter(patterns, isBlockPattern)),
+  blockPatterns: sortPatterns(Arr.filter(patterns, isBlockPattern))
 });
 
 export {

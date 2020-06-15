@@ -5,10 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Editor from '../api/Editor';
 import DOMUtils from '../api/dom/DOMUtils';
-import Tools from '../api/util/Tools';
+import Editor from '../api/Editor';
 import Schema from '../api/html/Schema';
+import Tools from '../api/util/Tools';
 
 /**
  * Internal class for generating previews styles for formats.
@@ -35,15 +35,13 @@ const parsedSelectorToHtml = function (ancestry, editor: Editor) {
   };
 
   const createElement = function (sItem) {
-    let elm;
-
     item = typeof sItem === 'string' ? {
       name: sItem,
       classes: [],
       attrs: {}
     } : sItem;
 
-    elm = dom.create(item.name);
+    const elm = dom.create(item.name);
     decorate(elm, item);
     return elm;
   };
@@ -61,11 +59,11 @@ const parsedSelectorToHtml = function (ancestry, editor: Editor) {
   };
 
   const wrapInHtml = function (elm, ancestry, siblings) {
-    let parent, parentCandidate, parentRequired;
+    let parent, parentCandidate;
     const ancestor = ancestry.length > 0 && ancestry[0];
     const ancestorName = ancestor && ancestor.name;
 
-    parentRequired = getRequiredParent(elm, ancestorName);
+    const parentRequired = getRequiredParent(elm, ancestorName);
 
     if (parentRequired) {
       if (ancestorName === parentRequired) {
@@ -186,7 +184,7 @@ const parseSelector = function (selector: string) {
 };
 
 const getCssText = function (editor: Editor, format) {
-  let name, previewFrag, previewElm, items;
+  let name, previewFrag;
   let previewCss = '', parentFontSize, previewStyles;
 
   previewStyles = editor.settings.preview_styles;
@@ -228,7 +226,7 @@ const getCssText = function (editor: Editor, format) {
 
   name = format.block || format.inline || 'span';
 
-  items = parseSelector(format.selector);
+  const items = parseSelector(format.selector);
   if (items.length) {
     if (!items[0].name) { // e.g. something like ul > .someClass was provided
       items[0].name = name;
@@ -239,7 +237,7 @@ const getCssText = function (editor: Editor, format) {
     previewFrag = parsedSelectorToHtml([ name ], editor);
   }
 
-  previewElm = dom.select(name, previewFrag)[0] || previewFrag.firstChild;
+  const previewElm = dom.select(name, previewFrag)[0] || previewFrag.firstChild;
 
   // Add format styles to preview element
   each(format.styles, function (value, name) {

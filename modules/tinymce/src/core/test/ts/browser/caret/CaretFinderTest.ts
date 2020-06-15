@@ -1,11 +1,11 @@
 import { Assertions, Chain, GeneralSteps, Logger, Pipeline } from '@ephox/agar';
-import { Hierarchy, Element } from '@ephox/sugar';
+import { UnitTest } from '@ephox/bedrock-client';
+import { HTMLElement } from '@ephox/dom-globals';
+import { Option } from '@ephox/katamari';
+import { Element, Hierarchy } from '@ephox/sugar';
 import * as CaretFinder from 'tinymce/core/caret/CaretFinder';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import ViewBlock from '../../module/test/ViewBlock';
-import { UnitTest } from '@ephox/bedrock-client';
-import { Option } from '@ephox/katamari';
-import { HTMLElement } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.core.CaretFinderTest', function (success, failure) {
   const viewBlock = ViewBlock();
@@ -302,7 +302,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretFinderTest', function (success, fa
           cCreateFromPosition([], 2),
           cNavigate(false),
           cAssertCaretPosition([ 0, 0 ], 1)
-        ])),
+        ]))
       ]))
     ])),
 

@@ -1,4 +1,4 @@
-import { Assertions, Logger, Log, Pipeline, Step, Waiter } from '@ephox/agar';
+import { Assertions, Log, Logger, Pipeline, Step, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyDom, TinyLoader, TinyUi } from '@ephox/mcagar';
 import * as LinkPluginUtils from 'tinymce/plugins/link/core/Utils';
@@ -54,6 +54,6 @@ UnitTest.asynctest('browser.tinymce.plugins.link.ImageFigureLinkTest', (success,
     plugins: 'link',
     toolbar: 'link',
     theme: 'silver',
-    base_url: '/project/tinymce/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

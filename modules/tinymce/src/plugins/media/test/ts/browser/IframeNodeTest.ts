@@ -1,4 +1,4 @@
-import { Pipeline, UiFinder, Chain, Assertions, ApproxStructure, Log } from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, Log, Pipeline, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
@@ -31,7 +31,7 @@ UnitTest.asynctest('browser.core.IframeNodeTest', function (success, failure) {
               styles: {
                 width: str.is('500px'),
                 height: str.is('250px')
-              },
+              }
             })), input)
           )
         ])
@@ -53,7 +53,7 @@ UnitTest.asynctest('browser.core.IframeNodeTest', function (success, failure) {
               styles: {
                 width: str.is('500px'),
                 height: str.is('250px')
-              },
+              }
             })), input)
           )
         ])
@@ -74,11 +74,11 @@ UnitTest.asynctest('browser.core.IframeNodeTest', function (success, failure) {
               styles: {
                 width: str.none('should not have width style'),
                 height: str.none('should not have height style')
-              },
+              }
             })), input)
           )
         ])
-      ]),
+      ])
     ], onSuccess, onFailure);
   }, {
     plugins: [ 'media' ],

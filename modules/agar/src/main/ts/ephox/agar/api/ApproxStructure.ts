@@ -25,7 +25,7 @@ const structApi = {
   zeroOrOne: ApproxStructures.zeroOrOne,
   zeroOrMore: ApproxStructures.zeroOrMore,
   oneOrMore: ApproxStructures.oneOrMore,
-  theRest: ApproxStructures.theRest,
+  theRest: ApproxStructures.theRest
 };
 
 const strApi = {

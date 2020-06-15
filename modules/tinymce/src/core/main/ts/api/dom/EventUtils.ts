@@ -6,8 +6,8 @@
  */
 
 import { document, HTMLElementEventMap, window } from '@ephox/dom-globals';
-import Env from '../Env';
 import { Obj } from '@ephox/katamari';
+import Env from '../Env';
 
 export type EventUtilsCallback<T> = (event: EventUtilsEvent<T>) => void;
 
@@ -309,10 +309,8 @@ class EventUtils {
 
         if (fakeName) {
           nativeHandler = function (evt) {
-            let current, related;
-
-            current = evt.currentTarget;
-            related = evt.relatedTarget;
+            const current = evt.currentTarget;
+            let related = evt.relatedTarget;
 
             // Check if related is inside the current target if it's not then the event should
             // be ignored since it's a mouseover/mouseout inside the element
@@ -393,7 +391,7 @@ class EventUtils {
   public unbind <T = any>(target: any, names: string, callback?: EventUtilsCallback<T>): this;
   public unbind (target: any): this;
   public unbind(target: any, names?: string, callback?: EventUtilsCallback<any>): this {
-    let id, callbackList, i, ci, name, eventMap;
+    let callbackList, i, ci, name, eventMap;
 
     // Don't bind to text nodes or comments
     if (!target || target.nodeType === 3 || target.nodeType === 8) {
@@ -401,7 +399,7 @@ class EventUtils {
     }
 
     // Unbind event or events if the target has the expando
-    id = target[this.expando];
+    const id = target[this.expando];
     if (id) {
       eventMap = this.events[id];
 
@@ -578,13 +576,12 @@ class EventUtils {
    * @param {String} id Expando id value to look for.
    */
   private executeHandlers(evt, id) {
-    let callbackList, i, l, callback;
     const container = this.events[id];
 
-    callbackList = container && container[evt.type];
+    const callbackList = container && container[evt.type];
     if (callbackList) {
-      for (i = 0, l = callbackList.length; i < l; i++) {
-        callback = callbackList[i];
+      for (let i = 0, l = callbackList.length; i < l; i++) {
+        const callback = callbackList[i];
 
         // Check if callback exists might be removed if a unbind is called inside the callback
         if (callback && callback.func.call(callback.scope, evt) === false) {

@@ -1,7 +1,7 @@
-import { Assertions, Pipeline, Step, Log, Logger } from '@ephox/agar';
+import { Assertions, Log, Logger, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { HTMLTableCellElement } from '@ephox/dom-globals';
-import { LegacyUnit, TinyLoader, TinyApis } from '@ephox/mcagar';
+import { LegacyUnit, TinyApis, TinyLoader } from '@ephox/mcagar';
 
 import Tools from 'tinymce/core/api/util/Tools';
 import Plugin from 'tinymce/plugins/table/Plugin';
@@ -72,7 +72,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.GridSelectionTest', (success, 
         '</table>',
       [ '2', '6' ],
       [ '2', '3', '4', '5', '6' ]
-      ),
+      )
     ];
 
     const sAssertSelectionContent = function (editor, expectedHtml: string) {
@@ -93,6 +93,6 @@ UnitTest.asynctest('browser.tinymce.plugins.table.GridSelectionTest', (success, 
       '*': 'width,height,vertical-align,text-align,float,border-color,background-color,border,padding,border-spacing,border-collapse'
     },
     theme: 'silver',
-    base_url: '/project/tinymce/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

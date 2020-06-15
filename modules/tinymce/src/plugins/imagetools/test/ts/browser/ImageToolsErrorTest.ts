@@ -69,7 +69,7 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsErrorTest', fun
           '/custom/404', undefined, 'ImageProxy HTTP error: Could not find Image Proxy'),
 
         sTestImageToolsError('TBA', '404 with api key',
-          '/custom/404', 'fake_key', 'ImageProxy HTTP error: Could not find Image Proxy'),
+          '/custom/404', 'fake_key', 'ImageProxy HTTP error: Could not find Image Proxy')
 
       ];
 
@@ -79,7 +79,7 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsErrorTest', fun
       theme: 'silver',
       plugins: 'imagetools',
       automatic_uploads: false,
-      base_url: '/project/tinymce/js/tinymce',
+      base_url: '/project/tinymce/js/tinymce'
     },
     success,
     failure

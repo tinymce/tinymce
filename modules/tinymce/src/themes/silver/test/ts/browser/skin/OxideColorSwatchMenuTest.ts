@@ -1,26 +1,14 @@
-import {
-  ApproxStructure,
-  Assertions,
-  Chain,
-  FocusTools,
-  Guard,
-  Keyboard,
-  Keys,
-  Logger,
-  Mouse,
-  Pipeline,
-  UiFinder,
-} from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, FocusTools, Guard, Keyboard, Keys, Logger, Mouse, Pipeline, UiFinder } from '@ephox/agar';
+import { TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Menu } from '@ephox/bridge';
 import { document } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { TinyLoader } from '@ephox/mcagar';
 import { Body, Element } from '@ephox/sugar';
+import Editor from 'tinymce/core/api/Editor';
 
 import Theme from 'tinymce/themes/silver/Theme';
-import Editor from 'tinymce/core/api/Editor';
-import { TestHelpers } from '@ephox/alloy';
 
 UnitTest.asynctest('OxideColorSwatchMenuTest', (success, failure) => {
   Theme();

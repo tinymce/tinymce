@@ -1,19 +1,19 @@
-import { document, console, window, setTimeout } from '@ephox/dom-globals';
+import { console, document, setTimeout, window } from '@ephox/dom-globals';
 import { Arr, Result } from '@ephox/katamari';
 import { Class, Element } from '@ephox/sugar';
+import { LazySink } from 'ephox/alloy/api/component/CommonTypes';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
 import { Container } from 'ephox/alloy/api/ui/Container';
+import { CustomList } from 'ephox/alloy/api/ui/CustomList';
 import { SplitFloatingToolbar } from 'ephox/alloy/api/ui/SplitFloatingToolbar';
 import { SplitSlidingToolbar } from 'ephox/alloy/api/ui/SplitSlidingToolbar';
 import { Toolbar } from 'ephox/alloy/api/ui/Toolbar';
 import { ToolbarGroup } from 'ephox/alloy/api/ui/ToolbarGroup';
-import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 import * as DemoSink from 'ephox/alloy/demo/DemoSink';
-import { LazySink } from 'ephox/alloy/api/component/CommonTypes';
-import { CustomList } from 'ephox/alloy/api/ui/CustomList';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 
 import * as DemoRenders from './forms/DemoRenders';
 
@@ -288,14 +288,14 @@ export default (): void => {
         CustomList.setItems(subject4, [
           Arr.map(groups(), ToolbarGroup.sketch),
           Arr.map(groups(), ToolbarGroup.sketch),
-          Arr.map(groups(), ToolbarGroup.sketch),
+          Arr.map(groups(), ToolbarGroup.sketch)
         ]);
 
         setTimeout(() => {
           CustomList.setItems(subject4, [
             Arr.map(groups().slice(0, 1), ToolbarGroup.sketch),
             Arr.map(groups(), ToolbarGroup.sketch),
-            Arr.map(groups(), ToolbarGroup.sketch),
+            Arr.map(groups(), ToolbarGroup.sketch)
           ]);
         }, 2000);
       }, 2000);

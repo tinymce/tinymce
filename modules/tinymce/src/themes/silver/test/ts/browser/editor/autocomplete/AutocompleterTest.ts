@@ -1,13 +1,15 @@
-import { Logger, Pipeline, Step, Keys, UiFinder, GeneralSteps, Waiter } from '@ephox/agar';
+import { GeneralSteps, Keys, Logger, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { TinyLoader, TinyUi, TinyApis, TinyActions } from '@ephox/mcagar';
+import { TinyActions, TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import { Body } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Promise from 'tinymce/core/api/util/Promise';
 import SilverTheme from 'tinymce/themes/silver/Theme';
-import { AutocompleterStructure, sAssertAutocompleterStructure, sWaitForAutocompleteToClose, sWaitForAutocompleteToOpen } from '../../../module/AutocompleterUtils';
+import {
+  AutocompleterStructure, sAssertAutocompleterStructure, sWaitForAutocompleteToClose, sWaitForAutocompleteToOpen
+} from '../../../module/AutocompleterUtils';
 
 UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
   SilverTheme();
@@ -47,7 +49,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
           Step.wait(50),
           ...additionalContent ? [
             tinyApis.sExecCommand('mceInsertContent', additionalContent),
-            tinyActions.sContentKeypress(additionalContent.charCodeAt(additionalContent.length - 1), { }),
+            tinyActions.sContentKeypress(additionalContent.charCodeAt(additionalContent.length - 1), { })
           ] : [ ]
         ]);
       };
@@ -120,7 +122,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
         },
         choice: GeneralSteps.sequence([
           tinyActions.sContentKeydown(Keys.down(), { }),
-          tinyActions.sContentKeydown(Keys.enter(), { }),
+          tinyActions.sContentKeydown(Keys.enter(), { })
         ]),
         assertion: store.sAssertEq('Second action should fire', [ 'colon2:colon2-b' ])
       });
@@ -195,7 +197,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
           hasIcons: false,
           groups: [
             [
-              { title: 'equals sign', text: '<span class="tox-autocompleter-highlight">equals s</span>ign' },
+              { title: 'equals sign', text: '<span class="tox-autocompleter-highlight">equals s</span>ign' }
             ]
           ]
         },
@@ -210,7 +212,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
         initialContent: '*<span data-mce-spelling="invalid">ha</span>p',
         cursorPos: {
           elementPath: [ 0, 2 ],
-          offset: 1,
+          offset: 1
         },
         structure: {
           type: 'grid',

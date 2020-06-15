@@ -85,7 +85,7 @@ export const createTableRowDialog = () => {
                 label: 'Background color'
               }
             ]
-          },
+          }
         ]
       },
       buttons: [

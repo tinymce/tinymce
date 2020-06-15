@@ -7,7 +7,8 @@
 
 import { Attachment } from '@ephox/alloy';
 import { Cell, Throttler } from '@ephox/katamari';
-import { Body, DomEvent, Element, Position, Css } from '@ephox/sugar';
+import { PlatformDetection } from '@ephox/sand';
+import { Body, Css, DomEvent, Element, Position } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import * as Events from '../api/Events';
@@ -19,7 +20,6 @@ import OuterContainer from '../ui/general/OuterContainer';
 import { identifyMenus } from '../ui/menus/menubar/Integration';
 import { iframe as loadIframeSkin } from './../ui/skin/Loader';
 import { setToolbar } from './Toolbars';
-import { PlatformDetection } from '@ephox/sand';
 
 const DOM = DOMUtils.DOM;
 const detection = PlatformDetection.detect();
@@ -137,7 +137,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
 
   return {
     iframeContainer: socket.element().dom(),
-    editorContainer: uiComponents.outerContainer.element().dom(),
+    editorContainer: uiComponents.outerContainer.element().dom()
   };
 };
 

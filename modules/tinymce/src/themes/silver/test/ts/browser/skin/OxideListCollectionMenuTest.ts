@@ -1,13 +1,13 @@
 import { ApproxStructure, Assertions, Chain, FocusTools, Keyboard, Keys, Logger, Pipeline, UiFinder } from '@ephox/agar';
+import { TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
+import { Menu } from '@ephox/bridge';
 import { document } from '@ephox/dom-globals';
 import { TinyLoader, TinyUi } from '@ephox/mcagar';
 import { Body, Element } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
-import { Menu } from '@ephox/bridge';
-import { TestHelpers } from '@ephox/alloy';
 
 UnitTest.asynctest('OxideListCollectionMenuTest', (success, failure) => {
   Theme();
@@ -60,7 +60,7 @@ UnitTest.asynctest('OxideListCollectionMenuTest', (success, failure) => {
                             children: [
                               s.element('svg', {})
                             ]
-                          }),
+                          })
                         ]
                       }),
                       s.element('div', {
@@ -160,7 +160,7 @@ UnitTest.asynctest('OxideListCollectionMenuTest', (success, failure) => {
                 text: 'Gamma',
                 shortcut: 'Ctrl+C',
                 icon: 'fake-icon-name'
-              } as Menu.MenuItemApi,
+              } as Menu.MenuItemApi
             ]);
           }
         });

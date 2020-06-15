@@ -1,11 +1,11 @@
-import { Log, NamedChain, ApproxStructure, UiFinder, Assertions, Pipeline } from '@ephox/agar';
+import { ApproxStructure, Assertions, Log, NamedChain, Pipeline, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Id, Result } from '@ephox/katamari';
 import { Editor as McEditor } from '@ephox/mcagar';
 import { Body } from '@ephox/sugar';
-import { cExtractOnlyOne } from '../../../module/UiChainUtils';
 
 import Theme from 'tinymce/themes/silver/Theme';
+import { cExtractOnlyOne } from '../../../module/UiChainUtils';
 
 UnitTest.asynctest('Editor alignment toolbar buttons test', (success, failure) => {
   Theme();
@@ -43,7 +43,7 @@ UnitTest.asynctest('Editor alignment toolbar buttons test', (success, failure) =
                   }),
                   s.element('button', {
                     attrs: { title: str.is('No alignment') }
-                  }),
+                  })
                 ]
               })
             ]

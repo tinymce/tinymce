@@ -7,9 +7,9 @@
 
 import { FormData, XMLHttpRequest } from '@ephox/dom-globals';
 import { Type } from '@ephox/katamari';
+import { BlobInfo } from '../api/file/BlobCache';
 import Promise from '../api/util/Promise';
 import Tools from '../api/util/Tools';
-import { BlobInfo } from '../api/file/BlobCache';
 
 /**
  * Upload blobs or blob infos to the specified URL or handler.
@@ -56,9 +56,7 @@ export function Uploader(uploadStatus, settings): Uploader {
   };
 
   const defaultHandler: UploadHandler = function (blobInfo, success, failure, progress) {
-    let xhr, formData;
-
-    xhr = new XMLHttpRequest();
+    const xhr = new XMLHttpRequest();
     xhr.open('POST', settings.url);
     xhr.withCredentials = settings.credentials;
 
@@ -71,14 +69,12 @@ export function Uploader(uploadStatus, settings): Uploader {
     };
 
     xhr.onload = function () {
-      let json;
-
       if (xhr.status < 200 || xhr.status >= 300) {
         failure('HTTP Error: ' + xhr.status);
         return;
       }
 
-      json = JSON.parse(xhr.responseText);
+      const json = JSON.parse(xhr.responseText);
 
       if (!json || typeof json.location !== 'string') {
         failure('Invalid JSON: ' + xhr.responseText);
@@ -88,7 +84,7 @@ export function Uploader(uploadStatus, settings): Uploader {
       success(pathJoin(settings.basePath, json.location));
     };
 
-    formData = new FormData(); // TODO: Stick this in sand
+    const formData = new FormData(); // TODO: Stick this in sand
     formData.append('file', blobInfo.blob(), blobInfo.filename());
 
     xhr.send(formData);

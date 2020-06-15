@@ -7,7 +7,9 @@ import { Layouts } from '../../positioning/mode/Anchoring';
 import * as Dismissal from '../../sandbox/Dismissal';
 import * as Reposition from '../../sandbox/Reposition';
 import * as FloatingToolbarButtonSchema from '../../ui/schema/FloatingToolbarButtonSchema';
-import { FloatingToolbarButtonApis, FloatingToolbarButtonDetail, FloatingToolbarButtonSketcher, FloatingToolbarButtonSpec } from '../../ui/types/FloatingToolbarButtonTypes';
+import {
+  FloatingToolbarButtonApis, FloatingToolbarButtonDetail, FloatingToolbarButtonSketcher, FloatingToolbarButtonSpec
+} from '../../ui/types/FloatingToolbarButtonTypes';
 import * as Behaviour from '../behaviour/Behaviour';
 import { Coupling } from '../behaviour/Coupling';
 import { Focusing } from '../behaviour/Focusing';
@@ -43,7 +45,7 @@ const position = (button: AlloyComponent, toolbar: AlloyComponent, detail: Float
     layouts,
     overrides: {
       maxWidthFunction: MaxWidth.expandable()
-    },
+    }
   }, toolbar, bounds);
 };
 
@@ -152,7 +154,7 @@ const factory: CompositeSketchFactory<FloatingToolbarButtonDetail, FloatingToolb
     },
     getToolbar(button: AlloyComponent) {
       return Sandboxing.getState(Coupling.getCoupled(button, 'toolbarSandbox'));
-    },
+    }
   }
 });
 

@@ -12,7 +12,7 @@ const point = (type: string, element: Element<any>, x: number, y: number): void 
     radiusX: 2.5,
     radiusY: 2.5,
     rotationAngle: 10,
-    force: 0.5,
+    force: 0.5
   };
 
   // Adapted from https://stackoverflow.com/a/42447620/11275515

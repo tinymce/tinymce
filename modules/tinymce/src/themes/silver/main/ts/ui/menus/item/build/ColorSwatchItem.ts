@@ -45,7 +45,7 @@ export function renderColorSwatchItem(spec: Menu.FancyMenuItem, backstage: UiFac
     data: { value: Id.generate('widget-id') },
     dom: {
       tag: 'div',
-      classes: [ 'tox-fancymenuitem' ],
+      classes: [ 'tox-fancymenuitem' ]
     },
     autofocus: true,
     components: [

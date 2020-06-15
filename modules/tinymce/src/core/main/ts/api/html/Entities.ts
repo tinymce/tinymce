@@ -29,7 +29,6 @@ interface Entities {
 
 const makeMap = Tools.makeMap;
 
-let namedEntities, baseEntities, reverseEntities;
 const attrsCharsRegExp = /[&<>\"\u0060\u007E-\uD7FF\uE000-\uFFEF]|[\uD800-\uDBFF][\uDC00-\uDFFF]/g;
 const textCharsRegExp = /[<>&\u007E-\uD7FF\uE000-\uFFEF]|[\uD800-\uDBFF][\uDC00-\uDFFF]/g;
 const rawCharsRegExp = /[<>&\"\']/g;
@@ -43,7 +42,7 @@ const asciiMap = {
 };
 
 // Raw entities
-baseEntities = {
+const baseEntities = {
   '\"': '&quot;', // Needs to be escaped since the YUI compressor would otherwise break the code
   '\'': '&#39;',
   '<': '&lt;',
@@ -53,7 +52,7 @@ baseEntities = {
 };
 
 // Reverse lookup table for raw entities
-reverseEntities = {
+const reverseEntities = {
   '&lt;': '<',
   '&gt;': '>',
   '&amp;': '&',
@@ -63,9 +62,7 @@ reverseEntities = {
 
 // Decodes text by using the browser
 const nativeDecode = (text: string): string => {
-  let elm;
-
-  elm = Element.fromTag('div').dom();
+  const elm = Element.fromTag('div').dom();
   elm.innerHTML = text;
 
   return elm.textContent || elm.innerText || text;
@@ -97,7 +94,7 @@ const buildEntitiesLookup = (items, radix?: number) => {
 };
 
 // Unpack entities lookup where the numbers are in radix 32 to reduce the size
-namedEntities = buildEntitiesLookup(
+const namedEntities = buildEntitiesLookup(
   '50,nbsp,51,iexcl,52,cent,53,pound,54,curren,55,yen,56,brvbar,57,sect,58,uml,59,copy,' +
   '5a,ordf,5b,laquo,5c,not,5d,shy,5e,reg,5f,macr,5g,deg,5h,plusmn,5i,sup2,5j,sup3,5k,acute,' +
   '5l,micro,5m,para,5n,middot,5o,cedil,5p,sup1,5q,ordm,5r,raquo,5s,frac14,5t,frac12,5u,frac34,' +

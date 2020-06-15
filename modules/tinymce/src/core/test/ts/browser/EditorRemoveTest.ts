@@ -26,7 +26,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorRemoveTest', (success, failure) =
   Pipeline.async({}, [
     Logger.t('remove editor without initializing it', Chain.asStep({}, [
       cCreateEditor,
-      cRemoveEditor,
+      cRemoveEditor
     ])),
 
     Logger.t('remove editor where the body has been removed', Chain.asStep({}, [

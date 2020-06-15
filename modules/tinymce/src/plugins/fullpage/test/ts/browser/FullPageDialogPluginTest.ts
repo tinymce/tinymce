@@ -1,17 +1,5 @@
 import {
-  ApproxStructure,
-  Assertions,
-  Chain,
-  FocusTools,
-  GeneralSteps,
-  Keyboard,
-  Keys,
-  Logger,
-  Pipeline,
-  Step,
-  UiFinder,
-  Guard,
-  Log,
+  ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Guard, Keyboard, Keys, Log, Logger, Pipeline, Step, UiFinder
 } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
@@ -30,7 +18,7 @@ UnitTest.asynctest('browser.tinymce.plugins.fullpage.FullPageDialogPluginTest', 
     descriptionInput : 'label.tox-label:contains(Description) + input.tox-textfield',
     robotsInput : 'label.tox-label:contains(Robots) + input.tox-textfield',
     authorInput : 'label.tox-label:contains(Author) + input.tox-textfield',
-    encodingInput : 'label.tox-label:contains(Encoding) + input.tox-textfield',
+    encodingInput : 'label.tox-label:contains(Encoding) + input.tox-textfield'
   };
 
   const sInitialState = (editor) => Logger.t(
@@ -53,7 +41,7 @@ UnitTest.asynctest('browser.tinymce.plugins.fullpage.FullPageDialogPluginTest', 
                       html: str.is('Metadata and Document Properties')
                     }),
                     s.element('button', {
-                      classes: [ arr.has('tox-button--icon'), arr.has('tox-button--naked') ],
+                      classes: [ arr.has('tox-button--icon'), arr.has('tox-button--naked') ]
                     })
                   ]
                 }),
@@ -77,7 +65,7 @@ UnitTest.asynctest('browser.tinymce.plugins.fullpage.FullPageDialogPluginTest', 
                                       html: str.is('Title')
                                     }),
                                     s.element('input', {
-                                      classes: [ arr.has('tox-textfield') ],
+                                      classes: [ arr.has('tox-textfield') ]
                                     })
                                   ]
                                 }),
@@ -89,7 +77,7 @@ UnitTest.asynctest('browser.tinymce.plugins.fullpage.FullPageDialogPluginTest', 
                                       html: str.is('Keywords')
                                     }),
                                     s.element('input', {
-                                      classes: [ arr.has('tox-textfield') ],
+                                      classes: [ arr.has('tox-textfield') ]
                                     })
                                   ]
                                 }),
@@ -101,7 +89,7 @@ UnitTest.asynctest('browser.tinymce.plugins.fullpage.FullPageDialogPluginTest', 
                                       html: str.is('Description')
                                     }),
                                     s.element('input', {
-                                      classes: [ arr.has('tox-textfield') ],
+                                      classes: [ arr.has('tox-textfield') ]
                                     })
                                   ]
                                 }),
@@ -113,7 +101,7 @@ UnitTest.asynctest('browser.tinymce.plugins.fullpage.FullPageDialogPluginTest', 
                                       html: str.is('Robots')
                                     }),
                                     s.element('input', {
-                                      classes: [ arr.has('tox-textfield') ],
+                                      classes: [ arr.has('tox-textfield') ]
                                     })
                                   ]
                                 }),
@@ -125,7 +113,7 @@ UnitTest.asynctest('browser.tinymce.plugins.fullpage.FullPageDialogPluginTest', 
                                       html: str.is('Author')
                                     }),
                                     s.element('input', {
-                                      classes: [ arr.has('tox-textfield') ],
+                                      classes: [ arr.has('tox-textfield') ]
                                     })
                                   ]
                                 }),
@@ -137,7 +125,7 @@ UnitTest.asynctest('browser.tinymce.plugins.fullpage.FullPageDialogPluginTest', 
                                       html: str.is('Encoding')
                                     }),
                                     s.element('input', {
-                                      classes: [ arr.has('tox-textfield') ],
+                                      classes: [ arr.has('tox-textfield') ]
                                     })
                                   ]
                                 })
@@ -157,7 +145,7 @@ UnitTest.asynctest('browser.tinymce.plugins.fullpage.FullPageDialogPluginTest', 
             dialog
           );
         })
-      ]),
+      ])
     ])
   );
 
@@ -226,7 +214,7 @@ UnitTest.asynctest('browser.tinymce.plugins.fullpage.FullPageDialogPluginTest', 
         sCheckInputValue('Description', selectors.descriptionInput, 'the nu description'),
         sCheckInputValue('Robots', selectors.robotsInput, 'the nu robots'),
         sCheckInputValue('Author', selectors.authorInput, 'the nu author'),
-        sCheckInputValue('Encoding', selectors.encodingInput, 'the nu encoding'),
+        sCheckInputValue('Encoding', selectors.encodingInput, 'the nu encoding')
       ]), onSuccess, onFailure);
 
   }, {

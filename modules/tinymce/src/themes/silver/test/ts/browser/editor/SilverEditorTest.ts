@@ -1,13 +1,13 @@
 /* tslint:disable:no-console */
-import { ApproxStructure, Assertions, Logger, Pipeline, Step, Chain, UiFinder, Keyboard, Keys, Log } from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, Keyboard, Keys, Log, Logger, Pipeline, Step, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { console, document } from '@ephox/dom-globals';
 import { Cell } from '@ephox/katamari';
 import { TinyLoader, TinyUi } from '@ephox/mcagar';
-import { Element, Body } from '@ephox/sugar';
+import { Body, Element } from '@ephox/sugar';
+import Editor from 'tinymce/core/api/Editor';
 
 import Env from 'tinymce/core/api/Env';
-import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
@@ -51,9 +51,9 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
                                   children: [
                                     s.element('svg', {})
                                   ]
-                                }),
+                                })
                               ]
-                            }),
+                            })
                           ]
                         }),
 
@@ -91,7 +91,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
                                           children: [
                                             s.element('svg', { })
                                           ]
-                                        }),
+                                        })
                                       ]
                                     }),
 
@@ -111,7 +111,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
                                           children: [
                                             s.element('svg', { })
                                           ]
-                                        }),
+                                        })
                                       ]
                                     }),
 
@@ -185,7 +185,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
                         }),
                         s.element('div', {
                           classes: [ arr.has('tox-anchorbar') ]
-                        }),
+                        })
                       ]
                     }),
                     s.element('div', {
@@ -199,9 +199,9 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
                         }),
                         s.element('div', {
                           classes: [ arr.has('tox-sidebar') ]
-                        }),
+                        })
                       ]
-                    }),
+                    })
                   ]
                 }),
                 s.element('div', {
@@ -387,7 +387,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
                 type: 'choiceitem',
                 text: 'Split2',
                 value: 'split2'
-              },
+              }
             ]);
           },
           onSetup: (splitButtonApi) => {
@@ -416,7 +416,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
                 type: 'choiceitem',
                 text: '2-Split2',
                 value: '2-split2'
-              },
+              }
             ]);
           },
           onAction: () => {

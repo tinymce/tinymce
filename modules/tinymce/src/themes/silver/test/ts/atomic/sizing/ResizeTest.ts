@@ -9,7 +9,7 @@ const mockEditor = (containerHeight, contentAreaHeight) => {
     min_height: 400,
     max_height: 600,
     min_width: 400,
-    max_width: 600,
+    max_width: 600
   };
 
   return {
@@ -55,7 +55,7 @@ UnitTest.asynctest('Editor resizing tests', function (success, failure) {
     makeDimensionsTest('Width less than minimum, no height change', 0, -500, ResizeTypes.Both, 500, { height: 500, width: 400 }),
     makeDimensionsTest('Width more than maximum, no height change', 0, 500, ResizeTypes.Both, 500, { height: 500, width: 600 }),
     makeDimensionsTest('Both less than minimum', -500, -500, ResizeTypes.Both, 500, { height: 400, width: 400 }),
-    makeDimensionsTest('Both more than maximum', 500, 500, ResizeTypes.Both, 500, { height: 600, width: 600 }),
+    makeDimensionsTest('Both more than maximum', 500, 500, ResizeTypes.Both, 500, { height: 600, width: 600 })
   ]);
 
   Pipeline.async({}, [

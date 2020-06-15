@@ -43,5 +43,5 @@ export {
   getTemplateReplaceValues,
   getTemplates,
   getCdateFormat,
-  getMdateFormat,
+  getMdateFormat
 };

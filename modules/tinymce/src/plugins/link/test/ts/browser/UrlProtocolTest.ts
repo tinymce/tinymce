@@ -1,10 +1,4 @@
-import {
-  Pipeline,
-  UiFinder,
-  FocusTools,
-  Log,
-  GeneralSteps,
-} from '@ephox/agar';
+import { FocusTools, GeneralSteps, Log, Pipeline, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyDom, TinyLoader, TinyUi } from '@ephox/mcagar';
@@ -86,7 +80,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.UrlProtocolTest', (success, fai
         testNoProtocolConfirm('#test')
       ]),
       Log.stepsAsStep('TBA', 'Test regex for email link with mailto:', [
-        testNoProtocolConfirm('mailto:no-reply@example.com'),
+        testNoProtocolConfirm('mailto:no-reply@example.com')
       ]),
       Log.stepsAsStep('TBA', 'Test regex for email link', [
         testProtocolConfirm('no-reply@example.com', 'mailto:')

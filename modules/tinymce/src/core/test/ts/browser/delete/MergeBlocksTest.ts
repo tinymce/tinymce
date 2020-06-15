@@ -1,9 +1,9 @@
 import { Assertions, Chain, GeneralSteps, Logger, Pipeline } from '@ephox/agar';
-import { Hierarchy, Element } from '@ephox/sugar';
-import * as MergeBlocks from 'tinymce/core/delete/MergeBlocks';
-import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Option } from '@ephox/katamari';
+import { Element, Hierarchy } from '@ephox/sugar';
+import * as MergeBlocks from 'tinymce/core/delete/MergeBlocks';
+import ViewBlock from '../../module/test/ViewBlock';
 
 UnitTest.asynctest('browser.tinymce.core.delete.MergeBlocksTest', function (success, failure) {
   const viewBlock = ViewBlock();
@@ -136,7 +136,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.MergeBlocksTest', function (succ
         cMergeBlocks(true, [ 0, 0 ], [ 0, 0, 0, 0 ]),
         cAssertPosition([ 0, 0 ], 0),
         cAssertHtml('<ul><li><br><ul><li>a</li></ul></li></ul>')
-      ])),
+      ]))
     ])),
 
     Logger.t('Merge backwards', GeneralSteps.sequence([

@@ -1,13 +1,13 @@
 import { FocusTools, Keyboard, Keys, Log, Pipeline, Step } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { document } from '@ephox/dom-globals';
 import { TinyLoader } from '@ephox/mcagar';
+import { Element } from '@ephox/sugar';
+import Tools from 'tinymce/core/api/util/Tools';
 
 import * as Settings from 'tinymce/plugins/spellchecker/api/Settings';
 import SpellcheckerPlugin from 'tinymce/plugins/spellchecker/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
-import { document } from '@ephox/dom-globals';
-import { Element } from '@ephox/sugar';
-import Tools from 'tinymce/core/api/util/Tools';
 
 UnitTest.asynctest('browser.tinymce.plugins.spellchecker.SpellcheckerTest', function (success, failure) {
 
@@ -58,7 +58,7 @@ UnitTest.asynctest('browser.tinymce.plugins.spellchecker.SpellcheckerTest', func
       sPressTab,
       sAssertFocused('Spellchecker button', '.tox-split-button'), // Button can be reached by keyboard
       sPressDown,
-      sAssertFocused('First language', '.tox-collection__item:contains("English")'), // Languages can be reached by keyboard
+      sAssertFocused('First language', '.tox-collection__item:contains("English")') // Languages can be reached by keyboard
     ]), onSuccess, onFailure);
   }, {
     theme: 'silver',
@@ -73,6 +73,6 @@ UnitTest.asynctest('browser.tinymce.plugins.spellchecker.SpellcheckerTest', func
           worl: [ 'world' ]
         }});
       }
-    },
+    }
   }, success, failure);
 });

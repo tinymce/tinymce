@@ -32,4 +32,4 @@ const follow = (ancestor: Element<DomNode>, descendantPath: number[]): Option<El
   }
 };
 
-export { path, follow, };
+export { path, follow };

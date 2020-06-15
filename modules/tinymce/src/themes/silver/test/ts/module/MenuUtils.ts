@@ -23,7 +23,7 @@ const sOpenMenuWithSelector = (label: string, selector: string) => Logger.t(
     Mouse.sClickOn(Body.body(), selector),
     Chain.asStep(Body.body(), [
       UiFinder.cWaitForVisible('Waiting for menu', '[role="menu"]')
-    ]),
+    ])
   ])
 );
 

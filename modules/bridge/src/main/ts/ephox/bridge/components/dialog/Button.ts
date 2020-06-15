@@ -1,5 +1,5 @@
 import { FieldPresence, FieldSchema, ValueSchema } from '@ephox/boulder';
-import { Id, Result, Option } from '@ephox/katamari';
+import { Id, Option, Result } from '@ephox/katamari';
 
 export interface ButtonApi {
   type: 'button';
@@ -33,7 +33,7 @@ const buttonFields = [
     ValueSchema.string
   ),
   FieldSchema.optionString('icon'),
-  FieldSchema.defaultedBoolean('borderless', false),
+  FieldSchema.defaultedBoolean('borderless', false)
 ];
 
 export const buttonSchema = ValueSchema.objOf(buttonFields);

@@ -9,7 +9,10 @@ import { clearInterval, clearTimeout, document, HTMLElement, setInterval, setTim
 import Editor from '../Editor';
 import Promise from './Promise';
 
-type DebounceFunc = (...args: any[]) => { stop: () => void };
+type DebounceFunc<T extends (...args: any[]) => void> = {
+  (...args: Parameters<T>): void;
+  stop: () => void;
+};
 
 interface Delay {
   requestAnimationFrame (callback: () => void, element?: HTMLElement): void;
@@ -19,8 +22,8 @@ interface Delay {
   setTimeout (callback: () => void, time?: number): number;
   clearInterval (id: number): void;
   clearTimeout (id: number): void;
-  debounce (callback: (...args: any[]) => void, time?: number): DebounceFunc;
-  throttle (callback: (...args: any[]) => void, time?: number): DebounceFunc;
+  debounce <T extends (...args: any[]) => any>(callback: T, time?: number): DebounceFunc<T>;
+  throttle <T extends (...args: any[]) => any>(callback: T, time?: number): DebounceFunc<T>;
 }
 
 /**
@@ -74,10 +77,10 @@ const wrappedClearInterval = function (id: number) {
   return clearInterval(id);
 };
 
-const debounce = function (callback: (...args: any[]) => void, time?: number): DebounceFunc {
-  let timer, func;
+const debounce = function <T extends (...args: any[]) => any>(callback: T, time?: number): DebounceFunc<T> {
+  let timer;
 
-  func = function (...args) {
+  const func = function (...args: Parameters<T>): void {
     clearTimeout(timer);
 
     timer = wrappedSetTimeout(function () {
@@ -163,9 +166,7 @@ const Delay: Delay = {
    * @return {Number} Timeout id number.
    */
   setEditorInterval(editor, callback, time?) {
-    let timer;
-
-    timer = wrappedSetInterval(function () {
+    const timer = wrappedSetInterval(function () {
       if (!editor.removed) {
         callback();
       } else {

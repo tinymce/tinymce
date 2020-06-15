@@ -1,7 +1,7 @@
-import { Step, Log, ApproxStructure, Pipeline } from '@ephox/agar';
+import { ApproxStructure, Log, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Obj } from '@ephox/katamari';
+import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
@@ -50,14 +50,14 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ApplyCellStyleCommandTest', (s
                   }),
                   s.element('td', {
                     styles: {
-                      width: str.is('50%'),
+                      width: str.is('50%')
                     },
                     children: [
                       s.text(str.is('b'))
                     ]
                   })
                 ]
-              }),
+              })
             ]
           })
         ]
@@ -108,7 +108,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ApplyCellStyleCommandTest', (s
         sApplyCellStyle(editor, { borderColor: 'blue' }),
         sAssertTableCellStructure({ 'background-color': 'red', 'border-color': 'blue' }),
         sApplyCellStyle(editor, { backgroundColor: '' }),
-        sAssertTableCellStructure({ 'border-color': 'blue' }),
+        sAssertTableCellStructure({ 'border-color': 'blue' })
       ]),
       Log.stepsAsStep('TINY-6004', `Test applying, changing and removing multiple styles with kebab-case`, [
         tinyApis.sSetContent(table),
@@ -118,7 +118,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ApplyCellStyleCommandTest', (s
         sApplyCellStyle(editor, { 'border-color': 'blue' }),
         sAssertTableCellStructure({ 'background-color': 'red', 'border-color': 'blue' }),
         sApplyCellStyle(editor, { 'background-color': '' }),
-        sAssertTableCellStructure({ 'border-color': 'blue' }),
+        sAssertTableCellStructure({ 'border-color': 'blue' })
       ]),
       Log.stepsAsStep('TINY-6004', `Test applying and removing all valid styles`, [
         tinyApis.sSetContent(table),
@@ -134,7 +134,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ApplyCellStyleCommandTest', (s
   }, {
     plugins: 'table',
     theme: 'silver',
-    base_url: '/project/tinymce/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });
 

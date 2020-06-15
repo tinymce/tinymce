@@ -47,6 +47,6 @@ UnitTest.asynctest('browser.tinymce.plugins.template.SelectedContentTest', (succ
     theme: 'silver',
     plugins: 'template',
     toolbar: 'template',
-    base_url: '/project/tinymce/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

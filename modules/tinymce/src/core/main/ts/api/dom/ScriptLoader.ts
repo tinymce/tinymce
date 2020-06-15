@@ -7,9 +7,9 @@
 
 import { console, document } from '@ephox/dom-globals';
 import { Type } from '@ephox/katamari';
-import DOMUtils from './DOMUtils';
 import { ReferrerPolicy } from '../SettingsTypes';
 import Tools from '../util/Tools';
+import DOMUtils from './DOMUtils';
 
 /**
  * This class handles asynchronous/synchronous loading of JavaScript files it will execute callbacks
@@ -96,7 +96,7 @@ class ScriptLoader {
    */
   public loadScript(url: string, success?: () => void, failure?: () => void) {
     const dom = DOM;
-    let elm, id;
+    let elm;
 
     // Execute callback when script is loaded
     const done = function () {
@@ -128,7 +128,7 @@ class ScriptLoader {
       }
     };
 
-    id = dom.uniqueId();
+    const id = dom.uniqueId();
 
     // Create new script element
     elm = document.createElement('script');
@@ -237,7 +237,6 @@ class ScriptLoader {
    */
   public loadScripts(scripts: string[], success?: () => void, scope?: {}, failure?: (urls: string[]) => void) {
     const self = this;
-    let loadScripts;
     const failures = [];
 
     const execCallbacks = function (name, url) {
@@ -257,7 +256,7 @@ class ScriptLoader {
       scope: scope || this
     });
 
-    loadScripts = function () {
+    const loadScripts = function () {
       const loadingScripts = grep(scripts);
 
       // Current scripts has been handled

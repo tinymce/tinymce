@@ -5,13 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Element, Node } from '@ephox/dom-globals';
+import { Arr, Fun } from '@ephox/katamari';
 import * as NodeType from '../dom/NodeType';
+import * as ArrUtils from '../util/ArrUtils';
 import * as CaretCandidate from './CaretCandidate';
 import CaretPosition from './CaretPosition';
-import { isBackwards, isForwards, findNode } from './CaretUtils';
-import { Node, Element } from '@ephox/dom-globals';
-import { Fun, Arr } from '@ephox/katamari';
-import * as ArrUtils from '../util/ArrUtils';
+import { findNode, isBackwards, isForwards } from './CaretUtils';
 
 export interface CaretWalker {
   next(caretPosition: CaretPosition): CaretPosition;
@@ -113,7 +113,7 @@ const moveForwardFromBr = (root: Element, nextNode: Node) => {
 
 const findCaretPosition = (direction: HDirection, startPos: CaretPosition, root: Node): CaretPosition => {
   let node, nextNode, innerNode;
-  let rootContentEditableFalseElm, caretPosition;
+  let caretPosition;
 
   if (!isElement(root) || !startPos) {
     return null;
@@ -202,7 +202,7 @@ const findCaretPosition = (direction: HDirection, startPos: CaretPosition, root:
 
   nextNode = findNode(node, direction, isEditableCaretCandidate, root);
 
-  rootContentEditableFalseElm = ArrUtils.last(Arr.filter(getParents(container, root), isContentEditableFalse));
+  const rootContentEditableFalseElm = ArrUtils.last(Arr.filter(getParents(container, root), isContentEditableFalse));
   if (rootContentEditableFalseElm && (!nextNode || !rootContentEditableFalseElm.contains(nextNode))) {
     if (isForwards(direction)) {
       caretPosition = CaretPosition.after(rootContentEditableFalseElm);

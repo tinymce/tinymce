@@ -1,9 +1,9 @@
 import { Pipeline, Step } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
+import { window } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { LegacyUnit } from '@ephox/mcagar';
 import EventUtils from 'tinymce/core/api/dom/EventUtils';
-import { UnitTest } from '@ephox/bedrock-client';
-import { window } from '@ephox/dom-globals';
 
 declare const document: any;
 
@@ -100,15 +100,13 @@ UnitTest.asynctest('browser.tinymce.core.dom.EventUtilsTest', function (success,
   });
 
   suite.test('unbind multiple', function () {
-    let result;
-
     eventUtils.bind(window, 'mouseup mousedown click', function (e) {
       result[e.type] = true;
     });
 
     eventUtils.unbind(window, 'mouseup mousedown');
 
-    result = {};
+    const result = {};
     eventUtils.fire(window, 'mouseup');
     eventUtils.fire(window, 'mousedown');
     eventUtils.fire(window, 'click');
@@ -116,13 +114,11 @@ UnitTest.asynctest('browser.tinymce.core.dom.EventUtilsTest', function (success,
   });
 
   suite.test('bind multiple', function () {
-    let result;
-
     eventUtils.bind(window, 'mouseup mousedown', function (e) {
       result[e.type] = true;
     });
 
-    result = {};
+    const result = {};
     eventUtils.fire(window, 'mouseup');
     eventUtils.fire(window, 'mousedown');
     eventUtils.fire(window, 'click');
@@ -174,8 +170,6 @@ UnitTest.asynctest('browser.tinymce.core.dom.EventUtilsTest', function (success,
   });
 
   suite.test('bind/fire stopImmediatePropagation', function () {
-    let result;
-
     eventUtils.bind(window, 'click', function () {
       result.click1 = true;
     });
@@ -189,14 +183,12 @@ UnitTest.asynctest('browser.tinymce.core.dom.EventUtilsTest', function (success,
       result.click3 = true;
     });
 
-    result = {};
+    const result = {} as Record<string, any>;
     eventUtils.fire(window, 'click');
     LegacyUnit.deepEqual(result, { click1: true, click2: true });
   });
 
   suite.test('bind/fire stopPropagation', function () {
-    let result;
-
     eventUtils.bind(window, 'click', function () {
       result.click1 = true;
     });
@@ -210,7 +202,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.EventUtilsTest', function (success,
       e.stopPropagation();
     });
 
-    result = {};
+    const result = {} as Record<string, any>;
     eventUtils.fire(document.getElementById('inner'), 'click');
     LegacyUnit.deepEqual(result, { click3: true });
   });

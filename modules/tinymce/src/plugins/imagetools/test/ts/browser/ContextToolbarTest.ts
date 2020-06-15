@@ -1,15 +1,15 @@
-import { Log, Pipeline, Chain, UiFinder, FocusTools, Keyboard, Keys, GeneralSteps, Waiter, NamedChain } from '@ephox/agar';
+import { Chain, FocusTools, GeneralSteps, Keyboard, Keys, Log, NamedChain, Pipeline, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
+import { Option } from '@ephox/katamari';
 import { TinyApis, TinyDom, TinyLoader, TinyUi, UiChains } from '@ephox/mcagar';
+import { Element } from '@ephox/sugar';
 
 import ImagePlugin from 'tinymce/plugins/image/Plugin';
 import ImageToolsPlugin from 'tinymce/plugins/imagetools/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
-import { Element } from '@ephox/sugar';
-import * as ImageUtils from '../module/test/ImageUtils';
 import ImageOps from '../module/test/ImageOps';
-import { Option } from '@ephox/katamari';
+import * as ImageUtils from '../module/test/ImageUtils';
 
 UnitTest.asynctest('browser.tinymce.plugins.imagetools.ContextToolbarTest', (success, failure) => {
   Theme();
@@ -27,7 +27,7 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.ContextToolbarTest', (suc
     const sOpenContextToolbar = (source) => GeneralSteps.sequence([
       ImageUtils.sLoadImage(editor, source, { width: 460, height: 598 }),
       tinyApis.sSelect('img', []),
-      tinyUi.sWaitForUi('Wait for table context toolbar', '.tox-toolbar button[aria-label="Rotate counterclockwise"]'),
+      tinyUi.sWaitForUi('Wait for table context toolbar', '.tox-toolbar button[aria-label="Rotate counterclockwise"]')
     ]);
 
     // Use keyboard shortcut ctrl+F9 to navigate to the context toolbar
@@ -109,7 +109,7 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.ContextToolbarTest', (suc
         */
         sWaitForDialogOpenThenCloseDialog('div.tox-image-tools__image>img'),
         Chain.asStep({}, [ cClickContextToolbarButton('Image options') ]),
-        sWaitForDialogOpenThenCloseDialog('div.tox-form'),
+        sWaitForDialogOpenThenCloseDialog('div.tox-form')
       ])
     ], onSuccess, onFailure);
   }, {

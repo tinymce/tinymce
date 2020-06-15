@@ -24,7 +24,7 @@
  * @version 3.4
  */
 
-import { Unicode, Obj } from '@ephox/katamari';
+import { Obj, Unicode } from '@ephox/katamari';
 import Schema from './Schema';
 
 export interface StyleMap { [s: string]: string | number }
@@ -53,7 +53,6 @@ const Styles = function (settings?, schema?: Schema): Styles {
   const trimRightRegExp = /\s+$/;
   let i;
   const encodingLookup = {};
-  let encodingItems;
   let validStyles;
   let invalidStyles;
   const invisibleChar = Unicode.zeroWidth;
@@ -65,7 +64,7 @@ const Styles = function (settings?, schema?: Schema): Styles {
     invalidStyles = schema.getInvalidStyles();
   }
 
-  encodingItems = (`\\" \\' \\; \\: ; : ` + invisibleChar).split(' ');
+  const encodingItems = (`\\" \\' \\; \\: ; : ` + invisibleChar).split(' ');
   for (i = 0; i < encodingItems.length; i++) {
     encodingLookup[encodingItems[i]] = invisibleChar + i;
     encodingLookup[invisibleChar + i] = encodingItems[i];
@@ -99,24 +98,22 @@ const Styles = function (settings?, schema?: Schema): Styles {
       const urlConverterScope = settings.url_converter_scope || this;
 
       const compress = function (prefix, suffix, noJoin?) {
-        let top, right, bottom, left;
-
-        top = styles[prefix + '-top' + suffix];
+        const top = styles[prefix + '-top' + suffix];
         if (!top) {
           return;
         }
 
-        right = styles[prefix + '-right' + suffix];
+        const right = styles[prefix + '-right' + suffix];
         if (!right) {
           return;
         }
 
-        bottom = styles[prefix + '-bottom' + suffix];
+        const bottom = styles[prefix + '-bottom' + suffix];
         if (!bottom) {
           return;
         }
 
-        left = styles[prefix + '-left' + suffix];
+        const left = styles[prefix + '-left' + suffix];
         if (!left) {
           return;
         }
@@ -332,11 +329,11 @@ const Styles = function (settings?, schema?: Schema): Styles {
       let css = '';
 
       const serializeStyles = (name: string) => {
-        let styleList, i, l, value;
+        let value;
 
-        styleList = validStyles[name];
+        const styleList = validStyles[name];
         if (styleList) {
-          for (i = 0, l = styleList.length; i < l; i++) {
+          for (let i = 0, l = styleList.length; i < l; i++) {
             name = styleList[i];
             value = styles[name];
 

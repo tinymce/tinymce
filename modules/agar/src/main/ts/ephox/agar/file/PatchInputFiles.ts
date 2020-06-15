@@ -1,6 +1,6 @@
-import { HTMLInputElement, File, Window, document, Event } from '@ephox/dom-globals';
+import { Chain, GeneralSteps, Step } from '@ephox/agar';
+import { document, Event, File, HTMLInputElement, Window } from '@ephox/dom-globals';
 import { Cell, Option } from '@ephox/katamari';
-import { Step, GeneralSteps, Chain } from '@ephox/agar';
 import { createFileList } from './FileList';
 
 interface Props {
@@ -54,7 +54,7 @@ const cUnpatchInputElement = Chain.op<any>(() => {
 const sRunOnPatchedFileInput = (files: File[], step: Step<any, any>): Step<any, any> => GeneralSteps.sequence([
   Chain.asStep({}, [ cPatchInputElement(files) ]),
   step,
-  Chain.asStep({}, [ cUnpatchInputElement ]),
+  Chain.asStep({}, [ cUnpatchInputElement ])
 ]);
 
 const cRunOnPatchedFileInput = (files: File[], chain: Chain<any, any>): Chain<any, any> => Chain.fromChains([

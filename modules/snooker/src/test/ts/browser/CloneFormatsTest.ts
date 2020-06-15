@@ -2,8 +2,8 @@ import { assert, UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
 import { Element, Html, Insert } from '@ephox/sugar';
-import * as TableFill from 'ephox/snooker/api/TableFill';
 import { CellSpan } from 'ephox/snooker/api/Generators';
+import * as TableFill from 'ephox/snooker/api/TableFill';
 
 UnitTest.test('CloneFormatsTest', function () {
   const doc = Element.fromDom(document);
@@ -17,7 +17,7 @@ UnitTest.test('CloneFormatsTest', function () {
   const cell: CellSpan = {
     element: Fun.constant(cellElement),
     colspan: Fun.constant(1),
-    rowspan: Fun.constant(1),
+    rowspan: Fun.constant(1)
   };
 
   const clonedCell = cloneTableFill.cell(cell);

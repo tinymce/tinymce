@@ -116,9 +116,9 @@ const canHaveChildren = function (editor: Editor, node) {
 };
 
 const moveSelectionToMarker = function (editor: Editor, marker) {
-  let parentEditableFalseElm, parentBlock, nextRng;
+  let nextRng;
   const dom = editor.dom, selection = editor.selection;
-  let node, node2;
+  let node2;
 
   const getContentEditableFalseParent = function (node: Node) {
     const root = editor.getBody();
@@ -139,7 +139,7 @@ const moveSelectionToMarker = function (editor: Editor, marker) {
   editor.selection.scrollIntoView(marker);
 
   // If marker is in cE=false then move selection to that element instead
-  parentEditableFalseElm = getContentEditableFalseParent(marker);
+  const parentEditableFalseElm = getContentEditableFalseParent(marker);
   if (parentEditableFalseElm) {
     dom.remove(marker);
     selection.select(parentEditableFalseElm);
@@ -150,7 +150,7 @@ const moveSelectionToMarker = function (editor: Editor, marker) {
   let rng = dom.createRng();
 
   // If previous sibling is a text node set the selection to the end of that node
-  node = marker.previousSibling;
+  const node = marker.previousSibling;
   if (node && node.nodeType === 3) {
     rng.setStart(node, node.nodeValue.length);
 
@@ -179,7 +179,7 @@ const moveSelectionToMarker = function (editor: Editor, marker) {
   };
 
   // Remove the marker node and set the new range
-  parentBlock = dom.getParent(marker, dom.isBlock);
+  const parentBlock = dom.getParent(marker, dom.isBlock);
   dom.remove(marker);
 
   if (parentBlock && dom.isEmpty(parentBlock)) {
@@ -216,8 +216,8 @@ const deleteSelectedContent = (editor: Editor) => {
 };
 
 export const insertHtmlAtCaret = function (editor: Editor, value: string, details) {
-  let parser, serializer, parentNode, rootNode, fragment, args;
-  let marker, rng, node, bookmarkHtml, merge;
+  let parentNode, rootNode, args;
+  let marker, rng, node;
   const selection: Selection = editor.selection, dom = editor.dom;
 
   // Check for whitespace before/after value
@@ -226,13 +226,13 @@ export const insertHtmlAtCaret = function (editor: Editor, value: string, detail
   }
 
   // Setup parser and serializer
-  parser = editor.parser;
-  merge = details.merge;
+  const parser = editor.parser;
+  const merge = details.merge;
 
-  serializer = Serializer({
+  const serializer = Serializer({
     validate: editor.settings.validate
   }, editor.schema);
-  bookmarkHtml = '<span id="mce_marker" data-mce-type="bookmark">&#xFEFF;&#x200B;</span>';
+  const bookmarkHtml = '<span id="mce_marker" data-mce-type="bookmark">&#xFEFF;&#x200B;</span>';
 
   // Run beforeSetContent handlers on the HTML to be inserted
   args = { content: value, format: 'html', selection: true, paste: details.paste };
@@ -275,7 +275,7 @@ export const insertHtmlAtCaret = function (editor: Editor, value: string, detail
 
   // Parse the fragment within the context of the parent node
   const parserArgs: any = { context: parentNode.nodeName.toLowerCase(), data: details.data, insert: true };
-  fragment = parser.parse(value, parserArgs);
+  const fragment = parser.parse(value, parserArgs);
 
   // Custom handling of lists
   if (details.paste === true && InsertList.isListFragment(editor.schema, fragment) && InsertList.isParentBlockLi(dom, parentNode)) {

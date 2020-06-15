@@ -36,6 +36,6 @@ export const Cleaner = () => {
   return {
     add,
     run,
-    wrap,
+    wrap
   };
 };

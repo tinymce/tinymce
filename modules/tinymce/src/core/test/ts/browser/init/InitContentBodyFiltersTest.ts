@@ -1,9 +1,9 @@
 import { Log, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
+import { Arr } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
-import { Arr } from '@ephox/katamari';
 
 UnitTest.asynctest('browser.tinymce.core.init.InitContentBodyFiltersTest', (success, failure) => {
   Theme();
@@ -16,8 +16,8 @@ UnitTest.asynctest('browser.tinymce.core.init.InitContentBodyFiltersTest', (succ
         tinyApis.sFocus(),
         tinyApis.sSetContent('<p style="color: rgb(255, 0, 0);">abc</p>'),
         // If an exception occurs, then no content will be inserted into the editor
-        tinyApis.sAssertContent('<p>abc</p>'),
-      ]),
+        tinyApis.sAssertContent('<p>abc</p>')
+      ])
     ], onSuccess, onFailure);
   }, {
     theme: 'silver',
@@ -32,6 +32,6 @@ UnitTest.asynctest('browser.tinymce.core.init.InitContentBodyFiltersTest', (succ
           });
         });
       });
-    },
+    }
   }, success, failure);
 });

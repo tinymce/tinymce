@@ -26,7 +26,7 @@ export const createCodeSampleDialog = () => {
           },
           {
             name: 'code',
-            type: 'textarea',
+            type: 'textarea'
           }
         ]
       },

@@ -4,7 +4,9 @@
  * For LGPL see License.txt in the project root for license information.
  * For commercial licenses see https://www.tiny.cloud/
  */
-import { AlloyEvents, AlloyParts, AlloySpec, AlloyTriggers, Behaviour, DomFactory, GuiFactory, ModalDialog, Reflecting, SystemEvents, } from '@ephox/alloy';
+import {
+  AlloyEvents, AlloyParts, AlloySpec, AlloyTriggers, Behaviour, DomFactory, GuiFactory, ModalDialog, Reflecting, SystemEvents
+} from '@ephox/alloy';
 import { DialogManager, Types } from '@ephox/bridge';
 import { Arr, Cell, Option } from '@ephox/katamari';
 
@@ -88,7 +90,7 @@ const renderModalDialog = (spec: DialogSpec, initialData, dialogEvents: AlloyEve
     eventOrder: {
       [SystemEvents.receive()]: [ 'reflecting', 'receiving' ],
       [SystemEvents.attachedToDom()]: [ 'scroll-lock', 'reflecting', 'messages', 'dialog-events', 'alloy.base.behaviour' ],
-      [SystemEvents.detachedFromDom()]: [ 'alloy.base.behaviour', 'dialog-events', 'messages', 'reflecting', 'scroll-lock' ],
+      [SystemEvents.detachedFromDom()]: [ 'alloy.base.behaviour', 'dialog-events', 'messages', 'reflecting', 'scroll-lock' ]
     }
   }));
 };

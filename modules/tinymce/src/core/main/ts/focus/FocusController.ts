@@ -5,14 +5,14 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { document, Element, FocusEvent } from '@ephox/dom-globals';
+import { document, Element, FocusEvent, HTMLElement } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
-import FocusManager from '../api/FocusManager';
 import DOMUtils from '../api/dom/DOMUtils';
-import * as SelectionRestore from '../selection/SelectionRestore';
-import Delay from '../api/util/Delay';
-import EditorManager from '../api/EditorManager';
 import Editor from '../api/Editor';
+import EditorManager from '../api/EditorManager';
+import FocusManager from '../api/FocusManager';
+import Delay from '../api/util/Delay';
+import * as SelectionRestore from '../selection/SelectionRestore';
 
 let documentFocusInHandler;
 const DOM = DOMUtils.DOM;
@@ -93,9 +93,8 @@ const registerEvents = function (editorManager: EditorManager, e: { editor: Edit
   if (!documentFocusInHandler) {
     documentFocusInHandler = function (e: FocusEvent) {
       const activeEditor = editorManager.activeEditor;
-      let target;
 
-      target = e.target;
+      const target = e.target as HTMLElement;
 
       if (activeEditor && target.ownerDocument === document) {
         // Fire a blur event if the element isn't a UI element

@@ -227,18 +227,14 @@ UnitTest.asynctest('browser.tinymce.core.SelectionOverridesTest', function (succ
   });
 
   suite.test('showCaret at TD', function (editor) {
-    let rng;
-
     editor.setContent('<table><tr><td contenteditable="false">x</td></tr></table>');
-    rng = editor._selectionOverrides.showCaret(1, editor.dom.select('td')[0], true);
+    const rng = editor._selectionOverrides.showCaret(1, editor.dom.select('td')[0], true);
     LegacyUnit.equal(true, rng === null, 'Should be null since TD is not a valid caret target');
   });
 
   suite.test('showCaret at TH', function (editor) {
-    let rng;
-
     editor.setContent('<table><tr><th contenteditable="false">x</th></tr></table>');
-    rng = editor._selectionOverrides.showCaret(1, editor.dom.select('th')[0], true);
+    const rng = editor._selectionOverrides.showCaret(1, editor.dom.select('th')[0], true);
     LegacyUnit.equal(true, rng === null, 'Should be null since TH is not a valid caret target');
   });
 

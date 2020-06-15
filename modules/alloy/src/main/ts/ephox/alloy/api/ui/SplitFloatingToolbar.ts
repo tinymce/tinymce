@@ -6,7 +6,9 @@ import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
 import * as Layout from '../../positioning/layout/Layout';
 import * as SplitToolbarUtils from '../../toolbar/SplitToolbarUtils';
 import * as SplitFloatingToolbarSchema from '../../ui/schema/SplitFloatingToolbarSchema';
-import { SplitFloatingToolbarApis, SplitFloatingToolbarDetail, SplitFloatingToolbarSketcher, SplitFloatingToolbarSpec } from '../../ui/types/SplitFloatingToolbarTypes';
+import {
+  SplitFloatingToolbarApis, SplitFloatingToolbarDetail, SplitFloatingToolbarSketcher, SplitFloatingToolbarSpec
+} from '../../ui/types/SplitFloatingToolbarTypes';
 import { Coupling } from '../behaviour/Coupling';
 import { AlloyComponent } from '../component/ComponentApi';
 import * as GuiFactory from '../component/GuiFactory';
@@ -47,7 +49,7 @@ const factory: CompositeSketchFactory<SplitFloatingToolbarDetail, SplitFloatingT
       },
       parts: {
         button: externals['overflow-button'](),
-        toolbar: externals.overflow(),
+        toolbar: externals.overflow()
       }
     })
   );
@@ -70,7 +72,7 @@ const factory: CompositeSketchFactory<SplitFloatingToolbarDetail, SplitFloatingT
               });
             }
           }
-        }),
+        })
       ]
     ),
     apis: {

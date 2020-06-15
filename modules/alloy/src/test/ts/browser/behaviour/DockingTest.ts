@@ -1,4 +1,4 @@
-import { ApproxStructure, Assertions, Cleaner, Logger, Step, Waiter, GeneralSteps } from '@ephox/agar';
+import { ApproxStructure, Assertions, Cleaner, GeneralSteps, Logger, Step, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { window } from '@ephox/dom-globals';
 import { DomEvent, Element } from '@ephox/sugar';
@@ -6,9 +6,9 @@ import { DomEvent, Element } from '@ephox/sugar';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Docking } from 'ephox/alloy/api/behaviour/Docking';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import { Container } from 'ephox/alloy/api/ui/Container';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
+import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
+import { Container } from 'ephox/alloy/api/ui/Container';
 
 UnitTest.asynctest('DockingTest', (success, failure) => {
   const cleanup = Cleaner();
@@ -95,7 +95,7 @@ UnitTest.asynctest('DockingTest', (success, failure) => {
             left: str.none(),
             top: str.is('2300px'),
             right: str.is('200px'),
-            bottom: str.none(),
+            bottom: str.none()
           }
         })),
         absoluteBox.element()

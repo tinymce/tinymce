@@ -46,7 +46,7 @@ const dfreeBodyConfig = {
   toolbar: false,
   quickbars_insert_toolbar: 'bold italic | quicklink h2 h3 blockquote',
   quickbars_selection_toolbar: 'bold italic | h2 h3 | blockquote quicklink',
-  contextmenu: 'inserttable | cell row column deletetable',
+  contextmenu: 'inserttable | cell row column deletetable'
 };
 
 tinymce.init(quickbarsClassicConfig);

@@ -24,7 +24,7 @@ const renderStatusbar = (editor: Editor, providersBackstage: UiFactoryBackstageP
         'title': providersBackstage.translate('Resize'), // TODO: tooltips AP-213
         'aria-hidden': 'true'
       },
-      innerHtml: getIcon('resize-handle', providersBackstage.icons),
+      innerHtml: getIcon('resize-handle', providersBackstage.icons)
     },
     behaviours: Behaviour.derive([
       Dragging.config({
@@ -84,7 +84,7 @@ const renderStatusbar = (editor: Editor, providersBackstage: UiFactoryBackstageP
           tag: 'div',
           classes: [ 'tox-statusbar__text-container' ]
         },
-        components,
+        components
       }];
     }
     return [];
@@ -103,9 +103,9 @@ const renderStatusbar = (editor: Editor, providersBackstage: UiFactoryBackstageP
   return {
     dom: {
       tag: 'div',
-      classes: [ 'tox-statusbar' ],
+      classes: [ 'tox-statusbar' ]
     },
-    components: getComponents(),
+    components: getComponents()
   };
 };
 

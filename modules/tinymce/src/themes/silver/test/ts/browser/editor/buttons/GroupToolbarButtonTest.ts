@@ -37,7 +37,7 @@ UnitTest.asynctest('GroupToolbarButtonTest', (success, failure) => {
             attrs: { title: str.is('Italic') }
           })
         ]
-      }),
+      })
     ]
   }));
 
@@ -115,7 +115,7 @@ UnitTest.asynctest('GroupToolbarButtonTest', (success, failure) => {
         toolbar_mode: 'wrap'
       }, [
         NamedChain.read('body', UiFinder.cNotExists('button[title="Formatting"]')),
-        NamedChain.read('body', UiFinder.cExists('button[title="Underline"]')),
+        NamedChain.read('body', UiFinder.cExists('button[title="Underline"]'))
       ])
     ]))
   ], success, failure);

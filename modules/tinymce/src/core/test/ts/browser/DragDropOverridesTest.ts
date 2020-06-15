@@ -31,7 +31,7 @@ UnitTest.asynctest('browser.tinymce.core.DragDropOverridesTest', (success, failu
 
           Assertions.assertEq('Should fire dragend event', true, fired.get());
         })
-      ])),
+      ]))
     ], onSuccess, onFailure);
   }, {
     indent: false,

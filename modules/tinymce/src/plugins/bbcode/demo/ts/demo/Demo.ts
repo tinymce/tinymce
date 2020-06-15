@@ -1,9 +1,8 @@
-import { document } from '@ephox/dom-globals';
+import { document, HTMLTextAreaElement } from '@ephox/dom-globals';
 
 declare let tinymce: any;
 
-let elm: any;
-elm = document.querySelector('.tinymce');
+const elm = document.querySelector('.tinymce') as HTMLTextAreaElement;
 elm.value = '[b]bbcode plugin[/b]';
 
 tinymce.init({

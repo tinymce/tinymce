@@ -1,4 +1,4 @@
-import { Pipeline, Log } from '@ephox/agar';
+import { Log, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
@@ -45,6 +45,6 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellClassListTest', (succ
   }, {
     plugins: 'table',
     theme: 'silver',
-    base_url: '/project/tinymce/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

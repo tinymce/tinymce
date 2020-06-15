@@ -36,7 +36,7 @@ export const createLinkDialog = () => {
               {
                 text: 'Blank',
                 value: '_blank'
-              },
+              }
             ]
           }
         ]

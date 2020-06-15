@@ -10,9 +10,7 @@ export default function () {
   let index = -1;
 
   function add(state) {
-    let removed;
-
-    removed = data.splice(++index);
+    const removed = data.splice(++index);
     data.push(state);
 
     return {

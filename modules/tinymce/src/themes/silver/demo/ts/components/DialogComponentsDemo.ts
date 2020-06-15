@@ -1,33 +1,25 @@
-import {
-  AlloyEvents,
-  DomFactory,
-  GuiFactory,
-  Input as AlloyInput,
-  Memento,
-  Representing,
-  SimpleSpec,
-} from '@ephox/alloy';
-import { Types } from '@ephox/bridge';
+import { AlloyEvents, DomFactory, GuiFactory, Input as AlloyInput, Memento, Representing, SimpleSpec } from '@ephox/alloy';
 import { ValueSchema } from '@ephox/boulder';
+import { Types } from '@ephox/bridge';
 import { console } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
-
-import { renderAlertBanner } from 'tinymce/themes/silver/ui/general/AlertBanner';
+import { UiFactoryBackstage, UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
 import { renderBodyPanel } from 'tinymce/themes/silver/ui/dialog/BodyPanel';
+import { renderCollection } from 'tinymce/themes/silver/ui/dialog/Collection';
 import { renderColorInput } from 'tinymce/themes/silver/ui/dialog/ColorInput';
 import { renderColorPicker } from 'tinymce/themes/silver/ui/dialog/ColorPicker';
 import { renderCustomEditor } from 'tinymce/themes/silver/ui/dialog/CustomEditor';
 import { renderDropZone } from 'tinymce/themes/silver/ui/dialog/Dropzone';
 import { renderGrid } from 'tinymce/themes/silver/ui/dialog/Grid';
 import { renderIFrame } from 'tinymce/themes/silver/ui/dialog/IFrame';
+import { renderLabel } from 'tinymce/themes/silver/ui/dialog/Label';
 import { renderSelectBox } from 'tinymce/themes/silver/ui/dialog/SelectBox';
 import { renderSizeInput } from 'tinymce/themes/silver/ui/dialog/SizeInput';
 import { renderInput, renderTextarea } from 'tinymce/themes/silver/ui/dialog/TextField';
 import { renderUrlInput } from 'tinymce/themes/silver/ui/dialog/UrlInput';
+
+import { renderAlertBanner } from 'tinymce/themes/silver/ui/general/AlertBanner';
 import { renderButton } from 'tinymce/themes/silver/ui/general/Button';
-import { UiFactoryBackstageShared, UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
-import { renderLabel } from 'tinymce/themes/silver/ui/dialog/Label';
-import { renderCollection } from 'tinymce/themes/silver/ui/dialog/Collection';
 import { renderCheckbox } from 'tinymce/themes/silver/ui/general/Checkbox';
 import { setupDemo } from './DemoHelpers';
 
@@ -175,7 +167,7 @@ export default () => {
         tag: 'div'
       },
       components: [
-        memBodyPanel.asSpec(),
+        memBodyPanel.asSpec()
       ],
       events: AlloyEvents.derive([
         AlloyEvents.runOnAttached((component) => {
@@ -295,7 +287,7 @@ export default () => {
     renderCollection({
       columns: 1,
       name: 'collection',
-      label: Option.some('Collection: '),
+      label: Option.some('Collection: ')
     }, sharedBackstage.providers)
   );
 

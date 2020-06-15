@@ -1,8 +1,8 @@
-import { GeneralSteps, Logger, Pipeline, Step, ApproxStructure } from '@ephox/agar';
+import { ApproxStructure, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import * as InsertBr from 'tinymce/core/newline/InsertBr';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.core.newline.InsertBrTest', function (success, failure) {
 
@@ -104,7 +104,7 @@ UnitTest.asynctest('browser.tinymce.core.newline.InsertBrTest', function (succes
             ]
           }))
         ),
-        tinyApis.sAssertSelection([ 0 ], 2, [ 0 ], 2),
+        tinyApis.sAssertSelection([ 0 ], 2, [ 0 ], 2)
       ]))
     ], onSuccess, onFailure);
   }, {

@@ -53,7 +53,7 @@ const getContentEditableRoot = function (root: Node, node: Node) {
 
 const ControlSelection = (selection: Selection, editor: Editor): ControlSelection => {
   const dom = editor.dom, each = Tools.each;
-  let selectedElm, selectedElmGhost, resizeHelper, resizeHandles, selectedHandle;
+  let selectedElm, selectedElmGhost, resizeHelper, selectedHandle;
   let startX, startY, selectedElmX, selectedElmY, startW, startH, ratio, resizeStarted;
   let width,
     height;
@@ -66,7 +66,8 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
     startScrollHeight;
 
   // Details about each resize handle how to scale etc
-  resizeHandles = {
+  // TODO: Add a type for the value
+  const resizeHandles: Record<string, any> = {
     // Name: x multiplier, y multiplier, delta size x, delta size y
     nw: [ 0, 0, -1, -1 ],
     ne: [ 1, 0, 1, -1 ],
@@ -247,18 +248,16 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
   };
 
   const showResizeRect = (targetElm: Element) => {
-    let position, targetWidth, targetHeight, e, rect;
-
     hideResizeRect();
     unbindResizeHandleEvents();
 
     // Get position and size of target
-    position = dom.getPos(targetElm, rootElement);
-    selectedElmX = position.x;
-    selectedElmY = position.y;
-    rect = targetElm.getBoundingClientRect(); // Fix for Gecko offsetHeight for table with caption
-    targetWidth = rect.width || (rect.right - rect.left);
-    targetHeight = rect.height || (rect.bottom - rect.top);
+    const position = dom.getPos(targetElm, rootElement);
+    const selectedElmX = position.x;
+    const selectedElmY = position.y;
+    const rect = targetElm.getBoundingClientRect(); // Fix for Gecko offsetHeight for table with caption
+    const targetWidth = rect.width || (rect.right - rect.left);
+    const targetHeight = rect.height || (rect.bottom - rect.top);
 
     // Reset width/height if user selects a new image/table
     if (selectedElm !== targetElm) {
@@ -267,7 +266,7 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
     }
 
     // Makes it possible to disable resizing
-    e = editor.fire('ObjectSelected', { target: targetElm });
+    const e = editor.fire('ObjectSelected', { target: targetElm });
 
     if (isResizable(targetElm) && !e.isDefaultPrevented()) {
       each(resizeHandles, (handle, name) => {

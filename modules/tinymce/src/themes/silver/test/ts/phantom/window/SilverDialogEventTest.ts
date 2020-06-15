@@ -117,7 +117,7 @@ UnitTest.asynctest('SilverDialog Event Test', (success, failure) => {
   Pipeline.async({}, Logger.ts('Test events for Submit, Cancel and X buttons', [
     sGui('button.tox-button:contains(Save)', [ 'onSubmit', 'onClose' ]),
     sGui('button.tox-button:contains(Cancel)', [ 'onCancel', 'onClose' ]),
-    sGui('[aria-label="Close"]', [ 'onCancel', 'onClose' ]),
+    sGui('[aria-label="Close"]', [ 'onCancel', 'onClose' ])
   ]), success, failure);
 
 });

@@ -11,7 +11,7 @@ export const createCodeDialog = () => {
         items: [
           {
             name: 'code',
-            type: 'textarea',
+            type: 'textarea'
           }
         ]
       },

@@ -1,9 +1,11 @@
-import { Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Log, Mouse, NamedChain, Pipeline, UiFinder, Waiter } from '@ephox/agar';
+import {
+  Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Log, Mouse, NamedChain, Pipeline, UiFinder, Waiter
+} from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { TinyApis, TinyLoader, TinyUi, UiChains } from '@ephox/mcagar';
-import { Body, Element, Replication, SelectorFilter, Html, Remove } from '@ephox/sugar';
+import { Body, Element, Html, Remove, Replication, SelectorFilter } from '@ephox/sugar';
 
 import Plugin from 'tinymce/plugins/table/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
@@ -28,7 +30,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ContextToolbarTest', (success,
 
     const sAddTableAndOpenContextToolbar = (html: string) => GeneralSteps.sequence([
       tinyApis.sSetContent(html),
-      tinyUi.sWaitForUi('Wait for table context toolbar', '.tox-toolbar button[aria-label="Table properties"]'),
+      tinyUi.sWaitForUi('Wait for table context toolbar', '.tox-toolbar button[aria-label="Table properties"]')
     ]);
 
     // Use keyboard shortcut ctrl+F9 to navigate to the context toolbar

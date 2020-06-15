@@ -5,12 +5,14 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Attr, Document, document, DocumentFragment, Element, HTMLElement, HTMLElementEventMap, HTMLElementTagNameMap, NamedNodeMap, Node, Range, Window, window } from '@ephox/dom-globals';
+import {
+  Attr, Document, document, DocumentFragment, Element, HTMLElement, HTMLElementEventMap, HTMLElementTagNameMap, NamedNodeMap, Node, Range,
+  Window, window
+} from '@ephox/dom-globals';
 import { Type } from '@ephox/katamari';
 import { VisualViewport } from '@ephox/sugar';
 import * as NodeType from '../../dom/NodeType';
 import * as Position from '../../dom/Position';
-import { StyleSheetLoader } from './StyleSheetLoader';
 import * as TrimNode from '../../dom/TrimNode';
 import Env from '../Env';
 import { GeomRect } from '../geom/Rect';
@@ -22,6 +24,7 @@ import Tools from '../util/Tools';
 import DomQuery, { DomQueryConstructor } from './DomQuery';
 import EventUtils, { EventUtilsCallback } from './EventUtils';
 import Sizzle from './Sizzle';
+import { StyleSheetLoader } from './StyleSheetLoader';
 import TreeWalker from './TreeWalker';
 
 /**
@@ -269,7 +272,6 @@ interface DOMUtils {
  * @param {settings} settings Optional settings collection.
  */
 function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMUtils {
-  let attrHooks;
   const addedStyles = {};
 
   const win = window;
@@ -361,20 +363,18 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
   };
 
   const setAttrib = (elm: string | Node, name: string, value: string | boolean | number) => {
-    let originalValue, hook;
-
     if (value === '') {
       value = null;
     }
 
     const $elm = $$(elm);
-    originalValue = $elm.attr(name);
+    const originalValue = $elm.attr(name);
 
     if (!$elm.length) {
       return;
     }
 
-    hook = attrHooks[name];
+    const hook = attrHooks[name];
     if (hook && hook.set) {
       hook.set($elm, value, name);
     } else {
@@ -482,11 +482,9 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
   };
 
   const getRect = (elm: string | HTMLElement): GeomRect => {
-    let pos, size;
-
     elm = get(elm);
-    pos = getPos(elm);
-    size = getSize(elm);
+    const pos = getPos(elm);
+    const size = getSize(elm);
 
     return {
       x: pos.x, y: pos.y,
@@ -812,7 +810,6 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
   };
 
   const loadCSS = (url: string) => {
-    let head;
 
     // Prevent inline from loading the same CSS file twice
     if (self !== DOMUtils.DOM && doc === document) {
@@ -824,11 +821,9 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
       url = '';
     }
 
-    head = doc.getElementsByTagName('head')[0];
+    const head = doc.getElementsByTagName('head')[0];
 
     each(url.split(','), function (url) {
-      let link;
-
       url = Tools._addCacheSuffix(url);
 
       if (files[url]) {
@@ -836,7 +831,7 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
       }
 
       files[url] = true;
-      link = create('link', {
+      const link = create('link', {
         rel: 'stylesheet',
         type: 'text/css',
         href: url,
@@ -905,10 +900,8 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     const referenceNode = get(reference);
 
     return run(node, function (node) {
-      let parent, nextSibling;
-
-      parent = referenceNode.parentNode;
-      nextSibling = referenceNode.nextSibling;
+      const parent = referenceNode.parentNode;
+      const nextSibling = referenceNode.nextSibling;
 
       if (nextSibling) {
         parent.insertBefore(node, nextSibling);
@@ -1899,7 +1892,7 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     dumpRng
   };
 
-  attrHooks = setupAttrHooks(styles, settings, () => self);
+  const attrHooks = setupAttrHooks(styles, settings, () => self);
 
   return self;
 }

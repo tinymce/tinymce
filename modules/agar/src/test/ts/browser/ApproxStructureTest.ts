@@ -66,7 +66,7 @@ UnitTest.asynctest('ApproxStructureTest', (success, _failure) => {
         s.element('div', {
           attrs: {
             selected: str.is('true')
-          },
+          }
         }),
         s.theRest()
       ]

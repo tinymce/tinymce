@@ -136,7 +136,7 @@ function NotificationManager(editor: Editor): NotificationManager {
         open({
           text: serviceMessage,
           type: 'warning',
-          timeout: 0,
+          timeout: 0
         });
       }
     });

@@ -102,11 +102,11 @@ const applyFormat = function (ed: Editor, name: string, vars?: FormatVars, node?
 
   const applyRngStyle = function (dom: DOMUtils, rng: RangeLikeObject, bookmark: IdBookmark | IndexBookmark, nodeSpecific?: boolean) {
     const newWrappers: Node[] = [];
-    let wrapName: string, wrapElm: Node, contentEditable = true;
+    let contentEditable = true;
 
     // Setup wrapper element
-    wrapName = format.inline || format.block;
-    wrapElm = dom.create(wrapName);
+    const wrapName = format.inline || format.block;
+    const wrapElm = dom.create(wrapName);
     setElementFormat(wrapElm);
 
     RangeWalk.walk(dom, rng, function (nodes) {
@@ -221,8 +221,6 @@ const applyFormat = function (ed: Editor, name: string, vars?: FormatVars, node?
 
     // Cleanup
     each(newWrappers, function (node) {
-      let childCount;
-
       const getChildCount = function (node: Node) {
         let count = 0;
 
@@ -235,8 +233,8 @@ const applyFormat = function (ed: Editor, name: string, vars?: FormatVars, node?
         return count;
       };
 
-      const getChildElementNode = function (root: Node) {
-        let child: Node | boolean = false;
+      const getChildElementNode = function (root: Node): Node | false {
+        let child: Node | false = false;
         each(root.childNodes, function (node) {
           if (isElementNode(node)) {
             child = node;
@@ -247,9 +245,9 @@ const applyFormat = function (ed: Editor, name: string, vars?: FormatVars, node?
       };
 
       const mergeStyles = function (node: Node) {
-        let child, clone;
+        let clone;
 
-        child = getChildElementNode(node);
+        const child = getChildElementNode(node);
 
         // If child was found and of the same type as the current node
         if (child && !Bookmarks.isBookmarkNode(child) && MatchFormat.matchName(dom, child, format)) {
@@ -263,7 +261,7 @@ const applyFormat = function (ed: Editor, name: string, vars?: FormatVars, node?
         return clone || node;
       };
 
-      childCount = getChildCount(node);
+      const childCount = getChildCount(node);
 
       // Remove empty nodes but only if there is multiple wrappers and they are not block
       // elements so never remove single <h1></h1> since that would remove the

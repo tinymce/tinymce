@@ -5,7 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, AnchorSpec, Behaviour, Boxes, Bubble, GuiFactory, InlineView, Keying, Layout, LayoutInside, MaxHeight, MaxWidth, Positioning } from '@ephox/alloy';
+import {
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, AnchorSpec, Behaviour, Boxes, Bubble, GuiFactory, InlineView,
+  Keying, Layout, LayoutInside, MaxHeight, MaxWidth, Positioning
+} from '@ephox/alloy';
 import { Toolbar } from '@ephox/bridge';
 import { Element as DomElement } from '@ephox/dom-globals';
 import { Arr, Cell, Id, Merger, Obj, Option, Thunk } from '@ephox/katamari';
@@ -154,7 +157,7 @@ const register = (editor: Editor, registryContextToolbars, sink: AlloyComponent,
   const wrapInPopDialog = (toolbarSpec: AlloySpec) => ({
     dom: {
       tag: 'div',
-      classes: [ 'tox-pop__dialog' ],
+      classes: [ 'tox-pop__dialog' ]
     },
     components: [ toolbarSpec ],
     behaviours: Behaviour.derive([

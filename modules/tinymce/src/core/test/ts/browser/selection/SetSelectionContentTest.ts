@@ -1,9 +1,9 @@
-import { GeneralSteps, Logger, Pipeline, Step, Assertions, ApproxStructure } from '@ephox/agar';
+import { ApproxStructure, Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import { Element } from '@ephox/sugar';
 import * as SetSelectionContent from 'tinymce/core/selection/SetSelectionContent';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock-client';
-import { Element } from '@ephox/sugar';
 
 UnitTest.asynctest('browser.tinymce.selection.SetSelectionContentTest', function (success, failure) {
 
@@ -64,7 +64,7 @@ UnitTest.asynctest('browser.tinymce.selection.SetSelectionContentTest', function
           })),
           root
         ),
-        tinyApis.sAssertSelection([ 0, 0 ], 2, [ 0, 0 ], 2),
+        tinyApis.sAssertSelection([ 0, 0 ], 2, [ 0, 0 ], 2)
       ])),
 
       Logger.t('Insert content in middle of word, collapsed selection', GeneralSteps.sequence([
@@ -83,7 +83,7 @@ UnitTest.asynctest('browser.tinymce.selection.SetSelectionContentTest', function
           })),
           root
         ),
-        tinyApis.sAssertSelection([ 0, 0 ], 2, [ 0, 0 ], 2),
+        tinyApis.sAssertSelection([ 0, 0 ], 2, [ 0, 0 ], 2)
       ])),
 
       Logger.t('Insert content at start of word, collapsed selection', GeneralSteps.sequence([
@@ -102,7 +102,7 @@ UnitTest.asynctest('browser.tinymce.selection.SetSelectionContentTest', function
           })),
           root
         ),
-        tinyApis.sAssertSelection([ 0, 0 ], 1, [ 0, 0 ], 1),
+        tinyApis.sAssertSelection([ 0, 0 ], 1, [ 0, 0 ], 1)
       ])),
 
       Logger.t('Insert content at end of word, collapsed selection', GeneralSteps.sequence([
@@ -120,7 +120,7 @@ UnitTest.asynctest('browser.tinymce.selection.SetSelectionContentTest', function
             ]
           })),
           root
-        ),
+        )
       ])),
 
       Logger.t('Insert content at end of word with partial text', GeneralSteps.sequence([
@@ -143,7 +143,7 @@ UnitTest.asynctest('browser.tinymce.selection.SetSelectionContentTest', function
             ]
           })),
           root
-        ),
+        )
       ])),
 
       Logger.t('Insert content at end of word with partial text', GeneralSteps.sequence([
@@ -167,8 +167,8 @@ UnitTest.asynctest('browser.tinymce.selection.SetSelectionContentTest', function
             ]
           })),
           root
-        ),
-      ])),
+        )
+      ]))
     ], onSuccess, onFailure);
   }, {
     selector: 'textarea',

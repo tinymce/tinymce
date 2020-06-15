@@ -1,9 +1,9 @@
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Fun, Result } from '@ephox/katamari';
 import { BodyComponentApi as BodyComponentApiType } from './BodyComponent';
-import { Panel as PanelType, PanelApi as PanelApiType, panelSchema } from './Panel';
-import { TabApi as TabApiType, Tab as TabType, TabPanel as TabPanelType, TabPanelApi as TabPanelApiType, tabPanelSchema } from './TabPanel';
 import * as FooterButton from './FooterButton';
+import { Panel as PanelType, PanelApi as PanelApiType, panelSchema } from './Panel';
+import { Tab as TabType, TabApi as TabApiType, TabPanel as TabPanelType, TabPanelApi as TabPanelApiType, tabPanelSchema } from './TabPanel';
 
 export type DialogMenuButtonItemTypes = FooterButton.DialogMenuButtonItemTypes;
 export type SuccessCallback = (menu: string | DialogMenuButtonItemTypes[]) => void;
@@ -123,7 +123,7 @@ export const dialogSchema = ValueSchema.objOf([
   FieldSchema.defaultedFunction('onSubmit', Fun.noop),
   FieldSchema.defaultedFunction('onClose', Fun.noop),
   FieldSchema.defaultedFunction('onCancel', Fun.noop),
-  FieldSchema.defaulted('onTabChange', Fun.noop),
+  FieldSchema.defaulted('onTabChange', Fun.noop)
 ]);
 
 export const createDialog = <T>(spec: DialogApi<T>): Result<Dialog<T>, ValueSchema.SchemaError<any>> => ValueSchema.asRaw('dialog', dialogSchema, spec);

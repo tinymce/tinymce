@@ -5,7 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { GuiFactory, InlineView, Menu, Highlighting, ItemTypes, Behaviour, AddEventsBehaviour, AlloyEvents, SystemEvents } from '@ephox/alloy';
+import {
+  AddEventsBehaviour, AlloyEvents, Behaviour, GuiFactory, Highlighting, InlineView, ItemTypes, Menu, SystemEvents
+} from '@ephox/alloy';
 import { InlineContent, Types } from '@ephox/bridge';
 import { console } from '@ephox/dom-globals';
 import { Arr, Cell, Option, Throttler, Thunk } from '@ephox/katamari';
@@ -14,13 +16,13 @@ import { Element, Remove } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { AutocompleteContext, getContext } from './autocomplete/AutocompleteContext';
 import { AutocompleterEditorEvents, AutocompleterUiApi } from './autocomplete/AutocompleteEditorEvents';
-import { AutocompleteLookupInfo, AutocompleteLookupData, lookup, lookupWithContext } from './autocomplete/AutocompleteLookup';
-import * as AutocompleteTag from './autocomplete/AutocompleteTag';
+import { AutocompleteLookupData, AutocompleteLookupInfo, lookup, lookupWithContext } from './autocomplete/AutocompleteLookup';
 import * as Autocompleters from './autocomplete/Autocompleters';
+import * as AutocompleteTag from './autocomplete/AutocompleteTag';
 import { UiFactoryBackstageShared } from './backstage/Backstage';
-import { createAutocompleteItems, createMenuFrom, FocusMode } from './ui/menus/menu/SingleMenu';
-import { createPartialMenuWithAlloyItems } from './ui/menus/menu/MenuUtils';
 import ItemResponse from './ui/menus/item/ItemResponse';
+import { createPartialMenuWithAlloyItems } from './ui/menus/menu/MenuUtils';
+import { createAutocompleteItems, createMenuFrom, FocusMode } from './ui/menus/menu/SingleMenu';
 
 interface ActiveAutocompleter {
   triggerChar: string;
@@ -212,7 +214,7 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => 
     isMenuOpen,
     isActive,
     isProcessingAction: processingAction.get,
-    getView: () => InlineView.getContent(autocompleter),
+    getView: () => InlineView.getContent(autocompleter)
   };
 
   AutocompleterEditorEvents.setup(autocompleterUiApi, editor);
