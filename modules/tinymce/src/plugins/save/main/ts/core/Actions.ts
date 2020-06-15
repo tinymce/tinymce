@@ -36,7 +36,7 @@ const save = function (editor) {
   if (formObj) {
     editor.setDirty(false);
 
-    // TODO: this is probably broken, as an event should be passed to `onsubmit`
+    // TODO: TINY-6105 this is probably broken, as an event should be passed to `onsubmit`
     // so we need to investigate this at some point
     if (!formObj.onsubmit || (formObj as any).onsubmit()) {
       if (typeof formObj.submit === 'function') {

@@ -284,7 +284,7 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function (success, fail
   });
 
   suite.test('clone', function () {
-    let  node, clone;
+    let node, clone;
 
     node = new Node('#text', 3);
     node.value = 'value';
