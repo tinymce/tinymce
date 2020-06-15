@@ -31,7 +31,7 @@ export interface ContextToggleButtonInstanceApi extends BaseToolbarToggleButtonI
 
 }
 
-export interface ContextButtonApi extends BaseToolbarButtonApi<ContextButtonInstanceApi>  {
+export interface ContextButtonApi extends BaseToolbarButtonApi<ContextButtonInstanceApi> {
   type?: 'contextformbutton';
   primary?: boolean;
   onAction: (formApi: ContextFormInstanceApi, api: ContextButtonInstanceApi) => void;

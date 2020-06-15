@@ -1,9 +1,9 @@
-import { Assertions, Pipeline, Log, NamedChain } from '@ephox/agar';
-import Theme from 'tinymce/themes/silver/Theme';
+import { Assertions, Log, NamedChain, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Editor as McEditor, ApiChains } from '@ephox/mcagar';
+import { ApiChains, Editor as McEditor } from '@ephox/mcagar';
+import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.content.HTMLDataURLsTest', (success, failure) =>  {
+UnitTest.asynctest('browser.tinymce.core.content.HTMLDataURLsTest', (success, failure) => {
   Theme();
 
   const content = '<p><a href="data:text/plain;base64,SGVsbG8sIHdvcmxkCg==">Click me</a></p>';

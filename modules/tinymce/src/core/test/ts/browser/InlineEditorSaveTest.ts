@@ -5,7 +5,7 @@ import { Body } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.InlineEditorSaveTest', (success, failure) =>  {
+UnitTest.asynctest('browser.tinymce.core.InlineEditorSaveTest', (success, failure) => {
   Theme();
 
   const settings = {

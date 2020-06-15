@@ -23,17 +23,17 @@ UnitTest.test('MergeOperationsTest', function () {
       });
     };
 
-    check([], [], b(0, 0, 1, 1),  'a');
-    check([ r([ en('a', false), en('a', false) ], 'thead') ], [ r([  en('a', false),  en('b', false) ], 'thead') ], b(0, 0, 0, 1), 'a');
-    check([ r([ en('a', false), en('a', false) ], 'tbody') ], [ r([  en('a', false),  en('b', false) ], 'tbody') ], b(0, 0, 0, 1), 'a');
+    check([], [], b(0, 0, 1, 1), 'a');
+    check([ r([ en('a', false), en('a', false) ], 'thead') ], [ r([ en('a', false), en('b', false) ], 'thead') ], b(0, 0, 0, 1), 'a');
+    check([ r([ en('a', false), en('a', false) ], 'tbody') ], [ r([ en('a', false), en('b', false) ], 'tbody') ], b(0, 0, 0, 1), 'a');
     check(
       [
         r([ en('a', false), en('a', false) ], 'thead'),
         r([ en('a', false), en('a', false) ], 'thead')
       ],
       [
-        r([  en('a', false),  en('b', false) ], 'thead'),
-        r([  en('c', false),  en('d', false) ], 'thead')
+        r([ en('a', false), en('b', false) ], 'thead'),
+        r([ en('c', false), en('d', false) ], 'thead')
       ], b(0, 0, 1, 1), 'a'
     );
     check(
@@ -42,8 +42,8 @@ UnitTest.test('MergeOperationsTest', function () {
         r([ en('a', false), en('a', false) ], 'tbody')
       ],
       [
-        r([  en('a', false),  en('b', false) ], 'tbody'),
-        r([  en('c', false),  en('d', false) ], 'tbody')
+        r([ en('a', false), en('b', false) ], 'tbody'),
+        r([ en('c', false), en('d', false) ], 'tbody')
       ], b(0, 0, 1, 1), 'a'
     );
 
@@ -53,8 +53,8 @@ UnitTest.test('MergeOperationsTest', function () {
         r([ en('d', false), en('e', false), en('f', false) ], 'tbody')
       ],
       [
-        r([  en('a', false),  en('b', false),  en('c', false) ], 'thead'),
-        r([  en('d', false),  en('e', false),  en('f', false) ], 'tbody')
+        r([ en('a', false), en('b', false), en('c', false) ], 'thead'),
+        r([ en('d', false), en('e', false), en('f', false) ], 'tbody')
       ], b(0, 0, 0, 1), 'a'
     );
     check(
@@ -63,8 +63,8 @@ UnitTest.test('MergeOperationsTest', function () {
         r([ en('d', false), en('e', false), en('f', false) ], 'tbody')
       ],
       [
-        r([  en('a', false),  en('b', false),  en('c', false) ], 'tbody'),
-        r([  en('d', false),  en('e', false),  en('f', false) ], 'tbody')
+        r([ en('a', false), en('b', false), en('c', false) ], 'tbody'),
+        r([ en('d', false), en('e', false), en('f', false) ], 'tbody')
       ], b(0, 0, 0, 1), 'a'
     );
 
@@ -74,8 +74,8 @@ UnitTest.test('MergeOperationsTest', function () {
         r([ en('a', false), en('a', false), en('a', false) ], 'tbody')
       ],
       [
-        r([  en('a', false),  en('b', false),  en('c', false) ], 'tbody'),
-        r([  en('d', false),  en('e', false),  en('f', false) ], 'tbody')
+        r([ en('a', false), en('b', false), en('c', false) ], 'tbody'),
+        r([ en('d', false), en('e', false), en('f', false) ], 'tbody')
       ], b(0, 0, 1, 2), 'a'
     );
   })();

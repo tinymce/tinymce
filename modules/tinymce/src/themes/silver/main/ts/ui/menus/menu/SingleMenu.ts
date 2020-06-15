@@ -173,7 +173,7 @@ export const createMenuFrom = (
   columns: number | 'auto',
   focusMode: FocusMode,
   presets: Types.PresetTypes
-): MenuTypes.MenuSpec  => {
+): MenuTypes.MenuSpec => {
   const focusManager = focusMode === FocusMode.ContentFocus ? FocusManagers.highlights() : FocusManagers.dom();
 
   const movement = deriveMenuMovement(columns, presets);

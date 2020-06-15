@@ -1,10 +1,10 @@
-import { Future, Option } from '@ephox/katamari';
-import * as JsonResponse from './JsonResponse';
-import { ResponseBodyDataTypes } from './HttpData';
 import { XMLHttpRequest } from '@ephox/dom-globals';
-import { HttpError } from './HttpError';
-import { DataType } from './DataType';
+import { Future, Option } from '@ephox/katamari';
 import { readBlobAsText } from './BlobReader';
+import { DataType } from './DataType';
+import { ResponseBodyDataTypes } from './HttpData';
+import { HttpError } from './HttpError';
+import * as JsonResponse from './JsonResponse';
 
 // can't get responseText of a blob, throws a DomException. Need to use FileReader.
 // request.response can be null if the server provided no content in the error response.
@@ -23,7 +23,7 @@ const getResponseText = (responseType: ResponseBodyDataTypes, request: XMLHttpRe
 };
 
 export const handle = (url: string, responseType: ResponseBodyDataTypes, request: XMLHttpRequest): Future<HttpError> => getResponseText(responseType, request).map((responseText) => {
-  const message = request.status === 0 ? 'Unknown HTTP error (possible cross-domain request)' :  `Could not load url ${url}: ${request.statusText}`;
+  const message = request.status === 0 ? 'Unknown HTTP error (possible cross-domain request)' : `Could not load url ${url}: ${request.statusText}`;
   return {
     message,
     status: request.status,

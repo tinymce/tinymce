@@ -164,7 +164,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.InsertRowTableResizeTest', (su
       if (input.widthBefore.isPercent) {
         // due to rounding errors we can be off by one pixel for percentage tables
         const actualDiff = Math.abs(input.widthBefore.px - input.widthAfter.px);
-        Assert.eq(`table width should be approx (within 1px): ${input.widthBefore.raw}% (${input.widthBefore.px}px) ~= ${input.widthAfter.raw}% (${input.widthAfter.px}px)`, true,  actualDiff <= 1);
+        Assert.eq(`table width should be approx (within 1px): ${input.widthBefore.raw}% (${input.widthBefore.px}px) ~= ${input.widthAfter.raw}% (${input.widthAfter.px}px)`, true, actualDiff <= 1);
       } else {
         Assertions.assertEq('table width should not change', input.widthBefore, input.widthAfter);
       }

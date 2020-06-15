@@ -678,7 +678,7 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
   };
 
   const add = (parentElm: RunArguments, name: string | Node, attrs?: Record<string, string | boolean | number>, html?: string | Node, create?: boolean): HTMLElement => run(parentElm, function (parentElm) {
-    const newElm = typeof name  === 'string' ? doc.createElement(name) : name;
+    const newElm = typeof name === 'string' ? doc.createElement(name) : name;
     setAttribs(newElm, attrs);
 
     if (html) {

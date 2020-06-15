@@ -115,7 +115,7 @@ const toStyles = (coord: CoordAdt<number>, scroll: Position, origin: Position): 
       ({ position: Option.some('fixed'), left: Option.some(x + 'px'), top: Option.some(y + 'px') }) // fixed
   );
 
-  return { right: Option.none(),  bottom: Option.none(), ...stylesOpt };
+  return { right: Option.none(), bottom: Option.none(), ...stylesOpt };
 };
 
 const translate = (coord: CoordAdt<number>, deltaX: number, deltaY: number): CoordAdt<number> => coord.fold(

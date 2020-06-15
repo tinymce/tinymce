@@ -63,7 +63,7 @@ const sClickDialogButton = (label: string, isSave: boolean) => Logger.t('Close d
   )
 ]));
 
-const cSetInputValue = (section, newValue) =>  Chain.control(
+const cSetInputValue = (section, newValue) => Chain.control(
   Chain.fromChains([
     UiFinder.cFindIn(`label:contains(${section}) + div > input`),
     UiControls.cSetValue(newValue)

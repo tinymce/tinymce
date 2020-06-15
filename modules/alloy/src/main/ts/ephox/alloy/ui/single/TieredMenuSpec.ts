@@ -165,7 +165,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, _ra
     }
   };
 
-  const expandRight = (container: AlloyComponent, item: AlloyComponent, decision: ExpandHighlightDecision  = ExpandHighlightDecision.HighlightSubmenu): Option<AlloyComponent> => {
+  const expandRight = (container: AlloyComponent, item: AlloyComponent, decision: ExpandHighlightDecision = ExpandHighlightDecision.HighlightSubmenu): Option<AlloyComponent> => {
     const value = getItemValue(item);
     return layeredState.expand(value).bind((path) => {
       // Called when submenus are opened by keyboard AND hovering navigation

@@ -1,6 +1,6 @@
-import { Option, OptionInstances, Result, ResultInstances } from '@ephox/katamari';
 import { Assert, TestLabel } from '@ephox/bedrock-client';
 import { Testable } from '@ephox/dispute';
+import { Option, OptionInstances, Result, ResultInstances } from '@ephox/katamari';
 
 const { tOption } = OptionInstances;
 const { tResult } = ResultInstances;
@@ -21,8 +21,8 @@ export const eqSome = <A> (message: TestLabel, expected: A, actual: Option<A>, t
 export const eqResult = <A, E> (message: TestLabel, expected: Result<A, E>, actual: Result<A, E>, testableA: Testable<A> = tAny, testableE: Testable<E> = tAny) =>
   Assert.eq(message, expected, actual, tResult(testableA, testableE));
 
-export const eqValue = <A, E>  (message: TestLabel, expected: A, actual: Result<A, E>, testableA: Testable<A> = tAny, testableE: Testable<E> = tAny) =>
+export const eqValue = <A, E> (message: TestLabel, expected: A, actual: Result<A, E>, testableA: Testable<A> = tAny, testableE: Testable<E> = tAny) =>
   eqResult(message, Result.value(expected), actual, testableA, testableE);
 
-export const eqError = <A, E>  (message: TestLabel, expected: E, actual: Result<A, E>, testableA: Testable<A> = tAny, testableE: Testable<E> = tAny) =>
+export const eqError = <A, E> (message: TestLabel, expected: E, actual: Result<A, E>, testableA: Testable<A> = tAny, testableE: Testable<E> = tAny) =>
   eqResult(message, Result.error(expected), actual, testableA, testableE);

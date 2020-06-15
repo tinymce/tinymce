@@ -4,7 +4,7 @@ import Element from '../../api/node/Element';
 import { Selection } from '../../api/selection/Selection';
 import * as NativeRange from './NativeRange';
 
-type SelectionDirectionHandler<U> =  (start: Element<DomNode>, soffset: number, finish: Element<DomNode>, foffset: number) => U;
+type SelectionDirectionHandler<U> = (start: Element<DomNode>, soffset: number, finish: Element<DomNode>, foffset: number) => U;
 
 export interface SelectionDirection {
   fold: <U> (

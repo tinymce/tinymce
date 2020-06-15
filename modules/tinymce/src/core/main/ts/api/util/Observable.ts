@@ -14,7 +14,7 @@ interface Observable<T extends NativeEventMap> {
   on <U = any>(name: string, callback: (event: EditorEvent<U>) => void, prepend?: boolean): EventDispatcher<T>;
   off <K extends keyof T>(name?: K, callback?: (event: EditorEvent<T[K]>) => void): EventDispatcher<T>;
   off <U = any>(name?: string, callback?: (event: EditorEvent<U>) => void): EventDispatcher<T>;
-  once <K extends keyof T>(name: K,  callback: (event: EditorEvent<T[K]>) => void): EventDispatcher<T>;
+  once <K extends keyof T>(name: K, callback: (event: EditorEvent<T[K]>) => void): EventDispatcher<T>;
   once <U = any>(name: string, callback: (event: EditorEvent<U>) => void): EventDispatcher<T>;
   hasEventListeners (name: string): boolean;
 }

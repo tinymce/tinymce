@@ -115,7 +115,7 @@ UnitTest.asynctest('textpattern.browser.FindInlinePatternTest', (success, failur
         ])
       ]),
       Log.stepsAsStep('TBA', 'inline * with uncollapsed range returns no match', [
-        sSetContentAndSelection('*x*&nbsp;', [ 0 ], 3,  [ 0 ], 4),
+        sSetContentAndSelection('*x*&nbsp;', [ 0 ], 3, [ 0 ], 4),
         Chain.asStep(editor, [
           cGetInlinePattern(inlinePatterns, true),
           cAssertPatterns([])

@@ -1,11 +1,11 @@
+import { Arr } from '@ephox/katamari';
+import { Element } from '@ephox/sugar';
 import * as DetailsList from '../model/DetailsList';
-import { toDetailList, onCells, TargetSelection } from '../model/RunOperation';
+import { onCells, TargetSelection, toDetailList } from '../model/RunOperation';
 import * as Transitions from '../model/Transitions';
 import { Warehouse } from '../model/Warehouse';
-import { Element } from '@ephox/sugar';
 import { Generators } from './Generators';
-import { Arr } from '@ephox/katamari';
-import { RowCells, DetailExt } from './Structs';
+import { DetailExt, RowCells } from './Structs';
 
 const getUpOrLeftCells = (grid: RowCells[], selectedCells: DetailExt[], generators: Generators): Element[] => {
   // Get rows up or at the row of the bottom right cell
@@ -24,7 +24,7 @@ const getDownOrRightCells = (grid: RowCells[], selectedCells: DetailExt[], gener
   const downDetails = toDetailList(downGrid, generators);
   // Get an array of the cells down or to the right of the bottom right cell
   return Arr.bind(downDetails, (detail) => {
-    const slicedCells = detail.cells().slice(selectedCells[0].column() + selectedCells[0].colspan() - 1,  + detail.cells().length);
+    const slicedCells = detail.cells().slice(selectedCells[0].column() + selectedCells[0].colspan() - 1, + detail.cells().length);
     return Arr.map(slicedCells, (cell) => cell.element());
   });
 };

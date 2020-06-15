@@ -1,6 +1,6 @@
 import { Eq } from '@ephox/dispute';
-import { Option } from './Option';
 import * as Fun from './Fun';
+import { Option } from './Option';
 
 // There are many variations of Object iteration that are faster than the 'for-in' style:
 // http://jsperf.com/object-keys-iteration/107
@@ -109,5 +109,5 @@ export const isEmpty = (r: Record<any, any>): boolean => {
   return true;
 };
 
-export const equal = <T>(a1: Record<string, T>, a2:  Record<string, T>, eq: Eq.Eq<T> = Eq.eqAny) =>
+export const equal = <T>(a1: Record<string, T>, a2: Record<string, T>, eq: Eq.Eq<T> = Eq.eqAny) =>
   Eq.eqRecord(eq).eq(a1, a2);

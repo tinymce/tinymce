@@ -127,7 +127,7 @@ const makePlainAdaptor = (editor: Editor): RtcAdaptor => ({
     toggle: (name, vars, node) => ToggleFormat.toggle(editor, name, vars, node)
   },
   editor: {
-    getContent: (args, format) =>  getContentInternal(editor, args, format),
+    getContent: (args, format) => getContentInternal(editor, args, format),
     setContent: (content, args) => setContentInternal(editor, content, args),
     insertContent: (value, details) => insertHtmlAtCaret(editor, value, details)
   },
