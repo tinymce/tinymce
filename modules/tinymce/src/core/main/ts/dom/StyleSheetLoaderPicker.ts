@@ -1,5 +1,5 @@
 import { Document, Element, ShadowDom } from '@ephox/sugar';
-import { StyleSheetLoader } from './StyleSheetLoader';
+import { StyleSheetLoader } from '../api/dom/StyleSheetLoader';
 import { Node as DomNode } from '@ephox/dom-globals';
 
 export const ui = (referenceElement: DomNode | null): StyleSheetLoader => {
