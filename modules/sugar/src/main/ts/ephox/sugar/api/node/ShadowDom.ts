@@ -6,7 +6,6 @@ import {
 } from '@ephox/dom-globals';
 import * as Node from './Node';
 import * as Head from './Head';
-import * as Body from './Body';
 import { Fun, Option, Type } from '@ephox/katamari';
 import Element from './Element';
 import * as Traverse from '../search/Traverse';
@@ -38,7 +37,6 @@ export const getRootNode: (e: Element<DomNode>) => RootNode =
     ? (e) => Element.fromDom((e.dom() as any).getRootNode())
     : Traverse.documentOrOwner;
 
-
 /** Create an element, using the actual document. */
 export const createElement: {
   <K extends keyof HTMLElementTagNameMap>(dos: RootNode, tag: K): Element<HTMLElementTagNameMap[K]>;
@@ -52,7 +50,8 @@ export const getStyleContainer = (dos: RootNode): Element<DomNode> =>
 
 /** Where content needs to go. ShadowRoot or document body */
 export const getContentContainer = (dos: RootNode): Element<DomNode> =>
-  isShadowRoot(dos) ? dos : Body.getBody(Traverse.documentOrOwner(dos));
+  // Can't use Body.body without causing a circular module reference (since Body.inBody uses ShadowDom)
+  isShadowRoot(dos) ? dos : Element.fromDom(Traverse.documentOrOwner(dos).dom().body);
 
 /** Is this element either a ShadowRoot or a descendent of a ShadowRoot. */
 export const isInShadowRoot = (e: Element<DomNode>): boolean =>

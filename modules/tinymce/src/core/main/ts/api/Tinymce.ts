@@ -99,6 +99,7 @@ export interface TinyMCE extends EditorManager {
     ControlSelection: (selection: Selection, editor: Editor) => ControlSelection;
     BookmarkManager: (selection: Selection) => BookmarkManager;
     Selection: (dom: DOMUtils, win: Window, serializer, editor: Editor) => Selection;
+    StyleSheetLoader: StyleSheetLoader;
     Event: EventUtils;
   };
 
@@ -124,7 +125,6 @@ export interface TinyMCE extends EditorManager {
   Formatter: (editor: Editor) => Formatter;
   NotificationManager: (editor: Editor) => NotificationManager;
   Shortcuts: ShortcutsConstructor;
-  StyleSheetLoader: StyleSheetLoader;
   UndoManager: (editor: Editor) => UndoManagerType;
   WindowManager: (editor: Editor) => WindowManager;
 
@@ -227,6 +227,7 @@ const publicApi = {
     ScriptLoader,
     RangeUtils,
     Serializer: DomSerializer,
+    StyleSheetLoader,
     ControlSelection,
     BookmarkManager,
     Selection,

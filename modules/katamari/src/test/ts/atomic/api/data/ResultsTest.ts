@@ -126,3 +126,10 @@ UnitTest.test('Check that value, value always equal comparison.bothValues', () =
     }
   ));
 });
+
+UnitTest.test('Results.unite', () => {
+  fc.assert(fc.property(fc.integer(), (a) => {
+    Assert.eq('should be error', a, Results.unite(Result.error<number, number>(a)));
+    Assert.eq('should be value', a, Results.unite(Result.value<number, number>(a)));
+  }));
+});
