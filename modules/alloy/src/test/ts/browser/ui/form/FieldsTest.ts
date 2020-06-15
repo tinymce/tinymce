@@ -241,14 +241,14 @@ UnitTest.asynctest('FieldsTest', (success, failure) => {
       Step.sync(() => {
         FormField.getField(inputA).fold(() => {
           throw new Error('The input Field could not be found');
-        },  (comp) => {
+        }, (comp) => {
           const alloyId = Tagger.readOrDie(comp.element());
           Assertions.assertEq('FormField should have an api that returns the input field', 'input-a-field', alloyId);
         });
 
         FormField.getLabel(inputA).fold(() => {
           throw new Error('The input Label could not be found');
-        },  (comp) => {
+        }, (comp) => {
           const alloyId = Tagger.readOrDie(comp.element());
           Assertions.assertEq('FormField should have an api that returns the input Label', 'input-a-label', alloyId);
         });

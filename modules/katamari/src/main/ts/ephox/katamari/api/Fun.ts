@@ -56,7 +56,7 @@ const die = function (msg: string) {
   };
 };
 
-const apply = function <T> (f: () => T): T  {
+const apply = function <T> (f: () => T): T {
   return f();
 };
 

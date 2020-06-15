@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyTriggers, AlloyComponent } from '@ephox/alloy';
+import { AlloyComponent, AlloyTriggers } from '@ephox/alloy';
 import { Arr, Option } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
@@ -88,7 +88,7 @@ const getSpec = (editor: Editor): SelectSpec => {
 
   const getPreviewFor = (item) => () => Option.some({
     tag: 'div',
-    styles: item.indexOf('dings') === -1 ? { 'font-family': item } :  { }
+    styles: item.indexOf('dings') === -1 ? { 'font-family': item } : { }
   });
 
   const onAction = (rawItem) => () => {

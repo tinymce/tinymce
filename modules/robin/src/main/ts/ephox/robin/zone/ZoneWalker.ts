@@ -127,7 +127,7 @@ const process = <E, D> (
       (_belowBlock) => Trampoline.stop() // We've gone past the end of the viewport, so stop completely
     );
   },
-  (_aItem, _aMode) =>  Trampoline.stop() // concluded(aItem, aMode) DO NOTHING
+  (_aItem, _aMode) => Trampoline.stop() // concluded(aItem, aMode) DO NOTHING
 );
 
 // I'm going to trampoline this:

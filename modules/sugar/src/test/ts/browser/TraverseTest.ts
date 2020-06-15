@@ -64,11 +64,11 @@ UnitTest.test('TraverseTest', () => {
   const c6 = node('c6');
   InsertAll.append(aunt, [ c1, c2, c3, c4, c5, c6 ]);
 
-  checkSiblings([ c1, c2 ],     c3, Traverse.prevSiblings);
+  checkSiblings([ c1, c2 ], c3, Traverse.prevSiblings);
   checkSiblings([ c4, c5, c6 ], c3, Traverse.nextSiblings);
 
-  checkSiblings([ c1 ],         c2, Traverse.prevSiblings);
-  checkSiblings([ c6 ],         c5, Traverse.nextSiblings);
+  checkSiblings([ c1 ], c2, Traverse.prevSiblings);
+  checkSiblings([ c6 ], c5, Traverse.nextSiblings);
 
   const el = Element.fromTag('div');
   Assert.eq('eq', true, Traverse.owner(el).dom() === document);

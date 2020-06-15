@@ -65,7 +65,7 @@ const byLanguage = function <E, D> (universe: Universe<E, D>, item: E): Grouping
 
   const toLeft = ClusterSearch.creepLeft(universe, item, isLanguageBoundary);
   const toRight = ClusterSearch.creepRight(universe, item, isLanguageBoundary);
-  const middle =  universe.property().isText(item) ? [ WordDecision.detail(universe, item) ] : [ ];
+  const middle = universe.property().isText(item) ? [ WordDecision.detail(universe, item) ] : [ ];
 
   const all = Arr.reverse(toLeft).concat(middle).concat(toRight);
 

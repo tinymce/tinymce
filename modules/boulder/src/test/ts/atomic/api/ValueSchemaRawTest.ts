@@ -1,12 +1,12 @@
 import { Logger } from '@ephox/agar';
 import { Assert, assert, UnitTest } from '@ephox/bedrock-client';
 import { Fun, Result } from '@ephox/katamari';
+import { KAssert } from '@ephox/katamari-assertions';
 import * as FieldPresence from 'ephox/boulder/api/FieldPresence';
 import * as FieldSchema from 'ephox/boulder/api/FieldSchema';
+import { Processor } from 'ephox/boulder/api/Main';
 import * as Objects from 'ephox/boulder/api/Objects';
 import * as ValueSchema from 'ephox/boulder/api/ValueSchema';
-import { Processor } from 'ephox/boulder/api/Main';
-import { KAssert } from '@ephox/katamari-assertions';
 
 UnitTest.test('ValueSchemaRawTest', function () {
   const checkErr = function (label: string, expectedPart: string, input: any, processor: Processor) {
@@ -227,7 +227,7 @@ UnitTest.test('ValueSchemaRawTest', function () {
   Logger.sync('defaulted option(fallback), value not supplied', function () {
     const v = ValueSchema.asRawOrDie('test.option', ValueSchema.objOf([
       FieldSchema.field('alpha', 'alpha', FieldPresence.asDefaultedOption('fallback'), ValueSchema.anyValue())
-    ]), {  });
+    ]), { });
     KAssert.eqNone('fallback.opt: no alpha should be none', v.alpha);
   });
 

@@ -79,7 +79,7 @@ UnitTest.test('Atomic Test: parts.SchemasTest', () => {
     'sanity: group',
     { },
     [ group ],
-    {  }
+    { }
   );
 
   checkSuccess(

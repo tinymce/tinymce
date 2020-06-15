@@ -1,6 +1,6 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { Types } from '@ephox/bridge';
 import { ValueSchema } from '@ephox/boulder';
+import { Types } from '@ephox/bridge';
 import { Blob } from '@ephox/dom-globals';
 
 UnitTest.test('Custom Editor Schema Test', () => {
@@ -39,7 +39,7 @@ UnitTest.test('Custom Editor Schema Test', () => {
       return {
         setValue: (_value: string) => {},
         getValue: () => '',
-        destroy: () =>  {}
+        destroy: () => {}
       };
     }
   }).isValue());
@@ -52,7 +52,7 @@ UnitTest.test('Custom Editor Schema Test', () => {
       return {
         setValue: (_value: string) => {},
         getValue: () => '',
-        destroy: () =>  {}
+        destroy: () => {}
       };
     }
   }).isError());

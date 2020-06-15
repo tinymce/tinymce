@@ -31,7 +31,7 @@ const getOuterHtml = function (elm: Node): string {
 };
 
 const createFragment = function (html: string): DocumentFragment {
-  let  node;
+  let node;
 
   const container = document.createElement('div');
   const frag = document.createDocumentFragment();

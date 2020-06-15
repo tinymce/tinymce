@@ -1,4 +1,4 @@
-import { document, console } from '@ephox/dom-globals';
+import { console, document } from '@ephox/dom-globals';
 import { Class, Element } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
@@ -11,7 +11,7 @@ import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 
 // tslint:disable:no-console
 
-export default (): void  => {
+export default (): void => {
   const gui = Gui.create();
   const body = Element.fromDom(document.body);
   Class.add(gui.element(), 'gui-root-demo-container');

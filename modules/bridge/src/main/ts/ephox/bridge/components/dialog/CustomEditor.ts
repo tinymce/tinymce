@@ -1,12 +1,12 @@
-import { ValueSchema, FieldSchema } from '@ephox/boulder';
-import { Result } from '@ephox/katamari';
+import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Element } from '@ephox/dom-globals';
+import { Result } from '@ephox/katamari';
 import { FormComponent, FormComponentApi, formComponentFields } from './FormComponent';
 
 export interface CustomEditorInit {
   setValue: (value: string) => void;
   getValue: () => string;
-  destroy: () =>  void;
+  destroy: () => void;
 }
 
 export type CustomEditorInitFn = (elm: Element, settings: any) => Promise<CustomEditorInit>;

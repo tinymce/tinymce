@@ -88,14 +88,14 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadEscEnterBubbleTest', (s
       steps.sWaitForMenu('Down to activate menu'),
       Keyboard.sKeydown(doc, Keys.escape(), {}),
       steps.sWaitForNoMenu('Esc to close menu'),
-      Keyboard.sKeydown(doc,  Keys.escape(), {}),
+      Keyboard.sKeydown(doc, Keys.escape(), {}),
 
       FocusTools.sSetFocus('Focusing typeahead', gui.element(), 'input'),
       Keyboard.sKeydown(doc, Keys.down(), { }),
       steps.sWaitForMenu('Down to activate menu'),
       Keyboard.sKeydown(doc, Keys.enter(), {}),
       steps.sWaitForNoMenu('Enter to close menu'),
-      Keyboard.sKeydown(doc,  Keys.enter(), {}),
+      Keyboard.sKeydown(doc, Keys.enter(), {}),
       store.sAssertEq('Should have item1 and onExecute', [ '1(input-div-li)', '***onExecute***' ]),
 
       FocusTools.sSetFocus('Focusing typeahead to open preview mode', gui.element(), 'input'),

@@ -17,7 +17,7 @@ const formatErrors = function (errors) {
 
   // TODO: Work out a better split between PrettyPrinter and SchemaError
   return Arr.map(es, function (e) {
-    return 'Failed path: ('  + e.path.join(' > ') + ')\n' + e.getErrorInfo();
+    return 'Failed path: (' + e.path.join(' > ') + ')\n' + e.getErrorInfo();
   });
 };
 

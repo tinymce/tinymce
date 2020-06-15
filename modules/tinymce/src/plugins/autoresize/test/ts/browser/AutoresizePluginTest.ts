@@ -28,7 +28,7 @@ UnitTest.asynctest('browser.tinymce.plugins.autoresize.AutoresizePluginTest', (s
     // Get the editor height, but exclude the 10px margin from the calculations
     const editorContentHeight = editor.getContentAreaContainer().offsetHeight - 10;
     const actualDiff = Math.abs(editorContentHeight - height);
-    Assert.eq(`should be approx (within ${diff}px): ${editorContentHeight} ~= ${height}`, true,  actualDiff <= diff);
+    Assert.eq(`should be approx (within ${diff}px): ${editorContentHeight} ~= ${height}`, true, actualDiff <= diff);
   }));
 
   const sAssertScrollPositionGreaterThan = (window: Window, position: number) => Logger.t(`Assert scroll position is ~${position}px`, Step.sync(() => {

@@ -1,6 +1,6 @@
 import { FocusTools, GeneralSteps, Log, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { SelectorFind, Body, Focus } from '@ephox/sugar';
+import { Body, Focus, SelectorFind } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
@@ -64,7 +64,7 @@ UnitTest.asynctest('SpecialKeyingFocusInTest', (success, failure) => {
         Step.sync(() => {
           Keying.focusIn(oneComp);
         }),
-        store.sAssertEq('focusIn should have fired', [  'focusIn' ]),
+        store.sAssertEq('focusIn should have fired', [ 'focusIn' ]),
         FocusTools.sTryOnSelector('Focus should stay on body', doc, 'body'),
         store.sClear
       ])),
@@ -74,7 +74,7 @@ UnitTest.asynctest('SpecialKeyingFocusInTest', (success, failure) => {
         Step.sync(() => {
           Keying.focusIn(twoComp);
         }),
-        store.sAssertEq('Nothing should have fired', [  ]),
+        store.sAssertEq('Nothing should have fired', [ ]),
         FocusTools.sTryOnSelector('Focus should move to cTwo', doc, '.two')
       ])),
 

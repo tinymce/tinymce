@@ -146,7 +146,7 @@ UnitTest.asynctest('ScrollTest', (success, failure) => {
       setToElement(doc, cEl, cPos.left(), cPos.top(), 1, 1, 'set to centre el');
 
       // scroll text of the centre cell into view (right-aligned in RTL mode)
-      const x = cX + (doc.rtl ?  (Width.get(cEl) - Width.get(doc.iframe)) : 0);
+      const x = cX + (doc.rtl ? (Width.get(cEl) - Width.get(doc.iframe)) : 0);
       scrollTo(x, cY, doc); // scroll back to centre
 
       scrollBy(-50, 30, doc, 'scrollBy/1');

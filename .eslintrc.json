@@ -22,6 +22,7 @@
     "comma-dangle": ["error", "never"],
     "keyword-spacing": ["error"],
     "no-empty": "off",
+    "no-multi-spaces": ["error", { "ignoreEOLComments": true }],
     "no-shadow": "off",
     "no-underscore-dangle": "off",
     "no-unused-expressions": "off",

@@ -45,7 +45,7 @@ export interface CompositeSketchDetail extends BaseSketchDetail<CompositeSketchS
   partUids: Record<string, string>;
 }
 
-export interface CompositeSketch<S extends CompositeSketchSpec>  {
+export interface CompositeSketch<S extends CompositeSketchSpec> {
   name: () => string;
   configFields: () => FieldProcessorAdt[];
   partFields: () => PartTypeAdt[];

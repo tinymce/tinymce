@@ -8,7 +8,7 @@ import { insertOrUpdateImage } from 'tinymce/plugins/image/core/ImageSelection';
 import Plugin from 'tinymce/plugins/image/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageSelectionTest',  (success, failure) => {
+UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageSelectionTest', (success, failure) => {
   Plugin();
   Theme();
 

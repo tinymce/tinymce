@@ -7,7 +7,7 @@ import * as Fields from '../../data/Fields';
 import * as PartType from '../../parts/PartType';
 import { ToolbarGroupDetail, ToolbarGroupSpec } from '../types/ToolbarGroupTypes';
 
-const schema: () => FieldProcessorAdt[]  = Fun.constant([
+const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.strict('items'),
   Fields.markers([ 'itemSelector' ]),
   SketchBehaviours.field('tgroupBehaviours', [ Keying ])

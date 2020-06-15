@@ -57,7 +57,7 @@ const addSplitButton = function (editor: Editor, id, tooltip, cmd, nodeName, sty
         return {
           type: 'choiceitem',
           value: itemValue,
-          icon: 'list-' +  iconStyle + '-' + iconName,
+          icon: 'list-' + iconStyle + '-' + iconName,
           text: displayText
         };
       });

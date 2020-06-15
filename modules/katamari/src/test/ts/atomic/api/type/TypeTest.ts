@@ -1,8 +1,8 @@
+import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { Pprint, Testable } from '@ephox/dispute';
 import * as Arr from 'ephox/katamari/api/Arr';
 import * as Type from 'ephox/katamari/api/Type';
-import { UnitTest, Assert } from '@ephox/bedrock-client';
 import * as fc from 'fast-check';
-import { Pprint, Testable } from '@ephox/dispute';
 
 const { tNumber } = Testable;
 
@@ -28,7 +28,7 @@ UnitTest.test('Type.is*: Unit tests', () => {
   const checkIsFunction = check(Type.isFunction, 'isFunction');
   const checkIsNumber = check(Type.isNumber, 'isNumber');
 
-  checkIsNull(true,  null);
+  checkIsNull(true, null);
   checkIsNull(false, undefined);
   checkIsNull(false, true);
   checkIsNull(false, false);
@@ -41,7 +41,7 @@ UnitTest.test('Type.is*: Unit tests', () => {
   checkIsNull(false, 1);
 
   checkIsUndefined(false, null);
-  checkIsUndefined(true,  undefined);
+  checkIsUndefined(true, undefined);
   checkIsUndefined(false, true);
   checkIsUndefined(false, false);
   checkIsUndefined(false, 'ball');
@@ -54,8 +54,8 @@ UnitTest.test('Type.is*: Unit tests', () => {
 
   checkIsBoolean(false, null);
   checkIsBoolean(false, undefined);
-  checkIsBoolean(true,  true);
-  checkIsBoolean(true,  false);
+  checkIsBoolean(true, true);
+  checkIsBoolean(true, false);
   checkIsBoolean(false, 'ball');
   checkIsBoolean(false, {});
   checkIsBoolean(false, objectString);
@@ -68,9 +68,9 @@ UnitTest.test('Type.is*: Unit tests', () => {
   checkIsString(false, undefined);
   checkIsString(false, true);
   checkIsString(false, false);
-  checkIsString(true,  'ball');
+  checkIsString(true, 'ball');
   checkIsString(false, {});
-  checkIsString(true,  objectString);
+  checkIsString(true, objectString);
   checkIsString(false, []);
   checkIsString(false, noop);
   checkIsString(false, [ 1, 3, 4, 5 ]);
@@ -81,7 +81,7 @@ UnitTest.test('Type.is*: Unit tests', () => {
   checkIsObject(false, true);
   checkIsObject(false, false);
   checkIsObject(false, 'ball');
-  checkIsObject(true,  {});
+  checkIsObject(true, {});
   checkIsObject(false, objectString);
   checkIsObject(false, []);
   checkIsObject(false, noop);
@@ -95,9 +95,9 @@ UnitTest.test('Type.is*: Unit tests', () => {
   checkIsArray(false, 'ball');
   checkIsArray(false, {});
   checkIsArray(false, objectString);
-  checkIsArray(true,  []);
+  checkIsArray(true, []);
   checkIsArray(false, noop);
-  checkIsArray(true,  [ 1, 3, 4, 5 ]);
+  checkIsArray(true, [ 1, 3, 4, 5 ]);
   checkIsArray(false, 1);
 
   checkIsFunction(false, null);
@@ -108,7 +108,7 @@ UnitTest.test('Type.is*: Unit tests', () => {
   checkIsFunction(false, {});
   checkIsFunction(false, objectString);
   checkIsFunction(false, []);
-  checkIsFunction(true,  noop);
+  checkIsFunction(true, noop);
   checkIsFunction(false, [ 1, 3, 4, 5 ]);
   checkIsFunction(false, 1);
 
@@ -122,7 +122,7 @@ UnitTest.test('Type.is*: Unit tests', () => {
   checkIsNumber(false, []);
   checkIsNumber(false, noop);
   checkIsNumber(false, [ 1, 3, 4, 5 ]);
-  checkIsNumber(true,  1);
+  checkIsNumber(true, 1);
 
 });
 
