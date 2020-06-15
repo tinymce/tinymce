@@ -2,6 +2,7 @@ Version 5.4.0 (TBD)
     Added `StyleSheetLoader` module to public API, as it was already part of `DOMUtils` #TINY-6100
     Added Oxide variables for styling the select element and headings in dialog content #TINY-6070
     Added icons for `table` column and row cut, copy and paste toolbar buttons #TINY-6062
+    Added icons for sort table columns #TINY-5097
     Added all `table` menu items to the UI registry, so they can be used by name in other menus #TINY-4866
     Added new `mceTableApplyCellStyle` command to the `table` plugin #TINY-6004
     Added new `table` cut, copy and paste column editor commands and menu items #TINY-6006
