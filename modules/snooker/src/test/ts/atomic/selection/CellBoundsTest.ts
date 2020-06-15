@@ -1,9 +1,9 @@
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
+import { Element } from '@ephox/sugar';
 import * as Structs from 'ephox/snooker/api/Structs';
 import { Warehouse } from 'ephox/snooker/model/Warehouse';
 import * as CellBounds from 'ephox/snooker/selection/CellBounds';
-import { UnitTest, assert } from '@ephox/bedrock-client';
-import { Element } from '@ephox/sugar';
 
 UnitTest.test('CellBounds.isWithin Test', function () {
   const s = (fakeEle: any, rowspan: number, colspan: number) => Structs.detail(fakeEle as Element, rowspan, colspan);
@@ -84,7 +84,7 @@ UnitTest.test('CellBounds.isWithin Test', function () {
     { expected: false, label: 'm', row: 4, column: 1 },
     { expected: true, label: 'n', row: 4, column: 2 },
     { expected: false, label: 'o', row: 4, column: 3 },
-    { expected: false, label: 'p', row: 4, column: 4 },
+    { expected: false, label: 'p', row: 4, column: 4 }
   ];
 
   Arr.each(cases, function (c) {

@@ -40,7 +40,7 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotateTest', (success, failu
           '<p>First</p>',
           '<p><span data-test-anything="empty-paragraph" data-mce-annotation="test-annotation" data-mce-annotation-uid="test-uid" class="mce-annotation"><br /></span></p>',
           '<p>Third</p>'
-        ]),
+        ])
       ])
     );
 

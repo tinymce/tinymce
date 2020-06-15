@@ -21,7 +21,7 @@ UnitTest.test('tinymce.lists.browser.ListModelTest', () => {
     content: Jsc.small(arbitratyContent),
     listType: Jsc.oneof(Jsc.constant(ListType.OL), Jsc.constant(ListType.UL)),
     listAttributes: Jsc.oneof(Jsc.constant({}), Jsc.constant({ style: 'list-style-type: lower-alpha;' })),
-    itemAttributes: Jsc.oneof(Jsc.constant({}), Jsc.constant({ style: 'color: red;' })),
+    itemAttributes: Jsc.oneof(Jsc.constant({}), Jsc.constant({ style: 'color: red;' }))
   });
 
   const arbitraryEntries = Jsc.array(arbitraryEntry);

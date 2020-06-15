@@ -1,9 +1,9 @@
-import { Assertions, Pipeline, Log, Chain, NamedChain } from '@ephox/agar';
-import { Editor as McEditor } from '@ephox/mcagar';
-import Theme from 'tinymce/themes/silver/Theme';
+import { Assertions, Chain, Log, NamedChain, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
+import { Editor as McEditor } from '@ephox/mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
+import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.core.init.InitContentBodyDirectionalityTest', (success, failure) => {
   Theme();
@@ -58,6 +58,6 @@ UnitTest.asynctest('browser.tinymce.core.init.InitContentBodyDirectionalityTest'
       },
       'Directionality should not be set if the editor language does not have a directionality',
       ''
-    )),
+    ))
   ], success, failure);
 });

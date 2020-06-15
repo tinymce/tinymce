@@ -22,6 +22,7 @@ import { Selections } from './selection/Selections';
 import { getSelectionTargets } from './selection/SelectionTargets';
 import * as Buttons from './ui/Buttons';
 import * as MenuItems from './ui/MenuItems';
+import * as TableFormats from './core/TableFormats';
 
 function Plugin(editor: Editor) {
   const selections = Selections(editor);
@@ -41,6 +42,7 @@ function Plugin(editor: Editor) {
   editor.on('PreInit', function () {
     editor.serializer.addTempAttr(Ephemera.firstSelected);
     editor.serializer.addTempAttr(Ephemera.lastSelected);
+    TableFormats.registerFormats(editor);
   });
 
   if (hasTabNavigation(editor)) {

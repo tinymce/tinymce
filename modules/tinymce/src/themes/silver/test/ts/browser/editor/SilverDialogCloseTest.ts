@@ -14,7 +14,7 @@ UnitTest.asynctest('Editor (Silver) Configuration Close test', (success, failure
         'Dialog closes without error using close button',
         [
           tinyUi.sWaitForPopup('wait for window', 'div[role="dialog"].tox-dialog'),
-          tinyUi.sClickOnUi('click on close button', 'div[role="dialog"] button[aria-label="Close"]'),
+          tinyUi.sClickOnUi('click on close button', 'div[role="dialog"] button[aria-label="Close"]')
         ]
       ), onSuccess, onFailure);
     },
@@ -35,7 +35,7 @@ UnitTest.asynctest('Editor (Silver) Configuration Close test', (success, failure
                 name: 'close',
                 text: 'Close'
               }
-            ],
+            ]
           });
         });
       }

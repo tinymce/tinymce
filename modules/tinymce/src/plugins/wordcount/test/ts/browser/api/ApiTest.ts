@@ -1,10 +1,10 @@
-import { Assertions, Logger, Pipeline, Step, Log, GeneralSteps } from '@ephox/agar';
+import { Assertions, GeneralSteps, Log, Logger, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { TinyLoader, TinyApis } from '@ephox/mcagar';
+import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import Editor from 'tinymce/core/api/Editor';
+import { CountGetter, WordCountApi } from 'tinymce/plugins/wordcount/api/Api';
 import Plugin from 'tinymce/plugins/wordcount/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
-import { CountGetter, WordCountApi } from 'tinymce/plugins/wordcount/api/Api';
-import Editor from 'tinymce/core/api/Editor';
 
 interface Sel {
   startPath: number[];
@@ -56,7 +56,7 @@ UnitTest.asynctest('browser.tinymce.plugins.wordcount.ApiTest', (success, failur
 
       Logger.t('Body character count without spaces', GeneralSteps.sequence([
         bodyCharacterCountWithoutSpaces('Simple character count', '<p>My sentence is this.</p>', 17),
-        bodyCharacterCountWithoutSpaces('Counts surrogate pairs as single character', '<p>𩸽</p>', 1),
+        bodyCharacterCountWithoutSpaces('Counts surrogate pairs as single character', '<p>𩸽</p>', 1)
       ])),
 
       Logger.t('Selection word count', GeneralSteps.sequence([
@@ -65,7 +65,7 @@ UnitTest.asynctest('browser.tinymce.plugins.wordcount.ApiTest', (success, failur
           soffset: 2,
           finishPath: [ 0, 0 ],
           foffset: 15
-        }),
+        })
       ])),
 
       Logger.t('Selection character count', GeneralSteps.sequence([
@@ -74,7 +74,7 @@ UnitTest.asynctest('browser.tinymce.plugins.wordcount.ApiTest', (success, failur
           soffset: 2,
           finishPath: [ 0, 0 ],
           foffset: 15
-        }),
+        })
       ])),
 
       Logger.t('Selection character count without spaces', GeneralSteps.sequence([
@@ -83,7 +83,7 @@ UnitTest.asynctest('browser.tinymce.plugins.wordcount.ApiTest', (success, failur
           soffset: 2,
           finishPath: [ 0, 0 ],
           foffset: 15
-        }),
+        })
       ]))
     ]), onSuccess, onFailure);
   }, {

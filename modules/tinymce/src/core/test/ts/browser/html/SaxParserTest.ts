@@ -1,7 +1,7 @@
 import { Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { LegacyUnit } from '@ephox/mcagar';
-import SaxParser from 'tinymce/core/api/html/SaxParser';
+import SaxParser, { SaxParserSettings } from 'tinymce/core/api/html/SaxParser';
 import Schema from 'tinymce/core/api/html/Schema';
 import Writer from 'tinymce/core/api/html/Writer';
 import Tools from 'tinymce/core/api/util/Tools';
@@ -11,7 +11,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function (success,
 
   const writer = Writer(), schema = Schema();
 
-  const createCounter = function (writer) {
+  const createCounter = function (writer): SaxParserSettings & { counts: any } {
     const counts: any = {};
 
     return {
@@ -580,11 +580,9 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function (success,
   });
 
   suite.test('Parse (validate)', function () {
-    let counter, parser;
-
-    counter = createCounter(writer);
+    const counter = createCounter(writer);
     counter.validate = true;
-    parser = SaxParser(counter, schema);
+    const parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('<invalid1>123<invalid2 />456<span title="title" invalid3="value">789</span>012</invalid1>');
     LegacyUnit.equal(writer.getContent(), '123456<span title="title">789</span>012', 'Parse invalid elements and attributes.');
@@ -592,11 +590,9 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function (success,
   });
 
   suite.test('Self closing', function () {
-    let counter, parser;
-
-    counter = createCounter(writer);
+    const counter = createCounter(writer);
     counter.validate = true;
-    parser = SaxParser(counter, schema);
+    const parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('<ul><li>1<li><b>2</b><li><em><b>3</b></em></ul>');
     LegacyUnit.equal(
@@ -664,33 +660,27 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function (success,
   });
 
   suite.test('Parse attr with backslash #5436', function () {
-    let counter, parser;
-
-    counter = createCounter(writer);
-    parser = SaxParser(counter, schema);
+    const counter = createCounter(writer);
+    const parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('<a title="\\" href="h">x</a>');
     LegacyUnit.equal(writer.getContent(), '<a title="\\" href="h">x</a>');
   });
 
   suite.test('Parse no attributes span before strong', function () {
-    let counter, parser;
-
-    counter = createCounter(writer);
+    const counter = createCounter(writer);
     counter.validate = true;
-    parser = SaxParser(counter, schema);
+    const parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('<p><span>A</span> <strong>B</strong></p>');
     LegacyUnit.equal(writer.getContent(), '<p>A <strong>B</strong></p>');
   });
 
   suite.test('Conditional comments (allowed)', function () {
-    let counter, parser;
-
-    counter = createCounter(writer);
+    const counter = createCounter(writer);
     counter.validate = false;
     counter.allow_conditional_comments = true;
-    parser = SaxParser(counter, schema);
+    const parser = SaxParser(counter, schema);
 
     writer.reset();
     parser.parse('<!--[if gte IE 4]>alert(1)<![endif]-->');
@@ -698,12 +688,10 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function (success,
   });
 
   suite.test('Conditional comments (denied)', function () {
-    let counter, parser;
-
-    counter = createCounter(writer);
+    const counter = createCounter(writer);
     counter.validate = false;
     counter.allow_conditional_comments = false;
-    parser = SaxParser(counter, schema);
+    const parser = SaxParser(counter, schema);
 
     writer.reset();
     parser.parse('<!--[if gte IE 4]>alert(1)<![endif]-->');
@@ -719,12 +707,10 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function (success,
   });
 
   suite.test('Parse script urls (allowed)', function () {
-    let counter, parser;
-
-    counter = createCounter(writer);
+    const counter = createCounter(writer);
     counter.validate = false;
     counter.allow_script_urls = true;
-    parser = SaxParser(counter, schema);
+    const parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse(
       '<a href="javascript:alert(1)">1</a>' +
@@ -739,12 +725,10 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function (success,
   });
 
   suite.test('Parse script urls (allowed html data uris)', function () {
-    let counter, parser;
-
-    counter = createCounter(writer);
+    const counter = createCounter(writer);
     counter.validate = false;
     counter.allow_html_data_urls = true;
-    parser = SaxParser(counter, schema);
+    const parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse(
       '<a href="javascript:alert(1)">1</a>' +
@@ -760,13 +744,11 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function (success,
   });
 
   suite.test('Parse script urls (disallow svg data image uris)', function () {
-    let counter, parser;
-
-    counter = createCounter(writer);
+    const counter = createCounter(writer);
     counter.validate = false;
     counter.allow_html_data_urls = false;
     counter.allow_svg_data_urls = false;
-    parser = SaxParser(counter, schema);
+    const parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse(
       '<a href="data:image/svg+xml;base64,x">1</a>'
@@ -778,11 +760,9 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function (success,
   });
 
   suite.test('Parse script urls (denied)', function () {
-    let counter, parser;
-
-    counter = createCounter(writer);
+    const counter = createCounter(writer);
     counter.validate = false;
-    parser = SaxParser(counter, schema);
+    const parser = SaxParser(counter, schema);
 
     writer.reset();
     parser.parse(
@@ -815,11 +795,9 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function (success,
 
   suite.test('Parse away bogus elements', function () {
     const testBogusSaxParse = function (inputHtml, outputHtml, counters) {
-      let counter, parser;
-
-      counter = createCounter(writer);
+      const counter = createCounter(writer);
       counter.validate = true;
-      parser = SaxParser(counter, schema);
+      const parser = SaxParser(counter, schema);
       writer.reset();
       parser.parse(inputHtml);
       LegacyUnit.equal(writer.getContent(), outputHtml);
@@ -863,11 +841,9 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function (success,
   });
 
   suite.test('parse XSS PI', function () {
-    let counter, parser;
-
-    counter = createCounter(writer);
+    const counter = createCounter(writer);
     counter.validate = false;
-    parser = SaxParser(counter, schema);
+    const parser = SaxParser(counter, schema);
 
     writer.reset();
     parser.parse(
@@ -883,10 +859,8 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function (success,
   });
 
   suite.test('aria attributes', function () {
-    let counter, parser;
-
-    counter = createCounter(writer);
-    parser = SaxParser(Tools.extend({ validate: true }, counter), schema);
+    const counter = createCounter(writer);
+    const parser = SaxParser(Tools.extend({ validate: true }, counter), schema);
     writer.reset();
     parser.parse('<span aria-label="test" role="myrole" unsupportedattr="2">a</span>');
     LegacyUnit.equal(
@@ -896,10 +870,8 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function (success,
   });
 
   suite.test('Parse elements with numbers', function () {
-    let counter, parser;
-
-    counter = createCounter(writer);
-    parser = SaxParser(counter, schema);
+    const counter = createCounter(writer);
+    const parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('<a5>text</a5>');
     LegacyUnit.equal(writer.getContent(), '<a5>text</a5>', 'Parse element with numbers.');
@@ -907,10 +879,8 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function (success,
   });
 
   suite.test('Parse internal elements with disallowed attributes', function () {
-    let counter, parser;
-
-    counter = createCounter(writer);
-    parser = SaxParser(counter, schema);
+    const counter = createCounter(writer);
+    const parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('<b data-mce-type="test" id="x" style="color: red" src="1" data="2" onclick="3"></b>');
     LegacyUnit.equal(writer.getContent(), '<b data-mce-type="test" id="x" style="color: red"></b>');
@@ -936,8 +906,6 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function (success,
   });
 
   suite.test('Parse special elements', function () {
-    let counter, parser;
-
     const specialHtml = (
       '<b>' +
       '<textarea></b></textarea><title></b></title><script></b></script>' +
@@ -947,8 +915,8 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function (success,
       '</b>'
     );
 
-    counter = createCounter(writer);
-    parser = SaxParser(counter, schema);
+    const counter = createCounter(writer);
+    const parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse(specialHtml);
     LegacyUnit.equal(writer.getContent(), specialHtml);

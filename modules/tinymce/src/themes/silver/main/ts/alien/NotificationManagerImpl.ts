@@ -83,7 +83,7 @@ export default function (editor: Editor, extras, uiMothership: Gui.GuiSystem): N
         },
         lazySink: extras.backstage.shared.getSink,
         fireDismissalEventInstead: { },
-        ...backstage.shared.header.isPositionedAtTop() ? { } : { fireRepositionEventInstead: { }},
+        ...backstage.shared.header.isPositionedAtTop() ? { } : { fireRepositionEventInstead: { }}
       })
     );
 

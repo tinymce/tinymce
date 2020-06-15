@@ -6,11 +6,11 @@
  */
 
 import { navigator } from '@ephox/dom-globals';
-import { Arr, Fun, Future, Futures, Result } from '@ephox/katamari';
+import { Arr, Fun, Future, Futures, Result, Results } from '@ephox/katamari';
 import { Attr, Element } from '@ephox/sugar';
-import { ReferrerPolicy } from '../api/SettingsTypes';
-import Delay from '../api/util/Delay';
-import Tools from '../api/util/Tools';
+import { ReferrerPolicy } from '../SettingsTypes';
+import Delay from '../util/Delay';
+import Tools from '../util/Tools';
 
 /**
  * This class handles loading of external stylesheets and fires events when these are loaded.
@@ -34,9 +34,8 @@ export interface StyleSheetLoaderSettings {
 export function StyleSheetLoader(document, settings: Partial<StyleSheetLoaderSettings> = {}): StyleSheetLoader {
   let idCount = 0;
   const loadedStates = {};
-  let maxLoadTime;
 
-  maxLoadTime = settings.maxLoadTime || 5000;
+  const maxLoadTime = settings.maxLoadTime || 5000;
 
   const _setReferrerPolicy = (referrerPolicy: ReferrerPolicy) => {
     settings.referrerPolicy = referrerPolicy;
@@ -55,7 +54,7 @@ export function StyleSheetLoader(document, settings: Partial<StyleSheetLoaderSet
    * @param {Function} errorCallback Callback to be executed when failed loading.
    */
   const load = function (url: string, loadedCallback: Function, errorCallback?: Function) {
-    let link, style, startTime, state;
+    let link, style, state;
 
     const resolve = (status: number) => {
       state.status = status;
@@ -187,7 +186,7 @@ export function StyleSheetLoader(document, settings: Partial<StyleSheetLoaderSet
     link.id = 'u' + (idCount++);
     link.async = false;
     link.defer = false;
-    startTime = new Date().getTime();
+    const startTime = new Date().getTime();
 
     if (settings.contentCssCors) {
       link.crossOrigin = 'anonymous';
@@ -231,10 +230,6 @@ export function StyleSheetLoader(document, settings: Partial<StyleSheetLoaderSet
     });
   };
 
-  const unbox = function (result) {
-    return result.fold(Fun.identity, Fun.identity);
-  };
-
   const loadAll = function (urls: string[], success: Function, failure: Function) {
     Futures.par(Arr.map(urls, loadF)).get(function (result) {
       const parts = Arr.partition(result, function (r) {
@@ -242,9 +237,9 @@ export function StyleSheetLoader(document, settings: Partial<StyleSheetLoaderSet
       });
 
       if (parts.fail.length > 0) {
-        failure(parts.fail.map(unbox));
+        failure(parts.fail.map(Results.unite));
       } else {
-        success(parts.pass.map(unbox));
+        success(parts.pass.map(Results.unite));
       }
     });
   };

@@ -60,6 +60,7 @@ import URI, { URIConstructor } from './util/URI';
 import VK from './util/VK';
 import XHR from './util/XHR';
 import { UndoManager as UndoManagerType } from '../undo/UndoManagerTypes';
+import { StyleSheetLoader } from './dom/StyleSheetLoader';
 
 export interface TinyMCE extends EditorManager {
 
@@ -98,6 +99,7 @@ export interface TinyMCE extends EditorManager {
     ControlSelection: (selection: Selection, editor: Editor) => ControlSelection;
     BookmarkManager: (selection: Selection) => BookmarkManager;
     Selection: (dom: DOMUtils, win: Window, serializer, editor: Editor) => Selection;
+    StyleSheetLoader: StyleSheetLoader;
     Event: EventUtils;
   };
 
@@ -225,6 +227,7 @@ const publicApi = {
     ScriptLoader,
     RangeUtils,
     Serializer: DomSerializer,
+    StyleSheetLoader,
     ControlSelection,
     BookmarkManager,
     Selection,

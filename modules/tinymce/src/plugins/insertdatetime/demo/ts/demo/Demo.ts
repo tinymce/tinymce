@@ -8,7 +8,7 @@ tinymce.init({
   menubar: 'insertdatetime',
   menu: {
     insertdatetime: { title: 'Insert Date/Time', items: 'insertdatetime' }
-  },
+  }
 });
 
 export {};

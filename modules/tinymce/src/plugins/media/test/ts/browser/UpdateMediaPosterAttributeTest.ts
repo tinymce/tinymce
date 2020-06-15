@@ -1,6 +1,6 @@
-import { Pipeline, Log, GeneralSteps } from '@ephox/agar';
+import { GeneralSteps, Log, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { TinyLoader, TinyUi, TinyApis } from '@ephox/mcagar';
+import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 
 import Plugin from 'tinymce/plugins/media/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
@@ -56,6 +56,6 @@ UnitTest.asynctest('browser.plugins.media.UpdateMediaPosterAttributeTest', (succ
     plugins: [ 'media' ],
     toolbar: 'media',
     theme: 'silver',
-    base_url: '/project/tinymce/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

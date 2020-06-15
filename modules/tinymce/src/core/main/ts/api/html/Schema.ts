@@ -5,8 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Tools from '../util/Tools';
 import { Obj } from '@ephox/katamari';
+import Tools from '../util/Tools';
 
 export type SchemaType = 'html4' | 'html5' | 'html5-strict';
 
@@ -40,10 +40,26 @@ export type Attribute = {
   validValues?: any;
 };
 
+export interface DefaultAttribute {
+  name: string;
+  value: string;
+}
+
+export interface AttributePattern {
+  defaultValue?: string;
+  forcedValue?: string;
+  pattern: RegExp;
+  required?: boolean;
+  validValues?: Record<string, string>;
+}
+
 export type ElementRule = {
   attributes: Record<string, Attribute>;
+  attributesDefault?: DefaultAttribute[];
+  attributesForced?: DefaultAttribute[];
   attributesOrder: string[];
-  attributePatterns?: RegExp[];
+  attributePatterns?: AttributePattern[];
+  attributesRequired?: string[];
   paddEmpty?: boolean;
   removeEmpty?: boolean;
   removeEmptyAttrs?: boolean;
@@ -414,11 +430,6 @@ function Schema(settings?: SchemaSettings): Schema {
   let elements: Record<string, SchemaElement> = {};
   const children: Record<string, {}> = {};
   let patternElements = [];
-  let validStyles;
-  let invalidStyles;
-  let schemaItems;
-  let whiteSpaceElementsMap, selfClosingElementsMap, shortEndedElementsMap, boolAttrMap, validClasses;
-  let blockElementsMap, nonEmptyElementsMap, moveCaretBeforeOnEnterElementsMap, textBlockElementsMap, textInlineElementsMap;
   const customElementsMap = {}, specialElements = {} as SchemaRegExpMap;
 
   // Creates an lookup table map object for the specified option or the default value
@@ -444,36 +455,36 @@ function Schema(settings?: SchemaSettings): Schema {
   };
 
   settings = settings || {};
-  schemaItems = compileSchema(settings.schema);
+  const schemaItems = compileSchema(settings.schema);
 
   // Allow all elements and attributes if verify_html is set to false
   if (settings.verify_html === false) {
     settings.valid_elements = '*[*]';
   }
 
-  validStyles = compileElementMap(settings.valid_styles);
-  invalidStyles = compileElementMap(settings.invalid_styles, 'map');
-  validClasses = compileElementMap(settings.valid_classes, 'map');
+  const validStyles = compileElementMap(settings.valid_styles);
+  const invalidStyles = compileElementMap(settings.invalid_styles, 'map');
+  const validClasses = compileElementMap(settings.valid_classes, 'map');
 
   // Setup map objects
-  whiteSpaceElementsMap = createLookupTable(
+  const whiteSpaceElementsMap = createLookupTable(
     'whitespace_elements',
     'pre script noscript style textarea video audio iframe object code'
   );
-  selfClosingElementsMap = createLookupTable('self_closing_elements', 'colgroup dd dt li option p td tfoot th thead tr');
-  shortEndedElementsMap = createLookupTable('short_ended_elements', 'area base basefont br col frame hr img input isindex link ' +
+  const selfClosingElementsMap = createLookupTable('self_closing_elements', 'colgroup dd dt li option p td tfoot th thead tr');
+  const shortEndedElementsMap = createLookupTable('short_ended_elements', 'area base basefont br col frame hr img input isindex link ' +
     'meta param embed source wbr track');
-  boolAttrMap = createLookupTable('boolean_attributes', 'checked compact declare defer disabled ismap multiple nohref noresize ' +
+  const boolAttrMap = createLookupTable('boolean_attributes', 'checked compact declare defer disabled ismap multiple nohref noresize ' +
     'noshade nowrap readonly selected autoplay loop controls');
-  nonEmptyElementsMap = createLookupTable('non_empty_elements', 'td th iframe video audio object ' +
+  const nonEmptyElementsMap = createLookupTable('non_empty_elements', 'td th iframe video audio object ' +
     'script pre code', shortEndedElementsMap);
-  moveCaretBeforeOnEnterElementsMap = createLookupTable('move_caret_before_on_enter_elements', 'table', nonEmptyElementsMap);
-  textBlockElementsMap = createLookupTable('text_block_elements', 'h1 h2 h3 h4 h5 h6 p div address pre form ' +
+  const moveCaretBeforeOnEnterElementsMap = createLookupTable('move_caret_before_on_enter_elements', 'table', nonEmptyElementsMap);
+  const textBlockElementsMap = createLookupTable('text_block_elements', 'h1 h2 h3 h4 h5 h6 p div address pre form ' +
     'blockquote center dir fieldset header footer article section hgroup aside main nav figure');
-  blockElementsMap = createLookupTable('block_elements', 'hr table tbody thead tfoot ' +
+  const blockElementsMap = createLookupTable('block_elements', 'hr table tbody thead tfoot ' +
     'th tr td li ol ul caption dl dt dd noscript menu isindex option ' +
     'datalist select optgroup figcaption details summary', textBlockElementsMap);
-  textInlineElementsMap = createLookupTable('text_inline_elements', 'span strong b em i font strike u var cite ' +
+  const textInlineElementsMap = createLookupTable('text_inline_elements', 'span strong b em i font strike u var cite ' +
     'dfn code mark q sup sub samp');
 
   each((settings.special || 'script noscript noframes noembed title style textarea xmp').split(' '), function (name) {

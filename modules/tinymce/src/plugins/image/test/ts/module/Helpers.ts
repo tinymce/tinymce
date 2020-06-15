@@ -42,7 +42,7 @@ export const advancedTabSelectors = {
   style: 'label.tox-label:contains("Style") + input.tox-textfield',
   hspace: 'label.tox-label:contains("Horizontal space") + input.tox-textfield',
   vspace: 'label.tox-label:contains("Vertical space") + input.tox-textfield',
-  borderstyle: 'label.tox-label:contains("Border style") + div.tox-selectfield select',
+  borderstyle: 'label.tox-label:contains("Border style") + div.tox-selectfield select'
 };
 
 const cGetTopmostDialog = Chain.control(

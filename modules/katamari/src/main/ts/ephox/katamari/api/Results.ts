@@ -1,5 +1,6 @@
 import { Adt } from './Adt';
 import * as Arr from './Arr';
+import * as Fun from './Fun';
 import { Result } from './Result';
 
 const comparison = Adt.generate([
@@ -39,3 +40,6 @@ export const compare = function<A, B> (result1: Result<A, B>, result2: Result<A,
     });
   });
 };
+
+export const unite: <T>(result: Result<T, T>) => T = <T>(result: Result<T, T>): T =>
+  result.fold(Fun.identity, Fun.identity);

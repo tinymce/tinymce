@@ -26,7 +26,7 @@ UnitTest.asynctest('tinymce.lists.browser.ListPropertiesTest', (success, failure
       sOpenContextMenu(editor, tinyUi, contextMenuSelector),
       FocusTools.sTryOnSelector('Wait for the context menu to be focused', doc, contentMenuSelector),
       Keyboard.sKeydown(doc, Keys.enter(), {}),
-      tinyUi.sWaitForUi('Wait for the dialog to appear', '[role=dialog]'),
+      tinyUi.sWaitForUi('Wait for the dialog to appear', '[role=dialog]')
     ]);
   };
 
@@ -40,7 +40,7 @@ UnitTest.asynctest('tinymce.lists.browser.ListPropertiesTest', (success, failure
           Assertions.assertEq('Assert initial start value', currentValue, Value.get(input));
         }),
         UiControls.cSetValue(newValue)
-      ]),
+      ])
     ]);
   };
 

@@ -1,15 +1,4 @@
-import {
-  ApproxStructure,
-  Assertions,
-  FocusTools,
-  GeneralSteps,
-  Logger,
-  Mouse,
-  Pipeline,
-  Step,
-  UiFinder,
-  Waiter,
-} from '@ephox/agar';
+import { ApproxStructure, Assertions, FocusTools, GeneralSteps, Logger, Mouse, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
@@ -27,7 +16,7 @@ UnitTest.asynctest('WindowManager:alert Test', (success, failure) => {
     Waiter.sTryUntil(
       'Waiting for blocker to disappear after clicking close',
       UiFinder.sNotExists(Body.body(), '.tox-dialog-wrap')
-    ),
+    )
   ]);
 
   const sHasBasicStructure = (label: string) => GeneralSteps.sequence([
@@ -102,12 +91,12 @@ UnitTest.asynctest('WindowManager:alert Test', (success, failure) => {
                             s.element('button', {
                               html: str.is('OK'),
                               classes: [
-                                arr.has('tox-button'),
+                                arr.has('tox-button')
                               ],
                               attrs: {
                                 'type': str.is('button'),
                                 'data-alloy-tabstop': str.is('true')
-                              },
+                              }
                             })
                           ]
                         })
@@ -203,7 +192,7 @@ UnitTest.asynctest('WindowManager:alert Test', (success, failure) => {
     GeneralSteps.sequence([
       sCreateAlert('Showing an alert', Fun.noop),
       Mouse.sClickOn(Body.body(), '.tox-button:contains("OK")'),
-      UiFinder.sNotExists(Body.body(), '[role="dialog"]'),
+      UiFinder.sNotExists(Body.body(), '[role="dialog"]')
     ])
   );
 

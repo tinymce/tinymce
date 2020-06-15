@@ -20,7 +20,7 @@ export default function () {
       },
       onHide: (_api) => {
 
-      },
+      }
     });
   };
 

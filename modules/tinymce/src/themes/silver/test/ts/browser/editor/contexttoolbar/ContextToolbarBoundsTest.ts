@@ -1,4 +1,4 @@
-import { Assertions, Chain, Logger, NamedChain, Pipeline, GeneralSteps } from '@ephox/agar';
+import { Assertions, Chain, GeneralSteps, Logger, NamedChain, Pipeline } from '@ephox/agar';
 import { Bounds, Boxes } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
 import { window } from '@ephox/dom-globals';
@@ -30,7 +30,7 @@ UnitTest.asynctest('ContextToolbarBoundsTest', (success, failure) => {
       viewport: Boxes.win(),
       header: Boxes.box(header),
       container: Boxes.box(container),
-      content: Boxes.box(contentAreaContainer),
+      content: Boxes.box(contentAreaContainer)
     };
   };
 
@@ -103,7 +103,7 @@ UnitTest.asynctest('ContextToolbarBoundsTest', (success, failure) => {
         assertBounds('bottom');
       })),
       NamedChain.read('tearDownScroll', Chain.op(Fun.call)),
-      NamedChain.read('editor', McEditor.cRemove),
+      NamedChain.read('editor', McEditor.cRemove)
     ])
   ]));
 
@@ -117,8 +117,8 @@ UnitTest.asynctest('ContextToolbarBoundsTest', (success, failure) => {
           x: bounds.content.x,
           y: bounds.header.bottom,
           right: bounds.content.right,
-          bottom: bounds.viewport.bottom,
-        }),
+          bottom: bounds.viewport.bottom
+        })
       }),
       sTestScenario({
         label: 'Distraction Free(full view): Top of the viewport -> Bottom of the viewport',
@@ -128,8 +128,8 @@ UnitTest.asynctest('ContextToolbarBoundsTest', (success, failure) => {
           x: bounds.content.x,
           y: bounds.viewport.y,
           right: bounds.content.right,
-          bottom: bounds.viewport.bottom,
-        }),
+          bottom: bounds.viewport.bottom
+        })
       }),
       sTestScenario({
         label: 'Iframe(full view): Bottom of the header -> Bottom of the editor container',
@@ -139,8 +139,8 @@ UnitTest.asynctest('ContextToolbarBoundsTest', (success, failure) => {
           x: bounds.content.x,
           y: bounds.header.bottom,
           right: bounds.content.right,
-          bottom: bounds.container.bottom,
-        }),
+          bottom: bounds.container.bottom
+        })
       }),
       sTestScenario({
         label: 'Iframe(editor partly in view): Top of viewport -> Bottom of the editor container',
@@ -150,8 +150,8 @@ UnitTest.asynctest('ContextToolbarBoundsTest', (success, failure) => {
           x: bounds.content.x,
           y: bounds.viewport.y,
           right: bounds.content.right,
-          bottom: bounds.container.bottom,
-        }),
+          bottom: bounds.container.bottom
+        })
       }),
       sTestScenario({
         label: 'Iframe(editor partly in view): Bottom of viewport -> Top of content area',
@@ -161,9 +161,9 @@ UnitTest.asynctest('ContextToolbarBoundsTest', (success, failure) => {
           x: bounds.content.x,
           y: bounds.content.y,
           right: bounds.content.right,
-          bottom: bounds.viewport.bottom,
-        }),
-      }),
+          bottom: bounds.viewport.bottom
+        })
+      })
     ])),
 
     Logger.t('Test Context toolbar bounds with toolbar bottom', GeneralSteps.sequence([
@@ -175,8 +175,8 @@ UnitTest.asynctest('ContextToolbarBoundsTest', (success, failure) => {
           x: bounds.content.x,
           y: bounds.container.y,
           right: bounds.content.right,
-          bottom: bounds.header.y,
-        }),
+          bottom: bounds.header.y
+        })
       }),
       sTestScenario({
         label: 'Inline(full view): Top of the viewport -> Top of the header',
@@ -186,9 +186,9 @@ UnitTest.asynctest('ContextToolbarBoundsTest', (success, failure) => {
           x: bounds.content.x,
           y: bounds.viewport.y,
           right: bounds.content.right,
-          bottom: bounds.header.y,
-        }),
-      }),
-    ])),
+          bottom: bounds.header.y
+        })
+      })
+    ]))
   ], success, failure);
 });

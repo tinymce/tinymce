@@ -3,7 +3,9 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { ApiChains, TinyLoader } from '@ephox/mcagar';
 import Plugin from 'tinymce/plugins/image/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
-import { cAssertCleanHtml, cAssertInputValue, cFillActiveDialog, cSubmitDialog, cWaitForDialog, generalTabSelectors } from '../module/Helpers';
+import {
+  cAssertCleanHtml, cAssertInputValue, cFillActiveDialog, cSubmitDialog, cWaitForDialog, generalTabSelectors
+} from '../module/Helpers';
 
 UnitTest.asynctest('browser.tinymce.plugins.image.DialogUpdateTest', (success, failure) => {
   SilverTheme();
@@ -19,14 +21,14 @@ UnitTest.asynctest('browser.tinymce.plugins.image.DialogUpdateTest', (success, f
         cWaitForDialog(),
         Chain.fromParent(Chain.identity, [
           cAssertInputValue(generalTabSelectors.src, '#1'),
-          cAssertInputValue(generalTabSelectors.title, 'title'),
+          cAssertInputValue(generalTabSelectors.title, 'title')
         ]),
         cFillActiveDialog({
           src: { value: '#2' },
           title: ''
         }),
         cSubmitDialog(),
-        cAssertCleanHtml('Checking output', '<p><img src="#2" /></p>'),
+        cAssertCleanHtml('Checking output', '<p><img src="#2" /></p>')
       ])
     ], onSuccess, onFailure);
   }, {

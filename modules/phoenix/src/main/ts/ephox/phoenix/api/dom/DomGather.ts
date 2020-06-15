@@ -33,5 +33,5 @@ export {
   seekLeft,
   seekRight,
   walkers,
-  walk,
+  walk
 };

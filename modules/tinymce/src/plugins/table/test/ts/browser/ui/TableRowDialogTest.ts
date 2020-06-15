@@ -26,7 +26,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
     const baseData = {
       height: '',
       align: '',
-      type: 'tbody',
+      type: 'tbody'
     };
 
     const advHtml = '<table style="border: 1px solid black; border-collapse: collapse;" border="1"><thead>' +
@@ -39,7 +39,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
       type: 'thead',
       backgroundcolor: 'blue',
       bordercolor: 'red',
-      borderstyle: '',
+      borderstyle: ''
     };
 
     const baseGetTest = () => Log.stepsAsStep('TBA', 'Table: Table row properties dialog (get data from plain cell)', [
@@ -134,7 +134,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
         type: 'tbody',
         backgroundcolor: '',
         bordercolor: '',
-        borderstyle: '',
+        borderstyle: ''
       }, true, generalSelectors),
       TableTestUtils.sClickDialogButton('clicking save', true),
       tinyApis.sAssertContent(
@@ -168,7 +168,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
         type: 'tbody',
         backgroundcolor: '',
         bordercolor: 'blue',
-        borderstyle: '',
+        borderstyle: ''
       };
 
       const newData = {
@@ -177,7 +177,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
         type: 'tbody',
         backgroundcolor: '',
         bordercolor: 'red',
-        borderstyle: '',
+        borderstyle: ''
       };
 
       const newHtml =
@@ -201,7 +201,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
         TableTestUtils.sAssertDialogValues(initialData, true, generalSelectors),
         TableTestUtils.sSetDialogValues(newData, true, generalSelectors),
         TableTestUtils.sClickDialogButton('clicking save', true),
-        tinyApis.sAssertContent(newHtml),
+        tinyApis.sAssertContent(newHtml)
       ]);
     };
 
@@ -215,7 +215,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
         type: 'thead',
         backgroundcolor: '',
         bordercolor: '',
-        borderstyle: '',
+        borderstyle: ''
       };
 
       return Log.stepsAsStep('TBA', 'Table: Change table row type from header to body', [
@@ -230,7 +230,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
           type: 'tbody',
           backgroundcolor: '',
           bordercolor: '',
-          borderstyle: '',
+          borderstyle: ''
         }, true, generalSelectors),
         TableTestUtils.sClickDialogButton('clicking save', true),
         tinyApis.sAssertContent(expectedHtml)
@@ -256,6 +256,6 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
     indent: false,
     valid_styles: {
       '*': 'width,height,vertical-align,text-align,float,border-color,border-style,background-color,border,padding,border-spacing,border-collapse'
-    },
+    }
   }, success, failure);
 });

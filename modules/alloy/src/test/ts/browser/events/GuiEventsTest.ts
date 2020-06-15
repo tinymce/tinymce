@@ -1,4 +1,6 @@
-import { Chain, Cleaner, Cursors, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Pipeline, Step, Touch, UiFinder } from '@ephox/agar';
+import {
+  Chain, Cleaner, Cursors, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Pipeline, Step, Touch, UiFinder
+} from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { Attr, DomEvent, Element, EventArgs, Insert, Node, Remove, Text } from '@ephox/sugar';
@@ -250,7 +252,7 @@ UnitTest.asynctest('GuiEventsTest', (success, failure) => {
   const sTestTransitionEnd = Step.pass;
 
   const gui = GuiEvents.setup(page, {
-    triggerEvent,
+    triggerEvent
   });
 
   Pipeline.async({}, [

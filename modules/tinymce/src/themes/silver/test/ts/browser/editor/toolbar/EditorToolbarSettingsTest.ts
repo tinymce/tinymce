@@ -1,6 +1,6 @@
-import { Log, Pipeline, UiFinder, NamedChain, Assertions, ApproxStructure } from '@ephox/agar';
+import { ApproxStructure, Assertions, Log, NamedChain, Pipeline, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Result, Arr, Id } from '@ephox/katamari';
+import { Arr, Id, Result } from '@ephox/katamari';
 import { Editor as McagarEditor } from '@ephox/mcagar';
 import { Body } from '@ephox/sugar';
 
@@ -17,7 +17,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
     toolbar9: toolbarVal9,
     toolbar20: toolbarVal20,
     theme: 'silver',
-    base_url: '/project/tinymce/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce'
   });
 
   const cAssertIsDefaultToolbar = Assertions.cAssertStructure(
@@ -147,7 +147,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
                       s.element('button', { }),
                       s.element('button', { })
                     ]
-                  }),
+                  })
                 ]
               }),
               s.element('div', {
@@ -193,11 +193,11 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
                   s.element('div', {
                     classes: [ arr.has('tox-toolbar__group') ],
                     children: [
-                      s.element('button', { }),
+                      s.element('button', { })
                     ]
                   })
                 ]
-              }),
+              })
             ]
           }))
         ), Id.generate('')),
@@ -241,7 +241,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
                       s.element('button', { }),
                       s.element('button', { })
                     ]
-                  }),
+                  })
                 ]
               }),
               s.element('div', {
@@ -283,9 +283,9 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
                     children: [
                       s.element('button', { }),
                       s.element('button', { }),
-                      s.element('button', { }),
+                      s.element('button', { })
                     ]
-                  }),
+                  })
                 ]
               })
             ]
@@ -315,9 +315,9 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
                     classes: [ arr.has('tox-toolbar__group') ],
                     children: [
                       s.element('button', { }),
-                      s.element('button', { }),
+                      s.element('button', { })
                     ]
-                  }),
+                  })
                 ]
               })
             ]
@@ -348,9 +348,9 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
                     classes: [ arr.has('tox-toolbar__group') ],
                     children: [
                       s.element('button', { }),
-                      s.element('button', { }),
+                      s.element('button', { })
                     ]
-                  }),
+                  })
                 ]
               }),
               s.element('div', {
@@ -394,7 +394,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
                       s.element('button', { }),
                       s.element('button', { })
                     ]
-                  }),
+                  })
                 ]
               })
             ]
@@ -425,13 +425,13 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
                     classes: [ arr.has('tox-toolbar__group') ],
                     children: [
                       s.element('button', { }),
-                      s.element('button', { }),
+                      s.element('button', { })
                     ]
                   }),
                   s.element('div', {
                     classes: [ arr.has('tox-toolbar__group') ],
                     children: [
-                      s.element('button', { }),
+                      s.element('button', { })
                     ]
                   })
                 ]

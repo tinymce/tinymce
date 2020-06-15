@@ -1,9 +1,9 @@
-import { Pipeline, Step, Log } from '@ephox/agar';
+import { Log, Pipeline, Step } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
+import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import AnchorPlugin from 'tinymce/plugins/anchor/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock-client';
-import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.plugins.anchor.AnchorEditTest', (success, failure) => {
   AnchorPlugin();
@@ -38,13 +38,13 @@ UnitTest.asynctest('browser.tinymce.plugins.anchor.AnchorEditTest', (success, fa
         tinyApis.sExecCommand('undo'),
         tinyApis.sSetCursor([], 0),
         tinyApis.sAssertContentPresence({ 'a.mce-item-anchor#abc': 1 }),
-        tinyUi.sWaitForUi('Anchor toolbar button is not highlighted', 'button[aria-label="Anchor"][aria-pressed="false"]'),
+        tinyUi.sWaitForUi('Anchor toolbar button is not highlighted', 'button[aria-label="Anchor"][aria-pressed="false"]')
       ])
       , onSuccess, onFailure);
   }, {
     theme: 'silver',
     plugins: 'anchor',
     toolbar: 'anchor',
-    base_url: '/project/tinymce/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

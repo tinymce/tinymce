@@ -59,10 +59,10 @@ UnitTest.asynctest('TinyScenariosTest', (success, failure) => {
             containers: (elem) => !Node.isText(elem)
           }
         }
-      }),
+      })
     ], loadSuccess, loadFailure);
 
   }, {
-    base_url: '/project/tinymce/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

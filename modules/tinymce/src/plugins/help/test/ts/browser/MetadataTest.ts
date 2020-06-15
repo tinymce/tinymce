@@ -1,15 +1,15 @@
-import { Pipeline, Log } from '@ephox/agar';
+import { Log, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyLoader, TinyUi } from '@ephox/mcagar';
 
 import HelpPlugin from 'tinymce/plugins/help/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
-
-import FakePlugin from '../module/test/FakePlugin';
-import NoMetaFakePlugin from '../module/test/NoMetaFakePlugin';
 import * as PluginAssert from '../module/PluginAssert';
 
 import { selectors } from '../module/Selectors';
+
+import FakePlugin from '../module/test/FakePlugin';
+import NoMetaFakePlugin from '../module/test/NoMetaFakePlugin';
 
 UnitTest.asynctest('Browser Test: .MetadataTest', (success, failure) => {
 
@@ -41,6 +41,6 @@ UnitTest.asynctest('Browser Test: .MetadataTest', (success, failure) => {
     plugins: 'help fake nometafake',
     toolbar: 'help',
     theme: 'silver',
-    base_url: '/project/tinymce/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

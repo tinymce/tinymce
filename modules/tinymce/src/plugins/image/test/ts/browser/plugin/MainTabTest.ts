@@ -1,18 +1,11 @@
 import { Log, Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Editor } from '@ephox/mcagar';
 import Env from 'tinymce/core/api/Env';
 import ImagePlugin from 'tinymce/plugins/image/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 
-import {
-  cAssertCleanHtml,
-  cExecCommand,
-  cFillActiveDialog,
-  cSubmitDialog,
-  cWaitForDialog,
-  silverSettings,
-} from '../../module/Helpers';
-import { UnitTest } from '@ephox/bedrock-client';
+import { cAssertCleanHtml, cExecCommand, cFillActiveDialog, cSubmitDialog, cWaitForDialog, silverSettings } from '../../module/Helpers';
 
 UnitTest.asynctest('All image dialog ui options on empty editor' + (Env.ceFalse ? '' : ' (old IE)'), (success, failure) => {
   SilverTheme();

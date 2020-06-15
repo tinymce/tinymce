@@ -1,12 +1,12 @@
 import { ApproxStructure, Assertions, Logger } from '@ephox/agar';
+import { TestHelpers } from '@ephox/alloy';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { FieldSchema, Objects, ValueSchema } from '@ephox/boulder';
 import { Cell, Fun, Option, Result } from '@ephox/katamari';
+import { KAssert } from '@ephox/katamari-assertions';
 import { Element } from '@ephox/sugar';
 
 import * as LinkBridge from 'tinymce/themes/mobile/bridge/LinkBridge';
-import { TestHelpers } from '@ephox/alloy';
-import { KAssert } from '@ephox/katamari-assertions';
 
 UnitTest.test('Test: phantom.bridge.LinkBridgeTest', function () {
   const store = TestHelpers.TestStore();
@@ -89,10 +89,10 @@ UnitTest.test('Test: phantom.bridge.LinkBridgeTest', function () {
         text: toResult(info, 'text'),
         title: toResult(info, 'title'),
         target: toResult(info, 'target'),
-        link: toResult(info, 'link'),
+        link: toResult(info, 'link')
       })).getOrDie('Missing info'),
       mutations: Option.from(rawScenario.mutations).getOr(Fun.noop),
-      expected: Option.from(rawScenario.expected).getOr([]),
+      expected: Option.from(rawScenario.expected).getOr([])
     };
 
     Logger.sync('setInfo ... ' + scenario.label, function () {

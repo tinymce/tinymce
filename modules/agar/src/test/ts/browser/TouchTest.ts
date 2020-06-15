@@ -6,9 +6,9 @@ import { DomEvent, Element, Insert, Remove } from '@ephox/sugar';
 import * as Assertions from 'ephox/agar/api/Assertions';
 import { Chain } from 'ephox/agar/api/Chain';
 import * as GeneralSteps from 'ephox/agar/api/GeneralSteps';
-import * as Touch from 'ephox/agar/api/Touch';
 import { Pipeline } from 'ephox/agar/api/Pipeline';
 import { Step } from 'ephox/agar/api/Step';
+import * as Touch from 'ephox/agar/api/Touch';
 import * as UiFinder from 'ephox/agar/api/UiFinder';
 
 UnitTest.asynctest('TouchTest', (success, failure) => {
@@ -103,7 +103,7 @@ UnitTest.asynctest('TouchTest', (success, failure) => {
         UiFinder.cFindIn('input'),
         Touch.cTouchMove
       ])
-    ),
+    )
 
   ], () => {
     Arr.each(handlers, (h) => { h.unbind(); });

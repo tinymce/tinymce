@@ -44,5 +44,5 @@ const none = (current: Element | undefined = undefined) => adt.none(current);
 
 export const CellLocation = {
   ...adt,
-  none,
+  none
 };

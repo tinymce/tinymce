@@ -1,19 +1,6 @@
 import {
-  ApproxStructure,
-  Assertions,
-  Chain,
-  Keyboard,
-  Keys,
-  Logger,
-  Mouse,
-  NamedChain,
-  Pipeline,
-  Step,
-  UiControls,
-  UiFinder,
-  FocusTools,
-  Log,
-  GeneralSteps,
+  ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Log, Logger, Mouse, NamedChain, Pipeline, Step, UiControls,
+  UiFinder
 } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';

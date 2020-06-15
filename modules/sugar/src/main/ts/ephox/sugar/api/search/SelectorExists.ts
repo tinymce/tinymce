@@ -26,5 +26,5 @@ export {
   sibling,
   child,
   descendant,
-  closest,
+  closest
 };

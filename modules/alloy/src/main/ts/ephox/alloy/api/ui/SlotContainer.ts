@@ -103,7 +103,7 @@ const make = (detail: SlotContainerDetail, components: AlloySpec[]) => {
     isShowing,
     hideSlot,
     hideAllSlots,
-    showSlot,
+    showSlot
   };
 
   return {
@@ -123,7 +123,7 @@ const slotApis: SlotContainerApis = Obj.map({
   isShowing: (apis: SlotContainerApis, c: AlloyComponent, key: string) => apis.isShowing(c, key),
   hideSlot: (apis: SlotContainerApis, c: AlloyComponent, key: string) => apis.hideSlot(c, key),
   hideAllSlots: (apis: SlotContainerApis, c: AlloyComponent) => apis.hideAllSlots(c),
-  showSlot: (apis: SlotContainerApis, c: AlloyComponent, key: string) => apis.showSlot(c, key),
+  showSlot: (apis: SlotContainerApis, c: AlloyComponent, key: string) => apis.showSlot(c, key)
 }, (value) => GuiTypes.makeApi<SlotContainerApis, any>(value));
 
 const SlotContainer: SlotContainerSketcher = {

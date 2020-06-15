@@ -61,7 +61,7 @@ UnitTest.asynctest('Inline editor ContextToolbar Position test', (success, failu
 
         // Position the element behind the docked toolbar and check the toolbar is hidden
         sScrollTo(0, -10),
-        UiFinder.sWaitForHidden('Waiting for toolbar to be hidden', Body.body(), '.tox-pop'),
+        UiFinder.sWaitForHidden('Waiting for toolbar to be hidden', Body.body(), '.tox-pop')
       ]);
 
       Pipeline.async({ }, [

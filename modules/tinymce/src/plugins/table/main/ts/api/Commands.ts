@@ -21,6 +21,7 @@ import * as TableSelection from '../selection/TableSelection';
 import * as CellDialog from '../ui/CellDialog';
 import * as RowDialog from '../ui/RowDialog';
 import * as TableDialog from '../ui/TableDialog';
+import { DomModifier } from '../ui/DomModifier';
 
 const registerCommands = (editor: Editor, actions: TableActions, cellSelection: CellSelectionApi, selections: Selections, clipboard: Clipboard) => {
   const isRoot = Util.getIsRoot(editor);
@@ -129,7 +130,31 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
       TableDialog.open(editor, true);
     }
   });
+
+  // Apply cell style using command (background color, border color, border style and border width)
+  // tinyMCE.activeEditor.execCommand('mceTableApplyCellStyle', false, { backgroundColor: 'red', borderColor: 'blue' })
+  // Remove cell style using command (an empty string indicates to remove the style)
+  // tinyMCE.activeEditor.execCommand('mceTableApplyCellStyle', false, { backgroundColor: '' })
+  editor.addCommand('mceTableApplyCellStyle', (_ui: boolean, args: Record<string, string>) => {
+    if (!Type.isObject(args)) {
+      return;
+    }
+
+    const cells = TableSelection.getCellsFromSelection(editor);
+    if (cells.length === 0) {
+      return;
+    }
+
+    Obj.each(args, (value, style) => {
+      const formatName = 'tablecell' + style.toLowerCase().replace('-', '');
+      if (editor.formatter.has(formatName) && Type.isString(value)) {
+        Arr.each(cells, (cell) => {
+          DomModifier.normal(editor, cell).setFormat(formatName, value);
+        });
+      }
+    });
+  });
+
 };
 
 export { registerCommands };
-

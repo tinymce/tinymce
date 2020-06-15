@@ -34,14 +34,12 @@ const getElmIndex = function (elm: Element) {
 };
 
 const markAllMatches = function (editor: Editor, currentSearchState: Cell<SearchState>, pattern: Pattern, inSelection: boolean) {
-  let node, marker;
-
-  marker = editor.dom.create('span', {
+  const marker = editor.dom.create('span', {
     'data-mce-bogus': 1
   });
 
   marker.className = 'mce-match-marker'; // IE 7 adds class="mce-match-marker" and class=mce-match-marker
-  node = editor.getBody();
+  const node = editor.getBody();
 
   done(editor, currentSearchState, false);
 
@@ -63,10 +61,9 @@ const unwrap = function (node: Node) {
 };
 
 const findSpansByIndex = function (editor: Editor, index: number) {
-  let nodes;
   const spans = [];
 
-  nodes = Tools.toArray(editor.getBody().getElementsByTagName('span'));
+  const nodes = Tools.toArray(editor.getBody().getElementsByTagName('span'));
   if (nodes.length) {
     for (let i = 0; i < nodes.length; i++) {
       const nodeIndex = getElmIndex(nodes[i]);
@@ -176,16 +173,16 @@ const isMatchSpan = function (node: Element) {
 const replace = function (editor: Editor, currentSearchState: Cell<SearchState>, text: string, forward?: boolean, all?: boolean) {
   const searchState = currentSearchState.get();
   const currentIndex = searchState.index;
-  let i, nodes, node, matchIndex, currentMatchIndex, nextIndex = currentIndex;
+  let currentMatchIndex, nextIndex = currentIndex;
 
   forward = forward !== false;
 
-  node = editor.getBody();
-  nodes = Tools.grep(Tools.toArray(node.getElementsByTagName('span')), isMatchSpan);
-  for (i = 0; i < nodes.length; i++) {
+  const node = editor.getBody();
+  const nodes = Tools.grep(Tools.toArray(node.getElementsByTagName('span')), isMatchSpan);
+  for (let i = 0; i < nodes.length; i++) {
     const nodeIndex = getElmIndex(nodes[i]);
 
-    matchIndex = currentMatchIndex = parseInt(nodeIndex, 10);
+    let matchIndex = currentMatchIndex = parseInt(nodeIndex, 10);
     if (all || matchIndex === searchState.index) {
       if (text.length) {
         nodes[i].firstChild.nodeValue = text;
@@ -229,10 +226,10 @@ const replace = function (editor: Editor, currentSearchState: Cell<SearchState>,
 };
 
 const done = function (editor: Editor, currentSearchState: Cell<SearchState>, keepEditorSelection?: boolean) {
-  let i, nodes, startContainer, endContainer;
+  let i, startContainer, endContainer;
   const searchState = currentSearchState.get();
 
-  nodes = Tools.toArray(editor.getBody().getElementsByTagName('span'));
+  const nodes = Tools.toArray(editor.getBody().getElementsByTagName('span'));
   for (i = 0; i < nodes.length; i++) {
     const nodeIndex = getElmIndex(nodes[i]);
 

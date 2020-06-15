@@ -24,7 +24,7 @@ UnitTest.asynctest('Inline Editor (Silver) width test', (success, failure) => {
               s.element('div', {
                 classes: [ arr.has('tox-editor-header') ],
                 styles: {
-                  'max-width': str.is(`${maxWidth}px`),
+                  'max-width': str.is(`${maxWidth}px`)
                 },
                 children: [
                   s.element('div', {
@@ -108,6 +108,6 @@ UnitTest.asynctest('Inline Editor (Silver) width test', (success, failure) => {
     }, 400, (editor) => [
       sOpenMore(ToolbarMode.sliding),
       sAssetWidth(Element.fromDom(editor.getContainer()), 400, 300)
-    ]),
+    ])
   ], success, failure);
 });

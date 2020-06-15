@@ -32,7 +32,7 @@ UnitTest.asynctest('ToolbarBottomTest - assert direction that menus open in when
         NamedChain.writeValue('body', Body.body()),
         ...Arr.flatten(Arr.map(scenario.initial, (p) => [
           NamedChain.read('body', Mouse.cClickOn(p.clickOn)),
-          NamedChain.read('body', UiFinder.cWaitForVisible(`Wait for "${p.waitFor}" to be visible`, p.waitFor)),
+          NamedChain.read('body', UiFinder.cWaitForVisible(`Wait for "${p.waitFor}" to be visible`, p.waitFor))
         ])),
         NamedChain.direct('body', Chain.fromChains([ UiFinder.cFindIn(scenario.assertAbove), Chain.mapper(Boxes.box) ]), 'upperBoxBounds'),
         NamedChain.direct('body', Chain.fromChains([ UiFinder.cFindIn(scenario.assertBelow), Chain.mapper(Boxes.box) ]), 'lowerBoxBounds'),
@@ -44,7 +44,7 @@ UnitTest.asynctest('ToolbarBottomTest - assert direction that menus open in when
           );
         }),
         NamedChain.read('editor', McEditor.cRemove)
-      ]),
+      ])
     ]);
   };
 
@@ -87,7 +87,7 @@ UnitTest.asynctest('ToolbarBottomTest - assert direction that menus open in when
         waitFor: 'div[role="menu"]'
       }],
       assertAbove: 'div[role="menu"]',
-      assertBelow: '.tox-split-button__chevron',
+      assertBelow: '.tox-split-button__chevron'
     }),
 
     sScenarioAsStep({
@@ -102,7 +102,7 @@ UnitTest.asynctest('ToolbarBottomTest - assert direction that menus open in when
         waitFor: '.tox-toolbar__overflow'
       }],
       assertAbove: '.tox-toolbar__overflow',
-      assertBelow: 'button[title="More..."]',
+      assertBelow: 'button[title="More..."]'
     }),
 
     sScenarioAsStep({
@@ -120,7 +120,7 @@ UnitTest.asynctest('ToolbarBottomTest - assert direction that menus open in when
         waitFor: 'div[role="menu"]'
       }],
       assertAbove: 'div[role="menu"]',
-      assertBelow: 'button[title="Align"]',
+      assertBelow: 'button[title="Align"]'
     }),
 
     sScenarioAsStep({
@@ -135,7 +135,7 @@ UnitTest.asynctest('ToolbarBottomTest - assert direction that menus open in when
         waitFor: 'div[role="menu"]'
       }],
       assertAbove: 'div[role="menu"]',
-      assertBelow: 'button:contains("File")',
+      assertBelow: 'button:contains("File")'
     }),
 
     sScenarioAsStep({
@@ -170,7 +170,7 @@ UnitTest.asynctest('ToolbarBottomTest - assert direction that menus open in when
         waitFor: 'div[role="menu"]'
       }],
       assertAbove: 'div[role="dialog"] .tox-tbtn--select',
-      assertBelow: 'div[role="menu"]',
-    }),
+      assertBelow: 'div[role="menu"]'
+    })
   ], success, failure);
 });

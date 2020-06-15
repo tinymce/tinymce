@@ -34,7 +34,7 @@ const renderTextField = function (spec: TextField, providersBackstage: UiFactory
       execute: (comp) => {
         AlloyTriggers.emit(comp, formSubmitEvent);
         return Option.some(true);
-      },
+      }
     }),
     AddEventsBehaviour.config('textfield-change', [
       AlloyEvents.run(NativeEvents.input(), (component, _) => {

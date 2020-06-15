@@ -1,6 +1,6 @@
-import { ValueSchema, FieldSchema } from '@ephox/boulder';
+import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
-import { BaseToolbarButtonApi, BaseToolbarButtonInstanceApi, BaseToolbarButton, baseToolbarButtonFields } from './ToolbarButton';
+import { BaseToolbarButton, BaseToolbarButtonApi, baseToolbarButtonFields, BaseToolbarButtonInstanceApi } from './ToolbarButton';
 
 export interface BaseToolbarToggleButtonApi<I extends BaseToolbarButtonInstanceApi> extends BaseToolbarButtonApi<I> {
   active?: boolean;
@@ -31,7 +31,7 @@ export interface ToolbarToggleButtonInstanceApi extends BaseToolbarToggleButtonI
 }
 
 export const baseToolbarToggleButtonFields = [
-  FieldSchema.defaultedBoolean('active', false),
+  FieldSchema.defaultedBoolean('active', false)
 ].concat(baseToolbarButtonFields);
 
 export const toggleButtonSchema = ValueSchema.objOf(

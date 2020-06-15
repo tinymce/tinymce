@@ -40,7 +40,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellDialogTest', (success
       celltype: 'td',
       halign: '',
       valign: '',
-      scope: '',
+      scope: ''
     };
 
     const baseAdvData = {
@@ -77,10 +77,10 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellDialogTest', (success
         celltype: 'td',
         scope: '',
         halign: '',
-        valign: '',
+        valign: ''
       }, false, generalSelectors),
       TableTestUtils.sClickDialogButton('close dialog', true),
-      tinyApis.sAssertContent('<table><tbody><tr><td style="width: 100px; height: 101px;">a</td><td>b</td></tr></tbody></table>'),
+      tinyApis.sAssertContent('<table><tbody><tr><td style="width: 100px; height: 101px;">a</td><td>b</td></tr></tbody></table>')
     ]);
 
     const advGetTest = () => {
@@ -177,7 +177,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellDialogTest', (success
         TableTestUtils.sAssertDialogValues(baseAdvData, true, generalSelectors),
         TableTestUtils.sSetDialogValues(newData, true, generalSelectors),
         TableTestUtils.sClickDialogButton('submit', true),
-        tinyApis.sAssertContent(newHtml),
+        tinyApis.sAssertContent(newHtml)
       ]);
     };
 
@@ -246,7 +246,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellDialogTest', (success
         tinyApis.sSelect('th', [ 0 ]),
         tinyApis.sExecCommand('mceTableCellProps'),
         TableTestUtils.sAssertDialogValues(advData, true, generalSelectors),
-        TableTestUtils.sClickDialogButton('submit dialog', false),
+        TableTestUtils.sClickDialogButton('submit dialog', false)
       ]);
     };
 
@@ -281,7 +281,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellDialogTest', (success
         TableTestUtils.sClickDialogButton('submit dialog', true),
         tinyApis.sAssertContent(advHtml),
         TableTestUtils.sOpenTableDialog(tinyUi),
-        TableTestUtils.sAssertDialogValues(advData, true, generalSelectors),
+        TableTestUtils.sAssertDialogValues(advData, true, generalSelectors)
       ]);
     };
 
@@ -304,6 +304,6 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellDialogTest', (success
     indent: false,
     valid_styles: {
       '*': 'width,height,vertical-align,text-align,float,border-color,border-style,background-color,border,padding,border-spacing,border-collapse,border-width'
-    },
+    }
   }, success, failure);
 });

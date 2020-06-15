@@ -1,4 +1,4 @@
-import { Log, Pipeline, ApproxStructure } from '@ephox/agar';
+import { ApproxStructure, Log, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { ImageData } from 'tinymce/plugins/image/core/ImageData';
@@ -55,7 +55,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.api.CommandsTest', (success, f
                       'border-style': str.is('solid'),
                       'margin': str.is('2px 1px')
                     }
-                  }),
+                  })
                 ]
               })
             ]
@@ -101,7 +101,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.api.CommandsTest', (success, f
                       'border-style': str.is('solid'),
                       'margin': str.is('2px 1px')
                     }
-                  }),
+                  })
                 ]
               })
             ]
@@ -133,7 +133,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.api.CommandsTest', (success, f
           height: ''
         }),
         api.sAssertContent('<p><img src="#1" /></p>')
-      ]),
+      ])
     ], onSuccess, onFailure);
   }, {
     theme: 'silver',

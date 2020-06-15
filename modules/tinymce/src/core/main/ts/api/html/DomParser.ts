@@ -12,8 +12,8 @@ import { hasOnlyChild, isEmpty, isLineBreakNode, isPaddedWithNbsp, paddEmptyNode
 import { BlobCache } from '../file/BlobCache';
 import Tools from '../util/Tools';
 import Node from './Node';
-import SaxParser from './SaxParser';
-import Schema from './Schema';
+import SaxParser, { ParserFormat } from './SaxParser';
+import Schema, { SchemaElement } from './Schema';
 
 /**
  * This class parses HTML code into a DOM like structure of nodes it will remove redundant whitespace and make
@@ -49,6 +49,7 @@ export interface ParserFilter {
 }
 
 export interface DomParserSettings {
+  allow_html_data_urls?: boolean;
   allow_conditional_comments?: boolean;
   allow_html_in_named_anchor?: boolean;
   allow_script_urls?: boolean;
@@ -90,13 +91,13 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
 
   const fixInvalidChildren = function (nodes) {
     let ni, node, parent, parents, newParent, currentNode, tempNode, childNode, i;
-    let nonEmptyElements, whitespaceElements, nonSplitableElements, textBlockElements, specialElements, sibling, nextNode;
+    let sibling, nextNode;
 
-    nonSplitableElements = makeMap('tr,td,th,tbody,thead,tfoot,table');
-    nonEmptyElements = schema.getNonEmptyElements();
-    whitespaceElements = schema.getWhiteSpaceElements();
-    textBlockElements = schema.getTextBlockElements();
-    specialElements = schema.getSpecialElements();
+    const nonSplitableElements = makeMap('tr,td,th,tbody,thead,tfoot,table');
+    const nonEmptyElements = schema.getNonEmptyElements();
+    const whitespaceElements = schema.getWhiteSpaceElements();
+    const textBlockElements = schema.getTextBlockElements();
+    const specialElements = schema.getSpecialElements();
 
     for (ni = 0; ni < nodes.length; ni++) {
       node = nodes[ni];
@@ -328,8 +329,7 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
    * @return {tinymce.html.Node} Root node containing the tree.
    */
   const parse = (html: string, args?: ParserArgs): Node => {
-    let parser, nodes, i, l, fi, fl, list, name;
-    let blockElements;
+    let nodes, i, l, fi, fl, list, name;
     const invalidChildren = [];
     let isInWhiteSpacePreservedElement;
     let node: Node;
@@ -347,7 +347,7 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
     args = args || {};
     matchedNodes = {};
     matchedAttributes = {};
-    blockElements = extend(makeMap('script,style,head,html,body,title,meta,param'), schema.getBlockElements());
+    const blockElements = extend(makeMap('script,style,head,html,body,title,meta,param'), schema.getBlockElements());
     const nonEmptyElements = schema.getNonEmptyElements();
     const children = schema.children;
     const validate = settings.validate;
@@ -475,8 +475,9 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
       return output;
     };
 
-    parser = SaxParser({
+    const parser = SaxParser({
       validate,
+      allow_html_data_urls: settings.allow_html_data_urls,
       allow_script_urls: settings.allow_script_urls,
       allow_conditional_comments: settings.allow_conditional_comments,
       preserve_cdata: settings.preserve_cdata,
@@ -518,17 +519,15 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
       },
 
       doctype(text) {
-        let newNode;
-
-        newNode = node.append(createNode('#doctype', 10));
+        const newNode = node.append(createNode('#doctype', 10));
         newNode.value = text;
         removeWhitespaceBefore(node);
       },
 
       start(name, attrs, empty) {
-        let newNode, attrFiltersLen, elementRule, attrName, parent;
+        let newNode, attrFiltersLen, attrName, parent;
 
-        elementRule = validate ? schema.getElementRule(name) : {};
+        const elementRule = validate ? schema.getElementRule(name) : {} as SchemaElement;
         if (elementRule) {
           newNode = createNode(elementRule.outputName || name, 1);
           newNode.attributes = attrs;
@@ -576,9 +575,9 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
       },
 
       end(name) {
-        let textNode, elementRule, text, sibling, tempNode;
+        let textNode, text, sibling, tempNode;
 
-        elementRule = validate ? schema.getElementRule(name) : {};
+        const elementRule: Partial<SchemaElement> = validate ? schema.getElementRule(name) : {};
         if (elementRule) {
           if (blockElements[name]) {
             if (!isInWhiteSpacePreservedElement) {
@@ -683,7 +682,7 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
 
     const rootNode = node = new Node(args.context || settings.root_name, 11);
 
-    parser.parse(html, args.format);
+    parser.parse(html, args.format as ParserFormat);
 
     // Fix invalid children or report invalid children in a contextual parsing
     if (validate && invalidChildren.length) {

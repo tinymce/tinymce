@@ -71,14 +71,12 @@ export const BlobCache = (): BlobCache => {
   };
 
   const toBlobInfo = (o: BlobInfoData): BlobInfo => {
-    let id, name;
-
     if (!o.blob || !o.base64) {
       throw new Error('blob and base64 representations of the image are required for BlobInfo to be created');
     }
 
-    id = o.id || Uuid.uuid('blobid');
-    name = o.name || id;
+    const id = o.id || Uuid.uuid('blobid');
+    const name = o.name || id;
 
     return {
       id: Fun.constant(id),

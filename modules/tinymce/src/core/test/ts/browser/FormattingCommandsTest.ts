@@ -254,11 +254,9 @@ UnitTest.asynctest('browser.tinymce.core.FormattingCommandsTest', function (succ
   });
 
   suite.test('mceInsertLink (link adjacent text)', function (editor) {
-    let rng;
-
     editor.setContent('<p><a href="#">a</a>b</p>');
 
-    rng = editor.dom.createRng();
+    const rng = editor.dom.createRng();
     rng.setStart(editor.getBody().firstChild.lastChild, 0);
     rng.setEnd(editor.getBody().firstChild.lastChild, 1);
     editor.selection.setRng(rng);

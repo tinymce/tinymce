@@ -13,6 +13,6 @@ UnitTest.asynctest('Editor with sticky bottom toolbar', (success, failure) => {
   Pipeline.async({}, [
     sTestStickyHeader(ToolbarMode.default, ToolbarLocation.bottom),
     sTestStickyHeader(ToolbarMode.floating, ToolbarLocation.bottom),
-    sTestStickyHeader(ToolbarMode.sliding, ToolbarLocation.bottom),
+    sTestStickyHeader(ToolbarMode.sliding, ToolbarLocation.bottom)
   ], success, failure);
 });

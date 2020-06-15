@@ -1,11 +1,11 @@
-import { Log, Pipeline, UiFinder, NamedChain, Assertions, ApproxStructure } from '@ephox/agar';
+import { ApproxStructure, Assertions, Log, NamedChain, Pipeline, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Result, Arr, Id } from '@ephox/katamari';
+import { Arr, Id, Result } from '@ephox/katamari';
 import { Editor as McagarEditor } from '@ephox/mcagar';
 import { Body } from '@ephox/sugar';
 
 import SilverTheme from 'tinymce/themes/silver/Theme';
-import { cExtractOnlyOne, cCountNumber } from '../../../module/UiChainUtils';
+import { cCountNumber, cExtractOnlyOne } from '../../../module/UiChainUtils';
 
 UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
   SilverTheme();
@@ -13,7 +13,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
   const cCreateEditorWithMenubar = (menubar) => McagarEditor.cFromSettings({
     menubar,
     theme: 'silver',
-    base_url: '/project/tinymce/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce'
   });
 
   const cAssertIsDefaultMenubar = Assertions.cAssertStructure(

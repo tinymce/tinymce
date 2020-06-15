@@ -172,11 +172,11 @@ const findParentContainer = (
   endOffset: number,
   start: boolean
 ) => {
-  let container, parent, sibling, siblingName, root;
+  let container, parent, sibling;
 
   container = parent = start ? startContainer : endContainer;
-  siblingName = start ? 'previousSibling' : 'nextSibling';
-  root = dom.getRoot();
+  const siblingName = start ? 'previousSibling' : 'nextSibling';
+  const root = dom.getRoot();
 
   // If it's a text node and the offset is inside the text
   if (NodeType.isText(container) && !isWhiteSpaceNode(container)) {

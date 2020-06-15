@@ -6,21 +6,8 @@
  */
 
 import {
-  AddEventsBehaviour,
-  AlloyEvents,
-  AlloyTriggers,
-  Behaviour,
-  Button,
-  Composing,
-  Container,
-  DataField,
-  Input,
-  Keying,
-  Memento,
-  NativeEvents,
-  Representing,
-  Tabstopping,
-  Toggling,
+  AddEventsBehaviour, AlloyEvents, AlloyTriggers, Behaviour, Button, Composing, Container, DataField, Input, Keying, Memento, NativeEvents,
+  Representing, Tabstopping, Toggling
 } from '@ephox/alloy';
 import { Option } from '@ephox/katamari';
 

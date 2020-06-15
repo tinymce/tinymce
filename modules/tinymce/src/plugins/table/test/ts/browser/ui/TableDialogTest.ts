@@ -1,4 +1,4 @@
-import { Log, Pipeline, ApproxStructure } from '@ephox/agar';
+import { ApproxStructure, Log, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import Plugin from 'tinymce/plugins/table/Plugin';
@@ -18,7 +18,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogGeneralTest', (succ
     border: 'label.tox-label:contains(Border width) + input.tox-textfield',
     caption: 'label.tox-label:contains(Caption) + label.tox-checkbox>input',
     align: 'label.tox-label:contains(Alignment) + div.tox-selectfield>select',
-    class: 'label.tox-label:contains(Class) + div.tox-selectfield>select',
+    class: 'label.tox-label:contains(Class) + div.tox-selectfield>select'
   };
 
   TinyLoader.setup((editor, onSuccess, onFailure) => {
@@ -75,11 +75,11 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogGeneralTest', (succ
                       children: [
                         s.text(str.is('X'))
                       ]
-                    }),
+                    })
                   ]
                 })
               ]
-            }),
+            })
           ]
         });
       });
@@ -250,7 +250,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogGeneralTest', (succ
         sSetCursor,
         tinyApis.sExecCommand('mceTableProps'),
         TableTestUtils.sAssertDialogValues(baseData, true, generalSelectors),
-        TableTestUtils.sClickDialogButton('submit dialog', false),
+        TableTestUtils.sClickDialogButton('submit dialog', false)
       ]);
     };
 
@@ -316,7 +316,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogGeneralTest', (succ
         TableTestUtils.sClickDialogButton('submit dialog', true),
         tinyApis.sAssertContent(newHtml),
         TableTestUtils.sOpenTableDialog(tinyUi),
-        TableTestUtils.sAssertDialogValues(newData, true, generalSelectors),
+        TableTestUtils.sAssertDialogValues(newData, true, generalSelectors)
       ]);
     };
 

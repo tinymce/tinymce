@@ -1,8 +1,10 @@
-import { Element } from '@ephox/dom-globals';
-import { Option, Result, Fun } from '@ephox/katamari';
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
-import { BaseToolbarButtonApi, BaseToolbarButtonInstanceApi, BaseToolbarButton, baseToolbarButtonFields } from './ToolbarButton';
-import { BaseToolbarToggleButtonApi, BaseToolbarToggleButtonInstanceApi, BaseToolbarToggleButton, baseToolbarToggleButtonFields } from './ToolbarToggleButton';
+import { Element } from '@ephox/dom-globals';
+import { Fun, Option, Result } from '@ephox/katamari';
+import { BaseToolbarButton, BaseToolbarButtonApi, baseToolbarButtonFields, BaseToolbarButtonInstanceApi } from './ToolbarButton';
+import {
+  BaseToolbarToggleButton, BaseToolbarToggleButtonApi, baseToolbarToggleButtonFields, BaseToolbarToggleButtonInstanceApi
+} from './ToolbarToggleButton';
 
 export type ContextToolbarPosition = 'node' | 'selection' | 'line';
 export type ContextScope = 'node' | 'editor';
@@ -105,7 +107,7 @@ export interface ContextForm extends ContextBar {
 const contextBarFields = [
   FieldSchema.defaultedFunction('predicate', () => false),
   FieldSchema.defaultedStringEnum('scope', 'node', [ 'node', 'editor' ]),
-  FieldSchema.defaultedStringEnum('position', 'selection', [ 'node', 'selection', 'line' ]),
+  FieldSchema.defaultedStringEnum('position', 'selection', [ 'node', 'selection', 'line' ])
 ];
 
 const contextButtonFields = baseToolbarButtonFields.concat([

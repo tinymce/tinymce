@@ -1,6 +1,6 @@
 import { Assert, assert, TestLabel } from '@ephox/bedrock-client';
 import { Arr, Fun, Obj, Option } from '@ephox/katamari';
-import { Attr, Classes, Css, Element, Html, Node, Text, Traverse, Value, Truncate } from '@ephox/sugar';
+import { Attr, Classes, Css, Element, Html, Node, Text, Traverse, Truncate, Value } from '@ephox/sugar';
 
 import * as ApproxComparisons from './ApproxComparisons';
 
@@ -86,7 +86,7 @@ const elementQueue = (items: Element<any>[], container: Option<Element<any>>): E
     const atMark = () => i === x;
     return {
       reset,
-      atMark,
+      atMark
     };
   };
 
@@ -95,7 +95,7 @@ const elementQueue = (items: Element<any>[], container: Option<Element<any>>): E
     current,
     peek,
     take,
-    mark,
+    mark
   };
 };
 
@@ -313,5 +313,5 @@ export {
   zeroOrOne,
   zeroOrMore,
   oneOrMore,
-  theRest,
+  theRest
 };

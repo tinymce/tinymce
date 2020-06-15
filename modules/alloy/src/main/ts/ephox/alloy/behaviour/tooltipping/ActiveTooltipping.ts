@@ -93,7 +93,7 @@ const events = (tooltipConfig: TooltippingConfig, state: TooltippingState): Allo
           }),
           AlloyEvents.run(NativeEvents.mouseout(), (comp) => {
             AlloyTriggers.emit(comp, HideTooltipEvent);
-          }),
+          })
         ]
         : [
           AlloyEvents.run(SystemEvents.highlight(), (comp, _se) => {
@@ -101,7 +101,7 @@ const events = (tooltipConfig: TooltippingConfig, state: TooltippingState): Allo
           }),
           AlloyEvents.run(SystemEvents.dehighlight(), (comp) => {
             AlloyTriggers.emit(comp, HideTooltipEvent);
-          }),
+          })
         ]
     )
   ]));

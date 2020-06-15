@@ -60,5 +60,5 @@ export {
   backtrack,
   sidestep,
   advance,
-  go,
+  go
 };

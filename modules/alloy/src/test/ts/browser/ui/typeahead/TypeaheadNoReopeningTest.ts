@@ -126,7 +126,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoReopeningTest', (succ
             Step.wait(500),
             UiFinder.sNotExists(component.element(), '[role="menu"]')
           ])
-        ),
+        )
       ])
     );
 

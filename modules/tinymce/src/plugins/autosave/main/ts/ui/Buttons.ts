@@ -5,8 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import * as Storage from '../core/Storage';
 import Editor from 'tinymce/core/api/Editor';
+import * as Storage from '../core/Storage';
 
 const makeSetupHandler = (editor: Editor) => (api) => {
   api.setDisabled(!Storage.hasDraft(editor));
@@ -35,7 +35,7 @@ const register = (editor: Editor) => {
     onAction: () => {
       Storage.restoreLastDraft(editor);
     },
-    onSetup: makeSetupHandler(editor),
+    onSetup: makeSetupHandler(editor)
   });
 };
 

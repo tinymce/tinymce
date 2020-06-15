@@ -1,7 +1,7 @@
 import { ApproxStructure, GeneralSteps, Logger, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Obj } from '@ephox/katamari';
+import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
@@ -54,7 +54,7 @@ UnitTest.asynctest('browser.tinymce.core.newline.ForcedRootBlockTest', (success,
             ApproxStructure.build((s, _str, _arr) => s.element('body', {
               children: [
                 s.element(rootBlock, {}),
-                ApproxStructure.fromHtml(expectedHTML('<br data-mce-bogus="1">')),
+                ApproxStructure.fromHtml(expectedHTML('<br data-mce-bogus="1">'))
               ]
             }))
           ),

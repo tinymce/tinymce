@@ -5,15 +5,15 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node, HTMLElement, Range } from '@ephox/dom-globals';
+import { HTMLElement, Node, Range } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
-import * as CaretContainer from '../caret/CaretContainer';
-import * as NodeType from '../dom/NodeType';
-import TreeWalker from '../api/dom/TreeWalker';
-import * as RangeCompare from './RangeCompare';
 import DOMUtils from '../api/dom/DOMUtils';
-import { isCaretNode } from '../fmt/FormatContainer';
+import TreeWalker from '../api/dom/TreeWalker';
+import * as CaretContainer from '../caret/CaretContainer';
 import { CaretPosition } from '../caret/CaretPosition';
+import * as NodeType from '../dom/NodeType';
+import { isCaretNode } from '../fmt/FormatContainer';
+import * as RangeCompare from './RangeCompare';
 
 const findParent = (node: Node, rootNode: Node, predicate: (node: Node) => boolean) => {
   while (node && node !== rootNode) {
@@ -115,13 +115,13 @@ const findTextNodeRelative = (dom: DOMUtils, isAfterNode: boolean, collapsed: bo
 const normalizeEndPoint = (dom: DOMUtils, collapsed: boolean, start: boolean, rng: Range): Option<CaretPosition> => {
   let container, offset;
   const body = dom.getRoot();
-  let node, nonEmptyElementsMap;
-  let directionLeft, isAfterNode, normalized = false;
+  let node;
+  let directionLeft, normalized = false;
 
   container = rng[(start ? 'start' : 'end') + 'Container'];
   offset = rng[(start ? 'start' : 'end') + 'Offset'];
-  isAfterNode = NodeType.isElement(container) && offset === container.childNodes.length;
-  nonEmptyElementsMap = dom.schema.getNonEmptyElements();
+  const isAfterNode = NodeType.isElement(container) && offset === container.childNodes.length;
+  const nonEmptyElementsMap = dom.schema.getNonEmptyElements();
   directionLeft = start;
 
   if (CaretContainer.isCaretContainer(container)) {

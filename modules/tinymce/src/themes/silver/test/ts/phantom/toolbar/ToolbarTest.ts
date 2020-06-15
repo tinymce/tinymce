@@ -113,7 +113,7 @@ UnitTest.asynctest('Toolbar Test', (success, failure) => {
           FocusTools.sTryOnSelector('Checking focus is on "two"', doc, 'span:contains("two")'),
 
           Keyboard.sKeydown(doc, Keys.tab(), { }),
-          FocusTools.sTryOnSelector('Checking focus is on "four"', doc, 'span:contains("four")'),
+          FocusTools.sTryOnSelector('Checking focus is on "four"', doc, 'span:contains("four")')
         ])
       ),
 
@@ -141,7 +141,7 @@ UnitTest.asynctest('Toolbar Test', (success, failure) => {
           FocusTools.sTryOnSelector('Checking focus is on "B"', doc, 'span:contains("B")'),
 
           Keyboard.sKeydown(doc, Keys.tab(), { }),
-          FocusTools.sTryOnSelector('Checking focus is on "C"', doc, 'span:contains("C")'),
+          FocusTools.sTryOnSelector('Checking focus is on "C"', doc, 'span:contains("C")')
         ])
       ),
 

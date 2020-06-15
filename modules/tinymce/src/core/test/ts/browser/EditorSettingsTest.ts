@@ -17,7 +17,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
   Theme();
 
   const expectedDefaultSettings: RawEditorSettings = {
-    toolbar_mode: 'floating',
+    toolbar_mode: 'floating'
   };
 
   const expectedTouchDefaultSettings: RawEditorSettings = {
@@ -266,7 +266,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
           Assertions.assertEq('Should only have the mobile setting on touch', EditorSettings.getParam(fakeEditor, 'settingA', false), isTouch);
           Assertions.assertEq('Should have the expected mobile setting value on touch', EditorSettings.getParam(fakeEditor, 'settingB', false), isTouch);
           Assertions.assertEq('Should have the expected desktop setting on desktop', EditorSettings.getParam(fakeEditor, 'settingB', true), isTouch);
-        })),
+        }))
       ])),
 
       Logger.t('combineSettings tests', GeneralSteps.sequence([
@@ -392,7 +392,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
               mobile: { plugins: [ 'lists', 'autolink', 'foo', 'bar' ], theme: 'silver' }
             })
           );
-        })),
+        }))
       ])),
 
       Logger.t('getParam hash (legacy)', Step.sync(function () {

@@ -22,7 +22,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.BlockFormatsTest', (success, failur
       sRunTinyWithSettings({
         statusbar: false,
         menubar: false,
-        base_url: '/project/tinymce/js/tinymce',
+        base_url: '/project/tinymce/js/tinymce'
       }, (tinyApis: TinyApis, editor: Editor) => [
         Logger.t('apply heading format at the end of paragraph should not expand selection', GeneralSteps.sequence([
           tinyApis.sSetContent('<p>a</p>'),
@@ -41,7 +41,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.BlockFormatsTest', (success, failur
           tinyApis.sSetCursor([ 0, 0 ], 1),
           UiFinder.sWaitFor('default setting - Check that formatter displays Paragraph', Body.body(), 'button.tox-tbtn--select span.tox-tbtn__select-label:contains("Paragraph")'),
           Step.sync(() => editor.formatter.apply('h1')),
-          UiFinder.sWaitFor('default setting - Check that formatter displays Heading 1', Body.body(), 'button.tox-tbtn--select span.tox-tbtn__select-label:contains("Heading 1")'),
+          UiFinder.sWaitFor('default setting - Check that formatter displays Heading 1', Body.body(), 'button.tox-tbtn--select span.tox-tbtn__select-label:contains("Heading 1")')
         ]))
       ])
     ),
@@ -74,10 +74,10 @@ UnitTest.asynctest('browser.tinymce.core.fmt.BlockFormatsTest', (success, failur
           Step.sync(() => editor.formatter.apply('pre')),
           UiFinder.sWaitFor('Check that formatter displays Pre', Body.body(), 'button.tox-tbtn--select span.tox-tbtn__select-label:contains("Pre")'),
           Step.sync(() => editor.formatter.apply('p')),
-          UiFinder.sWaitFor('Check that formatter displays Paragraph', Body.body(), 'button.tox-tbtn--select span.tox-tbtn__select-label:contains("Paragraph")'),
+          UiFinder.sWaitFor('Check that formatter displays Paragraph', Body.body(), 'button.tox-tbtn--select span.tox-tbtn__select-label:contains("Paragraph")')
         ]))
       ])
-    ),
+    )
 
   ], success, failure);
 });

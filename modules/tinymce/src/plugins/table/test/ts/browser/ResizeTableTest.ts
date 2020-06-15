@@ -3,10 +3,10 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { Cell } from '@ephox/katamari';
 import { ApiChains, Editor as McEditor } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
+import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 import * as TableTestUtils from '../module/test/TableTestUtils';
-import Editor from 'tinymce/core/api/Editor';
 
 UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, failure) => {
   const lastObjectResizeStartEvent = Cell<any>(null);
@@ -188,7 +188,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
       cAssertEventData(lastObjectResizedEvent, 'objectresized'),
 
       NamedChain.read('editor', McEditor.cRemove)
-    ])),
+    ]))
   ], function () {
     success();
   }, failure, TestLogs.init());

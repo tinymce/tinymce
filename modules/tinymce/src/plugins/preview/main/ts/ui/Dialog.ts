@@ -21,7 +21,7 @@ export const open = (editor: Editor) => {
         {
           name: 'preview',
           type: 'iframe',
-          sandboxed: true,
+          sandboxed: true
         }
       ]
     },

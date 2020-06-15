@@ -5,90 +5,65 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLTableCellElement, Node } from '@ephox/dom-globals';
-import { Fun } from '@ephox/katamari';
+import { Types } from '@ephox/bridge';
+import { HTMLTableCellElement } from '@ephox/dom-globals';
+import { Arr, Fun } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
-import Tools from 'tinymce/core/api/util/Tools';
 import * as Styles from '../actions/Styles';
 import * as Util from '../alien/Util';
 import { hasAdvancedCellTab } from '../api/Settings';
+import * as TableSelection from '../selection/TableSelection';
 import * as CellDialogGeneralTab from './CellDialogGeneralTab';
-import * as Helpers from './Helpers';
 import { DomModifier } from './DomModifier';
-import { Types } from '@ephox/bridge';
+import * as Helpers from './Helpers';
 
 type CellData = Helpers.CellData;
 
-const updateSimpleProps = (modifiers, data: CellData) => {
-  modifiers.setAttrib('scope', data.scope);
-  modifiers.setAttrib('class', data.class);
-  modifiers.setStyle('width', Util.addSizeSuffix(data.width));
-  modifiers.setStyle('height', Util.addSizeSuffix(data.height));
+const updateSimpleProps = (modifier: DomModifier, data: CellData) => {
+  modifier.setAttrib('scope', data.scope);
+  modifier.setAttrib('class', data.class);
+  modifier.setStyle('width', Util.addSizeSuffix(data.width));
+  modifier.setStyle('height', Util.addSizeSuffix(data.height));
 };
 
-const updateAdvancedProps = (modifiers, data: CellData) => {
-  modifiers.setStyle('background-color', data.backgroundcolor);
-  modifiers.setStyle('border-color', data.bordercolor);
-  modifiers.setStyle('border-style', data.borderstyle);
-  modifiers.setStyle('border-width', Util.addSizeSuffix(data.borderwidth));
+const updateAdvancedProps = (modifier: DomModifier, data: CellData) => {
+  modifier.setFormat('tablecellbackgroundcolor', data.backgroundcolor);
+  modifier.setFormat('tablecellbordercolor', data.bordercolor);
+  modifier.setFormat('tablecellborderstyle', data.borderstyle);
+  modifier.setFormat('tablecellborderwidth', Util.addSizeSuffix(data.borderwidth));
 };
+
+// NOTES:
 
 // When applying to a single cell, values can be falsy. That is
 // because there should be a consistent value across the cell
 // selection, so it should also be possible to toggle things off.
-const applyToSingle = (editor: Editor, cells: HTMLTableCellElement[], data: CellData) => {
-  // NOTE: cells instead of cellElm passed through here just to keep signature
-  // same as applyToMultiple. Probably change.
-  // let cellElm = cells[0] as HTMLTableCellElement;
-  const dom = editor.dom;
-
-  // Switch cell type
-  const cellElm = data.celltype && cells[0].nodeName.toLowerCase() !== data.celltype ? (dom.rename(cells[0], data.celltype) as HTMLTableCellElement) : cells[0];
-
-  const modifiers = DomModifier.normal(dom, cellElm);
-
-  updateSimpleProps(modifiers, data);
-
-  if (hasAdvancedCellTab(editor)) {
-    updateAdvancedProps(modifiers, data);
-  }
-
-  // Remove alignment
-  Styles.unApplyAlign(editor, cellElm);
-  Styles.unApplyVAlign(editor, cellElm);
-
-  // Apply alignment
-  if (data.halign) {
-    Styles.applyAlign(editor, cellElm, data.halign);
-  }
-
-  // Apply vertical alignment
-  if (data.valign) {
-    Styles.applyVAlign(editor, cellElm, data.valign);
-  }
-};
 
 // When applying to multiple cells, values must be truthy to be set.
 // This is because multiple cells might have different values, and you
 // don't want a blank value to wipe out their original values. Note,
 // how as part of this, it doesn't remove any original alignment before
 // applying any specified alignment.
-const applyToMultiple = (editor, cells: Node[], data: CellData) => {
+
+const applyCellData = (editor: Editor, cells: HTMLTableCellElement[], data: CellData) => {
   const dom = editor.dom;
+  const isSingleCell = cells.length === 1;
 
-  Tools.each(cells, (cellElm: HTMLTableCellElement) => {
-    // Switch cell type
-    if (data.celltype && cellElm.nodeName.toLowerCase() !== data.celltype) {
-      cellElm = dom.rename(cellElm, data.celltype) as HTMLTableCellElement;
-    }
+  Arr.each(cells, (cell) => {
+    // Switch cell type if applicable
+    const cellElm = data.celltype && cell.nodeName.toLowerCase() !== data.celltype ? (dom.rename(cell, data.celltype) as HTMLTableCellElement) : cell;
+    const modifier = isSingleCell ? DomModifier.normal(editor, cellElm) : DomModifier.ifTruthy(editor, cellElm);
 
-    // NOTE: This isn't tested at all.
-    const modifiers = DomModifier.ifTruthy(dom, cellElm);
-
-    updateSimpleProps(modifiers, data);
+    updateSimpleProps(modifier, data);
 
     if (hasAdvancedCellTab(editor)) {
-      updateAdvancedProps(modifiers, data);
+      updateAdvancedProps(modifier, data);
+    }
+
+    // Remove alignment
+    if (isSingleCell) {
+      Styles.unApplyAlign(editor, cellElm);
+      Styles.unApplyVAlign(editor, cellElm);
     }
 
     // Apply alignment
@@ -104,36 +79,25 @@ const applyToMultiple = (editor, cells: Node[], data: CellData) => {
 };
 
 const onSubmitCellForm = (editor: Editor, cells: HTMLTableCellElement[], api) => {
-  const data = api.getData();
+  const data: CellData = api.getData();
   api.close();
 
   editor.undoManager.transact(() => {
-    const applicator = cells.length === 1 ? applyToSingle : applyToMultiple;
-    applicator(editor, cells, data);
+    applyCellData(editor, cells, data);
     editor.focus();
   });
 };
 
 const open = (editor: Editor) => {
-  // these any types are cheating, but seem difficult to unwind
-  let cellElm, cells = [];
+  const cells = TableSelection.getCellsFromSelection(editor);
 
-  // Get selected cells or the current cell
-  cells = editor.dom.select('td[data-mce-selected],th[data-mce-selected]');
-  cellElm = editor.dom.getParent(editor.selection.getStart(), 'td,th');
-  if (!cells.length && cellElm) {
-    cells.push(cellElm);
-  }
-
-  cellElm = cellElm || cells[0];
-
-  if (!cellElm) {
-    // If this element is null, return now to avoid crashing.
+  // Check if there are any cells to operate on
+  if (cells.length === 0) {
     return;
   }
 
   // Get current data and find shared values between cells
-  const cellsData: CellData[] = Tools.map(cells,
+  const cellsData: CellData[] = Arr.map(cells,
     (cellElm) => Helpers.extractDataFromCellElement(editor, cellElm, hasAdvancedCellTab(editor))
   );
   const data = Helpers.getSharedValues<CellData>(cellsData);
@@ -156,7 +120,7 @@ const open = (editor: Editor) => {
         type: 'grid',
         columns: 2,
         items: CellDialogGeneralTab.getItems(editor)
-      },
+      }
     ]
   };
   editor.windowManager.open({

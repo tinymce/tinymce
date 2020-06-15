@@ -1,6 +1,6 @@
 import { Keys, Log, Pipeline, Step } from '@ephox/agar';
-import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
 import VK from 'tinymce/core/api/util/VK';
 import NonbreakingPlugin from 'tinymce/plugins/nonbreaking/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
@@ -36,7 +36,7 @@ UnitTest.asynctest('browser.tinymce.plugins.nonbreaking.NonbreakingForceTabTest'
     toolbar: 'nonbreaking',
     nonbreaking_force_tab: 5,
     theme: 'silver',
-    base_url: '/project/tinymce/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 }
 );

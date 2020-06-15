@@ -1,5 +1,5 @@
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import * as Arr from 'ephox/katamari/api/Arr';
-import { UnitTest, Assert } from '@ephox/bedrock-client';
 
 const arrayLike: ArrayLike<number> = {
   length: 6,
@@ -8,7 +8,7 @@ const arrayLike: ArrayLike<number> = {
   2: 2,
   3: 3,
   4: 4,
-  5: 5,
+  5: 5
 };
 
 UnitTest.test('ArrArrayLikeTest', () => {

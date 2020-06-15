@@ -1,10 +1,10 @@
 import { Assertions, Chain, GeneralSteps, Logger, Pipeline } from '@ephox/agar';
-import { Fun, Option } from '@ephox/katamari';
-import { Hierarchy, Element } from '@ephox/sugar';
-import * as CefDeleteAction from 'tinymce/core/delete/CefDeleteAction';
-import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
+import { Fun, Option } from '@ephox/katamari';
+import { Element, Hierarchy } from '@ephox/sugar';
+import * as CefDeleteAction from 'tinymce/core/delete/CefDeleteAction';
+import ViewBlock from '../../module/test/ViewBlock';
 
 UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteActionTest', (success, failure) => {
   const viewBlock = ViewBlock();
@@ -300,7 +300,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteActionTest', (success, 
         cReadAction(false, [ 1 ], 0),
         cAssertActionNone
       ]))
-    ])),
+    ]))
   ], function () {
     viewBlock.detach();
     success();

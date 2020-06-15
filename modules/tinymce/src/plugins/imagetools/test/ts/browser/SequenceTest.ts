@@ -1,4 +1,4 @@
-import { Pipeline, Log } from '@ephox/agar';
+import { Log, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { console } from '@ephox/dom-globals';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
@@ -54,6 +54,6 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.SequenceTest', (success, 
     plugins: 'imagetools',
     imagetools_cors_hosts: [ 'moxiecode.cachefly.net' ],
     base_url: '/project/tinymce/js/tinymce',
-    toolbar: 'editimage',
+    toolbar: 'editimage'
   }, success, failure);
 });

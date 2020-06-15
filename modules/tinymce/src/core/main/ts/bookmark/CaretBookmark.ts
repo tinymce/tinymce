@@ -5,12 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import * as NodeType from '../dom/NodeType';
-import DOMUtils from '../api/dom/DOMUtils';
-import * as ArrUtils from '../util/ArrUtils';
-import CaretPosition from '../caret/CaretPosition';
 import { Node } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
+import DOMUtils from '../api/dom/DOMUtils';
+import CaretPosition from '../caret/CaretPosition';
+import * as NodeType from '../dom/NodeType';
+import * as ArrUtils from '../util/ArrUtils';
 
 /**
  * This module creates or resolves xpath like string representation of a CaretPositions.
@@ -76,12 +76,12 @@ const normalizedTextOffset = (node: Node, offset: number): number => {
 const equal = (a) => (b) => a === b;
 
 const normalizedNodeIndex = (node: Node): number => {
-  let nodes, index, numTextFragments;
+  let nodes, index;
 
   nodes = getChildNodes(normalizedParent(node));
   index = ArrUtils.findIndex(nodes, equal(node), node);
   nodes = nodes.slice(0, index + 1);
-  numTextFragments = ArrUtils.reduce(nodes, function (result, node, i) {
+  const numTextFragments = ArrUtils.reduce(nodes, function (result, node, i) {
     if (isText(node) && isText(nodes[i - 1])) {
       result++;
     }
@@ -193,17 +193,17 @@ const findTextPosition = (container: Node, offset: number): CaretPosition => {
 };
 
 const resolve = (root: Node, path: string): CaretPosition => {
-  let parts, container, offset;
+  let offset;
 
   if (!path) {
     return null;
   }
 
-  parts = path.split(',');
-  path = parts[0].split('/');
+  const parts = path.split(',');
+  const paths = parts[0].split('/');
   offset = parts.length > 1 ? parts[1] : 'before';
 
-  container = ArrUtils.reduce(path, function (result, value) {
+  const container = ArrUtils.reduce(paths, function (result, value) {
     value = /([\w\-\(\)]+)\[([0-9]+)\]/.exec(value);
     if (!value) {
       return null;

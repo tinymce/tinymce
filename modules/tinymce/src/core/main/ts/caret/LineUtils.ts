@@ -5,16 +5,16 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node, ClientRect, HTMLElement } from '@ephox/dom-globals';
-import { Fun, Arr } from '@ephox/katamari';
-import * as ArrUtils from '../util/ArrUtils';
+import { ClientRect, HTMLElement, Node } from '@ephox/dom-globals';
+import { Arr, Fun } from '@ephox/katamari';
+import { getClientRects, NodeClientRect } from '../dom/Dimensions';
 import * as NodeType from '../dom/NodeType';
-import { NodeClientRect, getClientRects } from '../dom/Dimensions';
 import * as GeomClientRect from '../geom/ClientRect';
-import * as CaretUtils from './CaretUtils';
+import * as ArrUtils from '../util/ArrUtils';
 import * as CaretCandidate from './CaretCandidate';
-import { ClientRectLine, VDirection } from './LineWalker';
+import * as CaretUtils from './CaretUtils';
 import { isFakeCaretTarget } from './FakeCaret';
+import { ClientRectLine, VDirection } from './LineWalker';
 
 export interface CaretInfo {
   node: Node;
@@ -28,10 +28,8 @@ const distanceToRectRight = (clientRect: NodeClientRect, clientX: number) => Mat
 const isInside = (clientX: number, clientRect: ClientRect): boolean => clientX >= clientRect.left && clientX <= clientRect.right;
 
 const findClosestClientRect = (clientRects: ClientRect[], clientX: number): NodeClientRect => ArrUtils.reduce(clientRects, (oldClientRect, clientRect) => {
-  let oldDistance, newDistance;
-
-  oldDistance = Math.min(distanceToRectLeft(oldClientRect, clientX), distanceToRectRight(oldClientRect, clientX));
-  newDistance = Math.min(distanceToRectLeft(clientRect, clientX), distanceToRectRight(clientRect, clientX));
+  const oldDistance = Math.min(distanceToRectLeft(oldClientRect, clientX), distanceToRectRight(oldClientRect, clientX));
+  const newDistance = Math.min(distanceToRectLeft(clientRect, clientX), distanceToRectRight(clientRect, clientX));
 
   if (isInside(clientX, clientRect)) {
     return clientRect;
@@ -65,9 +63,7 @@ const findLineNodeRects = (root: Node, targetNodeRect: NodeClientRect): ClientRe
   let clientRects = [];
 
   const collect = (checkPosFn, node) => {
-    let lineRects;
-
-    lineRects = Arr.filter(getClientRects([ node ]), function (clientRect) {
+    const lineRects = Arr.filter(getClientRects([ node ]), function (clientRect) {
       return !checkPosFn(clientRect, targetNodeRect);
     });
 

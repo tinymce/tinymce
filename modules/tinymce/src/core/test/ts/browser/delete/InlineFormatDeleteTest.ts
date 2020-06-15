@@ -1,9 +1,9 @@
 import { ApproxStructure, Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import * as InlineFormatDelete from 'tinymce/core/delete/InlineFormatDelete';
 import * as Zwsp from 'tinymce/core/text/Zwsp';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.core.delete.InlineFormatDelete', function (success, failure) {
 
@@ -96,7 +96,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.InlineFormatDelete', function (s
                           })
                         ]
                       }),
-                      s.text(str.is('b')),
+                      s.text(str.is('b'))
                     ]
                   })
                 ]

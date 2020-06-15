@@ -5,15 +5,15 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Node } from '@ephox/dom-globals';
 import { Arr, Fun } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
+import Editor from './api/Editor';
+import * as Settings from './api/Settings';
 import * as Bookmarks from './bookmark/Bookmarks';
 import * as NodeType from './dom/NodeType';
 import * as Parents from './dom/Parents';
 import * as EditorFocus from './focus/EditorFocus';
-import * as Settings from './api/Settings';
-import Editor from './api/Editor';
-import { Node } from '@ephox/dom-globals';
 
 /**
  * Makes sure that everything gets wrapped in paragraphs.
@@ -61,28 +61,25 @@ const addRootBlocks = function (editor: Editor) {
   const schema = editor.schema, blockElements = schema.getBlockElements();
   let node: Node = selection.getStart();
   const rootNode = editor.getBody();
-  let rng;
-  let startContainer, startOffset, endContainer, endOffset, rootBlockNode;
-  let tempNode, wrapped, restoreSelection;
-  let rootNodeName;
+  let rootBlockNode, tempNode, wrapped;
 
   const forcedRootBlock = Settings.getForcedRootBlock(editor);
   if (!node || !NodeType.isElement(node) || !forcedRootBlock) {
     return;
   }
 
-  rootNodeName = rootNode.nodeName.toLowerCase();
+  const rootNodeName = rootNode.nodeName.toLowerCase();
   if (!schema.isValidChild(rootNodeName, forcedRootBlock.toLowerCase()) || hasBlockParent(blockElements, rootNode, node)) {
     return;
   }
 
   // Get current selection
-  rng = selection.getRng();
-  startContainer = rng.startContainer;
-  startOffset = rng.startOffset;
-  endContainer = rng.endContainer;
-  endOffset = rng.endOffset;
-  restoreSelection = EditorFocus.hasFocus(editor);
+  const rng = selection.getRng();
+  const startContainer = rng.startContainer;
+  const startOffset = rng.startOffset;
+  const endContainer = rng.endContainer;
+  const endOffset = rng.endOffset;
+  const restoreSelection = EditorFocus.hasFocus(editor);
 
   // Wrap non block elements and text nodes
   node = rootNode.firstChild;

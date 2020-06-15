@@ -238,13 +238,13 @@ const setup = (editor: Editor): RenderInfo => {
     dom: {
       tag: 'div',
       classes: [ 'tox-editor-header' ],
-      ...verticalDirAttributes,
+      ...verticalDirAttributes
     },
     components: Arr.flatten<AlloySpec>([
       hasMenubar ? [ partMenubar ] : [ ],
       getPartToolbar(),
       // fixed_toolbar_container anchors to the editable area, else add an anchor bar
-      Settings.useFixedContainer(editor) ? [ ] : [ memAnchorBar.asSpec() ],
+      Settings.useFixedContainer(editor) ? [ ] : [ memAnchorBar.asSpec() ]
     ]),
     sticky: Settings.isStickyToolbar(editor),
     editor,
@@ -264,7 +264,7 @@ const setup = (editor: Editor): RenderInfo => {
       tag: 'div',
       classes: [ 'tox-editor-container' ]
     },
-    components: editorComponents,
+    components: editorComponents
   };
 
   const containerComponents = Arr.flatten<AlloySpec>([
@@ -296,7 +296,7 @@ const setup = (editor: Editor): RenderInfo => {
           // This is overridden by the skin, it helps avoid FOUC
           visibility: 'hidden',
           // Hide the container if needed, but don't use "display: none" so that it still has a position
-          ...isHidden ? { opacity: '0', border: '0' } : {},
+          ...isHidden ? { opacity: '0', border: '0' } : {}
         },
         attributes
       },

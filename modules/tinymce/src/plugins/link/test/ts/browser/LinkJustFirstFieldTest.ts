@@ -37,7 +37,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.JustFirstFieldTest', (success, 
           })
         )
       ]),
-      TestLinkUi.sClearHistory,
+      TestLinkUi.sClearHistory
     ], onSuccess, onFailure);
   }, {
     plugins: 'link',

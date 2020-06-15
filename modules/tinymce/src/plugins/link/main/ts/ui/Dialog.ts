@@ -38,7 +38,7 @@ const handleSubmit = (editor: Editor, info: LinkDialogInfo) => (api: Types.Dialo
     target: getChangedValue('target'),
     rel: getChangedValue('rel'),
     class: getChangedValue('linkClass'),
-    title: getChangedValue('title'),
+    title: getChangedValue('title')
   };
 
   const attachState = {
@@ -68,7 +68,7 @@ const getInitialData = (info: LinkDialogInfo, defaultTarget: Option<string>): Li
         () => info.anchor.text.getOr('')
       ),
       original: {
-        value: info.anchor.url.getOr(''),
+        value: info.anchor.url.getOr('')
       }
     }
   },

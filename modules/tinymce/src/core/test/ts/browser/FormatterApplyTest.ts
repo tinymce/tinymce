@@ -1555,14 +1555,12 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function (success,
   });
 
   suite.test('Caret format and backspace', function (editor) {
-    let rng;
-
     editor.formatter.register('format', {
       inline: 'b'
     });
 
     editor.setContent('<p>abc</p>');
-    rng = editor.dom.createRng();
+    const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('p')[0].firstChild, 3);
     rng.setEnd(editor.dom.select('p')[0].firstChild, 3);
     editor.selection.setRng(rng);

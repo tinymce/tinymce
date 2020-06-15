@@ -65,7 +65,6 @@ const hasClass = function (n, c) {
 const insertTemplate = function (editor, ui, html) {
   // Note: ui is unused here but is required since this can be called by execCommand
   let el;
-  let n;
   const dom = editor.dom;
   const sel = editor.selection.getContent();
 
@@ -73,7 +72,7 @@ const insertTemplate = function (editor, ui, html) {
   el = dom.create('div', null, html);
 
   // Find template element within div
-  n = dom.select('.mceTmpl', el);
+  const n = dom.select('.mceTmpl', el);
   if (n && n.length > 0) {
     el = dom.create('div', null);
     el.appendChild(n[0].cloneNode(true));

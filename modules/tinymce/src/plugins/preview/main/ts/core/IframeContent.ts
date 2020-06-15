@@ -6,9 +6,9 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
+import Env from 'tinymce/core/api/Env';
 import Tools from 'tinymce/core/api/util/Tools';
 import * as Settings from '../api/Settings';
-import Env from 'tinymce/core/api/Env';
 
 const getPreviewHtml = function (editor: Editor) {
   let headHtml = '';
@@ -72,5 +72,5 @@ const getPreviewHtml = function (editor: Editor) {
 };
 
 export {
-  getPreviewHtml,
+  getPreviewHtml
 };

@@ -13,7 +13,7 @@ const left = function (): Direction {
 
   return {
     sibling,
-    first,
+    first
   };
 };
 
@@ -28,7 +28,7 @@ const right = function (): Direction {
 
   return {
     sibling,
-    first,
+    first
   };
 };
 

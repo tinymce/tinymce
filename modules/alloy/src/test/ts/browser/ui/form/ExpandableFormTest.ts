@@ -283,7 +283,7 @@ UnitTest.asynctest('ExpandableFormTest', (success, failure) => {
             Focus.search(component.element()).fold(() => {
               die('The focus has not stayed in the form');
             }, next);
-          }),
+          })
         ])
       ),
 

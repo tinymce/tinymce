@@ -1,4 +1,4 @@
-import { Keys, Pipeline, Log } from '@ephox/agar';
+import { Keys, Log, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
 
@@ -34,7 +34,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableTablNavigationDisabledTes
     plugins: 'table',
     table_tab_navigation: false,
     theme: 'silver',
-    base_url: '/project/tinymce/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 }
 );

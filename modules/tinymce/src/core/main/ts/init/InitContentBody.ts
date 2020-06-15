@@ -62,6 +62,7 @@ const mkParserSettings = (editor: Editor): DomParserSettings => {
 
   return removeUndefined<DomParserSettings>({
     allow_conditional_comments: settings.allow_conditional_comments,
+    allow_html_data_urls: settings.allow_html_data_urls,
     allow_html_in_named_anchor: settings.allow_html_in_named_anchor,
     allow_script_urls: settings.allow_script_urls,
     allow_unsafe_link_target: settings.allow_unsafe_link_target,
@@ -121,7 +122,7 @@ const mkSerializerSettings = (editor: Editor): SerializerSettings => {
       valid_elements: settings.valid_elements,
       valid_styles: settings.valid_styles,
       verify_html: settings.verify_html,
-      whitespace_elements: settings.whitespace_elements,
+      whitespace_elements: settings.whitespace_elements
     })
   };
 };
@@ -333,7 +334,7 @@ const preInit = (editor: Editor, rtcMode: boolean) => {
 const initContentBody = function (editor: Editor, skipWrite?: boolean) {
   const settings = editor.settings;
   const targetElm = editor.getElement();
-  let doc = editor.getDoc(), body;
+  let doc = editor.getDoc();
 
   // Restore visibility on target element
   if (!settings.inline) {
@@ -364,8 +365,10 @@ const initContentBody = function (editor: Editor, skipWrite?: boolean) {
   }
 
   // It will not steal focus while setting contentEditable
-  body = editor.getBody();
-  body.disabled = true;
+  const body = editor.getBody();
+  // disabled isn't valid on all body elements, so need to cast here
+  // TODO: See if we actually need to disable/re-enable here
+  (body as any).disabled = true;
   editor.readonly = !!settings.readonly;
 
   if (!editor.readonly) {
@@ -376,7 +379,7 @@ const initContentBody = function (editor: Editor, skipWrite?: boolean) {
     body.contentEditable = editor.getParam('content_editable_state', true);
   }
 
-  body.disabled = false;
+  (body as any).disabled = false;
 
   editor.editorUpload = EditorUpload(editor);
   editor.schema = Schema(settings);

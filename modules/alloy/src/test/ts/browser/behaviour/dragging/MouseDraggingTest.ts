@@ -154,7 +154,7 @@ UnitTest.asynctest('MouseDraggingTest', (success, failure) => {
       }), '_'),
 
       NamedChain.direct('box', Mouse.cMouseDown, '_'),
-      NamedChain.direct('container', UiFinder.cFindIn('.test-blocker'), 'blocker'),
+      NamedChain.direct('container', UiFinder.cFindIn('.test-blocker'), 'blocker')
     ]);
 
     return [

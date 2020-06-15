@@ -104,7 +104,7 @@ export const renderDropZone = (spec: DropZoneSpec, providersBackstage: UiFactory
         AlloyEvents.run('dragover', stopper),
         AlloyEvents.run('drop', sequence([ stopper, onDrop ])),
         AlloyEvents.run(NativeEvents.change(), onSelect)
-      ]),
+      ])
     ]),
     components: [
       {

@@ -33,7 +33,7 @@ UnitTest.asynctest('browser.tinymce.plugins.charmap.SearchTest', (success, failu
         tinyApis.sFocus(),
         tinyUi.sClickOnToolbar('click charmap', 'button[aria-label="Special character"]'),
         Chain.asStep({}, [
-          tinyUi.cWaitForPopup('wait for popup', 'div[role="dialog"]'),
+          tinyUi.cWaitForPopup('wait for popup', 'div[role="dialog"]')
         ]),
         FocusTools.sTryOnSelector('Focus should start on', doc, 'input'), // TODO: Remove duped startup of these tests
         FocusTools.sSetActiveValue(doc, 'euro'),
@@ -62,6 +62,6 @@ UnitTest.asynctest('browser.tinymce.plugins.charmap.SearchTest', (success, failu
     plugins: 'charmap',
     toolbar: 'charmap',
     theme: 'silver',
-    base_url: '/project/tinymce/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });
