@@ -49,6 +49,7 @@ export interface ParserFilter {
 }
 
 export interface DomParserSettings {
+  allow_html_data_urls?: boolean;
   allow_conditional_comments?: boolean;
   allow_html_in_named_anchor?: boolean;
   allow_script_urls?: boolean;
@@ -476,6 +477,7 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
 
     const parser = SaxParser({
       validate,
+      allow_html_data_urls: settings.allow_html_data_urls,
       allow_script_urls: settings.allow_script_urls,
       allow_conditional_comments: settings.allow_conditional_comments,
       preserve_cdata: settings.preserve_cdata,

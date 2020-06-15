@@ -323,20 +323,10 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     return false;
   };
 
-  const get = (elm: string | Node): HTMLElement => {
-    if (elm && doc && typeof elm === 'string') {
-      const node = doc.getElementById(elm);
-
-      // IE and Opera returns meta elements when they match the specified input ID, but getElementsByName seems to do the trick
-      if (node && node.id !== elm) {
-        return doc.getElementsByName(elm)[1];
-      } else {
-        return node;
-      }
-    }
-
-    return elm as HTMLElement;
-  };
+  const get = (elm: string | Node): HTMLElement | null =>
+    elm && doc && Type.isString(elm)
+      ? doc.getElementById(elm)
+      : elm as HTMLElement;
 
   const $$ = <T extends Node>(elm: string | T | T[] | DomQuery<T>): DomQuery<T | Node> => $(typeof elm === 'string' ? get(elm) : elm);
 

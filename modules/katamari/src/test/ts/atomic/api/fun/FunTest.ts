@@ -60,6 +60,13 @@ UnitTest.test('Check compose :: compose(f, g)(x) = f(g(x))', () => {
   }));
 });
 
+UnitTest.test('Check compose1 :: compose1(f, g)(x) = f(g(x))', () => {
+  fc.assert(fc.property(fc.string(), fc.func(fc.string()), fc.func(fc.string()), (x, f, g) => {
+    const h = Fun.compose1(f, g);
+    Assert.eq('eq', f(g(x)), h(x));
+  }));
+});
+
 UnitTest.test('Check constant :: constant(a)() === a', () => {
   fc.assert(fc.property(fc.json(), (json) => {
     Assert.eq('eq', json, Fun.constant(json)());
