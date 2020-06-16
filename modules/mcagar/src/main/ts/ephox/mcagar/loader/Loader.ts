@@ -17,7 +17,7 @@ interface Callbacks {
 
 const createTarget = (inline: boolean) => Element.fromTag(inline ? 'div' : 'textarea');
 
-export const removeTinymceElements = () => {
+const removeTinymceElements = () => {
   // NOTE: Don't remove the link/scripts added, as those are part of the global tinymce which we don't clean up
   const elements = Arr.flatten([
     // Some older versions of tinymce leaves elements behind in the dom
