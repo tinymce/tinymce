@@ -183,6 +183,7 @@ export function StyleSheetLoader(documentOrShadowRoot: DomDocument | ShadowRoot,
 
     // Start loading
     state.status = 1;
+    // TODO: Use Sugar to create this element
     link = doc.dom().createElement('link');
     link.rel = 'stylesheet';
     link.type = 'text/css';
@@ -208,6 +209,7 @@ export function StyleSheetLoader(documentOrShadowRoot: DomDocument | ShadowRoot,
       // Sniff for old Firefox that doesn't support the onload event on link elements
       // TODO: Remove this in the future when everyone uses modern browsers
       if (navigator.userAgent.indexOf('Firefox') > 0) {
+        // TODO: Use Sugar to create this element
         style = doc.dom().createElement('style');
         style.textContent = '@import "' + url + '"';
         waitForGeckoLinkLoaded();
