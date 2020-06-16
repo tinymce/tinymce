@@ -6,7 +6,14 @@
  */
 
 import { Registry } from '@ephox/bridge';
-import { Document, Element, Event, HTMLElement, HTMLIFrameElement, Window } from '@ephox/dom-globals';
+import {
+  Document,
+  Element,
+  Event,
+  HTMLElement,
+  HTMLIFrameElement,
+  Window
+} from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import * as EditorContent from '../content/EditorContent';
 import * as NodeType from '../dom/NodeType';
@@ -41,12 +48,15 @@ import { Plugin } from './PluginManager';
 import { EditorSettings, RawEditorSettings } from './SettingsTypes';
 import Shortcuts from './Shortcuts';
 import { Theme } from './ThemeManager';
+import { registry } from './ui/Registry';
 import EventDispatcher, { NativeEventMap } from './util/EventDispatcher';
 import I18n, { TranslatedString, Untranslated } from './util/I18n';
 import Tools from './util/Tools';
 import URI from './util/URI';
 import WindowManager from './WindowManager';
 import { StyleSheetLoader } from './dom/StyleSheetLoader';
+import * as StyleSheetLoaderRegistry from '../dom/StyleSheetLoaderRegistry';
+import { Element as SugarElement } from '@ephox/sugar';
 
 /**
  * This class contains the core logic for a TinyMCE editor.
@@ -70,8 +80,15 @@ import { StyleSheetLoader } from './dom/StyleSheetLoader';
 
 export interface Ui {
   readonly registry: Registry.Registry;
-  /** StyleSheetLoader for styles in the editor UI. For content styles, use editor.dom.styleSheetLoader. */
-  readonly styleSheetLoader: StyleSheetLoader;
+}
+
+export interface Styles {
+  readonly ui: {
+    styleSheetLoader: () => StyleSheetLoader;
+  }
+  readonly content: {
+    styleSheetLoader: () => StyleSheetLoader;
+  }
 }
 
 export interface EditorConstructor {
@@ -85,6 +102,30 @@ const DOM = DOMUtils.DOM;
 const extend = Tools.extend, each = Tools.each;
 const resolve = Tools.resolve;
 const ie = Env.ie;
+
+const createStyleApi = (self: Editor): Styles => ({
+  content: {
+    styleSheetLoader: () => {
+      if (self.dom && self.dom.styleSheetLoader) {
+        return self.dom.styleSheetLoader;
+      } else {
+        throw new Error('Content stylesheet loader not yet ready');
+      }
+    }
+  },
+  ui: {
+    styleSheetLoader: () => {
+      if (self.getElement()) {
+        return StyleSheetLoaderRegistry.instance.forElement(SugarElement.fromDom(self.getElement()), {
+          contentCssCors: self.settings.contentCssCors,
+          referrerPolicy: self.settings.referrerPolicy
+        });
+      } else {
+        throw new Error('Ui stylesheet loader not yet ready');
+      }
+    }
+  }
+});
 
 /**
  * Include Editor API docs.
@@ -177,6 +218,11 @@ class Editor implements EditorObservable {
    * @type tinymce.editor.ui.Ui
    */
   public ui: Ui;
+
+  /**
+   * Editor style API.
+   */
+  public styles: Styles;
 
   /**
    * Editor mode API
@@ -326,6 +372,10 @@ class Editor implements EditorObservable {
       Env.cacheSuffix = this.settings.cache_suffix.replace(/^[\?\&]+/, '');
     }
 
+    this.ui = {
+      registry: registry()
+    };
+
     const self = this;
     const modeInstance = create(self);
     this.mode = modeInstance;
@@ -339,6 +389,8 @@ class Editor implements EditorObservable {
       context: this.inline ? this.getBody() : this.getDoc(),
       element: this.getBody()
     }));
+
+    this.styles = createStyleApi(self)
   }
 
   /**
