@@ -42,8 +42,8 @@ const rawLoad = (
   maxLoadTime: number,
   referrerPolicy: Option<ReferrerPolicy>,
   contentCssCors: boolean
-): LazyValue<Result<string, string>> =>
-  LazyValue.withTimeout((completer) => {
+): LazyValue<Result<string, string>> => {
+  const lv: LazyValue<Option<Result<string, string>>> = LazyValues.withTimeout((completer) => {
     // TODO: would it be better to return errors, rather than the URL?
     const doc = Traverse.documentOrOwner(root);
     const onload = () => {
@@ -54,7 +54,9 @@ const rawLoad = (
     };
     const link = createLinkTag(doc, url, onload, onerror, referrerPolicy, contentCssCors);
     Insert.append(ShadowDom.getStyleContainer(root), link);
-  }, () => Result.error(url), maxLoadTime);
+  }, maxLoadTime);
+  return lv.map((or) => or.getOrThunk(() => Result.error(url)));
+};
 
 export const create = (): StyleSheetGlobalLoader => {
 
