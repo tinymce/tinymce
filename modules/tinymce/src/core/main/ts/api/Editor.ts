@@ -41,6 +41,7 @@ import { Plugin } from './PluginManager';
 import { EditorSettings, RawEditorSettings } from './SettingsTypes';
 import Shortcuts from './Shortcuts';
 import { Theme } from './ThemeManager';
+import { registry } from './ui/Registry';
 import EventDispatcher, { NativeEventMap } from './util/EventDispatcher';
 import I18n, { TranslatedString, Untranslated } from './util/I18n';
 import Tools from './util/Tools';
@@ -69,9 +70,9 @@ import { StyleSheetLoader } from './dom/StyleSheetLoader';
  */
 
 export interface Ui {
-  readonly registry: Registry.Registry;
+  registry: Registry.Registry;
   /** StyleSheetLoader for styles in the editor UI. For content styles, use editor.dom.styleSheetLoader. */
-  readonly styleSheetLoader: StyleSheetLoader;
+  styleSheetLoader: StyleSheetLoader;
 }
 
 export interface EditorConstructor {
@@ -325,6 +326,11 @@ class Editor implements EditorObservable {
     if (this.settings.cache_suffix) {
       Env.cacheSuffix = this.settings.cache_suffix.replace(/^[\?\&]+/, '');
     }
+
+    this.ui = {
+      registry: registry(),
+      styleSheetLoader: undefined
+    };
 
     const self = this;
     const modeInstance = create(self);

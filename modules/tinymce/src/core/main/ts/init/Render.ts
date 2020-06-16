@@ -25,7 +25,6 @@ import WindowManager from '../api/WindowManager';
 import * as NodeType from '../dom/NodeType';
 import * as ErrorReporter from '../ErrorReporter';
 import * as Init from './Init';
-import { registry } from '../api/ui/Registry';
 import { Element } from '@ephox/sugar';
 import { StyleSheetLoader } from '../api/dom/StyleSheetLoader';
 import * as StyleSheetLoaderRegistry from '../dom/StyleSheetLoaderRegistry';
@@ -202,10 +201,7 @@ const render = function (editor: Editor) {
     return;
   }
 
-  editor.ui = {
-    registry: registry(),
-    styleSheetLoader: getStyleSheetLoader(Element.fromDom(editor.getElement()), settings)
-  };
+  editor.ui.styleSheetLoader = getStyleSheetLoader(Element.fromDom(editor.getElement()), settings);
 
   // Hide target element early to prevent content flashing
   if (!settings.inline) {
