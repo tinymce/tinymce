@@ -5,10 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { document, Document as DomDocument, Node as DomNode, ShadowRoot } from '@ephox/dom-globals';
+import { Document as DomDocument, Node as DomNode, ShadowRoot } from '@ephox/dom-globals';
 import { StyleSheetLoader, StyleSheetLoaderSettings } from 'tinymce/core/api/dom/StyleSheetLoader';
 import { Element, ShadowDom } from '@ephox/sugar';
-import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import { Option } from '@ephox/katamari';
 
 export interface StyleSheetLoaderRegistry {
@@ -26,15 +25,11 @@ export const create = (): StyleSheetLoaderRegistry => {
     const root = ShadowDom.getRootNode(referenceElement);
 
     const rootDom = root.dom();
-    if (rootDom === document) {
-      return DOMUtils.DOM.styleSheetLoader;
-    } else {
-      return Option.from(map.get(rootDom)).getOrThunk(() => {
-        const sl = StyleSheetLoader(rootDom, settings);
-        map.set(rootDom, sl);
-        return sl;
-      });
-    }
+    return Option.from(map.get(rootDom)).getOrThunk(() => {
+      const sl = StyleSheetLoader(rootDom, settings);
+      map.set(rootDom, sl);
+      return sl;
+    });
   };
 
   return {
