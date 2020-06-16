@@ -1,7 +1,7 @@
 import { Chain } from '@ephox/agar';
 import { setTimeout } from '@ephox/dom-globals';
 import { Global, Id, Strings, Type } from '@ephox/katamari';
-import { Attr, Body, Element, Insert, Remove, Selectors } from '@ephox/sugar';
+import { Attr, Body, Element, Insert, Remove, Selectors, ShadowDom } from '@ephox/sugar';
 import 'tinymce';
 import { Editor as EditorType } from '../alien/EditorTypes';
 import { setTinymceBaseUrl } from '../loader/Urls';
@@ -28,9 +28,11 @@ const cFromElement = function <T extends EditorType = EditorType> (element: Elem
       setTinymceBaseUrl(Global.tinymce, '/project/node_modules/tinymce');
     }
 
+    const targetSettings = ShadowDom.isInShadowRoot(element) ? ({ target: element.dom() }) : ({ selector: '#' + randomId });
+
     tinymce.init({
       ...nuSettings,
-      selector: '#' + randomId,
+      ...targetSettings,
       setup(editor: T) {
         if (Type.isFunction(nuSettings.setup)) {
           nuSettings.setup(editor);
