@@ -10,6 +10,7 @@ import { HTMLIFrameElement } from '@ephox/dom-globals';
 import { Cell, Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Element, Focus, Node } from '@ephox/sugar';
+import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import ThemeManager from 'tinymce/core/api/ThemeManager';
 import Editor from 'tinymce/core/api/Editor';
 
@@ -26,7 +27,6 @@ import * as CssUrls from './util/CssUrls';
 import * as FormatChangers from './util/FormatChangers';
 import * as SkinLoaded from './util/SkinLoaded';
 import { NotificationSpec } from 'tinymce/core/api/NotificationManager';
-import * as StyleSheetLoaderRegistry from './style/StyleSheetLoaderRegistry';
 
 // not to be confused with editor mode
 const READING = 'toReading'; // 'hide the keyboard'
@@ -39,12 +39,7 @@ const renderMobileTheme = (editor: Editor) => {
 
     if (Settings.isSkinDisabled(editor) === false) {
       editor.contentCSS.push(cssUrls.content);
-      const loaderSettings = {
-        contentCssCors: editor.settings.contentCssCors,
-        referrerPolicy: editor.settings.referrerPolicy
-      };
-      const loader = StyleSheetLoaderRegistry.instance.forElement(editor.getElement(), loaderSettings);
-      loader.load(cssUrls.ui, SkinLoaded.fireSkinLoaded(editor));
+      DOMUtils.DOM.styleSheetLoader.load(cssUrls.ui, SkinLoaded.fireSkinLoaded(editor));
     } else {
       SkinLoaded.fireSkinLoaded(editor)();
     }
