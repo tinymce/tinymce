@@ -44,8 +44,8 @@ export function StyleSheetLoader(documentOrShadowRoot: DomDocument | ShadowRoot,
     settings.referrerPolicy = referrerPolicy;
   };
 
-  const appendToHead = function (node: DomNode) {
-    Insert.append(ShadowDom.getStyleContainer(edos), Element.fromDom(node));
+  const addStyle = (element: Element<DomNode>) => {
+    Insert.append(ShadowDom.getStyleContainer(edos), element);
   };
 
   /**
@@ -211,7 +211,7 @@ export function StyleSheetLoader(documentOrShadowRoot: DomDocument | ShadowRoot,
         style = doc.dom().createElement('style');
         style.textContent = '@import "' + url + '"';
         waitForGeckoLinkLoaded();
-        appendToHead(style);
+        addStyle(Element.fromDom(style));
         return;
       }
 
@@ -219,7 +219,7 @@ export function StyleSheetLoader(documentOrShadowRoot: DomDocument | ShadowRoot,
       waitForWebKitLinkLoaded();
     }
 
-    appendToHead(link);
+    addStyle(Element.fromDom(link));
     link.href = url;
   };
 
