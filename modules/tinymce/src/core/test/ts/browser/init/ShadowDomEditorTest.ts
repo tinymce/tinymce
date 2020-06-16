@@ -1,12 +1,13 @@
 import { Pipeline, Step } from '@ephox/agar';
-import { document, setTimeout, StyleSheet } from '@ephox/dom-globals';
-import { TinyLoader } from '@ephox/mcagar';
+import { document, StyleSheet } from '@ephox/dom-globals';
+import { TinyLoader, Editor as McEditor } from '@ephox/mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 import { ShadowDom, Element, Insert, Body, Remove } from '@ephox/sugar';
 import { UnitTest, Assert } from '@ephox/bedrock-client';
-import { Arr, Futures, Global, Strings } from '@ephox/katamari';
-import { Future } from '@ephox/katamari/lib/main/ts/ephox/katamari/api/Future';
+import { Arr, Strings } from '@ephox/katamari';
+import { NamedChain } from '@ephox/agar/lib/main/ts/ephox/agar/api/NamedChain';
+import { Chain } from '@ephox/agar/lib/main/ts/ephox/agar/api/Chain';
 
 const isSkin = (ss: StyleSheet) => ss.href !== null && Strings.contains(ss.href, 'skin.min.css');
 
@@ -54,40 +55,29 @@ UnitTest.asynctest('Only one skin stylesheet should be loaded for multiple edito
     Insert.append(Body.body(), shadowHost);
     const sr = Element.fromDom(shadowHost.dom().attachShadow({ mode: 'open' }));
 
-    const createF = () => Future.nu((done) => {
+    const mkEditor = () => {
       const editorDiv = Element.fromTag('div', document);
       Insert.append(sr, editorDiv);
+      return McEditor.cFromElement(editorDiv, { base_url: '/project/tinymce/js/tinymce' });
+    };
 
-      Global.tinymce.init({
-        target: editorDiv.dom(),
-        base_url: '/project/tinymce/js/tinymce',
-        setup: (editor) => {
-          editor.on('SkinLoaded', () => {
-            setTimeout(() => {
-              done(editor);
-            }, 0);
-          });
-        }
-      });
-    });
+    const nc = NamedChain.asChain([
+      NamedChain.write('editor1', mkEditor()),
+      NamedChain.write('editor2', mkEditor()),
+      NamedChain.write('editor3', mkEditor()),
+      NamedChain.merge([ 'editor1', 'editor2', 'editor3' ], 'editors'),
+      NamedChain.read('editors', Chain.op((editors) => {
+        Assert.eq(
+          'There should only be 1 skin stylesheet in the ShadowRoot',
+          1,
+          Arr.filter(sr.dom().styleSheets, isSkin).length
+        );
+      })),
+      NamedChain.read('editor1', McEditor.cRemove),
+      NamedChain.read('editor2', McEditor.cRemove),
+      NamedChain.read('editor3', McEditor.cRemove)
+    ]);
 
-    Futures.traverse([1, 2, 3], createF).get((editors: Editor[]) => {
-      Pipeline.async({}, [
-        Step.sync(() => {
-          Assert.eq(
-            'There should only be 1 skin stylesheet in the ShadowRoot',
-            1,
-            Arr.filter(sr.dom().styleSheets, isSkin).length
-          );
-          Remove.remove(shadowHost);
-          Arr.each(editors, (e) => e.remove());
-          TinyLoader.removeTinymceElements();
-        })
-      ], () => {
-        success()
-      }, failure);
-    });
-  } else {
-    success();
+    Pipeline.async({}, [ Chain.asStep({}, [ nc ]) ], () => success(), failure);
   }
 });
