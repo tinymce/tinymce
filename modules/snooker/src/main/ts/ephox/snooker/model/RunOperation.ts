@@ -11,6 +11,7 @@ import { Warehouse } from './Warehouse';
 import { Generators, GeneratorsWrapper, SimpleGenerators } from '../api/Generators';
 import { ResizeWire } from '../api/ResizeWire';
 import { TableOperationResult } from '../api/TableOperations';
+import { HTMLTableElement } from '@ephox/dom-globals';
 
 type DetailExt = Structs.DetailExt;
 type DetailNew = Structs.DetailNew;
@@ -40,16 +41,30 @@ export interface TargetUnmergable {
   readonly unmergable: () => Option<Element[]>;
 }
 
-export interface TargetPaste {
+// combines the above 4 interfaces because this is what data we actually get from TinyMCE
+export interface CombinedTargets {
   readonly element: () => Element;
-  readonly generators: () => SimpleGenerators;
-  readonly clipboard: () => Element;
+  readonly mergable: () => Option<any>;
+  readonly unmergable: () => Option<any>;
+  readonly selection: () => Element[];
 }
 
 export interface TargetPasteRows {
   readonly selection: () => Element[];
   readonly generators: () => SimpleGenerators;
   readonly clipboard: () => Element[];
+}
+
+// combines the above 2 interfaces because this is what data we actually get from TinyMCE
+export interface CombinedPasteRowsTargets extends CombinedTargets {
+  readonly generators: () => SimpleGenerators;
+  readonly clipboard: () => Element[];
+}
+
+export interface TargetPaste {
+  readonly element: () => Element;
+  readonly generators: () => SimpleGenerators;
+  readonly clipboard: () => Element;
 }
 
 export interface ExtractMergable {
@@ -104,8 +119,10 @@ type Adjustment = <T extends Structs.DetailNew>(table: Element, grid: Structs.Ro
 type PostAction = (e: Element) => void;
 type GenWrap<GW extends GeneratorsWrapper> = (g: Generators) => GW;
 
+export type OperationCallback<T> = (wire: ResizeWire, table: Element<HTMLTableElement>, target: T, generators: Generators, direction: BarPositions<ColInfo>) => Option<RunOperationOutput>;
+
 const run = <RAW, INFO, GW extends GeneratorsWrapper>
-(operation: Operation<INFO, GW>, extract: Extract<RAW, INFO>, adjustment: Adjustment, postAction: PostAction, genWrappers: GenWrap<GW>) =>
+(operation: Operation<INFO, GW>, extract: Extract<RAW, INFO>, adjustment: Adjustment, postAction: PostAction, genWrappers: GenWrap<GW>): OperationCallback<RAW> =>
   (wire: ResizeWire, table: Element, target: RAW, generators: Generators, direction: BarPositions<ColInfo>): Option<RunOperationOutput> => {
     const input = DetailsList.fromTable(table);
     const warehouse = Warehouse.generate(input);

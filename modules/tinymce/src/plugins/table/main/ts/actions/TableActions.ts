@@ -7,7 +7,7 @@
 
 import { Arr, Fun, Option } from '@ephox/katamari';
 import {
-  CellMutations, TableDirection, TableFill, TableGridSize, TableOperations
+  CellMutations, TableDirection, TableFill, TableGridSize, TableOperations, RunOperation
 } from '@ephox/snooker';
 import { Element, Node } from '@ephox/sugar';
 
@@ -17,24 +17,29 @@ import { getCloneElements } from '../api/Settings';
 import { fireNewCell, fireNewRow } from '../api/Events';
 import Editor from 'tinymce/core/api/Editor';
 import { DomDescent } from '@ephox/phoenix';
+import { HTMLTableElement, Range } from '@ephox/dom-globals';
+
+export type BasicTableAction<T extends RunOperation.CombinedTargets = RunOperation.CombinedTargets> = (table: Element<HTMLTableElement>, target: T) => Option<Range>;
+export type PasteTableAction<T extends RunOperation.TargetPaste = RunOperation.TargetPaste> = (table: Element<HTMLTableElement>, target: T) => Option<Range>;
+export type AdvancedPasteTableAction<T extends RunOperation.TargetPasteRows = RunOperation.TargetPasteRows> = (table: Element<HTMLTableElement>, target: T) => Option<Range>;
 
 export interface TableActions {
-  deleteRow: (table: any, target: any) => any;
-  deleteColumn: (table: any, target: any) => any;
-  insertRowsBefore: (table: any, target: any) => any;
-  insertRowsAfter: (table: any, target: any) => any;
-  insertColumnsBefore: (table: any, target: any) => any;
-  insertColumnsAfter: (table: any, target: any) => any;
-  mergeCells: (table: any, target: any) => any;
-  unmergeCells: (table: any, target: any) => any;
-  pasteColsBefore: (table: any, target: any) => any;
-  pasteColsAfter: (table: any, target: any) => any;
-  pasteRowsBefore: (table: any, target: any) => any;
-  pasteRowsAfter: (table: any, target: any) => any;
-  pasteCells: (table: any, target: any) => any;
+  deleteRow: BasicTableAction;
+  deleteColumn: BasicTableAction;
+  insertRowsBefore: BasicTableAction;
+  insertRowsAfter: BasicTableAction;
+  insertColumnsBefore: BasicTableAction;
+  insertColumnsAfter: BasicTableAction;
+  mergeCells: BasicTableAction;
+  unmergeCells: BasicTableAction;
+  pasteColsBefore: AdvancedPasteTableAction;
+  pasteColsAfter: AdvancedPasteTableAction;
+  pasteRowsBefore: AdvancedPasteTableAction;
+  pasteRowsAfter: AdvancedPasteTableAction;
+  pasteCells: PasteTableAction;
 }
 
-export const TableActions = function (editor: Editor, lazyWire) {
+export const TableActions = function (editor: Editor, lazyWire): TableActions {
   const isTableBody = function (editor: Editor) {
     return Node.name(Util.getBody(editor)) === 'table';
   };
@@ -44,7 +49,7 @@ export const TableActions = function (editor: Editor, lazyWire) {
     return isTableBody(editor) === false || size.rows() > 1;
   };
 
-  const lastColumnGuard = function (table) {
+  const lastColumnGuard = function (table: Element<HTMLTableElement>) {
     const size = TableGridSize.getGridSize(table);
     return isTableBody(editor) === false || size.columns() > 1;
   };
@@ -52,8 +57,8 @@ export const TableActions = function (editor: Editor, lazyWire) {
   // Option.none gives the default cloneFormats.
   const cloneFormats = getCloneElements(editor);
 
-  const execute = function (operation, guard, mutate, lazyWire) {
-    return function (table, target) {
+  const execute = function <T> (operation: RunOperation.OperationCallback<T>, guard, mutate, lazyWire) {
+    return function (table: Element<HTMLTableElement>, target: T): Option<Range> {
       Util.removeDataStyle(table);
       const wire = lazyWire();
       const doc = Element.fromDom(editor.getDoc());

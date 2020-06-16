@@ -512,7 +512,7 @@ class Editor implements EditorObservable {
    * @param {addQueryValueHandlerCallback} callback Function to execute when the command value retrieval occurs.
    * @param {Object} scope Optional scope to execute the function in.
    */
-  public addQueryValueHandler(name: string, callback: () => void, scope?: {}) {
+  public addQueryValueHandler(name: string, callback: () => string, scope?: {}) {
     /**
      * Callback function that gets called when a queryCommandValue is executed.
      *

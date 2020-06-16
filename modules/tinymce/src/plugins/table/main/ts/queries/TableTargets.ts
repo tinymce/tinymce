@@ -5,53 +5,40 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Element as DomElement, Node } from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
+import { Element } from '@ephox/sugar';
 import * as CellOperations from './CellOperations';
+import { RunOperation } from '@ephox/snooker';
 
-const noMenu = function (cell) {
-  return {
-    element: Fun.constant(cell),
-    mergable: Option.none,
-    unmergable: Option.none,
-    selection: Fun.constant([ cell ])
-  };
-};
+const noMenu = (cell: Element<DomElement>): RunOperation.CombinedTargets => ({
+  element: Fun.constant(cell),
+  mergable: Option.none,
+  unmergable: Option.none,
+  selection: Fun.constant([ cell ])
+});
 
-const forMenu = function (selections, table, cell) {
-  return {
-    element: Fun.constant(cell),
-    mergable: Fun.constant(CellOperations.mergable(table, selections)),
-    unmergable: Fun.constant(CellOperations.unmergable(cell, selections)),
-    selection: Fun.constant(CellOperations.selection(cell, selections))
-  };
-};
+const forMenu = (selections, table, cell: Element<DomElement>): RunOperation.CombinedTargets => ({
+  element: Fun.constant(cell),
+  mergable: Fun.constant(CellOperations.mergable(table, selections)),
+  unmergable: Fun.constant(CellOperations.unmergable(cell, selections)),
+  selection: Fun.constant(CellOperations.selection(cell, selections))
+});
 
-const notCell = function (element) {
-  return noMenu(element);
-};
-
-// TODO: types
-const paste = (element: any, clipboard: any, generators: any) => ({
+const paste = (element: Element<DomElement>, clipboard: Element<Node>, generators: any): RunOperation.TargetPaste => ({
   element: Fun.constant(element),
   clipboard: Fun.constant(clipboard),
   generators: Fun.constant(generators)
 });
 
-const pasteRows = function (selections, table, cell, clipboard, generators) {
-  return {
-    element: Fun.constant(cell),
-    mergable: Option.none,
-    unmergable: Option.none,
-    selection: Fun.constant(CellOperations.selection(cell, selections)),
-    clipboard: Fun.constant(clipboard),
-    generators: Fun.constant(generators)
-  };
-};
+const pasteRows = (selections, _table, cell, clipboard, generators): RunOperation.CombinedPasteRowsTargets => ({
+  element: Fun.constant(cell),
+  mergable: Option.none,
+  unmergable: Option.none,
+  selection: Fun.constant(CellOperations.selection(cell, selections)),
+  clipboard: Fun.constant(clipboard),
+  generators: Fun.constant(generators)
+});
 
-export {
-  noMenu,
-  forMenu,
-  notCell,
-  paste,
-  pasteRows
-};
+export { noMenu, forMenu, paste, pasteRows };
+
