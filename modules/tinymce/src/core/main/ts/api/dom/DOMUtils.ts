@@ -26,6 +26,8 @@ import EventUtils, { EventUtilsCallback } from './EventUtils';
 import Sizzle from './Sizzle';
 import { StyleSheetLoader } from './StyleSheetLoader';
 import TreeWalker from './TreeWalker';
+import { Element as SugarElement } from '@ephox/sugar'
+import * as StyleSheetLoaderRegistry from '../../dom/StyleSheetLoaderRegistry';
 
 /**
  * Utility class for various DOM manipulation and retrieval functions.
@@ -279,7 +281,7 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
   let counter = 0;
   const stdMode = true;
   const boxModel = true;
-  const styleSheetLoader = StyleSheetLoader(doc, {
+  const styleSheetLoader = StyleSheetLoaderRegistry.instance.forElement(SugarElement.fromDom(doc), {
     contentCssCors: settings.contentCssCors,
     referrerPolicy: settings.referrerPolicy
   });
