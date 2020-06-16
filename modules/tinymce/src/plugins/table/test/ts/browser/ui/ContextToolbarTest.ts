@@ -30,7 +30,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ContextToolbarTest', (success,
 
     const sAddTableAndOpenContextToolbar = (html: string) => GeneralSteps.sequence([
       tinyApis.sSetContent(html),
-      tinyUi.sWaitForUi('Wait for table context toolbar', '.tox-toolbar button[aria-label="Table properties"]')
+      tinyUi.sWaitForUi('Wait for table context toolbar', '.tox-toolbar button[aria-label="Table properties"]:not(.tox-tbtn--disabled)')
     ]);
 
     // Use keyboard shortcut ctrl+F9 to navigate to the context toolbar
