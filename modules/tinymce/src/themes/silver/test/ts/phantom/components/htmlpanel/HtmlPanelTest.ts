@@ -22,7 +22,7 @@ UnitTest.asynctest('HtmlPanel component Test', (success, failure) => {
           children: [
             s.element('br', { }),
             s.element('br', { }),
-            s.element('hr', { }),
+            s.element('hr', { })
           ]
         })),
         component.element()
@@ -48,7 +48,7 @@ UnitTest.asynctest('HtmlPanel component Test', (success, failure) => {
           },
           children: [
             s.element('br', { }),
-            s.element('hr', { }),
+            s.element('hr', { })
           ]
         })),
         component.element()

@@ -20,5 +20,5 @@ const safeToken = function (elements: Element[], token: string, optimise?: (e: E
 export {
   safeWords,
   safeToken,
-  run,
+  run
 };

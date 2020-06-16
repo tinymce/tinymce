@@ -32,7 +32,7 @@ export const renderSelectBox = (spec: SelectBoxSpec, providersBackstage: UiFacto
 
   const pField = AlloyFormField.parts().field({
     // TODO: Alloy should not allow dom changing of an HTML select!
-    dom: {  },
+    dom: { },
     selectAttributes: {
       size: spec.size
     },

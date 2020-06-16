@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node, Element, document, Range } from '@ephox/dom-globals';
+import { document, Element, Node, Range } from '@ephox/dom-globals';
 import * as NodeType from '../dom/NodeType';
 import * as Zwsp from '../text/Zwsp';
 import { CaretPosition } from './CaretPosition';
@@ -34,11 +34,11 @@ const isCaretContainer = (node: Node): boolean => isCaretContainerBlock(node) ||
 const hasContent = (node: Node): boolean => node.firstChild !== node.lastChild || !NodeType.isBr(node.firstChild);
 
 const insertInline = (node: Node, before: boolean): Node => {
-  let doc, sibling, textNode, parentNode;
+  let sibling;
 
-  doc = node.ownerDocument;
-  textNode = doc.createTextNode(Zwsp.ZWSP);
-  parentNode = node.parentNode;
+  const doc = node.ownerDocument;
+  const textNode = doc.createTextNode(Zwsp.ZWSP);
+  const parentNode = node.parentNode;
 
   if (!before) {
     sibling = node.nextSibling;
@@ -127,14 +127,12 @@ const createBogusBr = (): Element => {
 };
 
 const insertBlock = (blockName: string, node: Node, before: boolean): Node => {
-  let doc, blockNode, parentNode;
-
-  doc = node.ownerDocument;
-  blockNode = doc.createElement(blockName);
+  const doc = node.ownerDocument;
+  const blockNode = doc.createElement(blockName);
   blockNode.setAttribute('data-mce-caret', before ? 'before' : 'after');
   blockNode.setAttribute('data-mce-bogus', 'all');
   blockNode.appendChild(createBogusBr());
-  parentNode = node.parentNode;
+  const parentNode = node.parentNode;
 
   if (!before) {
     if (node.nextSibling) {

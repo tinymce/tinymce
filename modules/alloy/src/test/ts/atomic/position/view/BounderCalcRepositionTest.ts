@@ -7,7 +7,7 @@ import * as Bounder from 'ephox/alloy/positioning/view/Bounder';
 UnitTest.test('BounderCalcRepositionTest', () => {
 
   const maxBounds = 2000;
-  const minBounds  = 0;
+  const minBounds = 0;
   const zeroableArb = Jsc.integer(minBounds, maxBounds);
 
   const arbTestCase = Jsc.bless({

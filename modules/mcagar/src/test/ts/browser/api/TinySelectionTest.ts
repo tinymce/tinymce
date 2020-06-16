@@ -1,7 +1,7 @@
 import { Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import * as TinyLoader from 'ephox/mcagar/api/TinyLoader';
 import { TinyApis } from 'ephox/mcagar/api/TinyApis';
+import * as TinyLoader from 'ephox/mcagar/api/TinyLoader';
 
 UnitTest.asynctest('TinySelectionTest', (success, failure) => {
   TinyLoader.setupLight((editor, loadSuccess, loadFailure) => {
@@ -38,6 +38,6 @@ UnitTest.asynctest('TinySelectionTest', (success, failure) => {
     ], loadSuccess, loadFailure);
 
   }, {
-    base_url: '/project/tinymce/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

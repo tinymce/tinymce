@@ -1,6 +1,6 @@
-import { BinaryReader } from './BinaryReader';
 import { Arr, Option, Result, Type } from '@ephox/katamari';
-import { readLong, readSignedLong, readShort, readByte, readString, readList } from './BinaryReaderUtils';
+import { BinaryReader } from './BinaryReader';
+import { readByte, readList, readLong, readShort, readSignedLong, readString } from './BinaryReaderUtils';
 
 // See https://www.exif.org/Exif2-2.PDF for types
 export interface TiffTags {
@@ -370,7 +370,7 @@ const parseExifTags = (data: Record<string, unknown>): ExifTags => {
     DigitalZoomRatio: Option.from(data.DigitalZoomRatio).filter(Type.isNumber).getOrUndefined(),
     Contrast: Option.from(data.Contrast).filter(Type.isString).getOrUndefined(),
     Saturation: Option.from(data.Saturation).filter(Type.isString).getOrUndefined(),
-    Sharpness: Option.from(data.Sharpness).filter(Type.isString).getOrUndefined(),
+    Sharpness: Option.from(data.Sharpness).filter(Type.isString).getOrUndefined()
   };
 };
 
@@ -398,7 +398,7 @@ const parseGpsTags = (data: Record<string, unknown>): GPSTags => {
     GPSLatitudeRef: Option.from(data.GPSLatitudeRef).filter(Type.isString).getOrUndefined(),
     GPSLatitude: Option.from(data.GPSLatitude).filter(Type.isNumber).getOrUndefined(),
     GPSLongitudeRef: Option.from(data.GPSLongitudeRef).filter(Type.isString).getOrUndefined(),
-    GPSLongitude: Option.from(data.GPSLongitude).filter(Type.isNumber).getOrUndefined(),
+    GPSLongitude: Option.from(data.GPSLongitude).filter(Type.isNumber).getOrUndefined()
   };
 };
 
@@ -419,7 +419,7 @@ const parseThumbTags = (data: Record<string, unknown>): Result<ThumbTags, string
   }
   return Result.value({
     JPEGInterchangeFormat,
-    JPEGInterchangeFormatLength,
+    JPEGInterchangeFormatLength
   });
 };
 

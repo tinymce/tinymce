@@ -19,11 +19,11 @@ const trimHtml = function (tempAttrs, html) {
 const trimInternal = function (serializer, html) {
   let content = html;
   const bogusAllRegExp = /<(\w+) [^>]*data-mce-bogus="all"[^>]*>/g;
-  let endTagIndex, index, matchLength, matches, shortEndedElements;
+  let endTagIndex, index, matchLength, matches;
   const schema = serializer.schema;
 
   content = trimHtml(serializer.getTempAttrs(), content);
-  shortEndedElements = schema.getShortEndedElements();
+  const shortEndedElements = schema.getShortEndedElements();
 
   // Remove all bogus elements marked with "all"
   while ((matches = bogusAllRegExp.exec(content))) {

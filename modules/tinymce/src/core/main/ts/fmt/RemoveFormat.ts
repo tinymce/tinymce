@@ -417,7 +417,7 @@ const remove = (ed: Editor, name: string, vars?: FormatVars, node?: Node | Range
 
   // Merges the styles for each node
   const process = (node: Node) => {
-    let children: Node[], lastContentEditable: boolean, hasContentEditableState: boolean;
+    let lastContentEditable: boolean, hasContentEditableState: boolean;
 
     // Node has a contentEditable value
     if (NodeType.isElement(node) && dom.getContentEditable(node)) {
@@ -427,7 +427,7 @@ const remove = (ed: Editor, name: string, vars?: FormatVars, node?: Node | Range
     }
 
     // Grab the children first since the nodelist might be changed
-    children = Arr.from(node.childNodes);
+    const children = Arr.from(node.childNodes);
 
     // Process current node
     if (contentEditable && !hasContentEditableState) {

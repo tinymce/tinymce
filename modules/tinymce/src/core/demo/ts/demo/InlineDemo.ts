@@ -28,7 +28,7 @@ export default function () {
       'searchreplace wordcount visualblocks visualchars code fullscreen fullpage insertdatetime media nonbreaking',
       'save table directionality emoticons template paste importcss textpattern',
       'codesample help noneditable print'
-    ],
+    ]
   };
 
   tinymce.init(settings);

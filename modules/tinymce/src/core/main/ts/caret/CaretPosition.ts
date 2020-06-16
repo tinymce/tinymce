@@ -5,15 +5,15 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import * as CaretCandidate from './CaretCandidate';
+import { ClientRect, Document, Element, Node, Range } from '@ephox/dom-globals';
+import { Arr, Fun, Options, Unicode } from '@ephox/katamari';
 import DOMUtils from '../api/dom/DOMUtils';
 import * as NodeType from '../dom/NodeType';
 import * as GeomClientRect from '../geom/ClientRect';
 import * as RangeNodes from '../selection/RangeNodes';
 import * as ExtendingChar from '../text/ExtendingChar';
-import { Arr, Options, Fun, Unicode } from '@ephox/katamari';
-import { Document, Range, Element, ClientRect, Node } from '@ephox/dom-globals';
 import * as Predicate from '../util/Predicate';
+import * as CaretCandidate from './CaretCandidate';
 
 /**
  * This module contains logic for creating caret positions within a document a caretposition
@@ -64,12 +64,11 @@ const getBrClientRect = (brNode: Element): ClientRect => {
   const rng = createRange(doc);
   const nbsp = doc.createTextNode(Unicode.nbsp);
   const parentNode = brNode.parentNode;
-  let clientRect;
 
   parentNode.insertBefore(nbsp, brNode);
   rng.setStart(nbsp, 0);
   rng.setEnd(nbsp, 1);
-  clientRect = GeomClientRect.clone(rng.getBoundingClientRect());
+  const clientRect = GeomClientRect.clone(rng.getBoundingClientRect());
   parentNode.removeChild(nbsp);
 
   return clientRect;
@@ -93,9 +92,9 @@ const getBoundingClientRectWebKitText = (rng: Range): ClientRect => {
 const isZeroRect = (r) => r.left === 0 && r.right === 0 && r.top === 0 && r.bottom === 0;
 
 const getBoundingClientRect = (item: Element | Range): ClientRect => {
-  let clientRect, clientRects;
+  let clientRect;
 
-  clientRects = item.getClientRects();
+  const clientRects = item.getClientRects();
   if (clientRects.length > 0) {
     clientRect = GeomClientRect.clone(clientRects[0]);
   } else {
@@ -259,9 +258,7 @@ export function CaretPosition(container: Node, offset: number, clientRects?): Ca
   };
 
   const toRange = (): Range => {
-    let range;
-
-    range = createRange(container.ownerDocument);
+    const range = createRange(container.ownerDocument);
     range.setStart(container, offset);
     range.setEnd(container, offset);
 

@@ -27,7 +27,7 @@ UnitTest.asynctest('Custom Help Tabs test', (success, failure) => {
     NamedChain.asChain([
       NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
       NamedChain.read('editor', compareTabNames(expectedTabNames)),
-      NamedChain.output('editor'),
+      NamedChain.output('editor')
     ]),
     McEditor.cRemove
   ]);
@@ -61,9 +61,9 @@ UnitTest.asynctest('Custom Help Tabs test', (success, failure) => {
           title: 'Extra1',
           items: [{
             type: 'htmlpanel',
-            html: '<p>This is an extra tab</p>',
+            html: '<p>This is an extra tab</p>'
           }]
-        },
+        }
       ]
     }, [ 'Handy Shortcuts', 'Plugins', 'Version', 'Extra1' ])),
 
@@ -79,7 +79,7 @@ UnitTest.asynctest('Custom Help Tabs test', (success, failure) => {
             title: 'Extra1',
             items: [{
               type: 'htmlpanel',
-              html: '<p>This is an extra tab</p>',
+              html: '<p>This is an extra tab</p>'
             }]
           });
         });
@@ -108,9 +108,9 @@ UnitTest.asynctest('Custom Help Tabs test', (success, failure) => {
           title: 'Extra1',
           items: [{
             type: 'htmlpanel',
-            html: '<p>This is an extra tab</p>',
+            html: '<p>This is an extra tab</p>'
           }]
-        },
+        }
       ],
       setup: (editor) => {
         editor.on('init', () => {
@@ -119,7 +119,7 @@ UnitTest.asynctest('Custom Help Tabs test', (success, failure) => {
             title: 'Extra2',
             items: [{
               type: 'htmlpanel',
-              html: '<p>This is another extra tab</p>',
+              html: '<p>This is another extra tab</p>'
             }]
           });
           editor.plugins.help.addTab({
@@ -127,7 +127,7 @@ UnitTest.asynctest('Custom Help Tabs test', (success, failure) => {
             title: 'Extra3',
             items: [{
               type: 'htmlpanel',
-              html: '<p>This is yet another extra tab, but this one should not render</p>',
+              html: '<p>This is yet another extra tab, but this one should not render</p>'
             }]
           });
         });
@@ -145,6 +145,6 @@ UnitTest.asynctest('Custom Help Tabs test', (success, failure) => {
         'versions',
         'unknown'
       ]
-    }, [ 'Handy Shortcuts', 'Plugins', 'Version' ])),
+    }, [ 'Handy Shortcuts', 'Plugins', 'Version' ]))
   ], success, failure);
 });

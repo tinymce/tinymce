@@ -15,5 +15,5 @@ const safeToken: SafeTokenApi = Searcher.safeToken;
 export {
   safeWords,
   safeToken,
-  run,
+  run
 };

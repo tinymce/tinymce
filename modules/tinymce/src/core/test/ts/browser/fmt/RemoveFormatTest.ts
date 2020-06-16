@@ -73,7 +73,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.RemoveFormatTest', (success, failur
           sRemoveFormat(editor, removeFormat),
           tinyApis.sAssertContent('<p><strong>ab</strong>&nbsp; &nbsp;cd</p>'),
           tinyApis.sAssertSelection([ 0, 1 ], 3, [ 0, 1 ], 3)
-        ])),
+        ]))
       ])),
       Logger.t('Remove single format with collapsed selection', GeneralSteps.sequence([
         Logger.t('In middle of first of two words wrapped in strong and em', GeneralSteps.sequence([
@@ -89,12 +89,12 @@ UnitTest.asynctest('browser.tinymce.core.fmt.RemoveFormatTest', (success, failur
           sRemoveFormat(editor, boldFormat),
           tinyApis.sAssertContent('<p><em>ab&nbsp; &nbsp;<strong>cd</strong></em></p>'),
           tinyApis.sAssertSelection([ 0, 0, 0 ], 2, [ 0, 0, 0 ], 2)
-        ])),
+        ]))
       ]))
     ], onSuccess, onFailure);
   }, {
     base_url: '/project/tinymce/js/tinymce',
     plugins: '',
-    toolbar: '',
+    toolbar: ''
   }, success, failure);
 });

@@ -22,7 +22,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
       // api.sSetCursor([0], 1),
       api.sSetCursor(cursorPos.elementPath, cursorPos.offset),
       api.sExecCommand('mceImage', true),
-      ui.sWaitForPopup('Wait for Image dialog', 'div[role="dialog"]'),
+      ui.sWaitForPopup('Wait for Image dialog', 'div[role="dialog"]')
     ]);
 
     const createTestWithContent = (name: string, content: string, cursorPos: any, data: Partial<ImageDialogData>, expectedContent: string) => Log.stepsAsStep('TBA', 'Image: ' + name, [
@@ -43,7 +43,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
         cSetInputValue(advancedTabSelectors.style, style)
       ]),
       assertion,
-      ui.sClickOnUi('click save', 'div[role="dialog"] button:contains("Save")'),
+      ui.sClickOnUi('click save', 'div[role="dialog"] button:contains("Save")')
     ]);
 
     const suiteArr = [
@@ -53,7 +53,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
           alt: 'alt',
           hspace: '10',
           src: {
-            value: 'src',
+            value: 'src'
           },
           vspace: '10'
         },

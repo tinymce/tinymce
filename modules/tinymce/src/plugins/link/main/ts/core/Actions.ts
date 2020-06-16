@@ -5,12 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import Editor from 'tinymce/core/api/Editor';
 import VK from 'tinymce/core/api/util/VK';
 import * as Settings from '../api/Settings';
+import * as Dialog from '../ui/Dialog';
 import * as OpenUrl from './OpenUrl';
 import * as Utils from './Utils';
-import * as Dialog from '../ui/Dialog';
-import Editor from 'tinymce/core/api/Editor';
 
 const getLink = (editor: Editor, elm) => editor.dom.getParent(elm, 'a[href]');
 
@@ -96,5 +96,5 @@ export {
   leftClickedOnAHref,
   setupGotoLinks,
   toggleActiveState,
-  toggleEnabledState,
+  toggleEnabledState
 };

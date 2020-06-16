@@ -6,8 +6,8 @@
  */
 
 import { window } from '@ephox/dom-globals';
-import Env from '../Env';
 import * as ArrUtils from '../../util/ArrUtils';
+import Env from '../Env';
 
 type ArrayCallback<T, R> = (x: T, i: number, xs: ReadonlyArray<T>) => R;
 type ObjCallback<T, R> = (value: T[keyof T], key: string, obj: T) => R;
@@ -163,14 +163,14 @@ const hasOwnProperty = function (obj, prop) {
  */
 const create = function (s, p, root?) {
   const self = this;
-  let sp, ns, cn, scn, c, de = 0;
+  let sp, scn, c, de = 0;
 
   // Parse : <prefix> <class>:<super class>
   s = /^((static) )?([\w.]+)(:([\w.]+))?/.exec(s);
-  cn = s[3].match(/(^|\.)(\w+)$/i)[2]; // Class name
+  const cn = s[3].match(/(^|\.)(\w+)$/i)[2]; // Class name
 
   // Create namespace for new class
-  ns = self.createNS(s[3].replace(/\.\w+$/, ''), root);
+  const ns = self.createNS(s[3].replace(/\.\w+$/, ''), root);
 
   // Class already exists
   if (ns[cn]) {
@@ -251,7 +251,7 @@ const create = function (s, p, root?) {
 const extend = function (obj, ...exts: any[]) {
   for (let i = 0; i < exts.length; i++) {
     const ext = exts[i];
-    for (let name in ext) {
+    for (const name in ext) {
       if (ext.hasOwnProperty(name)) {
         const value = ext[name];
         if (value !== undefined) {

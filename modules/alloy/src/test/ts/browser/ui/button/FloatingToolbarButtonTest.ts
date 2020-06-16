@@ -55,7 +55,7 @@ UnitTest.asynctest('FloatingToolbarButtonTest', (success, failure) => {
             classes: [ 'test-toolbar' ]
           }
         }
-      },
+      }
     })
   ), (doc, _body, gui, component, _store) => {
     gui.add(sinkComp);
@@ -121,18 +121,18 @@ UnitTest.asynctest('FloatingToolbarButtonTest', (success, failure) => {
 
       Log.stepsAsStep('', 'Assert initial structure', [
         sAssertButtonStructure(false),
-        sAssertFloatingToolbarClosed(),
+        sAssertFloatingToolbarClosed()
       ]),
 
       Log.stepsAsStep('', 'Clicking on button should open floating toolbar', [
         Mouse.sClickOn(gui.element(), 'button'),
         sAssertButtonStructure(true),
-        sAssertFloatingToolbarOpened(),
+        sAssertFloatingToolbarOpened()
       ]),
 
       Log.stepsAsStep('', 'Escape should close floating toolbar', [
         Keyboard.sKeydown(doc, Keys.escape(), { }),
-        sAssertFloatingToolbarClosed(),
+        sAssertFloatingToolbarClosed()
       ]),
 
       GuiSetup.mRemoveStyles

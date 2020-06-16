@@ -15,5 +15,5 @@ const set = (element: Element<Text>, value: string) => api.set(element, value);
 export {
   get,
   getOption,
-  set,
+  set
 };

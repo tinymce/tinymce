@@ -34,7 +34,7 @@ export default {
           {
             text: 'Blank',
             value: '_blank'
-          },
+          }
         ]
       }
     ]

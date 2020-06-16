@@ -1,11 +1,13 @@
-import { FocusTools, Keyboard, Keys, Log, Pipeline, Chain } from '@ephox/agar';
+import { Chain, FocusTools, Keyboard, Keys, Log, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
-import { TinyApis, TinyLoader, ApiChains } from '@ephox/mcagar';
+import { ApiChains, TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
 import Plugin from 'tinymce/plugins/image/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
-import { cWaitForDialog, cFillActiveDialog, cSubmitDialog, cAssertCleanHtml, cAssertInputValue, cAssertInputCheckbox, generalTabSelectors } from '../module/Helpers';
+import {
+  cAssertCleanHtml, cAssertInputCheckbox, cAssertInputValue, cFillActiveDialog, cSubmitDialog, cWaitForDialog, generalTabSelectors
+} from '../module/Helpers';
 
 UnitTest.asynctest('browser.tinymce.plugins.image.DescriptiveImageDialogTest', (success, failure) => {
 
@@ -39,7 +41,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.DescriptiveImageDialogTest', (
         sAssertFocused('Cancel', 'button.tox-button:contains("Cancel")'),
         sPressTab,
         sAssertFocused('Save', 'button.tox-button:contains("Save")'),
-        sPressEsc,
+        sPressEsc
       ]),
       Log.chainsAsStep('TBA', 'Image update with empty alt should remove the existing alt attribute', [
         Chain.inject(editor),
@@ -49,7 +51,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.DescriptiveImageDialogTest', (
         cWaitForDialog(),
         Chain.fromParent(Chain.identity, [
           cAssertInputValue(generalTabSelectors.src, '#1'),
-          cAssertInputValue(generalTabSelectors.alt, 'alt1'),
+          cAssertInputValue(generalTabSelectors.alt, 'alt1')
         ]),
         cFillActiveDialog({
           src: {
@@ -58,7 +60,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.DescriptiveImageDialogTest', (
           alt: ''
         }),
         cSubmitDialog(),
-        cAssertCleanHtml('Checking output', '<p><img src="src" /></p>'),
+        cAssertCleanHtml('Checking output', '<p><img src="src" /></p>')
       ]),
       Log.chainsAsStep('TBA', 'Image update with decorative toggled on should produce empty alt and role=presentation', [
         Chain.inject(editor),
@@ -75,7 +77,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.DescriptiveImageDialogTest', (
           decorative: true
         }),
         cSubmitDialog(),
-        cAssertCleanHtml('Checking output', '<p><img role="presentation" src="#1" alt="" /></p>'),
+        cAssertCleanHtml('Checking output', '<p><img role="presentation" src="#1" alt="" /></p>')
       ]),
       Log.chainsAsStep('TBA', 'Image update with decorative toggled off should produce empty alt and role=presentation', [
         Chain.inject(editor),
@@ -92,7 +94,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.DescriptiveImageDialogTest', (
           decorative: false
         }),
         cSubmitDialog(),
-        cAssertCleanHtml('Checking output', '<p><img src="#1" /></p>'),
+        cAssertCleanHtml('Checking output', '<p><img src="#1" /></p>')
       ])
     ], onSuccess, onFailure);
   }, {

@@ -1,12 +1,12 @@
-import { Assertions, Step, Log, Logger } from '@ephox/agar';
+import { Assertions, Log, Logger, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Class, Width } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Sliding } from 'ephox/alloy/api/behaviour/Sliding';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
+import { Container } from 'ephox/alloy/api/ui/Container';
 import * as PhantomSkipper from 'ephox/alloy/test/PhantomSkipper';
 
 UnitTest.asynctest('SlidingInterruptedTest', (success, failure) => {
@@ -110,7 +110,7 @@ UnitTest.asynctest('SlidingInterruptedTest', (success, failure) => {
           })
         ),
         sIsGrowing,
-        sIsNotShrinking,
+        sIsNotShrinking
       ])
     ];
   }, () => { success(); }, failure);

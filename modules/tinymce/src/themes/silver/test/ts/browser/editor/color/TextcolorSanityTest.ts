@@ -1,4 +1,4 @@
-import { ApproxStructure, Pipeline, Log } from '@ephox/agar';
+import { ApproxStructure, Log, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
@@ -78,6 +78,6 @@ UnitTest.asynctest('TextcolorSanityTest', (success, failure) => {
   }, {
     plugins: '',
     toolbar: 'forecolor backcolor fontsizeselect',
-    base_url: '/project/tinymce/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

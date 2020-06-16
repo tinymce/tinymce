@@ -68,5 +68,5 @@ const viewport = (element: Element<DomElement>) => {
 export {
   absolute,
   relative,
-  viewport,
+  viewport
 };

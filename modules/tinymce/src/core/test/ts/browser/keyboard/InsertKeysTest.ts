@@ -1,12 +1,12 @@
-import { GeneralSteps, Logger, Pipeline, Step, Waiter, Chain, Cursors } from '@ephox/agar';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import Theme from 'tinymce/themes/silver/Theme';
+import { Chain, Cursors, GeneralSteps, Logger, Pipeline, Step, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import Editor from 'tinymce/core/api/Editor';
+import { document } from '@ephox/dom-globals';
+import { Arr, Fun } from '@ephox/katamari';
+import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
 import { Element, Insert } from '@ephox/sugar';
-import { Arr, Fun } from '@ephox/katamari';
-import { document } from '@ephox/dom-globals';
+import Editor from 'tinymce/core/api/Editor';
+import Theme from 'tinymce/themes/silver/Theme';
 
 const browser = PlatformDetection.detect().browser;
 
@@ -203,7 +203,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.InsertKeysTest', (success, fai
           tinyApis.sSetCursor([ 0, 0 ], 3),
           sFireKeyPress(editor),
           Waiter.sTryUntil('', tinyApis.sAssertContent('<p>a b</p>'), 10, 1000),
-          tinyApis.sAssertSelection([ 0, 0 ], 3, [ 0, 0 ], 3),
+          tinyApis.sAssertSelection([ 0, 0 ], 3, [ 0, 0 ], 3)
         ] : [])),
 
         Logger.t('Nbsp in pre', GeneralSteps.sequence([
@@ -325,6 +325,6 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.InsertKeysTest', (success, fai
     ], onSuccess, onFailure);
   }, {
     indent: false,
-    base_url: '/project/tinymce/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

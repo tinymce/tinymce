@@ -1,22 +1,10 @@
 import {
-  ApproxStructure,
-  Assertions,
-  FocusTools,
-  GeneralSteps,
-  Keyboard,
-  Keys,
-  Logger,
-  Step,
-  UiFinder,
-  Waiter,
-  Chain,
-  Log,
-  Mouse,
+  ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Log, Logger, Mouse, Step, UiFinder, Waiter
 } from '@ephox/agar';
 import { GuiFactory, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
-import { Fun, Arr, Strings } from '@ephox/katamari';
+import { Arr, Fun, Strings } from '@ephox/katamari';
 import { Element, SelectorFind, Selectors } from '@ephox/sugar';
 
 import SilverMenubar from 'tinymce/themes/silver/ui/menus/menubar/SilverMenubar';

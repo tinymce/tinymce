@@ -7,7 +7,7 @@ import Element from 'ephox/sugar/api/node/Element';
 UnitTest.test('CommentsTest', () => {
   const testPage = Element.fromHtml('<div><!--one--></head><body><!--two--><p><!--three--></p></div>');
 
-  const all  = Comments.find(testPage, Option.none());
+  const all = Comments.find(testPage, Option.none());
   assert.eq(3, all.length);
   assert.eq('one', Comment.get(all[0]));
   assert.eq('two', Comment.get(all[1]));

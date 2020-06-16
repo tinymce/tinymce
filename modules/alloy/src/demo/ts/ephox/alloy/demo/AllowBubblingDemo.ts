@@ -1,15 +1,15 @@
-import { document, console } from '@ephox/dom-globals';
+import { console, document } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 
 import { AllowBubbling } from 'ephox/alloy/api/behaviour/AllowBubbling';
-import { Behaviour, AlloySpec, AlloyEvents, AddEventsBehaviour } from 'ephox/alloy/api/Main';
+import { AddEventsBehaviour, AlloyEvents, AlloySpec, Behaviour } from 'ephox/alloy/api/Main';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 
-const getItemSpec  = (): AlloySpec => ({
+const getItemSpec = (): AlloySpec => ({
   dom: {
     tag: 'div',
     classes: [ 'item' ]

@@ -1,4 +1,4 @@
-import { HTMLTableElement, HTMLTableRowElement, HTMLTableCellElement, Element as DomElement } from '@ephox/dom-globals';
+import { Element as DomElement, HTMLTableCellElement, HTMLTableElement, HTMLTableRowElement } from '@ephox/dom-globals';
 import { Arr, Fun, Option } from '@ephox/katamari';
 import { Element, Node, SelectorFilter, SelectorFind, Selectors, Traverse } from '@ephox/sugar';
 import { getAttrValue } from '../util/CellUtils';
@@ -31,7 +31,7 @@ const cells = (ancestor: Element): Element<HTMLTableCellElement>[] => LayerSelec
 
 const notCell = (element: Element, isRoot?: (e: Element) => boolean) => lookup<DomElement>([ 'caption', 'tr', 'tbody', 'tfoot', 'thead' ], element, isRoot);
 
-const neighbours =  <T extends DomElement = DomElement> (selector: string) => (element: Element): Option<Element<T>[]> =>
+const neighbours = <T extends DomElement = DomElement> (selector: string) => (element: Element): Option<Element<T>[]> =>
   Traverse.parent(element).map((parent) => SelectorFilter.children(parent, selector));
 
 const neighbourCells = neighbours<HTMLTableCellElement>('th,td');

@@ -425,7 +425,7 @@ export const Dialog = (editor: Editor) => {
     alertErr: alertErr(editor),
     normalizeCss: normalizeCss(editor),
     parseStyle: parseStyle(editor),
-    serializeStyle: serializeStyle(editor),
+    serializeStyle: serializeStyle(editor)
   };
   const open = () => collect(editor).then(makeDialog(helpers)).then((spec) => editor.windowManager.open(spec));
   const openLater = () => {

@@ -165,7 +165,7 @@ const renderFloatingToolbarButton = (spec: Toolbar.GroupToolbarButton, backstage
           attributes
         }
       }
-    },
+    }
   });
 };
 
@@ -185,7 +185,7 @@ const renderCommonToolbarButton = <T>(spec: GeneralToolbarButton<T>, specialisat
             getApi: specialisation.getApi
           }),
           onControlAttached(specialisation, editorOffCell),
-          onControlDetached(specialisation, editorOffCell),
+          onControlDetached(specialisation, editorOffCell)
         ]),
         DisablingConfigs.toolbarButton(() => spec.disabled || providersBackstage.isReadOnly()),
         ReadOnly.receivingConfig()
@@ -286,7 +286,7 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
         comp.getSystem().getByDom(button).each((buttonComp) => Toggling.set(buttonComp, state));
       });
     },
-    isActive: () => SelectorFind.descendant(comp.element(), 'span').exists((button) => comp.getSystem().getByDom(button).exists(Toggling.isOn)),
+    isActive: () => SelectorFind.descendant(comp.element(), 'span').exists((button) => comp.getSystem().getByDom(button).exists(Toggling.isOn))
   });
 
   const editorOffCell = Cell(Fun.noop);
@@ -313,7 +313,7 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
       AddEventsBehaviour.config('split-dropdown-events', [
         AlloyEvents.run(focusButtonEvent, Focusing.focus),
         onControlAttached(specialisation, editorOffCell),
-        onControlDetached(specialisation, editorOffCell),
+        onControlDetached(specialisation, editorOffCell)
       ]),
       Unselecting.config({ })
     ]),
@@ -346,7 +346,7 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
         buttonBehaviours: Behaviour.derive([
           DisablingConfigs.splitButton(sharedBackstage.providers.isReadOnly),
           ReadOnly.receivingConfig()
-        ]),
+        ])
       }),
       AlloySplitDropdown.parts()['aria-descriptor']({
         text: sharedBackstage.providers.translate('To open the popup, press Shift+Enter')

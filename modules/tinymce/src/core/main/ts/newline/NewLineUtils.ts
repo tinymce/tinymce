@@ -7,8 +7,8 @@
 
 import { Fun, Option, Unicode } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
-import Editor from '../api/Editor';
 import TreeWalker from '../api/dom/TreeWalker';
+import Editor from '../api/Editor';
 import * as ElementType from '../dom/ElementType';
 import * as NodeType from '../dom/NodeType';
 import * as ScrollIntoView from '../dom/ScrollIntoView';
@@ -24,7 +24,7 @@ const firstNonWhiteSpaceNodeSibling = function (node) {
 };
 
 const moveToCaretPosition = function (editor: Editor, root) {
-  let node, rng, lastNode = root;
+  let node, lastNode = root;
   const dom = editor.dom;
   const moveCaretBeforeOnEnterElementsMap = editor.schema.getMoveCaretBeforeOnEnterElements();
 
@@ -40,7 +40,7 @@ const moveToCaretPosition = function (editor: Editor, root) {
     }
   }
 
-  rng = dom.createRng();
+  const rng = dom.createRng();
   root.normalize();
 
   if (root.hasChildNodes()) {

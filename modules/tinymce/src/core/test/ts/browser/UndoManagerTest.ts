@@ -79,8 +79,6 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', function (success, failur
   });
 
   suite.test('Typing state', function (editor) {
-    let selectAllFlags;
-
     editor.undoManager.clear();
     editor.setContent('test');
 
@@ -92,7 +90,7 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', function (success, failur
     editor.dom.fire(editor.getBody(), 'keydown', { keyCode: 13 });
     ok(!editor.undoManager.typing);
 
-    selectAllFlags = { keyCode: 65, ctrlKey: false, altKey: false, shiftKey: false };
+    const selectAllFlags: Record<string, any> = { keyCode: 65, ctrlKey: false, altKey: false, shiftKey: false };
 
     if (Env.mac) {
       selectAllFlags.metaKey = true;
@@ -152,7 +150,6 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', function (success, failur
   });
 
   suite.test('No undo/redo cmds on Undo/Redo shortcut', function (editor) {
-    let evt;
     const commands = [];
     let added = false;
 
@@ -167,7 +164,7 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', function (success, failur
       added = true;
     });
 
-    evt = {
+    const evt = {
       keyCode: 90,
       metaKey: Env.mac,
       ctrlKey: !Env.mac,
@@ -184,7 +181,7 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', function (success, failur
   });
 
   suite.test('Transact', function (editor) {
-    let count = 0, level;
+    let count = 0;
 
     editor.undoManager.clear();
 
@@ -192,7 +189,7 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', function (success, failur
       count++;
     });
 
-    level = editor.undoManager.transact(function () {
+    const level = editor.undoManager.transact(function () {
       editor.undoManager.add();
       editor.undoManager.add();
     });
@@ -265,8 +262,6 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', function (success, failur
   });
 
   suite.test('Extra with changes', function (editor) {
-    let data;
-
     editor.undoManager.clear();
     editor.setContent('<p>abc</p>');
     LegacyUnit.setSelection(editor, 'p', 0);
@@ -280,7 +275,7 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', function (success, failur
       editor.insertContent('2');
     });
 
-    data = editor.undoManager.data;
+    const data = editor.undoManager.data;
     LegacyUnit.equal(data.length, 3);
     LegacyUnit.equal(data[0].content, '<p>abc</p>');
     LegacyUnit.deepEqual(data[0].bookmark, { start: [ 0, 0, 0 ] });

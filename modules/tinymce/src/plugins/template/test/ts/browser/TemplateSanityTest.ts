@@ -25,7 +25,7 @@ UnitTest.asynctest('browser.tinymce.plugins.template.TemplateSanityTest', (succe
         UiFinder.sWaitForVisible('Waited for dialog to be visible', docBody, dialogSelector),
         Mouse.sClickOn(docBody, 'button.tox-button:contains(Save)'),
         Waiter.sTryUntil('Dialog should close', UiFinder.sNotExists(docBody, dialogSelector)),
-        tinyApis.sAssertContent('<p><strong>c</strong></p>'),
+        tinyApis.sAssertContent('<p><strong>c</strong></p>')
       ]),
 
       Log.stepsAsStep('TBA', 'Template: Test basic content replacement', [
@@ -36,7 +36,7 @@ UnitTest.asynctest('browser.tinymce.plugins.template.TemplateSanityTest', (succe
         UiFinder.sWaitForVisible('Waited for dialog to be visible', docBody, dialogSelector),
         Mouse.sClickOn(docBody, 'button.tox-button:contains(Save)'),
         Waiter.sTryUntil('Dialog should close', UiFinder.sNotExists(docBody, dialogSelector)),
-        tinyApis.sAssertContent('<p>Tester test@test.com</p>'),
+        tinyApis.sAssertContent('<p>Tester test@test.com</p>')
       ]),
 
       Log.stepsAsStep('TBA', 'Template: Test loading in snippet from other file', [
@@ -54,14 +54,14 @@ UnitTest.asynctest('browser.tinymce.plugins.template.TemplateSanityTest', (succe
         UiFinder.sExists(docBody, dialogSelector + ' p:contains("<strong>b</strong>")'),
         Mouse.sClickOn(docBody, 'button.tox-button:contains(Save)'),
         Waiter.sTryUntil('Dialog should close', UiFinder.sNotExists(docBody, dialogSelector)),
-        tinyApis.sAssertContent('<p><em>this is external</em></p>'),
+        tinyApis.sAssertContent('<p><em>this is external</em></p>')
       ]),
 
       Log.stepsAsStep('TBA', 'Template: Test command', [
         tinyApis.sSetContent(''),
         tinyApis.sSetSetting('template_replace_values', { name: 'Tester' }),
         tinyApis.sExecCommand('mceInsertTemplate', '<p>{$name}</p>'),
-        tinyApis.sAssertContent('<p>Tester</p>'),
+        tinyApis.sAssertContent('<p>Tester</p>')
       ])
     ], onSuccess, onFailure);
   }, {
@@ -69,6 +69,6 @@ UnitTest.asynctest('browser.tinymce.plugins.template.TemplateSanityTest', (succe
     plugins: 'template',
     toolbar: 'template',
     indent: false,
-    base_url: '/project/tinymce/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

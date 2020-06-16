@@ -1,7 +1,7 @@
-import { Step, Log, ApproxStructure, Pipeline } from '@ephox/agar';
+import { ApproxStructure, Log, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Obj } from '@ephox/katamari';
+import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
@@ -144,15 +144,15 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableFormatsTest', (success, f
           sApplyFormat(editor, formatName, vars),
           sAssertTableCellStructure(styles, { cell1: true }),
           sRemoveFormat(editor, formatName, vars),
-          sAssertTableCellStructure(),
+          sAssertTableCellStructure()
         ]),
         Log.stepsAsStep('TINY-6004', 'Apply format on multi cell selection (table) then remove format', [
           tinyApis.sSetContent(beforeTable({ cell1: true, cell2: true, cell3: true, cell4: true })),
           sApplyFormat(editor, formatName, vars),
           sAssertTableCellStructure(styles, { cell1: true, cell2: true, cell3: true, cell4: true }),
           sRemoveFormat(editor, formatName, vars),
-          sAssertTableCellStructure(),
-        ]),
+          sAssertTableCellStructure()
+        ])
       ]);
 
     Pipeline.async({}, [
@@ -165,7 +165,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableFormatsTest', (success, f
   }, {
     plugins: 'table',
     theme: 'silver',
-    base_url: '/project/tinymce/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });
 

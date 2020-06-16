@@ -152,7 +152,7 @@ const opMakeColumnHeader = function (grid: Structs.RowCells[], detail: Structs.D
 };
 
 const opUnmakeRowHeader = function (grid: Structs.RowCells[], detail: Structs.DetailExt, comparator: CompElm, genWrappers: GeneratorsTransform) {
-  const newGrid =  TransformOperations.replaceRow(grid, detail.row(), comparator, genWrappers.replaceOrInit);
+  const newGrid = TransformOperations.replaceRow(grid, detail.row(), comparator, genWrappers.replaceOrInit);
   return bundle(newGrid, detail.row(), detail.column());
 };
 

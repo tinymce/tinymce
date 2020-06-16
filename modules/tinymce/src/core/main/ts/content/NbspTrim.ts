@@ -6,22 +6,20 @@
  */
 
 import { Node, Range } from '@ephox/dom-globals';
-import * as NodeType from '../dom/NodeType';
 import { Unicode } from '@ephox/katamari';
+import * as NodeType from '../dom/NodeType';
 
 const isAfterNbsp = (container: Node, offset: number) => NodeType.isText(container) && container.nodeValue[offset - 1] === Unicode.nbsp;
 
 const trimOrPadLeftRight = (rng: Range, html: string): string => {
-  let container, offset;
-
-  container = rng.startContainer;
-  offset = rng.startOffset;
+  const container = rng.startContainer;
+  const offset = rng.startOffset;
 
   const hasSiblingText = function (siblingName) {
     return container[siblingName] && container[siblingName].nodeType === 3;
   };
 
-  if (container.nodeType === 3) {
+  if (NodeType.isText(container)) {
     if (offset > 0) {
       html = html.replace(/^&nbsp;/, ' ');
     } else if (!hasSiblingText('previousSibling')) {
@@ -40,12 +38,10 @@ const trimOrPadLeftRight = (rng: Range, html: string): string => {
 
 // Removes &nbsp; from a [b] c -> a &nbsp;c -> a c
 const trimNbspAfterDeleteAndPadValue = (rng: Range, value: string): string => {
-  let container, offset;
+  const container = rng.startContainer;
+  const offset = rng.startOffset;
 
-  container = rng.startContainer;
-  offset = rng.startOffset;
-
-  if (container.nodeType === 3 && rng.collapsed) {
+  if (NodeType.isText(container) && rng.collapsed) {
     if (container.data[offset] === Unicode.nbsp) {
       container.deleteData(offset, 1);
 

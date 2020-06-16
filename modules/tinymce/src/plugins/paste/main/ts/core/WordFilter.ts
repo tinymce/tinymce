@@ -5,6 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Unicode } from '@ephox/katamari';
+import Editor from 'tinymce/core/api/Editor';
 import DomParser from 'tinymce/core/api/html/DomParser';
 import Node from 'tinymce/core/api/html/Node';
 import Schema from 'tinymce/core/api/html/Schema';
@@ -12,8 +14,6 @@ import Serializer from 'tinymce/core/api/html/Serializer';
 import Tools from 'tinymce/core/api/util/Tools';
 import * as Settings from '../api/Settings';
 import * as Utils from './Utils';
-import Editor from 'tinymce/core/api/Editor';
-import { Unicode } from '@ephox/katamari';
 
 /**
  * This class parses word HTML into proper TinyMCE markup.
@@ -37,9 +37,9 @@ function isWordContent(content) {
  * Checks if the specified text starts with "1. " or "a. " etc.
  */
 function isNumericList(text) {
-  let found, patterns;
+  let found;
 
-  patterns = [
+  const patterns = [
     /^[IVXLMCD]{1,2}\.[ \u00a0]/,  // Roman upper case
     /^[ivxlmcd]{1,2}\.[ \u00a0]/,  // Roman lower case
     /^[a-z]{1,2}[\.\)][ \u00a0]/,  // Alphabetical a-z
@@ -322,9 +322,9 @@ function filterStyles(editor, validStyles, node, styleValue) {
 }
 
 const filterWordContent = function (editor: Editor, content: string) {
-  let retainStyleProperties, validStyles;
+  let validStyles;
 
-  retainStyleProperties = Settings.getRetainStyleProps(editor);
+  const retainStyleProperties = Settings.getRetainStyleProps(editor);
   if (retainStyleProperties) {
     validStyles = Tools.makeMap(retainStyleProperties.split(/[, ]/));
   }

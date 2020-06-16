@@ -28,8 +28,8 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.UndoTextpatternTest', (s
           tinyApis.sExecCommand('Undo'),
           tinyApis.sAssertContent('<p>*a*</p>\n<p>&nbsp;</p>'),
           tinyApis.sExecCommand('Undo'),
-          tinyApis.sAssertContent('<p>*a*</p>'),
-        ]),
+          tinyApis.sAssertContent('<p>*a*</p>')
+        ])
       ],
       tinyApis.sSetContent('')
     );

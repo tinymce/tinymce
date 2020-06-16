@@ -1,5 +1,5 @@
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
-import { Fun, Result, Option } from '@ephox/katamari';
+import { Fun, Option, Result } from '@ephox/katamari';
 import { CommonMenuItem, CommonMenuItemApi, commonMenuItemFields, CommonMenuItemInstanceApi } from './CommonMenuItem';
 
 export interface MenuItemApi extends CommonMenuItemApi {
@@ -23,7 +23,7 @@ export const menuItemSchema = ValueSchema.objOf([
   FieldSchema.strictString('type'),
   FieldSchema.defaultedFunction('onSetup', () => Fun.noop),
   FieldSchema.defaultedFunction('onAction', Fun.noop),
-  FieldSchema.optionString('icon'),
+  FieldSchema.optionString('icon')
 ].concat(commonMenuItemFields));
 
 export const createMenuItem = (spec: MenuItemApi): Result<MenuItem, ValueSchema.SchemaError<any>> => ValueSchema.asRaw('menuitem', menuItemSchema, spec);

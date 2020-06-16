@@ -97,6 +97,20 @@ UnitTest.asynctest('ChainTest', (success, failure) => {
     ])
   );
 
+  const testIsolatedChainAcc = StepAssertions.testChain(
+    'Sentence: ',
+    Chain.fromChains([
+      Chain.inject('Sentence: '),
+      Chain.fromIsolatedChains([
+        acc('T'),
+        acc('h'),
+        acc('i'),
+        acc('s'),
+        cIsEqual('Sentence: This')
+      ])
+    ])
+  );
+
   const testChainAsync = StepAssertions.testChain(
     'async works!',
     Chain.async((_value, next) => {
@@ -173,6 +187,10 @@ UnitTest.asynctest('ChainTest', (success, failure) => {
     Logger.t(
       '[When using fromChains, chains do accumulate when passing]\n',
       testChainAcc
+    ),
+    Logger.t(
+      '[When using fromIsolatedChains, chains do accumulate when passing, but return the original value]\n',
+      testIsolatedChainAcc
     ),
     Logger.t(
       '[Chain should async]\n',

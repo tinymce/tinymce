@@ -100,7 +100,7 @@ const moveWord = function (forward: boolean, editor: Editor, _caret: Cell<Text>)
 
 const setupSelectedState = function (editor: Editor): Cell<Text> {
   const caret = Cell(null);
-  const isInlineTarget: NodePredicate  = Fun.curry(InlineUtils.isInlineTarget, editor);
+  const isInlineTarget: NodePredicate = Fun.curry(InlineUtils.isInlineTarget, editor);
 
   editor.on('NodeChange', function (e) {
     // IE will steal the focus when changing the selection since it uses a single selection model

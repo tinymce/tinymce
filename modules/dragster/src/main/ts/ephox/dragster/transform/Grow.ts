@@ -1,5 +1,5 @@
-import { Event, Events, Bindable } from '@ephox/porkbun';
-import { Height, Width, Element } from '@ephox/sugar';
+import { Bindable, Event, Events } from '@ephox/porkbun';
+import { Element, Height, Width } from '@ephox/sugar';
 
 export interface GrowEvent {
   readonly x: number;
@@ -28,7 +28,7 @@ const grower = function (f: GrowthFn) {
       grow: Event([ 'x', 'y' ])
     }) as GrowEvents;
 
-    const mutate =  function (x: number, y: number) {
+    const mutate = function (x: number, y: number) {
       const growth = f(x, y);
       const width = Width.get(element);
       const height = Height.get(element);
@@ -51,14 +51,14 @@ const both = grower(function (x, y): Growth {
   };
 });
 
-const horizontal = grower(function (x, _y): Growth  {
+const horizontal = grower(function (x, _y): Growth {
   return {
     x,
     y: 0
   };
 });
 
-const vertical = grower(function (x, y): Growth  {
+const vertical = grower(function (x, y): Growth {
   return {
     x: 0,
     y

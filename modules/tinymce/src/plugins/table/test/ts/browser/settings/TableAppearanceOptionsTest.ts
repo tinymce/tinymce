@@ -1,4 +1,4 @@
-import { Assertions, Chain, Pipeline, Log } from '@ephox/agar';
+import { Assertions, Chain, Log, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
@@ -68,6 +68,6 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableAppearanceTest', (success
     toolbar: 'table',
     table_appearance_options: false,
     theme: 'silver',
-    base_url: '/project/tinymce/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

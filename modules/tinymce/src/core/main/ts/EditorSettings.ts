@@ -39,7 +39,7 @@ const legacyMobilePlugins = [ 'lists', 'autolink', 'autosave' ];
 const defaultTouchSettings: RawEditorSettings = {
   table_grid: false,          // Table grid relies on hover, which isn't available so use the dialog instead
   object_resizing: false,     // No nice way to do object resizing at this stage
-  resize: false,              // Editor resize doesn't work on touch devices at this stage
+  resize: false              // Editor resize doesn't work on touch devices at this stage
 };
 
 const normalizePlugins = function (plugins: string | string[]) {
@@ -185,7 +185,7 @@ const isOnMobile = function (isMobileDevice: boolean, sectionResult: SectionResu
   return isMobileDevice && hasSection(sectionResult, 'mobile');
 };
 
-const combineSettings = (isMobileDevice: boolean, isPhone: boolean,  defaultSettings: RawEditorSettings, defaultOverrideSettings: RawEditorSettings, settings: RawEditorSettings): EditorSettings => {
+const combineSettings = (isMobileDevice: boolean, isPhone: boolean, defaultSettings: RawEditorSettings, defaultOverrideSettings: RawEditorSettings, settings: RawEditorSettings): EditorSettings => {
   // Use mobile mode by default on phones, so patch in the default mobile settings
   const defaultDeviceSettings = isMobileDevice ? { mobile: getDefaultMobileSettings(settings.mobile || {}, isPhone) } : { };
   const sectionResult = extractSections([ 'mobile' ], Merger.deepMerge(defaultDeviceSettings, settings));

@@ -1,9 +1,9 @@
-import { UiFinder, Assertions, Chain, Guard, Log, Pipeline } from '@ephox/agar';
+import { Assertions, Chain, Guard, Log, Pipeline, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document, HTMLLabelElement } from '@ephox/dom-globals';
 import { Cell } from '@ephox/katamari';
 import { Editor as McEditor } from '@ephox/mcagar';
-import { Element, Body, Attr, SelectorFind, Html } from '@ephox/sugar';
+import { Attr, Body, Element, Html, SelectorFind } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 
 import FullscreenPlugin from 'tinymce/plugins/fullscreen/Plugin';
@@ -102,7 +102,7 @@ UnitTest.asynctest('browser.tinymce.plugins.fullscreen.FullScreenPluginTest', (s
       Chain.fromParent(Chain.identity, [
         Chain.op((editor: Editor) => editor.execCommand('mceFullScreen', true)),
         cAssertEditorAndLastEvent('After fullscreen command', true),
-        cAssertFullscreenClass('After fullscreen command', true),
+        cAssertFullscreenClass('After fullscreen command', true)
       ]),
       McEditor.cRemove,
       cAssertFullscreenClass('After editor is closed', false)

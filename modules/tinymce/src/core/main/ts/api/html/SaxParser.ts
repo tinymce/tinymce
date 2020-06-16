@@ -5,11 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Strings, Obj } from '@ephox/katamari';
+import { Obj, Strings } from '@ephox/katamari';
+import { Base64Extract, extractBase64DataUris, restoreDataUris } from '../../html/Base64Uris';
 import Tools from '../util/Tools';
 import Entities from './Entities';
 import Schema from './Schema';
-import { extractBase64DataUris, restoreDataUris, Base64Extract } from '../../html/Base64Uris';
 
 /**
  * This class parses HTML code using pure JavaScript and executes various events for each item it finds. It will
@@ -74,7 +74,7 @@ export interface SaxParserSettings {
   text? (text: string, raw?: boolean): void;
 }
 
-type ParserFormat = 'html' | 'xhtml' | 'xml';
+export type ParserFormat = 'html' | 'xhtml' | 'xml';
 
 interface SaxParser {
   parse (html: string, format?: ParserFormat): void;
@@ -121,10 +121,10 @@ const isInvalidUri = (settings: SaxParserSettings, uri: string) => {
  * @return {Number} Index of the end tag.
  */
 const findEndTagIndex = (schema: Schema, html: string, startIndex: number): number => {
-  let count = 1, index, matches, tokenRegExp, shortEndedElements;
+  let count = 1, index, matches;
 
-  shortEndedElements = schema.getShortEndedElements();
-  tokenRegExp = /<([!?\/])?([A-Za-z0-9\-_\:\.]+)((?:\s+[^"\'>]+(?:(?:"[^"]*")|(?:\'[^\']*\')|[^>]*))*|\/|\s+)>/g;
+  const shortEndedElements = schema.getShortEndedElements();
+  const tokenRegExp = /<([!?\/])?([A-Za-z0-9\-_\:\.]+)((?:\s+[^"\'>]+(?:(?:"[^"]*")|(?:\'[^\']*\')|[^>]*))*|\/|\s+)>/g;
   tokenRegExp.lastIndex = index = startIndex;
 
   while ((matches = tokenRegExp.exec(html))) {
@@ -211,12 +211,11 @@ function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
     let matches, index = 0, value, endRegExp;
     const stack = [];
     let attrList, i, textData, name;
-    let isInternalElement, removeInternalElements, shortEndedElements, fillAttrsMap, isShortEnded;
-    let validate, elementRule, isValidElement, attr, attribsValue, validAttributesMap, validAttributePatterns;
-    let attributesRequired, attributesDefault, attributesForced, processHtml;
-    let anyAttributesRequired, selfClosing, tokenRegExp, attrRegExp, specialElements, attrValue, idCount = 0;
+    let isInternalElement, isShortEnded;
+    let elementRule, isValidElement, attr, attribsValue, validAttributesMap, validAttributePatterns;
+    let attributesRequired, attributesDefault, attributesForced;
+    let anyAttributesRequired, attrValue, idCount = 0;
     const decode = Entities.decode;
-    let fixSelfClosing;
     const filteredUrlAttrs = Tools.makeMap('src,href,data,background,formaction,poster,xlink:href');
     const scriptUriRegExp = /((java|vb)script|mhtml):/i;
     const parsingMode = format === 'html' ? ParsingMode.Html : ParsingMode.Xml;
@@ -356,7 +355,7 @@ function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
     };
 
     // Precompile RegExps and map objects
-    tokenRegExp = new RegExp('<(?:' +
+    const tokenRegExp = new RegExp('<(?:' +
       '(?:!--([\\w\\W]*?)--!?>)|' + // Comment
       '(?:!\\[CDATA\\[([\\w\\W]*?)\\]\\]>)|' + // CDATA
       '(?:![Dd][Oo][Cc][Tt][Yy][Pp][Ee]([\\w\\W]*?)>)|' + // DOCTYPE (case insensitive)
@@ -366,17 +365,17 @@ function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
       `(?:([A-Za-z][A-Za-z0-9\\-_\\:\\.]*)((?:\\s+[^"'>]+(?:(?:"[^"]*")|(?:'[^']*')|[^>]*))*|\\/|\\s+)>)` + // Start element
       ')', 'g');
 
-    attrRegExp = /([\w:\-]+)(?:\s*=\s*(?:(?:\"((?:[^\"])*)\")|(?:\'((?:[^\'])*)\')|([^>\s]+)))?/g;
+    const attrRegExp = /([\w:\-]+)(?:\s*=\s*(?:(?:\"((?:[^\"])*)\")|(?:\'((?:[^\'])*)\')|([^>\s]+)))?/g;
 
     // Setup lookup tables for empty elements and boolean attributes
-    shortEndedElements = schema.getShortEndedElements();
-    selfClosing = settings.self_closing_elements || schema.getSelfClosingElements();
-    fillAttrsMap = schema.getBoolAttrs();
-    validate = settings.validate;
-    removeInternalElements = settings.remove_internals;
-    fixSelfClosing = settings.fix_self_closing;
-    specialElements = schema.getSpecialElements();
-    processHtml = html + '>';
+    const shortEndedElements = schema.getShortEndedElements();
+    const selfClosing = settings.self_closing_elements || schema.getSelfClosingElements();
+    const fillAttrsMap = schema.getBoolAttrs();
+    const validate = settings.validate;
+    const removeInternalElements = settings.remove_internals;
+    const fixSelfClosing = settings.fix_self_closing;
+    const specialElements = schema.getSpecialElements();
+    const processHtml = html + '>';
 
     while ((matches = tokenRegExp.exec(processHtml))) { // Adds and extra '>' to keep regexps from doing catastrofic backtracking on malformed html
       const matchText = matches[0];

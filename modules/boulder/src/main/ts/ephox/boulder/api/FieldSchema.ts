@@ -1,8 +1,10 @@
-import { Result, Arr } from '@ephox/katamari';
-import { value, objOf, arrOf, arrOfObj, anyValue, objOfOnly, Processor, field, state as valueState, FieldProcessorAdt } from '../core/ValueProcessor';
+import { Arr, Result } from '@ephox/katamari';
+import { SimpleResult } from '../alien/SimpleResult';
+import {
+  anyValue, arrOf, arrOfObj, field, FieldProcessorAdt, objOf, objOfOnly, Processor, state as valueState, value
+} from '../core/ValueProcessor';
 import * as FieldPresence from './FieldPresence';
 import * as ValueSchema from './ValueSchema';
-import { SimpleResult } from '../alien/SimpleResult';
 
 const validateEnum = (values) => ValueSchema.valueOf((value) => Arr.contains(values, value) ?
   Result.value(value) :
@@ -51,7 +53,7 @@ const forbid = function (key: string, message: string): FieldProcessorAdt {
   );
 };
 
-const strictObjOf = function (key: string, objSchema: FieldProcessorAdt[]): FieldProcessorAdt  {
+const strictObjOf = function (key: string, objSchema: FieldProcessorAdt[]): FieldProcessorAdt {
   return field(key, key, FieldPresence.strict(), objOf(objSchema));
 };
 

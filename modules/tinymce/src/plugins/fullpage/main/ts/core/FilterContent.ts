@@ -21,7 +21,7 @@ const low = function (s) {
 };
 
 const handleSetContent = function (editor: Editor, headState, footState, evt) {
-  let startPos, endPos, content, headerFragment, styles = '';
+  let startPos, endPos, content, styles = '';
   const dom = editor.dom;
 
   if (evt.selection) {
@@ -65,7 +65,7 @@ const handleSetContent = function (editor: Editor, headState, footState, evt) {
   }
 
   // Parse header and update iframe
-  headerFragment = Parser.parseHeader(headState.get());
+  const headerFragment = Parser.parseHeader(headState.get());
   each(headerFragment.getAll('style'), function (node) {
     if (node.firstChild) {
       styles += node.firstChild.value;

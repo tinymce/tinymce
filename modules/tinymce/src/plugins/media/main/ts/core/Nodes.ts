@@ -5,20 +5,19 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import Node from 'tinymce/core/api/html/Node';
 import * as Settings from '../api/Settings';
 import * as Sanitize from './Sanitize';
 import * as VideoScript from './VideoScript';
-import Editor from 'tinymce/core/api/Editor';
 
 declare let escape: any;
 
 const createPlaceholderNode = function (editor: Editor, node: Node) {
-  let placeHolder;
   const name = node.name;
 
-  placeHolder = new Node('img', 1);
+  const placeHolder = new Node('img', 1);
   placeHolder.shortEnded = true;
 
   retainAttributesAndInnerHtml(editor, node, placeHolder);
@@ -36,12 +35,9 @@ const createPlaceholderNode = function (editor: Editor, node: Node) {
 };
 
 const createPreviewIframeNode = function (editor: Editor, node: Node) {
-  let previewWrapper;
-  let previewNode;
-  let shimNode;
   const name = node.name;
 
-  previewWrapper = new Node('span', 1);
+  const previewWrapper = new Node('span', 1);
   previewWrapper.attr({
     'contentEditable': 'false',
     'style': node.attr('style'),
@@ -51,7 +47,7 @@ const createPreviewIframeNode = function (editor: Editor, node: Node) {
 
   retainAttributesAndInnerHtml(editor, node, previewWrapper);
 
-  previewNode = new Node(name, 1);
+  const previewNode = new Node(name, 1);
   previewNode.attr({
     src: node.attr('src'),
     allowfullscreen: node.attr('allowfullscreen'),
@@ -62,7 +58,7 @@ const createPreviewIframeNode = function (editor: Editor, node: Node) {
     frameborder: '0'
   });
 
-  shimNode = new Node('span', 1);
+  const shimNode = new Node('span', 1);
   shimNode.attr('class', 'mce-shim');
 
   previewWrapper.append(previewNode);
@@ -74,13 +70,11 @@ const createPreviewIframeNode = function (editor: Editor, node: Node) {
 const retainAttributesAndInnerHtml = function (editor: Editor, sourceNode: Node, targetNode: Node) {
   let attrName;
   let attrValue;
-  let attribs;
   let ai;
-  let innerHtml;
 
   // Prefix all attributes except width, height and style since we
   // will add these to the placeholder
-  attribs = sourceNode.attributes;
+  const attribs = sourceNode.attributes;
   ai = attribs.length;
   while (ai--) {
     attrName = attribs[ai].name;
@@ -97,7 +91,7 @@ const retainAttributesAndInnerHtml = function (editor: Editor, sourceNode: Node,
 
   // Place the inner HTML contents inside an escaped attribute
   // This enables us to copy/paste the fake object
-  innerHtml = sourceNode.firstChild && sourceNode.firstChild.value;
+  const innerHtml = sourceNode.firstChild && sourceNode.firstChild.value;
   if (innerHtml) {
     targetNode.attr('data-mce-html', escape(Sanitize.sanitize(editor, innerHtml)));
     targetNode.firstChild = null;

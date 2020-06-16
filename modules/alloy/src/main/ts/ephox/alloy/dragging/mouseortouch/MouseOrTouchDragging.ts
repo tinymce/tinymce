@@ -14,7 +14,7 @@ import { MouseOrTouchDraggingConfig } from './MouseOrTouchDraggingTypes';
 
 const events = <E>(dragConfig: MouseOrTouchDraggingConfig<E>, dragState: DraggingState, updateStartState: (comp: AlloyComponent) => void) => [
   ...MouseDragging.events(dragConfig, dragState, updateStartState),
-  ...TouchDragging.events(dragConfig, dragState, updateStartState),
+  ...TouchDragging.events(dragConfig, dragState, updateStartState)
 ] as AlloyEventKeyAndHandler<EventArgs<UIEvent>>[];
 
 const schema: FieldProcessorAdt[] = [

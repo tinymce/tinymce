@@ -5,8 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Entities from './Entities';
 import Tools from '../util/Tools';
+import Entities from './Entities';
 import { Attributes } from './Node';
 
 /**
@@ -47,14 +47,13 @@ interface Writer {
 
 const Writer = function (settings?: WriterSettings): Writer {
   const html = [];
-  let indent, indentBefore, indentAfter, encode, htmlOutput;
 
   settings = settings || {};
-  indent = settings.indent;
-  indentBefore = makeMap(settings.indent_before || '');
-  indentAfter = makeMap(settings.indent_after || '');
-  encode = Entities.getEncodeFunc(settings.entity_encoding || 'raw', settings.entities);
-  htmlOutput = settings.element_format === 'html';
+  const indent = settings.indent;
+  const indentBefore = makeMap(settings.indent_before || '');
+  const indentAfter = makeMap(settings.indent_after || '');
+  const encode = Entities.getEncodeFunc(settings.entity_encoding || 'raw', settings.entities);
+  const htmlOutput = settings.element_format === 'html';
 
   return {
     /**

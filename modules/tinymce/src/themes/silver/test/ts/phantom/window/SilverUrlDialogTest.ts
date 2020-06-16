@@ -1,11 +1,11 @@
 import { ApproxStructure, Assertions, Chain, GeneralSteps, Mouse, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
+import { TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Body } from '@ephox/sugar';
-import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 
 import { Types } from '@ephox/bridge';
 import { Cell } from '@ephox/katamari';
-import { TestHelpers } from '@ephox/alloy';
+import { Body } from '@ephox/sugar';
+import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 import TestExtras from '../../module/TestExtras';
 
 UnitTest.asynctest('WindowManager:url-dialog Test', (success, failure) => {
@@ -27,7 +27,7 @@ UnitTest.asynctest('WindowManager:url-dialog Test', (success, failure) => {
           text: 'Barny Text',
           align: 'start',
           primary: true
-        },
+        }
       ],
       onClose: store.adder('onClose'),
       onAction: store.adder('onAction'),
@@ -81,7 +81,7 @@ UnitTest.asynctest('WindowManager:url-dialog Test', (success, failure) => {
         classes: [ arr.not('tox-dialog__disable-scroll') ]
       })),
       Body.body()
-    ),
+    )
   ], () => {
     helpers.destroy();
     success();

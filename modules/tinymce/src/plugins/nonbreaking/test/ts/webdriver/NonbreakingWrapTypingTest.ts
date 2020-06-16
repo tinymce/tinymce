@@ -1,10 +1,10 @@
 import { ApproxStructure, Log, Pipeline, RealKeys } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
+import { Unicode } from '@ephox/katamari';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
+import Env from 'tinymce/core/api/Env';
 import NonbreakingPlugin from 'tinymce/plugins/nonbreaking/Plugin';
 import theme from 'tinymce/themes/silver/Theme';
-import Env from 'tinymce/core/api/Env';
-import { Unicode } from '@ephox/katamari';
 
 UnitTest.asynctest('webdriver.tinymce.plugins.nonbreaking.NonbreakingWrapTypingTest', (success, failure) => {
   // Note: Uses RealKeys, so needs a browser. Headless won't work.
@@ -169,7 +169,7 @@ UnitTest.asynctest('webdriver.tinymce.plugins.nonbreaking.NonbreakingWrapTypingT
               ].concat(isGecko ? [ s.element('br', {}) ] : [])
             })
           ]
-        }))),
+        })))
       ]),
 
       tinyApis.sSetContent(''), // reset content
@@ -237,8 +237,8 @@ UnitTest.asynctest('webdriver.tinymce.plugins.nonbreaking.NonbreakingWrapTypingT
               ].concat(isGecko ? [ s.element('br', {}) ] : [])
             })
           ]
-        }))),
-      ]),
+        })))
+      ])
 
     ], onSuccess, onFailure);
   }, {

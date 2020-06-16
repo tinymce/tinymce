@@ -1,9 +1,8 @@
+import { Assert, UnitTest } from '@ephox/bedrock-client';
+import * as Fun from 'ephox/katamari/api/Fun';
 import { Option } from 'ephox/katamari/api/Option';
 import { arbOptionSome as arbOptionSome } from 'ephox/katamari/test/arb/ArbDataTypes';
-
-import { Assert, UnitTest } from '@ephox/bedrock-client';
 import fc from 'fast-check';
-import * as Fun from 'ephox/katamari/api/Fun';
 
 const boom = Fun.die('boom');
 
@@ -30,7 +29,7 @@ UnitTest.test('Option.some(x) === Option.some(x)', () => {
 UnitTest.test('Option.some(x) === Option.some(x) (same ref)', () => {
   fc.assert(fc.property(fc.integer(), (i) => {
     const ob = Option.some(i);
-    Assert.eq('eq',  true, ob.equals(ob));
+    Assert.eq('eq', true, ob.equals(ob));
   }));
 });
 
@@ -46,7 +45,7 @@ UnitTest.test('Option.some: unit tests', () => {
 
   Assert.eq('eq', false, Option.some(4).equals(Option.none()));
   Assert.eq('eq', false, Option.some(2).equals(Option.some(4)));
-  Assert.eq('eq', true,  Option.some(5).equals(Option.some(5)));
+  Assert.eq('eq', true, Option.some(5).equals(Option.some(5)));
   Assert.eq('eq', false, Option.some(5.1).equals(Option.some(5.3)));
 
   const comparator = (a, b) => Math.round(a) === Math.round(b);
@@ -61,19 +60,19 @@ UnitTest.test('Options.equals_', () => {
 
 UnitTest.test('some !== none, for any predicate', () => {
   fc.assert(fc.property(arbOptionSome(fc.integer()), (opt1) => {
-    Assert.eq('eq',  false, opt1.equals_(Option.none(), boom));
+    Assert.eq('eq', false, opt1.equals_(Option.none(), boom));
   }));
 });
 
 UnitTest.test('none !== some, for any predicate', () => {
   fc.assert(fc.property(arbOptionSome(fc.integer()), (opt1) => {
-    Assert.eq('eq',  false, Option.none().equals_(opt1, boom));
+    Assert.eq('eq', false, Option.none().equals_(opt1, boom));
   }));
 });
 
 UnitTest.test('Checking some(x).equals_(some(y), _, _ -> false) === false', () => {
   fc.assert(fc.property(arbOptionSome(fc.integer()), arbOptionSome(fc.integer()), (opt1, opt2) => {
-    Assert.eq('eq',  false, opt1.equals_(opt2, Fun.constant(false)));
+    Assert.eq('eq', false, opt1.equals_(opt2, Fun.constant(false)));
   }));
 });
 
@@ -81,7 +80,7 @@ UnitTest.test('Checking some(x).equals_(some(y), _, _ -> true) === true', () => 
   fc.assert(fc.property(fc.integer(), fc.integer(), (a, b) => {
     const opt1 = Option.some(a);
     const opt2 = Option.some(b);
-    Assert.eq('eq',  true, opt1.equals_(opt2, Fun.constant(true)));
+    Assert.eq('eq', true, opt1.equals_(opt2, Fun.constant(true)));
   }));
 });
 

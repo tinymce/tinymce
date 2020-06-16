@@ -6,7 +6,7 @@
  */
 
 import { Console } from '@ephox/dom-globals';
-import { Obj, Type, Results, Arr, Global } from '@ephox/katamari';
+import { Arr, Global, Obj, Results, Type } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { PatternSet } from '../core/PatternTypes';
 import { createPatternSet, normalizePattern } from './Pattern';
@@ -42,7 +42,7 @@ const getPatternSet = (editorSettings): PatternSet => {
     error('The setting textpattern_patterns should be an array');
     return {
       inlinePatterns: [],
-      blockPatterns: [],
+      blockPatterns: []
     };
   }
   const normalized = Results.partition(Arr.map(patterns, normalizePattern));

@@ -57,7 +57,7 @@ const makeTab = (_info: ImageDialogInfo) => ({
           ]
         }
       ]
-    },
+    }
   ]
 });
 

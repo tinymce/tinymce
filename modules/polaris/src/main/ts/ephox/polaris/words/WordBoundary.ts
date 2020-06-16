@@ -1,11 +1,9 @@
-import { characterIndices as ci } from './UnicodeData';
 import { CharacterMap } from './StringMapper';
+import { characterIndices as ci } from './UnicodeData';
 
 const isWordBoundary = (map: CharacterMap, index: number): boolean => {
-  let prevType: number;
   const type = map[index];
   const nextType = map[index + 1];
-  let nextNextType: number;
 
   if (index < 0 || (index > map.length - 1 && index !== 0)) {
     return false;
@@ -16,7 +14,7 @@ const isWordBoundary = (map: CharacterMap, index: number): boolean => {
     return false;
   }
 
-  nextNextType = map[index + 2];
+  const nextNextType = map[index + 2];
 
   // WB6. Don't break letters across certain punctuation.
   if (type === ci.ALETTER &&
@@ -25,7 +23,7 @@ const isWordBoundary = (map: CharacterMap, index: number): boolean => {
     return false;
   }
 
-  prevType = map[index - 1];
+  const prevType = map[index - 1];
 
   // WB7. Don't break letters across certain punctuation.
   if ((type === ci.MIDLETTER || type === ci.MIDNUMLET || nextType === ci.AT) &&

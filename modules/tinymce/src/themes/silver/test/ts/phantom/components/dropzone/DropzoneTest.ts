@@ -12,7 +12,7 @@ UnitTest.asynctest('Dropzone component Test', (success, failure) => {
     (_store, _doc, _body) => GuiFactory.build(
       renderDropZone({
         name: 'drop1',
-        label: Option.some('Dropzone Label'),
+        label: Option.some('Dropzone Label')
       }, TestProviders)
     ),
     (_doc, _body, _gui, component, _store) => [

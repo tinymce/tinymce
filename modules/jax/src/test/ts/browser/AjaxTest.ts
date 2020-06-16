@@ -1,10 +1,10 @@
+import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Blob, console } from '@ephox/dom-globals';
 import { Arr, FutureResult, Result } from '@ephox/katamari';
-import { UnitTest, assert } from '@ephox/bedrock-client';
-import { console, Blob } from '@ephox/dom-globals';
+import { readBlobAsText } from 'ephox/jax/core/BlobReader';
 import { DataType } from 'ephox/jax/core/DataType';
 import * as Http from 'ephox/jax/core/Http';
 import { HttpError } from 'ephox/jax/core/HttpError';
-import { readBlobAsText } from 'ephox/jax/core/BlobReader';
 
 /* tslint:disable:no-console */
 
@@ -58,7 +58,7 @@ UnitTest.asynctest('HttpTest', (success, failure) => {
     expectError('GET Query parameters incorrect', Http.get(
       {
         url: '/custom/jax/sample/get/1?word=beta',
-        responseType: DataType.JSON,
+        responseType: DataType.JSON
       }
     )),
 
@@ -67,7 +67,7 @@ UnitTest.asynctest('HttpTest', (success, failure) => {
     }, Http.get(
       {
         url: '/custom/jax/sample/get/1?word=alpha',
-        responseType: DataType.JSON,
+        responseType: DataType.JSON
       }
     )),
 

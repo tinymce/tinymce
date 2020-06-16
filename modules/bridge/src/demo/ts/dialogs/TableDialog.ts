@@ -62,7 +62,7 @@ export const createTableDialog = () => {
                         value: 'left'
                       }
                     ]
-                  },
+                  }
                 ]
               }
             ]
@@ -92,7 +92,7 @@ export const createTableDialog = () => {
                 label: 'Background color'
               }
             ]
-          },
+          }
         ]
       },
       buttons: [

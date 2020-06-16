@@ -58,7 +58,7 @@ UnitTest.asynctest('Distraction free editor ContextToolbar Position test', (succ
 
         // Position the element off the top of the screen and check the toolbar is hidden
         sScrollTo(0, 1000),
-        UiFinder.sWaitForHidden('Waiting for toolbar to be hidden', Body.body(), '.tox-pop'),
+        UiFinder.sWaitForHidden('Waiting for toolbar to be hidden', Body.body(), '.tox-pop')
       ]);
 
       Pipeline.async({ }, [

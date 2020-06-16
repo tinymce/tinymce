@@ -16,7 +16,7 @@ UnitTest.test('CopyColumnsTest', () => {
     Insert.append(Body.body(), table);
 
     const rows = copyCols(table, {
-      selection: Fun.constant([ Hierarchy.follow(table, [ section, row, column, 0 ]).getOrDie() ]),
+      selection: Fun.constant([ Hierarchy.follow(table, [ section, row, column, 0 ]).getOrDie() ])
     }).getOrDie();
     const copiedHtml = Arr.map(rows, Html.getOuter).join('');
 

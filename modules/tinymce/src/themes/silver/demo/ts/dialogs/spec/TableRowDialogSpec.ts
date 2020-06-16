@@ -84,7 +84,7 @@ export default {
             label: 'Background color'
           }
         ]
-      },
+      }
     ]
   },
   buttons: [

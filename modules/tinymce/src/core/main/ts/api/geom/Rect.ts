@@ -42,14 +42,12 @@ const min = Math.min, max = Math.max, round = Math.round;
  * @param {String} rel Relative position. For example: tr-bl.
  */
 const relativePosition = function (rect, targetRect, rel) {
-  let x, y, w, h, targetW, targetH;
-
-  x = targetRect.x;
-  y = targetRect.y;
-  w = rect.w;
-  h = rect.h;
-  targetW = targetRect.w;
-  targetH = targetRect.h;
+  let x = targetRect.x;
+  let y = targetRect.y;
+  const w = rect.w;
+  const h = rect.h;
+  const targetW = targetRect.w;
+  const targetH = targetRect.h;
 
   rel = (rel || '').split('');
 
@@ -134,12 +132,10 @@ const inflate = function (rect, w, h) {
  * @return {Rect} The intersection of the two rectangles or null if they don't intersect.
  */
 const intersect = function (rect, cropRect) {
-  let x1, y1, x2, y2;
-
-  x1 = max(rect.x, cropRect.x);
-  y1 = max(rect.y, cropRect.y);
-  x2 = min(rect.x + rect.w, cropRect.x + cropRect.w);
-  y2 = min(rect.y + rect.h, cropRect.y + cropRect.h);
+  const x1 = max(rect.x, cropRect.x);
+  const y1 = max(rect.y, cropRect.y);
+  const x2 = min(rect.x + rect.w, cropRect.x + cropRect.w);
+  const y2 = min(rect.y + rect.h, cropRect.y + cropRect.h);
 
   if (x2 - x1 < 0 || y2 - y1 < 0) {
     return null;
@@ -159,20 +155,17 @@ const intersect = function (rect, cropRect) {
  * @return {Rect} Clamped rect.
  */
 const clamp = function (rect, clampRect, fixedSize?) {
-  let underflowX1, underflowY1, overflowX2, overflowY2,
-    x1, y1, x2, y2, cx2, cy2;
+  let x1 = rect.x;
+  let y1 = rect.y;
+  let x2 = rect.x + rect.w;
+  let y2 = rect.y + rect.h;
+  const cx2 = clampRect.x + clampRect.w;
+  const cy2 = clampRect.y + clampRect.h;
 
-  x1 = rect.x;
-  y1 = rect.y;
-  x2 = rect.x + rect.w;
-  y2 = rect.y + rect.h;
-  cx2 = clampRect.x + clampRect.w;
-  cy2 = clampRect.y + clampRect.h;
-
-  underflowX1 = max(0, clampRect.x - x1);
-  underflowY1 = max(0, clampRect.y - y1);
-  overflowX2 = max(0, x2 - cx2);
-  overflowY2 = max(0, y2 - cy2);
+  const underflowX1 = max(0, clampRect.x - x1);
+  const underflowY1 = max(0, clampRect.y - y1);
+  const overflowX2 = max(0, x2 - cx2);
+  const overflowY2 = max(0, y2 - cy2);
 
   x1 += underflowX1;
   y1 += underflowY1;

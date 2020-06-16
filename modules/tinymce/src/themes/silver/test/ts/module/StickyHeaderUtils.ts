@@ -1,4 +1,4 @@
-import { ApproxStructure, Assertions, Chain, GeneralSteps, Guard, Keyboard, Keys, Logger, NamedChain, Step, StructAssert, UiFinder } from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, GeneralSteps, Guard, Keyboard, Keys, Logger, Step, StructAssert, UiFinder } from '@ephox/agar';
 import { document, window } from '@ephox/dom-globals';
 import { Body, Css, Element, Focus, Scroll, SelectorFind } from '@ephox/sugar';
 
@@ -19,7 +19,7 @@ const staticPartsInner = (s: ApproxStructure.StructApi, _str: ApproxStructure.St
     s.element('div', {}),
     s.element('div', {
       classes: [ arr.has('tox-anchorbar') ]
-    }),
+    })
   ];
 
 const expectedScrollEventBound = (s: ApproxStructure.StructApi, str: ApproxStructure.StringApi, arr: ApproxStructure.ArrayApi): StructAssert[] => [
@@ -53,7 +53,7 @@ const expectedHalfView = (s: ApproxStructure.StructApi, str: ApproxStructure.Str
   s.element('div', {
     classes: [
       arr.has('tox-editor-header'),
-      arr.not('tox-editor-dock-fadeout'),
+      arr.not('tox-editor-dock-fadeout')
     ],
     styles: {
       position: str.contains('fixed'),
@@ -69,7 +69,7 @@ const expectedEditorHidden = (s: ApproxStructure.StructApi, str: ApproxStructure
     classes: [
       arr.has('tox-editor-header'),
       arr.has('tox-editor-dock-fadeout'),
-      arr.not('tox-editor-dock-fadein'),
+      arr.not('tox-editor-dock-fadein')
     ],
     styles: {
       position: str.contains('fixed'),
@@ -100,17 +100,15 @@ const cScrollRelativeEditor = (delta: number, scrollRelativeTop: boolean) => Cha
   Scroll.to(0, window.pageYOffset + (scrollRelativeTop ? delta : -delta));
 });
 
-const cAssertSinkVisibility = (label: string, visibility: 'hidden' | 'visible') => NamedChain.asChain([
-  NamedChain.writeValue('body', Body.body()),
-  NamedChain.direct('body', UiFinder.cFindIn( '.tox-tinymce-aux'), 'sink'),
-  NamedChain.direct('sink', Chain.control(
+const cAssertSinkVisibility = (label: string, visibility: 'hidden' | 'visible') => Chain.fromIsolatedChainsWith(Body.body(), [
+  UiFinder.cFindIn( '.tox-tinymce-aux'),
+  Chain.control(
     Chain.fromChains([
-      Chain.mapper((sink) =>  Css.get(sink, 'visibility')),
+      Chain.mapper((sink) => Css.get(sink, 'visibility')),
       Assertions.cAssertEq(label, visibility)
     ]),
     Guard.tryUntil(`Wait for sink visibility to be ${visibility}`)
-  ), '_'),
-  NamedChain.outputInput
+  )
 ]);
 
 const cAssertMenuStructure = (label: string, position: string) => Chain.control(

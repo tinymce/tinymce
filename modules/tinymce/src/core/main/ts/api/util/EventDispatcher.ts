@@ -5,9 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { ClipboardEvent, DataTransfer, DragEvent, Event, FocusEvent, KeyboardEvent, MouseEvent, PointerEvent, TouchEvent, WheelEvent } from '@ephox/dom-globals';
-import Tools from './Tools';
+import {
+  ClipboardEvent, DataTransfer, DragEvent, Event, FocusEvent, KeyboardEvent, MouseEvent, PointerEvent, TouchEvent, WheelEvent
+} from '@ephox/dom-globals';
 import { Fun, Obj } from '@ephox/katamari';
+import Tools from './Tools';
 
 // InputEvent is experimental so we don't have an actual type
 // See https://developer.mozilla.org/en-US/docs/Web/API/InputEvent
@@ -143,8 +145,6 @@ class EventDispatcher<T extends NativeEventMap> {
   public fire <K extends keyof T>(name: K, args?: T[K]): EditorEvent<T[K]>;
   public fire <U = any>(name: string, args?: U): EditorEvent<U>;
   public fire(name: string, args?: any): EditorEvent<any> {
-    let handlers, i, l, callback;
-
     name = name.toLowerCase();
     args = args || {};
     args.type = name;
@@ -181,10 +181,10 @@ class EventDispatcher<T extends NativeEventMap> {
       this.settings.beforeFire(args);
     }
 
-    handlers = this.bindings[name];
+    const handlers = this.bindings[name];
     if (handlers) {
-      for (i = 0, l = handlers.length; i < l; i++) {
-        callback = handlers[i];
+      for (let i = 0, l = handlers.length; i < l; i++) {
+        const callback = handlers[i];
 
         // Unbind handlers marked with "once"
         if (callback.once) {

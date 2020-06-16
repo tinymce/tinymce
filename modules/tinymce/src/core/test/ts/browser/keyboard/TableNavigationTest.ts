@@ -1,7 +1,7 @@
 import { GeneralSteps, Keys, Logger, Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.core.keyboard.TableNavigationTest', (success, failure) => {
   Theme();
@@ -43,7 +43,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.TableNavigationTest', (success
           tinyActions.sContentKeystroke(Keys.up(), {}),
           tinyApis.sAssertSelection([ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 0),
           tinyApis.sAssertContent('<table><tbody><tr><td>a</td><td>b</td></tr><tr><td>c</td><td>d</td></tr></tbody></table>')
-        ])),
+        ]))
       ])),
       Logger.t('Down navigation', GeneralSteps.sequence([
         Logger.t('Arrow down on last position in last table cell', GeneralSteps.sequence([
@@ -77,7 +77,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.TableNavigationTest', (success
           tinyActions.sContentKeystroke(Keys.down(), {}),
           tinyApis.sAssertSelection([ 0, 0, 1, 1, 0 ], 1, [ 0, 0, 1, 1, 0 ], 1),
           tinyApis.sAssertContent('<table><tbody><tr><td>a</td><td>b</td></tr><tr><td>c</td><td>d</td></tr></tbody></table>')
-        ])),
+        ]))
       ]))
     ], onSuccess, onFailure);
   }, {

@@ -18,7 +18,7 @@ UnitTest.asynctest('browser.tinymce.themes.mobile.EditorRemoveTest', (success, f
 
   const cleanedThorAttrsStruct = (str) => ({
     'position': str.none(),
-    'background-color': str.none(),
+    'background-color': str.none()
   });
 
   Pipeline.async({}, [
@@ -54,7 +54,7 @@ UnitTest.asynctest('browser.tinymce.themes.mobile.EditorRemoveTest', (success, f
       McEditor.cRemove,
       Chain.injectThunked(Body.body),
       Assertions.cAssertStructure('Assert Thor overrides removed from body', ApproxStructure.build((s, str) => s.element('body', {
-        attrs: cleanedThorAttrsStruct(str),
+        attrs: cleanedThorAttrsStruct(str)
       }))),
       UiFinder.cFindIn('div.tinymce-editor'),
       Assertions.cAssertStructure('Assert Thor overrides removed from editor div', ApproxStructure.build((s, str) => s.element('div', {

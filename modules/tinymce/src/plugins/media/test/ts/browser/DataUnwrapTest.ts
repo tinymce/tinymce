@@ -16,7 +16,7 @@ UnitTest.asynctest('browser.core.DataToHtmlTest', function (success, failure) {
         value: 'www.test.com',
         meta: {
           altsource: 'www.newaltsource.com',
-          poster: 'www.newposter.com/image.jpg',
+          poster: 'www.newposter.com/image.jpg'
         }
       },
       altsource: {
@@ -24,7 +24,7 @@ UnitTest.asynctest('browser.core.DataToHtmlTest', function (success, failure) {
         meta: {}
       },
       poster: { value: '', meta: {}},
-      embed: '',
+      embed: ''
     };
 
     const outputData: MediaData = {
@@ -45,17 +45,17 @@ UnitTest.asynctest('browser.core.DataToHtmlTest', function (success, failure) {
     const outputDataWithDimensions: MediaData = {
       ...outputData,
       width: '100px',
-      height: '200px',
+      height: '200px'
     };
 
     Pipeline.async({}, Log.steps('TINY-4163', 'Test Dialog.unwrap() ', [
       Assertions.sAssertEq('Test unwrap without dimensions', outputData, Dialog.unwrap(inputData, 'source')),
-      Assertions.sAssertEq('Test unwrap with dimensions', outputDataWithDimensions, Dialog.unwrap(inputDataWithDimensions, 'source')),
+      Assertions.sAssertEq('Test unwrap with dimensions', outputDataWithDimensions, Dialog.unwrap(inputDataWithDimensions, 'source'))
     ]), onSuccess, onFailure);
   }, {
     plugins: [ 'media' ],
     toolbar: 'media',
     theme: 'silver',
-    base_url: '/project/tinymce/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

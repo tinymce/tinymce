@@ -230,7 +230,7 @@ UnitTest.asynctest('InlineViewTest', (success, failure) => {
               Button.sketch({ uid: 'italic-button', dom: { tag: 'button', innerHtml: 'I', classes: [ 'italic-button' ] }, action: store.adder('italic') }),
               Button.sketch({ uid: 'underline-button', dom: { tag: 'button', innerHtml: 'U', classes: [ 'underline-button' ] }, action: store.adder('underline') }),
               buildDropdown('+', 'Option'),
-              buildDropdown('-', 'Item'),
+              buildDropdown('-', 'Item')
             ]
           }));
         })

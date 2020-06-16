@@ -25,5 +25,5 @@ export {
   add,
   remove,
   toggle,
-  supports,
+  supports
 };

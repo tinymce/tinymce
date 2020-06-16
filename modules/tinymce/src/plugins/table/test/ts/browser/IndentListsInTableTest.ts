@@ -52,6 +52,6 @@ UnitTest.asynctest('tinymce.plugins.table.IndentListsInTableTest', (success, fai
     toolbar: 'table numlist',
     indent: false,
     theme: 'silver',
-    base_url: '/project/tinymce/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

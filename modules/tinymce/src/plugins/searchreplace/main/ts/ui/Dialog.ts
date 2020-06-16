@@ -185,13 +185,13 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
         type: 'custom',
         name: 'replace',
         text: 'Replace',
-        disabled: true,
+        disabled: true
       },
       {
         type: 'custom',
         name: 'replaceall',
         text: 'Replace All',
-        disabled: true,
+        disabled: true
       }
     ],
     initialData,

@@ -1,17 +1,5 @@
 import {
-  ApproxStructure,
-  Assertions,
-  Chain,
-  FocusTools,
-  GeneralSteps,
-  Keyboard,
-  Keys,
-  Log,
-  Logger,
-  Mouse,
-  Pipeline,
-  Step,
-  UiFinder,
+  ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Log, Logger, Mouse, Pipeline, Step, UiFinder
 } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
@@ -72,7 +60,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
           sAssertItemTicks('Checking ticks at location', expectedTicks),
           afterStep,
           Keyboard.sKeydown(doc, Keys.escape(), { }),
-          UiFinder.sNotExists(Body.body(), '[role="menu"]'),
+          UiFinder.sNotExists(Body.body(), '[role="menu"]')
         ])
       );
 

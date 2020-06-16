@@ -36,7 +36,7 @@ UnitTest.asynctest('browser.tinymce.core.ReadOnlyModeTest', (success, failure) =
               children: [
                 s.text(str.is('a')),
                 s.element('span', {
-                  attrs,
+                  attrs
                 }),
                 s.text(str.is('c'))
               ]
@@ -113,7 +113,7 @@ UnitTest.asynctest('browser.tinymce.core.ReadOnlyModeTest', (success, failure) =
                     contenteditable: str.is('false')
                   },
                   children: [
-                    s.text(str.is('CEF')),
+                    s.text(str.is('CEF'))
                   ]
                 })
               ]
@@ -128,10 +128,10 @@ UnitTest.asynctest('browser.tinymce.core.ReadOnlyModeTest', (success, failure) =
                 s.element('p', {
                   attrs: {
                     'data-mce-caret': str.is('before'),
-                    'data-mce-bogus': str.is('all'),
+                    'data-mce-bogus': str.is('all')
                   },
                   children: [
-                    s.element('br', {}),
+                    s.element('br', {})
                   ]
                 }),
                 s.element('div', {
@@ -139,12 +139,12 @@ UnitTest.asynctest('browser.tinymce.core.ReadOnlyModeTest', (success, failure) =
                     contenteditable: str.is('false')
                   },
                   children: [
-                    s.text(str.is('CEF')),
+                    s.text(str.is('CEF'))
                   ]
                 }),
                 s.element('div', {
                   attrs: {
-                    'data-mce-bogus': str.is('all'),
+                    'data-mce-bogus': str.is('all')
                   },
                   classes: [ arr.has('mce-visual-caret'), arr.has('mce-visual-caret-before') ]
                 })

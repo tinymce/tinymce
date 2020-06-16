@@ -7,7 +7,7 @@ export default function () {
     selector: 'textarea.tiny-text',
     theme: 'silver',
     toolbar: 'styleselect',
-    plugins: [ 'lists', 'autolink', 'autosave', 'insertdatetime'  ],
+    plugins: [ 'lists', 'autolink', 'autosave', 'insertdatetime' ],
     style_formats: [
       { title: 'Bold text', inline: 'b' },
       { title: 'Red text', inline: 'span', styles: { color: '#ff0000' }},
@@ -56,7 +56,7 @@ export default function () {
           { title: 'Justify', icon: 'alignjustify', format: 'alignjustify' }
         ]
       }
-    ],
+    ]
   });
 
   tinymce.init({
@@ -64,6 +64,6 @@ export default function () {
     theme: 'silver',
     toolbar: 'styleselect',
     block_formats: 'Paragraph=p;Header 1=h1;Header 2=h2;Separator Name=|;Header 3=h3',
-    plugins: [ 'lists', 'autolink', 'autosave', 'insertdatetime' ],
+    plugins: [ 'lists', 'autolink', 'autosave', 'insertdatetime' ]
   });
 }

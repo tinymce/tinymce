@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Writer, { WriterSettings } from './Writer';
-import Schema from './Schema';
 import Node from './Node';
+import Schema from './Schema';
+import Writer, { WriterSettings } from './Writer';
 
 export interface SerializerSettings extends WriterSettings {
   inner?: boolean;
@@ -44,11 +44,9 @@ const Serializer = function (settings?: SerializerSettings, schema = Schema()) {
    * @return {String} String with HTML based on DOM tree.
    */
   const serialize = (node: Node): string => {
-    let handlers, validate;
+    const validate = settings.validate;
 
-    validate = settings.validate;
-
-    handlers = {
+    const handlers = {
       // #text
       3(node) {
         writer.text(node.value, node.raw);
@@ -88,7 +86,7 @@ const Serializer = function (settings?: SerializerSettings, schema = Schema()) {
 
     const walk = function (node: Node) {
       const handler = handlers[node.type];
-      let  name, isEmpty, attrs, attrName, attrValue, sortedAttrs, i, l, elementRule;
+      let name, isEmpty, attrs, attrName, attrValue, sortedAttrs, i, l, elementRule;
 
       if (!handler) {
         name = node.name;

@@ -13,7 +13,7 @@ const fireWordCountUpdate = (editor: Editor, api: WordCountApi) => {
     wordCount: {
       words: api.body.getWordCount(),
       characters: api.body.getCharacterCount(),
-      charactersWithoutSpaces: api.body.getCharacterCountWithoutSpaces(),
+      charactersWithoutSpaces: api.body.getCharacterCountWithoutSpaces()
     }
   });
 };

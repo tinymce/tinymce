@@ -33,7 +33,7 @@ UnitTest.asynctest('browser.tinymce.plugins.emoticons.AppendTest', (success, fai
         tinyApis.sFocus(),
         tinyUi.sClickOnToolbar('click emoticons', 'button'),
         Chain.asStep({}, [
-          tinyUi.cWaitForPopup('wait for popup', 'div[role="dialog"]'),
+          tinyUi.cWaitForPopup('wait for popup', 'div[role="dialog"]')
         ]),
         FocusTools.sTryOnSelector('Focus should start on input', doc, 'input'),
         Chain.asStep(body, [
@@ -44,7 +44,7 @@ UnitTest.asynctest('browser.tinymce.plugins.emoticons.AppendTest', (success, fai
               tabElement(s, str, arr)('People'),
               tabElement(s, str, arr)('User Defined')
             ]
-          }))),
+          })))
         ]),
         FocusTools.sSetActiveValue(doc, 'clock'),
         Chain.asStep(doc, [

@@ -27,7 +27,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.OutdentForcedRootBlockFalseTest'
     tinyActions.sContentKeystroke(key, { }),
     sNormalizeBody(editor),
     tinyApis.sAssertContent(expectedHtml),
-    tinyApis.sAssertSelection(expectedPath, expectedOffset, expectedPath, expectedOffset),
+    tinyApis.sAssertSelection(expectedPath, expectedOffset, expectedPath, expectedOffset)
   ]);
 
   const sNormalizeBody = (editor: Editor) => Step.sync(() => {
@@ -52,7 +52,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.OutdentForcedRootBlockFalseTest'
           'aa\n<div style="padding-left: 40px;">bb</div>',
           [ 1, 0 ],
           1
-        ), // no outdent
+        ) // no outdent
       ]))
     ], onSuccess, onFailure);
   }, {

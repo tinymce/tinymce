@@ -6,31 +6,19 @@
  */
 
 import {
-  AddEventsBehaviour,
-  AlloyComponent,
-  AlloyEvents,
-  AlloyTriggers,
-  Behaviour,
-  Composing,
-  CustomEvent,
-  Replacing,
-  Sliding,
-  SystemEvents,
-  Tabstopping,
-  Focusing,
-  SlotContainer,
-  SlotContainerTypes,
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Composing, CustomEvent, Focusing, Replacing, Sliding,
+  SlotContainer, SlotContainerTypes, SystemEvents, Tabstopping
 } from '@ephox/alloy';
+import { ValueSchema } from '@ephox/boulder';
 import { Sidebar as BridgeSidebar } from '@ephox/bridge';
 import { HTMLElement } from '@ephox/dom-globals';
-import { Arr, Id, Option, Obj, Cell, Fun } from '@ephox/katamari';
+import { Arr, Cell, Fun, Id, Obj, Option } from '@ephox/katamari';
 import { Css, Width } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
+import { onControlAttached, onControlDetached } from 'tinymce/themes/silver/ui/controls/Controls';
 
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 import { SimpleBehaviours } from '../alien/SimpleBehaviours';
-import { onControlAttached, onControlDetached } from 'tinymce/themes/silver/ui/controls/Controls';
-import { ValueSchema } from '@ephox/boulder';
 
 export type SidebarConfig = Record<string, BridgeSidebar.SidebarApi>;
 
@@ -105,7 +93,7 @@ const makePanels = (parts: SlotContainerTypes.SlotContainerParts, panelConfigs: 
 const makeSidebar = (panelConfigs: SidebarConfig) => SlotContainer.sketch((parts) => ({
   dom: {
     tag: 'div',
-    classes: [ 'tox-sidebar__pane-container' ],
+    classes: [ 'tox-sidebar__pane-container' ]
   },
   components: makePanels(parts, panelConfigs),
   slotBehaviours: SimpleBehaviours.unnamedEvents([

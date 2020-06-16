@@ -1,10 +1,10 @@
-import { Pipeline, Log, FocusTools, Keyboard, Keys } from '@ephox/agar';
+import { FocusTools, Keyboard, Keys, Log, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
+import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import { Element } from '@ephox/sugar';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
-import { Element } from '@ephox/sugar';
-import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogKeyboardNavTest', (success, failure) => {
 
@@ -81,7 +81,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogKeyboardNavTest', (
       sPressTabKey,
       sAssertFocusOnItem('Save', '.tox-button:contains("Save")'),
       sPressTabKey,
-      sAssertFocusOnItem('Advanced Tab', '.tox-dialog__body-nav-item:contains("Advanced")'),
+      sAssertFocusOnItem('Advanced Tab', '.tox-dialog__body-nav-item:contains("Advanced")')
     ]), onSuccess, onFailure);
   }, {
     plugins: 'table',

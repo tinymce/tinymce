@@ -8,10 +8,10 @@ import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
+import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Button } from 'ephox/alloy/api/ui/Button';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { InlineView } from 'ephox/alloy/api/ui/InlineView';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import * as Layout from 'ephox/alloy/positioning/layout/Layout';
 import { NodeAnchorSpec } from 'ephox/alloy/positioning/mode/Anchoring';
 import * as Sinks from 'ephox/alloy/test/Sinks';
@@ -130,7 +130,7 @@ UnitTest.asynctest('InlineViewRepositionTest', (success, failure) => {
 
           sCheckOpen('Dialog should still be open', inline, '.test-inline'),
           sCheckPosition('Check inline view has not moved', inline.element(), 200, 210),
-          store.sAssertEq('Broadcasting SHOULD fire reposition event', [ 'test-reposition-fired' ]),
+          store.sAssertEq('Broadcasting SHOULD fire reposition event', [ 'test-reposition-fired' ])
         ])
       ),
 

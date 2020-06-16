@@ -5,10 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import * as ArrUtils from '../util/ArrUtils';
-import * as NodeType from '../dom/NodeType';
 import DomQuery from '../api/dom/DomQuery';
 import Editor from '../api/Editor';
+import * as NodeType from '../dom/NodeType';
+import * as ArrUtils from '../util/ArrUtils';
 
 /**
  * Internal class for overriding formatting.
@@ -37,7 +37,7 @@ const postProcess = function (name: string, editor: Editor) {
 
 addPostProcessHook('pre', function (editor: Editor) {
   const rng = editor.selection.getRng();
-  let isPre, blocks;
+  let blocks;
 
   const hasPreSibling = function (pre) {
     return isPre(pre.previousSibling) && ArrUtils.indexOf(blocks, pre.previousSibling) !== -1;
@@ -48,7 +48,7 @@ addPostProcessHook('pre', function (editor: Editor) {
     DomQuery(pre1).append('<br><br>').append(pre2.childNodes);
   };
 
-  isPre = NodeType.matchNodeNames([ 'pre' ]);
+  const isPre = NodeType.matchNodeNames([ 'pre' ]);
 
   if (!rng.collapsed) {
     blocks = editor.selection.getSelectedBlocks();

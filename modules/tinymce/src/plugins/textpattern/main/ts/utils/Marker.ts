@@ -37,7 +37,7 @@ const createMarker = (dom: DOMUtils, markerPrefix: string, pathRange: PathRange)
   return {
     prefix: markerPrefix,
     end: textEnd.parentNode.insertBefore(newMarker(dom, markerPrefix + '-end'), textEnd),
-    start: textStart.parentNode.insertBefore(newMarker(dom, markerPrefix + '-start'), textStart),
+    start: textStart.parentNode.insertBefore(newMarker(dom, markerPrefix + '-start'), textStart)
   };
 };
 

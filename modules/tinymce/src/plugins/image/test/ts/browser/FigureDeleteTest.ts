@@ -48,6 +48,6 @@ UnitTest.asynctest('browser.tinymce.plugins.image.FigureDeleteTest', (success, f
     plugins: 'image',
     toolbar: 'image',
     image_caption: true,
-    base_url: '/project/tinymce/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

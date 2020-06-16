@@ -47,7 +47,7 @@ UnitTest.asynctest('Widget Keying Test', (success, failure) => {
       },
       components: [
         makeButton('button1', 'Button1'),
-        makeButton('button2', 'Button2'),
+        makeButton('button2', 'Button2')
       ],
 
       behaviours: Behaviour.derive([

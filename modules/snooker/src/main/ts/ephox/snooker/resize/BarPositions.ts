@@ -1,5 +1,5 @@
 import { Arr, Fun, Option } from '@ephox/katamari';
-import { Height, Location, Width, Element } from '@ephox/sugar';
+import { Element, Height, Location, Width } from '@ephox/sugar';
 
 export interface RowInfo {
   readonly row: number;
@@ -84,13 +84,13 @@ const height: BarPositions<RowInfo> = {
 const ltr: BarPositions<ColInfo> = {
   delta: Fun.identity,
   edge: ltrEdge,
-  positions: (optElements: Option<Element>[]) => findPositions(getLeftEdge, getRightEdge, optElements),
+  positions: (optElements: Option<Element>[]) => findPositions(getLeftEdge, getRightEdge, optElements)
 };
 
 const rtl: BarPositions<ColInfo> = {
   delta: negate,
   edge: rtlEdge,
-  positions: (optElements: Option<Element>[]) => findPositions(getRightEdge, getLeftEdge, optElements),
+  positions: (optElements: Option<Element>[]) => findPositions(getRightEdge, getLeftEdge, optElements)
 };
 
 export {

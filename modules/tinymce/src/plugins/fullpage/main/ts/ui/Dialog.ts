@@ -59,7 +59,7 @@ const open = function (editor: Editor, headState: Cell<string>) {
           name: 'docencoding',
           type: 'input',
           label: 'Encoding'
-        },
+        }
       ]
     },
     buttons: [

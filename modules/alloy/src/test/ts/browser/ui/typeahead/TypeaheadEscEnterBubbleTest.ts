@@ -1,16 +1,16 @@
 import { FocusTools, Keyboard, Keys } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Arr, Future, Result, Option } from '@ephox/katamari';
+import { Arr, Future, Option, Result } from '@ephox/katamari';
 import { Node } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import { Typeahead } from 'ephox/alloy/api/ui/Typeahead';
 import * as TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import * as Sinks from 'ephox/alloy/test/Sinks';
 import TestTypeaheadSteps from 'ephox/alloy/test/typeahead/TestTypeaheadSteps';
 
@@ -88,14 +88,14 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadEscEnterBubbleTest', (s
       steps.sWaitForMenu('Down to activate menu'),
       Keyboard.sKeydown(doc, Keys.escape(), {}),
       steps.sWaitForNoMenu('Esc to close menu'),
-      Keyboard.sKeydown(doc,  Keys.escape(), {}),
+      Keyboard.sKeydown(doc, Keys.escape(), {}),
 
       FocusTools.sSetFocus('Focusing typeahead', gui.element(), 'input'),
       Keyboard.sKeydown(doc, Keys.down(), { }),
       steps.sWaitForMenu('Down to activate menu'),
       Keyboard.sKeydown(doc, Keys.enter(), {}),
       steps.sWaitForNoMenu('Enter to close menu'),
-      Keyboard.sKeydown(doc,  Keys.enter(), {}),
+      Keyboard.sKeydown(doc, Keys.enter(), {}),
       store.sAssertEq('Should have item1 and onExecute', [ '1(input-div-li)', '***onExecute***' ]),
 
       FocusTools.sSetFocus('Focusing typeahead to open preview mode', gui.element(), 'input'),
@@ -109,7 +109,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadEscEnterBubbleTest', (s
       store.sAssertEq('Pressing <enter> in preview mode should execute', [ '***onExecute***' ]),
 
       GuiSetup.mRemoveStyles,
-      GuiSetup.mTeardownKeyLogger(body, [ 'keydown.to.body: 27' ]),
+      GuiSetup.mTeardownKeyLogger(body, [ 'keydown.to.body: 27' ])
     ];
   }, success, failure);
 });

@@ -130,5 +130,5 @@ export {
   slotVisibility,
 
   highlight,
-  dehighlight,
+  dehighlight
 };

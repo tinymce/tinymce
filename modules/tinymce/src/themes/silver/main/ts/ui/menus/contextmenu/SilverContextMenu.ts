@@ -16,7 +16,7 @@ import * as DesktopContextMenu from './platform/DesktopContextMenu';
 import * as MobileContextMenu from './platform/MobileContextMenu';
 import * as Settings from './Settings';
 
-type MenuItem =  string | Menu.MenuItemApi | Menu.NestedMenuItemApi | Menu.SeparatorMenuItemApi;
+type MenuItem = string | Menu.MenuItemApi | Menu.NestedMenuItemApi | Menu.SeparatorMenuItemApi;
 
 const isSeparator = (item: MenuItem): boolean => Type.isString(item) ? item === '|' : item.type === 'separator';
 
@@ -118,7 +118,7 @@ export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Err
   const contextmenu = GuiFactory.build(
     InlineView.sketch({
       dom: {
-        tag: 'div',
+        tag: 'div'
       },
       lazySink,
       onEscape: () => editor.focus(),

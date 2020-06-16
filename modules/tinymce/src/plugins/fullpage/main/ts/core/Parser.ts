@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLLinkElement } from '@ephox/dom-globals';
 import Editor from 'tinymce/core/api/Editor';
 import DomParser from 'tinymce/core/api/html/DomParser';
 import Node from 'tinymce/core/api/html/Node';
@@ -104,8 +103,8 @@ const htmlToData = function (editor: Editor, head: string) {
   return data;
 };
 
-const dataToHtml = function (editor, data, head) {
-  let headerFragment, headElement, html, elm, value;
+const dataToHtml = function (editor: Editor, data, head) {
+  let headElement, elm, value;
   const dom = editor.dom;
 
   function setAttr(elm, name, value) {
@@ -120,7 +119,7 @@ const dataToHtml = function (editor, data, head) {
     }
   }
 
-  headerFragment = parseHeader(head);
+  const headerFragment = parseHeader(head);
   headElement = headerFragment.getAll('head')[0];
   if (!headElement) {
     elm = headerFragment.getAll('html')[0];
@@ -236,7 +235,7 @@ const dataToHtml = function (editor, data, head) {
     }
   });
 
-  const currentStyleSheetsMap: Record<string, HTMLLinkElement> = {};
+  const currentStyleSheetsMap: Record<string, Node> = {};
   Tools.each(headerFragment.getAll('link'), function (stylesheet) {
     if (stylesheet.attr('rel') === 'stylesheet') {
       currentStyleSheetsMap[stylesheet.attr('href')] = stylesheet;
@@ -296,7 +295,7 @@ const dataToHtml = function (editor, data, head) {
   }
 
   // Serialize header fragment and crop away body part
-  html = Serializer({
+  const html = Serializer({
     validate: false,
     indent: true,
     indent_before: 'head,html,body,meta,title,script,link,style',

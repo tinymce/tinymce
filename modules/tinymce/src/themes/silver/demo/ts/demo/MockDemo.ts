@@ -19,7 +19,7 @@ const mockFeatureState = () => {
   return {
     get,
     set,
-    toggle,
+    toggle
   };
 };
 

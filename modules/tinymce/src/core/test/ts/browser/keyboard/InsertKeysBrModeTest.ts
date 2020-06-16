@@ -1,8 +1,8 @@
 import { GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock-client';
+import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import Editor from 'tinymce/core/api/Editor';
+import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.core.keyboard.InsertKeysBrModeTest', (success, failure) => {
   Theme();
@@ -116,7 +116,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.InsertKeysBrModeTest', (succes
             tinyApis.sAssertSelection([ 0 ], 7, [ 0 ], 7),
             tinyApis.sAssertContent('a b c d')
           ]))
-        ])),
+        ]))
       ]))
     ], onSuccess, onFailure);
   }, {

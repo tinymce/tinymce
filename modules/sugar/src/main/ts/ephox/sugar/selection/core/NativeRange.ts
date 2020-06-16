@@ -10,7 +10,7 @@ const selectNodeContents = (win: Window, element: Element<DomNode>) => {
   return rng;
 };
 
-const selectNodeContentsUsing = (rng: Range, element: Element<DomNode>) =>  rng.selectNodeContents(element.dom());
+const selectNodeContentsUsing = (rng: Range, element: Element<DomNode>) => rng.selectNodeContents(element.dom());
 
 const isWithin = (outerRange: Range, innerRange: Range) =>
   // Adapted from: http://stackoverflow.com/questions/5605401/insert-link-in-contenteditable-element
@@ -81,12 +81,12 @@ const getFirstRect = (rng: Range) => {
   const rects = rng.getClientRects();
   // ASSUMPTION: The first rectangle is the start of the selection
   const rect = rects.length > 0 ? rects[0] : rng.getBoundingClientRect();
-  return rect.width > 0 || rect.height > 0  ? Option.some(rect).map(toRect) : Option.none<StructRect>();
+  return rect.width > 0 || rect.height > 0 ? Option.some(rect).map(toRect) : Option.none<StructRect>();
 };
 
 const getBounds = (rng: Range) => {
   const rect = rng.getBoundingClientRect();
-  return rect.width > 0 || rect.height > 0  ? Option.some(rect).map(toRect) : Option.none<StructRect>();
+  return rect.width > 0 || rect.height > 0 ? Option.some(rect).map(toRect) : Option.none<StructRect>();
 };
 
 const toString = (rng: Range) => rng.toString();

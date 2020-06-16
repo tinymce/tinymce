@@ -76,7 +76,7 @@ UnitTest.asynctest('browser.tinymce.core.ModeTest', (success, failure) => {
     Pipeline.async({}, Arr.flatten([
       [
         sOverrideDefaultMode,
-        sRegisterTestModes,
+        sRegisterTestModes
       ],
       Logger.ts('test default API', [
         sAssertMode('readonly'),
@@ -86,7 +86,7 @@ UnitTest.asynctest('browser.tinymce.core.ModeTest', (success, failure) => {
         sAssertBodyClass(editor, 'mce-content-readonly', false),
         sSetMode('readonly'),
         sAssertMode('readonly'),
-        sAssertBodyClass(editor, 'mce-content-readonly', true),
+        sAssertBodyClass(editor, 'mce-content-readonly', true)
       ]),
       Logger.ts('test custom modes (aliases of design and readonly)', [
         sSetMode('customDesign'),
@@ -94,19 +94,19 @@ UnitTest.asynctest('browser.tinymce.core.ModeTest', (success, failure) => {
         sAssertBodyClass(editor, 'mce-content-readonly', false),
         sSetMode('customReadonly'),
         sAssertMode('customReadonly'),
-        sAssertBodyClass(editor, 'mce-content-readonly', true),
+        sAssertBodyClass(editor, 'mce-content-readonly', true)
       ]),
       Logger.ts('test failing to activate a readonly-like mode leaves the editor in design', [
         sSetMode('design'),
         sSetMode('failingActivateReadonly'),
         sAssertMode('design'),
-        sAssertBodyClass(editor, 'mce-content-readonly', false),
+        sAssertBodyClass(editor, 'mce-content-readonly', false)
       ]),
       Logger.ts('test failing to deactivate a design-like mode still switches to readonly', [
         sSetMode('failingDeactivateDesign'),
         sSetMode('readonly'),
         sAssertMode('readonly'),
-        sAssertBodyClass(editor, 'mce-content-readonly', true),
+        sAssertBodyClass(editor, 'mce-content-readonly', true)
       ])
     ]), onSuccess, onFailure);
   }, {

@@ -7,7 +7,7 @@ export default {
     items: [
       {
         name: 'char',
-        type: 'collection',
+        type: 'collection'
         // TODO TINY-3229 implement collection columns properly
         // columns: 'auto'
       }

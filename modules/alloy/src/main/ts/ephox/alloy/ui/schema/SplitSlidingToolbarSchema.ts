@@ -83,7 +83,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
             mode: 'pressed'
           },
           toggleOnExecute: false
-        }),
+        })
       ])
     })
   }),

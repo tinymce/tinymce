@@ -141,7 +141,7 @@ UnitTest.asynctest('FormCoupledInputsTest', (success, failure) => {
               UiFinder.cFindIn('.field2 input'),
               UiControls.cGetValue,
               Assertions.cAssertEq('Field 2 is not correct', field2)
-            ]),
+            ])
           ]
         )
       ]);
@@ -166,7 +166,7 @@ UnitTest.asynctest('FormCoupledInputsTest', (success, failure) => {
               Chain.binder((elem) => component.getSystem().getByDom(elem)),
               Chain.mapper((subcomponent) => Representing.getValue(subcomponent)),
               Assertions.cAssertEq('Checking represented data', valueOut)
-            ]),
+            ])
           ]
         )
       ]);
@@ -194,7 +194,7 @@ UnitTest.asynctest('FormCoupledInputsTest', (success, failure) => {
               Chain.op((comp) => {
                 Assertions.assertEq('Not lock', true, Class.has(comp.element(), 'lock'));
               })
-            ]),
+            ])
           ])
       ]);
 

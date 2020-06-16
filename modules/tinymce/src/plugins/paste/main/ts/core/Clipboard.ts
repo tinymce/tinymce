@@ -5,7 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { ClipboardEvent, DataTransfer, DragEvent, Event, File, HTMLImageElement, Image, KeyboardEvent, navigator, Range } from '@ephox/dom-globals';
+import {
+  ClipboardEvent, DataTransfer, DragEvent, Event, File, HTMLImageElement, Image, KeyboardEvent, navigator, Range
+} from '@ephox/dom-globals';
 import { Arr, Cell, Singleton } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
@@ -285,7 +287,7 @@ const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: 
   });
 
   function insertClipboardContent(clipboardContent: ClipboardContents, isKeyBoardPaste: boolean, plainTextMode: boolean, internal: boolean) {
-    let content, isPlainTextHtml, isImage;
+    let content;
 
     // Grab HTML from Clipboard API or paste bin as a fallback
     if (hasContentType(clipboardContent, 'text/html')) {
@@ -305,8 +307,8 @@ const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: 
 
     pasteBin.remove();
 
-    isPlainTextHtml = (internal === false && Newlines.isPlainText(content));
-    isImage = SmartPaste.isImageUrl(content);
+    const isPlainTextHtml = (internal === false && Newlines.isPlainText(content));
+    const isImage = SmartPaste.isImageUrl(content);
 
     // If we got nothing from clipboard API and pastebin or the content is a plain text (with only
     // some BRs, Ps or DIVs as newlines) then we fallback to plain/text

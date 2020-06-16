@@ -5,13 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Behaviour, Keying, Replacing, SimpleSpec, AlloySpec } from '@ephox/alloy';
-import { Option, Arr } from '@ephox/katamari';
+import { AlloySpec, Behaviour, Keying, Replacing, SimpleSpec } from '@ephox/alloy';
+import { Types } from '@ephox/bridge';
+import { Arr, Option } from '@ephox/katamari';
+import { UiFactoryBackstageShared } from '../../backstage/Backstage';
 
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 import { RepresentingConfigs } from '../alien/RepresentingConfigs';
-import { Types } from '@ephox/bridge';
-import { UiFactoryBackstageShared } from '../../backstage/Backstage';
 import { Omit } from '../Omit';
 
 type LabelSpec = Omit<Types.Label.Label, 'type'>;
@@ -39,7 +39,7 @@ export const renderLabel = (spec: LabelSpec, backstageShared: UiFactoryBackstage
       RepresentingConfigs.domHtml(Option.none()),
       Keying.config({
         mode: 'acyclic'
-      }),
+      })
     ])
   };
 };

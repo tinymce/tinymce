@@ -39,7 +39,7 @@ const phase: {
   kontinue: <E> () => TextSeekerPhase<E>;
   finish: <E> (info: SpotPoint<E>) => TextSeekerPhase<E>;
 } = Adt.generate([
-  { abort: [  ] },
+  { abort: [ ] },
   { kontinue: [ ] },
   { finish: [ 'info' ] }
 ]);

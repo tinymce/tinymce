@@ -5,12 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Adt,  Arr,  Option } from '@ephox/katamari';
+import { Adt, Arr, Option } from '@ephox/katamari';
+import Editor from '../api/Editor';
 import * as Settings from '../api/Settings';
+import * as LazyEvaluator from '../util/LazyEvaluator';
 import * as ContextSelectors from './ContextSelectors';
 import * as NewLineUtils from './NewLineUtils';
-import * as LazyEvaluator from '../util/LazyEvaluator';
-import Editor from '../api/Editor';
 
 const newLineAction = Adt.generate([
   { br: [ ] },

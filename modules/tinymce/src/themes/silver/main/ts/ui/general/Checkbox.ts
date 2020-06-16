@@ -71,7 +71,7 @@ export const renderCheckbox = (spec: CheckboxSpec, providerBackstage: UiFactoryB
           AlloyTriggers.emitWith(component, formChangeEvent, { name: spec.name } );
         })
       ])
-    ]),
+    ])
   });
 
   const pLabel = AlloyFormField.parts().label({
@@ -112,7 +112,7 @@ export const renderCheckbox = (spec: CheckboxSpec, providerBackstage: UiFactoryB
   return AlloyFormField.sketch({
     dom: {
       tag: 'label',
-      classes: [ 'tox-checkbox' ],
+      classes: [ 'tox-checkbox' ]
     },
     components: [
       pField,

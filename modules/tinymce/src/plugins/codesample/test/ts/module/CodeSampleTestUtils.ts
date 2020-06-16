@@ -1,6 +1,6 @@
-import { Logger, Step, Assertions, Waiter, ApproxStructure, UiFinder, Chain, Mouse, FocusTools, GeneralSteps } from '@ephox/agar';
-import { Element, TextContent } from '@ephox/sugar';
+import { ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Logger, Mouse, Step, UiFinder, Waiter } from '@ephox/agar';
 import { document } from '@ephox/dom-globals';
+import { Element, TextContent } from '@ephox/sugar';
 
 const dialogSelector = 'div.tox-dialog';
 const toolbarButtonSelector = '[role="toolbar"] button[aria-label="Insert/edit code sample"]';
@@ -75,7 +75,7 @@ const sAssertEditorContents = (editorBody, language, content, selector) =>
    */
   GeneralSteps.sequence(Logger.ts('Assert overall structure of editor content', [
     sAssertEditorContentStructure(editorBody, language, content),
-    sAssertPreText(Element.fromDom(editorBody), selector, content),
+    sAssertPreText(Element.fromDom(editorBody), selector, content)
   ]));
 
 export {

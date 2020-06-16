@@ -23,7 +23,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.QuickLinkTest', (success, failu
       // open and very quickly close because this was happing at superhuman
       // speeds. So I'm slowing it down.
       Step.wait(100),
-      FocusTools.sTryOnSelector('Selector should be in contextform input', doc, '.tox-toolbar input'),
+      FocusTools.sTryOnSelector('Selector should be in contextform input', doc, '.tox-toolbar input')
     ]);
 
     Pipeline.async({}, [

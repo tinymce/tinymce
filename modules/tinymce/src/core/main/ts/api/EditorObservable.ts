@@ -5,14 +5,14 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node, Event } from '@ephox/dom-globals';
-import Observable from './util/Observable';
+import { Event, Node } from '@ephox/dom-globals';
+import { Obj } from '@ephox/katamari';
+import { isReadOnly, preventReadOnlyEvents } from '../mode/Readonly';
 import DOMUtils from './dom/DOMUtils';
-import Tools from './util/Tools';
 import Editor from './Editor';
 import { EditorEventMap } from './EventTypes';
-import { isReadOnly, preventReadOnlyEvents } from '../mode/Readonly';
-import { Obj } from '@ephox/katamari';
+import Observable from './util/Observable';
+import Tools from './util/Tools';
 
 /**
  * This mixin contains the event logic for the tinymce.Editor class.
@@ -76,7 +76,7 @@ const fireEvent = (editor: Editor, eventName: string, e: Event) => {
  * @param {String} eventName Name of the event for example "click".
  */
 const bindEventDelegate = function (editor: Editor, eventName: string) {
-  let eventRootElm, delegate;
+  let delegate;
 
   if (!editor.delegates) {
     editor.delegates = {};
@@ -86,7 +86,7 @@ const bindEventDelegate = function (editor: Editor, eventName: string) {
     return;
   }
 
-  eventRootElm = getEventTarget(editor, eventName);
+  const eventRootElm = getEventTarget(editor, eventName);
 
   if (editor.settings.event_root) {
     if (!customEventRootDelegates) {

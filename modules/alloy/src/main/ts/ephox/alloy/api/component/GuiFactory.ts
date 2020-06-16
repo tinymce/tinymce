@@ -95,7 +95,7 @@ const build = (spec: AlloySpec): AlloyComponent => GuiTypes.getPremade(spec).fol
   // EFFICIENCY: Consider not merging here, and passing uid through separately
   const userSpecWithUid = spec.hasOwnProperty('uid') ? spec as SimpleOrSketchSpec : {
     uid: uids(''),
-    ...spec,
+    ...spec
   } as SimpleOrSketchSpec;
   return buildFromSpec(userSpecWithUid).getOrDie();
 }, (prebuilt) => prebuilt);

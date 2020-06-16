@@ -35,7 +35,7 @@ UnitTest.test('WalkerPathTest', function () {
             Gene('3.2.1.1', 'node', []),
             Gene('3.2.1.2', 'node', [])
           ]),
-          Gene('3.2.2', 'node', []),
+          Gene('3.2.2', 'node', [])
         ]),
         Gene('3.3', 'node', [])
       ])

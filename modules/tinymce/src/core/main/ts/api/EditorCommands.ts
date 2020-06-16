@@ -6,18 +6,18 @@
  */
 
 import { HTMLElement } from '@ephox/dom-globals';
-import Env from './Env';
+import { Bookmark } from '../bookmark/BookmarkTypes';
+import * as FontCommands from '../commands/FontCommands';
+import * as IndentOutdent from '../commands/IndentOutdent';
 import * as InsertContent from '../content/InsertContent';
 import * as DeleteCommands from '../delete/DeleteCommands';
-import * as FontCommands from '../commands/FontCommands';
 import * as NodeType from '../dom/NodeType';
 import * as InsertBr from '../newline/InsertBr';
-import * as SelectionBookmark from '../selection/SelectionBookmark';
-import Tools from './util/Tools';
-import * as IndentOutdent from '../commands/IndentOutdent';
-import Editor from './Editor';
 import * as InsertNewLine from '../newline/InsertNewLine';
-import { Bookmark } from '../bookmark/BookmarkTypes';
+import * as SelectionBookmark from '../selection/SelectionBookmark';
+import Editor from './Editor';
+import Env from './Env';
+import Tools from './util/Tools';
 
 /**
  * This class enables you to add custom editor commands and it contains
@@ -61,7 +61,7 @@ class EditorCommands {
    * @return {Boolean} true/false if the command was found or not.
    */
   public execCommand(command: string, ui?: boolean, value?: any, args?: any): boolean {
-    let func, customCommand, state = false;
+    let func, state = false;
     const self = this;
 
     if (self.editor.removed) {
@@ -79,7 +79,7 @@ class EditorCommands {
       return false;
     }
 
-    customCommand = command.toLowerCase();
+    const customCommand = command.toLowerCase();
     if ((func = self.commands.exec[customCommand])) {
       func(customCommand, ui, value);
       self.editor.fire('ExecCommand', { command, ui, value });
@@ -350,14 +350,14 @@ class EditorCommands {
 
       // Override list commands to fix WebKit bug
       'InsertUnorderedList,InsertOrderedList'(command) {
-        let listElm, listParent;
+        let listParent;
 
         self.execNativeCommand(command);
 
         // WebKit produces lists within block elements so we need to split them
         // we will replace the native list creation logic to custom logic later on
         // TODO: Remove this when the list creation logic is removed
-        listElm = editor.dom.getParent(editor.selection.getNode(), 'ol,ul');
+        const listElm = editor.dom.getParent(editor.selection.getNode(), 'ol,ul');
         if (listElm) {
           listParent = listElm.parentNode;
 
@@ -476,13 +476,11 @@ class EditorCommands {
       },
 
       'mceInsertLink'(command, ui, value) {
-        let anchor;
-
         if (typeof value === 'string') {
           value = { href: value };
         }
 
-        anchor = editor.dom.getParent(editor.selection.getNode(), 'a');
+        const anchor = editor.dom.getParent(editor.selection.getNode(), 'a');
 
         // Spaces are never valid in URLs and it's a very common mistake for people to make so we fix it here.
         value.href = value.href.replace(/ /g, '%20');

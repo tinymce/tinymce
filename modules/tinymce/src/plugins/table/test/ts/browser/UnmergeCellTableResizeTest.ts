@@ -1,10 +1,10 @@
 import { Assertions, Chain, Guard, Keyboard, Keys, Log, NamedChain, TestLogs, UiFinder } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Editor, TinyDom } from '@ephox/mcagar';
+import { SelectorFind } from '@ephox/sugar';
 
 import Plugin from 'tinymce/plugins/table/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
-import { SelectorFind } from '@ephox/sugar';
 import * as TableTestUtils from '../module/test/TableTestUtils';
 
 UnitTest.asynctest('browser.tinymce.plugins.table.UnmergeCellTableResizeTest', (success, failure) => {
@@ -273,7 +273,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.UnmergeCellTableResizeTest', (
       if (input.widthBefore.isPercent) {
         // due to rounding errors we can be off by one pixel for percentage tables
         const actualDiff = Math.abs(input.widthBefore.px - input.widthAfter.px);
-        Assert.eq(`table width should be approx (within 1px): ${input.widthBefore.raw}% (${input.widthBefore.px}px) ~= ${input.widthAfter.raw}% (${input.widthAfter.px}px)`, true,  actualDiff <= 1);
+        Assert.eq(`table width should be approx (within 1px): ${input.widthBefore.raw}% (${input.widthBefore.px}px) ~= ${input.widthAfter.raw}% (${input.widthAfter.px}px)`, true, actualDiff <= 1);
       } else {
         Assertions.assertEq('table width should not change', input.widthBefore, input.widthAfter);
       }

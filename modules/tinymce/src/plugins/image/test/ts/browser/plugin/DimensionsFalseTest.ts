@@ -1,17 +1,10 @@
 import { Log, Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Editor } from '@ephox/mcagar';
 import ImagePlugin from 'tinymce/plugins/image/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 
-import {
-  cAssertCleanHtml,
-  cExecCommand,
-  cFillActiveDialog,
-  cSubmitDialog,
-  cWaitForDialog,
-  silverSettings,
-} from '../../module/Helpers';
-import { UnitTest } from '@ephox/bedrock-client';
+import { cAssertCleanHtml, cExecCommand, cFillActiveDialog, cSubmitDialog, cWaitForDialog, silverSettings } from '../../module/Helpers';
 
 UnitTest.asynctest('Image dialog image_dimensions: false', (success, failure) => {
   SilverTheme();

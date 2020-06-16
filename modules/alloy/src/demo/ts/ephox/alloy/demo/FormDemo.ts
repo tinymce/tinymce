@@ -175,7 +175,7 @@ export default (): void => {
             components: [
               parts.field('omega', DemoFields.coupledTextMunger(omegaSpec)),
               parts.field('alpha', DemoFields.textMunger(alphaSpec)),
-              parts.field('beta', DemoFields.textMunger(betaSpec)),
+              parts.field('beta', DemoFields.textMunger(betaSpec))
             ]
           }))
         ),

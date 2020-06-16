@@ -1,7 +1,7 @@
-import { Pipeline, Step, UiFinder, Log } from '@ephox/agar';
+import { Log, Pipeline, Step, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
-import { TinyLoader, TinyApis } from '@ephox/mcagar';
+import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
 import CodePlugin from 'tinymce/plugins/codesample/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
@@ -36,7 +36,7 @@ UnitTest.asynctest('browser.tinymce.plugins.codesample.DblClickCodesampleTest', 
               editor.fire('dblclick', { target: pre });
             }),
             UiFinder.sWaitForVisible('Waited for dialog to be visible', docBody, dialogSelector),
-            TestUtils.sAssertCodeSampleDialog('markup', markupContent),
+            TestUtils.sAssertCodeSampleDialog('markup', markupContent)
           ]
         ),
 
@@ -47,8 +47,8 @@ UnitTest.asynctest('browser.tinymce.plugins.codesample.DblClickCodesampleTest', 
           UiFinder.sNotExists(docBody, 'button[aria-pressed="true"]'),
           tinyApis.sSelect('pre.language-markup', []),
           tinyApis.sNodeChanged(),
-          UiFinder.sExists(docBody, 'button[aria-pressed="true"]'),
-        ]),
+          UiFinder.sExists(docBody, 'button[aria-pressed="true"]')
+        ])
       ]
       , onSuccess, onFailure);
   }, {

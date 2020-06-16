@@ -63,7 +63,7 @@ const registerCommandButtons = (editor: Editor) => {
 
 const registerCommandToggleButtons = (editor: Editor) => {
   Tools.each([
-    { name: 'blockquote', text: 'Blockquote', action: 'mceBlockQuote', icon: 'quote' },
+    { name: 'blockquote', text: 'Blockquote', action: 'mceBlockQuote', icon: 'quote' }
   ], (btn) => {
     editor.ui.registry.addToggleButton(btn.name, {
       tooltip: btn.text,
