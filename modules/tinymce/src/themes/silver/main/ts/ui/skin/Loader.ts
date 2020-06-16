@@ -9,7 +9,6 @@ import { getSkinUrl, isSkinDisabled } from '../../api/Settings';
 import Editor from 'tinymce/core/api/Editor';
 import * as SkinLoaded from './SkinLoaded';
 import { Fun } from '@ephox/katamari';
-import * as StyleSheetLoaderRegistry from 'tinymce/themes/silver/style/StyleSheetLoaderRegistry';
 
 const loadSkin = (isInline: boolean, editor: Editor) => {
   const skinUrl = getSkinUrl(editor);
@@ -23,12 +22,7 @@ const loadSkin = (isInline: boolean, editor: Editor) => {
   // In Modern Inline, this is explicitly called in editor.on('focus', ...) as well as in render().
   // Seems to work without, but adding a note in case things break later
   if (isSkinDisabled(editor) === false && skinUiCss) {
-    const loaderSettings = {
-      contentCssCors: editor.settings.contentCssCors,
-      referrerPolicy: editor.settings.referrerPolicy
-    };
-    const loader = StyleSheetLoaderRegistry.instance.forElement(editor.getElement(), loaderSettings);
-    loader.load(skinUiCss, SkinLoaded.fireSkinLoaded(editor), SkinLoaded.fireSkinLoadError(editor, 'Skin could not be loaded'));
+    editor.ui.styleSheetLoader.load(skinUiCss, SkinLoaded.fireSkinLoaded(editor), SkinLoaded.fireSkinLoadError(editor, 'Skin could not be loaded'));
   } else {
     SkinLoaded.fireSkinLoaded(editor)();
   }

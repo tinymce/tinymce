@@ -5,15 +5,15 @@ import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import { Option } from '@ephox/katamari';
 
 export interface StyleSheetLoaderRegistry {
-  readonly forElement: (referenceElement: DomNode, settings: Partial<StyleSheetLoaderSettings>) => StyleSheetLoader;
+  readonly forElement: (referenceElement: Element<DomNode>, settings: Partial<StyleSheetLoaderSettings>) => StyleSheetLoader;
 }
 
 const create = (): StyleSheetLoaderRegistry => {
 
   const map = new WeakMap<DomDocument | ShadowRoot, StyleSheetLoader>();
 
-  const forElement = (referenceElement: DomNode, settings: Partial<StyleSheetLoaderSettings>) => {
-    const root = ShadowDom.getRootNode(Element.fromDom(referenceElement));
+  const forElement = (referenceElement: Element<DomNode>, settings: Partial<StyleSheetLoaderSettings>) => {
+    const root = ShadowDom.getRootNode(referenceElement);
 
     const rootDom = root.dom();
     if (rootDom === document) {

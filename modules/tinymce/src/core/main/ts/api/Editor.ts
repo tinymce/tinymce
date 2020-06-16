@@ -41,12 +41,12 @@ import { Plugin } from './PluginManager';
 import { EditorSettings, RawEditorSettings } from './SettingsTypes';
 import Shortcuts from './Shortcuts';
 import { Theme } from './ThemeManager';
-import { registry } from './ui/Registry';
 import EventDispatcher, { NativeEventMap } from './util/EventDispatcher';
 import I18n, { TranslatedString, Untranslated } from './util/I18n';
 import Tools from './util/Tools';
 import URI from './util/URI';
 import WindowManager from './WindowManager';
+import { StyleSheetLoader } from './dom/StyleSheetLoader';
 
 /**
  * This class contains the core logic for a TinyMCE editor.
@@ -69,7 +69,9 @@ import WindowManager from './WindowManager';
  */
 
 export interface Ui {
-  registry: Registry.Registry;
+  readonly registry: Registry.Registry;
+  /** StyleSheetLoader for styles in the editor UI. For content styles, use editor.dom.styleSheetLoader. */
+  readonly styleSheetLoader: StyleSheetLoader;
 }
 
 export interface EditorConstructor {
@@ -323,10 +325,6 @@ class Editor implements EditorObservable {
     if (this.settings.cache_suffix) {
       Env.cacheSuffix = this.settings.cache_suffix.replace(/^[\?\&]+/, '');
     }
-
-    this.ui = {
-      registry: registry()
-    };
 
     const self = this;
     const modeInstance = create(self);
