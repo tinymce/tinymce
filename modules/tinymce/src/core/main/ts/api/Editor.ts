@@ -85,10 +85,10 @@ export interface Ui {
 export interface Styles {
   readonly ui: {
     styleSheetLoader: () => StyleSheetLoader;
-  }
+  };
   readonly content: {
     styleSheetLoader: () => StyleSheetLoader;
-  }
+  };
 }
 
 export interface EditorConstructor {
@@ -390,7 +390,7 @@ class Editor implements EditorObservable {
       element: this.getBody()
     }));
 
-    this.styles = createStyleApi(self)
+    this.styles = createStyleApi(self);
   }
 
   /**

@@ -165,8 +165,6 @@ const loadScripts = function (editor: Editor, suffix: string) {
   });
 };
 
-
-
 const render = function (editor: Editor) {
   const settings = editor.settings, id = editor.id;
 
