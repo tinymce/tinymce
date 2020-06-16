@@ -46,8 +46,11 @@ const setupFromElement = (callback: Loader.RunCallback, settings: Record<string,
   }, settings, Option.some(element));
 };
 
+const removeTinymceElements: () => void = Loader.removeTinymceElements;
+
 export {
   setup,
   setupLight,
-  setupFromElement
+  setupFromElement,
+  removeTinymceElements
 };
