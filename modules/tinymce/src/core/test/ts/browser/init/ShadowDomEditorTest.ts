@@ -1,4 +1,4 @@
-import { Pipeline, Step } from '@ephox/agar';
+import { Pipeline, Step, Chain, NamedChain } from '@ephox/agar';
 import { document, StyleSheet } from '@ephox/dom-globals';
 import { TinyLoader, Editor as McEditor } from '@ephox/mcagar';
 import Editor from 'tinymce/core/api/Editor';
@@ -6,8 +6,6 @@ import Theme from 'tinymce/themes/silver/Theme';
 import { ShadowDom, Element, Insert, Body, Remove } from '@ephox/sugar';
 import { UnitTest, Assert } from '@ephox/bedrock-client';
 import { Arr, Strings } from '@ephox/katamari';
-import { NamedChain } from '@ephox/agar/lib/main/ts/ephox/agar/api/NamedChain';
-import { Chain } from '@ephox/agar/lib/main/ts/ephox/agar/api/Chain';
 
 const isSkin = (ss: StyleSheet) => ss.href !== null && Strings.contains(ss.href, 'skin.min.css');
 
@@ -65,14 +63,13 @@ UnitTest.asynctest('Only one skin stylesheet should be loaded for multiple edito
       NamedChain.write('editor1', mkEditor()),
       NamedChain.write('editor2', mkEditor()),
       NamedChain.write('editor3', mkEditor()),
-      NamedChain.merge([ 'editor1', 'editor2', 'editor3' ], 'editors'),
-      NamedChain.read('editors', Chain.op((editors) => {
+      Chain.op(() => {
         Assert.eq(
           'There should only be 1 skin stylesheet in the ShadowRoot',
           1,
           Arr.filter(sr.dom().styleSheets, isSkin).length
         );
-      })),
+      }),
       NamedChain.read('editor1', McEditor.cRemove),
       NamedChain.read('editor2', McEditor.cRemove),
       NamedChain.read('editor3', McEditor.cRemove)
