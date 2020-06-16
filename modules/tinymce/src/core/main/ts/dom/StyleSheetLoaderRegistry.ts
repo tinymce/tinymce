@@ -8,7 +8,10 @@ export interface StyleSheetLoaderRegistry {
   readonly forElement: (referenceElement: Element<DomNode>, settings: Partial<StyleSheetLoaderSettings>) => StyleSheetLoader;
 }
 
-const create = (): StyleSheetLoaderRegistry => {
+/**
+ * For testing only - please use StyleSheetLoader.instance in production code.
+ */
+export const create = (): StyleSheetLoaderRegistry => {
 
   const map = new WeakMap<DomDocument | ShadowRoot, StyleSheetLoader>();
 
