@@ -1,6 +1,6 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import * as StyleSheetLoaderRegistry from 'tinymce/core/dom/StyleSheetLoaderRegistry';
-import { Document, Element } from '@ephox/sugar';
+import { Document, Element, ShadowDom } from '@ephox/sugar';
 import { Testable } from '@ephox/dispute';
 import { document } from '@ephox/dom-globals';
 import { StyleSheetLoader } from 'tinymce/core/api/dom/StyleSheetLoader';
@@ -13,6 +13,10 @@ UnitTest.test('StyleSheetLoaderRegistry - same element gets same instance (docum
 });
 
 UnitTest.test('StyleSheetLoaderRegistry - same element gets same instance (ShadowRoot)', () => {
+  if (!ShadowDom.isSupported()) {
+    return;
+  }
+
   const div = document.createElement('div');
   const sr = div.attachShadow({ mode: 'open' });
   const innerDiv = document.createElement('div');
