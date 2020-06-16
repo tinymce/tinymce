@@ -10,7 +10,7 @@ import {
   Window, window
 } from '@ephox/dom-globals';
 import { Type } from '@ephox/katamari';
-import { VisualViewport } from '@ephox/sugar';
+import { VisualViewport, Element as SugarElement } from '@ephox/sugar';
 import * as NodeType from '../../dom/NodeType';
 import * as Position from '../../dom/Position';
 import * as TrimNode from '../../dom/TrimNode';
@@ -26,7 +26,6 @@ import EventUtils, { EventUtilsCallback } from './EventUtils';
 import Sizzle from './Sizzle';
 import { StyleSheetLoader } from './StyleSheetLoader';
 import TreeWalker from './TreeWalker';
-import { Element as SugarElement } from '@ephox/sugar'
 import * as StyleSheetLoaderRegistry from '../../dom/StyleSheetLoaderRegistry';
 
 /**
