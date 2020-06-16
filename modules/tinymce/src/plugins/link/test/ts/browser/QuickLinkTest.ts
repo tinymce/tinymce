@@ -128,7 +128,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.QuickLinkTest', (success, failu
           'a:contains("http://tiny.cloud/changed/6")': 0,
           'a[href="http://tiny.cloud/6"]': 1,
           'a:contains("Word")': 1
-        }),
+        })
       ]),
 
       Log.stepsAsStep('TINY-5952', 'Checking that QuickLink link-deletes end up on the undo stack', [
@@ -144,7 +144,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.QuickLinkTest', (success, failu
         tinyApis.sAssertContentPresence({
           'a[href="http://tiny.cloud/7"]': 1,
           'a:contains("Word")': 1
-        }),
+        })
       ]),
 
       TestLinkUi.sClearHistory
