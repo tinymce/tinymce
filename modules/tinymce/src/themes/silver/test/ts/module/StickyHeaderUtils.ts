@@ -1,6 +1,4 @@
-import {
-  ApproxStructure, Assertions, Chain, GeneralSteps, Guard, Keyboard, Keys, Logger, NamedChain, Step, StructAssert, UiFinder
-} from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, GeneralSteps, Guard, Keyboard, Keys, Logger, Step, StructAssert, UiFinder } from '@ephox/agar';
 import { document, window } from '@ephox/dom-globals';
 import { Body, Css, Element, Focus, Scroll, SelectorFind } from '@ephox/sugar';
 
@@ -102,17 +100,15 @@ const cScrollRelativeEditor = (delta: number, scrollRelativeTop: boolean) => Cha
   Scroll.to(0, window.pageYOffset + (scrollRelativeTop ? delta : -delta));
 });
 
-const cAssertSinkVisibility = (label: string, visibility: 'hidden' | 'visible') => NamedChain.asChain([
-  NamedChain.writeValue('body', Body.body()),
-  NamedChain.direct('body', UiFinder.cFindIn( '.tox-tinymce-aux'), 'sink'),
-  NamedChain.direct('sink', Chain.control(
+const cAssertSinkVisibility = (label: string, visibility: 'hidden' | 'visible') => Chain.fromIsolatedChainsWith(Body.body(), [
+  UiFinder.cFindIn( '.tox-tinymce-aux'),
+  Chain.control(
     Chain.fromChains([
       Chain.mapper((sink) => Css.get(sink, 'visibility')),
       Assertions.cAssertEq(label, visibility)
     ]),
     Guard.tryUntil(`Wait for sink visibility to be ${visibility}`)
-  ), '_'),
-  NamedChain.outputInput
+  )
 ]);
 
 const cAssertMenuStructure = (label: string, position: string) => Chain.control(

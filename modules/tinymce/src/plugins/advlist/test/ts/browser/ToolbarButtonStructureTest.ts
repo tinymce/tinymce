@@ -1,10 +1,10 @@
+import { ApproxStructure, Assertions, Chain, Log, Pipeline, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Pipeline, Log, NamedChain, Waiter, Assertions, ApproxStructure, UiFinder } from '@ephox/agar';
+import { Editor } from '@ephox/mcagar';
+import { Body } from '@ephox/sugar';
 import AdvListPlugin from 'tinymce/plugins/advlist/Plugin';
 import ListsPlugin from 'tinymce/plugins/lists/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
-import { Editor } from '@ephox/mcagar';
-import { Body } from '@ephox/sugar';
 
 UnitTest.asynctest('browser.tinymce.plugins.advlist.ToolbarButtonStructureTest', (success, failure) => {
   AdvListPlugin();
@@ -22,10 +22,9 @@ UnitTest.asynctest('browser.tinymce.plugins.advlist.ToolbarButtonStructureTest',
         statusbar: false,
         base_url: '/project/tinymce/js/tinymce'
       }),
-      NamedChain.asChain([
-        NamedChain.writeValue('body', Body.body()),
-        NamedChain.direct('body', UiFinder.cFindIn('.tox-editor-header .tox-toolbar .tox-toolbar__group'), 'toolbarGroup'),
-        NamedChain.read('toolbarGroup', Waiter.cTryUntil('', Assertions.cAssertStructure(
+      Chain.fromIsolatedChainsWith(Body.body(), [
+        UiFinder.cFindIn('.tox-editor-header .tox-toolbar .tox-toolbar__group'),
+        Waiter.cTryUntil('', Assertions.cAssertStructure(
           'Check lists toolbar button structure',
           ApproxStructure.build((s, str, arr) => s.element('div', {
             classes: [ arr.has('tox-toolbar__group') ],
@@ -38,8 +37,7 @@ UnitTest.asynctest('browser.tinymce.plugins.advlist.ToolbarButtonStructureTest',
               })
             ]
           }))
-        ))),
-        NamedChain.outputInput
+        ))
       ]),
       Editor.cRemove
     ]),
@@ -52,10 +50,9 @@ UnitTest.asynctest('browser.tinymce.plugins.advlist.ToolbarButtonStructureTest',
         statusbar: false,
         base_url: '/project/tinymce/js/tinymce'
       }),
-      NamedChain.asChain([
-        NamedChain.writeValue('body', Body.body()),
-        NamedChain.direct('body', UiFinder.cFindIn('.tox-editor-header .tox-toolbar .tox-toolbar__group'), 'toolbarGroup'),
-        NamedChain.read('toolbarGroup', Waiter.cTryUntil('', Assertions.cAssertStructure(
+      Chain.fromIsolatedChainsWith(Body.body(), [
+        UiFinder.cFindIn('.tox-editor-header .tox-toolbar .tox-toolbar__group'),
+        Waiter.cTryUntil('', Assertions.cAssertStructure(
           'Check lists toolbar button structure',
           ApproxStructure.build((s, str, arr) => s.element('div', {
             classes: [ arr.has('tox-toolbar__group') ],
@@ -68,8 +65,7 @@ UnitTest.asynctest('browser.tinymce.plugins.advlist.ToolbarButtonStructureTest',
               })
             ]
           }))
-        ))),
-        NamedChain.outputInput
+        ))
       ]),
       Editor.cRemove
     ])
