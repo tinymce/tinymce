@@ -23,6 +23,11 @@ UnitTest.asynctest('Skin stylesheets should be loaded in ShadowRoot when editor 
       Pipeline.async({}, [
         Step.sync(() => {
           Assert.eq(
+            'There should not be any skin stylesheets in the document',
+            false,
+            Arr.exists(document.styleSheets, isSkin)
+          );
+          Assert.eq(
             'There should be a skin stylesheet in the ShadowRoot',
             true,
             Arr.exists(sr.dom().styleSheets, isSkin)
