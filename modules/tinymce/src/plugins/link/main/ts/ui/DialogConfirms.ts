@@ -55,7 +55,7 @@ const tryProtocolTransform = (assumeExternalTargets: AssumeExternalTargets, defa
 };
 
 const preprocess = (editor: Editor, data: LinkDialogOutput): Promise<LinkDialogOutput> => Arr.findMap(
-  [ tryEmailTransform, tryProtocolTransform(Settings.assumeExternalTargets(editor),  Settings.getDefaultLinkProtocol(editor)) ],
+  [ tryEmailTransform, tryProtocolTransform(Settings.assumeExternalTargets(editor), Settings.getDefaultLinkProtocol(editor)) ],
   (f) => f(data)
 ).fold(
   () => Promise.resolve(data),

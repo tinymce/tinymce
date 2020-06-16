@@ -41,9 +41,9 @@ const onHandler = (fieldName: string): FieldProcessorAdt => onPresenceHandler('o
 
 const onKeyboardHandler = (fieldName: string): FieldProcessorAdt => onPresenceHandler('onKeyboardHandler', fieldName, FieldPresence.defaulted(Option.none));
 
-const onStrictHandler = (fieldName: string): FieldProcessorAdt =>  onPresenceHandler('onHandler', fieldName, FieldPresence.strict());
+const onStrictHandler = (fieldName: string): FieldProcessorAdt => onPresenceHandler('onHandler', fieldName, FieldPresence.strict());
 
-const onStrictKeyboardHandler = (fieldName: string): FieldProcessorAdt =>  onPresenceHandler('onKeyboardHandler', fieldName, FieldPresence.strict());
+const onStrictKeyboardHandler = (fieldName: string): FieldProcessorAdt => onPresenceHandler('onKeyboardHandler', fieldName, FieldPresence.strict());
 
 const output = (name: string, value: any): FieldProcessorAdt => FieldSchema.state(name, Fun.constant(value));
 

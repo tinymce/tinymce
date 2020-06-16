@@ -7,7 +7,7 @@ export default function () {
     selector: 'textarea.tiny-text',
     theme: 'silver',
     toolbar: 'styleselect',
-    plugins: [ 'lists', 'autolink', 'autosave', 'insertdatetime'  ],
+    plugins: [ 'lists', 'autolink', 'autosave', 'insertdatetime' ],
     style_formats: [
       { title: 'Bold text', inline: 'b' },
       { title: 'Red text', inline: 'span', styles: { color: '#ff0000' }},

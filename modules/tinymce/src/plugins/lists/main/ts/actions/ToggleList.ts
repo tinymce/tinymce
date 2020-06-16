@@ -248,7 +248,7 @@ const hasListStyleDetail = function (detail) {
   return 'list-style-type' in detail;
 };
 
-const toggleSingleList =  function (editor, parentList, listName, detail) {
+const toggleSingleList = function (editor, parentList, listName, detail) {
   if (parentList === editor.getBody()) {
     return;
   }

@@ -127,7 +127,7 @@ const annotateWithBookmark = (editor: Editor, name: string, settings: AnnotatorS
 
     // Even after applying word grab, we could not find a selection. Therefore,
     // just make a wrapper and insert it at the current cursor
-    if (selection.getRng().collapsed && !hasFakeSelection)  {
+    if (selection.getRng().collapsed && !hasFakeSelection) {
       const wrapper = makeAnnotation(editor.getDoc(), data, name, settings.decorate);
       // Put something visible in the marker
       Html.set(wrapper, Unicode.nbsp);

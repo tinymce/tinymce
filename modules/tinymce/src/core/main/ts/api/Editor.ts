@@ -437,7 +437,7 @@ class Editor implements EditorObservable {
   public getParam <K extends keyof ParamTypeMap>(name: string, defaultVal: ParamTypeMap[K], type: K): ParamTypeMap[K];
   public getParam <K extends keyof EditorSettings>(name: K, defaultVal?: EditorSettings[K], type?: string): EditorSettings[K];
   public getParam <T>(name: string, defaultVal: T, type: string): T;
-  public getParam(name: string, defaultVal?: any, type?: string): any  {
+  public getParam(name: string, defaultVal?: any, type?: string): any {
     return getParam(this, name, defaultVal, type);
   }
 

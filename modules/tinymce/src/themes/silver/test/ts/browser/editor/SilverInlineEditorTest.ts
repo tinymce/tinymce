@@ -95,7 +95,7 @@ UnitTest.asynctest('Inline Editor (Silver) test', (success, failure) => {
                                 children: [
                                   s.element('span', {
                                     // NOTE: Not sure what this should be?
-                                    classes: [  ],
+                                    classes: [ ],
                                     children: [
                                       s.element('svg', { })
                                     ]

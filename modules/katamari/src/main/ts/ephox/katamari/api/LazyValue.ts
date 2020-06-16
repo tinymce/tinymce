@@ -1,6 +1,6 @@
 import * as Arr from './Arr';
 import { Option } from './Option';
-import { setTimeout, clearTimeout } from '@ephox/dom-globals';
+import { setTimeout } from '@ephox/dom-globals';
 
 export interface LazyValue<T> {
   readonly get: (callback: (value: T) => void) => void;
@@ -28,7 +28,7 @@ const nu = <T>(baseFn: (completer: (value: T) => void) => void): LazyValue<T> =>
   };
 
   const set = (x: T) => {
-    if (!isReady()) { // avoid duplicate completions
+    if (!isReady()) {
       data = Option.some(x);
       run(callbacks);
       callbacks = [];
@@ -59,24 +59,12 @@ const nu = <T>(baseFn: (completer: (value: T) => void) => void): LazyValue<T> =>
   };
 };
 
-const pure = <T>(a: T) => nu((callback: (value: T) => void) => {
-  callback(a);
-});
-
-export const withTimeout = <T> (baseFn: (completer: (value: T) => void) => void, ifTimeout: () => T, timeout: number): LazyValue<T> =>
-  LazyValue.nu((completer) => {
-    const done = (r: T) => {
-      clearTimeout(timeoutRef);
-      completer(r);
-    };
-    const timeoutRef = setTimeout(() => {
-      done(ifTimeout());
-    }, timeout);
-    baseFn(done);
+const pure = <T>(a: T) =>
+  nu((callback: (value: T) => void) => {
+    callback(a);
   });
 
 export const LazyValue = {
   nu,
-  pure,
-  withTimeout
+  pure
 };

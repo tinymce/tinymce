@@ -14,7 +14,7 @@ const steps = (testId: string, description: string, fs: Step<any, any>[]): Step<
 
 const stepsAsStep = (testId: string, description: string, fs: Step<any, any>[]): Step<any, any> => sequence(steps(testId, description, fs));
 
-const chain = <T, U>(testId: string, description: string, c: Chain<T, U>): Chain<T, U>  => Chain.label(generateLogMsg(testId, description), c);
+const chain = <T, U>(testId: string, description: string, c: Chain<T, U>): Chain<T, U> => Chain.label(generateLogMsg(testId, description), c);
 
 const chains = (testId: string, description: string, cs: Chain<any, any>[]): Chain<any, any>[] => Arr.map(cs, (c, i) => chain(testId, description + ' (' + i + ')', c));
 

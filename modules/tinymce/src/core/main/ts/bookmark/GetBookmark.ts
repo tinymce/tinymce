@@ -5,19 +5,19 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Text, Range, Node, Element } from '@ephox/dom-globals';
+import { Element, Node, Range, Text } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
-import * as CaretBookmark from './CaretBookmark';
+import DOMUtils from '../api/dom/DOMUtils';
+import Selection from '../api/dom/Selection';
+import Tools from '../api/util/Tools';
 import * as CaretContainer from '../caret/CaretContainer';
 import CaretPosition from '../caret/CaretPosition';
 import * as NodeType from '../dom/NodeType';
+import { rangeInsertNode } from '../selection/RangeInsertNode';
 import * as RangeNodes from '../selection/RangeNodes';
 import * as Zwsp from '../text/Zwsp';
-import Tools from '../api/util/Tools';
-import Selection from '../api/dom/Selection';
-import DOMUtils from '../api/dom/DOMUtils';
-import { PathBookmark, IndexBookmark, StringPathBookmark, RangeBookmark, IdBookmark, Bookmark } from './BookmarkTypes';
-import { rangeInsertNode } from '../selection/RangeInsertNode';
+import { Bookmark, IdBookmark, IndexBookmark, PathBookmark, RangeBookmark, StringPathBookmark } from './BookmarkTypes';
+import * as CaretBookmark from './CaretBookmark';
 
 type TrimFn = (s: string) => string;
 
@@ -38,7 +38,7 @@ const getPoint = function (dom: DOMUtils, trim: TrimFn, normalized: boolean, rng
   let container = rng[start ? 'startContainer' : 'endContainer'];
   let offset = rng[start ? 'startOffset' : 'endOffset'];
   const point = [];
-  let  childNodes, after = 0;
+  let childNodes, after = 0;
   const root = dom.getRoot();
 
   if (NodeType.isText(container)) {

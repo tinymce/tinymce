@@ -1,10 +1,10 @@
 import { UnitTest } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
+import { Element } from '@ephox/sugar';
 import * as Structs from 'ephox/snooker/api/Structs';
 import * as Fitment from 'ephox/snooker/test/Fitment';
 import * as TableMerge from 'ephox/snooker/test/TableMerge';
 import TestGenerator from 'ephox/snooker/test/TestGenerator';
-import { Element } from '@ephox/sugar';
 
 UnitTest.test('FitmentTest', function () {
   const generator = TestGenerator;
@@ -90,9 +90,9 @@ UnitTest.test('FitmentTest', function () {
   check(
     tailorTest,
     [
-      [ en('a', false),   en('b', false),   en('c', false),   en('?_0', true) ],
-      [ en('d', false),   en('e', false),   en('f', false),   en('?_1', true) ],
-      [ en('g', false),   en('h', false),   en('i', false),   en('?_2', true) ],
+      [ en('a', false), en('b', false), en('c', false), en('?_0', true) ],
+      [ en('d', false), en('e', false), en('f', false), en('?_1', true) ],
+      [ en('g', false), en('h', false), en('i', false), en('?_2', true) ],
       [ en('?_3', true), en('?_4', true), en('?_5', true), en('?_6', true) ]
     ], start(2, 2), gridA, {
       rowDelta: -1,
@@ -129,10 +129,10 @@ UnitTest.test('FitmentTest', function () {
   check(
     mergeGridsTest,
     [
-      [ en('a', false),   en('b', false),   en('c', false),        en('?_0', true) ],
-      [ en('d', false),   en('e', false),   en('f', false),        en('?_1', true) ],
-      [ en('g', false),   en('h', false),   en('h(1)_0', true),   en('h(2)_1', true) ],
-      [ en('?_3', true), en('?_4', true), en('h(3)_2', true),   en('h(4)_3', true) ]
+      [ en('a', false), en('b', false), en('c', false), en('?_0', true) ],
+      [ en('d', false), en('e', false), en('f', false), en('?_1', true) ],
+      [ en('g', false), en('h', false), en('h(1)_0', true), en('h(2)_1', true) ],
+      [ en('?_3', true), en('?_4', true), en('h(3)_2', true), en('h(4)_3', true) ]
     ], start(2, 2), gridA, gridB, generator, Fun.tripleEquals);
 
   check(

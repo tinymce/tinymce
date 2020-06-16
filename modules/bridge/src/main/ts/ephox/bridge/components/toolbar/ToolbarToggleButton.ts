@@ -20,7 +20,7 @@ export interface ToolbarToggleButtonApi extends BaseToolbarToggleButtonApi<Toolb
   onAction: (api: ToolbarToggleButtonInstanceApi) => void;
 }
 
-export interface ToolbarToggleButton extends BaseToolbarToggleButton<ToolbarToggleButtonInstanceApi>  {
+export interface ToolbarToggleButton extends BaseToolbarToggleButton<ToolbarToggleButtonInstanceApi> {
   type: 'togglebutton';
   onAction: (api: ToolbarToggleButtonInstanceApi) => void;
 }

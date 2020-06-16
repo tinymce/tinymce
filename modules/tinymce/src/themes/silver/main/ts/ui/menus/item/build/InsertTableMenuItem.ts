@@ -55,7 +55,7 @@ const makeCell = (row, col, labelId) => {
   });
 };
 
-const makeCells =  (labelId, numRows, numCols) => {
+const makeCells = (labelId, numRows, numCols) => {
   const cells = [];
   for (let i = 0; i < numRows; i++) {
     const row = [];

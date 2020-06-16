@@ -4,7 +4,7 @@ import Jsc from '@ephox/wrap-jsverify';
 
 const createTag = (name): Element<any> => {
   const partial = name.split('-');
-  const tag = partial.length > 0  ? partial[0] : name;
+  const tag = partial.length > 0 ? partial[0] : name;
   return Element.fromTag(tag);
 };
 

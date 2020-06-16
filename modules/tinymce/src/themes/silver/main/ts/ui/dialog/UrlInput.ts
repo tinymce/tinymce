@@ -230,7 +230,7 @@ export const renderUrlInput = (spec: UrlInputSpec, backstage: UiFactoryBackstage
     disabled: spec.disabled,
     primary: false,
     borderless: true
-  },  (component) => AlloyTriggers.emit(component, browseUrlEvent), providersBackstage, [], [ 'tox-browse-url' ]));
+  }, (component) => AlloyTriggers.emit(component, browseUrlEvent), providersBackstage, [], [ 'tox-browse-url' ]));
 
   const controlHWrapper = (): AlloySpec => ({
     dom: {

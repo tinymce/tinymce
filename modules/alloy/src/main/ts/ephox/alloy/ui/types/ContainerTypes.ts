@@ -16,7 +16,7 @@ export interface ContainerDetail extends SingleSketchDetail {
   eventOrder: Record<string, string[]>;
 }
 
-export interface ContainerSpec extends SingleSketchSpec  {
+export interface ContainerSpec extends SingleSketchSpec {
   uid?: string;
   dom?: OptionalDomSchema;
   components?: AlloySpec[];

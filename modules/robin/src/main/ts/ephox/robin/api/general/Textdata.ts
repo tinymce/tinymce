@@ -16,7 +16,7 @@ export interface Textdata<E> extends TextdataGet<E> {
  * Create a PositionArray of textnodes and returns the array along with the concatenated text.
  */
 const get = function <E, D> (universe: Universe<E, D>, elements: E[]) {
-  const list =  PositionArray.generate(elements, function (x, start) {
+  const list = PositionArray.generate(elements, function (x, start) {
     return universe.property().isText(x) ?
       Option.some(Spot.range(x, start, start + universe.property().getText(x).length)) :
       Option.none<SpotRange<E>>();

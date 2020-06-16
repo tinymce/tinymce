@@ -60,7 +60,7 @@ export interface BehaviourConfig<D extends BehaviourConfigDetail, S extends Beha
   fields: FieldProcessorAdt[];
 }
 
-export interface BehaviourModeSpec<D extends BehaviourConfigDetail, S extends BehaviourState, A extends BehaviourApisRecord<D, S>, E extends BehaviourExtraRecord<E> = {}> extends BaseBehaviourConfig<D, S, A, E>  {
+export interface BehaviourModeSpec<D extends BehaviourConfigDetail, S extends BehaviourState, A extends BehaviourApisRecord<D, S>, E extends BehaviourExtraRecord<E> = {}> extends BaseBehaviourConfig<D, S, A, E> {
   branchKey: string;
   branches: Record<string, FieldProcessorAdt[]>;
 }

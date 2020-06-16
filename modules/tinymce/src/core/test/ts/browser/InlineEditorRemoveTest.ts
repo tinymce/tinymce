@@ -4,7 +4,7 @@ import { ApiChains, Editor as McEditor } from '@ephox/mcagar';
 import { Body } from '@ephox/sugar';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.InlineEditorRemoveTest', (success, failure) =>  {
+UnitTest.asynctest('browser.tinymce.core.InlineEditorRemoveTest', (success, failure) => {
   Theme();
 
   const settings = {

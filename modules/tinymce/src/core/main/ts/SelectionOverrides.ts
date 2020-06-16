@@ -218,11 +218,11 @@ const SelectionOverrides = function (editor: Editor): SelectionOverrides {
         removeContentEditableSelection();
         hideFakeCaret();
 
-        const caretInfo = LineUtils.closestCaret(rootNode, e.clientX, e.clientY);
-        if (caretInfo) {
-          if (!hasBetterMouseTarget(e.target, caretInfo.node)) {
+        const fakeCaretInfo = LineUtils.closestFakeCaret(rootNode, e.clientX, e.clientY);
+        if (fakeCaretInfo) {
+          if (!hasBetterMouseTarget(e.target, fakeCaretInfo.node)) {
             e.preventDefault();
-            const range = showCaret(1, caretInfo.node as HTMLElement, caretInfo.before, false);
+            const range = showCaret(1, fakeCaretInfo.node as HTMLElement, fakeCaretInfo.before, false);
             editor.getBody().focus();
             setRange(range);
           }

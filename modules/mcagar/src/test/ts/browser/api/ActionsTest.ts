@@ -4,7 +4,7 @@ import { Editor as EditorType } from 'ephox/mcagar/alien/EditorTypes';
 import { ActionChains } from 'ephox/mcagar/api/ActionChains';
 import * as Editor from 'ephox/mcagar/api/Editor';
 
-UnitTest.asynctest('ActionTest', (success, failure) =>  {
+UnitTest.asynctest('ActionTest', (success, failure) => {
   let count: number;
 
   const sResetCount = Step.sync(() => count = 0);

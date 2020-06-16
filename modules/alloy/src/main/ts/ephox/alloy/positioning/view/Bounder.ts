@@ -67,7 +67,7 @@ const calcReposition = (newX: number, newY: number, width: number, height: numbe
   };
 };
 
-const attempt = (candidate: SpotInfo, width: number, height: number, bounds: Boxes.Bounds): BounderAttemptAdt  => {
+const attempt = (candidate: SpotInfo, width: number, height: number, bounds: Boxes.Bounds): BounderAttemptAdt => {
   const candidateX = candidate.x();
   const candidateY = candidate.y();
   const bubbleOffsets = candidate.bubble().offset();

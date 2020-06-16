@@ -140,19 +140,19 @@ UnitTest.asynctest('ReflectingTest', (success, failure) => {
           children: [
             s.element('div', {
               children: [
-                s.element('span', { children: [  s.text(str.is('state-changes-only')) ] })
+                s.element('span', { children: [ s.text(str.is('state-changes-only')) ] })
               ]
             }),
             s.element('div', {
               children: [
-                s.element('span', { children: [  s.text(str.is('2a-cat')) ] }),
-                s.element('span', { children: [  s.text(str.is('2a-dog')) ] })
+                s.element('span', { children: [ s.text(str.is('2a-cat')) ] }),
+                s.element('span', { children: [ s.text(str.is('2a-dog')) ] })
               ]
             }),
             s.element('div', {
               children: [
-                s.element('span', { children: [  s.text(str.is('2b-cat')) ] }),
-                s.element('span', { children: [  s.text(str.is('2b-dog')) ] })
+                s.element('span', { children: [ s.text(str.is('2b-cat')) ] }),
+                s.element('span', { children: [ s.text(str.is('2b-dog')) ] })
               ]
             }),
             s.element('div', {
@@ -196,25 +196,25 @@ UnitTest.asynctest('ReflectingTest', (success, failure) => {
           children: [
             s.element('div', {
               children: [
-                s.element('span', { children: [  s.text(str.is('state-changes-only')) ] })
+                s.element('span', { children: [ s.text(str.is('state-changes-only')) ] })
               ]
             }),
             s.element('div', {
               children: [
-                s.element('span', { children: [  s.text(str.is('alpha')) ] }),
-                s.element('span', { children: [  s.text(str.is('beta')) ] })
+                s.element('span', { children: [ s.text(str.is('alpha')) ] }),
+                s.element('span', { children: [ s.text(str.is('beta')) ] })
               ]
             }),
             s.element('div', {
               children: [
-                s.element('span', { children: [  s.text(str.is('alpha')) ] }),
-                s.element('span', { children: [  s.text(str.is('beta')) ] })
+                s.element('span', { children: [ s.text(str.is('alpha')) ] }),
+                s.element('span', { children: [ s.text(str.is('beta')) ] })
               ]
             }),
             s.element('div', {
               children: [
-                s.element('span', { children: [  s.text(str.is('alpha')) ] }),
-                s.element('span', { children: [  s.text(str.is('beta')) ] })
+                s.element('span', { children: [ s.text(str.is('alpha')) ] }),
+                s.element('span', { children: [ s.text(str.is('beta')) ] })
               ]
             }),
             s.element('div', {
@@ -235,30 +235,30 @@ UnitTest.asynctest('ReflectingTest', (success, failure) => {
           children: [
             s.element('div', {
               children: [
-                s.element('span', { children: [  s.text(str.is('state-changes-only')) ] })
+                s.element('span', { children: [ s.text(str.is('state-changes-only')) ] })
               ]
             }),
             s.element('div', {
               children: [
-                s.element('span', { children: [  s.text(str.is('alpha')) ] }),
-                s.element('span', { children: [  s.text(str.is('beta')) ] })
+                s.element('span', { children: [ s.text(str.is('alpha')) ] }),
+                s.element('span', { children: [ s.text(str.is('beta')) ] })
               ]
             }),
             s.element('div', {
               children: [
-                s.element('span', { children: [  s.text(str.is('alpha')) ] }),
-                s.element('span', { children: [  s.text(str.is('beta')) ] })
+                s.element('span', { children: [ s.text(str.is('alpha')) ] }),
+                s.element('span', { children: [ s.text(str.is('beta')) ] })
               ]
             }),
             s.element('div', {
               children: [
-                s.element('span', { children: [  s.text(str.is('alpha')) ] }),
-                s.element('span', { children: [  s.text(str.is('beta')) ] })
+                s.element('span', { children: [ s.text(str.is('alpha')) ] }),
+                s.element('span', { children: [ s.text(str.is('beta')) ] })
               ]
             }),
             s.element('div', {
               children: [
-                s.element('span', { children: [  s.text(str.is('gamma')) ] })
+                s.element('span', { children: [ s.text(str.is('gamma')) ] })
               ]
             })
           ]

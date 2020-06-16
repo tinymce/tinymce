@@ -197,7 +197,7 @@ const objOfOnly = function (fields: ValueProcessorAdt[]): Processor {
       return !Obj.hasNonNullableKey(fieldNames, k);
     });
 
-    return extra.length === 0  ? delegate.extract(path, strength, o) :
+    return extra.length === 0 ? delegate.extract(path, strength, o) :
       SchemaError.unsupportedFields(path, extra);
   };
 

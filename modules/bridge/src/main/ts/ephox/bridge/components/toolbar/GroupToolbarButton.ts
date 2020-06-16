@@ -19,7 +19,7 @@ export interface GroupToolbarButtonApi extends BaseToolbarButtonApi<GroupToolbar
   items?: ToolbarConfig;
 }
 
-export interface GroupToolbarButton extends BaseToolbarButton<GroupToolbarButtonInstanceApi>  {
+export interface GroupToolbarButton extends BaseToolbarButton<GroupToolbarButtonInstanceApi> {
   type: 'grouptoolbarbutton';
   items: ToolbarConfig;
 }

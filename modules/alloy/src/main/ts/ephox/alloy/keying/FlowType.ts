@@ -55,7 +55,7 @@ const doMove = (movement: KeyRuleHandler<FlowConfig, Stateless>): KeyRuleHandler
           Option.some<boolean>(true)
     );
 
-const doEscape: KeyRuleHandler<FlowConfig, Stateless>  = (component, simulatedEvent, flowConfig) =>
+const doEscape: KeyRuleHandler<FlowConfig, Stateless> = (component, simulatedEvent, flowConfig) =>
   flowConfig.onEscape(component, simulatedEvent);
 
 const getKeydownRules = (
