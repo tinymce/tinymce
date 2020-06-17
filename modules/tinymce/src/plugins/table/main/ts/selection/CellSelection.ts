@@ -14,9 +14,9 @@ import { Class, Compare, DomEvent, Element, Node, Selection, SelectionDirection 
 
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
-import * as Util from '../alien/Util';
 import * as Events from '../api/Events';
 import { getCloneElements } from '../api/Settings';
+import * as Util from '../core/Util';
 import * as Direction from '../queries/Direction';
 import * as Ephemera from './Ephemera';
 import { SelectionTargets } from './SelectionTargets';

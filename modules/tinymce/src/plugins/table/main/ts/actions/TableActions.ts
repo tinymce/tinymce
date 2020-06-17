@@ -5,19 +5,18 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { HTMLTableElement, Range } from '@ephox/dom-globals';
 import { Arr, Fun, Option } from '@ephox/katamari';
-import {
-  CellMutations, TableDirection, TableFill, TableGridSize, TableOperations, RunOperation, ResizeWire
-} from '@ephox/snooker';
+import { DomDescent } from '@ephox/phoenix';
+import { CellMutations, ResizeWire, RunOperation, TableDirection, TableFill, TableGridSize, TableOperations } from '@ephox/snooker';
 import { Element, Node } from '@ephox/sugar';
 
-import * as Util from '../alien/Util';
-import * as Direction from '../queries/Direction';
-import { getCloneElements } from '../api/Settings';
-import { fireNewCell, fireNewRow } from '../api/Events';
 import Editor from 'tinymce/core/api/Editor';
-import { DomDescent } from '@ephox/phoenix';
-import { HTMLTableElement, Range } from '@ephox/dom-globals';
+import { fireNewCell, fireNewRow } from '../api/Events';
+import { getCloneElements } from '../api/Settings';
+import * as Util from '../core/Util';
+import * as Direction from '../queries/Direction';
+import * as TableSize from '../queries/TableSize';
 
 type TableAction<T> = (table: Element<HTMLTableElement>, target: T) => Option<Range>;
 export type BasicTableAction = TableAction<RunOperation.CombinedTargets>;
@@ -58,7 +57,8 @@ export const TableActions = (editor: Editor, lazyWire: () => ResizeWire): TableA
       const doc = Element.fromDom(editor.getDoc());
       const direction = TableDirection(Direction.directionAt);
       const generators = TableFill.cellOperations(mutate, doc, cloneFormats);
-      return guard(table) ? operation(wire, table, target, generators, direction).bind((result) => {
+      const sizing = TableSize.get(editor, table);
+      return guard(table) ? operation(wire, table, target, generators, direction, sizing).bind((result) => {
         Arr.each(result.newRows(), (row) => {
           fireNewRow(editor, row.dom());
         });

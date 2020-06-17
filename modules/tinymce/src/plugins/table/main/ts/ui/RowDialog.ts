@@ -10,13 +10,13 @@ import { HTMLTableRowElement } from '@ephox/dom-globals';
 import { Arr, Fun } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import * as Styles from '../actions/Styles';
-import * as Util from '../alien/Util';
 import { hasAdvancedRowTab } from '../api/Settings';
+import { switchSectionType } from '../core/TableSections';
+import * as Util from '../core/Util';
 import * as TableSelection from '../selection/TableSelection';
 import { DomModifier } from './DomModifier';
 import * as Helpers from './Helpers';
 import * as RowDialogGeneralTab from './RowDialogGeneralTab';
-import { switchSectionType } from '../core/TableSections';
 
 type RowData = Helpers.RowData;
 

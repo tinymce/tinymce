@@ -5,10 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Compare, Element, Attr, SelectorFilter } from '@ephox/sugar';
-import Editor from 'tinymce/core/api/Editor';
-import { Arr } from '@ephox/katamari';
 import { HTMLElement, Node } from '@ephox/dom-globals';
+import { Arr, Option } from '@ephox/katamari';
+import { Attr, Compare, Element, SelectorFilter } from '@ephox/sugar';
+import Editor from 'tinymce/core/api/Editor';
 
 const getNodeName = (elm: Node) => elm.nodeName.toLowerCase();
 
@@ -37,13 +37,20 @@ const addSizeSuffix = function (size: string) {
   return size;
 };
 
-const removeDataStyle = (table) => {
+const removeDataStyle = (table: Element<HTMLElement>) => {
   const dataStyleCells = SelectorFilter.descendants(table, 'td[data-mce-style],th[data-mce-style]');
   Attr.remove(table, 'data-mce-style');
   Arr.each(dataStyleCells, function (cell) {
     Attr.remove(cell, 'data-mce-style');
   });
 };
+
+const getRawWidth = (editor: Editor, elm: HTMLElement) => {
+  const raw = editor.dom.getStyle(elm, 'width') || editor.dom.getAttrib(elm, 'width');
+  return Option.from(raw).filter((s) => s.length > 0);
+};
+
+const isPercentage = (value: string) => /(\d+(\.\d+)?)%/.test(value);
 
 export {
   getNodeName,
@@ -53,5 +60,7 @@ export {
   removePxSuffix,
   getPixelWidth,
   getPixelHeight,
-  removeDataStyle
+  getRawWidth,
+  removeDataStyle,
+  isPercentage
 };

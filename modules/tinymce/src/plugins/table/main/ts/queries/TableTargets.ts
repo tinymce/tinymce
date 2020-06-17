@@ -7,7 +7,7 @@
 
 import { Element as DomElement, HTMLTableCaptionElement, HTMLTableCellElement, HTMLTableElement, HTMLTableRowElement } from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
-import { RunOperation } from '@ephox/snooker';
+import { RunOperation, SimpleGenerators } from '@ephox/snooker';
 import { Element } from '@ephox/sugar';
 import { Selections } from '../selection/Selections';
 import * as CellOperations from './CellOperations';
@@ -26,13 +26,13 @@ const forMenu = (selections: Selections, table: Element<HTMLTableElement>, cell:
   selection: Fun.constant(CellOperations.selection(cell, selections))
 });
 
-const paste = (element: Element<DomElement>, clipboard: Element<HTMLTableElement>, generators: any): RunOperation.TargetPaste => ({
+const paste = (element: Element<DomElement>, clipboard: Element<HTMLTableElement>, generators: SimpleGenerators): RunOperation.TargetPaste => ({
   element: Fun.constant(element),
   clipboard: Fun.constant(clipboard),
   generators: Fun.constant(generators)
 });
 
-const pasteRows = (selections: Selections, _table: Element<HTMLTableElement>, cell: Element<HTMLTableCellElement>, clipboard: Element<HTMLTableRowElement>[], generators: any): RunOperation.TargetPasteRows => ({
+const pasteRows = (selections: Selections, cell: Element<HTMLTableCellElement>, clipboard: Element<HTMLTableRowElement>[], generators: SimpleGenerators): RunOperation.TargetPasteRows => ({
   selection: Fun.constant(CellOperations.selection(cell, selections)),
   clipboard: Fun.constant(clipboard),
   generators: Fun.constant(generators)

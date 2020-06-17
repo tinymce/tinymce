@@ -8,11 +8,13 @@ Version 5.4.0 (TBD)
     Added new `table` cut, copy and paste column editor commands and menu items #TINY-6006
     Added additional font related Oxide variables for secondary buttons allowing more specific styling. #TINY-6061
     Added new `table_header_type` setting to control how table header rows are structured #TINY-6007
+    Added new `table_sizing` setting to replace the `table_responsive_width` setting, which has now been deprecated #TINY-6051
     Changed `advlist` toolbar buttons to only show a dropdown list if there's more than one option #TINY-3194
     Changed `mceInsertTable` command and `insertTable` API method to take optional header rows and columns arguments #TINY-6012
     Changed stylesheet loading, so that UI skin stylesheets now to load in a ShadowRoot, if the editor is in a ShadowRoot. #TINY-6089
     Changed the DOM location of menus so that they display correctly when the editor is in a ShadowRoot. #TINY-6093
     Changed the table plugin to correctly detect all valid header row structures #TINY-6007
+    Fixed tables with no defined width being converted to a `fixed` width table when modifying the table #TINY-6051
     Fixed the `autosave` isEmpty API incorrectly detecting non-empty content as empty #TINY-5953
     Fixed table `Paste row after` and `Paste row before` menu items not disabled when nothing was available to paste #TINY-6006
     Fixed a selection performance issue with large tables on Microsoft Internet Explorer and Edge #TINY-6057

@@ -1,6 +1,7 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
+import { TableSize } from '@ephox/snooker';
 import { Body, Css, Element, Html, Insert, InsertAll, Remove, SelectorFilter } from '@ephox/sugar';
 import { ResizeDirection } from 'ephox/snooker/api/ResizeDirection';
 import * as Sizes from 'ephox/snooker/api/Sizes';
@@ -129,7 +130,7 @@ UnitTest.test('Table Sizes Test (fusebox)', function () {
 
   const checkWidth = function (expected: string[][], table: Element, newWidth: string) {
     Insert.append(Body.body(), table);
-    Sizes.redistribute(table, Option.some(newWidth), Option.none(), ResizeDirection.ltr);
+    Sizes.redistribute(table, Option.some(newWidth), Option.none(), ResizeDirection.ltr, TableSize.getTableSize(table));
     assert.eq(expected, readWidth(table));
     Remove.remove(table);
   };
@@ -141,7 +142,7 @@ UnitTest.test('Table Sizes Test (fusebox)', function () {
 
   const checkHeight = function (expected: string[][], table: Element, newHeight: string) {
     Insert.append(Body.body(), table);
-    Sizes.redistribute(table, Option.none(), Option.some(newHeight), ResizeDirection.ltr);
+    Sizes.redistribute(table, Option.none(), Option.some(newHeight), ResizeDirection.ltr, TableSize.getTableSize(table));
     assert.eq(expected, readHeight(table));
     Remove.remove(table);
   };

@@ -203,8 +203,7 @@ const opUnmergeCells = function (grid: Structs.RowCells[], unmergable: Element[]
 
 const opPasteCells = function (grid: Structs.RowCells[], pasteDetails: ExtractPaste, comparator: CompElm, _genWrappers: GeneratorsModification) {
   const gridify = function (table: Element, generators: SimpleGenerators) {
-    const list = DetailsList.fromTable(table);
-    const wh = Warehouse.generate(list);
+    const wh = Warehouse.fromTable(table);
     return Transitions.toGrid(wh, generators, true);
   };
   const gridB = gridify(pasteDetails.clipboard(), pasteDetails.generators());

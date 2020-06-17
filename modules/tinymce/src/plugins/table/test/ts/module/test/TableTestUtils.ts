@@ -7,6 +7,16 @@ import { TinyDom, TinyUi } from '@ephox/mcagar';
 import { Attr, Body, Element, Html, SelectorFilter, SelectorFind, Value } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 
+const getRawWidth = (editor: Editor, elm: HTMLElement) => {
+  const style = editor.dom.getStyle(elm, 'width');
+  if (style) {
+    return style;
+  } else {
+    const attr = editor.dom.getAttrib(elm, 'width');
+    return attr ? attr + 'px' : attr;
+  }
+};
+
 const sAssertTableStructure = (editor, structure) => Logger.t('Assert table structure ' + structure, Step.sync(() => {
   const table = SelectorFind.descendant(Element.fromDom(editor.getBody()), 'table').getOrDie('Should exist a table');
   Assertions.assertStructure('Should be a table the expected structure', structure, table);
@@ -205,12 +215,14 @@ const cGetWidth = Chain.control(
   Chain.mapper(function (input: any) {
     const editor = input.editor;
     const elm = input.element.dom();
-    const rawWidth = editor.dom.getStyle(elm, 'width');
+    const rawWidth = getRawWidth(editor, elm);
     const pxWidth = editor.dom.getStyle(elm, 'width', true);
+    const unit = rawWidth === '' ? null : /\d+(\.\d+)?(%|px)/.exec(rawWidth)[2];
     return {
       raw: rawWidth === '' ? null : parseFloat(rawWidth),
       px: parseInt(pxWidth, 10),
-      isPercent: /%$/.test(rawWidth)
+      unit,
+      isPercent: unit === '%'
     };
   }),
   Guard.addLogging('Get table width')

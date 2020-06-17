@@ -14,8 +14,8 @@ import Env from 'tinymce/core/api/Env';
 import { StyleMap } from 'tinymce/core/api/html/Styles';
 import * as InsertTable from '../actions/InsertTable';
 import * as Styles from '../actions/Styles';
-import * as Util from '../alien/Util';
 import { getDefaultAttributes, getDefaultStyles, getTableClassList, hasAdvancedTableTab, shouldStyleWithCss } from '../api/Settings';
+import * as Util from '../core/Util';
 import * as Helpers from './Helpers';
 import * as TableDialogGeneralTab from './TableDialogGeneralTab';
 

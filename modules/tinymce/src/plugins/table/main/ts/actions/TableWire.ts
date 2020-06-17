@@ -7,9 +7,9 @@
 
 import { ResizeWire } from '@ephox/snooker';
 import { Body, Css, Element, Insert, Remove } from '@ephox/sugar';
-
-import * as Util from '../alien/Util';
 import Editor from 'tinymce/core/api/Editor';
+
+import * as Util from '../core/Util';
 
 const createContainer = function () {
   const container = Element.fromTag('div');

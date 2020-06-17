@@ -6,10 +6,10 @@
  */
 
 import { TableSelection } from '@ephox/darwin';
-import * as Util from '../alien/Util';
+import Editor from 'tinymce/core/api/Editor';
+import * as Util from '../core/Util';
 import * as Ephemera from './Ephemera';
 import * as SelectionTypes from './SelectionTypes';
-import Editor from 'tinymce/core/api/Editor';
 
 export interface Selections {
   get: () => any;
