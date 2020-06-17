@@ -183,7 +183,7 @@ UnitTest.asynctest('OxideFontFormatMenuTest', (success, failure) => {
                       })
                     ]
                   })
-                ],
+                ]
               }))
             )
           ])),

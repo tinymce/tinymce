@@ -1,8 +1,8 @@
-import { ApproxStructure, Assertions, Pipeline   } from '@ephox/agar';
+import { ApproxStructure, Assertions, Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Body, Element, Insert, Remove } from '@ephox/sugar';
 import SilverTheme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('Silver fixed_toolbar_container test', (success, failure) => {
   SilverTheme();
@@ -40,7 +40,7 @@ UnitTest.asynctest('Silver fixed_toolbar_container test', (success, failure) => 
                               children: [
                                 s.element('svg', {})
                               ]
-                            }),
+                            })
                           ]
                         })
                       ]
@@ -68,7 +68,7 @@ UnitTest.asynctest('Silver fixed_toolbar_container test', (success, failure) => 
                                   attrs: {
                                     'aria-label': str.is('Bold')
                                   }
-                                }),
+                                })
                               ]
                             })
                           ]
@@ -76,7 +76,7 @@ UnitTest.asynctest('Silver fixed_toolbar_container test', (success, failure) => 
                       ]
                     })
                   ]
-                }),
+                })
               ]
             }),
             s.element('div', {
@@ -98,7 +98,7 @@ UnitTest.asynctest('Silver fixed_toolbar_container test', (success, failure) => 
     Pipeline.async({ }, [
       tinyApis.sSetContent('fixed_toolbar_container test'),
       tinyApis.sFocus(),
-      sToolbarTest(),
+      sToolbarTest()
     ], onSuccess, onFailure);
   }, {
     theme: 'silver',
@@ -106,7 +106,7 @@ UnitTest.asynctest('Silver fixed_toolbar_container test', (success, failure) => 
     fixed_toolbar_container: '#toolbar',
     menubar: 'file',
     toolbar: 'undo bold',
-    base_url: '/project/tinymce/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce'
   }, () => {
     Remove.remove(toolbarContainer);
     success();

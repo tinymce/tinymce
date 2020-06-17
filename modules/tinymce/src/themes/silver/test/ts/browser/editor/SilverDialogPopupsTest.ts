@@ -1,10 +1,10 @@
-import { FocusTools, Keyboard, Keys, Pipeline, UiFinder, Log, Chain, Mouse, Waiter } from '@ephox/agar';
+import { Chain, FocusTools, Keyboard, Keys, Log, Mouse, Pipeline, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { document, ClientRect } from '@ephox/dom-globals';
+import { ClientRect, document } from '@ephox/dom-globals';
 import { Result } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
-import { Element, Body, SelectorExists } from '@ephox/sugar';
+import { Body, Element, SelectorExists } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 
@@ -68,7 +68,7 @@ UnitTest.asynctest('Editor Dialog Popups Test', (success, failure) => {
           Keyboard.sKeydown(doc, Keys.escape(), { }),
           Keyboard.sKeydown(doc, Keys.escape(), { }),
           sWaitForDialogClosed
-        ]),
+        ])
       ] : [ ], onSuccess, onFailure);
     },
     {

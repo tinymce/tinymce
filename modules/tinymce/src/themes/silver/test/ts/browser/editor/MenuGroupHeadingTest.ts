@@ -1,8 +1,8 @@
 import { ApproxStructure, Assertions, Chain, Log, Logger, Pipeline, UiFinder } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyLoader, TinyUi } from '@ephox/mcagar';
 import { Body } from '@ephox/sugar';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('Menu group heading test', (success, failure) => {
   Theme();
@@ -46,7 +46,7 @@ UnitTest.asynctest('Menu group heading test', (success, failure) => {
                     })
                   ]
                 })),
-              ),
+              )
             ])
           ])
         ]
@@ -61,7 +61,7 @@ UnitTest.asynctest('Menu group heading test', (success, failure) => {
         { title: 'Bold text', inline: 'b' },
         { title: 'Table styles' },
         { title: 'Table row 1', selector: 'tr', classes: 'tablerow1' }
-      ],
+      ]
     },
     () => {
       success();

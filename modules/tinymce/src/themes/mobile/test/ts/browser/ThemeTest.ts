@@ -34,7 +34,7 @@ UnitTest.asynctest('browser.tinymce.themes.mobile.ThemeTest', (success, failure)
       UiFinder.sNotExists(Element.fromDom(document.body), '[aria-label="The read only mode group"]'),
       UiFinder.sNotExists(Element.fromDom(document.body), `.${Styles.resolve('mask-edit-icon')}`),
       ui.sClickOnUi('Click back to Tap to Edit screen', `.${Styles.resolve('icon-back')}`),
-      UiFinder.sExists(Element.fromDom(document.body), `.${Styles.resolve('mask-tap-icon')}`),
+      UiFinder.sExists(Element.fromDom(document.body), `.${Styles.resolve('mask-tap-icon')}`)
     ], onSuccess, onFailure);
   }, {
     theme: 'mobile',

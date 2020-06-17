@@ -20,6 +20,6 @@ export const Gene = function (id: string, name: string, children: Gene[] = [], c
     css,
     attrs,
     text,
-    parent,
+    parent
   };
 };

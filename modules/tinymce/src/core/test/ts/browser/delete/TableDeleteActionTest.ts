@@ -148,6 +148,6 @@ UnitTest.asynctest('browser.tinymce.core.delete.TableDeleteActionTest', function
       ),
       cExtractDeleteSelectionCell,
       Assertions.cAssertEq('Should be cells', '<td>test</td>')
-    ])),
+    ]))
   ], success, failure);
 });

@@ -1,10 +1,10 @@
+import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { Testable } from '@ephox/dispute';
 import * as Fun from 'ephox/katamari/api/Fun';
 import { Option } from 'ephox/katamari/api/Option';
 import { tOption } from 'ephox/katamari/api/OptionInstances';
-import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { Testable } from '@ephox/dispute';
-import fc from 'fast-check';
 import { arbOptionSome as arbOptionSome } from 'ephox/katamari/test/arb/ArbDataTypes';
+import fc from 'fast-check';
 
 const { die, constant } = Fun;
 const { some, none } = Option;
@@ -26,7 +26,7 @@ UnitTest.test('Option.filter', () => {
 
 UnitTest.test('Checking some(x).filter(_ -> false) === none', () => {
   fc.assert(fc.property(arbOptionSome(fc.integer()), (opt) => {
-    Assert.eq('eq',  true, tOption().eq(
+    Assert.eq('eq', true, tOption().eq(
       none(),
       opt.filter(Fun.constant(false))));
   }));
@@ -34,7 +34,7 @@ UnitTest.test('Checking some(x).filter(_ -> false) === none', () => {
 
 UnitTest.test('Checking some(x).filter(_ -> true) === some(x)', () => {
   fc.assert(fc.property(fc.integer(), (x) => {
-    Assert.eq('eq',  true, tOption().eq(
+    Assert.eq('eq', true, tOption().eq(
       some(x),
       some(x).filter(Fun.constant(true))
     ));

@@ -97,7 +97,7 @@ const oses: PlatformInfo[] = [
     name : 'ChromeOS',
     search : checkContains('cros'),
     versionRegexes: [ /.*?chrome\/([0-9]+)\.([0-9]+).*/ ]
-  },
+  }
 ];
 
 export const PlatformInfo = {

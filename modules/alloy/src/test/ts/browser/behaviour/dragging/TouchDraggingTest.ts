@@ -163,7 +163,7 @@ UnitTest.asynctest('TouchDraggingTest', (success, failure) => {
       }), '_'),
 
       NamedChain.direct('box', Touch.cTouchStart, '_'),
-      NamedChain.direct('container', UiFinder.cFindIn('.test-blocker'), 'blocker'),
+      NamedChain.direct('container', UiFinder.cFindIn('.test-blocker'), 'blocker')
     ]);
 
     return [

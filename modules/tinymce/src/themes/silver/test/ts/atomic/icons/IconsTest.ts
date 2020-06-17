@@ -1,9 +1,9 @@
-import { UnitTest } from '@ephox/bedrock-client';
-import { IconProvider, get } from 'tinymce/themes/silver/ui/icons/Icons';
 import { Assertions, Pipeline, Step } from '@ephox/agar';
-import { getAll as getAllOxide } from '@tinymce/oxide-icons-default';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyLoader } from '@ephox/mcagar';
+import { getAll as getAllOxide } from '@tinymce/oxide-icons-default';
 import Theme from 'tinymce/themes/silver/Theme';
+import { get, IconProvider } from 'tinymce/themes/silver/ui/icons/Icons';
 
 UnitTest.asynctest('IconsTest', (success, failure) => {
   Theme();
@@ -44,7 +44,7 @@ UnitTest.asynctest('IconsTest', (success, failure) => {
     });
 
     Pipeline.async({}, [
-      getTest,
+      getTest
     ], onSuccess, onFailure);
   }, {
     base_url: '/project/tinymce/js/tinymce'

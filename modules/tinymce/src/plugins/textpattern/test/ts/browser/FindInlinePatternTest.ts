@@ -1,6 +1,6 @@
 import { Assertions, Chain, GeneralSteps, Log, Pipeline } from '@ephox/agar';
-import { UnitTest, assert } from '@ephox/bedrock-client';
-import { Obj, Arr } from '@ephox/katamari';
+import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Arr, Obj } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -77,12 +77,12 @@ UnitTest.asynctest('textpattern.browser.FindInlinePatternTest', (success, failur
 
     const sSetContentAndCursor = (content: string, elementPath: number[], offset: number) => GeneralSteps.sequence([
       tinyApis.sSetRawContent(`<div>${content}</div>`),
-      tinyApis.sSetCursor([ 0 ].concat(elementPath), offset),
+      tinyApis.sSetCursor([ 0 ].concat(elementPath), offset)
     ]);
 
     const sSetContentAndSelection = (content: string, startPath: number[], soffset: number, finishPath: number[], foffset: number) => GeneralSteps.sequence([
       tinyApis.sSetRawContent(`<div>${content}</div>`),
-      tinyApis.sSetSelection([ 0 ].concat(startPath), soffset, [ 0 ].concat(finishPath), foffset),
+      tinyApis.sSetSelection([ 0 ].concat(startPath), soffset, [ 0 ].concat(finishPath), foffset)
     ]);
 
     Pipeline.async({}, [
@@ -115,7 +115,7 @@ UnitTest.asynctest('textpattern.browser.FindInlinePatternTest', (success, failur
         ])
       ]),
       Log.stepsAsStep('TBA', 'inline * with uncollapsed range returns no match', [
-        sSetContentAndSelection('*x*&nbsp;', [ 0 ], 3,  [ 0 ], 4),
+        sSetContentAndSelection('*x*&nbsp;', [ 0 ], 3, [ 0 ], 4),
         Chain.asStep(editor, [
           cGetInlinePattern(inlinePatterns, true),
           cAssertPatterns([])

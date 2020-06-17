@@ -6,8 +6,8 @@
  */
 
 import { Option } from '@ephox/katamari';
-import Editor from './api/Editor';
 import DOMUtils from './api/dom/DOMUtils';
+import Editor from './api/Editor';
 import * as Events from './api/Events';
 
 const DOM = DOMUtils.DOM;
@@ -40,7 +40,7 @@ const restoreForm = (editor: Editor) => {
   }
 };
 
-const remove =  (editor: Editor): void => {
+const remove = (editor: Editor): void => {
   if (!editor.removed) {
     const { _selectionOverrides, editorUpload } = editor;
     const body = editor.getBody();

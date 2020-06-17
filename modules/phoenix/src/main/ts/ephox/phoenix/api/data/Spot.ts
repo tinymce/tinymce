@@ -32,5 +32,5 @@ export {
   delta,
   range,
   points,
-  text,
+  text
 };

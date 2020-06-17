@@ -53,7 +53,7 @@ const factory: CompositeSketchFactory<SplitDropdownDetail, SplitDropdownSpec> = 
           Attr.set(descriptor.element(), 'id', descriptorId);
           Attr.set(component.element(), 'aria-describedby', descriptorId);
         });
-      }),
+      })
     ]),
     ...ButtonBase.events(Option.some(action))
   };

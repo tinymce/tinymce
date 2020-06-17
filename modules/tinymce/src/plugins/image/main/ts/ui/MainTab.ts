@@ -5,8 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { ImageDialogInfo, ListItem } from './DialogTypes';
 import { Arr } from '@ephox/katamari';
+import { ImageDialogInfo, ListItem } from './DialogTypes';
 
 const makeItems = (info: ImageDialogInfo) => {
   const imageUrl = {
@@ -53,7 +53,7 @@ const makeItems = (info: ImageDialogInfo) => {
     items?: Array<DialogItems | ListItem>;
   }
   // TODO: the original listbox supported styled items but bridge does not seem to support this
-  const classList = info.classList.map((items): DialogItems  => ({
+  const classList = info.classList.map((items): DialogItems => ({
     name: 'classes',
     type: 'selectbox',
     label: 'Class',

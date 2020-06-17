@@ -5,16 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import {
-  AlloyComponent,
-  AlloyEvents,
-  AlloyTriggers,
-  Disabling,
-  Memento,
-  MementoRecord,
-  Representing,
-  SystemEvents,
-} from '@ephox/alloy';
+import { AlloyComponent, AlloyEvents, AlloyTriggers, Disabling, Memento, MementoRecord, Representing, SystemEvents } from '@ephox/alloy';
 import { ValueSchema } from '@ephox/boulder';
 import { Toolbar } from '@ephox/bridge';
 import { Arr, Fun, Option } from '@ephox/katamari';

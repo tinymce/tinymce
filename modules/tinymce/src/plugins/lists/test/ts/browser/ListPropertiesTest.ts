@@ -26,7 +26,7 @@ UnitTest.asynctest('tinymce.lists.browser.ListPropertiesTest', (success, failure
       sOpenContextMenu(editor, tinyUi, contextMenuSelector),
       FocusTools.sTryOnSelector('Wait for the context menu to be focused', doc, contentMenuSelector),
       Keyboard.sKeydown(doc, Keys.enter(), {}),
-      tinyUi.sWaitForUi('Wait for the dialog to appear', '[role=dialog]'),
+      tinyUi.sWaitForUi('Wait for the dialog to appear', '[role=dialog]')
     ]);
   };
 
@@ -40,7 +40,7 @@ UnitTest.asynctest('tinymce.lists.browser.ListPropertiesTest', (success, failure
           Assertions.assertEq('Assert initial start value', currentValue, Value.get(input));
         }),
         UiControls.cSetValue(newValue)
-      ]),
+      ])
     ]);
   };
 
@@ -87,7 +87,7 @@ UnitTest.asynctest('tinymce.lists.browser.ListPropertiesTest', (success, failure
       Log.stepsAsStep('TINY-3915', 'List properties shown for OL in UL and can change start value', [
         tinyApis.sSetContent('<ul><li>Root Item<ol><li>Item 1</li><li>Item 2</li></ol></li></ul>'),
         tinyApis.sSetCursor([ 0, 0, 1, 0, 0 ], 0),
-        sOpenAndUpdateDialog(editor, tinyUi, 'ol > li',  '1', '5'),
+        sOpenAndUpdateDialog(editor, tinyUi, 'ol > li', '1', '5'),
         tinyApis.sAssertContent('<ul><li>Root Item<ol start="5"><li>Item 1</li><li>Item 2</li></ol></li></ul>'),
         sOpenAndUpdateDialog(editor, tinyUi, 'ol > li', '5', '1'),
         tinyApis.sAssertContent('<ul><li>Root Item<ol><li>Item 1</li><li>Item 2</li></ol></li></ul>')

@@ -1,16 +1,16 @@
-import { Logger, GeneralSteps, Files, DragnDrop as Dnd } from '@ephox/agar';
+import { DragnDrop as Dnd, Files, GeneralSteps, Logger } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Blob, DataTransfer } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
-import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import { Container } from 'ephox/alloy/api/ui/Container';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { DragnDrop } from 'ephox/alloy/api/behaviour/DragnDrop';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { TestStore } from 'ephox/alloy/api/testhelpers/TestStore';
-import { StartingDragndropConfigSpec, DropDragndropConfigSpec } from 'ephox/alloy/dragging/dragndrop/DragnDropTypes';
+import { Container } from 'ephox/alloy/api/ui/Container';
+import { DropDragndropConfigSpec, StartingDragndropConfigSpec } from 'ephox/alloy/dragging/dragndrop/DragnDropTypes';
 
 UnitTest.asynctest('DragnDropTest', (success, failure) => {
   const platform = PlatformDetection.detect();
@@ -168,19 +168,19 @@ UnitTest.asynctest('DragnDropTest', (success, failure) => {
       sAssertDraggedFiles('Should have expected files', store, [
         { name: 'a.html', size: 3, type: 'text/html', lastModified: 1234 },
         { name: 'b.txt', size: 4, type: 'text/plain', lastModified: 123 }
-      ]),
+      ])
     ])),
 
     Logger.t('Drag and drop copy to copy', GeneralSteps.sequence([
       store.sClear,
       Dnd.sDragnDrop('.draggableCopy', '.dropzoneCopy'),
-      sAssertDraggedData('Should have expected data', store, { data: 'copy' }),
+      sAssertDraggedData('Should have expected data', store, { data: 'copy' })
     ])),
 
     Logger.t('Drag and drop move to move', GeneralSteps.sequence([
       store.sClear,
       Dnd.sDragnDrop('.draggableMove', '.dropzoneMove'),
-      sAssertDraggedData('Should have expected data', store, { data: 'move' }),
+      sAssertDraggedData('Should have expected data', store, { data: 'move' })
     ])),
 
     Logger.t('Drag and drop move to copy', GeneralSteps.sequence([

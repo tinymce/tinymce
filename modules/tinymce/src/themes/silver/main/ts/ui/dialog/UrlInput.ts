@@ -26,7 +26,7 @@ import * as MenuParts from '../menus/menu/MenuParts';
 import * as NestedMenus from '../menus/menu/NestedMenus';
 import { Omit } from '../Omit';
 import {
-  anchorTargetBottom, anchorTargets, anchorTargetTop, filterByQuery, headerTargets, historyTargets, joinMenuLists,
+  anchorTargetBottom, anchorTargets, anchorTargetTop, filterByQuery, headerTargets, historyTargets, joinMenuLists
 } from '../urlinput/Completions';
 
 type UrlInputSpec = Omit<Types.UrlInput.UrlInput, 'type'>;
@@ -230,7 +230,7 @@ export const renderUrlInput = (spec: UrlInputSpec, backstage: UiFactoryBackstage
     disabled: spec.disabled,
     primary: false,
     borderless: true
-  },  (component) => AlloyTriggers.emit(component, browseUrlEvent), providersBackstage, [], [ 'tox-browse-url' ]));
+  }, (component) => AlloyTriggers.emit(component, browseUrlEvent), providersBackstage, [], [ 'tox-browse-url' ]));
 
   const controlHWrapper = (): AlloySpec => ({
     dom: {
@@ -248,7 +248,7 @@ export const renderUrlInput = (spec: UrlInputSpec, backstage: UiFactoryBackstage
       const componentData = Representing.getValue(field);
       const urlData = {
         fieldname: spec.name,
-        ...componentData,
+        ...componentData
       };
       optUrlPicker.each((picker) => {
         picker(urlData).get((chosenData) => {

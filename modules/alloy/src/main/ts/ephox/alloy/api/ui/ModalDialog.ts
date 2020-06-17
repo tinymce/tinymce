@@ -84,7 +84,7 @@ const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (det
             if (busy.hasConfigured(Keying)) {
               Keying.focusIn(busy);
             }
-          }),
+          })
         ])
       ])
     });

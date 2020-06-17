@@ -3,8 +3,8 @@ import { Options } from '@ephox/katamari';
 import * as Conversions from '../util/Conversions';
 import { Promise } from '../util/Promise';
 import { BinaryReader } from './BinaryReader';
-import { readMetaData, ExifTags, GPSTags , TiffTags } from './ExifReader';
 import { readShort } from './BinaryReaderUtils';
+import { ExifTags, GPSTags, readMetaData, TiffTags } from './ExifReader';
 
 export interface JPEGMeta {
   tiff: TiffTags;
@@ -59,7 +59,7 @@ const extractHeaders = function (br: BinaryReader): Header[] {
   let idx = 2;
 
   while (idx + 2 <= br.length()) {
-    let marker = readShort(br, idx).toOption().getOrNull();
+    const marker = readShort(br, idx).toOption().getOrNull();
     if (marker === null) {
       throw new Error('Invalid Exif data.');
     }

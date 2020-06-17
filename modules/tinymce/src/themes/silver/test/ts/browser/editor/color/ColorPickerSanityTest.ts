@@ -1,4 +1,4 @@
-import { Pipeline, Step, FocusTools, Mouse, Waiter, UiFinder, Assertions, Log, Logger, GeneralSteps } from '@ephox/agar';
+import { Assertions, FocusTools, GeneralSteps, Log, Logger, Mouse, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document, HTMLInputElement } from '@ephox/dom-globals';
 import { TinyLoader } from '@ephox/mcagar';
@@ -55,13 +55,13 @@ UnitTest.asynctest('ColorPickerSanityTest', (success, failure) => {
     FocusTools.sSetFocus('Focus dialog', docBody, dialogSelector),
     Waiter.sTryUntil('Button is not disabled', UiFinder.sNotExists(docBody, 'button.tox-button:contains("Save")[disabled]')),
     Mouse.sClickOn(docBody, 'button.tox-button:contains(Save)'),
-    Waiter.sTryUntil('Dialog should close', UiFinder.sNotExists(docBody, dialogSelector)),
+    Waiter.sTryUntil('Dialog should close', UiFinder.sNotExists(docBody, dialogSelector))
   ]));
 
   const sCancelDialog = GeneralSteps.sequence(Logger.ts('Click Cancel and close dialog', [
     FocusTools.sSetFocus('Focus dialog', docBody, dialogSelector),
     Mouse.sClickOn(docBody, 'button.tox-button:contains(Cancel)'),
-    Waiter.sTryUntil('Dialog should close', UiFinder.sNotExists(docBody, dialogSelector)),
+    Waiter.sTryUntil('Dialog should close', UiFinder.sNotExists(docBody, dialogSelector))
   ]));
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
@@ -90,6 +90,6 @@ UnitTest.asynctest('ColorPickerSanityTest', (success, failure) => {
     plugins: '',
     theme: 'silver',
     toolbar: '',
-    base_url: '/project/tinymce/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

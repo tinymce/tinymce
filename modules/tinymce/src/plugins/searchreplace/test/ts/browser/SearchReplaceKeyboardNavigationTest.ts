@@ -53,7 +53,7 @@ UnitTest.asynctest('browser.tinymce.plugins.searchreplace.SearchReplaceKeyboardN
         sAssertFocused('Find and replace edit menu item', '.tox-collection__item:contains("Find and replace")'), // Menu item can be reached by keyboard
         sPressEsc,
         sPressTab,
-        sAssertFocused('Find and replace button', '.tox-tbtn'), // Button can be reached by keyboard
+        sAssertFocused('Find and replace button', '.tox-tbtn') // Button can be reached by keyboard
       ]),
       Log.stepsAsStep('TINY-3914', 'Find and replace: Dialog keyboard navigation', [
         sOpenDialog(tinyUi),
@@ -68,7 +68,7 @@ UnitTest.asynctest('browser.tinymce.plugins.searchreplace.SearchReplaceKeyboardN
         sAssertFocused('Placeholder menu button', '.tox-tbtn--select[title="Preferences"]'),
         sPressTab,
         sAssertFocused('Find button', '.tox-button[title="Find"]'),
-        sPressEsc,
+        sPressEsc
       ]),
       Log.stepsAsStep('TINY-3961', 'Find and replace: Dialog keyboard focus is returned to find input', [
         tinyApis.sSetContent('<p>fish fish fish</p>'),
@@ -91,7 +91,7 @@ UnitTest.asynctest('browser.tinymce.plugins.searchreplace.SearchReplaceKeyboardN
         sAssertFocused('Find button', '.tox-button[title="Replace All"]'),
         sPressEnter,
         sAssertFocused('Find input', '.tox-textfield[placeholder="Find"]'),
-        sPressEsc,
+        sPressEsc
       ]),
       Log.stepsAsStep('TINY-4014', 'Find and replace: Dialog keyboard focus is returned to find input after displaying an alert', [
         tinyApis.sSetContent('<p>fish fish fish</p>'),

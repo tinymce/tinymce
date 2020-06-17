@@ -3,9 +3,11 @@ import * as Arr from 'ephox/katamari/api/Arr';
 import * as Fun from 'ephox/katamari/api/Fun';
 import { LazyValue } from 'ephox/katamari/api/LazyValue';
 import * as LazyValues from 'ephox/katamari/api/LazyValues';
+import { Option } from 'ephox/katamari/api/Option';
 import { setTimeout } from '@ephox/dom-globals';
 import { eqAsync, promiseTest } from 'ephox/katamari/test/AsyncProps';
 import fc from 'fast-check';
+import { tOption } from 'ephox/katamari/api/OptionInstances';
 
 const lazyCounter = () => {
   let counter = 0;
@@ -110,3 +112,44 @@ promiseTest('LazyValue: parallel spec', () => fc.assert(fc.asyncProperty(fc.arra
     resolve();
   });
 }))));
+
+promiseTest('LazyValue: TINY-6106: LazyValue should only use the value from the first time the callback is called', () => new Promise((resolve, reject) => {
+  LazyValue.nu((completer) => {
+    // Since lazyvalue kicks off the computation straight away, both completer calls happen before the callback is fired.
+    // If the bug is present, the value will be 3. If the bug is fixed, the value will be 2.
+    completer(2);
+    completer(3);
+  }).get((actual) => {
+    eqAsync('should be 2', 2, actual, reject);
+    resolve();
+  });
+}));
+
+promiseTest('LazyValue: TINY-6107: LazyValues.withTimeout - never returns', () => new Promise((resolve, reject) => {
+  LazyValues.withTimeout(() => {
+  }, 1).get((actual) => {
+    eqAsync('should time out', Option.none(), actual, reject, tOption());
+    resolve();
+  });
+}));
+
+promiseTest('LazyValue: TINY-6107: LazyValues.withTimeout - times out before it returns', () => new Promise((resolve, reject) => {
+  LazyValues.withTimeout((cb) => {
+    setTimeout(() => cb(88), 50);
+  }, 1).get((actual) => {
+    eqAsync('should timeout', Option.none(), actual, reject, tOption());
+    resolve();
+  });
+}));
+
+promiseTest('LazyValue: TINY-6107: LazyValues.withTimeout - times out after it returns', () => new Promise((resolve, reject) => {
+  LazyValues.withTimeout<string>((cb) => {
+    setTimeout(() => {
+      cb('cat');
+    }, 10);
+  }, 100).get((actual) => {
+    eqAsync('should not timeout', Option.some('cat'), actual, reject, tOption());
+    resolve();
+  });
+}));
+

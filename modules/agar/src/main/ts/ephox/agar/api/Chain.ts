@@ -86,6 +86,22 @@ const fromChainsWith = <T, U = any, V = any>(initial: T, chains: Chain<any, any>
     [ inject(initial) ].concat(chains)
   );
 
+const fromIsolatedChains = <T = any>(chains: Chain<any, any>[]): Chain<T, T> => {
+  const cs = Arr.map(chains, extract);
+
+  return on<T, T>((value, next, die, initLogs) => {
+    Pipeline.async(value, cs, (_v, newLogs) => {
+      // Ignore the output value and use the original value instead
+      next(value, newLogs);
+    }, die, initLogs);
+  });
+};
+
+const fromIsolatedChainsWith = <T, U = any>(initial: T, chains: Chain<any, any>[]): Chain<U, U> =>
+  fromIsolatedChains<U>(
+    [ inject(initial) ].concat(chains)
+  );
+
 const fromParent = <T, U, V>(parent: Chain<T, U>, chains: Chain<U, V>[]): Chain<T, U> =>
   on((cvalue: T, cnext: NextFn<U>, cdie: DieFn, clogs: TestLogs) => {
     Pipeline.async(cvalue, [ extract(parent) ], (value: U, parentLogs: TestLogs) => {
@@ -193,6 +209,8 @@ export const Chain = {
   injectThunked,
   fromChains,
   fromChainsWith,
+  fromIsolatedChains,
+  fromIsolatedChainsWith,
   fromParent,
   asStep,
   isolate,

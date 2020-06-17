@@ -322,14 +322,12 @@ const EditorManager: EditorManager = {
    * @param {Object} defaultSettings Defaults settings object.
    */
   overrideDefaults(defaultSettings) {
-    let baseUrl, suffix;
-
-    baseUrl = defaultSettings.base_url;
+    const baseUrl = defaultSettings.base_url;
     if (baseUrl) {
       this._setBaseUrl(baseUrl);
     }
 
-    suffix = defaultSettings.suffix;
+    const suffix = defaultSettings.suffix;
     if (defaultSettings.suffix) {
       this.suffix = suffix;
     }
@@ -367,9 +365,9 @@ const EditorManager: EditorManager = {
    */
   init(settings) {
     const self: EditorManager = this;
-    let result, invalidInlineTargets;
+    let result;
 
-    invalidInlineTargets = Tools.makeMap(
+    const invalidInlineTargets = Tools.makeMap(
       'area base basefont br col frame hr img input isindex link meta param embed source wbr track ' +
       'colgroup option table tbody tfoot thead tr th td script noscript style textarea video audio iframe object menu',
       ' '
@@ -610,11 +608,10 @@ const EditorManager: EditorManager = {
    */
   add(editor) {
     const self: EditorManager = this;
-    let existingEditor;
 
-    // Prevent existing editors from beeing added again this could happen
+    // Prevent existing editors from being added again this could happen
     // if a user calls createEditor then render or add multiple times.
-    existingEditor = legacyEditors[editor.id];
+    const existingEditor = legacyEditors[editor.id];
     if (existingEditor === editor) {
       return editor;
     }

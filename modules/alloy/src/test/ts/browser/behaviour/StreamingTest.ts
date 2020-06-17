@@ -4,9 +4,9 @@ import { UnitTest } from '@ephox/bedrock-client';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Streaming } from 'ephox/alloy/api/behaviour/Streaming';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import { Container } from 'ephox/alloy/api/ui/Container';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
+import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
+import { Container } from 'ephox/alloy/api/ui/Container';
 
 UnitTest.asynctest('StreamingTest', (success, failure) => {
 
@@ -55,6 +55,6 @@ UnitTest.asynctest('StreamingTest', (success, failure) => {
     Step.sync(() => {
       AlloyTriggers.emit(component, 'cancel.stream');
     }),
-    Waiter.sTryUntil('', store.sAssertEq('Event should have been cancelled, so nothing should be in store', [ ])),
+    Waiter.sTryUntil('', store.sAssertEq('Event should have been cancelled, so nothing should be in store', [ ]))
   ], () => { success(); }, failure);
 });

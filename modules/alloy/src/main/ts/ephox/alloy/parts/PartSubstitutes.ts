@@ -55,7 +55,7 @@ const subs = <D extends CompositeSketchDetail>(owner: string, detail: D, parts: 
             // Group multiples do not take the uid because there is more than one.
             data.factory.sketch(
               Merger.deepMerge(
-                data.defaults(detail, u,  _partValidated),
+                data.defaults(detail, u, _partValidated),
                 u,
                 data.overrides(detail, u)
               )

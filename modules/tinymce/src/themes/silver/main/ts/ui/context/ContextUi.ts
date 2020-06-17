@@ -5,7 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, CustomEvent, GuiFactory, InlineView, Keying, NativeEvents, } from '@ephox/alloy';
+import {
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, CustomEvent, GuiFactory, InlineView, Keying,
+  NativeEvents
+} from '@ephox/alloy';
 import { Arr, Cell, Id, Option, Result } from '@ephox/katamari';
 import { Class, Css, Element, EventArgs, Focus, Width } from '@ephox/sugar';
 import Delay from 'tinymce/core/api/util/Delay';
@@ -104,7 +107,7 @@ const renderContextToolbar = (spec: { onEscape: () => Option<boolean>; sink: All
               focus: last.focus
             });
           });
-        }),
+        })
 
       ]),
       Keying.config({

@@ -39,7 +39,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.ControlSelectionTest', function (su
       Mouse.cMouseUp
     ]),
     sAssertEventCount('ObjectResizeStart', expectedCount),
-    sAssertEventCount('ObjectResized', expectedCount),
+    sAssertEventCount('ObjectResized', expectedCount)
   ]);
 
   const cGetElementDimensions = (name: string) => Chain.mapper((element: Element): number =>

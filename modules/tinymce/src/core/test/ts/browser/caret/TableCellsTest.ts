@@ -1,11 +1,13 @@
 import { Assertions, Chain, GeneralSteps, Logger, Pipeline } from '@ephox/agar';
-import { Hierarchy, Element, SelectorFind } from '@ephox/sugar';
-import { getClosestCellAbove, getClosestCellBelow, findClosestPositionInAboveCell, findClosestPositionInBelowCell } from 'tinymce/core/caret/TableCells';
-import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/bedrock-client';
-import { CaretPosition } from 'tinymce/core/caret/CaretPosition';
-import { Option } from '@ephox/katamari';
 import { HTMLTableElement } from '@ephox/dom-globals';
+import { Option } from '@ephox/katamari';
+import { Element, Hierarchy, SelectorFind } from '@ephox/sugar';
+import { CaretPosition } from 'tinymce/core/caret/CaretPosition';
+import {
+  findClosestPositionInAboveCell, findClosestPositionInBelowCell, getClosestCellAbove, getClosestCellBelow
+} from 'tinymce/core/caret/TableCells';
+import ViewBlock from '../../module/test/ViewBlock';
 
 UnitTest.asynctest('browser.tinymce.core.caret.TableCellsTest', function (success, failure) {
   const viewBlock = ViewBlock();
@@ -76,7 +78,7 @@ UnitTest.asynctest('browser.tinymce.core.caret.TableCellsTest', function (succes
           '<td style="width: 20px; height: 20px;">d</td>',
           '</tr>',
           '</tbody>',
-          '</table>',
+          '</table>'
         ].join('')),
         cGetClosestCellAbove(30, 30),
         cAssertCell([ 0, 0, 0, 1 ])
@@ -94,7 +96,7 @@ UnitTest.asynctest('browser.tinymce.core.caret.TableCellsTest', function (succes
           '<td style="width: 20px; height: 20px;">d</td>',
           '</tr>',
           '</tbody>',
-          '</table>',
+          '</table>'
         ].join('')),
         cGetClosestCellAbove(15, 30),
         cAssertCell([ 0, 0, 0, 0 ])
@@ -112,7 +114,7 @@ UnitTest.asynctest('browser.tinymce.core.caret.TableCellsTest', function (succes
           '<td style="width: 20px; height: 20px;">d</td>',
           '</tr>',
           '</tbody>',
-          '</table>',
+          '</table>'
         ].join('')),
         cGetClosestCellAbove(15, 15),
         cAssertNone
@@ -133,7 +135,7 @@ UnitTest.asynctest('browser.tinymce.core.caret.TableCellsTest', function (succes
           '<td style="width: 20px; height: 20px;">d</td>',
           '</tr>',
           '</tbody>',
-          '</table>',
+          '</table>'
         ].join('')),
         cGetClosestCellBelow(30, 15),
         cAssertCell([ 0, 0, 1, 1 ])
@@ -151,7 +153,7 @@ UnitTest.asynctest('browser.tinymce.core.caret.TableCellsTest', function (succes
           '<td style="width: 20px; height: 20px;">d</td>',
           '</tr>',
           '</tbody>',
-          '</table>',
+          '</table>'
         ].join('')),
         cGetClosestCellBelow(15, 15),
         cAssertCell([ 0, 0, 1, 0 ])
@@ -169,7 +171,7 @@ UnitTest.asynctest('browser.tinymce.core.caret.TableCellsTest', function (succes
           '<td style="width: 20px; height: 20px;">d</td>',
           '</tr>',
           '</tbody>',
-          '</table>',
+          '</table>'
         ].join('')),
         cGetClosestCellBelow(30, 30),
         cAssertNone
@@ -190,7 +192,7 @@ UnitTest.asynctest('browser.tinymce.core.caret.TableCellsTest', function (succes
           '<td style="width: 20px; height: 20px;">d</td>',
           '</tr>',
           '</tbody>',
-          '</table>',
+          '</table>'
         ].join('')),
         cFindClosestPositionInAboveCell([ 0, 0, 1, 1 ], 0),
         cAssertCaretPosition([ 0, 0, 0, 1, 0 ], 0)
@@ -208,7 +210,7 @@ UnitTest.asynctest('browser.tinymce.core.caret.TableCellsTest', function (succes
           '<td style="width: 20px; height: 20px;">d</td>',
           '</tr>',
           '</tbody>',
-          '</table>',
+          '</table>'
         ].join('')),
         cFindClosestPositionInAboveCell([ 0, 0, 1, 1 ], 1),
         cAssertCaretPosition([ 0, 0, 0, 1, 0 ], 1)
@@ -226,7 +228,7 @@ UnitTest.asynctest('browser.tinymce.core.caret.TableCellsTest', function (succes
           '<td style="width: 20px; height: 20px;">d</td>',
           '</tr>',
           '</tbody>',
-          '</table>',
+          '</table>'
         ].join('')),
         cFindClosestPositionInBelowCell([ 0, 0, 0, 1 ], 0),
         cAssertCaretPosition([ 0, 0, 1, 1, 0 ], 0)
@@ -244,7 +246,7 @@ UnitTest.asynctest('browser.tinymce.core.caret.TableCellsTest', function (succes
           '<td style="width: 20px; height: 20px;">d</td>',
           '</tr>',
           '</tbody>',
-          '</table>',
+          '</table>'
         ].join('')),
         cFindClosestPositionInBelowCell([ 0, 0, 0, 1 ], 1),
         cAssertCaretPosition([ 0, 0, 1, 1, 0 ], 1)

@@ -5,12 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import * as FormatUtils from './FormatUtils';
+import { Node } from '@ephox/dom-globals';
+import { Arr } from '@ephox/katamari';
+import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
 import { Format, FormatVars, SelectorFormat } from '../api/fmt/Format';
-import { Node } from '@ephox/dom-globals';
-import DOMUtils from '../api/dom/DOMUtils';
-import { Arr } from '@ephox/katamari';
+import * as FormatUtils from './FormatUtils';
 
 const isEq = FormatUtils.isEq;
 
@@ -137,8 +137,6 @@ const matchNode = function (ed: Editor, node: Node, name: string, vars?: FormatV
 };
 
 const match = function (editor: Editor, name: string, vars: FormatVars, node) {
-  let startNode;
-
   // Check specified node
   if (node) {
     return matchParents(editor, node, name, vars);
@@ -151,7 +149,7 @@ const match = function (editor: Editor, name: string, vars: FormatVars, node) {
   }
 
   // Check start node if it's different
-  startNode = editor.selection.getStart();
+  const startNode = editor.selection.getStart();
   if (startNode !== node) {
     if (matchParents(editor, startNode, name, vars)) {
       return true;

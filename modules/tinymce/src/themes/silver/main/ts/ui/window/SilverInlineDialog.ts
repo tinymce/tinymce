@@ -7,36 +7,24 @@
 
 // DUPE with SilverDialog. Cleaning up.
 import {
-  AddEventsBehaviour,
-  AlloyTriggers,
-  Behaviour,
-  Composing,
-  GuiFactory,
-  Keying,
-  Memento,
-  Receiving,
-  Reflecting,
-  SimpleSpec,
-  SystemEvents,
-  Focusing,
-  AlloyEvents,
-  NativeEvents
+  AddEventsBehaviour, AlloyEvents, AlloyTriggers, Behaviour, Composing, Focusing, GuiFactory, Keying, Memento, NativeEvents, Receiving,
+  Reflecting, SimpleSpec, SystemEvents
 } from '@ephox/alloy';
 import { DialogManager } from '@ephox/bridge';
-import { Option, Id } from '@ephox/katamari';
+import { Id, Option } from '@ephox/katamari';
 import { Attr, Node } from '@ephox/sugar';
+import { UiFactoryBackstage } from '../../backstage/Backstage';
 
 import { RepresentingConfigs } from '../alien/RepresentingConfigs';
 import { formCloseEvent } from '../general/FormEvents';
 import * as NavigableObject from '../general/NavigableObject';
 import { dialogChannel } from './DialogChannels';
 import { renderInlineBody } from './SilverDialogBody';
+import * as SilverDialogCommon from './SilverDialogCommon';
 import { SilverDialogEvents } from './SilverDialogEvents';
 import { renderInlineFooter } from './SilverDialogFooter';
 import { renderInlineHeader } from './SilverDialogHeader';
 import { getDialogApi } from './SilverDialogInstanceApi';
-import { UiFactoryBackstage } from '../../backstage/Backstage';
-import * as SilverDialogCommon from './SilverDialogCommon';
 
 const renderInlineDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: SilverDialogCommon.WindowExtra, backstage: UiFactoryBackstage, ariaAttrs: boolean) => {
   const dialogLabelId = Id.generate('dialog-label');
@@ -86,7 +74,7 @@ const renderInlineDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: S
       attributes: {
         role: 'dialog',
         ['aria-labelledby']: dialogLabelId,
-        ['aria-describedby']: `${dialogContentId}`,
+        ['aria-describedby']: `${dialogContentId}`
       }
     },
     eventOrder: {

@@ -25,7 +25,7 @@ export const createFindReplaceDialog = () => {
             name: 'wholewords',
             type: 'checkbox',
             label: 'Whole Words'
-          },
+          }
         ]
       },
       buttons: [

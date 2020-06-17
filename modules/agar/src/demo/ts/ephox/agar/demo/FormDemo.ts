@@ -1,4 +1,4 @@
-import { HTMLInputElement, HTMLButtonElement } from '@ephox/dom-globals';
+import { HTMLButtonElement, HTMLInputElement } from '@ephox/dom-globals';
 import { Attr, Css, DomEvent, Element, Html, Insert, InsertAll, Remove, Value } from '@ephox/sugar';
 import { Chain } from 'ephox/agar/api/Chain';
 import * as FocusTools from 'ephox/agar/api/FocusTools';
@@ -10,7 +10,7 @@ export const demo = (): void => {
   DemoContainer.init(
     'Form Demo',
     (success, failure) => {
-      const form =  Element.fromTag('form');
+      const form = Element.fromTag('form');
 
       const start = Element.fromHtml<HTMLButtonElement>('<button>Go</button>');
       DomEvent.bind(start, 'click', () => {

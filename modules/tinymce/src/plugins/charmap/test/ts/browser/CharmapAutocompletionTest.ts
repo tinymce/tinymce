@@ -1,4 +1,4 @@
-import { Keyboard, Keys, Log, Pipeline, UiFinder, Step } from '@ephox/agar';
+import { Keyboard, Keys, Log, Pipeline, Step, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { navigator } from '@ephox/dom-globals';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
@@ -33,6 +33,6 @@ UnitTest.asynctest('browser.tinymce.plugins.charmap.AutocompletionTest', (succes
     plugins: 'charmap',
     toolbar: 'charmap',
     theme: 'silver',
-    base_url: '/project/tinymce/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

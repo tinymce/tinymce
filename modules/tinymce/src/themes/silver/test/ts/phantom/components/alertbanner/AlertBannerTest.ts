@@ -50,7 +50,7 @@ UnitTest.asynctest('AlertBanner component Test', (success, failure) => {
             s.element('div', {
               classes: [ arr.has('tox-notification__body') ],
               html: str.is('I am a banner')
-            }),
+            })
           ]
         })),
         component.element()

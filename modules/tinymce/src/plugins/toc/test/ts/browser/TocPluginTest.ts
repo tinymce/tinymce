@@ -1,4 +1,4 @@
-import { Pipeline, Log } from '@ephox/agar';
+import { Log, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 
@@ -136,8 +136,6 @@ UnitTest.asynctest('browser.tinymce.plugins.toc.TocPluginTest', (success, failur
   });
 
   suite.test('TestCase-TBA: TableOfContents: Misc.', function (editor) {
-    let contents, $toc;
-
     editor.getBody().innerHTML =
       '<h2 id="h1">H2</h2>' +
       '<p>This is some text.</p><br />' +
@@ -149,12 +147,12 @@ UnitTest.asynctest('browser.tinymce.plugins.toc.TocPluginTest', (success, failur
     LegacyUnit.setSelection(editor, 'h2', 0);
     editor.execCommand('mceInsertToc');
 
-    contents = editor.getContent();
+    const contents = editor.getContent();
     LegacyUnit.equal(/contenteditable/i.test(contents), false, 'cE stripped for getContent()');
 
     editor.setContent(contents);
 
-    $toc = editor.$('.tst-toc');
+    const $toc = editor.$('.tst-toc');
     LegacyUnit.deepEqual($toc.attr('contentEditable'), 'false', 'cE added back after setContent()');
     LegacyUnit.deepEqual($toc.find(':first-child').attr('contentEditable'), 'true',
       'cE added back to title after setContent()');

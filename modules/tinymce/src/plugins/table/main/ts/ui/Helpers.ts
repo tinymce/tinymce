@@ -7,7 +7,7 @@
 
 import { Types } from '@ephox/bridge';
 import { Element as DomElement, HTMLElement, Node } from '@ephox/dom-globals';
-import { Arr, Obj, Strings, Fun } from '@ephox/katamari';
+import { Arr, Fun, Obj, Strings } from '@ephox/katamari';
 import { Css, Element } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
@@ -179,7 +179,7 @@ const extractDataFromSettings = (editor: Editor, hasAdvTableTab: boolean): Table
 
   const advStyle = (hasAdvTableTab ? extractAdvancedStyleData(editor.dom) : {});
 
-  const getCellPaddingCellSpacing  = () => {
+  const getCellPaddingCellSpacing = () => {
     const spacing = Obj.get(style, 'border-spacing').or(Obj.get(attrs, 'cellspacing')).fold( () => ({}), (cellspacing) => ({ cellspacing }));
     const padding = Obj.get(style, 'border-padding').or(Obj.get(attrs, 'cellpadding')).fold( () => ({}), (cellpadding) => ({ cellpadding }));
     return {

@@ -5,15 +5,15 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Element, HTMLElement } from '@ephox/dom-globals';
+import { Cell, Obj } from '@ephox/katamari';
+import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import URI from 'tinymce/core/api/util/URI';
 import XHR from 'tinymce/core/api/util/XHR';
 import * as Events from '../api/Events';
 import * as Settings from '../api/Settings';
 import { DomTextMatcher } from './DomTextMatcher';
-import Editor from 'tinymce/core/api/Editor';
-import { Cell, Obj } from '@ephox/katamari';
-import { Element, HTMLElement } from '@ephox/dom-globals';
 
 export interface Data {
   words: Record<string, string[]>;
@@ -156,10 +156,9 @@ const getElmIndex = function (elm: HTMLElement) {
 };
 
 const findSpansByIndex = function (editor: Editor, index: string) {
-  let nodes;
   const spans = [];
 
-  nodes = Tools.toArray(editor.getBody().getElementsByTagName('span'));
+  const nodes = Tools.toArray(editor.getBody().getElementsByTagName('span'));
   if (nodes.length) {
     for (let i = 0; i < nodes.length; i++) {
       const nodeIndex = getElmIndex(nodes[i]);

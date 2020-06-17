@@ -5,8 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Blob, HTMLImageElement, URL } from '@ephox/dom-globals';
 import { BlobConversions, ImageTransformations, ResultConversions } from '@ephox/imagetools';
 import { Option } from '@ephox/katamari';
+import { Element, SelectorFind } from '@ephox/sugar';
+import Editor from 'tinymce/core/api/Editor';
 
 import Delay from 'tinymce/core/api/util/Delay';
 import Promise from 'tinymce/core/api/util/Promise';
@@ -16,9 +19,6 @@ import URI from 'tinymce/core/api/util/URI';
 import * as Settings from '../api/Settings';
 import * as ImageSize from './ImageSize';
 import * as Proxy from './Proxy';
-import Editor from 'tinymce/core/api/Editor';
-import { HTMLImageElement, Blob, URL } from '@ephox/dom-globals';
-import { SelectorFind, Element } from '@ephox/sugar';
 
 let count = 0;
 
@@ -102,8 +102,7 @@ const imageToBlob = (editor: Editor, img: HTMLImageElement): Promise<Blob> => Se
 );
 
 const findBlob = function (editor: Editor, img) {
-  let blobInfo;
-  blobInfo = editor.editorUpload.blobCache.getByUri(img.src);
+  const blobInfo = editor.editorUpload.blobCache.getByUri(img.src);
   if (blobInfo) {
     return Promise.resolve(blobInfo.blob());
   }
@@ -125,9 +124,9 @@ const cancelTimedUpload = function (imageUploadTimerState) {
 
 const updateSelectedImage = function (editor: Editor, ir, uploadImmediately, imageUploadTimerState, selectedImage, size?) {
   return ir.toBlob().then(function (blob) {
-    let uri, name, blobCache, blobInfo;
+    let uri, name, blobInfo;
 
-    blobCache = editor.editorUpload.blobCache;
+    const blobCache = editor.editorUpload.blobCache;
     uri = selectedImage.src;
 
     if (Settings.shouldReuseFilename(editor)) {

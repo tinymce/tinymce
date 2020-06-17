@@ -9,10 +9,12 @@ Version 5.4.0 (TBD)
     Changed `advlist` toolbar buttons to only show a dropdown list if there's more than one option #TINY-3194
     Changed `mceInsertTable` command and `insertTable` API method to take optional header rows and columns arguments #TINY-6012
     Fixed table `Paste row after` and `Paste row before` menu items not disabled when nothing was available to paste #TINY-6006
+    Fixed a selection performance issue with large tables on Microsoft Internet Explorer and Edge #TINY-6057
     Fixed filters for screening commands from the undo stack to be properly case-insensitive #TINY-5946
     Fixed `fullscreen` plugin now removes all classes when the editor is closed #TINY-4048
     Fixed handling of mixed-case icon names by having the silver theme downcase them before icon retrieval #TINY-3854
     Fixed leading and trailing spaces lost when using `editor.selection.getContent({ format: 'text' })` #TINY-5986
+    Fixed an issue where changing the URL with the quicklink toolbar caused unexpected undo behavior #TINY-5952
     Fixed an issue where removing formatting in a table cell would cause Internet Explorer 11 to scroll to the end of the table #TINY-6049
     Fixed an issue where the `allow_html_data_urls` setting was not correctly applied #TINY-5951
     Fixed the `autolink` feature so that it no longer treats a string with multiple "@" characters as an email address #TINY-4773

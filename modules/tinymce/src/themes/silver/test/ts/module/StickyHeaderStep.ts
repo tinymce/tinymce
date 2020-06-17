@@ -1,4 +1,4 @@
-import { GeneralSteps, Pipeline, Step, UiFinder, Waiter, Assertions } from '@ephox/agar';
+import { Assertions, GeneralSteps, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
 import { Cell } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Body } from '@ephox/sugar';
@@ -42,7 +42,7 @@ const sTestStickyHeader = (toolbarMode: ToolbarMode, toolbarLocation: ToolbarLoc
               editor.getContentAreaContainer().clientHeight
             );
             next({});
-          }),
+          })
         ])),
         Step.label('Scroll down so the editor is hidden from view, it should have hidden css markings', StickyUtils.sScrollAndAssertStructure(isToolbarTop, 500, StickyUtils.expectedEditorHidden)),
         StickyUtils.sAssertHeaderDocked(isToolbarTop),
@@ -101,7 +101,7 @@ const sTestStickyHeader = (toolbarMode: ToolbarMode, toolbarLocation: ToolbarLoc
           // TODO: Figure out why Chrome 78 needs this wait on MacOS. I suspect it might be because fullscreen sets overflow hidden
           // we're setting the scroll position before the window has updated
           Step.wait(100),
-          StickyUtils.sScrollAndAssertStructure(isToolbarTop, 200, StickyUtils.expectedHalfView),
+          StickyUtils.sScrollAndAssertStructure(isToolbarTop, 200, StickyUtils.expectedHalfView)
         ])),
 
         Step.sync(() => teardownPageScroll.get()())

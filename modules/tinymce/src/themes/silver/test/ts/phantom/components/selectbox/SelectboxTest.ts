@@ -4,10 +4,10 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { Option } from '@ephox/katamari';
 
 import { renderSelectBox } from 'tinymce/themes/silver/ui/dialog/SelectBox';
+import { DisablingSteps } from '../../../module/DisablingSteps';
 import { DomSteps } from '../../../module/DomSteps';
 import { RepresentingSteps } from '../../../module/ReperesentingSteps';
 import TestProviders from '../../../module/TestProviders';
-import { DisablingSteps } from '../../../module/DisablingSteps';
 
 UnitTest.asynctest('Selectbox component Test', (success, failure) => {
 
@@ -15,7 +15,7 @@ UnitTest.asynctest('Selectbox component Test', (success, failure) => {
     ...TestProviders,
     icons: () => <Record<string, string>> {
       'chevron-down': '<svg></svg>' // details don't matter, just needs an SVG for the test
-    },
+    }
   };
 
   TestHelpers.GuiSetup.setup(
@@ -28,7 +28,7 @@ UnitTest.asynctest('Selectbox component Test', (success, failure) => {
         items: [
           { value: 'one', text: 'One' },
           { value: 'two', text: 'Two' },
-          { value: 'three', text: 'Three' },
+          { value: 'three', text: 'Three' }
         ]
       }, providers)
     ),

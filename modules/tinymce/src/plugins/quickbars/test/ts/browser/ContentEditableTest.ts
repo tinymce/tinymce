@@ -33,22 +33,22 @@ UnitTest.asynctest('browser.tinymce.plugins.quickbars.ContentEditableTest', (suc
         tinyApis.sSelect('div', []),
         sAssertToolbarVisible,
         tinyApis.sSelect('div[contenteditable=false]', []),
-        sAssertToolbarNotVisible,
+        sAssertToolbarNotVisible
       ]),
       Log.stepsAsStep('TBA', 'Text selection toolbar is not shown with contenteditable=false parent, select child of parent', [
         tinyApis.sSetContent('<div><p>abc</p></div><div contenteditable="false"><p>cab</p></div>'),
         tinyApis.sSelect('div p', []),
         sAssertToolbarVisible,
         tinyApis.sSelect('div[contenteditable=false] p', []),
-        sAssertToolbarNotVisible,
+        sAssertToolbarNotVisible
       ]),
       Log.stepsAsStep('TBA', 'Text selection toolbar is not shown with contenteditable=false span, select span', [
         tinyApis.sSetContent('<p>abc</p><p>abc <span contenteditable="false">click on me</span> 123</p>'),
         tinyApis.sSetSelection([ 0, 0 ], 0, [ 0, 0 ], 1),
         sAssertToolbarVisible,
         tinyApis.sSelect('p span', []),
-        sAssertToolbarNotVisible,
-      ]),
+        sAssertToolbarNotVisible
+      ])
     ], onSuccess, onFailure);
   }, {
     plugins: 'quickbars link',

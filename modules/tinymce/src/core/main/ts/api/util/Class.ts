@@ -5,8 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Tools from './Tools';
 import { Obj } from '@ephox/katamari';
+import Tools from './Tools';
 
 /**
  * This utility class is used for easier inheritance.
@@ -54,7 +54,6 @@ const Class: Class = function () {
 Class.extend = extendClass = function (prop: Prop): ExtendedClass {
   const self = this;
   const _super = self.prototype;
-  let prototype;
 
   // The dummy class constructor
   const Class = function () {
@@ -93,10 +92,9 @@ Class.extend = extendClass = function (prop: Prop): ExtendedClass {
     return function () {
       const self = this;
       const tmp = self._super;
-      let ret;
 
       self._super = _super[name];
-      ret = fn.apply(self, arguments);
+      const ret = fn.apply(self, arguments);
       self._super = tmp;
 
       return ret;
@@ -108,7 +106,7 @@ Class.extend = extendClass = function (prop: Prop): ExtendedClass {
   initializing = true;
 
   /* eslint new-cap:0 */
-  prototype = new self();
+  const prototype = new self();
   initializing = false;
 
   // Add mixins

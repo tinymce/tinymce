@@ -5,13 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Types } from '@ephox/bridge';
 import { Future, Obj, Option, Type } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import { LinkTarget, LinkTargets } from '../ui/core/LinkTargets';
 import { addToHistory, getHistory } from './UrlInputHistory';
-import { Types } from '@ephox/bridge';
 
 type PickerCallback = (value: string, meta: Record<string, any>) => void;
 type Picker = (callback: PickerCallback, value: string, meta: Record<string, any>) => void;
@@ -138,5 +138,5 @@ export const UrlInputBackstage = (editor: Editor): UiFactoryBackstageForUrlInput
   addToHistory,
   getLinkInformation: () => getLinkInformation(editor),
   getValidationHandler: () => getValidationHandler(editor),
-  getUrlPicker: (filetype: string) => getUrlPicker(editor, filetype),
+  getUrlPicker: (filetype: string) => getUrlPicker(editor, filetype)
 });

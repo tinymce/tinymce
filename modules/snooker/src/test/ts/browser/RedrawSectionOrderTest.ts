@@ -2,12 +2,12 @@ import { ApproxStructure, Assertions, Logger, Pipeline, Step } from '@ephox/agar
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr, Unicode } from '@ephox/katamari';
 import { Compare, Element, Traverse } from '@ephox/sugar';
+import * as Structs from 'ephox/snooker/api/Structs';
 import * as DetailsList from 'ephox/snooker/model/DetailsList';
 import * as Transitions from 'ephox/snooker/model/Transitions';
 import { Warehouse } from 'ephox/snooker/model/Warehouse';
 import * as Redraw from 'ephox/snooker/operate/Redraw';
 import * as Bridge from 'ephox/snooker/test/Bridge';
-import * as Structs from 'ephox/snooker/api/Structs';
 
 UnitTest.asynctest('Redraw Section Order Test', (success, failure) => {
 
@@ -60,7 +60,7 @@ UnitTest.asynctest('Redraw Section Order Test', (success, failure) => {
             children: [
               basicRowStructure(s, str, 'one'),
               basicRowStructure(s, str, 'two'),
-              basicRowStructure(s, str, 'three'),
+              basicRowStructure(s, str, 'three')
             ]
           })
         ]
@@ -78,7 +78,7 @@ UnitTest.asynctest('Redraw Section Order Test', (success, failure) => {
           s.element('tbody', {
             children: [
               basicRowStructure(s, str, 'one'),
-              basicRowStructure(s, str, 'three'),
+              basicRowStructure(s, str, 'three')
             ]
           })
         ]
@@ -95,12 +95,12 @@ UnitTest.asynctest('Redraw Section Order Test', (success, failure) => {
           }),
           s.element('tbody', {
             children: [
-              basicRowStructure(s, str, 'three'),
+              basicRowStructure(s, str, 'three')
             ]
           }),
           s.element('tfoot', {
             children: [
-              basicRowStructure(s, str, 'one'),
+              basicRowStructure(s, str, 'one')
             ]
           })
         ]
@@ -113,12 +113,12 @@ UnitTest.asynctest('Redraw Section Order Test', (success, failure) => {
           s.element('tbody', {
             children: [
               basicRowStructure(s, str, 'two'),
-              basicRowStructure(s, str, 'three'),
+              basicRowStructure(s, str, 'three')
             ]
           }),
           s.element('tfoot', {
             children: [
-              basicRowStructure(s, str, 'one'),
+              basicRowStructure(s, str, 'one')
             ]
           })
         ]

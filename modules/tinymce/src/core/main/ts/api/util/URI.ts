@@ -6,8 +6,8 @@
  */
 
 import { document } from '@ephox/dom-globals';
-import Tools from './Tools';
 import { Arr } from '@ephox/katamari';
+import Tools from './Tools';
 
 /**
  * This class handles parsing, modification and serialization of URI/URL strings.
@@ -290,11 +290,11 @@ class URI {
    * @param {String} path Absolute path to convert into a relative path.
    */
   public toRelPath(base: string, path: string): string {
-    let items, breakPoint = 0, out = '', i, l;
+    let breakPoint = 0, out = '', i, l;
 
     // Split the paths
     const normalizedBase = base.substring(0, base.lastIndexOf('/')).split('/');
-    items = path.split('/');
+    const items = path.split('/');
 
     if (normalizedBase.length >= items.length) {
       for (i = 0, l = normalizedBase.length; i < l; i++) {
@@ -341,10 +341,10 @@ class URI {
    * @param {String} path Relative path to convert into an absolute path.
    */
   public toAbsPath(base: string, path: string): string {
-    let i, nb = 0, o = [], tr, outPath;
+    let i, nb = 0, o = [], outPath;
 
     // Split paths
-    tr = /\/$/.test(path) ? '/' : '';
+    const tr = /\/$/.test(path) ? '/' : '';
     let normalizedBase = base.split('/');
     const normalizedPath = path.split('/');
 

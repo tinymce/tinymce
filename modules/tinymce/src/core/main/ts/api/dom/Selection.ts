@@ -110,8 +110,6 @@ interface Selection {
  * @param {tinymce.Editor} editor Editor instance of the selection.
  */
 const Selection = function (dom: DOMUtils, win: Window, serializer: Serializer, editor: Editor): Selection {
-  let bookmarkManager: BookmarkManager;
-  let controlSelection: ControlSelection;
   let selectedRange: Range | null;
   let explicitRange: Range | null;
 
@@ -291,7 +289,7 @@ const Selection = function (dom: DOMUtils, win: Window, serializer: Serializer, 
    * @see http://www.dotvoid.com/2001/03/using-the-range-object-in-mozilla/
    */
   const getRng = (): Range | null => {
-    let selection, rng, elm, doc;
+    let selection, rng, elm;
 
     const tryCompareBoundaryPoints = function (how, sourceRange, destinationRange) {
       try {
@@ -310,7 +308,7 @@ const Selection = function (dom: DOMUtils, win: Window, serializer: Serializer, 
       return null;
     }
 
-    doc = win.document;
+    const doc = win.document;
 
     if (typeof doc === 'undefined' || doc === null) {
       return null;
@@ -342,7 +340,8 @@ const Selection = function (dom: DOMUtils, win: Window, serializer: Serializer, 
     // This can occur when the editor is placed in a hidden container element on Gecko
     // Or on IE when there was an exception
     if (!rng) {
-      rng = doc.createRange ? doc.createRange() : doc.body.createTextRange();
+      // TODO: Is this still needed in modern browsers?
+      rng = doc.createRange ? doc.createRange() : (doc.body as any).createTextRange();
     }
 
     // If range is at start of document then move it to start of body
@@ -375,7 +374,7 @@ const Selection = function (dom: DOMUtils, win: Window, serializer: Serializer, 
    * @param {Boolean} forward Optional boolean if the selection is forwards or backwards.
    */
   const setRng = (rng: Range, forward?: boolean) => {
-    let sel, node, evt;
+    let node;
 
     if (!isValidRange(rng)) {
       return;
@@ -395,9 +394,9 @@ const Selection = function (dom: DOMUtils, win: Window, serializer: Serializer, 
       return;
     }
 
-    sel = getSel();
+    const sel = getSel();
 
-    evt = editor.fire('SetSelectionRange', { range: rng, forward });
+    const evt = editor.fire('SetSelectionRange', { range: rng, forward });
     rng = evt.range;
 
     if (sel) {
@@ -478,19 +477,17 @@ const Selection = function (dom: DOMUtils, win: Window, serializer: Serializer, 
 
   const isForward = (): boolean => {
     const sel = getSel();
-    let anchorRange,
-      focusRange;
 
     // No support for selection direction then always return true
     if (!sel || !sel.anchorNode || !sel.focusNode) {
       return true;
     }
 
-    anchorRange = dom.createRng();
+    const anchorRange = dom.createRng();
     anchorRange.setStart(sel.anchorNode, sel.anchorOffset);
     anchorRange.collapse(true);
 
-    focusRange = dom.createRng();
+    const focusRange = dom.createRng();
     focusRange.setStart(sel.focusNode, sel.focusOffset);
     focusRange.collapse(true);
 
@@ -590,8 +587,8 @@ const Selection = function (dom: DOMUtils, win: Window, serializer: Serializer, 
     destroy
   };
 
-  bookmarkManager = BookmarkManager(exports);
-  controlSelection = ControlSelection(exports, editor);
+  const bookmarkManager = BookmarkManager(exports);
+  const controlSelection = ControlSelection(exports, editor);
 
   exports.bookmarkManager = bookmarkManager;
   exports.controlSelection = controlSelection;

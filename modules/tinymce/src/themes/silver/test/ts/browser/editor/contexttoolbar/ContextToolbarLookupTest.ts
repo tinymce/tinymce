@@ -101,7 +101,7 @@ UnitTest.asynctest('Inline editor Context Toolbar Lookup test', (success, failur
           tinyApis.sFocus(),
           UiFinder.sWaitForVisible('Waiting for parent node toolbar to appear', Body.body(), '.tox-tbtn:contains(Parent)'),
           sAssertNames([ 'em', 'strong', 'p' ], [ 'em', 'strong', 'p' ], [ 'em' ])
-        ]),
+        ])
       ], onSuccess, onFailure);
     },
     {

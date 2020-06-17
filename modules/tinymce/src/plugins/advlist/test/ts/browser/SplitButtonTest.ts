@@ -1,11 +1,11 @@
-import { Log, Mouse, Pipeline, Step, Waiter, UiFinder, Assertions, ApproxStructure, Keyboard, Keys } from '@ephox/agar';
+import { ApproxStructure, Assertions, Keyboard, Keys, Log, Mouse, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
+import { document } from '@ephox/dom-globals';
 import { TinyLoader } from '@ephox/mcagar';
 import { Body, Element } from '@ephox/sugar';
 import AdvListPlugin from 'tinymce/plugins/advlist/Plugin';
 import ListsPlugin from 'tinymce/plugins/lists/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
-import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.plugins.advlist.SplitButtonTest', function (success, failure) {
   AdvListPlugin();
@@ -44,7 +44,7 @@ UnitTest.asynctest('browser.tinymce.plugins.advlist.SplitButtonTest', function (
                       arr.has('tox-collection__item--active')
                     ],
                     attrs: {
-                      title: str.is('Default'),
+                      title: str.is('Default')
                     },
                     children: [
                       s.element('div', {
@@ -58,7 +58,7 @@ UnitTest.asynctest('browser.tinymce.plugins.advlist.SplitButtonTest', function (
                       arr.has('tox-collection__item')
                     ],
                     attrs: {
-                      title: str.is('Circle'),
+                      title: str.is('Circle')
                     },
                     children: [
                       s.element('div', {
@@ -72,7 +72,7 @@ UnitTest.asynctest('browser.tinymce.plugins.advlist.SplitButtonTest', function (
                       arr.has('tox-collection__item')
                     ],
                     attrs: {
-                      title: str.is('Square'),
+                      title: str.is('Square')
                     },
                     children: [
                       s.element('div', {
@@ -114,7 +114,7 @@ UnitTest.asynctest('browser.tinymce.plugins.advlist.SplitButtonTest', function (
                       arr.has('tox-collection__item--active')
                     ],
                     attrs: {
-                      title: str.is('Default'),
+                      title: str.is('Default')
                     },
                     children: [
                       s.element('div', {
@@ -128,7 +128,7 @@ UnitTest.asynctest('browser.tinymce.plugins.advlist.SplitButtonTest', function (
                       arr.has('tox-collection__item')
                     ],
                     attrs: {
-                      title: str.is('Lower Alpha'),
+                      title: str.is('Lower Alpha')
                     },
                     children: [
                       s.element('div', {
@@ -142,7 +142,7 @@ UnitTest.asynctest('browser.tinymce.plugins.advlist.SplitButtonTest', function (
                       arr.has('tox-collection__item')
                     ],
                     attrs: {
-                      title: str.is('Lower Greek'),
+                      title: str.is('Lower Greek')
                     },
                     children: [
                       s.element('div', {
@@ -162,7 +162,7 @@ UnitTest.asynctest('browser.tinymce.plugins.advlist.SplitButtonTest', function (
                       arr.has('tox-collection__item')
                     ],
                     attrs: {
-                      title: str.is('Lower Roman'),
+                      title: str.is('Lower Roman')
                     },
                     children: [
                       s.element('div', {
@@ -176,7 +176,7 @@ UnitTest.asynctest('browser.tinymce.plugins.advlist.SplitButtonTest', function (
                       arr.has('tox-collection__item')
                     ],
                     attrs: {
-                      title: str.is('Upper Alpha'),
+                      title: str.is('Upper Alpha')
                     },
                     children: [
                       s.element('div', {
@@ -190,7 +190,7 @@ UnitTest.asynctest('browser.tinymce.plugins.advlist.SplitButtonTest', function (
                       arr.has('tox-collection__item')
                     ],
                     attrs: {
-                      title: str.is('Upper Roman'),
+                      title: str.is('Upper Roman')
                     },
                     children: [
                       s.element('div', {
@@ -215,7 +215,7 @@ UnitTest.asynctest('browser.tinymce.plugins.advlist.SplitButtonTest', function (
       assertNumListStructure(),
       Keyboard.sKeydown(Element.fromDom(document), Keys.escape(), { }),
       clickOnSplitBtnFor('Bullet list'),
-      assertBullListStructure(),
+      assertBullListStructure()
 
     ], onSuccess, onFailure);
   }, {

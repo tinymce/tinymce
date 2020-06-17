@@ -84,36 +84,36 @@ export default (): void => {
   // North
   makeExample('n', 'top', 'top', {
     onLtr: () => [ LayoutInside.north ],
-    onRtl: () => [ LayoutInside.north ],
+    onRtl: () => [ LayoutInside.north ]
   });
 
   // South
   makeExample('s', 'bottom', 'bottom', {
     onLtr: () => [ LayoutInside.south ],
-    onRtl: () => [ LayoutInside.south ],
+    onRtl: () => [ LayoutInside.south ]
   });
 
   // East/west
   makeExample('e', 'right', 'left', {
     onLtr: () => [ LayoutInside.east ],
-    onRtl: () => [ LayoutInside.west ],
+    onRtl: () => [ LayoutInside.west ]
   });
 
   // West/east
   makeExample('w', 'left', 'right', {
     onLtr: () => [ LayoutInside.west ],
-    onRtl: () => [ LayoutInside.east ],
+    onRtl: () => [ LayoutInside.east ]
   });
 
   // Northeast/northwest
   makeExample('ne-nw', 'top right', 'top left', {
     onLtr: () => [ LayoutInside.northwest ],
-    onRtl: () => [ LayoutInside.northeast ],
+    onRtl: () => [ LayoutInside.northeast ]
   });
 
   // Southeast/southwestt
   makeExample('se-sw', 'bottom right', 'bottom left', {
     onLtr: () => [ LayoutInside.southwest ],
-    onRtl: () => [ LayoutInside.southeast ],
+    onRtl: () => [ LayoutInside.southeast ]
   });
 };

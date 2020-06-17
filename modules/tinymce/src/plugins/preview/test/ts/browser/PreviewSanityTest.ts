@@ -1,7 +1,7 @@
-import { Pipeline, Log, Waiter, UiFinder, Keyboard, Keys, GeneralSteps, Logger } from '@ephox/agar';
+import { GeneralSteps, Keyboard, Keys, Log, Logger, Pipeline, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
-import { TinyApis, TinyLoader, TinyUi, TinyDom } from '@ephox/mcagar';
+import { TinyApis, TinyDom, TinyLoader, TinyUi } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
 
 import PreviewPlugin from 'tinymce/plugins/preview/Plugin';
@@ -42,6 +42,6 @@ UnitTest.asynctest('browser.tinymce.plugins.preview.PreviewSanityTest', (success
     theme: 'silver',
     plugins: 'preview',
     toolbar: 'preview',
-    base_url: '/project/tinymce/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

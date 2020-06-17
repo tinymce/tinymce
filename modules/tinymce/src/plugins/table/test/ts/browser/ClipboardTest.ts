@@ -1,4 +1,4 @@
-import { Pipeline, Log } from '@ephox/agar';
+import { Log, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 
@@ -373,8 +373,6 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ClipboardTest', (success, fail
   });
 
   suite.test('TestCase-TBA: Table: row clipboard api', (editor) => {
-    let clipboardRows;
-
     const createRow = (cellContents) => {
       const tr = editor.dom.create('tr');
 
@@ -395,7 +393,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ClipboardTest', (success, fail
     LegacyUnit.setSelection(editor, 'tr:nth-child(1) td', 0);
     editor.execCommand('mceTableCopyRow');
 
-    clipboardRows = editor.plugins.table.getClipboardRows();
+    const clipboardRows = editor.plugins.table.getClipboardRows();
 
     LegacyUnit.equal(clipboardRows.length, 1);
     LegacyUnit.equal(clipboardRows[0].tagName, 'TR');
@@ -432,6 +430,6 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ClipboardTest', (success, fail
       '*': 'width,height,vertical-align,text-align,float,border-color,background-color,border,padding,border-spacing,border-collapse'
     },
     theme: 'silver',
-    base_url: '/project/tinymce/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

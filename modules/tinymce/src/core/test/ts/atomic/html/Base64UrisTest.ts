@@ -1,8 +1,8 @@
-import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { extractBase64DataUris, Base64Extract, restoreDataUris, UriMap, parseDataUri } from 'tinymce/core/html/Base64Uris';
 import { Logger } from '@ephox/agar';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Obj, Option } from '@ephox/katamari';
 import { KAssert } from '@ephox/katamari-assertions';
+import { Base64Extract, extractBase64DataUris, parseDataUri, restoreDataUris, UriMap } from 'tinymce/core/html/Base64Uris';
 
 UnitTest.test('Base64Uris Test', () => {
   const replacePrefix = (value: string, prefix: string) => value.replace(/\$prefix/g, prefix);
@@ -35,7 +35,7 @@ UnitTest.test('Base64Uris Test', () => {
       {
         html: '<img src="$prefix_0">',
         uris: {
-          $prefix_0: 'data:image/gif;base64,R0/yw==',
+          $prefix_0: 'data:image/gif;base64,R0/yw=='
         }
       }
     );
@@ -46,7 +46,7 @@ UnitTest.test('Base64Uris Test', () => {
       {
         html: 'a<img src="$prefix_0">b',
         uris: {
-          $prefix_0: 'data:image/gif;base64,R0/yw==',
+          $prefix_0: 'data:image/gif;base64,R0/yw=='
         }
       }
     );
@@ -71,7 +71,7 @@ UnitTest.test('Base64Uris Test', () => {
         html: '<img src="$prefix_0"><img src="$prefix_1">',
         uris: {
           $prefix_0: 'data:image/svg+xml;base64,R0/yw==',
-          $prefix_1: 'data:image/x-icon;base64,R1/yw==',
+          $prefix_1: 'data:image/x-icon;base64,R1/yw=='
         }
       }
     );
@@ -82,7 +82,7 @@ UnitTest.test('Base64Uris Test', () => {
       {
         html: '<img src="$prefix_0">',
         uris: {
-          $prefix_0: 'data:some/thing;base64,R2/yw==',
+          $prefix_0: 'data:some/thing;base64,R2/yw=='
         }
       }
     );

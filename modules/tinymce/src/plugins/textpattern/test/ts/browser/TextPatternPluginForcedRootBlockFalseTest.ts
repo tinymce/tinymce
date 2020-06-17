@@ -22,7 +22,7 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextPatternPluginForcedR
       ])),
       Step.label('block format with forced_root_block: false', GeneralSteps.sequence([
         Utils.sSetContentAndPressEnter(tinyApis, tinyActions, '# heading 1', 11, [ 0 ], false),
-        Step.label('Check heading format was applied', tinyApis.sAssertContentStructure(Utils.forcedRootBlockStructHelper('h1', ' heading 1'))),
+        Step.label('Check heading format was applied', tinyApis.sAssertContentStructure(Utils.forcedRootBlockStructHelper('h1', ' heading 1')))
       ]))
     ], tinyApis.sSetContent(''));
 

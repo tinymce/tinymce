@@ -1,4 +1,6 @@
-import { ApproxStructure, Assertions, Chain, FocusTools, Keyboard, Keys, Logger, Mouse, NamedChain, Step, StructAssert, UiFinder, } from '@ephox/agar';
+import {
+  ApproxStructure, Assertions, Chain, FocusTools, Keyboard, Keys, Logger, Mouse, NamedChain, Step, StructAssert, UiFinder
+} from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Result } from '@ephox/katamari';
 import { Attr, Class, Compare } from '@ephox/sugar';

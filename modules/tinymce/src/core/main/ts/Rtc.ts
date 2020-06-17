@@ -124,10 +124,10 @@ const makePlainAdaptor = (editor: Editor): RtcAdaptor => ({
   formatter: {
     apply: (name, vars?, node?) => ApplyFormat.applyFormat(editor, name, vars, node),
     remove: (name, vars, node, similar?) => RemoveFormat.remove(editor, name, vars, node, similar),
-    toggle: (name, vars, node) => ToggleFormat.toggle(editor, name, vars, node),
+    toggle: (name, vars, node) => ToggleFormat.toggle(editor, name, vars, node)
   },
   editor: {
-    getContent: (args, format) =>  getContentInternal(editor, args, format),
+    getContent: (args, format) => getContentInternal(editor, args, format),
     setContent: (content, args) => setContentInternal(editor, content, args),
     insertContent: (value, details) => insertHtmlAtCaret(editor, value, details)
   },
@@ -169,7 +169,7 @@ const makeRtcAdaptor = (tinymceEditor: Editor, rtcEditor: RtcRuntimeApi): RtcAda
     formatter: {
       apply: (name, vars, _node) => rtcEditor.applyFormat(name, defaultVars(vars)),
       remove: (name, vars, _node, _similar?) => rtcEditor.removeFormat(name, defaultVars(vars)),
-      toggle: (name, vars, _node) => rtcEditor.toggleFormat(name, defaultVars(vars)),
+      toggle: (name, vars, _node) => rtcEditor.toggleFormat(name, defaultVars(vars))
     },
     editor: {
       getContent: (args, format) => {

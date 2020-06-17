@@ -1,9 +1,9 @@
-import { Arr, Type, Id, Option } from '@ephox/katamari';
-import { Element as DomElement, DataTransfer, DataTransferItemList } from '@ephox/dom-globals';
-import { createDataTransferItemList } from './DataTransferItemList';
+import { DataTransfer, Element as DomElement } from '@ephox/dom-globals';
+import { Arr, Id, Option, Type } from '@ephox/katamari';
 import { createFileList } from '../file/FileList';
 import { getData } from './DataTransferItem';
-import { setReadWriteMode, isInProtectedMode, isInReadWriteMode } from './Mode';
+import { createDataTransferItemList } from './DataTransferItemList';
+import { isInProtectedMode, isInReadWriteMode, setReadWriteMode } from './Mode';
 
 const imageId = Id.generate('image');
 
@@ -41,7 +41,6 @@ const normalize = (format: string) => {
 const createDataTransfer = (): DataTransfer => {
   let dropEffect = 'move';
   let effectAllowed = 'all';
-  let items: DataTransferItemList;
 
   const dataTransfer: DataTransfer = {
     get dropEffect() {
@@ -128,7 +127,7 @@ const createDataTransfer = (): DataTransfer => {
     }
   };
 
-  items = createDataTransferItemList(dataTransfer);
+  const items = createDataTransferItemList(dataTransfer);
 
   setReadWriteMode(dataTransfer);
 

@@ -1,10 +1,10 @@
 import { ApproxStructure, Assertions, Chain, GeneralSteps, Log, Pipeline, UiFinder, Waiter } from '@ephox/agar';
-import { Sidebar } from '@ephox/bridge';
+import { TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
+import { Sidebar } from '@ephox/bridge';
 import { TinyLoader, TinyUi } from '@ephox/mcagar';
 import { Body, Element, Traverse } from '@ephox/sugar';
 import Theme from 'tinymce/themes/silver/Theme';
-import { TestHelpers } from '@ephox/alloy';
 
 interface EventLog {
   name: string;
@@ -22,7 +22,7 @@ UnitTest.asynctest('tinymce.themes.silver.test.browser.sidebar.SidebarTest', fun
       return GeneralSteps.sequence([
         store.sClear,
         tinyUi.sClickOnToolbar('Toggle sidebar', 'button[aria-label="' + tooltip + '"]'),
-        Waiter.sTryUntil('Checking sidebar callbacks', store.sAssertEq('Asserting sidebar callbacks', expected)),
+        Waiter.sTryUntil('Checking sidebar callbacks', store.sAssertEq('Asserting sidebar callbacks', expected))
       ]);
     };
 
@@ -66,12 +66,12 @@ UnitTest.asynctest('tinymce.themes.silver.test.browser.sidebar.SidebarTest', fun
         { name: 'mysidebar3:render', index: 2 },
         { name: 'mysidebar1:hide', index: 0 },
         { name: 'mysidebar2:hide', index: 1 },
-        { name: 'mysidebar3:hide', index: 2 },
+        { name: 'mysidebar3:hide', index: 2 }
       ])),
       sClickAndAssertEvents('My sidebar 1', [{ name: 'mysidebar1:show', index: 0 }]),
       sClickAndAssertEvents('My sidebar 2', [{ name: 'mysidebar1:hide', index: 0 }, { name: 'mysidebar2:show', index: 1 }]),
       sClickAndAssertEvents('My sidebar 3', [{ name: 'mysidebar2:hide', index: 1 }, { name: 'mysidebar3:show', index: 2 }]),
-      sClickAndAssertEvents('My sidebar 3', [{ name: 'mysidebar3:hide', index: 2 }]),
+      sClickAndAssertEvents('My sidebar 3', [{ name: 'mysidebar3:hide', index: 2 }])
     ]), onSuccess, onFailure);
   }, {
     theme: 'silver',
@@ -111,6 +111,6 @@ UnitTest.asynctest('tinymce.themes.silver.test.browser.sidebar.SidebarTest', fun
         onShow: logEvent('mysidebar3:show'),
         onHide: logEvent('mysidebar3:hide')
       });
-    },
+    }
   }, success, failure);
 });

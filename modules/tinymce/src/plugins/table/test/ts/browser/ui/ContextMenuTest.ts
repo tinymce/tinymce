@@ -1,4 +1,5 @@
-import { ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Log, Pipeline, Waiter, UiFinder } from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Log, Pipeline, UiFinder, Waiter } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { TinyApis, TinyLoader, TinyUi, UiChains } from '@ephox/mcagar';
@@ -6,7 +7,6 @@ import { Body, Element } from '@ephox/sugar';
 
 import TablePlugin from 'tinymce/plugins/table/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.plugins.table.ContextMenuTest', (success, failure) => {
   SilverTheme();
@@ -193,7 +193,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ContextMenuTest', (success, fa
         sAssertHtmlStructure('Assert Insert Column', '<table><tbody><tr><td><br></td><td><br></td><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td><td><br></td><td><br></td></tr></tbody></table>'),
 
         sSelectColumnContextMenu('Delete Column', '.tox-collection__item:contains("Delete column")', 2),
-        sAssertHtmlStructure('Assert Column Deleted', '<table><tbody><tr><td><br></td><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td><td><br></td></tr></tbody></table>'),
+        sAssertHtmlStructure('Assert Column Deleted', '<table><tbody><tr><td><br></td><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td><td><br></td></tr></tbody></table>')
       ])
     ], onSuccess, onFailure);
   }, {
@@ -201,6 +201,6 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ContextMenuTest', (success, fa
     plugins: 'table',
     toolbar: 'table',
     indent: false,
-    base_url: '/project/tinymce/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

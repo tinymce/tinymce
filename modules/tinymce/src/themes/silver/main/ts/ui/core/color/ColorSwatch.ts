@@ -9,8 +9,8 @@ import { HexColour, RgbaColour } from '@ephox/acid';
 import { Menu, Toolbar, Types } from '@ephox/bridge';
 import { Cell, Fun, Option, Strings } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
-import * as Settings from './Settings';
 import * as Events from '../../../api/Events';
+import * as Settings from './Settings';
 
 export interface ColorSwatchDialogData {
   colorpicker: string;
@@ -223,7 +223,7 @@ const colorPickerDialog = (editor: Editor) => (callback, value: string) => {
       {
         type: 'cancel',
         name: 'cancel',
-        text: 'Cancel',
+        text: 'Cancel'
       },
       {
         type: 'submit',

@@ -147,7 +147,7 @@ UnitTest.test('TableLookupTest', function () {
 
   const testOuterTableMergedCellClick = function () {
     const triggerSelector = 'body > table > tbody > tr:nth-child(3) > td:nth-child(1)';
-    const resultSelector =  triggerSelector;
+    const resultSelector = triggerSelector;
     testerFound(htmlB, triggerSelector, resultSelector, 'testOuterTableMergedCellClick');
   };
 

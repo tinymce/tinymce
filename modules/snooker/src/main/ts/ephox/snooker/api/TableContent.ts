@@ -33,7 +33,7 @@ const merge = function (cells: Element[]) {
     return CursorPosition.last(cell).bind(function (rightEdge) {
       const rightSiblingIsBlock = siblingIsBlock(rightEdge);
       return Traverse.parent(rightEdge).map(function (parent) {
-        return rightSiblingIsBlock === true || isListItem(parent) || isBr(rightEdge) || (DomStructure.isBlock(parent) && !Compare.eq(cell, parent)) ? [] :  [ Element.fromTag('br') ];
+        return rightSiblingIsBlock === true || isListItem(parent) || isBr(rightEdge) || (DomStructure.isBlock(parent) && !Compare.eq(cell, parent)) ? [] : [ Element.fromTag('br') ];
       });
     }).getOr([]);
   };

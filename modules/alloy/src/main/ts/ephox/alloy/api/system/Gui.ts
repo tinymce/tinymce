@@ -60,7 +60,7 @@ const takeover = (root: AlloyComponent): GuiSystem => {
   const domEvents = GuiEvents.setup(root.element(), {
     triggerEvent(eventName: string, event: EventArgs) {
       return Debugging.monitorEvent(eventName, event.target(), (logger: Debugging.DebuggerLogger) => Triggers.triggerUntilStopped(lookup, eventName, event, logger));
-    },
+    }
   });
 
   const systemApi: AlloySystemApi = {

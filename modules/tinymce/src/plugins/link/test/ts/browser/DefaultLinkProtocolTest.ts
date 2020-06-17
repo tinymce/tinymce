@@ -1,4 +1,4 @@
-import { Pipeline, Log } from '@ephox/agar';
+import { Log, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
@@ -42,7 +42,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.DefaultLinkProtocolTest', (succ
         Log.stepsAsStep('TBA', 'other urls are not prompted to add http:// prefix', [
           TestLinkUi.sInsertLink(tinyUi, 'google.com'),
           TestLinkUi.sAssertContentPresence(tinyApis, { 'a': 1, 'a[href="google.com"]': 1 })
-        ]),
+        ])
       ]),
 
       Log.stepsAsStep('TBA', 'link_default_protocol: "https"', [
@@ -71,13 +71,13 @@ UnitTest.asynctest('browser.tinymce.plugins.link.DefaultLinkProtocolTest', (succ
         Log.stepsAsStep('TBA', 'other urls are not prompted to add https:// prefix', [
           TestLinkUi.sInsertLink(tinyUi, 'google.com'),
           TestLinkUi.sAssertContentPresence(tinyApis, { 'a': 1, 'a[href="google.com"]': 1 })
-        ]),
-      ]),
+        ])
+      ])
     ], onSuccess, onFailure);
   }, {
     plugins: 'link',
     toolbar: 'link',
     theme: 'silver',
-    base_url: '/project/tinymce/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

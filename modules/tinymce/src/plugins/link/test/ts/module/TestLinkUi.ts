@@ -1,8 +1,8 @@
-import { Chain, FocusTools, GeneralSteps, Guard, Logger, Mouse, Step, UiFinder, Waiter, Assertions, UiControls } from '@ephox/agar';
+import { Assertions, Chain, FocusTools, GeneralSteps, Guard, Logger, Mouse, Step, UiControls, UiFinder, Waiter } from '@ephox/agar';
 import { document, Event, localStorage } from '@ephox/dom-globals';
-import { Type, Obj } from '@ephox/katamari';
+import { Obj, Type } from '@ephox/katamari';
 import { TinyApis, TinyDom, TinyUi } from '@ephox/mcagar';
-import { Element, Value, Body } from '@ephox/sugar';
+import { Body, Element, Value } from '@ephox/sugar';
 
 const doc = TinyDom.fromDom(document);
 
@@ -11,12 +11,12 @@ const selectors = {
   text: 'label.tox-label:contains(Text to display) + input.tox-textfield',
   title: 'label.tox-label:contains(Title) + input.tox-textfield',
   target: 'label.tox-label:contains(Open link in...) + div.tox-selectfield>select',
-  linklist: 'label.tox-label:contains(Link list) + div.tox-selectfield>select',
+  linklist: 'label.tox-label:contains(Link list) + div.tox-selectfield>select'
 };
 
 const sOpenLinkDialog = (ui: TinyUi) => Logger.t('Open link dialog', GeneralSteps.sequence([
   ui.sClickOnToolbar('Click toolbar button', 'button'),
-  UiFinder.sWaitForVisible('wait for link dialog', TinyDom.fromDom(document.body), '[role="dialog"]'),
+  UiFinder.sWaitForVisible('wait for link dialog', TinyDom.fromDom(document.body), '[role="dialog"]')
 ]));
 
 const sClickOnDialog = (label: string, selector: string) => Logger.t('Click on dialog', GeneralSteps.sequence([

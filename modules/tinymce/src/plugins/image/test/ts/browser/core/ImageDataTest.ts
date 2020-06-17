@@ -525,7 +525,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
             s.element('img', {
               attrs: {
                 src: str.is('some2.gif'),
-                alt: str.none('no alt'),
+                alt: str.none('no alt')
               }
             })
           ]

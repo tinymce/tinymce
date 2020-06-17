@@ -48,7 +48,7 @@ UnitTest.asynctest('browser.tinymce.plugins.searchreplace.SearchReplaceInSelecti
       tinyApis.sSetContent(scenario.content),
       scenario.sel ? tinyApis.sSetSelection(scenario.sel.sPath, scenario.sel.sOffset, scenario.sel.fPath || scenario.sel.sPath, scenario.sel.fOffset || scenario.sel.fOffset) : Step.pass,
       Step.sync(() => {
-        const matches = editor.plugins.searchreplace.find(scenario.find, scenario.matchCase || false,  scenario.wholeWords || false, true);
+        const matches = editor.plugins.searchreplace.find(scenario.find, scenario.matchCase || false, scenario.wholeWords || false, true);
         Assertions.assertEq('Check the correct number of matches were found', scenario.matches, matches);
       }),
       isReplaceScenario(scenario) ? sReplaceStep(editor, scenario) : Step.pass

@@ -88,7 +88,7 @@ UnitTest.asynctest('Browser Test: behaviour.ReplacingAndTogglingTest', (success,
         // Assert the state hasn't been reset
         Assertions.assertEq('Assert child1 toggling state is still on', true, Toggling.isOn(childComp1));
         Assertions.assertEq('Assert child2 toggling state is still on', true, Toggling.isOn(childComp1));
-      }),
+      })
     ];
   },
   success, failure

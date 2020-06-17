@@ -34,7 +34,7 @@ export default {
         name: 'encoding',
         type: 'input',
         label: 'Encoding'
-      },
+      }
     ]
   },
   buttons: [

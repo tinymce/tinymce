@@ -18,7 +18,7 @@ UnitTest.asynctest('browser events.TapEventsTest', (success, failure) => {
     triggerEvent(name) {
       store.adder(name)();
       return true;
-    },
+    }
   });
 
   const alpha = Element.fromText('alpha');

@@ -68,7 +68,7 @@ UnitTest.asynctest('Inline Editor Floating Toolbar Drawer Position test', (succe
       sOpenFloatingToolbarAndAssertPosition(tinyUi, getExpectedToolbarPos, [
         // Press enter a few times to change the height of the editor
         sPressEnterNTimes(tinyApis, tinyActions, 3),
-        sAssertFloatingToolbarPosition(tinyUi, getExpectedToolbarPos, 105, 465),
+        sAssertFloatingToolbarPosition(tinyUi, getExpectedToolbarPos, 105, 465)
       ])
     ];
   }));
@@ -94,7 +94,7 @@ UnitTest.asynctest('Inline Editor Floating Toolbar Drawer Position test', (succe
         Step.sync(() => {
           initialContainerTop.set(getUiContainerTop(editor)); // reset the toolbar position
         }),
-        sAssertFloatingToolbarPosition(tinyUi, getExpectedToolbarPos, 105, 465), // top of ui container - two toolbar heights
+        sAssertFloatingToolbarPosition(tinyUi, getExpectedToolbarPos, 105, 465) // top of ui container - two toolbar heights
       ])
     ];
   }));
@@ -103,6 +103,6 @@ UnitTest.asynctest('Inline Editor Floating Toolbar Drawer Position test', (succe
     Log.stepsAsStep('TINY-4725', 'Inline Editor Floating Toolbar Drawer Position test', [
       sTestToolbarTop,
       sTestToolbarBottom
-    ]),
+    ])
   ], () => success(), failure);
 });

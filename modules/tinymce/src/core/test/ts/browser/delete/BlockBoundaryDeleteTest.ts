@@ -309,7 +309,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.BlockBoundaryDeleteTest', functi
           }))
         ),
         tinyApis.sAssertSelection([ 0, 2 ], 1, [ 0, 2 ], 1)
-      ])),
+      ]))
     ], onSuccess, onFailure);
   }, {
     base_url: '/project/tinymce/js/tinymce',

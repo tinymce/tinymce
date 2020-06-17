@@ -1,12 +1,12 @@
-import { ApproxStructure, Assertions, Chain, GeneralSteps, Mouse, Pipeline, UiFinder, Waiter, FocusTools, Step } from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Mouse, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
+import { TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Body, Element } from '@ephox/sugar';
-import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
+import { Types } from '@ephox/bridge';
 
 import { document } from '@ephox/dom-globals';
-import { Types } from '@ephox/bridge';
 import { Cell } from '@ephox/katamari';
-import { TestHelpers } from '@ephox/alloy';
+import { Body, Element } from '@ephox/sugar';
+import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 import TestExtras from '../../module/TestExtras';
 
 UnitTest.asynctest('WindowManager:simple-dialog Test', (success, failure) => {
@@ -27,7 +27,7 @@ UnitTest.asynctest('WindowManager:simple-dialog Test', (success, failure) => {
             type: 'input',
             name: 'fred',
             label: 'Freds Input'
-          },
+          }
         ]
       },
       buttons: [
@@ -37,7 +37,7 @@ UnitTest.asynctest('WindowManager:simple-dialog Test', (success, failure) => {
           text: 'Barny Text',
           align: 'start',
           primary: true
-        },
+        }
       ],
       initialData: {
         fred: 'said hello pebbles'
@@ -83,7 +83,7 @@ UnitTest.asynctest('WindowManager:simple-dialog Test', (success, failure) => {
       'Waiting for all dialog events when closing',
       store.sAssertEq('Checking stuff', [
         'closeWindow',
-        'onClose',
+        'onClose'
       ])
     ),
     Assertions.sAssertStructure('"tox-dialog__scroll-disable" should have been removed from the body',
@@ -91,7 +91,7 @@ UnitTest.asynctest('WindowManager:simple-dialog Test', (success, failure) => {
         classes: [ arr.not('tox-dialog__disable-scroll') ]
       })),
       Body.body()
-    ),
+    )
   ], () => {
     helpers.destroy();
     success();

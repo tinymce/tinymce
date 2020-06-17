@@ -5,17 +5,17 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Types } from '@ephox/bridge';
 import { HTMLTableCellElement } from '@ephox/dom-globals';
-import { Fun, Arr } from '@ephox/katamari';
+import { Arr, Fun } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import * as Styles from '../actions/Styles';
 import * as Util from '../alien/Util';
 import { hasAdvancedCellTab } from '../api/Settings';
-import * as CellDialogGeneralTab from './CellDialogGeneralTab';
-import * as Helpers from './Helpers';
-import { DomModifier } from './DomModifier';
-import { Types } from '@ephox/bridge';
 import * as TableSelection from '../selection/TableSelection';
+import * as CellDialogGeneralTab from './CellDialogGeneralTab';
+import { DomModifier } from './DomModifier';
+import * as Helpers from './Helpers';
 
 type CellData = Helpers.CellData;
 
@@ -120,7 +120,7 @@ const open = (editor: Editor) => {
         type: 'grid',
         columns: 2,
         items: CellDialogGeneralTab.getItems(editor)
-      },
+      }
     ]
   };
   editor.windowManager.open({

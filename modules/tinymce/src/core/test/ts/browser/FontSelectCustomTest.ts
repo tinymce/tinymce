@@ -41,7 +41,7 @@ UnitTest.asynctest('browser.tinymce.core.FontSelectCustomTest', function (succes
         tinyApis.sSetCursor([ 0, 0 ], 0),
         tinyApis.sNodeChanged(),
         sAssertSelectBoxDisplayValue(editor, 'Font sizes', '12px'),
-        sAssertSelectBoxDisplayValue(editor, 'Fonts', 'Bookshelf Symbol 7'),
+        sAssertSelectBoxDisplayValue(editor, 'Fonts', 'Bookshelf Symbol 7')
       ])),
 
       Logger.t('Font family with quoted font names', GeneralSteps.sequence([
@@ -50,8 +50,8 @@ UnitTest.asynctest('browser.tinymce.core.FontSelectCustomTest', function (succes
         tinyApis.sSetCursor([ 0, 0 ], 0),
         tinyApis.sNodeChanged(),
         sAssertSelectBoxDisplayValue(editor, 'Font sizes', '12px'),
-        sAssertSelectBoxDisplayValue(editor, 'Fonts', 'Bauhaus 93'),
-      ])),
+        sAssertSelectBoxDisplayValue(editor, 'Fonts', 'Bauhaus 93')
+      ]))
     ], onSuccess, onFailure);
   }, {
     base_url: '/project/tinymce/js/tinymce',

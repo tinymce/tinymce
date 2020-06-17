@@ -1,4 +1,6 @@
-import { ApproxStructure, Assertions, Chain, FocusTools, Keyboard, Keys, Logger, Mouse, Step, StructAssert, UiFinder, Waiter, } from '@ephox/agar';
+import {
+  ApproxStructure, Assertions, Chain, FocusTools, Keyboard, Keys, Logger, Mouse, Step, StructAssert, UiFinder, Waiter
+} from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr, Result } from '@ephox/katamari';
 import { SelectorFind } from '@ephox/sugar';
@@ -46,7 +48,7 @@ UnitTest.asynctest('Tooltipping Behaviour', (success, failure) => {
           lazySink,
           delay: 10,
           tooltipDom: {
-            tag: 'span',
+            tag: 'span'
           },
           tooltipComponents: [
             GuiFactory.text(`${name}-tooltip`)
@@ -164,7 +166,7 @@ UnitTest.asynctest('Tooltipping Behaviour', (success, failure) => {
             UiFinder.cFindIn('span:contains("alpha-tooltip")'),
             Mouse.cMouseOut
           ]),
-          Logger.t('Hovering outside the tooltip should dismiss it after delay', Waiter.sTryUntil('emptysing', sAssertEmptySink)),
+          Logger.t('Hovering outside the tooltip should dismiss it after delay', Waiter.sTryUntil('emptysing', sAssertEmptySink))
         ]
       ),
 

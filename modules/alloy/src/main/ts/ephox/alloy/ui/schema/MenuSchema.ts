@@ -40,7 +40,7 @@ const configureMatrix = (detail: MenuDetail, movementInfo: MenuMatrixMovement): 
   mode: 'matrix',
   selectors: {
     row: movementInfo.rowSelector,
-    cell: '.' + detail.markers.item,
+    cell: '.' + detail.markers.item
   },
   focusManager: detail.focusManager
 });
@@ -101,7 +101,7 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
       ],
       matrix: [
         Fields.output('config', configureMatrix),
-        FieldSchema.strict('rowSelector'),
+        FieldSchema.strict('rowSelector')
       ],
       menu: [
         FieldSchema.defaulted('moveOnTab', true),

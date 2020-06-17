@@ -5,6 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { HTMLFormElement } from '@ephox/dom-globals';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Tools from 'tinymce/core/api/util/Tools';
 import * as Settings from '../api/Settings';
@@ -17,9 +18,7 @@ const displayErrorMessage = function (editor, message) {
 };
 
 const save = function (editor) {
-  let formObj;
-
-  formObj = DOMUtils.DOM.getParent(editor.id, 'form');
+  const formObj = DOMUtils.DOM.getParent(editor.id, 'form') as HTMLFormElement;
 
   if (Settings.enableWhenDirty(editor) && !editor.isDirty()) {
     return;
@@ -37,7 +36,9 @@ const save = function (editor) {
   if (formObj) {
     editor.setDirty(false);
 
-    if (!formObj.onsubmit || formObj.onsubmit()) {
+    // TODO: TINY-6105 this is probably broken, as an event should be passed to `onsubmit`
+    // so we need to investigate this at some point
+    if (!formObj.onsubmit || (formObj as any).onsubmit()) {
       if (typeof formObj.submit === 'function') {
         formObj.submit();
       } else {

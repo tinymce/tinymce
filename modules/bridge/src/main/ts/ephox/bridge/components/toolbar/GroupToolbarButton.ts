@@ -19,7 +19,7 @@ export interface GroupToolbarButtonApi extends BaseToolbarButtonApi<GroupToolbar
   items?: ToolbarConfig;
 }
 
-export interface GroupToolbarButton extends BaseToolbarButton<GroupToolbarButtonInstanceApi>  {
+export interface GroupToolbarButton extends BaseToolbarButton<GroupToolbarButtonInstanceApi> {
   type: 'grouptoolbarbutton';
   items: ToolbarConfig;
 }
@@ -32,7 +32,7 @@ export const groupToolbarButtonSchema = ValueSchema.objOf([
       FieldSchema.strictArrayOf('items', ValueSchema.string)
     ]),
     ValueSchema.string
-  ])),
+  ]))
 ].concat(baseToolbarButtonFields));
 
 export const createGroupToolbarButton = (spec: any): Result<GroupToolbarButton, ValueSchema.SchemaError<any>> => ValueSchema.asRaw<GroupToolbarButton>('GroupToolbarButton', groupToolbarButtonSchema, spec);

@@ -1,8 +1,8 @@
 import { GeneralSteps, Logger, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import SilverTheme from 'tinymce/themes/silver/Theme';
 import Editor from 'tinymce/core/api/Editor';
+import SilverTheme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.core.fmt.RemoveHighlightFormatTest', (success, failure) => {
   SilverTheme();
@@ -40,11 +40,11 @@ UnitTest.asynctest('browser.tinymce.core.fmt.RemoveHighlightFormatTest', (succes
           tinyApis.sExecCommand('RemoveFormat'),
           tinyApis.sAssertContent('<p>Part 1 Part 2 Part 3 Part 4</p>'),
           tinyApis.sAssertSelection([ 0, 0 ], 2, [ 0, 2 ], 4)
-        ])),
-      ])),
+        ]))
+      ]))
     ], onSuccess, onFailure);
   }, {
     base_url: '/project/tinymce/js/tinymce',
-    plugins: '',
+    plugins: ''
   }, success, failure);
 });

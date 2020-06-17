@@ -1,18 +1,9 @@
 import {
-  ApproxStructure,
-  Assertions,
-  Chain,
-  FocusTools,
-  Keyboard,
-  Keys,
-  Logger,
-  Mouse,
-  Pipeline,
-  UiFinder,
-  Step,
-  GeneralSteps,
+  ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Pipeline, Step, UiFinder
 } from '@ephox/agar';
+import { TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
+import { Menu } from '@ephox/bridge';
 import { document, navigator } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { TinyLoader } from '@ephox/mcagar';
@@ -20,8 +11,6 @@ import { Body, Element } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
-import { Menu } from '@ephox/bridge';
-import { TestHelpers } from '@ephox/alloy';
 
 UnitTest.asynctest('OxideGridCollectionMenuTest', (success, failure) => {
   Theme();

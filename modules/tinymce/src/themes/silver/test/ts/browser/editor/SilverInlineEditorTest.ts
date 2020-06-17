@@ -2,12 +2,12 @@
 import { ApproxStructure, Assertions, Chain, Keyboard, Keys, Log, Logger, Pipeline, Step, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { console, document } from '@ephox/dom-globals';
-import { Cell, Arr } from '@ephox/katamari';
-import { TinyLoader, TinyApis, TinyUi } from '@ephox/mcagar';
-import { Element, Body, Css } from '@ephox/sugar';
+import { Arr, Cell } from '@ephox/katamari';
+import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
+import { Body, Css, Element } from '@ephox/sugar';
+import Editor from 'tinymce/core/api/Editor';
 
 import Env from 'tinymce/core/api/Env';
-import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('Inline Editor (Silver) test', (success, failure) => {
@@ -45,9 +45,9 @@ UnitTest.asynctest('Inline Editor (Silver) test', (success, failure) => {
                             children: [
                               s.element('svg', {})
                             ]
-                          }),
+                          })
                         ]
-                      }),
+                      })
                     ]
                   }),
 
@@ -85,7 +85,7 @@ UnitTest.asynctest('Inline Editor (Silver) test', (success, failure) => {
                                     children: [
                                       s.element('svg', { })
                                     ]
-                                  }),
+                                  })
                                 ]
                               }),
 
@@ -95,7 +95,7 @@ UnitTest.asynctest('Inline Editor (Silver) test', (success, failure) => {
                                 children: [
                                   s.element('span', {
                                     // NOTE: Not sure what this should be?
-                                    classes: [  ],
+                                    classes: [ ],
                                     children: [
                                       s.element('svg', { })
                                     ]
@@ -105,7 +105,7 @@ UnitTest.asynctest('Inline Editor (Silver) test', (success, failure) => {
                                     children: [
                                       s.element('svg', { })
                                     ]
-                                  }),
+                                  })
                                 ]
                               }),
 
@@ -386,7 +386,7 @@ UnitTest.asynctest('Inline Editor (Silver) test', (success, failure) => {
               type: 'choiceitem',
               text: 'Split2',
               value: 'split2'
-            },
+            }
           ]);
         },
         onSetup: (splitButtonApi) => {
@@ -415,7 +415,7 @@ UnitTest.asynctest('Inline Editor (Silver) test', (success, failure) => {
               type: 'choiceitem',
               text: '2-Split2',
               value: '2-split2'
-            },
+            }
           ]);
         },
         onAction: () => {

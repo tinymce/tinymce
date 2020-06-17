@@ -86,7 +86,7 @@ const makeMenu = (detail: InlineViewDetail, menuSandbox: AlloyComponent, anchor:
         const submenuLayouts = getSubmenuLayouts(st.triggeringPath);
         Positioning.position(sink, { anchor: 'submenu', item: st.triggeringItem, ...submenuLayouts }, st.triggeredMenu);
       });
-    },
+    }
   });
 };
 

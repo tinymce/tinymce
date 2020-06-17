@@ -40,9 +40,7 @@ const pathJoin = (path1: string | undefined, path2: string) => {
 
 export default (settings: UploaderSettings) => {
   const defaultHandler = (blobInfo: BlobInfo, success: SuccessCallback, failure: FailureCallback, progress: ProgressCallback) => {
-    let xhr, formData;
-
-    xhr = new XMLHttpRequest();
+    const xhr = new XMLHttpRequest();
     xhr.open('POST', settings.url);
     xhr.withCredentials = settings.credentials;
 
@@ -55,14 +53,12 @@ export default (settings: UploaderSettings) => {
     };
 
     xhr.onload = () => {
-      let json;
-
       if (xhr.status < 200 || xhr.status >= 300) {
         failure('HTTP Error: ' + xhr.status);
         return;
       }
 
-      json = JSON.parse(xhr.responseText);
+      const json = JSON.parse(xhr.responseText);
 
       if (!json || typeof json.location !== 'string') {
         failure('Invalid JSON: ' + xhr.responseText);
@@ -72,7 +68,7 @@ export default (settings: UploaderSettings) => {
       success(pathJoin(settings.basePath, json.location));
     };
 
-    formData = new FormData();
+    const formData = new FormData();
     formData.append('file', blobInfo.blob(), blobInfo.filename());
 
     xhr.send(formData);

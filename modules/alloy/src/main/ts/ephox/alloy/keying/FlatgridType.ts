@@ -58,7 +58,7 @@ const doMove = (
 const handleTab: KeyRuleHandler<FlatgridConfig, FlatgridState> = (_component, _simulatedEvent, gridConfig) =>
   gridConfig.captureTab ? Option.some<boolean>(true) : Option.none();
 
-const doEscape: KeyRuleHandler<FlatgridConfig, FlatgridState>  = (component, simulatedEvent, gridConfig) =>
+const doEscape: KeyRuleHandler<FlatgridConfig, FlatgridState> = (component, simulatedEvent, gridConfig) =>
   gridConfig.onEscape(component, simulatedEvent);
 
 const moveLeft = doMove(WrapArrNavigation.cycleLeft);

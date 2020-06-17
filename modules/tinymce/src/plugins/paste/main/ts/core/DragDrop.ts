@@ -5,20 +5,21 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { MouseEvent, Range } from '@ephox/dom-globals';
 import RangeUtils from 'tinymce/core/api/dom/RangeUtils';
+import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
+import { Clipboard } from '../api/Clipboard';
 import * as Settings from '../api/Settings';
+import { ClipboardContents } from './Clipboard';
 import * as InternalHtml from './InternalHtml';
 import * as Utils from './Utils';
-import Editor from 'tinymce/core/api/Editor';
-import { Clipboard } from '../api/Clipboard';
-import { MouseEvent, DataTransfer, Range } from '@ephox/dom-globals';
 
 const getCaretRangeFromEvent = function (editor: Editor, e: MouseEvent) {
   return RangeUtils.getCaretRangeFromPoint(e.clientX, e.clientY, editor.getDoc());
 };
 
-const isPlainTextFileUrl = function (content: DataTransfer) {
+const isPlainTextFileUrl = function (content: ClipboardContents) {
   const plainTextContent = content['text/plain'];
   return plainTextContent ? plainTextContent.indexOf('file://') === 0 : false;
 };
@@ -49,15 +50,13 @@ const setup = function (editor: Editor, clipboard: Clipboard, draggingInternally
   }
 
   editor.on('drop', function (e) {
-    let dropContent, rng;
-
-    rng = getCaretRangeFromEvent(editor, e);
+    const rng = getCaretRangeFromEvent(editor, e);
 
     if (e.isDefaultPrevented() || draggingInternallyState.get()) {
       return;
     }
 
-    dropContent = clipboard.getDataTransferItems(e.dataTransfer);
+    const dropContent = clipboard.getDataTransferItems(e.dataTransfer);
     const internal = clipboard.hasContentType(dropContent, InternalHtml.internalHtmlMime());
 
     if ((!clipboard.hasHtmlOrText(dropContent) || isPlainTextFileUrl(dropContent)) && clipboard.pasteImageData(e, rng)) {

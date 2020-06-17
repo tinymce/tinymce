@@ -1,6 +1,6 @@
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import * as Obj from 'ephox/katamari/api/Obj';
 import fc from 'fast-check';
-import { UnitTest, Assert } from '@ephox/bedrock-client';
 
 UnitTest.test('ObjEachTest', function () {
   const check = function <T> (expected: Array<{index: string; value: T}>, input: Record<string, T>) {
@@ -24,7 +24,7 @@ UnitTest.test('Each + set should equal the same object', () => {
       const output = Obj.each(obj, function (x, i) {
         values[i] = x;
       });
-      Assert.eq('eq',  obj, values);
+      Assert.eq('eq', obj, values);
       Assert.eq('output', undefined, output);
     }
   ));

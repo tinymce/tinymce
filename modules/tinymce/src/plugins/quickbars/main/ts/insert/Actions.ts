@@ -38,13 +38,11 @@ const getInsertedElement = function (editor: Editor) {
 
 const insertTableHtml = (editor: Editor, cols: number, rows: number) => {
   editor.undoManager.transact(function () {
-    let tableElm, cellElm;
-
     editor.insertContent(createTableHtml(cols, rows));
 
-    tableElm = getInsertedElement(editor);
+    const tableElm = getInsertedElement(editor);
     tableElm.removeAttribute('data-mce-id');
-    cellElm = editor.dom.select('td,th', tableElm);
+    const cellElm = editor.dom.select('td,th', tableElm);
     editor.selection.setCursorLocation(cellElm[0], 0);
   });
 };
@@ -54,10 +52,8 @@ const insertTable = function (editor: Editor, cols: number, rows: number) {
 };
 
 const insertBlob = function (editor: Editor, base64: string, blob: Blob) {
-  let blobCache, blobInfo;
-
-  blobCache = editor.editorUpload.blobCache;
-  blobInfo = blobCache.create(Id.generate('mceu'), blob, base64);
+  const blobCache = editor.editorUpload.blobCache;
+  const blobInfo = blobCache.create(Id.generate('mceu'), blob, base64);
   blobCache.add(blobInfo);
 
   editor.insertContent(editor.dom.createHTML('img', { src: blobInfo.blobUri() }));

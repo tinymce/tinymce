@@ -4,8 +4,8 @@ import { Editor as McEditor } from '@ephox/mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
-import Theme from 'tinymce/themes/silver/Theme';
 import Node from 'tinymce/core/api/html/Node';
+import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.core.content.EditorContentNotInitializedTest', (success, failure) => {
   Theme();
@@ -62,7 +62,7 @@ UnitTest.asynctest('browser.tinymce.core.content.EditorContentNotInitializedTest
     Logger.t('set tree content on editor without initializing it', Chain.asStep({}, [
       cCreateEditor,
       cSetContentAndAssertReturn(new Node('p', 1)),
-      McEditor.cRemove,
+      McEditor.cRemove
     ])),
 
     Logger.t('set tree content on editor where the body has been removed', Chain.asStep({}, [

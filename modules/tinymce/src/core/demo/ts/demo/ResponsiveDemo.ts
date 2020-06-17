@@ -16,7 +16,7 @@ export default () => {
         };
       },
       onShow: (_api) => { },
-      onHide: (_api) => { },
+      onHide: (_api) => { }
     });
   };
 
@@ -141,7 +141,7 @@ export default () => {
     //   }
     // ],
     toolbar_mode: 'sliding',
-    emoticons_database_url: '/src/plugins/emoticons/main/js/emojis.js',
+    emoticons_database_url: '/src/plugins/emoticons/main/js/emojis.js'
   };
 
   tinymce.init(settings);

@@ -6,7 +6,10 @@
  */
 
 /* eslint-disable max-len */
-import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, CustomEvent, Focusing, GuiFactory, ItemTypes, ItemWidget, Keying, Memento, NativeEvents, NativeSimulatedEvent, Replacing, SystemEvents, Toggling } from '@ephox/alloy';
+import {
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, CustomEvent, Focusing, GuiFactory, ItemTypes,
+  ItemWidget, Keying, Memento, NativeEvents, NativeSimulatedEvent, Replacing, SystemEvents, Toggling
+} from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
 import { Arr, Id } from '@ephox/katamari';
 /* eslint-enable max-len */
@@ -52,7 +55,7 @@ const makeCell = (row, col, labelId) => {
   });
 };
 
-const makeCells =  (labelId, numRows, numCols) => {
+const makeCells = (labelId, numRows, numCols) => {
   const cells = [];
   for (let i = 0; i < numRows; i++) {
     const row = [];
@@ -102,7 +105,7 @@ export const renderInsertTableMenuItem = (spec: Menu.FancyMenuItem): ItemTypes.W
     data: { value: Id.generate('widget-id') },
     dom: {
       tag: 'div',
-      classes: [ 'tox-fancymenuitem' ],
+      classes: [ 'tox-fancymenuitem' ]
     },
     autofocus: true,
     components: [ ItemWidget.parts().widget({

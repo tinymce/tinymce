@@ -15,7 +15,7 @@ UnitTest.test('BrowserTest', function () {
     if (! PlatformQuery.hasOwnProperty(expectedQuery)) {
       assert.fail('Platform query: ' + expectedQuery + ' not known');
     }
-    assert.eq(true, PlatformQuery[expectedQuery](platform), 'The query ' + expectedQuery + ' should match.\nUser Agent: ' + userAgent +  '\nbrowser: ' + expectedBrowser);
+    assert.eq(true, PlatformQuery[expectedQuery](platform), 'The query ' + expectedQuery + ' should match.\nUser Agent: ' + userAgent + '\nbrowser: ' + expectedBrowser);
   }
 
   const checkOSVersion = function (expectedMajor: number, expectedMinor: number, userAgent: string) {

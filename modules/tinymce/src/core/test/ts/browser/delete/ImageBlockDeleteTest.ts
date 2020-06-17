@@ -1,10 +1,10 @@
-import { GeneralSteps, Logger, Pipeline, Keys, Log } from '@ephox/agar';
+import { GeneralSteps, Keys, Log, Logger, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
-import Theme from 'tinymce/themes/silver/Theme';
 import VK from 'tinymce/core/api/util/VK';
+import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.delete.ImageBlockDeleteTest',  (success, failure) => {
+UnitTest.asynctest('browser.tinymce.core.delete.ImageBlockDeleteTest', (success, failure) => {
   Theme();
 
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {

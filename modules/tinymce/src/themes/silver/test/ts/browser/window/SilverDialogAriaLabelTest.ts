@@ -1,4 +1,4 @@
-import { Chain, Pipeline, UiFinder, NamedChain, GeneralSteps, Logger } from '@ephox/agar';
+import { Chain, GeneralSteps, Logger, NamedChain, Pipeline, UiFinder } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Types } from '@ephox/bridge';
@@ -26,7 +26,7 @@ UnitTest.asynctest('WindowManager:inline-dialog Test', (success, failure) => {
     const sAssertDialogLabelledBy = Chain.asStep(Body.body(), [ NamedChain.asChain([
       NamedChain.direct(NamedChain.inputName(), UiFinder.cFindIn('[role="dialog"]'), 'dialog'),
       NamedChain.direct('dialog', cGetDialogLabelId, 'labelId'),
-      NamedChain.bundle((obj) => UiFinder.findIn(obj.dialog, `#${obj.labelId}`)),
+      NamedChain.bundle((obj) => UiFinder.findIn(obj.dialog, `#${obj.labelId}`))
     ]) ]);
 
     const dialogSpec: Types.Dialog.DialogApi<{}> = {

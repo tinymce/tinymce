@@ -1,20 +1,18 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { Testable } from '@ephox/dispute';
 import { document, Element, HTMLIFrameElement, HTMLLinkElement, HTMLMetaElement, window } from '@ephox/dom-globals';
-import Env from 'tinymce/core/api/Env';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+import Env from 'tinymce/core/api/Env';
 import Schema from 'tinymce/core/api/html/Schema';
 import Tools from 'tinymce/core/api/util/Tools';
 import * as HtmlUtils from '../../module/test/HtmlUtils';
-import { Testable } from '@ephox/dispute';
 
 const DOM = DOMUtils(document, { keep_values: true, schema: Schema() });
 
 UnitTest.test('DOMUtils.parseStyle', () => {
-  let dom;
-
   DOM.add(document.body, 'div', { id: 'test' });
 
-  dom = DOMUtils(document, {
+  const dom = DOMUtils(document, {
     hex_colors: true, keep_values: true, url_converter(u) {
       return 'X' + u + 'Y';
     }
@@ -148,9 +146,7 @@ UnitTest.test('DOMUtils.add', () => {
 });
 
 UnitTest.test('DOMUtils.create', () => {
-  let e;
-
-  e = DOM.create('span', { class: 'abc 123' }, 'content <b>abc</b>');
+  const e = DOM.create('span', { class: 'abc 123' }, 'content <b>abc</b>');
 
   Assert.eq('incorrect nodeName', 'SPAN', e.nodeName);
   Assert.eq('incorrect className', 'abc 123', e.className);
@@ -225,8 +221,6 @@ UnitTest.test('DOMUtils.encode', () => {
 });
 
 UnitTest.test('DOMUtils.setGetAttrib', () => {
-  let dom;
-
   DOM.add(document.body, 'div', { id: 'test' });
 
   DOM.setAttrib('test', 'class', 'test 123');
@@ -245,7 +239,7 @@ UnitTest.test('DOMUtils.setGetAttrib', () => {
   Assert.eq('', '123', DOM.getAttrib('test', 'class'));
   Assert.eq('', 'abc', DOM.getAttrib('test', 'title'));
 
-  dom = DOMUtils(document, {
+  const dom = DOMUtils(document, {
     keep_values: true, url_converter(u, n) {
       return '&<>"' + u + '&<>"' + n;
     }
@@ -377,9 +371,7 @@ UnitTest.test('DOMUtils.is', () => {
 });
 
 UnitTest.test('DOMUtils.getViewPort', () => {
-  let wp;
-
-  wp = DOM.getViewPort();
+  const wp = DOM.getViewPort();
   Assert.eq('', 0, wp.x);
   Assert.eq('', 0, wp.y);
   Assert.eq('', true, wp.w > 0);

@@ -31,14 +31,14 @@ UnitTest.asynctest('Statusbar Structure Test', (success, failure) => {
           children: [
             s.element('a', { children: [ s.text(str.is('Powered by Tiny')) ] })
           ]
-        }),
+        })
       ]
     }),
     s.element('div', {
       attrs: {
         'aria-hidden': str.is('true')
       },
-      classes: [ arr.has('tox-statusbar__resize-handle') ],
+      classes: [ arr.has('tox-statusbar__resize-handle') ]
     })
   ];
 
@@ -59,14 +59,14 @@ UnitTest.asynctest('Statusbar Structure Test', (success, failure) => {
           children: [
             s.element('a', { children: [ s.text(str.is('Powered by Tiny')) ] })
           ]
-        }),
+        })
       ]
     }),
     s.element('div', {
       attrs: {
         'aria-hidden': str.is('true')
       },
-      classes: [ arr.has('tox-statusbar__resize-handle') ],
+      classes: [ arr.has('tox-statusbar__resize-handle') ]
     })
   ];
 
@@ -108,7 +108,7 @@ UnitTest.asynctest('Statusbar Structure Test', (success, failure) => {
         structureLabel,
         editorStructure
       )), 'assertion'),
-      NamedChain.output('editor'),
+      NamedChain.output('editor')
     ]),
     Editor.cRemove
   ]);
@@ -137,7 +137,7 @@ UnitTest.asynctest('Statusbar Structure Test', (success, failure) => {
     Log.step('TBA', 'Statusbar without wordcount', makeStep(
       {
         theme: 'silver',
-        base_url: '/project/tinymce/js/tinymce',
+        base_url: '/project/tinymce/js/tinymce'
       },
       'Statusbar structure without wordcount',
       ApproxStructure.build((s, str, arr) => s.element('div', {
@@ -222,7 +222,7 @@ UnitTest.asynctest('Statusbar Structure Test', (success, failure) => {
                           s.element('div', { children: [ s.text(str.is(' » ')) ] }),
                           s.element('div', { children: [ s.text(str.is('strong')) ] })
                         ]
-                      }),
+                      })
                     ]
                   })
                 ]
@@ -248,9 +248,9 @@ UnitTest.asynctest('Statusbar Structure Test', (success, failure) => {
                       s.element('div', {
                         classes: [ arr.has('tox-statusbar__path') ],
                         children: [
-                          s.element('div', { children: [ s.text(str.is('p')) ] }),
+                          s.element('div', { children: [ s.text(str.is('p')) ] })
                         ]
-                      }),
+                      })
                     ]
                   })
                 ]

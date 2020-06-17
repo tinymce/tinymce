@@ -30,5 +30,5 @@ export {
   all,
   from,
   find,
-  toText,
+  toText
 };

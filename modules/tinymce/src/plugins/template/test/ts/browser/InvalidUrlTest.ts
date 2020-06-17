@@ -33,14 +33,14 @@ UnitTest.asynctest('browser.tinymce.plugins.template.InvalidUrlTest', (success, 
         Waiter.sTryUntil('Dialog should not close', UiFinder.sExists(docBody, dialogSelector)),
         tinyUi.sClickOnUi('Click on Cancel button', 'button.tox-button:contains(Cancel)'),
         Waiter.sTryUntil('Dialog should close', UiFinder.sNotExists(docBody, dialogSelector)),
-        tinyApis.sAssertContent(''),
-      ]),
+        tinyApis.sAssertContent('')
+      ])
     ], onSuccess, onFailure);
   }, {
     theme: 'silver',
     plugins: 'template',
     toolbar: 'template',
     indent: false,
-    base_url: '/project/tinymce/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

@@ -31,13 +31,12 @@ export interface DomTextMatcher {
 }
 
 export const DomTextMatcher = function (node, editor): DomTextMatcher {
-  let m, matches = [], text;
+  let m, matches = [];
   const dom = editor.dom;
-  let blockElementsMap, hiddenTextElementsMap, shortEndedElementsMap;
 
-  blockElementsMap = editor.schema.getBlockElements(); // H1-H6, P, TD etc
-  hiddenTextElementsMap = editor.schema.getWhiteSpaceElements(); // TEXTAREA, PRE, STYLE, SCRIPT
-  shortEndedElementsMap = editor.schema.getShortEndedElements(); // BR, IMG, INPUT
+  const blockElementsMap = editor.schema.getBlockElements(); // H1-H6, P, TD etc
+  const hiddenTextElementsMap = editor.schema.getWhiteSpaceElements(); // TEXTAREA, PRE, STYLE, SCRIPT
+  const shortEndedElementsMap = editor.schema.getShortEndedElements(); // BR, IMG, INPUT
 
   function createMatch(m, data) {
     if (!m[0]) {
@@ -475,7 +474,7 @@ export const DomTextMatcher = function (node, editor): DomTextMatcher {
     return this;
   }
 
-  text = getText(node);
+  const text = getText(node);
 
   return {
     text,

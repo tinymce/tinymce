@@ -65,7 +65,7 @@ function BookmarkManager(selection: Selection): BookmarkManager {
      * // Restore the selection bookmark
      * tinymce.activeEditor.selection.moveToBookmark(bm);
      */
-    moveToBookmark: Fun.curry(Bookmarks.moveToBookmark, selection) as (bookmark: Bookmark) => boolean,
+    moveToBookmark: Fun.curry(Bookmarks.moveToBookmark, selection) as (bookmark: Bookmark) => boolean
   };
 }
 

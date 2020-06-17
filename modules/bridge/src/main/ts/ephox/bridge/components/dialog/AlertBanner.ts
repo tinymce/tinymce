@@ -22,7 +22,7 @@ const alertBannerFields = [
   FieldSchema.strictString('text'),
   FieldSchema.strictStringEnum('level', [ 'info', 'warn', 'error', 'success' ]),
   FieldSchema.strictString('icon'),
-  FieldSchema.defaulted('url', ''),
+  FieldSchema.defaulted('url', '')
 ];
 
 export const alertBannerSchema = ValueSchema.objOf(alertBannerFields);

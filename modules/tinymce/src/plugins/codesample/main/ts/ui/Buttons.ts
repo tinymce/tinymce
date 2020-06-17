@@ -24,7 +24,7 @@ const register = function (editor: Editor) {
       };
       editor.on('NodeChange', nodeChangeHandler);
       return () => editor.off('NodeChange', nodeChangeHandler);
-    },
+    }
   });
 
   editor.ui.registry.addMenuItem('codesample', {

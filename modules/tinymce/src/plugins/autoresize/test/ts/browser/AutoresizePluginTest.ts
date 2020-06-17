@@ -3,10 +3,10 @@ import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { navigator, Window, window } from '@ephox/dom-globals';
 import { Cell } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import Editor from 'tinymce/core/api/Editor';
 import AutoresizePlugin from 'tinymce/plugins/autoresize/Plugin';
 import FullscreenPlugin from 'tinymce/plugins/fullscreen/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
-import Editor from 'tinymce/core/api/Editor';
 
 UnitTest.asynctest('browser.tinymce.plugins.autoresize.AutoresizePluginTest', (success, failure) => {
 
@@ -28,7 +28,7 @@ UnitTest.asynctest('browser.tinymce.plugins.autoresize.AutoresizePluginTest', (s
     // Get the editor height, but exclude the 10px margin from the calculations
     const editorContentHeight = editor.getContentAreaContainer().offsetHeight - 10;
     const actualDiff = Math.abs(editorContentHeight - height);
-    Assert.eq(`should be approx (within ${diff}px): ${editorContentHeight} ~= ${height}`, true,  actualDiff <= diff);
+    Assert.eq(`should be approx (within ${diff}px): ${editorContentHeight} ~= ${height}`, true, actualDiff <= diff);
   }));
 
   const sAssertScrollPositionGreaterThan = (window: Window, position: number) => Logger.t(`Assert scroll position is ~${position}px`, Step.sync(() => {
@@ -121,7 +121,7 @@ UnitTest.asynctest('browser.tinymce.plugins.autoresize.AutoresizePluginTest', (s
             Waiter.sTryUntil('wait for editor height', sAssertEditorContentApproxHeight(editor, 5100), 10, 3000),
             Waiter.sTryUntil('wait for editor height', sAssertEditorHeightAbove(editor, 5100), 10, 3000),
             sAssertScrollPositionGreaterThan(window, 3500)
-          ]),
+          ])
         ] : []
       , onSuccess, onFailure);
   }, {

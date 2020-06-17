@@ -1,4 +1,4 @@
-import { Chain, Log, Mouse, NamedChain, Pipeline, UiControls, UiFinder } from '@ephox/agar';
+import { Chain, Log, Mouse, Pipeline, UiControls, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 
@@ -16,17 +16,15 @@ UnitTest.asynctest('browser.tinymce.plugins.searchreplace.SearchReplacePrevNextT
     const tinyApis = TinyApis(editor);
     const tinyUi = TinyUi(editor);
 
-    const cAssertButtonsEnabled = NamedChain.asChain([
-      NamedChain.direct(NamedChain.inputName(), UiFinder.cWaitFor('wait for next button to be enabled', 'button[title="Next"]:not([disabled])'), '_'),
-      NamedChain.direct(NamedChain.inputName(), UiFinder.cWaitFor('wait for prev button to be enabled', 'button[title="Previous"]:not([disabled])'), '_'),
-      NamedChain.direct(NamedChain.inputName(), UiFinder.cWaitFor('wait for replace button to be enabled', 'button[title="Replace"]:not([disabled])'), '_'),
-      NamedChain.outputInput
+    const cAssertButtonsEnabled = Chain.fromParent(Chain.identity, [
+      UiFinder.cWaitFor('wait for next button to be enabled', 'button[title="Next"]:not([disabled])'),
+      UiFinder.cWaitFor('wait for prev button to be enabled', 'button[title="Previous"]:not([disabled])'),
+      UiFinder.cWaitFor('wait for replace button to be enabled', 'button[title="Replace"]:not([disabled])')
     ]);
 
-    const cAssertNextPrevButtonsDisabled = NamedChain.asChain([
-      NamedChain.direct(NamedChain.inputName(), UiFinder.cWaitFor('wait for next button to be disabled', 'button[title="Next"][disabled]'), '_'),
-      NamedChain.direct(NamedChain.inputName(), UiFinder.cWaitFor('wait for prev button to be disabled', 'button[title="Previous"][disabled]'), '_'),
-      NamedChain.outputInput
+    const cAssertNextPrevButtonsDisabled = Chain.fromParent(Chain.identity, [
+      UiFinder.cWaitFor('wait for next button to be disabled', 'button[title="Next"][disabled]'),
+      UiFinder.cWaitFor('wait for prev button to be disabled', 'button[title="Previous"][disabled]')
     ]);
 
     const cClickButton = (name: string) => Chain.fromChains([

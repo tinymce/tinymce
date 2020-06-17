@@ -5,14 +5,15 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { window } from '@ephox/dom-globals';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import Env from 'tinymce/core/api/Env';
 import Delay from 'tinymce/core/api/util/Delay';
 import Tools from 'tinymce/core/api/util/Tools';
 import VK from 'tinymce/core/api/util/VK';
 import * as Settings from '../api/Settings';
-import { window } from '@ephox/dom-globals';
 
 const DOM = DOMUtils.DOM;
 
@@ -22,9 +23,9 @@ const tabCancel = function (e) {
   }
 };
 
-const setup = function (editor) {
+const setup = function (editor: Editor) {
   function tabHandler(e) {
-    let x, el, v, i;
+    let x, el, i;
 
     if (e.keyCode !== VK.TAB || e.ctrlKey || e.altKey || e.metaKey || e.isDefaultPrevented()) {
       return;
@@ -66,7 +67,7 @@ const setup = function (editor) {
       return null;
     }
 
-    v = Tools.explode(Settings.getTabFocus(editor));
+    const v = Tools.explode(Settings.getTabFocus(editor));
 
     if (v.length === 1) {
       v[1] = v[0];

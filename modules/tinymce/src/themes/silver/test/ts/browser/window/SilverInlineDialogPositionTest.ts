@@ -196,7 +196,7 @@ UnitTest.asynctest('WindowManager:inline-dialog Position Test', (success, failur
 
             NamedChain.direct('body', DialogUtils.cClose, '_'),
             NamedChain.outputInput
-          ])),
+          ]))
         ])
       ], () => {
         teardownPageScroll();

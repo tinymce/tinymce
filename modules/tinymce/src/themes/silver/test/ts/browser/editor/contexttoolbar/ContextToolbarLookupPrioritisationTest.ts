@@ -1,10 +1,10 @@
-import { Pipeline, Step, Log } from '@ephox/agar';
-import { UnitTest, Assert } from '@ephox/bedrock-client';
+import { Log, Pipeline, Step } from '@ephox/agar';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Toolbar } from '@ephox/bridge';
-import { Option, Arr } from '@ephox/katamari';
-import { matchStartNode } from 'tinymce/themes/silver/ui/context/ContextToolbarLookup';
+import { Arr, Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 import { ContextTypes } from 'tinymce/themes/silver/ContextToolbar';
+import { matchStartNode } from 'tinymce/themes/silver/ui/context/ContextToolbarLookup';
 
 UnitTest.asynctest('Context toolbar prioritisation on lookup test', (success, failure) => {
 
@@ -71,7 +71,7 @@ UnitTest.asynctest('Context toolbar prioritisation on lookup test', (success, fa
       const nodeScoped = [ createToolbar('a') ];
       const editorScoped = [ createToolbar('b') ];
       assertMatch(nodeScoped, editorScoped, Arr.flatten([ nodeScoped, editorScoped ]));
-    })),
+    }))
   ], success, failure);
 
 });

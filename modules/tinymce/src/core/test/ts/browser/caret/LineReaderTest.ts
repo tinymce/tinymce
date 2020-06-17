@@ -5,7 +5,10 @@ import { Arr, Fun, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Element, Hierarchy } from '@ephox/sugar';
 import { CaretPosition } from 'tinymce/core/caret/CaretPosition';
-import { BreakType, findClosestHorizontalPosition, getPositionsAbove, getPositionsBelow, getPositionsUntilNextLine, getPositionsUntilPreviousLine, isAtFirstLine, isAtLastLine, LineInfo } from 'tinymce/core/caret/LineReader';
+import {
+  BreakType, findClosestHorizontalPosition, getPositionsAbove, getPositionsBelow, getPositionsUntilNextLine, getPositionsUntilPreviousLine,
+  isAtFirstLine, isAtLastLine, LineInfo
+} from 'tinymce/core/caret/LineReader';
 import ViewBlock from '../../module/test/ViewBlock';
 
 UnitTest.asynctest('browser.tinymce.core.caret.LineReader', (success, failure) => {
@@ -107,7 +110,7 @@ UnitTest.asynctest('browser.tinymce.core.caret.LineReader', (success, failure) =
 
   const cAssertBreakType = (expectedBreakType: BreakType) => Chain.op(function (linebreak: LineInfo) {
     const actualBreakType = linebreak.breakType;
-    Assertions.assertEq('Should be the expected break type',  expectedBreakType, actualBreakType);
+    Assertions.assertEq('Should be the expected break type', expectedBreakType, actualBreakType);
   });
 
   const cAssertCaretPosition = (path: number[], offset: number) => Chain.op(function (posOption: Option<any>) {
