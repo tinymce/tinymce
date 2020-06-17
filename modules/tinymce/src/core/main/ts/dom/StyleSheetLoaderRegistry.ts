@@ -15,7 +15,7 @@ export interface StyleSheetLoaderRegistry {
 }
 
 /**
- * For testing only - please use StyleSheetLoader.instance in production code.
+ * This function is exported for testing purposes only - please use StyleSheetLoader.instance in production code.
  */
 export const create = (): StyleSheetLoaderRegistry => {
 
