@@ -10,7 +10,7 @@ import {
   Window, window
 } from '@ephox/dom-globals';
 import { Type } from '@ephox/katamari';
-import { VisualViewport } from '@ephox/sugar';
+import { VisualViewport, Element as SugarElement } from '@ephox/sugar';
 import * as NodeType from '../../dom/NodeType';
 import * as Position from '../../dom/Position';
 import * as TrimNode from '../../dom/TrimNode';
@@ -26,6 +26,7 @@ import EventUtils, { EventUtilsCallback } from './EventUtils';
 import Sizzle from './Sizzle';
 import { StyleSheetLoader } from './StyleSheetLoader';
 import TreeWalker from './TreeWalker';
+import * as StyleSheetLoaderRegistry from '../../dom/StyleSheetLoaderRegistry';
 
 /**
  * Utility class for various DOM manipulation and retrieval functions.
@@ -279,7 +280,7 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
   let counter = 0;
   const stdMode = true;
   const boxModel = true;
-  const styleSheetLoader = StyleSheetLoader(doc, {
+  const styleSheetLoader = StyleSheetLoaderRegistry.instance.forElement(SugarElement.fromDom(doc), {
     contentCssCors: settings.contentCssCors,
     referrerPolicy: settings.referrerPolicy
   });

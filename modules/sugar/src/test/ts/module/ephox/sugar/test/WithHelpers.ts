@@ -8,11 +8,8 @@ export const withNormalElement = (f: (d: Element<DomElement>) => void): void => 
   const div = Element.fromTag('div');
   Insert.append(Body.body(), div);
 
-  try {
-    f(div);
-  } finally {
-    Remove.remove(div);
-  }
+  f(div);
+  Remove.remove(div);
 };
 
 const withShadowElementInMode = (mode: 'open' | 'closed', f: (sr: Element<ShadowRoot>, innerDiv: Element<DomElement>, shadowHost: Element<DomElement>) => void) => {
@@ -22,12 +19,8 @@ const withShadowElementInMode = (mode: 'open' | 'closed', f: (sr: Element<Shadow
   const innerDiv = Element.fromTag('div', document);
 
   Insert.append(sr, innerDiv);
-
-  try {
-    f(sr, innerDiv, shadowHost);
-  } finally {
-    Remove.remove(shadowHost);
-  }
+  f(sr, innerDiv, shadowHost);
+  Remove.remove(shadowHost);
 };
 
 export const withShadowElement = (f: (shadowRoot: Element<ShadowRoot>, innerDiv: Element<DomElement>, shadowHost: Element<DomElement>) => void): void => {
@@ -50,9 +43,6 @@ export const withIframe = (f: (div: Element<DomElement>, iframe: Element<HTMLIFr
   const div = Element.fromTag('div', cw.document);
   Insert.append(Body.getBody(Element.fromDom(cw.document)), div);
   cw.document.close();
-  try {
-    f(div, iframe, cw);
-  } finally {
-    Remove.remove(iframe);
-  }
+  f(div, iframe, cw);
+  Remove.remove(iframe);
 };

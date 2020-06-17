@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLFormElement, window } from '@ephox/dom-globals';
+import { Element as DomElement, HTMLFormElement, window } from '@ephox/dom-globals';
 import { Arr, Fun, Option, Options, Type } from '@ephox/katamari';
 import { UrlObject } from '../api/AddOnManager';
 import DOMUtils from '../api/dom/DOMUtils';
@@ -25,6 +25,9 @@ import WindowManager from '../api/WindowManager';
 import * as NodeType from '../dom/NodeType';
 import * as ErrorReporter from '../ErrorReporter';
 import * as Init from './Init';
+import { Element } from '@ephox/sugar';
+import { StyleSheetLoader } from '../api/dom/StyleSheetLoader';
+import * as StyleSheetLoaderRegistry from '../dom/StyleSheetLoaderRegistry';
 
 const DOM = DOMUtils.DOM;
 
@@ -165,6 +168,12 @@ const loadScripts = function (editor: Editor, suffix: string) {
   });
 };
 
+const getStyleSheetLoader = (element: Element<DomElement>, editorSettings: EditorSettings): StyleSheetLoader =>
+  StyleSheetLoaderRegistry.instance.forElement(element, {
+    contentCssCors: editorSettings.contentCssCors,
+    referrerPolicy: editorSettings.referrerPolicy
+  });
+
 const render = function (editor: Editor) {
   const settings = editor.settings, id = editor.id;
 
@@ -191,6 +200,8 @@ const render = function (editor: Editor) {
   if (!Env.contentEditable) {
     return;
   }
+
+  editor.ui.styleSheetLoader = getStyleSheetLoader(Element.fromDom(editor.getElement()), settings);
 
   // Hide target element early to prevent content flashing
   if (!settings.inline) {
