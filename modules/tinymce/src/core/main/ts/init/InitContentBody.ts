@@ -168,11 +168,11 @@ const createParser = function (editor: Editor): DomParser {
 
   // Keep scripts from executing
   parser.addNodeFilter('script', function (nodes: Node[]) {
-    let i = nodes.length, node, type;
+    let i = nodes.length;
 
     while (i--) {
-      node = nodes[i];
-      type = node.attr('type') || 'no/type';
+      const node = nodes[i];
+      const type = node.attr('type') || 'no/type';
       if (type.indexOf('mce-') !== 0) {
         node.attr('type', 'mce-' + type);
       }
@@ -181,10 +181,10 @@ const createParser = function (editor: Editor): DomParser {
 
   if (editor.settings.preserve_cdata) {
     parser.addNodeFilter('#cdata', function (nodes: Node[]) {
-      let i = nodes.length, node;
+      let i = nodes.length;
 
       while (i--) {
-        node = nodes[i];
+        const node = nodes[i];
         node.type = 8;
         node.name = '#comment';
         node.value = '[CDATA[' + editor.dom.encode(node.value) + ']]';
@@ -193,11 +193,11 @@ const createParser = function (editor: Editor): DomParser {
   }
 
   parser.addNodeFilter('p,h1,h2,h3,h4,h5,h6,div', function (nodes: Node[]) {
-    let i = nodes.length, node;
+    let i = nodes.length;
     const nonEmptyElements = editor.schema.getNonEmptyElements();
 
     while (i--) {
-      node = nodes[i];
+      const node = nodes[i];
 
       if (node.isEmpty(nonEmptyElements) && node.getAll('br').length === 0) {
         node.append(new Node('br', 1)).shortEnded = true;

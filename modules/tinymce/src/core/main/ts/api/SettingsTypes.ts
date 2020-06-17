@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element, HTMLElement, HTMLImageElement, Node, ReferrerPolicy as DomReferrerPolicy } from '@ephox/dom-globals';
+import { HTMLElement, HTMLImageElement, Node, ReferrerPolicy as DomReferrerPolicy } from '@ephox/dom-globals';
 import { UploadHandler } from '../file/Uploader';
 import Editor from './Editor';
 import { Formats } from './fmt/Format';
@@ -162,7 +162,7 @@ interface BaseEditorSettings {
   style_formats_merge?: boolean;
   submit_patch?: boolean;
   suffix?: string;
-  target?: Element;
+  target?: HTMLElement;
   theme?: string | ThemeInitFunc;
   theme_url?: string;
   toolbar?: boolean | string | string[] | Array<ToolbarGroup>;

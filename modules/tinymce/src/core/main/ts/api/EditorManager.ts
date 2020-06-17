@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { BeforeUnloadEvent, document, Element, HTMLFormElement, Window } from '@ephox/dom-globals';
+import { BeforeUnloadEvent, document, HTMLElement, HTMLFormElement, Window } from '@ephox/dom-globals';
 import { Arr, Obj, Type } from '@ephox/katamari';
 import * as ErrorReporter from '../ErrorReporter';
 import * as FocusController from '../focus/FocusController';
@@ -363,7 +363,7 @@ const EditorManager: EditorManager = {
    *    ...
    * });
    */
-  init(settings) {
+  init(settings: RawEditorSettings) {
     const self: EditorManager = this;
     let result;
 
@@ -373,19 +373,19 @@ const EditorManager: EditorManager = {
       ' '
     );
 
-    const isInvalidInlineTarget = function (settings, elm) {
+    const isInvalidInlineTarget = (settings: RawEditorSettings, elm: HTMLElement) => {
       return settings.inline && elm.tagName.toLowerCase() in invalidInlineTargets;
     };
 
-    const createId = function (elm) {
+    const createId = function (elm: HTMLElement) {
       let id = elm.id;
 
       // Use element id, or unique name or generate a unique id
       if (!id) {
-        id = elm.name;
+        id = (elm as unknown as HTMLTextAreaElement).name as string | undefined;
 
         if (id && !DOM.get(id)) {
-          id = elm.name;
+          // Keep current name
         } else {
           // Generate unique name
           id = DOM.uniqueId();
@@ -411,8 +411,8 @@ const EditorManager: EditorManager = {
       return className.constructor === RegExp ? className.test(elm.className) : DOM.hasClass(elm, className);
     };
 
-    const findTargets = function (settings): Element[] {
-      let l, targets = [];
+    const findTargets = (settings: RawEditorSettings): HTMLElement[] => {
+      let targets: HTMLElement[] = [];
 
       if (Env.browser.isIE() && Env.browser.version.major < 11) {
         ErrorReporter.initError(
@@ -443,13 +443,13 @@ const EditorManager: EditorManager = {
       // Fallback to old setting
       switch (settings.mode) {
         case 'exact':
-          l = settings.elements || '';
+          const l = settings.elements || '';
 
           if (l.length > 0) {
             each(explode(l), function (id) {
-              let elm;
+              const elm = DOM.get(id);
 
-              if ((elm = DOM.get(id))) {
+              if (elm) {
                 targets.push(elm);
               } else {
                 each(document.forms, function (f: HTMLFormElement) {
@@ -490,9 +490,9 @@ const EditorManager: EditorManager = {
     const initEditors = function () {
       let initCount = 0;
       const editors = [];
-      let targets: Element[];
+      let targets: HTMLElement[];
 
-      const createEditor = function (id, settings, targetElm) {
+      const createEditor = function (id: string, settings: RawEditorSettings, targetElm: HTMLElement) {
         const editor: Editor = new Editor(id, settings, self);
 
         editors.push(editor);
@@ -515,7 +515,7 @@ const EditorManager: EditorManager = {
       // TODO: Deprecate this one
       if (settings.types) {
         each(settings.types, function (type) {
-          Tools.each(targets, function (elm) {
+          Tools.each(targets, function (elm: HTMLElement) {
             if (DOM.is(elm, type.selector)) {
               createEditor(createId(elm), extend({}, settings, type), elm);
               return false;
