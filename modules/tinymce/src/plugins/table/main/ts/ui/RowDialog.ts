@@ -16,7 +16,8 @@ import { hasAdvancedRowTab } from '../api/Settings';
 import { DomModifier } from './DomModifier';
 import * as Helpers from './Helpers';
 import * as RowDialogGeneralTab from './RowDialogGeneralTab';
-import * as TableSelection from '../selection/TableSelection';
+import { TableSelection } from '@ephox/snooker';
+import * as Ephemera from '../selection/Ephemera';
 
 type RowData = Helpers.RowData;
 
@@ -98,7 +99,7 @@ const onSubmitRowForm = (editor: Editor, rows: HTMLElement[], oldData: RowData, 
 };
 
 const open = (editor: Editor) => {
-  const rows = TableSelection.getRowsFromSelection(editor);
+  const rows = TableSelection.getRowsFromSelection(editor, Ephemera.selected);
 
   // Check if there are any rows to operate on
   if (rows.length === 0) {

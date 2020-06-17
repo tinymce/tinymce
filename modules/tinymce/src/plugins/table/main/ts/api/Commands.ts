@@ -5,26 +5,23 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLTableRowElement } from '@ephox/dom-globals';
+import { HTMLTableElement, HTMLTableRowElement, HTMLTableCellElement } from '@ephox/dom-globals';
 import { Arr, Fun, Obj, Option, Type } from '@ephox/katamari';
-import { CopyCols, CopyRows, TableFill, TableLookup } from '@ephox/snooker';
+import { CopyCols, CopyRows, CssUtils, Selections, TableFill, TableLookup, TableSelection, TableTargets } from '@ephox/snooker';
 import { Element, Insert, Remove, Replication } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { insertTableWithDataValidation } from '../actions/InsertTable';
-import { TableActions, BasicTableAction, AdvancedPasteTableAction } from '../actions/TableActions';
-import * as Util from '../alien/Util';
+import { AdvancedPasteTableAction, BasicTableAction, TableActions } from '../actions/TableActions';
 import { Clipboard } from '../core/Clipboard';
-import * as TableTargets from '../queries/TableTargets';
 import { CellSelectionApi } from '../selection/CellSelection';
-import { Selections } from '../selection/Selections';
-import * as TableSelection from '../selection/TableSelection';
+import * as Ephemera from '../selection/Ephemera';
 import * as CellDialog from '../ui/CellDialog';
+import { DomModifier } from '../ui/DomModifier';
 import * as RowDialog from '../ui/RowDialog';
 import * as TableDialog from '../ui/TableDialog';
-import { DomModifier } from '../ui/DomModifier';
 
 const registerCommands = (editor: Editor, actions: TableActions, cellSelection: CellSelectionApi, selections: Selections, clipboard: Clipboard) => {
-  const isRoot = Util.getIsRoot(editor);
+  const isRoot = CssUtils.getIsRoot(editor);
   const eraseTable = () => TableSelection.getSelectionStartCellOrCaption(editor).each((cellOrCaption) => {
     TableLookup.table(cellOrCaption, isRoot).filter(Fun.not(isRoot)).each((table) => {
       const cursor = Element.fromText('');
@@ -45,29 +42,30 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
   });
 
   const getTableFromCell = (cell: Element): Option<Element> => TableLookup.table(cell, isRoot);
+  const getTargetsForMenu = (table: Element<HTMLTableElement>, cell: Element<HTMLTableCellElement>) => TableTargets.forMenu(selections, table, cell, Ephemera.firstSelectedSelector, Ephemera.lastSelectedSelector);
 
   const actOnSelection = (execute: BasicTableAction): void => TableSelection.getSelectionStartCell(editor).each((cell) => {
     getTableFromCell(cell).each((table) => {
-      const targets = TableTargets.forMenu(selections, table, cell);
+      const targets = getTargetsForMenu(table, cell);
       execute(table, targets).each((rng) => {
         editor.selection.setRng(rng);
         editor.focus();
         cellSelection.clear(table);
-        Util.removeDataStyle(table);
+        CssUtils.removeDataStyle(table);
       });
     });
   });
 
   const copyRowSelection = () => TableSelection.getSelectionStartCell(editor).map((cell) =>
     getTableFromCell(cell).bind((table) => {
-      const targets = TableTargets.forMenu(selections, table, cell);
+      const targets = getTargetsForMenu(table, cell);
       const generators = TableFill.cellOperations(Fun.noop, Element.fromDom(editor.getDoc()), Option.none());
       return CopyRows.copyRows(table, targets, generators);
     }));
 
   const copyColSelection = () => TableSelection.getSelectionStartCell(editor).map((cell) =>
     getTableFromCell(cell).bind((table) => {
-      const targets = TableTargets.forMenu(selections, table, cell);
+      const targets = getTargetsForMenu(table, cell);
       return CopyCols.copyCols(table, targets);
     }));
 
@@ -140,7 +138,7 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
       return;
     }
 
-    const cells = TableSelection.getCellsFromSelection(editor);
+    const cells = TableSelection.getCellsFromSelection(editor, Ephemera.selectedSelector);
     if (cells.length === 0) {
       return;
     }
@@ -158,3 +156,4 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
 };
 
 export { registerCommands };
+

@@ -5,19 +5,14 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Fun, Option } from '@ephox/katamari';
-import {
-  CellMutations, TableDirection, TableFill, TableGridSize, TableOperations, RunOperation, ResizeWire
-} from '@ephox/snooker';
-import { Element, Node } from '@ephox/sugar';
-
-import * as Util from '../alien/Util';
-import * as Direction from '../queries/Direction';
-import { getCloneElements } from '../api/Settings';
-import { fireNewCell, fireNewRow } from '../api/Events';
-import Editor from 'tinymce/core/api/Editor';
-import { DomDescent } from '@ephox/phoenix';
 import { HTMLTableElement, Range } from '@ephox/dom-globals';
+import { Arr, Fun, Option } from '@ephox/katamari';
+import { DomDescent } from '@ephox/phoenix';
+import { CellMutations, CssUtils, ResizeWire, RunOperation, TableDirection, TableFill, TableGridSize, TableOperations, Direction } from '@ephox/snooker';
+import { Element, Node } from '@ephox/sugar';
+import Editor from 'tinymce/core/api/Editor';
+import { fireNewCell, fireNewRow } from '../api/Events';
+import { getCloneElements } from '../api/Settings';
 
 type TableAction<T> = (table: Element<HTMLTableElement>, target: T) => Option<Range>;
 export type BasicTableAction = TableAction<RunOperation.CombinedTargets>;
@@ -41,7 +36,7 @@ export interface TableActions {
 }
 
 export const TableActions = (editor: Editor, lazyWire: () => ResizeWire): TableActions => {
-  const isTableBody = (editor: Editor) => Node.name(Util.getBody(editor)) === 'table';
+  const isTableBody = (editor: Editor) => Node.name(CssUtils.getBody(editor)) === 'table';
 
   const lastRowGuard = (table: Element<HTMLTableElement>) => isTableBody(editor) === false || TableGridSize.getGridSize(table).rows() > 1;
 
@@ -53,7 +48,7 @@ export const TableActions = (editor: Editor, lazyWire: () => ResizeWire): TableA
 
   const execute = <T> (operation: RunOperation.OperationCallback<T>, guard, mutate, lazyWire) =>
     (table: Element<HTMLTableElement>, target: T): Option<Range> => {
-      Util.removeDataStyle(table);
+      CssUtils.removeDataStyle(table);
       const wire = lazyWire();
       const doc = Element.fromDom(editor.getDoc());
       const direction = TableDirection(Direction.directionAt);

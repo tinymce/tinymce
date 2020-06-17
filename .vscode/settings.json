@@ -53,5 +53,6 @@
 
     // Search can just exclude node_modules completely
     "node_modules": true
-  }
+  },
+  "eslint.enable": true
 }

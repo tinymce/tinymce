@@ -5,18 +5,16 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node, HTMLTableElement, HTMLTableCellElement, HTMLTableRowElement, Element, Range } from '@ephox/dom-globals';
+import { Element, HTMLTableCellElement, HTMLTableElement, HTMLTableRowElement, Node, Range } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
-import { ResizeWire, TableDirection, TableResize } from '@ephox/snooker';
+import { CssUtils, Direction, ResizeWire, TableDirection, TableResize } from '@ephox/snooker';
 import { Element as SugarElement } from '@ephox/sugar';
-import Tools from 'tinymce/core/api/util/Tools';
-import * as Direction from '../queries/Direction';
-import * as TableWire from './TableWire';
-import { hasTableResizeBars, hasObjectResizing, isPixelsForced, isPercentagesForced } from '../api/Settings';
 import Editor from 'tinymce/core/api/Editor';
+import Tools from 'tinymce/core/api/util/Tools';
 import * as Events from '../api/Events';
-import * as Util from '../alien/Util';
-import { enforcePixels, enforcePercentage } from './EnforceUnit';
+import { hasObjectResizing, hasTableResizeBars, isPercentagesForced, isPixelsForced } from '../api/Settings';
+import { enforcePercentage, enforcePixels } from './EnforceUnit';
+import * as TableWire from './TableWire';
 
 export interface ResizeHandler {
   lazyResize: () => Option<TableResize>;
@@ -72,20 +70,20 @@ export const getResizeHandler = function (editor: Editor): ResizeHandler {
 
       sz.events.beforeResize.bind(function (event) {
         const rawTable = event.table().dom();
-        Events.fireObjectResizeStart(editor, rawTable, Util.getPixelWidth(rawTable), Util.getPixelHeight(rawTable));
+        Events.fireObjectResizeStart(editor, rawTable, CssUtils.getPixelWidth(rawTable), CssUtils.getPixelHeight(rawTable));
       });
 
       sz.events.afterResize.bind(function (event) {
         const table = event.table();
         const rawTable = table.dom();
-        Util.removeDataStyle(table);
+        CssUtils.removeDataStyle(table);
 
         selectionRng.each(function (rng) {
           editor.selection.setRng(rng);
           editor.focus();
         });
 
-        Events.fireObjectResized(editor, rawTable, Util.getPixelWidth(rawTable), Util.getPixelHeight(rawTable));
+        Events.fireObjectResized(editor, rawTable, CssUtils.getPixelWidth(rawTable), CssUtils.getPixelHeight(rawTable));
         editor.undoManager.add();
       });
 

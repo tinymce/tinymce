@@ -7,10 +7,9 @@
 
 import { Element as DomElement, HTMLTableCaptionElement, HTMLTableCellElement, HTMLTableElement, HTMLTableRowElement } from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
-import { RunOperation } from '@ephox/snooker';
+import { RunOperation, Selections } from '@ephox/snooker';
 import { Element } from '@ephox/sugar';
-import { Selections } from '../selection/Selections';
-import * as CellOperations from './CellOperations';
+import CellOperations from './CellOperations';
 
 const noMenu = (cell: Element<HTMLTableCellElement | HTMLTableCaptionElement>): RunOperation.CombinedTargets => ({
   element: Fun.constant(cell),
@@ -19,9 +18,9 @@ const noMenu = (cell: Element<HTMLTableCellElement | HTMLTableCaptionElement>): 
   selection: Fun.constant([ cell ])
 });
 
-const forMenu = (selections: Selections, table: Element<HTMLTableElement>, cell: Element<HTMLTableCellElement>): RunOperation.CombinedTargets => ({
+const forMenu = (selections: Selections, table: Element<HTMLTableElement>, cell: Element<HTMLTableCellElement>, firstSelectedSelector: string, lastSelectedSelector: string): RunOperation.CombinedTargets => ({
   element: Fun.constant(cell),
-  mergable: Fun.constant(CellOperations.mergable(table, selections)),
+  mergable: Fun.constant(CellOperations.mergable(table, selections, firstSelectedSelector, lastSelectedSelector)),
   unmergable: Fun.constant(CellOperations.unmergable(cell, selections)),
   selection: Fun.constant(CellOperations.selection(cell, selections))
 });
@@ -39,4 +38,3 @@ const pasteRows = (selections: Selections, _table: Element<HTMLTableElement>, ce
 });
 
 export { noMenu, forMenu, paste, pasteRows };
-

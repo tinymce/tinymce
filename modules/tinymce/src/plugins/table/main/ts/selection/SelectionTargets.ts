@@ -1,11 +1,9 @@
 import { HTMLTableCaptionElement, HTMLTableCellElement } from '@ephox/dom-globals';
 import { Arr, Cell, Option, Thunk } from '@ephox/katamari';
-import { RunOperation, TableLookup } from '@ephox/snooker';
+import { RunOperation, TableLookup, Selections, TableSelection, TableTargets } from '@ephox/snooker';
 import { Element, Node } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
-import * as TableTargets from '../queries/TableTargets';
-import { Selections } from './Selections';
-import * as TableSelection from './TableSelection';
+import * as Ephemera from './Ephemera';
 
 export type SelectionTargets = ReturnType<typeof getSelectionTargets>;
 
@@ -20,7 +18,7 @@ export const getSelectionTargets = (editor: Editor, selections: Selections) => {
       if (isCaption(cellOrCaption)) {
         return TableTargets.noMenu(cellOrCaption);
       } else {
-        return TableTargets.forMenu(selections, table, cellOrCaption);
+        return TableTargets.forMenu(selections, table, cellOrCaption, Ephemera.firstSelectedSelector, Ephemera.lastSelectedSelector);
       }
     });
   });

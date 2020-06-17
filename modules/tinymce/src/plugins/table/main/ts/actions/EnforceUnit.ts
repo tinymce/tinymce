@@ -7,10 +7,10 @@
 
 import { Arr } from '@ephox/katamari';
 import { Css, Element, SelectorFilter, Traverse } from '@ephox/sugar';
-import { getPixelWidth } from '../alien/Util';
 import { HTMLTableElement } from '@ephox/dom-globals';
+import { CssUtils } from '@ephox/snooker';
 
-const calculatePercentageWidth = (element: Element, parent: Element): string => getPixelWidth(element.dom()) / getPixelWidth(parent.dom()) * 100 + '%';
+const calculatePercentageWidth = (element: Element, parent: Element): string => CssUtils.getPixelWidth(element.dom()) / CssUtils.getPixelWidth(parent.dom()) * 100 + '%';
 
 const enforcePercentage = (rawTable: HTMLTableElement) => {
   const table = Element.fromDom(rawTable);
@@ -27,7 +27,7 @@ const enforcePercentage = (rawTable: HTMLTableElement) => {
 };
 
 const enforcePixels = (table: HTMLTableElement) => {
-  Css.set(Element.fromDom(table), 'width', getPixelWidth(table).toString() + 'px');
+  Css.set(Element.fromDom(table), 'width', CssUtils.getPixelWidth(table).toString() + 'px');
 };
 
 export {

@@ -5,14 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Fun, Arr, Type } from '@ephox/katamari';
-import { TableRender } from '@ephox/snooker';
-import { Attr, Html, SelectorFind, SelectorFilter, Css } from '@ephox/sugar';
-import { getDefaultAttributes, getDefaultStyles, isPixelsForced } from '../api/Settings';
-import { fireNewRow, fireNewCell } from '../api/Events';
-import * as Util from '../alien/Util';
+import { HTMLElement, HTMLTableDataCellElement, HTMLTableElement, HTMLTableHeaderCellElement, HTMLTableRowElement } from '@ephox/dom-globals';
+import { Arr, Fun, Type } from '@ephox/katamari';
+import { CssUtils, TableRender } from '@ephox/snooker';
+import { Attr, Css, Html, SelectorFilter, SelectorFind } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
-import { HTMLElement, HTMLTableRowElement, HTMLTableDataCellElement, HTMLTableHeaderCellElement, HTMLTableElement } from '@ephox/dom-globals';
+import { fireNewCell, fireNewRow } from '../api/Events';
+import { getDefaultAttributes, getDefaultStyles, isPixelsForced } from '../api/Settings';
 
 const placeCaretInCell = (editor: Editor, cell) => {
   editor.selection.select(cell.dom(), true);
@@ -49,7 +48,7 @@ const insert = (editor: Editor, columns: number, rows: number, colHeaders: numbe
   const html = Html.getOuter(table);
   editor.insertContent(html);
 
-  return SelectorFind.descendant<HTMLTableElement>(Util.getBody(editor), 'table[data-mce-id="__mce"]').map((table) => {
+  return SelectorFind.descendant<HTMLTableElement>(CssUtils.getBody(editor), 'table[data-mce-id="__mce"]').map((table) => {
     if (isPixelsForced(editor)) {
       Css.set(table, 'width', Css.get(table, 'width'));
     }
@@ -74,7 +73,5 @@ const insertTableWithDataValidation = (editor: Editor, rows: number, columns: nu
   }
 };
 
-export {
-  insert,
-  insertTableWithDataValidation
-};
+export { insert, insertTableWithDataValidation };
+

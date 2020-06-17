@@ -9,15 +9,12 @@ import { InputHandlers, SelectionAnnotation, SelectionKeys } from '@ephox/darwin
 import { Event, HTMLElement, KeyboardEvent, MouseEvent, Node as HtmlNode, TouchEvent } from '@ephox/dom-globals';
 import { Cell, Fun, Option } from '@ephox/katamari';
 import { DomParent } from '@ephox/robin';
-import { OtherCells, TableFill, TableLookup, TableResize } from '@ephox/snooker';
+import { CssUtils, Direction, OtherCells, TableFill, TableLookup, TableResize } from '@ephox/snooker';
 import { Class, Compare, DomEvent, Element, Node, Selection, SelectionDirection } from '@ephox/sugar';
-
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
-import * as Util from '../alien/Util';
 import * as Events from '../api/Events';
 import { getCloneElements } from '../api/Settings';
-import * as Direction from '../queries/Direction';
 import * as Ephemera from './Ephemera';
 import { SelectionTargets } from './SelectionTargets';
 
@@ -46,8 +43,8 @@ export default function (editor: Editor, lazyResize: () => Option<TableResize>, 
 
   editor.on('init', (_e) => {
     const win = editor.getWin();
-    const body = Util.getBody(editor);
-    const isRoot = Util.getIsRoot(editor);
+    const body = CssUtils.getBody(editor);
+    const isRoot = CssUtils.getIsRoot(editor);
 
     // When the selection changes through either the mouse or keyboard, and the selection is no longer within the table.
     // Remove the selection.

@@ -12,10 +12,11 @@ import Editor from 'tinymce/core/api/Editor';
 import * as Styles from '../actions/Styles';
 import * as Util from '../alien/Util';
 import { hasAdvancedCellTab } from '../api/Settings';
-import * as TableSelection from '../selection/TableSelection';
 import * as CellDialogGeneralTab from './CellDialogGeneralTab';
 import { DomModifier } from './DomModifier';
 import * as Helpers from './Helpers';
+import { TableSelection } from '@ephox/snooker';
+import * as Ephemera from '../selection/Ephemera';
 
 type CellData = Helpers.CellData;
 
@@ -89,7 +90,7 @@ const onSubmitCellForm = (editor: Editor, cells: HTMLTableCellElement[], api) =>
 };
 
 const open = (editor: Editor) => {
-  const cells = TableSelection.getCellsFromSelection(editor);
+  const cells = TableSelection.getCellsFromSelection(editor, Ephemera.selectedSelector);
 
   // Check if there are any cells to operate on
   if (cells.length === 0) {

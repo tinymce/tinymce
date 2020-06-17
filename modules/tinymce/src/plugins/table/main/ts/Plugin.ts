@@ -18,14 +18,14 @@ import { Clipboard as FakeClipboard } from './core/Clipboard';
 import * as TabContext from './queries/TabContext';
 import CellSelection from './selection/CellSelection';
 import * as Ephemera from './selection/Ephemera';
-import { Selections } from './selection/Selections';
 import { getSelectionTargets } from './selection/SelectionTargets';
 import * as Buttons from './ui/Buttons';
 import * as MenuItems from './ui/MenuItems';
 import * as TableFormats from './core/TableFormats';
+import { Selections } from '@ephox/snooker';
 
 function Plugin(editor: Editor) {
-  const selections = Selections(editor);
+  const selections = Selections(editor, Ephemera.selectedSelector);
   const selectionTargets = getSelectionTargets(editor, selections);
   const resizeHandler = getResizeHandler(editor);
   const cellSelection = CellSelection(editor, resizeHandler.lazyResize, selectionTargets);

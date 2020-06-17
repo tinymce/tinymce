@@ -21,6 +21,12 @@ import { TableResize } from './TableResize';
 import * as RunOperation from '../model/RunOperation';
 import * as GridRow from '../model/GridRow';
 import * as OtherCells from './OtherCells';
+import * as TableSelection from '../selection/TableSelection';
+import { Selections } from '../selection/Selections';
+import { SelectionTypes } from '../selection/SelectionTypes';
+import * as CssUtils from '../util/CssUtils';
+import * as TableTargets from '../queries/TableTargets';
+import Direction from '../queries/Direction';
 
 export {
   CellLocation,
@@ -29,6 +35,8 @@ export {
   CopyCols,
   CopyRows,
   CopySelected,
+  CssUtils,
+  Direction,
   Generators,
   ResizeDirection,
   ResizeWire,
@@ -43,6 +51,10 @@ export {
   TablePositions,
   TableRender,
   TableResize,
+  TableSelection,
+  TableTargets,
+  Selections,
+  SelectionTypes,
   RunOperation,
   GridRow,
   OtherCells

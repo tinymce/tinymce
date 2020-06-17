@@ -6,15 +6,10 @@
  */
 
 import { Arr, Fun, Option } from '@ephox/katamari';
-import { CopySelected, TableFill, TableLookup } from '@ephox/snooker';
+import { CopySelected, TableFill, TableLookup, Selections, SelectionTypes, TableTargets } from '@ephox/snooker';
 import { Element, Elements, Node, Replication } from '@ephox/sugar';
-
 import Editor from 'tinymce/core/api/Editor';
-
-import * as TableTargets from '../queries/TableTargets';
 import * as Ephemera from '../selection/Ephemera';
-import { Selections } from '../selection/Selections';
-import * as SelectionTypes from '../selection/SelectionTypes';
 import { TableActions } from './TableActions';
 import { Node as DomNode, HTMLTableElement } from '@ephox/dom-globals';
 
