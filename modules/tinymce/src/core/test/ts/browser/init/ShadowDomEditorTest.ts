@@ -63,17 +63,19 @@ UnitTest.asynctest('Only one skin stylesheet should be loaded for multiple edito
     NamedChain.write('editor1', mkEditor()),
     NamedChain.write('editor2', mkEditor()),
     NamedChain.write('editor3', mkEditor()),
-    NamedChain.merge([ 'editor1', 'editor2', 'editor3' ], 'editors'),
-    NamedChain.read('editors', Chain.op(() => {
+    Chain.op(() => {
       Assert.eq(
         'There should only be 1 skin stylesheet in the ShadowRoot',
         1,
         Arr.filter(sr.dom().styleSheets, isSkin).length
       );
-    })),
+    }),
     NamedChain.read('editor1', McEditor.cRemove),
     NamedChain.read('editor2', McEditor.cRemove),
-    NamedChain.read('editor3', McEditor.cRemove)
+    NamedChain.read('editor3', McEditor.cRemove),
+    Chain.op(() => {
+      Remove.remove(shadowHost);
+    })
   ]);
   Pipeline.async({}, [ Chain.asStep({}, [ nc ]) ], () => success(), failure);
 });
