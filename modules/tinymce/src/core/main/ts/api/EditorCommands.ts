@@ -228,7 +228,7 @@ class EditorCommands {
     this.commands.state[command] = () => callback.call(scope || this.editor);
   }
 
-  public addQueryValueHandler(command: string, callback: () => void, scope?: {}) {
+  public addQueryValueHandler(command: string, callback: () => string, scope?: {}) {
     command = command.toLowerCase();
     this.commands.value[command] = () => callback.call(scope || this.editor);
   }

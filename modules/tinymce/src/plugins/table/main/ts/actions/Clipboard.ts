@@ -16,6 +16,7 @@ import * as Ephemera from '../selection/Ephemera';
 import { Selections } from '../selection/Selections';
 import * as SelectionTypes from '../selection/SelectionTypes';
 import { TableActions } from './TableActions';
+import { Node as DomNode, HTMLTableElement } from '@ephox/dom-globals';
 
 const extractSelected = function (cells) {
   // Assume for now that we only have one table (also handles the case where we multi select outside a table)
@@ -53,7 +54,8 @@ const registerEvents = function (editor: Editor, selections: Selections, actions
             return Node.name(content) !== 'meta';
           });
 
-          if (elements.length === 1 && Node.name(elements[0]) === 'table') {
+          const isTable = (elm: Element<DomNode>): elm is Element<HTMLTableElement> => Node.name(elm) === 'table';
+          if (elements.length === 1 && isTable(elements[0])) {
             e.preventDefault();
 
             const doc = Element.fromDom(editor.getDoc());

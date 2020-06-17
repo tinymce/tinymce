@@ -5,22 +5,22 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLTableCellElement, HTMLTableRowElement } from '@ephox/dom-globals';
+import { Element as DomElement, HTMLTableCellElement, HTMLTableRowElement, HTMLTableCaptionElement } from '@ephox/dom-globals';
 import { Arr, Option, Options } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
 import { TableLookup } from '@ephox/snooker';
-import { Selections } from '../selection/Selections';
-import * as CellOperations from '../queries/CellOperations';
-import * as Ephemera from './Ephemera';
+import { Element } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
+import * as CellOperations from '../queries/CellOperations';
+import { Selections } from '../selection/Selections';
+import * as Ephemera from './Ephemera';
 
-const getSelectionStartFromSelector = (selector: string) => (editor: Editor) => Option.from(editor.dom.getParent(editor.selection.getStart(), selector)).map(Element.fromDom);
+const getSelectionStartFromSelector = <T extends DomElement>(selector: string) => (editor: Editor) => Option.from(editor.dom.getParent(editor.selection.getStart(), selector)).map((n) => Element.fromDom(n) as Element<T>);
 
-const getSelectionStartCaption = getSelectionStartFromSelector('caption');
+const getSelectionStartCaption = getSelectionStartFromSelector<HTMLTableCaptionElement>('caption');
 
-const getSelectionStartCell = getSelectionStartFromSelector('th,td');
+const getSelectionStartCell = getSelectionStartFromSelector<HTMLTableCellElement>('th,td');
 
-const getSelectionStartCellOrCaption = getSelectionStartFromSelector('th,td,caption');
+const getSelectionStartCellOrCaption = getSelectionStartFromSelector<HTMLTableCellElement | HTMLTableCaptionElement>('th,td,caption');
 
 
 const getCellsFromSelection = (editor: Editor): HTMLTableCellElement[] =>
@@ -40,10 +40,5 @@ const getRowsFromSelection = (editor: Editor): HTMLTableRowElement[] => {
   ).getOr([]);
 };
 
-export {
-  getSelectionStartCaption,
-  getSelectionStartCell,
-  getSelectionStartCellOrCaption,
-  getCellsFromSelection,
-  getRowsFromSelection
-};
+export { getSelectionStartCaption, getSelectionStartCell, getSelectionStartCellOrCaption, getCellsFromSelection, getRowsFromSelection };
+
