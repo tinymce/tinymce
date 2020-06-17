@@ -21,13 +21,14 @@ import * as TableLookup from './TableLookup';
 import * as TableOperations from './TableOperations';
 import * as TablePositions from './TablePositions';
 import * as TableRender from './TableRender';
-import { TableResize } from './TableResize';
+import { TableResize, ColumnResizing } from './TableResize';
 import { TableSize } from './TableSize';
 
 export {
   CellLocation,
   CellMutations,
   CellNavigation,
+  ColumnResizing,
   CopyCols,
   CopyRows,
   CopySelected,

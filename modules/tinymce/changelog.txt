@@ -1,4 +1,6 @@
 Version 5.5.0 (TBD)
+    Added new `table_column_sizing` setting to control how the table is affected when resizing columns via the resize bars #TINY-6001
+    Fixed an issue where column resizing via the resize bars was inconsistent between fixed and relative table widths #TINY-6001
     Fixed the `media` plugin not saving the alternative source url in some situations #TINY-4113
     Fixed an issue where dragging and dropping within a table would select table cells #TINY-5950
 Version 5.4.1 (TBD)

@@ -1,5 +1,5 @@
 import { HTMLElement, HTMLTableElement } from '@ephox/dom-globals';
-import { Cell, Fun } from '@ephox/katamari';
+import { Arr, Cell, Fun } from '@ephox/katamari';
 import { Element, Width } from '@ephox/sugar';
 import { Warehouse } from '../model/Warehouse';
 import { BarPositions, ColInfo } from '../resize/BarPositions';
@@ -11,6 +11,7 @@ export interface TableSize {
   readonly width: () => number;
   readonly pixelWidth: () => number;
   readonly getWidths: (warehouse: Warehouse, direction: BarPositions<ColInfo>, tableSize: TableSize) => number[];
+  readonly getNewWidths: (widths: number[], deltas: number[]) => number[];
   readonly getCellDelta: (delta: number) => number;
   readonly singleColumnWidth: (w: number, delta: number) => number[];
   readonly minCellWidth: () => number;
@@ -29,6 +30,7 @@ const noneSize = (table: Element<HTMLTableElement>): TableSize => {
     width: getWidth,
     pixelWidth: getWidth,
     getWidths: ColumnSizes.getPixelWidths,
+    getNewWidths: (widths, _deltas) => widths,
     getCellDelta: zero,
     singleColumnWidth: Fun.constant([ 0 ]),
     minCellWidth: zero,
@@ -54,11 +56,18 @@ const percentageSize = (initialWidth: string, table: Element<HTMLTableElement>):
     floatWidth.set(newWidth);
     pixelWidth.set(Width.get(table));
   };
+  const getNewWidths = (widths: number[], deltas: number[]) => {
+    const initialNewWidths = Arr.map(widths, (width, i) => width + deltas[i]);
+    const normaliser = 100 / Arr.foldl(initialNewWidths, (b, a) => b + a, 0);
+    // Normalise widths to add up to 100%
+    return Arr.map(initialNewWidths, (w) => w * normaliser);
+  };
 
   return {
     width: floatWidth.get,
     pixelWidth: pixelWidth.get,
     getWidths: ColumnSizes.getPercentageWidths,
+    getNewWidths,
     getCellDelta,
     singleColumnWidth,
     minCellWidth,
@@ -81,11 +90,13 @@ const pixelSize = (initialWidth: number, table: Element<HTMLTableElement>): Tabl
     Sizes.setPixelWidth(table, newWidth);
     width.set(newWidth);
   };
+  const getNewWidths = (widths: number[], deltas: number[]) => Arr.map(widths, (width, i) => width + deltas[i]);
 
   return {
     width: getWidth,
     pixelWidth: getWidth,
     getWidths: ColumnSizes.getPixelWidths,
+    getNewWidths,
     getCellDelta,
     singleColumnWidth,
     minCellWidth: CellUtils.minWidth,

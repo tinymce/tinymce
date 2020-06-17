@@ -131,9 +131,9 @@ Ready.execute(function () {
   InsertAll.append(ephoxUi, [ ltrs, rtls ]);
 
   const lazyTableSize = (table: Element<HTMLTableElement>) => TableSize.getTableSize(table);
-  const ltrManager = TableResize.create(ResizeWire.body(tester, ltrs), ResizeDirection.ltr, lazyTableSize);
+  const ltrManager = TableResize.create(ResizeWire.body(tester, ltrs), ResizeDirection.ltr, 'default', lazyTableSize);
   ltrManager.on();
-  const rtlManager = TableResize.create(ResizeWire.body(subject3, rtls), ResizeDirection.rtl, lazyTableSize);
+  const rtlManager = TableResize.create(ResizeWire.body(subject3, rtls), ResizeDirection.rtl, 'default', lazyTableSize);
   rtlManager.on();
 
   // For firefox.

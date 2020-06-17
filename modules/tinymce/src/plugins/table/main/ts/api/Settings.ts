@@ -6,6 +6,7 @@
  */
 
 import { Arr, Obj, Option, Type } from '@ephox/katamari';
+import { ColumnResizing } from '@ephox/snooker';
 import Editor from 'tinymce/core/api/Editor';
 
 export interface StringMap {
@@ -70,6 +71,12 @@ const getTableHeaderType = (editor: Editor): string => {
   }
 };
 
+const getColumnReszingBehaviour = (editor: Editor): ColumnResizing => {
+  const validModes: ColumnResizing[] = [ 'default', 'static', 'resizetable' ];
+  const givenMode = editor.getParam('table_column_sizing', 'default', 'string');
+  return Arr.find(validModes, (mode) => mode === givenMode).getOr('default');
+};
+
 const getCloneElements = (editor: Editor): Option<string[]> => {
   const cloneElements = editor.getParam('table_clone_elements');
 
@@ -107,5 +114,6 @@ export {
   isPixelsForced,
   isResponsiveForced,
   getToolbar,
-  getTableHeaderType
+  getTableHeaderType,
+  getColumnReszingBehaviour
 };

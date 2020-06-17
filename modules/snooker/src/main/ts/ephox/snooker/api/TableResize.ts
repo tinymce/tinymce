@@ -10,6 +10,8 @@ import { TableSize } from './TableSize';
 type ColInfo = BarPositions.ColInfo;
 type BarPositions<A> = BarPositions.BarPositions<A>;
 
+export type ColumnResizing = 'default' | 'resizetable' | 'static';
+
 export interface BeforeTableResizeEvent {
   readonly table: () => Element;
 }
@@ -42,7 +44,7 @@ export interface TableResize {
   readonly events: TableResizeEventRegistry;
 }
 
-const create = (wire: ResizeWire, vdirection: BarPositions<ColInfo>, lazySizing: (element: Element<HTMLTableElement>) => TableSize): TableResize => {
+const create = (wire: ResizeWire, vdirection: BarPositions<ColInfo>, columnResizeBehaviour: ColumnResizing, lazySizing: (element: Element<HTMLTableElement>) => TableSize): TableResize => {
   const hdirection = BarPositions.height;
   const manager = BarManager(wire, vdirection, hdirection);
 
@@ -69,7 +71,7 @@ const create = (wire: ResizeWire, vdirection: BarPositions<ColInfo>, lazySizing:
     events.trigger.beforeResize(table);
     const delta = vdirection.delta(event.delta(), table);
     const tableSize = lazySizing(table);
-    Adjustments.adjustWidth(table, delta, event.column(), vdirection, tableSize);
+    Adjustments.adjustWidth(table, delta, event.column(), vdirection, columnResizeBehaviour, tableSize);
     events.trigger.afterResize(table);
   });
 
