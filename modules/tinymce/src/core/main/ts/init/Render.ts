@@ -26,10 +26,12 @@ import * as NodeType from '../dom/NodeType';
 import * as ErrorReporter from '../ErrorReporter';
 import * as Init from './Init';
 import { Element } from '@ephox/sugar';
-import { StyleSheetLoader } from '../api/dom/StyleSheetLoader';
+import * as StyleSheetLoader from '../api/dom/StyleSheetLoader';
 import * as StyleSheetLoaderRegistry from '../dom/StyleSheetLoaderRegistry';
 
 const DOM = DOMUtils.DOM;
+type StyleSheetLoader = StyleSheetLoader.StyleSheetLoader;
+type QueuedStyleSheetLoader = StyleSheetLoader.QueuedStyleSheetLoader;
 
 const hasSkipLoadPrefix = function (name) {
   return name.charAt(0) === '-';
@@ -201,7 +203,13 @@ const render = function (editor: Editor) {
     return;
   }
 
-  editor.ui.styleSheetLoader = getStyleSheetLoader(Element.fromDom(editor.getElement()), settings);
+  const isQueued = (ssl: StyleSheetLoader): ssl is QueuedStyleSheetLoader =>
+    ssl.hasOwnProperty('start');
+
+  const ssl = editor.ui.styleSheetLoader;
+  if (isQueued(ssl)) {
+    ssl.start(getStyleSheetLoader(Element.fromDom(editor.getElement()), settings));
+  }
 
   // Hide target element early to prevent content flashing
   if (!settings.inline) {

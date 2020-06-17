@@ -47,7 +47,9 @@ import I18n, { TranslatedString, Untranslated } from './util/I18n';
 import Tools from './util/Tools';
 import URI from './util/URI';
 import WindowManager from './WindowManager';
-import { StyleSheetLoader } from './dom/StyleSheetLoader';
+import * as StyleSheetLoader from './dom/StyleSheetLoader';
+
+type StyleSheetLoader = StyleSheetLoader.StyleSheetLoader;
 
 /**
  * This class contains the core logic for a TinyMCE editor.
@@ -70,9 +72,9 @@ import { StyleSheetLoader } from './dom/StyleSheetLoader';
  */
 
 export interface Ui {
-  registry: Registry.Registry;
+  readonly registry: Registry.Registry;
   /** StyleSheetLoader for styles in the editor UI. For content styles, use editor.dom.styleSheetLoader. */
-  styleSheetLoader: StyleSheetLoader;
+  readonly styleSheetLoader: StyleSheetLoader;
 }
 
 export interface EditorConstructor {
@@ -329,7 +331,7 @@ class Editor implements EditorObservable {
 
     this.ui = {
       registry: registry(),
-      styleSheetLoader: undefined
+      styleSheetLoader: StyleSheetLoader.queuedStyleSheetLoader()
     };
 
     const self = this;

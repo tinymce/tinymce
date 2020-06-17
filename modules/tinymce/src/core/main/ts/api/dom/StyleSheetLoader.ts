@@ -6,7 +6,7 @@
  */
 
 import { navigator, Document as DomDocument, Node as DomNode, ShadowRoot } from '@ephox/dom-globals';
-import { Arr, Fun, Future, Futures, Result, Results } from '@ephox/katamari';
+import { Arr, Fun, Future, Futures, Option, Result, Results } from '@ephox/katamari';
 import { Attr, Element, Insert, ShadowDom, Traverse } from '@ephox/sugar';
 import { ReferrerPolicy } from '../SettingsTypes';
 import Delay from '../util/Delay';
@@ -29,6 +29,75 @@ export interface StyleSheetLoaderSettings {
   maxLoadTime: number;
   contentCssCors: boolean;
   referrerPolicy: ReferrerPolicy;
+}
+
+export interface QueuedStyleSheetLoader extends StyleSheetLoader {
+  start: (styleSheetLoader: StyleSheetLoader) => void;
+}
+
+export interface QueuedDispatcher<A> {
+  readonly queue: (a: A) => void,
+  readonly set: (f: (a: A) => void) => void;
+}
+
+export const queuedDispatcher = <A> () => {
+
+  let q: A[] = [];
+  let odisp: Option<(a: A) => void> = Option.none();
+
+  const queue = (a: A): void => {
+    odisp.fold(
+      () => {
+        q.push(a);
+      },
+      (f) => f(a)
+    );
+  }
+
+  const set = (f: (a: A) => void): void => {
+    odisp = Option.some(f);
+    Arr.each(q, (qq) => {
+      f(qq);
+    });
+    q = [];
+  }
+
+  return {
+    queue,
+    set
+  }
+};
+
+export function queuedStyleSheetLoader(): QueuedStyleSheetLoader {
+
+  const dispLoad: QueuedDispatcher<[string, Function, Function | undefined]> = queuedDispatcher();
+  const dispLoadAll: QueuedDispatcher<[string[], Function, Function]> = queuedDispatcher();
+  const dispSetRP: QueuedDispatcher<ReferrerPolicy> = queuedDispatcher();
+
+  const load = (url: string, loadedCallback: Function, errorCallback?: Function): void => {
+    dispLoad.queue([url, loadedCallback, errorCallback]);
+  }
+
+  const loadAll = function (urls: string[], success: Function, failure: Function): void {
+    dispLoadAll.queue([urls, success, failure])
+  }
+
+  const start = (styleSheetLoader: StyleSheetLoader) => {
+    dispLoad.set((a) => styleSheetLoader.load(...a));
+    dispLoadAll.set((a) => styleSheetLoader.loadAll(...a));
+    dispSetRP.set(styleSheetLoader._setReferrerPolicy);
+  };
+
+  const _setReferrerPolicy = (referrerPolicy: ReferrerPolicy): void => {
+    dispSetRP.queue(referrerPolicy);
+  }
+
+  return {
+    load,
+    loadAll,
+    _setReferrerPolicy,
+    start
+  }
 }
 
 export function StyleSheetLoader(documentOrShadowRoot: DomDocument | ShadowRoot, settings: Partial<StyleSheetLoaderSettings> = {}): StyleSheetLoader {
