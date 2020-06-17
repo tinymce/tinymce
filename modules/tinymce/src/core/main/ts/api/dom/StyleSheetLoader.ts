@@ -36,7 +36,7 @@ export interface QueuedStyleSheetLoader extends StyleSheetLoader {
 }
 
 export interface QueuedDispatcher<A> {
-  readonly queue: (a: A) => void,
+  readonly queue: (a: A) => void;
   readonly set: (f: (a: A) => void) => void;
 }
 
@@ -52,7 +52,7 @@ export const queuedDispatcher = <A> () => {
       },
       (f) => f(a)
     );
-  }
+  };
 
   const set = (f: (a: A) => void): void => {
     odisp = Option.some(f);
@@ -60,27 +60,27 @@ export const queuedDispatcher = <A> () => {
       f(qq);
     });
     q = [];
-  }
+  };
 
   return {
     queue,
     set
-  }
+  };
 };
 
-export function queuedStyleSheetLoader(): QueuedStyleSheetLoader {
+export const queuedStyleSheetLoader = (): QueuedStyleSheetLoader => {
 
   const dispLoad: QueuedDispatcher<[string, Function, Function | undefined]> = queuedDispatcher();
   const dispLoadAll: QueuedDispatcher<[string[], Function, Function]> = queuedDispatcher();
   const dispSetRP: QueuedDispatcher<ReferrerPolicy> = queuedDispatcher();
 
   const load = (url: string, loadedCallback: Function, errorCallback?: Function): void => {
-    dispLoad.queue([url, loadedCallback, errorCallback]);
-  }
+    dispLoad.queue([ url, loadedCallback, errorCallback ]);
+  };
 
-  const loadAll = function (urls: string[], success: Function, failure: Function): void {
-    dispLoadAll.queue([urls, success, failure])
-  }
+  const loadAll = (urls: string[], success: Function, failure: Function): void => {
+    dispLoadAll.queue([ urls, success, failure ]);
+  };
 
   const start = (styleSheetLoader: StyleSheetLoader) => {
     dispLoad.set((a) => styleSheetLoader.load(...a));
@@ -90,15 +90,15 @@ export function queuedStyleSheetLoader(): QueuedStyleSheetLoader {
 
   const _setReferrerPolicy = (referrerPolicy: ReferrerPolicy): void => {
     dispSetRP.queue(referrerPolicy);
-  }
+  };
 
   return {
     load,
     loadAll,
     _setReferrerPolicy,
     start
-  }
-}
+  };
+};
 
 export function StyleSheetLoader(documentOrShadowRoot: DomDocument | ShadowRoot, settings: Partial<StyleSheetLoaderSettings> = {}): StyleSheetLoader {
   let idCount = 0;
