@@ -1,5 +1,6 @@
+import { HTMLTableCaptionElement, HTMLTableCellElement } from '@ephox/dom-globals';
 import { Arr, Cell, Option, Thunk } from '@ephox/katamari';
-import { TableLookup, RunOperation } from '@ephox/snooker';
+import { RunOperation, TableLookup } from '@ephox/snooker';
 import { Element, Node } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import * as TableTargets from '../queries/TableTargets';
@@ -14,8 +15,9 @@ export const getSelectionTargets = (editor: Editor, selections: Selections) => {
 
   const findTargets = (): Option<RunOperation.CombinedTargets> => TableSelection.getSelectionStartCellOrCaption(editor).bind((cellOrCaption) => {
     const table = TableLookup.table(cellOrCaption);
+    const isCaption = (elem: Element<HTMLTableCaptionElement | HTMLTableCellElement>): elem is Element<HTMLTableCaptionElement> => Node.name(elem) === 'caption';
     return table.map((table) => {
-      if (Node.name(cellOrCaption) === 'caption') {
+      if (isCaption(cellOrCaption)) {
         return TableTargets.noMenu(cellOrCaption);
       } else {
         return TableTargets.forMenu(selections, table, cellOrCaption);
