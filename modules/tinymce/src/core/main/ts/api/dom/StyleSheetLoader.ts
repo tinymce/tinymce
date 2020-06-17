@@ -6,11 +6,12 @@
  */
 
 import { navigator, Document as DomDocument, Node as DomNode, ShadowRoot } from '@ephox/dom-globals';
-import { Arr, Fun, Future, Futures, Option, Result, Results } from '@ephox/katamari';
+import { Arr, Fun, Future, Futures, Result, Results } from '@ephox/katamari';
 import { Attr, Element, Insert, ShadowDom, Traverse } from '@ephox/sugar';
 import { ReferrerPolicy } from '../SettingsTypes';
 import Delay from '../util/Delay';
 import Tools from '../util/Tools';
+import { QueuedDispatcher, queuedDispatcher } from '../util/QueuedDispatcher';
 
 /**
  * This class handles loading of external stylesheets and fires events when these are loaded.
@@ -34,39 +35,6 @@ export interface StyleSheetLoaderSettings {
 export interface QueuedStyleSheetLoader extends StyleSheetLoader {
   start: (styleSheetLoader: StyleSheetLoader) => void;
 }
-
-export interface QueuedDispatcher<A> {
-  readonly queue: (a: A) => void;
-  readonly set: (f: (a: A) => void) => void;
-}
-
-export const queuedDispatcher = <A> () => {
-
-  let q: A[] = [];
-  let odisp: Option<(a: A) => void> = Option.none();
-
-  const queue = (a: A): void => {
-    odisp.fold(
-      () => {
-        q.push(a);
-      },
-      (f) => f(a)
-    );
-  };
-
-  const set = (f: (a: A) => void): void => {
-    odisp = Option.some(f);
-    Arr.each(q, (qq) => {
-      f(qq);
-    });
-    q = [];
-  };
-
-  return {
-    queue,
-    set
-  };
-};
 
 export const queuedStyleSheetLoader = (): QueuedStyleSheetLoader => {
 
