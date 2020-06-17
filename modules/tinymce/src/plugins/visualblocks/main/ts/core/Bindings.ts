@@ -23,10 +23,6 @@ const setup = function (editor: Editor, pluginUrl: string, enabledState: Cell<bo
       VisualBlocks.toggleVisualBlocks(editor, pluginUrl, enabledState);
     }
   });
-
-  editor.on('remove', function () {
-    editor.dom.removeClass(editor.getBody(), 'mce-visualblocks');
-  });
 };
 
 export {

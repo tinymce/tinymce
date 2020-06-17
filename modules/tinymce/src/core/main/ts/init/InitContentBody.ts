@@ -349,14 +349,6 @@ const initContentBody = function (editor: Editor, skipWrite?: boolean) {
   }
 
   if (editor.inline) {
-    editor.on('remove', function () {
-      const bodyEl = this.getBody();
-
-      DOM.removeClass(bodyEl, 'mce-content-body');
-      DOM.removeClass(bodyEl, 'mce-edit-focus');
-      DOM.setAttrib(bodyEl, 'contentEditable', null);
-    });
-
     DOM.addClass(targetElm, 'mce-content-body');
     editor.contentDocument = doc = document;
     editor.contentWindow = window;
