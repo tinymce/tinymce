@@ -6,12 +6,15 @@
  */
 
 import { Attachment, Channels, Gui, SystemEvents } from '@ephox/alloy';
-import { document, MouseEvent, Node as DomNode, UIEvent } from '@ephox/dom-globals';
+import { MouseEvent, Node as DomNode, UIEvent } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
-import { DomEvent, Element, EventArgs } from '@ephox/sugar';
+import { DomEvent, Element, EventArgs, ShadowDom } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 
 const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMothership: Gui.GuiSystem) => {
+
+  const root = ShadowDom.getRootNode(Element.fromDom(editor.getElement()));
+
   const broadcastEvent = (name: string, evt: EventArgs) => {
     Arr.each([ mothership, uiMothership ], (ship) => {
       ship.broadcastEvent(name, evt);
@@ -27,13 +30,13 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMothership: Gui.GuiS
   const fireDismissPopups = (evt: EventArgs) => broadcastOn(Channels.dismissPopups(), { target: evt.target() });
 
   // Document touch events
-  const onTouchstart = DomEvent.bind(Element.fromDom(document), 'touchstart', fireDismissPopups);
-  const onTouchmove = DomEvent.bind(Element.fromDom(document), 'touchmove', (evt) => broadcastEvent(SystemEvents.documentTouchmove(), evt));
-  const onTouchend = DomEvent.bind(Element.fromDom(document), 'touchend', (evt) => broadcastEvent(SystemEvents.documentTouchend(), evt));
+  const onTouchstart = DomEvent.bind(root, 'touchstart', fireDismissPopups);
+  const onTouchmove = DomEvent.bind(root, 'touchmove', (evt) => broadcastEvent(SystemEvents.documentTouchmove(), evt));
+  const onTouchend = DomEvent.bind(root, 'touchend', (evt) => broadcastEvent(SystemEvents.documentTouchend(), evt));
 
   // Document mouse events
-  const onMousedown = DomEvent.bind(Element.fromDom(document), 'mousedown', fireDismissPopups);
-  const onMouseup = DomEvent.bind(Element.fromDom(document), 'mouseup', (evt) => {
+  const onMousedown = DomEvent.bind(root, 'mousedown', fireDismissPopups);
+  const onMouseup = DomEvent.bind(root, 'mouseup', (evt) => {
     if (evt.raw().button === 0) {
       broadcastOn(Channels.mouseReleased(), { target: evt.target() });
     }
