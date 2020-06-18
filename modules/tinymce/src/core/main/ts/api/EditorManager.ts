@@ -7,7 +7,6 @@
 
 import { BeforeUnloadEvent, document, HTMLElement, HTMLFormElement, Window } from '@ephox/dom-globals';
 import { Arr, Obj, Type } from '@ephox/katamari';
-import { Attr, Element as SugarElement } from '@ephox/sugar';
 import * as ErrorReporter from '../ErrorReporter';
 import * as FocusController from '../focus/FocusController';
 import AddOnManager from './AddOnManager';
@@ -377,23 +376,13 @@ const EditorManager: EditorManager = {
     const isInvalidInlineTarget = (settings: RawEditorSettings, elm: HTMLElement) =>
       settings.inline && elm.tagName.toLowerCase() in invalidInlineTargets;
 
-    const createId = function (elm: HTMLElement) {
+    const createId = (elm: HTMLElement & { name?: string }): string => {
       let id = elm.id;
 
-      // Use element id, or unique name or generate a unique id
       if (!id) {
-        id = (elm as unknown as HTMLTextAreaElement).name as string | undefined;
-
-        if (id && !DOM.get(id)) {
-          // Keep current name
-        } else {
-          // Generate unique name
-          id = DOM.uniqueId();
-        }
-
+        id = Obj.get(elm, 'name').filter((name) => !DOM.get(name)).getOrThunk(DOM.uniqueId);
         elm.setAttribute('id', id);
       }
-
       return id;
     };
 
@@ -493,17 +482,7 @@ const EditorManager: EditorManager = {
       let targets: HTMLElement[];
 
       const createEditor = function (id: string, settings: RawEditorSettings, targetElm: HTMLElement) {
-        const targetElmWrap = SugarElement.fromDom(targetElm);
-        const tagSnapshot = Attr.clone(targetElmWrap);
-
         const editor: Editor = new Editor(id, settings, self);
-        editor.on('remove', () => {
-          Arr.each(Arr.map(targetElm.attributes, (attr) => attr.name), (name: string) => {
-            Attr.remove(targetElmWrap, name);
-          });
-          Attr.setAll(targetElmWrap, tagSnapshot);
-        });
-
         editors.push(editor);
 
         editor.on('init', function () {

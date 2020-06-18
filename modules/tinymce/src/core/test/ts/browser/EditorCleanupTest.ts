@@ -1,7 +1,7 @@
 import { Assertions, Chain, Log, NamedChain, Pipeline } from '@ephox/agar';
 import { Editor as McEditor } from '@ephox/mcagar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Attr, Element, Truncate } from '@ephox/sugar';
+import { Attr, Element, Remove, Truncate } from '@ephox/sugar';
 import { HTMLDivElement } from '@ephox/dom-globals';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -13,35 +13,43 @@ UnitTest.asynctest('browser.tinymce.core.EditorCleanupTest', (success, failure) 
   Theme();
   VisualBlocksPlugin();
 
-  const base_url = '/project/tinymce/js/tinymce';
-
   const cTestCleanup = (settings: RawEditorSettings, html: string = '<div></div>') => NamedChain.asChain([
-    NamedChain.direct(NamedChain.inputName(), McEditor.cFromHtml(html, settings), 'editor'),
+    // spin the editor up and down, getting a reference to its target element inbetween
+    NamedChain.write('editor', McEditor.cFromHtml(html, { base_url: '/project/tinymce/js/tinymce', ...settings })),
     NamedChain.direct('editor', Chain.mapper((editor: Editor) => Element.fromDom(editor.getElement())), 'element'),
     NamedChain.read('editor', Chain.op((editor: Editor) => editor.remove())),
     // first, remove the id of the element, as that's inserted from McEditor.cFromHtml and is out of our control
     NamedChain.read('element', Chain.op((element: Element<HTMLDivElement>) => Attr.remove(element, 'id'))),
+    // assert that the html of the element is correct
     NamedChain.direct('element', Chain.mapper(Truncate.getHtml), 'raw-html'),
     NamedChain.read('raw-html', Assertions.cAssertHtml('all properties on the element should be cleaned up', html)),
-    NamedChain.read('editor', McEditor.cRemove)
+    // remove the element
+    NamedChain.read('element', Chain.op(Remove.remove))
   ]);
 
   Pipeline.async({}, [
     Log.chainsAsStep('TINY-4001', 'Inline editor should clean up attributes', [
-      cTestCleanup({ base_url, inline: true })
+      cTestCleanup({ inline: true })
     ]),
 
     Log.chainsAsStep('TINY-4001', 'Iframe editor should clean up attributes', [
-      cTestCleanup({ base_url })
+      cTestCleanup({ })
+    ]),
+
+    Log.chainsAsStep('TINY-4001', 'Editor should replace existing attributes on teardown', [
+      cTestCleanup({ }, '<div classname="these are some classes"></div>'),
+      cTestCleanup({ }, '<div style="position: absolute"></div>'),
+      cTestCleanup({ }, '<div data-someattribute="7"></div>'),
+      cTestCleanup({ }, '<textarea name="foo"></textarea>')
     ]),
 
     Log.chainsAsStep('TINY-4001', 'Editor should clean up placeholder', [
-      cTestCleanup({ base_url, placeholder: 'Some text' }),
-      cTestCleanup({ base_url, placeholder: 'Some text' }, '<div placeholder="Testing"></div>')
+      cTestCleanup({ placeholder: 'Some text' }),
+      cTestCleanup({ placeholder: 'Some text' }, '<div placeholder="Testing"></div>')
     ]),
 
     Log.chainsAsStep('TINY-4001', 'Visual blocks plugin should not leave classes on target', [
-      cTestCleanup({ base_url, plugins: 'visualblocks' })
+      cTestCleanup({ plugins: 'visualblocks' })
     ])
   ], success, failure);
 });

@@ -7,6 +7,7 @@
 
 import { HTMLFormElement, window } from '@ephox/dom-globals';
 import { Arr, Fun, Option, Options, Type } from '@ephox/katamari';
+import { Attr, Element } from '@ephox/sugar';
 import { UrlObject } from '../api/AddOnManager';
 import DOMUtils from '../api/dom/DOMUtils';
 import EventUtils from '../api/dom/EventUtils';
@@ -192,6 +193,16 @@ const render = function (editor: Editor) {
     return;
   }
 
+  // snapshot the element we're going to render to
+  const element = Element.fromDom(editor.getElement());
+  const snapshot = Attr.clone(element);
+  editor.on('remove', () => {
+    Arr.eachr(element.dom().attributes, (attr) =>
+      Attr.remove(element, attr.name)
+    );
+    Attr.setAll(element, snapshot);
+  });
+
   // Hide target element early to prevent content flashing
   if (!settings.inline) {
     editor.orgVisibility = editor.getElement().style.visibility;
@@ -200,6 +211,7 @@ const render = function (editor: Editor) {
     editor.inline = true;
   }
 
+  // TODO: Investigate the types here
   const form = (editor.getElement() as HTMLFormElement).form || DOM.getParent(id, 'form');
   if (form) {
     editor.formElement = form;
