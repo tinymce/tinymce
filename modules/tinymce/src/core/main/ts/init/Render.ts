@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLFormElement, window } from '@ephox/dom-globals';
+import { Element as DomElement, HTMLFormElement, window } from '@ephox/dom-globals';
 import { Arr, Fun, Option, Options, Type } from '@ephox/katamari';
 import { Attr, Element } from '@ephox/sugar';
 import { UrlObject } from '../api/AddOnManager';
@@ -26,6 +26,8 @@ import WindowManager from '../api/WindowManager';
 import * as NodeType from '../dom/NodeType';
 import * as ErrorReporter from '../ErrorReporter';
 import * as Init from './Init';
+import { StyleSheetLoader } from '../api/dom/StyleSheetLoader';
+import * as StyleSheetLoaderRegistry from '../dom/StyleSheetLoaderRegistry';
 
 const DOM = DOMUtils.DOM;
 
@@ -166,6 +168,12 @@ const loadScripts = function (editor: Editor, suffix: string) {
   });
 };
 
+const getStyleSheetLoader = (element: Element<DomElement>, editorSettings: EditorSettings): StyleSheetLoader =>
+  StyleSheetLoaderRegistry.instance.forElement(element, {
+    contentCssCors: editorSettings.contentCssCors,
+    referrerPolicy: editorSettings.referrerPolicy
+  });
+
 const render = function (editor: Editor) {
   const settings = editor.settings, id = editor.id;
 
@@ -202,6 +210,8 @@ const render = function (editor: Editor) {
     );
     Attr.setAll(element, snapshot);
   });
+
+  editor.ui.styleSheetLoader = getStyleSheetLoader(element, settings);
 
   // Hide target element early to prevent content flashing
   if (!settings.inline) {

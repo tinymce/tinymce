@@ -1,7 +1,7 @@
 import { TestLogs } from '@ephox/agar';
 import { console, document, setTimeout } from '@ephox/dom-globals';
 import { Arr, Fun, Global, Id, Option } from '@ephox/katamari';
-import { Attr, Body, Element, Insert, Remove, SelectorFilter } from '@ephox/sugar';
+import { Attr, Body, Element, Insert, Remove, SelectorFilter, ShadowDom } from '@ephox/sugar';
 import { Editor } from '../alien/EditorTypes';
 
 export type SuccessCallback = (v?: any, logs?: TestLogs) => void;
@@ -68,9 +68,11 @@ const setup = (callbacks: Callbacks, settings: Record<string, any>, elementOpt: 
   } else {
     callbacks.preInit(tinymce, settings);
 
+    const targetSettings = ShadowDom.isInShadowRoot(target) ? ({ target: target.dom() }) : ({ selector: '#' + randomId });
+
     tinymce.init({
       ...settings,
-      selector: '#' + randomId,
+      ...targetSettings,
       setup(editor: Editor) {
         // Execute the setup called by the test.
         settingsSetup(editor);

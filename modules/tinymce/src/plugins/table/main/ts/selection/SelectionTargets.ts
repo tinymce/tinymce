@@ -1,29 +1,24 @@
+import { HTMLTableCaptionElement, HTMLTableCellElement } from '@ephox/dom-globals';
 import { Arr, Cell, Option, Thunk } from '@ephox/katamari';
-import { TableLookup } from '@ephox/snooker';
+import { RunOperation, TableLookup } from '@ephox/snooker';
 import { Element, Node } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import * as TableTargets from '../queries/TableTargets';
 import { Selections } from './Selections';
 import * as TableSelection from './TableSelection';
 
-export interface Targets {
-  element: () => Element;
-  mergable: () => Option<any>;
-  unmergable: () => Option<any>;
-  selection: () => Element[];
-}
-
 export type SelectionTargets = ReturnType<typeof getSelectionTargets>;
 
 export const getSelectionTargets = (editor: Editor, selections: Selections) => {
-  const targets = Cell<Option<Targets>>(Option.none());
+  const targets = Cell<Option<RunOperation.CombinedTargets>>(Option.none());
   const changeHandlers = Cell([]);
 
-  const findTargets = (): Option<Targets> => TableSelection.getSelectionStartCellOrCaption(editor).bind((cellOrCaption) => {
+  const findTargets = (): Option<RunOperation.CombinedTargets> => TableSelection.getSelectionStartCellOrCaption(editor).bind((cellOrCaption) => {
     const table = TableLookup.table(cellOrCaption);
+    const isCaption = (elem: Element<HTMLTableCaptionElement | HTMLTableCellElement>): elem is Element<HTMLTableCaptionElement> => Node.name(elem) === 'caption';
     return table.map((table) => {
-      if (Node.name(cellOrCaption) === 'caption') {
-        return TableTargets.notCell(cellOrCaption);
+      if (isCaption(cellOrCaption)) {
+        return TableTargets.noMenu(cellOrCaption);
       } else {
         return TableTargets.forMenu(selections, table, cellOrCaption);
       }
@@ -38,7 +33,7 @@ export const getSelectionTargets = (editor: Editor, selections: Selections) => {
     Arr.each(changeHandlers.get(), (handler) => handler());
   };
 
-  const onSetup = (api, isDisabled: (targets: Targets) => boolean) => {
+  const onSetup = (api, isDisabled: (targets: RunOperation.CombinedTargets) => boolean) => {
     const handler = () => targets.get().fold(() => {
       api.setDisabled(true);
     }, (targets) => {

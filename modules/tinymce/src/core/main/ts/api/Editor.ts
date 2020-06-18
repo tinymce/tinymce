@@ -47,6 +47,7 @@ import I18n, { TranslatedString, Untranslated } from './util/I18n';
 import Tools from './util/Tools';
 import URI from './util/URI';
 import WindowManager from './WindowManager';
+import { StyleSheetLoader } from './dom/StyleSheetLoader';
 
 /**
  * This class contains the core logic for a TinyMCE editor.
@@ -70,6 +71,8 @@ import WindowManager from './WindowManager';
 
 export interface Ui {
   registry: Registry.Registry;
+  /** StyleSheetLoader for styles in the editor UI. For content styles, use editor.dom.styleSheetLoader. */
+  styleSheetLoader: StyleSheetLoader;
 }
 
 export interface EditorConstructor {
@@ -325,7 +328,8 @@ class Editor implements EditorObservable {
     }
 
     this.ui = {
-      registry: registry()
+      registry: registry(),
+      styleSheetLoader: undefined
     };
 
     const self = this;
@@ -512,7 +516,7 @@ class Editor implements EditorObservable {
    * @param {addQueryValueHandlerCallback} callback Function to execute when the command value retrieval occurs.
    * @param {Object} scope Optional scope to execute the function in.
    */
-  public addQueryValueHandler(name: string, callback: () => void, scope?: {}) {
+  public addQueryValueHandler(name: string, callback: () => string, scope?: {}) {
     /**
      * Callback function that gets called when a queryCommandValue is executed.
      *

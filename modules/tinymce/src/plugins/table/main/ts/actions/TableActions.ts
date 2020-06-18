@@ -7,7 +7,7 @@
 
 import { Arr, Fun, Option } from '@ephox/katamari';
 import {
-  CellMutations, TableDirection, TableFill, TableGridSize, TableOperations
+  CellMutations, TableDirection, TableFill, TableGridSize, TableOperations, RunOperation, ResizeWire
 } from '@ephox/snooker';
 import { Element, Node } from '@ephox/sugar';
 
@@ -17,53 +17,52 @@ import { getCloneElements } from '../api/Settings';
 import { fireNewCell, fireNewRow } from '../api/Events';
 import Editor from 'tinymce/core/api/Editor';
 import { DomDescent } from '@ephox/phoenix';
+import { HTMLTableElement, Range } from '@ephox/dom-globals';
+
+type TableAction<T> = (table: Element<HTMLTableElement>, target: T) => Option<Range>;
+export type BasicTableAction = TableAction<RunOperation.CombinedTargets>;
+export type PasteTableAction = TableAction<RunOperation.TargetPaste>;
+export type AdvancedPasteTableAction = TableAction<RunOperation.TargetPasteRows>;
 
 export interface TableActions {
-  deleteRow: (table: any, target: any) => any;
-  deleteColumn: (table: any, target: any) => any;
-  insertRowsBefore: (table: any, target: any) => any;
-  insertRowsAfter: (table: any, target: any) => any;
-  insertColumnsBefore: (table: any, target: any) => any;
-  insertColumnsAfter: (table: any, target: any) => any;
-  mergeCells: (table: any, target: any) => any;
-  unmergeCells: (table: any, target: any) => any;
-  pasteColsBefore: (table: any, target: any) => any;
-  pasteColsAfter: (table: any, target: any) => any;
-  pasteRowsBefore: (table: any, target: any) => any;
-  pasteRowsAfter: (table: any, target: any) => any;
-  pasteCells: (table: any, target: any) => any;
+  deleteRow: BasicTableAction;
+  deleteColumn: BasicTableAction;
+  insertRowsBefore: BasicTableAction;
+  insertRowsAfter: BasicTableAction;
+  insertColumnsBefore: BasicTableAction;
+  insertColumnsAfter: BasicTableAction;
+  mergeCells: BasicTableAction;
+  unmergeCells: BasicTableAction;
+  pasteColsBefore: AdvancedPasteTableAction;
+  pasteColsAfter: AdvancedPasteTableAction;
+  pasteRowsBefore: AdvancedPasteTableAction;
+  pasteRowsAfter: AdvancedPasteTableAction;
+  pasteCells: PasteTableAction;
 }
 
-export const TableActions = function (editor: Editor, lazyWire) {
-  const isTableBody = function (editor: Editor) {
-    return Node.name(Util.getBody(editor)) === 'table';
-  };
+export const TableActions = (editor: Editor, lazyWire: () => ResizeWire): TableActions => {
+  const isTableBody = (editor: Editor) => Node.name(Util.getBody(editor)) === 'table';
 
-  const lastRowGuard = function (table) {
-    const size = TableGridSize.getGridSize(table);
-    return isTableBody(editor) === false || size.rows() > 1;
-  };
+  const lastRowGuard = (table: Element<HTMLTableElement>) => isTableBody(editor) === false || TableGridSize.getGridSize(table).rows() > 1;
 
-  const lastColumnGuard = function (table) {
-    const size = TableGridSize.getGridSize(table);
-    return isTableBody(editor) === false || size.columns() > 1;
-  };
+  const lastColumnGuard = (table: Element<HTMLTableElement>) =>
+    isTableBody(editor) === false || TableGridSize.getGridSize(table).columns() > 1;
 
   // Option.none gives the default cloneFormats.
   const cloneFormats = getCloneElements(editor);
 
-  const execute = function (operation, guard, mutate, lazyWire) {
-    return function (table, target) {
+  const execute = <T> (operation: RunOperation.OperationCallback<T>, guard, mutate, lazyWire) =>
+    (table: Element<HTMLTableElement>, target: T): Option<Range> => {
       Util.removeDataStyle(table);
       const wire = lazyWire();
       const doc = Element.fromDom(editor.getDoc());
       const direction = TableDirection(Direction.directionAt);
       const generators = TableFill.cellOperations(mutate, doc, cloneFormats);
-      return guard(table) ? operation(wire, table, target, generators, direction).bind(function (result) {
-        Arr.each(result.newRows(), function (row) {
+      return guard(table) ? operation(wire, table, target, generators, direction).bind((result) => {
+        Arr.each(result.newRows(), (row) => {
           fireNewRow(editor, row.dom());
         });
-        Arr.each(result.newCells(), function (cell) {
+        Arr.each(result.newCells(), (cell) => {
           fireNewCell(editor, cell.dom());
         });
         return result.cursor().map((cell) => {
@@ -75,7 +74,6 @@ export const TableActions = function (editor: Editor, lazyWire) {
         });
       }) : Option.none();
     };
-  };
 
   const deleteRow = execute(TableOperations.eraseRows, lastRowGuard, Fun.noop, lazyWire);
 

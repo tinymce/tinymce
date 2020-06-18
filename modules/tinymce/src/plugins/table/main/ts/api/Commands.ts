@@ -11,7 +11,7 @@ import { CopyCols, CopyRows, TableFill, TableLookup } from '@ephox/snooker';
 import { Element, Insert, Remove, Replication } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { insertTableWithDataValidation } from '../actions/InsertTable';
-import { TableActions } from '../actions/TableActions';
+import { TableActions, BasicTableAction, AdvancedPasteTableAction } from '../actions/TableActions';
 import * as Util from '../alien/Util';
 import { Clipboard } from '../core/Clipboard';
 import * as TableTargets from '../queries/TableTargets';
@@ -46,7 +46,7 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
 
   const getTableFromCell = (cell: Element): Option<Element> => TableLookup.table(cell, isRoot);
 
-  const actOnSelection = (execute) => TableSelection.getSelectionStartCell(editor).each((cell) => {
+  const actOnSelection = (execute: BasicTableAction): void => TableSelection.getSelectionStartCell(editor).each((cell) => {
     getTableFromCell(cell).each((table) => {
       const targets = TableTargets.forMenu(selections, table, cell);
       execute(table, targets).each((rng) => {
@@ -71,11 +71,11 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
       return CopyCols.copyCols(table, targets);
     }));
 
-  const pasteOnSelection = (execute, getRows: () => Option<Element<HTMLTableRowElement>[]>) =>
+  const pasteOnSelection = (execute: AdvancedPasteTableAction, getRows: () => Option<Element<HTMLTableRowElement>[]>) =>
     // If we have clipboard rows to paste
     getRows().each((rows) => {
       const clonedRows = Arr.map(rows, (row) => Replication.deep(row));
-      TableSelection.getSelectionStartCell(editor).each((cell) => {
+      TableSelection.getSelectionStartCell(editor).each((cell) =>
         getTableFromCell(cell).each((table) => {
           const generators = TableFill.paste(Element.fromDom(editor.getDoc()));
           const targets = TableTargets.pasteRows(selections, table, cell, clonedRows, generators);
@@ -84,8 +84,8 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
             editor.focus();
             cellSelection.clear(table);
           });
-        });
-      });
+        })
+      );
     });
 
   // Register action commands
