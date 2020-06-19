@@ -14,6 +14,7 @@ import Editor from 'tinymce/core/api/Editor';
 import { fireNewCell, fireNewRow } from '../api/Events';
 import { getCloneElements } from '../api/Settings';
 import * as Util from '../alien/Util';
+import * as Ephemera from '../selection/Ephemera';
 
 type TableAction<T> = (table: Element<HTMLTableElement>, target: T) => Option<Range>;
 export type BasicTableAction = TableAction<RunOperation.CombinedTargets>;
@@ -49,7 +50,7 @@ export const TableActions = (editor: Editor, lazyWire: () => ResizeWire): TableA
 
   const execute = <T> (operation: RunOperation.OperationCallback<T>, guard, mutate, lazyWire) =>
     (table: Element<HTMLTableElement>, target: T): Option<Range> => {
-      CssUtils.removeDataStyle(table);
+      CssUtils.removeDataStyle(table, Ephemera.styleAttribute);
       const wire = lazyWire();
       const doc = Element.fromDom(editor.getDoc());
       const direction = TableDirection(Direction.directionAt);

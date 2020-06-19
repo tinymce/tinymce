@@ -15,6 +15,7 @@ import * as Events from '../api/Events';
 import { hasObjectResizing, hasTableResizeBars, isPercentagesForced, isPixelsForced } from '../api/Settings';
 import { enforcePercentage, enforcePixels } from './EnforceUnit';
 import * as TableWire from './TableWire';
+import * as Ephemera from '../selection/Ephemera';
 
 export interface ResizeHandler {
   lazyResize: () => Option<TableResize>;
@@ -76,7 +77,7 @@ export const getResizeHandler = function (editor: Editor): ResizeHandler {
       sz.events.afterResize.bind(function (event) {
         const table = event.table();
         const rawTable = table.dom();
-        CssUtils.removeDataStyle(table);
+        CssUtils.removeDataStyle(table, Ephemera.styleAttribute);
 
         selectionRng.each(function (rng) {
           editor.selection.setRng(rng);

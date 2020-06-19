@@ -5,6 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+const strStyleAttribute = 'data-mce-style';
 const strSelected = 'data-mce-selected';
 const strSelectedSelector = 'td[' + strSelected + '],th[' + strSelected + ']';
 // used with not selectors
@@ -14,6 +15,7 @@ const strFirstSelectedSelector = 'td[' + strFirstSelected + '],th[' + strFirstSe
 const strLastSelected = 'data-mce-last-selected';
 const strLastSelectedSelector = 'td[' + strLastSelected + '],th[' + strLastSelected + ']';
 
+export const styleAttribute = strStyleAttribute;
 export const selected = strSelected;
 export const selectedSelector = strSelectedSelector;
 export const attributeSelector = strAttributeSelector;

@@ -7,10 +7,10 @@ const getPixelHeight = (elm: HTMLElement) => elm.getBoundingClientRect().height;
 
 const getIsRoot = (editorBody: Element<any>) => (element: Element<any>) => Compare.eq(element, editorBody);
 
-const removeDataStyle = (table: Element<HTMLTableElement>) => {
-  const dataStyleCells = SelectorFilter.descendants(table, 'td[data-mce-style],th[data-mce-style]');
-  Attr.remove(table, 'data-mce-style');
-  Arr.each(dataStyleCells, (cell) => Attr.remove(cell, 'data-mce-style'));
+const removeDataStyle = (table: Element<HTMLTableElement>, styleAttribute: string) => {
+  const dataStyleCells = SelectorFilter.descendants(table, `td[${styleAttribute}],th[${styleAttribute}]`);
+  Attr.remove(table, styleAttribute);
+  Arr.each(dataStyleCells, (cell) => Attr.remove(cell, styleAttribute));
 };
 
 export {

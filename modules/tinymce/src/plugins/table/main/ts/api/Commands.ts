@@ -5,13 +5,14 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLTableElement, HTMLTableRowElement, HTMLTableCellElement } from '@ephox/dom-globals';
+import { HTMLTableCellElement, HTMLTableElement, HTMLTableRowElement } from '@ephox/dom-globals';
 import { Arr, Fun, Obj, Option, Type } from '@ephox/katamari';
 import { CopyCols, CopyRows, CssUtils, Selections, TableFill, TableLookup, TableSelection, TableTargets } from '@ephox/snooker';
 import { Element, Insert, Remove, Replication } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { insertTableWithDataValidation } from '../actions/InsertTable';
 import { AdvancedPasteTableAction, BasicTableAction, TableActions } from '../actions/TableActions';
+import * as Util from '../alien/Util';
 import { Clipboard } from '../core/Clipboard';
 import { CellSelectionApi } from '../selection/CellSelection';
 import * as Ephemera from '../selection/Ephemera';
@@ -19,7 +20,6 @@ import * as CellDialog from '../ui/CellDialog';
 import { DomModifier } from '../ui/DomModifier';
 import * as RowDialog from '../ui/RowDialog';
 import * as TableDialog from '../ui/TableDialog';
-import * as Util from '../alien/Util';
 
 const registerCommands = (editor: Editor, actions: TableActions, cellSelection: CellSelectionApi, selections: Selections, clipboard: Clipboard) => {
   const isRoot = CssUtils.getIsRoot(Util.getBody(editor));
@@ -52,7 +52,7 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
         editor.selection.setRng(rng);
         editor.focus();
         cellSelection.clear(table);
-        CssUtils.removeDataStyle(table);
+        CssUtils.removeDataStyle(table, Ephemera.styleAttribute);
       });
     });
   });
