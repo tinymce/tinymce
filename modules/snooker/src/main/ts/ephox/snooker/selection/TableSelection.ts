@@ -1,11 +1,12 @@
-import { Element as DomElement, HTMLTableCellElement, HTMLTableRowElement, HTMLTableCaptionElement } from '@ephox/dom-globals';
-import { Arr, Option, Options } from '@ephox/katamari';
+import { Element as DomElement, HTMLTableCellElement, HTMLTableRowElement, HTMLTableCaptionElement, Node } from '@ephox/dom-globals';
+import { Arr, Options } from '@ephox/katamari';
 import { TableLookup } from '@ephox/snooker';
-import { Element } from '@ephox/sugar';
+import { Attr, Compare, Element, Elements, SelectorFind } from '@ephox/sugar';
 import { Selections } from './Selections';
 import CellOperations from '../queries/CellOperations';
 
-const getSelectionStartFromSelector = <T extends DomElement>(selector: string) => (editor: any) => Option.from(editor.dom.getParent(editor.selection.getStart(), selector)).map((n) => Element.fromDom(n) as Element<T>);
+const getSelectionStartFromSelector = <T extends DomElement>(selector: string) => (start: Element<Node>) =>
+  SelectorFind.closest<T>(start, selector);
 
 const getSelectionStartCaption = getSelectionStartFromSelector<HTMLTableCaptionElement>('caption');
 
@@ -13,22 +14,21 @@ const getSelectionStartCell = getSelectionStartFromSelector<HTMLTableCellElement
 
 const getSelectionStartCellOrCaption = getSelectionStartFromSelector<HTMLTableCellElement | HTMLTableCaptionElement>('th,td,caption');
 
-const getCellsFromSelection = (editor: any, selectedSelector: string): HTMLTableCellElement[] =>
-  getSelectionStartCell(editor)
-    .map((cell) => CellOperations.selection(cell, Selections(editor, selectedSelector)))
-    .map((cells) => Arr.map(cells, (cell) => cell.dom()))
+const getCellsFromSelection = (body: any, start: Element<Node>, selectedSelector: string): Element<HTMLTableCellElement>[] =>
+  getSelectionStartCell(start)
+    .map((cell) => CellOperations.selection(cell, Selections(body, () => start, selectedSelector)))
     .getOr([]);
 
-const getRowsFromSelection = (editor: any, selector: string): HTMLTableRowElement[] => {
-  const cellOpt = getSelectionStartCell(editor);
+const getRowsFromSelection = (start: Element<Node>, selector: string): Element<HTMLTableRowElement>[] => {
+  const cellOpt = getSelectionStartCell(start);
   const rowsOpt = cellOpt.bind((cell) => TableLookup.table(cell))
-    .map((table) => TableLookup.rows(table))
-    .map((rows) => Arr.map(rows, (row) => row.dom()));
-
+    .map((table) => TableLookup.rows(table));
   return Options.lift2(cellOpt, rowsOpt, (cell, rows) =>
-    Arr.filter(rows, (row) => Arr.exists(row.cells, (rowCell) => editor.dom.getAttrib(rowCell, selector) === '1' || rowCell === cell.dom()))
+    Arr.filter(rows, (row) =>
+      Arr.exists(Elements.fromDom(row.dom().cells), (rowCell) =>
+        Attr.get(rowCell, selector) === '1' || Compare.eq(rowCell, cell)
+      )
+    )
   ).getOr([]);
 };
-
 export { getSelectionStartCaption, getSelectionStartCell, getSelectionStartCellOrCaption, getCellsFromSelection, getRowsFromSelection };
-

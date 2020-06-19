@@ -7,9 +7,10 @@
 
 import { HTMLElement, HTMLTableDataCellElement, HTMLTableElement, HTMLTableHeaderCellElement, HTMLTableRowElement } from '@ephox/dom-globals';
 import { Arr, Fun, Type } from '@ephox/katamari';
-import { CssUtils, TableRender } from '@ephox/snooker';
+import { TableRender } from '@ephox/snooker';
 import { Attr, Css, Html, SelectorFilter, SelectorFind } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
+import * as Util from '../alien/Util';
 import { fireNewCell, fireNewRow } from '../api/Events';
 import { getDefaultAttributes, getDefaultStyles, isPixelsForced } from '../api/Settings';
 
@@ -48,7 +49,7 @@ const insert = (editor: Editor, columns: number, rows: number, colHeaders: numbe
   const html = Html.getOuter(table);
   editor.insertContent(html);
 
-  return SelectorFind.descendant<HTMLTableElement>(CssUtils.getBody(editor), 'table[data-mce-id="__mce"]').map((table) => {
+  return SelectorFind.descendant<HTMLTableElement>(Util.getBody(editor), 'table[data-mce-id="__mce"]').map((table) => {
     if (isPixelsForced(editor)) {
       Css.set(table, 'width', Css.get(table, 'width'));
     }

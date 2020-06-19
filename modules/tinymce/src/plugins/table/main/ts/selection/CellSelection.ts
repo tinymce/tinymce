@@ -17,6 +17,7 @@ import * as Events from '../api/Events';
 import { getCloneElements } from '../api/Settings';
 import * as Ephemera from './Ephemera';
 import { SelectionTargets } from './SelectionTargets';
+import * as Util from '../alien/Util';
 
 const hasInternalTarget = (e: Event) => Class.has(Element.fromDom(e.target as HTMLElement), 'ephox-snooker-resizer-bar') === false;
 
@@ -43,8 +44,8 @@ export default function (editor: Editor, lazyResize: () => Option<TableResize>, 
 
   editor.on('init', (_e) => {
     const win = editor.getWin();
-    const body = CssUtils.getBody(editor);
-    const isRoot = CssUtils.getIsRoot(editor);
+    const body = Util.getBody(editor);
+    const isRoot = CssUtils.getIsRoot(body);
 
     // When the selection changes through either the mouse or keyboard, and the selection is no longer within the table.
     // Remove the selection.
@@ -97,7 +98,7 @@ export default function (editor: Editor, lazyResize: () => Option<TableResize>, 
       lazyResize().each((resize) => resize.hideBars());
 
       const rng = editor.selection.getRng();
-      const startContainer = Element.fromDom(editor.selection.getStart());
+      const startContainer = Util.getSelectionStart(editor);
       const start = Element.fromDom(rng.startContainer);
       const end = Element.fromDom(rng.endContainer);
       const direction = Direction.directionAt(startContainer).isRtl() ? SelectionKeys.rtl : SelectionKeys.ltr;

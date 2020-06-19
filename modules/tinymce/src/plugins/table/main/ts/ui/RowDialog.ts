@@ -8,16 +8,16 @@
 import { Types } from '@ephox/bridge';
 import { HTMLElement } from '@ephox/dom-globals';
 import { Arr, Fun } from '@ephox/katamari';
+import { TableSelection } from '@ephox/snooker';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import * as Styles from '../actions/Styles';
 import * as Util from '../alien/Util';
 import { hasAdvancedRowTab } from '../api/Settings';
+import * as Ephemera from '../selection/Ephemera';
 import { DomModifier } from './DomModifier';
 import * as Helpers from './Helpers';
 import * as RowDialogGeneralTab from './RowDialogGeneralTab';
-import { TableSelection } from '@ephox/snooker';
-import * as Ephemera from '../selection/Ephemera';
 
 type RowData = Helpers.RowData;
 
@@ -99,7 +99,7 @@ const onSubmitRowForm = (editor: Editor, rows: HTMLElement[], oldData: RowData, 
 };
 
 const open = (editor: Editor) => {
-  const rows = TableSelection.getRowsFromSelection(editor, Ephemera.selected);
+  const rows = TableSelection.getRowsFromSelection(Util.getSelectionStart(editor), Ephemera.selected);
 
   // Check if there are any rows to operate on
   if (rows.length === 0) {
@@ -107,7 +107,7 @@ const open = (editor: Editor) => {
   }
 
   // Get current data and find shared values between rows
-  const rowsData: RowData[] = Arr.map(rows, (rowElm) => Helpers.extractDataFromRowElement(editor, rowElm, hasAdvancedRowTab(editor)));
+  const rowsData: RowData[] = Arr.map(rows, (rowElm) => Helpers.extractDataFromRowElement(editor, rowElm.dom(), hasAdvancedRowTab(editor)));
   const data = Helpers.getSharedValues<RowData>(rowsData);
 
   const dialogTabPanel: Types.Dialog.TabPanelApi = {
@@ -150,10 +150,9 @@ const open = (editor: Editor) => {
       }
     ],
     initialData: data,
-    onSubmit: Fun.curry(onSubmitRowForm, editor, rows, data)
+    onSubmit: Fun.curry(onSubmitRowForm, editor, Arr.map(rows, (r) => r.dom()), data)
   });
 };
 
-export {
-  open
-};
+export { open };
+

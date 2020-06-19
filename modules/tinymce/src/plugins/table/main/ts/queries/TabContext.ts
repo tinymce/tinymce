@@ -7,13 +7,12 @@
 
 import { KeyboardEvent } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
-import { CellNavigation, TableLookup, TableTargets, CssUtils } from '@ephox/snooker';
-import {
-  Compare, CursorPosition, Element, Node, Selection, SelectorFilter, SelectorFind, WindowSelection
-} from '@ephox/sugar';
+import { CellNavigation, TableLookup, TableTargets } from '@ephox/snooker';
+import { Compare, CursorPosition, Element, Node, Selection, SelectorFilter, SelectorFind, WindowSelection } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import VK from 'tinymce/core/api/util/VK';
 import { TableActions } from '../actions/TableActions';
+import * as Util from '../alien/Util';
 
 const forward = function (editor: Editor, isRoot, cell, lazyWire) {
   return go(editor, isRoot, CellNavigation.next(cell), lazyWire);
@@ -57,7 +56,7 @@ const rootElements = [ 'table', 'li', 'dl' ];
 
 const handle = function (event: KeyboardEvent, editor: Editor, actions: TableActions, lazyWire) {
   if (event.keyCode === VK.TAB) {
-    const body = CssUtils.getBody(editor);
+    const body = Util.getBody(editor);
     const isRoot = function (element) {
       const name = Node.name(element);
       return Compare.eq(element, body) || Arr.contains(rootElements, name);
@@ -78,6 +77,4 @@ const handle = function (event: KeyboardEvent, editor: Editor, actions: TableAct
   }
 };
 
-export {
-  handle
-};
+export { handle };

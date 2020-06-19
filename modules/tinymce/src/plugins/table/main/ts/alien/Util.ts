@@ -5,15 +5,20 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-const removePxSuffix = function (size: string) {
-  return size ? size.replace(/px$/, '') : '';
-};
+import Editor from 'tinymce/core/api/Editor';
+import { Element } from '@ephox/sugar';
 
-const addSizeSuffix = function (size: string) {
+const removePxSuffix = (size: string) => size ? size.replace(/px$/, '') : '';
+
+const addSizeSuffix = (size: string) => {
   if (/^[0-9]+$/.test(size)) {
     size += 'px';
   }
   return size;
 };
 
-export { addSizeSuffix, removePxSuffix };
+const getBody = (editor: Editor) => Element.fromDom(editor.getBody());
+const getSelectionStart = (editor) => Element.fromDom(editor.selection.getStart());
+const getThunkedSelectionStart = (editor) => () => Element.fromDom(editor.selection.getStart());
+
+export { addSizeSuffix, removePxSuffix, getBody, getSelectionStart, getThunkedSelectionStart };

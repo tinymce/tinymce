@@ -19,10 +19,11 @@ import * as CellDialog from '../ui/CellDialog';
 import { DomModifier } from '../ui/DomModifier';
 import * as RowDialog from '../ui/RowDialog';
 import * as TableDialog from '../ui/TableDialog';
+import * as Util from '../alien/Util';
 
 const registerCommands = (editor: Editor, actions: TableActions, cellSelection: CellSelectionApi, selections: Selections, clipboard: Clipboard) => {
-  const isRoot = CssUtils.getIsRoot(editor);
-  const eraseTable = () => TableSelection.getSelectionStartCellOrCaption(editor).each((cellOrCaption) => {
+  const isRoot = CssUtils.getIsRoot(Util.getBody(editor));
+  const eraseTable = () => TableSelection.getSelectionStartCellOrCaption(Util.getSelectionStart(editor)).each((cellOrCaption) => {
     TableLookup.table(cellOrCaption, isRoot).filter(Fun.not(isRoot)).each((table) => {
       const cursor = Element.fromText('');
       Insert.after(table, cursor);
@@ -44,7 +45,7 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
   const getTableFromCell = (cell: Element): Option<Element> => TableLookup.table(cell, isRoot);
   const getTargetsForMenu = (table: Element<HTMLTableElement>, cell: Element<HTMLTableCellElement>) => TableTargets.forMenu(selections, table, cell, Ephemera.firstSelectedSelector, Ephemera.lastSelectedSelector);
 
-  const actOnSelection = (execute: BasicTableAction): void => TableSelection.getSelectionStartCell(editor).each((cell) => {
+  const actOnSelection = (execute: BasicTableAction): void => TableSelection.getSelectionStartCell(Util.getSelectionStart(editor)).each((cell) => {
     getTableFromCell(cell).each((table) => {
       const targets = getTargetsForMenu(table, cell);
       execute(table, targets).each((rng) => {
@@ -56,14 +57,14 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
     });
   });
 
-  const copyRowSelection = () => TableSelection.getSelectionStartCell(editor).map((cell) =>
+  const copyRowSelection = () => TableSelection.getSelectionStartCell(Util.getSelectionStart(editor)).map((cell) =>
     getTableFromCell(cell).bind((table) => {
       const targets = getTargetsForMenu(table, cell);
       const generators = TableFill.cellOperations(Fun.noop, Element.fromDom(editor.getDoc()), Option.none());
       return CopyRows.copyRows(table, targets, generators);
     }));
 
-  const copyColSelection = () => TableSelection.getSelectionStartCell(editor).map((cell) =>
+  const copyColSelection = () => TableSelection.getSelectionStartCell(Util.getSelectionStart(editor)).map((cell) =>
     getTableFromCell(cell).bind((table) => {
       const targets = getTargetsForMenu(table, cell);
       return CopyCols.copyCols(table, targets);
@@ -73,7 +74,7 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
     // If we have clipboard rows to paste
     getRows().each((rows) => {
       const clonedRows = Arr.map(rows, (row) => Replication.deep(row));
-      TableSelection.getSelectionStartCell(editor).each((cell) =>
+      TableSelection.getSelectionStartCell(Util.getSelectionStart(editor)).each((cell) =>
         getTableFromCell(cell).each((table) => {
           const generators = TableFill.paste(Element.fromDom(editor.getDoc()));
           const targets = TableTargets.pasteRows(selections, table, cell, clonedRows, generators);
@@ -138,7 +139,7 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
       return;
     }
 
-    const cells = TableSelection.getCellsFromSelection(editor, Ephemera.selectedSelector);
+    const cells = TableSelection.getCellsFromSelection(editor.getBody(), Util.getSelectionStart(editor), Ephemera.selectedSelector);
     if (cells.length === 0) {
       return;
     }
@@ -147,7 +148,7 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
       const formatName = 'tablecell' + style.toLowerCase().replace('-', '');
       if (editor.formatter.has(formatName) && Type.isString(value)) {
         Arr.each(cells, (cell) => {
-          DomModifier.normal(editor, cell).setFormat(formatName, value);
+          DomModifier.normal(editor, cell.dom()).setFormat(formatName, value);
         });
       }
     });

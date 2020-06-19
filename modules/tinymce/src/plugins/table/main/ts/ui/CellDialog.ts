@@ -8,15 +8,15 @@
 import { Types } from '@ephox/bridge';
 import { HTMLTableCellElement } from '@ephox/dom-globals';
 import { Arr, Fun } from '@ephox/katamari';
+import { TableSelection } from '@ephox/snooker';
 import Editor from 'tinymce/core/api/Editor';
 import * as Styles from '../actions/Styles';
 import * as Util from '../alien/Util';
 import { hasAdvancedCellTab } from '../api/Settings';
+import * as Ephemera from '../selection/Ephemera';
 import * as CellDialogGeneralTab from './CellDialogGeneralTab';
 import { DomModifier } from './DomModifier';
 import * as Helpers from './Helpers';
-import { TableSelection } from '@ephox/snooker';
-import * as Ephemera from '../selection/Ephemera';
 
 type CellData = Helpers.CellData;
 
@@ -90,7 +90,7 @@ const onSubmitCellForm = (editor: Editor, cells: HTMLTableCellElement[], api) =>
 };
 
 const open = (editor: Editor) => {
-  const cells = TableSelection.getCellsFromSelection(editor, Ephemera.selectedSelector);
+  const cells = TableSelection.getCellsFromSelection(editor.getBody(), Util.getSelectionStart(editor), Ephemera.selectedSelector);
 
   // Check if there are any cells to operate on
   if (cells.length === 0) {
@@ -99,7 +99,7 @@ const open = (editor: Editor) => {
 
   // Get current data and find shared values between cells
   const cellsData: CellData[] = Arr.map(cells,
-    (cellElm) => Helpers.extractDataFromCellElement(editor, cellElm, hasAdvancedCellTab(editor))
+    (cellElm) => Helpers.extractDataFromCellElement(editor, cellElm.dom(), hasAdvancedCellTab(editor))
   );
   const data = Helpers.getSharedValues<CellData>(cellsData);
 
@@ -142,10 +142,9 @@ const open = (editor: Editor) => {
       }
     ],
     initialData: data,
-    onSubmit: Fun.curry(onSubmitCellForm, editor, cells)
+    onSubmit: Fun.curry(onSubmitCellForm, editor, Arr.map(cells, (c) => c.dom()))
   });
 };
 
-export {
-  open
-};
+export { open };
+

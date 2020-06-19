@@ -5,9 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { CssUtils, ResizeWire } from '@ephox/snooker';
+import { ResizeWire } from '@ephox/snooker';
 import { Body, Css, Element, Insert, Remove } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
+import * as Util from '../alien/Util';
 
 const createContainer = () => {
   const container = Element.fromTag('div');
@@ -27,7 +28,7 @@ const createContainer = () => {
 };
 
 const get = (editor: Editor, _container?) =>
-  editor.inline ? ResizeWire.body(CssUtils.getBody(editor), createContainer()) : ResizeWire.only(Element.fromDom(editor.getDoc()));
+  editor.inline ? ResizeWire.body(Util.getBody(editor), createContainer()) : ResizeWire.only(Element.fromDom(editor.getDoc()));
 
 const remove = (editor: Editor, wire) => {
   if (editor.inline) {
@@ -36,3 +37,4 @@ const remove = (editor: Editor, wire) => {
 };
 
 export { get, remove };
+

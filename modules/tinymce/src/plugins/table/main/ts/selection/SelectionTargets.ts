@@ -4,6 +4,7 @@ import { RunOperation, TableLookup, Selections, TableSelection, TableTargets } f
 import { Element, Node } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import * as Ephemera from './Ephemera';
+import * as Util from '../alien/Util';
 
 export type SelectionTargets = ReturnType<typeof getSelectionTargets>;
 
@@ -11,17 +12,18 @@ export const getSelectionTargets = (editor: Editor, selections: Selections) => {
   const targets = Cell<Option<RunOperation.CombinedTargets>>(Option.none());
   const changeHandlers = Cell([]);
 
-  const findTargets = (): Option<RunOperation.CombinedTargets> => TableSelection.getSelectionStartCellOrCaption(editor).bind((cellOrCaption) => {
-    const table = TableLookup.table(cellOrCaption);
-    const isCaption = (elem: Element<HTMLTableCaptionElement | HTMLTableCellElement>): elem is Element<HTMLTableCaptionElement> => Node.name(elem) === 'caption';
-    return table.map((table) => {
-      if (isCaption(cellOrCaption)) {
-        return TableTargets.noMenu(cellOrCaption);
-      } else {
-        return TableTargets.forMenu(selections, table, cellOrCaption, Ephemera.firstSelectedSelector, Ephemera.lastSelectedSelector);
-      }
+  const findTargets = (): Option<RunOperation.CombinedTargets> => TableSelection.getSelectionStartCellOrCaption(Util.getSelectionStart(editor))
+    .bind((cellOrCaption) => {
+      const table = TableLookup.table(cellOrCaption);
+      const isCaption = (elem: Element<HTMLTableCaptionElement | HTMLTableCellElement>): elem is Element<HTMLTableCaptionElement> => Node.name(elem) === 'caption';
+      return table.map((table) => {
+        if (isCaption(cellOrCaption)) {
+          return TableTargets.noMenu(cellOrCaption);
+        } else {
+          return TableTargets.forMenu(selections, table, cellOrCaption, Ephemera.firstSelectedSelector, Ephemera.lastSelectedSelector);
+        }
+      });
     });
-  });
 
   const resetTargets = () => {
     // Reset the targets

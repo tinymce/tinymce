@@ -6,26 +6,27 @@
  */
 
 import { KeyboardEvent } from '@ephox/dom-globals';
+import { Selections } from '@ephox/snooker';
 import Editor from 'tinymce/core/api/Editor';
 import PluginManager from 'tinymce/core/api/PluginManager';
 import * as Clipboard from './actions/Clipboard';
 import { getResizeHandler } from './actions/ResizeHandler';
 import { TableActions } from './actions/TableActions';
+import * as Util from './alien/Util';
 import { getApi } from './api/Api';
 import * as Commands from './api/Commands';
 import { hasTabNavigation } from './api/Settings';
 import { Clipboard as FakeClipboard } from './core/Clipboard';
+import * as TableFormats from './core/TableFormats';
 import * as TabContext from './queries/TabContext';
 import CellSelection from './selection/CellSelection';
 import * as Ephemera from './selection/Ephemera';
 import { getSelectionTargets } from './selection/SelectionTargets';
 import * as Buttons from './ui/Buttons';
 import * as MenuItems from './ui/MenuItems';
-import * as TableFormats from './core/TableFormats';
-import { Selections } from '@ephox/snooker';
 
 function Plugin(editor: Editor) {
-  const selections = Selections(editor, Ephemera.selectedSelector);
+  const selections = Selections(Util.getBody(editor), Util.getThunkedSelectionStart(editor), Ephemera.selectedSelector);
   const selectionTargets = getSelectionTargets(editor, selections);
   const resizeHandler = getResizeHandler(editor);
   const cellSelection = CellSelection(editor, resizeHandler.lazyResize, selectionTargets);

@@ -13,6 +13,7 @@ import { Element, Node } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { fireNewCell, fireNewRow } from '../api/Events';
 import { getCloneElements } from '../api/Settings';
+import * as Util from '../alien/Util';
 
 type TableAction<T> = (table: Element<HTMLTableElement>, target: T) => Option<Range>;
 export type BasicTableAction = TableAction<RunOperation.CombinedTargets>;
@@ -36,7 +37,7 @@ export interface TableActions {
 }
 
 export const TableActions = (editor: Editor, lazyWire: () => ResizeWire): TableActions => {
-  const isTableBody = (editor: Editor) => Node.name(CssUtils.getBody(editor)) === 'table';
+  const isTableBody = (editor: Editor) => Node.name(Util.getBody(editor)) === 'table';
 
   const lastRowGuard = (table: Element<HTMLTableElement>) => isTableBody(editor) === false || TableGridSize.getGridSize(table).rows() > 1;
 
