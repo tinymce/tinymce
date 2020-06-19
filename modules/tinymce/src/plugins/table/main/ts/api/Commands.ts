@@ -7,7 +7,7 @@
 
 import { HTMLTableCellElement, HTMLTableElement, HTMLTableRowElement } from '@ephox/dom-globals';
 import { Arr, Fun, Obj, Option, Type } from '@ephox/katamari';
-import { CopyCols, CopyRows, CssUtils, Selections, TableFill, TableLookup, TableSelection, TableTargets } from '@ephox/snooker';
+import { CopyCols, CopyRows, Selections, TableFill, TableLookup, TableSelection, TableTargets } from '@ephox/snooker';
 import { Element, Insert, Remove, Replication } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { insertTableWithDataValidation } from '../actions/InsertTable';
@@ -22,7 +22,7 @@ import * as RowDialog from '../ui/RowDialog';
 import * as TableDialog from '../ui/TableDialog';
 
 const registerCommands = (editor: Editor, actions: TableActions, cellSelection: CellSelectionApi, selections: Selections, clipboard: Clipboard) => {
-  const isRoot = CssUtils.getIsRoot(Util.getBody(editor));
+  const isRoot = Util.getIsRoot(editor);
   const eraseTable = () => TableSelection.getSelectionStartCellOrCaption(Util.getSelectionStart(editor)).each((cellOrCaption) => {
     TableLookup.table(cellOrCaption, isRoot).filter(Fun.not(isRoot)).each((table) => {
       const cursor = Element.fromText('');
@@ -43,7 +43,8 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
   });
 
   const getTableFromCell = (cell: Element): Option<Element> => TableLookup.table(cell, isRoot);
-  const getTargetsForMenu = (table: Element<HTMLTableElement>, cell: Element<HTMLTableCellElement>) => TableTargets.forMenu(selections, table, cell, Ephemera.firstSelectedSelector, Ephemera.lastSelectedSelector);
+  const selectors = { firstSelectedSelector: Ephemera.firstSelectedSelector, lastSelectedSelector: Ephemera.lastSelectedSelector };
+  const getTargetsForMenu = (table: Element<HTMLTableElement>, cell: Element<HTMLTableCellElement>) => TableTargets.forMenu(selections, table, cell, selectors);
 
   const actOnSelection = (execute: BasicTableAction): void => TableSelection.getSelectionStartCell(Util.getSelectionStart(editor)).each((cell) => {
     getTableFromCell(cell).each((table) => {
@@ -52,7 +53,7 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
         editor.selection.setRng(rng);
         editor.focus();
         cellSelection.clear(table);
-        CssUtils.removeDataStyle(table, Ephemera.styleAttribute);
+        Util.removeDataStyle(table);
       });
     });
   });
@@ -139,7 +140,7 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
       return;
     }
 
-    const cells = TableSelection.getCellsFromSelection(editor.getBody(), Util.getSelectionStart(editor), Ephemera.selectedSelector);
+    const cells = TableSelection.getCellsFromSelection(Util.getBody(editor), Util.getSelectionStart(editor), Ephemera.selectedSelector);
     if (cells.length === 0) {
       return;
     }

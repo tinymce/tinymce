@@ -6,12 +6,12 @@ export interface SelectionType {
   fold: <T>(
     none: () => T,
     multiple: (elements: Element<DomElement>[]) => T,
-    single: (elements: Element<DomElement>) => T,
+    single: (element: Element<DomElement>) => T,
   ) => T;
   match: <T> (branches: {
     none: () => T;
     multiple: (elements: Element<DomElement>[]) => T;
-    single: (elements: Element<DomElement>) => T;
+    single: (element: Element<DomElement>) => T;
   }) => T;
   log: (label: string) => void;
 }
@@ -19,14 +19,14 @@ export interface SelectionType {
 const type = Adt.generate<{
   none: () => SelectionType;
   multiple: (elements: Element<DomElement>[]) => SelectionType;
-  single: (elements: Element<DomElement>) => SelectionType;
+  single: (element: Element<DomElement>) => SelectionType;
 }>([
       { none: [] },
       { multiple: [ 'elements' ] },
-      { single: [ 'selection' ] }
+      { single: [ 'element' ] }
     ]);
 
-const cata = <T> (subject: SelectionType, onNone: () => T, onMultiple: (multiple: Element<DomElement>[]) => T, onSingle: (elements: Element<DomElement>) => T) =>
+const cata = <T> (subject: SelectionType, onNone: () => T, onMultiple: (multiple: Element<DomElement>[]) => T, onSingle: (element: Element<DomElement>) => T) =>
   subject.fold(onNone, onMultiple, onSingle);
 
 // tslint:disable-next-line:variable-name

@@ -24,9 +24,8 @@ import * as OtherCells from './OtherCells';
 import * as TableSelection from '../selection/TableSelection';
 import { Selections } from '../selection/Selections';
 import { SelectionTypes } from '../selection/SelectionTypes';
-import * as CssUtils from '../util/CssUtils';
 import * as TableTargets from '../queries/TableTargets';
-import Direction from '../queries/Direction';
+import * as Direction from '../queries/Direction';
 
 export {
   CellLocation,
@@ -35,7 +34,6 @@ export {
   CopyCols,
   CopyRows,
   CopySelected,
-  CssUtils,
   Direction,
   Generators,
   ResizeDirection,

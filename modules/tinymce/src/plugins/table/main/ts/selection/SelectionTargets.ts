@@ -20,7 +20,8 @@ export const getSelectionTargets = (editor: Editor, selections: Selections) => {
         if (isCaption(cellOrCaption)) {
           return TableTargets.noMenu(cellOrCaption);
         } else {
-          return TableTargets.forMenu(selections, table, cellOrCaption, Ephemera.firstSelectedSelector, Ephemera.lastSelectedSelector);
+          const selectors = { firstSelectedSelector: Ephemera.firstSelectedSelector, lastSelectedSelector: Ephemera.lastSelectedSelector };
+          return TableTargets.forMenu(selections, table, cellOrCaption, selectors);
         }
       });
     });

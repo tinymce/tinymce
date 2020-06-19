@@ -7,9 +7,10 @@
 
 import { Element as DomElement, HTMLTableCaptionElement, HTMLTableCellElement, HTMLTableElement, HTMLTableRowElement } from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
-import { RunOperation, Selections } from '@ephox/snooker';
 import { Element } from '@ephox/sugar';
-import CellOperations from './CellOperations';
+import * as RunOperation from '../model/RunOperation';
+import { Selections } from '../selection/Selections';
+import * as CellOperations from './CellOperations';
 
 const noMenu = (cell: Element<HTMLTableCellElement | HTMLTableCaptionElement>): RunOperation.CombinedTargets => ({
   element: Fun.constant(cell),
@@ -18,11 +19,17 @@ const noMenu = (cell: Element<HTMLTableCellElement | HTMLTableCaptionElement>): 
   selection: Fun.constant([ cell ])
 });
 
-const forMenu = (selections: Selections, table: Element<HTMLTableElement>, cell: Element<HTMLTableCellElement>, firstSelectedSelector: string, lastSelectedSelector: string): RunOperation.CombinedTargets => ({
+// TODO: if we switch Ephemera to exporting an object, probably don't need this
+export interface ForMenuSelectors {
+  firstSelectedSelector: string;
+  lastSelectedSelector: string;
+}
+
+const forMenu = (selections: Selections, table: Element<HTMLTableElement>, cell: Element<HTMLTableCellElement>, selectors: ForMenuSelectors): RunOperation.CombinedTargets => ({
   element: Fun.constant(cell),
-  mergable: Fun.constant(CellOperations.mergable(table, selections, firstSelectedSelector, lastSelectedSelector)),
-  unmergable: Fun.constant(CellOperations.unmergable(cell, selections)),
-  selection: Fun.constant(CellOperations.selection(cell, selections))
+  mergable: Fun.constant(CellOperations.mergable(table, selections, selectors.firstSelectedSelector, selectors.lastSelectedSelector)),
+  unmergable: Fun.constant(CellOperations.unmergable(selections)),
+  selection: Fun.constant(CellOperations.selection(selections))
 });
 
 const paste = (element: Element<DomElement>, clipboard: Element<HTMLTableElement>, generators: any): RunOperation.TargetPaste => ({
@@ -32,9 +39,10 @@ const paste = (element: Element<DomElement>, clipboard: Element<HTMLTableElement
 });
 
 const pasteRows = (selections: Selections, _table: Element<HTMLTableElement>, cell: Element<HTMLTableCellElement>, clipboard: Element<HTMLTableRowElement>[], generators: any): RunOperation.TargetPasteRows => ({
-  selection: Fun.constant(CellOperations.selection(cell, selections)),
+  selection: Fun.constant(CellOperations.selection(selections)),
   clipboard: Fun.constant(clipboard),
   generators: Fun.constant(generators)
 });
 
 export { noMenu, forMenu, paste, pasteRows };
+

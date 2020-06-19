@@ -90,7 +90,7 @@ const onSubmitCellForm = (editor: Editor, cells: HTMLTableCellElement[], api) =>
 };
 
 const open = (editor: Editor) => {
-  const cells = TableSelection.getCellsFromSelection(editor.getBody(), Util.getSelectionStart(editor), Ephemera.selectedSelector);
+  const cells = TableSelection.getCellsFromSelection(Util.getBody(editor), Util.getSelectionStart(editor), Ephemera.selectedSelector);
 
   // Check if there are any cells to operate on
   if (cells.length === 0) {

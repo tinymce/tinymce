@@ -1,9 +1,9 @@
 import { Element as DomElement, HTMLTableCellElement, HTMLTableRowElement, HTMLTableCaptionElement, Node } from '@ephox/dom-globals';
 import { Arr, Options } from '@ephox/katamari';
-import { TableLookup } from '@ephox/snooker';
 import { Attr, Compare, Element, Elements, SelectorFind } from '@ephox/sugar';
 import { Selections } from './Selections';
-import CellOperations from '../queries/CellOperations';
+import * as CellOperations from '../queries/CellOperations';
+import * as TableLookup from '../api/TableLookup';
 
 const getSelectionStartFromSelector = <T extends DomElement>(selector: string) => (start: Element<Node>) =>
   SelectorFind.closest<T>(start, selector);
@@ -14,9 +14,9 @@ const getSelectionStartCell = getSelectionStartFromSelector<HTMLTableCellElement
 
 const getSelectionStartCellOrCaption = getSelectionStartFromSelector<HTMLTableCellElement | HTMLTableCaptionElement>('th,td,caption');
 
-const getCellsFromSelection = (body: any, start: Element<Node>, selectedSelector: string): Element<HTMLTableCellElement>[] =>
+const getCellsFromSelection = (root: Element<DomElement>, start: Element<Node>, selectedSelector: string): Element<HTMLTableCellElement>[] =>
   getSelectionStartCell(start)
-    .map((cell) => CellOperations.selection(cell, Selections(body, () => start, selectedSelector)))
+    .map((_cell) => CellOperations.selection(Selections(root, () => start, selectedSelector)))
     .getOr([]);
 
 const getRowsFromSelection = (start: Element<Node>, selector: string): Element<HTMLTableRowElement>[] => {
@@ -31,4 +31,5 @@ const getRowsFromSelection = (start: Element<Node>, selector: string): Element<H
     )
   ).getOr([]);
 };
+
 export { getSelectionStartCaption, getSelectionStartCell, getSelectionStartCellOrCaption, getCellsFromSelection, getRowsFromSelection };
