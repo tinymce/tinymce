@@ -3,7 +3,7 @@ import { document, StyleSheet } from '@ephox/dom-globals';
 import { TinyLoader, Editor as McEditor } from '@ephox/mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
-import { ShadowDom, Element, Insert, Body, Remove } from '@ephox/sugar';
+import { ShadowDom, Element, Insert, Body, Remove, SelectorFilter } from '@ephox/sugar';
 import { UnitTest, Assert } from '@ephox/bedrock-client';
 import { Arr, Strings } from '@ephox/katamari';
 
@@ -78,4 +78,32 @@ UnitTest.asynctest('Only one skin stylesheet should be loaded for multiple edito
     })
   ]);
   Pipeline.async({}, [ Chain.asStep({}, [ nc ]) ], () => success(), failure);
+});
+
+UnitTest.asynctest('aux div should be within shadow root', (success, failure) => {
+
+  if (!ShadowDom.isSupported()) {
+    return success();
+  }
+
+  Theme();
+
+  const shadowHost = Element.fromTag('div', document);
+  Insert.append(Body.body(), shadowHost);
+  const sr = Element.fromDom(shadowHost.dom().attachShadow({ mode: 'open' }));
+  const editorDiv = Element.fromTag('div', document);
+  Insert.append(sr, editorDiv);
+
+  TinyLoader.setupFromElement((editor: Editor, onSuccess, onFailure) => {
+    Pipeline.async({}, [
+      Step.sync(() => {
+        Assert.eq('Should be no aux divs in the document', 0, SelectorFilter.descendants(Body.body(), '.tox-tinymce-aux').length);
+        Assert.eq('Should be 1 aux div in the shadow root', 1, SelectorFilter.descendants(sr, '.tox-tinymce-aux').length);
+        Remove.remove(shadowHost);
+      })
+    ], onSuccess, onFailure);
+  }, {
+    toolbar_sticky: false,
+    base_url: '/project/tinymce/js/tinymce'
+  }, editorDiv, success, failure);
 });
