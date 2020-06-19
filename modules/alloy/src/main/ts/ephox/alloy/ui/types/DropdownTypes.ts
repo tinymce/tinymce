@@ -6,7 +6,7 @@ import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
-import { AnchorSpec, AnchorOverrides, HasLayoutAnchor, HasLayoutAnchorSpec } from '../../positioning/mode/Anchoring';
+import { AnchorOverrides, AnchorSpec, HasLayoutAnchor, HasLayoutAnchorSpec } from '../../positioning/mode/Anchoring';
 import { TieredData, TieredMenuSpec } from './TieredMenuTypes';
 
 // F is the fetched data
@@ -31,6 +31,7 @@ export interface CommonDropdownDetail<F> extends CompositeSketchDetail, HasLayou
 }
 
 export interface DropdownDetail extends CommonDropdownDetail<TieredData>, CompositeSketchDetail {
+  dom: RawDomSchema;
   dropdownBehaviours: SketchBehaviours;
   onExecute: (sandbox: AlloyComponent, item: AlloyComponent, value: any) => void;
   toggleClass: string;
