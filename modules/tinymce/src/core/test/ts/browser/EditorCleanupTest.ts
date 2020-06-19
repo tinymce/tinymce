@@ -38,7 +38,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorCleanupTest', (success, failure) 
 
     Log.chainsAsStep('TINY-4001', 'Editor should replace existing attributes on teardown', [
       cTestCleanup({ }, '<div classname="these are some classes"></div>'),
-      cTestCleanup({ }, '<div style="position: absolute"></div>'),
+      cTestCleanup({ }, '<div style="position: absolute;"></div>'),
       cTestCleanup({ }, '<div data-someattribute="7"></div>'),
       cTestCleanup({ }, '<textarea name="foo"></textarea>')
     ]),
