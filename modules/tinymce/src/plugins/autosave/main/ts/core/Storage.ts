@@ -11,15 +11,22 @@ import LocalStorage from 'tinymce/core/api/util/LocalStorage';
 import Tools from 'tinymce/core/api/util/Tools';
 import * as Events from '../api/Events';
 import * as Settings from '../api/Settings';
+import { Type } from '@ephox/katamari';
+import { DOMParser } from '@ephox/dom-globals';
 
 const isEmpty = (editor: Editor, html?: string) => {
-  const forcedRootBlockName = editor.settings.forced_root_block;
+  if (Type.isUndefined(html)) {
+    return editor.dom.isEmpty(editor.getBody());
+  } else {
+    const trimmedHtml = Tools.trim(html);
 
-  html = Tools.trim(typeof html === 'undefined' ? editor.getBody().innerHTML : html);
-
-  return html === '' || new RegExp(
-    '^<' + forcedRootBlockName + '[^>]*>((\u00a0|&nbsp;|[ \t]|<br[^>]*>)+?|)<\/' + forcedRootBlockName + '>|<br>$', 'i'
-  ).test(html);
+    if (trimmedHtml === '') {
+      return true;
+    } else {
+      const fragment = new DOMParser().parseFromString(trimmedHtml, 'text/html');
+      return editor.dom.isEmpty(fragment);
+    }
+  }
 };
 
 const hasDraft = (editor: Editor) => {
