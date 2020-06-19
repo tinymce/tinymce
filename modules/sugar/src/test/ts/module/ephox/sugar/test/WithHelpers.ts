@@ -11,6 +11,7 @@ import * as Insert from 'ephox/sugar/api/dom/Insert';
 import * as Body from 'ephox/sugar/api/node/Body';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
 import * as Attr from 'ephox/sugar/api/properties/Attr';
+import { ShadowDom } from '@ephox/sugar';
 
 export const withNormalElement = (f: (d: Element<DomElement>) => void): void => {
   const div = Element.fromTag('div');
@@ -21,24 +22,25 @@ export const withNormalElement = (f: (d: Element<DomElement>) => void): void => 
 };
 
 const withShadowElementInMode = (mode: 'open' | 'closed', f: (sr: Element<ShadowRoot>, innerDiv: Element<HTMLElement>, shadowHost: Element<HTMLElement>) => void) => {
-  const shadowHost: Element<HTMLElement> = Element.fromTag('div', document);
-  Attr.set(shadowHost, 'data-blah', 'shadow-host');
+  if (ShadowDom.isSupported()) {
+    const shadowHost: Element<HTMLElement> = Element.fromTag('div', document);
+    Attr.set(shadowHost, 'data-blah', 'shadow-host');
 
-  Insert.append(Body.body(), shadowHost);
-  const sr: Element<ShadowRoot> = Element.fromDom(shadowHost.dom().attachShadow({ mode }));
-  const innerDiv: Element<HTMLElement> = Element.fromTag('div', document);
-  Attr.set(innerDiv, 'data-blah', 'div-in-shadow-root');
+    Insert.append(Body.body(), shadowHost);
+    const sr: Element<ShadowRoot> = Element.fromDom(shadowHost.dom().attachShadow({ mode }));
+    const innerDiv: Element<HTMLElement> = Element.fromTag('div', document);
+    Attr.set(innerDiv, 'data-blah', 'div-in-shadow-root');
 
-  Insert.append(sr, innerDiv);
-  f(sr, innerDiv, shadowHost);
-  Remove.remove(shadowHost);
+    Insert.append(sr, innerDiv);
+    f(sr, innerDiv, shadowHost);
+    Remove.remove(shadowHost);
+  }
 };
 
 export const withShadowElement = (f: (shadowRoot: Element<ShadowRoot>, innerDiv: Element<HTMLElement>, shadowHost: Element<HTMLElement>) => void): void => {
   withShadowElementInMode('open', f);
   withShadowElementInMode('closed', f);
 };
-
 
 export const withIframe = (f: (div: Element<DomElement>, iframe: Element<HTMLIFrameElement>, cw: Window) => void): void => {
   const iframe = Element.fromTag('iframe');
