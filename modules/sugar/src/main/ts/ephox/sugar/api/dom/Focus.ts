@@ -14,7 +14,7 @@ const hasFocus = (element: Element<DomNode>) => {
   return element.dom() === doc.activeElement;
 };
 
-const active = (_dos?: Element<Document | ShadowRoot>) => {
+const active = (_dos?: Element<Document | ShadowRoot>): Option<Element<HTMLElement>> => {
   const dos = _dos !== undefined ? _dos.dom() : document;
   // Note: assuming that activeElement will always be a HTMLElement (maybe we should add a runtime check?)
   return Option.from(dos.activeElement as HTMLElement).map(Element.fromDom);
