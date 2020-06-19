@@ -72,7 +72,7 @@ const setupInShadowRoot = (callback: Loader.RunCallback, settings: Record<string
   );
 };
 
-/** Runs the callback in the body, and then in a shadow root. Lets you test both scenarios. */
+/** Runs the callback with an editor in the body, and then with an editor in a shadow root. Lets you test both scenarios. */
 const setupInBodyAndShadowRoot = (callback: Loader.RunCallback, settings: Record<string, any>, success: Loader.SuccessCallback, failure: Loader.FailureCallback) => {
   setup(
     callback,
