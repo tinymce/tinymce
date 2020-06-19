@@ -8,12 +8,14 @@
 import { Attachment, Channels, Gui, SystemEvents } from '@ephox/alloy';
 import { MouseEvent, Node as DomNode, UIEvent } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
-import { DomEvent, Element, EventArgs, ShadowDom } from '@ephox/sugar';
+import { Document, DomEvent, Element, EventArgs, ShadowDom } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 
 const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMothership: Gui.GuiSystem) => {
 
-  const root = ShadowDom.getRootNode(Element.fromDom(editor.getElement()));
+  const el = Element.fromDom(editor.getElement());
+  const root = ShadowDom.getRootNode(el);
+  const doc = Document.getDocument();
 
   const broadcastEvent = (name: string, evt: EventArgs) => {
     Arr.each([ mothership, uiMothership ], (ship) => {
@@ -29,17 +31,30 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMothership: Gui.GuiS
 
   const fireDismissPopups = (evt: EventArgs) => broadcastOn(Channels.dismissPopups(), { target: evt.target() });
 
-  // Document touch events
-  const onTouchstart = DomEvent.bind(root, 'touchstart', fireDismissPopups);
-  const onTouchmove = DomEvent.bind(root, 'touchmove', (evt) => broadcastEvent(SystemEvents.documentTouchmove(), evt));
-  const onTouchend = DomEvent.bind(root, 'touchend', (evt) => broadcastEvent(SystemEvents.documentTouchend(), evt));
+  const roots = ShadowDom.isInShadowRoot(el) ? [ root, doc ] : [ doc ];
 
-  // Document mouse events
-  const onMousedown = DomEvent.bind(root, 'mousedown', fireDismissPopups);
-  const onMouseup = DomEvent.bind(root, 'mouseup', (evt) => {
-    if (evt.raw().button === 0) {
-      broadcastOn(Channels.mouseReleased(), { target: evt.target() });
-    }
+  const docEvents = Arr.bind(roots, (r) => {
+
+    // Document touch events
+    const onTouchstart = DomEvent.bind(r, 'touchstart', fireDismissPopups);
+    const onTouchmove = DomEvent.bind(r, 'touchmove', (evt) => broadcastEvent(SystemEvents.documentTouchmove(), evt));
+    const onTouchend = DomEvent.bind(r, 'touchend', (evt) => broadcastEvent(SystemEvents.documentTouchend(), evt));
+
+    // Document mouse events
+    const onMousedown = DomEvent.bind(r, 'mousedown', fireDismissPopups);
+    const onMouseup = DomEvent.bind(r, 'mouseup', (evt) => {
+      if (evt.raw().button === 0) {
+        broadcastOn(Channels.mouseReleased(), { target: evt.target() });
+      }
+    });
+
+    return [
+      onTouchstart,
+      onTouchmove,
+      onTouchend,
+      onMousedown,
+      onMouseup
+    ];
   });
 
   // Editor content events
@@ -78,11 +93,9 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMothership: Gui.GuiS
     editor.off('ResizeWindow', onWindowResize);
     editor.off('ResizeEditor', onEditorResize);
 
-    onMousedown.unbind();
-    onTouchstart.unbind();
-    onTouchmove.unbind();
-    onTouchend.unbind();
-    onMouseup.unbind();
+    Arr.each(docEvents, (e) => {
+      e.unbind();
+    });
   });
 
   editor.on('detach', () => {
