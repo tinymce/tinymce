@@ -1,5 +1,5 @@
 import { Option, Strings, Type } from '@ephox/katamari';
-import { Element, Insert, Body, Remove } from '@ephox/sugar';
+import { Element, Insert, Body, Remove, ShadowDom } from '@ephox/sugar';
 import 'tinymce';
 import * as Loader from '../loader/Loader';
 import { setTinymceBaseUrl } from '../loader/Urls';
@@ -48,6 +48,10 @@ const setupFromElement = (callback: Loader.RunCallback, settings: Record<string,
 };
 
 const setupInShadowRoot = (callback: Loader.RunCallback, settings: Record<string, any>, success: Loader.SuccessCallback, failure: Loader.FailureCallback) => {
+  if (!ShadowDom.isSupported()) {
+    return success();
+  }
+
   const shadowHost: Element<HTMLElement> = Element.fromTag('div', document);
 
   Insert.append(Body.body(), shadowHost);
