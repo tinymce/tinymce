@@ -1,13 +1,13 @@
 import { Assertions, Logger, Pipeline, Step, Waiter } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
+import { TinyLoader } from '@ephox/mcagar';
 import * as Preview from 'tinymce/core/fmt/Preview';
 import Theme from 'tinymce/themes/silver/Theme';
 import * as HtmlUtils from '../../module/test/HtmlUtils';
 
 UnitTest.test('Preview.parseSelector()', () => {
-  LegacyUnit.deepEqual(Preview.parseSelector('li.class1.class2#id1[attr1="1"]:disabled'), [
+  Assert.eq('li.class1.class2#id1 ok', [
     {
       name: 'li',
       selector: 'li.class1.class2#id1[attr1="1"]:disabled',
@@ -18,9 +18,9 @@ UnitTest.test('Preview.parseSelector()', () => {
         disabled: 'disabled'
       }
     }
-  ], 'li.class1.class2#id1 ok');
+  ], Preview.parseSelector('li.class1.class2#id1[attr1="1"]:disabled'));
 
-  LegacyUnit.deepEqual(Preview.parseSelector('ul.parent1 > li.class1.class2#id1'), [
+  Assert.eq('ul.parent1 > li.class1.class2#id1 ok', [
     {
       name: 'li',
       selector: 'li.class1.class2#id1',
@@ -35,9 +35,9 @@ UnitTest.test('Preview.parseSelector()', () => {
       classes: [ 'parent1' ],
       attrs: {}
     }
-  ], 'ul.parent1 > li.class1.class2#id1 ok');
+  ], Preview.parseSelector('ul.parent1 > li.class1.class2#id1'));
 
-  LegacyUnit.deepEqual(Preview.parseSelector('div.class1 > ol.class2 + ul > li:hover'), [
+  Assert.eq('div.class1 > ol.class2 + ul > li:hover ok', [
     {
       name: 'li',
       selector: 'li:hover',
@@ -64,9 +64,9 @@ UnitTest.test('Preview.parseSelector()', () => {
       classes: [ 'class1' ],
       attrs: {}
     }
-  ], 'div.class1 > ol.class2 + ul > li:hover ok');
+  ], Preview.parseSelector('div.class1 > ol.class2 + ul > li:hover'));
 
-  LegacyUnit.deepEqual(Preview.parseSelector('.class > *'), [
+  Assert.eq('.class > * ok', [
     {
       name: 'div',
       selector: '*',
@@ -79,9 +79,9 @@ UnitTest.test('Preview.parseSelector()', () => {
       classes: [ 'class' ],
       attrs: {}
     }
-  ], '.class > * ok');
+  ], Preview.parseSelector('.class > *'));
 
-  LegacyUnit.deepEqual(Preview.parseSelector('p + *'), [
+  Assert.eq('p + * ok', [
     {
       name: 'div',
       selector: '*',
@@ -96,16 +96,16 @@ UnitTest.test('Preview.parseSelector()', () => {
         }
       ]
     }
-  ], 'p + * ok');
+  ], Preview.parseSelector('p + *'));
 
-  LegacyUnit.deepEqual(Preview.parseSelector('*.test'), [
+  Assert.eq('*.test ok', [
     {
       name: '*',
       selector: '*.test',
       attrs: {},
       classes: [ 'test' ]
     }
-  ], '*.test ok');
+  ], Preview.parseSelector('*.test'));
 });
 
 UnitTest.test('Preview.selectorToHtml()', () => {
@@ -117,15 +117,15 @@ UnitTest.test('Preview.selectorToHtml()', () => {
     return HtmlUtils.normalizeHtml(Preview.selectorToHtml(selector).outerHTML);
   };
 
-  LegacyUnit.equal(selectorToHtml('ul > li.class1'), trimSpaces([
+  Assert.eq('ul > li.class1 ok', trimSpaces([
     '<div>',
     '<ul>',
     '<li class="class1"></li>',
     '</ul>',
     '</div>'
-  ].join('')), 'ul > li.class1 ok');
+  ].join('')), selectorToHtml('ul > li.class1'));
 
-  LegacyUnit.equal(selectorToHtml('ol + ul#id1 > li.class1[title="Some Title"]'), trimSpaces([
+  Assert.eq('ol + ul#id1 > li.class1[title="Some Title"] ok', trimSpaces([
     '<div>',
     '<div>',
     '<ol></ol>',
@@ -134,9 +134,9 @@ UnitTest.test('Preview.selectorToHtml()', () => {
     '</ul>',
     '</div>',
     '</div>'
-  ].join('')), 'ol + ul#id1 > li.class1[title="Some Title"] ok');
+  ].join('')), selectorToHtml('ol + ul#id1 > li.class1[title="Some Title"]'));
 
-  LegacyUnit.equal(selectorToHtml('tr > th + td'), trimSpaces([
+  Assert.eq('tr > th + td (required parental structure properly rebuilt) ok', trimSpaces([
     '<div>',
     '<table>',
     '<tbody>',
@@ -147,9 +147,9 @@ UnitTest.test('Preview.selectorToHtml()', () => {
     '</tbody>',
     '</table>',
     '</div>'
-  ].join('')), 'tr > th + td (required parental structure properly rebuilt) ok');
+  ].join('')), selectorToHtml('tr > th + td'));
 
-  LegacyUnit.equal(selectorToHtml('p li[title="Some Title"][alt="Some Alt"]'), trimSpaces([
+  Assert.eq('p li[title="Some Title"][alt="Some Alt"] (test multiple spaced attributes) ok', trimSpaces([
     '<div>',
     '<p>',
     '<ul>',
@@ -157,14 +157,14 @@ UnitTest.test('Preview.selectorToHtml()', () => {
     '</ul>',
     '</p>',
     '</div>'
-  ].join('')), 'p li[title="Some Title"][alt="Some Alt"] (test multiple spaced attributes) ok');
+  ].join('')), selectorToHtml('p li[title="Some Title"][alt="Some Alt"]'));
 });
 
 UnitTest.asynctest('Preview.getCssText', function (success, failure) {
   Theme();
 
   const ok = function (value: boolean, label: string) {
-    return LegacyUnit.equal(value, true, label);
+    return Assert.eq(label, true, value);
   };
 
   const previewStyles = function () {
@@ -198,10 +198,10 @@ UnitTest.asynctest('Preview.getCssText', function (success, failure) {
       ok(!/font-weight:(bold|700)/.test(getCssText({ inline: 'b', preview: 'font-size' })),
         'Bold should not be when we only preview font-size');
 
-      ok(/color:rgb\(255, 0, 0\)/.test(getCssText({ inline: 'custom', styles: { color: '#ff0000' } })),
+      ok(/color:rgb\(255, 0, 0\)/.test(getCssText({ inline: 'custom', styles: { color: '#ff0000' }})),
         'Test preview of a custom element.');
 
-      ok(/color:rgb\(255, 0, 0\)/.test(getCssText({ inline: 'invalid', styles: { color: '#ff0000' } })),
+      ok(/color:rgb\(255, 0, 0\)/.test(getCssText({ inline: 'invalid', styles: { color: '#ff0000' }})),
         `Test preview of an invalid element shouldn't crash the editor .`);
 
       ok(/color:rgb\(0, 255, 0\)/.test(getCssText({ selector: 'tr', classes: [ 'preview' ] })),
