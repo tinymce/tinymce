@@ -43,7 +43,6 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, _ra
     const makeSketch = () => Menu.sketch({
       ...spec,
       value: name,
-      items: spec.items,
       markers: detail.markers,
 
       // Fake focus.
