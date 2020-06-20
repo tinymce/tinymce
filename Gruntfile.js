@@ -1,7 +1,6 @@
 // Tests either run in PhantomJs or real browsers
 const runsInPhantom = [
   '@ephox/alloy',
-  '@ephox/mcagar',
   '@ephox/katamari',
   '@ephox/katamari-test',
   '@ephox/imagetools',
