@@ -126,14 +126,12 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssGroupsTest', (suc
             {
               title: 'Advanced',
               filter: /.adv/,
-              selector_converter: (selector, group) => {
-                return {
-                  title: selector + '.AdvGroup',
-                  // NOTE: This is required so that it isn't disabled.
-                  selector: 'p',
-                  classes: selector.split('.')[1]
-                };
-              }
+              selector_converter: (selector, group) => ({
+                title: selector + '.AdvGroup',
+                // NOTE: This is required so that it isn't disabled.
+                selector: 'p',
+                classes: selector.split('.')[1]
+              })
             },
             {
               title: 'Other',
