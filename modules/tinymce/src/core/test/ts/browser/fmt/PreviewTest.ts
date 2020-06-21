@@ -6,7 +6,7 @@ import * as Preview from 'tinymce/core/fmt/Preview';
 import Theme from 'tinymce/themes/silver/Theme';
 import * as HtmlUtils from '../../module/test/HtmlUtils';
 
-UnitTest.test('Preview.parseSelector()', () => {
+UnitTest.test('browser.tinymce.core.fmt.PreviewTest: Preview.parseSelector', () => {
   Assert.eq('li.class1.class2#id1 ok', [
     {
       name: 'li',
@@ -108,7 +108,7 @@ UnitTest.test('Preview.parseSelector()', () => {
   ], Preview.parseSelector('*.test'));
 });
 
-UnitTest.test('Preview.selectorToHtml()', () => {
+UnitTest.test('browser.tinymce.core.fmt.PreviewTest: Preview.selectorToHtml', () => {
   const trimSpaces = function (str) {
     return str.replace(/>\s+</g, '><').replace(/^\s*|\s*$/g, '');
   };
@@ -160,7 +160,7 @@ UnitTest.test('Preview.selectorToHtml()', () => {
   ].join('')), selectorToHtml('p li[title="Some Title"][alt="Some Alt"]'));
 });
 
-UnitTest.asynctest('Preview.getCssText', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.fmt.PreviewTest: Preview.getCssText', function (success, failure) {
   Theme();
 
   const ok = function (value: boolean, label: string) {
