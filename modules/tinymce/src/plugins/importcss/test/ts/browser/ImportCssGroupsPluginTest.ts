@@ -1,6 +1,5 @@
 import { GeneralSteps, Log, Pipeline, Step, Keys, Keyboard, Assertions } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { console, document } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { TinyLoader, TinyUi } from '@ephox/mcagar';
 import { Element, ShadowDom } from '@ephox/sugar';
@@ -128,8 +127,6 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssGroupsTest', (suc
               title: 'Advanced',
               filter: /.adv/,
               selector_converter: (selector, group) => {
-                // tslint:disable-next-line:no-console
-                console.log('selector', selector, 'group', group);
                 return {
                   title: selector + '.AdvGroup',
                   // NOTE: This is required so that it isn't disabled.
