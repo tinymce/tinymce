@@ -53,6 +53,8 @@ UnitTest.test('Focus.activeElement in ShadowRoot', () => {
     Focus.focus(outerInput);
     Assert.eq('ShadowRoot\'s active element should be none', Focus.active(sr), Option.none(), tOption(tElement()));
     Assert.eq('Document\'s active element is the outer input box', Focus.active(), Option.some(outerInput), tOption(tElement()));
+
+    Remove.remove(outerInput);
   });
 });
 
@@ -75,5 +77,7 @@ UnitTest.test('Focus.search in ShadowRoot', () => {
     Assert.eq('Searching from shadow root should yield none', Focus.search(sr), Option.none(), tOption(tElement()));
     Assert.eq('Searching from shadow host should yield none', Focus.search(sh), Option.none(), tOption(tElement()));
     Assert.eq('Searching from body should yield outer input box', Focus.search(Body.body()), Option.some(outerInput), tOption(tElement()));
+
+    Remove.remove(outerInput);
   });
 });
