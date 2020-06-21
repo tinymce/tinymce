@@ -3,7 +3,7 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { console, document } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { TinyLoader, TinyUi } from '@ephox/mcagar';
-import { Element } from '@ephox/sugar';
+import { Element, ShadowDom } from '@ephox/sugar';
 import Plugin from 'tinymce/plugins/importcss/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
@@ -15,8 +15,8 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssGroupsTest', (suc
   Theme();
 
   const sTestEditorWithSettings = (assertions, pluginSettings) => Step.async((onStepSuccess, onStepFailure) => {
-    TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-      const doc = Element.fromDom(document);
+    TinyLoader.setupInBodyAndShadowRoot((editor, onSuccess, onFailure) => {
+      const dos = ShadowDom.getRootNode(Element.fromDom(editor.getElement()));
 
       const tinyUi = TinyUi(editor);
 
@@ -24,7 +24,7 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssGroupsTest', (suc
         tinyUi.sClickOnToolbar('Clicking on the styleselect dropdown', 'button')
       ]);
 
-      const navigationSteps = MenuNavigationTestUtils.generateNavigation(doc, assertions.navigation);
+      const navigationSteps = MenuNavigationTestUtils.generateNavigation(dos, assertions.navigation);
 
       Pipeline.async({}, Arr.flatten([
         [
@@ -38,8 +38,8 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssGroupsTest', (suc
         ],
         [ sOpenStyleMenu ],
         navigationSteps,
-        Arr.map(assertions.choice.keysBeforeExecute, (k) => Keyboard.sKeydown(doc, k, { })),
-        [ Keyboard.sKeydown(doc, Keys.enter(), { }) ],
+        Arr.map(assertions.choice.keysBeforeExecute, (k) => Keyboard.sKeydown(dos, k, { })),
+        [ Keyboard.sKeydown(dos, Keys.enter(), { }) ],
         [
           Assertions.sAssertPresence(
             `${assertions.choice.presence} should now be present`,
