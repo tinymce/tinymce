@@ -4,19 +4,20 @@ import AdvlistPlugin from 'tinymce/plugins/advlist/Plugin';
 import ListsPlugin from 'tinymce/plugins/lists/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Body } from '@ephox/sugar';
+import { Element, ShadowDom } from '@ephox/sugar';
 
 UnitTest.asynctest('browser.tinymce.plugins.advlist.ChangeListStyleTest', function (success, failure) {
   Theme();
   ListsPlugin();
   AdvlistPlugin();
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupInBodyAndShadowRoot((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
     const tinyUi = TinyUi(editor);
+    const contentContainer = ShadowDom.getContentContainer(ShadowDom.getRootNode(Element.fromDom(editor.getElement())));
     const sWaitForMenu = () => Waiter.sTryUntil(
       'Waiting for menu to appear',
-      UiFinder.sExists(Body.body(), '.tox-menu.tox-selected-menu')
+      UiFinder.sExists(contentContainer, '.tox-menu.tox-selected-menu')
     );
 
     Pipeline.async({}, [
@@ -89,6 +90,8 @@ UnitTest.asynctest('browser.tinymce.plugins.advlist.ChangeListStyleTest', functi
     indent: false,
     plugins: 'lists advlist',
     toolbar: 'numlist bullist',
+    menubar: false,
+    statusbar: false,
     base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });
