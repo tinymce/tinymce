@@ -17,7 +17,7 @@ interface KeyLoggerState {
 const setupIn = (
   root: RootNode,
   createComponent: (store: TestStore, doc: Element, body: Element) => AlloyComponent,
-  f: (doc: Element, body: Element, gui: Gui.GuiSystem, component: AlloyComponent, store: TestStore
+  f: (doc: RootNode, body: Element, gui: Gui.GuiSystem, component: AlloyComponent, store: TestStore
   ) => Array<Step<any, any>>, success: () => void, failure: (err: any, logs?: TestLogs) => void
 ) => {
   const store = TestStore();
@@ -30,14 +30,19 @@ const setupIn = (
   const component = createComponent(store, root, contentContainer);
   gui.add(component);
 
-  Pipeline.async({}, f(root, contentContainer, gui, component, store), () => {
-    Attachment.detachSystem(gui);
-    success();
-  }, (e, logs) => {
-    // tslint:disable-next-line
-    // console.error(e);
-    failure(e, logs);
-  }, TestLogs.init());
+  try {
+    const steps = f(root, contentContainer, gui, component, store);
+    Pipeline.async({}, steps, () => {
+      Attachment.detachSystem(gui);
+      success();
+    }, (e, logs) => {
+      // tslint:disable-next-line
+      // console.error(e);
+      failure(e, logs);
+    }, TestLogs.init());
+  } catch (e) {
+    failure(e);
+  }
 };
 
 /**
@@ -49,7 +54,7 @@ const setupIn = (
  * @param success
  * @param failure
  */
-const setupInBody = (
+const setup = (
   createComponent: (store: TestStore, doc: Element, body: Element) => AlloyComponent,
   f: (doc: Element, body: Element, gui: Gui.GuiSystem, component: AlloyComponent, store: TestStore) => Array<Step<any, any>>,
   success: () => void,
@@ -84,13 +89,13 @@ const setupInShadowRoot = (
   }, failure);
 };
 
-const setup = (
+const setupInBodyAndShadowRoot = (
   createComponent: (store: TestStore, doc: Element, body: Element) => AlloyComponent,
   f: (doc: Element, body: Element, gui: Gui.GuiSystem, component: AlloyComponent, store: TestStore) => Array<Step<any, any>>,
   success: () => void,
   failure: (err: any, logs?: TestLogs) => void
 ): void => {
-  setupInBody(createComponent, f, () => {
+  setup(createComponent, f, () => {
     setupInShadowRoot(createComponent, f, success, failure);
   }, failure);
 };
@@ -149,7 +154,7 @@ const mRemoveStyles = Step.stateful((value: any, next, _die) => {
 export {
   setup,
   setupInShadowRoot,
-  setupInBody,
+  setupInBodyAndShadowRoot,
   guiSetup,
   mSetupKeyLogger,
   mTeardownKeyLogger,
