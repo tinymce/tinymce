@@ -6,7 +6,7 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
-import { Type, Option } from '@ephox/katamari';
+import { Type, Option, Arr } from '@ephox/katamari';
 
 export interface StringMap {
   [key: string]: string;
@@ -44,6 +44,17 @@ const isPercentagesForced = (editor: Editor): boolean => editor.getParam('table_
 const isPixelsForced = (editor: Editor): boolean => editor.getParam('table_responsive_width') === false;
 const getToolbar = (editor: Editor): string => editor.getParam('table_toolbar', defaultTableToolbar);
 
+
+const getTableHeaderRowType = (editor: Editor): string => {
+  const value = editor.getParam('table_header_row_type', 'auto', 'string');
+  const validValues = [ 'thead', 'ths', 'both', 'auto' ];
+  if (!Arr.contains(validValues, value)) {
+    return 'auto';
+  } else {
+    return value;
+  }
+};
+
 const getCloneElements = (editor: Editor): Option<string[]> => {
   const cloneElements = editor.getParam('table_clone_elements');
 
@@ -80,5 +91,6 @@ export {
   hasObjectResizing,
   isPercentagesForced,
   isPixelsForced,
-  getToolbar
+  getToolbar,
+  getTableHeaderRowType
 };

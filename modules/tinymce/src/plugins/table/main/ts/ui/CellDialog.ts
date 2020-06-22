@@ -51,7 +51,7 @@ const applyCellData = (editor: Editor, cells: HTMLTableCellElement[], data: Cell
 
   Arr.each(cells, (cell) => {
     // Switch cell type if applicable
-    const cellElm = data.celltype && cell.nodeName.toLowerCase() !== data.celltype ? (dom.rename(cell, data.celltype) as HTMLTableCellElement) : cell;
+    const cellElm = data.celltype && Util.getNodeName(cell).toLowerCase() !== data.celltype ? (dom.rename(cell, data.celltype) as HTMLTableCellElement) : cell;
     const modifier = isSingleCell ? DomModifier.normal(editor, cellElm) : DomModifier.ifTruthy(editor, cellElm);
 
     updateSimpleProps(modifier, data);

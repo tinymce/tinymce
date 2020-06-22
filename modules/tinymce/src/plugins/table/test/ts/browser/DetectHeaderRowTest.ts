@@ -1,10 +1,10 @@
-import { Assertions, Chain, Pipeline, UiFinder, Log } from '@ephox/agar';
+import { Assertions, Chain, Log, Pipeline, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
+import { detectHeaderRow, getRowType } from 'tinymce/plugins/table/core/TableRowSectionTypes';
 import Plugin from 'tinymce/plugins/table/Plugin';
-import * as Helpers from 'tinymce/plugins/table/ui/Helpers';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.plugins.table.DetectHeaderRowTest', (success, failure) => {
@@ -26,7 +26,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DetectHeaderRowTest', (success
         Chain.asStep(Element.fromDom(editor.getBody()), [
           UiFinder.cFindIn('tr'),
           Chain.op((tr) => {
-            const rowData = Helpers.getRowType(editor, tr.dom());
+            const rowData = getRowType(editor, tr.dom());
             Assertions.assertEq('Detect as part of the tbody', 'tbody', rowData);
           })
         ])
@@ -42,7 +42,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DetectHeaderRowTest', (success
         Chain.asStep(Element.fromDom(editor.getBody()), [
           UiFinder.cFindIn('tr'),
           Chain.op((tr) => {
-            Helpers.detectHeaderRow(editor, tr.dom()).fold(
+            detectHeaderRow(editor, tr.dom()).fold(
               () => Assertions.assertEq('Row incorrectly detected as not a header row', true, false), // would call failure() but want logs
               (rowData) => {
                 Assertions.assertEq('Detect as part of the tbody', false, rowData.thead);
@@ -64,7 +64,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DetectHeaderRowTest', (success
         Chain.asStep(Element.fromDom(editor.getBody()), [
           UiFinder.cFindIn('tr'),
           Chain.op((tr) => {
-            const rowData = Helpers.detectHeaderRow(editor, tr.dom()).getOrDie();
+            const rowData = detectHeaderRow(editor, tr.dom()).getOrDie();
             Assertions.assertEq('Detect as part of the tbody', false, rowData.thead);
             Assertions.assertEq('Detect as all ths', true, rowData.ths);
           })
@@ -82,7 +82,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DetectHeaderRowTest', (success
         Chain.asStep(Element.fromDom(editor.getBody()), [
           UiFinder.cFindIn('tr'),
           Chain.op((tr) => {
-            const rowData = Helpers.getRowType(editor, tr.dom());
+            const rowData = getRowType(editor, tr.dom());
             Assertions.assertEq('Detect as part of the tbody', 'tbody', rowData);
           })
         ])
@@ -101,7 +101,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DetectHeaderRowTest', (success
         Chain.asStep(Element.fromDom(editor.getBody()), [
           UiFinder.cFindIn('tr.foo'),
           Chain.op((tr) => {
-            const rowData = Helpers.detectHeaderRow(editor, tr.dom()).getOrDie();
+            const rowData = detectHeaderRow(editor, tr.dom()).getOrDie();
             Assertions.assertEq('Detect as part of the thead', true, rowData.thead);
             Assertions.assertEq('Detect as td', false, rowData.ths);
           })
@@ -121,7 +121,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DetectHeaderRowTest', (success
         Chain.asStep(Element.fromDom(editor.getBody()), [
           UiFinder.cFindIn('tr.foo'),
           Chain.op((tr) => {
-            const rowData = Helpers.detectHeaderRow(editor, tr.dom()).getOrDie();
+            const rowData = detectHeaderRow(editor, tr.dom()).getOrDie();
             Assertions.assertEq('Detect as part of the thead', true, rowData.thead);
             Assertions.assertEq('Detect as all th', true, rowData.ths);
           })
@@ -142,7 +142,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DetectHeaderRowTest', (success
         Chain.asStep(Element.fromDom(editor.getBody()), [
           UiFinder.cFindIn('tr.foo'),
           Chain.op((tr) => {
-            const rowData = Helpers.detectHeaderRow(editor, tr.dom()).getOrDie();
+            const rowData = detectHeaderRow(editor, tr.dom()).getOrDie();
             Assertions.assertEq('Detect as part of the thead', true, rowData.thead);
             Assertions.assertEq('Detect as all th', true, rowData.ths);
           })
@@ -163,7 +163,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DetectHeaderRowTest', (success
         Chain.asStep(Element.fromDom(editor.getBody()), [
           UiFinder.cFindIn('tr.foo'),
           Chain.op((tr) => {
-            const rowData = Helpers.detectHeaderRow(editor, tr.dom()).getOrDie();
+            const rowData = detectHeaderRow(editor, tr.dom()).getOrDie();
             Assertions.assertEq('Detect as part of the thead', true, rowData.thead);
             Assertions.assertEq('Detect as not all th', false, rowData.ths);
           })
