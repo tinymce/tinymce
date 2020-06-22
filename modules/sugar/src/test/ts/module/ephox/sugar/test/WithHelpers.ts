@@ -1,5 +1,12 @@
 import Element from 'ephox/sugar/api/node/Element';
-import { document, Element as DomElement, HTMLIFrameElement, ShadowRoot, Window } from '@ephox/dom-globals';
+import {
+  document,
+  Element as DomElement,
+  HTMLElement,
+  HTMLIFrameElement,
+  ShadowRoot,
+  Window
+} from '@ephox/dom-globals';
 import * as Insert from 'ephox/sugar/api/dom/Insert';
 import * as Body from 'ephox/sugar/api/node/Body';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
@@ -12,7 +19,7 @@ export const withNormalElement = (f: (d: Element<DomElement>) => void): void => 
   Remove.remove(div);
 };
 
-const withShadowElementInMode = (mode: 'open' | 'closed', f: (sr: Element<ShadowRoot>, innerDiv: Element<DomElement>, shadowHost: Element<DomElement>) => void) => {
+const withShadowElementInMode = (mode: 'open' | 'closed', f: (sr: Element<ShadowRoot>, innerDiv: Element<HTMLElement>, shadowHost: Element<HTMLElement>) => void) => {
   const shadowHost = Element.fromTag('div', document);
   Insert.append(Body.body(), shadowHost);
   const sr = Element.fromDom(shadowHost.dom().attachShadow({ mode }));
@@ -23,13 +30,13 @@ const withShadowElementInMode = (mode: 'open' | 'closed', f: (sr: Element<Shadow
   Remove.remove(shadowHost);
 };
 
-export const withShadowElement = (f: (shadowRoot: Element<ShadowRoot>, innerDiv: Element<DomElement>, shadowHost: Element<DomElement>) => void): void => {
+export const withShadowElement = (f: (shadowRoot: Element<ShadowRoot>, innerDiv: Element<HTMLElement>, shadowHost: Element<HTMLElement>) => void): void => {
   withShadowElementInMode('open', f);
   withShadowElementInMode('closed', f);
 };
 
 
-export const withIframe = (f: (div: Element<DomElement>, iframe: Element<HTMLIFrameElement>, cw: Window) => void): void => {
+export const withIframe = (f: (div: Element<HTMLElement>, iframe: Element<HTMLIFrameElement>, cw: Window) => void): void => {
   const iframe = Element.fromTag('iframe');
   Insert.append(Body.body(), iframe);
 
