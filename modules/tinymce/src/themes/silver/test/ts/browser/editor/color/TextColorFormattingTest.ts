@@ -106,7 +106,7 @@ UnitTest.asynctest('TextColorFormattingTest', (success, failure) => {
       ]
     }));
 
-  TinyLoader.setup((editor, onSuccess, onFailure) => {
+  TinyLoader.setupInBodyAndShadowRoot((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
     const tinyUi = TinyUi(editor);
 

@@ -1,8 +1,8 @@
 import { Assertions, FocusTools, GeneralSteps, Log, Logger, Mouse, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { document, HTMLInputElement } from '@ephox/dom-globals';
+import { HTMLInputElement } from '@ephox/dom-globals';
 import { TinyLoader } from '@ephox/mcagar';
-import { Element, SelectorFilter } from '@ephox/sugar';
+import { Element, SelectorFilter, ShadowDom } from '@ephox/sugar';
 
 import SilverTheme from 'tinymce/themes/silver/Theme';
 import * as ColorSwatch from 'tinymce/themes/silver/ui/core/color/ColorSwatch';
@@ -10,61 +10,61 @@ import * as ColorSwatch from 'tinymce/themes/silver/ui/core/color/ColorSwatch';
 UnitTest.asynctest('ColorPickerSanityTest', (success, failure) => {
   SilverTheme();
 
-  // mutation is yummy
-  let currentColor = '';
+  TinyLoader.setupInBodyAndShadowRoot(function (editor, onSuccess, onFailure) {
+    // mutation is yummy
+    let currentColor = '';
 
-  const setColor = (hexOpt) => {
-    hexOpt.each((hex) => {
-      currentColor = hex;
-    });
-  };
+    const setColor = (hexOpt) => {
+      hexOpt.each((hex) => {
+        currentColor = hex;
+      });
+    };
 
-  const dialogSelector = 'div[role="dialog"]';
+    const dialogSelector = 'div[role="dialog"]';
 
-  const docBody = Element.fromDom(document.body);
+    const docBody = ShadowDom.getContentContainer(ShadowDom.getRootNode(Element.fromDom(editor.getElement())));
 
-  const sAssertColor = function (expected) {
-    return Logger.t('Asserting color', Step.sync(function () {
-      Assertions.assertEq('Asserting current colour is ' + expected, expected, currentColor);
+    const sAssertColor = function (expected) {
+      return Logger.t('Asserting color', Step.sync(function () {
+        Assertions.assertEq('Asserting current colour is ' + expected, expected, currentColor);
+      }));
+    };
+
+    const sSetHex = (hex) => Logger.t('Changing textarea content to ' + hex, Step.sync(() => {
+      const inputs = SelectorFilter.descendants<HTMLInputElement>(docBody, 'div[role="dialog"] input');
+      const hexInput = inputs[inputs.length - 1];
+      hexInput.dom().value = hex;
     }));
-  };
 
-  const sSetHex = (hex) => Logger.t('Changing textarea content to ' + hex, Step.sync(() => {
-    const inputs = SelectorFilter.descendants<HTMLInputElement>(docBody, 'div[role="dialog"] input');
-    const hexInput = inputs[inputs.length - 1];
-    hexInput.dom().value = hex;
-  }));
+    const sOpenDialog = (editor, docBody) => GeneralSteps.sequence(Logger.ts('Open dialog and wait for it to be visible', [
+      Step.sync(function () {
+        const dialog = ColorSwatch.colorPickerDialog(editor);
+        dialog(setColor, '#ffffff');
+      }),
+      UiFinder.sWaitForVisible('Waited for dialog to be visible', docBody, dialogSelector)
+    ]));
 
-  const sOpenDialog = (editor, docBody) => GeneralSteps.sequence(Logger.ts('Open dialog and wait for it to be visible', [
-    Step.sync(function () {
-      const dialog = ColorSwatch.colorPickerDialog(editor);
-      dialog(setColor, '#ffffff');
-    }),
-    UiFinder.sWaitForVisible('Waited for dialog to be visible', docBody, dialogSelector)
-  ]));
+    const sAssertColorWhite = sAssertColor('#ffffff');
 
-  const sAssertColorWhite = sAssertColor('#ffffff');
+    const sAssertColorBlack = sAssertColor('#000000');
 
-  const sAssertColorBlack = sAssertColor('#000000');
+    const sSetHexWhite = sSetHex('ffffff');
 
-  const sSetHexWhite = sSetHex('ffffff');
+    const sSetHexBlack = sSetHex('000000');
 
-  const sSetHexBlack = sSetHex('000000');
+    const sSubmitDialog = GeneralSteps.sequence(Logger.ts('Click Save and close dialog', [
+      FocusTools.sSetFocus('Focus dialog', docBody, dialogSelector),
+      Waiter.sTryUntil('Button is not disabled', UiFinder.sNotExists(docBody, 'button.tox-button:contains("Save")[disabled]')),
+      Mouse.sClickOn(docBody, 'button.tox-button:contains(Save)'),
+      Waiter.sTryUntil('Dialog should close', UiFinder.sNotExists(docBody, dialogSelector))
+    ]));
 
-  const sSubmitDialog = GeneralSteps.sequence(Logger.ts('Click Save and close dialog', [
-    FocusTools.sSetFocus('Focus dialog', docBody, dialogSelector),
-    Waiter.sTryUntil('Button is not disabled', UiFinder.sNotExists(docBody, 'button.tox-button:contains("Save")[disabled]')),
-    Mouse.sClickOn(docBody, 'button.tox-button:contains(Save)'),
-    Waiter.sTryUntil('Dialog should close', UiFinder.sNotExists(docBody, dialogSelector))
-  ]));
+    const sCancelDialog = GeneralSteps.sequence(Logger.ts('Click Cancel and close dialog', [
+      FocusTools.sSetFocus('Focus dialog', docBody, dialogSelector),
+      Mouse.sClickOn(docBody, 'button.tox-button:contains(Cancel)'),
+      Waiter.sTryUntil('Dialog should close', UiFinder.sNotExists(docBody, dialogSelector))
+    ]));
 
-  const sCancelDialog = GeneralSteps.sequence(Logger.ts('Click Cancel and close dialog', [
-    FocusTools.sSetFocus('Focus dialog', docBody, dialogSelector),
-    Mouse.sClickOn(docBody, 'button.tox-button:contains(Cancel)'),
-    Waiter.sTryUntil('Dialog should close', UiFinder.sNotExists(docBody, dialogSelector))
-  ]));
-
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, [
       Log.stepsAsStep('TBA', 'ColorPicker: Open dialog, click Save and assert color is white', [
         sOpenDialog(editor, docBody),
