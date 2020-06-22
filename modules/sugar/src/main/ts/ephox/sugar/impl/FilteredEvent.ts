@@ -2,6 +2,7 @@ import { Event, Node } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
 import { EventArgs, EventFilter, EventHandler, EventUnbinder } from '../api/events/Types';
 import Element from '../api/node/Element';
+import * as ShadowDom from '../api/node/ShadowDom';
 
 type WrappedHandler<T> = (rawEvent: T) => void;
 
@@ -18,7 +19,7 @@ const mkEvent = <T extends Event>(target: Element, x: number, y: number, stop: (
   });
 
 const fromRawEvent = <T extends Event>(rawEvent: T) => {
-  const target = Element.fromDom(rawEvent.target as Node);
+  const target = Element.fromDom(ShadowDom.getOriginalEventTarget(rawEvent).getOr(rawEvent.target) as Node);
 
   const stop = () => rawEvent.stopPropagation();
 
