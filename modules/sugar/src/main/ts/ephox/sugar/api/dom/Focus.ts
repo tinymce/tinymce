@@ -1,33 +1,36 @@
-import { document, Document, HTMLElement, Node as DomNode, ShadowRoot } from '@ephox/dom-globals';
+import { HTMLElement, Node as DomNode } from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
 import Element from '../node/Element';
 import * as PredicateExists from '../search/PredicateExists';
 import * as Compare from './Compare';
-import { ShadowDom } from '@ephox/sugar';
+import * as ShadowDom from '../node/ShadowDom';
+import * as Document from '../node/Document';
 
-const focus = (element: Element<HTMLElement>) => element.dom().focus();
+type RootNode = ShadowDom.RootNode;
 
-const blur = (element: Element<HTMLElement>) => element.dom().blur();
+const focus = (element: Element<HTMLElement>): void =>
+  element.dom().focus();
+
+const blur = (element: Element<HTMLElement>): void =>
+  element.dom().blur();
 
 const hasFocus = (element: Element<DomNode>): boolean => {
   const doc = ShadowDom.getRootNode(element).dom();
   return element.dom() === doc.activeElement;
 };
 
-const active = (_dos?: Element<Document | ShadowRoot>): Option<Element<HTMLElement>> => {
-  const dos = _dos !== undefined ? _dos.dom() : document;
+const active = (root: RootNode = Document.getDocument()): Option<Element<HTMLElement>> => {
   // Note: assuming that activeElement will always be a HTMLElement (maybe we should add a runtime check?)
-  return Option.from(dos.activeElement as HTMLElement).map(Element.fromDom);
+  return Option.from(root.dom().activeElement as HTMLElement).map(Element.fromDom);
 };
 
-const focusInside = (element: Element<HTMLElement>) => {
-  // Only call focus if the focus is not already inside it.
-  const doc = ShadowDom.getRootNode(element);
-  const inside = active(doc).filter((a) => PredicateExists.closest(a, Fun.curry(Compare.eq, element)));
-
-  inside.fold(() => {
+/** Focus the specified element, unless one of its descendents already has focus. */
+const focusInside = (element: Element<HTMLElement>): void => {
+  const root = ShadowDom.getRootNode(element);
+  const alreadyFocusedInside = active(root).exists((a) => PredicateExists.closest(a, Fun.curry(Compare.eq, element)));
+  if (!alreadyFocusedInside) {
     focus(element);
-  }, Fun.noop);
+  }
 };
 
 /**
