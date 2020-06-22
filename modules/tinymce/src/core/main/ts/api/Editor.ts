@@ -188,7 +188,12 @@ class Editor implements EditorObservable {
   public mode: Mode;
 
   /**
+   * Sets the editor mode. For example: "design", "code" or "readonly".
+   * <br>
+   * <em>Deprecated in TinyMCE 5.0.4</em> - Use <code>editor.mode.set(mode)</code> instead.
    *
+   * @method setMode
+   * @param {String} mode Mode to set the editor in.
    * @deprecated now an alias for editor.mode.set()
    */
   public setMode: (mode: string) => void;
