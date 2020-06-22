@@ -9,21 +9,17 @@ import { Arr, Strings } from '@ephox/katamari';
 
 const isSkin = (ss: StyleSheet) => ss.href !== null && Strings.contains(ss.href, 'skin.min.css');
 
-UnitTest.asynctest('Skin stylesheets should be loaded in ShadowRoot when editor is in ShadowRoot', (success, failure) => {
+const shadowRootFromEditor = (editor: Editor) => ShadowDom.getShadowRoot(Element.fromDom(editor.getElement())).getOrDie();
 
+UnitTest.asynctest('Skin stylesheets should be loaded in ShadowRoot when editor is in ShadowRoot', (success, failure) => {
   if (!ShadowDom.isSupported()) {
     return success();
   }
 
   Theme();
 
-  const shadowHost = Element.fromTag('div', document);
-  Insert.append(Body.body(), shadowHost);
-  const sr = Element.fromDom(shadowHost.dom().attachShadow({ mode: 'open' }));
-  const editorDiv = Element.fromTag('div', document);
-  Insert.append(sr, editorDiv);
-
-  TinyLoader.setupFromElement((editor: Editor, onSuccess, onFailure) => {
+  TinyLoader.setupInShadowRoot((editor: Editor, onSuccess, onFailure) => {
+    const sr = shadowRootFromEditor(editor);
     Pipeline.async({}, [
       Step.sync(() => {
         // TODO TINY-6144: Test that there are no skin stylesheets in the head. We will need to clean up existing stylesheets first, which may require a StyleSheetLoader.removeAll() function
@@ -32,13 +28,12 @@ UnitTest.asynctest('Skin stylesheets should be loaded in ShadowRoot when editor 
           true,
           Arr.exists(sr.dom().styleSheets, isSkin)
         );
-        Remove.remove(shadowHost);
       })
     ], onSuccess, onFailure);
   }, {
     toolbar_sticky: false,
     base_url: '/project/tinymce/js/tinymce'
-  }, editorDiv, success, failure);
+  }, success, failure);
 });
 
 UnitTest.asynctest('Only one skin stylesheet should be loaded for multiple editors in a ShadowRoot', (success, failure) => {
@@ -77,29 +72,22 @@ UnitTest.asynctest('Only one skin stylesheet should be loaded for multiple edito
 });
 
 UnitTest.asynctest('aux div should be within shadow root', (success, failure) => {
-
   if (!ShadowDom.isSupported()) {
     return success();
   }
 
   Theme();
 
-  const shadowHost = Element.fromTag('div', document);
-  Insert.append(Body.body(), shadowHost);
-  const sr = Element.fromDom(shadowHost.dom().attachShadow({ mode: 'open' }));
-  const editorDiv = Element.fromTag('div', document);
-  Insert.append(sr, editorDiv);
-
-  TinyLoader.setupFromElement((editor: Editor, onSuccess, onFailure) => {
+  TinyLoader.setupInShadowRoot((editor: Editor, onSuccess, onFailure) => {
+    const sr = shadowRootFromEditor(editor);
     Pipeline.async({}, [
       Step.sync(() => {
         Assert.eq('Should be no aux divs in the document', 0, SelectorFilter.descendants(Body.body(), '.tox-tinymce-aux').length);
         Assert.eq('Should be 1 aux div in the shadow root', 1, SelectorFilter.descendants(sr, '.tox-tinymce-aux').length);
-        Remove.remove(shadowHost);
       })
     ], onSuccess, onFailure);
   }, {
     toolbar_sticky: false,
     base_url: '/project/tinymce/js/tinymce'
-  }, editorDiv, success, failure);
+  }, success, failure);
 });
