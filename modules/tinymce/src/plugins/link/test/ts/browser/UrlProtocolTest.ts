@@ -85,7 +85,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.UrlProtocolTest', (success, fai
       Log.stepsAsStep('TBA', 'Test regex for email link', [
         testProtocolConfirm('no-reply@example.com', 'mailto:')
       ]),
-      Log.stepsAsStep('TBA', 'Test regex for path with @', [
+      Log.stepsAsStep('5941', 'Test regex for path with @', [
         testNoProtocolConfirm('imgs/test@2xdpi.jpg')
       ])
     ], onSuccess, onFailure);
