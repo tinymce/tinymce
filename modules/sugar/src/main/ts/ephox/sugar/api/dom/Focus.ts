@@ -1,8 +1,6 @@
 import { HTMLElement, Node as DomNode } from '@ephox/dom-globals';
-import { Fun, Option } from '@ephox/katamari';
+import { Option } from '@ephox/katamari';
 import Element from '../node/Element';
-import * as PredicateExists from '../search/PredicateExists';
-import * as Compare from './Compare';
 import * as ShadowDom from '../node/ShadowDom';
 import * as Document from '../node/Document';
 
@@ -26,8 +24,7 @@ const active = (root: RootNode = Document.getDocument()): Option<Element<HTMLEle
 
 /** Focus the specified element, unless one of its descendents already has focus. */
 const focusInside = (element: Element<HTMLElement>): void => {
-  const root = ShadowDom.getRootNode(element);
-  const alreadyFocusedInside = active(root).exists((a) => PredicateExists.closest(a, Fun.curry(Compare.eq, element)));
+  const alreadyFocusedInside = search(element).isSome();
   if (!alreadyFocusedInside) {
     focus(element);
   }
