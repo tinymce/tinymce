@@ -118,13 +118,6 @@ const setup = (editor: Editor) => {
       // TINY-4828: Update the placeholder after pasting content. This needs to use a timeout as
       // the browser doesn't update the dom until after the paste event has fired
       editor.on('paste', (e) => Delay.setEditorTimeout(editor, () => updatePlaceholder(e)));
-
-      // Remove the placeholder attributes on remove
-      editor.on('remove', () => {
-        const body = editor.getBody();
-        dom.setAttrib(body, placeholderAttr, null);
-        dom.setAttrib(body, 'aria-placeholder', null);
-      });
     });
   }
 };

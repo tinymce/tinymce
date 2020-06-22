@@ -26,6 +26,7 @@ UnitTest.asynctest('Skin stylesheets should be loaded in ShadowRoot when editor 
   TinyLoader.setupFromElement((editor: Editor, onSuccess, onFailure) => {
     Pipeline.async({}, [
       Step.sync(() => {
+        // TODO TINY-6144: Test that there are no skin stylesheets in the head. We will need to clean up existing stylesheets first, which may require a StyleSheetLoader.removeAll() function
         Assert.eq(
           'There should be a skin stylesheet in the ShadowRoot',
           true,
