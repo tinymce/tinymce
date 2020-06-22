@@ -22,6 +22,7 @@ Version 5.4.0 (TBD)
     Fixed an issue where removing formatting in a table cell would cause Internet Explorer 11 to scroll to the end of the table #TINY-6049
     Fixed an issue where the `allow_html_data_urls` setting was not correctly applied #TINY-5951
     Fixed the `autolink` feature so that it no longer treats a string with multiple "@" characters as an email address #TINY-4773
+    Fixed an issue where removing the editor would leave unexpected attributes on the target element #TINY-4001
 Version 5.3.2 (2020-06-10)
     Fixed a regression introduced in 5.3.0, where `images_dataimg_filter` was no-longer called #TINY-6086
 Version 5.3.1 (2020-05-27)

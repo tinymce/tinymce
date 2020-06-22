@@ -1,6 +1,6 @@
 import { ApproxStructure, Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { console, document, window } from '@ephox/dom-globals';
+import { HTMLElement, console, document, window } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { LegacyUnit } from '@ephox/mcagar';
 import { Attr, Element, SelectorFilter } from '@ephox/sugar';
@@ -35,7 +35,7 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
   };
 
   suite.asyncTest('target (initialised properly)', function (_, done) {
-    const elm1 = viewBlock.get().querySelector('#elm-1');
+    const elm1 = viewBlock.get().querySelector<HTMLElement>('#elm-1');
 
     EditorManager.init({
       target: elm1,
