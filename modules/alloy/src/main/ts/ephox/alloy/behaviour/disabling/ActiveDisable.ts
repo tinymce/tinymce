@@ -1,5 +1,3 @@
-import { Arr } from '@ephox/katamari';
-
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as SystemEvents from '../../api/events/SystemEvents';
 import { DomDefinitionDetail } from '../../dom/DomDefinition';
@@ -12,7 +10,7 @@ import { DisableConfig } from './DisableTypes';
 const exhibit = (base: DomDefinitionDetail, disableConfig: DisableConfig) => DomModification.nu({
   // Do not add the attribute yet, because it will depend on the node name
   // if we use "aria-disabled" or just "disabled"
-  classes: disableConfig.disabled ? disableConfig.disableClass.map(Arr.pure).getOr([ ]) : [ ]
+  classes: disableConfig.disabled() ? disableConfig.disableClass.toArray() : [ ]
 });
 
 const events = (disableConfig: DisableConfig, disableState: Stateless) => AlloyEvents.derive([
