@@ -7,6 +7,7 @@
 
 import { Element as DomElement, HTMLFormElement, window } from '@ephox/dom-globals';
 import { Arr, Fun, Option, Options, Type } from '@ephox/katamari';
+import { Attr, Element } from '@ephox/sugar';
 import { UrlObject } from '../api/AddOnManager';
 import DOMUtils from '../api/dom/DOMUtils';
 import EventUtils from '../api/dom/EventUtils';
@@ -25,7 +26,6 @@ import WindowManager from '../api/WindowManager';
 import * as NodeType from '../dom/NodeType';
 import * as ErrorReporter from '../ErrorReporter';
 import * as Init from './Init';
-import { Element } from '@ephox/sugar';
 import { StyleSheetLoader } from '../api/dom/StyleSheetLoader';
 import * as StyleSheetLoaderRegistry from '../dom/StyleSheetLoaderRegistry';
 
@@ -201,7 +201,17 @@ const render = function (editor: Editor) {
     return;
   }
 
-  editor.ui.styleSheetLoader = getStyleSheetLoader(Element.fromDom(editor.getElement()), settings);
+  // snapshot the element we're going to render to
+  const element = Element.fromDom(editor.getElement());
+  const snapshot = Attr.clone(element);
+  editor.on('remove', () => {
+    Arr.eachr(element.dom().attributes, (attr) =>
+      Attr.remove(element, attr.name)
+    );
+    Attr.setAll(element, snapshot);
+  });
+
+  editor.ui.styleSheetLoader = getStyleSheetLoader(element, settings);
 
   // Hide target element early to prevent content flashing
   if (!settings.inline) {
@@ -211,6 +221,7 @@ const render = function (editor: Editor) {
     editor.inline = true;
   }
 
+  // TODO: Investigate the types here
   const form = (editor.getElement() as HTMLFormElement).form || DOM.getParent(id, 'form');
   if (form) {
     editor.formElement = form;
