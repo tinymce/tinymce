@@ -10,11 +10,11 @@ import { tElement } from './ElementInstances';
 const { tArray } = Testable;
 
 const checkOpt = <T extends DomNode>(expected: Option<Element<T>>, actual: Option<Element<T>>) => {
-  KAssert.eqOption('eq', expected, actual, tElement);
+  KAssert.eqOption('eq', expected, actual, tElement());
 };
 
 const checkList = <T extends DomNode>(expected: ArrayLike<Element<T>>, actual: ArrayLike<Element<T>>) => {
-  Assert.eq('eq', expected, actual, tArray(tElement));
+  Assert.eq('eq', expected, actual, tArray(tElement()));
 };
 
 const isName = <K extends keyof HTMLElementTagNameMap>(name: K) => (x: Element<DomNode>): x is Element<HTMLElementTagNameMap[K]> => Node.name(x) === name;
