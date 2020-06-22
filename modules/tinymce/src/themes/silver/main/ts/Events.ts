@@ -6,9 +6,9 @@
  */
 
 import { Attachment, Channels, Gui, SystemEvents } from '@ephox/alloy';
-import { MouseEvent, Node as DomNode, UIEvent } from '@ephox/dom-globals';
+import { MouseEvent, Node as DomNode, ShadowRoot, UIEvent } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
-import { Document, DomEvent, Element, EventArgs, ShadowDom } from '@ephox/sugar';
+import { Compare, Document, DomEvent, Element, EventArgs, ShadowDom } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 
 const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMothership: Gui.GuiSystem): void => {
@@ -17,16 +17,17 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMothership: Gui.GuiS
 
   const referenceElement = Element.fromDom(editor.getElement());
 
-  const eventRoot = ShadowDom.getShadowRoot(referenceElement).fold(
-    () => doc,
-    /*
+  /*
     If we're in an *open* shadow root, we can use composedPath to find the real target, so we can continue to use
     event delegation up to the document. This lets us capture events outside the shadow root that affect us.
+
     If we're in a *closed* shadow root, then composedPath isn't available to us. As such, our best bet is to attach
-    these listeners to the shadow root itself.
-    */
-    (sr) => ShadowDom.isOpen(sr) ? doc : sr
-  );
+    these listeners to the shadow root itself, and add an extra listener to the document.
+   */
+
+  const root = ShadowDom.getRootNode(referenceElement);
+
+  const eventRoot = ShadowDom.isShadowRoot(root) && ShadowDom.isClosed(root) ? root : doc;
 
   const broadcastEvent = (name: string, evt: EventArgs) => {
     Arr.each([ mothership, uiMothership ], (ship) => {
@@ -56,6 +57,22 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMothership: Gui.GuiS
       broadcastOn(Channels.mouseReleased(), { target: evt.target() });
     }
   });
+
+  const fireDismissPopupsOutsideShadowHost = (sr: Element<ShadowRoot>) => (evt: EventArgs) => {
+    /*
+    Dismiss popups if mousedown happens outside of the shadow host.
+    This is used for closed shadow roots.
+    There might be cases of nested shadow roots where this doesn't work.
+    */
+    if (!Compare.eq(evt.target(), ShadowDom.getShadowHost(sr))) {
+      fireDismissPopups(evt);
+    }
+  };
+
+  const extraUnbinders = ShadowDom.isShadowRoot(root) && ShadowDom.isClosed(root) ? [
+    DomEvent.bind(doc, 'touchstart', fireDismissPopupsOutsideShadowHost(root)),
+    DomEvent.bind(doc, 'mousedown', fireDismissPopupsOutsideShadowHost(root))
+  ] : [];
 
   // Editor content events
   const onContentClick = (raw: UIEvent) => broadcastOn(Channels.dismissPopups(), { target: Element.fromDom(raw.target as DomNode) });
@@ -98,6 +115,10 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMothership: Gui.GuiS
     onTouchmove.unbind();
     onTouchend.unbind();
     onMouseup.unbind();
+
+    Arr.each(extraUnbinders, (ub) => {
+      ub.unbind();
+    });
   });
 
   editor.on('detach', () => {

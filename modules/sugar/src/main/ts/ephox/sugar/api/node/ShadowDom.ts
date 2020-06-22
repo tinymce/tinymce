@@ -110,4 +110,8 @@ export const setEventTargetToOriginalTarget = <T extends Event> (event: EventArg
 };
 
 export const isOpen = (sr: Element<ShadowRoot>): boolean =>
-  isSupported() && (sr.dom() as any).mode === 'open';
+  (sr.dom() as any).mode === 'open';
+
+export const isClosed = (sr: Element<ShadowRoot>): boolean =>
+  (sr.dom() as any).mode === 'closed';
+
