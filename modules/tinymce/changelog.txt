@@ -1,4 +1,5 @@
 Version 5.4.0 (TBD)
+    Added keyboard navigation support to menus and toolbars when the editor is in a ShadowRoot. #TINY-6152
     Added `Editor.ui.styleSheetLoader` API field, which allows loading of stylesheets within the Document or ShadowRoot that the editor UI is in. #TINY-6089
     Added `StyleSheetLoader` module to public API, as it was already part of `DOMUtils` #TINY-6100
     Added Oxide variables for styling the select element and headings in dialog content #TINY-6070
