@@ -20,6 +20,7 @@ const toggle = (editor: Editor, name: string, vars: FormatVars, node: Node) => {
   } else {
     ApplyFormat.applyFormat(editor, name, vars, node);
   }
+  editor.nodeChanged();
 };
 
 export {

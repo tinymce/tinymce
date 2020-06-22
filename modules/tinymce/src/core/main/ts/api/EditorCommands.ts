@@ -258,7 +258,6 @@ class EditorCommands {
 
   private toggleFormat(name: string, value?) {
     this.editor.formatter.toggle(name, value ? { value } : undefined);
-    this.editor.nodeChanged();
   }
 
   private storeSelection(type?: number) {
