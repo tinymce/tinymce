@@ -15,8 +15,8 @@ const blur = (element: Element<HTMLElement>): void =>
   element.dom().blur();
 
 const hasFocus = (element: Element<DomNode>): boolean => {
-  const doc = ShadowDom.getRootNode(element).dom();
-  return element.dom() === doc.activeElement;
+  const root = ShadowDom.getRootNode(element).dom();
+  return element.dom() === root.activeElement;
 };
 
 const active = (root: RootNode = Document.getDocument()): Option<Element<HTMLElement>> => {
