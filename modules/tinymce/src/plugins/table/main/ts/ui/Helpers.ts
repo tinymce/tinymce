@@ -6,8 +6,8 @@
  */
 
 import { Types } from '@ephox/bridge';
-import { Element as DomElement, HTMLElement, Node } from '@ephox/dom-globals';
-import { Arr, Fun, Obj, Strings } from '@ephox/katamari';
+import { Element as DomElement, HTMLElement, HTMLTableRowElement, Node } from '@ephox/dom-globals';
+import { Arr, Fun, Obj, Strings, Option } from '@ephox/katamari';
 import { Css, Element } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
@@ -229,6 +229,29 @@ const extractDataFromTableElement = (editor: Editor, elm: DomElement, hasAdvTabl
   };
 };
 
+export interface HeaderRowConfiguration {
+  thead: boolean;
+  ths: boolean;
+}
+
+const getSection = (elm: HTMLTableRowElement) => elm.parentNode.nodeName.toLowerCase();
+
+const detectHeaderRow = (editor: Editor, elm: HTMLTableRowElement): Option<HeaderRowConfiguration> => {
+  // Header rows can use a combination of theads and ths - want to detect the 3 combinations
+  const isThead = getSection(elm) === 'thead';
+  const areAllCellsThs = !Arr.exists(elm.cells, (c) => c.nodeName.toLowerCase() !== 'th');
+
+  if (isThead || areAllCellsThs) {
+    return Option.some({ thead: isThead, ths: areAllCellsThs });
+  }
+  return Option.none();
+};
+
+const getRowType = (editor: Editor, elm: HTMLTableRowElement) => detectHeaderRow(editor, elm).fold(
+  () => getSection(elm),
+  (_rowConfig) => 'thead'
+);
+
 export interface RowData {
   height: string;
   scope: string;
@@ -240,13 +263,13 @@ export interface RowData {
   backgroundcolor?: string;
 }
 
-const extractDataFromRowElement = (editor: Editor, elm: HTMLElement, hasAdvancedRowTab: boolean): RowData => {
+const extractDataFromRowElement = (editor: Editor, elm: HTMLTableRowElement, hasAdvancedRowTab: boolean): RowData => {
   const dom = editor.dom;
   return {
     height: dom.getStyle(elm, 'height') || dom.getAttrib(elm, 'height'),
     scope: dom.getAttrib(elm, 'scope'),
     class: dom.getAttrib(elm, 'class', ''),
-    type: elm.parentNode.nodeName.toLowerCase(),
+    type: getRowType(editor, elm),
     align: getHAlignment(editor, elm),
     ...(hasAdvancedRowTab ? extractAdvancedStyles(dom, elm) : {})
   };
@@ -280,4 +303,4 @@ const extractDataFromCellElement = (editor: Editor, elm: HTMLElement, hasAdvance
   };
 };
 
-export { buildListItems, extractAdvancedStyles, getSharedValues, getAdvancedTab, extractDataFromTableElement, extractDataFromRowElement, extractDataFromCellElement, extractDataFromSettings };
+export { buildListItems, extractAdvancedStyles, getSharedValues, getAdvancedTab, extractDataFromTableElement, extractDataFromRowElement, extractDataFromCellElement, extractDataFromSettings, getRowType, detectHeaderRow };
