@@ -8,12 +8,25 @@
 import { Attachment, Channels, Gui, SystemEvents } from '@ephox/alloy';
 import { MouseEvent, Node as DomNode, UIEvent } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
-import { DomEvent, Element, EventArgs, ShadowDom } from '@ephox/sugar';
+import { Document, DomEvent, Element, EventArgs, ShadowDom } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 
-const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMothership: Gui.GuiSystem) => {
+const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMothership: Gui.GuiSystem): void => {
 
-  const root = ShadowDom.getRootNode(Element.fromDom(editor.getElement()));
+  const doc = Document.getDocument();
+
+  const referenceElement = Element.fromDom(editor.getElement());
+
+  const eventRoot = ShadowDom.getShadowRoot(referenceElement).fold(
+    () => doc,
+    /*
+    If we're in an *open* shadow root, we can use composedPath to find the real target, so we can continue to use
+    event delegation up to the document. This lets us capture events outside the shadow root that affect us.
+    If we're in a *closed* shadow root, then composedPath isn't available to us. As such, our best bet is to attach
+    these listeners to the shadow root itself.
+    */
+    (sr) => ShadowDom.isOpen(sr) ? doc : sr
+  );
 
   const broadcastEvent = (name: string, evt: EventArgs) => {
     Arr.each([ mothership, uiMothership ], (ship) => {
@@ -27,16 +40,18 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMothership: Gui.GuiS
     });
   };
 
-  const fireDismissPopups = (evt: EventArgs) => broadcastOn(Channels.dismissPopups(), { target: evt.target() });
+  const fireDismissPopups = (evt: EventArgs) => {
+    broadcastOn(Channels.dismissPopups(), { target: evt.target() });
+  };
 
   // Document touch events
-  const onTouchstart = DomEvent.bind(root, 'touchstart', fireDismissPopups);
-  const onTouchmove = DomEvent.bind(root, 'touchmove', (evt) => broadcastEvent(SystemEvents.documentTouchmove(), evt));
-  const onTouchend = DomEvent.bind(root, 'touchend', (evt) => broadcastEvent(SystemEvents.documentTouchend(), evt));
+  const onTouchstart = DomEvent.bind(eventRoot, 'touchstart', fireDismissPopups);
+  const onTouchmove = DomEvent.bind(eventRoot, 'touchmove', (evt) => broadcastEvent(SystemEvents.documentTouchmove(), evt));
+  const onTouchend = DomEvent.bind(eventRoot, 'touchend', (evt) => broadcastEvent(SystemEvents.documentTouchend(), evt));
 
   // Document mouse events
-  const onMousedown = DomEvent.bind(root, 'mousedown', fireDismissPopups);
-  const onMouseup = DomEvent.bind(root, 'mouseup', (evt) => {
+  const onMousedown = DomEvent.bind(eventRoot, 'mousedown', fireDismissPopups);
+  const onMouseup = DomEvent.bind(eventRoot, 'mouseup', (evt) => {
     if (evt.raw().button === 0) {
       broadcastOn(Channels.mouseReleased(), { target: evt.target() });
     }
