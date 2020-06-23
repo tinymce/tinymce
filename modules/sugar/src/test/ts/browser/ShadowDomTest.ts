@@ -8,7 +8,12 @@ import { PlatformDetection } from '@ephox/sand';
 import * as ShadowDom from 'ephox/sugar/api/node/ShadowDom';
 import { Testable } from '@ephox/dispute';
 import { htmlBlockTagName, htmlInlineTagName } from 'ephox/sugar/test/Arbitrary';
-import { withIframe, withNormalElement, withShadowElement } from 'ephox/sugar/test/WithHelpers';
+import {
+  withIframe,
+  withNormalElement,
+  withShadowElement,
+  withShadowElementInMode
+} from 'ephox/sugar/test/WithHelpers';
 import { tElement } from 'ephox/sugar/test/ElementInstances';
 import * as Document from 'ephox/sugar/api/node/Document';
 import * as Head from 'ephox/sugar/api/node/Head';
@@ -138,3 +143,13 @@ UnitTest.test('getShadowHost', () => {
   });
 });
 
+UnitTest.test('isOpen / isClosed', () => {
+  withShadowElementInMode('open', (sr) => {
+    Assert.eq('open shadow root is open', true, ShadowDom.isOpen(sr));
+    Assert.eq('open shadow root is not closed', false, ShadowDom.isClosed(sr));
+  });
+  withShadowElementInMode('closed', (sr) => {
+    Assert.eq('closed shadow root is not open', false, ShadowDom.isOpen(sr));
+    Assert.eq('closed shadow root is closed', true, ShadowDom.isClosed(sr));
+  });
+});

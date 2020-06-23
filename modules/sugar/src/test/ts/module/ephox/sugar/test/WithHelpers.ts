@@ -13,7 +13,7 @@ export const withNormalElement = (f: (d: Element<DomElement>) => void): void => 
   Remove.remove(div);
 };
 
-const withShadowElementInMode = (mode: 'open' | 'closed', f: (sr: Element<ShadowRoot>, innerDiv: Element<DomElement>, shadowHost: Element<DomElement>) => void) => {
+export const withShadowElementInMode = (mode: 'open' | 'closed', f: (sr: Element<ShadowRoot>, innerDiv: Element<DomElement>, shadowHost: Element<DomElement>) => void) => {
   if (ShadowDom.isSupported()) {
     const shadowHost = Element.fromTag('div', document);
     Insert.append(Body.body(), shadowHost);
