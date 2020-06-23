@@ -17,10 +17,9 @@ const hasFocus = (element: Element<DomNode>): boolean => {
   return element.dom() === root.activeElement;
 };
 
-const active = (root: RootNode = Document.getDocument()): Option<Element<HTMLElement>> => {
-  // Note: assuming that activeElement will always be a HTMLElement (maybe we should add a runtime check?)
-  return Option.from(root.dom().activeElement as HTMLElement).map(Element.fromDom);
-};
+// Note: assuming that activeElement will always be a HTMLElement (maybe we should add a runtime check?)
+const active = (root: RootNode = Document.getDocument()): Option<Element<HTMLElement>> =>
+  Option.from(root.dom().activeElement as HTMLElement).map(Element.fromDom);
 
 /** Focus the specified element, unless one of its descendents already has focus. */
 const focusInside = (element: Element<HTMLElement>): void => {

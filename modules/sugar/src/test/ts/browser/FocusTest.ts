@@ -115,14 +115,17 @@ UnitTest.test('Focus.focusInside in ShadowRoot', () => {
     Focus.focus(innerInput);
     Assert.eq('innerInput should have focus', true, Focus.hasFocus(innerInput));
     Assert.eq('innerDiv should not have focus', false, Focus.hasFocus(innerDiv));
+    Assert.eq('shadowHost should have focus', true, Focus.hasFocus(shadowHost));
 
     Focus.focusInside(innerDiv);
     Assert.eq('innerInput should have focus', true, Focus.hasFocus(innerInput));
     Assert.eq('innerDiv should not have focus', false, Focus.hasFocus(innerDiv));
+    Assert.eq('shadowHost should have focus', true, Focus.hasFocus(shadowHost));
 
     Focus.focus(innerDiv);
     Assert.eq('innerInput should not have focus', false, Focus.hasFocus(innerInput));
     Assert.eq('innerDiv should have focus', true, Focus.hasFocus(innerDiv));
+    Assert.eq('shadowHost should have focus', true, Focus.hasFocus(shadowHost));
 
   });
 });
