@@ -82,7 +82,7 @@ export const getOriginalEventTarget = (event: Event): Option<EventTarget> => {
     // otherwise we'll get Shadow Root parent, not actual target element.
     // TODO: update @ephox/dom-globals to include Event.composedPath
     const eventAny = event as any;
-    if (eventAny.composedPath) {
+    if (eventAny.composed && eventAny.composedPath) {
       const composedPath = eventAny.composedPath();
       if (composedPath && composedPath.length > 0) {
         return Option.from(composedPath[0]);
