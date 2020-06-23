@@ -8,9 +8,10 @@ import Element from 'ephox/sugar/api/node/Element';
 import * as Attr from 'ephox/sugar/api/properties/Attr';
 import { withShadowElement } from 'ephox/sugar/test/WithHelpers';
 import { Option, OptionInstances } from '@ephox/katamari';
-import tOption = OptionInstances.tOption;
 import { tElement } from 'ephox/sugar/test/ElementInstances';
 import { HTMLElement } from '@ephox/dom-globals';
+
+const tOption = OptionInstances.tOption;
 
 UnitTest.test('FocusTest', () => {
   const div = Element.fromTag('div');
