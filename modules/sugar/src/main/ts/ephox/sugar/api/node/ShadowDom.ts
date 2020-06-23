@@ -72,7 +72,9 @@ export const getShadowHost = (e: Element<ShadowRoot>): Element<DomElement> =>
   Element.fromDom(e.dom().host);
 
 /**
- * Gets the event target based on shadow dom properties. Only works if the shadow tree is open.
+ * When Events bubble up through a ShadowRoot, the browser changes the target to be the shadow host.
+ * This function gets the "original" event target if possible.
+ * This only works if the shadow tree is open - if the shadow tree is closed, event.target is returned.
  * See: https://developers.google.com/web/fundamentals/web-components/shadowdom#events
  */
 export const getOriginalEventTarget = (event: Event): Option<EventTarget> => {

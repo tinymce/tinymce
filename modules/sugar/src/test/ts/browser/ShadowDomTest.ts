@@ -1,7 +1,7 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import Element from 'ephox/sugar/api/node/Element';
 import * as Insert from 'ephox/sugar/api/dom/Insert';
-import { Element as DomElement, navigator } from '@ephox/dom-globals';
+import { Element as DomElement, HTMLElement, navigator } from '@ephox/dom-globals';
 import * as SelectorFind from 'ephox/sugar/api/search/SelectorFind';
 import fc from 'fast-check';
 import { PlatformDetection } from '@ephox/sand';
@@ -160,11 +160,8 @@ UnitTest.test('isOpen / isClosed', () => {
   });
 });
 
-UnitTest.asynctest('getOriginalEventTarget', (success, failure) => {
-
+function checkOriginalEventTarget(expected: Element<HTMLElement>, innerDiv: Element<HTMLElement>, shadowHost: Element<HTMLElement>, success: UnitTest.SuccessCallback, failure: UnitTest.FailureCallback) {
   let capturedEvt: Option<EventArgs<any>> = Option.none();
-
-  const { shadowHost, innerDiv } = setupShadowRoot('open');
 
   const unbinder = DomEvent.bind(Body.body(), 'click', (evt) => {
     capturedEvt = Option.some(evt);
@@ -177,9 +174,27 @@ UnitTest.asynctest('getOriginalEventTarget', (success, failure) => {
       Assert.eq('capturedEvt is set', true, capturedEvt.isSome());
     })),
     Chain.op(() => {
-      Assert.eq('capturedEvt should be the innerDiv', innerDiv, capturedEvt.getOrDie().target(), tElement);
+      Assert.eq('capturedEvt', expected, capturedEvt.getOrDie().target(), tElement);
       unbinder.unbind();
       Remove.remove(shadowHost);
     })
   ]) ], success, failure);
+}
+
+UnitTest.asynctest('getOriginalEventTarget on a closed shadow root', (success, failure) => {
+  if (!ShadowDom.isSupported()) {
+    return success();
+  }
+
+  const { shadowHost, innerDiv } = setupShadowRoot('closed');
+  checkOriginalEventTarget(shadowHost, innerDiv, shadowHost, success, failure);
+});
+
+UnitTest.asynctest('getOriginalEventTarget on an open shadow root', (success, failure) => {
+  if (!ShadowDom.isSupported()) {
+    return success();
+  }
+
+  const { shadowHost, innerDiv } = setupShadowRoot('open');
+  checkOriginalEventTarget(innerDiv, innerDiv, shadowHost, success, failure);
 });

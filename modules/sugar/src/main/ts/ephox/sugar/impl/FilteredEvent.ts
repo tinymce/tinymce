@@ -18,6 +18,10 @@ const mkEvent = <T extends Event>(target: Element, x: number, y: number, stop: (
     raw:     Fun.constant(raw)
   });
 
+/** Wraps an Event in an EventArgs structure.
+ * The returned EventArgs structure has its target set to the "original" target if possible.
+ * See ShadowDom.getOriginalEventTarget
+ */
 const fromRawEvent = <T extends Event>(rawEvent: T) => {
   const target = Element.fromDom(ShadowDom.getOriginalEventTarget(rawEvent).getOr(rawEvent.target) as Node);
 
