@@ -9,7 +9,6 @@ import * as Head from './Head';
 import { Fun, Option, Type } from '@ephox/katamari';
 import Element from './Element';
 import * as Traverse from '../search/Traverse';
-import { EventArgs } from '../events/Types';
 
 export type RootNode = Element<Document | ShadowRoot>;
 
@@ -90,19 +89,6 @@ export const getOriginalEventTarget = (event: Event): Option<EventTarget> => {
     }
   }
   return Option.from(event.target);
-};
-
-export const setEventTargetToOriginalTarget = <T extends Event> (event: EventArgs<T>): EventArgs<T> => {
-
-  const doOverride = (target: EventTarget) => ({
-    ...event,
-    target: Fun.constant(Element.fromDom(target as DomNode))
-  });
-
-  return getOriginalEventTarget(event.raw()).fold(
-    () => event,
-    (target) => target === event.raw().target ? event : doOverride(target)
-  );
 };
 
 export const isOpen = (sr: Element<ShadowRoot>): boolean =>
