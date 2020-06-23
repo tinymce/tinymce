@@ -3,6 +3,7 @@ import { document, Element as DomElement, HTMLIFrameElement, ShadowRoot, Window 
 import * as Insert from 'ephox/sugar/api/dom/Insert';
 import * as Body from 'ephox/sugar/api/node/Body';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
+import * as ShadowDom from 'ephox/sugar/api/node/ShadowDom';
 
 export const withNormalElement = (f: (d: Element<DomElement>) => void): void => {
   const div = Element.fromTag('div');
@@ -13,14 +14,16 @@ export const withNormalElement = (f: (d: Element<DomElement>) => void): void => 
 };
 
 const withShadowElementInMode = (mode: 'open' | 'closed', f: (sr: Element<ShadowRoot>, innerDiv: Element<DomElement>, shadowHost: Element<DomElement>) => void) => {
-  const shadowHost = Element.fromTag('div', document);
-  Insert.append(Body.body(), shadowHost);
-  const sr = Element.fromDom(shadowHost.dom().attachShadow({ mode }));
-  const innerDiv = Element.fromTag('div', document);
+  if (ShadowDom.isSupported()) {
+    const shadowHost = Element.fromTag('div', document);
+    Insert.append(Body.body(), shadowHost);
+    const sr = Element.fromDom(shadowHost.dom().attachShadow({ mode }));
+    const innerDiv = Element.fromTag('div', document);
 
-  Insert.append(sr, innerDiv);
-  f(sr, innerDiv, shadowHost);
-  Remove.remove(shadowHost);
+    Insert.append(sr, innerDiv);
+    f(sr, innerDiv, shadowHost);
+    Remove.remove(shadowHost);
+  }
 };
 
 export const withShadowElement = (f: (shadowRoot: Element<ShadowRoot>, innerDiv: Element<DomElement>, shadowHost: Element<DomElement>) => void): void => {
