@@ -1,5 +1,5 @@
 import {
-  Document, Element as DomElement,
+  Document, Element as DomElement, Event, EventTarget,
   HTMLElement, HTMLElementTagNameMap,
   Node as DomNode,
   ShadowRoot
@@ -9,6 +9,7 @@ import * as Head from './Head';
 import { Fun, Option, Type } from '@ephox/katamari';
 import Element from './Element';
 import * as Traverse from '../search/Traverse';
+import { EventArgs } from '../events/Types';
 
 export type RootNode = Element<Document | ShadowRoot>;
 
@@ -70,3 +71,42 @@ export const getShadowRoot = (e: Element<DomNode>): Option<Element<ShadowRoot>> 
  */
 export const getShadowHost = (e: Element<ShadowRoot>): Element<DomElement> =>
   Element.fromDom(e.dom().host);
+
+/**
+ * Gets the event target based on shadow dom properties. Only works if the shadow tree is open.
+ * See: https://developers.google.com/web/fundamentals/web-components/shadowdom#events
+ */
+export const getOriginalEventTarget = (event: Event): Option<EventTarget> => {
+  if (isSupported()) {
+    // When target element is inside Shadow DOM we need to take first element from composedPath
+    // otherwise we'll get Shadow Root parent, not actual target element.
+    // TODO: update @ephox/dom-globals to include Event.composedPath
+    const eventAny = event as any;
+    if (eventAny.composedPath) {
+      const composedPath = eventAny.composedPath();
+      if (composedPath && composedPath.length > 0) {
+        return Option.from(composedPath[0]);
+      }
+    }
+  }
+  return Option.from(event.target);
+};
+
+export const setEventTargetToOriginalTarget = <T extends Event> (event: EventArgs<T>): EventArgs<T> => {
+
+  const doOverride = (target: EventTarget) => ({
+    ...event,
+    target: Fun.constant(Element.fromDom(target as DomNode))
+  });
+
+  return getOriginalEventTarget(event.raw()).fold(
+    () => event,
+    (target) => target === event.raw().target ? event : doOverride(target)
+  );
+};
+
+export const isOpen = (sr: Element<ShadowRoot>): boolean =>
+  (sr.dom() as any).mode === 'open';
+
+export const isClosed = (sr: Element<ShadowRoot>): boolean =>
+  (sr.dom() as any).mode === 'closed';
