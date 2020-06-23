@@ -8,11 +8,11 @@
 import { HTMLElement, HTMLTableRowElement } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
 import { TableLookup } from '@ephox/snooker';
-import { Element } from '@ephox/sugar';
+import { Element, SelectorFilter } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
-import { getTableHeaderType } from '../api/Settings';
 import * as Util from '../alien/Util';
+import { getTableHeaderType } from '../api/Settings';
 
 export interface HeaderRowConfiguration {
   thead: boolean;
@@ -26,10 +26,7 @@ const detectHeaderRow = (editor: Editor, elm: HTMLTableRowElement): Option<Heade
   const isThead = getSection(elm) === 'thead';
   const areAllCellsThs = !Arr.exists(elm.cells, (c) => Util.getNodeName(c) !== 'th');
 
-  if (isThead || areAllCellsThs) {
-    return Option.some({ thead: isThead, ths: areAllCellsThs });
-  }
-  return Option.none();
+  return isThead || areAllCellsThs ? Option.some({ thead: isThead, ths: areAllCellsThs }) : Option.none();
 };
 
 const getRowType = (editor: Editor, elm: HTMLTableRowElement) => detectHeaderRow(editor, elm).fold(
@@ -39,33 +36,37 @@ const getRowType = (editor: Editor, elm: HTMLTableRowElement) => detectHeaderRow
 
 const switchRowSection = (dom: DOMUtils, rowElm: HTMLElement, newSectionName: string) => {
   const tableElm = dom.getParent(rowElm, 'table');
-  const oldParentElm = rowElm.parentNode;
-  let parentElm = dom.select(newSectionName, tableElm)[0];
+  const oldSectionElm = rowElm.parentNode;
+  const oldSectionName = Util.getNodeName(oldSectionElm);
 
-  if (!parentElm) {
-    parentElm = dom.create(newSectionName);
-    const firstTableChild = tableElm.firstChild;
-    if (firstTableChild) {
-      // caption tag should be the first descendant of the table tag (see TINY-1167)
-      if (Util.getNodeName(firstTableChild) === 'caption') {
-        dom.insertAfter(parentElm, firstTableChild);
+  // Skip e.g. if old type was thead but it was configured as tbody > tr > th, and we're switching to tbody
+  if (newSectionName !== oldSectionName) {
+    let sectionElm = dom.select(newSectionName, tableElm)[0];
+
+    if (!sectionElm) {
+      sectionElm = dom.create(newSectionName);
+      const firstTableChild = tableElm.firstChild;
+
+      if (newSectionName === 'thead') {
+        Arr.last(SelectorFilter.children(Element.fromDom(tableElm), 'caption,colgroup')).fold(
+          () => tableElm.insertBefore(sectionElm, firstTableChild),
+          (c) => dom.insertAfter(sectionElm, c.dom())
+        );
       } else {
-        tableElm.insertBefore(parentElm, firstTableChild);
+        tableElm.appendChild(sectionElm);
       }
-    } else {
-      tableElm.appendChild(parentElm);
     }
-  }
 
-  // If moving from the head to the body, add to the top of the body
-  if (newSectionName === 'tbody' && Util.getNodeName(oldParentElm) === 'thead' && parentElm.firstChild) {
-    parentElm.insertBefore(rowElm, parentElm.firstChild);
-  } else {
-    parentElm.appendChild(rowElm);
-  }
+    // If moving from the head to the body, add to the top of the body
+    if (newSectionName === 'tbody' && oldSectionName === 'thead' && sectionElm.firstChild) {
+      sectionElm.insertBefore(rowElm, sectionElm.firstChild);
+    } else {
+      sectionElm.appendChild(rowElm);
+    }
 
-  if (!oldParentElm.hasChildNodes()) {
-    dom.remove(oldParentElm);
+    if (!oldSectionElm.hasChildNodes()) {
+      dom.remove(oldSectionElm);
+    }
   }
 };
 
@@ -73,18 +74,18 @@ const switchRowCellType = (dom: DOMUtils, rowElm: HTMLTableRowElement, newCellTy
   Arr.each(rowElm.cells, (c) => Util.getNodeName(c) !== newCellType ? dom.rename(c, newCellType): c);
 };
 
-const switchRowType = (editor: Editor, rowElm: HTMLTableRowElement, newType: string) => {
+const switchSectionType = (editor: Editor, rowElm: HTMLTableRowElement, newType: string) => {
   const determineHeaderRowType = () => {
-    // default if all else fails is thead > tr > tds aka 'thead' mode
+    // default if all else fails is thead > tr > tds aka 'section' mode
     const allTableRows = TableLookup.table(Element.fromDom(rowElm.cells[0]))
       .map((table) => TableLookup.rows(table)).getOr([]);
-    return Arr.find(allTableRows, (row: Element<HTMLTableRowElement>) => detectHeaderRow(editor, row.dom()).isSome()).map((detectedType) => {
+    return Arr.findMap<Element<HTMLTableRowElement>, HeaderRowConfiguration>(allTableRows, (row) => detectHeaderRow(editor, row.dom())).map((detectedType) => {
       if (detectedType.thead && detectedType.ths) {
-        return 'both';
+        return 'sectionCells';
       } else {
-        return detectedType.thead ? 'thead' : 'ths';
+        return detectedType.thead ? 'section' : 'cells';
       }
-    }).getOr('thead');
+    }).getOr('section');
   };
 
   const dom = editor.dom;
@@ -92,19 +93,16 @@ const switchRowType = (editor: Editor, rowElm: HTMLTableRowElement, newType: str
   if (newType === 'thead') {
     const headerRowTypeSetting = getTableHeaderType(editor);
     const headerRowType = headerRowTypeSetting === 'auto' ? determineHeaderRowType() : headerRowTypeSetting;
-    if (headerRowType === 'ths') {
-      switchRowCellType(dom, rowElm, 'th');
-    } else if (headerRowType === 'both') {
-      switchRowCellType(dom, rowElm, 'th');
-      switchRowSection(dom, rowElm, 'thead');
-    } else { // technically headerRowType === 'thead' case but also default behaviour
-      switchRowSection(dom, rowElm, 'thead');
-    }
+
+    // We're going to always enforce the right td/th and thead/tbody/tfoot type.
+    // switchRowSection will short circuit if not necessary to save computation
+    switchRowCellType(dom, rowElm, headerRowType === 'section' ? 'td' : 'th');
+    switchRowSection(dom, rowElm, headerRowType === 'cells' ? 'tbody' : 'thead');
   } else {
     switchRowCellType(dom, rowElm, 'td'); // if switching from header to other, may need to switch th to td
     switchRowSection(dom, rowElm, newType);
   }
 };
 
-export { getRowType, detectHeaderRow, switchRowType };
+export { getRowType, detectHeaderRow, switchSectionType };
 

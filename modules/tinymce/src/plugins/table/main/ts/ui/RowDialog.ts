@@ -16,7 +16,7 @@ import * as TableSelection from '../selection/TableSelection';
 import { DomModifier } from './DomModifier';
 import * as Helpers from './Helpers';
 import * as RowDialogGeneralTab from './RowDialogGeneralTab';
-import { switchRowType } from '../core/TableSections';
+import { switchSectionType } from '../core/TableSections';
 
 type RowData = Helpers.RowData;
 
@@ -38,7 +38,7 @@ const applyRowData = (editor: Editor, rows: HTMLTableRowElement[], oldData: RowD
   Arr.each(rows, (rowElm) => {
     // Switch row type
     if (data.type !== Util.getNodeName(rowElm.parentNode)) {
-      switchRowType(editor, rowElm, data.type);
+      switchSectionType(editor, rowElm, data.type);
     }
 
     const modifier = isSingleRow ? DomModifier.normal(editor, rowElm) : DomModifier.ifTruthy(editor, rowElm);

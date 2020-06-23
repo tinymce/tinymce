@@ -6,6 +6,7 @@ import Editor from 'tinymce/core/api/Editor';
 import { detectHeaderRow, getRowType } from 'tinymce/plugins/table/core/TableSections';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
+import { HTMLTableRowElement } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.plugins.table.DetectHeaderRowTest', (success, failure) => {
   Plugin();
@@ -14,8 +15,14 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DetectHeaderRowTest', (success
   TinyLoader.setupLight((editor: Editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
 
+    const sAssertRow = (selector: string, assertions: (row: Element<HTMLTableRowElement>) => void) =>
+      Chain.asStep(Element.fromDom(editor.getBody()), [
+        UiFinder.cFindIn(selector),
+        Chain.op(assertions)
+      ]);
+
     Pipeline.async({}, [
-      Log.stepsAsStep('TBA', 'No header rows', [
+      Log.stepsAsStep('TINY-6007', 'No header rows', [
         tinyApis.sSetContent(
           '<table>' +
           '<tbody><tr>' +
@@ -23,15 +30,12 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DetectHeaderRowTest', (success
           '</tr></tbody>' +
           '</table>'
         ),
-        Chain.asStep(Element.fromDom(editor.getBody()), [
-          UiFinder.cFindIn('tr'),
-          Chain.op((tr) => {
-            const rowData = getRowType(editor, tr.dom());
-            Assertions.assertEq('Detect as part of the tbody', 'tbody', rowData);
-          })
-        ])
+        sAssertRow('tr', (tr) => {
+          const rowData = getRowType(editor, tr.dom());
+          Assertions.assertEq('Detect as part of the tbody', 'tbody', rowData);
+        })
       ]),
-      Log.stepsAsStep('TBA', 'Tbody > tr > th is detected correctly as a header row', [
+      Log.stepsAsStep('TINY-6007', 'Tbody > tr > th is detected correctly as a header row', [
         tinyApis.sSetContent(
           '<table>' +
           '<tbody><tr>' +
@@ -39,20 +43,17 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DetectHeaderRowTest', (success
           '</tr></tbody>' +
           '</table>'
         ),
-        Chain.asStep(Element.fromDom(editor.getBody()), [
-          UiFinder.cFindIn('tr'),
-          Chain.op((tr) => {
-            detectHeaderRow(editor, tr.dom()).fold(
-              () => Assertions.assertEq('Row incorrectly detected as not a header row', true, false), // would call failure() but want logs
-              (rowData) => {
-                Assertions.assertEq('Detect as part of the tbody', false, rowData.thead);
-                Assertions.assertEq('Detect as ths', true, rowData.ths);
-              }
-            );
-          })
-        ])
+        sAssertRow('tr', (tr) => {
+          detectHeaderRow(editor, tr.dom()).fold(
+            () => Assertions.assertEq('Row incorrectly detected as not a header row', true, false), // would call failure() but want logs
+            (rowData) => {
+              Assertions.assertEq('Detect as part of the tbody', false, rowData.thead);
+              Assertions.assertEq('Detect as ths', true, rowData.ths);
+            }
+          );
+        })
       ]),
-      Log.stepsAsStep('TBA', 'Tbody > tr > ths is detected correctly as a header row', [
+      Log.stepsAsStep('TINY-6007', 'Tbody > tr > ths is detected correctly as a header row', [
         tinyApis.sSetContent(
           '<table>' +
           '<tbody><tr>' +
@@ -61,16 +62,13 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DetectHeaderRowTest', (success
           '</tr></tbody>' +
           '</table>'
         ),
-        Chain.asStep(Element.fromDom(editor.getBody()), [
-          UiFinder.cFindIn('tr'),
-          Chain.op((tr) => {
-            const rowData = detectHeaderRow(editor, tr.dom()).getOrDie();
-            Assertions.assertEq('Detect as part of the tbody', false, rowData.thead);
-            Assertions.assertEq('Detect as all ths', true, rowData.ths);
-          })
-        ])
+        sAssertRow('tr', (tr) => {
+          const rowData = detectHeaderRow(editor, tr.dom()).getOrDie();
+          Assertions.assertEq('Detect as part of the tbody', false, rowData.thead);
+          Assertions.assertEq('Detect as all ths', true, rowData.ths);
+        })
       ]),
-      Log.stepsAsStep('TBA', 'Tbody > tr > td+th is detected correctly as NOT a header row', [
+      Log.stepsAsStep('TINY-6007', 'Tbody > tr > td+th is detected correctly as NOT a header row', [
         tinyApis.sSetContent(
           '<table>' +
           '<tbody><tr>' +
@@ -79,15 +77,12 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DetectHeaderRowTest', (success
           '</tr></tbody>' +
           '</table>'
         ),
-        Chain.asStep(Element.fromDom(editor.getBody()), [
-          UiFinder.cFindIn('tr'),
-          Chain.op((tr) => {
-            const rowData = getRowType(editor, tr.dom());
-            Assertions.assertEq('Detect as part of the tbody', 'tbody', rowData);
-          })
-        ])
+        sAssertRow('tr', (tr) => {
+          const rowData = getRowType(editor, tr.dom());
+          Assertions.assertEq('Detect as part of the tbody', 'tbody', rowData);
+        })
       ]),
-      Log.stepsAsStep('TBA', 'Thead > tr > td is detected correctly as a header row', [
+      Log.stepsAsStep('TINY-6007', 'Thead > tr > td is detected correctly as a header row', [
         tinyApis.sSetContent(
           '<table>' +
           '<thead><tr class="foo">' +
@@ -98,16 +93,13 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DetectHeaderRowTest', (success
           '</tr></tbody>' +
           '</table>'
         ),
-        Chain.asStep(Element.fromDom(editor.getBody()), [
-          UiFinder.cFindIn('tr.foo'),
-          Chain.op((tr) => {
-            const rowData = detectHeaderRow(editor, tr.dom()).getOrDie();
-            Assertions.assertEq('Detect as part of the thead', true, rowData.thead);
-            Assertions.assertEq('Detect as td', false, rowData.ths);
-          })
-        ])
+        sAssertRow('tr.foo', (tr) => {
+          const rowData = detectHeaderRow(editor, tr.dom()).getOrDie();
+          Assertions.assertEq('Detect as part of the thead', true, rowData.thead);
+          Assertions.assertEq('Detect as td', false, rowData.ths);
+        })
       ]),
-      Log.stepsAsStep('TBA', 'Thead > tr > th is detected correctly as a header row', [
+      Log.stepsAsStep('TINY-6007', 'Thead > tr > th is detected correctly as a header row', [
         tinyApis.sSetContent(
           '<table>' +
           '<thead><tr class="foo">' +
@@ -118,16 +110,13 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DetectHeaderRowTest', (success
           '</tr></tbody>' +
           '</table>'
         ),
-        Chain.asStep(Element.fromDom(editor.getBody()), [
-          UiFinder.cFindIn('tr.foo'),
-          Chain.op((tr) => {
-            const rowData = detectHeaderRow(editor, tr.dom()).getOrDie();
-            Assertions.assertEq('Detect as part of the thead', true, rowData.thead);
-            Assertions.assertEq('Detect as all th', true, rowData.ths);
-          })
-        ])
+        sAssertRow('tr.foo', (tr) => {
+          const rowData = detectHeaderRow(editor, tr.dom()).getOrDie();
+          Assertions.assertEq('Detect as part of the thead', true, rowData.thead);
+          Assertions.assertEq('Detect as all th', true, rowData.ths);
+        })
       ]),
-      Log.stepsAsStep('TBA', 'Thead > tr > ths is detected correctly as a header row', [
+      Log.stepsAsStep('TINY-6007', 'Thead > tr > ths is detected correctly as a header row', [
         tinyApis.sSetContent(
           '<table>' +
           '<thead><tr class="foo">' +
@@ -139,16 +128,13 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DetectHeaderRowTest', (success
           '</tr></tbody>' +
           '</table>'
         ),
-        Chain.asStep(Element.fromDom(editor.getBody()), [
-          UiFinder.cFindIn('tr.foo'),
-          Chain.op((tr) => {
-            const rowData = detectHeaderRow(editor, tr.dom()).getOrDie();
-            Assertions.assertEq('Detect as part of the thead', true, rowData.thead);
-            Assertions.assertEq('Detect as all th', true, rowData.ths);
-          })
-        ])
+        sAssertRow('tr.foo', (tr) => {
+          const rowData = detectHeaderRow(editor, tr.dom()).getOrDie();
+          Assertions.assertEq('Detect as part of the thead', true, rowData.thead);
+          Assertions.assertEq('Detect as all th', true, rowData.ths);
+        })
       ]),
-      Log.stepsAsStep('TBA', 'Thead > tr > td+th is detected correctly as a header row', [
+      Log.stepsAsStep('TINY-6007', 'Thead > tr > td+th is detected correctly as a header row', [
         tinyApis.sSetContent(
           '<table>' +
           '<thead><tr class="foo">' +
@@ -160,14 +146,11 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DetectHeaderRowTest', (success
           '</tr></tbody>' +
           '</table>'
         ),
-        Chain.asStep(Element.fromDom(editor.getBody()), [
-          UiFinder.cFindIn('tr.foo'),
-          Chain.op((tr) => {
-            const rowData = detectHeaderRow(editor, tr.dom()).getOrDie();
-            Assertions.assertEq('Detect as part of the thead', true, rowData.thead);
-            Assertions.assertEq('Detect as not all th', false, rowData.ths);
-          })
-        ])
+        sAssertRow('tr.foo', (tr) => {
+          const rowData = detectHeaderRow(editor, tr.dom()).getOrDie();
+          Assertions.assertEq('Detect as part of the thead', true, rowData.thead);
+          Assertions.assertEq('Detect as not all th', false, rowData.ths);
+        })
       ])
     ], onSuccess, onFailure);
   }, {

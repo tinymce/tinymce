@@ -7,7 +7,7 @@ Version 5.4.0 (TBD)
     Added new `mceTableApplyCellStyle` command to the `table` plugin #TINY-6004
     Added new `table` cut, copy and paste column editor commands and menu items #TINY-6006
     Added additional font related Oxide variables for secondary buttons allowing more specific styling. #TINY-6061
-    Added new `table_header_row_type` setting to control how table header rows are structured #TINY-6007
+    Added new `table_header_type` setting to control how table header rows are structured #TINY-6007
     Changed `advlist` toolbar buttons to only show a dropdown list if there's more than one option #TINY-3194
     Changed `mceInsertTable` command and `insertTable` API method to take optional header rows and columns arguments #TINY-6012
     Changed stylesheet loading, so that UI skin stylesheets now to load in a ShadowRoot, if the editor is in a ShadowRoot. #TINY-6089

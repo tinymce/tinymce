@@ -46,10 +46,11 @@ const getToolbar = (editor: Editor): string => editor.getParam('table_toolbar', 
 
 
 const getTableHeaderType = (editor: Editor): string => {
-  const value = editor.getParam('table_header_type', 'auto', 'string');
-  const validValues = [ 'thead', 'ths', 'both', 'auto' ];
+  const defaultValue = 'section';
+  const value = editor.getParam('table_header_type', defaultValue, 'string');
+  const validValues = [ 'section', 'cells', 'sectionCells', 'auto' ];
   if (!Arr.contains(validValues, value)) {
-    return 'auto';
+    return defaultValue;
   } else {
     return value;
   }
