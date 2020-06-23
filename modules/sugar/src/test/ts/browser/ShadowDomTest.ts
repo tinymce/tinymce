@@ -12,13 +12,19 @@ import {
   withIframe,
   withNormalElement,
   withShadowElement,
-  withShadowElementInMode
+  withShadowElementInMode,
+  setupShadowRoot
 } from 'ephox/sugar/test/WithHelpers';
 import { tElement } from 'ephox/sugar/test/ElementInstances';
 import * as Document from 'ephox/sugar/api/node/Document';
 import * as Head from 'ephox/sugar/api/node/Head';
 import * as Body from 'ephox/sugar/api/node/Body';
 import * as Node from 'ephox/sugar/api/node/Node';
+import * as DomEvent from 'ephox/sugar/api/events/DomEvent';
+import { Mouse, Chain, Pipeline, Waiter } from '@ephox/agar';
+import { Option } from '@ephox/katamari';
+import { EventArgs } from 'ephox/sugar/api/events/Types';
+import { Remove } from '@ephox/sugar';
 
 type RootNode = ShadowDom.RootNode;
 
@@ -152,4 +158,28 @@ UnitTest.test('isOpen / isClosed', () => {
     Assert.eq('closed shadow root is not open', false, ShadowDom.isOpen(sr));
     Assert.eq('closed shadow root is closed', true, ShadowDom.isClosed(sr));
   });
+});
+
+UnitTest.asynctest('getOriginalEventTarget', (success, failure) => {
+
+  let capturedEvt: Option<EventArgs<any>> = Option.none();
+
+  const { shadowHost, innerDiv } = setupShadowRoot('open');
+
+  const unbinder = DomEvent.bind(Body.body(), 'click', (evt) => {
+    capturedEvt = Option.some(evt);
+  });
+
+  Pipeline.async({}, [ Chain.asStep({}, [
+    Chain.inject(innerDiv),
+    Mouse.cClick,
+    Waiter.cTryUntil('capturedEvt is set', Chain.op(() => {
+      Assert.eq('capturedEvt is set', true, capturedEvt.isSome());
+    })),
+    Chain.op(() => {
+      Assert.eq('capturedEvt should be the innerDiv', innerDiv, capturedEvt.getOrDie().target(), tElement);
+      unbinder.unbind();
+      Remove.remove(shadowHost);
+    })
+  ]) ], success, failure);
 });
