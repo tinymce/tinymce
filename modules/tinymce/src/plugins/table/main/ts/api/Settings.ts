@@ -45,8 +45,8 @@ const isPixelsForced = (editor: Editor): boolean => editor.getParam('table_respo
 const getToolbar = (editor: Editor): string => editor.getParam('table_toolbar', defaultTableToolbar);
 
 
-const getTableHeaderRowType = (editor: Editor): string => {
-  const value = editor.getParam('table_header_row_type', 'auto', 'string');
+const getTableHeaderType = (editor: Editor): string => {
+  const value = editor.getParam('table_header_type', 'auto', 'string');
   const validValues = [ 'thead', 'ths', 'both', 'auto' ];
   if (!Arr.contains(validValues, value)) {
     return 'auto';
@@ -92,5 +92,5 @@ export {
   isPercentagesForced,
   isPixelsForced,
   getToolbar,
-  getTableHeaderRowType
+  getTableHeaderType
 };

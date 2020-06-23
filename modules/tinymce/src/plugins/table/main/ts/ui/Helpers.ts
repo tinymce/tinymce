@@ -13,7 +13,7 @@ import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import * as Styles from '../actions/Styles';
 import { getDefaultAttributes, getDefaultStyles, shouldStyleWithCss } from '../api/Settings';
-import { getRowType } from '../core/TableRowSectionTypes';
+import { getRowType } from '../core/TableSections';
 import * as Util from '../alien/Util';
 
 /**

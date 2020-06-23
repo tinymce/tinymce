@@ -16,7 +16,7 @@ import * as TableSelection from '../selection/TableSelection';
 import { DomModifier } from './DomModifier';
 import * as Helpers from './Helpers';
 import * as RowDialogGeneralTab from './RowDialogGeneralTab';
-import { switchRowType } from '../core/TableRowSectionTypes';
+import { switchRowType } from '../core/TableSections';
 
 type RowData = Helpers.RowData;
 

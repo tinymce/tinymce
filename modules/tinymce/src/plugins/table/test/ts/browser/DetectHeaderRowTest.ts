@@ -3,7 +3,7 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
-import { detectHeaderRow, getRowType } from 'tinymce/plugins/table/core/TableRowSectionTypes';
+import { detectHeaderRow, getRowType } from 'tinymce/plugins/table/core/TableSections';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 

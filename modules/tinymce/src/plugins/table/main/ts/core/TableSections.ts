@@ -11,7 +11,7 @@ import { TableLookup } from '@ephox/snooker';
 import { Element } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
-import { getTableHeaderRowType } from '../api/Settings';
+import { getTableHeaderType } from '../api/Settings';
 import * as Util from '../alien/Util';
 
 export interface HeaderRowConfiguration {
@@ -47,7 +47,7 @@ const switchRowSection = (dom: DOMUtils, rowElm: HTMLElement, newSectionName: st
     const firstTableChild = tableElm.firstChild;
     if (firstTableChild) {
       // caption tag should be the first descendant of the table tag (see TINY-1167)
-      if (Util.getNodeName(firstTableChild) === 'CAPTION') {
+      if (Util.getNodeName(firstTableChild) === 'caption') {
         dom.insertAfter(parentElm, firstTableChild);
       } else {
         tableElm.insertBefore(parentElm, firstTableChild);
@@ -58,7 +58,7 @@ const switchRowSection = (dom: DOMUtils, rowElm: HTMLElement, newSectionName: st
   }
 
   // If moving from the head to the body, add to the top of the body
-  if (newSectionName === 'tbody' && Util.getNodeName(oldParentElm) === 'THEAD' && parentElm.firstChild) {
+  if (newSectionName === 'tbody' && Util.getNodeName(oldParentElm) === 'thead' && parentElm.firstChild) {
     parentElm.insertBefore(rowElm, parentElm.firstChild);
   } else {
     parentElm.appendChild(rowElm);
@@ -90,7 +90,7 @@ const switchRowType = (editor: Editor, rowElm: HTMLTableRowElement, newType: str
   const dom = editor.dom;
 
   if (newType === 'thead') {
-    const headerRowTypeSetting = getTableHeaderRowType(editor);
+    const headerRowTypeSetting = getTableHeaderType(editor);
     const headerRowType = headerRowTypeSetting === 'auto' ? determineHeaderRowType() : headerRowTypeSetting;
     if (headerRowType === 'ths') {
       switchRowCellType(dom, rowElm, 'th');
