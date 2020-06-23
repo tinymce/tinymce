@@ -138,10 +138,3 @@ UnitTest.test('getShadowHost', () => {
   });
 });
 
-if (ShadowDom.isSupported()) {
-  UnitTest.test('get', () => {
-    withShadowElement((sr, inner, sh) => {
-      Assert.eq('Should be shadow host', sh, ShadowDom.getShadowHost(sr), tElement);
-    });
-  });
-}
