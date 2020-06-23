@@ -1,6 +1,6 @@
 import { FieldProcessorAdt, FieldSchema, ValueSchema } from '@ephox/boulder';
 
-import { AlloySpec, RawDomSchema } from '../api/component/SpecTypes';
+import { AlloySpec, OptionalDomSchema } from '../api/component/SpecTypes';
 import * as Fields from '../data/Fields';
 
 export interface BaseSketchSpec {
@@ -10,7 +10,7 @@ export interface BaseSketchSpec {
 export interface BaseSketchDetail<T extends BaseSketchSpec> {
   uid: string;
   components: AlloySpec[];
-  dom: RawDomSchema;
+  dom: OptionalDomSchema;
   originalSpec: T;
   'debug.sketcher': { };
 }
