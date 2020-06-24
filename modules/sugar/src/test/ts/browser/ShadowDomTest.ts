@@ -1,7 +1,7 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import Element from 'ephox/sugar/api/node/Element';
 import * as Insert from 'ephox/sugar/api/dom/Insert';
-import { Element as DomElement, HTMLElement, navigator } from '@ephox/dom-globals';
+import { Element as DomElement, navigator } from '@ephox/dom-globals';
 import * as SelectorFind from 'ephox/sugar/api/search/SelectorFind';
 import fc from 'fast-check';
 import { PlatformDetection } from '@ephox/sand';
@@ -21,10 +21,8 @@ import * as Head from 'ephox/sugar/api/node/Head';
 import * as Body from 'ephox/sugar/api/node/Body';
 import * as Node from 'ephox/sugar/api/node/Node';
 import * as DomEvent from 'ephox/sugar/api/events/DomEvent';
-import { Mouse, Chain, Pipeline, Waiter } from '@ephox/agar';
-import { Option } from '@ephox/katamari';
-import { EventArgs } from 'ephox/sugar/api/events/Types';
 import { Remove } from '@ephox/sugar';
+import * as Attr from 'ephox/sugar/api/properties/Attr';
 
 type RootNode = ShadowDom.RootNode;
 
@@ -160,25 +158,34 @@ UnitTest.test('isOpen / isClosed', () => {
   });
 });
 
-function checkOriginalEventTarget(expected: Element<HTMLElement>, innerDiv: Element<HTMLElement>, shadowHost: Element<HTMLElement>, success: UnitTest.SuccessCallback, failure: UnitTest.FailureCallback) {
-  let capturedEvt: Option<EventArgs<any>> = Option.none();
+function checkOriginalEventTarget(mode: 'open' | 'closed', success: UnitTest.SuccessCallback, failure: UnitTest.FailureCallback) {
+  const { innerDiv, shadowHost } = setupShadowRoot(mode);
+
+  const input = (desc: string, parent: Element<DomElement>) => {
+    const i = Element.fromTag('input');
+    Attr.setAll(i, { 'type': 'text', 'data-description': desc });
+    Insert.append(parent, i);
+    return i;
+  };
+
+  const i1 = input('i2', Body.body());
+  const i2 = input('i2', innerDiv);
+
+  i1.dom().click();
 
   const unbinder = DomEvent.bind(Body.body(), 'click', (evt) => {
-    capturedEvt = Option.some(evt);
-  });
-
-  Pipeline.async({}, [ Chain.asStep({}, [
-    Chain.inject(innerDiv),
-    Mouse.cClick,
-    Waiter.cTryUntil('capturedEvt is set', Chain.op(() => {
-      Assert.eq('capturedEvt is set', true, capturedEvt.isSome());
-    })),
-    Chain.op(() => {
-      Assert.eq('capturedEvt', expected, capturedEvt.getOrDie().target(), tElement);
+    try {
+      const expected = mode === 'open' ? i2 : shadowHost;
+      Assert.eq('Check event target', expected, evt.target(), tElement);
       unbinder.unbind();
+      Remove.remove(i1);
       Remove.remove(shadowHost);
-    })
-  ]) ], success, failure);
+      success();
+    } catch (e) {
+      failure(e);
+    }
+  });
+  i2.dom().click();
 }
 
 UnitTest.asynctest('getOriginalEventTarget on a closed shadow root', (success, failure) => {
@@ -186,15 +193,12 @@ UnitTest.asynctest('getOriginalEventTarget on a closed shadow root', (success, f
     return success();
   }
 
-  const { shadowHost, innerDiv } = setupShadowRoot('closed');
-  checkOriginalEventTarget(shadowHost, innerDiv, shadowHost, success, failure);
+  checkOriginalEventTarget('closed', success, failure);
 });
 
 UnitTest.asynctest('getOriginalEventTarget on an open shadow root', (success, failure) => {
   if (!ShadowDom.isSupported()) {
     return success();
   }
-
-  const { shadowHost, innerDiv } = setupShadowRoot('open');
-  checkOriginalEventTarget(innerDiv, innerDiv, shadowHost, success, failure);
+  checkOriginalEventTarget('open', success, failure);
 });
