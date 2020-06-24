@@ -2,8 +2,9 @@ import { UnitTest, Assert } from '@ephox/bedrock-client';
 import Element from 'ephox/sugar/api/node/Element';
 import { tElement, eqElement } from 'ephox/sugar/test/ElementInstances';
 import { Option, OptionInstances } from '@ephox/katamari';
-import tOption = OptionInstances.tOption;
 import { HTMLDivElement, Element as DomElement } from '@ephox/dom-globals';
+
+const tOption = OptionInstances.tOption;
 
 UnitTest.test('Element testable/eq', () => {
   const span1: Element<DomElement> = Element.fromTag('span');
