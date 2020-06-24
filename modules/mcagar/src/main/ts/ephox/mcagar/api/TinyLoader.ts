@@ -4,6 +4,7 @@ import 'tinymce';
 import * as Loader from '../loader/Loader';
 import { setTinymceBaseUrl } from '../loader/Urls';
 import { document, HTMLElement, ShadowRoot } from '@ephox/dom-globals';
+import { TestLogs } from '@ephox/agar';
 
 const setupBaseUrl = (tinymce: any, settings: Record<string, any>) => {
   if (settings.base_url) {
@@ -77,8 +78,11 @@ const setupInBodyAndShadowRoot = (callback: Loader.RunCallback, settings: Record
   setup(
     callback,
     settings,
-    () => {
-      setupInShadowRoot(callback, settings, success, failure);
+    (_v, logs1) => {
+      setupInShadowRoot(callback, settings, (v2, logs2) => {
+        const logs = TestLogs.concat(TestLogs.getOrInit(logs1), TestLogs.getOrInit(logs2));
+        success(v2, logs);
+      }, failure);
     },
     failure
   );

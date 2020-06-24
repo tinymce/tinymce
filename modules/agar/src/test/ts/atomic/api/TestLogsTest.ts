@@ -239,3 +239,10 @@ UnitTest.test('TestLogsTest', () => {
     return next;
   }, logs);
 });
+
+UnitTest.test('TestLogs.concat', () => {
+  Assert.eq('[] concat [] = []', TestLogs.init(), TestLogs.concat(TestLogs.init(), TestLogs.init()));
+  Assert.eq('[a] concat [] = [a]', addLogEntry(TestLogs.init(), 'message1'), TestLogs.concat(TestLogs.single('message1'), TestLogs.init()));
+  Assert.eq('[] concat [a] = [a]', addLogEntry(TestLogs.init(), 'message1'), TestLogs.concat(TestLogs.init(), TestLogs.single('message1')));
+  Assert.eq('[a] concat [b] = [a, b]', addLogEntry(addLogEntry(TestLogs.init(), 'message1'), 'message2'), TestLogs.concat(TestLogs.single('message1'), TestLogs.single('message2')));
+});
