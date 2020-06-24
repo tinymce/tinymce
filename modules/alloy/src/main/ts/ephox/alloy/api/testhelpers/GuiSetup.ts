@@ -36,8 +36,6 @@ const setupIn = (
       Attachment.detachSystem(gui);
       success();
     }, (e, logs) => {
-      // tslint:disable-next-line
-      // console.error(e);
       failure(e, logs);
     }, TestLogs.init());
   } catch (e) {
