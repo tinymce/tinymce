@@ -1,9 +1,7 @@
 import { Arr, Fun, Option } from '@ephox/katamari';
-import { Element, Remove } from '@ephox/sugar';
+import { Element, Node, Remove } from '@ephox/sugar';
 import * as DetailsList from '../model/DetailsList';
-import {
-  ExtractMergable, ExtractPaste, ExtractPasteRows, onCell, onCells, onMergable, onPaste, onPasteByEditor, onUnmergable, run
-} from '../model/RunOperation';
+import { ExtractMergable, ExtractPaste, ExtractPasteRows, onCell, onCells, onMergable, onPaste, onPasteByEditor, onUnmergable, run, TargetSelection } from '../model/RunOperation';
 import * as TableMerge from '../model/TableMerge';
 import * as Transitions from '../model/Transitions';
 import { Warehouse } from '../model/Warehouse';
@@ -15,6 +13,7 @@ import { Generators, GeneratorsMerging, GeneratorsModification, GeneratorsTransf
 import * as Structs from './Structs';
 import * as TableContent from './TableContent';
 import * as TableLookup from './TableLookup';
+import { console } from '@ephox/dom-globals';
 
 export interface TableOperationResult {
   readonly grid: () => Structs.RowCells[];
@@ -259,6 +258,29 @@ const opPasteRowsAfter = function (grid: Structs.RowCells[], pasteDetails: Extra
   return outcome(mergedGrid, cursor);
 };
 
+const opGetColumnType = function (table: Element, target: TargetSelection): string {
+  const list = DetailsList.fromTable(table);
+  const house = Warehouse.generate(list);
+  const details = onCells(house, target);
+  return details.bind((selectedCells): Option<string> => {
+    console.log(selectedCells);
+    const lastSelectedCell = selectedCells[selectedCells.length - 1];
+    const minColRange = selectedCells[0].column();
+    const maxColRange = lastSelectedCell.column() + lastSelectedCell.colspan();
+    const selectedColumnCells = Arr.flatten(Arr.map(house.all, (row) =>
+      Arr.filter(row.cells(), (cell) => cell.column() >= minColRange && cell.column() < maxColRange)));
+
+    const numHeaderCells = Arr.filter(selectedColumnCells, (cell) => Node.name(cell.element()) === 'th').length;
+    if (numHeaderCells === 0) {
+      return Option.some('td');
+    } else if (numHeaderCells === selectedColumnCells.length) {
+      return Option.some('th');
+    } else {
+      return Option.none();
+    }
+  }).getOr('');
+};
+
 // Only column modifications force a resizing. Everything else just tries to preserve the table as is.
 const resize = Adjustments.adjustWidthTo;
 
@@ -285,3 +307,4 @@ export const pasteColsBefore = run(opPasteColsBefore, onPasteByEditor, Fun.noop,
 export const pasteColsAfter = run(opPasteColsAfter, onPasteByEditor, Fun.noop, Fun.noop, Generators.modification);
 export const pasteRowsBefore = run(opPasteRowsBefore, onPasteByEditor, Fun.noop, Fun.noop, Generators.modification);
 export const pasteRowsAfter = run(opPasteRowsAfter, onPasteByEditor, Fun.noop, Fun.noop, Generators.modification);
+export const getColumnType = opGetColumnType;

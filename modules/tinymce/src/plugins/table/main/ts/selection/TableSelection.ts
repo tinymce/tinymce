@@ -22,7 +22,6 @@ const getSelectionStartCell = getSelectionStartFromSelector<HTMLTableCellElement
 
 const getSelectionStartCellOrCaption = getSelectionStartFromSelector<HTMLTableCellElement | HTMLTableCaptionElement>('th,td,caption');
 
-
 const getCellsFromSelection = (editor: Editor): HTMLTableCellElement[] =>
   getSelectionStartCell(editor)
     .map((cell) => CellOperations.selection(cell, Selections(editor)))
