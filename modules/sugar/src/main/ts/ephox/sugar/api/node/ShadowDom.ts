@@ -81,7 +81,7 @@ export const getOriginalEventTarget = (event: Event): Option<EventTarget> => {
   if (isSupported()) {
     // When target element is inside Shadow DOM we need to take first element from composedPath
     // otherwise we'll get Shadow Root parent, not actual target element.
-    // TODO: update @ephox/dom-globals to include Event.composedPath
+    // TODO: TINY-3312 Upgrade to latest dom-globals which includes the missing Event.composedPath property
     const eventAny = event as any;
     if (eventAny.composed && eventAny.composedPath) {
       const composedPath = eventAny.composedPath();
