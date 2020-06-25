@@ -21,7 +21,7 @@ import * as Head from 'ephox/sugar/api/node/Head';
 import * as Body from 'ephox/sugar/api/node/Body';
 import * as Node from 'ephox/sugar/api/node/Node';
 import * as DomEvent from 'ephox/sugar/api/events/DomEvent';
-import { Remove } from '@ephox/sugar';
+import * as Remove from 'ephox/sugar/api/dom/Remove';
 import * as Attr from 'ephox/sugar/api/properties/Attr';
 
 type RootNode = ShadowDom.RootNode;
