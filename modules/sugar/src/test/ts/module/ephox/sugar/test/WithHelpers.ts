@@ -10,8 +10,8 @@ import {
 import * as Insert from 'ephox/sugar/api/dom/Insert';
 import * as Body from 'ephox/sugar/api/node/Body';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
+import * as ShadowDom from 'ephox/sugar/api/node/ShadowDom';
 import * as Attr from 'ephox/sugar/api/properties/Attr';
-import { ShadowDom } from '@ephox/sugar';
 
 export const withNormalElement = (f: (d: Element<DomElement>) => void): void => {
   const div = Element.fromTag('div');
@@ -21,18 +21,23 @@ export const withNormalElement = (f: (d: Element<DomElement>) => void): void => 
   Remove.remove(div);
 };
 
-const withShadowElementInMode = (mode: 'open' | 'closed', f: (sr: Element<ShadowRoot>, innerDiv: Element<HTMLElement>, shadowHost: Element<HTMLElement>) => void) => {
+export const setupShadowRoot = (mode: 'open' | 'closed') => {
+  const shadowHost = Element.fromTag('div', document);
+  Attr.set(shadowHost, 'data-description', 'shadowHost');
+  Insert.append(Body.body(), shadowHost);
+  const shadowRoot = Element.fromDom(shadowHost.dom().attachShadow({ mode }));
+
+  const innerDiv = Element.fromTag('div', document);
+  Attr.set(innerDiv, 'data-description', 'innerDiv');
+
+  Insert.append(shadowRoot, innerDiv);
+  return { shadowHost, shadowRoot, innerDiv };
+};
+
+export const withShadowElementInMode = (mode: 'open' | 'closed', f: (sr: Element<ShadowRoot>, innerDiv: Element<HTMLElement>, shadowHost: Element<HTMLElement>) => void) => {
   if (ShadowDom.isSupported()) {
-    const shadowHost: Element<HTMLElement> = Element.fromTag('div', document);
-    Attr.set(shadowHost, 'data-blah', 'shadow-host');
-
-    Insert.append(Body.body(), shadowHost);
-    const sr: Element<ShadowRoot> = Element.fromDom(shadowHost.dom().attachShadow({ mode }));
-    const innerDiv: Element<HTMLElement> = Element.fromTag('div', document);
-    Attr.set(innerDiv, 'data-blah', 'div-in-shadow-root');
-
-    Insert.append(sr, innerDiv);
-    f(sr, innerDiv, shadowHost);
+    const { shadowHost, shadowRoot, innerDiv } = setupShadowRoot(mode);
+    f(shadowRoot, innerDiv, shadowHost);
     Remove.remove(shadowHost);
   }
 };

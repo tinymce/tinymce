@@ -18,7 +18,7 @@ import Tools from './util/Tools';
  * editor.shortcuts.add('ctrl+a', "description of the shortcut", function() {});
  * editor.shortcuts.add('meta+a', "description of the shortcut", function() {}); // "meta" maps to Command on Mac and Ctrl on PC
  * editor.shortcuts.add('ctrl+alt+a', "description of the shortcut", function() {});
- * editor.shortcuts.add('access+a', "description of the shortcut", function() {}); // "access" maps to ctrl+alt on Mac and shift+alt on PC
+ * editor.shortcuts.add('access+a', "description of the shortcut", function() {}); // "access" maps to Control+Option on Mac and shift+alt on PC
  */
 
 const each = Tools.each, explode = Tools.explode;

@@ -7,8 +7,11 @@ type Eq<A> = Eq.Eq<A>;
 type Pprint<A> = Pprint.Pprint<A>;
 type Testable<A> = Testable.Testable<A>;
 
-export const eqElement: Eq<Element<DomNode>> = Eq.contramap(Eq.tripleEq, (e) => e.dom());
+export const eqElement = <T extends DomNode> (): Eq<Element<T>> =>
+  Eq.contramap(Eq.tripleEq, (e) => e.dom());
 
-export const pprintElement: Pprint<Element<DomNode>> = Pprint.pprint<Element<DomNode>>((e) => Pnode.single(Html.getOuter(e)));
+export const pprintElement = <T extends DomNode> (): Pprint<Element<T>> =>
+  Pprint.pprint<Element<T>>((e) => Pnode.single(Html.getOuter(e)));
 
-export const tElement: Testable<Element<DomNode>> = Testable.testable(eqElement, pprintElement);
+export const tElement = <T extends DomNode> (): Testable<Element<T>> =>
+  Testable.testable(eqElement(), pprintElement());

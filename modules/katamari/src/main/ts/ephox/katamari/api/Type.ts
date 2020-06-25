@@ -38,6 +38,12 @@ export const isBoolean: (value: any) => value is boolean =
 export const isUndefined: (a: any) => a is undefined =
   eq(undefined);
 
+export const isNullable = (a: any): boolean =>
+  a === null || a === undefined;
+
+export const isNonNullable = <A> (a: A | null | undefined): a is NonNullable<A> =>
+  !isNullable(a);
+
 export const isFunction: (value: any) => value is Function =
   isSimpleType<Function>('function');
 

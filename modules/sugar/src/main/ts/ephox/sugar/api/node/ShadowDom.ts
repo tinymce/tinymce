@@ -1,12 +1,12 @@
 import {
-  Document, Element as DomElement,
+  Document, Element as DomElement, Event, EventTarget,
   HTMLElement, HTMLElementTagNameMap,
   Node as DomNode,
   ShadowRoot
 } from '@ephox/dom-globals';
 import * as Node from './Node';
 import * as Head from './Head';
-import { Fun, Option, Type } from '@ephox/katamari';
+import { Arr, Fun, Option, Type } from '@ephox/katamari';
 import Element from './Element';
 import * as Traverse from '../search/Traverse';
 
@@ -70,3 +70,42 @@ export const getShadowRoot = (e: Element<DomNode>): Option<Element<ShadowRoot>> 
  */
 export const getShadowHost = (e: Element<ShadowRoot>): Element<DomElement> =>
   Element.fromDom(e.dom().host);
+
+/**
+ * When Events bubble up through a ShadowRoot, the browser changes the target to be the shadow host.
+ * This function gets the "original" event target if possible.
+ * This only works if the shadow tree is open - if the shadow tree is closed, event.target is returned.
+ * See: https://developers.google.com/web/fundamentals/web-components/shadowdom#events
+ */
+export const getOriginalEventTarget = (event: Event): Option<EventTarget> => {
+  if (isSupported() && Type.isNonNullable(event.target)) {
+    const el = Element.fromDom(event.target as DomNode);
+    if (Node.isElement(el) && isOpenShadowHost(Element.fromDom(event.target as DomElement))) {
+      // When target element is inside Shadow DOM we need to take first element from composedPath
+      // otherwise we'll get Shadow Root parent, not actual target element.
+      // TODO: TINY-3312 Upgrade to latest dom-globals which includes the missing Event.composedPath property
+      const eventAny = event as any;
+      if (eventAny.composed && eventAny.composedPath) {
+        const composedPath = eventAny.composedPath();
+        if (composedPath) {
+          return Arr.head(composedPath);
+        }
+      }
+    }
+  }
+  return Option.from(event.target);
+};
+
+// TODO: TINY-3312 Upgrade to latest dom-globals which includes the missing 'mode' property
+export const isOpenShadowRoot = (sr: Element<ShadowRoot>): boolean =>
+  (sr.dom() as any).mode === 'open';
+
+// TODO: TINY-3312 Upgrade to latest dom-globals which includes the missing 'mode' property
+export const isClosedShadowRoot = (sr: Element<ShadowRoot>): boolean =>
+  (sr.dom() as any).mode === 'closed';
+
+/** Return true if the element is a host of an open shadow root.
+ *  Return false if the element is a host of a closed shadow root, or if the element is not a host.
+ */
+export const isOpenShadowHost = (element: Element<DomElement>): boolean =>
+  Type.isNonNullable(element.dom().shadowRoot);
