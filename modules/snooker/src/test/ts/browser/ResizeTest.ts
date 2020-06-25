@@ -2,12 +2,14 @@ import { assert, UnitTest } from '@ephox/bedrock-client';
 import { HTMLDivElement, HTMLTableElement } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { Body, Css, Element, Insert, Remove } from '@ephox/sugar';
+import * as ResizeBehaviour from 'ephox/snooker/api/ResizeBehaviour';
 import { ResizeDirection } from 'ephox/snooker/api/ResizeDirection';
 import { TableSize } from 'ephox/snooker/api/TableSize';
 import * as Deltas from 'ephox/snooker/calc/Deltas';
 import { Warehouse } from 'ephox/snooker/model/Warehouse';
 
 UnitTest.test('ResizeTest', function () {
+  const resizing = ResizeBehaviour.preserveTable();
   const direction = ResizeDirection.ltr;
 
   const boundBox = '<div style="width: 800px; height: 600px; display: block;"></div>';
@@ -51,7 +53,7 @@ UnitTest.test('ResizeTest', function () {
     // [50%, 50%] existing widths.
     assert.eq([ 50, 50 ], widths);
 
-    const deltas = Deltas.determine(widths, 0, step, tableSize, 'default');
+    const deltas = Deltas.determine(widths, 0, step, tableSize, resizing);
 
     // [25%, -25%] deltas.
     assert.eq([ 25, -25 ], deltas);
@@ -109,7 +111,7 @@ UnitTest.test('ResizeTest', function () {
       assert.eq(true, x < 1 && x > -1);
     });
 
-    const deltas = Deltas.determine(widths, 0, step, tableSize, 'default');
+    const deltas = Deltas.determine(widths, 0, step, tableSize, resizing);
 
     // [25%, -25%] deltas.
     assert.eq([ 25, -25 ], deltas);
@@ -158,7 +160,7 @@ UnitTest.test('ResizeTest', function () {
     // [50%, 50%] existing widths.
     assert.eq([ 400, 400 ], widths);
 
-    const deltas = Deltas.determine(widths, 0, step, tableSize, 'default');
+    const deltas = Deltas.determine(widths, 0, step, tableSize, resizing);
 
     // [25%, -25%] deltas.
     assert.eq([ 200, -200 ], deltas);
@@ -203,7 +205,7 @@ UnitTest.test('ResizeTest', function () {
     // [50%, 50%] existing widths.
     assert.eq([ 400, 400 ], widths);
 
-    const deltas = Deltas.determine(widths, 0, step, tableSize, 'default');
+    const deltas = Deltas.determine(widths, 0, step, tableSize, resizing);
 
     // [25%, -25%] deltas.
     assert.eq([ 200, -200 ], deltas);

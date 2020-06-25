@@ -6,7 +6,6 @@
  */
 
 import { Arr, Obj, Option, Type } from '@ephox/katamari';
-import { ColumnResizing } from '@ephox/snooker';
 import Editor from 'tinymce/core/api/Editor';
 
 export interface StringMap {
@@ -37,6 +36,8 @@ const determineDefaultStyles = (editor: Editor) => {
 const defaultAttributes = {
   border: '1'
 };
+
+const defaultColumnSizingBehaviour = 'preservetable';
 
 const getTableSizingMode = (editor: Editor): TableSizingMode => editor.getParam('table_sizing_mode', 'auto');
 const getTableResponseWidth = (editor: Editor): boolean | undefined => editor.getParam('table_responsive_width');
@@ -71,10 +72,11 @@ const getTableHeaderType = (editor: Editor): string => {
   }
 };
 
-const getColumnReszingBehaviour = (editor: Editor): ColumnResizing => {
-  const validModes: ColumnResizing[] = [ 'default', 'static', 'resizetable' ];
-  const givenMode = editor.getParam('table_column_sizing', 'default', 'string');
-  return Arr.find(validModes, (mode) => mode === givenMode).getOr('default');
+
+const getColumnResizingBehaviour = (editor: Editor): 'preservetable' | 'resizetable' => {
+  const validModes: Array<'preservetable' | 'resizetable'> = [ 'preservetable', 'resizetable' ];
+  const givenMode = editor.getParam('table_column_resizing', defaultColumnSizingBehaviour, 'string');
+  return Arr.find(validModes, (mode) => mode === givenMode).getOr(defaultColumnSizingBehaviour);
 };
 
 const getCloneElements = (editor: Editor): Option<string[]> => {
@@ -115,5 +117,5 @@ export {
   isResponsiveForced,
   getToolbar,
   getTableHeaderType,
-  getColumnReszingBehaviour
+  getColumnResizingBehaviour
 };

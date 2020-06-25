@@ -8,6 +8,7 @@ import * as CopyRows from './CopyRows';
 import * as CopySelected from './CopySelected';
 import { Generators, SimpleGenerators } from './Generators';
 import * as OtherCells from './OtherCells';
+import * as ResizeBehaviour from './ResizeBehaviour';
 import { ResizeDirection } from './ResizeDirection';
 import { ResizeWire } from './ResizeWire';
 import * as Sizes from './Sizes';
@@ -21,18 +22,18 @@ import * as TableLookup from './TableLookup';
 import * as TableOperations from './TableOperations';
 import * as TablePositions from './TablePositions';
 import * as TableRender from './TableRender';
-import { TableResize, ColumnResizing } from './TableResize';
+import { TableResize } from './TableResize';
 import { TableSize } from './TableSize';
 
 export {
   CellLocation,
   CellMutations,
   CellNavigation,
-  ColumnResizing,
   CopyCols,
   CopyRows,
   CopySelected,
   Generators,
+  ResizeBehaviour,
   ResizeDirection,
   ResizeWire,
   SimpleGenerators,

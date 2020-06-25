@@ -1,5 +1,6 @@
 import { Arr } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
+import { ResizeBehaviour } from '../api/ResizeBehaviour';
 import { Detail, RowData } from '../api/Structs';
 import { TableSize } from '../api/TableSize';
 import * as Deltas from '../calc/Deltas';
@@ -9,19 +10,23 @@ import { BarPositions, ColInfo, RowInfo } from './BarPositions';
 import * as ColumnSizes from './ColumnSizes';
 import * as Recalculations from './Recalculations';
 import * as Sizes from './Sizes';
-import { ColumnResizing } from '../api/TableResize';
 
 const sumUp = (newSize: number[]) => Arr.foldr(newSize, (b, a) => b + a, 0);
 
-const adjustWidth = (table: Element, delta: number, index: number, direction: BarPositions<ColInfo>, columnResizeBehaviour: ColumnResizing, tableSize: TableSize) => {
-  const step = tableSize.getCellDelta(delta);
+const clampTableDelta = (sizes: number[], index: number, delta: number, minCellSize: number) => {
+  const newSize = Math.max(minCellSize, sizes[index] + delta);
+  return newSize - sizes[index];
+};
+
+const adjustWidth = (table: Element, delta: number, index: number, direction: BarPositions<ColInfo>, resizing: ResizeBehaviour, tableSize: TableSize) => {
   const warehouse = Warehouse.fromTable(table);
   const widths = tableSize.getWidths(warehouse, direction, tableSize);
+  const step = clampTableDelta(widths, index, tableSize.getCellDelta(delta), tableSize.minCellWidth());
   const isLastColumn = index === warehouse.grid.columns() - 1;
 
   // Calculate all of the new widths for columns
-  const deltas = Deltas.determine(widths, index, step, tableSize, columnResizeBehaviour);
-  const newWidths = tableSize.getNewWidths(widths, deltas);
+  const deltas = Deltas.determine(widths, index, step, tableSize, resizing);
+  const newWidths = Arr.map(deltas, (dx, i) => dx + widths[i]);
 
   // Set the width of each cell based on the column widths
   const newSizes = Recalculations.recalculateWidth(warehouse, newWidths);
@@ -29,19 +34,7 @@ const adjustWidth = (table: Element, delta: number, index: number, direction: Ba
     tableSize.setElementWidth(cell.element, cell.width);
   });
 
-  // Set the overall width of the table.
-  if (columnResizeBehaviour === 'resizetable' || isLastColumn) {
-    let newDelta = step;
-    if (tableSize.label === 'fixed') {
-      // For px sizing, newDelta includes the extra px for the padding and border width that needs to be included for the new table width to be correct
-      newDelta = tableSize.width() - sumUp(widths);
-    } else if (columnResizeBehaviour !== 'default' && step < 0 && Math.abs(step) > widths[index]) {
-      // RTL (relative) over another column
-      newDelta = sumUp(deltas);
-    }
-
-    tableSize.adjustTableWidth(newDelta);
-  }
+  resizing.resizeTable(tableSize.adjustTableWidth, step, isLastColumn);
 };
 
 const adjustHeight = (table: Element, delta: number, index: number, direction: BarPositions<RowInfo>) => {

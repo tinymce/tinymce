@@ -4,13 +4,12 @@ import { Element } from '@ephox/sugar';
 import * as Adjustments from '../resize/Adjustments';
 import { BarManager } from '../resize/BarManager';
 import * as BarPositions from '../resize/BarPositions';
+import { ResizeBehaviour } from './ResizeBehaviour';
 import { ResizeWire } from './ResizeWire';
 import { TableSize } from './TableSize';
 
 type ColInfo = BarPositions.ColInfo;
 type BarPositions<A> = BarPositions.BarPositions<A>;
-
-export type ColumnResizing = 'default' | 'resizetable' | 'static';
 
 export interface BeforeTableResizeEvent {
   readonly table: () => Element;
@@ -44,7 +43,7 @@ export interface TableResize {
   readonly events: TableResizeEventRegistry;
 }
 
-const create = (wire: ResizeWire, vdirection: BarPositions<ColInfo>, columnResizeBehaviour: ColumnResizing, lazySizing: (element: Element<HTMLTableElement>) => TableSize): TableResize => {
+const create = (wire: ResizeWire, vdirection: BarPositions<ColInfo>, resizing: ResizeBehaviour, lazySizing: (element: Element<HTMLTableElement>) => TableSize): TableResize => {
   const hdirection = BarPositions.height;
   const manager = BarManager(wire, vdirection, hdirection);
 
@@ -58,6 +57,7 @@ const create = (wire: ResizeWire, vdirection: BarPositions<ColInfo>, columnResiz
     const table = event.table();
     events.trigger.beforeResize(table);
     const delta = hdirection.delta(event.delta(), table);
+    // TODO: Use the resizing behaviour for heights as well
     Adjustments.adjustHeight(table, delta, event.row(), hdirection);
     events.trigger.afterResize(table);
   });
@@ -71,7 +71,7 @@ const create = (wire: ResizeWire, vdirection: BarPositions<ColInfo>, columnResiz
     events.trigger.beforeResize(table);
     const delta = vdirection.delta(event.delta(), table);
     const tableSize = lazySizing(table);
-    Adjustments.adjustWidth(table, delta, event.column(), vdirection, columnResizeBehaviour, tableSize);
+    Adjustments.adjustWidth(table, delta, event.column(), vdirection, resizing, tableSize);
     events.trigger.afterResize(table);
   });
 
