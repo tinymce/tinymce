@@ -21,18 +21,17 @@ export interface TableSize {
 
 const noneSize = (element: Element<HTMLTableElement>): TableSize => {
   const getWidth = () => Width.get(element);
-  const singleColumnWidth = (w: number, delta: number) => {
-    const newNext = Math.max(CellUtils.minWidth(), w + delta);
-    return [ newNext - w ];
-  };
+  const zero = Fun.constant(0);
 
+  // Note: The 3 delta functions below return 0 to signify a change shouldn't be made
+  // however this is currently not used, so may need changing if ever used
   return {
     width: getWidth,
     pixelWidth: getWidth,
     getWidths: ColumnSizes.getPixelWidths,
-    getCellDelta: Fun.identity,
-    singleColumnWidth,
-    minCellWidth: CellUtils.minWidth,
+    getCellDelta: zero,
+    singleColumnWidth: Fun.constant([ 0 ]),
+    minCellWidth: zero,
     setElementWidth: Fun.noop,
     setTableWidth: Fun.noop,
     label: 'none'

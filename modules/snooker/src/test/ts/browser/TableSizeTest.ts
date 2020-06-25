@@ -93,11 +93,11 @@ UnitTest.test('TableSize.noneSizing', () => {
   Assert.eq('Width should be the computed size of the table', width, sizing.width());
   Assert.eq('Pixel width should be the computed size of the table', width, sizing.pixelWidth());
   Assert.eq('Cell widths should be the computed size of the cell', [ cellWidth, cellWidth ], sizing.getWidths(warehouse, ResizeDirection.ltr, sizing));
-  Assert.eq('Cell min width should be at least 10px', true, sizing.minCellWidth() >= 10);
+  Assert.eq('Cell min width should be 0px', 0, sizing.minCellWidth());
 
   fc.assert(fc.property(fc.integer(-390, 390), fc.integer(400, 1000), (delta, colWidth) => {
-    Assert.eq('Cell delta should be identity', delta, sizing.getCellDelta(delta));
-    Assert.eq('Single column delta width should be the delta', [ delta ], sizing.singleColumnWidth(colWidth, delta));
+    Assert.eq('Cell delta should be 0', 0, sizing.getCellDelta(delta));
+    Assert.eq('Single column delta width should be 0', [ 0 ], sizing.singleColumnWidth(colWidth, delta));
   }));
 
   sizing.setTableWidth(table, [ cellWidth - 10, cellWidth - 10 ], -20);
