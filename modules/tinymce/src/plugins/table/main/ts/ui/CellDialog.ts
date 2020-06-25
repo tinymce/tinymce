@@ -22,15 +22,15 @@ type CellData = Helpers.CellData;
 const updateSimpleProps = (modifier: DomModifier, data: CellData) => {
   modifier.setAttrib('scope', data.scope);
   modifier.setAttrib('class', data.class);
-  modifier.setStyle('width', Util.addSizeSuffix(data.width));
-  modifier.setStyle('height', Util.addSizeSuffix(data.height));
+  modifier.setStyle('width', Util.addPxSuffix(data.width));
+  modifier.setStyle('height', Util.addPxSuffix(data.height));
 };
 
 const updateAdvancedProps = (modifier: DomModifier, data: CellData) => {
   modifier.setFormat('tablecellbackgroundcolor', data.backgroundcolor);
   modifier.setFormat('tablecellbordercolor', data.bordercolor);
   modifier.setFormat('tablecellborderstyle', data.borderstyle);
-  modifier.setFormat('tablecellborderwidth', Util.addSizeSuffix(data.borderwidth));
+  modifier.setFormat('tablecellborderwidth', Util.addPxSuffix(data.borderwidth));
 };
 
 // NOTES:

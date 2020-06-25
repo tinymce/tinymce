@@ -8,15 +8,15 @@ import * as Sizes from '../resize/Sizes';
 import * as CellUtils from '../util/CellUtils';
 
 export interface TableSize {
-  width: () => number;
-  pixelWidth: () => number;
-  getWidths: (warehouse: Warehouse, direction: BarPositions<ColInfo>, tableSize: TableSize) => number[];
-  getCellDelta: (delta: number) => number;
-  singleColumnWidth: (w: number, delta: number) => number[];
-  minCellWidth: () => number;
-  setElementWidth: (cell: Element<HTMLTableCellElement>, amount: number) => void;
-  setTableWidth: (table: Element<HTMLTableElement>, newWidths: number[], delta: number) => void;
-  label: string;
+  readonly width: () => number;
+  readonly pixelWidth: () => number;
+  readonly getWidths: (warehouse: Warehouse, direction: BarPositions<ColInfo>, tableSize: TableSize) => number[];
+  readonly getCellDelta: (delta: number) => number;
+  readonly singleColumnWidth: (w: number, delta: number) => number[];
+  readonly minCellWidth: () => number;
+  readonly setElementWidth: (cell: Element<HTMLTableCellElement>, amount: number) => void;
+  readonly setTableWidth: (table: Element<HTMLTableElement>, newWidths: number[], delta: number) => void;
+  readonly label: string;
 }
 
 const noneSize = (element: Element<HTMLTableElement>): TableSize => {

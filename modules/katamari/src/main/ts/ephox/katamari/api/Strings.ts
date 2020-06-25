@@ -78,6 +78,10 @@ export const lTrim: (s: string) => string =
 export const rTrim: (s: string) => string =
   blank(/\s+$/g);
 
+export const isNotEmpty = (s: string) => s.length > 0;
+
+export const isEmpty = (s: string) => !isNotEmpty(s);
+
 // Extract codepoint a la ES2015 String.fromCodePoint
 // From https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/fromCodePoint
 export const fromCodePoint = (...codePoints: number[]): string => {

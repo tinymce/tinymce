@@ -94,7 +94,7 @@ export const getResizeHandler = function (editor: Editor): ResizeHandler {
     const targetElm = e.target;
     if (isTable(targetElm)) {
 
-      const tableHasPercentage = Util.getRawWidth(editor, targetElm).map(Util.isPercentage).getOr(false);
+      const tableHasPercentage = Util.getRawWidth(editor, targetElm).exists(Util.isPercentage);
 
       if (tableHasPercentage && isPixelsForced(editor)) {
         enforcePixels(targetElm);
