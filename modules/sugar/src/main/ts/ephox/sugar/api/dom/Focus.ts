@@ -1,33 +1,32 @@
-import { document, Document, HTMLElement, Node as DomNode } from '@ephox/dom-globals';
-import { Fun, Option } from '@ephox/katamari';
+import { HTMLElement, Node as DomNode } from '@ephox/dom-globals';
+import { Option } from '@ephox/katamari';
 import Element from '../node/Element';
-import * as PredicateExists from '../search/PredicateExists';
-import * as Traverse from '../search/Traverse';
-import * as Compare from './Compare';
+import * as ShadowDom from '../node/ShadowDom';
+import * as Document from '../node/Document';
 
-const focus = (element: Element<HTMLElement>) => element.dom().focus();
+type RootNode = ShadowDom.RootNode;
 
-const blur = (element: Element<HTMLElement>) => element.dom().blur();
+const focus = (element: Element<HTMLElement>): void =>
+  element.dom().focus();
 
-const hasFocus = (element: Element<DomNode>) => {
-  const doc = Traverse.owner(element).dom();
-  return element.dom() === doc.activeElement;
+const blur = (element: Element<HTMLElement>): void =>
+  element.dom().blur();
+
+const hasFocus = (element: Element<DomNode>): boolean => {
+  const root = ShadowDom.getRootNode(element).dom();
+  return element.dom() === root.activeElement;
 };
 
-const active = (_doc?: Element<Document>) => {
-  const doc = _doc !== undefined ? _doc.dom() : document;
-  // Note: assuming that activeElement will always be a HTMLElement (maybe we should add a runtime check?)
-  return Option.from(doc.activeElement as HTMLElement).map(Element.fromDom);
-};
+// Note: assuming that activeElement will always be a HTMLElement (maybe we should add a runtime check?)
+const active = (root: RootNode = Document.getDocument()): Option<Element<HTMLElement>> =>
+  Option.from(root.dom().activeElement as HTMLElement).map(Element.fromDom);
 
-const focusInside = (element: Element<HTMLElement>) => {
-  // Only call focus if the focus is not already inside it.
-  const doc = Traverse.owner(element);
-  const inside = active(doc).filter((a) => PredicateExists.closest(a, Fun.curry(Compare.eq, element)));
-
-  inside.fold(() => {
+/** Focus the specified element, unless one of its descendents already has focus. */
+const focusInside = (element: Element<HTMLElement>): void => {
+  const alreadyFocusedInside = search(element).isSome();
+  if (!alreadyFocusedInside) {
     focus(element);
-  }, Fun.noop);
+  }
 };
 
 /**
@@ -35,7 +34,8 @@ const focusInside = (element: Element<HTMLElement>) => {
  * Use instead of SelectorFind.descendant(container, ':focus')
  *  because the :focus selector relies on keyboard focus.
  */
-const search = (element: Element<DomNode>) => active(Traverse.owner(element))
-  .filter((e) => element.dom().contains(e.dom()));
+const search = (element: Element<DomNode>): Option<Element<HTMLElement>> =>
+  active(ShadowDom.getRootNode(element))
+    .filter((e) => element.dom().contains(e.dom()));
 
 export { hasFocus, focus, blur, active, search, focusInside };

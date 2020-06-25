@@ -21,7 +21,7 @@ export const withNormalElement = (f: (d: Element<DomElement>) => void): void => 
   Remove.remove(div);
 };
 
-export const setupShadowRoot = (mode: 'open' | 'closed') => {
+export const setupShadowRoot = (mode: 'open' | 'closed'): { shadowRoot: Element<ShadowRoot>; innerDiv: Element<HTMLElement>; shadowHost: Element<HTMLElement> } => {
   const shadowHost = Element.fromTag('div', document);
   Attr.set(shadowHost, 'data-description', 'shadowHost');
   Insert.append(Body.body(), shadowHost);
@@ -31,12 +31,12 @@ export const setupShadowRoot = (mode: 'open' | 'closed') => {
   Attr.set(innerDiv, 'data-description', 'innerDiv');
 
   Insert.append(shadowRoot, innerDiv);
-  return { shadowHost, shadowRoot, innerDiv };
+  return { shadowHost, innerDiv, shadowRoot };
 };
 
 export const withShadowElementInMode = (mode: 'open' | 'closed', f: (sr: Element<ShadowRoot>, innerDiv: Element<HTMLElement>, shadowHost: Element<HTMLElement>) => void) => {
   if (ShadowDom.isSupported()) {
-    const { shadowHost, shadowRoot, innerDiv } = setupShadowRoot(mode);
+    const { shadowRoot, innerDiv, shadowHost } = setupShadowRoot(mode);
     f(shadowRoot, innerDiv, shadowHost);
     Remove.remove(shadowHost);
   }
@@ -47,7 +47,7 @@ export const withShadowElement = (f: (shadowRoot: Element<ShadowRoot>, innerDiv:
   withShadowElementInMode('closed', f);
 };
 
-export const withIframe = (f: (div: Element<DomElement>, iframe: Element<HTMLIFrameElement>, cw: Window) => void): void => {
+export const withIframe = (f: (div: Element<HTMLElement>, iframe: Element<HTMLIFrameElement>, cw: Window) => void): void => {
   const iframe = Element.fromTag('iframe');
   Insert.append(Body.body(), iframe);
 
