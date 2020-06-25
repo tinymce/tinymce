@@ -103,6 +103,8 @@ UnitTest.test('Focus.hasFocus in ShadowRoot', () => {
     Assert.eq('innerDiv should not have focus', false, Focus.hasFocus(innerDiv));
     Assert.eq('outerInput should have focus', true, Focus.hasFocus(outerInput));
     Assert.eq('shadowRoot should not have focus', false, Focus.hasFocus(shadowRoot));
+
+    Remove.remove(outerInput);
   });
 });
 
