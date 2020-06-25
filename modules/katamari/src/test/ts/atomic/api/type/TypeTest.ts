@@ -151,7 +151,7 @@ UnitTest.test('Type.isNullable', () => {
     Assert.eq('string should not be nullable', false, Type.isNullable(s));
   }));
   fc.assert(fc.property(fc.integer(), (i) => {
-    Assert.eq('integer should not is nullable', false, Type.isNullable(i));
+    Assert.eq('integer should not be nullable', false, Type.isNullable(i));
   }));
 });
 
