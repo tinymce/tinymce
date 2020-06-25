@@ -1,7 +1,8 @@
 import { Option, Strings, Type } from '@ephox/katamari';
-import { Element, Insert, Body, Remove, ShadowDom } from '@ephox/sugar';
+import { Body, Element, Insert, Remove, ShadowDom } from '@ephox/sugar';
 import 'tinymce';
 import * as Loader from '../loader/Loader';
+import { FailureCallback, SuccessCallback } from '../loader/Loader';
 import { setTinymceBaseUrl } from '../loader/Urls';
 import { document, HTMLElement, ShadowRoot } from '@ephox/dom-globals';
 import { TestLogs } from '@ephox/agar';
@@ -48,7 +49,7 @@ const setupFromElement = (callback: Loader.RunCallback, settings: Record<string,
   }, settings, Option.some(element));
 };
 
-const setupInShadowRoot = (callback: Loader.RunCallback, settings: Record<string, any>, success: Loader.SuccessCallback, failure: Loader.FailureCallback) => {
+const setupInShadowRoot = (callback: (editor: any, shadowRoot: Element<ShadowRoot>, success: SuccessCallback, failure: FailureCallback) => void, settings: Record<string, any>, success: Loader.SuccessCallback, failure: Loader.FailureCallback) => {
   if (!ShadowDom.isSupported()) {
     return success();
   }
@@ -62,7 +63,7 @@ const setupInShadowRoot = (callback: Loader.RunCallback, settings: Record<string
   Insert.append(sr, editorDiv);
 
   setupFromElement(
-    callback,
+    (editor, success, failure) => callback(editor, sr, success, failure),
     settings,
     editorDiv,
     (v, logs) => {
@@ -79,7 +80,7 @@ const setupInBodyAndShadowRoot = (callback: Loader.RunCallback, settings: Record
     callback,
     settings,
     (_v, logs1) => {
-      setupInShadowRoot(callback, settings, (v2, logs2) => {
+      setupInShadowRoot((e, _sr, s, f) => callback(e, s, f), settings, (v2, logs2) => {
         const logs = TestLogs.concat(TestLogs.getOrInit(logs1), TestLogs.getOrInit(logs2));
         success(v2, logs);
       }, failure);
