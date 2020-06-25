@@ -6,7 +6,7 @@ import {
 } from '@ephox/dom-globals';
 import * as Node from './Node';
 import * as Head from './Head';
-import { Fun, Option, Type } from '@ephox/katamari';
+import { Arr, Fun, Option, Type } from '@ephox/katamari';
 import Element from './Element';
 import * as Traverse from '../search/Traverse';
 
@@ -85,8 +85,8 @@ export const getOriginalEventTarget = (event: Event): Option<EventTarget> => {
     const eventAny = event as any;
     if (eventAny.composed && eventAny.composedPath) {
       const composedPath = eventAny.composedPath();
-      if (composedPath && composedPath.length > 0) {
-        return Option.from(composedPath[0]);
+      if (composedPath) {
+        return Arr.head(composedPath);
       }
     }
   }
