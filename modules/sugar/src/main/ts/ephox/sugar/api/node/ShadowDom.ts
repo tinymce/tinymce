@@ -78,15 +78,18 @@ export const getShadowHost = (e: Element<ShadowRoot>): Element<DomElement> =>
  * See: https://developers.google.com/web/fundamentals/web-components/shadowdom#events
  */
 export const getOriginalEventTarget = (event: Event): Option<EventTarget> => {
-  if (isSupported()) {
-    // When target element is inside Shadow DOM we need to take first element from composedPath
-    // otherwise we'll get Shadow Root parent, not actual target element.
-    // TODO: TINY-3312 Upgrade to latest dom-globals which includes the missing Event.composedPath property
-    const eventAny = event as any;
-    if (eventAny.composed && eventAny.composedPath) {
-      const composedPath = eventAny.composedPath();
-      if (composedPath) {
-        return Arr.head(composedPath);
+  if (isSupported() && Type.isNonNullable(event.target)) {
+    const el = Element.fromDom(event.target as DomNode);
+    if (Node.isElement(el) && isOpenShadowHost(Element.fromDom(event.target as DomElement))) {
+      // When target element is inside Shadow DOM we need to take first element from composedPath
+      // otherwise we'll get Shadow Root parent, not actual target element.
+      // TODO: TINY-3312 Upgrade to latest dom-globals which includes the missing Event.composedPath property
+      const eventAny = event as any;
+      if (eventAny.composed && eventAny.composedPath) {
+        const composedPath = eventAny.composedPath();
+        if (composedPath) {
+          return Arr.head(composedPath);
+        }
       }
     }
   }
