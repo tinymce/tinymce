@@ -2,10 +2,12 @@ import { Option, Strings, Type } from '@ephox/katamari';
 import { Body, Element, Insert, Remove, ShadowDom } from '@ephox/sugar';
 import 'tinymce';
 import * as Loader from '../loader/Loader';
-import { FailureCallback, SuccessCallback } from '../loader/Loader';
 import { setTinymceBaseUrl } from '../loader/Urls';
 import { document, HTMLElement, ShadowRoot } from '@ephox/dom-globals';
 import { TestLogs } from '@ephox/agar';
+
+type FailureCallback = Loader.FailureCallback;
+type SuccessCallback = Loader.SuccessCallback;
 
 const setupBaseUrl = (tinymce: any, settings: Record<string, any>) => {
   if (settings.base_url) {
