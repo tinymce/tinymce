@@ -16,13 +16,13 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableSizingTest', (success, fa
       defaultStyles ? tinyApis.sSetSetting('table_default_styles', defaultStyles) : tinyApis.sDeleteSetting('table_default_styles'),
       tinyApis.sExecCommand('mceInsertTable', { rows: 2, columns: 2 }),
       tinyApis.sAssertContentStructure(ApproxStructure.build((s, str) => s.element('body', {
-        children: [ assertion(s, str) ]
+        children: [ assertion(s, str), s.theRest() ]
       })))
     ]);
 
     Pipeline.async({}, [
       Log.stepsAsStep('TINY-6051', 'Should default to a percentage width when inserting new tables', [
-        tinyApis.sDeleteSetting('table_sizing'),
+        tinyApis.sDeleteSetting('table_sizing_mode'),
         sTest((s, str) => s.element('table', {
           styles: {
             'border-collapse': str.is('collapse'),
@@ -37,7 +37,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableSizingTest', (success, fa
         }), { width: '600px' })
       ]),
       Log.stepsAsStep('TINY-6051', 'Relative sizing should default to a percentage width when inserting new tables', [
-        tinyApis.sSetSetting('table_sizing', 'relative'),
+        tinyApis.sSetSetting('table_sizing_mode', 'relative'),
         sTest((s, str) => s.element('table', {
           styles: {
             'border-collapse': str.is('collapse'),
@@ -52,7 +52,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableSizingTest', (success, fa
         }), { width: '750px' })
       ]),
       Log.stepsAsStep('TINY-6051', 'Fixed sizing should default to a pixel width when inserting new tables', [
-        tinyApis.sSetSetting('table_sizing', 'fixed'),
+        tinyApis.sSetSetting('table_sizing_mode', 'fixed'),
         sTest((s, str) => s.element('table', {
           styles: {
             'border-collapse': str.is('collapse'),
@@ -71,7 +71,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableSizingTest', (success, fa
         }), { width: '100%' })
       ]),
       Log.stepsAsStep('TINY-6051', 'Responsive sizing should default to no width when inserting new tables', [
-        tinyApis.sSetSetting('table_sizing', 'responsive'),
+        tinyApis.sSetSetting('table_sizing_mode', 'responsive'),
         sTest((s, str) => s.element('table', {
           styles: {
             'border-collapse': str.is('collapse'),

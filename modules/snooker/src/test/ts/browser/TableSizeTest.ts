@@ -61,7 +61,7 @@ UnitTest.test('TableSize.percentageSizing', () => {
   const warehouse = Warehouse.fromTable(table);
 
   Assert.eq('Width should be 75', 80, sizing.width());
-  Assert.eq('Pixel width should be 600px', 400, sizing.pixelWidth());
+  Assert.eq('Pixel width should be 400px', 400, sizing.pixelWidth());
   Assert.eq('Cell widths should be 50% each', [ 50, 50 ], sizing.getWidths(warehouse, ResizeDirection.ltr, sizing));
   Assert.eq('Cell min width should be at least 10px in percentage (2.5%)', true, sizing.minCellWidth() >= 2.5);
 

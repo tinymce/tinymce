@@ -13,7 +13,7 @@ export interface StringMap {
 }
 
 type ClassList = Array<{title: string; value: string}>;
-type TableSizing = 'fixed' | 'relative' | 'responsive' | 'auto';
+type TableSizingMode = 'fixed' | 'relative' | 'responsive' | 'auto';
 
 const defaultTableToolbar = 'tableprops tabledelete | tableinsertrowbefore tableinsertrowafter tabledeleterow | tableinsertcolbefore tableinsertcolafter tabledeletecol';
 
@@ -37,7 +37,7 @@ const defaultAttributes = {
   border: '1'
 };
 
-const getTableSizing = (editor: Editor): TableSizing => editor.getParam('table_sizing', 'auto');
+const getTableSizingMode = (editor: Editor): TableSizingMode => editor.getParam('table_sizing_mode', 'auto');
 const getTableResponseWidth = (editor: Editor): boolean | undefined => editor.getParam('table_responsive_width');
 
 const getDefaultAttributes = (editor: Editor): StringMap => editor.getParam('table_default_attributes', defaultAttributes, 'object');
@@ -53,9 +53,9 @@ const shouldStyleWithCss = (editor: Editor): boolean => editor.getParam('table_s
 const getCellClassList = (editor: Editor): ClassList => editor.getParam('table_cell_class_list', [], 'array');
 const getRowClassList = (editor: Editor): ClassList => editor.getParam('table_row_class_list', [], 'array');
 const getTableClassList = (editor: Editor): ClassList => editor.getParam('table_class_list', [], 'array');
-const isPercentagesForced = (editor: Editor): boolean => getTableSizing(editor) === 'relative' || getTableResponseWidth(editor) === true;
-const isPixelsForced = (editor: Editor): boolean => getTableSizing(editor) === 'fixed' || getTableResponseWidth(editor) === false;
-const isResponsiveForced = (editor: Editor): boolean => getTableSizing(editor) === 'responsive';
+const isPercentagesForced = (editor: Editor): boolean => getTableSizingMode(editor) === 'relative' || getTableResponseWidth(editor) === true;
+const isPixelsForced = (editor: Editor): boolean => getTableSizingMode(editor) === 'fixed' || getTableResponseWidth(editor) === false;
+const isResponsiveForced = (editor: Editor): boolean => getTableSizingMode(editor) === 'responsive';
 const getToolbar = (editor: Editor): string => editor.getParam('table_toolbar', defaultTableToolbar);
 
 
