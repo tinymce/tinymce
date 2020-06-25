@@ -4,7 +4,7 @@ import * as Insert from 'ephox/sugar/api/dom/Insert';
 import * as Body from 'ephox/sugar/api/node/Body';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
 import * as ShadowDom from 'ephox/sugar/api/node/ShadowDom';
-import { Attr } from '@ephox/sugar';
+import * as Attr from 'ephox/sugar/api/properties/Attr';
 
 export const withNormalElement = (f: (d: Element<DomElement>) => void): void => {
   const div = Element.fromTag('div');
