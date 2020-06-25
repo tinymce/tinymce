@@ -148,7 +148,7 @@ UnitTest.test('Type.isNullable', () => {
   Assert.eq('null should be nullable', true, Type.isNullable(null));
   Assert.eq('undefined should be nullable', true, Type.isNullable(undefined));
   fc.assert(fc.property(fc.string(), (s) => {
-    Assert.eq('string should not is nullable', false, Type.isNullable(s));
+    Assert.eq('string should not be nullable', false, Type.isNullable(s));
   }));
   fc.assert(fc.property(fc.integer(), (i) => {
     Assert.eq('integer should not is nullable', false, Type.isNullable(i));
@@ -159,10 +159,10 @@ UnitTest.test('Type.isNonNullable', () => {
   Assert.eq('null should be nullable', false, Type.isNonNullable(null));
   Assert.eq('undefined should be nullable', false, Type.isNonNullable(undefined));
   fc.assert(fc.property(fc.string(), (s) => {
-    Assert.eq('string should not is nullable', false, Type.isNonNullable(s));
+    Assert.eq('string should not be nullable', true, Type.isNonNullable(s));
   }));
   fc.assert(fc.property(fc.integer(), (i) => {
-    Assert.eq('integer should not is nullable', false, Type.isNullable(i));
+    Assert.eq('integer should not be nullable', true, Type.isNonNullable(i));
   }));
 
   // this is testing a compile-time check of the type guard
