@@ -81,7 +81,7 @@ UnitTest.test('getRootNode === shadowroot on element in shadow root', () => {
 
 UnitTest.test('getRootNode(shadowroot) === shadowroot', () => {
   withShadowElement((sr) => {
-    Assert.eq('should be shadowroot', sr, sr, tElement);
+    Assert.eq('should be shadowroot', sr, sr, tElement());
   });
 });
 
@@ -137,7 +137,7 @@ UnitTest.test('contentcontainer is shadow root for shadow root', () => {
   });
 });
 
-UnitTest.test('stylecontainer is body for document', () => {
+UnitTest.test('contentcontainer is body for document', () => {
   Assert.eq('Should be head', Body.getBody(Document.getDocument()), ShadowDom.getContentContainer(Document.getDocument()), tElement());
 });
 
@@ -176,7 +176,7 @@ const checkOriginalEventTarget = (mode: 'open' | 'closed', success: UnitTest.Suc
   const unbinder = DomEvent.bind(Body.body(), 'click', (evt) => {
     try {
       const expected = mode === 'open' ? i2 : shadowHost;
-      Assert.eq('Check event target', expected, evt.target(), tElement);
+      Assert.eq('Check event target', expected, evt.target(), tElement());
       unbinder.unbind();
       Remove.remove(i1);
       Remove.remove(shadowHost);
