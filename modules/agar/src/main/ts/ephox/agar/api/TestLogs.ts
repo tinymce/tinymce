@@ -153,11 +153,23 @@ export const addStackTrace = (logs: TestLogs, err: { stack: any }): TestLogs => 
   }));
 };
 
+const init = (): TestLogs => initLogsWith([ ]);
+
 const initLogsWith = (history: TestLogEntry[]) => ({
   history
 });
 
+const concat = (logs1: TestLogs, logs2: TestLogs): TestLogs =>
+  initLogsWith(Arr.flatten([ logs1.history, logs2.history ]));
+
+const single = (message: string): TestLogs =>
+  addLogEntry(init(), message);
+
 export const TestLogs = {
-  getOrInit: (logs: TestLogs): TestLogs => logs !== undefined ? logs : initLogsWith([ ]),
-  init: (): TestLogs => initLogsWith([ ])
+  getOrInit: (logs?: TestLogs): TestLogs => logs !== undefined ? logs : initLogsWith([ ]),
+  init,
+  initLogsWith,
+  concat,
+  addLogEntry,
+  single
 };

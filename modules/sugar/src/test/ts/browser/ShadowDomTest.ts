@@ -1,7 +1,7 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import Element from 'ephox/sugar/api/node/Element';
 import * as Insert from 'ephox/sugar/api/dom/Insert';
-import { Element as DomElement, navigator } from '@ephox/dom-globals';
+import { Element as DomElement, navigator, ShadowRoot } from '@ephox/dom-globals';
 import * as SelectorFind from 'ephox/sugar/api/search/SelectorFind';
 import fc from 'fast-check';
 import { PlatformDetection } from '@ephox/sand';
@@ -23,6 +23,7 @@ import * as Node from 'ephox/sugar/api/node/Node';
 import * as DomEvent from 'ephox/sugar/api/events/DomEvent';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
 import * as Attr from 'ephox/sugar/api/properties/Attr';
+import { Arr } from '@ephox/katamari';
 
 type RootNode = ShadowDom.RootNode;
 
@@ -216,3 +217,13 @@ UnitTest.test('isOpenShadowHost on closed shadow host', () => {
     Assert.eq('The innerDiv is not an open shadow host', false, ShadowDom.isOpenShadowHost(innerDiv));
   });
 });
+
+if (ShadowDom.isSupported()) {
+  UnitTest.test('withShadowElement gives us open and closed roots', () => {
+    const roots: Array<Element<ShadowRoot>> = [];
+    withShadowElement((sr) => {
+      roots.push(sr);
+    });
+    Assert.eq('open then closed', [ 'open', 'closed' ], Arr.map(roots, (r) => (r.dom() as any).mode ));
+  });
+}

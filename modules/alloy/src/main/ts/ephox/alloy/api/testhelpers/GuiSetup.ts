@@ -1,48 +1,105 @@
 import { Assertions, Pipeline, Step, TestLogs } from '@ephox/agar';
-import { document, HTMLDocument } from '@ephox/dom-globals';
 import { Merger } from '@ephox/katamari';
-import { DomEvent, Element, EventUnbinder, Html, Insert, Remove } from '@ephox/sugar';
+import { Body, Document, DomEvent, Element, EventUnbinder, Html, Insert, Remove, ShadowDom } from '@ephox/sugar';
 
 import { AlloyComponent } from '../component/ComponentApi';
 import * as Attachment from '../system/Attachment';
 import * as Gui from '../system/Gui';
 import { TestStore } from './TestStore';
 
+type RootNode = ShadowDom.RootNode;
+
 interface KeyLoggerState {
   log: string[];
   onKeydown: EventUnbinder;
 }
 
-/**
- * @deprecated use guiSetup instead.
- * TODO: remove and inline
- */
-const setup = (createComponent: (store: TestStore, doc: Element, body: Element) => AlloyComponent,
-               f: (doc: Element, body: Element, gui: Gui.GuiSystem, component: AlloyComponent, store: TestStore) => Array<Step<any, any>>, success: () => void, failure: (err: any, logs?: TestLogs) => void) => {
+const setupIn = (
+  root: RootNode,
+  createComponent: (store: TestStore, doc: Element, body: Element) => AlloyComponent,
+  f: (doc: RootNode, body: Element, gui: Gui.GuiSystem, component: AlloyComponent, store: TestStore
+  ) => Array<Step<any, any>>, success: () => void, failure: (err: any, logs?: TestLogs) => void
+) => {
   const store = TestStore();
 
   const gui = Gui.create();
+  const contentContainer = ShadowDom.getContentContainer(root);
 
-  const doc = Element.fromDom(document);
-  const body = Element.fromDom(document.body);
+  Attachment.attachSystem(contentContainer, gui);
 
-  Attachment.attachSystem(body, gui);
-
-  const component = createComponent(store, doc, body);
+  const component = createComponent(store, root, contentContainer);
   gui.add(component);
 
-  Pipeline.async({}, f(doc, body, gui, component, store), () => {
-    Attachment.detachSystem(gui);
-    success();
-  }, (e, logs) => {
-    // tslint:disable-next-line
-    // console.error(e);
-    failure(e, logs);
-  }, TestLogs.init());
+  try {
+    const steps = f(root, contentContainer, gui, component, store);
+    Pipeline.async({}, steps, () => {
+      Attachment.detachSystem(gui);
+      success();
+    }, (e, logs) => {
+      failure(e, logs);
+    }, TestLogs.init());
+  } catch (e) {
+    failure(e);
+  }
 };
 
 /**
- * Setup an editor, run a Step, then tear down.
+ * Setup in the body, run list of untyped Steps, then tear down.
+ * Use #guiSetup for type-safe steps.
+ *
+ * @param createComponent
+ * @param f
+ * @param success
+ * @param failure
+ */
+const setup = (
+  createComponent: (store: TestStore, doc: Element, body: Element) => AlloyComponent,
+  f: (doc: Element, body: Element, gui: Gui.GuiSystem, component: AlloyComponent, store: TestStore) => Array<Step<any, any>>,
+  success: () => void,
+  failure: (err: any, logs?: TestLogs) => void
+): void => {
+  setupIn(Document.getDocument(), createComponent, f, success, failure);
+};
+
+/**
+* Setup in a Shadow Root, run list of untyped Steps, then tear down.
+*
+* @param createComponent
+* @param f
+* @param success
+* @param failure
+*/
+const setupInShadowRoot = (
+  createComponent: (store: TestStore, doc: Element, body: Element) => AlloyComponent,
+  f: (doc: Element, body: Element, gui: Gui.GuiSystem, component: AlloyComponent, store: TestStore) => Array<Step<any, any>>,
+  success: () => void,
+  failure: (err: any, logs?: TestLogs) => void
+): void => {
+  if (!ShadowDom.isSupported()) {
+    return success();
+  }
+  const sh = Element.fromTag('div');
+  Insert.append(Body.body(), sh);
+  const sr = Element.fromDom(sh.dom().attachShadow({ mode: 'open' }));
+  setupIn(sr, createComponent, f, () => {
+    Remove.remove(sh);
+    success();
+  }, failure);
+};
+
+const setupInBodyAndShadowRoot = (
+  createComponent: (store: TestStore, doc: Element, body: Element) => AlloyComponent,
+  f: (doc: Element, body: Element, gui: Gui.GuiSystem, component: AlloyComponent, store: TestStore) => Array<Step<any, any>>,
+  success: () => void,
+  failure: (err: any, logs?: TestLogs) => void
+): void => {
+  setup(createComponent, f, () => {
+    setupInShadowRoot(createComponent, f, success, failure);
+  }, failure);
+};
+
+/**
+ * Setup in the body, run a typed Step, then tear down.
  * If you need to run multiple Steps, compose them using the functions in StepSequence.
  *
  * @param createComponent
@@ -76,9 +133,9 @@ const mTeardownKeyLogger = (body: Element, expected: string[]) => Step.stateful(
   next(rest);
 });
 
-const mAddStyles = (doc: Element<HTMLDocument>, styles: string[]) => Step.stateful((value: any, next, _die) => {
+const mAddStyles = (dos: RootNode, styles: string[]) => Step.stateful((value: any, next, _die) => {
   const style = Element.fromTag('style');
-  const head = Element.fromDom(doc.dom().head);
+  const head = ShadowDom.getStyleContainer(dos);
   Insert.append(head, style);
   Html.set(style, styles.join('\n'));
 
@@ -94,6 +151,8 @@ const mRemoveStyles = Step.stateful((value: any, next, _die) => {
 
 export {
   setup,
+  setupInShadowRoot,
+  setupInBodyAndShadowRoot,
   guiSetup,
   mSetupKeyLogger,
   mTeardownKeyLogger,
