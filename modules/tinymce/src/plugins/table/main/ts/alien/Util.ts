@@ -8,7 +8,9 @@
 import { Compare, Element, Attr, SelectorFilter } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { Arr } from '@ephox/katamari';
-import { HTMLElement } from '@ephox/dom-globals';
+import { HTMLElement, Node } from '@ephox/dom-globals';
+
+const getNodeName = (elm: Node) => elm.nodeName.toLowerCase();
 
 const getBody = function (editor: Editor) {
   return Element.fromDom(editor.getBody());
@@ -44,6 +46,7 @@ const removeDataStyle = (table) => {
 };
 
 export {
+  getNodeName,
   getBody,
   getIsRoot,
   addSizeSuffix,

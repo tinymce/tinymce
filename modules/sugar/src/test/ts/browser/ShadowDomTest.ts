@@ -53,13 +53,13 @@ const shouldBeDocument = (n: RootNode) => {
 
 UnitTest.test('getRootNode === document on normal element in dom', () => {
   withNormalElement((div) => {
-    Assert.eq('should be document', Document.getDocument(), ShadowDom.getRootNode(div), tElement);
+    Assert.eq('should be document', Document.getDocument(), ShadowDom.getRootNode(div), tElement());
   });
 });
 
 UnitTest.test('getRootNode(document) === document on normal element in dom', () => {
   withNormalElement(() => {
-    Assert.eq('should be document', Document.getDocument(), ShadowDom.getRootNode(Document.getDocument()), tElement);
+    Assert.eq('should be document', Document.getDocument(), ShadowDom.getRootNode(Document.getDocument()), tElement());
   });
 });
 
@@ -75,7 +75,7 @@ UnitTest.test('document is document', () => {
 
 UnitTest.test('getRootNode === shadowroot on element in shadow root', () => {
   withShadowElement((sr, innerDiv) => {
-    Assert.eq('should be shadowroot', sr, ShadowDom.getRootNode(innerDiv), tElement);
+    Assert.eq('should be shadowroot', sr, ShadowDom.getRootNode(innerDiv), tElement());
   });
 });
 
@@ -123,27 +123,27 @@ UnitTest.test('isSupported platform test', () => {
 
 UnitTest.test('stylecontainer is shadow root for shadow root', () => {
   withShadowElement((sr) => {
-    Assert.eq('Should be shadow root', sr, ShadowDom.getStyleContainer(sr), tElement);
+    Assert.eq('Should be shadow root', sr, ShadowDom.getStyleContainer(sr), tElement());
   });
 });
 
 UnitTest.test('stylecontainer is head for document', () => {
-  Assert.eq('Should be head', Head.getHead(Document.getDocument()), ShadowDom.getStyleContainer(Document.getDocument()), tElement);
+  Assert.eq('Should be head', Head.getHead(Document.getDocument()), ShadowDom.getStyleContainer(Document.getDocument()), tElement());
 });
 
 UnitTest.test('contentcontainer is shadow root for shadow root', () => {
   withShadowElement((sr) => {
-    Assert.eq('Should be shadow root', sr, ShadowDom.getContentContainer(sr), tElement);
+    Assert.eq('Should be shadow root', sr, ShadowDom.getContentContainer(sr), tElement());
   });
 });
 
 UnitTest.test('stylecontainer is body for document', () => {
-  Assert.eq('Should be head', Body.getBody(Document.getDocument()), ShadowDom.getContentContainer(Document.getDocument()), tElement);
+  Assert.eq('Should be head', Body.getBody(Document.getDocument()), ShadowDom.getContentContainer(Document.getDocument()), tElement());
 });
 
 UnitTest.test('getShadowHost', () => {
   withShadowElement((sr, inner, sh) => {
-    Assert.eq('Should be shadow host', sh, ShadowDom.getShadowHost(sr), tElement);
+    Assert.eq('Should be shadow host', sh, ShadowDom.getShadowHost(sr), tElement());
   });
 });
 
