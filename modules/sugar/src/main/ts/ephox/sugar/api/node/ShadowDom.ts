@@ -93,8 +93,10 @@ export const getOriginalEventTarget = (event: Event): Option<EventTarget> => {
   return Option.from(event.target);
 };
 
+// TODO: TINY-3312 Upgrade to latest dom-globals which includes the missing 'mode' property
 export const isOpen = (sr: Element<ShadowRoot>): boolean =>
   (sr.dom() as any).mode === 'open';
 
+// TODO: TINY-3312 Upgrade to latest dom-globals which includes the missing 'mode' property
 export const isClosed = (sr: Element<ShadowRoot>): boolean =>
   (sr.dom() as any).mode === 'closed';
