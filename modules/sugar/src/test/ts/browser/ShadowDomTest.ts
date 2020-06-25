@@ -158,7 +158,7 @@ UnitTest.test('isOpen / isClosed', () => {
   });
 });
 
-function checkOriginalEventTarget(mode: 'open' | 'closed', success: UnitTest.SuccessCallback, failure: UnitTest.FailureCallback) {
+const checkOriginalEventTarget = (mode: 'open' | 'closed', success: UnitTest.SuccessCallback, failure: UnitTest.FailureCallback): void => {
   const { innerDiv, shadowHost } = setupShadowRoot(mode);
 
   const input = (desc: string, parent: Element<DomElement>) => {
@@ -186,7 +186,7 @@ function checkOriginalEventTarget(mode: 'open' | 'closed', success: UnitTest.Suc
     }
   });
   i2.dom().click();
-}
+};
 
 UnitTest.asynctest('getOriginalEventTarget on a closed shadow root', (success, failure) => {
   if (!ShadowDom.isSupported()) {
