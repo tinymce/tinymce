@@ -13,7 +13,7 @@ import { Container } from 'ephox/alloy/api/ui/Container';
 
 UnitTest.asynctest('DisablingTest', (success, failure) => {
 
-  const subject = Memento.record(
+  const memDisabledButton = Memento.record(
     Button.sketch({
       dom: {
         tag: 'button',
@@ -27,10 +27,26 @@ UnitTest.asynctest('DisablingTest', (success, failure) => {
     })
   );
 
+  const memEnabledButton = Memento.record(
+    Button.sketch({
+      dom: {
+        tag: 'button',
+        innerHtml: 'button'
+      },
+      buttonBehaviours: Behaviour.derive([
+        Disabling.config({
+          disabled: () => false,
+          disableClass: 'btn-disabled'
+        })
+      ])
+    })
+  );
+
   GuiSetup.setup((store, _doc, _body) => GuiFactory.build(
     Container.sketch({
       components: [
-        subject.asSpec()
+        memDisabledButton.asSpec(),
+        memEnabledButton.asSpec()
       ],
       events: AlloyEvents.derive([
         AlloyEvents.runOnExecute(store.adder('execute.reached'))
@@ -39,11 +55,12 @@ UnitTest.asynctest('DisablingTest', (success, failure) => {
     )), (_doc, _body, _gui, component, store) => {
 
     const sClickButton = Chain.asStep({ }, [
-      Chain.mapper(() => subject.get(component).element()),
+      Chain.mapper(() => memDisabledButton.get(component).element()),
       Mouse.cClick
     ]);
 
-    const button = subject.get(component);
+    const disabledButton = memDisabledButton.get(component);
+    const enabledButton = memEnabledButton.get(component);
     return [
       Assertions.sAssertStructure(
         'Disabled should have a disabled attribute',
@@ -52,7 +69,17 @@ UnitTest.asynctest('DisablingTest', (success, failure) => {
             disabled: str.is('disabled')
           }
         })),
-        button.element()
+        disabledButton.element()
+      ),
+      Assertions.sAssertStructure(
+        'Enabled should not  have a disabled attribute or class',
+        ApproxStructure.build((s, str, arr) => s.element('button', {
+          attrs: {
+            disabled: str.none()
+          },
+          classes: [ arr.not('btn-disabled') ]
+        })),
+        enabledButton.element()
       ),
 
       Logger.t(
@@ -60,7 +87,7 @@ UnitTest.asynctest('DisablingTest', (success, failure) => {
         GeneralSteps.sequence([
           Step.sync(() => {
             // TODO: Maybe replace with an alloy focus call
-            Focus.focus(button.element());
+            Focus.focus(disabledButton.element());
           }),
           sClickButton,
           store.sAssertEq('Execute did not get past disabled button', [ ])
@@ -70,7 +97,7 @@ UnitTest.asynctest('DisablingTest', (success, failure) => {
       Logger.t(
         'Re-enable button',
         Step.sync(() => {
-          Disabling.enable(button);
+          Disabling.enable(disabledButton);
         })
       ),
 
@@ -81,7 +108,7 @@ UnitTest.asynctest('DisablingTest', (success, failure) => {
             disabled: str.none()
           }
         })),
-        button.element()
+        disabledButton.element()
       ),
 
       Logger.t(
@@ -89,7 +116,7 @@ UnitTest.asynctest('DisablingTest', (success, failure) => {
         GeneralSteps.sequence([
           Step.sync(() => {
             // TODO: Maybe replace with an alloy focus call
-            Focus.focus(button.element());
+            Focus.focus(disabledButton.element());
           }),
           sClickButton,
           store.sAssertEq('Execute did not get past disabled button', [ 'execute.reached' ])
@@ -99,7 +126,7 @@ UnitTest.asynctest('DisablingTest', (success, failure) => {
       Logger.t(
         'Set button to disabled state',
         Step.sync(() => {
-          Disabling.set(button, true);
+          Disabling.set(disabledButton, true);
         })
       ),
 
@@ -110,13 +137,13 @@ UnitTest.asynctest('DisablingTest', (success, failure) => {
             disabled: str.is('disabled')
           }
         })),
-        button.element()
+        disabledButton.element()
       ),
 
       Logger.t(
         'Set button to enabled state',
         Step.sync(() => {
-          Disabling.set(button, false);
+          Disabling.set(disabledButton, false);
         })
       ),
 
@@ -127,7 +154,7 @@ UnitTest.asynctest('DisablingTest', (success, failure) => {
             disabled: str.none()
           }
         })),
-        button.element()
+        disabledButton.element()
       )
     ];
   }, () => { success(); }, failure);

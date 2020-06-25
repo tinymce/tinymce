@@ -143,3 +143,33 @@ UnitTest.test('Type.is*: only one should match for every value', () => {
     Assert.eq('number of matching types', 1, matches.length, tNumber);
   }));
 });
+
+UnitTest.test('Type.isNullable', () => {
+  Assert.eq('null should be nullable', true, Type.isNullable(null));
+  Assert.eq('undefined should be nullable', true, Type.isNullable(undefined));
+  fc.assert(fc.property(fc.string(), (s) => {
+    Assert.eq('string should not be nullable', false, Type.isNullable(s));
+  }));
+  fc.assert(fc.property(fc.integer(), (i) => {
+    Assert.eq('integer should not be nullable', false, Type.isNullable(i));
+  }));
+});
+
+UnitTest.test('Type.isNonNullable', () => {
+  Assert.eq('null should be nullable', false, Type.isNonNullable(null));
+  Assert.eq('undefined should be nullable', false, Type.isNonNullable(undefined));
+  fc.assert(fc.property(fc.string(), (s) => {
+    Assert.eq('string should not be nullable', true, Type.isNonNullable(s));
+  }));
+  fc.assert(fc.property(fc.integer(), (i) => {
+    Assert.eq('integer should not be nullable', true, Type.isNonNullable(i));
+  }));
+
+  // this is testing a compile-time check of the type guard
+  const os: string | null | undefined = 'hello';
+  if (Type.isNonNullable(os)) {
+    const s: string = os;
+    Assert.eq('s', s, os);
+  }
+});
+
