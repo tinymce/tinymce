@@ -81,11 +81,15 @@ const setupInBodyAndShadowRoot = (callback: Loader.RunCallback, settings: Record
   setup(
     callback,
     settings,
-    (_v, logs1) => {
-      setupInShadowRoot((e, _sr, s, f) => callback(e, s, f), settings, (v2, logs2) => {
-        const logs = TestLogs.concat(TestLogs.getOrInit(logs1), TestLogs.getOrInit(logs2));
-        success(v2, logs);
-      }, failure);
+    (v, logs1) => {
+      if (ShadowDom.isSupported()) {
+        setupInShadowRoot((e, _sr, s, f) => callback(e, s, f), settings, (v2, logs2) => {
+          const logs = TestLogs.concat(TestLogs.getOrInit(logs1), TestLogs.getOrInit(logs2));
+          success(v2, logs);
+        }, failure);
+      } else {
+        success(v, logs1);
+      }
     },
     failure
   );
