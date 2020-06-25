@@ -94,9 +94,15 @@ export const getOriginalEventTarget = (event: Event): Option<EventTarget> => {
 };
 
 // TODO: TINY-3312 Upgrade to latest dom-globals which includes the missing 'mode' property
-export const isOpen = (sr: Element<ShadowRoot>): boolean =>
+export const isOpenShadowRoot = (sr: Element<ShadowRoot>): boolean =>
   (sr.dom() as any).mode === 'open';
 
 // TODO: TINY-3312 Upgrade to latest dom-globals which includes the missing 'mode' property
-export const isClosed = (sr: Element<ShadowRoot>): boolean =>
+export const isClosedShadowRoot = (sr: Element<ShadowRoot>): boolean =>
   (sr.dom() as any).mode === 'closed';
+
+/** Return true if the element is a host of an open shadow root.
+ *  Return false if the element is a host of a closed shadow root, or if the element is not a host.
+ */
+export const isOpenShadowHost = (element: Element<DomElement>): boolean =>
+  Type.isNonNullable(element.dom().shadowRoot);

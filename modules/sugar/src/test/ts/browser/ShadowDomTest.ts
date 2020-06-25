@@ -147,14 +147,14 @@ UnitTest.test('getShadowHost', () => {
   });
 });
 
-UnitTest.test('isOpen / isClosed', () => {
+UnitTest.test('isOpenShadowRoot / isClosedShadowRoot', () => {
   withShadowElementInMode('open', (sr) => {
-    Assert.eq('open shadow root is open', true, ShadowDom.isOpen(sr));
-    Assert.eq('open shadow root is not closed', false, ShadowDom.isClosed(sr));
+    Assert.eq('open shadow root is open', true, ShadowDom.isOpenShadowRoot(sr));
+    Assert.eq('open shadow root is not closed', false, ShadowDom.isClosedShadowRoot(sr));
   });
   withShadowElementInMode('closed', (sr) => {
-    Assert.eq('closed shadow root is not open', false, ShadowDom.isOpen(sr));
-    Assert.eq('closed shadow root is closed', true, ShadowDom.isClosed(sr));
+    Assert.eq('closed shadow root is not open', false, ShadowDom.isOpenShadowRoot(sr));
+    Assert.eq('closed shadow root is closed', true, ShadowDom.isClosedShadowRoot(sr));
   });
 });
 
@@ -201,4 +201,18 @@ UnitTest.asynctest('getOriginalEventTarget on an open shadow root', (success, fa
     return success();
   }
   checkOriginalEventTarget('open', success, failure);
+});
+
+UnitTest.test('isOpenShadowHost on open shadow host', () => {
+  withShadowElementInMode('open', (shadowRoot, innerDiv, shadowHost) => () => {
+    Assert.eq('The open shadow host is an open shadow host', true, ShadowDom.isOpenShadowHost(shadowHost));
+    Assert.eq('The innerDiv is not an open shadow host', false, ShadowDom.isOpenShadowHost(innerDiv));
+  });
+});
+
+UnitTest.test('isOpenShadowHost on closed shadow host', () => {
+  withShadowElementInMode('closed', (shadowRoot, innerDiv, shadowHost) => () => {
+    Assert.eq('The closed shadow host is an open shadow host', false, ShadowDom.isOpenShadowHost(shadowHost));
+    Assert.eq('The innerDiv is not an open shadow host', false, ShadowDom.isOpenShadowHost(innerDiv));
+  });
 });
