@@ -703,7 +703,7 @@ function Schema(settings?: SchemaSettings): Schema {
 
   // Adds valid children to the schema object
   const addValidChildren = function (validChildren) {
-    const childRuleRegExp = /^([+\-]?)([A-Sa-z0-9_\-\.\u00b7\u00c0-\u00d6\u00d8-\u00f6\u00f8-\u037d\u037f-\u1fff\u200c-\u200d\u203f-\u2040\u2070-\u218f\u2c00-\u2fef\u3001-\ud7ff\uf900-\ufdcf\ufdf0-\ufffd]+)\[([^\]]+)\]$/; // from w3c's custom element grammar
+    const childRuleRegExp = /^([+\-]?)([A-Za-z0-9_\-\.\u00b7\u00c0-\u00d6\u00d8-\u00f6\u00f8-\u037d\u037f-\u1fff\u200c-\u200d\u203f-\u2040\u2070-\u218f\u2c00-\u2fef\u3001-\ud7ff\uf900-\ufdcf\ufdf0-\ufffd]+)\[([^\]]+)\]$/; // from w3c's custom element grammar
 
     // Invalidate the schema cache if the schema is mutated
     mapCache[settings.schema] = null;
