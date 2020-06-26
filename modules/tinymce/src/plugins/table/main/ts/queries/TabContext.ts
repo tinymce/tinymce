@@ -8,16 +8,14 @@
 import { KeyboardEvent } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
 import { CellNavigation, TableLookup } from '@ephox/snooker';
-import {
-  Compare, CursorPosition, Element, Node, Selection, SelectorFilter, SelectorFind, WindowSelection
-} from '@ephox/sugar';
+import { Compare, CursorPosition, Element, Node, Selection, SelectorFilter, SelectorFind, WindowSelection } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import VK from 'tinymce/core/api/util/VK';
-
-import * as Util from '../alien/Util';
-import * as TableTargets from './TableTargets';
 import { TableActions } from '../actions/TableActions';
+
+import * as Util from '../core/Util';
+import * as TableTargets from './TableTargets';
 
 const forward = function (editor: Editor, isRoot, cell, lazyWire) {
   return go(editor, isRoot, CellNavigation.next(cell), lazyWire);

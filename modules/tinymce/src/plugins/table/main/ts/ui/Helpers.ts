@@ -14,7 +14,7 @@ import Editor from 'tinymce/core/api/Editor';
 import * as Styles from '../actions/Styles';
 import { getDefaultAttributes, getDefaultStyles, shouldStyleWithCss } from '../api/Settings';
 import { getRowType } from '../core/TableSections';
-import * as Util from '../alien/Util';
+import * as Util from '../core/Util';
 
 /**
  * @class tinymce.table.ui.Helpers

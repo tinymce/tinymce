@@ -1,9 +1,9 @@
 import { Fun, Option, Strings } from '@ephox/katamari';
 import { Attr, Css, Element, Height, Node, Width } from '@ephox/sugar';
 import * as TableLookup from '../api/TableLookup';
+import { TableSize } from '../api/TableSize';
 import { getSpan } from '../util/CellUtils';
 import * as RuntimeSize from './RuntimeSize';
-import { TableSize } from './TableSize';
 
 export interface GenericWidth {
   width: () => number;

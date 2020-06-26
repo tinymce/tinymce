@@ -1,12 +1,12 @@
 import { Arr, Fun, Option } from '@ephox/katamari';
 import { Css, Element } from '@ephox/sugar';
+import { TableSize } from '../api/TableSize';
 import * as Blocks from '../lookup/Blocks';
+import { Warehouse } from '../model/Warehouse';
 import * as CellUtils from '../util/CellUtils';
 import * as Util from '../util/Util';
+import { BarPositions, ColInfo, RowInfo } from './BarPositions';
 import * as Sizes from './Sizes';
-import { Warehouse } from '../model/Warehouse';
-import { BarPositions, RowInfo, ColInfo } from './BarPositions';
-import { TableSize } from './TableSize';
 
 const getRaw = function (cell: Element, property: string, getter: (e: Element) => number) {
   return Css.getRaw(cell, property).fold(function () {

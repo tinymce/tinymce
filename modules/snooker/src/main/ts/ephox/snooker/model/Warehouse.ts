@@ -1,6 +1,8 @@
+import { HTMLTableElement } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
-import * as Structs from '../api/Structs';
 import { Element } from '@ephox/sugar';
+import * as Structs from '../api/Structs';
+import * as DetailsList from './DetailsList';
 
 export interface Warehouse {
   readonly grid: Structs.Grid;
@@ -88,6 +90,11 @@ const generate = function <T extends Structs.Detail> (list: Structs.RowData<T>[]
   };
 };
 
+const fromTable = (table: Element<HTMLTableElement>) => {
+  const list = DetailsList.fromTable(table);
+  return generate(list);
+};
+
 const justCells = function (warehouse: Warehouse) {
   const rows = Arr.map(warehouse.all, (w) => w.cells());
 
@@ -95,6 +102,7 @@ const justCells = function (warehouse: Warehouse) {
 };
 
 export const Warehouse = {
+  fromTable,
   generate,
   getAt,
   findItem,

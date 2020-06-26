@@ -5,14 +5,15 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Fun, Arr, Type } from '@ephox/katamari';
+import { HTMLElement, HTMLTableDataCellElement, HTMLTableElement, HTMLTableHeaderCellElement, HTMLTableRowElement } from '@ephox/dom-globals';
+import { Arr, Fun, Type } from '@ephox/katamari';
 import { TableRender } from '@ephox/snooker';
-import { Attr, Html, SelectorFind, SelectorFilter, Css } from '@ephox/sugar';
-import { getDefaultAttributes, getDefaultStyles, isPixelsForced } from '../api/Settings';
-import { fireNewRow, fireNewCell } from '../api/Events';
-import * as Util from '../alien/Util';
+import { Attr, Html, SelectorFilter, SelectorFind } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
-import { HTMLElement, HTMLTableRowElement, HTMLTableDataCellElement, HTMLTableHeaderCellElement, HTMLTableElement } from '@ephox/dom-globals';
+import { fireNewCell, fireNewRow } from '../api/Events';
+import { getDefaultAttributes, getDefaultStyles, isPercentagesForced, isPixelsForced, isResponsiveForced } from '../api/Settings';
+import * as Util from '../core/Util';
+import { enforceNone, enforcePercentage, enforcePixels } from './EnforceUnit';
 
 const placeCaretInCell = (editor: Editor, cell) => {
   editor.selection.select(cell.dom(), true);
@@ -40,7 +41,7 @@ const insert = (editor: Editor, columns: number, rows: number, colHeaders: numbe
   const options: TableRender.RenderOptions = {
     styles: defaultStyles,
     attributes: getDefaultAttributes(editor),
-    percentages: isPercentage(defaultStyles.width) && !isPixelsForced(editor)
+    percentages: isPercentage(defaultStyles.width)
   };
 
   const table = TableRender.render(rows, columns, rowHeaders, colHeaders, options);
@@ -50,9 +51,15 @@ const insert = (editor: Editor, columns: number, rows: number, colHeaders: numbe
   editor.insertContent(html);
 
   return SelectorFind.descendant<HTMLTableElement>(Util.getBody(editor), 'table[data-mce-id="__mce"]').map((table) => {
+    const rawTable = table.dom();
     if (isPixelsForced(editor)) {
-      Css.set(table, 'width', Css.get(table, 'width'));
+      enforcePixels(rawTable);
+    } else if (isPercentagesForced(editor)) {
+      enforcePercentage(rawTable);
+    } else if (isResponsiveForced(editor)) {
+      enforceNone(rawTable);
     }
+    Util.removeDataStyle(table);
     Attr.remove(table, 'data-mce-id');
     fireEvents(editor, table);
     selectFirstCellInTable(editor, table);

@@ -1,19 +1,13 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
+import { HTMLDivElement, HTMLTableElement } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
-import { Body, Element, Insert, Remove, Css } from '@ephox/sugar';
+import { Body, Css, Element, Insert, Remove } from '@ephox/sugar';
 import { ResizeDirection } from 'ephox/snooker/api/ResizeDirection';
+import { TableSize } from 'ephox/snooker/api/TableSize';
 import * as Deltas from 'ephox/snooker/calc/Deltas';
-import * as DetailsList from 'ephox/snooker/model/DetailsList';
 import { Warehouse } from 'ephox/snooker/model/Warehouse';
-import * as TableSize from 'ephox/snooker/resize/TableSize';
-import { HTMLTableElement, HTMLDivElement } from '@ephox/dom-globals';
 
 UnitTest.test('ResizeTest', function () {
-  const getWarehouse = function (table: Element) {
-    const list = DetailsList.fromTable(table);
-    return Warehouse.generate(list);
-  };
-
   const direction = ResizeDirection.ltr;
 
   const boundBox = '<div style="width: 800px; height: 600px; display: block;"></div>';
@@ -51,7 +45,7 @@ UnitTest.test('ResizeTest', function () {
     const step = tableSize.getCellDelta(delta);
     assert.eq(25, step);
 
-    const warehouse = getWarehouse(table);
+    const warehouse = Warehouse.fromTable(table);
     const widths = tableSize.getWidths(warehouse, direction, tableSize);
 
     // [50%, 50%] existing widths.
@@ -100,7 +94,7 @@ UnitTest.test('ResizeTest', function () {
     const step = tableSize.getCellDelta(delta);
     assert.eq(25, step);
 
-    const warehouse = getWarehouse(table);
+    const warehouse = Warehouse.fromTable(table);
     const widths = tableSize.getWidths(warehouse, direction, tableSize);
 
     const expectedWidths = [ 50, 50 ];
@@ -158,7 +152,7 @@ UnitTest.test('ResizeTest', function () {
     const step = tableSize.getCellDelta(delta);
     assert.eq(200, step);
 
-    const warehouse = getWarehouse(table);
+    const warehouse = Warehouse.fromTable(table);
     const widths = tableSize.getWidths(warehouse, direction, tableSize);
 
     // [50%, 50%] existing widths.
@@ -203,7 +197,7 @@ UnitTest.test('ResizeTest', function () {
     const step = tableSize.getCellDelta(delta);
     assert.eq(200, step);
 
-    const warehouse = getWarehouse(table);
+    const warehouse = Warehouse.fromTable(table);
     const widths = tableSize.getWidths(warehouse, direction, tableSize);
 
     // [50%, 50%] existing widths.

@@ -1,17 +1,17 @@
+import { HTMLTableElement } from '@ephox/dom-globals';
 import { Arr, Fun, Option, Options } from '@ephox/katamari';
-import { Compare, Traverse, Element } from '@ephox/sugar';
+import { Compare, Element, Traverse } from '@ephox/sugar';
+import { Generators, GeneratorsWrapper, SimpleGenerators } from '../api/Generators';
+import { ResizeWire } from '../api/ResizeWire';
 import * as Structs from '../api/Structs';
 import * as TableLookup from '../api/TableLookup';
+import { TableOperationResult } from '../api/TableOperations';
+import { TableSize } from '../api/TableSize';
 import * as Redraw from '../operate/Redraw';
 import * as BarPositions from '../resize/BarPositions';
 import * as Bars from '../resize/Bars';
-import * as DetailsList from './DetailsList';
 import * as Transitions from './Transitions';
 import { Warehouse } from './Warehouse';
-import { Generators, GeneratorsWrapper, SimpleGenerators } from '../api/Generators';
-import { ResizeWire } from '../api/ResizeWire';
-import { TableOperationResult } from '../api/TableOperations';
-import { HTMLTableElement } from '@ephox/dom-globals';
 
 type DetailExt = Structs.DetailExt;
 type DetailNew = Structs.DetailNew;
@@ -104,17 +104,16 @@ const findInWarehouse = (warehouse: Warehouse, element: Element): Option<DetailE
 type EqEle = (e1: Element, e2: Element) => boolean;
 type Operation<INFO, GW extends GeneratorsWrapper> = (model: Structs.RowCells[], info: INFO, eq: EqEle, w: GW) => TableOperationResult;
 type Extract<RAW, INFO> = (warehouse: Warehouse, target: RAW) => Option<INFO>;
-type Adjustment = <T extends Structs.DetailNew>(table: Element, grid: Structs.RowDataNew<T>[], direction: BarPositions<ColInfo>) => void;
+type Adjustment = <T extends Structs.DetailNew>(table: Element, grid: Structs.RowDataNew<T>[], direction: BarPositions<ColInfo>, tableSize: TableSize) => void;
 type PostAction = (e: Element) => void;
 type GenWrap<GW extends GeneratorsWrapper> = (g: Generators) => GW;
 
-export type OperationCallback<T> = (wire: ResizeWire, table: Element<HTMLTableElement>, target: T, generators: Generators, direction: BarPositions<ColInfo>) => Option<RunOperationOutput>;
+export type OperationCallback<T> = (wire: ResizeWire, table: Element<HTMLTableElement>, target: T, generators: Generators, direction: BarPositions<ColInfo>, sizing?: TableSize) => Option<RunOperationOutput>;
 
 const run = <RAW, INFO, GW extends GeneratorsWrapper>
 (operation: Operation<INFO, GW>, extract: Extract<RAW, INFO>, adjustment: Adjustment, postAction: PostAction, genWrappers: GenWrap<GW>): OperationCallback<RAW> =>
-  (wire: ResizeWire, table: Element, target: RAW, generators: Generators, direction: BarPositions<ColInfo>): Option<RunOperationOutput> => {
-    const input = DetailsList.fromTable(table);
-    const warehouse = Warehouse.generate(input);
+  (wire: ResizeWire, table: Element, target: RAW, generators: Generators, direction: BarPositions<ColInfo>, sizing?: TableSize): Option<RunOperationOutput> => {
+    const warehouse = Warehouse.fromTable(table);
     const output = extract(warehouse, target).map((info) => {
       const model = fromWarehouse(warehouse, generators);
       const result = operation(model, info, Compare.eq, genWrappers(generators));
@@ -127,7 +126,8 @@ const run = <RAW, INFO, GW extends GeneratorsWrapper>
 
     return output.fold(() => Option.none<RunOperationOutput>(), (out) => {
       const newElements = Redraw.render(table, out.grid());
-      adjustment(table, out.grid(), direction);
+      const tableSizing = Option.from(sizing).getOrThunk(() => TableSize.getTableSize(table));
+      adjustment(table, out.grid(), direction, tableSizing);
       postAction(table);
       Bars.refresh(wire, table, BarPositions.height, direction);
       return Option.some({
