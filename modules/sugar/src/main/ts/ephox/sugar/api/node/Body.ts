@@ -18,7 +18,10 @@ const inBody = (element: Element<DomNode>): boolean => {
   }
 
   return getShadowRoot(Element.fromDom(dom)).fold(
-    () => dom.ownerDocument.body.contains(dom),
+    () => {
+      const od = dom.ownerDocument;
+      return od !== null && od.body.contains(dom);
+    },
     Fun.compose1(inBody, getShadowHost)
   );
 };
