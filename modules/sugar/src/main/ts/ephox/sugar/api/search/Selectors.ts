@@ -11,8 +11,8 @@ const is = <T extends DomElement = DomElement> (element: Element<DomNode>, selec
     const elem = dom as DomElement;
     if (elem.matches !== undefined) {
       return elem.matches(selector);
-    } else if (elem.msMatchesSelector !== undefined) {
-      return elem.msMatchesSelector(selector);
+    } else if ((elem as any).msMatchesSelector !== undefined) {
+      return (elem as any).msMatchesSelector(selector);
     } else if (elem.webkitMatchesSelector !== undefined) {
       return elem.webkitMatchesSelector(selector);
     } else if ((elem as any).mozMatchesSelector !== undefined) {
