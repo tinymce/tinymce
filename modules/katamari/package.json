@@ -16,7 +16,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@ephox/dispute": "^1.0.3",
-    "@ephox/dom-globals": "^1.1.2",
+    "@ephox/dom-globals": "^3.9.5",
     "@ephox/wrap-promise-polyfill": "^2.2.0",
     "tslib": "^1.9.3"
   },

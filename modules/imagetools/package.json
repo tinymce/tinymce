@@ -8,7 +8,7 @@
     "ephox"
   ],
   "dependencies": {
-    "@ephox/dom-globals": "^1.1.2"
+    "@ephox/dom-globals": "^3.9.5"
   },
   "scripts": {
     "test": "bedrock-auto -b phantomjs -d src/test/ts",

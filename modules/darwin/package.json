@@ -18,7 +18,7 @@
     "LICENSE.txt"
   ],
   "dependencies": {
-    "@ephox/dom-globals": "^1.1.2",
+    "@ephox/dom-globals": "^3.9.5",
     "@ephox/katamari": "^6.0.1",
     "@ephox/phoenix": "^5.1.6",
     "@ephox/robin": "^7.0.53",

@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@ephox/boulder": "^4.0.5",
-    "@ephox/dom-globals": "^1.1.2",
+    "@ephox/dom-globals": "^3.9.5",
     "@ephox/katamari": "^6.0.1"
   },
   "author": "Ephox Corporation",
