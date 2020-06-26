@@ -14,8 +14,8 @@ import Env from 'tinymce/core/api/Env';
 import { StyleMap } from 'tinymce/core/api/html/Styles';
 import * as InsertTable from '../actions/InsertTable';
 import * as Styles from '../actions/Styles';
-import * as Util from '../alien/Util';
 import { getDefaultAttributes, getDefaultStyles, getTableClassList, hasAdvancedTableTab, shouldStyleWithCss } from '../api/Settings';
+import * as Util from '../core/Util';
 import * as Helpers from './Helpers';
 import * as TableDialogGeneralTab from './TableDialogGeneralTab';
 
@@ -45,17 +45,17 @@ const applyDataToElement = (editor: Editor, tableElm, data: TableData) => {
 
   attrs.class = data.class;
 
-  styles.height = Util.addSizeSuffix(data.height);
+  styles.height = Util.addPxSuffix(data.height);
 
   if (dom.getAttrib(tableElm, 'width') && !shouldStyleWithCss(editor)) {
     attrs.width = Util.removePxSuffix(data.width);
   } else {
-    styles.width = Util.addSizeSuffix(data.width);
+    styles.width = Util.addPxSuffix(data.width);
   }
 
   if (shouldStyleWithCss(editor)) {
-    styles['border-width'] = Util.addSizeSuffix(data.border);
-    styles['border-spacing'] = Util.addSizeSuffix(data.cellspacing);
+    styles['border-width'] = Util.addPxSuffix(data.border);
+    styles['border-spacing'] = Util.addPxSuffix(data.cellspacing);
   } else {
     attrs.border = data.border;
     attrs.cellpadding = data.cellpadding;
@@ -67,8 +67,8 @@ const applyDataToElement = (editor: Editor, tableElm, data: TableData) => {
   if (shouldStyleWithCss(editor) && tableElm.children) {
     for (let i = 0; i < tableElm.children.length; i++) {
       styleTDTH(dom, tableElm.children[i], {
-        'border-width': Util.addSizeSuffix(data.border),
-        'padding': Util.addSizeSuffix(data.cellpadding)
+        'border-width': Util.addPxSuffix(data.border),
+        'padding': Util.addPxSuffix(data.cellpadding)
       });
       if (hasAdvancedTableTab(editor)) {
         styleTDTH(dom, tableElm.children[i], {

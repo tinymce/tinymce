@@ -1,17 +1,18 @@
-import { Element as DomElement, window } from '@ephox/dom-globals';
+import { Element as DomElement, HTMLTableElement, window } from '@ephox/dom-globals';
 import { Fun, Obj, Option, Options } from '@ephox/katamari';
-import { Attr, Css, Direction, DomEvent, Element, Insert, InsertAll, Node, Ready, Replication, SelectorFind, EventArgs } from '@ephox/sugar';
+import { Attr, Css, Direction, DomEvent, Element, EventArgs, Insert, InsertAll, Node, Ready, Replication, SelectorFind } from '@ephox/sugar';
+import { Generators } from 'ephox/snooker/api/Generators';
 import { ResizeDirection } from 'ephox/snooker/api/ResizeDirection';
 import { ResizeWire } from 'ephox/snooker/api/ResizeWire';
 import * as TableOperations from 'ephox/snooker/api/TableOperations';
 import { TableResize } from 'ephox/snooker/api/TableResize';
-import { Generators } from 'ephox/snooker/api/Generators';
-import { BarPositions, ColInfo } from 'ephox/snooker/resize/BarPositions';
+import { TableSize } from 'ephox/snooker/api/TableSize';
 import { RunOperationOutput, TargetElement, TargetSelection } from 'ephox/snooker/model/RunOperation';
+import { BarPositions, ColInfo } from 'ephox/snooker/resize/BarPositions';
 
 Ready.execute(function () {
 
-  const tester = Element.fromHtml(
+  const tester = Element.fromHtml<HTMLTableElement>(
     '<table border=1>' +
       '<tr>' +
         '<th>A0</th>' +
@@ -82,7 +83,7 @@ Ready.execute(function () {
   // subject = Element.fromHtml('<table contenteditable="true" style="border-collapse: collapse;"><tbody><tr><td>A</td><td>A2</td></tr><tr><td rowspan=2>B</td><td>C</td></tr><tr><td>d</td></tr></tbody></table>');
   // subject = Element.fromHtml('<table contenteditable="true" style="border-collapse: collapse;"><tbody><tr><td>A</td></tr><tr><td rowspan=2>B</td></tr></tbody></table>');
 
-  const subject2 = Element.fromHtml(
+  const subject2 = Element.fromHtml<HTMLTableElement>(
     '<table contenteditable="true" style="border-collapse: collapse;"><tbody>' +
       '<tr>' +
         '<td style="width: 110px;">1</td>' +
@@ -98,7 +99,7 @@ Ready.execute(function () {
     '</tbody></table>'
   );
 
-  const subject3 = Element.fromHtml(
+  const subject3 = Element.fromHtml<HTMLTableElement>(
     '<table contenteditable="true" width="100%" cellpadding="0" border="1" cellspacing="0"> ' +
     '<tbody>' +
     '<tr> ' +
@@ -129,9 +130,10 @@ Ready.execute(function () {
   InsertAll.append(rtls, [ Element.fromHtml('<p>Right to Left table</p>'), subject3 ]);
   InsertAll.append(ephoxUi, [ ltrs, rtls ]);
 
-  const ltrManager = TableResize.create(ResizeWire.body(tester, ltrs), ResizeDirection.ltr);
+  const lazyTableSize = (table: Element<HTMLTableElement>) => TableSize.getTableSize(table);
+  const ltrManager = TableResize.create(ResizeWire.body(tester, ltrs), ResizeDirection.ltr, lazyTableSize);
   ltrManager.on();
-  const rtlManager = TableResize.create(ResizeWire.body(subject3, rtls), ResizeDirection.rtl);
+  const rtlManager = TableResize.create(ResizeWire.body(subject3, rtls), ResizeDirection.rtl, lazyTableSize);
   rtlManager.on();
 
   // For firefox.
@@ -228,7 +230,7 @@ Ready.execute(function () {
     gap
   };
 
-  const runOperation = function (operation: (wire: ResizeWire, table: Element, target: TargetElement & TargetSelection, generators: Generators, direction: BarPositions<ColInfo>) => Option<RunOperationOutput>) {
+  const runOperation = function (operation: (wire: ResizeWire, table: Element, target: TargetElement & TargetSelection, generators: Generators, direction: BarPositions<ColInfo>, tableSize: TableSize) => Option<RunOperationOutput>) {
     return function (_event: EventArgs) {
       detection().each(function (start) {
         const dir = Direction.getDirection(start);
@@ -239,7 +241,9 @@ Ready.execute(function () {
         };
 
         // wire, table, target, generators, direction
-        operation(ResizeWire.only(ephoxUi), SelectorFind.ancestor(start, 'table').getOrDie(), target, generators, direction);
+        const table = SelectorFind.ancestor(start, 'table').getOrDie() as Element<HTMLTableElement>;
+        const tableSize = TableSize.getTableSize(table);
+        operation(ResizeWire.only(ephoxUi), table, target, generators, direction, tableSize);
       });
     };
   };

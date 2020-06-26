@@ -1,6 +1,6 @@
+import { HTMLTableElement } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
-import * as DetailsList from '../model/DetailsList';
 import { onCells, TargetSelection, toDetailList } from '../model/RunOperation';
 import * as Transitions from '../model/Transitions';
 import { Warehouse } from '../model/Warehouse';
@@ -29,9 +29,8 @@ const getDownOrRightCells = (grid: RowCells[], selectedCells: DetailExt[], gener
   });
 };
 
-const getOtherCells = (table: Element, target: TargetSelection, generators: Generators) => {
-  const list = DetailsList.fromTable(table);
-  const house = Warehouse.generate(list);
+const getOtherCells = (table: Element<HTMLTableElement>, target: TargetSelection, generators: Generators) => {
+  const house = Warehouse.fromTable(table);
   const details = onCells(house, target);
   return details.map(function (selectedCells) {
     const grid = Transitions.toGrid(house, generators, false);

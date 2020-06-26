@@ -5,15 +5,15 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Arr, Obj, Option, Type } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
-import { Type, Option, Arr } from '@ephox/katamari';
 
 export interface StringMap {
   [key: string]: string;
 }
 
 type ClassList = Array<{title: string; value: string}>;
-type ColorPickerCallback = (editor: Editor, pickValue: (value: string) => void, value: string) => void;
+type TableSizingMode = 'fixed' | 'relative' | 'responsive' | 'auto';
 
 const defaultTableToolbar = 'tableprops tabledelete | tableinsertrowbefore tableinsertrowafter tabledeleterow | tableinsertcolbefore tableinsertcolafter tabledeletecol';
 
@@ -22,12 +22,26 @@ const defaultStyles = {
   'width': '100%'
 };
 
+const determineDefaultStyles = (editor: Editor) => {
+  if (isPixelsForced(editor)) {
+    const editorWidth = editor.getBody().offsetWidth;
+    return { ...defaultStyles, width: editorWidth + 'px' };
+  } else if (isResponsiveForced(editor)) {
+    return Obj.filter(defaultStyles, (_value, key) => key !== 'width');
+  } else {
+    return defaultStyles;
+  }
+};
+
 const defaultAttributes = {
   border: '1'
 };
 
+const getTableSizingMode = (editor: Editor): TableSizingMode => editor.getParam('table_sizing_mode', 'auto');
+const getTableResponseWidth = (editor: Editor): boolean | undefined => editor.getParam('table_responsive_width');
+
 const getDefaultAttributes = (editor: Editor): StringMap => editor.getParam('table_default_attributes', defaultAttributes, 'object');
-const getDefaultStyles = (editor: Editor): StringMap => editor.getParam('table_default_styles', defaultStyles, 'object');
+const getDefaultStyles = (editor: Editor): StringMap => editor.getParam('table_default_styles', determineDefaultStyles(editor), 'object');
 const hasTableResizeBars = (editor: Editor): boolean => editor.getParam('table_resize_bars', true, 'boolean');
 const hasTabNavigation = (editor: Editor): boolean => editor.getParam('table_tab_navigation', true, 'boolean');
 const hasAdvancedCellTab = (editor: Editor): boolean => editor.getParam('table_cell_advtab', true, 'boolean');
@@ -39,9 +53,9 @@ const shouldStyleWithCss = (editor: Editor): boolean => editor.getParam('table_s
 const getCellClassList = (editor: Editor): ClassList => editor.getParam('table_cell_class_list', [], 'array');
 const getRowClassList = (editor: Editor): ClassList => editor.getParam('table_row_class_list', [], 'array');
 const getTableClassList = (editor: Editor): ClassList => editor.getParam('table_class_list', [], 'array');
-const getColorPickerCallback = (editor: Editor): ColorPickerCallback => editor.getParam('color_picker_callback');
-const isPercentagesForced = (editor: Editor): boolean => editor.getParam('table_responsive_width') === true;
-const isPixelsForced = (editor: Editor): boolean => editor.getParam('table_responsive_width') === false;
+const isPercentagesForced = (editor: Editor): boolean => getTableSizingMode(editor) === 'relative' || getTableResponseWidth(editor) === true;
+const isPixelsForced = (editor: Editor): boolean => getTableSizingMode(editor) === 'fixed' || getTableResponseWidth(editor) === false;
+const isResponsiveForced = (editor: Editor): boolean => getTableSizingMode(editor) === 'responsive';
 const getToolbar = (editor: Editor): string => editor.getParam('table_toolbar', defaultTableToolbar);
 
 
@@ -87,11 +101,11 @@ export {
   getCellClassList,
   getRowClassList,
   getTableClassList,
-  getColorPickerCallback,
   getCloneElements,
   hasObjectResizing,
   isPercentagesForced,
   isPixelsForced,
+  isResponsiveForced,
   getToolbar,
   getTableHeaderType
 };

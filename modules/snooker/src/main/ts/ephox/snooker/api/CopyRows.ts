@@ -1,7 +1,6 @@
 import { HTMLTableRowElement } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
-import * as DetailsList from '../model/DetailsList';
 import { onCells, TargetSelection, toDetailList } from '../model/RunOperation';
 import * as Transitions from '../model/Transitions';
 import { Warehouse } from '../model/Warehouse';
@@ -9,8 +8,7 @@ import * as Redraw from '../operate/Redraw';
 import { Generators } from './Generators';
 
 const copyRows = function (table: Element, target: TargetSelection, generators: Generators): Option<Element<HTMLTableRowElement>[]> {
-  const list = DetailsList.fromTable(table);
-  const house = Warehouse.generate(list);
+  const house = Warehouse.fromTable(table);
   const details = onCells(house, target);
   return details.map(function (selectedCells) {
     const grid = Transitions.toGrid(house, generators, false);

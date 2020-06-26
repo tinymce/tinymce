@@ -3,7 +3,6 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { Arr, Unicode } from '@ephox/katamari';
 import { Compare, Element, Traverse } from '@ephox/sugar';
 import * as Structs from 'ephox/snooker/api/Structs';
-import * as DetailsList from 'ephox/snooker/model/DetailsList';
 import * as Transitions from 'ephox/snooker/model/Transitions';
 import { Warehouse } from 'ephox/snooker/model/Warehouse';
 import * as Redraw from 'ephox/snooker/operate/Redraw';
@@ -19,8 +18,7 @@ UnitTest.asynctest('Redraw Section Order Test', (success, failure) => {
       return rowOfCells.getOrThunk(() => Structs.elementnew(Bridge.generators.row(), true));
     };
 
-    const input = DetailsList.fromTable(table);
-    const warehouse = Warehouse.generate(input);
+    const warehouse = Warehouse.fromTable(table);
     const model = Transitions.toGrid(warehouse, Bridge.generators, false);
     const rendered = Transitions.toDetails(model, Compare.eq);
 

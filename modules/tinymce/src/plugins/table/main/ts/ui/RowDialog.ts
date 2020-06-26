@@ -10,20 +10,20 @@ import { HTMLTableRowElement } from '@ephox/dom-globals';
 import { Arr, Fun } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import * as Styles from '../actions/Styles';
-import * as Util from '../alien/Util';
 import { hasAdvancedRowTab } from '../api/Settings';
+import { switchSectionType } from '../core/TableSections';
+import * as Util from '../core/Util';
 import * as TableSelection from '../selection/TableSelection';
 import { DomModifier } from './DomModifier';
 import * as Helpers from './Helpers';
 import * as RowDialogGeneralTab from './RowDialogGeneralTab';
-import { switchSectionType } from '../core/TableSections';
 
 type RowData = Helpers.RowData;
 
 const updateSimpleProps = (modifier: DomModifier, data: RowData) => {
   modifier.setAttrib('scope', data.scope);
   modifier.setAttrib('class', data.class);
-  modifier.setStyle('height', Util.addSizeSuffix(data.height));
+  modifier.setStyle('height', Util.addPxSuffix(data.height));
 };
 
 const updateAdvancedProps = (modifier: DomModifier, data: RowData) => {

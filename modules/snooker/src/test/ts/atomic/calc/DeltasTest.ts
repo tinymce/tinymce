@@ -1,7 +1,7 @@
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
+import { TableSize } from 'ephox/snooker/api/TableSize';
 import * as Deltas from 'ephox/snooker/calc/Deltas';
-import { UnitTest, assert } from '@ephox/bedrock-client';
-import { TableSize } from 'ephox/snooker/resize/TableSize';
 
 UnitTest.test('Deltas', function () {
   const min = 10;
