@@ -55,7 +55,7 @@ const promise = <T>(): PromisePolyfillConstructor => {
   } as unknown as PromisePolyfillConstructor;
 
   // Use polyfill for setImmediate for performance gains
-  const asap = Promise.immediateFn || (typeof window.setImmediate === 'function' && window.setImmediate) ||
+  const asap = Promise.immediateFn || (typeof (window as any).setImmediate === 'function' && (window as any).setImmediate) ||
     function (fn: (handler: (...args: any[]) => void) => void) { setTimeout(fn, 1); };
 
   // Polyfill for Function.prototype.bind

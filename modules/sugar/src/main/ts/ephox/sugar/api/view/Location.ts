@@ -27,8 +27,8 @@ const absolute = (element: Element<DomElement>) => {
     return Position(body.offsetLeft, body.offsetTop);
   }
 
-  const scrollTop = firstDefinedOrZero(win.pageYOffset, html.scrollTop);
-  const scrollLeft = firstDefinedOrZero(win.pageXOffset, html.scrollLeft);
+  const scrollTop = win === null ? 0 : firstDefinedOrZero(win.pageYOffset, html.scrollTop);
+  const scrollLeft = win === null ? 0 : firstDefinedOrZero(win.pageXOffset, html.scrollLeft);
 
   const clientTop = firstDefinedOrZero(html.clientTop, body.clientTop);
   const clientLeft = firstDefinedOrZero(html.clientLeft, body.clientLeft);

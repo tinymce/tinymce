@@ -169,11 +169,16 @@ function blobToCanvas(blob: Blob): Promise<HTMLCanvasElement> {
 }
 
 function blobToDataUri(blob: Blob): Promise<string> {
-  return new Promise(function (resolve) {
+  return new Promise((resolve, reject) => {
     const reader = new FileReader();
 
-    reader.onloadend = function () {
-      resolve(reader.result);
+    reader.onloadend = () => {
+      const r = reader.result;
+      if (r === null) {
+        reject('result was null');
+      } else {
+        resolve(r.toString());
+      }
     };
 
     reader.readAsDataURL(blob);
@@ -181,11 +186,16 @@ function blobToDataUri(blob: Blob): Promise<string> {
 }
 
 function blobToArrayBuffer(blob: Blob): Promise<ArrayBuffer> {
-  return new Promise(function (resolve) {
+  return new Promise((resolve, reject) => {
     const reader = new FileReader();
 
-    reader.onloadend = function () {
-      resolve(reader.result);
+    reader.onloadend = () => {
+      const r = reader.result;
+      if (r === null) {
+        reject('result was null');
+      } else {
+        resolve(r as ArrayBuffer);
+      }
     };
 
     reader.readAsArrayBuffer(blob);

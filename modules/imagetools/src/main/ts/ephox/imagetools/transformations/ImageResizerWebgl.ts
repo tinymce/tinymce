@@ -1,4 +1,10 @@
-import { HTMLCanvasElement, HTMLImageElement, WebGLProgram, WebGLRenderingContext } from '@ephox/dom-globals';
+import {
+  HTMLCanvasElement,
+  HTMLImageElement,
+  WebGLProgram,
+  WebGLRenderingContext,
+  WebGLShader
+} from '@ephox/dom-globals';
 import { Promise } from '../util/Promise';
 import * as Canvas from '../util/Canvas';
 import * as ImageSize from '../util/ImageSize';
@@ -189,8 +195,11 @@ function _createProgram(gl: WebGLRenderingContext): WebGLProgram {
   return program;
 }
 
-function _loadShader(gl: WebGLRenderingContext, source: string, type: string) {
+function _loadShader(gl: WebGLRenderingContext, source: string, type: string): WebGLShader {
   const shader = gl.createShader((gl as any)[type]);
+  if (shader === null) {
+    throw new Error('Cannot create shader');
+  }
   gl.shaderSource(shader, source);
   gl.compileShader(shader);
 

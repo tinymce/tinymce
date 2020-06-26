@@ -1,16 +1,38 @@
 import { Document, Node as DomNode } from '@ephox/dom-globals';
 import { Arr, Fun } from '@ephox/katamari';
-import { Attr, Compare, Css, Element, Insert, InsertAll, Node, PredicateFilter, PredicateFind, Remove, SelectorFilter, SelectorFind, Text, Traverse } from '@ephox/sugar';
+import {
+  Attr,
+  Compare,
+  Css,
+  Element,
+  Insert,
+  InsertAll,
+  Node,
+  PredicateFilter,
+  PredicateFind,
+  Remove,
+  SelectorFilter,
+  SelectorFind,
+  Text,
+  Traverse
+} from '@ephox/sugar';
 import TagBoundaries from '../common/TagBoundaries';
 import { Universe } from './Universe';
+import { Type } from '@ephox/katamari/lib/main/ts/ephox/katamari/api/Main';
 
 export default function (): Universe<Element, Document> {
   const clone = function (element: Element) {
     return Element.fromDom((element.dom() as DomNode).cloneNode(false));
   };
 
-  const document = function (element: Element) {
-    return (element.dom() as DomNode).ownerDocument;
+  // TODO: dupe with Element.ts. Should we be using Options instead of throwing?
+  const getOwnerDocumentOrThrow = (element: Element<DomNode>): Document => {
+    const od = element.dom().ownerDocument;
+    if (Type.isNonNullable(od)) {
+      return od;
+    } else {
+      throw new Error('ownerDocument was not set');
+    }
   };
 
   const isBoundary = function (element: Element) {
@@ -91,7 +113,7 @@ export default function (): Universe<Element, Document> {
       children: Traverse.children,
       name: Node.name,
       parent: Traverse.parent,
-      document,
+      document: getOwnerDocumentOrThrow,
       isText: Node.isText,
       isComment: Node.isComment,
       isElement: Node.isElement,

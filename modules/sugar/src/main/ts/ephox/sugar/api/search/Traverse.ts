@@ -1,9 +1,10 @@
-import { Document, HTMLElement, Node as DomNode } from '@ephox/dom-globals';
+import { ChildNode, Document, HTMLElement, Node as DomNode, ParentNode } from '@ephox/dom-globals';
 import { Arr, Fun, Option, Type } from '@ephox/katamari';
 import * as Recurse from '../../alien/Recurse';
 import * as Compare from '../dom/Compare';
 import Element from '../node/Element';
 import * as Node from '../node/Node';
+import * as ElementParams from '../../impl/ElementParams';
 
 /**
  * The document associated with the current element
@@ -34,7 +35,12 @@ const documentElement = (element: Element<DomNode>) =>
 const defaultView = (element: Element<DomNode>) =>
   Element.fromDom(getOwnerDocumentOrThrow(element).defaultView);
 
-const parent = (element: Element<DomNode>) => Option.from(element.dom().parentNode).map(Element.fromDom);
+const parent = (element: Element<DomNode>): Option<Element<DomNode & ParentNode>> =>
+  Option.from(element.dom().parentNode).map(Element.fromDom);
+
+/** Variant of #parent. This return type can be more convenient in some situations. */
+const parentNode = (element: Element<DomNode>): Option<Element<DomNode>> =>
+  parent(element).map(ElementParams.narrowL());
 
 const findIndex = (element: Element<DomNode>) => parent(element).bind((p) => {
   // TODO: Refactor out children so we can avoid the constant unwrapping
@@ -73,31 +79,31 @@ const siblings = (element: Element<DomNode>) => {
 const offsetParent = (element: Element<HTMLElement>) =>
   Option.from(element.dom().offsetParent).map(Element.fromDom);
 
-const prevSibling = (element: Element<DomNode>): Option<Element<DomNode>> =>
-  Option.from<DomNode>(element.dom().previousSibling).map(Element.fromDom);
+const prevSibling = (element: Element<DomNode>): Option<Element<DomNode & ChildNode>> =>
+  Option.from(element.dom().previousSibling).map(Element.fromDom);
 
-const nextSibling = (element: Element<DomNode>): Option<Element<DomNode>> =>
-  Option.from<DomNode>(element.dom().nextSibling).map(Element.fromDom);
+const nextSibling = (element: Element<DomNode>): Option<Element<DomNode & ChildNode>> =>
+  Option.from(element.dom().nextSibling).map(Element.fromDom);
 
 // This one needs to be reversed, so they're still in DOM order
-const prevSiblings = (element: Element<DomNode>): Array<Element<DomNode>> =>
-  Arr.reverse(Recurse.toArray(element, prevSibling));
+const prevSiblings = (element: Element<DomNode>): Array<Element<DomNode & ChildNode>> =>
+  Arr.reverse(Recurse.toArray(element as Element<DomNode & ChildNode>, prevSibling));
 
-const nextSiblings = (element: Element<DomNode>): Array<Element<DomNode>> =>
-  Recurse.toArray(element, nextSibling);
+const nextSiblings = (element: Element<DomNode>): Array<Element<DomNode & ChildNode>> =>
+  Recurse.toArray(element as Element<DomNode & ChildNode>, nextSibling);
 
-const children = (element: Element<DomNode>): Array<Element<DomNode>> =>
+const children = (element: Element<DomNode>): Array<Element<DomNode & ChildNode>> =>
   Arr.map(element.dom().childNodes, Element.fromDom);
 
-const child = (element: Element<DomNode>, index: number): Option<Element<DomNode>> => {
+const child = (element: Element<DomNode>, index: number): Option<Element<DomNode & ChildNode>> => {
   const cs = element.dom().childNodes;
-  return Option.from(cs[index] as DomNode).map(Element.fromDom);
+  return Option.from(cs[index]).map(Element.fromDom);
 };
 
-const firstChild = (element: Element<DomNode>): Option<Element<DomNode>> =>
+const firstChild = (element: Element<DomNode>): Option<Element<DomNode & ChildNode>> =>
   child(element, 0);
 
-const lastChild = (element: Element<DomNode>): Option<Element<DomNode>> =>
+const lastChild = (element: Element<DomNode>): Option<Element<DomNode & ChildNode>> =>
   child(element, element.dom().childNodes.length - 1);
 
 const childNodesCount = (element: Element<DomNode>): number =>
@@ -127,6 +133,7 @@ export {
   defaultView,
   documentElement,
   parent,
+  parentNode,
   findIndex,
   parents,
   siblings,

@@ -4,11 +4,14 @@ import { Bounds } from '../../alien/Boxes';
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { BehaviourState } from '../common/BehaviourState';
+import { Css } from '@ephox/sugar';
+
+type CssStyleDeclarationValue = Css.CssStyleDeclarationValue;
 
 export type DockingMode = 'top' | 'bottom';
 
 export interface InitialDockingPosition {
-  style: Record<string, string>;
+  style: Record<string, CssStyleDeclarationValue>;
   position: string;
   bounds: Bounds;
 }

@@ -74,7 +74,7 @@ UnitTest.asynctest('Browser Test: events.BroadcastingEventsTest', (success, fail
         } else {
           // for IE and other old browsers
           const evt = window.document.createEvent('UIEvents');
-          evt.initUIEvent('resize', true, false, window, 0);
+          (evt as any).initUIEvent('resize', true, false, window, 0);
           window.dispatchEvent(evt);
         }
       }),

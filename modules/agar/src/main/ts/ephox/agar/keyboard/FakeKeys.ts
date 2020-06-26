@@ -57,12 +57,12 @@ const keyevent = (type: string, doc: Element<any>, value: number, modifiers: Mix
     const shiftKey = mod.shiftKey === true;
     const metaKey = mod.metaKey === true;
 
-    if (oEvent.initKeyboardEvent) {
+    if ((oEvent as any).initKeyboardEvent) {
       // Note: typescript thinks the arguments are wrong so we should probably test it
-      (<any> oEvent).initKeyboardEvent(type, canBubble, cancellable, domDoc.defaultView, ctrlKey, altKey, shiftKey, metaKey, value, value);
+      (oEvent as any).initKeyboardEvent(type, canBubble, cancellable, domDoc.defaultView, ctrlKey, altKey, shiftKey, metaKey, value, value);
     } else {
       // this is unknown to typescript
-      (<any> oEvent).initKeyEvent(type, canBubble, cancellable, domDoc.defaultView, ctrlKey, altKey, shiftKey, metaKey, value, type === 'keypress' && platform.browser.isFirefox() ? value : 0);
+      (oEvent as any).initKeyEvent(type, canBubble, cancellable, domDoc.defaultView, ctrlKey, altKey, shiftKey, metaKey, value, type === 'keypress' && platform.browser.isFirefox() ? value : 0);
     }
 
     dispatcher.dom().dispatchEvent(oEvent);

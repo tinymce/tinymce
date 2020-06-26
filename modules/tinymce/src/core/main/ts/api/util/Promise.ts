@@ -13,7 +13,7 @@
 
 // tslint:disable: no-unimported-promise
 
-import { setImmediate, setTimeout } from '@ephox/dom-globals';
+import { setTimeout } from '@ephox/dom-globals';
 
 declare const window: any;
 
@@ -38,7 +38,7 @@ const promise = function () {
   };
 
   // Use polyfill for setImmediate for performance gains
-  const asap = Promise.immediateFn || (typeof setImmediate === 'function' && setImmediate) ||
+  const asap = Promise.immediateFn || (typeof (window as any).setImmediate === 'function' && (window as any).setImmediate) ||
   function (fn) { setTimeout(fn, 1); };
 
   function handle(deferred) {

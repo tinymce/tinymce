@@ -162,7 +162,7 @@ UnitTest.asynctest('SelectionInFramePositionTest', (success, failure) => {
               NamedChain.direct('range2', Chain.binder((range2: SimRange) => {
                 const start = range2.start();
                 // NOTE: Safari likes to select the text node.
-                const optElement = Node.isText(start) ? Traverse.parent(start) : Option.some(start);
+                const optElement = Node.isText(start) ? Traverse.parentNode(start) : Option.some(start);
                 return optElement.filter(Node.isHTMLElement).map((elem) => {
                   elem.dom().scrollIntoView();
                   return Scroll.get(

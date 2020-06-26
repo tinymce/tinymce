@@ -1,5 +1,5 @@
 import { FieldSchema } from '@ephox/boulder';
-import { Window } from '@ephox/dom-globals';
+import { Window, Node as DomNode } from '@ephox/dom-globals';
 import { Option, Unicode } from '@ephox/katamari';
 import { Element, Insert, Node, Remove, Selection, SimRange, Traverse, WindowSelection } from '@ephox/sugar';
 
@@ -56,7 +56,11 @@ const placement = (component: AlloyComponent, anchorInfo: SelectionAnchor, origi
     return optRect.bind((rawRect) => ContentAnchorCommon.capRect(rawRect.left(), rawRect.top(), rawRect.width(), rawRect.height()));
   });
 
-  const targetElement: Option<Element> = getAnchorSelection(win, anchorInfo).bind((sel) => Node.isElement(sel.start()) ? Option.some(sel.start()) : Traverse.parent(sel.start()));
+  const targetElement: Option<Element> = getAnchorSelection(win, anchorInfo).bind((sel) =>
+    Node.isElement(sel.start())
+      ? Option.some(sel.start())
+      : Traverse.parent(sel.start()).map<Element<DomNode>>((x) => x)
+  );
   const elem = targetElement.getOr(component.element());
 
   return ContentAnchorCommon.calcNewAnchor(selectionBox, rootPoint, anchorInfo, origin, elem);

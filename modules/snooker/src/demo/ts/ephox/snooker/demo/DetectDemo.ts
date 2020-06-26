@@ -186,7 +186,7 @@ Ready.execute(function () {
 
   const detection = (): Option<Element<DomElement>> => {
     const selection = window.getSelection();
-    if (selection.rangeCount > 0) {
+    if (selection != null && selection.rangeCount > 0) {
       const range = selection.getRangeAt(0);
       const firstElement = range.startContainer.nodeType === 3 ? range.startContainer.parentNode : range.startContainer;
       return Options.mapFrom(firstElement, Element.fromDom).filter(Node.isElement);

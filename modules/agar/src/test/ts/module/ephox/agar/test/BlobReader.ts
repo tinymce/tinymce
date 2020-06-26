@@ -5,7 +5,7 @@ const readBlobAsText = (blob: Blob): FutureResult<string, string> => FutureResul
   const reader = new FileReader();
   reader.readAsText(blob);
   reader.onloadend = () => {
-    resolve(Result.value(reader.result));
+    resolve(Result.value(reader.result.toString()));
   };
   reader.onerror = (_evt) => {
     resolve(Result.error('Error loading blob'));

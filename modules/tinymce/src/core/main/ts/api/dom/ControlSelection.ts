@@ -432,7 +432,7 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
   const disableGeckoResize = function () {
     try {
       // Disable object resizing on Gecko
-      editor.getDoc().execCommand('enableObjectResizing', false, false);
+      editor.getDoc().execCommand('enableObjectResizing', false, 'false');
     } catch (ex) {
       // Ignore
     }

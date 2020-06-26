@@ -22,14 +22,18 @@ const get = (_DOC?: Element<Document>) => {
 const to = (x: number, y: number, _DOC?: Element<Document>) => {
   const doc = _DOC !== undefined ? _DOC.dom() : document;
   const win = doc.defaultView;
-  win.scrollTo(x, y);
+  if (win !== null) {
+    win.scrollTo(x, y);
+  }
 };
 
 // Scroll content by (x,y) relative to document _doc (or global if not supplied)
 const by = (x: number, y: number, _DOC?: Element<Document>) => {
   const doc = _DOC !== undefined ? _DOC.dom() : document;
   const win = doc.defaultView;
-  win.scrollBy(x, y);
+  if (win !== null) {
+    win.scrollBy(x, y);
+  }
 };
 
 // Set the window scroll position to the element

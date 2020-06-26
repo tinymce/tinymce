@@ -58,7 +58,7 @@ const fromElement = (node: Element<any>): StructAssert => {
     return ApproxStructures.element(Node.name(node), {
       children: Arr.map(Traverse.children(node), fromElement),
       attrs: toAssertableObj(getAttrsExcept(node, [ 'style', 'class' ])),
-      styles: toAssertableObj(Css.getAllRaw(node)),
+      styles: toAssertableObj(Obj.map(Css.getAllRaw(node), String)),
       classes: toAssertableArr(Classes.get(node))
     });
   } else {

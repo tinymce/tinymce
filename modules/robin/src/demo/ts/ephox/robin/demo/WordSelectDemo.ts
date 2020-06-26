@@ -12,18 +12,20 @@ Insert.append(ephoxUi, editor);
 
 const select = function (s: Element, so: number, f: Element, fo: number) {
   const selection = window.getSelection();
-  selection.removeAllRanges();
-  const range = document.createRange();
-  range.setStart(s.dom(), so);
-  range.setEnd(f.dom(), fo);
-  // tslint:disable-next-line:no-console
-  console.log('setting range: ', s.dom(), so, f.dom(), fo);
-  selection.addRange(range);
+  if (selection != null) {
+    selection.removeAllRanges();
+    const range = document.createRange();
+    range.setStart(s.dom(), so);
+    range.setEnd(f.dom(), fo);
+    // tslint:disable-next-line:no-console
+    console.log('setting range: ', s.dom(), so, f.dom(), fo);
+    selection.addRange(range);
+  }
 };
 
 const getSelection = function () {
   const selection = window.getSelection();
-  if (selection.rangeCount > 0) {
+  if (selection !== null && selection.rangeCount > 0) {
     const range = selection.getRangeAt(0);
     // tslint:disable-next-line:no-console
     console.log('range: ', range);

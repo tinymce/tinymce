@@ -40,19 +40,21 @@ const setRangeFromRelative = (win: Window, relative: Selection): void =>
     },
     rtl(start, soffset, finish, foffset) {
       const selection = win.getSelection();
-      // If this selection is backwards, then we need to use extend.
-      if (selection.setBaseAndExtent) {
-        selection.setBaseAndExtent(start.dom(), soffset, finish.dom(), foffset);
-      } else if ((selection as any).extend) {
-        // This try catch is for older browsers (Firefox 52) as they're sometimes unable to handle setting backwards selections using selection.extend and error out.
-        try {
-          setLegacyRtlRange(win, selection, start, soffset, finish, foffset);
-        } catch (e) {
-          // If it does fail, try again with ltr.
+      if (selection != null) {
+        // If this selection is backwards, then we need to use extend.
+        if (selection.setBaseAndExtent) {
+          selection.setBaseAndExtent(start.dom(), soffset, finish.dom(), foffset);
+        } else if ((selection as any).extend) {
+          // This try catch is for older browsers (Firefox 52) as they're sometimes unable to handle setting backwards selections using selection.extend and error out.
+          try {
+            setLegacyRtlRange(win, selection, start, soffset, finish, foffset);
+          } catch (e) {
+            // If it does fail, try again with ltr.
+            doSetRange(win, finish, foffset, start, soffset);
+          }
+        } else {
           doSetRange(win, finish, foffset, start, soffset);
         }
-      } else {
-        doSetRange(win, finish, foffset, start, soffset);
       }
     }
   });
@@ -155,7 +157,9 @@ const getAsString = (win: Window, selection: Selection) => {
 
 const clear = (win: Window) => {
   const selection = win.getSelection();
-  selection.removeAllRanges();
+  if (selection !== null) {
+    selection.removeAllRanges();
+  }
 };
 
 const clone = (win: Window, selection: Selection) => {

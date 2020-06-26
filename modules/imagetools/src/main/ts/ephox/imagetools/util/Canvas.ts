@@ -26,7 +26,7 @@ function get3dContext(canvas: HTMLCanvasElement): WebGLRenderingContext | null {
   if (!gl) { // it seems that sometimes it doesn't throw exception, but still fails to get context
     gl = null;
   }
-  return gl;
+  return (gl as WebGLRenderingContext | null);
 }
 
 function resize(canvas: HTMLCanvasElement, width: number, height: number) {

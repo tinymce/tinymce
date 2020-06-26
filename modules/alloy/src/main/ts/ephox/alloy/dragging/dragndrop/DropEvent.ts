@@ -6,15 +6,15 @@ import * as DataTransfers from './DataTransfers';
 import { DroppingConfig } from './DragnDropTypes';
 
 export interface DropEvent extends SimulatedEvent<EventArgs<DragEvent>> {
-  data: string;
-  files: File[];
+  readonly data: string;
+  readonly files: File[];
 }
 
 export const createDropEventDetails = (config: DroppingConfig, event: SimulatedEvent<EventArgs<DragEvent>>): DropEvent => {
   const rawEvent = event.event().raw();
   const transfer = rawEvent.dataTransfer;
-  const data = DataTransfers.getData(transfer, config.type);
-  const files = DataTransfers.getFiles(transfer);
+  const data = transfer === null ? '' : DataTransfers.getData(transfer, config.type);
+  const files = transfer === null ? [] : DataTransfers.getFiles(transfer);
 
   return {
     ...event,

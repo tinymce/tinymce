@@ -123,7 +123,7 @@ DomEvent.bind(ephoxUi, 'keyup', function (event) {
 DomEvent.bind(ephoxUi, 'keydown', function (event) {
   // This might get expensive.
   WindowSelection.getExact(window).each(function (sel) {
-    const target = (Node.isText(sel.start()) ? Traverse.parent(sel.start()) : Option.some(sel.start())).filter(Node.isElement);
+    const target = (Node.isText(sel.start()) ? Traverse.parentNode(sel.start()) : Option.some(sel.start())).filter(Node.isElement);
     const direction = target.map(Direction.getDirection).getOr('ltr');
     keyHandlers.keydown(event, sel.start(), sel.soffset(), sel.finish(), sel.foffset(), direction === 'ltr' ? SelectionKeys.ltr : SelectionKeys.rtl).each(function (response) {
       handleResponse(event, response);
