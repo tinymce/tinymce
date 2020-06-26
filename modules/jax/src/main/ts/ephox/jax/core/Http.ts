@@ -1,4 +1,13 @@
-import { Blob, XMLHttpRequest, FormData, File, fetch, Response, Headers } from '@ephox/dom-globals';
+import {
+  Blob,
+  XMLHttpRequest,
+  FormData,
+  File,
+  fetch,
+  Response,
+  Headers,
+  ReadableStreamReadResult
+} from '@ephox/dom-globals';
 import { FutureResult, Result, Option, Obj, Type, Strings, Global } from '@ephox/katamari';
 import * as ResponseError from './ResponseError';
 import * as ResponseSuccess from './ResponseSuccess';
@@ -71,7 +80,7 @@ const toNativeFormData = (formDataInput: Record<string, string | Blob | File>) =
   return nativeFormData;
 };
 
-const getData = (body: RequestBody) => Option.from(body).map((b) => {
+const getData = (body: RequestBody): Option<string | FormData | Blob> => Option.from(body).map((b) => {
   if (b.type === DataType.JSON) {
     return JSON.stringify(b.data);
   } else if (b.type === DataType.FormData) {
@@ -79,7 +88,7 @@ const getData = (body: RequestBody) => Option.from(body).map((b) => {
   } else if (b.type === DataType.MultipartFormData) {
     return toNativeFormData(b.data);
   } else {
-    return b;
+    return b.data;
   }
 });
 
@@ -127,11 +136,6 @@ const get = <T extends keyof ResponseTypeMap>(init: HttpTypes.GetDelInit<T>) => 
 
 const del = <T extends keyof ResponseTypeMap>(init: HttpTypes.GetDelInit<T>) => send({ ...init, method: HttpTypes.HttpMethod.Delete, body: empty() });
 
-interface FetchReaderResult {
-  done: boolean;
-  value: Uint8Array;
-}
-
 const sendProgress = (init: HttpTypes.DownloadHttpRequest, loaded: number) => {
   if (Type.isFunction(init.progress)) {
     init.progress(loaded);
@@ -163,7 +167,7 @@ const fetchDownload = (init: HttpTypes.DownloadHttpRequest): FutureResult<Blob, 
 
     if (body) {
       const reader = body.getReader();
-      const process = (result: FetchReaderResult) => {
+      const process = (result: ReadableStreamReadResult<Uint8Array>): void => {
         if (result.done) {
           resolve(Result.value(new Blob(chunks, { type: mime.getOr('') })));
         } else {
