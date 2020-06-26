@@ -15,14 +15,79 @@ body {
   margin: 1rem;
 }
 
+/* Below is an example how to style tables and still get full
+   functionality of the different table properties dialogs */
 table {
   border-collapse: collapse;
 }
 
-table th,
-table td {
-  border: 1px solid #ccc;
+/* Apply a default padding if legacy cellpading is missing */
+table:not([cellpadding]) th,
+table:not([cellpadding]) td {
   padding: .4rem;
+}
+
+/* Remove the outer borders from table cells to allow the
+   table's border styles to be visible */
+table tr:first-child td {
+  border-top: 0;
+}
+
+table tr:last-child td {
+  border-bottom: 0;
+}
+
+table tr td:first-child {
+  border-left: 0;
+}
+
+table tr td:last-child {
+  border-right: 0;
+}
+
+/* Set a default border style if a table has a positive border attribute
+   and no inline css border style */
+table[border]:not([border="0"]):not([style*="border-style"]) {
+  border-style: solid;
+}
+
+/* Set a default border color if a table has a positive border attribute
+   and no inline css border color */
+table[border]:not([border="0"]):not([style*="border-color"]) {
+  border-color: #ccc;
+}
+
+/* Set a default border style for table cells if a table has a
+   positive border attribute */
+table[border]:not([border="0"]) th,
+table[border]:not([border="0"]) td {
+  border-style: solid;
+}
+
+/* Cascade down the table border styles to table cells */
+table[border][style*="dashed"]:not([border="0"]) th,
+table[border][style*="dashed"]:not([border="0"]) td {
+  border-style: dashed;
+}
+
+table[border][style*="dotted"]:not([border="0"]) th,
+table[border][style*="dotted"]:not([border="0"]) td {
+  border-style: dotted;
+}
+
+table[border][style*="double"]:not([border="0"]) th,
+table[border][style*="double"]:not([border="0"]) td {
+  border-style: double;
+}
+
+table[border][style*="groove"]:not([border="0"]) th,
+table[border][style*="double"]:not([border="0"]) td {
+  border-style: groove;
+}
+
+table[border][style*="ridge"]:not([border="0"]) th,
+table[border][style*="ridge"]:not([border="0"]) td {
+  border-style: ridge;
 }
 
 figure {
