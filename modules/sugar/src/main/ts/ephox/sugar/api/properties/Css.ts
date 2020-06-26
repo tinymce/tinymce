@@ -1,4 +1,12 @@
-import { console, CSSStyleDeclaration, Element as DomElement, HTMLElement, Node as DomNode, window } from '@ephox/dom-globals';
+import {
+  console,
+  CSSRule,
+  CSSStyleDeclaration,
+  Element as DomElement,
+  HTMLElement,
+  Node as DomNode,
+  window
+} from '@ephox/dom-globals';
 import { Arr, Obj, Option, Strings, Type } from '@ephox/katamari';
 import * as Style from '../../impl/Style';
 import * as Body from '../node/Body';
@@ -101,8 +109,17 @@ const getRaw = (element: Element<DomNode>, property: string) => {
   return Option.from(raw).filter((r) => r.length > 0);
 };
 
-const getAllRaw = (element: Element<DomNode>) => {
-  const css: Record<string, string> = {};
+export type CssStyleDeclarationValue
+  = string
+  | number
+  | ((property: string) => string)
+  | ((index: number) => string)
+  | ((property: string, value: (string | null), priority?: string) => void)
+  | CSSRule
+  | null;
+
+const getAllRaw = (element: Element<DomNode>): Record<string, CssStyleDeclarationValue> => {
+  const css: Record<string, CssStyleDeclarationValue> = {};
   const dom = element.dom();
 
   if (Style.isSupported(dom)) {
