@@ -1,9 +1,11 @@
-import { Event, Events, Bindable } from '@ephox/porkbun';
+import { HTMLTableElement } from '@ephox/dom-globals';
+import { Bindable, Event, Events } from '@ephox/porkbun';
+import { Element } from '@ephox/sugar';
 import * as Adjustments from '../resize/Adjustments';
 import { BarManager } from '../resize/BarManager';
 import * as BarPositions from '../resize/BarPositions';
 import { ResizeWire } from './ResizeWire';
-import { Element } from '@ephox/sugar';
+import { TableSize } from './TableSize';
 
 type ColInfo = BarPositions.ColInfo;
 type BarPositions<A> = BarPositions.BarPositions<A>;
@@ -40,7 +42,7 @@ export interface TableResize {
   readonly events: TableResizeEventRegistry;
 }
 
-const create = (wire: ResizeWire, vdirection: BarPositions<ColInfo>): TableResize => {
+const create = (wire: ResizeWire, vdirection: BarPositions<ColInfo>, lazySizing: (element: Element<HTMLTableElement>) => TableSize): TableResize => {
   const hdirection = BarPositions.height;
   const manager = BarManager(wire, vdirection, hdirection);
 
@@ -50,22 +52,25 @@ const create = (wire: ResizeWire, vdirection: BarPositions<ColInfo>): TableResiz
     startDrag: Event([])
   }) as TableResizeEvents;
 
-  manager.events.adjustHeight.bind(function (event) {
-    events.trigger.beforeResize(event.table());
-    const delta = hdirection.delta(event.delta(), event.table());
-    Adjustments.adjustHeight(event.table(), delta, event.row(), hdirection);
-    events.trigger.afterResize(event.table());
+  manager.events.adjustHeight.bind((event) => {
+    const table = event.table();
+    events.trigger.beforeResize(table);
+    const delta = hdirection.delta(event.delta(), table);
+    Adjustments.adjustHeight(table, delta, event.row(), hdirection);
+    events.trigger.afterResize(table);
   });
 
-  manager.events.startAdjust.bind(function (_event) {
+  manager.events.startAdjust.bind((_event) => {
     events.trigger.startDrag();
   });
 
-  manager.events.adjustWidth.bind(function (event) {
-    events.trigger.beforeResize(event.table());
-    const delta = vdirection.delta(event.delta(), event.table());
-    Adjustments.adjustWidth(event.table(), delta, event.column(), vdirection);
-    events.trigger.afterResize(event.table());
+  manager.events.adjustWidth.bind((event) => {
+    const table = event.table();
+    events.trigger.beforeResize(table);
+    const delta = vdirection.delta(event.delta(), table);
+    const tableSize = lazySizing(table);
+    Adjustments.adjustWidth(table, delta, event.column(), vdirection, tableSize);
+    events.trigger.afterResize(table);
   });
 
   return {

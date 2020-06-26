@@ -1,4 +1,4 @@
-import { Assertions, Chain, Logger, Mouse, NamedChain, Pipeline, TestLogs } from '@ephox/agar';
+import { Assertions, Chain, Log, Mouse, NamedChain, Pipeline, TestLogs } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Cell } from '@ephox/katamari';
 import { ApiChains, Editor as McEditor } from '@ephox/mcagar';
@@ -72,11 +72,15 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
   ]);
 
   const cAssertUnitBeforeResize = (unit: string) => Chain.op((widths: any) => {
-    Assertions.assertEq(`table width before resizing is in ${unit}`, unit === '%', widths.widthBefore.isPercent);
+    Assertions.assertEq(`table width before resizing is in ${unit}`, unit, widths.widthBefore.unit);
   });
 
   const cAssertUnitAfterResize = (unit: string) => Chain.op((widths: any) => {
-    Assertions.assertEq(`table width after resizing is in ${unit}`, unit === '%', widths.widthAfter.isPercent);
+    Assertions.assertEq(`table width after resizing is in ${unit}`, unit, widths.widthAfter.unit);
+  });
+
+  const cAssertWidthBeforeResize = (width: string) => Chain.op((widths: any) => {
+    Assertions.assertEq(`table raw width before resizing is ${width}`, width, widths.widthBefore.raw);
   });
 
   const cAssertEventData = (state, expectedEventName) => Chain.op((_) => {
@@ -87,7 +91,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
   });
 
   Pipeline.async({}, [
-    Logger.t('Test default config of [table_responsive_width=unset], resize should detect current unit', Chain.asStep({}, [
+    Log.chainsAsStep('TBA', 'Test default config of [table_sizing_mode=unset], resize should detect current unit', [
       NamedChain.write('editor', McEditor.cFromSettings({
         plugins: 'table',
         width: 400,
@@ -110,15 +114,15 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
       cAssertEventData(lastObjectResizedEvent, 'objectresized'),
 
       NamedChain.read('editor', McEditor.cRemove)
-    ])),
+    ]),
 
-    Logger.t('Test default config of [table_responsive_width=true], new tables should default to % and resize should force %', Chain.asStep({}, [
+    Log.chainsAsStep('TBA', 'Test default config of [table_sizing_mode="relative"], new tables should default to % and resize should force %', [
       NamedChain.write('editor', McEditor.cFromSettings({
         plugins: 'table',
         width: 400,
         theme: 'silver',
         base_url: '/project/tinymce/js/tinymce',
-        table_responsive_width: true
+        table_sizing_mode: 'relative'
       })),
 
       cClearResizeEventData,
@@ -135,7 +139,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
       cAssertEventData(lastObjectResizeStartEvent, 'objectresizestart'),
       cAssertEventData(lastObjectResizedEvent, 'objectresized'),
 
-      // Force % on unset tables with [table_responsive_width=true]
+      // Force % on unset tables with [table_sizing_mode="relative"]
       cClearResizeEventData,
       NamedChain.read('editor', ApiChains.cSetContent('')),
       NamedChain.direct('editor', cInsertResizeMeasure(TableTestUtils.cInsertRaw('<table><tbody><tr><td><br></td><td><br></td></tr></tbody></table>')), 'widths'),
@@ -143,7 +147,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
       cAssertEventData(lastObjectResizeStartEvent, 'objectresizestart'),
       cAssertEventData(lastObjectResizedEvent, 'objectresized'),
 
-      // Force % on tables with that are initially set to px with [table_responsive_width=true]
+      // Force % on tables with that are initially set to px with [table_sizing_mode="relative"]
       cClearResizeEventData,
       NamedChain.read('editor', ApiChains.cSetContent('')),
       NamedChain.direct('editor', cInsertResizeMeasure(TableTestUtils.cInsertRaw('<table style="width: 200px;"><tbody><tr><td></td><td></td></tr></tbody></table>')), 'widths'),
@@ -152,15 +156,15 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
       cAssertEventData(lastObjectResizedEvent, 'objectresized'),
 
       NamedChain.read('editor', McEditor.cRemove)
-    ])),
+    ]),
 
-    Logger.t('Test [table_responsive_width=false], new tables should default to px and resize should force px', Chain.asStep({}, [
+    Log.chainsAsStep('TBA', 'Test [table_sizing_mode="fixed"], new tables should default to px and resize should force px', [
       NamedChain.write('editor', McEditor.cFromSettings({
         plugins: 'table',
         width: 400,
         theme: 'silver',
         base_url: '/project/tinymce/js/tinymce',
-        table_responsive_width: false
+        table_sizing_mode: 'fixed'
       })),
 
       cClearResizeEventData,
@@ -171,7 +175,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
       cAssertEventData(lastObjectResizeStartEvent, 'objectresizestart'),
       cAssertEventData(lastObjectResizedEvent, 'objectresized'),
 
-      // Force px on unset tables with [table_responsive_width=false]
+      // Force px on unset tables with [table_sizing_mode="fixed"]
       cClearResizeEventData,
       NamedChain.read('editor', ApiChains.cSetContent('')),
       NamedChain.direct('editor', cInsertResizeMeasure(TableTestUtils.cInsertRaw('<table><tbody><tr><td><br></td><td><br></td></tr></tbody></table>')), 'widths'),
@@ -179,7 +183,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
       cAssertEventData(lastObjectResizeStartEvent, 'objectresizestart'),
       cAssertEventData(lastObjectResizedEvent, 'objectresized'),
 
-      // Force px on tables with that are initially set to % with [table_responsive_width=false]
+      // Force px on tables with that are initially set to % with [table_sizing_mode="fixed"]
       cClearResizeEventData,
       NamedChain.read('editor', ApiChains.cSetContent('')),
       NamedChain.direct('editor', cInsertResizeMeasure(TableTestUtils.cInsertRaw('<table style="width: 100%;"><tbody><tr><td style="width: 50%;"></td><td style="width: 50%;"></td></tr></tbody></table>')), 'widths'),
@@ -188,8 +192,43 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
       cAssertEventData(lastObjectResizedEvent, 'objectresized'),
 
       NamedChain.read('editor', McEditor.cRemove)
-    ]))
-  ], function () {
-    success();
-  }, failure, TestLogs.init());
+    ]),
+
+    Log.chainsAsStep('TINY-6051', 'Test [table_sizing_mode="responsive"], new tables should default to no widths and resize should force percentage', [
+      NamedChain.write('editor', McEditor.cFromSettings({
+        plugins: 'table',
+        width: 400,
+        theme: 'silver',
+        base_url: '/project/tinymce/js/tinymce',
+        table_sizing_mode: 'responsive'
+      })),
+
+      cClearResizeEventData,
+      NamedChain.read('editor', ApiChains.cSetContent('')),
+      NamedChain.direct('editor', cInsertResizeMeasure(TableTestUtils.cInsertTable(5, 2)), 'widths'),
+      NamedChain.read('widths', cAssertUnitBeforeResize(null)),
+      NamedChain.read('widths', cAssertUnitAfterResize('%')),
+      NamedChain.read('widths', cAssertWidthBeforeResize(null)),
+      cAssertEventData(lastObjectResizeStartEvent, 'objectresizestart'),
+      cAssertEventData(lastObjectResizedEvent, 'objectresized'),
+
+      // Force % on unset tables with [table_sizing_mode="responsive"]
+      cClearResizeEventData,
+      NamedChain.read('editor', ApiChains.cSetContent('')),
+      NamedChain.direct('editor', cInsertResizeMeasure(TableTestUtils.cInsertRaw('<table><tbody><tr><td><br></td><td><br></td></tr></tbody></table>')), 'widths'),
+      NamedChain.read('widths', cAssertUnitAfterResize('%')),
+      cAssertEventData(lastObjectResizeStartEvent, 'objectresizestart'),
+      cAssertEventData(lastObjectResizedEvent, 'objectresized'),
+
+      // Force % on tables with that are initially set to px with [table_sizing_mode="responsive"]
+      cClearResizeEventData,
+      NamedChain.read('editor', ApiChains.cSetContent('')),
+      NamedChain.direct('editor', cInsertResizeMeasure(TableTestUtils.cInsertRaw('<table style="width: 200px;"><tbody><tr><td></td><td></td></tr></tbody></table>')), 'widths'),
+      NamedChain.read('widths', cAssertUnitAfterResize('%')),
+      cAssertEventData(lastObjectResizeStartEvent, 'objectresizestart'),
+      cAssertEventData(lastObjectResizedEvent, 'objectresized'),
+
+      NamedChain.read('editor', McEditor.cRemove)
+    ])
+  ], success, failure, TestLogs.init());
 });

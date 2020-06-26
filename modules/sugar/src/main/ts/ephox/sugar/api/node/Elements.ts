@@ -16,6 +16,6 @@ const fromTags = (tags: string[], scope?: Document | null) => Arr.map(tags, (x) 
 
 const fromText = (texts: string[], scope?: Document | null) => Arr.map(texts, (x) => Element.fromText(x, scope));
 
-const fromDom = <T extends (Node | Window)>(nodes: T[]): Element<T>[] => Arr.map(nodes, Element.fromDom);
+const fromDom = <T extends (Node | Window)>(nodes: ArrayLike<T>): Element<T>[] => Arr.map(nodes, Element.fromDom);
 
 export { fromHtml, fromTags, fromText, fromDom };

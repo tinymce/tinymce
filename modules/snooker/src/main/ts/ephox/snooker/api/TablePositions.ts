@@ -1,6 +1,5 @@
 import { Option } from '@ephox/katamari';
 import { Compare, Element } from '@ephox/sugar';
-import * as DetailsList from '../model/DetailsList';
 import { Warehouse } from '../model/Warehouse';
 import * as CellFinder from '../selection/CellFinder';
 import * as CellGroup from '../selection/CellGroup';
@@ -35,10 +34,7 @@ const getBox = function (table: Element, first: Element, last: Element) {
 };
 
 // Private method ... keep warehouse in snooker, please.
-const getWarehouse = function (table: Element) {
-  const list = DetailsList.fromTable(table);
-  return Warehouse.generate(list);
-};
+const getWarehouse = Warehouse.fromTable;
 
 export {
   moveBy,

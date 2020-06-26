@@ -5,18 +5,19 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node, HTMLTableElement, HTMLTableCellElement, HTMLTableRowElement, Element, Range } from '@ephox/dom-globals';
+import { HTMLTableCellElement, HTMLTableElement, HTMLTableRowElement, Node, Range } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import { ResizeWire, TableDirection, TableResize } from '@ephox/snooker';
 import { Element as SugarElement } from '@ephox/sugar';
-import Tools from 'tinymce/core/api/util/Tools';
-import * as Direction from '../queries/Direction';
-import * as TableWire from './TableWire';
-import { hasTableResizeBars, hasObjectResizing, isPixelsForced, isPercentagesForced } from '../api/Settings';
 import Editor from 'tinymce/core/api/Editor';
+import Tools from 'tinymce/core/api/util/Tools';
 import * as Events from '../api/Events';
-import * as Util from '../alien/Util';
-import { enforcePixels, enforcePercentage } from './EnforceUnit';
+import { hasObjectResizing, hasTableResizeBars, isPercentagesForced, isPixelsForced, isResponsiveForced } from '../api/Settings';
+import * as Util from '../core/Util';
+import * as Direction from '../queries/Direction';
+import * as TableSize from '../queries/TableSize';
+import { enforcePercentage, enforcePixels } from './EnforceUnit';
+import * as TableWire from './TableWire';
 
 export interface ResizeHandler {
   lazyResize: () => Option<TableResize>;
@@ -28,17 +29,11 @@ export const getResizeHandler = function (editor: Editor): ResizeHandler {
   let selectionRng = Option.none<Range>();
   let resize = Option.none<TableResize>();
   let wire = Option.none();
-  const percentageBasedSizeRegex = /(\d+(\.\d+)?)%/;
   let startW: number;
   let startRawW: string;
 
   const isTable = function (elm: Node): elm is HTMLTableElement {
     return elm.nodeName === 'TABLE';
-  };
-
-  const getRawWidth = function (elm: Element) {
-    const raw = editor.dom.getStyle(elm, 'width') || editor.dom.getAttrib(elm, 'width');
-    return Option.from(raw).filter((s) => s.length > 0);
   };
 
   const lazyResize = function () {
@@ -64,7 +59,8 @@ export const getResizeHandler = function (editor: Editor): ResizeHandler {
     const rawWire = TableWire.get(editor);
     wire = Option.some(rawWire);
     if (hasObjectResizing(editor) && hasTableResizeBars(editor)) {
-      const sz = TableResize.create(rawWire, direction);
+      const lazySizing = (table: SugarElement<HTMLTableElement>) => TableSize.get(editor, table);
+      const sz = TableResize.create(rawWire, direction, lazySizing);
       sz.on();
       sz.events.startDrag.bind(function (_event) {
         selectionRng = Option.some(editor.selection.getRng());
@@ -98,16 +94,16 @@ export const getResizeHandler = function (editor: Editor): ResizeHandler {
     const targetElm = e.target;
     if (isTable(targetElm)) {
 
-      const tableHasPercentage = getRawWidth(targetElm).map((w) => percentageBasedSizeRegex.test(w)).getOr(false);
+      const tableHasPercentage = Util.getRawWidth(editor, targetElm).exists(Util.isPercentage);
 
       if (tableHasPercentage && isPixelsForced(editor)) {
         enforcePixels(targetElm);
-      } else if (!tableHasPercentage && isPercentagesForced(editor)) {
+      } else if (!tableHasPercentage && (isPercentagesForced(editor) || isResponsiveForced(editor))) {
         enforcePercentage(targetElm);
       }
 
       startW = e.width;
-      startRawW = getRawWidth(targetElm).getOr('');
+      startRawW = Util.getRawWidth(editor, targetElm).getOr('');
     }
   });
 
@@ -118,8 +114,8 @@ export const getResizeHandler = function (editor: Editor): ResizeHandler {
     if (isTable(targetElm)) {
       const table = targetElm;
 
-      if (percentageBasedSizeRegex.test(startRawW)) {
-        const percentW = parseFloat(percentageBasedSizeRegex.exec(startRawW)[1]);
+      if (Util.isPercentage(startRawW)) {
+        const percentW = parseFloat(startRawW.replace('%', ''));
         const targetPercentW = e.width * percentW / startW;
         editor.dom.setStyle(table, 'width', targetPercentW + '%');
       } else {

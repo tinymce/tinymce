@@ -11,8 +11,8 @@ import { TableLookup } from '@ephox/snooker';
 import { Element, SelectorFilter } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
-import * as Util from '../alien/Util';
 import { getTableHeaderType } from '../api/Settings';
+import * as Util from './Util';
 
 export interface HeaderRowConfiguration {
   thead: boolean;

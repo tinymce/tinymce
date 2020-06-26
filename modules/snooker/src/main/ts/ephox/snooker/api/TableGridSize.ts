@@ -1,10 +1,8 @@
-import * as DetailsList from '../model/DetailsList';
-import { Warehouse } from '../model/Warehouse';
 import { Element } from '@ephox/sugar';
+import { Warehouse } from '../model/Warehouse';
 
 const getGridSize = function (table: Element) {
-  const input = DetailsList.fromTable(table);
-  const warehouse = Warehouse.generate(input);
+  const warehouse = Warehouse.fromTable(table);
   return warehouse.grid;
 };
 
