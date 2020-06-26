@@ -18,10 +18,21 @@ const owner = (element: Element<DomNode>) => Element.fromDom(element.dom().owner
 const documentOrOwner = (dos: Element<DomNode>): Element<Document> =>
   Node.isDocument(dos) ? dos : owner(dos);
 
-const documentElement = (element: Element<DomNode>) => Element.fromDom(element.dom().ownerDocument.documentElement);
+const getOwnerDocumentOrThrow = (element: Element<DomNode>): Document => {
+  const od = element.dom().ownerDocument;
+  if (Type.isNonNullable(od)) {
+    return od;
+  } else {
+    throw new Error('ownerDocument was not set');
+  }
+};
+
+const documentElement = (element: Element<DomNode>) =>
+  Element.fromDom(getOwnerDocumentOrThrow(element).documentElement);
 
 // The window element associated with the element
-const defaultView = (element: Element<DomNode>) => Element.fromDom(element.dom().ownerDocument.defaultView);
+const defaultView = (element: Element<DomNode>) =>
+  Element.fromDom(getOwnerDocumentOrThrow(element).defaultView);
 
 const parent = (element: Element<DomNode>) => Option.from(element.dom().parentNode).map(Element.fromDom);
 
@@ -59,31 +70,41 @@ const siblings = (element: Element<DomNode>) => {
   return parent(element).map(children).map(filterSelf).getOr([]);
 };
 
-const offsetParent = (element: Element<HTMLElement>) => Option.from(element.dom().offsetParent).map(Element.fromDom);
+const offsetParent = (element: Element<HTMLElement>) =>
+  Option.from(element.dom().offsetParent).map(Element.fromDom);
 
-const prevSibling = (element: Element<DomNode>) => Option.from(element.dom().previousSibling).map(Element.fromDom);
+const prevSibling = (element: Element<DomNode>): Option<Element<DomNode>> =>
+  Option.from<DomNode>(element.dom().previousSibling).map(Element.fromDom);
 
-const nextSibling = (element: Element<DomNode>) => Option.from(element.dom().nextSibling).map(Element.fromDom);
+const nextSibling = (element: Element<DomNode>): Option<Element<DomNode>> =>
+  Option.from<DomNode>(element.dom().nextSibling).map(Element.fromDom);
 
 // This one needs to be reversed, so they're still in DOM order
-const prevSiblings = (element: Element<DomNode>) => Arr.reverse(Recurse.toArray(element, prevSibling));
+const prevSiblings = (element: Element<DomNode>): Array<Element<DomNode>> =>
+  Arr.reverse(Recurse.toArray(element, prevSibling));
 
-const nextSiblings = (element: Element<DomNode>) => Recurse.toArray(element, nextSibling);
+const nextSiblings = (element: Element<DomNode>): Array<Element<DomNode>> =>
+  Recurse.toArray(element, nextSibling);
 
-const children = (element: Element<DomNode>) => Arr.map(element.dom().childNodes, Element.fromDom);
+const children = (element: Element<DomNode>): Array<Element<DomNode>> =>
+  Arr.map(element.dom().childNodes, Element.fromDom);
 
-const child = (element: Element<DomNode>, index: number) => {
+const child = (element: Element<DomNode>, index: number): Option<Element<DomNode>> => {
   const cs = element.dom().childNodes;
   return Option.from(cs[index] as DomNode).map(Element.fromDom);
 };
 
-const firstChild = (element: Element<DomNode>) => child(element, 0);
+const firstChild = (element: Element<DomNode>): Option<Element<DomNode>> =>
+  child(element, 0);
 
-const lastChild = (element: Element<DomNode>) => child(element, element.dom().childNodes.length - 1);
+const lastChild = (element: Element<DomNode>): Option<Element<DomNode>> =>
+  child(element, element.dom().childNodes.length - 1);
 
-const childNodesCount = (element: Element<DomNode>) => element.dom().childNodes.length;
+const childNodesCount = (element: Element<DomNode>): number =>
+  element.dom().childNodes.length;
 
-const hasChildNodes = (element: Element<DomNode>) => element.dom().hasChildNodes();
+const hasChildNodes = (element: Element<DomNode>): boolean =>
+  element.dom().hasChildNodes();
 
 export interface ElementAndOffset<E> {
   readonly element: () => Element<E>;
