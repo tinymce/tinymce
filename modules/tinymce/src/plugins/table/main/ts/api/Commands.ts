@@ -11,7 +11,7 @@ import { CopyCols, CopyRows, TableFill, TableLookup } from '@ephox/snooker';
 import { Element, Insert, Remove, Replication } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { insertTableWithDataValidation } from '../actions/InsertTable';
-import { AdvancedPasteTableAction, BasicTableAction, TableActions } from '../actions/TableActions';
+import { AdvancedPasteTableAction, CombinedTargetsTableAction, TableActions } from '../actions/TableActions';
 import { Clipboard } from '../core/Clipboard';
 import * as Util from '../core/Util';
 import * as TableTargets from '../queries/TableTargets';
@@ -46,7 +46,7 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
 
   const getTableFromCell = (cell: Element): Option<Element> => TableLookup.table(cell, isRoot);
 
-  const actOnSelection = (execute: BasicTableAction): void => TableSelection.getSelectionStartCell(editor).each((cell) => {
+  const actOnSelection = (execute: CombinedTargetsTableAction): void => TableSelection.getSelectionStartCell(editor).each((cell) => {
     getTableFromCell(cell).each((table) => {
       const targets = TableTargets.forMenu(selections, table, cell);
       execute(table, targets).each((rng) => {

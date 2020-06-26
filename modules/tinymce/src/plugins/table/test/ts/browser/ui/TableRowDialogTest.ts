@@ -26,7 +26,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
     const baseData = {
       height: '',
       align: '',
-      type: 'tbody'
+      type: 'body'
     };
 
     const advHtml = '<table style="border: 1px solid black; border-collapse: collapse;" border="1"><thead>' +
@@ -36,7 +36,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
     const advData = {
       align: 'right',
       height: '10px',
-      type: 'thead',
+      type: 'header',
       backgroundcolor: 'blue',
       bordercolor: 'red',
       borderstyle: ''
@@ -60,7 +60,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
       TableTestUtils.sSetDialogValues({
         height: '10',
         align: 'right',
-        type: 'thead'
+        type: 'header'
       }, false, generalSelectors),
       TableTestUtils.sClickDialogButton('clicking save', true),
       tinyApis.sAssertContent('<table style="border: 1px solid black; border-collapse: collapse;" border="1"><thead><tr style="height: 10px; text-align: right;"><td>X</td></tr></thead></table>')
@@ -74,7 +74,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
       TableTestUtils.sSetDialogValues({
         height: '',
         align: '',
-        type: 'thead'
+        type: 'header'
       }, false, generalSelectors),
       TableTestUtils.sClickDialogButton('clicking save', true),
       tinyApis.sAssertContent('<table><caption>CAPTION</caption><thead><tr><td>X</td></tr></thead><tbody><tr><td>Y</td></tr></tbody></table>')
@@ -105,7 +105,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
       TableTestUtils.sSetDialogValues({
         align: '',
         height: '',
-        type: 'tbody',
+        type: 'body',
         bordercolor: 'blue',
         borderstyle: 'dotted',
         backgroundcolor: '#ff0000'
@@ -131,7 +131,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
       TableTestUtils.sSetDialogValues({
         align: '',
         height: '',
-        type: 'tbody',
+        type: 'body',
         backgroundcolor: '',
         bordercolor: '',
         borderstyle: ''
@@ -165,7 +165,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
       const initialData = {
         align: '',
         height: '20px',
-        type: 'tbody',
+        type: 'body',
         backgroundcolor: '',
         bordercolor: 'blue',
         borderstyle: ''
@@ -174,7 +174,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
       const newData = {
         align: 'center',
         height: '',
-        type: 'tbody',
+        type: 'body',
         backgroundcolor: '',
         bordercolor: 'red',
         borderstyle: ''
@@ -212,7 +212,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
       const initialData = {
         align: '',
         height: '',
-        type: 'thead',
+        type: 'header',
         backgroundcolor: '',
         bordercolor: '',
         borderstyle: ''
@@ -227,7 +227,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
         TableTestUtils.sSetDialogValues({
           align: '',
           height: '',
-          type: 'tbody',
+          type: 'body',
           backgroundcolor: '',
           bordercolor: '',
           borderstyle: ''

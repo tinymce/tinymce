@@ -85,7 +85,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.SwitchTableSectionTest', (succ
       }),
       Chain.fromParent(Chain.identity, [
         ApiChains.cSetContent(startContent),
-        cSwitchSection('tr#one', 'thead'),
+        cSwitchSection('tr#one', 'header'),
         ApiChains.cAssertContent(expected)
       ]),
       McEditor.cRemove
@@ -184,7 +184,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.SwitchTableSectionTest', (succ
       }),
       Chain.fromParent(Chain.identity, [
         ApiChains.cSetContent(startContent),
-        cSwitchSection('tr#two', 'thead'),
+        cSwitchSection('tr#two', 'header'),
         ApiChains.cAssertContent(expected)
       ]),
       McEditor.cRemove
@@ -253,19 +253,19 @@ UnitTest.asynctest('browser.tinymce.plugins.table.SwitchTableSectionTest', (succ
     sExistingHeaderSwitchTest('type auto so should detect type from existing', 'auto', thsExpected, existingThsExpected),
     sExistingHeaderSwitchTest('type auto so should detect type from existing', 'auto', bothExpected, existingBothExpected),
     // General tests for switching between various sections
-    sSectionSwitchTest('tfoot', 'auto', basicContent, tfootContent), // tbody to tfoot
-    sSectionSwitchTest('tbody', 'auto', tfootContent, reversedBasicContent), // tfoot to tbody
-    sSectionSwitchTest('tbody', 'section', theadExpected, basicContent), // thead to tbody
-    sSectionSwitchTest('tbody', 'cells', thsExpected, basicContent), // cells to tbody
-    sSectionSwitchTest('tbody', 'sectionCells', bothExpected, basicContent), // sectionCells to tbody
-    sSectionSwitchTest('tfoot', 'section', theadExpected, tfootContent), // thead to tfoot
-    sSectionSwitchTest('tfoot', 'cells', thsExpected, tfootContent), // ths to tfoot
-    sSectionSwitchTest('tfoot', 'sectionCells', bothExpected, tfootContent), // sectionCells to tfoot
+    sSectionSwitchTest('footer', 'auto', basicContent, tfootContent), // body to footer
+    sSectionSwitchTest('body', 'auto', tfootContent, reversedBasicContent), // footer to body
+    sSectionSwitchTest('body', 'section', theadExpected, basicContent), // header to body
+    sSectionSwitchTest('body', 'cells', thsExpected, basicContent), // cells to body
+    sSectionSwitchTest('body', 'sectionCells', bothExpected, basicContent), // sectionCells to body
+    sSectionSwitchTest('footer', 'section', theadExpected, tfootContent), // header to footer
+    sSectionSwitchTest('footer', 'cells', thsExpected, tfootContent), // ths to footer
+    sSectionSwitchTest('footer', 'sectionCells', bothExpected, tfootContent), // sectionCells to footer
     // Test that trying to switch to the same section does nothing
-    sSectionSwitchTest('tbody', 'auto', basicContent, basicContent),
-    sSectionSwitchTest('thead', 'section', theadExpected, theadExpected),
-    sSectionSwitchTest('thead', 'cells', thsExpected, thsExpected),
-    sSectionSwitchTest('thead', 'sectionCells', bothExpected, bothExpected),
-    sSectionSwitchTest('tfoot', 'auto', tfootContent, tfootContent)
+    sSectionSwitchTest('body', 'auto', basicContent, basicContent),
+    sSectionSwitchTest('header', 'section', theadExpected, theadExpected),
+    sSectionSwitchTest('header', 'cells', thsExpected, thsExpected),
+    sSectionSwitchTest('header', 'sectionCells', bothExpected, bothExpected),
+    sSectionSwitchTest('footer', 'auto', tfootContent, tfootContent)
   ], success, failure);
 });

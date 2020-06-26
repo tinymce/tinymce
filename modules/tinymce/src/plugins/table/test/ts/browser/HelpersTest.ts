@@ -100,7 +100,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.HelpersTest', (success, failur
             // Assertions.assertEq('Extracts scope', 'row', rowData.scope); // Chrome won't set a scope on a tr?
             Assertions.assertEq('Extracts class', 'foo', rowData.class);
             Assertions.assertEq('Extracts align', 'left', rowData.align);
-            Assertions.assertEq('Extracts type', 'tbody', rowData.type);
+            Assertions.assertEq('Extracts type', 'body', rowData.type);
             Assertions.assertEq('Extracts border-style', 'dashed', rowData.borderstyle);
             Assertions.assertEq('Extracts border-color', '#d91111', rowData.bordercolor);
             Assertions.assertEq('Extracts background-color', '#333333', rowData.backgroundcolor);

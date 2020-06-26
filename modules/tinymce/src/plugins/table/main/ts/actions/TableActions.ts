@@ -21,35 +21,33 @@ import * as TableSize from '../queries/TableSize';
 import { getCellsFromSelection, getRowsFromSelection } from '../selection/TableSelection';
 
 type TableAction<T> = (table: Element<HTMLTableElement>, target: T) => Option<Range>;
-export type BasicTableAction = TableAction<RunOperation.CombinedTargets>;
+export type SimpleTableAction = (editor: Editor, args: Record<string, any>) => void;
+export type CombinedTargetsTableAction = TableAction<RunOperation.CombinedTargets>;
 export type PasteTableAction = TableAction<RunOperation.TargetPaste>;
 export type AdvancedPasteTableAction = TableAction<RunOperation.TargetPasteRows>;
-export type SimpleTableAction = (editor: Editor, args: Record<string, any>) => void;
-export type SimpleGetterTableAction = (editor: Editor) => string;
-export type GetterTableAction = (table: Element<HTMLTableElement>, target: RunOperation.TargetSelection) => string;
 export type ElementTableAction = TableAction<RunOperation.TargetElement>;
 
 export interface TableActions {
-  deleteRow: BasicTableAction;
-  deleteColumn: BasicTableAction;
-  insertRowsBefore: BasicTableAction;
-  insertRowsAfter: BasicTableAction;
-  insertColumnsBefore: BasicTableAction;
-  insertColumnsAfter: BasicTableAction;
-  mergeCells: BasicTableAction;
-  unmergeCells: BasicTableAction;
+  deleteRow: CombinedTargetsTableAction;
+  deleteColumn: CombinedTargetsTableAction;
+  insertRowsBefore: CombinedTargetsTableAction;
+  insertRowsAfter: CombinedTargetsTableAction;
+  insertColumnsBefore: CombinedTargetsTableAction;
+  insertColumnsAfter: CombinedTargetsTableAction;
+  mergeCells: CombinedTargetsTableAction;
+  unmergeCells: CombinedTargetsTableAction;
+  pasteCells: PasteTableAction;
   pasteColsBefore: AdvancedPasteTableAction;
   pasteColsAfter: AdvancedPasteTableAction;
   pasteRowsBefore: AdvancedPasteTableAction;
   pasteRowsAfter: AdvancedPasteTableAction;
-  pasteCells: PasteTableAction;
   setTableCellType: SimpleTableAction;
   setTableRowType: SimpleTableAction;
   makeColumnHeader: ElementTableAction;
   unmakeColumnHeader: ElementTableAction;
-  getTableRowType: SimpleGetterTableAction;
-  getTableCellType: SimpleGetterTableAction;
-  getTableColType: GetterTableAction;
+  getTableRowType: (editor: Editor) => string;
+  getTableCellType: (editor: Editor) => string;
+  getTableColType: (table: Element<HTMLTableElement>, target: RunOperation.TargetSelection) => string;
 }
 
 export const TableActions = (editor: Editor, lazyWire: () => ResizeWire): TableActions => {
