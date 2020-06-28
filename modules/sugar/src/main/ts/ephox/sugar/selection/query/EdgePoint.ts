@@ -1,4 +1,4 @@
-import { ClientRect, Document, DOMRect, Element as DomElement, Node as DomNode } from '@ephox/dom-globals';
+import { ClientRect, Document, DOMRect, Element as DomElement, Node as DomNode, Range } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import Element from '../../api/node/Element';
 import * as Traverse from '../../api/search/Traverse';
@@ -16,17 +16,17 @@ import * as CursorPosition from '../../api/selection/CursorPosition';
 const COLLAPSE_TO_LEFT = true;
 const COLLAPSE_TO_RIGHT = false;
 
-const getCollapseDirection = (rect: ClientRect | DOMRect, x: number) =>
+const getCollapseDirection = (rect: ClientRect | DOMRect, x: number): boolean =>
   x - rect.left < rect.right - x ? COLLAPSE_TO_LEFT : COLLAPSE_TO_RIGHT;
 
-const createCollapsedNode = (doc: Element<Document>, target: Element<DomNode>, collapseDirection: boolean) => {
+const createCollapsedNode = (doc: Element<Document>, target: Element<DomNode>, collapseDirection: boolean): Range => {
   const r = doc.dom().createRange();
   r.selectNode(target.dom());
   r.collapse(collapseDirection);
   return r;
 };
 
-const locateInElement = (doc: Element<Document>, node: Element<DomElement>, x: number) => {
+const locateInElement = (doc: Element<Document>, node: Element<DomElement>, x: number): Option<Range> => {
   const cursorRange = doc.dom().createRange();
   cursorRange.selectNode(node.dom());
   const rect = cursorRange.getBoundingClientRect();
@@ -36,13 +36,13 @@ const locateInElement = (doc: Element<Document>, node: Element<DomElement>, x: n
   return f(node).map((target) => createCollapsedNode(doc, target, collapseDirection));
 };
 
-const locateInEmpty = (doc: Element<Document>, node: Element<DomElement>, x: number) => {
+const locateInEmpty = (doc: Element<Document>, node: Element<DomElement>, x: number): Option<Range> => {
   const rect = node.dom().getBoundingClientRect();
   const collapseDirection = getCollapseDirection(rect, x);
   return Option.some(createCollapsedNode(doc, node, collapseDirection));
 };
 
-const search = (doc: Element<Document>, node: Element<DomElement>, x: number) => {
+const search = (doc: Element<Document>, node: Element<DomElement>, x: number): Option<Range> => {
   const f = Traverse.children(node).length === 0 ? locateInEmpty : locateInElement;
   return f(doc, node, x);
 };

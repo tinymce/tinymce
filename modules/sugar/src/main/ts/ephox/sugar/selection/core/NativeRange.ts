@@ -1,25 +1,26 @@
-import { ClientRect, DOMRect, Node as DomNode, Range, Window } from '@ephox/dom-globals';
+import { ClientRect, DocumentFragment, DOMRect, Node as DomNode, Range, Window } from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
 import Element from '../../api/node/Element';
 import { StructRect } from '../../api/selection/Rect';
 import { Situ } from '../../api/selection/Situ';
 
-const selectNodeContents = (win: Window, element: Element<DomNode>) => {
+const selectNodeContents = (win: Window, element: Element<DomNode>): Range => {
   const rng = win.document.createRange();
   selectNodeContentsUsing(rng, element);
   return rng;
 };
 
-const selectNodeContentsUsing = (rng: Range, element: Element<DomNode>) => rng.selectNodeContents(element.dom());
+const selectNodeContentsUsing = (rng: Range, element: Element<DomNode>): void =>
+  rng.selectNodeContents(element.dom());
 
-const isWithin = (outerRange: Range, innerRange: Range) =>
+const isWithin = (outerRange: Range, innerRange: Range): boolean =>
   // Adapted from: http://stackoverflow.com/questions/5605401/insert-link-in-contenteditable-element
   innerRange.compareBoundaryPoints(outerRange.END_TO_START, outerRange) < 1 && innerRange.compareBoundaryPoints(outerRange.START_TO_END, outerRange) > -1;
 
 const create = (win: Window) => win.document.createRange();
 
 // NOTE: Mutates the range.
-const setStart = (rng: Range, situ: Situ) => {
+const setStart = (rng: Range, situ: Situ): void => {
   situ.fold((e) => {
     rng.setStartBefore(e.dom());
   }, (e, o) => {
@@ -29,7 +30,7 @@ const setStart = (rng: Range, situ: Situ) => {
   });
 };
 
-const setFinish = (rng: Range, situ: Situ) => {
+const setFinish = (rng: Range, situ: Situ): void => {
   situ.fold((e) => {
     rng.setEndBefore(e.dom());
   }, (e, o) => {
@@ -39,31 +40,31 @@ const setFinish = (rng: Range, situ: Situ) => {
   });
 };
 
-const replaceWith = (rng: Range, fragment: Element<DomNode>) => {
+const replaceWith = (rng: Range, fragment: Element<DomNode>): void => {
   // Note: this document fragment approach may not work on IE9.
   deleteContents(rng);
   rng.insertNode(fragment.dom());
 };
 
-const relativeToNative = (win: Window, startSitu: Situ, finishSitu: Situ) => {
+const relativeToNative = (win: Window, startSitu: Situ, finishSitu: Situ): Range => {
   const range = win.document.createRange();
   setStart(range, startSitu);
   setFinish(range, finishSitu);
   return range;
 };
 
-const exactToNative = (win: Window, start: Element<DomNode>, soffset: number, finish: Element<DomNode>, foffset: number) => {
+const exactToNative = (win: Window, start: Element<DomNode>, soffset: number, finish: Element<DomNode>, foffset: number): Range => {
   const rng = win.document.createRange();
   rng.setStart(start.dom(), soffset);
   rng.setEnd(finish.dom(), foffset);
   return rng;
 };
 
-const deleteContents = (rng: Range) => {
+const deleteContents = (rng: Range): void => {
   rng.deleteContents();
 };
 
-const cloneFragment = (rng: Range) => {
+const cloneFragment = (rng: Range): Element<DocumentFragment> => {
   const fragment = rng.cloneContents();
   return Element.fromDom(fragment);
 };
@@ -77,18 +78,19 @@ const toRect = (rect: ClientRect | DOMRect): StructRect => ({
   height: Fun.constant(rect.height)
 });
 
-const getFirstRect = (rng: Range) => {
+const getFirstRect = (rng: Range): Option<StructRect> => {
   const rects = rng.getClientRects();
   // ASSUMPTION: The first rectangle is the start of the selection
   const rect = rects.length > 0 ? rects[0] : rng.getBoundingClientRect();
   return rect.width > 0 || rect.height > 0 ? Option.some(rect).map(toRect) : Option.none<StructRect>();
 };
 
-const getBounds = (rng: Range) => {
+const getBounds = (rng: Range): Option<StructRect> => {
   const rect = rng.getBoundingClientRect();
   return rect.width > 0 || rect.height > 0 ? Option.some(rect).map(toRect) : Option.none<StructRect>();
 };
 
-const toString = (rng: Range) => rng.toString();
+const toString = (rng: Range): string =>
+  rng.toString();
 
 export { create, replaceWith, selectNodeContents, selectNodeContentsUsing, relativeToNative, exactToNative, deleteContents, cloneFragment, getFirstRect, getBounds, isWithin, toString };

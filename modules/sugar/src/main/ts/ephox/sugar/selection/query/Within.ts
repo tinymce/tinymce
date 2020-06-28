@@ -8,7 +8,7 @@ import { Selection } from '../../api/selection/Selection';
 import * as NativeRange from '../core/NativeRange';
 import * as SelectionDirection from '../core/SelectionDirection';
 
-const withinContainer = (win: Window, ancestor: Element<DomElement>, outerRange: Range, selector: string) => {
+const withinContainer = (win: Window, ancestor: Element<DomElement>, outerRange: Range, selector: string): Element<DomElement>[] => {
   const innerRange = NativeRange.create(win);
   const self = Selectors.is(ancestor, selector) ? [ ancestor ] : [];
   const elements = self.concat(SelectorFilter.descendants(ancestor, selector));
@@ -19,7 +19,7 @@ const withinContainer = (win: Window, ancestor: Element<DomElement>, outerRange:
   });
 };
 
-const find = (win: Window, selection: Selection, selector: string) => {
+const find = (win: Window, selection: Selection, selector: string): Element<DomElement>[] => {
   // Reverse the selection if it is RTL when doing the comparison
   const outerRange = SelectionDirection.asLtrRange(win, selection);
   const ancestor = Element.fromDom(outerRange.commonAncestorContainer);

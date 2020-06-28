@@ -1,10 +1,10 @@
-import { ClientRect, Document, DOMRect, Text as DomText } from '@ephox/dom-globals';
+import { ClientRect, Document, DOMRect, Range, Text as DomText } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
 import Element from '../../api/node/Element';
 import * as Text from '../../api/node/Text';
 import * as Geometry from '../alien/Geometry';
 
-const locateOffset = (doc: Element<Document>, textnode: Element<DomText>, x: number, y: number, rect: ClientRect | DOMRect) => {
+const locateOffset = (doc: Element<Document>, textnode: Element<DomText>, x: number, y: number, rect: ClientRect | DOMRect): Range => {
   const rangeForOffset = (o: number) => {
     const r = doc.dom().createRange();
     r.setStart(textnode.dom(), o);
@@ -22,7 +22,7 @@ const locateOffset = (doc: Element<Document>, textnode: Element<DomText>, x: num
   return rangeForOffset(offset);
 };
 
-const locate = (doc: Element<Document>, node: Element<DomText>, x: number, y: number) => {
+const locate = (doc: Element<Document>, node: Element<DomText>, x: number, y: number): Option<Range> => {
   const r = doc.dom().createRange();
   r.selectNode(node.dom());
   const rects = r.getClientRects();

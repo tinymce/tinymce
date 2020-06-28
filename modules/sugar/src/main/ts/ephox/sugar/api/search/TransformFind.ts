@@ -2,7 +2,8 @@ import { Node as DomNode } from '@ephox/dom-globals';
 import { Fun, Option, Type } from '@ephox/katamari';
 import Element from '../node/Element';
 
-const ensureIsRoot = (isRoot?: (e: Element<DomNode>) => boolean) => Type.isFunction(isRoot) ? isRoot : Fun.constant(false);
+const ensureIsRoot = (isRoot?: (e: Element<DomNode>) => boolean): (e: Element<DomNode>) => boolean =>
+  Type.isFunction(isRoot) ? isRoot : Fun.constant(false);
 
 const ancestor = <A> (scope: Element<DomNode>, transform: (e: Element<DomNode>) => Option<A>, isRoot?: (e: Element<DomNode>) => boolean): Option<A> => {
   let element = scope.dom();

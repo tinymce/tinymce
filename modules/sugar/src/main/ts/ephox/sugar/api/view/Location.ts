@@ -3,13 +3,13 @@ import { inBody } from '../node/Body';
 import Element from '../node/Element';
 import { Position } from './Position';
 
-const boxPosition = (dom: DomElement) => {
+const boxPosition = (dom: DomElement): Position => {
   const box = dom.getBoundingClientRect();
   return Position(box.left, box.top);
 };
 
 // Avoids falsy false fallthrough
-const firstDefinedOrZero = (a: number, b: number) => {
+const firstDefinedOrZero = (a: number, b: number): number => {
   if (a !== undefined) {
     return a;
   } else {
@@ -17,7 +17,7 @@ const firstDefinedOrZero = (a: number, b: number) => {
   }
 };
 
-const absolute = (element: Element<DomElement>) => {
+const absolute = (element: Element<DomElement>): Position => {
   const doc = element.dom().ownerDocument;
   const body = doc.body;
   const win = doc.defaultView;
@@ -41,14 +41,14 @@ const absolute = (element: Element<DomElement>) => {
 // This is the old $.position(), but JQuery does nonsense calculations.
 // We're only 1 <-> 1 with the old value in the single place we use this function
 // (ego.api.Dragging) so the rest can bite me.
-const relative = (element: Element<HTMLElement>) => {
+const relative = (element: Element<HTMLElement>): Position => {
   const dom = element.dom();
   // jquery-ism: when style="position: fixed", this === boxPosition()
   // but tests reveal it returns the same thing anyway
   return Position(dom.offsetLeft, dom.offsetTop);
 };
 
-const viewport = (element: Element<DomElement>) => {
+const viewport = (element: Element<DomElement>): Position => {
   const dom = element.dom();
 
   const doc = dom.ownerDocument;

@@ -8,29 +8,31 @@ import * as Class from './Class';
  * ClassList is IE10 minimum:
  * https://developer.mozilla.org/en-US/docs/Web/API/Element.classList
  */
-const add = (element: Element<DomElement>, classes: string[]) => {
+const add = (element: Element<DomElement>, classes: string[]): void => {
   Arr.each(classes, (x) => {
     Class.add(element, x);
   });
 };
 
-const remove = (element: Element<DomElement>, classes: string[]) => {
+const remove = (element: Element<DomElement>, classes: string[]): void => {
   Arr.each(classes, (x) => {
     Class.remove(element, x);
   });
 };
 
-const toggle = (element: Element<DomElement>, classes: string[]) => {
+const toggle = (element: Element<DomElement>, classes: string[]): void => {
   Arr.each(classes, (x) => {
     Class.toggle(element, x);
   });
 };
 
-const hasAll = (element: Element<DomNode>, classes: string[]) => Arr.forall(classes, (clazz) => Class.has(element, clazz));
+const hasAll = (element: Element<DomNode>, classes: string[]): boolean =>
+  Arr.forall(classes, (clazz) => Class.has(element, clazz));
 
-const hasAny = (element: Element<DomNode>, classes: string[]) => Arr.exists(classes, (clazz) => Class.has(element, clazz));
+const hasAny = (element: Element<DomNode>, classes: string[]): boolean =>
+  Arr.exists(classes, (clazz) => Class.has(element, clazz));
 
-const getNative = (element: Element<DomElement>) => {
+const getNative = (element: Element<DomElement>): Array<string> => {
   const classList = element.dom().classList;
   const r: Array<string> = new Array(classList.length);
   for (let i = 0; i < classList.length; i++) {
@@ -42,7 +44,8 @@ const getNative = (element: Element<DomElement>) => {
   return r;
 };
 
-const get = (element: Element<DomElement>) => ClassList.supports(element) ? getNative(element) : ClassList.get(element);
+const get = (element: Element<DomElement>): Array<string> =>
+  ClassList.supports(element) ? getNative(element) : ClassList.get(element);
 
 export {
   add,

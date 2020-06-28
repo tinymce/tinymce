@@ -24,7 +24,7 @@ const is = <T extends DomElement = DomElement> (element: Element<DomNode>, selec
   }
 };
 
-const bypassSelector = (dom: DomNode) =>
+const bypassSelector = (dom: DomNode): boolean =>
   // Only elements, documents and shadow roots support querySelector
   // shadow root element type is DOCUMENT_FRAGMENT
   dom.nodeType !== ELEMENT && dom.nodeType !== DOCUMENT && dom.nodeType !== DOCUMENT_FRAGMENT ||

@@ -19,7 +19,8 @@ const visibilityToggler = (element: Element<DomElement>, property: string, hidde
   return Toggler(off, on, false);
 };
 
-const toggler = (element: Element<DomElement>) => visibilityToggler(element, 'visibility', 'hidden', 'visible');
+const toggler = (element: Element<DomElement>) =>
+  visibilityToggler(element, 'visibility', 'hidden', 'visible');
 
 const displayToggler = (element: Element<DomElement>, value: string) => visibilityToggler(element, 'display', 'none', value);
 

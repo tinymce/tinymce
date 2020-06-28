@@ -30,7 +30,8 @@ const supported: boolean =
  *
  * NOTE: Node.getRootNode() and Element.attachShadow don't exist on IE11 and pre-Chromium Edge.
  */
-export const isSupported = Fun.constant(supported);
+export const isSupported: () => boolean =
+  Fun.constant(supported);
 
 export const getRootNode: (e: Element<DomNode>) => RootNode =
   supported

@@ -8,21 +8,24 @@ import * as EdgePoint from './EdgePoint';
 
 declare const document: any;
 
-const caretPositionFromPoint = (doc: Element<Document>, x: number, y: number) => Option.from((doc.dom() as any).caretPositionFromPoint(x, y))
-  .bind((pos) => {
-    // It turns out that Firefox can return null for pos.offsetNode
-    if (pos.offsetNode === null) {
-      return Option.none<Range>();
-    }
-    const r = doc.dom().createRange();
-    r.setStart(pos.offsetNode, pos.offset);
-    r.collapse();
-    return Option.some(r);
-  });
+const caretPositionFromPoint = (doc: Element<Document>, x: number, y: number): Option<Range> =>
+  Option.from((doc.dom() as any)
+    .caretPositionFromPoint(x, y))
+    .bind((pos) => {
+      // It turns out that Firefox can return null for pos.offsetNode
+      if (pos.offsetNode === null) {
+        return Option.none<Range>();
+      }
+      const r = doc.dom().createRange();
+      r.setStart(pos.offsetNode, pos.offset);
+      r.collapse();
+      return Option.some(r);
+    });
 
-const caretRangeFromPoint = (doc: Element<Document>, x: number, y: number) => Option.from(doc.dom().caretRangeFromPoint(x, y));
+const caretRangeFromPoint = (doc: Element<Document>, x: number, y: number): Option<Range> =>
+  Option.from(doc.dom().caretRangeFromPoint(x, y));
 
-const searchTextNodes = (doc: Element<Document>, node: Element<DomNode>, x: number, y: number) => {
+const searchTextNodes = (doc: Element<Document>, node: Element<DomNode>, x: number, y: number): Option<Range> => {
   const r = doc.dom().createRange();
   r.selectNode(node.dom());
   const rect = r.getBoundingClientRect();
@@ -49,7 +52,7 @@ const availableSearch = document.caretPositionFromPoint ? caretPositionFromPoint
   document.caretRangeFromPoint ? caretRangeFromPoint :        // webkit implementation
     searchFromPoint;                                            // fallback
 
-const fromPoint = (win: Window, x: number, y: number) => {
+const fromPoint = (win: Window, x: number, y: number): Option<SimRange> => {
   const doc = Element.fromDom(win.document);
   return availableSearch(doc, x, y).map((rng) => SimRange.create(
     Element.fromDom(rng.startContainer),

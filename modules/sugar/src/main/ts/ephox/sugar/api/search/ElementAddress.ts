@@ -1,5 +1,5 @@
 import { ChildNode, Element as DomElement, Node as DomNode } from '@ephox/dom-globals';
-import { Arr, Fun } from '@ephox/katamari';
+import { Arr, Fun, Option } from '@ephox/katamari';
 import * as Compare from '../dom/Compare';
 import Element from '../node/Element';
 import * as PredicateFind from './PredicateFind';
@@ -8,17 +8,17 @@ import * as SelectorFind from './SelectorFind';
 import * as Traverse from './Traverse';
 
 export interface AddressInAncestor<A, D, E> {
-  ancestor: () => Element<A>;
-  descendants: () => Element<D>[];
-  element: () => Element<E>;
-  index: () => number;
+  readonly ancestor: () => Element<A>;
+  readonly descendants: () => Element<D>[];
+  readonly element: () => Element<E>;
+  readonly index: () => number;
 }
 
 export interface AddressInParent<P, C, E> {
-  parent: () => Element<P>;
-  children: () => Element<C>[];
-  element: () => Element<E>;
-  index: () => number;
+  readonly parent: () => Element<P>;
+  readonly children: () => Element<C>[];
+  readonly element: () => Element<E>;
+  readonly index: () => number;
 }
 
 const inAncestor = <A, D, E> (ancestor: Element<A>, descendants: Element<D>[], element: Element<E>, index: number): AddressInAncestor<A, D, E> => ({
@@ -35,24 +35,26 @@ const inParent = <P, C, E>(parent: Element<P>, children: Element<C>[], element: 
   index: Fun.constant(index)
 });
 
-const childOf = (element: Element<DomNode>, ancestor: Element<DomNode>) =>
+const childOf = (element: Element<DomNode>, ancestor: Element<DomNode>): Option<Element<DomNode>> =>
   PredicateFind.closest(element, (elem) =>
     Traverse.parent(elem).exists((parent) => Compare.eq(parent, ancestor)));
 
-const indexInParent = <E extends DomNode> (element: Element<E>) => Traverse.parent(element).bind((parent) => {
-  const children = Traverse.children(parent);
-  return indexOf(children, element).map((index) => inParent(parent, children, element as Element<E & DomNode & ChildNode>, index));
-});
+const indexInParent = <E extends DomNode>(element: Element<E>): Option<AddressInParent<DomNode, DomNode & ChildNode, E & ChildNode>> =>
+  Traverse.parent(element).bind((parent) => {
+    const children = Traverse.children(parent);
+    return indexOf(children, element).map((index) => inParent(parent, children, element as Element<E & DomNode & ChildNode>, index));
+  });
 
-const indexOf = (elements: Element<DomNode>[], element: Element<DomNode>) => Arr.findIndex(elements, Fun.curry(Compare.eq, element));
+const indexOf = (elements: Element<DomNode>[], element: Element<DomNode>): Option<number> =>
+  Arr.findIndex(elements, Fun.curry(Compare.eq, element));
 
-const selectorsInParent = <E extends DomNode, S extends DomElement = DomElement> (element: Element<E>, selector: string) =>
+const selectorsInParent = <E extends DomNode, S extends DomElement = DomElement> (element: Element<E>, selector: string): Option<AddressInParent<DomNode, S, E & S>> =>
   Traverse.parent(element).bind((parent) => {
     const children = SelectorFilter.children<S>(parent, selector);
     return indexOf(children, element).map((index) => inParent(parent, children, element as Element<E & S>, index));
   });
 
-const descendantsInAncestor = <E extends DomNode, A extends DomElement = DomElement, D extends DomElement = DomElement> (element: Element<E>, ancestorSelector: string, descendantSelector: string) =>
+const descendantsInAncestor = <E extends DomNode, A extends DomElement = DomElement, D extends DomElement = DomElement> (element: Element<E>, ancestorSelector: string, descendantSelector: string): Option<AddressInAncestor<A, D, E & D>> =>
   SelectorFind.closest<A>(element, ancestorSelector).bind((ancestor) => {
     const descendants = SelectorFilter.descendants<D>(ancestor, descendantSelector);
     return indexOf(descendants, element).map((index) => inAncestor(ancestor, descendants, element as Element<E & D>, index));

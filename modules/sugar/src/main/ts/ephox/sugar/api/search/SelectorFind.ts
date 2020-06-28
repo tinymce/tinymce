@@ -1,4 +1,4 @@
-import { Element as DomElement, Node as DomNode } from '@ephox/dom-globals';
+import { ChildNode, Element as DomElement, Node as DomNode } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import ClosestOrAncestor from '../../impl/ClosestOrAncestor';
 import Element from '../node/Element';
@@ -7,16 +7,16 @@ import * as Selectors from './Selectors';
 
 // TODO: An internal SelectorFilter module that doesn't Element.fromDom() everything
 
-const first = <T extends DomElement = DomElement> (selector: string) =>
+const first = <T extends DomElement = DomElement> (selector: string): Option<Element<T>> =>
   Selectors.one<T>(selector);
 
-const ancestor = <T extends DomElement = DomElement> (scope: Element<DomNode>, selector: string, isRoot?: (e: Element<DomNode>) => boolean) =>
+const ancestor = <T extends DomElement = DomElement> (scope: Element<DomNode>, selector: string, isRoot?: (e: Element<DomNode>) => boolean): Option<Element<T>> =>
   PredicateFind.ancestor(scope, (e): e is Element<T> => Selectors.is<T>(e, selector), isRoot);
 
-const sibling = <T extends DomElement = DomElement> (scope: Element<DomNode>, selector: string) =>
+const sibling = <T extends DomElement = DomElement> (scope: Element<DomNode>, selector: string): Option<Element<T & ChildNode>> =>
   PredicateFind.sibling(scope, (e): e is Element<T> => Selectors.is<T>(e, selector));
 
-const child = <T extends DomElement = DomElement> (scope: Element<DomNode>, selector: string) =>
+const child = <T extends DomElement = DomElement> (scope: Element<DomNode>, selector: string): Option<Element<T & ChildNode>> =>
   PredicateFind.child(scope, (e): e is Element<T> => Selectors.is<T>(e, selector));
 
 const descendant = <T extends DomElement = DomElement> (scope: Element<DomNode>, selector: string): Option<Element<T>> =>

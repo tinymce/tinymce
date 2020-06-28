@@ -7,28 +7,28 @@ import * as NativeRange from './NativeRange';
 type SelectionDirectionHandler<U> = (start: Element<DomNode>, soffset: number, finish: Element<DomNode>, foffset: number) => U;
 
 export interface SelectionDirection {
-  fold: <U> (
+  readonly fold: <U> (
     ltr: SelectionDirectionHandler<U>,
     rtl: SelectionDirectionHandler<U>
   ) => U;
-  match: <U> (branches: {
+  readonly match: <U> (branches: {
     ltr: SelectionDirectionHandler<U>;
     rtl: SelectionDirectionHandler<U>;
   }) => U;
-  log: (label: string) => void;
+  readonly log: (label: string) => void;
 }
 
 type SelectionDirectionConstructor = (start: Element<DomNode>, soffset: number, finish: Element<DomNode>, foffset: number) => SelectionDirection;
 
 const adt: {
-  ltr: SelectionDirectionConstructor;
-  rtl: SelectionDirectionConstructor;
+  readonly ltr: SelectionDirectionConstructor;
+  readonly rtl: SelectionDirectionConstructor;
 } = Adt.generate([
   { ltr: [ 'start', 'soffset', 'finish', 'foffset' ] },
   { rtl: [ 'start', 'soffset', 'finish', 'foffset' ] }
 ]);
 
-const fromRange = (win: Window, type: SelectionDirectionConstructor, range: Range) =>
+const fromRange = (win: Window, type: SelectionDirectionConstructor, range: Range): SelectionDirection =>
   type(Element.fromDom(range.startContainer), range.startOffset, Element.fromDom(range.endContainer), range.endOffset);
 
 interface LtrRtlRanges {
@@ -36,28 +36,29 @@ interface LtrRtlRanges {
   rtl: () => Option<Range>;
 }
 
-const getRanges = (win: Window, selection: Selection): LtrRtlRanges => selection.match<LtrRtlRanges>({
-  domRange(rng) {
-    return {
-      ltr: Fun.constant(rng),
-      rtl: Option.none
-    };
-  },
-  relative(startSitu, finishSitu) {
-    return {
-      ltr: Thunk.cached(() => NativeRange.relativeToNative(win, startSitu, finishSitu)),
-      rtl: Thunk.cached(() => Option.some(NativeRange.relativeToNative(win, finishSitu, startSitu)))
-    };
-  },
-  exact(start: Element<DomNode>, soffset: number, finish: Element<DomNode>, foffset: number) {
-    return {
-      ltr: Thunk.cached(() => NativeRange.exactToNative(win, start, soffset, finish, foffset)),
-      rtl: Thunk.cached(() => Option.some(NativeRange.exactToNative(win, finish, foffset, start, soffset)))
-    };
-  }
-});
+const getRanges = (win: Window, selection: Selection): LtrRtlRanges =>
+  selection.match<LtrRtlRanges>({
+    domRange(rng) {
+      return {
+        ltr: Fun.constant(rng),
+        rtl: Option.none
+      };
+    },
+    relative(startSitu, finishSitu) {
+      return {
+        ltr: Thunk.cached(() => NativeRange.relativeToNative(win, startSitu, finishSitu)),
+        rtl: Thunk.cached(() => Option.some(NativeRange.relativeToNative(win, finishSitu, startSitu)))
+      };
+    },
+    exact(start: Element<DomNode>, soffset: number, finish: Element<DomNode>, foffset: number) {
+      return {
+        ltr: Thunk.cached(() => NativeRange.exactToNative(win, start, soffset, finish, foffset)),
+        rtl: Thunk.cached(() => Option.some(NativeRange.exactToNative(win, finish, foffset, start, soffset)))
+      };
+    }
+  });
 
-const doDiagnose = (win: Window, ranges: LtrRtlRanges) => {
+const doDiagnose = (win: Window, ranges: LtrRtlRanges): SelectionDirection => {
   // If we cannot create a ranged selection from start > finish, it could be RTL
   const rng = ranges.ltr();
   if (rng.collapsed) {
@@ -76,12 +77,12 @@ const doDiagnose = (win: Window, ranges: LtrRtlRanges) => {
   }
 };
 
-const diagnose = (win: Window, selection: Selection) => {
+const diagnose = (win: Window, selection: Selection): SelectionDirection => {
   const ranges = getRanges(win, selection);
   return doDiagnose(win, ranges);
 };
 
-const asLtrRange = (win: Window, selection: Selection) => {
+const asLtrRange = (win: Window, selection: Selection): Range => {
   const diagnosis = diagnose(win, selection);
   return diagnosis.match({
     ltr: (start, soffset, finish, foffset): Range => {

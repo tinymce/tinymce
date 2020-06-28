@@ -45,7 +45,7 @@ export default (name: string, getOffset: (e: Element<HTMLElement>) => number) =>
   };
 */
 
-  const get = (element: Element<HTMLElement>) => {
+  const get = (element: Element<HTMLElement>): number => {
     const r = getOffset(element);
 
     // zero or null means non-standard or disconnected, fall back to CSS
@@ -61,13 +61,14 @@ export default (name: string, getOffset: (e: Element<HTMLElement>) => number) =>
   // although these calculations only seem relevant for quirks mode, and edge cases TBIO doesn't rely on
   const getOuter = get;
 
-  const aggregate = (element: Element<DomElement>, properties: string[]) => Arr.foldl(properties, (acc, property) => {
-    const val = Css.get(element, property);
-    const value = val === undefined ? 0 : parseInt(val, 10);
-    return isNaN(value) ? acc : acc + value;
-  }, 0);
+  const aggregate = (element: Element<DomElement>, properties: string[]): number =>
+    Arr.foldl(properties, (acc, property) => {
+      const val = Css.get(element, property);
+      const value = val === undefined ? 0 : parseInt(val, 10);
+      return isNaN(value) ? acc : acc + value;
+    }, 0);
 
-  const max = (element: Element<DomElement>, value: number, properties: string[]) => {
+  const max = (element: Element<DomElement>, value: number, properties: string[]): number => {
     const cumulativeInclusions = aggregate(element, properties);
     // if max-height is 100px and your cumulativeInclusions is 150px, there is no way max-height can be 100px, so we return 0.
     const absoluteMax = value > cumulativeInclusions ? value - cumulativeInclusions : 0;

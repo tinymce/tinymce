@@ -63,16 +63,17 @@ const getBounds = (_win?: Window): Bounds => {
   );
 };
 
-const bind = (name: string, callback: EventHandler, _win?: Window) => get(_win).map((visualViewport) => {
-  const handler = (e: Event) => fromRawEvent(e);
-  visualViewport.addEventListener(name, handler);
+const bind = (name: string, callback: EventHandler, _win?: Window): { unbind: (...args: any[]) => void } =>
+  get(_win).map((visualViewport) => {
+    const handler = (e: Event) => fromRawEvent(e);
+    visualViewport.addEventListener(name, handler);
 
-  return {
-    unbind: () => visualViewport.removeEventListener(name, handler)
-  };
-}).getOrThunk(() => ({
-  unbind: Fun.noop
-}));
+    return {
+      unbind: () => visualViewport.removeEventListener(name, handler)
+    };
+  }).getOrThunk(() => ({
+    unbind: Fun.noop
+  }));
 
 export {
   bind,

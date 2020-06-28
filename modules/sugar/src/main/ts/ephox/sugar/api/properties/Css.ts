@@ -6,7 +6,7 @@ import Element from '../node/Element';
 import * as Node from '../node/Node';
 import * as Attr from './Attr';
 
-const internalSet = (dom: DomNode, property: string, value: string) => {
+const internalSet = (dom: DomNode, property: string, value: string): void => {
   // This is going to hurt. Apologies.
   // JQuery coerces numbers to pixels for certain property names, and other times lets numbers through.
   // we're going to be explicit; strings only.
@@ -22,7 +22,7 @@ const internalSet = (dom: DomNode, property: string, value: string) => {
   }
 };
 
-const internalRemove = (dom: DomNode, property: string) => {
+const internalRemove = (dom: DomNode, property: string): void => {
   /*
    * IE9 and above - MDN doesn't have details, but here's a couple of random internet claims
    *
@@ -94,14 +94,15 @@ const getUnsafeProperty = (dom: DomNode, property: string) => Style.isSupported(
  *
  * Returns NONE if the property isn't set, or the value is an empty string.
  */
-const getRaw = (element: Element<DomNode>, property: string) => {
+const getRaw = (element: Element<DomNode>, property: string): Option<string> => {
   const dom = element.dom();
   const raw = getUnsafeProperty(dom, property);
 
   return Option.from(raw).filter((r) => r.length > 0);
 };
 
-const getAllRaw = (element: Element<DomNode>) => {
+// TODO: When dom-globals is updated, this will need to return Record<string, CrazyCssUnionType>
+const getAllRaw = (element: Element<DomNode>): Record<string, string> => {
   const css: Record<string, string> = {};
   const dom = element.dom();
 
@@ -114,7 +115,7 @@ const getAllRaw = (element: Element<DomNode>) => {
   return css;
 };
 
-const isValidValue = (tag: string, property: string, value: string) => {
+const isValidValue = (tag: string, property: string, value: string): boolean => {
   const element = Element.fromTag(tag);
   set(element, property, value);
   const style = getRaw(element, property);
@@ -132,7 +133,7 @@ const remove = (element: Element<DomNode>, property: string) => {
   }
 };
 
-const preserve = <E extends DomElement, T> (element: Element<E>, f: (e: Element<E>) => T) => {
+const preserve = <E extends DomElement, T> (element: Element<E>, f: (e: Element<E>) => T): T => {
   const oldStyles = Attr.get(element, 'style');
   const result = f(element);
   if (oldStyles === undefined) {
@@ -143,7 +144,7 @@ const preserve = <E extends DomElement, T> (element: Element<E>, f: (e: Element<
   return result;
 };
 
-const copy = (source: Element<DomNode>, target: Element<HTMLElement>) => {
+const copy = (source: Element<DomNode>, target: Element<HTMLElement>): void => {
   const sourceDom = source.dom();
   const targetDom = target.dom();
   if (Style.isSupported(sourceDom) && Style.isSupported(targetDom)) {
@@ -155,9 +156,10 @@ const copy = (source: Element<DomNode>, target: Element<HTMLElement>) => {
  * do not rely on this return value.
  * It's here so the closure compiler doesn't optimise the property access away.
  */
-const reflow = (e: Element<HTMLElement>) => e.dom().offsetWidth;
+const reflow = (e: Element<HTMLElement>): number =>
+  e.dom().offsetWidth;
 
-const transferOne = (source: Element<DomNode>, destination: Element<DomNode>, style: string) => {
+const transferOne = (source: Element<DomNode>, destination: Element<DomNode>, style: string): void => {
   getRaw(source, style).each((value) => {
     // NOTE: We don't want to clobber any existing inline styles.
     if (getRaw(destination, style).isNone()) {
@@ -166,7 +168,7 @@ const transferOne = (source: Element<DomNode>, destination: Element<DomNode>, st
   });
 };
 
-const transfer = (source: Element<DomNode>, destination: Element<DomNode>, styles: string[]) => {
+const transfer = (source: Element<DomNode>, destination: Element<DomNode>, styles: string[]): void => {
   if (!Node.isElement(source) || !Node.isElement(destination)) {
     return;
   }

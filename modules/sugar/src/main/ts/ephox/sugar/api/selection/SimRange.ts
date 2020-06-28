@@ -3,10 +3,10 @@ import { Fun } from '@ephox/katamari';
 import Element from '../node/Element';
 
 export interface SimRange {
-  start: () => Element<DomNode>;
-  soffset: () => number;
-  finish: () => Element<DomNode>;
-  foffset: () => number;
+  readonly start: () => Element<DomNode>;
+  readonly soffset: () => number;
+  readonly finish: () => Element<DomNode>;
+  readonly foffset: () => number;
 }
 
 const create = (start: Element<DomNode>, soffset: number, finish: Element<DomNode>, foffset: number): SimRange => ({

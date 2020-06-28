@@ -12,7 +12,7 @@ import Toggler from './Toggler';
  * If it did, the toggler could be better.
  */
 
-const add = (element: Element<DomElement>, clazz: string) => {
+const add = (element: Element<DomElement>, clazz: string): void => {
   if (ClassList.supports(element)) {
     element.dom().classList.add(clazz);
   } else {
@@ -20,7 +20,7 @@ const add = (element: Element<DomElement>, clazz: string) => {
   }
 };
 
-const cleanClass = (element: Element<DomElement>) => {
+const cleanClass = (element: Element<DomElement>): void => {
   const classList = ClassList.supports(element) ? element.dom().classList : ClassList.get(element);
   // classList is a "live list", so this is up to date already
   if (classList.length === 0) {
@@ -29,7 +29,7 @@ const cleanClass = (element: Element<DomElement>) => {
   }
 };
 
-const remove = (element: Element<DomElement>, clazz: string) => {
+const remove = (element: Element<DomElement>, clazz: string): void => {
   if (ClassList.supports(element)) {
     const classList = element.dom().classList;
     classList.remove(clazz);
@@ -40,7 +40,7 @@ const remove = (element: Element<DomElement>, clazz: string) => {
   cleanClass(element);
 };
 
-const toggle = (element: Element<DomElement>, clazz: string) =>
+const toggle = (element: Element<DomElement>, clazz: string): boolean =>
   ClassList.supports(element) ? element.dom().classList.toggle(clazz) : ClassList.toggle(element, clazz);
 
 const toggler = (element: Element<DomElement>, clazz: string) => {
@@ -53,7 +53,7 @@ const toggler = (element: Element<DomElement>, clazz: string) => {
       ClassList.remove(element, clazz);
     }
   };
-  const on = () => {
+  const on = (): void => {
     if (hasClasslist) {
       classList.add(clazz);
     } else {
@@ -63,7 +63,7 @@ const toggler = (element: Element<DomElement>, clazz: string) => {
   return Toggler(off, on, has(element, clazz));
 };
 
-const has = (element: Element<Node>, clazz: string) =>
+const has = (element: Element<Node>, clazz: string): boolean =>
   ClassList.supports(element) && element.dom().classList.contains(clazz);
 
 export {

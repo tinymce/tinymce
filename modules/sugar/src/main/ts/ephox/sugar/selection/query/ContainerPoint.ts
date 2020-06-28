@@ -29,10 +29,10 @@ const searchInChildren = (doc: Element<Document>, node: Element<DomNode>, x: num
   });
 };
 
-const locateNode = (doc: Element<Document>, node: Element<DomNode>, x: number, y: number) =>
+const locateNode = (doc: Element<Document>, node: Element<DomNode>, x: number, y: number): Option<Range> =>
   Node.isText(node) ? TextPoint.locate(doc, node, x, y) : searchInChildren(doc, node, x, y);
 
-const locate = (doc: Element<Document>, node: Element<DomNode>, x: number, y: number) => {
+const locate = (doc: Element<Document>, node: Element<DomNode>, x: number, y: number): Option<Range> => {
   const r = doc.dom().createRange();
   r.selectNode(node.dom());
   const rect = r.getBoundingClientRect();

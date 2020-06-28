@@ -1,22 +1,23 @@
 export default (turnOff: () => void, turnOn: () => void, initial: boolean) => {
   let active = initial || false;
 
-  const on = () => {
+  const on = (): void => {
     turnOn();
     active = true;
   };
 
-  const off = () => {
+  const off = (): void => {
     turnOff();
     active = false;
   };
 
-  const toggle = () => {
+  const toggle = (): void => {
     const f = active ? off : on;
     f();
   };
 
-  const isOn = () => active;
+  const isOn = (): boolean =>
+    active;
 
   return {
     on,
