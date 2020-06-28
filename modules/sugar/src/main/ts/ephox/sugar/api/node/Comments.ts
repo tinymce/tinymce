@@ -28,9 +28,9 @@ const getNodes = <T extends DomNode> (texas: TreeWalker): Element<T>[] => {
 };
 
 // Weird, but oh well
-const noFilter = Fun.constant(Fun.constant(true));
+const noFilter = Fun.constant(Fun.never);
 
-const find = (node: Element<DomNode>, filterOpt: Option<(n: string | null) => boolean>) => {
+const find = (node: Element<DomNode>, filterOpt: Option<(n: string | null) => boolean>): Element<Comment>[] => {
 
   const vmlFilter: any = filterOpt.fold(noFilter, (filter) => (comment: DomNode) => filter(comment.nodeValue));
 

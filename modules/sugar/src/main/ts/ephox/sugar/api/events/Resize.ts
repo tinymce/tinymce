@@ -11,8 +11,8 @@ import { EventUnbinder } from './Types';
 import * as Viewable from './Viewable';
 
 interface Monitored {
-  element: Element<HTMLElement>;
-  handlers: Array<() => void>;
+  readonly element: Element<HTMLElement>;
+  readonly handlers: Array<() => void>;
   lastWidth: number;
   lastHeight: number;
 }
@@ -25,9 +25,10 @@ const elem = (element: Element<HTMLElement>): Monitored => ({
 });
 const elems: Monitored[] = [];
 
-const findElem = (element: Element<DomNode>) => Arr.findIndex(elems, (el) => Compare.eq(el.element, element)).getOr(-1);
+const findElem = (element: Element<DomNode>): number =>
+  Arr.findIndex(elems, (el) => Compare.eq(el.element, element)).getOr(-1);
 
-const bind = (element: Element<HTMLElement>, handler: () => void) => {
+const bind = (element: Element<HTMLElement>, handler: () => void): void => {
   const el = Arr.find(elems, (elm) => Compare.eq(elm.element, element)).getOrThunk(() => {
     const newEl = elem(element);
     elems.push(newEl);
@@ -49,7 +50,7 @@ const bind = (element: Element<HTMLElement>, handler: () => void) => {
   }, 100);
 };
 
-const unbind = (element: Element<DomNode>, handler: () => void) => {
+const unbind = (element: Element<DomNode>, handler: () => void): void => {
   // remove any monitors on this element
   Monitors.end(element);
   const index = findElem(element);
@@ -71,17 +72,18 @@ const unbind = (element: Element<DomNode>, handler: () => void) => {
   }
 };
 
-const visibleUpdate = (el: Monitored) => {
+const visibleUpdate = (el: Monitored): void => {
   const w = Width.get(el.element);
   const h = Height.get(el.element);
   if (w !== el.lastWidth || h !== el.lastHeight) {
+    // TODO: Do we need to use mutation here?
     el.lastWidth = w;
     el.lastHeight = h;
     Arr.each(el.handlers, Fun.apply);
   }
 };
 
-const update = (el: Monitored) => {
+const update = (el: Monitored): void => {
   const element = el.element;
   // if already visible, run the update
   if (Visibility.isVisible(element)) {
@@ -100,13 +102,13 @@ const update = (el: Monitored) => {
 // Don't use peanut Throttler, requestAnimationFrame is much much better than setTimeout for resize/scroll events:
 // http://www.html5rocks.com/en/tutorials/speed/animations/
 let throttle = false;
-const runHandler = () => {
+const runHandler = (): void => {
   throttle = false;
   // cancelAnimationFrame isn't stable yet, so we can't pass events to the callback (they would be out of date)
   Arr.each(elems, update);
 };
 
-const listener = () => {
+const listener = (): void => {
   // cancelAnimationFrame isn't stable yet, so we just ignore all subsequent events until the next animation frame
   if (!throttle) {
     throttle = true;
@@ -115,11 +117,11 @@ const listener = () => {
 };
 
 let interval = Option.none<EventUnbinder>();
-const start = () => {
+const start = (): void => {
   interval = Option.some(DomEvent.bind(Element.fromDom(window), 'resize', listener));
 };
 
-const stop = () => {
+const stop = (): void => {
   interval.each((f) => {
     f.unbind();
     interval = Option.none();

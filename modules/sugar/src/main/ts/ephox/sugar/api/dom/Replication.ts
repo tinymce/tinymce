@@ -6,13 +6,16 @@ import * as Insert from './Insert';
 import * as InsertAll from './InsertAll';
 import * as Remove from './Remove';
 
-const clone = <E extends DomNode> (original: Element<E>, isDeep: boolean) => Element.fromDom(original.dom().cloneNode(isDeep) as E);
+const clone = <E extends DomNode> (original: Element<E>, isDeep: boolean): Element<E> =>
+  Element.fromDom(original.dom().cloneNode(isDeep) as E);
 
 /** Shallow clone - just the tag, no children */
-const shallow = <E extends DomNode> (original: Element<E>) => clone(original, false);
+const shallow = <E extends DomNode> (original: Element<E>): Element<E> =>
+  clone(original, false);
 
 /** Deep clone - everything copied including children */
-const deep = <E extends DomNode> (original: Element<E>) => clone(original, true);
+const deep = <E extends DomNode> (original: Element<E>): Element<E> =>
+  clone(original, true);
 
 /** Shallow clone, with a new tag */
 const shallowAs = <K extends keyof HTMLElementTagNameMap> (original: Element<DomElement>, tag: K): Element<HTMLElementTagNameMap[K]> => {
@@ -25,7 +28,7 @@ const shallowAs = <K extends keyof HTMLElementTagNameMap> (original: Element<Dom
 };
 
 /** Deep clone, with a new tag */
-const copy = <K extends keyof HTMLElementTagNameMap> (original: Element<DomElement>, tag: K) => {
+const copy = <K extends keyof HTMLElementTagNameMap> (original: Element<DomElement>, tag: K): Element<HTMLElementTagNameMap[K]> => {
   const nu = shallowAs(original, tag);
 
   // NOTE
@@ -41,7 +44,7 @@ const copy = <K extends keyof HTMLElementTagNameMap> (original: Element<DomEleme
 };
 
 /** Change the tag name, but keep all children */
-const mutate = <K extends keyof HTMLElementTagNameMap> (original: Element<DomElement>, tag: K) => {
+const mutate = <K extends keyof HTMLElementTagNameMap> (original: Element<DomElement>, tag: K): Element<HTMLElementTagNameMap[K]> => {
   const nu = shallowAs(original, tag);
 
   Insert.before(original, nu);

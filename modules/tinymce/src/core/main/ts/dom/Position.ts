@@ -8,6 +8,7 @@
 import { Arr } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Element, Node, Css, Traverse } from '@ephox/sugar';
+import { HTMLElement } from '@ephox/dom-globals';
 
 const browser = PlatformDetection.detect().browser;
 
@@ -19,16 +20,16 @@ const firstElement = function (nodes) {
 // this tries to compensate for that by detecting if that offsets are incorrect and then remove the height
 const getTableCaptionDeltaY = function (elm) {
   if (browser.isFirefox() && Node.name(elm) === 'table') {
-    return firstElement(Traverse.children(elm)).filter(function (elm) {
-      return Node.name(elm) === 'caption';
-    }).bind(function (caption) {
-      return firstElement(Traverse.nextSiblings(caption)).map(function (body) {
-        const bodyTop = body.dom().offsetTop;
-        const captionTop = caption.dom().offsetTop;
-        const captionHeight = caption.dom().offsetHeight;
-        return bodyTop <= captionTop ? -captionHeight : 0;
-      });
-    }).getOr(0);
+    return firstElement(Traverse.children(elm))
+      .filter(Node.isTag('caption'))
+      .bind((caption) =>
+        firstElement(Traverse.nextSiblings(caption))
+          .map((body) => {
+            const bodyTop = (body as Element<HTMLElement>).dom().offsetTop;
+            const captionTop = caption.dom().offsetTop;
+            const captionHeight = caption.dom().offsetHeight;
+            return bodyTop <= captionTop ? -captionHeight : 0;
+          })).getOr(0);
   } else {
     return 0;
   }

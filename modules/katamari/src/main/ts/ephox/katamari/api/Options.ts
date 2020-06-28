@@ -66,3 +66,7 @@ export const flatten = <T> (oot: Option<Option<T>>): Option<T> => oot.bind(Fun.i
 // This can help with type inference, by specifying the type param on the none case, so the caller doesn't have to.
 export const someIf = <A> (b: boolean, a: A): Option<A> =>
   b ? Option.some(a) : Option.none<A>();
+
+/** covariant upcast */
+export const vary: <A, B extends A> (oab: Option<B>) => Option<A> =
+  Fun.identity;

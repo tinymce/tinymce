@@ -36,7 +36,7 @@ const all = <T extends DomElement = DomElement> (selector: string, scope?: Eleme
   return bypassSelector(base) ? [] : Arr.map((base as DomElement | Document).querySelectorAll<T>(selector), Element.fromDom);
 };
 
-const one = <T extends DomElement = DomElement> (selector: string, scope?: Element<DomNode>) => {
+const one = <T extends DomElement = DomElement> (selector: string, scope?: Element<DomNode>): Option<Element<T>> => {
   const base = scope === undefined ? document : scope.dom();
   return bypassSelector(base) ? Option.none<Element<T>>() : Option.from((base as DomElement | Document).querySelector<T>(selector)).map(Element.fromDom);
 };

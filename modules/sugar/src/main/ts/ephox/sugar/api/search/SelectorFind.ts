@@ -19,7 +19,7 @@ const sibling = <T extends DomElement = DomElement> (scope: Element<DomNode>, se
 const child = <T extends DomElement = DomElement> (scope: Element<DomNode>, selector: string) =>
   PredicateFind.child(scope, (e): e is Element<T> => Selectors.is<T>(e, selector));
 
-const descendant = <T extends DomElement = DomElement> (scope: Element<DomNode>, selector: string) =>
+const descendant = <T extends DomElement = DomElement> (scope: Element<DomNode>, selector: string): Option<Element<T>> =>
   Selectors.one<T>(selector, scope);
 
 // Returns Some(closest ancestor element (sugared)) matching 'selector' up to isRoot, or None() otherwise

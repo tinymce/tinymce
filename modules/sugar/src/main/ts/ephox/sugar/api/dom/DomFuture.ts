@@ -1,15 +1,11 @@
-import { clearTimeout, setTimeout } from '@ephox/dom-globals';
+import { clearTimeout, Event, setTimeout } from '@ephox/dom-globals';
 import { Future, LazyValue, Result } from '@ephox/katamari';
 import * as DomEvent from '../events/DomEvent';
 import { EventArgs } from '../events/Types';
 import Element from '../node/Element';
 
-type WorkDone = (res: Result<EventArgs, string>) => void;
-type Worker = (callback: WorkDone) => void;
-type TaskConstructor<T> = (worker: Worker) => T;
-
-const w = <T> (fType: TaskConstructor<T>, element: Element, eventType: string, timeout: number) => fType((callback) => {
-  const listener = DomEvent.bind(element, eventType, (event) => {
+const q = <E extends Event>(element: Element<unknown>, eventType: string, timeout: number) => (callback: (r: Result<EventArgs<E>, string>) => void): void => {
+  const listener = DomEvent.bind<E>(element, eventType, (event) => {
     clearTimeout(time);
     listener.unbind();
     callback(Result.value(event));
@@ -19,10 +15,11 @@ const w = <T> (fType: TaskConstructor<T>, element: Element, eventType: string, t
     listener.unbind();
     callback(Result.error('Event ' + eventType + ' did not fire within ' + timeout + 'ms'));
   }, timeout);
-});
+};
 
-const cWaitFor = (element: Element, eventType: string, timeout: number) => w(LazyValue.nu, element, eventType, timeout);
+const cWaitFor = <E extends Event>(element: Element<unknown>, eventType: string, timeout: number): LazyValue<Result<EventArgs<E>, string>> =>
+  LazyValue.nu(q(element, eventType, timeout));
 
-const waitFor = (element: Element, eventType: string, timeout: number) => w(Future.nu, element, eventType, timeout);
+const waitFor = (element: Element, eventType: string, timeout: number) => Future.nu(q(element, eventType, timeout));
 
 export { cWaitFor, waitFor };
