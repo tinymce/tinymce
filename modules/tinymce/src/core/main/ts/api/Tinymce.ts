@@ -130,7 +130,7 @@ export interface TinyMCE extends EditorManager {
 
   // Global instances
   DOM: DOMUtils;
-  ScriptLoader: ScriptLoaderConstructor;
+  ScriptLoader: ScriptLoader;
   PluginManager: AddOnManager<void | Plugin>;
   ThemeManager: AddOnManager<Theme>;
   IconManager: IconManager;

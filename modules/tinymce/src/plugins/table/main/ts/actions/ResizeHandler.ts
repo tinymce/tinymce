@@ -94,10 +94,9 @@ export const getResizeHandler = function (editor: Editor): ResizeHandler {
     if (isTable(targetElm)) {
       const table = Element.fromDom(targetElm);
 
-      const tableHasPercentage = Sizes.isPercentSizing(table);
-      if (tableHasPercentage && isPixelsForced(editor)) {
+      if (!Sizes.isPixelSizing(table) && isPixelsForced(editor)) {
         enforcePixels(editor, table);
-      } else if (!tableHasPercentage && (isPercentagesForced(editor) || isResponsiveForced(editor))) {
+      } else if (!Sizes.isPercentSizing(table) && isPercentagesForced(editor)) {
         enforcePercentage(editor, table);
       }
 
@@ -111,7 +110,11 @@ export const getResizeHandler = function (editor: Editor): ResizeHandler {
     if (isTable(targetElm)) {
       const table = Element.fromDom(targetElm);
 
-      if (Util.isPercentage(startRawW)) {
+      if (startRawW === '' || (!Util.isPercentage(startRawW) && isResponsiveForced(editor))) {
+        // Responsive tables don't have a width so we need to convert it to a relative/percent
+        // table instead, as that's closer to responsive sizing than fixed sizing
+        enforcePercentage(editor, table);
+      } else if (Util.isPercentage(startRawW)) {
         const percentW = parseFloat(startRawW.replace('%', ''));
         const targetPercentW = e.width * percentW / startW;
         Css.set(table, 'width', targetPercentW + '%');
