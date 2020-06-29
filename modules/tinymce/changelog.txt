@@ -1,3 +1,6 @@
+Version 5.5.0 (TBD)
+    Added ability to load TinyMCE in inline mode within a ShadowRoot #TINY-6128
+
 Version 5.4.0 (TBD)
     Added keyboard navigation support to menus and toolbars when the editor is in a ShadowRoot #TINY-6152
     Added the ability for menus to be clicked when the editor is in an open shadow root #TINY-6091
