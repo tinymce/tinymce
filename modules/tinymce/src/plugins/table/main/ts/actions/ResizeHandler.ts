@@ -5,18 +5,17 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLTableCellElement, HTMLTableElement, HTMLTableRowElement, Node, Range } from '@ephox/dom-globals';
+import { HTMLTableElement, Node, Range } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
-import { ResizeWire, TableDirection, TableResize } from '@ephox/snooker';
-import { Element as SugarElement } from '@ephox/sugar';
+import { ResizeWire, Sizes, TableDirection, TableResize } from '@ephox/snooker';
+import { Css, Element, Element as SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
-import Tools from 'tinymce/core/api/util/Tools';
 import * as Events from '../api/Events';
 import { hasObjectResizing, hasTableResizeBars, isPercentagesForced, isPixelsForced, isResponsiveForced } from '../api/Settings';
 import * as Util from '../core/Util';
 import * as Direction from '../queries/Direction';
 import * as TableSize from '../queries/TableSize';
-import { enforcePercentage, enforcePixels } from './EnforceUnit';
+import { enforcePercentage, enforcePixels, syncPixels } from './EnforceUnit';
 import * as TableWire from './TableWire';
 
 export interface ResizeHandler {
@@ -93,13 +92,13 @@ export const getResizeHandler = function (editor: Editor): ResizeHandler {
   editor.on('ObjectResizeStart', function (e) {
     const targetElm = e.target;
     if (isTable(targetElm)) {
+      const table = Element.fromDom(targetElm);
 
-      const tableHasPercentage = Util.getRawWidth(editor, targetElm).exists(Util.isPercentage);
-
+      const tableHasPercentage = Sizes.isPercentSizing(table);
       if (tableHasPercentage && isPixelsForced(editor)) {
-        enforcePixels(targetElm);
+        enforcePixels(editor, table);
       } else if (!tableHasPercentage && (isPercentagesForced(editor) || isResponsiveForced(editor))) {
-        enforcePercentage(targetElm);
+        enforcePercentage(editor, table);
       }
 
       startW = e.width;
@@ -107,34 +106,19 @@ export const getResizeHandler = function (editor: Editor): ResizeHandler {
     }
   });
 
-  interface CellSize { cell: HTMLTableCellElement; width: string }
-
   editor.on('ObjectResized', function (e) {
     const targetElm = e.target;
     if (isTable(targetElm)) {
-      const table = targetElm;
+      const table = Element.fromDom(targetElm);
 
       if (Util.isPercentage(startRawW)) {
         const percentW = parseFloat(startRawW.replace('%', ''));
         const targetPercentW = e.width * percentW / startW;
-        editor.dom.setStyle(table, 'width', targetPercentW + '%');
+        Css.set(table, 'width', targetPercentW + '%');
       } else {
-        const newCellSizes: CellSize[] = [];
-        Tools.each(table.rows, function (row: HTMLTableRowElement) {
-          Tools.each(row.cells, function (cell: HTMLTableCellElement) {
-            const width = editor.dom.getStyle(cell, 'width', true);
-            newCellSizes.push({
-              cell,
-              width
-            });
-          });
-        });
-
-        Tools.each(newCellSizes, function (newCellSize: CellSize) {
-          editor.dom.setStyle(newCellSize.cell, 'width', newCellSize.width);
-          editor.dom.setAttrib(newCellSize.cell, 'width', null);
-        });
+        syncPixels(table);
       }
+      Util.removeDataStyle(table);
     }
   });
 

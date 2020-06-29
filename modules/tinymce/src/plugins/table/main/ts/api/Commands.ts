@@ -7,9 +7,10 @@
 
 import { HTMLTableRowElement } from '@ephox/dom-globals';
 import { Arr, Fun, Obj, Option, Type } from '@ephox/katamari';
-import { CopyCols, CopyRows, TableFill, TableLookup } from '@ephox/snooker';
+import { CopyCols, CopyRows, Sizes, TableFill, TableLookup } from '@ephox/snooker';
 import { Element, Insert, Remove, Replication } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
+import { enforceNone, enforcePercentage, enforcePixels } from '../actions/EnforceUnit';
 import { insertTableWithDataValidation } from '../actions/InsertTable';
 import { AdvancedPasteTableAction, BasicTableAction, TableActions } from '../actions/TableActions';
 import { Clipboard } from '../core/Clipboard';
@@ -22,6 +23,7 @@ import * as CellDialog from '../ui/CellDialog';
 import { DomModifier } from '../ui/DomModifier';
 import * as RowDialog from '../ui/RowDialog';
 import * as TableDialog from '../ui/TableDialog';
+import { isPercentagesForced, isPixelsForced, isResponsiveForced } from './Settings';
 
 const registerCommands = (editor: Editor, actions: TableActions, cellSelection: CellSelectionApi, selections: Selections, clipboard: Clipboard) => {
   const isRoot = Util.getIsRoot(editor);
@@ -42,6 +44,23 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
         editor.nodeChanged();
       }
     });
+  });
+
+  const setSizingMode = (sizing: string) => TableSelection.getSelectionStartCellOrCaption(editor).each((cellOrCaption) => {
+    // Do nothing if tables are forced to use a specific sizing mode
+    const isForcedSizing = isResponsiveForced(editor) || isPixelsForced(editor) || isPercentagesForced(editor);
+    if (!isForcedSizing) {
+      TableLookup.table(cellOrCaption, isRoot).each((table) => {
+        if (sizing === 'relative' && !Sizes.isPercentSizing(table)) {
+          enforcePercentage(editor, table);
+        } else if (sizing === 'fixed' && !Sizes.isPixelSizing(table)) {
+          enforcePixels(editor, table);
+        } else if (sizing === 'responsive' && !Sizes.isNoneSizing(table)) {
+          enforceNone(table);
+        }
+        Util.removeDataStyle(table);
+      });
+    }
   });
 
   const getTableFromCell = (cell: Element): Option<Element> => TableLookup.table(cell, isRoot);
@@ -112,7 +131,8 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
     mceTablePasteColAfter: (_grid) => pasteOnSelection(actions.pasteColsAfter, clipboard.getColumns),
     mceTablePasteRowBefore: (_grid) => pasteOnSelection(actions.pasteRowsBefore, clipboard.getRows),
     mceTablePasteRowAfter: (_grid) => pasteOnSelection(actions.pasteRowsAfter, clipboard.getRows),
-    mceTableDelete: eraseTable
+    mceTableDelete: eraseTable,
+    mceTableSizingMode: (ui: boolean, sizing: string) => setSizingMode(sizing)
   }, (func, name) => editor.addCommand(name, func));
 
   // Register dialog commands

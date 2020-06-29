@@ -1,5 +1,6 @@
+import { HTMLTableElement } from '@ephox/dom-globals';
 import { Fun, Option, Strings } from '@ephox/katamari';
-import { Attr, Css, Element, Height, Node, Width } from '@ephox/sugar';
+import { Attr, Body, Css, Element, Height, Node, Traverse, Width } from '@ephox/sugar';
 import * as TableLookup from '../api/TableLookup';
 import { TableSize } from '../api/TableSize';
 import { getSpan } from '../util/CellUtils';
@@ -13,6 +14,11 @@ export interface GenericWidth {
 const rGenericSizeRegex = /(\d+(\.\d+)?)(\w|%)*/;
 const rPercentageBasedSizeRegex = /(\d+(\.\d+)?)%/;
 const rPixelBasedSizeRegex = /(\d+(\.\d+)?)px|em/;
+
+const getPercentSize = (elm: Element, getter: (e: Element) => number) => {
+  const relativeParent = Traverse.offsetParent(elm).getOr(Body.getBody(Traverse.owner(elm)));
+  return getter(elm) / getter(relativeParent) * 100;
+};
 
 export const setPixelWidth = function (cell: Element, amount: number) {
   Css.set(cell, 'width', amount + 'px');
@@ -79,7 +85,7 @@ const choosePercentageSize = function (element: Element, width: string, tableSiz
   if (percentMatch !== null) {
     return parseFloat(percentMatch[1]);
   } else {
-    const intWidth = Width.get(element);
+    const intWidth = RuntimeSize.getWidth(element);
     return normalizePercentageWidth(intWidth, tableSize);
   }
 };
@@ -109,13 +115,13 @@ const choosePixelSize = function (element: Element, width: string, tableSize: Ta
     const floatWidth = parseFloat(percentMatch[1]);
     return normalizePixelWidth(floatWidth, tableSize);
   }
-  return Width.get(element);
+  return RuntimeSize.getWidth(element);
 };
 
-export const getPixelWidth = function (cell: Element, tableSize: TableSize) {
+export const getPixelWidth = function (cell: Element, tableSize: TableSize): number {
   const width = getRawWidth(cell);
   return width.fold(function () {
-    return Width.get(cell);
+    return RuntimeSize.getWidth(cell);
   }, function (w) {
     return choosePixelSize(cell, w, tableSize);
   });
@@ -143,6 +149,16 @@ export const getGenericWidth = function (cell: Element): Option<GenericWidth> {
 export const setGenericWidth = function (cell: Element, amount: number, unit: string) {
   Css.set(cell, 'width', amount + unit);
 };
+
+export const getPixelTableWidth = (table: Element<HTMLTableElement>): string => Width.get(table) + 'px';
+export const getPixelTableHeight = (table: Element<HTMLTableElement>): string => Height.get(table) + 'px';
+
+export const getPercentTableWidth = (table: Element<HTMLTableElement>): string => getPercentSize(table, Width.get) + '%';
+export const getPercentTableHeight = (table: Element<HTMLTableElement>): string => getPercentSize(table, Height.get) + '%';
+
+export const isPercentSizing = (table: Element<HTMLTableElement>) => getRawWidth(table).exists((size) => rPercentageBasedSizeRegex.test(size));
+export const isPixelSizing = (table: Element<HTMLTableElement>) => getRawWidth(table).exists((size) => rPixelBasedSizeRegex.test(size));
+export const isNoneSizing = (table: Element<HTMLTableElement>) => getRawWidth(table).isNone();
 
 export const percentageBasedSizeRegex = Fun.constant(rPercentageBasedSizeRegex);
 export const pixelBasedSizeRegex = Fun.constant(rPixelBasedSizeRegex);

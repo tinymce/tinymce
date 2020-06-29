@@ -40,8 +40,7 @@ const insert = (editor: Editor, columns: number, rows: number, colHeaders: numbe
   const defaultStyles = getDefaultStyles(editor);
   const options: TableRender.RenderOptions = {
     styles: defaultStyles,
-    attributes: getDefaultAttributes(editor),
-    percentages: isPercentage(defaultStyles.width)
+    attributes: getDefaultAttributes(editor)
   };
 
   const table = TableRender.render(rows, columns, rowHeaders, colHeaders, options);
@@ -51,13 +50,12 @@ const insert = (editor: Editor, columns: number, rows: number, colHeaders: numbe
   editor.insertContent(html);
 
   return SelectorFind.descendant<HTMLTableElement>(Util.getBody(editor), 'table[data-mce-id="__mce"]').map((table) => {
-    const rawTable = table.dom();
     if (isPixelsForced(editor)) {
-      enforcePixels(rawTable);
-    } else if (isPercentagesForced(editor)) {
-      enforcePercentage(rawTable);
+      enforcePixels(editor, table);
     } else if (isResponsiveForced(editor)) {
-      enforceNone(rawTable);
+      enforceNone(table);
+    } else if (isPercentagesForced(editor) || isPercentage(defaultStyles.width)) {
+      enforcePercentage(editor, table);
     }
     Util.removeDataStyle(table);
     Attr.remove(table, 'data-mce-id');
