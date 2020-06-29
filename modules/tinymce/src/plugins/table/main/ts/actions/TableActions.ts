@@ -112,25 +112,23 @@ export const TableActions = (editor: Editor, lazyWire: () => ResizeWire): TableA
 
   const pasteCells = execute(TableOperations.pasteCells, Fun.always, Fun.noop, lazyWire);
 
+  const extractType = (args: Record<string, any>, validTypes: string[]) =>
+    Obj.get(args, 'type').filter((type) => Arr.contains(validTypes, type));
+
   const setTableCellType = (editor: Editor, args: Record<string, any>) =>
-    Obj.get(args, 'type').each((type) => {
-      if (Arr.contains([ 'td', 'th' ], type)) {
-        switchCellType(editor.dom, getCellsFromSelection(editor), type);
-      }
+    extractType(args, [ 'td', 'th' ]).each((type) => {
+      switchCellType(editor.dom, getCellsFromSelection(editor), type);
     });
 
   const setTableRowType = (editor: Editor, args: Record<string, any>) =>
-    // type: 'header' | 'body' | 'footer'
-    Obj.get(args, 'type').each((type) => {
-      if (Arr.contains([ 'header', 'body', 'footer' ], type)) {
-        Arr.map(getRowsFromSelection(editor), (row) => switchSectionType(editor, row, type));
-      }
+    extractType(args, [ 'header', 'body', 'footer' ]).each((type) => {
+      Arr.map(getRowsFromSelection(editor), (row) => switchSectionType(editor, row, type));
     });
 
   const makeColumnHeader = execute(TableOperations.makeColumnHeader, Fun.always, Fun.noop, lazyWire);
   const unmakeColumnHeader = execute(TableOperations.unmakeColumnHeader, Fun.always, Fun.noop, lazyWire);
 
-  const getTableRowType = (editor: Editor) => {
+  const getTableRowType = (editor: Editor): 'header' | 'body' | 'footer' | '' => {
     const rows = getRowsFromSelection(editor);
     if (rows.length > 0) {
       const rowTypes = Arr.map(rows, (r) => getRowType(editor, r));

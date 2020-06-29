@@ -90,6 +90,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.command.InsertTableCommandTest
     },
     theme: 'silver',
     base_url: '/project/tinymce/js/tinymce',
-    statusbar: false
+    statusbar: false,
+    table_header_type: 'cells'
   }, success, failure);
 });

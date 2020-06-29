@@ -19,9 +19,9 @@ export interface HeaderRowConfiguration {
   ths: boolean;
 }
 
-const getSection = (elm: HTMLTableRowElement) => Util.getNodeName(elm.parentNode);
+const getSection = (elm: HTMLTableRowElement): string => Util.getNodeName(elm.parentNode);
 
-const mapSectionNameToType = (section: string): string => {
+const mapSectionNameToType = (section: string): 'header' | 'footer' | 'body' => {
   if (section === 'thead') {
     return 'header';
   } else if (section === 'tfoot') {
@@ -86,7 +86,7 @@ const switchCellType = (dom: DOMUtils, cells: ArrayLike<HTMLTableCellElement>, n
 };
 
 const switchSectionType = (editor: Editor, rowElm: HTMLTableRowElement, newType: string) => {
-  const determineHeaderRowType = () => {
+  const determineHeaderRowType = (): 'section' | 'cells' | 'sectionCells' => {
     // default if all else fails is thead > tr > tds aka 'section' mode
     const allTableRows = TableLookup.table(Element.fromDom(rowElm.cells[0]))
       .map((table) => TableLookup.rows(table)).getOr([]);

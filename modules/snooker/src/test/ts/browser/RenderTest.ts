@@ -5,7 +5,7 @@ import * as Render from 'ephox/snooker/operate/Render';
 UnitTest.asynctest('RenderTest', (success, failure) => {
   Pipeline.async({}, [
     Logger.t('Render table default options', Step.sync(() => {
-      const table = Render.render(1, 2, 0, 0);
+      const table = Render.render(1, 2, 0, 0, 'cells');
 
       Assertions.assertStructure('Should be a table with default styles/attributes', ApproxStructure.build((s, str, _arr) => s.element('table', {
         styles: {
@@ -35,7 +35,7 @@ UnitTest.asynctest('RenderTest', (success, failure) => {
       })), table);
     })),
     Logger.t('Render table with everything disabled', Step.sync(() => {
-      const table = Render.render(1, 2, 0, 0, { styles: { width: '50%', height: '100px' }, attributes: {}});
+      const table = Render.render(1, 2, 0, 0, 'cells', { styles: { width: '50%', height: '100px' }, attributes: {}});
 
       Assertions.assertStructure('Should be a table with styles', ApproxStructure.build((s, str, _arr) => s.element('table', {
         styles: {
@@ -71,7 +71,7 @@ UnitTest.asynctest('RenderTest', (success, failure) => {
       })), table);
     })),
     Logger.t('Render table with attributes', Step.sync(() => {
-      const table = Render.render(1, 2, 0, 0, { styles: {}, attributes: { border: '1', class: 'myclass' }});
+      const table = Render.render(1, 2, 0, 0, 'cells', { styles: {}, attributes: { border: '1', class: 'myclass' }});
 
       Assertions.assertStructure('Should be a table with styles', ApproxStructure.build((s, str, _arr) => s.element('table', {
         styles: {
@@ -111,7 +111,7 @@ UnitTest.asynctest('RenderTest', (success, failure) => {
       })), table);
     })),
     Logger.t('Render table with everything disabled', Step.sync(() => {
-      const table = Render.render(1, 2, 0, 0, { styles: {}, attributes: {}});
+      const table = Render.render(1, 2, 0, 0, 'cells', { styles: {}, attributes: {}});
 
       Assertions.assertStructure('Should be a table with default styles/attributes', ApproxStructure.build((s, str, _arr) => s.element('table', {
         styles: {
@@ -135,6 +135,164 @@ UnitTest.asynctest('RenderTest', (success, failure) => {
                     styles: {
                       width: str.none('Should not have width')
                     },
+                    children: [
+                      s.element('br', {})
+                    ]
+                  })
+                ]
+              })
+            ]
+          })
+        ]
+      })), table);
+    })),
+    Logger.t('Render table with cells header', Step.sync(() => {
+      const table = Render.render(2, 3, 1, 2, 'cells');
+
+      Assertions.assertStructure('Should be a table with a header row of ths', ApproxStructure.build((s, _str, _arr) => s.element('table', {
+        children: [
+          s.element('tbody', {
+            children: [
+              s.element('tr', {
+                children: [
+                  s.element('th', {
+                    children: [
+                      s.element('br', {})
+                    ]
+                  }),
+                  s.element('th', {
+                    children: [
+                      s.element('br', {})
+                    ]
+                  }),
+                  s.element('th', {
+                    children: [
+                      s.element('br', {})
+                    ]
+                  })
+                ]
+              }),
+              s.element('tr', {
+                children: [
+                  s.element('th', {
+                    children: [
+                      s.element('br', {})
+                    ]
+                  }),
+                  s.element('th', {
+                    children: [
+                      s.element('br', {})
+                    ]
+                  }),
+                  s.element('td', {
+                    children: [
+                      s.element('br', {})
+                    ]
+                  })
+                ]
+              })
+            ]
+          })
+        ]
+      })), table);
+    })),
+    Logger.t('Render table with section header', Step.sync(() => {
+      const table = Render.render(2, 3, 1, 2, 'section');
+
+      Assertions.assertStructure('Should be a table with a header row of ths', ApproxStructure.build((s, _str, _arr) => s.element('table', {
+        children: [
+          s.element('thead', {
+            children: [
+              s.element('tr', {
+                children: [
+                  s.element('th', {
+                    children: [
+                      s.element('br', {})
+                    ]
+                  }),
+                  s.element('th', {
+                    children: [
+                      s.element('br', {})
+                    ]
+                  }),
+                  s.element('td', {
+                    children: [
+                      s.element('br', {})
+                    ]
+                  })
+                ]
+              })
+            ]
+          }),
+          s.element('tbody', {
+            children: [
+              s.element('tr', {
+                children: [
+                  s.element('th', {
+                    children: [
+                      s.element('br', {})
+                    ]
+                  }),
+                  s.element('th', {
+                    children: [
+                      s.element('br', {})
+                    ]
+                  }),
+                  s.element('td', {
+                    children: [
+                      s.element('br', {})
+                    ]
+                  })
+                ]
+              })
+            ]
+          })
+        ]
+      })), table);
+    })),
+    Logger.t('Render table with sectionCells header', Step.sync(() => {
+      const table = Render.render(2, 3, 1, 2, 'sectionCells');
+
+      Assertions.assertStructure('Should be a table with a header row of ths', ApproxStructure.build((s, _str, _arr) => s.element('table', {
+        children: [
+          s.element('thead', {
+            children: [
+              s.element('tr', {
+                children: [
+                  s.element('th', {
+                    children: [
+                      s.element('br', {})
+                    ]
+                  }),
+                  s.element('th', {
+                    children: [
+                      s.element('br', {})
+                    ]
+                  }),
+                  s.element('th', {
+                    children: [
+                      s.element('br', {})
+                    ]
+                  })
+                ]
+              })
+            ]
+          }),
+          s.element('tbody', {
+            children: [
+              s.element('tr', {
+                children: [
+                  s.element('th', {
+                    children: [
+                      s.element('br', {})
+                    ]
+                  }),
+                  s.element('th', {
+                    children: [
+                      s.element('br', {})
+                    ]
+                  }),
+                  s.element('td', {
                     children: [
                       s.element('br', {})
                     ]
