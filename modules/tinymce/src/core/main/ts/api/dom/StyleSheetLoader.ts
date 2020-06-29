@@ -16,7 +16,6 @@ import Tools from '../util/Tools';
  * This class handles loading of external stylesheets and fires events when these are loaded.
  *
  * @class tinymce.dom.StyleSheetLoader
- * @private
  */
 
 export interface StyleSheetLoader {
@@ -235,6 +234,14 @@ export function StyleSheetLoader(documentOrShadowRoot: DomDocument | ShadowRoot,
     });
   };
 
+   /**
+   * Loads the specified css style sheet files and call the success callback once it's finished loading.
+   *
+   * @method loadAll
+   * @param {Array} urls Urls to be loaded.
+   * @param {Function} success Callback to be executed when the styles sheets have been successfully loaded.
+   * @param {Function} failure Callback to be executed when the style sheets fail to load.
+   */
   const loadAll = function (urls: string[], success: Function, failure: Function) {
     Futures.par(Arr.map(urls, loadF)).get(function (result) {
       const parts = Arr.partition(result, function (r) {
