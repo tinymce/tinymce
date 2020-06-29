@@ -367,7 +367,7 @@
 	test('Parsing comments', function() {
 		var counter, parser;
 
-		expect(8);
+		expect(10);
 
 		counter = createCounter(writer);
 		parser = new tinymce.html.SaxParser(counter, schema);
@@ -396,6 +396,13 @@
 		parser.parse('<b>a<!-- value -->b</b>');
 		equal(writer.getContent(), '<b>a<!-- value -->b</b>', 'Parse comment with tags around it.');
 		deepEqual(counter.counts, {comment:1, text:2, start:1, end:1}, 'Parse comment with tags around it counts.');
+
+		counter = createCounter(writer);
+		parser = new tinymce.html.SaxParser(counter, schema);
+		writer.reset();
+		parser.parse('<!-- value --!>');
+		equal(writer.getContent(), '<!-- value -->', 'Parse comment with exclamation in end value.');
+		deepEqual(counter.counts, {comment: 1}, 'Parse comment with exclamation in end value counts.');
 	});
 
 	test('Parsing cdata', function() {
@@ -739,5 +746,25 @@
 			'<?xml &gt;&lt;iframe SRC=&amp;#106&amp;#97&amp;#118&amp;#97&amp;#115&amp;#99&amp;#114&amp;#105&amp;#112&amp;' +
 			'#116&amp;#58&amp;#97&amp;#108&amp;#101&amp;#114&amp;#116&amp;#40&amp;#39&amp;#88&amp;#83&amp;#83&amp;#39&amp;#41&gt;?>'
 		);
+	});
+
+	test('Parse cdata with comments and trim those comments away', function () {
+		var testCDataSaxParse = function (inputHtml, outputHtml, counters) {
+			var counter, parser;
+
+			counter = createCounter(writer);
+			counter.validate = true;
+			parser = new tinymce.html.SaxParser(counter, schema);
+			writer.reset();
+			parser.parse(inputHtml);
+			equal(writer.getContent(), outputHtml);
+			deepEqual(counter.counts, counters);
+		};
+
+		expect(6);
+
+		testCDataSaxParse('<![CDATA[<!--x--><!--y--!>--><!--]]>', '<![CDATA[xy]]>', {cdata: 1});
+		testCDataSaxParse('<![CDATA[------>>>xy]]>', '<![CDATA[xy]]>', {cdata: 1});
+		testCDataSaxParse('<![CDATA[------!>>!>xy]]>', '<![CDATA[xy]]>', {cdata: 1});
 	});
 })();
