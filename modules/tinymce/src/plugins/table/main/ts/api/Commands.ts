@@ -145,17 +145,6 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
       actOnSelection(type === 'th' ? actions.makeColumnHeader : actions.unmakeColumnHeader)
     ));
 
-  Obj.each({
-    mceTableRowType: () => actions.getTableRowType(editor),
-    mceTableCellType: () => actions.getTableCellType(editor),
-    mceTableColType: () => TableSelection.getSelectionStartCell(editor).bind((cell) =>
-      getTableFromCell(cell).map((table): string => {
-        const targets = TableTargets.forMenu(selections, table, cell);
-        return actions.getTableColType(table, targets);
-      })
-    ).getOr('')
-  }, (func, name) => editor.addQueryValueHandler(name, func));
-
   // Register dialog commands
   Obj.each({
     // AP-101 TableDialog.open renders a slightly different dialog if isNew is true
@@ -199,4 +188,3 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
 };
 
 export { registerCommands };
-

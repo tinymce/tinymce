@@ -1,6 +1,5 @@
 import { Attr, Css, Element, Insert, InsertAll } from '@ephox/sugar';
 import { Arr } from '@ephox/katamari';
-import { console } from '@ephox/dom-globals';
 
 export interface RenderOptions {
   styles: Record<string, string>;
@@ -22,7 +21,6 @@ const tableHeaderCell = () => Element.fromTag('th');
 const tableCell = () => Element.fromTag('td');
 
 const createRow = (columns: number, rowHeaders: number, columnHeaders: number, rowIndex: number) => {
-  console.log({ rowIndex, columns, rowHeaders, columnHeaders });
   const tr = Element.fromTag('tr');
   for (let j = 0; j < columns; j++) {
 
