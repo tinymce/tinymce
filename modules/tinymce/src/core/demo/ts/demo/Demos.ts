@@ -11,6 +11,7 @@ import IframeDemo from './IframeDemo';
 import ResponsiveDemo from './ResponsiveDemo';
 import StickyToolbarDemo from './StickyToolbarDemo';
 import ShadowDomDemo from './ShadowDomDemo';
+import ShadowDomInlineDemo from './ShadowDomInlineDemo';
 
 declare const window: any;
 
@@ -27,5 +28,6 @@ window.demos = {
   SourceDumpDemo,
   ResponsiveDemo,
   StickyToolbarDemo,
-  ShadowDomDemo
+  ShadowDomDemo,
+  ShadowDomInlineDemo
 };
