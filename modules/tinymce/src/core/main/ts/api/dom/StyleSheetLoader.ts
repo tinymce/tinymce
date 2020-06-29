@@ -234,12 +234,12 @@ export function StyleSheetLoader(documentOrShadowRoot: DomDocument | ShadowRoot,
     });
   };
 
-   /**
-   * Loads the specified css style sheet files and call the success callback once it's finished loading.
+  /**
+   * Loads the specified css style sheets and call the success callback once it's finished loading.
    *
    * @method loadAll
    * @param {Array} urls Urls to be loaded.
-   * @param {Function} success Callback to be executed when the styles sheets have been successfully loaded.
+   * @param {Function} success Callback to be executed when the style sheets have been successfully loaded.
    * @param {Function} failure Callback to be executed when the style sheets fail to load.
    */
   const loadAll = function (urls: string[], success: Function, failure: Function) {
