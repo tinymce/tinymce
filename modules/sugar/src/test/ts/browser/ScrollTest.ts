@@ -101,7 +101,7 @@ UnitTest.asynctest('ScrollTest', (success, failure) => {
   const scrollCheck = (x: number, y: number, epsX: number, epsY: number, doc: TestDocSpec, msg: string) => {
     Css.reflow(doc.body);
     const scr = Scroll.get(doc.rawDoc);
-    assert.eq(true, within(x, scr.left(), epsX) , msg + ' (' + doc.dir + ') Expected scrollCheck x=' + x + ', got=' + scr.left() + ', eps=' + epsX);
+    assert.eq(true, within(x, scr.left(), epsX), msg + ' (' + doc.dir + ') Expected scrollCheck x=' + x + ', got=' + scr.left() + ', eps=' + epsX);
     assert.eq(true, within(y, scr.top(), epsY), msg + ' (' + doc.dir + ') Expected scrollCheck y=' + y + ', got=' + scr.top() + ', eps=' + epsY);
   };
 

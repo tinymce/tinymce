@@ -6,11 +6,11 @@
  */
 
 import { Menu } from '@ephox/bridge';
+import { Cell } from '@ephox/katamari';
+import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import * as Settings from '../api/Settings';
 import * as Actions from '../core/Actions';
-import { Cell } from '@ephox/katamari';
-import Editor from 'tinymce/core/api/Editor';
 
 const register = function (editor: Editor) {
   const formats = Settings.getFormats(editor);
@@ -26,7 +26,7 @@ const register = function (editor: Editor) {
     onAction: (_api) => {
       Actions.insertDateTime(editor, defaultFormat.get());
     },
-    onItemAction: (_api , value) => {
+    onItemAction: (_api, value) => {
       defaultFormat.set(value);
       Actions.insertDateTime(editor, value);
     }

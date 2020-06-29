@@ -22,7 +22,7 @@ const F10: () => number[] = () => [ 121 ];
 
 export {
   BACKSPACE,
-  TAB ,
+  TAB,
   ENTER,
   SHIFT,
   CTRL,

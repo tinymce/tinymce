@@ -37,7 +37,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.AssumeExternalTargetsTest', (su
           TestLinkUi.sAssertContentPresence(tinyApis, { 'a': 1, 'a[href="www.google.com"]': 1 })
         ])),
 
-        Logger.t('others urls are not prompted' , GeneralSteps.sequence([
+        Logger.t('others urls are not prompted', GeneralSteps.sequence([
           TestLinkUi.sInsertLink(tinyUi, 'google.com'),
           TestLinkUi.sAssertContentPresence(tinyApis, { 'a': 1, 'a[href="google.com"]': 1 })
         ]))

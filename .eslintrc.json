@@ -20,6 +20,7 @@
     "@typescript-eslint/prefer-regexp-exec": "off",
     "@typescript-eslint/unbound-method": "off",
     "comma-dangle": ["error", "never"],
+    "comma-spacing": ["error"],
     "keyword-spacing": ["error"],
     "no-empty": "off",
     "no-multi-spaces": ["error", { "ignoreEOLComments": true }],

@@ -99,7 +99,7 @@ const sAssertAutocompleterStructure = (structure: AutocompleterStructure) => Cha
         ]
       }))
     ),
-    Guard.tryUntil('Waiting for autocompleter structure to match' , 100, 1000)
+    Guard.tryUntil('Waiting for autocompleter structure to match', 100, 1000)
   )
 ]);
 
