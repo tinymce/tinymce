@@ -19,6 +19,7 @@ import * as Body from './node/Body';
 import * as Comment from './node/Comment';
 import * as Comments from './node/Comments';
 import Element from './node/Element';
+import * as ElementInstances from './node/ElementInstances';
 import * as Document from './node/Document';
 import * as Head from './node/Head';
 import * as Elements from './node/Elements';
@@ -101,6 +102,7 @@ export {
   Comments,
   Document,
   Element,
+  ElementInstances,
   Elements,
   Fragment,
   Head,

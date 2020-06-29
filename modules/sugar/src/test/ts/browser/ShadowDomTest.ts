@@ -15,7 +15,7 @@ import {
   withShadowElementInMode,
   setupShadowRoot
 } from 'ephox/sugar/test/WithHelpers';
-import { tElement } from 'ephox/sugar/test/ElementInstances';
+import { tElement } from 'ephox/sugar/api/node/ElementInstances';
 import * as Document from 'ephox/sugar/api/node/Document';
 import * as Head from 'ephox/sugar/api/node/Head';
 import * as Body from 'ephox/sugar/api/node/Body';

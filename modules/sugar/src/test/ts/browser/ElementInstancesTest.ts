@@ -1,6 +1,6 @@
 import { UnitTest, Assert } from '@ephox/bedrock-client';
 import Element from 'ephox/sugar/api/node/Element';
-import { tElement, eqElement } from 'ephox/sugar/test/ElementInstances';
+import { tElement, eqElement } from 'ephox/sugar/api/node/ElementInstances';
 import { Option, OptionInstances } from '@ephox/katamari';
 import { HTMLDivElement, Element as DomElement } from '@ephox/dom-globals';
 
