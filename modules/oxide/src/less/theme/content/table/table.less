@@ -13,16 +13,10 @@
 
 // Show a dashed border inside TinyMCE if the table
 // lacks any border attributes or styles or have them
-// be set to zero. The !important is to override the
-// default content css for removing the table cell's
-// outer borders.
+// be set to zero
 table[style*="border-width: 0px"],
 .mce-item-table:not([border]),
 .mce-item-table[border="0"] {
-  border: @empty-table-border !important;
-}
-
-// The below elements doesn't need the important flag */
 table[style*="border-width: 0px"] td,
 .mce-item-table:not([border]) td,
 .mce-item-table[border="0"] td,
