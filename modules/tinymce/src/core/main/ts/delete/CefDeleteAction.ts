@@ -6,17 +6,17 @@
  */
 
 import { Node, Range } from '@ephox/dom-globals';
-import { Adt, Fun , Option } from '@ephox/katamari';
+import { Adt, Fun, Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
+import { findNextBr, findPreviousBr, isAfterBr, isBeforeBr } from '../caret/CaretBr';
 import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
+import { isAfterContentEditableFalse, isBeforeContentEditableFalse } from '../caret/CaretPositionPredicates';
 import * as CaretUtils from '../caret/CaretUtils';
-import * as DeleteUtils from './DeleteUtils';
+import * as ElementType from '../dom/ElementType';
 import * as Empty from '../dom/Empty';
 import * as NodeType from '../dom/NodeType';
-import * as ElementType from '../dom/ElementType';
-import { findPreviousBr, findNextBr, isAfterBr, isBeforeBr } from '../caret/CaretBr';
-import { isAfterContentEditableFalse, isBeforeContentEditableFalse } from '../caret/CaretPositionPredicates';
+import * as DeleteUtils from './DeleteUtils';
 
 const isCompoundElement = (node: Node) => ElementType.isTableCell(Element.fromDom(node)) || ElementType.isListItem(Element.fromDom(node));
 

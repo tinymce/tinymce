@@ -24,7 +24,7 @@ UnitTest.asynctest('Toolbar with toolbar drawer readonly mode test', (success, f
         NamedChain.direct('body', cResizeToPos(sx, sy, dx, dy), '_')
       ]);
 
-      const cAssertToolbarButtonState = (label: string, disabled: boolean, f: ApproxStructure.Builder<StructAssert[]>) => Chain.fromChainsWith(Body.body(),[
+      const cAssertToolbarButtonState = (label: string, disabled: boolean, f: ApproxStructure.Builder<StructAssert[]>) => Chain.fromChainsWith(Body.body(), [
         UiFinder.cFindIn('.tox-toolbar-overlord'),
         Chain.control(
           Assertions.cAssertStructure(label, ApproxStructure.build((s, str, arr) =>
@@ -46,7 +46,7 @@ UnitTest.asynctest('Toolbar with toolbar drawer readonly mode test', (success, f
         )
       ]);
 
-      const cAssertToolbarDrawerButtonState = (label: string, f: (s, str, arr) => StructAssert[]) => Chain.fromChainsWith(Body.body(),[
+      const cAssertToolbarDrawerButtonState = (label: string, f: (s, str, arr) => StructAssert[]) => Chain.fromChainsWith(Body.body(), [
         UiFinder.cFindIn('.tox-toolbar__overflow'),
         Chain.control(
           Assertions.cAssertStructure(label, ApproxStructure.build((s, str, arr) =>

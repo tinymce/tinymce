@@ -70,7 +70,7 @@ UnitTest.asynctest('browser.tinymce.plugins.searchreplace.SearchReplaceDialogTes
         Utils.sSelectPreference(tinyUi, 'Find in selection'),
         sFindAndAssertFound(2),
         browser.isIE() ? // TODO: Look into what to do with IE as it has a single selection model which causes some different behaviour
-          tinyApis.sAssertSelection([ 0, 0 ] , 0, [ 0, 0 ], 0) :
+          tinyApis.sAssertSelection([ 0, 0 ], 0, [ 0, 0 ], 0) :
           tinyApis.sAssertSelection([ 0 ], 0, [ 0 ], 4),
         Utils.sSelectPreference(tinyUi, 'Find in selection'),
         Utils.sCloseDialog(tinyUi)

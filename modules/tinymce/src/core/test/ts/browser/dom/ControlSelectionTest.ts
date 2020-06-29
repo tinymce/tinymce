@@ -109,7 +109,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.ControlSelectionTest', function (su
         tinyApis.sSetContent('<p><table><tbody><tr><td>Cell</td><td>Cell</td></tr></tbody></table></p>'),
         tinyApis.sSelect('td', [ 0 ]),
         sResizeAndAssertEventCount(editorBody, '#mceResizeHandlese', 10, 1),
-        sResizeAndAssertEventCount(editorBody, '#mceResizeHandlese',20, 2)
+        sResizeAndAssertEventCount(editorBody, '#mceResizeHandlese', 20, 2)
       ]),
       Log.stepsAsStep('TINY-4161', 'Resize ghost element dimensions match target element when using fixed width', [
         sResetEventCounter,

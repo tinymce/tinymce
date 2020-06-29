@@ -62,7 +62,7 @@ export const BarManager = function (wire: ResizeWire, direction: BarPositions<Co
 
   const getDelta = function (target: Element, dir: string) {
     const newX = CellUtils.getCssValue(target, dir);
-    const oldX = CellUtils.getAttrValue(target,'data-initial-' + dir, 0);
+    const oldX = CellUtils.getAttrValue(target, 'data-initial-' + dir, 0);
     return newX - oldX;
   };
 

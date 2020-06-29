@@ -6,9 +6,9 @@
  */
 
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Button as AlloyButton, Disabling, FloatingToolbarButton,
-  Focusing, Keying, NativeEvents, Reflecting, Replacing, SketchSpec, SplitDropdown as AlloySplitDropdown, SystemEvents, TieredData,
-  TieredMenuTypes, Toggling, Unselecting
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Button as AlloyButton, Disabling, FloatingToolbarButton, Focusing,
+  Keying, NativeEvents, Reflecting, Replacing, SketchSpec, SplitDropdown as AlloySplitDropdown, SystemEvents, TieredData, TieredMenuTypes, Toggling,
+  Unselecting
 } from '@ephox/alloy';
 import { Toolbar, Types } from '@ephox/bridge';
 import { Arr, Cell, Fun, Future, Id, Merger, Option } from '@ephox/katamari';
@@ -200,7 +200,7 @@ const renderToolbarButtonWith = (spec: Toolbar.ToolbarButton, providersBackstage
   toolbarButtonBehaviours: [ ].concat(bonusEvents.length > 0 ? [
     // TODO: May have to pass through eventOrder if events start clashing
     AddEventsBehaviour.config('toolbarButtonWith', bonusEvents)
-  ] : [ ]) ,
+  ] : [ ]),
   getApi: getButtonApi,
   onSetup: spec.onSetup
 }, providersBackstage);

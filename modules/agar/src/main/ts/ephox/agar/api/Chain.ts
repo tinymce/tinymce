@@ -57,7 +57,7 @@ const op = <T>(fx: (value: T) => void): Chain<T, T> =>
   });
 
 const async = <T, U>(fx: (input: T, next: (v: U) => void, die: (err) => void) => void) =>
-  on<T, U>((v, n, d, logs) => fx(v, (v) => n(v, logs) , (err) => d(err, logs)));
+  on<T, U>((v, n, d, logs) => fx(v, (v) => n(v, logs), (err) => d(err, logs)));
 
 const inject = <T, U>(value: U): Chain<T, U> =>
   on((_input: T, next: NextFn<U>, die: DieFn, logs: TestLogs) => {

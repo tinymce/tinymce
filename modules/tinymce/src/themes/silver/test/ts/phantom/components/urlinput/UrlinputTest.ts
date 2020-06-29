@@ -195,13 +195,13 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
             repValue.meta.attach();
           })
         ),
-        store.sAssertEq('Attach should be in store ... after firing attach', [ 'addToHistory' , 'header1.attach' ]),
+        store.sAssertEq('Attach should be in store ... after firing attach', [ 'addToHistory', 'header1.attach' ]),
 
         Mouse.sClickOn(component.element(), 'button'),
 
         store.sAssertEq(
           'URL picker should have been opened ... after clicking button',
-          [ 'addToHistory' , 'header1.attach', 'urlpicker' ]
+          [ 'addToHistory', 'header1.attach', 'urlpicker' ]
         ),
 
         Waiter.sTryUntilPredicate('Checking Value.get', () => 'http://tiny.cloud' === Value.get(input.element())),

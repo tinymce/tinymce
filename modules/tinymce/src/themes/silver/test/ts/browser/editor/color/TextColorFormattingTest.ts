@@ -12,7 +12,7 @@ UnitTest.asynctest('TextColorFormattingTest', (success, failure) => {
   SilverTheme();
 
   const backcolorTitleStruct = ApproxStructure.build((s, str) =>
-    s.element('body' , {
+    s.element('body', {
       children: [
         s.element('p', {
           children: [
@@ -30,7 +30,7 @@ UnitTest.asynctest('TextColorFormattingTest', (success, failure) => {
     }));
 
   const forecolorTitleStruct = ApproxStructure.build((s, str) =>
-    s.element('body' , {
+    s.element('body', {
       children: [
         s.element('p', {
           children: [
@@ -110,7 +110,7 @@ UnitTest.asynctest('TextColorFormattingTest', (success, failure) => {
     const tinyApis = TinyApis(editor);
     const tinyUi = TinyUi(editor);
 
-    Pipeline.async({} , [
+    Pipeline.async({}, [
       Log.stepsAsStep('TBA', 'TextColor: Forecolor on non breaking space', [
         tinyApis.sFocus(),
         tinyApis.sSetContent(`Hello${Unicode.nbsp}world`),

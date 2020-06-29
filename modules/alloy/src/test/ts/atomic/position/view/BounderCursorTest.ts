@@ -169,7 +169,7 @@ UnitTest.test('BounderCursorTest', () => {
   // East
   check({
     label: 'layout-e',
-    x: 55 + 10 ,
+    x: 55 + 10,
     y: 150 - (75 / 2) + (10 / 2)
   }, two, bounds(55, 150, 10, 10), panelBox, bubb, view);
 
