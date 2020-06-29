@@ -32,7 +32,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DetectHeaderRowTest', (success
         ),
         sAssertRow('tr', (tr) => {
           const rowData = getRowType(editor, tr.dom());
-          Assertions.assertEq('Detect as part of the tbody', 'tbody', rowData);
+          Assertions.assertEq('Detect as part of the tbody', 'body', rowData);
         })
       ]),
       Log.stepsAsStep('TINY-6007', 'Tbody > tr > th is detected correctly as a header row', [
@@ -79,7 +79,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DetectHeaderRowTest', (success
         ),
         sAssertRow('tr', (tr) => {
           const rowData = getRowType(editor, tr.dom());
-          Assertions.assertEq('Detect as part of the tbody', 'tbody', rowData);
+          Assertions.assertEq('Detect as part of the tbody', 'body', rowData);
         })
       ]),
       Log.stepsAsStep('TINY-6007', 'Thead > tr > td is detected correctly as a header row', [

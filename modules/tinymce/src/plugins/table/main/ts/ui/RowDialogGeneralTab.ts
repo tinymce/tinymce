@@ -30,9 +30,9 @@ const formChildren: Types.Dialog.BodyComponentApi[] = [
     name: 'type',
     label: 'Row type',
     items: [
-      { text: 'Header', value: 'thead' },
-      { text: 'Body', value: 'tbody' },
-      { text: 'Footer', value: 'tfoot' }
+      { text: 'Header', value: 'header' },
+      { text: 'Body', value: 'body' },
+      { text: 'Footer', value: 'footer' }
     ]
   },
   {

@@ -12,7 +12,7 @@ import { Element, Insert, Remove, Replication } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { enforceNone, enforcePercentage, enforcePixels } from '../actions/EnforceUnit';
 import { insertTableWithDataValidation } from '../actions/InsertTable';
-import { AdvancedPasteTableAction, BasicTableAction, TableActions } from '../actions/TableActions';
+import { AdvancedPasteTableAction, CombinedTargetsTableAction, TableActions } from '../actions/TableActions';
 import { Clipboard } from '../core/Clipboard';
 import * as Util from '../core/Util';
 import * as TableTargets from '../queries/TableTargets';
@@ -65,7 +65,7 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
 
   const getTableFromCell = (cell: Element): Option<Element> => TableLookup.table(cell, isRoot);
 
-  const actOnSelection = (execute: BasicTableAction): void => TableSelection.getSelectionStartCell(editor).each((cell) => {
+  const actOnSelection = (execute: CombinedTargetsTableAction): void => TableSelection.getSelectionStartCell(editor).each((cell) => {
     getTableFromCell(cell).each((table) => {
       const targets = TableTargets.forMenu(selections, table, cell);
       execute(table, targets).each((rng) => {
@@ -134,6 +134,16 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
     mceTableDelete: eraseTable,
     mceTableSizingMode: (ui: boolean, sizing: string) => setSizingMode(sizing)
   }, (func, name) => editor.addCommand(name, func));
+
+  Obj.each({
+    mceTableCellType: (_ui, args) => actions.setTableCellType(editor, args),
+    mceTableRowType: (_ui, args) => actions.setTableRowType(editor, args)
+  }, (func, name) => editor.addCommand(name, func));
+
+  editor.addCommand('mceTableColType', (_ui, args) =>
+    Obj.get(args, 'type').each((type) =>
+      actOnSelection(type === 'th' ? actions.makeColumnHeader : actions.unmakeColumnHeader)
+    ));
 
   // Register dialog commands
   Obj.each({

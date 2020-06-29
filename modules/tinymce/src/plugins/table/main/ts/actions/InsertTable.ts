@@ -11,7 +11,7 @@ import { TableRender } from '@ephox/snooker';
 import { Attr, Html, SelectorFilter, SelectorFind } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { fireNewCell, fireNewRow } from '../api/Events';
-import { getDefaultAttributes, getDefaultStyles, isPercentagesForced, isPixelsForced, isResponsiveForced } from '../api/Settings';
+import { getDefaultAttributes, getDefaultStyles, isPercentagesForced, isPixelsForced, isResponsiveForced, getTableHeaderType } from '../api/Settings';
 import * as Util from '../core/Util';
 import { enforceNone, enforcePercentage, enforcePixels } from './EnforceUnit';
 
@@ -43,7 +43,7 @@ const insert = (editor: Editor, columns: number, rows: number, colHeaders: numbe
     attributes: getDefaultAttributes(editor)
   };
 
-  const table = TableRender.render(rows, columns, rowHeaders, colHeaders, options);
+  const table = TableRender.render(rows, columns, rowHeaders, colHeaders, getTableHeaderType(editor), options);
   Attr.set(table, 'data-mce-id', '__mce');
 
   const html = Html.getOuter(table);

@@ -13,6 +13,7 @@ import { getResizeHandler } from './actions/ResizeHandler';
 import { TableActions } from './actions/TableActions';
 import { getApi } from './api/Api';
 import * as Commands from './api/Commands';
+import * as QueryCommands from './api/QueryCommands';
 import { hasTabNavigation } from './api/Settings';
 import { Clipboard as FakeClipboard } from './core/Clipboard';
 import * as TabContext from './queries/TabContext';
@@ -33,6 +34,7 @@ function Plugin(editor: Editor) {
   const clipboard = FakeClipboard();
 
   Commands.registerCommands(editor, actions, cellSelection, selections, clipboard);
+  QueryCommands.registerQueryCommands(editor, actions, selections);
   Clipboard.registerEvents(editor, selections, actions, cellSelection);
 
   MenuItems.addMenuItems(editor, selectionTargets, clipboard);

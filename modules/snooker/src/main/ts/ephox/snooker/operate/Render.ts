@@ -1,4 +1,5 @@
 import { Attr, Css, Element, Insert, InsertAll } from '@ephox/sugar';
+import { Arr } from '@ephox/katamari';
 
 export interface RenderOptions {
   styles: Record<string, string>;
@@ -15,53 +16,54 @@ const DefaultRenderOptions: RenderOptions = {
   }
 };
 
-const makeTable = function () {
-  return Element.fromTag('table');
+const tableHeaderCell = () => Element.fromTag('th');
+
+const tableCell = () => Element.fromTag('td');
+
+const createRow = (columns: number, rowHeaders: number, columnHeaders: number, rowIndex: number) => {
+  const tr = Element.fromTag('tr');
+  for (let j = 0; j < columns; j++) {
+
+    const td = rowIndex < rowHeaders || j < columnHeaders ? tableHeaderCell() : tableCell();
+    if (j < columnHeaders) { Attr.set(td, 'scope', 'row'); }
+    if (rowIndex < rowHeaders) { Attr.set(td, 'scope', 'col'); }
+
+    // Note, this is a placeholder so that the cells have height. The unicode character didn't work in IE10.
+    Insert.append(td, Element.fromTag('br'));
+    Insert.append(tr, td);
+  }
+  return tr;
 };
 
-const tableBody = function () {
-  return Element.fromTag('tbody');
-};
+const createRows = (rows: number, columns: number, rowHeaders: number, columnHeaders: number) =>
+  Arr.range(rows, (r) => createRow(columns, rowHeaders, columnHeaders, r));
 
-const tableRow = function () {
-  return Element.fromTag('tr');
-};
-
-const tableHeaderCell = function () {
-  return Element.fromTag('th');
-};
-
-const tableCell = function () {
-  return Element.fromTag('td');
-};
-
-const render = (rows: number, columns: number, rowHeaders: number, columnHeaders: number, renderOpts: RenderOptions = DefaultRenderOptions) => {
-  const table = makeTable();
+const render = (rows: number, columns: number, rowHeaders: number, columnHeaders: number, headerType: string, renderOpts: RenderOptions = DefaultRenderOptions) => {
+  const table = Element.fromTag('table');
+  const rowHeadersGoInThead = headerType !== 'cells';
 
   Css.setAll(table, renderOpts.styles);
   Attr.setAll(table, renderOpts.attributes);
 
-  const tbody = tableBody();
-  Insert.append(table, tbody);
+  const actualRowHeaders = Math.min(rows, rowHeaders);
 
-  // Setting initial widths on cells to avoid jumpy stretching of the active cell and shrinkage of the surrounding ones (see TINY-1398).
-  const trs = [];
-  for (let i = 0; i < rows; i++) {
-    const tr = tableRow();
-    for (let j = 0; j < columns; j++) {
+  if (rowHeadersGoInThead && rowHeaders > 0) {
+    const thead = Element.fromTag('thead');
+    Insert.append(table, thead);
 
-      const td = i < rowHeaders || j < columnHeaders ? tableHeaderCell() : tableCell();
-      if (j < columnHeaders) { Attr.set(td, 'scope', 'row'); }
-      if (i < rowHeaders) { Attr.set(td, 'scope', 'col'); }
-
-      // Note, this is a placeholder so that the cells have height. The unicode character didn't work in IE10.
-      Insert.append(td, Element.fromTag('br'));
-      Insert.append(tr, td);
-    }
-    trs.push(tr);
+    const theadRowHeaders = headerType === 'sectionCells' ? actualRowHeaders : 0;
+    const theadRows = createRows(rowHeaders, columns, theadRowHeaders, columnHeaders);
+    InsertAll.append(thead, theadRows);
   }
 
-  InsertAll.append(tbody, trs);
+  const tbody = Element.fromTag('tbody');
+  Insert.append(table, tbody);
+
+  const numRows = rowHeadersGoInThead ? rows - actualRowHeaders : rows;
+  const numRowHeaders = rowHeadersGoInThead ? 0 : rowHeaders;
+  const tbodyRows = createRows(numRows, columns, numRowHeaders, columnHeaders);
+
+  InsertAll.append(tbody, tbodyRows);
   return table;
 };
 

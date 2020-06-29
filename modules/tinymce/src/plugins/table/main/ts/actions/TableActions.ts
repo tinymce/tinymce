@@ -6,7 +6,7 @@
  */
 
 import { HTMLTableElement, Range } from '@ephox/dom-globals';
-import { Arr, Fun, Option } from '@ephox/katamari';
+import { Arr, Fun, Obj, Option } from '@ephox/katamari';
 import { DomDescent } from '@ephox/phoenix';
 import { CellMutations, ResizeWire, RunOperation, TableDirection, TableFill, TableGridSize, TableOperations } from '@ephox/snooker';
 import { Element, Node } from '@ephox/sugar';
@@ -14,29 +14,40 @@ import { Element, Node } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { fireNewCell, fireNewRow } from '../api/Events';
 import { getCloneElements } from '../api/Settings';
+import { getRowType, switchCellType, switchSectionType } from '../core/TableSections';
 import * as Util from '../core/Util';
 import * as Direction from '../queries/Direction';
 import * as TableSize from '../queries/TableSize';
+import { getCellsFromSelection, getRowsFromSelection } from '../selection/TableSelection';
 
 type TableAction<T> = (table: Element<HTMLTableElement>, target: T) => Option<Range>;
-export type BasicTableAction = TableAction<RunOperation.CombinedTargets>;
+export type SimpleTableAction = (editor: Editor, args: Record<string, any>) => void;
+export type CombinedTargetsTableAction = TableAction<RunOperation.CombinedTargets>;
 export type PasteTableAction = TableAction<RunOperation.TargetPaste>;
 export type AdvancedPasteTableAction = TableAction<RunOperation.TargetPasteRows>;
+export type ElementTableAction = TableAction<RunOperation.TargetElement>;
 
 export interface TableActions {
-  deleteRow: BasicTableAction;
-  deleteColumn: BasicTableAction;
-  insertRowsBefore: BasicTableAction;
-  insertRowsAfter: BasicTableAction;
-  insertColumnsBefore: BasicTableAction;
-  insertColumnsAfter: BasicTableAction;
-  mergeCells: BasicTableAction;
-  unmergeCells: BasicTableAction;
+  deleteRow: CombinedTargetsTableAction;
+  deleteColumn: CombinedTargetsTableAction;
+  insertRowsBefore: CombinedTargetsTableAction;
+  insertRowsAfter: CombinedTargetsTableAction;
+  insertColumnsBefore: CombinedTargetsTableAction;
+  insertColumnsAfter: CombinedTargetsTableAction;
+  mergeCells: CombinedTargetsTableAction;
+  unmergeCells: CombinedTargetsTableAction;
+  pasteCells: PasteTableAction;
   pasteColsBefore: AdvancedPasteTableAction;
   pasteColsAfter: AdvancedPasteTableAction;
   pasteRowsBefore: AdvancedPasteTableAction;
   pasteRowsAfter: AdvancedPasteTableAction;
-  pasteCells: PasteTableAction;
+  setTableCellType: SimpleTableAction;
+  setTableRowType: SimpleTableAction;
+  makeColumnHeader: ElementTableAction;
+  unmakeColumnHeader: ElementTableAction;
+  getTableRowType: (editor: Editor) => string;
+  getTableCellType: (editor: Editor) => string;
+  getTableColType: (table: Element<HTMLTableElement>, target: RunOperation.TargetSelection) => string;
 }
 
 export const TableActions = (editor: Editor, lazyWire: () => ResizeWire): TableActions => {
@@ -101,6 +112,48 @@ export const TableActions = (editor: Editor, lazyWire: () => ResizeWire): TableA
 
   const pasteCells = execute(TableOperations.pasteCells, Fun.always, Fun.noop, lazyWire);
 
+  const extractType = (args: Record<string, any>, validTypes: string[]) =>
+    Obj.get(args, 'type').filter((type) => Arr.contains(validTypes, type));
+
+  const setTableCellType = (editor: Editor, args: Record<string, any>) =>
+    extractType(args, [ 'td', 'th' ]).each((type) => {
+      switchCellType(editor.dom, getCellsFromSelection(editor), type);
+    });
+
+  const setTableRowType = (editor: Editor, args: Record<string, any>) =>
+    extractType(args, [ 'header', 'body', 'footer' ]).each((type) => {
+      Arr.map(getRowsFromSelection(editor), (row) => switchSectionType(editor, row, type));
+    });
+
+  const makeColumnHeader = execute(TableOperations.makeColumnHeader, Fun.always, Fun.noop, lazyWire);
+  const unmakeColumnHeader = execute(TableOperations.unmakeColumnHeader, Fun.always, Fun.noop, lazyWire);
+
+  const getTableRowType = (editor: Editor): 'header' | 'body' | 'footer' | '' => {
+    const rows = getRowsFromSelection(editor);
+    if (rows.length > 0) {
+      const rowTypes = Arr.map(rows, (r) => getRowType(editor, r));
+      const hasHeader = Arr.contains(rowTypes, 'header');
+      const hasFooter = Arr.contains(rowTypes, 'footer');
+      if (!hasHeader && !hasFooter) {
+        return 'body';
+      } else {
+        const hasBody = Arr.contains(rowTypes, 'body');
+        if (hasHeader && !hasBody && !hasFooter) {
+          return 'header';
+        } else if (!hasHeader && !hasBody && hasFooter) {
+          return 'footer';
+        } else {
+          return '';
+        }
+      }
+    }
+  };
+
+  const getTableCellType = (editor: Editor) =>
+    TableOperations.getCellsType(getCellsFromSelection(editor), (cell) => Util.getNodeName(cell) === 'th').getOr('');
+
+  const getTableColType = TableOperations.getColumnType;
+
   return {
     deleteRow,
     deleteColumn,
@@ -114,6 +167,13 @@ export const TableActions = (editor: Editor, lazyWire: () => ResizeWire): TableA
     pasteColsAfter,
     pasteRowsBefore,
     pasteRowsAfter,
-    pasteCells
+    pasteCells,
+    setTableCellType,
+    setTableRowType,
+    makeColumnHeader,
+    unmakeColumnHeader,
+    getTableRowType,
+    getTableCellType,
+    getTableColType
   };
 };
