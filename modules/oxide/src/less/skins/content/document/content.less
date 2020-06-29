@@ -36,10 +36,17 @@ table {
   border-collapse: collapse;
 }
 
-table th,
-table td {
-  border: 1px solid #ccc;
+/* Apply a default padding if legacy cellpading attribute is missing */
+table:not([cellpadding]) th,
+table:not([cellpadding]) td {
   padding: .4rem;
+}
+
+/* Set default table styles if a table has a positive border attribute
+   and no inline css */
+table[border]:not([border="0"]):not([style*="border"]) th,
+table[border]:not([border="0"]):not([style*="border"]) td {
+  border: 1px solid #ccc;
 }
 
 figure figcaption {
