@@ -12,6 +12,8 @@ import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import { AllowedFormat } from 'tinymce/core/api/fmt/StyleFormat';
 
+import * as ShadowDomHelper from '../alien/ShadowDomHelper';
+
 export interface ToolbarGroupSetting {
   name?: string;
   items: string[];
@@ -91,7 +93,8 @@ export enum ToolbarLocation {
   bottom = 'bottom'
 }
 
-const getToolbarGroups = (editor: Editor) => editor.getParam('toolbar_groups', {}, 'object');
+const getToolbarGroups = (editor: Editor) =>
+  editor.getParam('toolbar_groups', {}, 'object');
 
 const getToolbarLocation = (editor: Editor) => editor.getParam('toolbar_location', ToolbarLocation.auto, 'string') as ToolbarLocation;
 const isToolbarLocationBottom = (editor: Editor) => getToolbarLocation(editor) === ToolbarLocation.bottom;
@@ -106,9 +109,9 @@ const fixedContainerElement = (editor): Option<Element> => {
 
 const useFixedContainer = (editor): boolean => editor.inline && fixedContainerElement(editor).isSome();
 
-const getUiContainer = (editor): Element => {
+const getUiContainer = (editor: Editor): Element => {
   const fixedContainer = fixedContainerElement(editor);
-  return fixedContainer.getOr(Body.body());
+  return fixedContainer.getOrThunk(() => ShadowDomHelper.getEditorRootNode(editor));
 };
 
 const isDistractionFree = (editor: Editor) => editor.inline && !isMenubarEnabled(editor) && !isToolbarEnabled(editor) && !isMultipleToolbars(editor);
@@ -118,7 +121,8 @@ const isStickyToolbar = (editor: Editor) => {
   return (isStickyToolbar || editor.inline) && !useFixedContainer(editor) && !isDistractionFree(editor);
 };
 
-const isDraggableModal = (editor: Editor): boolean => editor.getParam('draggable_modal', false, 'boolean');
+const isDraggableModal = (editor: Editor): boolean =>
+  editor.getParam('draggable_modal', false, 'boolean');
 
 const getMenus = (editor: Editor) => {
   const menu = editor.getParam('menu');

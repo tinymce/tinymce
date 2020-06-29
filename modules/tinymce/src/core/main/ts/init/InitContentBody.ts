@@ -39,6 +39,7 @@ import * as SelectionBookmark from '../selection/SelectionBookmark';
 import { hasAnyRanges } from '../selection/SelectionUtils';
 import SelectionOverrides from '../SelectionOverrides';
 import Quirks from '../util/Quirks';
+import { StyleSheetLoader } from '../api/dom/StyleSheetLoader';
 
 declare const escape: any;
 
@@ -258,9 +259,8 @@ const initEditor = function (editor: Editor) {
   autoFocus(editor);
 };
 
-const getStyleSheetLoader = function (editor: Editor) {
-  return editor.inline ? DOM.styleSheetLoader : editor.dom.styleSheetLoader;
-};
+const getStyleSheetLoader = (editor: Editor): StyleSheetLoader =>
+  editor.inline ? editor.ui.styleSheetLoader : editor.dom.styleSheetLoader;
 
 const preInit = (editor: Editor, rtcMode: boolean) => {
   const settings = editor.settings, doc = editor.getDoc(), body = editor.getBody();
