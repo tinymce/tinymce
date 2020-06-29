@@ -9,6 +9,7 @@ import { Element } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
 import * as EditorView from '../EditorView';
 import { NotificationManagerImpl } from '../ui/NotificationManagerImpl';
+import * as Settings from './Settings';
 import Editor from './Editor';
 import Delay from './util/Delay';
 
@@ -130,7 +131,7 @@ function NotificationManager(editor: Editor): NotificationManager {
 
   const registerEvents = function (editor: Editor) {
     editor.on('SkinLoaded', function () {
-      const serviceMessage = editor.settings.service_message;
+      const serviceMessage = Settings.getServiceMessage(editor);
 
       if (serviceMessage) {
         open({
