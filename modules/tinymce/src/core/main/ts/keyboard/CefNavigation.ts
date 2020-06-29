@@ -139,7 +139,7 @@ const exitPreBlock = (editor: Editor, direction: HDirection, range: Range): void
   const getNextVisualCaretPosition = Fun.curry(CaretUtils.getVisualCaretPosition, caretWalker.next);
   const getPrevVisualCaretPosition = Fun.curry(CaretUtils.getVisualCaretPosition, caretWalker.prev);
 
-  if (range.collapsed && editor.settings.forced_root_block) {
+  if (range.collapsed && Settings.hasForcedRootBlock(editor)) {
     pre = editor.dom.getParent(range.startContainer, 'PRE');
     if (!pre) {
       return;

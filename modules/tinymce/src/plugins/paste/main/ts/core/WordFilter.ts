@@ -474,7 +474,7 @@ const filterWordContent = function (editor: Editor, content: string) {
 
   // Serialize DOM back to HTML
   content = Serializer({
-    validate: editor.settings.validate
+    validate: Settings.getValidate(editor)
   }, schema).serialize(rootNode);
 
   return content;

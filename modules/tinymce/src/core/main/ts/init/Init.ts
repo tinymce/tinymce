@@ -59,7 +59,7 @@ const trimLegacyPrefix = function (name: string) {
 const initPlugins = function (editor: Editor) {
   const initializedPlugins = [];
 
-  Tools.each(editor.settings.plugins.split(/[ ,]/), function (name) {
+  Tools.each(Settings.getPlugins(editor).split(/[ ,]/), function (name) {
     initPlugin(editor, initializedPlugins, trimLegacyPrefix(name));
   });
 };
@@ -81,11 +81,11 @@ const initIcons = (editor: Editor) => {
   });
 };
 
-const initTheme = function (editor: Editor) {
-  const theme = editor.settings.theme;
+const initTheme = (editor: Editor) => {
+  const theme = Settings.getTheme(editor);
 
   if (Type.isString(theme)) {
-    editor.settings.theme = trimLegacyPrefix(theme);
+    editor.settings.theme = trimLegacyPrefix(theme); // Kept until a proper API can be made. TINY-6142
 
     const Theme = ThemeManager.get(theme);
     editor.theme = new Theme(editor, ThemeManager.urls[theme]);
@@ -106,7 +106,7 @@ const renderFromLoadedTheme = function (editor: Editor) {
 
 const renderFromThemeFunc = function (editor: Editor) {
   const elm = editor.getElement();
-  const theme = editor.settings.theme as ThemeInitFunc;
+  const theme = Settings.getTheme(editor) as ThemeInitFunc;
   const info = theme(editor, elm);
 
   if (info.editorContainer.nodeType) {
@@ -147,9 +147,9 @@ const renderThemeUi = function (editor: Editor) {
 
   editor.orgDisplay = elm.style.display;
 
-  if (Type.isString(editor.settings.theme)) {
+  if (Type.isString(Settings.getTheme(editor))) {
     return renderFromLoadedTheme(editor);
-  } else if (Type.isFunction(editor.settings.theme)) {
+  } else if (Type.isFunction(Settings.getTheme(editor))) {
     return renderFromThemeFunc(editor);
   } else {
     return renderThemeFalse(editor);

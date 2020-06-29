@@ -540,6 +540,23 @@ class Editor implements EditorObservable {
    * @param {String/Function} cmdFunc Command name string or function to execute when the key is pressed.
    * @param {Object} scope Optional scope to execute the function in.
    * @return {Boolean} true/false state if the shortcut was added or not.
+   * @example
+   * editor.addShortcut('ctrl+a', "description of the shortcut", function() {});
+   * editor.addShortcut('ctrl+alt+a', "description of the shortcut", function() {});
+   * // "meta" maps to Command on Mac and Ctrl on PC
+   * editor.addShortcut('meta+a', "description of the shortcut", function() {});
+   * // "access" maps to Control+Option on Mac and shift+alt on PC
+   * editor.addShortcut('access+a', "description of the shortcut", function() {});
+   *
+   * editor.addShortcut(
+   *  'meta+access+c', 'Opens the code editor dialog.', function () {
+   *    editor.execCommand('mceCodeEditor');
+   * });
+   *
+   * editor.addShortcut(
+   *  'meta+shift+32', 'Inserts "Hello, World!" for meta+shift+space', function () {
+   *    editor.execCommand('mceInsertContent', false, 'Hello, World!');
+   * });
    */
   public addShortcut(pattern: string, desc: string, cmdFunc: string | any[] | Function, scope?: {}) {
     this.shortcuts.add(pattern, desc, cmdFunc, scope);

@@ -34,11 +34,12 @@ const removeCacheSuffix = function (url: string) {
   return url;
 };
 
-const isSkinContentCss = function (editor: Editor, href: string) {
-  const settings = editor.settings, skin = settings.skin !== false ? settings.skin || 'oxide' : false;
+const isSkinContentCss = (editor: Editor, href: string) => {
+  const skin = Settings.getSkin(editor);
 
   if (skin) {
-    const skinUrl = settings.skin_url ? editor.documentBaseURI.toAbsolute(settings.skin_url) : EditorManager.baseURL + '/skins/ui/' + skin;
+    const skinUrlBase = Settings.getSkinUrl(editor);
+    const skinUrl = skinUrlBase ? editor.documentBaseURI.toAbsolute(skinUrlBase) : EditorManager.baseURL + '/skins/ui/' + skin;
     const contentSkinUrlPart = EditorManager.baseURL + '/skins/content/';
     return href === skinUrl + '/content' + (editor.inline ? '.inline' : '') + '.min.css' || href.indexOf(contentSkinUrlPart) !== -1;
   }

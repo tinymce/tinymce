@@ -13,6 +13,9 @@ export type HelpTabsSetting = (string | Types.Dialog.TabApi)[];
 
 const getHelpTabs = (editor: Editor): Option<HelpTabsSetting> => Option.from(editor.getParam('help_tabs'));
 
+const getForcedPlugins = (editor: Editor) => editor.getParam('forced_plugins');
+
 export {
-  getHelpTabs
+  getHelpTabs,
+  getForcedPlugins
 };

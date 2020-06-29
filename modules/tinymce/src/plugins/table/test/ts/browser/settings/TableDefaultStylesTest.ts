@@ -1,4 +1,4 @@
-import { GeneralSteps, Logger, Pipeline, ApproxStructure, Waiter } from '@ephox/agar';
+import { ApproxStructure, GeneralSteps, Logger, Pipeline, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
@@ -35,7 +35,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDefaultStylesTest', (succ
                   children: [
                     s.element('td', {
                       styles: {
-                        width: str.is('100%')
+                        width: str.contains('%')
                       },
                       children: [
                         s.element('br', {})

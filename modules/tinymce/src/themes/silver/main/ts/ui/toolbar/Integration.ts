@@ -11,10 +11,10 @@ import { Toolbar } from '@ephox/bridge';
 import { console } from '@ephox/dom-globals';
 import { Arr, Obj, Option, Result, Type } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
-import { getToolbarMode, ToolbarMode } from '../../api/Settings';
+import { getToolbarMode, ToolbarMode, ToolbarGroupSetting } from '../../api/Settings';
 
 import { UiFactoryBackstage } from '../../backstage/Backstage';
-import { RenderToolbarConfig, ToolbarGroupSetting } from '../../Render';
+import { RenderToolbarConfig } from '../../Render';
 import { renderMenuButton } from '../button/MenuButton';
 import { createAlignSelect } from '../core/complex/AlignSelect';
 import { createFontSelect } from '../core/complex/FontSelect';

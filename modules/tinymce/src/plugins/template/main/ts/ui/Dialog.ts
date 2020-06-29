@@ -56,11 +56,7 @@ const getPreviewContent = (editor: Editor, html: string) => {
         '">';
     });
 
-    let bodyClass = editor.settings.body_class || '';
-    if (bodyClass.indexOf('=') !== -1) {
-      bodyClass = editor.getParam('body_class', '', 'hash');
-      bodyClass = bodyClass[editor.id] || '';
-    }
+    const bodyClass = Settings.getBodyClass(editor);
 
     const encode = editor.dom.encode;
 

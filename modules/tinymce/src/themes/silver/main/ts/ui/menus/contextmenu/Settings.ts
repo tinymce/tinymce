@@ -6,17 +6,22 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
-import { Obj, Arr } from '@ephox/katamari';
+import { Obj, Arr, Option } from '@ephox/katamari';
 
 const patchPipeConfig = (config: string[] | string) => typeof config === 'string' ? config.split(/[ ,]/) : config;
 
 const shouldNeverUseNative = function (editor: Editor): boolean {
-  return editor.settings.contextmenu_never_use_native || false;
+  return editor.getParam('contextmenu_never_use_native', false, 'boolean');
 };
 
-const getMenuItems = (editor: Editor, name: string, defaultItems: string) => {
+const getMenuItems = (editor: Editor, name: string, defaultItems: string): string[] => {
   const contextMenus = editor.ui.registry.getAll().contextMenus;
-  return Obj.get(editor.settings, name).map(patchPipeConfig).getOrThunk(() => Arr.filter(patchPipeConfig(defaultItems), (item) => Obj.has(contextMenus, item)));
+
+  return Option.from(editor.getParam(name)).map(patchPipeConfig).getOrThunk(() =>
+    Arr.filter(patchPipeConfig(defaultItems), (item) =>
+      Obj.has(contextMenus, item)
+    )
+  );
 };
 
 const isContextMenuDisabled = (editor: Editor): boolean => editor.getParam('contextmenu') === false;

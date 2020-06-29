@@ -26,17 +26,9 @@ const getPreviewHtml = function (editor: Editor) {
     headHtml += '<link type="text/css" rel="stylesheet" href="' + encode(editor.documentBaseURI.toAbsolute(url)) + '"' + cors + '>';
   });
 
-  let bodyId = editor.settings.body_id || 'tinymce';
-  if (bodyId.indexOf('=') !== -1) {
-    bodyId = editor.getParam('body_id', '', 'hash');
-    bodyId = bodyId[editor.id] || bodyId;
-  }
+  const bodyId = Settings.getBodyId(editor);
 
-  let bodyClass = editor.settings.body_class || '';
-  if (bodyClass.indexOf('=') !== -1) {
-    bodyClass = editor.getParam('body_class', '', 'hash');
-    bodyClass = bodyClass[editor.id] || '';
-  }
+  const bodyClass = Settings.getBodyClass(editor);
 
   const isMetaKeyPressed = Env.mac ? 'e.metaKey' : 'e.ctrlKey && !e.altKey';
 

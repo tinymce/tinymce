@@ -5,9 +5,9 @@ import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
-import * as TableTestUtils from '../module/test/TableTestUtils';
+import * as TableTestUtils from '../../module/test/TableTestUtils';
 
-UnitTest.asynctest('browser.tinymce.plugins.table.ApplyCellStyleCommandTest', (success, failure) => {
+UnitTest.asynctest('browser.tinymce.plugins.table.command.ApplyCellStyleCommandTest', (success, failure) => {
   Plugin();
   SilverTheme();
 

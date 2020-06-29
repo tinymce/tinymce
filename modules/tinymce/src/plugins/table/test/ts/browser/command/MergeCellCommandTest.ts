@@ -6,7 +6,7 @@ import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.plugins.table.MergeCellCommandTest', (success, failure) => {
+UnitTest.asynctest('browser.tinymce.plugins.table.command.MergeCellCommandTest', (success, failure) => {
   const suite = LegacyUnit.createSuite<Editor>();
 
   Plugin();
