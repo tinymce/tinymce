@@ -16,16 +16,68 @@ body {
   max-width: 900px;
 }
 
+
 table {
   border-collapse: collapse;
 }
 
-table th,
-table td {
-  border: 1px solid #ccc;
+/* Apply a default padding if legacy cellpading attribute is missing */
+table:not([cellpadding]) th,
+table:not([cellpadding]) td {
   padding: .4rem;
 }
 
+/* Set default table styles if a table has a positive border attribute
+   and no inline css */
+table[border]:not([border="0"]):not([style*="border-width"]) th,
+table[border]:not([border="0"]):not([style*="border-width"]) td {
+  border-width: 1px;
+}
+
+/* Set default table styles if a table has a positive border attribute
+   and no inline css */
+table[border]:not([border="0"]):not([style*="border-style"]) th,
+table[border]:not([border="0"]):not([style*="border-style"]) td {
+  border-style: solid;
+}
+
+/* Set default table styles if a table has a positive border attribute
+   and no inline css */
+table[border]:not([border="0"]):not([style*="border-color"]) th,
+table[border]:not([border="0"]):not([style*="border-color"]) td {
+  border-color: #ccc;
+}
+
+/* Cascade down the table border styles to table cells */
+table[border][style*="solid"]:not([border="0"]) th,
+table[border][style*="solid"]:not([border="0"]) td {
+  border-style: solid;
+}
+
+table[border][style*="dashed"]:not([border="0"]) th,
+table[border][style*="dashed"]:not([border="0"]) td {
+  border-style: dashed;
+}
+
+table[border][style*="dotted"]:not([border="0"]) th,
+table[border][style*="dotted"]:not([border="0"]) td {
+  border-style: dotted;
+}
+
+table[border][style*="double"]:not([border="0"]) th,
+table[border][style*="double"]:not([border="0"]) td {
+  border-style: double;
+}
+
+table[border][style*="groove"]:not([border="0"]) th,
+table[border][style*="double"]:not([border="0"]) td {
+  border-style: groove;
+}
+
+table[border][style*="ridge"]:not([border="0"]) th,
+table[border][style*="ridge"]:not([border="0"]) td {
+  border-style: ridge;
+}
 figure {
   display: table;
   margin: 1rem auto;
