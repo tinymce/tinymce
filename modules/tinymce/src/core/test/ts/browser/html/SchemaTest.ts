@@ -149,6 +149,14 @@ UnitTest.asynctest('browser.tinymce.core.html.SchemaTest', function (success, fa
         attributesOrder: [ 'id', 'style', 'class' ]
       }
     );
+    schema.addValidElements('custom-element[custom-attribute]');
+    LegacyUnit.deepEqual(
+      schema.getElementRule('custom-element'),
+      {
+        attributes: { 'id': {}, 'style': {}, 'custom-attribute': {}},
+        attributesOrder: [ 'id', 'style', 'custom-attribute' ]
+      }
+    );
   });
 
   suite.test(`addValidElements when there's a colon in an attribute name`, function () {
