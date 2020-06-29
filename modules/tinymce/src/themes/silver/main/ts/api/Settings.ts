@@ -6,13 +6,11 @@
  */
 
 import { Arr, Option, Obj, Type } from '@ephox/katamari';
-import { Body, Element, SelectorFind } from '@ephox/sugar';
+import { Body, Element, SelectorFind, ShadowDom } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import { AllowedFormat } from 'tinymce/core/api/fmt/StyleFormat';
-
-import * as ShadowDomHelper from '../alien/ShadowDomHelper';
 
 export interface ToolbarGroupSetting {
   name?: string;
@@ -111,7 +109,9 @@ const useFixedContainer = (editor): boolean => editor.inline && fixedContainerEl
 
 const getUiContainer = (editor: Editor): Element => {
   const fixedContainer = fixedContainerElement(editor);
-  return fixedContainer.getOrThunk(() => ShadowDomHelper.getEditorRootNode(editor));
+  return fixedContainer.getOrThunk(() =>
+    ShadowDom.getContentContainer(ShadowDom.getRootNode(Element.fromDom(editor.getElement())))
+  );
 };
 
 const isDistractionFree = (editor: Editor) => editor.inline && !isMenubarEnabled(editor) && !isToolbarEnabled(editor) && !isMultipleToolbars(editor);
