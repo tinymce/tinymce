@@ -120,7 +120,7 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
     mceTableRowType: (_ui, args) => actions.setTableRowType(editor, args)
   }, (func, name) => editor.addCommand(name, func));
 
-  editor.addCommand('mceTableColumnType', (_ui, args) =>
+  editor.addCommand('mceTableColType', (_ui, args) =>
     Obj.get(args, 'type').each((type) =>
       actOnSelection(type === 'th' ? actions.makeColumnHeader : actions.unmakeColumnHeader)
     ));

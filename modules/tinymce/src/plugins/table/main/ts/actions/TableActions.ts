@@ -134,15 +134,15 @@ export const TableActions = (editor: Editor, lazyWire: () => ResizeWire): TableA
     const rows = getRowsFromSelection(editor);
     if (rows.length > 0) {
       const rowTypes = Arr.map(rows, (r) => getRowType(editor, r));
-      const hasHeader = Arr.contains(rowTypes, 'thead');
-      const hasFooter = Arr.contains(rowTypes, 'tfoot');
+      const hasHeader = Arr.contains(rowTypes, 'header');
+      const hasFooter = Arr.contains(rowTypes, 'footer');
       if (!hasHeader && !hasFooter) {
         return 'body';
       } else {
-        const hasBody = Arr.contains(rowTypes, 'tbody');
+        const hasBody = Arr.contains(rowTypes, 'body');
         if (hasHeader && !hasBody && !hasFooter) {
           return 'header';
-        } else if (hasHeader && hasBody && hasFooter) {
+        } else if (!hasHeader && !hasBody && hasFooter) {
           return 'footer';
         } else {
           return '';
