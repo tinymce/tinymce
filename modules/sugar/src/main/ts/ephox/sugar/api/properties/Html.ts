@@ -6,9 +6,10 @@ import Element from '../node/Element';
 import * as Elements from '../node/Elements';
 import * as Traverse from '../search/Traverse';
 
-const get = (element: Element<HTMLElement>) => element.dom().innerHTML;
+const get = (element: Element<HTMLElement>): string =>
+  element.dom().innerHTML;
 
-const set = (element: Element<DomNode>, content: string) => {
+const set = (element: Element<DomNode>, content: string): void => {
   const owner = Traverse.owner(element);
   const docDom = owner.dom();
 
@@ -21,7 +22,7 @@ const set = (element: Element<DomNode>, content: string) => {
   Insert.append(element, fragment);
 };
 
-const getOuter = (element: Element<DomNode>) => {
+const getOuter = (element: Element<DomNode>): string => {
   const container = Element.fromTag('div');
   const clone = Element.fromDom(element.dom().cloneNode(true));
   Insert.append(container, clone);

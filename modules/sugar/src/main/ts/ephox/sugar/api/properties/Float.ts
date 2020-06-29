@@ -4,7 +4,7 @@ import * as Style from '../../impl/Style';
 import Element from '../node/Element';
 import * as Css from './Css';
 
-const isCentered = (element: Element<DomNode>) => {
+const isCentered = (element: Element<DomNode>): boolean => {
   const dom = element.dom();
   if (Style.isSupported(dom)) {
     const marginLeft = dom.style.marginRight;
@@ -15,7 +15,7 @@ const isCentered = (element: Element<DomNode>) => {
   }
 };
 
-const divine = (element: Element<DomElement>) => {
+const divine = (element: Element<DomElement>): Option<string> => {
   if (isCentered(element)) {
     return Option.some('center');
   } else {
@@ -24,9 +24,10 @@ const divine = (element: Element<DomElement>) => {
   }
 };
 
-const getRaw = (element: Element<DomNode>) => Css.getRaw(element, 'float').getOrNull();
+const getRaw = (element: Element<DomNode>): string | null =>
+  Css.getRaw(element, 'float').getOrNull();
 
-const setCentered = (element: Element<DomNode>) => {
+const setCentered = (element: Element<DomNode>): void => {
   Css.setAll(element, {
     'margin-left': 'auto',
     'margin-right': 'auto'

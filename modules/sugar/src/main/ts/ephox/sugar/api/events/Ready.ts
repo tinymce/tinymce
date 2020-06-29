@@ -2,7 +2,7 @@ import { document } from '@ephox/dom-globals';
 import Element from '../node/Element';
 import * as DomEvent from './DomEvent';
 
-const execute = (f: () => void) => {
+const execute = (f: () => void): void => {
   /*
    * We only use this in one place, so creating one listener per ready request is more optimal than managing
    * a single event with a queue of functions.

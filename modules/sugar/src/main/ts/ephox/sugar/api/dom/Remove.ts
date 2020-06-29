@@ -4,7 +4,7 @@ import Element from '../node/Element';
 import * as Traverse from '../search/Traverse';
 import * as InsertAll from './InsertAll';
 
-const empty = (element: Element<DomNode>) => {
+const empty = (element: Element<DomNode>): void => {
   // shortcut "empty node" trick. Requires IE 9.
   element.dom().textContent = '';
 
@@ -17,14 +17,14 @@ const empty = (element: Element<DomNode>) => {
   });
 };
 
-const remove = (element: Element<DomNode>) => {
+const remove = (element: Element<DomNode>): void => {
   const dom = element.dom();
   if (dom.parentNode !== null) {
     dom.parentNode.removeChild(dom);
   }
 };
 
-const unwrap = (wrapper: Element<DomNode>) => {
+const unwrap = (wrapper: Element<DomNode>): void => {
   const children = Traverse.children(wrapper);
   if (children.length > 0) {
     InsertAll.before(wrapper, children);

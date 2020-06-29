@@ -3,9 +3,10 @@ import Element from '../node/Element';
 
 type TogglableElement = HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | HTMLOptionElement | HTMLButtonElement;
 
-const get = (element: Element<TogglableElement>) => element.dom().value;
+const get = (element: Element<TogglableElement>): string =>
+  element.dom().value;
 
-const set = (element: Element<TogglableElement>, value: string) => {
+const set = (element: Element<TogglableElement>, value: string): void => {
   if (value === undefined) {
     throw new Error('Value.set was undefined');
   }
