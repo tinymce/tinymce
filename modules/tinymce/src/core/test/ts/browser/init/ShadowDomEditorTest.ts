@@ -33,7 +33,7 @@ UnitTest.asynctest('Skin stylesheets should be loaded in ShadowRoot when editor 
   }, success, failure);
 });
 
-UnitTest.asynctest('Only one skin stylesheet should be loaded for multiple editors in a ShadowRoot', (success, failure) => {
+const multipleStyleSheetTest = (extraSettings: Record<string, any>) => (success, failure) => {
   if (!ShadowDom.isSupported()) {
     return success();
   }
@@ -45,7 +45,7 @@ UnitTest.asynctest('Only one skin stylesheet should be loaded for multiple edito
   const mkEditor = () => {
     const editorDiv = Element.fromTag('div', document);
     Insert.append(sr, editorDiv);
-    return McEditor.cFromElement(editorDiv, { base_url: '/project/tinymce/js/tinymce' });
+    return McEditor.cFromElement(editorDiv, { base_url: '/project/tinymce/js/tinymce', ...extraSettings });
   };
   const nc = NamedChain.asChain([
     NamedChain.write('editor1', mkEditor()),
@@ -66,7 +66,10 @@ UnitTest.asynctest('Only one skin stylesheet should be loaded for multiple edito
     })
   ]);
   Pipeline.async({}, [ Chain.asStep({}, [ nc ]) ], () => success(), failure);
-});
+};
+
+UnitTest.asynctest('Only one skin stylesheet should be loaded for multiple editors in a ShadowRoot (normal mode)', multipleStyleSheetTest({}));
+UnitTest.asynctest('Only one skin stylesheet should be loaded for multiple editors in a ShadowRoot (inline mode)', multipleStyleSheetTest({ inline: true }));
 
 UnitTest.asynctest('aux div should be within shadow root', (success, failure) => {
   if (!ShadowDom.isSupported()) {
