@@ -51,10 +51,12 @@ table[border]:not([border="0"]):not([style*="border-style"]) {
   border-style: solid;
 }
 
-/* Set a default border color if a table has a positive border attribute
-   and no inline css border color */
-table[border]:not([border="0"]):not([style*="border-color"]) {
-  border-color: #ccc;
+/* Prevent borders from showing up if inline styles for border-color or
+   border-style is present on the table tag. The dashed border for
+   "invisible tables" found in tables.less has presedence because of
+   specificity. */
+table[border="0"] {
+  border: 0 !important;
 }
 
 /* Set a default border style for table cells if a table has a
@@ -62,6 +64,14 @@ table[border]:not([border="0"]):not([style*="border-color"]) {
 table[border]:not([border="0"]) th,
 table[border]:not([border="0"]) td {
   border-style: solid;
+}
+
+/* Set a default border color if a table has a positive border attribute
+   and no inline css border color */
+table[border]:not([border="0"]):not([style*="border-color"]),
+table[border]:not([border="0"]):not([style*="border-color"]) th,
+table[border]:not([border="0"]):not([style*="border-color"]) td {
+  border-color: #ccc;
 }
 
 /* Cascade down the table border styles to table cells */
