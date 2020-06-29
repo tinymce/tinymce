@@ -48,7 +48,7 @@ export function StyleSheetLoader(documentOrShadowRoot: DomDocument | ShadowRoot,
   };
 
   /**
-   * Loads the specified css style sheet file and call the loadedCallback once it's finished loading.
+   * Loads the specified CSS file and calls the `loadedCallback` once it's finished loading.
    *
    * @method load
    * @param {String} url Url to be loaded.
@@ -235,7 +235,7 @@ export function StyleSheetLoader(documentOrShadowRoot: DomDocument | ShadowRoot,
   };
 
   /**
-   * Loads the specified css style sheets and call the success callback once it's finished loading.
+   * Loads the specified CSS files and calls the `success` callback once it's finished loading.
    *
    * @method loadAll
    * @param {Array} urls Urls to be loaded.
