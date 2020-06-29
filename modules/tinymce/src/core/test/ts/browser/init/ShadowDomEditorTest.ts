@@ -1,6 +1,6 @@
-import { Pipeline, Step, Chain, NamedChain } from '@ephox/agar';
+import { Pipeline, Step, Chain, NamedChain, UiFinder } from '@ephox/agar';
 import { document, StyleSheet, ShadowRoot } from '@ephox/dom-globals';
-import { TinyLoader, Editor as McEditor } from '@ephox/mcagar';
+import { TinyLoader, Editor as McEditor, TinyApis } from '@ephox/mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 import { ShadowDom, Element, Insert, Body, Remove, SelectorFilter } from '@ephox/sugar';
@@ -9,7 +9,7 @@ import { Arr, Strings } from '@ephox/katamari';
 
 const isSkin = (ss: StyleSheet) => ss.href !== null && Strings.contains(ss.href, 'skin.min.css');
 
-UnitTest.asynctest('Skin stylesheets should be loaded in ShadowRoot when editor is in ShadowRoot', (success, failure) => {
+const skinSheetsTest = (extraSettings: Record<string, any>) => (success, failure) => {
   if (!ShadowDom.isSupported()) {
     return success();
   }
@@ -29,9 +29,13 @@ UnitTest.asynctest('Skin stylesheets should be loaded in ShadowRoot when editor 
     ], onSuccess, onFailure);
   }, {
     toolbar_sticky: false,
-    base_url: '/project/tinymce/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce',
+    ...extraSettings
   }, success, failure);
-});
+};
+
+UnitTest.asynctest('Skin stylesheets should be loaded in ShadowRoot when editor is in ShadowRoot (normal mode)', skinSheetsTest({}));
+UnitTest.asynctest('Skin stylesheets should be loaded in ShadowRoot when editor is in ShadowRoot (inline mode)', skinSheetsTest({ inline: true }));
 
 const multipleStyleSheetTest = (extraSettings: Record<string, any>) => (success, failure) => {
   if (!ShadowDom.isSupported()) {
@@ -71,7 +75,7 @@ const multipleStyleSheetTest = (extraSettings: Record<string, any>) => (success,
 UnitTest.asynctest('Only one skin stylesheet should be loaded for multiple editors in a ShadowRoot (normal mode)', multipleStyleSheetTest({}));
 UnitTest.asynctest('Only one skin stylesheet should be loaded for multiple editors in a ShadowRoot (inline mode)', multipleStyleSheetTest({ inline: true }));
 
-UnitTest.asynctest('aux div should be within shadow root', (success, failure) => {
+const auxDivTest = (extraSettings: Record<string, any>) => (success, failure) => {
   if (!ShadowDom.isSupported()) {
     return success();
   }
@@ -79,7 +83,11 @@ UnitTest.asynctest('aux div should be within shadow root', (success, failure) =>
   Theme();
 
   TinyLoader.setupInShadowRoot((editor, shadowRoot: Element<ShadowRoot>, onSuccess, onFailure) => {
+    const tinyApis = TinyApis(editor);
     Pipeline.async({}, [
+      tinyApis.sFocus(),
+      tinyApis.sNodeChanged(),
+      UiFinder.sWaitForVisible('Wait for editor to be visible', shadowRoot, '.tox-editor-header'),
       Step.sync(() => {
         Assert.eq('Should be no aux divs in the document', 0, SelectorFilter.descendants(Body.body(), '.tox-tinymce-aux').length);
         Assert.eq('Should be 1 aux div in the shadow root', 1, SelectorFilter.descendants(shadowRoot, '.tox-tinymce-aux').length);
@@ -87,6 +95,10 @@ UnitTest.asynctest('aux div should be within shadow root', (success, failure) =>
     ], onSuccess, onFailure);
   }, {
     toolbar_sticky: false,
-    base_url: '/project/tinymce/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce',
+    ...extraSettings
   }, success, failure);
-});
+};
+
+UnitTest.asynctest('aux div should be within shadow root (normal mode)', auxDivTest({}));
+UnitTest.asynctest('aux div should be within shadow root (inline mode)', auxDivTest({ inline: true }));
