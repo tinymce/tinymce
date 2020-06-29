@@ -19,13 +19,13 @@ const register = function (editor: Editor) {
   editor.ui.registry.addButton('template', {
     icon: 'template',
     tooltip: 'Insert template',
-    onAction: Templates.createTemplateList(editor.settings, showDialog(editor))
+    onAction: Templates.createTemplateList(editor, showDialog(editor))
   });
 
   editor.ui.registry.addMenuItem('template', {
     icon: 'template',
     text: 'Insert template...',
-    onAction: Templates.createTemplateList(editor.settings, showDialog(editor))
+    onAction: Templates.createTemplateList(editor, showDialog(editor))
   });
 };
 

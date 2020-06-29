@@ -13,7 +13,7 @@ import * as Keyboard from './keyboard/Keyboard';
 
 export default function () {
   PluginManager.add('textpattern', (editor) => {
-    const patternsState = Cell(Settings.getPatternSet(editor.settings));
+    const patternsState = Cell(Settings.getPatternSet(editor));
 
     Keyboard.setup(editor, patternsState);
 

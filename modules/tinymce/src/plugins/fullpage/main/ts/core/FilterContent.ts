@@ -14,11 +14,8 @@ import * as Protect from './Protect';
 
 const each = Tools.each;
 
-const low = function (s) {
-  return s.replace(/<\/?[A-Z]+/g, function (a) {
-    return a.toLowerCase();
-  });
-};
+const low = (s: string) =>
+  s.replace(/<\/?[A-Z]+/g, (a: string) => a.toLowerCase());
 
 const handleSetContent = function (editor: Editor, headState, footState, evt) {
   let startPos, endPos, content, styles = '';
@@ -28,7 +25,7 @@ const handleSetContent = function (editor: Editor, headState, footState, evt) {
     return;
   }
 
-  content = Protect.protectHtml(editor.settings.protect, evt.content);
+  content = Protect.protectHtml(Settings.getProtect(editor), evt.content);
 
   // Ignore raw updated if we already have a head, this will fix issues with undo/redo keeping the head/foot separate
   if (evt.format === 'raw' && headState.get()) {

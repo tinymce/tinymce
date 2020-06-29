@@ -15,7 +15,7 @@ export default function () {
   PluginManager.add('fullscreen', (editor) => {
     const fullscreenState: Cell<any> = Cell(null);
 
-    if (editor.settings.inline) {
+    if (editor.inline) {
       return Api.get(fullscreenState);
     }
 
