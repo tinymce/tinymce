@@ -38,9 +38,7 @@ const shouldShowLinkTitle = (editor: Editor) => editor.getParam('link_title', tr
 
 const allowUnsafeLinkTarget = (editor: Editor) => editor.getParam('allow_unsafe_link_target', false, 'boolean');
 
-const useQuickLink = function (editor: Editor) {
-  return editor.getParam('link_quicklink', false, 'boolean');
-};
+const useQuickLink = (editor: Editor) => editor.getParam('link_quicklink', false, 'boolean');
 
 const getDefaultLinkProtocol = (editor: Editor): string => editor.getParam('link_default_protocol', 'http', 'string');
 

@@ -11,6 +11,7 @@ import Serializer from 'tinymce/core/api/html/Serializer';
 import Tools from 'tinymce/core/api/util/Tools';
 import * as Events from '../api/Events';
 import * as WordFilter from './WordFilter';
+import * as Settings from '../api/Settings';
 
 const preProcess = (editor: Editor, html: string) => {
   const parser = DomParser({ }, editor.schema);
@@ -21,7 +22,7 @@ const preProcess = (editor: Editor, html: string) => {
   });
 
   const fragment = parser.parse(html, { forced_root_block: false, isRootContent: true });
-  return Serializer({ validate: editor.settings.validate }, editor.schema).serialize(fragment);
+  return Serializer({ validate: Settings.getValidate(editor) }, editor.schema).serialize(fragment);
 };
 
 const processResult = function (content: string, cancelled: boolean) {

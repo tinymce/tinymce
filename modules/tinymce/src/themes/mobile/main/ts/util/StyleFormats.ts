@@ -8,11 +8,12 @@
 import { Toggling } from '@ephox/alloy';
 import { Arr, Fun, Id, Merger, Obj } from '@ephox/katamari';
 
-import DefaultStyleFormats from '../features/DefaultStyleFormats';
 import * as StylesMenu from '../ui/StylesMenu';
 import * as StyleConversions from './StyleConversions';
+import Editor from 'tinymce/core/api/Editor';
+import * as Settings from '../api/Settings';
 
-const register = (editor, settings) => {
+const register = (editor: Editor) => {
 
   const isSelectedFor = (format) => (): boolean =>
     editor.formatter.match(format);
@@ -44,8 +45,6 @@ const register = (editor, settings) => {
     return newItem;
   };
 
-  const formats = Obj.get(settings, 'style_formats').getOr(DefaultStyleFormats);
-
   const doEnrich = (items) => Arr.map(items, (item) => {
     if (Obj.hasNonNullableKey(item, 'items')) {
       const newItems = doEnrich(item.items);
@@ -62,10 +61,10 @@ const register = (editor, settings) => {
     }
   });
 
-  return doEnrich(formats);
+  return doEnrich(Settings.getStyleFormats(editor));
 };
 
-const prune = (editor, formats) => {
+const prune = (editor: Editor, formats) => {
 
   const doPrune = (items) => Arr.bind(items, (item) => {
     if (item.items !== undefined) {

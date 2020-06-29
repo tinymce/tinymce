@@ -101,8 +101,6 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
       })
     ]), 10, 10000);
 
-    // The following tests have been removed from the testing pipeline as they depend
-    // on the triggerUpload functionality which is currently not feasible in the state of the code
     const uploadWithCustomRoute = Log.stepsAsStep('TBA', 'Image: Image uploader test with custom route', [
       api.sSetContent(''),
       api.sSetSetting('images_upload_url', '/custom/imageUpload'),

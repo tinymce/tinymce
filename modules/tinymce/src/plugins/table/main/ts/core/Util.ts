@@ -7,7 +7,8 @@
 
 import { HTMLElement, Node } from '@ephox/dom-globals';
 import { Arr, Option, Strings } from '@ephox/katamari';
-import { Attr, Compare, Element, SelectorFilter } from '@ephox/sugar';
+import { TableLookup } from '@ephox/snooker';
+import { Attr, Compare, Element } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 
 const getNodeName = (elm: Node) => elm.nodeName.toLowerCase();
@@ -25,9 +26,8 @@ const removePxSuffix = (size: string) => size ? size.replace(/px$/, '') : '';
 const addPxSuffix = (size: string): string => /^\d+(\.\d+)?$/.test(size) ? size + 'px' : size;
 
 const removeDataStyle = (table: Element<HTMLElement>): void => {
-  const dataStyleCells = SelectorFilter.descendants(table, 'td[data-mce-style],th[data-mce-style]');
   Attr.remove(table, 'data-mce-style');
-  Arr.each(dataStyleCells, (cell) => Attr.remove(cell, 'data-mce-style'));
+  Arr.each(TableLookup.cells(table), (cell) => Attr.remove(cell, 'data-mce-style'));
 };
 
 const getRawWidth = (editor: Editor, elm: HTMLElement): Option<string> => {

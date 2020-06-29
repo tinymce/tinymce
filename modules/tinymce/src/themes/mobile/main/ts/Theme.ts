@@ -218,7 +218,7 @@ const renderMobileTheme = (editor: Editor) => {
       };
 
       const features = Features.setup(realm, editor);
-      const items = Features.detect(editor.settings, features);
+      const items = Features.detect(editor, features);
 
       const actionGroup = {
         label: 'the action group',

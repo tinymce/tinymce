@@ -6,12 +6,9 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
-import PluginManager from 'tinymce/core/api/PluginManager';
 
-export const hasRtcPlugin = (editor: Editor) => {
-  if (/(^|[ ,])rtc([, ]|$)/.test(editor.getParam('plugins', '', 'string')) && PluginManager.get('rtc')) {
-    return true;
-  } else {
-    return false;
-  }
+const getInline = (editor: Editor) => editor.getParam('inline');
+
+export {
+  getInline
 };

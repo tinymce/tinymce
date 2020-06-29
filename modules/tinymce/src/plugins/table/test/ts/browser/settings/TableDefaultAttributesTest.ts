@@ -1,4 +1,4 @@
-import { GeneralSteps, Logger, Pipeline, ApproxStructure, Waiter } from '@ephox/agar';
+import { ApproxStructure, GeneralSteps, Logger, Pipeline, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
@@ -14,13 +14,13 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDefaultAttributesTest', (
     const tinyApis = TinyApis(editor);
     const tinyUi = TinyUi(editor);
 
-    const tableBody2By2 = (s, str, _arr) => s.element('tbody', {
+    const tableBody2By2 = (s, str: ApproxStructure.StringApi, _arr) => s.element('tbody', {
       children: [
         s.element('tr', {
           children: [
             s.element('td', {
               styles: {
-                width: str.is('50%')
+                width: str.contains('%')
               },
               children: [
                 s.element('br', {})
@@ -28,7 +28,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDefaultAttributesTest', (
             }),
             s.element('td', {
               styles: {
-                width: str.is('50%')
+                width: str.contains('%')
               },
               children: [
                 s.element('br', {})
@@ -40,7 +40,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDefaultAttributesTest', (
           children: [
             s.element('td', {
               styles: {
-                width: str.is('50%')
+                width: str.contains('%')
               },
               children: [
                 s.element('br', {})
@@ -48,7 +48,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDefaultAttributesTest', (
             }),
             s.element('td', {
               styles: {
-                width: str.is('50%')
+                width: str.contains('%')
               },
               children: [
                 s.element('br', {})

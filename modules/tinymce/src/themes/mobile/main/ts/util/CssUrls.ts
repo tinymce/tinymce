@@ -7,7 +7,8 @@
 
 import EditorManager from 'tinymce/core/api/EditorManager';
 import Editor from 'tinymce/core/api/Editor';
-import { Obj } from '@ephox/katamari';
+import { Option } from '@ephox/katamari';
+import * as Settings from '../api/Settings';
 
 export interface CssUrls {
   readonly content: string;
@@ -15,7 +16,7 @@ export interface CssUrls {
 }
 
 const derive = (editor: Editor): CssUrls => {
-  const base = Obj.get(editor.settings, 'skin_url').fold(
+  const base = Option.from(Settings.getSkinUrl(editor)).fold(
     () => EditorManager.baseURL + '/skins/ui/oxide',
     (url) => url
   );

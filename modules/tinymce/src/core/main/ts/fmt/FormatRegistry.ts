@@ -7,6 +7,7 @@
 
 import { Obj, Type } from '@ephox/katamari';
 import * as DefaultFormats from './DefaultFormats';
+import * as Settings from '../api/Settings';
 import { Format, Formats } from '../api/fmt/Format';
 import Tools from '../api/util/Tools';
 import Editor from '../api/Editor';
@@ -80,7 +81,7 @@ export function FormatRegistry(editor: Editor): FormatRegistry {
   };
 
   register(DefaultFormats.get(editor.dom));
-  register(editor.settings.formats);
+  register(Settings.getFormats(editor));
 
   return {
     get,

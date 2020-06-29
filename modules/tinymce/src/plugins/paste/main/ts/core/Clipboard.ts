@@ -24,6 +24,7 @@ import * as ProcessFilters from './ProcessFilters';
 import * as SmartPaste from './SmartPaste';
 import * as Utils from './Utils';
 import * as Whitespace from './Whitespace';
+import * as Settings from '../api/Settings';
 
 declare let window: any;
 
@@ -57,7 +58,7 @@ const pasteHtml = (editor: Editor, html: string, internalFlag: boolean) => {
 const pasteText = (editor: Editor, text: string) => {
   const encodedText = editor.dom.encode(text).replace(/\r\n/g, '\n');
   const normalizedText = Whitespace.normalizeWhitespace(encodedText);
-  const html = Newlines.convert(normalizedText, editor.settings.forced_root_block, editor.settings.forced_root_block_attrs);
+  const html = Newlines.convert(normalizedText, Settings.getForcedRootBlock(editor), Settings.getForcedRootBlockAttrs(editor));
   doPaste(editor, html, false, true);
 };
 
@@ -128,7 +129,10 @@ const parseDataUri = (uri: string) => {
   }
 };
 
-const isValidDataUriImage = (settings, imgElm: HTMLImageElement) => settings.images_dataimg_filter ? settings.images_dataimg_filter(imgElm) : true;
+const isValidDataUriImage = (editor: Editor, imgElm: HTMLImageElement) => {
+  const filter = Settings.getImagesDataImgFilter(editor);
+  return filter ? filter(imgElm) : true;
+};
 
 const extractFilename = (editor: Editor, str: string) => {
   const m = str.match(/([\s\S]+?)\.(?:jpeg|jpg|png|gif)$/i);
@@ -140,13 +144,13 @@ const uniqueId = Utils.createIdGenerator('mceclip');
 const pasteImage = (editor: Editor, imageItem) => {
   const { data: base64, type } = parseDataUri(imageItem.uri);
   const id = uniqueId();
-  const name = editor.settings.images_reuse_filename && imageItem.blob.name ? extractFilename(editor, imageItem.blob.name) : id;
+  const name = Settings.getImagesReuseFilename(editor) && imageItem.blob.name ? extractFilename(editor, imageItem.blob.name) : id;
   const img = new Image();
 
   img.src = imageItem.uri;
 
   // TODO: Move the bulk of the cache logic to EditorUpload
-  if (isValidDataUriImage(editor.settings, img)) {
+  if (isValidDataUriImage(editor, img)) {
     const blobCache = editor.editorUpload.blobCache;
     let blobInfo;
 
@@ -197,7 +201,7 @@ const getImagesFromDataTransfer = (dataTransfer: DataTransfer) => {
 const pasteImageData = (editor, e: ClipboardEvent | DragEvent, rng: Range) => {
   const dataTransfer = isClipboardEvent(e) ? e.clipboardData : e.dataTransfer;
 
-  if (editor.settings.paste_data_images && dataTransfer) {
+  if (Settings.getPasteDataImages(editor) && dataTransfer) {
     const images = getImagesFromDataTransfer(dataTransfer);
 
     if (images.length > 0) {
@@ -441,7 +445,7 @@ const registerEventsAndFilters = (editor: Editor, pasteBin: PasteBin, pasteForma
 
     const isDataUri = (src: string) => src.indexOf('data:') === 0;
 
-    if (!editor.settings.paste_data_images && isPasteInsert(args)) {
+    if (!Settings.getPasteDataImages(editor) && isPasteInsert(args)) {
       let i = nodes.length;
 
       while (i--) {
@@ -454,7 +458,7 @@ const registerEventsAndFilters = (editor: Editor, pasteBin: PasteBin, pasteForma
         // Safari on Mac produces webkit-fake-url see: https://bugs.webkit.org/show_bug.cgi?id=49141
         if (isWebKitFakeUrl(src)) {
           remove(nodes[i]);
-        } else if (!editor.settings.allow_html_data_urls && isDataUri(src)) {
+        } else if (!Settings.getAllowHtmlDataUrls(editor) && isDataUri(src)) {
           remove(nodes[i]);
         }
       }

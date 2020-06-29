@@ -9,9 +9,9 @@ import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import * as Util from '../core/Util';
 
-const register = function (editor: Editor) {
-  const hasPlugin = function (editor, plugin) {
-    const plugins = editor.settings.plugins ? editor.settings.plugins : '';
+const register = (editor: Editor) => {
+  const hasPlugin = (editor: Editor, plugin: string) => {
+    const plugins = editor.getParam('plugins', '', 'string');
     return Tools.inArray(plugins.split(/[ ,]/), plugin) !== -1;
   };
 

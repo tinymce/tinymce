@@ -18,53 +18,11 @@ UnitTest.asynctest('RenderTest', (success, failure) => {
               s.element('tr', {
                 children: [
                   s.element('td', {
-                    styles: {
-                      width: str.is('50%')
-                    },
                     children: [
                       s.element('br', {})
                     ]
                   }),
                   s.element('td', {
-                    styles: {
-                      width: str.is('50%')
-                    },
-                    children: [
-                      s.element('br', {})
-                    ]
-                  })
-                ]
-              })
-            ]
-          })
-        ]
-      })), table);
-    })),
-    Logger.t('Render table with percentages', Step.sync(() => {
-      const table = Render.render(1, 2, 0, 0, { styles: {}, attributes: {}, percentages: true });
-
-      Assertions.assertStructure('Should be a table with percentages', ApproxStructure.build((s, str, _arr) => s.element('table', {
-        styles: {
-          'width': str.none('Should not have width'),
-          'border-collapse': str.none('Should not have border-collapse')
-        },
-        children: [
-          s.element('tbody', {
-            children: [
-              s.element('tr', {
-                children: [
-                  s.element('td', {
-                    styles: {
-                      width: str.is('50%')
-                    },
-                    children: [
-                      s.element('br', {})
-                    ]
-                  }),
-                  s.element('td', {
-                    styles: {
-                      width: str.is('50%')
-                    },
                     children: [
                       s.element('br', {})
                     ]
@@ -77,7 +35,7 @@ UnitTest.asynctest('RenderTest', (success, failure) => {
       })), table);
     })),
     Logger.t('Render table with everything disabled', Step.sync(() => {
-      const table = Render.render(1, 2, 0, 0, { styles: { width: '50%', height: '100px' }, attributes: {}, percentages: false });
+      const table = Render.render(1, 2, 0, 0, { styles: { width: '50%', height: '100px' }, attributes: {}});
 
       Assertions.assertStructure('Should be a table with styles', ApproxStructure.build((s, str, _arr) => s.element('table', {
         styles: {
@@ -113,7 +71,7 @@ UnitTest.asynctest('RenderTest', (success, failure) => {
       })), table);
     })),
     Logger.t('Render table with attributes', Step.sync(() => {
-      const table = Render.render(1, 2, 0, 0, { styles: {}, attributes: { border: '1', class: 'myclass' }, percentages: false });
+      const table = Render.render(1, 2, 0, 0, { styles: {}, attributes: { border: '1', class: 'myclass' }});
 
       Assertions.assertStructure('Should be a table with styles', ApproxStructure.build((s, str, _arr) => s.element('table', {
         styles: {
@@ -153,7 +111,7 @@ UnitTest.asynctest('RenderTest', (success, failure) => {
       })), table);
     })),
     Logger.t('Render table with everything disabled', Step.sync(() => {
-      const table = Render.render(1, 2, 0, 0, { styles: {}, attributes: {}, percentages: false });
+      const table = Render.render(1, 2, 0, 0, { styles: {}, attributes: {}});
 
       Assertions.assertStructure('Should be a table with default styles/attributes', ApproxStructure.build((s, str, _arr) => s.element('table', {
         styles: {
