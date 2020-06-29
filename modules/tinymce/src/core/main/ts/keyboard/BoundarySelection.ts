@@ -17,6 +17,7 @@ import * as WordSelection from '../selection/WordSelection';
 import * as BoundaryCaret from './BoundaryCaret';
 import * as BoundaryLocation from './BoundaryLocation';
 import * as InlineUtils from './InlineUtils';
+import * as Settings from '../api/Settings';
 
 const setCaretPosition = function (editor: Editor, pos: CaretPosition) {
   const rng = editor.dom.createRng();
@@ -26,10 +27,6 @@ const setCaretPosition = function (editor: Editor, pos: CaretPosition) {
 };
 
 type NodePredicate = (node: Node) => boolean;
-
-const isFeatureEnabled = function (editor: Editor) {
-  return editor.settings.inline_boundaries !== false;
-};
 
 const setSelected = function (state: boolean, elm: HTMLElement) {
   if (state) {
@@ -88,13 +85,13 @@ const renderInsideInlineCaret = function (isInlineTarget: NodePredicate, editor:
 
 const move = function (editor: Editor, caret: Cell<Text>, forward: boolean) {
   return function () {
-    return isFeatureEnabled(editor) ? findLocation(editor, caret, forward).isSome() : false;
+    return Settings.isInlineBoundariesEnabled(editor) ? findLocation(editor, caret, forward).isSome() : false;
   };
 };
 
 const moveWord = function (forward: boolean, editor: Editor, _caret: Cell<Text>) {
   return function () {
-    return isFeatureEnabled(editor) ? WordSelection.moveByWord(forward, editor) : false;
+    return Settings.isInlineBoundariesEnabled(editor) ? WordSelection.moveByWord(forward, editor) : false;
   };
 };
 
@@ -107,7 +104,7 @@ const setupSelectedState = function (editor: Editor): Cell<Text> {
     // as such we should ignore the first node change, as we don't want the editor to steal focus
     // during the initial load. If the content is changed afterwords then we are okay with it
     // stealing focus since it likely means the editor is being interacted with.
-    if (isFeatureEnabled(editor) && !(Env.browser.isIE() && e.initial)) {
+    if (Settings.isInlineBoundariesEnabled(editor) && !(Env.browser.isIE() && e.initial)) {
       toggleInlines(isInlineTarget, editor.dom, e.parents);
       safeRemoveCaretContainer(editor, caret);
       renderInsideInlineCaret(isInlineTarget, editor, caret, e.parents);

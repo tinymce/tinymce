@@ -10,6 +10,7 @@ import { Obj } from '@ephox/katamari';
 import { isReadOnly, preventReadOnlyEvents } from '../mode/Readonly';
 import DOMUtils from './dom/DOMUtils';
 import Editor from './Editor';
+import * as Settings from './Settings';
 import { EditorEventMap } from './EventTypes';
 import Observable from './util/Observable';
 import Tools from './util/Tools';
@@ -46,9 +47,11 @@ const getEventTarget = function (editor: Editor, eventName: string): Node {
   }
 
   // Bind to event root instead of body if it's defined
-  if (editor.settings.event_root) {
+  const eventRoot = Settings.getEventRoot(editor);
+
+  if (eventRoot) {
     if (!editor.eventRoot) {
-      editor.eventRoot = DOM.select(editor.settings.event_root)[0];
+      editor.eventRoot = DOM.select(eventRoot)[0];
     }
 
     return editor.eventRoot;
@@ -88,7 +91,7 @@ const bindEventDelegate = function (editor: Editor, eventName: string) {
 
   const eventRootElm = getEventTarget(editor, eventName);
 
-  if (editor.settings.event_root) {
+  if (Settings.getEventRoot(editor)) {
     if (!customEventRootDelegates) {
       customEventRootDelegates = {};
       editor.editorManager.on('removeEditor', function () {

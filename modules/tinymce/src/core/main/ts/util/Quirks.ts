@@ -30,8 +30,7 @@ interface Quirks {
 
 const Quirks = function (editor: Editor): Quirks {
   const each = Tools.each;
-  const BACKSPACE = VK.BACKSPACE, DELETE = VK.DELETE, dom = editor.dom, selection: Selection = editor.selection,
-    settings = editor.settings, parser = editor.parser;
+  const BACKSPACE = VK.BACKSPACE, DELETE = VK.DELETE, dom = editor.dom, selection: Selection = editor.selection, parser = editor.parser;
   const isGecko = Env.gecko, isIE = Env.ie, isWebKit = Env.webkit;
   const mceInternalUrlPrefix = 'data:text/mce-internal,';
   const mceInternalDataType = isIE ? 'Text' : 'URL';
@@ -455,19 +454,19 @@ const Quirks = function (editor: Editor): Quirks {
   /**
    * Sets various Gecko editing options on mouse down and before a execCommand to disable inline table editing that is broken etc.
    */
-  const setGeckoEditingOptions = function () {
-    const setOpts = function () {
+  const setGeckoEditingOptions = () => {
+    const setOpts = () => {
       refreshContentEditable();
 
       setEditorCommandState('StyleWithCSS', false);
       setEditorCommandState('enableInlineTableEditing', false);
 
-      if (!settings.object_resizing) {
+      if (!Settings.getObjectResizing(editor)) {
         setEditorCommandState('enableObjectResizing', false);
       }
     };
 
-    if (!settings.readonly) {
+    if (!Settings.isReadOnly(editor)) {
       editor.on('BeforeExecCommand mousedown', setOpts);
     }
   };
@@ -513,9 +512,9 @@ const Quirks = function (editor: Editor): Quirks {
    * WebKit will produce DIV elements here and there by default. But since TinyMCE uses paragraphs by
    * default we want to change that behavior.
    */
-  const setDefaultBlockType = function () {
-    if (settings.forced_root_block) {
-      editor.on('init', function () {
+  const setDefaultBlockType = () => {
+    if (Settings.getForcedRootBlock(editor)) {
+      editor.on('init', () => {
         setEditorCommandState('DefaultParagraphSeparator', Settings.getForcedRootBlock(editor));
       });
     }

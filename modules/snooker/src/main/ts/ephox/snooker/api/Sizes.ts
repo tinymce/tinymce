@@ -4,6 +4,7 @@ import { Warehouse } from '../model/Warehouse';
 import * as BarPositions from '../resize/BarPositions';
 import * as ColumnSizes from '../resize/ColumnSizes';
 import * as Redistribution from '../resize/Redistribution';
+import * as Sizes from '../resize/Sizes';
 import * as CellUtils from '../util/CellUtils';
 import { DetailExt, RowData } from './Structs';
 import { TableSize } from './TableSize';
@@ -62,6 +63,18 @@ const redistribute = function (table: Element, optWidth: Option<string>, optHeig
 
 };
 
+const isPercentSizing = Sizes.isPercentSizing;
+const isPixelSizing = Sizes.isPixelSizing;
+const isNoneSizing = Sizes.isNoneSizing;
+
+const getPercentTableWidth = Sizes.getPercentTableWidth;
+const getPercentTableHeight = Sizes.getPercentTableHeight;
+
 export {
+  getPercentTableWidth,
+  getPercentTableHeight,
+  isPercentSizing,
+  isPixelSizing,
+  isNoneSizing,
   redistribute
 };

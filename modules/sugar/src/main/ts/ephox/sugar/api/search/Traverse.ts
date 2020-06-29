@@ -59,7 +59,7 @@ const siblings = (element: Element<DomNode>) => {
   return parent(element).map(children).map(filterSelf).getOr([]);
 };
 
-const offsetParent = (element: Element<HTMLElement>) => Option.from(element.dom().offsetParent).map(Element.fromDom);
+const offsetParent = (element: Element<HTMLElement>) => Option.from(element.dom().offsetParent as HTMLElement).map(Element.fromDom);
 
 const prevSibling = (element: Element<DomNode>) => Option.from(element.dom().previousSibling).map(Element.fromDom);
 

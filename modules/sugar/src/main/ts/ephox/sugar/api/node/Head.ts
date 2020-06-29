@@ -1,5 +1,7 @@
+import { document, Document, HTMLHeadElement } from '@ephox/dom-globals';
 import Element from './Element';
-import { Document, HTMLHeadElement } from '@ephox/dom-globals';
+
+export const head = (): Element<HTMLHeadElement> => getHead(Element.fromDom(document));
 
 export const getHead = (doc: Element<Document>): Element<HTMLHeadElement> => {
   const b = doc.dom().head;

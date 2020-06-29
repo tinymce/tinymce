@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Obj } from '@ephox/katamari';
+import { Arr } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { SelectData } from './BespokeSelect';
 
@@ -53,8 +53,8 @@ const split = (rawFormats: string, delimiter: Delimiter): string[] => {
   }
 };
 
-const buildBasicSettingsDataset = (editor: Editor, settingName, defaults, delimiter: Delimiter): BasicSelectDataset => {
-  const rawFormats = Obj.get(editor.settings, settingName).getOr(defaults);
+const buildBasicSettingsDataset = (editor: Editor, settingName: string, defaults: string, delimiter: Delimiter): BasicSelectDataset => {
+  const rawFormats = editor.getParam(settingName, defaults, 'string');
   const data = process(split(rawFormats, delimiter));
   return {
     type: 'basic',

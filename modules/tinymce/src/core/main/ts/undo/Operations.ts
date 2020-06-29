@@ -12,6 +12,7 @@ import { Event } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import { UndoManager, Locks, Index, UndoLevel, UndoBookmark } from './UndoManagerTypes';
 import * as GetBookmark from '../bookmark/GetBookmark';
+import * as Settings from '../api/Settings';
 import { setTyping, endTyping } from './TypingState';
 import { isUnlocked } from './Locks';
 
@@ -22,7 +23,6 @@ export const beforeChange = (editor: Editor, locks: Locks, beforeBookmark: UndoB
 };
 
 export const addUndoLevel = (editor: Editor, undoManager: UndoManager, index: Index, locks: Locks, beforeBookmark: UndoBookmark, level?: UndoLevel, event?: Event) => {
-  const settings = editor.settings;
   const currentLevel = Levels.createFromEditor(editor);
 
   level = level || {} as UndoLevel;
@@ -50,8 +50,10 @@ export const addUndoLevel = (editor: Editor, undoManager: UndoManager, index: In
   }
 
   // Time to compress
-  if (settings.custom_undo_redo_levels) {
-    if (undoManager.data.length > settings.custom_undo_redo_levels) {
+  const customUndoRedoLevels = Settings.getCustomUndoRedoLevels(editor);
+
+  if (customUndoRedoLevels) {
+    if (undoManager.data.length > customUndoRedoLevels) {
       for (let i = 0; i < undoManager.data.length - 1; i++) {
         undoManager.data[i] = undoManager.data[i + 1];
       }

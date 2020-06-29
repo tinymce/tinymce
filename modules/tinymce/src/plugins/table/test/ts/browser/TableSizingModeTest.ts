@@ -4,7 +4,7 @@ import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.plugins.table.TableSizingTest', (success, failure) => {
+UnitTest.asynctest('browser.tinymce.plugins.table.TableSizingModeTest', (success, failure) => {
   Plugin();
   SilverTheme();
 

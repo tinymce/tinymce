@@ -1,5 +1,5 @@
-import { HTMLTableCellElement, HTMLTableElement } from '@ephox/dom-globals';
-import { Arr, Fun } from '@ephox/katamari';
+import { HTMLElement, HTMLTableElement } from '@ephox/dom-globals';
+import { Cell, Fun } from '@ephox/katamari';
 import { Element, Width } from '@ephox/sugar';
 import { Warehouse } from '../model/Warehouse';
 import { BarPositions, ColInfo } from '../resize/BarPositions';
@@ -14,13 +14,13 @@ export interface TableSize {
   readonly getCellDelta: (delta: number) => number;
   readonly singleColumnWidth: (w: number, delta: number) => number[];
   readonly minCellWidth: () => number;
-  readonly setElementWidth: (cell: Element<HTMLTableCellElement>, amount: number) => void;
-  readonly setTableWidth: (table: Element<HTMLTableElement>, newWidths: number[], delta: number) => void;
+  readonly setElementWidth: (element: Element<HTMLElement>, width: number) => void;
+  readonly adjustTableWidth: (delta: number) => void;
   readonly label: string;
 }
 
-const noneSize = (element: Element<HTMLTableElement>): TableSize => {
-  const getWidth = () => Width.get(element);
+const noneSize = (table: Element<HTMLTableElement>): TableSize => {
+  const getWidth = () => Width.get(table);
   const zero = Fun.constant(0);
 
   // Note: The 3 delta functions below return 0 to signify a change shouldn't be made
@@ -33,56 +33,64 @@ const noneSize = (element: Element<HTMLTableElement>): TableSize => {
     singleColumnWidth: Fun.constant([ 0 ]),
     minCellWidth: zero,
     setElementWidth: Fun.noop,
-    setTableWidth: Fun.noop,
+    adjustTableWidth: Fun.noop,
     label: 'none'
   };
 };
 
-const percentageSize = (width: string, element: Element<HTMLTableElement>): TableSize => {
-  const floatWidth = parseFloat(width);
-  const pixelWidth = Width.get(element);
-  const getCellDelta = (delta: number) => delta / pixelWidth * 100;
+const percentageSize = (initialWidth: string, table: Element<HTMLTableElement>): TableSize => {
+  const floatWidth = Cell(parseFloat(initialWidth));
+  const pixelWidth = Cell(Width.get(table));
+  const getCellDelta = (delta: number) => delta / pixelWidth.get() * 100;
   // If we have one column in a percent based table, that column should be 100% of the width of the table.
   const singleColumnWidth = (w: number, _delta: number) => [ 100 - w ];
   // Get the width of a 10 pixel wide cell over the width of the table as a percentage
-  const minCellWidth = () => CellUtils.minWidth() / pixelWidth * 100;
-  const setTableWidth = (table: Element, _newWidths: number[], delta: number) => {
-    const ratio = delta / 100;
-    const change = ratio * floatWidth;
-    Sizes.setPercentageWidth(table, floatWidth + change);
+  const minCellWidth = () => CellUtils.minWidth() / pixelWidth.get() * 100;
+  const adjustTableWidth = (delta: number) => {
+    const currentWidth = floatWidth.get();
+    const change = delta / 100 * currentWidth;
+    const newWidth = currentWidth + change;
+    Sizes.setPercentageWidth(table, newWidth);
+    floatWidth.set(newWidth);
+    pixelWidth.set(Width.get(table));
   };
+
   return {
-    width: Fun.constant(floatWidth),
-    pixelWidth: Fun.constant(pixelWidth),
+    width: floatWidth.get,
+    pixelWidth: pixelWidth.get,
     getWidths: ColumnSizes.getPercentageWidths,
     getCellDelta,
     singleColumnWidth,
     minCellWidth,
     setElementWidth: Sizes.setPercentageWidth,
-    setTableWidth,
+    adjustTableWidth,
     label: 'percent'
   };
 };
 
-const pixelSize = (width: number): TableSize => {
+const pixelSize = (initialWidth: number, table: Element<HTMLTableElement>): TableSize => {
+  const width = Cell(initialWidth);
+  const getWidth = width.get;
   const getCellDelta = Fun.identity;
   const singleColumnWidth = (w: number, delta: number) => {
     const newNext = Math.max(CellUtils.minWidth(), w + delta);
     return [ newNext - w ];
   };
-  const setTableWidth = (table: Element, newWidths: number[], _delta: number) => {
-    const total = Arr.foldr(newWidths, (b, a) => b + a, 0);
-    Sizes.setPixelWidth(table, total);
+  const adjustTableWidth = (delta: number) => {
+    const newWidth = getWidth() + delta;
+    Sizes.setPixelWidth(table, newWidth);
+    width.set(newWidth);
   };
+
   return {
-    width: Fun.constant(width),
-    pixelWidth: Fun.constant(width),
+    width: getWidth,
+    pixelWidth: getWidth,
     getWidths: ColumnSizes.getPixelWidths,
     getCellDelta,
     singleColumnWidth,
     minCellWidth: CellUtils.minWidth,
     setElementWidth: Sizes.setPixelWidth,
-    setTableWidth,
+    adjustTableWidth,
     label: 'pixel'
   };
 };
@@ -95,19 +103,20 @@ const chooseSize = (element: Element<HTMLTableElement>, width: string) => {
   const pixelMatch = Sizes.pixelBasedSizeRegex().exec(width);
   if (pixelMatch !== null) {
     const intWidth = parseInt(pixelMatch[1], 10);
-    return pixelSize(intWidth);
+    return pixelSize(intWidth, element);
   }
   const fallbackWidth = Width.get(element);
-  return pixelSize(fallbackWidth);
+  return pixelSize(fallbackWidth, element);
 };
 
-const getTableSize = (element: Element<HTMLTableElement>) => {
-  const width = Sizes.getRawWidth(element);
+const getTableSize = (table: Element<HTMLTableElement>) => {
+  const width = Sizes.getRawWidth(table);
   return width.fold(
-    () => noneSize(element),
-    (w) => chooseSize(element, w)
+    () => noneSize(table),
+    (w) => chooseSize(table, w)
   );
 };
+
 
 export const TableSize = {
   getTableSize,
