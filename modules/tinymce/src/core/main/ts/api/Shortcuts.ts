@@ -17,10 +17,10 @@ import Tools from './util/Tools';
  * @example
  * editor.shortcuts.add('ctrl+a', "description of the shortcut", function() {});
  * editor.shortcuts.add('ctrl+alt+a', "description of the shortcut", function() {});
- * editor.shortcuts.add('meta+a', "description of the shortcut", function() {});
  * // "meta" maps to Command on Mac and Ctrl on PC
- * editor.shortcuts.add('access+a', "description of the shortcut", function() {});
+ * editor.shortcuts.add('meta+a', "description of the shortcut", function() {});
  * // "access" maps to Control+Option on Mac and shift+alt on PC
+ * editor.shortcuts.add('access+a', "description of the shortcut", function() {});
  *
  * editor.shortcuts.add(
  *  'meta+access+c', 'Opens the code editor dialog.', function () {

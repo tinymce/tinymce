@@ -543,10 +543,10 @@ class Editor implements EditorObservable {
    * @example
    * editor.addShortcut('ctrl+a', "description of the shortcut", function() {});
    * editor.addShortcut('ctrl+alt+a', "description of the shortcut", function() {});
-   * editor.addShortcut('meta+a', "description of the shortcut", function() {});
    * // "meta" maps to Command on Mac and Ctrl on PC
-   * editor.addShortcut('access+a', "description of the shortcut", function() {});
+   * editor.addShortcut('meta+a', "description of the shortcut", function() {});
    * // "access" maps to Control+Option on Mac and shift+alt on PC
+   * editor.addShortcut('access+a', "description of the shortcut", function() {});
    *
    * editor.addShortcut(
    *  'meta+access+c', 'Opens the code editor dialog.', function () {
