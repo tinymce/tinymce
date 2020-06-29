@@ -17,7 +17,7 @@ Version 5.4.0 (TBD)
     Changed stylesheet loading, so that UI skin stylesheets can load in a ShadowRoot if required #TINY-6089
     Changed the DOM location of menus so that they display correctly when the editor is in a ShadowRoot #TINY-6093
     Changed the table plugin to correctly detect all valid header row structures #TINY-6007
-    Fixed tables with no defined width not being converted to a `fixed` width table when modifying the table #TINY-6051
+    Fixed tables with no defined width being converted to a `fixed` width table when modifying the table #TINY-6051
     Fixed the `autosave` `isEmpty` API incorrectly detecting non-empty content as empty #TINY-5953
     Fixed table `Paste row after` and `Paste row before` menu items not disabled when nothing was available to paste #TINY-6006
     Fixed a selection performance issue with large tables on Microsoft Internet Explorer and Edge #TINY-6057
