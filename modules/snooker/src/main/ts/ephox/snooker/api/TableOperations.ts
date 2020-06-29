@@ -13,7 +13,6 @@ import { Generators, GeneratorsMerging, GeneratorsModification, GeneratorsTransf
 import * as Structs from './Structs';
 import * as TableContent from './TableContent';
 import * as TableLookup from './TableLookup';
-import { console } from '@ephox/dom-globals';
 
 export interface TableOperationResult {
   readonly grid: () => Structs.RowCells[];
@@ -258,27 +257,28 @@ const opPasteRowsAfter = function (grid: Structs.RowCells[], pasteDetails: Extra
   return outcome(mergedGrid, cursor);
 };
 
-const opGetColumnType = function (table: Element, target: TargetSelection): string {
-  const list = DetailsList.fromTable(table);
-  const house = Warehouse.generate(list);
+const opGetColumnType = (table: Element, target: TargetSelection): string => {
+  const house = Warehouse.fromTable(table);
   const details = onCells(house, target);
   return details.bind((selectedCells): Option<string> => {
-    console.log(selectedCells);
     const lastSelectedCell = selectedCells[selectedCells.length - 1];
     const minColRange = selectedCells[0].column();
     const maxColRange = lastSelectedCell.column() + lastSelectedCell.colspan();
     const selectedColumnCells = Arr.flatten(Arr.map(house.all, (row) =>
       Arr.filter(row.cells(), (cell) => cell.column() >= minColRange && cell.column() < maxColRange)));
-
-    const numHeaderCells = Arr.filter(selectedColumnCells, (cell) => Node.name(cell.element()) === 'th').length;
-    if (numHeaderCells === 0) {
-      return Option.some('td');
-    } else if (numHeaderCells === selectedColumnCells.length) {
-      return Option.some('th');
-    } else {
-      return Option.none();
-    }
+    return getCellsType(selectedColumnCells, (cell) => Node.name(cell.element()) === 'th');
   }).getOr('');
+};
+
+export const getCellsType = <T>(cells: T[], headerPred: (x: T) => boolean): Option<string> => {
+  const headerCells = Arr.filter(cells, headerPred);
+  if (headerCells.length === 0) {
+    return Option.some('td');
+  } else if (headerCells.length === cells.length) {
+    return Option.some('th');
+  } else {
+    return Option.none();
+  }
 };
 
 // Only column modifications force a resizing. Everything else just tries to preserve the table as is.

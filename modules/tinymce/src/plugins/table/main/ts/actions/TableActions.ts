@@ -151,21 +151,8 @@ export const TableActions = (editor: Editor, lazyWire: () => ResizeWire): TableA
     }
   };
 
-  const getTableCellType = (editor: Editor) => {
-    const cells = getCellsFromSelection(editor);
-    if (cells.length > 0) {
-      const headerCells = Arr.filter(cells, (cell) => Util.getNodeName(cell) === 'th');
-      if (cells.length === headerCells.length) {
-        return 'th';
-      } else if (headerCells.length === 0) {
-        return 'td';
-      } else {
-        return '';
-      }
-    } else {
-      return '';
-    }
-  };
+  const getTableCellType = (editor: Editor) =>
+    TableOperations.getCellsType(getCellsFromSelection(editor), (cell) => Util.getNodeName(cell) === 'th').getOr('');
 
   const getTableColType = TableOperations.getColumnType;
 

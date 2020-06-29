@@ -130,8 +130,8 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableSectionApiTest', (success
 </tbody>
 </table>`;
 
-  const cSwitchType = (startContent: string, expectedContent: string, command: string, type: string, selector = 'tr#one td') => 
-    Log.chain('TINY-6007', `Switch to ${type}, command = ${command}`, Chain.fromParent(Chain.identity, [
+  const cSwitchType = (startContent: string, expectedContent: string, command: string, type: string, selector = 'tr#one td') =>
+    Log.chain('TINY-6150', `Switch to ${type}, command = ${command}`, Chain.fromParent(Chain.identity, [
       ApiChains.cSetContent(startContent),
       Chain.op((editor: Editor) => {
         const row = UiFinder.findIn(Element.fromDom(editor.getBody()), selector).getOrDie();
@@ -142,7 +142,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableSectionApiTest', (success
     ]));
 
   const sSwitchTypeAndConfig = (tableHeaderType: string, startContent: string, expectedContent: string, command: string, type: string, selector = 'tr#one td') =>
-    Log.chainsAsStep('TINY-6007', `Switch to ${type}, command = ${command}, table_header_type = ${tableHeaderType}`, [
+    Log.chainsAsStep('TINY-6150', `Switch to ${type}, command = ${command}, table_header_type = ${tableHeaderType}`, [
       McEditor.cFromSettings({
         plugins: 'table',
         theme: 'silver',
@@ -153,15 +153,15 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableSectionApiTest', (success
       McEditor.cRemove
     ]);
 
-  const cGetType = (content: string, command: string, expected: string, selector = 'tr#one td') => 
-    Log.chain('TINY-6007', `Get type of ${selector} using ${command}`, Chain.fromParent(Chain.identity, [
+  const cGetType = (content: string, command: string, expected: string, selector = 'tr#one td') =>
+    Log.chain('TINY-6150', `Get type of ${selector} using ${command}`, Chain.fromParent(Chain.identity, [
       ApiChains.cSetContent(content),
       Chain.op((editor: Editor) => {
         const row = UiFinder.findIn(Element.fromDom(editor.getBody()), selector).getOrDie();
         editor.selection.select(row.dom());
         const value = editor.queryCommandValue(command);
         Assert.eq(`Assert query value is ${expected}`, expected, value);
-      }),
+      })
     ]));
 
   // Note: cases double up with SwitchTableSectionTest a lot, so not as in depth as that test for rows
