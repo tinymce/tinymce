@@ -96,7 +96,7 @@ export const getResizeHandler = function (editor: Editor): ResizeHandler {
 
       const tableHasPercentage = Sizes.isPercentSizing(table);
       if (tableHasPercentage && isPixelsForced(editor)) {
-        enforcePixels(editor,table);
+        enforcePixels(editor, table);
       } else if (!tableHasPercentage && (isPercentagesForced(editor) || isResponsiveForced(editor))) {
         enforcePercentage(editor, table);
       }

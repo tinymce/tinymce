@@ -42,7 +42,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.command.TableSizingModeCommand
   };
 
   const generateTable = (mode: SizingMode, width: number, rows: number, cols: number) => {
-    const tableWidth = generateWidth(mode, width,1);
+    const tableWidth = generateWidth(mode, width, 1);
     const renderedRows = Arr.range(rows, (row) => '<tr>' + Arr.range(cols, (col) => {
       const cellWidth = generateWidth(mode, width, cols);
       const cellNum = (row * cols) + col + 1;
