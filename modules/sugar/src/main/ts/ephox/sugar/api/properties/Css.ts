@@ -153,12 +153,12 @@ const copy = (source: Element<DomNode>, target: Element<HTMLElement>): void => {
   }
 };
 
-/* NOTE:
- * do not rely on this return value.
- * It's here so the closure compiler doesn't optimise the property access away.
+/* NOTE: This function is here for the side effect it triggers.
+The value itself is not used.
+Be sure to not use the return value, and that it is not removed by a minifier.
  */
-const reflow = (e: Element<HTMLElement>): number =>
-  e.dom().offsetWidth;
+const reflow = (e: Element<HTMLElement>): void =>
+  e.dom().offsetWidth as unknown as void;
 
 const transferOne = (source: Element<DomNode>, destination: Element<DomNode>, style: string): void => {
   getRaw(source, style).each((value) => {
