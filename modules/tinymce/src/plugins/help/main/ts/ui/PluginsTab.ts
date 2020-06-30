@@ -15,6 +15,7 @@ import * as Settings from '../api/Settings';
 export interface PluginUrlType {
   key: string;
   name: string;
+  slug?: string;
 }
 
 const tab = (editor: Editor): Types.Dialog.TabApi => {
@@ -60,7 +61,8 @@ const tab = (editor: Editor): Types.Dialog.TabApi => {
     const getMetadata = editor.plugins[key].getMetadata;
     return typeof getMetadata === 'function' ? makeLink(getMetadata()) : key;
   }, function (x) {
-    return makeLink({ name: x.name, url: 'https://www.tiny.cloud/docs/plugins/' + x.key });
+    const urlSlug = x.slug || x.key;
+    return makeLink({ name: x.name, url: 'https://www.tiny.cloud/docs/plugins/' + urlSlug });
   });
 
   const getPluginKeys = (editor: Editor) => {
