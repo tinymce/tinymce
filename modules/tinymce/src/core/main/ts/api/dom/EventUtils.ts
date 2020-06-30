@@ -7,7 +7,6 @@
 
 import { document, HTMLElementEventMap, window } from '@ephox/dom-globals';
 import { Obj } from '@ephox/katamari';
-import Env from '../Env';
 
 export type EventUtilsCallback<T> = (event: EventUtilsEvent<T>) => void;
 
@@ -73,22 +72,6 @@ const removeEvent = function (target, name, callback, capture?) {
 };
 
 /**
- * Gets the event target based on shadow dom properties like path and composedPath.
- */
-const getTargetFromShadowDom = function (event, defaultTarget) {
-  // When target element is inside Shadow DOM we need to take first element from composedPath
-  // otherwise we'll get Shadow Root parent, not actual target element
-  if (event.composedPath) {
-    const composedPath = event.composedPath();
-    if (composedPath && composedPath.length > 0) {
-      return composedPath[0];
-    }
-  }
-
-  return defaultTarget;
-};
-
-/**
  * Normalizes a native event object or just adds the event specific methods on a custom event.
  */
 const fix = function <T extends any> (originalEvent: T, data?): EventUtilsEvent<T> {
@@ -108,9 +91,8 @@ const fix = function <T extends any> (originalEvent: T, data?): EventUtilsEvent<
     event.target = event.srcElement || document;
   }
 
-  // Experimental shadow dom support
-  if (Env.experimentalShadowDom) {
-    event.target = getTargetFromShadowDom(originalEvent, event.target);
+  if (event.composedPath) {
+    event.composedPath = () => originalEvent.composedPath();
   }
 
   // Calculate pageX/Y if missing and clientX/Y available
