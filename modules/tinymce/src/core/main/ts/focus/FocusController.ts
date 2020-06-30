@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { document, Element, FocusEvent, HTMLElement } from '@ephox/dom-globals';
+import { document, Element, FocusEvent } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
@@ -14,6 +14,7 @@ import FocusManager from '../api/FocusManager';
 import Delay from '../api/util/Delay';
 import * as SelectionRestore from '../selection/SelectionRestore';
 import * as Settings from '../api/Settings';
+import { ShadowDom } from '@ephox/sugar';
 
 let documentFocusInHandler;
 const DOM = DOMUtils.DOM;
@@ -95,14 +96,16 @@ const registerEvents = function (editorManager: EditorManager, e: { editor: Edit
     documentFocusInHandler = function (e: FocusEvent) {
       const activeEditor = editorManager.activeEditor;
 
-      const target = e.target as HTMLElement;
-
-      if (activeEditor && target.ownerDocument === document) {
-        // Fire a blur event if the element isn't a UI element
-        if (target !== document.body && !isUIElement(activeEditor, target) && editorManager.focusedEditor === activeEditor) {
-          activeEditor.fire('blur', { focusedEditor: null });
-          editorManager.focusedEditor = null;
-        }
+      if (activeEditor) {
+        ShadowDom.getOriginalEventTarget(e).each((target: Element) => {
+          if (target.ownerDocument === document) {
+            // Fire a blur event if the element isn't a UI element
+            if (target !== document.body && !isUIElement(activeEditor, target) && editorManager.focusedEditor === activeEditor) {
+              activeEditor.fire('blur', { focusedEditor: null });
+              editorManager.focusedEditor = null;
+            }
+          }
+        });
       }
     };
 
