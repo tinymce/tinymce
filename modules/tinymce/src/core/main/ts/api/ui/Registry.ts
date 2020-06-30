@@ -106,6 +106,9 @@ const registry = () => {
      * @param {String} name Unique name identifying the new icon.
      * @param {svgData} string The SVG data string the browser will use to render the SVG icon.
      * @return {void} void
+     * @example
+     * //To add a simple triangle icon:
+     * editor.ui.registry.addIcon('triangleUp', '<svg height="10" width="10"><path d="M5 0 L10 10 L0 10 Z" /></svg>' );
      */
     addIcon: bridge.addIcon,
 
