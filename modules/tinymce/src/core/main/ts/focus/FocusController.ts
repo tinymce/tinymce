@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { document, Element, FocusEvent } from '@ephox/dom-globals';
+import { document, Element as DomElement, Node as DomNode, FocusEvent } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
@@ -14,17 +14,17 @@ import FocusManager from '../api/FocusManager';
 import Delay from '../api/util/Delay';
 import * as SelectionRestore from '../selection/SelectionRestore';
 import * as Settings from '../api/Settings';
-import { ShadowDom } from '@ephox/sugar';
+import { Element, Focus, Node, ShadowDom } from '@ephox/sugar';
 
 let documentFocusInHandler;
 const DOM = DOMUtils.DOM;
 
-const isEditorUIElement = function (elm: Element) {
+const isEditorUIElement = function (elm: DomElement) {
   // Since this can be overridden by third party we need to use the API reference here
   return FocusManager.isEditorUIElement(elm);
 };
 
-const isEditorContentAreaElement = function (elm: Element) {
+const isEditorContentAreaElement = function (elm: DomElement) {
   const classList = elm.classList;
   if (classList !== undefined) {
     // tox-edit-area__iframe === iframe container element
@@ -35,7 +35,7 @@ const isEditorContentAreaElement = function (elm: Element) {
   }
 };
 
-const isUIElement = function (editor: Editor, elm: Element) {
+const isUIElement = function (editor: Editor, elm: DomNode) {
   const customSelector = Settings.getCustomUiSelector(editor);
   const parent = DOM.getParent(elm, function (elm) {
     return (
@@ -46,9 +46,11 @@ const isUIElement = function (editor: Editor, elm: Element) {
   return parent !== null;
 };
 
-const getActiveElement = function (): Element {
+const getActiveElement = function (editor: Editor): DomElement {
   try {
-    return document.activeElement;
+    const root = ShadowDom.getRootNode(Element.fromDom(editor.getElement()));
+    const active = Focus.active(root).getOrThunk(() => ShadowDom.getContentContainer(root));
+    return Node.isElement(active) ? active.dom() : document.body;
   } catch (ex) {
     // IE sometimes fails to get the activeElement when resizing table
     // TODO: Investigate this
@@ -83,7 +85,7 @@ const registerEvents = function (editorManager: EditorManager, e: { editor: Edit
       const focusedEditor = editorManager.focusedEditor;
 
       // Still the same editor the blur was outside any editor UI
-      if (!isUIElement(self, getActiveElement()) && focusedEditor === self) {
+      if (!isUIElement(self, getActiveElement(self)) && focusedEditor === self) {
         self.fire('blur', { focusedEditor: null });
         editorManager.focusedEditor = null;
       }
@@ -97,7 +99,7 @@ const registerEvents = function (editorManager: EditorManager, e: { editor: Edit
       const activeEditor = editorManager.activeEditor;
 
       if (activeEditor) {
-        ShadowDom.getOriginalEventTarget(e).each((target: Element) => {
+        ShadowDom.getOriginalEventTarget(e).each((target: DomElement) => {
           if (target.ownerDocument === document) {
             // Fire a blur event if the element isn't a UI element
             if (target !== document.body && !isUIElement(activeEditor, target) && editorManager.focusedEditor === activeEditor) {
