@@ -1,3 +1,4 @@
 # List of packages to bump:
 # Format: [package_name]@[new_version]
 snooker@6.0.0
+darwin@4.1.0
