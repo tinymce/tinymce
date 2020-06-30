@@ -14,7 +14,7 @@ import FocusManager from '../api/FocusManager';
 import Delay from '../api/util/Delay';
 import * as SelectionRestore from '../selection/SelectionRestore';
 import * as Settings from '../api/Settings';
-import { Element, Focus, Node, ShadowDom } from '@ephox/sugar';
+import { Element, Focus, ShadowDom } from '@ephox/sugar';
 
 let documentFocusInHandler;
 const DOM = DOMUtils.DOM;
@@ -49,8 +49,10 @@ const isUIElement = function (editor: Editor, elm: DomNode) {
 const getActiveElement = function (editor: Editor): DomElement {
   try {
     const root = ShadowDom.getRootNode(Element.fromDom(editor.getElement()));
-    const active = Focus.active(root).getOrThunk(() => ShadowDom.getContentContainer(root));
-    return Node.isElement(active) ? active.dom() : document.body;
+    return Focus.active(root).fold(
+      () => document.body,
+      (x) => x.dom()
+    );
   } catch (ex) {
     // IE sometimes fails to get the activeElement when resizing table
     // TODO: Investigate this
