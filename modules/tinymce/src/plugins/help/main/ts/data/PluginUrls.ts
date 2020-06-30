@@ -52,7 +52,7 @@ const urls = [
   { key: 'advcode', name: 'Advanced Code Editor*' },
   { key: 'formatpainter', name: 'Format Painter*' },
   { key: 'powerpaste', name: 'PowerPaste*' },
-  { key: '../tinydrive', name: 'Tiny Drive*' },
+  { key: 'drive', name: 'Tiny Drive*' },
   { key: 'tinymcespellchecker', name: 'Spell Checker Pro*' },
   { key: 'a11ychecker', name: 'Accessibility Checker*' },
   { key: 'linkchecker', name: 'Link Checker*' },
