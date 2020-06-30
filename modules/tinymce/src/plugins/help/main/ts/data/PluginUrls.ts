@@ -52,7 +52,7 @@ const urls = [
   { key: 'advcode', name: 'Advanced Code Editor*' },
   { key: 'formatpainter', name: 'Format Painter*' },
   { key: 'powerpaste', name: 'PowerPaste*' },
-  { key: 'tinydrive', name: 'Tiny Drive*' },
+  { key: 'drive', name: 'Tiny Drive*' },
   { key: 'tinymcespellchecker', name: 'Spell Checker Pro*' },
   { key: 'a11ychecker', name: 'Accessibility Checker*' },
   { key: 'linkchecker', name: 'Link Checker*' },
@@ -62,7 +62,7 @@ const urls = [
   { key: 'casechange', name: 'Case Change*' },
   { key: 'permanentpen', name: 'Permanent Pen*' },
   { key: 'pageembed', name: 'Page Embed*' },
-  { key: 'tinycomments', name: 'Tiny Comments*' },
+  { key: 'comments', name: 'Tiny Comments*' },
   { key: 'advtable', name: 'Advanced Tables*' },
   { key: 'autocorrect', name: 'Autocorrect*' }
 ];
