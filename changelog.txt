@@ -1,5 +1,6 @@
-Version 4.5.12 (2020-07-01)
+Version 4.5.12 (2020-07-03)
   Fixed so links with xlink:href attributes are filtered correctly to prevent XSS. #TINY-1626
+  Fixed the `visualchars` plugin converting HTML-like text to DOM elements in certain cases #TINY-4507
   Fixed HTML comments incorrectly being parsed in certain cases #TINY-4511
   Fixed a security issue related to CDATA sanitization during parsing #TINY-4669
 Version 4.5.11 (2019-05-16)
