@@ -108,7 +108,7 @@ const registry = () => {
      * @return {void} void
      * @example
      * //To add a simple triangle icon:
-     * editor.ui.registry.addIcon('triangleUp', '<svg height="10" width="10"><path d="M5 0 L10 10 L0 10 Z" /></svg>' );
+     * editor.ui.registry.addIcon('triangleUp', '<svg height="24" width="24"><path d="M12 0 L24 24 L0 24 Z" /></svg>' );
      */
     addIcon: bridge.addIcon,
 
