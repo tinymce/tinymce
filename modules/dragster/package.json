@@ -21,7 +21,8 @@
     "@ephox/dom-globals": "^1.1.2",
     "@ephox/katamari": "^6.1.1",
     "@ephox/porkbun": "^4.0.37",
-    "@ephox/sugar": "^6.1.1"
+    "@ephox/sugar": "^6.1.1",
+    "tslib": "^2.0.0"
   },
   "scripts": {
     "test": "bedrock-auto -b phantomjs -d src/test",

@@ -12,7 +12,7 @@
     "@ephox/dom-globals": "^1.1.2",
     "@ephox/katamari": "^6.1.1",
     "@ephox/sugar": "^6.1.1",
-    "tslib": "^1.9.3"
+    "tslib": "^2.0.0"
   },
   "author": "Ephox Corporation",
   "license": "Apache-2.0",

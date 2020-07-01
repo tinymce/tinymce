@@ -23,7 +23,8 @@
     "@ephox/katamari": "^6.1.1",
     "@ephox/porkbun": "^4.0.37",
     "@ephox/robin": "^7.0.55",
-    "@ephox/sugar": "^6.1.1"
+    "@ephox/sugar": "^6.1.1",
+    "tslib": "^2.0.0"
   },
   "author": "Ephox Corporation",
   "license": "Apache-2.0",
