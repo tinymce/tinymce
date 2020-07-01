@@ -125,7 +125,7 @@ class EditorCommands {
    *
    * @method queryCommandState
    * @param {String} command Command to check the state of.
-   * @return {Boolean/Number} true/false if the selected contents is bold or not, -1 if it's not found.
+   * @return {Boolean} true/false if the selected contents is bold or not.
    */
   public queryCommandState(command: string): boolean {
     let func;
