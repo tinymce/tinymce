@@ -20,7 +20,7 @@ const isLeftButtonPressed = (raw: MouseEvent) => {
 };
 
 // Not 100% sure whether this works, so use with caution
-const isRealClick = (raw: any) =>
+const isRealClick = (raw: any): boolean =>
   // Firefox non-standard property
   // https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent#mozInputSource
   (raw.mozInputSource === 6 || raw.mozInputSource === 0) ? false

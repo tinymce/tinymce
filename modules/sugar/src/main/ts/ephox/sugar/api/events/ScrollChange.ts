@@ -3,12 +3,13 @@ import Element from '../node/Element';
 import { Position } from '../view/Position';
 import * as Scroll from '../view/Scroll';
 import * as DomEvent from './DomEvent';
+import { EventUnbinder } from './Types';
 
 /* Some browsers (Firefox) fire a scroll event even if the values for scroll don't
  * change. This acts as an intermediary between the scroll event, and the value for scroll
  * changing
  */
-const bind = (doc: Element<Document>, handler: (pos: Position) => void) => {
+const bind = (doc: Element<Document>, handler: (pos: Position) => void): EventUnbinder => {
   let lastScroll = Scroll.get(doc);
   const scrollBinder = DomEvent.bind(doc, 'scroll', (_event) => {
     const scroll = Scroll.get(doc);

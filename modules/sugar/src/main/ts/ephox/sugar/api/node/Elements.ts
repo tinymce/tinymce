@@ -1,4 +1,4 @@
-import { document, Document, Node, Window } from '@ephox/dom-globals';
+import { document, Document, HTMLElement, Node, Text, Window } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import * as Traverse from '../search/Traverse';
 import Element from './Element';
@@ -12,10 +12,13 @@ const fromHtml = <T extends Node[]> (html: string, scope?: Document | null): Ele
   return Traverse.children(Element.fromDom(div)) as unknown as ElementTuple<T>;
 };
 
-const fromTags = (tags: string[], scope?: Document | null) => Arr.map(tags, (x) => Element.fromTag(x, scope));
+const fromTags = (tags: string[], scope?: Document | null): Element<HTMLElement>[] =>
+  Arr.map(tags, (x) => Element.fromTag(x, scope));
 
-const fromText = (texts: string[], scope?: Document | null) => Arr.map(texts, (x) => Element.fromText(x, scope));
+const fromText = (texts: string[], scope?: Document | null): Element<Text>[] =>
+  Arr.map(texts, (x) => Element.fromText(x, scope));
 
-const fromDom = <T extends (Node | Window)>(nodes: ArrayLike<T>): Element<T>[] => Arr.map(nodes, Element.fromDom);
+const fromDom = <T extends (Node | Window)>(nodes: ArrayLike<T>): Element<T>[] =>
+  Arr.map(nodes, Element.fromDom);
 
 export { fromHtml, fromTags, fromText, fromDom };

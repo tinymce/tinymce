@@ -27,7 +27,7 @@ const elems: Monitored[] = [];
 
 const findElem = (element: Element<DomNode>) => Arr.findIndex(elems, (el) => Compare.eq(el.element, element)).getOr(-1);
 
-const bind = (element: Element<HTMLElement>, handler: () => void) => {
+const bind = (element: Element<HTMLElement>, handler: () => void): void => {
   const el = Arr.find(elems, (elm) => Compare.eq(elm.element, element)).getOrThunk(() => {
     const newEl = elem(element);
     elems.push(newEl);

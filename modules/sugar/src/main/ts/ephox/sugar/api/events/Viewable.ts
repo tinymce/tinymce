@@ -14,13 +14,13 @@ declare const window: any;
  * It's a bit harder to manage, though, because visibility is a one-shot listener.
  */
 
-const poll = (element: Element<HTMLElement>, f: () => void) => {
+const poll = (element: Element<HTMLElement>, f: () => void): () => void => {
   const poller = setInterval(f, 500);
 
   return () => clearInterval(poller);
 };
 
-const mutate = (element: Element<HTMLElement>, f: () => void) => {
+const mutate = (element: Element<HTMLElement>, f: () => void): () => void => {
   const observer: MutationObserver = new window.MutationObserver(f);
 
   const unbindMutate = () => observer.disconnect();

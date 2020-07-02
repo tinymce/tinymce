@@ -30,7 +30,8 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@ephox/dom-globals": "^1.1.2",
-    "@ephox/katamari": "^6.1.1"
+    "@ephox/katamari": "^6.1.1",
+    "tslib": "^2.0.0"
   },
   "main": "./lib/main/ts/ephox/sand/api/Main.js",
   "module": "./lib/main/ts/ephox/sand/api/Main.js",

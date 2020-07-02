@@ -7,7 +7,8 @@ import * as Direction from './Direction';
 
 type Alignment = 'left' | 'right' | 'justify' | 'center' | 'match-parent';
 
-const normal = (value: Alignment) => (_element: Element<DomElement>) => value;
+const normal = (value: Alignment) => (_element: Element<DomElement>): Alignment =>
+  value;
 
 const lookups: Record<string, (element: Element<DomElement>) => string> = {
   'start': Direction.onDirection<Alignment>('left', 'right'),
@@ -24,7 +25,7 @@ const getAlignment = (element: Element<DomElement>, property: string): string =>
     .getOr(raw);
 };
 
-const hasAlignment = (element: Element<DomElement> | Element<Text>, property: string, value: string) =>
+const hasAlignment = (element: Element<DomElement> | Element<Text>, property: string, value: string): boolean =>
   Node.isText(element) ? false : getAlignment(element, property) === value;
 
 export {

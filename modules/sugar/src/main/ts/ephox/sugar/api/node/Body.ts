@@ -23,7 +23,8 @@ const inBody = (element: Element<DomNode>): boolean => {
   );
 };
 
-const body = () => getBody(Element.fromDom(document));
+const body = (): Element<HTMLElement> =>
+  getBody(Element.fromDom(document));
 
 const getBody = (doc: Element<Document>): Element<HTMLElement> => {
   const b = doc.dom().body;

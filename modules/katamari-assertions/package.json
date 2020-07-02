@@ -20,7 +20,7 @@
     "@ephox/dom-globals": "^1.1.2",
     "@ephox/katamari": "^6.1.1",
     "@ephox/wrap-promise-polyfill": "^2.2.0",
-    "tslib": "^1.9.3"
+    "tslib": "^2.0.0"
   },
   "files": [
     "lib/main",
