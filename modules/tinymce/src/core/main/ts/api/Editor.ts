@@ -502,7 +502,7 @@ class Editor implements EditorObservable {
    * @param {addQueryStateHandlerCallback} callback Function to execute when the command state retrieval occurs.
    * @param {Object} scope Optional scope to execute the function in.
    */
-  public addQueryStateHandler(name: string, callback: () => void, scope?: {}) {
+  public addQueryStateHandler(name: string, callback: () => boolean, scope?: {}) {
     /**
      * Callback function that gets called when a queryCommandState is executed.
      *
