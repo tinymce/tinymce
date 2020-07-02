@@ -28,7 +28,8 @@
     "@ephox/katamari": "^6.1.1",
     "@ephox/sand": "^3.1.10",
     "@ephox/sugar": "^6.1.1",
-    "@ephox/wrap-jsverify": "^2.0.1"
+    "@ephox/wrap-jsverify": "^2.0.1",
+    "tslib": "^2.0.0"
   },
   "main": "./lib/main/ts/ephox/mcagar/api/Main.js",
   "module": "./lib/main/ts/ephox/mcagar/api/Main.js",
