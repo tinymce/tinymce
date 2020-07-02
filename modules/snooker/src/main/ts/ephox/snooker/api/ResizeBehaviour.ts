@@ -4,6 +4,7 @@ type TableResizer = (delta: number) => void;
 
 export interface ResizeBehaviour {
   readonly resizeTable: (resizer: TableResizer, delta: number, isLastColumn: boolean) => void;
+  readonly clampTableDelta: (sizes: number[], index: number, delta: number, minCellSize: number, isLastColumn: boolean) => number;
   readonly calcLeftEdgeDeltas: (input: number[], index: number, nextIndex: number, delta: number, minCellSize: number, relativeSizing: boolean) => number[];
   readonly calcMiddleDeltas: (input: number[], previousIndex: number, index: number, nextIndex: number, delta: number, minCellSize: number, relativeSizing: boolean) => number[];
   readonly calcRightEdgeDeltas: (input: number[], previousIndex: number, index: number, delta: number, minCellSize: number, relativeSizing: boolean) => number[];
@@ -14,6 +15,10 @@ const zero = (array: number[]) => Arr.map(array, Fun.constant(0));
 const surround = (input: number[], startIndex: number, endIndex: number, results: number[], f: (array: number[]) => number[]) =>
   f(input.slice(0, startIndex)).concat(results).concat(f(input.slice(endIndex)));
 
+const clampDelta = (sizes: number[], index: number, delta: number, minCellSize: number) => {
+  const newSize = Math.max(minCellSize, sizes[index] + delta);
+  return newSize - sizes[index];
+};
 
 // Preserve the size of the columns/rows and adjust the table size
 const resizeTable = (): ResizeBehaviour => {
@@ -67,6 +72,7 @@ const resizeTable = (): ResizeBehaviour => {
 
   return {
     resizeTable,
+    clampTableDelta: clampDelta,
     calcLeftEdgeDeltas,
     calcMiddleDeltas,
     calcRightEdgeDeltas
@@ -105,8 +111,23 @@ const preserveTable = (): ResizeBehaviour => {
     }
   };
 
+  const clampTableDelta = (sizes: number[], index: number, delta: number, minCellSize: number, isLastColumn: boolean) => {
+    // Don't clamp the last resizer
+    if (isLastColumn) {
+      if (delta >= 0) {
+        return delta;
+      } else {
+        const maxDelta = Arr.foldl(sizes, (a, b) => a + b - minCellSize, 0);
+        return Math.max(-maxDelta, delta);
+      }
+    } else {
+      return clampDelta(sizes, index, delta, minCellSize);
+    }
+  };
+
   return {
     resizeTable,
+    clampTableDelta,
     calcLeftEdgeDeltas,
     calcMiddleDeltas,
     calcRightEdgeDeltas

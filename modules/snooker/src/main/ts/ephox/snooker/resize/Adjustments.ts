@@ -13,19 +13,15 @@ import * as Sizes from './Sizes';
 
 const sumUp = (newSize: number[]) => Arr.foldr(newSize, (b, a) => b + a, 0);
 
-const clampTableDelta = (sizes: number[], index: number, delta: number, minCellSize: number) => {
-  const newSize = Math.max(minCellSize, sizes[index] + delta);
-  return newSize - sizes[index];
-};
-
 const adjustWidth = (table: Element, delta: number, index: number, direction: BarPositions<ColInfo>, resizing: ResizeBehaviour, tableSize: TableSize) => {
   const warehouse = Warehouse.fromTable(table);
+  const step = tableSize.getCellDelta(delta);
   const widths = tableSize.getWidths(warehouse, direction, tableSize);
-  const step = clampTableDelta(widths, index, tableSize.getCellDelta(delta), tableSize.minCellWidth());
   const isLastColumn = index === warehouse.grid.columns() - 1;
+  const clampedStep = resizing.clampTableDelta(widths, index, step, tableSize.minCellWidth(), isLastColumn);
 
   // Calculate all of the new widths for columns
-  const deltas = Deltas.determine(widths, index, step, tableSize, resizing);
+  const deltas = Deltas.determine(widths, index, clampedStep, tableSize, resizing);
   const newWidths = Arr.map(deltas, (dx, i) => dx + widths[i]);
 
   // Set the width of each cell based on the column widths
@@ -34,7 +30,7 @@ const adjustWidth = (table: Element, delta: number, index: number, direction: Ba
     tableSize.setElementWidth(cell.element, cell.width);
   });
 
-  resizing.resizeTable(tableSize.adjustTableWidth, step, isLastColumn);
+  resizing.resizeTable(tableSize.adjustTableWidth, clampedStep, isLastColumn);
 };
 
 const adjustHeight = (table: Element, delta: number, index: number, direction: BarPositions<RowInfo>) => {
