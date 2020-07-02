@@ -6,11 +6,14 @@ import * as Node from './Node';
 
 const api = NodeValue(Node.isText, 'text');
 
-const get = (element: Element<Text>) => api.get(element);
+const get = (element: Element<Text>): string =>
+  api.get(element);
 
-const getOption = (element: Element<DomNode>): Option<string> => api.getOption(element);
+const getOption = (element: Element<DomNode>): Option<string> =>
+  api.getOption(element);
 
-const set = (element: Element<Text>, value: string) => api.set(element, value);
+const set = (element: Element<Text>, value: string): void =>
+  api.set(element, value);
 
 export {
   get,

@@ -6,11 +6,14 @@ import * as Node from './Node';
 
 const api = NodeValue(Node.isComment, 'comment');
 
-const get = (element: Element<Comment>) => api.get(element);
+const get = (element: Element<Comment>): string =>
+  api.get(element);
 
-const getOption = (element: Element<DomNode>): Option<string> => api.getOption(element);
+const getOption = (element: Element<DomNode>): Option<string> =>
+  api.getOption(element);
 
-const set = (element: Element<Comment>, value: string) => api.set(element, value);
+const set = (element: Element<Comment>, value: string): void =>
+  api.set(element, value);
 
 export {
   get,

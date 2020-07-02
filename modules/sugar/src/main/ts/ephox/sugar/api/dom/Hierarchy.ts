@@ -19,7 +19,7 @@ const up = (descendant: Element<DomNode>, stopper: (e: Element<DomNode>) => bool
   }
 };
 
-const path = (ancestor: Element<DomNode>, descendant: Element<DomNode>) => {
+const path = (ancestor: Element<DomNode>, descendant: Element<DomNode>): Option<number[]> => {
   const stopper = Fun.curry(Compare.eq, ancestor);
   return Compare.eq(ancestor, descendant) ? Option.some<number[]>([]) : up(descendant, stopper);
 };

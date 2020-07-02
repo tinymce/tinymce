@@ -1,8 +1,8 @@
-import { document, Document, Node as DomNode } from '@ephox/dom-globals';
+import { document, Document, DocumentFragment, Node as DomNode } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import Element from './Element';
 
-const fromElements = (elements: Element<DomNode>[], scope?: Document | null) => {
+const fromElements = (elements: Element<DomNode>[], scope?: Document | null): Element<DocumentFragment> => {
   const doc = scope || document;
   const fragment = doc.createDocumentFragment();
   Arr.each(elements, (element) => {
