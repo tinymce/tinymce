@@ -428,7 +428,47 @@ UnitTest.asynctest('browser.tinymce.core.EditorTest', (success, failure) => {
 
     input.parentNode.removeChild(input);
   }));
-  });
+
+  const sHasPlugin = (editor: Editor) => {
+    const sCheckWithoutManager = (title: string, plugins: string, plugin: string, expected: boolean) => Step.sync(() => {
+      editor.settings.plugins = plugins;
+      Assert.eq(title, expected, editor.hasPlugin(plugin));
+    });
+
+    const sCheckWithManager = (title: string, plugins: string, plugin: string, addToManager: boolean, expected: boolean) => Step.sync(() => {
+      if (addToManager) {
+        PluginManager.add('ParticularPlugin', () => {});
+      }
+
+      editor.settings.plugins = plugins;
+      Assert.eq(title, editor.hasPlugin(plugin, true), expected);
+
+      if (addToManager) {
+        PluginManager.remove('ParticularPlugin');
+      }
+    });
+
+    return Log.stepsAsStep('TINY-766', 'hasPlugin',
+      [
+        Log.stepsAsStep('TINY-766', 'Checking without requiring a plugin to be loaded', [
+          sCheckWithoutManager('Plugin does not exist', 'Plugin Is Not Here', 'ParticularPlugin', false),
+          sCheckWithoutManager('Plugin does exist with spaces', 'Has ParticularPlugin In List', 'ParticularPlugin', true),
+          sCheckWithoutManager('Plugin does exist with commas', 'Has,ParticularPlugin,In,List', 'ParticularPlugin', true),
+          sCheckWithoutManager('Plugin does exist with spaces and commas', 'Has, ParticularPlugin, In, List', 'ParticularPlugin', true),
+          sCheckWithoutManager('Plugin does not patch to OtherPlugin', 'Has OtherPlugin In List', 'Plugin', false)
+        ]),
+
+        Log.stepsAsStep('TINY-766', 'Checking while requiring a plugin to be loaded', [
+          sCheckWithManager('Plugin does not exist', 'Plugin Is Not Here', 'ParticularPlugin', true, false),
+          sCheckWithManager('Plugin does exist with spaces', 'Has ParticularPlugin In List', 'ParticularPlugin', true, true),
+          sCheckWithManager('Plugin does exist with commas', 'Has,ParticularPlugin,In,List', 'ParticularPlugin', true, true),
+          sCheckWithManager('Plugin does exist with spaces and commas', 'Has, ParticularPlugin, In, List', 'ParticularPlugin', true, true),
+          sCheckWithManager('Plugin does not patch to OtherPlugin', 'Has OtherPlugin In List', 'Plugin', true, false),
+          sCheckWithManager('Plugin which has not loaded does not return true', 'Has ParticularPlugin In List', 'ParticularPlugin', false, false)
+        ])
+      ]
+    );
+  };
 
   TinyLoader.setup((editor, onSuccess, onFailure) => {
     Pipeline.async({},
@@ -457,7 +497,8 @@ UnitTest.asynctest('browser.tinymce.core.EditorTest', (success, failure) => {
         sTreatSomeParagraphsAsEmptyContents(editor),
         sKamerWordBoundaries(editor),
         sPreserveWhitespacePreElements(editor),
-        sHasFocus(editor)
+        sHasFocus(editor),
+        sHasPlugin(editor)
       ],
       onSuccess, onFailure);
   }, {
