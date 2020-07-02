@@ -1,5 +1,6 @@
 Version 5.5.0 (TBD)
     Added ability to load TinyMCE in inline mode within a ShadowRoot #TINY-6128
+    Fixed the `media` plugin not saving the alternative source url in some situations #TINY-4113
 
 Version 5.4.0 (2020-06-30)
     Added keyboard navigation support to menus and toolbars when the editor is in a ShadowRoot #TINY-6152

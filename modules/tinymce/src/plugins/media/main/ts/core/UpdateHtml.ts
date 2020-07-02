@@ -161,7 +161,7 @@ const updateHtml = (html: string, data: Partial<MediaData>, updateAll?: boolean)
               const attrs: any = [];
               attrs.map = {};
 
-              if (sourceCount < index) {
+              if (sourceCount <= index) {
                 setAttributes(attrs, {
                   src: data[sources[index]],
                   type: data[sources[index] + 'mime']
