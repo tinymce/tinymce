@@ -57,6 +57,14 @@ define("tinymce/html/SaxParser", [
 ], function(Schema, Entities, Tools) {
 	var each = Tools.each;
 
+	function trimComments(text) {
+		var sanitizedText = text;
+		while (/<!--|--!?>/g.test(sanitizedText)) {
+			sanitizedText = sanitizedText.replace(/<!--|--!?>/g, '');
+		}
+		return sanitizedText;
+	}
+
 	/**
 	 * Returns the index of the end tag for a specific start tag. This can be
 	 * used to skip all children of a parent element from being processed.
@@ -137,7 +145,8 @@ define("tinymce/html/SaxParser", [
 			var validate, elementRule, isValidElement, attr, attribsValue, validAttributesMap, validAttributePatterns;
 			var attributesRequired, attributesDefault, attributesForced;
 			var anyAttributesRequired, selfClosing, tokenRegExp, attrRegExp, specialElements, attrValue, idCount = 0;
-			var decode = Entities.decode, fixSelfClosing, filteredUrlAttrs = Tools.makeMap('src,href,data,background,formaction,poster');
+			var decode = Entities.decode, fixSelfClosing;
+			var filteredUrlAttrs = Tools.makeMap('src,href,data,background,formaction,poster,xlink:href');
 			var scriptUriRegExp = /((java|vb)script|mhtml):/i, dataUriRegExp = /^data:/i;
 
 			function processEndTag(name) {
@@ -235,7 +244,7 @@ define("tinymce/html/SaxParser", [
 
 			// Precompile RegExps and map objects
 			tokenRegExp = new RegExp('<(?:' +
-				'(?:!--([\\w\\W]*?)-->)|' + // Comment
+				'(?:!--([\\w\\W]*?)--!?>)|' + // Comment
 				'(?:!\\[CDATA\\[([\\w\\W]*?)\\]\\]>)|' + // CDATA
 				'(?:!DOCTYPE([\\w\\W]*?)>)|' + // DOCTYPE
 				'(?:\\?([^\\s\\/<>]+) ?([\\w\\W]*?)[?/]>)|' + // PI
@@ -442,7 +451,7 @@ define("tinymce/html/SaxParser", [
 
 					self.comment(value);
 				} else if ((value = matches[2])) { // CDATA
-					self.cdata(value);
+					self.cdata(trimComments(value));
 				} else if ((value = matches[3])) { // DOCTYPE
 					self.doctype(value);
 				} else if ((value = matches[4])) { // PI

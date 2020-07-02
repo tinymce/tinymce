@@ -68,7 +68,7 @@ tinymce.PluginManager.add('visualchars', function(editor) {
 			}, 'childNodes');
 
 			for (i = 0; i < nodeList.length; i++) {
-				nodeValue = nodeList[i].nodeValue;
+				nodeValue = editor.dom.encode(nodeList[i].nodeValue);
 				nodeValue = nodeValue.replace(visualCharsRegExp, wrapCharWithSpan);
 
 				div = editor.dom.create('div', null, nodeValue);

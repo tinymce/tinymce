@@ -29,3 +29,13 @@ test('Visualchar toggle on/off', function() {
 	editor.execCommand('mceVisualChars');
 	equal(0, editor.dom.select('span').length);
 });
+
+test('Visualchar toggle on/off with HTML like content ', function() {
+	editor.setContent('<p>&lt;img src="image.png"&gt;&nbsp;</p>');
+	equal(0, editor.dom.select('span').length);
+	editor.execCommand('mceVisualChars');
+	equal('<p>&lt;img src="image.png"&gt;&nbsp;</p>', editor.getContent());
+	equal(1, editor.dom.select('span').length);
+	editor.execCommand('mceVisualChars');
+	equal(0, editor.dom.select('span').length);
+});
