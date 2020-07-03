@@ -78,10 +78,11 @@ export const addUndoLevel = (editor: Editor, undoManager: UndoManager, index: In
 
   if (index.get() > 0) {
     editor.setDirty(true);
+    editor.fire('AddUndo', args);
     editor.fire('change', args);
+  } else {
+    editor.fire('AddUndo', args);
   }
-
-  editor.fire('AddUndo', args);
 
   return level;
 };
