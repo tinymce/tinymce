@@ -440,6 +440,35 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', function (success, failur
     ok(editor.isDirty(), 'Dirty state should be true');
   });
 
+  suite.asyncTest('Dirty state on second AddUndo', function (editor, done, die) {
+    editor.setContent('<p>a</p>');
+    LegacyUnit.setSelection(editor, 'p', 1);
+
+    let first = true;
+    const test = function () {
+      if (first) {
+        first = false;
+        if (editor.isDirty()) {
+          die('Dirty flag should not be set on first AddUndo.');
+        }
+      } else {
+        if (editor.isDirty()) {
+          done();
+        } else {
+          die('Dirty flag should be set after second AddUndo.');
+        }
+      }
+    };
+
+    editor.undoManager.clear();
+    editor.setDirty(false);
+    editor.on('AddUndo', test);
+    KeyUtils.type(editor, '\n');
+    KeyUtils.type(editor, '\n');
+
+    editor.off('AddUndo', test);
+  });
+
   suite.test('ExecCommand while typing should produce undo level', function (editor) {
     editor.undoManager.clear();
     editor.setDirty(false);
