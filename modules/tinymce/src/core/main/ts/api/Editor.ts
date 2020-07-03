@@ -886,9 +886,8 @@ class Editor implements EditorObservable {
   /**
    * Returns true/false if the editor is dirty or not. It will get dirty if the user has made modifications to the contents.
    *
-   * The dirty state is automatically set to true if you do modifications to the content in other words if you undo/redo to update
-   * the contents of the editor or when undo levels already exists and an additional one is added. It will also be set to false if
-   * you call editor.save().
+   * The dirty state is automatically set to `true` when the editor content is modified by the user since initialization
+   * or the last `editor.save()` call. This includes changes made using undo or redo.
    *
    * @method isDirty
    * @return {Boolean} True/false if the editor is dirty or not. It will get dirty if the user has made modifications to the contents.
