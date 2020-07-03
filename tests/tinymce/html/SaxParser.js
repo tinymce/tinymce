@@ -767,4 +767,25 @@
 		testCDataSaxParse('<![CDATA[------>>>xy]]>', '<![CDATA[xy]]>', {cdata: 1});
 		testCDataSaxParse('<![CDATA[------!>>!>xy]]>', '<![CDATA[xy]]>', {cdata: 1});
 	});
+
+	test('Parse special elements', function () {
+		var counter, parser;
+
+		var specialHtml = (
+			'<b>' +
+			'<textarea></b></textarea><title></b></title><script></b></script>' +
+			'<iframe><img src="image.png"></iframe>' +
+			'<noframes></b></noframes><noscript></b></noscript><style></b></style>' +
+			'<xmp></b></xmp>' +
+			'<noembed></b></noembed>' +
+			'</b>'
+		);
+
+		counter = createCounter(writer);
+		parser = new tinymce.html.SaxParser(counter, schema);
+		writer.reset();
+		parser.parse(specialHtml);
+		equal(writer.getContent(), specialHtml);
+		deepEqual(counter.counts, {start: 10, text: 9, end: 10});
+	});
 })();
