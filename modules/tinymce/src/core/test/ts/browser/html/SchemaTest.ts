@@ -1,5 +1,6 @@
 import { Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { Arr, Obj } from '@ephox/katamari';
 import { LegacyUnit } from '@ephox/mcagar';
 import Schema from 'tinymce/core/api/html/Schema';
 
@@ -277,6 +278,22 @@ UnitTest.asynctest('browser.tinymce.core.html.SchemaTest', function (success, fa
       b: {}, cite: {}, code: {}, dfn: {}, em: {}, font: {}, i: {}, mark: {}, q: {},
       samp: {}, span: {}, strike: {}, strong: {}, sub: {}, sup: {}, u: {}, var: {}
     });
+  });
+
+  suite.test('getSpecialElements', () => {
+    const schema = Schema();
+    const keys = Arr.sort(Obj.keys(schema.getSpecialElements()));
+    Assert.eq('special elements', keys, Arr.sort([
+      'script',
+      'noscript',
+      'iframe',
+      'noframes',
+      'noembed',
+      'title',
+      'style',
+      'textarea',
+      'xmp'
+    ]));
   });
 
   suite.test('isValidChild', function () {

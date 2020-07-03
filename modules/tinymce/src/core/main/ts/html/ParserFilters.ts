@@ -76,7 +76,7 @@ const register = (parser: DomParser, settings: DomParserSettings): void => {
       const blockElements = Tools.extend({}, schema.getBlockElements());
       const nonEmptyElements = schema.getNonEmptyElements();
       let parent, lastParent, prev, prevName;
-      const whiteSpaceElements = schema.getNonEmptyElements();
+      const whiteSpaceElements = schema.getWhiteSpaceElements();
       let elementRule, textNode;
 
       // Remove brs from body element as well
