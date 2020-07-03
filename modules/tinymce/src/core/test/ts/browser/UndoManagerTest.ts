@@ -440,7 +440,7 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', function (success, failur
     ok(editor.isDirty(), 'Dirty state should be true');
   });
 
-  suite.asyncTest('Dirty state on second AddUndo', function (editor, done, die) {
+  suite.asyncTest('Dirty state on second AddUndo', (editor, done, die) => {
     editor.setContent('<p>a</p>');
     LegacyUnit.setSelection(editor, 'p', 1);
 
