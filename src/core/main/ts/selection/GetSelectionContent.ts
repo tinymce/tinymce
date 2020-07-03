@@ -7,11 +7,17 @@
 
 import { Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
+import { GetContentArgs } from '../content/GetContent';
 import EventProcessRanges from './EventProcessRanges';
 import FragmentReader from './FragmentReader';
 import MultiRange from './MultiRange';
 import Zwsp from '../text/Zwsp';
 import { Editor } from '../api/Editor';
+
+export interface GetSelectionContentArgs extends GetContentArgs {
+  selection?: boolean;
+  contextual?: boolean;
+}
 
 const getTextContent = (editor: Editor): string => {
   return Option.from(editor.selection.getRng()).map((rng) => {
@@ -26,7 +32,7 @@ const getTextContent = (editor: Editor): string => {
   }).getOr('');
 };
 
-const getHtmlContent = (editor: Editor, args: any): string => {
+const getHtmlContent = (editor: Editor, args: GetSelectionContentArgs): string => {
   const rng = editor.selection.getRng(), tmpElm = editor.dom.create('body');
   const sel = editor.selection.getSel();
   let fragment;
@@ -40,7 +46,7 @@ const getHtmlContent = (editor: Editor, args: any): string => {
   return editor.selection.serializer.serialize(tmpElm, args);
 };
 
-const getContent = (editor: Editor, args: any = {}): string => {
+const getContent = (editor: Editor, args: GetSelectionContentArgs = {}): string => {
   args.get = true;
   args.format = args.format || 'html';
   args.selection = true;

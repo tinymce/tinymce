@@ -1,4 +1,5 @@
 Version 4.9.11 (TBD)
+    Fixed the `selection.setContent()` API not running parser filters #TINY-4002
     Fixed content in an iframe element parsing as dom elements instead of text content #TINY-5943
 Version 4.9.10 (2020-04-23)
     Fixed an issue where the editor selection could end up inside a short ended element (eg br) #TINY-3999
