@@ -24,11 +24,12 @@ define("tinymce/dom/Selection", [
 	"tinymce/dom/RangeUtils",
 	"tinymce/dom/BookmarkManager",
 	"tinymce/dom/NodeType",
+	"tinymce/html/Serializer",
 	"tinymce/Env",
 	"tinymce/util/Tools",
 	"tinymce/caret/CaretPosition"
-], function(TreeWalker, TridentSelection, ControlSelection, RangeUtils, BookmarkManager, NodeType, Env, Tools, CaretPosition) {
-	var each = Tools.each, trim = Tools.trim;
+], function(TreeWalker, TridentSelection, ControlSelection, RangeUtils, BookmarkManager, NodeType, Serializer, Env, Tools, CaretPosition) {
+	var each = Tools.each, trim = Tools.trim, extend = Tools.extend;
 	var isIE = Env.ie;
 
 	/**
@@ -166,7 +167,12 @@ define("tinymce/dom/Selection", [
 				self.editor.fire('BeforeSetContent', args);
 			}
 
-			content = args.content;
+			if (args.format !== 'raw') {
+				var node = self.editor.parser.parse(args.content, extend({isRootContent: true, forced_root_block: false}, args));
+				content = new Serializer({validate: self.editor.settings.validate}, self.editor.schema).serialize(node);
+			} else {
+				content = args.content;
+			}
 
 			if (rng.insertNode) {
 				// Make caret marker since insertNode places the caret in the beginning of text after insert

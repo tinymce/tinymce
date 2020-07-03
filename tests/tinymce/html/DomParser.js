@@ -576,4 +576,16 @@
 			'<div>1 2<div>3</div></div>'
 		);
 	});
+
+	test('parse iframe XSS', function () {
+		var serializer = new tinymce.html.Serializer();
+
+		equal(
+			serializer.serialize(new tinymce.html.DomParser().parse(
+				'<iframe><textarea></iframe><img src="a" onerror="alert(document.domain)" />')
+			),
+			'<iframe><textarea></iframe><img src="a" />'
+		);
+	});
+
 })();

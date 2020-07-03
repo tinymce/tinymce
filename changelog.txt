@@ -1,8 +1,10 @@
 Version 4.5.12 (2020-07-03)
   Fixed so links with xlink:href attributes are filtered correctly to prevent XSS. #TINY-1626
+  Fixed the `selection.setContent()` API not running parser filters #TINY-4002
   Fixed the `visualchars` plugin converting HTML-like text to DOM elements in certain cases #TINY-4507
   Fixed HTML comments incorrectly being parsed in certain cases #TINY-4511
   Fixed a security issue related to CDATA sanitization during parsing #TINY-4669
+  Fixed content in an iframe element parsing as dom elements instead of text content #TINY-5943
 Version 4.5.11 (2019-05-16)
   Fixed bug where the editor would scroll to the top of the editable area if a dialog was closed in inline mode. #TINY-1073
 Version 4.5.10 (2018-10-19)
