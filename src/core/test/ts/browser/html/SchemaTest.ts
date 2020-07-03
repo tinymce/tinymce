@@ -1,3 +1,4 @@
+import { Arr, Obj } from '@ephox/katamari';
 import { LegacyUnit } from '@ephox/mcagar';
 import { Pipeline } from '@ephox/agar';
 import Schema from 'tinymce/core/api/html/Schema';
@@ -311,6 +312,22 @@ UnitTest.asynctest('browser.tinymce.core.html.SchemaTest', function () {
       b: {}, cite: {}, code: {}, dfn: {}, em: {}, font: {}, i: {}, mark: {}, q: {},
       samp: {}, span: {}, strike: {}, strong: {}, sub: {}, sup: {}, u: {}, var: {}
     });
+  });
+
+  suite.test('getSpecialElements', () => {
+    const schema = Schema();
+    const keys = Arr.sort(Obj.keys(schema.getSpecialElements()));
+    LegacyUnit.equal(keys, Arr.sort([
+      'script',
+      'noscript',
+      'iframe',
+      'noframes',
+      'noembed',
+      'title',
+      'style',
+      'textarea',
+      'xmp'
+    ]));
   });
 
   suite.test('isValidChild', function () {
