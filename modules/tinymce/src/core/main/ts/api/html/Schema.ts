@@ -487,7 +487,7 @@ function Schema(settings?: SchemaSettings): Schema {
   const textInlineElementsMap = createLookupTable('text_inline_elements', 'span strong b em i font strike u var cite ' +
     'dfn code mark q sup sub samp');
 
-  each((settings.special || 'script noscript noframes noembed title style textarea xmp').split(' '), function (name) {
+  each((settings.special || 'script noscript iframe noframes noembed title style textarea xmp').split(' '), function (name) {
     specialElements[name] = new RegExp('<\/' + name + '[^>]*>', 'gi');
   });
 
