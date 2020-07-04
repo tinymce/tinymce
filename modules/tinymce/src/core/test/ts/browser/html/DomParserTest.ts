@@ -679,6 +679,17 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
     );
   });
 
+  suite.test('parse iframe XSS', function () {
+    const serializer = Serializer();
+
+    LegacyUnit.equal(
+      serializer.serialize(DomParser().parse(
+        '<iframe><textarea></iframe><img src="a" onerror="alert(document.domain)" />')
+      ),
+      '<iframe><textarea></iframe><img src="a" />'
+    );
+  });
+
   suite.test('getAttributeFilters/getNodeFilters', function () {
     const parser = DomParser();
     const cb1 = (_nodes, _name, _args) => {};

@@ -1,5 +1,6 @@
 import { Log, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
+import { Unicode } from '@ephox/katamari';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -178,11 +179,21 @@ UnitTest.asynctest('browser.tinymce.plugins.searchreplace.SearchReplacePluginTes
       'x</p>');
   });
 
+  suite.test('TestCase-TINY-4599: SearchReplace: Excludes zwsp characters', (editor) => {
+    const content = `<p>a${Unicode.zeroWidth} b${Unicode.zeroWidth} a</p>`;
+    editor.setContent(content, { format: 'raw' });
+    LegacyUnit.equal(2, editor.plugins.searchreplace.find(' '));
+    LegacyUnit.equal(2, editor.getBody().getElementsByTagName('span').length);
+    editor.plugins.searchreplace.done();
+    LegacyUnit.equal(0, editor.getBody().getElementsByTagName('span').length);
+    LegacyUnit.equal(editor.getBody().innerHTML, content);
+  });
+
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, Log.steps('TBA', 'SearchReplace: Find and replace matches', suite.toSteps(editor)), onSuccess, onFailure);
   }, {
     plugins: 'searchreplace',
-    valid_elements: 'b,i,br,span[contenteditable]',
+    valid_elements: 'p,b,i,br,span[contenteditable]',
     indent: false,
     base_url: '/project/tinymce/js/tinymce',
     theme: 'silver'
