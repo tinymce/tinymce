@@ -1,3 +1,5 @@
+Version 5.4.1 (TBD)
+    Fixed zero-width caret characters included in the Search and Replace plugin results #TINY-4599
 Version 5.4.0 (2020-06-30)
     Added keyboard navigation support to menus and toolbars when the editor is in a ShadowRoot #TINY-6152
     Added the ability for menus to be clicked when the editor is in an open shadow root #TINY-6091
