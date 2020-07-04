@@ -1,11 +1,11 @@
 import { Assert, assert, UnitTest } from '@ephox/bedrock-client';
-import { Body, DomEvent, Element, Insert, Remove, SelectorFind } from '@ephox/sugar';
-import { Pipeline } from 'ephox/agar/api/Pipeline';
-import { dragnDrop, dropFiles, isDraggable, sDragnDrop, sDropFiles } from 'ephox/agar/api/DragnDrop';
-import { Step } from 'ephox/agar/api/Step';
-import { GeneralSteps, Logger } from 'ephox/agar/api/Main';
-import { createFile } from 'ephox/agar/api/Files';
 import { Blob } from '@ephox/dom-globals';
+import { Body, DomEvent, Element, Insert, Remove, SelectorFind } from '@ephox/sugar';
+import { dragnDrop, dropFiles, isDraggable, sDragnDrop, sDropItems, sDropFiles } from 'ephox/agar/api/DragnDrop';
+import { createFile } from 'ephox/agar/api/Files';
+import { GeneralSteps, Logger } from 'ephox/agar/api/Main';
+import { Pipeline } from 'ephox/agar/api/Pipeline';
+import { Step } from 'ephox/agar/api/Step';
 
 UnitTest.test('DragDrop.isDraggable', () => {
   const check = (expected: boolean, html: string) => {
@@ -111,6 +111,15 @@ UnitTest.asynctest('DragnDropTest', (success, failure) => {
         ], to);
       }),
       sAssertStoreItems([ 'dragenter', 'dragover', 'drop files: 2' ])
+    ])),
+
+    Logger.t('Drop items using selector', GeneralSteps.sequence([
+      sClearStore,
+      sDropItems([
+        { data: 'hello', type: 'text/plain' },
+        { data: '<p>hello</p>', type: 'text/html' }
+      ], '.dropzone'),
+      sAssertStoreItems([ 'dragenter', 'dragover', 'drop text: hello' ])
     ]))
   ], () => {
     Remove.remove(dropzone);

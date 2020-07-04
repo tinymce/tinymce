@@ -1,5 +1,7 @@
 Version 5.4.1 (TBD)
     Fixed zero-width caret characters included in the Search and Replace plugin results #TINY-4599
+    Fixed dragging and dropping unsupported files navigating the browser away from the editor #TINY-6027
+    Fixed undo levels not created on browser handled drop or paste events #TINY-6027
     Fixed content in an iframe element parsing as dom elements instead of text content #TINY-5943
 Version 5.4.0 (2020-06-30)
     Added keyboard navigation support to menus and toolbars when the editor is in a ShadowRoot #TINY-6152
