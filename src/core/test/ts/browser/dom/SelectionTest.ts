@@ -85,6 +85,15 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function () {
     editor.selection.setContent('<div>test</div>');
     LegacyUnit.equal(editor.getContent(), '<div>test</div>', 'Set contents at selection');
 
+    // Insert XSS at selection
+    editor.setContent('<p>text</p>');
+    rng = editor.dom.createRng();
+    rng.setStart(editor.getBody(), 0);
+    rng.setEnd(editor.getBody(), 1);
+    editor.selection.setRng(rng);
+    editor.selection.setContent('<img src="a" onerror="alert(1)" />');
+    LegacyUnit.equal(editor.getContent(), '<img src="a" />', 'Set XSS at selection');
+
     // Set contents at selection (collapsed)
     editor.setContent('<p>text</p>');
     rng = editor.dom.createRng();

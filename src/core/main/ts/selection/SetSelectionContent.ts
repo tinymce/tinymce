@@ -5,26 +5,51 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-const setContent = function (editor, content, args) {
+import { EditorEvent } from '../api/dom/EventUtils';
+import { Editor } from '../api/Editor';
+import Serializer from '../api/html/Serializer';
+import { SetContentArgs } from '../content/SetContent';
+
+export interface SelectionSetContentArgs extends SetContentArgs {
+  selection?: boolean;
+}
+
+const setupArgs = (args: Partial<SelectionSetContentArgs>, content: string): SelectionSetContentArgs => ({
+  format: 'html',
+  ...args,
+  set: true,
+  selection: true,
+  content
+});
+
+const cleanContent = (editor: Editor, args: SelectionSetContentArgs) => {
+  if (args.format !== 'raw') {
+    const node = editor.parser.parse(args.content, { isRootContent: true, forced_root_block: false, ...args });
+    return Serializer({ validate: editor.validate }, editor.schema).serialize(node);
+  } else {
+    return args.content;
+  }
+};
+
+const setContent = (editor: Editor, content: string, args: SelectionSetContentArgs) => {
+  // Note: Need to cast as an EditorEvent due to reusing the variable for the editor.fire() return value
+  let contentArgs = setupArgs(args, content) as EditorEvent<SelectionSetContentArgs>;
+
   let rng = editor.selection.getRng(), caretNode;
   const doc = editor.getDoc();
   let frag, temp;
 
-  args = args || { format: 'html' };
-  args.set = true;
-  args.selection = true;
-  args.content = content;
-
   // Dispatch before set content event
-  if (!args.no_events) {
-    args = editor.fire('BeforeSetContent', args);
-    if (args.isDefaultPrevented()) {
-      editor.fire('SetContent', args);
+  if (!contentArgs.no_events) {
+    contentArgs = editor.fire('BeforeSetContent', contentArgs);
+    if (contentArgs.isDefaultPrevented()) {
+      editor.fire('SetContent', contentArgs);
       return;
     }
   }
 
-  content = args.content;
+  // Sanitize the content
+  content = cleanContent(editor, contentArgs);
 
   if (rng.insertNode) {
     // Make caret marker since insertNode places the caret in the beginning of text after insert
@@ -59,7 +84,7 @@ const setContent = function (editor, content, args) {
     // Move to caret marker
     caretNode = editor.dom.get('__caret');
 
-    // Make sure we wrap it compleatly, Opera fails with a simple select call
+    // Make sure we wrap it completely, Opera fails with a simple select call
     rng = doc.createRange();
     rng.setStartBefore(caretNode);
     rng.setEndBefore(caretNode);
@@ -74,24 +99,25 @@ const setContent = function (editor, content, args) {
       // Might fail on Opera for some odd reason
     }
   } else {
-    if (rng.item) {
+    let anyRng: any = rng;
+    if (anyRng.item) {
       // Delete content and get caret text selection
       doc.execCommand('Delete', false, null);
-      rng = editor.getRng();
+      anyRng = editor.selection.getRng();
     }
 
     // Explorer removes spaces from the beginning of pasted contents
     if (/^\s+/.test(content)) {
-      rng.pasteHTML('<span id="__mce_tmp">_</span>' + content);
+      anyRng.pasteHTML('<span id="__mce_tmp">_</span>' + content);
       editor.dom.remove('__mce_tmp');
     } else {
-      rng.pasteHTML(content);
+      anyRng.pasteHTML(content);
     }
   }
 
   // Dispatch set content event
-  if (!args.no_events) {
-    editor.fire('SetContent', args);
+  if (!contentArgs.no_events) {
+    editor.fire('SetContent', contentArgs);
   }
 };
 

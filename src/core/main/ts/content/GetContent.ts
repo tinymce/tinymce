@@ -26,6 +26,7 @@ export interface GetContentArgs {
   content?: string;
   getInner?: boolean;
   no_events?: boolean;
+  [key: string]: any;
 }
 
 const trimEmptyContents = (editor: Editor, html: string): string => {
