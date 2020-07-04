@@ -871,6 +871,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function () {
     const specialHtml = (
       '<b>' +
       '<textarea></b></textarea><title></b></title><script></b></script>' +
+      '<iframe><img src="image.png"></iframe>' +
       '<noframes></b></noframes><noscript></b></noscript><style></b></style>' +
       '<xmp></b></xmp>' +
       '<noembed></b></noembed>' +
@@ -882,7 +883,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function () {
     writer.reset();
     parser.parse(specialHtml);
     LegacyUnit.equal(writer.getContent(), specialHtml);
-    LegacyUnit.deepEqual(counter.counts, { start: 9, text: 8, end: 9 });
+    LegacyUnit.deepEqual(counter.counts, { start: 10, text: 9, end: 10 });
   });
 
   suite.test('Parse malformed elements that start with numbers', function () {
