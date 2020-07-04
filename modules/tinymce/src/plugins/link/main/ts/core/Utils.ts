@@ -5,14 +5,35 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element, HTMLAnchorElement } from '@ephox/dom-globals';
-import { Arr, Option, Obj, Type } from '@ephox/katamari';
+import { Element, HTMLAnchorElement, Node, Range } from '@ephox/dom-globals';
+import { Arr, Obj, Option, Type } from '@ephox/katamari';
+import TreeWalker from 'tinymce/core/api/dom/TreeWalker';
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import * as Settings from '../api/Settings';
 import { AssumeExternalTargets } from '../api/Types';
 import { AttachState, LinkDialogOutput } from '../ui/DialogTypes';
 import { hasRtcPlugin } from './DetectRtc';
+
+const isAnchor = (elm: Node): elm is HTMLAnchorElement => elm && elm.nodeName.toLowerCase() === 'a';
+const isLink = (elm: Node): elm is HTMLAnchorElement => isAnchor(elm) && !!getHref(elm);
+
+const collectNodesInRange = <T extends Node>(rng: Range, predicate: (node) => node is T): T[] => {
+  if (rng.collapsed) {
+    return [];
+  } else {
+    const contents = rng.cloneContents();
+    const walker = new TreeWalker(contents.firstChild, contents);
+    const elements: T[] = [];
+    let current = contents.firstChild;
+    do {
+      if (predicate(current)) {
+        elements.push(current);
+      }
+    } while ((current = walker.next()));
+    return elements;
+  }
+};
 
 const hasProtocol = (url: string): boolean => /^\w+:/i.test(url);
 
@@ -41,7 +62,7 @@ const applyRelTargetRules = (rel: string, isUnsafe: boolean): string => {
 
 const trimCaretContainers = (text: string): string => text.replace(/\uFEFF/g, '');
 
-const getAnchorElement = (editor: Editor, selectedElm?: Element): HTMLAnchorElement => {
+const getAnchorElement = (editor: Editor, selectedElm?: Element): HTMLAnchorElement | null => {
   selectedElm = selectedElm || editor.selection.getNode();
   if (isImageFigure(selectedElm)) {
     // for an image contained in a figure we look for a link inside the selected element
@@ -56,9 +77,9 @@ const getAnchorText = (selection, anchorElm: HTMLAnchorElement) => {
   return trimCaretContainers(text);
 };
 
-const isLink = (elm: Element): elm is HTMLAnchorElement => elm && elm.nodeName === 'A' && !!getHref(elm);
+const hasLinks = (elements: Node[]) => Tools.grep(elements, isLink).length > 0;
 
-const hasLinks = (elements: Element[]) => Tools.grep(elements, isLink).length > 0;
+const hasLinksInSelection = (rng: Range) => collectNodesInRange(rng, isLink).length > 0;
 
 const isOnlyTextSelected = (html: string) => {
   // Partial html and not a fully selected anchor element
@@ -154,16 +175,34 @@ const linkDomMutation = (editor: Editor, attachState: AttachState, data: LinkDia
   });
 };
 
+const unlinkSelection = (editor: Editor) => {
+  const dom = editor.dom, selection = editor.selection;
+  const bookmark = selection.getBookmark();
+  const rng = selection.getRng().cloneRange();
+
+  // Extend the selection out to the entire anchor element
+  const startAnchorElm = dom.getParent(rng.startContainer, 'a[href]', editor.getBody());
+  const endAnchorElm = dom.getParent(rng.endContainer, 'a[href]', editor.getBody());
+  if (startAnchorElm) {
+    rng.setStartBefore(startAnchorElm);
+  }
+  if (endAnchorElm) {
+    rng.setEndAfter(endAnchorElm);
+  }
+  selection.setRng(rng);
+
+  // Remove the link
+  editor.execCommand('unlink');
+  selection.moveToBookmark(bookmark);
+};
+
 const unlinkDomMutation = (editor: Editor) => {
   editor.undoManager.transact(() => {
     const node = editor.selection.getNode();
     if (isImageFigure(node)) {
       unlinkImageFigure(editor, node);
     } else {
-      const anchorElm = editor.dom.getParent(node, 'a[href]', editor.getBody());
-      if (anchorElm) {
-        editor.dom.remove(anchorElm, true);
-      }
+      unlinkSelection(editor);
     }
     editor.focus();
   });
@@ -215,6 +254,7 @@ export {
   unlink,
   isLink,
   hasLinks,
+  hasLinksInSelection,
   getHref,
   isOnlyTextSelected,
   getAnchorElement,
