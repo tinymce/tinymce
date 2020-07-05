@@ -109,7 +109,7 @@ const setupContextToolbars = function (editor: Editor) {
           const value = formApi.getValue();
           if (!anchor) {
             const attachState = { href: value, attach: () => { } };
-            const onlyText = Utils.isOnlyTextSelected(editor.selection.getContent());
+            const onlyText = Utils.isOnlyTextSelected(editor);
             const text: Option<string> = onlyText ? Option.some(Utils.getAnchorText(editor.selection, anchor)).filter((t) => t.length > 0).or(Option.from(value)) : Option.none();
             Utils.link(editor, attachState, {
               href: value,
