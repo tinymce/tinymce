@@ -68,21 +68,29 @@ const createPreviewIframeNode = function (editor: Editor, node: Node) {
 };
 
 const retainAttributesAndInnerHtml = function (editor: Editor, sourceNode: Node, targetNode: Node) {
+  const internalCeAttr = 'data-mce-contenteditable';
   let attrName;
   let attrValue;
   let ai;
 
-  // Prefix all attributes except width, height and style since we
-  // will add these to the placeholder
+  // Prefix all attributes except width, height and style since we will add these to the placeholder
   const attribs = sourceNode.attributes;
   ai = attribs.length;
   while (ai--) {
     attrName = attribs[ai].name;
     attrValue = attribs[ai].value;
 
-    if (attrName !== 'width' && attrName !== 'height' && attrName !== 'style') {
+    if (attrName !== 'width' && attrName !== 'height' && attrName !== 'style' && attrName !== internalCeAttr) {
       if (attrName === 'data' || attrName === 'src') {
         attrValue = editor.convertURL(attrValue, attrName);
+      }
+
+      // Copy the actual content editable attribute, not the temp value added by core
+      if (attrName === 'contenteditable') {
+        attrValue = sourceNode.attr(internalCeAttr);
+        if (!attrValue) {
+          continue;
+        }
       }
 
       targetNode.attr('data-mce-p-' + attrName, attrValue);

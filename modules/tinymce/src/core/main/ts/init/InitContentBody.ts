@@ -205,7 +205,37 @@ const createParser = function (editor: Editor): DomParser {
     }
   });
 
+  // Convert native media elements to non editable elements
+  parser.addNodeFilter('video,audio,embed,object', (nodes) => {
+    let i = nodes.length;
+    while (i--) {
+      const node = nodes[i];
+      const ce = node.attr('contenteditable');
+      if (ce && !node.attr('data-mce-contenteditable')) {
+        node.attr('data-mce-contenteditable', ce);
+      }
+      node.attr('contenteditable', 'false');
+    }
+  });
+
   return parser;
+};
+
+const createSerializer = (editor: Editor): DomSerializer => {
+  const serializer = DomSerializer(mkSerializerSettings(editor), editor);
+
+  // Remove content editable attributes from media elements
+  serializer.addNodeFilter('video,audio,embed,object', (nodes) => {
+    let i = nodes.length;
+    while (i--) {
+      const node = nodes[i];
+      const original = node.attr('data-mce-contenteditable');
+      node.attr('contenteditable', original ? original : null);
+      node.attr('data-mce-contenteditable', null);
+    }
+  });
+
+  return serializer;
 };
 
 const autoFocus = function (editor: Editor) {
@@ -392,7 +422,7 @@ const initContentBody = function (editor: Editor, skipWrite?: boolean) {
   });
 
   editor.parser = createParser(editor);
-  editor.serializer = DomSerializer(mkSerializerSettings(editor), editor);
+  editor.serializer = createSerializer(editor);
   editor.selection = Selection(editor.dom, editor.getWin(), editor.serializer, editor);
   editor.annotator = Annotator(editor);
   editor.formatter = Formatter(editor);

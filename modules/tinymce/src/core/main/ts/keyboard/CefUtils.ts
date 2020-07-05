@@ -6,10 +6,11 @@
  */
 
 import { Element, Range } from '@ephox/dom-globals';
+import Editor from '../api/Editor';
 import CaretPosition from '../caret/CaretPosition';
 import * as CaretUtils from '../caret/CaretUtils';
 import * as NodeType from '../dom/NodeType';
-import Editor from '../api/Editor';
+import * as ScrollIntoView from '../dom/ScrollIntoView';
 
 const isContentEditableTrue = NodeType.isContentEditableTrue;
 const isContentEditableFalse = NodeType.isContentEditableFalse;
@@ -71,9 +72,17 @@ const renderRangeCaret = (editor: Editor, range: Range, scrollIntoView: boolean)
   return range;
 };
 
+
+const moveToRange = (editor: Editor, rng: Range) => {
+  editor.selection.setRng(rng);
+  // Don't reuse the original range as TinyMCE will adjust it
+  ScrollIntoView.scrollRangeIntoView(editor, editor.selection.getRng());
+};
+
 export {
   showCaret,
   selectNode,
   renderCaretAtRange,
-  renderRangeCaret
+  renderRangeCaret,
+  moveToRange
 };

@@ -331,5 +331,38 @@
         }
       }
     }
+  },
+
+  {
+    "request": {
+      "method": "get",
+      "path": "/custom/video.mp4"
+    },
+
+    "response": {
+      "status": 404
+    }
+  },
+
+  {
+    "request": {
+      "method": "get",
+      "path": "/custom/audio.mp3"
+    },
+
+    "response": {
+      "status": 404
+    }
+  },
+
+  {
+    "request": {
+      "method": "get",
+      "path": "/custom/file.pdf"
+    },
+
+    "response": {
+      "status": 404
+    }
   }
 ]
