@@ -160,7 +160,7 @@ class EditorCommands {
    *
    * @method queryCommandValue
    * @param {String} command Command to check the value of.
-   * @return {String} Command value of false (`""`) if the command value is not found.
+   * @return {String} Command value or an empty string (`""`) if the query command is not found.
    */
   public queryCommandValue(command: string): string {
     let func;
