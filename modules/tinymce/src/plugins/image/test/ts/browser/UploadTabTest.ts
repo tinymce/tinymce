@@ -37,7 +37,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
           FileInput.sRunOnPatchedFileInput([ Files.createFile('logo.png', 0, blob) ], Chain.asStep({}, [
             // cPopupToDialog('div[role="dialog"]'),
             ui.cWaitForPopup('Locate popup', 'div[role="dialog"]'),
-            UiFinder.cFindIn('input[type="file"]'),
+            UiFinder.cFindIn('button:contains("Browse for an image")'),
             Mouse.cClick
           ]))
         ], next, die);

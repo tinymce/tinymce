@@ -1,31 +1,28 @@
-import { Option } from '@ephox/katamari';
+import { Singleton } from '@ephox/katamari';
 import { Compare, SelectorFind, Element, EventArgs } from '@ephox/sugar';
 import * as CellSelection from '../selection/CellSelection';
 import { WindowBridge } from '../api/WindowBridge';
 import { SelectionAnnotation } from '../api/SelectionAnnotation';
 
-const findCell = function (target: Element, isRoot: (e: Element) => boolean) {
-  return SelectorFind.closest(target, 'td,th', isRoot);
-};
+const findCell = (target: Element, isRoot: (e: Element) => boolean) =>
+  SelectorFind.closest(target, 'td,th', isRoot);
 
-export default function (bridge: WindowBridge, container: Element, isRoot: (e: Element) => boolean, annotations: SelectionAnnotation) {
-  let cursor: Option<Element> = Option.none();
-  const clearState = function () {
-    cursor = Option.none();
-  };
+export default (bridge: WindowBridge, container: Element, isRoot: (e: Element) => boolean, annotations: SelectionAnnotation) => {
+  const cursor = Singleton.value<Element>();
+  const clearstate = cursor.clear;
 
   /* Keep this as lightweight as possible when we're not in a table selection, it runs constantly */
-  const mousedown = function (event: EventArgs) {
+  const mousedown = (event: EventArgs) => {
     annotations.clear(container);
-    cursor = findCell(event.target(), isRoot);
+    findCell(event.target(), isRoot).each(cursor.set);
   };
 
   /* Keep this as lightweight as possible when we're not in a table selection, it runs constantly */
-  const mouseover = function (event: EventArgs) {
-    cursor.each(function (start) {
+  const mouseover = (event: EventArgs) => {
+    cursor.on((start) => {
       annotations.clearBeforeUpdate(container);
-      findCell(event.target(), isRoot).each(function (finish) {
-        CellSelection.identify(start, finish, isRoot).each(function (cellSel) {
+      findCell(event.target(), isRoot).each((finish) => {
+        CellSelection.identify(start, finish, isRoot).each((cellSel) => {
           const boxes = cellSel.boxes.getOr([]);
           // Wait until we have more than one, otherwise you can't do text selection inside a cell.
           // Alternatively, if the one cell selection starts in one cell and ends in a different cell,
@@ -42,13 +39,14 @@ export default function (bridge: WindowBridge, container: Element, isRoot: (e: E
   };
 
   /* Keep this as lightweight as possible when we're not in a table selection, it runs constantly */
-  const mouseup = function (_event?: EventArgs) {
-    cursor.each(clearState);
+  const mouseup = (_event?: EventArgs) => {
+    clearstate();
   };
 
   return {
+    clearstate,
     mousedown,
     mouseover,
     mouseup
   };
-}
+};
