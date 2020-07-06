@@ -27,7 +27,7 @@ const neighbours = function (input: number[], index: number) {
 
 /*
  * Calculate the offsets to apply to each column width (not the absolute widths themselves)
- * based on a resize at column: column of step: step. The minimum column width allowed is min
+ * based on a resize at column: column of step: step
  */
 const determine = function (input: number[], column: number, step: number, tableSize: TableSize, resize: ResizeBehaviour): number[] {
   const result = input.slice(0);

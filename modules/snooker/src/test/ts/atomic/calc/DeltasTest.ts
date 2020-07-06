@@ -4,7 +4,7 @@ import * as ResizeBehaviour from 'ephox/snooker/api/ResizeBehaviour';
 import { TableSize } from 'ephox/snooker/api/TableSize';
 import * as Deltas from 'ephox/snooker/calc/Deltas';
 
-UnitTest.test('Deltas', () => {
+UnitTest.test('DeltasTest', () => {
   const preserveTable = ResizeBehaviour.preserveTable();
   const resizeTable = ResizeBehaviour.resizeTable();
 
@@ -16,7 +16,8 @@ UnitTest.test('Deltas', () => {
     };
     const tableSize = {
       minCellWidth: Fun.constant(10),
-      singleColumnWidth
+      singleColumnWidth,
+      isRelative: false
     };
     const actual = Deltas.determine(input, column, step, tableSize as TableSize, resizeBehaviour);
     assert.eq(expected, Arr.map(actual, (num) => Math.round(num)), `${msg}: expected: ${expected}, actual: ${actual}`);
@@ -43,6 +44,11 @@ UnitTest.test('Deltas', () => {
   check('deltas - columnSizing: resizeTable" - second column bar (2)', [ 0, 20, 0, 0 ], [ 100, 50, 250, 100 ], 1, 20, resizeTable);
   check('deltas - columnSizing: resizeTable" - second column bar (3)', [ 0, 80, 0, 0 ], [ 100, 50, 250, 100 ], 1, 80, resizeTable);
 
+  check('deltas - columnSizing: resizeTable" - third column bar (0)', [ 0, 0, -20, 0 ], [ 100, 50, 250, 100 ], 2, -20, resizeTable);
+  check('deltas - columnSizing: resizeTable" - third column bar (1)', [ 0, 0, -200, 0 ], [ 100, 50, 250, 100 ], 2, -200, resizeTable);
+  check('deltas - columnSizing: resizeTable" - third column bar (2)', [ 0, 0, 20, 0 ], [ 100, 50, 250, 100 ], 2, 20, resizeTable);
+  check('deltas - columnSizing: resizeTable" - third column bar (3)', [ 0, 0, 80, 0 ], [ 100, 50, 250, 100 ], 2, 80, resizeTable);
+
   check('deltas - columnSizing: resizeTable" - last column bar (0)', [ 0, 0, 0, 50 ], [ 100, 50, 250, 100 ], 3, 50, resizeTable);
   check('deltas - columnSizing: resizeTable" - last column bar (1)', [ 0, 0, 0, 100 ], [ 100, 50, 250, 100 ], 3, 100, resizeTable);
   check('deltas - columnSizing: resizeTable" - last column bar (2)', [ 0, 0, 0, -50 ], [ 100, 50, 250, 100 ], 3, -50, resizeTable);
@@ -57,4 +63,14 @@ UnitTest.test('Deltas', () => {
   check('deltas - columnSizing: preserveTable - second column bar (1)', [ 0, -40, 40, 0 ], [ 100, 50, 250, 100 ], 1, -200, preserveTable);
   check('deltas - columnSizing: preserveTable - second column bar (2)', [ 0, 20, -20, 0 ], [ 100, 50, 250, 100 ], 1, 20, preserveTable);
   check('deltas - columnSizing: preserveTable - second column bar (3)', [ 0, 80, -80, 0 ], [ 100, 50, 250, 100 ], 1, 80, preserveTable);
+
+  check('deltas - columnSizing: preserveTable - third column bar (0)', [ 0, 0, -20, 20 ], [ 100, 50, 250, 100 ], 2, -20, preserveTable);
+  check('deltas - columnSizing: preserveTable - third column bar (1)', [ 0, 0, -200, 200 ], [ 100, 50, 250, 100 ], 2, -200, preserveTable);
+  check('deltas - columnSizing: preserveTable - third column bar (2)', [ 0, 0, 20, -20 ], [ 100, 50, 250, 100 ], 2, 20, preserveTable);
+  check('deltas - columnSizing: preserveTable - third column bar (3)', [ 0, 0, 80, -80 ], [ 100, 50, 250, 100 ], 2, 80, preserveTable);
+
+  check('deltas - columnSizing: preserveTable - last column bar (0)', [ -5, -5, -5, -5 ], [ 100, 50, 250, 100 ], 3, -20, preserveTable);
+  check('deltas - columnSizing: preserveTable - last column bar (1)', [ -50, -50, -50, -50 ], [ 100, 50, 250, 100 ], 3, -200, preserveTable);
+  check('deltas - columnSizing: preserveTable - last column bar (2)', [ 5, 5, 5, 5 ], [ 100, 50, 250, 100 ], 3, 20, preserveTable);
+  check('deltas - columnSizing: preserveTable - last column bar (3)', [ 20, 20, 20, 20 ], [ 100, 50, 250, 100 ], 3, 80, preserveTable);
 });

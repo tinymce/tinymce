@@ -71,7 +71,7 @@ UnitTest.test('TableAdjustmentsTest', () => {
   };
 
   const testInnerColumnResizing = () => {
-    // 'preserveTable' column sizing
+    // 'preserveTable' column resizing
     testAdjustWidth(`ltr step (%) - preserveTable (0)`, 50, [ 37.5, 12.5, 25, 25 ], relativeTable(), percentageToStep(12.5, 400), 0, ResizeDirection.ltr, preserveTable);
     testAdjustWidth(`ltr step (%) - preserveTable (1)`, 50, [ 25, 37.5, 12.5, 25 ], relativeTable(), percentageToStep(12.5, 400), 1, ResizeDirection.ltr, preserveTable);
     testAdjustWidth(`ltr step (%) - preserveTable (2)`, 50, [ 25, 25, 37.5, 12.5 ], relativeTable(), percentageToStep(12.5, 400), 2, ResizeDirection.ltr, preserveTable);
@@ -97,7 +97,7 @@ UnitTest.test('TableAdjustmentsTest', () => {
     testAdjustWidth(`rtl large step (px) - preserveTable (1)`, 400, [ 96, 10, 182, 96 ], pixelTable(), -200, 1, ResizeDirection.rtl, preserveTable);
     testAdjustWidth(`rtl large step (px) - preserveTable (2)`, 400, [ 96, 96, 10, 182 ], pixelTable(), -200, 2, ResizeDirection.rtl, preserveTable);
 
-    // 'resizeTable' column sizing
+    // 'resizeTable' column resizing
     testAdjustWidth(`ltr step (%) - resizeTable (0)`, 56.25, [ 33.33, 22.22, 22.22, 22.22 ], relativeTable(), percentageToStep(12.5, 400), 0, ResizeDirection.ltr, resizeTable);
     testAdjustWidth(`ltr step (%) - resizeTable (1)`, 56.25, [ 22.22, 33.33, 22.22, 22.22 ], relativeTable(), percentageToStep(12.5, 400), 1, ResizeDirection.ltr, resizeTable);
     testAdjustWidth(`ltr step (%) - resizeTable (2)`, 56.25, [ 22.22, 22.22, 33.33, 22.22 ], relativeTable(), percentageToStep(12.5, 400), 2, ResizeDirection.ltr, resizeTable);
@@ -125,7 +125,7 @@ UnitTest.test('TableAdjustmentsTest', () => {
   };
 
   const testLastColumnResizing = () => {
-    // 'resizeTable' column sizing
+    // 'resizeTable' column resizing
     testAdjustWidth(`ltr step (%) - resizeTable (3)`, 56.25, [ 22.22, 22.22, 22.22, 33.33 ], relativeTable(), percentageToStep(12.5, 400), 3, ResizeDirection.ltr, resizeTable);
     testAdjustWidth(`ltr large step (%) - resizeTable (3)`, 75, [ 16.67, 16.67, 16.67, 50 ], relativeTable(), percentageToStep(50, 400), 3, ResizeDirection.ltr, resizeTable);
     testAdjustWidth(`rtl step (%) - resizeTable (3)`, 43.75, [ 28.57, 28.57, 28.57, 14.29 ], relativeTable(), percentageToStep(-12.5, 400), 3, ResizeDirection.rtl, resizeTable);
@@ -135,7 +135,7 @@ UnitTest.test('TableAdjustmentsTest', () => {
     testAdjustWidth(`rtl step (px) - resizeTable (3)`, 350, [ 96, 96, 96, 46 ], pixelTable(), -50, 3, ResizeDirection.rtl, resizeTable);
     testAdjustWidth(`rtl large step (px) - resizeTable (3)`, 314, [ 96, 96, 96, 10 ], pixelTable(), -200, 3, ResizeDirection.rtl, resizeTable);
 
-    // 'preserve' column sizing
+    // 'preserveTable' column resizing
     testAdjustWidth(`ltr step (%) - preserveTable (3)`, 56.25, [ 25, 25, 25, 25 ], relativeTable(), percentageToStep(12.5, 400), 3, ResizeDirection.ltr, preserveTable);
     testAdjustWidth(`ltr large step (%) - preserveTable (3)`, 75, [ 25, 25, 25, 25 ], relativeTable(), percentageToStep(50, 400), 3, ResizeDirection.ltr, preserveTable);
     testAdjustWidth(`rtl step (%) - preserveTable (3)`, 43.75, [ 25, 25, 25, 25 ], relativeTable(), percentageToStep(-12.5, 400), 3, ResizeDirection.rtl, preserveTable);

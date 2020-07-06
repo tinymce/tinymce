@@ -23,6 +23,8 @@ tinymce.init({
   table_style_by_css: true,
   // table grid TBD
   table_grid: true,
+  // table_column_resizing: 'default',
+  // table_sizing_mode: 'fixed',
   // table_advtab: true,
   // table_cell_advtab: false,
   // table_row_advtab: false,

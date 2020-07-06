@@ -15,6 +15,7 @@ const zero = (array: number[]) => Arr.map(array, Fun.constant(0));
 const surround = (input: number[], startIndex: number, endIndex: number, results: number[], f: (array: number[]) => number[]) =>
   f(input.slice(0, startIndex)).concat(results).concat(f(input.slice(endIndex)));
 
+// Clamps negative (rtl) deltas that cause a column/row to be reduced past its min size
 const clampDelta = (sizes: number[], index: number, delta: number, minCellSize: number) => {
   const newSize = Math.max(minCellSize, sizes[index] + delta);
   return newSize - sizes[index];
@@ -43,6 +44,7 @@ const resizeTable = (): ResizeBehaviour => {
     });
   };
 
+  // Calculations for the inner columns/rows
   const calcLeftEdgeDeltas = (input: number[], index: number, next: number, delta: number, minCellSize: number, relativeSizing: boolean) => {
     if (relativeSizing) {
       return calcRelativeDeltas(input, index, delta, minCellSize);
@@ -51,12 +53,14 @@ const resizeTable = (): ResizeBehaviour => {
     }
   };
 
-  const calcMiddleDeltas = (input: number[], prev: number, index: number, next: number, delta: number, minCellSize: number, relativeSizing: boolean) =>
+  const calcMiddleDeltas = (input: number[], _prev: number, index: number, next: number, delta: number, minCellSize: number, relativeSizing: boolean) =>
     calcLeftEdgeDeltas(input, index, next, delta, minCellSize, relativeSizing);
 
   const resizeTable = (resizer: TableResizer, delta: number) =>
     resizer(delta);
 
+  // Calculations for the last column/row resizer
+  // Resizing the last column/row only requires the delta of the last column/row to be calcuated
   const calcRightEdgeDeltas = (input: number[], _prev: number, index: number, delta: number, minCellSize: number, relativeSizing: boolean) => {
     if (relativeSizing) {
       return calcRelativeDeltas(input, index, delta, minCellSize);
@@ -81,6 +85,7 @@ const resizeTable = (): ResizeBehaviour => {
 
 // Distribute the column/rows and try to preserve the table size
 const preserveTable = (): ResizeBehaviour => {
+  // Calculations for the inner columns/rows
   const calcLeftEdgeDeltas = (input: number[], index: number, next: number, delta: number, minCellSize: number) => {
     if (delta >= 0) {
       const newNext = Math.max(minCellSize, input[next] - delta);
@@ -89,11 +94,11 @@ const preserveTable = (): ResizeBehaviour => {
     } else {
       const newThis = Math.max(minCellSize, input[index] + delta);
       const diff = input[index] - newThis;
-      return surround(input, index, next + 1, [ newThis - input[index], diff ], zero);
+      return surround(input, index, next + 1, [ -Math.abs(diff), diff ], zero);
     }
   };
 
-  const calcMiddleDeltas = (input: number[], prev: number, index: number, next: number, delta: number, minCellSize: number) =>
+  const calcMiddleDeltas = (input: number[], _prev: number, index: number, next: number, delta: number, minCellSize: number) =>
     calcLeftEdgeDeltas(input, index, next, delta, minCellSize);
 
   const resizeTable = (resizer: TableResizer, delta: number, isLastColumn: boolean) => {
@@ -102,7 +107,9 @@ const preserveTable = (): ResizeBehaviour => {
     }
   };
 
-  const calcRightEdgeDeltas = (input: number[], _prev: number, index: number, delta: number, minCellSize: number, relativeSizing: boolean) => {
+  // Calculations for the last column/row resizer
+  // Resizing the last column/row distributes the delta amongst all of the columns/row
+  const calcRightEdgeDeltas = (input: number[], _prev: number, _index: number, delta: number, _minCellSize: number, relativeSizing: boolean) => {
     if (relativeSizing) {
       return zero(input);
     } else {
@@ -112,11 +119,13 @@ const preserveTable = (): ResizeBehaviour => {
   };
 
   const clampTableDelta = (sizes: number[], index: number, delta: number, minCellSize: number, isLastColumn: boolean) => {
-    // Don't clamp the last resizer
+    // Don't clamp the last resizer using normal methods.
+    // Need to allow table width to be reduced past the last column position to allow for distributive resizing
     if (isLastColumn) {
       if (delta >= 0) {
         return delta;
       } else {
+        // Clamp delta so that none of the columns/rows can reduce below their min size
         const maxDelta = Arr.foldl(sizes, (a, b) => a + b - minCellSize, 0);
         return Math.max(-maxDelta, delta);
       }
