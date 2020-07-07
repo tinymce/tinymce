@@ -63,7 +63,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
         type: 'header'
       }, false, generalSelectors),
       TableTestUtils.sClickDialogButton('clicking save', true),
-      tinyApis.sAssertContent('<table style="border: 1px solid black; border-collapse: collapse;" border="1"><thead><tr style="height: 10px; text-align: right;"><td>X</td></tr></thead></table>')
+      tinyApis.sAssertContent('<table style="border: 1px solid black; border-collapse: collapse;" border="1"><thead><tr style="height: 10px; text-align: right;"><td scope="col">X</td></tr></thead></table>')
     ]);
 
     const captionTest = () => Log.stepsAsStep('TBA', 'Table: Caption should always stay the firstChild of the table (see TINY-1167)', [
@@ -77,7 +77,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
         type: 'header'
       }, false, generalSelectors),
       TableTestUtils.sClickDialogButton('clicking save', true),
-      tinyApis.sAssertContent('<table><caption>CAPTION</caption><thead><tr><td>X</td></tr></thead><tbody><tr><td>Y</td></tr></tbody></table>')
+      tinyApis.sAssertContent('<table><caption>CAPTION</caption><thead><tr><td scope="col">X</td></tr></thead><tbody><tr><td>Y</td></tr></tbody></table>')
     ]);
 
     const advGetTest = () => Log.stepsAsStep('TBA', 'Table: Table row properties dialog (get data from complex row)', [
