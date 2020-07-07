@@ -36,12 +36,12 @@ const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, c
 
   const apis: DropdownApis = {
     expand: (comp) => {
-      if (! Toggling.isOn(comp)) {
+      if (!Toggling.isOn(comp)) {
         DropdownUtils.togglePopup(detail, (x) => x, comp, externals, Fun.noop, DropdownUtils.HighlightOnOpen.HighlightNone).get(Fun.noop);
       }
     },
     open: (comp) => {
-      if (! Toggling.isOn(comp)) {
+      if (!Toggling.isOn(comp)) {
         DropdownUtils.togglePopup(detail, (x) => x, comp, externals, Fun.noop, DropdownUtils.HighlightOnOpen.HighlightFirst).get(Fun.noop);
       }
     },

@@ -82,7 +82,7 @@ const builder = (detail: WidgetItemDetail) => {
             // then focus it (i.e. escape the inner widget). Only do if not autofocusing
             // Autofocusing should treat the widget like it is the only item, so it should
             // let its outer menu handle escape
-            if (! Focusing.isFocused(component) && !detail.autofocus) {
+            if (!Focusing.isFocused(component) && !detail.autofocus) {
               Focusing.focus(component);
               return Option.some<boolean>(true);
             } else if (detail.autofocus) {

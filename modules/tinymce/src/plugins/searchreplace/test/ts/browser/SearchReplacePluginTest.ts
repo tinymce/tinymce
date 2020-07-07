@@ -158,21 +158,21 @@ UnitTest.asynctest('browser.tinymce.plugins.searchreplace.SearchReplacePluginTes
   });
 
   suite.test('TestCase-TINY-5967: SearchReplace: Find and replace all in nested contenteditable elements', (editor) => {
-    editor.setContent('<p>Editable '+
+    editor.setContent('<p>Editable ' +
       '<span contenteditable="false">NonEditable <span contenteditable="true">Editable ' +
       '<span contenteditable="false">NonEditable <span contenteditable="true">Editable </span>NonEditable </span>' +
       'Editable </span>NonEditable </span>' +
       'Editable</p>');
     LegacyUnit.equal(5, editor.plugins.searchreplace.find('Editable', true, true));
     LegacyUnit.equal(HtmlUtils.normalizeHtml(editor.getBody().innerHTML), (
-      '<p><span class="mce-match-marker mce-match-marker-selected" data-mce-bogus="1" data-mce-index="0">Editable</span> '+
+      '<p><span class="mce-match-marker mce-match-marker-selected" data-mce-bogus="1" data-mce-index="0">Editable</span> ' +
       '<span contenteditable="false">NonEditable <span contenteditable="true"><span class="mce-match-marker" data-mce-bogus="1" data-mce-index="1">Editable</span> ' +
       '<span contenteditable="false">NonEditable <span contenteditable="true"><span class="mce-match-marker" data-mce-bogus="1" data-mce-index="2">Editable</span> </span>NonEditable </span>' +
       '<span class="mce-match-marker" data-mce-bogus="1" data-mce-index="3">Editable</span> </span>NonEditable </span>' +
       '<span class="mce-match-marker" data-mce-bogus="1" data-mce-index="4">Editable</span></p>'
     ));
     LegacyUnit.equal(editor.plugins.searchreplace.replace('x', true, true), false);
-    LegacyUnit.equal(editor.getContent(), '<p>x '+
+    LegacyUnit.equal(editor.getContent(), '<p>x ' +
       '<span contenteditable="false">NonEditable <span contenteditable="true">x ' +
       '<span contenteditable="false">NonEditable <span contenteditable="true">x </span>NonEditable </span>' +
       'x </span>NonEditable </span>' +

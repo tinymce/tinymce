@@ -9,7 +9,7 @@ const init = (): CouplingState => {
 
   const getOrCreate = (component: AlloyComponent, coupleConfig: CouplingConfig, name: string): AlloyComponent => {
     const available = Obj.keys(coupleConfig.others);
-    if (! available) {
+    if (!available) {
       throw new Error('Cannot find coupled component: ' + name + '. Known coupled components: ' + JSON.stringify(available, null, 2));
     } else {
       // TODO: Likely type error. coupleConfig.others[key] is `() => ((comp: AlloyComponent) => AlloySpec)`, but builder is being treated as a `(comp: AlloyComponent) => AlloySpec`

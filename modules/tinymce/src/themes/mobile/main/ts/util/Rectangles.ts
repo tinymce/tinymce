@@ -30,7 +30,7 @@ const toRect = (rawRect: RawRect): StructRect => ({
 });
 
 const getRectsFromRange = (range: Range): StructRect[] => {
-  if (! range.collapsed) {
+  if (!range.collapsed) {
     return Arr.map(range.getClientRects(), toRect);
   } else {
     const start = Element.fromDom(range.startContainer);
