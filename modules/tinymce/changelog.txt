@@ -1,4 +1,5 @@
 Version 5.5.0 (TBD)
+    Added `hasPlugin` function to the editor API to determine if a plugin exists or not #TINY-766
     Fixed the `media` plugin not saving the alternative source url in some situations #TINY-4113
     Fixed an issue where dragging and dropping within a table would select table cells #TINY-5950
 Version 5.4.1 (TBD)

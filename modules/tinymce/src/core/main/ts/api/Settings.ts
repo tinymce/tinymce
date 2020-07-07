@@ -179,7 +179,7 @@ const isReadOnly = (editor: Editor): boolean => editor.getParam('readonly');
 
 const hasContentCssCors = (editor: Editor): boolean => editor.getParam('content_css_cors');
 
-const getPlugins = (editor: Editor) => editor.getParam('plugins');
+const getPlugins = (editor: Editor): string => editor.getParam('plugins', '', 'string');
 
 const getExternalPlugins = (editor: Editor) => editor.getParam('external_plugins');
 
