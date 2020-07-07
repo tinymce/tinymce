@@ -51,6 +51,7 @@ UnitTest.asynctest('browser.tinymce.core.DragDropOverridesTest', (success, failu
       ])),
       Log.chainsAsStep('TINY-6027', 'Drag unsupported file into the editor/UI is prevented', [
         Chain.inject(editor),
+        Chain.wait(100), // Wait a small amount of time to ensure the events have been bound
         ApiChains.cSetContent('<p>Content</p>'),
         Chain.fromIsolatedChainsWith(Element.fromDom(editor.getBody()), [
           DragnDrop.cDropFiles([
