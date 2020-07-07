@@ -183,6 +183,8 @@ const getPlugins = (editor: Editor) => editor.getParam('plugins');
 
 const getExternalPlugins = (editor: Editor) => editor.getParam('external_plugins');
 
+const shouldBlockUnsupportedDrop = (editor: Editor) => editor.getParam('block_unsupported_drop', true, 'boolean');
+
 export {
   getIframeAttrs,
   getDocType,
@@ -242,5 +244,6 @@ export {
   isReadOnly,
   hasContentCssCors,
   getPlugins,
-  getExternalPlugins
+  getExternalPlugins,
+  shouldBlockUnsupportedDrop
 };
