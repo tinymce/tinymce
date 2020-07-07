@@ -24,7 +24,7 @@ const getDownOrRightCells = (grid: RowCells[], selectedCells: DetailExt[], gener
   const downDetails = toDetailList(downGrid, generators);
   // Get an array of the cells down or to the right of the bottom right cell
   return Arr.bind(downDetails, (detail) => {
-    const slicedCells = detail.cells().slice(selectedCells[0].column() + selectedCells[0].colspan() - 1, +detail.cells().length);
+    const slicedCells = detail.cells().slice(selectedCells[0].column() + selectedCells[0].colspan() - 1, detail.cells().length);
     return Arr.map(slicedCells, (cell) => cell.element());
   });
 };
