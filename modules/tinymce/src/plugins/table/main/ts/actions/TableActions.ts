@@ -117,7 +117,7 @@ export const TableActions = (editor: Editor, lazyWire: () => ResizeWire): TableA
 
   const setTableCellType = (editor: Editor, args: Record<string, any>) =>
     extractType(args, [ 'td', 'th' ]).each((type) => {
-      switchCellType(editor.dom, getCellsFromSelection(editor), type);
+      switchCellType(editor.dom, getCellsFromSelection(editor), type, null);
     });
 
   const setTableRowType = (editor: Editor, args: Record<string, any>) =>
