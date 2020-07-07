@@ -1,4 +1,4 @@
-import { Assertions, Chain, DragnDrop, GeneralSteps, Log, Logger, Pipeline, Step, UiFinder } from '@ephox/agar';
+import { Assertions, Chain, DragnDrop, GeneralSteps, Log, Logger, Mouse, Pipeline, Step, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Blob, document, File } from '@ephox/dom-globals';
 import { Cell } from '@ephox/katamari';
@@ -17,6 +17,14 @@ UnitTest.asynctest('browser.tinymce.core.DragDropOverridesTest', (success, failu
 
     return Object.freeze(newBlob);
   };
+
+  const cAssertNotification = (message: string) => Chain.fromIsolatedChainsWith(Body.body(), [
+    UiFinder.cWaitForVisible('Wait for notification to appear', '.tox-notification'),
+    Assertions.cAssertPresence('Verify message content', {
+      ['.tox-notification__body:contains(' + message + ')']: 1
+    }),
+    Mouse.cClickOn('.tox-notification__dismiss')
+  ]);
 
   TinyLoader.setup((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
@@ -48,6 +56,7 @@ UnitTest.asynctest('browser.tinymce.core.DragDropOverridesTest', (success, failu
           DragnDrop.cDropFiles([
             createFile('test.txt', 123, new Blob([ 'content' ], { type: 'text/plain' }))
           ]),
+          cAssertNotification('Dropped file type is not supported'),
           DragnDrop.cDropItems([
             { data: 'Some content', type: 'text/plain' }
           ], false)

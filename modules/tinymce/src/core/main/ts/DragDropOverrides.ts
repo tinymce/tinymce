@@ -17,6 +17,7 @@ import * as MousePosition from './dom/MousePosition';
 import * as NodeType from './dom/NodeType';
 import { isUIElement } from './focus/FocusController';
 import * as Predicate from './util/Predicate';
+import * as ErrorReporter from './ErrorReporter';
 
 /**
  * This module contains logic overriding the drag/drop logic of the editor.
@@ -289,8 +290,10 @@ const blockUnsupportedFileDrop = (editor: Editor) => {
       // Prevent file drop events within the editor, as they'll cause the browser to navigate away
       const dataTransfer = e.dataTransfer;
       if (dataTransfer && (Arr.contains(dataTransfer.types, 'Files') || dataTransfer.files.length > 0)) {
-        // TODO: Add an error notification in 5.5
         e.preventDefault();
+        if (e.type === 'drop') {
+          ErrorReporter.displayError(editor, 'Dropped file type is not supported');
+        }
       }
     }
   };
