@@ -27,7 +27,7 @@ UnitTest.asynctest('Editor Dialog Popups Test', (success, failure) => {
         Chain.binder((rect: ClientRect) => {
           const middle = { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
           const range = document.caretRangeFromPoint(middle.x, middle.y);
-          if (! range) {
+          if (!range) {
             return Result.error('Could not find a range at coordinate: (' + middle.x + ', ' + middle.y + ')');
           } else {
             return SelectorExists.closest(Element.fromDom(range.startContainer), selector) ? Result.value(rect) : Result.error('Range was not within: "' + selector + '". Are you sure that it is on top of the dialog?');

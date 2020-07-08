@@ -77,7 +77,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, _ra
   const getItemByValue = (_container: AlloyComponent, menus: AlloyComponent[], itemValue: string): Option<AlloyComponent> =>
     // Can *greatly* improve the performance of this by calculating things up front.
     Arr.findMap(menus, (menu) => {
-      if (! menu.getSystem().isConnected()) { return Option.none(); }
+      if (!menu.getSystem().isConnected()) { return Option.none(); }
       const candidates = Highlighting.getCandidates(menu);
       return Arr.find(candidates, (c) => getItemValue(c) === itemValue);
     });
@@ -101,7 +101,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, _ra
 
       // May not need to do the active menu thing.
       Classes.remove(o.element(), [ detail.markers.backgroundMenu ]);
-      if (! detail.stayInDom) { Replacing.remove(container, o); }
+      if (!detail.stayInDom) { Replacing.remove(container, o); }
     });
   };
 
@@ -139,7 +139,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, _ra
         Class.add(r.element(), detail.markers.backgroundMenu);
       });
 
-      if (! Body.inBody(activeMenu.element())) {
+      if (!Body.inBody(activeMenu.element())) {
         Replacing.append(container, GuiFactory.premade(activeMenu));
       }
 
@@ -173,7 +173,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, _ra
         const activeMenu = buildIfRequired(container, menuName, activeMenuPrep);
 
         // DUPE with above. Fix later.
-        if (! Body.inBody(activeMenu.element())) {
+        if (!Body.inBody(activeMenu.element())) {
           Replacing.append(container, GuiFactory.premade(activeMenu));
         }
 

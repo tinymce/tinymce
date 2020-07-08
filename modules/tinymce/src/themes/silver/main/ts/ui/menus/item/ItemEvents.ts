@@ -22,7 +22,7 @@ export interface OnMenuItemExecuteType<T> extends GetApiType<T> {
 const onMenuItemExecute = <T>(info: OnMenuItemExecuteType<T>, itemResponse: ItemResponse) => AlloyEvents.runOnExecute(function (comp, simulatedEvent) {
   // If there is an action, run the action
   runWithApi(info, comp)(info.onAction);
-  if (! info.triggersSubmenu && itemResponse === ItemResponse.CLOSE_ON_EXECUTE) {
+  if (!info.triggersSubmenu && itemResponse === ItemResponse.CLOSE_ON_EXECUTE) {
     AlloyTriggers.emit(comp, SystemEvents.sandboxClose());
     simulatedEvent.stop();
   }
