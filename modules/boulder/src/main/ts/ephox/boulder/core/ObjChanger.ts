@@ -23,7 +23,7 @@ const indexOnKey = function (array, key) {
 const exclude = function (obj, fields) {
   const r = { };
   Obj.each(obj, function (v, k) {
-    if (! Arr.contains(fields, k)) {
+    if (!Arr.contains(fields, k)) {
       r[k] = v;
     }
   });

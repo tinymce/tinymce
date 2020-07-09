@@ -6,7 +6,6 @@
  */
 
 import { Behaviour, Dragging, SimpleSpec } from '@ephox/alloy';
-import { Strings } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import I18n from 'tinymce/core/api/util/I18n';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
@@ -50,9 +49,9 @@ const renderStatusbar = (editor: Editor, providersBackstage: UiFactoryBackstageP
     };
   };
 
-  const getResizeType = (editor): ResizeTypes => {
+  const getResizeType = (editor: Editor): ResizeTypes => {
     // If autoresize is enabled, disable resize
-    const fallback = !Strings.contains(editor.getParam('plugins', '', 'string'), 'autoresize');
+    const fallback = !editor.hasPlugin('autoresize');
     const resize = editor.getParam('resize', fallback);
     if (resize === false) {
       return ResizeTypes.None;
@@ -70,7 +69,7 @@ const renderStatusbar = (editor: Editor, providersBackstage: UiFactoryBackstageP
       components.push(ElementPath.renderElementPath(editor, { }, providersBackstage));
     }
 
-    if (Strings.contains(editor.getParam('plugins', '', 'string'), 'wordcount')) {
+    if (editor.hasPlugin('wordcount')) {
       components.push(renderWordCount(editor, providersBackstage));
     }
 

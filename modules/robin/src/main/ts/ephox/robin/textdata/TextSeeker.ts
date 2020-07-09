@@ -78,7 +78,7 @@ const repeat = function <E, D> (universe: Universe<E, D>, item: E, mode: Transit
 
   if (isBoundary(universe, item)) {
     return terminate();
-  } else if (! universe.property().isText(item)) {
+  } else if (!universe.property().isText(item)) {
     return recurse(recent);
   } else {
     const text = universe.property().getText(item);

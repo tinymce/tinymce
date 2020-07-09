@@ -6,16 +6,12 @@
  */
 
 import PluginManager from 'tinymce/core/api/PluginManager';
-import Tools from 'tinymce/core/api/util/Tools';
 import * as Commands from './api/Commands';
 import * as Buttons from './ui/Buttons';
-import Editor from 'tinymce/core/api/Editor';
 
 export default () => {
   PluginManager.add('advlist', (editor) => {
-    const hasPlugin = (editor: Editor, plugin: string) => Tools.inArray(editor.getParam('plugins', '', 'string').split(/[ ,]/), plugin) !== -1;
-
-    if (hasPlugin(editor, 'lists')) {
+    if (editor.hasPlugin('lists')) {
       Buttons.register(editor);
       Commands.register(editor);
     }

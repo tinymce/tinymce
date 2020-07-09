@@ -12,7 +12,7 @@ UnitTest.test('BrowserTest', function () {
     assert.eq(expectedMajor, actualBrowserVersion.major);
     assert.eq(expectedMinor, actualBrowserVersion.minor);
 
-    if (! PlatformQuery.hasOwnProperty(expectedQuery)) {
+    if (!PlatformQuery.hasOwnProperty(expectedQuery)) {
       assert.fail('Platform query: ' + expectedQuery + ' not known');
     }
     assert.eq(true, PlatformQuery[expectedQuery](platform), 'The query ' + expectedQuery + ' should match.\nUser Agent: ' + userAgent + '\nbrowser: ' + expectedBrowser);

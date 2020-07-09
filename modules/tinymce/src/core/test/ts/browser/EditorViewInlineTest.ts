@@ -21,10 +21,10 @@ UnitTest.asynctest('browser.tinymce.core.EditorViewInlineTest', function (succes
   };
 
   const sTestIsXYInContentArea = function (editor, deltaX, deltaY) {
-    const dx1 = - 25 - deltaX;
+    const dx1 = -25 - deltaX;
     const dy1 = -25 - deltaY;
-    const dx2 = - 5 - deltaX;
-    const dy2 = - 5 - deltaY;
+    const dx2 = -5 - deltaX;
+    const dy2 = -5 - deltaY;
     return Step.label('Check points relative to deltaX=' + deltaX + ' deltaY=' + deltaY, Chain.asStep({}, [
       Chain.fromParent(
         Chain.label(

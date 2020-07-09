@@ -8,7 +8,7 @@ import { Highlighting } from '../behaviour/Highlighting';
 
 const reportFocusShifting = (component: AlloyComponent, prevFocus: Option<Element>, newFocus: Option<Element>) => {
   const noChange = prevFocus.exists((p) => newFocus.exists((n) => Compare.eq(n, p)));
-  if (! noChange) {
+  if (!noChange) {
     AlloyTriggers.emitWith(component, SystemEvents.focusShifted(), {
       prevFocus,
       newFocus

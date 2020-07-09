@@ -89,7 +89,7 @@ const missingOrderError = <T> (eventName: string, tuples: Array<BehaviourTuple<a
 const fuse = <T extends EventFormat>(tuples: Array<BehaviourTuple<T>>, eventOrder: Record<string, string[]>, eventName: string): Result<AlloyEventHandler<T>, any[]> => {
   // ASSUMPTION: tuples.length will never be 0, because it wouldn't have an entry if it was 0
   const order = eventOrder[eventName];
-  if (! order) {
+  if (!order) {
     return missingOrderError(eventName, tuples);
   } else {
     return PrioritySort.sortKeys('Event: ' + eventName, 'name', tuples, order).map(
