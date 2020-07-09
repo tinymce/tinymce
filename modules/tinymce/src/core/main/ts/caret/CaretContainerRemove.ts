@@ -5,12 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Node, Text } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
-import * as CaretContainer from './CaretContainer';
-import CaretPosition from './CaretPosition';
 import * as NodeType from '../dom/NodeType';
 import * as Zwsp from '../text/Zwsp';
-import { Node, Text } from '@ephox/dom-globals';
+import * as CaretContainer from './CaretContainer';
+import CaretPosition from './CaretPosition';
 
 const isElement = NodeType.isElement;
 const isText = NodeType.isText;
@@ -22,26 +22,17 @@ const removeNode = (node: Node) => {
   }
 };
 
-const getNodeValue = (node: Node): string => {
-  try {
-    return node.nodeValue;
-  } catch (ex) {
-    // IE sometimes produces "Invalid argument" on nodes
-    return '';
-  }
-};
-
-const setNodeValue = (node: Node, text: string) => {
-  if (text.length === 0) {
-    removeNode(node);
-  } else {
-    node.nodeValue = text;
-  }
-};
-
 const trimCount = (text: string) => {
   const trimmedText = Zwsp.trim(text);
   return { count: text.length - trimmedText.length, text: trimmedText };
+};
+
+const deleteZwspChars = (caretContainer: Text) => {
+  // We use the Text.deleteData API here so as to preserve selection offsets
+  let idx;
+  while ((idx = caretContainer.data.lastIndexOf(Zwsp.ZWSP)) !== -1) {
+    caretContainer.deleteData(idx, 1);
+  }
 };
 
 const removeUnchanged = (caretContainer: Node, pos: CaretPosition): CaretPosition => {
@@ -55,7 +46,7 @@ const removeTextAndReposition = (caretContainer: Text, pos: CaretPosition): Care
   const text = before.text + after.text;
 
   if (text.length > 0) {
-    setNodeValue(caretContainer, text);
+    deleteZwspChars(caretContainer);
     return CaretPosition(caretContainer, pos.offset() - before.count);
   } else {
     return pos;
@@ -87,8 +78,10 @@ const remove = (caretContainerNode: Node) => {
   }
 
   if (isText(caretContainerNode)) {
-    const text = Zwsp.trim(getNodeValue(caretContainerNode));
-    setNodeValue(caretContainerNode, text);
+    deleteZwspChars(caretContainerNode);
+    if (caretContainerNode.data.length === 0) {
+      removeNode(caretContainerNode);
+    }
   }
 };
 

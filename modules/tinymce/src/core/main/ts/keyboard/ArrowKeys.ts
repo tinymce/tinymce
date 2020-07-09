@@ -10,6 +10,7 @@ import { Cell } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import * as BoundarySelection from './BoundarySelection';
 import * as CefNavigation from './CefNavigation';
+import * as MediaNavigation from './MediaNavigation';
 import * as TableNavigation from './TableNavigation';
 import * as ContentEndpointNavigation from './ContentEndpointNavigation';
 import * as MatchKeys from './MatchKeys';
@@ -28,6 +29,10 @@ const executeKeydownOverride = function (editor: Editor, caret: Cell<Text>, evt:
     { keyCode: VK.LEFT, action: TableNavigation.moveH(editor, false) },
     { keyCode: VK.UP, action: TableNavigation.moveV(editor, false) },
     { keyCode: VK.DOWN, action: TableNavigation.moveV(editor, true) },
+    { keyCode: VK.RIGHT, action: MediaNavigation.moveH(editor, true) },
+    { keyCode: VK.LEFT, action: MediaNavigation.moveH(editor, false) },
+    { keyCode: VK.UP, action: MediaNavigation.moveV(editor, false) },
+    { keyCode: VK.DOWN, action: MediaNavigation.moveV(editor, true) },
     { keyCode: VK.RIGHT, action: BoundarySelection.move(editor, caret, true) },
     { keyCode: VK.LEFT, action: BoundarySelection.move(editor, caret, false) },
     { keyCode: VK.RIGHT, ctrlKey: !os.isOSX(), altKey: os.isOSX(), action: BoundarySelection.moveNextWord(editor, caret) },

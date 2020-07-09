@@ -22,6 +22,10 @@
 
   // Selection outline on certain editable objects
   img[data-mce-selected],
+  video[data-mce-selected],
+  audio[data-mce-selected],
+  object[data-mce-selected],
+  embed[data-mce-selected],
   table[data-mce-selected] {
     outline: @object-block-selected-outline-width solid @object-block-selected-color;
   }

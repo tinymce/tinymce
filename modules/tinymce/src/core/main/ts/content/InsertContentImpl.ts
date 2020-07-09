@@ -27,7 +27,7 @@ import * as InsertList from './InsertList';
 import * as Settings from '../api/Settings';
 import { isAfterNbsp, trimNbspAfterDeleteAndPadValue, trimOrPadLeftRight } from './NbspTrim';
 
-const isTableCell = NodeType.matchNodeNames([ 'td', 'th' ]);
+const isTableCell = NodeType.isTableCell;
 
 const isTableCellContentSelected = (dom: DOMUtils, rng: Range, cell: Node | null) => {
   if (cell !== null) {

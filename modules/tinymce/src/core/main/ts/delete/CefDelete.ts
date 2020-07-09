@@ -10,6 +10,7 @@ import { Arr, Option } from '@ephox/katamari';
 import { Element, Remove, SelectorFilter } from '@ephox/sugar';
 import Editor from '../api/Editor';
 import CaretPosition from '../caret/CaretPosition';
+import * as CefUtils from '../dom/CefUtils';
 import * as NodeType from '../dom/NodeType';
 import * as CefDeleteAction from './CefDeleteAction';
 import * as DeleteElement from './DeleteElement';
@@ -38,7 +39,7 @@ const moveToPosition = function (editor: Editor) {
   };
 };
 
-const getAncestorCe = (editor, node: Node) => Option.from(getContentEditableRoot(editor.getBody(), node));
+const getAncestorCe = (editor: Editor, node: Node) => Option.from(CefUtils.getContentEditableRoot(editor.getBody(), node));
 
 const backspaceDeleteCaret = function (editor: Editor, forward: boolean) {
   const selectedNode = editor.selection.getNode(); // is the parent node if cursor before/after cef
@@ -92,24 +93,11 @@ const backspaceDeleteRange = function (editor: Editor, forward: boolean) {
   return false;
 };
 
-const getContentEditableRoot = function (root, node) {
-  while (node && node !== root) {
-    if (NodeType.isContentEditableTrue(node) || NodeType.isContentEditableFalse(node)) {
-      return node;
-    }
-
-    node = node.parentNode;
-  }
-
-  return null;
-};
-
 const paddEmptyElement = function (editor: Editor) {
-  let br;
-  const ceRoot = getContentEditableRoot(editor.getBody(), editor.selection.getNode());
+  const ceRoot = CefUtils.getContentEditableRoot(editor.getBody(), editor.selection.getNode());
 
   if (NodeType.isContentEditableTrue(ceRoot) && editor.dom.isBlock(ceRoot) && editor.dom.isEmpty(ceRoot)) {
-    br = editor.dom.create('br', { 'data-mce-bogus': '1' });
+    const br = editor.dom.create('br', { 'data-mce-bogus': '1' });
     editor.dom.setHTML(ceRoot, '');
     ceRoot.appendChild(br);
     editor.selection.setRng(CaretPosition.before(br).toRange());

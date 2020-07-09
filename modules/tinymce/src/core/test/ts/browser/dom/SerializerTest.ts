@@ -807,10 +807,10 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function (success,
     const lastNodeFilter = Arr.last(ser.getNodeFilters()).getOrDie('Failed to get filter');
     const lastAttributeFilter = Arr.last(ser.getAttributeFilters()).getOrDie('Failed to get filter');
 
-    Assert.eq('Should be the last registred filter element name', 'some-tag', lastNodeFilter.name);
-    Assert.eq('Should be the last registred node filter function', nodeFilter, lastNodeFilter.callbacks[0]);
-    Assert.eq('Should be the last registred filter attribute name', 'data-something', lastAttributeFilter.name);
-    Assert.eq('Should be the last registred attribute filter function', attrFilter, lastAttributeFilter.callbacks[0]);
+    Assert.eq('Should be the last registered filter element name', 'some-tag', lastNodeFilter.name);
+    Assert.eq('Should be the last registered node filter function', nodeFilter, lastNodeFilter.callbacks[0]);
+    Assert.eq('Should be the last registered filter attribute name', 'data-something', lastAttributeFilter.name);
+    Assert.eq('Should be the last registered attribute filter function', attrFilter, lastAttributeFilter.callbacks[0]);
   });
 
   viewBlock.attach();

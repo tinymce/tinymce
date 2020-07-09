@@ -274,7 +274,7 @@ const blockIeDrop = (editor: Editor) => {
     // FF doesn't pass out clientX/clientY for drop since this is for IE we just use null instead
     const realTarget = typeof e.clientX !== 'undefined' ? editor.getDoc().elementFromPoint(e.clientX, e.clientY) : null;
 
-    if (isContentEditableFalse(realTarget) || isContentEditableFalse(editor.dom.getContentEditableParent(realTarget))) {
+    if (isContentEditableFalse(realTarget) || editor.dom.getContentEditableParent(realTarget) === 'false') {
       e.preventDefault();
     }
   });

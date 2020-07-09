@@ -18,6 +18,7 @@ import { isFakeCaretTarget } from './FakeCaret';
 
 const isContentEditableTrue = NodeType.isContentEditableTrue;
 const isContentEditableFalse = NodeType.isContentEditableFalse;
+const isMedia = NodeType.isMedia;
 const isBlockLike = NodeType.matchStyleValues('display', 'block table table-cell table-caption list-item');
 const isCaretContainer = CaretContainer.isCaretContainer;
 const isCaretContainerBlock = CaretContainer.isCaretContainerBlock;
@@ -147,7 +148,7 @@ const lean = (left: boolean, root: Node, node: Node): Node => {
       sibling = sibling[siblingName];
     }
 
-    if (isContentEditableFalse(sibling)) {
+    if (isContentEditableFalse(sibling) || isMedia(sibling)) {
       if (isNodesInSameBlock(root, sibling, node)) {
         return sibling;
       }

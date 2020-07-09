@@ -5,18 +5,22 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element, HTMLElement, Range } from '@ephox/dom-globals';
-import { Arr, Option, Fun } from '@ephox/katamari';
+import { Element, HTMLElement, HTMLTableCellElement, HTMLTableElement, Range } from '@ephox/dom-globals';
+import { Arr, Fun, Option } from '@ephox/katamari';
 import { Attr, Element as SugarElement, Insert } from '@ephox/sugar';
 import Editor from '../api/Editor';
 import * as Settings from '../api/Settings';
-import { isFakeCaretTableBrowser } from '../caret/FakeCaret';
 import * as CaretFinder from '../caret/CaretFinder';
-import { findClosestHorizontalPositionFromPoint, getPositionsAbove, getPositionsBelow, getPositionsUntilNextLine, getPositionsUntilPreviousLine, BreakType, LineInfo } from '../caret/LineReader';
 import CaretPosition from '../caret/CaretPosition';
+import { isFakeCaretTableBrowser } from '../caret/FakeCaret';
+import * as FakeCaretUtils from '../caret/FakeCaretUtils';
+import {
+  BreakType, findClosestHorizontalPositionFromPoint, getPositionsAbove, getPositionsBelow, getPositionsUntilNextLine, getPositionsUntilPreviousLine,
+  LineInfo
+} from '../caret/LineReader';
 import { findClosestPositionInAboveCell, findClosestPositionInBelowCell } from '../caret/TableCells';
 import * as NodeType from '../dom/NodeType';
-import * as CefUtils from './CefUtils';
+import * as NavigationUtils from './NavigationUtils';
 
 const hasNextBreak = (getPositionsUntil, scope: HTMLElement, lineInfo: LineInfo): boolean => lineInfo.breakAt.map((breakPos) => getPositionsUntil(scope, breakPos).breakAt.isSome()).getOr(false);
 
@@ -50,8 +54,9 @@ const navigateHorizontally = (editor, forward: boolean, table: HTMLElement, _td:
   const direction = forward ? 1 : -1;
 
   if (isFakeCaretTableBrowser() && isCaretAtStartOrEndOfTable(forward, rng, table)) {
-    const newRng = CefUtils.showCaret(direction, editor, table, !forward, false);
-    CefUtils.moveToRange(editor, newRng);
+    FakeCaretUtils.showCaret(direction, editor, table, !forward, false).each((newRng) => {
+      NavigationUtils.moveToRange(editor, newRng);
+    });
     return true;
   }
 
@@ -89,10 +94,10 @@ const renderBlock = (down: boolean, editor: Editor, table: HTMLElement, pos: Car
       const rng = editor.dom.createRng();
       rng.setStart(element.dom(), 0);
       rng.setEnd(element.dom(), 0);
-      CefUtils.moveToRange(editor, rng);
+      NavigationUtils.moveToRange(editor, rng);
     });
   } else {
-    CefUtils.moveToRange(editor, pos.toRange());
+    NavigationUtils.moveToRange(editor, pos.toRange());
   }
 };
 
@@ -101,9 +106,9 @@ const moveCaret = (editor: Editor, down: boolean, pos: CaretPosition) => {
   const last = down === false;
 
   table.fold(
-    () => CefUtils.moveToRange(editor, pos.toRange()),
+    () => NavigationUtils.moveToRange(editor, pos.toRange()),
     (table) => CaretFinder.positionIn(last, editor.getBody()).filter((lastPos) => lastPos.isEqual(pos)).fold(
-      () => CefUtils.moveToRange(editor, pos.toRange()),
+      () => NavigationUtils.moveToRange(editor, pos.toRange()),
       (_) => renderBlock(down, editor, table, pos)
     )
   );
@@ -127,9 +132,15 @@ const navigateVertically = (editor, down: boolean, table: HTMLElement, td: HTMLE
   }
 };
 
-const moveH = (editor, forward: boolean) => () => Option.from(editor.dom.getParent(editor.selection.getNode(), 'td,th')).bind((td) => Option.from(editor.dom.getParent(td, 'table')).map((table) => navigateHorizontally(editor, forward, table, td))).getOr(false);
+const move = (editor: Editor, forward: boolean, mover: (editor: Editor, forward: boolean, table: HTMLTableElement, td: HTMLTableCellElement) => boolean) =>
+  Option.from(editor.dom.getParent<HTMLTableCellElement>(editor.selection.getNode(), 'td,th'))
+    .bind((td) => Option.from(editor.dom.getParent(td, 'table'))
+      .map((table) => mover(editor, forward, table, td))
+    ).getOr(false);
 
-const moveV = (editor, forward: boolean) => () => Option.from(editor.dom.getParent(editor.selection.getNode(), 'td,th')).bind((td) => Option.from(editor.dom.getParent(td, 'table')).map((table) => navigateVertically(editor, forward, table, td))).getOr(false);
+const moveH = (editor, forward: boolean) => () => move(editor, forward, navigateHorizontally);
+
+const moveV = (editor, forward: boolean) => () => move(editor, forward, navigateVertically);
 
 export {
   isFakeCaretTableBrowser,

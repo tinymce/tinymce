@@ -23,7 +23,7 @@ const isContentEditableFalse = NodeType.isContentEditableFalse;
 const isBr = NodeType.isBr;
 const isText = NodeType.isText;
 const isInvalidTextElement = NodeType.matchNodeNames([ 'script', 'style', 'textarea' ]);
-const isAtomicInline = NodeType.matchNodeNames([ 'img', 'input', 'textarea', 'hr', 'iframe', 'video', 'audio', 'object' ]);
+const isAtomicInline = NodeType.matchNodeNames([ 'img', 'input', 'textarea', 'hr', 'iframe', 'video', 'audio', 'object', 'embed' ]);
 const isTable = NodeType.matchNodeNames([ 'table' ]);
 const isCaretContainer = CaretContainer.isCaretContainer;
 

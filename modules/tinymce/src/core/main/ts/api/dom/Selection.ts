@@ -329,12 +329,12 @@ const Selection = function (dom: DOMUtils, win: Window, serializer: Serializer, 
         } else {
           rng = selection.createRange ? selection.createRange() : doc.createRange();
         }
+
+        rng = EventProcessRanges.processRanges(editor, [ rng ])[0];
       }
     } catch (ex) {
       // IE throws unspecified error here if TinyMCE is placed in a frame/iframe
     }
-
-    rng = EventProcessRanges.processRanges(editor, [ rng ])[0];
 
     // No range found then create an empty one
     // This can occur when the editor is placed in a hidden container element on Gecko
@@ -478,17 +478,20 @@ const Selection = function (dom: DOMUtils, win: Window, serializer: Serializer, 
   const isForward = (): boolean => {
     const sel = getSel();
 
+    const anchorNode = sel?.anchorNode;
+    const focusNode = sel?.focusNode;
+
     // No support for selection direction then always return true
-    if (!sel || !sel.anchorNode || !sel.focusNode) {
+    if (!sel || !anchorNode || !focusNode || NodeType.isRestrictedNode(anchorNode) || NodeType.isRestrictedNode(focusNode)) {
       return true;
     }
 
     const anchorRange = dom.createRng();
-    anchorRange.setStart(sel.anchorNode, sel.anchorOffset);
+    anchorRange.setStart(anchorNode, sel.anchorOffset);
     anchorRange.collapse(true);
 
     const focusRange = dom.createRng();
-    focusRange.setStart(sel.focusNode, sel.focusOffset);
+    focusRange.setStart(focusNode, sel.focusOffset);
     focusRange.collapse(true);
 
     return anchorRange.compareBoundaryPoints(anchorRange.START_TO_START, focusRange) <= 0;

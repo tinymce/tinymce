@@ -8,6 +8,7 @@
 import { document, Element, Event, MouseEvent, Node } from '@ephox/dom-globals';
 import { Obj } from '@ephox/katamari';
 import { Element as SugarElement, Selectors } from '@ephox/sugar';
+import * as CefUtils from '../../dom/CefUtils';
 import * as NodeType from '../../dom/NodeType';
 import * as RangePoint from '../../dom/RangePoint';
 import Editor from '../Editor';
@@ -37,19 +38,6 @@ interface ControlSelection {
  */
 
 const isContentEditableFalse = NodeType.isContentEditableFalse;
-const isContentEditableTrue = NodeType.isContentEditableTrue;
-
-const getContentEditableRoot = function (root: Node, node: Node) {
-  while (node && node !== root) {
-    if (isContentEditableTrue(node) || isContentEditableFalse(node)) {
-      return node;
-    }
-
-    node = node.parentNode;
-  }
-
-  return null;
-};
 
 const ControlSelection = (selection: Selection, editor: Editor): ControlSelection => {
   const dom = editor.dom, each = Tools.each;
@@ -417,7 +405,7 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
   };
 
   const isWithinContentEditableFalse = function (elm) {
-    return isContentEditableFalse(getContentEditableRoot(editor.getBody(), elm));
+    return isContentEditableFalse(CefUtils.getContentEditableRoot(editor.getBody(), elm));
   };
 
   const unbindResizeHandleEvents = function () {
@@ -465,7 +453,7 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
           Delay.setEditorTimeout(editor, () => editor.selection.select(node));
         };
 
-        if (isWithinContentEditableFalse(e.target)) {
+        if (isWithinContentEditableFalse(e.target) || NodeType.isMedia(e.target)) {
           e.preventDefault();
           delayedSelect(e.target);
           return;
