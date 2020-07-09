@@ -134,7 +134,7 @@ Ready.execute(function () {
   const lazyTableSize = (table: Element<HTMLTableElement>) => TableSize.getTableSize(table);
   const ltrManager = TableResize.create(ResizeWire.body(tester, ltrs), ResizeDirection.ltr, ResizeBehaviour.preserveTable(), lazyTableSize);
   ltrManager.on();
-  const rtlManager = TableResize.create(ResizeWire.body(subject3, rtls), ResizeDirection.rtl, ResizeBehaviour.resizeTable(), lazyTableSize);
+  const rtlManager = TableResize.create(ResizeWire.body(subject3, rtls), ResizeDirection.rtl, ResizeBehaviour.preserveTable(), lazyTableSize);
   rtlManager.on();
 
   // For firefox.
