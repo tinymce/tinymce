@@ -40,6 +40,7 @@ UnitTest.asynctest('browser.tinymce.core.geom.ClientRectTest', function () {
     LegacyUnit.equal(ClientRect.isAbove(rect(10, 20, 10, 10), rect(20, 20, 10, 40)), false);
     LegacyUnit.equal(ClientRect.isAbove(rect(10, 10, 10, 10), rect(20, 15, 10, 10)), false);
     LegacyUnit.equal(ClientRect.isAbove(rect(10, 15, 10, 10), rect(20, 20, 10, 10)), false);
+    LegacyUnit.equal(ClientRect.isAbove(rect(10, 10, 10, 40), rect(20, 40, 10, 10)), false);
     LegacyUnit.equal(ClientRect.isAbove(rect(10, 10, 10, 10), rect(20, 20, 10, 10)), true);
     LegacyUnit.equal(ClientRect.isAbove(rect(10, 10, 10, 10), rect(20, 16, 10, 10)), true);
   });

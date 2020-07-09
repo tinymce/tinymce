@@ -5,11 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Element, Range } from '@ephox/dom-globals';
+import { Editor } from 'tinymce/core/api/Editor';
 import CaretPosition from '../caret/CaretPosition';
 import * as CaretUtils from '../caret/CaretUtils';
 import NodeType from '../dom/NodeType';
-import { Editor } from 'tinymce/core/api/Editor';
-import { Element, Range } from '@ephox/dom-globals';
+import ScrollIntoView from '../dom/ScrollIntoView';
 
 const isContentEditableTrue = NodeType.isContentEditableTrue;
 const isContentEditableFalse = NodeType.isContentEditableFalse;
@@ -72,9 +73,16 @@ const renderRangeCaret = (editor: Editor, range: Range, scrollIntoView: boolean)
   return range;
 };
 
+const moveToRange = (editor: Editor, rng: Range) => {
+  editor.selection.setRng(rng);
+  // Don't reuse the original range as TinyMCE will adjust it
+  ScrollIntoView.scrollRangeIntoView(editor, editor.selection.getRng());
+};
+
 export {
   showCaret,
   selectNode,
   renderCaretAtRange,
-  renderRangeCaret
+  renderRangeCaret,
+  moveToRange
 };
