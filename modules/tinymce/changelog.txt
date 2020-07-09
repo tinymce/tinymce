@@ -5,6 +5,7 @@ Version 5.5.0 (TBD)
     Changed `imagetools` context menu icon for accessing the `image` settings to use the same icon #TINY-4141
     Deprecated the `Env.experimentalShadowDom` flag #TINY-6128
     Fixed the `event.getComposedPath()` function on events fired from TinyMCE. This was throwing an exception, but now works as expected. #TINY-6128
+    Fixed the `template` plugin previews missing some content styles #TINY-6115
     Fixed the `media` plugin not saving the alternative source url in some situations #TINY-4113
     Fixed an issue where dragging and dropping within a table would select table cells #TINY-5950
     Fixed up and down keyboard navigation not working for inline `contenteditable="false"` elements #TINY-6226

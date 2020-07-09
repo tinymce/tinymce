@@ -10,7 +10,7 @@ import Env from 'tinymce/core/api/Env';
 import Tools from 'tinymce/core/api/util/Tools';
 import * as Settings from '../api/Settings';
 
-const getPreviewHtml = function (editor: Editor) {
+const getPreviewHtml = (editor: Editor) => {
   let headHtml = '';
   const encode = editor.dom.encode;
   const contentStyle = Settings.getContentStyle(editor);
@@ -22,7 +22,7 @@ const getPreviewHtml = function (editor: Editor) {
   }
 
   const cors = Settings.shouldUseContentCssCors(editor) ? ' crossorigin="anonymous"' : '';
-  Tools.each(editor.contentCSS, function (url) {
+  Tools.each(editor.contentCSS, (url) => {
     headHtml += '<link type="text/css" rel="stylesheet" href="' + encode(editor.documentBaseURI.toAbsolute(url)) + '"' + cors + '>';
   });
 
