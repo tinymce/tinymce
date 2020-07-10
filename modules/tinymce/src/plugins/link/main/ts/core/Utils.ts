@@ -80,13 +80,14 @@ const hasLinks = (elements: Node[]) => Tools.grep(elements, isLink).length > 0;
 
 const hasLinksInSelection = (rng: Range) => collectNodesInRange(rng, isLink).length > 0;
 
-const isOnlyTextSelected = (html: string) => {
-  // Partial html and not a fully selected anchor element
-  if (/</.test(html) && (!/^<a [^>]+>[^<]+<\/a>$/.test(html) || html.indexOf('href=') === -1)) {
-    return false;
-  }
+const isOnlyTextSelected = (editor: Editor) => {
+  // Allow anchor and inline text elements to be in the selection but nothing else
+  const inlineTextElements = editor.schema.getTextInlineElements();
+  const isElement = (elm: Node): elm is Element => elm.nodeType === 1 && !isAnchor(elm) && !Obj.has(inlineTextElements, elm.nodeName.toLowerCase());
 
-  return true;
+  // Collect all non inline text elements in the range and make sure no elements were found
+  const elements = collectNodesInRange(editor.selection.getRng(), isElement);
+  return elements.length === 0;
 };
 
 const isImageFigure = (elm: Element) => elm && elm.nodeName === 'FIGURE' && /\bimage\b/i.test(elm.className);
