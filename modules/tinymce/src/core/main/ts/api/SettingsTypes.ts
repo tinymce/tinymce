@@ -54,6 +54,7 @@ interface BaseEditorSettings {
   automatic_uploads?: boolean;
   base_url?: string;
   block_formats?: string;
+  block_unsupported_drop?: boolean;
   body_id?: string;
   body_class?: string;
   br_in_pre?: boolean;

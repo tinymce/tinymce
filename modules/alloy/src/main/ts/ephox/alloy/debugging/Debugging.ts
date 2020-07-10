@@ -95,7 +95,7 @@ const makeEventLogger = (eventName: string, initialTarget: Element): DebuggerLog
         time: finishTime - startTime,
         target: initialTarget.dom(),
         sequence: Arr.map(sequence, (s) => {
-          if (! Arr.contains([ 'cut', 'stopped', 'response' ], s.outcome)) { return s.outcome; } else { return '{' + s.purpose + '} ' + s.outcome + ' at (' + AlloyLogger.element(s.target) + ')'; }
+          if (!Arr.contains([ 'cut', 'stopped', 'response' ], s.outcome)) { return s.outcome; } else { return '{' + s.purpose + '} ' + s.outcome + ' at (' + AlloyLogger.element(s.target) + ')'; }
         })
       });
     }

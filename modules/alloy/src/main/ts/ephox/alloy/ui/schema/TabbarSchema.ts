@@ -52,7 +52,7 @@ const tabsPart = PartType.group<TabbarDetail, TabButtonSpec>({
         const response = (() => {
           if (activeButton && barDetail.clickToDismiss) {
             return dismissTab;
-          } else if (! activeButton) {
+          } else if (!activeButton) {
             return changeTab;
           } else {
             return Fun.noop;

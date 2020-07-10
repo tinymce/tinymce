@@ -70,7 +70,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
       return {
         fakeFocus: true,
         onHighlight(menu: AlloyComponent, item: AlloyComponent): void {
-          if (! detail.previewing.get()) {
+          if (!detail.previewing.get()) {
             menu.getSystem().getByUid(detail.uid).each((input) => {
 
               if (detail.model.populateFromBrowse) {

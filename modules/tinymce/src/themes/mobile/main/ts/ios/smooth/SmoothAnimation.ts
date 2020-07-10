@@ -43,7 +43,7 @@ const create = function () {
         finish(destination);
       }, function (s) {
         increment(s, abort);
-        if (! finished) {
+        if (!finished) {
           const newValue = getCurrent();
           // Jump to the end if the increment is no longer working.
           if (newValue !== s || Math.abs(newValue - destination) > Math.abs(value - destination)) {

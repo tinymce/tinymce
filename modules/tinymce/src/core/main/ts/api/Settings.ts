@@ -179,9 +179,11 @@ const isReadOnly = (editor: Editor): boolean => editor.getParam('readonly');
 
 const hasContentCssCors = (editor: Editor): boolean => editor.getParam('content_css_cors');
 
-const getPlugins = (editor: Editor) => editor.getParam('plugins');
+const getPlugins = (editor: Editor): string => editor.getParam('plugins', '', 'string');
 
 const getExternalPlugins = (editor: Editor) => editor.getParam('external_plugins');
+
+const shouldBlockUnsupportedDrop = (editor: Editor) => editor.getParam('block_unsupported_drop', true, 'boolean');
 
 export {
   getIframeAttrs,
@@ -242,5 +244,6 @@ export {
   isReadOnly,
   hasContentCssCors,
   getPlugins,
-  getExternalPlugins
+  getExternalPlugins,
+  shouldBlockUnsupportedDrop
 };

@@ -97,7 +97,7 @@ const send = <T extends keyof ResponseTypeMap>(init: HttpTypes.HttpRequest<T>) =
   const onLoad = () => {
     // Local files and Cors errors return status 0.
     // The only way we can decifer a local request is request url starts with 'file:' and allow local files to succeed.
-    if (request.status === 0 && ! Strings.startsWith(init.url, 'file:')) {
+    if (request.status === 0 && !Strings.startsWith(init.url, 'file:')) {
       onError();
     } else if (request.status < 100 || request.status >= 400) {
       onError();

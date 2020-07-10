@@ -24,7 +24,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableSectionApiTest', (success
   const theadContent = `<table>
 <thead>
 <tr id="one">
-<td>text</td>
+<td scope="col">text</td>
 </tr>
 </thead>
 <tbody>
@@ -37,7 +37,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableSectionApiTest', (success
   const thsContent = `<table>
 <tbody>
 <tr id="one">
-<th>text</th>
+<th scope="col">text</th>
 </tr>
 <tr id="two">
 <td>text</td>
@@ -51,7 +51,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableSectionApiTest', (success
 <td>text</td>
 </tr>
 <tr id="one">
-<th>text</th>
+<th scope="col">text</th>
 </tr>
 </tbody>
 </table>`;
@@ -59,7 +59,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableSectionApiTest', (success
   const theadThsContent = `<table>
 <thead>
 <tr id="one">
-<th>text</th>
+<th scope="col">text</th>
 </tr>
 </thead>
 <tbody>

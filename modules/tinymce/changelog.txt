@@ -1,10 +1,16 @@
 Version 5.5.0 (TBD)
+    Added `hasPlugin` function to the editor API to determine if a plugin exists or not #TINY-766
     Fixed the `media` plugin not saving the alternative source url in some situations #TINY-4113
     Fixed an issue where dragging and dropping within a table would select table cells #TINY-5950
+    Fixed up and down keyboard navigation not working for inline `contenteditable="false"` elements #TINY-6226
     Fixed the `unlink` toolbar button not working when multiple links were selected #TINY-4867
-Version 5.4.1 (TBD)
-    Fixed zero-width caret characters included in the Search and Replace plugin results #TINY-4599
-    Fixed content in an iframe element parsing as dom elements instead of text content #TINY-5943
+Version 5.4.1 (2020-07-08)
+    Fixed the Search and Replace plugin incorrectly including zero-width caret characters in search results #TINY-4599
+    Fixed dragging and dropping unsupported files navigating the browser away from the editor #TINY-6027
+    Fixed undo levels not created on browser handled drop or paste events #TINY-6027
+    Fixed content in an iframe element parsing as DOM elements instead of text content #TINY-5943
+    Fixed Oxide checklist styles not showing when printing #TINY-5139
+    Fixed bug with `scope` attribute not being added to the cells of header rows #TINY-6206
 Version 5.4.0 (2020-06-30)
     Added keyboard navigation support to menus and toolbars when the editor is in a ShadowRoot #TINY-6152
     Added the ability for menus to be clicked when the editor is in an open shadow root #TINY-6091

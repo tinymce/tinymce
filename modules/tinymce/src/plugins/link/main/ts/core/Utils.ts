@@ -13,7 +13,6 @@ import Tools from 'tinymce/core/api/util/Tools';
 import * as Settings from '../api/Settings';
 import { AssumeExternalTargets } from '../api/Types';
 import { AttachState, LinkDialogOutput } from '../ui/DialogTypes';
-import { hasRtcPlugin } from './DetectRtc';
 
 const isAnchor = (elm: Node): elm is HTMLAnchorElement => elm && elm.nodeName.toLowerCase() === 'a';
 const isLink = (elm: Node): elm is HTMLAnchorElement => isAnchor(elm) && !!getHref(elm);
@@ -222,11 +221,11 @@ const unwrapOptions = (data: LinkDialogOutput) => {
 };
 
 const link = (editor: Editor, attachState: AttachState, data: LinkDialogOutput) => {
-  hasRtcPlugin(editor) ? editor.execCommand('createlink', false, unwrapOptions(data)) : linkDomMutation(editor, attachState, data);
+  editor.hasPlugin('rtc', true) ? editor.execCommand('createlink', false, unwrapOptions(data)) : linkDomMutation(editor, attachState, data);
 };
 
 const unlink = (editor: Editor) => {
-  hasRtcPlugin(editor) ? editor.execCommand('unlink') : unlinkDomMutation(editor);
+  editor.hasPlugin('rtc', true) ? editor.execCommand('unlink') : unlinkDomMutation(editor);
 };
 
 const unlinkImageFigure = (editor: Editor, fig: Element) => {
