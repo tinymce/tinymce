@@ -11,7 +11,7 @@ import { HDirection } from '../caret/CaretWalker';
 import * as NodeType from '../dom/NodeType';
 import * as NavigationUtils from './NavigationUtils';
 
-const moveH = (editor: Editor, forward: boolean) => (): boolean => {
+const moveH = (editor: Editor, forward: boolean): boolean => {
   const direction = forward ? HDirection.Forwards : HDirection.Backwards;
   const range = editor.selection.getRng();
 
@@ -21,7 +21,7 @@ const moveH = (editor: Editor, forward: boolean) => (): boolean => {
   });
 };
 
-const moveV = (editor: Editor, down: boolean) => (): boolean => {
+const moveV = (editor: Editor, down: boolean): boolean => {
   const direction = down ? 1 : -1;
   const range = editor.selection.getRng();
 
@@ -31,7 +31,7 @@ const moveV = (editor: Editor, down: boolean) => (): boolean => {
   });
 };
 
-const moveToLineEndPoint = (editor: Editor, forward: boolean) => (): boolean => {
+const moveToLineEndPoint = (editor: Editor, forward: boolean): boolean => {
   const isNearMedia = forward ? isAfterMedia : isBeforeMedia;
   return NavigationUtils.moveToLineEndPoint(editor, forward, isNearMedia);
 };

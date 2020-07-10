@@ -5,27 +5,28 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Node, Range } from '@ephox/dom-globals';
 import { Fun, Options } from '@ephox/katamari';
 import { Compare, Element, PredicateFind } from '@ephox/sugar';
-import * as CaretFinder from '../caret/CaretFinder';
-import CaretPosition from '../caret/CaretPosition';
-import * as DeleteUtils from './DeleteUtils';
-import * as MergeBlocks from './MergeBlocks';
-import * as ElementType from '../dom/ElementType';
 import Selection from '../api/dom/Selection';
 import Editor from '../api/Editor';
+import * as CaretFinder from '../caret/CaretFinder';
+import CaretPosition from '../caret/CaretPosition';
+import * as ElementType from '../dom/ElementType';
+import * as DeleteUtils from './DeleteUtils';
+import * as MergeBlocks from './MergeBlocks';
 
-const deleteRangeMergeBlocks = function (rootNode, selection: Selection) {
+const deleteRangeMergeBlocks = (rootNode: Element<Node>, selection: Selection) => {
   const rng = selection.getRng();
 
   return Options.lift2(
     DeleteUtils.getParentBlock(rootNode, Element.fromDom(rng.startContainer)),
     DeleteUtils.getParentBlock(rootNode, Element.fromDom(rng.endContainer)),
-    function (block1, block2) {
+    (block1, block2) => {
       if (Compare.eq(block1, block2) === false) {
         rng.deleteContents();
 
-        MergeBlocks.mergeBlocks(rootNode, true, block1, block2).each(function (pos) {
+        MergeBlocks.mergeBlocks(rootNode, true, block1, block2).each((pos) => {
           selection.setRng(pos.toRange());
         });
 
@@ -36,37 +37,35 @@ const deleteRangeMergeBlocks = function (rootNode, selection: Selection) {
     }).getOr(false);
 };
 
-const isRawNodeInTable = function (root, rawNode) {
+const isRawNodeInTable = (root: Element<Node>, rawNode: Node) => {
   const node = Element.fromDom(rawNode);
   const isRoot = Fun.curry(Compare.eq, root);
   return PredicateFind.ancestor(node, ElementType.isTableCell, isRoot).isSome();
 };
 
-const isSelectionInTable = function (root, rng) {
-  return isRawNodeInTable(root, rng.startContainer) || isRawNodeInTable(root, rng.endContainer);
-};
+const isSelectionInTable = (root: Element<Node>, rng: Range) =>
+  isRawNodeInTable(root, rng.startContainer) || isRawNodeInTable(root, rng.endContainer);
 
-const isEverythingSelected = function (root, rng) {
+const isEverythingSelected = (root: Element<Node>, rng: Range) => {
   const noPrevious = CaretFinder.prevPosition(root.dom(), CaretPosition.fromRangeStart(rng)).isNone();
   const noNext = CaretFinder.nextPosition(root.dom(), CaretPosition.fromRangeEnd(rng)).isNone();
   return !isSelectionInTable(root, rng) && noPrevious && noNext;
 };
 
-const emptyEditor = function (editor: Editor) {
+const emptyEditor = (editor: Editor) => {
   editor.setContent('');
   editor.selection.setCursorLocation();
   return true;
 };
 
-const deleteRange = function (editor: Editor) {
+const deleteRange = (editor: Editor) => {
   const rootNode = Element.fromDom(editor.getBody());
   const rng = editor.selection.getRng();
   return isEverythingSelected(rootNode, rng) ? emptyEditor(editor) : deleteRangeMergeBlocks(rootNode, editor.selection);
 };
 
-const backspaceDelete = function (editor: Editor, _forward: boolean) {
-  return editor.selection.isCollapsed() ? false : deleteRange(editor);
-};
+const backspaceDelete = (editor: Editor, _forward: boolean) =>
+  editor.selection.isCollapsed() ? false : deleteRange(editor);
 
 export {
   backspaceDelete

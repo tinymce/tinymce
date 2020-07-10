@@ -15,16 +15,18 @@ import * as BoundaryLocation from './BoundaryLocation';
 import { needsToHaveNbsp } from './Nbsps';
 import * as CaretFinder from '../caret/CaretFinder';
 
-const insertSpaceOrNbspAtPosition = (root: Element, pos: CaretPosition): Option<CaretPosition> => needsToHaveNbsp(root, pos) ? insertNbspAtPosition(pos) : insertSpaceAtPosition(pos);
+const insertSpaceOrNbspAtPosition = (root: Element, pos: CaretPosition): Option<CaretPosition> =>
+  needsToHaveNbsp(root, pos) ? insertNbspAtPosition(pos) : insertSpaceAtPosition(pos);
 
-const locationToCaretPosition = (root: Element) => (location) => location.fold(
+const locationToCaretPosition = (root: Element) => (location: BoundaryLocation.LocationAdt) => location.fold(
   (element) => CaretFinder.prevPosition(root.dom(), CaretPosition.before(element)),
   (element) => CaretFinder.firstPositionIn(element),
   (element) => CaretFinder.lastPositionIn(element),
   (element) => CaretFinder.nextPosition(root.dom(), CaretPosition.after(element))
 );
 
-const insertInlineBoundarySpaceOrNbsp = (root: Element, pos: CaretPosition) => (checkPos: CaretPosition) => needsToHaveNbsp(root, checkPos) ? insertNbspAtPosition(pos) : insertSpaceAtPosition(pos);
+const insertInlineBoundarySpaceOrNbsp = (root: Element, pos: CaretPosition) => (checkPos: CaretPosition) =>
+  needsToHaveNbsp(root, checkPos) ? insertNbspAtPosition(pos) : insertSpaceAtPosition(pos);
 
 const setSelection = (editor: Editor) => (pos: CaretPosition) => {
   editor.selection.setRng(pos.toRange());

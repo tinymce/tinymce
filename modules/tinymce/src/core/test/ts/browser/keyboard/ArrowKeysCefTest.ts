@@ -46,7 +46,6 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.ArrowKeysCefTest', (success, f
       tinyApis.sAssertContent('<pre>abc</pre>'),
       sAssertNode((node) => node.nodeName === 'PRE'),
 
-
       tinyApis.sSetCursor([ 0, 0 ], offset),
       tinyActions.sContentKeystroke(arrow),
       tinyApis.sAssertContent(expectedContent),

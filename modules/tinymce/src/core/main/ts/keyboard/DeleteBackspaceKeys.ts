@@ -22,7 +22,7 @@ import * as Outdent from '../delete/Outdent';
 import * as TableDelete from '../delete/TableDelete';
 import * as MatchKeys from './MatchKeys';
 
-const executeKeydownOverride = function (editor: Editor, caret: Cell<Text>, evt: KeyboardEvent) {
+const executeKeydownOverride = (editor: Editor, caret: Cell<Text>, evt: KeyboardEvent) => {
   MatchKeys.execute([
     { keyCode: VK.BACKSPACE, action: MatchKeys.action(Outdent.backspaceDelete, editor, false) },
     { keyCode: VK.BACKSPACE, action: MatchKeys.action(CefDelete.backspaceDelete, editor, false) },
@@ -43,26 +43,26 @@ const executeKeydownOverride = function (editor: Editor, caret: Cell<Text>, evt:
     { keyCode: VK.DELETE, action: MatchKeys.action(BlockBoundaryDelete.backspaceDelete, editor, true) },
     { keyCode: VK.BACKSPACE, action: MatchKeys.action(InlineFormatDelete.backspaceDelete, editor, false) },
     { keyCode: VK.DELETE, action: MatchKeys.action(InlineFormatDelete.backspaceDelete, editor, true) }
-  ], evt).each(function (_) {
+  ], evt).each((_) => {
     evt.preventDefault();
   });
 };
 
-const executeKeyupOverride = function (editor: Editor, evt: KeyboardEvent) {
+const executeKeyupOverride = (editor: Editor, evt: KeyboardEvent) => {
   MatchKeys.execute([
     { keyCode: VK.BACKSPACE, action: MatchKeys.action(CefDelete.paddEmptyElement, editor) },
     { keyCode: VK.DELETE, action: MatchKeys.action(CefDelete.paddEmptyElement, editor) }
   ], evt);
 };
 
-const setup = function (editor: Editor, caret: Cell<Text>) {
-  editor.on('keydown', function (evt: EditorEvent<KeyboardEvent>) {
+const setup = (editor: Editor, caret: Cell<Text>) => {
+  editor.on('keydown', (evt: EditorEvent<KeyboardEvent>) => {
     if (evt.isDefaultPrevented() === false) {
       executeKeydownOverride(editor, caret, evt);
     }
   });
 
-  editor.on('keyup', function (evt: EditorEvent<KeyboardEvent>) {
+  editor.on('keyup', (evt: EditorEvent<KeyboardEvent>) => {
     if (evt.isDefaultPrevented() === false) {
       executeKeyupOverride(editor, evt);
     }

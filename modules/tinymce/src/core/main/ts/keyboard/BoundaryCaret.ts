@@ -5,16 +5,17 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Option, Cell } from '@ephox/katamari';
+import { Text } from '@ephox/dom-globals';
+import { Cell, Option } from '@ephox/katamari';
 import * as CaretContainer from '../caret/CaretContainer';
 import * as CaretContainerInline from '../caret/CaretContainerInline';
 import * as CaretContainerRemove from '../caret/CaretContainerRemove';
 import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import * as NodeType from '../dom/NodeType';
-import { Text } from '@ephox/dom-globals';
+import { LocationAdt } from './BoundaryLocation';
 
-const insertInlinePos = function (pos: CaretPosition, before: boolean) {
+const insertInlinePos = (pos: CaretPosition, before: boolean) => {
   if (NodeType.isText(pos.container())) {
     return CaretContainerInline.insertInline(before, pos.container());
   } else {
@@ -22,21 +23,21 @@ const insertInlinePos = function (pos: CaretPosition, before: boolean) {
   }
 };
 
-const isPosCaretContainer = function (pos: CaretPosition, caret: Cell<Text>) {
-  const caretNode = (<Cell<any>> caret).get();
+const isPosCaretContainer = (pos: CaretPosition, caret: Cell<Text>) => {
+  const caretNode = caret.get();
   return caretNode && pos.container() === caretNode && CaretContainer.isCaretContainerInline(caretNode);
 };
 
-const renderCaret = function (caret: Cell<Text>, location) {
-  return location.fold(
-    function (element) { // Before
+const renderCaret = (caret: Cell<Text>, location: LocationAdt) =>
+  location.fold(
+    (element) => { // Before
       CaretContainerRemove.remove(caret.get());
       const text = CaretContainerInline.insertInlineBefore(element);
       caret.set(text);
       return Option.some(CaretPosition(text, text.length - 1));
     },
-    function (element) { // Start
-      return CaretFinder.firstPositionIn(element).map(function (pos) {
+    (element) => // Start
+      CaretFinder.firstPositionIn(element).map((pos) => {
         if (!isPosCaretContainer(pos, caret)) {
           CaretContainerRemove.remove(caret.get());
           const text = insertInlinePos(pos, true);
@@ -45,10 +46,9 @@ const renderCaret = function (caret: Cell<Text>, location) {
         } else {
           return CaretPosition(caret.get(), 1);
         }
-      });
-    },
-    function (element) { // End
-      return CaretFinder.lastPositionIn(element).map(function (pos) {
+      }),
+    (element) => // End
+      CaretFinder.lastPositionIn(element).map((pos) => {
         if (!isPosCaretContainer(pos, caret)) {
           CaretContainerRemove.remove(caret.get());
           const text = insertInlinePos(pos, false);
@@ -57,16 +57,14 @@ const renderCaret = function (caret: Cell<Text>, location) {
         } else {
           return CaretPosition(caret.get(), caret.get().length - 1);
         }
-      });
-    },
-    function (element) { // After
+      }),
+    (element) => { // After
       CaretContainerRemove.remove(caret.get());
       const text = CaretContainerInline.insertInlineAfter(element);
       caret.set(text);
       return Option.some(CaretPosition(text, 1));
     }
   );
-};
 
 export {
   renderCaret

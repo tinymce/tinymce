@@ -14,10 +14,10 @@ import * as MediaNavigation from './MediaNavigation';
 
 const executeKeydownOverride = (editor: Editor, evt: KeyboardEvent) => {
   MatchKeys.execute([
-    { keyCode: VK.END, action: CefNavigation.moveToLineEndPoint(editor, true) },
-    { keyCode: VK.HOME, action: CefNavigation.moveToLineEndPoint(editor, false) },
-    { keyCode: VK.END, action: MediaNavigation.moveToLineEndPoint(editor, true) },
-    { keyCode: VK.HOME, action: MediaNavigation.moveToLineEndPoint(editor, false) }
+    { keyCode: VK.END, action: MatchKeys.action(CefNavigation.moveToLineEndPoint, editor, true) },
+    { keyCode: VK.HOME, action: MatchKeys.action(CefNavigation.moveToLineEndPoint, editor, false) },
+    { keyCode: VK.END, action: MatchKeys.action(MediaNavigation.moveToLineEndPoint, editor, true) },
+    { keyCode: VK.HOME, action: MatchKeys.action(MediaNavigation.moveToLineEndPoint, editor, false) }
   ], evt).each((_) => {
     evt.preventDefault();
   });

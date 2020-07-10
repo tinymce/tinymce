@@ -7,7 +7,7 @@
 
 import { Arr, Fun } from '@ephox/katamari';
 import { Node, Element } from '@ephox/sugar';
-import { HTMLHeadingElement, HTMLElement, HTMLTableElement, HTMLBRElement } from '@ephox/dom-globals';
+import { HTMLHeadingElement, HTMLElement, HTMLTableElement, HTMLBRElement, HTMLTableCellElement } from '@ephox/dom-globals';
 
 const blocks = [
   'article', 'aside', 'details', 'div', 'dt', 'figcaption', 'footer',
@@ -55,7 +55,7 @@ const isList = lazyLookup(lists);
 const isListItem = lazyLookup(listItems);
 const isVoid = lazyLookup(voids);
 const isTableSection = lazyLookup(tableSections);
-const isTableCell = lazyLookup(tableCells);
+const isTableCell = lazyLookup<HTMLTableCellElement>(tableCells);
 const isWsPreserveElement = lazyLookup(wsElements);
 
 export {

@@ -124,11 +124,9 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
       }
     });
 
-    editor.on('blur NewBlock', () => {
-      removeElementSelection();
-    });
+    editor.on('blur NewBlock', removeElementSelection);
 
-    editor.on('ResizeWindow FullscreenStateChanged', () => fakeCaret.reposition());
+    editor.on('ResizeWindow FullscreenStateChanged', fakeCaret.reposition);
 
     const hasNormalCaretPosition = (elm: Element) => {
       const caretWalker = CaretWalker(elm);

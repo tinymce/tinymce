@@ -39,7 +39,8 @@ const isTableCellContentSelected = (dom: DOMUtils, rng: Range, cell: Node | null
 };
 
 const selectionSetContent = (editor: Editor, content: string) => {
-  const rng = editor.selection.getRng();
+  const selection = editor.selection;
+  const rng = selection.getRng();
   const container = rng.startContainer;
   const offset = rng.startOffset;
 
@@ -48,10 +49,10 @@ const selectionSetContent = (editor: Editor, content: string) => {
     container.deleteData(offset, 1);
     rng.setStart(container, offset);
     rng.setEnd(container, offset);
-    editor.selection.setRng(rng);
+    selection.setRng(rng);
   }
 
-  editor.selection.setContent(content);
+  selection.setContent(content);
 };
 
 const validInsertion = function (editor: Editor, value: string, parentNode: DomElement) {
@@ -125,7 +126,7 @@ const moveSelectionToMarker = function (editor: Editor, marker) {
     const root = editor.getBody();
 
     for (; node && node !== root; node = node.parentNode) {
-      if (editor.dom.getContentEditable(node) === 'false') {
+      if (dom.getContentEditable(node) === 'false') {
         return node;
       }
     }
@@ -137,7 +138,7 @@ const moveSelectionToMarker = function (editor: Editor, marker) {
     return;
   }
 
-  editor.selection.scrollIntoView(marker);
+  selection.scrollIntoView(marker);
 
   // If marker is in cE=false then move selection to that element instead
   const parentEditableFalseElm = getContentEditableFalseParent(marker);
@@ -269,7 +270,7 @@ export const insertHtmlAtCaret = function (editor: Editor, value: string, detail
   // Insert node maker where we will insert the new HTML and get it's parent
   if (!selection.isCollapsed()) {
     deleteSelectedContent(editor);
-    value = trimNbspAfterDeleteAndPadValue(editor.selection.getRng(), value);
+    value = trimNbspAfterDeleteAndPadValue(selection.getRng(), value);
   }
 
   parentNode = selection.getNode();
@@ -280,8 +281,8 @@ export const insertHtmlAtCaret = function (editor: Editor, value: string, detail
 
   // Custom handling of lists
   if (details.paste === true && InsertList.isListFragment(editor.schema, fragment) && InsertList.isParentBlockLi(dom, parentNode)) {
-    rng = InsertList.insertAtCaret(serializer, dom, editor.selection.getRng(), fragment);
-    editor.selection.setRng(rng);
+    rng = InsertList.insertAtCaret(serializer, dom, selection.getRng(), fragment);
+    selection.setRng(rng);
     editor.fire('SetContent', args);
     return;
   }
@@ -353,7 +354,7 @@ export const insertHtmlAtCaret = function (editor: Editor, value: string, detail
   reduceInlineTextElements(editor, merge);
   moveSelectionToMarker(editor, dom.get('mce_marker'));
   unmarkFragmentElements(editor.getBody());
-  trimBrsFromTableCell(editor.dom, editor.selection.getStart());
+  trimBrsFromTableCell(dom, selection.getStart());
 
   editor.fire('SetContent', args);
   editor.addVisual();

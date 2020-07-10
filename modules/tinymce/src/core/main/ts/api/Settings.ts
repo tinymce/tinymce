@@ -10,6 +10,7 @@ import { Arr, Fun, Strings, Type } from '@ephox/katamari';
 import { UploadHandler } from '../file/Uploader';
 import DOMUtils from './dom/DOMUtils';
 import Editor from './Editor';
+import Env from './Env';
 import { ReferrerPolicy } from './SettingsTypes';
 import I18n from './util/I18n';
 import Tools from './util/Tools';
@@ -123,7 +124,14 @@ const getDirectionality = (editor: Editor): string | undefined => editor.getPara
 
 const getInlineBoundarySelector = (editor: Editor): string => editor.getParam('inline_boundaries_selector', 'a[href],code,.mce-annotation', 'string');
 
-const getObjectResizing = (editor: Editor) => editor.getParam('object_resizing');
+const getObjectResizing = (editor: Editor): string | false => {
+  const selector = editor.getParam('object_resizing');
+  if (selector === false || Env.iOS) {
+    return false;
+  } else {
+    return Type.isString(selector) ? selector : 'table,img,figure.image,div';
+  }
+};
 
 const getResizeImgProportional = (editor: Editor): boolean => editor.getParam('resize_img_proportional', true, 'boolean');
 

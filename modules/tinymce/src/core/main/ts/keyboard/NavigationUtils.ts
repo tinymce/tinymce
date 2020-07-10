@@ -144,10 +144,10 @@ const getLineEndPoint = (editor: Editor, forward: boolean): Option<CaretPosition
 };
 
 const moveToLineEndPoint = (editor: Editor, forward: boolean, isElementPosition: (pos: CaretPosition) => boolean) =>
-  getLineEndPoint(editor, forward).filter(isElementPosition).map((pos) => {
+  getLineEndPoint(editor, forward).filter(isElementPosition).exists((pos) => {
     editor.selection.setRng(pos.toRange());
     return true;
-  }).getOr(false);
+  });
 
 export {
   moveHorizontally,

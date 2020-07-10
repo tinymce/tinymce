@@ -22,13 +22,16 @@ import { findClosestPositionInAboveCell, findClosestPositionInBelowCell } from '
 import * as NodeType from '../dom/NodeType';
 import * as NavigationUtils from './NavigationUtils';
 
-const hasNextBreak = (getPositionsUntil, scope: HTMLElement, lineInfo: LineInfo): boolean => lineInfo.breakAt.map((breakPos) => getPositionsUntil(scope, breakPos).breakAt.isSome()).getOr(false);
+type PositionsUntilFn = (scope: HTMLElement, start: CaretPosition) => LineInfo;
+
+const hasNextBreak = (getPositionsUntil: PositionsUntilFn, scope: HTMLElement, lineInfo: LineInfo): boolean =>
+  lineInfo.breakAt.exists((breakPos) => getPositionsUntil(scope, breakPos).breakAt.isSome());
 
 const startsWithWrapBreak = (lineInfo: LineInfo) => lineInfo.breakType === BreakType.Wrap && lineInfo.positions.length === 0;
 
 const startsWithBrBreak = (lineInfo: LineInfo) => lineInfo.breakType === BreakType.Br && lineInfo.positions.length === 1;
 
-const isAtTableCellLine = (getPositionsUntil, scope: HTMLElement, pos: CaretPosition) => {
+const isAtTableCellLine = (getPositionsUntil: PositionsUntilFn, scope: HTMLElement, pos: CaretPosition) => {
   const lineInfo = getPositionsUntil(scope, pos);
 
   // Since we can't determine if the caret is on the above or below line in a word wrap break we asume it's always
@@ -41,15 +44,15 @@ const isAtTableCellLine = (getPositionsUntil, scope: HTMLElement, pos: CaretPosi
   }
 };
 
-const isAtFirstTableCellLine = Fun.curry(isAtTableCellLine, getPositionsUntilPreviousLine) as (scope: HTMLElement, pos: CaretPosition) => boolean;
-const isAtLastTableCellLine = Fun.curry(isAtTableCellLine, getPositionsUntilNextLine) as (scope: HTMLElement, pos: CaretPosition) => boolean;
+const isAtFirstTableCellLine = Fun.curry(isAtTableCellLine, getPositionsUntilPreviousLine);
+const isAtLastTableCellLine = Fun.curry(isAtTableCellLine, getPositionsUntilNextLine);
 
 const isCaretAtStartOrEndOfTable = (forward: boolean, rng: Range, table: Element): boolean => {
   const caretPos = CaretPosition.fromRangeStart(rng);
-  return CaretFinder.positionIn(!forward, table).map((pos) => pos.isEqual(caretPos)).getOr(false);
+  return CaretFinder.positionIn(!forward, table).exists((pos) => pos.isEqual(caretPos));
 };
 
-const navigateHorizontally = (editor, forward: boolean, table: HTMLElement, _td: HTMLElement): boolean => {
+const navigateHorizontally = (editor: Editor, forward: boolean, table: HTMLElement, _td: HTMLElement): boolean => {
   const rng = editor.selection.getRng();
   const direction = forward ? 1 : -1;
 
@@ -114,7 +117,7 @@ const moveCaret = (editor: Editor, down: boolean, pos: CaretPosition) => {
   );
 };
 
-const navigateVertically = (editor, down: boolean, table: HTMLElement, td: HTMLElement): boolean => {
+const navigateVertically = (editor: Editor, down: boolean, table: HTMLElement, td: HTMLElement): boolean => {
   const rng = editor.selection.getRng();
   const pos = CaretPosition.fromRangeStart(rng);
   const root = editor.getBody();
@@ -138,9 +141,9 @@ const move = (editor: Editor, forward: boolean, mover: (editor: Editor, forward:
       .map((table) => mover(editor, forward, table, td))
     ).getOr(false);
 
-const moveH = (editor, forward: boolean) => () => move(editor, forward, navigateHorizontally);
+const moveH = (editor: Editor, forward: boolean) => move(editor, forward, navigateHorizontally);
 
-const moveV = (editor, forward: boolean) => () => move(editor, forward, navigateVertically);
+const moveV = (editor: Editor, forward: boolean) => move(editor, forward, navigateVertically);
 
 export {
   isFakeCaretTableBrowser,
