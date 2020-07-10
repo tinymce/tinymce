@@ -214,7 +214,7 @@ const moveH = (editor: Editor, forward: boolean) => {
     const newRng = getHorizontalRange(editor, forward);
 
     if (newRng) {
-      editor.selection.setRng(newRng);
+      CefUtils.moveToRange(editor, newRng);
       return true;
     } else {
       return false;
@@ -227,7 +227,7 @@ const moveV = (editor: Editor, down: boolean) => {
     const newRng = getVerticalRange(editor, down);
 
     if (newRng) {
-      editor.selection.setRng(newRng);
+      CefUtils.moveToRange(editor, newRng);
       return true;
     } else {
       return false;

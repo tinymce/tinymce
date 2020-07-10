@@ -60,7 +60,8 @@ const isValidOverflow = (overflowY: number, rect1: ClientRect, rect2: ClientRect
 };
 
 const isAbove = (rect1: ClientRect, rect2: ClientRect): boolean => {
-  if ((rect1.bottom - rect1.height / 2) < rect2.top) {
+  const halfHeight = Math.min(rect2.height / 2, rect1.height / 2);
+  if ((rect1.bottom - halfHeight) < rect2.top) {
     return true;
   }
 

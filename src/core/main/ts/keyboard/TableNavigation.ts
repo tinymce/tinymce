@@ -11,18 +11,12 @@ import * as CefUtils from '../keyboard/CefUtils';
 import { Arr, Option, Fun } from '@ephox/katamari';
 import { getPositionsAbove, findClosestHorizontalPositionFromPoint, getPositionsBelow, getPositionsUntilPreviousLine, getPositionsUntilNextLine, BreakType, LineInfo } from 'tinymce/core/caret/LineReader';
 import { findClosestPositionInAboveCell, findClosestPositionInBelowCell } from 'tinymce/core/caret/TableCells';
-import ScrollIntoView from 'tinymce/core/dom/ScrollIntoView';
 import { Editor } from 'tinymce/core/api/Editor';
 import NodeType from 'tinymce/core/dom/NodeType';
 import Settings from 'tinymce/core/api/Settings';
 import { Element as SugarElement, Attr, Insert } from '@ephox/sugar';
 import { HTMLElement, Range, Element } from '@ephox/dom-globals';
 import { isFakeCaretTableBrowser } from '../caret/FakeCaret';
-
-const moveToRange = (editor: Editor, rng: Range) => {
-  editor.selection.setRng(rng);
-  ScrollIntoView.scrollRangeIntoView(editor, rng);
-};
 
 const hasNextBreak = (getPositionsUntil, scope: HTMLElement, lineInfo: LineInfo): boolean => {
   return lineInfo.breakAt.map((breakPos) => getPositionsUntil(scope, breakPos).breakAt.isSome()).getOr(false);
@@ -59,7 +53,7 @@ const navigateHorizontally = (editor, forward: boolean, table: HTMLElement, td: 
 
   if (isFakeCaretTableBrowser() && isCaretAtStartOrEndOfTable(forward, rng, table)) {
     const newRng = CefUtils.showCaret(direction, editor, table, !forward, true);
-    moveToRange(editor, newRng);
+    CefUtils.moveToRange(editor, newRng);
     return true;
   }
 
@@ -109,10 +103,10 @@ const renderBlock = (down: boolean, editor: Editor, table: HTMLElement, pos: Car
       const rng = editor.dom.createRng();
       rng.setStart(element.dom(), 0);
       rng.setEnd(element.dom(), 0);
-      moveToRange(editor, rng);
+      CefUtils.moveToRange(editor, rng);
     });
   } else {
-    moveToRange(editor, pos.toRange());
+    CefUtils.moveToRange(editor, pos.toRange());
   }
 };
 
@@ -121,10 +115,10 @@ const moveCaret = (editor: Editor, down: boolean, pos: CaretPosition) => {
   const last = down === false;
 
   table.fold(
-    () => moveToRange(editor, pos.toRange()),
+    () => CefUtils.moveToRange(editor, pos.toRange()),
     (table) => {
       return CaretFinder.positionIn(last, editor.getBody()).filter((lastPos) => lastPos.isEqual(pos)).fold(
-        () => moveToRange(editor, pos.toRange()),
+        () => CefUtils.moveToRange(editor, pos.toRange()),
         (_) => renderBlock(down, editor, table, pos)
       );
     }
