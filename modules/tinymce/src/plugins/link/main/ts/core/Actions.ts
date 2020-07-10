@@ -5,7 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Menu, Toolbar } from '@ephox/bridge';
+import { Node } from '@ephox/dom-globals';
 import Editor from 'tinymce/core/api/Editor';
+import { NodeChangeEvent } from 'tinymce/core/api/EventTypes';
 import VK from 'tinymce/core/api/util/VK';
 import * as Settings from '../api/Settings';
 import * as Dialog from '../ui/Dialog';
@@ -76,18 +79,27 @@ const setupGotoLinks = (editor: Editor) => {
   });
 };
 
-const toggleActiveState = (editor: Editor) => function (api) {
-  const nodeChangeHandler = (e) => api.setActive(!editor.mode.isReadOnly() && !!Utils.getAnchorElement(editor, e.element));
-  editor.on('NodeChange', nodeChangeHandler);
-  return () => editor.off('NodeChange', nodeChangeHandler);
+const toggleState = (editor: Editor, toggler: (e: NodeChangeEvent) => void) => {
+  editor.on('NodeChange', toggler);
+  return () => editor.off('NodeChange', toggler);
 };
 
-const toggleEnabledState = (editor: Editor) => function (api) {
+const toggleActiveState = (editor: Editor) => (api: Toolbar.ToolbarToggleButtonInstanceApi | Menu.ToggleMenuItemInstanceApi) =>
+  toggleState(editor, () => {
+    api.setActive(!editor.mode.isReadOnly() && Utils.getAnchorElement(editor, editor.selection.getNode()) !== null);
+  });
+
+const toggleEnabledState = (editor: Editor) => (api: Toolbar.ToolbarButtonInstanceApi | Menu.MenuItemInstanceApi) => {
+  const updateState = () => api.setDisabled(Utils.getAnchorElement(editor, editor.selection.getNode()) === null);
+  updateState();
+  return toggleState(editor, updateState);
+};
+
+const toggleUnlinkState = (editor: Editor) => (api: Toolbar.ToolbarButtonInstanceApi | Menu.MenuItemInstanceApi) => {
+  const hasLinks = (parents: Node[]) => Utils.hasLinks(parents) || Utils.hasLinksInSelection(editor.selection.getRng());
   const parents = editor.dom.getParents(editor.selection.getStart());
-  api.setDisabled(!Utils.hasLinks(parents));
-  const nodeChangeHandler = (e) => api.setDisabled(!Utils.hasLinks(e.parents));
-  editor.on('NodeChange', nodeChangeHandler);
-  return () => editor.off('NodeChange', nodeChangeHandler);
+  api.setDisabled(!hasLinks(parents));
+  return toggleState(editor, (e) => api.setDisabled(!hasLinks(e.parents)));
 };
 
 export {
@@ -96,5 +108,6 @@ export {
   leftClickedOnAHref,
   setupGotoLinks,
   toggleActiveState,
-  toggleEnabledState
+  toggleEnabledState,
+  toggleUnlinkState
 };

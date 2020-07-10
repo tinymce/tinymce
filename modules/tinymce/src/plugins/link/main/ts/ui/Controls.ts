@@ -10,9 +10,9 @@ import { HTMLAnchorElement } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 
+import * as Settings from '../api/Settings';
 import * as Actions from '../core/Actions';
 import * as Utils from '../core/Utils';
-import * as Settings from '../api/Settings';
 
 const setupButtons = function (editor: Editor) {
   editor.ui.registry.addToggleButton('link', {
@@ -33,7 +33,7 @@ const setupButtons = function (editor: Editor) {
     icon: 'unlink',
     tooltip: 'Remove link',
     onAction: () => Utils.unlink(editor),
-    onSetup: Actions.toggleEnabledState(editor)
+    onSetup: Actions.toggleUnlinkState(editor)
   });
 };
 
@@ -56,7 +56,7 @@ const setupMenuItems = function (editor: Editor) {
     icon: 'unlink',
     text: 'Remove link',
     onAction: () => Utils.unlink(editor),
-    onSetup: Actions.toggleEnabledState(editor)
+    onSetup: Actions.toggleUnlinkState(editor)
   });
 };
 
