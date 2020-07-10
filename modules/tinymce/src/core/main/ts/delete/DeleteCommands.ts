@@ -5,16 +5,17 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import Editor from '../api/Editor';
 import * as BlockBoundaryDelete from './BlockBoundaryDelete';
 import * as BlockRangeDelete from './BlockRangeDelete';
+import * as CefBoundaryDelete from './CefBoundaryDelete';
 import * as CefDelete from './CefDelete';
 import * as DeleteUtils from './DeleteUtils';
+import * as ImageBlockDelete from './ImageBlockDelete';
 import * as BoundaryDelete from './InlineBoundaryDelete';
-import * as TableDelete from './TableDelete';
 import * as InlineFormatDelete from './InlineFormatDelete';
-import * as CefBoundaryDelete from './CefBoundaryDelete';
-import Editor from '../api/Editor';
 import * as Outdent from './Outdent';
+import * as TableDelete from './TableDelete';
 
 const nativeCommand = function (editor: Editor, command: string) {
   editor.getDoc().execCommand(command, false, null);
@@ -32,6 +33,8 @@ const deleteCommand = function (editor: Editor) {
   } else if (BlockBoundaryDelete.backspaceDelete(editor, false)) {
     return;
   } else if (TableDelete.backspaceDelete(editor)) {
+    return;
+  } else if (ImageBlockDelete.backspaceDelete(editor, false)) {
     return;
   } else if (BlockRangeDelete.backspaceDelete(editor, false)) {
     return;
@@ -53,6 +56,8 @@ const forwardDeleteCommand = function (editor: Editor) {
   } else if (BlockBoundaryDelete.backspaceDelete(editor, true)) {
     return;
   } else if (TableDelete.backspaceDelete(editor)) {
+    return;
+  } else if (ImageBlockDelete.backspaceDelete(editor, true)) {
     return;
   } else if (BlockRangeDelete.backspaceDelete(editor, true)) {
     return;
