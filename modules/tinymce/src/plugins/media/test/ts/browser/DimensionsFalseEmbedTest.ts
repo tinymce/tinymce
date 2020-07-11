@@ -7,11 +7,11 @@ import Theme from 'tinymce/themes/silver/Theme';
 
 import * as Utils from '../module/test/Utils';
 
-UnitTest.asynctest('browser.tinymce.plugins.media.DimensionsFalseEmbedTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.plugins.media.DimensionsFalseEmbedTest', (success, failure) => {
   Plugin();
   Theme();
 
-  const struct = ApproxStructure.build(function (s, str) {
+  const struct = ApproxStructure.build((s, str, arr) => {
     return s.element('body', {
       children: [
         s.element('p', {
@@ -27,17 +27,19 @@ UnitTest.asynctest('browser.tinymce.plugins.media.DimensionsFalseEmbedTest', fun
                     height: str.is('100')
                   }
                 }),
-                s.anything()
+                s.element('span', {
+                  classes: [ arr.has('mce-shim') ]
+                })
               ]
-            }),
-            s.anything()
+            })
           ]
-        })
+        }),
+        s.theRest()
       ]
     });
   });
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyUi = TinyUi(editor);
     const tinyApis = TinyApis(editor);
 

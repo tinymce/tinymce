@@ -40,7 +40,7 @@ UnitTest.asynctest('browser.tinymce.plugins.media.UpdateMediaPosterAttributeTest
           `<source src="${source}" />\n</video>`
         ),
         sCloseDialog,
-        api.sSelect('img', []),
+        api.sSelect('span.mce-preview-object', []),
         Utils.sOpenDialog(ui),
         sOpenAdvTab(),
         Utils.sPastePosterValue(ui, poster2),

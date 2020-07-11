@@ -56,6 +56,7 @@ UnitTest.asynctest('browser.tinymce.plugins.media.ReopenResizeTest', function (s
     theme: 'silver',
     indent: false,
     forced_root_block: false,
+    media_live_embeds:  false,
     base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });
