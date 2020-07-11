@@ -175,7 +175,9 @@ const sPasteTextareaValue = function (ui: TinyUi, value: string) {
       cFindInDialog(selectors.embed)(ui),
       UiControls.cSetValue(value)
     ]),
-    cFakeEvent('paste')
+    cFakeEvent('paste'),
+    // Need to wait for the post paste event to fire
+    Chain.wait(50)
   ]));
 };
 

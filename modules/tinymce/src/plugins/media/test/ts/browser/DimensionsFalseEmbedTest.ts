@@ -1,4 +1,4 @@
-import { ApproxStructure, Pipeline, Waiter, Log } from '@ephox/agar';
+import { ApproxStructure, Log, Pipeline, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 
@@ -27,12 +27,12 @@ UnitTest.asynctest('browser.tinymce.plugins.media.DimensionsFalseEmbedTest', fun
                     height: str.is('100')
                   }
                 }),
-                s.anything()
+                s.element('span', { })
               ]
-            }),
-            s.anything()
+            })
           ]
-        })
+        }),
+        s.anything()
       ]
     });
   });

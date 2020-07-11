@@ -44,7 +44,7 @@ UnitTest.asynctest('browser.tinymce.plugins.media.ContentFormatsTest', function 
 
   suite.test('TestCase-TBA: Media: Video retain as is', function (editor) {
     editor.setContent(
-      '<video src="320x240.ogg" autoplay loop controls>text<a href="#">link</a></video>'
+      '<video src="320x240.ogg" autoplay loop controls width="300" height="150">text<a href="#">link</a></video>'
     );
 
     LegacyUnit.equal(
@@ -84,6 +84,7 @@ UnitTest.asynctest('browser.tinymce.plugins.media.ContentFormatsTest', function 
   });
 
   suite.test('TestCase-TBA: Media: Resize complex object', function (editor) {
+    editor.settings.media_live_embeds = false;
     editor.setContent(
       '<video width="300" height="150" controls="controls">' +
       '<source src="s" />' +
@@ -119,6 +120,7 @@ UnitTest.asynctest('browser.tinymce.plugins.media.ContentFormatsTest', function 
     );
 
     delete editor.settings.media_filter_html;
+    delete editor.settings.media_live_embeds;
   });
 
   suite.test('TestCase-TBA: Media: Media script elements', function (editor) {
@@ -148,21 +150,21 @@ UnitTest.asynctest('browser.tinymce.plugins.media.ContentFormatsTest', function 
       LegacyUnit.equal(editor.getContent(), expectedOutput);
     }
 
-    testXss('<video><a href="javascript:alert(1);">a</a></video>', '<p><video width="300" height="150"><a>a</a></video></p>');
-    testXss('<video><img src="x" onload="alert(1)"></video>', '<p><video width="300" height=\"150\"><img src="x" /></video></p>');
-    testXss('<video><img src="x"></video>', '<p><video width="300" height="150"><img src="x" /></video></p>');
-    testXss('<video><!--[if IE]><img src="x"><![endif]--></video>', '<p><video width="300" height="150"><!-- [if IE]><img src="x"><![endif]--></video></p>');
+    testXss('<video><a href="javascript:alert(1);">a</a></video>', '<p><video><a>a</a></video></p>');
+    testXss('<video><img src="x" onload="alert(1)"></video>', '<p><video><img src="x" /></video></p>');
+    testXss('<video><img src="x"></video>', '<p><video><img src="x" /></video></p>');
+    testXss('<video><!--[if IE]><img src="x"><![endif]--></video>', '<p><video><!-- [if IE]><img src="x"><![endif]--></video></p>');
     testXss('<p><p><audio src=x onerror=alert(1)></audio>', '<p><audio src="x"></audio></p>');
     testXss('<p><html><audio><br /><audio src=x onerror=alert(1)></p>', '');
     testXss('<p><audio><img src="javascript:alert(1)"></audio>', '<p><audio><img /></audio></p>');
     testXss('<p><audio><img src="x" style="behavior:url(x); width: 1px"></audio>', '<p><audio><img src="x" style="width: 1px;" /></audio></p>');
     testXss(
       '<p><video><noscript><svg onload="javascript:alert(1)"></svg></noscript></video>',
-      '<p><video width="300" height="150"></video></p>'
+      '<p><video></video></p>'
     );
     testXss(
       '<p><video><script><svg onload="javascript:alert(1)"></svg></s' + 'cript></video>',
-      '<p><video width="300" height="150"></video></p>'
+      '<p><video></video></p>'
     );
     testXss(
       '<p><audio><noscript><svg onload="javascript:alert(1)"></svg></noscript></audio>',
