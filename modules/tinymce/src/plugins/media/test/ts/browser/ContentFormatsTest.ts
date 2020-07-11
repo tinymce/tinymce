@@ -83,6 +83,7 @@ UnitTest.asynctest('browser.tinymce.plugins.media.ContentFormatsTest', function 
   });
 
   suite.test('TestCase-TBA: Media: Resize complex object', function (editor) {
+    editor.settings.media_live_embeds = false;
     editor.setContent(
       '<video width="300" height="150" controls="controls">' +
       '<source src="s" />' +
@@ -118,6 +119,7 @@ UnitTest.asynctest('browser.tinymce.plugins.media.ContentFormatsTest', function 
     );
 
     delete editor.settings.media_filter_html;
+    delete editor.settings.media_live_embeds;
   });
 
   suite.test('TestCase-TBA: Media: Media script elements', function (editor) {

@@ -8,11 +8,11 @@ import Theme from 'tinymce/themes/silver/Theme';
 
 import * as Utils from '../module/test/Utils';
 
-UnitTest.asynctest('browser.tinymce.plugins.media.core.PlaceholderTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.plugins.media.core.PlaceholderTest', (success, failure) => {
   Plugin();
   Theme();
 
-  const sTestPlaceholder = function (ui: TinyUi, editor: Editor, apis: TinyApis, url: string, expected: string, struct: StructAssert) {
+  const sTestPlaceholder = (ui: TinyUi, editor: Editor, apis: TinyApis, url: string, expected: string, struct: StructAssert) => {
     return Logger.t(`Test placeholder ${expected}`, GeneralSteps.sequence([
       Utils.sOpenDialog(ui),
       Utils.sSetFormItemNoEvent(ui, url),
@@ -24,7 +24,7 @@ UnitTest.asynctest('browser.tinymce.plugins.media.core.PlaceholderTest', functio
     ]));
   };
 
-  const sTestScriptPlaceholder = function (ui: TinyUi, editor: Editor, apis: TinyApis, expected: string, struct: StructAssert) {
+  const sTestScriptPlaceholder = (ui: TinyUi, editor: Editor, apis: TinyApis, expected: string, struct: StructAssert) => {
     return Logger.t(`Test script placeholder ${expected}`, GeneralSteps.sequence([
       apis.sSetContent(
         '<script src="http://media1.tinymce.com/123456"></script>' +
@@ -37,7 +37,8 @@ UnitTest.asynctest('browser.tinymce.plugins.media.core.PlaceholderTest', functio
       apis.sSetContent('')
     ]));
   };
-  const placeholderStructure = ApproxStructure.build(function (s) {
+
+  const placeholderStructure = ApproxStructure.build((s) => {
     return s.element('body', {
       children: [
         s.element('p', {
@@ -53,7 +54,7 @@ UnitTest.asynctest('browser.tinymce.plugins.media.core.PlaceholderTest', functio
     });
   });
 
-  const iframeStructure = ApproxStructure.build(function (s) {
+  const iframeStructure = ApproxStructure.build((s) => {
     return s.element('body', {
       children: [
         s.element('p', {
@@ -71,7 +72,7 @@ UnitTest.asynctest('browser.tinymce.plugins.media.core.PlaceholderTest', functio
     });
   });
 
-  const scriptStruct = ApproxStructure.build(function (s, str, arr) {
+  const scriptStruct = ApproxStructure.build((s, str, arr) => {
     return s.element('body', {
       children: [
         s.element('p', {
@@ -102,12 +103,12 @@ UnitTest.asynctest('browser.tinymce.plugins.media.core.PlaceholderTest', functio
     });
   });
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const ui = TinyUi(editor);
     const apis = TinyApis(editor);
 
-    Pipeline.async({},
-      Log.steps('TBA', 'Media: Set and assert script placeholder and placeholder structure', [
+    Pipeline.async({}, [
+      Log.stepsAsStep('TBA', 'Media: Set and assert script placeholder and placeholder structure', [
         Utils.sSetSetting(editor.settings, 'media_live_embeds', false),
         sTestScriptPlaceholder(ui, editor, apis,
           '<p>\n' +
@@ -119,6 +120,17 @@ UnitTest.asynctest('browser.tinymce.plugins.media.core.PlaceholderTest', functio
           '<p><iframe src="https://www.youtube.com/embed/P_205ZY52pY" width="560" ' +
           'height="314" allowfullscreen="allowfullscreen"></iframe></p>',
           placeholderStructure),
+        sTestPlaceholder(ui, editor, apis,
+          '/custom/video.mp4',
+          '<p><video controls="controls" width="300" height="150">\n' +
+          '<source src="custom/video.mp4" type="video/mp4" /></video></p>',
+          placeholderStructure),
+        sTestPlaceholder(ui, editor, apis,
+          '/custom/audio.mp3',
+          '<p><audio src="custom/audio.mp3" controls="controls"></audio></p>',
+          placeholderStructure),
+      ]),
+      Log.stepsAsStep('TBA', 'Media: Set and assert live embed structure', [
         Utils.sSetSetting(editor.settings, 'media_live_embeds', true),
         sTestPlaceholder(ui, editor, apis,
           'https://www.youtube.com/watch?v=P_205ZY52pY',
@@ -126,7 +138,7 @@ UnitTest.asynctest('browser.tinymce.plugins.media.core.PlaceholderTest', functio
           'height="314" allowfullscreen="allowfullscreen"></iframe></p>',
           iframeStructure)
       ])
-      , onSuccess, onFailure);
+    ], onSuccess, onFailure);
   }, {
     plugins: [ 'media' ],
     toolbar: 'media',
