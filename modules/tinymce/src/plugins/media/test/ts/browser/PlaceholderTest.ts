@@ -3,6 +3,7 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
+import Env from 'tinymce/core/api/Env';
 import Plugin from 'tinymce/plugins/media/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
@@ -38,18 +39,19 @@ UnitTest.asynctest('browser.tinymce.plugins.media.core.PlaceholderTest', (succes
     ]));
   };
 
-  const placeholderStructure = ApproxStructure.build((s) => {
+  const placeholderStructure = ApproxStructure.build((s, str) => {
     return s.element('body', {
       children: [
         s.element('p', {
           children: [
-            s.element('img', {})
+            s.element('img', {
+              attrs: {
+                src: str.is(Env.transparentSrc)
+              }
+            })
           ]
         }),
-        s.element('div', {}),
-        s.element('div', {}),
-        s.element('div', {}),
-        s.element('div', {})
+        s.theRest()
       ]
     });
   });
@@ -64,10 +66,10 @@ UnitTest.asynctest('browser.tinymce.plugins.media.core.PlaceholderTest', (succes
                 s.element('iframe', {}),
                 s.element('span', {})
               ]
-            }),
-            s.anything()
+            })
           ]
-        })
+        }),
+        s.theRest()
       ]
     });
   });

@@ -133,7 +133,7 @@ const getObjectResizing = (editor: Editor): string | false => {
   if (selector === false || Env.iOS) {
     return false;
   } else {
-    return Type.isString(selector) ? selector : 'table,img,figure.image,div';
+    return Type.isString(selector) ? selector : 'table,img,figure.image,div,video,iframe';
   }
 };
 

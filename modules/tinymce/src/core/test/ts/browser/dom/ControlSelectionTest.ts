@@ -2,8 +2,9 @@ import { Assertions, Chain, GeneralSteps, Log, Mouse, NamedChain, Pipeline, Step
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Cell, Obj, Strings } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Css, Hierarchy, SugarElement } from '@ephox/sugar';
+import { Attribute, Css, Hierarchy, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
+import Env from 'tinymce/core/api/Env';
 import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.core.dom.ControlSelectionTest', function (success, failure) {
@@ -43,10 +44,12 @@ UnitTest.asynctest('browser.tinymce.core.dom.ControlSelectionTest', function (su
   ]);
 
   const cGetElementDimensions = (name: string) => Chain.mapper((element: SugarElement): number =>
-    Css.getRaw(element, name).map((v) => parseInt(v, 10)).getOr(0));
+    Css.getRaw(element, name).orThunk(() => Attribute.getOpt(element, name))
+      .map((v) => parseInt(v, 10))
+      .getOr(0));
 
   const cAssertElementDimension = (label: string, expectedDimension: number) => Chain.op((dimension: number) => {
-    Assertions.assertEq(label, true, Math.abs(dimension - expectedDimension) < 3);
+    Assertions.assertEq(label + ` ${dimension}px ~= ${expectedDimension}px`, true, Math.abs(dimension - expectedDimension) < 3);
   });
 
   const cGetAndAssertDimensions = (width: number, height: number) => NamedChain.asChain([
@@ -58,9 +61,9 @@ UnitTest.asynctest('browser.tinymce.core.dom.ControlSelectionTest', function (su
     NamedChain.outputInput
   ]);
 
-  const sResizeAndAssertDimensions = (editorBody: SugarElement, targetSelector: string, resizeSelector: string, delta: number, width: number, height: number) => {
-    const expectedWidth = Strings.endsWith(resizeSelector, 'sw') || Strings.endsWith(resizeSelector, 'nw') ? width - delta : width + delta;
-    const expectedHeight = Strings.endsWith(resizeSelector, 'nw') || Strings.endsWith(resizeSelector, 'ne') ? height - delta : height + delta;
+  const sResizeAndAssertDimensions = (editorBody: SugarElement, targetSelector: string, resizeSelector: string, deltaX: number, deltaY: number, width: number, height: number) => {
+    const expectedWidth = Strings.endsWith(resizeSelector, 'sw') || Strings.endsWith(resizeSelector, 'nw') ? width - deltaX : width + deltaX;
+    const expectedHeight = Strings.endsWith(resizeSelector, 'nw') || Strings.endsWith(resizeSelector, 'ne') ? height - deltaY : height + deltaY;
 
     return Chain.asStep(editorBody, [
       NamedChain.asChain([
@@ -70,7 +73,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.ControlSelectionTest', function (su
         NamedChain.read('resizeHandle', Mouse.cMouseDown),
         NamedChain.direct('body', UiFinder.cFindIn('.mce-clonedresizable'), 'ghost'),
         NamedChain.read('ghost', cGetAndAssertDimensions(width, height)),
-        NamedChain.read('resizeHandle', Mouse.cMouseMoveTo(delta, delta)),
+        NamedChain.read('resizeHandle', Mouse.cMouseMoveTo(deltaX, deltaY)),
         NamedChain.read('ghost', cGetAndAssertDimensions(expectedWidth, expectedHeight)),
         NamedChain.read('resizeHandle', Mouse.cMouseUp),
         NamedChain.read('target', cGetAndAssertDimensions(expectedWidth, expectedHeight)),
@@ -115,13 +118,28 @@ UnitTest.asynctest('browser.tinymce.core.dom.ControlSelectionTest', function (su
         sResetEventCounter,
         tinyApis.sSetContent('<p><table style="width: 600px; height: 100px"><tbody><tr><td>Cell</td><td>Cell</td></tr></tbody></table></p>'),
         tinyApis.sSelect('td', [ 0 ]),
-        sResizeAndAssertDimensions(editorBody, 'table', '#mceResizeHandlesw', 10, 600, 100)
+        sResizeAndAssertDimensions(editorBody, 'table', '#mceResizeHandlesw', 10, 10, 600, 100)
       ]),
       Log.stepsAsStep('TINY-4161', 'Resize ghost element dimensions match target element when using relative width', [
         sResetEventCounter,
         tinyApis.sSetContent('<p><table style="width: 100%; height: 50px"><tbody><tr><td>Cell</td><td>Cell</td></tr></tbody></table></p>'),
         tinyApis.sSelect('td', [ 0 ]),
-        sResizeAndAssertDimensions(editorBody, 'table', '#mceResizeHandlese', -10, 798, 50)
+        sResizeAndAssertDimensions(editorBody, 'table', '#mceResizeHandlese', -10, -10, 798, 50)
+      ]),
+      Log.stepsAsStep('TINY-6229', 'Resize video element', [
+        tinyApis.sSetContent('<p><video controls width="300" height="150"></video></p>'),
+        tinyApis.sSelect('video', [ ]),
+        sResizeAndAssertDimensions(editorBody, 'video', '#mceResizeHandlese', 300, 150, 300, 150)
+      ]),
+      Log.stepsAsStep('TINY-6229', 'Resize video media element', [
+        tinyApis.sSetContent('<p><span contenteditable="false" class="mce-preview-object mce-object-video"><video controls width="300" height="150"></video></span></p>'),
+        tinyApis.sSelect('span', [ ]),
+        sResizeAndAssertDimensions(editorBody, 'video', '#mceResizeHandlese', -150, -75, 300, 150)
+      ]),
+      Log.stepsAsStep('TINY-6229', 'Resize iframe media element', [
+        tinyApis.sSetContent('<p><span contenteditable="false" class="mce-preview-object mce-object-iframe"><iframe style="border: 1px solid black" width="400" height="200" src="' + Env.transparentSrc + '" allowfullscreen></iframe></span></p>'),
+        tinyApis.sSelect('span', [ ]),
+        sResizeAndAssertDimensions(editorBody, 'iframe', '#mceResizeHandlese', 100, 50, 402, 202)
       ])
     ], onSuccess, onFailure);
   }, {

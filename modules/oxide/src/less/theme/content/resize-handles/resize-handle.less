@@ -47,11 +47,15 @@
     }
   }
 
+  .mce-resize-backdrop {
+    z-index: 10000;
+  }
+
   .mce-clonedresizable {
     opacity: .5;
     outline: 1px dashed black;
     position: absolute;
-    z-index: 10000;
+    z-index: 10001;
 
     // Hide table borders when using table_column_resizing: 'resizetable'
     &.mce-resizetable-columns th,
@@ -74,6 +78,6 @@
     padding: 5px;
     position: absolute;
     white-space: nowrap;
-    z-index: 10001;
+    z-index: 10002;
   }
 }
