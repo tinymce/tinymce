@@ -5,15 +5,17 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Option } from '@ephox/katamari';
-import Editor from 'tinymce/core/api/Editor';
 import { Types } from '@ephox/bridge';
+import Editor from 'tinymce/core/api/Editor';
 
 export type HelpTabsSetting = (string | Types.Dialog.TabApi)[];
 
-const getHelpTabs = (editor: Editor): Option<HelpTabsSetting> => Option.from(editor.getParam('help_tabs'));
+const getSetting = <T>(name: string, defaultValue?: T, type?: string) => (editor: Editor): T =>
+  editor.getParam(name, defaultValue, type);
 
-const getForcedPlugins = (editor: Editor) => editor.getParam('forced_plugins');
+const getHelpTabs = getSetting<HelpTabsSetting>('help_tabs');
+
+const getForcedPlugins = getSetting<string[]>('forced_plugins');
 
 export {
   getHelpTabs,

@@ -5,59 +5,61 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { HTMLImageElement } from '@ephox/dom-globals';
 import Editor from 'tinymce/core/api/Editor';
 
-const shouldBlockDrop = (editor: Editor): boolean => editor.getParam('paste_block_drop', false);
+const defaultValidElements = (
+  '-strong/b,-em/i,-u,-span,-p,-ol,-ul,-li,-h1,-h2,-h3,-h4,-h5,-h6,' +
+  '-p/div,-a[href|name],sub,sup,strike,br,del,table[width],tr,' +
+  'td[colspan|rowspan|width],th[colspan|rowspan|width],thead,tfoot,tbody'
+);
 
-const shouldPasteDataImages = (editor: Editor): boolean => editor.getParam('paste_data_images', false);
+const getSetting = <T>(name: string, defaultValue?: T, type?: string) => (editor: Editor): T =>
+  editor.getParam(name, defaultValue, type);
 
-const shouldFilterDrop = (editor: Editor): boolean => editor.getParam('paste_filter_drop', true);
+const shouldBlockDrop = getSetting('paste_block_drop', false);
+
+const shouldPasteDataImages = getSetting('paste_data_images', false);
+
+const shouldFilterDrop = getSetting('paste_filter_drop', true);
 
 type ProcessFn = (plugin, args) => void;
 
-const getPreProcess = (editor: Editor): ProcessFn => editor.getParam('paste_preprocess');
+const getPreProcess = getSetting<ProcessFn>('paste_preprocess');
 
-const getPostProcess = (editor: Editor): ProcessFn => editor.getParam('paste_postprocess');
+const getPostProcess = getSetting<ProcessFn>('paste_postprocess');
 
-const getWebkitStyles = (editor: Editor): string => editor.getParam('paste_webkit_styles');
+const getWebkitStyles = getSetting<string>('paste_webkit_styles');
 
-const shouldRemoveWebKitStyles = (editor: Editor): boolean => editor.getParam('paste_remove_styles_if_webkit', true);
+const shouldRemoveWebKitStyles = getSetting('paste_remove_styles_if_webkit', true);
 
-const shouldMergeFormats = (editor: Editor): boolean => editor.getParam('paste_merge_formats', true);
+const shouldMergeFormats = getSetting('paste_merge_formats', true);
 
-const isSmartPasteEnabled = (editor: Editor): boolean => editor.getParam('smart_paste', true);
+const isSmartPasteEnabled = getSetting('smart_paste', true);
 
-const isPasteAsTextEnabled = (editor: Editor): boolean => editor.getParam('paste_as_text', false);
+const isPasteAsTextEnabled = getSetting('paste_as_text', false);
 
-const getRetainStyleProps = (editor: Editor): string => editor.getParam('paste_retain_style_properties');
+const getRetainStyleProps = getSetting<string>('paste_retain_style_properties');
 
-const getWordValidElements = (editor: Editor): string => {
-  const defaultValidElements = (
-    '-strong/b,-em/i,-u,-span,-p,-ol,-ul,-li,-h1,-h2,-h3,-h4,-h5,-h6,' +
-    '-p/div,-a[href|name],sub,sup,strike,br,del,table[width],tr,' +
-    'td[colspan|rowspan|width],th[colspan|rowspan|width],thead,tfoot,tbody'
-  );
+const getWordValidElements = getSetting('paste_word_valid_elements', defaultValidElements);
 
-  return editor.getParam('paste_word_valid_elements', defaultValidElements);
-};
+const shouldConvertWordFakeLists = getSetting('paste_convert_word_fake_lists', true);
 
-const shouldConvertWordFakeLists = (editor: Editor): boolean => editor.getParam('paste_convert_word_fake_lists', true);
+const shouldUseDefaultFilters = getSetting('paste_enable_default_filters', true);
 
-const shouldUseDefaultFilters = (editor: Editor): boolean => editor.getParam('paste_enable_default_filters', true);
+const getValidate = getSetting<boolean>('validate');
 
-const getValidate = (editor: Editor) => editor.getParam('validate');
+const getAllowHtmlDataUrls = getSetting('allow_html_data_urls', false, 'boolean');
 
-const getAllowHtmlDataUrls = (editor: Editor): boolean => editor.getParam('allow_html_data_urls', false, 'boolean');
+const getPasteDataImages = getSetting('paste_data_images', false, 'boolean');
 
-const getPasteDataImages = (editor: Editor): boolean => editor.getParam('paste_data_images', false, 'boolean');
+const getImagesDataImgFilter = getSetting<(img: HTMLImageElement) => boolean>('images_dataimg_filter');
 
-const getImagesDataImgFilter = (editor: Editor) => editor.getParam('images_dataimg_filter');
+const getImagesReuseFilename = getSetting<boolean>('images_reuse_filename');
 
-const getImagesReuseFilename = (editor: Editor) => editor.getParam('images_reuse_filename');
+const getForcedRootBlock = getSetting<string | boolean>('forced_root_block');
 
-const getForcedRootBlock = (editor: Editor) => editor.getParam('forced_root_block');
-
-const getForcedRootBlockAttrs = (editor: Editor) => editor.getParam('forced_root_block_attrs');
+const getForcedRootBlockAttrs = getSetting<Record<string, string>>('forced_root_block_attrs');
 
 export {
   shouldBlockDrop,

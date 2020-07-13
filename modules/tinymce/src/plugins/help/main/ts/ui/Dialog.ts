@@ -65,7 +65,7 @@ const parseCustomTabs = (editor: Editor, customTabs: CustomTabSpecs) => {
     ...customTabs.get()
   };
 
-  return Settings.getHelpTabs(editor).fold(
+  return Option.from(Settings.getHelpTabs(editor)).fold(
     () => getNamesFromTabs(tabs),
     (tabsFromSettings: Settings.HelpTabsSetting) => parseHelpTabsSetting(tabsFromSettings, tabs)
   );

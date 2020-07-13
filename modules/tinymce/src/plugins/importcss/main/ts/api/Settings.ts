@@ -7,26 +7,31 @@
 
 import Editor from 'tinymce/core/api/Editor';
 
-const shouldMergeClasses = (editor: Editor) => editor.getParam('importcss_merge_classes');
+type FilterFn = string | RegExp | Function;
 
-const shouldImportExclusive = (editor: Editor) => editor.getParam('importcss_exclusive');
+const getSetting = <T>(name: string, defaultValue?: T, type?: string) => (editor: Editor): T =>
+  editor.getParam(name, defaultValue, type);
 
-const getSelectorConverter = (editor: Editor) => editor.getParam('importcss_selector_converter');
+const shouldMergeClasses = getSetting<boolean>('importcss_merge_classes');
 
-const getSelectorFilter = (editor: Editor) => editor.getParam('importcss_selector_filter');
+const shouldImportExclusive = getSetting<boolean>('importcss_exclusive');
 
-const getCssGroups = (editor: Editor) => editor.getParam('importcss_groups');
+const getSelectorConverter = getSetting<(selector: string) => boolean>('importcss_selector_converter');
 
-const shouldAppend = (editor: Editor) => editor.getParam('importcss_append');
+const getSelectorFilter = getSetting<FilterFn>('importcss_selector_filter');
 
-const getFileFilter = (editor: Editor) => editor.getParam('importcss_file_filter');
+const getCssGroups = getSetting<{ title: string; filter?: FilterFn }[]>('importcss_groups');
+
+const shouldAppend = getSetting<boolean>('importcss_append');
+
+const getFileFilter = getSetting<FilterFn>('importcss_file_filter');
 
 const getSkin = (editor: Editor) => {
   const skin = editor.getParam('skin');
   return skin !== false ? skin || 'oxide' : false;
 };
 
-const getSkinUrl = (editor: Editor) => editor.getParam('skin_url');
+const getSkinUrl = getSetting<string>('skin_url');
 
 export {
   shouldMergeClasses,

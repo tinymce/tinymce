@@ -7,25 +7,23 @@
 
 import Editor from 'tinymce/core/api/Editor';
 
-const getLanguages = function (editor: Editor) {
-  const defaultLanguages = 'English=en,Danish=da,Dutch=nl,Finnish=fi,French=fr_FR,German=de,Italian=it,Polish=pl,Portuguese=pt_BR,Spanish=es,Swedish=sv';
-  return editor.getParam('spellchecker_languages', defaultLanguages);
-};
+const defaultLanguages = 'English=en,Danish=da,Dutch=nl,Finnish=fi,French=fr_FR,German=de,Italian=it,Polish=pl,Portuguese=pt_BR,Spanish=es,Swedish=sv';
 
-const getLanguage = function (editor: Editor) {
+const getSetting = <T>(name: string, defaultValue?: T, type?: string) => (editor: Editor): T =>
+  editor.getParam(name, defaultValue, type);
+
+const getLanguages = getSetting('spellchecker_languages', defaultLanguages);
+
+const getLanguage = (editor: Editor) => {
   const defaultLanguage = editor.getParam('language', 'en');
   return editor.getParam('spellchecker_language', defaultLanguage);
 };
 
-const getRpcUrl = function (editor: Editor) {
-  return editor.getParam('spellchecker_rpc_url');
-};
+const getRpcUrl = getSetting<string>('spellchecker_rpc_url');
 
-const getSpellcheckerCallback = function (editor: Editor) {
-  return editor.getParam('spellchecker_callback');
-};
+const getSpellcheckerCallback = getSetting<Function>('spellchecker_callback');
 
-const getSpellcheckerWordcharPattern = function (editor: Editor) {
+const getSpellcheckerWordcharPattern = (editor: Editor) => {
   const defaultPattern = new RegExp('[^' +
   '\\s!"#$%&()*+,-./:;<=>?@[\\]^_{|}`' +
   '\u00a7\u00a9\u00ab\u00ae\u00b1\u00b6\u00b7\u00b8\u00bb' +

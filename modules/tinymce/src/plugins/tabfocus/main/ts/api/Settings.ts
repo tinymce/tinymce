@@ -5,13 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-const getTabFocusElements = function (editor) {
-  return editor.getParam('tabfocus_elements', ':prev,:next');
-};
+import Editor from 'tinymce/core/api/Editor';
 
-const getTabFocus = function (editor) {
-  return editor.getParam('tab_focus', getTabFocusElements(editor));
-};
+const getTabFocusElements = (editor: Editor) => editor.getParam('tabfocus_elements', ':prev,:next');
+
+const getTabFocus = (editor: Editor) => editor.getParam('tab_focus', getTabFocusElements(editor));
 
 export {
   getTabFocus

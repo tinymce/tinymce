@@ -6,22 +6,28 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
+import { ExternalTemplate } from '../ui/Dialog';
 
-const getCreationDateClasses = (editor: Editor) => editor.getParam('template_cdate_classes', 'cdate');
+type TemplateCallback = (callback: (template: ExternalTemplate[]) => void) => void;
 
-const getModificationDateClasses = (editor: Editor) => editor.getParam('template_mdate_classes', 'mdate');
+const getSetting = <T>(name: string, defaultValue?: T, type?: string) => (editor: Editor): T =>
+  editor.getParam(name, defaultValue, type);
 
-const getSelectedContentClasses = (editor: Editor) => editor.getParam('template_selected_content_classes', 'selcontent');
+const getCreationDateClasses = getSetting('template_cdate_classes', 'cdate');
 
-const getPreviewReplaceValues = (editor: Editor) => editor.getParam('template_preview_replace_values');
+const getModificationDateClasses = getSetting('template_mdate_classes', 'mdate');
 
-const getTemplateReplaceValues = (editor: Editor) => editor.getParam('template_replace_values');
+const getSelectedContentClasses = getSetting('template_selected_content_classes', 'selcontent');
 
-const getTemplates = (editor: Editor) => editor.getParam('templates');
+const getPreviewReplaceValues = getSetting<Record<string, any>>('template_preview_replace_values');
 
-const getCdateFormat = (editor: Editor) => editor.getParam('template_cdate_format', editor.translate('%Y-%m-%d'));
+const getTemplateReplaceValues = getSetting<Record<string, any>>('template_replace_values');
 
-const getMdateFormat = (editor: Editor) => editor.getParam('template_mdate_format', editor.translate('%Y-%m-%d'));
+const getTemplates = getSetting<TemplateCallback | string | ExternalTemplate[]>('templates');
+
+const getCdateFormat = getSetting('template_cdate_format', '%Y-%m-%d');
+
+const getMdateFormat = getSetting('template_mdate_format', '%Y-%m-%d');
 
 const getBodyClassFromHash = (editor: Editor) => {
   const bodyClass = editor.getParam('body_class', '', 'hash');

@@ -7,9 +7,7 @@
 
 import Editor from 'tinymce/core/api/Editor';
 
-const isEnabledByDefault = function (editor: Editor) {
-  return editor.getParam('visualblocks_default_state', false, 'boolean');
-};
+const isEnabledByDefault = (editor: Editor) => editor.getParam('visualblocks_default_state', false, 'boolean');
 
 export {
   isEnabledByDefault

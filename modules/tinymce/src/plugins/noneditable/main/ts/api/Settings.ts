@@ -5,15 +5,16 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-const getNonEditableClass = function (editor) {
-  return editor.getParam('noneditable_noneditable_class', 'mceNonEditable');
-};
+import Editor from 'tinymce/core/api/Editor';
 
-const getEditableClass = function (editor) {
-  return editor.getParam('noneditable_editable_class', 'mceEditable');
-};
+const getSetting = <T>(name: string, defaultValue?: T, type?: string) => (editor: Editor): T =>
+  editor.getParam(name, defaultValue, type);
 
-const getNonEditableRegExps = function (editor) {
+const getNonEditableClass = getSetting('noneditable_noneditable_class', 'mceNonEditable');
+
+const getEditableClass = getSetting('noneditable_editable_class', 'mceEditable');
+
+const getNonEditableRegExps = (editor: Editor): RegExp[] => {
   const nonEditableRegExps = editor.getParam('noneditable_regexp', []);
 
   if (nonEditableRegExps && nonEditableRegExps.constructor === RegExp) {

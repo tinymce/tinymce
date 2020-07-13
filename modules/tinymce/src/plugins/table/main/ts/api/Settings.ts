@@ -22,6 +22,9 @@ const defaultStyles = {
   'width': '100%'
 };
 
+const getSetting = <T>(name: string, defaultValue?: T, type?: string) => (editor: Editor): T =>
+  editor.getParam(name, defaultValue, type);
+
 const determineDefaultStyles = (editor: Editor) => {
   if (isPixelsForced(editor)) {
     const editorWidth = editor.getBody().offsetWidth;
@@ -37,26 +40,26 @@ const defaultAttributes = {
   border: '1'
 };
 
-const getTableSizingMode = (editor: Editor): TableSizingMode => editor.getParam('table_sizing_mode', 'auto');
-const getTableResponseWidth = (editor: Editor): boolean | undefined => editor.getParam('table_responsive_width');
+const getTableSizingMode = getSetting<TableSizingMode>('table_sizing_mode', 'auto');
+const getTableResponseWidth = getSetting<boolean>('table_responsive_width');
 
-const getDefaultAttributes = (editor: Editor): StringMap => editor.getParam('table_default_attributes', defaultAttributes, 'object');
+const getDefaultAttributes = getSetting<StringMap>('table_default_attributes', defaultAttributes, 'object');
 const getDefaultStyles = (editor: Editor): StringMap => editor.getParam('table_default_styles', determineDefaultStyles(editor), 'object');
-const hasTableResizeBars = (editor: Editor): boolean => editor.getParam('table_resize_bars', true, 'boolean');
-const hasTabNavigation = (editor: Editor): boolean => editor.getParam('table_tab_navigation', true, 'boolean');
-const hasAdvancedCellTab = (editor: Editor): boolean => editor.getParam('table_cell_advtab', true, 'boolean');
-const hasAdvancedRowTab = (editor: Editor): boolean => editor.getParam('table_row_advtab', true, 'boolean');
-const hasAdvancedTableTab = (editor: Editor): boolean => editor.getParam('table_advtab', true, 'boolean');
-const hasAppearanceOptions = (editor: Editor): boolean => editor.getParam('table_appearance_options', true, 'boolean');
-const hasTableGrid = (editor: Editor): boolean => editor.getParam('table_grid', true, 'boolean');
-const shouldStyleWithCss = (editor: Editor): boolean => editor.getParam('table_style_by_css', false, 'boolean');
-const getCellClassList = (editor: Editor): ClassList => editor.getParam('table_cell_class_list', [], 'array');
-const getRowClassList = (editor: Editor): ClassList => editor.getParam('table_row_class_list', [], 'array');
-const getTableClassList = (editor: Editor): ClassList => editor.getParam('table_class_list', [], 'array');
+const hasTableResizeBars = getSetting('table_resize_bars', true, 'boolean');
+const hasTabNavigation = getSetting('table_tab_navigation', true, 'boolean');
+const hasAdvancedCellTab = getSetting('table_cell_advtab', true, 'boolean');
+const hasAdvancedRowTab = getSetting('table_row_advtab', true, 'boolean');
+const hasAdvancedTableTab = getSetting('table_advtab', true, 'boolean');
+const hasAppearanceOptions = getSetting('table_appearance_options', true, 'boolean');
+const hasTableGrid = getSetting('table_grid', true, 'boolean');
+const shouldStyleWithCss = getSetting('table_style_by_css', false, 'boolean');
+const getCellClassList = getSetting<ClassList>('table_cell_class_list', [], 'array');
+const getRowClassList = getSetting<ClassList>('table_row_class_list', [], 'array');
+const getTableClassList = getSetting<ClassList>('table_class_list', [], 'array');
 const isPercentagesForced = (editor: Editor): boolean => getTableSizingMode(editor) === 'relative' || getTableResponseWidth(editor) === true;
 const isPixelsForced = (editor: Editor): boolean => getTableSizingMode(editor) === 'fixed' || getTableResponseWidth(editor) === false;
 const isResponsiveForced = (editor: Editor): boolean => getTableSizingMode(editor) === 'responsive';
-const getToolbar = (editor: Editor): string => editor.getParam('table_toolbar', defaultTableToolbar);
+const getToolbar = getSetting('table_toolbar', defaultTableToolbar);
 
 
 const getTableHeaderType = (editor: Editor): string => {

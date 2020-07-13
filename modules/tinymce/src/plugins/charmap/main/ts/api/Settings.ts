@@ -7,9 +7,14 @@
 
 import Editor from 'tinymce/core/api/Editor';
 
-const getCharMap = (editor: Editor) => editor.getParam('charmap');
+type CustomCharMap = [number, string][] | (() => [number, string][]);
 
-const getCharMapAppend = (editor: Editor) => editor.getParam('charmap_append');
+const getSetting = <T>(name: string, defaultValue?: T, type?: string) => (editor: Editor): T =>
+  editor.getParam(name, defaultValue, type);
+
+const getCharMap = getSetting<CustomCharMap>('charmap');
+
+const getCharMapAppend = getSetting<CustomCharMap>('charmap_append');
 
 export {
   getCharMap,

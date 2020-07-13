@@ -7,23 +7,26 @@
 
 import Editor from 'tinymce/core/api/Editor';
 
-const shouldHideInSourceView = (editor: Editor) => editor.getParam('fullpage_hide_in_source_view');
+const getSetting = <T>(name: string, defaultValue?: T, type?: string) => (editor: Editor): T =>
+  editor.getParam(name, defaultValue, type);
 
-const getDefaultXmlPi = (editor: Editor) => editor.getParam('fullpage_default_xml_pi');
+const shouldHideInSourceView = getSetting<boolean>('fullpage_hide_in_source_view');
 
-const getDefaultEncoding = (editor: Editor) => editor.getParam('fullpage_default_encoding');
+const getDefaultXmlPi = getSetting<boolean>('fullpage_default_xml_pi');
 
-const getDefaultFontFamily = (editor: Editor) => editor.getParam('fullpage_default_font_family');
+const getDefaultEncoding = getSetting<string>('fullpage_default_encoding');
 
-const getDefaultFontSize = (editor: Editor) => editor.getParam('fullpage_default_font_size');
+const getDefaultFontFamily = getSetting<string>('fullpage_default_font_family');
 
-const getDefaultTextColor = (editor: Editor) => editor.getParam('fullpage_default_text_color');
+const getDefaultFontSize = getSetting<string>('fullpage_default_font_size');
 
-const getDefaultTitle = (editor: Editor) => editor.getParam('fullpage_default_title');
+const getDefaultTextColor = getSetting<string>('fullpage_default_text_color');
 
-const getDefaultDocType = (editor: Editor) => editor.getParam('fullpage_default_doctype', '<!DOCTYPE html>');
+const getDefaultTitle = getSetting<string>('fullpage_default_title');
 
-const getProtect = (editor: Editor) => editor.getParam('protect');
+const getDefaultDocType = getSetting<string>('fullpage_default_doctype', '<!DOCTYPE html>');
+
+const getProtect = getSetting<boolean>('protect');
 
 export {
   shouldHideInSourceView,

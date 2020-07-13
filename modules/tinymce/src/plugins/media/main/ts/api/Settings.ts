@@ -5,41 +5,30 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-const getScripts = function (editor) {
-  return editor.getParam('media_scripts');
-};
+import Editor from 'tinymce/core/api/Editor';
+import { DataToHtmlCallback } from '../core/DataToHtml';
+import { VideoScript } from '../core/VideoScript';
 
-const getAudioTemplateCallback = function (editor) {
-  return editor.getParam('audio_template_callback');
-};
+const getSetting = <T>(name: string, defaultValue?: T, type?: string) => (editor: Editor): T =>
+  editor.getParam(name, defaultValue, type);
 
-const getVideoTemplateCallback = function (editor) {
-  return editor.getParam('video_template_callback');
-};
+const getScripts = getSetting<VideoScript[]>('media_scripts');
 
-const hasLiveEmbeds = function (editor) {
-  return editor.getParam('media_live_embeds', true);
-};
+const getAudioTemplateCallback = getSetting<DataToHtmlCallback>('audio_template_callback');
 
-const shouldFilterHtml = function (editor) {
-  return editor.getParam('media_filter_html', true);
-};
+const getVideoTemplateCallback = getSetting<DataToHtmlCallback>('video_template_callback');
 
-const getUrlResolver = function (editor) {
-  return editor.getParam('media_url_resolver');
-};
+const hasLiveEmbeds = getSetting('media_live_embeds', true);
 
-const hasAltSource = function (editor) {
-  return editor.getParam('media_alt_source', true);
-};
+const shouldFilterHtml = getSetting('media_filter_html', true);
 
-const hasPoster = function (editor) {
-  return editor.getParam('media_poster', true);
-};
+const getUrlResolver = getSetting<Function>('media_url_resolver');
 
-const hasDimensions = function (editor) {
-  return editor.getParam('media_dimensions', true);
-};
+const hasAltSource = getSetting('media_alt_source', true);
+
+const hasPoster = getSetting('media_poster', true);
+
+const hasDimensions = getSetting('media_dimensions', true);
 
 export {
   getScripts,

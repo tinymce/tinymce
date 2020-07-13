@@ -10,6 +10,9 @@ import Editor from 'tinymce/core/api/Editor';
 import { ListItem } from '../ui/DialogTypes';
 import { Type } from '@ephox/katamari';
 
+const getSetting = <T>(name: string, defaultValue?: T, type?: string) => (editor: Editor): T =>
+  editor.getParam(name, defaultValue, type);
+
 const assumeExternalTargets = (editor: Editor): AssumeExternalTargets => {
   const externalTargets = editor.getParam('link_assume_external_targets', false);
   if (Type.isBoolean(externalTargets) && externalTargets) {
@@ -22,25 +25,25 @@ const assumeExternalTargets = (editor: Editor): AssumeExternalTargets => {
   return AssumeExternalTargets.OFF;
 };
 
-const hasContextToolbar = (editor: Editor) => editor.getParam('link_context_toolbar', false, 'boolean');
+const hasContextToolbar = getSetting('link_context_toolbar', false, 'boolean');
 
-const getLinkList = (editor: Editor): string | ListItem[] | ((success: (val: any) => void) => void) => editor.getParam('link_list');
+const getLinkList = getSetting<string | ListItem[]>('link_list');
 
-const getDefaultLinkTarget = (editor: Editor) => editor.getParam('default_link_target');
+const getDefaultLinkTarget = getSetting<string>('default_link_target');
 
-const getTargetList = (editor: Editor): boolean | ListItem[] => editor.getParam('target_list', true);
+const getTargetList = getSetting<boolean | ListItem[]>('target_list', true);
 
-const getRelList = (editor: Editor): ListItem[] => editor.getParam('rel_list', [], 'array');
+const getRelList = getSetting<ListItem[]>('rel_list', [], 'array');
 
-const getLinkClassList = (editor: Editor): ListItem[] => editor.getParam('link_class_list', [], 'array');
+const getLinkClassList = getSetting<ListItem[]>('link_class_list', [], 'array');
 
-const shouldShowLinkTitle = (editor: Editor) => editor.getParam('link_title', true, 'boolean');
+const shouldShowLinkTitle = getSetting('link_title', true, 'boolean');
 
-const allowUnsafeLinkTarget = (editor: Editor) => editor.getParam('allow_unsafe_link_target', false, 'boolean');
+const allowUnsafeLinkTarget = getSetting('allow_unsafe_link_target', false, 'boolean');
 
-const useQuickLink = (editor: Editor) => editor.getParam('link_quicklink', false, 'boolean');
+const useQuickLink = getSetting('link_quicklink', false, 'boolean');
 
-const getDefaultLinkProtocol = (editor: Editor): string => editor.getParam('link_default_protocol', 'http', 'string');
+const getDefaultLinkProtocol = getSetting('link_default_protocol', 'http', 'string');
 
 export {
   assumeExternalTargets,

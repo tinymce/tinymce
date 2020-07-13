@@ -27,7 +27,7 @@ interface ContentTemplate {
   content: string;
 }
 
-type ExternalTemplate = UrlTemplate | ContentTemplate;
+export type ExternalTemplate = UrlTemplate | ContentTemplate;
 
 interface InternalTemplate {
   selected: boolean;

@@ -8,9 +8,9 @@
 import { Types } from '@ephox/bridge';
 import { File } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
+import { UploadHandler } from 'tinymce/core/api/SettingsTypes';
 
 import { ImageData } from '../core/ImageData';
-import { UploadHandler } from '../core/Uploader';
 
 export interface ListValue {
   text: string;

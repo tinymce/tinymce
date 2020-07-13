@@ -5,17 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-const enableWhenDirty = function (editor) {
-  return editor.getParam('save_enablewhendirty', true);
-};
+import Editor from 'tinymce/core/api/Editor';
 
-const hasOnSaveCallback = function (editor) {
-  return !!editor.getParam('save_onsavecallback');
-};
+const enableWhenDirty = (editor: Editor) => editor.getParam('save_enablewhendirty', true);
 
-const hasOnCancelCallback = function (editor) {
-  return !!editor.getParam('save_oncancelcallback');
-};
+const hasOnSaveCallback = (editor: Editor) => !!editor.getParam('save_onsavecallback');
+
+const hasOnCancelCallback = (editor: Editor) => !!editor.getParam('save_oncancelcallback');
 
 export {
   enableWhenDirty,

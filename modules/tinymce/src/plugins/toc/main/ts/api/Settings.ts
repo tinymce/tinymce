@@ -5,16 +5,16 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-const getTocClass = function (editor) {
-  return editor.getParam('toc_class', 'mce-toc');
-};
+import Editor from 'tinymce/core/api/Editor';
 
-const getTocHeader = function (editor) {
+const getTocClass = (editor: Editor) => editor.getParam('toc_class', 'mce-toc');
+
+const getTocHeader = (editor: Editor) => {
   const tagName = editor.getParam('toc_header', 'h2');
   return /^h[1-6]$/.test(tagName) ? tagName : 'h2';
 };
 
-const getTocDepth = function (editor) {
+const getTocDepth = (editor: Editor) => {
   const depth = parseInt(editor.getParam('toc_depth', '3'), 10);
   return depth >= 1 && depth <= 9 ? depth : 3;
 };

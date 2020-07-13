@@ -82,12 +82,12 @@ const insertTemplate = function (editor, ui, html) {
   Tools.each(dom.select('*', el), function (n) {
     // Replace cdate
     if (hasClass(n, Settings.getCreationDateClasses(editor).replace(/\s+/g, '|'))) {
-      n.innerHTML = DateTimeHelper.getDateTime(editor, Settings.getCdateFormat(editor));
+      n.innerHTML = DateTimeHelper.getDateTime(editor, editor.translate(Settings.getCdateFormat(editor)));
     }
 
     // Replace mdate
     if (hasClass(n, Settings.getModificationDateClasses(editor).replace(/\s+/g, '|'))) {
-      n.innerHTML = DateTimeHelper.getDateTime(editor, Settings.getMdateFormat(editor));
+      n.innerHTML = DateTimeHelper.getDateTime(editor, editor.translate(Settings.getMdateFormat(editor)));
     }
 
     // Replace selection

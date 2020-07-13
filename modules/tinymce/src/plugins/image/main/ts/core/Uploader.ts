@@ -8,6 +8,7 @@
 import { FormData, XMLHttpRequest } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
 import { BlobInfo } from 'tinymce/core/api/file/BlobCache';
+import { UploadHandler } from 'tinymce/core/api/SettingsTypes';
 import Promise from 'tinymce/core/api/util/Promise';
 import Tools from 'tinymce/core/api/util/Tools';
 
@@ -17,11 +18,6 @@ import Tools from 'tinymce/core/api/util/Tools';
  */
 
 // TODO: TINY-4601 Remove this file and expose the core uploader instead to remove duplication
-
-export type SuccessCallback = (path: string) => void;
-export type FailureCallback = (error: string) => void;
-export type ProgressCallback = (percent: number) => void;
-export type UploadHandler = (blobInfo: BlobInfo, success: SuccessCallback, failure: FailureCallback, progress: ProgressCallback) => void;
 
 export interface UploaderSettings {
   url?: string;
@@ -39,7 +35,7 @@ const pathJoin = (path1: string | undefined, path2: string) => {
 };
 
 export default (settings: UploaderSettings) => {
-  const defaultHandler = (blobInfo: BlobInfo, success: SuccessCallback, failure: FailureCallback, progress: ProgressCallback) => {
+  const defaultHandler: UploadHandler = (blobInfo, success, failure, progress) => {
     const xhr = new XMLHttpRequest();
     xhr.open('POST', settings.url);
     xhr.withCredentials = settings.credentials;

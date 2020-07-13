@@ -96,7 +96,7 @@ const defaultFetchImage = (editor: Editor, img: HTMLImageElement) => {
   return BlobConversions.imageToBlob(img);
 };
 
-const imageToBlob = (editor: Editor, img: HTMLImageElement): Promise<Blob> => Settings.getFetchImage(editor).fold(
+const imageToBlob = (editor: Editor, img: HTMLImageElement): Promise<Blob> => Option.from(Settings.getFetchImage(editor)).fold(
   () => defaultFetchImage(editor, img),
   (customFetchImage) => customFetchImage(img)
 );

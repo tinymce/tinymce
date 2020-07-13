@@ -14,7 +14,7 @@ import * as Actions from '../core/Actions';
 
 const register = function (editor: Editor) {
   const formats = Settings.getFormats(editor);
-  const defaultFormat = Cell(Settings.getDefaultDateTime(editor));
+  const defaultFormat = Cell(editor.translate(Settings.getDefaultDateTime(editor)));
 
   editor.ui.registry.addSplitButton('insertdatetime', {
     icon: 'insert-time',

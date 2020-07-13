@@ -6,7 +6,7 @@
  */
 
 import { HTMLElement, HTMLImageElement, Node, ReferrerPolicy as DomReferrerPolicy } from '@ephox/dom-globals';
-import { UploadHandler } from '../file/Uploader';
+import * as Uploader from '../file/Uploader';
 import Editor from './Editor';
 import { Formats } from './fmt/Format';
 import { AllowedFormat } from './fmt/StyleFormat';
@@ -32,6 +32,8 @@ export type ReferrerPolicy = DomReferrerPolicy | 'origin' | 'same-origin' | 'str
 
 export type URLConverter = (url: string, name: string, elm?: HTMLElement) => string;
 export type URLConverterCallback = (url: string, node: Node, on_save: boolean, name: string) => void;
+
+export type UploadHandler = Uploader.UploadHandler;
 
 interface ToolbarGroup {
   name?: string;

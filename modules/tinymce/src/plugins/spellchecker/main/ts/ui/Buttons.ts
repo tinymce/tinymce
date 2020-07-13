@@ -33,11 +33,11 @@ const buildMenuItems = function (listName: string, languageValues) {
 
 const getItems = function (editor) {
   return Tools.map(Settings.getLanguages(editor).split(','), function (langPair) {
-    langPair = langPair.split('=');
+    const splitLangPair = langPair.split('=');
 
     return {
-      name: langPair[0],
-      value: langPair[1]
+      name: splitLangPair[0],
+      value: splitLangPair[1]
     };
   });
 };
