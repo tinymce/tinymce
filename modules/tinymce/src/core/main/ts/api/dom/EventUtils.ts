@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { document, HTMLElementEventMap, MouseEvent, window } from '@ephox/dom-globals';
+import { document, EventTarget, HTMLElementEventMap, MouseEvent, window } from '@ephox/dom-globals';
 import { Obj } from '@ephox/katamari';
 
 export type EventUtilsCallback<T> = (event: EventUtilsEvent<T>) => void;
@@ -21,6 +21,7 @@ interface PartialEvent {
   stopImmediatePropagation?: () => void;
   returnValue?: boolean;
   cancelBubble?: boolean;
+  composedPath?: () => EventTarget[];
 }
 
 export type EventUtilsEvent<T> = T & {
