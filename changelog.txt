@@ -1,4 +1,4 @@
-Version 4.9.11 (TBD)
+Version 4.9.11 (2020-07-13)
     Fixed the `selection.setContent()` API not running parser filters #TINY-4002
     Fixed content in an iframe element parsing as DOM elements instead of text content #TINY-5943
     Fixed up and down keyboard navigation not working for inline `contenteditable="false"` elements #TINY-6226
