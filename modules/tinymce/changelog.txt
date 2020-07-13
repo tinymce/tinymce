@@ -1,6 +1,10 @@
 Version 5.5.0 (TBD)
+    Added ability to load TinyMCE in inline mode within a ShadowRoot #TINY-6128
     Added `hasPlugin` function to the editor API to determine if a plugin exists or not #TINY-766
+    Changed the `target` property on fired events to use the native event target. The original target for an open shadow root can be obtained using `event.getComposedPath()` #TINY-6128
     Changed `imagetools` context menu icon for accessing the `image` settings to use the same icon #TINY-4141
+    Deprecated the `Env.experimentalShadowDom` flag #TINY-6128
+    Fixed the `event.getComposedPath()` function on events fired from TinyMCE. This was throwing an exception, but now works as expected. #TINY-6128
     Fixed the `media` plugin not saving the alternative source url in some situations #TINY-4113
     Fixed an issue where dragging and dropping within a table would select table cells #TINY-5950
     Fixed up and down keyboard navigation not working for inline `contenteditable="false"` elements #TINY-6226

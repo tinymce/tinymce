@@ -5,9 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { document, HTMLElementEventMap, MouseEvent, window } from '@ephox/dom-globals';
+import { document, EventTarget, HTMLElementEventMap, MouseEvent, window } from '@ephox/dom-globals';
 import { Obj } from '@ephox/katamari';
-import Env from '../Env';
 
 export type EventUtilsCallback<T> = (event: EventUtilsEvent<T>) => void;
 
@@ -22,6 +21,7 @@ interface PartialEvent {
   stopImmediatePropagation?: () => void;
   returnValue?: boolean;
   cancelBubble?: boolean;
+  composedPath?: () => EventTarget[];
 }
 
 export type EventUtilsEvent<T> = T & {
@@ -85,21 +85,6 @@ const removeEvent = function (target, name, callback, capture?) {
   }
 };
 
-/**
- * Gets the event target based on shadow dom properties like path and composedPath.
- */
-const getTargetFromShadowDom = function (event, defaultTarget) {
-  // When target element is inside Shadow DOM we need to take first element from composedPath
-  // otherwise we'll get Shadow Root parent, not actual target element
-  if (event.composedPath) {
-    const composedPath = event.composedPath();
-    if (composedPath && composedPath.length > 0) {
-      return composedPath[0];
-    }
-  }
-
-  return defaultTarget;
-};
 
 const isMouseEvent = (event: any): event is MouseEvent => mouseEventRe.test(event.type);
 
@@ -123,9 +108,8 @@ const fix = function <T extends PartialEvent> (originalEvent: T, data?): EventUt
     event.target = event.srcElement || document;
   }
 
-  // Experimental shadow dom support
-  if (Env.experimentalShadowDom) {
-    event.target = getTargetFromShadowDom(originalEvent, event.target);
+  if (event.composedPath) {
+    event.composedPath = () => originalEvent.composedPath();
   }
 
   // Calculate pageX/Y if missing and clientX/Y available

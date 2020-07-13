@@ -5,7 +5,7 @@ import { Option } from '@ephox/katamari';
 import { KAssert } from '@ephox/katamari-assertions';
 import { Element } from '@ephox/sugar';
 import * as Node from 'ephox/sugar/api/node/Node';
-import { tElement } from './ElementInstances';
+import { tElement } from 'ephox/sugar/api/node/ElementInstances';
 
 const { tArray } = Testable;
 
