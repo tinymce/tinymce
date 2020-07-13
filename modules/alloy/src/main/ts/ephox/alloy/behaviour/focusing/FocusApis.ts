@@ -4,14 +4,14 @@ import { AlloyComponent } from '../../api/component/ComponentApi';
 import { FocusingConfig } from './FocusingTypes';
 
 const focus = (component: AlloyComponent, focusConfig: FocusingConfig): void => {
-  if (! focusConfig.ignore) {
+  if (!focusConfig.ignore) {
     Focus.focus(component.element());
     focusConfig.onFocus(component);
   }
 };
 
 const blur = (component: AlloyComponent, focusConfig: FocusingConfig): void => {
-  if (! focusConfig.ignore) {
+  if (!focusConfig.ignore) {
     Focus.blur(component.element());
   }
 };

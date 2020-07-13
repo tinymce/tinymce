@@ -15,7 +15,7 @@ const resume = (cWin: Window, frame: Element<HTMLElement>): void => {
     // INVESTIGATE: This predicate may not be required. The purpose of it is to ensure
     // that the content window's frame element is not unnecessarily blurred before giving
     // it focus.
-    if (! Compare.eq(active, frame)) {
+    if (!Compare.eq(active, frame)) {
       Focus.blur(active);
     }
   });

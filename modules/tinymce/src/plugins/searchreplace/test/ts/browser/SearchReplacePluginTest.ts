@@ -1,5 +1,6 @@
 import { Log, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
+import { Unicode } from '@ephox/katamari';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -157,32 +158,42 @@ UnitTest.asynctest('browser.tinymce.plugins.searchreplace.SearchReplacePluginTes
   });
 
   suite.test('TestCase-TINY-5967: SearchReplace: Find and replace all in nested contenteditable elements', (editor) => {
-    editor.setContent('<p>Editable '+
+    editor.setContent('<p>Editable ' +
       '<span contenteditable="false">NonEditable <span contenteditable="true">Editable ' +
       '<span contenteditable="false">NonEditable <span contenteditable="true">Editable </span>NonEditable </span>' +
       'Editable </span>NonEditable </span>' +
       'Editable</p>');
     LegacyUnit.equal(5, editor.plugins.searchreplace.find('Editable', true, true));
     LegacyUnit.equal(HtmlUtils.normalizeHtml(editor.getBody().innerHTML), (
-      '<p><span class="mce-match-marker mce-match-marker-selected" data-mce-bogus="1" data-mce-index="0">Editable</span> '+
+      '<p><span class="mce-match-marker mce-match-marker-selected" data-mce-bogus="1" data-mce-index="0">Editable</span> ' +
       '<span contenteditable="false">NonEditable <span contenteditable="true"><span class="mce-match-marker" data-mce-bogus="1" data-mce-index="1">Editable</span> ' +
       '<span contenteditable="false">NonEditable <span contenteditable="true"><span class="mce-match-marker" data-mce-bogus="1" data-mce-index="2">Editable</span> </span>NonEditable </span>' +
       '<span class="mce-match-marker" data-mce-bogus="1" data-mce-index="3">Editable</span> </span>NonEditable </span>' +
       '<span class="mce-match-marker" data-mce-bogus="1" data-mce-index="4">Editable</span></p>'
     ));
     LegacyUnit.equal(editor.plugins.searchreplace.replace('x', true, true), false);
-    LegacyUnit.equal(editor.getContent(), '<p>x '+
+    LegacyUnit.equal(editor.getContent(), '<p>x ' +
       '<span contenteditable="false">NonEditable <span contenteditable="true">x ' +
       '<span contenteditable="false">NonEditable <span contenteditable="true">x </span>NonEditable </span>' +
       'x </span>NonEditable </span>' +
       'x</p>');
   });
 
+  suite.test('TestCase-TINY-4599: SearchReplace: Excludes zwsp characters', (editor) => {
+    const content = `<p>a${Unicode.zeroWidth} b${Unicode.zeroWidth} a</p>`;
+    editor.setContent(content, { format: 'raw' });
+    LegacyUnit.equal(2, editor.plugins.searchreplace.find(' '));
+    LegacyUnit.equal(2, editor.getBody().getElementsByTagName('span').length);
+    editor.plugins.searchreplace.done();
+    LegacyUnit.equal(0, editor.getBody().getElementsByTagName('span').length);
+    LegacyUnit.equal(editor.getBody().innerHTML, content);
+  });
+
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, Log.steps('TBA', 'SearchReplace: Find and replace matches', suite.toSteps(editor)), onSuccess, onFailure);
   }, {
     plugins: 'searchreplace',
-    valid_elements: 'b,i,br,span[contenteditable]',
+    valid_elements: 'p,b,i,br,span[contenteditable]',
     indent: false,
     base_url: '/project/tinymce/js/tinymce',
     theme: 'silver'

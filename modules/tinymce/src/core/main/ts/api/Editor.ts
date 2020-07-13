@@ -7,7 +7,7 @@
 
 import { Registry } from '@ephox/bridge';
 import { Document, Element, Event, HTMLElement, HTMLIFrameElement, Window } from '@ephox/dom-globals';
-import { Option } from '@ephox/katamari';
+import { Option, Arr } from '@ephox/katamari';
 import * as EditorContent from '../content/EditorContent';
 import * as NodeType from '../dom/NodeType';
 import * as EditorRemove from '../EditorRemove';
@@ -37,7 +37,7 @@ import Node from './html/Node';
 import Schema from './html/Schema';
 import { create, Mode } from './Mode';
 import NotificationManager from './NotificationManager';
-import { Plugin } from './PluginManager';
+import PluginManager, { Plugin } from './PluginManager';
 import { EditorSettings, RawEditorSettings } from './SettingsTypes';
 import Shortcuts from './Shortcuts';
 import { Theme } from './ThemeManager';
@@ -48,6 +48,7 @@ import Tools from './util/Tools';
 import URI from './util/URI';
 import WindowManager from './WindowManager';
 import { StyleSheetLoader } from './dom/StyleSheetLoader';
+import * as Settings from './Settings';
 
 /**
  * This class contains the core logic for a TinyMCE editor.
@@ -450,6 +451,30 @@ class Editor implements EditorObservable {
   }
 
   /**
+   * Checks that the plugin is in the editor configuration and can optionally check if the plugin has been loaded.
+   * <br>
+   * <em>Added in TinyMCE 5.4</em>
+   *
+   * @method hasPlugin
+   * @param {String} name The name of the plugin, as specified for the TinyMCE `plugins` option.
+   * @param {Boolean} loaded If `true`, will also check that the plugin has been loaded.
+   * @return {Boolean} If `loaded` is `true`, returns `true` if the plugin is in the configuration and has been loaded. If `loaded` is `false`, returns `true` if the plugin is in the configuration, regardless of plugin load status.
+   * @example
+   * // Returns `true` if the Comments plugin is in the editor configuration and has loaded successfully:
+   * tinymce.activeEditor.hasPlugin('tinycomments', true);
+   * // Returns `true` if the Table plugin is in the editor configuration, regardless of whether or not it loads:
+   * tinymce.activeEditor.hasPlugin('table');
+   */
+  public hasPlugin(name: string, loaded?: boolean): boolean {
+    const hasPlugin = Arr.contains(Settings.getPlugins(this).split(/[ ,]/), name);
+    if (hasPlugin) {
+      return loaded ? PluginManager.get(name) !== undefined : true;
+    } else {
+      return false;
+    }
+  }
+
+  /**
    * Dispatches out a onNodeChange event to all observers. This method should be called when you
    * need to update the UI states or element path etc.
    *
@@ -502,7 +527,7 @@ class Editor implements EditorObservable {
    * @param {addQueryStateHandlerCallback} callback Function to execute when the command state retrieval occurs.
    * @param {Object} scope Optional scope to execute the function in.
    */
-  public addQueryStateHandler(name: string, callback: () => void, scope?: {}) {
+  public addQueryStateHandler(name: string, callback: () => boolean, scope?: {}) {
     /**
      * Callback function that gets called when a queryCommandState is executed.
      *

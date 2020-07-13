@@ -78,7 +78,7 @@ const setup = (editor: Editor, _registry: AnnotationsRegistry): AnnotationChange
           },
           ({ uid, name, elements }) => {
             // Changed from a different annotation (or nothing)
-            if (! prev.is(uid)) {
+            if (!prev.is(uid)) {
               fireCallbacks(name, uid, elements);
               data.previous.set(Option.some(uid));
             }

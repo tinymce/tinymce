@@ -16,15 +16,13 @@
 
     &::before {
       & when (@content-ui-darkmode = true) {
-        background-image: data-uri('image/svg+xml;charset=UTF-8', '../../../../svg/checklist-unchecked-light.svg');
+        content: data-uri('image/svg+xml;charset=UTF-8', '../../../../svg/checklist-unchecked-light.svg');
       }
 
       & when (@content-ui-darkmode = false) {
-        background-image: data-uri('image/svg+xml;charset=UTF-8', '../../../../svg/checklist-unchecked.svg');
+        content: data-uri('image/svg+xml;charset=UTF-8', '../../../../svg/checklist-unchecked.svg');
       }
 
-      background-size: 100%;
-      content: '';
       cursor: pointer;
       height: 1em;
       margin-left: -1.5em;
@@ -36,11 +34,11 @@
 
   li:not(.tox-checklist--hidden).tox-checklist--checked::before {
     & when (@content-ui-darkmode = true) {
-      background-image: data-uri('image/svg+xml;charset=UTF-8', '../../../../svg/checklist-checked-light.svg');
+      content: data-uri('image/svg+xml;charset=UTF-8', '../../../../svg/checklist-checked-light.svg');
     }
 
     & when (@content-ui-darkmode = false) {
-      background-image: data-uri('image/svg+xml;charset=UTF-8', '../../../../svg/checklist-checked.svg');
+      content: data-uri('image/svg+xml;charset=UTF-8', '../../../../svg/checklist-checked.svg');
     }
   }
 }

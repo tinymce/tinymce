@@ -26,7 +26,7 @@ const nonEmptyAttr = (dom: DOMUtils, elem: string | Element, name: string): Opti
 
 const extractFromAnchor = (editor: Editor, anchor: HTMLAnchorElement) => {
   const dom = editor.dom;
-  const onlyText = Utils.isOnlyTextSelected(editor.selection.getContent());
+  const onlyText = Utils.isOnlyTextSelected(editor);
   const text: Option<string> = onlyText ? Option.some(Utils.getAnchorText(editor.selection, anchor)) : Option.none();
   const url: Option<string> = anchor ? Option.some(dom.getAttrib(anchor, 'href')) : Option.none();
   const target: Option<string> = anchor ? Option.from(dom.getAttrib(anchor, 'target')) : Option.none();

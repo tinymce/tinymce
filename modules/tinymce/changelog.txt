@@ -1,10 +1,23 @@
 Version 5.5.0 (TBD)
     Added ability to load TinyMCE in inline mode within a ShadowRoot #TINY-6128
+    Added `hasPlugin` function to the editor API to determine if a plugin exists or not #TINY-766
     Changed the `target` property on fired events to use the native event target. The original target for an open shadow root can be obtained using `event.getComposedPath()` #TINY-6128
+    Changed `imagetools` context menu icon for accessing the `image` settings to use the same icon #TINY-4141
     Deprecated the `Env.experimentalShadowDom` flag #TINY-6128
     Fixed the `event.getComposedPath()` function on events fired from TinyMCE. This was throwing an exception, but now works as expected. #TINY-6128
     Fixed the `media` plugin not saving the alternative source url in some situations #TINY-4113
-
+    Fixed an issue where dragging and dropping within a table would select table cells #TINY-5950
+    Fixed up and down keyboard navigation not working for inline `contenteditable="false"` elements #TINY-6226
+    Fixed the `unlink` toolbar button not working when selecting multiple links #TINY-4867
+    Fixed the `link` dialog not showing the "Text to display" field in some valid cases #TINY-5205
+    Fixed pressing escape not focusing the editor when using multiple toolbars #TINY-6230
+Version 5.4.1 (2020-07-08)
+    Fixed the Search and Replace plugin incorrectly including zero-width caret characters in search results #TINY-4599
+    Fixed dragging and dropping unsupported files navigating the browser away from the editor #TINY-6027
+    Fixed undo levels not created on browser handled drop or paste events #TINY-6027
+    Fixed content in an iframe element parsing as DOM elements instead of text content #TINY-5943
+    Fixed Oxide checklist styles not showing when printing #TINY-5139
+    Fixed bug with `scope` attribute not being added to the cells of header rows #TINY-6206
 Version 5.4.0 (2020-06-30)
     Added keyboard navigation support to menus and toolbars when the editor is in a ShadowRoot #TINY-6152
     Added the ability for menus to be clicked when the editor is in an open shadow root #TINY-6091

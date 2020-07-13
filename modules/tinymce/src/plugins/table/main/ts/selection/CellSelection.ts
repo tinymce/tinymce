@@ -14,6 +14,7 @@ import { Class, Compare, DomEvent, Element, Node, Selection, SelectionDirection 
 
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
+import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import * as Events from '../api/Events';
 import { getCloneElements } from '../api/Settings';
 import * as Util from '../core/Util';
@@ -132,17 +133,21 @@ export default function (editor: Editor, lazyResize: () => Option<TableResize>, 
       return (raw.buttons & 1) !== 0;
     };
 
-    const mouseDown = (e: MouseEvent) => {
+    const dragStart = (_e: EditorEvent<DragEvent>) => {
+      mouseHandlers.clearstate();
+    };
+
+    const mouseDown = (e: EditorEvent<MouseEvent>) => {
       if (isLeftMouse(e) && hasInternalTarget(e)) {
         mouseHandlers.mousedown(DomEvent.fromRawEvent(e));
       }
     };
-    const mouseOver = (e: MouseEvent) => {
+    const mouseOver = (e: EditorEvent<MouseEvent>) => {
       if (isLeftButtonPressed(e) && hasInternalTarget(e)) {
         mouseHandlers.mouseover(DomEvent.fromRawEvent(e));
       }
     };
-    const mouseUp = (e: MouseEvent) => {
+    const mouseUp = (e: EditorEvent<MouseEvent>) => {
       if (isLeftMouse(e) && hasInternalTarget(e)) {
         mouseHandlers.mouseup(DomEvent.fromRawEvent(e));
       }
@@ -172,6 +177,7 @@ export default function (editor: Editor, lazyResize: () => Option<TableResize>, 
 
     const doubleTap = getDoubleTap();
 
+    editor.on('dragstart', dragStart);
     editor.on('mousedown', mouseDown);
     editor.on('mouseover', mouseOver);
     editor.on('mouseup', mouseUp);

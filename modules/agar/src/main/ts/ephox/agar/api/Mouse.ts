@@ -1,71 +1,133 @@
 import { Element, Focus } from '@ephox/sugar';
+import { Fun } from '@ephox/katamari';
 
 import * as Clicks from '../mouse/Clicks';
 import { Chain } from './Chain';
 import * as UiFinder from './UiFinder';
 
-const cTrigger = (selector: string, action: (ele: Element) => void) => Chain.async<Element, Element>((container, next, die) => {
-  UiFinder.findIn(container, selector).fold(
-    () => die('Could not find element: ' + selector),
-    (ele) => {
-      action(ele);
-      next(container);
-    }
-  );
-});
+// Custom event creation
+const cClickWith = Fun.compose(Chain.op, Clicks.click);
+const cContextMenuWith = Fun.compose(Chain.op, Clicks.contextMenu);
+const cMouseOverWith = Fun.compose(Chain.op, Clicks.mouseOver);
+const cMouseDownWith = Fun.compose(Chain.op, Clicks.mouseDown);
+const cMouseUpWith = Fun.compose(Chain.op, Clicks.mouseUp);
+const cMouseMoveWith = Fun.compose(Chain.op, Clicks.mouseMove);
+const cMouseOutWith = Fun.compose(Chain.op, Clicks.mouseOut);
 
-const sTriggerWith = <T>(container: Element, selector: string, action: (ele: Element) => void) => Chain.asStep<T, Element>(container, [ cTrigger(selector, action) ]);
+// With delta position (shifted relative to top-left of component)
+/**
+ * @deprecated use cMouseUpWith({ dx, dy }) instead */
+const cMouseUpTo = (dx: number, dy: number) => cMouseUpWith({ dx, dy });
+/**
+ * @deprecated use cMouseMoveWith({ dx, dy }) instead */
+const cMouseMoveTo = (dx: number, dy: number) => cMouseMoveWith({ dx, dy });
 
-const trueClick = function (elem: Element) {
+// No extra settings
+/**
+ * @deprecated use cClickWith({ }) instead*/
+const cClick = cClickWith({ });
+/**
+ * @deprecated use cContextMenuWith({ }) instead */
+const cContextMenu = cContextMenuWith({ });
+/**
+ * @deprecated use cMouseOverWith({ }) instead */
+const cMouseOver = cMouseOverWith({ });
+/**
+ * @deprecated use cMouseDownWith({ }) instead */
+const cMouseDown = cMouseDownWith({ });
+/**
+ * @deprecated use cMouseUpWith({ }) instead */
+const cMouseUp = cMouseUpWith({ });
+/**
+ * @deprecated use cMouseMoveWith({ }) instead */
+const cMouseMove = cMouseMoveWith({ });
+/**
+ * @deprecated use cMouseOutWith({ }) instead */
+const cMouseOut = cMouseOutWith({ });
+
+// Work with selectors
+const sTriggerOn = <T>(container: Element, selector: string, action: (ele: Element) => void) =>
+  Chain.asStep<T, Element>(container, [ Chain.async<Element, Element>((container, next, die) => {
+    UiFinder.findIn(container, selector).fold(
+      () => die('Could not find element: ' + selector),
+      (ele) => {
+        action(ele);
+        next(container);
+      }
+    );
+  }) ]);
+
+const sClickOn = <T>(container: Element, selector: string) => sTriggerOn<T>(container, selector, Clicks.trigger);
+
+const sHoverOn = <T>(container: Element, selector: string) =>
+  sTriggerOn<T>(container, selector, Clicks.mouseOver({ }));
+
+const sContextMenuOn = <T>(container: Element, selector: string) =>
+  sTriggerOn<T>(container, selector, Clicks.contextMenu({ }));
+
+const cClickOn = (selector: string): Chain<Element, Element> => Chain.fromIsolatedChains([
+  UiFinder.cFindIn(selector),
+  cClick
+]);
+
+// True click utilities: mouse down / mouse up / click events all in one
+const trueClick = (elem: Element) => {
   // The closest event queue to a true Click
   Focus.focus(elem);
-  Clicks.mousedown(elem);
-  Clicks.mouseup(elem);
+  Clicks.mouseDown({ })(elem);
+  Clicks.mouseUp({ })(elem);
   Clicks.trigger(elem);
 };
-
-const sClickOn = <T>(container: Element, selector: string) => sTriggerWith<T>(container, selector, Clicks.trigger);
-
-const sHoverOn = <T>(container: Element, selector: string) => sTriggerWith<T>(container, selector, Clicks.mouseover);
-
-const sTrueClickOn = <T>(container: Element, selector: string) => sTriggerWith<T>(container, selector, trueClick);
-
-const sContextMenuOn = <T>(container: Element, selector: string) => sTriggerWith<T>(container, selector, Clicks.contextmenu);
-
-const cClickOn = (selector: string): Chain<Element, Element> => cTrigger(selector, Clicks.trigger);
-
-const cMouseUpTo = (dx: number, dy: number) => Chain.op(Clicks.mouseupTo(dx, dy));
-
-const cMouseMoveTo = (dx: number, dy: number) => Chain.op(Clicks.mousemoveTo(dx, dy));
-
-const point = Clicks.point;
-
-const cClick = Chain.op(Clicks.trigger);
 const cTrueClick = Chain.op(trueClick);
-const cContextMenu = Chain.op(Clicks.contextmenu);
-const cMouseOver = Chain.op(Clicks.mouseover);
-const cMouseDown = Chain.op(Clicks.mousedown);
-const cMouseUp = Chain.op(Clicks.mouseup);
-const cMouseMove = Chain.op(Clicks.mousemove);
-const cMouseOut = Chain.op(Clicks.mouseout);
+const sTrueClickOn = <T>(container: Element, selector: string) => sTriggerOn<T>(container, selector, trueClick);
+
+// Low level exports
+const leftClickButton = Clicks.leftClickButton ;
+const middleClickButton = Clicks.middleClickButton ;
+const rightClickButton = Clicks.rightClickButton ;
+const leftClickButtons = Clicks.leftClickButtons ;
+const rightClickButtons = Clicks.rightClickButtons ;
+const middleClickButtons = Clicks.middleClickButtons ;
+/**
+ * @deprecated Use event instead */
+const point = Clicks.point;
+const event = Clicks.event;
 
 export {
-  point,
-
-  sClickOn,
-  sTrueClickOn,
-  sHoverOn,
-  sContextMenuOn,
+  cClickWith,
+  cContextMenuWith,
+  cMouseOverWith,
+  cMouseDownWith,
+  cMouseUpWith,
+  cMouseMoveWith,
+  cMouseOutWith,
 
   cClick,
-  cClickOn,
-  cTrueClick,
   cContextMenu,
   cMouseOver,
   cMouseDown,
   cMouseUp,
-  cMouseUpTo,
   cMouseMove,
+  cMouseOut,
+
+  cMouseUpTo,
   cMouseMoveTo,
-  cMouseOut
+
+  sClickOn,
+  sHoverOn,
+  sContextMenuOn,
+  cClickOn,
+
+  cTrueClick,
+  sTrueClickOn,
+
+  leftClickButton,
+  middleClickButton,
+  rightClickButton,
+  leftClickButtons,
+  rightClickButtons,
+  middleClickButtons,
+
+  point,
+  event
 };

@@ -33,6 +33,12 @@ const map = Tools.map, inArray = Tools.inArray;
 export type EditorCommandCallback = (ui: boolean, value: any, args: any) => void;
 export type EditorCommandsCallback = (command: string, ui: boolean, value: any, args: any) => void;
 
+interface Commands {
+  state: Record<string, (command: string) => boolean>;
+  exec: Record<string, EditorCommandsCallback>;
+  value: Record<string, (command: string) => string>;
+}
+
 export interface EditorCommandsConstructor {
   readonly prototype: EditorCommands;
 
@@ -42,7 +48,7 @@ export interface EditorCommandsConstructor {
 class EditorCommands {
   private readonly editor: Editor;
   private selectionBookmark: Bookmark;
-  private commands = { state: {}, exec: {}, value: {}};
+  private commands: Commands = { state: {}, exec: {}, value: {}};
 
   public constructor(editor: Editor) {
     this.editor = editor;
@@ -121,11 +127,11 @@ class EditorCommands {
   }
 
   /**
-   * Queries the current state for a command for example if the current selection is "bold".
+   * Queries the current state for a command. For example: If the current selection is "bold".
    *
    * @method queryCommandState
    * @param {String} command Command to check the state of.
-   * @return {Boolean/Number} true/false if the selected contents is bold or not, -1 if it's not found.
+   * @return {Boolean} true/false - For example: If the selected contents is bold or not.
    */
   public queryCommandState(command: string): boolean {
     let func;
@@ -150,11 +156,11 @@ class EditorCommands {
   }
 
   /**
-   * Queries the command value for example the current fontsize.
+   * Queries the command value. For example: The current fontsize.
    *
    * @method queryCommandValue
    * @param {String} command Command to check the value of.
-   * @return {Object} Command value of false if it's not found.
+   * @return {String} Command value or an empty string (`""`) if the query command is not found.
    */
   public queryCommandValue(command: string): string {
     let func;
@@ -183,9 +189,10 @@ class EditorCommands {
    * @param {Object} commandList Name/value collection with commands to add, the names can also be comma separated.
    * @param {String} type Optional type to add, defaults to exec. Can be value or state as well.
    */
-  public addCommands(commandList: Record<string, EditorCommandsCallback>, type?: 'exec' | 'state' | 'value') {
+  public addCommands<K extends keyof Commands>(commandList: Commands[K], type: K): void;
+  public addCommands(commandList: Record<string, EditorCommandsCallback>): void;
+  public addCommands(commandList: Commands[keyof Commands], type: 'exec' | 'state' | 'query' = 'exec') {
     const self = this;
-    type = type || 'exec';
 
     each(commandList, function (callback, command) {
       each(command.toLowerCase().split(','), function (command) {
@@ -223,7 +230,7 @@ class EditorCommands {
     return false;
   }
 
-  public addQueryStateHandler(command: string, callback: () => void, scope?: {}) {
+  public addQueryStateHandler(command: string, callback: () => boolean, scope?: {}) {
     command = command.toLowerCase();
     this.commands.state[command] = () => callback.call(scope || this.editor);
   }

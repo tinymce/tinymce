@@ -3,7 +3,7 @@ import { Attr, Element, Node, PredicateFind, SelectorFind, Traverse } from '@eph
 
 const find = (queryElem: Element): Option<Element> => {
   const dependent: Option<Element> = PredicateFind.closest(queryElem, (elem) => {
-    if (! Node.isElement(elem)) { return false; }
+    if (!Node.isElement(elem)) { return false; }
     const id = Attr.get(elem, 'id');
     return id !== undefined && id.indexOf('aria-owns') > -1;
   });

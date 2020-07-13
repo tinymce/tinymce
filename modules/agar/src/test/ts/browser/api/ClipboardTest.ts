@@ -7,7 +7,7 @@ import { createFileFromString } from 'ephox/agar/api/Files';
 import { Chain, Logger, Step, ChainSequence, StepSequence } from 'ephox/agar/api/Main';
 import { Pipeline } from 'ephox/agar/api/Pipeline';
 
-if (! /phantom/i.test(navigator.userAgent)) {
+if (!/phantom/i.test(navigator.userAgent)) {
   UnitTest.asynctest('ClipboardTest', (success, failure) => {
     const pastebin = Element.fromHtml('<div class="pastebin"></div>');
     const pasteState = Cell(Option.none<DataTransfer>());

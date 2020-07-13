@@ -125,7 +125,7 @@ const removeNode = function (dom: DOMUtils, node: Node) {
 };
 
 const escapeSearchText = (text: string, wholeWord: boolean) => {
-  const escapedText = text.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&').replace(/\s/g, '[^\\S\\r\\n]');
+  const escapedText = text.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&').replace(/\s/g, '[^\\S\\r\\n\\uFEFF]');
   const wordRegex = '(' + escapedText + ')';
   return wholeWord ? `(?:^|\\s|${PolarisPattern.punctuation()})` + wordRegex + `(?=$|\\s|${PolarisPattern.punctuation()})` : wordRegex;
 };

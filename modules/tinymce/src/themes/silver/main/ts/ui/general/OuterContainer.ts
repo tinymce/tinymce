@@ -179,7 +179,10 @@ const partMultipleToolbar = Composite.partType.optional<OuterContainerSketchDeta
         cyclicKeying: false,
         initGroups: [ ],
         providers: spec.providers,
-        onEscape: () => Option.none()
+        onEscape: () => {
+          spec.onEscape();
+          return Option.some(true);
+        }
       }),
       setupItem: (_mToolbar, tc, data, _index) => {
         Toolbar.setGroups(tc, data);

@@ -68,7 +68,7 @@ UnitTest.asynctest('Browser Test: events.BroadcastingEventsTest', (success, fail
       store.sClear,
       Step.sync(() => {
         // Fake a window resize, by manually triggering a resize event
-        if (typeof(Event) === 'function') {
+        if (typeof Event === 'function') {
           // modern browsers
           window.dispatchEvent(new Event('resize'));
         } else {
