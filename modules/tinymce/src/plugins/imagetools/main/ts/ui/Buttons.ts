@@ -58,7 +58,7 @@ const register = function (editor: Editor) {
 
   editor.ui.registry.addButton('imageoptions', {
     tooltip: 'Image options',
-    icon: 'image-options',
+    icon: 'image',
     onAction: cmd('mceImage')
   });
 

@@ -14,6 +14,7 @@ import XHR from 'tinymce/core/api/util/XHR';
 import * as Settings from '../api/Settings';
 import * as Templates from '../core/Templates';
 import * as Utils from '../core/Utils';
+import Env from 'tinymce/core/api/Env';
 
 interface UrlTemplate {
   title: string;
@@ -48,17 +49,38 @@ type UpdateDialogCallback = (dialogApi: Types.Dialog.DialogInstanceApi<DialogDat
 
 const getPreviewContent = (editor: Editor, html: string) => {
   if (html.indexOf('<html>') === -1) {
-    let contentCssLinks = '';
+    let contentCssEntries = '';
+
+    const contentStyle = Settings.getContentStyle(editor);
+    if (contentStyle) {
+      contentCssEntries += '<style type="text/css">' + contentStyle + '</style>';
+    }
+
+    const cors = Settings.shouldUseContentCssCors(editor) ? ' crossorigin="anonymous"' : '';
 
     Tools.each(editor.contentCSS, (url) => {
-      contentCssLinks += '<link type="text/css" rel="stylesheet" href="' +
+      contentCssEntries += '<link type="text/css" rel="stylesheet" href="' +
         editor.documentBaseURI.toAbsolute(url) +
-        '">';
+        '"' + cors + '>';
     });
 
     const bodyClass = Settings.getBodyClass(editor);
 
     const encode = editor.dom.encode;
+
+    const isMetaKeyPressed = Env.mac ? 'e.metaKey' : 'e.ctrlKey && !e.altKey';
+
+    const preventClicksOnLinksScript = (
+      '<script>' +
+      'document.addEventListener && document.addEventListener("click", function(e) {' +
+      'for (var elm = e.target; elm; elm = elm.parentNode) {' +
+      'if (elm.nodeName === "A" && !(' + isMetaKeyPressed + ')) {' +
+      'e.preventDefault();' +
+      '}' +
+      '}' +
+      '}, false);' +
+      '</script> '
+    );
 
     const directionality = editor.getBody().dir;
     const dirAttr = directionality ? ' dir="' + encode(directionality) + '"' : '';
@@ -67,7 +89,9 @@ const getPreviewContent = (editor: Editor, html: string) => {
       '<!DOCTYPE html>' +
       '<html>' +
       '<head>' +
-      contentCssLinks +
+      '<base href="' + encode(editor.documentBaseURI.getURI()) + '">' +
+      contentCssEntries +
+      preventClicksOnLinksScript +
       '</head>' +
       '<body class="' + encode(bodyClass) + '"' + dirAttr + '>' +
       html +
@@ -229,5 +253,6 @@ const open = (editor: Editor, templateList: ExternalTemplate[]) => {
 };
 
 export {
-  open
+  open,
+  getPreviewContent
 };

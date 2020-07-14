@@ -1,11 +1,20 @@
 Version 5.5.0 (TBD)
+    Added new `table_column_resizing` setting to control how the table is affected when resizing columns using the resize bars #TINY-6001
+    Added ability to load TinyMCE in inline mode within a ShadowRoot #TINY-6128
     Added `hasPlugin` function to the editor API to determine if a plugin exists or not #TINY-766
     Added the ability to delete and navigate HTML media elements without the media plugin #TINY-4211
+    Changed the `target` property on fired events to use the native event target. The original target for an open shadow root can be obtained using `event.getComposedPath()` #TINY-6128
+    Changed `imagetools` context menu icon for accessing the `image` settings to use the same icon #TINY-4141
+    Deprecated the `Env.experimentalShadowDom` flag #TINY-6128
+    Fixed the `event.getComposedPath()` function on events fired from TinyMCE. This was throwing an exception, but now works as expected. #TINY-6128
+    Fixed the `template` plugin previews missing some content styles #TINY-6115
     Fixed the `media` plugin not saving the alternative source url in some situations #TINY-4113
+    Fixed an issue where column resizing using the resize bars was inconsistent between fixed and relative table widths #TINY-6001
     Fixed an issue where dragging and dropping within a table would select table cells #TINY-5950
     Fixed up and down keyboard navigation not working for inline `contenteditable="false"` elements #TINY-6226
     Fixed the `unlink` toolbar button not working when selecting multiple links #TINY-4867
     Fixed the `link` dialog not showing the "Text to display" field in some valid cases #TINY-5205
+    Fixed pressing escape not focusing the editor when using multiple toolbars #TINY-6230
 Version 5.4.1 (2020-07-08)
     Fixed the Search and Replace plugin incorrectly including zero-width caret characters in search results #TINY-4599
     Fixed dragging and dropping unsupported files navigating the browser away from the editor #TINY-6027
