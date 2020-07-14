@@ -37,6 +37,8 @@ const defaultAttributes = {
   border: '1'
 };
 
+const defaultColumnResizingBehaviour = 'preservetable';
+
 const getTableSizingMode = (editor: Editor): TableSizingMode => editor.getParam('table_sizing_mode', 'auto');
 const getTableResponseWidth = (editor: Editor): boolean | undefined => editor.getParam('table_responsive_width');
 
@@ -68,6 +70,13 @@ const getTableHeaderType = (editor: Editor): string => {
   } else {
     return value;
   }
+};
+
+
+const getColumnResizingBehaviour = (editor: Editor): 'preservetable' | 'resizetable' => {
+  const validModes: Array<'preservetable' | 'resizetable'> = [ 'preservetable', 'resizetable' ];
+  const givenMode = editor.getParam('table_column_resizing', defaultColumnResizingBehaviour, 'string');
+  return Arr.find(validModes, (mode) => mode === givenMode).getOr(defaultColumnResizingBehaviour);
 };
 
 const getCloneElements = (editor: Editor): Option<string[]> => {
@@ -107,5 +116,6 @@ export {
   isPixelsForced,
   isResponsiveForced,
   getToolbar,
-  getTableHeaderType
+  getTableHeaderType,
+  getColumnResizingBehaviour
 };

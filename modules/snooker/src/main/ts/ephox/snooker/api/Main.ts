@@ -8,6 +8,7 @@ import * as CopyRows from './CopyRows';
 import * as CopySelected from './CopySelected';
 import { Generators, SimpleGenerators } from './Generators';
 import * as OtherCells from './OtherCells';
+import * as ResizeBehaviour from './ResizeBehaviour';
 import { ResizeDirection } from './ResizeDirection';
 import { ResizeWire } from './ResizeWire';
 import * as Sizes from './Sizes';
@@ -32,6 +33,7 @@ export {
   CopyRows,
   CopySelected,
   Generators,
+  ResizeBehaviour,
   ResizeDirection,
   ResizeWire,
   SimpleGenerators,

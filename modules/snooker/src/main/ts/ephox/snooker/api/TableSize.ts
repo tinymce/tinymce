@@ -16,6 +16,7 @@ export interface TableSize {
   readonly minCellWidth: () => number;
   readonly setElementWidth: (element: Element<HTMLElement>, width: number) => void;
   readonly adjustTableWidth: (delta: number) => void;
+  readonly isRelative: boolean;
   readonly label: string;
 }
 
@@ -34,6 +35,7 @@ const noneSize = (table: Element<HTMLTableElement>): TableSize => {
     minCellWidth: zero,
     setElementWidth: Fun.noop,
     adjustTableWidth: Fun.noop,
+    isRelative: true,
     label: 'none'
   };
 };
@@ -64,6 +66,7 @@ const percentageSize = (initialWidth: string, table: Element<HTMLTableElement>):
     minCellWidth,
     setElementWidth: Sizes.setPercentageWidth,
     adjustTableWidth,
+    isRelative: true,
     label: 'percent'
   };
 };
@@ -91,6 +94,7 @@ const pixelSize = (initialWidth: number, table: Element<HTMLTableElement>): Tabl
     minCellWidth: CellUtils.minWidth,
     setElementWidth: Sizes.setPixelWidth,
     adjustTableWidth,
+    isRelative: false,
     label: 'pixel'
   };
 };
