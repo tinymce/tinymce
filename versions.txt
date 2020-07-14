@@ -3,3 +3,4 @@
 agar@4.18.0
 darwin@4.1.0
 snooker@6.1.0
+sugar@6.2.0
