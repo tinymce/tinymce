@@ -172,7 +172,9 @@ const setup = (editor: Editor): RenderInfo => {
       classes: [ 'tox-toolbar-overlord' ]
     },
     providers: backstage.shared.providers,
-    onEscape: () => { },
+    onEscape: () => {
+      editor.focus();
+    },
     type: toolbarMode
   });
 

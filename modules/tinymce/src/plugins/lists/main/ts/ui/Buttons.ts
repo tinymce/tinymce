@@ -6,18 +6,12 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
-import Tools from 'tinymce/core/api/util/Tools';
 import * as Util from '../core/Util';
 
 const register = (editor: Editor) => {
-  const hasPlugin = (editor: Editor, plugin: string) => {
-    const plugins = editor.getParam('plugins', '', 'string');
-    return Tools.inArray(plugins.split(/[ ,]/), plugin) !== -1;
-  };
-
   const exec = (command) => () => editor.execCommand(command);
 
-  if (!hasPlugin(editor, 'advlist')) {
+  if (!editor.hasPlugin('advlist')) {
     editor.ui.registry.addToggleButton('numlist', {
       icon: 'ordered-list',
       active: false,

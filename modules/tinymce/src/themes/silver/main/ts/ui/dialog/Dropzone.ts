@@ -47,7 +47,7 @@ export const renderDropZone = (spec: DropZoneSpec, providersBackstage: UiFactory
   };
 
   const onDrop: AlloyEvents.EventRunHandler<EventArgs> = (comp, se) => {
-    if (! Disabling.isDisabled(comp)) {
+    if (!Disabling.isDisabled(comp)) {
       const transferEvent = se.event().raw() as DragEvent;
       handleFiles(comp, transferEvent.dataTransfer.files);
     }

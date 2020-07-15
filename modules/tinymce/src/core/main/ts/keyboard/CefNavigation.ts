@@ -34,7 +34,7 @@ const moveToCeFalseHorizontally = (direction: HDirection, editor: Editor, getNex
   if (!range.collapsed) {
     const node = getSelectedNode(range);
     if (isContentEditableFalse(node)) {
-      return CefUtils.showCaret(direction, editor, node, direction === HDirection.Backwards, true);
+      return CefUtils.showCaret(direction, editor, node, direction === HDirection.Backwards, false);
     }
   }
 
@@ -55,19 +55,19 @@ const moveToCeFalseHorizontally = (direction: HDirection, editor: Editor, getNex
   }
 
   if (isBeforeContentEditableFalseFn(nextCaretPosition)) {
-    return CefUtils.showCaret(direction, editor, nextCaretPosition.getNode(!forwards) as Element, forwards, true);
+    return CefUtils.showCaret(direction, editor, nextCaretPosition.getNode(!forwards) as Element, forwards, false);
   }
 
   // Peek ahead for handling of ab|c<span cE=false> -> abc|<span cE=false>
   const peekCaretPosition = getNextPosFn(nextCaretPosition);
   if (peekCaretPosition && isBeforeContentEditableFalseFn(peekCaretPosition)) {
     if (CaretUtils.isMoveInsideSameBlock(nextCaretPosition, peekCaretPosition)) {
-      return CefUtils.showCaret(direction, editor, peekCaretPosition.getNode(!forwards) as Element, forwards, true);
+      return CefUtils.showCaret(direction, editor, peekCaretPosition.getNode(!forwards) as Element, forwards, false);
     }
   }
 
   if (rangeIsInContainerBlock) {
-    return CefUtils.renderRangeCaret(editor, nextCaretPosition.toRange(), true);
+    return CefUtils.renderRangeCaret(editor, nextCaretPosition.toRange(), false);
   }
 
   return null;
@@ -104,7 +104,7 @@ const moveToCeFalseVertically = (direction: LineWalker.VDirection, editor: Edito
       dist1 = Math.abs(clientX - closestNextLineRect.left);
       dist2 = Math.abs(clientX - closestNextLineRect.right);
 
-      return CefUtils.showCaret(direction, editor, closestNextLineRect.node, dist1 < dist2, true);
+      return CefUtils.showCaret(direction, editor, closestNextLineRect.node, dist1 < dist2, false);
     }
   }
 
@@ -113,12 +113,12 @@ const moveToCeFalseVertically = (direction: LineWalker.VDirection, editor: Edito
 
     closestNextLineRect = LineUtils.findClosestClientRect(Arr.filter(caretPositions, LineWalker.isLine(1)), clientX);
     if (closestNextLineRect) {
-      return CefUtils.renderRangeCaret(editor, closestNextLineRect.position.toRange(), true);
+      return CefUtils.renderRangeCaret(editor, closestNextLineRect.position.toRange(), false);
     }
 
     closestNextLineRect = ArrUtils.last(Arr.filter(caretPositions, LineWalker.isLine(0)));
     if (closestNextLineRect) {
-      return CefUtils.renderRangeCaret(editor, closestNextLineRect.position.toRange(), true);
+      return CefUtils.renderRangeCaret(editor, closestNextLineRect.position.toRange(), false);
     }
   }
 };
@@ -211,7 +211,7 @@ const moveH = (editor: Editor, forward: boolean) => () => {
   const newRng = getHorizontalRange(editor, forward);
 
   if (newRng) {
-    editor.selection.setRng(newRng);
+    CefUtils.moveToRange(editor, newRng);
     return true;
   } else {
     return false;
@@ -222,7 +222,7 @@ const moveV = (editor: Editor, down: boolean) => () => {
   const newRng = getVerticalRange(editor, down);
 
   if (newRng) {
-    editor.selection.setRng(newRng);
+    CefUtils.moveToRange(editor, newRng);
     return true;
   } else {
     return false;

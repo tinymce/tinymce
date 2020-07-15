@@ -11,7 +11,7 @@ UnitTest.test('CommentTest', () => {
     Traverse.child(span, 0).filter(Node.isComment).each((text0) => {
       span.dom().innerHTML = 'smashed';
       const v = Comment.get(text0); // Throws in IE10.
-      assert.eq('string', typeof(v));
+      assert.eq('string', typeof v);
     });
   };
 

@@ -30,6 +30,8 @@
     "one-var": "off",
     "prefer-rest-params": "off",
     "prefer-spread": "off",
+    "space-infix-ops": "error",
+    "space-unary-ops": "error",
     "max-len": ["warn", 260]
   }
 }

@@ -127,11 +127,11 @@ class EditorCommands {
   }
 
   /**
-   * Queries the current state for a command for example if the current selection is "bold".
+   * Queries the current state for a command. For example: If the current selection is "bold".
    *
    * @method queryCommandState
    * @param {String} command Command to check the state of.
-   * @return {Boolean} true/false if the selected contents is bold or not.
+   * @return {Boolean} true/false - For example: If the selected contents is bold or not.
    */
   public queryCommandState(command: string): boolean {
     let func;
@@ -156,11 +156,11 @@ class EditorCommands {
   }
 
   /**
-   * Queries the command value for example the current fontsize.
+   * Queries the command value. For example: The current fontsize.
    *
    * @method queryCommandValue
    * @param {String} command Command to check the value of.
-   * @return {Object} Command value of false if it's not found.
+   * @return {String} Command value or an empty string (`""`) if the query command is not found.
    */
   public queryCommandValue(command: string): string {
     let func;

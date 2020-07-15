@@ -37,7 +37,7 @@ const baseWith = function (handleUnsupported: HandleFn, required: string[], pred
       return Arr.contains(keys, req);
     });
 
-    if (! allReqd) {
+    if (!allReqd) {
       BagUtils.reqMessage(required, keys);
     }
 

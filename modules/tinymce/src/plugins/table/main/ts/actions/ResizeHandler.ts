@@ -7,11 +7,11 @@
 
 import { HTMLTableElement, Node, Range } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
-import { ResizeWire, Sizes, TableDirection, TableResize } from '@ephox/snooker';
+import { ResizeBehaviour, ResizeWire, Sizes, TableDirection, TableResize } from '@ephox/snooker';
 import { Css, Element, Element as SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import * as Events from '../api/Events';
-import { hasObjectResizing, hasTableResizeBars, isPercentagesForced, isPixelsForced, isResponsiveForced } from '../api/Settings';
+import * as Settings from '../api/Settings';
 import * as Util from '../core/Util';
 import * as Direction from '../queries/Direction';
 import * as TableSize from '../queries/TableSize';
@@ -57,9 +57,10 @@ export const getResizeHandler = function (editor: Editor): ResizeHandler {
     const direction = TableDirection(Direction.directionAt);
     const rawWire = TableWire.get(editor);
     wire = Option.some(rawWire);
-    if (hasObjectResizing(editor) && hasTableResizeBars(editor)) {
+    if (Settings.hasObjectResizing(editor) && Settings.hasTableResizeBars(editor)) {
       const lazySizing = (table: SugarElement<HTMLTableElement>) => TableSize.get(editor, table);
-      const sz = TableResize.create(rawWire, direction, lazySizing);
+      const resizing = Settings.getColumnResizingBehaviour(editor) === 'resizetable' ? ResizeBehaviour.resizeTable() : ResizeBehaviour.preserveTable();
+      const sz = TableResize.create(rawWire, direction, resizing, lazySizing);
       sz.on();
       sz.events.startDrag.bind(function (_event) {
         selectionRng = Option.some(editor.selection.getRng());
@@ -94,9 +95,9 @@ export const getResizeHandler = function (editor: Editor): ResizeHandler {
     if (isTable(targetElm)) {
       const table = Element.fromDom(targetElm);
 
-      if (!Sizes.isPixelSizing(table) && isPixelsForced(editor)) {
+      if (!Sizes.isPixelSizing(table) && Settings.isPixelsForced(editor)) {
         enforcePixels(editor, table);
-      } else if (!Sizes.isPercentSizing(table) && isPercentagesForced(editor)) {
+      } else if (!Sizes.isPercentSizing(table) && Settings.isPercentagesForced(editor)) {
         enforcePercentage(editor, table);
       }
 
@@ -110,7 +111,7 @@ export const getResizeHandler = function (editor: Editor): ResizeHandler {
     if (isTable(targetElm)) {
       const table = Element.fromDom(targetElm);
 
-      if (startRawW === '' || (!Util.isPercentage(startRawW) && isResponsiveForced(editor))) {
+      if (startRawW === '' || (!Util.isPercentage(startRawW) && Settings.isResponsiveForced(editor))) {
         // Responsive tables don't have a width so we need to convert it to a relative/percent
         // table instead, as that's closer to responsive sizing than fixed sizing
         enforcePercentage(editor, table);

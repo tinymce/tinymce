@@ -10,7 +10,7 @@ const getPreviewDialogWidth = (editor: Editor): number => parseInt(editor.getPar
 
 const getPreviewDialogHeight = (editor: Editor): number => parseInt(editor.getParam('plugin_preview_height', '500'), 10);
 
-const getContentStyle = (editor: Editor): string => editor.getParam('content_style', '');
+const getContentStyle = (editor: Editor): string => editor.getParam('content_style', '', 'string');
 
 const shouldUseContentCssCors = (editor: Editor): boolean => editor.getParam('content_css_cors', false, 'boolean');
 

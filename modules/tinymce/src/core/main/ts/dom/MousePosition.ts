@@ -5,7 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { HTMLElement, MouseEvent } from '@ephox/dom-globals';
 import Editor from '../api/Editor';
+import { EditorEvent } from '../api/util/EventDispatcher';
 
 /**
  * This module calculates an absolute coordinate inside the editor body for both local and global mouse events.
@@ -14,7 +16,17 @@ import Editor from '../api/Editor';
  * @class tinymce.dom.MousePosition
  */
 
-const getAbsolutePosition = function (elm) {
+export interface PagePosition {
+  pageX: number;
+  pageY: number;
+};
+
+interface Position {
+  top: number;
+  left: number;
+};
+
+const getAbsolutePosition = (elm: HTMLElement) => {
   const clientRect = elm.getBoundingClientRect();
   const doc = elm.ownerDocument;
   const docElem = doc.documentElement;
@@ -26,16 +38,14 @@ const getAbsolutePosition = function (elm) {
   };
 };
 
-const getBodyPosition = function (editor: Editor) {
-  return editor.inline ? getAbsolutePosition(editor.getBody()) : { left: 0, top: 0 };
-};
+const getBodyPosition = (editor: Editor): Position => editor.inline ? getAbsolutePosition(editor.getBody()) : { left: 0, top: 0 };
 
-const getScrollPosition = function (editor: Editor) {
+const getScrollPosition = (editor: Editor): Position => {
   const body = editor.getBody();
   return editor.inline ? { left: body.scrollLeft, top: body.scrollTop } : { left: 0, top: 0 };
 };
 
-const getBodyScroll = function (editor: Editor) {
+const getBodyScroll = (editor: Editor): Position => {
   const body = editor.getBody(), docElm = editor.getDoc().documentElement;
   const inlineScroll = { left: body.scrollLeft, top: body.scrollTop };
   const iframeScroll = { left: body.scrollLeft || docElm.scrollLeft, top: body.scrollTop || docElm.scrollTop };
@@ -43,7 +53,7 @@ const getBodyScroll = function (editor: Editor) {
   return editor.inline ? inlineScroll : iframeScroll;
 };
 
-const getMousePosition = function (editor: Editor, event) {
+const getMousePosition = (editor: Editor, event: EditorEvent<MouseEvent>): Position => {
   if (event.target.ownerDocument !== editor.getDoc()) {
     const iframePosition = getAbsolutePosition(editor.getContentAreaContainer());
     const scrollPosition = getBodyScroll(editor);
@@ -60,16 +70,13 @@ const getMousePosition = function (editor: Editor, event) {
   };
 };
 
-const calculatePosition = function (bodyPosition, scrollPosition, mousePosition) {
-  return {
-    pageX: (mousePosition.left - bodyPosition.left) + scrollPosition.left,
-    pageY: (mousePosition.top - bodyPosition.top) + scrollPosition.top
-  };
-};
+const calculatePosition = (bodyPosition: Position, scrollPosition: Position, mousePosition: Position): PagePosition => ({
+  pageX: (mousePosition.left - bodyPosition.left) + scrollPosition.left,
+  pageY: (mousePosition.top - bodyPosition.top) + scrollPosition.top
+});
 
-const calc = function (editor: Editor, event) {
-  return calculatePosition(getBodyPosition(editor), getScrollPosition(editor), getMousePosition(editor, event));
-};
+const calc = (editor: Editor, event: EditorEvent<MouseEvent>): PagePosition =>
+  calculatePosition(getBodyPosition(editor), getScrollPosition(editor), getMousePosition(editor, event));
 
 export {
   calc

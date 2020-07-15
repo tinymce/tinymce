@@ -144,6 +144,11 @@ const cGetBody = Chain.control(
   Guard.addLogging('Get body')
 );
 
+const cGetDoc = Chain.control(
+  Chain.mapper((editor: Editor) => Element.fromDom(editor.getDoc().documentElement)),
+  Guard.addLogging('Get doc')
+);
+
 const cInsertTable = (cols: number, rows: number) => Chain.mapper((editor: Editor) => TinyDom.fromDom(editor.plugins.table.insertTable(cols, rows)));
 
 const cInsertRaw = (html: string) => Chain.mapper((editor: Editor) => {
@@ -234,6 +239,32 @@ const cDragHandle = function (id, deltaH, deltaV) {
     Guard.addLogging('Drag handle')
   );
 };
+
+const cDragResizeBar = (rowOrCol: 'row' | 'column', index: number, dx: number, dy: number) =>
+  Chain.control(
+    NamedChain.asChain([
+      NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
+      NamedChain.direct('editor', cGetBody, 'editorBody'),
+      // Need to mouse over the table to trigger the 'resizebar' divs to appear in the dom
+      NamedChain.read('editorBody', Chain.fromChains([
+        UiFinder.cFindIn('td'),
+        Mouse.cMouseOver
+      ])),
+      NamedChain.direct('editor', cGetDoc, 'editorDoc'),
+      NamedChain.read('editorDoc', Chain.fromChains([
+        UiFinder.cFindIn(`div[data-${rowOrCol}='${index}']`),
+        Mouse.cMouseDown
+      ])),
+      NamedChain.read('editorDoc', Chain.fromChains([
+        UiFinder.cFindIn('div.ephox-dragster-blocker'),
+        Mouse.cMouseMove,
+        Mouse.cMouseMoveTo(dx, dy),
+        Mouse.cMouseUpTo(dx, dy)
+      ])),
+      NamedChain.outputInput
+    ]),
+    Guard.addLogging(`Drag ${rowOrCol} ${index} resizer`)
+  );
 
 const cGetWidth = Chain.control(
   Chain.mapper(function (input: any) {
@@ -405,11 +436,13 @@ export {
   cSetInputValue,
   cWaitForDialog,
   cGetBody,
+  cGetDoc,
   cInsertTable,
   cInsertRaw,
   cMergeCells,
   cSplitCells,
   cDragHandle,
+  cDragResizeBar,
   cGetWidth,
   cGetCellWidth,
   cInsertColumnBefore,

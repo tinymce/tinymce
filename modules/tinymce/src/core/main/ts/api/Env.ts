@@ -248,6 +248,12 @@ const Env: Env = {
 
   cacheSuffix: null,
   container: null,
+
+  /**
+   * <em>Deprecated in TinyMCE 5.5</em> - if you need the original target of an event, please use `event.composedPath()`
+   *
+   * @deprecated
+   */
   experimentalShadowDom: false,
 
   /**

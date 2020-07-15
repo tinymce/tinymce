@@ -8,14 +8,13 @@
 import PluginManager from 'tinymce/core/api/PluginManager';
 import * as Api from './api/Api';
 import * as Commands from './api/Commands';
-import { hasRtcPlugin } from './core/DetectRtc';
 import * as Keyboard from './core/Keyboard';
 import * as Buttons from './ui/Buttons';
 import * as MenuItems from './ui/MenuItems';
 
 export default () => {
   PluginManager.add('lists', (editor) => {
-    if (hasRtcPlugin(editor) === false) {
+    if (editor.hasPlugin('rtc', true) === false) {
       Keyboard.setup(editor);
       Commands.register(editor);
     }

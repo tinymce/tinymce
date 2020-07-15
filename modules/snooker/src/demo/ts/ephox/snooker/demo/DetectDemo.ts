@@ -2,6 +2,7 @@ import { Element as DomElement, HTMLTableElement, window } from '@ephox/dom-glob
 import { Fun, Obj, Option, Options } from '@ephox/katamari';
 import { Attr, Css, Direction, DomEvent, Element, EventArgs, Insert, InsertAll, Node, Ready, Replication, SelectorFind } from '@ephox/sugar';
 import { Generators } from 'ephox/snooker/api/Generators';
+import * as ResizeBehaviour from 'ephox/snooker/api/ResizeBehaviour';
 import { ResizeDirection } from 'ephox/snooker/api/ResizeDirection';
 import { ResizeWire } from 'ephox/snooker/api/ResizeWire';
 import * as TableOperations from 'ephox/snooker/api/TableOperations';
@@ -131,9 +132,9 @@ Ready.execute(function () {
   InsertAll.append(ephoxUi, [ ltrs, rtls ]);
 
   const lazyTableSize = (table: Element<HTMLTableElement>) => TableSize.getTableSize(table);
-  const ltrManager = TableResize.create(ResizeWire.body(tester, ltrs), ResizeDirection.ltr, lazyTableSize);
+  const ltrManager = TableResize.create(ResizeWire.body(tester, ltrs), ResizeDirection.ltr, ResizeBehaviour.preserveTable(), lazyTableSize);
   ltrManager.on();
-  const rtlManager = TableResize.create(ResizeWire.body(subject3, rtls), ResizeDirection.rtl, lazyTableSize);
+  const rtlManager = TableResize.create(ResizeWire.body(subject3, rtls), ResizeDirection.rtl, ResizeBehaviour.preserveTable(), lazyTableSize);
   rtlManager.on();
 
   // For firefox.

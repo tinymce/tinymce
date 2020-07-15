@@ -24,6 +24,7 @@ const mouse = function (win: Window, container: Element, isRoot: (e: Element) =>
   const handlers = MouseSelection(bridge, container, isRoot, annotations);
 
   return {
+    clearstate: handlers.clearstate,
     mousedown: handlers.mousedown,
     mouseover: handlers.mouseover,
     mouseup: handlers.mouseup

@@ -93,7 +93,7 @@ const factory: UiSketcher.SingleSketchFactory<SilverMenubarDetail, SilverMenubar
           // TODO: Use constants
           SelectorFind.descendant(comp.element(), '.' + MenuButtonClasses.Active).each((activeButton) => {
             SelectorFind.closest(se.event().target(), '.' + MenuButtonClasses.Button).each((hoveredButton) => {
-              if (! Compare.eq(activeButton, hoveredButton)) {
+              if (!Compare.eq(activeButton, hoveredButton)) {
                 // Now, find the components, and expand the hovered one, and close the active one
                 comp.getSystem().getByDom(activeButton).each((activeComp) => {
                   comp.getSystem().getByDom(hoveredButton).each((hoveredComp) => {
