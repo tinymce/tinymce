@@ -1,5 +1,5 @@
-import { Pipeline, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
+import { Pipeline, Step, Log } from '@ephox/agar';
+import { UnitTest, Assert } from '@ephox/bedrock-client';
 import { document, HTMLImageElement } from '@ephox/dom-globals';
 import { Arr, Fun } from '@ephox/katamari';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
@@ -14,8 +14,6 @@ import * as Conversions from 'tinymce/core/file/Conversions';
 import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', (success, failure) => {
-  const suite = LegacyUnit.createSuite<Editor>();
-
   Theme();
 
   let testBlobDataUri;
@@ -25,151 +23,144 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', (success, failure) =
     return;
   }
 
-  const teardown = function (editor: Editor) {
-    return Step.sync(function () {
+  const teardown = (editor: Editor) =>
+    Step.sync(() => {
       editor.editorUpload.destroy();
       editor.settings.automatic_uploads = false;
       delete editor.settings.images_replace_blob_uris;
       dataImgFilter = undefined;
     });
-  };
 
-  const appendTeardown = function (editor: Editor, steps: Step<any, any>[]) {
-    return Arr.bind(steps, function (step) {
-      return [ step, teardown(editor) ];
-    });
-  };
+  const appendTeardown = (editor: Editor, steps: Step<any, any>[]) =>
+    Arr.bind(steps, (step) =>
+      [ step, teardown(editor) ]
+    );
 
-  const imageHtml = function (uri: string) {
-    return DOMUtils.DOM.createHTML('img', { src: uri });
-  };
+  const imageHtml = (uri: string) =>
+    DOMUtils.DOM.createHTML('img', { src: uri });
 
-  const assertResult = function (editor: Editor, uploadUri: string, uploadedBlobInfo: BlobInfo, result: UploadResult[]) {
+  const assertResult = (editor: Editor, title: string, uploadUri: string, uploadedBlobInfo: BlobInfo, result: UploadResult[]) => {
     const firstResult = result[0];
-    LegacyUnit.strictEqual(result.length, 1);
-    LegacyUnit.strictEqual(firstResult.status, true);
-    LegacyUnit.strictEqual(firstResult.element.src.indexOf(uploadedBlobInfo.id() + '.png') !== -1, true);
-    LegacyUnit.strictEqual(firstResult.uploadUri, uploadUri);
-    LegacyUnit.strictEqual(firstResult.blobInfo.id(), uploadedBlobInfo.id());
-    LegacyUnit.strictEqual(firstResult.blobInfo.name(), uploadedBlobInfo.name());
-    LegacyUnit.strictEqual(firstResult.blobInfo.filename(), uploadedBlobInfo.filename());
-    LegacyUnit.strictEqual(firstResult.blobInfo.blob(), uploadedBlobInfo.blob());
-    LegacyUnit.strictEqual(firstResult.blobInfo.base64(), uploadedBlobInfo.base64());
-    LegacyUnit.strictEqual(firstResult.blobInfo.blobUri(), uploadedBlobInfo.blobUri());
-    LegacyUnit.strictEqual(firstResult.blobInfo.uri(), uploadedBlobInfo.uri());
-    LegacyUnit.equal('<p><img src="' + uploadedBlobInfo.filename() + '" /></p>', editor.getContent());
+    Assert.eq(title, 1, result.length);
+    Assert.eq(title, true, firstResult.status);
+    Assert.eq(title, true, firstResult.element.src.indexOf(uploadedBlobInfo.id() + '.png') !== -1);
+    Assert.eq(title, uploadUri, firstResult.uploadUri);
+    Assert.eq(title, uploadedBlobInfo.id(), firstResult.blobInfo.id());
+    Assert.eq(title, uploadedBlobInfo.name(), firstResult.blobInfo.name());
+    Assert.eq(title, uploadedBlobInfo.filename(), firstResult.blobInfo.filename());
+    Assert.eq(title, uploadedBlobInfo.blob(), firstResult.blobInfo.blob());
+    Assert.eq(title, uploadedBlobInfo.base64(), firstResult.blobInfo.base64());
+    Assert.eq(title, uploadedBlobInfo.blobUri(), firstResult.blobInfo.blobUri());
+    Assert.eq(title, uploadedBlobInfo.uri(), firstResult.blobInfo.uri());
+    Assert.eq(title, editor.getContent(), '<p><img src="' + uploadedBlobInfo.filename() + '" /></p>');
 
     return result;
   };
 
-  const hasBlobAsSource = function (elm) {
-    return elm.src.indexOf('blob:') === 0;
-  };
+  const hasBlobAsSource = (elm) =>
+    elm.src.indexOf('blob:') === 0;
 
-  suite.asyncTest('_scanForImages', function (editor, done, die) {
+  const sScanForImages = (editor) => Log.step('TBA', '_scanForImages', Step.async((done, die) => {
     editor.setContent(imageHtml(testBlobDataUri));
 
-    editor._scanForImages().then(function (result) {
+    editor._scanForImages().then((result) => {
       const blobInfo = result[0].blobInfo;
 
-      LegacyUnit.equal('data:' + blobInfo.blob().type + ';base64,' + blobInfo.base64(), testBlobDataUri);
-      LegacyUnit.equal(editor.getBody().innerHTML, '<p><img src="' + blobInfo.blobUri() + '"></p>');
-      LegacyUnit.equal(
+      Assert.eq('_scanForImages', testBlobDataUri, 'data:' + blobInfo.blob().type + ';base64,' + blobInfo.base64());
+      Assert.eq('_scanForImages', '<p><img src="' + blobInfo.blobUri() + '"></p>', editor.getBody().innerHTML);
+      Assert.eq('_scanForImages',
         '<p><img src="data:' + blobInfo.blob().type + ';base64,' + blobInfo.base64() + '" /></p>',
         editor.getContent()
       );
-      LegacyUnit.strictEqual(editor.editorUpload.blobCache.get(blobInfo.id()), blobInfo);
+      Assert.eq('_scanForImages', blobInfo, editor.editorUpload.blobCache.get(blobInfo.id()));
     }).then(done, die);
-  });
+  }));
 
-  suite.asyncTest('replace uploaded blob uri with result uri (copy/paste of an uploaded blob uri)', function (editor, done, die) {
+  const sReplaceUploadUri = (editor) => Log.step('TBA', 'replace uploaded blob uri with result uri (copy/paste of an uploaded blob uri)', Step.async((done, die) => {
     editor.setContent(imageHtml(testBlobDataUri));
 
-    editor.settings.images_upload_handler = function (_data, success) {
+    editor.settings.images_upload_handler = (_data: BlobInfo, success) => {
       success('file.png');
     };
 
-    editor._scanForImages().then(function (result) {
+    editor._scanForImages().then((result) => {
       const blobUri = result[0].blobInfo.blobUri();
 
-      return editor.uploadImages(function () {
+      return editor.uploadImages(() => {
         editor.setContent(imageHtml(blobUri));
-        LegacyUnit.strictEqual(hasBlobAsSource(editor.$('img')[0]), false);
-        LegacyUnit.strictEqual(editor.getContent(), '<p><img src="file.png" /></p>');
+        Assert.eq('replace uploaded blob uri with result uri (copy/paste of an uploaded blob uri)', false, hasBlobAsSource(editor.$('img')[0]));
+        Assert.eq('replace uploaded blob uri with result uri (copy/paste of an uploaded blob uri)', '<p><img src="file.png" /></p>', editor.getContent());
       });
     }).then(done, die);
-  });
+  }));
 
-  suite.asyncTest(
-    `don't replace uploaded blob uri with result uri (copy/paste of` +
-  ' an uploaded blob uri) since blob uris are retained',
-    function (editor, done, die) {
-      editor.settings.images_replace_blob_uris = false;
-      editor.setContent(imageHtml(testBlobDataUri));
+  const sNoReplaceUploadUri = (editor) => Log.step('TBA', `don't replace uploaded blob uri with result uri (copy/paste of an uploaded blob uri) since blob uris are retained`, Step.async((done, die) => {
+    editor.settings.images_replace_blob_uris = false;
+    editor.setContent(imageHtml(testBlobDataUri));
 
-      editor.settings.images_upload_handler = function (_data, success) {
-        success('file.png');
-      };
+    editor.settings.images_upload_handler = (_data: BlobInfo, success) => {
+      success('file.png');
+    };
 
-      editor._scanForImages().then(function (result) {
-        const blobUri = result[0].blobInfo.blobUri();
+    editor._scanForImages().then((result) => {
+      const blobUri = result[0].blobInfo.blobUri();
 
-        return editor.uploadImages(function () {
-          editor.setContent(imageHtml(blobUri));
-          LegacyUnit.strictEqual(hasBlobAsSource(editor.$('img')[0]), true);
-          LegacyUnit.strictEqual(editor.getContent(), '<p><img src="file.png" /></p>');
-        });
-      }).then(done, die);
-    });
+      return editor.uploadImages(() => {
+        editor.setContent(imageHtml(blobUri));
+        Assert.eq('Has blob', true, hasBlobAsSource(editor.$('img')[0]));
+        Assert.eq('contains image', '<p><img src="file.png" /></p>', editor.getContent());
+      });
+    }).then(done, die);
+  }));
 
-  suite.asyncTest('uploadImages (callback)', function (editor, done, die) {
+  const sUploadImagesCallback = (editor) => Log.step('TBA', 'uploadImages (callback)', Step.async((done, die) => {
     let uploadedBlobInfo, uploadUri;
 
     editor.setContent(imageHtml(testBlobDataUri));
 
-    editor.settings.images_upload_handler = function (data, success) {
+    editor.settings.images_upload_handler = (data: BlobInfo, success) => {
       uploadedBlobInfo = data;
       uploadUri = data.id() + '.png';
       success(uploadUri);
     };
 
     editor.uploadImages((result) => {
-      assertResult(editor, uploadUri, uploadedBlobInfo, result);
+      assertResult(editor, 'Upload the images', uploadUri, uploadedBlobInfo, result);
     }).then(() => editor.uploadImages((result) => {
-      LegacyUnit.strictEqual(result.length, 0);
+      Assert.eq('Upload the images', 0, result.length);
     })).then(done, die);
-  });
+  }));
 
-  suite.asyncTest('uploadImages (promise)', function (editor, done, die) {
+  const sUploadImagesPromise = (editor) => Log.step('TBA', 'uploadImages (promise)', Step.async((done, die) => {
     let uploadedBlobInfo, uploadUri;
 
     editor.setContent(imageHtml(testBlobDataUri));
 
-    editor.settings.images_upload_handler = function (data, success) {
+    editor.settings.images_upload_handler = (data: BlobInfo, success) => {
       uploadedBlobInfo = data;
       uploadUri = data.id() + '.png';
       success(uploadUri);
     };
 
-    editor.uploadImages().then(function (result) {
-      assertResult(editor, uploadUri, uploadedBlobInfo, result);
+    editor.uploadImages().then((result) => {
+      assertResult(editor, 'Upload the images', uploadUri, uploadedBlobInfo, result);
     }).then(() => {
       uploadedBlobInfo = null;
 
-      return editor.uploadImages().then(function (result) {
-        LegacyUnit.strictEqual(result.length, 0);
-        LegacyUnit.strictEqual(uploadedBlobInfo, null);
+      return editor.uploadImages().then((result) => {
+        Assert.eq('Upload the images', 0, result.length);
+        Assert.eq('Upload the images', null, uploadedBlobInfo);
       });
     }).then(done, die);
-  });
+  }));
 
-  suite.asyncTest('uploadImages retain blob urls after upload', function (editor, done, die) {
+  const sUploadImagesRetainUrl = (editor) => Log.step('TBA', 'uploadImages retain blob urls after upload', Step.async((done, die) => {
     let uploadedBlobInfo;
 
-    const assertResult = function (result) {
-      LegacyUnit.strictEqual(result[0].status, true);
-      LegacyUnit.strictEqual(hasBlobAsSource(result[0].element), true, 'Not a blob url');
-      LegacyUnit.equal('<p><img src="' + uploadedBlobInfo.filename() + '" /></p>', editor.getContent());
+    const assertResultRetainsUrl = (result) => {
+      Assert.eq('uploadImages retain blob urls after upload', true, result[0].status);
+      Assert.eq('Not a blob url', hasBlobAsSource(result[0].element), true);
+      Assert.eq('uploadImages retain blob urls after upload', editor.getContent(), '<p><img src="' + uploadedBlobInfo.filename() + '" /></p>');
 
       return result;
     };
@@ -177,22 +168,22 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', (success, failure) =
     editor.setContent(imageHtml(testBlobDataUri));
 
     editor.settings.images_replace_blob_uris = false;
-    editor.settings.images_upload_handler = function (data, success) {
+    editor.settings.images_upload_handler = (data: BlobInfo, success) => {
       uploadedBlobInfo = data;
       success(data.id() + '.png');
     };
 
-    editor.uploadImages(assertResult).then(assertResult).then(function () {
+    editor.uploadImages(assertResultRetainsUrl).then(assertResultRetainsUrl).then(() => {
       uploadedBlobInfo = null;
 
-      return editor.uploadImages(function () {}).then(function (result) {
-        LegacyUnit.strictEqual(result.length, 0);
-        LegacyUnit.strictEqual(uploadedBlobInfo, null);
+      return editor.uploadImages(() => {}).then((result) => {
+        Assert.eq('uploadImages retain blob urls after upload', 0, result.length);
+        Assert.eq('uploadImages retain blob urls after upload', null, uploadedBlobInfo);
       });
     }).then(done, die);
-  });
+  }));
 
-  suite.asyncTest('uploadImages reuse filename', (editor, done, die) => {
+  const sUploadImagesReuseFilename = (editor) => Log.step('TBA', 'uploadImages reuse filename', Step.async((done, die) => {
     let uploadedBlobInfo;
 
     editor.settings.images_reuse_filename = true;
@@ -203,48 +194,48 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', (success, failure) =
       success('custom.png?size=small');
     };
 
-    const assertResult = function (editor: Editor, _uploadedBlobInfo: BlobInfo, result: UploadResult[]) {
-      LegacyUnit.strictEqual(result.length, 1);
-      LegacyUnit.strictEqual(result[0].status, true);
-      LegacyUnit.equal('<p><img src="custom.png?size=small" /></p>', editor.getContent());
+    const assertResultReusesFilename = (editor: Editor, _uploadedBlobInfo: BlobInfo, result: UploadResult[]) => {
+      Assert.eq('uploadImages reuse filename', 1, result.length);
+      Assert.eq('uploadImages reuse filename', true, result[0].status);
+      Assert.eq('uploadImages reuse filename', editor.getContent(), '<p><img src="custom.png?size=small" /></p>');
 
       return result;
     };
 
     editor.uploadImages((result) => {
-      assertResult(editor, uploadedBlobInfo, result);
+      assertResultReusesFilename(editor, uploadedBlobInfo, result);
 
       editor.uploadImages((_result) => {
         const img = editor.$('img')[0];
-        LegacyUnit.strictEqual(hasBlobAsSource(img), false);
-        LegacyUnit.strictEqual(img.src.indexOf('custom.png?size=small&') !== -1, true, 'Check the cache invalidation string was added');
-        LegacyUnit.strictEqual(editor.getContent(), '<p><img src="custom.png?size=small" /></p>');
+        Assert.eq('uploadImages reuse filename', false, hasBlobAsSource(img));
+        Assert.eq('Check the cache invalidation string was added', true, img.src.indexOf('custom.png?size=small&') !== -1);
+        Assert.eq('uploadImages reuse filename', '<p><img src="custom.png?size=small" /></p>', editor.getContent());
         delete editor.settings.images_reuse_filename;
       }).then(done, die);
     });
-  });
+  }));
 
-  suite.asyncTest('uploadConcurrentImages', function (editor, done, die) {
+  const sUploadConcurrentImages = (editor) => Log.step('TBA', 'uploadConcurrentImages', Step.async((done, die) => {
     let uploadCount = 0, callCount = 0;
 
-    const uploadDone = function (result) {
+    const uploadDone = (result) => {
       callCount++;
 
       if (callCount === 2) {
-        LegacyUnit.equal(uploadCount, 1, 'Should only be one upload.');
+        Assert.eq('Should only be one upload.', 1, uploadCount);
       }
 
-      LegacyUnit.equal(editor.getContent(), '<p><img src="myimage.png" /></p>');
+      Assert.eq('uploadConcurrentImages', '<p><img src="myimage.png" /></p>', editor.getContent());
       LegacyUnit.equalDom(result[0].element, editor.$('img')[0]);
-      LegacyUnit.equal(result[0].status, true);
+      Assert.eq('uploadConcurrentImages', true, result[0].status);
     };
 
     editor.setContent(imageHtml(testBlobDataUri));
 
-    editor.settings.images_upload_handler = function (_data, success) {
+    editor.settings.images_upload_handler = (_data: BlobInfo, success) => {
       uploadCount++;
 
-      Delay.setTimeout(function () {
+      Delay.setTimeout(() => {
         success('myimage.png');
       }, 0);
     };
@@ -253,30 +244,30 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', (success, failure) =
       editor.uploadImages(uploadDone),
       editor.uploadImages(uploadDone)
     ]).then(done, die);
-  });
+  }));
 
-  suite.asyncTest('uploadConcurrentImages (fail)', function (editor, done, die) {
+  const sUploadConcurrentImagesFail = (editor) => Log.step('TBA', 'uploadConcurrentImages (fail)', Step.async((done, die) => {
     let uploadCount = 0, callCount = 0;
 
-    const uploadDone = function (result: UploadResult[]) {
+    const uploadDone = (result: UploadResult[]) => {
       callCount++;
 
       if (callCount === 2) {
         // This is in exact since the status of the image can be pending or failed meaning it should try again
-        LegacyUnit.equal(uploadCount >= 1, true, 'Should at least be one.');
+        Assert.eq('Should at least be one.', true, uploadCount >= 1);
       }
 
       LegacyUnit.equalDom(result[0].element, editor.$('img')[0]);
-      LegacyUnit.equal(result[0].status, false);
-      LegacyUnit.equal(result[0].uploadUri, '');
+      Assert.eq('uploadConcurrentImages (fail)', false, result[0].status);
+      Assert.eq('uploadConcurrentImages (fail)', '', result[0].uploadUri);
     };
 
     editor.setContent(imageHtml(testBlobDataUri));
 
-    editor.settings.images_upload_handler = function (_data, _success, failure) {
+    editor.settings.images_upload_handler = (_data: BlobInfo, _success, failure) => {
       uploadCount++;
 
-      Delay.setTimeout(function () {
+      Delay.setTimeout(() => {
         failure('Error');
       }, 0);
     };
@@ -285,67 +276,99 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', (success, failure) =
       editor.uploadImages(uploadDone),
       editor.uploadImages(uploadDone)
     ]).then(done, die);
-  });
+  }));
 
-  suite.asyncTest(`Don't upload transparent image`, function (editor, done, die) {
+  const sUploadConcurrentImagesFailWithRemove = (editor) => Log.step('TBA', 'uploadConcurrentImages fails, with remove', Step.async((done, die) => {
+    let uploadCount = 0, callCount = 0;
+
+    const uploadDone = (result: UploadResult[]) => {
+      callCount++;
+
+      if (callCount === 2) {
+        // This is in exact since the status of the image can be pending or failed meaning it should try again
+        Assert.eq('Should at least be one.', uploadCount >= 1, true);
+      }
+
+      Assert.eq('No element in the editor', undefined, editor.$('img')[0]);
+      Assert.eq('Status is false', result[0].status, false);
+      Assert.eq('Uri is empty', result[0].uploadUri, '');
+    };
+
+    editor.setContent(imageHtml(testBlobDataUri));
+
+    editor.settings.images_upload_handler = (_data: BlobInfo, _success, failure) => {
+      uploadCount++;
+
+      Delay.setTimeout(() => {
+        failure('Error', { remove: true });
+      }, 0);
+    };
+
+    Promise.all([
+      editor.uploadImages(uploadDone),
+      editor.uploadImages(uploadDone)
+    ]).then(done, die);
+  }));
+
+  const sDoNotUploadTransparentImage = (editor) => Log.step('TBA', `Don't upload transparent image`, Step.async((done, die) => {
     let uploadCount = 0;
 
-    const uploadDone = function () {
-      LegacyUnit.equal(uploadCount, 0, 'Should not upload.');
+    const uploadDone = () => {
+      Assert.eq('Should not upload.', 0, uploadCount);
     };
 
     editor.setContent(imageHtml(Env.transparentSrc));
 
-    editor.settings.images_upload_handler = function (_data, success) {
+    editor.settings.images_upload_handler = (_data: BlobInfo, success) => {
       uploadCount++;
       success('url');
     };
 
     editor.uploadImages(uploadDone).then(done, die);
-  });
+  }));
 
-  suite.asyncTest(`Don't upload bogus image`, function (editor, done, die) {
+  const sDoNotUploadBogusImage = (editor) => Log.step('TBA', `Don't upload bogus image`, Step.async((done, die) => {
     let uploadCount = 0;
 
-    const uploadDone = function () {
-      LegacyUnit.equal(uploadCount, 0, 'Should not upload.');
+    const uploadDone = () => {
+      Assert.eq('Should not upload.', 0, uploadCount);
     };
 
     editor.setContent('<img src="' + testBlobDataUri + '" data-mce-bogus="1">');
 
-    editor.settings.images_upload_handler = function (_data, success) {
+    editor.settings.images_upload_handler = (_data: BlobInfo, success) => {
       uploadCount++;
       success('url');
     };
 
     editor.uploadImages(uploadDone).then(done, die);
-  });
+  }));
 
-  suite.asyncTest(`Don't upload filtered image`, function (editor, done, die) {
+  const sDoNotUploadFilteredImage = (editor) => Log.step('TBA', `Don't upload filtered image`, Step.async((done, die) => {
     let uploadCount = 0;
 
-    const uploadDone = function () {
-      LegacyUnit.equal(uploadCount, 0, 'Should not upload.');
+    const uploadDone = () => {
+      Assert.eq('Should not upload.', 0, uploadCount);
     };
 
     dataImgFilter = (img) => !img.hasAttribute('data-skip');
 
     editor.setContent('<img src="' + testBlobDataUri + '" data-skip="1">');
 
-    editor.settings.images_upload_handler = function (_data, success) {
+    editor.settings.images_upload_handler = (_data: BlobInfo, success) => {
       uploadCount++;
       success('url');
     };
 
     editor.uploadImages(uploadDone).then(done, die);
-  });
+  }));
 
-  suite.asyncTest(`Don't upload api filtered image`, function (editor, done, die) {
+  const sDoNotUploadApiFilteredImage = (editor) => Log.step('TBA', `Don't upload api filtered image`, Step.async((done, die) => {
     let uploadCount = 0, filterCount = 0;
 
-    const uploadDone = function () {
-      LegacyUnit.equal(uploadCount, 0, 'Should not upload.');
-      LegacyUnit.equal(filterCount, 1, 'Should have filtered one item.');
+    const uploadDone = () => {
+      Assert.eq('Should not upload.', 0, uploadCount);
+      Assert.eq('Should have filtered one item.', 1, filterCount);
     };
 
     dataImgFilter = Fun.constant(true);
@@ -357,20 +380,20 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', (success, failure) =
     editor.setContent('<img src="' + testBlobDataUri + '" data-skip="1">');
     filterCount = 0;
 
-    editor.settings.images_upload_handler = function (_data, success) {
+    editor.settings.images_upload_handler = (_data: BlobInfo, success) => {
       uploadCount++;
       success('url');
     };
 
     editor.uploadImages(uploadDone).then(done, die);
-  });
+  }));
 
-  suite.test('Retain blobs not in blob cache', function (editor) {
+  const sRetainBlobsNotInCache = (editor) => Log.step('TBA', 'Retain blobs not in blob cache', Step.sync(() => {
     editor.setContent('<img src="blob:http%3A//host/f8d1e462-8646-485f-87c5-f9bcee5873c6">');
-    LegacyUnit.equal('<p><img src="blob:http%3A//host/f8d1e462-8646-485f-87c5-f9bcee5873c6" /></p>', editor.getContent());
-  });
+    Assert.eq('Retain blobs not in blob cache', editor.getContent(), '<p><img src="blob:http%3A//host/f8d1e462-8646-485f-87c5-f9bcee5873c6" /></p>');
+  }));
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const canvas = document.createElement('canvas');
     canvas.width = 320;
     canvas.height = 200;
@@ -387,8 +410,24 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', (success, failure) =
 
     testBlobDataUri = canvas.toDataURL();
 
-    Conversions.uriToBlob(testBlobDataUri).then(function () {
-      const steps = appendTeardown(editor, suite.toSteps(editor));
+    Conversions.uriToBlob(testBlobDataUri).then(() => {
+      const steps = appendTeardown(editor, [
+        sScanForImages(editor),
+        sReplaceUploadUri(editor),
+        sNoReplaceUploadUri(editor),
+        sUploadImagesCallback(editor),
+        sUploadImagesPromise(editor),
+        sUploadImagesRetainUrl(editor),
+        sUploadImagesReuseFilename(editor),
+        sUploadConcurrentImages(editor),
+        sUploadConcurrentImagesFail(editor),
+        sDoNotUploadTransparentImage(editor),
+        sDoNotUploadBogusImage(editor),
+        sDoNotUploadFilteredImage(editor),
+        sDoNotUploadApiFilteredImage(editor),
+        sRetainBlobsNotInCache(editor),
+        sUploadConcurrentImagesFailWithRemove(editor)
+      ]);
       Pipeline.async({}, steps, onSuccess, onFailure);
     });
   }, {
