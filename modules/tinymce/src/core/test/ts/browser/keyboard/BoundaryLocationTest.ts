@@ -1,23 +1,23 @@
 import { Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
-import { Hierarchy, Element, SelectorFind, Selectors } from '@ephox/sugar';
+import { Hierarchy, SelectorFind, Selectors, SugarElement } from '@ephox/sugar';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import * as BoundaryLocation from 'tinymce/core/keyboard/BoundaryLocation';
-import ViewBlock from '../../module/test/ViewBlock';
 import * as Zwsp from 'tinymce/core/text/Zwsp';
-import { UnitTest } from '@ephox/bedrock-client';
+import ViewBlock from '../../module/test/ViewBlock';
 
 UnitTest.asynctest('browser.tinymce.core.keyboard.BoundaryLocationTest', function (success, failure) {
   const ZWSP = Zwsp.ZWSP;
   const viewBlock = ViewBlock();
 
   const isInlineTarget = function (elm) {
-    return Selectors.is(Element.fromDom(elm), 'a[href],code');
+    return Selectors.is(SugarElement.fromDom(elm), 'a[href],code');
   };
 
   const createViewElement = function (html) {
     viewBlock.update(html);
-    return Element.fromDom(viewBlock.get());
+    return SugarElement.fromDom(viewBlock.get());
   };
 
   const createLocation = function (elm, elementPath, offset) {
@@ -42,7 +42,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.BoundaryLocationTest', functio
   };
 
   const locationElement = function (location) {
-    return Element.fromDom(location.fold(
+    return SugarElement.fromDom(location.fold(
       Fun.identity,
       Fun.identity,
       Fun.identity,

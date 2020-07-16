@@ -1,14 +1,14 @@
 import { Singleton } from '@ephox/katamari';
-import { Compare, SelectorFind, Element, EventArgs } from '@ephox/sugar';
-import * as CellSelection from '../selection/CellSelection';
-import { WindowBridge } from '../api/WindowBridge';
+import { Compare, EventArgs, SelectorFind, SugarElement } from '@ephox/sugar';
 import { SelectionAnnotation } from '../api/SelectionAnnotation';
+import { WindowBridge } from '../api/WindowBridge';
+import * as CellSelection from '../selection/CellSelection';
 
-const findCell = (target: Element, isRoot: (e: Element) => boolean) =>
+const findCell = (target: SugarElement, isRoot: (e: SugarElement) => boolean) =>
   SelectorFind.closest(target, 'td,th', isRoot);
 
-export default (bridge: WindowBridge, container: Element, isRoot: (e: Element) => boolean, annotations: SelectionAnnotation) => {
-  const cursor = Singleton.value<Element>();
+export default (bridge: WindowBridge, container: SugarElement, isRoot: (e: SugarElement) => boolean, annotations: SelectionAnnotation) => {
+  const cursor = Singleton.value<SugarElement>();
   const clearstate = cursor.clear;
 
   /* Keep this as lightweight as possible when we're not in a table selection, it runs constantly */

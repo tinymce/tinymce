@@ -1,10 +1,10 @@
 import { Generators, PropertySteps, Step } from '@ephox/agar';
-import { Element, Html, SimRange } from '@ephox/sugar';
+import { Html, SimRange, SugarElement } from '@ephox/sugar';
 import Jsc from '@ephox/wrap-jsverify';
 import { Editor } from '../alien/EditorTypes';
 
 type ContentGenerator = any;
-type SelectionExclusions = { containers: (container: Element) => boolean };
+type SelectionExclusions = { containers: (container: SugarElement) => boolean };
 type ArbScenarioOptions = { exclusions: SelectionExclusions };
 type AsyncPropertyOptions = { scenario: ArbScenarioOptions; property: Record<string, any> };
 
@@ -25,10 +25,10 @@ export const TinyScenarios = function (editor: Editor): TinyScenarios {
   // We can't just generate a scenario because normalisation is going to cause issues
   // with getting a selection.
   const genScenario = function (genContent: ContentGenerator, selectionExclusions: SelectionExclusions) {
-    return genContent.flatMap(function (structure: Element) {
+    return genContent.flatMap(function (structure: SugarElement) {
       const html = Html.getOuter(structure);
       editor.setContent(html);
-      return Generators.selection(Element.fromDom(editor.getBody()), selectionExclusions).map(function (selection: SimRange) {
+      return Generators.selection(SugarElement.fromDom(editor.getBody()), selectionExclusions).map(function (selection: SimRange) {
         const win = editor.selection.win;
         const rng = win.document.createRange();
         rng.setStart(selection.start().dom(), selection.soffset());
@@ -46,7 +46,7 @@ export const TinyScenarios = function (editor: Editor): TinyScenarios {
     return Jsc.bless({
       generator: genScenario(genContent, options.exclusions),
       show(scenario: Scenario) {
-        const root = Element.fromDom(editor.getBody());
+        const root = SugarElement.fromDom(editor.getBody());
         return JSON.stringify({
           input: scenario.input,
           selection: Generators.describeSelection(root, scenario.selection)

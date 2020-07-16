@@ -7,11 +7,11 @@
 
 import { Node } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
-import { Element, Node as SugarNode } from '@ephox/sugar';
+import { SugarElement, SugarNode } from '@ephox/sugar';
 import * as Data from './Data';
 import * as Html from './Html';
 
-const isMatch = (n: Element) => {
+const isMatch = (n: SugarElement) => {
   const value = SugarNode.value(n);
   return SugarNode.isText(n) &&
     value !== undefined &&
@@ -19,10 +19,10 @@ const isMatch = (n: Element) => {
 };
 
 // inlined sugars PredicateFilter.descendants for file size
-const filterDescendants = (scope: Element, predicate: (x: Element) => boolean) => {
-  let result: Element[] = [];
+const filterDescendants = (scope: SugarElement, predicate: (x: SugarElement) => boolean) => {
+  let result: SugarElement[] = [];
   const dom = scope.dom();
-  const children = Arr.map(dom.childNodes, Element.fromDom);
+  const children = Arr.map(dom.childNodes, SugarElement.fromDom);
 
   Arr.each(children, (x) => {
     if (predicate(x)) {

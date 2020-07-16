@@ -1,7 +1,7 @@
 import { FocusTools, Keyboard, Keys } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr, Future, Option, Result } from '@ephox/katamari';
-import { Node } from '@ephox/sugar';
+import { SugarNode } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
@@ -61,7 +61,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadEscEnterBubbleTest', (s
             },
             onExecute: store.adder('***onExecute***'),
             onItemExecute: (typeahead, sandbox, item, value) => {
-              store.adder(value.value + '(' + Arr.map([ typeahead.element(), sandbox.element(), item.element() ], Node.name).join('-') + ')')();
+              store.adder(value.value + '(' + Arr.map([ typeahead.element(), sandbox.element(), item.element() ], SugarNode.name).join('-') + ')')();
             }
           })
         ],

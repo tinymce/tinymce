@@ -2,7 +2,7 @@ import { ApproxStructure, Assertions, Keyboard, Keys, Log, Mouse, Pipeline, Step
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { TinyLoader } from '@ephox/mcagar';
-import { Body, Element } from '@ephox/sugar';
+import { SugarBody, SugarElement } from '@ephox/sugar';
 import AdvListPlugin from 'tinymce/plugins/advlist/Plugin';
 import ListsPlugin from 'tinymce/plugins/lists/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
@@ -13,10 +13,10 @@ UnitTest.asynctest('browser.tinymce.plugins.advlist.SplitButtonTest', function (
   Theme();
 
   const clickOnSplitBtnFor = (label) => Log.stepsAsStep('TBA', `ADVlist: Test split menu for ${label} has the correct Dom structure`, [
-    Mouse.sClickOn(Body.body(), '[aria-label="' + label + '"] > .tox-tbtn + .tox-split-button__chevron'),
+    Mouse.sClickOn(SugarBody.body(), '[aria-label="' + label + '"] > .tox-tbtn + .tox-split-button__chevron'),
     Waiter.sTryUntil(
       `Waiting for ${label} menu to appear`,
-      UiFinder.sExists(Body.body(), '.tox-menu.tox-selected-menu')
+      UiFinder.sExists(SugarBody.body(), '.tox-menu.tox-selected-menu')
     )
   ]);
 
@@ -86,7 +86,7 @@ UnitTest.asynctest('browser.tinymce.plugins.advlist.SplitButtonTest', function (
           })
         ]
       })),
-      Element.fromDom(document.querySelector('.tox-tiered-menu'))
+      SugarElement.fromDom(document.querySelector('.tox-tiered-menu'))
     );
   });
 
@@ -204,7 +204,7 @@ UnitTest.asynctest('browser.tinymce.plugins.advlist.SplitButtonTest', function (
           })
         ]
       })),
-      Element.fromDom(document.querySelector('.tox-tiered-menu'))
+      SugarElement.fromDom(document.querySelector('.tox-tiered-menu'))
     );
   });
 
@@ -213,7 +213,7 @@ UnitTest.asynctest('browser.tinymce.plugins.advlist.SplitButtonTest', function (
 
       clickOnSplitBtnFor('Numbered list'),
       assertNumListStructure(),
-      Keyboard.sKeydown(Element.fromDom(document), Keys.escape(), { }),
+      Keyboard.sKeydown(SugarElement.fromDom(document), Keys.escape(), { }),
       clickOnSplitBtnFor('Bullet list'),
       assertBullListStructure()
 

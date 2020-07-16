@@ -1,18 +1,18 @@
-import { ResizeDirection } from './ResizeDirection';
 import { Option } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import { BarPositions, ColInfo } from '../resize/BarPositions';
+import { ResizeDirection } from './ResizeDirection';
 
 export type TableDirection = BarPositions<ColInfo>;
 
-export const TableDirection = (directionAt: (e: Element) => { isRtl: () => boolean }): TableDirection => {
-  const auto = (table: Element) => directionAt(table).isRtl() ? ResizeDirection.rtl : ResizeDirection.ltr;
+export const TableDirection = (directionAt: (e: SugarElement) => { isRtl: () => boolean }): TableDirection => {
+  const auto = (table: SugarElement) => directionAt(table).isRtl() ? ResizeDirection.rtl : ResizeDirection.ltr;
 
-  const delta = (amount: number, table: Element) => auto(table).delta(amount, table);
+  const delta = (amount: number, table: SugarElement) => auto(table).delta(amount, table);
 
-  const positions = (cols: Option<Element>[], table: Element) => auto(table).positions(cols, table);
+  const positions = (cols: Option<SugarElement>[], table: SugarElement) => auto(table).positions(cols, table);
 
-  const edge = (cell: Element) => auto(cell).edge(cell);
+  const edge = (cell: SugarElement) => auto(cell).edge(cell);
 
   return {
     delta,

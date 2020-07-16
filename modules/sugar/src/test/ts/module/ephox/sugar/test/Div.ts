@@ -1,3 +1,3 @@
-import Element from 'ephox/sugar/api/node/Element';
+import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
 
-export default () => Element.fromTag('div');
+export default () => SugarElement.fromTag('div');

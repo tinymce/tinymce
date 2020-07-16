@@ -5,11 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Fun, Option, Unicode } from '@ephox/katamari';
+import { Insert, SugarElement } from '@ephox/sugar';
+import { CaretPosition } from '../caret/CaretPosition';
 import { getElementFromPosition } from '../caret/CaretUtils';
 import * as NodeType from '../dom/NodeType';
-import { CaretPosition } from '../caret/CaretPosition';
-import { Insert, Element } from '@ephox/sugar';
-import { Option, Fun, Unicode } from '@ephox/katamari';
 
 const insertTextAtPosition = (text: string, pos: CaretPosition): Option<CaretPosition> => {
   const container = pos.container();
@@ -20,7 +20,7 @@ const insertTextAtPosition = (text: string, pos: CaretPosition): Option<CaretPos
     return Option.some(CaretPosition(container, offset + text.length));
   } else {
     return getElementFromPosition(pos).map((elm) => {
-      const textNode = Element.fromText(text);
+      const textNode = SugarElement.fromText(text);
 
       if (pos.isAtEnd()) {
         Insert.after(elm, textNode);

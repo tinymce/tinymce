@@ -1,7 +1,7 @@
 import { Chain, Logger, Pipeline, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { ApiChains, Editor as McEditor } from '@ephox/mcagar';
-import { Body } from '@ephox/sugar';
+import { SugarBody } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
@@ -14,7 +14,7 @@ UnitTest.asynctest('browser.tinymce.core.InlineEditorSaveTest', (success, failur
   };
 
   const cAssertBogusExist = Chain.async((val, next, die) => {
-    UiFinder.findIn(Body.body(), '[data-mce-bogus]').fold(
+    UiFinder.findIn(SugarBody.body(), '[data-mce-bogus]').fold(
       () => {
         die('Should be data-mce-bogus tags present');
       },

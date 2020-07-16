@@ -6,7 +6,7 @@
  */
 
 import { Arr } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import * as RangeNodes from './RangeNodes';
 
 const getRanges = function (selection) {
@@ -24,7 +24,7 @@ const getRanges = function (selection) {
 const getSelectedNodes = function (ranges) {
   return Arr.bind(ranges, function (range) {
     const node = RangeNodes.getSelectedNode(range);
-    return node ? [ Element.fromDom(node) ] : [];
+    return node ? [ SugarElement.fromDom(node) ] : [];
   });
 };
 

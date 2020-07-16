@@ -1,21 +1,21 @@
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Arr, Fun, Obj, Option } from '@ephox/katamari';
-import { DomEvent, Element, EventArgs, Insert } from '@ephox/sugar';
+import { DomEvent, EventArgs, Insert, SugarElement } from '@ephox/sugar';
 
-import { AlloyComponent } from '../../api/component/ComponentApi';
 import { UncurriedHandler } from '../../events/EventRegistry';
 import * as SimulatedEvent from '../../events/SimulatedEvent';
 import ForeignCache from '../../foreign/ForeignCache';
 import * as Tagger from '../../registry/Tagger';
 import { AlloyBehaviourRecord } from '../behaviour/Behaviour';
+import { AlloyComponent } from '../component/ComponentApi';
 import * as GuiFactory from '../component/GuiFactory';
 import { AlloyEventRecord } from '../events/AlloyEvents';
 import * as Gui from './Gui';
 
 export interface ForeignGuiSpec {
-  readonly root: Element;
+  readonly root: SugarElement;
   readonly dispatchers: Dispatcher[];
-  readonly insertion?: (root: Element, system: Gui.GuiSystem) => void;
+  readonly insertion?: (root: SugarElement, system: Gui.GuiSystem) => void;
 }
 
 export interface DispatchedAlloyConfig {
@@ -25,14 +25,14 @@ export interface DispatchedAlloyConfig {
 }
 
 export interface Dispatcher {
-  readonly getTarget: (elem: Element) => Option<Element>;
+  readonly getTarget: (elem: SugarElement) => Option<SugarElement>;
   readonly alloyConfig: DispatchedAlloyConfig;
 }
 
 export interface ForeignGuiDetail {
-  readonly root: Element;
+  readonly root: SugarElement;
   readonly dispatchers: Dispatcher[];
-  readonly insertion: (root: Element, system: Gui.GuiSystem) => void;
+  readonly insertion: (root: SugarElement, system: Gui.GuiSystem) => void;
 }
 
 const schema = ValueSchema.objOfOnly([
@@ -43,7 +43,7 @@ const schema = ValueSchema.objOfOnly([
     // The configuration for the behaviours
     FieldSchema.strict('alloyConfig')
   ]),
-  FieldSchema.defaulted('insertion', (root: Element, system: AlloyComponent) => {
+  FieldSchema.defaulted('insertion', (root: SugarElement, system: AlloyComponent) => {
     Insert.append(root, system.element());
   })
 ]);
@@ -87,18 +87,18 @@ const supportedEvents = [
 ];
 
 interface DispatcherMission {
-  target: Element;
+  target: SugarElement;
   dispatcher: Dispatcher;
 }
 
 // Find the dispatcher information for the target if available. Note, the
 // dispatcher may also change the target.
-const findDispatcher = (dispatchers: Dispatcher[], target: Element): Option<DispatcherMission> => Arr.findMap(dispatchers, (dispatcher: Dispatcher) => dispatcher.getTarget(target).map((newTarget) => ({
+const findDispatcher = (dispatchers: Dispatcher[], target: SugarElement): Option<DispatcherMission> => Arr.findMap(dispatchers, (dispatcher: Dispatcher) => dispatcher.getTarget(target).map((newTarget) => ({
   target: newTarget,
   dispatcher
 })));
 
-const getProxy = <T extends SimulatedEvent.EventFormat>(event: T, target: Element) => {
+const getProxy = <T extends SimulatedEvent.EventFormat>(event: T, target: SugarElement) => {
   // Setup the component wrapping for the target element
   const component = GuiFactory.build(
     GuiFactory.external({ element: target })
@@ -126,7 +126,7 @@ const engage = (spec: ForeignGuiSpec) => {
     dispatchTo(type, event);
   }));
 
-  const proxyFor = <T extends SimulatedEvent.EventFormat>(event: T, target: Element, descHandler: UncurriedHandler) => {
+  const proxyFor = <T extends SimulatedEvent.EventFormat>(event: T, target: SugarElement, descHandler: UncurriedHandler) => {
     // create a simple alloy wrapping around the element, and add it to the world
     const proxy = getProxy(event, target);
     const component = proxy.component();

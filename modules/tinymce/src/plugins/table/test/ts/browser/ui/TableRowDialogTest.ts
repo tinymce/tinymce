@@ -2,7 +2,7 @@ import { Log, Pipeline, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 import * as TableTestUtils from '../../module/test/TableTestUtils';
@@ -44,7 +44,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
 
     const baseGetTest = () => Log.stepsAsStep('TBA', 'Table: Table row properties dialog (get data from plain cell)', [
       tinyApis.sSetSetting('table_row_advtab', false),
-      UiFinder.sWaitForVisible('waiting for editor', Element.fromDom(document.body), 'div.tox-tinymce'),
+      UiFinder.sWaitForVisible('waiting for editor', SugarElement.fromDom(document.body), 'div.tox-tinymce'),
       tinyApis.sSetContent(baseHtml),
       tinyApis.sSelect('td', [ 0 ]),
       TableTestUtils.sOpenTableDialog(tinyUi),
@@ -53,7 +53,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
     ]);
 
     const baseGetSetTest = () => Log.stepsAsStep('TBA', 'Table: Table row properties dialog (update all)', [
-      UiFinder.sWaitForVisible('waiting for editor', Element.fromDom(document.body), 'div.tox-tinymce'),
+      UiFinder.sWaitForVisible('waiting for editor', SugarElement.fromDom(document.body), 'div.tox-tinymce'),
       tinyApis.sSetContent(baseHtml),
       tinyApis.sSelect('td', [ 0 ]),
       TableTestUtils.sOpenTableDialog(tinyUi),
@@ -90,7 +90,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
     ]);
 
     const advGetSetTest = () => Log.stepsAsStep('TBA', 'Table: Update advanced styles from row properties dialog', [
-      UiFinder.sWaitForVisible('waiting for editor', Element.fromDom(document.body), 'div.tox-tinymce'),
+      UiFinder.sWaitForVisible('waiting for editor', SugarElement.fromDom(document.body), 'div.tox-tinymce'),
       tinyApis.sSetContent(
         '<table style="border: 1px solid black; border-collapse: collapse;" border="1">' +
           '<tbody>' +

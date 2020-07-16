@@ -2,11 +2,11 @@ import { FieldSchema, Objects } from '@ephox/boulder';
 import { Arr } from '@ephox/katamari';
 import { Value } from '@ephox/sugar';
 
-import { SketchSpec } from '../../api/component/SpecTypes';
 import { HtmlSelectDetail, HtmlSelectSketcher, HtmlSelectSpec } from '../../ui/types/HtmlSelectTypes';
 import { Focusing } from '../behaviour/Focusing';
 import { Representing } from '../behaviour/Representing';
 import * as SketchBehaviours from '../component/SketchBehaviours';
+import { SketchSpec } from '../component/SpecTypes';
 import * as Sketcher from './Sketcher';
 import { SingleSketchFactory } from './UiSketcher';
 

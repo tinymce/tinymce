@@ -1,6 +1,6 @@
-import { Node as DomNode } from '@ephox/dom-globals';
+import { Node } from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
-import Element from '../node/Element';
+import { SugarElement } from '../node/SugarElement';
 import * as Traverse from '../search/Traverse';
 import * as Compare from './Compare';
 
@@ -9,7 +9,7 @@ import * as Compare from './Compare';
  * a) path: Generates a list of child indices from the ancestor to the descendant
  * b) follow: Follows a path of child indices from an ancestor to reach a descendant
  */
-const up = (descendant: Element<DomNode>, stopper: (e: Element<DomNode>) => boolean): Option<number[]> => {
+const up = (descendant: SugarElement<Node>, stopper: (e: SugarElement<Node>) => boolean): Option<number[]> => {
   if (stopper(descendant)) {
     return Option.some([] as number[]);
   } else {
@@ -19,12 +19,12 @@ const up = (descendant: Element<DomNode>, stopper: (e: Element<DomNode>) => bool
   }
 };
 
-const path = (ancestor: Element<DomNode>, descendant: Element<DomNode>): Option<number[]> => {
+const path = (ancestor: SugarElement<Node>, descendant: SugarElement<Node>): Option<number[]> => {
   const stopper = Fun.curry(Compare.eq, ancestor);
   return Compare.eq(ancestor, descendant) ? Option.some<number[]>([]) : up(descendant, stopper);
 };
 
-const follow = (ancestor: Element<DomNode>, descendantPath: number[]): Option<Element<DomNode>> => {
+const follow = (ancestor: SugarElement<Node>, descendantPath: number[]): Option<SugarElement<Node>> => {
   if (descendantPath.length === 0) {
     return Option.some(ancestor);
   } else {

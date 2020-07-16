@@ -1,20 +1,20 @@
 import { Assertions, Chain, GeneralSteps, Logger, Pipeline } from '@ephox/agar';
-import { Fun, Result } from '@ephox/katamari';
-import { Hierarchy, Element, Html } from '@ephox/sugar';
-import * as SimpleTableModel from 'tinymce/core/selection/SimpleTableModel';
 import { UnitTest } from '@ephox/bedrock-client';
+import { Fun, Result } from '@ephox/katamari';
+import { Hierarchy, Html, SugarElement } from '@ephox/sugar';
+import * as SimpleTableModel from 'tinymce/core/selection/SimpleTableModel';
 
 UnitTest.asynctest('browser.tinymce.core.selection.SimpleTableModel', function (success, failure) {
 
   const cFromDom = function (html) {
     return Chain.injectThunked(function () {
-      return SimpleTableModel.fromDom(Element.fromHtml(html));
+      return SimpleTableModel.fromDom(SugarElement.fromHtml(html));
     });
   };
 
   const cFromDomSubSection = function (html, startPath, endPath) {
     return Chain.binder(function (_) {
-      const tableElm = Element.fromHtml(html);
+      const tableElm = SugarElement.fromHtml(html);
       const startElm = Hierarchy.follow(tableElm, startPath).getOrDie();
       const endElm = Hierarchy.follow(tableElm, endPath).getOrDie();
       return SimpleTableModel.subsection(SimpleTableModel.fromDom(tableElm), startElm, endElm).fold(

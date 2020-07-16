@@ -5,8 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { document } from '@ephox/dom-globals';
 import { Singleton } from '@ephox/katamari';
-import { Class, Css, Element, Focus } from '@ephox/sugar';
+import { Class, Css, Focus, SugarElement } from '@ephox/sugar';
 
 import * as Styles from '../../style/Styles';
 import * as Scrollable from '../../touch/scroll/Scrollable';
@@ -17,7 +18,6 @@ import * as IosKeyboard from '../view/IosKeyboard';
 import * as IosEvents from './IosEvents';
 import * as IosSetup from './IosSetup';
 import * as PlatformEditor from './PlatformEditor';
-import { document } from '@ephox/dom-globals';
 
 type IosApi = IosSetup.IosApi;
 
@@ -32,7 +32,7 @@ const create = function (platform, mask) {
 
   const enter = function () {
     mask.hide();
-    const doc = Element.fromDom(document);
+    const doc = SugarElement.fromDom(document);
     PlatformEditor.getActiveApi(platform.editor).each(function (editorApi) {
       // TODO: Orientation changes.
       // orientation = Orientation.onChange();

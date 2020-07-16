@@ -1,6 +1,6 @@
 import { ApproxStructure, Assertions, Chain, Guard, UiFinder, Waiter } from '@ephox/agar';
 import { Arr } from '@ephox/katamari';
-import { Body } from '@ephox/sugar';
+import { SugarBody } from '@ephox/sugar';
 
 interface AutocompleterListStructure {
   type: 'list';
@@ -62,16 +62,16 @@ const structWithTitleAndIcon = (d) => (s, str, arr) => s.element('div', {
   ]
 });
 
-const sWaitForAutocompleteToOpen = UiFinder.sWaitForVisible('Wait for autocompleter to appear', Body.body(), '.tox-autocompleter div[role="menu"]');
+const sWaitForAutocompleteToOpen = UiFinder.sWaitForVisible('Wait for autocompleter to appear', SugarBody.body(), '.tox-autocompleter div[role="menu"]');
 
 const sWaitForAutocompleteToClose = Waiter.sTryUntil(
   'Autocompleter should disappear',
-  UiFinder.sNotExists(Body.body(), '.tox-autocompleter div[role="menu"]'),
+  UiFinder.sNotExists(SugarBody.body(), '.tox-autocompleter div[role="menu"]'),
   100,
   1000
 );
 
-const sAssertAutocompleterStructure = (structure: AutocompleterStructure) => Chain.asStep(Body.body(), [
+const sAssertAutocompleterStructure = (structure: AutocompleterStructure) => Chain.asStep(SugarBody.body(), [
   UiFinder.cFindIn('.tox-autocompleter'),
   Chain.control(
     Assertions.cAssertStructure(

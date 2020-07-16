@@ -5,13 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
+import Editor from '../api/Editor';
 import * as BlockMergeBoundary from './BlockMergeBoundary';
 import * as MergeBlocks from './MergeBlocks';
-import Editor from '../api/Editor';
 
 const backspaceDelete = (editor: Editor, forward: boolean): boolean => {
-  const rootNode = Element.fromDom(editor.getBody());
+  const rootNode = SugarElement.fromDom(editor.getBody());
 
   const position = BlockMergeBoundary.read(rootNode.dom(), forward, editor.selection.getRng()).bind((blockBoundary) =>
     MergeBlocks.mergeBlocks(rootNode, forward, blockBoundary.from.block, blockBoundary.to.block));

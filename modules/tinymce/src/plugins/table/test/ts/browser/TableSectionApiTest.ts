@@ -1,10 +1,10 @@
 import { Chain, Log, Pipeline, UiFinder } from '@ephox/agar';
-import { UnitTest, Assert } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { ApiChains, Editor as McEditor } from '@ephox/mcagar';
+import { SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
-import { Element } from '@ephox/sugar';
 
 UnitTest.asynctest('browser.tinymce.plugins.table.TableSectionApiTest', (success, failure) => {
   Plugin();
@@ -134,7 +134,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableSectionApiTest', (success
     Log.chain('TINY-6150', `Switch to ${type}, command = ${command}`, Chain.fromParent(Chain.identity, [
       ApiChains.cSetContent(startContent),
       Chain.op((editor: Editor) => {
-        const row = UiFinder.findIn(Element.fromDom(editor.getBody()), selector).getOrDie();
+        const row = UiFinder.findIn(SugarElement.fromDom(editor.getBody()), selector).getOrDie();
         editor.selection.select(row.dom());
         editor.execCommand(command, false, { type });
       }),
@@ -157,7 +157,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableSectionApiTest', (success
     Log.chain('TINY-6150', `Get type of ${selector} using ${command}`, Chain.fromParent(Chain.identity, [
       ApiChains.cSetContent(content),
       Chain.op((editor: Editor) => {
-        const row = UiFinder.findIn(Element.fromDom(editor.getBody()), selector).getOrDie();
+        const row = UiFinder.findIn(SugarElement.fromDom(editor.getBody()), selector).getOrDie();
         editor.selection.select(row.dom());
         const value = editor.queryCommandValue(command);
         Assert.eq(`Assert query value is ${expected}`, expected, value);

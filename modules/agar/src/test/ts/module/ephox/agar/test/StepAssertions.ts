@@ -1,9 +1,9 @@
+import { Assert } from '@ephox/bedrock-client';
+import { Pprint } from '@ephox/dispute';
 import { Arr, Fun, Result } from '@ephox/katamari';
 import { Chain } from 'ephox/agar/api/Chain';
 import { Pipeline } from 'ephox/agar/api/Pipeline';
 import { Step } from 'ephox/agar/api/Step';
-import { Pprint } from '@ephox/dispute';
-import { Assert } from '@ephox/bedrock-client';
 
 const sPreserved = '..preserved..';
 

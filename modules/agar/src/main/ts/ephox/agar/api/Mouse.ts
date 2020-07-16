@@ -1,5 +1,5 @@
-import { Element, Focus } from '@ephox/sugar';
 import { Fun } from '@ephox/katamari';
+import { Focus, SugarElement } from '@ephox/sugar';
 
 import * as Clicks from '../mouse/Clicks';
 import { Chain } from './Chain';
@@ -46,8 +46,8 @@ const cMouseMove = cMouseMoveWith({ });
 const cMouseOut = cMouseOutWith({ });
 
 // Work with selectors
-const sTriggerOn = <T>(container: Element, selector: string, action: (ele: Element) => void) =>
-  Chain.asStep<T, Element>(container, [ Chain.async<Element, Element>((container, next, die) => {
+const sTriggerOn = <T>(container: SugarElement, selector: string, action: (ele: SugarElement) => void) =>
+  Chain.asStep<T, SugarElement>(container, [ Chain.async<SugarElement, SugarElement>((container, next, die) => {
     UiFinder.findIn(container, selector).fold(
       () => die('Could not find element: ' + selector),
       (ele) => {
@@ -57,21 +57,21 @@ const sTriggerOn = <T>(container: Element, selector: string, action: (ele: Eleme
     );
   }) ]);
 
-const sClickOn = <T>(container: Element, selector: string) => sTriggerOn<T>(container, selector, Clicks.trigger);
+const sClickOn = <T>(container: SugarElement, selector: string) => sTriggerOn<T>(container, selector, Clicks.trigger);
 
-const sHoverOn = <T>(container: Element, selector: string) =>
+const sHoverOn = <T>(container: SugarElement, selector: string) =>
   sTriggerOn<T>(container, selector, Clicks.mouseOver({ }));
 
-const sContextMenuOn = <T>(container: Element, selector: string) =>
+const sContextMenuOn = <T>(container: SugarElement, selector: string) =>
   sTriggerOn<T>(container, selector, Clicks.contextMenu({ }));
 
-const cClickOn = (selector: string): Chain<Element, Element> => Chain.fromIsolatedChains([
+const cClickOn = (selector: string): Chain<SugarElement, SugarElement> => Chain.fromIsolatedChains([
   UiFinder.cFindIn(selector),
   cClick
 ]);
 
 // True click utilities: mouse down / mouse up / click events all in one
-const trueClick = (elem: Element) => {
+const trueClick = (elem: SugarElement) => {
   // The closest event queue to a true Click
   Focus.focus(elem);
   Clicks.mouseDown({ })(elem);
@@ -79,7 +79,7 @@ const trueClick = (elem: Element) => {
   Clicks.trigger(elem);
 };
 const cTrueClick = Chain.op(trueClick);
-const sTrueClickOn = <T>(container: Element, selector: string) => sTriggerOn<T>(container, selector, trueClick);
+const sTrueClickOn = <T>(container: SugarElement, selector: string) => sTriggerOn<T>(container, selector, trueClick);
 
 // Low level exports
 const leftClickButton = Clicks.leftClickButton ;

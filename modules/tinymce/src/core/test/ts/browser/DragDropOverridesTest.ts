@@ -3,7 +3,7 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { Blob, document, File } from '@ephox/dom-globals';
 import { Cell } from '@ephox/katamari';
 import { ApiChains, TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Body, Element, Hierarchy, Node } from '@ephox/sugar';
+import { Hierarchy, SugarBody, SugarElement, SugarNode } from '@ephox/sugar';
 import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.core.DragDropOverridesTest', (success, failure) => {
@@ -18,7 +18,7 @@ UnitTest.asynctest('browser.tinymce.core.DragDropOverridesTest', (success, failu
     return Object.freeze(newBlob);
   };
 
-  const cAssertNotification = (message: string) => Chain.fromIsolatedChainsWith(Body.body(), [
+  const cAssertNotification = (message: string) => Chain.fromIsolatedChainsWith(SugarBody.body(), [
     UiFinder.cWaitForVisible('Wait for notification to appear', '.tox-notification'),
     Assertions.cAssertPresence('Verify message content', {
       ['.tox-notification__body:contains(' + message + ')']: 1
@@ -38,7 +38,7 @@ UnitTest.asynctest('browser.tinymce.core.DragDropOverridesTest', (success, failu
       Logger.t('drop draggable element outside of editor', GeneralSteps.sequence([
         tinyApis.sSetContent('<p contenteditable="false">a</p>'),
         Step.sync(() => {
-          const target = Hierarchy.follow(Element.fromDom(editor.getBody()), [ 0 ]).filter(Node.isElement).getOrDie().dom();
+          const target = Hierarchy.follow(SugarElement.fromDom(editor.getBody()), [ 0 ]).filter(SugarNode.isElement).getOrDie().dom();
           const rect = target.getBoundingClientRect();
           const button = 0, screenX = (rect.left + rect.width / 2), screenY = (rect.top + rect.height / 2);
 
@@ -53,7 +53,7 @@ UnitTest.asynctest('browser.tinymce.core.DragDropOverridesTest', (success, failu
         Chain.inject(editor),
         Chain.wait(100), // Wait a small amount of time to ensure the events have been bound
         ApiChains.cSetContent('<p>Content</p>'),
-        Chain.fromIsolatedChainsWith(Element.fromDom(editor.getBody()), [
+        Chain.fromIsolatedChainsWith(SugarElement.fromDom(editor.getBody()), [
           DragnDrop.cDropFiles([
             createFile('test.txt', 123, new Blob([ 'content' ], { type: 'text/plain' }))
           ]),
@@ -62,7 +62,7 @@ UnitTest.asynctest('browser.tinymce.core.DragDropOverridesTest', (success, failu
             { data: 'Some content', type: 'text/plain' }
           ], false)
         ]),
-        Chain.fromIsolatedChainsWith(Body.body(), [
+        Chain.fromIsolatedChainsWith(SugarBody.body(), [
           UiFinder.cFindIn('.tox-toolbar__primary'),
           DragnDrop.cDropFiles([
             createFile('test.js', 123, new Blob([ 'var a = "content";' ], { type: 'application/javascript' }))

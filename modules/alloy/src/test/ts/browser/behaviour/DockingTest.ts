@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, Cleaner, GeneralSteps, Logger, Step, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { window } from '@ephox/dom-globals';
-import { DomEvent, Element } from '@ephox/sugar';
+import { DomEvent, SugarElement } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Docking } from 'ephox/alloy/api/behaviour/Docking';
@@ -61,7 +61,7 @@ UnitTest.asynctest('DockingTest', (success, failure) => {
     const staticBox = component.components()[0];
     const absoluteBox = component.components()[1];
     cleanup.add(
-      DomEvent.bind(Element.fromDom(window), 'scroll', (evt) => {
+      DomEvent.bind(SugarElement.fromDom(window), 'scroll', (evt) => {
         gui.broadcastEvent(SystemEvents.windowScroll(), evt);
       }).unbind
     );

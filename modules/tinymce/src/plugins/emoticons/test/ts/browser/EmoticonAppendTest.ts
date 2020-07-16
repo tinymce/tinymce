@@ -2,7 +2,7 @@ import { ApproxStructure, Assertions, Chain, FocusTools, Keyboard, Keys, Log, Pi
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
-import { Attr, Body, Element } from '@ephox/sugar';
+import { Attribute, SugarBody, SugarElement } from '@ephox/sugar';
 
 import EmoticonsPlugin from 'tinymce/plugins/emoticons/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
@@ -25,8 +25,8 @@ UnitTest.asynctest('browser.tinymce.plugins.emoticons.AppendTest', (success, fai
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
     const tinyUi = TinyUi(editor);
-    const doc = Element.fromDom(document);
-    const body = Body.body();
+    const doc = SugarElement.fromDom(document);
+    const body = SugarBody.body();
 
     Pipeline.async({},
       Log.steps('TBA', 'Emoticons: Open dialog, verify custom categories listed and search for custom emoticon', [
@@ -55,7 +55,7 @@ UnitTest.asynctest('browser.tinymce.plugins.emoticons.AppendTest', (success, fai
           'Wait until clock is the first choice (search should filter)',
           Chain.asStep(body, [
             UiFinder.cFindIn('.tox-collection__item:first'),
-            Chain.mapper((item) => Attr.get(item, 'data-collection-item-value')),
+            Chain.mapper((item) => Attribute.get(item, 'data-collection-item-value')),
             Assertions.cAssertEq('Search should show custom clock', '⏲')
           ])
         ),

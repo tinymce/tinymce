@@ -1,10 +1,10 @@
-import { Step, Pipeline, Chain, UiFinder, Assertions, ApproxStructure, GeneralSteps, Mouse, Log } from '@ephox/agar';
-import { TinyLoader, TinyUi } from '@ephox/mcagar';
-import Theme from 'tinymce/themes/silver/Theme';
+import { ApproxStructure, Assertions, Chain, GeneralSteps, Log, Mouse, Pipeline, Step, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import Plugin from 'tinymce/plugins/importcss/Plugin';
-import { Body, Element } from '@ephox/sugar';
 import { Arr, Option } from '@ephox/katamari';
+import { TinyLoader, TinyUi } from '@ephox/mcagar';
+import { SugarBody, SugarElement } from '@ephox/sugar';
+import Plugin from 'tinymce/plugins/importcss/Plugin';
+import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssTest', (success, failure) => {
 
@@ -16,7 +16,7 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssTest', (success, 
 
       const tinyUi = TinyUi(editor);
 
-      const sAssertMenu = (label: string, expected) => Chain.asStep(Body.body(), [
+      const sAssertMenu = (label: string, expected) => Chain.asStep(SugarBody.body(), [
         UiFinder.cWaitForVisible('Waiting for styles menu to appear', '[role="menu"]'),
         Assertions.cAssertStructure('Checking structure', ApproxStructure.build((s, str, arr) => s.element('div', {
           classes: [ arr.has('tox-menu') ],
@@ -55,15 +55,15 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssTest', (success, 
           {
             [c]: 0
           },
-          Element.fromDom(editor.getBody())
+          SugarElement.fromDom(editor.getBody())
         ),
-        Mouse.sClickOn(Body.body(), `.tox-collection__item .tox-collection__item-label:contains(${c})`),
+        Mouse.sClickOn(SugarBody.body(), `.tox-collection__item .tox-collection__item-label:contains(${c})`),
         Assertions.sAssertPresence(
           `${c} should be present`,
           {
             [c]: 1
           },
-          Element.fromDom(editor.getBody())
+          SugarElement.fromDom(editor.getBody())
         )
       ]).getOr([ ])), onSuccess, onFailure);
     }, {

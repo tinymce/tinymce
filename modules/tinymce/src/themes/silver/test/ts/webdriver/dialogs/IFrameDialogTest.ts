@@ -1,19 +1,19 @@
 import { FocusTools, Pipeline, RealKeys, Step } from '@ephox/agar';
+import { TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { Arr, Fun } from '@ephox/katamari';
-import { Class, Element, Focus } from '@ephox/sugar';
-import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
+import { Class, Focus, SugarElement } from '@ephox/sugar';
 
 import Env from 'tinymce/core/api/Env';
-import { TestHelpers } from '@ephox/alloy';
+import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 import TestExtras from '../../module/TestExtras';
 
 UnitTest.asynctest('IFrame Dialog Test (webdriver)', (success, failure) => {
   const helpers = TestExtras();
   const windowManager = WindowManager.setup(helpers.extras);
 
-  const doc = Element.fromDom(document);
+  const doc = SugarElement.fromDom(document);
 
   const tests = (Env.ie > 0 || Env.webkit || Env.gecko) ? [] :
     [

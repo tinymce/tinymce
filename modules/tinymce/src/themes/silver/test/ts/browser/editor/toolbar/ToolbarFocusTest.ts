@@ -1,7 +1,7 @@
 import { Chain, FocusTools, Keyboard, Keys, Log, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { ApiChains, Editor as McEditor } from '@ephox/mcagar';
-import { Document, Element } from '@ephox/sugar';
+import { SugarDocument, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { RawEditorSettings } from 'tinymce/core/api/SettingsTypes';
 import SilverTheme from 'tinymce/themes/silver/Theme';
@@ -19,8 +19,8 @@ UnitTest.asynctest('browser.tinymce.themes.silver.editor.toolbar.ToolbarFocusTes
     }),
     ApiChains.cFocus,
     Chain.runStepsOnValue((editor: Editor) => {
-      const editorDoc = Element.fromDom(editor.getDoc());
-      const doc = Document.getDocument();
+      const editorDoc = SugarElement.fromDom(editor.getDoc());
+      const doc = SugarDocument.getDocument();
 
       return [
         // Press the Alt+F10 key

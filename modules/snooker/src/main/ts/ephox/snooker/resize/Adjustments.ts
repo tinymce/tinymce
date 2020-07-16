@@ -1,5 +1,5 @@
 import { Arr } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import { ResizeBehaviour } from '../api/ResizeBehaviour';
 import { Detail, RowData } from '../api/Structs';
 import { TableSize } from '../api/TableSize';
@@ -13,7 +13,7 @@ import * as Sizes from './Sizes';
 
 const sumUp = (newSize: number[]) => Arr.foldr(newSize, (b, a) => b + a, 0);
 
-const adjustWidth = (table: Element, delta: number, index: number, direction: BarPositions<ColInfo>, resizing: ResizeBehaviour, tableSize: TableSize) => {
+const adjustWidth = (table: SugarElement, delta: number, index: number, direction: BarPositions<ColInfo>, resizing: ResizeBehaviour, tableSize: TableSize) => {
   const warehouse = Warehouse.fromTable(table);
   const step = tableSize.getCellDelta(delta);
   const widths = tableSize.getWidths(warehouse, direction, tableSize);
@@ -33,7 +33,7 @@ const adjustWidth = (table: Element, delta: number, index: number, direction: Ba
   resizing.resizeTable(tableSize.adjustTableWidth, clampedStep, isLastColumn);
 };
 
-const adjustHeight = (table: Element, delta: number, index: number, direction: BarPositions<RowInfo>) => {
+const adjustHeight = (table: SugarElement, delta: number, index: number, direction: BarPositions<RowInfo>) => {
   const warehouse = Warehouse.fromTable(table);
   const heights = ColumnSizes.getPixelHeights(warehouse, direction);
 
@@ -55,7 +55,7 @@ const adjustHeight = (table: Element, delta: number, index: number, direction: B
 };
 
 // Ensure that the width of table cells match the passed in table information.
-const adjustWidthTo = <T extends Detail> (table: Element, list: RowData<T>[], direction: BarPositions<ColInfo>, tableSize: TableSize) => {
+const adjustWidthTo = <T extends Detail> (table: SugarElement, list: RowData<T>[], direction: BarPositions<ColInfo>, tableSize: TableSize) => {
   const warehouse = Warehouse.generate(list);
   const widths = tableSize.getWidths(warehouse, direction, tableSize);
 

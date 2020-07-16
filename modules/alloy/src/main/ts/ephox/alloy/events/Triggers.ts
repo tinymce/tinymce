@@ -1,5 +1,5 @@
 import { Adt, Arr, Cell, Option } from '@ephox/katamari';
-import { Element, Traverse } from '@ephox/sugar';
+import { SugarElement, Traverse } from '@ephox/sugar';
 
 import { DebuggerLogger } from '../debugging/Debugging';
 import * as DescribedHandler from './DescribedHandler';
@@ -7,17 +7,17 @@ import { ElementAndHandler, UidAndHandler } from './EventRegistry';
 import * as EventSource from './EventSource';
 import { EventFormat, fromExternal, fromSource } from './SimulatedEvent';
 
-type LookupEvent = (eventName: string, target: Element) => Option<ElementAndHandler>;
+type LookupEvent = (eventName: string, target: SugarElement) => Option<ElementAndHandler>;
 
 export interface TriggerAdt {
   fold: <T>(
     stopped: () => T,
-    resume: (elem: Element) => T,
+    resume: (elem: SugarElement) => T,
     complete: () => T
   ) => T;
   match: <T> (branches: {
     stopped: () => T;
-    resume: (elem: Element) => T;
+    resume: (elem: SugarElement) => T;
     complete: () => T;
   }) => T;
   log: (label: string) => void;
@@ -25,7 +25,7 @@ export interface TriggerAdt {
 
 const adt: {
   stopped: () => TriggerAdt;
-  resume: (elem: Element) => TriggerAdt;
+  resume: (elem: SugarElement) => TriggerAdt;
   complete: () => TriggerAdt;
 } = Adt.generate([
   { stopped: [ ] },
@@ -33,7 +33,7 @@ const adt: {
   { complete: [ ] }
 ]);
 
-const doTriggerHandler = (lookup: LookupEvent, eventType: string, rawEvent: EventFormat, target: Element, source: Cell<Element>, logger: DebuggerLogger): TriggerAdt => {
+const doTriggerHandler = (lookup: LookupEvent, eventType: string, rawEvent: EventFormat, target: SugarElement, source: Cell<SugarElement>, logger: DebuggerLogger): TriggerAdt => {
   const handler = lookup(eventType, target);
 
   const simulatedEvent = fromSource(rawEvent, source);
@@ -68,18 +68,17 @@ const doTriggerHandler = (lookup: LookupEvent, eventType: string, rawEvent: Even
   });
 };
 
-const doTriggerOnUntilStopped = (lookup: LookupEvent, eventType: string, rawEvent: EventFormat, rawTarget: Element, source: Cell<Element>, logger: DebuggerLogger): boolean => doTriggerHandler(lookup, eventType, rawEvent, rawTarget, source, logger).fold(() =>
-// stopped.
-  true
-, (parent) =>
-// Go again.
-  doTriggerOnUntilStopped(lookup, eventType, rawEvent, parent, source, logger)
-, () =>
-// completed
-  false
-);
+const doTriggerOnUntilStopped = (lookup: LookupEvent, eventType: string, rawEvent: EventFormat, rawTarget: SugarElement, source: Cell<SugarElement>, logger: DebuggerLogger): boolean =>
+  doTriggerHandler(lookup, eventType, rawEvent, rawTarget, source, logger).fold(
+    // stopped.
+    () => true,
+    // Go again.
+    (parent) => doTriggerOnUntilStopped(lookup, eventType, rawEvent, parent, source, logger),
+    // completed
+    () => false
+  );
 
-const triggerHandler = <T extends EventFormat>(lookup: LookupEvent, eventType: string, rawEvent: T, target: Element, logger: DebuggerLogger): TriggerAdt => {
+const triggerHandler = <T extends EventFormat>(lookup: LookupEvent, eventType: string, rawEvent: T, target: SugarElement, logger: DebuggerLogger): TriggerAdt => {
   const source = EventSource.derive(rawEvent, target);
   return doTriggerHandler(lookup, eventType, rawEvent, target, source, logger);
 };
@@ -101,7 +100,7 @@ const triggerUntilStopped = (lookup: LookupEvent, eventType: string, rawEvent: E
   return triggerOnUntilStopped(lookup, eventType, rawEvent, rawTarget, logger);
 };
 
-const triggerOnUntilStopped = (lookup: LookupEvent, eventType: string, rawEvent: EventFormat, rawTarget: Element, logger: DebuggerLogger): boolean => {
+const triggerOnUntilStopped = (lookup: LookupEvent, eventType: string, rawEvent: EventFormat, rawTarget: SugarElement, logger: DebuggerLogger): boolean => {
   const source = EventSource.derive(rawEvent, rawTarget);
   return doTriggerOnUntilStopped(lookup, eventType, rawEvent, rawTarget, source, logger);
 };

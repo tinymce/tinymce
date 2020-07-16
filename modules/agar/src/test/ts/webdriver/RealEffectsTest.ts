@@ -1,7 +1,7 @@
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { PlatformDetection } from '@ephox/sand';
-import { Class, Css, Element, Html, Insert, Remove } from '@ephox/sugar';
+import { Class, Css, Html, Insert, Remove, SugarElement } from '@ephox/sugar';
 import * as Assertions from 'ephox/agar/api/Assertions';
 import { Chain } from 'ephox/agar/api/Chain';
 import * as Guard from 'ephox/agar/api/Guard';
@@ -24,20 +24,20 @@ UnitTest.asynctest('Real Effects Test', (success, failure) => {
     return success();
   }
 
-  const head = Element.fromDom(document.head);
-  const body = Element.fromDom(document.body);
+  const head = SugarElement.fromDom(document.head);
+  const body = SugarElement.fromDom(document.body);
 
-  const container = Element.fromTag('div');
+  const container = SugarElement.fromTag('div');
 
   const sCreateWorld = Step.sync(() => {
-    const input = Element.fromTag('input');
+    const input = SugarElement.fromTag('input');
     Insert.append(container, input);
 
-    const css = Element.fromTag('style');
+    const css = SugarElement.fromTag('style');
     Html.set(css, 'button { border: 1px solid black; }\nbutton.test:hover { border: 1px solid white }');
     Insert.append(head, css);
 
-    const button = Element.fromTag('button');
+    const button = SugarElement.fromTag('button');
     Class.add(button, 'test');
     Html.set(button, 'Mouse over me');
     Insert.append(container, button);

@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, Logger, Pipeline, Step, StepSequence } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
@@ -66,7 +66,7 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotateTest', (success, failu
               })
             ]
           })),
-          Element.fromDom(editor.getBody())
+          SugarElement.fromDom(editor.getBody())
         )
       ])
     );
@@ -93,7 +93,7 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotateTest', (success, failu
               })
             ]
           })),
-          Element.fromDom(editor.getBody())
+          SugarElement.fromDom(editor.getBody())
         )
       ])
     );
@@ -120,7 +120,7 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotateTest', (success, failu
               })
             ]
           })),
-          Element.fromDom(editor.getBody())
+          SugarElement.fromDom(editor.getBody())
         )
       ])
     );

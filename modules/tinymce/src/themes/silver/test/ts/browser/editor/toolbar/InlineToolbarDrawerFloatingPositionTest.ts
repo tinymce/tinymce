@@ -2,7 +2,7 @@ import { Chain, GeneralSteps, Keys, Log, Pipeline, Step, UiFinder, Waiter } from
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Cell } from '@ephox/katamari';
 import { Editor as McEditor, TinyActions, TinyApis, TinyUi } from '@ephox/mcagar';
-import { Body, Css, Element, Location } from '@ephox/sugar';
+import { Css, SugarBody, SugarElement, SugarLocation } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { RawEditorSettings } from 'tinymce/core/api/SettingsTypes';
@@ -15,8 +15,8 @@ UnitTest.asynctest('Inline Editor Floating Toolbar Drawer Position test', (succe
   const lineHeight = 30;
 
   const getUiContainerTop = (editor: Editor) => {
-    const uiContainer = Element.fromDom(editor.getContainer());
-    return Location.absolute(uiContainer).top();
+    const uiContainer = SugarElement.fromDom(editor.getContainer());
+    return SugarLocation.absolute(uiContainer).top();
   };
 
   const sPressEnterNTimes = (tinyApis: TinyApis, tinyActions: TinyActions, times: number) => GeneralSteps.sequence([
@@ -37,7 +37,7 @@ UnitTest.asynctest('Inline Editor Floating Toolbar Drawer Position test', (succe
     }),
     Chain.async((editor, onSuccess, onFailure) => {
       const tinyApis = TinyApis(editor);
-      const uiContainer = Element.fromDom(editor.getContainer());
+      const uiContainer = SugarElement.fromDom(editor.getContainer());
 
       Pipeline.async({ }, [
         Step.sync(() => {
@@ -46,7 +46,7 @@ UnitTest.asynctest('Inline Editor Floating Toolbar Drawer Position test', (succe
         tinyApis.sSetContent('<p>Line 1</p><p>Line 2</p><p>Line 3</p>'),
         tinyApis.sFocus(),
         tinyApis.sSetCursor([ 2, 0 ], 'Line 3'.length),
-        UiFinder.sWaitForVisible('Wait for editor to be visible', Body.body(), '.tox-editor-header button[title="More..."]'),
+        UiFinder.sWaitForVisible('Wait for editor to be visible', SugarBody.body(), '.tox-editor-header button[title="More..."]'),
         ...getSteps(editor, tinyApis)
       ], () => onSuccess(editor), onFailure);
     }),

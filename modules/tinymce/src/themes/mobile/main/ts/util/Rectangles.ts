@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Fun } from '@ephox/katamari';
-import { Awareness, Element, RawRect, Selection, StructRect, Traverse, WindowSelection } from '@ephox/sugar';
 import { Range, Window } from '@ephox/dom-globals';
+import { Arr, Fun } from '@ephox/katamari';
+import { Awareness, RawRect, SimSelection, StructRect, SugarElement, Traverse, WindowSelection } from '@ephox/sugar';
 
 const COLLAPSED_WIDTH = 2;
 
@@ -33,9 +33,9 @@ const getRectsFromRange = (range: Range): StructRect[] => {
   if (!range.collapsed) {
     return Arr.map(range.getClientRects(), toRect);
   } else {
-    const start = Element.fromDom(range.startContainer);
+    const start = SugarElement.fromDom(range.startContainer);
     return Traverse.parent(start).bind((parent) => {
-      const selection = Selection.exact(start, range.startOffset, parent, Awareness.getEnd(parent));
+      const selection = SimSelection.exact(start, range.startOffset, parent, Awareness.getEnd(parent));
       const optRect = WindowSelection.getFirstRect(range.startContainer.ownerDocument.defaultView, selection);
       return optRect.map(collapsedRect).map(Arr.pure);
     }).getOr([ ]);

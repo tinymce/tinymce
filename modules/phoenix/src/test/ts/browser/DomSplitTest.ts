@@ -1,9 +1,9 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Text } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
-import { Element, Text, Traverse } from '@ephox/sugar';
+import { SugarElement, SugarText, Traverse } from '@ephox/sugar';
 import * as DomSplit from 'ephox/phoenix/api/dom/DomSplit';
 import { Page } from '../module/ephox/phoenix/test/Page';
-import { Text as DomText } from '@ephox/dom-globals';
 
 UnitTest.test('DomSplitTest', function () {
   /*
@@ -12,23 +12,23 @@ UnitTest.test('DomSplitTest', function () {
   <div2>{t7:Next }<p4>{t8:Section }<s4>{t9:no}{t10:w}
   */
 
-  const check = function (expected: string[], element: Element<DomText>) {
+  const check = function (expected: string[], element: SugarElement<Text>) {
     const parent = Traverse.parent(element);
     parent.fold(function () {
       throw new Error('Element must have parent for test to work');
     }, function (v) {
-      const children = Traverse.children(v) as Element<DomText>[];
-      const text = Arr.map(children, Text.get);
+      const children = Traverse.children(v) as SugarElement<Text>[];
+      const text = Arr.map(children, SugarText.get);
       assert.eq(expected, text);
     });
   };
 
-  const checkSplitByPair = function (expected: string[], element: Element<DomText>, start: number, end: number) {
+  const checkSplitByPair = function (expected: string[], element: SugarElement<Text>, start: number, end: number) {
     DomSplit.splitByPair(element, start, end);
     check(expected, element);
   };
 
-  const checkSplit = function (expected: string[], element: Element<DomText>, offset: number) {
+  const checkSplit = function (expected: string[], element: SugarElement<Text>, offset: number) {
     DomSplit.split(element, offset);
     check(expected, element);
   };

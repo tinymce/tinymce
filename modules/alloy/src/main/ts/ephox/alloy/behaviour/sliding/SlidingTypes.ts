@@ -1,5 +1,5 @@
 import { Option } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
@@ -26,7 +26,7 @@ export interface SlidingConfig extends Behaviour.BehaviourConfigDetail {
   closedClass: string;
   dimension: {
     property: string;
-    getDimension: (elem: Element) => string;
+    getDimension: (elem: SugarElement) => string;
   };
   onGrown: (comp: AlloyComponent) => void;
   onShrunk: (comp: AlloyComponent) => void;
@@ -34,7 +34,7 @@ export interface SlidingConfig extends Behaviour.BehaviourConfigDetail {
   growingClass: string;
   onStartGrow: (comp: AlloyComponent) => void;
   onStartShrink: (comp: AlloyComponent) => void;
-  getAnimationRoot: Option<(comp: AlloyComponent) => Element>;
+  getAnimationRoot: Option<(comp: AlloyComponent) => SugarElement>;
 
 }
 
@@ -54,7 +54,7 @@ export interface SlidingConfigSpec extends Behaviour.BehaviourConfigSpec {
   shrinkingClass: string;
   growingClass: string;
   onStartGrow?: (component: AlloyComponent) => void;
-  getAnimationRoot?: (component: AlloyComponent) => Element;
+  getAnimationRoot?: (component: AlloyComponent) => SugarElement;
   onStartShrink?: (component: AlloyComponent) => void;
   onShrunk?: (component: AlloyComponent) => void;
   onGrown?: (component: AlloyComponent) => void;

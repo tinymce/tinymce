@@ -1,13 +1,11 @@
-import {
-  ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Pipeline, Step, UiFinder
-} from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Pipeline, Step, UiFinder } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Menu } from '@ephox/bridge';
 import { document, navigator } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { TinyLoader } from '@ephox/mcagar';
-import { Body, Element } from '@ephox/sugar';
+import { SugarBody, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
@@ -19,7 +17,7 @@ UnitTest.asynctest('OxideGridCollectionMenuTest', (success, failure) => {
 
   TinyLoader.setup(
     (editor, onSuccess, onFailure) => {
-      const doc = Element.fromDom(document);
+      const doc = SugarElement.fromDom(document);
 
       Pipeline.async({ }, Logger.ts(
         'Check structure of grid collection menu',
@@ -27,9 +25,9 @@ UnitTest.asynctest('OxideGridCollectionMenuTest', (success, failure) => {
           TestHelpers.GuiSetup.mAddStyles(doc, [
             ':focus { background-color: rgb(222, 224, 226); }'
           ]),
-          Mouse.sClickOn(Body.body(), '.tox-split-button__chevron'),
-          UiFinder.sWaitForVisible('Waiting for menu', Body.body(), '[role="menu"]'),
-          Chain.asStep(Body.body(), [
+          Mouse.sClickOn(SugarBody.body(), '.tox-split-button__chevron'),
+          UiFinder.sWaitForVisible('Waiting for menu', SugarBody.body(), '[role="menu"]'),
+          Chain.asStep(SugarBody.body(), [
             UiFinder.cFindIn('[role="menu"]'),
             Assertions.cAssertStructure(
               'Checking structure',

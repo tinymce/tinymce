@@ -2,7 +2,7 @@ import { Chain, Log, Mouse, Pipeline, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import TemplatePlugin from 'tinymce/plugins/template/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 
@@ -14,14 +14,14 @@ UnitTest.asynctest('browser.tinymce.plugins.template.TemplateSanityTest', (succe
   TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
 
-    const docBody = Element.fromDom(document.body);
+    const docBody = SugarElement.fromDom(document.body);
     const dialogSelector = 'div.tox-dialog';
     const toolbarButtonSelector = '[role="toolbar"] button[aria-label="Insert template"]';
 
     Pipeline.async({}, [
       Log.stepsAsStep('TBA', 'Template: Test basic template insertion', [
         tinyApis.sSetSetting('templates', [{ title: 'a', description: 'b', content: '<strong>c</strong>' }]),
-        Mouse.sClickOn(Element.fromDom(editor.getContainer()), toolbarButtonSelector),
+        Mouse.sClickOn(SugarElement.fromDom(editor.getContainer()), toolbarButtonSelector),
         UiFinder.sWaitForVisible('Waited for dialog to be visible', docBody, dialogSelector),
         Mouse.sClickOn(docBody, 'button.tox-button:contains(Save)'),
         Waiter.sTryUntil('Dialog should close', UiFinder.sNotExists(docBody, dialogSelector)),
@@ -32,7 +32,7 @@ UnitTest.asynctest('browser.tinymce.plugins.template.TemplateSanityTest', (succe
         tinyApis.sSetContent(''),
         tinyApis.sSetSetting('templates', [{ title: 'a', description: 'b', content: '<p>{$name} {$email}</p>' }]),
         tinyApis.sSetSetting('template_replace_values', { name: 'Tester', email: 'test@test.com' }),
-        Mouse.sClickOn(Element.fromDom(editor.getContainer()), toolbarButtonSelector),
+        Mouse.sClickOn(SugarElement.fromDom(editor.getContainer()), toolbarButtonSelector),
         UiFinder.sWaitForVisible('Waited for dialog to be visible', docBody, dialogSelector),
         Mouse.sClickOn(docBody, 'button.tox-button:contains(Save)'),
         Waiter.sTryUntil('Dialog should close', UiFinder.sNotExists(docBody, dialogSelector)),
@@ -42,7 +42,7 @@ UnitTest.asynctest('browser.tinymce.plugins.template.TemplateSanityTest', (succe
       Log.stepsAsStep('TBA', 'Template: Test loading in snippet from other file', [
         tinyApis.sSetContent(''),
         tinyApis.sSetSetting('templates', [{ title: 'a', description: '<strong>b</strong>', url: '/project/tinymce/src/plugins/template/test/html/test_template.html' }]),
-        Mouse.sClickOn(Element.fromDom(editor.getContainer()), toolbarButtonSelector),
+        Mouse.sClickOn(SugarElement.fromDom(editor.getContainer()), toolbarButtonSelector),
         UiFinder.sWaitForVisible('Waited for dialog to be visible', docBody, dialogSelector),
         Chain.asStep(docBody, [
           UiFinder.cFindIn(dialogSelector),

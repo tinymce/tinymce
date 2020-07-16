@@ -4,7 +4,7 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { console, document } from '@ephox/dom-globals';
 import { Cell } from '@ephox/katamari';
 import { TinyLoader, TinyUi } from '@ephox/mcagar';
-import { Body, Element } from '@ephox/sugar';
+import { SugarBody, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 
 import Env from 'tinymce/core/api/Env';
@@ -18,7 +18,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
   TinyLoader.setup(
     (editor, onSuccess, onFailure) => {
       const tinyUi = TinyUi(editor);
-      const container = Element.fromDom(editor.getContainer());
+      const container = SugarElement.fromDom(editor.getContainer());
 
       Pipeline.async({ }, Logger.ts(
         'Check basic structure and actions',
@@ -222,8 +222,8 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
 
           Log.stepsAsStep('TBA', 'Menu appearing from menubar should have svg icons', [
             tinyUi.sClickOnMenu('Click on test menu', 'button[role="menuitem"]:contains("test")'),
-            UiFinder.sWaitForVisible('Waiting for menu to appear', Body.body(), '[role="menu"]'),
-            Chain.asStep(Body.body(), [
+            UiFinder.sWaitForVisible('Waiting for menu to appear', SugarBody.body(), '[role="menu"]'),
+            Chain.asStep(SugarBody.body(), [
               UiFinder.cFindIn('[role="menu"] .tox-collection__item--active'),
               Assertions.cAssertStructure(
                 'Checking item has svg icon and text',
@@ -248,8 +248,8 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
                 }))
               )
             ]),
-            Keyboard.sKeydown(Element.fromDom(document), Keys.escape(), { }),
-            UiFinder.sNotExists(Body.body(), '[role="menu"]')
+            Keyboard.sKeydown(SugarElement.fromDom(document), Keys.escape(), { }),
+            UiFinder.sNotExists(SugarBody.body(), '[role="menu"]')
           ]),
 
           Log.stepsAsStep('TBA', 'Clicking on a toggle button should not toggle. It is up to the setActive api to do that', [

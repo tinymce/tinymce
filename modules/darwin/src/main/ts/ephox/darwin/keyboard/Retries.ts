@@ -1,11 +1,11 @@
 import { Adt, Fun, Option } from '@ephox/katamari';
 import { DomGather } from '@ephox/phoenix';
 import { DomStructure } from '@ephox/robin';
-import { Node, PredicateFind, Element } from '@ephox/sugar';
-import * as Carets from './Carets';
-import * as Rectangles from './Rectangles';
+import { PredicateFind, SugarElement, SugarNode } from '@ephox/sugar';
 import { WindowBridge } from '../api/WindowBridge';
 import { Situs } from '../selection/Situs';
+import * as Carets from './Carets';
+import * as Rectangles from './Rectangles';
 
 type Carets = Carets.Carets;
 
@@ -26,9 +26,9 @@ export interface Retries {
 
 export interface CaretMovement {
   point: (caret: Carets) => number;
-  adjuster: (bridge: WindowBridge, element: Element, guessBox: Carets, original: Carets, caret: Carets) => Retries;
+  adjuster: (bridge: WindowBridge, element: SugarElement, guessBox: Carets, original: Carets, caret: Carets) => Retries;
   move: (caret: Carets, amount: number) => Carets;
-  gather: (element: Element, isRoot: (e: Element) => boolean) => Option<Element>;
+  gather: (element: SugarElement, isRoot: (e: SugarElement) => boolean) => Option<SugarElement>;
 }
 
 const JUMP_SIZE = 5;
@@ -47,7 +47,7 @@ const isOutside = function (caret: Carets, box: Carets): boolean {
 };
 
 // Find the block and determine whether or not that block is outside. If it is outside, move up/down and right.
-const inOutsideBlock = function (bridge: WindowBridge, element: Element, caret: Carets) {
+const inOutsideBlock = function (bridge: WindowBridge, element: SugarElement, caret: Carets) {
   return PredicateFind.closest(element, DomStructure.isBlock).fold(Fun.constant(false), function (cell) {
     return Rectangles.getEntireBox(bridge, cell).exists(function (box) {
       return isOutside(caret, box);
@@ -75,7 +75,7 @@ const inOutsideBlock = function (bridge: WindowBridge, element: Element, caret: 
  *    because the guess is GOOD.
  */
 
-const adjustDown = function (bridge: WindowBridge, element: Element, guessBox: Carets, original: Carets, caret: Carets): Retries {
+const adjustDown = function (bridge: WindowBridge, element: SugarElement, guessBox: Carets, original: Carets, caret: Carets): Retries {
   const lowerCaret = Carets.moveDown(caret, JUMP_SIZE);
   if (Math.abs(guessBox.bottom - original.bottom) < 1) {
     return adt.retry(lowerCaret);
@@ -88,7 +88,7 @@ const adjustDown = function (bridge: WindowBridge, element: Element, guessBox: C
   }
 };
 
-const adjustUp = function (bridge: WindowBridge, element: Element, guessBox: Carets, original: Carets, caret: Carets): Retries {
+const adjustUp = function (bridge: WindowBridge, element: SugarElement, guessBox: Carets, original: Carets, caret: Carets): Retries {
   const higherCaret = Carets.moveUp(caret, JUMP_SIZE);
   if (Math.abs(guessBox.top - original.top) < 1) {
     return adt.retry(higherCaret);
@@ -117,7 +117,7 @@ const downMovement: CaretMovement = {
 
 const isAtTable = function (bridge: WindowBridge, x: number, y: number): boolean {
   return bridge.elementFromPoint(x, y).filter(function (elm) {
-    return Node.name(elm) === 'table';
+    return SugarNode.name(elm) === 'table';
   }).isSome();
 };
 

@@ -3,7 +3,7 @@ import { TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Sidebar } from '@ephox/bridge';
 import { TinyLoader, TinyUi } from '@ephox/mcagar';
-import { Body, Element, Traverse } from '@ephox/sugar';
+import { SugarBody, SugarElement, Traverse } from '@ephox/sugar';
 import Theme from 'tinymce/themes/silver/Theme';
 
 interface EventLog {
@@ -27,7 +27,7 @@ UnitTest.asynctest('tinymce.themes.silver.test.browser.sidebar.SidebarTest', fun
     };
 
     Pipeline.async(editor, Log.steps('TBA', 'Sidebar actions test', [
-      Chain.asStep(Body.body(), [
+      Chain.asStep(SugarBody.body(), [
         UiFinder.cFindIn('.tox-sidebar-wrap .tox-sidebar'),
         Assertions.cAssertStructure('Checking structure', ApproxStructure.build((s, str, arr) => s.element('div', {
           classes: [ arr.has('tox-sidebar') ],
@@ -79,12 +79,12 @@ UnitTest.asynctest('tinymce.themes.silver.test.browser.sidebar.SidebarTest', fun
     toolbar: 'mysidebar1 mysidebar2 mysidebar3',
     setup(editor) {
       const logEvent = (name: string) => (api: Sidebar.SidebarInstanceApi) => {
-        const index = Traverse.findIndex(Element.fromDom(api.element())).getOr(-1);
+        const index = Traverse.findIndex(SugarElement.fromDom(api.element())).getOr(-1);
         const entry: EventLog = { name, index };
         store.adder(entry)();
       };
       const handleSetup = (eventName: string) => (api: Sidebar.SidebarInstanceApi) => {
-        api.element().appendChild(Element.fromHtml('<div style="width: 200px; background: red;"></div>').dom());
+        api.element().appendChild(SugarElement.fromHtml('<div style="width: 200px; background: red;"></div>').dom());
         logEvent(eventName)(api);
         return () => {};
       };

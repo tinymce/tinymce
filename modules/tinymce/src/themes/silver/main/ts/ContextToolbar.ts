@@ -6,14 +6,14 @@
  */
 
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, AnchorSpec, Behaviour, Boxes, Bubble, GuiFactory, InlineView,
-  Keying, Layout, LayoutInside, MaxHeight, MaxWidth, Positioning
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, AnchorSpec, Behaviour, Boxes, Bubble, GuiFactory, InlineView, Keying,
+  Layout, LayoutInside, MaxHeight, MaxWidth, Positioning
 } from '@ephox/alloy';
 import { Toolbar } from '@ephox/bridge';
-import { Element as DomElement } from '@ephox/dom-globals';
+import { Element } from '@ephox/dom-globals';
 import { Arr, Cell, Id, Merger, Obj, Option, Thunk } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Css, Element, Focus, Scroll } from '@ephox/sugar';
+import { Css, Focus, Scroll, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
 import { getToolbarMode, ToolbarMode } from './api/Settings';
@@ -107,7 +107,7 @@ const register = (editor: Editor, registryContextToolbars, sink: AlloyComponent,
     const nodeBounds = lastElement.get().map((ele) => ele.getBoundingClientRect()).getOrThunk(() => editor.selection.getRng().getBoundingClientRect());
 
     // Translate to the top level document, as nodeBounds is relative to the iframe viewport
-    const diffTop = editor.inline ? Scroll.get().top() : Boxes.absolute(Element.fromDom(editor.getBody())).y;
+    const diffTop = editor.inline ? Scroll.get().top() : Boxes.absolute(SugarElement.fromDom(editor.getBody())).y;
 
     return {
       y: nodeBounds.top + diffTop,
@@ -151,7 +151,7 @@ const register = (editor: Editor, registryContextToolbars, sink: AlloyComponent,
   };
 
   const lastAnchor = Cell(Option.none<AnchorSpec>());
-  const lastElement = Cell<Option<DomElement>>(Option.none<DomElement>());
+  const lastElement = Cell(Option.none<Element>());
   const timer = Cell(null);
 
   const wrapInPopDialog = (toolbarSpec: AlloySpec) => ({
@@ -216,13 +216,13 @@ const register = (editor: Editor, registryContextToolbars, sink: AlloyComponent,
     // TODO: Have this stored in a better structure
     Obj.get(scopes.lookupTable, e.toolbarKey).each((ctx) => {
       // ASSUMPTION: this is only used to open one specific toolbar at a time, hence [ctx]
-      launchContext([ ctx ], e.target === editor ? Option.none() : Option.some(e as DomElement));
+      launchContext([ ctx ], e.target === editor ? Option.none() : Option.some(e as Element));
       // Forms launched via this way get immediate focus
       InlineView.getContent(contextbar).each(Keying.focusIn);
     });
   });
 
-  const getAnchor = (position: Toolbar.ContextToolbarPosition, element: Option<Element>): AnchorSpec => {
+  const getAnchor = (position: Toolbar.ContextToolbarPosition, element: Option<SugarElement>): AnchorSpec => {
     const anchorage = position === 'node' ? extras.backstage.shared.anchors.node(element) : extras.backstage.shared.anchors.cursor();
     return Merger.deepMerge(
       anchorage,
@@ -230,7 +230,7 @@ const register = (editor: Editor, registryContextToolbars, sink: AlloyComponent,
     );
   };
 
-  const launchContext = (toolbarApi: Array<ContextTypes>, elem: Option<DomElement>) => {
+  const launchContext = (toolbarApi: Array<ContextTypes>, elem: Option<Element>) => {
     clearTimer();
 
     // If a mobile context menu is open, don't launch else they'll probably overlap. For android, specifically.
@@ -239,7 +239,7 @@ const register = (editor: Editor, registryContextToolbars, sink: AlloyComponent,
     }
 
     const toolbarSpec = buildToolbar(toolbarApi);
-    const sElem = elem.map(Element.fromDom);
+    const sElem = elem.map(SugarElement.fromDom);
 
     // TINY-4495 ASSUMPTION: Can only do toolbarApi[0].position because ContextToolbarLookup.filterToolbarsByPosition
     // ensures all toolbars returned by ContextToolbarLookup have the same position.

@@ -1,18 +1,18 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { DataTransfer, navigator } from '@ephox/dom-globals';
 import { Cell, Option } from '@ephox/katamari';
-import { Body, DomEvent, Element, Insert, Remove } from '@ephox/sugar';
+import { DomEvent, Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
 import { cCopy, cCut, sPasteDataTransfer, sPasteFiles, sPasteItems } from 'ephox/agar/api/Clipboard';
 import { createFileFromString } from 'ephox/agar/api/Files';
-import { Chain, Logger, Step, ChainSequence, StepSequence } from 'ephox/agar/api/Main';
+import { Chain, ChainSequence, Logger, Step, StepSequence } from 'ephox/agar/api/Main';
 import { Pipeline } from 'ephox/agar/api/Pipeline';
 
 if (!/phantom/i.test(navigator.userAgent)) {
   UnitTest.asynctest('ClipboardTest', (success, failure) => {
-    const pastebin = Element.fromHtml('<div class="pastebin"></div>');
+    const pastebin = SugarElement.fromHtml('<div class="pastebin"></div>');
     const pasteState = Cell(Option.none<DataTransfer>());
 
-    Insert.append(Body.body(), pastebin);
+    Insert.append(SugarBody.body(), pastebin);
 
     const cutUnbinder = DomEvent.bind(pastebin, 'cut', (evt) => {
       const dataTransfer = evt.raw().clipboardData;

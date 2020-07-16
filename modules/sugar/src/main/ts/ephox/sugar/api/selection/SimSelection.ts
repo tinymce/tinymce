@@ -1,29 +1,29 @@
-import { Node as DomNode, Range } from '@ephox/dom-globals';
+import { Node, Range } from '@ephox/dom-globals';
 import { Adt } from '@ephox/katamari';
-import Element from '../node/Element';
+import { SugarElement } from '../node/SugarElement';
 import * as Traverse from '../search/Traverse';
 import { SimRange } from './SimRange';
 import { Situ } from './Situ';
 
-export interface Selection {
+export interface SimSelection {
   fold: <U> (
     domRange: (rng: Range) => U,
     relative: (startSitu: Situ, finishSitu: Situ) => U,
-    exact: (start: Element<DomNode>, soffset: number, finish: Element<DomNode>, foffset: number) => U
+    exact: (start: SugarElement<Node>, soffset: number, finish: SugarElement<Node>, foffset: number) => U
   ) => U;
   match: <U> (branches: {
     domRange: (rng: Range) => U;
     relative: (startSitu: Situ, finishSitu: Situ) => U;
-    exact: (start: Element<DomNode>, soffset: number, finish: Element<DomNode>, foffset: number) => U;
+    exact: (start: SugarElement<Node>, soffset: number, finish: SugarElement<Node>, foffset: number) => U;
   }) => U;
   log: (label: string) => void;
 }
 
 // Consider adding a type for "element"
 const adt: {
-  domRange: (rng: Range) => Selection;
-  relative: (startSitu: Situ, finishSitu: Situ) => Selection;
-  exact: (start: Element<DomNode>, soffset: number, finish: Element<DomNode>, foffset: number) => Selection;
+  domRange: (rng: Range) => SimSelection;
+  relative: (startSitu: Situ, finishSitu: Situ) => SimSelection;
+  exact: (start: SugarElement<Node>, soffset: number, finish: SugarElement<Node>, foffset: number) => SimSelection;
 } = Adt.generate([
   { domRange: [ 'rng' ] },
   { relative: [ 'startSitu', 'finishSitu' ] },
@@ -32,8 +32,8 @@ const adt: {
 
 const exactFromRange = (simRange: SimRange) => adt.exact(simRange.start(), simRange.soffset(), simRange.finish(), simRange.foffset());
 
-const getStart = (selection: Selection) => selection.match({
-  domRange: (rng) => Element.fromDom(rng.startContainer),
+const getStart = (selection: SimSelection) => selection.match({
+  domRange: (rng) => SugarElement.fromDom(rng.startContainer),
   relative: (startSitu, _finishSitu) => Situ.getStart(startSitu),
   exact: (start, _soffset, _finish, _foffset) => start
 });
@@ -42,7 +42,7 @@ const domRange = adt.domRange;
 const relative = adt.relative;
 const exact = adt.exact;
 
-const getWin = (selection: Selection) => {
+const getWin = (selection: SimSelection) => {
   const start = getStart(selection);
   return Traverse.defaultView(start);
 };
@@ -51,7 +51,7 @@ const getWin = (selection: Selection) => {
 const range = SimRange.create;
 
 // tslint:disable-next-line:variable-name
-export const Selection = {
+export const SimSelection = {
   domRange,
   relative,
   exact,

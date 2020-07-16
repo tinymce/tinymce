@@ -5,12 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Unicode } from '@ephox/katamari';
-import { Node, Text, Traverse } from '@ephox/sugar';
+import { Node } from '@ephox/dom-globals';
+import { SugarElement, SugarNode, SugarText, Traverse } from '@ephox/sugar';
+import Editor from '../api/Editor';
 import { isCaretNode } from '../fmt/FormatContainer';
 import * as FormatUtils from '../fmt/FormatUtils';
+import { ZWSP } from '../text/Zwsp';
 import { isAnnotation } from './Identification';
-import Editor from '../api/Editor';
 
 export const enum ChildContext {
   // Was previously used for br and zero width cursors. Keep as a state
@@ -22,11 +23,10 @@ export const enum ChildContext {
   Valid = 'valid'
 }
 
-const isZeroWidth = (elem): boolean =>
-  // TODO: I believe this is the same cursor used in tinymce (Unicode.zeroWidth)?
-  Node.isText(elem) && Text.get(elem) === Unicode.zeroWidth;
+const isZeroWidth = (elem: SugarElement<Node>): boolean =>
+  SugarNode.isText(elem) && SugarText.get(elem) === ZWSP;
 
-const context = (editor: Editor, elem: any, wrapName: string, nodeName: string): ChildContext => Traverse.parent(elem).fold(
+const context = (editor: Editor, elem: SugarElement, wrapName: string, nodeName: string): ChildContext => Traverse.parent(elem).fold(
   () => ChildContext.Skipping,
 
   (parent) => {
@@ -36,9 +36,9 @@ const context = (editor: Editor, elem: any, wrapName: string, nodeName: string):
       return ChildContext.Valid;
     } else if (isAnnotation(elem)) {
       return ChildContext.Existing;
-    } else if (isCaretNode(elem)) {
+    } else if (isCaretNode(elem.dom())) {
       return ChildContext.Caret;
-    } else if (!FormatUtils.isValid(editor, wrapName, nodeName) || !FormatUtils.isValid(editor, Node.name(parent), wrapName)) {
+    } else if (!FormatUtils.isValid(editor, wrapName, nodeName) || !FormatUtils.isValid(editor, SugarNode.name(parent), wrapName)) {
       return ChildContext.InvalidChild;
     } else {
       return ChildContext.Valid;

@@ -1,6 +1,6 @@
 import { console, document, setTimeout } from '@ephox/dom-globals';
 import { Arr, Fun, Option, Result } from '@ephox/katamari';
-import { Class, Element, EventArgs, Value } from '@ephox/sugar';
+import { Class, EventArgs, SugarElement, Value } from '@ephox/sugar';
 
 import * as AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviour';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
@@ -28,7 +28,7 @@ import * as DemoRenders from './forms/DemoRenders';
 
 export default (): void => {
   const gui = Gui.create();
-  const body = Element.fromDom(document.body);
+  const body = SugarElement.fromDom(document.body);
   Class.add(gui.element(), 'gui-root-demo-container');
   Attachment.attachSystem(body, gui);
 

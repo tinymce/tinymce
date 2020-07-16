@@ -1,4 +1,4 @@
-import { Compare, Element } from '@ephox/sugar';
+import { Compare, SugarElement } from '@ephox/sugar';
 import * as Structs from '../api/Structs';
 import { Warehouse } from '../model/Warehouse';
 import * as CellBounds from './CellBounds';
@@ -12,7 +12,7 @@ const getBounds = function (detailA: Structs.DetailExt, detailB: Structs.DetailE
   );
 };
 
-const getAnyBox = function (warehouse: Warehouse, startCell: Element, finishCell: Element) {
+const getAnyBox = function (warehouse: Warehouse, startCell: SugarElement, finishCell: SugarElement) {
   const startCoords = Warehouse.findItem(warehouse, startCell, Compare.eq);
   const finishCoords = Warehouse.findItem(warehouse, finishCell, Compare.eq);
   return startCoords.bind(function (sc) {
@@ -22,7 +22,7 @@ const getAnyBox = function (warehouse: Warehouse, startCell: Element, finishCell
   });
 };
 
-const getBox = function (warehouse: Warehouse, startCell: Element, finishCell: Element) {
+const getBox = function (warehouse: Warehouse, startCell: SugarElement, finishCell: SugarElement) {
   return getAnyBox(warehouse, startCell, finishCell).bind(function (bounds: Structs.Bounds) {
     return CellBounds.isRectangular(warehouse, bounds);
   });

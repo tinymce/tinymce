@@ -1,12 +1,12 @@
 import { document } from '@ephox/dom-globals';
-import { Class, Element, Elements, Html, Insert, InsertAll, Remove } from '@ephox/sugar';
+import { Class, Html, Insert, InsertAll, Remove, SugarElement, SugarElements } from '@ephox/sugar';
 
-export const init = (name: string, f: (success: () => void, failure: (err: any) => void) => Element[]): void => {
-  const container = Element.fromTag('div');
+export const init = (name: string, f: (success: () => void, failure: (err: any) => void) => SugarElement[]): void => {
+  const container = SugarElement.fromTag('div');
   Class.add(container, 'demo-container');
   Html.set(container, '<p>' + name + '</p>');
 
-  const outcome = Element.fromTag('div');
+  const outcome = SugarElement.fromTag('div');
   Html.set(outcome, 'Running ....');
 
   const success = () => {
@@ -25,9 +25,9 @@ export const init = (name: string, f: (success: () => void, failure: (err: any) 
     Class.add(outcome, 'failure');
     Remove.empty(outcome);
     if (err.diff) {
-      InsertAll.append(outcome, Elements.fromHtml(keepMarkers(htmlentities(err.diff.comparison))));
+      InsertAll.append(outcome, SugarElements.fromHtml(keepMarkers(htmlentities(err.diff.comparison))));
     } else {
-      Insert.append(outcome, Element.fromText(err));
+      Insert.append(outcome, SugarElement.fromText(err));
     }
   };
 
@@ -35,5 +35,5 @@ export const init = (name: string, f: (success: () => void, failure: (err: any) 
 
   const elements = f(success, failure);
   InsertAll.append(container, elements);
-  Insert.append(Element.fromDom(document.body), container);
+  Insert.append(SugarElement.fromDom(document.body), container);
 };

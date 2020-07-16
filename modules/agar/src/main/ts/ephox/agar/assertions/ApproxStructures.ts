@@ -1,6 +1,6 @@
 import { Assert, assert, TestLabel } from '@ephox/bedrock-client';
 import { Arr, Fun, Obj, Option } from '@ephox/katamari';
-import { Attr, Classes, Css, Element, Html, Node, Text, Traverse, Truncate, Value } from '@ephox/sugar';
+import { Attribute, Classes, Css, Html, SugarElement, SugarNode, SugarText, Traverse, Truncate, Value } from '@ephox/sugar';
 
 import * as ApproxComparisons from './ApproxComparisons';
 
@@ -16,9 +16,9 @@ export interface ArrayAssert {
 
 export interface ElementQueue {
   context(): string;
-  current(): Option<Element<any>>;
-  peek(): Option<Element<any>>;
-  take(): Option<Element<any>>;
+  current(): Option<SugarElement<any>>;
+  peek(): Option<SugarElement<any>>;
+  take(): Option<SugarElement<any>>;
   mark(): {
     reset: () => void ;
     atMark: () => boolean;
@@ -27,7 +27,7 @@ export interface ElementQueue {
 
 export interface StructAssertBasic {
   type?: 'basic';
-  doAssert: (actual: Element<any>) => void;
+  doAssert: (actual: SugarElement<any>) => void;
 }
 
 export interface StructAssertAdv {
@@ -46,7 +46,7 @@ export interface ElementFields {
   children?: StructAssert[];
 }
 
-const elementQueue = (items: Element<any>[], container: Option<Element<any>>): ElementQueue => {
+const elementQueue = (items: SugarElement<any>[], container: Option<SugarElement<any>>): ElementQueue => {
   let i = -1;
 
   const context = () => {
@@ -69,9 +69,9 @@ const elementQueue = (items: Element<any>[], container: Option<Element<any>>): E
     );
   };
 
-  const current = () => i >= 0 && i < items.length ? Option.some(items[i]) : Option.none<Element<any>>();
+  const current = () => i >= 0 && i < items.length ? Option.some(items[i]) : Option.none<SugarElement<any>>();
 
-  const peek = () => i + 1 < items.length ? Option.some(items[i + 1]) : Option.none<Element<any>>();
+  const peek = () => i + 1 < items.length ? Option.some(items[i + 1]) : Option.none<SugarElement<any>>();
 
   const take = () => {
     i += 1;
@@ -100,8 +100,8 @@ const elementQueue = (items: Element<any>[], container: Option<Element<any>>): E
 };
 
 const element = (tag: string, fields: ElementFields): StructAssert => {
-  const doAssert = (actual: Element<any>): void => {
-    Assert.eq(() => 'Incorrect node name for: ' + Truncate.getHtml(actual), tag, Node.name(actual));
+  const doAssert = (actual: SugarElement<any>): void => {
+    Assert.eq(() => 'Incorrect node name for: ' + Truncate.getHtml(actual), tag, SugarNode.name(actual));
     const attrs = fields.attrs !== undefined ? fields.attrs : {};
     const classes = fields.classes !== undefined ? fields.classes : [];
     const styles = fields.styles !== undefined ? fields.styles : {};
@@ -127,13 +127,13 @@ const text = (s: StringAssert, combineSiblings = false): StructAssert => {
     queue.take().fold(() => {
       assert.fail('No more nodes, so cannot check if its text is: ' + s.show() + ' for ' + queue.context());
     }, (actual) => {
-      Text.getOption(actual).fold(() => {
+      SugarText.getOption(actual).fold(() => {
         assert.fail('Node is not a text node, so cannot check if its text is: ' + s.show() + ' for ' + queue.context());
       }, (t: string) => {
         let text = t;
         if (combineSiblings) {
-          while (queue.peek().map(Node.isText).is(true)) {
-            text += queue.take().bind(Text.getOption).getOr('');
+          while (queue.peek().map(SugarNode.isText).is(true)) {
+            text += queue.take().bind(SugarText.getOption).getOr('');
           }
         }
         if (s.strAssert === undefined) {
@@ -217,12 +217,12 @@ const anythingStruct: StructAssert = {
   doAssert: Fun.noop
 };
 
-const assertAttrs = (expectedAttrs: Record<string, StringAssert>, actual: Element<any>) => {
+const assertAttrs = (expectedAttrs: Record<string, StringAssert>, actual: SugarElement<any>) => {
   Obj.each(expectedAttrs, (v, k) => {
     if (v.strAssert === undefined) {
       throw new Error(JSON.stringify(v) + ' is not a *string assertion*.\nSpecified in *expected* attributes of ' + Truncate.getHtml(actual));
     }
-    const actualValue = Attr.has(actual, k) ? Attr.get(actual, k) : ApproxComparisons.missing();
+    const actualValue = Attribute.getOpt(actual, k).getOrThunk(ApproxComparisons.missing);
     v.strAssert(
       () => 'Checking attribute: "' + k + '" of ' + Truncate.getHtml(actual) + '\n',
       actualValue
@@ -230,7 +230,7 @@ const assertAttrs = (expectedAttrs: Record<string, StringAssert>, actual: Elemen
   });
 };
 
-const assertClasses = (expectedClasses: ArrayAssert[], actual: Element<any>) => {
+const assertClasses = (expectedClasses: ArrayAssert[], actual: SugarElement<any>) => {
   const actualClasses = Classes.get(actual);
   Arr.each(expectedClasses, (eCls) => {
     if (eCls.arrAssert === undefined) {
@@ -240,7 +240,7 @@ const assertClasses = (expectedClasses: ArrayAssert[], actual: Element<any>) => 
   });
 };
 
-const assertStyles = (expectedStyles: Record<string, StringAssert>, actual: Element<any>) => {
+const assertStyles = (expectedStyles: Record<string, StringAssert>, actual: SugarElement<any>) => {
   Obj.each(expectedStyles, (v, k) => {
     const actualValue = Css.getRaw(actual, k).getOrThunk(ApproxComparisons.missing);
     if (v.strAssert === undefined) {
@@ -253,7 +253,7 @@ const assertStyles = (expectedStyles: Record<string, StringAssert>, actual: Elem
   });
 };
 
-const assertHtml = (expectedHtml: Option<StringAssert>, actual: Element<any>) => {
+const assertHtml = (expectedHtml: Option<StringAssert>, actual: SugarElement<any>) => {
   expectedHtml.each((expected) => {
     const actualHtml = Html.get(actual);
     if (expected.strAssert === undefined) {
@@ -263,7 +263,7 @@ const assertHtml = (expectedHtml: Option<StringAssert>, actual: Element<any>) =>
   });
 };
 
-const assertValue = (expectedValue: Option<StringAssert>, actual: Element<any>) => {
+const assertValue = (expectedValue: Option<StringAssert>, actual: SugarElement<any>) => {
   expectedValue.each((v) => {
     if (v.strAssert === undefined) {
       throw new Error(JSON.stringify(v) + ' is not a *string assertion*.\nSpecified in *expected* value of ' + Truncate.getHtml(actual));

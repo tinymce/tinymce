@@ -3,7 +3,6 @@ import { Cell, Fun, Option } from '@ephox/katamari';
 import { EventArgs, Focus } from '@ephox/sugar';
 
 import * as ElementFromPoint from '../../alien/ElementFromPoint';
-import { AlloyComponent } from '../../api/component/ComponentApi';
 import { TransitionPropertiesSpec } from '../../behaviour/transitioning/TransitioningTypes';
 import * as DropdownUtils from '../../dropdown/DropdownUtils';
 import * as TouchMenuSchema from '../../ui/schema/TouchMenuSchema';
@@ -17,6 +16,7 @@ import { Sandboxing } from '../behaviour/Sandboxing';
 import { Toggling } from '../behaviour/Toggling';
 import { Transitioning } from '../behaviour/Transitioning';
 import { Unselecting } from '../behaviour/Unselecting';
+import { AlloyComponent } from '../component/ComponentApi';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as AlloyEvents from '../events/AlloyEvents';
 import * as AlloyTriggers from '../events/AlloyTriggers';

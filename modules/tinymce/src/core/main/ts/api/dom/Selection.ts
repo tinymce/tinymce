@@ -6,7 +6,7 @@
  */
 
 import { ClientRect, Element, HTMLElement, Node as DomNode, Range, Selection as NativeSelection, Window } from '@ephox/dom-globals';
-import { Compare, Element as SugarElement } from '@ephox/sugar';
+import { Compare, SugarElement } from '@ephox/sugar';
 import { Bookmark } from '../../bookmark/BookmarkTypes';
 import CaretPosition from '../../caret/CaretPosition';
 import * as NodeType from '../../dom/NodeType';

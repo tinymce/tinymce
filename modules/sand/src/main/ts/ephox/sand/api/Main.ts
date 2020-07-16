@@ -1,9 +1,9 @@
-import * as HTMLElement from './HTMLElement';
-import * as Node from './Node';
 import * as PlatformDetection from './PlatformDetection';
+import * as SandHTMLElement from './SandHTMLElement';
+import * as SandNode from './SandNode';
 
 export {
-  HTMLElement,
-  Node,
+  SandHTMLElement,
+  SandNode,
   PlatformDetection
 };

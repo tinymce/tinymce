@@ -1,33 +1,33 @@
 import { document } from '@ephox/dom-globals';
-import { Comment, Element, Node, Text, Truncate } from '@ephox/sugar';
+import { SugarComment, SugarElement, SugarNode, SugarText, Truncate } from '@ephox/sugar';
 import Jsc from '@ephox/wrap-jsverify';
 
-const createTag = (name): Element<any> => {
+const createTag = (name): SugarElement<any> => {
   const partial = name.split('-');
   const tag = partial.length > 0 ? partial[0] : name;
-  return Element.fromTag(tag);
+  return SugarElement.fromTag(tag);
 };
 
 const comment = Jsc.string.smap(
   (s) => {
     const raw = document.createComment(s);
-    return Element.fromDom(raw);
+    return SugarElement.fromDom(raw);
   },
-  Comment.get,
-  (c) => 'Comment[' + Comment.get(c) + ']'
+  SugarComment.get,
+  (c) => 'Comment[' + SugarComment.get(c) + ']'
 );
 
 const elementOfArb = (arb) =>
-  arb.smap(createTag, Node.name, Truncate.getHtml);
+  arb.smap(createTag, SugarNode.name, Truncate.getHtml);
 
 const elementOf = (tag) =>
   createTag(tag);
 
 const textOfArb = (arb) =>
-  arb.smap(Element.fromText, Text.get, Text.get);
+  arb.smap(SugarElement.fromText, SugarText.get, SugarText.get);
 
 const textOf = (s) =>
-  Element.fromText(s);
+  SugarElement.fromText(s);
 
 export {
   elementOfArb,

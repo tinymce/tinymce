@@ -4,8 +4,8 @@ import { AlloyBehaviour, BehaviourConfigDetail, BehaviourConfigSpec } from '../.
 import { LazySink } from '../../api/component/CommonTypes';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
-import { BehaviourState } from '../../behaviour/common/BehaviourState';
 import { AnchorSpec } from '../../positioning/mode/Anchoring';
+import { BehaviourState } from '../common/BehaviourState';
 
 export interface TooltippingBehaviour extends AlloyBehaviour<TooltippingConfigSpec, TooltippingConfig> {
   hideAllExclusive: (comp: AlloyComponent) => void;

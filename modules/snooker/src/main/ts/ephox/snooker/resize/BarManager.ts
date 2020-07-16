@@ -1,7 +1,7 @@
 import { Dragger } from '@ephox/dragster';
 import { Fun, Option } from '@ephox/katamari';
 import { Bindable, Event, Events } from '@ephox/porkbun';
-import { Attr, Body, Class, Compare, Css, DomEvent, Element, SelectorFind } from '@ephox/sugar';
+import { Attribute, Class, Compare, Css, DomEvent, SelectorFind, SugarBody, SugarElement } from '@ephox/sugar';
 import { findClosestContentEditable, isContentEditableTrue } from '../alien/ContentEditable';
 import { ResizeWire } from '../api/ResizeWire';
 import * as Styles from '../style/Styles';
@@ -11,13 +11,13 @@ import { BarPositions, ColInfo, RowInfo } from './BarPositions';
 import * as Bars from './Bars';
 
 export interface DragAdjustHeightEvent {
-  table: () => Element;
+  table: () => SugarElement;
   delta: () => number;
   row: () => number;
 }
 
 export interface DragAdjustWidthEvent {
-  table: () => Element;
+  table: () => SugarElement;
   delta: () => number;
   column: () => number;
 }
@@ -29,8 +29,8 @@ export interface DragAdjustEvents {
     startAdjust: Bindable<{}>;
   };
   trigger: {
-    adjustHeight: (table: Element, delta: number, row: number) => void;
-    adjustWidth: (table: Element, delta: number, column: number) => void;
+    adjustHeight: (table: SugarElement, delta: number, row: number) => void;
+    adjustWidth: (table: SugarElement, delta: number, column: number) => void;
     startAdjust: () => void;
   };
 }
@@ -41,10 +41,10 @@ export const BarManager = function (wire: ResizeWire, direction: BarPositions<Co
   const mutation = BarMutation();
   const resizing = Dragger.transform(mutation, {});
 
-  let hoverTable = Option.none<Element>();
+  let hoverTable = Option.none<SugarElement>();
 
-  const getResizer = function (element: Element, type: string) {
-    return Option.from(Attr.get(element, type));
+  const getResizer = function (element: SugarElement, type: string) {
+    return Option.from(Attribute.get(element, type));
   };
 
   /* Reposition the bar as the user drags */
@@ -60,7 +60,7 @@ export const BarManager = function (wire: ResizeWire, direction: BarPositions<Co
     });
   });
 
-  const getDelta = function (target: Element, dir: string) {
+  const getDelta = function (target: SugarElement, dir: string) {
     const newX = CellUtils.getCssValue(target, dir);
     const oldX = CellUtils.getAttrValue(target, 'data-initial-' + dir, 0);
     return newX - oldX;
@@ -72,13 +72,13 @@ export const BarManager = function (wire: ResizeWire, direction: BarPositions<Co
       hoverTable.each(function (table) {
         getResizer(target, 'data-row').each(function (row) {
           const delta = getDelta(target, 'top');
-          Attr.remove(target, 'data-initial-top');
+          Attribute.remove(target, 'data-initial-top');
           events.trigger.adjustHeight(table, delta, parseInt(row, 10));
         });
 
         getResizer(target, 'data-column').each(function (column) {
           const delta = getDelta(target, 'left');
-          Attr.remove(target, 'data-initial-left');
+          Attribute.remove(target, 'data-initial-left');
           events.trigger.adjustWidth(table, delta, parseInt(column, 10));
         });
 
@@ -88,10 +88,10 @@ export const BarManager = function (wire: ResizeWire, direction: BarPositions<Co
 
   });
 
-  const handler = function (target: Element, dir: string) {
+  const handler = function (target: SugarElement, dir: string) {
     events.trigger.startAdjust();
     mutation.assign(target);
-    Attr.set(target, 'data-initial-' + dir, CellUtils.getCssValue(target, dir));
+    Attribute.set(target, 'data-initial-' + dir, CellUtils.getCssValue(target, dir));
     Class.add(target, resizeBarDragging);
     Css.set(target, 'opacity', '0.2');
     resizing.go(wire.parent());
@@ -108,11 +108,11 @@ export const BarManager = function (wire: ResizeWire, direction: BarPositions<Co
     }
   });
 
-  const isRoot = function (e: Element) {
+  const isRoot = function (e: SugarElement) {
     return Compare.eq(e, wire.view());
   };
 
-  const findClosestEditableTable = (target: Element): Option<Element> => SelectorFind.closest(target, 'table', isRoot).filter((table) => findClosestContentEditable(table, isRoot).exists(isContentEditableTrue));
+  const findClosestEditableTable = (target: SugarElement): Option<SugarElement> => SelectorFind.closest(target, 'table', isRoot).filter((table) => findClosestContentEditable(table, isRoot).exists(isContentEditableTrue));
 
   /* mouseover on table: When the mouse moves within the CONTENT AREA (NOT THE TABLE), refresh the bars. */
   const mouseover = DomEvent.bind(wire.view(), 'mouseover', function (event) {
@@ -123,7 +123,7 @@ export const BarManager = function (wire: ResizeWire, direction: BarPositions<Co
         * This is fairly safe to do frequently; it's a single querySelectorAll() on the content and Arr.map on the result.
         * If we _really_ need to optimise it further, we can start caching the bar references in the wire somehow.
         */
-        if (Body.inBody(event.target())) {
+        if (SugarBody.inBody(event.target())) {
           Bars.destroy(wire);
         }
       },
@@ -141,7 +141,7 @@ export const BarManager = function (wire: ResizeWire, direction: BarPositions<Co
     Bars.destroy(wire);
   };
 
-  const refresh = function (tbl: Element) {
+  const refresh = function (tbl: SugarElement) {
     Bars.refresh(wire, tbl, hdirection, direction);
   };
 

@@ -2,10 +2,10 @@ import { assert, UnitTest } from '@ephox/bedrock-client';
 import { document, HTMLLinkElement } from '@ephox/dom-globals';
 import * as Compare from 'ephox/sugar/api/dom/Compare';
 import * as Link from 'ephox/sugar/api/dom/Link';
-import Element from 'ephox/sugar/api/node/Element';
+import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
 
 UnitTest.test('LinkTest', () => {
-  const realDoc = Element.fromDom(document);
+  const realDoc = SugarElement.fromDom(document);
   const headNodes = document.head.children.length;
 
   const firstLink = Link.addStylesheet('fake://url1/');
@@ -22,8 +22,8 @@ UnitTest.test('LinkTest', () => {
   // counting headNodes as "zero"
   const url1 = document.head.children[headNodes] as HTMLLinkElement;
   const url2 = document.head.children[headNodes + 1] as HTMLLinkElement;
-  assert.eq(true, Compare.eq(firstLink, Element.fromDom(url1)), 'first link element was not equal');
-  assert.eq(true, Compare.eq(secondLink, Element.fromDom(url2)), 'second link element was not equal');
+  assert.eq(true, Compare.eq(firstLink, SugarElement.fromDom(url1)), 'first link element was not equal');
+  assert.eq(true, Compare.eq(secondLink, SugarElement.fromDom(url2)), 'second link element was not equal');
   assertStylesheetLink(url1, 'fake://url1/');
   assertStylesheetLink(url2, 'fake://url2/');
 

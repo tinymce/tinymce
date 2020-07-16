@@ -7,7 +7,7 @@
 
 import { Range } from '@ephox/dom-globals';
 import { Arr, Fun, Option, Options } from '@ephox/katamari';
-import { Compare, Element, Node, Traverse } from '@ephox/sugar';
+import { Compare, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 import DOMUtils from '../api/dom/DOMUtils';
 import Selection from '../api/dom/Selection';
 import TreeWalker from '../api/dom/TreeWalker';
@@ -21,18 +21,18 @@ import * as TableCellSelection from './TableCellSelection';
 const getStartNode = function (rng) {
   const sc = rng.startContainer, so = rng.startOffset;
   if (NodeType.isText(sc)) {
-    return so === 0 ? Option.some(Element.fromDom(sc)) : Option.none();
+    return so === 0 ? Option.some(SugarElement.fromDom(sc)) : Option.none();
   } else {
-    return Option.from(sc.childNodes[so]).map(Element.fromDom);
+    return Option.from(sc.childNodes[so]).map(SugarElement.fromDom);
   }
 };
 
 const getEndNode = function (rng) {
   const ec = rng.endContainer, eo = rng.endOffset;
   if (NodeType.isText(ec)) {
-    return eo === ec.data.length ? Option.some(Element.fromDom(ec)) : Option.none();
+    return eo === ec.data.length ? Option.some(SugarElement.fromDom(ec)) : Option.none();
   } else {
-    return Option.from(ec.childNodes[eo - 1]).map(Element.fromDom);
+    return Option.from(ec.childNodes[eo - 1]).map(SugarElement.fromDom);
   }
 };
 
@@ -49,7 +49,7 @@ const getLastChildren = function (node) {
   return Traverse.lastChild(node).fold(
     Fun.constant([ node ]),
     function (child) {
-      if (Node.name(child) === 'br') {
+      if (SugarNode.name(child) === 'br') {
         return Traverse.prevSibling(child).map(function (sibling) {
           return [ node ].concat(getLastChildren(sibling));
         }).getOr([]);

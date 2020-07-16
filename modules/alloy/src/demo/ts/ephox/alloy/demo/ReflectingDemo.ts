@@ -1,20 +1,20 @@
 import { document } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
-import { Class, Element, Value } from '@ephox/sugar';
+import { Class, SugarElement, Value } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
+import { Reflecting } from 'ephox/alloy/api/behaviour/Reflecting';
+import { Streaming } from 'ephox/alloy/api/behaviour/Streaming';
+import * as DomFactory from 'ephox/alloy/api/component/DomFactory';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
 import { Container } from 'ephox/alloy/api/ui/Container';
-import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
-import { Reflecting } from 'ephox/alloy/api/behaviour/Reflecting';
 import { Input } from 'ephox/alloy/api/ui/Input';
-import { Streaming } from 'ephox/alloy/api/behaviour/Streaming';
-import * as DomFactory from 'ephox/alloy/api/component/DomFactory';
+import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 
 export default (): void => {
   const gui = Gui.create();
-  const body = Element.fromDom(document.body);
+  const body = SugarElement.fromDom(document.body);
   Class.add(gui.element(), 'gui-root-demo-container');
   Attachment.attachSystem(body, gui);
 

@@ -4,7 +4,7 @@ import { ClientRect, document } from '@ephox/dom-globals';
 import { Result } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
-import { Body, Element, SelectorExists } from '@ephox/sugar';
+import { SelectorExists, SugarBody, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 
@@ -14,11 +14,11 @@ UnitTest.asynctest('Editor Dialog Popups Test', (success, failure) => {
   TinyLoader.setupLight(
     (editor, onSuccess, onFailure) => {
       const tinyApis = TinyApis(editor);
-      const doc = Element.fromDom(document);
+      const doc = SugarElement.fromDom(document);
 
       const sWaitForDialogClosed = Waiter.sTryUntil(
         'Waiting for dialog to close',
-        UiFinder.sNotExists(Body.body(), '.tox-dialog')
+        UiFinder.sNotExists(SugarBody.body(), '.tox-dialog')
       );
 
       const sAssertVisibleFocusInside = (cGetFocused, selector: string) => Chain.asStep(doc, [
@@ -30,7 +30,7 @@ UnitTest.asynctest('Editor Dialog Popups Test', (success, failure) => {
           if (!range) {
             return Result.error('Could not find a range at coordinate: (' + middle.x + ', ' + middle.y + ')');
           } else {
-            return SelectorExists.closest(Element.fromDom(range.startContainer), selector) ? Result.value(rect) : Result.error('Range was not within: "' + selector + '". Are you sure that it is on top of the dialog?');
+            return SelectorExists.closest(SugarElement.fromDom(range.startContainer), selector) ? Result.value(rect) : Result.error('Range was not within: "' + selector + '". Are you sure that it is on top of the dialog?');
           }
         })
       ]);
@@ -41,7 +41,7 @@ UnitTest.asynctest('Editor Dialog Popups Test', (success, failure) => {
       Pipeline.async({ }, PlatformDetection.detect().browser.isChrome() ? [
         Log.stepsAsStep('TBA', 'Trigger the colorswatch and check that the swatch appears in front of the dialog', [
           tinyApis.sFocus(),
-          Mouse.sClickOn(Body.body(), 'button:contains("Show Color Dialog")'),
+          Mouse.sClickOn(SugarBody.body(), 'button:contains("Show Color Dialog")'),
           FocusTools.sTryOnSelector('Focus should be on colorinput', doc, 'input'),
           Keyboard.sKeydown(doc, Keys.tab(), { }),
           FocusTools.sTryOnSelector('Focus should be on colorinput button', doc, 'span[aria-haspopup="true"]'),
@@ -57,12 +57,12 @@ UnitTest.asynctest('Editor Dialog Popups Test', (success, failure) => {
         Log.stepsAsStep('TBA', 'Trigger the urlinput and check that the dropdown appears in front of the dialog', [
           tinyApis.sFocus(),
           tinyApis.sSetContent('<p><a href="http://foo">Foo</a> <a href="http://goo">Goo</a></p>'),
-          Mouse.sClickOn(Body.body(), 'button:contains("Show Urlinput Dialog")'),
+          Mouse.sClickOn(SugarBody.body(), 'button:contains("Show Urlinput Dialog")'),
           FocusTools.sTryOnSelector('Focus should be on urlinput', doc, 'input'),
           Keyboard.sKeydown(doc, Keys.down(), { }),
-          UiFinder.sWaitForVisible('Waiting for menu to appear', Body.body(), '.tox-collection__item'),
+          UiFinder.sWaitForVisible('Waiting for menu to appear', SugarBody.body(), '.tox-collection__item'),
           sAssertVisibleFocusInside(Chain.fromChains([
-            Chain.inject(Body.body()),
+            Chain.inject(SugarBody.body()),
             UiFinder.cFindIn('.tox-collection__item--active')
           ]), '.tox-menu'),
           Keyboard.sKeydown(doc, Keys.escape(), { }),

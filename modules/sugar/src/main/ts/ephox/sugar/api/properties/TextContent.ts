@@ -1,10 +1,10 @@
-import { Node as DomNode } from '@ephox/dom-globals';
-import Element from '../node/Element';
+import { Node } from '@ephox/dom-globals';
+import { SugarElement } from '../node/SugarElement';
 
-const get = (element: Element<DomNode>): string | null =>
+const get = (element: SugarElement<Node>): string | null =>
   element.dom().textContent;
 
-const set = (element: Element<DomNode>, value: string): void => {
+const set = (element: SugarElement<Node>, value: string): void => {
   element.dom().textContent = value;
 };
 

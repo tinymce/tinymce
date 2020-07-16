@@ -1,12 +1,12 @@
 import { Chain, Cursors, NamedChain } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Option, Result } from '@ephox/katamari';
-import { Css, Element, Html } from '@ephox/sugar';
+import { Css, Html, SugarElement } from '@ephox/sugar';
 
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as ChainUtils from 'ephox/alloy/test/ChainUtils';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import * as PositionTestUtils from 'ephox/alloy/test/PositionTestUtils';
 import * as Sinks from 'ephox/alloy/test/Sinks';
 
@@ -18,7 +18,7 @@ UnitTest.asynctest('SelectionInDocPositionTest', (success, failure) => {
       content += '<p>paragraph ' + i + '</p>';
     }
 
-    const editor = Element.fromTag('div');
+    const editor = SugarElement.fromTag('div');
     Html.set(editor, content);
 
     const inlineEditor = GuiFactory.build(

@@ -1,33 +1,33 @@
-import { Element as DomElement, Node, Window } from '@ephox/dom-globals';
+import { Element, Node, Window } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
-import { Element, Traverse } from '@ephox/sugar';
+import { SugarElement, Traverse } from '@ephox/sugar';
 import Sizzle from '@ephox/wrap-sizzle';
 
-const toOptionEl = (output: DomElement[]): Option<Element<DomElement>> =>
-  output.length === 0 ? Option.none() : Option.from(output[0]).map(Element.fromDom);
+const toOptionEl = (output: Element[]): Option<SugarElement<Element>> =>
+  output.length === 0 ? Option.none() : Option.from(output[0]).map(SugarElement.fromDom);
 
 /* Petrie makes extensive use of :visible, :has() and :contains() which are sizzle extensions */
-const descendant = (sugarElement: Element<any>, selector: string): Option<Element<DomElement>> => {
-  const siz: DomElement[] = Sizzle(selector, sugarElement.dom());
+const descendant = (sugarElement: SugarElement<any>, selector: string): Option<SugarElement<Element>> => {
+  const siz: Element[] = Sizzle(selector, sugarElement.dom());
   return toOptionEl(siz);
 };
 
-const toArrayEl = (elements: (Node | Window)[]): Element<Node | Window>[] =>
-  Arr.map(elements, Element.fromDom);
+const toArrayEl = (elements: (Node | Window)[]): SugarElement<Node | Window>[] =>
+  Arr.map(elements, SugarElement.fromDom);
 
 /* Petrie makes extensive use of :visible, :has() and :contains() which are sizzle extensions */
-const descendants = (sugarElement: Element<any>, selector: string): Element<any>[] =>
+const descendants = (sugarElement: SugarElement<any>, selector: string): SugarElement<any>[] =>
   toArrayEl(Sizzle(selector, sugarElement.dom()));
 
-const matches = (sugarElement: Element<any>, selector: string): boolean =>
+const matches = (sugarElement: SugarElement<any>, selector: string): boolean =>
   Sizzle.matchesSelector(sugarElement.dom(), selector);
 
-const child = (sugarElement: Element<any>, selector: string): Option<Element<any>> => {
+const child = (sugarElement: SugarElement<any>, selector: string): Option<SugarElement<any>> => {
   const children = Traverse.children(sugarElement);
   return Arr.find(children, (child) => matches(child, selector));
 };
 
-const children = (sugarElement: Element<any>, selector: string): Element<any>[] => {
+const children = (sugarElement: SugarElement<any>, selector: string): SugarElement<any>[] => {
   const children = Traverse.children(sugarElement);
   return Arr.filter(children, (child) => matches(child, selector));
 };

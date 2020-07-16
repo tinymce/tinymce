@@ -6,7 +6,7 @@
  */
 
 import { Fun, Option, Unicode } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import TreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
 import * as ElementType from '../dom/ElementType';
@@ -118,7 +118,7 @@ const getParentBlockName = function (editor: Editor) {
 
 const isListItemParentBlock = function (editor: Editor) {
   return getParentBlock(editor).filter(function (elm) {
-    return ElementType.isListItem(Element.fromDom(elm));
+    return ElementType.isListItem(SugarElement.fromDom(elm));
   }).isSome();
 };
 

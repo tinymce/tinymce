@@ -1,7 +1,7 @@
 import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
 import { HTMLElement } from '@ephox/dom-globals';
 import { Arr, Fun, Option } from '@ephox/katamari';
-import { Compare, Element, Height, SelectorFilter, SelectorFind } from '@ephox/sugar';
+import { Compare, Height, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
 
 import * as Keys from '../alien/Keys';
 import { AlloyComponent } from '../api/component/ComponentApi';
@@ -27,7 +27,7 @@ const create = (cyclicField: FieldProcessorAdt) => {
   ]);
 
   // TODO: Test this
-  const isVisible = (tabbingConfig: TabbingConfig, element: Element<HTMLElement>): boolean => {
+  const isVisible = (tabbingConfig: TabbingConfig, element: SugarElement<HTMLElement>): boolean => {
     const target = tabbingConfig.visibilitySelector.
       bind((sel) => SelectorFind.closest<HTMLElement>(element, sel)).
       getOr(element);
@@ -36,18 +36,18 @@ const create = (cyclicField: FieldProcessorAdt) => {
     return Height.get(target) > 0;
   };
 
-  const findInitial = (component: AlloyComponent, tabbingConfig: TabbingConfig): Option<Element> => {
-    const tabstops: Element[] = SelectorFilter.descendants(component.element(), tabbingConfig.selector);
-    const visibles: Element[] = Arr.filter(tabstops, (elem) => isVisible(tabbingConfig, elem));
+  const findInitial = (component: AlloyComponent, tabbingConfig: TabbingConfig): Option<SugarElement> => {
+    const tabstops: SugarElement[] = SelectorFilter.descendants(component.element(), tabbingConfig.selector);
+    const visibles: SugarElement[] = Arr.filter(tabstops, (elem) => isVisible(tabbingConfig, elem));
 
     return Option.from(visibles[tabbingConfig.firstTabstop]);
   };
 
-  const findCurrent = (component: AlloyComponent, tabbingConfig: TabbingConfig): Option<Element> =>
+  const findCurrent = (component: AlloyComponent, tabbingConfig: TabbingConfig): Option<SugarElement> =>
     tabbingConfig.focusManager.get(component).
       bind((elem) => SelectorFind.closest(elem, tabbingConfig.selector));
 
-  const isTabstop = (tabbingConfig: TabbingConfig, element: Element): boolean =>
+  const isTabstop = (tabbingConfig: TabbingConfig, element: SugarElement): boolean =>
     isVisible(tabbingConfig, element) && tabbingConfig.useTabstopAt(element);
 
   // Fire an alloy focus on the first visible element that matches the selector
@@ -59,12 +59,12 @@ const create = (cyclicField: FieldProcessorAdt) => {
 
   const goFromTabstop = (
     component: AlloyComponent,
-    tabstops: Element[],
+    tabstops: SugarElement[],
     stopIndex: number,
     tabbingConfig: TabbingConfig,
-    cycle: ArrNavigation.ArrCycle<Element>
+    cycle: ArrNavigation.ArrCycle<SugarElement>
   ): Option<boolean> =>
-    cycle(tabstops, stopIndex, (elem: Element) => isTabstop(tabbingConfig, elem)).
+    cycle(tabstops, stopIndex, (elem: SugarElement) => isTabstop(tabbingConfig, elem)).
       fold(
         // Even if there is only one, still capture the event if cycling
         () => tabbingConfig.cyclic ? Option.some<boolean>(true) : Option.none(),
@@ -79,13 +79,13 @@ const create = (cyclicField: FieldProcessorAdt) => {
     component: AlloyComponent,
     _simulatedEvent: NativeSimulatedEvent,
     tabbingConfig: TabbingConfig,
-    cycle: ArrNavigation.ArrCycle<Element>
+    cycle: ArrNavigation.ArrCycle<SugarElement>
   ): Option<boolean> => {
     // 1. Find our current tabstop
     // 2. Find the index of that tabstop
     // 3. Cycle the tabstop
     // 4. Fire alloy focus on the resultant tabstop
-    const tabstops: Element[] = SelectorFilter.descendants(component.element(), tabbingConfig.selector);
+    const tabstops: SugarElement[] = SelectorFilter.descendants(component.element(), tabbingConfig.selector);
     return findCurrent(component, tabbingConfig).bind((tabstop) => {
       // focused component
       const optStopIndex = Arr.findIndex(tabstops, Fun.curry(Compare.eq, tabstop));

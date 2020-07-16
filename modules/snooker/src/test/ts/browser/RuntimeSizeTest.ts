@@ -1,7 +1,7 @@
 import { assert, TestLabel, UnitTest } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Attr, Body, Css, Element, Html, Insert, InsertAll, Remove, SelectorFilter } from '@ephox/sugar';
+import { Attribute, Css, Html, Insert, InsertAll, Remove, SelectorFilter, SugarBody, SugarElement } from '@ephox/sugar';
 import * as RuntimeSize from 'ephox/snooker/resize/RuntimeSize';
 
 interface TableModel {
@@ -16,20 +16,20 @@ UnitTest.test('Runtime Size Test', () => {
 
   const random = (min: number, max: number) => Math.round(Math.random() * (max - min) + min);
 
-  const getOuterHeight = (elm: Element) => Math.round(elm.dom().getBoundingClientRect().height);
-  const getOuterWidth = (elm: Element) => Math.round(elm.dom().getBoundingClientRect().width);
+  const getOuterHeight = (elm: SugarElement) => Math.round(elm.dom().getBoundingClientRect().height);
+  const getOuterWidth = (elm: SugarElement) => Math.round(elm.dom().getBoundingClientRect().width);
 
-  const measureCells = (getSize: (e: Element) => number, table: Element) => Arr.map(SelectorFilter.descendants(table, 'td'), getSize);
+  const measureCells = (getSize: (e: SugarElement) => number, table: SugarElement) => Arr.map(SelectorFilter.descendants(table, 'td'), getSize);
 
-  const measureTable = (table: Element, getSize: (e: Element) => number) => ({
+  const measureTable = (table: SugarElement, getSize: (e: SugarElement) => number) => ({
     total: getSize(table),
     cells: measureCells(getSize, table)
   });
 
-  const setHeight = (table: Element, value: string) => Css.set(table, 'height', value);
-  const setWidth = (table: Element, value: string) => Css.set(table, 'width', value);
+  const setHeight = (table: SugarElement, value: string) => Css.set(table, 'height', value);
+  const setWidth = (table: SugarElement, value: string) => Css.set(table, 'width', value);
 
-  const resizeTableBy = (table: Element, setSize: (e: Element, v: string) => void, tableInfo: { total: number; cells: number[] }, delta: number) => {
+  const resizeTableBy = (table: SugarElement, setSize: (e: SugarElement, v: string) => void, tableInfo: { total: number; cells: number[] }, delta: number) => {
     setSize(table, '');
     Arr.map(SelectorFilter.descendants(table, 'td'), (cell, i) => {
       setSize(cell, (tableInfo.cells[i] + delta) + 'px');
@@ -41,7 +41,7 @@ UnitTest.test('Runtime Size Test', () => {
     assert.eq(true, Math.abs(a - b) <= 1, msg);
   };
 
-  const assertSize = (s1: { total: number; cells: number[] }, table: Element, getOuterSize: (e: Element) => number, message: string) => {
+  const assertSize = (s1: { total: number; cells: number[] }, table: SugarElement, getOuterSize: (e: SugarElement) => number, message: string) => {
     const s2 = measureTable(table, getOuterSize);
     const cellAssertEq = platform.browser.isIE() || platform.browser.isEdge() ? fuzzyAssertEq : assert.eq;
 
@@ -69,12 +69,12 @@ UnitTest.test('Runtime Size Test', () => {
   };
 
   const createTable = (rows: number, cols: number) => {
-    const table = Element.fromTag('table');
-    const tbody = Element.fromTag('tbody');
+    const table = SugarElement.fromTag('table');
+    const tbody = SugarElement.fromTag('tbody');
 
-    Attr.set(table, 'border', '1');
-    Attr.set(table, 'cellpadding', random(0, 10).toString());
-    Attr.set(table, 'cellspacing', random(0, 10).toString());
+    Attribute.set(table, 'border', '1');
+    Attribute.set(table, 'cellpadding', random(0, 10).toString());
+    Attribute.set(table, 'cellspacing', random(0, 10).toString());
 
     Css.setAll(table, {
       'border-collapse': randomValue([ 'collapse', 'separate' ]),
@@ -87,10 +87,10 @@ UnitTest.test('Runtime Size Test', () => {
     });
 
     const rowElms = Arr.range(rows, () => {
-      const row = Element.fromTag('tr');
+      const row = SugarElement.fromTag('tr');
 
       Arr.range(cols, () => {
-        const cell = Element.fromTag('td');
+        const cell = SugarElement.fromTag('td');
 
         Css.setAll(cell, {
           'width': randomSize(1, 100),
@@ -106,7 +106,7 @@ UnitTest.test('Runtime Size Test', () => {
           'border-right': randomBorder(0, 5, 'green')
         });
 
-        const content = Element.fromTag('div');
+        const content = SugarElement.fromTag('div');
 
         Css.setAll(content, {
           width: '10px',
@@ -122,7 +122,7 @@ UnitTest.test('Runtime Size Test', () => {
 
     Insert.append(table, tbody);
     InsertAll.append(tbody, rowElms);
-    Insert.append(Body.body(), table);
+    Insert.append(SugarBody.body(), table);
 
     return table;
   };
@@ -140,8 +140,8 @@ UnitTest.test('Runtime Size Test', () => {
   const getHeightDelta = (model: TableModel, delta: number) => model.rows * delta;
   const getWidthDelta = (model: TableModel, delta: number) => model.cols * delta;
 
-  const testTableSize = (createTable: (rows: number, cols: number) => Element, getOuterSize: (e: Element) => number, getSize: (e: Element) => number,
-                         setSize: (e: Element, v: string) => void, getTotalDelta: (model: TableModel, delta: number) => number) => () => {
+  const testTableSize = (createTable: (rows: number, cols: number) => SugarElement, getOuterSize: (e: SugarElement) => number, getSize: (e: SugarElement) => number,
+                         setSize: (e: SugarElement, v: string) => void, getTotalDelta: (model: TableModel, delta: number) => number) => () => {
     const rows = random(1, 5);
     const cols = random(1, 5);
 

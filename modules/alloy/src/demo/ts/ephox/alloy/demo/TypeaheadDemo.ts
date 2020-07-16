@@ -1,6 +1,6 @@
 import { console, document } from '@ephox/dom-globals';
 import { Arr, Future, Option, Result, Strings } from '@ephox/katamari';
-import { Class, Element, Value } from '@ephox/sugar';
+import { Class, SugarElement, Value } from '@ephox/sugar';
 
 import { Representing } from 'ephox/alloy/api/behaviour/Representing';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
@@ -18,7 +18,7 @@ import * as DemoRenders from './forms/DemoRenders';
 
 export default (): void => {
   const gui = Gui.create();
-  const body = Element.fromDom(document.body);
+  const body = SugarElement.fromDom(document.body);
   Class.add(gui.element(), 'gui-root-demo-container');
   Attachment.attachSystem(body, gui);
 

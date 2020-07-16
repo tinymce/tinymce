@@ -1,7 +1,7 @@
 import { Assertions, Log, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
-import { Class, Element, SelectorFilter } from '@ephox/sugar';
+import { Class, SelectorFilter, SugarElement } from '@ephox/sugar';
 
 import SearchreplacePlugin from 'tinymce/plugins/searchreplace/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
@@ -27,7 +27,7 @@ UnitTest.asynctest('browser.tinymce.plugins.searchreplace.SearchReplaceDialogCyc
     const sSelectPreference = (name: string) => Utils.sSelectPreference(tinyUi, name);
 
     const sAssertMatchFound = (index: number) => Step.sync(() => {
-      const matches = SelectorFilter.descendants(Element.fromDom(editor.getBody()), '.mce-match-marker');
+      const matches = SelectorFilter.descendants(SugarElement.fromDom(editor.getBody()), '.mce-match-marker');
       const elem = matches[index];
       Assertions.assertEq(`Check match ${index} is marked as selected`, true, Class.has(elem, 'mce-match-marker-selected'));
     });

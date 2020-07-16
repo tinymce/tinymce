@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node, Range, Element as DomElement } from '@ephox/dom-globals';
+import { Element, Node, Range } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
-import { Compare, Element, Focus } from '@ephox/sugar';
+import { Compare, Focus, SugarElement } from '@ephox/sugar';
 import Selection from '../api/dom/Selection';
 import Editor from '../api/Editor';
 import Env from '../api/Env';
@@ -18,12 +18,12 @@ import * as RangeNodes from '../selection/RangeNodes';
 import * as SelectionBookmark from '../selection/SelectionBookmark';
 import * as FocusController from './FocusController';
 
-const getContentEditableHost = (editor: Editor, node: Node): DomElement =>
+const getContentEditableHost = (editor: Editor, node: Node): Element =>
   editor.dom.getParent(node, (node) => editor.dom.getContentEditable(node) === 'true');
 
-const getCollapsedNode = (rng: Range): Option<Element<Node>> => rng.collapsed ? Option.from(RangeNodes.getNode(rng.startContainer, rng.startOffset)).map(Element.fromDom) : Option.none();
+const getCollapsedNode = (rng: Range): Option<SugarElement<Node>> => rng.collapsed ? Option.from(RangeNodes.getNode(rng.startContainer, rng.startOffset)).map(SugarElement.fromDom) : Option.none();
 
-const getFocusInElement = (root: Element<any>, rng: Range): Option<Element<any>> => getCollapsedNode(rng).bind(function (node) {
+const getFocusInElement = (root: SugarElement<any>, rng: Range): Option<SugarElement<any>> => getCollapsedNode(rng).bind(function (node) {
   if (ElementType.isTableSection(node)) {
     return Option.some(node);
   } else if (Compare.contains(root, node) === false) {
@@ -34,7 +34,7 @@ const getFocusInElement = (root: Element<any>, rng: Range): Option<Element<any>>
 });
 
 const normalizeSelection = (editor: Editor, rng: Range): void => {
-  getFocusInElement(Element.fromDom(editor.getBody()), rng).bind(function (elm) {
+  getFocusInElement(SugarElement.fromDom(editor.getBody()), rng).bind(function (elm) {
     return CaretFinder.firstPositionIn(elm.dom());
   }).fold(
     () => { editor.selection.normalize(); return; },
@@ -56,13 +56,13 @@ const focusBody = (body) => {
   }
 };
 
-const hasElementFocus = (elm: Element): boolean => Focus.hasFocus(elm) || Focus.search(elm).isSome();
+const hasElementFocus = (elm: SugarElement): boolean => Focus.hasFocus(elm) || Focus.search(elm).isSome();
 
-const hasIframeFocus = (editor: Editor): boolean => editor.iframeElement && Focus.hasFocus(Element.fromDom(editor.iframeElement));
+const hasIframeFocus = (editor: Editor): boolean => editor.iframeElement && Focus.hasFocus(SugarElement.fromDom(editor.iframeElement));
 
 const hasInlineFocus = (editor: Editor): boolean => {
   const rawBody = editor.getBody();
-  return rawBody && hasElementFocus(Element.fromDom(rawBody));
+  return rawBody && hasElementFocus(SugarElement.fromDom(rawBody));
 };
 
 const hasUiFocus = (editor: Editor): boolean =>

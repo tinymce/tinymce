@@ -13,7 +13,7 @@ import { Types } from '@ephox/bridge';
 import { HTMLElement } from '@ephox/dom-globals';
 import { Arr, Fun } from '@ephox/katamari';
 
-import { Attr, Class, Element, EventArgs, Focus, Html, SelectorFilter, SelectorFind } from '@ephox/sugar';
+import { Attribute, Class, EventArgs, Focus, Html, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
 import I18n from 'tinymce/core/api/util/I18n';
 import { renderFormFieldWith, renderLabel } from 'tinymce/themes/silver/ui/alien/FieldLabeller';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
@@ -31,9 +31,9 @@ export const renderCollection = (spec: CollectionSpec, providersBackstage: UiFac
   // DUPE with TextField.
   const pLabel = spec.label.map((label) => renderLabel(label, providersBackstage));
 
-  const runOnItem = <T extends EventFormat>(f: (c: AlloyComponent, se: SimulatedEvent<T>, tgt: Element, itemValue: string) => void) => (comp: AlloyComponent, se: SimulatedEvent<T>) => {
-    SelectorFind.closest(se.event().target(), '[data-collection-item-value]').each((target: Element<HTMLElement>) => {
-      f(comp, se, target, Attr.get(target, 'data-collection-item-value'));
+  const runOnItem = <T extends EventFormat>(f: (c: AlloyComponent, se: SimulatedEvent<T>, tgt: SugarElement, itemValue: string) => void) => (comp: AlloyComponent, se: SimulatedEvent<T>) => {
+    SelectorFind.closest(se.event().target(), '[data-collection-item-value]').each((target: SugarElement<HTMLElement>) => {
+      f(comp, se, target, Attribute.get(target, 'data-collection-item-value'));
     });
   };
 
@@ -124,13 +124,13 @@ export const renderCollection = (spec: CollectionSpec, providersBackstage: UiFac
         onDisabled: (comp) => {
           iterCollectionItems(comp, (childElm) => {
             Class.add(childElm, 'tox-collection__item--state-disabled');
-            Attr.set(childElm, 'aria-disabled', true);
+            Attribute.set(childElm, 'aria-disabled', true);
           });
         },
         onEnabled: (comp) => {
           iterCollectionItems(comp, (childElm) => {
             Class.remove(childElm, 'tox-collection__item--state-disabled');
-            Attr.remove(childElm, 'aria-disabled');
+            Attribute.remove(childElm, 'aria-disabled');
           });
         }
       }),

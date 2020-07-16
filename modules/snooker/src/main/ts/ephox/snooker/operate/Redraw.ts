@@ -1,24 +1,24 @@
 import { HTMLTableRowElement } from '@ephox/dom-globals';
 import { Arr, Fun } from '@ephox/katamari';
-import { Attr, Element, Insert, InsertAll, Remove, Replication, SelectorFilter, SelectorFind, Traverse } from '@ephox/sugar';
+import { Attribute, Insert, InsertAll, Remove, Replication, SelectorFilter, SelectorFind, SugarElement, Traverse } from '@ephox/sugar';
 import { Detail, DetailNew, RowDataNew } from '../api/Structs';
 
-const setIfNot = function (element: Element, property: string, value: number, ignore: number): void {
+const setIfNot = function (element: SugarElement, property: string, value: number, ignore: number): void {
   if (value === ignore) {
-    Attr.remove(element, property);
+    Attribute.remove(element, property);
   } else {
-    Attr.set(element, property, value);
+    Attribute.set(element, property, value);
   }
 };
 
 interface NewRowsAndCells {
-  readonly newRows: Element[];
-  readonly newCells: Element[];
+  readonly newRows: SugarElement[];
+  readonly newCells: SugarElement[];
 }
 
-const render = function <T extends DetailNew> (table: Element, grid: RowDataNew<T>[]): NewRowsAndCells {
-  const newRows: Element[] = [];
-  const newCells: Element[] = [];
+const render = function <T extends DetailNew> (table: SugarElement, grid: RowDataNew<T>[]): NewRowsAndCells {
+  const newRows: SugarElement[] = [];
+  const newCells: SugarElement[] = [];
 
   const insertThead = Arr.last(SelectorFilter.children(table, 'caption,colgroup')).fold(
     () => Fun.curry(Insert.prepend, table),
@@ -27,7 +27,7 @@ const render = function <T extends DetailNew> (table: Element, grid: RowDataNew<
 
   const renderSection = function (gridSection: RowDataNew<T>[], sectionName: 'thead' | 'tbody' | 'tfoot') {
     const section = SelectorFind.child(table, sectionName).getOrThunk(function () {
-      const tb = Element.fromTag(sectionName, Traverse.owner(table).dom());
+      const tb = SugarElement.fromTag(sectionName, Traverse.owner(table).dom());
       sectionName === 'thead' ? insertThead(tb) : Insert.append(table, tb); // mutation
       return tb;
     });
@@ -94,7 +94,7 @@ const render = function <T extends DetailNew> (table: Element, grid: RowDataNew<
   };
 };
 
-const copy = <T extends Detail> (grid: RowDataNew<T>[]): Element<HTMLTableRowElement>[] => Arr.map(grid, (row) => {
+const copy = <T extends Detail> (grid: RowDataNew<T>[]): SugarElement<HTMLTableRowElement>[] => Arr.map(grid, (row) => {
   // Shallow copy the row element
   const tr = Replication.shallow(row.element());
   Arr.each(row.cells(), (cell) => {

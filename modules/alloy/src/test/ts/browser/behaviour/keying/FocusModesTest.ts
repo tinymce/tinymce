@@ -1,6 +1,6 @@
 import { FocusTools, GeneralSteps, Keyboard, Keys, Log, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Body, Element, Focus, SelectorFind } from '@ephox/sugar';
+import { Focus, SelectorFind, SugarBody, SugarElement } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
@@ -8,8 +8,8 @@ import { Keying } from 'ephox/alloy/api/behaviour/Keying';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { AlloySpec } from 'ephox/alloy/api/component/SpecTypes';
-import { FocusInsideModes } from 'ephox/alloy/keying/KeyingModeTypes';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
+import { FocusInsideModes } from 'ephox/alloy/keying/KeyingModeTypes';
 
 UnitTest.asynctest('Focus Modes Test', (success, failure) => {
 
@@ -70,14 +70,14 @@ UnitTest.asynctest('Focus Modes Test', (success, failure) => {
     const onFocusComp = SelectorFind.descendant(component.element(), '.onFocus').bind((elem) => component.getSystem().getByDom(elem).toOption()).getOrDie('Could not find "onFocus" div');
 
     const sResetFocus = Step.sync(() => {
-      Focus.focus(Body.body());
+      Focus.focus(SugarBody.body());
     });
 
     const sFocusIn = (comp: AlloyComponent) => Step.sync(() => {
       Keying.focusIn(comp);
     });
 
-    const sTriggerFocus = (target: Element) => Step.sync(() => {
+    const sTriggerFocus = (target: SugarElement) => Step.sync(() => {
       component.getSystem().triggerFocus(target, component.element());
     });
 

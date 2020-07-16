@@ -1,10 +1,10 @@
 import { Assertions, Chain, GeneralSteps, Logger, Pipeline } from '@ephox/agar';
-import { Arr } from '@ephox/katamari';
-import { Hierarchy, Insert, Element, Html } from '@ephox/sugar';
-import * as FragmentReader from 'tinymce/core/selection/FragmentReader';
-import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
+import { Arr } from '@ephox/katamari';
+import { Hierarchy, Html, Insert, SugarElement } from '@ephox/sugar';
+import * as FragmentReader from 'tinymce/core/selection/FragmentReader';
+import ViewBlock from '../../module/test/ViewBlock';
 
 UnitTest.asynctest('browser.tinymce.core.selection.FragmentReaderTest', function (success, failure) {
   const viewBlock = ViewBlock();
@@ -17,32 +17,32 @@ UnitTest.asynctest('browser.tinymce.core.selection.FragmentReaderTest', function
 
   const cReadFragment = function (startPath, startOffset, endPath, endOffset) {
     return Chain.mapper(function (viewBlock: any) {
-      const sc = Hierarchy.follow(Element.fromDom(viewBlock.get()), startPath).getOrDie();
-      const ec = Hierarchy.follow(Element.fromDom(viewBlock.get()), endPath).getOrDie();
+      const sc = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), startPath).getOrDie();
+      const ec = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), endPath).getOrDie();
       const rng = document.createRange();
 
       rng.setStart(sc.dom(), startOffset);
       rng.setEnd(ec.dom(), endOffset);
 
-      return FragmentReader.read(Element.fromDom(viewBlock.get()), [ rng ]);
+      return FragmentReader.read(SugarElement.fromDom(viewBlock.get()), [ rng ]);
     });
   };
 
   const cReadFragmentCells = function (paths) {
     return Chain.mapper(function (viewBlock: any) {
       const ranges = Arr.map(paths, function (path) {
-        const container = Hierarchy.follow(Element.fromDom(viewBlock.get()), path).getOrDie();
+        const container = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), path).getOrDie();
         const rng = document.createRange();
         rng.selectNode(container.dom());
         return rng;
       });
 
-      return FragmentReader.read(Element.fromDom(viewBlock.get()), ranges);
+      return FragmentReader.read(SugarElement.fromDom(viewBlock.get()), ranges);
     });
   };
 
   const getFragmentHtml = function (fragment) {
-    const elm = Element.fromTag('div');
+    const elm = SugarElement.fromTag('div');
     Insert.append(elm, fragment);
     return Html.get(elm);
   };

@@ -1,9 +1,9 @@
 import { Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
-import { Hierarchy, Element } from '@ephox/sugar';
-import * as RangeNormalizer from 'tinymce/core/selection/RangeNormalizer';
-import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
+import { Hierarchy, SugarElement } from '@ephox/sugar';
+import * as RangeNormalizer from 'tinymce/core/selection/RangeNormalizer';
+import ViewBlock from '../../module/test/ViewBlock';
 
 UnitTest.asynctest('browser.tinymce.core.selection.RangeNormalizerTest', function (success, failure) {
   const viewBlock = ViewBlock();
@@ -20,8 +20,8 @@ UnitTest.asynctest('browser.tinymce.core.selection.RangeNormalizerTest', functio
 
   const mCreateRange = function (startPath, startOffset, endPath, endOffset) {
     return Step.stateful(function (_value, next, _die) {
-      const startContainer = Hierarchy.follow(Element.fromDom(viewBlock.get()), startPath).getOrDie();
-      const endContainer = Hierarchy.follow(Element.fromDom(viewBlock.get()), endPath).getOrDie();
+      const startContainer = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), startPath).getOrDie();
+      const endContainer = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), endPath).getOrDie();
       const rng = document.createRange();
       rng.setStart(startContainer.dom(), startOffset);
       rng.setEnd(endContainer.dom(), endOffset);
@@ -31,12 +31,12 @@ UnitTest.asynctest('browser.tinymce.core.selection.RangeNormalizerTest', functio
 
   const mAssertRange = function (startPath, startOffset, endPath, endOffset) {
     return Step.stateful(function (value: any, next, _die) {
-      const startContainer = Hierarchy.follow(Element.fromDom(viewBlock.get()), startPath).getOrDie();
-      const endContainer = Hierarchy.follow(Element.fromDom(viewBlock.get()), endPath).getOrDie();
+      const startContainer = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), startPath).getOrDie();
+      const endContainer = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), endPath).getOrDie();
 
-      Assertions.assertDomEq('Should be expected startContainer', startContainer, Element.fromDom(value.startContainer));
+      Assertions.assertDomEq('Should be expected startContainer', startContainer, SugarElement.fromDom(value.startContainer));
       Assertions.assertEq('Should be expected startOffset', startOffset, value.startOffset);
-      Assertions.assertDomEq('Should be expected endContainer', endContainer, Element.fromDom(value.endContainer));
+      Assertions.assertDomEq('Should be expected endContainer', endContainer, SugarElement.fromDom(value.endContainer));
       Assertions.assertEq('Should be expected endOffset', endOffset, value.endOffset);
 
       next(value);

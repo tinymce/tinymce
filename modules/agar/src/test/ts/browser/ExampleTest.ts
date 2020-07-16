@@ -1,6 +1,6 @@
 import { UnitTest } from '@ephox/bedrock-client';
 import { document, setTimeout } from '@ephox/dom-globals';
-import { Class, Css, DomEvent, Element, Html, Insert, InsertAll, Remove } from '@ephox/sugar';
+import { Class, Css, DomEvent, Html, Insert, InsertAll, Remove, SugarElement } from '@ephox/sugar';
 import { Chain } from 'ephox/agar/api/Chain';
 import * as ChainSequence from 'ephox/agar/api/ChainSequence';
 import * as Guard from 'ephox/agar/api/Guard';
@@ -11,15 +11,15 @@ import * as UiFinder from 'ephox/agar/api/UiFinder';
 UnitTest.asynctest('Example for Tutorial', (success, failure) => {
 
   const makeSource = () => {
-    const editor = Element.fromTag('div');
+    const editor = SugarElement.fromTag('div');
     Class.add(editor, 'editor');
     // Css.set(editor, 'display', 'none');
 
-    const showButton = Element.fromTag('button');
+    const showButton = SugarElement.fromTag('button');
     Class.add(showButton, 'show');
     Html.set(showButton, 'Show');
 
-    const dialog = Element.fromTag('div');
+    const dialog = SugarElement.fromTag('div');
     Class.add(dialog, 'dialog');
     Css.setAll(dialog, {
       width: '300px',
@@ -30,10 +30,10 @@ UnitTest.asynctest('Example for Tutorial', (success, failure) => {
       top: '100px',
       background: 'white'
     });
-    const dialogContent = Element.fromTag('textarea');
+    const dialogContent = SugarElement.fromTag('textarea');
     Html.set(dialogContent, 'Look at this dialog ... wow!');
 
-    const cancelButton = Element.fromTag('button');
+    const cancelButton = SugarElement.fromTag('button');
     Html.set(cancelButton, 'Cancel');
     Class.add(cancelButton, 'cancel');
 
@@ -42,7 +42,7 @@ UnitTest.asynctest('Example for Tutorial', (success, failure) => {
     Insert.append(editor, showButton);
 
     setTimeout(() => {
-      Insert.append(Element.fromDom(document.body), editor);
+      Insert.append(SugarElement.fromDom(document.body), editor);
     }, 5);
 
     const onClick = DomEvent.bind(showButton, 'click', () => {
@@ -64,7 +64,7 @@ UnitTest.asynctest('Example for Tutorial', (success, failure) => {
 
   const source = makeSource();
 
-  const body = Element.fromDom(document.body);
+  const body = SugarElement.fromDom(document.body);
 
   Pipeline.runStep({},
     // Inject as the first input: body

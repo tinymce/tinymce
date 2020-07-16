@@ -1,14 +1,14 @@
 import { Assertions, Chain, GeneralSteps, Logger, Pipeline } from '@ephox/agar';
-import { Arr } from '@ephox/katamari';
-import { Hierarchy, Element, Node } from '@ephox/sugar';
-import * as Parents from 'tinymce/core/dom/Parents';
 import { UnitTest } from '@ephox/bedrock-client';
+import { Arr } from '@ephox/katamari';
+import { Hierarchy, SugarElement, SugarNode } from '@ephox/sugar';
+import * as Parents from 'tinymce/core/dom/Parents';
 
 UnitTest.asynctest('browser.tinymce.core.dom.ParentsTest', function (success, failure) {
 
   const cCreateStructure = function (html) {
     return Chain.injectThunked(function () {
-      return Element.fromHtml(html);
+      return SugarElement.fromHtml(html);
     });
   };
 
@@ -37,8 +37,8 @@ UnitTest.asynctest('browser.tinymce.core.dom.ParentsTest', function (success, fa
   };
 
   const cAssertElementNames = function (expectedNames) {
-    return Chain.mapper(function (parents: Element[]) {
-      const names = Arr.map(parents, Node.name);
+    return Chain.mapper(function (parents: SugarElement[]) {
+      const names = Arr.map(parents, SugarNode.name);
       Assertions.assertEq('Should be expected names', expectedNames, names);
       return {};
     });
@@ -46,7 +46,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.ParentsTest', function (success, fa
 
   const hasName = function (name) {
     return function (elm) {
-      return Node.name(elm) === name;
+      return SugarNode.name(elm) === name;
     };
   };
 

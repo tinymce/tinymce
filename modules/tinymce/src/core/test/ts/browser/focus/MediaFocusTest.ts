@@ -1,7 +1,7 @@
 import { FocusTools, Log, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.core.focus.MediaFocusTest', (success, failure) => {
@@ -9,7 +9,7 @@ UnitTest.asynctest('browser.tinymce.core.focus.MediaFocusTest', (success, failur
 
   TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
-    const editorBody = Element.fromDom(editor.getBody());
+    const editorBody = SugarElement.fromDom(editor.getBody());
 
     Pipeline.async({}, [
       Log.stepsAsStep('TINY-4211', 'Focus media will select the object', [

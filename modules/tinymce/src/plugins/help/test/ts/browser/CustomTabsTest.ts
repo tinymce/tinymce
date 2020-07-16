@@ -3,7 +3,7 @@ import { assert, UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { Editor as McEditor } from '@ephox/mcagar';
-import { Element, Html } from '@ephox/sugar';
+import { Html, SugarElement } from '@ephox/sugar';
 import HelpPlugin from 'tinymce/plugins/help/Plugin';
 import Editor from '../../../../../core/main/ts/api/Editor';
 import Theme from '../../../../../themes/silver/main/ts/Theme';
@@ -13,7 +13,7 @@ UnitTest.asynctest('Custom Help Tabs test', (success, failure) => {
   HelpPlugin();
   Theme();
 
-  const doc = Element.fromDom(document);
+  const doc = SugarElement.fromDom(document);
 
   const compareTabNames = (expectedNames: string[]) => Chain.op((editor: Editor) => {
     editor.execCommand('mceHelp');

@@ -7,12 +7,11 @@
 
 import {
   AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, Composing, CustomEvent, Disabling,
-  FormField as AlloyFormField, Invalidating, Memento, NativeEvents, Representing, SketchSpec, SystemEvents, Tabstopping,
-  Typeahead as AlloyTypeahead
+  FormField as AlloyFormField, Invalidating, Memento, NativeEvents, Representing, SketchSpec, SystemEvents, Tabstopping, Typeahead as AlloyTypeahead
 } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
 import { Arr, Fun, Future, FutureResult, Id, Option, Result } from '@ephox/katamari';
-import { Attr, Traverse } from '@ephox/sugar';
+import { Attribute, Traverse } from '@ephox/sugar';
 
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { UiFactoryBackstageForUrlInput } from '../../backstage/UrlInputBackstage';
@@ -96,7 +95,7 @@ export const renderUrlInput = (spec: UrlInputSpec, backstage: UiFactoryBackstage
           notify: {
             onInvalid: (comp: AlloyComponent, err: string) => {
               memInvalidIcon.getOpt(comp).each((invalidComp) => {
-                Attr.set(invalidComp.element(), 'title', providersBackstage.translate(err));
+                Attribute.set(invalidComp.element(), 'title', providersBackstage.translate(err));
               });
             }
           },

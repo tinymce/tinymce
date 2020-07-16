@@ -1,9 +1,9 @@
 import { Objects } from '@ephox/boulder';
 import { Id, Obj, Option } from '@ephox/katamari';
 
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { AlloySpec, PremadeSpec } from '../../api/component/SpecTypes';
 import * as FunctionAnnotator from '../../debugging/FunctionAnnotator';
+import { AlloyComponent } from '../component/ComponentApi';
+import { AlloySpec, PremadeSpec } from '../component/SpecTypes';
 
 const premadeTag = Id.generate('alloy-premade');
 

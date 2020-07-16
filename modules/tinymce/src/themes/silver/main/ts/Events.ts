@@ -6,9 +6,9 @@
  */
 
 import { Attachment, Channels, Gui, SystemEvents } from '@ephox/alloy';
-import { document, MouseEvent, Node as DomNode, UIEvent } from '@ephox/dom-globals';
+import { document, MouseEvent, Node, UIEvent } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
-import { DomEvent, Element, EventArgs } from '@ephox/sugar';
+import { DomEvent, EventArgs, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 
 const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMothership: Gui.GuiSystem) => {
@@ -27,23 +27,23 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMothership: Gui.GuiS
   const fireDismissPopups = (evt: EventArgs) => broadcastOn(Channels.dismissPopups(), { target: evt.target() });
 
   // Document touch events
-  const onTouchstart = DomEvent.bind(Element.fromDom(document), 'touchstart', fireDismissPopups);
-  const onTouchmove = DomEvent.bind(Element.fromDom(document), 'touchmove', (evt) => broadcastEvent(SystemEvents.documentTouchmove(), evt));
-  const onTouchend = DomEvent.bind(Element.fromDom(document), 'touchend', (evt) => broadcastEvent(SystemEvents.documentTouchend(), evt));
+  const onTouchstart = DomEvent.bind(SugarElement.fromDom(document), 'touchstart', fireDismissPopups);
+  const onTouchmove = DomEvent.bind(SugarElement.fromDom(document), 'touchmove', (evt) => broadcastEvent(SystemEvents.documentTouchmove(), evt));
+  const onTouchend = DomEvent.bind(SugarElement.fromDom(document), 'touchend', (evt) => broadcastEvent(SystemEvents.documentTouchend(), evt));
 
   // Document mouse events
-  const onMousedown = DomEvent.bind(Element.fromDom(document), 'mousedown', fireDismissPopups);
-  const onMouseup = DomEvent.bind(Element.fromDom(document), 'mouseup', (evt) => {
+  const onMousedown = DomEvent.bind(SugarElement.fromDom(document), 'mousedown', fireDismissPopups);
+  const onMouseup = DomEvent.bind(SugarElement.fromDom(document), 'mouseup', (evt) => {
     if (evt.raw().button === 0) {
       broadcastOn(Channels.mouseReleased(), { target: evt.target() });
     }
   });
 
   // Editor content events
-  const onContentClick = (raw: UIEvent) => broadcastOn(Channels.dismissPopups(), { target: Element.fromDom(raw.target as DomNode) });
+  const onContentClick = (raw: UIEvent) => broadcastOn(Channels.dismissPopups(), { target: SugarElement.fromDom(raw.target as Node) });
   const onContentMouseup = (raw: MouseEvent) => {
     if (raw.button === 0) {
-      broadcastOn(Channels.mouseReleased(), { target: Element.fromDom(raw.target as DomNode) });
+      broadcastOn(Channels.mouseReleased(), { target: SugarElement.fromDom(raw.target as Node) });
     }
   };
 

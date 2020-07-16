@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Node } from '@ephox/dom-globals';
 import { Arr, Fun, Option } from '@ephox/katamari';
-import { Compare, Css, Element, Node, Traverse, PredicateFind } from '@ephox/sugar';
-import { Node as DomNode } from '@ephox/dom-globals';
+import { Compare, Css, PredicateFind, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 
 const candidatesArray = [ '9px', '10px', '11px', '12px', '14px', '16px', '18px', '20px', '24px', '32px', '36px' ];
@@ -21,8 +21,8 @@ const indexToSize = (index): Option<string> =>
 const sizeToIndex = (size): Option<number> =>
   Arr.findIndex(candidatesArray, (v) => v === size);
 
-const getRawOrComputed = (isRoot: (e: Element<DomNode>) => boolean, rawStart: Element<any>): string => {
-  const optStart = Node.isElement(rawStart) ? Option.some(rawStart) : Traverse.parent(rawStart).filter(Node.isElement);
+const getRawOrComputed = (isRoot: (e: SugarElement<Node>) => boolean, rawStart: SugarElement<any>): string => {
+  const optStart = SugarNode.isElement(rawStart) ? Option.some(rawStart) : Traverse.parent(rawStart).filter(SugarNode.isElement);
   return optStart.map((start) => {
     const inline = PredicateFind.closest(start, (elem) => Css.getRaw(elem, 'font-size').isSome(), isRoot)
       .bind((elem) => Css.getRaw(elem, 'font-size'));
@@ -34,8 +34,8 @@ const getRawOrComputed = (isRoot: (e: Element<DomNode>) => boolean, rawStart: El
 const getSize = (editor: Editor): string => {
   // This was taken from the tinymce approach (FontInfo is unlikely to be global)
   const node = editor.selection.getStart();
-  const elem = Element.fromDom(node);
-  const root = Element.fromDom(editor.getBody());
+  const elem = SugarElement.fromDom(node);
+  const root = SugarElement.fromDom(editor.getBody());
 
   const isRoot = (e) => Compare.eq(root, e);
 

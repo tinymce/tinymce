@@ -3,7 +3,7 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { Result } from '@ephox/katamari';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
-import { Body, Css, Element, Traverse } from '@ephox/sugar';
+import { Css, SugarBody, SugarElement, Traverse } from '@ephox/sugar';
 import CharmapPlugin from 'tinymce/plugins/charmap/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 
@@ -14,7 +14,7 @@ UnitTest.asynctest('browser.tinymce.plugins.charmap.DialogHeightTest', (success,
   // Move into shared library
   const cFakeEvent = function (name) {
     return Chain.control(
-      Chain.op(function (elm: Element) {
+      Chain.op(function (elm: SugarElement) {
         const evt = document.createEvent('HTMLEvents');
         evt.initEvent(name, true, true);
         elm.dom().dispatchEvent(evt);
@@ -23,12 +23,12 @@ UnitTest.asynctest('browser.tinymce.plugins.charmap.DialogHeightTest', (success,
     );
   };
 
-  const cTabPanelHeight = Chain.binder<Element, string, string>((tabpanel) => Css.getRaw(tabpanel, 'height').fold(() => Result.error('tabpanel has no height'), Result.value));
+  const cTabPanelHeight = Chain.binder<SugarElement, string, string>((tabpanel) => Css.getRaw(tabpanel, 'height').fold(() => Result.error('tabpanel has no height'), Result.value));
 
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
     const tinyUi = TinyUi(editor);
-    const doc = Element.fromDom(document);
+    const doc = SugarElement.fromDom(document);
 
     Pipeline.async({},
       Log.steps('TBA', 'Charmap: Search for items, dialog height should not change when fewer items returned', [
@@ -38,7 +38,7 @@ UnitTest.asynctest('browser.tinymce.plugins.charmap.DialogHeightTest', (success,
           tinyUi.cWaitForPopup('wait for popup', 'div[role="dialog"]')
         ]),
         FocusTools.sTryOnSelector('Focus should start on', doc, 'input'),
-        Chain.asStep(Body.body(), [
+        Chain.asStep(SugarBody.body(), [
           NamedChain.asChain([
             NamedChain.direct(NamedChain.inputName(), Chain.identity, 'body'),
             NamedChain.writeValue('doc', doc),

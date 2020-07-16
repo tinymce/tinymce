@@ -6,7 +6,7 @@
  */
 
 import { Arr, Fun } from '@ephox/katamari';
-import { Element, Focus, Node } from '@ephox/sugar';
+import { Focus, SugarElement, SugarNode } from '@ephox/sugar';
 import Delay from 'tinymce/core/api/util/Delay';
 
 // There are numerous problems with Google Keyboard when we need to switch focus back from a toolbar item / dialog to
@@ -32,10 +32,10 @@ const autocompleteHack = function (/* iBody */) {
 
 const resume = function (cWin) {
   cWin.focus();
-  const iBody = Element.fromDom(cWin.document.body);
+  const iBody = SugarElement.fromDom(cWin.document.body);
 
   const inInput = Focus.active().exists(function (elem) {
-    return Arr.contains([ 'input', 'textarea' ], Node.name(elem));
+    return Arr.contains([ 'input', 'textarea' ], SugarNode.name(elem));
   });
 
   const transaction = inInput ? autocompleteHack() : Fun.apply;

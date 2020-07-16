@@ -1,5 +1,5 @@
 import { Option } from '@ephox/katamari';
-import { Class, Classes, Css, Element } from '@ephox/sugar';
+import { Class, Classes, Css, SugarElement } from '@ephox/sugar';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SlidingConfig, SlidingState } from './SlidingTypes';
@@ -7,7 +7,7 @@ import { getAnimationRoot } from './SlidingUtils';
 
 const getDimensionProperty = (slideConfig: SlidingConfig) => slideConfig.dimension.property;
 
-const getDimension = (slideConfig: SlidingConfig, elem: Element) => slideConfig.dimension.getDimension(elem);
+const getDimension = (slideConfig: SlidingConfig, elem: SugarElement) => slideConfig.dimension.getDimension(elem);
 
 const disableTransitions = (component: AlloyComponent, slideConfig: SlidingConfig) => {
   const root = getAnimationRoot(component, slideConfig);

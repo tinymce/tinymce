@@ -1,6 +1,6 @@
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Fun, Option } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 
 import { NamedConfiguredBehaviour } from '../api/behaviour/Behaviour';
 import { Receiving } from '../api/behaviour/Receiving';
@@ -12,14 +12,14 @@ import * as Channels from '../api/messages/Channels';
 import { ReceivingConfig, ReceivingConfigSpec } from '../behaviour/receiving/ReceivingTypes';
 
 interface DismissalReceivingDetail {
-  isExtraPart: (sandbox: AlloyComponent, target: () => Element) => boolean;
+  isExtraPart: (sandbox: AlloyComponent, target: () => SugarElement) => boolean;
   fireEventInstead: Option<{
     event: string;
   }>;
 }
 
 export interface DismissalReceivingSpec {
-  isExtraPart?: (sandbox: AlloyComponent, target: () => Element) => boolean;
+  isExtraPart?: (sandbox: AlloyComponent, target: () => SugarElement) => boolean;
   fireEventInstead?: {
     event?: string;
   };
@@ -46,7 +46,7 @@ const receivingChannel = (rawSpec: DismissalReceivingSpec) => {
       schema: ValueSchema.objOfOnly([
         FieldSchema.strict('target')
       ]),
-      onReceive(sandbox: AlloyComponent, data: { target: () => Element }) {
+      onReceive(sandbox: AlloyComponent, data: { target: () => SugarElement }) {
         if (Sandboxing.isOpen(sandbox)) {
           const isPart = Sandboxing.isPartOf(sandbox, data.target) || detail.isExtraPart(sandbox, data.target);
           if (!isPart) {

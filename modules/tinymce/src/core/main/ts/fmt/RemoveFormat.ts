@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element as DomElement, Node, Range } from '@ephox/dom-globals';
+import { Element, Node, Range } from '@ephox/dom-globals';
 import { Arr, Option, Type } from '@ephox/katamari';
-import { Element, Insert, InsertAll, Traverse } from '@ephox/sugar';
+import { Insert, InsertAll, SugarElement, Traverse } from '@ephox/sugar';
 import DOMUtils from '../api/dom/DOMUtils';
 import TreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
@@ -87,8 +87,8 @@ const wrap = (dom: DOMUtils, node: Node, name: string, attrs?: Record<string, st
 };
 
 const wrapWithSiblings = (dom: DOMUtils, node: Node, next: boolean, name: string, attrs?: Record<string, string>): Node => {
-  const start = Element.fromDom(node);
-  const wrapper = Element.fromDom(dom.create(name, attrs));
+  const start = SugarElement.fromDom(node);
+  const wrapper = SugarElement.fromDom(dom.create(name, attrs));
   const siblings = next ? Traverse.nextSiblings(start) : Traverse.prevSiblings(start);
 
   InsertAll.append(wrapper, siblings);
@@ -220,7 +220,7 @@ const removeFormat = (ed: Editor, format: RemoveFormatPartial, vars?: FormatVars
   }
 
   // "matchName" will made sure we're dealing with an element, so cast as one
-  const elm = node as DomElement;
+  const elm = node as Element;
 
   // Applies to styling elements like strong, em, i, u, etc. so that if they have styling attributes, the attributes can be kept but the styling element is removed
   if (format.inline && format.remove === 'all' && Type.isArray(format.preserve_attributes)) {

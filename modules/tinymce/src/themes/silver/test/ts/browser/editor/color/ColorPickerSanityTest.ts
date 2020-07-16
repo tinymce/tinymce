@@ -2,7 +2,7 @@ import { Assertions, FocusTools, GeneralSteps, Log, Logger, Mouse, Pipeline, Ste
 import { UnitTest } from '@ephox/bedrock-client';
 import { HTMLInputElement } from '@ephox/dom-globals';
 import { TinyLoader } from '@ephox/mcagar';
-import { Element, SelectorFilter, ShadowDom } from '@ephox/sugar';
+import { SelectorFilter, SugarElement, SugarShadowDom } from '@ephox/sugar';
 
 import SilverTheme from 'tinymce/themes/silver/Theme';
 import * as ColorSwatch from 'tinymce/themes/silver/ui/core/color/ColorSwatch';
@@ -22,7 +22,7 @@ UnitTest.asynctest('ColorPickerSanityTest', (success, failure) => {
 
     const dialogSelector = 'div[role="dialog"]';
 
-    const docBody = ShadowDom.getContentContainer(ShadowDom.getRootNode(Element.fromDom(editor.getElement())));
+    const docBody = SugarShadowDom.getContentContainer(SugarShadowDom.getRootNode(SugarElement.fromDom(editor.getElement())));
 
     const sAssertColor = function (expected) {
       return Logger.t('Asserting color', Step.sync(function () {

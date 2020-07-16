@@ -3,7 +3,7 @@ import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { document, Node } from '@ephox/dom-globals';
 import { Cell, Obj } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Body, Focus, SelectorFind } from '@ephox/sugar';
+import { Focus, SelectorFind, SugarBody } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import SilverTheme from 'tinymce/themes/silver/Theme';
@@ -49,7 +49,7 @@ UnitTest.asynctest('Inline editor Context Toolbar Lookup test', (success, failur
           tinyApis.sSetContent('<p><a href="http://tiny.cloud">link</a></p>'),
           sResetNames(),
           tinyApis.sSetCursor([ 0, 0, 0 ], 1),
-          UiFinder.sWaitForVisible('Waiting for node toolbar to appear', Body.body(), '.tox-tbtn:contains(Node)'),
+          UiFinder.sWaitForVisible('Waiting for node toolbar to appear', SugarBody.body(), '.tox-tbtn:contains(Node)'),
           sAssertNames([ 'a' ], [ 'a' ], [ 'a' ])
         ]),
 
@@ -57,7 +57,7 @@ UnitTest.asynctest('Inline editor Context Toolbar Lookup test', (success, failur
           tinyApis.sSetContent('<p><strong><em>bold italic</em></strong></p>'),
           sResetNames(),
           tinyApis.sSetCursor([ 0, 0, 0, 0 ], 1),
-          UiFinder.sWaitForVisible('Waiting for parent node toolbar to appear', Body.body(), '.tox-tbtn:contains(Parent)'),
+          UiFinder.sWaitForVisible('Waiting for parent node toolbar to appear', SugarBody.body(), '.tox-tbtn:contains(Parent)'),
           sAssertNames([ 'em', 'strong', 'p' ], [ 'em', 'strong', 'p' ], [ 'em' ])
         ]),
 
@@ -65,7 +65,7 @@ UnitTest.asynctest('Inline editor Context Toolbar Lookup test', (success, failur
           tinyApis.sSetContent('<p><span style="color: red">content</span></p>'),
           sResetNames(),
           tinyApis.sSetCursor([ 0, 0, 0 ], 1),
-          UiFinder.sWaitForVisible('Waiting for editor toolbar to appear', Body.body(), '.tox-tbtn:contains(Editor)'),
+          UiFinder.sWaitForVisible('Waiting for editor toolbar to appear', SugarBody.body(), '.tox-tbtn:contains(Editor)'),
           sAssertNames([ 'span' ], [ 'span' ], [ 'span' ])
         ]),
 
@@ -90,16 +90,16 @@ UnitTest.asynctest('Inline editor Context Toolbar Lookup test', (success, failur
           tinyApis.sSetContent('<p><strong><em>bold italic</em></strong></p>'),
           sResetNames(),
           tinyApis.sSetCursor([ 0, 0, 0, 0 ], 1),
-          UiFinder.sWaitForVisible('Waiting for parent node toolbar to appear', Body.body(), '.tox-tbtn:contains(Parent)'),
+          UiFinder.sWaitForVisible('Waiting for parent node toolbar to appear', SugarBody.body(), '.tox-tbtn:contains(Parent)'),
           sAssertNames([ 'em', 'strong', 'p' ], [ 'em', 'strong', 'p' ], [ 'em' ]),
           sResetNames(),
           Step.sync(() => {
-            SelectorFind.descendant(Body.body(), '#content-click-area').each(Focus.focus);
+            SelectorFind.descendant(SugarBody.body(), '#content-click-area').each(Focus.focus);
           }),
-          Waiter.sTryUntil('Wait for toolbar to hide', UiFinder.sNotExists(Body.body(), '.tox-pop')),
+          Waiter.sTryUntil('Wait for toolbar to hide', UiFinder.sNotExists(SugarBody.body(), '.tox-pop')),
           sAssertNames([], [], []),
           tinyApis.sFocus(),
-          UiFinder.sWaitForVisible('Waiting for parent node toolbar to appear', Body.body(), '.tox-tbtn:contains(Parent)'),
+          UiFinder.sWaitForVisible('Waiting for parent node toolbar to appear', SugarBody.body(), '.tox-tbtn:contains(Parent)'),
           sAssertNames([ 'em', 'strong', 'p' ], [ 'em', 'strong', 'p' ], [ 'em' ])
         ])
       ], onSuccess, onFailure);

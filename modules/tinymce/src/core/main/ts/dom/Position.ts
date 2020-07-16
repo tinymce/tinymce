@@ -5,22 +5,22 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr } from '@ephox/katamari';
+import { HTMLElement, Node } from '@ephox/dom-globals';
+import { Arr, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Element, Node, Css, Traverse } from '@ephox/sugar';
+import { Css, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
 const browser = PlatformDetection.detect().browser;
 
-const firstElement = function (nodes) {
-  return Arr.find(nodes, Node.isElement);
-};
+const firstElement = (nodes: SugarElement<Node>[]): Option<SugarElement<HTMLElement>> =>
+  Arr.find(nodes, SugarNode.isElement) as Option<SugarElement<HTMLElement>>;
 
 // Firefox has a bug where caption height is not included correctly in offset calculations of tables
 // this tries to compensate for that by detecting if that offsets are incorrect and then remove the height
 const getTableCaptionDeltaY = function (elm) {
-  if (browser.isFirefox() && Node.name(elm) === 'table') {
+  if (browser.isFirefox() && SugarNode.name(elm) === 'table') {
     return firstElement(Traverse.children(elm)).filter(function (elm) {
-      return Node.name(elm) === 'caption';
+      return SugarNode.name(elm) === 'caption';
     }).bind(function (caption) {
       return firstElement(Traverse.nextSiblings(caption)).map(function (body) {
         const bodyTop = body.dom().offsetTop;
@@ -46,7 +46,7 @@ const getPos = function (body, elm, rootElm) {
   if (elm) {
     // Use getBoundingClientRect if it exists since it's faster than looping offset nodes
     // Fallback to offsetParent calculations if the body isn't static better since it stops at the body root
-    if (rootElm === body && elm.getBoundingClientRect && Css.get(Element.fromDom(body), 'position') === 'static') {
+    if (rootElm === body && elm.getBoundingClientRect && Css.get(SugarElement.fromDom(body), 'position') === 'static') {
       pos = elm.getBoundingClientRect();
 
       // Add scroll offsets from documentElement or body since IE with the wrong box model will use d.body and so do WebKit
@@ -71,7 +71,7 @@ const getPos = function (body, elm, rootElm) {
       offsetParent = offsetParent.parentNode;
     }
 
-    y += getTableCaptionDeltaY(Element.fromDom(elm));
+    y += getTableCaptionDeltaY(SugarElement.fromDom(elm));
   }
 
   return { x, y };

@@ -7,7 +7,7 @@
 
 import { Document, document } from '@ephox/dom-globals';
 import { Arr, Cell, Option } from '@ephox/katamari';
-import { Element, Html, Remove, SelectorFilter } from '@ephox/sugar';
+import { Html, Remove, SelectorFilter, SugarElement } from '@ephox/sugar';
 import Editor from '../api/Editor';
 import * as TrimHtml from '../dom/TrimHtml';
 import * as Fragments from './Fragments';
@@ -73,7 +73,7 @@ const getLevelContent = function (level: UndoLevel): string {
 };
 
 const getCleanLevelContent = (level: UndoLevel): string => {
-  const elm = Element.fromTag('body', lazyTempDocument());
+  const elm = SugarElement.fromTag('body', lazyTempDocument());
   Html.set(elm, getLevelContent(level));
   Arr.each(SelectorFilter.descendants(elm, '*[data-mce-bogus]'), Remove.unwrap);
   return Html.get(elm);

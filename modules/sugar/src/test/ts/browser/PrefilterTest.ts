@@ -1,12 +1,12 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import * as Hierarchy from 'ephox/sugar/api/dom/Hierarchy';
-import Element from 'ephox/sugar/api/node/Element';
+import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
 import * as Html from 'ephox/sugar/api/properties/Html';
 import { Situ } from 'ephox/sugar/api/selection/Situ';
 import * as Prefilter from 'ephox/sugar/selection/quirks/Prefilter';
 
 UnitTest.test('Browser Test: PrefilterTest', () => {
-  const root = Element.fromHtml(
+  const root = SugarElement.fromHtml(
     '<div>' +
       '<span>dog</span>' +
       '<br>' +

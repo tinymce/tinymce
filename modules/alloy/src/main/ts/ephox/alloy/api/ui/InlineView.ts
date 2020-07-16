@@ -1,11 +1,9 @@
 import { FieldSchema } from '@ephox/boulder';
 import { Arr, Fun, Option } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
+
 import * as Boxes from '../../alien/Boxes';
 import * as ComponentStructure from '../../alien/ComponentStructure';
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { AlloySpec, SketchSpec } from '../../api/component/SpecTypes';
-import * as SystemEvents from '../../api/events/SystemEvents';
 import * as Fields from '../../data/Fields';
 import * as Layout from '../../positioning/layout/Layout';
 import { AnchorSpec } from '../../positioning/mode/Anchoring';
@@ -17,7 +15,10 @@ import { Receiving } from '../behaviour/Receiving';
 import { Representing } from '../behaviour/Representing';
 import { Sandboxing } from '../behaviour/Sandboxing';
 import { LazySink } from '../component/CommonTypes';
+import { AlloyComponent } from '../component/ComponentApi';
 import * as SketchBehaviours from '../component/SketchBehaviours';
+import { AlloySpec, SketchSpec } from '../component/SpecTypes';
+import * as SystemEvents from '../events/SystemEvents';
 import * as Sketcher from './Sketcher';
 import { tieredMenu as TieredMenu } from './TieredMenu';
 import { SingleSketchFactory } from './UiSketcher';
@@ -91,7 +92,7 @@ const makeMenu = (detail: InlineViewDetail, menuSandbox: AlloyComponent, anchor:
 };
 
 const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail: InlineViewDetail, spec): SketchSpec => {
-  const isPartOfRelated = (sandbox: AlloyComponent, queryElem: Element) => {
+  const isPartOfRelated = (sandbox: AlloyComponent, queryElem: SugarElement) => {
     const related = detail.getRelated(sandbox);
     return related.exists((rel) => ComponentStructure.isPartOf(rel, queryElem));
   };
@@ -103,7 +104,7 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail: 
   const showAt = (sandbox: AlloyComponent, anchor: AnchorSpec, thing: AlloySpec) => {
     showWithin(sandbox, anchor, thing, Option.none());
   };
-  const showWithin = (sandbox: AlloyComponent, anchor: AnchorSpec, thing: AlloySpec, boxElement: Option<Element>) => {
+  const showWithin = (sandbox: AlloyComponent, anchor: AnchorSpec, thing: AlloySpec, boxElement: Option<SugarElement>) => {
     showWithinBounds(sandbox, anchor, thing, () => boxElement.map((elem) => Boxes.box(elem)));
   };
   const showWithinBounds = (sandbox: AlloyComponent, anchor: AnchorSpec, thing: AlloySpec, getBounds: () => Option<Boxes.Bounds>) => {

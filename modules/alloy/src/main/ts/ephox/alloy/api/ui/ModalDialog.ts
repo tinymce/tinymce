@@ -1,24 +1,24 @@
 import { Cell, Id, Option } from '@ephox/katamari';
-import { Attr, Traverse } from '@ephox/sugar';
+import { Attribute, Traverse } from '@ephox/sugar';
 
-import * as AddEventsBehaviour from '../../api/behaviour/AddEventsBehaviour';
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { AlloySpec } from '../../api/component/SpecTypes';
-import * as AlloyEvents from '../../api/events/AlloyEvents';
-import * as AlloyTriggers from '../../api/events/AlloyTriggers';
-import * as NativeEvents from '../../api/events/NativeEvents';
 import * as AriaDescribe from '../../aria/AriaDescribe';
 import * as AriaLabel from '../../aria/AriaLabel';
 import { CustomEvent } from '../../events/SimulatedEvent';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as ModalDialogSchema from '../../ui/schema/ModalDialogSchema';
 import { GetBusySpec, ModalDialogApis, ModalDialogDetail, ModalDialogSketcher, ModalDialogSpec } from '../../ui/types/ModalDialogTypes';
+import * as AddEventsBehaviour from '../behaviour/AddEventsBehaviour';
 import * as Behaviour from '../behaviour/Behaviour';
 import { Focusing } from '../behaviour/Focusing';
 import { Keying } from '../behaviour/Keying';
 import { Replacing } from '../behaviour/Replacing';
+import { AlloyComponent } from '../component/ComponentApi';
 import * as GuiFactory from '../component/GuiFactory';
 import * as SketchBehaviours from '../component/SketchBehaviours';
+import { AlloySpec } from '../component/SpecTypes';
+import * as AlloyEvents from '../events/AlloyEvents';
+import * as AlloyTriggers from '../events/AlloyTriggers';
+import * as NativeEvents from '../events/NativeEvents';
 import * as Attachment from '../system/Attachment';
 import * as Sketcher from './Sketcher';
 import { CompositeSketchFactory } from './UiSketcher';
@@ -64,14 +64,14 @@ const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (det
           }),
 
           AlloyEvents.run(dialogIdleEvent, (_blocker, _se) => {
-            if (Attr.has(dialog.element(), 'aria-busy')) {
-              Attr.remove(dialog.element(), 'aria-busy');
+            if (Attribute.has(dialog.element(), 'aria-busy')) {
+              Attribute.remove(dialog.element(), 'aria-busy');
               busyComp.get().each((bc) => Replacing.remove(dialog, bc));
             }
           }),
 
           AlloyEvents.run<DialogBusyEvent>(dialogBusyEvent, (blocker, se) => {
-            Attr.set(dialog.element(), 'aria-busy', 'true');
+            Attribute.set(dialog.element(), 'aria-busy', 'true');
             const getBusySpec = se.event().getBusySpec();
 
             busyComp.get().each((bc) => {

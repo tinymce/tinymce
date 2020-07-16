@@ -1,13 +1,13 @@
 import { ApproxStructure, Assertions, Chain, Log, Pipeline, Step, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyLoader } from '@ephox/mcagar';
-import { Body } from '@ephox/sugar';
+import { SugarBody } from '@ephox/sugar';
 import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('tinymce.themes.silver.test.browser.throbber.ThrobberTest', (success, failure) => {
   Theme();
 
-  const sAssertThrobberHiddenStructure = Chain.asStep(Body.body(), [
+  const sAssertThrobberHiddenStructure = Chain.asStep(SugarBody.body(), [
     UiFinder.cFindIn('.tox-throbber'),
     Assertions.cAssertStructure('Checking disabled structure', ApproxStructure.build((s, str, arr) => s.element('div', {
       attrs: {
@@ -20,7 +20,7 @@ UnitTest.asynctest('tinymce.themes.silver.test.browser.throbber.ThrobberTest', (
     })))
   ]);
 
-  const sAssertThrobberShownStructure = Chain.asStep(Body.body(), [
+  const sAssertThrobberShownStructure = Chain.asStep(SugarBody.body(), [
     UiFinder.cFindIn('.tox-throbber'),
     Assertions.cAssertStructure('Checking enabled structure', ApproxStructure.build((s, str, arr) => s.element('div', {
       attrs: {
@@ -64,10 +64,10 @@ UnitTest.asynctest('tinymce.themes.silver.test.browser.throbber.ThrobberTest', (
       Log.stepsAsStep('TBA', 'Throbber actions test', [
         sAssertThrobberHiddenStructure,
         sSetProgressState(true),
-        UiFinder.sWaitForVisible('Wait for throbber to show', Body.body(), '.tox-throbber'),
+        UiFinder.sWaitForVisible('Wait for throbber to show', SugarBody.body(), '.tox-throbber'),
         sAssertThrobberShownStructure,
         sSetProgressState(false),
-        UiFinder.sWaitForHidden('Wait for throbber to hide', Body.body(), '.tox-throbber'),
+        UiFinder.sWaitForHidden('Wait for throbber to hide', SugarBody.body(), '.tox-throbber'),
         sAssertThrobberHiddenStructure
       ]),
       Log.stepsAsStep('TBA', 'Throbber actions with timeout test', [
@@ -75,10 +75,10 @@ UnitTest.asynctest('tinymce.themes.silver.test.browser.throbber.ThrobberTest', (
         // Wait for a little and make sure the throbber is still hidden
         Step.wait(150),
         sAssertThrobberHiddenStructure,
-        UiFinder.sWaitForVisible('Wait for throbber to show', Body.body(), '.tox-throbber'),
+        UiFinder.sWaitForVisible('Wait for throbber to show', SugarBody.body(), '.tox-throbber'),
         sAssertThrobberShownStructure,
         sSetProgressState(false),
-        UiFinder.sWaitForHidden('Wait for throbber to hide', Body.body(), '.tox-throbber'),
+        UiFinder.sWaitForHidden('Wait for throbber to hide', SugarBody.body(), '.tox-throbber'),
         sAssertThrobberHiddenStructure
       ])
     ], onSuccess, onFailure);

@@ -1,22 +1,22 @@
-import { Node as DomNode } from '@ephox/dom-globals';
+import { Node } from '@ephox/dom-globals';
 import { Arr, Fun } from '@ephox/katamari';
 import * as Compare from '../dom/Compare';
-import Element from '../node/Element';
+import { SugarElement } from '../node/SugarElement';
 import * as PredicateExists from './PredicateExists';
 
-const ancestor = (element: Element<DomNode>, target: Element<DomNode>): boolean =>
+const ancestor = (element: SugarElement<Node>, target: SugarElement<Node>): boolean =>
   PredicateExists.ancestor(element, Fun.curry(Compare.eq, target));
 
-const anyAncestor = (element: Element<DomNode>, targets: Element<DomNode>[]): boolean =>
+const anyAncestor = (element: SugarElement<Node>, targets: SugarElement<Node>[]): boolean =>
   Arr.exists(targets, (target) => ancestor(element, target));
 
-const sibling = (element: Element<DomNode>, targets: Element<DomNode>[]): boolean =>
+const sibling = (element: SugarElement<Node>, targets: SugarElement<Node>[]): boolean =>
   PredicateExists.sibling(element, (elem) => Arr.exists(targets, Fun.curry(Compare.eq, elem)));
 
-const child = (element: Element<DomNode>, target: Element<DomNode>): boolean =>
+const child = (element: SugarElement<Node>, target: SugarElement<Node>): boolean =>
   PredicateExists.child(element, Fun.curry(Compare.eq, target));
 
-const descendant = (element: Element<DomNode>, target: Element<DomNode>): boolean =>
+const descendant = (element: SugarElement<Node>, target: SugarElement<Node>): boolean =>
   PredicateExists.descendant(element, Fun.curry(Compare.eq, target));
 
 export { ancestor, anyAncestor, sibling, child, descendant };

@@ -6,11 +6,11 @@
  */
 
 import { InputHandlers, SelectionAnnotation, SelectionKeys } from '@ephox/darwin';
-import { Event, HTMLElement, KeyboardEvent, MouseEvent, Node as HtmlNode, TouchEvent } from '@ephox/dom-globals';
+import { Event, HTMLElement, KeyboardEvent, MouseEvent, Node, TouchEvent } from '@ephox/dom-globals';
 import { Cell, Fun, Option } from '@ephox/katamari';
 import { DomParent } from '@ephox/robin';
 import { OtherCells, TableFill, TableLookup, TableResize } from '@ephox/snooker';
-import { Class, Compare, DomEvent, Element, Node, Selection, SelectionDirection } from '@ephox/sugar';
+import { Class, Compare, DomEvent, SelectionDirection, SimSelection, SugarElement, SugarNode } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
@@ -22,19 +22,19 @@ import * as Direction from '../queries/Direction';
 import * as Ephemera from './Ephemera';
 import { SelectionTargets } from './SelectionTargets';
 
-const hasInternalTarget = (e: Event) => Class.has(Element.fromDom(e.target as HTMLElement), 'ephox-snooker-resizer-bar') === false;
+const hasInternalTarget = (e: Event) => Class.has(SugarElement.fromDom(e.target as HTMLElement), 'ephox-snooker-resizer-bar') === false;
 
 export interface CellSelectionApi {
-  clear: (container: Element) => void;
+  clear: (container: SugarElement) => void;
 }
 
 export default function (editor: Editor, lazyResize: () => Option<TableResize>, selectionTargets: SelectionTargets): CellSelectionApi {
-  const onSelection = (cells: Element[], start: Element, finish: Element) => {
+  const onSelection = (cells: SugarElement[], start: SugarElement, finish: SugarElement) => {
     selectionTargets.targets().each((targets) => {
       const tableOpt = TableLookup.table(start);
       tableOpt.each((table) => {
         const cloneFormats = getCloneElements(editor);
-        const generators = TableFill.cellOperations(Fun.noop, Element.fromDom(editor.getDoc()), cloneFormats);
+        const generators = TableFill.cellOperations(Fun.noop, SugarElement.fromDom(editor.getDoc()), cloneFormats);
         const otherCells = OtherCells.getOtherCells(table, targets, generators);
         Events.fireTableSelectionChange(editor, cells, start, finish, otherCells);
       });
@@ -54,8 +54,8 @@ export default function (editor: Editor, lazyResize: () => Option<TableResize>, 
     // Remove the selection.
     const syncSelection = () => {
       const sel = editor.selection;
-      const start = Element.fromDom(sel.getStart());
-      const end = Element.fromDom(sel.getEnd());
+      const start = SugarElement.fromDom(sel.getStart());
+      const end = SugarElement.fromDom(sel.getEnd());
       const shared = DomParent.sharedOne(TableLookup.table, [ start, end ]);
       shared.fold(() => annotations.clear(body), Fun.noop);
     };
@@ -77,7 +77,7 @@ export default function (editor: Editor, lazyResize: () => Option<TableResize>, 
         event.kill();
       }
       response.selection().each((ns) => {
-        const relative = Selection.relative(ns.start(), ns.finish());
+        const relative = SimSelection.relative(ns.start(), ns.finish());
         const rng = SelectionDirection.asLtrRange(win, relative);
         editor.selection.setRng(rng);
       });
@@ -88,8 +88,8 @@ export default function (editor: Editor, lazyResize: () => Option<TableResize>, 
       // Note, this is an optimisation.
       if (wrappedEvent.raw().shiftKey && SelectionKeys.isNavigation(wrappedEvent.raw().which)) {
         const rng = editor.selection.getRng();
-        const start = Element.fromDom(rng.startContainer);
-        const end = Element.fromDom(rng.endContainer);
+        const start = SugarElement.fromDom(rng.startContainer);
+        const end = SugarElement.fromDom(rng.endContainer);
         keyHandlers.keyup(wrappedEvent, start, rng.startOffset, end, rng.endOffset).each((response) => {
           handleResponse(wrappedEvent, response);
         });
@@ -101,9 +101,9 @@ export default function (editor: Editor, lazyResize: () => Option<TableResize>, 
       lazyResize().each((resize) => resize.hideBars());
 
       const rng = editor.selection.getRng();
-      const startContainer = Element.fromDom(editor.selection.getStart());
-      const start = Element.fromDom(rng.startContainer);
-      const end = Element.fromDom(rng.endContainer);
+      const startContainer = SugarElement.fromDom(editor.selection.getStart());
+      const start = SugarElement.fromDom(rng.startContainer);
+      const end = SugarElement.fromDom(rng.endContainer);
       const direction = Direction.directionAt(startContainer).isRtl() ? SelectionKeys.rtl : SelectionKeys.ltr;
       keyHandlers.keydown(wrappedEvent, start, rng.startOffset, end, rng.endOffset, direction).each((response) => {
         handleResponse(wrappedEvent, response);
@@ -154,12 +154,12 @@ export default function (editor: Editor, lazyResize: () => Option<TableResize>, 
     };
 
     const getDoubleTap = () => {
-      const lastTarget = Cell<Element>(Element.fromDom(body as any));
+      const lastTarget = Cell<SugarElement>(SugarElement.fromDom(body as any));
       const lastTimeStamp = Cell<number>(0);
 
       const touchEnd = (t: TouchEvent) => {
-        const target = Element.fromDom(<HtmlNode> t.target);
-        if (Node.name(target) === 'td' || Node.name(target) === 'th') {
+        const target = SugarElement.fromDom(t.target as Node);
+        if (SugarNode.name(target) === 'td' || SugarNode.name(target) === 'th') {
           const lT = lastTarget.get();
           const lTS = lastTimeStamp.get();
           if (Compare.eq(lT, target) && (t.timeStamp - lTS) < 300) {

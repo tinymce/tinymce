@@ -7,7 +7,7 @@
 
 import { Node, Range } from '@ephox/dom-globals';
 import { Fun, Options } from '@ephox/katamari';
-import { Compare, Element, PredicateFind } from '@ephox/sugar';
+import { Compare, PredicateFind, SugarElement } from '@ephox/sugar';
 import Selection from '../api/dom/Selection';
 import Editor from '../api/Editor';
 import * as CaretFinder from '../caret/CaretFinder';
@@ -16,12 +16,12 @@ import * as ElementType from '../dom/ElementType';
 import * as DeleteUtils from './DeleteUtils';
 import * as MergeBlocks from './MergeBlocks';
 
-const deleteRangeMergeBlocks = (rootNode: Element<Node>, selection: Selection) => {
+const deleteRangeMergeBlocks = (rootNode: SugarElement<Node>, selection: Selection) => {
   const rng = selection.getRng();
 
   return Options.lift2(
-    DeleteUtils.getParentBlock(rootNode, Element.fromDom(rng.startContainer)),
-    DeleteUtils.getParentBlock(rootNode, Element.fromDom(rng.endContainer)),
+    DeleteUtils.getParentBlock(rootNode, SugarElement.fromDom(rng.startContainer)),
+    DeleteUtils.getParentBlock(rootNode, SugarElement.fromDom(rng.endContainer)),
     (block1, block2) => {
       if (Compare.eq(block1, block2) === false) {
         rng.deleteContents();
@@ -37,16 +37,16 @@ const deleteRangeMergeBlocks = (rootNode: Element<Node>, selection: Selection) =
     }).getOr(false);
 };
 
-const isRawNodeInTable = (root: Element<Node>, rawNode: Node) => {
-  const node = Element.fromDom(rawNode);
+const isRawNodeInTable = (root: SugarElement<Node>, rawNode: Node) => {
+  const node = SugarElement.fromDom(rawNode);
   const isRoot = Fun.curry(Compare.eq, root);
   return PredicateFind.ancestor(node, ElementType.isTableCell, isRoot).isSome();
 };
 
-const isSelectionInTable = (root: Element<Node>, rng: Range) =>
+const isSelectionInTable = (root: SugarElement<Node>, rng: Range) =>
   isRawNodeInTable(root, rng.startContainer) || isRawNodeInTable(root, rng.endContainer);
 
-const isEverythingSelected = (root: Element<Node>, rng: Range) => {
+const isEverythingSelected = (root: SugarElement<Node>, rng: Range) => {
   const noPrevious = CaretFinder.prevPosition(root.dom(), CaretPosition.fromRangeStart(rng)).isNone();
   const noNext = CaretFinder.nextPosition(root.dom(), CaretPosition.fromRangeEnd(rng)).isNone();
   return !isSelectionInTable(root, rng) && noPrevious && noNext;
@@ -59,7 +59,7 @@ const emptyEditor = (editor: Editor) => {
 };
 
 const deleteRange = (editor: Editor) => {
-  const rootNode = Element.fromDom(editor.getBody());
+  const rootNode = SugarElement.fromDom(editor.getBody());
   const rng = editor.selection.getRng();
   return isEverythingSelected(rootNode, rng) ? emptyEditor(editor) : deleteRangeMergeBlocks(rootNode, editor.selection);
 };

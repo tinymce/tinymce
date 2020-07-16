@@ -1,17 +1,17 @@
+import { Element, Node } from '@ephox/dom-globals';
 import { Arr, Fun, Option } from '@ephox/katamari';
 import { DomParent } from '@ephox/robin';
 import { TablePositions } from '@ephox/snooker';
-import { Compare, SelectorFilter, SelectorFind, Selectors, Element } from '@ephox/sugar';
+import { Compare, SelectorFilter, SelectorFind, Selectors, SugarElement } from '@ephox/sugar';
 import { Identified, IdentifiedExt } from './Identified';
-import { Node as DomNode, Element as DomElement } from '@ephox/dom-globals';
 
-const lookupTable = function (container: Element) {
+const lookupTable = function (container: SugarElement) {
   return SelectorFind.ancestor(container, 'table');
 };
 
-const identify = function (start: Element, finish: Element, isRoot?: (element: Element) => boolean): Option<Identified> {
-  const getIsRoot = function (rootTable: Element) {
-    return function (element: Element) {
+const identify = function (start: SugarElement, finish: SugarElement, isRoot?: (element: SugarElement) => boolean): Option<Identified> {
+  const getIsRoot = function (rootTable: SugarElement) {
+    return function (element: SugarElement) {
       return (isRoot !== undefined && isRoot(element)) || Compare.eq(element, rootTable);
     };
   };
@@ -68,18 +68,18 @@ const identify = function (start: Element, finish: Element, isRoot?: (element: E
   }
 };
 
-const retrieve = function (container: Element<DomNode>, selector: string) {
+const retrieve = function (container: SugarElement<Node>, selector: string) {
   const sels = SelectorFilter.descendants(container, selector);
-  return sels.length > 0 ? Option.some(sels) : Option.none<Element<DomElement>[]>();
+  return sels.length > 0 ? Option.some(sels) : Option.none<SugarElement<Element>[]>();
 };
 
-const getLast = function (boxes: Element[], lastSelectedSelector: string) {
+const getLast = function (boxes: SugarElement[], lastSelectedSelector: string) {
   return Arr.find(boxes, function (box) {
     return Selectors.is(box, lastSelectedSelector);
   });
 };
 
-const getEdges = function (container: Element, firstSelectedSelector: string, lastSelectedSelector: string) {
+const getEdges = function (container: SugarElement, firstSelectedSelector: string, lastSelectedSelector: string) {
   return SelectorFind.descendant(container, firstSelectedSelector).bind(function (first) {
     return SelectorFind.descendant(container, lastSelectedSelector).bind(function (last) {
       return DomParent.sharedOne(lookupTable, [ first, last ]).map(function (tbl) {
@@ -93,7 +93,7 @@ const getEdges = function (container: Element, firstSelectedSelector: string, la
   });
 };
 
-const expandTo = function (finish: Element, firstSelectedSelector: string): Option<IdentifiedExt> {
+const expandTo = function (finish: SugarElement, firstSelectedSelector: string): Option<IdentifiedExt> {
   return SelectorFind.ancestor(finish, 'table').bind(function (table) {
     return SelectorFind.descendant(table, firstSelectedSelector).bind(function (start) {
       return identify(start, finish).bind(function (identified) {
@@ -109,7 +109,7 @@ const expandTo = function (finish: Element, firstSelectedSelector: string): Opti
   });
 };
 
-const shiftSelection = function (boxes: Element[], deltaRow: number, deltaColumn: number, firstSelectedSelector: string, lastSelectedSelector: string) {
+const shiftSelection = function (boxes: SugarElement[], deltaRow: number, deltaColumn: number, firstSelectedSelector: string, lastSelectedSelector: string) {
   return getLast(boxes, lastSelectedSelector).bind(function (last) {
     return TablePositions.moveBy(last, deltaRow, deltaColumn).bind(function (finish) {
       return expandTo(finish, firstSelectedSelector);

@@ -1,5 +1,5 @@
 import { Option } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 
 import * as EditableFields from '../alien/EditableFields';
 import * as Keys from '../alien/Keys';
@@ -13,7 +13,7 @@ import { GeneralKeyingConfig, KeyRuleHandler } from './KeyingModeTypes';
 const doDefaultExecute = (
   component: AlloyComponent,
   _simulatedEvent: NativeSimulatedEvent,
-  focused: Element
+  focused: SugarElement
 ): Option<boolean> => {
   // Note, we use to pass through simulatedEvent here and make target: component. This simplification
   // may be a problem
@@ -24,7 +24,7 @@ const doDefaultExecute = (
 const defaultExecute = (
   component: AlloyComponent,
   simulatedEvent: NativeSimulatedEvent,
-  focused: Element
+  focused: SugarElement
 ): Option<boolean> => {
   const isComplex = EditableFields.inside(focused) && KeyMatch.inSet(Keys.SPACE())(simulatedEvent.event());
   return isComplex ? Option.none() : doDefaultExecute(component, simulatedEvent, focused);

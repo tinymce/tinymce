@@ -1,10 +1,10 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { TinyLoader } from '@ephox/mcagar';
+import { SugarElementInstances } from '@ephox/sugar';
 import * as Settings from 'tinymce/themes/silver/api/Settings';
-import { ElementInstances } from '@ephox/sugar';
 import Theme from 'tinymce/themes/silver/Theme';
 
-const tElement = ElementInstances.tElement;
+const tElement = SugarElementInstances.tElement;
 
 UnitTest.asynctest('Inline getUiContainer returns shadow root', (success, failure) => {
 

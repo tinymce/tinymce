@@ -1,9 +1,9 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
-import Element from 'ephox/sugar/api/node/Element';
+import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
 import * as OnNode from 'ephox/sugar/api/properties/OnNode';
 
 UnitTest.test('OnNodeTest', () => {
-  const element = Element.fromTag('div');
+  const element = SugarElement.fromTag('div');
 
   const addAlpha = OnNode.addClass('alpha');
   const addBeta = OnNode.addClass('beta');

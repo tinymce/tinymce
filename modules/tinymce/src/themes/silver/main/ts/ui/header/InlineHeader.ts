@@ -7,11 +7,13 @@
 
 import { AlloyComponent, Boxes, Channels, Docking, VerticalDir } from '@ephox/alloy';
 import { Cell, Option } from '@ephox/katamari';
-import { Attr, Body, Css, Element, Height, Location, Traverse, Width } from '@ephox/sugar';
+import { Attribute, Css, Height, SugarBody, SugarElement, SugarLocation, Traverse, Width } from '@ephox/sugar';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
-import { getMaxWidthSetting, getToolbarLocation, getToolbarMode, isStickyToolbar, ToolbarLocation, ToolbarMode, useFixedContainer } from '../../api/Settings';
+import {
+  getMaxWidthSetting, getToolbarLocation, getToolbarMode, isStickyToolbar, ToolbarLocation, ToolbarMode, useFixedContainer
+} from '../../api/Settings';
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { RenderUiComponents } from '../../Render';
 import OuterContainer from '../general/OuterContainer';
@@ -28,7 +30,7 @@ export interface InlineHeader {
   repositionPopups: () => void;
 }
 
-export const InlineHeader = (editor: Editor, targetElm: Element, uiComponents: RenderUiComponents, backstage: UiFactoryBackstage, floatContainer: Cell<AlloyComponent>): InlineHeader => {
+export const InlineHeader = (editor: Editor, targetElm: SugarElement, uiComponents: RenderUiComponents, backstage: UiFactoryBackstage, floatContainer: Cell<AlloyComponent>): InlineHeader => {
   const { uiMothership, outerContainer } = uiComponents;
   const DOM = DOMUtils.DOM;
   const useFixedToolbarContainer = useFixedContainer(editor);
@@ -96,15 +98,15 @@ export const InlineHeader = (editor: Editor, targetElm: Element, uiComponents: R
 
     // Update the vertical menu direction
     const verticalDir = isPositionedAtTop() ? VerticalDir.AttributeValue.TopToBottom : VerticalDir.AttributeValue.BottomToTop;
-    Attr.set(container.element(), VerticalDir.Attribute, verticalDir);
+    Attribute.set(container.element(), VerticalDir.Attribute, verticalDir);
   };
 
   const updateChromeWidth = () => {
     // Update the max width of the inline toolbar
     const maxWidth = editorMaxWidthOpt.getOrThunk(() => {
       // No max width, so use the body width, minus the left pos as the maximum
-      const bodyMargin = Utils.parseToInt(Css.get(Body.body(), 'margin-left')).getOr(0);
-      return Width.get(Body.body()) - Location.absolute(targetElm).left() + bodyMargin;
+      const bodyMargin = Utils.parseToInt(Css.get(SugarBody.body(), 'margin-left')).getOr(0);
+      return Width.get(SugarBody.body()) - SugarLocation.absolute(targetElm).left() + bodyMargin;
     });
     Css.set(floatContainer.get().element(), 'max-width', maxWidth + 'px');
   };

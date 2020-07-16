@@ -1,12 +1,12 @@
 import { Chain } from '@ephox/agar';
 import { setTimeout } from '@ephox/dom-globals';
 import { Global, Id, Strings, Type } from '@ephox/katamari';
-import { Attr, Body, Element, Insert, Remove, Selectors, ShadowDom } from '@ephox/sugar';
+import { Attribute, Insert, Remove, Selectors, SugarBody, SugarElement, SugarShadowDom } from '@ephox/sugar';
 import 'tinymce';
 import { Editor as EditorType } from '../alien/EditorTypes';
 import { setTinymceBaseUrl } from '../loader/Urls';
 
-const cFromElement = function <T extends EditorType = EditorType> (element: Element, settings: Record<string, any>): Chain<any, T> {
+const cFromElement = function <T extends EditorType = EditorType> (element: SugarElement, settings: Record<string, any>): Chain<any, T> {
   return Chain.async<any, T>(function (_, next, die) {
     const nuSettings: Record<string, any> = {
       toolbar_mode: 'wrap',
@@ -15,9 +15,9 @@ const cFromElement = function <T extends EditorType = EditorType> (element: Elem
 
     const randomId = Id.generate('tiny-loader');
 
-    Attr.set(element, 'id', randomId);
-    if (!Body.inBody(element)) {
-      Insert.append(Body.body(), element);
+    Attribute.set(element, 'id', randomId);
+    if (!SugarBody.inBody(element)) {
+      Insert.append(SugarBody.body(), element);
     }
 
     const tinymce = Global.tinymce;
@@ -28,7 +28,7 @@ const cFromElement = function <T extends EditorType = EditorType> (element: Elem
       setTinymceBaseUrl(Global.tinymce, '/project/node_modules/tinymce');
     }
 
-    const targetSettings = ShadowDom.isInShadowRoot(element) ? ({ target: element.dom() }) : ({ selector: '#' + randomId });
+    const targetSettings = SugarShadowDom.isInShadowRoot(element) ? ({ target: element.dom() }) : ({ selector: '#' + randomId });
 
     tinymce.init({
       ...nuSettings,
@@ -52,7 +52,7 @@ const cFromElement = function <T extends EditorType = EditorType> (element: Elem
 };
 
 const cFromHtml = function <T extends EditorType = EditorType> (html: string | null, settings: Record<string, any>): Chain<any, T> {
-  const element = html ? Element.fromHtml(html) : Element.fromTag(settings.inline ? 'div' : 'textarea');
+  const element = html ? SugarElement.fromHtml(html) : SugarElement.fromTag(settings.inline ? 'div' : 'textarea');
   return cFromElement(element, settings);
 };
 

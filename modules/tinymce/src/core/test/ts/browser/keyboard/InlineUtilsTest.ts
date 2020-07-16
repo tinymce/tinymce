@@ -1,16 +1,16 @@
 import { Assertions, Chain, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
-import { Hierarchy, Element, Node } from '@ephox/sugar';
+import { UnitTest } from '@ephox/bedrock-client';
+import { Hierarchy, SugarElement, SugarNode } from '@ephox/sugar';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import * as InlineUtils from 'tinymce/core/keyboard/InlineUtils';
 import * as Zwsp from 'tinymce/core/text/Zwsp';
-import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.core.keyboard.InlineUtilsTest', function (success, failure) {
   const ZWSP = Zwsp.ZWSP;
 
   const cCreateElement = function (html) {
     return Chain.injectThunked(function () {
-      return Element.fromHtml(html);
+      return SugarElement.fromHtml(html);
     });
   };
 
@@ -25,7 +25,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.InlineUtilsTest', function (su
   const cAssertPosition = function (path, expectedOffset) {
     return Chain.mapper(function (elmPos: any) {
       const expectedContainer = Hierarchy.follow(elmPos.elm, path).getOrDie();
-      Assertions.assertDomEq('Should be expected container', Element.fromDom(elmPos.pos.container()), expectedContainer);
+      Assertions.assertDomEq('Should be expected container', SugarElement.fromDom(elmPos.pos.container()), expectedContainer);
       Assertions.assertEq('Should be expected offset', elmPos.pos.offset(), expectedOffset);
       return {};
     });
@@ -33,7 +33,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.InlineUtilsTest', function (su
 
   const cSplitAt = function (path, offset) {
     return Chain.mapper(function (elm: any) {
-      const textNode = Hierarchy.follow(elm, path).filter(Node.isText).getOrDie();
+      const textNode = Hierarchy.follow(elm, path).filter(SugarNode.isText).getOrDie();
       textNode.dom().splitText(offset);
       return elm;
     });
@@ -48,17 +48,17 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.InlineUtilsTest', function (su
 
   Pipeline.async({}, [
     Logger.t('isInlineTarget with various editor settings', Step.sync(function () {
-      Assertions.assertEq('Links should be inline target', true, InlineUtils.isInlineTarget(createFakeEditor({ }), Element.fromHtml('<a href="a">').dom()));
-      Assertions.assertEq('Code should be inline target', true, InlineUtils.isInlineTarget(createFakeEditor({ }), Element.fromHtml('<code>').dom()));
-      Assertions.assertEq('Annotations should be inline target', true, InlineUtils.isInlineTarget(createFakeEditor({ }), Element.fromHtml('<span class="mce-annotation"></span>').dom()));
-      Assertions.assertEq('None link anchor should not be inline target', false, InlineUtils.isInlineTarget(createFakeEditor({ }), Element.fromHtml('<a>').dom()));
-      Assertions.assertEq('Bold should not be inline target', false, InlineUtils.isInlineTarget(createFakeEditor({ }), Element.fromHtml('<b>').dom()));
+      Assertions.assertEq('Links should be inline target', true, InlineUtils.isInlineTarget(createFakeEditor({ }), SugarElement.fromHtml('<a href="a">').dom()));
+      Assertions.assertEq('Code should be inline target', true, InlineUtils.isInlineTarget(createFakeEditor({ }), SugarElement.fromHtml('<code>').dom()));
+      Assertions.assertEq('Annotations should be inline target', true, InlineUtils.isInlineTarget(createFakeEditor({ }), SugarElement.fromHtml('<span class="mce-annotation"></span>').dom()));
+      Assertions.assertEq('None link anchor should not be inline target', false, InlineUtils.isInlineTarget(createFakeEditor({ }), SugarElement.fromHtml('<a>').dom()));
+      Assertions.assertEq('Bold should not be inline target', false, InlineUtils.isInlineTarget(createFakeEditor({ }), SugarElement.fromHtml('<b>').dom()));
       Assertions.assertEq('Bold should be inline target if configured', true, InlineUtils.isInlineTarget(createFakeEditor({
         inline_boundaries_selector: 'b'
-      }), Element.fromHtml('<b>').dom()));
+      }), SugarElement.fromHtml('<b>').dom()));
       Assertions.assertEq('Italic should be inline target if configured', true, InlineUtils.isInlineTarget(createFakeEditor({
         inline_boundaries_selector: 'b,i'
-      }), Element.fromHtml('<i>').dom()));
+      }), SugarElement.fromHtml('<i>').dom()));
     })),
 
     Logger.t('normalizePosition on text forwards', GeneralSteps.sequence([

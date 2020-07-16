@@ -1,7 +1,7 @@
 import { Assertions, Chain, Mouse, Step, UiControls, UiFinder, Waiter } from '@ephox/agar';
 import { AlloyLogger, AlloyTriggers, NativeEvents, Toggling } from '@ephox/alloy';
 import { Result } from '@ephox/katamari';
-import { Attr, Focus, Traverse, Element } from '@ephox/sugar';
+import { Attribute, Focus, SugarElement, Traverse } from '@ephox/sugar';
 
 const cGetFocused = Chain.binder(function () {
   return Focus.active().fold(function () {
@@ -9,7 +9,7 @@ const cGetFocused = Chain.binder(function () {
   }, Result.value);
 });
 
-const cGetParent = Chain.binder(function (elem: Element) {
+const cGetParent = Chain.binder(function (elem: SugarElement) {
   return Traverse.parent(elem).fold(function () {
     return Result.error('Could not find parent of ' + AlloyLogger.element(elem));
   }, Result.value);
@@ -51,7 +51,7 @@ const sWaitForToggledState = function (label, state, realm, memento) {
     Step.sync(function () {
       const component = memento.get(realm.socket());
       Assertions.assertEq(
-        'Selected/Pressed state of component: (' + Attr.get(component.element(), 'class') + ')',
+        'Selected/Pressed state of component: (' + Attribute.get(component.element(), 'class') + ')',
         state,
         Toggling.isOn(component)
       );

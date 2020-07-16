@@ -1,7 +1,7 @@
 import { Chain, FocusTools, Keyboard, Keys, Logger, NamedChain, Step, UiFinder, Waiter } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Fun, Result } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 
 import { Keying } from 'ephox/alloy/api/behaviour/Keying';
 import { Representing } from 'ephox/alloy/api/behaviour/Representing';
@@ -93,9 +93,9 @@ UnitTest.asynctest('Browser Test: ui.slider.TwoDSliderTest', (success, failure) 
     })
   ), (doc, _body, _gui, component, _store) => {
 
-    const cGetBounds = Chain.mapper((elem: Element) => elem.dom().getBoundingClientRect());
+    const cGetBounds = Chain.mapper((elem: SugarElement) => elem.dom().getBoundingClientRect());
 
-    const cGetComponent = Chain.binder((elem: Element) => component.getSystem().getByDom(elem));
+    const cGetComponent = Chain.binder((elem: SugarElement) => component.getSystem().getByDom(elem));
 
     const cGetParts = NamedChain.asChain([
       NamedChain.writeValue('slider', component.element()),

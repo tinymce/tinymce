@@ -3,7 +3,7 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { Types } from '@ephox/bridge';
 import { HTMLElement } from '@ephox/dom-globals';
 import { Editor as McEditor } from '@ephox/mcagar';
-import { Body, Css, Element, Height, Scroll, Traverse } from '@ephox/sugar';
+import { Css, Height, Scroll, SugarBody, SugarElement, Traverse } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 
 import Theme from 'tinymce/themes/silver/Theme';
@@ -31,7 +31,7 @@ UnitTest.asynctest('WindowManager:inline-dialog Position Test', (success, failur
   };
 
   const cAssertPos = (pos: string, x: number, y: number) => Chain.control(
-    Chain.op((dialog: Element<HTMLElement>) => {
+    Chain.op((dialog: SugarElement<HTMLElement>) => {
       const diff = 5;
       const position = Css.get(dialog, 'position');
       const top = dialog.dom().offsetTop;
@@ -51,7 +51,7 @@ UnitTest.asynctest('WindowManager:inline-dialog Position Test', (success, failur
   const createTestOpenChain = (editor: Editor) => Chain.fromChains([
     DialogUtils.cOpen(editor, dialogSpec, { inline: 'toolbar' }),
     Chain.injectThunked(() => {
-      const dialog = UiFinder.findIn(Body.body(), '.tox-dialog-inline').getOrDie();
+      const dialog = UiFinder.findIn(SugarBody.body(), '.tox-dialog-inline').getOrDie();
       return Traverse.parent(dialog).getOr(dialog);
     })
   ]);
@@ -69,10 +69,10 @@ UnitTest.asynctest('WindowManager:inline-dialog Position Test', (success, failur
       const cTestOpen = createTestOpenChain(editor);
 
       Pipeline.async({ }, [
-        Chain.asStep(Body.body(), [
+        Chain.asStep(SugarBody.body(), [
           Chain.label('Test position when resizing', NamedChain.asChain([
             NamedChain.direct(NamedChain.inputName(), Chain.identity, 'body'),
-            NamedChain.writeValue('container', Element.fromDom(editor.getContainer())),
+            NamedChain.writeValue('container', SugarElement.fromDom(editor.getContainer())),
             NamedChain.direct('body', UiFinder.cFindIn('.tox-statusbar__resize-handle'), 'resizeHandle'),
             NamedChain.direct('body', cTestOpen, 'dialog'),
             NamedChain.direct('dialog', cAssertPos('absolute', 105, -310), '_'),
@@ -97,7 +97,7 @@ UnitTest.asynctest('WindowManager:inline-dialog Position Test', (success, failur
           ])),
           Chain.label('Test position when scrolling', NamedChain.asChain([
             NamedChain.direct(NamedChain.inputName(), Chain.identity, 'body'),
-            NamedChain.writeValue('container', Element.fromDom(editor.getContainer())),
+            NamedChain.writeValue('container', SugarElement.fromDom(editor.getContainer())),
             NamedChain.direct('body', cTestOpen, 'dialog'),
 
             // Enlarge the editor to 2000px
@@ -120,7 +120,7 @@ UnitTest.asynctest('WindowManager:inline-dialog Position Test', (success, failur
           ])),
           Chain.label('Test initial position when initially scrolled', NamedChain.asChain([
             NamedChain.direct(NamedChain.inputName(), Chain.identity, 'body'),
-            NamedChain.writeValue('container', Element.fromDom(editor.getContainer())),
+            NamedChain.writeValue('container', SugarElement.fromDom(editor.getContainer())),
 
             // Enlarge the editor to 2000px
             NamedChain.direct('container', Chain.op((container) => {
@@ -160,7 +160,7 @@ UnitTest.asynctest('WindowManager:inline-dialog Position Test', (success, failur
       const teardownPageScroll = setupPageScroll(editor, 1000);
 
       Pipeline.async({ }, [
-        Chain.asStep(Body.body(), [
+        Chain.asStep(SugarBody.body(), [
           Chain.label('Position of dialog should be constant when toolbar bottom docks', NamedChain.asChain([
             NamedChain.direct(NamedChain.inputName(), Chain.identity, 'body'),
 
@@ -182,7 +182,7 @@ UnitTest.asynctest('WindowManager:inline-dialog Position Test', (success, failur
           ])),
           Chain.label('Test position when resizing', NamedChain.asChain([
             NamedChain.direct(NamedChain.inputName(), Chain.identity, 'body'),
-            NamedChain.writeValue('container', Element.fromDom(editor.getContainer())),
+            NamedChain.writeValue('container', SugarElement.fromDom(editor.getContainer())),
             NamedChain.direct('body', UiFinder.cFindIn('.tox-statusbar__resize-handle'), 'resizeHandle'),
 
             cScrollRelativeEditor(editor, 'top', -100),
@@ -218,7 +218,7 @@ UnitTest.asynctest('WindowManager:inline-dialog Position Test', (success, failur
       const teardownPageScroll = setupPageScroll(editor, 1000);
 
       Pipeline.async({ }, [
-        Chain.asStep(Body.body(), [
+        Chain.asStep(SugarBody.body(), [
           Chain.label('Position of dialog should be constant when toolbar bottom docks', NamedChain.asChain([
             NamedChain.direct(NamedChain.inputName(), Chain.identity, 'body'),
 

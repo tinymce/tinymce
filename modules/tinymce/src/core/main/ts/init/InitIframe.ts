@@ -6,7 +6,7 @@
  */
 
 import { document, window } from '@ephox/dom-globals';
-import { Attr, Class, Element } from '@ephox/sugar';
+import { Attribute, Class, SugarElement } from '@ephox/sugar';
 
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
@@ -42,11 +42,11 @@ const relaxDomain = function (editor: Editor, ifr) {
 };
 
 const createIframeElement = function (id: string, title: TranslatedString, height: number, customAttrs: {}) {
-  const iframe = Element.fromTag('iframe');
+  const iframe = SugarElement.fromTag('iframe');
 
-  Attr.setAll(iframe, customAttrs);
+  Attribute.setAll(iframe, customAttrs);
 
-  Attr.setAll(iframe, {
+  Attribute.setAll(iframe, {
     id: id + '_ifr',
     frameBorder: '0',
     allowTransparency: 'true',

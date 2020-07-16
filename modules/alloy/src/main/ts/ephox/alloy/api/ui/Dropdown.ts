@@ -1,9 +1,6 @@
 import { Fun, Obj, Option } from '@ephox/katamari';
 import { EventArgs } from '@ephox/sugar';
 
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { AlloySpec, SketchSpec } from '../../api/component/SpecTypes';
-import * as AlloyTriggers from '../../api/events/AlloyTriggers';
 import * as DropdownUtils from '../../dropdown/DropdownUtils';
 import { SimulatedEvent } from '../../events/SimulatedEvent';
 import * as ButtonBase from '../../ui/common/ButtonBase';
@@ -14,7 +11,10 @@ import { Focusing } from '../behaviour/Focusing';
 import { Keying } from '../behaviour/Keying';
 import { Sandboxing } from '../behaviour/Sandboxing';
 import { Toggling } from '../behaviour/Toggling';
+import { AlloyComponent } from '../component/ComponentApi';
 import * as SketchBehaviours from '../component/SketchBehaviours';
+import { AlloySpec, SketchSpec } from '../component/SpecTypes';
+import * as AlloyTriggers from '../events/AlloyTriggers';
 import * as SystemEvents from '../events/SystemEvents';
 import * as Sketcher from './Sketcher';
 import * as TieredMenu from './TieredMenu';

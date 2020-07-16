@@ -1,18 +1,18 @@
 import { Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
-import { Element } from '@ephox/sugar';
-import * as ElementType from 'tinymce/core/dom/ElementType';
 import { UnitTest } from '@ephox/bedrock-client';
+import { SugarElement } from '@ephox/sugar';
+import * as ElementType from 'tinymce/core/dom/ElementType';
 
 UnitTest.asynctest('browser.tinymce.core.dom.ElementTypeTest', (success, failure) => {
   const sCheckElement = function (name, predicate, expectedValue) {
     return Step.sync(function () {
-      Assertions.assertEq('Should be the expected value for specified element', expectedValue, predicate(Element.fromTag(name)));
+      Assertions.assertEq('Should be the expected value for specified element', expectedValue, predicate(SugarElement.fromTag(name)));
     });
   };
 
   const sCheckText = function (predicate) {
     return Step.sync(function () {
-      Assertions.assertEq('Should be false for non element', false, predicate(Element.fromText('text')));
+      Assertions.assertEq('Should be false for non element', false, predicate(SugarElement.fromText('text')));
     });
   };
 

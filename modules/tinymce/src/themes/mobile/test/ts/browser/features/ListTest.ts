@@ -1,15 +1,15 @@
 import { GeneralSteps, Pipeline } from '@ephox/agar';
+import { TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Body, Traverse } from '@ephox/sugar';
+import { SugarBody, Traverse } from '@ephox/sugar';
 
 import * as TestTheme from '../../module/test/theme/TestTheme';
 import * as TestUi from '../../module/test/ui/TestUi';
-import { TestHelpers } from '@ephox/alloy';
 
 UnitTest.asynctest('Browser Test: features.ListTest', function (success, failure) {
 
   /* This test is going to create a toolbar with both list items on it */
-  const body = Body.body();
+  const body = SugarBody.body();
 
   TestTheme.setup({
     container: body,

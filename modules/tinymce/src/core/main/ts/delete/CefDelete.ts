@@ -7,7 +7,7 @@
 
 import { Node } from '@ephox/dom-globals';
 import { Arr, Fun, Option } from '@ephox/katamari';
-import { Element, Remove, SelectorFilter } from '@ephox/sugar';
+import { Remove, SelectorFilter, SugarElement } from '@ephox/sugar';
 import Editor from '../api/Editor';
 import CaretPosition from '../caret/CaretPosition';
 import * as CefUtils from '../dom/CefUtils';
@@ -18,7 +18,7 @@ import * as DeleteUtils from './DeleteUtils';
 
 const deleteElement = (editor: Editor, forward: boolean) => (element: Node) => {
   editor._selectionOverrides.hideFakeCaret();
-  DeleteElement.deleteElement(editor, forward, Element.fromDom(element));
+  DeleteElement.deleteElement(editor, forward, SugarElement.fromDom(element));
   return true;
 };
 
@@ -57,7 +57,7 @@ const backspaceDeleteCaret = (editor: Editor, forward: boolean) => {
   );
 };
 
-const deleteOffscreenSelection = (rootElement: Element<Node>) => {
+const deleteOffscreenSelection = (rootElement: SugarElement<Node>) => {
   Arr.each(SelectorFilter.descendants(rootElement, '.mce-offscreen-selection'), Remove.remove);
 };
 
@@ -73,8 +73,8 @@ const backspaceDeleteRange = (editor: Editor, forward: boolean) => {
     const hasCefAncestor = getAncestorCe(editor, selectedNode.parentNode).filter(NodeType.isContentEditableFalse);
     return hasCefAncestor.fold(
       () => {
-        deleteOffscreenSelection(Element.fromDom(editor.getBody()));
-        DeleteElement.deleteElement(editor, forward, Element.fromDom(editor.selection.getNode()));
+        deleteOffscreenSelection(SugarElement.fromDom(editor.getBody()));
+        DeleteElement.deleteElement(editor, forward, SugarElement.fromDom(editor.selection.getNode()));
         DeleteUtils.paddEmptyBody(editor);
         return true;
       },

@@ -1,9 +1,9 @@
+import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Arr, Option } from '@ephox/katamari';
 import { Gene } from 'ephox/boss/api/Gene';
 import * as Down from 'ephox/boss/mutant/Down';
 import * as Locator from 'ephox/boss/mutant/Locator';
 import * as Tracks from 'ephox/boss/mutant/Tracks';
-import { Arr, Option } from '@ephox/katamari';
-import { UnitTest, assert } from '@ephox/bedrock-client';
 
 UnitTest.test('DownTest', function () {
   const family = Tracks.track(

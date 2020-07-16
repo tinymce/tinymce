@@ -1,6 +1,6 @@
 import { Assertions, Chain, GeneralSteps, Logger, Mouse, UiFinder, Waiter } from '@ephox/agar';
 import { Boxes } from '@ephox/alloy';
-import { Body } from '@ephox/sugar';
+import { SugarBody } from '@ephox/sugar';
 
 import { ToolbarMode } from 'tinymce/themes/silver/api/Settings';
 
@@ -20,8 +20,8 @@ const getToolbarSelector = (type: ToolbarMode, opening: boolean) => {
 const sOpenMenuWithSelector = (label: string, selector: string) => Logger.t(
   `Trying to open menu: ${label}`,
   GeneralSteps.sequence([
-    Mouse.sClickOn(Body.body(), selector),
-    Chain.asStep(Body.body(), [
+    Mouse.sClickOn(SugarBody.body(), selector),
+    Chain.asStep(SugarBody.body(), [
       UiFinder.cWaitForVisible('Waiting for menu', '[role="menu"]')
     ])
   ])
@@ -30,16 +30,16 @@ const sOpenMenuWithSelector = (label: string, selector: string) => Logger.t(
 const sOpenMore = (type: ToolbarMode) => Logger.t(
   'Trying to open more drawer',
   GeneralSteps.sequence([
-    Mouse.sClickOn(Body.body(), 'button[title="More..."]'),
-    UiFinder.sWaitForVisible('Waiting for more drawer to open', Body.body(), getToolbarSelector(type, true))
+    Mouse.sClickOn(SugarBody.body(), 'button[title="More..."]'),
+    UiFinder.sWaitForVisible('Waiting for more drawer to open', SugarBody.body(), getToolbarSelector(type, true))
   ])
 );
 
 const sCloseMore = (type: ToolbarMode) => Logger.t(
   'Trying to close more drawer',
   GeneralSteps.sequence([
-    Mouse.sClickOn(Body.body(), 'button[title="More..."]'),
-    Waiter.sTryUntil('Waiting for more drawer to close', UiFinder.sNotExists(Body.body(), getToolbarSelector(type, false)))
+    Mouse.sClickOn(SugarBody.body(), 'button[title="More..."]'),
+    Waiter.sTryUntil('Waiting for more drawer to close', UiFinder.sNotExists(SugarBody.body(), getToolbarSelector(type, false)))
   ])
 );
 
@@ -61,7 +61,7 @@ const sOpenNestedMenus = (menus: OpenNestedMenus[]) => {
   return GeneralSteps.sequence(openMenusSequence);
 };
 
-const sAssertMoreDrawerInViewport = (type: ToolbarMode) => Chain.asStep(Body.body(), [
+const sAssertMoreDrawerInViewport = (type: ToolbarMode) => Chain.asStep(SugarBody.body(), [
   UiFinder.cFindIn(getToolbarSelector(type, true)),
   Chain.op((drawer) => {
     const winBox = Boxes.win();

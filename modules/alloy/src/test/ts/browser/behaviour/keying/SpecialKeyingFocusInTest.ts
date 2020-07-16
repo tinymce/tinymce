@@ -1,6 +1,6 @@
 import { FocusTools, GeneralSteps, Log, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Body, Focus, SelectorFind } from '@ephox/sugar';
+import { Focus, SelectorFind, SugarBody } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
@@ -55,7 +55,7 @@ UnitTest.asynctest('SpecialKeyingFocusInTest', (success, failure) => {
     return [
       GuiSetup.mSetupKeyLogger(body),
       Step.sync(() => {
-        Focus.focus(Body.body());
+        Focus.focus(SugarBody.body());
       }),
       FocusTools.sTryOnSelector('Focus should start on body', doc, 'body'),
 

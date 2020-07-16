@@ -3,7 +3,7 @@ import { Boxes } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
 import { Editor as McEditor } from '@ephox/mcagar';
-import { Body } from '@ephox/sugar';
+import { SugarBody } from '@ephox/sugar';
 import { RawEditorSettings } from 'tinymce/core/api/SettingsTypes';
 import Theme from 'tinymce/themes/silver/Theme';
 
@@ -29,7 +29,7 @@ UnitTest.asynctest('ToolbarBottomTest - assert direction that menus open in when
     return Log.chainsAsStep('', scenario.message, [
       NamedChain.asChain([
         NamedChain.write('editor', McEditor.cFromSettings(nuSettings)),
-        NamedChain.writeValue('body', Body.body()),
+        NamedChain.writeValue('body', SugarBody.body()),
         ...Arr.flatten(Arr.map(scenario.initial, (p) => [
           NamedChain.read('body', Mouse.cClickOn(p.clickOn)),
           NamedChain.read('body', UiFinder.cWaitForVisible(`Wait for "${p.waitFor}" to be visible`, p.waitFor))

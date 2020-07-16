@@ -1,10 +1,10 @@
 import { assert, Assert, UnitTest } from '@ephox/bedrock-client';
-import { createFile } from 'ephox/agar/api/Files';
 import { Blob } from '@ephox/dom-globals';
 import { Type } from '@ephox/katamari';
-import { createDataTransferItemList } from 'ephox/agar/datatransfer/DataTransferItemList';
-import { getData } from 'ephox/agar/datatransfer/DataTransferItem';
+import { createFile } from 'ephox/agar/api/Files';
 import { createDataTransfer } from 'ephox/agar/datatransfer/DataTransfer';
+import { getData } from 'ephox/agar/datatransfer/DataTransferItem';
+import { createDataTransferItemList } from 'ephox/agar/datatransfer/DataTransferItemList';
 import { setProtectedMode, setReadOnlyMode } from 'ephox/agar/datatransfer/Mode';
 
 UnitTest.test('DataTransferItemListTest', () => {

@@ -1,12 +1,12 @@
 import { Option } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 
 import * as Behaviour from '../../api/behaviour/Behaviour';
-import * as AlloyEvents from '../../api/events/AlloyEvents';
 import { AlloyComponent } from '../../api/component/ComponentApi';
+import * as AlloyEvents from '../../api/events/AlloyEvents';
 import { DomDefinitionDetail } from '../../dom/DomDefinition';
 import { DomModification } from '../../dom/DomModification';
-import { NativeSimulatedEvent, EventFormat } from '../../events/SimulatedEvent';
+import { EventFormat, NativeSimulatedEvent } from '../../events/SimulatedEvent';
 import { DropEvent } from './DropEvent';
 import { DragnDropImageClone } from './ImageClone';
 
@@ -22,9 +22,9 @@ export interface StartingDragndropConfigSpec {
   phoneyTypes?: string[];
   effectAllowed?: string;
   getData?: (component: AlloyComponent) => string;
-  getImageParent?: (component: AlloyComponent) => Element;
+  getImageParent?: (component: AlloyComponent) => SugarElement;
   getImage?: (component: AlloyComponent) => DragnDropImageClone;
-  canDrag?: (component: AlloyComponent, target: Element) => boolean;
+  canDrag?: (component: AlloyComponent, target: SugarElement) => boolean;
   onDragstart?: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;
   onDragover?: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;
   onDragend?: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;
@@ -35,13 +35,13 @@ export interface DragStartingConfig {
   phoneyTypes: string[];
   effectAllowed: string;
   getData: Option<(component: AlloyComponent) => string>;
-  getImageParent: Option<(component: AlloyComponent) => Element>;
+  getImageParent: Option<(component: AlloyComponent) => SugarElement>;
   getImage: Option<(component: AlloyComponent) => {
-    element: () => Element;
+    element: () => SugarElement;
     x: () => number;
     y: () => number;
   }>;
-  canDrag: (component: AlloyComponent, target: Element) => boolean;
+  canDrag: (component: AlloyComponent, target: SugarElement) => boolean;
   onDragstart: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;
   onDragover: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;
   onDragend: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;

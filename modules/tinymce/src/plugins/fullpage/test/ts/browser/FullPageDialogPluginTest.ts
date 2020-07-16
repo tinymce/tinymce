@@ -4,7 +4,7 @@ import {
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { TinyLoader } from '@ephox/mcagar';
-import { Body, Element, Value } from '@ephox/sugar';
+import { SugarBody, SugarElement, Value } from '@ephox/sugar';
 import Plugin from 'tinymce/plugins/fullpage/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
@@ -25,8 +25,8 @@ UnitTest.asynctest('browser.tinymce.plugins.fullpage.FullPageDialogPluginTest', 
     'test inital data',
     GeneralSteps.sequence([
       sOpenDialog(editor),
-      UiFinder.sWaitFor('Waiting for dialog to appear', Body.body(), '.tox-dialog-wrap'),
-      Chain.asStep(Body.body(), [
+      UiFinder.sWaitFor('Waiting for dialog to appear', SugarBody.body(), '.tox-dialog-wrap'),
+      Chain.asStep(SugarBody.body(), [
         UiFinder.cFindIn('div.tox-dialog'),
         Chain.op((dialog) => {
           Assertions.assertStructure(
@@ -155,7 +155,7 @@ UnitTest.asynctest('browser.tinymce.plugins.fullpage.FullPageDialogPluginTest', 
 
   const cGetInput = (selector: string) => Chain.control(
     Chain.fromChains([
-      Chain.inject(Body.body()),
+      Chain.inject(SugarBody.body()),
       UiFinder.cFindIn(selector)
     ]),
     Guard.addLogging('Get input')
@@ -171,7 +171,7 @@ UnitTest.asynctest('browser.tinymce.plugins.fullpage.FullPageDialogPluginTest', 
   );
 
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
-    const doc = Element.fromDom(document);
+    const doc = SugarElement.fromDom(document);
     Pipeline.async({},
       Log.steps('TBA', 'FullPage: Test initial data, set new input values, open dialog, verify that the dialog data matches the input values', [
 
@@ -206,7 +206,7 @@ UnitTest.asynctest('browser.tinymce.plugins.fullpage.FullPageDialogPluginTest', 
         Keyboard.sKeydown(doc, Keys.tab(), { }),
         FocusTools.sIsOnSelector('The save button should be focused', doc, 'button:contains("Save")'),
         Keyboard.sKeydown(doc, Keys.enter(), { }),
-        UiFinder.sNotExists(Body.body(), 'div.tox-dialog'),
+        UiFinder.sNotExists(SugarBody.body(), 'div.tox-dialog'),
 
         sOpenDialog(editor),
         sCheckInputValue('Title', selectors.titleInput, 'the nu title'),

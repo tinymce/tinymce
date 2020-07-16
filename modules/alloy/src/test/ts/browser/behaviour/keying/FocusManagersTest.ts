@@ -1,7 +1,7 @@
 import { Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Step, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { Attr, Element, Focus, SelectorFind } from '@ephox/sugar';
+import { Attribute, Focus, SelectorFind, SugarElement } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
@@ -16,8 +16,8 @@ UnitTest.asynctest('Browser Test: behaviour.keying.FocusManagersTest', (success,
   const createManager = (prefix: string) => {
     let active: string | undefined = '';
 
-    const set = (_component: AlloyComponent, focusee: Element) => {
-      active = Attr.get(focusee, 'class');
+    const set = (_component: AlloyComponent, focusee: SugarElement) => {
+      active = Attribute.get(focusee, 'class');
     };
 
     const get = (component: AlloyComponent) => SelectorFind.descendant(component.element(), '.' + active);

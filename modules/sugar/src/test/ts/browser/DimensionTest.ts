@@ -2,9 +2,9 @@ import { assert, UnitTest } from '@ephox/bedrock-client';
 import { HTMLDivElement, HTMLElement, HTMLTableElement } from '@ephox/dom-globals';
 import * as Insert from 'ephox/sugar/api/dom/Insert';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
-import * as Body from 'ephox/sugar/api/node/Body';
-import Element from 'ephox/sugar/api/node/Element';
-import * as Attr from 'ephox/sugar/api/properties/Attr';
+import * as SugarBody from 'ephox/sugar/api/node/SugarBody';
+import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
+import * as Attribute from 'ephox/sugar/api/properties/Attribute';
 import * as Css from 'ephox/sugar/api/properties/Css';
 import * as Height from 'ephox/sugar/api/view/Height';
 import * as Width from 'ephox/sugar/api/view/Width';
@@ -13,9 +13,9 @@ import Div from 'ephox/sugar/test/Div';
 import MathElement from 'ephox/sugar/test/MathElement';
 
 interface DimensionApi {
-  get: (element: Element<HTMLElement>) => number;
-  getOuter: (element: Element<HTMLElement>) => number;
-  set: (element: Element<HTMLElement>, value: number | string) => void;
+  get: (element: SugarElement<HTMLElement>) => number;
+  getOuter: (element: SugarElement<HTMLElement>) => number;
+  set: (element: SugarElement<HTMLElement>, value: number | string) => void;
 }
 
 UnitTest.test('DimensionTest', () => {
@@ -29,14 +29,14 @@ UnitTest.test('DimensionTest', () => {
     if (borderBox) {
       Css.set(c, 'box-sizing', 'border-box');
     }
-    Insert.append(c, Element.fromHtml('&nbsp;')); // div has no height without content
+    Insert.append(c, SugarElement.fromHtml('&nbsp;')); // div has no height without content
 
     // disconnected tests
     assert.eq(0, dimension.get(c));
     assert.eq(0, dimension.getOuter(c));
 
-    Insert.append(Body.body(), c);
-    Insert.append(Body.body(), m);
+    Insert.append(SugarBody.body(), c);
+    Insert.append(SugarBody.body(), m);
 
     dimension.get(m);
     dimension.getOuter(m);
@@ -118,7 +118,7 @@ UnitTest.test('DimensionTest', () => {
 
     // TODO: Far more extensive tests involving combinations of border, margin and padding.
 
-    Attr.remove(c, 'style');
+    Attribute.remove(c, 'style');
     dimension.set(c, 50);
     assert.eq(50, dimension.get(c));
     assert.eq(50, dimension.getOuter(c));
@@ -141,9 +141,9 @@ UnitTest.test('DimensionTest', () => {
     max-height & max-width tests
   */
 
-  const bounds = Element.fromTag('div');
-  const container = Element.fromTag('div');
-  const inner = Element.fromTag('div');
+  const bounds = SugarElement.fromTag('div');
+  const container = SugarElement.fromTag('div');
+  const inner = SugarElement.fromTag('div');
 
   const paddingTop = 2;
   const marginBottom = 3;
@@ -155,7 +155,7 @@ UnitTest.test('DimensionTest', () => {
   const maxHeight = 50;
   const maxWidth = 200;
 
-  Attr.set(bounds, 'title', 'I am the bounds, i should never be larger than ' + maxHeight + 'px high or ' + maxWidth + 'px wide, and my scrollHeight/Width should never exceed those limits either. k?');
+  Attribute.set(bounds, 'title', 'I am the bounds, i should never be larger than ' + maxHeight + 'px high or ' + maxWidth + 'px wide, and my scrollHeight/Width should never exceed those limits either. k?');
   Css.setAll(bounds, {
     display: 'inline-block',
     overflow: 'hidden' // for automated test purposes hidden is best for IE, scroll will add scroll bars
@@ -176,7 +176,7 @@ UnitTest.test('DimensionTest', () => {
 
   Insert.append(container, inner);
   Insert.append(bounds, container);
-  Insert.append(Body.body(), bounds);
+  Insert.append(SugarBody.body(), bounds);
 
   // Aggregator test
   // Dimension.agregate takes an element and a list of propeties that return measurement values.
@@ -232,12 +232,12 @@ UnitTest.test('DimensionTest', () => {
   assert.eq(true, boundsWidth > maxWidth);
 
   // Table height test Firefox will exclude caption from offsetHeight
-  const tbl = Element.fromHtml<HTMLTableElement>('<table><caption style="height: 300px"></caption><tbody><tr><td style="height: 10px"></td></tr></tbody></table>');
+  const tbl = SugarElement.fromHtml<HTMLTableElement>('<table><caption style="height: 300px"></caption><tbody><tr><td style="height: 10px"></td></tr></tbody></table>');
   Insert.append(bounds, tbl);
   assert.eq(true, Height.getOuter(tbl) > 300, 'Height should be more than 300');
 
   // Height on detached node
-  const detachedElm = Element.fromHtml<HTMLDivElement>('<div>a</div>');
+  const detachedElm = SugarElement.fromHtml<HTMLDivElement>('<div>a</div>');
   assert.eq(0, Height.getOuter(detachedElm), 'Should be zero for a detached element');
 
   // This test is broken in ie10, we don't understand exactly how it calculates max-width, every other platform passes.

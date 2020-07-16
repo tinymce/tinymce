@@ -1,10 +1,10 @@
 import { ApproxStructure, Assertions, Chain, GeneralSteps, Mouse, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
-
 import { Types } from '@ephox/bridge';
 import { Cell } from '@ephox/katamari';
-import { Body } from '@ephox/sugar';
+import { SugarBody } from '@ephox/sugar';
+
 import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 import TestExtras from '../../module/TestExtras';
 
@@ -40,8 +40,8 @@ UnitTest.asynctest('WindowManager:url-dialog Test', (success, failure) => {
   ]);
 
   const sTestClose = GeneralSteps.sequence([
-    Mouse.sClickOn(Body.body(), '[aria-label="Close"]'),
-    UiFinder.sNotExists(Body.body(), '[role="dialog"]')
+    Mouse.sClickOn(SugarBody.body(), '[aria-label="Close"]'),
+    UiFinder.sNotExists(SugarBody.body(), '[role="dialog"]')
   ]);
 
   Pipeline.async({}, [
@@ -50,7 +50,7 @@ UnitTest.asynctest('WindowManager:url-dialog Test', (success, failure) => {
       ApproxStructure.build((s, str, arr) => s.element('body', {
         classes: [ arr.has('tox-dialog__disable-scroll') ]
       })),
-      Body.body()
+      SugarBody.body()
     ),
     Waiter.sTryUntil(
       'Waiting for an initial message to be received from the iframe',
@@ -64,7 +64,7 @@ UnitTest.asynctest('WindowManager:url-dialog Test', (success, failure) => {
       'Waiting for the reply message to be received from the iframe',
       store.sAssertEq('Checking stuff', [ 'onMessage', 'onMessage' ])
     ),
-    Mouse.sClickOn(Body.body(), 'button:contains("Barny Text")'),
+    Mouse.sClickOn(SugarBody.body(), 'button:contains("Barny Text")'),
     sTestClose,
     Waiter.sTryUntil(
       'Waiting for all dialog events when closing',
@@ -80,7 +80,7 @@ UnitTest.asynctest('WindowManager:url-dialog Test', (success, failure) => {
       ApproxStructure.build((s, str, arr) => s.element('body', {
         classes: [ arr.not('tox-dialog__disable-scroll') ]
       })),
-      Body.body()
+      SugarBody.body()
     )
   ], () => {
     helpers.destroy();

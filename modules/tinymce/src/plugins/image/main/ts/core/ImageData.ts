@@ -6,10 +6,10 @@
  */
 
 import { document, HTMLElement, Node } from '@ephox/dom-globals';
-import { Attr, Element } from '@ephox/sugar';
+import { Type } from '@ephox/katamari';
+import { Attribute, SugarElement } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import * as Utils from './Utils';
-import { Type } from '@ephox/katamari';
 
 const DOM = DOMUtils.DOM;
 
@@ -248,16 +248,16 @@ const setAlt = (image: HTMLElement, alt: string, isDecorative: boolean) => {
   if (isDecorative) {
     DOM.setAttrib(image, 'role', 'presentation');
     // unfortunately can't set "" attr value with domutils
-    const sugarImage = Element.fromDom(image);
-    Attr.set(sugarImage, 'alt', '');
+    const sugarImage = SugarElement.fromDom(image);
+    Attribute.set(sugarImage, 'alt', '');
   } else {
     if (Type.isNull(alt)) {
-      const sugarImage = Element.fromDom(image);
-      Attr.remove(sugarImage, 'alt');
+      const sugarImage = SugarElement.fromDom(image);
+      Attribute.remove(sugarImage, 'alt');
     } else {
       // unfortunately can't set "" attr value with domutils
-      const sugarImage = Element.fromDom(image);
-      Attr.set(sugarImage, 'alt', alt);
+      const sugarImage = SugarElement.fromDom(image);
+      Attribute.set(sugarImage, 'alt', alt);
     }
     if (DOM.getAttrib(image, 'role') === 'presentation') {
       DOM.setAttrib(image, 'role', '');

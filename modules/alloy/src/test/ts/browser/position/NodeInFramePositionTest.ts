@@ -2,9 +2,9 @@ import { Chain, Cursors, Guard, NamedChain } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Window } from '@ephox/dom-globals';
 import { Option, Result } from '@ephox/katamari';
-import { Css, DomEvent, Element, SelectorFind, WindowSelection } from '@ephox/sugar';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { Css, DomEvent, SelectorFind, SugarElement, WindowSelection } from '@ephox/sugar';
 
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Container } from 'ephox/alloy/api/ui/Container';
@@ -16,7 +16,7 @@ import * as Frames from '../../../../demo/ts/ephox/alloy/demo/frames/Frames';
 
 UnitTest.asynctest('SelectionInFramePositionTest', (success, failure) => {
 
-  const frame = Element.fromTag('iframe');
+  const frame = SugarElement.fromTag('iframe');
 
   GuiSetup.setup((_store, _doc, _body) => {
     let content = '';
@@ -54,8 +54,8 @@ UnitTest.asynctest('SelectionInFramePositionTest', (success, failure) => {
       const node = data.classic.element().dom().contentWindow.document.querySelector('#p3');
       return {
         anchor: 'node',
-        root: Element.fromDom(data.classic.element().dom().contentWindow.document.body),
-        node: Option.some(Element.fromDom(node))
+        root: SugarElement.fromDom(data.classic.element().dom().contentWindow.document.body),
+        node: Option.some(SugarElement.fromDom(node))
       };
     });
 
@@ -65,7 +65,7 @@ UnitTest.asynctest('SelectionInFramePositionTest', (success, failure) => {
       const path = Cursors.path(rawPath);
 
       return Chain.binder((win: Window) => {
-        const body = Element.fromDom(win.document.body);
+        const body = SugarElement.fromDom(win.document.body);
         const range = Cursors.calculate(body, path);
         WindowSelection.setExact(
           win,
@@ -95,7 +95,7 @@ UnitTest.asynctest('SelectionInFramePositionTest', (success, failure) => {
             [
               Chain.control(
                 Chain.binder((data: any) => {
-                  const root = Element.fromDom(data.classic.element().dom().contentWindow.document.body);
+                  const root = SugarElement.fromDom(data.classic.element().dom().contentWindow.document.body);
                   return SelectorFind.descendant(root, 'p').fold(() => Result.error('Could not find paragraph yet'), (_p) => Result.value(data));
                 }),
                 Guard.tryUntil('Waiting for content to load in iframe', 10, 10000)

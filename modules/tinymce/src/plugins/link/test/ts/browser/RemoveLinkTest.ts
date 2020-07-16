@@ -2,7 +2,7 @@ import { Assertions, Chain, Log, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyDom, TinyLoader, TinyUi } from '@ephox/mcagar';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 
@@ -15,7 +15,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.RemoveLinkTest', (success, fail
     const tinyApis = TinyApis(editor);
     const tinyUi = TinyUi(editor);
     const doc = TinyDom.fromDom(document);
-    const body = Element.fromDom(editor.getBody());
+    const body = SugarElement.fromDom(editor.getBody());
 
     Pipeline.async({}, [
       Log.stepsAsStep('TBA', 'Removing a link with a collapsed selection', [

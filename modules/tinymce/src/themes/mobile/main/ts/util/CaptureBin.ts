@@ -5,12 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Css, Element, Focus, Insert, Remove } from '@ephox/sugar';
-import { HTMLInputElement, Node as DomNode } from '@ephox/dom-globals';
+import { HTMLInputElement, Node } from '@ephox/dom-globals';
+import { Css, Focus, Insert, Remove, SugarElement } from '@ephox/sugar';
 
-const input = (parent: Element<DomNode>, operation: (e: Element<HTMLInputElement>) => void): void => {
+const input = (parent: SugarElement<Node>, operation: (e: SugarElement<HTMLInputElement>) => void): void => {
   // to capture focus allowing the keyboard to remain open with no 'real' selection
-  const input: Element<HTMLInputElement> = Element.fromTag('input');
+  const input: SugarElement<HTMLInputElement> = SugarElement.fromTag('input');
   Css.setAll(input, {
     opacity: '0',
     position: 'absolute',

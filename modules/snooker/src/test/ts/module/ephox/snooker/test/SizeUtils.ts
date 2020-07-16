@@ -1,10 +1,10 @@
 import { Assert } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { Css, Element, Head, Insert, Remove, SelectorFilter } from '@ephox/sugar';
+import { Css, Insert, Remove, SelectorFilter, SugarElement, SugarHead } from '@ephox/sugar';
 
 const addStyles = () => {
-  const style = Element.fromHtml('<style>table { border-collapse: collapse; } td { border: 1px solid #333; min-width: 25px; }</style>');
-  Insert.append(Head.head(), style);
+  const style = SugarElement.fromHtml('<style>table { border-collapse: collapse; } td { border: 1px solid #333; min-width: 25px; }</style>');
+  Insert.append(SugarHead.head(), style);
 
   return {
     remove: () => Remove.remove(style)
@@ -23,7 +23,7 @@ const reducePrecision = (value: string, precision: number = 1) => {
   }
 };
 
-const readWidth = (element: Element) => {
+const readWidth = (element: SugarElement) => {
   const rows = SelectorFilter.descendants(element, 'tr');
   return Arr.map(rows, (row) => {
     const cells = SelectorFilter.descendants(row, 'td,th');
@@ -33,7 +33,7 @@ const readWidth = (element: Element) => {
   });
 };
 
-const readHeight = (element: Element) => {
+const readHeight = (element: SugarElement) => {
   const rows = SelectorFilter.descendants(element, 'tr');
   return Arr.map(rows, (row) => {
     const cells = SelectorFilter.descendants(row, 'td,th');

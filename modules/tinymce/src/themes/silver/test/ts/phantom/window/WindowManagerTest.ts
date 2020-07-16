@@ -3,7 +3,7 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { Types } from '@ephox/bridge';
 import { document, HTMLInputElement } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
-import { Body, Element as SugarElement } from '@ephox/sugar';
+import { SugarBody, SugarElement } from '@ephox/sugar';
 import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 import TestExtras from '../../module/TestExtras';
 
@@ -40,14 +40,14 @@ UnitTest.asynctest('WindowManager:configurations Test', (success, failure) => {
   });
 
   const sTeardown = GeneralSteps.sequence([
-    Mouse.sClickOn(Body.body(), '.tox-button--icon[aria-label="Close"]'),
+    Mouse.sClickOn(SugarBody.body(), '.tox-button--icon[aria-label="Close"]'),
     Waiter.sTryUntil(
       'Waiting for blocker to disappear after clicking close',
-      UiFinder.sNotExists(Body.body(), '.tox-dialog-wrap')
+      UiFinder.sNotExists(SugarBody.body(), '.tox-dialog-wrap')
     )
   ]);
 
-  const sAssertSinkStructure = (asserter) => Chain.asStep(Body.body(), [
+  const sAssertSinkStructure = (asserter) => Chain.asStep(SugarBody.body(), [
     UiFinder.cWaitFor('Looking for sink', '.mce-silver-sink'),
     Chain.op(asserter)
   ]);
@@ -57,10 +57,10 @@ UnitTest.asynctest('WindowManager:configurations Test', (success, failure) => {
     GeneralSteps.sequence([
       Waiter.sTryUntil(
         'Waiting for any other dialogs to disappear',
-        UiFinder.sNotExists(Body.body(), '.tox-button--icon[aria-label="Close"]')
+        UiFinder.sNotExists(SugarBody.body(), '.tox-button--icon[aria-label="Close"]')
       ),
       drag ? sSetupDialogWithDragging(conf) : sSetupDialogWithoutDragging(conf),
-      UiFinder.sWaitFor('Waiting for dialog to appear', Body.body(), '.tox-button--icon[aria-label="Close"]'),
+      UiFinder.sWaitFor('Waiting for dialog to appear', SugarBody.body(), '.tox-button--icon[aria-label="Close"]'),
       sAssertSinkStructure(asserter),
       sTeardown
     ])

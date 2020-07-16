@@ -6,9 +6,9 @@
  */
 
 import { Types } from '@ephox/bridge';
-import { Element as DomElement, HTMLElement, HTMLTableRowElement, Node } from '@ephox/dom-globals';
+import { Element, HTMLElement, HTMLTableRowElement, Node } from '@ephox/dom-globals';
 import { Arr, Fun, Obj, Strings } from '@ephox/katamari';
-import { Css, Element } from '@ephox/sugar';
+import { Css, SugarElement } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import * as Styles from '../actions/Styles';
@@ -47,7 +47,7 @@ const buildListItems = (inputList: any, startItems?: InternalClassListItem[]): I
 const rgbToHex = (dom: DOMUtils) => (value: string) => Strings.startsWith(value, 'rgb') ? dom.toHex(value) : value;
 
 const extractAdvancedStyles = (dom: DOMUtils, elm: Node) => {
-  const element = Element.fromDom(elm);
+  const element = SugarElement.fromDom(elm);
   return {
     borderwidth: Css.getRaw(element, 'border-width').getOr(''),
     borderstyle: Css.getRaw(element, 'border-style').getOr(''),
@@ -201,14 +201,14 @@ const extractDataFromSettings = (editor: Editor, hasAdvTableTab: boolean): Table
   return data;
 };
 
-const extractDataFromTableElement = (editor: Editor, elm: DomElement, hasAdvTableTab: boolean): TableData => {
-  const getBorder = (dom: DOMUtils, elm: DomElement) => {
+const extractDataFromTableElement = (editor: Editor, elm: Element, hasAdvTableTab: boolean): TableData => {
+  const getBorder = (dom: DOMUtils, elm: Element) => {
     // Cases (in order to check):
     // 1. shouldStyleWithCss - extract border-width style if it exists
     // 2. !shouldStyleWithCss && border attribute - set border attribute as value
     // 3. !shouldStyleWithCss && nothing on the table - grab styles from the first th or td
 
-    const optBorderWidth = Css.getRaw(Element.fromDom(elm), 'border-width');
+    const optBorderWidth = Css.getRaw(SugarElement.fromDom(elm), 'border-width');
     if (shouldStyleWithCss(editor) && optBorderWidth.isSome()) {
       return optBorderWidth.getOr('');
     }

@@ -1,5 +1,6 @@
+import { Assert, TestLabel, UnitTest } from '@ephox/bedrock-client';
 import { Obj, Option } from '@ephox/katamari';
-import { Compare, Element, Truncate } from '@ephox/sugar';
+import { Compare, SugarElement, Truncate } from '@ephox/sugar';
 
 import { elementQueue, StructAssert } from '../assertions/ApproxStructures';
 import * as Differ from '../assertions/Differ';
@@ -8,7 +9,6 @@ import { Chain } from './Chain';
 import * as Logger from './Logger';
 import { Step } from './Step';
 import * as UiFinder from './UiFinder';
-import { Assert, TestLabel, UnitTest } from '@ephox/bedrock-client';
 
 const toStep = <U extends any[]>(method: (...args: U) => void) =>
   <T>(...args: U) => Step.sync<T>(() => {
@@ -40,7 +40,7 @@ const assertHtml = (label: TestLabel, expected: string, actual: string): void =>
   }
 };
 
-const assertStructure = (label: TestLabel, expected: StructAssert, container: Element<any>): void => {
+const assertStructure = (label: TestLabel, expected: StructAssert, container: SugarElement<any>): void => {
   Logger.sync(label, () => {
     if (expected.type === 'advanced') {
       expected.doAssert(elementQueue([ container ], Option.none()));
@@ -51,14 +51,14 @@ const assertStructure = (label: TestLabel, expected: StructAssert, container: El
 };
 
 const assertHtmlStructure = (label: TestLabel, expected: string, actual: string): void => {
-  assertStructure(label, ApproxStructure.fromHtml(expected), Element.fromHtml(actual));
+  assertStructure(label, ApproxStructure.fromHtml(expected), SugarElement.fromHtml(actual));
 };
 
-const assertHtmlStructure2 = (label: TestLabel, expected: string, actual: Element<any>): void => {
+const assertHtmlStructure2 = (label: TestLabel, expected: string, actual: SugarElement<any>): void => {
   assertStructure(label, ApproxStructure.fromHtml(expected), actual);
 };
 
-const assertPresence = (label: TestLabel, expected: Record<string, number>, container: Element<any>): void => {
+const assertPresence = (label: TestLabel, expected: Record<string, number>, container: SugarElement<any>): void => {
   Obj.each(expected, (num: number, selector: string) => {
     const actual = UiFinder.findAllIn(container, selector).length;
     Assert.eq(TestLabel.concat('Did not find ' + num + ' of ' + selector + ', found: ' + actual + '. Test: ', label), num, actual);
@@ -67,7 +67,7 @@ const assertPresence = (label: TestLabel, expected: Record<string, number>, cont
 
 const assertEq = Assert.eq;
 
-const assertDomEq = (label: TestLabel, expected: Element<any>, actual: Element<any>): void => {
+const assertDomEq = (label: TestLabel, expected: SugarElement<any>, actual: SugarElement<any>): void => {
   Assert.eq(
     TestLabel.concat(label, () => '\nExpected : ' + Truncate.getHtml(expected) + '\nActual: ' + Truncate.getHtml(actual)),
     true,

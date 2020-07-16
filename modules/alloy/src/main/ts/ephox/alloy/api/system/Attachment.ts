@@ -1,18 +1,18 @@
 import { Arr } from '@ephox/katamari';
-import { Body, Insert, Element, Traverse, Remove } from '@ephox/sugar';
+import { Insert, Remove, SugarBody, SugarElement, Traverse } from '@ephox/sugar';
 
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { GuiSystem } from '../../api/system/Gui';
 import * as InternalAttachment from '../../system/InternalAttachment';
+import { AlloyComponent } from '../component/ComponentApi';
+import { GuiSystem } from './Gui';
 
 const attach = (parent: AlloyComponent, child: AlloyComponent): void => {
   attachWith(parent, child, Insert.append);
 };
 
-const attachWith = (parent: AlloyComponent, child: AlloyComponent, insertion: (parent: Element, child: Element) => void): void => {
+const attachWith = (parent: AlloyComponent, child: AlloyComponent, insertion: (parent: SugarElement, child: SugarElement) => void): void => {
   parent.getSystem().addToWorld(child);
   insertion(parent.element(), child.element());
-  if (Body.inBody(parent.element())) { InternalAttachment.fireAttaching(child); }
+  if (SugarBody.inBody(parent.element())) { InternalAttachment.fireAttaching(child); }
   parent.syncComponents();
 };
 
@@ -40,15 +40,15 @@ const detachChildren = (component: AlloyComponent): void => {
   component.syncComponents();
 };
 
-const attachSystem = (element: Element, guiSystem: GuiSystem): void => {
+const attachSystem = (element: SugarElement, guiSystem: GuiSystem): void => {
   attachSystemWith(element, guiSystem, Insert.append);
 };
 
-const attachSystemAfter = (element: Element, guiSystem: GuiSystem): void => {
+const attachSystemAfter = (element: SugarElement, guiSystem: GuiSystem): void => {
   attachSystemWith(element, guiSystem, Insert.after);
 };
 
-const attachSystemWith = (element: Element, guiSystem: GuiSystem, inserter: (marker: Element, element: Element) => void): void => {
+const attachSystemWith = (element: SugarElement, guiSystem: GuiSystem, inserter: (marker: SugarElement, element: SugarElement) => void): void => {
   inserter(element, guiSystem.element());
   const children = Traverse.children(guiSystem.element());
   Arr.each(children, (child) => {

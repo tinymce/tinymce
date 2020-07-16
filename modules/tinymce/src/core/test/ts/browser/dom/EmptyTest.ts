@@ -1,13 +1,13 @@
 import { Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
-import { Element } from '@ephox/sugar';
-import * as Empty from 'tinymce/core/dom/Empty';
 import { UnitTest } from '@ephox/bedrock-client';
+import { SugarElement } from '@ephox/sugar';
+import * as Empty from 'tinymce/core/dom/Empty';
 
 UnitTest.asynctest('browser.tinymce.core.dom.EmptyTest', function (success, failure) {
 
   const sTestEmpty = function (html, expected) {
     return Step.sync(function () {
-      const elm = Element.fromHtml(html);
+      const elm = SugarElement.fromHtml(html);
       const expectedLabel = expected ? 'empty' : 'not empty';
       Assertions.assertEq(html + ' should be treated as ' + expectedLabel, expected, Empty.isEmpty(elm));
     });

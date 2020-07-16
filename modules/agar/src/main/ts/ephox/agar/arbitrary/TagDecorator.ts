@@ -1,7 +1,7 @@
+import { Option } from '@ephox/katamari';
 import Jsc from '@ephox/wrap-jsverify';
 
 import { WeightedChoice } from './WeightedChoice';
-import { Option } from '@ephox/katamari';
 
 interface Decorator {
   weight: number;

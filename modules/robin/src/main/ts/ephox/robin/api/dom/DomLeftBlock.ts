@@ -1,14 +1,14 @@
 import { DomUniverse } from '@ephox/boss';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import * as LeftBlock from '../general/LeftBlock';
 
 const universe = DomUniverse();
 
-const top = function (item: Element) {
+const top = function (item: SugarElement) {
   return LeftBlock.top(universe, item);
 };
 
-const all = function (item: Element) {
+const all = function (item: SugarElement) {
   return LeftBlock.all(universe, item);
 };
 

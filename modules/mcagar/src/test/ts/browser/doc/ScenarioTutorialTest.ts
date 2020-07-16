@@ -1,7 +1,7 @@
 import { Arbitraries, Assertions, Pipeline, Step, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import { Editor } from 'ephox/mcagar/alien/EditorTypes';
 import { TinyApis } from 'ephox/mcagar/api/TinyApis';
 import { TinyDom } from 'ephox/mcagar/api/TinyDom';
@@ -10,7 +10,7 @@ import { TinyScenarios } from 'ephox/mcagar/api/TinyScenarios';
 
 UnitTest.asynctest('Tutorial: Property Testing with TinyMCE', (success, failure) => {
 
-  const sAssertion = (editor: Editor, body: Element) => Step.sync(function () {
+  const sAssertion = (editor: Editor, body: SugarElement) => Step.sync(function () {
     const strongs = UiFinder.findAllIn(body, 'strong');
     Assertions.assertEq('There should be no strong tags', 0, strongs.length);
     const editorContent1 = editor.getContent();

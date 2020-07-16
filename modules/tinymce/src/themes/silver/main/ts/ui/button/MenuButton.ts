@@ -8,7 +8,7 @@
 import { AlloyComponent, AlloyTriggers, Disabling, MementoRecord, SketchSpec, Tabstopping } from '@ephox/alloy';
 import { Menu, Toolbar, Types } from '@ephox/bridge';
 import { Arr, Cell, Option } from '@ephox/katamari';
-import { Attr, Class, Focus } from '@ephox/sugar';
+import { Attribute, Class, Focus } from '@ephox/sugar';
 import { formActionEvent } from 'tinymce/themes/silver/ui/general/FormEvents';
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { renderCommonDropdown } from '../dropdown/CommonDropdown';
@@ -28,10 +28,10 @@ const getMenuButtonApi = (component: AlloyComponent): Toolbar.ToolbarMenuButtonI
     const elm = component.element();
     if (state) {
       Class.add(elm, ToolbarButtonClasses.Ticked);
-      Attr.set(elm, 'aria-pressed', true);
+      Attribute.set(elm, 'aria-pressed', true);
     } else {
       Class.remove(elm, ToolbarButtonClasses.Ticked);
-      Attr.remove(elm, 'aria-pressed');
+      Attribute.remove(elm, 'aria-pressed');
     }
   },
   isActive: () => Class.has(component.element(), ToolbarButtonClasses.Ticked)

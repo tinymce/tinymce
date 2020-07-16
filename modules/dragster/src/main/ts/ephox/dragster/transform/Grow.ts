@@ -1,5 +1,5 @@
 import { Bindable, Event, Events } from '@ephox/porkbun';
-import { Element, Height, Width } from '@ephox/sugar';
+import { Height, SugarElement, Width } from '@ephox/sugar';
 
 export interface GrowEvent {
   readonly x: number;
@@ -23,7 +23,7 @@ interface Growth {
 type GrowthFn = (x: number, y: number) => Growth;
 
 const grower = function (f: GrowthFn) {
-  return function (element: Element) {
+  return function (element: SugarElement) {
     const events = Events.create({
       grow: Event([ 'x', 'y' ])
     }) as GrowEvents;

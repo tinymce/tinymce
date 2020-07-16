@@ -1,15 +1,15 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
+import { Cell } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Attr, Class, Css, DomEvent, Element, Html, Insert, Remove } from '@ephox/sugar';
+import { Attribute, Class, Css, DomEvent, Html, Insert, Remove, SugarElement } from '@ephox/sugar';
 import { Chain } from 'ephox/agar/api/Chain';
 import * as Guard from 'ephox/agar/api/Guard';
+import { Assertions } from 'ephox/agar/api/Main';
 import { Pipeline } from 'ephox/agar/api/Pipeline';
 import * as RealMouse from 'ephox/agar/api/RealMouse';
 import { Step } from 'ephox/agar/api/Step';
 import * as UiFinder from 'ephox/agar/api/UiFinder';
-import { Cell } from '@ephox/katamari';
-import { Assertions } from 'ephox/agar/api/Main';
 
 UnitTest.asynctest('RealMouseTest', (success, failure) => {
 
@@ -24,24 +24,24 @@ UnitTest.asynctest('RealMouseTest', (success, failure) => {
   style.innerHTML = 'button[data-test]:hover { background-color: blue; color: white; } button.other { background-color: blue; color: white; } button';
   document.head.appendChild(style);
 
-  const container = Element.fromTag('div');
-  const button = Element.fromTag('button');
-  Attr.set(button, 'data-test', 'true');
+  const container = SugarElement.fromTag('div');
+  const button = SugarElement.fromTag('button');
+  Attribute.set(button, 'data-test', 'true');
   Html.set(button, 'hover-button');
   Insert.append(container, button);
 
-  const other = Element.fromTag('button');
+  const other = SugarElement.fromTag('button');
   Class.add(other, 'other');
   Html.set(other, 'other-button');
   Insert.append(container, other);
 
-  const normal = Element.fromTag('button');
+  const normal = SugarElement.fromTag('button');
   Html.set(normal, 'Normal');
   Insert.append(container, normal);
 
-  Insert.append(Element.fromDom(document.body), container);
+  Insert.append(SugarElement.fromDom(document.body), container);
 
-  const clickMe = Element.fromTag('button');
+  const clickMe = SugarElement.fromTag('button');
   Class.add(clickMe, 'click-me');
   Html.set(clickMe, 'Click me!');
   Insert.append(container, clickMe);
@@ -70,7 +70,7 @@ UnitTest.asynctest('RealMouseTest', (success, failure) => {
       RealMouse.cClick(),
       Chain.op((button) => {
         Assertions.assertEq('mouseup event has fired', 1, count.get());
-        Assertions.assertEq(`button doesn't have ${RealMouse.BedrockIdAttribute} attribute`, false, Attr.has(button, RealMouse.BedrockIdAttribute));
+        Assertions.assertEq(`button doesn't have ${RealMouse.BedrockIdAttribute} attribute`, false, Attribute.has(button, RealMouse.BedrockIdAttribute));
       })
     ])
   ], () => {

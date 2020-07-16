@@ -1,6 +1,8 @@
-import { Element as DomElement, HTMLTableElement, window } from '@ephox/dom-globals';
+import { Element, HTMLTableElement, window } from '@ephox/dom-globals';
 import { Fun, Obj, Option, Options } from '@ephox/katamari';
-import { Attr, Css, Direction, DomEvent, Element, EventArgs, Insert, InsertAll, Node, Ready, Replication, SelectorFind } from '@ephox/sugar';
+import {
+  Attribute, Css, Direction, DomEvent, EventArgs, Insert, InsertAll, Ready, Replication, SelectorFind, SugarElement, SugarNode
+} from '@ephox/sugar';
 import { Generators } from 'ephox/snooker/api/Generators';
 import * as ResizeBehaviour from 'ephox/snooker/api/ResizeBehaviour';
 import { ResizeDirection } from 'ephox/snooker/api/ResizeDirection';
@@ -13,7 +15,7 @@ import { BarPositions, ColInfo } from 'ephox/snooker/resize/BarPositions';
 
 Ready.execute(function () {
 
-  const tester = Element.fromHtml<HTMLTableElement>(
+  const tester = SugarElement.fromHtml<HTMLTableElement>(
     '<table border=1>' +
       '<tr>' +
         '<th>A0</th>' +
@@ -38,7 +40,7 @@ Ready.execute(function () {
     '</table>'
   );
 
-  // const subject = Element.fromHtml(
+  // const subject = SugarElement.fromHtml(
   //   '<table contenteditable="true" style="border-collapse: collapse;" border="1"><tbody>' +
   //     '<tr>' +
   //       '<td style="width: 110px;">1</td>' +
@@ -81,10 +83,10 @@ Ready.execute(function () {
   //   '</tbody></table>'
   // );
 
-  // subject = Element.fromHtml('<table contenteditable="true" style="border-collapse: collapse;"><tbody><tr><td>A</td><td>A2</td></tr><tr><td rowspan=2>B</td><td>C</td></tr><tr><td>d</td></tr></tbody></table>');
-  // subject = Element.fromHtml('<table contenteditable="true" style="border-collapse: collapse;"><tbody><tr><td>A</td></tr><tr><td rowspan=2>B</td></tr></tbody></table>');
+  // subject = SugarElement.fromHtml('<table contenteditable="true" style="border-collapse: collapse;"><tbody><tr><td>A</td><td>A2</td></tr><tr><td rowspan=2>B</td><td>C</td></tr><tr><td>d</td></tr></tbody></table>');
+  // subject = SugarElement.fromHtml('<table contenteditable="true" style="border-collapse: collapse;"><tbody><tr><td>A</td></tr><tr><td rowspan=2>B</td></tr></tbody></table>');
 
-  const subject2 = Element.fromHtml<HTMLTableElement>(
+  const subject2 = SugarElement.fromHtml<HTMLTableElement>(
     '<table contenteditable="true" style="border-collapse: collapse;"><tbody>' +
       '<tr>' +
         '<td style="width: 110px;">1</td>' +
@@ -100,7 +102,7 @@ Ready.execute(function () {
     '</tbody></table>'
   );
 
-  const subject3 = Element.fromHtml<HTMLTableElement>(
+  const subject3 = SugarElement.fromHtml<HTMLTableElement>(
     '<table contenteditable="true" width="100%" cellpadding="0" border="1" cellspacing="0"> ' +
     '<tbody>' +
     '<tr> ' +
@@ -125,13 +127,13 @@ Ready.execute(function () {
     '</table>');
 
   const ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
-  const ltrs = Element.fromHtml('<div class="ltrs"></div>');
-  InsertAll.append(ltrs, [ Element.fromHtml('<p>Left to Right tables</p>'), tester, Element.fromTag('p'), subject2 ]);
-  const rtls = Element.fromHtml('<div dir="rtl"></div>');
-  InsertAll.append(rtls, [ Element.fromHtml('<p>Right to Left table</p>'), subject3 ]);
+  const ltrs = SugarElement.fromHtml('<div class="ltrs"></div>');
+  InsertAll.append(ltrs, [ SugarElement.fromHtml('<p>Left to Right tables</p>'), tester, SugarElement.fromTag('p'), subject2 ]);
+  const rtls = SugarElement.fromHtml('<div dir="rtl"></div>');
+  InsertAll.append(rtls, [ SugarElement.fromHtml('<p>Right to Left table</p>'), subject3 ]);
   InsertAll.append(ephoxUi, [ ltrs, rtls ]);
 
-  const lazyTableSize = (table: Element<HTMLTableElement>) => TableSize.getTableSize(table);
+  const lazyTableSize = (table: SugarElement<HTMLTableElement>) => TableSize.getTableSize(table);
   const ltrManager = TableResize.create(ResizeWire.body(tester, ltrs), ResizeDirection.ltr, ResizeBehaviour.preserveTable(), lazyTableSize);
   ltrManager.on();
   const rtlManager = TableResize.create(ResizeWire.body(subject3, rtls), ResizeDirection.rtl, ResizeBehaviour.preserveTable(), lazyTableSize);
@@ -143,41 +145,41 @@ Ready.execute(function () {
     // document.execCommand("enableObjectResizing", false, "false");
   });
 
-  const afterRow = Element.fromTag('button');
-  Insert.append(afterRow, Element.fromText('Row After'));
+  const afterRow = SugarElement.fromTag('button');
+  Insert.append(afterRow, SugarElement.fromText('Row After'));
   Insert.append(ephoxUi, afterRow);
 
-  const beforeRow = Element.fromTag('button');
-  Insert.append(beforeRow, Element.fromText('Row Before'));
+  const beforeRow = SugarElement.fromTag('button');
+  Insert.append(beforeRow, SugarElement.fromText('Row Before'));
   Insert.append(ephoxUi, beforeRow);
 
-  const afterColumn = Element.fromTag('button');
-  Insert.append(afterColumn, Element.fromText('Column After'));
+  const afterColumn = SugarElement.fromTag('button');
+  Insert.append(afterColumn, SugarElement.fromText('Column After'));
   Insert.append(ephoxUi, afterColumn);
 
-  const beforeColumn = Element.fromTag('button');
-  Insert.append(beforeColumn, Element.fromText('Column Before'));
+  const beforeColumn = SugarElement.fromTag('button');
+  Insert.append(beforeColumn, SugarElement.fromText('Column Before'));
   Insert.append(ephoxUi, beforeColumn);
 
-  const splitCellIntoColumns = Element.fromTag('button');
-  Insert.append(splitCellIntoColumns, Element.fromText('Split Cell Into Columns'));
+  const splitCellIntoColumns = SugarElement.fromTag('button');
+  Insert.append(splitCellIntoColumns, SugarElement.fromText('Split Cell Into Columns'));
   Insert.append(ephoxUi, splitCellIntoColumns);
 
-  const splitCellIntoRows = Element.fromTag('button');
-  Insert.append(splitCellIntoRows, Element.fromText('Split Cell Into Rows'));
+  const splitCellIntoRows = SugarElement.fromTag('button');
+  Insert.append(splitCellIntoRows, SugarElement.fromText('Split Cell Into Rows'));
   Insert.append(ephoxUi, splitCellIntoRows);
 
-  const eraseRow = Element.fromTag('button');
-  Insert.append(eraseRow, Element.fromText('Erase row'));
+  const eraseRow = SugarElement.fromTag('button');
+  Insert.append(eraseRow, SugarElement.fromText('Erase row'));
   Insert.append(ephoxUi, eraseRow);
 
-  const eraseColumn = Element.fromTag('button');
-  Insert.append(eraseColumn, Element.fromText('Erase column'));
+  const eraseColumn = SugarElement.fromTag('button');
+  Insert.append(eraseColumn, SugarElement.fromText('Erase column'));
   Insert.append(ephoxUi, eraseColumn);
 
   const makeButton = function (desc: string) {
-    const button = Element.fromTag('button');
-    Insert.append(button, Element.fromText(desc));
+    const button = SugarElement.fromTag('button');
+    Insert.append(button, SugarElement.fromText(desc));
     Insert.append(ephoxUi, button);
     return button;
   };
@@ -187,39 +189,39 @@ Ready.execute(function () {
   const makeRowHeader = makeButton('makeRowHeader');
   const unmakeRowHeader = makeButton('unmakeRowHeader');
 
-  const detection = (): Option<Element<DomElement>> => {
+  const detection = (): Option<SugarElement<Element>> => {
     const selection = window.getSelection();
     if (selection.rangeCount > 0) {
       const range = selection.getRangeAt(0);
       const firstElement = range.startContainer.nodeType === 3 ? range.startContainer.parentNode : range.startContainer;
-      return Options.mapFrom(firstElement, Element.fromDom).filter(Node.isElement);
+      return Options.mapFrom(firstElement, SugarElement.fromDom).filter(SugarNode.isElement);
     } else {
       return Option.none();
     }
   };
 
   const newCell: Generators['cell'] = function (prev) {
-    const td = Element.fromTag('td');
-    Insert.append(td, Element.fromText('?'));
+    const td = SugarElement.fromTag('td');
+    Insert.append(td, SugarElement.fromText('?'));
     if (prev.colspan() === 1) { Css.set(td, 'width', Css.get(prev.element(), 'width')); }
     if (prev.rowspan() === 1) { Css.set(td, 'height', Css.get(prev.element(), 'height')); }
     return td;
   };
 
   const gap: Generators['gap'] = function () {
-    const td = Element.fromTag('td');
-    Insert.append(td, Element.fromText('?'));
+    const td = SugarElement.fromTag('td');
+    Insert.append(td, SugarElement.fromText('?'));
     return td;
   };
 
   const newRow: Generators['row'] = function () {
-    return Element.fromTag('tr');
+    return SugarElement.fromTag('tr');
   };
 
   const replace: Generators['replace'] = function (cell, tag, attrs) {
     const replica = Replication.copy(cell, tag);
     Obj.each(attrs, function (v, k) {
-      if (v !== null) { Attr.set(replica, k, v); }
+      if (v !== null) { Attribute.set(replica, k, v); }
     });
     return replica;
   };
@@ -231,7 +233,7 @@ Ready.execute(function () {
     gap
   };
 
-  const runOperation = function (operation: (wire: ResizeWire, table: Element, target: TargetElement & TargetSelection, generators: Generators, direction: BarPositions<ColInfo>, tableSize: TableSize) => Option<RunOperationOutput>) {
+  const runOperation = function (operation: (wire: ResizeWire, table: SugarElement, target: TargetElement & TargetSelection, generators: Generators, direction: BarPositions<ColInfo>, tableSize: TableSize) => Option<RunOperationOutput>) {
     return function (_event: EventArgs) {
       detection().each(function (start) {
         const dir = Direction.getDirection(start);
@@ -242,7 +244,7 @@ Ready.execute(function () {
         };
 
         // wire, table, target, generators, direction
-        const table = SelectorFind.ancestor(start, 'table').getOrDie() as Element<HTMLTableElement>;
+        const table = SelectorFind.ancestor(start, 'table').getOrDie() as SugarElement<HTMLTableElement>;
         const tableSize = TableSize.getTableSize(table);
         operation(ResizeWire.only(ephoxUi), table, target, generators, direction, tableSize);
       });

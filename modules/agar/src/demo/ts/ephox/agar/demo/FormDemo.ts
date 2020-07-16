@@ -1,5 +1,5 @@
 import { HTMLButtonElement, HTMLInputElement } from '@ephox/dom-globals';
-import { Attr, Css, DomEvent, Element, Html, Insert, InsertAll, Remove, Value } from '@ephox/sugar';
+import { Attribute, Css, DomEvent, Html, Insert, InsertAll, Remove, SugarElement, Value } from '@ephox/sugar';
 import { Chain } from 'ephox/agar/api/Chain';
 import * as FocusTools from 'ephox/agar/api/FocusTools';
 import * as Mouse from 'ephox/agar/api/Mouse';
@@ -10,18 +10,18 @@ export const demo = (): void => {
   DemoContainer.init(
     'Form Demo',
     (success, failure) => {
-      const form = Element.fromTag('form');
+      const form = SugarElement.fromTag('form');
 
-      const start = Element.fromHtml<HTMLButtonElement>('<button>Go</button>');
+      const start = SugarElement.fromHtml<HTMLButtonElement>('<button>Go</button>');
       DomEvent.bind(start, 'click', () => {
         Remove.remove(start);
 
-        const labelName = Element.fromTag('label');
+        const labelName = SugarElement.fromTag('label');
         Html.set(labelName, 'Name');
-        const fieldName = Element.fromHtml<HTMLInputElement>('<input type="text" />');
+        const fieldName = SugarElement.fromHtml<HTMLInputElement>('<input type="text" />');
 
-        const submit = Element.fromTag('button');
-        Attr.set(submit, 'type', 'button');
+        const submit = SugarElement.fromTag('button');
+        Attribute.set(submit, 'type', 'button');
         Html.set(submit, 'Apply');
 
         DomEvent.bind(submit, 'click', () => {

@@ -1,7 +1,7 @@
 import { Fun, Option } from '@ephox/katamari';
-import { Css, Height, Position, Width } from '@ephox/sugar';
-import { AlloyComponent } from '../../api/component/ComponentApi';
+import { Css, Height, SugarPosition, Width } from '@ephox/sugar';
 
+import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as AlloyTriggers from '../../api/events/AlloyTriggers';
 import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
 import { SliderModelDetailParts, SliderValueXY, TwoDSliderDetail } from '../types/SliderTypes';
@@ -24,7 +24,7 @@ const sliderValue = (x: number, y: number): SliderValueXY => ({
 
 // find both values of x and y offsets of where the mouse was clicked from the model.
 // then fire a slider change event with those values, returning the values
-const setValueFrom = (spectrum: AlloyComponent, detail: TwoDSliderDetail, value: Position): SliderValueXY => {
+const setValueFrom = (spectrum: AlloyComponent, detail: TwoDSliderDetail, value: SugarPosition): SliderValueXY => {
   const xValue = HorizontalModel.findValueOfOffset(spectrum, detail, value.left());
   const yValue = VerticalModel.findValueOfOffset(spectrum, detail, value.top());
   const val = sliderValue(xValue, yValue);
@@ -61,7 +61,7 @@ const setToMax = (spectrum: AlloyComponent, detail: TwoDSliderDetail): void => {
 };
 
 // get event data as a SugarPosition
-const getValueFromEvent = (simulatedEvent: NativeSimulatedEvent): Option<Position> => ModelCommon.getEventSource(simulatedEvent);
+const getValueFromEvent = (simulatedEvent: NativeSimulatedEvent): Option<SugarPosition> => ModelCommon.getEventSource(simulatedEvent);
 
 // update the position of the thumb from the slider's current value
 const setPositionFromValue = (slider: AlloyComponent, thumb: AlloyComponent, detail: TwoDSliderDetail, edges: SliderModelDetailParts): void => {

@@ -1,12 +1,12 @@
 import { Arr, Option } from '@ephox/katamari';
-import { Compare, Insert, Element } from '@ephox/sugar';
+import { Compare, Insert, SugarElement } from '@ephox/sugar';
 
-import * as AriaFocus from '../../aria/AriaFocus';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { AlloySpec } from '../../api/component/SpecTypes';
 import * as Attachment from '../../api/system/Attachment';
-import { Stateless } from '../../behaviour/common/BehaviourState';
+import * as AriaFocus from '../../aria/AriaFocus';
 import * as InternalAttachment from '../../system/InternalAttachment';
+import { Stateless } from '../common/BehaviourState';
 import { ReplacingConfig } from './ReplacingTypes';
 
 const set = (component: AlloyComponent, replaceConfig: ReplacingConfig, replaceState: Stateless, data: AlloySpec[]): void => {
@@ -19,7 +19,7 @@ const set = (component: AlloyComponent, replaceConfig: ReplacingConfig, replaceS
   }, component.element());
 };
 
-const insert = (component: AlloyComponent, replaceConfig: ReplacingConfig, insertion: (p: Element, c: Element) => void, childSpec: AlloySpec): void => {
+const insert = (component: AlloyComponent, replaceConfig: ReplacingConfig, insertion: (p: SugarElement, c: SugarElement) => void, childSpec: AlloySpec): void => {
   const child = component.getSystem().build(childSpec);
   Attachment.attachWith(component, child, insertion);
 };
@@ -50,7 +50,7 @@ const replaceAt = (component: AlloyComponent, replaceConfig: ReplacingConfig, re
     remove(component, replaceConfig, replaceState, replacee);
 
     replacer.each((r) => {
-      insert(component, replaceConfig, (p: Element, c: Element) => {
+      insert(component, replaceConfig, (p: SugarElement, c: SugarElement) => {
         Insert.appendAt(p, c, replaceeIndex);
       }, r);
     });

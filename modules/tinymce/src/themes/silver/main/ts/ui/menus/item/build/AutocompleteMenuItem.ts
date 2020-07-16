@@ -9,7 +9,7 @@ import { Behaviour, GuiFactory, ItemTypes, MaxHeight, Tooltipping } from '@ephox
 import { InlineContent, Types } from '@ephox/bridge';
 import { HTMLElement } from '@ephox/dom-globals';
 import { Obj, Option } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import I18n from 'tinymce/core/api/util/I18n';
 import { UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
@@ -47,7 +47,7 @@ const tooltipBehaviour = (
         onShow: (component, _tooltip) => {
           tooltipWorker((elm) => {
             Tooltipping.setComponents(component, [
-              GuiFactory.external({ element: Element.fromDom(elm) })
+              GuiFactory.external({ element: SugarElement.fromDom(elm) })
             ]);
           });
         }

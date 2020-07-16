@@ -1,7 +1,7 @@
 import { Arr, Obj } from '@ephox/katamari';
-import { AlloyBehaviour, AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 
 import * as BehaviourBlob from '../../behaviour/common/BehaviourBlob';
+import { AlloyBehaviour, AlloyBehaviourRecord } from '../behaviour/Behaviour';
 
 type BehaviourName = string;
 

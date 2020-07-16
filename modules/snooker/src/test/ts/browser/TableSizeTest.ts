@@ -1,7 +1,7 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { HTMLTableCellElement, HTMLTableElement } from '@ephox/dom-globals';
 import { Option, OptionInstances } from '@ephox/katamari';
-import { Body, Css, Element, Insert, Remove, SelectorFind, Width } from '@ephox/sugar';
+import { Css, Insert, Remove, SelectorFind, SugarBody, SugarElement, Width } from '@ephox/sugar';
 import { ResizeDirection } from 'ephox/snooker/api/ResizeDirection';
 import { TableSize } from 'ephox/snooker/api/TableSize';
 import { Warehouse } from 'ephox/snooker/model/Warehouse';
@@ -14,13 +14,13 @@ const percentTableHtml = '<table style="width: 80%"><tbody><tr><td style="width:
 const noneTableHtml = '<table><tbody><tr><td></td><td></td></tr></tbody></table>';
 
 UnitTest.test('TableSize.getTableSize', () => {
-  const noneTable = Element.fromHtml<HTMLTableElement>(noneTableHtml);
+  const noneTable = SugarElement.fromHtml<HTMLTableElement>(noneTableHtml);
   const noneSizing = TableSize.getTableSize(noneTable);
   Assert.eq('None sizing detected', 'none', noneSizing.label);
 
   fc.assert(fc.property(fc.integer(100, 1000), fc.float(1, 100), (pixel, percent) => {
-    const pixelTable = Element.fromHtml<HTMLTableElement>(pixelTableHtml.replace('400px', pixel + 'px'));
-    const percentageTable = Element.fromHtml<HTMLTableElement>(percentTableHtml.replace('80%', percent + '%'));
+    const pixelTable = SugarElement.fromHtml<HTMLTableElement>(pixelTableHtml.replace('400px', pixel + 'px'));
+    const percentageTable = SugarElement.fromHtml<HTMLTableElement>(percentTableHtml.replace('80%', percent + '%'));
 
     const pixelSizing = TableSize.getTableSize(pixelTable);
     const percentageSizing = TableSize.getTableSize(percentageTable);
@@ -31,8 +31,8 @@ UnitTest.test('TableSize.getTableSize', () => {
 });
 
 UnitTest.test('TableSize.pixelSizing', () => {
-  const table = Element.fromHtml<HTMLTableElement>(pixelTableHtml);
-  Insert.append(Body.body(), table);
+  const table = SugarElement.fromHtml<HTMLTableElement>(pixelTableHtml);
+  Insert.append(SugarBody.body(), table);
 
   const sizing = TableSize.getTableSize(table);
   const warehouse = Warehouse.fromTable(table);
@@ -60,10 +60,10 @@ UnitTest.test('TableSize.pixelSizing', () => {
 });
 
 UnitTest.test('TableSize.percentageSizing', () => {
-  const container = Element.fromHtml('<div style="position: absolute; left: 0; top: 0; width: 500px"></div>');
-  const table = Element.fromHtml<HTMLTableElement>(percentTableHtml);
+  const container = SugarElement.fromHtml('<div style="position: absolute; left: 0; top: 0; width: 500px"></div>');
+  const table = SugarElement.fromHtml<HTMLTableElement>(percentTableHtml);
   Insert.append(container, table);
-  Insert.append(Body.body(), container);
+  Insert.append(SugarBody.body(), container);
 
   const sizing = TableSize.getTableSize(table);
   const warehouse = Warehouse.fromTable(table);
@@ -92,8 +92,8 @@ UnitTest.test('TableSize.percentageSizing', () => {
 });
 
 UnitTest.test('TableSize.noneSizing', () => {
-  const table = Element.fromHtml<HTMLTableElement>(noneTableHtml);
-  Insert.append(Body.body(), table);
+  const table = SugarElement.fromHtml<HTMLTableElement>(noneTableHtml);
+  Insert.append(SugarBody.body(), table);
 
   const sizing = TableSize.getTableSize(table);
   const warehouse = Warehouse.fromTable(table);

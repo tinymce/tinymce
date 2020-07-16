@@ -3,7 +3,7 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { document, HTMLLabelElement } from '@ephox/dom-globals';
 import { Cell } from '@ephox/katamari';
 import { Editor as McEditor } from '@ephox/mcagar';
-import { Attr, Body, Element, Html, SelectorFind } from '@ephox/sugar';
+import { Attribute, Html, SelectorFind, SugarBody, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 
 import FullscreenPlugin from 'tinymce/plugins/fullscreen/Plugin';
@@ -12,11 +12,11 @@ import SilverTheme from 'tinymce/themes/silver/Theme';
 
 export const cWaitForDialog = (ariaLabel) =>
   Chain.control(
-    Chain.fromChainsWith(Body.body(), [
+    Chain.fromChainsWith(SugarBody.body(), [
       UiFinder.cWaitFor('Waiting for dialog', '[role="dialog"]'),
       Chain.op((dialog) => {
-        if (Attr.has(dialog, 'aria-labelledby')) {
-          const labelledby = Attr.get(dialog, 'aria-labelledby');
+        if (Attribute.has(dialog, 'aria-labelledby')) {
+          const labelledby = Attribute.get(dialog, 'aria-labelledby');
           const dialogLabel = SelectorFind.descendant<HTMLLabelElement>(dialog, '#' + labelledby).getOrDie('Could not find labelledby');
           Assertions.assertEq('Checking label text', ariaLabel, Html.get(dialogLabel));
         } else {
@@ -48,9 +48,9 @@ UnitTest.asynctest('browser.tinymce.plugins.fullscreen.FullScreenPluginTest', (s
     const label2 = `Body and Html should ${shouldExist ? '' : 'not '}have "tox-fullscreen" class`;
     return Chain.control(
       Chain.fromChains([
-        Chain.inject(Body.body()),
+        Chain.inject(SugarBody.body()),
         UiFinder.cFindIn(selector),
-        Chain.inject(Element.fromDom(document.documentElement)),
+        Chain.inject(SugarElement.fromDom(document.documentElement)),
         UiFinder.cFindIn(selector)
       ]),
       Guard.addLogging(`${label}: ${label2}`)
@@ -59,7 +59,7 @@ UnitTest.asynctest('browser.tinymce.plugins.fullscreen.FullScreenPluginTest', (s
 
   const cCloseOnlyWindow = Chain.control(
     Chain.op((editor: Editor) => {
-      const dialogs = () => UiFinder.findAllIn(Body.body(), '[role="dialog"]');
+      const dialogs = () => UiFinder.findAllIn(SugarBody.body(), '[role="dialog"]');
       Assertions.assertEq('One window exists', 1, dialogs().length);
       editor.windowManager.close();
       Assertions.assertEq('No windows exist', 0, dialogs().length);

@@ -2,7 +2,7 @@ import { ApproxStructure, GeneralSteps, Logger, Pipeline, Step } from '@ephox/ag
 import { UnitTest } from '@ephox/bedrock-client';
 import { Document, DocumentFragment, Node } from '@ephox/dom-globals';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Elements, Fragment } from '@ephox/sugar';
+import { SugarElements, SugarFragment } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { rangeInsertNode } from 'tinymce/core/selection/RangeInsertNode';
 import Theme from 'tinymce/themes/silver/Theme';
@@ -14,7 +14,8 @@ UnitTest.asynctest('browser.tinymce.core.selection.RangeInsertNode', (success, f
     rangeInsertNode(editor.dom, editor.selection.getRng(), node);
   });
 
-  const fragmentFromHtml = (html: string, scope: Document): DocumentFragment => Fragment.fromElements(Elements.fromHtml(html, scope), scope).dom();
+  const fragmentFromHtml = (html: string, scope: Document): DocumentFragment =>
+    SugarFragment.fromElements(SugarElements.fromHtml(html, scope), scope).dom();
 
   TinyLoader.setupLight((editor: Editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);

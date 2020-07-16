@@ -2,7 +2,7 @@ import { Assertions, Chain, FocusTools, GeneralSteps, Guard, Logger, Mouse, Step
 import { document, Event, localStorage } from '@ephox/dom-globals';
 import { Obj, Type } from '@ephox/katamari';
 import { TinyApis, TinyDom, TinyUi } from '@ephox/mcagar';
-import { Body, Element, Value } from '@ephox/sugar';
+import { SugarBody, SugarElement, Value } from '@ephox/sugar';
 
 const doc = TinyDom.fromDom(document);
 
@@ -34,7 +34,7 @@ const sClickOnConfirmDialog = (label: string, state: boolean) => Logger.t('Click
   )
 ]));
 
-const fireEvent = (elem: Element, event: string) => {
+const fireEvent = (elem: SugarElement, event: string) => {
   let evt;
   if (Type.isFunction(Event)) {
     evt = new Event(event, {
@@ -49,7 +49,7 @@ const fireEvent = (elem: Element, event: string) => {
 };
 
 const cFireEvent = (event: string) => Chain.control(
-  Chain.op((elem: Element) => {
+  Chain.op((elem: SugarElement) => {
     fireEvent(elem, event);
   }),
   Guard.addLogging('Fire event')
@@ -57,7 +57,7 @@ const cFireEvent = (event: string) => Chain.control(
 
 const cGetInput = (selector: string) => Chain.control(
   Chain.fromChains([
-    Chain.inject(Body.body()),
+    Chain.inject(SugarBody.body()),
     UiFinder.cFindIn(selector)
   ]),
   Guard.addLogging('Get input')

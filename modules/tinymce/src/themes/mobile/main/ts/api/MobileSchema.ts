@@ -7,7 +7,7 @@
 
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
-import { Element, Traverse } from '@ephox/sugar';
+import { SugarElement, Traverse } from '@ephox/sugar';
 
 export default ValueSchema.objOf([
   FieldSchema.strictObjOf('editor', [
@@ -49,7 +49,7 @@ export default ValueSchema.objOf([
     return Traverse.owner(spec.socket).dom().defaultView;
   }),
   FieldSchema.state('body', function (spec) {
-    return Element.fromDom(
+    return SugarElement.fromDom(
       spec.socket.dom().ownerDocument.body
     );
   }),

@@ -2,7 +2,7 @@ import { Log, Pipeline, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import TemplatePlugin from 'tinymce/plugins/template/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 
@@ -15,7 +15,7 @@ UnitTest.asynctest('browser.tinymce.plugins.template.InvalidUrlTest', (success, 
     const tinyApis = TinyApis(editor);
     const tinyUi = TinyUi(editor);
 
-    const docBody = Element.fromDom(document.body);
+    const docBody = SugarElement.fromDom(document.body);
     const alertDialogSelector = 'div.tox-dialog.tox-alert-dialog';
     const dialogSelector = 'div.tox-dialog';
     const toolbarButtonSelector = 'button[aria-label="Insert template"]';

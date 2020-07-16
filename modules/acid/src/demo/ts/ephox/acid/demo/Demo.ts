@@ -1,16 +1,16 @@
-import { Debugging, Gui, GuiFactory, Channels } from '@ephox/alloy';
+import { Channels, Debugging, Gui, GuiFactory } from '@ephox/alloy';
 import { console, document } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
-import { Class, Element, Insert, DomEvent } from '@ephox/sugar';
+import { Class, DomEvent, Insert, SugarElement } from '@ephox/sugar';
 import * as ColourPicker from 'ephox/acid/gui/ColourPicker';
 import { strings } from '../../../../i18n/en';
 
 const gui = Gui.create();
-const body = Element.fromDom(document.body);
+const body = SugarElement.fromDom(document.body);
 Class.add(gui.element(), 'gui-root-demo-container');
 Insert.append(body, gui.element());
 
-DomEvent.bind(Element.fromDom(document), 'mouseup', (evt) => {
+DomEvent.bind(SugarElement.fromDom(document), 'mouseup', (evt) => {
   if (evt.raw().button === 0) {
     gui.broadcastOn([ Channels.mouseReleased() ], {
       target: evt.target()

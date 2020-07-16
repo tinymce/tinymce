@@ -3,7 +3,7 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { console } from '@ephox/dom-globals';
 import { Arr, Fun, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Element, Hierarchy } from '@ephox/sugar';
+import { Hierarchy, SugarElement } from '@ephox/sugar';
 import { CaretPosition } from 'tinymce/core/caret/CaretPosition';
 import {
   BreakType, findClosestHorizontalPosition, getPositionsAbove, getPositionsBelow, getPositionsUntilNextLine, getPositionsUntilPreviousLine,
@@ -33,31 +33,31 @@ UnitTest.asynctest('browser.tinymce.core.caret.LineReader', (success, failure) =
   };
 
   const cGetPositionsUntilPreviousLine = (path: number[], offset: number) => Chain.mapper(function (scope: any) {
-    const container = Hierarchy.follow(Element.fromDom(scope.get()), path).getOrDie();
+    const container = Hierarchy.follow(SugarElement.fromDom(scope.get()), path).getOrDie();
     const pos = CaretPosition(container.dom(), offset);
     return getPositionsUntilPreviousLine(scope.get(), pos);
   });
 
   const cGetPositionsUntilNextLine = (path: number[], offset: number) => Chain.mapper(function (scope: any) {
-    const container = Hierarchy.follow(Element.fromDom(scope.get()), path).getOrDie();
+    const container = Hierarchy.follow(SugarElement.fromDom(scope.get()), path).getOrDie();
     const pos = CaretPosition(container.dom(), offset);
     return getPositionsUntilNextLine(scope.get(), pos);
   });
 
   const cGetAbovePositions = (path: number[], offset: number) => Chain.mapper(function (scope: any) {
-    const container = Hierarchy.follow(Element.fromDom(scope.get()), path).getOrDie();
+    const container = Hierarchy.follow(SugarElement.fromDom(scope.get()), path).getOrDie();
     const pos = CaretPosition(container.dom(), offset);
     return getPositionsAbove(scope.get(), pos);
   });
 
   const cGetBelowPositions = (path: number[], offset: number) => Chain.mapper(function (scope: any) {
-    const container = Hierarchy.follow(Element.fromDom(scope.get()), path).getOrDie();
+    const container = Hierarchy.follow(SugarElement.fromDom(scope.get()), path).getOrDie();
     const pos = CaretPosition(container.dom(), offset);
     return getPositionsBelow(scope.get(), pos);
   });
 
   const cFindClosestHorizontalPosition = (path: number[], offset: number) => Chain.mapper(function (positions: CaretPosition[]) {
-    const container = Hierarchy.follow(Element.fromDom(viewBlock.get()), path).getOrDie();
+    const container = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), path).getOrDie();
     const pos = CaretPosition(container.dom(), offset);
     return findClosestHorizontalPosition(positions, pos);
   });
@@ -69,8 +69,8 @@ UnitTest.asynctest('browser.tinymce.core.caret.LineReader', (success, failure) =
 
     Assertions.assertEq('Should be the expected amount of positions', expectedPositions.length, actualPositions.length);
     Arr.each(expectedPositions, (p: Path, i) => {
-      const container = Hierarchy.follow(Element.fromDom(viewBlock.get()), p.path).getOrDie();
-      Assertions.assertDomEq('Should be the expected container', container, Element.fromDom(actualPositions[i].container()));
+      const container = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), p.path).getOrDie();
+      Assertions.assertDomEq('Should be the expected container', container, SugarElement.fromDom(actualPositions[i].container()));
       Assertions.assertEq('Should be the expected offset', p.offset, actualPositions[i].offset());
     });
   });
@@ -90,8 +90,8 @@ UnitTest.asynctest('browser.tinymce.core.caret.LineReader', (success, failure) =
 
     Assertions.assertEq('Should be the expected amount of positions', expectedPositions.length, actualPositions.length);
     Arr.each(expectedPositions, (p: Path, i) => {
-      const container = Hierarchy.follow(Element.fromDom(viewBlock.get()), p.path).getOrDie();
-      Assertions.assertDomEq('Should be the expected container', container, Element.fromDom(actualPositions[i].container()));
+      const container = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), p.path).getOrDie();
+      Assertions.assertDomEq('Should be the expected container', container, SugarElement.fromDom(actualPositions[i].container()));
       Assertions.assertEq('Should be the expected offset', p.offset, actualPositions[i].offset());
     });
   });
@@ -101,10 +101,10 @@ UnitTest.asynctest('browser.tinymce.core.caret.LineReader', (success, failure) =
   });
 
   const cAssertBreakPosition = (path: number[], offset: number) => Chain.op(function (linebreak: LineInfo) {
-    const container = Hierarchy.follow(Element.fromDom(viewBlock.get()), path).getOrDie();
+    const container = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), path).getOrDie();
     const breakPos = linebreak.breakAt.getOrDie();
 
-    Assertions.assertDomEq('Should be the expected container', container, Element.fromDom(breakPos.container()));
+    Assertions.assertDomEq('Should be the expected container', container, SugarElement.fromDom(breakPos.container()));
     Assertions.assertEq('Should be the expected offset', offset, breakPos.offset());
   });
 
@@ -114,15 +114,15 @@ UnitTest.asynctest('browser.tinymce.core.caret.LineReader', (success, failure) =
   });
 
   const cAssertCaretPosition = (path: number[], offset: number) => Chain.op(function (posOption: Option<any>) {
-    const container = Hierarchy.follow(Element.fromDom(viewBlock.get()), path).getOrDie();
+    const container = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), path).getOrDie();
     const pos = posOption.getOrDie('Needs to return a caret');
 
-    Assertions.assertDomEq('Should be the expected container', container, Element.fromDom(pos.container()));
+    Assertions.assertDomEq('Should be the expected container', container, SugarElement.fromDom(pos.container()));
     Assertions.assertEq('Should be the expected offset', offset, pos.offset());
   });
 
   const cVisualCaretCheck = (predicate, path: number[], offset: number) => Chain.mapper(function (scope: any) {
-    const container = Hierarchy.follow(Element.fromDom(scope.get()), path).getOrDie();
+    const container = Hierarchy.follow(SugarElement.fromDom(scope.get()), path).getOrDie();
     const pos = CaretPosition(container.dom(), offset);
     return predicate(scope.get(), pos);
   });

@@ -1,9 +1,9 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
-import { HTMLDivElement, Node as DomNode } from '@ephox/dom-globals';
+import { HTMLDivElement, Node } from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
 import * as Compare from 'ephox/sugar/api/dom/Compare';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
-import Element from 'ephox/sugar/api/node/Element';
+import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
 import * as PredicateExists from 'ephox/sugar/api/search/PredicateExists';
 import * as PredicateFilter from 'ephox/sugar/api/search/PredicateFilter';
 import * as PredicateFind from 'ephox/sugar/api/search/PredicateFind';
@@ -17,9 +17,9 @@ import * as TestPage from 'ephox/sugar/test/TestPage';
 UnitTest.test('IsRootTest', () => {
   TestPage.connect(); // description of structure is in TestPage
 
-  const isRoot = (e: Element<unknown>) => Compare.eq(TestPage.d1, e);
+  const isRoot = (e: SugarElement<unknown>) => Compare.eq(TestPage.d1, e);
 
-  const checkNone = <T extends DomNode>(optElement: Option<Element<T>>) => Checkers.checkOpt(Option.none<Element<T>>(), optElement);
+  const checkNone = <T extends Node>(optElement: Option<SugarElement<T>>) => Checkers.checkOpt(Option.none<SugarElement<T>>(), optElement);
 
   checkNone(SelectorFind.ancestor(TestPage.t6, 'li', isRoot));
   checkNone(SelectorFind.ancestor(TestPage.t6, 'ol,ul', isRoot));

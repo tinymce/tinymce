@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, Chain, Log, Pipeline, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 
 import Delay from 'tinymce/core/api/util/Delay';
 import Plugin from 'tinymce/plugins/media/Plugin';
@@ -19,7 +19,7 @@ UnitTest.asynctest('browser.core.IframeNodeTest', function (success, failure) {
         apis.sSetContent(
           '<iframe class="test-class" style="height: 250px; width: 500px;" src="about:blank"></iframe>'
         ),
-        Chain.asStep(Element.fromDom(editor.getBody()), [
+        Chain.asStep(SugarElement.fromDom(editor.getBody()), [
           UiFinder.cFindIn('iframe'),
           Chain.op((input) =>
             Assertions.assertStructure('should have all attributes', ApproxStructure.build((s, str, arr) => s.element('iframe', {
@@ -41,7 +41,7 @@ UnitTest.asynctest('browser.core.IframeNodeTest', function (success, failure) {
         apis.sSetContent(
           '<iframe class="test-class" style="height: 250px; width: 500px;" width="300" height="150" src="about:blank"></iframe>'
         ),
-        Chain.asStep(Element.fromDom(editor.getBody()), [
+        Chain.asStep(SugarElement.fromDom(editor.getBody()), [
           UiFinder.cFindIn('iframe'),
           Chain.op((input) =>
             Assertions.assertStructure('should have all attributes', ApproxStructure.build((s, str, arr) => s.element('iframe', {
@@ -63,7 +63,7 @@ UnitTest.asynctest('browser.core.IframeNodeTest', function (success, failure) {
         apis.sSetContent(
           '<iframe width="300" height="150" src="about:blank"></iframe>'
         ),
-        Chain.asStep(Element.fromDom(editor.getBody()), [
+        Chain.asStep(SugarElement.fromDom(editor.getBody()), [
           UiFinder.cFindIn('iframe'),
           Chain.op((input) =>
             Assertions.assertStructure('should have all attributes', ApproxStructure.build((s, str, _arr) => s.element('iframe', {

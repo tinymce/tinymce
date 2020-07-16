@@ -3,7 +3,7 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { window } from '@ephox/dom-globals';
 import { TinyLoader, TinyUi } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
-import { Body, Css, Element, Insert, Location, Scroll } from '@ephox/sugar';
+import { Css, Insert, Scroll, SugarBody, SugarElement, SugarLocation } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
@@ -18,16 +18,16 @@ UnitTest.asynctest('Editor Floating Toolbar Drawer Position test', (success, fai
   const sScrollTo = (x: number, y: number) => Step.sync(() => Scroll.to(x, y));
 
   // Setup the element to render to
-  const rootElement = Element.fromTag('div');
-  const editorElement = Element.fromTag('textarea');
+  const rootElement = SugarElement.fromTag('div');
+  const editorElement = SugarElement.fromTag('textarea');
   Css.set(rootElement, 'margin-left', '100px');
   Insert.append(rootElement, editorElement);
-  Insert.append(Body.body(), rootElement);
+  Insert.append(SugarBody.body(), rootElement);
 
   TinyLoader.setupFromElement((editor: Editor, onSuccess, onFailure) => {
     const tinyUi = TinyUi(editor);
-    const uiContainer = Element.fromDom(editor.getContainer());
-    const initialContainerPos = Location.absolute(uiContainer);
+    const uiContainer = SugarElement.fromDom(editor.getContainer());
+    const initialContainerPos = SugarLocation.absolute(uiContainer);
 
     const sAddMargins = Step.sync(() => {
       Css.set(uiContainer, 'margin-top', '2000px');

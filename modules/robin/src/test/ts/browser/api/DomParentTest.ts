@@ -1,14 +1,14 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr, Fun, Option } from '@ephox/katamari';
-import { Attr, Compare, Element, Hierarchy, Html, SelectorFind } from '@ephox/sugar';
-import * as DomParent from 'ephox/robin/api/dom/DomParent';
 import { KAssert } from '@ephox/katamari-assertions';
+import { Attribute, Compare, Hierarchy, Html, SelectorFind, SugarElement } from '@ephox/sugar';
+import * as DomParent from 'ephox/robin/api/dom/DomParent';
 
 UnitTest.test(
   'DomParentTest',
   function () {
     const check = function (expected: string, p: string, c: string) {
-      const container = Element.fromTag('div');
+      const container = SugarElement.fromTag('div');
       container.dom().innerHTML =
         '<ol class="one-nine" style="list-style-type: decimal;">' +
         '<li class="one">One</li>' +
@@ -76,7 +76,7 @@ UnitTest.test(
       '</ol>', 'one-nine', 'six');
 
     const checkPath = function (expected: string, input: string, p: number[], c: number[]) {
-      const container = Element.fromTag('div');
+      const container = SugarElement.fromTag('div');
       container.dom().innerHTML = input;
 
       const parent = Hierarchy.follow(container, p).getOrDie();
@@ -196,7 +196,7 @@ UnitTest.test(
 
     (function () {
       const check = function (expected: Option<string[]>, s: string, f: string) {
-        const container = Element.fromTag('div');
+        const container = SugarElement.fromTag('div');
         container.dom().innerHTML =
           '<ol class="one-nine" style="list-style-type: decimal;">' +
           '<li class="one">One</li>' +
@@ -220,7 +220,7 @@ UnitTest.test(
         const child = SelectorFind.descendant(container, '.' + f).getOrDie();
         const subset = DomParent.subset(parent, child);
 
-        const actual = subset.map((ss) => Arr.map(ss, (x) => Attr.get(x, 'class')));
+        const actual = subset.map((ss) => Arr.map(ss, (x) => Attribute.get(x, 'class')));
         const expected_ = expected.map((ss) => Arr.map<string | undefined>((ss), (x) => x));
 
         KAssert.eqOption('eq', expected_, actual);

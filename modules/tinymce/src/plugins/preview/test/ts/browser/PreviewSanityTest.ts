@@ -2,7 +2,7 @@ import { GeneralSteps, Keyboard, Keys, Log, Logger, Pipeline, UiFinder, Waiter }
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyDom, TinyLoader, TinyUi } from '@ephox/mcagar';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 
 import PreviewPlugin from 'tinymce/plugins/preview/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
@@ -13,7 +13,7 @@ UnitTest.asynctest('browser.tinymce.plugins.preview.PreviewSanityTest', (success
   SilverTheme();
 
   const dialogSelector = 'div[role="dialog"]';
-  const docBody = Element.fromDom(document.body);
+  const docBody = SugarElement.fromDom(document.body);
   const doc = TinyDom.fromDom(document);
 
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {

@@ -1,5 +1,6 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import Jsc from '@ephox/wrap-jsverify';
+
 import * as MenuPathing from 'ephox/alloy/menu/layered/MenuPathing';
 
 UnitTest.test('MenuPathingTest', () => {

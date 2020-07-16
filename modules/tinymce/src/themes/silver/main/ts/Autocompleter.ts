@@ -5,13 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import {
-  AddEventsBehaviour, AlloyEvents, Behaviour, GuiFactory, Highlighting, InlineView, ItemTypes, Menu, SystemEvents
-} from '@ephox/alloy';
+import { AddEventsBehaviour, AlloyEvents, Behaviour, GuiFactory, Highlighting, InlineView, ItemTypes, Menu, SystemEvents } from '@ephox/alloy';
 import { InlineContent, Types } from '@ephox/bridge';
 import { console } from '@ephox/dom-globals';
 import { Arr, Cell, Option, Throttler, Thunk } from '@ephox/katamari';
-import { Element, Remove } from '@ephox/sugar';
+import { Remove, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { AutocompleteContext, getContext } from './autocomplete/AutocompleteContext';
@@ -26,7 +24,7 @@ import { createAutocompleteItems, createMenuFrom, FocusMode } from './ui/menus/m
 
 interface ActiveAutocompleter {
   triggerChar: string;
-  element: Element;
+  element: SugarElement;
   matchLength: number;
 }
 
@@ -64,7 +62,7 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => 
     if (isActive()) {
       // Unwrap the content if an incomplete mention
       const lastElement = activeAutocompleter.get().map((ac) => ac.element);
-      AutocompleteTag.detect(lastElement.getOr(Element.fromDom(editor.selection.getNode()))).each(Remove.unwrap);
+      AutocompleteTag.detect(lastElement.getOr(SugarElement.fromDom(editor.selection.getNode()))).each(Remove.unwrap);
 
       // Hide the menu and reset
       hideIfNecessary();
@@ -142,7 +140,7 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => 
       autocompleter,
       {
         anchor: 'node',
-        root: Element.fromDom(editor.getBody()),
+        root: SugarElement.fromDom(editor.getBody()),
         node: Option.from(ac.element)
       },
       Menu.sketch(

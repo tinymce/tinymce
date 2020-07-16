@@ -6,8 +6,8 @@
  */
 
 import {
-  Text, Comment, Document, Element, Node, HTMLElement, DocumentFragment, HTMLTextAreaElement, HTMLInputElement, HTMLBRElement, HTMLImageElement,
-  HTMLTableCellElement
+  Comment, Document, DocumentFragment, Element, HTMLBRElement, HTMLElement, HTMLImageElement, HTMLInputElement, HTMLTableCellElement,
+  HTMLTextAreaElement, Node, Text
 } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 

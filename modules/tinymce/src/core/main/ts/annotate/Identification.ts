@@ -6,7 +6,7 @@
  */
 
 import { Arr, Option } from '@ephox/katamari';
-import { Attr, Class, Compare, Element, Node, SelectorFilter, SelectorFind, Traverse } from '@ephox/sugar';
+import { Attribute, Class, Compare, SelectorFilter, SelectorFind, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 import Editor from '../api/Editor';
 
 import * as Markings from './Markings';
@@ -16,8 +16,8 @@ import * as Markings from './Markings';
 const identify = (editor: Editor, annotationName: Option<string>): Option<{uid: string; name: string; elements: any[]}> => {
   const rng = editor.selection.getRng();
 
-  const start = Element.fromDom(rng.startContainer);
-  const root = Element.fromDom(editor.getBody());
+  const start = SugarElement.fromDom(rng.startContainer);
+  const root = SugarElement.fromDom(editor.getBody());
 
   const selector = annotationName.fold(
     () => '.' + Markings.annotation(),
@@ -28,8 +28,8 @@ const identify = (editor: Editor, annotationName: Option<string>): Option<{uid: 
   const closest = SelectorFind.closest(newStart, selector, (n) => Compare.eq(n, root));
 
   const getAttr = (c, property: string): Option<any> => {
-    if (Attr.has(c, property)) {
-      return Option.some(Attr.get(c, property));
+    if (Attribute.has(c, property)) {
+      return Option.some(Attribute.get(c, property));
     } else {
       return Option.none();
     }
@@ -47,19 +47,19 @@ const identify = (editor: Editor, annotationName: Option<string>): Option<{uid: 
   ));
 };
 
-const isAnnotation = (elem: any): boolean => Node.isElement(elem) && Class.has(elem, Markings.annotation());
+const isAnnotation = (elem: any): boolean => SugarNode.isElement(elem) && Class.has(elem, Markings.annotation());
 
 const findMarkers = (editor: Editor, uid: string): any[] => {
-  const body = Element.fromDom(editor.getBody());
+  const body = SugarElement.fromDom(editor.getBody());
   return SelectorFilter.descendants(body, `[${Markings.dataAnnotationId()}="${uid}"]`);
 };
 
-const findAll = (editor: Editor, name: string): Record<string, Element[]> => {
-  const body = Element.fromDom(editor.getBody());
+const findAll = (editor: Editor, name: string): Record<string, SugarElement[]> => {
+  const body = SugarElement.fromDom(editor.getBody());
   const markers = SelectorFilter.descendants(body, `[${Markings.dataAnnotation()}="${name}"]`);
-  const directory: Record<string, Element[]> = { };
+  const directory: Record<string, SugarElement[]> = { };
   Arr.each(markers, (m) => {
-    const uid = Attr.get(m, Markings.dataAnnotationId());
+    const uid = Attribute.get(m, Markings.dataAnnotationId());
     const nodesAlready = directory.hasOwnProperty(uid) ? directory[uid] : [ ];
     directory[uid] = nodesAlready.concat([ m ]);
   });

@@ -5,13 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node, Element } from '@ephox/dom-globals';
-import { Element as SugarElement } from '@ephox/sugar';
+import { Element, Node } from '@ephox/dom-globals';
+import { SugarElement } from '@ephox/sugar';
 import Editor from '../api/Editor';
+import * as CaretFinder from '../caret/CaretFinder';
 import { CaretPosition } from '../caret/CaretPosition';
 import { isTextBlock } from '../dom/ElementType';
 import * as NodeType from '../dom/NodeType';
-import * as CaretFinder from '../caret/CaretFinder';
 import * as RangeNormalizer from './RangeNormalizer';
 
 const isTextBlockNode = (node: Node): node is Element => NodeType.isElement(node) && isTextBlock(SugarElement.fromDom(node));

@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element as DomElement, Node, Range } from '@ephox/dom-globals';
+import { Element, Node, Range } from '@ephox/dom-globals';
 import { Adt, Fun, Option } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import { findNextBr, findPreviousBr, isAfterBr, isBeforeBr } from '../caret/CaretBr';
 import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
@@ -20,19 +20,19 @@ import * as DeleteUtils from './DeleteUtils';
 
 export interface DeleteActionAdt {
   fold: <T> (
-    remove: (element: DomElement) => T,
-    moveToElement: (element: DomElement) => T,
+    remove: (element: Element) => T,
+    moveToElement: (element: Element) => T,
     moveToPosition: (position: CaretPosition) => T,
   ) => T;
   match: <T> (branches: {
-    remove: (element: DomElement) => T;
-    moveToElement: (element: DomElement) => T;
+    remove: (element: Element) => T;
+    moveToElement: (element: Element) => T;
     moveToPosition: (position: CaretPosition) => T;
   }) => T;
   log: (label: string) => void;
 }
 
-const isCompoundElement = (node: Node) => ElementType.isTableCell(Element.fromDom(node)) || ElementType.isListItem(Element.fromDom(node));
+const isCompoundElement = (node: Node) => ElementType.isTableCell(SugarElement.fromDom(node)) || ElementType.isListItem(SugarElement.fromDom(node));
 
 const DeleteAction = Adt.generate([
   { remove: [ 'element' ] },
@@ -47,7 +47,7 @@ const isAtContentEditableBlockCaret = (forward: boolean, from: CaretPosition) =>
 };
 
 const isDeleteFromCefDifferentBlocks = (root: Node, forward: boolean, from: CaretPosition, to: CaretPosition) => {
-  const inSameBlock = (elm: DomElement) => ElementType.isInline(Element.fromDom(elm)) && !CaretUtils.isInSameBlock(from, to, root);
+  const inSameBlock = (elm: Element) => ElementType.isInline(SugarElement.fromDom(elm)) && !CaretUtils.isInSameBlock(from, to, root);
 
   return CaretUtils.getRelativeCefElm(!forward, from).fold(
     () => CaretUtils.getRelativeCefElm(forward, to).fold(Fun.constant(false), inSameBlock),
@@ -57,7 +57,7 @@ const isDeleteFromCefDifferentBlocks = (root: Node, forward: boolean, from: Care
 
 const deleteEmptyBlockOrMoveToCef = (root: Node, forward: boolean, from: CaretPosition, to: CaretPosition): Option<DeleteActionAdt> => {
   const toCefElm = to.getNode(forward === false);
-  return DeleteUtils.getParentBlock(Element.fromDom(root), Element.fromDom(from.getNode())).map((blockElm) =>
+  return DeleteUtils.getParentBlock(SugarElement.fromDom(root), SugarElement.fromDom(from.getNode())).map((blockElm) =>
     Empty.isEmpty(blockElm) ? DeleteAction.remove(blockElm.dom()) : DeleteAction.moveToElement(toCefElm)
   ).orThunk(() => Option.some(DeleteAction.moveToElement(toCefElm)));
 };
@@ -121,7 +121,7 @@ const getContentEditableAction = (root: Node, forward: boolean, from: CaretPosit
 const read = (root: Node, forward: boolean, rng: Range): Option<DeleteActionAdt> => {
   const normalizedRange = CaretUtils.normalizeRange(forward ? 1 : -1, root, rng);
   const from = CaretPosition.fromRangeStart(normalizedRange);
-  const rootElement = Element.fromDom(root);
+  const rootElement = SugarElement.fromDom(root);
 
   if (forward === false && isAfterContentEditableFalse(from)) {
     return Option.some(DeleteAction.remove(from.getNode(true)));

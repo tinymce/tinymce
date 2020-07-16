@@ -5,7 +5,7 @@ import { Assert } from '@ephox/bedrock-client';
 import { document, HTMLElement, HTMLTableCellElement, HTMLTableRowElement } from '@ephox/dom-globals';
 import { Arr, Obj } from '@ephox/katamari';
 import { TinyDom, TinyUi } from '@ephox/mcagar';
-import { Attr, Body, Element, Html, SelectorFilter, SelectorFind, Value } from '@ephox/sugar';
+import { Attribute, Html, SelectorFilter, SelectorFind, SugarBody, SugarElement, Value } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 
 const getRawWidth = (editor: Editor, elm: HTMLElement) => {
@@ -42,7 +42,7 @@ const assertWidth = (editor: Editor, elm: HTMLElement, expectedWidth: number | n
 };
 
 const sAssertTableStructure = (editor: Editor, structure: StructAssert) => Logger.t('Assert table structure', Step.sync(() => {
-  const table = SelectorFind.descendant(Element.fromDom(editor.getBody()), 'table').getOrDie('Should exist a table');
+  const table = SelectorFind.descendant(SugarElement.fromDom(editor.getBody()), 'table').getOrDie('Should exist a table');
   Assertions.assertStructure('Should be a table the expected structure', structure, table);
 }));
 
@@ -72,7 +72,7 @@ const sAssertElementStructure = (editor, selector, expected) => Logger.t('Assert
   Assertions.assertStructure(
     'Asserting HTML structure of the element: ' + selector,
     ApproxStructure.fromHtml(expected),
-    SelectorFind.descendant(Element.fromDom(body), selector).getOrDie('Nothing in the Editor matches selector: ' + selector)
+    SelectorFind.descendant(SugarElement.fromDom(body), selector).getOrDie('Nothing in the Editor matches selector: ' + selector)
   );
 }));
 
@@ -83,7 +83,7 @@ const sAssertApproxElementStructure = (editor, selector, expected) => Logger.t('
   Assertions.assertStructure(
     'Asserting HTML structure of the element: ' + selector,
     expected,
-    SelectorFind.descendant(Element.fromDom(body), selector).getOrDie('Nothing in the Editor matches selector: ' + selector)
+    SelectorFind.descendant(SugarElement.fromDom(body), selector).getOrDie('Nothing in the Editor matches selector: ' + selector)
   );
 }));
 
@@ -107,13 +107,13 @@ const cSetInputValue = (section, newValue) => Chain.control(
 
 const cWaitForDialog = Chain.control(
   Chain.fromChains([
-    Chain.inject(Body.body()),
+    Chain.inject(SugarBody.body()),
     UiFinder.cWaitFor('Waiting for dialog', '[role="dialog"]')
   ]),
   Guard.addLogging('Wait for dialog to be visible')
 );
 
-const sChooseTab = (tabName: string) => Logger.t('Choose tab ' + tabName, Chain.asStep(Body.body(), [
+const sChooseTab = (tabName: string) => Logger.t('Choose tab ' + tabName, Chain.asStep(SugarBody.body(), [
   cWaitForDialog,
   UiFinder.cFindIn(`[role="tab"]:contains(${tabName})`),
   Mouse.cClick
@@ -145,19 +145,19 @@ const cGetBody = Chain.control(
 );
 
 const cGetDoc = Chain.control(
-  Chain.mapper((editor: Editor) => Element.fromDom(editor.getDoc().documentElement)),
+  Chain.mapper((editor: Editor) => SugarElement.fromDom(editor.getDoc().documentElement)),
   Guard.addLogging('Get doc')
 );
 
 const cInsertTable = (cols: number, rows: number) => Chain.mapper((editor: Editor) => TinyDom.fromDom(editor.plugins.table.insertTable(cols, rows)));
 
 const cInsertRaw = (html: string) => Chain.mapper((editor: Editor) => {
-  const element = Element.fromHtml<HTMLElement>(html);
-  Attr.set(element, 'data-mce-id', '__mce');
+  const element = SugarElement.fromHtml<HTMLElement>(html);
+  Attribute.set(element, 'data-mce-id', '__mce');
   editor.insertContent(Html.getOuter(element));
 
-  return SelectorFind.descendant(Element.fromDom(editor.getBody()), '[data-mce-id="__mce"]').map((el) => {
-    Attr.remove(el, 'data-mce-id');
+  return SelectorFind.descendant(SugarElement.fromDom(editor.getBody()), '[data-mce-id="__mce"]').map((el) => {
+    Attribute.remove(el, 'data-mce-id');
     return el;
   }).getOrDie();
 });
@@ -289,7 +289,7 @@ const cGetCellWidth = (rowNumber: number, columnNumber: number) => Chain.control
 
 const cGetInput = (selector: string) => Chain.control(
   Chain.fromChains([
-    Chain.inject(Body.body()),
+    Chain.inject(SugarBody.body()),
     UiFinder.cFindIn(selector)
   ]),
   Guard.addLogging('Get input')
@@ -322,13 +322,13 @@ const sSetInputValue = (label, selector, value) => Logger.t(label,
 );
 
 const sGotoGeneralTab = Chain.asStep({}, [
-  Chain.inject(Body.body()),
+  Chain.inject(SugarBody.body()),
   UiFinder.cFindIn('div.tox-tab:contains(General)'),
   Mouse.cClick
 ]);
 
 const sGotoAdvancedTab = Chain.asStep({}, [
-  Chain.inject(Body.body()),
+  Chain.inject(SugarBody.body()),
   UiFinder.cFindIn('div.tox-tab:contains(Advanced)'),
   Mouse.cClick
 ]);

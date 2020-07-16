@@ -1,14 +1,14 @@
-import { Node as DomNode } from '@ephox/dom-globals';
+import { Node } from '@ephox/dom-globals';
 import { Option, Type } from '@ephox/katamari';
-import Element from '../api/node/Element';
+import { SugarElement } from '../api/node/SugarElement';
 
-type TestFn = (e: Element<DomNode>) => boolean;
-type ScopeTestFn<T, R extends DomNode> = (scope: Element<DomNode>, a: T) => scope is Element<R>;
-type AncestorFn<T, R extends DomNode> = (scope: Element<DomNode>, predicate: T, isRoot?: TestFn) => Option<Element<R>>;
+type TestFn = (e: SugarElement<Node>) => boolean;
+type ScopeTestFn<T, R extends Node> = (scope: SugarElement<Node>, a: T) => scope is SugarElement<R>;
+type AncestorFn<T, R extends Node> = (scope: SugarElement<Node>, predicate: T, isRoot?: TestFn) => Option<SugarElement<R>>;
 
-export default <T, R extends DomNode = DomNode> (is: ScopeTestFn<T, R>, ancestor: AncestorFn<T, R>, scope: Element<DomNode>, a: T, isRoot?: TestFn): Option<Element<R>> =>
+export default <T, R extends Node = Node> (is: ScopeTestFn<T, R>, ancestor: AncestorFn<T, R>, scope: SugarElement<Node>, a: T, isRoot?: TestFn): Option<SugarElement<R>> =>
   is(scope, a) ?
     Option.some(scope) :
     Type.isFunction(isRoot) && isRoot(scope) ?
-      Option.none<Element<R>>() :
+      Option.none<SugarElement<R>>() :
       ancestor(scope, a, isRoot);

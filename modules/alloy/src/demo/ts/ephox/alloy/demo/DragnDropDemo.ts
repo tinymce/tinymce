@@ -1,6 +1,6 @@
 import { console, document } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
-import { Class, Css, Element, Replication } from '@ephox/sugar';
+import { Class, Css, Replication, SugarElement } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { DragnDrop } from 'ephox/alloy/api/behaviour/DragnDrop';
@@ -12,7 +12,7 @@ import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 
 export default (): void => {
   const gui = Gui.create();
-  const body = Element.fromDom(document.body);
+  const body = SugarElement.fromDom(document.body);
   Class.add(gui.element(), 'gui-root-demo-container');
   // Css.set(gui.element(), 'direction', 'rtl');
 

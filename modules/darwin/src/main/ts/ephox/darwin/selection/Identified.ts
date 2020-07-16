@@ -1,14 +1,14 @@
 import { Option } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 
 export interface Identified {
-  boxes: Option<Element[]>;
-  start: Element;
-  finish: Element;
+  boxes: Option<SugarElement[]>;
+  start: SugarElement;
+  finish: SugarElement;
 }
 
 export interface IdentifiedExt {
-  boxes: Element[];
-  start: Element;
-  finish: Element;
+  boxes: SugarElement[];
+  start: SugarElement;
+  finish: SugarElement;
 }

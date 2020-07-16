@@ -1,7 +1,7 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { HTMLElement } from '@ephox/dom-globals';
 import * as Replication from 'ephox/sugar/api/dom/Replication';
-import Element from 'ephox/sugar/api/node/Element';
+import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
 import * as Traverse from 'ephox/sugar/api/search/Traverse';
 
 interface TestSpec {
@@ -12,7 +12,7 @@ interface TestSpec {
 }
 
 UnitTest.test('ReplicationTest', () => {
-  const checkValues = (expected: TestSpec, actual: Element<HTMLElement>) => {
+  const checkValues = (expected: TestSpec, actual: SugarElement<HTMLElement>) => {
     assert.eq(expected.name, 'span');
     assert.eq(expected.attrs.href, actual.dom().getAttribute('href'));
     assert.eq(expected.attrs['data-color'], actual.dom().getAttribute('data-color'));
@@ -22,13 +22,13 @@ UnitTest.test('ReplicationTest', () => {
   };
 
   const checkCopy = (expected: TestSpec, input: string) => {
-    const initial = Element.fromHtml<HTMLElement>(input);
+    const initial = SugarElement.fromHtml<HTMLElement>(input);
     const actual = Replication.copy(initial, 'span');
     checkValues(expected, actual);
   };
 
   const checkMutate = (expected: TestSpec, input: string) => {
-    const initial = Element.fromHtml<HTMLElement>(input);
+    const initial = SugarElement.fromHtml<HTMLElement>(input);
 
     const actual = Replication.mutate(initial, 'span');
 

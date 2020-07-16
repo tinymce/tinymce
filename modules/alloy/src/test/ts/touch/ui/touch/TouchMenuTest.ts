@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, Chain, Logger, Step, StructAssert, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr, Future, Option } from '@ephox/katamari';
-import { Class, Element } from '@ephox/sugar';
+import { Class, SugarElement } from '@ephox/sugar';
 
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
@@ -109,7 +109,7 @@ UnitTest.asynctest('Browser Test: ui.touch.TouchMenuTest', (success, failure) =>
     );
   }, (doc, _body, gui, component, store) => {
 
-    const fireTouchstart = (target: Element, x: number, y: number) => {
+    const fireTouchstart = (target: SugarElement, x: number, y: number) => {
       AlloyTriggers.dispatchWith(component, target, NativeEvents.touchstart(), {
         raw: {
           touches: [
@@ -119,15 +119,15 @@ UnitTest.asynctest('Browser Test: ui.touch.TouchMenuTest', (success, failure) =>
       });
     };
 
-    const fireTouchend = (target: Element) => {
+    const fireTouchend = (target: SugarElement) => {
       AlloyTriggers.dispatch(component, target, NativeEvents.touchend());
     };
 
-    const fireLongpress = (target: Element) => {
+    const fireLongpress = (target: SugarElement) => {
       AlloyTriggers.dispatch(component, target, SystemEvents.longpress());
     };
 
-    const sFireTouchmoveOn = (container: Element, selector: string) => Chain.asStep(gui.element(), [
+    const sFireTouchmoveOn = (container: SugarElement, selector: string) => Chain.asStep(gui.element(), [
       UiFinder.cFindIn(selector),
       Chain.op((target) => {
         const rect = target.dom().getBoundingClientRect();

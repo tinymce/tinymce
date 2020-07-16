@@ -6,7 +6,7 @@
  */
 
 import { Arr, Fun } from '@ephox/katamari';
-import { Compare, Insert, Replication, Element, Fragment, Node, SelectorFind, Traverse } from '@ephox/sugar';
+import { Compare, Insert, Replication, SelectorFind, SugarElement, SugarFragment, SugarNode, Traverse } from '@ephox/sugar';
 import * as ElementType from '../dom/ElementType';
 import * as Parents from '../dom/Parents';
 import * as SelectionUtils from './SelectionUtils';
@@ -15,20 +15,20 @@ import * as TableCellSelection from './TableCellSelection';
 
 const findParentListContainer = function (parents) {
   return Arr.find(parents, function (elm) {
-    return Node.name(elm) === 'ul' || Node.name(elm) === 'ol';
+    return SugarNode.name(elm) === 'ul' || SugarNode.name(elm) === 'ol';
   });
 };
 
 const getFullySelectedListWrappers = function (parents, rng) {
   return Arr.find(parents, function (elm) {
-    return Node.name(elm) === 'li' && SelectionUtils.hasAllContentsSelected(elm, rng);
+    return SugarNode.name(elm) === 'li' && SelectionUtils.hasAllContentsSelected(elm, rng);
   }).fold(
     Fun.constant([]),
     function (_li) {
       return findParentListContainer(parents).map(function (listCont) {
         return [
-          Element.fromTag('li'),
-          Element.fromTag(Node.name(listCont))
+          SugarElement.fromTag('li'),
+          SugarElement.fromTag(SugarNode.name(listCont))
         ];
       }).getOr([]);
     }
@@ -40,7 +40,7 @@ const wrap = function (innerElm, elms) {
     Insert.append(elm, acc);
     return elm;
   }, innerElm);
-  return elms.length > 0 ? Fragment.fromElements([ wrapped ]) : wrapped;
+  return elms.length > 0 ? SugarFragment.fromElements([ wrapped ]) : wrapped;
 };
 
 const directListWrappers = function (commonAnchorContainer) {
@@ -57,7 +57,7 @@ const directListWrappers = function (commonAnchorContainer) {
 };
 
 const getWrapElements = function (rootNode, rng) {
-  const commonAnchorContainer = Element.fromDom(rng.commonAncestorContainer);
+  const commonAnchorContainer = SugarElement.fromDom(rng.commonAncestorContainer);
   const parents = Parents.parentsAndSelf(commonAnchorContainer, rootNode);
   const wrapElements = Arr.filter(parents, function (elm) {
     return ElementType.isInline(elm) || ElementType.isHeading(elm);
@@ -68,11 +68,11 @@ const getWrapElements = function (rootNode, rng) {
 };
 
 const emptyFragment = function () {
-  return Fragment.fromElements([]);
+  return SugarFragment.fromElements([]);
 };
 
 const getFragmentFromRange = function (rootNode, rng) {
-  return wrap(Element.fromDom(rng.cloneContents()), getWrapElements(rootNode, rng));
+  return wrap(SugarElement.fromDom(rng.cloneContents()), getWrapElements(rootNode, rng));
 };
 
 const getParentTable = function (rootElm, cell) {
@@ -86,7 +86,7 @@ const getTableFragment = function (rootNode, selectedTableCells) {
     const fullTableModel = SimpleTableModel.fromDom(tableElm);
 
     return SimpleTableModel.subsection(fullTableModel, firstCell, lastCell).map(function (sectionedTableModel) {
-      return Fragment.fromElements([ SimpleTableModel.toDom(sectionedTableModel) ]);
+      return SugarFragment.fromElements([ SimpleTableModel.toDom(sectionedTableModel) ]);
     });
   }).getOrThunk(emptyFragment);
 };

@@ -1,7 +1,7 @@
 import { Objects } from '@ephox/boulder';
 import { console, document } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
-import { Class, Element, SelectorFind, Width } from '@ephox/sugar';
+import { Class, SelectorFind, SugarElement, Width } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Transitioning } from 'ephox/alloy/api/behaviour/Transitioning';
@@ -17,7 +17,7 @@ import { ItemSpec } from 'ephox/alloy/ui/types/ItemTypes';
 
 export default (): void => {
   const gui = Gui.create();
-  const body = Element.fromDom(document.body);
+  const body = SugarElement.fromDom(document.body);
   Class.add(gui.element(), 'gui-root-demo-container');
   Attachment.attachSystem(body, gui);
 

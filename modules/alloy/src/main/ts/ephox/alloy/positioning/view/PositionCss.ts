@@ -1,5 +1,5 @@
 import { Fun, Option } from '@ephox/katamari';
-import { Element, Css } from '@ephox/sugar';
+import { Css, SugarElement } from '@ephox/sugar';
 
 export interface PositionCss {
   readonly position: () => string;
@@ -23,7 +23,7 @@ const NuPositionCss = (
   bottom: Fun.constant(bottom)
 });
 
-const applyPositionCss = (element: Element, position: PositionCss) => {
+const applyPositionCss = (element: SugarElement, position: PositionCss) => {
   const addPx = (num: number) => num + 'px';
 
   Css.setOptions(element, {

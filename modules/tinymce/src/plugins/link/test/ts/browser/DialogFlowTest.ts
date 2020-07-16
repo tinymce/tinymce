@@ -1,11 +1,10 @@
 import {
-  ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Log, Logger, Mouse, NamedChain, Pipeline, Step, UiControls,
-  UiFinder
+  ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Log, Logger, Mouse, NamedChain, Pipeline, Step, UiControls, UiFinder
 } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyDom, TinyLoader, TinyUi } from '@ephox/mcagar';
-import { Attr } from '@ephox/sugar';
+import { Attribute } from '@ephox/sugar';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 
@@ -100,7 +99,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.DialogFlowTest', (success, fail
       Chain.asStep(TinyDom.fromDom(editor.getBody()), [
         NamedChain.asChain([
           NamedChain.direct(NamedChain.inputName(), UiFinder.cFindIn('h1'), 'h1'),
-          NamedChain.direct('h1', Chain.mapper((h1) => Attr.get(h1, 'id')), 'h1-id'),
+          NamedChain.direct('h1', Chain.mapper((h1) => Attribute.get(h1, 'id')), 'h1-id'),
           NamedChain.bundle((obj) => UiFinder.findIn(obj[NamedChain.inputName()], `a[href="#${obj['h1-id']}"]:contains("Header One")`))
         ])
       ])

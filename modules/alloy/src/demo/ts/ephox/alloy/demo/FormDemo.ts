@@ -1,6 +1,6 @@
 import { console, document, setTimeout } from '@ephox/dom-globals';
 import { Obj, Result } from '@ephox/katamari';
-import { Class, Element } from '@ephox/sugar';
+import { Class, SugarElement } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Keying } from 'ephox/alloy/api/behaviour/Keying';
@@ -25,7 +25,7 @@ import * as DemoFields from './forms/DemoFields';
 
 export default (): void => {
   const gui = Gui.create();
-  const body = Element.fromDom(document.body);
+  const body = SugarElement.fromDom(document.body);
   Class.add(gui.element(), 'gui-root-demo-container');
   Attachment.attachSystem(body, gui);
 

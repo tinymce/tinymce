@@ -1,8 +1,8 @@
 import { Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Insert, Element, SelectorFind } from '@ephox/sugar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
+import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import { Insert, SelectorFind, SugarElement } from '@ephox/sugar';
 
 UnitTest.asynctest(
   'browser.tinymce.core.init.InitEditorThemeFunctionIframeTest',
@@ -17,19 +17,19 @@ UnitTest.asynctest(
           tinyApis.sAssertContent('<p>a</p>')
         ])),
         Logger.t('Editor element properties', Step.sync(function () {
-          const body = Element.fromDom(document.body);
+          const body = SugarElement.fromDom(document.body);
           const editorElement = SelectorFind.descendant(body, '#' + editor.id + '_parent').getOrDie('No elm');
           const iframeContainerElement = SelectorFind.descendant(body, '#' + editor.id + '_iframecontainer').getOrDie('No elm');
 
-          Assertions.assertDomEq('Should be expected editor container element', editorElement, Element.fromDom(editor.editorContainer));
-          Assertions.assertDomEq('Should be expected iframe container element element', iframeContainerElement, Element.fromDom(editor.contentAreaContainer));
+          Assertions.assertDomEq('Should be expected editor container element', editorElement, SugarElement.fromDom(editor.editorContainer));
+          Assertions.assertDomEq('Should be expected iframe container element element', iframeContainerElement, SugarElement.fromDom(editor.contentAreaContainer));
         }))
       ], onSuccess, onFailure);
     }, {
       theme(editor, target) {
-        const elm = Element.fromHtml('<div><button>B</button><div></div></div>');
+        const elm = SugarElement.fromHtml('<div><button>B</button><div></div></div>');
 
-        Insert.after(Element.fromDom(target), elm);
+        Insert.after(SugarElement.fromDom(target), elm);
 
         return {
           editorContainer: elm.dom(),

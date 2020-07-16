@@ -1,6 +1,7 @@
-import { Chain, UiFinder, Step, Logger, GeneralSteps, Assertions, FocusTools } from '@ephox/agar';
+import { Assertions, Chain, FocusTools, GeneralSteps, Logger, Step, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
+import { Attribute } from '@ephox/sugar';
 
 import * as AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviour';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
@@ -9,9 +10,8 @@ import { Highlighting } from 'ephox/alloy/api/behaviour/Highlighting';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
 import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import * as FocusManagers from 'ephox/alloy/api/focus/FocusManagers';
-import { Attr } from '@ephox/sugar';
+import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 
 UnitTest.asynctest('Browser Test: behaviour.keying.FocusManagersTest', (success, failure) => {
   GuiSetup.setup(
@@ -44,8 +44,8 @@ UnitTest.asynctest('Browser Test: behaviour.keying.FocusManagersTest', (success,
           AlloyEvents.run<SystemEvents.AlloyFocusShiftedEvent>(SystemEvents.focusShifted(), (_comp, se) => {
             const prevFocus = se.event().prevFocus();
             const newFocus = se.event().newFocus();
-            const prevIndex = prevFocus.map((p) => Attr.get(p, 'data-index')).getOr('{none}');
-            const newIndex = newFocus.map((p) => Attr.get(p, 'data-index')).getOr('{none}');
+            const prevIndex = prevFocus.map((p) => Attribute.get(p, 'data-index')).getOr('{none}');
+            const newIndex = newFocus.map((p) => Attribute.get(p, 'data-index')).getOr('{none}');
             store.adder(prevIndex + '->' + newIndex)();
           })
         ])

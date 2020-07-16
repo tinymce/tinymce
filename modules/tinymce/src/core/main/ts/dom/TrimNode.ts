@@ -5,10 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
+import Tools from '../api/util/Tools';
 import * as ElementType from './ElementType';
 import * as NodeType from './NodeType';
-import Tools from '../api/util/Tools';
 
 const surroundedBySpans = function (node) {
   const previousIsSpan = node.previousSibling && node.previousSibling.nodeName === 'SPAN';
@@ -61,7 +61,7 @@ const trimNode = function (dom, node) {
       }
 
       // Keep non empty elements and void elements
-      if (children.length || ElementType.isVoid(Element.fromDom(node))) {
+      if (children.length || ElementType.isVoid(SugarElement.fromDom(node))) {
         return;
       }
     }

@@ -1,12 +1,12 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { Body, Compare, Element, Hierarchy, Html, Insert, InsertAll, Remove } from '@ephox/sugar';
+import { Compare, Hierarchy, Html, Insert, InsertAll, Remove, SugarBody, SugarElement } from '@ephox/sugar';
 import * as DomClumps from 'ephox/robin/api/dom/DomClumps';
 
 UnitTest.test('DomClumpsTest', function () {
-  const body = Body.body();
+  const body = SugarBody.body();
 
-  const container = Element.fromTag('div');
+  const container = SugarElement.fromTag('div');
 
   Insert.append(body, container);
 
@@ -14,13 +14,13 @@ UnitTest.test('DomClumpsTest', function () {
     return Hierarchy.follow(container, path).getOrDie('Could not find the path: ' + path.join(','));
   };
 
-  const isRoot = function (elem: Element) {
+  const isRoot = function (elem: SugarElement) {
     return Compare.eq(elem, container);
   };
 
-  const mark = function (res: Element[]) {
+  const mark = function (res: SugarElement[]) {
     if (res.length > 0) {
-      const strong = Element.fromTag('strong');
+      const strong = SugarElement.fromTag('strong');
       Insert.before(res[0], strong);
       InsertAll.append(strong, res);
     }

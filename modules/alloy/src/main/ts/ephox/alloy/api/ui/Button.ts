@@ -1,12 +1,12 @@
 import { FieldSchema } from '@ephox/boulder';
 import { Obj } from '@ephox/katamari';
 
-import { SketchSpec } from '../../api/component/SpecTypes';
 import * as ButtonBase from '../../ui/common/ButtonBase';
 import { ButtonDetail, ButtonSketcher, ButtonSpec } from '../../ui/types/ButtonTypes';
 import { Focusing } from '../behaviour/Focusing';
 import { Keying } from '../behaviour/Keying';
 import { SketchBehaviours } from '../component/SketchBehaviours';
+import { SketchSpec } from '../component/SpecTypes';
 import * as Sketcher from './Sketcher';
 import { SingleSketchFactory } from './UiSketcher';
 

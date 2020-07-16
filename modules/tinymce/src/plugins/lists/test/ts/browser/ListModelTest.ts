@@ -2,7 +2,7 @@ import { Arbitraries } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import Jsc from '@ephox/wrap-jsverify';
 import { composeList } from 'tinymce/plugins/lists/listModel/ComposeList';
 import { Entry } from 'tinymce/plugins/lists/listModel/Entry';
@@ -55,7 +55,7 @@ UnitTest.test('tinymce.lists.browser.ListModelTest', () => {
       itemAttributes: ${JSON.stringify(entry.itemAttributes)}
     }`;
 
-  const serializeElements = (elms: Element[]): string => Arr.map(elms, (el) => el.dom().outerHTML).join('');
+  const serializeElements = (elms: SugarElement[]): string => Arr.map(elms, (el) => el.dom().outerHTML).join('');
 
   Jsc.assert(composeParseProperty, {
     size: 500,
@@ -67,7 +67,7 @@ UnitTest.test('tinymce.lists.browser.ListModelTest', () => {
   /* const inputEntries: Entry[] = [
     {
       depth: 2,
-      content: [Element.fromHtml('<i>stuff</i>')],
+      content: [SugarElement.fromHtml('<i>stuff</i>')],
       listType: ListType.OL,
       isSelected: false,
       listAttributes: {style: 'list-style-type: lower-alpha;'},

@@ -1,5 +1,5 @@
 import { UnitTest } from '@ephox/bedrock-client';
-import { Element, InsertAll } from '@ephox/sugar';
+import { InsertAll, SugarElement } from '@ephox/sugar';
 import * as ApproxStructure from 'ephox/agar/api/ApproxStructure';
 import * as Assertions from 'ephox/agar/api/Assertions';
 
@@ -14,7 +14,7 @@ UnitTest.asynctest('ApproxStructureTest', (success, _failure) => {
     '</div>';
 
   const check = (expected, input) => {
-    const target = Element.fromHtml(input);
+    const target = SugarElement.fromHtml(input);
     Assertions.assertStructure('Test', expected, target);
   };
 
@@ -112,11 +112,11 @@ UnitTest.asynctest('ApproxStructureTest', (success, _failure) => {
   check(struct2, '<div><span class="hello"></span><div></div><span class="bye"></span></div>');
   check(struct2, '<div><span class="hello"></span><span class="hello"></span><span class="hello"></span><span class="hello"></span><div></div><span class="bye"></span></div>');
 
-  const container = Element.fromTag('div');
+  const container = SugarElement.fromTag('div');
   InsertAll.append(container, [
-    Element.fromText('hello'),
-    Element.fromText(' '),
-    Element.fromText('world')
+    SugarElement.fromText('hello'),
+    SugarElement.fromText(' '),
+    SugarElement.fromText('world')
   ]);
 
   Assertions.assertStructure('Test', ApproxStructure.build((s, str, _arr) =>

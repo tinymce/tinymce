@@ -7,35 +7,35 @@
 
 import { HTMLTableRowElement } from '@ephox/dom-globals';
 import { Cell, Option } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 
 export interface Clipboard {
-  getRows: () => Option<Element<HTMLTableRowElement>[]>;
-  setRows: (rows: Option<Element<HTMLTableRowElement>[]>) => void;
+  getRows: () => Option<SugarElement<HTMLTableRowElement>[]>;
+  setRows: (rows: Option<SugarElement<HTMLTableRowElement>[]>) => void;
   clearRows: () => void;
 
-  getColumns: () => Option<Element<HTMLTableRowElement>[]>;
-  setColumns: (columns: Option<Element<HTMLTableRowElement>[]>) => void;
+  getColumns: () => Option<SugarElement<HTMLTableRowElement>[]>;
+  setColumns: (columns: Option<SugarElement<HTMLTableRowElement>[]>) => void;
   clearColumns: () => void;
 }
 
 export const Clipboard = (): Clipboard => {
-  const rows = Cell(Option.none<Element<HTMLTableRowElement>[]>());
-  const cols = Cell(Option.none<Element<HTMLTableRowElement>[]>());
+  const rows = Cell(Option.none<SugarElement<HTMLTableRowElement>[]>());
+  const cols = Cell(Option.none<SugarElement<HTMLTableRowElement>[]>());
 
-  const clearClipboard = (clipboard: Cell<Option<Element<any>[]>>) => {
+  const clearClipboard = (clipboard: Cell<Option<SugarElement<any>[]>>) => {
     clipboard.set(Option.none());
   };
 
   return {
     getRows: rows.get,
-    setRows: (r: Option<Element<HTMLTableRowElement>[]>) => {
+    setRows: (r: Option<SugarElement<HTMLTableRowElement>[]>) => {
       rows.set(r);
       clearClipboard(cols);
     },
     clearRows: () => clearClipboard(rows),
     getColumns: cols.get,
-    setColumns: (c: Option<Element<HTMLTableRowElement>[]>) => {
+    setColumns: (c: Option<SugarElement<HTMLTableRowElement>[]>) => {
       cols.set(c);
       clearClipboard(rows);
     },

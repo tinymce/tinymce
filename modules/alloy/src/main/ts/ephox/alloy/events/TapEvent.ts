@@ -1,7 +1,7 @@
 import { Objects } from '@ephox/boulder';
 import { Touch, TouchEvent } from '@ephox/dom-globals';
 import { Cell, Obj, Option } from '@ephox/katamari';
-import { Compare, Element, EventArgs } from '@ephox/sugar';
+import { Compare, EventArgs, SugarElement } from '@ephox/sugar';
 
 import DelayedFunction from '../alien/DelayedFunction';
 import * as NativeEvents from '../api/events/NativeEvents';
@@ -28,7 +28,7 @@ const isFarEnough = (touch: Touch, data: TouchHistoryData): boolean => {
 export interface TouchHistoryData {
   x: number;
   y: number;
-  target: Element;
+  target: SugarElement;
 }
 
 const monitor = (settings: GuiEventSettings) => {

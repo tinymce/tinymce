@@ -1,5 +1,5 @@
 import { Option } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 
 export interface GeneralDefinitionSpec<EC> {
   uid: string;
@@ -13,7 +13,7 @@ export interface GeneralDefinitionSpec<EC> {
   // defChildren?: DC[];
 }
 
-export interface DomDefinitionSpec extends GeneralDefinitionSpec<Element> {
+export interface DomDefinitionSpec extends GeneralDefinitionSpec<SugarElement> {
 
 }
 
@@ -28,7 +28,7 @@ export interface GeneralDefinitionDetail<EC> {
   domChildren: EC[];
 }
 
-export interface DomDefinitionDetail extends GeneralDefinitionDetail<Element> {
+export interface DomDefinitionDetail extends GeneralDefinitionDetail<SugarElement> {
 
 }
 
@@ -37,7 +37,7 @@ const defToStr = (defn: GeneralDefinitionDetail<any>): string => {
   return JSON.stringify(raw, null, 2);
 };
 
-const defToRaw = (defn: GeneralDefinitionDetail<Element>): GeneralDefinitionSpec<string> => ({
+const defToRaw = (defn: GeneralDefinitionDetail<SugarElement>): GeneralDefinitionSpec<string> => ({
   uid: defn.uid,
   tag: defn.tag,
   classes: defn.classes,

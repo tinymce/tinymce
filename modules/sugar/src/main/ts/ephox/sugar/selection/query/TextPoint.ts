@@ -1,10 +1,10 @@
-import { ClientRect, Document, DOMRect, Text as DomText } from '@ephox/dom-globals';
+import { ClientRect, Document, DOMRect, Text } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
-import Element from '../../api/node/Element';
-import * as Text from '../../api/node/Text';
+import { SugarElement } from '../../api/node/SugarElement';
+import * as SugarText from '../../api/node/SugarText';
 import * as Geometry from '../alien/Geometry';
 
-const locateOffset = (doc: Element<Document>, textnode: Element<DomText>, x: number, y: number, rect: ClientRect | DOMRect) => {
+const locateOffset = (doc: SugarElement<Document>, textnode: SugarElement<Text>, x: number, y: number, rect: ClientRect | DOMRect) => {
   const rangeForOffset = (o: number) => {
     const r = doc.dom().createRange();
     r.setStart(textnode.dom(), o);
@@ -17,12 +17,12 @@ const locateOffset = (doc: Element<Document>, textnode: Element<DomText>, x: num
     return r.getBoundingClientRect();
   };
 
-  const length = Text.get(textnode).length;
+  const length = SugarText.get(textnode).length;
   const offset = Geometry.searchForPoint(rectForOffset, x, y, rect.right, length);
   return rangeForOffset(offset);
 };
 
-const locate = (doc: Element<Document>, node: Element<DomText>, x: number, y: number) => {
+const locate = (doc: SugarElement<Document>, node: SugarElement<Text>, x: number, y: number) => {
   const r = doc.dom().createRange();
   r.selectNode(node.dom());
   const rects = r.getClientRects();

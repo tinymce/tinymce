@@ -1,5 +1,5 @@
 import { Obj, Option } from '@ephox/katamari';
-import { Body, Element } from '@ephox/sugar';
+import { SugarBody, SugarElement } from '@ephox/sugar';
 
 import { AlloyComponent } from '../api/component/ComponentApi';
 import EventRegistry, { ElementAndHandler, UidAndHandler } from '../events/EventRegistry';
@@ -24,7 +24,7 @@ export default () => {
     const conflict = components[tagId];
     if (conflict === component) { unregister(component); } else { throw new Error(
       'The tagId "' + tagId + '" is already used by: ' + AlloyLogger.element(conflict.element()) + '\nCannot use it for: ' + AlloyLogger.element(component.element()) + '\n' +
-        'The conflicting element is' + (Body.inBody(conflict.element()) ? ' ' : ' not ') + 'already in the DOM'
+        'The conflicting element is' + (SugarBody.inBody(conflict.element()) ? ' ' : ' not ') + 'already in the DOM'
     );
     }
   };
@@ -47,7 +47,7 @@ export default () => {
 
   const filter = (type: string): UidAndHandler[] => events.filterByType(type);
 
-  const find = (isAboveRoot: (elem: Element) => boolean, type: string, target: Element): Option<ElementAndHandler> => events.find(isAboveRoot, type, target);
+  const find = (isAboveRoot: (elem: SugarElement) => boolean, type: string, target: SugarElement): Option<ElementAndHandler> => events.find(isAboveRoot, type, target);
 
   const getById = (id: string): Option<AlloyComponent> => Obj.get(components, id);
 

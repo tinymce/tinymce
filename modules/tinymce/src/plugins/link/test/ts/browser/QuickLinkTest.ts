@@ -2,7 +2,7 @@ import { FocusTools, GeneralSteps, Keyboard, Keys, Log, Pipeline, Step, UiFinder
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyDom, TinyLoader } from '@ephox/mcagar';
-import { Body } from '@ephox/sugar';
+import { SugarBody } from '@ephox/sugar';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 import { TestLinkUi } from '../module/TestLinkUi';
@@ -38,7 +38,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.QuickLinkTest', (success, failu
           'a[href="http://tiny.cloud"]': 1,
           'a:contains("http://tiny.cloud")': 1
         }),
-        UiFinder.sNotExists(Body.body(), '.tox-pop__dialog')
+        UiFinder.sNotExists(SugarBody.body(), '.tox-pop__dialog')
       ]),
 
       Log.stepsAsStep('TBA', 'Checking that QuickLink can add a link to selected text and keep the current text', [
@@ -52,7 +52,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.QuickLinkTest', (success, failu
           'a:contains("http://tiny.cloud/2")': 0,
           'a:contains("Word")': 1
         }),
-        UiFinder.sNotExists(Body.body(), '.tox-pop__dialog')
+        UiFinder.sNotExists(SugarBody.body(), '.tox-pop__dialog')
       ]),
 
       Log.stepsAsStep('TBA', 'Checking that QuickLink can add a link to a selected image and keep the current image', [
@@ -66,7 +66,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.QuickLinkTest', (success, failu
           'a:contains("http://tiny.cloud/2")': 0,
           'img[src="image.jpg"]': 1
         }),
-        UiFinder.sNotExists(Body.body(), '.tox-pop__dialog')
+        UiFinder.sNotExists(SugarBody.body(), '.tox-pop__dialog')
       ]),
 
       Log.stepsAsStep('TBA', 'Checking that QuickLink can edit an existing link', [
@@ -80,7 +80,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.QuickLinkTest', (success, failu
           'a:contains("http://tiny.cloud/3")': 0,
           'a:contains("Word")': 1
         }),
-        UiFinder.sNotExists(Body.body(), '.tox-pop__dialog')
+        UiFinder.sNotExists(SugarBody.body(), '.tox-pop__dialog')
       ]),
 
       Log.stepsAsStep('TBA', 'Checking that QuickLink can remove an existing link', [
@@ -97,7 +97,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.QuickLinkTest', (success, failu
           'a': 0,
           'p:contains("Word")': 1
         }),
-        UiFinder.sNotExists(Body.body(), '.tox-pop__dialog')
+        UiFinder.sNotExists(SugarBody.body(), '.tox-pop__dialog')
       ]),
 
       Log.stepsAsStep('TINY-5952', 'Checking that QuickLink link-creations end up on the undo stack', [

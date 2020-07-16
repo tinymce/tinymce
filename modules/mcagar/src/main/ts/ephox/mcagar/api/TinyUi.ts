@@ -1,6 +1,6 @@
 import { Assertions, Chain, Mouse, Step, UiFinder } from '@ephox/agar';
 import { Arr, Fun } from '@ephox/katamari';
-import { Element, ShadowDom, Visibility } from '@ephox/sugar';
+import { SugarElement, SugarShadowDom, Visibility } from '@ephox/sugar';
 import { Editor } from '../alien/EditorTypes';
 import { getThemeSelectors } from './ThemeSelectors';
 
@@ -14,35 +14,35 @@ export interface TinyUi {
   sFillDialogWith: <T> (data: Record<string, any>, selector: string) => Step<T, T>;
   sSubmitDialog: <T> (selector: string) => Step<T, T>;
 
-  cWaitForPopup: <T> (label: string, selector: string) => Chain<T, Element>;
-  cWaitForUi: <T> (label: string, selector: string) => Chain<T, Element>;
-  cWaitForState: <T> (hasState: (element: Element) => boolean) => (label: string, selector: string) => Chain<T, Element>;
+  cWaitForPopup: <T> (label: string, selector: string) => Chain<T, SugarElement>;
+  cWaitForUi: <T> (label: string, selector: string) => Chain<T, SugarElement>;
+  cWaitForState: <T> (hasState: (element: SugarElement) => boolean) => (label: string, selector: string) => Chain<T, SugarElement>;
 
-  cFillDialogWith: (data: Record<string, any>) => Chain<Element, Element>;
-  cSubmitDialog: () => Chain<Element, Element>;
-  cAssertDialogContents: (data: Record<string, any>) => Chain<Element, Element>;
+  cFillDialogWith: (data: Record<string, any>) => Chain<SugarElement, SugarElement>;
+  cSubmitDialog: () => Chain<SugarElement, SugarElement>;
+  cAssertDialogContents: (data: Record<string, any>) => Chain<SugarElement, SugarElement>;
 
-  cTriggerContextMenu: (label: string, target: string, menu: string) => Chain<Element, Element>;
+  cTriggerContextMenu: (label: string, target: string, menu: string) => Chain<SugarElement, SugarElement>;
 }
 
 export const TinyUi = function (editor: Editor): TinyUi {
-  const dialogRoot = ShadowDom.getContentContainer(ShadowDom.getRootNode(Element.fromDom(editor.getElement())));
-  const toolstripRoot = Element.fromDom(editor.getContainer());
-  const editorRoot = Element.fromDom(editor.getBody());
+  const dialogRoot = SugarShadowDom.getContentContainer(SugarShadowDom.getRootNode(SugarElement.fromDom(editor.getElement())));
+  const toolstripRoot = SugarElement.fromDom(editor.getContainer());
+  const editorRoot = SugarElement.fromDom(editor.getBody());
 
   const cDialogRoot = Chain.inject(dialogRoot);
 
-  const cGetToolbarRoot = Chain.fromChainsWith<Element, Element, Element>(toolstripRoot, [
-    Chain.binder((container: Element) => UiFinder.findIn(container, getThemeSelectors().toolBarSelector(editor)))
+  const cGetToolbarRoot = Chain.fromChainsWith<SugarElement, SugarElement, SugarElement>(toolstripRoot, [
+    Chain.binder((container: SugarElement) => UiFinder.findIn(container, getThemeSelectors().toolBarSelector(editor)))
   ]);
 
-  const cGetMenuRoot = Chain.fromChainsWith<Element, Element, Element>(toolstripRoot, [
-    Chain.binder((container: Element) => UiFinder.findIn(container, getThemeSelectors().menuBarSelector))
+  const cGetMenuRoot = Chain.fromChainsWith<SugarElement, SugarElement, SugarElement>(toolstripRoot, [
+    Chain.binder((container: SugarElement) => UiFinder.findIn(container, getThemeSelectors().menuBarSelector))
   ]);
 
   const cEditorRoot = Chain.inject(editorRoot);
 
-  const cFindIn = function (cRoot: Chain<Element, Element>, selector: string) {
+  const cFindIn = function (cRoot: Chain<SugarElement, SugarElement>, selector: string) {
     return Chain.fromChains([
       cRoot,
       UiFinder.cFindIn(selector)
@@ -82,9 +82,9 @@ export const TinyUi = function (editor: Editor): TinyUi {
     ]);
   };
 
-  const cWaitForState = function <T> (hasState: (element: Element) => boolean) {
+  const cWaitForState = function <T> (hasState: (element: SugarElement) => boolean) {
     return function (label: string, selector: string) {
-      return Chain.fromChainsWith<Element, T, Element>(dialogRoot, [
+      return Chain.fromChainsWith<SugarElement, T, SugarElement>(dialogRoot, [
         UiFinder.cWaitForState(label, selector, hasState)
       ]);
     };
@@ -99,7 +99,7 @@ export const TinyUi = function (editor: Editor): TinyUi {
   };
 
   const cTriggerContextMenu = function (label: string, target: string, menu: string) {
-    return Chain.fromChains<Element, Element>([
+    return Chain.fromChains<SugarElement, SugarElement>([
       cFindIn(cEditorRoot, target),
       Mouse.cContextMenu,
 
@@ -108,14 +108,14 @@ export const TinyUi = function (editor: Editor): TinyUi {
     ]);
   };
 
-  const getDialogByElement = function (element: Element) {
+  const getDialogByElement = function (element: SugarElement) {
     return Arr.find(editor.windowManager.getWindows(), function (win) {
       return element.dom().id === win._id;
     });
   };
 
   const cAssertDialogContents = function (data: Record<string, any>) {
-    return Chain.async<Element, Element>(function (element, next, die) {
+    return Chain.async<SugarElement, SugarElement>(function (element, next, die) {
       getDialogByElement(element).fold(() => die('Can not find dialog'), function (win) {
         Assertions.assertEq('asserting dialog contents', data, win.toJSON());
         next(element);
@@ -124,7 +124,7 @@ export const TinyUi = function (editor: Editor): TinyUi {
   };
 
   const cFillDialogWith = function (data: Record<string, any>) {
-    return Chain.async<Element, Element>(function (element, next, die) {
+    return Chain.async<SugarElement, SugarElement>(function (element, next, die) {
       getDialogByElement(element).fold(() => die('Can not find dialog'), function (win) {
         win.fromJSON({ ...win.toJSON(), ...data });
         next(element);
@@ -140,8 +140,8 @@ export const TinyUi = function (editor: Editor): TinyUi {
   };
 
   const cSubmitDialog = function () {
-    return Chain.fromChains<Element, Element>([
-      Chain.binder((container: Element) => UiFinder.findIn(container, getThemeSelectors().dialogSubmitSelector)),
+    return Chain.fromChains<SugarElement, SugarElement>([
+      Chain.binder((container: SugarElement) => UiFinder.findIn(container, getThemeSelectors().dialogSubmitSelector)),
       Mouse.cClick
     ]);
   };

@@ -1,7 +1,7 @@
 import { Cleaner, Step, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Event, window } from '@ephox/dom-globals';
-import { DomEvent, Element, EventArgs } from '@ephox/sugar';
+import { DomEvent, EventArgs, SugarElement } from '@ephox/sugar';
 
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
@@ -38,12 +38,12 @@ UnitTest.asynctest('Browser Test: events.BroadcastingEventsTest', (success, fail
     })
   ), (doc, _body, gui, _component, store) => {
     cleanup.add(
-      DomEvent.bind(Element.fromDom(window), 'scroll', (evt) => {
+      DomEvent.bind(SugarElement.fromDom(window), 'scroll', (evt) => {
         gui.broadcastEvent(SystemEvents.windowScroll(), evt);
       }).unbind
     );
     cleanup.add(
-      DomEvent.bind(Element.fromDom(window), 'resize', (evt) => {
+      DomEvent.bind(SugarElement.fromDom(window), 'resize', (evt) => {
         gui.broadcastEvent(SystemEvents.windowResize(), evt);
       }).unbind
     );

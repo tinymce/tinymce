@@ -1,6 +1,6 @@
 import { Assertions, Chain, Cursors, StructAssert, UiFinder } from '@ephox/agar';
-import { Node as DomNode } from '@ephox/dom-globals';
-import { Element, Hierarchy, Html } from '@ephox/sugar';
+import { Node } from '@ephox/dom-globals';
+import { Hierarchy, Html, SugarElement } from '@ephox/sugar';
 import { Editor } from '../alien/EditorTypes';
 import * as TinySelections from '../selection/TinySelections';
 import { Presence } from './TinyApis';
@@ -25,7 +25,7 @@ export interface ApiChains {
 }
 
 const lazyBody = function (editor: Editor) {
-  return Element.fromDom(editor.getBody());
+  return SugarElement.fromDom(editor.getBody());
 };
 
 const cNodeChanged = <T extends Editor> (): Chain<T, T> => Chain.op(function (editor: T) {
@@ -117,10 +117,10 @@ const cAssertContentStructure = function <T extends Editor> (expected: StructAss
   });
 };
 
-const assertPath = function (label: string, root: Element, expPath: number[], expOffset: number, actElement: DomNode, actOffset: number) {
+const assertPath = function (label: string, root: SugarElement, expPath: number[], expOffset: number, actElement: Node, actOffset: number) {
   const expected = Cursors.calculateOne(root, expPath);
   const message = function () {
-    const actual = Element.fromDom(actElement);
+    const actual = SugarElement.fromDom(actElement);
     const actPath = Hierarchy.path(root, actual).getOrDie('could not find path to root');
     return 'Expected path: ' + JSON.stringify(expPath) + '.\nActual path: ' + JSON.stringify(actPath);
   };

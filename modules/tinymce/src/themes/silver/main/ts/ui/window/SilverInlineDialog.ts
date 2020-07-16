@@ -7,14 +7,14 @@
 
 // DUPE with SilverDialog. Cleaning up.
 import {
-  AddEventsBehaviour, AlloyEvents, AlloyTriggers, Behaviour, Composing, Focusing, GuiFactory, Keying, Memento, NativeEvents, Receiving,
-  Reflecting, SimpleSpec, SystemEvents
+  AddEventsBehaviour, AlloyEvents, AlloyTriggers, Behaviour, Composing, Focusing, GuiFactory, Keying, Memento, NativeEvents, Receiving, Reflecting,
+  SimpleSpec, SystemEvents
 } from '@ephox/alloy';
 import { DialogManager } from '@ephox/bridge';
 import { Id, Option } from '@ephox/katamari';
-import { Attr, Node } from '@ephox/sugar';
-import { UiFactoryBackstage } from '../../backstage/Backstage';
+import { Attribute, SugarNode } from '@ephox/sugar';
 
+import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { RepresentingConfigs } from '../alien/RepresentingConfigs';
 import { formCloseEvent } from '../general/FormEvents';
 import * as NavigableObject from '../general/NavigableObject';
@@ -92,7 +92,7 @@ const renderInlineDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: S
           return Option.some(true);
         },
         useTabstopAt: (elem) => !NavigableObject.isPseudoStop(elem) && (
-          Node.name(elem) !== 'button' || Attr.get(elem, 'disabled') !== 'disabled'
+          SugarNode.name(elem) !== 'button' || Attribute.get(elem, 'disabled') !== 'disabled'
         )
       }),
       Reflecting.config({

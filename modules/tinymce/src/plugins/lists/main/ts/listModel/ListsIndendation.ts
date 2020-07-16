@@ -6,7 +6,7 @@
  */
 
 import { Arr, Fun, Option, Options } from '@ephox/katamari';
-import { Element, Fragment, InsertAll, Remove } from '@ephox/sugar';
+import { InsertAll, Remove, SugarElement, SugarFragment } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { fireListEvent } from '../api/Events';
 import { ListAction } from '../core/ListAction';
@@ -19,20 +19,20 @@ import { normalizeEntries } from './NormalizeEntries';
 import { EntrySet, ItemSelection, parseLists } from './ParseLists';
 import { hasFirstChildList } from './Util';
 
-const outdentedComposer = (editor: Editor, entries: Entry[]): Element[] => {
+const outdentedComposer = (editor: Editor, entries: Entry[]): SugarElement[] => {
   const normalizedEntries = normalizeEntries(entries);
   return Arr.map(normalizedEntries, (entry) => {
-    const content = Fragment.fromElements(entry.content);
-    return Element.fromDom(createTextBlock(editor, content.dom()));
+    const content = SugarFragment.fromElements(entry.content);
+    return SugarElement.fromDom(createTextBlock(editor, content.dom()));
   });
 };
 
-const indentedComposer = (editor: Editor, entries: Entry[]): Element[] => {
+const indentedComposer = (editor: Editor, entries: Entry[]): SugarElement[] => {
   const normalizedEntries = normalizeEntries(entries);
   return composeList(editor.contentDocument, normalizedEntries).toArray();
 };
 
-const composeEntries = (editor, entries: Entry[]): Element[] => Arr.bind(Arr.groupBy(entries, isIndented), (entries) => {
+const composeEntries = (editor, entries: Entry[]): SugarElement[] => Arr.bind(Arr.groupBy(entries, isIndented), (entries) => {
   const groupIsIndented = Arr.head(entries).map(isIndented).getOr(false);
   return groupIsIndented ? indentedComposer(editor, entries) : outdentedComposer(editor, entries);
 });
@@ -42,7 +42,7 @@ const indentSelectedEntries = (entries: Entry[], indentation: Indentation): void
 };
 
 const getItemSelection = (editor: Editor): Option<ItemSelection> => {
-  const selectedListItems = Arr.map(Selection.getSelectedListItems(editor), Element.fromDom);
+  const selectedListItems = Arr.map(Selection.getSelectedListItems(editor), SugarElement.fromDom);
 
   return Options.lift2(
     Arr.find(selectedListItems, Fun.not(hasFirstChildList)),
@@ -50,7 +50,7 @@ const getItemSelection = (editor: Editor): Option<ItemSelection> => {
     (start, end) => ({ start, end }));
 };
 
-const listIndentation = (editor: Editor, lists: Element[], indentation: Indentation) => {
+const listIndentation = (editor: Editor, lists: SugarElement[], indentation: Indentation) => {
   const entrySets: EntrySet[] = parseLists(lists, getItemSelection(editor));
 
   Arr.each(entrySets, (entrySet) => {

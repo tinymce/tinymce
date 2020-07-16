@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, Log, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import AnchorPlugin from 'tinymce/plugins/anchor/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
@@ -30,7 +30,7 @@ UnitTest.asynctest('browser.tinymce.plugins.anchor.AnchorContentEditableTest', (
               })
             ]
           })),
-          Element.fromDom(editor.getBody())
+          SugarElement.fromDom(editor.getBody())
         )
       ]),
       // Note: The next step should pass because of the allow_html_in_named_anchor setting
@@ -51,7 +51,7 @@ UnitTest.asynctest('browser.tinymce.plugins.anchor.AnchorContentEditableTest', (
               })
             ]
           })),
-          Element.fromDom(editor.getBody())
+          SugarElement.fromDom(editor.getBody())
         )
       ])
     ], onSuccess, onFailure);

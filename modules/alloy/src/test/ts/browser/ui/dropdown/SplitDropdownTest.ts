@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, FocusTools, Keyboard, Keys, Mouse, Touch, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr, Fun, Future, Option, Result } from '@ephox/katamari';
-import { Attr } from '@ephox/sugar';
+import { Attribute } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Positioning } from 'ephox/alloy/api/behaviour/Positioning';
@@ -41,14 +41,14 @@ UnitTest.asynctest('SplitDropdown List', (success, failure) => {
 
         toggleClass: 'test-selected-dropdown',
         onExecute(dropdown, button) {
-          const arg0Name = Attr.get(dropdown.element(), 'data-test-id');
-          const arg1Name = Attr.get(button.element(), 'data-test-id');
+          const arg0Name = Attribute.get(dropdown.element(), 'data-test-id');
+          const arg1Name = Attribute.get(button.element(), 'data-test-id');
           store.adderH('dropdown.execute(' + arg0Name + ', ' + arg1Name + ')')();
         },
         onItemExecute(dropdown, tieredMenu, item) {
-          const arg0Name = Attr.get(dropdown.element(), 'data-test-id');
-          const arg1Name = Attr.get(tieredMenu.element(), 'data-test-id');
-          const arg2Name = Attr.get(item.element(), 'data-test-id');
+          const arg0Name = Attribute.get(dropdown.element(), 'data-test-id');
+          const arg1Name = Attribute.get(tieredMenu.element(), 'data-test-id');
+          const arg2Name = Attribute.get(item.element(), 'data-test-id');
           AlloyTriggers.emit(item, SystemEvents.sandboxClose());
           store.adderH('dropdown.item.execute(' + [ arg0Name, arg1Name, arg2Name ].join(', ') + ')')();
         },

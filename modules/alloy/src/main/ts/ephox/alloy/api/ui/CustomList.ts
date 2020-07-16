@@ -1,14 +1,14 @@
 import { console } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { AlloySpec } from '../../api/component/SpecTypes';
 
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as CustomListSchema from '../../ui/schema/CustomListSchema';
 import { CustomListApis, CustomListDetail, CustomListSketcher, CustomListSpec } from '../../ui/types/CustomListTypes';
 import { NamedConfiguredBehaviour } from '../behaviour/Behaviour';
 import { Replacing } from '../behaviour/Replacing';
+import { AlloyComponent } from '../component/ComponentApi';
 import * as SketchBehaviours from '../component/SketchBehaviours';
+import { AlloySpec } from '../component/SpecTypes';
 import * as Sketcher from './Sketcher';
 import { CompositeSketchFactory } from './UiSketcher';
 

@@ -6,7 +6,7 @@
  */
 
 import { Fun, Option } from '@ephox/katamari';
-import { Attr, DomEvent, Element } from '@ephox/sugar';
+import { Attribute, DomEvent, SugarElement } from '@ephox/sugar';
 
 import * as Styles from '../../style/Styles';
 import * as DataAttributes from '../../util/DataAttributes';
@@ -20,7 +20,7 @@ const EXTRA_SPACING = 50;
 const data = 'data-' + Styles.resolve('last-outer-height');
 
 const setLastHeight = function (cBody, value) {
-  Attr.set(cBody, data, value);
+  Attribute.set(cBody, data, value);
 };
 
 const getLastHeight = function (cBody) {
@@ -52,7 +52,7 @@ const calculate = function (cWin, bounds, delta) {
 };
 
 const setup = function (outerWindow, cWin) {
-  const cBody = Element.fromDom(cWin.document.body);
+  const cBody = SugarElement.fromDom(cWin.document.body);
 
   const toEditing = function () {
     // TBIO-3816 throttling the resume was causing keyboard hide/show issues with undo/redo
@@ -61,7 +61,7 @@ const setup = function (outerWindow, cWin) {
     ResumeEditing.resume(cWin);
   };
 
-  const onResize = DomEvent.bind(Element.fromDom(outerWindow), 'resize', function () {
+  const onResize = DomEvent.bind(SugarElement.fromDom(outerWindow), 'resize', function () {
 
     findDelta(outerWindow, cBody).each(function (delta) {
       getBounds(cWin).each(function (bounds) {

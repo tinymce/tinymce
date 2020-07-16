@@ -7,8 +7,8 @@
 
 import { Node, Range, Text } from '@ephox/dom-globals';
 import { Arr, Fun, Obj } from '@ephox/katamari';
-import { Node as SandNode } from '@ephox/sand';
-import { Element, SelectorFilter, Traverse } from '@ephox/sugar';
+import { SandNode } from '@ephox/sand';
+import { SelectorFilter, SugarElement, Traverse } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import TreeWalker from 'tinymce/core/api/dom/TreeWalker';
 import { TextSection } from './Types';
@@ -37,7 +37,7 @@ const nuSection = (): TextSection => ({
   elements: []
 });
 
-const toLeaf = (node: Node, offset: number) => Traverse.leaf(Element.fromDom(node), offset);
+const toLeaf = (node: Node, offset: number) => Traverse.leaf(SugarElement.fromDom(node), offset);
 
 const walk = (dom: DOMUtils, walkerFn: (shallow?: boolean) => Node, startNode: Node, callbacks: WalkerCallbacks, endNode?: Node, skipStart: boolean = true) => {
   let next = skipStart ? walkerFn(false) : startNode;
@@ -89,7 +89,7 @@ const collectTextToBoundary = (dom: DOMUtils, section: TextSection, node: Node, 
       } else {
         section.sOffset += next.length;
       }
-      section.elements.push(Element.fromDom(next));
+      section.elements.push(SugarElement.fromDom(next));
     }
   });
 };
@@ -123,7 +123,7 @@ const collect = (dom: DOMUtils, rootNode: Node, startNode: Node, endNode?: Node,
       return false;
     },
     text: (next) => {
-      current.elements.push(Element.fromDom(next));
+      current.elements.push(SugarElement.fromDom(next));
       if (callbacks) {
         callbacks.text(next, current);
       }
@@ -157,7 +157,7 @@ const collectRangeSections = (dom: DOMUtils, rng: Range): TextSection[] => {
     cef: (node) => {
       // Collect the sections and then order them appropriately, as nested sections maybe out of order
       // TODO: See if we can improve this to avoid the sort overhead
-      const sections = Arr.bind(SelectorFilter.descendants(Element.fromDom(node), '*[contenteditable=true]'), (e) => {
+      const sections = Arr.bind(SelectorFilter.descendants(SugarElement.fromDom(node), '*[contenteditable=true]'), (e) => {
         const ceTrueNode = e.dom();
         return collect(dom, ceTrueNode, ceTrueNode);
       });

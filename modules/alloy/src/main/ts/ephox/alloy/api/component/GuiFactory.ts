@@ -1,8 +1,7 @@
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Arr, Cell, Fun, Obj, Option, Result } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 
-import { AlloySpec, PremadeSpec, SimpleOrSketchSpec } from '../../api/component/SpecTypes';
 import * as DefaultEvents from '../../events/DefaultEvents';
 import * as Tagger from '../../registry/Tagger';
 import * as CustomSpec from '../../spec/CustomSpec';
@@ -11,6 +10,7 @@ import { AlloySystemApi } from '../system/SystemApi';
 import * as GuiTypes from '../ui/GuiTypes';
 import * as Component from './Component';
 import { AlloyComponent } from './ComponentApi';
+import { AlloySpec, PremadeSpec, SimpleOrSketchSpec } from './SpecTypes';
 
 const buildSubcomponents = (spec: SimpleOrSketchSpec): AlloyComponent[] => {
   const components = Obj.get(spec, 'components').getOr([ ]);
@@ -36,7 +36,7 @@ const buildFromSpec = (userSpec: SimpleOrSketchSpec): Result<AlloyComponent, str
 };
 
 const text = (textContent: string): PremadeSpec => {
-  const element = Element.fromText(textContent);
+  const element = SugarElement.fromText(textContent);
 
   return external({
     element
@@ -44,9 +44,9 @@ const text = (textContent: string): PremadeSpec => {
 };
 
 // Rename.
-export interface ExternalElement { uid?: string; element: Element }
+export interface ExternalElement { uid?: string; element: SugarElement }
 const external = (spec: ExternalElement): PremadeSpec => {
-  const extSpec: { uid: Option<string>; element: Element } = ValueSchema.asRawOrDie('external.component', ValueSchema.objOfOnly([
+  const extSpec: { uid: Option<string>; element: SugarElement } = ValueSchema.asRawOrDie('external.component', ValueSchema.objOfOnly([
     FieldSchema.strict('element'),
     FieldSchema.option('uid')
   ]), spec);

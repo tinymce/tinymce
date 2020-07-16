@@ -1,18 +1,18 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Option } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
-import * as DomTextdata from 'ephox/robin/api/dom/DomTextdata';
 import { KAssert } from '@ephox/katamari-assertions';
+import { SugarElement } from '@ephox/sugar';
+import * as DomTextdata from 'ephox/robin/api/dom/DomTextdata';
 
 UnitTest.test('DomTextdataTest', function () {
-  const a = Element.fromText('alpha');
-  const b = Element.fromText(' beta');
-  const c = Element.fromText('');
-  const d = Element.fromText(' ');
-  const e = Element.fromText('epsilon');
-  const f = Element.fromText('foo');
+  const a = SugarElement.fromText('alpha');
+  const b = SugarElement.fromText(' beta');
+  const c = SugarElement.fromText('');
+  const d = SugarElement.fromText(' ');
+  const e = SugarElement.fromText('epsilon');
+  const f = SugarElement.fromText('foo');
 
-  const check = function (expected: { text: string; cursor: Option<number> }, elements: Element[], current: Element, offset: number) {
+  const check = function (expected: { text: string; cursor: Option<number> }, elements: SugarElement[], current: SugarElement, offset: number) {
     const actual = DomTextdata.from(elements, current, offset);
     Assert.eq('eq', expected.text, actual.text);
 

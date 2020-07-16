@@ -1,7 +1,7 @@
 import { Chain, Guard, Mouse, NamedChain, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Option, Result } from '@ephox/katamari';
-import { Css, Position, Scroll } from '@ephox/sugar';
+import { Css, Scroll, SugarPosition } from '@ephox/sugar';
 
 import * as Boxes from 'ephox/alloy/alien/Boxes';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
@@ -33,7 +33,7 @@ UnitTest.asynctest('MouseDraggingTest', (success, failure) => {
               return [
                 Dragging.snap({
                   sensor: DragCoord.fixed(300, 10),
-                  range: Position(1000, 30),
+                  range: SugarPosition(1000, 30),
                   output: DragCoord.fixed(Option.none<number>(), Option.some(10))
                 })
               ];
@@ -69,7 +69,7 @@ UnitTest.asynctest('MouseDraggingTest', (success, failure) => {
     const cEnsurePositionChanged = Chain.control(
       Chain.binder((all: any) => all.box_position1.left !== all.box_position2.left &&
           all.box_position2.left !== all.box_position3.left ? Result.value({}) :
-        Result.error('Positions did not change.\nPosition data: ' + JSON.stringify({
+        Result.error('Positions did not change.\nSugarPosition data: ' + JSON.stringify({
           1: all.box_position1,
           2: all.box_position2,
           3: all.box_position3
@@ -85,7 +85,7 @@ UnitTest.asynctest('MouseDraggingTest', (success, failure) => {
           all.box_position7.left === all.box_position8_bound.left &&
           all.box_position7.left === '400px' && all.box_position8_bound.top === '100px';
         return boundLeft && boundRight ? Result.value({}) :
-          Result.error('Dragging should have been restricted to the bounds.\nPosition data: ' + JSON.stringify({
+          Result.error('Dragging should have been restricted to the bounds.\nSugarPosition data: ' + JSON.stringify({
             1: all.box_position4,
             2: all.box_position5,
             3: all.box_position6_bound,
@@ -100,7 +100,7 @@ UnitTest.asynctest('MouseDraggingTest', (success, failure) => {
         const boundBottom = all.box_scrolled_position9.top === all.box_scrolled_position10_bound.top &&
           all.box_scrolled_position9.top === '400px' && all.box_scrolled_position10_bound.left === '50px';
         return boundBottom ? Result.value({}) :
-          Result.error('Dragging should have been restricted to the bounds.\nPosition data: ' + JSON.stringify({
+          Result.error('Dragging should have been restricted to the bounds.\nSugarPosition data: ' + JSON.stringify({
             1: all.box_scrolled_position9,
             2: all.box_scrolled_position10_bound
           }, null, 2));

@@ -1,11 +1,11 @@
-import { Assertions, ApproxStructure, Chain, FocusTools, Keyboard, Keys, Log, Pipeline, UiFinder } from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, FocusTools, Keyboard, Keys, Log, Pipeline, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { TinyLoader, TinyUi } from '@ephox/mcagar';
+import { Menu } from '@ephox/bridge';
 import { document } from '@ephox/dom-globals';
+import { TinyLoader, TinyUi } from '@ephox/mcagar';
+import { SugarBody, SugarElement } from '@ephox/sugar';
 
 import Theme from 'tinymce/themes/silver/Theme';
-import { Body, Element } from '@ephox/sugar';
-import { Menu } from '@ephox/bridge';
 
 const tableCellsApprox = (s, arr, selectedRows, selectedCols) => {
   const cells = [];
@@ -50,15 +50,15 @@ UnitTest.asynctest('OxideTablePickerMenuTest', (success, failure) => {
   TinyLoader.setup(
     (editor, onSuccess, onFailure) => {
       const tinyUi = TinyUi(editor);
-      const doc = Element.fromDom(document);
+      const doc = SugarElement.fromDom(document);
 
       Pipeline.async({ }, Log.steps(
         'TBA',
         'Check structure of table picker',
         [
           tinyUi.sClickOnToolbar('Click on toolbar button', 'button'),
-          UiFinder.sWaitForVisible('Waiting for menu', Body.body(), '[role="menu"]'),
-          Chain.asStep(Body.body(), [
+          UiFinder.sWaitForVisible('Waiting for menu', SugarBody.body(), '[role="menu"]'),
+          Chain.asStep(SugarBody.body(), [
             UiFinder.cFindIn('[role="menu"]'),
             Assertions.cAssertStructure(
               'Checking structure',
@@ -68,7 +68,7 @@ UnitTest.asynctest('OxideTablePickerMenuTest', (success, failure) => {
           FocusTools.sTryOnSelector('Focus should be on first table cell', doc, '.tox-insert-table-picker__selected:last'),
           Keyboard.sKeydown(doc, Keys.down(), {}),
           Keyboard.sKeydown(doc, Keys.right(), {}),
-          Chain.asStep(Body.body(), [
+          Chain.asStep(SugarBody.body(), [
             UiFinder.cFindIn('[role="menu"]'),
             Assertions.cAssertStructure(
               'Checking structure',

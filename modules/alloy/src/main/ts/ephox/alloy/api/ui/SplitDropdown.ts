@@ -1,7 +1,6 @@
 import { Fun, Id, Option } from '@ephox/katamari';
-import { Attr } from '@ephox/sugar';
+import { Attribute } from '@ephox/sugar';
 
-import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as DropdownUtils from '../../dropdown/DropdownUtils';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as ButtonBase from '../../ui/common/ButtonBase';
@@ -15,6 +14,7 @@ import { Keying } from '../behaviour/Keying';
 import { Toggling } from '../behaviour/Toggling';
 import { AlloyComponent } from '../component/ComponentApi';
 import * as SketchBehaviours from '../component/SketchBehaviours';
+import * as AlloyEvents from '../events/AlloyEvents';
 import * as AlloyTriggers from '../events/AlloyTriggers';
 import * as Sketcher from './Sketcher';
 import { CompositeSketchFactory } from './UiSketcher';
@@ -50,8 +50,8 @@ const factory: CompositeSketchFactory<SplitDropdownDetail, SplitDropdownSpec> = 
         const ariaDescriptor = AlloyParts.getPart(component, detail, 'aria-descriptor');
         ariaDescriptor.each((descriptor) => {
           const descriptorId = Id.generate('aria');
-          Attr.set(descriptor.element(), 'id', descriptorId);
-          Attr.set(component.element(), 'aria-describedby', descriptorId);
+          Attribute.set(descriptor.element(), 'id', descriptorId);
+          Attribute.set(component.element(), 'aria-describedby', descriptorId);
         });
       })
     ]),

@@ -1,6 +1,6 @@
 import { Assertions, Logger, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Attr } from '@ephox/sugar';
+import { Attribute } from '@ephox/sugar';
 
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as Memento from 'ephox/alloy/api/component/Memento';
@@ -67,7 +67,7 @@ UnitTest.asynctest('Browser Test: .ui.button.ButtonTypeTest', (success, failure)
       label,
       Step.sync(() => {
         const button = memento.get(component);
-        Assertions.assertEq('"type" attribute', expected, Attr.get(button.element(), 'type'));
+        Assertions.assertEq('"type" attribute', expected, Attribute.get(button.element(), 'type'));
       })
     );
 

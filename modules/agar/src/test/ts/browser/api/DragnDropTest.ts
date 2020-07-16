@@ -1,7 +1,7 @@
 import { Assert, assert, UnitTest } from '@ephox/bedrock-client';
 import { Blob } from '@ephox/dom-globals';
-import { Body, DomEvent, Element, Insert, Remove, SelectorFind } from '@ephox/sugar';
-import { dragnDrop, dropFiles, isDraggable, sDragnDrop, sDropItems, sDropFiles } from 'ephox/agar/api/DragnDrop';
+import { DomEvent, Insert, Remove, SelectorFind, SugarBody, SugarElement } from '@ephox/sugar';
+import { dragnDrop, dropFiles, isDraggable, sDragnDrop, sDropFiles, sDropItems } from 'ephox/agar/api/DragnDrop';
 import { createFile } from 'ephox/agar/api/Files';
 import { GeneralSteps, Logger } from 'ephox/agar/api/Main';
 import { Pipeline } from 'ephox/agar/api/Pipeline';
@@ -9,7 +9,7 @@ import { Step } from 'ephox/agar/api/Step';
 
 UnitTest.test('DragDrop.isDraggable', () => {
   const check = (expected: boolean, html: string) => {
-    assert.eq(expected, isDraggable(Element.fromHtml(html)));
+    assert.eq(expected, isDraggable(SugarElement.fromHtml(html)));
   };
   check(false, '<div/>');
   check(false, '<a/>');
@@ -23,8 +23,8 @@ UnitTest.test('DragDrop.isDraggable', () => {
 });
 
 UnitTest.asynctest('DragnDropTest', (success, failure) => {
-  const dropzone = Element.fromHtml('<div class="dropzone"></div>');
-  const draggable = Element.fromHtml('<div class="draggable" draggable="true"></div>');
+  const dropzone = SugarElement.fromHtml('<div class="dropzone"></div>');
+  const draggable = SugarElement.fromHtml('<div class="draggable" draggable="true"></div>');
   const store: string[] = [];
 
   const sClearStore = Step.sync(() => {
@@ -70,8 +70,8 @@ UnitTest.asynctest('DragnDropTest', (success, failure) => {
     store.push('dragend');
   });
 
-  Insert.append(Body.body(), dropzone);
-  Insert.append(Body.body(), draggable);
+  Insert.append(SugarBody.body(), dropzone);
+  Insert.append(SugarBody.body(), draggable);
 
   Pipeline.async({}, [
     Logger.t('Drag/drop element with data using selectors', GeneralSteps.sequence([
@@ -83,8 +83,8 @@ UnitTest.asynctest('DragnDropTest', (success, failure) => {
     Logger.t('Drag/drop element with data using elements', GeneralSteps.sequence([
       sClearStore,
       Step.sync(() => {
-        const from = SelectorFind.descendant(Body.body(), '.draggable').getOrDie('Could not find from element.');
-        const to = SelectorFind.descendant(Body.body(), '.dropzone').getOrDie('Could not find to element.');
+        const from = SelectorFind.descendant(SugarBody.body(), '.draggable').getOrDie('Could not find from element.');
+        const to = SelectorFind.descendant(SugarBody.body(), '.dropzone').getOrDie('Could not find to element.');
 
         dragnDrop(from, to);
       }),
@@ -103,7 +103,7 @@ UnitTest.asynctest('DragnDropTest', (success, failure) => {
     Logger.t('Drop files using element', GeneralSteps.sequence([
       sClearStore,
       Step.sync(() => {
-        const to = SelectorFind.descendant(Body.body(), '.dropzone').getOrDie('Could not find to element.');
+        const to = SelectorFind.descendant(SugarBody.body(), '.dropzone').getOrDie('Could not find to element.');
 
         dropFiles([
           createFile('a.txt', 123, new Blob([ '' ], { type: 'text/plain' })),

@@ -3,24 +3,24 @@ import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { HTMLElement } from '@ephox/dom-globals';
 import { Cell } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Attr, Element, Height, Hierarchy, Width } from '@ephox/sugar';
+import { Attribute, Height, Hierarchy, SugarElement, Width } from '@ephox/sugar';
+import Editor from 'tinymce/core/api/Editor';
 
 import TablePlugin from 'tinymce/plugins/table/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
-import Editor from 'tinymce/core/api/Editor';
 
 UnitTest.asynctest('browser.tinymce.plugins.table.DragResizeTest', (success, failure) => {
   SilverTheme();
   TablePlugin();
 
-  const sDragDrop = (container: Element, selector: string, dx: number, dy: number) => Logger.t('Drag from a point and drop at specified point', Chain.asStep(container, [
+  const sDragDrop = (container: SugarElement, selector: string, dx: number, dy: number) => Logger.t('Drag from a point and drop at specified point', Chain.asStep(container, [
     UiFinder.cFindIn(selector),
     Mouse.cMouseDown,
     Mouse.cMouseMoveTo(dx, dy),
     Mouse.cMouseUpTo(dx, dy)
   ]));
 
-  const sDragDropBlocker = (container: Element, selector: string, dx: number, dy: number) => Logger.t('Block dragging and dropping of any other element in the container', Chain.asStep({}, [
+  const sDragDropBlocker = (container: SugarElement, selector: string, dx: number, dy: number) => Logger.t('Block dragging and dropping of any other element in the container', Chain.asStep({}, [
     Chain.fromParent(Chain.inject(container), [
       Chain.fromChains([
         UiFinder.cFindIn(selector),
@@ -43,7 +43,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DragResizeTest', (success, fai
   const state = Cell(null);
 
   const sSetStateFrom = (editor, path) => Logger.t('Set height and width', Step.sync(() => {
-    const element = Hierarchy.follow(Element.fromDom(editor.getBody()), path).getOrDie('could not find element') as Element<HTMLElement>;
+    const element = Hierarchy.follow(SugarElement.fromDom(editor.getBody()), path).getOrDie('could not find element') as SugarElement<HTMLElement>;
     const height = Height.get(element);
     const width = Width.get(element);
 
@@ -60,14 +60,14 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DragResizeTest', (success, fai
   const looseEqual = (exp, act, loose) => Math.abs(exp - act) <= loose;
 
   const sAssertNoDataStyle = (editor, path) => Logger.t('Assert no data style is applied', Step.sync(() => {
-    const element = Hierarchy.follow(Element.fromDom(editor.getBody()), path).getOrDie('could not find element');
-    const hasDataStyle = Attr.has(element, 'data-mce-style');
+    const element = Hierarchy.follow(SugarElement.fromDom(editor.getBody()), path).getOrDie('could not find element');
+    const hasDataStyle = Attribute.has(element, 'data-mce-style');
 
     Assert.eq('should not have data style', false, hasDataStyle);
   }));
 
   const sAssertSizeChange = (editor, path, change) => Logger.t('Asset change in height and width', Step.sync(() => {
-    const element = Hierarchy.follow(Element.fromDom(editor.getBody()), path).getOrDie('could not find element') as Element<HTMLElement>;
+    const element = Hierarchy.follow(SugarElement.fromDom(editor.getBody()), path).getOrDie('could not find element') as SugarElement<HTMLElement>;
     const height = Height.get(element);
     const width = Width.get(element);
 
@@ -95,7 +95,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DragResizeTest', (success, fai
     tinyApis.sSetSelection([ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 0),
     Waiter.sTryUntil(
       'wait for resize handles',
-      UiFinder.sExists(Element.fromDom(editor.getBody()), '#mceResizeHandlese')
+      UiFinder.sExists(SugarElement.fromDom(editor.getBody()), '#mceResizeHandlese')
     )
   ]));
 
@@ -108,8 +108,8 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DragResizeTest', (success, fai
         tinyApis.sSetContent('<table style="border-collapse: collapse;border: 0;"><tbody><tr><td style="height:45px;">a</td></tr><tr><td style="height:45px;">a</td></tr></tbody></table>'),
         sSetStateFrom(editor, [ 0, 0, 0, 0 ]),
         sWaitForSelection(editor, tinyApis),
-        sMouseover(Element.fromDom(editor.getBody()), 'td'),
-        sDragDropBlocker(Element.fromDom(editor.getDoc().documentElement), 'div[data-row="0"]', 0, 50),
+        sMouseover(SugarElement.fromDom(editor.getBody()), 'td'),
+        sDragDropBlocker(SugarElement.fromDom(editor.getDoc().documentElement), 'div[data-row="0"]', 0, 50),
         sAssertSizeChange(editor, [ 0, 0, 0, 0 ], { dh: 50, dw: 0 }),
         sAssertNoDataStyle(editor, [ 0 ]),
         sResetState
@@ -119,8 +119,8 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DragResizeTest', (success, fai
         tinyApis.sSetContent('<table style="border-collapse: collapse;border: 0;"><tbody><tr><td style="height:45px;">a</td></tr><tr><td style="height:45px;">a</td></tr></tbody></table>'),
         sSetStateFrom(editor, [ 0, 0, 0, 0 ]),
         sWaitForSelection(editor, tinyApis),
-        sMouseover(Element.fromDom(editor.getBody()), 'td'),
-        sDragDropBlocker(Element.fromDom(editor.getDoc().documentElement), 'div[data-column="0"]', 50, 0),
+        sMouseover(SugarElement.fromDom(editor.getBody()), 'td'),
+        sDragDropBlocker(SugarElement.fromDom(editor.getDoc().documentElement), 'div[data-column="0"]', 50, 0),
         sAssertSizeChange(editor, [ 0, 0, 0, 0 ], { dh: 0, dw: 50 }),
         sAssertNoDataStyle(editor, [ 0 ]),
         sResetState
@@ -130,9 +130,9 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DragResizeTest', (success, fai
         tinyApis.sSetContent(tableHtml),
         sSetStateFrom(editor, [ 0 ]),
         sWaitForSelection(editor, tinyApis),
-        sDragDrop(Element.fromDom(editor.getBody()), '#mceResizeHandlese', 50, 50),
-        sMouseover(Element.fromDom(editor.getBody()), 'td'),
-        sDragDropBlocker(Element.fromDom(editor.getDoc().documentElement), 'div[data-row="0"]', 0, 50),
+        sDragDrop(SugarElement.fromDom(editor.getBody()), '#mceResizeHandlese', 50, 50),
+        sMouseover(SugarElement.fromDom(editor.getBody()), 'td'),
+        sDragDropBlocker(SugarElement.fromDom(editor.getDoc().documentElement), 'div[data-row="0"]', 0, 50),
         sAssertSizeChange(editor, [ 0 ], { dh: 100, dw: 50 }),
         sAssertNoDataStyle(editor, [ 0 ]),
         sResetState
@@ -142,9 +142,9 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DragResizeTest', (success, fai
         tinyApis.sSetContent(tableHtml),
         sSetStateFrom(editor, [ 0 ]),
         sWaitForSelection(editor, tinyApis),
-        sDragDrop(Element.fromDom(editor.getBody()), '#mceResizeHandlese', 50, 50),
-        sMouseover(Element.fromDom(editor.getBody()), 'td'),
-        sDragDropBlocker(Element.fromDom(editor.getDoc().documentElement), 'div[data-row="0"]', 0, -30),
+        sDragDrop(SugarElement.fromDom(editor.getBody()), '#mceResizeHandlese', 50, 50),
+        sMouseover(SugarElement.fromDom(editor.getBody()), 'td'),
+        sDragDropBlocker(SugarElement.fromDom(editor.getDoc().documentElement), 'div[data-row="0"]', 0, -30),
         sAssertSizeChange(editor, [ 0 ], { dh: 20, dw: 50 }),
         sAssertNoDataStyle(editor, [ 0 ]),
         sResetState
@@ -154,9 +154,9 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DragResizeTest', (success, fai
         tinyApis.sSetContent(tableHtml),
         sSetStateFrom(editor, [ 0 ]),
         sWaitForSelection(editor, tinyApis),
-        sDragDrop(Element.fromDom(editor.getBody()), '#mceResizeHandlese', 50, 50),
-        sMouseover(Element.fromDom(editor.getBody()), 'td'),
-        sDragDropBlocker(Element.fromDom(editor.getDoc().documentElement), 'div[data-column="0"]', 50, 0),
+        sDragDrop(SugarElement.fromDom(editor.getBody()), '#mceResizeHandlese', 50, 50),
+        sMouseover(SugarElement.fromDom(editor.getBody()), 'td'),
+        sDragDropBlocker(SugarElement.fromDom(editor.getDoc().documentElement), 'div[data-column="0"]', 50, 0),
         sAssertSizeChange(editor, [ 0 ], { dh: 50, dw: 50 }),
         sAssertNoDataStyle(editor, [ 0 ]),
         sResetState
@@ -166,9 +166,9 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DragResizeTest', (success, fai
         tinyApis.sSetContent(tableHtml),
         sSetStateFrom(editor, [ 0 ]),
         sWaitForSelection(editor, tinyApis),
-        sDragDrop(Element.fromDom(editor.getBody()), '#mceResizeHandlese', 50, 50),
-        sMouseover(Element.fromDom(editor.getBody()), 'td'),
-        sDragDropBlocker(Element.fromDom(editor.getDoc().documentElement), 'div[data-column="0"]', -30, 0),
+        sDragDrop(SugarElement.fromDom(editor.getBody()), '#mceResizeHandlese', 50, 50),
+        sMouseover(SugarElement.fromDom(editor.getBody()), 'td'),
+        sDragDropBlocker(SugarElement.fromDom(editor.getDoc().documentElement), 'div[data-column="0"]', -30, 0),
         sAssertSizeChange(editor, [ 0 ], { dh: 50, dw: 50 }),
         sAssertNoDataStyle(editor, [ 0 ]),
         sResetState
@@ -178,9 +178,9 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DragResizeTest', (success, fai
         tinyApis.sSetContent(tableHtml),
         sSetStateFrom(editor, [ 0 ]),
         sWaitForSelection(editor, tinyApis),
-        sDragDrop(Element.fromDom(editor.getBody()), '#mceResizeHandlese', -10, -10),
-        sMouseover(Element.fromDom(editor.getBody()), 'td'),
-        sDragDropBlocker(Element.fromDom(editor.getDoc().documentElement), 'div[data-row="0"]', 0, 50),
+        sDragDrop(SugarElement.fromDom(editor.getBody()), '#mceResizeHandlese', -10, -10),
+        sMouseover(SugarElement.fromDom(editor.getBody()), 'td'),
+        sDragDropBlocker(SugarElement.fromDom(editor.getDoc().documentElement), 'div[data-row="0"]', 0, 50),
         sAssertSizeChange(editor, [ 0 ], { dh: 40, dw: -10 }),
         sAssertNoDataStyle(editor, [ 0 ]),
         sResetState
@@ -190,9 +190,9 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DragResizeTest', (success, fai
         tinyApis.sSetContent(tableHtml),
         sSetStateFrom(editor, [ 0 ]),
         sWaitForSelection(editor, tinyApis),
-        sDragDrop(Element.fromDom(editor.getBody()), '#mceResizeHandlese', -10, -10),
-        sMouseover(Element.fromDom(editor.getBody()), 'td'),
-        sDragDropBlocker(Element.fromDom(editor.getDoc().documentElement), 'div[data-row="0"]', 0, -20),
+        sDragDrop(SugarElement.fromDom(editor.getBody()), '#mceResizeHandlese', -10, -10),
+        sMouseover(SugarElement.fromDom(editor.getBody()), 'td'),
+        sDragDropBlocker(SugarElement.fromDom(editor.getDoc().documentElement), 'div[data-row="0"]', 0, -20),
         sAssertSizeChange(editor, [ 0 ], { dh: -30, dw: -10 }),
         sAssertNoDataStyle(editor, [ 0 ]),
         sResetState
@@ -202,9 +202,9 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DragResizeTest', (success, fai
         tinyApis.sSetContent(tableHtml),
         sSetStateFrom(editor, [ 0 ]),
         sWaitForSelection(editor, tinyApis),
-        sDragDrop(Element.fromDom(editor.getBody()), '#mceResizeHandlese', -10, -10),
-        sMouseover(Element.fromDom(editor.getBody()), 'td'),
-        sDragDropBlocker(Element.fromDom(editor.getDoc().documentElement), 'div[data-column="0"]', 50, 0),
+        sDragDrop(SugarElement.fromDom(editor.getBody()), '#mceResizeHandlese', -10, -10),
+        sMouseover(SugarElement.fromDom(editor.getBody()), 'td'),
+        sDragDropBlocker(SugarElement.fromDom(editor.getDoc().documentElement), 'div[data-column="0"]', 50, 0),
         sAssertSizeChange(editor, [ 0 ], { dh: -10, dw: -10 }),
         sAssertNoDataStyle(editor, [ 0 ]),
         sResetState
@@ -214,9 +214,9 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DragResizeTest', (success, fai
         tinyApis.sSetContent(tableHtml),
         sSetStateFrom(editor, [ 0 ]),
         sWaitForSelection(editor, tinyApis),
-        sDragDrop(Element.fromDom(editor.getBody()), '#mceResizeHandlese', -10, -10),
-        sMouseover(Element.fromDom(editor.getBody()), 'td'),
-        sDragDropBlocker(Element.fromDom(editor.getDoc().documentElement), 'div[data-column="0"]', -20, 0),
+        sDragDrop(SugarElement.fromDom(editor.getBody()), '#mceResizeHandlese', -10, -10),
+        sMouseover(SugarElement.fromDom(editor.getBody()), 'td'),
+        sDragDropBlocker(SugarElement.fromDom(editor.getDoc().documentElement), 'div[data-column="0"]', -20, 0),
         sAssertSizeChange(editor, [ 0 ], { dh: -10, dw: -10 }),
         sAssertNoDataStyle(editor, [ 0 ]),
         sResetState

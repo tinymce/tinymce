@@ -1,12 +1,12 @@
 import { Assertions, Chain, Log, Pipeline, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
+import { HTMLTableRowElement } from '@ephox/dom-globals';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { detectHeaderRow, getRowType } from 'tinymce/plugins/table/core/TableSections';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
-import { HTMLTableRowElement } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.plugins.table.DetectHeaderRowTest', (success, failure) => {
   Plugin();
@@ -15,8 +15,8 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DetectHeaderRowTest', (success
   TinyLoader.setupLight((editor: Editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
 
-    const sAssertRow = (selector: string, assertions: (row: Element<HTMLTableRowElement>) => void) =>
-      Chain.asStep(Element.fromDom(editor.getBody()), [
+    const sAssertRow = (selector: string, assertions: (row: SugarElement<HTMLTableRowElement>) => void) =>
+      Chain.asStep(SugarElement.fromDom(editor.getBody()), [
         UiFinder.cFindIn(selector),
         Chain.op(assertions)
       ]);

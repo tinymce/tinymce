@@ -5,25 +5,25 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Editor from '../api/Editor';
-import CaretPosition from '../caret/CaretPosition';
-import { Fun, Arr } from '@ephox/katamari';
-import { Insert, Element, Compare, PredicateFind, Node, Attr } from '@ephox/sugar';
-import * as Settings from '../api/Settings';
 import { document } from '@ephox/dom-globals';
+import { Arr, Fun } from '@ephox/katamari';
+import { Attribute, Compare, Insert, PredicateFind, SugarElement, SugarNode } from '@ephox/sugar';
+import Editor from '../api/Editor';
+import * as Settings from '../api/Settings';
+import CaretPosition from '../caret/CaretPosition';
+import { isAtFirstLine, isAtLastLine } from '../caret/LineReader';
 import * as ElementType from '../dom/ElementType';
-import { isAtLastLine, isAtFirstLine } from '../caret/LineReader';
 
-const isTarget = (node: Element) => Arr.contains([ 'figcaption' ], Node.name(node));
+const isTarget = (node: SugarElement) => Arr.contains([ 'figcaption' ], SugarNode.name(node));
 
-const rangeBefore = (target: Element) => {
+const rangeBefore = (target: SugarElement) => {
   const rng = document.createRange();
   rng.setStartBefore(target.dom());
   rng.setEndBefore(target.dom());
   return rng;
 };
 
-const insertElement = (root: Element, elm: Element, forward: boolean) => {
+const insertElement = (root: SugarElement, elm: SugarElement, forward: boolean) => {
   if (forward) {
     Insert.append(root, elm);
   } else {
@@ -31,24 +31,24 @@ const insertElement = (root: Element, elm: Element, forward: boolean) => {
   }
 };
 
-const insertBr = (root: Element, forward: boolean) => {
-  const br = Element.fromTag('br');
+const insertBr = (root: SugarElement, forward: boolean) => {
+  const br = SugarElement.fromTag('br');
   insertElement(root, br, forward);
   return rangeBefore(br);
 };
 
-const insertBlock = (root: Element, forward: boolean, blockName: string, attrs: Record<string, string>) => {
-  const block = Element.fromTag(blockName);
-  const br = Element.fromTag('br');
+const insertBlock = (root: SugarElement, forward: boolean, blockName: string, attrs: Record<string, string>) => {
+  const block = SugarElement.fromTag(blockName);
+  const br = SugarElement.fromTag('br');
 
-  Attr.setAll(block, attrs);
+  Attribute.setAll(block, attrs);
   Insert.append(block, br);
   insertElement(root, block, forward);
 
   return rangeBefore(br);
 };
 
-const insertEmptyLine = (root: Element, rootBlockName: string, attrs: Record<string, string>, forward: boolean) => {
+const insertEmptyLine = (root: SugarElement, rootBlockName: string, attrs: Record<string, string>, forward: boolean) => {
   if (rootBlockName === '') {
     return insertBr(root, forward);
   } else {
@@ -56,15 +56,15 @@ const insertEmptyLine = (root: Element, rootBlockName: string, attrs: Record<str
   }
 };
 
-const getClosestTargetBlock = (pos: CaretPosition, root: Element) => {
+const getClosestTargetBlock = (pos: CaretPosition, root: SugarElement) => {
   const isRoot = Fun.curry(Compare.eq, root);
-  return PredicateFind.closest(Element.fromDom(pos.container()), ElementType.isBlock, isRoot).filter(isTarget);
+  return PredicateFind.closest(SugarElement.fromDom(pos.container()), ElementType.isBlock, isRoot).filter(isTarget);
 };
 
-const isAtFirstOrLastLine = (root: Element, forward: boolean, pos: CaretPosition) => forward ? isAtLastLine(root.dom(), pos) : isAtFirstLine(root.dom(), pos);
+const isAtFirstOrLastLine = (root: SugarElement, forward: boolean, pos: CaretPosition) => forward ? isAtLastLine(root.dom(), pos) : isAtFirstLine(root.dom(), pos);
 
 const moveCaretToNewEmptyLine = (editor: Editor, forward: boolean) => {
-  const root = Element.fromDom(editor.getBody());
+  const root = SugarElement.fromDom(editor.getBody());
   const pos = CaretPosition.fromRangeStart(editor.selection.getRng());
   const rootBlock = Settings.getForcedRootBlock(editor);
   const rootBlockAttrs = Settings.getForcedRootBlockAttrs(editor);

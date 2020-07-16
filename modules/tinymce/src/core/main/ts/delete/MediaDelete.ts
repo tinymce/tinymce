@@ -7,9 +7,9 @@
 
 import { Node } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import Editor from '../api/Editor';
-import { isBeforeMedia, isAfterMedia } from '../caret/CaretPositionPredicates';
+import { isAfterMedia, isBeforeMedia } from '../caret/CaretPositionPredicates';
 import * as CaretUtils from '../caret/CaretUtils';
 import { HDirection } from '../caret/CaretWalker';
 import * as NodeType from '../dom/NodeType';
@@ -18,7 +18,7 @@ import * as DeleteElement from './DeleteElement';
 
 const deleteElement = (editor: Editor, forward: boolean, element: Node) => {
   editor._selectionOverrides.hideFakeCaret();
-  DeleteElement.deleteElement(editor, forward, Element.fromDom(element));
+  DeleteElement.deleteElement(editor, forward, SugarElement.fromDom(element));
   return true;
 };
 

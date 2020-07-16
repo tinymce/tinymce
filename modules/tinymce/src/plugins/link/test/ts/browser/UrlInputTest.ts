@@ -1,15 +1,15 @@
-import { Pipeline, UiFinder, GeneralSteps, Chain, Logger, UiControls, Assertions, Mouse } from '@ephox/agar';
+import { Assertions, Chain, GeneralSteps, Logger, Mouse, Pipeline, UiControls, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
+import { document } from '@ephox/dom-globals';
 import { TinyLoader, TinyUi } from '@ephox/mcagar';
+import { Attribute, SugarElement } from '@ephox/sugar';
 
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
-import { Element, Attr } from '@ephox/sugar';
-import { document } from '@ephox/dom-globals';
 
 const cFakeEvent = function (name) {
   return Chain.label('Fake event',
-    Chain.op(function (elm: Element) {
+    Chain.op(function (elm: SugarElement) {
       const evt = document.createEvent('HTMLEvents');
       evt.initEvent(name, true, true);
       elm.dom().dispatchEvent(evt);
@@ -22,7 +22,7 @@ const cCloseDialog = Chain.fromChains([
   Mouse.cClick
 ]);
 
-const cFindByLabelFor = (labelText: string) => Chain.binder((outer: Element) => UiFinder.findIn(outer, 'label:contains("' + labelText + '")').bind((labelEle) => UiFinder.findIn(outer, '#' + Attr.get(labelEle, 'for'))));
+const cFindByLabelFor = (labelText: string) => Chain.binder((outer: SugarElement) => UiFinder.findIn(outer, 'label:contains("' + labelText + '")').bind((labelEle) => UiFinder.findIn(outer, '#' + Attribute.get(labelEle, 'for'))));
 
 UnitTest.asynctest('browser.tinymce.plugins.link.UrlInputTest', (success, failure) => {
   Theme();

@@ -2,7 +2,7 @@ import { Keyboard, Keys, Log, Pipeline, Step, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { navigator } from '@ephox/dom-globals';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Body, Element } from '@ephox/sugar';
+import { SugarBody, SugarElement } from '@ephox/sugar';
 import CharmapPlugin from 'tinymce/plugins/charmap/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 
@@ -13,7 +13,7 @@ UnitTest.asynctest('browser.tinymce.plugins.charmap.AutocompletionTest', (succes
 
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
-    const eDoc = Element.fromDom(editor.getDoc());
+    const eDoc = SugarElement.fromDom(editor.getDoc());
 
     Pipeline.async({},
       Log.steps('TBA', 'Charmap: Autocomplete, trigger an autocomplete and check it appears', [
@@ -21,7 +21,7 @@ UnitTest.asynctest('browser.tinymce.plugins.charmap.AutocompletionTest', (succes
         tinyApis.sSetContent('<p>:co</p>'),
         tinyApis.sSetCursor([ 0, 0 ], 3),
         Keyboard.sKeypress(eDoc, 'o'.charCodeAt(0), { }),
-        UiFinder.sWaitForVisible('Waiting for autocomplete menu', Body.body(), '.tox-autocompleter'),
+        UiFinder.sWaitForVisible('Waiting for autocomplete menu', SugarBody.body(), '.tox-autocompleter'),
         Keyboard.sKeydown(eDoc, Keys.enter(), { }),
 
         // This assertion does not pass on Phantom. The editor content

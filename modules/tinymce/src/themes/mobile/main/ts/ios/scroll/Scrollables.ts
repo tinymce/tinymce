@@ -6,7 +6,7 @@
  */
 
 import { Fun } from '@ephox/katamari';
-import { Attr, DomEvent, SelectorFind } from '@ephox/sugar';
+import { Attribute, DomEvent, SelectorFind } from '@ephox/sugar';
 
 import * as Styles from '../../style/Styles';
 
@@ -35,11 +35,11 @@ const hasHorizontalScroll = function (container) {
 };
 
 const markAsHorizontal = function (container) {
-  Attr.set(container, dataHorizontal, 'true');
+  Attribute.set(container, dataHorizontal, 'true');
 };
 
 const hasScroll = function (container) {
-  return Attr.get(container, dataHorizontal) === 'true' ? hasHorizontalScroll(container) : hasVerticalScroll(container);
+  return Attribute.get(container, dataHorizontal) === 'true' ? hasHorizontalScroll(container) : hasVerticalScroll(container);
 };
 
 /*

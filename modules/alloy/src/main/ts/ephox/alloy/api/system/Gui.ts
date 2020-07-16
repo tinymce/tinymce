@@ -1,7 +1,6 @@
 import { Arr, Fun, Result } from '@ephox/katamari';
-import { Compare, Element, EventArgs, Focus, Node, Remove, Traverse } from '@ephox/sugar';
+import { Compare, EventArgs, Focus, Remove, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
-import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as Debugging from '../../debugging/Debugging';
 import * as DescribedHandler from '../../events/DescribedHandler';
 import * as GuiEvents from '../../events/GuiEvents';
@@ -9,6 +8,7 @@ import { FocusingEvent } from '../../events/SimulatedEvent';
 import * as Triggers from '../../events/Triggers';
 import Registry from '../../registry/Registry';
 import * as Tagger from '../../registry/Tagger';
+import { AlloyComponent } from '../component/ComponentApi';
 import * as GuiFactory from '../component/GuiFactory';
 import * as SystemEvents from '../events/SystemEvents';
 import { Container } from '../ui/Container';
@@ -17,12 +17,12 @@ import { AlloySystemApi } from './SystemApi';
 
 export interface GuiSystem {
   root: () => AlloyComponent;
-  element: () => Element;
+  element: () => SugarElement;
   destroy: () => void;
   add: (component: AlloyComponent) => void;
   remove: (component: AlloyComponent) => void;
   getByUid: (uid: string) => Result<AlloyComponent, Error>;
-  getByDom: (element: Element) => Result<AlloyComponent, Error>;
+  getByDom: (element: SugarElement) => Result<AlloyComponent, Error>;
 
   addToWorld: (comp: AlloyComponent) => void;
   removeFromWorld: (comp: AlloyComponent) => void;
@@ -48,14 +48,14 @@ const create = (): GuiSystem => {
 };
 
 const takeover = (root: AlloyComponent): GuiSystem => {
-  const isAboveRoot = (el: Element): boolean => Traverse.parent(root.element()).fold(
+  const isAboveRoot = (el: SugarElement): boolean => Traverse.parent(root.element()).fold(
     () => true,
     (parent) => Compare.eq(el, parent)
   );
 
   const registry = Registry();
 
-  const lookup = (eventName: string, target: Element) => registry.find(isAboveRoot, eventName, target);
+  const lookup = (eventName: string, target: SugarElement) => registry.find(isAboveRoot, eventName, target);
 
   const domEvents = GuiEvents.setup(root.element(), {
     triggerEvent(eventName: string, event: EventArgs) {
@@ -66,13 +66,13 @@ const takeover = (root: AlloyComponent): GuiSystem => {
   const systemApi: AlloySystemApi = {
     // This is a real system
     debugInfo: Fun.constant('real'),
-    triggerEvent(eventName: string, target: Element, data: any) {
+    triggerEvent(eventName: string, target: SugarElement, data: any) {
       Debugging.monitorEvent(eventName, target, (logger: Debugging.DebuggerLogger) =>
         // The return value is not used because this is a fake event.
         Triggers.triggerOnUntilStopped(lookup, eventName, data, target, logger)
       );
     },
-    triggerFocus(target: Element, originator: Element) {
+    triggerFocus(target: SugarElement, originator: SugarElement) {
       Tagger.read(target).fold(() => {
         // When the target is not within the alloy system, dispatch a normal focus event.
         Focus.focus(target);
@@ -121,7 +121,7 @@ const takeover = (root: AlloyComponent): GuiSystem => {
 
   const addToWorld = (component: AlloyComponent) => {
     component.connect(systemApi);
-    if (!Node.isText(component.element())) {
+    if (!SugarNode.isText(component.element())) {
       registry.register(component);
       Arr.each(component.components(), addToWorld);
       systemApi.triggerEvent(SystemEvents.systemInit(), component.element(), { target: Fun.constant(component.element()) });
@@ -129,7 +129,7 @@ const takeover = (root: AlloyComponent): GuiSystem => {
   };
 
   const removeFromWorld = (component: AlloyComponent) => {
-    if (!Node.isText(component.element())) {
+    if (!SugarNode.isText(component.element())) {
       Arr.each(component.components(), removeFromWorld);
       registry.unregister(component);
     }
@@ -187,7 +187,7 @@ const takeover = (root: AlloyComponent): GuiSystem => {
     new Error('Could not find component with uid: "' + uid + '" in system.')
   ), Result.value);
 
-  const getByDom = (elem: Element): Result<AlloyComponent, Error> => {
+  const getByDom = (elem: SugarElement): Result<AlloyComponent, Error> => {
     const uid = Tagger.read(elem).getOr('not found');
     return getByUid(uid);
   };

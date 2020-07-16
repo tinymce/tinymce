@@ -3,7 +3,7 @@ import { TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { TinyActions, TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
-import { Body } from '@ephox/sugar';
+import { SugarBody } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Promise from 'tinymce/core/api/util/Promise';
 import SilverTheme from 'tinymce/themes/silver/Theme';
@@ -241,7 +241,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
           }),
           // Can't wait for anything to change, so just wait for a prefixed amount of time
           Step.wait(500),
-          Step.label('Check the autocompleter does not appear', UiFinder.sNotExists(Body.body(), '.tox-autocompleter')),
+          Step.label('Check the autocompleter does not appear', UiFinder.sNotExists(SugarBody.body(), '.tox-autocompleter')),
           sSetContentAndTrigger({
             triggerChar: '*',
             additionalContent: 'bc'
@@ -321,7 +321,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
         }),
         // Can't wait for anything to change, so just wait for a prefixed amount of time
         Step.wait(500),
-        Step.label('Check the autocompleter does not appear', UiFinder.sNotExists(Body.body(), '.tox-autocompleter')),
+        Step.label('Check the autocompleter does not appear', UiFinder.sNotExists(SugarBody.body(), '.tox-autocompleter')),
         sSetContentAndTrigger({
           triggerChar: '=',
           initialContent: 'test=t'

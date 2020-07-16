@@ -1,6 +1,6 @@
 import { ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Logger, Mouse, Step, UiFinder, Waiter } from '@ephox/agar';
 import { document } from '@ephox/dom-globals';
-import { Element, TextContent } from '@ephox/sugar';
+import { SugarElement, TextContent } from '@ephox/sugar';
 
 const dialogSelector = 'div.tox-dialog';
 const toolbarButtonSelector = '[role="toolbar"] button[aria-label="Insert/edit code sample"]';
@@ -39,10 +39,10 @@ const sAssertEditorContentStructure = (editorBody, language, _content) => Logger
         s.anything()
       ]
     })),
-    Element.fromDom(editorBody)
+    SugarElement.fromDom(editorBody)
   ), 100, 3000));
 
-const sAssertPreText = (container: Element, selector, expected) => Logger.t('Assert PRE content', Chain.asStep(container, [
+const sAssertPreText = (container: SugarElement, selector, expected) => Logger.t('Assert PRE content', Chain.asStep(container, [
   UiFinder.cFindIn(selector),
   Chain.op((snippet) => {
     const text = TextContent.get(snippet);
@@ -51,7 +51,7 @@ const sAssertPreText = (container: Element, selector, expected) => Logger.t('Ass
 ]));
 
 const sOpenDialogAndAssertInitial = (editor, docBody, language, content) => GeneralSteps.sequence(Logger.ts('Open dialog and assert initial language and content', [
-  Mouse.sClickOn(Element.fromDom(editor.getContainer()), toolbarButtonSelector),
+  Mouse.sClickOn(SugarElement.fromDom(editor.getContainer()), toolbarButtonSelector),
   UiFinder.sWaitForVisible('Waited for dialog to be visible', docBody, dialogSelector),
   sAssertCodeSampleDialog(language, content)
 ]));
@@ -75,7 +75,7 @@ const sAssertEditorContents = (editorBody, language, content, selector) =>
    */
   GeneralSteps.sequence(Logger.ts('Assert overall structure of editor content', [
     sAssertEditorContentStructure(editorBody, language, content),
-    sAssertPreText(Element.fromDom(editorBody), selector, content)
+    sAssertPreText(SugarElement.fromDom(editorBody), selector, content)
   ]));
 
 export {

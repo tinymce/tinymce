@@ -1,12 +1,12 @@
-import { Assertions, GeneralSteps, Logger, Pipeline, Step, Waiter, Cursors } from '@ephox/agar';
+import { Assertions, Cursors, GeneralSteps, Logger, Pipeline, Step, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { window } from '@ephox/dom-globals';
 import { Cell } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
+import Editor from 'tinymce/core/api/Editor';
 import * as ScrollIntoView from 'tinymce/core/dom/ScrollIntoView';
 import Theme from 'tinymce/themes/silver/Theme';
-import Editor from 'tinymce/core/api/Editor';
 
 UnitTest.asynctest('browser.tinymce.core.dom.ScrollIntoViewTest', (success, failure) => {
 
@@ -40,7 +40,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.ScrollIntoViewTest', (success, fail
   };
 
   const sScrollRangeIntoView = (editor: Editor, path: number[], offset: number) => Step.sync(function () {
-    const x = Cursors.calculateOne(Element.fromDom(editor.getBody()), path);
+    const x = Cursors.calculateOne(SugarElement.fromDom(editor.getBody()), path);
     const rng = editor.dom.createRng();
     rng.setStart(x.dom(), offset);
     rng.setEnd(x.dom(), offset);
@@ -89,8 +89,8 @@ UnitTest.asynctest('browser.tinymce.core.dom.ScrollIntoViewTest', (success, fail
 
   const mAssertScrollIntoViewEventInfo = function (editor: Editor, expectedElementSelector: string, expectedAlignToTop: boolean) {
     return Step.stateful(function (value: any, next, _die) {
-      const expectedTarget = Element.fromDom(editor.dom.select(expectedElementSelector)[0]);
-      const actualTarget = Element.fromDom(value.state.get().elm);
+      const expectedTarget = SugarElement.fromDom(editor.dom.select(expectedElementSelector)[0]);
+      const actualTarget = SugarElement.fromDom(value.state.get().elm);
       Assertions.assertDomEq('Target should be expected element', expectedTarget, actualTarget);
       Assertions.assertEq('Align to top should be expected value', expectedAlignToTop, value.state.get().alignToTop);
       editor.off('ScrollIntoView', value.handler);

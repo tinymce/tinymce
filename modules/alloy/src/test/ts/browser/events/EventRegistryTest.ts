@@ -2,7 +2,7 @@ import { Assertions, Chain, GeneralSteps, Logger, NamedChain, Pipeline, Step, Ui
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { Arr, Fun, Result } from '@ephox/katamari';
-import { Attr, Compare, Element, Html, Insert, SelectorFilter, Truncate } from '@ephox/sugar';
+import { Attribute, Compare, Html, Insert, SelectorFilter, SugarElement, Truncate } from '@ephox/sugar';
 
 import * as DescribedHandler from 'ephox/alloy/events/DescribedHandler';
 import EventRegistry, { ElementAndHandler } from 'ephox/alloy/events/EventRegistry';
@@ -11,8 +11,8 @@ import * as Tagger from 'ephox/alloy/registry/Tagger';
 type ExpectedType = { id?: string; handler: string; target?: string; purpose?: string };
 
 UnitTest.asynctest('EventRegistryTest', (success, failure) => {
-  const body = Element.fromDom(document.body);
-  const page = Element.fromTag('div');
+  const body = SugarElement.fromDom(document.body);
+  const page = SugarElement.fromTag('div');
 
   Html.set(page,
     '<div data-test-uid="comp-1">' +
@@ -29,7 +29,7 @@ UnitTest.asynctest('EventRegistryTest', (success, failure) => {
   // Add alloy UID tags to match these attributes.
   const pageBits = SelectorFilter.descendants(page, '[data-test-uid]');
   Arr.each(pageBits, (bit) => {
-    Attr.getOpt(bit, 'data-test-uid').each((testUid) => Tagger.writeOnly(bit, testUid));
+    Attribute.getOpt(bit, 'data-test-uid').each((testUid) => Tagger.writeOnly(bit, testUid));
   });
 
   const isRoot = Fun.curry(Compare.eq, page);
@@ -90,7 +90,7 @@ UnitTest.asynctest('EventRegistryTest', (success, failure) => {
   );
 
   const sAssertFind = (label: string, expected: ExpectedType, type: string, id: string) => {
-    const cFindHandler = Chain.binder((target: Element) => events.find(isRoot, type, target).fold(
+    const cFindHandler = Chain.binder((target: SugarElement) => events.find(isRoot, type, target).fold(
       () => Result.error('No event handler for ' + type + ' on ' + target.dom()),
       Result.value
     ));
@@ -110,7 +110,7 @@ UnitTest.asynctest('EventRegistryTest', (success, failure) => {
             Assertions.assertEq(
               'find(' + type + ', ' + id + ') = true',
               expected.target,
-              Attr.get(section.element, 'data-test-uid')
+              Attribute.get(section.element, 'data-test-uid')
             );
             Assertions.assertEq(
               () => 'find(' + type + ', ' + id + ') = ' + JSON.stringify(expected.handler),

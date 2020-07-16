@@ -1,7 +1,7 @@
-import { GeneralSteps, Log, Pipeline, UiFinder, Step } from '@ephox/agar';
+import { GeneralSteps, Log, Pipeline, Step, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Body } from '@ephox/sugar';
+import { SugarBody } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 
 import QuickbarsPlugin from 'tinymce/plugins/quickbars/Plugin';
@@ -18,7 +18,7 @@ UnitTest.asynctest('browser.tinymce.plugins.quickbars.ToolbarFalseTest', (succes
     const sAssertToolbarNotVisible = GeneralSteps.sequence([
       // We can't wait for something to happen, as nothing will change. So instead, just wait some time for when the toolbar would have normally shown
       Step.wait(200),
-      UiFinder.sNotExists(Body.body(), '.tox-pop__dialog .tox-toolbar')
+      UiFinder.sNotExists(SugarBody.body(), '.tox-pop__dialog .tox-toolbar')
     ]);
 
     Pipeline.async({}, [

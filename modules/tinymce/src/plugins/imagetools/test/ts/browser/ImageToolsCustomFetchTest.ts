@@ -4,7 +4,7 @@ import { document } from '@ephox/dom-globals';
 import { BlobConversions } from '@ephox/imagetools';
 import { Cell, Option } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Body } from '@ephox/sugar';
+import { SugarBody } from '@ephox/sugar';
 import Promise from 'tinymce/core/api/util/Promise';
 import ImagetoolsPlugin from 'tinymce/plugins/imagetools/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
@@ -44,7 +44,7 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsCustomFetchTest
         ImageUtils.sLoadImage(editor, srcUrl),
         tinyApis.sSelect('img', []),
         ImageUtils.sExecCommand(editor, 'mceImageFlipHorizontal'),
-        UiFinder.sWaitFor('Waited for notification', Body.body(), '.tox-notification__body:contains("Custom fail")')
+        UiFinder.sWaitFor('Waited for notification', SugarBody.body(), '.tox-notification__body:contains("Custom fail")')
       ])
     ], onSuccess, onFailure);
   }, {

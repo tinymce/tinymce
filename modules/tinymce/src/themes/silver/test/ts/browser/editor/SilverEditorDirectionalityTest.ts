@@ -1,10 +1,10 @@
-import { Assertions, Pipeline, Log, ApproxStructure, NamedChain, Chain } from '@ephox/agar';
-import { Editor as McEditor } from '@ephox/mcagar';
-import Theme from 'tinymce/themes/silver/Theme';
+import { ApproxStructure, Assertions, Chain, Log, NamedChain, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Element } from '@ephox/sugar';
-import EditorManager from 'tinymce/core/api/EditorManager';
+import { Editor as McEditor } from '@ephox/mcagar';
+import { SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
+import EditorManager from 'tinymce/core/api/EditorManager';
+import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('Editor (Silver) directionality test', (success, failure) => {
   Theme();
@@ -14,7 +14,7 @@ UnitTest.asynctest('Editor (Silver) directionality test', (success, failure) => 
     _dir: 'rtl'
   });
 
-  const cGetEditorContainer = Chain.mapper((editor: Editor) => Element.fromDom(editor.getContainer()));
+  const cGetEditorContainer = Chain.mapper((editor: Editor) => SugarElement.fromDom(editor.getContainer()));
 
   const cSetContent = (content: string) => Chain.mapper(function (editor: any) {
     return editor.editorCommands.execCommand('mceSetContent', false, content);

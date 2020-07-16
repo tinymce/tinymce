@@ -1,8 +1,8 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import * as Insert from 'ephox/sugar/api/dom/Insert';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
-import * as Body from 'ephox/sugar/api/node/Body';
-import Element from 'ephox/sugar/api/node/Element';
+import * as SugarBody from 'ephox/sugar/api/node/SugarBody';
+import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
 import * as Class from 'ephox/sugar/api/properties/Class';
 import * as Classes from 'ephox/sugar/api/properties/Classes';
 import * as Html from 'ephox/sugar/api/properties/Html';
@@ -29,7 +29,7 @@ UnitTest.test('RemoveTest', () => {
     Insert.append(container, p2);
     Insert.append(p, span);
 
-    if (connected) { Insert.append(Body.body(), container); }
+    if (connected) { Insert.append(SugarBody.body(), container); }
 
     assert.eq('<p><span></span></p><p></p>', Html.get(container));
     Remove.remove(p2);
@@ -45,7 +45,7 @@ UnitTest.test('RemoveTest', () => {
     assert.eq(0, Traverse.children(container).length);
 
     // after inserting an empty text node, empty doesn't always mean empty!
-    Insert.append(container, Element.fromText(''));
+    Insert.append(container, SugarElement.fromText(''));
     Remove.empty(container);
     assert.eq('', Html.get(container));
     assert.eq(0, Traverse.children(container).length);

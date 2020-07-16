@@ -6,7 +6,7 @@
  */
 
 import { Arr, Fun, Option } from '@ephox/katamari';
-import { Compare, Element, Insert, Remove, Traverse } from '@ephox/sugar';
+import { Compare, Insert, Remove, SugarElement, Traverse } from '@ephox/sugar';
 import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import * as ElementType from '../dom/ElementType';
@@ -14,7 +14,7 @@ import * as Empty from '../dom/Empty';
 import * as PaddingBr from '../dom/PaddingBr';
 import * as Parents from '../dom/Parents';
 
-const getChildrenUntilBlockBoundary = (block: Element) => {
+const getChildrenUntilBlockBoundary = (block: SugarElement) => {
   const children = Traverse.children(block);
   return Arr.findIndex(children, ElementType.isBlock).fold(
     () => children,
@@ -22,27 +22,27 @@ const getChildrenUntilBlockBoundary = (block: Element) => {
   );
 };
 
-const extractChildren = (block: Element) => {
+const extractChildren = (block: SugarElement) => {
   const children = getChildrenUntilBlockBoundary(block);
   Arr.each(children, Remove.remove);
   return children;
 };
 
-const removeEmptyRoot = (rootNode: Element, block: Element) => {
+const removeEmptyRoot = (rootNode: SugarElement, block: SugarElement) => {
   const parents = Parents.parentsAndSelf(block, rootNode);
   return Arr.find(parents.reverse(), (element) => Empty.isEmpty(element)).each(Remove.remove);
 };
 
-const isEmptyBefore = (el: Element) => Arr.filter(Traverse.prevSiblings(el), (el) => !Empty.isEmpty(el)).length === 0;
+const isEmptyBefore = (el: SugarElement) => Arr.filter(Traverse.prevSiblings(el), (el) => !Empty.isEmpty(el)).length === 0;
 
-const nestedBlockMerge = (rootNode: Element, fromBlock: Element, toBlock: Element, insertionPoint: Element): Option<CaretPosition> => {
+const nestedBlockMerge = (rootNode: SugarElement, fromBlock: SugarElement, toBlock: SugarElement, insertionPoint: SugarElement): Option<CaretPosition> => {
   if (Empty.isEmpty(toBlock)) {
     PaddingBr.fillWithPaddingBr(toBlock);
     return CaretFinder.firstPositionIn(toBlock.dom());
   }
 
   if (isEmptyBefore(insertionPoint) && Empty.isEmpty(fromBlock)) {
-    Insert.before(insertionPoint, Element.fromTag('br'));
+    Insert.before(insertionPoint, SugarElement.fromTag('br'));
   }
 
   const position = CaretFinder.prevPosition(toBlock.dom(), CaretPosition.before(insertionPoint.dom()));
@@ -53,7 +53,7 @@ const nestedBlockMerge = (rootNode: Element, fromBlock: Element, toBlock: Elemen
   return position;
 };
 
-const sidelongBlockMerge = (rootNode: Element, fromBlock: Element, toBlock: Element): Option<CaretPosition> => {
+const sidelongBlockMerge = (rootNode: SugarElement, fromBlock: SugarElement, toBlock: SugarElement): Option<CaretPosition> => {
   if (Empty.isEmpty(toBlock)) {
     Remove.remove(toBlock);
     if (Empty.isEmpty(fromBlock)) {
@@ -70,23 +70,23 @@ const sidelongBlockMerge = (rootNode: Element, fromBlock: Element, toBlock: Elem
   return position;
 };
 
-const findInsertionPoint = (toBlock: Element, block: Element) => {
+const findInsertionPoint = (toBlock: SugarElement, block: SugarElement) => {
   const parentsAndSelf = Parents.parentsAndSelf(block, toBlock);
   return Option.from(parentsAndSelf[parentsAndSelf.length - 1]);
 };
 
-const getInsertionPoint = (fromBlock: Element, toBlock: Element): Option<Element> =>
+const getInsertionPoint = (fromBlock: SugarElement, toBlock: SugarElement): Option<SugarElement> =>
   Compare.contains(toBlock, fromBlock) ? findInsertionPoint(toBlock, fromBlock) : Option.none();
 
-const trimBr = (first: boolean, block: Element) => {
+const trimBr = (first: boolean, block: SugarElement) => {
   CaretFinder.positionIn(first, block.dom())
     .map((position) => position.getNode())
-    .map(Element.fromDom)
+    .map(SugarElement.fromDom)
     .filter(ElementType.isBr)
     .each(Remove.remove);
 };
 
-const mergeBlockInto = (rootNode: Element, fromBlock: Element, toBlock: Element): Option<CaretPosition> => {
+const mergeBlockInto = (rootNode: SugarElement, fromBlock: SugarElement, toBlock: SugarElement): Option<CaretPosition> => {
   trimBr(true, fromBlock);
   trimBr(false, toBlock);
 
@@ -96,7 +96,7 @@ const mergeBlockInto = (rootNode: Element, fromBlock: Element, toBlock: Element)
   );
 };
 
-const mergeBlocks = (rootNode: Element, forward: boolean, block1: Element, block2: Element) =>
+const mergeBlocks = (rootNode: SugarElement, forward: boolean, block1: SugarElement, block2: SugarElement) =>
   forward ? mergeBlockInto(rootNode, block2, block1) : mergeBlockInto(rootNode, block1, block2);
 
 export {

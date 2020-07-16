@@ -1,9 +1,9 @@
-import { Attachment, GuiFactory, DomFactory, Behaviour, Positioning, Gui } from '@ephox/alloy';
-import { Fun } from '@ephox/katamari';
-import { Body, Class } from '@ephox/sugar';
+import { Attachment, Behaviour, DomFactory, Gui, GuiFactory, Positioning } from '@ephox/alloy';
 import { document } from '@ephox/dom-globals';
-import TestBackstage from './TestBackstage';
+import { Fun } from '@ephox/katamari';
+import { Class, SugarBody } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
+import TestBackstage from './TestBackstage';
 
 export default () => {
 
@@ -40,7 +40,7 @@ export default () => {
   };
 
   uiMothership.add(sink);
-  Attachment.attachSystem(Body.body(), uiMothership);
+  Attachment.attachSystem(SugarBody.body(), uiMothership);
 
   const destroy = () => {
     uiMothership.remove(sink);

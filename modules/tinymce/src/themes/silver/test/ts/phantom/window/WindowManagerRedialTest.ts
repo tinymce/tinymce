@@ -5,7 +5,7 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { Types } from '@ephox/bridge';
 import { console } from '@ephox/dom-globals';
 import { Cell } from '@ephox/katamari';
-import { Body, Value } from '@ephox/sugar';
+import { SugarBody, Value } from '@ephox/sugar';
 import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 import TestExtras from '../../module/TestExtras';
 
@@ -143,31 +143,31 @@ UnitTest.asynctest('WindowManager:redial Test', (success, failure) => {
   ]);
 
   const sTestClose = GeneralSteps.sequence([
-    Mouse.sClickOn(Body.body(), '[aria-label="Close"]'),
-    UiFinder.sNotExists(Body.body(), '[role="dialog"]')
+    Mouse.sClickOn(SugarBody.body(), '[aria-label="Close"]'),
+    UiFinder.sNotExists(SugarBody.body(), '[role="dialog"]')
   ]);
 
   Pipeline.async({}, [
     sTestOpen,
-    UiFinder.sExists(Body.body(), 'button:contains("Destination: DialogB"):not([disabled])'),
-    Mouse.sClickOn(Body.body(), 'button:contains("Disable other")'),
+    UiFinder.sExists(SugarBody.body(), 'button:contains("Destination: DialogB"):not([disabled])'),
+    Mouse.sClickOn(SugarBody.body(), 'button:contains("Disable other")'),
     Logger.t(
       'Button should be disabled',
-      UiFinder.sNotExists(Body.body(), 'button:contains("Destination: DialogB"):not([disabled])')
+      UiFinder.sNotExists(SugarBody.body(), 'button:contains("Destination: DialogB"):not([disabled])')
     ),
 
-    Mouse.sClickOn(Body.body(), 'button:contains("Disable other")'),
-    Mouse.sClickOn(Body.body(), 'button:contains("Destination: DialogB")'),
+    Mouse.sClickOn(SugarBody.body(), 'button:contains("Disable other")'),
+    Mouse.sClickOn(SugarBody.body(), 'button:contains("Destination: DialogB")'),
 
-    Mouse.sClickOn(Body.body(), 'button:contains("Enable other")'),
+    Mouse.sClickOn(SugarBody.body(), 'button:contains("Enable other")'),
     Logger.t(
       'Button should be enabled',
-      UiFinder.sExists(Body.body(), 'button:contains("Destination: DialogB"):not([disabled])')
+      UiFinder.sExists(SugarBody.body(), 'button:contains("Destination: DialogB"):not([disabled])')
     ),
-    Mouse.sClickOn(Body.body(), 'button:contains("Destination: DialogB")'),
+    Mouse.sClickOn(SugarBody.body(), 'button:contains("Destination: DialogB")'),
 
-    Mouse.sClickOn(Body.body(), 'button:contains("Destination: DialogC")'),
-    Chain.asStep(Body.body(), [
+    Mouse.sClickOn(SugarBody.body(), 'button:contains("Destination: DialogC")'),
+    Chain.asStep(SugarBody.body(), [
       UiFinder.cFindIn('input'),
       Chain.op((input) => {
         Assertions.assertEq('Checking input value', 'C.Alpha', Value.get(input));
@@ -177,15 +177,15 @@ UnitTest.asynctest('WindowManager:redial Test', (success, failure) => {
     Step.sync(() => {
       currentDialogApi.get().disable('tab.switch.two');
     }),
-    UiFinder.sExists(Body.body(), 'button[disabled]:contains("Switch to Tab Two")'),
+    UiFinder.sExists(SugarBody.body(), 'button[disabled]:contains("Switch to Tab Two")'),
     Step.sync(() => {
       currentDialogApi.get().enable('tab.switch.two');
     }),
 
-    Mouse.sClickOn(Body.body(), 'button:contains("Switch to Tab Two")'),
+    Mouse.sClickOn(SugarBody.body(), 'button:contains("Switch to Tab Two")'),
     Logger.t(
       'Tab "Two" should be selected',
-      UiFinder.sExists(Body.body(), '.tox-dialog__body-nav-item--active:contains("two")')
+      UiFinder.sExists(SugarBody.body(), '.tox-dialog__body-nav-item--active:contains("two")')
     ),
 
     sTestClose,

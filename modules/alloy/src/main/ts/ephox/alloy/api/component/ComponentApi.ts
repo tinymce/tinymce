@@ -1,10 +1,10 @@
 import { Option } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 
-import { AlloyBehaviour } from '../../api/behaviour/Behaviour';
-import { AlloySystemApi } from '../../api/system/SystemApi';
 import { BehaviourConfigAndState } from '../../behaviour/common/BehaviourBlob';
 import { UncurriedHandler } from '../../events/EventRegistry';
+import { AlloyBehaviour } from '../behaviour/Behaviour';
+import { AlloySystemApi } from '../system/SystemApi';
 
 export interface AlloyComponent {
   getSystem: () => AlloySystemApi;
@@ -15,7 +15,7 @@ export interface AlloyComponent {
   connect: (newApi: AlloySystemApi) => void;
   disconnect: () => void;
   getApis: <A>() => A;
-  element: () => Element;
+  element: () => SugarElement;
   syncComponents: () => void;
   components: () => AlloyComponent[];
   events: () => Record<string, UncurriedHandler>;

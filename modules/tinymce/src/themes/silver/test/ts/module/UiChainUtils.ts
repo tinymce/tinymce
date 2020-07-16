@@ -1,8 +1,8 @@
 import { Chain, Guard, Mouse, UiFinder } from '@ephox/agar';
-import { Arr, Result } from '@ephox/katamari';
-import Editor from 'tinymce/core/api/Editor';
 import { window } from '@ephox/dom-globals';
-import { Scroll, Element } from '@ephox/sugar';
+import { Arr, Result } from '@ephox/katamari';
+import { Scroll, SugarElement } from '@ephox/sugar';
+import Editor from 'tinymce/core/api/Editor';
 
 const cCountNumber = (selector) => Chain.fromChains([
   UiFinder.cFindAllIn(selector),
@@ -42,7 +42,7 @@ const cResizeToPos = (sx: number, sy: number, dx: number, dy: number, delta: num
 };
 
 const cScrollRelativeEditor = (editor: Editor, relative: 'top' | 'bottom' = 'top', deltaY: number) => Chain.op(() => {
-  const target = Element.fromDom(editor.inline ? editor.getBody() : editor.getContainer());
+  const target = SugarElement.fromDom(editor.inline ? editor.getBody() : editor.getContainer());
   target.dom().scrollIntoView(relative === 'top');
   Scroll.to(0, window.pageYOffset + deltaY);
 });

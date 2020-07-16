@@ -5,18 +5,18 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLElement, Event } from '@ephox/dom-globals';
+import { Event, HTMLElement } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
-import { Element, SelectorFind } from '@ephox/sugar';
-import * as CaretContainer from './CaretContainer';
+import { SelectorFind, SugarElement } from '@ephox/sugar';
 import Editor from '../api/Editor';
+import * as CaretContainer from './CaretContainer';
 
 /**
  * This module shows the invisible block that the caret is currently in when contents is added to that block.
  */
 
 const findBlockCaretContainer = function (editor: Editor) {
-  return SelectorFind.descendant(Element.fromDom(editor.getBody()), '*[data-mce-caret]').fold(Fun.constant(null), function (elm) {
+  return SelectorFind.descendant(SugarElement.fromDom(editor.getBody()), '*[data-mce-caret]').fold(Fun.constant(null), function (elm) {
     return elm.dom();
   });
 };

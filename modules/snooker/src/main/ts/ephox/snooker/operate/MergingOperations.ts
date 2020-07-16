@@ -1,10 +1,10 @@
 import { Arr, Option } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import * as Structs from '../api/Structs';
 import * as GridRow from '../model/GridRow';
 
-type CompElm = (e1: Element, e2: Element) => boolean;
-type Subst = () => Element;
+type CompElm = (e1: SugarElement, e2: SugarElement) => boolean;
+type Subst = () => SugarElement;
 
 // substitution: () -> item
 const merge = function (grid: Structs.RowCells[], bounds: Structs.Bounds, comparator: CompElm, substitution: Subst) {
@@ -22,7 +22,7 @@ const merge = function (grid: Structs.RowCells[], bounds: Structs.Bounds, compar
 };
 
 // substitution: () -> item
-const unmerge = function (grid: Structs.RowCells[], target: Element, comparator: CompElm, substitution: Subst) {
+const unmerge = function (grid: Structs.RowCells[], target: SugarElement, comparator: CompElm, substitution: Subst) {
   // Mutating. Do we care about the efficiency gain?
   let first = true;
   // tslint:disable-next-line:prefer-for-of
@@ -73,7 +73,7 @@ const splitRows = function (grid: Structs.RowCells[], index: number, comparator:
     const cells = uniqueCells(rowPrevCells, comparator);
     Arr.each(cells, function (cell) {
       // only make a sub when we have to
-      let replacement = Option.none<Element>();
+      let replacement = Option.none<SugarElement>();
       for (let i = index; i < grid.length; i++) {
         for (let j = 0; j < GridRow.cellLength(grid[0]); j++) {
           const current = grid[i].cells()[j];

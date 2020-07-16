@@ -1,8 +1,8 @@
-import { HTMLElement, Node as DomNode, setTimeout, window } from '@ephox/dom-globals';
+import { HTMLElement, Node, setTimeout, window } from '@ephox/dom-globals';
 import { Arr, Fun, Option } from '@ephox/katamari';
 import * as Monitors from '../../impl/Monitors';
 import * as Compare from '../dom/Compare';
-import Element from '../node/Element';
+import { SugarElement } from '../node/SugarElement';
 import * as Height from '../view/Height';
 import * as Visibility from '../view/Visibility';
 import * as Width from '../view/Width';
@@ -11,13 +11,13 @@ import { EventUnbinder } from './Types';
 import * as Viewable from './Viewable';
 
 interface Monitored {
-  element: Element<HTMLElement>;
+  element: SugarElement<HTMLElement>;
   handlers: Array<() => void>;
   lastWidth: number;
   lastHeight: number;
 }
 
-const elem = (element: Element<HTMLElement>): Monitored => ({
+const elem = (element: SugarElement<HTMLElement>): Monitored => ({
   element,
   handlers: [],
   lastWidth: Width.get(element),
@@ -25,9 +25,9 @@ const elem = (element: Element<HTMLElement>): Monitored => ({
 });
 const elems: Monitored[] = [];
 
-const findElem = (element: Element<DomNode>) => Arr.findIndex(elems, (el) => Compare.eq(el.element, element)).getOr(-1);
+const findElem = (element: SugarElement<Node>) => Arr.findIndex(elems, (el) => Compare.eq(el.element, element)).getOr(-1);
 
-const bind = (element: Element<HTMLElement>, handler: () => void): void => {
+const bind = (element: SugarElement<HTMLElement>, handler: () => void): void => {
   const el = Arr.find(elems, (elm) => Compare.eq(elm.element, element)).getOrThunk(() => {
     const newEl = elem(element);
     elems.push(newEl);
@@ -49,7 +49,7 @@ const bind = (element: Element<HTMLElement>, handler: () => void): void => {
   }, 100);
 };
 
-const unbind = (element: Element<DomNode>, handler: () => void) => {
+const unbind = (element: SugarElement<Node>, handler: () => void) => {
   // remove any monitors on this element
   Monitors.end(element);
   const index = findElem(element);
@@ -116,7 +116,7 @@ const listener = () => {
 
 let interval = Option.none<EventUnbinder>();
 const start = () => {
-  interval = Option.some(DomEvent.bind(Element.fromDom(window), 'resize', listener));
+  interval = Option.some(DomEvent.bind(SugarElement.fromDom(window), 'resize', listener));
 };
 
 const stop = () => {

@@ -7,7 +7,7 @@
 
 import { HTMLElement, Node, Range } from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import TreeWalker from '../api/dom/TreeWalker';
 import * as NodeType from '../dom/NodeType';
 import * as CaretCandidate from './CaretCandidate';
@@ -289,8 +289,8 @@ const getNormalizedRangeEndPoint = (direction: number, root: Node, range: Range)
   return CaretPosition.fromRangeEnd(normalizedRange);
 };
 
-const getElementFromPosition = (pos: CaretPosition): Option<Element> => Option.from(pos.getNode()).map(Element.fromDom);
-const getElementFromPrevPosition = (pos: CaretPosition): Option<Element> => Option.from(pos.getNode(true)).map(Element.fromDom);
+const getElementFromPosition = (pos: CaretPosition): Option<SugarElement> => Option.from(pos.getNode()).map(SugarElement.fromDom);
+const getElementFromPrevPosition = (pos: CaretPosition): Option<SugarElement> => Option.from(pos.getNode(true)).map(SugarElement.fromDom);
 
 const getVisualCaretPosition = (walkFn, caretPosition: CaretPosition): CaretPosition => {
   while ((caretPosition = walkFn(caretPosition))) {

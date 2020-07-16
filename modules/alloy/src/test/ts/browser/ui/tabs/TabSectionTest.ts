@@ -1,6 +1,6 @@
 import { ApproxStructure, Assertions, GeneralSteps, Logger, Step, StructAssert } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Element, SelectorFind } from '@ephox/sugar';
+import { SelectorFind, SugarElement } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Tabstopping } from 'ephox/alloy/api/behaviour/Tabstopping';
@@ -89,7 +89,7 @@ UnitTest.asynctest('TabSection Test', (success, failure) => {
       SelectorFind.descendant(component.element(), '.test-tabview').getOrDie('Could not find tabview')
     ).getOrDie();
 
-    const sAssertTabSelection = (label: string, expected: boolean, element: Element) =>
+    const sAssertTabSelection = (label: string, expected: boolean, element: SugarElement) =>
       Assertions.sAssertStructure(label + ' (asserting structure)', ApproxStructure.build((s, str, arr) => s.element('button', {
         attrs: {
           'aria-selected': expected ? str.is('true') : str.is('false')

@@ -1,24 +1,24 @@
 import { Assertions, Chain, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
-import { Hierarchy, Element } from '@ephox/sugar';
-import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
-import * as NormalizeRange from 'tinymce/core/selection/NormalizeRange';
-import ViewBlock from '../../module/test/ViewBlock';
-import * as Zwsp from 'tinymce/core/text/Zwsp';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
+import { Hierarchy, SugarElement } from '@ephox/sugar';
+import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+import * as NormalizeRange from 'tinymce/core/selection/NormalizeRange';
+import * as Zwsp from 'tinymce/core/text/Zwsp';
+import ViewBlock from '../../module/test/ViewBlock';
 
 UnitTest.asynctest('browser.tinymce.core.selection.NormalizeRangeTest', function (success, failure) {
   const viewBlock = ViewBlock();
 
   const assertRange = function (root, range, startPath, startOffset, endPath, endOffset) {
-    const sc = Hierarchy.follow(Element.fromDom(root), startPath).getOrDie();
-    const ec = Hierarchy.follow(Element.fromDom(root), endPath).getOrDie();
+    const sc = Hierarchy.follow(SugarElement.fromDom(root), startPath).getOrDie();
+    const ec = Hierarchy.follow(SugarElement.fromDom(root), endPath).getOrDie();
     const actualRange = range.getOrDie('Should be some');
 
-    Assertions.assertDomEq('Should be expected start container', sc, Element.fromDom(actualRange.startContainer));
+    Assertions.assertDomEq('Should be expected start container', sc, SugarElement.fromDom(actualRange.startContainer));
     Assertions.assertEq('Should be expected start offset', startOffset, actualRange.startOffset);
-    Assertions.assertDomEq('Should be expected end container', ec, Element.fromDom(actualRange.endContainer));
+    Assertions.assertDomEq('Should be expected end container', ec, SugarElement.fromDom(actualRange.endContainer));
     Assertions.assertEq('Should be expected end offset', endOffset, actualRange.endOffset);
   };
 
@@ -30,8 +30,8 @@ UnitTest.asynctest('browser.tinymce.core.selection.NormalizeRangeTest', function
 
   const cNormalizeRange = function (startPath, startOffset, endPath, endOffset) {
     return Chain.mapper(function (viewBlock: any) {
-      const sc = Hierarchy.follow(Element.fromDom(viewBlock.get()), startPath).getOrDie();
-      const ec = Hierarchy.follow(Element.fromDom(viewBlock.get()), endPath).getOrDie();
+      const sc = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), startPath).getOrDie();
+      const ec = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), endPath).getOrDie();
       const rng = document.createRange();
 
       rng.setStart(sc.dom(), startOffset);

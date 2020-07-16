@@ -1,16 +1,16 @@
 import { document } from '@ephox/dom-globals';
-import { Attr, Element, Insert, Remove } from '@ephox/sugar';
+import { Attribute, Insert, Remove, SugarElement } from '@ephox/sugar';
 import { Step } from 'ephox/agar/api/Step';
 
 const mSetup = Step.stateful((state, next, _die) => {
-  const container = Element.fromTag('div');
-  Attr.set(container, 'tabindex', '-1');
-  Attr.set(container, 'test-id', 'true');
+  const container = SugarElement.fromTag('div');
+  Attribute.set(container, 'tabindex', '-1');
+  Attribute.set(container, 'test-id', 'true');
 
-  const input = Element.fromTag('input');
+  const input = SugarElement.fromTag('input');
   Insert.append(container, input);
 
-  Insert.append(Element.fromDom(document.body), container);
+  Insert.append(SugarElement.fromDom(document.body), container);
   next({
     container,
     input
@@ -18,7 +18,7 @@ const mSetup = Step.stateful((state, next, _die) => {
 });
 
 interface TeardownState {
-  container: Element<any>;
+  container: SugarElement<any>;
 }
 
 const mTeardown = Step.stateful<TeardownState, TeardownState>((state, next, _die) => {

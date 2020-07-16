@@ -1,6 +1,6 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
-import Element from 'ephox/sugar/api/node/Element';
-import * as Attr from 'ephox/sugar/api/properties/Attr';
+import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
+import * as Attribute from 'ephox/sugar/api/properties/Attribute';
 import * as Class from 'ephox/sugar/api/properties/Class';
 import * as Classes from 'ephox/sugar/api/properties/Classes';
 import Div from 'ephox/sugar/test/Div';
@@ -23,7 +23,7 @@ UnitTest.test('ClassTest', () => {
 
   Class.remove(c, 'blob');
   check(false, false, false, false);
-  assert.eq(false, Attr.has(c, 'class'), 'empty class attribute was not removed');
+  assert.eq(false, Attribute.has(c, 'class'), 'empty class attribute was not removed');
 
   Class.add(c, 'blob');
   check(true, false, false, false);
@@ -51,9 +51,9 @@ UnitTest.test('ClassTest', () => {
 
   Class.remove(c, 'spot');
   check(false, false, false, false);
-  assert.eq(false, Attr.has(c, 'class'), 'empty class attribute was not removed');
+  assert.eq(false, Attribute.has(c, 'class'), 'empty class attribute was not removed');
 
-  const incorrect = Element.fromText('a');
+  const incorrect = SugarElement.fromText('a');
   assert.eq(false, Class.has(incorrect, 'anything'));
 
   assert.eq([], Classes.get(m));

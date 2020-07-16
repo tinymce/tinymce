@@ -2,7 +2,7 @@ import { Assertions, Chain, FileInput, Files, GeneralSteps, Log, Logger, Mouse, 
 import { UnitTest } from '@ephox/bedrock-client';
 import { Strings } from '@ephox/katamari';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
-import { Body } from '@ephox/sugar';
+import { SugarBody } from '@ephox/sugar';
 import * as Conversions from 'tinymce/core/file/Conversions';
 import Plugin from 'tinymce/plugins/image/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
@@ -87,14 +87,14 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
       sAssertImageTab('Advanced', true)
     ]);
 
-    const sAssertSrcTextValue = (expectedValue: string) => Waiter.sTryUntil('Waited for input to change to expected value', Chain.asStep(Body.body(), [
+    const sAssertSrcTextValue = (expectedValue: string) => Waiter.sTryUntil('Waited for input to change to expected value', Chain.asStep(SugarBody.body(), [
       UiFinder.cFindIn('label.tox-label:contains("Source") + div > div > input.tox-textfield'),
       Chain.op((input) => {
         Assertions.assertEq('Assert field source value ', expectedValue, input.dom().value);
       })
     ]), 10, 10000);
 
-    const sAssertSrcTextValueStartsWith = (expectedValue: string) => Waiter.sTryUntil('Waited for input to change to start with expected value', Chain.asStep(Body.body(), [
+    const sAssertSrcTextValueStartsWith = (expectedValue: string) => Waiter.sTryUntil('Waited for input to change to start with expected value', Chain.asStep(SugarBody.body(), [
       UiFinder.cFindIn('label.tox-label:contains("Source") + div > div > input.tox-textfield'),
       Chain.op((input) => {
         Assertions.assertEq('Assert field source value ', true, Strings.startsWith(input.dom().value, expectedValue));
@@ -147,8 +147,8 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
       sTriggerUpload,
       ui.sWaitForUi('Wait for an alert dialog to appear', '.tox-alert-dialog'),
       ui.sClickOnUi('Switch to Upload tab', '.tox-alert-dialog .tox-button:contains("OK")'),
-      UiFinder.sNotExists(Body.body(), '.tox-alert-dialog'),
-      UiFinder.sExists(Body.body(), '.tox-dialog__body-nav-item--active:contains("Upload")'),
+      UiFinder.sNotExists(SugarBody.body(), '.tox-alert-dialog'),
+      UiFinder.sExists(SugarBody.body(), '.tox-dialog__body-nav-item--active:contains("Upload")'),
       ui.sClickOnUi('Close dialog', 'button:contains("Cancel")')
     ]);
 

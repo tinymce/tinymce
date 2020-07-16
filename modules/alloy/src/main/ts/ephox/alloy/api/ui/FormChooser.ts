@@ -1,7 +1,6 @@
 import { Arr, Fun, Option } from '@ephox/katamari';
-import { Attr, SelectorFilter } from '@ephox/sugar';
+import { Attribute, SelectorFilter } from '@ephox/sugar';
 
-import { AlloySpec, SketchSpec } from '../../api/component/SpecTypes';
 import * as FormChooserSchema from '../../ui/schema/FormChooserSchema';
 import { FormChooserDetail, FormChooserSketcher, FormChooserSpec } from '../../ui/types/FormChooserTypes';
 import { Composing } from '../behaviour/Composing';
@@ -10,6 +9,7 @@ import { Keying } from '../behaviour/Keying';
 import { Representing } from '../behaviour/Representing';
 import { AlloyComponent } from '../component/ComponentApi';
 import * as SketchBehaviours from '../component/SketchBehaviours';
+import { AlloySpec, SketchSpec } from '../component/SpecTypes';
 import * as AlloyEvents from '../events/AlloyEvents';
 import * as SystemEvents from '../events/SystemEvents';
 import * as Sketcher from './Sketcher';
@@ -51,10 +51,10 @@ const factory: CompositeSketchFactory<FormChooserDetail, FormChooserSpec> = (det
           itemClass: detail.markers.choiceClass,
           highlightClass: detail.markers.selectedClass,
           onHighlight(chooser, choice) {
-            Attr.set(choice.element(), 'aria-checked', 'true');
+            Attribute.set(choice.element(), 'aria-checked', 'true');
           },
           onDehighlight(chooser, choice) {
-            Attr.set(choice.element(), 'aria-checked', 'false');
+            Attribute.set(choice.element(), 'aria-checked', 'false');
           }
         }),
 

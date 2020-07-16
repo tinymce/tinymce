@@ -1,11 +1,11 @@
-import { Logger, Pipeline, Keyboard, Step, Keys, GeneralSteps, RealKeys } from '@ephox/agar';
+import { GeneralSteps, Keyboard, Keys, Logger, Pipeline, RealKeys, Step } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
 import { setTimeout } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
-import { TinyLoader, TinyUi, TinyApis } from '@ephox/mcagar';
-import { Element } from '@ephox/sugar';
+import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
+import { SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Promise from 'tinymce/core/api/util/Promise';
@@ -42,7 +42,7 @@ UnitTest.asynctest('Editor Autocompleter delay response test', (success, failure
       const tinyUi = TinyUi(editor);
       const tinyApis = TinyApis(editor);
 
-      const eDoc = Element.fromDom(editor.getDoc());
+      const eDoc = SugarElement.fromDom(editor.getDoc());
 
       const sTestAutocompleter = (scenario: Scenario) => {
         const initialContent = scenario.initialContent || scenario.triggerChar;

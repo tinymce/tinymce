@@ -1,12 +1,12 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Obj } from '@ephox/katamari';
-import { Element, Hierarchy } from '@ephox/sugar';
+import { Hierarchy, SugarElement } from '@ephox/sugar';
 import { SpotPoint } from 'ephox/phoenix/api/data/Types';
 import * as DomDescent from 'ephox/phoenix/api/dom/DomDescent';
 
 UnitTest.test('DomDescentTest', function () {
 
-  const root = Element.fromHtml(
+  const root = SugarElement.fromHtml(
     '<div>\n' +
     '<p>This <span>first</span> thing I do</p>' +
     '<table>\n  <tbody>\n  <tr>\n  <td>Hi</td>\n  </tr>\n  </tbody>\n  </table>\n' +
@@ -35,7 +35,7 @@ UnitTest.test('DomDescentTest', function () {
     offset: number;
   }
 
-  const check = function (expected: CheckItem, actual: SpotPoint<Element>) {
+  const check = function (expected: CheckItem, actual: SpotPoint<SugarElement>) {
     const aPath = Hierarchy.path(root, actual.element()).getOrDie('Could not extract path');
     assert.eq(expected.path, aPath);
     assert.eq(expected.offset, actual.offset());

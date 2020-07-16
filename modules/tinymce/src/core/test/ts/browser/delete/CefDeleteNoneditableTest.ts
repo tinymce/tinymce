@@ -2,7 +2,7 @@ import { ApproxStructure, Keyboard, Keys, Log, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr, Unicode } from '@ephox/katamari';
 import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import NoneditablePlugin from 'tinymce/plugins/noneditable/Plugin';
@@ -83,7 +83,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteNoneditableTest', (succ
       Log.stepsAsStep('TINY-3868', 'Should backspace cef inside cet with collapsed selection after inner cef', [
         tinyApis.sSetContent('<div class="mceNonEditable"><span class="mceEditable"><span class="mceNonEditable">az</span> b</span> c</div><p>d</p>'),
         tinyApis.sSelect('div>span', [ 0 ]),
-        Keyboard.sKeydown(Element.fromDom(editor.getDoc()), Keys.right(), { }),
+        Keyboard.sKeydown(SugarElement.fromDom(editor.getDoc()), Keys.right(), { }),
         tinyActions.sContentKeystroke(Keys.backspace(), {}),
         tinyApis.sAssertSelection([ 0, 0, 0 ], 0, [ 0, 0, 0 ], 0),
         tinyApis.sAssertContentStructure(
@@ -115,7 +115,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteNoneditableTest', (succ
       Log.stepsAsStep('TINY-3868', 'Should not backspace cef inside cef with collapsed selection after inner cef', [
         tinyApis.sSetContent('<div class="mceNonEditable"><span class="mceNonEditable">a</span> b</div><p>c</p>'),
         tinyApis.sSelect('div.mceNonEditable', [ 0 ]),
-        Keyboard.sKeydown(Element.fromDom(editor.getDoc()), Keys.right(), { }),
+        Keyboard.sKeydown(SugarElement.fromDom(editor.getDoc()), Keys.right(), { }),
         tinyActions.sContentKeystroke(Keys.backspace(), {}),
         tinyApis.sAssertSelection([ 0, 1 ], 1, [ 0, 1 ], 1),
         tinyApis.sAssertContentStructure(
@@ -145,7 +145,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteNoneditableTest', (succ
       Log.stepsAsStep('TINY-3868', 'Should not delete cef inside cef with collapsed selection before inner cef', [
         tinyApis.sSetContent('<div class="mceNonEditable"><span class="mceNonEditable">a</span> b</div><p>c</p>'),
         tinyApis.sSelect('div.mceNonEditable', [ 0 ]),
-        Keyboard.sKeydown(Element.fromDom(editor.getDoc()), Keys.left(), { }),
+        Keyboard.sKeydown(SugarElement.fromDom(editor.getDoc()), Keys.left(), { }),
         tinyActions.sContentKeystroke(46, {}), // 46 = delete keycode
         tinyApis.sAssertSelection([ 0, 0 ], 0, [ 0, 0 ], 0),
         tinyApis.sAssertContentStructure(

@@ -1,7 +1,7 @@
 import { GeneralSteps, Logger, Pipeline, Step, UiFinder } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Body } from '@ephox/sugar';
+import { SugarBody } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { RawEditorSettings } from 'tinymce/core/api/SettingsTypes';
 import Theme from 'tinymce/themes/silver/Theme';
@@ -39,9 +39,9 @@ UnitTest.asynctest('browser.tinymce.core.fmt.BlockFormatsTest', (success, failur
         Logger.t('Using default style formats config, the Block formatting dropdown should show the correct format selection', GeneralSteps.sequence([
           tinyApis.sSetContent('<p>a</p>'),
           tinyApis.sSetCursor([ 0, 0 ], 1),
-          UiFinder.sWaitFor('default setting - Check that formatter displays Paragraph', Body.body(), 'button.tox-tbtn--select span.tox-tbtn__select-label:contains("Paragraph")'),
+          UiFinder.sWaitFor('default setting - Check that formatter displays Paragraph', SugarBody.body(), 'button.tox-tbtn--select span.tox-tbtn__select-label:contains("Paragraph")'),
           Step.sync(() => editor.formatter.apply('h1')),
-          UiFinder.sWaitFor('default setting - Check that formatter displays Heading 1', Body.body(), 'button.tox-tbtn--select span.tox-tbtn__select-label:contains("Heading 1")')
+          UiFinder.sWaitFor('default setting - Check that formatter displays Heading 1', SugarBody.body(), 'button.tox-tbtn--select span.tox-tbtn__select-label:contains("Heading 1")')
         ]))
       ])
     ),
@@ -68,13 +68,13 @@ UnitTest.asynctest('browser.tinymce.core.fmt.BlockFormatsTest', (success, failur
         Logger.t('Using default style formats config, the Block formatting dropdown should show the correct format selection ', GeneralSteps.sequence([
           tinyApis.sSetContent('<p>a</p>'),
           tinyApis.sSetCursor([ 0, 0 ], 1),
-          UiFinder.sWaitFor('Check that formatter displays Paragraph', Body.body(), 'button.tox-tbtn--select span.tox-tbtn__select-label:contains("Paragraph")'),
+          UiFinder.sWaitFor('Check that formatter displays Paragraph', SugarBody.body(), 'button.tox-tbtn--select span.tox-tbtn__select-label:contains("Paragraph")'),
           Step.sync(() => editor.formatter.apply('h1')),
-          UiFinder.sWaitFor('Check that formatter displays Heading 1', Body.body(), 'button.tox-tbtn--select span.tox-tbtn__select-label:contains("Heading 1")'),
+          UiFinder.sWaitFor('Check that formatter displays Heading 1', SugarBody.body(), 'button.tox-tbtn--select span.tox-tbtn__select-label:contains("Heading 1")'),
           Step.sync(() => editor.formatter.apply('pre')),
-          UiFinder.sWaitFor('Check that formatter displays Pre', Body.body(), 'button.tox-tbtn--select span.tox-tbtn__select-label:contains("Pre")'),
+          UiFinder.sWaitFor('Check that formatter displays Pre', SugarBody.body(), 'button.tox-tbtn--select span.tox-tbtn__select-label:contains("Pre")'),
           Step.sync(() => editor.formatter.apply('p')),
-          UiFinder.sWaitFor('Check that formatter displays Paragraph', Body.body(), 'button.tox-tbtn--select span.tox-tbtn__select-label:contains("Paragraph")')
+          UiFinder.sWaitFor('Check that formatter displays Paragraph', SugarBody.body(), 'button.tox-tbtn--select span.tox-tbtn__select-label:contains("Paragraph")')
         ]))
       ])
     )

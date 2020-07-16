@@ -2,7 +2,7 @@ import { Assertions, Chain, GeneralSteps, Logger, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
-import { Element, Hierarchy } from '@ephox/sugar';
+import { Hierarchy, SugarElement } from '@ephox/sugar';
 import * as CefDeleteAction from 'tinymce/core/delete/CefDeleteAction';
 import ViewBlock from '../../module/test/ViewBlock';
 
@@ -17,7 +17,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteActionTest', (success, 
 
   const cReadAction = function (forward, cursorPath, cursorOffset) {
     return Chain.mapper(function (viewBlock: any) {
-      const container = Hierarchy.follow(Element.fromDom(viewBlock.get()), cursorPath).getOrDie();
+      const container = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), cursorPath).getOrDie();
       const rng = document.createRange();
       rng.setStart(container.dom(), cursorOffset);
       rng.setEnd(container.dom(), cursorOffset);
@@ -27,7 +27,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteActionTest', (success, 
 
   const cAssertRemoveElementAction = function (elementPath) {
     return Chain.op(function (actionOption: Option<any>) {
-      const element = Hierarchy.follow(Element.fromDom(viewBlock.get()), elementPath).getOrDie();
+      const element = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), elementPath).getOrDie();
       const action = actionOption.getOrDie();
       Assertions.assertEq('Should be expected action type', 'remove', actionName(action));
       Assertions.assertDomEq('Should be expected element', element, actionValue(action));
@@ -36,7 +36,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteActionTest', (success, 
 
   const cAssertMoveToElementAction = function (elementPath) {
     return Chain.op(function (actionOption: Option<any>) {
-      const element = Hierarchy.follow(Element.fromDom(viewBlock.get()), elementPath).getOrDie();
+      const element = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), elementPath).getOrDie();
       const action = actionOption.getOrDie();
       Assertions.assertEq('Should be expected action type', 'moveToElement', actionName(action));
       Assertions.assertDomEq('Should be expected element', element, actionValue(action));
@@ -45,10 +45,10 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteActionTest', (success, 
 
   const cAssertMoveToPositionAction = function (elementPath, offset) {
     return Chain.op(function (actionOption: Option<any>) {
-      const container = Hierarchy.follow(Element.fromDom(viewBlock.get()), elementPath).getOrDie();
+      const container = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), elementPath).getOrDie();
       const action = actionOption.getOrDie();
       Assertions.assertEq('Should be expected action type', 'moveToPosition', actionName(action));
-      Assertions.assertDomEq('Should be expected container', container, Element.fromDom(actionValue(action).container()));
+      Assertions.assertDomEq('Should be expected container', container, SugarElement.fromDom(actionValue(action).container()));
       Assertions.assertEq('Should be expected offset', offset, actionValue(action).offset());
     });
   };
@@ -67,8 +67,8 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteActionTest', (success, 
 
   const actionValue = function (action) {
     return action.fold(
-      Element.fromDom,
-      Element.fromDom,
+      SugarElement.fromDom,
+      SugarElement.fromDom,
       Fun.identity
     );
   };

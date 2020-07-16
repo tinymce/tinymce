@@ -1,8 +1,8 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
-import { Element as DomElement } from '@ephox/dom-globals';
+import { Element } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
-import Element from 'ephox/sugar/api/node/Element';
+import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
 import * as Class from 'ephox/sugar/api/properties/Class';
 import * as SelectorExists from 'ephox/sugar/api/search/SelectorExists';
 import * as SelectorFilter from 'ephox/sugar/api/search/SelectorFilter';
@@ -15,14 +15,14 @@ import * as TestPage from 'ephox/sugar/test/TestPage';
 UnitTest.test('SelectorTest', () => {
   // Querying non-element nodes does not throw an error
 
-  const textnode = Element.fromText('');
-  const commentnode = Element.fromHtml('<!--a-->');
+  const textnode = SugarElement.fromText('');
+  const commentnode = SugarElement.fromHtml('<!--a-->');
   assert.eq(false, Selectors.is(textnode, 'anything'));
   assert.eq(false, Selectors.is(commentnode, 'anything'));
   assert.eq([], Selectors.all('anything', textnode));
   assert.eq([], Selectors.all('anything', commentnode));
-  Checkers.checkOpt(Option.none<Element<DomElement>>(), Selectors.one('anything', textnode));
-  Checkers.checkOpt(Option.none<Element<DomElement>>(), Selectors.one('anything', commentnode));
+  Checkers.checkOpt(Option.none<SugarElement<Element>>(), Selectors.one('anything', textnode));
+  Checkers.checkOpt(Option.none<SugarElement<Element>>(), Selectors.one('anything', commentnode));
   assert.eq([], SelectorFilter.ancestors(textnode, 'anything'));
   assert.eq([], SelectorFilter.siblings(textnode, 'anything'));
   assert.eq([], SelectorFilter.children(textnode, 'anything'));
@@ -38,19 +38,19 @@ UnitTest.test('SelectorTest', () => {
 
   TestPage.connect(); // description of structure is in TestPage
 
-  Checkers.checkOpt(Option.none<Element<DomElement>>(), Selectors.one('asdf'));
+  Checkers.checkOpt(Option.none<SugarElement<Element>>(), Selectors.one('asdf'));
 
   Checkers.checkOpt(Option.some(TestPage.p1), SelectorFind.first('p'));
   Checkers.checkOpt(Option.some(TestPage.p1), Selectors.one('p'));
-  Checkers.checkOpt(Option.none<Element<DomElement>>(), SelectorFind.sibling(TestPage.s1, 'p'));
+  Checkers.checkOpt(Option.none<SugarElement<Element>>(), SelectorFind.sibling(TestPage.s1, 'p'));
   Checkers.checkOpt(Option.some(TestPage.s3), SelectorFind.sibling(TestPage.s4, 'span'));
-  Checkers.checkOpt(Option.none<Element<DomElement>>(), SelectorFind.ancestor(TestPage.s1, 'li'));
+  Checkers.checkOpt(Option.none<SugarElement<Element>>(), SelectorFind.ancestor(TestPage.s1, 'li'));
   Checkers.checkOpt(Option.some(TestPage.container), SelectorFind.ancestor(TestPage.s4, 'div'));
   Checkers.checkOpt(Option.some(TestPage.s2), SelectorFind.descendant(TestPage.p2, 'span'));
   Checkers.checkOpt(Option.some(TestPage.s3), SelectorFind.descendant(TestPage.p2, 'span span'));
   Checkers.checkOpt(Option.none(), SelectorFind.child(TestPage.p2, 'li'));
   Checkers.checkOpt(Option.some(TestPage.s1), SelectorFind.child(TestPage.p1, 'span'));
-  Checkers.checkOpt(Option.none<Element<DomElement>>(), SelectorFind.closest(TestPage.p1, 'span'));
+  Checkers.checkOpt(Option.none<SugarElement<Element>>(), SelectorFind.closest(TestPage.p1, 'span'));
   Checkers.checkOpt(Option.some(TestPage.p1), SelectorFind.closest(TestPage.p1, 'p'));
   Checkers.checkOpt(Option.some(TestPage.p1), SelectorFind.closest(TestPage.s1, 'p'));
   Checkers.checkOpt(Option.some(TestPage.p1), SelectorFind.closest(TestPage.t1, 'p'));

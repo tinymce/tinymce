@@ -6,7 +6,7 @@
  */
 
 import { Arr, Unicode } from '@ephox/katamari';
-import { Insert, Remove, Element, Node, Text, SelectorFilter, Traverse } from '@ephox/sugar';
+import { Insert, Remove, SelectorFilter, SugarElement, SugarNode, SugarText, Traverse } from '@ephox/sugar';
 import * as ElementType from './ElementType';
 
 const getLastChildren = function (elm) {
@@ -14,7 +14,7 @@ const getLastChildren = function (elm) {
   let rawNode = elm.dom();
 
   while (rawNode) {
-    children.push(Element.fromDom(rawNode));
+    children.push(SugarElement.fromDom(rawNode));
     rawNode = rawNode.lastChild;
   }
 
@@ -31,11 +31,11 @@ const removeTrailingBr = function (elm) {
 
 const fillWithPaddingBr = function (elm) {
   Remove.empty(elm);
-  Insert.append(elm, Element.fromHtml('<br data-mce-bogus="1">'));
+  Insert.append(elm, SugarElement.fromHtml('<br data-mce-bogus="1">'));
 };
 
 const isPaddingContents = function (elm) {
-  return Node.isText(elm) ? Text.get(elm) === Unicode.nbsp : ElementType.isBr(elm);
+  return SugarNode.isText(elm) ? SugarText.get(elm) === Unicode.nbsp : ElementType.isBr(elm);
 };
 
 const isPaddedElement = function (elm) {

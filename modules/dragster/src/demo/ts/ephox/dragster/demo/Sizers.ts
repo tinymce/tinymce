@@ -1,9 +1,9 @@
 import { Arr, Fun } from '@ephox/katamari';
-import { Css, Element, Height, InsertAll, Location, Remove, SelectorFind, Visibility, Width } from '@ephox/sugar';
+import { Css, Height, InsertAll, Remove, SelectorFind, SugarElement, SugarLocation, Visibility, Width } from '@ephox/sugar';
 
 export default function () {
   const box = function () {
-    const r = Element.fromTag('div');
+    const r = SugarElement.fromTag('div');
     Width.set(r, 8);
     Height.set(r, 8);
     Css.set(r, 'position', 'absolute');
@@ -36,8 +36,8 @@ export default function () {
   const southeast = box();
   Css.set(southeast.element(), 'cursor', 'se-resize');
 
-  const update = function (target: Element) {
-    const loc = Location.viewport(target);
+  const update = function (target: SugarElement) {
+    const loc = SugarLocation.viewport(target);
     const w = Width.get(target);
     const h = Height.get(target);
     const minx = loc.left();

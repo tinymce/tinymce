@@ -1,13 +1,13 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import * as DomStructure from 'ephox/robin/api/dom/DomStructure';
 
 UnitTest.test('DomStructureTest', function () {
   const expectInlineElements = [ 'span', 'em', 'strong', 'b', 'i', 'a' ];
 
   const getInline = function (el: string) {
-    const element = Element.fromTag(el);
+    const element = SugarElement.fromTag(el);
     return DomStructure.isInline(element);
   };
   Arr.each(expectInlineElements, function (e) {

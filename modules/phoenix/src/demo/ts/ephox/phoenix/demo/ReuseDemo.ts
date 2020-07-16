@@ -1,9 +1,9 @@
 import { document, window } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
-import { Css, DomEvent, Element, Insert, Node, SelectorFind } from '@ephox/sugar';
+import { Css, DomEvent, Insert, SelectorFind, SugarElement, SugarNode } from '@ephox/sugar';
 import * as DomWrapping from 'ephox/phoenix/api/dom/DomWrapping';
 
-const editor = Element.fromTag('div');
+const editor = SugarElement.fromTag('div');
 Css.setAll(editor, {
   width: '400px',
   height: '300px',
@@ -11,14 +11,14 @@ Css.setAll(editor, {
 });
 const ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
 
-DomEvent.bind(Element.fromDom(document), 'keydown', function (event) {
+DomEvent.bind(SugarElement.fromDom(document), 'keydown', function (event) {
   if (event.raw().keyCode === 13) {
     const selection = window.getSelection();
     if (selection.rangeCount > 0) {
-      const spans = DomWrapping.reuse(Element.fromDom(selection.anchorNode), selection.anchorOffset, Element.fromDom(selection.focusNode), selection.focusOffset, function (elem) {
-        return Node.name(elem) === 'span';
+      const spans = DomWrapping.reuse(SugarElement.fromDom(selection.anchorNode), selection.anchorOffset, SugarElement.fromDom(selection.focusNode), selection.focusOffset, function (elem) {
+        return SugarNode.name(elem) === 'span';
       }, function () {
-        return DomWrapping.nu(Element.fromTag('span'));
+        return DomWrapping.nu(SugarElement.fromTag('span'));
       });
 
       Arr.each(spans, function (span) {

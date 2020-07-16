@@ -1,10 +1,10 @@
+import { TestLogs } from '@ephox/agar';
+import { document, HTMLElement, ShadowRoot } from '@ephox/dom-globals';
 import { Option, Strings, Type } from '@ephox/katamari';
-import { Body, Element, Insert, Remove, ShadowDom } from '@ephox/sugar';
+import { Insert, Remove, SugarBody, SugarElement, SugarShadowDom } from '@ephox/sugar';
 import 'tinymce';
 import * as Loader from '../loader/Loader';
 import { setTinymceBaseUrl } from '../loader/Urls';
-import { document, HTMLElement, ShadowRoot } from '@ephox/dom-globals';
-import { TestLogs } from '@ephox/agar';
 
 type FailureCallback = Loader.FailureCallback;
 type SuccessCallback = Loader.SuccessCallback;
@@ -42,7 +42,7 @@ const setup = (callback: Loader.RunCallback, settings: Record<string, any>, succ
   }, settings, Option.none());
 };
 
-const setupFromElement = (callback: Loader.RunCallback, settings: Record<string, any>, element: Element, success: Loader.SuccessCallback, failure: Loader.FailureCallback) => {
+const setupFromElement = (callback: Loader.RunCallback, settings: Record<string, any>, element: SugarElement, success: Loader.SuccessCallback, failure: Loader.FailureCallback) => {
   Loader.setup({
     preInit: setupBaseUrl,
     run: callback,
@@ -51,16 +51,16 @@ const setupFromElement = (callback: Loader.RunCallback, settings: Record<string,
   }, settings, Option.some(element));
 };
 
-const setupInShadowRoot = (callback: (editor: any, shadowRoot: Element<ShadowRoot>, success: SuccessCallback, failure: FailureCallback) => void, settings: Record<string, any>, success: Loader.SuccessCallback, failure: Loader.FailureCallback) => {
-  if (!ShadowDom.isSupported()) {
+const setupInShadowRoot = (callback: (editor: any, shadowRoot: SugarElement<ShadowRoot>, success: SuccessCallback, failure: FailureCallback) => void, settings: Record<string, any>, success: Loader.SuccessCallback, failure: Loader.FailureCallback) => {
+  if (!SugarShadowDom.isSupported()) {
     return success();
   }
 
-  const shadowHost: Element<HTMLElement> = Element.fromTag('div', document);
+  const shadowHost: SugarElement<HTMLElement> = SugarElement.fromTag('div', document);
 
-  Insert.append(Body.body(), shadowHost);
-  const sr: Element<ShadowRoot> = Element.fromDom(shadowHost.dom().attachShadow({ mode: 'open' }));
-  const editorDiv: Element<HTMLElement> = Element.fromTag('div', document);
+  Insert.append(SugarBody.body(), shadowHost);
+  const sr: SugarElement<ShadowRoot> = SugarElement.fromDom(shadowHost.dom().attachShadow({ mode: 'open' }));
+  const editorDiv: SugarElement<HTMLElement> = SugarElement.fromTag('div', document);
 
   Insert.append(sr, editorDiv);
 
@@ -82,7 +82,7 @@ const setupInBodyAndShadowRoot = (callback: Loader.RunCallback, settings: Record
     callback,
     settings,
     (v, logs1) => {
-      if (ShadowDom.isSupported()) {
+      if (SugarShadowDom.isSupported()) {
         setupInShadowRoot((e, _sr, s, f) => callback(e, s, f), settings, (v2, logs2) => {
           const logs = TestLogs.concat(TestLogs.getOrInit(logs1), TestLogs.getOrInit(logs2));
           success(v2, logs);

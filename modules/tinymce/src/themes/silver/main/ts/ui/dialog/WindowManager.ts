@@ -5,11 +5,14 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Boxes, Docking, GuiFactory, HotspotAnchorSpec, InlineView, Keying, MakeshiftAnchorSpec, ModalDialog, NodeAnchorSpec, SelectionAnchorSpec, SystemEvents } from '@ephox/alloy';
+import {
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Boxes, Docking, GuiFactory, HotspotAnchorSpec, InlineView, Keying,
+  MakeshiftAnchorSpec, ModalDialog, NodeAnchorSpec, SelectionAnchorSpec, SystemEvents
+} from '@ephox/alloy';
 import { Processor, ValueSchema } from '@ephox/boulder';
 import { DialogManager, Types } from '@ephox/bridge';
 import { Option, Singleton } from '@ephox/katamari';
-import { Body, Element, SelectorExists } from '@ephox/sugar';
+import { SelectorExists, SugarBody, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import * as Settings from '../../api/Settings';
@@ -31,7 +34,7 @@ type InlineDialogAnchor = HotspotAnchorSpec | MakeshiftAnchorSpec | NodeAnchorSp
 
 const validateData = <T extends Types.Dialog.DialogData>(data: T, validator: Processor) => ValueSchema.getOrDie(ValueSchema.asRaw('data', validator, data));
 
-const isAlertOrConfirmDialog = (target: Element): boolean => SelectorExists.closest(target, '.tox-alert-dialog') || SelectorExists.closest(target, '.tox-confirm-dialog');
+const isAlertOrConfirmDialog = (target: SugarElement): boolean => SelectorExists.closest(target, '.tox-alert-dialog') || SelectorExists.closest(target, '.tox-confirm-dialog');
 
 const inlineAdditionalBehaviours = (editor: Editor, isStickyToolbar: boolean, isToolbarLocationTop: boolean): Behaviour.NamedConfiguredBehaviour<any, any>[] => {
   // When using sticky toolbars it already handles the docking behaviours so applying docking would
@@ -43,7 +46,7 @@ const inlineAdditionalBehaviours = (editor: Editor, isStickyToolbar: boolean, is
     return [
       Docking.config({
         contextual: {
-          lazyContext: () => Option.some(Boxes.box(Element.fromDom(editor.getContentAreaContainer()))),
+          lazyContext: () => Option.some(Boxes.box(SugarElement.fromDom(editor.getContentAreaContainer()))),
           fadeInClass: 'tox-dialog-dock-fadein',
           fadeOutClass: 'tox-dialog-dock-fadeout',
           transitionClass: 'tox-dialog-dock-transition'
@@ -184,7 +187,7 @@ const setup = (extras: WindowManagerSetup) => {
         inlineDialogComp,
         anchor,
         GuiFactory.premade(dialogUi.dialog),
-        Option.some(Body.body())
+        Option.some(SugarBody.body())
       );
 
       // Refresh the docking position if not using a sticky toolbar

@@ -5,19 +5,19 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node as DomNode } from '@ephox/dom-globals';
+import { Node } from '@ephox/dom-globals';
 import { Option, Options } from '@ephox/katamari';
-import { Compare, Element, PredicateFind } from '@ephox/sugar';
+import { Compare, PredicateFind, SugarElement } from '@ephox/sugar';
 import Editor from '../api/Editor';
 import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import { isListItem, isTextBlock } from '../dom/ElementType';
 import * as InlineUtils from '../keyboard/InlineUtils';
 
-const isBeforeRoot = (rootNode: Element<any>) => (elm: Element<any>): boolean =>
-  Compare.eq(rootNode, Element.fromDom(elm.dom().parentNode));
+const isBeforeRoot = (rootNode: SugarElement<any>) => (elm: SugarElement<any>): boolean =>
+  Compare.eq(rootNode, SugarElement.fromDom(elm.dom().parentNode));
 
-const getParentBlock = (rootNode: Element<DomNode>, elm: Element<DomNode>): Option<Element<DomNode>> =>
+const getParentBlock = (rootNode: SugarElement<Node>, elm: SugarElement<Node>): Option<SugarElement<Node>> =>
   (Compare.contains(rootNode, elm)
     ? PredicateFind.closest(elm, (element) => isTextBlock(element) || isListItem(element), isBeforeRoot(rootNode))
     : Option.none()
@@ -36,7 +36,7 @@ const paddEmptyBody = (editor: Editor) => {
   }
 };
 
-const willDeleteLastPositionInElement = (forward: boolean, fromPos: CaretPosition, elm: DomNode) =>
+const willDeleteLastPositionInElement = (forward: boolean, fromPos: CaretPosition, elm: Node) =>
   Options.lift2(
     CaretFinder.firstPositionIn(elm),
     CaretFinder.lastPositionIn(elm),

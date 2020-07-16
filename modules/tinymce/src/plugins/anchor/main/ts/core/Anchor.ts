@@ -5,8 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Editor from 'tinymce/core/api/Editor';
 import { Element } from '@ephox/dom-globals';
+import Editor from 'tinymce/core/api/Editor';
 
 const isNamedAnchor = (editor: Editor, node: Element) => node.tagName === 'A' && editor.dom.getAttrib(node, 'href') === '';
 

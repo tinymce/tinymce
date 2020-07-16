@@ -2,10 +2,10 @@ import { Assertions, Chain, GeneralSteps, Logger, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Range } from '@ephox/dom-globals';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Hierarchy, Element } from '@ephox/sugar';
+import { Hierarchy, SugarElement } from '@ephox/sugar';
+import Editor from 'tinymce/core/api/Editor';
 import * as ExpandRange from 'tinymce/core/fmt/ExpandRange';
 import Theme from 'tinymce/themes/silver/Theme';
-import Editor from 'tinymce/core/api/Editor';
 
 UnitTest.asynctest('browser.tinymce.core.fmt.ExpandRangeTest', function (success, failure) {
 
@@ -19,8 +19,8 @@ UnitTest.asynctest('browser.tinymce.core.fmt.ExpandRangeTest', function (success
 
   const cExpandRng = function (startPath: number[], startOffset: number, endPath: number[], endOffset: number, format, excludeTrailingSpaces: boolean = false) {
     return Chain.mapper(function (editor: Editor) {
-      const startContainer = Hierarchy.follow(Element.fromDom(editor.getBody()), startPath).getOrDie();
-      const endContainer = Hierarchy.follow(Element.fromDom(editor.getBody()), endPath).getOrDie();
+      const startContainer = Hierarchy.follow(SugarElement.fromDom(editor.getBody()), startPath).getOrDie();
+      const endContainer = Hierarchy.follow(SugarElement.fromDom(editor.getBody()), endPath).getOrDie();
 
       const rng = editor.dom.createRng();
       rng.setStart(startContainer.dom(), startOffset);
@@ -32,12 +32,12 @@ UnitTest.asynctest('browser.tinymce.core.fmt.ExpandRangeTest', function (success
 
   const cAssertRange = function (editor: Editor, startPath: number[], startOffset: number, endPath: number[], endOffset: number) {
     return Chain.op(function (rng: Range) {
-      const startContainer = Hierarchy.follow(Element.fromDom(editor.getBody()), startPath).getOrDie();
-      const endContainer = Hierarchy.follow(Element.fromDom(editor.getBody()), endPath).getOrDie();
+      const startContainer = Hierarchy.follow(SugarElement.fromDom(editor.getBody()), startPath).getOrDie();
+      const endContainer = Hierarchy.follow(SugarElement.fromDom(editor.getBody()), endPath).getOrDie();
 
-      Assertions.assertDomEq('Should be expected start container', startContainer, Element.fromDom(rng.startContainer));
+      Assertions.assertDomEq('Should be expected start container', startContainer, SugarElement.fromDom(rng.startContainer));
       Assertions.assertEq('Should be expected start offset', startOffset, rng.startOffset);
-      Assertions.assertDomEq('Should be expected end container', endContainer, Element.fromDom(rng.endContainer));
+      Assertions.assertDomEq('Should be expected end container', endContainer, SugarElement.fromDom(rng.endContainer));
       Assertions.assertEq('Should be expected end offset', endOffset, rng.endOffset);
     });
   };

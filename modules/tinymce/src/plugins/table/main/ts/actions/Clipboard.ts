@@ -5,9 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { HTMLTableElement, Node } from '@ephox/dom-globals';
 import { Arr, Fun, Option } from '@ephox/katamari';
 import { CopySelected, TableFill, TableLookup } from '@ephox/snooker';
-import { Element, Elements, Node, Replication } from '@ephox/sugar';
+import { Replication, SugarElement, SugarElements, SugarNode } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 
@@ -16,7 +17,6 @@ import * as Ephemera from '../selection/Ephemera';
 import { Selections } from '../selection/Selections';
 import * as SelectionTypes from '../selection/SelectionTypes';
 import { TableActions } from './TableActions';
-import { Node as DomNode, HTMLTableElement } from '@ephox/dom-globals';
 
 const extractSelected = function (cells) {
   // Assume for now that we only have one table (also handles the case where we multi select outside a table)
@@ -25,9 +25,9 @@ const extractSelected = function (cells) {
   });
 };
 
-const serializeElements = (editor: Editor, elements: Element[]): string => Arr.map(elements, (elm) => editor.selection.serializer.serialize(elm.dom(), {})).join('');
+const serializeElements = (editor: Editor, elements: SugarElement[]): string => Arr.map(elements, (elm) => editor.selection.serializer.serialize(elm.dom(), {})).join('');
 
-const getTextContent = (elements: Element[]): string => Arr.map(elements, (element) => element.dom().innerText).join('');
+const getTextContent = (elements: SugarElement[]): string => Arr.map(elements, (element) => element.dom().innerText).join('');
 
 const registerEvents = function (editor: Editor, selections: Selections, actions: TableActions, cellSelection) {
   editor.on('BeforeGetContent', function (e) {
@@ -47,18 +47,18 @@ const registerEvents = function (editor: Editor, selections: Selections, actions
     if (e.selection === true && e.paste === true) {
       const cellOpt = Option.from(editor.dom.getParent(editor.selection.getStart(), 'th,td'));
       cellOpt.each(function (domCell) {
-        const cell = Element.fromDom(domCell);
+        const cell = SugarElement.fromDom(domCell);
         TableLookup.table(cell).each((table) => {
 
-          const elements = Arr.filter(Elements.fromHtml(e.content), function (content) {
-            return Node.name(content) !== 'meta';
+          const elements = Arr.filter(SugarElements.fromHtml(e.content), function (content) {
+            return SugarNode.name(content) !== 'meta';
           });
 
-          const isTable = (elm: Element<DomNode>): elm is Element<HTMLTableElement> => Node.name(elm) === 'table';
+          const isTable = (elm: SugarElement<Node>): elm is SugarElement<HTMLTableElement> => SugarNode.name(elm) === 'table';
           if (elements.length === 1 && isTable(elements[0])) {
             e.preventDefault();
 
-            const doc = Element.fromDom(editor.getDoc());
+            const doc = SugarElement.fromDom(editor.getDoc());
             const generators = TableFill.paste(doc);
             const targets = TableTargets.paste(cell, elements[0], generators);
             actions.pasteCells(table, targets).each(function (rng) {

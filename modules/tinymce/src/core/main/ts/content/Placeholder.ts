@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element as DomElement, KeyboardEvent } from '@ephox/dom-globals';
+import { Element, KeyboardEvent } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
 import Env from '../api/Env';
@@ -60,9 +60,9 @@ const isTypingKeyboardEvent = (e: EditorEvent<unknown>) =>
   // Android will generally always send a 229 keycode since it uses an IME to input text
   isKeyboardEvent(e) && !(isDeleteEvent(e) || e.type === 'keyup' && e.keyCode === 229);
 
-const isVisuallyEmpty = (dom: DOMUtils, rootElm: DomElement, forcedRootBlock: string) => {
+const isVisuallyEmpty = (dom: DOMUtils, rootElm: Element, forcedRootBlock: string) => {
   // Note: Don't use DOMUtils.isEmpty() here as it treats empty format caret nodes as non empty nodes
-  if (Empty.isEmpty(Element.fromDom(rootElm), false)) {
+  if (Empty.isEmpty(SugarElement.fromDom(rootElm), false)) {
     const isForcedRootBlockFalse = forcedRootBlock === '';
     // Ensure the node matches the forced_root_block setting, as the content could be an empty list, etc...
     // and also check that the content isn't indented

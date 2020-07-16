@@ -1,5 +1,5 @@
 import { Option } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 
 import { Bounds } from '../../alien/Boxes';
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
@@ -20,7 +20,7 @@ export interface InlineViewDetail extends SingleSketchDetail {
   onHide: (component: AlloyComponent) => void;
   onEscape: Option<(component: AlloyComponent) => void>;
   getRelated: (component: AlloyComponent) => Option<AlloyComponent>;
-  isExtraPart: (component: AlloyComponent, target: Element) => boolean;
+  isExtraPart: (component: AlloyComponent, target: SugarElement) => boolean;
   lazySink: LazySink;
   eventOrder: Record<string, string[]>;
   fireDismissalEventInstead: Option<{
@@ -41,7 +41,7 @@ export interface InlineViewSpec extends SingleSketchSpec {
   onHide?: (component: AlloyComponent) => void;
   onEscape?: (component: AlloyComponent) => void;
   getRelated?: (component: AlloyComponent) => Option<AlloyComponent>;
-  isExtraPart?: (component: AlloyComponent, target: Element) => boolean;
+  isExtraPart?: (component: AlloyComponent, target: SugarElement) => boolean;
   eventOrder?: Record<string, string[]>;
   fireDismissalEventInstead?: {
     event?: string;
@@ -59,7 +59,7 @@ export interface InlineMenuSpec {
 
 export interface InlineViewApis {
   showAt: (component: AlloyComponent, anchor: AnchorSpec, thing: AlloySpec) => void;
-  showWithin: (component: AlloyComponent, anchor: AnchorSpec, thing: AlloySpec, boxElement: Option<Element>) => void;
+  showWithin: (component: AlloyComponent, anchor: AnchorSpec, thing: AlloySpec, boxElement: Option<SugarElement>) => void;
   showWithinBounds: (component: AlloyComponent, anchor: AnchorSpec, thing: AlloySpec, getBounds: () => Option<Bounds>) => void;
   showMenuAt: (component: AlloyComponent, anchor: AnchorSpec, menuSpec: InlineMenuSpec) => void;
   showMenuWithinBounds: (component: AlloyComponent, anchor: AnchorSpec, menuSpec: InlineMenuSpec, getBounds: () => Option<Bounds>) => void;

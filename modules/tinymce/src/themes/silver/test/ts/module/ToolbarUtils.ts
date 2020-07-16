@@ -1,16 +1,16 @@
 import { Assertions, Chain, GeneralSteps, Step } from '@ephox/agar';
 import { TinyUi } from '@ephox/mcagar';
-import { Body, Height, Location, Width } from '@ephox/sugar';
+import { Height, SugarBody, SugarLocation, Width } from '@ephox/sugar';
 
 import { ToolbarMode } from 'tinymce/themes/silver/api/Settings';
 import { sCloseMore, sOpenMore } from './MenuUtils';
 
-const sAssertFloatingToolbarPosition = (tinyUi: TinyUi, getTop: () => number, expectedLeft: number, expectedRight: number) => Chain.asStep(Body.body(), [
+const sAssertFloatingToolbarPosition = (tinyUi: TinyUi, getTop: () => number, expectedLeft: number, expectedRight: number) => Chain.asStep(SugarBody.body(), [
   tinyUi.cWaitForUi('Wait for drawer to be visible', '.tox-toolbar__overflow'),
   Chain.op((toolbar) => {
     const top = getTop();
     const diff = 10;
-    const pos = Location.absolute(toolbar);
+    const pos = SugarLocation.absolute(toolbar);
     const right = pos.left() + Width.get(toolbar);
     Assertions.assertEq(`Drawer top position ${pos.top()}px should be ~${top}px`, true, Math.abs(pos.top() - top) < diff);
     Assertions.assertEq(`Drawer left position ${pos.left()}px should be ~${expectedLeft}px`, true, Math.abs(pos.left() - expectedLeft) < diff);
@@ -18,7 +18,7 @@ const sAssertFloatingToolbarPosition = (tinyUi: TinyUi, getTop: () => number, ex
   })
 ]);
 
-const sAssertFloatingToolbarHeight = (tinyUi: TinyUi, expectedHeight: number) => Chain.asStep(Body.body(), [
+const sAssertFloatingToolbarHeight = (tinyUi: TinyUi, expectedHeight: number) => Chain.asStep(SugarBody.body(), [
   tinyUi.cWaitForUi('Wait for drawer to be visible', '.tox-toolbar__overflow'),
   Chain.op((toolbar) => {
     const height = Height.get(toolbar);

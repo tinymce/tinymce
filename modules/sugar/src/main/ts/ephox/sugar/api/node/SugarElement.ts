@@ -1,11 +1,11 @@
-import { ChildNode, console, document, Document, Element as DomElement, HTMLElement, HTMLElementTagNameMap, Node as DomNode, Text, Window } from '@ephox/dom-globals';
+import { ChildNode, console, document, Document, Element, HTMLElement, HTMLElementTagNameMap, Node, Text, Window } from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
 
-interface Element<T = any> {
+interface SugarElement<T = any> {
   dom: () => T;
 }
 
-const fromHtml = <E extends DomNode = DomNode & ChildNode> (html: string, scope?: Document | null): Element<E> => {
+const fromHtml = <E extends Node = Node & ChildNode> (html: string, scope?: Document | null): SugarElement<E> => {
   const doc = scope || document;
   const div = doc.createElement('div');
   div.innerHTML = html;
@@ -18,34 +18,34 @@ const fromHtml = <E extends DomNode = DomNode & ChildNode> (html: string, scope?
 };
 
 const fromTag: {
-  <K extends keyof HTMLElementTagNameMap>(tag: K, scope?: Document | null): Element<HTMLElementTagNameMap[K]>;
-  (tag: string, scope?: Document | null): Element<HTMLElement>;
-} = (tag: string, scope?: Document | null): Element => {
+  <K extends keyof HTMLElementTagNameMap>(tag: K, scope?: Document | null): SugarElement<HTMLElementTagNameMap[K]>;
+  (tag: string, scope?: Document | null): SugarElement<HTMLElement>;
+} = (tag: string, scope?: Document | null): SugarElement => {
   const doc = scope || document;
   const node = doc.createElement(tag);
   return fromDom(node);
 };
 
-const fromText = (text: string, scope?: Document | null): Element<Text> => {
+const fromText = (text: string, scope?: Document | null): SugarElement<Text> => {
   const doc = scope || document;
   const node = doc.createTextNode(text);
   return fromDom(node);
 };
 
-const fromDom = <T extends DomNode | Window> (node: T | null): Element<T> => {
+const fromDom = <T extends Node | Window> (node: T | null): SugarElement<T> => {
   if (node === null || node === undefined) { throw new Error('Node cannot be null or undefined'); }
   return {
     dom: Fun.constant(node)
   };
 };
 
-const fromPoint = (docElm: Element<Document>, x: number, y: number): Option<Element<DomElement>> => {
+const fromPoint = (docElm: SugarElement<Document>, x: number, y: number): Option<SugarElement<Element>> => {
   const doc = docElm.dom();
   return Option.from(doc.elementFromPoint(x, y)).map(fromDom);
 };
 
 // tslint:disable-next-line:variable-name
-const Element = {
+const SugarElement = {
   fromHtml,
   fromTag,
   fromText,
@@ -53,4 +53,6 @@ const Element = {
   fromPoint
 };
 
-export default Element;
+export {
+  SugarElement
+};

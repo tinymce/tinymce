@@ -1,6 +1,6 @@
 import { FieldSchema } from '@ephox/boulder';
 import { Fun, Option } from '@ephox/katamari';
-import { Element, SelectorFind } from '@ephox/sugar';
+import { SelectorFind, SugarElement } from '@ephox/sugar';
 
 import * as Keys from '../alien/Keys';
 import { AlloyComponent } from '../api/component/ComponentApi';
@@ -26,7 +26,7 @@ const schema = [
 
 // TODO: Remove dupe.
 // TODO: Probably use this for not just execution.
-const findCurrent = (component: AlloyComponent, flowConfig: FlowConfig): Option<Element> =>
+const findCurrent = (component: AlloyComponent, flowConfig: FlowConfig): Option<SugarElement> =>
   flowConfig.focusManager.get(component).bind((elem) => SelectorFind.closest(elem, flowConfig.selector));
 
 const execute = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent, flowConfig: FlowConfig): Option<boolean> =>
@@ -40,10 +40,10 @@ const focusIn = (component: AlloyComponent, flowConfig: FlowConfig, _state: Stat
   });
 };
 
-const moveLeft = (element: Element, focused: Element, info: FlowConfig): Option<Element> =>
+const moveLeft = (element: SugarElement, focused: SugarElement, info: FlowConfig): Option<SugarElement> =>
   DomNavigation.horizontal(element, info.selector, focused, -1);
 
-const moveRight = (element: Element, focused: Element, info: FlowConfig): Option<Element> =>
+const moveRight = (element: SugarElement, focused: SugarElement, info: FlowConfig): Option<SugarElement> =>
   DomNavigation.horizontal(element, info.selector, focused, +1);
 
 const doMove = (movement: KeyRuleHandler<FlowConfig, Stateless>): KeyRuleHandler<FlowConfig, Stateless> =>

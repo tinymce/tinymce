@@ -7,15 +7,15 @@
 
 import { Event, HTMLElement, MouseEvent } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
-import { Attr, Class, Element, SelectorFilter } from '@ephox/sugar';
+import { Attribute, Class, SelectorFilter, SugarElement } from '@ephox/sugar';
 import Editor from '../api/Editor';
-import * as EditorFocus from '../focus/EditorFocus';
 import VK from '../api/util/VK';
+import * as EditorFocus from '../focus/EditorFocus';
 
 const internalContentEditableAttr = 'data-mce-contenteditable';
 
 // Not quite sugar Class.toggle, it's more of a Class.set
-const toggleClass = (elm: Element, cls: string, state: boolean) => {
+const toggleClass = (elm: SugarElement, cls: string, state: boolean) => {
   if (Class.has(elm, cls) && state === false) {
     Class.remove(elm, cls);
   } else if (state) {
@@ -31,20 +31,20 @@ const setEditorCommandState = (editor: Editor, cmd: string, state: boolean) => {
   }
 };
 
-const setContentEditable = (elm: Element, state: boolean) => {
+const setContentEditable = (elm: SugarElement, state: boolean) => {
   elm.dom().contentEditable = state ? 'true' : 'false';
 };
 
-const switchOffContentEditableTrue = (elm: Element) => {
+const switchOffContentEditableTrue = (elm: SugarElement) => {
   Arr.each(SelectorFilter.descendants(elm, '*[contenteditable="true"]'), (elm) => {
-    Attr.set(elm, internalContentEditableAttr, 'true');
+    Attribute.set(elm, internalContentEditableAttr, 'true');
     setContentEditable(elm, false);
   });
 };
 
-const switchOnContentEditableTrue = (elm: Element) => {
+const switchOnContentEditableTrue = (elm: SugarElement) => {
   Arr.each(SelectorFilter.descendants(elm, `*[${internalContentEditableAttr}="true"]`), (elm) => {
-    Attr.remove(elm, internalContentEditableAttr);
+    Attribute.remove(elm, internalContentEditableAttr);
     setContentEditable(elm, true);
   });
 };
@@ -60,7 +60,7 @@ const restoreFakeSelection = (editor: Editor) => {
 };
 
 const toggleReadOnly = (editor: Editor, state: boolean) => {
-  const body = Element.fromDom(editor.getBody());
+  const body = SugarElement.fromDom(editor.getBody());
 
   toggleClass(body, 'mce-content-readonly', state);
 

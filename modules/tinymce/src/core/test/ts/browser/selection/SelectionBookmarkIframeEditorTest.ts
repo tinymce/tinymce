@@ -1,10 +1,10 @@
 import { Assertions, Cursors, Logger, Pipeline, Step } from '@ephox/agar';
-import { TinyLoader } from '@ephox/mcagar';
-import { PlatformDetection } from '@ephox/sand';
-import { Hierarchy, Element, Html } from '@ephox/sugar';
-import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
+import { TinyLoader } from '@ephox/mcagar';
+import { PlatformDetection } from '@ephox/sand';
+import { Hierarchy, Html, SugarElement } from '@ephox/sugar';
+import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest(
   'browser.tinymce.core.selection.SelectionBookmarkIframeEditorTest',
@@ -32,8 +32,8 @@ UnitTest.asynctest(
     };
 
     const setSelection = function (editor, start, soffset, finish, foffset) {
-      const sc = Hierarchy.follow(Element.fromDom(editor.getBody()), start).getOrDie();
-      const fc = Hierarchy.follow(Element.fromDom(editor.getBody()), start).getOrDie();
+      const sc = Hierarchy.follow(SugarElement.fromDom(editor.getBody()), start).getOrDie();
+      const fc = Hierarchy.follow(SugarElement.fromDom(editor.getBody()), start).getOrDie();
 
       const rng = document.createRange();
       rng.setStart(sc.dom(), soffset);
@@ -45,7 +45,7 @@ UnitTest.asynctest(
     const assertPath = function (label, root, expPath, expOffset, actElement, actOffset) {
       const expected = Cursors.calculateOne(root, expPath);
       const message = function () {
-        const actual = Element.fromDom(actElement);
+        const actual = SugarElement.fromDom(actElement);
         const actPath = Hierarchy.path(root, actual).getOrDie('could not find path to root');
         return 'Expected path: ' + JSON.stringify(expPath) + '.\nActual path: ' + JSON.stringify(actPath);
       };
@@ -55,7 +55,7 @@ UnitTest.asynctest(
 
     const assertSelection = function (editor, startPath, soffset, finishPath, foffset) {
       const actual = editor.selection.getRng();
-      const root = Element.fromDom(editor.getBody());
+      const root = SugarElement.fromDom(editor.getBody());
       assertPath('start', root, startPath, soffset, actual.startContainer, actual.startOffset);
       assertPath('finish', root, finishPath, foffset, actual.endContainer, actual.endOffset);
     };

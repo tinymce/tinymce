@@ -1,7 +1,6 @@
 import { Arr, Option } from '@ephox/katamari';
-import { Attr } from '@ephox/sugar';
+import { Attribute } from '@ephox/sugar';
 
-import * as AlloyTriggers from '../../api/events/AlloyTriggers';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as TabSectionSchema from '../../ui/schema/TabSectionSchema';
 import { TabSectionApis, TabSectionDetail, TabSectionSketcher, TabSectionSpec } from '../../ui/types/TabSectionTypes';
@@ -11,6 +10,7 @@ import { Representing } from '../behaviour/Representing';
 import { AlloyComponent } from '../component/ComponentApi';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as AlloyEvents from '../events/AlloyEvents';
+import * as AlloyTriggers from '../events/AlloyTriggers';
 import * as SystemEvents from '../events/SystemEvents';
 import * as Sketcher from './Sketcher';
 import { CompositeSketchFactory } from './UiSketcher';
@@ -25,8 +25,8 @@ const factory: CompositeSketchFactory<TabSectionDetail, TabSectionSpec> = (detai
         const panel = tabData.view();
 
         // Update the tabview to refer to the current tab.
-        Attr.getOpt(button.element(), 'id').each((id) => {
-          Attr.set(tabview.element(), 'aria-labelledby', id);
+        Attribute.getOpt(button.element(), 'id').each((id) => {
+          Attribute.set(tabview.element(), 'aria-labelledby', id);
         });
         Replacing.set(tabview, panel);
         detail.onChangeTab(tabview, button, panel);

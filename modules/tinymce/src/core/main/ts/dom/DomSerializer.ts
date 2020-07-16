@@ -5,23 +5,23 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element as DomElement } from '@ephox/dom-globals';
+import { Element } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
 import * as Events from '../api/Events';
-import { URLConverter } from '../api/SettingsTypes';
 import DomParser, { DomParserSettings, ParserArgs, ParserFilter } from '../api/html/DomParser';
 import Node from '../api/html/Node';
 import Schema, { SchemaSettings } from '../api/html/Schema';
 import Serializer, { SerializerSettings } from '../api/html/Serializer';
+import { WriterSettings } from '../api/html/Writer';
+import { URLConverter } from '../api/SettingsTypes';
 import Tools from '../api/util/Tools';
 import * as Zwsp from '../text/Zwsp';
 import * as DomSerializerFilters from './DomSerializerFilters';
 import * as DomSerializerPreProcess from './DomSerializerPreProcess';
 import { isWsPreserveElement } from './ElementType';
-import { WriterSettings } from '../api/html/Writer';
 
 export interface SerializerArgs extends ParserArgs {
   format?: string;
@@ -38,8 +38,8 @@ interface DomSerializer {
   addAttributeFilter (name: string, callback: (nodes: Node[], name: string, args: ParserArgs) => void): void;
   getNodeFilters (): ParserFilter[];
   getAttributeFilters (): ParserFilter[];
-  serialize (node: DomElement, parserArgs: { format: 'tree' } & SerializerArgs): Node;
-  serialize (node: DomElement, parserArgs?: SerializerArgs): string;
+  serialize (node: Element, parserArgs: { format: 'tree' } & SerializerArgs): Node;
+  serialize (node: Element, parserArgs?: SerializerArgs): string;
   addRules (rules: string): void;
   setRules (rules: string): void;
   addTempAttr (name: string): void;
@@ -69,9 +69,9 @@ const postProcess = function (editor: Editor, args: ParserArgs, content: string)
   }
 };
 
-const getHtmlFromNode = function (dom: DOMUtils, node: DomElement, args) {
+const getHtmlFromNode = function (dom: DOMUtils, node: Element, args) {
   const html = Zwsp.trim(args.getInner ? node.innerHTML : dom.getOuterHTML(node));
-  return args.selection || isWsPreserveElement(Element.fromDom(node)) ? html : Tools.trim(html);
+  return args.selection || isWsPreserveElement(SugarElement.fromDom(node)) ? html : Tools.trim(html);
 };
 
 const parseHtml = function (htmlParser: DomParser, html: string, args: ParserArgs) {
@@ -102,7 +102,7 @@ const DomSerializer = function (settings: DomSerializerSettings, editor: Editor)
   const htmlParser = DomParser(settings, schema);
   DomSerializerFilters.register(htmlParser, settings, dom);
 
-  const serialize = function (node: DomElement, parserArgs = {}) {
+  const serialize = function (node: Element, parserArgs = {}) {
     const args = { format: 'html', ...parserArgs };
     const targetNode = DomSerializerPreProcess.process(editor, node, args);
     const html = getHtmlFromNode(dom, targetNode, args);

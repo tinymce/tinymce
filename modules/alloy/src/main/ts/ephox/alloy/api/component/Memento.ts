@@ -1,9 +1,9 @@
 import { Obj, Option } from '@ephox/katamari';
 
-import { SimpleOrSketchSpec } from '../../api/component/SpecTypes';
-import { isSketchSpec } from '../../api/ui/Sketcher';
 import * as Tagger from '../../registry/Tagger';
-import { AlloyComponent } from '../../api/component/ComponentApi';
+import { isSketchSpec } from '../ui/Sketcher';
+import { AlloyComponent } from './ComponentApi';
+import { SimpleOrSketchSpec } from './SpecTypes';
 
 export interface MementoRecord {
   get: (comp: AlloyComponent) => AlloyComponent;

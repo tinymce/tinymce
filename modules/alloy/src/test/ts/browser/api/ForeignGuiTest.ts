@@ -2,7 +2,7 @@ import { ApproxStructure, Assertions, Logger, Mouse, Pipeline, Step } from '@eph
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
-import { Body, Element, EventArgs, Html, Insert, Node, Remove, Traverse } from '@ephox/sugar';
+import { EventArgs, Html, Insert, Remove, SugarBody, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Toggling } from 'ephox/alloy/api/behaviour/Toggling';
@@ -14,10 +14,10 @@ import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import * as Tagger from 'ephox/alloy/registry/Tagger';
 
 UnitTest.asynctest('Browser Test: api.ForeignGuiTest', (success, failure) => {
-  const root = Element.fromTag('div');
+  const root = SugarElement.fromTag('div');
   Html.set(root, '<span class="clicker">A</span> and <span class="clicker">B</span>');
 
-  Insert.append(Body.body(), root);
+  Insert.append(SugarBody.body(), root);
 
   const connection = ForeignGui.engage({
     root,
@@ -26,7 +26,7 @@ UnitTest.asynctest('Browser Test: api.ForeignGuiTest', (success, failure) => {
     },
     dispatchers: [
       {
-        getTarget(elem) { return Node.name(elem) === 'span' ? Option.some(elem) : Option.none(); },
+        getTarget: (elem) => SugarNode.name(elem) === 'span' ? Option.some(elem) : Option.none(),
         alloyConfig: {
           behaviours: Behaviour.derive([
             Toggling.config({
@@ -64,7 +64,7 @@ UnitTest.asynctest('Browser Test: api.ForeignGuiTest', (success, failure) => {
   );
 
   Pipeline.async({}, [
-    GuiSetup.mAddStyles(Element.fromDom(document), [
+    GuiSetup.mAddStyles(SugarElement.fromDom(document), [
       '.selected { color: white; background: black; }'
     ]),
     Assertions.sAssertStructure(

@@ -2,7 +2,7 @@ import { ApproxStructure, Assertions, Chain, Guard, Mouse, NamedChain, Pipeline,
 import { UnitTest } from '@ephox/bedrock-client';
 import { HTMLElement } from '@ephox/dom-globals';
 import { Editor as McEditor } from '@ephox/mcagar';
-import { Body, Element, Traverse } from '@ephox/sugar';
+import { SugarBody, SugarElement, Traverse } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { NotificationApi } from 'tinymce/core/api/NotificationManager';
@@ -27,7 +27,7 @@ UnitTest.asynctest('NotificationManagerImpl test', (success, failure) => {
   });
 
   const cAssertPosition = (prefix: string, x: number, y: number, diff: number = 5) => Chain.op((notification: NotificationApi) => {
-    const elem = Traverse.parent(Element.fromDom(notification.getEl())).getOrDie() as Element<HTMLElement>;
+    const elem = Traverse.parent(SugarElement.fromDom(notification.getEl())).getOrDie() as SugarElement<HTMLElement>;
     const top = elem.dom().offsetTop;
     const left = elem.dom().offsetLeft;
     Assertions.assertEq(`${prefix} top position should be ${y}px~=${top}px`, true, Math.abs(y - top) < diff);
@@ -104,7 +104,7 @@ UnitTest.asynctest('NotificationManagerImpl test', (success, failure) => {
               ]
             })
           ]
-        })), Element.fromDom(notification.getEl()));
+        })), SugarElement.fromDom(notification.getEl()));
       });
 
       Chain.pipeline([
@@ -187,7 +187,7 @@ UnitTest.asynctest('NotificationManagerImpl test', (success, failure) => {
       Chain.pipeline([
         Chain.control(
           NamedChain.asChain([
-            NamedChain.writeValue('body', Body.body()),
+            NamedChain.writeValue('body', SugarBody.body()),
             NamedChain.write('nError', cOpenNotification(editor, 'error', 'Message 1')),
             NamedChain.write('nWarn', cOpenNotification(editor, 'warning', 'Message 2')),
 

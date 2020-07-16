@@ -1,12 +1,13 @@
-/* eslint-disable max-len */
-import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, EventFormat, Focusing, Form, FormField, FormTypes, Input, Invalidating, Memento, Representing, SimulatedEvent, Sketcher, SketchSpec, Tabstopping, UiSketcher } from '@ephox/alloy';
+import {
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, EventFormat, Focusing, Form, FormField, FormTypes, Input, Invalidating,
+  Memento, Representing, SimulatedEvent, Sketcher, SketchSpec, Tabstopping, UiSketcher
+} from '@ephox/alloy';
 import { Cell, Fun, Future, Id, Merger, Option, Result } from '@ephox/katamari';
 import { Css } from '@ephox/sugar';
 import { Hex, Rgba } from '../../api/colour/ColourTypes';
 import * as HexColour from '../../api/colour/HexColour';
 import * as RgbaColour from '../../api/colour/RgbaColour';
 import * as ColourEvents from '../ColourEvents';
-/* eslint-enable max-len */
 
 const validInput = Id.generate('valid-input');
 const invalidInput = Id.generate('invalid-input');

@@ -1,7 +1,7 @@
 import { Attachment, Behaviour, Channels, Debugging, DomFactory, Gui, GuiFactory, Positioning } from '@ephox/alloy';
 import { console, document, window } from '@ephox/dom-globals';
 import { Fun, Future, Id, Option, Result } from '@ephox/katamari';
-import { Body, Class } from '@ephox/sugar';
+import { Class, SugarBody } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import I18n from 'tinymce/core/api/util/I18n';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
@@ -126,13 +126,13 @@ const setupDemo = () => {
           // NOTE: Non-sensical
           ({
             anchor: 'selection',
-            root: Body.body()
+            root: SugarBody.body()
           }),
         node: (elem) =>
           // NOTE: Non-sensical
           ({
             anchor: 'node',
-            root: Body.body(),
+            root: SugarBody.body(),
             node: elem
           })
       }
@@ -214,10 +214,10 @@ const setupDemo = () => {
     //       canApply: () => true,
     //       get,
     //       getCssText: (name) => {
-    //         const span = Element.fromTag('span');
+    //         const span = SugarElement.fromTag('span');
     //         Css.setAll(span, formats[name].styles || { });
     //         console.log('span', span.dom());
-    //         return Attr.get(span, 'style') || '';
+    //         return Attribute.get(span, 'style') || '';
     //       }
     //     };
     //   })()
@@ -236,7 +236,7 @@ const setupDemo = () => {
   };
 
   uiMothership.add(sink);
-  Attachment.attachSystem(Body.body(), uiMothership);
+  Attachment.attachSystem(SugarBody.body(), uiMothership);
 
   const destroy = () => {
     uiMothership.remove(sink);

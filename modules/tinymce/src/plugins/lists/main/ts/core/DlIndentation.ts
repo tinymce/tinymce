@@ -5,13 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Editor from 'tinymce/core/api/Editor';
-import { Compare, Replication, Element, Traverse } from '@ephox/sugar';
-import * as SplitList from './SplitList';
-import { Indentation } from '../listModel/Indentation';
 import { Arr } from '@ephox/katamari';
+import { Compare, Replication, SugarElement, Traverse } from '@ephox/sugar';
+import Editor from 'tinymce/core/api/Editor';
+import { Indentation } from '../listModel/Indentation';
+import * as SplitList from './SplitList';
 
-const outdentDlItem = (editor: Editor, item: Element): void => {
+const outdentDlItem = (editor: Editor, item: SugarElement): void => {
   if (Compare.is(item, 'dd')) {
     Replication.mutate(item, 'dt');
   } else if (Compare.is(item, 'dt')) {
@@ -19,13 +19,13 @@ const outdentDlItem = (editor: Editor, item: Element): void => {
   }
 };
 
-const indentDlItem = (item: Element): void => {
+const indentDlItem = (item: SugarElement): void => {
   if (Compare.is(item, 'dt')) {
     Replication.mutate(item, 'dd');
   }
 };
 
-const dlIndentation = (editor: Editor, indentation: Indentation, dlItems: Element[]) => {
+const dlIndentation = (editor: Editor, indentation: Indentation, dlItems: SugarElement[]) => {
   if (indentation === Indentation.Indent) {
     Arr.each(dlItems, indentDlItem);
   } else {

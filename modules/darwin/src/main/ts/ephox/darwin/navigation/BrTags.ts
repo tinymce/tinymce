@@ -1,20 +1,20 @@
 import { Fun, Option } from '@ephox/katamari';
 import { Spot, SpotPoint } from '@ephox/phoenix';
-import { Awareness, ElementAddress, Node, Situ, Text, Traverse, Element } from '@ephox/sugar';
+import { Awareness, ElementAddress, Situ, SugarElement, SugarNode, SugarText, Traverse } from '@ephox/sugar';
 import { BeforeAfter } from './BeforeAfter';
 import { KeyDirection } from './KeyDirection';
 
-const isBr = function (elem: Element) {
-  return Node.name(elem) === 'br';
+const isBr = function (elem: SugarElement) {
+  return SugarNode.name(elem) === 'br';
 };
 
-const gatherer = function (cand: Element, gather: KeyDirection['gather'], isRoot: (e: Element) => boolean): Option<Element> {
+const gatherer = function (cand: SugarElement, gather: KeyDirection['gather'], isRoot: (e: SugarElement) => boolean): Option<SugarElement> {
   return gather(cand, isRoot).bind(function (target) {
-    return Node.isText(target) && Text.get(target).trim().length === 0 ? gatherer(target, gather, isRoot) : Option.some(target);
+    return SugarNode.isText(target) && SugarText.get(target).trim().length === 0 ? gatherer(target, gather, isRoot) : Option.some(target);
   });
 };
 
-const handleBr = function (isRoot: (e: Element) => boolean, element: Element, direction: KeyDirection) {
+const handleBr = function (isRoot: (e: SugarElement) => boolean, element: SugarElement, direction: KeyDirection) {
   // 1. Has a neighbouring sibling ... position relative to neighbouring element
   // 2. Has no neighbouring sibling ... position relative to gathered element
   return direction.traverse(element).orThunk(function () {
@@ -22,14 +22,14 @@ const handleBr = function (isRoot: (e: Element) => boolean, element: Element, di
   }).map(direction.relative);
 };
 
-const findBr = function (element: Element, offset: number) {
+const findBr = function (element: SugarElement, offset: number) {
   return Traverse.child(element, offset).filter(isBr).orThunk(function () {
     // Can be either side of the br, and still be a br.
     return Traverse.child(element, offset - 1).filter(isBr);
   });
 };
 
-const handleParent = function (isRoot: (e: Element) => boolean, element: Element, offset: number, direction: KeyDirection) {
+const handleParent = function (isRoot: (e: SugarElement) => boolean, element: SugarElement, offset: number, direction: KeyDirection) {
   // 1. Has no neighbouring sibling, position relative to gathered element
   // 2. Has a neighbouring sibling, position at the neighbouring sibling with respect to parent
   return findBr(element, offset).bind(function (br) {
@@ -43,7 +43,7 @@ const handleParent = function (isRoot: (e: Element) => boolean, element: Element
   });
 };
 
-const tryBr = function (isRoot: (e: Element) => boolean, element: Element, offset: number, direction: KeyDirection) {
+const tryBr = function (isRoot: (e: SugarElement) => boolean, element: SugarElement, offset: number, direction: KeyDirection) {
   // Three different situations
   // 1. the br is the child, and it has a previous sibling. Use parent, index-1)
   // 2. the br is the child and it has no previous sibling, set to before the previous gather result
@@ -59,7 +59,7 @@ const tryBr = function (isRoot: (e: Element) => boolean, element: Element, offse
   });
 };
 
-const process = function (analysis: BeforeAfter): Option<SpotPoint<Element>> {
+const process = function (analysis: BeforeAfter): Option<SpotPoint<SugarElement>> {
   return BeforeAfter.cata(analysis,
     function (_message) {
       return Option.none();

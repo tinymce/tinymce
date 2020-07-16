@@ -1,12 +1,12 @@
 import { Arr, Obj } from '@ephox/katamari';
-import { Attr, Css } from '@ephox/sugar';
+import { Attribute, Css } from '@ephox/sugar';
 
-import { AlloySpec, SketchSpec } from '../../api/component/SpecTypes';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as PartType from '../../parts/PartType';
 import { SlotContainerApis, SlotContainerDetail, SlotContainerSketcher, SlotContainerSpecBuilder } from '../../ui/types/SlotContainerTypes';
 import { AlloyComponent } from '../component/ComponentApi';
 import * as SketchBehaviours from '../component/SketchBehaviours';
+import { AlloySpec, SketchSpec } from '../component/SpecTypes';
 import * as AlloyTriggers from '../events/AlloyTriggers';
 import * as SystemEvents from '../events/SystemEvents';
 import * as GuiTypes from './GuiTypes';
@@ -65,14 +65,14 @@ const make = (detail: SlotContainerDetail, components: AlloySpec[]) => {
     Arr.each(keys, (key) => f(container, key));
   };
 
-  const doShowing = (comp: AlloyComponent, _key: string): boolean => Attr.get(comp.element(), 'aria-hidden') !== 'true';
+  const doShowing = (comp: AlloyComponent, _key: string): boolean => Attribute.get(comp.element(), 'aria-hidden') !== 'true';
 
   const doShow = (comp: AlloyComponent, key: string) => {
     // NOTE: May need to restore old values.
     if (!doShowing(comp, key)) {
       const element = comp.element();
       Css.remove(element, 'display');
-      Attr.remove(element, 'aria-hidden');
+      Attribute.remove(element, 'aria-hidden');
       AlloyTriggers.emitWith(comp, SystemEvents.slotVisibility(), { name: key, visible: true });
     }
   };
@@ -82,7 +82,7 @@ const make = (detail: SlotContainerDetail, components: AlloySpec[]) => {
     if (doShowing(comp, key)) {
       const element = comp.element();
       Css.set(element, 'display', 'none');
-      Attr.set(element, 'aria-hidden', 'true');
+      Attribute.set(element, 'aria-hidden', 'true');
       AlloyTriggers.emitWith(comp, SystemEvents.slotVisibility(), { name: key, visible: false });
     }
   };

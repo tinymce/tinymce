@@ -1,6 +1,6 @@
-import TagBoundaries from '../common/TagBoundaries';
 import { Arr, Option } from '@ephox/katamari';
 import { Gene } from '../api/Gene';
+import TagBoundaries from '../common/TagBoundaries';
 
 const children = function (item: Gene) {
   return item.children;

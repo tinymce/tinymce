@@ -1,15 +1,15 @@
-import { document, Document, HTMLElement, Node as DomNode } from '@ephox/dom-globals';
-import Element from './Element';
-import * as Node from './Node';
-import { getShadowHost, getShadowRoot } from './ShadowDom';
+import { document, Document, HTMLElement, Node } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
+import { SugarElement } from './SugarElement';
+import * as SugarNode from './SugarNode';
+import { getShadowHost, getShadowRoot } from './SugarShadowDom';
 
 // Node.contains() is very, very, very good performance
 // http://jsperf.com/closest-vs-contains/5
-const inBody = (element: Element<DomNode>): boolean => {
+const inBody = (element: SugarElement<Node>): boolean => {
   // Technically this is only required on IE, where contains() returns false for text nodes.
   // But it's cheap enough to run everywhere and Sugar doesn't have platform detection (yet).
-  const dom = Node.isText(element) ? element.dom().parentNode : element.dom();
+  const dom = SugarNode.isText(element) ? element.dom().parentNode : element.dom();
 
   // use ownerDocument.body to ensure this works inside iframes.
   // Normally contains is bad because an element "contains" itself, but here we want that.
@@ -17,21 +17,21 @@ const inBody = (element: Element<DomNode>): boolean => {
     return false;
   }
 
-  return getShadowRoot(Element.fromDom(dom)).fold(
+  return getShadowRoot(SugarElement.fromDom(dom)).fold(
     () => dom.ownerDocument.body.contains(dom),
     Fun.compose1(inBody, getShadowHost)
   );
 };
 
-const body = (): Element<HTMLElement> =>
-  getBody(Element.fromDom(document));
+const body = (): SugarElement<HTMLElement> =>
+  getBody(SugarElement.fromDom(document));
 
-const getBody = (doc: Element<Document>): Element<HTMLElement> => {
+const getBody = (doc: SugarElement<Document>): SugarElement<HTMLElement> => {
   const b = doc.dom().body;
   if (b === null || b === undefined) {
     throw new Error('Body is not available yet');
   }
-  return Element.fromDom(b);
+  return SugarElement.fromDom(b);
 };
 
 export {

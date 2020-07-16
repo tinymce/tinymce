@@ -1,6 +1,6 @@
 import { MouseEvent } from '@ephox/dom-globals';
 import * as FilteredEvent from '../../impl/FilteredEvent';
-import Element from '../node/Element';
+import { SugarElement } from '../node/SugarElement';
 import { EventFilter, EventHandler } from './Types';
 
 // https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/button
@@ -31,7 +31,7 @@ const isRealClick = (raw: any): boolean =>
       : true;
 
 const filtered = (event: string, filter: EventFilter<MouseEvent>) => ({
-  bind(element: Element, f: EventHandler<MouseEvent>) {
+  bind(element: SugarElement, f: EventHandler<MouseEvent>) {
     return FilteredEvent.bind(element, event, filter, f);
   }
 });

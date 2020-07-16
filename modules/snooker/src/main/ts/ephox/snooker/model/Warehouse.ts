@@ -1,6 +1,6 @@
 import { HTMLTableElement } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import * as Structs from '../api/Structs';
 import * as DetailsList from './DetailsList';
 
@@ -19,7 +19,7 @@ const getAt = function (warehouse: Warehouse, row: number, column: number) {
   return raw !== undefined ? Option.some(raw) : Option.none<Structs.DetailExt>();
 };
 
-const findItem = function <T> (warehouse: Warehouse, item: T, comparator: (a: T, b: Element) => boolean) {
+const findItem = function <T> (warehouse: Warehouse, item: T, comparator: (a: T, b: SugarElement) => boolean) {
   const filtered = filterItems(warehouse, function (detail) {
     return comparator(item, detail.element());
   });
@@ -90,7 +90,7 @@ const generate = function <T extends Structs.Detail> (list: Structs.RowData<T>[]
   };
 };
 
-const fromTable = (table: Element<HTMLTableElement>) => {
+const fromTable = (table: SugarElement<HTMLTableElement>) => {
   const list = DetailsList.fromTable(table);
   return generate(list);
 };

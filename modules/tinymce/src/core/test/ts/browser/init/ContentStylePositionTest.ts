@@ -1,10 +1,10 @@
 import { Assertions, Pipeline, Step } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
+import { HTMLElement, NodeListOf } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { TinyLoader } from '@ephox/mcagar';
-import { Element, Node } from '@ephox/sugar';
+import { SugarElement, SugarNode } from '@ephox/sugar';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock-client';
-import { NodeListOf, HTMLElement } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.core.init.ContentStylePositionTest', (success, failure) => {
   Theme();
@@ -17,7 +17,7 @@ UnitTest.asynctest('browser.tinymce.core.init.ContentStylePositionTest', (succes
       Step.sync(function () {
         const headStuff: NodeListOf<HTMLElement> = editor.getDoc().head.querySelectorAll('link, style');
         const linkIndex = Arr.findIndex(headStuff, function (elm) {
-          return Node.name(Element.fromDom(elm)) === 'link';
+          return SugarNode.name(SugarElement.fromDom(elm)) === 'link';
         }).getOrDie('could not find link elemnt');
         const styleIndex = Arr.findIndex(headStuff, function (elm) {
           return elm.innerText === contentStyle;

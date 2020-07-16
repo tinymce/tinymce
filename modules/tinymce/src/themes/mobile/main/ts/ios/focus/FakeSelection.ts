@@ -6,9 +6,7 @@
  */
 
 import { Arr } from '@ephox/katamari';
-import {
-  Class, Classes, Css, DomEvent, Element, Insert, InsertAll, Remove, Traverse
-} from '@ephox/sugar';
+import { Class, Classes, Css, DomEvent, Insert, InsertAll, Remove, SugarElement, Traverse } from '@ephox/sugar';
 
 import * as Styles from '../../style/Styles';
 import * as Rectangles from '../../util/Rectangles';
@@ -25,10 +23,10 @@ export default function (win, frame) {
    */
   const doc = win.document;
 
-  const container = Element.fromTag('div');
+  const container = SugarElement.fromTag('div');
   Class.add(container, Styles.resolve('unfocused-selections'));
 
-  Insert.append(Element.fromDom(doc.documentElement), container);
+  Insert.append(SugarElement.fromDom(doc.documentElement), container);
 
   const onTouch = DomEvent.bind(container, 'touchstart', function (event) {
     // We preventDefault the event incase the touch is between 2 letters creating a new collapsed selection,
@@ -41,7 +39,7 @@ export default function (win, frame) {
   });
 
   const make = function (rectangle) {
-    const span = Element.fromTag('span');
+    const span = SugarElement.fromTag('span');
     Classes.add(span, [ Styles.resolve('layer-editor'), Styles.resolve('unfocused-selection') ]);
     Css.setAll(span, {
       left: rectangle.left() + 'px',

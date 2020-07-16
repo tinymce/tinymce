@@ -1,22 +1,22 @@
-import { Pipeline, Step, Chain, NamedChain, UiFinder } from '@ephox/agar';
-import { document, StyleSheet, ShadowRoot } from '@ephox/dom-globals';
-import { TinyLoader, Editor as McEditor, TinyApis } from '@ephox/mcagar';
+import { Chain, NamedChain, Pipeline, Step, UiFinder } from '@ephox/agar';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { document, ShadowRoot, StyleSheet } from '@ephox/dom-globals';
+import { Arr, Strings } from '@ephox/katamari';
+import { Editor as McEditor, TinyApis, TinyLoader } from '@ephox/mcagar';
+import { Insert, Remove, SelectorFilter, SugarBody, SugarElement, SugarShadowDom } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
-import { ShadowDom, Element, Insert, Body, Remove, SelectorFilter } from '@ephox/sugar';
-import { UnitTest, Assert } from '@ephox/bedrock-client';
-import { Arr, Strings } from '@ephox/katamari';
 
 const isSkin = (ss: StyleSheet) => ss.href !== null && Strings.contains(ss.href, 'skin.min.css');
 
 const skinSheetsTest = (extraSettings: Record<string, any>) => (success, failure) => {
-  if (!ShadowDom.isSupported()) {
+  if (!SugarShadowDom.isSupported()) {
     return success();
   }
 
   Theme();
 
-  TinyLoader.setupInShadowRoot((editor: Editor, shadowRoot: Element<ShadowRoot>, onSuccess, onFailure) => {
+  TinyLoader.setupInShadowRoot((editor: Editor, shadowRoot: SugarElement<ShadowRoot>, onSuccess, onFailure) => {
     Pipeline.async({}, [
       Step.sync(() => {
         // TODO TINY-6144: Test that there are no skin stylesheets in the head. We will need to clean up existing stylesheets first, which may require a StyleSheetLoader.removeAll() function
@@ -38,16 +38,16 @@ UnitTest.asynctest('Skin stylesheets should be loaded in ShadowRoot when editor 
 UnitTest.asynctest('Skin stylesheets should be loaded in ShadowRoot when editor is in ShadowRoot (inline mode)', skinSheetsTest({ inline: true }));
 
 const multipleStyleSheetTest = (extraSettings: Record<string, any>) => (success, failure) => {
-  if (!ShadowDom.isSupported()) {
+  if (!SugarShadowDom.isSupported()) {
     return success();
   }
 
   Theme();
-  const shadowHost = Element.fromTag('div', document);
-  Insert.append(Body.body(), shadowHost);
-  const sr = Element.fromDom(shadowHost.dom().attachShadow({ mode: 'open' }));
+  const shadowHost = SugarElement.fromTag('div', document);
+  Insert.append(SugarBody.body(), shadowHost);
+  const sr = SugarElement.fromDom(shadowHost.dom().attachShadow({ mode: 'open' }));
   const mkEditor = () => {
-    const editorDiv = Element.fromTag('div', document);
+    const editorDiv = SugarElement.fromTag('div', document);
     Insert.append(sr, editorDiv);
     return McEditor.cFromElement(editorDiv, { base_url: '/project/tinymce/js/tinymce', ...extraSettings });
   };
@@ -76,20 +76,20 @@ UnitTest.asynctest('Only one skin stylesheet should be loaded for multiple edito
 UnitTest.asynctest('Only one skin stylesheet should be loaded for multiple editors in a ShadowRoot (inline mode)', multipleStyleSheetTest({ inline: true }));
 
 const auxDivTest = (extraSettings: Record<string, any>) => (success, failure) => {
-  if (!ShadowDom.isSupported()) {
+  if (!SugarShadowDom.isSupported()) {
     return success();
   }
 
   Theme();
 
-  TinyLoader.setupInShadowRoot((editor, shadowRoot: Element<ShadowRoot>, onSuccess, onFailure) => {
+  TinyLoader.setupInShadowRoot((editor, shadowRoot: SugarElement<ShadowRoot>, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
     Pipeline.async({}, [
       tinyApis.sFocus(),
       tinyApis.sNodeChanged(),
       UiFinder.sWaitForVisible('Wait for editor to be visible', shadowRoot, '.tox-editor-header'),
       Step.sync(() => {
-        Assert.eq('Should be no aux divs in the document', 0, SelectorFilter.descendants(Body.body(), '.tox-tinymce-aux').length);
+        Assert.eq('Should be no aux divs in the document', 0, SelectorFilter.descendants(SugarBody.body(), '.tox-tinymce-aux').length);
         Assert.eq('Should be 1 aux div in the shadow root', 1, SelectorFilter.descendants(shadowRoot, '.tox-tinymce-aux').length);
       })
     ], onSuccess, onFailure);

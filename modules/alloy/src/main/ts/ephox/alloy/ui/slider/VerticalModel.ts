@@ -1,7 +1,7 @@
 import { Fun, Option } from '@ephox/katamari';
 import { Css, Height } from '@ephox/sugar';
-import { AlloyComponent } from '../../api/component/ComponentApi';
 
+import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as AlloyTriggers from '../../api/events/AlloyTriggers';
 import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
 import { SliderValueY, VerticalSliderDetail } from '../types/SliderTypes';

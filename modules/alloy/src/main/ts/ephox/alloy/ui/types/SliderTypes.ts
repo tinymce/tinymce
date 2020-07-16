@@ -1,5 +1,5 @@
 import { Cell, Option } from '@ephox/katamari';
-import { Position } from '@ephox/sugar';
+import { SugarPosition } from '@ephox/sugar';
 
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
@@ -43,10 +43,10 @@ export interface EdgeActions {
 }
 
 export interface Manager {
-  setValueFrom: (spectrum: AlloyComponent, detail: SliderDetail, value: number | Position) => void;
+  setValueFrom: (spectrum: AlloyComponent, detail: SliderDetail, value: number | SugarPosition) => void;
   setToMin: (spectrum: AlloyComponent, detail: SliderDetail) => void;
   setToMax: (spectrum: AlloyComponent, detail: SliderDetail) => void;
-  getValueFromEvent: (simulatedEvent: NativeSimulatedEvent) => Option<number | Position>;
+  getValueFromEvent: (simulatedEvent: NativeSimulatedEvent) => Option<number | SugarPosition>;
   setPositionFromValue: (slider: AlloyComponent, thumb: AlloyComponent, detail: SliderDetail, parts: SliderModelDetailParts) => void;
   onLeft: (spectrum: AlloyComponent, detail: SliderDetail) => Option<boolean>;
   onRight: (spectrum: AlloyComponent, detail: SliderDetail) => Option<boolean>;

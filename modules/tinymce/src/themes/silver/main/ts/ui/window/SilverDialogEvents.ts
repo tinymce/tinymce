@@ -9,12 +9,11 @@ import { AlloyComponent, AlloyEvents, AlloyTriggers, CustomEvent, Keying, Native
 import { DialogManager, Types } from '@ephox/bridge';
 import { HTMLElement } from '@ephox/dom-globals';
 import { Result } from '@ephox/katamari';
-import { Attr, Compare, Element, Focus } from '@ephox/sugar';
+import { Attribute, Compare, Focus, SugarElement } from '@ephox/sugar';
 
 import {
   formActionEvent, FormActionEvent, formBlockEvent, FormBlockEvent, formCancelEvent, FormCancelEvent, FormChangeEvent, formChangeEvent,
-  FormCloseEvent, formCloseEvent, FormSubmitEvent, formSubmitEvent, formTabChangeEvent, FormTabChangeEvent, formUnblockEvent,
-  FormUnblockEvent
+  FormCloseEvent, formCloseEvent, FormSubmitEvent, formSubmitEvent, formTabChangeEvent, FormTabChangeEvent, formUnblockEvent, FormUnblockEvent
 } from '../general/FormEvents';
 import * as NavigableObject from '../general/NavigableObject';
 
@@ -90,7 +89,7 @@ const initDialog = <T>(getInstanceApi: () => Types.Dialog.DialogInstanceApi<T>, 
 
     fireApiEvent<FormActionEvent>(formActionEvent, (api, spec, event, component) => {
       const focusIn = () => Keying.focusIn(component);
-      const isDisabled = (focused: Element<HTMLElement>) => Attr.has(focused, 'disabled') || Attr.getOpt(focused, 'aria-disabled').exists((val) => val === 'true');
+      const isDisabled = (focused: SugarElement<HTMLElement>) => Attribute.has(focused, 'disabled') || Attribute.getOpt(focused, 'aria-disabled').exists((val) => val === 'true');
       const current = Focus.active();
 
       spec.onAction(api, { name: event.name(), value: event.value() });

@@ -8,7 +8,7 @@
 import { HTMLTableElement, Node, Range } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import { ResizeBehaviour, ResizeWire, Sizes, TableDirection, TableResize } from '@ephox/snooker';
-import { Css, Element, Element as SugarElement } from '@ephox/sugar';
+import { Css, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import * as Events from '../api/Events';
 import * as Settings from '../api/Settings';
@@ -93,7 +93,7 @@ export const getResizeHandler = function (editor: Editor): ResizeHandler {
   editor.on('ObjectResizeStart', function (e) {
     const targetElm = e.target;
     if (isTable(targetElm)) {
-      const table = Element.fromDom(targetElm);
+      const table = SugarElement.fromDom(targetElm);
 
       if (!Sizes.isPixelSizing(table) && Settings.isPixelsForced(editor)) {
         enforcePixels(editor, table);
@@ -109,7 +109,7 @@ export const getResizeHandler = function (editor: Editor): ResizeHandler {
   editor.on('ObjectResized', function (e) {
     const targetElm = e.target;
     if (isTable(targetElm)) {
-      const table = Element.fromDom(targetElm);
+      const table = SugarElement.fromDom(targetElm);
 
       if (startRawW === '' || (!Util.isPercentage(startRawW) && Settings.isResponsiveForced(editor))) {
         // Responsive tables don't have a width so we need to convert it to a relative/percent

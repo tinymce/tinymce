@@ -1,7 +1,7 @@
 import { Assertions, GeneralSteps, Logger, Step, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Option, Result } from '@ephox/katamari';
-import { Css, Element } from '@ephox/sugar';
+import { Css, SugarElement } from '@ephox/sugar';
 
 import * as AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviour';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
@@ -85,7 +85,7 @@ UnitTest.asynctest('InlineViewRepositionTest', (success, failure) => {
       ])
     );
 
-    const sCheckPosition = (label: string, element: Element, x: number, y: number) => Logger.t(
+    const sCheckPosition = (label: string, element: SugarElement, x: number, y: number) => Logger.t(
       label,
       Step.sync(() => {
         const top = parseInt(Css.get(element, 'top').replace('px', ''), 10);

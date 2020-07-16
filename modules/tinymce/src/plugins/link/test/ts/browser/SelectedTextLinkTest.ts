@@ -2,7 +2,7 @@ import { FocusTools, GeneralSteps, Keyboard, Keys, Log, Pipeline, UiFinder, Wait
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyDom, TinyLoader } from '@ephox/mcagar';
-import { Body } from '@ephox/sugar';
+import { SugarBody } from '@ephox/sugar';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 import { TestLinkUi } from '../module/TestLinkUi';
@@ -16,8 +16,8 @@ UnitTest.asynctest('browser.tinymce.plugins.link.SelectedTextTest', (success, fa
     const tinyApis = TinyApis(editor);
     const doc = TinyDom.fromDom(document);
 
-    const sTextToDisplayShown = UiFinder.sExists(Body.body(), '.tox-label:contains("Text to display")');
-    const sTextToDisplayHidden = UiFinder.sNotExists(Body.body(), '.tox-label:contains("Text to display")');
+    const sTextToDisplayShown = UiFinder.sExists(SugarBody.body(), '.tox-label:contains("Text to display")');
+    const sTextToDisplayHidden = UiFinder.sNotExists(SugarBody.body(), '.tox-label:contains("Text to display")');
 
     const sOpenDialog = (textToDisplayVisible: boolean = true) => GeneralSteps.sequence([
       tinyApis.sExecCommand('mcelink'),

@@ -1,9 +1,9 @@
 import { console, document, setTimeout, window } from '@ephox/dom-globals';
 import { Arr, Result } from '@ephox/katamari';
-import { Class, Element } from '@ephox/sugar';
+import { Class, SugarElement } from '@ephox/sugar';
+
 import { LazySink } from 'ephox/alloy/api/component/CommonTypes';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
-
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
 import { Container } from 'ephox/alloy/api/ui/Container';
@@ -21,7 +21,7 @@ import * as DemoRenders from './forms/DemoRenders';
 
 export default (): void => {
   const gui = Gui.create();
-  const body = Element.fromDom(document.body);
+  const body = SugarElement.fromDom(document.body);
   Class.add(gui.element(), 'gui-root-demo-container');
   Attachment.attachSystem(body, gui);
 

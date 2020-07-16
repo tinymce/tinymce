@@ -1,4 +1,4 @@
-import { Attr, Css, Node, Traverse } from '@ephox/sugar';
+import { Attribute, Css, SugarNode, Traverse } from '@ephox/sugar';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { AlloyEventRecord } from '../../api/events/AlloyEvents';
@@ -11,20 +11,20 @@ const initialAttribute = 'data-initial-z-index';
 // discarding it, we need to reset those z-indices back to what they
 // were. ASSUMPTION: the blocker has been added as a direct child of the root
 const resetZIndex = (blocker: AlloyComponent): void => {
-  Traverse.parent(blocker.element()).filter(Node.isElement).each((root) => {
-    Attr.getOpt(root, initialAttribute).fold(
+  Traverse.parent(blocker.element()).filter(SugarNode.isElement).each((root) => {
+    Attribute.getOpt(root, initialAttribute).fold(
       () => Css.remove(root, 'z-index'),
       (zIndex) => Css.set(root, 'z-index', zIndex)
     );
 
-    Attr.remove(root, initialAttribute);
+    Attribute.remove(root, initialAttribute);
   });
 };
 
 const changeZIndex = (blocker: AlloyComponent): void => {
-  Traverse.parent(blocker.element()).filter(Node.isElement).each((root) => {
+  Traverse.parent(blocker.element()).filter(SugarNode.isElement).each((root) => {
     Css.getRaw(root, 'z-index').each((zindex) => {
-      Attr.set(root, initialAttribute, zindex);
+      Attribute.set(root, initialAttribute, zindex);
     });
 
     // Used to be a really high number, but it probably just has

@@ -1,5 +1,5 @@
 import { Contracts, Option } from '@ephox/katamari';
-import { EventArgs, Element, Position } from '@ephox/sugar';
+import { EventArgs, SugarElement, SugarPosition } from '@ephox/sugar';
 import { BlockerOptions } from '../detect/Blocker';
 
 export interface DragMutation {
@@ -7,15 +7,15 @@ export interface DragMutation {
 }
 
 export interface DragMode {
-  compare: (old: Position, nu: Position) => Position;
-  extract: (event: EventArgs) => Option<Position>;
-  mutate: (mutation: DragMutation, info: Position) => void;
+  compare: (old: SugarPosition, nu: SugarPosition) => SugarPosition;
+  extract: (event: EventArgs) => Option<SugarPosition>;
+  mutate: (mutation: DragMutation, info: SugarPosition) => void;
   sink: (dragApi: DragApi, settings: Partial<BlockerOptions>) => DragSink;
 }
 
 export interface DragSink {
-  element: () => Element;
-  start: (parent: Element) => void;
+  element: () => SugarElement;
+  start: (parent: SugarElement) => void;
   stop: () => void;
   destroy: () => void;
 }

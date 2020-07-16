@@ -7,7 +7,7 @@
 
 import { Element, HTMLElement, MouseEvent, Node, Range } from '@ephox/dom-globals';
 import { Arr, Obj, Unicode } from '@ephox/katamari';
-import { Attr, Compare, Element as SugarElement, Remove, SelectorFilter, SelectorFind } from '@ephox/sugar';
+import { Attribute, Compare, Remove, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
 import Editor from './api/Editor';
 import Env from './api/Env';
 import VK from './api/util/VK';
@@ -392,7 +392,7 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
     const nodeElm = SugarElement.fromDom(elm);
     Arr.each(SelectorFilter.descendants(SugarElement.fromDom(editor.getBody()), '*[data-mce-selected]'), (elm) => {
       if (!Compare.eq(nodeElm, elm)) {
-        Attr.remove(elm, elementSelectionAttr);
+        Attribute.remove(elm, elementSelectionAttr);
       }
     });
 

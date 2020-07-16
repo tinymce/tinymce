@@ -2,7 +2,7 @@ import { Assertions, Logger, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
 import { TinyLoader } from '@ephox/mcagar';
-import { Class, Element } from '@ephox/sugar';
+import { Class, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
@@ -10,7 +10,7 @@ UnitTest.asynctest('browser.tinymce.core.ModeTest', (success, failure) => {
   Theme();
 
   const sAssertBodyClass = (editor: Editor, cls: string, state: boolean) => Step.label('sAssertBodyClass: checking editor ' + (state ? 'has' : `doesn't have`) + ' class ' + cls, Step.sync(() => {
-    Assertions.assertEq('Should be the expected class state', state, Class.has(Element.fromDom(editor.getBody()), cls));
+    Assertions.assertEq('Should be the expected class state', state, Class.has(SugarElement.fromDom(editor.getBody()), cls));
   }));
 
   TinyLoader.setupLight(function (editor: Editor, onSuccess, onFailure) {

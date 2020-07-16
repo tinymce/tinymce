@@ -1,6 +1,6 @@
 import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
-import { Height, Location, Width } from '@ephox/sugar';
+import { Height, SugarLocation, Width } from '@ephox/sugar';
 
 import { Coupling } from '../../api/behaviour/Coupling';
 import { Toggling } from '../../api/behaviour/Toggling';
@@ -15,7 +15,7 @@ import * as Layout from '../../positioning/layout/Layout';
 import { TouchMenuDetail } from '../types/TouchMenuTypes';
 
 const anchorAtCentre = (component: AlloyComponent) => {
-  const pos = Location.absolute(component.element());
+  const pos = SugarLocation.absolute(component.element());
   const w = Width.get(component.element());
   const h = Height.get(component.element());
   return {

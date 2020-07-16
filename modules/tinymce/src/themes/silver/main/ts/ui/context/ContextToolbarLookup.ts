@@ -5,17 +5,17 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node as DomNode } from '@ephox/dom-globals';
+import { Node } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
-import { Compare, Element, TransformFind } from '@ephox/sugar';
+import { Compare, SugarElement, TransformFind } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { ContextTypes } from '../../ContextToolbar';
 import { ScopedToolbars } from './ContextToolbarScopes';
 
-export type LookupResult = { toolbars: ContextTypes[]; elem: Element };
+export type LookupResult = { toolbars: ContextTypes[]; elem: SugarElement };
 type MatchResult = { contextToolbars: ContextTypes[]; contextForms: ContextTypes[] };
 
-const matchTargetWith = (elem: Element, candidates: ContextTypes[]): MatchResult => {
+const matchTargetWith = (elem: SugarElement, candidates: ContextTypes[]): MatchResult => {
   const ctxs = Arr.filter(candidates, (toolbarApi) => toolbarApi.predicate(elem.dom()));
   // TODO: somehow type this properly (Arr.partition can't)
   // e.g. here pass is Toolbar.ContextToolbar and fail is Toolbar.ContextForm
@@ -65,7 +65,7 @@ const filterByPositionForAncestorNode = (toolbars: ContextTypes[]) => {
   }
 };
 
-const matchStartNode = (elem: Element, nodeCandidates: ContextTypes[], editorCandidates: ContextTypes[]): Option<LookupResult> => {
+const matchStartNode = (elem: SugarElement, nodeCandidates: ContextTypes[], editorCandidates: ContextTypes[]): Option<LookupResult> => {
   // requirements:
   // 1. prioritise context forms over context menus
   // 2. prioritise node scoped over editor scoped context forms
@@ -104,11 +104,11 @@ const matchAncestor = (isRoot, startNode, scopes): Option<LookupResult> => {
 };
 
 const lookup = (scopes: ScopedToolbars, editor: Editor): Option<LookupResult> => {
-  const rootElem = Element.fromDom(editor.getBody());
-  const isRoot = (elem: Element<DomNode>) => Compare.eq(elem, rootElem);
-  const isOutsideRoot = (startNode: Element<DomNode>) => !isRoot(startNode) && !Compare.contains(rootElem, startNode);
+  const rootElem = SugarElement.fromDom(editor.getBody());
+  const isRoot = (elem: SugarElement<Node>) => Compare.eq(elem, rootElem);
+  const isOutsideRoot = (startNode: SugarElement<Node>) => !isRoot(startNode) && !Compare.contains(rootElem, startNode);
 
-  const startNode = Element.fromDom(editor.selection.getNode());
+  const startNode = SugarElement.fromDom(editor.selection.getNode());
 
   // Ensure the lookup doesn't start on a parent or sibling element of the root node
   if (isOutsideRoot(startNode)) {
