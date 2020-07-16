@@ -5,12 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Event, Node as DomNode, Range } from '@ephox/dom-globals';
+import { Event, Node, Range } from '@ephox/dom-globals';
 import { Fun, Obj, Option, Type } from '@ephox/katamari';
 import Editor from './api/Editor';
 import Formatter from './api/Formatter';
-import Node from './api/html/Node';
-import Serializer from './api/html/Serializer';
+import AstNode from './api/html/Node';
+import HtmlSerializer from './api/html/Serializer';
 import { Content, ContentFormat, GetContentArgs, SetContentArgs } from './content/ContentTypes';
 import { getContentInternal } from './content/GetContentImpl';
 import { insertHtmlAtCaret } from './content/InsertContentImpl';
@@ -24,9 +24,9 @@ import { RangeLikeObject } from './selection/RangeTypes';
 import * as Operations from './undo/Operations';
 import { Index, Locks, UndoBookmark, UndoLevel, UndoLevelType, UndoManager } from './undo/UndoManagerTypes';
 
-const isTreeNode = (content: any): content is Node => content instanceof Node;
+const isTreeNode = (content: any): content is AstNode => content instanceof AstNode;
 
-const runSerializerFiltersOnFragment = (editor: Editor, fragment: Node) => {
+const runSerializerFiltersOnFragment = (editor: Editor, fragment: AstNode) => {
   FilterNode.filter(editor.serializer.getNodeFilters(), editor.serializer.getAttributeFilters(), fragment);
 };
 
@@ -40,10 +40,10 @@ interface RtcRuntimeApi {
   applyFormat: (format: string, vars: Record<string, string>) => void;
   removeFormat: (format: string, vars: Record<string, string>) => void;
   toggleFormat: (format: string, vars: Record<string, string>) => void;
-  getContent: () => Node | null;
-  setContent: (node: Node) => void;
-  insertContent: (node: Node) => void;
-  getSelectedContent: () => Node | null;
+  getContent: () => AstNode | null;
+  setContent: (node: AstNode) => void;
+  insertContent: (node: AstNode) => void;
+  getSelectedContent: () => AstNode | null;
   getRawModel: () => any;
   isRemote: boolean;
 }
@@ -175,7 +175,7 @@ const makeRtcAdaptor = (tinymceEditor: Editor, rtcEditor: RtcRuntimeApi): RtcAda
       getContent: (args, format) => {
         if (format === 'html' || format === 'tree') {
           const fragment = rtcEditor.getContent();
-          const serializer = Serializer({ inner: true });
+          const serializer = HtmlSerializer({ inner: true });
 
           runSerializerFiltersOnFragment(tinymceEditor, fragment);
 
@@ -200,7 +200,7 @@ const makeRtcAdaptor = (tinymceEditor: Editor, rtcEditor: RtcRuntimeApi): RtcAda
       getContent: (format, args) => {
         if (format === 'html' || format === 'tree') {
           const fragment = rtcEditor.getSelectedContent();
-          const serializer = Serializer({});
+          const serializer = HtmlSerializer({});
 
           runSerializerFiltersOnFragment(tinymceEditor, fragment);
 
@@ -304,16 +304,16 @@ export const applyFormat = (
   editor: Editor,
   name: string,
   vars?: Record<string, string>,
-  node?: DomNode | RangeLikeObject
+  node?: Node | RangeLikeObject
 ): void => {
   getRtcInstanceWithError(editor).formatter.apply(name, vars, node);
 };
 
-export const removeFormat = (editor: Editor, name: string, vars?: Record<string, string>, node?: DomNode | Range, similar?: boolean) => {
+export const removeFormat = (editor: Editor, name: string, vars?: Record<string, string>, node?: Node | Range, similar?: boolean) => {
   getRtcInstanceWithError(editor).formatter.remove(name, vars, node, similar);
 };
 
-export const toggleFormat = (editor: Editor, name: string, vars: Record<string, string>, node: DomNode): void => {
+export const toggleFormat = (editor: Editor, name: string, vars: Record<string, string>, node: Node): void => {
   getRtcInstanceWithError(editor).formatter.toggle(name, vars, node);
 };
 

@@ -11,7 +11,7 @@ import { UploadHandler } from '../file/Uploader';
 import DOMUtils from './dom/DOMUtils';
 import Editor from './Editor';
 import Env from './Env';
-import { ReferrerPolicy } from './SettingsTypes';
+import { UpdatedReferrerPolicy } from './SettingsTypes';
 import I18n from './util/I18n';
 import Tools from './util/Tools';
 
@@ -96,7 +96,7 @@ const getImagesUploadHandler = (editor: Editor): UploadHandler => editor.getPara
 
 const shouldUseContentCssCors = (editor: Editor): boolean => editor.getParam('content_css_cors', false, 'boolean');
 
-const getReferrerPolicy = (editor: Editor): ReferrerPolicy => editor.getParam('referrer_policy', '', 'string') as ReferrerPolicy;
+const getReferrerPolicy = (editor: Editor): UpdatedReferrerPolicy => editor.getParam('referrer_policy', '', 'string') as UpdatedReferrerPolicy;
 
 const getLanguageCode = (editor: Editor): string => editor.getParam('language', 'en', 'string');
 

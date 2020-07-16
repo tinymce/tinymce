@@ -9,7 +9,7 @@ import { HTMLElement, Node } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { Attribute, Insert, SugarElement, SugarText } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
-import Selection from 'tinymce/core/api/dom/Selection';
+import EditorSelection from 'tinymce/core/api/dom/Selection';
 import * as TextCollect from './TextCollect';
 import * as TextPosition from './TextPosition';
 import { Pattern, TextMatch, TextSection } from './Types';
@@ -49,7 +49,7 @@ const findAndMark = (dom: DOMUtils, pattern: Pattern, node: Node, replacementNod
   return matches.length;
 };
 
-const findAndMarkInSelection = (dom: DOMUtils, pattern: Pattern, selection: Selection, replacementNode: HTMLElement) => {
+const findAndMarkInSelection = (dom: DOMUtils, pattern: Pattern, selection: EditorSelection, replacementNode: HTMLElement) => {
   const bookmark = selection.getBookmark();
 
   // Handle table cell selection as the table plugin enables

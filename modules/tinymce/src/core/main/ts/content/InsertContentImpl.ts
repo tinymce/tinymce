@@ -10,11 +10,11 @@ import { Option } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import DOMUtils from '../api/dom/DOMUtils';
 import ElementUtils from '../api/dom/ElementUtils';
-import Selection from '../api/dom/Selection';
+import EditorSelection from '../api/dom/Selection';
 import Editor from '../api/Editor';
 import Env from '../api/Env';
-import ParserNode from '../api/html/Node';
-import Serializer from '../api/html/Serializer';
+import AstNode from '../api/html/Node';
+import HtmlSerializer from '../api/html/Serializer';
 import * as Settings from '../api/Settings';
 import Tools from '../api/util/Tools';
 import CaretPosition from '../caret/CaretPosition';
@@ -93,7 +93,7 @@ const reduceInlineTextElements = (editor: Editor, merge: boolean) => {
   }
 };
 
-const markFragmentElements = (fragment: ParserNode) => {
+const markFragmentElements = (fragment: AstNode) => {
   let node = fragment;
 
   while ((node = node.walk())) {
@@ -220,7 +220,7 @@ const deleteSelectedContent = (editor: Editor) => {
 export const insertHtmlAtCaret = function (editor: Editor, value: string, details) {
   let parentNode, rootNode, args;
   let marker, rng, node;
-  const selection: Selection = editor.selection, dom = editor.dom;
+  const selection: EditorSelection = editor.selection, dom = editor.dom;
 
   // Check for whitespace before/after value
   if (/^ | $/.test(value)) {
@@ -231,7 +231,7 @@ export const insertHtmlAtCaret = function (editor: Editor, value: string, detail
   const parser = editor.parser;
   const merge = details.merge;
 
-  const serializer = Serializer({
+  const serializer = HtmlSerializer({
     validate: Settings.shouldValidate(editor)
   }, editor.schema);
   const bookmarkHtml = '<span id="mce_marker" data-mce-type="bookmark">&#xFEFF;&#x200B;</span>';

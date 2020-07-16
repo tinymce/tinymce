@@ -7,7 +7,7 @@
 
 import { Registry } from '@ephox/bridge';
 import { Document, Element, Event, HTMLElement, HTMLIFrameElement, Window } from '@ephox/dom-globals';
-import { Option, Arr } from '@ephox/katamari';
+import { Arr, Option } from '@ephox/katamari';
 import * as EditorContent from '../content/EditorContent';
 import * as NodeType from '../dom/NodeType';
 import * as EditorRemove from '../EditorRemove';
@@ -24,8 +24,9 @@ import Annotator from './Annotator';
 import DomQuery, { DomQueryConstructor } from './dom/DomQuery';
 import DOMUtils from './dom/DOMUtils';
 import ScriptLoader from './dom/ScriptLoader';
-import Selection from './dom/Selection';
+import EditorSelection from './dom/Selection';
 import DomSerializer from './dom/Serializer';
+import { StyleSheetLoader } from './dom/StyleSheetLoader';
 import EditorCommands, { EditorCommandCallback } from './EditorCommands';
 import EditorManager from './EditorManager';
 import EditorObservable from './EditorObservable';
@@ -33,11 +34,12 @@ import EditorUpload, { UploadCallback, UploadResult } from './EditorUpload';
 import Env from './Env';
 import Formatter from './Formatter';
 import DomParser from './html/DomParser';
-import Node from './html/Node';
+import AstNode from './html/Node';
 import Schema from './html/Schema';
 import { create, Mode } from './Mode';
 import NotificationManager from './NotificationManager';
 import PluginManager, { Plugin } from './PluginManager';
+import * as Settings from './Settings';
 import { EditorSettings, RawEditorSettings } from './SettingsTypes';
 import Shortcuts from './Shortcuts';
 import { Theme } from './ThemeManager';
@@ -47,8 +49,6 @@ import I18n, { TranslatedString, Untranslated } from './util/I18n';
 import Tools from './util/Tools';
 import URI from './util/URI';
 import WindowManager from './WindowManager';
-import { StyleSheetLoader } from './dom/StyleSheetLoader';
-import * as Settings from './Settings';
 
 /**
  * This class contains the core logic for a TinyMCE editor.
@@ -255,7 +255,7 @@ class Editor implements EditorObservable {
   public readonly: boolean;
   public removed: boolean;
   public schema: Schema;
-  public selection: Selection;
+  public selection: EditorSelection;
   public serializer: DomSerializer;
   public startContent: string;
   public targetElm: HTMLElement;
@@ -841,7 +841,7 @@ class Editor implements EditorObservable {
    * tinymce.activeEditor.setContent('<p>Some html</p>', {format: 'html'});
    */
   public setContent (content: string, args?: EditorContent.SetContentArgs): string;
-  public setContent (content: Node, args?: EditorContent.SetContentArgs): Node;
+  public setContent (content: AstNode, args?: EditorContent.SetContentArgs): AstNode;
   public setContent(content: EditorContent.Content, args?: EditorContent.SetContentArgs): EditorContent.Content {
     return EditorContent.setContent(this, content, args);
   }
@@ -863,7 +863,7 @@ class Editor implements EditorObservable {
    * // Get content of a specific editor:
    * tinymce.get('content id').getContent()
    */
-  public getContent (args: { format: 'tree' } & EditorContent.GetContentArgs): Node;
+  public getContent (args: { format: 'tree' } & EditorContent.GetContentArgs): AstNode;
   public getContent (args?: EditorContent.GetContentArgs): string;
   public getContent(args?: EditorContent.GetContentArgs): EditorContent.Content {
     return EditorContent.getContent(this, args);

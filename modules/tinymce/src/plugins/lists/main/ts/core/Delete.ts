@@ -10,7 +10,7 @@ import { Arr } from '@ephox/katamari';
 import { Compare, SugarElement } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import RangeUtils from 'tinymce/core/api/dom/RangeUtils';
-import TreeWalker from 'tinymce/core/api/dom/TreeWalker';
+import DomTreeWalker from 'tinymce/core/api/dom/TreeWalker';
 import Editor from 'tinymce/core/api/Editor';
 import VK from 'tinymce/core/api/util/VK';
 import { flattenListSelection, outdentListSelection } from '../actions/Indendation';
@@ -34,7 +34,7 @@ const findNextCaretContainer = function (editor: Editor, rng: Range, isForward: 
     node = RangeUtils.getNode(node, offset);
   }
 
-  const walker = new TreeWalker(node, root);
+  const walker = new DomTreeWalker(node, root);
 
   // Delete at <li>|<br></li> then jump over the bogus br
   if (isForward) {

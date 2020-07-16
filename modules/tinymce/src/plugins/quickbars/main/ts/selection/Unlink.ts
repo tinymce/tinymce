@@ -7,7 +7,7 @@
 
 import { HTMLElement, Node } from '@ephox/dom-globals';
 import RangeUtils from 'tinymce/core/api/dom/RangeUtils';
-import TreeWalker from 'tinymce/core/api/dom/TreeWalker';
+import DomTreeWalker from 'tinymce/core/api/dom/TreeWalker';
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import * as Bookmark from './Bookmark';
@@ -23,7 +23,7 @@ const getSelectedElements = function (rootElm: HTMLElement, startNode: Node, end
   let node;
   const elms = [];
 
-  const walker = new TreeWalker(startNode, rootElm);
+  const walker = new DomTreeWalker(startNode, rootElm);
   for (node = startNode; node; node = walker.next()) {
     if (node.nodeType === 1) {
       elms.push(node);

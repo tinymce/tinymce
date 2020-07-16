@@ -11,7 +11,7 @@ import * as ParserFilters from '../../html/ParserFilters';
 import { hasOnlyChild, isEmpty, isLineBreakNode, isPaddedWithNbsp, paddEmptyNode } from '../../html/ParserUtils';
 import { BlobCache } from '../file/BlobCache';
 import Tools from '../util/Tools';
-import Node from './Node';
+import AstNode from './Node';
 import SaxParser, { ParserFormat } from './SaxParser';
 import Schema, { SchemaElement } from './Schema';
 
@@ -41,7 +41,7 @@ export interface ParserArgs {
   [key: string]: any;
 }
 
-export type ParserFilterCallback = (nodes: Node[], name: string, args: ParserArgs) => void;
+export type ParserFilterCallback = (nodes: AstNode[], name: string, args: ParserArgs) => void;
 
 export interface ParserFilter {
   name: string;
@@ -71,12 +71,12 @@ export interface DomParserSettings {
 
 interface DomParser {
   schema: Schema;
-  addAttributeFilter (name: string, callback: (nodes: Node[], name: string, args: ParserArgs) => void): void;
+  addAttributeFilter (name: string, callback: (nodes: AstNode[], name: string, args: ParserArgs) => void): void;
   getAttributeFilters (): ParserFilter[];
-  addNodeFilter (name: string, callback: (nodes: Node[], name: string, args: ParserArgs) => void): void;
+  addNodeFilter (name: string, callback: (nodes: AstNode[], name: string, args: ParserArgs) => void): void;
   getNodeFilters (): ParserFilter[];
-  filterNode (node: Node): Node;
-  parse (html: string, args?: ParserArgs): Node;
+  filterNode (node: AstNode): AstNode;
+  parse (html: string, args?: ParserArgs): AstNode;
 }
 
 const DomParser = function (settings?: DomParserSettings, schema = Schema()): DomParser {
@@ -189,13 +189,13 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
             continue;
           }
 
-          node.wrap(filterNode(new Node('ul', 1)));
+          node.wrap(filterNode(new AstNode('ul', 1)));
           continue;
         }
 
         // Try wrapping the element in a DIV
         if (schema.isValidChild(node.parent.name, 'div') && schema.isValidChild('div', node.name)) {
-          node.wrap(filterNode(new Node('div', 1)));
+          node.wrap(filterNode(new AstNode('div', 1)));
         } else {
           // We failed wrapping it, then remove or unwrap it
           if (specialElements[node.name]) {
@@ -215,7 +215,7 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
    * @param {tinymce.html.Node} node the node to run filters on.
    * @return {tinymce.html.Node} The passed in node.
    */
-  const filterNode = (node: Node): Node => {
+  const filterNode = (node: AstNode): AstNode => {
     let i, name, list;
 
     name = node.name;
@@ -263,7 +263,7 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
    * @method {String} name Comma separated list of nodes to collect.
    * @param {function} callback Callback function to execute once it has collected nodes.
    */
-  const addNodeFilter = (name: string, callback: (nodes: Node[], name: string, args: ParserArgs) => void) => {
+  const addNodeFilter = (name: string, callback: (nodes: AstNode[], name: string, args: ParserArgs) => void) => {
     each(explode(name), function (name) {
       let list = nodeFilters[name];
 
@@ -301,7 +301,7 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
    * @param {String} name Comma separated list of nodes to collect.
    * @param {function} callback Callback function to execute once it has collected nodes.
    */
-  const addAttributeFilter = (name: string, callback: (nodes: Node[], name: string, args: ParserArgs) => void) => {
+  const addAttributeFilter = (name: string, callback: (nodes: AstNode[], name: string, args: ParserArgs) => void) => {
     each(explode(name), function (name) {
       let i;
 
@@ -328,11 +328,11 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
    * @param {Object} args Optional args object that gets passed to all filter functions.
    * @return {tinymce.html.Node} Root node containing the tree.
    */
-  const parse = (html: string, args?: ParserArgs): Node => {
+  const parse = (html: string, args?: ParserArgs): AstNode => {
     let nodes, i, l, fi, fl, list, name;
     const invalidChildren = [];
     let isInWhiteSpacePreservedElement;
-    let node: Node;
+    let node: AstNode;
 
     const getRootBlockName = (name) => {
       if (name === false) {
@@ -411,7 +411,7 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
     };
 
     const createNode = function (name, type) {
-      const node = new Node(name, type);
+      const node = new AstNode(name, type);
       let list;
 
       if (name in nodeFilters) {
@@ -680,7 +680,7 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
       }
     }, schema);
 
-    const rootNode = node = new Node(args.context || settings.root_name, 11);
+    const rootNode = node = new AstNode(args.context || settings.root_name, 11);
 
     parser.parse(html, args.format as ParserFormat);
 

@@ -7,10 +7,10 @@
 
 import { Node } from '@ephox/dom-globals';
 
-export interface TreeWalkerConstructor {
-  readonly prototype: TreeWalker;
+export interface DomTreeWalkerConstructor {
+  readonly prototype: DomTreeWalker;
 
-  new (startNode: Node, rootNode: Node): TreeWalker;
+  new (startNode: Node, rootNode: Node): DomTreeWalker;
 }
 
 /**
@@ -25,7 +25,7 @@ export interface TreeWalkerConstructor {
  * } while (walker.next());
  */
 
-class TreeWalker {
+class DomTreeWalker {
   private readonly rootNode: Node;
   private node: Node;
 
@@ -135,4 +135,4 @@ class TreeWalker {
   }
 }
 
-export default TreeWalker;
+export default DomTreeWalker;

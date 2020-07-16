@@ -7,8 +7,8 @@
 
 import { Node, Text } from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
+import DomTreeWalker from '../api/dom/TreeWalker';
 import * as NodeType from './NodeType';
-import TreeWalker from '../api/dom/TreeWalker';
 
 interface TextWalker {
   current (): Option<Text>;
@@ -18,7 +18,7 @@ interface TextWalker {
 }
 
 const TextWalker = (startNode: Node, rootNode: Node, isBoundary: (node: Node) => boolean = Fun.never): TextWalker => {
-  const walker = new TreeWalker(startNode, rootNode);
+  const walker = new DomTreeWalker(startNode, rootNode);
 
   const walk = (direction: 'next' | 'prev' | 'prev2'): Option<Text> => {
     let next: Node;

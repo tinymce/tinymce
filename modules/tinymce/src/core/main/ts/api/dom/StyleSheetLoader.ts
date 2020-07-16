@@ -8,7 +8,7 @@
 import { Document, navigator, Node, ShadowRoot } from '@ephox/dom-globals';
 import { Arr, Fun, Future, Futures, Result, Results } from '@ephox/katamari';
 import { Attribute, Insert, SugarElement, SugarShadowDom, Traverse } from '@ephox/sugar';
-import { ReferrerPolicy } from '../SettingsTypes';
+import { UpdatedReferrerPolicy } from '../SettingsTypes';
 import Delay from '../util/Delay';
 import Tools from '../util/Tools';
 
@@ -21,13 +21,13 @@ import Tools from '../util/Tools';
 export interface StyleSheetLoader {
   load: (url: string, loadedCallback: Function, errorCallback?: Function) => void;
   loadAll: (urls: string[], success: Function, failure: Function) => void;
-  _setReferrerPolicy: (referrerPolicy: ReferrerPolicy) => void;
+  _setReferrerPolicy: (referrerPolicy: UpdatedReferrerPolicy) => void;
 }
 
 export interface StyleSheetLoaderSettings {
   maxLoadTime: number;
   contentCssCors: boolean;
-  referrerPolicy: ReferrerPolicy;
+  referrerPolicy: UpdatedReferrerPolicy;
 }
 
 export function StyleSheetLoader(documentOrShadowRoot: Document | ShadowRoot, settings: Partial<StyleSheetLoaderSettings> = {}): StyleSheetLoader {
@@ -39,7 +39,7 @@ export function StyleSheetLoader(documentOrShadowRoot: Document | ShadowRoot, se
 
   const maxLoadTime = settings.maxLoadTime || 5000;
 
-  const _setReferrerPolicy = (referrerPolicy: ReferrerPolicy) => {
+  const _setReferrerPolicy = (referrerPolicy: UpdatedReferrerPolicy) => {
     settings.referrerPolicy = referrerPolicy;
   };
 

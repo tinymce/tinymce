@@ -12,9 +12,9 @@ import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
 import * as Events from '../api/Events';
 import DomParser, { DomParserSettings, ParserArgs, ParserFilter } from '../api/html/DomParser';
-import Node from '../api/html/Node';
+import AstNode from '../api/html/Node';
 import Schema, { SchemaSettings } from '../api/html/Schema';
-import Serializer, { SerializerSettings } from '../api/html/Serializer';
+import HtmlSerializer, { HtmlSerializerSettings } from '../api/html/Serializer';
 import { WriterSettings } from '../api/html/Writer';
 import { URLConverter } from '../api/SettingsTypes';
 import Tools from '../api/util/Tools';
@@ -23,23 +23,23 @@ import * as DomSerializerFilters from './DomSerializerFilters';
 import * as DomSerializerPreProcess from './DomSerializerPreProcess';
 import { isWsPreserveElement } from './ElementType';
 
-export interface SerializerArgs extends ParserArgs {
+export interface DomSerializerArgs extends ParserArgs {
   format?: string;
 }
 
-interface DomSerializerSettings extends DomParserSettings, WriterSettings, SchemaSettings, SerializerSettings {
+interface DomSerializerSettings extends DomParserSettings, WriterSettings, SchemaSettings, HtmlSerializerSettings {
   url_converter?: URLConverter;
   url_converter_scope?: {};
 }
 
-interface DomSerializer {
+interface DomSerializerImpl {
   schema: Schema;
-  addNodeFilter (name: string, callback: (nodes: Node[], name: string, args: ParserArgs) => void): void;
-  addAttributeFilter (name: string, callback: (nodes: Node[], name: string, args: ParserArgs) => void): void;
+  addNodeFilter (name: string, callback: (nodes: AstNode[], name: string, args: ParserArgs) => void): void;
+  addAttributeFilter (name: string, callback: (nodes: AstNode[], name: string, args: ParserArgs) => void): void;
   getNodeFilters (): ParserFilter[];
   getAttributeFilters (): ParserFilter[];
-  serialize (node: Element, parserArgs: { format: 'tree' } & SerializerArgs): Node;
-  serialize (node: Element, parserArgs?: SerializerArgs): string;
+  serialize (node: Element, parserArgs: { format: 'tree' } & DomSerializerArgs): AstNode;
+  serialize (node: Element, parserArgs?: DomSerializerArgs): string;
   addRules (rules: string): void;
   setRules (rules: string): void;
   addTempAttr (name: string): void;
@@ -81,17 +81,17 @@ const parseHtml = function (htmlParser: DomParser, html: string, args: ParserArg
   return rootNode;
 };
 
-const serializeNode = function (settings: SerializerSettings, schema: Schema, node: Node) {
-  const htmlSerializer = Serializer(settings, schema);
+const serializeNode = function (settings: HtmlSerializerSettings, schema: Schema, node: AstNode) {
+  const htmlSerializer = HtmlSerializer(settings, schema);
   return htmlSerializer.serialize(node);
 };
 
-const toHtml = function (editor: Editor, settings: SerializerSettings, schema: Schema, rootNode: Node, args: ParserArgs) {
+const toHtml = function (editor: Editor, settings: HtmlSerializerSettings, schema: Schema, rootNode: AstNode, args: ParserArgs) {
   const content = serializeNode(settings, schema, rootNode);
   return postProcess(editor, args, content);
 };
 
-const DomSerializer = function (settings: DomSerializerSettings, editor: Editor): DomSerializer {
+const DomSerializerImpl = function (settings: DomSerializerSettings, editor: Editor): DomSerializerImpl {
   const tempAttrs = [ 'data-mce-selected' ];
 
   const dom = editor && editor.dom ? editor.dom : DOMUtils.DOM;
@@ -131,6 +131,6 @@ const DomSerializer = function (settings: DomSerializerSettings, editor: Editor)
 };
 
 export {
-  DomSerializer,
+  DomSerializerImpl,
   DomSerializerSettings
 };

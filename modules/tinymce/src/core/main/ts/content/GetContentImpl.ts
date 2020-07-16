@@ -9,7 +9,7 @@ import { HTMLElement } from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import Editor from '../api/Editor';
-import Node from '../api/html/Node';
+import AstNode from '../api/html/Node';
 import * as Settings from '../api/Settings';
 import Tools from '../api/util/Tools';
 import { isWsPreserveElement } from '../dom/ElementType';
@@ -59,6 +59,6 @@ const getContentFromBody = (editor: Editor, args: GetContentArgs, format: Conten
 
 export const getContentInternal = (editor: Editor, args: GetContentArgs, format): Content => Option.from(editor.getBody())
   .fold(
-    Fun.constant(args.format === 'tree' ? new Node('body', 11) : ''),
+    Fun.constant(args.format === 'tree' ? new AstNode('body', 11) : ''),
     (body) => getContentFromBody(editor, args, format, body)
   );

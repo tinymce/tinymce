@@ -8,7 +8,7 @@
 import { Element, Node, Range } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import { Compare, Focus, SugarElement } from '@ephox/sugar';
-import Selection from '../api/dom/Selection';
+import EditorSelection from '../api/dom/Selection';
 import Editor from '../api/Editor';
 import Env from '../api/Env';
 import * as CaretFinder from '../caret/CaretFinder';
@@ -75,7 +75,7 @@ const hasFocus = (editor: Editor): boolean => editor.inline ? hasInlineFocus(edi
 const hasEditorOrUiFocus = (editor: Editor): boolean => hasFocus(editor) || hasUiFocus(editor);
 
 const focusEditor = (editor: Editor) => {
-  const selection: Selection = editor.selection;
+  const selection: EditorSelection = editor.selection;
   const body = editor.getBody();
   let rng = selection.getRng();
 

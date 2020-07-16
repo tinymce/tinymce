@@ -7,7 +7,7 @@
 
 import { Fun, Option, Unicode } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
-import TreeWalker from '../api/dom/TreeWalker';
+import DomTreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
 import * as ElementType from '../dom/ElementType';
 import * as NodeType from '../dom/NodeType';
@@ -44,7 +44,7 @@ const moveToCaretPosition = function (editor: Editor, root) {
   root.normalize();
 
   if (root.hasChildNodes()) {
-    const walker = new TreeWalker(root, root);
+    const walker = new DomTreeWalker(root, root);
 
     while ((node = walker.current())) {
       if (NodeType.isText(node)) {

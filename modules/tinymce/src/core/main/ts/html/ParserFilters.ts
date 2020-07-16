@@ -9,17 +9,17 @@ import { Image } from '@ephox/dom-globals';
 import { Arr, Obj, Option, Unicode } from '@ephox/katamari';
 import Env from '../api/Env';
 import DomParser, { DomParserSettings } from '../api/html/DomParser';
-import Node from '../api/html/Node';
+import AstNode from '../api/html/Node';
 import Tools from '../api/util/Tools';
 import * as Conversions from '../file/Conversions';
 import { uniqueId } from '../file/ImageScanner';
 import { parseDataUri } from './Base64Uris';
 import { isEmpty, paddEmptyNode } from './ParserUtils';
 
-const isBogusImage = (img: Node) => img.attr('data-mce-bogus');
-const isInternalImageSource = (img: Node) => img.attr('src') === Env.transparentSrc || img.attr('data-mce-placeholder');
+const isBogusImage = (img: AstNode) => img.attr('data-mce-bogus');
+const isInternalImageSource = (img: AstNode) => img.attr('src') === Env.transparentSrc || img.attr('data-mce-placeholder');
 
-const isValidDataImg = (img: Node, settings: DomParserSettings) => {
+const isValidDataImg = (img: AstNode, settings: DomParserSettings) => {
   if (settings.images_dataimg_filter) {
     // Construct an image element
     const imgElem = new Image();
@@ -37,7 +37,7 @@ const isValidDataImg = (img: Node, settings: DomParserSettings) => {
 
 const registerBase64ImageFilter = (parser: DomParser, settings: DomParserSettings) => {
   const { blob_cache: blobCache } = settings;
-  const processImage = (img: Node): void => {
+  const processImage = (img: AstNode): void => {
     const inputSrc = img.attr('src');
 
     if (isInternalImageSource(img) || isBogusImage(img)) {
@@ -143,7 +143,7 @@ const register = (parser: DomParser, settings: DomParserSettings): void => {
           }
 
           if (lastParent === parent && settings.padd_empty_with_br !== true) {
-            textNode = new Node('#text', 3);
+            textNode = new AstNode('#text', 3);
             textNode.value = Unicode.nbsp;
             node.replace(textNode);
           }
@@ -213,7 +213,7 @@ const register = (parser: DomParser, settings: DomParserSettings): void => {
           if (node.prev && node.prev.name === 'li') {
             node.prev.append(node);
           } else {
-            const li = new Node('li', 1);
+            const li = new AstNode('li', 1);
             li.attr('style', 'list-style-type: none');
             node.wrap(li);
           }

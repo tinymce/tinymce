@@ -10,7 +10,7 @@ import DOMUtils from '../api/dom/DOMUtils';
 import DomParser from '../api/html/DomParser';
 import Entities from '../api/html/Entities';
 import * as Zwsp from '../text/Zwsp';
-import { DomSerializerSettings } from './DomSerializer';
+import { DomSerializerSettings } from './DomSerializerImpl';
 
 declare const unescape: any;
 

@@ -7,7 +7,7 @@
 
 import { Node } from '@ephox/dom-globals';
 import DOMUtils from '../api/dom/DOMUtils';
-import Selection from '../api/dom/Selection';
+import EditorSelection from '../api/dom/Selection';
 import Editor from '../api/Editor';
 import { FormatVars } from '../api/fmt/Format';
 import Tools from '../api/util/Tools';
@@ -38,7 +38,7 @@ const applyFormat = function (ed: Editor, name: string, vars?: FormatVars, node?
   const format = formatList[0];
   let rng;
   const isCollapsed = !node && ed.selection.isCollapsed();
-  const dom = ed.dom, selection: Selection = ed.selection;
+  const dom = ed.dom, selection: EditorSelection = ed.selection;
 
   const setElementFormat = function (elm: Node, fmt?) {
     fmt = fmt || format;

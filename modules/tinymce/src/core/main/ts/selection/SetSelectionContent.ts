@@ -9,7 +9,7 @@ import { DocumentFragment, Range, Text } from '@ephox/dom-globals';
 import { Option, Options } from '@ephox/katamari';
 import { Remove, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 import Editor from '../api/Editor';
-import Serializer from '../api/html/Serializer';
+import HtmlSerializer from '../api/html/Serializer';
 import { EditorEvent } from '../api/util/EventDispatcher';
 import { SetContentArgs } from '../content/ContentTypes';
 import * as ScrollIntoView from '../dom/ScrollIntoView';
@@ -68,7 +68,7 @@ const setupArgs = (args: Partial<SelectionSetContentArgs>, content: string): Sel
 const cleanContent = (editor: Editor, args: SelectionSetContentArgs) => {
   if (args.format !== 'raw') {
     const node = editor.parser.parse(args.content, { isRootContent: true, forced_root_block: false, ...args });
-    return Serializer({ validate: editor.validate }, editor.schema).serialize(node);
+    return HtmlSerializer({ validate: editor.validate }, editor.schema).serialize(node);
   } else {
     return args.content;
   }

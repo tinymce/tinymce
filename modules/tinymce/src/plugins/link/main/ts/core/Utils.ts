@@ -7,7 +7,7 @@
 
 import { Element, HTMLAnchorElement, Node, Range } from '@ephox/dom-globals';
 import { Arr, Obj, Option, Type } from '@ephox/katamari';
-import TreeWalker from 'tinymce/core/api/dom/TreeWalker';
+import DomTreeWalker from 'tinymce/core/api/dom/TreeWalker';
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import * as Settings from '../api/Settings';
@@ -22,7 +22,7 @@ const collectNodesInRange = <T extends Node>(rng: Range, predicate: (node) => no
     return [];
   } else {
     const contents = rng.cloneContents();
-    const walker = new TreeWalker(contents.firstChild, contents);
+    const walker = new DomTreeWalker(contents.firstChild, contents);
     const elements: T[] = [];
     let current = contents.firstChild;
     do {

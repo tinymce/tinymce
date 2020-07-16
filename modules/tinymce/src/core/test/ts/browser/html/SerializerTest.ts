@@ -3,13 +3,13 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { LegacyUnit } from '@ephox/mcagar';
 import DomParser from 'tinymce/core/api/html/DomParser';
 import Schema from 'tinymce/core/api/html/Schema';
-import Serializer from 'tinymce/core/api/html/Serializer';
+import HtmlSerializer from 'tinymce/core/api/html/Serializer';
 
 UnitTest.asynctest('browser.tinymce.core.html.SerializerTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
 
   suite.test('Basic serialization', function () {
-    const serializer = Serializer();
+    const serializer = HtmlSerializer();
 
     LegacyUnit.equal(serializer.serialize(DomParser().parse('text<text&')), 'text&lt;text&amp;');
     LegacyUnit.equal(
@@ -23,7 +23,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SerializerTest', function (success
   });
 
   suite.test('Sorting of attributes', function () {
-    const serializer = Serializer();
+    const serializer = HtmlSerializer();
 
     LegacyUnit.equal(
       serializer.serialize(DomParser().parse('<b class="class" id="id">x</b>')),
@@ -33,7 +33,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SerializerTest', function (success
 
   suite.test('Serialize with validate: true, when parsing with validate:false bug', function () {
     const schema = Schema({ valid_elements: 'b' });
-    const serializer = Serializer({}, schema);
+    const serializer = HtmlSerializer({}, schema);
 
     LegacyUnit.equal(
       serializer.serialize(DomParser({ validate: false }, schema).parse('<b a="1" b="2">a</b><i a="1" b="2">b</i>')),
