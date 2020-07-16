@@ -10,7 +10,6 @@ import { Bookmark } from '../bookmark/BookmarkTypes';
 import * as FontCommands from '../commands/FontCommands';
 import * as IndentOutdent from '../commands/IndentOutdent';
 import * as InsertContent from '../content/InsertContent';
-import * as DeleteCommands from '../delete/DeleteCommands';
 import * as NodeType from '../dom/NodeType';
 import * as InsertBr from '../newline/InsertBr';
 import * as InsertNewLine from '../newline/InsertNewLine';
@@ -512,14 +511,6 @@ class EditorCommands {
         }
       },
 
-      'delete'() {
-        DeleteCommands.deleteCommand(editor);
-      },
-
-      'forwardDelete'() {
-        DeleteCommands.forwardDeleteCommand(editor);
-      },
-
       'mceNewDocument'() {
         editor.setContent('');
       },
@@ -531,7 +522,8 @@ class EditorCommands {
     });
 
     const alignStates = (name: string) => () => {
-      const nodes = editor.selection.isCollapsed() ? [ editor.dom.getParent(editor.selection.getNode(), editor.dom.isBlock) ] : editor.selection.getSelectedBlocks();
+      const selection = editor.selection;
+      const nodes = selection.isCollapsed() ? [ editor.dom.getParent(selection.getNode(), editor.dom.isBlock) ] : selection.getSelectedBlocks();
       const matches = map(nodes, function (node) {
         return !!editor.formatter.matchNode(node, name);
       });

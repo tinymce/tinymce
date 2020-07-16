@@ -12,7 +12,7 @@ import Editor from '../api/Editor';
 import { EditorEvent } from '../api/util/EventDispatcher';
 import { endTypingLevelIgnoreLocks } from '../undo/TypingState';
 
-const handleEnterKeyEvent = function (editor: Editor, event: EditorEvent<KeyboardEvent>) {
+const handleEnterKeyEvent = (editor: Editor, event: EditorEvent<KeyboardEvent>) => {
   if (event.isDefaultPrevented()) {
     return;
   }
@@ -20,7 +20,7 @@ const handleEnterKeyEvent = function (editor: Editor, event: EditorEvent<Keyboar
   event.preventDefault();
 
   endTypingLevelIgnoreLocks(editor.undoManager);
-  editor.undoManager.transact(function () {
+  editor.undoManager.transact(() => {
     if (editor.selection.isCollapsed() === false) {
       editor.execCommand('Delete');
     }
@@ -29,8 +29,8 @@ const handleEnterKeyEvent = function (editor: Editor, event: EditorEvent<Keyboar
   });
 };
 
-const setup = function (editor: Editor) {
-  editor.on('keydown', function (event: EditorEvent<KeyboardEvent>) {
+const setup = (editor: Editor) => {
+  editor.on('keydown', (event: EditorEvent<KeyboardEvent>) => {
     if (event.keyCode === VK.ENTER) {
       handleEnterKeyEvent(editor, event);
     }

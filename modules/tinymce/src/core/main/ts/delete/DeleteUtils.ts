@@ -5,57 +5,56 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Node as DomNode } from '@ephox/dom-globals';
 import { Option, Options } from '@ephox/katamari';
 import { Compare, Element, PredicateFind } from '@ephox/sugar';
-import * as CaretFinder from '../caret/CaretFinder';
-import { isTextBlock, isListItem } from '../dom/ElementType';
-import * as InlineUtils from '../keyboard/InlineUtils';
 import Editor from '../api/Editor';
+import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
-import { Node as DomNode } from '@ephox/dom-globals';
+import { isListItem, isTextBlock } from '../dom/ElementType';
+import * as InlineUtils from '../keyboard/InlineUtils';
 
 const isBeforeRoot = (rootNode: Element<any>) => (elm: Element<any>): boolean =>
   Compare.eq(rootNode, Element.fromDom(elm.dom().parentNode));
 
-const getParentBlock = (rootNode, elm: Element<DomNode>): Option<Element<DomNode>> =>
+const getParentBlock = (rootNode: Element<DomNode>, elm: Element<DomNode>): Option<Element<DomNode>> =>
   (Compare.contains(rootNode, elm)
     ? PredicateFind.closest(elm, (element) => isTextBlock(element) || isListItem(element), isBeforeRoot(rootNode))
     : Option.none()
   );
 
-const placeCaretInEmptyBody = function (editor: Editor) {
+const placeCaretInEmptyBody = (editor: Editor) => {
   const body = editor.getBody();
   const node = body.firstChild && editor.dom.isBlock(body.firstChild) ? body.firstChild : body;
   editor.selection.setCursorLocation(node, 0);
 };
 
-const paddEmptyBody = function (editor: Editor) {
+const paddEmptyBody = (editor: Editor) => {
   if (editor.dom.isEmpty(editor.getBody())) {
     editor.setContent('');
     placeCaretInEmptyBody(editor);
   }
 };
 
-const willDeleteLastPositionInElement = function (forward: boolean, fromPos: CaretPosition, elm) {
-  return Options.lift2(
+const willDeleteLastPositionInElement = (forward: boolean, fromPos: CaretPosition, elm: DomNode) =>
+  Options.lift2(
     CaretFinder.firstPositionIn(elm),
     CaretFinder.lastPositionIn(elm),
-    function (firstPos, lastPos) {
+    (firstPos, lastPos): boolean => {
       const normalizedFirstPos = InlineUtils.normalizePosition(true, firstPos);
       const normalizedLastPos = InlineUtils.normalizePosition(false, lastPos);
       const normalizedFromPos = InlineUtils.normalizePosition(false, fromPos);
 
       if (forward) {
-        return CaretFinder.nextPosition(elm, normalizedFromPos).map(function (nextPos) {
-          return nextPos.isEqual(normalizedLastPos) && fromPos.isEqual(normalizedFirstPos);
-        }).getOr(false);
+        return CaretFinder.nextPosition(elm, normalizedFromPos).exists((nextPos) =>
+          nextPos.isEqual(normalizedLastPos) && fromPos.isEqual(normalizedFirstPos)
+        );
       } else {
-        return CaretFinder.prevPosition(elm, normalizedFromPos).map(function (prevPos) {
-          return prevPos.isEqual(normalizedFirstPos) && fromPos.isEqual(normalizedLastPos);
-        }).getOr(false);
+        return CaretFinder.prevPosition(elm, normalizedFromPos).exists((prevPos) =>
+          prevPos.isEqual(normalizedFirstPos) && fromPos.isEqual(normalizedLastPos)
+        );
       }
     }).getOr(true);
-};
 
 export {
   getParentBlock,

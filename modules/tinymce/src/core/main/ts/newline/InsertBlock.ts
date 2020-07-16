@@ -134,13 +134,15 @@ const getEditableRoot = function (dom, node) {
 };
 
 const applyAttributes = (editor: Editor, node: DomElement, forcedRootBlockAttrs: Record<string, string>) => {
+  const dom = editor.dom;
+
   // Merge and apply style attribute
   Option.from(forcedRootBlockAttrs.style)
-    .map(editor.dom.parseStyle)
+    .map(dom.parseStyle)
     .each((attrStyles) => {
       const currentStyles = Css.getAllRaw(Element.fromDom(node));
       const newStyles = { ...currentStyles, ...attrStyles };
-      editor.dom.setStyles(node, newStyles);
+      dom.setStyles(node, newStyles);
     });
 
   // Merge and apply class attribute
@@ -149,13 +151,13 @@ const applyAttributes = (editor: Editor, node: DomElement, forcedRootBlockAttrs:
   Options.lift2(attrClassesOpt, currentClassesOpt, (attrClasses, currentClasses) => {
     const filteredClasses = Arr.filter(currentClasses, (clazz) => !Arr.contains(attrClasses, clazz));
     const newClasses = [ ...attrClasses, ...filteredClasses ];
-    editor.dom.setAttrib(node, 'class', newClasses.join(' '));
+    dom.setAttrib(node, 'class', newClasses.join(' '));
   });
 
   // Apply any remaining forced root block attributes
   const appliedAttrs = [ 'style', 'class' ];
   const remainingAttrs = Obj.filter(forcedRootBlockAttrs, (_, attrs) => !Arr.contains(appliedAttrs, attrs));
-  editor.dom.setAttribs(node, remainingAttrs);
+  dom.setAttribs(node, remainingAttrs);
 };
 
 const setForcedBlockAttrs = function (editor: Editor, node) {

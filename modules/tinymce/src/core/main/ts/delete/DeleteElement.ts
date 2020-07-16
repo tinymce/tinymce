@@ -5,36 +5,33 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Fun, Obj, Option, Options } from '@ephox/katamari';
-import { Insert, Remove, Element, Node as SugarNode, PredicateFind, Traverse, Node } from '@ephox/sugar';
 import { Node as DomNode } from '@ephox/dom-globals';
+import { Fun, Obj, Option, Options } from '@ephox/katamari';
+import { Element, Insert, Node as SugarNode, Node, PredicateFind, Remove, Traverse } from '@ephox/sugar';
+import Editor from '../api/Editor';
 import * as CaretCandidate from '../caret/CaretCandidate';
 import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
-import * as MergeText from './MergeText';
 import * as Empty from '../dom/Empty';
 import * as NodeType from '../dom/NodeType';
-import Editor from '../api/Editor';
+import * as MergeText from './MergeText';
 
-const needsReposition = function (pos, elm) {
+const needsReposition = (pos: CaretPosition, elm: DomNode) => {
   const container = pos.container();
   const offset = pos.offset();
   return CaretPosition.isTextPosition(pos) === false && container === elm.parentNode && offset > CaretPosition.before(elm).offset();
 };
 
-const reposition = function (elm, pos) {
-  return needsReposition(pos, elm) ? CaretPosition(pos.container(), pos.offset() - 1) : pos;
-};
+const reposition = (elm: DomNode, pos: CaretPosition) =>
+  needsReposition(pos, elm) ? CaretPosition(pos.container(), pos.offset() - 1) : pos;
 
-const beforeOrStartOf = function (node) {
-  return NodeType.isText(node) ? CaretPosition(node, 0) : CaretPosition.before(node);
-};
+const beforeOrStartOf = (node: DomNode) =>
+  NodeType.isText(node) ? CaretPosition(node, 0) : CaretPosition.before(node);
 
-const afterOrEndOf = function (node) {
-  return NodeType.isText(node) ? CaretPosition(node, node.data.length) : CaretPosition.after(node);
-};
+const afterOrEndOf = (node: DomNode) =>
+  NodeType.isText(node) ? CaretPosition(node, node.data.length) : CaretPosition.after(node);
 
-const getPreviousSiblingCaretPosition = function (elm) {
+const getPreviousSiblingCaretPosition = (elm: DomNode): Option<CaretPosition> => {
   if (CaretCandidate.isCaretCandidate(elm.previousSibling)) {
     return Option.some(afterOrEndOf(elm.previousSibling));
   } else {
@@ -42,7 +39,7 @@ const getPreviousSiblingCaretPosition = function (elm) {
   }
 };
 
-const getNextSiblingCaretPosition = function (elm) {
+const getNextSiblingCaretPosition = (elm: DomNode): Option<CaretPosition> => {
   if (CaretCandidate.isCaretCandidate(elm.nextSibling)) {
     return Option.some(beforeOrStartOf(elm.nextSibling));
   } else {
@@ -50,71 +47,52 @@ const getNextSiblingCaretPosition = function (elm) {
   }
 };
 
-const findCaretPositionBackwardsFromElm = function (rootElement, elm) {
+const findCaretPositionBackwardsFromElm = (rootElement: DomNode, elm: DomNode) => {
   const startPosition = CaretPosition.before(elm.previousSibling ? elm.previousSibling : elm.parentNode);
   return CaretFinder.prevPosition(rootElement, startPosition).fold(
-    function () {
-      return CaretFinder.nextPosition(rootElement, CaretPosition.after(elm));
-    },
+    () => CaretFinder.nextPosition(rootElement, CaretPosition.after(elm)),
     Option.some
   );
 };
 
-const findCaretPositionForwardsFromElm = function (rootElement, elm) {
-  return CaretFinder.nextPosition(rootElement, CaretPosition.after(elm)).fold(
-    function () {
-      return CaretFinder.prevPosition(rootElement, CaretPosition.before(elm));
-    },
+const findCaretPositionForwardsFromElm = (rootElement: DomNode, elm: DomNode) =>
+  CaretFinder.nextPosition(rootElement, CaretPosition.after(elm)).fold(
+    () => CaretFinder.prevPosition(rootElement, CaretPosition.before(elm)),
     Option.some
   );
-};
 
-const findCaretPositionBackwards = function (rootElement, elm) {
-  return getPreviousSiblingCaretPosition(elm).orThunk(function () {
-    return getNextSiblingCaretPosition(elm);
-  }).orThunk(function () {
-    return findCaretPositionBackwardsFromElm(rootElement, elm);
-  });
-};
+const findCaretPositionBackwards = (rootElement: DomNode, elm: DomNode) =>
+  getPreviousSiblingCaretPosition(elm).orThunk(() => getNextSiblingCaretPosition(elm))
+    .orThunk(() => findCaretPositionBackwardsFromElm(rootElement, elm));
 
-const findCaretPositionForward = function (rootElement, elm) {
-  return getNextSiblingCaretPosition(elm).orThunk(function () {
-    return getPreviousSiblingCaretPosition(elm);
-  }).orThunk(function () {
-    return findCaretPositionForwardsFromElm(rootElement, elm);
-  });
-};
+const findCaretPositionForward = (rootElement: DomNode, elm: DomNode) =>
+  getNextSiblingCaretPosition(elm)
+    .orThunk(() => getPreviousSiblingCaretPosition(elm))
+    .orThunk(() => findCaretPositionForwardsFromElm(rootElement, elm));
 
-const findCaretPosition = function (forward: boolean, rootElement, elm) {
-  return forward ? findCaretPositionForward(rootElement, elm) : findCaretPositionBackwards(rootElement, elm);
-};
+const findCaretPosition = (forward: boolean, rootElement: DomNode, elm: DomNode) =>
+  forward ? findCaretPositionForward(rootElement, elm) : findCaretPositionBackwards(rootElement, elm);
 
-const findCaretPosOutsideElmAfterDelete = function (forward: boolean, rootElement, elm) {
-  return findCaretPosition(forward, rootElement, elm).map(Fun.curry(reposition, elm));
-};
+const findCaretPosOutsideElmAfterDelete = (forward: boolean, rootElement: DomNode, elm: DomNode) =>
+  findCaretPosition(forward, rootElement, elm).map(Fun.curry(reposition, elm));
 
-const setSelection = function (editor: Editor, forward: boolean, pos: Option<CaretPosition>) {
+const setSelection = (editor: Editor, forward: boolean, pos: Option<CaretPosition>) => {
   pos.fold(
-    function () {
+    () => {
       editor.focus();
     },
-    function (pos) {
+    (pos) => {
       editor.selection.setRng(pos.toRange(), forward);
     }
   );
 };
 
-const eqRawNode = function (rawNode: DomNode) {
-  return function (elm) {
-    return elm.dom() === rawNode;
-  };
-};
+const eqRawNode = (rawNode: DomNode) => (elm: Element) => elm.dom() === rawNode;
 
-const isBlock = function (editor: Editor, elm) {
-  return elm && editor.schema.getBlockElements().hasOwnProperty(SugarNode.name(elm));
-};
+const isBlock = (editor: Editor, elm: Element) =>
+  elm && Obj.has(editor.schema.getBlockElements(), SugarNode.name(elm));
 
-const paddEmptyBlock = (elm: Element<any>): Option<CaretPosition> => {
+const paddEmptyBlock = (elm: Element): Option<CaretPosition> => {
   if (Empty.isEmpty(elm)) {
     const br = Element.fromHtml('<br data-mce-bogus="1">');
     Remove.empty(elm);
@@ -162,12 +140,12 @@ const deleteElement = (editor: Editor, forward: boolean, elm: Element, moveCaret
     editor.selection.setCursorLocation();
   } else {
     parentBlock.bind(paddEmptyBlock).fold(
-      function () {
+      () => {
         if (moveCaret) {
           setSelection(editor, forward, normalizedAfterDeletePos);
         }
       },
-      function (paddPos) {
+      (paddPos) => {
         if (moveCaret) {
           setSelection(editor, forward, Option.some(paddPos));
         }

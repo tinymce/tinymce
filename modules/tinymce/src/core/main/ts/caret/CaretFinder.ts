@@ -59,7 +59,7 @@ const fromPosition = (forward: boolean, root: Node, pos: CaretPosition) => {
 };
 
 // Finds: <p>a|<b>b</b></p> -> <p>a<b>b|</b></p>
-const navigate = (forward: boolean, root: Element, from: CaretPosition) =>
+const navigate = (forward: boolean, root: Node, from: CaretPosition) =>
   fromPosition(forward, root, from).bind((to) => {
     if (CaretUtils.isInSameBlock(from, to, root) && shouldSkipPosition(forward, from, to)) {
       return fromPosition(forward, root, to);

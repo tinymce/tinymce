@@ -7,7 +7,7 @@
 
 import { document } from '@ephox/dom-globals';
 import { Throttler } from '@ephox/katamari';
-import * as CefUtils from '../keyboard/CefUtils';
+import * as FakeCaretUtils from '../caret/FakeCaretUtils';
 import Editor from '../api/Editor';
 
 const setup = function (editor: Editor) {
@@ -20,7 +20,7 @@ const setup = function (editor: Editor) {
     if (!editor.removed && editor.getBody().contains(document.activeElement)) {
       const rng = editor.selection.getRng();
       if (rng.collapsed) { // see TINY-1479
-        const caretRange = CefUtils.renderRangeCaret(editor, editor.selection.getRng(), false);
+        const caretRange = FakeCaretUtils.renderRangeCaret(editor, rng, false);
         editor.selection.setRng(caretRange);
       }
     }

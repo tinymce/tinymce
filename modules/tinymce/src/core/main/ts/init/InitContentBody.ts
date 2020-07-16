@@ -27,6 +27,7 @@ import Tools from '../api/util/Tools';
 import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import * as Placeholder from '../content/Placeholder';
+import * as DeleteCommands from '../delete/DeleteCommands';
 import * as NodeType from '../dom/NodeType';
 import * as TouchEvents from '../events/TouchEvents';
 import * as ForceBlocks from '../ForceBlocks';
@@ -407,7 +408,8 @@ const initContentBody = function (editor: Editor, skipWrite?: boolean) {
     MultiClickSelection.setup(editor);
   }
 
-  KeyboardOverrides.setup(editor);
+  const caret = KeyboardOverrides.setup(editor);
+  DeleteCommands.setup(editor, caret);
   ForceBlocks.setup(editor);
   Placeholder.setup(editor);
 

@@ -12,16 +12,16 @@ import VK from '../api/util/VK';
 import Editor from '../api/Editor';
 import { EditorEvent } from '../api/util/EventDispatcher';
 
-const executeKeydownOverride = function (editor: Editor, evt: KeyboardEvent) {
+const executeKeydownOverride = (editor: Editor, evt: KeyboardEvent) => {
   MatchKeys.execute([
     { keyCode: VK.SPACEBAR, action: MatchKeys.action(InsertSpace.insertSpaceOrNbspAtSelection, editor) }
-  ], evt).each(function (_) {
+  ], evt).each((_) => {
     evt.preventDefault();
   });
 };
 
-const setup = function (editor: Editor) {
-  editor.on('keydown', function (evt: EditorEvent<KeyboardEvent>) {
+const setup = (editor: Editor) => {
+  editor.on('keydown', (evt: EditorEvent<KeyboardEvent>) => {
     if (evt.isDefaultPrevented() === false) {
       executeKeydownOverride(editor, evt);
     }

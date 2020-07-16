@@ -17,14 +17,14 @@ const deleteCaret = (editor: Editor, forward: boolean): boolean => {
   return CaretFinder.fromPosition(forward, editor.getBody(), fromPos)
     .filter((pos) => forward ? isBeforeImageBlock(pos) : isAfterImageBlock(pos))
     .bind((pos) => Option.from(getChildNodeAtRelativeOffset(forward ? 0 : -1, pos)))
-    .map((elm) => {
+    .exists((elm) => {
       editor.selection.select(elm);
       return true;
-    })
-    .getOr(false);
+    });
 };
 
-const backspaceDelete = (editor: Editor, forward: boolean): boolean => editor.selection.isCollapsed() ? deleteCaret(editor, forward) : false;
+const backspaceDelete = (editor: Editor, forward: boolean): boolean =>
+  editor.selection.isCollapsed() ? deleteCaret(editor, forward) : false;
 
 export {
   backspaceDelete

@@ -80,7 +80,7 @@ const moveCaretToNewEmptyLine = (editor: Editor, forward: boolean) => {
   });
 };
 
-const moveV = (editor: Editor, forward: boolean) => () => {
+const moveV = (editor: Editor, forward: boolean) => {
   if (editor.selection.isCollapsed()) {
     return moveCaretToNewEmptyLine(editor, forward);
   } else {

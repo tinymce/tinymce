@@ -27,29 +27,21 @@ const defaultPatterns = (patterns: KeyPattern[]): KeyPattern[] => Arr.map(patter
   ...pattern
 }));
 
-const matchesEvent = function (pattern: KeyPattern, evt: KeyboardEvent) {
-  return (
-    evt.keyCode === pattern.keyCode &&
-    evt.shiftKey === pattern.shiftKey &&
-    evt.altKey === pattern.altKey &&
-    evt.ctrlKey === pattern.ctrlKey &&
-    evt.metaKey === pattern.metaKey
-  );
-};
+const matchesEvent = (pattern: KeyPattern, evt: KeyboardEvent) => (
+  evt.keyCode === pattern.keyCode &&
+  evt.shiftKey === pattern.shiftKey &&
+  evt.altKey === pattern.altKey &&
+  evt.ctrlKey === pattern.ctrlKey &&
+  evt.metaKey === pattern.metaKey
+);
 
-const match = function (patterns: KeyPattern[], evt: KeyboardEvent) {
-  return Arr.bind(defaultPatterns(patterns), (pattern) => matchesEvent(pattern, evt) ? [ pattern ] : [ ]);
-};
+const match = (patterns: KeyPattern[], evt: KeyboardEvent) =>
+  Arr.bind(defaultPatterns(patterns), (pattern) => matchesEvent(pattern, evt) ? [ pattern ] : [ ]);
 
-const action = function (f, ...x: any[]) {
-  return function () {
-    return f.apply(null, x);
-  };
-};
+const action = <T extends (...args: any[]) => any>(f: T, ...x: Parameters<T>) => (): ReturnType<T> => f.apply(null, x);
 
-const execute = function (patterns: KeyPattern[], evt: KeyboardEvent): Option<KeyPattern> {
-  return Arr.find(match(patterns, evt), (pattern) => pattern.action());
-};
+const execute = (patterns: KeyPattern[], evt: KeyboardEvent): Option<KeyPattern> =>
+  Arr.find(match(patterns, evt), (pattern) => pattern.action());
 
 export {
   match,

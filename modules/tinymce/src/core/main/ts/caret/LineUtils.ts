@@ -14,7 +14,7 @@ import * as ArrUtils from '../util/ArrUtils';
 import * as CaretCandidate from './CaretCandidate';
 import * as CaretUtils from './CaretUtils';
 import { isFakeCaretTarget } from './FakeCaret';
-import { ClientRectLine, VDirection } from './LineWalker';
+import { VDirection } from './LineWalker';
 
 export interface CaretInfo {
   node: Node;
@@ -28,7 +28,7 @@ const distanceToRectRight = (clientRect: NodeClientRect, clientX: number) => Mat
 const isInsideX = (clientX: number, clientRect: ClientRect): boolean => clientX >= clientRect.left && clientX <= clientRect.right;
 const isInsideY = (clientY: number, clientRect: ClientRect): boolean => clientY >= clientRect.top && clientY <= clientRect.bottom;
 
-const findClosestClientRect = (clientRects: ClientRect[], clientX: number): NodeClientRect => ArrUtils.reduce(clientRects, (oldClientRect, clientRect) => {
+const findClosestClientRect = <T extends ClientRect>(clientRects: T[], clientX: number): T => ArrUtils.reduce(clientRects, (oldClientRect, clientRect) => {
   const oldDistance = Math.min(distanceToRectLeft(oldClientRect, clientX), distanceToRectRight(oldClientRect, clientX));
   const newDistance = Math.min(distanceToRectLeft(clientRect, clientX), distanceToRectRight(clientRect, clientX));
 
@@ -61,7 +61,7 @@ const walkUntil = (direction: VDirection, root: Node, predicateFn: (node: Node) 
   } while ((node = findNode(node, direction, CaretCandidate.isEditableCaretCandidate, root)));
 };
 
-const findLineNodeRects = (root: Node, targetNodeRect: NodeClientRect, includeChildren: boolean = true): ClientRectLine[] => {
+const findLineNodeRects = (root: Node, targetNodeRect: NodeClientRect, includeChildren: boolean = true): NodeClientRect[] => {
   let clientRects = [];
 
   const collect = (checkPosFn, node) => {
@@ -90,14 +90,14 @@ const caretInfo = (clientRect: NodeClientRect, clientX: number): CaretInfo => ({
 
 const closestFakeCaret = (root: HTMLElement, clientX: number, clientY: number): CaretInfo => {
   const fakeTargetNodeRects = getClientRects(getFakeCaretTargets(root));
-  const targetNodeRects = Arr.filter(fakeTargetNodeRects, Fun.curry(isInsideY, clientY));
+  const targetNodeRects = Arr.filter<NodeClientRect>(fakeTargetNodeRects, Fun.curry(isInsideY, clientY));
 
   let closestNodeRect = findClosestClientRect(targetNodeRects, clientX);
   if (closestNodeRect) {
     // TINY-6057: Don't include children nodes within a table when finding the line
     // rects, as that will never be a valid position for a table fake caret and can
     // lead to performance issues with large tables.
-    const includeChildren = !NodeType.isTable(closestNodeRect.node);
+    const includeChildren = !NodeType.isTable(closestNodeRect.node) && !NodeType.isMedia(closestNodeRect.node);
     closestNodeRect = findClosestClientRect(findLineNodeRects(root, closestNodeRect, includeChildren), clientX);
     if (closestNodeRect && isFakeCaretTarget(closestNodeRect.node)) {
       return caretInfo(closestNodeRect, clientX);

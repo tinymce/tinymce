@@ -5,14 +5,14 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Node, Range } from '@ephox/dom-globals';
 import { Option, Options } from '@ephox/katamari';
 import { Compare, Element, Traverse } from '@ephox/sugar';
 import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
-import * as DeleteUtils from './DeleteUtils';
 import * as Empty from '../dom/Empty';
 import * as NodeType from '../dom/NodeType';
-import { Node } from '@ephox/dom-globals';
+import * as DeleteUtils from './DeleteUtils';
 
 export interface BlockPosition {
   readonly block: Element<Node>;
@@ -34,37 +34,28 @@ const blockBoundary = (from: BlockPosition, to: BlockPosition): BlockBoundary =>
   to
 });
 
-const getBlockPosition = function (rootNode: Node, pos: CaretPosition): Option<BlockPosition> {
+const getBlockPosition = (rootNode: Node, pos: CaretPosition): Option<BlockPosition> => {
   const rootElm = Element.fromDom(rootNode);
   const containerElm = Element.fromDom(pos.container());
-  return DeleteUtils.getParentBlock(rootElm, containerElm).map(function (block) {
-    return blockPosition(block, pos);
-  });
+  return DeleteUtils.getParentBlock(rootElm, containerElm).map((block) => blockPosition(block, pos));
 };
 
-const isDifferentBlocks = function (blockBoundary: BlockBoundary): boolean {
-  return Compare.eq(blockBoundary.from.block, blockBoundary.to.block) === false;
-};
+const isDifferentBlocks = (blockBoundary: BlockBoundary): boolean =>
+  Compare.eq(blockBoundary.from.block, blockBoundary.to.block) === false;
 
-const hasSameParent = function (blockBoundary: BlockBoundary): boolean {
-  return Traverse.parent(blockBoundary.from.block).bind(function (parent1) {
-    return Traverse.parent(blockBoundary.to.block).filter(function (parent2) {
-      return Compare.eq(parent1, parent2);
-    });
-  }).isSome();
-};
+const hasSameParent = (blockBoundary: BlockBoundary): boolean =>
+  Traverse.parent(blockBoundary.from.block).bind((parent1) =>
+    Traverse.parent(blockBoundary.to.block).filter((parent2) => Compare.eq(parent1, parent2))
+  ).isSome();
 
-const isEditable = function (blockBoundary: BlockBoundary): boolean {
-  return NodeType.isContentEditableFalse(blockBoundary.from.block.dom()) === false && NodeType.isContentEditableFalse(blockBoundary.to.block.dom()) === false;
-};
+const isEditable = (blockBoundary: BlockBoundary): boolean =>
+  NodeType.isContentEditableFalse(blockBoundary.from.block.dom()) === false && NodeType.isContentEditableFalse(blockBoundary.to.block.dom()) === false;
 
-const skipLastBr = function (rootNode, forward: boolean, blockPosition: BlockPosition): BlockPosition {
+const skipLastBr = (rootNode: Node, forward: boolean, blockPosition: BlockPosition): BlockPosition => {
   if (NodeType.isBr(blockPosition.position.getNode()) && Empty.isEmpty(blockPosition.block) === false) {
-    return CaretFinder.positionIn(false, blockPosition.block.dom()).bind(function (lastPositionInBlock) {
+    return CaretFinder.positionIn(false, blockPosition.block.dom()).bind((lastPositionInBlock) => {
       if (lastPositionInBlock.isEqual(blockPosition.position)) {
-        return CaretFinder.fromPosition(forward, rootNode, lastPositionInBlock).bind(function (to) {
-          return getBlockPosition(rootNode, to);
-        });
+        return CaretFinder.fromPosition(forward, rootNode, lastPositionInBlock).bind((to) => getBlockPosition(rootNode, to));
       } else {
         return Option.some(blockPosition);
       }
@@ -74,23 +65,20 @@ const skipLastBr = function (rootNode, forward: boolean, blockPosition: BlockPos
   }
 };
 
-const readFromRange = function (rootNode, forward, rng): Option<BlockBoundary> {
+const readFromRange = (rootNode: Node, forward: boolean, rng: Range): Option<BlockBoundary> => {
   const fromBlockPos = getBlockPosition(rootNode, CaretPosition.fromRangeStart(rng));
-  const toBlockPos = fromBlockPos.bind(function (blockPos) {
-    return CaretFinder.fromPosition(forward, rootNode, blockPos.position).bind(function (to) {
-      return getBlockPosition(rootNode, to).map(function (blockPos) {
-        return skipLastBr(rootNode, forward, blockPos);
-      });
-    });
-  });
+  const toBlockPos = fromBlockPos.bind((blockPos) =>
+    CaretFinder.fromPosition(forward, rootNode, blockPos.position).bind((to) =>
+      getBlockPosition(rootNode, to).map((blockPos) => skipLastBr(rootNode, forward, blockPos))
+    )
+  );
 
   return Options.lift2(fromBlockPos, toBlockPos, blockBoundary).filter((blockBoundary) =>
     isDifferentBlocks(blockBoundary) && hasSameParent(blockBoundary) && isEditable(blockBoundary));
 };
 
-const read = function (rootNode, forward, rng): Option<BlockBoundary> {
-  return rng.collapsed ? readFromRange(rootNode, forward, rng) : Option.none();
-};
+const read = (rootNode: Node, forward: boolean, rng: Range): Option<BlockBoundary> =>
+  rng.collapsed ? readFromRange(rootNode, forward, rng) : Option.none();
 
 export {
   read

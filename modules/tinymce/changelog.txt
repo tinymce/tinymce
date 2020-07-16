@@ -2,6 +2,7 @@ Version 5.5.0 (TBD)
     Added new `table_column_resizing` setting to control how the table is affected when resizing columns using the resize bars #TINY-6001
     Added ability to load TinyMCE in inline mode within a ShadowRoot #TINY-6128
     Added `hasPlugin` function to the editor API to determine if a plugin exists or not #TINY-766
+    Added the ability to delete and navigate HTML media elements without the media plugin #TINY-4211
     Changed the `target` property on fired events to use the native event target. The original target for an open shadow root can be obtained using `event.getComposedPath()` #TINY-6128
     Changed `imagetools` context menu icon for accessing the `image` settings to use the same icon #TINY-4141
     Deprecated the `Env.experimentalShadowDom` flag #TINY-6128

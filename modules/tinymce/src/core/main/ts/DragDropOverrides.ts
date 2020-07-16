@@ -61,19 +61,20 @@ const cloneElement = (elm: HTMLElement) => {
 };
 
 const createGhost = (editor: Editor, elm: HTMLElement, width: number, height: number) => {
+  const dom = editor.dom;
   const clonedElm = elm.cloneNode(true);
 
-  editor.dom.setStyles(clonedElm, { width, height });
-  editor.dom.setAttrib(clonedElm, 'data-mce-selected', null);
+  dom.setStyles(clonedElm, { width, height });
+  dom.setAttrib(clonedElm, 'data-mce-selected', null);
 
-  const ghostElm = editor.dom.create('div', {
+  const ghostElm = dom.create('div', {
     'class': 'mce-drag-container',
     'data-mce-bogus': 'all',
     'unselectable': 'on',
     'contenteditable': 'false'
   });
 
-  editor.dom.setStyles(ghostElm, {
+  dom.setStyles(ghostElm, {
     position: 'absolute',
     opacity: 0.5,
     overflow: 'hidden',
@@ -84,7 +85,7 @@ const createGhost = (editor: Editor, elm: HTMLElement, width: number, height: nu
     height
   });
 
-  editor.dom.setStyles(clonedElm, {
+  dom.setStyles(clonedElm, {
     margin: 0,
     boxSizing: 'border-box'
   });
@@ -274,7 +275,7 @@ const blockIeDrop = (editor: Editor) => {
     // FF doesn't pass out clientX/clientY for drop since this is for IE we just use null instead
     const realTarget = typeof e.clientX !== 'undefined' ? editor.getDoc().elementFromPoint(e.clientX, e.clientY) : null;
 
-    if (isContentEditableFalse(realTarget) || isContentEditableFalse(editor.dom.getContentEditableParent(realTarget))) {
+    if (isContentEditableFalse(realTarget) || editor.dom.getContentEditableParent(realTarget) === 'false') {
       e.preventDefault();
     }
   });

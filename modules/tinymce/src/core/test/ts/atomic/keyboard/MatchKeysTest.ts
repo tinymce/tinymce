@@ -89,8 +89,8 @@ UnitTest.asynctest('atomic.tinymce.core.keyboard.MatchKeysTest', function (succe
       { shiftKey: false, altKey: false, ctrlKey: true, metaKey: true, keyCode: 65, action: actionB }
     ),
     Logger.t('Action wrapper helper', Step.sync(function () {
-      const action = MatchKeys.action(function () {
-        return Array.prototype.slice.call(arguments, 0);
+      const action = MatchKeys.action(function (...rest: any[]) {
+        return Array.prototype.slice.call(rest, 0);
       }, 1, 2, 3);
 
       Assertions.assertEq('Should return the parameters passed in', [ 1, 2, 3 ], action());
