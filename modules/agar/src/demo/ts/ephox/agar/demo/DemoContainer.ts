@@ -1,4 +1,3 @@
-import { document } from '@ephox/dom-globals';
 import { Class, Html, Insert, InsertAll, Remove, SugarElement, SugarElements } from '@ephox/sugar';
 
 export const init = (name: string, f: (success: () => void, failure: (err: any) => void) => SugarElement[]): void => {

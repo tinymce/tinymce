@@ -1,5 +1,4 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
-import { HTMLParagraphElement, Node, window } from '@ephox/dom-globals';
 import { PlatformDetection } from '@ephox/sand';
 import * as Compare from 'ephox/sugar/api/dom/Compare';
 import * as Hierarchy from 'ephox/sugar/api/dom/Hierarchy';

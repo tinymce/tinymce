@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Text } from '@ephox/dom-globals';
 import * as NodeType from '../dom/NodeType';
 import { RangeLikeObject } from './RangeTypes';
 

@@ -1,5 +1,4 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { document, Node } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { KAssert } from '@ephox/katamari-assertions';
 import * as Compare from 'ephox/sugar/api/dom/Compare';

@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element, HTMLLIElement, Node, Range } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { Compare, SugarElement } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
@@ -84,7 +83,7 @@ const moveChildren = function (dom: DOMUtils, fromElm: Element, toElm: Element) 
 
 const mergeLiElements = function (dom: DOMUtils, fromElm: Element, toElm: Element) {
   let listNode;
-  const ul = fromElm.parentNode;
+  const ul: Node = fromElm.parentNode;
 
   if (!NodeType.isChildOfBody(dom, fromElm) || !NodeType.isChildOfBody(dom, toElm)) {
     return;

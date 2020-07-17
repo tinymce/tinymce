@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element } from '@ephox/dom-globals';
 import { Arr, Obj, Option } from '@ephox/katamari';
 import { Remove } from '@ephox/sugar';
 import * as AnnotationChanges from '../annotate/AnnotationChanges';

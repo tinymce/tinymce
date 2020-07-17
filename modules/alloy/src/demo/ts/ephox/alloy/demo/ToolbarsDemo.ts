@@ -1,4 +1,3 @@
-import { console, document, setTimeout, window } from '@ephox/dom-globals';
 import { Arr, Result } from '@ephox/katamari';
 import { Class, SugarElement } from '@ephox/sugar';
 
@@ -17,7 +16,7 @@ import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 
 import * as DemoRenders from './forms/DemoRenders';
 
-// tslint:disable:no-console
+/* eslint-disable no-console */
 
 export default (): void => {
   const gui = Gui.create();

@@ -1,6 +1,5 @@
 import { ApproxStructure, Assertions, Cleaner, GeneralSteps, Logger, Step, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { window } from '@ephox/dom-globals';
 import { DomEvent, SugarElement } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';

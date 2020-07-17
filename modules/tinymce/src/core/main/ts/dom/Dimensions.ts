@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLElement, Node } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import * as ClientRect from '../geom/ClientRect';
 import * as NodeType from './NodeType';

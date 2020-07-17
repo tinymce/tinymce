@@ -1,4 +1,3 @@
-import { console, document } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
 import { Class, Css, Replication, SugarElement } from '@ephox/sugar';
 
@@ -37,7 +36,7 @@ export default (): void => {
         type: 'text/plain',
         dropEffect,
         onDrop(_component, dropEvent) {
-          // tslint:disable-next-line:no-console
+          // eslint-disable-next-line no-console
           console.log('onDrop', {
             data: dropEvent.data,
             files: dropEvent.files

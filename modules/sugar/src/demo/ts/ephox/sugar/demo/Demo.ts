@@ -1,4 +1,3 @@
-import { console, document } from '@ephox/dom-globals';
 import * as Insert from 'ephox/sugar/api/dom/Insert';
 import * as InsertAll from 'ephox/sugar/api/dom/InsertAll';
 import * as DomEvent from 'ephox/sugar/api/events/DomEvent';
@@ -6,7 +5,7 @@ import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
 import * as Css from 'ephox/sugar/api/properties/Css';
 import * as Html from 'ephox/sugar/api/properties/Html';
 
-/* tslint:disable:no-console */
+/* eslint-disable no-console */
 
 const container = SugarElement.fromTag('div');
 

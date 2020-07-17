@@ -7,7 +7,6 @@
 
 import { AddEventsBehaviour, AlloyEvents, Behaviour, GuiFactory, Highlighting, InlineView, ItemTypes, Menu, SystemEvents } from '@ephox/alloy';
 import { InlineContent, Types } from '@ephox/bridge';
-import { console } from '@ephox/dom-globals';
 import { Arr, Cell, Option, Throttler, Thunk } from '@ephox/katamari';
 import { Remove, SugarElement } from '@ephox/sugar';
 
@@ -89,7 +88,7 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => 
         (itemValue, itemMeta) => {
           const nr = editor.selection.getRng();
           getContext(editor.dom, nr, triggerChar).fold(
-            // tslint:disable-next-line:no-console
+            // eslint-disable-next-line no-console
             () => console.error('Lost context. Cursor probably moved'),
             ({ range }) => {
               const autocompleterApi: InlineContent.AutocompleterInstanceApi = {

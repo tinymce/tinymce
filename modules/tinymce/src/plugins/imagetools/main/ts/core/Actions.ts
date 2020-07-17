@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Blob, HTMLImageElement, URL } from '@ephox/dom-globals';
 import { BlobConversions, ImageTransformations, ResultConversions } from '@ephox/imagetools';
 import { Option } from '@ephox/katamari';
 import { SelectorFind, SugarElement } from '@ephox/sugar';

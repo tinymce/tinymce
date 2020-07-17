@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { KeyboardEvent } from '@ephox/dom-globals';
 import Editor from 'tinymce/core/api/Editor';
 import PluginManager from 'tinymce/core/api/PluginManager';
 import * as Clipboard from './actions/Clipboard';
@@ -16,6 +15,7 @@ import * as Commands from './api/Commands';
 import * as QueryCommands from './api/QueryCommands';
 import { hasTabNavigation } from './api/Settings';
 import { Clipboard as FakeClipboard } from './core/Clipboard';
+import * as TableFormats from './core/TableFormats';
 import * as TabContext from './queries/TabContext';
 import CellSelection from './selection/CellSelection';
 import * as Ephemera from './selection/Ephemera';
@@ -23,7 +23,6 @@ import { Selections } from './selection/Selections';
 import { getSelectionTargets } from './selection/SelectionTargets';
 import * as Buttons from './ui/Buttons';
 import * as MenuItems from './ui/MenuItems';
-import * as TableFormats from './core/TableFormats';
 
 function Plugin(editor: Editor) {
   const selections = Selections(editor);

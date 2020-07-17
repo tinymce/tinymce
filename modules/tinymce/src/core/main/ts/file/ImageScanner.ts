@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLElement, HTMLImageElement } from '@ephox/dom-globals';
 import { Arr, Fun } from '@ephox/katamari';
 import Env from '../api/Env';
 import { BlobCache, BlobInfo } from '../api/file/BlobCache';

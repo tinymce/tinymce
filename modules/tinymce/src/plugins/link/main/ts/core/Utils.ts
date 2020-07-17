@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element, HTMLAnchorElement, Node, Range } from '@ephox/dom-globals';
 import { Arr, Obj, Option, Type } from '@ephox/katamari';
 import DomTreeWalker from 'tinymce/core/api/dom/TreeWalker';
 import Editor from 'tinymce/core/api/Editor';
@@ -24,7 +23,7 @@ const collectNodesInRange = <T extends Node>(rng: Range, predicate: (node) => no
     const contents = rng.cloneContents();
     const walker = new DomTreeWalker(contents.firstChild, contents);
     const elements: T[] = [];
-    let current = contents.firstChild;
+    let current: Node = contents.firstChild;
     do {
       if (predicate(current)) {
         elements.push(current);

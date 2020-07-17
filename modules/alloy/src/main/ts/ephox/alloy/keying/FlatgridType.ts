@@ -1,5 +1,4 @@
 import { FieldSchema } from '@ephox/boulder';
-import { HTMLElement } from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
 import { SelectorFind, SugarElement } from '@ephox/sugar';
 

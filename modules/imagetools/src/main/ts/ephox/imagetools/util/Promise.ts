@@ -1,5 +1,3 @@
-import { setTimeout, Window } from '@ephox/dom-globals';
-
 /**
  * Modified to be a feature fill and wrapped as tinymce module.
  *
@@ -55,7 +53,8 @@ const promise = <T>(): PromisePolyfillConstructor => {
   } as unknown as PromisePolyfillConstructor;
 
   // Use polyfill for setImmediate for performance gains
-  const asap = Promise.immediateFn || (typeof window.setImmediate === 'function' && window.setImmediate) ||
+  const anyWindow = window as any;
+  const asap = Promise.immediateFn || (typeof anyWindow.setImmediate === 'function' && anyWindow.setImmediate) ||
     function (fn: (handler: (...args: any[]) => void) => void) { setTimeout(fn, 1); };
 
   // Polyfill for Function.prototype.bind

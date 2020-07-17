@@ -1,7 +1,6 @@
 import { ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Log, Logger, Mouse, Pipeline, UiFinder } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
-import { document, navigator } from '@ephox/dom-globals';
 import { Arr, Option, Options, Result } from '@ephox/katamari';
 import { TinyLoader, TinyUi } from '@ephox/mcagar';
 import { Attribute, SugarBody, SugarElement } from '@ephox/sugar';

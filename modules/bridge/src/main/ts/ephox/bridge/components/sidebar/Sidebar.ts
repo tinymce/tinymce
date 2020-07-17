@@ -1,6 +1,5 @@
-import { HTMLElement } from '@ephox/dom-globals';
-import { Fun, Option, Result } from '@ephox/katamari';
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { Fun, Option, Result } from '@ephox/katamari';
 
 export interface SidebarInstanceApi {
   element: () => HTMLElement;

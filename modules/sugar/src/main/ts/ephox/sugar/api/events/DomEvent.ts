@@ -1,4 +1,3 @@
-import { Event, HTMLElementEventMap } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
 import * as FilteredEvent from '../../impl/FilteredEvent';
 import { SugarElement } from '../node/SugarElement';

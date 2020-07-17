@@ -1,4 +1,3 @@
-import { DataTransfer, setTimeout } from '@ephox/dom-globals';
 import { Arr, Cell, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Attribute, Css, DomEvent, Insert, Remove, Replication, SugarElement } from '@ephox/sugar';

@@ -1,4 +1,3 @@
-import { HTMLElement } from '@ephox/dom-globals';
 import { Num, Option } from '@ephox/katamari';
 import { Attribute, SugarElement, SugarNode } from '@ephox/sugar';
 

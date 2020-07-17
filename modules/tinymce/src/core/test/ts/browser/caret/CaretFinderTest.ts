@@ -1,6 +1,5 @@
 import { Assertions, Chain, GeneralSteps, Logger, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { HTMLElement } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import { Hierarchy, SugarElement } from '@ephox/sugar';
 import * as CaretFinder from 'tinymce/core/caret/CaretFinder';

@@ -6,7 +6,6 @@
  */
 
 import { InputHandlers, SelectionAnnotation, SelectionKeys } from '@ephox/darwin';
-import { Event, HTMLElement, KeyboardEvent, MouseEvent, Node, TouchEvent } from '@ephox/dom-globals';
 import { Cell, Fun, Option } from '@ephox/katamari';
 import { DomParent } from '@ephox/robin';
 import { OtherCells, TableFill, TableLookup, TableResize } from '@ephox/snooker';

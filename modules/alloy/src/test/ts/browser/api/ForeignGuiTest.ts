@@ -1,6 +1,5 @@
 import { ApproxStructure, Assertions, Logger, Mouse, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { document } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import { EventArgs, Html, Insert, Remove, SugarBody, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 

@@ -1,5 +1,4 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { Blob, FileList, HTMLInputElement, navigator } from '@ephox/dom-globals';
 import { Cell, Option } from '@ephox/katamari';
 import { Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
 import { cRunOnPatchedFileInput, sRunOnPatchedFileInput } from 'ephox/agar/api/FileInput';

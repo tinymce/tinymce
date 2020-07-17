@@ -1,5 +1,4 @@
 import { Fun, Id, Option } from '@ephox/katamari';
-import { File, DataTransferItem, DataTransfer } from '@ephox/dom-globals';
 import { isInProtectedMode } from './Mode';
 
 const dataId = Id.generate('data');
@@ -27,7 +26,7 @@ const createDataTransferItemFromFile = (dataTransfer: DataTransfer, file: File):
       }
     },
 
-    // Not supported on all browsers but needed since the dom-globals type has it
+    // Not supported on all browsers but needed since the TS dom lib type has it
     webkitGetAsEntry: Fun.noop
   };
 
@@ -45,7 +44,7 @@ const createDataTransferItemFromString = (dataTransfer: DataTransfer, type: stri
     },
     getAsFile: Fun.constant(null),
 
-    // Not supported on all browsers but needed since the dom-globals type has it
+    // Not supported on all browsers but needed since the TS dom lib type has it
     webkitGetAsEntry: Fun.noop
   };
 

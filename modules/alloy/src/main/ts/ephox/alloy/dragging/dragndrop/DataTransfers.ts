@@ -1,4 +1,3 @@
-import { DataTransfer, Element } from '@ephox/dom-globals';
 import { Arr, Strings, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 

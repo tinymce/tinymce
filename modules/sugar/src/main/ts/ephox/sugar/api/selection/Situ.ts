@@ -1,4 +1,3 @@
-import { Node } from '@ephox/dom-globals';
 import { Adt, Fun } from '@ephox/katamari';
 import { SugarElement } from '../node/SugarElement';
 

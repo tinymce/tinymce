@@ -1,5 +1,3 @@
-import { document, HTMLTextAreaElement, HTMLInputElement } from '@ephox/dom-globals';
-
 declare let tinymce: any;
 
 export default function () {

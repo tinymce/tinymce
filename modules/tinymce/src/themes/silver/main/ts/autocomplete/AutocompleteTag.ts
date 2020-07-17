@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Range } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import { Awareness, CursorPosition, Insert, SelectorFind, SugarElement, Traverse } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';

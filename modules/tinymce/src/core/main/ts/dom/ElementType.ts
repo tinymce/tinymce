@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLBRElement, HTMLElement, HTMLHeadingElement, HTMLTableCellElement, HTMLTableElement } from '@ephox/dom-globals';
 import { Arr, Fun } from '@ephox/katamari';
 import { SugarElement, SugarNode } from '@ephox/sugar';
 

@@ -1,4 +1,3 @@
-import { document } from '@ephox/dom-globals';
 import { Css, DomEvent, Insert, SelectorFind, SugarElement } from '@ephox/sugar';
 import * as Dragger from 'ephox/dragster/api/Dragger';
 import Sizers from 'ephox/dragster/demo/Sizers';

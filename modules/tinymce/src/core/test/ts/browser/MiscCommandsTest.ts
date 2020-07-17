@@ -1,6 +1,5 @@
 import { Assertions, Pipeline } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { Range } from '@ephox/dom-globals';
 import { LegacyUnit, TinyDom, TinyLoader } from '@ephox/mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';

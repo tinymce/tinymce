@@ -1,4 +1,3 @@
-import { HTMLTableElement } from '@ephox/dom-globals';
 import { Bindable, Event, Events } from '@ephox/porkbun';
 import { SugarElement } from '@ephox/sugar';
 import * as Adjustments from '../resize/Adjustments';

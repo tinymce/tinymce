@@ -1,5 +1,4 @@
 import { Assert, assert, UnitTest } from '@ephox/bedrock-client';
-import { HTMLElement } from '@ephox/dom-globals';
 import { Option, OptionInstances } from '@ephox/katamari';
 import * as Compare from 'ephox/sugar/api/dom/Compare';
 import * as Focus from 'ephox/sugar/api/dom/Focus';

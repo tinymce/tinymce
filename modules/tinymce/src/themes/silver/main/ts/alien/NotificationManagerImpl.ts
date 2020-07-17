@@ -6,7 +6,6 @@
  */
 
 import { Gui, GuiFactory, InlineView, Layout, LayoutInside, NodeAnchorSpec } from '@ephox/alloy';
-import { Element } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
 import { SugarBody, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';

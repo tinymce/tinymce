@@ -1,4 +1,3 @@
-import { Document, Node } from '@ephox/dom-globals';
 import { Result } from '@ephox/katamari';
 import { Compare, Focus, SugarElement, Traverse, Truncate } from '@ephox/sugar';
 

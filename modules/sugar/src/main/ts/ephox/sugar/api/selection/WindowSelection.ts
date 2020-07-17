@@ -1,4 +1,3 @@
-import { Element, Node, Range, Selection, Window } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import * as NativeRange from '../../selection/core/NativeRange';
 import * as SelectionDirection from '../../selection/core/SelectionDirection';
@@ -13,8 +12,10 @@ import { SimRange } from './SimRange';
 import { SimSelection } from './SimSelection';
 import { Situ } from './Situ';
 
+const getNativeSelection = (win: Window) => Option.from(win.getSelection());
+
 const doSetNativeRange = (win: Window, rng: Range): void => {
-  Option.from(win.getSelection()).each((selection) => {
+  getNativeSelection(win).each((selection) => {
     selection.removeAllRanges();
     selection.addRange(rng);
   });
@@ -39,21 +40,22 @@ const setRangeFromRelative = (win: Window, relative: SimSelection): void =>
       doSetRange(win, start, soffset, finish, foffset);
     },
     rtl(start, soffset, finish, foffset) {
-      const selection = win.getSelection();
-      // If this selection is backwards, then we need to use extend.
-      if (selection.setBaseAndExtent) {
-        selection.setBaseAndExtent(start.dom(), soffset, finish.dom(), foffset);
-      } else if ((selection as any).extend) {
-        // This try catch is for older browsers (Firefox 52) as they're sometimes unable to handle setting backwards selections using selection.extend and error out.
-        try {
-          setLegacyRtlRange(win, selection, start, soffset, finish, foffset);
-        } catch (e) {
-          // If it does fail, try again with ltr.
+      getNativeSelection(win).each((selection) => {
+        // If this selection is backwards, then we need to use extend.
+        if (selection.setBaseAndExtent) {
+          selection.setBaseAndExtent(start.dom(), soffset, finish.dom(), foffset);
+        } else if ((selection as any).extend) {
+          // This try catch is for older browsers (Firefox 52) as they're sometimes unable to handle setting backwards selections using selection.extend and error out.
+          try {
+            setLegacyRtlRange(win, selection, start, soffset, finish, foffset);
+          } catch (e) {
+            // If it does fail, try again with ltr.
+            doSetRange(win, finish, foffset, start, soffset);
+          }
+        } else {
           doSetRange(win, finish, foffset, start, soffset);
         }
-      } else {
-        doSetRange(win, finish, foffset, start, soffset);
-      }
+      });
     }
   });
 
@@ -128,7 +130,7 @@ const forElement = (win: Window, element: SugarElement<Node>) => {
 
 const getExact = (win: Window) =>
   // We want to retrieve the selection as it is.
-  Option.from(win.getSelection())
+  getNativeSelection(win)
     .filter((sel) => sel.rangeCount > 0)
     .bind(doGetExact);
 
@@ -154,8 +156,7 @@ const getAsString = (win: Window, selection: SimSelection) => {
 };
 
 const clear = (win: Window) => {
-  const selection = win.getSelection();
-  selection.removeAllRanges();
+  getNativeSelection(win).each((selection) => selection.removeAllRanges());
 };
 
 const clone = (win: Window, selection: SimSelection) => {

@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element, Node } from '@ephox/dom-globals';
 import * as NodeType from '../dom/NodeType';
 
 const CARET_ID = '_mce_caret';

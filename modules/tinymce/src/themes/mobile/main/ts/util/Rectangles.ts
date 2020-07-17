@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Range, Window } from '@ephox/dom-globals';
 import { Arr, Fun } from '@ephox/katamari';
 import { Awareness, RawRect, SimSelection, StructRect, SugarElement, Traverse, WindowSelection } from '@ephox/sugar';
 

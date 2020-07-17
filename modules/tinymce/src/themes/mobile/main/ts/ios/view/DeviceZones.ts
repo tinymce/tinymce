@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLElement, Node, Window } from '@ephox/dom-globals';
 import { Css, Height, SugarElement, Traverse } from '@ephox/sugar';
 
 import * as Orientation from '../../touch/view/Orientation';

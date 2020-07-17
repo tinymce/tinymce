@@ -1,8 +1,7 @@
 import { UnitTest } from '@ephox/bedrock-client';
-import { Blob, XMLHttpRequest } from '@ephox/dom-globals';
 import { Obj } from '@ephox/katamari';
-import * as Assertion from 'ephox/imagetools/test/Assertion';
 import { JPEGMeta } from 'ephox/imagetools/api/Main';
+import * as Assertion from 'ephox/imagetools/test/Assertion';
 import { Promise } from 'ephox/imagetools/util/Promise';
 
 const problematiJPEGs: Record<string, any>[] = [

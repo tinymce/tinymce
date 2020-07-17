@@ -1,4 +1,3 @@
-import { document, MutationObserver } from '@ephox/dom-globals';
 import { Id, Thunk } from '@ephox/katamari';
 import { DomEvent, Html, SugarElement, TextContent } from '@ephox/sugar';
 

@@ -6,7 +6,6 @@
  */
 
 import { Types } from '@ephox/bridge';
-import { Element, HTMLElement, HTMLTableRowElement, Node } from '@ephox/dom-globals';
 import { Arr, Fun, Obj, Strings } from '@ephox/katamari';
 import { Css, SugarElement } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';

@@ -1,7 +1,6 @@
 import {
   AlloyComponent, Attachment, Behaviour, Boxes, Button, DragCoord, Dragging, DraggingTypes, GuiFactory, Memento, Unselecting
 } from '@ephox/alloy';
-import { ClientRect, HTMLTableDataCellElement } from '@ephox/dom-globals';
 import { Arr, Cell, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Compare, Css, SugarElement, SugarPosition, Traverse } from '@ephox/sugar';

@@ -1,5 +1,4 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { document, Element, Node, window } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { KAssert } from '@ephox/katamari-assertions';
 import * as InsertAll from 'ephox/sugar/api/dom/InsertAll';

@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { document, Range } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Compare, SimSelection, SugarElement, SugarNode, SugarText, Traverse } from '@ephox/sugar';

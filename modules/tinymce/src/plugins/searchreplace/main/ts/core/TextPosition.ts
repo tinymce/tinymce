@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Text } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { SugarElement, SugarText } from '@ephox/sugar';
 import { Pattern, Position, TextMatch } from './Types';

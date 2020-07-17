@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { TransitionEvent } from '@ephox/dom-globals';
 import { Arr, Throttler } from '@ephox/katamari';
 import { Compare, DomEvent, Height } from '@ephox/sugar';
 

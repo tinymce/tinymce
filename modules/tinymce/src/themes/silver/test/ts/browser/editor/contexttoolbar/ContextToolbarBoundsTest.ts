@@ -1,7 +1,6 @@
 import { Assertions, Chain, GeneralSteps, Logger, NamedChain, Pipeline } from '@ephox/agar';
 import { Bounds, Boxes } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
-import { window } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
 import { Editor as McEditor } from '@ephox/mcagar';
 import { Css, Scroll, SelectorFind, SugarBody, SugarElement } from '@ephox/sugar';

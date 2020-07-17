@@ -1,5 +1,3 @@
-import { clearInterval, setInterval, setTimeout } from '@ephox/dom-globals';
-
 import { DieFn, NextFn } from '../pipe/Pipe';
 import { Pipeline } from './Pipeline';
 import { Step } from './Step';

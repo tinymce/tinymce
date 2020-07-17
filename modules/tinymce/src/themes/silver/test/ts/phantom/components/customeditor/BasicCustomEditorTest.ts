@@ -2,7 +2,6 @@
 import { ApproxStructure, Assertions, Cleaner, Logger, Step, Waiter } from '@ephox/agar';
 import { GuiFactory, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
-import { HTMLElement } from '@ephox/dom-globals';
 import { Cell, Global } from '@ephox/katamari';
 import { Class, SugarElement } from '@ephox/sugar';
 import Resource from 'tinymce/core/api/Resource';

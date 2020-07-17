@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Blob } from '@ephox/dom-globals';
 import { Id } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 

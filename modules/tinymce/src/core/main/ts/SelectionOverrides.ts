@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element, HTMLElement, MouseEvent, Node, Range } from '@ephox/dom-globals';
 import { Arr, Obj, Unicode } from '@ephox/katamari';
 import { Attribute, Compare, Remove, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
 import Editor from './api/Editor';
@@ -284,7 +283,8 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
           e.preventDefault();
           clipboardData.clearData();
           clipboardData.setData('text/html', realSelectionElement.outerHTML);
-          clipboardData.setData('text/plain', realSelectionElement.outerText);
+          // outerText is a nonstandard property and doesn't exist on Firefox, so fallback to innerText
+          clipboardData.setData('text/plain', (realSelectionElement as any).outerText || realSelectionElement.innerText);
         }
       }
     });

@@ -5,10 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { document } from '@ephox/dom-globals';
 import { Throttler } from '@ephox/katamari';
-import * as FakeCaretUtils from '../caret/FakeCaretUtils';
 import Editor from '../api/Editor';
+import * as FakeCaretUtils from '../caret/FakeCaretUtils';
 
 const setup = function (editor: Editor) {
   const renderFocusCaret = Throttler.first(function () {

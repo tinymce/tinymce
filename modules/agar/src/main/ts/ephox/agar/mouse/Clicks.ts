@@ -1,4 +1,3 @@
-import { Document, HTMLElement, MouseEvent, Node, window } from '@ephox/dom-globals';
 import { Fun, Obj } from '@ephox/katamari';
 import { SugarElement, SugarLocation, SugarNode, SugarPosition } from '@ephox/sugar';
 

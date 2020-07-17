@@ -1,4 +1,3 @@
-import { document } from '@ephox/dom-globals';
 import { Option, Options } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Css, DomEvent, EventArgs, Height, Insert, InsertAll, SelectorFind, SugarElement, SugarElements, SugarNode, Width } from '@ephox/sugar';

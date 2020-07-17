@@ -2,7 +2,6 @@ import {
   ApproxStructure, Assertions, Chain, Cursors, GeneralSteps, Guard, Logger, Mouse, NamedChain, Step, StructAssert, UiControls, UiFinder, Waiter
 } from '@ephox/agar';
 import { Assert } from '@ephox/bedrock-client';
-import { document, HTMLElement, HTMLTableCellElement, HTMLTableRowElement } from '@ephox/dom-globals';
 import { Arr, Obj } from '@ephox/katamari';
 import { TinyDom, TinyUi } from '@ephox/mcagar';
 import { Attribute, Html, SelectorFilter, SelectorFind, SugarBody, SugarElement, Value } from '@ephox/sugar';

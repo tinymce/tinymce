@@ -1,6 +1,5 @@
 import { Assertions } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { document } from '@ephox/dom-globals';
 import { Unicode } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import * as Nodes from 'tinymce/plugins/visualchars/core/Nodes';

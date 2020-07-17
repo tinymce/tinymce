@@ -1,4 +1,3 @@
-import { Document, Node, Range } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
 import { SugarElement } from '../../api/node/SugarElement';
 import * as SugarNode from '../../api/node/SugarNode';

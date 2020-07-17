@@ -7,7 +7,6 @@
 
 import { AlloyComponent, AlloyEvents, AlloyTriggers, CustomEvent, Keying, NativeEvents, Reflecting, Representing } from '@ephox/alloy';
 import { DialogManager, Types } from '@ephox/bridge';
-import { HTMLElement } from '@ephox/dom-globals';
 import { Result } from '@ephox/katamari';
 import { Attribute, Compare, Focus, SugarElement } from '@ephox/sugar';
 

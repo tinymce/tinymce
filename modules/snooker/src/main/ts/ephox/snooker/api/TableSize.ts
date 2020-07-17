@@ -1,4 +1,3 @@
-import { HTMLElement, HTMLTableElement } from '@ephox/dom-globals';
 import { Cell, Fun } from '@ephox/katamari';
 import { SugarElement, Width } from '@ephox/sugar';
 import { Warehouse } from '../model/Warehouse';

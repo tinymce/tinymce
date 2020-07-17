@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element, Node } from '@ephox/dom-globals';
 import { SugarElement } from '@ephox/sugar';
 import Editor from '../api/Editor';
 import * as CaretFinder from '../caret/CaretFinder';

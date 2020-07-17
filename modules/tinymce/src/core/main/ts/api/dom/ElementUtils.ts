@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Attr } from '@ephox/dom-globals';
 import * as Bookmarks from '../../bookmark/Bookmarks';
 import Tools from '../util/Tools';
 import DOMUtils from './DOMUtils';

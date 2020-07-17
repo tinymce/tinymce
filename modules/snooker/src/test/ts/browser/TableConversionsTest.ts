@@ -1,5 +1,4 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { HTMLDivElement, HTMLTableElement } from '@ephox/dom-globals';
 import { Option, OptionInstances } from '@ephox/katamari';
 import { Css, Insert, Remove, SugarBody, SugarElement, Width } from '@ephox/sugar';
 import { ResizeDirection } from 'ephox/snooker/api/ResizeDirection';

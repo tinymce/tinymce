@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Range } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import Env from '../api/Env';
 import * as ClientRect from '../geom/ClientRect';

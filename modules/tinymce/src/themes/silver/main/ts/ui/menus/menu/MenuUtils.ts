@@ -1,7 +1,6 @@
 import { ItemTypes, MenuTypes } from '@ephox/alloy';
 import { ValueSchema } from '@ephox/boulder';
-import { Types, InlineContent } from '@ephox/bridge';
-import { console } from '@ephox/dom-globals';
+import { InlineContent, Types } from '@ephox/bridge';
 import { Arr, Option } from '@ephox/katamari';
 import { components as menuComponents, dom as menuDom } from './MenuParts';
 
@@ -18,9 +17,9 @@ export interface PartialMenuSpec {
 }
 
 export const handleError = (error: ValueSchema.SchemaError<any>): Option<ItemTypes.ItemSpec> => {
-  // tslint:disable-next-line:no-console
+  // eslint-disable-next-line no-console
   console.error(ValueSchema.formatError(error));
-  // tslint:disable-next-line:no-console
+  // eslint-disable-next-line no-console
   console.log(error);
   return Option.none();
 };

@@ -1,4 +1,3 @@
-import { HTMLElement, Window } from '@ephox/dom-globals';
 import { Resolve } from '@ephox/katamari';
 import * as Global from '../util/Global';
 

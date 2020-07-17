@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { ClientRect, Element, HTMLElement, Node, Range, Selection, Window } from '@ephox/dom-globals';
 import { Compare, SugarElement } from '@ephox/sugar';
 import { Bookmark } from '../../bookmark/BookmarkTypes';
 import CaretPosition from '../../caret/CaretPosition';

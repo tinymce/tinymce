@@ -1,5 +1,4 @@
 import { FieldProcessorAdt, FieldSchema, ValueSchema } from '@ephox/boulder';
-import { FocusEvent, KeyboardEvent } from '@ephox/dom-globals';
 import { Arr, Option, Result } from '@ephox/katamari';
 import { EventArgs } from '@ephox/sugar';
 

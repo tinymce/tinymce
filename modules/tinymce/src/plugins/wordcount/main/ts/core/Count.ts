@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
 import { Words } from '@ephox/polaris';
 import Schema from 'tinymce/core/api/html/Schema';

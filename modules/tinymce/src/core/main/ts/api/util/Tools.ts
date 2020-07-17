@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { window } from '@ephox/dom-globals';
 import * as ArrUtils from '../../util/ArrUtils';
 import Env from '../Env';
 

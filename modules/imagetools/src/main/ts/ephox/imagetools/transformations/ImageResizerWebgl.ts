@@ -1,7 +1,7 @@
-import { HTMLCanvasElement, HTMLImageElement, WebGLProgram, WebGLRenderingContext } from '@ephox/dom-globals';
-import { Promise } from '../util/Promise';
+import { Option } from '@ephox/katamari';
 import * as Canvas from '../util/Canvas';
 import * as ImageSize from '../util/ImageSize';
+import { Promise } from '../util/Promise';
 
 /**
  * @method scale
@@ -176,7 +176,7 @@ function _createProgram(gl: WebGLRenderingContext): WebGLProgram {
 
   for (const type in shaders.bilinear) {
     if (Object.hasOwnProperty.call(shaders.bilinear, type)) {
-      gl.attachShader(program, _loadShader(gl, shaders.bilinear[type], type));
+      _loadShader(gl, shaders.bilinear[type], type).each((shader) => gl.attachShader(program, shader));
     }
   }
 
@@ -189,17 +189,18 @@ function _createProgram(gl: WebGLRenderingContext): WebGLProgram {
   return program;
 }
 
-function _loadShader(gl: WebGLRenderingContext, source: string, type: string) {
-  const shader = gl.createShader((gl as any)[type]);
-  gl.shaderSource(shader, source);
-  gl.compileShader(shader);
+function _loadShader(gl: WebGLRenderingContext, source: string, type: string): Option<WebGLShader> {
+  return Option.from(gl.createShader((gl as any)[type])).map((shader) => {
+    gl.shaderSource(shader, source);
+    gl.compileShader(shader);
 
-  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-    const err = gl.getShaderInfoLog(shader);
-    gl.deleteShader(shader);
-    throw new Error('Cannot compile a ' + type + ' shader: ' + err);
-  }
-  return shader;
+    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+      const err = gl.getShaderInfoLog(shader);
+      gl.deleteShader(shader);
+      throw new Error('Cannot compile a ' + type + ' shader: ' + err);
+    }
+    return shader;
+  });
 }
 
 export {

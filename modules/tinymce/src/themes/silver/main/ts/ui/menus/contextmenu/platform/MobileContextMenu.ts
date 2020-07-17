@@ -1,5 +1,4 @@
 import { AlloyComponent, Bubble, InlineView, Layout, LayoutInside, MaxHeight, MaxWidth } from '@ephox/alloy';
-import { MouseEvent, TouchEvent } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { SimSelection, WindowSelection } from '@ephox/sugar';

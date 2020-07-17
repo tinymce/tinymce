@@ -5,11 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { KeyboardEvent } from '@ephox/dom-globals';
-import * as InsertNewLine from '../newline/InsertNewLine';
-import VK from '../api/util/VK';
 import Editor from '../api/Editor';
 import { EditorEvent } from '../api/util/EventDispatcher';
+import VK from '../api/util/VK';
+import * as InsertNewLine from '../newline/InsertNewLine';
 import { endTypingLevelIgnoreLocks } from '../undo/TypingState';
 
 const handleEnterKeyEvent = (editor: Editor, event: EditorEvent<KeyboardEvent>) => {

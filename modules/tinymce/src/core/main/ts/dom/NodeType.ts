@@ -5,10 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import {
-  Comment, Document, DocumentFragment, Element, HTMLBRElement, HTMLElement, HTMLImageElement, HTMLInputElement, HTMLTableCellElement,
-  HTMLTextAreaElement, Node, Text
-} from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 
 const isNodeType = function (type) {

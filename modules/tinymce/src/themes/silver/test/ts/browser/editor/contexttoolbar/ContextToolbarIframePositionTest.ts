@@ -1,6 +1,5 @@
 import { Assertions, Keys, Log, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { window } from '@ephox/dom-globals';
 import { TinyActions, TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import { Css, Scroll, SugarBody, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';

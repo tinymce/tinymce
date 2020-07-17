@@ -1,5 +1,4 @@
 import { Channels, Debugging, Gui, GuiFactory } from '@ephox/alloy';
-import { console, document } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import { Class, DomEvent, Insert, SugarElement } from '@ephox/sugar';
 import * as ColourPicker from 'ephox/acid/gui/ColourPicker';
@@ -20,7 +19,7 @@ DomEvent.bind(SugarElement.fromDom(document), 'mouseup', (evt) => {
 
 const fakeTranslate = (key: string): string =>
   Option.from(strings[key]).getOrThunk(() => {
-    // tslint:disable-next-line:no-console
+    // eslint-disable-next-line no-console
     console.error('Missing translation for ' + key);
     return key;
   });

@@ -1,5 +1,4 @@
 import { ApproxStructure, Assertions, Step } from '@ephox/agar';
-import { Element } from '@ephox/dom-globals';
 import { Arr, Obj } from '@ephox/katamari';
 import { TinyApis } from '@ephox/mcagar';
 import { SugarElement } from '@ephox/sugar';

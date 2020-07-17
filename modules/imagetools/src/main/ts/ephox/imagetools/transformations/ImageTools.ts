@@ -1,4 +1,3 @@
-import { HTMLCanvasElement, HTMLImageElement } from '@ephox/dom-globals';
 import * as Canvas from '../util/Canvas';
 import * as ImageResult from '../util/ImageResult';
 import * as ImageResizerCanvas from './ImageResizerCanvas';

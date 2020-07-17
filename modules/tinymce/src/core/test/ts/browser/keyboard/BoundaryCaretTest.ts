@@ -1,6 +1,5 @@
 import { Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { HTMLDivElement } from '@ephox/dom-globals';
 import { Cell } from '@ephox/katamari';
 import { Hierarchy, Selectors, SugarElement } from '@ephox/sugar';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';

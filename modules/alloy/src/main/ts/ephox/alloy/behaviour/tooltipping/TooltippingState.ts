@@ -1,5 +1,4 @@
-import { setTimeout, clearTimeout } from '@ephox/dom-globals';
-import { Fun, Option, Cell } from '@ephox/katamari';
+import { Cell, Fun, Option } from '@ephox/katamari';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { nuState } from '../common/BehaviourState';

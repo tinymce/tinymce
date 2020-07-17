@@ -1,6 +1,5 @@
 import { GeneralSteps, Keys, Log, Pipeline, Step } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { Node } from '@ephox/dom-globals';
 import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
 import Env from 'tinymce/core/api/Env';
 import * as CaretContainer from 'tinymce/core/caret/CaretContainer';

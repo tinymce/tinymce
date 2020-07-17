@@ -1,9 +1,8 @@
-import { XMLHttpRequest } from '@ephox/dom-globals';
 import { FutureResult } from '@ephox/katamari';
-import * as JsonResponse from './JsonResponse';
-import { ResponseTypeMap, ResponseBodyDataTypes } from './HttpData';
-import { HttpError } from './HttpError';
 import { DataType } from './DataType';
+import { ResponseBodyDataTypes, ResponseTypeMap } from './HttpData';
+import { HttpError } from './HttpError';
+import * as JsonResponse from './JsonResponse';
 
 export const validate = <T extends keyof ResponseTypeMap>(responseType: ResponseBodyDataTypes, request: XMLHttpRequest): FutureResult<ResponseTypeMap[T], HttpError> => {
   const normal = () => FutureResult.pure(request.response);

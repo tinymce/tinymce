@@ -1,4 +1,3 @@
-import { Element, Node } from '@ephox/dom-globals';
 import { SugarElement } from '../node/SugarElement';
 import * as Class from './Class';
 import * as Classes from './Classes';

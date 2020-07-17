@@ -6,7 +6,6 @@
  */
 
 import { AlloyComponent, AlloyTriggers, Highlighting, NativeEvents } from '@ephox/alloy';
-import { Event, KeyboardEvent } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';

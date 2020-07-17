@@ -1,7 +1,6 @@
 import { AlloyEvents, DomFactory, GuiFactory, Input as AlloyInput, Memento, Representing, SimpleSpec } from '@ephox/alloy';
 import { ValueSchema } from '@ephox/boulder';
 import { Types } from '@ephox/bridge';
-import { console } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import { UiFactoryBackstage, UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
 import { renderBodyPanel } from 'tinymce/themes/silver/ui/dialog/BodyPanel';
@@ -23,7 +22,7 @@ import { renderButton } from 'tinymce/themes/silver/ui/general/Button';
 import { renderCheckbox } from 'tinymce/themes/silver/ui/general/Checkbox';
 import { setupDemo } from './DemoHelpers';
 
-// tslint:disable:no-console
+/* eslint-disable no-console */
 
 export default () => {
   const helpers = setupDemo();

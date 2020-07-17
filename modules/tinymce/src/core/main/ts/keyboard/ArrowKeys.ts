@@ -5,17 +5,16 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Text, KeyboardEvent } from '@ephox/dom-globals';
 import { Cell } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
+import Editor from '../api/Editor';
+import VK from '../api/util/VK';
 import * as BoundarySelection from './BoundarySelection';
 import * as CefNavigation from './CefNavigation';
-import * as MediaNavigation from './MediaNavigation';
-import * as TableNavigation from './TableNavigation';
 import * as ContentEndpointNavigation from './ContentEndpointNavigation';
 import * as MatchKeys from './MatchKeys';
-import VK from '../api/util/VK';
-import Editor from '../api/Editor';
+import * as MediaNavigation from './MediaNavigation';
+import * as TableNavigation from './TableNavigation';
 
 const executeKeydownOverride = (editor: Editor, caret: Cell<Text>, evt: KeyboardEvent) => {
   const os = PlatformDetection.detect().os;

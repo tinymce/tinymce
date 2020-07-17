@@ -1,4 +1,3 @@
-import { HTMLTableCaptionElement, HTMLTableCellElement } from '@ephox/dom-globals';
 import { Arr, Cell, Option, Thunk } from '@ephox/katamari';
 import { RunOperation, TableLookup } from '@ephox/snooker';
 import { SugarElement, SugarNode } from '@ephox/sugar';

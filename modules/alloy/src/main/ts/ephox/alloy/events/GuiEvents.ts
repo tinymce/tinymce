@@ -1,5 +1,4 @@
 import { FieldSchema, Processor, ValueSchema } from '@ephox/boulder';
-import { clearTimeout, KeyboardEvent, setTimeout } from '@ephox/dom-globals';
 import { Arr, Cell, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { DomEvent, EventArgs, EventUnbinder, SelectorExists, SugarElement, SugarNode } from '@ephox/sugar';

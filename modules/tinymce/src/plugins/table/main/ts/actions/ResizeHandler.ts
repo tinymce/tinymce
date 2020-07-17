@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLTableElement, Node, Range } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import { ResizeBehaviour, ResizeWire, Sizes, TableDirection, TableResize } from '@ephox/snooker';
 import { Css, SugarElement } from '@ephox/sugar';

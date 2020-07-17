@@ -1,4 +1,3 @@
-import { document, window } from '@ephox/dom-globals';
 import { Class, Css, DomEvent, SugarElement } from '@ephox/sugar';
 
 import * as Boxes from 'ephox/alloy/alien/Boxes';

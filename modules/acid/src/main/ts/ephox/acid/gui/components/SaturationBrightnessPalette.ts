@@ -1,5 +1,4 @@
 import { AlloyComponent, AlloyTriggers, Behaviour, Composing, Focusing, Sketcher, SketchSpec, Slider, SliderTypes, UiSketcher } from '@ephox/alloy';
-import { HTMLCanvasElement } from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
 import { Rgba } from '../../api/colour/ColourTypes';
 import * as RgbaColour from '../../api/colour/RgbaColour';

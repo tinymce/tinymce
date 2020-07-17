@@ -1,4 +1,3 @@
-import { console, document } from '@ephox/dom-globals';
 import { Class, SugarElement } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
@@ -9,7 +8,7 @@ import { Button } from 'ephox/alloy/api/ui/Button';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 import * as DomModification from 'ephox/alloy/dom/DomModification';
 
-// tslint:disable:no-console
+/* eslint-disable no-console */
 
 export default (): void => {
   const gui = Gui.create();

@@ -5,13 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Event } from '@ephox/dom-globals';
 import { Cell, Option } from '@ephox/katamari';
 import { Bookmark } from '../bookmark/BookmarkTypes';
-import { addKeyboardShortcuts, registerEvents } from '../undo/Setup';
-import { UndoManager, Locks, Index, UndoLevel } from '../undo/UndoManagerTypes';
-import Editor from './Editor';
 import * as Rtc from '../Rtc';
+import { addKeyboardShortcuts, registerEvents } from '../undo/Setup';
+import { Index, Locks, UndoLevel, UndoManager } from '../undo/UndoManagerTypes';
+import Editor from './Editor';
 
 /**
  * This class handles the undo/redo history levels for the editor. Since the built-in undo/redo has major drawbacks a custom one was needed.

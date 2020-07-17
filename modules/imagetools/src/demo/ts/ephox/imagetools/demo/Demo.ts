@@ -1,6 +1,5 @@
-import { document, HTMLButtonElement, HTMLElement, HTMLFormElement, HTMLImageElement, HTMLSelectElement } from '@ephox/dom-globals';
-import * as ResultConversions from 'ephox/imagetools/api/ResultConversions';
 import * as ImageTransformations from 'ephox/imagetools/api/ImageTransformations';
+import * as ResultConversions from 'ephox/imagetools/api/ResultConversions';
 import { ImageResult } from 'ephox/imagetools/util/ImageResult';
 
 function isSelect(el: HTMLElement): el is HTMLSelectElement {

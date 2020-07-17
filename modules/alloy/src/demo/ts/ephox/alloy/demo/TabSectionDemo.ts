@@ -1,4 +1,3 @@
-import { document, prompt, setTimeout } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { Class, SugarElement } from '@ephox/sugar';
 
@@ -87,7 +86,7 @@ export default (): void => {
   );
 
   setTimeout(() => {
-    const chosenTab = prompt('Move to tab?');
+    const chosenTab = window.prompt('Move to tab?');
     if (chosenTab !== null) {
       const tabSection = memTabSection.get(subject);
       TabSection.showTab(tabSection, chosenTab);

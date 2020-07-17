@@ -1,6 +1,5 @@
 import { Assertions, Chain, Logger, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { document } from '@ephox/dom-globals';
 import { Arr, Fun, Option, Result } from '@ephox/katamari';
 import { Hierarchy, Html, SugarElement } from '@ephox/sugar';
 import * as TableDeleteAction from 'tinymce/core/delete/TableDeleteAction';

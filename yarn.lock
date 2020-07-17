@@ -244,11 +244,6 @@
   resolved "https://registry.yarnpkg.com/@ephox/dispute/-/dispute-1.0.4.tgz#9cc03a740548f2b3db43ac544050b7e3b36651dd"
   integrity sha512-PzklC1q7Flovi/pnxTFsY1pPKaEAm0whC+lFXM2Sh4Fc+lUt7A/UMRoV9bg9DyeTbD/mWEr/hvdyJp6hI14uKg==
 
-"@ephox/dom-globals@^1.1.2":
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/@ephox/dom-globals/-/dom-globals-1.1.2.tgz#cb181a7652c1f097c9920fcf551c1fe202f70041"
-  integrity sha512-wTcfYP5FH4n5tzVMaE8a7T6XqdTFiGfGAC6LiuCYPBh4mOeIEN5WkiPuAy+trJBl0wRdlwKl+XmhIW06Xf4tpg==
-
 "@ephox/oxide-icons-tools@^2.1.1":
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/@ephox/oxide-icons-tools/-/oxide-icons-tools-2.1.1.tgz#335c7f9f7aece7d0f2027bbf647a4f1c77a0b76e"

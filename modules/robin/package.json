@@ -19,7 +19,6 @@
   ],
   "dependencies": {
     "@ephox/boss": "^3.1.7",
-    "@ephox/dom-globals": "^1.1.2",
     "@ephox/katamari": "^6.1.1",
     "@ephox/phoenix": "^5.1.8",
     "@ephox/polaris": "^3.0.52",

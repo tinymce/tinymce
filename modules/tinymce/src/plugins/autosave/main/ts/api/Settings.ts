@@ -5,9 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import * as Time from '../core/Time';
-import { document } from '@ephox/dom-globals';
 import Editor from 'tinymce/core/api/Editor';
+import * as Time from '../core/Time';
 
 const shouldAskBeforeUnload = (editor: Editor) => editor.getParam('autosave_ask_before_unload', true);
 

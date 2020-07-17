@@ -1,5 +1,4 @@
-import { console, document, window } from '@ephox/dom-globals';
-import { Fun } from '@ephox/katamari';
+import { Fun, Option } from '@ephox/katamari';
 import { DomEvent, Insert, SelectorFind, SugarElement } from '@ephox/sugar';
 import * as DomSmartSelect from 'ephox/robin/api/dom/DomSmartSelect';
 
@@ -11,32 +10,34 @@ const editor = SugarElement.fromHtml('<div contenteditable="true" style="width: 
 Insert.append(ephoxUi, editor);
 
 const select = function (s: SugarElement, so: number, f: SugarElement, fo: number) {
-  const selection = window.getSelection();
-  selection.removeAllRanges();
-  const range = document.createRange();
-  range.setStart(s.dom(), so);
-  range.setEnd(f.dom(), fo);
-  // tslint:disable-next-line:no-console
-  console.log('setting range: ', s.dom(), so, f.dom(), fo);
-  selection.addRange(range);
+  Option.from(window.getSelection()).each((selection) => {
+    selection.removeAllRanges();
+    const range = document.createRange();
+    range.setStart(s.dom(), so);
+    range.setEnd(f.dom(), fo);
+    // eslint-disable-next-line no-console
+    console.log('setting range: ', s.dom(), so, f.dom(), fo);
+    selection.addRange(range);
+  });
 };
 
 const getSelection = function () {
-  const selection = window.getSelection();
-  if (selection.rangeCount > 0) {
-    const range = selection.getRangeAt(0);
-    // tslint:disable-next-line:no-console
-    console.log('range: ', range);
-    return {
-      startContainer: Fun.constant(SugarElement.fromDom(range.startContainer)),
-      startOffset: Fun.constant(range.startOffset),
-      endContainer: Fun.constant(SugarElement.fromDom(range.endContainer)),
-      endOffset: Fun.constant(range.endOffset),
-      collapsed: Fun.constant(range.collapsed)
-    };
-  } else {
-    return null;
-  }
+  return Option.from(window.getSelection()).map((selection) => {
+    if (selection.rangeCount > 0) {
+      const range = selection.getRangeAt(0);
+      // eslint-disable-next-line no-console
+      console.log('range: ', range);
+      return {
+        startContainer: Fun.constant(SugarElement.fromDom(range.startContainer)),
+        startOffset: Fun.constant(range.startOffset),
+        endContainer: Fun.constant(SugarElement.fromDom(range.endContainer)),
+        endOffset: Fun.constant(range.endOffset),
+        collapsed: Fun.constant(range.collapsed)
+      };
+    } else {
+      return null;
+    }
+  }).getOrNull();
 };
 
 DomEvent.bind(editor, 'click', function (_event) {

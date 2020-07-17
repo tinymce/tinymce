@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
 import { Compare, SelectorExists, SugarElement } from '@ephox/sugar';
 import DomTreeWalker from '../api/dom/TreeWalker';

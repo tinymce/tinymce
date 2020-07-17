@@ -6,7 +6,6 @@
  */
 
 import { Types } from '@ephox/bridge';
-import { File } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 
 import { ImageData } from '../core/ImageData';

@@ -1,4 +1,3 @@
-import { HTMLElement } from '@ephox/dom-globals';
 import { Insert, Remove, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 

@@ -1,4 +1,3 @@
-import { Document } from '@ephox/dom-globals';
 import { SugarElement } from '../node/SugarElement';
 import * as Scroll from '../view/Scroll';
 import { SugarPosition } from '../view/SugarPosition';

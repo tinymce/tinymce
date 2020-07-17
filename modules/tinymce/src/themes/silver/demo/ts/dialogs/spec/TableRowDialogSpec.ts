@@ -1,5 +1,3 @@
-import { console } from '@ephox/dom-globals';
-
 export default {
   title: 'Row properties',
   body: {
@@ -111,7 +109,7 @@ export default {
   onSubmit: (api) => {
     const data = api.getData();
 
-    // tslint:disable-next-line:no-console
+    // eslint-disable-next-line no-console
     console.log({
       type: data.rowtype,
       align: data.align,

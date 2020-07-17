@@ -5,9 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Promise from './util/Promise';
 import ScriptLoader from './dom/ScriptLoader';
-import { setTimeout, clearTimeout } from '@ephox/dom-globals';
+import Promise from './util/Promise';
 
 interface Resource {
   load(id: string, url: string): Promise<any>;

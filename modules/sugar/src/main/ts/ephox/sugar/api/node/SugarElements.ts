@@ -1,4 +1,3 @@
-import { document, Document, HTMLElement, Node, Text, Window } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import * as Traverse from '../search/Traverse';
 import { SugarElement } from './SugarElement';

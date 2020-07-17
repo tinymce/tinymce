@@ -6,7 +6,6 @@
  */
 
 import { AlloyComponent, Boxes, Channels, Docking, Focusing, Receiving } from '@ephox/alloy';
-import { HTMLElement } from '@ephox/dom-globals';
 import { Arr, Cell, Option, Result } from '@ephox/katamari';
 import { Class, Classes, Compare, Css, Focus, Height, Scroll, SugarElement, SugarLocation, Traverse, Visibility, Width } from '@ephox/sugar';
 

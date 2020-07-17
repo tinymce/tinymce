@@ -1,5 +1,4 @@
 import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
-import { DataTransfer, DragEvent } from '@ephox/dom-globals';
 import { EventArgs } from '@ephox/sugar';
 
 import * as AlloyEvents from '../../api/events/AlloyEvents';

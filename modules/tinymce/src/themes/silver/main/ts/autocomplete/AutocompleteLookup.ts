@@ -6,7 +6,6 @@
  */
 
 import { InlineContent, Types } from '@ephox/bridge';
-import { Node, Range } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';

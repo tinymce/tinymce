@@ -1,4 +1,3 @@
-import { document } from '@ephox/dom-globals';
 import { Arr, Obj, Option } from '@ephox/katamari';
 import { Attribute, Css, DomEvent, Insert, SugarElement, SugarText } from '@ephox/sugar';
 import { Wrapter } from 'ephox/phoenix/api/data/Types';

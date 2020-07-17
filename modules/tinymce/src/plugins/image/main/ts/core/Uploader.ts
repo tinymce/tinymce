@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { FormData, XMLHttpRequest } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
 import { BlobInfo } from 'tinymce/core/api/file/BlobCache';
 import Promise from 'tinymce/core/api/util/Promise';

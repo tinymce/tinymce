@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { document } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { Scroll, SugarElement, SugarLocation, SugarPosition } from '@ephox/sugar';
 

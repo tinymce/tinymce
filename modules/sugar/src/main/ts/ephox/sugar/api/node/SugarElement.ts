@@ -1,4 +1,3 @@
-import { ChildNode, console, document, Document, Element, HTMLElement, HTMLElementTagNameMap, Node, Text, Window } from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
 
 interface SugarElement<T = any> {
@@ -10,7 +9,7 @@ const fromHtml = <E extends Node = Node & ChildNode> (html: string, scope?: Docu
   const div = doc.createElement('div');
   div.innerHTML = html;
   if (!div.hasChildNodes() || div.childNodes.length > 1) {
-    // tslint:disable-next-line:no-console
+    // eslint-disable-next-line no-console
     console.error('HTML does not have a single root node', html);
     throw new Error('HTML must have a single root node');
   }

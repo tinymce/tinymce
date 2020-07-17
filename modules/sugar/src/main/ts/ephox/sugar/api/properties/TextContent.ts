@@ -1,4 +1,3 @@
-import { Node } from '@ephox/dom-globals';
 import { SugarElement } from '../node/SugarElement';
 
 const get = (element: SugarElement<Node>): string | null =>

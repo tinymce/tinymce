@@ -1,5 +1,4 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
-import { console, Document, HTMLElement, HTMLIFrameElement, Window } from '@ephox/dom-globals';
 import { Arr, Fun, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import * as Insert from 'ephox/sugar/api/dom/Insert';
@@ -329,7 +328,7 @@ UnitTest.asynctest('LocationTest', (success, failure) => {
       const chromeDifference = -2;
       Arr.each(tests, (t) => {
         if (t.id !== 'table-1') {
-          // tslint:disable-next-line:no-console
+          // eslint-disable-next-line no-console
           console.log('> Note - fix for Chrome bug - subtracting from relative top and left: ', chromeDifference);
           t.relative.top += chromeDifference;
           t.relative.left.ltr += chromeDifference;

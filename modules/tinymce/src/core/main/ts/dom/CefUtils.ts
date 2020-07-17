@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node } from '@ephox/dom-globals';
 import * as NodeType from './NodeType';
 
 const getContentEditableRoot = (root: Node, node: Node): Node | null => {

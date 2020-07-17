@@ -1,4 +1,3 @@
-import { ChildNode, Node } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import { SugarElement } from '../node/SugarElement';
 import * as PredicateFind from '../search/PredicateFind';

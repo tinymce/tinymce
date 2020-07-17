@@ -1,11 +1,10 @@
-import { Pipeline, RealMouse, Waiter, Chain, Log } from '@ephox/agar';
+import { Chain, Log, Pipeline, RealMouse, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
 
 import PastePlugin from 'tinymce/plugins/paste/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
-import { window } from '@ephox/dom-globals';
 
 UnitTest.asynctest('tinymce.plugins.paste.webdriver.CutTest', (success, failure) => {
 

@@ -1,6 +1,5 @@
 import { Arr, Type } from '@ephox/katamari';
-import { File, DataTransferItemList, DataTransferItem, DataTransfer } from '@ephox/dom-globals';
-import { createDataTransferItemFromString, createDataTransferItemFromFile } from './DataTransferItem';
+import { createDataTransferItemFromFile, createDataTransferItemFromString } from './DataTransferItem';
 import { isInReadWriteMode } from './Mode';
 
 const throwInvalidState = (): void => {

@@ -6,7 +6,6 @@
  */
 
 import { Types } from '@ephox/bridge';
-import { File, URL } from '@ephox/dom-globals';
 import { Arr, Merger, Option, Type } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';

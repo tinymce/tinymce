@@ -1,5 +1,4 @@
 import { Objects } from '@ephox/boulder';
-import { Touch, TouchEvent } from '@ephox/dom-globals';
 import { Cell, Obj, Option } from '@ephox/katamari';
 import { Compare, EventArgs, SugarElement } from '@ephox/sugar';
 

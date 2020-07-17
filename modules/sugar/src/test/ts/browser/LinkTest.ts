@@ -1,5 +1,4 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
-import { document, HTMLLinkElement } from '@ephox/dom-globals';
 import * as Compare from 'ephox/sugar/api/dom/Compare';
 import * as Link from 'ephox/sugar/api/dom/Link';
 import { SugarElement } from 'ephox/sugar/api/node/SugarElement';

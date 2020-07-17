@@ -6,7 +6,6 @@
  */
 
 import { MakeshiftAnchorSpec, NodeAnchorSpec, SelectionAnchorSpec } from '@ephox/alloy';
-import { HTMLElement, MouseEvent, TouchEvent } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';

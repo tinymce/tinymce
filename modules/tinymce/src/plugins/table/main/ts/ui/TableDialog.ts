@@ -6,7 +6,6 @@
  */
 
 import { Types } from '@ephox/bridge';
-import { Element } from '@ephox/dom-globals';
 import { Fun, Type, Unicode } from '@ephox/katamari';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';

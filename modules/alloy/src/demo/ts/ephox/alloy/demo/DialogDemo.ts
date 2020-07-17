@@ -1,4 +1,3 @@
-import { console, document, setTimeout } from '@ephox/dom-globals';
 import { Option, Result } from '@ephox/katamari';
 import { Class, SugarElement } from '@ephox/sugar';
 
@@ -12,7 +11,7 @@ import { ModalDialog } from 'ephox/alloy/api/ui/ModalDialog';
 import * as DemoSink from 'ephox/alloy/demo/DemoSink';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 
-// tslint:disable:no-console
+/* eslint-disable no-console */
 
 export default (): void => {
   const gui = Gui.create();

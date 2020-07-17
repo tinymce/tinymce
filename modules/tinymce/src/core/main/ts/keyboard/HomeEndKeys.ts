@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { KeyboardEvent } from '@ephox/dom-globals';
 import Editor from '../api/Editor';
 import VK from '../api/util/VK';
 import * as CefNavigation from './CefNavigation';

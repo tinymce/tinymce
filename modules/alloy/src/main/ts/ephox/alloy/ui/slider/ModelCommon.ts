@@ -1,4 +1,3 @@
-import { MouseEvent, Touch, TouchEvent } from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
 import { SugarPosition } from '@ephox/sugar';
 

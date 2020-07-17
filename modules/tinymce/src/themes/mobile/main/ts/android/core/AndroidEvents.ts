@@ -6,7 +6,6 @@
  */
 
 import { Toggling } from '@ephox/alloy';
-import { HTMLInputElement } from '@ephox/dom-globals';
 import { Arr, Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Compare, DomEvent, Focus, SugarElement, SugarNode, Traverse } from '@ephox/sugar';

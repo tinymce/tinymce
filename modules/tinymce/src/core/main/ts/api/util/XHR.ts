@@ -5,11 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { XMLHttpRequest } from '@ephox/dom-globals';
 import Delay from './Delay';
+import { NativeEventMap } from './EventDispatcher';
 import Observable from './Observable';
 import Tools from './Tools';
-import { NativeEventMap } from './EventDispatcher';
 
 export interface XHRSettings {
   async?: boolean;

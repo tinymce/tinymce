@@ -1,4 +1,3 @@
-import { navigator, window } from '@ephox/dom-globals';
 import { Fun, Thunk } from '@ephox/katamari';
 
 import { Browser as BrowserCore } from '../core/Browser';

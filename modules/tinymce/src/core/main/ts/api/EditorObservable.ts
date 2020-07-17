@@ -5,13 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Event, Node } from '@ephox/dom-globals';
 import { Obj } from '@ephox/katamari';
 import { isReadOnly, preventReadOnlyEvents } from '../mode/Readonly';
 import DOMUtils from './dom/DOMUtils';
 import Editor from './Editor';
-import * as Settings from './Settings';
 import { EditorEventMap } from './EventTypes';
+import * as Settings from './Settings';
 import Observable from './util/Observable';
 import Tools from './util/Tools';
 

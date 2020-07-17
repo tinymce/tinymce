@@ -10,7 +10,6 @@ import {
   NativeEvents, Replacing, Representing, SimulatedEvent, SketchSpec, SystemEvents, Tabstopping
 } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
-import { HTMLElement } from '@ephox/dom-globals';
 import { Arr, Fun } from '@ephox/katamari';
 
 import { Attribute, Class, EventArgs, Focus, Html, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';

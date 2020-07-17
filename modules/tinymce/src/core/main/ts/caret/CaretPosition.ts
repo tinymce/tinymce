@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { ClientRect, Document, Element, Node, Range } from '@ephox/dom-globals';
 import { Arr, Fun, Options, Unicode } from '@ephox/katamari';
 import DOMUtils from '../api/dom/DOMUtils';
 import * as NodeType from '../dom/NodeType';

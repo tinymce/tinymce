@@ -1,4 +1,3 @@
-import { DataTransfer, Element } from '@ephox/dom-globals';
 import { Arr, Id, Option, Type } from '@ephox/katamari';
 import { createFileList } from '../file/FileList';
 import { getData } from './DataTransferItem';
@@ -102,8 +101,6 @@ const createDataTransfer = (): DataTransfer => {
         dataTransfer.clearData(normalize(format));
         items.add(data, normalize(format));
       }
-
-      return true; // Standard says void dom-globals says boolean
     },
 
     clearData: (format?: string) => {
@@ -122,8 +119,6 @@ const createDataTransfer = (): DataTransfer => {
           }
         }
       }
-
-      return true; // Standard says void dom-globals says boolean
     }
   };
 

@@ -1,5 +1,4 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
-import { document } from '@ephox/dom-globals';
 import { Compare, Hierarchy, Insert, InsertAll, Remove, SugarBody, SugarElement } from '@ephox/sugar';
 import * as DomSmartSelect from 'ephox/robin/api/dom/DomSmartSelect';
 

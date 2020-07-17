@@ -1,4 +1,3 @@
-import { HTMLFrameElement } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import { Compare, Scroll, SugarElement, SugarLocation, SugarPosition, Traverse } from '@ephox/sugar';
 

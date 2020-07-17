@@ -1,4 +1,3 @@
-import { HTMLElement } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { Html, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 

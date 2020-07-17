@@ -1,5 +1,4 @@
 import { ApproxStructure, Assertions, Chain, GeneralSteps, Guard, Keyboard, Keys, Logger, Step, StructAssert, UiFinder } from '@ephox/agar';
-import { document, window } from '@ephox/dom-globals';
 import { Css, Focus, Scroll, SelectorFind, SugarBody, SugarElement } from '@ephox/sugar';
 
 const staticPartsOuter = (s: ApproxStructure.StructApi, _str: ApproxStructure.StringApi, arr: ApproxStructure.ArrayApi): StructAssert[] =>

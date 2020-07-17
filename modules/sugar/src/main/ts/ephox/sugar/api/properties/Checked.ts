@@ -1,4 +1,3 @@
-import { HTMLInputElement, Node } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import { SugarElement } from '../node/SugarElement';
 import * as SelectorFind from '../search/SelectorFind';

@@ -1,6 +1,5 @@
 import { Assertions, Chain, GeneralSteps, Logger, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { console } from '@ephox/dom-globals';
 import { Arr, Fun, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Hierarchy, SugarElement } from '@ephox/sugar';
@@ -27,7 +26,7 @@ UnitTest.asynctest('browser.tinymce.core.caret.LineReader', (success, failure) =
 
   const logPositions = (msg, positions) => {
     Arr.each(positions, (pos) => {
-      // tslint:disable-next-line:no-console
+      // eslint-disable-next-line no-console
       console.log(msg, pos.container(), pos.offset(), pos.getClientRects());
     });
   };

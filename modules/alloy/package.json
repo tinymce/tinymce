@@ -5,7 +5,6 @@
   "dependencies": {
     "@ephox/agar": "^4.17.0",
     "@ephox/boulder": "^4.0.7",
-    "@ephox/dom-globals": "^1.1.2",
     "@ephox/katamari": "^6.1.1",
     "@ephox/sand": "^3.1.10",
     "@ephox/sugar": "^6.1.1",

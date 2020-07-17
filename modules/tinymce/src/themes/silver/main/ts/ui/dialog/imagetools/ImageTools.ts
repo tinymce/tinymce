@@ -9,7 +9,6 @@ import {
   AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, CustomEvent, Disabling, Representing, SimpleSpec, SimulatedEvent
 } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
-import { Blob, console } from '@ephox/dom-globals';
 import { ImageResult, ResultConversions } from '@ephox/imagetools';
 import { Fun, Option } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
@@ -90,7 +89,7 @@ export const renderImageTools = (detail: ImageToolsSpec, providersBackstage: UiF
         unblock(anyInSystem);
         return oImg;
       })).catch((err) => {
-      // tslint:disable-next-line:no-console
+      // eslint-disable-next-line no-console
         console.log(err); // TODO: Notify the user?
         unblock(anyInSystem);
         return err;

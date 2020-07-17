@@ -1,5 +1,3 @@
-import { window } from '@ephox/dom-globals';
-
 export default {
   title: 'AlertBanner',
   body: {

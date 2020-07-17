@@ -1,6 +1,5 @@
 import { ApproxStructure, Assertions, Chain, Guard, Mouse, NamedChain, Pipeline, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { HTMLElement } from '@ephox/dom-globals';
 import { Editor as McEditor } from '@ephox/mcagar';
 import { SugarBody, SugarElement, Traverse } from '@ephox/sugar';
 

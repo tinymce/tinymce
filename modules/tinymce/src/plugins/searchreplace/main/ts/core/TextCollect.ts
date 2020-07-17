@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node, Range, Text } from '@ephox/dom-globals';
 import { Arr, Fun, Obj } from '@ephox/katamari';
 import { SandNode } from '@ephox/sand';
 import { SelectorFilter, SugarElement, Traverse } from '@ephox/sugar';

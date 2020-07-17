@@ -5,13 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLImageElement } from '@ephox/dom-globals';
 import { Arr, Fun, Strings, Type } from '@ephox/katamari';
 import { UploadHandler } from '../file/Uploader';
 import DOMUtils from './dom/DOMUtils';
 import Editor from './Editor';
 import Env from './Env';
-import { UpdatedReferrerPolicy } from './SettingsTypes';
 import I18n from './util/I18n';
 import Tools from './util/Tools';
 
@@ -96,7 +94,7 @@ const getImagesUploadHandler = (editor: Editor): UploadHandler => editor.getPara
 
 const shouldUseContentCssCors = (editor: Editor): boolean => editor.getParam('content_css_cors', false, 'boolean');
 
-const getReferrerPolicy = (editor: Editor): UpdatedReferrerPolicy => editor.getParam('referrer_policy', '', 'string') as UpdatedReferrerPolicy;
+const getReferrerPolicy = (editor: Editor): ReferrerPolicy => editor.getParam('referrer_policy', '', 'string') as ReferrerPolicy;
 
 const getLanguageCode = (editor: Editor): string => editor.getParam('language', 'en', 'string');
 

@@ -1,6 +1,5 @@
 import { Assertions, Chain, GeneralSteps, Logger, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { document } from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
 import { Hierarchy, SugarElement } from '@ephox/sugar';
 import * as CefDeleteAction from 'tinymce/core/delete/CefDeleteAction';

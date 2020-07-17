@@ -1,4 +1,3 @@
-import { Window } from '@ephox/dom-globals';
 import { SelectionDirection, SimRange, SimSelection, SugarElement } from '@ephox/sugar';
 import { Situs } from './Situs';
 

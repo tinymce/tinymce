@@ -5,10 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Arr } from '@ephox/katamari';
 import * as NodeType from '../dom/NodeType';
 import * as CaretContainer from './CaretContainer';
-import { Node, HTMLElement } from '@ephox/dom-globals';
-import { Arr } from '@ephox/katamari';
 
 /**
  * This module contains logic for handling caret candidates. A caret candidate is

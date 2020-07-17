@@ -5,8 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLElement, Range } from '@ephox/dom-globals';
-
 function isContentEditableFalse(node) {
   return node && node.nodeType === 1 && node.contentEditable === 'false';
 }

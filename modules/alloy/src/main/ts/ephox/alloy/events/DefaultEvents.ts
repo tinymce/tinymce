@@ -1,4 +1,3 @@
-import { console } from '@ephox/dom-globals';
 import { Compare, SugarElement } from '@ephox/sugar';
 
 import { AlloyComponent } from '../api/component/ComponentApi';
@@ -20,7 +19,7 @@ const events: AlloyEvents.AlloyEventRecord = AlloyEvents.derive([
     const originator: SugarElement = simulatedEvent.event().originator();
     const target: SugarElement = simulatedEvent.event().target();
     if (isRecursive(component, originator, target)) {
-      // tslint:disable-next-line:no-console
+      // eslint-disable-next-line no-console
       console.warn(
         SystemEvents.focus() + ' did not get interpreted by the desired target. ' +
         '\nOriginator: ' + AlloyLogger.element(originator) +

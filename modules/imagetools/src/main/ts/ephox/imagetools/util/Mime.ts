@@ -1,5 +1,3 @@
-import { document } from '@ephox/dom-globals';
-
 function getUriPathName(uri: string): string {
   const a = document.createElement('a');
   a.href = uri;

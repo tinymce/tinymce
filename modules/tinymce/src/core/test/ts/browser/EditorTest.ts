@@ -1,6 +1,5 @@
 import { Log, Pipeline, Step, UiFinder } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Attribute, Class, SugarBody } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';

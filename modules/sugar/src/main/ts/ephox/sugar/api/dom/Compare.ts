@@ -1,4 +1,3 @@
-import { Node } from '@ephox/dom-globals';
 import { Arr, Fun } from '@ephox/katamari';
 import { PlatformDetection, SandNode } from '@ephox/sand';
 import { SugarElement } from '../node/SugarElement';

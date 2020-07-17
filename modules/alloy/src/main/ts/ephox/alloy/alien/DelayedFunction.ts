@@ -1,5 +1,3 @@
-import { setTimeout, clearTimeout } from '@ephox/dom-globals';
-
 export default <T extends (...args: any[]) => void>(fun: T, delay: number) => {
   let ref: number | null = null;
 

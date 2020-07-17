@@ -1,5 +1,4 @@
 import { Assertions, Chain, GeneralSteps, Guard, UiControls, UiFinder, Waiter } from '@ephox/agar';
-import { document } from '@ephox/dom-globals';
 import { TinyUi } from '@ephox/mcagar';
 import { SugarElement } from '@ephox/sugar';
 

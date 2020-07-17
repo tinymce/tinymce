@@ -5,14 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Type } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
 import LocalStorage from 'tinymce/core/api/util/LocalStorage';
 import Tools from 'tinymce/core/api/util/Tools';
 import * as Events from '../api/Events';
 import * as Settings from '../api/Settings';
-import { Type } from '@ephox/katamari';
-import { DOMParser } from '@ephox/dom-globals';
 
 const isEmpty = (editor: Editor, html?: string) => {
   if (Type.isUndefined(html)) {

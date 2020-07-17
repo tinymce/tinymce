@@ -1,6 +1,5 @@
 import { DragnDrop as Dnd, Files, GeneralSteps, Logger } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Blob, DataTransfer } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 

@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { ClientRect, HTMLElement, Node } from '@ephox/dom-globals';
 import { Arr, Fun } from '@ephox/katamari';
 import { getClientRects, NodeClientRect } from '../dom/Dimensions';
 import * as NodeType from '../dom/NodeType';

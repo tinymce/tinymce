@@ -13,7 +13,6 @@
   },
   "dependencies": {
     "@ephox/boulder": "^4.0.7",
-    "@ephox/dom-globals": "^1.1.2",
     "@ephox/katamari": "^6.1.1",
     "tslib": "^2.0.0"
   },

@@ -1,8 +1,7 @@
 import { Pipeline, Step } from '@ephox/agar';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import * as TrimNode from 'tinymce/core/dom/TrimNode';
-import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.core.dom.TrimNodeTest', function (success, failure) {
 

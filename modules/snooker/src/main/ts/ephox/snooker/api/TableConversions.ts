@@ -1,4 +1,3 @@
-import { HTMLElement, HTMLTableElement } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
 import { Attribute, Css, SugarElement } from '@ephox/sugar';
 import { BarPositions, ColInfo } from '../resize/BarPositions';

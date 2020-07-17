@@ -1,6 +1,5 @@
-import { Assertions, Chain, UiFinder, Mouse, Guard, Logger } from '@ephox/agar';
+import { Assertions, Chain, Guard, Logger, Mouse, UiFinder } from '@ephox/agar';
 import { TinyDom } from '@ephox/mcagar';
-import { document } from '@ephox/dom-globals';
 
 export const sAssert = function (errString, objStruc, waitOn, clickOn) {
   return Logger.t('Assert structure in dialog', Chain.asStep(TinyDom.fromDom(document.body), [

@@ -1,5 +1,4 @@
 import { FieldSchema } from '@ephox/boulder';
-import { Window } from '@ephox/dom-globals';
 import { Option, Unicode } from '@ephox/katamari';
 import { Insert, Remove, SimRange, SimSelection, SugarElement, SugarNode, Traverse, WindowSelection } from '@ephox/sugar';
 
@@ -58,7 +57,7 @@ const placement = (component: AlloyComponent, anchorInfo: SelectionAnchor, origi
   });
 
   const targetElement: Option<SugarElement> = getAnchorSelection(win, anchorInfo)
-    .bind((sel) => SugarNode.isElement(sel.start()) ? Option.some(sel.start()) : Traverse.parent(sel.start()));
+    .bind((sel) => SugarNode.isElement(sel.start()) ? Option.some(sel.start()) : Traverse.parentNode(sel.start()));
   const elem = targetElement.getOr(component.element());
 
   return ContentAnchorCommon.calcNewAnchor(selectionBox, rootPoint, anchorInfo, origin, elem);

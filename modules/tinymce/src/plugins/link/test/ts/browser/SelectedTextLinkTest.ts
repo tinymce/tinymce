@@ -1,6 +1,5 @@
 import { FocusTools, GeneralSteps, Keyboard, Keys, Log, Pipeline, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyDom, TinyLoader } from '@ephox/mcagar';
 import { SugarBody } from '@ephox/sugar';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';

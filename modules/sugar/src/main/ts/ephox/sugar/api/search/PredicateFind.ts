@@ -1,4 +1,3 @@
-import { ChildNode, Node } from '@ephox/dom-globals';
 import { Arr, Fun, Option, Type } from '@ephox/katamari';
 import ClosestOrAncestor from '../../impl/ClosestOrAncestor';
 import * as Compare from '../dom/Compare';

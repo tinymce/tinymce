@@ -5,10 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import {
-  Element, HTMLBRElement, HTMLDListElement, HTMLElement, HTMLLIElement, HTMLOListElement, HTMLTableCellElement, HTMLTableHeaderCellElement,
-  HTMLUListElement, Node, Text
-} from '@ephox/dom-globals';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 

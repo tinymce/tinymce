@@ -1,6 +1,5 @@
 import { Assertions, Chain, Log, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyDom, TinyLoader, TinyUi } from '@ephox/mcagar';
 import { SugarElement } from '@ephox/sugar';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';

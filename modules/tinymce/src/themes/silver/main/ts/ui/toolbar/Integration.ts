@@ -8,10 +8,9 @@
 import { AlloySpec, SketchSpec, VerticalDir } from '@ephox/alloy';
 import { ValueSchema } from '@ephox/boulder';
 import { Toolbar } from '@ephox/bridge';
-import { console } from '@ephox/dom-globals';
 import { Arr, Obj, Option, Result, Type } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
-import { getToolbarMode, ToolbarMode, ToolbarGroupSetting } from '../../api/Settings';
+import { getToolbarMode, ToolbarGroupSetting, ToolbarMode } from '../../api/Settings';
 
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { RenderToolbarConfig } from '../../Render';
@@ -26,7 +25,7 @@ import { renderFloatingToolbarButton, renderSplitButton, renderToolbarButton, re
 import { ToolbarGroup } from './CommonToolbar';
 
 export const handleError = (error) => {
-  // tslint:disable-next-line:no-console
+  // eslint-disable-next-line no-console
   console.error(ValueSchema.formatError(error));
 };
 
@@ -130,7 +129,7 @@ const types = {
 
 const extractFrom = (spec: ToolbarButton, extras: Extras, editor: Editor): Option<AlloySpec> => Obj.get(types, spec.type).fold(
   () => {
-    // tslint:disable-next-line:no-console
+    // eslint-disable-next-line no-console
     console.error('skipping button defined by', spec);
     return Option.none();
   },
@@ -185,7 +184,7 @@ const createToolbar = (toolbarConfig: RenderToolbarConfig): ToolbarGroupSetting[
   } else if (isToolbarGroupSettingArray(toolbar)) {
     return toolbar;
   } else {
-    // tslint:disable-next-line:no-console
+    // eslint-disable-next-line no-console
     console.error('Toolbar type should be string, string[], boolean or ToolbarGroup[]');
     return [];
   }
@@ -201,7 +200,7 @@ const lookupButton = (editor: Editor, buttons: Record<string, any>, toolbarItem:
     (spec) => {
       if (spec.type === 'grouptoolbarbutton' && !allowToolbarGroups) {
         // TODO change this message when sliding is available
-        // tslint:disable-next-line:no-console
+        // eslint-disable-next-line no-console
         console.warn(`Ignoring the '${toolbarItem}' toolbar button. Group toolbar buttons are only supported when using floating toolbar mode and cannot be nested.`);
         return Option.none();
       } else {

@@ -6,7 +6,6 @@
  */
 
 import { Toolbar } from '@ephox/bridge';
-import { HTMLAnchorElement } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 

@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLElement, Node } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Css, SugarElement, SugarNode, Traverse } from '@ephox/sugar';

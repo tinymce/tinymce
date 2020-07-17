@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node, Text } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import * as NodeType from '../dom/NodeType';
 import * as Zwsp from '../text/Zwsp';

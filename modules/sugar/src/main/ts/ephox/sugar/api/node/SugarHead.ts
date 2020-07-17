@@ -1,4 +1,3 @@
-import { document, Document, HTMLHeadElement } from '@ephox/dom-globals';
 import { SugarElement } from './SugarElement';
 
 export const head = (): SugarElement<HTMLHeadElement> => getHead(SugarElement.fromDom(document));

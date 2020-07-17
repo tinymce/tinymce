@@ -3,7 +3,6 @@ import {
 } from '@ephox/agar';
 import { GuiFactory, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
-import { document } from '@ephox/dom-globals';
 import { Arr, Fun, Strings } from '@ephox/katamari';
 import { SelectorFind, Selectors, SugarElement } from '@ephox/sugar';
 

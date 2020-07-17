@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node, Text } from '@ephox/dom-globals';
 import { Unicode } from '@ephox/katamari';
 import DomTreeWalker from 'tinymce/core/api/dom/TreeWalker';
 import Schema, { SchemaMap } from 'tinymce/core/api/html/Schema';

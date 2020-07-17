@@ -1,4 +1,3 @@
-import { MouseEvent } from '@ephox/dom-globals';
 import * as FilteredEvent from '../../impl/FilteredEvent';
 import { SugarElement } from '../node/SugarElement';
 import { EventFilter, EventHandler } from './Types';

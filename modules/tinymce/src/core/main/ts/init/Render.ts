@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element, HTMLFormElement, window } from '@ephox/dom-globals';
 import { Arr, Fun, Option, Options, Type } from '@ephox/katamari';
 import { Attribute, SugarElement } from '@ephox/sugar';
 import { UrlObject } from '../api/AddOnManager';

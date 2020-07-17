@@ -1,5 +1,4 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
-import { HTMLIFrameElement, setTimeout } from '@ephox/dom-globals';
 import { PlatformDetection } from '@ephox/sand';
 import * as Compare from 'ephox/sugar/api/dom/Compare';
 import * as Insert from 'ephox/sugar/api/dom/Insert';

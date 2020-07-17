@@ -1,6 +1,5 @@
 import { Chain, Log, Mouse, Pipeline, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { SugarElement } from '@ephox/sugar';
 import TemplatePlugin from 'tinymce/plugins/template/Plugin';

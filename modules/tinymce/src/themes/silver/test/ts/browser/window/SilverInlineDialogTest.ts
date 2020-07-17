@@ -2,7 +2,6 @@ import { ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Logger, M
 import { TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Types } from '@ephox/bridge';
-import { document } from '@ephox/dom-globals';
 import { Cell, Strings } from '@ephox/katamari';
 import { TinyLoader } from '@ephox/mcagar';
 import { SugarBody, SugarElement } from '@ephox/sugar';

@@ -1,4 +1,3 @@
-import { console, Element, Node } from '@ephox/dom-globals';
 import { Arr, Obj, Option, Type } from '@ephox/katamari';
 import { SugarElement } from '../node/SugarElement';
 import * as SugarNode from '../node/SugarNode';
@@ -12,7 +11,7 @@ const rawSet = (dom: Element, key: string, value: string | boolean | number): vo
   if (Type.isString(value) || Type.isBoolean(value) || Type.isNumber(value)) {
     dom.setAttribute(key, value + '');
   } else {
-    // tslint:disable-next-line:no-console
+    // eslint-disable-next-line no-console
     console.error('Invalid call to Attribute.set. Key ', key, ':: Value ', value, ':: Element ', dom);
     throw new Error('Attribute value was not simple');
   }

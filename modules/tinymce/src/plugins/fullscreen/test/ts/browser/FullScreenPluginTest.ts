@@ -1,6 +1,5 @@
 import { Assertions, Chain, Guard, Log, Pipeline, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { document, HTMLLabelElement } from '@ephox/dom-globals';
 import { Cell } from '@ephox/katamari';
 import { Editor as McEditor } from '@ephox/mcagar';
 import { Attribute, Html, SelectorFind, SugarBody, SugarElement } from '@ephox/sugar';

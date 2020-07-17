@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLElement } from '@ephox/dom-globals';
 import Editor from 'tinymce/core/api/Editor';
 import * as Utils from '../util/Utils';
 import * as Prism from './Prism';

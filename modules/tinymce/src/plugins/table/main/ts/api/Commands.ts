@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLTableRowElement } from '@ephox/dom-globals';
 import { Arr, Fun, Obj, Option, Type } from '@ephox/katamari';
 import { CopyCols, CopyRows, Sizes, TableFill, TableLookup } from '@ephox/snooker';
 import { Insert, Remove, Replication, SugarElement } from '@ephox/sugar';

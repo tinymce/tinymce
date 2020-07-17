@@ -6,7 +6,6 @@
  */
 
 import { AlloyTriggers, Attachment, Swapping } from '@ephox/alloy';
-import { HTMLIFrameElement } from '@ephox/dom-globals';
 import { Cell, Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Focus, SugarElement, SugarNode } from '@ephox/sugar';

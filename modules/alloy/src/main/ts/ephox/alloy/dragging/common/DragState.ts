@@ -1,4 +1,3 @@
-import { Event } from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
 import { EventArgs } from '@ephox/sugar';
 

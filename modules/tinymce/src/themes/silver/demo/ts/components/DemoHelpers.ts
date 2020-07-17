@@ -1,5 +1,4 @@
 import { Attachment, Behaviour, Channels, Debugging, DomFactory, Gui, GuiFactory, Positioning } from '@ephox/alloy';
-import { console, document, window } from '@ephox/dom-globals';
 import { Fun, Future, Id, Option, Result } from '@ephox/katamari';
 import { Class, SugarBody } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
@@ -42,7 +41,7 @@ const setupDemo = () => {
     targets: [
       { type: 'anchor', title: 'Google', url: 'http://www.google.com.au', level: 0, attach: Fun.noop },
       { type: 'header', title: 'Header', url: '#header', level: 1, attach: () => {
-        // tslint:disable-next-line:no-console
+        // eslint-disable-next-line no-console
         console.log('This is where the ID would be attached to the header so it can be linked');
       } }
     ],

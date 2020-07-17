@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element, Node, Text } from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
 import * as NodeType from '../dom/NodeType';
 import * as CaretCandidate from './CaretCandidate';

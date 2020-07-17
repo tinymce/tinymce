@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node, Text } from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
 import DomTreeWalker from '../api/dom/TreeWalker';
 import * as NodeType from './NodeType';

@@ -1,4 +1,3 @@
-import { HTMLTableElement } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import * as Structs from '../api/Structs';

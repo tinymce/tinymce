@@ -1,5 +1,4 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { DataTransfer, navigator } from '@ephox/dom-globals';
 import { Cell, Option } from '@ephox/katamari';
 import { DomEvent, Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
 import { cCopy, cCut, sPasteDataTransfer, sPasteFiles, sPasteItems } from 'ephox/agar/api/Clipboard';

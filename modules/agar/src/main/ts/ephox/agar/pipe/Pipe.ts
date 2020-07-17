@@ -1,4 +1,3 @@
-import { setTimeout } from '@ephox/dom-globals';
 import { addStackTrace, TestLogs } from '../api/TestLogs';
 
 export type NextFn<T> = (value: T, logs: TestLogs) => void;

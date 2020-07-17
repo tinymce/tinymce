@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { KeyboardEvent, Text } from '@ephox/dom-globals';
 import { Cell } from '@ephox/katamari';
 import Editor from '../api/Editor';
 import { EditorEvent } from '../api/util/EventDispatcher';

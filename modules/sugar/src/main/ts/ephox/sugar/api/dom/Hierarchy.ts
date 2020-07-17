@@ -1,4 +1,3 @@
-import { Node } from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
 import { SugarElement } from '../node/SugarElement';
 import * as Traverse from '../search/Traverse';

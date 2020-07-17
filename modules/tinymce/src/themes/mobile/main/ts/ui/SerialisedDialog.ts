@@ -6,11 +6,10 @@
  */
 
 import {
-  AddEventsBehaviour, AlloyEvents, AlloyTriggers, Behaviour, Button, Container, Disabling, Form, Highlighting, Keying, Memento,
-  NativeEvents, Representing
+  AddEventsBehaviour, AlloyEvents, AlloyTriggers, Behaviour, Button, Container, Disabling, Form, Highlighting, Keying, Memento, NativeEvents,
+  Representing
 } from '@ephox/alloy';
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
-import { HTMLElement } from '@ephox/dom-globals';
 import { Arr, Cell, Option, Singleton } from '@ephox/katamari';
 import { Css, SelectorFilter, SelectorFind, Width } from '@ephox/sugar';
 

@@ -1,5 +1,4 @@
 import { TestLabel } from '@ephox/bedrock-client';
-import { console } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import * as ErrorTypes from '../alien/ErrorTypes';
 import { DieFn, NextFn } from '../pipe/Pipe';
@@ -40,7 +39,7 @@ const ts = <T, U>(label: string, fs: Step<T, U>[]): Step<T, U>[] => {
 
 const spec = (msg): void => {
   // TMP, WIP
-  // tslint:disable-next-line:no-console
+  // eslint-disable-next-line no-console
   console.log(msg);
 };
 

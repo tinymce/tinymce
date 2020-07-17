@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node } from '@ephox/dom-globals';
 import { SugarElement, SugarNode, SugarText, Traverse } from '@ephox/sugar';
 import Editor from '../api/Editor';
 import { isCaretNode } from '../fmt/FormatContainer';

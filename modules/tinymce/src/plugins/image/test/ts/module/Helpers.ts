@@ -1,5 +1,4 @@
 import { Assertions, Chain, Guard, Mouse, UiControls, UiFinder } from '@ephox/agar';
-import { document } from '@ephox/dom-globals';
 import { Arr, Obj, Result } from '@ephox/katamari';
 import { TinyUi } from '@ephox/mcagar';
 import { Checked, Focus, SelectTag, SugarBody, SugarElement, SugarNode, Value } from '@ephox/sugar';

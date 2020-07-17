@@ -1,5 +1,4 @@
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
-import { Element } from '@ephox/dom-globals';
 import { Result } from '@ephox/katamari';
 import { FormComponent, FormComponentApi, formComponentFields } from './FormComponent';
 

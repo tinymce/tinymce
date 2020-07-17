@@ -1,4 +1,3 @@
-import { HTMLElementTagNameMap } from '@ephox/dom-globals';
 import { Arr, Obj, Option } from '@ephox/katamari';
 import { Attribute, Compare, Css, CursorPosition, Insert, Replication, SelectorFilter, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 import { CellSpan, Generators, SimpleGenerators } from './Generators';

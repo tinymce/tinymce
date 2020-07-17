@@ -1,4 +1,3 @@
-import { Element, HTMLTableElement, window } from '@ephox/dom-globals';
 import { Fun, Obj, Option, Options } from '@ephox/katamari';
 import {
   Attribute, Css, Direction, DomEvent, EventArgs, Insert, InsertAll, Ready, Replication, SelectorFind, SugarElement, SugarNode
@@ -189,16 +188,16 @@ Ready.execute(function () {
   const makeRowHeader = makeButton('makeRowHeader');
   const unmakeRowHeader = makeButton('unmakeRowHeader');
 
-  const detection = (): Option<SugarElement<Element>> => {
-    const selection = window.getSelection();
-    if (selection.rangeCount > 0) {
-      const range = selection.getRangeAt(0);
-      const firstElement = range.startContainer.nodeType === 3 ? range.startContainer.parentNode : range.startContainer;
-      return Options.mapFrom(firstElement, SugarElement.fromDom).filter(SugarNode.isElement);
-    } else {
-      return Option.none();
-    }
-  };
+  const detection = (): Option<SugarElement<Element>> =>
+    Option.from(window.getSelection()).bind((selection) => {
+      if (selection.rangeCount > 0) {
+        const range = selection.getRangeAt(0);
+        const firstElement = range.startContainer.nodeType === 3 ? range.startContainer.parentNode : range.startContainer;
+        return Options.mapFrom(firstElement, SugarElement.fromDom).filter(SugarNode.isElement);
+      } else {
+        return Option.none();
+      }
+    });
 
   const newCell: Generators['cell'] = function (prev) {
     const td = SugarElement.fromTag('td');

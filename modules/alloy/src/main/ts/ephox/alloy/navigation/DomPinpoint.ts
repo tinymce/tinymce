@@ -1,4 +1,3 @@
-import { HTMLElement } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
 import { Compare, SelectorFilter, SugarElement, Visibility } from '@ephox/sugar';
 

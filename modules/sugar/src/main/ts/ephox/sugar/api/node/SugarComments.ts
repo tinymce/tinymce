@@ -1,4 +1,3 @@
-import { Comment, document, Node, NodeFilter, TreeWalker } from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { SugarElement } from './SugarElement';

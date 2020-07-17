@@ -1,4 +1,3 @@
-import { Node, Range, Window } from '@ephox/dom-globals';
 import { Adt, Fun, Option, Thunk } from '@ephox/katamari';
 import { SugarElement } from '../../api/node/SugarElement';
 import { SimSelection } from '../../api/selection/SimSelection';

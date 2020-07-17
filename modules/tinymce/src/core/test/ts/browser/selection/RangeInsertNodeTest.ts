@@ -1,6 +1,5 @@
 import { ApproxStructure, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Document, DocumentFragment, Node } from '@ephox/dom-globals';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { SugarElements, SugarFragment } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';

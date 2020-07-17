@@ -6,7 +6,6 @@
  */
 
 import { Types } from '@ephox/bridge';
-import { Element, HTMLElement } from '@ephox/dom-globals';
 import { Arr, Cell, Obj, Option, Type } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import * as Settings from '../api/Settings';

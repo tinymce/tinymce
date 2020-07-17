@@ -1,5 +1,4 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
-import { Text } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { SugarElement, SugarText, Traverse } from '@ephox/sugar';
 import * as DomSplit from 'ephox/phoenix/api/dom/DomSplit';

@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Image } from '@ephox/dom-globals';
 import { Arr, Obj, Option, Unicode } from '@ephox/katamari';
 import Env from '../api/Env';
 import DomParser, { DomParserSettings } from '../api/html/DomParser';

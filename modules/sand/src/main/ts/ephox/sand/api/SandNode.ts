@@ -1,5 +1,3 @@
-import { Node } from '@ephox/dom-globals';
-
 /*
  * Most of sand doesn't alter the methods on the object.
  * We're making an exception for Node, because bitwise and is so easy to get wrong.

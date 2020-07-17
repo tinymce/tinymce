@@ -1,6 +1,5 @@
-/* tslint:disable:no-console */
+/* eslint-disable no-console */
 import { GuiFactory } from '@ephox/alloy';
-import { console } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 

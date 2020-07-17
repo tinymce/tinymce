@@ -1,4 +1,3 @@
-import { document, Document, Element, HTMLDivElement, Window } from '@ephox/dom-globals';
 import { Option, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import * as Insert from '../dom/Insert';
@@ -22,14 +21,18 @@ const get = (_DOC?: SugarElement<Document>) => {
 const to = (x: number, y: number, _DOC?: SugarElement<Document>) => {
   const doc = _DOC !== undefined ? _DOC.dom() : document;
   const win = doc.defaultView;
-  win.scrollTo(x, y);
+  if (win) {
+    win.scrollTo(x, y);
+  }
 };
 
 // Scroll content by (x,y) relative to document _doc (or global if not supplied)
 const by = (x: number, y: number, _DOC?: SugarElement<Document>) => {
   const doc = _DOC !== undefined ? _DOC.dom() : document;
   const win = doc.defaultView;
-  win.scrollBy(x, y);
+  if (win) {
+    win.scrollBy(x, y);
+  }
 };
 
 // Set the window scroll position to the element

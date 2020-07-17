@@ -1,6 +1,5 @@
 import { ApproxStructure, Assertions, GeneralSteps, Logger, Mouse, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Text } from '@ephox/dom-globals';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { SugarElement } from '@ephox/sugar';
 import * as CaretFormat from 'tinymce/core/fmt/CaretFormat';

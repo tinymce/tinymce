@@ -1,6 +1,5 @@
 import { Chain, Step } from '@ephox/agar';
 import { Assert } from '@ephox/bedrock-client';
-import { console } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 
 export interface TestStore {
@@ -21,7 +20,7 @@ export const TestStore = (): TestStore => {
 
   const add = (value: any) => {
     array.push(value);
-    // tslint:disable-next-line:no-console
+    // eslint-disable-next-line no-console
     console.log('store.add', value, array);
   };
 

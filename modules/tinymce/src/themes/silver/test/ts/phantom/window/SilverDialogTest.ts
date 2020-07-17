@@ -3,7 +3,6 @@ import { TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Types } from '@ephox/bridge';
 
-import { document } from '@ephox/dom-globals';
 import { Cell } from '@ephox/katamari';
 import { SugarBody, SugarElement } from '@ephox/sugar';
 import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';

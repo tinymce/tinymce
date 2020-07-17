@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Attr, document, Range, Selection } from '@ephox/dom-globals';
 import Editor from '../api/Editor';
 import Env from '../api/Env';
 import * as Settings from '../api/Settings';
@@ -483,7 +482,7 @@ const Quirks = function (editor: Editor): Quirks {
   const addBrAfterLastLinks = function () {
     const fixLinks = function () {
       each(dom.select('a'), function (node) {
-        let parentNode = node.parentNode;
+        let parentNode: Node = node.parentNode;
         const root = dom.getRoot();
 
         if (parentNode.lastChild === node) {

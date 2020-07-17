@@ -5,8 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { ClientRect } from '@ephox/dom-globals';
-
 /**
  * Contains various tools for rect/position calculation.
  *

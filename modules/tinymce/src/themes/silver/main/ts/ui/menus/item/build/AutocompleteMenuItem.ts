@@ -7,7 +7,6 @@
 
 import { Behaviour, GuiFactory, ItemTypes, MaxHeight, Tooltipping } from '@ephox/alloy';
 import { InlineContent, Types } from '@ephox/bridge';
-import { HTMLElement } from '@ephox/dom-globals';
 import { Obj, Option } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';

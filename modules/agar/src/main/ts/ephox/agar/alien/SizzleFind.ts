@@ -1,4 +1,3 @@
-import { Element, Node, Window } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
 import { SugarElement, Traverse } from '@ephox/sugar';
 import Sizzle from '@ephox/wrap-sizzle';

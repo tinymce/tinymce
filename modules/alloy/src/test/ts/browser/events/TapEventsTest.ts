@@ -1,6 +1,5 @@
 import { GeneralSteps, Logger, Pipeline, Step, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { TouchEvent } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
 import { EventArgs, SugarElement } from '@ephox/sugar';
 

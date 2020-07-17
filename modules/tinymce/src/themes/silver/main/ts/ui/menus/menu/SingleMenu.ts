@@ -7,7 +7,6 @@
 /* eslint-disable max-len */
 import { AlloyEvents, FocusManagers, ItemTypes, Keying, MenuTypes, TieredMenu, TieredMenuTypes } from '@ephox/alloy';
 import { InlineContent, Menu as BridgeMenu, Types } from '@ephox/bridge';
-import { console } from '@ephox/dom-globals';
 import { Arr, Option, Options } from '@ephox/katamari';
 import { UiFactoryBackstage, UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
 import { detectSize } from '../../alien/FlatgridAutodetect';
@@ -86,7 +85,7 @@ const createMenuItemFromBridge = (
         (d) => MenuItems.fancy(parseForHorizontalMenu(d), backstage)
       );
     default: {
-      // tslint:disable-next-line:no-console
+      // eslint-disable-next-line no-console
       console.error('Unknown item in general menu', item);
       return Option.none();
     }

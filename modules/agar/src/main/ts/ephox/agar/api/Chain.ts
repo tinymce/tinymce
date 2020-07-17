@@ -1,4 +1,3 @@
-import { console } from '@ephox/dom-globals';
 import { Arr, Fun, Result } from '@ephox/katamari';
 
 import * as AsyncActions from '../pipe/AsyncActions';
@@ -165,7 +164,7 @@ const debugging = op(GeneralActions.debug);
 
 const log = <T>(message: string): Chain<T, T> =>
   on((input: T, next: NextFn<T>, die: DieFn, logs: TestLogs) => {
-    // tslint:disable-next-line:no-console
+    // eslint-disable-next-line no-console
     console.log(message);
     next(input, addLogEntry(logs, message));
   });

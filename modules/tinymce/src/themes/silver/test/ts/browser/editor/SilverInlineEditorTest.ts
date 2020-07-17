@@ -1,7 +1,6 @@
-/* tslint:disable:no-console */
+/* eslint-disable no-console */
 import { ApproxStructure, Assertions, Chain, Keyboard, Keys, Log, Logger, Pipeline, Step, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { console, document } from '@ephox/dom-globals';
 import { Arr, Cell } from '@ephox/katamari';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import { Css, SugarBody, SugarElement } from '@ephox/sugar';

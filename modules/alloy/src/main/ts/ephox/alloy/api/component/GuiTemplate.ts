@@ -1,4 +1,3 @@
-import { Node, Text } from '@ephox/dom-globals';
 import { Arr, Obj, Result } from '@ephox/katamari';
 import { SugarElement, SugarNode, SugarText, Traverse } from '@ephox/sugar';
 import { getAttrs, getClasses } from './DomFactory';

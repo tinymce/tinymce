@@ -1,5 +1,4 @@
 import { Chain, Mouse, NamedChain, UiFinder } from '@ephox/agar';
-import { HTMLElement } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
 import { SugarBody, SugarElement, Visibility } from '@ephox/sugar';
 import { Editor } from '../alien/EditorTypes';

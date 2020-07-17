@@ -5,12 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { KeyboardEvent } from '@ephox/dom-globals';
-import * as InsertSpace from './InsertSpace';
-import * as MatchKeys from './MatchKeys';
-import VK from '../api/util/VK';
 import Editor from '../api/Editor';
 import { EditorEvent } from '../api/util/EventDispatcher';
+import VK from '../api/util/VK';
+import * as InsertSpace from './InsertSpace';
+import * as MatchKeys from './MatchKeys';
 
 const executeKeydownOverride = (editor: Editor, evt: KeyboardEvent) => {
   MatchKeys.execute([

@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Text } from '@ephox/dom-globals';
 import { SugarElement } from '@ephox/sugar';
 
 export interface Pattern {

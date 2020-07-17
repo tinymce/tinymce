@@ -1,5 +1,3 @@
-import { ClientRect } from '@ephox/dom-globals';
-
 import { AlloyComponent } from '../../api/component/ComponentApi';
 
 const top = 'top',

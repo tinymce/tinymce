@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node, Range } from '@ephox/dom-globals';
 import { Unicode } from '@ephox/katamari';
 import * as NodeType from '../dom/NodeType';
 

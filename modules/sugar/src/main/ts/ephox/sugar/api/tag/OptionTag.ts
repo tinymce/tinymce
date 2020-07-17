@@ -1,4 +1,3 @@
-import { HTMLOptionElement } from '@ephox/dom-globals';
 import { SugarElement } from '../node/SugarElement';
 
 const setValue = (option: SugarElement<HTMLOptionElement>, value: string, text: string) => {

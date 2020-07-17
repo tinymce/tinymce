@@ -5,13 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLElement } from '@ephox/dom-globals';
 import { Arr, Fun, Option, Options } from '@ephox/katamari';
-import { CaretPosition } from './CaretPosition';
-import { HDirection, CaretWalker } from './CaretWalker';
-import * as CaretFinder from './CaretFinder';
 import * as NodeType from '../dom/NodeType';
+import * as CaretFinder from './CaretFinder';
+import { CaretPosition } from './CaretPosition';
 import { isInSameBlock } from './CaretUtils';
+import { CaretWalker, HDirection } from './CaretWalker';
 
 export enum BreakType {
   Br,

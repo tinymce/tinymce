@@ -1,6 +1,5 @@
 import { Assertions, Cursors, GeneralSteps, Logger, Pipeline, Step, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { window } from '@ephox/dom-globals';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Scroll, SugarElement, SugarLocation } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';

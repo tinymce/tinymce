@@ -1,4 +1,3 @@
-import { Document, Element, Event, EventTarget, HTMLElement, HTMLElementTagNameMap, Node, ShadowRoot } from '@ephox/dom-globals';
 import { Arr, Fun, Option, Type } from '@ephox/katamari';
 import * as Traverse from '../search/Traverse';
 import { SugarElement } from './SugarElement';
@@ -17,8 +16,8 @@ export const isShadowRoot = (dos: RootNode): dos is SugarElement<ShadowRoot> =>
   SugarNode.isDocumentFragment(dos);
 
 const supported: boolean =
-  Type.isFunction((Element.prototype as any).attachShadow) &&
-  Type.isFunction((Node.prototype as any).getRootNode);
+  Type.isFunction(Element.prototype.attachShadow) &&
+  Type.isFunction(Node.prototype.getRootNode);
 
 /**
  * Does the browser support shadow DOM?
@@ -78,10 +77,8 @@ export const getOriginalEventTarget = (event: Event): Option<EventTarget> => {
     if (SugarNode.isElement(el) && isOpenShadowHost(el)) {
       // When target element is inside Shadow DOM we need to take first element from composedPath
       // otherwise we'll get Shadow Root parent, not actual target element.
-      // TODO: TINY-3312 Upgrade to latest dom-globals which includes the missing Event.composedPath property
-      const eventAny = event as any;
-      if (eventAny.composed && eventAny.composedPath) {
-        const composedPath = eventAny.composedPath();
+      if (event.composed && event.composedPath) {
+        const composedPath = event.composedPath();
         if (composedPath) {
           return Arr.head(composedPath);
         }
@@ -91,13 +88,11 @@ export const getOriginalEventTarget = (event: Event): Option<EventTarget> => {
   return Option.from(event.target);
 };
 
-// TODO: TINY-3312 Upgrade to latest dom-globals which includes the missing 'mode' property
 export const isOpenShadowRoot = (sr: SugarElement<ShadowRoot>): boolean =>
-  (sr.dom() as any).mode === 'open';
+  sr.dom().mode === 'open';
 
-// TODO: TINY-3312 Upgrade to latest dom-globals which includes the missing 'mode' property
 export const isClosedShadowRoot = (sr: SugarElement<ShadowRoot>): boolean =>
-  (sr.dom() as any).mode === 'closed';
+  sr.dom().mode === 'closed';
 
 /** Return true if the element is a host of an open shadow root.
  *  Return false if the element is a host of a closed shadow root, or if the element is not a host.

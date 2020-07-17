@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Text } from '@ephox/dom-globals';
 import { Arr, Strings, Unicode } from '@ephox/katamari';
 import { Remove, SugarElement } from '@ephox/sugar';
 import { isNbsp, isWhiteSpace } from '../text/CharType';

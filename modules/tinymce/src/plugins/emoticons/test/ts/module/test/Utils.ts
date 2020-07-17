@@ -1,5 +1,4 @@
 import { Chain, Guard } from '@ephox/agar';
-import { document } from '@ephox/dom-globals';
 import { SugarElement } from '@ephox/sugar';
 
 // TODO: Move into shared library (eg agar)

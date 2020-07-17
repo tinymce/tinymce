@@ -1,4 +1,3 @@
-import { HTMLElementTagNameMap } from '@ephox/dom-globals';
 import { Arr, Cell, Contracts, Fun, Option } from '@ephox/katamari';
 import { Css, SugarElement } from '@ephox/sugar';
 import { getAttrValue } from '../util/CellUtils';

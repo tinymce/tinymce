@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { document, Element, Node, Range, Text } from '@ephox/dom-globals';
 import * as NodeType from '../dom/NodeType';
 import * as Zwsp from '../text/Zwsp';
 import { CaretPosition } from './CaretPosition';

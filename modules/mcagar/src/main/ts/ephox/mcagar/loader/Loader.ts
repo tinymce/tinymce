@@ -1,5 +1,4 @@
 import { TestLogs } from '@ephox/agar';
-import { console, document, setTimeout } from '@ephox/dom-globals';
 import { Arr, Fun, Global, Id, Option } from '@ephox/katamari';
 import { Attribute, Insert, Remove, SelectorFilter, SugarBody, SugarElement, SugarShadowDom } from '@ephox/sugar';
 import { Editor } from '../alien/EditorTypes';
@@ -54,7 +53,7 @@ const setup = (callbacks: Callbacks, settings: Record<string, any>, elementOpt: 
 
   // Agar v. ??? supports logging
   const onFailure = (err: Error | string, logs?: TestLogs) => {
-    // tslint:disable-next-line:no-console
+    // eslint-disable-next-line no-console
     console.log('Tiny Loader error: ', err);
     // Do no teardown so that the failed test still shows the editor. Important for selection
     callbacks.failure(err, logs);

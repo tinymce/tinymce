@@ -1,5 +1,4 @@
-/* tslint:disable:no-console */
-import { console } from '@ephox/dom-globals';
+/* eslint-disable no-console */
 import { Merger } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 

@@ -1,4 +1,3 @@
-import { document } from '@ephox/dom-globals';
 import { Arr, Result } from '@ephox/katamari';
 import { Class, SugarElement } from '@ephox/sugar';
 

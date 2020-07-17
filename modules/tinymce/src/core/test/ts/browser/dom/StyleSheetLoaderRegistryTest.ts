@@ -1,6 +1,5 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Testable } from '@ephox/dispute';
-import { document } from '@ephox/dom-globals';
 import { SugarDocument, SugarElement, SugarShadowDom } from '@ephox/sugar';
 import { StyleSheetLoader } from 'tinymce/core/api/dom/StyleSheetLoader';
 import * as StyleSheetLoaderRegistry from 'tinymce/core/dom/StyleSheetLoaderRegistry';

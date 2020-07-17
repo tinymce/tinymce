@@ -6,7 +6,6 @@
  */
 
 import { AlloyComponent, AlloyEvents, Replacing, SystemEvents, TabbarTypes, TabSection } from '@ephox/alloy';
-import { Element, window } from '@ephox/dom-globals';
 import { Arr, Cell, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Css, Focus, Height, SelectorFind, SugarElement, Traverse, Width } from '@ephox/sugar';
