@@ -14,6 +14,7 @@ import UploadStatus from '../file/UploadStatus';
 import Editor from './Editor';
 import { BlobCache, BlobInfo } from './file/BlobCache';
 import * as Settings from './Settings';
+import * as Rtc from '../Rtc';
 
 /**
  * Handles image uploads, updates undo stack and patches over various internal functions.
@@ -127,6 +128,8 @@ const EditorUpload = function (editor: Editor): EditorUpload {
       const blobInfos = Arr.map(imageInfos, (imageInfo) => imageInfo.blobInfo);
 
       return uploader.upload(blobInfos, openNotification).then(aliveGuard((result) => {
+        const imagesToRemove: HTMLImageElement[] = [];
+
         const filteredResult: UploadResult[] = Arr.map(result, (uploadInfo, index) => {
           const blobInfo = imageInfos[index].blobInfo;
           const image = imageInfos[index].image;
@@ -135,7 +138,11 @@ const EditorUpload = function (editor: Editor): EditorUpload {
             blobCache.removeByUri(image.src);
             replaceImageUriInView(image, uploadInfo.url);
           } else if (uploadInfo.error) {
-            ErrorReporter.uploadError(editor, uploadInfo.error);
+            if (uploadInfo.error.options.remove) {
+              imagesToRemove.push(image);
+            }
+
+            ErrorReporter.uploadError(editor, uploadInfo.error.message);
           }
 
           return {
@@ -145,6 +152,20 @@ const EditorUpload = function (editor: Editor): EditorUpload {
             blobInfo
           };
         });
+
+        if (imagesToRemove.length > 0) {
+          if (Rtc.isRtc(editor)) {
+            // To be replaced by RTC API to mirror DOM changes when such is implemented.
+            console.error('Removing images on failed uploads is currently unsupported for RTC'); // eslint-disable-line no-console
+          } else {
+            editor.undoManager.transact(() => {
+              Arr.each(imagesToRemove, (element) => {
+                editor.dom.remove(element);
+                blobCache.removeByUri(element.src);
+              });
+            });
+          }
+        }
 
         if (callback) {
           callback(filteredResult);
