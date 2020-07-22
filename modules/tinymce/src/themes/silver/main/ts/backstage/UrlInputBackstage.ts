@@ -10,9 +10,9 @@ import { Future, Obj, Option, Type } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
+import * as Settings from '../api/Settings';
 import { LinkTarget, LinkTargets } from '../ui/core/LinkTargets';
 import { addToHistory, getHistory } from './UrlInputHistory';
-import * as Settings from '../api/Settings';
 
 type PickerCallback = (value: string, meta: Record<string, any>) => void;
 type Picker = (callback: PickerCallback, value: string, meta: Record<string, any>) => void;
@@ -65,8 +65,8 @@ const makeMap = (value: any): Record<string, boolean> => Obj.map(Tools.makeMap(v
 const getPicker = (editor: Editor): Option<Picker> => Option.from(Settings.getFilePickerCallback(editor)).filter(Type.isFunction) as Option<Picker>;
 
 const getPickerTypes = (editor: Editor): boolean | Record<string, boolean> => {
-  const optFileTypes = Option.some(Settings.getFilePickerTypes(editor)).filter(isTruthy);;
-  const optLegacyTypes = Option.some(Settings.getFileBrowserCallbackTypes(editor)).filter(isTruthy);;
+  const optFileTypes = Option.some(Settings.getFilePickerTypes(editor)).filter(isTruthy);
+  const optLegacyTypes = Option.some(Settings.getFileBrowserCallbackTypes(editor)).filter(isTruthy);
   const optTypes = optFileTypes.or(optLegacyTypes).map(makeMap);
   return getPicker(editor).fold(
     () => false,
@@ -105,6 +105,8 @@ const getUrlPicker = (editor: Editor, filetype: string): Option<UrlPicker> => ge
   picker.call(editor, handler, entry.value, meta);
 }));
 
+const getTextSetting = (value: string | boolean): string | undefined => Option.from(value).filter(Type.isString).getOrUndefined();
+
 export const getLinkInformation = (editor: Editor): Option<LinkInformation> => {
   if (Settings.noTypeaheadUrls(editor)) {
     return Option.none();
@@ -112,8 +114,8 @@ export const getLinkInformation = (editor: Editor): Option<LinkInformation> => {
 
   return Option.some({
     targets: LinkTargets.find(editor.getBody()),
-    anchorTop: Settings.getAnchorTop(editor),
-    anchorBottom: Settings.getAnchorBottom(editor)
+    anchorTop: getTextSetting(Settings.getAnchorTop(editor)),
+    anchorBottom: getTextSetting(Settings.getAnchorBottom(editor))
   });
 };
 export const getValidationHandler = (editor: Editor): Option<UrlValidationHandler> => Option.from(Settings.getFilePickerValidatorHandler(editor));
