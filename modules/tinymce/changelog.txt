@@ -1,3 +1,5 @@
+Version 5.4.2 (TBD)
+    Fixed a regression where the `anchor_top` and `anchor_bottom` settings weren't working when set to `false` #TINY-6256
 Version 5.4.1 (2020-07-08)
     Fixed the Search and Replace plugin incorrectly including zero-width caret characters in search results #TINY-4599
     Fixed dragging and dropping unsupported files navigating the browser away from the editor #TINY-6027
