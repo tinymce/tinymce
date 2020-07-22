@@ -492,6 +492,7 @@ const EditorManager: EditorManager = {
         });
 
         editor.targetElm = editor.targetElm || targetElm;
+        editor.targetContainer = editor.targetContainer || settings.targetContainer;
         editor.render();
       };
 

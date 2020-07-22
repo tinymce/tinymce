@@ -259,6 +259,7 @@ class Editor implements EditorObservable {
   public serializer: DomSerializer;
   public startContent: string;
   public targetElm: HTMLElement;
+  public targetContainer?: HTMLElement;
   public theme: Theme;
   public undoManager: UndoManager;
   public validate: boolean;

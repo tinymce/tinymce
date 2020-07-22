@@ -75,7 +75,8 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
   loadIframeSkin(editor);
 
   const eTargetNode = Element.fromDom(args.targetNode);
-  const uiRoot = ShadowDom.getContentContainer(ShadowDom.getRootNode(eTargetNode));
+  const eContainerNode = args.targetContainer && Element.fromDom(args.targetContainer);
+  const uiRoot = eContainerNode || ShadowDom.getContentContainer(ShadowDom.getRootNode(eTargetNode));
 
   Attachment.attachSystemAfter(eTargetNode, uiComponents.mothership);
   Attachment.attachSystem(uiRoot, uiComponents.uiMothership);

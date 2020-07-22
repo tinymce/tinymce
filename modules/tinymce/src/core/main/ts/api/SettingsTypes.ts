@@ -164,6 +164,7 @@ interface BaseEditorSettings {
   submit_patch?: boolean;
   suffix?: string;
   target?: HTMLElement;
+  targetContainer?: HTMLElement;
   theme?: string | ThemeInitFunc;
   theme_url?: string;
   toolbar?: boolean | string | string[] | Array<ToolbarGroup>;

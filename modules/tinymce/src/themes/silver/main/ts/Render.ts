@@ -72,6 +72,7 @@ export interface RenderUiConfig extends RenderToolbarConfig {
 
 export interface RenderArgs {
   targetNode: HTMLElement;
+  targetContainer: HTMLElement;
   height: string;
 }
 
@@ -389,9 +390,10 @@ const setup = (editor: Editor): RenderInfo => {
 
     const elm = editor.getElement();
     const height = setEditorSize();
+    const targetContainer = editor.targetContainer;
 
     const uiComponents: RenderUiComponents = { mothership, uiMothership, outerContainer };
-    const args: RenderArgs = { targetNode: elm, height };
+    const args: RenderArgs = { targetNode: elm, height, targetContainer };
     return mode.render(editor, uiComponents, rawUiConfig, backstage, args);
   };
 
