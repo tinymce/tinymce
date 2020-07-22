@@ -48,8 +48,8 @@ interface BaseEditorSettings {
   allow_html_in_named_anchor?: boolean;
   allow_script_urls?: boolean;
   allow_unsafe_link_target?: boolean;
-  anchor_bottom?: boolean | string;
-  anchor_top?: boolean | string;
+  anchor_bottom?: false | string;
+  anchor_top?: false | string;
   auto_focus?: string | true;
   automatic_uploads?: boolean;
   base_url?: string;

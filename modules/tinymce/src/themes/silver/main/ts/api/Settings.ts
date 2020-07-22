@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Option, Obj, Type } from '@ephox/katamari';
+import { Arr, Obj, Option, Type } from '@ephox/katamari';
 import { Body, Element, SelectorFind, ShadowDom } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
@@ -146,9 +146,9 @@ const getFileBrowserCallbackTypes = (editor: Editor) => editor.getParam('file_br
 
 const noTypeaheadUrls = (editor: Editor) => editor.getParam('typeahead_urls') === false;
 
-const getAnchorTop = (editor: Editor): string => editor.getParam('anchor_top', '#top', 'string');
+const getAnchorTop = (editor: Editor): string | false => editor.getParam('anchor_top', '#top');
 
-const getAnchorBottom = (editor: Editor): string => editor.getParam('anchor_bottom', '#bottom', 'string');
+const getAnchorBottom = (editor: Editor): string | false => editor.getParam('anchor_bottom', '#bottom');
 
 const getFilePickerValidatorHandler = (editor: Editor) => {
   const handler = editor.getParam('file_picker_validator_handler', undefined, 'function');
