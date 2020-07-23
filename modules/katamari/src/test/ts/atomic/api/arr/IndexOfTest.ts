@@ -1,8 +1,8 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Testable } from '@ephox/dispute';
 import * as Arr from 'ephox/katamari/api/Arr';
-import { Option } from 'ephox/katamari/api/Option';
-import { tOption } from 'ephox/katamari/api/OptionInstances';
+import { Optional } from 'ephox/katamari/api/Optional';
+import { tOptional } from 'ephox/katamari/api/OptionalInstances';
 import { arbNegativeInteger } from 'ephox/katamari/test/arb/ArbDataTypes';
 import fc from 'fast-check';
 
@@ -10,7 +10,7 @@ const { tNumber } = Testable;
 
 UnitTest.test('Arr.indexOf: unit tests', () => {
   const checkNoneHelper = (xs, x) => {
-    Assert.eq('none', Option.none(), Arr.indexOf(xs, x), tOption());
+    Assert.eq('none', Optional.none(), Arr.indexOf(xs, x), tOptional());
   };
 
   const checkNone = (xs: any[], x) => {
@@ -19,7 +19,7 @@ UnitTest.test('Arr.indexOf: unit tests', () => {
   };
 
   const checkHelper = (expected, xs, x) => {
-    Assert.eq('some', Option.some(expected), Arr.indexOf(xs, x), tOption());
+    Assert.eq('some', Optional.some(expected), Arr.indexOf(xs, x), tOptional());
   };
 
   const check = (expected, xs: any[], x) => {
@@ -42,9 +42,9 @@ UnitTest.test('Arr.indexOf: find in middle of array', () => {
     const arr = prefix.concat([ element ]).concat(suffix);
     Assert.eq(
       'Element should be found immediately after the prefix array',
-      Option.some(prefix.length),
+      Optional.some(prefix.length),
       Arr.indexOf(arr, element),
-      tOption(tNumber)
+      tOptional(tNumber)
     );
   }));
 });
@@ -53,7 +53,7 @@ UnitTest.test('Arr.indexOf: indexOf of an empty array is none', () => {
   fc.property(
     fc.integer(),
     (x) => {
-      Assert.eq('indexOf', Option.none(), Arr.indexOf([], x), tOption());
+      Assert.eq('indexOf', Optional.none(), Arr.indexOf([], x), tOptional());
     }
   );
 });
@@ -63,7 +63,7 @@ UnitTest.test('Arr.indexOf: indexOf of a [value].concat(array) is some(0)', () =
     fc.array(fc.integer()),
     fc.integer(),
     (arr, x) => {
-      Assert.eq('index', Option.some(0), Arr.indexOf([ x ].concat(arr), x), tOption());
+      Assert.eq('index', Optional.some(0), Arr.indexOf([ x ].concat(arr), x), tOptional());
     }
   );
 });

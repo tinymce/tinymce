@@ -1,4 +1,4 @@
-import { Options } from '@ephox/katamari';
+import { Optionals } from '@ephox/katamari';
 import * as Conversions from '../util/Conversions';
 import { Promise } from '../util/Promise';
 import { BinaryReader } from './BinaryReader';
@@ -36,9 +36,9 @@ const extractFrom = function (blob: Blob): Promise<JPEGMeta> {
           const data = readMetaData(app1[0].segment);
           meta.tiff = data.tiff.getOrDie();
           // silence errors for the optional parts
-          meta.exif = Options.flatten(data.exif.toOption()).getOrNull();
-          meta.gps = Options.flatten(data.gps.toOption()).getOrNull();
-          meta.thumb = Options.flatten(data.thumb.toOption()).getOrNull();
+          meta.exif = Optionals.flatten(data.exif.toOptional()).getOrNull();
+          meta.gps = Optionals.flatten(data.gps.toOptional()).getOrNull();
+          meta.thumb = Optionals.flatten(data.thumb.toOptional()).getOrNull();
         } else {
           return Promise.reject('Headers did not include required information');
         }
@@ -58,7 +58,7 @@ const extractHeaders = function (br: BinaryReader): Header[] {
   let idx = 2;
 
   while (idx + 2 <= br.length()) {
-    const marker = readShort(br, idx).toOption().getOrNull();
+    const marker = readShort(br, idx).toOptional().getOrNull();
     if (marker === null) {
       throw new Error('Invalid Exif data.');
     }
@@ -74,7 +74,7 @@ const extractHeaders = function (br: BinaryReader): Header[] {
       break;
     }
 
-    const lengthTemp = readShort(br, idx + 2).toOption().getOrNull();
+    const lengthTemp = readShort(br, idx + 2).toOptional().getOrNull();
     if (lengthTemp === null) {
       throw new Error('Invalid Exif data.');
     }

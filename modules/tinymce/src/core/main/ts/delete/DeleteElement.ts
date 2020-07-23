@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Fun, Obj, Option, Options } from '@ephox/katamari';
+import { Fun, Obj, Optional, Optionals } from '@ephox/katamari';
 import { Insert, PredicateFind, Remove, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 import Editor from '../api/Editor';
 import * as CaretCandidate from '../caret/CaretCandidate';
@@ -30,19 +30,19 @@ const beforeOrStartOf = (node: Node) =>
 const afterOrEndOf = (node: Node) =>
   NodeType.isText(node) ? CaretPosition(node, node.data.length) : CaretPosition.after(node);
 
-const getPreviousSiblingCaretPosition = (elm: Node): Option<CaretPosition> => {
+const getPreviousSiblingCaretPosition = (elm: Node): Optional<CaretPosition> => {
   if (CaretCandidate.isCaretCandidate(elm.previousSibling)) {
-    return Option.some(afterOrEndOf(elm.previousSibling));
+    return Optional.some(afterOrEndOf(elm.previousSibling));
   } else {
-    return elm.previousSibling ? CaretFinder.lastPositionIn(elm.previousSibling) : Option.none();
+    return elm.previousSibling ? CaretFinder.lastPositionIn(elm.previousSibling) : Optional.none();
   }
 };
 
-const getNextSiblingCaretPosition = (elm: Node): Option<CaretPosition> => {
+const getNextSiblingCaretPosition = (elm: Node): Optional<CaretPosition> => {
   if (CaretCandidate.isCaretCandidate(elm.nextSibling)) {
-    return Option.some(beforeOrStartOf(elm.nextSibling));
+    return Optional.some(beforeOrStartOf(elm.nextSibling));
   } else {
-    return elm.nextSibling ? CaretFinder.firstPositionIn(elm.nextSibling) : Option.none();
+    return elm.nextSibling ? CaretFinder.firstPositionIn(elm.nextSibling) : Optional.none();
   }
 };
 
@@ -50,14 +50,14 @@ const findCaretPositionBackwardsFromElm = (rootElement: Node, elm: Node) => {
   const startPosition = CaretPosition.before(elm.previousSibling ? elm.previousSibling : elm.parentNode);
   return CaretFinder.prevPosition(rootElement, startPosition).fold(
     () => CaretFinder.nextPosition(rootElement, CaretPosition.after(elm)),
-    Option.some
+    Optional.some
   );
 };
 
 const findCaretPositionForwardsFromElm = (rootElement: Node, elm: Node) =>
   CaretFinder.nextPosition(rootElement, CaretPosition.after(elm)).fold(
     () => CaretFinder.prevPosition(rootElement, CaretPosition.before(elm)),
-    Option.some
+    Optional.some
   );
 
 const findCaretPositionBackwards = (rootElement: Node, elm: Node) =>
@@ -75,7 +75,7 @@ const findCaretPosition = (forward: boolean, rootElement: Node, elm: Node) =>
 const findCaretPosOutsideElmAfterDelete = (forward: boolean, rootElement: Node, elm: Node) =>
   findCaretPosition(forward, rootElement, elm).map(Fun.curry(reposition, elm));
 
-const setSelection = (editor: Editor, forward: boolean, pos: Option<CaretPosition>) => {
+const setSelection = (editor: Editor, forward: boolean, pos: Optional<CaretPosition>) => {
   pos.fold(
     () => {
       editor.focus();
@@ -91,18 +91,18 @@ const eqRawNode = (rawNode: Node) => (elm: SugarElement) => elm.dom() === rawNod
 const isBlock = (editor: Editor, elm: SugarElement) =>
   elm && Obj.has(editor.schema.getBlockElements(), SugarNode.name(elm));
 
-const paddEmptyBlock = (elm: SugarElement): Option<CaretPosition> => {
+const paddEmptyBlock = (elm: SugarElement): Optional<CaretPosition> => {
   if (Empty.isEmpty(elm)) {
     const br = SugarElement.fromHtml('<br data-mce-bogus="1">');
     Remove.empty(elm);
     Insert.append(elm, br);
-    return Option.some(CaretPosition.before(br.dom()));
+    return Optional.some(CaretPosition.before(br.dom()));
   } else {
-    return Option.none();
+    return Optional.none();
   }
 };
 
-const deleteNormalized = (elm: SugarElement, afterDeletePosOpt: Option<CaretPosition>, normalizeWhitespace?: boolean): Option<CaretPosition> => {
+const deleteNormalized = (elm: SugarElement, afterDeletePosOpt: Optional<CaretPosition>, normalizeWhitespace?: boolean): Optional<CaretPosition> => {
   const prevTextOpt = Traverse.prevSibling(elm).filter(SugarNode.isText);
   const nextTextOpt = Traverse.nextSibling(elm).filter(SugarNode.isText);
 
@@ -111,7 +111,7 @@ const deleteNormalized = (elm: SugarElement, afterDeletePosOpt: Option<CaretPosi
 
   // Merge and normalize any prev/next text nodes, so that they are merged and don't lose meaningful whitespace
   // eg. <p>a <span></span> b</p> -> <p>a &nsbp;b</p> or <p><span></span> a</p> -> <p>&nbsp;a</a>
-  return Options.lift3(prevTextOpt, nextTextOpt, afterDeletePosOpt, (prev, next, pos) => {
+  return Optionals.lift3(prevTextOpt, nextTextOpt, afterDeletePosOpt, (prev, next, pos) => {
     const prevNode = prev.dom(), nextNode = next.dom();
     const offset = prevNode.data.length;
     MergeText.mergeTextNodes(prevNode, nextNode, normalizeWhitespace);
@@ -146,7 +146,7 @@ const deleteElement = (editor: Editor, forward: boolean, elm: SugarElement, move
       },
       (paddPos) => {
         if (moveCaret) {
-          setSelection(editor, forward, Option.some(paddPos));
+          setSelection(editor, forward, Optional.some(paddPos));
         }
       }
     );

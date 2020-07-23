@@ -1,6 +1,6 @@
 import { Assertions, GeneralSteps, Logger, Step, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Option, Result } from '@ephox/katamari';
+import { Optional, Result } from '@ephox/katamari';
 
 import * as AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviour';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
@@ -28,7 +28,7 @@ UnitTest.asynctest('InlineViewDismissTest', (success, failure) => {
         },
 
         getRelated() {
-          return Option.some(related);
+          return Optional.some(related);
         },
 
         fireDismissalEventInstead: {

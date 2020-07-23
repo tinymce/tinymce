@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Fun, Obj, Option, Type } from '@ephox/katamari';
+import { Fun, Obj, Optional, Type } from '@ephox/katamari';
 import Editor from './api/Editor';
 import Formatter from './api/Formatter';
 import AstNode from './api/html/Node';
@@ -83,7 +83,7 @@ interface RtcAdaptor {
     getContent: (format: ContentFormat, args: GetSelectionContentArgs) => Content;
   };
   raw: {
-    getModel: () => Option<any>;
+    getModel: () => Optional<any>;
   };
 }
 
@@ -134,7 +134,7 @@ const makePlainAdaptor = (editor: Editor): RtcAdaptor => ({
     getContent: (format, args) => getSelectedContentInternal(editor, format, args)
   },
   raw: {
-    getModel: () => Option.none()
+    getModel: () => Optional.none()
   }
 });
 
@@ -210,21 +210,21 @@ const makeRtcAdaptor = (tinymceEditor: Editor, rtcEditor: RtcRuntimeApi): RtcAda
       }
     },
     raw: {
-      getModel: () => Option.some(rtcEditor.getRawModel())
+      getModel: () => Optional.some(rtcEditor.getRawModel())
     }
   };
 };
 
 export const isRtc = (editor: Editor) => Obj.has(editor.plugins, 'rtc');
 
-export const setup = (editor: Editor): Option<Promise<boolean>> => {
+export const setup = (editor: Editor): Optional<Promise<boolean>> => {
   const editorCast = editor as RtcEditor;
-  return (Obj.get(editor.plugins, 'rtc') as Option<RtcPluginApi>).fold(
+  return (Obj.get(editor.plugins, 'rtc') as Optional<RtcPluginApi>).fold(
     () => {
       editorCast.rtcInstance = makePlainAdaptor(editor);
-      return Option.none();
+      return Optional.none();
     },
-    (rtc) => Option.some(
+    (rtc) => Optional.some(
       rtc.setup().then((rtcEditor) => {
         editorCast.rtcInstance = makeRtcAdaptor(editor, rtcEditor);
         return rtcEditor.isRemote;

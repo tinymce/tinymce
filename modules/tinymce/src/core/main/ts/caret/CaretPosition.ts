@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Fun, Options, Unicode } from '@ephox/katamari';
+import { Arr, Fun, Optionals, Unicode } from '@ephox/katamari';
 import DOMUtils from '../api/dom/DOMUtils';
 import * as NodeType from '../dom/NodeType';
 import * as GeomClientRect from '../geom/ClientRect';
@@ -394,9 +394,9 @@ export namespace CaretPosition {
    */
   export const before = (node: Node) => CaretPosition(node.parentNode, nodeIndex(node));
 
-  export const isAbove = (pos1: CaretPosition, pos2: CaretPosition): boolean => Options.lift2(Arr.head(pos2.getClientRects()), Arr.last(pos1.getClientRects()), GeomClientRect.isAbove).getOr(false);
+  export const isAbove = (pos1: CaretPosition, pos2: CaretPosition): boolean => Optionals.lift2(Arr.head(pos2.getClientRects()), Arr.last(pos1.getClientRects()), GeomClientRect.isAbove).getOr(false);
 
-  export const isBelow = (pos1: CaretPosition, pos2: CaretPosition): boolean => Options.lift2(Arr.last(pos2.getClientRects()), Arr.head(pos1.getClientRects()), GeomClientRect.isBelow).getOr(false);
+  export const isBelow = (pos1: CaretPosition, pos2: CaretPosition): boolean => Optionals.lift2(Arr.last(pos2.getClientRects()), Arr.head(pos1.getClientRects()), GeomClientRect.isBelow).getOr(false);
 
   export const isAtStart = (pos: CaretPosition) => pos ? pos.isAtStart() : false;
   export const isAtEnd = (pos: CaretPosition) => pos ? pos.isAtEnd() : false;

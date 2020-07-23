@@ -1,5 +1,5 @@
 import { Universe } from '@ephox/boss';
-import { Fun, Option, Unicode } from '@ephox/katamari';
+import { Fun, Optional, Unicode } from '@ephox/katamari';
 import * as Spot from '../api/data/Spot';
 import { SpanWrapRange, SpotPoint } from '../api/data/Types';
 import * as Injection from '../api/general/Injection';
@@ -12,7 +12,7 @@ interface SpanWrapPoint<E> {
   wrappers(): E[];
 }
 
-const point = function <E, D> (universe: Universe<E, D>, start: E, soffset: number, _finish: E, _foffset: number, exclusions: (e: E) => boolean): Option<SpanWrapRange<E>> {
+const point = function <E, D> (universe: Universe<E, D>, start: E, soffset: number, _finish: E, _foffset: number, exclusions: (e: E) => boolean): Optional<SpanWrapRange<E>> {
   const scanned = scan(universe, start, soffset, exclusions);
   const cursor = scanned.cursor();
   const range = Spot.points(
@@ -20,7 +20,7 @@ const point = function <E, D> (universe: Universe<E, D>, start: E, soffset: numb
     Spot.point(cursor.element(), cursor.offset())
   );
 
-  return Option.some<SpanWrapRange<E>>({
+  return Optional.some<SpanWrapRange<E>>({
     range: Fun.constant(range),
     temporary: scanned.temporary,
     wrappers: scanned.wrappers
@@ -34,7 +34,7 @@ const temporary = function <E, D> (universe: Universe<E, D>, start: E, soffset: 
   const cursor = universe.create().text(Unicode.zeroWidth, doc);
   universe.insert().append(span, cursor);
 
-  const injectAt = universe.property().isEmptyTag(start) ? universe.property().parent(start) : Option.some(start);
+  const injectAt = universe.property().isEmptyTag(start) ? universe.property().parent(start) : Optional.some(start);
   injectAt.each(function (z) {
     Injection.atStartOf(universe, z, soffset, span);
   });
@@ -50,14 +50,14 @@ const temporary = function <E, D> (universe: Universe<E, D>, start: E, soffset: 
  * The point approach needs to reuse a temporary span (if we already have one) or create one if we don't.
  */
 const scan = function <E, D> (universe: Universe<E, D>, start: E, soffset: number, exclusions: (e: E) => boolean): SpanWrapPoint<E> {
-  return universe.property().parent(start).bind(function (parent): Option<SpanWrapPoint<E>> {
+  return universe.property().parent(start).bind(function (parent): Optional<SpanWrapPoint<E>> {
     const cursor = Spot.point(start, soffset);
     const canReuse = isSpan(universe, exclusions)(parent) && universe.property().children(parent).length === 1 && isUnicode(universe, start);
-    return canReuse ? Option.some<SpanWrapPoint<E>>({
+    return canReuse ? Optional.some<SpanWrapPoint<E>>({
       cursor: Fun.constant(cursor),
       temporary: Fun.constant(false),
       wrappers: Fun.constant([ parent ])
-    }) : Option.none();
+    }) : Optional.none();
   }).getOrThunk(function () {
     return temporary(universe, start, soffset);
   });
@@ -69,14 +69,14 @@ const isUnicode = function <E, D> (universe: Universe<E, D>, element: E) {
 
 const isSpan = <E, D>(universe: Universe<E, D>, exclusions: (e: E) => boolean) => (elem: E) => universe.property().name(elem) === 'span' && exclusions(elem) === false;
 
-const wrap = function <E, D> (universe: Universe<E, D>, start: E, soffset: number, finish: E, foffset: number, exclusions: (e: E) => boolean): Option<SpanWrapRange<E>> {
+const wrap = function <E, D> (universe: Universe<E, D>, start: E, soffset: number, finish: E, foffset: number, exclusions: (e: E) => boolean): Optional<SpanWrapRange<E>> {
   const doc = universe.property().document(start);
   const nuSpan = function () {
     return Wraps(universe, universe.create().nu('span', doc));
   };
 
   const wrappers = Wrapper.reuse(universe, start, soffset, finish, foffset, isSpan(universe, exclusions), nuSpan);
-  return Option.from(wrappers[wrappers.length - 1]).map(function (lastSpan) {
+  return Optional.from(wrappers[wrappers.length - 1]).map(function (lastSpan) {
     const lastOffset = universe.property().children(lastSpan).length;
     const range = Spot.points(
       Spot.point(wrappers[0], 0),

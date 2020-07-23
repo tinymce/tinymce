@@ -6,10 +6,10 @@
  */
 
 import { AlloyComponent } from '@ephox/alloy';
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import { SelectorFilter } from '@ephox/sugar';
 
-const detectSize = (comp: AlloyComponent, margin: number, selectorClass: string): Option<{ numColumns: number; numRows: number}> => {
+const detectSize = (comp: AlloyComponent, margin: number, selectorClass: string): Optional<{ numColumns: number; numRows: number}> => {
   const descendants = SelectorFilter.descendants(comp.element(), '.' + selectorClass);
 
   // TODO: This seems to cause performance issues in the emoji dialog
@@ -21,12 +21,12 @@ const detectSize = (comp: AlloyComponent, margin: number, selectorClass: string)
 
     }).getOr(descendants.length);
 
-    return Option.some({
+    return Optional.some({
       numColumns: columnLength,
       numRows: Math.ceil(descendants.length / columnLength)
     });
   } else {
-    return Option.none();
+    return Optional.none();
   }
 };
 

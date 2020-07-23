@@ -1,4 +1,4 @@
-import { Arr, Fun, Option, Type } from '@ephox/katamari';
+import { Arr, Fun, Optional, Type } from '@ephox/katamari';
 import * as Traverse from '../search/Traverse';
 import { SugarElement } from './SugarElement';
 import * as SugarHead from './SugarHead';
@@ -52,9 +52,9 @@ export const isInShadowRoot = (e: SugarElement<Node>): boolean =>
   getShadowRoot(e).isSome();
 
 /** If this element is in a ShadowRoot, return it. */
-export const getShadowRoot = (e: SugarElement<Node>): Option<SugarElement<ShadowRoot>> => {
+export const getShadowRoot = (e: SugarElement<Node>): Optional<SugarElement<ShadowRoot>> => {
   const r = getRootNode(e);
-  return isShadowRoot(r) ? Option.some(r) : Option.none();
+  return isShadowRoot(r) ? Optional.some(r) : Optional.none();
 };
 
 /** Return the host of a ShadowRoot.
@@ -71,7 +71,7 @@ export const getShadowHost = (e: SugarElement<ShadowRoot>): SugarElement<Element
  * This only works if the shadow tree is open - if the shadow tree is closed, event.target is returned.
  * See: https://developers.google.com/web/fundamentals/web-components/shadowdom#events
  */
-export const getOriginalEventTarget = (event: Event): Option<EventTarget> => {
+export const getOriginalEventTarget = (event: Event): Optional<EventTarget> => {
   if (isSupported() && Type.isNonNullable(event.target)) {
     const el = SugarElement.fromDom(event.target as Node);
     if (SugarNode.isElement(el) && isOpenShadowHost(el)) {
@@ -85,7 +85,7 @@ export const getOriginalEventTarget = (event: Event): Option<EventTarget> => {
       }
     }
   }
-  return Option.from(event.target);
+  return Optional.from(event.target);
 };
 
 export const isOpenShadowRoot = (sr: SugarElement<ShadowRoot>): boolean =>

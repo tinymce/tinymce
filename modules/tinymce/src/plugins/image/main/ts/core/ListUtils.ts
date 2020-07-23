@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Option, Type } from '@ephox/katamari';
+import { Arr, Optional, Type } from '@ephox/katamari';
 import Tools from 'tinymce/core/api/util/Tools';
-import { ListItem, ListGroup, ListValue } from '../ui/DialogTypes';
+import { ListGroup, ListItem, ListValue } from '../ui/DialogTypes';
 
 export type ListExtractor = (item: any) => string;
 
@@ -28,11 +28,11 @@ const sanitizeList = (list: any, extractValue: ListExtractor): ListItem[] => {
   return out;
 };
 
-const sanitizer = (extracter = getValue) => (list: any): Option<ListItem[]> => {
+const sanitizer = (extracter = getValue) => (list: any): Optional<ListItem[]> => {
   if (list) {
-    return Option.from(list).map((list) => sanitizeList(list, extracter));
+    return Optional.from(list).map((list) => sanitizeList(list, extracter));
   } else {
-    return Option.none();
+    return Optional.none();
   }
 };
 
@@ -40,17 +40,17 @@ const sanitize = (list: any) => sanitizer(getValue)(list);
 
 const isGroup = (item: ListItem): item is ListGroup => Object.prototype.hasOwnProperty.call(item, 'items');
 
-const findEntryDelegate = (list: ListItem[], value: string): Option<ListValue> => Arr.findMap(list, (item) => {
+const findEntryDelegate = (list: ListItem[], value: string): Optional<ListValue> => Arr.findMap(list, (item) => {
   if (isGroup(item)) {
     return findEntryDelegate(item.items, value);
   } else if (item.value === value) {
-    return Option.some(item);
+    return Optional.some(item);
   } else {
-    return Option.none();
+    return Optional.none();
   }
 });
 
-const findEntry = (optList: Option<ListItem[]>, value: string) =>
+const findEntry = (optList: Optional<ListItem[]>, value: string) =>
   optList.bind((list) => findEntryDelegate(list, value));
 
 export const ListUtils = {

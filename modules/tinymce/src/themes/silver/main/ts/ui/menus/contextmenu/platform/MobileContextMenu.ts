@@ -1,5 +1,5 @@
 import { AlloyComponent, Bubble, InlineView, Layout, LayoutInside, MaxHeight, MaxWidth } from '@ephox/alloy';
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { SimSelection, WindowSelection } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
@@ -109,7 +109,7 @@ const show = (editor: Editor, e: EditorEvent<TouchEvent>, items: MenuItems, back
       },
       data: menuData,
       type: 'horizontal'
-    }, () => Option.some(getContextToolbarBounds(editor, backstage.shared)));
+    }, () => Optional.some(getContextToolbarBounds(editor, backstage.shared)));
 
     // Ensure the context toolbar is hidden
     editor.fire(hideContextToolbarEvent);

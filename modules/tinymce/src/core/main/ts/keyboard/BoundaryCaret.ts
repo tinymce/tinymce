@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Cell, Option } from '@ephox/katamari';
+import { Cell, Optional } from '@ephox/katamari';
 import * as CaretContainer from '../caret/CaretContainer';
 import * as CaretContainerInline from '../caret/CaretContainerInline';
 import * as CaretContainerRemove from '../caret/CaretContainerRemove';
@@ -33,7 +33,7 @@ const renderCaret = (caret: Cell<Text>, location: LocationAdt) =>
       CaretContainerRemove.remove(caret.get());
       const text = CaretContainerInline.insertInlineBefore(element);
       caret.set(text);
-      return Option.some(CaretPosition(text, text.length - 1));
+      return Optional.some(CaretPosition(text, text.length - 1));
     },
     (element) => // Start
       CaretFinder.firstPositionIn(element).map((pos) => {
@@ -61,7 +61,7 @@ const renderCaret = (caret: Cell<Text>, location: LocationAdt) =>
       CaretContainerRemove.remove(caret.get());
       const text = CaretContainerInline.insertInlineAfter(element);
       caret.set(text);
-      return Option.some(CaretPosition(text, 1));
+      return Optional.some(CaretPosition(text, 1));
     }
   );
 

@@ -1,4 +1,4 @@
-import { Cell, Option } from '@ephox/katamari';
+import { Cell, Optional } from '@ephox/katamari';
 
 import { nuState } from '../common/BehaviourState';
 import { DockingConfig, DockingMode, DockingState, InitialDockingPosition } from './DockingTypes';
@@ -6,7 +6,7 @@ import { DockingConfig, DockingMode, DockingState, InitialDockingPosition } from
 const init = (spec: DockingConfig): DockingState => {
   const docked = Cell(false);
   const visible = Cell(true);
-  const initialBounds = Cell(Option.none<InitialDockingPosition>());
+  const initialBounds = Cell(Optional.none<InitialDockingPosition>());
   const modes = Cell<DockingMode[]>(spec.modes);
 
   const readState = () => `docked:  ${docked.get()}, visible: ${visible.get()}, modes: ${modes.get().join(',')}`;

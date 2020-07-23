@@ -1,5 +1,5 @@
 import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
-import { Arr, Fun, Option } from '@ephox/katamari';
+import { Arr, Fun, Optional } from '@ephox/katamari';
 import { Focus, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
 
 import * as Keys from '../alien/Keys';
@@ -22,7 +22,7 @@ const schema: FieldProcessorAdt[] = [
 
   // Used to determine whether pressing right/down at the end cycles back to the start/top
   FieldSchema.defaulted('cycles', true),
-  FieldSchema.defaulted('previousSelector', Option.none),
+  FieldSchema.defaulted('previousSelector', Optional.none),
   FieldSchema.defaulted('execute', KeyingTypes.defaultExecute)
 ];
 
@@ -75,4 +75,4 @@ const getKeyupRules: () => Array<KeyRules.KeyRule<MatrixConfig, Stateless>> = Fu
   KeyRules.rule(KeyMatch.inSet(Keys.SPACE()), KeyingTypes.stopEventForFirefox)
 ]);
 
-export default KeyingType.typical(schema, NoState.init, getKeydownRules, getKeyupRules, () => Option.some(focusIn));
+export default KeyingType.typical(schema, NoState.init, getKeydownRules, getKeyupRules, () => Optional.some(focusIn));

@@ -1,7 +1,7 @@
 import {
   AlloyComponent, Attachment, Behaviour, Boxes, Button, DragCoord, Dragging, DraggingTypes, GuiFactory, Memento, Unselecting
 } from '@ephox/alloy';
-import { Arr, Cell, Option } from '@ephox/katamari';
+import { Arr, Cell, Optional } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Compare, Css, SugarElement, SugarPosition, Traverse } from '@ephox/sugar';
 
@@ -28,10 +28,10 @@ const snapOffset = snapWidth / 2;
 //   Insert.append(SugarBody.body(), debugArea);
 // };
 
-const calcSnap = (selectorOpt: Option<AlloyComponent>, td: SugarElement<HTMLTableDataCellElement>, x: number, y: number, width: number, height: number) => selectorOpt.fold(() => Dragging.snap({
+const calcSnap = (selectorOpt: Optional<AlloyComponent>, td: SugarElement<HTMLTableDataCellElement>, x: number, y: number, width: number, height: number) => selectorOpt.fold(() => Dragging.snap({
   sensor: DragCoord.absolute(x - snapOffset, y - snapOffset),
   range: SugarPosition(width, height),
-  output: DragCoord.absolute(Option.some(x), Option.some(y)),
+  output: DragCoord.absolute(Optional.some(x), Optional.some(y)),
   extra: {
     td
   }
@@ -45,16 +45,16 @@ const calcSnap = (selectorOpt: Option<AlloyComponent>, td: SugarElement<HTMLTabl
   return Dragging.snap({
     sensor: DragCoord.absolute(sensorLeft, sensorTop),
     range: SugarPosition(sensorWidth, sensorHeight),
-    output: DragCoord.absolute(Option.some(x - (rect.width / 2)), Option.some(y - (rect.height / 2))),
+    output: DragCoord.absolute(Optional.some(x - (rect.width / 2)), Optional.some(y - (rect.height / 2))),
     extra: {
       td
     }
   });
 });
 
-const getSnapsConfig = (getSnapPoints: () => DraggingTypes.SnapConfig<SnapExtra>[], cell: Cell<Option<SugarElement<HTMLTableDataCellElement>>>, onChange: (td: SugarElement<HTMLTableDataCellElement>) => void): DraggingTypes.SnapsConfigSpec<SnapExtra> => {
-  // Can't use Option.is() here since we need to do a dom compare, not an equality compare
-  const isSameCell = (cellOpt: Option<SugarElement<HTMLTableDataCellElement>>, td: SugarElement<HTMLTableDataCellElement>) => cellOpt.exists((currentTd) => Compare.eq(currentTd, td));
+const getSnapsConfig = (getSnapPoints: () => DraggingTypes.SnapConfig<SnapExtra>[], cell: Cell<Optional<SugarElement<HTMLTableDataCellElement>>>, onChange: (td: SugarElement<HTMLTableDataCellElement>) => void): DraggingTypes.SnapsConfigSpec<SnapExtra> => {
+  // Can't use Optional.is() here since we need to do a dom compare, not an equality compare
+  const isSameCell = (cellOpt: Optional<SugarElement<HTMLTableDataCellElement>>, td: SugarElement<HTMLTableDataCellElement>) => cellOpt.exists((currentTd) => Compare.eq(currentTd, td));
 
   return {
     getSnapPoints,
@@ -63,7 +63,7 @@ const getSnapsConfig = (getSnapPoints: () => DraggingTypes.SnapConfig<SnapExtra>
     onSensor: (component, extra) => {
       const td = extra.td;
       if (!isSameCell(cell.get(), td)) {
-        cell.set(Option.some(td));
+        cell.set(Optional.some(td));
         onChange(td);
       }
     },
@@ -98,8 +98,8 @@ const setup = (editor: Editor, sink: AlloyComponent) => {
   const tlTds = Cell<SugarElement<HTMLTableDataCellElement>[]>([]);
   const brTds = Cell<SugarElement<HTMLTableDataCellElement>[]>([]);
   const isVisible = Cell<Boolean>(false);
-  const startCell = Cell<Option<SugarElement<HTMLTableDataCellElement>>>(Option.none());
-  const finishCell = Cell<Option<SugarElement<HTMLTableDataCellElement>>>(Option.none());
+  const startCell = Cell<Optional<SugarElement<HTMLTableDataCellElement>>>(Optional.none());
+  const finishCell = Cell<Optional<SugarElement<HTMLTableDataCellElement>>>(Optional.none());
 
   const getTopLeftSnap = (td: SugarElement<HTMLTableDataCellElement>) => {
     const box = Boxes.absolute(td);
@@ -178,8 +178,8 @@ const setup = (editor: Editor, sink: AlloyComponent) => {
         Attachment.attach(sink, bottomRight);
         isVisible.set(true);
       }
-      startCell.set(Option.some(e.start));
-      finishCell.set(Option.some(e.finish));
+      startCell.set(Optional.some(e.start));
+      finishCell.set(Optional.some(e.finish));
 
       e.otherCells.each((otherCells) => {
         tlTds.set(otherCells.upOrLeftCells);
@@ -201,8 +201,8 @@ const setup = (editor: Editor, sink: AlloyComponent) => {
         Attachment.detach(bottomRight);
         isVisible.set(false);
       }
-      startCell.set(Option.none());
-      finishCell.set(Option.none());
+      startCell.set(Optional.none());
+      finishCell.set(Optional.none());
     });
   }
 };

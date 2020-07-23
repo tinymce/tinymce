@@ -1,4 +1,4 @@
-import { Fun, Option } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 import { Compare, Focus, PredicateFind, SugarElement, Traverse } from '@ephox/sugar';
 
 const preserve = <T>(f: (e: SugarElement) => T, container: SugarElement): T => {
@@ -6,7 +6,7 @@ const preserve = <T>(f: (e: SugarElement) => T, container: SugarElement): T => {
 
   const refocus = Focus.active(ownerDoc).bind((focused: SugarElement) => {
     const hasFocus = (elem: SugarElement) => Compare.eq(focused, elem);
-    return hasFocus(container) ? Option.some(container) : PredicateFind.descendant(container, hasFocus);
+    return hasFocus(container) ? Optional.some(container) : PredicateFind.descendant(container, hasFocus);
   });
 
   const result = f(container);

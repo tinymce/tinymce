@@ -7,7 +7,7 @@
 
 import { AlloySpec, Behaviour, Keying, Replacing, SimpleSpec } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import { UiFactoryBackstageShared } from '../../backstage/Backstage';
 
 import { ComposingConfigs } from '../alien/ComposingConfigs';
@@ -36,7 +36,7 @@ export const renderLabel = (spec: LabelSpec, backstageShared: UiFactoryBackstage
     behaviours: Behaviour.derive([
       ComposingConfigs.self(),
       Replacing.config({}),
-      RepresentingConfigs.domHtml(Option.none()),
+      RepresentingConfigs.domHtml(Optional.none()),
       Keying.config({
         mode: 'acyclic'
       })

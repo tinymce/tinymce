@@ -1,12 +1,12 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { Option, OptionInstances } from '@ephox/katamari';
+import { Optional, OptionalInstances } from '@ephox/katamari';
 import { Css, Insert, Remove, SugarBody, SugarElement, Width } from '@ephox/sugar';
 import { ResizeDirection } from 'ephox/snooker/api/ResizeDirection';
 import * as TableConversions from 'ephox/snooker/api/TableConversions';
 import { TableSize } from 'ephox/snooker/api/TableSize';
 import { addStyles, assertApproxCellSizes, readWidth } from 'ephox/snooker/test/SizeUtils';
 
-const tOption = OptionInstances.tOption;
+const tOptional = OptionalInstances.tOptional;
 
 const percentTable =
   '<table style="width: 100%;">' +
@@ -103,7 +103,7 @@ UnitTest.test('TableConversions.convertToPercentSize', () => {
       Assert.eq('Assert table width', true, Math.abs(delta) <= 2);
       assertApproxCellSizes(expected, readWidth(table), 2);
     } else {
-      Assert.eq('Assert table width', Option.some(expectedTableWidth), Css.getRaw(table, 'width'), tOption());
+      Assert.eq('Assert table width', Optional.some(expectedTableWidth), Css.getRaw(table, 'width'), tOptional());
       Assert.eq('Assert cell widths', expected, readWidth(table));
     }
     Remove.remove(table);
@@ -143,7 +143,7 @@ UnitTest.test('TableConversions.convertToNoneSize', () => {
   const check = (expected: (string | null)[][], table: SugarElement<HTMLTableElement>) => {
     Insert.append(container, table);
     TableConversions.convertToNoneSize(table);
-    Assert.eq('Assert no table width', Option.none<string>(), Css.getRaw(table, 'width'), tOption());
+    Assert.eq('Assert no table width', Optional.none<string>(), Css.getRaw(table, 'width'), tOptional());
     Assert.eq('Assert no cell widths', expected, readWidth(table));
     Remove.remove(table);
   };

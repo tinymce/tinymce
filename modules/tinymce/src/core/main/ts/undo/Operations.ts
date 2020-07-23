@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import Editor from '../api/Editor';
 import * as Settings from '../api/Settings';
 import Tools from '../api/util/Tools';
@@ -17,7 +17,7 @@ import { Index, Locks, UndoBookmark, UndoLevel, UndoManager } from './UndoManage
 
 export const beforeChange = (editor: Editor, locks: Locks, beforeBookmark: UndoBookmark) => {
   if (isUnlocked(locks)) {
-    beforeBookmark.set(Option.some(GetBookmark.getUndoBookmark(editor.selection)));
+    beforeBookmark.set(Optional.some(GetBookmark.getUndoBookmark(editor.selection)));
   }
 };
 

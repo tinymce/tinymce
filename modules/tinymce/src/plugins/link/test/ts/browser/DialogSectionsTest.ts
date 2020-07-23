@@ -1,6 +1,6 @@
 import { GeneralSteps, Log, Pipeline, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import { TinyApis, TinyDom, TinyLoader, TinyUi } from '@ephox/mcagar';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
@@ -21,7 +21,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.DialogSectionsTest', (success, 
   };
 
   interface TestSection {
-    setting: { key: string; value: Option<any> };
+    setting: { key: string; value: Optional<any> };
     selector: string;
     exists: boolean;
   }
@@ -52,7 +52,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.DialogSectionsTest', (success, 
       TestLinkUi.sClickOnDialog('click on cancel', 'button:contains("Cancel")')
     ]);
 
-    const sCheckTargetSection = (exists: boolean, value: Option<boolean>) => Log.step('TBA', 'Link: sCheckTargetSection',
+    const sCheckTargetSection = (exists: boolean, value: Optional<boolean>) => Log.step('TBA', 'Link: sCheckTargetSection',
       sCheckSections([
         {
           setting: { key: 'target_list', value },
@@ -62,7 +62,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.DialogSectionsTest', (success, 
       ])
     );
 
-    const sCheckTitleSection = (exists: boolean, value: Option<boolean>) => Log.step('TBA', 'Link: sCheckTitleSection',
+    const sCheckTitleSection = (exists: boolean, value: Optional<boolean>) => Log.step('TBA', 'Link: sCheckTitleSection',
       sCheckSections([
         {
           setting: { key: 'link_title', value },
@@ -72,7 +72,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.DialogSectionsTest', (success, 
       ])
     );
 
-    const sCheckRelSection = (exists: boolean, value: Option<Array<{ value: string; title: string }>>) => Log.step('TBA', 'Link: sCheckRelSection',
+    const sCheckRelSection = (exists: boolean, value: Optional<Array<{ value: string; title: string }>>) => Log.step('TBA', 'Link: sCheckRelSection',
       sCheckSections([
         {
           setting: { key: 'rel_list', value },
@@ -82,7 +82,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.DialogSectionsTest', (success, 
       ])
     );
 
-    const sCheckClassSection = (exists: boolean, value: Option<Array<{ value: string; title: string }>>) => Log.step('TBA', 'Link: sCheckClassSection',
+    const sCheckClassSection = (exists: boolean, value: Optional<Array<{ value: string; title: string }>>) => Log.step('TBA', 'Link: sCheckClassSection',
       sCheckSections([
         {
           setting: { key: 'link_class_list', value },
@@ -92,7 +92,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.DialogSectionsTest', (success, 
       ])
     );
 
-    const sCheckLinkListSection = (exists: boolean, value: Option<Array<{ value: string; title: string }>>) => Log.step('TBA', 'Link: sCheckLinkListSection',
+    const sCheckLinkListSection = (exists: boolean, value: Optional<Array<{ value: string; title: string }>>) => Log.step('TBA', 'Link: sCheckLinkListSection',
       sCheckSections([
         {
           setting: { key: 'link_list', value },
@@ -105,30 +105,30 @@ UnitTest.asynctest('browser.tinymce.plugins.link.DialogSectionsTest', (success, 
     // NOTE: Always end with none to remove the setting from future tests
     Pipeline.async({}, [
       TestLinkUi.sClearHistory,
-      sCheckTargetSection(false, Option.some(false)),
-      sCheckTargetSection(true, Option.some(true)),
-      sCheckTargetSection(true, Option.none()),
+      sCheckTargetSection(false, Optional.some(false)),
+      sCheckTargetSection(true, Optional.some(true)),
+      sCheckTargetSection(true, Optional.none()),
 
-      sCheckRelSection(true, Option.some([
+      sCheckRelSection(true, Optional.some([
         { title: 'a', value: 'b' },
         { title: 'c', value: 'd' }
       ])),
-      sCheckRelSection(false, Option.none()),
+      sCheckRelSection(false, Optional.none()),
 
-      sCheckTitleSection(false, Option.some(false)),
-      sCheckTitleSection(true, Option.none()),
+      sCheckTitleSection(false, Optional.some(false)),
+      sCheckTitleSection(true, Optional.none()),
 
-      sCheckClassSection(true, Option.some([
+      sCheckClassSection(true, Optional.some([
         { title: 'a', value: 'b' },
         { title: 'c', value: 'd' }
       ])),
-      sCheckClassSection(false, Option.none()),
+      sCheckClassSection(false, Optional.none()),
 
-      sCheckLinkListSection(true, Option.some([
+      sCheckLinkListSection(true, Optional.some([
         { title: 'a', value: 'b' },
         { title: 'c', value: 'd' }
       ])),
-      sCheckLinkListSection(false, Option.none()),
+      sCheckLinkListSection(false, Optional.none()),
       TestLinkUi.sClearHistory
     ], onSuccess, onFailure);
   }, {

@@ -6,7 +6,7 @@
  */
 
 import { Types } from '@ephox/bridge';
-import { Arr, Option, Options } from '@ephox/katamari';
+import { Arr, Optional, Optionals } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 
 import * as Settings from '../api/Settings';
@@ -29,7 +29,7 @@ const handleSubmit = (editor: Editor, info: LinkDialogInfo) => (api: Types.Dialo
 
   // Check if a key is defined, meaning it was a field in the dialog. If it is,
   // then check if it's changed and return none if nothing has changed.
-  const getChangedValue = (key: string) => Option.from(data[key]).filter((value) => !info.anchor[key].is(value));
+  const getChangedValue = (key: string) => Optional.from(data[key]).filter((value) => !info.anchor[key].is(value));
 
   const changedData = {
     href: data.url.value,
@@ -57,7 +57,7 @@ const collectData = (editor): Promise<LinkDialogInfo> => {
   return DialogInfo.collect(editor, anchorNode);
 };
 
-const getInitialData = (info: LinkDialogInfo, defaultTarget: Option<string>): LinkDialogData => ({
+const getInitialData = (info: LinkDialogInfo, defaultTarget: Optional<string>): LinkDialogData => ({
   url: {
     value: info.anchor.url.getOr(''),
     meta: {
@@ -107,7 +107,7 @@ const makeDialog = (settings: LinkDialogInfo, onSubmit, editor: Editor): Types.D
     }
   ] : [];
 
-  const defaultTarget: Option<string> = Option.from(Settings.getDefaultLinkTarget(editor));
+  const defaultTarget: Optional<string> = Optional.from(Settings.getDefaultLinkTarget(editor));
 
   const initialData = getInitialData(settings, defaultTarget);
   const dialogDelta = DialogChanges.init(initialData, settings);
@@ -119,7 +119,7 @@ const makeDialog = (settings: LinkDialogInfo, onSubmit, editor: Editor): Types.D
       urlInput,
       displayText,
       titleText,
-      Options.cat<Types.Dialog.BodyComponentApi>([
+      Optionals.cat<Types.Dialog.BodyComponentApi>([
         catalogs.anchor.map(ListOptions.createUi('anchor', 'Anchors')),
         catalogs.rels.map(ListOptions.createUi('rel', 'Rel')),
         catalogs.targets.map(ListOptions.createUi('target', 'Open link in...')),

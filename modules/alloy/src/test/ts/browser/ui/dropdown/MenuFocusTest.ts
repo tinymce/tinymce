@@ -118,7 +118,7 @@ UnitTest.asynctest('MenuFocusTest', (success, failure) => {
         Chain.asStep(component.element(), [
           UiFinder.cFindIn(focusTarget),
           Chain.op((alphaWidget) => {
-            Focusing.focus(component.getSystem().getByDom(alphaWidget).toOption().getOrDie('Could not find selector: ' + focusTarget));
+            Focusing.focus(component.getSystem().getByDom(alphaWidget).toOptional().getOrDie('Could not find selector: ' + focusTarget));
           })
         ]),
         FocusTools.sTryOnSelector('Focus hould be on', doc, expected)

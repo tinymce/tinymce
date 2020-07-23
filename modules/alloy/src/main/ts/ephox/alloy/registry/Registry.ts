@@ -1,4 +1,4 @@
-import { Obj, Option } from '@ephox/katamari';
+import { Obj, Optional } from '@ephox/katamari';
 import { SugarBody, SugarElement } from '@ephox/sugar';
 
 import { AlloyComponent } from '../api/component/ComponentApi';
@@ -47,9 +47,9 @@ export default () => {
 
   const filter = (type: string): UidAndHandler[] => events.filterByType(type);
 
-  const find = (isAboveRoot: (elem: SugarElement) => boolean, type: string, target: SugarElement): Option<ElementAndHandler> => events.find(isAboveRoot, type, target);
+  const find = (isAboveRoot: (elem: SugarElement) => boolean, type: string, target: SugarElement): Optional<ElementAndHandler> => events.find(isAboveRoot, type, target);
 
-  const getById = (id: string): Option<AlloyComponent> => Obj.get(components, id);
+  const getById = (id: string): Optional<AlloyComponent> => Obj.get(components, id);
 
   return {
     find,

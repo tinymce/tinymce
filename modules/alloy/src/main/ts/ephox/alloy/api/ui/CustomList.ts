@@ -1,4 +1,4 @@
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as CustomListSchema from '../../ui/schema/CustomListSchema';
@@ -51,7 +51,7 @@ const factory: CompositeSketchFactory<CustomListDetail, CustomListSpec> = (detai
     components: AlloySpec[];
   } = detail.shell ? { behaviours: [ Replacing.config({ }) ], components: [ ] } : { behaviours: [ ], components };
 
-  const getListContainer = (component: AlloyComponent) => detail.shell ? Option.some(component) : AlloyParts.getPart(component, detail, 'items');
+  const getListContainer = (component: AlloyComponent) => detail.shell ? Optional.some(component) : AlloyParts.getPart(component, detail, 'items');
 
   return {
     uid: detail.uid,

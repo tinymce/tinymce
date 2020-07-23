@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Fun, Option } from '@ephox/katamari';
+import { Arr, Fun, Optional } from '@ephox/katamari';
 import { Compare, Css, PredicateFind, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 
@@ -14,14 +14,14 @@ const candidatesArray = [ '9px', '10px', '11px', '12px', '14px', '16px', '18px',
 const defaultSize = 'medium';
 const defaultIndex = 2;
 
-const indexToSize = (index): Option<string> =>
-  Option.from(candidatesArray[index]);
+const indexToSize = (index): Optional<string> =>
+  Optional.from(candidatesArray[index]);
 
-const sizeToIndex = (size): Option<number> =>
+const sizeToIndex = (size): Optional<number> =>
   Arr.findIndex(candidatesArray, (v) => v === size);
 
 const getRawOrComputed = (isRoot: (e: SugarElement<Node>) => boolean, rawStart: SugarElement<any>): string => {
-  const optStart = SugarNode.isElement(rawStart) ? Option.some(rawStart) : Traverse.parent(rawStart).filter(SugarNode.isElement);
+  const optStart = SugarNode.isElement(rawStart) ? Optional.some(rawStart) : Traverse.parent(rawStart).filter(SugarNode.isElement);
   return optStart.map((start) => {
     const inline = PredicateFind.closest(start, (elem) => Css.getRaw(elem, 'font-size').isSome(), isRoot)
       .bind((elem) => Css.getRaw(elem, 'font-size'));

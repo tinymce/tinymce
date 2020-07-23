@@ -1,4 +1,4 @@
-import { Cell, Fun, Option } from '@ephox/katamari';
+import { Cell, Fun, Optional } from '@ephox/katamari';
 import { EventArgs, Focus } from '@ephox/sugar';
 
 import * as ElementFromPoint from '../../alien/ElementFromPoint';
@@ -30,7 +30,7 @@ type TouchHoverState = (comp: AlloyComponent) => void;
 
 const factory: CompositeSketchFactory<TouchMenuDetail, TouchMenuSpec> = (detail, components, spec, externals) => {
 
-  const getMenu = (component: AlloyComponent): Option<AlloyComponent> => {
+  const getMenu = (component: AlloyComponent): Optional<AlloyComponent> => {
     const sandbox = Coupling.getCoupled(component, 'sandbox');
     return Sandboxing.getState(sandbox);
   };

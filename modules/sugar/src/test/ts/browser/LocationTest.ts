@@ -1,5 +1,5 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
-import { Arr, Fun, Option } from '@ephox/katamari';
+import { Arr, Fun, Optional } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import * as Insert from 'ephox/sugar/api/dom/Insert';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
@@ -25,8 +25,8 @@ interface TestDocSpec {
 type AttrMap = Record<string, string | boolean | number>;
 interface TestAttrMap {
   iframe: AttrMap;
-  html: Option<AttrMap>;
-  body: Option<AttrMap>;
+  html: Optional<AttrMap>;
+  body: Optional<AttrMap>;
 }
 
 interface CheckSpec {
@@ -73,7 +73,7 @@ UnitTest.asynctest('LocationTest', (success, failure) => {
           rtl: iframeDoc.body.dir === 'rtl',
           dir: Attribute.get(body, 'dir') || 'ltr',
           byId(str) {
-            return Option.from(iframeDoc.getElementById(str))
+            return Optional.from(iframeDoc.getElementById(str))
               .map(SugarElement.fromDom)
               .getOrDie('cannot find element with id ' + str);
           }
@@ -95,14 +95,14 @@ UnitTest.asynctest('LocationTest', (success, failure) => {
 
   testOne(ifr, { // vanilla iframe
     iframe: { id: 'vanilla', style: 'height:200px; width:500px; border: 1px dashed chartreuse;' },
-    html: Option.none(),
-    body: Option.some<AttrMap>({ contenteditable: 'true', style: 'margin: 0; padding: 5px;' })
+    html: Optional.none(),
+    body: Optional.some<AttrMap>({ contenteditable: 'true', style: 'margin: 0; padding: 5px;' })
   },
   () => {
     testOne(ifr, { // rtl iframe
       iframe: { id: 'ifrRtl', style: 'height:200px; width:500px; border: 1px dashed turquoise;' },
-      html: Option.none(),
-      body: Option.some<AttrMap>({ dir: 'rtl', contenteditable: 'true', style: 'margin: 0; padding: 5px;' })
+      html: Optional.none(),
+      body: Optional.some<AttrMap>({ dir: 'rtl', contenteditable: 'true', style: 'margin: 0; padding: 5px;' })
     },
     success);
   });

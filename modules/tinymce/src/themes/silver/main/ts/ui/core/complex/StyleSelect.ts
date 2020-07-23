@@ -6,7 +6,7 @@
  */
 
 import { AlloyComponent, AlloyTriggers } from '@ephox/alloy';
-import { Arr, Fun, Option } from '@ephox/katamari';
+import { Arr, Fun, Optional } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { getStyleFormats } from 'tinymce/themes/silver/ui/core/complex/StyleFormat';
 import { UiFactoryBackstage } from '../../../backstage/Backstage';
@@ -21,10 +21,10 @@ const getSpec = (editor: Editor, dataset: SelectDataset): SelectSpec => {
 
   const getPreviewFor = (format: string) => () => {
     const fmt = editor.formatter.get(format);
-    return fmt !== undefined ? Option.some({
+    return fmt !== undefined ? Optional.some({
       tag: fmt.length > 0 ? fmt[0].inline || fmt[0].block || 'div' : 'div',
       styles: editor.dom.parseStyle(editor.formatter.getCssText(format))
-    }) : Option.none();
+    }) : Optional.none();
   };
 
   const updateSelectMenuText = (parents: Element[], comp: AlloyComponent) => {
@@ -40,18 +40,18 @@ const getSpec = (editor: Editor, dataset: SelectDataset): SelectSpec => {
     });
   };
 
-  const nodeChangeHandler = Option.some((comp: AlloyComponent) => (e) => updateSelectMenuText(e.parents, comp));
+  const nodeChangeHandler = Optional.some((comp: AlloyComponent) => (e) => updateSelectMenuText(e.parents, comp));
 
-  const setInitialValue = Option.some((comp: AlloyComponent) => {
+  const setInitialValue = Optional.some((comp: AlloyComponent) => {
     const parents = getCurrentSelectionParents(editor);
     updateSelectMenuText(parents, comp);
   });
 
   return {
     tooltip: 'Formats',
-    icon: Option.none(),
+    icon: Optional.none(),
     isSelectedFor,
-    getCurrentValue: Fun.constant(Option.none()),
+    getCurrentValue: Fun.constant(Optional.none()),
     getPreviewFor,
     onAction: onActionToggleFormat(editor),
     setInitialValue,

@@ -1,4 +1,4 @@
-import { Arr, Fun, Option } from '@ephox/katamari';
+import { Arr, Fun, Optional } from '@ephox/katamari';
 import { Attribute, SelectorFilter } from '@ephox/sugar';
 
 import * as FormChooserSchema from '../../ui/schema/FormChooserSchema';
@@ -43,7 +43,7 @@ const factory: CompositeSketchFactory<FormChooserDetail, FormChooserSpec> = (det
             return chooser.getSystem().getByDom(focused).map((choice) => {
               Highlighting.highlight(chooser, choice);
               return true;
-            }).toOption().map(Fun.constant<boolean>(true));
+            }).toOptional().map(Fun.constant<boolean>(true));
           }
         }),
 
@@ -59,7 +59,7 @@ const factory: CompositeSketchFactory<FormChooserDetail, FormChooserSpec> = (det
         }),
 
         Composing.config({
-          find: Option.some
+          find: Optional.some
         }),
 
         Representing.config({

@@ -1,4 +1,4 @@
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
 export interface GeneralDefinitionSpec<EC> {
@@ -23,8 +23,8 @@ export interface GeneralDefinitionDetail<EC> {
   attributes: Record<string, any>;
   classes: string[];
   styles: Record<string, string>;
-  value: Option<any>;
-  innerHtml: Option<string>;
+  value: Optional<any>;
+  innerHtml: Optional<string>;
   domChildren: EC[];
 }
 

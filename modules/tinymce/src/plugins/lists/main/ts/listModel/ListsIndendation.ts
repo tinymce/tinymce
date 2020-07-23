@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Fun, Option, Options } from '@ephox/katamari';
+import { Arr, Fun, Optional, Optionals } from '@ephox/katamari';
 import { InsertAll, Remove, SugarElement, SugarFragment } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { fireListEvent } from '../api/Events';
@@ -41,10 +41,10 @@ const indentSelectedEntries = (entries: Entry[], indentation: Indentation): void
   Arr.each(Arr.filter(entries, isSelected), (entry) => indentEntry(indentation, entry));
 };
 
-const getItemSelection = (editor: Editor): Option<ItemSelection> => {
+const getItemSelection = (editor: Editor): Optional<ItemSelection> => {
   const selectedListItems = Arr.map(Selection.getSelectedListItems(editor), SugarElement.fromDom);
 
-  return Options.lift2(
+  return Optionals.lift2(
     Arr.find(selectedListItems, Fun.not(hasFirstChildList)),
     Arr.find(Arr.reverse(selectedListItems), Fun.not(hasFirstChildList)),
     (start, end) => ({ start, end }));

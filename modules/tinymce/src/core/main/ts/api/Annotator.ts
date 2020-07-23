@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Obj, Option } from '@ephox/katamari';
+import { Arr, Obj, Optional } from '@ephox/katamari';
 import { Remove } from '@ephox/sugar';
 import * as AnnotationChanges from '../annotate/AnnotationChanges';
 import * as AnnotationFilter from '../annotate/AnnotationFilter';
@@ -86,7 +86,7 @@ const Annotator = function (editor: Editor): Annotator {
      * @param {String} name the name of the annotation to remove
      */
     remove: (name: string): void => {
-      identify(editor, Option.some(name)).each(({ elements }) => {
+      identify(editor, Optional.some(name)).each(({ elements }) => {
         Arr.each(elements, Remove.unwrap);
       });
     },

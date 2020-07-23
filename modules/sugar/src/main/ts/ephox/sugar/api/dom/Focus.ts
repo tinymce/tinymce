@@ -1,4 +1,4 @@
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import * as SugarDocument from '../node/SugarDocument';
 import { SugarElement } from '../node/SugarElement';
 import * as SugarShadowDom from '../node/SugarShadowDom';
@@ -17,8 +17,8 @@ const hasFocus = (element: SugarElement<Node>): boolean => {
 };
 
 // Note: assuming that activeElement will always be a HTMLElement (maybe we should add a runtime check?)
-const active = (root: RootNode = SugarDocument.getDocument()): Option<SugarElement<HTMLElement>> =>
-  Option.from(root.dom().activeElement as HTMLElement).map(SugarElement.fromDom);
+const active = (root: RootNode = SugarDocument.getDocument()): Optional<SugarElement<HTMLElement>> =>
+  Optional.from(root.dom().activeElement as HTMLElement).map(SugarElement.fromDom);
 
 /** Focus the specified element, unless one of its descendents already has focus. */
 const focusInside = (element: SugarElement<HTMLElement>): void => {
@@ -33,7 +33,7 @@ const focusInside = (element: SugarElement<HTMLElement>): void => {
  * Use instead of SelectorFind.descendant(container, ':focus')
  *  because the :focus selector relies on keyboard focus.
  */
-const search = (element: SugarElement<Node>): Option<SugarElement<HTMLElement>> =>
+const search = (element: SugarElement<Node>): Optional<SugarElement<HTMLElement>> =>
   active(SugarShadowDom.getRootNode(element))
     .filter((e) => element.dom().contains(e.dom()));
 

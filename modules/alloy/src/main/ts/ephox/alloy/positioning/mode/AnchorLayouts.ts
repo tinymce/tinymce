@@ -1,5 +1,5 @@
 import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { Direction, SugarElement } from '@ephox/sugar';
 
 import { AnchorLayout } from '../layout/LayoutTypes';
@@ -20,7 +20,7 @@ const get = (
   defaultRtl: AnchorLayout[],
   defaultBottomLtr: AnchorLayout[],
   defaultBottomRtl: AnchorLayout[],
-  dirElement: Option<SugarElement>
+  dirElement: Optional<SugarElement>
 ): AnchorLayout[] => {
   const isBottomToTop = dirElement.map(isBottomToTopDir).getOr(false);
 

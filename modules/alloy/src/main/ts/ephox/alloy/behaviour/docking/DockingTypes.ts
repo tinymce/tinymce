@@ -1,4 +1,4 @@
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 
 import { Bounds } from '../../alien/Boxes';
 import * as Behaviour from '../../api/behaviour/Behaviour';
@@ -20,14 +20,14 @@ export interface DockingBehaviour extends Behaviour.AlloyBehaviour<DockingConfig
   isDocked: (component: AlloyComponent) => boolean;
   getModes: (component: AlloyComponent) => DockingMode[];
   setModes: (component: AlloyComponent, modes: DockingMode[]) => void;
-  getInitialPosition: (component: AlloyComponent) => Option<InitialDockingPosition>;
+  getInitialPosition: (component: AlloyComponent) => Optional<InitialDockingPosition>;
 }
 
 export interface DockingContext {
   fadeInClass: string;
   fadeOutClass: string;
   transitionClass: string;
-  lazyContext: (component: AlloyComponent) => Option<Bounds>;
+  lazyContext: (component: AlloyComponent) => Optional<Bounds>;
   onShow: (component: AlloyComponent) => void;
   onShown: (component: AlloyComponent) => void;
   onHide: (component: AlloyComponent) => void;
@@ -35,7 +35,7 @@ export interface DockingContext {
 }
 
 export interface DockingConfig extends Behaviour.BehaviourConfigDetail {
-  contextual: Option<DockingContext>;
+  contextual: Optional<DockingContext>;
   lazyViewport: (component?: AlloyComponent) => Bounds;
   modes: DockingMode[];
   onDocked: (component: AlloyComponent) => void;
@@ -45,8 +45,8 @@ export interface DockingConfig extends Behaviour.BehaviourConfigDetail {
 export interface DockingState extends BehaviourState {
   isDocked: () => boolean;
   setDocked: (docked: boolean) => void;
-  getInitialPosition: () => Option<InitialDockingPosition>;
-  setInitialPosition: (bounds: Option<InitialDockingPosition>) => void;
+  getInitialPosition: () => Optional<InitialDockingPosition>;
+  setInitialPosition: (bounds: Optional<InitialDockingPosition>) => void;
   isVisible: () => boolean;
   setVisible: (visible: boolean) => void;
   getModes: () => DockingMode[];
@@ -58,7 +58,7 @@ export interface DockingConfigSpec extends Behaviour.BehaviourConfigSpec {
     fadeInClass: string;
     fadeOutClass: string;
     transitionClass: string;
-    lazyContext: (component: AlloyComponent) => Option<Bounds>;
+    lazyContext: (component: AlloyComponent) => Optional<Bounds>;
     onShow?: (component: AlloyComponent) => void;
     onShown?: (component: AlloyComponent) => void;
     onHide?: (component: AlloyComponent) => void;

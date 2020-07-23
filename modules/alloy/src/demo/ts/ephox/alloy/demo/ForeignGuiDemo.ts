@@ -1,4 +1,4 @@
-import { Option, Options } from '@ephox/katamari';
+import { Optional, Optionals } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Css, DomEvent, EventArgs, Height, Insert, InsertAll, SelectorFind, SugarElement, SugarElements, SugarNode, Width } from '@ephox/sugar';
 
@@ -30,8 +30,8 @@ export default (): void => {
   const ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
   const platform = PlatformDetection.detect();
 
-  const onNode = (name: string) => (elem: SugarElement): Option<SugarElement> =>
-    Options.someIf(SugarNode.name(elem) === name, elem);
+  const onNode = (name: string) => (elem: SugarElement): Optional<SugarElement> =>
+    Optionals.someIf(SugarNode.name(elem) === name, elem);
 
   const contents = '<div><strong>drag1</strong> and <code>click1</code> and <strong>drag2</strong> ' +
     'and <code>click2</code> and <img style="width: 140px; height: 130px;" /></div>';

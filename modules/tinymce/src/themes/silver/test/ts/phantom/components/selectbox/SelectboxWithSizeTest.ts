@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions } from '@ephox/agar';
 import { GuiFactory, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 
 import { renderSelectBox } from 'tinymce/themes/silver/ui/dialog/SelectBox';
 import { DomSteps } from '../../../module/DomSteps';
@@ -15,7 +15,7 @@ UnitTest.asynctest('Selectbox with size component Test', (success, failure) => {
       renderSelectBox({
         name: 'selector',
         size: 5,
-        label: Option.some('selector'),
+        label: Optional.some('selector'),
         disabled: false,
         items: [
           { value: 'one', text: 'One' },

@@ -1,4 +1,4 @@
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { SugarElement } from '../../api/node/SugarElement';
 import * as Traverse from '../../api/search/Traverse';
 import * as CursorPosition from '../../api/selection/CursorPosition';
@@ -38,7 +38,7 @@ const locateInElement = (doc: SugarElement<Document>, node: SugarElement<Element
 const locateInEmpty = (doc: SugarElement<Document>, node: SugarElement<Element>, x: number) => {
   const rect = node.dom().getBoundingClientRect();
   const collapseDirection = getCollapseDirection(rect, x);
-  return Option.some(createCollapsedNode(doc, node, collapseDirection));
+  return Optional.some(createCollapsedNode(doc, node, collapseDirection));
 };
 
 const search = (doc: SugarElement<Document>, node: SugarElement<Element>, x: number) => {

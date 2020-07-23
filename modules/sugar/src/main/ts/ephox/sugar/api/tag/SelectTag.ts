@@ -1,9 +1,9 @@
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import { SugarElement } from '../node/SugarElement';
 
 const getValueFromIndex = (options: HTMLOptionsCollection, index: number) => {
   const optionVal = options[index];
-  return optionVal === undefined || index === -1 ? Option.none<string>() : Option.from(optionVal.value);
+  return optionVal === undefined || index === -1 ? Optional.none<string>() : Optional.from(optionVal.value);
 };
 
 const getValue = (select: SugarElement<HTMLSelectElement>) => {

@@ -1,12 +1,12 @@
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { Css, Insert, Remove, SugarElement, SugarLocation, SugarPosition, Traverse } from '@ephox/sugar';
 
-const getOffsetParent = (element: SugarElement): Option<SugarElement<HTMLElement>> => {
+const getOffsetParent = (element: SugarElement): Optional<SugarElement<HTMLElement>> => {
   // Firefox sets the offsetParent to the body when fixed instead of null like
   // all other browsers. So we need to check if the element is fixed and if so then
   // disregard the elements offsetParent.
   const isFixed = Css.getRaw(element, 'position').is('fixed');
-  const offsetParent = isFixed ? Option.none<SugarElement<HTMLElement>>() : Traverse.offsetParent(element);
+  const offsetParent = isFixed ? Optional.none<SugarElement<HTMLElement>>() : Traverse.offsetParent(element);
   return offsetParent.orThunk(() => {
     const marker = SugarElement.fromTag('span');
     // PERFORMANCE: Append the marker to the parent element, as adding it before the current element will

@@ -6,10 +6,10 @@
  */
 
 import { Menu as BridgeMenu } from '@ephox/bridge';
-import { Arr, Strings, Option } from '@ephox/katamari';
+import { Arr, Optional, Strings } from '@ephox/katamari';
+import { LinkInformation } from '../../backstage/UrlInputBackstage';
 
 import { LinkTarget, LinkTargetType } from '../core/LinkTargets';
-import { LinkInformation } from '../../backstage/UrlInputBackstage';
 import { SingleMenuItemApi } from '../menus/menu/SingleMenuTypes';
 
 const separator: BridgeMenu.SeparatorMenuItemApi = {
@@ -49,9 +49,9 @@ const headerTargets = (linkInfo: LinkInformation) => filteredTargets('header', l
 
 const anchorTargets = (linkInfo: LinkInformation) => filteredTargets('anchor', linkInfo.targets);
 
-const anchorTargetTop = (linkInfo: LinkInformation) => Option.from(linkInfo.anchorTop).map((url) => staticMenuItem('<top>', url)).toArray();
+const anchorTargetTop = (linkInfo: LinkInformation) => Optional.from(linkInfo.anchorTop).map((url) => staticMenuItem('<top>', url)).toArray();
 
-const anchorTargetBottom = (linkInfo: LinkInformation) => Option.from(linkInfo.anchorBottom).map((url) => staticMenuItem('<bottom>', url)).toArray();
+const anchorTargetBottom = (linkInfo: LinkInformation) => Optional.from(linkInfo.anchorBottom).map((url) => staticMenuItem('<bottom>', url)).toArray();
 
 const historyTargets = (history: string[]) => Arr.map(history, (url) => staticMenuItem(url, url));
 

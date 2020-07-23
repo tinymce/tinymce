@@ -1,5 +1,5 @@
 import { AlloyComponent, AlloyTriggers, Behaviour, Composing, Focusing, Sketcher, SketchSpec, Slider, SliderTypes, UiSketcher } from '@ephox/alloy';
-import { Fun, Option } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 import { Rgba } from '../../api/colour/ColourTypes';
 import * as RgbaColour from '../../api/colour/RgbaColour';
 import * as ColourEvents from '../ColourEvents';
@@ -86,7 +86,7 @@ const paletteFactory = (_translate: (key: string) => string, getClass: (key: str
 
     const sliderBehaviours = Behaviour.derive([
       Composing.config({
-        find: Option.some
+        find: Optional.some
       }),
       Focusing.config({})
     ]);

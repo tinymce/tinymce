@@ -6,7 +6,7 @@
  */
 
 import { Types } from '@ephox/bridge';
-import { Arr, Cell, Option, Throttler } from '@ephox/katamari';
+import { Arr, Cell, Optional, Throttler } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { insertEmoticon } from '../core/Actions';
 import { ALL_CATEGORY, EmojiDatabase } from '../core/EmojiDatabase';
@@ -18,7 +18,7 @@ const open = function (editor: Editor, database: EmojiDatabase) {
 
   const initialState = {
     pattern: '',
-    results: emojisFrom(database.listAll(), '', Option.some(300))
+    results: emojisFrom(database.listAll(), '', Optional.some(300))
   };
 
   const currentTab = Cell(ALL_CATEGORY);
@@ -27,7 +27,7 @@ const open = function (editor: Editor, database: EmojiDatabase) {
     const dialogData = dialogApi.getData();
     const category = currentTab.get();
     const candidates = database.listCategory(category);
-    const results = emojisFrom(candidates, dialogData[patternName], category === ALL_CATEGORY ? Option.some(300) : Option.none());
+    const results = emojisFrom(candidates, dialogData[patternName], category === ALL_CATEGORY ? Optional.some(300) : Optional.none());
     dialogApi.setData({
       results
     });

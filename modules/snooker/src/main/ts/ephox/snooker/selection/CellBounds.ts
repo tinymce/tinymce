@@ -1,6 +1,6 @@
-import { Fun, Option } from '@ephox/katamari';
-import { Warehouse } from '../model/Warehouse';
+import { Fun, Optional } from '@ephox/katamari';
 import { Bounds, DetailExt } from '../api/Structs';
+import { Warehouse } from '../model/Warehouse';
 
 const inSelection = function (bounds: Bounds, detail: DetailExt) {
   const leftEdge = detail.column();
@@ -34,7 +34,7 @@ const isRectangular = function (warehouse: Warehouse, bounds: Bounds) {
     }
   }
 
-  return isRect ? Option.some(bounds) : Option.none<Bounds>();
+  return isRect ? Optional.some(bounds) : Optional.none<Bounds>();
 };
 
 export {

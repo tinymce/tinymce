@@ -1,4 +1,4 @@
-import { Arr, Fun, Option } from '@ephox/katamari';
+import { Arr, Fun, Optional } from '@ephox/katamari';
 import { Remove, SugarElement, SugarNode } from '@ephox/sugar';
 import * as DetailsList from '../model/DetailsList';
 import {
@@ -18,7 +18,7 @@ import * as TableLookup from './TableLookup';
 
 export interface TableOperationResult {
   readonly grid: () => Structs.RowCells[];
-  readonly cursor: () => Option<SugarElement>;
+  readonly cursor: () => Optional<SugarElement>;
 }
 
 type CompElm = (e1: SugarElement, e2: SugarElement) => boolean;
@@ -30,7 +30,7 @@ const prune = function (table: SugarElement) {
   }
 };
 
-const outcome = (grid: Structs.RowCells[], cursor: Option<SugarElement>): TableOperationResult => ({
+const outcome = (grid: Structs.RowCells[], cursor: Optional<SugarElement>): TableOperationResult => ({
   grid: Fun.constant(grid),
   cursor: Fun.constant(cursor)
 });
@@ -42,9 +42,9 @@ const elementFromGrid = function (grid: Structs.RowCells[], row: number, column:
 };
 
 const findIn = function (grid: Structs.RowCells[], row: number, column: number) {
-  return Option.from(grid[row]).bind(function (r) {
-    return Option.from(r.cells()[column]).bind(function (c) {
-      return Option.from(c.element());
+  return Optional.from(grid[row]).bind(function (r) {
+    return Optional.from(r.cells()[column]).bind(function (c) {
+      return Optional.from(c.element());
     });
   });
 };
@@ -191,14 +191,14 @@ const opMergeCells = function (grid: Structs.RowCells[], mergable: ExtractMergab
   const cells = mergable.cells();
   TableContent.merge(cells);
   const newGrid = MergingOperations.merge(grid, mergable.bounds(), comparator, Fun.constant(cells[0]));
-  return outcome(newGrid, Option.from(cells[0]));
+  return outcome(newGrid, Optional.from(cells[0]));
 };
 
 const opUnmergeCells = function (grid: Structs.RowCells[], unmergable: SugarElement[], comparator: CompElm, genWrappers: GeneratorsMerging) {
   const newGrid = Arr.foldr(unmergable, function (b, cell) {
     return MergingOperations.unmerge(b, cell, comparator, genWrappers.combine(cell));
   }, grid);
-  return outcome(newGrid, Option.from(unmergable[0]));
+  return outcome(newGrid, Optional.from(unmergable[0]));
 };
 
 const opPasteCells = function (grid: Structs.RowCells[], pasteDetails: ExtractPaste, comparator: CompElm, _genWrappers: GeneratorsModification) {
@@ -210,7 +210,7 @@ const opPasteCells = function (grid: Structs.RowCells[], pasteDetails: ExtractPa
   const startAddress = Structs.address(pasteDetails.row(), pasteDetails.column());
   const mergedGrid = TableMerge.merge(startAddress, grid, gridB, pasteDetails.generators(), comparator);
   return mergedGrid.fold(function () {
-    return outcome(grid, Option.some(pasteDetails.element()));
+    return outcome(grid, Optional.some(pasteDetails.element()));
   }, function (nuGrid) {
     const cursor = elementFromGrid(nuGrid, pasteDetails.row(), pasteDetails.column());
     return outcome(nuGrid, cursor);
@@ -262,7 +262,7 @@ const opPasteRowsAfter = function (grid: Structs.RowCells[], pasteDetails: Extra
 const opGetColumnType = (table: SugarElement, target: TargetSelection): string => {
   const house = Warehouse.fromTable(table);
   const details = onCells(house, target);
-  return details.bind((selectedCells): Option<string> => {
+  return details.bind((selectedCells): Optional<string> => {
     const lastSelectedCell = selectedCells[selectedCells.length - 1];
     const minColRange = selectedCells[0].column();
     const maxColRange = lastSelectedCell.column() + lastSelectedCell.colspan();
@@ -272,14 +272,14 @@ const opGetColumnType = (table: SugarElement, target: TargetSelection): string =
   }).getOr('');
 };
 
-export const getCellsType = <T>(cells: T[], headerPred: (x: T) => boolean): Option<string> => {
+export const getCellsType = <T>(cells: T[], headerPred: (x: T) => boolean): Optional<string> => {
   const headerCells = Arr.filter(cells, headerPred);
   if (headerCells.length === 0) {
-    return Option.some('td');
+    return Optional.some('td');
   } else if (headerCells.length === cells.length) {
-    return Option.some('th');
+    return Optional.some('th');
   } else {
-    return Option.none();
+    return Optional.none();
   }
 };
 

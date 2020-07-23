@@ -6,14 +6,14 @@
  */
 
 import { Types } from '@ephox/bridge';
-import { Arr, Obj, Option, Options } from '@ephox/katamari';
+import { Arr, Obj, Optional, Optionals } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import * as Settings from '../api/Settings';
 import { CustomTabSpecs, TabSpecs } from '../Plugin';
+import * as KeyboardNavTab from './KeyboardNavTab';
 import * as KeyboardShortcutsTab from './KeyboardShortcutsTab';
 import * as PluginsTab from './PluginsTab';
 import * as VersionTab from './VersionTab';
-import * as KeyboardNavTab from './KeyboardNavTab';
 
 interface TabData {
   tabs: TabSpecs;
@@ -74,8 +74,8 @@ const parseCustomTabs = (editor: Editor, customTabs: CustomTabSpecs) => {
 const init = (editor: Editor, customTabs: CustomTabSpecs): () => void => () => {
   // const tabSpecs: Record<string, Types.Dialog.TabApi> = customTabs.get();
   const { tabs, names } = parseCustomTabs(editor, customTabs);
-  const foundTabs: Option<Types.Dialog.TabApi>[] = Arr.map(names, (name) => Obj.get(tabs, name));
-  const dialogTabs: Types.Dialog.TabApi[] = Options.cat(foundTabs);
+  const foundTabs: Optional<Types.Dialog.TabApi>[] = Arr.map(names, (name) => Obj.get(tabs, name));
+  const dialogTabs: Types.Dialog.TabApi[] = Optionals.cat(foundTabs);
 
   const body: Types.Dialog.TabPanelApi = {
     type: 'tabpanel',

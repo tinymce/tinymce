@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Compare, SimSelection, SugarElement, SugarNode, SugarText, Traverse } from '@ephox/sugar';
 import Editor from '../api/Editor';
@@ -54,7 +54,7 @@ const nativeRangeToSelectionRange = function (r) {
 
 const readRange = function (win) {
   const selection = win.getSelection();
-  const rng = !selection || selection.rangeCount === 0 ? Option.none() : Option.from(selection.getRangeAt(0));
+  const rng = !selection || selection.rangeCount === 0 ? Optional.none() : Optional.from(selection.getRangeAt(0));
   return rng.map(nativeRangeToSelectionRange);
 };
 
@@ -66,33 +66,33 @@ const getBookmark = function (root) {
 };
 
 const validate = function (root, bookmark) {
-  return Option.from(bookmark)
+  return Optional.from(bookmark)
     .filter(isRngInRoot(root))
     .map(normalizeRng);
 };
 
-const bookmarkToNativeRng = function (bookmark): Option<Range> {
+const bookmarkToNativeRng = function (bookmark): Optional<Range> {
   const rng = document.createRange();
 
   try {
     // Might throw IndexSizeError
     rng.setStart(bookmark.start().dom(), bookmark.soffset());
     rng.setEnd(bookmark.finish().dom(), bookmark.foffset());
-    return Option.some(rng);
+    return Optional.some(rng);
   } catch (_) {
-    return Option.none();
+    return Optional.none();
   }
 };
 
 const store = function (editor: Editor) {
-  const newBookmark = shouldStore(editor) ? getBookmark(SugarElement.fromDom(editor.getBody())) : Option.none();
+  const newBookmark = shouldStore(editor) ? getBookmark(SugarElement.fromDom(editor.getBody())) : Optional.none();
 
   editor.bookmark = newBookmark.isSome() ? newBookmark : editor.bookmark;
 };
 
 const storeNative = function (editor: Editor, rng) {
   const root = SugarElement.fromDom(editor.getBody());
-  const range = shouldStore(editor) ? Option.from(rng) : Option.none();
+  const range = shouldStore(editor) ? Optional.from(rng) : Optional.none();
 
   const newBookmark = range.map(nativeRangeToSelectionRange)
     .filter(isRngInRoot(root));
@@ -100,8 +100,8 @@ const storeNative = function (editor: Editor, rng) {
   editor.bookmark = newBookmark.isSome() ? newBookmark : editor.bookmark;
 };
 
-const getRng = function (editor: Editor): Option<Range> {
-  const bookmark = editor.bookmark ? editor.bookmark : Option.none();
+const getRng = function (editor: Editor): Optional<Range> {
+  const bookmark = editor.bookmark ? editor.bookmark : Optional.none();
 
   return bookmark
     .bind((x) => validate(SugarElement.fromDom(editor.getBody()), x))

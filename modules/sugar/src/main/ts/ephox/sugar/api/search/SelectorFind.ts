@@ -1,4 +1,4 @@
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import ClosestOrAncestor from '../../impl/ClosestOrAncestor';
 import { SugarElement } from '../node/SugarElement';
 import * as PredicateFind from './PredicateFind';
@@ -22,7 +22,7 @@ const descendant = <T extends Element = Element> (scope: SugarElement<Node>, sel
   Selectors.one<T>(selector, scope);
 
 // Returns Some(closest ancestor element (sugared)) matching 'selector' up to isRoot, or None() otherwise
-const closest = <T extends Element = Element> (scope: SugarElement<Node>, selector: string, isRoot?: (e: SugarElement<Node>) => boolean): Option<SugarElement<T>> => {
+const closest = <T extends Element = Element> (scope: SugarElement<Node>, selector: string, isRoot?: (e: SugarElement<Node>) => boolean): Optional<SugarElement<T>> => {
   const is = (element: SugarElement<Node>, selector: string): element is SugarElement<T> => Selectors.is<T>(element, selector);
   return ClosestOrAncestor<string, T>(is, ancestor, scope, selector, isRoot);
 };

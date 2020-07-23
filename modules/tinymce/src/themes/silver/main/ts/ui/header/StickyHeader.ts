@@ -6,7 +6,7 @@
  */
 
 import { AlloyComponent, Boxes, Channels, Docking, Focusing, Receiving } from '@ephox/alloy';
-import { Arr, Cell, Option, Result } from '@ephox/katamari';
+import { Arr, Cell, Optional, Result } from '@ephox/katamari';
 import { Class, Classes, Compare, Css, Focus, Height, Scroll, SugarElement, SugarLocation, Traverse, Visibility, Width } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -111,12 +111,12 @@ const restoreFocus = (headerElem: SugarElement, focusedElem: SugarElement) => {
   ).each(() => Focus.focus(focusedElem));
 };
 
-const findFocusedElem = (rootElm: SugarElement, lazySink: () => Result<AlloyComponent, Error>): Option<SugarElement> =>
+const findFocusedElem = (rootElm: SugarElement, lazySink: () => Result<AlloyComponent, Error>): Optional<SugarElement> =>
   // Check to see if an element is focused inside the header or inside the sink
   // and if so store the element so we can restore it later
-  Focus.search(rootElm).orThunk(() => lazySink().toOption().bind((sink) => Focus.search(sink.element())));
+  Focus.search(rootElm).orThunk(() => lazySink().toOptional().bind((sink) => Focus.search(sink.element())));
 
-const setup = (editor: Editor, sharedBackstage: UiFactoryBackstageShared, lazyHeader: () => Option<AlloyComponent>): void => {
+const setup = (editor: Editor, sharedBackstage: UiFactoryBackstageShared, lazyHeader: () => Optional<AlloyComponent>): void => {
   if (!editor.inline) {
     // If using bottom toolbar then when the editor resizes we need to reset docking
     // otherwise it won't know the original toolbar position has moved
@@ -169,7 +169,7 @@ const setup = (editor: Editor, sharedBackstage: UiFactoryBackstageShared, lazyHe
   });
 };
 
-const isDocked = (lazyHeader: () => Option<AlloyComponent>): boolean => lazyHeader().map(Docking.isDocked).getOr(false);
+const isDocked = (lazyHeader: () => Optional<AlloyComponent>): boolean => lazyHeader().map(Docking.isDocked).getOr(false);
 
 const getIframeBehaviours = () => [
   Receiving.config({
@@ -182,7 +182,7 @@ const getIframeBehaviours = () => [
 ];
 
 const getBehaviours = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => {
-  const focusedElm = Cell<Option<SugarElement>>(Option.none());
+  const focusedElm = Cell<Optional<SugarElement>>(Optional.none());
   const lazySink = sharedBackstage.getSink;
 
   const runOnSinkElement = (f: (sink: SugarElement) => void) => {
@@ -211,7 +211,7 @@ const getBehaviours = (editor: Editor, sharedBackstage: UiFactoryBackstageShared
           // Force the header to hide before it overflows outside the container
           const boxHeight = box.height - headerHeight;
           const topBound = box.y + (isDockedMode(comp, 'top') ? 0 : headerHeight);
-          return Option.some(Boxes.bounds(box.x, topBound, box.width, boxHeight));
+          return Optional.some(Boxes.bounds(box.x, topBound, box.width, boxHeight));
         },
         onShow: () => {
           runOnSinkElement((elem) => updateSinkVisibility(elem, true));
@@ -221,7 +221,7 @@ const getBehaviours = (editor: Editor, sharedBackstage: UiFactoryBackstageShared
           // Restore focus and reset the stored focused element
           focusedElm.get().each((elem) => {
             restoreFocus(comp.element(), elem);
-            focusedElm.set(Option.none());
+            focusedElm.set(Optional.none());
           });
         },
         onHide: (comp) => {

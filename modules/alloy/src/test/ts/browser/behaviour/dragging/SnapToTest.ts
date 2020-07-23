@@ -1,6 +1,6 @@
 import { Chain, Guard, NamedChain } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Option, Result } from '@ephox/katamari';
+import { Optional, Result } from '@ephox/katamari';
 import { Css, Scroll, SugarPosition } from '@ephox/sugar';
 
 import * as Boxes from 'ephox/alloy/alien/Boxes';
@@ -17,7 +17,7 @@ UnitTest.asynctest('SnapToTest', (success, failure) => {
   const snap = Dragging.snap({
     sensor: DragCoord.fixed(300, 10),
     range: SugarPosition(10, 10),
-    output: DragCoord.fixed(Option.some(300), Option.some(10))
+    output: DragCoord.fixed(Optional.some(300), Optional.some(10))
   });
 
   const subject = Memento.record(

@@ -1,4 +1,4 @@
-import { Cell, Option } from '@ephox/katamari';
+import { Cell, Optional } from '@ephox/katamari';
 import { SugarPosition } from '@ephox/sugar';
 
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
@@ -25,33 +25,33 @@ export type SliderValue = SliderValueX | SliderValueY | SliderValueXY;
 
 export interface SliderModelDetailParts {
   getSpectrum: (component: AlloyComponent) => AlloyComponent;
-  getLeftEdge: (component: AlloyComponent) => Option<AlloyComponent>;
-  getRightEdge: (component: AlloyComponent) => Option<AlloyComponent>;
-  getTopEdge: (component: AlloyComponent) => Option<AlloyComponent>;
-  getBottomEdge: (component: AlloyComponent) => Option<AlloyComponent>;
+  getLeftEdge: (component: AlloyComponent) => Optional<AlloyComponent>;
+  getRightEdge: (component: AlloyComponent) => Optional<AlloyComponent>;
+  getTopEdge: (component: AlloyComponent) => Optional<AlloyComponent>;
+  getBottomEdge: (component: AlloyComponent) => Optional<AlloyComponent>;
 }
 
 export interface EdgeActions {
-  'top-left': Option<(edge: AlloyComponent, detail: SliderDetail) => void>;
-  'top': Option<(edge: AlloyComponent, detail: SliderDetail) => void>;
-  'top-right': Option<(edge: AlloyComponent, detail: SliderDetail) => void>;
-  'right': Option<(edge: AlloyComponent, detail: SliderDetail) => void>;
-  'bottom-right': Option<(edge: AlloyComponent, detail: SliderDetail) => void>;
-  'bottom': Option<(edge: AlloyComponent, detail: SliderDetail) => void>;
-  'bottom-left': Option<(edge: AlloyComponent, detail: SliderDetail) => void>;
-  'left': Option<(edge: AlloyComponent, detail: SliderDetail) => void>;
+  'top-left': Optional<(edge: AlloyComponent, detail: SliderDetail) => void>;
+  'top': Optional<(edge: AlloyComponent, detail: SliderDetail) => void>;
+  'top-right': Optional<(edge: AlloyComponent, detail: SliderDetail) => void>;
+  'right': Optional<(edge: AlloyComponent, detail: SliderDetail) => void>;
+  'bottom-right': Optional<(edge: AlloyComponent, detail: SliderDetail) => void>;
+  'bottom': Optional<(edge: AlloyComponent, detail: SliderDetail) => void>;
+  'bottom-left': Optional<(edge: AlloyComponent, detail: SliderDetail) => void>;
+  'left': Optional<(edge: AlloyComponent, detail: SliderDetail) => void>;
 }
 
 export interface Manager {
   setValueFrom: (spectrum: AlloyComponent, detail: SliderDetail, value: number | SugarPosition) => void;
   setToMin: (spectrum: AlloyComponent, detail: SliderDetail) => void;
   setToMax: (spectrum: AlloyComponent, detail: SliderDetail) => void;
-  getValueFromEvent: (simulatedEvent: NativeSimulatedEvent) => Option<number | SugarPosition>;
+  getValueFromEvent: (simulatedEvent: NativeSimulatedEvent) => Optional<number | SugarPosition>;
   setPositionFromValue: (slider: AlloyComponent, thumb: AlloyComponent, detail: SliderDetail, parts: SliderModelDetailParts) => void;
-  onLeft: (spectrum: AlloyComponent, detail: SliderDetail) => Option<boolean>;
-  onRight: (spectrum: AlloyComponent, detail: SliderDetail) => Option<boolean>;
-  onUp: (spectrum: AlloyComponent, detail: SliderDetail) => Option<boolean>;
-  onDown: (spectrum: AlloyComponent, detail: SliderDetail) => Option<boolean>;
+  onLeft: (spectrum: AlloyComponent, detail: SliderDetail) => Optional<boolean>;
+  onRight: (spectrum: AlloyComponent, detail: SliderDetail) => Optional<boolean>;
+  onUp: (spectrum: AlloyComponent, detail: SliderDetail) => Optional<boolean>;
+  onDown: (spectrum: AlloyComponent, detail: SliderDetail) => Optional<boolean>;
   edgeActions: EdgeActions;
 }
 
@@ -92,7 +92,7 @@ export interface SliderDetail extends CompositeSketchDetail {
   rounded: boolean;
   stepSize: number;
   snapToGrid: boolean;
-  snapStart: Option<number>;
+  snapStart: Optional<number>;
 
   onChange: (component: AlloyComponent, thumb: AlloyComponent, value: number | SliderValue) => void;
   onChoose: (component: AlloyComponent, thumb: AlloyComponent, value: number | SliderValue) => void;

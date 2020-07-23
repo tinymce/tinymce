@@ -11,7 +11,7 @@ import {
   Unselecting
 } from '@ephox/alloy';
 import { Toolbar, Types } from '@ephox/bridge';
-import { Arr, Cell, Fun, Future, Id, Merger, Option } from '@ephox/katamari';
+import { Arr, Cell, Fun, Future, Id, Merger, Optional } from '@ephox/katamari';
 import { Attribute, SelectorFind } from '@ephox/sugar';
 
 import I18n from 'tinymce/core/api/util/I18n';
@@ -55,15 +55,15 @@ const getToggleApi = (component: AlloyComponent): Toolbar.ToolbarToggleButtonIns
   setDisabled: (state: boolean) => Disabling.set(component, state)
 });
 
-const getTooltipAttributes = (tooltip: Option<string>, providersBackstage: UiFactoryBackstageProviders) => tooltip.map<{}>((tooltip) => ({
+const getTooltipAttributes = (tooltip: Optional<string>, providersBackstage: UiFactoryBackstageProviders) => tooltip.map<{}>((tooltip) => ({
   'aria-label': providersBackstage.translate(tooltip),
   'title': providersBackstage.translate(tooltip)
 })).getOr({});
 
 interface GeneralToolbarButton<T> {
-  icon: Option<string>;
-  text: Option<string>;
-  tooltip: Option<string>;
+  icon: Optional<string>;
+  text: Optional<string>;
+  tooltip: Optional<string>;
   onAction: (api: T) => void;
   disabled: boolean;
 }
@@ -88,11 +88,11 @@ const rtlTransform = [
 
 type Behaviours = Behaviour.NamedConfiguredBehaviour<Behaviour.BehaviourConfigSpec, Behaviour.BehaviourConfigDetail>[];
 const renderCommonStructure = (
-  icon: Option<string>,
-  text: Option<string>,
-  tooltip: Option<string>,
-  receiver: Option<string>,
-  behaviours: Option<Behaviours>,
+  icon: Optional<string>,
+  text: Optional<string>,
+  tooltip: Optional<string>,
+  receiver: Optional<string>,
+  behaviours: Optional<Behaviours>,
   providersBackstage: UiFactoryBackstageProviders
 ) => {
 
@@ -157,7 +157,7 @@ const renderFloatingToolbarButton = (spec: Toolbar.GroupToolbarButton, backstage
       toggledClass: ToolbarButtonClasses.Ticked
     },
     parts: {
-      button: renderCommonStructure(spec.icon, spec.text, spec.tooltip, Option.none(), Option.none(), sharedBackstage.providers),
+      button: renderCommonStructure(spec.icon, spec.text, spec.tooltip, Optional.none(), Optional.none(), sharedBackstage.providers),
       toolbar: {
         dom: {
           tag: 'div',
@@ -171,7 +171,7 @@ const renderFloatingToolbarButton = (spec: Toolbar.GroupToolbarButton, backstage
 
 const renderCommonToolbarButton = <T>(spec: GeneralToolbarButton<T>, specialisation: Specialisation<T>, providersBackstage: UiFactoryBackstageProviders) => {
   const editorOffCell = Cell(Fun.noop);
-  const structure = renderCommonStructure(spec.icon, spec.text, spec.tooltip, Option.none(), Option.none(), providersBackstage);
+  const structure = renderCommonStructure(spec.icon, spec.text, spec.tooltip, Optional.none(), Optional.none(), providersBackstage);
   return AlloyButton.sketch({
     dom: structure.dom,
     components: structure.components,
@@ -230,10 +230,10 @@ interface ChoiceFetcher {
   columns: 'auto' | number;
   presets: Types.PresetTypes;
   onItemAction: (api: Toolbar.ToolbarSplitButtonInstanceApi, value: string) => void;
-  select: Option<(value: string) => boolean>;
+  select: Optional<(value: string) => boolean>;
 }
 
-const fetchChoices = (getApi, spec: ChoiceFetcher, providersBackstage: UiFactoryBackstageProviders) => (comp: AlloyComponent): Future<Option<TieredData>> => Future.nu((callback) => spec.fetch(callback)).map((items) => Option.from(createTieredDataFrom(
+const fetchChoices = (getApi, spec: ChoiceFetcher, providersBackstage: UiFactoryBackstageProviders) => (comp: AlloyComponent): Future<Optional<TieredData>> => Future.nu((callback) => spec.fetch(callback)).map((items) => Optional.from(createTieredDataFrom(
   Merger.deepMerge(
     createPartialChoiceMenu(
       Id.generate('menu-value'),
@@ -333,7 +333,7 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
 
     components: [
       AlloySplitDropdown.parts().button(
-        renderCommonStructure(spec.icon, spec.text, Option.none(), Option.some(displayChannel), Option.some([
+        renderCommonStructure(spec.icon, spec.text, Optional.none(), Optional.some(displayChannel), Optional.some([
           Toggling.config({ toggleClass: ToolbarButtonClasses.Ticked, toggleOnExecute: false })
         ]), sharedBackstage.providers)
       ),

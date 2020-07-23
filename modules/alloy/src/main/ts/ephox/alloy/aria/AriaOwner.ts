@@ -1,8 +1,8 @@
-import { Id, Option } from '@ephox/katamari';
+import { Id, Optional } from '@ephox/katamari';
 import { Attribute, PredicateFind, SelectorFind, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
-const find = (queryElem: SugarElement): Option<SugarElement> => {
-  const dependent: Option<SugarElement> = PredicateFind.closest(queryElem, (elem) => {
+const find = (queryElem: SugarElement): Optional<SugarElement> => {
+  const dependent: Optional<SugarElement> = PredicateFind.closest(queryElem, (elem) => {
     if (!SugarNode.isElement(elem)) {
       return false;
     }

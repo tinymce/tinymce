@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Fun, Option } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 import { Attribute, DomEvent, SugarElement } from '@ephox/sugar';
 
 import * as Styles from '../../style/Styles';
@@ -36,13 +36,13 @@ const getBoundsFrom = function (rect) {
 
 const getBounds = function (cWin) {
   const rects = Rectangles.getRectangles(cWin);
-  return rects.length > 0 ? Option.some(rects[0]).map(getBoundsFrom) : Option.none();
+  return rects.length > 0 ? Optional.some(rects[0]).map(getBoundsFrom) : Optional.none();
 };
 
 const findDelta = function (outerWindow, cBody) {
   const last = getLastHeight(cBody);
   const current = outerWindow.innerHeight;
-  return last > current ? Option.some(last - current) : Option.none();
+  return last > current ? Optional.some(last - current) : Optional.none();
 };
 
 const calculate = function (cWin, bounds, delta) {

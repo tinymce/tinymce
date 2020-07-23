@@ -1,4 +1,4 @@
-import { Arr, Fun, Option } from '@ephox/katamari';
+import { Arr, Fun, Optional } from '@ephox/katamari';
 import * as Monitors from '../../impl/Monitors';
 import * as Compare from '../dom/Compare';
 import { SugarElement } from '../node/SugarElement';
@@ -113,15 +113,15 @@ const listener = () => {
   }
 };
 
-let interval = Option.none<EventUnbinder>();
+let interval = Optional.none<EventUnbinder>();
 const start = () => {
-  interval = Option.some(DomEvent.bind(SugarElement.fromDom(window), 'resize', listener));
+  interval = Optional.some(DomEvent.bind(SugarElement.fromDom(window), 'resize', listener));
 };
 
 const stop = () => {
   interval.each((f) => {
     f.unbind();
-    interval = Option.none();
+    interval = Optional.none();
   });
 };
 

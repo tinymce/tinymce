@@ -10,7 +10,7 @@ import {
   Invalidating, Layout, Memento, Representing, SimpleSpec, Tabstopping
 } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
-import { Future, Id, Option, Result } from '@ephox/katamari';
+import { Future, Id, Optional, Result } from '@ephox/katamari';
 import { Css, SugarElement, Traverse } from '@ephox/sugar';
 
 import { UiFactoryBackstageShared } from '../../backstage/Backstage';
@@ -93,7 +93,7 @@ export const renderColorInput = (spec: ColorInputSpec, sharedBackstage: UiFactor
     selectOnFocus: false
   });
 
-  const pLabel: Option<AlloySpec> = spec.label.map((label) => renderLabel(label, sharedBackstage.providers));
+  const pLabel: Optional<AlloySpec> = spec.label.map((label) => renderLabel(label, sharedBackstage.providers));
 
   const emitSwatchChange = (colorBit, value) => {
     AlloyTriggers.emitWith(colorBit, colorSwatchChangeEvent, {

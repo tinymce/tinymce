@@ -1,5 +1,5 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { Arr, Obj, Option } from '@ephox/katamari';
+import { Arr, Obj, Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import Jsc from '@ephox/wrap-jsverify';
 
@@ -17,8 +17,8 @@ interface DefinitionType {
   classes: string[];
   attributes: Record<string, string>;
   styles: Record<string, string>;
-  value: Option<string>;
-  innerHtml: Option<string>;
+  value: Optional<string>;
+  innerHtml: Optional<string>;
   domChildren: SugarElement[];
 }
 
@@ -30,12 +30,12 @@ UnitTest.test('DomDefinitionTest', () => {
   // properties
 
   const arbOptionOf = <T>(arb: any) => Jsc.tuple([ Jsc.bool, arb ]).smap(
-    (arr: [boolean, string]) => arr[0] ? Option.some(arr[1]) : Option.none(),
-    (opt: Option<string>) => opt.fold(
+    (arr: [boolean, string]) => arr[0] ? Optional.some(arr[1]) : Optional.none(),
+    (opt: Optional<string>) => opt.fold(
       () => [ false, '' ],
       (v) => [ true, v ]
     ),
-    (opt: Option<string>) => opt.fold(
+    (opt: Optional<string>) => opt.fold(
       () => 'None',
       (v) => 'Some(' + v + ')'
     )
@@ -50,7 +50,7 @@ UnitTest.test('DomDefinitionTest', () => {
     arbOptionOf(Jsc.string),
     arbOptionOf(Jsc.string)
   ]).smap(
-    (arr: [string, string, string[], Record<string, string>, Record<string, string>, Option<string>, Option<string>]) => ({
+    (arr: [string, string, string[], Record<string, string>, Record<string, string>, Optional<string>, Optional<string>]) => ({
       uid: arr[0],
       tag: arr[1],
       classes: arr[2],

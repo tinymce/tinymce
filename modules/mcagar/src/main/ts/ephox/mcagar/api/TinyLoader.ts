@@ -1,5 +1,5 @@
 import { TestLogs } from '@ephox/agar';
-import { Option, Strings, Type } from '@ephox/katamari';
+import { Optional, Strings, Type } from '@ephox/katamari';
 import { Insert, Remove, SugarBody, SugarElement, SugarShadowDom } from '@ephox/sugar';
 import 'tinymce';
 import * as Loader from '../loader/Loader';
@@ -29,7 +29,7 @@ const setupLight = (callback: Loader.RunCallback, settings: Record<string, any>,
     run: callback,
     success,
     failure
-  }, nuSettings, Option.none());
+  }, nuSettings, Optional.none());
 };
 
 const setup = (callback: Loader.RunCallback, settings: Record<string, any>, success: Loader.SuccessCallback, failure: Loader.FailureCallback) => {
@@ -38,7 +38,7 @@ const setup = (callback: Loader.RunCallback, settings: Record<string, any>, succ
     run: callback,
     success,
     failure
-  }, settings, Option.none());
+  }, settings, Optional.none());
 };
 
 const setupFromElement = (callback: Loader.RunCallback, settings: Record<string, any>, element: SugarElement, success: Loader.SuccessCallback, failure: Loader.FailureCallback) => {
@@ -47,7 +47,7 @@ const setupFromElement = (callback: Loader.RunCallback, settings: Record<string,
     run: callback,
     success,
     failure
-  }, settings, Option.some(element));
+  }, settings, Optional.some(element));
 };
 
 const setupInShadowRoot = (callback: (editor: any, shadowRoot: SugarElement<ShadowRoot>, success: SuccessCallback, failure: FailureCallback) => void, settings: Record<string, any>, success: Loader.SuccessCallback, failure: Loader.FailureCallback) => {

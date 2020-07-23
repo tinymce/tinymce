@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Fun, Option, Unicode } from '@ephox/katamari';
+import { Fun, Optional, Unicode } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import DomTreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
@@ -104,7 +104,7 @@ const getEditableRoot = function (dom, node) {
 };
 
 const getParentBlock = function (editor: Editor) {
-  return Option.from(editor.dom.getParent(editor.selection.getStart(true), editor.dom.isBlock));
+  return Optional.from(editor.dom.getParent(editor.selection.getStart(true), editor.dom.isBlock));
 };
 
 const getParentBlockName = function (editor: Editor) {

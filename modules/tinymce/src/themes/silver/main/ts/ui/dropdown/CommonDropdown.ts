@@ -7,11 +7,11 @@
 
 /* eslint-disable max-len */
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, CustomEvent, Dropdown as AlloyDropdown, Focusing, GuiFactory,
-  Keying, Memento, Replacing, Representing, SimulatedEvent, SketchSpec, TieredData, Unselecting
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, CustomEvent, Dropdown as AlloyDropdown, Focusing, GuiFactory, Keying,
+  Memento, Replacing, Representing, SimulatedEvent, SketchSpec, TieredData, Unselecting
 } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
-import { Arr, Cell, Fun, Future, Id, Merger, Option } from '@ephox/katamari';
+import { Arr, Cell, Fun, Future, Id, Merger, Optional } from '@ephox/katamari';
 import { EventArgs } from '@ephox/sugar';
 import { toolbarButtonEventOrder } from 'tinymce/themes/silver/ui/toolbar/button/ButtonEvents';
 
@@ -37,12 +37,12 @@ export interface UpdateMenuIconEvent extends CustomEvent {
 }
 
 export interface CommonDropdownSpec<T> {
-  text: Option<string>;
-  icon: Option<string>;
+  text: Optional<string>;
+  icon: Optional<string>;
   disabled?: boolean;
-  tooltip: Option<string>;
-  role: Option<string>;
-  fetch: (callback: (tdata: Option<TieredData>) => void) => void;
+  tooltip: Optional<string>;
+  role: Optional<string>;
+  fetch: (callback: (tdata: Optional<TieredData>) => void) => void;
   onSetup: (itemApi: T) => OnDestroy<T>;
   getApi: (comp: AlloyComponent) => T;
   columns: Types.ColumnTypes;
@@ -87,7 +87,7 @@ const renderCommonDropdown = <T>(
     // Close the dropdown
     AlloyDropdown.close(dropdown);
 
-    return Option.some(true);
+    return Optional.some(true);
   };
 
   const role = spec.role.fold(() => ({ }), (role) => ({ role }));
@@ -116,7 +116,7 @@ const renderCommonDropdown = <T>(
       components: componentRenderPipeline([
         optMemDisplayIcon.map((mem) => mem.asSpec()),
         optMemDisplayText.map((mem) => mem.asSpec()),
-        Option.some({
+        Optional.some({
           dom: {
             tag: 'div',
             classes: [ `${prefix}__select-chevron` ],

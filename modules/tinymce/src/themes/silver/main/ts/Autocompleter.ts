@@ -7,7 +7,7 @@
 
 import { AddEventsBehaviour, AlloyEvents, Behaviour, GuiFactory, Highlighting, InlineView, ItemTypes, Menu, SystemEvents } from '@ephox/alloy';
 import { InlineContent, Types } from '@ephox/bridge';
-import { Arr, Cell, Option, Throttler, Thunk } from '@ephox/katamari';
+import { Arr, Cell, Optional, Throttler, Thunk } from '@ephox/katamari';
 import { Remove, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -28,7 +28,7 @@ interface ActiveAutocompleter {
 }
 
 const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => {
-  const activeAutocompleter = Cell<Option<ActiveAutocompleter>>(Option.none());
+  const activeAutocompleter = Cell<Optional<ActiveAutocompleter>>(Optional.none());
   const processingAction = Cell<boolean>(false);
 
   const autocompleter = GuiFactory.build(
@@ -65,7 +65,7 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => 
 
       // Hide the menu and reset
       hideIfNecessary();
-      activeAutocompleter.set(Option.none());
+      activeAutocompleter.set(Optional.none());
       processingAction.set(false);
     }
   };
@@ -77,7 +77,7 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => 
   const getAutocompleters: () => Autocompleters.AutocompleterDatabase = Thunk.cached(() => Autocompleters.register(editor));
 
   const getCombinedItems = (triggerChar: string, matches: AutocompleteLookupData[]): ItemTypes.ItemSpec[] => {
-    const columns = Arr.findMap(matches, (m) => Option.from(m.columns)).getOr(1);
+    const columns = Arr.findMap(matches, (m) => Optional.from(m.columns)).getOr(1);
 
     return Arr.bind(matches, (match) => {
       const choices = match.items;
@@ -120,7 +120,7 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => 
       const wrapper = AutocompleteTag.create(editor, context.range);
 
       // store the element/context
-      activeAutocompleter.set(Option.some({
+      activeAutocompleter.set(Optional.some({
         triggerChar: context.triggerChar,
         element: wrapper,
         matchLength: context.text.length
@@ -134,13 +134,13 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => 
     ac.matchLength = context.text.length;
 
     // Display the autocompleter menu
-    const columns: Types.ColumnTypes = Arr.findMap(lookupData, (ld) => Option.from(ld.columns)).getOr(1);
+    const columns: Types.ColumnTypes = Arr.findMap(lookupData, (ld) => Optional.from(ld.columns)).getOr(1);
     InlineView.showAt(
       autocompleter,
       {
         anchor: 'node',
         root: SugarElement.fromDom(editor.getBody()),
-        node: Option.from(ac.element)
+        node: Optional.from(ac.element)
       },
       Menu.sketch(
         createMenuFrom(
@@ -156,7 +156,7 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => 
     InlineView.getContent(autocompleter).each(Highlighting.highlightFirst);
   };
 
-  const doLookup = (fetchOptions?: Record<string, any>): Option<AutocompleteLookupInfo> =>
+  const doLookup = (fetchOptions?: Record<string, any>): Optional<AutocompleteLookupInfo> =>
     activeAutocompleter.get().map(
       (ac) => getContext(editor.dom, editor.selection.getRng(), ac.triggerChar).
         bind((newContext) => lookupWithContext(editor, getAutocompleters, newContext, fetchOptions))

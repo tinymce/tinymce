@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Option, Options } from '@ephox/katamari';
+import { Optional, Optionals } from '@ephox/katamari';
 import DOMUtils from '../api/dom/DOMUtils';
 import EditorSelection from '../api/dom/Selection';
 import Env from '../api/Env';
@@ -122,7 +122,7 @@ const setEndPoint = (dom: DOMUtils, start: boolean, bookmark: PathBookmark, rng:
 
 const isValidTextNode = (node: Node): node is Text => NodeType.isText(node) && node.data.length > 0;
 
-const restoreEndPoint = (dom: DOMUtils, suffix: string, bookmark: IdBookmark): Option<CaretPosition> => {
+const restoreEndPoint = (dom: DOMUtils, suffix: string, bookmark: IdBookmark): Optional<CaretPosition> => {
   let marker = dom.get(bookmark.id + '_' + suffix), node, idx, next, prev;
   const keep = bookmark.keep;
   let container, offset;
@@ -207,27 +207,27 @@ const restoreEndPoint = (dom: DOMUtils, suffix: string, bookmark: IdBookmark): O
       }
     }
 
-    return Option.some(CaretPosition(container, offset));
+    return Optional.some(CaretPosition(container, offset));
   } else {
-    return Option.none<CaretPosition>();
+    return Optional.none<CaretPosition>();
   }
 };
 
-const resolvePaths = (dom: DOMUtils, bookmark: PathBookmark): Option<Range> => {
+const resolvePaths = (dom: DOMUtils, bookmark: PathBookmark): Optional<Range> => {
   const rng = dom.createRng();
 
   if (setEndPoint(dom, true, bookmark, rng) && setEndPoint(dom, false, bookmark, rng)) {
-    return Option.some(rng);
+    return Optional.some(rng);
   } else {
-    return Option.none();
+    return Optional.none();
   }
 };
 
-const resolveId = (dom: DOMUtils, bookmark: IdBookmark): Option<Range> => {
+const resolveId = (dom: DOMUtils, bookmark: IdBookmark): Optional<Range> => {
   const startPos = restoreEndPoint(dom, 'start', bookmark);
   const endPos = restoreEndPoint(dom, 'end', bookmark);
 
-  return Options.lift2(
+  return Optionals.lift2(
     startPos,
     endPos.or(startPos),
     (spos, epos) => {
@@ -239,30 +239,30 @@ const resolveId = (dom: DOMUtils, bookmark: IdBookmark): Option<Range> => {
   );
 };
 
-const resolveIndex = (dom: DOMUtils, bookmark: IndexBookmark): Option<Range> => Option.from(dom.select(bookmark.name)[bookmark.index]).map((elm) => {
+const resolveIndex = (dom: DOMUtils, bookmark: IndexBookmark): Optional<Range> => Optional.from(dom.select(bookmark.name)[bookmark.index]).map((elm) => {
   const rng = dom.createRng();
   rng.selectNode(elm);
   return rng;
 });
 
-const resolve = (selection: EditorSelection, bookmark: Bookmark): Option<Range> => {
+const resolve = (selection: EditorSelection, bookmark: Bookmark): Optional<Range> => {
   const dom = selection.dom;
 
   if (bookmark) {
     if (isPathBookmark(bookmark)) {
       return resolvePaths(dom, bookmark);
     } else if (isStringPathBookmark(bookmark)) {
-      return Option.some(resolveCaretPositionBookmark(dom, bookmark));
+      return Optional.some(resolveCaretPositionBookmark(dom, bookmark));
     } else if (isIdBookmark(bookmark)) {
       return resolveId(dom, bookmark);
     } else if (isIndexBookmark(bookmark)) {
       return resolveIndex(dom, bookmark);
     } else if (isRangeBookmark(bookmark)) {
-      return Option.some(bookmark.rng);
+      return Optional.some(bookmark.rng);
     }
   }
 
-  return Option.none();
+  return Optional.none();
 };
 
 export {

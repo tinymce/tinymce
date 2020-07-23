@@ -1,8 +1,8 @@
-import { Adt, Arr, Option } from '@ephox/katamari';
+import { Adt, Arr, Optional } from '@ephox/katamari';
 import { SugarPosition } from '@ephox/sugar';
 
 // Snappables use an option for the coord and then pass it to absorb below
-// so "T" here should either be a `number` or an `Option<number>`
+// so "T" here should either be a `number` or an `Optional<number>`
 export type DragCoords<T = number, U = CoordAdt<T>> = (x: T, y: T) => U;
 
 export interface CoordAdt<T = number> {
@@ -20,11 +20,11 @@ export interface CoordAdt<T = number> {
 }
 
 export type StylesCoord = {
-  left: Option<string>;
-  right: Option<string>;
-  top: Option<string>;
-  bottom: Option<string>;
-  position: Option<string>;
+  left: Optional<string>;
+  right: Optional<string>;
+  top: Optional<string>;
+  bottom: Optional<string>;
+  position: Optional<string>;
 };
 
 type CoordTransform = (coords: SugarPosition) => SugarPosition;
@@ -39,9 +39,9 @@ export type CoordStencil = (coord: CoordAdt<number>, scroll: SugarPosition, orig
  * absolute: the absolute coordinates to show before considering the offset parent
  */
 const adt: {
-  offset: DragCoords<number | Option<number>>;
-  absolute: DragCoords<number | Option<number>>;
-  fixed: DragCoords<number | Option<number>>;
+  offset: DragCoords<number | Optional<number>>;
+  absolute: DragCoords<number | Optional<number>>;
+  fixed: DragCoords<number | Optional<number>>;
 } = Adt.generate([
   { offset: [ 'x', 'y' ] },
   { absolute: [ 'x', 'y' ] },
@@ -108,14 +108,14 @@ const getDeltas = (coord1: CoordAdt<number>, coord2: CoordAdt<number>, xRange: n
 const toStyles = (coord: CoordAdt<number>, scroll: SugarPosition, origin: SugarPosition): StylesCoord => {
   const stylesOpt = coord.fold(
     (x, y) =>
-      ({ position: Option.some('absolute'), left: Option.some(x + 'px'), top: Option.some(y + 'px') }), // offset
+      ({ position: Optional.some('absolute'), left: Optional.some(x + 'px'), top: Optional.some(y + 'px') }), // offset
     (x, y) =>
-      ({ position: Option.some('absolute'), left: Option.some((x - origin.left()) + 'px'), top: Option.some((y - origin.top()) + 'px') }), // absolute
+      ({ position: Optional.some('absolute'), left: Optional.some((x - origin.left()) + 'px'), top: Optional.some((y - origin.top()) + 'px') }), // absolute
     (x, y) =>
-      ({ position: Option.some('fixed'), left: Option.some(x + 'px'), top: Option.some(y + 'px') }) // fixed
+      ({ position: Optional.some('fixed'), left: Optional.some(x + 'px'), top: Optional.some(y + 'px') }) // fixed
   );
 
-  return { right: Option.none(), bottom: Option.none(), ...stylesOpt };
+  return { right: Optional.none(), bottom: Optional.none(), ...stylesOpt };
 };
 
 const translate = (coord: CoordAdt<number>, deltaX: number, deltaY: number): CoordAdt<number> => coord.fold(
@@ -124,8 +124,8 @@ const translate = (coord: CoordAdt<number>, deltaX: number, deltaY: number): Coo
   (x, y) => fixed(x + deltaX, y + deltaY)
 );
 
-const absorb = (partialCoord: CoordAdt<Option<number>>, originalCoord: CoordAdt<number>, scroll: SugarPosition, origin: SugarPosition): CoordAdt<number> => {
-  const absorbOne = (stencil: CoordStencil, nu: DragCoords) => (optX: Option<number>, optY: Option<number>): CoordAdt => {
+const absorb = (partialCoord: CoordAdt<Optional<number>>, originalCoord: CoordAdt<number>, scroll: SugarPosition, origin: SugarPosition): CoordAdt<number> => {
+  const absorbOne = (stencil: CoordStencil, nu: DragCoords) => (optX: Optional<number>, optY: Optional<number>): CoordAdt => {
     const original = stencil(originalCoord, scroll, origin);
     return nu(optX.getOr(original.left()), optY.getOr(original.top()));
   };
@@ -139,15 +139,15 @@ const absorb = (partialCoord: CoordAdt<Option<number>>, originalCoord: CoordAdt<
 
 const offset = adt.offset as {
   (x: number, y: number): CoordAdt<number>;
-  (x: Option<number>, y: Option<number>): CoordAdt<Option<number>>;
+  (x: Optional<number>, y: Optional<number>): CoordAdt<Optional<number>>;
 };
 const absolute = adt.absolute as {
   (x: number, y: number): CoordAdt<number>;
-  (x: Option<number>, y: Option<number>): CoordAdt<Option<number>>;
+  (x: Optional<number>, y: Optional<number>): CoordAdt<Optional<number>>;
 };
 const fixed = adt.fixed as {
   (x: number, y: number): CoordAdt<number>;
-  (x: Option<number>, y: Option<number>): CoordAdt<Option<number>>;
+  (x: Optional<number>, y: Optional<number>): CoordAdt<Optional<number>>;
 };
 
 export {

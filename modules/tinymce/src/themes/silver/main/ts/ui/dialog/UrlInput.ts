@@ -10,7 +10,7 @@ import {
   FormField as AlloyFormField, Invalidating, Memento, NativeEvents, Representing, SketchSpec, SystemEvents, Tabstopping, Typeahead as AlloyTypeahead
 } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
-import { Arr, Fun, Future, FutureResult, Id, Option, Result } from '@ephox/katamari';
+import { Arr, Fun, Future, FutureResult, Id, Optional, Result } from '@ephox/katamari';
 import { Attribute, Traverse } from '@ephox/sugar';
 
 import { UiFactoryBackstage } from '../../backstage/Backstage';
@@ -175,7 +175,7 @@ export const renderUrlInput = (spec: UrlInputSpec, backstage: UiFactoryBackstage
   const pLabel = spec.label.map((label) => renderLabel(label, providersBackstage));
 
   // TODO: Consider a way of merging with Checkbox.
-  const makeIcon = (name, errId: Option<string>, icon = name, label = name) => ({
+  const makeIcon = (name, errId: Optional<string>, icon = name, label = name) => ({
     dom: {
       tag: 'div',
       classes: [ 'tox-icon', 'tox-control-wrap__status-icon-' + name ],
@@ -189,7 +189,7 @@ export const renderUrlInput = (spec: UrlInputSpec, backstage: UiFactoryBackstage
   });
 
   const memInvalidIcon = Memento.record(
-    makeIcon('invalid', Option.some(errorId), 'warning')
+    makeIcon('invalid', Optional.some(errorId), 'warning')
   );
 
   const memStatus = Memento.record({
@@ -224,7 +224,7 @@ export const renderUrlInput = (spec: UrlInputSpec, backstage: UiFactoryBackstage
 
   const memUrlPickerButton = Memento.record(renderButton({
     name: spec.name,
-    icon: Option.some('browse'),
+    icon: Optional.some('browse'),
     text: spec.label.getOr(''),
     disabled: spec.disabled,
     primary: false,

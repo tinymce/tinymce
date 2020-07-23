@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Fun, Obj, Option } from '@ephox/katamari';
+import { Arr, Fun, Obj, Optional } from '@ephox/katamari';
 import { Attribute, Insert, Remove, SugarElement, SugarNode } from '@ephox/sugar';
 import DomTreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
@@ -170,7 +170,7 @@ const insertFormatNodesIntoCaretContainer = function (formatNodes: Node[], caret
   return appendNode(innerMostFormatNode, innerMostFormatNode.ownerDocument.createTextNode(ZWSP));
 };
 
-const cleanFormatNode = (editor: Editor, caretContainer: Node, formatNode: Node, name: string, vars: FormatVars, similar: boolean): Option<Node> => {
+const cleanFormatNode = (editor: Editor, caretContainer: Node, formatNode: Node, name: string, vars: FormatVars, similar: boolean): Optional<Node> => {
   const formatter = editor.formatter;
   const dom = editor.dom;
 
@@ -187,9 +187,9 @@ const cleanFormatNode = (editor: Editor, caretContainer: Node, formatNode: Node,
     dom.add(caretContainer, clonedFormatNode);
     formatter.remove(name, vars, clonedFormatNode, similar);
     dom.remove(clonedFormatNode);
-    return Option.some(clonedFormatNode);
+    return Optional.some(clonedFormatNode);
   } else {
-    return Option.none();
+    return Optional.none();
   }
 };
 

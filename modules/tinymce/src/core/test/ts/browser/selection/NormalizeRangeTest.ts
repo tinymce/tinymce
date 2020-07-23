@@ -1,6 +1,6 @@
 import { Assertions, Chain, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { Hierarchy, SugarElement } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import * as NormalizeRange from 'tinymce/core/selection/NormalizeRange';
@@ -46,7 +46,7 @@ UnitTest.asynctest('browser.tinymce.core.selection.NormalizeRangeTest', function
     });
   };
 
-  const cAssertRangeNone = Chain.op(function (range: Option<any>) {
+  const cAssertRangeNone = Chain.op(function (range: Optional<any>) {
     Assertions.assertEq('Should be none', true, range.isNone());
   });
 

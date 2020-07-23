@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import { CellNavigation, TableLookup } from '@ephox/snooker';
 import { Compare, CursorPosition, SelectorFilter, SelectorFind, SimSelection, SugarElement, SugarNode, WindowSelection } from '@ephox/sugar';
 
@@ -39,7 +39,7 @@ const getNewRowCursorPosition = function (editor: Editor, table) {
 };
 
 const go: any = function (editor: Editor, isRoot, cell, actions, _lazyWire) { // TODO: forwars/backward is calling without actions
-  return cell.fold(Option.none, Option.none, function (current, next) {
+  return cell.fold(Optional.none, Optional.none, function (current, next) {
     return CursorPosition.first(next).map(function (cell) {
       return getCellFirstCursorPosition(editor, cell);
     });

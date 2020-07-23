@@ -1,5 +1,5 @@
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
-import { Arr, Cell, Fun, Obj, Option, Result } from '@ephox/katamari';
+import { Arr, Cell, Fun, Obj, Optional, Result } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
 import * as DefaultEvents from '../../events/DefaultEvents';
@@ -46,7 +46,7 @@ const text = (textContent: string): PremadeSpec => {
 // Rename.
 export interface ExternalElement { uid?: string; element: SugarElement }
 const external = (spec: ExternalElement): PremadeSpec => {
-  const extSpec: { uid: Option<string>; element: SugarElement } = ValueSchema.asRawOrDie('external.component', ValueSchema.objOfOnly([
+  const extSpec: { uid: Optional<string>; element: SugarElement } = ValueSchema.asRawOrDie('external.component', ValueSchema.objOfOnly([
     FieldSchema.strict('element'),
     FieldSchema.option('uid')
   ]), spec);
@@ -67,7 +67,7 @@ const external = (spec: ExternalElement): PremadeSpec => {
 
   const me: AlloyComponent = {
     getSystem: systemApi.get,
-    config: Option.none,
+    config: Optional.none,
     hasConfigured: Fun.constant(false),
     connect,
     disconnect,

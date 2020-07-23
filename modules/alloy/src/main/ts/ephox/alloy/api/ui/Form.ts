@@ -1,4 +1,4 @@
-import { Arr, Obj, Option, Result } from '@ephox/katamari';
+import { Arr, Obj, Optional, Result } from '@ephox/katamari';
 
 import * as AlloyLogger from '../../log/AlloyLogger';
 import * as AlloyParts from '../../parts/AlloyParts';
@@ -45,7 +45,7 @@ const sketch = (fSpec: FormSpecBuilder): SketchSpec => {
   return UiSketcher.composite(owner, schema, fieldParts, make, spec);
 };
 
-const toResult = <T, E>(o: Option<T>, e: E) => o.fold(() => Result.error(e), Result.value);
+const toResult = <T, E>(o: Optional<T>, e: E) => o.fold(() => Result.error(e), Result.value);
 
 const make = (detail: FormDetail, components: AlloySpec[]) => ({
   uid: detail.uid,
@@ -84,7 +84,7 @@ const make = (detail: FormDetail, components: AlloySpec[]) => ({
 
   apis: {
     getField(form: AlloyComponent, key: string) {
-      // Returns an Option (not a result);
+      // Returns an Optional (not a result);
       return AlloyParts.getPart(form, detail, key).bind(Composing.getCurrent);
     }
   }

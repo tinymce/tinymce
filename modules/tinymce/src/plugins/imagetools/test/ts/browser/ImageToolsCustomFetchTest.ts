@@ -1,7 +1,7 @@
 import { Log, Pipeline, Step, UiFinder } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { BlobConversions } from '@ephox/imagetools';
-import { Cell, Option } from '@ephox/katamari';
+import { Cell, Optional } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { SugarBody } from '@ephox/sugar';
 import Promise from 'tinymce/core/api/util/Promise';
@@ -12,7 +12,7 @@ import * as ImageUtils from '../module/test/ImageUtils';
 UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsCustomFetchTest', (success, failure) => {
   const uploadHandlerState = ImageUtils.createStateContainer();
   const srcUrl = '/project/tinymce/src/plugins/imagetools/demo/img/dogleft.jpg';
-  const fetchState = Cell(Option.none());
+  const fetchState = Cell(Optional.none());
 
   ImagetoolsPlugin();
   SilverTheme();
@@ -23,7 +23,7 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsCustomFetchTest
     Pipeline.async({}, [
       Log.stepsAsStep('TBA', 'ImageTools: flip image with custom fetch image', [
         tinyApis.sSetSetting('imagetools_fetch_image', (img) => {
-          fetchState.set(Option.some(img.src));
+          fetchState.set(Optional.some(img.src));
           return BlobConversions.imageToBlob(img);
         }),
         ImageUtils.sLoadImage(editor, srcUrl),

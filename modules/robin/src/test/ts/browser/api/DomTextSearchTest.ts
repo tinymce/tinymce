@@ -183,7 +183,7 @@ UnitTest.test('DomTextSearchTest', function () {
   checkEdge(l7, w1); // hit the edge looking for a word
 
   //
-  // scanRight returns Option({element, offset})
+  // scanRight returns Optional({element, offset})
   //
   (function () {
     const container = SugarElement.fromTag('div');

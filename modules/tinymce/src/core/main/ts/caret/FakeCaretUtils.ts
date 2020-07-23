@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import Editor from '../api/Editor';
 import * as NodeType from '../dom/NodeType';
 import CaretPosition from './CaretPosition';
@@ -15,9 +15,9 @@ import { isInlineFakeCaretTarget } from './FakeCaret';
 const isContentEditableTrue = NodeType.isContentEditableTrue;
 const isContentEditableFalse = NodeType.isContentEditableFalse;
 
-const showCaret = (direction: number, editor: Editor, node: Element, before: boolean, scrollIntoView: boolean): Option<Range> =>
+const showCaret = (direction: number, editor: Editor, node: Element, before: boolean, scrollIntoView: boolean): Optional<Range> =>
   // TODO: Figure out a better way to handle this dependency
-  Option.from(editor._selectionOverrides.showCaret(direction, node, before, scrollIntoView));
+  Optional.from(editor._selectionOverrides.showCaret(direction, node, before, scrollIntoView));
 
 const getNodeRange = (node: Element): Range => {
   const rng = node.ownerDocument.createRange();
@@ -25,16 +25,16 @@ const getNodeRange = (node: Element): Range => {
   return rng;
 };
 
-const selectNode = (editor: Editor, node: Element): Option<Range> => {
+const selectNode = (editor: Editor, node: Element): Optional<Range> => {
   const e = editor.fire('BeforeObjectSelected', { target: node });
   if (e.isDefaultPrevented()) {
-    return Option.none();
+    return Optional.none();
   }
 
-  return Option.some(getNodeRange(node));
+  return Optional.some(getNodeRange(node));
 };
 
-const renderCaretAtRange = (editor: Editor, range: Range, scrollIntoView: boolean): Option<Range> => {
+const renderCaretAtRange = (editor: Editor, range: Range, scrollIntoView: boolean): Optional<Range> => {
   const normalizedRange = CaretUtils.normalizeRange(1, editor.getBody(), range);
   const caretPosition = CaretPosition.fromRangeStart(normalizedRange);
 
@@ -55,7 +55,7 @@ const renderCaretAtRange = (editor: Editor, range: Range, scrollIntoView: boolea
     return showCaret(1, editor, ceRoot, false, scrollIntoView);
   }
 
-  return Option.none();
+  return Optional.none();
 };
 
 const renderRangeCaret = (editor: Editor, range: Range, scrollIntoView: boolean): Range =>

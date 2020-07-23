@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Fun, Option } from '@ephox/katamari';
+import { Arr, Fun, Optional } from '@ephox/katamari';
 import { CopySelected, TableFill, TableLookup } from '@ephox/snooker';
 import { Replication, SugarElement, SugarElements, SugarNode } from '@ephox/sugar';
 
@@ -44,7 +44,7 @@ const registerEvents = function (editor: Editor, selections: Selections, actions
 
   editor.on('BeforeSetContent', function (e) {
     if (e.selection === true && e.paste === true) {
-      const cellOpt = Option.from(editor.dom.getParent(editor.selection.getStart(), 'th,td'));
+      const cellOpt = Optional.from(editor.dom.getParent(editor.selection.getStart(), 'th,td'));
       cellOpt.each(function (domCell) {
         const cell = SugarElement.fromDom(domCell);
         TableLookup.table(cell).each((table) => {

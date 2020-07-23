@@ -7,7 +7,7 @@
 
 import { AlloyComponent, AlloySpec, Behaviour, Button, GuiFactory, Memento, Replacing, Sketcher, UiSketcher } from '@ephox/alloy';
 import { FieldSchema } from '@ephox/boulder';
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import { TranslatedString, Untranslated } from 'tinymce/core/api/util/I18n';
 import { get as getIcon, getFirst, IconProvider } from '../icons/Icons';
 
@@ -20,7 +20,7 @@ export interface NotificationSketchApis {
 export interface NotificationSketchSpec extends Sketcher.SingleSketchSpec {
   text: string;
   level: 'info' | 'warn' | 'warning' | 'error' | 'success';
-  icon: Option<string>;
+  icon: Optional<string>;
   closeButton?: boolean;
   progress: boolean;
   onAction: Function;
@@ -31,8 +31,8 @@ export interface NotificationSketchSpec extends Sketcher.SingleSketchSpec {
 // tslint:disable-next-line:no-empty-interface
 export interface NotificationSketchDetail extends Sketcher.SingleSketchDetail {
   text: string;
-  level: Option<'info' | 'warn' | 'warning' | 'error' | 'success'>;
-  icon: Option<string>;
+  level: Optional<'info' | 'warn' | 'warning' | 'error' | 'success'>;
+  icon: Optional<string>;
   closeButton: boolean;
   onAction: Function;
   progress: boolean;
@@ -141,7 +141,7 @@ const factory: UiSketcher.SingleSketchFactory<NotificationSketchDetail, Notifica
   const iconChoices = Arr.flatten([
     detail.icon.toArray(),
     detail.level.toArray(),
-    detail.level.bind((level) => Option.from(notificationIconMap[level])).toArray()
+    detail.level.bind((level) => Optional.from(notificationIconMap[level])).toArray()
   ]);
 
   return {

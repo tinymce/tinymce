@@ -1,4 +1,4 @@
-import { Fun, Option } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { SugarElement } from './SugarElement';
 
@@ -29,7 +29,7 @@ const getNodes = <T extends Node> (texas: TreeWalker): SugarElement<T>[] => {
 // Weird, but oh well
 const noFilter = Fun.constant(Fun.constant(true));
 
-const find = (node: SugarElement<Node>, filterOpt: Option<(n: string | null) => boolean>) => {
+const find = (node: SugarElement<Node>, filterOpt: Optional<(n: string | null) => boolean>) => {
 
   const vmlFilter: any = filterOpt.fold(noFilter, (filter) => (comment: Node) => filter(comment.nodeValue));
 

@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
 import AstNode from '../api/html/Node';
@@ -13,7 +13,7 @@ import { AnnotationsRegistry, AnnotatorSettings } from './AnnotationsRegistry';
 import * as Markings from './Markings';
 
 const setup = (editor: Editor, registry: AnnotationsRegistry): void => {
-  const identifyParserNode = (span: AstNode): Option<AnnotatorSettings> => Option.from(span.attr(Markings.dataAnnotation())).bind(registry.lookup);
+  const identifyParserNode = (span: AstNode): Optional<AnnotatorSettings> => Optional.from(span.attr(Markings.dataAnnotation())).bind(registry.lookup);
 
   editor.on('init', () => {
     editor.serializer.addNodeFilter('span', (spans) => {

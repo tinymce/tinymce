@@ -8,7 +8,7 @@
 import { AlloySpec, SketchSpec, VerticalDir } from '@ephox/alloy';
 import { ValueSchema } from '@ephox/boulder';
 import { Toolbar } from '@ephox/bridge';
-import { Arr, Obj, Option, Result, Type } from '@ephox/katamari';
+import { Arr, Obj, Optional, Result, Type } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { getToolbarMode, ToolbarGroupSetting, ToolbarMode } from '../../api/Settings';
 
@@ -88,7 +88,7 @@ const types = {
       s,
       ToolbarButtonClasses.Button,
       extras.backstage,
-      Option.none()
+      Optional.none()
     )
   ),
 
@@ -105,7 +105,7 @@ const types = {
     (s: Toolbar.GroupToolbarButton, extras, editor: Editor) => {
       const buttons = editor.ui.registry.getAll().buttons;
       const identify = (toolbar: string | ToolbarGroupSetting[]) =>
-        identifyButtons(editor, { buttons, toolbar, allowToolbarGroups: false }, extras, Option.none());
+        identifyButtons(editor, { buttons, toolbar, allowToolbarGroups: false }, extras, Optional.none());
       const attributes = {
         [VerticalDir.Attribute]: extras.backstage.shared.header.isPositionedAtTop() ? VerticalDir.AttributeValue.TopToBottom : VerticalDir.AttributeValue.BottomToTop
       };
@@ -127,13 +127,13 @@ const types = {
   alignMenuButton: (editor: Editor, extras: Extras) => createAlignSelect(editor, extras.backstage)
 };
 
-const extractFrom = (spec: ToolbarButton, extras: Extras, editor: Editor): Option<AlloySpec> => Obj.get(types, spec.type).fold(
+const extractFrom = (spec: ToolbarButton, extras: Extras, editor: Editor): Optional<AlloySpec> => Obj.get(types, spec.type).fold(
   () => {
     // eslint-disable-next-line no-console
     console.error('skipping button defined by', spec);
-    return Option.none();
+    return Optional.none();
   },
-  (render) => Option.some(
+  (render) => Optional.some(
     render(spec, extras, editor)
   )
 );
@@ -190,31 +190,31 @@ const createToolbar = (toolbarConfig: RenderToolbarConfig): ToolbarGroupSetting[
   }
 };
 
-const lookupButton = (editor: Editor, buttons: Record<string, any>, toolbarItem: string, allowToolbarGroups: boolean, extras: Extras, prefixes: Option<string[]>): Option<AlloySpec> =>
+const lookupButton = (editor: Editor, buttons: Record<string, any>, toolbarItem: string, allowToolbarGroups: boolean, extras: Extras, prefixes: Optional<string[]>): Optional<AlloySpec> =>
   Obj.get(buttons, toolbarItem.toLowerCase()).orThunk(() => prefixes.bind((ps) => Arr.findMap(ps, (prefix) => Obj.get(buttons, prefix + toolbarItem.toLowerCase())))).fold(
     () => Obj.get(bespokeButtons, toolbarItem.toLowerCase()).map((r) => r(editor, extras)).orThunk(() =>
     // TODO: Add back after TINY-3232 is implemented
     // console.error('No representation for toolbarItem: ' + toolbarItem);
-      Option.none()
+      Optional.none()
     ),
     (spec) => {
       if (spec.type === 'grouptoolbarbutton' && !allowToolbarGroups) {
         // TODO change this message when sliding is available
         // eslint-disable-next-line no-console
         console.warn(`Ignoring the '${toolbarItem}' toolbar button. Group toolbar buttons are only supported when using floating toolbar mode and cannot be nested.`);
-        return Option.none();
+        return Optional.none();
       } else {
         return extractFrom(spec, extras, editor);
       }
     }
   );
 
-const identifyButtons = (editor: Editor, toolbarConfig: RenderToolbarConfig, extras: Extras, prefixes: Option<string[]>): ToolbarGroup[] => {
+const identifyButtons = (editor: Editor, toolbarConfig: RenderToolbarConfig, extras: Extras, prefixes: Optional<string[]>): ToolbarGroup[] => {
   const toolbarGroups = createToolbar(toolbarConfig);
   const groups = Arr.map(toolbarGroups, (group) => {
     const items = Arr.bind(group.items, (toolbarItem) => toolbarItem.trim().length === 0 ? [] : lookupButton(editor, toolbarConfig.buttons, toolbarItem, toolbarConfig.allowToolbarGroups, extras, prefixes).toArray());
     return {
-      title: Option.from(editor.translate(group.name)),
+      title: Optional.from(editor.translate(group.name)),
       items
     };
   });

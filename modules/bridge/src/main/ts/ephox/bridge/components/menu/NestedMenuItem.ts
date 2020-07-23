@@ -1,5 +1,5 @@
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
-import { Fun, Option, Result } from '@ephox/katamari';
+import { Fun, Optional, Result } from '@ephox/katamari';
 import { FancyMenuItemApi, MenuItemApi, SeparatorMenuItemApi, ToggleMenuItemApi } from '../../api/Menu';
 import { CommonMenuItem, CommonMenuItemApi, commonMenuItemFields, CommonMenuItemInstanceApi } from './CommonMenuItem';
 
@@ -17,7 +17,7 @@ export interface NestedMenuItemInstanceApi extends CommonMenuItemInstanceApi { }
 
 export interface NestedMenuItem extends CommonMenuItem {
   type: 'nestedmenuitem';
-  icon: Option<string>;
+  icon: Optional<string>;
   getSubmenuItems: () => string | Array<NestedMenuItemContents>;
   onSetup: (api: NestedMenuItemInstanceApi) => (api: NestedMenuItemInstanceApi) => void;
 }

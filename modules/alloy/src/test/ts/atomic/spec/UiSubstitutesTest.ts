@@ -1,6 +1,6 @@
 import { Logger } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 
 import { CompositeSketchDetail } from 'ephox/alloy/api/ui/Sketcher';
 import { ConfiguredPart } from 'ephox/alloy/parts/AlloyParts';
@@ -14,7 +14,7 @@ UnitTest.test('UiSubstitutesTest', () => {
   Logger.sync(
     'Testing empty components',
     () => {
-      const actual = UiSubstitutes.substitutePlaces(Option.some('detail'), { } as CompositeSketchDetail, [ ], { });
+      const actual = UiSubstitutes.substitutePlaces(Optional.some('detail'), { } as CompositeSketchDetail, [ ], { });
       Assert.eq('Components should stay empty', [ ], actual);
     }
   );
@@ -22,7 +22,7 @@ UnitTest.test('UiSubstitutesTest', () => {
   Logger.sync(
     'Testing everything normal',
     () => {
-      const actual = UiSubstitutes.substitutePlaces(Option.some('owner'), 'detail' as unknown as CompositeSketchDetail, [
+      const actual = UiSubstitutes.substitutePlaces(Optional.some('owner'), 'detail' as unknown as CompositeSketchDetail, [
         { uiType: 'normal' }
       ] as ConfiguredPart[], { });
       Assert.eq('Normal should be returned as is', [
@@ -34,7 +34,7 @@ UnitTest.test('UiSubstitutesTest', () => {
   Logger.sync(
     'Testing one level with a dependent',
     () => {
-      const actual = UiSubstitutes.substitutePlaces(Option.some('owner'), 'detail' as unknown as CompositeSketchDetail, [
+      const actual = UiSubstitutes.substitutePlaces(Optional.some('owner'), 'detail' as unknown as CompositeSketchDetail, [
         { uiType: 'normal' },
         { uiType: 'placeholder', name: 'foo', owner: 'owner' }
       ] as ConfiguredPart[], {

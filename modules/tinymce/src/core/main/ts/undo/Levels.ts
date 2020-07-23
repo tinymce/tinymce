@@ -5,20 +5,20 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Cell, Option } from '@ephox/katamari';
+import { Arr, Cell, Optional } from '@ephox/katamari';
 import { Html, Remove, SelectorFilter, SugarElement } from '@ephox/sugar';
 import Editor from '../api/Editor';
 import * as TrimHtml from '../dom/TrimHtml';
 import * as Fragments from './Fragments';
 import { UndoLevel, UndoLevelType } from './UndoManagerTypes';
 
-const undoLevelDocument = Cell<Option<Document>>(Option.none());
+const undoLevelDocument = Cell<Optional<Document>>(Optional.none());
 
 // We need to create a temporary document instead of using the global document since
 // innerHTML on a detached element will still make http requests to the images
 const lazyTempDocument = () => undoLevelDocument.get().getOrThunk(() => {
   const doc = document.implementation.createHTMLDocument('undo');
-  undoLevelDocument.set(Option.some(doc));
+  undoLevelDocument.set(Optional.some(doc));
   return doc;
 });
 

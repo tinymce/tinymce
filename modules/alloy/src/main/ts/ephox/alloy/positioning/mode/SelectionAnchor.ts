@@ -1,5 +1,5 @@
 import { FieldSchema } from '@ephox/boulder';
-import { Option, Unicode } from '@ephox/katamari';
+import { Optional, Unicode } from '@ephox/katamari';
 import { Insert, Remove, SimRange, SimSelection, SugarElement, SugarNode, Traverse, WindowSelection } from '@ephox/sugar';
 
 import * as Descend from '../../alien/Descend';
@@ -27,7 +27,7 @@ const point = <T> (element: SugarElement, offset: number): ElementAndOffset<T> =
 const descendOnce = (element: SugarElement, offset: number): ElementAndOffset<any> =>
   SugarNode.isText(element) ? point(element, offset) : Descend.descendOnce(element, offset);
 
-const getAnchorSelection = (win: Window, anchorInfo: SelectionAnchor): Option<SimRange> => {
+const getAnchorSelection = (win: Window, anchorInfo: SelectionAnchor): Optional<SimRange> => {
   // FIX TEST Test both providing a getSelection and not providing a getSelection
   const getSelection = anchorInfo.getSelection.getOrThunk(() => () => WindowSelection.getExact(win));
 
@@ -38,7 +38,7 @@ const getAnchorSelection = (win: Window, anchorInfo: SelectionAnchor): Option<Si
   });
 };
 
-const placement = (component: AlloyComponent, anchorInfo: SelectionAnchor, origin: Origins.OriginAdt): Option<Anchoring> => {
+const placement = (component: AlloyComponent, anchorInfo: SelectionAnchor, origin: Origins.OriginAdt): Optional<Anchoring> => {
   const win: Window = Traverse.defaultView(anchorInfo.root).dom();
   const rootPoint = ContainerOffsets.getRootPoint(component, origin, anchorInfo);
 
@@ -56,8 +56,8 @@ const placement = (component: AlloyComponent, anchorInfo: SelectionAnchor, origi
     return optRect.bind((rawRect) => ContentAnchorCommon.capRect(rawRect.left(), rawRect.top(), rawRect.width(), rawRect.height()));
   });
 
-  const targetElement: Option<SugarElement> = getAnchorSelection(win, anchorInfo)
-    .bind((sel) => SugarNode.isElement(sel.start()) ? Option.some(sel.start()) : Traverse.parentNode(sel.start()));
+  const targetElement: Optional<SugarElement> = getAnchorSelection(win, anchorInfo)
+    .bind((sel) => SugarNode.isElement(sel.start()) ? Optional.some(sel.start()) : Traverse.parentNode(sel.start()));
   const elem = targetElement.getOr(component.element());
 
   return ContentAnchorCommon.calcNewAnchor(selectionBox, rootPoint, anchorInfo, origin, elem);

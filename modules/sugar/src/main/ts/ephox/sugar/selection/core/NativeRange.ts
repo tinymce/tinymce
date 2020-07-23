@@ -1,4 +1,4 @@
-import { Fun, Option } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 import { SugarElement } from '../../api/node/SugarElement';
 import { StructRect } from '../../api/selection/Rect';
 import { Situ } from '../../api/selection/Situ';
@@ -80,12 +80,12 @@ const getFirstRect = (rng: Range) => {
   const rects = rng.getClientRects();
   // ASSUMPTION: The first rectangle is the start of the selection
   const rect = rects.length > 0 ? rects[0] : rng.getBoundingClientRect();
-  return rect.width > 0 || rect.height > 0 ? Option.some(rect).map(toRect) : Option.none<StructRect>();
+  return rect.width > 0 || rect.height > 0 ? Optional.some(rect).map(toRect) : Optional.none<StructRect>();
 };
 
 const getBounds = (rng: Range) => {
   const rect = rng.getBoundingClientRect();
-  return rect.width > 0 || rect.height > 0 ? Option.some(rect).map(toRect) : Option.none<StructRect>();
+  return rect.width > 0 || rect.height > 0 ? Optional.some(rect).map(toRect) : Optional.none<StructRect>();
 };
 
 const toString = (rng: Range) => rng.toString();

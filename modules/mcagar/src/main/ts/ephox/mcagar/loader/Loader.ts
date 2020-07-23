@@ -1,5 +1,5 @@
 import { TestLogs } from '@ephox/agar';
-import { Arr, Fun, Global, Id, Option } from '@ephox/katamari';
+import { Arr, Fun, Global, Id, Optional } from '@ephox/katamari';
 import { Attribute, Insert, Remove, SelectorFilter, SugarBody, SugarElement, SugarShadowDom } from '@ephox/sugar';
 import { Editor } from '../alien/EditorTypes';
 
@@ -28,7 +28,7 @@ const removeTinymceElements = () => {
   Arr.each(elements, Remove.remove);
 };
 
-const setup = (callbacks: Callbacks, settings: Record<string, any>, elementOpt: Option<SugarElement>) => {
+const setup = (callbacks: Callbacks, settings: Record<string, any>, elementOpt: Optional<SugarElement>) => {
   const target = elementOpt.getOrThunk(() => createTarget(settings.inline));
   const randomId = Id.generate('tiny-loader');
   Attribute.set(target, 'id', randomId);

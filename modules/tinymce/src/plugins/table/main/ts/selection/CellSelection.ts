@@ -6,7 +6,7 @@
  */
 
 import { InputHandlers, SelectionAnnotation, SelectionKeys } from '@ephox/darwin';
-import { Cell, Fun, Option } from '@ephox/katamari';
+import { Cell, Fun, Optional } from '@ephox/katamari';
 import { DomParent } from '@ephox/robin';
 import { OtherCells, TableFill, TableLookup, TableResize } from '@ephox/snooker';
 import { Class, Compare, DomEvent, SelectionDirection, SimSelection, SugarElement, SugarNode } from '@ephox/sugar';
@@ -27,7 +27,7 @@ export interface CellSelectionApi {
   clear: (container: SugarElement) => void;
 }
 
-export default function (editor: Editor, lazyResize: () => Option<TableResize>, selectionTargets: SelectionTargets): CellSelectionApi {
+export default function (editor: Editor, lazyResize: () => Optional<TableResize>, selectionTargets: SelectionTargets): CellSelectionApi {
   const onSelection = (cells: SugarElement[], start: SugarElement, finish: SugarElement) => {
     selectionTargets.targets().each((targets) => {
       const tableOpt = TableLookup.table(start);

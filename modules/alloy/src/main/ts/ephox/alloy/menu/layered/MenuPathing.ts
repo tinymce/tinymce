@@ -1,4 +1,4 @@
-import { Arr, Obj, Option } from '@ephox/katamari';
+import { Arr, Obj, Optional } from '@ephox/katamari';
 
 // Not enforced :( Just for readability.
 type TriggerItemToMenu = Record<string, string>;
@@ -17,7 +17,7 @@ const trace = (items: Record<string, string>, byItem: TriggerItemToMenu, byMenu:
   // is no triggering item, we are done.
   Obj.get(byMenu, finish).bind((triggerItem: string) => Obj.get(items, triggerItem).bind((triggerMenu: string) => {
     const rest = trace(items, byItem, byMenu, triggerMenu);
-    return Option.some([ triggerMenu ].concat(rest));
+    return Optional.some([ triggerMenu ].concat(rest));
   })).getOr([ ]);
 
 const generate = (menus: MenuToItems, expansions: TriggerItemToMenu): ItemToMenuPath => {

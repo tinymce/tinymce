@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Adt, Fun, Option } from '@ephox/katamari';
+import { Adt, Fun, Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import { findNextBr, findPreviousBr, isAfterBr, isBeforeBr } from '../caret/CaretBr';
 import * as CaretFinder from '../caret/CaretFinder';
@@ -54,61 +54,61 @@ const isDeleteFromCefDifferentBlocks = (root: Node, forward: boolean, from: Care
   );
 };
 
-const deleteEmptyBlockOrMoveToCef = (root: Node, forward: boolean, from: CaretPosition, to: CaretPosition): Option<DeleteActionAdt> => {
+const deleteEmptyBlockOrMoveToCef = (root: Node, forward: boolean, from: CaretPosition, to: CaretPosition): Optional<DeleteActionAdt> => {
   const toCefElm = to.getNode(forward === false);
   return DeleteUtils.getParentBlock(SugarElement.fromDom(root), SugarElement.fromDom(from.getNode())).map((blockElm) =>
     Empty.isEmpty(blockElm) ? DeleteAction.remove(blockElm.dom()) : DeleteAction.moveToElement(toCefElm)
-  ).orThunk(() => Option.some(DeleteAction.moveToElement(toCefElm)));
+  ).orThunk(() => Optional.some(DeleteAction.moveToElement(toCefElm)));
 };
 
-const findCefPosition = (root: Node, forward: boolean, from: CaretPosition): Option<DeleteActionAdt> =>
+const findCefPosition = (root: Node, forward: boolean, from: CaretPosition): Optional<DeleteActionAdt> =>
   CaretFinder.fromPosition(forward, root, from).bind((to) => {
     if (isCompoundElement(to.getNode())) {
-      return Option.none();
+      return Optional.none();
     } else if (isDeleteFromCefDifferentBlocks(root, forward, from, to)) {
-      return Option.none();
+      return Optional.none();
     } else if (forward && NodeType.isContentEditableFalse(to.getNode())) {
       return deleteEmptyBlockOrMoveToCef(root, forward, from, to);
     } else if (forward === false && NodeType.isContentEditableFalse(to.getNode(true))) {
       return deleteEmptyBlockOrMoveToCef(root, forward, from, to);
     } else if (forward && isAfterContentEditableFalse(from)) {
-      return Option.some(DeleteAction.moveToPosition(to));
+      return Optional.some(DeleteAction.moveToPosition(to));
     } else if (forward === false && isBeforeContentEditableFalse(from)) {
-      return Option.some(DeleteAction.moveToPosition(to));
+      return Optional.some(DeleteAction.moveToPosition(to));
     } else {
-      return Option.none();
+      return Optional.none();
     }
   });
 
-const getContentEditableBlockAction = (forward: boolean, elm: Node): Option<DeleteActionAdt> => {
+const getContentEditableBlockAction = (forward: boolean, elm: Node): Optional<DeleteActionAdt> => {
   if (forward && NodeType.isContentEditableFalse(elm.nextSibling)) {
-    return Option.some(DeleteAction.moveToElement(elm.nextSibling));
+    return Optional.some(DeleteAction.moveToElement(elm.nextSibling));
   } else if (forward === false && NodeType.isContentEditableFalse(elm.previousSibling)) {
-    return Option.some(DeleteAction.moveToElement(elm.previousSibling));
+    return Optional.some(DeleteAction.moveToElement(elm.previousSibling));
   } else {
-    return Option.none();
+    return Optional.none();
   }
 };
 
 const skipMoveToActionFromInlineCefToContent = (root: Node, from: CaretPosition, deleteAction: DeleteActionAdt) =>
   deleteAction.fold(
-    (elm) => Option.some(DeleteAction.remove(elm)),
-    (elm) => Option.some(DeleteAction.moveToElement(elm)),
+    (elm) => Optional.some(DeleteAction.remove(elm)),
+    (elm) => Optional.some(DeleteAction.moveToElement(elm)),
     (to) => {
       if (CaretUtils.isInSameBlock(from, to, root)) {
-        return Option.none();
+        return Optional.none();
       } else {
-        return Option.some(DeleteAction.moveToPosition(to));
+        return Optional.some(DeleteAction.moveToPosition(to));
       }
     }
   );
 
-const getContentEditableAction = (root: Node, forward: boolean, from: CaretPosition): Option<DeleteActionAdt> => {
+const getContentEditableAction = (root: Node, forward: boolean, from: CaretPosition): Optional<DeleteActionAdt> => {
   if (isAtContentEditableBlockCaret(forward, from)) {
     return getContentEditableBlockAction(forward, from.getNode(forward === false))
       .fold(
         () => findCefPosition(root, forward, from),
-        Option.some
+        Optional.some
       );
   } else {
     return findCefPosition(root, forward, from).bind((deleteAction) =>
@@ -117,15 +117,15 @@ const getContentEditableAction = (root: Node, forward: boolean, from: CaretPosit
   }
 };
 
-const read = (root: Node, forward: boolean, rng: Range): Option<DeleteActionAdt> => {
+const read = (root: Node, forward: boolean, rng: Range): Optional<DeleteActionAdt> => {
   const normalizedRange = CaretUtils.normalizeRange(forward ? 1 : -1, root, rng);
   const from = CaretPosition.fromRangeStart(normalizedRange);
   const rootElement = SugarElement.fromDom(root);
 
   if (forward === false && isAfterContentEditableFalse(from)) {
-    return Option.some(DeleteAction.remove(from.getNode(true)));
+    return Optional.some(DeleteAction.remove(from.getNode(true)));
   } else if (forward && isBeforeContentEditableFalse(from)) {
-    return Option.some(DeleteAction.remove(from.getNode()));
+    return Optional.some(DeleteAction.remove(from.getNode()));
   } else if (forward === false && isBeforeContentEditableFalse(from) && isAfterBr(rootElement, from)) {
     return findPreviousBr(rootElement, from).map((br) => DeleteAction.remove(br.getNode()));
   } else if (forward && isAfterContentEditableFalse(from) && isBeforeBr(rootElement, from)) {

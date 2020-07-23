@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Fun, Option } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import Editor from '../api/Editor';
 import AstNode from '../api/html/Node';
@@ -113,7 +113,7 @@ export const setContentInternal = (editor: Editor, content: Content, args: SetCo
     content = args.content;
   }
 
-  return Option.from(editor.getBody()).fold(
+  return Optional.from(editor.getBody()).fold(
     Fun.constant(content),
     (body) => isTreeNode(content) ? setContentTree(editor, body, content, args) : setContentString(editor, body, content, args)
   );

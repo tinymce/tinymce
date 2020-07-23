@@ -1,4 +1,4 @@
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import * as Structs from '../api/Structs';
 import * as GridRow from '../model/GridRow';
@@ -73,7 +73,7 @@ const splitRows = function (grid: Structs.RowCells[], index: number, comparator:
     const cells = uniqueCells(rowPrevCells, comparator);
     Arr.each(cells, function (cell) {
       // only make a sub when we have to
-      let replacement = Option.none<SugarElement>();
+      let replacement = Optional.none<SugarElement>();
       for (let i = index; i < grid.length; i++) {
         for (let j = 0; j < GridRow.cellLength(grid[0]); j++) {
           const current = grid[i].cells()[j];
@@ -81,7 +81,7 @@ const splitRows = function (grid: Structs.RowCells[], index: number, comparator:
 
           if (isToReplace) {
             if (replacement.isNone()) {
-              replacement = Option.some(substitution());
+              replacement = Optional.some(substitution());
             }
             replacement.each(function (sub) {
               GridRow.mutateCell(grid[i], j, Structs.elementnew(sub, true));

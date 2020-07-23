@@ -1,4 +1,4 @@
-import { Fun, Id, Option } from '@ephox/katamari';
+import { Fun, Id, Optional } from '@ephox/katamari';
 import { SugarElement, SugarNode } from '@ephox/sugar';
 
 import * as AlloyTags from '../ephemera/AlloyTags';
@@ -20,9 +20,9 @@ const writeOnly = (elem: SugarElement, uid: string | null) => {
   });
 };
 
-const read = (elem: SugarElement): Option<string> => {
+const read = (elem: SugarElement): Optional<string> => {
   const id = SugarNode.isElement(elem) ? (elem.dom() as any)[idAttr] : null;
-  return Option.from(id);
+  return Optional.from(id);
 };
 
 const readOrDie = (elem: SugarElement): string => read(elem).getOrDie('Could not find alloy uid in: ' + AlloyLogger.element(elem));

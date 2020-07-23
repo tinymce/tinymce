@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 
 const isChildOfBody = function (editor, elm) {
   return editor.$.contains(editor.getBody(), elm);
@@ -21,10 +21,10 @@ const isListNode = function (editor) {
   };
 };
 
-const getSelectedStyleType = function (editor): Option<string> {
+const getSelectedStyleType = function (editor): Optional<string> {
   const listElm = editor.dom.getParent(editor.selection.getNode(), 'ol,ul');
   const style = editor.dom.getStyle(listElm, 'listStyleType');
-  return Option.from(style);
+  return Optional.from(style);
 };
 
 export {

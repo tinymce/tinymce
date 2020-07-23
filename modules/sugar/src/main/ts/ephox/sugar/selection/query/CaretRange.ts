@@ -1,4 +1,4 @@
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { SugarElement } from '../../api/node/SugarElement';
 import * as Traverse from '../../api/search/Traverse';
 import { SimRange } from '../../api/selection/SimRange';
@@ -7,19 +7,19 @@ import * as EdgePoint from './EdgePoint';
 
 declare const document: any;
 
-const caretPositionFromPoint = (doc: SugarElement<Document>, x: number, y: number) => Option.from((doc.dom() as any).caretPositionFromPoint(x, y))
+const caretPositionFromPoint = (doc: SugarElement<Document>, x: number, y: number) => Optional.from((doc.dom() as any).caretPositionFromPoint(x, y))
   .bind((pos) => {
     // It turns out that Firefox can return null for pos.offsetNode
     if (pos.offsetNode === null) {
-      return Option.none<Range>();
+      return Optional.none<Range>();
     }
     const r = doc.dom().createRange();
     r.setStart(pos.offsetNode, pos.offset);
     r.collapse();
-    return Option.some(r);
+    return Optional.some(r);
   });
 
-const caretRangeFromPoint = (doc: SugarElement<Document>, x: number, y: number) => Option.from(doc.dom().caretRangeFromPoint(x, y));
+const caretRangeFromPoint = (doc: SugarElement<Document>, x: number, y: number) => Optional.from(doc.dom().caretRangeFromPoint(x, y));
 
 const searchTextNodes = (doc: SugarElement<Document>, node: SugarElement<Node>, x: number, y: number) => {
   const r = doc.dom().createRange();
@@ -32,7 +32,7 @@ const searchTextNodes = (doc: SugarElement<Document>, node: SugarElement<Node>, 
   return ContainerPoint.locate(doc, node, boundedX, boundedY);
 };
 
-const searchFromPoint = (doc: SugarElement<Document>, x: number, y: number): Option<Range> =>
+const searchFromPoint = (doc: SugarElement<Document>, x: number, y: number): Optional<Range> =>
   // elementFromPoint is defined to return null when there is no element at the point
   // This often happens when using IE10 event.y instead of event.clientY
   SugarElement.fromPoint(doc, x, y).bind((elem) => {

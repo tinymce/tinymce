@@ -1,4 +1,4 @@
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import * as Structs from '../api/Structs';
 import * as DetailsList from './DetailsList';
@@ -15,7 +15,7 @@ const key = function (row: number, column: number) {
 
 const getAt = function (warehouse: Warehouse, row: number, column: number) {
   const raw = warehouse.access[key(row, column)];
-  return raw !== undefined ? Option.some(raw) : Option.none<Structs.DetailExt>();
+  return raw !== undefined ? Optional.some(raw) : Optional.none<Structs.DetailExt>();
 };
 
 const findItem = function <T> (warehouse: Warehouse, item: T, comparator: (a: T, b: SugarElement) => boolean) {
@@ -23,7 +23,7 @@ const findItem = function <T> (warehouse: Warehouse, item: T, comparator: (a: T,
     return comparator(item, detail.element());
   });
 
-  return filtered.length > 0 ? Option.some(filtered[0]) : Option.none<Structs.DetailExt>();
+  return filtered.length > 0 ? Optional.some(filtered[0]) : Optional.none<Structs.DetailExt>();
 };
 
 const filterItems = function (warehouse: Warehouse, predicate: (x: Structs.DetailExt, i: number) => boolean) {

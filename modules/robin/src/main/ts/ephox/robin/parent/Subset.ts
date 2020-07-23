@@ -1,5 +1,5 @@
 import { Universe } from '@ephox/boss';
-import { Arr, Fun, Option } from '@ephox/katamari';
+import { Arr, Fun, Optional } from '@ephox/katamari';
 
 const eq = function <E, D> (universe: Universe<E, D>, item: E) {
   return Fun.curry(universe.eq, item);
@@ -8,10 +8,10 @@ const eq = function <E, D> (universe: Universe<E, D>, item: E) {
 const unsafeSubset = function <E, D> (universe: Universe<E, D>, common: E, ps1: E[], ps2: E[]) {
   const children = universe.property().children(common);
   if (universe.eq(common, ps1[0])) {
-    return Option.some([ ps1[0] ]);
+    return Optional.some([ ps1[0] ]);
   }
   if (universe.eq(common, ps2[0])) {
-    return Option.some([ ps2[0] ]);
+    return Optional.some([ ps2[0] ]);
   }
 
   const finder = function (ps: E[]) {

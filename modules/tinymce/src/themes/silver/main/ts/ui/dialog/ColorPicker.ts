@@ -8,7 +8,7 @@
 import { ColourPicker } from '@ephox/acid';
 import { AlloyTriggers, Behaviour, Composing, Form, Memento, NativeEvents, Representing, SimpleSpec } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 import { formActionEvent } from '../general/FormEvents';
@@ -94,7 +94,7 @@ export const renderColorPicker = (_spec: ColorPickerSpec): SimpleSpec => {
             const optRgbForm = Composing.getCurrent(picker);
             const optHex = optRgbForm.bind((rgbForm) => {
               const formValues = Representing.getValue(rgbForm);
-              return formValues.hex as Option<string>;
+              return formValues.hex as Optional<string>;
             }) ;
             return optHex.map((hex) => '#' + hex).getOr('');
           },
@@ -108,7 +108,7 @@ export const renderColorPicker = (_spec: ColorPickerSpec): SimpleSpec => {
               console.log('Can not find form');
             }, (rgbForm) => {
               Representing.setValue(rgbForm, {
-                hex: Option.from(m[1]).getOr('')
+                hex: Optional.from(m[1]).getOr('')
               });
 
               // So not the way to do this.

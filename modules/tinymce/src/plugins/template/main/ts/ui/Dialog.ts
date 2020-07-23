@@ -6,15 +6,15 @@
  */
 
 import { Types } from '@ephox/bridge';
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
+import Env from 'tinymce/core/api/Env';
 import Promise from 'tinymce/core/api/util/Promise';
 import Tools from 'tinymce/core/api/util/Tools';
 import XHR from 'tinymce/core/api/util/XHR';
 import * as Settings from '../api/Settings';
 import * as Templates from '../core/Templates';
 import * as Utils from '../core/Utils';
-import Env from 'tinymce/core/api/Env';
 
 interface UrlTemplate {
   title: string;
@@ -34,8 +34,8 @@ interface InternalTemplate {
   selected: boolean;
   text: string;
   value: {
-    url: Option<string>;
-    content: Option<string>;
+    url: Optional<string>;
+    content: Optional<string>;
     description: string;
   };
 }
@@ -104,21 +104,21 @@ const getPreviewContent = (editor: Editor, html: string) => {
 };
 
 const open = (editor: Editor, templateList: ExternalTemplate[]) => {
-  const createTemplates = (): Option<Array<InternalTemplate>> => {
+  const createTemplates = (): Optional<Array<InternalTemplate>> => {
     if (!templateList || templateList.length === 0) {
       const message = editor.translate('No templates defined.');
       editor.notificationManager.open({ text: message, type: 'info' });
-      return Option.none();
+      return Optional.none();
     }
 
-    return Option.from(Tools.map(templateList, (template: ExternalTemplate, index) => {
+    return Optional.from(Tools.map(templateList, (template: ExternalTemplate, index) => {
       const isUrlTemplate = (t: ExternalTemplate): t is UrlTemplate => (t as UrlTemplate).url !== undefined;
       return {
         selected: index === 0,
         text: template.title,
         value: {
-          url: isUrlTemplate(template) ? Option.from(template.url) : Option.none(),
-          content: !isUrlTemplate(template) ? Option.from(template.content) : Option.none(),
+          url: isUrlTemplate(template) ? Optional.from(template.url) : Optional.none(),
+          content: !isUrlTemplate(template) ? Optional.from(template.content) : Optional.none(),
           description: template.description
         }
       };
@@ -248,7 +248,7 @@ const open = (editor: Editor, templateList: ExternalTemplate[]) => {
     });
   };
 
-  const optTemplates: Option<InternalTemplate[]> = createTemplates();
+  const optTemplates: Optional<InternalTemplate[]> = createTemplates();
   optTemplates.each(openDialog);
 };
 

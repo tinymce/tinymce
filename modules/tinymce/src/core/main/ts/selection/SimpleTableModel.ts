@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Fun, Option } from '@ephox/katamari';
+import { Arr, Fun, Optional } from '@ephox/katamari';
 import { Attribute, Compare, Insert, InsertAll, Replication, SelectorFilter, SugarElement } from '@ephox/sugar';
 
 const tableModel = (element: SugarElement<unknown>, width: number, rows: SugarElement<unknown>[]) => ({
@@ -75,12 +75,12 @@ const findElementPos = function (table, element) {
     const cells = rows[y].cells();
     for (let x = 0; x < cells.length; x++) {
       if (Compare.eq(cells[x], element)) {
-        return Option.some(cellPosition(x, y));
+        return Optional.some(cellPosition(x, y));
       }
     }
   }
 
-  return Option.none();
+  return Optional.none();
 };
 
 const extractRows = function (table, sx, sy, ex, ey) {

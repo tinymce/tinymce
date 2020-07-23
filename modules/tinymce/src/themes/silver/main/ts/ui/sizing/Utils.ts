@@ -5,20 +5,20 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Option, Type } from '@ephox/katamari';
+import { Optional, Type } from '@ephox/katamari';
 
-const parseToInt = (val: string | number): Option<number> => {
+const parseToInt = (val: string | number): Optional<number> => {
   // if size is a number or '_px', will return the number
   const re = /^[0-9\.]+(|px)$/i;
   if (re.test('' + val)) {
-    return Option.some(parseInt('' + val, 10));
+    return Optional.some(parseInt('' + val, 10));
   }
-  return Option.none();
+  return Optional.none();
 };
 
 const numToPx = (val: string | number): string => Type.isNumber(val) ? val + 'px' : val;
 
-const calcCappedSize = (size: number, minSize: Option<number>, maxSize: Option<number>): number => {
+const calcCappedSize = (size: number, minSize: Optional<number>, maxSize: Optional<number>): number => {
   const minOverride = minSize.filter((min) => size < min);
   const maxOverride = maxSize.filter((max) => size > max);
   return minOverride.or(maxOverride).getOr(size);

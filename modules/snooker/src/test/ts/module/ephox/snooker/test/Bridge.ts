@@ -1,4 +1,4 @@
-import { Arr, Fun, Obj, Option, Options } from '@ephox/katamari';
+import { Arr, Fun, Obj, Optional, Optionals } from '@ephox/katamari';
 import { Attribute, Css, Hierarchy, Insert, Replication, SugarElement, SugarNode } from '@ephox/sugar';
 import { Generators } from 'ephox/snooker/api/Generators';
 import * as Structs from 'ephox/snooker/api/Structs';
@@ -7,12 +7,12 @@ import { TargetMergable } from 'ephox/snooker/model/RunOperation';
 // Mock/Stub out helper functions
 
 const targetStub = function (selection: { section: number; row: number; column: number}[], bounds: { startRow: number; startCol: number; finishRow: number; finishCol: number}, table: SugarElement): TargetMergable {
-  const cells = Options.cat(Arr.map(selection, function (path) {
+  const cells = Optionals.cat(Arr.map(selection, function (path) {
     return Hierarchy.follow(table, [ path.section, path.row, path.column ]);
   }));
 
   return {
-    mergable: Fun.constant(Option.some({
+    mergable: Fun.constant(Optional.some({
       cells: Fun.constant(cells),
       bounds: Fun.constant(Structs.bounds(bounds.startRow, bounds.startCol, bounds.finishRow, bounds.finishCol))
     }))

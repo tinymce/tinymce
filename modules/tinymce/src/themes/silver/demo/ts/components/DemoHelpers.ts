@@ -1,5 +1,5 @@
 import { Attachment, Behaviour, Channels, Debugging, DomFactory, Gui, GuiFactory, Positioning } from '@ephox/alloy';
-import { Fun, Future, Id, Option, Result } from '@ephox/katamari';
+import { Fun, Future, Id, Optional, Result } from '@ephox/katamari';
 import { Class, SugarBody } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import I18n from 'tinymce/core/api/util/I18n';
@@ -140,10 +140,10 @@ const setupDemo = () => {
     urlinput: {
       getHistory: fakeHistory,
       addToHistory: (_url: string, _fileType: string) => {},
-      getLinkInformation: () => Option.some(fakeLinkInfo),
-      getValidationHandler: () => Option.some(fakeValidator),
-      getUrlPicker: (_filetype) => Option.some((entry: ApiUrlData) => {
-        const newUrl = Option.from(window.prompt('File browser would show instead of this...', entry.value));
+      getLinkInformation: () => Optional.some(fakeLinkInfo),
+      getValidationHandler: () => Optional.some(fakeValidator),
+      getUrlPicker: (_filetype) => Optional.some((entry: ApiUrlData) => {
+        const newUrl = Optional.from(window.prompt('File browser would show instead of this...', entry.value));
         return Future.pure({ ...entry, value: newUrl.getOr(entry.value) });
       })
     }

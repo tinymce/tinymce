@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Obj, Option } from '@ephox/katamari';
+import { Obj, Optional } from '@ephox/katamari';
 import { TableLookup } from '@ephox/snooker';
 import { SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
@@ -17,7 +17,7 @@ import * as TableSelection from '../selection/TableSelection';
 
 const registerQueryCommands = (editor: Editor, actions: TableActions, selections: Selections) => {
   const isRoot = Util.getIsRoot(editor);
-  const getTableFromCell = (cell: SugarElement): Option<SugarElement> => TableLookup.table(cell, isRoot);
+  const getTableFromCell = (cell: SugarElement): Optional<SugarElement> => TableLookup.table(cell, isRoot);
 
   Obj.each({
     mceTableRowType: () => actions.getTableRowType(editor),

@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Log, Logger, Mouse, Pipeline, UiFinder } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Arr, Option, Options, Result } from '@ephox/katamari';
+import { Arr, Optional, Optionals, Result } from '@ephox/katamari';
 import { TinyLoader, TinyUi } from '@ephox/mcagar';
 import { Attribute, SugarBody, SugarElement } from '@ephox/sugar';
 
@@ -20,9 +20,9 @@ UnitTest.asynctest('OxideCollectionComponentTest', (success, failure) => {
       const tinyUi = TinyUi(editor);
       const doc = SugarElement.fromDom(document);
 
-      const structureItem = (optText: Option<string>, optIcon: Option<string>) => (s, str, arr) => s.element('div', {
+      const structureItem = (optText: Optional<string>, optIcon: Optional<string>) => (s, str, arr) => s.element('div', {
         classes: [ arr.has('tox-collection__item') ],
-        children: Options.cat([
+        children: Optionals.cat([
           optIcon.map((icon) => s.element('div', {
             classes: [ arr.has('tox-collection__item-icon') ],
             html: str.is(icon)
@@ -66,7 +66,7 @@ UnitTest.asynctest('OxideCollectionComponentTest', (success, failure) => {
                       s.element('div', {
                         classes: [ arr.has('tox-collection__group') ],
                         children: Arr.map([ 'A', 'B', 'C' ], (letter) =>
-                          structureItem(Option.some('text-' + letter), Option.some('icon-' + letter))(s, str, arr)
+                          structureItem(Optional.some('text-' + letter), Optional.some('icon-' + letter))(s, str, arr)
                         )
                       })
                     ]
@@ -97,7 +97,7 @@ UnitTest.asynctest('OxideCollectionComponentTest', (success, failure) => {
                         s.element('div', {
                           classes: [ arr.has('tox-collection__group') ],
                           children: Arr.map([ 'D', 'E', 'F' ], (letter) =>
-                            structureItem(Option.none(), Option.some('icon-' + letter))(s, str, arr)
+                            structureItem(Optional.none(), Optional.some('icon-' + letter))(s, str, arr)
                           )
                         })
                       ]
@@ -127,13 +127,13 @@ UnitTest.asynctest('OxideCollectionComponentTest', (success, failure) => {
                       s.element('div', {
                         classes: [ arr.has('tox-collection__group') ],
                         children: Arr.map([ 'G', 'H' ], (letter) =>
-                          structureItem(Option.none(), Option.some('icon-' + letter))(s, str, arr)
+                          structureItem(Optional.none(), Optional.some('icon-' + letter))(s, str, arr)
                         )
                       }),
                       s.element('div', {
                         classes: [ arr.has('tox-collection__group') ],
                         children: Arr.map([ 'I' ], (letter) =>
-                          structureItem(Option.none(), Option.some('icon-' + letter))(s, str, arr)
+                          structureItem(Optional.none(), Optional.some('icon-' + letter))(s, str, arr)
                         )
                       })
                     ]

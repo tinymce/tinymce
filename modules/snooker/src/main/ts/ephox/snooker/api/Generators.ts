@@ -1,4 +1,4 @@
-import { Arr, Cell, Contracts, Fun, Option } from '@ephox/katamari';
+import { Arr, Cell, Contracts, Fun, Optional } from '@ephox/katamari';
 import { Css, SugarElement } from '@ephox/sugar';
 import { getAttrValue } from '../util/CellUtils';
 
@@ -23,7 +23,7 @@ export interface SimpleGenerators extends Generators {
 }
 
 export interface GeneratorsWrapper {
-  readonly cursor: () => Option<SugarElement>;
+  readonly cursor: () => Optional<SugarElement>;
 }
 
 export interface GeneratorsModification extends GeneratorsWrapper {
@@ -63,7 +63,7 @@ const elementToData = function (element: SugarElement): CellSpan {
 // note that `toData` seems to be only for testing
 const modification = function (generators: Generators, toData = elementToData): GeneratorsModification {
   verifyGenerators(generators);
-  const position = Cell(Option.none<SugarElement>());
+  const position = Cell(Optional.none<SugarElement>());
 
   const nu = function (data: CellSpan) {
     return generators.cell(data);
@@ -77,13 +77,13 @@ const modification = function (generators: Generators, toData = elementToData): 
   const add = function (element: SugarElement) {
     const replacement = nuFrom(element);
     if (position.get().isNone()) {
-      position.set(Option.some(replacement));
+      position.set(Optional.some(replacement));
     }
-    recent = Option.some({ item: element, replacement });
+    recent = Optional.some({ item: element, replacement });
     return replacement;
   };
 
-  let recent = Option.none<Recent>();
+  let recent = Optional.none<Recent>();
   const getOrInit = function (element: SugarElement, comparator: (a: SugarElement, b: SugarElement) => boolean) {
     return recent.fold(function () {
       return add(element);
@@ -100,7 +100,7 @@ const modification = function (generators: Generators, toData = elementToData): 
 
 const transform = function <K extends keyof HTMLElementTagNameMap> (scope: string | null, tag: K) {
   return function (generators: Generators): GeneratorsTransform {
-    const position = Cell(Option.none<SugarElement>());
+    const position = Cell(Optional.none<SugarElement>());
     verifyGenerators(generators);
     const list: Item[] = [];
 
@@ -120,7 +120,7 @@ const transform = function <K extends keyof HTMLElementTagNameMap> (scope: strin
         sub: cell
       });
       if (position.get().isNone()) {
-        position.set(Option.some(cell));
+        position.set(Optional.some(cell));
       }
       return cell;
     };
@@ -142,11 +142,11 @@ const transform = function <K extends keyof HTMLElementTagNameMap> (scope: strin
 
 const merging = function (generators: Generators) {
   verifyGenerators(generators);
-  const position = Cell(Option.none<SugarElement>());
+  const position = Cell(Optional.none<SugarElement>());
 
   const combine = function (cell: SugarElement) {
     if (position.get().isNone()) {
-      position.set(Option.some(cell));
+      position.set(Optional.some(cell));
     }
     return function () {
       const raw = generators.cell({

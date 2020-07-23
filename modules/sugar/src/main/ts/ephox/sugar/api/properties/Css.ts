@@ -1,4 +1,4 @@
-import { Arr, Obj, Option, Strings, Type } from '@ephox/katamari';
+import { Arr, Obj, Optional, Strings, Type } from '@ephox/katamari';
 import * as Style from '../../impl/Style';
 import * as SugarBody from '../node/SugarBody';
 import { SugarElement } from '../node/SugarElement';
@@ -46,7 +46,7 @@ const setAll = (element: SugarElement<Node>, css: Record<string, string>): void 
   });
 };
 
-const setOptions = (element: SugarElement<Node>, css: Record<string, Option<string>>): void => {
+const setOptions = (element: SugarElement<Node>, css: Record<string, Optional<string>>): void => {
   const dom = element.dom();
 
   Obj.each(css, (v, k) => {
@@ -94,11 +94,11 @@ const getUnsafeProperty = (dom: Node, property: string): string =>
  *
  * Returns NONE if the property isn't set, or the value is an empty string.
  */
-const getRaw = (element: SugarElement<Node>, property: string): Option<string> => {
+const getRaw = (element: SugarElement<Node>, property: string): Optional<string> => {
   const dom = element.dom();
   const raw = getUnsafeProperty(dom, property);
 
-  return Option.from(raw).filter((r) => r.length > 0);
+  return Optional.from(raw).filter((r) => r.length > 0);
 };
 
 const getAllRaw = (element: SugarElement<Node>): Record<string, string> => {

@@ -1,4 +1,4 @@
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import * as Canvas from '../util/Canvas';
 import * as ImageSize from '../util/ImageSize';
 import { Promise } from '../util/Promise';
@@ -189,8 +189,8 @@ function _createProgram(gl: WebGLRenderingContext): WebGLProgram {
   return program;
 }
 
-function _loadShader(gl: WebGLRenderingContext, source: string, type: string): Option<WebGLShader> {
-  return Option.from(gl.createShader((gl as any)[type])).map((shader) => {
+function _loadShader(gl: WebGLRenderingContext, source: string, type: string): Optional<WebGLShader> {
+  return Optional.from(gl.createShader((gl as any)[type])).map((shader) => {
     gl.shaderSource(shader, source);
     gl.compileShader(shader);
 

@@ -6,7 +6,7 @@
  */
 
 import { Types } from '@ephox/bridge';
-import { Future, Obj, Option, Type } from '@ephox/katamari';
+import { Future, Obj, Optional, Type } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
@@ -53,20 +53,20 @@ export type UrlPicker = (entry: InternalUrlData) => Future<ApiUrlData>;
 export interface UiFactoryBackstageForUrlInput {
   getHistory: (fileType: string) => string[];
   addToHistory: (url: string, fileType: string) => void;
-  getLinkInformation: () => Option<LinkInformation>;
-  getValidationHandler: () => Option<UrlValidationHandler>;
-  getUrlPicker: (filetype: string) => Option<UrlPicker>;
+  getLinkInformation: () => Optional<LinkInformation>;
+  getValidationHandler: () => Optional<UrlValidationHandler>;
+  getUrlPicker: (filetype: string) => Optional<UrlPicker>;
 }
 
 const isTruthy = (value: any) => !!value;
 
 const makeMap = (value: any): Record<string, boolean> => Obj.map(Tools.makeMap(value, /[, ]/), isTruthy);
 
-const getPicker = (editor: Editor): Option<Picker> => Option.from(Settings.getFilePickerCallback(editor)).filter(Type.isFunction) as Option<Picker>;
+const getPicker = (editor: Editor): Optional<Picker> => Optional.from(Settings.getFilePickerCallback(editor)).filter(Type.isFunction) as Optional<Picker>;
 
 const getPickerTypes = (editor: Editor): boolean | Record<string, boolean> => {
-  const optFileTypes = Option.some(Settings.getFilePickerTypes(editor)).filter(isTruthy);
-  const optLegacyTypes = Option.some(Settings.getFileBrowserCallbackTypes(editor)).filter(isTruthy);
+  const optFileTypes = Optional.some(Settings.getFilePickerTypes(editor)).filter(isTruthy);
+  const optLegacyTypes = Optional.some(Settings.getFileBrowserCallbackTypes(editor)).filter(isTruthy);
   const optTypes = optFileTypes.or(optLegacyTypes).map(makeMap);
   return getPicker(editor).fold(
     () => false,
@@ -76,16 +76,16 @@ const getPickerTypes = (editor: Editor): boolean | Record<string, boolean> => {
   );
 };
 
-const getPickerSetting = (editor: Editor, filetype: string): Option<Picker> => {
+const getPickerSetting = (editor: Editor, filetype: string): Optional<Picker> => {
   const pickerTypes = getPickerTypes(editor);
   if (Type.isBoolean(pickerTypes)) {
-    return pickerTypes ? getPicker(editor) : Option.none();
+    return pickerTypes ? getPicker(editor) : Optional.none();
   } else {
-    return pickerTypes[filetype] ? getPicker(editor) : Option.none();
+    return pickerTypes[filetype] ? getPicker(editor) : Optional.none();
   }
 };
 
-const getUrlPicker = (editor: Editor, filetype: string): Option<UrlPicker> => getPickerSetting(editor, filetype).map((picker) => (entry: InternalUrlData): Future<ApiUrlData> => Future.nu((completer) => {
+const getUrlPicker = (editor: Editor, filetype: string): Optional<UrlPicker> => getPickerSetting(editor, filetype).map((picker) => (entry: InternalUrlData): Future<ApiUrlData> => Future.nu((completer) => {
   const handler = (value: string, meta?: Record<string, any>) => {
     if (!Type.isString(value)) {
       throw new Error('Expected value to be string');
@@ -99,26 +99,26 @@ const getUrlPicker = (editor: Editor, filetype: string): Option<UrlPicker> => ge
   const meta = {
     filetype,
     fieldname: entry.fieldname,
-    ...Option.from(entry.meta).getOr({})
+    ...Optional.from(entry.meta).getOr({})
   };
   // file_picker_callback(callback, currentValue, metaData)
   picker.call(editor, handler, entry.value, meta);
 }));
 
-const getTextSetting = (value: string | boolean): string | undefined => Option.from(value).filter(Type.isString).getOrUndefined();
+const getTextSetting = (value: string | boolean): string | undefined => Optional.from(value).filter(Type.isString).getOrUndefined();
 
-export const getLinkInformation = (editor: Editor): Option<LinkInformation> => {
+export const getLinkInformation = (editor: Editor): Optional<LinkInformation> => {
   if (Settings.noTypeaheadUrls(editor)) {
-    return Option.none();
+    return Optional.none();
   }
 
-  return Option.some({
+  return Optional.some({
     targets: LinkTargets.find(editor.getBody()),
     anchorTop: getTextSetting(Settings.getAnchorTop(editor)),
     anchorBottom: getTextSetting(Settings.getAnchorBottom(editor))
   });
 };
-export const getValidationHandler = (editor: Editor): Option<UrlValidationHandler> => Option.from(Settings.getFilePickerValidatorHandler(editor));
+export const getValidationHandler = (editor: Editor): Optional<UrlValidationHandler> => Optional.from(Settings.getFilePickerValidatorHandler(editor));
 
 export const getUrlPickerTypes = (editor: Editor): boolean | Record<string, boolean> => getPickerTypes(editor);
 

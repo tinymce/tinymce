@@ -1,5 +1,5 @@
-import { Option } from '@ephox/katamari';
 import { FieldSchema } from '@ephox/boulder';
+import { Optional } from '@ephox/katamari';
 
 export interface FormComponentApi {
   type: string;
@@ -16,7 +16,7 @@ export interface FormComponentWithLabelApi extends FormComponentApi {
 }
 
 export interface FormComponentWithLabel extends FormComponent {
-  label: Option<string>;
+  label: Optional<string>;
 }
 
 export const formComponentFields = [

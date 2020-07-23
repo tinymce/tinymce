@@ -1,6 +1,6 @@
 import { ApproxStructure, Assertions, Logger, Mouse, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { EventArgs, Html, Insert, Remove, SugarBody, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
@@ -25,7 +25,7 @@ UnitTest.asynctest('Browser Test: api.ForeignGuiTest', (success, failure) => {
     },
     dispatchers: [
       {
-        getTarget: (elem) => SugarNode.name(elem) === 'span' ? Option.some(elem) : Option.none(),
+        getTarget: (elem) => SugarNode.name(elem) === 'span' ? Optional.some(elem) : Optional.none(),
         alloyConfig: {
           behaviours: Behaviour.derive([
             Toggling.config({

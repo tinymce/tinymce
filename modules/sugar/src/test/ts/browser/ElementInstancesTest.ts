@@ -1,9 +1,9 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { Option, OptionInstances } from '@ephox/katamari';
+import { Optional, OptionalInstances } from '@ephox/katamari';
 import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
 import { eqElement, tElement } from 'ephox/sugar/api/node/SugarElementInstances';
 
-const tOption = OptionInstances.tOption;
+const tOptional = OptionalInstances.tOptional;
 
 UnitTest.test('SugarElement testable/eq', () => {
   const span1: SugarElement<Element> = SugarElement.fromTag('span');
@@ -18,8 +18,8 @@ UnitTest.test('SugarElement testable/eq', () => {
 });
 
 UnitTest.test('TINY-6151: SugarElement testable/eq - options', () => {
-  const el1: Option<SugarElement<HTMLDivElement>> = Option.some(SugarElement.fromTag('div'));
+  const el1: Optional<SugarElement<HTMLDivElement>> = Optional.some(SugarElement.fromTag('div'));
   // Before TINY-6151, tElement was a value - a Testable<DomElement> - and statements like below wouldn't compile.
   // We changed it to be a polymorphic function.
-  Assert.eq('same', el1, el1, tOption(tElement()));
+  Assert.eq('same', el1, el1, tOptional(tElement()));
 });

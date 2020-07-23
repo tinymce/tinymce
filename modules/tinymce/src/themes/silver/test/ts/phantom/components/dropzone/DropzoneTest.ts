@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, Chain, Logger, Step, UiFinder } from '@ephox/agar';
 import { AlloyTriggers, Composing, GuiFactory, Representing, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 
 import { renderDropZone } from 'tinymce/themes/silver/ui/dialog/Dropzone';
 import TestProviders from '../../../module/TestProviders';
@@ -12,7 +12,7 @@ UnitTest.asynctest('Dropzone component Test', (success, failure) => {
     (_store, _doc, _body) => GuiFactory.build(
       renderDropZone({
         name: 'drop1',
-        label: Option.some('Dropzone Label')
+        label: Optional.some('Dropzone Label')
       }, TestProviders)
     ),
     (_doc, _body, _gui, component, _store) => [

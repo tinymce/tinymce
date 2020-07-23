@@ -1,18 +1,18 @@
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { SugarBody, SugarElement, Traverse } from '@ephox/sugar';
 
 /* eslint-disable no-console */
 
-const iframeDoc = (element: SugarElement<HTMLFrameElement>): Option<SugarElement<HTMLDocument>> => {
+const iframeDoc = (element: SugarElement<HTMLFrameElement>): Optional<SugarElement<HTMLDocument>> => {
   const dom = element.dom();
   try {
     const idoc = dom.contentWindow ? dom.contentWindow.document : dom.contentDocument;
-    return idoc !== undefined && idoc !== null ? Option.some(SugarElement.fromDom(idoc)) : Option.none();
+    return idoc !== undefined && idoc !== null ? Optional.some(SugarElement.fromDom(idoc)) : Optional.none();
   } catch (err) {
     // ASSUMPTION: Permission errors result in an unusable iframe.
     console.log('Error reading iframe: ', dom);
     console.log('Error was: ' + err);
-    return Option.none();
+    return Optional.none();
   }
 };
 

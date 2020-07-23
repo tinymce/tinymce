@@ -6,7 +6,7 @@
  */
 
 import { Types } from '@ephox/bridge';
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import * as SelectionBookmark from '../selection/SelectionBookmark';
 import WindowManagerImpl from '../ui/WindowManagerImpl';
 import Editor from './Editor';
@@ -94,7 +94,7 @@ const WindowManager = function (editor: Editor): WindowManager {
   };
 
   const getTopDialog = function () {
-    return Option.from(dialogs[dialogs.length - 1]);
+    return Optional.from(dialogs[dialogs.length - 1]);
   };
 
   const storeSelectionAndOpenDialog = <T extends InstanceApi<any>>(openDialog: () => T) => {

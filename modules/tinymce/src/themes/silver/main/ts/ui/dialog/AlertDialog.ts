@@ -6,7 +6,7 @@
  */
 
 import { AlloyEvents, Focusing, GuiFactory, Memento, ModalDialog } from '@ephox/alloy';
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { renderFooterButton } from '../general/Button';
 import { formCancelEvent, FormCancelEvent } from '../general/FormEvents';
 import * as Dialogs from './Dialogs';
@@ -28,7 +28,7 @@ export const setup = (extras) => {
         primary: true,
         align: 'end',
         disabled: false,
-        icon: Option.none()
+        icon: Optional.none()
       }, 'cancel', extras.backstage)
     );
 
@@ -40,7 +40,7 @@ export const setup = (extras) => {
         lazySink: () => sharedBackstage.getSink(),
         header: Dialogs.hiddenHeader(titleSpec, closeSpec),
         body: Dialogs.pBodyMessage(message, sharedBackstage.providers),
-        footer: Option.some(Dialogs.pFooter(Dialogs.pFooterGroup([], [
+        footer: Optional.some(Dialogs.pFooter(Dialogs.pFooterGroup([], [
           memFooterClose.asSpec()
         ]))),
         onEscape: closeDialog,

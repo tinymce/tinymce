@@ -1,4 +1,4 @@
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
 import { Bounds } from '../../alien/Boxes';
@@ -18,15 +18,15 @@ export interface InlineViewDetail extends SingleSketchDetail {
   inlineBehaviours: SketchBehaviours;
   onShow: (component: AlloyComponent) => void;
   onHide: (component: AlloyComponent) => void;
-  onEscape: Option<(component: AlloyComponent) => void>;
-  getRelated: (component: AlloyComponent) => Option<AlloyComponent>;
+  onEscape: Optional<(component: AlloyComponent) => void>;
+  getRelated: (component: AlloyComponent) => Optional<AlloyComponent>;
   isExtraPart: (component: AlloyComponent, target: SugarElement) => boolean;
   lazySink: LazySink;
   eventOrder: Record<string, string[]>;
-  fireDismissalEventInstead: Option<{
+  fireDismissalEventInstead: Optional<{
     event: string;
   }>;
-  fireRepositionEventInstead: Option<{
+  fireRepositionEventInstead: Optional<{
     event: string;
   }>;
 }
@@ -40,7 +40,7 @@ export interface InlineViewSpec extends SingleSketchSpec {
   onShow?: (component: AlloyComponent) => void;
   onHide?: (component: AlloyComponent) => void;
   onEscape?: (component: AlloyComponent) => void;
-  getRelated?: (component: AlloyComponent) => Option<AlloyComponent>;
+  getRelated?: (component: AlloyComponent) => Optional<AlloyComponent>;
   isExtraPart?: (component: AlloyComponent, target: SugarElement) => boolean;
   eventOrder?: Record<string, string[]>;
   fireDismissalEventInstead?: {
@@ -59,13 +59,13 @@ export interface InlineMenuSpec {
 
 export interface InlineViewApis {
   showAt: (component: AlloyComponent, anchor: AnchorSpec, thing: AlloySpec) => void;
-  showWithin: (component: AlloyComponent, anchor: AnchorSpec, thing: AlloySpec, boxElement: Option<SugarElement>) => void;
-  showWithinBounds: (component: AlloyComponent, anchor: AnchorSpec, thing: AlloySpec, getBounds: () => Option<Bounds>) => void;
+  showWithin: (component: AlloyComponent, anchor: AnchorSpec, thing: AlloySpec, boxElement: Optional<SugarElement>) => void;
+  showWithinBounds: (component: AlloyComponent, anchor: AnchorSpec, thing: AlloySpec, getBounds: () => Optional<Bounds>) => void;
   showMenuAt: (component: AlloyComponent, anchor: AnchorSpec, menuSpec: InlineMenuSpec) => void;
-  showMenuWithinBounds: (component: AlloyComponent, anchor: AnchorSpec, menuSpec: InlineMenuSpec, getBounds: () => Option<Bounds>) => void;
+  showMenuWithinBounds: (component: AlloyComponent, anchor: AnchorSpec, menuSpec: InlineMenuSpec, getBounds: () => Optional<Bounds>) => void;
   hide: (component: AlloyComponent) => void;
   isOpen: (component: AlloyComponent) => boolean;
-  getContent: (component: AlloyComponent) => Option<AlloyComponent>;
+  getContent: (component: AlloyComponent) => Optional<AlloyComponent>;
   setContent: (component: AlloyComponent, thing: AlloySpec) => void;
   reposition: (component: AlloyComponent) => void;
 }

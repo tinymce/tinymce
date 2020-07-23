@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Option, Strings, Unicode } from '@ephox/katamari';
+import { Arr, Optional, Strings, Unicode } from '@ephox/katamari';
 import { Css, PredicateFind, SugarElement, SugarNode } from '@ephox/sugar';
 import Editor from '../api/Editor';
 import { isAfterBlock, isAtEndOfBlock, isAtStartOfBlock, isBeforeBlock } from '../caret/BlockBoundary';
@@ -150,10 +150,10 @@ const normalizeNbspAtEnd = (root: SugarElement, node: Text): boolean => {
   }
 };
 
-const normalizeNbsps = (root: SugarElement, pos: CaretPosition): Option<CaretPosition> => Option.some(pos).filter(hasNbsp).bind((pos) => {
+const normalizeNbsps = (root: SugarElement, pos: CaretPosition): Optional<CaretPosition> => Optional.some(pos).filter(hasNbsp).bind((pos) => {
   const container = pos.container() as Text;
   const normalized = normalizeNbspAtStart(root, container) || normalizeNbspInMiddleOfTextNode(container) || normalizeNbspAtEnd(root, container);
-  return normalized ? Option.some(pos) : Option.none();
+  return normalized ? Optional.some(pos) : Optional.none();
 });
 
 const normalizeNbspsInEditor = (editor: Editor) => {

@@ -2,7 +2,7 @@ import {
   AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, EventFormat, Focusing, Form, FormField, FormTypes, Input, Invalidating,
   Memento, Representing, SimulatedEvent, Sketcher, SketchSpec, Tabstopping, UiSketcher
 } from '@ephox/alloy';
-import { Cell, Fun, Future, Id, Merger, Option, Result } from '@ephox/katamari';
+import { Cell, Fun, Future, Id, Merger, Optional, Result } from '@ephox/katamari';
 import { Css } from '@ephox/sugar';
 import { Hex, Rgba } from '../../api/colour/ColourTypes';
 import * as HexColour from '../../api/colour/HexColour';
@@ -176,10 +176,10 @@ const rgbFormFactory = (
 
   const factory: UiSketcher.SingleSketchFactory<RgbFormDetail, RgbFormSpec> = (): SketchSpec => {
     const state = {
-      red: Cell(Option.some(255)),
-      green: Cell(Option.some(255)),
-      blue: Cell(Option.some(255)),
-      hex: Cell(Option.some('ffffff'))
+      red: Cell(Optional.some(255)),
+      green: Cell(Optional.some(255)),
+      blue: Cell(Optional.some(255)),
+      hex: Cell(Optional.some('ffffff'))
     };
 
     const copyHexToRgb = (form: AlloyComponent, hex: Hex) => {
@@ -188,9 +188,9 @@ const rgbFormFactory = (
       setValueRgb(rgb);
     };
 
-    const get = (prop: keyof typeof state): Option<any> => state[prop].get();
+    const get = (prop: keyof typeof state): Optional<any> => state[prop].get();
 
-    const set = (prop: keyof typeof state, value: Option<any>): void => {
+    const set = (prop: keyof typeof state, value: Optional<any>): void => {
       state[prop].set(value);
     };
 
@@ -205,15 +205,15 @@ const rgbFormFactory = (
     // TODO: Find way to use this for palette and slider updates
     const setValueRgb = (rgb: Rgba): void => {
       const red = rgb.red; const green = rgb.green; const blue = rgb.blue;
-      set('red', Option.some(red));
-      set('green', Option.some(green));
-      set('blue', Option.some(blue));
+      set('red', Optional.some(red));
+      set('green', Optional.some(green));
+      set('blue', Optional.some(blue));
     };
 
     const onInvalidInput = (form: AlloyComponent, simulatedEvent: SimulatedEvent<InputEvent>) => {
       const data = simulatedEvent.event();
       if (data.type() !== 'hex') {
-        set(data.type(), Option.none());
+        set(data.type(), Optional.none());
       } else {
         onInvalidHexx(form);
       }
@@ -222,7 +222,7 @@ const rgbFormFactory = (
     const onValidHex = (form: AlloyComponent, value: string) => {
       onValidHexx(form);
       const hex = HexColour.hexColour(value);
-      set('hex', Option.some(value));
+      set('hex', Optional.some(value));
 
       const rgb = RgbaColour.fromHex(hex);
       copyRgbToForm(form, rgb);
@@ -237,7 +237,7 @@ const rgbFormFactory = (
 
     const onValidRgb = (form: AlloyComponent, prop: 'red' | 'green' | 'blue', value: string) => {
       const val = parseInt(value, 10);
-      set(prop, Option.some(val));
+      set(prop, Optional.some(val));
       getValueRgb().each((rgb) => {
         const hex = copyRgbToHex(form, rgb);
         updatePreview(form, hex);

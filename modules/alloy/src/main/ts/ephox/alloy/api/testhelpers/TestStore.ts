@@ -1,11 +1,11 @@
 import { Chain, Step } from '@ephox/agar';
 import { Assert } from '@ephox/bedrock-client';
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 
 export interface TestStore {
   add: (value: any) => void;
   adder: (value: any) => () => void;
-  adderH: (value: any) => () => Option<boolean>;
+  adderH: (value: any) => () => Optional<boolean>;
   clear: () => void;
   sClear: Step<any, any>;
   cClear: Chain<any, any>;
@@ -26,10 +26,10 @@ export const TestStore = (): TestStore => {
 
   const adder = (value: any) => () => add(value);
 
-  // Used for keyboard handlers which need to return Option to know whether or not to kill the event
+  // Used for keyboard handlers which need to return Optional to know whether or not to kill the event
   const adderH = (value: any) => () => {
     add(value);
-    return Option.some(true);
+    return Optional.some(true);
   };
 
   const sClear = Step.sync(() => {

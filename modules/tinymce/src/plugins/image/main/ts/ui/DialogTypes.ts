@@ -6,7 +6,7 @@
  */
 
 import { Types } from '@ephox/bridge';
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 
 import { ImageData } from '../core/ImageData';
 import { UploadHandler } from '../core/Uploader';
@@ -25,8 +25,8 @@ export type ListItem = ListValue | ListGroup;
 
 export interface ImageDialogInfo {
   image: ImageData;
-  imageList: Option<ListItem[]>;
-  classList: Option<ListItem[]>;
+  imageList: Optional<ListItem[]>;
+  classList: Optional<ListItem[]>;
   hasAdvTab: boolean;
   hasUploadTab: boolean;
   hasUploadUrl: boolean;
@@ -41,7 +41,7 @@ export interface ImageDialogInfo {
   credentials: boolean;
   handler: UploadHandler;
   automaticUploads: boolean;
-  prependURL: Option<string>;
+  prependURL: Optional<string>;
 }
 
 export interface ImageDialogData {

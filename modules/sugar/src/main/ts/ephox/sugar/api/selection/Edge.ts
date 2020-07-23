@@ -1,4 +1,4 @@
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import * as Compare from '../dom/Compare';
 import { SugarElement } from '../node/SugarElement';
 import * as Awareness from './Awareness';
@@ -10,7 +10,7 @@ interface SelectionStart {
   startOffset: () => number;
 }
 
-type DescentFn = (element: SugarElement<Node>) => Option<SugarElement<Node & ChildNode>>;
+type DescentFn = (element: SugarElement<Node>) => Optional<SugarElement<Node & ChildNode>>;
 type AwarenessFn = (element: SugarElement<Node>, offset: number) => boolean;
 
 const isAtEdge = (parent: SugarElement<Node>, current: SugarElement<Node>, currentOffset: number, descent: DescentFn, awareness: AwarenessFn) =>

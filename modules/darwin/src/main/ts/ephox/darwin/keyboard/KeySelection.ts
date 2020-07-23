@@ -1,4 +1,4 @@
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { Awareness, Compare, SelectorFind, SugarElement } from '@ephox/sugar';
 import { SelectionAnnotation } from '../api/SelectionAnnotation';
 import * as CellSelection from '../selection/CellSelection';
@@ -16,7 +16,7 @@ const sync = function (container: SugarElement, isRoot: (element: SugarElement) 
       });
     });
   } else {
-    return Option.none<Response>();
+    return Optional.none<Response>();
   }
 };
 
@@ -28,16 +28,16 @@ const detect = function (container: SugarElement, isRoot: (element: SugarElement
       const boxes = cellSel.boxes.getOr([]);
       if (boxes.length > 0) {
         selectRange(container, boxes, cellSel.start, cellSel.finish);
-        return Option.some(Response.create(
-          Option.some(Util.makeSitus(start, 0, start, Awareness.getEnd(start))),
+        return Optional.some(Response.create(
+          Optional.some(Util.makeSitus(start, 0, start, Awareness.getEnd(start))),
           true
         ));
       } else {
-        return Option.none<Response>();
+        return Optional.none<Response>();
       }
     });
   } else {
-    return Option.none<Response>();
+    return Optional.none<Response>();
   }
 };
 

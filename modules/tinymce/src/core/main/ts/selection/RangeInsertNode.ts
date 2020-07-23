@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import DOMUtils from '../api/dom/DOMUtils';
 import * as NodeType from '../dom/NodeType';
 
@@ -22,8 +22,8 @@ const insertNode = (dom: DOMUtils, rng: Range, node: Node) => {
 };
 
 const insertFragment = (dom: DOMUtils, rng: Range, frag: DocumentFragment) => {
-  const firstChild = Option.from(frag.firstChild);
-  const lastChild = Option.from(frag.lastChild);
+  const firstChild = Optional.from(frag.firstChild);
+  const lastChild = Optional.from(frag.lastChild);
 
   rng.insertNode(frag);
 

@@ -1,5 +1,5 @@
 import { assert } from '@ephox/bedrock-client';
-import { Arr, Fun, Option, Options } from '@ephox/katamari';
+import { Arr, Fun, Optional, Optionals } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Attribute, Css, Hierarchy, Html, Insert, Remove, SelectorFilter, SugarBody, SugarElement, Traverse } from '@ephox/sugar';
 import { Generators, SimpleGenerators } from 'ephox/snooker/api/Generators';
@@ -17,7 +17,7 @@ type Op<T> = (
   target: T,
   generators: Generators,
   direction: BarPositions<ColInfo>
-) => Option<RunOperationOutput>;
+) => Optional<RunOperationOutput>;
 
 const checkOld = (
   expCell: { section: number; row: number; column: number },
@@ -117,8 +117,8 @@ const checkStructure = (
 };
 
 const checkDelete = (
-  optExpCell: Option<{ section: number; row: number; column: number }>,
-  optExpectedHtml: Option<{ ie: string; normal: string }>,
+  optExpCell: Optional<{ section: number; row: number; column: number }>,
+  optExpectedHtml: Optional<{ ie: string; normal: string }>,
   input: string,
   operation: Op<TargetSelection>,
   cells: { section: number; row: number; column: number }[],
@@ -215,7 +215,7 @@ const checkUnmerge = (
     Hierarchy.follow(table, [ path.section, path.row, path.column ])
   );
 
-  const unmergable = Option.some(Options.cat(unmergables));
+  const unmergable = Optional.some(Optionals.cat(unmergables));
 
   TableOperations.unmergeCells(wire, table, { unmergable: Fun.constant(unmergable) }, Bridge.generators, direction);
   // Presence.assertHas(expected, table, 'checking the operation on table: ' + Html.getOuter(table));

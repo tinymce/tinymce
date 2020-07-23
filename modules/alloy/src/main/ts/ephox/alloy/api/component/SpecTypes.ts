@@ -1,4 +1,4 @@
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 
 import { DomModification } from '../../dom/DomModification';
 import { ConfiguredPart } from '../../parts/AlloyParts';
@@ -23,8 +23,8 @@ export interface StructDomSchema {
   attributes: Record<string, string | boolean | number>;
   styles: Record<string, string>;
   classes: string[];
-  value: Option<string>;
-  innerHtml: Option<string>;
+  value: Optional<string>;
+  innerHtml: Optional<string>;
 }
 
 export interface RawDomSchema extends OptionalDomSchema {

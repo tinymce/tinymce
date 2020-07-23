@@ -6,7 +6,7 @@
  */
 
 import { Types } from '@ephox/bridge';
-import { Arr, Cell, Obj, Option, Type } from '@ephox/katamari';
+import { Arr, Cell, Obj, Optional, Type } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import * as Settings from '../api/Settings';
 import { dataToHtml } from '../core/DataToHtml';
@@ -15,7 +15,7 @@ import * as Service from '../core/Service';
 import { DialogSubData, MediaData, MediaDialogData } from '../core/Types';
 import * as UpdateHtml from '../core/UpdateHtml';
 
-const extractMeta = (sourceInput: keyof MediaDialogData, data: MediaDialogData): Option<Record<string, string>> => Obj.get(data, sourceInput).bind((mainData: DialogSubData) => Obj.get(mainData, 'meta'));
+const extractMeta = (sourceInput: keyof MediaDialogData, data: MediaDialogData): Optional<Record<string, string>> => Obj.get(data, sourceInput).bind((mainData: DialogSubData) => Obj.get(mainData, 'meta'));
 
 const getValue = (data: MediaDialogData, metaData: Record<string, string>, sourceInput?: keyof MediaDialogData) => (prop: keyof MediaDialogData): Record<string, string> => {
   // Cases:
@@ -24,17 +24,17 @@ const getValue = (data: MediaDialogData, metaData: Record<string, string>, sourc
   // 3. Not a urlinput so just get string
   // If prop === sourceInput do 1, 2 then 3, else do 2 then 1 or 3
   // ASSUMPTION: we only want to get values for props that already exist in data
-  const getFromData = (): Option<string | Record<string, string> | DialogSubData> => Obj.get(data, prop);
-  const getFromMetaData = (): Option<string> => Obj.get(metaData, prop);
-  const getNonEmptyValue = (c: Record<string, string>): Option<string> => Obj.get(c, 'value').bind((v: string) => v.length > 0 ? Option.some(v) : Option.none());
+  const getFromData = (): Optional<string | Record<string, string> | DialogSubData> => Obj.get(data, prop);
+  const getFromMetaData = (): Optional<string> => Obj.get(metaData, prop);
+  const getNonEmptyValue = (c: Record<string, string>): Optional<string> => Obj.get(c, 'value').bind((v: string) => v.length > 0 ? Optional.some(v) : Optional.none());
 
   const getFromValueFirst = () => getFromData().bind((child) => Type.isObject(child)
     ? getNonEmptyValue(child as Record<string, string>).orThunk(getFromMetaData)
-    : getFromMetaData().orThunk(() => Option.from(child as string)));
+    : getFromMetaData().orThunk(() => Optional.from(child as string)));
 
   const getFromMetaFirst = () => getFromMetaData().orThunk(() => getFromData().bind((child) => Type.isObject(child)
     ? getNonEmptyValue(child as Record<string, string>)
-    : Option.from(child as string)));
+    : Optional.from(child as string)));
 
   return { [prop]: (prop === sourceInput ? getFromValueFirst() : getFromMetaFirst()).getOr('') };
 };

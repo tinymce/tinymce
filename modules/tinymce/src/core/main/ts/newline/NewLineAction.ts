@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Adt, Arr, Option } from '@ephox/katamari';
+import { Adt, Arr, Optional } from '@ephox/katamari';
 import Editor from '../api/Editor';
 import * as Settings from '../api/Settings';
 import * as LazyEvaluator from '../util/LazyEvaluator';
@@ -70,7 +70,7 @@ const match = function (predicates, action) {
       return res && p(editor, shiftKey);
     }, true);
 
-    return isMatch ? Option.some(action) : Option.none();
+    return isMatch ? Optional.some(action) : Optional.none();
   };
 };
 

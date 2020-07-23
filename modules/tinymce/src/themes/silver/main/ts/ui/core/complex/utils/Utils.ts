@@ -6,19 +6,19 @@
  */
 
 import { Toolbar } from '@ephox/bridge';
-import { Cell, Option } from '@ephox/katamari';
+import { Cell, Optional } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { FormatterFormatItem } from '../BespokeSelect';
 
 type Unbinder = () => void;
 
 const onSetupFormatToggle = (editor: Editor, name: string) => (api: Toolbar.ToolbarToggleButtonInstanceApi) => {
-  const unbindCell = Cell<Option<Unbinder>>(Option.none());
+  const unbindCell = Cell<Optional<Unbinder>>(Optional.none());
 
   const init = () => {
     api.setActive(editor.formatter.match(name));
     const unbind = editor.formatter.formatChanged(name, api.setActive).unbind;
-    unbindCell.set(Option.some(unbind));
+    unbindCell.set(Optional.some(unbind));
   };
 
   // The editor may or may not have been setup yet, so check for that

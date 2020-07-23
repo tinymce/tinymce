@@ -1,4 +1,4 @@
-import { Fun, Option, Strings } from '@ephox/katamari';
+import { Fun, Optional, Strings } from '@ephox/katamari';
 import { Attribute, Css, Height, SugarBody, SugarElement, SugarNode, Traverse, Width } from '@ephox/sugar';
 import * as TableLookup from '../api/TableLookup';
 import { TableSize } from '../api/TableSize';
@@ -69,9 +69,9 @@ export const getRawWidth = function (element: SugarElement) {
   // Try to use the style width first, otherwise attempt to get attribute width
   const cssWidth = Css.getRaw(element, 'width');
   return cssWidth.fold(function () {
-    return Option.from(Attribute.get(element, 'width'));
+    return Optional.from(Attribute.get(element, 'width'));
   }, function (width) {
-    return Option.some(width);
+    return Optional.some(width);
   });
 };
 
@@ -130,17 +130,17 @@ export const getHeight = function (cell: SugarElement) {
   return get(cell, 'rowspan', getTotalHeight);
 };
 
-export const getGenericWidth = function (cell: SugarElement): Option<GenericWidth> {
+export const getGenericWidth = function (cell: SugarElement): Optional<GenericWidth> {
   const width = getRawWidth(cell);
   return width.bind(function (w) {
     const match = rGenericSizeRegex.exec(w);
     if (match !== null) {
-      return Option.some({
+      return Optional.some({
         width: Fun.constant(parseFloat(match[1])),
         unit: Fun.constant(match[3])
       });
     } else {
-      return Option.none<GenericWidth>();
+      return Optional.none<GenericWidth>();
     }
   });
 };

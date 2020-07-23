@@ -7,7 +7,7 @@
 
 import { AlloyEvents, Button, Memento, NativeEvents, SketchSpec } from '@ephox/alloy';
 import { BlobConversions } from '@ephox/imagetools';
-import { Id, Option } from '@ephox/katamari';
+import { Id, Optional } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 
 import * as Buttons from '../ui/Buttons';
@@ -28,10 +28,10 @@ const addImage = (editor: Editor, blob: Blob) => {
   });
 };
 
-const extractBlob = (simulatedEvent): Option<Blob> => {
+const extractBlob = (simulatedEvent): Optional<Blob> => {
   const event = simulatedEvent.event();
   const files = event.raw().target.files || event.raw().dataTransfer.files;
-  return Option.from(files[0]);
+  return Optional.from(files[0]);
 };
 
 const sketch = (editor): SketchSpec => {

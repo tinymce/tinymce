@@ -1,4 +1,4 @@
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
 import * as Behaviour from '../../api/behaviour/Behaviour';
@@ -34,7 +34,7 @@ export interface SlidingConfig extends Behaviour.BehaviourConfigDetail {
   growingClass: string;
   onStartGrow: (comp: AlloyComponent) => void;
   onStartShrink: (comp: AlloyComponent) => void;
-  getAnimationRoot: Option<(comp: AlloyComponent) => SugarElement>;
+  getAnimationRoot: Optional<(comp: AlloyComponent) => SugarElement>;
 
 }
 

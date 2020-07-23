@@ -1,6 +1,6 @@
 import { Assertions, Chain, GeneralSteps, Logger, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Arr, Fun, Option } from '@ephox/katamari';
+import { Arr, Fun, Optional } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Hierarchy, SugarElement } from '@ephox/sugar';
 import { CaretPosition } from 'tinymce/core/caret/CaretPosition';
@@ -74,8 +74,8 @@ UnitTest.asynctest('browser.tinymce.core.caret.LineReader', (success, failure) =
     });
   });
 
-  const cAssertNone = Chain.op(function (a: Option<any>) {
-    Assertions.assertEq('Option return value should be none', true, a.isNone());
+  const cAssertNone = Chain.op(function (a: Optional<any>) {
+    Assertions.assertEq('Optional return value should be none', true, a.isNone());
   });
 
   const cAssertLineInfoCaretPositions = (expectedPositions: Path[]) => Chain.op(function (lineInfo: LineInfo) {
@@ -112,7 +112,7 @@ UnitTest.asynctest('browser.tinymce.core.caret.LineReader', (success, failure) =
     Assertions.assertEq('Should be the expected break type', expectedBreakType, actualBreakType);
   });
 
-  const cAssertCaretPosition = (path: number[], offset: number) => Chain.op(function (posOption: Option<any>) {
+  const cAssertCaretPosition = (path: number[], offset: number) => Chain.op(function (posOption: Optional<any>) {
     const container = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), path).getOrDie();
     const pos = posOption.getOrDie('Needs to return a caret');
 

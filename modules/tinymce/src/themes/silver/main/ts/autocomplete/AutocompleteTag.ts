@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { Awareness, CursorPosition, Insert, SelectorFind, SugarElement, Traverse } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 
@@ -31,7 +31,7 @@ const create = (editor: Editor, range: Range): SugarElement =>
     return wrapper;
   });
 
-const detect = (elm: SugarElement): Option<SugarElement> => SelectorFind.closest(elm, autocompleteSelector);
+const detect = (elm: SugarElement): Optional<SugarElement> => SelectorFind.closest(elm, autocompleteSelector);
 
 export {
   create,

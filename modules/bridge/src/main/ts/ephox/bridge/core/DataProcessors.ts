@@ -1,7 +1,8 @@
 import { Processor } from '@ephox/boulder';
-import { Arr, Option, Type } from '@ephox/katamari';
+import { Arr, Optional, Type } from '@ephox/katamari';
 
 import { checkboxDataProcessor } from '../components/dialog/Checkbox';
+import { collectionDataProcessor } from '../components/dialog/Collection';
 import { colorInputDataProcessor } from '../components/dialog/ColorInput';
 import { colorPickerDataProcessor } from '../components/dialog/ColorPicker';
 import { customEditorDataProcessor } from '../components/dialog/CustomEditor';
@@ -11,10 +12,9 @@ import { inputDataProcessor } from '../components/dialog/Input';
 import { selectBoxDataProcessor } from '../components/dialog/SelectBox';
 import { sizeInputDataProcessor } from '../components/dialog/SizeInput';
 import { textAreaDataProcessor } from '../components/dialog/Textarea';
+import { dialogToggleMenuItemDataProcessor } from '../components/dialog/ToggleMenuItem';
 import { urlInputDataProcessor } from '../components/dialog/UrlInput';
 import { getAllObjects } from './ObjUtils';
-import { collectionDataProcessor } from '../components/dialog/Collection';
-import { dialogToggleMenuItemDataProcessor } from '../components/dialog/ToggleMenuItem';
 
 const isNamedItem = (obj) => Type.isString(obj.type) && Type.isString(obj.name);
 
@@ -35,7 +35,7 @@ const dataProcessors = {
   togglemenuitem: dialogToggleMenuItemDataProcessor
 };
 
-const getDataProcessor = (item): Option<Processor> => Option.from(dataProcessors[item.type]);
+const getDataProcessor = (item): Optional<Processor> => Optional.from(dataProcessors[item.type]);
 
 const getNamedItems = (structure) => Arr.filter(getAllObjects(structure), isNamedItem);
 

@@ -1,4 +1,4 @@
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { Structs, TablePositions } from '@ephox/snooker';
 import { Compare, SelectorFind, SugarElement } from '@ephox/sugar';
 import * as CellSelection from '../selection/CellSelection';
@@ -17,7 +17,7 @@ const retrieveBox = function (container: SugarElement, firstSelectedSelector: st
     const lastAncestor = SelectorFind.ancestor(edges.last(), 'thead,tfoot,tbody,table', isRoot);
     return firstAncestor.bind(function (fA) {
       return lastAncestor.bind(function (lA) {
-        return Compare.eq(fA, lA) ? TablePositions.getBox(edges.table(), edges.first(), edges.last()) : Option.none<Structs.Bounds>();
+        return Compare.eq(fA, lA) ? TablePositions.getBox(edges.table(), edges.first(), edges.last()) : Optional.none<Structs.Bounds>();
       });
     });
   });

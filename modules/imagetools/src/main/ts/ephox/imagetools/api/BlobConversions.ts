@@ -1,4 +1,4 @@
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import * as Conversions from '../util/Conversions';
 
 const blobToImage = function (blob: Blob): Promise<HTMLImageElement> {
@@ -17,12 +17,12 @@ const blobToBase64 = function (blob: Blob): Promise<string> {
   return Conversions.blobToBase64(blob);
 };
 
-const dataUriToBlobSync = function (uri: string): Option<Blob> {
+const dataUriToBlobSync = function (uri: string): Optional<Blob> {
   return Conversions.dataUriToBlobSync(uri);
 };
 
-const uriToBlob = function (uri: string): Option<Promise<Blob>> {
-  return Option.from(Conversions.uriToBlob(uri));
+const uriToBlob = function (uri: string): Optional<Promise<Blob>> {
+  return Optional.from(Conversions.uriToBlob(uri));
 };
 
 export {

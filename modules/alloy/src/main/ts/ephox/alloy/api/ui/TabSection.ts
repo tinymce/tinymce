@@ -1,4 +1,4 @@
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import { Attribute } from '@ephox/sugar';
 
 import * as AlloyParts from '../../parts/AlloyParts';
@@ -34,7 +34,7 @@ const factory: CompositeSketchFactory<TabSectionDetail, TabSectionSpec> = (detai
     });
   };
 
-  const changeTabBy = (section: AlloyComponent, byPred: (tbar: AlloyComponent) => Option<AlloyComponent>) => {
+  const changeTabBy = (section: AlloyComponent, byPred: (tbar: AlloyComponent) => Optional<AlloyComponent>) => {
     AlloyParts.getPart(section, detail, 'tabbar').each((tabbar) => {
       byPred(tabbar).each(AlloyTriggers.emitExecute);
     });

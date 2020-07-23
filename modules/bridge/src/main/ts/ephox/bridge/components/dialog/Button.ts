@@ -1,5 +1,5 @@
 import { FieldPresence, FieldSchema, ValueSchema } from '@ephox/boulder';
-import { Id, Option, Result } from '@ephox/katamari';
+import { Id, Optional, Result } from '@ephox/katamari';
 
 export interface ButtonApi {
   type: 'button';
@@ -17,7 +17,7 @@ export interface Button {
   disabled: boolean;
   primary: boolean;
   name: string;
-  icon: Option<string>;
+  icon: Optional<string>;
   borderless: boolean;
 }
 

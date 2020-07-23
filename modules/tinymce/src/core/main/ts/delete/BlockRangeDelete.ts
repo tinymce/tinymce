@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Fun, Options } from '@ephox/katamari';
+import { Fun, Optionals } from '@ephox/katamari';
 import { Compare, PredicateFind, SugarElement } from '@ephox/sugar';
 import EditorSelection from '../api/dom/Selection';
 import Editor from '../api/Editor';
@@ -18,7 +18,7 @@ import * as MergeBlocks from './MergeBlocks';
 const deleteRangeMergeBlocks = (rootNode: SugarElement<Node>, selection: EditorSelection) => {
   const rng = selection.getRng();
 
-  return Options.lift2(
+  return Optionals.lift2(
     DeleteUtils.getParentBlock(rootNode, SugarElement.fromDom(rng.startContainer)),
     DeleteUtils.getParentBlock(rootNode, SugarElement.fromDom(rng.endContainer)),
     (block1, block2) => {

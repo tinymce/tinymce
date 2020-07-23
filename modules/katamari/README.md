@@ -21,7 +21,7 @@ Below is a list of commonly used parts of `katamari`
 
 ## Optional Data Types
 
-`Option`: A representation of None or Some(x)
+`Optional`: A representation of None or Some(x)
 `Result`: A representation of Error(str) or Value(v)
 
 ## Asynchronous Data Types

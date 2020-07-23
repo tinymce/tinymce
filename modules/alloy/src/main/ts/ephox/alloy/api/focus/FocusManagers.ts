@@ -1,4 +1,4 @@
-import { Fun, Option } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 import { Compare, Focus, SugarElement } from '@ephox/sugar';
 
 import { Highlighting } from '../behaviour/Highlighting';
@@ -6,7 +6,7 @@ import { AlloyComponent } from '../component/ComponentApi';
 import * as AlloyTriggers from '../events/AlloyTriggers';
 import * as SystemEvents from '../events/SystemEvents';
 
-const reportFocusShifting = (component: AlloyComponent, prevFocus: Option<SugarElement>, newFocus: Option<SugarElement>) => {
+const reportFocusShifting = (component: AlloyComponent, prevFocus: Optional<SugarElement>, newFocus: Optional<SugarElement>) => {
   const noChange = prevFocus.exists((p) => newFocus.exists((n) => Compare.eq(n, p)));
   if (!noChange) {
     AlloyTriggers.emitWith(component, SystemEvents.focusShifted(), {
@@ -17,7 +17,7 @@ const reportFocusShifting = (component: AlloyComponent, prevFocus: Option<SugarE
 };
 
 export interface FocusManager {
-  get: (component: AlloyComponent) => Option<SugarElement>;
+  get: (component: AlloyComponent) => Optional<SugarElement>;
   set: (component: AlloyComponent, focusee: SugarElement) => void;
 }
 

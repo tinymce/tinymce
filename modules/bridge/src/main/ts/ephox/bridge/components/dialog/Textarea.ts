@@ -1,5 +1,5 @@
-import { ValueSchema, FieldSchema } from '@ephox/boulder';
-import { Option, Result } from '@ephox/katamari';
+import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { Optional, Result } from '@ephox/katamari';
 import { FormComponentWithLabel, FormComponentWithLabelApi, formComponentWithLabelFields } from './FormComponent';
 
 export interface TextAreaApi extends FormComponentWithLabelApi {
@@ -12,7 +12,7 @@ export interface TextAreaApi extends FormComponentWithLabelApi {
 export interface TextArea extends FormComponentWithLabel {
   type: 'textarea';
   maximized: boolean;
-  placeholder: Option<string>;
+  placeholder: Optional<string>;
   disabled: boolean;
 }
 

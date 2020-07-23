@@ -8,7 +8,7 @@
 import {
   AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, CustomEvent, GuiFactory, InlineView, Keying, NativeEvents
 } from '@ephox/alloy';
-import { Arr, Cell, Id, Option, Result } from '@ephox/katamari';
+import { Arr, Cell, Id, Optional, Result } from '@ephox/katamari';
 import { Class, Css, EventArgs, Focus, SugarElement, Width } from '@ephox/sugar';
 import Delay from 'tinymce/core/api/util/Delay';
 
@@ -24,12 +24,12 @@ export interface BackwardSlideEvent extends CustomEvent { }
 const changeSlideEvent = Id.generate('change-slide-event');
 export interface ChangeSlideEvent extends CustomEvent {
   contents: () => AlloySpec;
-  focus: () => Option<SugarElement>;
+  focus: () => Optional<SugarElement>;
 }
 
 const resizingClass = 'tox-pop--resizing';
 
-const renderContextToolbar = (spec: { onEscape: () => Option<boolean>; sink: AlloyComponent }) => {
+const renderContextToolbar = (spec: { onEscape: () => Optional<boolean>; sink: AlloyComponent }) => {
   const stack = Cell([ ]);
 
   return InlineView.sketch({
@@ -92,7 +92,7 @@ const renderContextToolbar = (spec: { onEscape: () => Option<boolean>; sink: All
           });
           AlloyTriggers.emitWith(comp, changeSlideEvent, {
             contents: se.event().forwardContents(),
-            focus: Option.none()
+            focus: Optional.none()
           });
         }),
 
@@ -117,7 +117,7 @@ const renderContextToolbar = (spec: { onEscape: () => Option<boolean>; sink: All
             spec.onEscape(),
           (_) => {
             AlloyTriggers.emit(comp, backSlideEvent);
-            return Option.some(true);
+            return Optional.some(true);
           }
         )
       })

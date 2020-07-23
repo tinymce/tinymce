@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Fun, Option } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 import Editor from '../api/Editor';
 import Env from '../api/Env';
 import * as Settings from '../api/Settings';
@@ -19,10 +19,10 @@ import * as NavigationUtils from './NavigationUtils';
 
 const isContentEditableFalse = NodeType.isContentEditableFalse;
 
-const moveToCeFalseHorizontally = (direction: HDirection, editor: Editor, range: Range): Option<Range> =>
+const moveToCeFalseHorizontally = (direction: HDirection, editor: Editor, range: Range): Optional<Range> =>
   NavigationUtils.moveHorizontally(editor, direction, range, isBeforeContentEditableFalse, isAfterContentEditableFalse, isContentEditableFalse);
 
-const moveToCeFalseVertically = (direction: LineWalker.VDirection, editor: Editor, range: Range): Option<Range> => {
+const moveToCeFalseVertically = (direction: LineWalker.VDirection, editor: Editor, range: Range): Optional<Range> => {
   const isBefore = (caretPosition: CaretPosition) => isBeforeContentEditableFalse(caretPosition) || isBeforeTable(caretPosition);
   const isAfter = (caretPosition: CaretPosition) => isAfterContentEditableFalse(caretPosition) || isAfterTable(caretPosition);
   return NavigationUtils.moveVertically(editor, direction, range, isBefore, isAfter, isContentEditableFalse);
@@ -64,23 +64,23 @@ const exitPreBlock = (editor: Editor, direction: HDirection, range: Range): void
   }
 };
 
-const getHorizontalRange = (editor: Editor, forward: boolean): Option<Range> => {
+const getHorizontalRange = (editor: Editor, forward: boolean): Optional<Range> => {
   const direction = forward ? HDirection.Forwards : HDirection.Backwards;
   const range = editor.selection.getRng();
 
   return moveToCeFalseHorizontally(direction, editor, range).orThunk(() => {
     exitPreBlock(editor, direction, range);
-    return Option.none();
+    return Optional.none();
   });
 };
 
-const getVerticalRange = (editor: Editor, down: boolean): Option<Range> => {
+const getVerticalRange = (editor: Editor, down: boolean): Optional<Range> => {
   const direction = down ? 1 : -1;
   const range = editor.selection.getRng();
 
   return moveToCeFalseVertically(direction, editor, range).orThunk(() => {
     exitPreBlock(editor, direction, range);
-    return Option.none();
+    return Optional.none();
   });
 };
 

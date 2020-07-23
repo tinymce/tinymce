@@ -1,29 +1,29 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { Arr, Fun, Optional, OptionalInstances, Optionals } from 'ephox/katamari/api/Main';
 import fc from 'fast-check';
-import { Option, Options, OptionInstances, Arr, Fun } from 'ephox/katamari/api/Main';
 
-const { tOption } = OptionInstances;
+const { tOptional } = OptionalInstances;
 
 UnitTest.test('Arr.findMap of empty is none', () => {
-  Assert.eq('eq', Option.none(), Arr.findMap([], Fun.die('⊥')), tOption());
+  Assert.eq('eq', Optional.none(), Arr.findMap([], Fun.die('⊥')), tOptional());
 });
 
-UnitTest.test('Arr.findMap of non-empty is first if f is Option.some', () => {
+UnitTest.test('Arr.findMap of non-empty is first if f is Optional.some', () => {
   fc.assert(fc.property(
     fc.integer(),
     fc.array(fc.integer()),
     (head, tail) => {
       const arr = [ head, ...tail ];
-      Assert.eq('eq', Option.some(head), Arr.findMap(arr, Option.some), tOption());
+      Assert.eq('eq', Optional.some(head), Arr.findMap(arr, Optional.some), tOptional());
     }
   ));
 });
 
-UnitTest.test('Arr.findMap of non-empty is none if f is Option.none', () => {
+UnitTest.test('Arr.findMap of non-empty is none if f is Optional.none', () => {
   fc.assert(fc.property(
     fc.array(fc.integer()),
     (arr) => {
-      Assert.eq('eq', Option.none(), Arr.findMap(arr, () => Option.none()), tOption());
+      Assert.eq('eq', Optional.none(), Arr.findMap(arr, () => Optional.none()), tOptional());
     }
   ));
 });
@@ -36,7 +36,7 @@ UnitTest.test('Arr.findMap finds an element', () => {
     fc.array(fc.integer()),
     (prefix, element, ret, suffix) => {
       const arr = [ ...prefix, element, ...suffix ];
-      Assert.eq('eq', Option.some(ret), Arr.findMap(arr, (x) => Options.someIf(x === element, ret)), tOption());
+      Assert.eq('eq', Optional.some(ret), Arr.findMap(arr, (x) => Optionals.someIf(x === element, ret)), tOptional());
     }
   ));
 });
@@ -46,7 +46,7 @@ UnitTest.test('Arr.findMap does not find an element', () => {
     fc.array(fc.nat()),
     fc.nat(),
     (arr, ret) => {
-      Assert.eq('eq', Option.none(), Arr.findMap(arr, (x) => Options.someIf(x === -1, ret)), tOption());
+      Assert.eq('eq', Optional.none(), Arr.findMap(arr, (x) => Optionals.someIf(x === -1, ret)), tOptional());
     }
   ));
 });

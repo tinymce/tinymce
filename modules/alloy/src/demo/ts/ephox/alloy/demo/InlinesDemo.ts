@@ -1,4 +1,4 @@
-import { Arr, Fun, Option, Result } from '@ephox/katamari';
+import { Arr, Fun, Optional, Result } from '@ephox/katamari';
 import { Class, EventArgs, SugarElement, Value } from '@ephox/sugar';
 
 import * as AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviour';
@@ -100,12 +100,12 @@ export default (): void => {
 
     onEscape() {
       console.log('inline.menu.escape');
-      return Option.some<boolean>(true);
+      return Optional.some<boolean>(true);
     },
 
     onExecute() {
       console.log('inline.menu.execute');
-      return Option.some<boolean>(true);
+      return Optional.some<boolean>(true);
     },
 
     onOpenMenu(_sandbox, _menu) {

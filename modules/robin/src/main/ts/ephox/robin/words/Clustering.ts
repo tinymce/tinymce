@@ -1,5 +1,5 @@
 import { Universe } from '@ephox/boss';
-import { Arr, Fun, Option } from '@ephox/katamari';
+import { Arr, Fun, Optional } from '@ephox/katamari';
 import { LanguageZones } from '../zone/LanguageZones';
 import * as ClusterSearch from './ClusterSearch';
 import { WordDecision, WordDecisionItem } from './WordDecision';
@@ -53,7 +53,7 @@ interface Grouping<E> {
   readonly middle: WordDecisionItem<E>[];
   readonly left: WordDecisionItem<E>[];
   readonly right: WordDecisionItem<E>[];
-  readonly lang: Option<string>;
+  readonly lang: Optional<string>;
 }
 
 // Return a grouping of: left, middle, right, lang, and all. It will use

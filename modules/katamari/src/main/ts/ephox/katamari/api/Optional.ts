@@ -1,11 +1,11 @@
 import * as Fun from './Fun';
 
-/** A value which may be Option.some(a) or Option.none().
+/** A value which may be Optional.some(a) or Optional.none().
  *  Useful for representing partiality or pass/fail conditions that produce a value when successful.
  *  Sometimes called a "type-safe alternative to null".
  *  Can be thought of as a list of exactly zero or 1 elements.
  */
-export interface Option<T> {
+export interface Optional<T> {
   /** If none, run whenNone; if some(a) run whenSome(a) */
   readonly fold: <T2> (whenNone: () => T2, whenSome: (v: T) => T2) => T2;
 
@@ -30,53 +30,53 @@ export interface Option<T> {
   - if some: return self
   - if none: return opt
   */
-  readonly or: (opt: Option<T>) => Option<T>;
+  readonly or: (opt: Optional<T>) => Optional<T>;
 
   /** Same as "or", but uses a thunk instead of a value */
-  readonly orThunk: (makeOption: () => Option<T>) => Option<T>;
+  readonly orThunk: (makeOption: () => Optional<T>) => Optional<T>;
 
   /** Run a function over the 'some' value.
-   *  "map" operation on the Option functor.
+   *  "map" operation on the Optional functor.
    */
-  readonly map: <T2> (mapper: (x: T) => T2) => Option<T2>;
+  readonly map: <T2> (mapper: (x: T) => T2) => Optional<T2>;
 
   /** Run a side effect over the 'some' value */
   readonly each: (worker: (x: T) => void) => void;
 
-  /** "bind"/"flatMap" operation on the Option Bind/Monad.
+  /** "bind"/"flatMap" operation on the Optional Bind/Monad.
    *  Equivalent to >>= in Haskell/PureScript; flatMap in Scala.
    */
-  readonly bind: <T2> (f: (x: T) => Option<T2>) => Option<T2>;
+  readonly bind: <T2> (f: (x: T) => Optional<T2>) => Optional<T2>;
 
-  /** Does this Option contain a value that predicate? */
+  /** Does this Optional contain a value that predicate? */
   readonly exists: (f: (x: T) => boolean) => boolean;
 
   /** Do all values contained in this option match this predicate? */
   readonly forall: (f: (x: T) => boolean) => boolean;
 
-  /** Return all values in this Option that match the predicate.
+  /** Return all values in this Optional that match the predicate.
    *  The predicate may refine the constituent type using TypeScript type predicates.
    */
   readonly filter: {
-    <Q extends T>(f: (x: T) => x is Q): Option<Q>;
-    (f: (x: T) => boolean): Option<T>;
+    <Q extends T>(f: (x: T) => x is Q): Optional<Q>;
+    (f: (x: T) => boolean): Optional<T>;
   };
 
   /** Compare two Options using === */
-  readonly equals: (opt: Option<T>) => boolean;
+  readonly equals: (opt: Optional<T>) => boolean;
 
   /** Compare two Options using a specified comparator. */
-  readonly equals_: <T2> (opt: Option<T2>, equality: (a: T, b: T2) => boolean) => boolean;
+  readonly equals_: <T2> (opt: Optional<T2>, equality: (a: T, b: T2) => boolean) => boolean;
 
-  /** Returns all the values in this Option as an array */
+  /** Returns all the values in this Optional as an array */
   readonly toArray: () => T[];
 
   readonly toString: () => string;
 }
 
-const none = <T>() => <Option<T>> NONE;
+const none = <T>() => <Optional<T>> NONE;
 
-const NONE: Option<any> = (() => {
+const NONE: Optional<any> = (() => {
   const eq = function (o) {
     return o.isNone();
   };
@@ -84,7 +84,7 @@ const NONE: Option<any> = (() => {
   // inlined from peanut, maybe a micro-optimisation?
   const call = (thunk) => thunk();
   const id = (n) => n;
-  const me: Option<any> = {
+  const me: Optional<any> = {
     fold: (n, _s) => n(),
     is: Fun.never,
     isSome: Fun.never,
@@ -112,7 +112,7 @@ const NONE: Option<any> = (() => {
   return me;
 })();
 
-const some = <T>(a: T): Option<T> => {
+const some = <T>(a: T): Optional<T> => {
   const constant_a = Fun.constant(a);
 
   const self = () =>
@@ -123,7 +123,7 @@ const some = <T>(a: T): Option<T> => {
     return f(a);
   };
 
-  const me: Option<T> = {
+  const me: Optional<T> = {
     fold: <T2> (n: () => T2, s: (v: T) => T2): T2 => s(a),
     is: (v: T): boolean => a === v,
     isSome: Fun.always,
@@ -142,14 +142,14 @@ const some = <T>(a: T): Option<T> => {
     bind,
     exists: bind,
     forall: bind,
-    filter: <Q extends T>(f: (value: T) => value is Q): Option<Q> =>
-      f(a) ? me as Option<Q> : NONE,
+    filter: <Q extends T>(f: (value: T) => value is Q): Optional<Q> =>
+      f(a) ? me as Optional<Q> : NONE,
     toArray: () => [ a ],
     toString: () => 'some(' + a + ')',
-    equals(o: Option<T>) {
+    equals(o: Optional<T>) {
       return o.is(a);
     },
-    equals_<T2>(o: Option<T2>, elementEq: (a: T, b: T2) => boolean) {
+    equals_<T2>(o: Optional<T2>, elementEq: (a: T, b: T2) => boolean) {
       return o.fold(
         Fun.never,
         function (b) { return elementEq(a, b); }
@@ -159,9 +159,9 @@ const some = <T>(a: T): Option<T> => {
   return me;
 };
 
-const from = <T>(value: T | undefined | null): Option<T> => value === null || value === undefined ? NONE : some(value);
+const from = <T>(value: T | undefined | null): Optional<T> => value === null || value === undefined ? NONE : some(value);
 
-export const Option = {
+export const Optional = {
   some,
   none,
   from

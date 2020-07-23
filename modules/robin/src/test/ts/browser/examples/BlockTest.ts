@@ -1,5 +1,5 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 import * as DomLook from 'ephox/robin/api/dom/DomLook';
 import * as DomParent from 'ephox/robin/api/dom/DomParent';
@@ -7,7 +7,7 @@ import * as DomStructure from 'ephox/robin/api/dom/DomStructure';
 import * as BrowserCheck from 'ephox/robin/test/BrowserCheck';
 
 UnitTest.test('BlockTest', function () {
-  const check = function (expected: string, input: string, look: (e: SugarElement) => Option<SugarElement>) {
+  const check = function (expected: string, input: string, look: (e: SugarElement) => Optional<SugarElement>) {
     BrowserCheck.run(input, function (node) {
       const actual = DomParent.sharedOne(look, [ node ]);
       actual.fold(function () {
@@ -18,7 +18,7 @@ UnitTest.test('BlockTest', function () {
     });
   };
 
-  const checkNone = function (input: string, look: (e: SugarElement) => Option<SugarElement>) {
+  const checkNone = function (input: string, look: (e: SugarElement) => Optional<SugarElement>) {
     BrowserCheck.run(input, function (node) {
       const actual = DomParent.sharedOne(look, [ node ]);
       actual.each(function (a) {

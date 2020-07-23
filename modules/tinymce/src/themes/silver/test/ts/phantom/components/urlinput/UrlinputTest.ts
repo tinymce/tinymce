@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, Chain, Keyboard, Keys, Logger, Mouse, Step, UiControls, UiFinder, Waiter } from '@ephox/agar';
 import { AlloyTriggers, Focusing, GuiFactory, NativeEvents, Representing, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Future, Option } from '@ephox/katamari';
+import { Future, Optional } from '@ephox/katamari';
 import { SelectorFind, SugarElement, Value } from '@ephox/sugar';
 import { ApiUrlData } from 'tinymce/themes/silver/backstage/UrlInputBackstage';
 import { LinkTargetType } from 'tinymce/themes/silver/ui/core/LinkTargets';
@@ -16,14 +16,14 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
   TestHelpers.GuiSetup.setup(
     (store, _doc, _body) => GuiFactory.build(
       renderUrlInput({
-        label: Option.some('UrlInput label'),
+        label: Optional.some('UrlInput label'),
         name: 'col1',
         filetype: 'file',
         disabled: false
       }, helpers.backstage, {
         getHistory: (_fileType) => [],
         addToHistory: (_url, _filetype) => store.adder('addToHistory')(),
-        getLinkInformation: () => Option.some({
+        getLinkInformation: () => Optional.some({
           targets: [
             {
               type: 'header' as LinkTargetType,
@@ -43,8 +43,8 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
           anchorTop: '#anchor-top',
           anchorBottom: undefined
         }),
-        getValidationHandler: () => Option.none(),
-        getUrlPicker: (_filetype) => Option.some((entry: ApiUrlData) => {
+        getValidationHandler: () => Optional.none(),
+        getUrlPicker: (_filetype) => Optional.some((entry: ApiUrlData) => {
           store.adder('urlpicker')();
           return Future.pure({ value: 'http://tiny.cloud', meta: { before: entry.value }, fieldname: 'test' });
         })

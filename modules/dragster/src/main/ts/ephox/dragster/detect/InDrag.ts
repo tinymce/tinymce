@@ -1,4 +1,4 @@
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { Bindable, Event, Events } from '@ephox/porkbun';
 import { EventArgs, SugarPosition } from '@ephox/sugar';
 import { DragMode } from '../api/DragApis';
@@ -18,10 +18,10 @@ interface InDragEvents {
 
 export default function () {
 
-  let previous = Option.none<SugarPosition>();
+  let previous = Optional.none<SugarPosition>();
 
   const reset = function () {
-    previous = Option.none();
+    previous = Optional.none();
   };
 
   // Return position delta between previous position and nu position,
@@ -31,7 +31,7 @@ export default function () {
       return mode.compare(old, nu);
     });
 
-    previous = Option.some(nu);
+    previous = Optional.some(nu);
     return result;
   };
 

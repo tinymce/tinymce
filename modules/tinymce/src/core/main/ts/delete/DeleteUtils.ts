@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Option, Options } from '@ephox/katamari';
+import { Optional, Optionals } from '@ephox/katamari';
 import { Compare, PredicateFind, SugarElement } from '@ephox/sugar';
 import Editor from '../api/Editor';
 import * as CaretFinder from '../caret/CaretFinder';
@@ -16,10 +16,10 @@ import * as InlineUtils from '../keyboard/InlineUtils';
 const isBeforeRoot = (rootNode: SugarElement<any>) => (elm: SugarElement<any>): boolean =>
   Compare.eq(rootNode, SugarElement.fromDom(elm.dom().parentNode));
 
-const getParentBlock = (rootNode: SugarElement<Node>, elm: SugarElement<Node>): Option<SugarElement<Node>> =>
+const getParentBlock = (rootNode: SugarElement<Node>, elm: SugarElement<Node>): Optional<SugarElement<Node>> =>
   (Compare.contains(rootNode, elm)
     ? PredicateFind.closest(elm, (element) => isTextBlock(element) || isListItem(element), isBeforeRoot(rootNode))
-    : Option.none()
+    : Optional.none()
   );
 
 const placeCaretInEmptyBody = (editor: Editor) => {
@@ -36,7 +36,7 @@ const paddEmptyBody = (editor: Editor) => {
 };
 
 const willDeleteLastPositionInElement = (forward: boolean, fromPos: CaretPosition, elm: Node) =>
-  Options.lift2(
+  Optionals.lift2(
     CaretFinder.firstPositionIn(elm),
     CaretFinder.lastPositionIn(elm),
     (firstPos, lastPos): boolean => {

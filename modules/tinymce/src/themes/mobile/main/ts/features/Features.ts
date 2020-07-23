@@ -7,9 +7,10 @@
 
 import { Behaviour, Receiving, Toggling } from '@ephox/alloy';
 import { Objects } from '@ephox/boulder';
-import { Arr, Obj, Option, Type } from '@ephox/katamari';
+import { Arr, Obj, Optional, Type } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
+import * as Settings from '../api/Settings';
 
 import * as Receivers from '../channels/Receivers';
 import * as TinyChannels from '../channels/TinyChannels';
@@ -18,10 +19,9 @@ import * as Buttons from '../ui/Buttons';
 import * as ColorSlider from '../ui/ColorSlider';
 import * as FontSizeSlider from '../ui/FontSizeSlider';
 import * as ImagePicker from '../ui/ImagePicker';
+import { MobileRealm } from '../ui/IosRealm';
 import * as LinkButton from '../ui/LinkButton';
 import * as StyleFormats from '../util/StyleFormats';
-import * as Settings from '../api/Settings';
-import { MobileRealm } from '../ui/IosRealm';
 
 const extract = (rawToolbar: string): string[] => {
   // Ignoring groups
@@ -136,21 +136,21 @@ const setup = function (realm: MobileRealm, editor: Editor) {
   };
 
   return {
-    undo: feature(Option.none(), undo),
-    redo: feature(Option.none(), redo),
-    bold: feature(Option.none(), bold),
-    italic: feature(Option.none(), italic),
-    underline: feature(Option.none(), underline),
-    removeformat: feature(Option.none(), removeformat),
-    link: feature(Option.none(), link),
-    unlink: feature(Option.none(), unlink),
-    image: feature(Option.none(), image),
+    undo: feature(Optional.none(), undo),
+    redo: feature(Optional.none(), redo),
+    bold: feature(Optional.none(), bold),
+    italic: feature(Optional.none(), italic),
+    underline: feature(Optional.none(), underline),
+    removeformat: feature(Optional.none(), removeformat),
+    link: feature(Optional.none(), link),
+    unlink: feature(Optional.none(), unlink),
+    image: feature(Optional.none(), image),
     // NOTE: Requires "lists" plugin.
-    bullist: feature(Option.some('bullist'), bullist),
-    numlist: feature(Option.some('numlist'), numlist),
-    fontsizeselect: feature(Option.none(), fontsizeselect),
-    forecolor: feature(Option.none(), forecolor),
-    styleselect: feature(Option.none(), styleselect)
+    bullist: feature(Optional.some('bullist'), bullist),
+    numlist: feature(Optional.some('numlist'), numlist),
+    fontsizeselect: feature(Optional.none(), fontsizeselect),
+    forecolor: feature(Optional.none(), forecolor),
+    styleselect: feature(Optional.none(), styleselect)
   };
 };
 

@@ -1,5 +1,5 @@
 import { Universe } from '@ephox/boss';
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 
 interface Data<E> {
   groups: {
@@ -34,10 +34,10 @@ const inspect = function <E, D> (universe: Universe<E, D>, rest: Data<E>, item: 
   // 1. There is nothing in the current list ... start a current list with item (nextlist)
   // 2. The item is the right sibling of the last thing on the current list ... accumulate into current list. (accumulate)
   // 3. Otherwise ... close off current, and start a new current with item (nextlist)
-  const nextSibling = Option.from(rest.current[rest.current.length - 1]).bind(universe.query().nextSibling);
+  const nextSibling = Optional.from(rest.current[rest.current.length - 1]).bind(universe.query().nextSibling);
   return nextSibling.bind<AccOrSkip>(function (next) {
     const same = universe.eq(next, item);
-    return same ? Option.some(accumulate) : Option.none();
+    return same ? Optional.some(accumulate) : Optional.none();
   }).getOr(nextlist);
 };
 

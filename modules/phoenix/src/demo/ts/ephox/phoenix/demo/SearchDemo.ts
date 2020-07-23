@@ -1,4 +1,4 @@
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import { Attribute, Class, Css, DomEvent, Insert, InsertAll, SugarElement, Value } from '@ephox/sugar';
 import { SearchResult } from 'ephox/phoenix/api/data/Types';
 import * as DomSearch from 'ephox/phoenix/api/dom/DomSearch';
@@ -67,5 +67,5 @@ const highlight = function (matches: SearchResult<SugarElement>[]) {
 
 InsertAll.append(container, [ input, button, buttonWord, content ]);
 
-const ephoxUi = SugarElement.fromDom(Option.from(document.getElementById('ephox-ui')).getOrDie('No element with id "ephox-id"'));
+const ephoxUi = SugarElement.fromDom(Optional.from(document.getElementById('ephox-ui')).getOrDie('No element with id "ephox-id"'));
 Insert.append(ephoxUi, container);

@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Option, Type } from '@ephox/katamari';
+import { Arr, Optional, Type } from '@ephox/katamari';
 import { Insert, InsertAll, SugarElement, Traverse } from '@ephox/sugar';
 import DOMUtils from '../api/dom/DOMUtils';
 import DomTreeWalker from '../api/dom/TreeWalker';
@@ -493,7 +493,7 @@ const remove = (ed: Editor, name: string, vars?: FormatVars, node?: Node | Range
 
         // Wrap and split if nested
         if (isChildOfInlineParent(dom, startContainer, endContainer)) {
-          const marker = Option.from(startContainer.firstChild).getOr(startContainer);
+          const marker = Optional.from(startContainer.firstChild).getOr(startContainer);
           splitToFormatRoot(wrapWithSiblings(dom, marker, true, 'span', { 'id': '_start', 'data-mce-type': 'bookmark' }));
           unwrap(true);
           return;
@@ -501,7 +501,7 @@ const remove = (ed: Editor, name: string, vars?: FormatVars, node?: Node | Range
 
         // Wrap and split if nested
         if (isChildOfInlineParent(dom, endContainer, startContainer)) {
-          const marker = Option.from(endContainer.lastChild).getOr(endContainer);
+          const marker = Optional.from(endContainer.lastChild).getOr(endContainer);
           splitToFormatRoot(wrapWithSiblings(dom, marker, false, 'span', { 'id': '_end', 'data-mce-type': 'bookmark' }));
           unwrap(false);
           return;

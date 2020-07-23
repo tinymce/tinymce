@@ -1,20 +1,20 @@
-import { Fun, Option } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 import { Css, SugarElement } from '@ephox/sugar';
 
 export interface PositionCss {
   readonly position: () => string;
-  readonly left: () => Option<number>;
-  readonly top: () => Option<number>;
-  readonly right: () => Option<number>;
-  readonly bottom: () => Option<number>;
+  readonly left: () => Optional<number>;
+  readonly top: () => Optional<number>;
+  readonly right: () => Optional<number>;
+  readonly bottom: () => Optional<number>;
 }
 
 const NuPositionCss = (
   position: string,
-  left: Option<number>,
-  top: Option<number>,
-  right: Option<number>,
-  bottom: Option<number>
+  left: Optional<number>,
+  top: Optional<number>,
+  right: Optional<number>,
+  bottom: Optional<number>
 ): PositionCss => ({
   position: Fun.constant(position),
   left: Fun.constant(left),
@@ -27,7 +27,7 @@ const applyPositionCss = (element: SugarElement, position: PositionCss) => {
   const addPx = (num: number) => num + 'px';
 
   Css.setOptions(element, {
-    position: Option.some(position.position()),
+    position: Optional.some(position.position()),
     left: position.left().map(addPx),
     top: position.top().map(addPx),
     right: position.right().map(addPx),

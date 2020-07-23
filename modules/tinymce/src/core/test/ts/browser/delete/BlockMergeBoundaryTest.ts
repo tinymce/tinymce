@@ -1,6 +1,6 @@
 import { Assertions, Chain, GeneralSteps, Logger, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { Hierarchy, SugarElement } from '@ephox/sugar';
 import * as BlockMergeBoundary from 'tinymce/core/delete/BlockMergeBoundary';
 import ViewBlock from '../../module/test/ViewBlock';
@@ -26,8 +26,8 @@ UnitTest.asynctest('browser.tinymce.core.delete.BlockMergeBoundary', function (s
     });
   };
 
-  const cAssertBlockBoundaryPositions = function (fromPath, fromOffset, toPath, toOffset): Chain<Option<BlockBoundary>, Option<BlockBoundary>> {
-    return Chain.op(function (blockBoundaryOption: Option<BlockMergeBoundary.BlockBoundary>) {
+  const cAssertBlockBoundaryPositions = function (fromPath, fromOffset, toPath, toOffset): Chain<Optional<BlockBoundary>, Optional<BlockBoundary>> {
+    return Chain.op(function (blockBoundaryOption: Optional<BlockMergeBoundary.BlockBoundary>) {
       const fromContainer = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), fromPath).getOrDie();
       const toContainer = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), toPath).getOrDie();
       const blockBoundary = blockBoundaryOption.getOrDie();
@@ -39,8 +39,8 @@ UnitTest.asynctest('browser.tinymce.core.delete.BlockMergeBoundary', function (s
     });
   };
 
-  const cAssertBlockBoundaryBlocks = function (fromBlockPath: number[], toBlockPath: number[]): Chain<Option<BlockBoundary>, Option<BlockBoundary>> {
-    return Chain.op(function (blockBoundaryOption: Option<BlockBoundary>) {
+  const cAssertBlockBoundaryBlocks = function (fromBlockPath: number[], toBlockPath: number[]): Chain<Optional<BlockBoundary>, Optional<BlockBoundary>> {
+    return Chain.op(function (blockBoundaryOption: Optional<BlockBoundary>) {
       const expectedFromBlock = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), fromBlockPath).getOrDie();
       const expectedToBlock = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), toBlockPath).getOrDie();
       const blockBoundary = blockBoundaryOption.getOrDie();
@@ -50,7 +50,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.BlockMergeBoundary', function (s
     });
   };
 
-  const cAssertBlockBoundaryNone = Chain.op(function (blockBoundaryOption: Option<BlockBoundary >) {
+  const cAssertBlockBoundaryNone = Chain.op(function (blockBoundaryOption: Optional<BlockBoundary >) {
     Assertions.assertEq('BlockBoundary should be none', true, blockBoundaryOption.isNone());
   });
 

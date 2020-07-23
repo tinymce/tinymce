@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Fun, Obj, Option, Type } from '@ephox/katamari';
+import { Arr, Fun, Obj, Optional, Type } from '@ephox/katamari';
 import { CopyCols, CopyRows, Sizes, TableFill, TableLookup } from '@ephox/snooker';
 import { Insert, Remove, Replication, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
@@ -62,7 +62,7 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
     }
   });
 
-  const getTableFromCell = (cell: SugarElement): Option<SugarElement> => TableLookup.table(cell, isRoot);
+  const getTableFromCell = (cell: SugarElement): Optional<SugarElement> => TableLookup.table(cell, isRoot);
 
   const actOnSelection = (execute: CombinedTargetsTableAction): void => TableSelection.getSelectionStartCell(editor).each((cell) => {
     getTableFromCell(cell).each((table) => {
@@ -79,7 +79,7 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
   const copyRowSelection = () => TableSelection.getSelectionStartCell(editor).map((cell) =>
     getTableFromCell(cell).bind((table) => {
       const targets = TableTargets.forMenu(selections, table, cell);
-      const generators = TableFill.cellOperations(Fun.noop, SugarElement.fromDom(editor.getDoc()), Option.none());
+      const generators = TableFill.cellOperations(Fun.noop, SugarElement.fromDom(editor.getDoc()), Optional.none());
       return CopyRows.copyRows(table, targets, generators);
     }));
 
@@ -89,7 +89,7 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
       return CopyCols.copyCols(table, targets);
     }));
 
-  const pasteOnSelection = (execute: AdvancedPasteTableAction, getRows: () => Option<SugarElement<HTMLTableRowElement>[]>) =>
+  const pasteOnSelection = (execute: AdvancedPasteTableAction, getRows: () => Optional<SugarElement<HTMLTableRowElement>[]>) =>
     // If we have clipboard rows to paste
     getRows().each((rows) => {
       const clonedRows = Arr.map(rows, (row) => Replication.deep(row));

@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Id, Obj, Option } from '@ephox/katamari';
+import { Id, Obj, Optional } from '@ephox/katamari';
 
 export type UriMap = Record<string, string>;
 
@@ -56,11 +56,11 @@ export const extractBase64DataUris = (html: string): Base64Extract => {
 
 export const restoreDataUris = (html: string, result: Base64Extract) => html.replace(new RegExp(`${result.prefix}_[0-9]+`, 'g'), (imageId) => Obj.get(result.uris, imageId).getOr(imageId));
 
-export const parseDataUri = (uri: string): Option<Base64UriParts> => {
+export const parseDataUri = (uri: string): Optional<Base64UriParts> => {
   const matches = /data:([^;]+);base64,([a-z0-9\+\/=]+)/i.exec(uri);
   if (matches) {
-    return Option.some({ type: matches[1], data: decodeURIComponent(matches[2]) });
+    return Optional.some({ type: matches[1], data: decodeURIComponent(matches[2]) });
   } else {
-    return Option.none();
+    return Optional.none();
   }
 };

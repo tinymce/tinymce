@@ -1,4 +1,4 @@
-import { Arr, Obj, Option } from '@ephox/katamari';
+import { Arr, Obj, Optional } from '@ephox/katamari';
 import { Attribute, Css, DomEvent, Insert, SugarElement, SugarText } from '@ephox/sugar';
 import { Wrapter } from 'ephox/phoenix/api/data/Types';
 import * as DomSearch from 'ephox/phoenix/api/dom/DomSearch';
@@ -43,6 +43,6 @@ const highlight = function (words: string[], nu: () => Wrapter<SugarElement>) {
   });
 };
 
-const ephoxUi = SugarElement.fromDom(Option.from(document.getElementById('ephox-ui')).getOrDie('No element with id "ephox-id"'));
+const ephoxUi = SugarElement.fromDom(Optional.from(document.getElementById('ephox-ui')).getOrDie('No element with id "ephox-id"'));
 Insert.append(ephoxUi, p);
 Insert.append(ephoxUi, button);

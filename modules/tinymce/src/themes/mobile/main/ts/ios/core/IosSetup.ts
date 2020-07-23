@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Fun, Option, Throttler } from '@ephox/katamari';
+import { Fun, Optional, Throttler } from '@ephox/katamari';
 import { Css, DomEvent, Focus, SugarBody, SugarElement } from '@ephox/sugar';
 
 import * as Orientation from '../../touch/view/Orientation';
@@ -31,13 +31,13 @@ const register = function (toolstrip, socket, container, outerWindow, structure,
   // back to show the current selection rectangle.
   const scrollBounds = function () {
     const rects = Rectangles.getRectangles(cWin);
-    return Option.from(rects[0]).bind(function (rect) {
+    return Optional.from(rects[0]).bind(function (rect) {
       const viewTop = rect.top() - socket.dom().scrollTop;
       const outside = viewTop > outerWindow.innerHeight + VIEW_MARGIN || viewTop < -VIEW_MARGIN;
-      return outside ? Option.some({
+      return outside ? Optional.some({
         top: Fun.constant(viewTop),
         bottom: Fun.constant(viewTop + rect.height())
-      }) : Option.none<{top: () => number; bottom: () => number}>();
+      }) : Optional.none<{top: () => number; bottom: () => number}>();
     });
   };
 

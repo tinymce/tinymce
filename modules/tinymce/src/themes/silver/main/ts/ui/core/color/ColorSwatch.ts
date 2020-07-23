@@ -7,7 +7,7 @@
 
 import { HexColour, RgbaColour } from '@ephox/acid';
 import { Menu, Toolbar, Types } from '@ephox/bridge';
-import { Cell, Fun, Option, Strings } from '@ephox/katamari';
+import { Cell, Fun, Optional, Strings } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import * as Events from '../../../api/Events';
 import * as Settings from './Settings';
@@ -125,7 +125,7 @@ const registerTextColorButton = (editor: Editor, name: string, format: string, t
     presets: 'color',
     icon: name === 'forecolor' ? 'text-color' : 'highlight-bg-color',
     select: (value) => {
-      const optCurrentRgb = Option.from(getCurrentColor(editor, format));
+      const optCurrentRgb = Optional.from(getCurrentColor(editor, format));
       return optCurrentRgb.bind((currentRgb) => RgbaColour.fromString(currentRgb).map((rgba) => {
         const currentHex = HexColour.fromRgba(rgba).value;
         // note: value = '#FFFFFF', currentHex = 'ffffff'
@@ -187,7 +187,7 @@ const registerTextColorMenuItem = (editor: Editor, name: string, format: string,
 const colorPickerDialog = (editor: Editor) => (callback, value: string) => {
   const getOnSubmit = (callback) => (api) => {
     const data = api.getData();
-    callback(Option.from(data.colorpicker));
+    callback(Optional.from(data.colorpicker));
     api.close();
   };
 
@@ -237,7 +237,7 @@ const colorPickerDialog = (editor: Editor) => (callback, value: string) => {
     onSubmit: submit,
     onClose: () => { },
     onCancel: () => {
-      callback(Option.none());
+      callback(Optional.none());
     }
   });
 };

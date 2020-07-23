@@ -6,11 +6,11 @@
  */
 
 import {
-  AddEventsBehaviour, AlloyEvents, AlloyTriggers, Behaviour, Disabling, FormField as AlloyFormField, Input as AlloyInput, Invalidating,
-  Keying, NativeEvents, Representing, SketchSpec, SystemEvents, Tabstopping
+  AddEventsBehaviour, AlloyEvents, AlloyTriggers, Behaviour, Disabling, FormField as AlloyFormField, Input as AlloyInput, Invalidating, Keying,
+  NativeEvents, Representing, SketchSpec, SystemEvents, Tabstopping
 } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
-import { Arr, Fun, Future, Option, Result } from '@ephox/katamari';
+import { Arr, Fun, Future, Optional, Result } from '@ephox/katamari';
 import { Traverse } from '@ephox/sugar';
 import { renderFormFieldWith, renderLabel } from 'tinymce/themes/silver/ui/alien/FieldLabeller';
 
@@ -33,7 +33,7 @@ const renderTextField = function (spec: TextField, providersBackstage: UiFactory
       useControlEnter: spec.multiline === true,
       execute: (comp) => {
         AlloyTriggers.emit(comp, formSubmitEvent);
-        return Option.some(true);
+        return Optional.some(true);
       }
     }),
     AddEventsBehaviour.config('textfield-change', [
@@ -110,11 +110,11 @@ export interface TextField {
   name: string;
   classname: string;
   flex: boolean;
-  label: Option<string>;
-  inputMode: Option<string>;
-  placeholder: Option<string>;
+  label: Optional<string>;
+  inputMode: Optional<string>;
+  placeholder: Optional<string>;
   disabled: boolean;
-  validation: Option<{
+  validation: Optional<{
     validator: Validator;
     validateOnLoad?: boolean;
   }>;
@@ -134,7 +134,7 @@ const renderInput = (spec: InputSpec, providersBackstage: UiFactoryBackstageProv
   flex: false,
   disabled: spec.disabled,
   classname: 'tox-textfield',
-  validation: Option.none(),
+  validation: Optional.none(),
   maximized: spec.maximized
 }, providersBackstage);
 
@@ -142,12 +142,12 @@ const renderTextarea = (spec: TextAreaSpec, providersBackstage: UiFactoryBacksta
   name: spec.name,
   multiline: true,
   label: spec.label,
-  inputMode: Option.none(), // type attribute is not valid for textareas
+  inputMode: Optional.none(), // type attribute is not valid for textareas
   placeholder: spec.placeholder,
   flex: true,
   disabled: spec.disabled,
   classname: 'tox-textarea',
-  validation: Option.none(),
+  validation: Optional.none(),
   maximized: spec.maximized
 }, providersBackstage);
 

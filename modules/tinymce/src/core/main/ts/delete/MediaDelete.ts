@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import Editor from '../api/Editor';
 import { isAfterMedia, isBeforeMedia } from '../caret/CaretPositionPredicates';
@@ -29,7 +29,7 @@ const deleteCaret = (editor: Editor, forward: boolean): boolean => {
   if (isNearMedia(fromPos)) {
     return deleteElement(editor, forward, fromPos.getNode(!forward));
   } else {
-    return Option.from(InlineUtils.normalizePosition(forward, fromPos))
+    return Optional.from(InlineUtils.normalizePosition(forward, fromPos))
       .filter((pos) => isNearMedia(pos) && CaretUtils.isMoveInsideSameBlock(fromPos, pos))
       .exists((pos) => deleteElement(editor, forward, pos.getNode(!forward)));
   }

@@ -1,7 +1,7 @@
 import { Assertions, Chain, Logger, UiControls, UiFinder, Waiter } from '@ephox/agar';
 import { GuiFactory, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 
 import { renderColorPicker } from 'tinymce/themes/silver/ui/dialog/ColorPicker';
 import { RepresentingSteps } from '../../../module/ReperesentingSteps';
@@ -10,7 +10,7 @@ UnitTest.asynctest('ColorPicker component Test', (success, failure) => {
   TestHelpers.GuiSetup.setup(
     (_store, _doc, _body) => GuiFactory.build(
       renderColorPicker({
-        label: Option.some('ColorPicker label'),
+        label: Optional.some('ColorPicker label'),
         name: 'col1'
       })
     ),

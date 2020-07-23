@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Fun, Option } from '@ephox/katamari';
+import { Arr, Fun, Optional } from '@ephox/katamari';
 import Editor from '../api/Editor';
 import * as CaretContainer from '../caret/CaretContainer';
 import CaretPosition from '../caret/CaretPosition';
@@ -26,11 +26,11 @@ const moveToRange = (editor: Editor, rng: Range) => {
   ScrollIntoView.scrollRangeIntoView(editor, editor.selection.getRng());
 };
 
-const renderRangeCaretOpt = (editor: Editor, range: Range, scrollIntoView: boolean): Option<Range> =>
-  Option.some(FakeCaretUtils.renderRangeCaret(editor, range, scrollIntoView));
+const renderRangeCaretOpt = (editor: Editor, range: Range, scrollIntoView: boolean): Optional<Range> =>
+  Optional.some(FakeCaretUtils.renderRangeCaret(editor, range, scrollIntoView));
 
 const moveHorizontally = (editor: Editor, direction: HDirection, range: Range, isBefore: (caretPosition: CaretPosition) => boolean,
-                          isAfter: (caretPosition: CaretPosition) => boolean, isElement: (node: Node) => node is Element): Option<Range> => {
+                          isAfter: (caretPosition: CaretPosition) => boolean, isElement: (node: Node) => node is Element): Optional<Range> => {
   const forwards = direction === HDirection.Forwards;
   const caretWalker = CaretWalker(editor.getBody());
   const getNextPosFn = Fun.curry(CaretUtils.getVisualCaretPosition, forwards ? caretWalker.next : caretWalker.prev);
@@ -51,7 +51,7 @@ const moveHorizontally = (editor: Editor, direction: HDirection, range: Range, i
   const nextCaretPosition = InlineUtils.normalizePosition(forwards, getNextPosFn(caretPosition));
   const rangeIsInContainerBlock = CaretContainer.isRangeInCaretContainerBlock(range);
   if (!nextCaretPosition) {
-    return rangeIsInContainerBlock ? Option.some(range) : Option.none();
+    return rangeIsInContainerBlock ? Optional.some(range) : Optional.none();
   }
 
   if (isBeforeFn(nextCaretPosition)) {
@@ -70,11 +70,11 @@ const moveHorizontally = (editor: Editor, direction: HDirection, range: Range, i
     return renderRangeCaretOpt(editor, nextCaretPosition.toRange(), false);
   }
 
-  return Option.none();
+  return Optional.none();
 };
 
 const moveVertically = (editor: Editor, direction: LineWalker.VDirection, range: Range, isBefore: (caretPosition: CaretPosition) => boolean,
-                        isAfter: (caretPosition: CaretPosition) => boolean, isElement: (node: Node) => node is Element): Option<Range> => {
+                        isAfter: (caretPosition: CaretPosition) => boolean, isElement: (node: Node) => node is Element): Optional<Range> => {
   const caretPosition = CaretUtils.getNormalizedRangeEndPoint(direction, editor.getBody(), range);
   const caretClientRect = ArrUtils.last(caretPosition.getClientRects());
   const forwards = direction === LineWalker.VDirection.Down;
@@ -124,10 +124,10 @@ const moveVertically = (editor: Editor, direction: LineWalker.VDirection, range:
       .map((pos) => FakeCaretUtils.renderRangeCaret(editor, pos.toRange(), false));
   }
 
-  return Option.none();
+  return Optional.none();
 };
 
-const getLineEndPoint = (editor: Editor, forward: boolean): Option<CaretPosition> => {
+const getLineEndPoint = (editor: Editor, forward: boolean): Optional<CaretPosition> => {
   const rng = editor.selection.getRng();
   const body = editor.getBody();
 

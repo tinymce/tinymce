@@ -6,11 +6,10 @@
  */
 
 import {
-  AddEventsBehaviour, AlloyEvents, Behaviour, Button, GuiFactory, Memento, Menu, Representing,
-  TieredMenu, Toggling, Transitioning
+  AddEventsBehaviour, AlloyEvents, Behaviour, Button, GuiFactory, Memento, Menu, Representing, TieredMenu, Toggling, Transitioning
 } from '@ephox/alloy';
 import { Objects } from '@ephox/boulder';
-import { Arr, Merger, Obj, Option } from '@ephox/katamari';
+import { Arr, Merger, Obj, Optional } from '@ephox/katamari';
 import { Css, SelectorFind, Width } from '@ephox/sugar';
 
 import * as Receivers from '../channels/Receivers';
@@ -177,10 +176,10 @@ const sketch = function (settings) {
     onExecute(_tmenu, item) {
       const v = Representing.getValue(item);
       settings.handle(item, v.value);
-      return Option.none();
+      return Optional.none();
     },
     onEscape() {
-      return Option.none();
+      return Optional.none();
     },
     onOpenMenu(container, menu) {
       const w = Width.get(container.element());

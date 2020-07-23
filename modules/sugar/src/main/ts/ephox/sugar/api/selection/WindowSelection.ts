@@ -1,4 +1,4 @@
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import * as NativeRange from '../../selection/core/NativeRange';
 import * as SelectionDirection from '../../selection/core/SelectionDirection';
 import * as CaretRange from '../../selection/query/CaretRange';
@@ -12,7 +12,7 @@ import { SimRange } from './SimRange';
 import { SimSelection } from './SimSelection';
 import { Situ } from './Situ';
 
-const getNativeSelection = (win: Window) => Option.from(win.getSelection());
+const getNativeSelection = (win: Window) => Optional.from(win.getSelection());
 
 const doSetNativeRange = (win: Window, rng: Range): void => {
   getNativeSelection(win).each((selection) => {
@@ -89,14 +89,14 @@ const readRange = (selection: Selection) => {
     const firstRng = selection.getRangeAt(0);
     const lastRng = selection.getRangeAt(selection.rangeCount - 1);
 
-    return Option.some(SimRange.create(
+    return Optional.some(SimRange.create(
       SugarElement.fromDom(firstRng.startContainer),
       firstRng.startOffset,
       SugarElement.fromDom(lastRng.endContainer),
       lastRng.endOffset
     ));
   } else {
-    return Option.none<SimRange>();
+    return Optional.none<SimRange>();
   }
 };
 
@@ -105,7 +105,7 @@ const doGetExact = (selection: Selection) => {
   const focus = SugarElement.fromDom(selection.focusNode);
 
   // if this returns true anchor is _after_ focus, so we need a custom selection object to maintain the RTL selection
-  return DocumentPosition.after(anchor, selection.anchorOffset, focus, selection.focusOffset) ? Option.some(
+  return DocumentPosition.after(anchor, selection.anchorOffset, focus, selection.focusOffset) ? Optional.some(
     SimRange.create(
       anchor,
       selection.anchorOffset,

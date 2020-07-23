@@ -1,4 +1,4 @@
-import { Arr, Cell, Option } from '@ephox/katamari';
+import { Arr, Cell, Optional } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Attribute, Css, DomEvent, Insert, Remove, Replication, SugarElement } from '@ephox/sugar';
 
@@ -66,7 +66,7 @@ const blockDefaultGhost = (target: SugarElement) => {
 // Edge doesn't have setDragImage support and just hiding the target element will position the drop icon incorrectly so we need custom ghost
 // TODO: Get rid of this once Edge switches to Chromium we feature detect setDragImage support so once they have it should use that instead
 const setDragImageFromCloneEdgeFallback = (image: DragnDropImageClone, parent: SugarElement, target: SugarElement) => {
-  const ghostState = Cell(Option.none<SugarElement<any>>());
+  const ghostState = Cell(Optional.none<SugarElement<any>>());
 
   const drag = DomEvent.bind(target, 'drag', (evt) => {
     // The calculated position needs to at least be cord + 1 since it would otherwise interfere with dropping
@@ -76,7 +76,7 @@ const setDragImageFromCloneEdgeFallback = (image: DragnDropImageClone, parent: S
     const ghost = ghostState.get().getOrThunk(() => {
       const newGhost = createGhostClone(image);
 
-      ghostState.set(Option.some(newGhost));
+      ghostState.set(Optional.some(newGhost));
 
       Css.setAll(newGhost, {
         position: 'fixed',

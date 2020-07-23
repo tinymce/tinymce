@@ -1,4 +1,4 @@
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import { Class, Css, Height, Insert, Remove, SelectorFilter, SugarElement, SugarLocation, SugarPosition, Width } from '@ephox/sugar';
 import { ResizeWire } from '../api/ResizeWire';
 import * as Blocks from '../lookup/Blocks';
@@ -17,7 +17,7 @@ const destroy = function (wire: ResizeWire) {
   Arr.each(previous, Remove.remove);
 };
 
-const drawBar = function <T> (wire: ResizeWire, positions: Option<T>[], create: (origin: SugarPosition, info: T) => SugarElement) {
+const drawBar = function <T> (wire: ResizeWire, positions: Optional<T>[], create: (origin: SugarPosition, info: T) => SugarElement) {
   const origin = wire.origin();
   Arr.each(positions, function (cpOption) {
     cpOption.each(function (cp) {
@@ -28,7 +28,7 @@ const drawBar = function <T> (wire: ResizeWire, positions: Option<T>[], create: 
   });
 };
 
-const refreshCol = function (wire: ResizeWire, colPositions: Option<ColInfo>[], position: SugarPosition, tableHeight: number) {
+const refreshCol = function (wire: ResizeWire, colPositions: Optional<ColInfo>[], position: SugarPosition, tableHeight: number) {
   drawBar(wire, colPositions, function (origin, cp) {
     const colBar = Bar.col(cp.col, cp.x - origin.left(), position.top() - origin.top(), BAR_THICKNESS, tableHeight);
     Class.add(colBar, resizeColBar);
@@ -36,7 +36,7 @@ const refreshCol = function (wire: ResizeWire, colPositions: Option<ColInfo>[], 
   });
 };
 
-const refreshRow = function (wire: ResizeWire, rowPositions: Option<RowInfo>[], position: SugarPosition, tableWidth: number) {
+const refreshRow = function (wire: ResizeWire, rowPositions: Optional<RowInfo>[], position: SugarPosition, tableWidth: number) {
   drawBar(wire, rowPositions, function (origin, cp) {
     const rowBar = Bar.row(cp.row, position.left() - origin.left(), cp.y - origin.top(), tableWidth, BAR_THICKNESS);
     Class.add(rowBar, resizeRowBar);
@@ -44,7 +44,7 @@ const refreshRow = function (wire: ResizeWire, rowPositions: Option<RowInfo>[], 
   });
 };
 
-const refreshGrid = function (wire: ResizeWire, table: SugarElement, rows: Option<SugarElement>[], cols: Option<SugarElement>[], hdirection: BarPositions<RowInfo>, vdirection: BarPositions<ColInfo>) {
+const refreshGrid = function (wire: ResizeWire, table: SugarElement, rows: Optional<SugarElement>[], cols: Optional<SugarElement>[], hdirection: BarPositions<RowInfo>, vdirection: BarPositions<ColInfo>) {
   const position = SugarLocation.absolute(table);
   const rowPositions = rows.length > 0 ? hdirection.positions(rows, table) : [];
   refreshRow(wire, rowPositions, position, Width.getOuter(table));

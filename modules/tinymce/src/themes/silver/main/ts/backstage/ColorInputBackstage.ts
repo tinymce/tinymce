@@ -5,13 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Menu } from '@ephox/bridge';
+import { Optional } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import * as ColorSwatch from '../ui/core/color/ColorSwatch';
 import * as Settings from '../ui/core/color/Settings';
-import { Menu } from '@ephox/bridge';
-import { Option } from '@ephox/katamari';
 
-type ColorInputCallback = (valueOpt: Option<string>) => void;
+type ColorInputCallback = (valueOpt: Optional<string>) => void;
 
 export interface UiFactoryBackstageForColorInput {
   colorPicker: (callback: ColorInputCallback, value: string) => void;

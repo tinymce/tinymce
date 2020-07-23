@@ -6,11 +6,11 @@
  */
 
 import { AddEventsBehaviour, AlloyEvents, Behaviour, Memento, Representing, SimpleSpec } from '@ephox/alloy';
-import { Cell, Option } from '@ephox/katamari';
+import { Types } from '@ephox/bridge';
+import { Cell, Optional } from '@ephox/katamari';
+import Resource from 'tinymce/core/api/Resource';
 
 import { ComposingConfigs } from '../alien/ComposingConfigs';
-import { Types } from '@ephox/bridge';
-import Resource from 'tinymce/core/api/Resource';
 
 type CustomEditorSpec = Types.CustomEditor.CustomEditor;
 type CustomEditorInitFn = Types.CustomEditor.CustomEditorInitFn;
@@ -18,7 +18,7 @@ type CustomEditorInitFn = Types.CustomEditor.CustomEditorInitFn;
 const isOldCustomEditor = (spec: CustomEditorSpec): spec is Types.CustomEditor.CustomEditorOld => Object.prototype.hasOwnProperty.call(spec, 'init');
 
 export const renderCustomEditor = (spec: CustomEditorSpec): SimpleSpec => {
-  const editorApi = Cell(Option.none<Types.CustomEditor.CustomEditorInit>());
+  const editorApi = Cell(Optional.none<Types.CustomEditor.CustomEditorInit>());
 
   const memReplaced = Memento.record({
     dom: {
@@ -26,7 +26,7 @@ export const renderCustomEditor = (spec: CustomEditorSpec): SimpleSpec => {
     }
   });
 
-  const initialValue = Cell(Option.none<string>());
+  const initialValue = Cell(Optional.none<string>());
 
   return {
     dom: {
@@ -47,8 +47,8 @@ export const renderCustomEditor = (spec: CustomEditorSpec): SimpleSpec => {
                 ea.setValue(cvalue);
               });
 
-              initialValue.set(Option.none());
-              editorApi.set(Option.some(ea));
+              initialValue.set(Optional.none());
+              editorApi.set(Optional.some(ea));
             });
           });
         })
@@ -63,7 +63,7 @@ export const renderCustomEditor = (spec: CustomEditorSpec): SimpleSpec => {
           setValue: (component, value) => {
             editorApi.get().fold(
               () => {
-                initialValue.set(Option.some(value));
+                initialValue.set(Optional.some(value));
               },
               (ed) => ed.setValue(value)
             );

@@ -1,4 +1,4 @@
-import { Fun, Option } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 import { DomEvent, Insert, SelectorFind, SugarElement } from '@ephox/sugar';
 import * as DomSmartSelect from 'ephox/robin/api/dom/DomSmartSelect';
 
@@ -10,7 +10,7 @@ const editor = SugarElement.fromHtml('<div contenteditable="true" style="width: 
 Insert.append(ephoxUi, editor);
 
 const select = function (s: SugarElement, so: number, f: SugarElement, fo: number) {
-  Option.from(window.getSelection()).each((selection) => {
+  Optional.from(window.getSelection()).each((selection) => {
     selection.removeAllRanges();
     const range = document.createRange();
     range.setStart(s.dom(), so);
@@ -22,7 +22,7 @@ const select = function (s: SugarElement, so: number, f: SugarElement, fo: numbe
 };
 
 const getSelection = function () {
-  return Option.from(window.getSelection()).map((selection) => {
+  return Optional.from(window.getSelection()).map((selection) => {
     if (selection.rangeCount > 0) {
       const range = selection.getRangeAt(0);
       // eslint-disable-next-line no-console

@@ -1,5 +1,5 @@
 import { Assert, TestLabel, UnitTest } from '@ephox/bedrock-client';
-import { Obj, Option } from '@ephox/katamari';
+import { Obj, Optional } from '@ephox/katamari';
 import { Compare, SugarElement, Truncate } from '@ephox/sugar';
 
 import { elementQueue, StructAssert } from '../assertions/ApproxStructures';
@@ -43,7 +43,7 @@ const assertHtml = (label: TestLabel, expected: string, actual: string): void =>
 const assertStructure = (label: TestLabel, expected: StructAssert, container: SugarElement<any>): void => {
   Logger.sync(label, () => {
     if (expected.type === 'advanced') {
-      expected.doAssert(elementQueue([ container ], Option.none()));
+      expected.doAssert(elementQueue([ container ], Optional.none()));
     } else {
       expected.doAssert(container);
     }

@@ -1,4 +1,4 @@
-import { Arr, Fun, Option } from '@ephox/katamari';
+import { Arr, Fun, Optional } from '@ephox/katamari';
 import { Css, SugarElement } from '@ephox/sugar';
 import { TableSize } from '../api/TableSize';
 import * as Blocks from '../lookup/Blocks';
@@ -24,7 +24,7 @@ const getRawH = function (cell: SugarElement) {
   return getRaw(cell, 'height', Sizes.getHeight);
 };
 
-const getWidthFrom = function <T> (warehouse: Warehouse, direction: BarPositions<ColInfo>, getWidth: (cell: SugarElement, tableSize: TableSize) => T, fallback: (deduced: Option<number>) => T, tableSize: TableSize) {
+const getWidthFrom = function <T> (warehouse: Warehouse, direction: BarPositions<ColInfo>, getWidth: (cell: SugarElement, tableSize: TableSize) => T, fallback: (deduced: Optional<number>) => T, tableSize: TableSize) {
   const columns = Blocks.columns(warehouse);
 
   const backups = Arr.map(columns, function (cellOption) {
@@ -44,7 +44,7 @@ const getWidthFrom = function <T> (warehouse: Warehouse, direction: BarPositions
   });
 };
 
-const getDeduced = function (deduced: Option<number>) {
+const getDeduced = function (deduced: Optional<number>) {
   return deduced.map(function (d) { return d + 'px'; }).getOr('');
 };
 
@@ -69,7 +69,7 @@ const getPixelWidths = function (warehouse: Warehouse, direction: BarPositions<C
   }, tableSize);
 };
 
-const getHeightFrom = function <T> (warehouse: Warehouse, direction: BarPositions<RowInfo>, getHeight: (cell: SugarElement) => T, fallback: (deduced: Option<number>) => T) {
+const getHeightFrom = function <T> (warehouse: Warehouse, direction: BarPositions<RowInfo>, getHeight: (cell: SugarElement) => T, fallback: (deduced: Optional<number>) => T) {
   const rows = Blocks.rows(warehouse);
 
   const backups = Arr.map(rows, function (cellOption) {
@@ -89,7 +89,7 @@ const getHeightFrom = function <T> (warehouse: Warehouse, direction: BarPosition
 };
 
 const getPixelHeights = function (warehouse: Warehouse, direction: BarPositions<RowInfo>) {
-  return getHeightFrom(warehouse, direction, Sizes.getHeight, function (deduced: Option<number>) {
+  return getHeightFrom(warehouse, direction, Sizes.getHeight, function (deduced: Optional<number>) {
     return deduced.getOrThunk(CellUtils.minHeight);
   });
 };

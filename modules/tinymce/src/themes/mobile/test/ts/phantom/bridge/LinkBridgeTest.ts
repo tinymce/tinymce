@@ -2,7 +2,7 @@ import { ApproxStructure, Assertions, Logger } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { FieldSchema, Objects, ValueSchema } from '@ephox/boulder';
-import { Cell, Fun, Option, Result } from '@ephox/katamari';
+import { Cell, Fun, Optional, Result } from '@ephox/katamari';
 import { KAssert } from '@ephox/katamari-assertions';
 import { SugarElement } from '@ephox/sugar';
 
@@ -81,18 +81,18 @@ UnitTest.test('Test: phantom.bridge.LinkBridgeTest', function () {
   };
 
   const checkApply = function (rawScenario) {
-    const toResult = (info, param) => Option.from(info[param]).fold(() => Result.error('Missing ' + param), Result.value);
+    const toResult = (info, param) => Optional.from(info[param]).fold(() => Result.error('Missing ' + param), Result.value);
     const scenario = {
-      label: Option.from(rawScenario.label).getOrDie('Missing label'),
-      info: Option.from(rawScenario.info).map((info) => ({
+      label: Optional.from(rawScenario.label).getOrDie('Missing label'),
+      info: Optional.from(rawScenario.info).map((info) => ({
         url: toResult(info, 'url'),
         text: toResult(info, 'text'),
         title: toResult(info, 'title'),
         target: toResult(info, 'target'),
         link: toResult(info, 'link')
       })).getOrDie('Missing info'),
-      mutations: Option.from(rawScenario.mutations).getOr(Fun.noop),
-      expected: Option.from(rawScenario.expected).getOr([])
+      mutations: Optional.from(rawScenario.mutations).getOr(Fun.noop),
+      expected: Optional.from(rawScenario.expected).getOr([])
     };
 
     Logger.sync('setInfo ... ' + scenario.label, function () {
@@ -274,7 +274,7 @@ UnitTest.test('Test: phantom.bridge.LinkBridgeTest', function () {
       text: '',
       title: '',
       target: '',
-      link: Option.some(
+      link: Optional.some(
         SugarElement.fromHtml('<a href="http://foo">http://foo</a>')
       )
     },
@@ -297,7 +297,7 @@ UnitTest.test('Test: phantom.bridge.LinkBridgeTest', function () {
       text: '',
       title: '',
       target: '',
-      link: Option.some(
+      link: Optional.some(
         SugarElement.fromHtml('<a href="http://foo">Foo</a>')
       )
     },
@@ -320,7 +320,7 @@ UnitTest.test('Test: phantom.bridge.LinkBridgeTest', function () {
       text: 'new-text',
       title: 'new-title',
       target: '',
-      link: Option.some(
+      link: Optional.some(
         SugarElement.fromHtml('<a href="http://foo">Foo</a>')
       )
     },
@@ -344,7 +344,7 @@ UnitTest.test('Test: phantom.bridge.LinkBridgeTest', function () {
       text: 'new-text',
       title: 'new-title',
       target: '',
-      link: Option.some(
+      link: Optional.some(
         SugarElement.fromHtml('<a href="http://foo">Foo</a>')
       )
     },
@@ -363,7 +363,7 @@ UnitTest.test('Test: phantom.bridge.LinkBridgeTest', function () {
       text: 'new-text',
       title: 'new-title',
       target: '',
-      link: Option.none()
+      link: Optional.none()
     },
     expected: [ ]
   });

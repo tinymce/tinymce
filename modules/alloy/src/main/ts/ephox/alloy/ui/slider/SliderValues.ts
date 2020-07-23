@@ -1,4 +1,4 @@
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 
 import { HorizontalSliderDetail, SliderDetail, VerticalSliderDetail } from '../types/SliderTypes';
 
@@ -30,7 +30,7 @@ const halfY = (detail: VerticalSliderDetail): number => yRange(detail) / 2;
 
 const step = (detail: SliderDetail): number => detail.stepSize;
 const snap = (detail: SliderDetail): boolean => detail.snapToGrid;
-const snapStart = (detail: SliderDetail): Option<number> => detail.snapStart;
+const snapStart = (detail: SliderDetail): Optional<number> => detail.snapStart;
 const rounded = (detail: SliderDetail): boolean => detail.rounded;
 
 // Not great but... /shrug

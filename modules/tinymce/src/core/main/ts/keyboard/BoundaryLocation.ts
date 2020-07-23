@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Adt, Fun, Option, Options } from '@ephox/katamari';
+import { Adt, Fun, Optional, Optionals } from '@ephox/katamari';
 import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import * as CaretUtils from '../caret/CaretUtils';
@@ -48,7 +48,7 @@ const before = (isInlineTarget: (node: Node) => boolean, rootNode: Node, pos: Ca
     () => CaretFinder.nextPosition(scope, nPos)
       .bind(Fun.curry(InlineUtils.findRootInline, isInlineTarget, scope))
       .map((inline) => Location.before(inline)),
-    Option.none
+    Optional.none
   );
 };
 
@@ -62,7 +62,7 @@ const start = (isInlineTarget: (node: Node) => boolean, rootNode: Node, pos: Car
   const nPos = InlineUtils.normalizeBackwards(pos);
   return findInsideRootInline(isInlineTarget, rootNode, nPos).bind((inline) => {
     const prevPos = CaretFinder.prevPosition(inline, nPos);
-    return prevPos.isNone() ? Option.some(Location.start(inline)) : Option.none();
+    return prevPos.isNone() ? Optional.some(Location.start(inline)) : Optional.none();
   });
 };
 
@@ -70,7 +70,7 @@ const end = (isInlineTarget: (node: Node) => boolean, rootNode: Node, pos: Caret
   const nPos = InlineUtils.normalizeForwards(pos);
   return findInsideRootInline(isInlineTarget, rootNode, nPos).bind((inline) => {
     const nextPos = CaretFinder.nextPosition(inline, nPos);
-    return nextPos.isNone() ? Option.some(Location.end(inline)) : Option.none();
+    return nextPos.isNone() ? Optional.some(Location.end(inline)) : Optional.none();
   });
 };
 
@@ -81,13 +81,13 @@ const after = (isInlineTarget: (node: Node) => boolean, rootNode: Node, pos: Car
     () => CaretFinder.prevPosition(scope, nPos)
       .bind(Fun.curry(InlineUtils.findRootInline, isInlineTarget, scope))
       .map((inline) => Location.after(inline)),
-    Option.none
+    Optional.none
   );
 };
 
 const isValidLocation = (location: LocationAdt) => InlineUtils.isRtl(getElement(location)) === false;
 
-const readLocation = (isInlineTarget: (node: Node) => boolean, rootNode: Node, pos: CaretPosition): Option<LocationAdt> => {
+const readLocation = (isInlineTarget: (node: Node) => boolean, rootNode: Node, pos: CaretPosition): Optional<LocationAdt> => {
   const location = LazyEvaluator.evaluateUntil([
     before,
     start,
@@ -130,7 +130,7 @@ const isEq = (location1: LocationAdt, location2: LocationAdt) =>
   getName(location1) === getName(location2) && getElement(location1) === getElement(location2);
 
 const betweenInlines = (forward: boolean, isInlineTarget: (node: Node) => boolean, rootNode: Node, from: CaretPosition, to: CaretPosition, location: LocationAdt) =>
-  Options.lift2(
+  Optionals.lift2(
     InlineUtils.findRootInline(isInlineTarget, rootNode, from),
     InlineUtils.findRootInline(isInlineTarget, rootNode, to),
     (fromInline, toInline) => {
@@ -142,12 +142,12 @@ const betweenInlines = (forward: boolean, isInlineTarget: (node: Node) => boolea
       }
     }).getOr(location);
 
-const skipNoMovement = (fromLocation: Option<LocationAdt>, toLocation: LocationAdt) => fromLocation.fold(
+const skipNoMovement = (fromLocation: Optional<LocationAdt>, toLocation: LocationAdt) => fromLocation.fold(
   Fun.constant(true),
   (fromLocation) => !isEq(fromLocation, toLocation)
 );
 
-const findLocationTraverse = (forward: boolean, isInlineTarget: (node: Node) => boolean, rootNode: Node, fromLocation: Option<LocationAdt>, pos: CaretPosition): Option<LocationAdt> => {
+const findLocationTraverse = (forward: boolean, isInlineTarget: (node: Node) => boolean, rootNode: Node, fromLocation: Optional<LocationAdt>, pos: CaretPosition): Optional<LocationAdt> => {
   const from = InlineUtils.normalizePosition(forward, pos);
   const to = CaretFinder.fromPosition(forward, rootNode, from).map(Fun.curry(InlineUtils.normalizePosition, forward));
 
@@ -161,25 +161,25 @@ const findLocationTraverse = (forward: boolean, isInlineTarget: (node: Node) => 
   return location.filter(isValidLocation);
 };
 
-const findLocationSimple = (forward: boolean, location: LocationAdt): Option<LocationAdt> => {
+const findLocationSimple = (forward: boolean, location: LocationAdt): Optional<LocationAdt> => {
   if (forward) {
-    return location.fold<Option<LocationAdt>>(
-      Fun.compose(Option.some, Location.start), // Before -> Start
-      Option.none,
-      Fun.compose(Option.some, Location.after), // End -> After
-      Option.none
+    return location.fold<Optional<LocationAdt>>(
+      Fun.compose(Optional.some, Location.start), // Before -> Start
+      Optional.none,
+      Fun.compose(Optional.some, Location.after), // End -> After
+      Optional.none
     );
   } else {
-    return location.fold<Option<LocationAdt>>(
-      Option.none,
-      Fun.compose(Option.some, Location.before), // Before <- Start
-      Option.none,
-      Fun.compose(Option.some, Location.end) // End <- After
+    return location.fold<Optional<LocationAdt>>(
+      Optional.none,
+      Fun.compose(Optional.some, Location.before), // Before <- Start
+      Optional.none,
+      Fun.compose(Optional.some, Location.end) // End <- After
     );
   }
 };
 
-const findLocation = (forward: boolean, isInlineTarget: (node: Node) => boolean, rootNode: Node, pos: CaretPosition): Option<LocationAdt> => {
+const findLocation = (forward: boolean, isInlineTarget: (node: Node) => boolean, rootNode: Node, pos: CaretPosition): Optional<LocationAdt> => {
   const from = InlineUtils.normalizePosition(forward, pos);
   const fromLocation = readLocation(isInlineTarget, rootNode, from);
 

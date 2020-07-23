@@ -7,7 +7,7 @@
 
 import { AddEventsBehaviour, AlloyEvents, AlloyParts, Receiving } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
-import { Cell, Obj, Option, Type } from '@ephox/katamari';
+import { Cell, Obj, Optional, Type } from '@ephox/katamari';
 import { DomEvent, EventUnbinder, SelectorFind, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -58,9 +58,9 @@ const renderUrlDialog = (internalDialog: Types.UrlDialog.UrlDialog, extra: Windo
   const footer = internalDialog.buttons.bind((buttons) => {
     // Don't render a footer if no buttons are specified
     if (buttons.length === 0) {
-      return Option.none<AlloyParts.ConfiguredPart>();
+      return Optional.none<AlloyParts.ConfiguredPart>();
     } else {
-      return Option.some(renderModalFooter({ buttons }, backstage));
+      return Optional.some(renderModalFooter({ buttons }, backstage));
     }
   });
 
@@ -78,7 +78,7 @@ const renderUrlDialog = (internalDialog: Types.UrlDialog.UrlDialog, extra: Windo
   // Determine the iframe urls domain, so we can target that specifically when sending messages
   const iframeUri = new URI(internalDialog.url, { base_uri: new URI(window.location.href) });
   const iframeDomain = `${iframeUri.protocol}://${iframeUri.host}${iframeUri.port ? ':' + iframeUri.port : ''}`;
-  const messageHandlerUnbinder = Cell(Option.none<EventUnbinder>());
+  const messageHandlerUnbinder = Cell(Optional.none<EventUnbinder>());
 
   // Setup the behaviours for dealing with messages between the iframe and current window
   const extraBehaviours = [
@@ -98,7 +98,7 @@ const renderUrlDialog = (internalDialog: Types.UrlDialog.UrlDialog, extra: Windo
             }
           }
         });
-        messageHandlerUnbinder.set(Option.some(unbind));
+        messageHandlerUnbinder.set(Optional.some(unbind));
       }),
 
       // When the dialog is closed, unbind the window message listener

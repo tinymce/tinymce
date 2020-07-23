@@ -6,7 +6,7 @@
  */
 
 import { AlloyComponent, AlloyTriggers } from '@ephox/alloy';
-import { Fun, Option } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { UiFactoryBackstage } from '../../../backstage/Backstage';
 import { updateMenuText } from '../../dropdown/CommonDropdown';
@@ -33,7 +33,7 @@ const getSpec = (editor: Editor): SelectSpec => {
 
   const getPreviewFor = (format: string) => () => {
     const fmt = editor.formatter.get(format);
-    return Option.some({
+    return Optional.some({
       tag: fmt.length > 0 ? fmt[0].inline || fmt[0].block || 'div' : 'div',
       styles: editor.dom.parseStyle(editor.formatter.getCssText(format))
     });
@@ -47,9 +47,9 @@ const getSpec = (editor: Editor): SelectSpec => {
     });
   };
 
-  const nodeChangeHandler = Option.some((comp: AlloyComponent) => (e) => updateSelectMenuText(e.parents, comp));
+  const nodeChangeHandler = Optional.some((comp: AlloyComponent) => (e) => updateSelectMenuText(e.parents, comp));
 
-  const setInitialValue = Option.some((comp: AlloyComponent) => {
+  const setInitialValue = Optional.some((comp: AlloyComponent) => {
     const parents = getCurrentSelectionParents(editor);
     updateSelectMenuText(parents, comp);
   });
@@ -58,9 +58,9 @@ const getSpec = (editor: Editor): SelectSpec => {
 
   return {
     tooltip: 'Blocks',
-    icon: Option.none(),
+    icon: Optional.none(),
     isSelectedFor,
-    getCurrentValue: Fun.constant(Option.none()),
+    getCurrentValue: Fun.constant(Optional.none()),
     getPreviewFor,
     onAction: onActionToggleFormat(editor),
     setInitialValue,

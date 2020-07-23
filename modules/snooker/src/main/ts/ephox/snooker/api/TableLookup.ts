@@ -1,19 +1,19 @@
-import { Arr, Fun, Option } from '@ephox/katamari';
+import { Arr, Fun, Optional } from '@ephox/katamari';
 import { SelectorFilter, SelectorFind, Selectors, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 import { getAttrValue } from '../util/CellUtils';
 import * as LayerSelector from '../util/LayerSelector';
 import * as Structs from './Structs';
 
 // lookup inside this table
-const lookup = <T extends Element = Element> (tags: string[], element: SugarElement, isRoot: (e: SugarElement) => boolean = Fun.never): Option<SugarElement<T>> => {
+const lookup = <T extends Element = Element> (tags: string[], element: SugarElement, isRoot: (e: SugarElement) => boolean = Fun.never): Optional<SugarElement<T>> => {
   // If the element we're inspecting is the root, we definitely don't want it.
   if (isRoot(element)) {
-    return Option.none();
+    return Optional.none();
   }
   // This looks a lot like SelectorFind.closest, with one big exception - the isRoot check.
   // The code here will look for parents if passed a table, SelectorFind.closest with that specific isRoot check won't.
   if (Arr.contains(tags, SugarNode.name(element))) {
-    return Option.some(element);
+    return Optional.some(element);
   }
 
   const isRootOrUpperTable = (elm: SugarElement) => Selectors.is(elm, 'table') || isRoot(elm);
@@ -30,7 +30,7 @@ const cells = (ancestor: SugarElement): SugarElement<HTMLTableCellElement>[] => 
 
 const notCell = (element: SugarElement, isRoot?: (e: SugarElement) => boolean) => lookup<Element>([ 'caption', 'tr', 'tbody', 'tfoot', 'thead' ], element, isRoot);
 
-const neighbours = <T extends Element = Element> (selector: string) => (element: SugarElement): Option<SugarElement<T>[]> =>
+const neighbours = <T extends Element = Element> (selector: string) => (element: SugarElement): Optional<SugarElement<T>[]> =>
   Traverse.parent(element).map((parent) => SelectorFilter.children(parent, selector));
 
 const neighbourCells = neighbours<HTMLTableCellElement>('th,td');

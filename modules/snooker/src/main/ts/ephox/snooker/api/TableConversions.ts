@@ -1,4 +1,4 @@
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import { Attribute, Css, SugarElement } from '@ephox/sugar';
 import { BarPositions, ColInfo } from '../resize/BarPositions';
 import * as Sizes from '../resize/Sizes';
@@ -13,13 +13,13 @@ const cleanupLegacyAttributes = (element: SugarElement<HTMLElement>) => {
 
 const convertToPercentSize = (table: SugarElement<HTMLTableElement>, direction: BarPositions<ColInfo>, tableSize: TableSize) => {
   const newWidth = Sizes.getPercentTableWidth(table);
-  redistribute(table, Option.some(newWidth), Option.none(), direction, tableSize);
+  redistribute(table, Optional.some(newWidth), Optional.none(), direction, tableSize);
   cleanupLegacyAttributes(table);
 };
 
 const convertToPixelSize = (table: SugarElement<HTMLTableElement>, direction: BarPositions<ColInfo>, tableSize: TableSize) => {
   const newWidth = Sizes.getPixelTableWidth(table);
-  redistribute(table, Option.some(newWidth), Option.none(), direction, tableSize);
+  redistribute(table, Optional.some(newWidth), Optional.none(), direction, tableSize);
   cleanupLegacyAttributes(table);
 };
 

@@ -1,5 +1,5 @@
 import { Dragger } from '@ephox/dragster';
-import { Fun, Option } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 import { Bindable, Event, Events } from '@ephox/porkbun';
 import { Attribute, Class, Compare, Css, DomEvent, SelectorFind, SugarBody, SugarElement } from '@ephox/sugar';
 import { findClosestContentEditable, isContentEditableTrue } from '../alien/ContentEditable';
@@ -41,10 +41,10 @@ export const BarManager = function (wire: ResizeWire, direction: BarPositions<Co
   const mutation = BarMutation();
   const resizing = Dragger.transform(mutation, {});
 
-  let hoverTable = Option.none<SugarElement>();
+  let hoverTable = Optional.none<SugarElement>();
 
   const getResizer = function (element: SugarElement, type: string) {
-    return Option.from(Attribute.get(element, type));
+    return Optional.from(Attribute.get(element, type));
   };
 
   /* Reposition the bar as the user drags */
@@ -112,7 +112,7 @@ export const BarManager = function (wire: ResizeWire, direction: BarPositions<Co
     return Compare.eq(e, wire.view());
   };
 
-  const findClosestEditableTable = (target: SugarElement): Option<SugarElement> => SelectorFind.closest(target, 'table', isRoot).filter((table) => findClosestContentEditable(table, isRoot).exists(isContentEditableTrue));
+  const findClosestEditableTable = (target: SugarElement): Optional<SugarElement> => SelectorFind.closest(target, 'table', isRoot).filter((table) => findClosestContentEditable(table, isRoot).exists(isContentEditableTrue));
 
   /* mouseover on table: When the mouse moves within the CONTENT AREA (NOT THE TABLE), refresh the bars. */
   const mouseover = DomEvent.bind(wire.view(), 'mouseover', function (event) {
@@ -128,7 +128,7 @@ export const BarManager = function (wire: ResizeWire, direction: BarPositions<Co
         }
       },
       (table) => {
-        hoverTable = Option.some(table);
+        hoverTable = Optional.some(table);
         Bars.refresh(wire, table, hdirection, direction);
       }
     );

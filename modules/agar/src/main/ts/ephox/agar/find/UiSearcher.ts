@@ -1,5 +1,5 @@
 import { TestLabel } from '@ephox/bedrock-client';
-import { Adt, Option, Result } from '@ephox/katamari';
+import { Adt, Optional, Result } from '@ephox/katamari';
 import { SugarElement, Truncate } from '@ephox/sugar';
 
 import * as SizzleFind from '../alien/SizzleFind';
@@ -41,10 +41,10 @@ const derive = (element: SugarElement<any>, selector: string) => {
   }
 };
 
-const matchesSelf = (element: SugarElement<any>, selector: string): Option<SugarElement<any>> =>
-  SizzleFind.matches(element, selector) ? Option.some(element) : Option.none();
+const matchesSelf = (element: SugarElement<any>, selector: string): Optional<SugarElement<any>> =>
+  SizzleFind.matches(element, selector) ? Optional.some(element) : Optional.none();
 
-const select = (element: SugarElement<any>, selector: string): Option<SugarElement<any>> =>
+const select = (element: SugarElement<any>, selector: string): Optional<SugarElement<any>> =>
   derive(element, selector).fold(
     matchesSelf,
     SizzleFind.child,
@@ -58,7 +58,7 @@ const selectAll = (element: SugarElement<any>, selector: string): Array<SugarEle
     SizzleFind.descendants
   );
 
-const toResult = <T>(message: TestLabel, option: Option<T>): Result<T, TestLabel> =>
+const toResult = <T>(message: TestLabel, option: Optional<T>): Result<T, TestLabel> =>
   option.fold(
     () => Result.error<T, TestLabel>(message),
     Result.value
