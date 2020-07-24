@@ -20,13 +20,13 @@ import { GeomRect } from '../geom/Rect';
 import Entities from '../html/Entities';
 import Schema from '../html/Schema';
 import Styles, { StyleMap } from '../html/Styles';
-import { ReferrerPolicy, URLConverter } from '../SettingsTypes';
+import { UpdatedReferrerPolicy, URLConverter } from '../SettingsTypes';
 import Tools from '../util/Tools';
 import DomQuery, { DomQueryConstructor } from './DomQuery';
 import EventUtils, { EventUtilsCallback } from './EventUtils';
 import Sizzle from './Sizzle';
 import { StyleSheetLoader } from './StyleSheetLoader';
-import TreeWalker from './TreeWalker';
+import DomTreeWalker from './TreeWalker';
 
 /**
  * Utility class for various DOM manipulation and retrieval functions.
@@ -167,7 +167,7 @@ export interface DOMUtilsSettings {
   collect: Function;
   onSetAttrib: Function;
   contentCssCors: boolean;
-  referrerPolicy: ReferrerPolicy;
+  referrerPolicy: UpdatedReferrerPolicy;
 }
 
 export type Target = Node | Window | Array<Node | Window>;
@@ -998,7 +998,7 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
 
     node = node.firstChild;
     if (node) {
-      const walker = new TreeWalker(node, node.parentNode);
+      const walker = new DomTreeWalker(node, node.parentNode);
       const whitespace = schema ? schema.getWhiteSpaceElements() : {};
       elements = elements || (schema ? schema.getNonEmptyElements() : null);
 

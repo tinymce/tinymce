@@ -8,7 +8,7 @@
 import { Element, HTMLElement, Node, Range, Text } from '@ephox/dom-globals';
 import { Option, Options } from '@ephox/katamari';
 import DOMUtils from '../api/dom/DOMUtils';
-import Selection from '../api/dom/Selection';
+import EditorSelection from '../api/dom/Selection';
 import Env from '../api/Env';
 import Tools from '../api/util/Tools';
 import * as CaretFinder from '../caret/CaretFinder';
@@ -246,7 +246,7 @@ const resolveIndex = (dom: DOMUtils, bookmark: IndexBookmark): Option<Range> => 
   return rng;
 });
 
-const resolve = (selection: Selection, bookmark: Bookmark): Option<Range> => {
+const resolve = (selection: EditorSelection, bookmark: Bookmark): Option<Range> => {
   const dom = selection.dom;
 
   if (bookmark) {

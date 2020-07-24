@@ -1,16 +1,16 @@
-import { GeneralSteps, Logger, Pipeline, Step, Assertions } from '@ephox/agar';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import Theme from 'tinymce/themes/silver/Theme';
+import { Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
+import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import AstNode from 'tinymce/core/api/html/Node';
+import HtmlSerializer from 'tinymce/core/api/html/Serializer';
 import * as EditorContent from 'tinymce/core/content/EditorContent';
-import Serializer from 'tinymce/core/api/html/Serializer';
-import Node from 'tinymce/core/api/html/Node';
+import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.core.content.EditorContentTest', (success, failure) => {
   const getFontTree = () => {
-    const body = new Node('body', 1);
-    const font = new Node('font', 1);
-    const text = new Node('#text', 3);
+    const body = new AstNode('body', 1);
+    const font = new AstNode('font', 1);
+    const text = new AstNode('#text', 3);
 
     text.value = 'x';
     font.attr('size', '7');
@@ -22,8 +22,8 @@ UnitTest.asynctest('browser.tinymce.core.content.EditorContentTest', (success, f
 
   Theme();
 
-  const toHtml = (node: Node) => {
-    const htmlSerializer = Serializer({});
+  const toHtml = (node: AstNode) => {
+    const htmlSerializer = HtmlSerializer({});
     return htmlSerializer.serialize(node);
   };
 
@@ -41,21 +41,21 @@ UnitTest.asynctest('browser.tinymce.core.content.EditorContentTest', (success, f
       Logger.t('getContent tree', GeneralSteps.sequence([
         tinyApis.sSetContent('<p>tree</p>'),
         Step.sync(() => {
-          const tree = EditorContent.getContent(editor, { format: 'tree' }) as Node;
+          const tree = EditorContent.getContent(editor, { format: 'tree' }) as AstNode;
           Assertions.assertHtml('Should be expected tree html', '<p>tree</p>', toHtml(tree));
         })
       ])),
       Logger.t('getContent tree filtered', GeneralSteps.sequence([
         Step.sync(() => {
           EditorContent.setContent(editor, '<p><font size="7">x</font></p>', { format: 'raw' });
-          const tree = EditorContent.getContent(editor, { format: 'tree' }) as Node;
+          const tree = EditorContent.getContent(editor, { format: 'tree' }) as AstNode;
           Assertions.assertHtml('Should be expected tree filtered html', '<p><span style="font-size: 300%;">x</span></p>', toHtml(tree));
         })
       ])),
       Logger.t('getContent tree using public api', GeneralSteps.sequence([
         tinyApis.sSetContent('<p>html</p>'),
         Step.sync(() => {
-          const tree = editor.getContent({ format: 'tree' }) as Node;
+          const tree = editor.getContent({ format: 'tree' }) as AstNode;
           Assertions.assertHtml('Should be expected filtered html', '<p>html</p>', toHtml(tree));
         })
       ])),
@@ -69,7 +69,7 @@ UnitTest.asynctest('browser.tinymce.core.content.EditorContentTest', (success, f
       Logger.t('setContent tree', GeneralSteps.sequence([
         tinyApis.sSetContent('<p>tree</p>'),
         Step.sync(() => {
-          const tree = EditorContent.getContent(editor, { format: 'tree' }) as Node;
+          const tree = EditorContent.getContent(editor, { format: 'tree' }) as AstNode;
           Assertions.assertHtml('Should be expected tree html', '<p>tree</p>', toHtml(tree));
 
           EditorContent.setContent(editor, '<p>new html</p>');

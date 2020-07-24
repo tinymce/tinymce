@@ -5,19 +5,19 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { document, DragEvent, Element, Node, HTMLElement, MouseEvent } from '@ephox/dom-globals';
+import { document, DragEvent, Element, HTMLElement, MouseEvent, Node } from '@ephox/dom-globals';
 import { Arr, Singleton } from '@ephox/katamari';
 import DOMUtils from './api/dom/DOMUtils';
-import Selection from './api/dom/Selection';
+import EditorSelection from './api/dom/Selection';
 import Editor from './api/Editor';
 import * as Settings from './api/Settings';
 import Delay from './api/util/Delay';
 import { EditorEvent } from './api/util/EventDispatcher';
 import * as MousePosition from './dom/MousePosition';
 import * as NodeType from './dom/NodeType';
+import * as ErrorReporter from './ErrorReporter';
 import { isUIElement } from './focus/FocusController';
 import * as Predicate from './util/Predicate';
-import * as ErrorReporter from './ErrorReporter';
 
 /**
  * This module contains logic overriding the drag/drop logic of the editor.
@@ -197,7 +197,7 @@ const move = (state: Singleton.Value<State>, editor: Editor) => {
 };
 
 // Returns the raw element instead of the fake cE=false element
-const getRawTarget = (selection: Selection) => {
+const getRawTarget = (selection: EditorSelection) => {
   const rng = selection.getSel().getRangeAt(0);
   const startContainer = rng.startContainer;
   return startContainer.nodeType === 3 ? startContainer.parentNode : startContainer;

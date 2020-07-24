@@ -8,7 +8,7 @@
 import { Element, Node, Range, Text } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
 import DOMUtils from '../api/dom/DOMUtils';
-import Selection from '../api/dom/Selection';
+import EditorSelection from '../api/dom/Selection';
 import Tools from '../api/util/Tools';
 import * as CaretContainer from '../caret/CaretContainer';
 import CaretPosition from '../caret/CaretPosition';
@@ -61,7 +61,7 @@ const getPoint = function (dom: DOMUtils, trim: TrimFn, normalized: boolean, rng
   return point;
 };
 
-const getLocation = function (trim: TrimFn, selection: Selection, normalized: boolean, rng: Range): PathBookmark {
+const getLocation = function (trim: TrimFn, selection: EditorSelection, normalized: boolean, rng: Range): PathBookmark {
   const dom = selection.dom, bookmark: any = {};
 
   bookmark.start = getPoint(dom, trim, normalized, rng, true);
@@ -146,7 +146,7 @@ const findAdjacentContentEditableFalseElm = function (rng: Range) {
   return findSibling(rng.startContainer, rng.startOffset) || findSibling(rng.endContainer, rng.endOffset);
 };
 
-const getOffsetBookmark = function (trim: TrimFn, normalized: boolean, selection: Selection): IndexBookmark | PathBookmark {
+const getOffsetBookmark = function (trim: TrimFn, normalized: boolean, selection: EditorSelection): IndexBookmark | PathBookmark {
   const element = selection.getNode();
   let name = element ? element.nodeName : null;
   const rng = selection.getRng();
@@ -164,7 +164,7 @@ const getOffsetBookmark = function (trim: TrimFn, normalized: boolean, selection
   return getLocation(trim, selection, normalized, rng);
 };
 
-const getCaretBookmark = function (selection: Selection): StringPathBookmark {
+const getCaretBookmark = function (selection: EditorSelection): StringPathBookmark {
   const rng = selection.getRng();
 
   return {
@@ -173,7 +173,7 @@ const getCaretBookmark = function (selection: Selection): StringPathBookmark {
   };
 };
 
-const getRangeBookmark = function (selection: Selection): RangeBookmark {
+const getRangeBookmark = function (selection: EditorSelection): RangeBookmark {
   return { rng: selection.getRng() };
 };
 
@@ -182,7 +182,7 @@ const createBookmarkSpan = (dom: DOMUtils, id: string, filled: boolean) => {
   return filled ? dom.create('span', args, '&#xFEFF;') : dom.create('span', args);
 };
 
-const getPersistentBookmark = function (selection: Selection, filled: boolean): IdBookmark | IndexBookmark {
+const getPersistentBookmark = function (selection: EditorSelection, filled: boolean): IdBookmark | IndexBookmark {
   const dom = selection.dom;
   let rng = selection.getRng();
   const id = dom.uniqueId();
@@ -214,7 +214,7 @@ const getPersistentBookmark = function (selection: Selection, filled: boolean): 
   return { id };
 };
 
-const getBookmark = function (selection: Selection, type: number, normalized: boolean): Bookmark {
+const getBookmark = function (selection: EditorSelection, type: number, normalized: boolean): Bookmark {
   if (type === 2) {
     return getOffsetBookmark(Zwsp.trim, normalized, selection);
   } else if (type === 3) {
@@ -226,7 +226,7 @@ const getBookmark = function (selection: Selection, type: number, normalized: bo
   }
 };
 
-const getUndoBookmark = Fun.curry(getOffsetBookmark, Fun.identity, true) as (selection: Selection) => IndexBookmark | PathBookmark;
+const getUndoBookmark = Fun.curry(getOffsetBookmark, Fun.identity, true) as (selection: EditorSelection) => IndexBookmark | PathBookmark;
 
 export {
   getBookmark,

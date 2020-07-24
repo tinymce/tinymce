@@ -19,7 +19,7 @@ import Delay from '../util/Delay';
 import { EditorEvent } from '../util/EventDispatcher';
 import Tools from '../util/Tools';
 import VK from '../util/VK';
-import Selection from './Selection';
+import EditorSelection from './Selection';
 
 interface ControlSelection {
   isResizable (elm: Element): boolean;
@@ -40,7 +40,7 @@ interface ControlSelection {
 
 const isContentEditableFalse = NodeType.isContentEditableFalse;
 
-const ControlSelection = (selection: Selection, editor: Editor): ControlSelection => {
+const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSelection => {
   const dom = editor.dom, each = Tools.each;
   let selectedElm, selectedElmGhost, resizeHelper, selectedHandle;
   let startX, startY, selectedElmX, selectedElmY, startW, startH, ratio, resizeStarted;

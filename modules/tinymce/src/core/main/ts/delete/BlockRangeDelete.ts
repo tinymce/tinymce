@@ -8,7 +8,7 @@
 import { Node, Range } from '@ephox/dom-globals';
 import { Fun, Options } from '@ephox/katamari';
 import { Compare, PredicateFind, SugarElement } from '@ephox/sugar';
-import Selection from '../api/dom/Selection';
+import EditorSelection from '../api/dom/Selection';
 import Editor from '../api/Editor';
 import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
@@ -16,7 +16,7 @@ import * as ElementType from '../dom/ElementType';
 import * as DeleteUtils from './DeleteUtils';
 import * as MergeBlocks from './MergeBlocks';
 
-const deleteRangeMergeBlocks = (rootNode: SugarElement<Node>, selection: Selection) => {
+const deleteRangeMergeBlocks = (rootNode: SugarElement<Node>, selection: EditorSelection) => {
   const rng = selection.getRng();
 
   return Options.lift2(

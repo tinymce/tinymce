@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { ClientRect, Element, HTMLElement, Node as DomNode, Range, Selection as NativeSelection, Window } from '@ephox/dom-globals';
+import { ClientRect, Element, HTMLElement, Node, Range, Selection, Window } from '@ephox/dom-globals';
 import { Compare, SugarElement } from '@ephox/sugar';
 import { Bookmark } from '../../bookmark/BookmarkTypes';
 import CaretPosition from '../../caret/CaretPosition';
@@ -23,12 +23,12 @@ import { hasAnyRanges, moveEndPoint } from '../../selection/SelectionUtils';
 import * as SetSelectionContent from '../../selection/SetSelectionContent';
 import Editor from '../Editor';
 import Env from '../Env';
-import Node from '../html/Node';
+import AstNode from '../html/Node';
 import BookmarkManager from './BookmarkManager';
 import ControlSelection from './ControlSelection';
 import DOMUtils from './DOMUtils';
 import SelectorChanged from './SelectorChanged';
-import Serializer from './Serializer';
+import DomSerializer from './Serializer';
 
 /**
  * This class handles text and control selection it's an crossbrowser utility class.
@@ -42,7 +42,7 @@ import Serializer from './Serializer';
 
 const isNativeIeSelection = (rng: any): boolean => !!(rng).select;
 
-const isAttachedToDom = function (node: DomNode): boolean {
+const isAttachedToDom = function (node: Node): boolean {
   return !!(node && node.ownerDocument) && Compare.contains(SugarElement.fromDom(node.ownerDocument), SugarElement.fromDom(node));
 };
 
@@ -56,26 +56,26 @@ const isValidRange = function (rng: Range) {
   }
 };
 
-interface Selection {
+interface EditorSelection {
   bookmarkManager: BookmarkManager;
   controlSelection: ControlSelection;
   dom: DOMUtils;
   win: Window;
-  serializer: Serializer;
+  serializer: DomSerializer;
   editor: Editor;
   collapse: (toStart?: boolean) => void;
-  setCursorLocation: (node?: DomNode, offset?: number) => void;
-  getContent (args: { format: 'tree' } & GetSelectionContent.GetSelectionContentArgs): Node;
+  setCursorLocation: (node?: Node, offset?: number) => void;
+  getContent (args: { format: 'tree' } & GetSelectionContent.GetSelectionContentArgs): AstNode;
   getContent (args?: GetSelectionContent.GetSelectionContentArgs): string;
   setContent: (content: string, args?: SetSelectionContent.SelectionSetContentArgs) => void;
   getBookmark: (type?: number, normalized?: boolean) => Bookmark;
   moveToBookmark: (bookmark: Bookmark) => boolean;
-  select: (node: DomNode, content?: boolean) => DomNode;
+  select: (node: Node, content?: boolean) => Node;
   isCollapsed: () => boolean;
   isForward: () => boolean;
   setNode: (elm: Element) => Element;
   getNode: () => Element;
-  getSel: () => NativeSelection;
+  getSel: () => Selection;
   setRng: (rng: Range, forward?: boolean) => void;
   getRng: () => Range;
   getStart: (real?: boolean) => Element;
@@ -83,12 +83,12 @@ interface Selection {
   getSelectedBlocks: (startElm?: Element, endElm?: Element) => Element[];
   normalize: () => Range;
   selectorChanged: (selector: string, callback: (active: boolean, args: {
-    node: DomNode;
+    node: Node;
     selector: String;
     parents: Element[];
-  }) => void) => Selection;
+  }) => void) => EditorSelection;
   selectorChangedWithUnbind: (selector: string, callback: (active: boolean, args: {
-    node: DomNode;
+    node: Node;
     selector: String;
     parents: Element[];
   }) => void) => { unbind: () => void };
@@ -109,7 +109,7 @@ interface Selection {
  * @param {tinymce.dom.Serializer} serializer DOM serialization class to use for getContent.
  * @param {tinymce.Editor} editor Editor instance of the selection.
  */
-const Selection = function (dom: DOMUtils, win: Window, serializer: Serializer, editor: Editor): Selection {
+const EditorSelection = function (dom: DOMUtils, win: Window, serializer: DomSerializer, editor: Editor): EditorSelection {
   let selectedRange: Range | null;
   let explicitRange: Range | null;
 
@@ -123,7 +123,7 @@ const Selection = function (dom: DOMUtils, win: Window, serializer: Serializer, 
    * @param {Node} node Optional node to put the cursor in.
    * @param {Number} offset Optional offset from the start of the node to put the cursor at.
    */
-  const setCursorLocation = (node?: DomNode, offset?: number) => {
+  const setCursorLocation = (node?: Node, offset?: number) => {
     const rng = dom.createRng();
 
     if (!node) {
@@ -233,7 +233,7 @@ const Selection = function (dom: DOMUtils, win: Window, serializer: Serializer, 
    * // Select the first paragraph in the active editor
    * tinymce.activeEditor.selection.select(tinymce.activeEditor.dom.select('p')[0]);
    */
-  const select = (node: DomNode, content?: boolean) => {
+  const select = (node: Node, content?: boolean) => {
     ElementSelection.select(dom, node, content).each(setRng);
     return node;
   };
@@ -278,7 +278,7 @@ const Selection = function (dom: DOMUtils, win: Window, serializer: Serializer, 
    * @method getSel
    * @return {Selection} Internal browser selection object.
    */
-  const getSel = (): NativeSelection => win.getSelection ? win.getSelection() : (<any> win.document).selection;
+  const getSel = (): Selection => win.getSelection ? win.getSelection() : (<any> win.document).selection;
 
   /**
    * Returns the browsers internal range object.
@@ -522,7 +522,7 @@ const Selection = function (dom: DOMUtils, win: Window, serializer: Serializer, 
    * @param {String} selector CSS selector to check for.
    * @param {function} callback Callback with state and args when the selector is matches or not.
    */
-  const selectorChanged = (selector: string, callback: (active: boolean, args: { node: DomNode; selector: String; parents: Element[] }) => void) => {
+  const selectorChanged = (selector: string, callback: (active: boolean, args: { node: Node; selector: String; parents: Element[] }) => void) => {
     selectorChangedWithUnbind(selector, callback);
     return exports;
   };
@@ -556,7 +556,7 @@ const Selection = function (dom: DOMUtils, win: Window, serializer: Serializer, 
     controlSelection.destroy();
   };
 
-  const exports: Selection = {
+  const exports: EditorSelection = {
     bookmarkManager: null,
     controlSelection: null,
     dom,
@@ -599,4 +599,4 @@ const Selection = function (dom: DOMUtils, win: Window, serializer: Serializer, 
   return exports;
 };
 
-export default Selection;
+export default EditorSelection;

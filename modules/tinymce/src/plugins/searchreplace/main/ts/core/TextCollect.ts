@@ -10,7 +10,7 @@ import { Arr, Fun, Obj } from '@ephox/katamari';
 import { SandNode } from '@ephox/sand';
 import { SelectorFilter, SugarElement, Traverse } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
-import TreeWalker from 'tinymce/core/api/dom/TreeWalker';
+import DomTreeWalker from 'tinymce/core/api/dom/TreeWalker';
 import { TextSection } from './Types';
 
 interface WalkerCallbacks {
@@ -75,7 +75,7 @@ const collectTextToBoundary = (dom: DOMUtils, section: TextSection, node: Node, 
   }
 
   const rootBlock = dom.getParent(rootNode, dom.isBlock);
-  const walker = new TreeWalker(node, rootBlock);
+  const walker = new DomTreeWalker(node, rootBlock);
   const walkerFn = forwards ? walker.next : walker.prev;
 
   // Walk over and add text nodes to the section and increase the offsets
@@ -95,7 +95,7 @@ const collectTextToBoundary = (dom: DOMUtils, section: TextSection, node: Node, 
 };
 
 const collect = (dom: DOMUtils, rootNode: Node, startNode: Node, endNode?: Node, callbacks?: CollectCallbacks, skipStart: boolean = true) => {
-  const walker = new TreeWalker(startNode, rootNode);
+  const walker = new DomTreeWalker(startNode, rootNode);
   const sections: TextSection[] = [];
   let current: TextSection = nuSection();
 

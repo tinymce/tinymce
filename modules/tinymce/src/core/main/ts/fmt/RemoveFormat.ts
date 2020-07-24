@@ -9,7 +9,7 @@ import { Element, Node, Range } from '@ephox/dom-globals';
 import { Arr, Option, Type } from '@ephox/katamari';
 import { Insert, InsertAll, SugarElement, Traverse } from '@ephox/sugar';
 import DOMUtils from '../api/dom/DOMUtils';
-import TreeWalker from '../api/dom/TreeWalker';
+import DomTreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
 import { FormatAttrOrStyleValue, FormatVars, RemoveFormatPartial } from '../api/fmt/Format';
 import * as Settings from '../api/Settings';
@@ -52,12 +52,12 @@ const getContainer = (ed: Editor, rng: RangeLikeObject, start?: boolean) => {
 
   // If start text node is excluded then walk to the next node
   if (NodeType.isText(container) && start && offset >= container.nodeValue.length) {
-    container = new TreeWalker(container, ed.getBody()).next() || container;
+    container = new DomTreeWalker(container, ed.getBody()).next() || container;
   }
 
   // If end text node is excluded then walk to the previous node
   if (NodeType.isText(container) && !start && offset === 0) {
-    container = new TreeWalker(container, ed.getBody()).prev() || container;
+    container = new DomTreeWalker(container, ed.getBody()).prev() || container;
   }
 
   return container;

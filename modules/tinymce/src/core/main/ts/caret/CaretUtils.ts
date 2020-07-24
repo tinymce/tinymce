@@ -8,7 +8,7 @@
 import { HTMLElement, Node, Range } from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
-import TreeWalker from '../api/dom/TreeWalker';
+import DomTreeWalker from '../api/dom/TreeWalker';
 import * as NodeType from '../dom/NodeType';
 import * as CaretCandidate from './CaretCandidate';
 import * as CaretContainer from './CaretContainer';
@@ -40,7 +40,7 @@ const skipCaretContainers = function (walk, shallow?: boolean): Node {
 };
 
 const findNode = (node: Node, direction: number, predicateFn: (node: Node) => boolean, rootNode: Node, shallow?: boolean) => {
-  const walker = new TreeWalker(node, rootNode);
+  const walker = new DomTreeWalker(node, rootNode);
 
   if (isBackwards(direction)) {
     if (isContentEditableFalse(node) || isCaretContainerBlock(node)) {

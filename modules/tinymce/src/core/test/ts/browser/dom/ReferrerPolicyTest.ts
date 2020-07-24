@@ -2,11 +2,11 @@ import { Chain, Logger, Pipeline, Step } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Editor as McEditor } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
-import Editor from 'tinymce/core/api/Editor';
-import { ReferrerPolicy } from 'tinymce/core/api/SettingsTypes';
-import Theme from 'tinymce/themes/silver/Theme';
-import ScriptLoader from 'tinymce/core/api/dom/ScriptLoader';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+import ScriptLoader from 'tinymce/core/api/dom/ScriptLoader';
+import Editor from 'tinymce/core/api/Editor';
+import { UpdatedReferrerPolicy } from 'tinymce/core/api/SettingsTypes';
+import Theme from 'tinymce/themes/silver/Theme';
 
 // TODO Find a way to test the referrerpolicy with ScriptLoader, as it removes the dom reference as soon as it's finished loading so we can't check
 // via dom elements. For now we're just loading a script to make sure it doesn't completely die when loading.
@@ -14,7 +14,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.ReferrerPolicyTest', (success, fail
   const platform = PlatformDetection.detect();
   Theme();
 
-  const cAssertReferrerLinkPresence = (referrerPolicy: ReferrerPolicy, expected: boolean) => Chain.op((editor: Editor) => {
+  const cAssertReferrerLinkPresence = (referrerPolicy: UpdatedReferrerPolicy, expected: boolean) => Chain.op((editor: Editor) => {
     const links = editor.getDoc().querySelectorAll(`link[referrerpolicy="${referrerPolicy}"]`);
     Assert.eq(`should have link with referrerpolicy="${referrerPolicy}"`, expected, links.length > 0);
   });

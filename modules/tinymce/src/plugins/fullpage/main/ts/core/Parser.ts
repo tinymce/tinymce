@@ -7,8 +7,8 @@
 
 import Editor from 'tinymce/core/api/Editor';
 import DomParser from 'tinymce/core/api/html/DomParser';
-import Node from 'tinymce/core/api/html/Node';
-import Serializer from 'tinymce/core/api/html/Serializer';
+import AstNode from 'tinymce/core/api/html/Node';
+import HtmlSerializer from 'tinymce/core/api/html/Serializer';
 import Tools from 'tinymce/core/api/util/Tools';
 import * as Settings from '../api/Settings';
 
@@ -60,7 +60,7 @@ const htmlToData = function (editor: Editor, head: string) {
   }
 
   // Parse meta elements
-  Tools.each<Node>(headerFragment.getAll('meta'), function (meta) {
+  Tools.each<AstNode>(headerFragment.getAll('meta'), function (meta) {
     const name = meta.attr('name');
     const httpEquiv = meta.attr('http-equiv');
     let matches;
@@ -123,7 +123,7 @@ const dataToHtml = function (editor: Editor, data, head) {
   headElement = headerFragment.getAll('head')[0];
   if (!headElement) {
     elm = headerFragment.getAll('html')[0];
-    headElement = new Node('head', 1);
+    headElement = new AstNode('head', 1);
 
     if (elm.firstChild) {
       elm.insert(headElement, elm.firstChild, true);
@@ -142,7 +142,7 @@ const dataToHtml = function (editor: Editor, data, head) {
     }
 
     if (elm.type !== 7) {
-      elm = new Node('xml', 7);
+      elm = new AstNode('xml', 7);
       headerFragment.insert(elm, headerFragment.firstChild, true);
     }
 
@@ -155,7 +155,7 @@ const dataToHtml = function (editor: Editor, data, head) {
   elm = headerFragment.getAll('#doctype')[0];
   if (data.doctype) {
     if (!elm) {
-      elm = new Node('#doctype', 10);
+      elm = new AstNode('#doctype', 10);
 
       if (data.xml_pi) {
         headerFragment.insert(elm, headerFragment.firstChild);
@@ -179,7 +179,7 @@ const dataToHtml = function (editor: Editor, data, head) {
 
   if (data.docencoding) {
     if (!elm) {
-      elm = new Node('meta', 1);
+      elm = new AstNode('meta', 1);
       elm.attr('http-equiv', 'Content-Type');
       elm.shortEnded = true;
       addHeadNode(elm);
@@ -194,13 +194,13 @@ const dataToHtml = function (editor: Editor, data, head) {
   elm = headerFragment.getAll('title')[0];
   if (data.title) {
     if (!elm) {
-      elm = new Node('title', 1);
+      elm = new AstNode('title', 1);
       addHeadNode(elm);
     } else {
       elm.empty();
     }
 
-    elm.append(new Node('#text', 3)).value = data.title;
+    elm.append(new AstNode('#text', 3)).value = data.title;
   } else if (elm) {
     elm.remove();
   }
@@ -226,7 +226,7 @@ const dataToHtml = function (editor: Editor, data, head) {
     }
 
     if (value) {
-      elm = new Node('meta', 1);
+      elm = new AstNode('meta', 1);
       elm.attr('name', name);
       elm.attr('content', value);
       elm.shortEnded = true;
@@ -235,7 +235,7 @@ const dataToHtml = function (editor: Editor, data, head) {
     }
   });
 
-  const currentStyleSheetsMap: Record<string, Node> = {};
+  const currentStyleSheetsMap: Record<string, AstNode> = {};
   Tools.each(headerFragment.getAll('link'), function (stylesheet) {
     if (stylesheet.attr('rel') === 'stylesheet') {
       currentStyleSheetsMap[stylesheet.attr('href')] = stylesheet;
@@ -245,7 +245,7 @@ const dataToHtml = function (editor: Editor, data, head) {
   // Add new
   Tools.each(data.stylesheets, function (stylesheet) {
     if (!currentStyleSheetsMap[stylesheet]) {
-      elm = new Node('link', 1);
+      elm = new AstNode('link', 1);
       elm.attr({
         rel: 'stylesheet',
         text: 'text/css',
@@ -295,7 +295,7 @@ const dataToHtml = function (editor: Editor, data, head) {
   }
 
   // Serialize header fragment and crop away body part
-  const html = Serializer({
+  const html = HtmlSerializer({
     validate: false,
     indent: true,
     indent_before: 'head,html,body,meta,title,script,link,style',

@@ -9,8 +9,8 @@ import { HTMLElement } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
 import { Insert, SugarElement } from '@ephox/sugar';
 import DOMUtils from '../api/dom/DOMUtils';
-import Selection from '../api/dom/Selection';
-import TreeWalker from '../api/dom/TreeWalker';
+import EditorSelection from '../api/dom/Selection';
+import DomTreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
 import Schema from '../api/html/Schema';
 import * as CaretFinder from '../caret/CaretFinder';
@@ -23,7 +23,7 @@ import { rangeInsertNode } from '../selection/RangeInsertNode';
 
 // Walks the parent block to the right and look for BR elements
 const hasRightSideContent = function (schema: Schema, container, parentBlock) {
-  const walker = new TreeWalker(container, parentBlock);
+  const walker = new DomTreeWalker(container, parentBlock);
   let node;
   const nonEmptyElementsMap = schema.getNonEmptyElements();
 
@@ -34,7 +34,7 @@ const hasRightSideContent = function (schema: Schema, container, parentBlock) {
   }
 };
 
-const scrollToBr = function (dom: DOMUtils, selection: Selection, brElm) {
+const scrollToBr = function (dom: DOMUtils, selection: EditorSelection, brElm) {
   // Insert temp marker and scroll to that
   const marker = dom.create('span', {}, '&nbsp;');
   brElm.parentNode.insertBefore(marker, brElm);
@@ -42,7 +42,7 @@ const scrollToBr = function (dom: DOMUtils, selection: Selection, brElm) {
   dom.remove(marker);
 };
 
-const moveSelectionToBr = function (dom: DOMUtils, selection: Selection, brElm, extraBr) {
+const moveSelectionToBr = function (dom: DOMUtils, selection: EditorSelection, brElm, extraBr) {
   const rng = dom.createRng();
 
   if (!extraBr) {

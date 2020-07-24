@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Node from '../api/html/Node';
+import AstNode from '../api/html/Node';
 
-export type Content = string | Node;
+export type Content = string | AstNode;
 export type ContentFormat = 'raw' | 'text' | 'html' | 'tree';
 
 export interface GetContentArgs {

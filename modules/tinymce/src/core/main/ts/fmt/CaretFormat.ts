@@ -8,7 +8,7 @@
 import { Document, Node, Range } from '@ephox/dom-globals';
 import { Arr, Fun, Obj, Option } from '@ephox/katamari';
 import { Attribute, Insert, Remove, SugarElement, SugarNode } from '@ephox/sugar';
-import TreeWalker from '../api/dom/TreeWalker';
+import DomTreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
 import { FormatVars } from '../api/fmt/Format';
 import CaretPosition from '../caret/CaretPosition';
@@ -53,7 +53,7 @@ const isCaretContainerEmpty = function (node: Node) {
 
 const findFirstTextNode = function (node: Node) {
   if (node) {
-    const walker = new TreeWalker(node, node);
+    const walker = new DomTreeWalker(node, node);
 
     for (node = walker.current(); node; node = walker.next()) {
       if (NodeType.isText(node)) {

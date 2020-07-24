@@ -8,7 +8,7 @@
 import { HTMLElement, Node, Range } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import DOMUtils from '../api/dom/DOMUtils';
-import TreeWalker from '../api/dom/TreeWalker';
+import DomTreeWalker from '../api/dom/TreeWalker';
 import * as CaretContainer from '../caret/CaretContainer';
 import { CaretPosition } from '../caret/CaretPosition';
 import * as NodeType from '../dom/NodeType';
@@ -40,7 +40,7 @@ const isTableCell = (node: Node) => node && /^(TD|TH|CAPTION)$/.test(node.nodeNa
 const isCeFalseCaretContainer = (node: Node, rootNode: Node) => CaretContainer.isCaretContainer(node) && hasParent(node, rootNode, isCaretNode) === false;
 
 const hasBrBeforeAfter = (dom: DOMUtils, node: Node, left: boolean) => {
-  const walker = new TreeWalker(node, dom.getParent(node.parentNode, dom.isBlock) || dom.getRoot());
+  const walker = new DomTreeWalker(node, dom.getParent(node.parentNode, dom.isBlock) || dom.getRoot());
 
   while ((node = walker[left ? 'prev' : 'next']())) {
     if (NodeType.isBr(node)) {
@@ -80,7 +80,7 @@ const findTextNodeRelative = (dom: DOMUtils, isAfterNode: boolean, collapsed: bo
   }
 
   // Walk left until we hit a text node we can move to or a block/br/img
-  const walker = new TreeWalker(startNode, parentBlockContainer);
+  const walker = new DomTreeWalker(startNode, parentBlockContainer);
   while ((node = walker[left ? 'prev' : 'next']())) {
     // Break if we hit a non content editable node
     if (dom.getContentEditableParent(node) === 'false' || isCeFalseCaretContainer(node, body)) {
@@ -173,7 +173,7 @@ const normalizeEndPoint = (dom: DOMUtils, collapsed: boolean, start: boolean, rn
       if (container.hasChildNodes() && isTable(container) === false) {
         // Walk the DOM to find a text node to place the caret at or a BR
         node = container;
-        const walker = new TreeWalker(container, body);
+        const walker = new DomTreeWalker(container, body);
 
         do {
           if (NodeType.isContentEditableFalse(node) || CaretContainer.isCaretContainer(node)) {

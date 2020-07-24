@@ -8,7 +8,7 @@
 import { Node } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
 import { Compare, SelectorExists, SugarElement } from '@ephox/sugar';
-import TreeWalker from '../api/dom/TreeWalker';
+import DomTreeWalker from '../api/dom/TreeWalker';
 import * as CaretCandidate from '../caret/CaretCandidate';
 import * as NodeType from './NodeType';
 
@@ -45,7 +45,7 @@ const isEmptyNode = function (targetNode: Node, skipBogus: boolean) {
       return true;
     }
 
-    const walker = new TreeWalker(node, targetNode);
+    const walker = new DomTreeWalker(node, targetNode);
     do {
       if (skipBogus) {
         if (isBogusAll(node)) {

@@ -9,7 +9,7 @@ import { DocumentFragment, Element, KeyboardEvent } from '@ephox/dom-globals';
 import { Arr, Obj, Option, Options } from '@ephox/katamari';
 import { Css, PredicateFilter, SugarElement, SugarNode } from '@ephox/sugar';
 import DOMUtils from '../api/dom/DOMUtils';
-import TreeWalker from '../api/dom/TreeWalker';
+import DomTreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
 import * as Settings from '../api/Settings';
 import { EditorEvent } from '../api/util/EventDispatcher';
@@ -323,7 +323,7 @@ const insert = function (editor: Editor, evt?: EditorEvent<KeyboardEvent>) {
     }
 
     // Walk the DOM and look for text nodes or non empty elements
-    const walker = new TreeWalker(container, parentBlock);
+    const walker = new DomTreeWalker(container, parentBlock);
 
     // If caret is in beginning or end of a text block then jump to the next/previous node
     if (NodeType.isText(container)) {

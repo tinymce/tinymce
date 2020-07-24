@@ -9,8 +9,8 @@ import { Range } from '@ephox/dom-globals';
 import { Arr, Fun, Option, Options } from '@ephox/katamari';
 import { Compare, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 import DOMUtils from '../api/dom/DOMUtils';
-import Selection from '../api/dom/Selection';
-import TreeWalker from '../api/dom/TreeWalker';
+import EditorSelection from '../api/dom/Selection';
+import DomTreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
 import Tools from '../api/util/Tools';
 import { IdBookmark, IndexBookmark } from '../bookmark/BookmarkTypes';
@@ -69,7 +69,7 @@ const hasAllContentsSelected = function (elm, rng) {
 };
 
 const moveEndPoint = (dom: DOMUtils, rng: Range, node, start: boolean): void => {
-  const root = node, walker = new TreeWalker(node, root);
+  const root = node, walker = new DomTreeWalker(node, root);
   const nonEmptyElementsMap = dom.schema.getNonEmptyElements();
 
   do {
@@ -133,7 +133,7 @@ const runOnRanges = (editor: Editor, executor: (rng: Range, fake: boolean) => vo
   }
 };
 
-const preserve = (selection: Selection, fillBookmark: boolean, executor: (bookmark: IdBookmark | IndexBookmark) => void) => {
+const preserve = (selection: EditorSelection, fillBookmark: boolean, executor: (bookmark: IdBookmark | IndexBookmark) => void) => {
   const bookmark = GetBookmark.getPersistentBookmark(selection, fillBookmark);
   executor(bookmark);
   selection.moveToBookmark(bookmark);

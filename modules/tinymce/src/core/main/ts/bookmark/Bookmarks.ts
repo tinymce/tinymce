@@ -5,18 +5,18 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import * as GetBookmark from './GetBookmark';
-import * as ResolveBookmark from './ResolveBookmark';
-import Selection from '../api/dom/Selection';
+import { Node } from '@ephox/dom-globals';
+import EditorSelection from '../api/dom/Selection';
 import * as NodeType from '../dom/NodeType';
 import { Bookmark } from './BookmarkTypes';
-import { Node } from '@ephox/dom-globals';
+import * as GetBookmark from './GetBookmark';
+import * as ResolveBookmark from './ResolveBookmark';
 
-const getBookmark = function (selection: Selection, type: number, normalized: boolean): Bookmark {
+const getBookmark = function (selection: EditorSelection, type: number, normalized: boolean): Bookmark {
   return GetBookmark.getBookmark(selection, type, normalized);
 };
 
-const moveToBookmark = function (selection: Selection, bookmark: Bookmark) {
+const moveToBookmark = function (selection: EditorSelection, bookmark: Bookmark) {
   ResolveBookmark.resolve(selection, bookmark).each(function (rng) {
     selection.setRng(rng);
   });

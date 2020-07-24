@@ -7,7 +7,7 @@
 
 import { console, document } from '@ephox/dom-globals';
 import { Type } from '@ephox/katamari';
-import { ReferrerPolicy } from '../SettingsTypes';
+import { UpdatedReferrerPolicy } from '../SettingsTypes';
 import Tools from '../util/Tools';
 import DOMUtils from './DOMUtils';
 
@@ -41,7 +41,7 @@ const DOM = DOMUtils.DOM;
 const each = Tools.each, grep = Tools.grep;
 
 export interface ScriptLoaderSettings {
-  referrerPolicy?: ReferrerPolicy;
+  referrerPolicy?: UpdatedReferrerPolicy;
 }
 
 export interface ScriptLoaderConstructor {
@@ -60,7 +60,7 @@ interface ScriptLoader {
   load (url: string, success?: () => void, scope?: {}, failure?: () => void): void;
   remove (url: string);
   loadQueue (success?: () => void, scope?: {}, failure?: (urls: string[]) => void): void;
-  _setReferrerPolicy (referrerPolicy: ReferrerPolicy): void;
+  _setReferrerPolicy (referrerPolicy: UpdatedReferrerPolicy): void;
 }
 
 const QUEUED = 0;
@@ -82,7 +82,7 @@ class ScriptLoader {
     this.settings = settings;
   }
 
-  public _setReferrerPolicy(referrerPolicy: ReferrerPolicy) {
+  public _setReferrerPolicy(referrerPolicy: UpdatedReferrerPolicy) {
     this.settings.referrerPolicy = referrerPolicy;
   }
 
