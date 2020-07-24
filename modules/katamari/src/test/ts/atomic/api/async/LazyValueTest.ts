@@ -1,4 +1,4 @@
-/* tslint:disable:no-unimported-promise */
+import Promise from '@ephox/wrap-promise-polyfill';
 import * as Arr from 'ephox/katamari/api/Arr';
 import * as Fun from 'ephox/katamari/api/Fun';
 import { LazyValue } from 'ephox/katamari/api/LazyValue';

@@ -23,7 +23,7 @@ const fakePromise = (): PromiseLike<true> => {
 
 const stepToPromise = <T, U>(step: Step<T, U>) =>
   (input: T): PromiseLike<true> =>
-    // tslint:disable-next-line:no-unimported-promise
+    // eslint-disable-next-line @tinymce/no-unimported-promise
     typeof Promise !== 'undefined' ? new Promise<true>((resolve, reject) => {
       step.runStep(input, () => {
         resolve(true);

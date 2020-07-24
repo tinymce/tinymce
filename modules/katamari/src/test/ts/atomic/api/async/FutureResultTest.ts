@@ -1,13 +1,13 @@
-/* tslint:disable:no-unimported-promise */
+import { Testable } from '@ephox/dispute';
+import Promise from '@ephox/wrap-promise-polyfill';
+import * as Fun from 'ephox/katamari/api/Fun';
 import { Future } from 'ephox/katamari/api/Future';
 import { FutureResult } from 'ephox/katamari/api/FutureResult';
 import { Result } from 'ephox/katamari/api/Result';
-import * as Fun from 'ephox/katamari/api/Fun';
-import fc from 'fast-check';
 import { tResult } from 'ephox/katamari/api/ResultInstances';
-import { Testable } from '@ephox/dispute';
 import { arbResult } from 'ephox/katamari/test/arb/ArbDataTypes';
 import { eqAsync, promiseTest } from 'ephox/katamari/test/AsyncProps';
+import fc from 'fast-check';
 
 type Testable<A> = Testable.Testable<A>;
 const { tNumber } = Testable;

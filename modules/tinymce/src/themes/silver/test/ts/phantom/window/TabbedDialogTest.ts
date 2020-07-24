@@ -31,10 +31,6 @@ UnitTest.asynctest('WindowManager:tabbed-dialog Test', (success, failure) => {
     );
   });
 
-  NamedChain.direct('tabview', Chain.op((_tabview) => {
-
-  }), '_'),
-
   Pipeline.async({ }, [
     Step.sync(() => {
       windowManager.open({

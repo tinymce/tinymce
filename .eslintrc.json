@@ -8,8 +8,6 @@
     ]
   },
   "rules": {
-    "@tinymce/no-enums-in-export-specifier": "off",
-    "@tinymce/no-unimported-promise": "off", // broken
     "@typescript-eslint/camelcase": "off", // leave off
     "@typescript-eslint/consistent-type-definitions": "off", // leave off
     "@typescript-eslint/member-ordering": "off",
@@ -20,18 +18,12 @@
     "@typescript-eslint/prefer-regexp-exec": "off",
     "@typescript-eslint/unbound-method": "off",
     "comma-dangle": ["error", "never"],
-    "comma-spacing": ["error"],
-    "keyword-spacing": ["error"],
     "no-empty": "off",
-    "no-multi-spaces": ["error", { "ignoreEOLComments": true }],
     "no-shadow": "off",
     "no-underscore-dangle": "off",
-    "no-unused-expressions": "off",
     "one-var": "off",
     "prefer-rest-params": "off",
     "prefer-spread": "off",
-    "space-infix-ops": "error",
-    "space-unary-ops": "error",
     "max-len": ["warn", 260]
   }
 }

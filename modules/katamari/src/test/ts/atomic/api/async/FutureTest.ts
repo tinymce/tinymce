@@ -1,5 +1,5 @@
-/* tslint:disable:no-unimported-promise */
 import { Testable } from '@ephox/dispute';
+import Promise from '@ephox/wrap-promise-polyfill';
 import * as Arr from 'ephox/katamari/api/Arr';
 import * as Fun from 'ephox/katamari/api/Fun';
 import { Future } from 'ephox/katamari/api/Future';
