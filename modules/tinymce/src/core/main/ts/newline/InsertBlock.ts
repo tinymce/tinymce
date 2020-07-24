@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { DocumentFragment, Element, KeyboardEvent } from '@ephox/dom-globals';
 import { Arr, Obj, Option, Options } from '@ephox/katamari';
 import { Css, PredicateFilter, SugarElement, SugarNode } from '@ephox/sugar';
 import DOMUtils from '../api/dom/DOMUtils';

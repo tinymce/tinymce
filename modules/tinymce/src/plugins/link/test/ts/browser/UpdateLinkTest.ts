@@ -1,7 +1,6 @@
-import { Pipeline, Log, FocusTools, Keyboard, Keys, Waiter } from '@ephox/agar';
+import { FocusTools, Keyboard, Keys, Log, Pipeline, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { document } from '@ephox/dom-globals';
-import { TinyApis, TinyLoader, TinyDom } from '@ephox/mcagar';
+import { TinyApis, TinyDom, TinyLoader } from '@ephox/mcagar';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 

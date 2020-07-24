@@ -1,5 +1,4 @@
 import { UnitTest } from '@ephox/bedrock-client';
-import { document } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { DomEvent, Insert, Remove, SugarElement } from '@ephox/sugar';

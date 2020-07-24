@@ -44,7 +44,8 @@ const simulate = function (bridge: WindowBridge, isRoot: (e: SugarElement) => bo
   });
 };
 
-const navigate = function (bridge: WindowBridge, isRoot: (e: SugarElement) => boolean, direction: KeyDirection, initial: SugarElement, anchor: SugarElement, precheck: (initial: SugarElement, isRoot: (e: SugarElement) => boolean) => Option<Response>) {
+const navigate = function (bridge: WindowBridge, isRoot: (e: SugarElement) => boolean, direction: KeyDirection, initial: SugarElement,
+                           anchor: SugarElement, precheck: (initial: SugarElement, isRoot: (e: SugarElement) => boolean) => Option<Response>) {
   // Do not override the up/down keys on IE.
   if (PlatformDetection.detect().browser.isIE()) {
     return Option.none<Response>();
@@ -102,7 +103,8 @@ const lastDownCheck = function (initial: SugarElement, isRoot: (e: SugarElement)
   });
 };
 
-const select = function (bridge: WindowBridge, container: SugarElement, isRoot: (e: SugarElement) => boolean, direction: KeyDirection, initial: SugarElement, anchor: SugarElement, selectRange: (container: SugarElement, boxes: SugarElement[], start: SugarElement, finish: SugarElement) => void) {
+const select = function (bridge: WindowBridge, container: SugarElement, isRoot: (e: SugarElement) => boolean, direction: KeyDirection, initial: SugarElement,
+                         anchor: SugarElement, selectRange: (container: SugarElement, boxes: SugarElement[], start: SugarElement, finish: SugarElement) => void) {
   return simulate(bridge, isRoot, direction, initial, anchor).bind(function (info) {
     return KeySelection.detect(container, isRoot, info.start(), info.finish(), selectRange);
   });

@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Document, Node, ShadowRoot } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import { SugarElement, SugarShadowDom } from '@ephox/sugar';
 import { StyleSheetLoader, StyleSheetLoaderSettings } from 'tinymce/core/api/dom/StyleSheetLoader';

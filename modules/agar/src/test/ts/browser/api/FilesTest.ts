@@ -1,7 +1,6 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { Logger, Pipeline, Step } from 'ephox/agar/api/Main';
 import { createFile } from 'ephox/agar/api/Files';
-import { Blob } from '@ephox/dom-globals';
+import { Logger, Pipeline, Step } from 'ephox/agar/api/Main';
 import { readBlobAsText } from 'ephox/agar/test/BlobReader';
 
 UnitTest.asynctest('FilesTest', (success, failure) => {

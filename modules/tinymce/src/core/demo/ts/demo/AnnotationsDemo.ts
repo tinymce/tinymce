@@ -1,4 +1,3 @@
-import { console, document, prompt } from '@ephox/dom-globals';
 import Editor from 'tinymce/core/api/Editor';
 
 declare let tinymce: any;
@@ -8,9 +7,8 @@ export default function () {
   const button = document.createElement('button');
   button.innerHTML = 'Get all annotations';
   button.addEventListener('click', () => {
-    // tslint:disable no-console
+    // eslint-disable-next-line no-console
     console.log('annotations', tinymce.activeEditor.annotator.getAll('alpha'));
-    // tslint:enable no-console
   });
   document.body.appendChild(button);
 
@@ -26,7 +24,7 @@ export default function () {
       editor.ui.registry.addButton('annotate-alpha', {
         text: 'Annotate',
         onAction() {
-          const comment = prompt('Comment with?');
+          const comment = window.prompt('Comment with?');
           editor.annotator.annotate('alpha', {
             comment
           });

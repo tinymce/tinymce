@@ -1,5 +1,4 @@
 import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
-import { DataTransfer } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
 import { EventArgs, SugarBody, SugarElement, Traverse } from '@ephox/sugar';
 

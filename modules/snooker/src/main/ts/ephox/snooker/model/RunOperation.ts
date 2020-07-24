@@ -1,4 +1,3 @@
-import { HTMLTableElement } from '@ephox/dom-globals';
 import { Arr, Fun, Option, Options } from '@ephox/katamari';
 import { Compare, SugarElement, Traverse } from '@ephox/sugar';
 import { Generators, GeneratorsWrapper, SimpleGenerators } from '../api/Generators';

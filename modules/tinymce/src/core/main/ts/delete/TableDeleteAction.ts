@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element, HTMLTableCellElement, HTMLTableElement, Node, Range } from '@ephox/dom-globals';
 import { Adt, Arr, Option, Options } from '@ephox/katamari';
 import { Compare, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
 import * as SelectionUtils from '../selection/SelectionUtils';

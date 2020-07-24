@@ -1,4 +1,3 @@
-import { KeyboardEvent } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
 import { EventArgs } from '@ephox/sugar';
 

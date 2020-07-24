@@ -18,7 +18,6 @@
     "LICENSE.txt"
   ],
   "dependencies": {
-    "@ephox/dom-globals": "^1.1.2",
     "@ephox/katamari": "^6.1.1",
     "@ephox/porkbun": "^4.0.37",
     "@ephox/sugar": "^6.1.1",

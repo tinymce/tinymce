@@ -1,5 +1,4 @@
 import { Objects } from '@ephox/boulder';
-import { console, Node } from '@ephox/dom-globals';
 import { Arr, Cell, Fun, Global, Obj, Option } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
@@ -89,7 +88,7 @@ const makeEventLogger = (eventName: string, initialTarget: SugarElement): Debugg
     write() {
       const finishTime = new Date().getTime();
       if (Arr.contains([ 'mousemove', 'mouseover', 'mouseout', SystemEvents.systemInit() ], eventName)) { return; }
-      // tslint:disable-next-line:no-console
+      // eslint-disable-next-line no-console
       console.log(eventName, {
         event: eventName,
         time: finishTime - startTime,

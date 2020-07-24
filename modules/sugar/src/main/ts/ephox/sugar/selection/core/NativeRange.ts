@@ -1,4 +1,3 @@
-import { ClientRect, DOMRect, Node, Range, Window } from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
 import { SugarElement } from '../../api/node/SugarElement';
 import { StructRect } from '../../api/selection/Rect';

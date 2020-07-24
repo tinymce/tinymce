@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
 import { SandHTMLElement } from '@ephox/sand';
 import DomQuery from 'tinymce/core/api/dom/DomQuery';

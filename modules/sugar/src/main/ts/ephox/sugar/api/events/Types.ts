@@ -1,4 +1,3 @@
-import { Event } from '@ephox/dom-globals';
 import { SugarElement } from '../node/SugarElement';
 
 export interface EventArgs<T = Event> {

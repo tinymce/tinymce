@@ -5,11 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLElement, HTMLIFrameElement } from '@ephox/dom-globals';
 import AddOnManager from './AddOnManager';
+import { DomQueryConstructor } from './dom/DomQuery';
 import Editor from './Editor';
 import { NotificationManagerImpl } from './NotificationManager';
-import { DomQueryConstructor } from './dom/DomQuery';
 import { WindowManagerImpl } from './WindowManager';
 
 export type Theme = {

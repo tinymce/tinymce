@@ -1,4 +1,3 @@
-import { KeyboardEvent, Window } from '@ephox/dom-globals';
 import { Arr, Fun, Option } from '@ephox/katamari';
 import { EventArgs, Situ, SugarElement } from '@ephox/sugar';
 import * as KeySelection from '../keyboard/KeySelection';

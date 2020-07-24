@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Text } from '@ephox/dom-globals';
 import { Cell } from '@ephox/katamari';
 import Editor from '../api/Editor';
 import * as BlockBoundaryDelete from './BlockBoundaryDelete';

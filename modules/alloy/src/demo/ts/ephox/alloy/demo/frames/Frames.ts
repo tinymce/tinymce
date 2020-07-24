@@ -1,8 +1,7 @@
-import { console, HTMLDocument, HTMLFrameElement } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import { SugarBody, SugarElement, Traverse } from '@ephox/sugar';
 
-// tslint:disable:no-console
+/* eslint-disable no-console */
 
 const iframeDoc = (element: SugarElement<HTMLFrameElement>): Option<SugarElement<HTMLDocument>> => {
   const dom = element.dom();

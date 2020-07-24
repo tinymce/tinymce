@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element } from '@ephox/dom-globals';
 import Editor from 'tinymce/core/api/Editor';
 import * as Settings from '../api/Settings';
 

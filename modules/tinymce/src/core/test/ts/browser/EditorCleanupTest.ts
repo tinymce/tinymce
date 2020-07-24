@@ -1,6 +1,5 @@
 import { Assertions, Chain, Log, NamedChain, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { HTMLDivElement } from '@ephox/dom-globals';
 import { Editor as McEditor } from '@ephox/mcagar';
 import { Attribute, Remove, SugarElement, Truncate } from '@ephox/sugar';
 

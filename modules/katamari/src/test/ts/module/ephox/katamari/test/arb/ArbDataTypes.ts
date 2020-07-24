@@ -1,7 +1,6 @@
+import { Future } from 'ephox/katamari/api/Future';
 import { Option } from 'ephox/katamari/api/Option';
 import { Result } from 'ephox/katamari/api/Result';
-import { Future } from 'ephox/katamari/api/Future';
-import { setTimeout } from '@ephox/dom-globals';
 import fc from 'fast-check';
 
 type Arbitrary<A> = fc.Arbitrary<A>;

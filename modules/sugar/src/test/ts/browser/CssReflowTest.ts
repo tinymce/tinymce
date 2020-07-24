@@ -1,5 +1,4 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
-import { HTMLIFrameElement, HTMLSpanElement } from '@ephox/dom-globals';
 import * as Insert from 'ephox/sugar/api/dom/Insert';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
 import * as DomEvent from 'ephox/sugar/api/events/DomEvent';

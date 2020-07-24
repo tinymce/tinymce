@@ -1,5 +1,4 @@
 import { Assertions, Chain, Cursors, FocusTools, Step, StructAssert, UiFinder, Waiter } from '@ephox/agar';
-import { document, Node, Range } from '@ephox/dom-globals';
 import { Hierarchy, Html, SugarElement } from '@ephox/sugar';
 import { Editor } from '../alien/EditorTypes';
 import * as TinySelections from '../selection/TinySelections';

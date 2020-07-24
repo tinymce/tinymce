@@ -1,6 +1,5 @@
 import { Assertions, Chain, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { document } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import { Hierarchy, SugarElement } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';

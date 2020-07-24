@@ -7,7 +7,6 @@
 
 import { AddEventsBehaviour, AlloyEvents, AlloyParts, Receiving } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
-import { HTMLIFrameElement, MessageEvent, window } from '@ephox/dom-globals';
 import { Cell, Obj, Option, Type } from '@ephox/katamari';
 import { DomEvent, EventUnbinder, SelectorFind, SugarElement } from '@ephox/sugar';
 

@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element, Range } from '@ephox/dom-globals';
 import { Unicode } from '@ephox/katamari';
 import Tools from '../api/util/Tools';
 import CaretPosition from '../caret/CaretPosition';

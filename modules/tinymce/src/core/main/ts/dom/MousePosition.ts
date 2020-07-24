@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLElement, MouseEvent } from '@ephox/dom-globals';
 import Editor from '../api/Editor';
 import { EditorEvent } from '../api/util/EventDispatcher';
 

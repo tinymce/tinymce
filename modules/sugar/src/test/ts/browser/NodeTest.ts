@@ -1,5 +1,4 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
-import { document, Node } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import * as NodeTypes from 'ephox/sugar/api/node/NodeTypes';
 import { SugarElement } from 'ephox/sugar/api/node/SugarElement';

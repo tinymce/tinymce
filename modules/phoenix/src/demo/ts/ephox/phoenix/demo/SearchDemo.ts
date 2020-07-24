@@ -1,4 +1,3 @@
-import { document } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
 import { Attribute, Class, Css, DomEvent, Insert, InsertAll, SugarElement, Value } from '@ephox/sugar';
 import { SearchResult } from 'ephox/phoenix/api/data/Types';

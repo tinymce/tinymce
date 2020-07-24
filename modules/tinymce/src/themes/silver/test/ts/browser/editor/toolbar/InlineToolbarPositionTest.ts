@@ -1,7 +1,6 @@
 import { ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Log, NamedChain, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
 import { Boxes } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
-import { document, HTMLElement } from '@ephox/dom-globals';
 import { Arr, Strings } from '@ephox/katamari';
 import { Editor as McEditor, TinyApis } from '@ephox/mcagar';
 import { Css, Insert, Remove, SelectorFind, SugarBody, SugarElement } from '@ephox/sugar';

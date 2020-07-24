@@ -1,4 +1,3 @@
-import { Blob, HTMLCanvasElement, HTMLImageElement } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
 import * as Canvas from './Canvas';
 import * as Conversions from './Conversions';

@@ -1,4 +1,3 @@
-import { HTMLInputElement, HTMLTextAreaElement } from '@ephox/dom-globals';
 import { Attribute, Classes, Css, Html, InsertAll, SugarElement, Value } from '@ephox/sugar';
 
 import * as Tagger from '../registry/Tagger';

@@ -1,5 +1,4 @@
 import { Chain, Guard, Mouse, UiFinder } from '@ephox/agar';
-import { window } from '@ephox/dom-globals';
 import { Arr, Result } from '@ephox/katamari';
 import { Scroll, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';

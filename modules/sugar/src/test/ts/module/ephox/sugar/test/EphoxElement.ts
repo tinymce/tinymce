@@ -1,4 +1,3 @@
-import { document } from '@ephox/dom-globals';
 import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
 
 export default (type: string) => {

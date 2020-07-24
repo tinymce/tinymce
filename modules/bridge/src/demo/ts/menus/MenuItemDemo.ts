@@ -1,4 +1,3 @@
-import { console } from '@ephox/dom-globals';
 import { getDemoRegistry } from '../buttons/DemoRegistry';
 
 export const registerDemoMenuItems = () => {
@@ -6,7 +5,7 @@ export const registerDemoMenuItems = () => {
     icon: 'code',
     text: 'Code',
     onAction: (_api) => {
-      // tslint:disable-next-line:no-console
+      // eslint-disable-next-line no-console
       console.log('open source code dialog');
     }
   });
@@ -15,13 +14,13 @@ export const registerDemoMenuItems = () => {
     text: 'Bold',
     shortcut: 'Meta+B',
     onSetup: (api) => {
-      // tslint:disable-next-line:no-console
+      // eslint-disable-next-line no-console
       console.log('bold');
       api.setActive(true);
       return () => { };
     },
     onAction: (_api) => {
-      // tslint:disable-next-line:no-console
+      // eslint-disable-next-line no-console
       console.log('bold');
     }
   });

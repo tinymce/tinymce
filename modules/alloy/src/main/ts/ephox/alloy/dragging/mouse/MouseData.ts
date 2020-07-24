@@ -1,4 +1,3 @@
-import { MouseEvent } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import { EventArgs, SugarPosition } from '@ephox/sugar';
 

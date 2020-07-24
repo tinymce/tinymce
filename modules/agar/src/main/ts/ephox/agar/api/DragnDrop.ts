@@ -1,5 +1,4 @@
 import { Chain, NamedChain, UiFinder } from '@ephox/agar';
-import { DataTransfer, DragEvent, File } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { Attribute, SugarBody, SugarElement, SugarNode } from '@ephox/sugar';
 import { createDataTransfer, getDragImage } from '../datatransfer/DataTransfer';

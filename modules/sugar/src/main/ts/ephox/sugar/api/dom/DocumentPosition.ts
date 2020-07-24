@@ -1,4 +1,3 @@
-import { Node, Range } from '@ephox/dom-globals';
 import { SugarElement } from '../node/SugarElement';
 import * as Traverse from '../search/Traverse';
 import * as Compare from './Compare';

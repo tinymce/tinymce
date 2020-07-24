@@ -1,6 +1,5 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { DomUniverse } from '@ephox/boss';
-import { Document } from '@ephox/dom-globals';
 import { Arr, Fun } from '@ephox/katamari';
 import { SugarElement, SugarText } from '@ephox/sugar';
 import * as Family from 'ephox/phoenix/api/general/Family';

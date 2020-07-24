@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { KeyboardEvent } from '@ephox/dom-globals';
 import Editor from './Editor';
 import Env from './Env';
 import Tools from './util/Tools';

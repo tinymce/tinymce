@@ -1,6 +1,5 @@
 import { Chain, FocusTools, GeneralSteps, Keyboard, Keys, Log, Logger, Pipeline, Step, UiControls, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import { SugarElement } from '@ephox/sugar';
 

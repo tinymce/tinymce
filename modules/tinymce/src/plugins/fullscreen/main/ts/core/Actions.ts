@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { document, window } from '@ephox/dom-globals';
 import { Cell, Fun, Singleton } from '@ephox/katamari';
 import { Css, SugarElement, WindowVisualViewport } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';

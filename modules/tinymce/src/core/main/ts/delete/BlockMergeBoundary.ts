@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node, Range } from '@ephox/dom-globals';
 import { Option, Options } from '@ephox/katamari';
 import { Compare, SugarElement, Traverse } from '@ephox/sugar';
 import * as CaretFinder from '../caret/CaretFinder';

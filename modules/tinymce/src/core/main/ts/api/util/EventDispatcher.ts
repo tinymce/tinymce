@@ -5,9 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import {
-  ClipboardEvent, DataTransfer, DragEvent, Event, FocusEvent, KeyboardEvent, MouseEvent, PointerEvent, TouchEvent, WheelEvent
-} from '@ephox/dom-globals';
 import { Fun, Obj } from '@ephox/katamari';
 import Tools from './Tools';
 

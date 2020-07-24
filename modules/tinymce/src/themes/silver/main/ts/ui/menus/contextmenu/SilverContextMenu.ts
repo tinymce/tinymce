@@ -7,7 +7,6 @@
 
 import { AddEventsBehaviour, AlloyComponent, AlloyEvents, Behaviour, GuiFactory, InlineView, Sandboxing, SystemEvents } from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
-import { Element, PointerEvent } from '@ephox/dom-globals';
 import { Arr, Fun, Obj, Result, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import Editor from 'tinymce/core/api/Editor';

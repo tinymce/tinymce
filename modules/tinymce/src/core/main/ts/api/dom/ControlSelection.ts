@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { document, Element, MouseEvent, Node } from '@ephox/dom-globals';
 import { Obj } from '@ephox/katamari';
 import { Selectors, SugarElement } from '@ephox/sugar';
 import * as CefUtils from '../../dom/CefUtils';
@@ -417,7 +416,7 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
   const disableGeckoResize = function () {
     try {
       // Disable object resizing on Gecko
-      editor.getDoc().execCommand('enableObjectResizing', false, false);
+      editor.getDoc().execCommand('enableObjectResizing', false, 'false');
     } catch (ex) {
       // Ignore
     }

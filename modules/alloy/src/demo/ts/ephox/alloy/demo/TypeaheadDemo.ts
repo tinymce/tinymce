@@ -1,4 +1,3 @@
-import { console, document } from '@ephox/dom-globals';
 import { Arr, Future, Option, Result, Strings } from '@ephox/katamari';
 import { Class, SugarElement, Value } from '@ephox/sugar';
 
@@ -14,7 +13,7 @@ import { TypeaheadData } from 'ephox/alloy/ui/types/TypeaheadTypes';
 
 import * as DemoRenders from './forms/DemoRenders';
 
-// tslint:disable:no-console
+/* eslint-disable no-console */
 
 export default (): void => {
   const gui = Gui.create();

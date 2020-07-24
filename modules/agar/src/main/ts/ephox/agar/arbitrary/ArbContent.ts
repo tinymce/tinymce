@@ -1,4 +1,3 @@
-import { console } from '@ephox/dom-globals';
 import { Merger, Obj } from '@ephox/katamari';
 
 import * as ArbSchema from './ArbSchema';
@@ -12,7 +11,7 @@ const makeArbOf = (component, schema, depth): any => {
     const message =
       'Did not understand arbitrary schema element: ' + JSON.stringify(component) +
       '. Known schema elements were: ' + JSON.stringify(Obj.keys(schema));
-    // tslint:disable-next-line:no-console
+    // eslint-disable-next-line no-console
     console.error(message);
     throw new Error(message);
   }

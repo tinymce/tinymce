@@ -67,6 +67,9 @@ const call = function (f: () => any) {
 const never = constant<false>(false) as (...args: any[]) => false;
 const always = constant<true>(true) as (...args: any[]) => true;
 
+/* Used to weaken types */
+const weaken = <A, B extends A>(b: B): A => b;
+
 export {
   noop,
   noarg,
@@ -81,5 +84,6 @@ export {
   apply,
   call,
   never,
-  always
+  always,
+  weaken
 };

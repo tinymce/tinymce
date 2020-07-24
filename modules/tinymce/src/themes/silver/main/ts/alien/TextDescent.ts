@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element, Node, Text } from '@ephox/dom-globals';
 import { NodeTypes } from '@ephox/sugar';
 import * as Spot from './Spot';
 

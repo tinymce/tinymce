@@ -1,12 +1,9 @@
-import { Node } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import { Insert, Remove, SelectorFind, SugarElement, Traverse } from '@ephox/sugar';
 
-const getNode = function (container: SugarElement) {
-  return SelectorFind.descendant(container, '.me').fold(function () {
-    return SelectorFind.descendant(container, '.child').bind(Traverse.firstChild);
-  }, function (v: SugarElement<Node>) {
-    return Option.some(v);
+const getNode = function (container: SugarElement): SugarElement<Node> {
+  return SelectorFind.descendant(container, '.me').orThunk(function () {
+    return SelectorFind.descendant(container, '.child').bind(Traverse.firstChild) as Option<SugarElement<any>>;
   }).getOrDie('Could not find the descendant ".me" or the first child of the descendant ".child"');
 };
 

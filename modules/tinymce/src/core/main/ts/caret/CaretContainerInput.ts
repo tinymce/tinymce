@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Event, HTMLElement } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
 import { SelectorFind, SugarElement } from '@ephox/sugar';
 import Editor from '../api/Editor';

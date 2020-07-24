@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element } from '@ephox/dom-globals';
 import { Arr, Fun } from '@ephox/katamari';
 import { Compare, SugarElement } from '@ephox/sugar';
 import * as ElementType from '../dom/ElementType';

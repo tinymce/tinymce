@@ -6,7 +6,6 @@
  */
 
 import { AlloyComponent, AlloyTriggers } from '@ephox/alloy';
-import { Element } from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { UiFactoryBackstage } from '../../../backstage/Backstage';

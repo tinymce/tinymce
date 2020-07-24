@@ -1,8 +1,7 @@
-import { LazyValue } from './LazyValue';
 import * as AsyncValues from '../async/AsyncValues';
-import { Option } from './Option';
 import * as Fun from './Fun';
-import { clearTimeout, setTimeout } from '@ephox/dom-globals';
+import { LazyValue } from './LazyValue';
+import { Option } from './Option';
 
 /** par :: [LazyValue a] -> LazyValue [a] */
 export const par = function <T> (lazyValues: LazyValue<T>[]) {

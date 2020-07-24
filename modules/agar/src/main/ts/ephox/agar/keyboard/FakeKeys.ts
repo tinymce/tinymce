@@ -1,4 +1,3 @@
-import { Document, HTMLElement } from '@ephox/dom-globals';
 import { PlatformDetection } from '@ephox/sand';
 import { SugarElement } from '@ephox/sugar';
 
@@ -57,12 +56,12 @@ const keyevent = (type: string, doc: SugarElement<any>, value: number, modifiers
     const shiftKey = mod.shiftKey === true;
     const metaKey = mod.metaKey === true;
 
-    if (oEvent.initKeyboardEvent) {
-      // Note: typescript thinks the arguments are wrong so we should probably test it
-      (<any> oEvent).initKeyboardEvent(type, canBubble, cancellable, domDoc.defaultView, ctrlKey, altKey, shiftKey, metaKey, value, value);
+    // this is unknown to typescript
+    const anyEvent = oEvent as any;
+    if (anyEvent.initKeyboardEvent) {
+      anyEvent.initKeyboardEvent(type, canBubble, cancellable, domDoc.defaultView, ctrlKey, altKey, shiftKey, metaKey, value, value);
     } else {
-      // this is unknown to typescript
-      (<any> oEvent).initKeyEvent(type, canBubble, cancellable, domDoc.defaultView, ctrlKey, altKey, shiftKey, metaKey, value, type === 'keypress' && platform.browser.isFirefox() ? value : 0);
+      anyEvent.initKeyEvent(type, canBubble, cancellable, domDoc.defaultView, ctrlKey, altKey, shiftKey, metaKey, value, type === 'keypress' && platform.browser.isFirefox() ? value : 0);
     }
 
     dispatcher.dom().dispatchEvent(oEvent);

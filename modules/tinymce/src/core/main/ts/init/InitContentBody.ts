@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { document, window } from '@ephox/dom-globals';
 import { Obj, Type } from '@ephox/katamari';
 import { Attribute, Insert, SugarElement } from '@ephox/sugar';
 import Annotator from '../api/Annotator';

@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLElement, Node } from '@ephox/dom-globals';
 import { Arr, Option, Strings } from '@ephox/katamari';
 import { TableLookup } from '@ephox/snooker';
 import { Attribute, Compare, SugarElement } from '@ephox/sugar';

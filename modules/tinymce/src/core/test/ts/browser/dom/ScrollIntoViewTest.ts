@@ -1,6 +1,5 @@
 import { Assertions, Cursors, GeneralSteps, Logger, Pipeline, Step, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { window } from '@ephox/dom-globals';
 import { Cell } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { SugarElement } from '@ephox/sugar';

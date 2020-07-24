@@ -1,6 +1,5 @@
 import { ApproxStructure, Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { console, document, HTMLElement, window } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { LegacyUnit } from '@ephox/mcagar';
 import { Attribute, SelectorFilter, SugarElement } from '@ephox/sugar';
@@ -184,7 +183,7 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
   const mAssertEditors = Step.label('mAssertEditors', Step.stateful(function (editors: any[], next, _die) {
     Assertions.assertHtml('Editor contents should be the first div content', '<p>a</p>', editors[0].getContent());
     Assertions.assertHtml('Editor contents should be the second div content', '<p>b</p>', editors[1].getContent());
-    // tslint:disable-next-line:no-console
+    // eslint-disable-next-line no-console
     console.log('Editor container 0:', editors[0].editorContainer);
     const containerApproxStructure = ApproxStructure.build((s, str, arr) => s.element('div', {
       classes: [ arr.has('tox'), arr.has('tox-tinymce'), arr.has('tox-tinymce-inline') ],

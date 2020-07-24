@@ -1,4 +1,3 @@
-import { Event, Node } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
 import { EventArgs, EventFilter, EventHandler, EventUnbinder } from '../api/events/Types';
 import { SugarElement } from '../api/node/SugarElement';

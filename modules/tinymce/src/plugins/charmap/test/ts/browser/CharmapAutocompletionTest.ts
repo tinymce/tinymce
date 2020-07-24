@@ -1,6 +1,5 @@
 import { Keyboard, Keys, Log, Pipeline, Step, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { navigator } from '@ephox/dom-globals';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { SugarBody, SugarElement } from '@ephox/sugar';
 import CharmapPlugin from 'tinymce/plugins/charmap/Plugin';

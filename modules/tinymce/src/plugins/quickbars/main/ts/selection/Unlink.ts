@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLElement, Node } from '@ephox/dom-globals';
 import RangeUtils from 'tinymce/core/api/dom/RangeUtils';
 import DomTreeWalker from 'tinymce/core/api/dom/TreeWalker';
 import Editor from 'tinymce/core/api/Editor';

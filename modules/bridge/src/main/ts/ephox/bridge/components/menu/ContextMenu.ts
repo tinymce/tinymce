@@ -1,4 +1,3 @@
-import { Element } from '@ephox/dom-globals';
 import { SeparatorMenuItemApi } from '../../api/Menu';
 
 export interface ContextMenuItem {

@@ -1,6 +1,5 @@
 import { Assertions, Chain, GeneralSteps, Guard, Logger, Mouse, Step, UiControls, UiFinder, Waiter } from '@ephox/agar';
 import { Assert } from '@ephox/bedrock-client';
-import { document, Event, HTMLElement } from '@ephox/dom-globals';
 import { Arr, Type } from '@ephox/katamari';
 import { TinyApis, TinyUi } from '@ephox/mcagar';
 import { Focus, SugarBody, SugarElement } from '@ephox/sugar';

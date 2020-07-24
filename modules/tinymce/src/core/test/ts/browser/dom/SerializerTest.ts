@@ -1,6 +1,5 @@
 import { Pipeline, Step } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { document } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { LegacyUnit } from '@ephox/mcagar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';

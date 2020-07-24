@@ -1,5 +1,4 @@
 import { Assertions, Logger, Step } from '@ephox/agar';
-import { Node } from '@ephox/dom-globals';
 import { Editor } from '../alien/EditorTypes';
 import { TinyDom } from './TinyDom';
 

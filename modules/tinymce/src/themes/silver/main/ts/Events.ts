@@ -6,7 +6,6 @@
  */
 
 import { Attachment, Channels, Gui, SystemEvents } from '@ephox/alloy';
-import { document, MouseEvent, Node, UIEvent } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { DomEvent, EventArgs, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';

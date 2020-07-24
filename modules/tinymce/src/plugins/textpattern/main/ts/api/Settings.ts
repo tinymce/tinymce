@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Console } from '@ephox/dom-globals';
 import { Arr, Global, Results, Type } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { PatternSet } from '../core/PatternTypes';

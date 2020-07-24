@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Event, HTMLElement, MouseEvent } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
 import { Attribute, Class, SelectorFilter, SugarElement } from '@ephox/sugar';
 import Editor from '../api/Editor';
@@ -25,7 +24,9 @@ const toggleClass = (elm: SugarElement, cls: string, state: boolean) => {
 
 const setEditorCommandState = (editor: Editor, cmd: string, state: boolean) => {
   try {
-    editor.getDoc().execCommand(cmd, false, state);
+    // execCommand needs a string for the value, so convert the boolean to a string
+    // See: https://developer.mozilla.org/en-US/docs/Web/API/Document/execCommand#Parameters
+    editor.getDoc().execCommand(cmd, false, String(state));
   } catch (ex) {
     // Ignore
   }

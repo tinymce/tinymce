@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element, Node, Range } from '@ephox/dom-globals';
 import { Arr, Fun, Option } from '@ephox/katamari';
 import Editor from '../api/Editor';
 import * as CaretContainer from '../caret/CaretContainer';

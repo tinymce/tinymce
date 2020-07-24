@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Blob, URL } from '@ephox/dom-globals';
 import { Arr, Fun, Type } from '@ephox/katamari';
 import * as Uuid from '../../util/Uuid';
 

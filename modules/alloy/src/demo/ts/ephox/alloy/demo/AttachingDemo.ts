@@ -1,4 +1,3 @@
-import { document, setTimeout } from '@ephox/dom-globals';
 import { Class, SugarElement } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';

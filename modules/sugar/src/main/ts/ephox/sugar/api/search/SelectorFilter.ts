@@ -1,4 +1,3 @@
-import { Element, Node } from '@ephox/dom-globals';
 import { SugarElement } from '../node/SugarElement';
 import * as PredicateFilter from './PredicateFilter';
 import * as Selectors from './Selectors';

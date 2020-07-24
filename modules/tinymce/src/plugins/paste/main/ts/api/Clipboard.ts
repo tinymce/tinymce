@@ -5,11 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { ClipboardContents, registerEventsAndFilters, pasteHtml, pasteText, pasteImageData, getDataTransferItems, hasContentType, hasHtmlOrText } from '../core/Clipboard';
-import { PasteBin } from '../core/PasteBin';
 import { Cell } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
-import { ClipboardEvent, DragEvent, Range, DataTransfer } from '@ephox/dom-globals';
+import {
+  ClipboardContents, getDataTransferItems, hasContentType, hasHtmlOrText, pasteHtml, pasteImageData, pasteText, registerEventsAndFilters
+} from '../core/Clipboard';
+import { PasteBin } from '../core/PasteBin';
 
 export interface Clipboard {
   pasteFormat: Cell<string>;

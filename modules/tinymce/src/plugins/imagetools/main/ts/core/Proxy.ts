@@ -8,7 +8,6 @@
 import Promise from 'tinymce/core/api/util/Promise';
 import * as Errors from './Errors';
 import * as Utils from './Utils';
-import { Blob } from '@ephox/dom-globals';
 
 /**
  * Handles loading images though a proxy for working around cors.

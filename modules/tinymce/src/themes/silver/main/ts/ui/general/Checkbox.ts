@@ -6,11 +6,10 @@
  */
 
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Disabling, Focusing, FormField as AlloyFormField, Keying,
-  Memento, NativeEvents, Representing, SimpleSpec, Tabstopping, Unselecting
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Disabling, Focusing, FormField as AlloyFormField, Keying, Memento,
+  NativeEvents, Representing, SimpleSpec, Tabstopping, Unselecting
 } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
-import { HTMLInputElement } from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as ReadOnly from '../../ReadOnly';

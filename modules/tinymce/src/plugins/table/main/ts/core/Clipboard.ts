@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLTableRowElement } from '@ephox/dom-globals';
 import { Cell, Option } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 

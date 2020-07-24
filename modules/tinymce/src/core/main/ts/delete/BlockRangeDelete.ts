@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node, Range } from '@ephox/dom-globals';
 import { Fun, Options } from '@ephox/katamari';
 import { Compare, PredicateFind, SugarElement } from '@ephox/sugar';
 import EditorSelection from '../api/dom/Selection';

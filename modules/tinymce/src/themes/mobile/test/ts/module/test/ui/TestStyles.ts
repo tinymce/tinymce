@@ -1,5 +1,4 @@
 import { Assertions, Chain, UiFinder, Waiter } from '@ephox/agar';
-import { document, navigator } from '@ephox/dom-globals';
 import { Id } from '@ephox/katamari';
 import { Attribute, Class, Css, Insert, Remove, SelectorFind, SugarElement } from '@ephox/sugar';
 

@@ -5,11 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { KeyboardEvent } from '@ephox/dom-globals';
 import { Cell } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
-import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import Delay from 'tinymce/core/api/util/Delay';
+import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import VK from 'tinymce/core/api/util/VK';
 import { PatternSet } from '../core/PatternTypes';
 import * as KeyHandler from './KeyHandler';

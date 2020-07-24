@@ -1,4 +1,3 @@
-import { console, document } from '@ephox/dom-globals';
 import { Arr, Future, Obj, Option, Result } from '@ephox/katamari';
 import { Class, SugarElement } from '@ephox/sugar';
 
@@ -20,7 +19,7 @@ import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 
 import * as DemoRenders from './forms/DemoRenders';
 
-// tslint:disable:no-console
+/* eslint-disable no-console */
 
 const makeItem = (v: string, t: string, c?: string): DemoRenders.DemoItem => ({
   type: 'item',

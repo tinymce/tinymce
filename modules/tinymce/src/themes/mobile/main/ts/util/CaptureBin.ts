@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLInputElement, Node } from '@ephox/dom-globals';
 import { Css, Focus, Insert, Remove, SugarElement } from '@ephox/sugar';
 
 const input = (parent: SugarElement<Node>, operation: (e: SugarElement<HTMLInputElement>) => void): void => {

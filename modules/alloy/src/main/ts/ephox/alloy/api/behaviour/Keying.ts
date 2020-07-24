@@ -1,4 +1,3 @@
-import { console } from '@ephox/dom-globals';
 import { Obj } from '@ephox/katamari';
 
 import { Stateless } from '../../behaviour/common/BehaviourState';
@@ -60,7 +59,7 @@ const Keying: KeyingBehaviour<any> = Behaviour.createModes({
     // available for all keying modes
     setGridSize <S>(component: AlloyComponent, keyConfig: GeneralKeyingConfig, keyState: KeyingState, numRows: number, numColumns: number) {
       if (!isFlatgridState(keyState)) {
-        // tslint:disable-next-line:no-console
+        // eslint-disable-next-line no-console
         console.error('Layout does not support setGridSize');
       } else {
         keyState.setGridSize(numRows, numColumns);

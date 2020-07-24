@@ -1,5 +1,4 @@
 import { FocusTools, GeneralSteps, Keyboard, Step, UiFinder, Waiter } from '@ephox/agar';
-import { HTMLDocument } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { SugarElement, Traverse } from '@ephox/sugar';
 

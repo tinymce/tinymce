@@ -1,4 +1,3 @@
-import { Blob, HTMLImageElement } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import * as Conversions from '../util/Conversions';
 

@@ -8,7 +8,6 @@
 import { ColourPicker } from '@ephox/acid';
 import { AlloyTriggers, Behaviour, Composing, Form, Memento, NativeEvents, Representing, SimpleSpec } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
-import { console } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 
 import { ComposingConfigs } from '../alien/ComposingConfigs';
@@ -105,7 +104,7 @@ export const renderColorPicker = (_spec: ColorPickerSpec): SimpleSpec => {
             const picker = memPicker.get(comp);
             const optRgbForm = Composing.getCurrent(picker);
             optRgbForm.fold(() => {
-              // tslint:disable-next-line:no-console
+              // eslint-disable-next-line no-console
               console.log('Can not find form');
             }, (rgbForm) => {
               Representing.setValue(rgbForm, {

@@ -1,4 +1,3 @@
-import { TouchEvent } from '@ephox/dom-globals';
 import { Cell, Fun, Option } from '@ephox/katamari';
 import { EventArgs, Focus } from '@ephox/sugar';
 

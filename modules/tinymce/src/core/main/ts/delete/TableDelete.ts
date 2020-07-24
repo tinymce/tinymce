@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLTableCaptionElement, HTMLTableCellElement, HTMLTableElement, Node, Range } from '@ephox/dom-globals';
 import { Arr, Fun, Option } from '@ephox/katamari';
 import { Compare, Remove, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 import Editor from '../api/Editor';

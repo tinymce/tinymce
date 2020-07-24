@@ -1,4 +1,3 @@
-import { Element, HTMLElement } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
 import { SugarElement } from '../node/SugarElement';
 import * as Css from '../properties/Css';

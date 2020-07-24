@@ -1,4 +1,6 @@
-import { createTableCellDialog } from './dialogs/TableCellDialog';
+import { registerDemoButtons } from './buttons/ButtonDemo';
+import { getDemoRegistry } from './buttons/DemoRegistry';
+import { createAlertBannerDialog } from './dialogs/AlertBannerDialog';
 import { createAnchorDialog } from './dialogs/AnchorDialog';
 import { createCharmapDialog } from './dialogs/CharmapDialog';
 import { createCodeDialog } from './dialogs/CodeDialog';
@@ -10,16 +12,13 @@ import { createImageDialog } from './dialogs/ImageDialog';
 import { createLinkDialog } from './dialogs/LinkDialog';
 import { createMediaDialog } from './dialogs/MediaDialogDemo';
 import { createPreviewDialog } from './dialogs/PreviewDialog';
+import { createTableCellDialog } from './dialogs/TableCellDialog';
 import { createTableDialog } from './dialogs/TableDialog';
 import { createTableRowDialog } from './dialogs/TableRowDialog';
 import { createTemplateDialog } from './dialogs/TemplateDialog';
-import { registerDemoButtons } from './buttons/ButtonDemo';
-import { registerDemoMenuItems } from './menus/MenuItemDemo';
-import { console } from '@ephox/dom-globals';
-import { getDemoRegistry } from './buttons/DemoRegistry';
-import { registerDemoContextMenus } from './menus/ContextMenuDemo';
 import { createWordcountDialog } from './dialogs/WordcountDialog';
-import { createAlertBannerDialog } from './dialogs/AlertBannerDialog';
+import { registerDemoContextMenus } from './menus/ContextMenuDemo';
+import { registerDemoMenuItems } from './menus/MenuItemDemo';
 
 createAlertBannerDialog();
 createAnchorDialog();
@@ -43,5 +42,5 @@ registerDemoMenuItems();
 registerDemoContextMenus();
 createWordcountDialog();
 
-// tslint:disable-next-line:no-console
+// eslint-disable-next-line no-console
 console.log(getDemoRegistry().getAll());

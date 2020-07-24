@@ -1,7 +1,6 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { ValueSchema } from '@ephox/boulder';
 import { Types } from '@ephox/bridge';
-import { Blob } from '@ephox/dom-globals';
 
 UnitTest.test('Custom Editor Schema Test', () => {
   const schema = Types.CustomEditor.customEditorSchema;

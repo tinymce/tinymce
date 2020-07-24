@@ -1,4 +1,3 @@
-import { Touch } from '@ephox/dom-globals';
 import { Cell, Fun, Option, Throttler } from '@ephox/katamari';
 import Editor from '../api/Editor';
 

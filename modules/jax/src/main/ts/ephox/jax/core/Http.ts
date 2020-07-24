@@ -1,11 +1,10 @@
-import { Blob, XMLHttpRequest, FormData, File, fetch, Response, Headers } from '@ephox/dom-globals';
-import { FutureResult, Result, Option, Obj, Type, Strings, Global } from '@ephox/katamari';
-import * as ResponseError from './ResponseError';
-import * as ResponseSuccess from './ResponseSuccess';
-import * as HttpTypes from './HttpTypes';
-import { HttpError, HttpErrorCode } from './HttpError';
+import { FutureResult, Global, Obj, Option, Result, Strings, Type } from '@ephox/katamari';
 import { DataType } from './DataType';
 import { RequestBody, ResponseBodyDataTypes, ResponseTypeMap, textData } from './HttpData';
+import { HttpError, HttpErrorCode } from './HttpError';
+import * as HttpTypes from './HttpTypes';
+import * as ResponseError from './ResponseError';
+import * as ResponseSuccess from './ResponseSuccess';
 import { buildUrl } from './UrlBuilder';
 
 const getContentType = (requestBody: RequestBody): Option<string> => Option.from(requestBody).bind((b) => {
@@ -63,7 +62,7 @@ const applyOptions = (request: XMLHttpRequest, options: ReturnType<typeof create
   Obj.each(options.headers, (v, k) => request.setRequestHeader(k, v));
 };
 
-const toNativeFormData = (formDataInput: Record<string, string | Blob | File>) => {
+const toNativeFormData = (formDataInput: Record<string, string | Blob | File>): FormData => {
   const nativeFormData = new FormData();
   Obj.each(formDataInput, (value, key) => {
     nativeFormData.append(key, value);
@@ -71,17 +70,18 @@ const toNativeFormData = (formDataInput: Record<string, string | Blob | File>) =
   return nativeFormData;
 };
 
-const getData = (body: RequestBody) => Option.from(body).map((b) => {
-  if (b.type === DataType.JSON) {
-    return JSON.stringify(b.data);
-  } else if (b.type === DataType.FormData) {
-    return toNativeFormData(b.data);
-  } else if (b.type === DataType.MultipartFormData) {
-    return toNativeFormData(b.data);
-  } else {
-    return b;
-  }
-});
+const getData = (body: RequestBody): Option<string | FormData | Blob> =>
+  Option.from(body).map((b) => {
+    if (b.type === DataType.JSON) {
+      return JSON.stringify(b.data);
+    } else if (b.type === DataType.FormData) {
+      return toNativeFormData(b.data);
+    } else if (b.type === DataType.MultipartFormData) {
+      return toNativeFormData(b.data);
+    } else {
+      return b.data;
+    }
+  });
 
 const send = <T extends keyof ResponseTypeMap>(init: HttpTypes.HttpRequest<T>) => FutureResult.nu<ResponseTypeMap[T], HttpError>((callback) => {
   const request = new XMLHttpRequest();
@@ -127,11 +127,6 @@ const get = <T extends keyof ResponseTypeMap>(init: HttpTypes.GetDelInit<T>) => 
 
 const del = <T extends keyof ResponseTypeMap>(init: HttpTypes.GetDelInit<T>) => send({ ...init, method: HttpTypes.HttpMethod.Delete, body: empty() });
 
-interface FetchReaderResult {
-  done: boolean;
-  value: Uint8Array;
-}
-
 const sendProgress = (init: HttpTypes.DownloadHttpRequest, loaded: number) => {
   if (Type.isFunction(init.progress)) {
     init.progress(loaded);
@@ -163,7 +158,7 @@ const fetchDownload = (init: HttpTypes.DownloadHttpRequest): FutureResult<Blob, 
 
     if (body) {
       const reader = body.getReader();
-      const process = (result: FetchReaderResult) => {
+      const process = (result: ReadableStreamReadResult<Uint8Array>) => {
         if (result.done) {
           resolve(Result.value(new Blob(chunks, { type: mime.getOr('') })));
         } else {

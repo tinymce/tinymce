@@ -1,5 +1,3 @@
-import { console } from '@ephox/dom-globals';
-
 export default {
   title: 'Cell properties',
   body: {
@@ -139,7 +137,7 @@ export default {
   onSubmit: (api) => {
     const data = api.getData();
 
-    // tslint:disable-next-line:no-console
+    // eslint-disable-next-line no-console
     console.log({
       width: data.width,
       height: data.height,

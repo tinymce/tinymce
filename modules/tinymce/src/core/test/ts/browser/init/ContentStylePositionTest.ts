@@ -1,6 +1,5 @@
 import { Assertions, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { HTMLElement, NodeListOf } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { TinyLoader } from '@ephox/mcagar';
 import { SugarElement, SugarNode } from '@ephox/sugar';

@@ -1,5 +1,4 @@
 import { Objects } from '@ephox/boulder';
-import { console, document } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import { Class, SelectorFind, SugarElement, Width } from '@ephox/sugar';
 
@@ -13,7 +12,7 @@ import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 import { ItemSpec } from 'ephox/alloy/ui/types/ItemTypes';
 
-// tslint:disable:no-console
+/* eslint-disable no-console */
 
 export default (): void => {
   const gui = Gui.create();

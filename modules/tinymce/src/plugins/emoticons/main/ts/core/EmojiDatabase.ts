@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { console } from '@ephox/dom-globals';
 import { Cell, Merger, Obj, Option } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import Resource from 'tinymce/core/api/Resource';
@@ -86,7 +85,7 @@ const initDatabase = (editor: Editor, databaseUrl: string, databaseId: string): 
       const userEmojis = getUserDefinedEmoticons(editor);
       processEmojis(Merger.merge(emojis, userEmojis));
     }, (err) => {
-      // tslint:disable-next-line:no-console
+      // eslint-disable-next-line no-console
       console.log(`Failed to load emoticons: ${err}`);
       categories.set(Option.some({}));
       all.set(Option.some([]));
@@ -117,7 +116,7 @@ const initDatabase = (editor: Editor, databaseUrl: string, databaseId: string): 
           } else {
             numRetries--;
             if (numRetries < 0) {
-              // tslint:disable-next-line:no-console
+              // eslint-disable-next-line no-console
               console.log('Could not load emojis from url: ' + databaseUrl);
               Delay.clearInterval(interval);
               reject(false);

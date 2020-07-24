@@ -1,4 +1,3 @@
-import { console, CSSStyleDeclaration, Element, HTMLElement, Node, window } from '@ephox/dom-globals';
 import { Arr, Obj, Option, Strings, Type } from '@ephox/katamari';
 import * as Style from '../../impl/Style';
 import * as SugarBody from '../node/SugarBody';
@@ -11,7 +10,7 @@ const internalSet = (dom: Node, property: string, value: string): void => {
   // JQuery coerces numbers to pixels for certain property names, and other times lets numbers through.
   // we're going to be explicit; strings only.
   if (!Type.isString(value)) {
-    // tslint:disable-next-line:no-console
+    // eslint-disable-next-line no-console
     console.error('Invalid call to CSS.set. Property ', property, ':: Value ', value, ':: Element ', dom);
     throw new Error('CSS value must be a string: ' + value);
   }
@@ -102,7 +101,6 @@ const getRaw = (element: SugarElement<Node>, property: string): Option<string> =
   return Option.from(raw).filter((r) => r.length > 0);
 };
 
-// TODO: TINY-3312: when we update dom-globals, this return type will need to change
 const getAllRaw = (element: SugarElement<Node>): Record<string, string> => {
   const css: Record<string, string> = {};
   const dom = element.dom();
@@ -110,7 +108,7 @@ const getAllRaw = (element: SugarElement<Node>): Record<string, string> => {
   if (Style.isSupported(dom)) {
     for (let i = 0; i < dom.style.length; i++) {
       const ruleName = dom.style.item(i) as keyof CSSStyleDeclaration;
-      css[ruleName] = dom.style[ruleName];
+      css[ruleName] = dom.style[ruleName] as string;
     }
   }
   return css;

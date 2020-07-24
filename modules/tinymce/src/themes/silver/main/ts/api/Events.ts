@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { UIEvent } from '@ephox/dom-globals';
 import Editor from 'tinymce/core/api/Editor';
 
 const fireSkinLoaded = (editor: Editor) => editor.fire('SkinLoaded');

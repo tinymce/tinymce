@@ -1,5 +1,4 @@
 import { UnitTest } from '@ephox/bedrock-client';
-import { HTMLInputElement } from '@ephox/dom-globals';
 import { KAssert } from '@ephox/katamari-assertions';
 import * as InsertAll from 'ephox/sugar/api/dom/InsertAll';
 import { SugarElement } from 'ephox/sugar/api/node/SugarElement';

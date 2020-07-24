@@ -1,6 +1,5 @@
 import { Log, Pipeline, Step, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import AnchorPlugin from 'tinymce/plugins/anchor/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';

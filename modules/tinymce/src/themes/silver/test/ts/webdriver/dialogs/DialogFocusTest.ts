@@ -2,7 +2,6 @@ import { FocusTools, Pipeline, RealMouse, Step } from '@ephox/agar';
 
 import { TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
-import { document, window } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';

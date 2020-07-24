@@ -1,5 +1,4 @@
 import { Attachment, Behaviour, DomFactory, Gui, GuiFactory, Positioning } from '@ephox/alloy';
-import { document } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
 import { Class, SugarBody } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';

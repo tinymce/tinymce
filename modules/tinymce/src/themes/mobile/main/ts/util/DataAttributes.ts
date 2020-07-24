@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element } from '@ephox/dom-globals';
 import { Attribute, SugarElement } from '@ephox/sugar';
 
 const safeParse = (element: SugarElement<Element>, attribute: string): number => {

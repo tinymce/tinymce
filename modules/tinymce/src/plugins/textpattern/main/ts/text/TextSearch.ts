@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node, Text } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import TextSeeker from 'tinymce/core/api/dom/TextSeeker';

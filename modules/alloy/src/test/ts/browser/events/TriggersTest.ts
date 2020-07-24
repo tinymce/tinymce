@@ -1,6 +1,5 @@
 import { Assertions, Logger, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { document } from '@ephox/dom-globals';
 import { Arr, Fun, Obj } from '@ephox/katamari';
 import { Attribute, EventArgs, Html, Insert, SelectorFind, SugarElement } from '@ephox/sugar';
 

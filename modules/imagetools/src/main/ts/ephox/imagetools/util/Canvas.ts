@@ -1,5 +1,3 @@
-import { document, HTMLCanvasElement, WebGLRenderingContext, CanvasRenderingContext2D } from '@ephox/dom-globals';
-
 function create(width: number, height: number) {
   return resize(document.createElement('canvas'), width, height);
 }
@@ -18,7 +16,7 @@ function get2dContext(canvas: HTMLCanvasElement) {
 function get3dContext(canvas: HTMLCanvasElement): WebGLRenderingContext | null {
   let gl = null;
   try {
-    gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+    gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl') as WebGLRenderingContext;
   } catch (e) {
     return null;
   }

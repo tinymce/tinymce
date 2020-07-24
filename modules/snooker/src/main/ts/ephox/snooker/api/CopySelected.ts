@@ -1,4 +1,3 @@
-import { HTMLElement } from '@ephox/dom-globals';
 import { Arr, Obj } from '@ephox/katamari';
 import { Attribute, Css, Insert, Remove, Selectors, SugarElement } from '@ephox/sugar';
 import * as DetailsList from '../model/DetailsList';

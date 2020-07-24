@@ -1,5 +1,4 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
-import { console } from '@ephox/dom-globals';
 import { Arr, Fun, Result } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import { SimpleGenerators } from 'ephox/snooker/api/Generators';
@@ -220,7 +219,7 @@ UnitTest.test('FitmentIVTest', () => {
     };
   };
 
-  /* tslint:disable:no-console */
+  /* eslint-disable no-console */
   const measureCycles = inVariantRunner('measure', measureIVTest, CYCLE_TIME);
   console.log(`ran ${measureCycles} measure tests...`);
   const tailorCycles = inVariantRunner('tailor', tailorTestIVTest, CYCLE_TIME);

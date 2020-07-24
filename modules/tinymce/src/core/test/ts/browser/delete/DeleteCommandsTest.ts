@@ -1,6 +1,5 @@
 import { GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Text } from '@ephox/dom-globals';
 import { Cell } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import * as DeleteCommands from 'tinymce/core/delete/DeleteCommands';

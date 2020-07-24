@@ -1,4 +1,3 @@
-import { console } from '@ephox/dom-globals';
 import { SugarBody } from '@ephox/sugar';
 
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
@@ -11,7 +10,7 @@ import * as Debugging from 'ephox/alloy/debugging/Debugging';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 import { FormParts } from 'ephox/alloy/ui/types/FormTypes';
 
-// tslint:disable:no-console
+/* eslint-disable no-console */
 
 export default (): void => {
   const gui = Gui.create();

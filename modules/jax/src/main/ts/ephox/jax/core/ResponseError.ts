@@ -1,4 +1,3 @@
-import { XMLHttpRequest } from '@ephox/dom-globals';
 import { Future, Option } from '@ephox/katamari';
 import { readBlobAsText } from './BlobReader';
 import { DataType } from './DataType';

@@ -1,5 +1,4 @@
 import { DomUniverse } from '@ephox/boss';
-import { Document } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import { TextSeekerPhaseProcessor } from '../../textdata/TextSeeker';

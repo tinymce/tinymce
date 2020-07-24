@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { Class, SugarElement, SugarNode } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';

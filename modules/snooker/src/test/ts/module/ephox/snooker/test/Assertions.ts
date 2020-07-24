@@ -1,5 +1,4 @@
 import { assert } from '@ephox/bedrock-client';
-import { HTMLTableDataCellElement, HTMLTableElement, HTMLTableHeaderCellElement } from '@ephox/dom-globals';
 import { Arr, Fun, Option, Options } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Attribute, Css, Hierarchy, Html, Insert, Remove, SelectorFilter, SugarBody, SugarElement, Traverse } from '@ephox/sugar';

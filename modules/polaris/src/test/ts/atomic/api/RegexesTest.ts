@@ -1,9 +1,7 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr, Obj } from '@ephox/katamari';
 import * as Regexes from 'ephox/polaris/api/Regexes';
-import { console } from '@ephox/dom-globals';
 
-// tslint:disable no-console
 UnitTest.test('RegexesTest', function () {
   const ephoxCases = [
     'www.google.com.au',
@@ -135,8 +133,10 @@ UnitTest.test('RegexesTest', function () {
     const matched = Regexes.link().exec(cs);
     assert.eq(cs, matched !== null && matched[0], 'expected true but was false: ' + cs);
     if (matched !== null && matched.length > 1) {
+      // eslint-disable-next-line no-console
       console.log('matched groups:');
       Arr.each(matched, function (s, i) {
+        // eslint-disable-next-line no-console
         console.log(i, s);
       });
       assert.fail('link regex must not capture any groups');

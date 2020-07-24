@@ -1,4 +1,3 @@
-import { DragEvent } from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
 
 import { Keying } from '../../api/behaviour/Keying';

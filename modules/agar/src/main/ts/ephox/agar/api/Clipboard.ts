@@ -1,4 +1,3 @@
-import { DataTransfer, File } from '@ephox/dom-globals';
 import { Arr, Obj } from '@ephox/katamari';
 import { SugarBody, SugarElement } from '@ephox/sugar';
 import { createCopyEvent, createCutEvent, createPasteEvent } from '../clipboard/ClipboardEvents';

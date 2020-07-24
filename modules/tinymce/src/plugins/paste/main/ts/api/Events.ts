@@ -6,7 +6,6 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
-import { HTMLElement } from '@ephox/dom-globals';
 
 const firePastePreProcess = function (editor: Editor, html: string, internal: boolean, isWordHtml: boolean) {
   return editor.fire('PastePreProcess', { content: html, internal, wordContent: isWordHtml });

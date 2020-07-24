@@ -6,7 +6,6 @@
  */
 
 import { AlloyComponent, AlloySpec, Behaviour, Gui, GuiFactory, Keying, Memento, Positioning, SimpleSpec, VerticalDir } from '@ephox/alloy';
-import { HTMLElement, HTMLIFrameElement } from '@ephox/dom-globals';
 import { Arr, Obj, Option, Result } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Css } from '@ephox/sugar';

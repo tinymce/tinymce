@@ -5,8 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { document, Node, Range } from '@ephox/dom-globals';
-import { Option, Arr } from '@ephox/katamari';
+import { Arr, Option } from '@ephox/katamari';
 
 import * as Utils from './Utils';
 

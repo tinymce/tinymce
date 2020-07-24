@@ -1,4 +1,3 @@
-import { HTMLStyleElement, Node } from '@ephox/dom-globals';
 import { Type } from '@ephox/katamari';
 
 // some elements, such as mathml, don't have style attributes

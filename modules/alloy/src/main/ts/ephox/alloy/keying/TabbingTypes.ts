@@ -1,5 +1,4 @@
 import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
-import { HTMLElement } from '@ephox/dom-globals';
 import { Arr, Fun, Option } from '@ephox/katamari';
 import { Compare, Height, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
 

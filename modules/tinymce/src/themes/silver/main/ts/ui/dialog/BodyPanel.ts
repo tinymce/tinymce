@@ -6,17 +6,16 @@
  */
 
 import { Behaviour, Form as AlloyForm, Keying, Memento, SimpleSpec } from '@ephox/alloy';
-import { console } from '@ephox/dom-globals';
+import { Types } from '@ephox/bridge';
 import { Arr, Fun } from '@ephox/katamari';
+import { UiFactoryBackstage } from '../../backstage/Backstage';
 
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 import { RepresentingConfigs } from '../alien/RepresentingConfigs';
 import * as FormValues from '../general/FormValues';
 import * as NavigableObject from '../general/NavigableObject';
 import { interpretInForm } from '../general/UiFactory';
-import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { Omit } from '../Omit';
-import { Types } from '@ephox/bridge';
 
 export type BodyPanelSpec = Omit<Types.Dialog.Panel, 'type'>;
 
@@ -58,7 +57,7 @@ const renderBodyPanel = (spec: BodyPanelSpec, backstage: UiFactoryBackstage): Si
       RepresentingConfigs.memento(memForm, {
         postprocess: (formValue) => FormValues.toValidValues(formValue).fold(
           (err) => {
-            // tslint:disable-next-line:no-console
+            // eslint-disable-next-line no-console
             console.error(err);
             return { };
           },

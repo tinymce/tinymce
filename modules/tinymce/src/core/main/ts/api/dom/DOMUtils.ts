@@ -5,10 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import {
-  Attr, Document, document, DocumentFragment, Element, HTMLElement, HTMLElementEventMap, HTMLElementTagNameMap, NamedNodeMap, Node, Range, Window,
-  window
-} from '@ephox/dom-globals';
 import { Type } from '@ephox/katamari';
 import { SugarElement, WindowVisualViewport } from '@ephox/sugar';
 import * as NodeType from '../../dom/NodeType';
@@ -20,7 +16,7 @@ import { GeomRect } from '../geom/Rect';
 import Entities from '../html/Entities';
 import Schema from '../html/Schema';
 import Styles, { StyleMap } from '../html/Styles';
-import { UpdatedReferrerPolicy, URLConverter } from '../SettingsTypes';
+import { URLConverter } from '../SettingsTypes';
 import Tools from '../util/Tools';
 import DomQuery, { DomQueryConstructor } from './DomQuery';
 import EventUtils, { EventUtilsCallback } from './EventUtils';
@@ -167,7 +163,7 @@ export interface DOMUtilsSettings {
   collect: Function;
   onSetAttrib: Function;
   contentCssCors: boolean;
-  referrerPolicy: UpdatedReferrerPolicy;
+  referrerPolicy: ReferrerPolicy;
 }
 
 export type Target = Node | Window | Array<Node | Window>;
@@ -1104,7 +1100,7 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     }
 
     // Collect all window/document events bound by editor instance
-    if (settings.collect && (target === doc || target === win)) {
+    if (settings.collect && (target === doc || (target as any) === win)) {
       boundEvents.push([ target, name, func, scope ]);
     }
 
@@ -1126,7 +1122,7 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     }
 
     // Remove any bound events matching the input
-    if (boundEvents.length > 0 && (target === doc || target === win)) {
+    if (boundEvents.length > 0 && (target === doc || (target as any) === win)) {
       i = boundEvents.length;
 
       while (i--) {

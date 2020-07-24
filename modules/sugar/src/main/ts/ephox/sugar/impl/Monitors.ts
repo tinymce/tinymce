@@ -1,4 +1,3 @@
-import { Node } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
 import * as Compare from '../api/dom/Compare';
 import { SugarElement } from '../api/node/SugarElement';

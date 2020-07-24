@@ -1,5 +1,4 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { Blob } from '@ephox/dom-globals';
 import { Type } from '@ephox/katamari';
 import { createFile } from 'ephox/agar/api/Files';
 import { createFileList } from 'ephox/agar/file/FileList';

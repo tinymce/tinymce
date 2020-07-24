@@ -1,6 +1,5 @@
 import { Chain, Cursors, GeneralSteps, Logger, Pipeline, Step, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { document } from '@ephox/dom-globals';
 import { Arr, Fun } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';

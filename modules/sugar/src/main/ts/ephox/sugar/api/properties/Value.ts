@@ -1,4 +1,3 @@
-import { HTMLButtonElement, HTMLInputElement, HTMLOptionElement, HTMLSelectElement, HTMLTextAreaElement } from '@ephox/dom-globals';
 import { SugarElement } from '../node/SugarElement';
 
 type TogglableElement = HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | HTMLOptionElement | HTMLButtonElement;

@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLImageElement } from '@ephox/dom-globals';
 import * as LegacyFilter from '../../html/LegacyFilter';
 import * as ParserFilters from '../../html/ParserFilters';
 import { hasOnlyChild, isEmpty, isLineBreakNode, isPaddedWithNbsp, paddEmptyNode } from '../../html/ParserUtils';

@@ -5,10 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Arr, Cell, Obj } from '@ephox/katamari';
 import Editor from '../api/Editor';
 import * as Events from '../api/Events';
-import { Obj, Arr, Cell } from '@ephox/katamari';
-import { console } from '@ephox/dom-globals';
 import { ModeApi } from '../api/Mode';
 import { toggleReadOnly } from './Readonly';
 
@@ -22,7 +21,7 @@ const switchToMode = (editor: Editor, activeMode: Cell<string>, availableModes: 
   try {
     newMode.activate();
   } catch (e) {
-    // tslint:disable-next-line:no-console
+    // eslint-disable-next-line no-console
     console.error(`problem while activating editor mode ${mode}:`, e);
     return;
   }
@@ -62,7 +61,7 @@ const registerMode = (availableModes: Record<string, ModeApi>, mode: string, api
         try {
           api.deactivate();
         } catch (e) {
-          // tslint:disable-next-line:no-console
+          // eslint-disable-next-line no-console
           console.error(`problem while deactivating editor mode ${mode}:`, e);
         }
       }

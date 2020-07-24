@@ -1,4 +1,3 @@
-import { Element, Node } from '@ephox/dom-globals';
 import { Arr, Fun, Option } from '@ephox/katamari';
 import { DomParent } from '@ephox/robin';
 import { TablePositions } from '@ephox/snooker';

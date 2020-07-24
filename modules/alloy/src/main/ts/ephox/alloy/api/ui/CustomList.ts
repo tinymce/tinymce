@@ -1,4 +1,3 @@
-import { console } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
 
 import * as AlloyParts from '../../parts/AlloyParts';
@@ -18,7 +17,7 @@ const factory: CompositeSketchFactory<CustomListDetail, CustomListSpec> = (detai
     getListContainer(list).fold(() => {
       // check that the group container existed. It may not have if the components
       // did not list anything, and shell was false.
-      // tslint:disable-next-line:no-console
+      // eslint-disable-next-line no-console
       console.error('Custom List was defined to not be a shell, but no item container was specified in components');
       throw new Error('Custom List was defined to not be a shell, but no item container was specified in components');
     }, (container) => {

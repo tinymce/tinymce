@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Text } from '@ephox/dom-globals';
 import { Cell, Option } from '@ephox/katamari';
 import * as CaretContainer from '../caret/CaretContainer';
 import * as CaretContainerInline from '../caret/CaretContainerInline';

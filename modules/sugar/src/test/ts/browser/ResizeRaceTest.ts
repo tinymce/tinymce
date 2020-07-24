@@ -1,5 +1,4 @@
 import { UnitTest } from '@ephox/bedrock-client';
-import { setTimeout } from '@ephox/dom-globals';
 import * as Insert from 'ephox/sugar/api/dom/Insert';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
 import * as Resize from 'ephox/sugar/api/events/Resize';

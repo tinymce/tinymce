@@ -1,4 +1,3 @@
-import { HTMLTableRowElement } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
 import { Attribute, InsertAll, Replication, SugarElement } from '@ephox/sugar';
 import { onCells, TargetSelection } from '../model/RunOperation';

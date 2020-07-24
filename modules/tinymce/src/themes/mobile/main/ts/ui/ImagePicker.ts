@@ -8,10 +8,9 @@
 import { AlloyEvents, Button, Memento, NativeEvents, SketchSpec } from '@ephox/alloy';
 import { BlobConversions } from '@ephox/imagetools';
 import { Id, Option } from '@ephox/katamari';
+import Editor from 'tinymce/core/api/Editor';
 
 import * as Buttons from '../ui/Buttons';
-import Editor from 'tinymce/core/api/Editor';
-import { Blob } from '@ephox/dom-globals';
 
 const addImage = (editor: Editor, blob: Blob) => {
   BlobConversions.blobToBase64(blob).then((base64) => {

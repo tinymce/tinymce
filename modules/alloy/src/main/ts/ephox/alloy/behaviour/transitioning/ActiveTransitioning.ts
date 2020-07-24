@@ -1,4 +1,3 @@
-import { TransitionEvent } from '@ephox/dom-globals';
 import { EventArgs } from '@ephox/sugar';
 
 import * as AlloyEvents from '../../api/events/AlloyEvents';

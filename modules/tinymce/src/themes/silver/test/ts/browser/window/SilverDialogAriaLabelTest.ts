@@ -2,7 +2,6 @@ import { Chain, GeneralSteps, Logger, NamedChain, Pipeline, UiFinder } from '@ep
 import { TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Types } from '@ephox/bridge';
-import { document } from '@ephox/dom-globals';
 import { Result } from '@ephox/katamari';
 import { TinyLoader } from '@ephox/mcagar';
 import { Attribute, SugarBody, SugarElement } from '@ephox/sugar';

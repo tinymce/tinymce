@@ -1,4 +1,3 @@
-import { clearTimeout, setTimeout } from '@ephox/dom-globals';
 import { Future, LazyValue, Result } from '@ephox/katamari';
 import * as DomEvent from '../events/DomEvent';
 import { EventArgs } from '../events/Types';

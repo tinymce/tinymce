@@ -1,4 +1,3 @@
-import { DataTransfer, document, DragEvent, Window } from '@ephox/dom-globals';
 import { PlatformDetection } from '@ephox/sand';
 import { SugarElement } from '@ephox/sugar';
 import { setProtectedMode, setReadOnlyMode, setReadWriteMode } from '../datatransfer/Mode';

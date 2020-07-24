@@ -1,4 +1,3 @@
-import { console } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
 import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 
@@ -33,11 +32,11 @@ export default () => {
         preview: 'Some content '
       },
       onSubmit: (_api) => {
-        // tslint:disable-next-line:no-console
+        // eslint-disable-next-line no-console
         console.log('Preview Demo onSubmit');
       },
       onClose: () => {
-        // tslint:disable-next-line:no-console
+        // eslint-disable-next-line no-console
         console.log('Preview Demo Close');
       }
     }, {}, Fun.noop);

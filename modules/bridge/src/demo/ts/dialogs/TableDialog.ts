@@ -1,4 +1,3 @@
-import { console } from '@ephox/dom-globals';
 import { openDemoDialog } from './DemoDialogHelpers';
 
 export const createTableDialog = () => {
@@ -123,7 +122,7 @@ export const createTableDialog = () => {
       onSubmit: (api) => {
         const data = api.getData();
 
-        // tslint:disable-next-line:no-console
+        // eslint-disable-next-line no-console
         console.log({
           width: data.width,
           height: data.height,

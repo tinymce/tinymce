@@ -1,5 +1,3 @@
-import { document, ShadowRootInit } from '@ephox/dom-globals';
-
 declare let tinymce: any;
 
 export default function (init: ShadowRootInit) {

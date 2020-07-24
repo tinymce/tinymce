@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { BeforeUnloadEvent, document, HTMLElement, HTMLFormElement, Window } from '@ephox/dom-globals';
 import { Arr, Obj, Type } from '@ephox/katamari';
 import * as ErrorReporter from '../ErrorReporter';
 import * as FocusController from '../focus/FocusController';

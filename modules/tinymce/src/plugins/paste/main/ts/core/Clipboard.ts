@@ -5,9 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import {
-  ClipboardEvent, DataTransfer, DragEvent, Event, File, HTMLImageElement, Image, KeyboardEvent, navigator, Range
-} from '@ephox/dom-globals';
 import { Arr, Cell, Singleton } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
@@ -17,6 +14,7 @@ import Promise from 'tinymce/core/api/util/Promise';
 import Tools from 'tinymce/core/api/util/Tools';
 import VK from 'tinymce/core/api/util/VK';
 import * as Events from '../api/Events';
+import * as Settings from '../api/Settings';
 import * as InternalHtml from './InternalHtml';
 import * as Newlines from './Newlines';
 import { PasteBin } from './PasteBin';
@@ -24,7 +22,6 @@ import * as ProcessFilters from './ProcessFilters';
 import * as SmartPaste from './SmartPaste';
 import * as Utils from './Utils';
 import * as Whitespace from './Whitespace';
-import * as Settings from '../api/Settings';
 
 declare let window: any;
 

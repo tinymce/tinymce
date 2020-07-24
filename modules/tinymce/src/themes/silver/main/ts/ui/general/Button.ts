@@ -6,11 +6,10 @@
  */
 
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, Button as AlloyButton, FormField as AlloyFormField,
-  Memento, SimpleOrSketchSpec, SketchSpec, Tabstopping
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, Button as AlloyButton, FormField as AlloyFormField, Memento,
+  SimpleOrSketchSpec, SketchSpec, Tabstopping
 } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
-import { console } from '@ephox/dom-globals';
 import { Fun, Merger, Option } from '@ephox/katamari';
 import { formActionEvent, formCancelEvent, formSubmitEvent } from 'tinymce/themes/silver/ui/general/FormEvents';
 
@@ -126,7 +125,7 @@ const getAction = (name: string, buttonType: string) => (comp: AlloyComponent) =
   } else if (buttonType === 'cancel') {
     AlloyTriggers.emit(comp, formCancelEvent);
   } else {
-    // tslint:disable-next-line:no-console
+    // eslint-disable-next-line no-console
     console.error('Unknown button type: ', buttonType);
   }
 };
@@ -161,7 +160,7 @@ export const renderFooterButton = (spec: FooterButtonSpec, buttonType: string, b
     };
     return renderButton(buttonSpec, action, backstage.shared.providers, [ ]);
   } else {
-    // tslint:disable-next-line:no-console
+    // eslint-disable-next-line no-console
     console.error('Unknown footer button type: ', buttonType);
   }
 };

@@ -1,4 +1,3 @@
-import { Event, EventListenerOrEventListenerObject, Window, window } from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
 import { fromRawEvent } from '../../impl/FilteredEvent';
 import { EventHandler } from '../events/Types';

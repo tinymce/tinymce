@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { atob, Blob, FileReader, XMLHttpRequest } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import Promise from '../api/util/Promise';
 
@@ -112,7 +111,7 @@ const blobToDataUri = function (blob: Blob): Promise<string> {
     const reader = new FileReader();
 
     reader.onloadend = function () {
-      resolve(reader.result);
+      resolve(reader.result as string);
     };
 
     reader.readAsDataURL(blob);

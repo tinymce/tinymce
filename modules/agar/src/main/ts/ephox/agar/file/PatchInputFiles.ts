@@ -1,5 +1,4 @@
 import { Chain, GeneralSteps, Step } from '@ephox/agar';
-import { document, Event, File, HTMLInputElement, Window } from '@ephox/dom-globals';
 import { Cell, Option } from '@ephox/katamari';
 import { createFileList } from './FileList';
 

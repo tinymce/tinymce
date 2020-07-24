@@ -1,5 +1,3 @@
-import { console } from '@ephox/dom-globals';
-
 import * as AsyncActions from '../pipe/AsyncActions';
 import * as GeneralActions from '../pipe/GeneralActions';
 import { DieFn, NextFn, Pipe, RunFn } from '../pipe/Pipe';
@@ -48,7 +46,7 @@ const debugging: Step<any, any> =
 
 const log = <T>(message: string): Step<T, T> =>
   raw<T, T>((value: T, next: NextFn<T>, die: DieFn, logs: TestLogs) => {
-    // tslint:disable-next-line:no-console
+    // eslint-disable-next-line no-console
     console.log(message);
     next(value, addLogEntry(logs, message));
   });

@@ -1,4 +1,3 @@
-import { ClientRect, Document, DOMRect, Element, Node } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import { SugarElement } from '../../api/node/SugarElement';
 import * as Traverse from '../../api/search/Traverse';

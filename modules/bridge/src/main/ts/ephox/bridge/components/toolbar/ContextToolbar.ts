@@ -1,5 +1,4 @@
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
-import { Element } from '@ephox/dom-globals';
 import { Fun, Option, Result } from '@ephox/katamari';
 import { BaseToolbarButton, BaseToolbarButtonApi, baseToolbarButtonFields, BaseToolbarButtonInstanceApi } from './ToolbarButton';
 import {

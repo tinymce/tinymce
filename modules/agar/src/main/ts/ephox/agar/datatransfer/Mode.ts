@@ -1,5 +1,4 @@
 import { Id, Option } from '@ephox/katamari';
-import { DataTransfer } from '@ephox/dom-globals';
 
 const enum Mode {
   ReadWrite,

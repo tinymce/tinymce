@@ -1,4 +1,3 @@
-import { Range } from '@ephox/dom-globals';
 import { Arr, Fun, Unicode } from '@ephox/katamari';
 import * as NodeType from 'tinymce/core/dom/NodeType';
 

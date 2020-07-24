@@ -1,6 +1,5 @@
 import { Chain, FocusTools, Guard, Log, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import { SugarElement } from '@ephox/sugar';
 import CharmapPlugin from 'tinymce/plugins/charmap/Plugin';

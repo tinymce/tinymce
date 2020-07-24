@@ -1,6 +1,5 @@
 import { Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { document } from '@ephox/dom-globals';
 import { LegacyUnit } from '@ephox/mcagar';
 import { Hierarchy, SugarElement } from '@ephox/sugar';
 import * as FontInfo from 'tinymce/core/fmt/FontInfo';

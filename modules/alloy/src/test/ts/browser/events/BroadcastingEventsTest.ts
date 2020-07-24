@@ -1,6 +1,5 @@
 import { Cleaner, Step, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Event, window } from '@ephox/dom-globals';
 import { DomEvent, EventArgs, SugarElement } from '@ephox/sugar';
 
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
@@ -73,7 +72,7 @@ UnitTest.asynctest('Browser Test: events.BroadcastingEventsTest', (success, fail
           window.dispatchEvent(new Event('resize'));
         } else {
           // for IE and other old browsers
-          const evt = window.document.createEvent('UIEvents');
+          const evt = window.document.createEvent('UIEvents') as any;
           evt.initUIEvent('resize', true, false, window, 0);
           window.dispatchEvent(evt);
         }

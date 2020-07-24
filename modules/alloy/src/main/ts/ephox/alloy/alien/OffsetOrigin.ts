@@ -1,4 +1,3 @@
-import { HTMLElement } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import { Css, Insert, Remove, SugarElement, SugarLocation, SugarPosition, Traverse } from '@ephox/sugar';
 

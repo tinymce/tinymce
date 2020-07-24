@@ -1,7 +1,6 @@
-import { ValueSchema, FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
+import { FieldProcessorAdt, FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
 import { FormComponentWithLabel, FormComponentWithLabelApi, formComponentWithLabelFields } from './FormComponent';
-import { Blob } from '@ephox/dom-globals';
 
 export interface ImageToolsState {
   blob: Blob;

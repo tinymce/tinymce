@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLElement, HTMLIFrameElement, Node, Window } from '@ephox/dom-globals';
 import { Fun, Option, Throttler } from '@ephox/katamari';
 import { Css, DomEvent, Focus, SugarBody, SugarElement } from '@ephox/sugar';
 

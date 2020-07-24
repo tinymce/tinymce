@@ -1,5 +1,4 @@
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
-import { Range } from '@ephox/dom-globals';
 import { Option, Result } from '@ephox/katamari';
 
 import { SeparatorMenuItem, SeparatorMenuItemApi, separatorMenuItemSchema } from '../menu/SeparatorMenuItem';

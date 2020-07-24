@@ -1,4 +1,3 @@
-import { HTMLTableRowElement } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import { onCells, TargetSelection, toDetailList } from '../model/RunOperation';

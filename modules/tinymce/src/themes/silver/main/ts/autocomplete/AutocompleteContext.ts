@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Range, Text } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';

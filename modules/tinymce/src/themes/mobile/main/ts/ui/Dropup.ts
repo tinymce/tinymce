@@ -5,13 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Behaviour, Container, GuiFactory, Replacing, Sliding, AlloyComponent } from '@ephox/alloy';
+import { AlloyComponent, Behaviour, Container, GuiFactory, Replacing, Sliding } from '@ephox/alloy';
 import { Fun } from '@ephox/katamari';
+import { SugarElement } from 'tinymce/themes/mobile/alien/TypeDefinitions';
 
 import * as Receivers from '../channels/Receivers';
 import * as Styles from '../style/Styles';
-import { SugarElement } from 'tinymce/themes/mobile/alien/TypeDefinitions';
-import { window } from '@ephox/dom-globals';
 
 export interface DropUp {
   appear: (menu: any, update: any, component: any) => void;

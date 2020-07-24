@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { KeyboardEvent } from '@ephox/dom-globals';
 import { Arr, Fun, Option } from '@ephox/katamari';
 
 export interface KeyPattern {

@@ -1,4 +1,3 @@
-import { Document, Node } from '@ephox/dom-globals';
 import { Arr, Fun } from '@ephox/katamari';
 import {
   Attribute, Compare, Css, Insert, InsertAll, PredicateFilter, PredicateFind, Remove, SelectorFilter, SelectorFind, SugarElement, SugarNode,
@@ -12,9 +11,7 @@ export default function (): Universe<SugarElement, Document> {
     return SugarElement.fromDom(element.dom().cloneNode(false));
   };
 
-  const document = function (element: SugarElement<Node>) {
-    return element.dom().ownerDocument;
-  };
+  const document = (element: SugarElement<Node>) => Traverse.documentOrOwner(element).dom();
 
   const isBoundary = function (element: SugarElement) {
     if (!SugarNode.isElement(element)) {

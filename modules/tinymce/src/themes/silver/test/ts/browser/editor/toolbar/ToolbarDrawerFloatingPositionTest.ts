@@ -1,6 +1,5 @@
 import { Log, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { window } from '@ephox/dom-globals';
 import { TinyLoader, TinyUi } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
 import { Css, Insert, Scroll, SugarBody, SugarElement, SugarLocation } from '@ephox/sugar';

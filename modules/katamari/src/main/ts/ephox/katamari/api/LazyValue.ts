@@ -1,6 +1,5 @@
 import * as Arr from './Arr';
 import { Option } from './Option';
-import { setTimeout } from '@ephox/dom-globals';
 
 export interface LazyValue<T> {
   readonly get: (callback: (value: T) => void) => void;

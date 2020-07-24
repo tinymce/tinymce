@@ -1,4 +1,3 @@
-import { console, document } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import * as AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviour';
@@ -47,7 +46,7 @@ export default () => {
         }),
         AddEventsBehaviour.config('events', [
           AlloyEvents.run('bubbled.scroll', (comp, e) => {
-            // tslint:disable-next-line:no-console
+            // eslint-disable-next-line no-console
             console.log(e.event().raw());
           })
         ])

@@ -1,5 +1,3 @@
-import { Document, HTMLElement, Node, Range, Window } from '@ephox/dom-globals';
-
 type EventCallback = false | ((event: any) => void);
 
 export interface Selection {

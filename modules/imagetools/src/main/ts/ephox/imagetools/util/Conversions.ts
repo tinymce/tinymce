@@ -1,4 +1,3 @@
-import { atob, Blob, FileReader, HTMLCanvasElement, HTMLImageElement, Image, URL, XMLHttpRequest } from '@ephox/dom-globals';
 import { Option, Type } from '@ephox/katamari';
 import * as Canvas from './Canvas';
 import * as ImageSize from './ImageSize';
@@ -173,7 +172,7 @@ function blobToDataUri(blob: Blob): Promise<string> {
     const reader = new FileReader();
 
     reader.onloadend = function () {
-      resolve(reader.result);
+      resolve(reader.result as string);
     };
 
     reader.readAsDataURL(blob);
@@ -185,7 +184,7 @@ function blobToArrayBuffer(blob: Blob): Promise<ArrayBuffer> {
     const reader = new FileReader();
 
     reader.onloadend = function () {
-      resolve(reader.result);
+      resolve(reader.result as ArrayBuffer);
     };
 
     reader.readAsArrayBuffer(blob);

@@ -1,4 +1,3 @@
-import { HTMLTableElement } from '@ephox/dom-globals';
 import { Fun, Option, Strings } from '@ephox/katamari';
 import { Attribute, Css, Height, SugarBody, SugarElement, SugarNode, Traverse, Width } from '@ephox/sugar';
 import * as TableLookup from '../api/TableLookup';

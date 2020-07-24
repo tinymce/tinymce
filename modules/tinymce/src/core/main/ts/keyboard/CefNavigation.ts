@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element, Range } from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
 import Editor from '../api/Editor';
 import Env from '../api/Env';

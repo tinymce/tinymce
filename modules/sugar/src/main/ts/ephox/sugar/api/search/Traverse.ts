@@ -1,4 +1,3 @@
-import { Document, HTMLElement, Node } from '@ephox/dom-globals';
 import { Arr, Fun, Option, Type } from '@ephox/katamari';
 import * as Recurse from '../../alien/Recurse';
 import * as Compare from '../dom/Compare';
@@ -18,12 +17,15 @@ const owner = (element: SugarElement<Node>) => SugarElement.fromDom(element.dom(
 const documentOrOwner = (dos: SugarElement<Node>): SugarElement<Document> =>
   SugarNode.isDocument(dos) ? dos : owner(dos);
 
-const documentElement = (element: SugarElement<Node>) => SugarElement.fromDom(element.dom().ownerDocument.documentElement);
+const documentElement = (element: SugarElement<Node>) => SugarElement.fromDom(documentOrOwner(element).dom().documentElement);
 
 // The window element associated with the element
-const defaultView = (element: SugarElement<Node>) => SugarElement.fromDom(element.dom().ownerDocument.defaultView);
+const defaultView = (element: SugarElement<Node>) => SugarElement.fromDom(documentOrOwner(element).dom().defaultView);
 
-const parent = (element: SugarElement<Node>) => Option.from(element.dom().parentNode).map(SugarElement.fromDom);
+const parent = (element: SugarElement<Node>): Option<SugarElement<Node & ParentNode>> => Option.from(element.dom().parentNode).map(SugarElement.fromDom);
+
+// Cast down to just be SugarElement<Node>
+const parentNode = (element: SugarElement<Node>): Option<SugarElement<Node>> => parent(element) as any;
 
 const findIndex = (element: SugarElement<Node>) => parent(element).bind((p) => {
   // TODO: Refactor out children so we can avoid the constant unwrapping
@@ -61,29 +63,38 @@ const siblings = (element: SugarElement<Node>) => {
 
 const offsetParent = (element: SugarElement<HTMLElement>) => Option.from(element.dom().offsetParent as HTMLElement).map(SugarElement.fromDom);
 
-const prevSibling = (element: SugarElement<Node>) => Option.from(element.dom().previousSibling).map(SugarElement.fromDom);
+const prevSibling = (element: SugarElement<Node>): Option<SugarElement<ChildNode>> =>
+  Option.from(element.dom().previousSibling).map(SugarElement.fromDom);
 
-const nextSibling = (element: SugarElement<Node>) => Option.from(element.dom().nextSibling).map(SugarElement.fromDom);
+const nextSibling = (element: SugarElement<Node>): Option<SugarElement<ChildNode>> =>
+  Option.from(element.dom().nextSibling).map(SugarElement.fromDom);
 
 // This one needs to be reversed, so they're still in DOM order
-const prevSiblings = (element: SugarElement<Node>) => Arr.reverse(Recurse.toArray(element, prevSibling));
+const prevSiblings = (element: SugarElement<Node>): SugarElement<ChildNode>[] =>
+  Arr.reverse(Recurse.toArray(element, prevSibling));
 
-const nextSiblings = (element: SugarElement<Node>) => Recurse.toArray(element, nextSibling);
+const nextSiblings = (element: SugarElement<Node>): SugarElement<ChildNode>[] =>
+  Recurse.toArray(element, nextSibling);
 
-const children = (element: SugarElement<Node>) => Arr.map(element.dom().childNodes, SugarElement.fromDom);
+const children = (element: SugarElement<Node>): SugarElement<ChildNode>[] =>
+  Arr.map(element.dom().childNodes, SugarElement.fromDom);
 
-const child = (element: SugarElement<Node>, index: number) => {
+const child = (element: SugarElement<Node>, index: number): Option<SugarElement<ChildNode>> => {
   const cs = element.dom().childNodes;
-  return Option.from(cs[index] as Node).map(SugarElement.fromDom);
+  return Option.from(cs[index]).map(SugarElement.fromDom);
 };
 
-const firstChild = (element: SugarElement<Node>) => child(element, 0);
+const firstChild = (element: SugarElement<Node>): Option<SugarElement<ChildNode>> =>
+  child(element, 0);
 
-const lastChild = (element: SugarElement<Node>) => child(element, element.dom().childNodes.length - 1);
+const lastChild = (element: SugarElement<Node>): Option<SugarElement<ChildNode>> =>
+  child(element, element.dom().childNodes.length - 1);
 
-const childNodesCount = (element: SugarElement<Node>) => element.dom().childNodes.length;
+const childNodesCount = (element: SugarElement<Node>): number =>
+  element.dom().childNodes.length;
 
-const hasChildNodes = (element: SugarElement<Node>) => element.dom().hasChildNodes();
+const hasChildNodes = (element: SugarElement<Node>): boolean =>
+  element.dom().hasChildNodes();
 
 export interface ElementAndOffset<E> {
   readonly element: () => SugarElement<E>;
@@ -106,6 +117,7 @@ export {
   defaultView,
   documentElement,
   parent,
+  parentNode,
   findIndex,
   parents,
   siblings,

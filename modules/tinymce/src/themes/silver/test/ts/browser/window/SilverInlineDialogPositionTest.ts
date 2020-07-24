@@ -1,7 +1,6 @@
 import { Assertions, Chain, Guard, Mouse, NamedChain, Pipeline, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Types } from '@ephox/bridge';
-import { HTMLElement } from '@ephox/dom-globals';
 import { Editor as McEditor } from '@ephox/mcagar';
 import { Css, Height, Scroll, SugarBody, SugarElement, Traverse } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';

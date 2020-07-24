@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Range, Document, Node } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
 import * as CaretRangeFromPoint from '../../selection/CaretRangeFromPoint';
 import * as NormalizeRange from '../../selection/NormalizeRange';

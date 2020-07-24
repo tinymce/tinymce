@@ -6,10 +6,9 @@
  */
 
 import { Menu } from '@ephox/bridge';
+import { Arr } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import ColorCache from './ColorCache';
-import { Arr } from '@ephox/katamari';
-import { document } from '@ephox/dom-globals';
 
 const choiceItem: 'choiceitem' = 'choiceitem';
 

@@ -1,6 +1,5 @@
-import { GeneralSteps, Pipeline, UiFinder, Log } from '@ephox/agar';
+import { GeneralSteps, Log, Pipeline, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { console, document } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
 import { TinyApis, TinyDom, TinyLoader, TinyUi } from '@ephox/mcagar';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
@@ -43,7 +42,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.DialogSectionsTest', (success, 
         Arr.map(
           sections,
           ({ selector, exists }) => {
-            // tslint:disable-next-line:no-console
+            // eslint-disable-next-line no-console
             console.log('selector', selector, 'exists', exists);
             const sExistence = exists ? UiFinder.sExists : UiFinder.sNotExists;
             return sExistence(TinyDom.fromDom(document.body), selector);

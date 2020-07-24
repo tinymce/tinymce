@@ -1,5 +1,4 @@
 import { Assertions, Chain, FocusTools, GeneralSteps, Guard, Logger, Mouse, Step, UiControls, UiFinder, Waiter } from '@ephox/agar';
-import { document, Event, localStorage } from '@ephox/dom-globals';
 import { Obj, Type } from '@ephox/katamari';
 import { TinyApis, TinyDom, TinyUi } from '@ephox/mcagar';
 import { SugarBody, SugarElement, Value } from '@ephox/sugar';

@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLElement } from '@ephox/dom-globals';
 import { Bookmark } from '../bookmark/BookmarkTypes';
 import * as FontCommands from '../commands/FontCommands';
 import * as IndentOutdent from '../commands/IndentOutdent';

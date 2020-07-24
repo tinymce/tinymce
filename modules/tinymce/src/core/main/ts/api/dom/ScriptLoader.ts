@@ -5,9 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { console, document } from '@ephox/dom-globals';
 import { Type } from '@ephox/katamari';
-import { UpdatedReferrerPolicy } from '../SettingsTypes';
 import Tools from '../util/Tools';
 import DOMUtils from './DOMUtils';
 
@@ -41,7 +39,7 @@ const DOM = DOMUtils.DOM;
 const each = Tools.each, grep = Tools.grep;
 
 export interface ScriptLoaderSettings {
-  referrerPolicy?: UpdatedReferrerPolicy;
+  referrerPolicy?: ReferrerPolicy;
 }
 
 export interface ScriptLoaderConstructor {
@@ -60,7 +58,7 @@ interface ScriptLoader {
   load (url: string, success?: () => void, scope?: {}, failure?: () => void): void;
   remove (url: string);
   loadQueue (success?: () => void, scope?: {}, failure?: (urls: string[]) => void): void;
-  _setReferrerPolicy (referrerPolicy: UpdatedReferrerPolicy): void;
+  _setReferrerPolicy (referrerPolicy: ReferrerPolicy): void;
 }
 
 const QUEUED = 0;
@@ -82,7 +80,7 @@ class ScriptLoader {
     this.settings = settings;
   }
 
-  public _setReferrerPolicy(referrerPolicy: UpdatedReferrerPolicy) {
+  public _setReferrerPolicy(referrerPolicy: ReferrerPolicy) {
     this.settings.referrerPolicy = referrerPolicy;
   }
 
@@ -120,9 +118,9 @@ class ScriptLoader {
         failure();
       } else {
         // Report the error so it's easier for people to spot loading errors
-        // tslint:disable-next-line:no-console
+        // eslint-disable-next-line no-console
         if (typeof console !== 'undefined' && console.log) {
-          // tslint:disable-next-line:no-console
+          // eslint-disable-next-line no-console
           console.log('Failed to load script: ' + url);
         }
       }

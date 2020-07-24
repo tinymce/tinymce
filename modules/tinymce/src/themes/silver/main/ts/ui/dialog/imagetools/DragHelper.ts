@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { document, window } from '@ephox/dom-globals';
 import DomQuery from 'tinymce/core/api/dom/DomQuery';
 
 /**

@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLElement } from '@ephox/dom-globals';
 import Editor from './Editor';
 
 const firePreProcess = (editor: Editor, args) => editor.fire('PreProcess', args);

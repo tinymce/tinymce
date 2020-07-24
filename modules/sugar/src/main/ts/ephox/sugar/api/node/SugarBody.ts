@@ -1,4 +1,3 @@
-import { document, Document, HTMLElement, Node } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
 import { SugarElement } from './SugarElement';
 import * as SugarNode from './SugarNode';
@@ -17,8 +16,9 @@ const inBody = (element: SugarElement<Node>): boolean => {
     return false;
   }
 
+  const doc = dom.ownerDocument;
   return getShadowRoot(SugarElement.fromDom(dom)).fold(
-    () => dom.ownerDocument.body.contains(dom),
+    () => doc.body.contains(dom),
     Fun.compose1(inBody, getShadowHost)
   );
 };

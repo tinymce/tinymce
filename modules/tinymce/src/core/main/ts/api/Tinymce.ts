@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node, Storage, Window } from '@ephox/dom-globals';
 import { UndoManager as UndoManagerType } from '../undo/UndoManagerTypes';
 import AddOnManager from './AddOnManager';
 import Annotator from './Annotator';

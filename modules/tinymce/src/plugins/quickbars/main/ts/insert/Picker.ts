@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { document, File, HTMLInputElement } from '@ephox/dom-globals';
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import Delay from 'tinymce/core/api/util/Delay';

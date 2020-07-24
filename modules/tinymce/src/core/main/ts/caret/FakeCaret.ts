@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element, HTMLElement, Node, Range } from '@ephox/dom-globals';
 import { Cell, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { SelectorFilter, SugarElement } from '@ephox/sugar';

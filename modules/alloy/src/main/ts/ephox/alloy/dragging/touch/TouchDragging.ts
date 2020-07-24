@@ -1,5 +1,4 @@
 import { FieldProcessorAdt } from '@ephox/boulder';
-import { TouchEvent } from '@ephox/dom-globals';
 import { Cell, Option } from '@ephox/katamari';
 import { EventArgs } from '@ephox/sugar';
 

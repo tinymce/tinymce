@@ -1,6 +1,5 @@
 import { Chain, NamedChain, Pipeline, Step, UiFinder } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { document, ShadowRoot, StyleSheet } from '@ephox/dom-globals';
 import { Arr, Strings } from '@ephox/katamari';
 import { Editor as McEditor, TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Insert, Remove, SelectorFilter, SugarBody, SugarElement, SugarShadowDom } from '@ephox/sugar';

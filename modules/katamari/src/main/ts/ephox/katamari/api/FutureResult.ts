@@ -1,6 +1,5 @@
 import { Future } from './Future';
 import { Result } from './Result';
-import { clearTimeout, setTimeout } from '@ephox/dom-globals';
 
 export interface FutureResult<A, E> extends Future<Result<A, E>> {
   toCached: () => FutureResult<A, E>;

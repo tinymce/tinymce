@@ -1,4 +1,3 @@
-import { HTMLElement, Node, setTimeout, window } from '@ephox/dom-globals';
 import { Arr, Fun, Option } from '@ephox/katamari';
 import * as Monitors from '../../impl/Monitors';
 import * as Compare from '../dom/Compare';

@@ -1,4 +1,3 @@
-import { Blob } from '@ephox/dom-globals';
 import { Options } from '@ephox/katamari';
 import * as Conversions from '../util/Conversions';
 import { Promise } from '../util/Promise';

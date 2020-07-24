@@ -1,6 +1,5 @@
 import { Chain, Cursors, Guard, NamedChain } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Window } from '@ephox/dom-globals';
 import { Option, Result } from '@ephox/katamari';
 import { Css, DomEvent, SelectorFind, SugarElement, WindowSelection } from '@ephox/sugar';
 

@@ -5,10 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Document, navigator, Node, ShadowRoot } from '@ephox/dom-globals';
 import { Arr, Fun, Future, Futures, Result, Results } from '@ephox/katamari';
 import { Attribute, Insert, SugarElement, SugarShadowDom, Traverse } from '@ephox/sugar';
-import { UpdatedReferrerPolicy } from '../SettingsTypes';
 import Delay from '../util/Delay';
 import Tools from '../util/Tools';
 
@@ -21,13 +19,13 @@ import Tools from '../util/Tools';
 export interface StyleSheetLoader {
   load: (url: string, loadedCallback: Function, errorCallback?: Function) => void;
   loadAll: (urls: string[], success: Function, failure: Function) => void;
-  _setReferrerPolicy: (referrerPolicy: UpdatedReferrerPolicy) => void;
+  _setReferrerPolicy: (referrerPolicy: ReferrerPolicy) => void;
 }
 
 export interface StyleSheetLoaderSettings {
   maxLoadTime: number;
   contentCssCors: boolean;
-  referrerPolicy: UpdatedReferrerPolicy;
+  referrerPolicy: ReferrerPolicy;
 }
 
 export function StyleSheetLoader(documentOrShadowRoot: Document | ShadowRoot, settings: Partial<StyleSheetLoaderSettings> = {}): StyleSheetLoader {
@@ -39,7 +37,7 @@ export function StyleSheetLoader(documentOrShadowRoot: Document | ShadowRoot, se
 
   const maxLoadTime = settings.maxLoadTime || 5000;
 
-  const _setReferrerPolicy = (referrerPolicy: UpdatedReferrerPolicy) => {
+  const _setReferrerPolicy = (referrerPolicy: ReferrerPolicy) => {
     settings.referrerPolicy = referrerPolicy;
   };
 

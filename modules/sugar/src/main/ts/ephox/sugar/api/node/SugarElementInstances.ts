@@ -1,5 +1,4 @@
 import { Eq, Pnode, Pprint, Testable } from '@ephox/dispute';
-import { Node } from '@ephox/dom-globals';
 import * as Html from '../properties/Html';
 import { SugarElement } from './SugarElement';
 

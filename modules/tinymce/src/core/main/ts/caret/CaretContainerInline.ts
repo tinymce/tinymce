@@ -8,7 +8,6 @@
 import { Fun } from '@ephox/katamari';
 import * as NodeType from '../dom/NodeType';
 import * as Zwsp from '../text/Zwsp';
-import { Node, Text } from '@ephox/dom-globals';
 
 const isText = NodeType.isText;
 const startsWithCaretContainer = (node: Node) => isText(node) && node.data[0] === Zwsp.ZWSP;

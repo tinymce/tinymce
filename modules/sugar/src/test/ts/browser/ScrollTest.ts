@@ -1,5 +1,4 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
-import { Document, HTMLElement, HTMLIFrameElement, Window } from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import * as Insert from 'ephox/sugar/api/dom/Insert';

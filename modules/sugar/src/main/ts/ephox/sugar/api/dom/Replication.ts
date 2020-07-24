@@ -1,4 +1,3 @@
-import { Element, HTMLElementTagNameMap, Node } from '@ephox/dom-globals';
 import { SugarElement } from '../node/SugarElement';
 import * as Attribute from '../properties/Attribute';
 import * as Traverse from '../search/Traverse';

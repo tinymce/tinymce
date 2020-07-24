@@ -1,6 +1,5 @@
 import { Assertions, FocusTools, GeneralSteps, Log, Logger, Mouse, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { HTMLInputElement } from '@ephox/dom-globals';
 import { TinyLoader } from '@ephox/mcagar';
 import { SelectorFilter, SugarElement, SugarShadowDom } from '@ephox/sugar';
 

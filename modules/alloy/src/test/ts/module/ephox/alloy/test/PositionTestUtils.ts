@@ -1,5 +1,4 @@
 import { Chain, Guard, NamedChain } from '@ephox/agar';
-import { window } from '@ephox/dom-globals';
 import { Option, Result } from '@ephox/katamari';
 import { Css, Scroll, SugarElement, Traverse } from '@ephox/sugar';
 

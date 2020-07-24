@@ -1,6 +1,5 @@
 import { FocusTools, Keyboard, Keys, Log, Pipeline, Step } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { document } from '@ephox/dom-globals';
 import { TinyLoader } from '@ephox/mcagar';
 import { SugarElement } from '@ephox/sugar';
 import Tools from 'tinymce/core/api/util/Tools';

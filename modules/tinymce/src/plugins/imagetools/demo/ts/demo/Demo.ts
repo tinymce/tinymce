@@ -1,8 +1,7 @@
-// tslint:disable:no-console
+/* eslint-disable no-console */
 
-import { console } from '@ephox/dom-globals';
-import Delay from 'tinymce/core/api/util/Delay';
 import DomQuery from 'tinymce/core/api/dom/DomQuery';
+import Delay from 'tinymce/core/api/util/Delay';
 
 declare let tinymce: any;
 

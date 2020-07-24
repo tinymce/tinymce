@@ -3,7 +3,6 @@ import { Assertions, Chain, GeneralSteps, Logger, Mouse, Pipeline, Step, UiFinde
 import { TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Types } from '@ephox/bridge';
-import { console } from '@ephox/dom-globals';
 import { Cell } from '@ephox/katamari';
 import { SugarBody, Value } from '@ephox/sugar';
 import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
@@ -128,7 +127,7 @@ UnitTest.asynctest('WindowManager:redial Test', (success, failure) => {
     onClose: store.adder('onCloseC'),
     onAction: (dialogApi, actionData) => {
       if (actionData.name === 'tab.switch.two') {
-        // tslint:disable-next-line:no-console
+        // eslint-disable-next-line no-console
         console.log('going to tab');
         dialogApi.showTab('two');
       }

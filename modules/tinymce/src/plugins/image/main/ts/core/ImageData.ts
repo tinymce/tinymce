@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { document, HTMLElement, Node } from '@ephox/dom-globals';
 import { Type } from '@ephox/katamari';
 import { Attribute, SugarElement } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';

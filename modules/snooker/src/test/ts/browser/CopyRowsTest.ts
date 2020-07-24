@@ -1,5 +1,4 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { HTMLTableElement } from '@ephox/dom-globals';
 import { Arr, Fun } from '@ephox/katamari';
 import { Hierarchy, Html, Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
 import { copyRows } from 'ephox/snooker/api/CopyRows';

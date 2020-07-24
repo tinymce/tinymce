@@ -1,5 +1,4 @@
 import { TestLogs } from '@ephox/agar';
-import { document, HTMLElement, ShadowRoot } from '@ephox/dom-globals';
 import { Option, Strings, Type } from '@ephox/katamari';
 import { Insert, Remove, SugarBody, SugarElement, SugarShadowDom } from '@ephox/sugar';
 import 'tinymce';

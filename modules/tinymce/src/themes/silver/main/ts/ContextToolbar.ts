@@ -10,7 +10,6 @@ import {
   Layout, LayoutInside, MaxHeight, MaxWidth, Positioning
 } from '@ephox/alloy';
 import { Toolbar } from '@ephox/bridge';
-import { Element } from '@ephox/dom-globals';
 import { Arr, Cell, Id, Merger, Obj, Option, Thunk } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Css, Focus, Scroll, SugarElement } from '@ephox/sugar';

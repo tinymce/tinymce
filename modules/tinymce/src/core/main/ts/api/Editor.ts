@@ -6,7 +6,6 @@
  */
 
 import { Registry } from '@ephox/bridge';
-import { Document, Element, Event, HTMLElement, HTMLIFrameElement, Window } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
 import * as EditorContent from '../content/EditorContent';
 import * as NodeType from '../dom/NodeType';

@@ -1,4 +1,3 @@
-import { HTMLElement } from '@ephox/dom-globals';
 import { PlatformDetection } from '@ephox/sand';
 import { Css, Height, SugarElement, Width } from '@ephox/sugar';
 

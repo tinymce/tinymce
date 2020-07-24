@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { document, DragEvent, Element, HTMLElement, MouseEvent, Node } from '@ephox/dom-globals';
 import { Arr, Singleton } from '@ephox/katamari';
 import DOMUtils from './api/dom/DOMUtils';
 import EditorSelection from './api/dom/Selection';

@@ -6,7 +6,6 @@
  */
 
 import { Types } from '@ephox/bridge';
-import { HTMLTableRowElement } from '@ephox/dom-globals';
 import { Arr, Fun } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import * as Styles from '../actions/Styles';

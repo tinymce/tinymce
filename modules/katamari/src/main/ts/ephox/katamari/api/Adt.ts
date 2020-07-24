@@ -1,7 +1,6 @@
 import * as Arr from './Arr';
 import * as Obj from './Obj';
 import * as Type from './Type';
-import { console } from '@ephox/dom-globals';
 
 export interface Adt {
   fold: <T> (...caseHandlers: ((...data: any[]) => T)[]) => T;
@@ -98,7 +97,7 @@ const generate = function <T = Record<string, (...data: any[]) => Adt>> (cases: 
 
         // NOTE: Only for debugging.
         log(label) {
-          // tslint:disable-next-line:no-console
+          // eslint-disable-next-line no-console
           console.log(label, {
             constructors,
             constructor: key,

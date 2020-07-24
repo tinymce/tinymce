@@ -1,4 +1,3 @@
-import { ClientRect, DOMRect, Element, Window } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import { RawRect, Rect, Scroll, SimRange, SimSelection, Situ, SugarElement, WindowSelection } from '@ephox/sugar';
 import { Situs } from '../selection/Situs';

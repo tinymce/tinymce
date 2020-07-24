@@ -1,4 +1,3 @@
-import { HTMLElement, Node } from '@ephox/dom-globals';
 import * as Insert from '../dom/Insert';
 import * as InsertAll from '../dom/InsertAll';
 import * as Remove from '../dom/Remove';

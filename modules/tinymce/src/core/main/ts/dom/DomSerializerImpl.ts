@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import DOMUtils from '../api/dom/DOMUtils';

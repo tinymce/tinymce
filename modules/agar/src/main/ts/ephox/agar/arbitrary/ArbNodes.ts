@@ -1,4 +1,3 @@
-import { document } from '@ephox/dom-globals';
 import { SugarComment, SugarElement, SugarNode, SugarText, Truncate } from '@ephox/sugar';
 import Jsc from '@ephox/wrap-jsverify';
 

@@ -1,12 +1,11 @@
 /* tslint:disable:no-unimported-promise */
+import { Testable } from '@ephox/dispute';
 import * as Arr from 'ephox/katamari/api/Arr';
 import * as Fun from 'ephox/katamari/api/Fun';
 import { Future } from 'ephox/katamari/api/Future';
 import * as Futures from 'ephox/katamari/api/Futures';
-import { promiseTest, eqAsync } from 'ephox/katamari/test/AsyncProps';
-import { setTimeout } from '@ephox/dom-globals';
+import { eqAsync, promiseTest } from 'ephox/katamari/test/AsyncProps';
 import fc from 'fast-check';
-import { Testable } from '@ephox/dispute';
 
 const { tNumber, tString, tArray } = Testable;
 

@@ -1,4 +1,3 @@
-import { Element, Node } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import ClosestOrAncestor from '../../impl/ClosestOrAncestor';
 import { SugarElement } from '../node/SugarElement';

@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { document, Element, HTMLElementEventMap, Node, Window } from '@ephox/dom-globals';
 import Tools from '../util/Tools';
 import EventUtils, { EventUtilsCallback } from './EventUtils';
 import Sizzle from './Sizzle';

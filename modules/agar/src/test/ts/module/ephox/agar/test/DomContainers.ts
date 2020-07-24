@@ -1,4 +1,3 @@
-import { document } from '@ephox/dom-globals';
 import { Attribute, Insert, Remove, SugarElement } from '@ephox/sugar';
 import { Step } from 'ephox/agar/api/Step';
 

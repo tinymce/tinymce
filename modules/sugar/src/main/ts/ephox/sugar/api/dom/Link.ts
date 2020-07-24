@@ -1,4 +1,3 @@
-import { document, Document, HTMLLinkElement, Node } from '@ephox/dom-globals';
 import { SugarElement } from '../node/SugarElement';
 import * as SugarHead from '../node/SugarHead';
 import * as Attribute from '../properties/Attribute';

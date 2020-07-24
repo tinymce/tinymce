@@ -6,11 +6,10 @@
  */
 
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Button, Disabling, FormField as AlloyFormField, Memento,
-  NativeEvents, Representing, SimpleSpec, SimulatedEvent, SystemEvents, Tabstopping, Toggling
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Button, Disabling, FormField as AlloyFormField, Memento, NativeEvents,
+  Representing, SimpleSpec, SimulatedEvent, SystemEvents, Tabstopping, Toggling
 } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
-import { DragEvent, FileList } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { EventArgs } from '@ephox/sugar';
 

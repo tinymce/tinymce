@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLTableElement, Range } from '@ephox/dom-globals';
 import { Arr, Fun, Obj, Option } from '@ephox/katamari';
 import { DomDescent } from '@ephox/phoenix';
 import { CellMutations, ResizeWire, RunOperation, TableDirection, TableFill, TableGridSize, TableOperations } from '@ephox/snooker';

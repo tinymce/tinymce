@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node, Range } from '@ephox/dom-globals';
 import RangeUtils from 'tinymce/core/api/dom/RangeUtils';
 import * as NodeType from './NodeType';
 

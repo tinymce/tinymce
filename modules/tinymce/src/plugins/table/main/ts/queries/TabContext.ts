@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { KeyboardEvent } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
 import { CellNavigation, TableLookup } from '@ephox/snooker';
 import { Compare, CursorPosition, SelectorFilter, SelectorFind, SimSelection, SugarElement, SugarNode, WindowSelection } from '@ephox/sugar';

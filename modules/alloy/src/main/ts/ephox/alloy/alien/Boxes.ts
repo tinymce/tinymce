@@ -1,4 +1,3 @@
-import { window } from '@ephox/dom-globals';
 import { Height, SugarElement, SugarLocation, Width, WindowVisualViewport } from '@ephox/sugar';
 import * as OuterPosition from '../frame/OuterPosition';
 

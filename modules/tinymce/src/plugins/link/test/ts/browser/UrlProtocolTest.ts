@@ -1,6 +1,5 @@
 import { FocusTools, GeneralSteps, Log, Pipeline, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyDom, TinyLoader, TinyUi } from '@ephox/mcagar';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';

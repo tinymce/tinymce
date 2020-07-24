@@ -5,8 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLAnchorElement } from '@ephox/dom-globals';
-import { Option, Arr } from '@ephox/katamari';
+import { Arr, Option } from '@ephox/katamari';
 import { ListValue } from '../DialogTypes';
 
 // NOTE: you currently need anchors in the content for this field to appear

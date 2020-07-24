@@ -1,5 +1,4 @@
 import { Objects } from '@ephox/boulder';
-import { TransitionEvent } from '@ephox/dom-globals';
 import { Css, EventArgs } from '@ephox/sugar';
 
 import * as AlloyEvents from '../../api/events/AlloyEvents';

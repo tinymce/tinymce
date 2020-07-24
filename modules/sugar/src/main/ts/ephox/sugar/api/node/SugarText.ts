@@ -1,4 +1,3 @@
-import { Node, Text } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import NodeValue from '../../impl/NodeValue';
 import { SugarElement } from './SugarElement';

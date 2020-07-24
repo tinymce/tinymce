@@ -1,6 +1,5 @@
 import { GeneralSteps, Log, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { document, Node } from '@ephox/dom-globals';
 import { Cell, Obj } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Focus, SelectorFind, SugarBody } from '@ephox/sugar';

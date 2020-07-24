@@ -1,6 +1,5 @@
 import { Assertions, Chain, GeneralSteps, Logger, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { document } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { Hierarchy, Html, Insert, SugarElement } from '@ephox/sugar';
 import * as FragmentReader from 'tinymce/core/selection/FragmentReader';

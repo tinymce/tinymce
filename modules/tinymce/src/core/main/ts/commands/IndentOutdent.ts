@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLElement } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { Css, PredicateFind, SugarElement, Traverse } from '@ephox/sugar';
 import Editor from '../api/Editor';

@@ -1,4 +1,3 @@
-import { document } from '@ephox/dom-globals';
 import { Class, Css, DomEvent, SugarElement, Traverse } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';

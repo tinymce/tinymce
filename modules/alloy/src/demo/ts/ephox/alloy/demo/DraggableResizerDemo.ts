@@ -1,4 +1,3 @@
-import { document } from '@ephox/dom-globals';
 import { PlatformDetection } from '@ephox/sand';
 import { Class, Css, SugarElement, SugarPosition, Traverse } from '@ephox/sugar';
 

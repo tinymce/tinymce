@@ -5,13 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Range, Node } from '@ephox/dom-globals';
 import { Arr, Option, Strings } from '@ephox/katamari';
 import Editor from '../api/Editor';
 import * as Settings from '../api/Settings';
-import * as FontInfo from '../fmt/FontInfo';
 import * as CaretFinder from '../caret/CaretFinder';
 import * as NodeType from '../dom/NodeType';
+import * as FontInfo from '../fmt/FontInfo';
 
 const findFirstCaretElement = (editor: Editor) => CaretFinder.firstPositionIn(editor.getBody()).map((caret) => {
   const container = caret.container();

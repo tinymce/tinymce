@@ -1,4 +1,3 @@
-import { Comment, Document, DocumentFragment, Element, HTMLElement, HTMLElementTagNameMap, Node, Text } from '@ephox/dom-globals';
 import { SandHTMLElement } from '@ephox/sand';
 import * as NodeTypes from './NodeTypes';
 import { SugarElement } from './SugarElement';

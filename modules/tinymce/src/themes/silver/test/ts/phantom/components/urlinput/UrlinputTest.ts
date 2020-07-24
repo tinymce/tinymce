@@ -1,7 +1,6 @@
 import { ApproxStructure, Assertions, Chain, Keyboard, Keys, Logger, Mouse, Step, UiControls, UiFinder, Waiter } from '@ephox/agar';
 import { AlloyTriggers, Focusing, GuiFactory, NativeEvents, Representing, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
-import { document } from '@ephox/dom-globals';
 import { Future, Option } from '@ephox/katamari';
 import { SelectorFind, SugarElement, Value } from '@ephox/sugar';
 import { ApiUrlData } from 'tinymce/themes/silver/backstage/UrlInputBackstage';

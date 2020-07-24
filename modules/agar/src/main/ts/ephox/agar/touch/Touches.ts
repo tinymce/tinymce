@@ -1,4 +1,3 @@
-import { Document, Touch, TouchEvent, UIEvent, window } from '@ephox/dom-globals';
 import { SugarElement, SugarLocation, SugarNode, Traverse } from '@ephox/sugar';
 
 const point = (type: string, element: SugarElement<any>, x: number, y: number): void => {

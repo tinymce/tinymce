@@ -6,12 +6,11 @@
  */
 
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Composing, CustomEvent, Focusing, Replacing, Sliding,
-  SlotContainer, SlotContainerTypes, SystemEvents, Tabstopping
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Composing, CustomEvent, Focusing, Replacing, Sliding, SlotContainer,
+  SlotContainerTypes, SystemEvents, Tabstopping
 } from '@ephox/alloy';
 import { ValueSchema } from '@ephox/boulder';
 import { Sidebar as BridgeSidebar } from '@ephox/bridge';
-import { HTMLElement } from '@ephox/dom-globals';
 import { Arr, Cell, Fun, Id, Obj, Option } from '@ephox/katamari';
 import { Css, Width } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';

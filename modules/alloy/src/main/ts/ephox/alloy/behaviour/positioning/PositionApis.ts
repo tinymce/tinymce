@@ -1,5 +1,4 @@
 import { ValueSchema } from '@ephox/boulder';
-import { document } from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
 import { Css, SugarElement, SugarLocation } from '@ephox/sugar';
 

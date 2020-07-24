@@ -1,7 +1,6 @@
-// tslint:disable:no-console
+/* eslint-disable no-console */
 
 import { Arr } from '@ephox/katamari';
-import { console, document } from '@ephox/dom-globals';
 import Delay from 'tinymce/core/api/util/Delay';
 
 declare let tinymce: any;

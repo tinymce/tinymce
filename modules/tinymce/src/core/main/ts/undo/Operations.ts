@@ -5,16 +5,15 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Editor from '../api/Editor';
-import * as Levels from './Levels';
-import Tools from '../api/util/Tools';
-import { Event } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
-import { UndoManager, Locks, Index, UndoLevel, UndoBookmark } from './UndoManagerTypes';
-import * as GetBookmark from '../bookmark/GetBookmark';
+import Editor from '../api/Editor';
 import * as Settings from '../api/Settings';
-import { setTyping, endTyping } from './TypingState';
+import Tools from '../api/util/Tools';
+import * as GetBookmark from '../bookmark/GetBookmark';
+import * as Levels from './Levels';
 import { isUnlocked } from './Locks';
+import { endTyping, setTyping } from './TypingState';
+import { Index, Locks, UndoBookmark, UndoLevel, UndoManager } from './UndoManagerTypes';
 
 export const beforeChange = (editor: Editor, locks: Locks, beforeBookmark: UndoBookmark) => {
   if (isUnlocked(locks)) {

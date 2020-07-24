@@ -1,6 +1,5 @@
 import { Assert } from '@ephox/bedrock-client';
 import { Testable } from '@ephox/dispute';
-import { HTMLElementTagNameMap, Node } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import { KAssert } from '@ephox/katamari-assertions';
 import { SugarElement } from 'ephox/sugar/api/node/SugarElement';

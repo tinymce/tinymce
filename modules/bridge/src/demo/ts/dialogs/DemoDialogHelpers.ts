@@ -1,5 +1,4 @@
 import { Processor, ValueSchema } from '@ephox/boulder';
-import { console } from '@ephox/dom-globals';
 import { Cell } from '@ephox/katamari';
 import { DialogManager } from '../../../main/ts/ephox/bridge/api/DialogManager';
 import { Dialog, DialogApi, DialogInstanceApi } from '../../../main/ts/ephox/bridge/components/dialog/Dialog';
@@ -8,7 +7,7 @@ import { Dialog, DialogApi, DialogInstanceApi } from '../../../main/ts/ephox/bri
 const createDemoApi = <T>(internalStructure: Dialog<T>, initalData: T, dataValidator: Processor): DialogInstanceApi<T> => {
   const data = Cell(initalData);
 
-  // tslint:disable-next-line:no-console
+  // eslint-disable-next-line no-console
   console.log({
     internalStructure,
     initalData

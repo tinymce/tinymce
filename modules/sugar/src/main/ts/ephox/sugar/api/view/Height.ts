@@ -1,4 +1,3 @@
-import { HTMLElement } from '@ephox/dom-globals';
 import Dimension from '../../impl/Dimension';
 import * as SugarBody from '../node/SugarBody';
 import { SugarElement } from '../node/SugarElement';

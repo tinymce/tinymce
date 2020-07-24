@@ -1,4 +1,3 @@
-import { Element, HTMLTableCellElement, HTMLTableElement, HTMLTableRowElement } from '@ephox/dom-globals';
 import { Arr, Fun, Option } from '@ephox/katamari';
 import { SelectorFilter, SelectorFind, Selectors, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 import { getAttrValue } from '../util/CellUtils';

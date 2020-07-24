@@ -1,4 +1,3 @@
-import { ClientRect, Document, DOMRect, Text } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
 import { SugarElement } from '../../api/node/SugarElement';
 import * as SugarText from '../../api/node/SugarText';

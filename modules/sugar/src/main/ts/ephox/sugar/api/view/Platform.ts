@@ -1,4 +1,3 @@
-import { window } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 

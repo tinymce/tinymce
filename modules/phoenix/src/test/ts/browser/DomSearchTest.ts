@@ -1,5 +1,4 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
-import { document } from '@ephox/dom-globals';
 import { Arr, Fun } from '@ephox/katamari';
 import { Attribute, Html, Insert, InsertAll, Remove, SugarElement } from '@ephox/sugar';
 import * as DomSearch from 'ephox/phoenix/api/dom/DomSearch';

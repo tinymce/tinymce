@@ -1,4 +1,4 @@
-import { Pipeline, UiFinder, Waiter, Log, Chain } from '@ephox/agar';
+import { Chain, Log, Pipeline, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyDom, TinyLoader, TinyUi } from '@ephox/mcagar';
 
@@ -6,7 +6,6 @@ import Plugin from 'tinymce/plugins/media/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
 import * as Utils from '../module/test/Utils';
-import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.plugins.media.DimensionsControlTest', function (success, failure) {
   Plugin();

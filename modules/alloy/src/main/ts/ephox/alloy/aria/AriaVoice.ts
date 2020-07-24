@@ -1,4 +1,3 @@
-import { HTMLDocument, setTimeout } from '@ephox/dom-globals';
 import { Id } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Attribute, Css, Insert, Remove, SugarElement, Traverse } from '@ephox/sugar';

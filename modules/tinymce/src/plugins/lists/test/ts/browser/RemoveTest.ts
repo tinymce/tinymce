@@ -1,6 +1,5 @@
-import { Pipeline, Log } from '@ephox/agar';
+import { Log, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Text } from '@ephox/dom-globals';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 
 import Editor from 'tinymce/core/api/Editor';

@@ -1,4 +1,3 @@
-import { Node, Range } from '@ephox/dom-globals';
 import { SimRange, SugarElement } from '@ephox/sugar';
 
 export interface TinyDom {

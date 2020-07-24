@@ -1,4 +1,3 @@
-import { HTMLButtonElement, HTMLInputElement } from '@ephox/dom-globals';
 import { Attribute, Css, DomEvent, Html, Insert, InsertAll, Remove, SugarElement, Value } from '@ephox/sugar';
 import { Chain } from 'ephox/agar/api/Chain';
 import * as FocusTools from 'ephox/agar/api/FocusTools';

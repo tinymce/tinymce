@@ -1,4 +1,3 @@
-import { console } from '@ephox/dom-globals';
 import { Thunk } from '@ephox/katamari';
 import Jsc from '@ephox/wrap-jsverify';
 
@@ -6,7 +5,7 @@ import { Step } from '../api/Step';
 import { TestLogs } from '../api/TestLogs';
 
 const logNoPromises = Thunk.cached(() => {
-  // tslint:disable-next-line:no-console
+  // eslint-disable-next-line no-console
   console.warn('No native promise support on browser to run async property tests. Skipping!');
 });
 

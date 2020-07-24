@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLElement, Window } from '@ephox/dom-globals';
 import { Compare, Focus, SugarElement } from '@ephox/sugar';
 
 import * as CursorRefresh from '../../touch/focus/CursorRefresh';

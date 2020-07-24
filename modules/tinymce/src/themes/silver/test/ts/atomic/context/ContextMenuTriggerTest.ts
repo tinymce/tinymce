@@ -1,5 +1,4 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
-import { PointerEvent } from '@ephox/dom-globals';
 import Editor from 'tinymce/core/api/Editor';
 import { isTriggeredByKeyboard } from 'tinymce/themes/silver/ui/menus/contextmenu/SilverContextMenu';
 

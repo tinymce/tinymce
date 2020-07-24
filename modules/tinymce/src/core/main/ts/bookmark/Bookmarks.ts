@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node } from '@ephox/dom-globals';
 import EditorSelection from '../api/dom/Selection';
 import * as NodeType from '../dom/NodeType';
 import { Bookmark } from './BookmarkTypes';

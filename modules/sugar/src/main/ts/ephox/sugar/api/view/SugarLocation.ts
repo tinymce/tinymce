@@ -1,4 +1,3 @@
-import { Element, HTMLElement } from '@ephox/dom-globals';
 import { inBody } from '../node/SugarBody';
 import { SugarElement } from '../node/SugarElement';
 import { SugarPosition } from './SugarPosition';
@@ -9,7 +8,7 @@ const boxPosition = (dom: Element) => {
 };
 
 // Avoids falsy false fallthrough
-const firstDefinedOrZero = (a: number, b: number) => {
+const firstDefinedOrZero = (a?: number, b?: number) => {
   if (a !== undefined) {
     return a;
   } else {
@@ -27,8 +26,8 @@ const absolute = (element: SugarElement<Element>) => {
     return SugarPosition(body.offsetLeft, body.offsetTop);
   }
 
-  const scrollTop = firstDefinedOrZero(win.pageYOffset, html.scrollTop);
-  const scrollLeft = firstDefinedOrZero(win.pageXOffset, html.scrollLeft);
+  const scrollTop = firstDefinedOrZero(win?.pageYOffset, html.scrollTop);
+  const scrollLeft = firstDefinedOrZero(win?.pageXOffset, html.scrollLeft);
 
   const clientTop = firstDefinedOrZero(html.clientTop, body.clientTop);
   const clientLeft = firstDefinedOrZero(html.clientLeft, body.clientLeft);

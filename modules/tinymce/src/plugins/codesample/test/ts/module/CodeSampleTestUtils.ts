@@ -1,5 +1,4 @@
 import { ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Logger, Mouse, Step, UiFinder, Waiter } from '@ephox/agar';
-import { document } from '@ephox/dom-globals';
 import { SugarElement, TextContent } from '@ephox/sugar';
 
 const dialogSelector = 'div.tox-dialog';

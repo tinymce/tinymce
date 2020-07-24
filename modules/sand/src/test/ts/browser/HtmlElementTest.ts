@@ -1,5 +1,4 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
-import { document } from '@ephox/dom-globals';
 import { SandHTMLElement } from 'ephox/sand/api/Main';
 
 UnitTest.test('HtmlElementTest', function () {

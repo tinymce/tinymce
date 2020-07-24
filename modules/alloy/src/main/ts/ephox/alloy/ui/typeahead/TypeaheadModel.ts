@@ -1,4 +1,3 @@
-import { HTMLInputElement } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import { Attribute, Value } from '@ephox/sugar';
 

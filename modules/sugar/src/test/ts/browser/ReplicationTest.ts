@@ -1,5 +1,4 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
-import { HTMLElement } from '@ephox/dom-globals';
 import * as Replication from 'ephox/sugar/api/dom/Replication';
 import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
 import * as Traverse from 'ephox/sugar/api/search/Traverse';

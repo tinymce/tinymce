@@ -6,7 +6,6 @@
  */
 
 // eslint-disable-next-line max-len
-import { ClientRect, HTMLElement, HTMLTableCaptionElement, HTMLTableDataCellElement, HTMLTableHeaderCellElement } from '@ephox/dom-globals';
 import { Arr, Fun, Option } from '@ephox/katamari';
 import { SelectorFilter, SugarElement } from '@ephox/sugar';
 import { clone as roundRect } from '../geom/ClientRect';

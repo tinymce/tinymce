@@ -1,5 +1,4 @@
 import { Chain } from '@ephox/agar';
-import { setTimeout } from '@ephox/dom-globals';
 import { Global, Id, Strings, Type } from '@ephox/katamari';
 import { Attribute, Insert, Remove, Selectors, SugarBody, SugarElement, SugarShadowDom } from '@ephox/sugar';
 import 'tinymce';

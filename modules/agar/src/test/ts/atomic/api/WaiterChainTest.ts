@@ -1,7 +1,6 @@
 import { UnitTest } from '@ephox/bedrock-client';
-import { setTimeout } from '@ephox/dom-globals';
-import { Pipeline } from 'ephox/agar/api/Pipeline';
 import { Chain } from 'ephox/agar/api/Chain';
+import { Pipeline } from 'ephox/agar/api/Pipeline';
 import * as Waiter from 'ephox/agar/api/Waiter';
 import * as StepAssertions from 'ephox/agar/test/StepAssertions';
 

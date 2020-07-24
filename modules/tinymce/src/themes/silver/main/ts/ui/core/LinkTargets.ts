@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLAnchorElement, HTMLElement, Node } from '@ephox/dom-globals';
 import { Arr, Fun, Id } from '@ephox/katamari';
 import { SelectorFilter, SugarElement } from '@ephox/sugar';
 import Tools from 'tinymce/core/api/util/Tools';

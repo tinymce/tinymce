@@ -1,4 +1,3 @@
-import { Node } from '@ephox/dom-globals';
 import { SugarElement } from '../node/SugarElement';
 import * as PredicateFind from './PredicateFind';
 
