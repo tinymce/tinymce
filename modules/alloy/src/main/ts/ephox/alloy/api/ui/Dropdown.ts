@@ -1,4 +1,4 @@
-import { Fun, Obj, Option } from '@ephox/katamari';
+import { Fun, Obj, Optional } from '@ephox/katamari';
 import { EventArgs } from '@ephox/sugar';
 
 import * as DropdownUtils from '../../dropdown/DropdownUtils';
@@ -59,9 +59,9 @@ const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, c
     }
   };
 
-  const triggerExecute = (comp: AlloyComponent, _se: SimulatedEvent<EventArgs>): Option<boolean> => {
+  const triggerExecute = (comp: AlloyComponent, _se: SimulatedEvent<EventArgs>): Optional<boolean> => {
     AlloyTriggers.emitExecute(comp);
-    return Option.some<boolean>(true);
+    return Optional.some<boolean>(true);
   };
 
   return {
@@ -91,7 +91,7 @@ const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, c
           mode: 'special',
           onSpace: triggerExecute,
           onEnter: triggerExecute,
-          onDown: (comp, _se): Option<boolean> => {
+          onDown: (comp, _se): Optional<boolean> => {
             if (Dropdown.isOpen(comp)) {
               const sandbox = Coupling.getCoupled(comp, 'sandbox');
               switchToMenu(sandbox);
@@ -99,14 +99,14 @@ const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, c
               Dropdown.open(comp);
             }
 
-            return Option.some<boolean>(true);
+            return Optional.some<boolean>(true);
           },
-          onEscape: (comp, _se): Option<boolean> => {
+          onEscape: (comp, _se): Optional<boolean> => {
             if (Dropdown.isOpen(comp)) {
               Dropdown.close(comp);
-              return Option.some<boolean>(true);
+              return Optional.some<boolean>(true);
             } else {
-              return Option.none();
+              return Optional.none();
             }
           }
         }),
@@ -115,7 +115,7 @@ const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, c
     ),
 
     events: ButtonBase.events(
-      Option.some(action)
+      Optional.some(action)
     ),
 
     eventOrder: {

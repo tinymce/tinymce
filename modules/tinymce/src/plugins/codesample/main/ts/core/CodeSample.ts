@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import * as Utils from '../util/Utils';
@@ -15,10 +15,10 @@ const getSelectedCodeSample = (editor: Editor) => {
   const node = editor.selection ? editor.selection.getNode() : null;
 
   if (Utils.isCodeSample(node)) {
-    return Option.some(node);
+    return Optional.some(node);
   }
 
-  return Option.none<Element>();
+  return Optional.none<Element>();
 };
 
 const insertCodeSample = (editor: Editor, language: string, code: string) => {

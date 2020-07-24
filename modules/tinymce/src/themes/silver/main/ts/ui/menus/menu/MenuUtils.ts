@@ -1,7 +1,7 @@
 import { ItemTypes, MenuTypes } from '@ephox/alloy';
 import { ValueSchema } from '@ephox/boulder';
 import { InlineContent, Types } from '@ephox/bridge';
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import { components as menuComponents, dom as menuDom } from './MenuParts';
 
 import { forCollection, forHorizontalCollection, forSwatch, forToolbar } from './MenuStructures';
@@ -16,12 +16,12 @@ export interface PartialMenuSpec {
   items: MenuTypes.MenuSpec['items'];
 }
 
-export const handleError = (error: ValueSchema.SchemaError<any>): Option<ItemTypes.ItemSpec> => {
+export const handleError = (error: ValueSchema.SchemaError<any>): Optional<ItemTypes.ItemSpec> => {
   // eslint-disable-next-line no-console
   console.error(ValueSchema.formatError(error));
   // eslint-disable-next-line no-console
   console.log(error);
-  return Option.none();
+  return Optional.none();
 };
 
 export const createHorizontalPartialMenuWithAlloyItems = (value: string, _hasIcons: boolean, items, _columns: Types.ColumnTypes, _presets: Types.PresetTypes): PartialMenuSpec => {

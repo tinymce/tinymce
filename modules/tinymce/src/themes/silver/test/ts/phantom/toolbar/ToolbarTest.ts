@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Step } from '@ephox/agar';
 import { AlloyComponent, Behaviour, Focusing, GuiFactory, Keying, TestHelpers, Toolbar } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 
 import { ToolbarMode } from 'tinymce/themes/silver/api/Settings';
 import { renderToolbar, renderToolbarGroup } from 'tinymce/themes/silver/ui/toolbar/CommonToolbar';
@@ -32,13 +32,13 @@ UnitTest.asynctest('Toolbar Test', (success, failure) => {
         providers,
         initGroups: [
           {
-            title: Option.none(), items: Arr.map([ 'one', 'two', 'three' ], makeButton)
+            title: Optional.none(), items: Arr.map([ 'one', 'two', 'three' ], makeButton)
           },
           {
-            title: Option.some('group title'), items: Arr.map([ 'four', 'five' ], makeButton)
+            title: Optional.some('group title'), items: Arr.map([ 'four', 'five' ], makeButton)
           },
           {
-            title: Option.some('another group title'), items: Arr.map([ 'six' ], makeButton)
+            title: Optional.some('another group title'), items: Arr.map([ 'six' ], makeButton)
           }
         ]
       })
@@ -122,10 +122,10 @@ UnitTest.asynctest('Toolbar Test', (success, failure) => {
         Step.sync(() => {
           const groups = Arr.map([
             {
-              title: Option.none<string>(), items: Arr.map([ 'A', 'B' ], makeButton)
+              title: Optional.none<string>(), items: Arr.map([ 'A', 'B' ], makeButton)
             },
             {
-              title: Option.none<string>(), items: Arr.map([ 'C' ], makeButton)
+              title: Optional.none<string>(), items: Arr.map([ 'C' ], makeButton)
             }
           ], renderToolbarGroup);
           Toolbar.setGroups(toolbar, groups);

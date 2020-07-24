@@ -1,6 +1,6 @@
 import { Assertions, Chain, GeneralSteps, Logger, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { Hierarchy, SugarElement } from '@ephox/sugar';
 import * as MergeBlocks from 'tinymce/core/delete/MergeBlocks';
 import ViewBlock from '../../module/test/ViewBlock';
@@ -29,7 +29,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.MergeBlocksTest', function (succ
   };
 
   const cAssertPosition = function (expectedPath, expectedOffset) {
-    return Chain.op(function (position: Option<any>) {
+    return Chain.op(function (position: Optional<any>) {
       const container = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), expectedPath).getOrDie();
 
       Assertions.assertDomEq('Should be expected container', container, SugarElement.fromDom(position.getOrDie().container()));

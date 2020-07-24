@@ -1,5 +1,5 @@
 import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
-import { Arr, Fun, Option } from '@ephox/katamari';
+import { Arr, Fun, Optional } from '@ephox/katamari';
 import { Compare, Height, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
 
 import * as Keys from '../alien/Keys';
@@ -35,14 +35,14 @@ const create = (cyclicField: FieldProcessorAdt) => {
     return Height.get(target) > 0;
   };
 
-  const findInitial = (component: AlloyComponent, tabbingConfig: TabbingConfig): Option<SugarElement> => {
+  const findInitial = (component: AlloyComponent, tabbingConfig: TabbingConfig): Optional<SugarElement> => {
     const tabstops: SugarElement[] = SelectorFilter.descendants(component.element(), tabbingConfig.selector);
     const visibles: SugarElement[] = Arr.filter(tabstops, (elem) => isVisible(tabbingConfig, elem));
 
-    return Option.from(visibles[tabbingConfig.firstTabstop]);
+    return Optional.from(visibles[tabbingConfig.firstTabstop]);
   };
 
-  const findCurrent = (component: AlloyComponent, tabbingConfig: TabbingConfig): Option<SugarElement> =>
+  const findCurrent = (component: AlloyComponent, tabbingConfig: TabbingConfig): Optional<SugarElement> =>
     tabbingConfig.focusManager.get(component).
       bind((elem) => SelectorFind.closest(elem, tabbingConfig.selector));
 
@@ -62,15 +62,15 @@ const create = (cyclicField: FieldProcessorAdt) => {
     stopIndex: number,
     tabbingConfig: TabbingConfig,
     cycle: ArrNavigation.ArrCycle<SugarElement>
-  ): Option<boolean> =>
+  ): Optional<boolean> =>
     cycle(tabstops, stopIndex, (elem: SugarElement) => isTabstop(tabbingConfig, elem)).
       fold(
         // Even if there is only one, still capture the event if cycling
-        () => tabbingConfig.cyclic ? Option.some<boolean>(true) : Option.none(),
+        () => tabbingConfig.cyclic ? Optional.some<boolean>(true) : Optional.none(),
         (target) => {
           tabbingConfig.focusManager.set(component, target);
           // Kill the event
-          return Option.some<boolean>(true);
+          return Optional.some<boolean>(true);
         }
       );
 
@@ -79,7 +79,7 @@ const create = (cyclicField: FieldProcessorAdt) => {
     _simulatedEvent: NativeSimulatedEvent,
     tabbingConfig: TabbingConfig,
     cycle: ArrNavigation.ArrCycle<SugarElement>
-  ): Option<boolean> => {
+  ): Optional<boolean> => {
     // 1. Find our current tabstop
     // 2. Find the index of that tabstop
     // 3. Cycle the tabstop
@@ -118,7 +118,7 @@ const create = (cyclicField: FieldProcessorAdt) => {
 
   const getKeyupRules = Fun.constant([ ]);
 
-  return KeyingType.typical(schema, NoState.init, getKeydownRules, getKeyupRules, () => Option.some(focusIn));
+  return KeyingType.typical(schema, NoState.init, getKeydownRules, getKeyupRules, () => Optional.some(focusIn));
 };
 
 export {

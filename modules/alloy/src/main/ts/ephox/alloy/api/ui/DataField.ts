@@ -1,5 +1,5 @@
 import { FieldSchema } from '@ephox/boulder';
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 
 import { DataFieldDetail, DataFieldSketcher, DataFieldSpec } from '../../ui/types/DataFieldTypes';
 import { Composing } from '../behaviour/Composing';
@@ -23,7 +23,7 @@ const factory: SingleSketchFactory<DataFieldDetail, DataFieldSpec> = (detail): S
         }
       }),
       Composing.config({
-        find: Option.some
+        find: Optional.some
       })
     ]
   ),

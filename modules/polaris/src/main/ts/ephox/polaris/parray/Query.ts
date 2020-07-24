@@ -1,4 +1,4 @@
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import { PRange } from '../pattern/Types';
 
 /**
@@ -34,9 +34,9 @@ const tryend = function (parray: PRange[], finish: number) {
 const sublist = function <T extends PRange> (parray: T[], start: number, finish: number) {
   const first = startindex(parray, start);
   const rawlast = startindex(parray, finish);
-  return first.bind(function (fIndex): Option<T[]> {
+  return first.bind(function (fIndex): Optional<T[]> {
     const last = rawlast.getOr(tryend(parray, finish));
-    return last > -1 ? Option.some(parray.slice(fIndex, last)) : Option.none();
+    return last > -1 ? Optional.some(parray.slice(fIndex, last)) : Optional.none();
   }).getOr([]);
 };
 

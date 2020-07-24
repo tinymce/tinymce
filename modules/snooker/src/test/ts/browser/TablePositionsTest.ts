@@ -1,5 +1,5 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { Insert, InsertAll, Remove, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
 import * as TablePositions from 'ephox/snooker/api/TablePositions';
 
@@ -76,8 +76,8 @@ UnitTest.test('RectangularTest', function () {
     [].forEach.call(tableTarget.dom().querySelectorAll('td'), function (td: HTMLElement) {
       td.style.background = '';
     });
-    Option.from(document.querySelector(from) as HTMLElement).getOrDie('Missing element for "from" selector').style.background = '#cadbee';
-    Option.from(document.querySelector(to) as HTMLElement).getOrDie('Missing element for "to" selector').style.background = '#5adb33';
+    Optional.from(document.querySelector(from) as HTMLElement).getOrDie('Missing element for "from" selector').style.background = '#cadbee';
+    Optional.from(document.querySelector(to) as HTMLElement).getOrDie('Missing element for "to" selector').style.background = '#5adb33';
     const start = SelectorFilter.descendants(tableTarget, from)[0];
     const finish = SelectorFilter.descendants(tableTarget, to)[0];
     const c = TablePositions.getBox(tableTarget, start, finish);

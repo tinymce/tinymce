@@ -1,4 +1,4 @@
-import { Arr, Obj, Option, Type } from '@ephox/katamari';
+import { Arr, Obj, Optional, Type } from '@ephox/katamari';
 import { SugarElement } from '../node/SugarElement';
 import * as SugarNode from '../node/SugarNode';
 
@@ -35,8 +35,8 @@ const get = (element: SugarElement<Element>, key: string): undefined | string =>
   return v === null ? undefined : v;
 };
 
-const getOpt = (element: SugarElement<Element>, key: string): Option<string> =>
-  Option.from(get(element, key));
+const getOpt = (element: SugarElement<Element>, key: string): Optional<string> =>
+  Optional.from(get(element, key));
 
 const has = (element: SugarElement<Node>, key: string): boolean => {
   const dom = element.dom();

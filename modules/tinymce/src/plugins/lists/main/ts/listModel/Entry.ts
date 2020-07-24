@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import { Attribute, Replication, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 import { hasLastChildList, ListType } from './Util';
 
@@ -44,7 +44,7 @@ const cloneItemContent = (li: SugarElement): SugarElement[] => {
   return Arr.map(content, Replication.deep);
 };
 
-const createEntry = (li: SugarElement, depth: number, isSelected: boolean): Option<Entry> => Traverse.parent(li).filter(SugarNode.isElement).map((list) => ({
+const createEntry = (li: SugarElement, depth: number, isSelected: boolean): Optional<Entry> => Traverse.parent(li).filter(SugarNode.isElement).map((list) => ({
   depth,
   dirty: false,
   isSelected,

@@ -1,6 +1,6 @@
 import { Chain, Cursors, Guard, NamedChain } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Option, Result } from '@ephox/katamari';
+import { Optional, Result } from '@ephox/katamari';
 import { Css, DomEvent, SelectorFind, SugarElement, WindowSelection } from '@ephox/sugar';
 
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
@@ -54,7 +54,7 @@ UnitTest.asynctest('SelectionInFramePositionTest', (success, failure) => {
       return {
         anchor: 'node',
         root: SugarElement.fromDom(data.classic.element().dom().contentWindow.document.body),
-        node: Option.some(SugarElement.fromDom(node))
+        node: Optional.some(SugarElement.fromDom(node))
       };
     });
 

@@ -1,5 +1,5 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
-import { Fun, Option } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import * as Insert from 'ephox/sugar/api/dom/Insert';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
@@ -26,8 +26,8 @@ interface TestDocSpec {
 type AttrMap = Record<string, string | boolean | number>;
 interface TestAttrMap {
   iframe: AttrMap;
-  html: Option<AttrMap>;
-  body: Option<AttrMap>;
+  html: Optional<AttrMap>;
+  body: Optional<AttrMap>;
 }
 
 UnitTest.asynctest('ScrollTest', (success, failure) => {
@@ -63,7 +63,7 @@ UnitTest.asynctest('ScrollTest', (success, failure) => {
           rtl: iframeDoc.body.dir === 'rtl',
           dir: Attribute.get(body, 'dir') || 'ltr',
           byId(str) {
-            return Option.from(iframeDoc.getElementById(str))
+            return Optional.from(iframeDoc.getElementById(str))
               .map(SugarElement.fromDom)
               .getOrDie('cannot find element with id ' + str);
           }
@@ -82,14 +82,14 @@ UnitTest.asynctest('ScrollTest', (success, failure) => {
   const ifr = '<iframe src="/project/@ephox/sugar/src/test/data/scrollTest.html"></iframe>';
   testOne(ifr, { // vanilla iframe
     iframe: { id: 'vanilla', style: 'height:200px; width:500px; border: 7px dotted chartreuse;' },
-    html: Option.none(),
-    body: Option.some<AttrMap>({ contenteditable: 'true', style: 'margin: 0; padding: 5px;' })
+    html: Optional.none(),
+    body: Optional.some<AttrMap>({ contenteditable: 'true', style: 'margin: 0; padding: 5px;' })
   },
   () => {
     testOne(ifr, { // rtl iframe
       iframe: { id: 'rtl', style: 'height:200px; width:500px; border: 7px solid blueviolet;' },
-      html: Option.none(),
-      body: Option.some<AttrMap>({ dir: 'rtl', contenteditable: 'true', style: 'margin: 0; padding: 5px;' })
+      html: Optional.none(),
+      body: Optional.some<AttrMap>({ dir: 'rtl', contenteditable: 'true', style: 'margin: 0; padding: 5px;' })
     },
     success);
   });

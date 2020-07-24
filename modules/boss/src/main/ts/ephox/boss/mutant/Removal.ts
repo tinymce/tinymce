@@ -1,4 +1,4 @@
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import { Gene } from '../api/Gene';
 import * as Comparator from './Comparator';
 import * as Detach from './Detach';
@@ -8,7 +8,7 @@ const unwrap = function (item: Gene) {
   item.parent.each(function (parent) {
     const children = item.children;
     Arr.each(children, function (child) {
-      child.parent = Option.some(parent);
+      child.parent = Optional.some(parent);
     });
 
     const index = Arr.findIndex(parent.children, function (sibling) {

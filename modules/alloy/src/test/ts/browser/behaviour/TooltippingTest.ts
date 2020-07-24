@@ -1,6 +1,4 @@
-import {
-  ApproxStructure, Assertions, Chain, FocusTools, Keyboard, Keys, Logger, Mouse, Step, StructAssert, UiFinder, Waiter
-} from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, FocusTools, Keyboard, Keys, Logger, Mouse, Step, StructAssert, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr, Result } from '@ephox/katamari';
 import { SelectorFind } from '@ephox/sugar';
@@ -87,7 +85,7 @@ UnitTest.asynctest('Tooltipping Behaviour', (success, failure) => {
 
     const alphaButton = component.getSystem().getByDom(
       SelectorFind.descendant(component.element(), '.alpha').getOrDie('Could not find alpha button')
-    ).toOption().getOrDie('Could not find alpha button component');
+    ).toOptional().getOrDie('Could not find alpha button component');
 
     const sAssertSinkContents = (children: ApproxStructure.Builder<StructAssert[]>) => Waiter.sTryUntil(
       'Waiting for tooltip to appear in sink',

@@ -1,6 +1,6 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Gene, TestUniverse, TextGene } from '@ephox/boss';
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import * as Split from 'ephox/phoenix/api/general/Split';
 import * as Finder from 'ephox/phoenix/test/Finder';
 
@@ -16,7 +16,7 @@ UnitTest.test('api.Split.(split,splitByPair)', function () {
     return { universe, item };
   };
 
-  const isEq = function (opt1: Option<string>, opt2: Option<Gene>) {
+  const isEq = function (opt1: Optional<string>, opt2: Optional<Gene>) {
     return opt1.fold(function () {
       return opt2.isNone();
     }, function (a) {
@@ -26,7 +26,7 @@ UnitTest.test('api.Split.(split,splitByPair)', function () {
     });
   };
 
-  const checkSplit = function (before: Option<string>, after: Option<string>, text: string, position: number) {
+  const checkSplit = function (before: Optional<string>, after: Optional<string>, text: string, position: number) {
     const input = generate(text);
     const actual = Split.split(input.universe, input.item, position);
     assert.eq(true, isEq(before, actual.before()));
@@ -42,13 +42,13 @@ UnitTest.test('api.Split.(split,splitByPair)', function () {
     }));
   };
   // probably never happens, but just in case
-  checkSplit(Option.none(), Option.some('apple'), 'apple', -1);
+  checkSplit(Optional.none(), Optional.some('apple'), 'apple', -1);
 
-  checkSplit(Option.some('a '), Option.some('cat'), 'a cat', 2);
-  checkSplit(Option.none(), Option.some('apple'), 'apple', 0);
-  checkSplit(Option.some('car'), Option.some('t'), 'cart', 3);
-  checkSplit(Option.some('cart'), Option.none(), 'cart', 4);
-  checkSplit(Option.some('cart'), Option.none(), 'cart', 5);
+  checkSplit(Optional.some('a '), Optional.some('cat'), 'a cat', 2);
+  checkSplit(Optional.none(), Optional.some('apple'), 'apple', 0);
+  checkSplit(Optional.some('car'), Optional.some('t'), 'cart', 3);
+  checkSplit(Optional.some('cart'), Optional.none(), 'cart', 4);
+  checkSplit(Optional.some('cart'), Optional.none(), 'cart', 5);
 
   checkPair('root(text("apples"))', 'apples', 'apples', 0, 0);
   checkPair('root(text("apples"))', 'apples', 'apples', 0, 6);

@@ -1,4 +1,4 @@
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import { Class, SugarElement, Value } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
@@ -54,7 +54,7 @@ export default (): void => {
               renderComponents: (data: { items: string [] }) => Arr.map(data.items, (d) => ({
                 dom: { tag: 'li', innerHtml: d }
               })),
-              updateState: (comp, data) => Option.some<any>(data),
+              updateState: (comp, data) => Optional.some<any>(data),
               initialData: {
                 items: [ 'dog', 'cat', 'elephant' ]
               }

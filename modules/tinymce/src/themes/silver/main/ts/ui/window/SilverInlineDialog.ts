@@ -11,7 +11,7 @@ import {
   SimpleSpec, SystemEvents
 } from '@ephox/alloy';
 import { DialogManager } from '@ephox/bridge';
-import { Id, Option } from '@ephox/katamari';
+import { Id, Optional } from '@ephox/katamari';
 import { Attribute, SugarNode } from '@ephox/sugar';
 
 import { UiFactoryBackstage } from '../../backstage/Backstage';
@@ -30,7 +30,7 @@ const renderInlineDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: S
   const dialogLabelId = Id.generate('dialog-label');
   const dialogContentId = Id.generate('dialog-content');
 
-  const updateState = (_comp, incoming: DialogManager.DialogInit<T>) => Option.some(incoming);
+  const updateState = (_comp, incoming: DialogManager.DialogInit<T>) => Optional.some(incoming);
 
   const memHeader = Memento.record(
     renderInlineHeader({
@@ -89,7 +89,7 @@ const renderInlineDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: S
         mode: 'cyclic',
         onEscape: (c) => {
           AlloyTriggers.emit(c, formCloseEvent);
-          return Option.some(true);
+          return Optional.some(true);
         },
         useTabstopAt: (elem) => !NavigableObject.isPseudoStop(elem) && (
           SugarNode.name(elem) !== 'button' || Attribute.get(elem, 'disabled') !== 'disabled'

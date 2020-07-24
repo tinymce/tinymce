@@ -7,7 +7,7 @@
 
 import { AlloySpec, Behaviour, Focusing, Keying, ModalDialog, Reflecting, Tabstopping } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
-import { Fun, Option } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 import { renderBodyPanel } from '../dialog/BodyPanel';
@@ -22,7 +22,7 @@ type WindowBodySpec = {
 
 // ariaAttrs is being passed through to silver inline dialog
 // from the WindowManager as a property of 'params'
-const renderBody = (spec: WindowBodySpec, id: Option<string>, backstage: UiFactoryBackstage, ariaAttrs: boolean): AlloySpec => {
+const renderBody = (spec: WindowBodySpec, id: Optional<string>, backstage: UiFactoryBackstage, ariaAttrs: boolean): AlloySpec => {
   const renderComponents = (incoming: WindowBodySpec) => {
     switch (incoming.body.type) {
       case 'tabpanel': {
@@ -39,7 +39,7 @@ const renderBody = (spec: WindowBodySpec, id: Option<string>, backstage: UiFacto
     }
   };
 
-  const updateState = (_comp, incoming: WindowBodySpec) => Option.some({
+  const updateState = (_comp, incoming: WindowBodySpec) => Optional.some({
     isTabPanel: () => incoming.body.type === 'tabpanel'
   });
 
@@ -69,10 +69,10 @@ const renderBody = (spec: WindowBodySpec, id: Option<string>, backstage: UiFacto
   };
 };
 
-const renderInlineBody = (spec: WindowBodySpec, contentId: string, backstage: UiFactoryBackstage, ariaAttrs: boolean) => renderBody(spec, Option.some(contentId), backstage, ariaAttrs);
+const renderInlineBody = (spec: WindowBodySpec, contentId: string, backstage: UiFactoryBackstage, ariaAttrs: boolean) => renderBody(spec, Optional.some(contentId), backstage, ariaAttrs);
 
 const renderModalBody = (spec: WindowBodySpec, backstage: UiFactoryBackstage) => {
-  const bodySpec = renderBody(spec, Option.none(), backstage, false);
+  const bodySpec = renderBody(spec, Optional.none(), backstage, false);
   return ModalDialog.parts().body(
     bodySpec
   );

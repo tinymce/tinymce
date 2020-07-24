@@ -1,4 +1,4 @@
-import { Arr, Option, Strings } from '@ephox/katamari';
+import { Arr, Optional, Strings } from '@ephox/katamari';
 
 export type FunctionWithAnnotation<T extends Function> = T & { toFunctionAnnotation?: () => { name: string; parameters: string[] } };
 
@@ -44,7 +44,7 @@ const markAsSketchApi = <T extends Function>(f: T, apiFunction: Function): Funct
   return f;
 };
 
-const getAnnotation = <T extends Function>(f: FunctionWithAnnotation<T>) => Option.from(
+const getAnnotation = <T extends Function>(f: FunctionWithAnnotation<T>) => Optional.from(
     f.toFunctionAnnotation?.()
 );
 

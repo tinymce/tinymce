@@ -1,4 +1,4 @@
-import { FutureResult, Global, Obj, Option, Result, Strings, Type } from '@ephox/katamari';
+import { FutureResult, Global, Obj, Optional, Result, Strings, Type } from '@ephox/katamari';
 import { DataType } from './DataType';
 import { RequestBody, ResponseBodyDataTypes, ResponseTypeMap, textData } from './HttpData';
 import { HttpError, HttpErrorCode } from './HttpError';
@@ -7,13 +7,13 @@ import * as ResponseError from './ResponseError';
 import * as ResponseSuccess from './ResponseSuccess';
 import { buildUrl } from './UrlBuilder';
 
-const getContentType = (requestBody: RequestBody): Option<string> => Option.from(requestBody).bind((b) => {
+const getContentType = (requestBody: RequestBody): Optional<string> => Optional.from(requestBody).bind((b) => {
   switch (b.type) {
-    case DataType.JSON: return Option.some('application/json');
-    case DataType.FormData: return Option.some('application/x-www-form-urlencoded; charset=UTF-8');
-    case DataType.MultipartFormData: return Option.none();
-    case DataType.Text: return Option.some('text/plain');
-    default: return Option.some('text/plain');
+    case DataType.JSON: return Optional.some('application/json');
+    case DataType.FormData: return Optional.some('application/x-www-form-urlencoded; charset=UTF-8');
+    case DataType.MultipartFormData: return Optional.none();
+    case DataType.Text: return Optional.some('text/plain');
+    default: return Optional.some('text/plain');
   }
 });
 
@@ -26,22 +26,22 @@ const getAccept = (responseType: ResponseBodyDataTypes) => {
   }
 };
 
-const getResponseType = (responseType: ResponseBodyDataTypes): Option<'blob' | 'text'> => {
+const getResponseType = (responseType: ResponseBodyDataTypes): Optional<'blob' | 'text'> => {
   switch (responseType) {
-    case DataType.JSON: return Option.none();
-    case DataType.Blob: return Option.some<'blob' | 'text'>('blob');
-    case DataType.Text: return Option.some<'blob' | 'text'>('text');
-    default: return Option.none();
+    case DataType.JSON: return Optional.none();
+    case DataType.Blob: return Optional.some<'blob' | 'text'>('blob');
+    case DataType.Text: return Optional.some<'blob' | 'text'>('text');
+    default: return Optional.none();
   }
 };
 
 const createOptions = <T extends keyof ResponseTypeMap>(init: HttpTypes.HttpRequest<T>) => {
   const contentType = getContentType(init.body);
-  const credentials: Option<boolean> = init.credentials === true ? Option.some<boolean>(true) : Option.none<boolean>();
+  const credentials: Optional<boolean> = init.credentials === true ? Optional.some<boolean>(true) : Optional.none<boolean>();
   const accept = getAccept(init.responseType) + ', */*; q=0.01';
   const headers = init.headers !== undefined ? init.headers : {};
   const responseType = getResponseType(init.responseType);
-  const progress: Option<HttpTypes.ProgressFunction> = Type.isFunction(init.progress) ? Option.some(init.progress) : Option.none();
+  const progress: Optional<HttpTypes.ProgressFunction> = Type.isFunction(init.progress) ? Optional.some(init.progress) : Optional.none();
 
   return {
     contentType,
@@ -70,8 +70,8 @@ const toNativeFormData = (formDataInput: Record<string, string | Blob | File>): 
   return nativeFormData;
 };
 
-const getData = (body: RequestBody): Option<string | FormData | Blob> =>
-  Option.from(body).map((b) => {
+const getData = (body: RequestBody): Optional<string | FormData | Blob> =>
+  Optional.from(body).map((b) => {
     if (b.type === DataType.JSON) {
       return JSON.stringify(b.data);
     } else if (b.type === DataType.FormData) {
@@ -85,7 +85,7 @@ const getData = (body: RequestBody): Option<string | FormData | Blob> =>
 
 const send = <T extends keyof ResponseTypeMap>(init: HttpTypes.HttpRequest<T>) => FutureResult.nu<ResponseTypeMap[T], HttpError>((callback) => {
   const request = new XMLHttpRequest();
-  request.open(init.method, buildUrl(init.url, Option.from(init.query)), true); // enforced async! enforced type as String!
+  request.open(init.method, buildUrl(init.url, Optional.from(init.query)), true); // enforced async! enforced type as String!
 
   const options = createOptions(init);
   applyOptions(request, options);
@@ -133,7 +133,7 @@ const sendProgress = (init: HttpTypes.DownloadHttpRequest, loaded: number) => {
   }
 };
 
-const getMimeType = (headers: Headers) => Option.from(headers.get('content-type')).map((value) => value.split(';')[0]);
+const getMimeType = (headers: Headers) => Optional.from(headers.get('content-type')).map((value) => value.split(';')[0]);
 
 const fetchDownload = (init: HttpTypes.DownloadHttpRequest): FutureResult<Blob, HttpError> => FutureResult.nu((resolve) => {
   const fail = (message: string, status: number) => {

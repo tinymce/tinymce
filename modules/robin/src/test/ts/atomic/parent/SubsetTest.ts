@@ -1,8 +1,8 @@
 import { UnitTest } from '@ephox/bedrock-client';
 import { Gene, TestUniverse, TextGene } from '@ephox/boss';
-import { Arr, Option } from '@ephox/katamari';
-import * as Subset from 'ephox/robin/parent/Subset';
+import { Arr, Optional } from '@ephox/katamari';
 import { KAssert } from '@ephox/katamari-assertions';
+import * as Subset from 'ephox/robin/parent/Subset';
 
 UnitTest.test('SubsetTest', function () {
   const universe = TestUniverse(Gene('root', 'root', [
@@ -26,17 +26,17 @@ UnitTest.test('SubsetTest', function () {
     ])
   ]));
 
-  const check = function (expected: Option<string[]>, startId: string, finishId: string) {
+  const check = function (expected: Optional<string[]>, startId: string, finishId: string) {
     const start = universe.find(universe.get(), startId).getOrDie();
     const finish = universe.find(universe.get(), finishId).getOrDie();
 
     const actual = Subset.subset(universe, start, finish).map((g) => Arr.map(g, (x) => x.id));
-    KAssert.eqOption('eq', expected, actual);
+    KAssert.eqOptional('eq', expected, actual);
   };
 
-  check(Option.some([ 'three-five' ]), 'three-five', 'five');
-  check(Option.some([ 'three-five' ]), 'five', 'three-five');
-  check(Option.some([ 'two', 'three-five' ]), 'two', 'five');
-  check(Option.some([ 'two', 'three-five' ]), 'two', 'four');
-  check(Option.some([ 'two', 'three-five', 'six', 'seven-nine' ]), 'two', 'eight');
+  check(Optional.some([ 'three-five' ]), 'three-five', 'five');
+  check(Optional.some([ 'three-five' ]), 'five', 'three-five');
+  check(Optional.some([ 'two', 'three-five' ]), 'two', 'five');
+  check(Optional.some([ 'two', 'three-five' ]), 'two', 'four');
+  check(Optional.some([ 'two', 'three-five', 'six', 'seven-nine' ]), 'two', 'eight');
 });

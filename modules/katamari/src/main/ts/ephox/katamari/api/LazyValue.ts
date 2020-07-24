@@ -1,5 +1,5 @@
 import * as Arr from './Arr';
-import { Option } from './Option';
+import { Optional } from './Optional';
 
 export interface LazyValue<T> {
   readonly get: (callback: (value: T) => void) => void;
@@ -8,7 +8,7 @@ export interface LazyValue<T> {
 }
 
 const nu = <T>(baseFn: (completer: (value: T) => void) => void): LazyValue<T> => {
-  let data = Option.none<T>();
+  let data = Optional.none<T>();
   let callbacks: ((value: T) => void)[] = [];
 
   /** map :: this LazyValue a -> (a -> b) -> LazyValue b */
@@ -28,7 +28,7 @@ const nu = <T>(baseFn: (completer: (value: T) => void) => void): LazyValue<T> =>
 
   const set = (x: T) => {
     if (!isReady()) {
-      data = Option.some(x);
+      data = Optional.some(x);
       run(callbacks);
       callbacks = [];
     }

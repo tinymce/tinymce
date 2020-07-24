@@ -1,4 +1,4 @@
-import { Arr, Obj, Option } from '@ephox/katamari';
+import { Arr, Obj, Optional } from '@ephox/katamari';
 import { Attribute, SugarNode } from '@ephox/sugar';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
@@ -33,14 +33,14 @@ const roleAttributes: Record<string, string[]> = {
   menuitemcheckbox: [ 'aria-checked' ]
 };
 
-const detectFromTag = (component: AlloyComponent): Option<string[]> => {
+const detectFromTag = (component: AlloyComponent): Optional<string[]> => {
   const elem = component.element();
   const rawTag = SugarNode.name(elem);
   const suffix = rawTag === 'input' && Attribute.has(elem, 'type') ? ':' + Attribute.get(elem, 'type') : '';
   return Obj.get(tagAttributes, rawTag + suffix);
 };
 
-const detectFromRole = (component: AlloyComponent): Option<string[]> => {
+const detectFromRole = (component: AlloyComponent): Optional<string[]> => {
   const elem = component.element();
   return Attribute.getOpt(elem, 'role').bind((role) => Obj.get(roleAttributes, role));
 };

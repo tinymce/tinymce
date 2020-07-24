@@ -1,6 +1,6 @@
 import { Assertions, Chain, GeneralSteps, Logger, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { Hierarchy, SugarElement } from '@ephox/sugar';
 import * as CaretFinder from 'tinymce/core/caret/CaretFinder';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
@@ -23,7 +23,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretFinderTest', function (success, fa
   };
 
   const cAssertCaretPosition = function (path, expectedOffset) {
-    return Chain.op(function (posOption: Option<any>) {
+    return Chain.op(function (posOption: Optional<any>) {
       const pos = posOption.getOrDie();
       const expectedContainer = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), path).getOrDie();
       Assertions.assertDomEq('Should be the expected container', expectedContainer, SugarElement.fromDom(pos.container()));
@@ -31,7 +31,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretFinderTest', function (success, fa
     });
   };
 
-  const cAssertNone = Chain.op(function (pos: Option<any>) {
+  const cAssertNone = Chain.op(function (pos: Optional<any>) {
     Assertions.assertEq('Should be the none but got some', true, pos.isNone());
   });
 

@@ -7,7 +7,7 @@
 
 import { AlloyComponent, AlloySpec, FormTypes, HotspotAnchorSpec, NodeAnchorSpec, SelectionAnchorSpec } from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
-import { Cell, Option, Result } from '@ephox/katamari';
+import { Cell, Optional, Result } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import I18n, { TranslatedString } from 'tinymce/core/api/util/I18n';
@@ -40,7 +40,7 @@ export interface UiFactoryBackstageShared {
     inlineDialog: () => HotspotAnchorSpec | NodeAnchorSpec;
     banner: () => HotspotAnchorSpec | NodeAnchorSpec;
     cursor: () => SelectionAnchorSpec;
-    node: (elem: Option<SugarElement>) => NodeAnchorSpec;
+    node: (elem: Optional<SugarElement>) => NodeAnchorSpec;
   };
   header?: UiFactoryBackstageForHeader;
   formInterpreter?: (parts: FormTypes.FormParts, spec: BridgedType, backstage: UiFactoryBackstage) => AlloySpec;

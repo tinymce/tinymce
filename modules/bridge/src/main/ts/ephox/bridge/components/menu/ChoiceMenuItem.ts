@@ -1,5 +1,5 @@
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
-import { Option, Result } from '@ephox/katamari';
+import { Optional, Result } from '@ephox/katamari';
 import { CommonMenuItem, CommonMenuItemApi, commonMenuItemFields, CommonMenuItemInstanceApi } from './CommonMenuItem';
 
 export interface ChoiceMenuItemApi extends CommonMenuItemApi {
@@ -15,7 +15,7 @@ export interface ChoiceMenuItemInstanceApi extends CommonMenuItemInstanceApi {
 export interface ChoiceMenuItem extends CommonMenuItem {
   type: 'choiceitem';
   active: boolean;
-  icon: Option<string>;
+  icon: Optional<string>;
 }
 
 export const choiceMenuItemSchema = ValueSchema.objOf([

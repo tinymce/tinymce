@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Fun, Option } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { DomEvent, SugarElement } from '@ephox/sugar';
 import Delay from 'tinymce/core/api/util/Delay';
@@ -60,10 +60,10 @@ const onChange = function (outerWindow, listeners) {
     poller = Delay.setInterval(function () {
       if (flag !== outerWindow.innerHeight) {
         Delay.clearInterval(poller);
-        f(Option.some(outerWindow.innerHeight));
+        f(Optional.some(outerWindow.innerHeight));
       } else if (insurance > INSURANCE) {
         Delay.clearInterval(poller);
-        f(Option.none());
+        f(Optional.none());
       }
       insurance++;
     }, INTERVAL);

@@ -1,4 +1,4 @@
-import { Arr, Fun, Option } from '@ephox/katamari';
+import { Arr, Fun, Optional } from '@ephox/katamari';
 
 import * as PositionArray from '../alien/PositionArray';
 
@@ -27,7 +27,7 @@ type GetLengthFunc<T> = (comp: T) => number;
 const apportion = <T>(units: T[], total: number, len: GetLengthFunc<T>): Widths => {
   const parray: Pos[] = PositionArray.generate(units, (unit, current) => {
     const width = len(unit);
-    return Option.some({
+    return Optional.some({
       element: Fun.constant(unit),
       start: Fun.constant(current),
       finish: Fun.constant(current + width),
@@ -61,9 +61,9 @@ const overflow = <T>(within: Pos[], extra: Pos[], overflower: T, withinWidth: nu
 
 const fitAll = (within: Pos[], extra: Pos[], withinWidth: number) => output(toUnit(within), [], withinWidth);
 
-const tryFit = <T>(total: number, units: T[], len: GetLengthFunc<T>): Option<Widths> => {
+const tryFit = <T>(total: number, units: T[], len: GetLengthFunc<T>): Optional<Widths> => {
   const divide = apportion(units, total, len);
-  return divide.extra().length === 0 ? Option.some(divide) : Option.none();
+  return divide.extra().length === 0 ? Optional.some(divide) : Optional.none();
 };
 
 const partition = <T>(total: number, units: T[], len: GetLengthFunc<T>, overflower: T) => {

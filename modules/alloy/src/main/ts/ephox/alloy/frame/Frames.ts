@@ -1,4 +1,4 @@
-import { Fun, Option } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
 import { Navigation } from './Navigation';
@@ -13,10 +13,10 @@ const walkUp = (navigation: Navigation, doc: SugarElement<HTMLDocument>): SugarE
 };
 
 // TODO: Why is this an option if it is always some?
-const pathTo = (element: SugarElement, navigation: Navigation): Option<SugarElement[]> => {
+const pathTo = (element: SugarElement, navigation: Navigation): Optional<SugarElement[]> => {
   const d = navigation.owner(element);
   const paths = walkUp(navigation, d);
-  return Option.some(paths);
+  return Optional.some(paths);
 };
 
 export {

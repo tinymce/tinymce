@@ -1,13 +1,13 @@
-import { Arr, Fun, Obj, Option } from '@ephox/katamari';
+import { Arr, Fun, Obj, Optional } from '@ephox/katamari';
 import { SugarPosition } from '@ephox/sugar';
 import * as Boxes from '../../alien/Boxes';
 import { AnchorBox } from './LayoutTypes';
 
 export interface BoundsRestriction {
-  left: Option<number>;
-  right: Option<number>;
-  top: Option<number>;
-  bottom: Option<number>;
+  left: Optional<number>;
+  right: Optional<number>;
+  top: Optional<number>;
+  bottom: Optional<number>;
 }
 
 export const enum AnchorBoxBounds {
@@ -47,12 +47,12 @@ export const adjustBounds = (bounds: Boxes.Bounds, boundsRestrictions: BoundsRes
   const applyRestriction = (dir: BoundsRestrictionKeys, current: number) => {
     const bubbleOffset = dir === 'top' || dir === 'bottom' ? bubbleOffsets.top() : bubbleOffsets.left();
     return Obj.get(boundsRestrictions, dir).bind(Fun.identity)
-      .bind((restriction): Option<number> => {
+      .bind((restriction): Optional<number> => {
         // Ensure the restriction is within the current bounds
         if (dir === 'left' || dir === 'top') {
-          return restriction >= current ? Option.some(restriction) : Option.none();
+          return restriction >= current ? Optional.some(restriction) : Optional.none();
         } else {
-          return restriction <= current ? Option.some(restriction) : Option.none();
+          return restriction <= current ? Optional.some(restriction) : Optional.none();
         }
       })
       .map((restriction) => restriction + bubbleOffset)

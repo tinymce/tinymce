@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Fun, Option, Options } from '@ephox/katamari';
+import { Arr, Fun, Optional, Optionals } from '@ephox/katamari';
 import { Compare, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 import DOMUtils from '../api/dom/DOMUtils';
 import EditorSelection from '../api/dom/Selection';
@@ -20,18 +20,18 @@ import * as TableCellSelection from './TableCellSelection';
 const getStartNode = function (rng) {
   const sc = rng.startContainer, so = rng.startOffset;
   if (NodeType.isText(sc)) {
-    return so === 0 ? Option.some(SugarElement.fromDom(sc)) : Option.none();
+    return so === 0 ? Optional.some(SugarElement.fromDom(sc)) : Optional.none();
   } else {
-    return Option.from(sc.childNodes[so]).map(SugarElement.fromDom);
+    return Optional.from(sc.childNodes[so]).map(SugarElement.fromDom);
   }
 };
 
 const getEndNode = function (rng) {
   const ec = rng.endContainer, eo = rng.endOffset;
   if (NodeType.isText(ec)) {
-    return eo === ec.data.length ? Option.some(SugarElement.fromDom(ec)) : Option.none();
+    return eo === ec.data.length ? Optional.some(SugarElement.fromDom(ec)) : Optional.none();
   } else {
-    return Option.from(ec.childNodes[eo - 1]).map(SugarElement.fromDom);
+    return Optional.from(ec.childNodes[eo - 1]).map(SugarElement.fromDom);
   }
 };
 
@@ -60,7 +60,7 @@ const getLastChildren = function (node) {
 };
 
 const hasAllContentsSelected = function (elm, rng) {
-  return Options.lift2(getStartNode(rng), getEndNode(rng), function (startNode, endNode) {
+  return Optionals.lift2(getStartNode(rng), getEndNode(rng), function (startNode, endNode) {
     const start = Arr.find(getFirstChildren(elm), Fun.curry(Compare.eq, startNode));
     const end = Arr.find(getLastChildren(elm), Fun.curry(Compare.eq, endNode));
     return start.isSome() && end.isSome();

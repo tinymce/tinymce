@@ -6,7 +6,7 @@
  */
 
 import { Gui, GuiFactory, InlineView, Layout, LayoutInside, NodeAnchorSpec } from '@ephox/alloy';
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import { SugarBody, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { NotificationApi, NotificationManagerImpl, NotificationSpec } from 'tinymce/core/api/NotificationManager';
@@ -66,7 +66,7 @@ export default function (editor: Editor, extras, uiMothership: Gui.GuiSystem): N
         text: settings.text,
         level: Arr.contains([ 'success', 'error', 'warning', 'warn', 'info' ], settings.type) ? settings.type : undefined,
         progress: settings.progressBar === true,
-        icon: Option.from(settings.icon),
+        icon: Optional.from(settings.icon),
         closeButton: !hideCloseButton,
         onAction: close,
         iconProvider: backstage.shared.providers.icons,
@@ -109,7 +109,7 @@ export default function (editor: Editor, extras, uiMothership: Gui.GuiSystem): N
           const nodeAnchor: NodeAnchorSpec = {
             anchor: 'node',
             root: SugarBody.body(),
-            node: Option.some(SugarElement.fromDom(element)),
+            node: Optional.some(SugarElement.fromDom(element)),
             layouts: {
               onRtl: () => [ layoutDirection ],
               onLtr: () => [ layoutDirection ]

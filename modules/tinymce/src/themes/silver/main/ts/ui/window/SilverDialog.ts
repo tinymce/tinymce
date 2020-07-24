@@ -7,7 +7,7 @@
 
 import { AlloyComponent, Composing, ModalDialog } from '@ephox/alloy';
 import { DialogManager } from '@ephox/bridge';
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { renderModalBody } from './SilverDialogBody';
@@ -46,7 +46,7 @@ const renderDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: SilverD
   const spec = {
     header,
     body,
-    footer: Option.some(footer),
+    footer: Optional.some(footer),
     extraClasses: dialogSize,
     extraBehaviours: [],
     extraStyles: {}

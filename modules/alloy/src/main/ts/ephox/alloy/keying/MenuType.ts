@@ -1,5 +1,5 @@
 import { FieldSchema } from '@ephox/boulder';
-import { Fun, Option } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 import { SelectorFind } from '@ephox/sugar';
 
 import * as Keys from '../alien/Keys';
@@ -32,9 +32,9 @@ const moveUp: DomMovement.ElementMover<MenuConfig, Stateless> = (element, focuse
 
 const moveDown: DomMovement.ElementMover<MenuConfig, Stateless> = (element, focused, info) => DomNavigation.horizontal(element, info.selector, focused, +1);
 
-const fireShiftTab: KeyRuleHandler<MenuConfig, Stateless> = (component, simulatedEvent, menuConfig, menuState) => menuConfig.moveOnTab ? DomMovement.move(moveUp)(component, simulatedEvent, menuConfig, menuState) : Option.none();
+const fireShiftTab: KeyRuleHandler<MenuConfig, Stateless> = (component, simulatedEvent, menuConfig, menuState) => menuConfig.moveOnTab ? DomMovement.move(moveUp)(component, simulatedEvent, menuConfig, menuState) : Optional.none();
 
-const fireTab: KeyRuleHandler<MenuConfig, Stateless> = (component, simulatedEvent, menuConfig, menuState) => menuConfig.moveOnTab ? DomMovement.move(moveDown)(component, simulatedEvent, menuConfig, menuState) : Option.none();
+const fireTab: KeyRuleHandler<MenuConfig, Stateless> = (component, simulatedEvent, menuConfig, menuState) => menuConfig.moveOnTab ? DomMovement.move(moveDown)(component, simulatedEvent, menuConfig, menuState) : Optional.none();
 
 const getKeydownRules = Fun.constant([
   KeyRules.rule(KeyMatch.inSet(Keys.UP()), DomMovement.move(moveUp)),
@@ -49,4 +49,4 @@ const getKeyupRules = Fun.constant([
   KeyRules.rule(KeyMatch.inSet(Keys.SPACE()), KeyingTypes.stopEventForFirefox)
 ]);
 
-export default KeyingType.typical(schema, NoState.init, getKeydownRules, getKeyupRules, () => Option.some(focusIn));
+export default KeyingType.typical(schema, NoState.init, getKeydownRules, getKeyupRules, () => Optional.some(focusIn));

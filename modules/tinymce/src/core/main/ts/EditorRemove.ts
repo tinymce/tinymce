@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import DOMUtils from './api/dom/DOMUtils';
 import Editor from './api/Editor';
 import * as Events from './api/Events';
@@ -16,7 +16,7 @@ const restoreOriginalStyles = (editor: Editor) => {
   DOM.setStyle(editor.id, 'display', editor.orgDisplay);
 };
 
-const safeDestroy = (x: any) => Option.from(x).each((x) => x.destroy());
+const safeDestroy = (x: any) => Optional.from(x).each((x) => x.destroy());
 
 const clearDomReferences = (editor: Editor) => {
   editor.contentAreaContainer = editor.formElement = editor.container = editor.editorContainer = null;

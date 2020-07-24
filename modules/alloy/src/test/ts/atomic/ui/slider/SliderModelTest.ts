@@ -1,5 +1,5 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import Jsc from '@ephox/wrap-jsverify';
 
 import * as SliderModel from 'ephox/alloy/ui/slider/SliderModel';
@@ -104,7 +104,7 @@ UnitTest.test('Atomic Test: ui.slider.SliderModelTest', () => {
         value: xValue,
         step: data.stepSize,
         snap: true,
-        snapStart: Option.none<number>(),
+        snapStart: Optional.none<number>(),
         rounded: data.rounded,
         hasMinEdge: data.hasLedge,
         hasMaxEdge: data.hasRedge,
@@ -137,7 +137,7 @@ UnitTest.test('Atomic Test: ui.slider.SliderModelTest', () => {
         value: xValue,
         step: data.stepSize,
         snap: true,
-        snapStart: Option.some(snapOffset + data.min),
+        snapStart: Optional.some(snapOffset + data.min),
         rounded: data.rounded,
         hasMinEdge: data.hasLedge,
         hasMaxEdge: data.hasRedge,
@@ -170,7 +170,7 @@ UnitTest.test('Atomic Test: ui.slider.SliderModelTest', () => {
         value: xValue,
         step: data.stepSize,
         snap: data.snapToGrid,
-        snapStart: Option.none<number>(),
+        snapStart: Optional.none<number>(),
         rounded: data.rounded,
         hasMinEdge: data.hasLedge,
         hasMaxEdge: data.hasRedge,
@@ -203,7 +203,7 @@ UnitTest.test('Atomic Test: ui.slider.SliderModelTest', () => {
         value: xValue,
         step: data.stepSize,
         snap: data.snapToGrid,
-        snapStart: Option.some(snapOffset + data.min <= data.max ? snapOffset + data.min : data.max),
+        snapStart: Optional.some(snapOffset + data.min <= data.max ? snapOffset + data.min : data.max),
         rounded: data.rounded,
         hasMinEdge: data.hasLedge,
         hasMaxEdge: data.hasRedge,

@@ -1,15 +1,15 @@
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { EventArgs, SugarPosition } from '@ephox/sugar';
 
-const getDataFrom = (touches: TouchList): Option<SugarPosition> => {
+const getDataFrom = (touches: TouchList): Optional<SugarPosition> => {
   const touch = touches[0];
-  return Option.some(SugarPosition(touch.clientX, touch.clientY));
+  return Optional.some(SugarPosition(touch.clientX, touch.clientY));
 };
 
-const getData = (event: EventArgs<TouchEvent>): Option<SugarPosition> => {
+const getData = (event: EventArgs<TouchEvent>): Optional<SugarPosition> => {
   const raw = event.raw();
   const touches = raw.touches;
-  return touches.length === 1 ? getDataFrom(touches) : Option.none();
+  return touches.length === 1 ? getDataFrom(touches) : Optional.none();
 };
 
 // When dragging the touch, the delta is simply the difference

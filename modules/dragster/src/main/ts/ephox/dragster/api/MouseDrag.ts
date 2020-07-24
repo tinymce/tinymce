@@ -1,4 +1,4 @@
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { DomEvent, EventArgs, Insert, Remove, SugarElement, SugarPosition } from '@ephox/sugar';
 import { Blocker, BlockerOptions } from '../detect/Blocker';
 import { DragApi, DragMode, DragMutation, DragSink } from './DragApis';
@@ -8,7 +8,7 @@ const compare = function (old: SugarPosition, nu: SugarPosition) {
 };
 
 const extract = function (event: EventArgs) {
-  return Option.some(SugarPosition(event.x(), event.y()));
+  return Optional.some(SugarPosition(event.x(), event.y()));
 };
 
 const mutate = function (mutation: DragMutation, info: SugarPosition) {

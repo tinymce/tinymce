@@ -41,7 +41,7 @@ const behaviours = (detail: InputDetail): Behaviour.AlloyBehaviourRecord => ({
       Representing.config({
         store: {
           mode: 'manual',
-          // Propagating its Option
+          // Propagating its Optional
           ...detail.data.map((data) => ({ initialValue: data } as { initialValue?: string })).getOr({ }),
           getValue(input) {
             return Value.get(input.element());

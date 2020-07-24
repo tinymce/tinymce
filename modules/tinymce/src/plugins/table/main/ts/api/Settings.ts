@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Obj, Option, Type } from '@ephox/katamari';
+import { Arr, Obj, Optional, Type } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 
 export interface StringMap {
@@ -79,15 +79,15 @@ const getColumnResizingBehaviour = (editor: Editor): 'preservetable' | 'resizeta
   return Arr.find(validModes, (mode) => mode === givenMode).getOr(defaultColumnResizingBehaviour);
 };
 
-const getCloneElements = (editor: Editor): Option<string[]> => {
+const getCloneElements = (editor: Editor): Optional<string[]> => {
   const cloneElements = editor.getParam('table_clone_elements');
 
   if (Type.isString(cloneElements)) {
-    return Option.some(cloneElements.split(/[ ,]/));
+    return Optional.some(cloneElements.split(/[ ,]/));
   } else if (Array.isArray(cloneElements)) {
-    return Option.some(cloneElements);
+    return Optional.some(cloneElements);
   } else {
-    return Option.none();
+    return Optional.none();
   }
 };
 

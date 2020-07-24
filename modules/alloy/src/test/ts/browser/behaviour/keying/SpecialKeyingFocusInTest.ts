@@ -48,9 +48,9 @@ UnitTest.asynctest('SpecialKeyingFocusInTest', (success, failure) => {
       ]
     }
   ), (doc, body, _gui, component, store) => {
-    const oneComp = SelectorFind.descendant(component.element(), '.one').bind((elem) => component.getSystem().getByDom(elem).toOption()).getOrDie('Could not find "one" div');
+    const oneComp = SelectorFind.descendant(component.element(), '.one').bind((elem) => component.getSystem().getByDom(elem).toOptional()).getOrDie('Could not find "one" div');
 
-    const twoComp = SelectorFind.descendant(component.element(), '.two').bind((elem) => component.getSystem().getByDom(elem).toOption()).getOrDie('Could not find "two" div');
+    const twoComp = SelectorFind.descendant(component.element(), '.two').bind((elem) => component.getSystem().getByDom(elem).toOptional()).getOrDie('Could not find "two" div');
 
     return [
       GuiSetup.mSetupKeyLogger(body),

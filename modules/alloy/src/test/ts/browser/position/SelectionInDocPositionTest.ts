@@ -1,6 +1,6 @@
 import { Chain, Cursors, NamedChain } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Option, Result } from '@ephox/katamari';
+import { Optional, Result } from '@ephox/katamari';
 import { Css, Html, SugarElement } from '@ephox/sugar';
 
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
@@ -51,7 +51,7 @@ UnitTest.asynctest('SelectionInDocPositionTest', (success, failure) => {
       anchor: 'selection',
       root: data.inline.element(),
       getSelection() {
-        return Option.some(
+        return Optional.some(
           Cursors.calculate(data.inline.element(), data.path)
         );
       }

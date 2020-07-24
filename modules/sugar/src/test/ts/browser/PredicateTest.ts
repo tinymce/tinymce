@@ -1,5 +1,5 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
-import { Fun, Option } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
 import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
 import * as SugarNode from 'ephox/sugar/api/node/SugarNode';
@@ -12,22 +12,22 @@ import * as TestPage from 'ephox/sugar/test/TestPage';
 UnitTest.test('PredicateTest', () => {
   TestPage.connect(); // description of structure is in TestPage
 
-  Checkers.checkOpt(Option.some(TestPage.p1), PredicateFind.first(Checkers.isName('p')));
+  Checkers.checkOpt(Optional.some(TestPage.p1), PredicateFind.first(Checkers.isName('p')));
 
-  Checkers.checkOpt(Option.none<SugarElement<Text>>(), PredicateFind.sibling(TestPage.t5, SugarNode.isText));
-  Checkers.checkOpt(Option.some(TestPage.s3), PredicateFind.sibling(TestPage.s4, Checkers.isName('span')));
+  Checkers.checkOpt(Optional.none<SugarElement<Text>>(), PredicateFind.sibling(TestPage.t5, SugarNode.isText));
+  Checkers.checkOpt(Optional.some(TestPage.s3), PredicateFind.sibling(TestPage.s4, Checkers.isName('span')));
 
-  Checkers.checkOpt(Option.none<SugarElement<HTMLLIElement>>(), PredicateFind.ancestor(TestPage.t4, Checkers.isName('li')));
-  Checkers.checkOpt(Option.some(TestPage.container), PredicateFind.ancestor(TestPage.s4, Checkers.isName('div')));
+  Checkers.checkOpt(Optional.none<SugarElement<HTMLLIElement>>(), PredicateFind.ancestor(TestPage.t4, Checkers.isName('li')));
+  Checkers.checkOpt(Optional.some(TestPage.container), PredicateFind.ancestor(TestPage.s4, Checkers.isName('div')));
 
-  Checkers.checkOpt(Option.none<SugarElement<HTMLSpanElement>>(), PredicateFind.ancestor(TestPage.s2, Checkers.isName('span')));
-  Checkers.checkOpt(Option.some(TestPage.s2), PredicateFind.closest(TestPage.s2, Checkers.isName('span')));
+  Checkers.checkOpt(Optional.none<SugarElement<HTMLSpanElement>>(), PredicateFind.ancestor(TestPage.s2, Checkers.isName('span')));
+  Checkers.checkOpt(Optional.some(TestPage.s2), PredicateFind.closest(TestPage.s2, Checkers.isName('span')));
 
-  Checkers.checkOpt(Option.some(TestPage.s2), PredicateFind.descendant(TestPage.p2, Checkers.isName('span')));
-  Checkers.checkOpt(Option.some(TestPage.t4), PredicateFind.descendant(TestPage.p2, SugarNode.isText));
+  Checkers.checkOpt(Optional.some(TestPage.s2), PredicateFind.descendant(TestPage.p2, Checkers.isName('span')));
+  Checkers.checkOpt(Optional.some(TestPage.t4), PredicateFind.descendant(TestPage.p2, SugarNode.isText));
 
-  Checkers.checkOpt(Option.none<SugarElement<Text>>(), PredicateFind.child(TestPage.p2, SugarNode.isText));
-  Checkers.checkOpt(Option.some(TestPage.t4), PredicateFind.child(TestPage.s3, SugarNode.isText));
+  Checkers.checkOpt(Optional.none<SugarElement<Text>>(), PredicateFind.child(TestPage.p2, SugarNode.isText));
+  Checkers.checkOpt(Optional.some(TestPage.t4), PredicateFind.child(TestPage.s3, SugarNode.isText));
 
   Checkers.checkList([ TestPage.p1, TestPage.p3, TestPage.p2 ], PredicateFilter.all(Checkers.isName('p')));
   Checkers.checkList([ TestPage.s3, TestPage.s2 ], PredicateFilter.ancestors(TestPage.t4, Checkers.isName('span')));

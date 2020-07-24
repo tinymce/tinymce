@@ -30,7 +30,7 @@ export default {
     //         // TODO: Not going through bridge yet
     //         type: 'input',
     //         name: 'panel-label-1',
-    //         label: Option.none(),
+    //         label: Optional.none(),
 
     //       }
     //     ]

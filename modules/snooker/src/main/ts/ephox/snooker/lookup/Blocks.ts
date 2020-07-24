@@ -1,4 +1,4 @@
-import { Arr, Fun, Option } from '@ephox/katamari';
+import { Arr, Fun, Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import { DetailExt } from '../api/Structs';
 import { Warehouse } from '../model/Warehouse';
@@ -9,7 +9,7 @@ import { Warehouse } from '../model/Warehouse';
  * sizes that are only available through the difference of two
  * spanning columns.
  */
-const columns = (warehouse: Warehouse): Option<SugarElement>[] => {
+const columns = (warehouse: Warehouse): Optional<SugarElement>[] => {
   const grid = warehouse.grid;
   const cols = Arr.range(grid.columns(), Fun.identity);
   const rowsArr = Arr.range(grid.rows(), Fun.identity);
@@ -26,14 +26,14 @@ const columns = (warehouse: Warehouse): Option<SugarElement>[] => {
   });
 };
 
-const decide = (getBlock: () => DetailExt[], isSingle: (detail: DetailExt) => boolean, getFallback: () => Option<DetailExt>): Option<SugarElement> => {
+const decide = (getBlock: () => DetailExt[], isSingle: (detail: DetailExt) => boolean, getFallback: () => Optional<DetailExt>): Optional<SugarElement> => {
   const inBlock = getBlock();
   const singleInBlock = Arr.find(inBlock, isSingle);
-  const detailOption = singleInBlock.orThunk(() => Option.from(inBlock[0]).orThunk(getFallback));
+  const detailOption = singleInBlock.orThunk(() => Optional.from(inBlock[0]).orThunk(getFallback));
   return detailOption.map((detail) => detail.element());
 };
 
-const rows = (warehouse: Warehouse): Option<SugarElement>[] => {
+const rows = (warehouse: Warehouse): Optional<SugarElement>[] => {
   const grid = warehouse.grid;
   const rowsArr = Arr.range(grid.rows(), Fun.identity);
   const cols = Arr.range(grid.columns(), Fun.identity);

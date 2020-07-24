@@ -5,23 +5,23 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Types } from '@ephox/bridge';
+import { Optional } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { getCellClassList } from '../api/Settings';
 import * as Helpers from './Helpers';
-import { Option } from '@ephox/katamari';
-import { Types } from '@ephox/bridge';
 
 const getClassList = (editor: Editor) => {
   const classes = Helpers.buildListItems(getCellClassList(editor));
   if (classes.length > 0) {
-    return Option.some<Types.Dialog.BodyComponentApi>({
+    return Optional.some<Types.Dialog.BodyComponentApi>({
       name: 'class',
       type: 'selectbox',
       label: 'Class',
       items: classes
     });
   }
-  return Option.none<Types.Dialog.BodyComponentApi>();
+  return Optional.none<Types.Dialog.BodyComponentApi>();
 };
 
 const children: Types.Dialog.BodyComponentApi[] = [

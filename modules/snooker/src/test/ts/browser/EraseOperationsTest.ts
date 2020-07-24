@@ -1,8 +1,8 @@
-import { Option } from '@ephox/katamari';
+import { UnitTest } from '@ephox/bedrock-client';
+import { Optional } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import * as TableOperations from 'ephox/snooker/api/TableOperations';
 import * as Assertions from 'ephox/snooker/test/Assertions';
-import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.test('EraseOperationsTest', function () {
   const platform = PlatformDetection.detect();
@@ -16,8 +16,8 @@ UnitTest.test('EraseOperationsTest', function () {
     ie: deleteExpectedContent1
   };
 
-  Assertions.checkDelete(Option.some({ section: 0, row: 1, column: 0 }),
-    Option.some(deleteExpected1),
+  Assertions.checkDelete(Optional.some({ section: 0, row: 1, column: 0 }),
+    Optional.some(deleteExpected1),
 
     '<table><tbody>' +
       '<tr><th>A1</th><td>B1</td><td>C1</td><td>D1</td></tr>' +
@@ -38,8 +38,8 @@ UnitTest.test('EraseOperationsTest', function () {
     normal: deleteExpectedContent2,
     ie: deleteExpectedContent2
   };
-  Assertions.checkDelete(Option.some({ section: 0, row: 0, column: 0 }),
-    Option.some(deleteExpected2),
+  Assertions.checkDelete(Optional.some({ section: 0, row: 0, column: 0 }),
+    Optional.some(deleteExpected2),
 
     '<table><tbody>' +
       '<tr><th>A1</th><td>B1</td><td>C1</td><td>D1</td></tr>' +
@@ -61,8 +61,8 @@ UnitTest.test('EraseOperationsTest', function () {
     normal: deleteExpectedContent3,
     ie: deleteExpectedContent3
   };
-  Assertions.checkDelete(Option.some({ section: 0, row: 1, column: 0 }),
-    Option.some(deleteExpected3),
+  Assertions.checkDelete(Optional.some({ section: 0, row: 1, column: 0 }),
+    Optional.some(deleteExpected3),
 
     '<table><tbody>' +
       '<tr><th>' +
@@ -88,8 +88,8 @@ UnitTest.test('EraseOperationsTest', function () {
     normal: deleteExpectedContent4,
     ie: deleteExpectedContent4
   };
-  Assertions.checkDelete(Option.some({ section: 0, row: 1, column: 1 }),
-    Option.some(deleteExpected4),
+  Assertions.checkDelete(Optional.some({ section: 0, row: 1, column: 1 }),
+    Optional.some(deleteExpected4),
 
     '<table><tbody>' +
       '<tr><th colspan="3">A1</th><td>D1</td></tr>' +
@@ -109,8 +109,8 @@ UnitTest.test('EraseOperationsTest', function () {
     normal: deleteExpectedContent5,
     ie: deleteExpectedContent5
   };
-  Assertions.checkDelete(Option.some({ section: 0, row: 0, column: 0 }),
-    Option.some(deleteExpected5),
+  Assertions.checkDelete(Optional.some({ section: 0, row: 0, column: 0 }),
+    Optional.some(deleteExpected5),
 
     '<table><tbody>' +
       '<tr><th>A1</th><td>B1</td><td>C1</td><td>D1</td></tr>' +
@@ -130,8 +130,8 @@ UnitTest.test('EraseOperationsTest', function () {
     normal: deleteExpectedContent6,
     ie: deleteExpectedContent6
   };
-  Assertions.checkDelete(Option.some({ section: 0, row: 0, column: 0 }),
-    Option.some(deleteExpected6),
+  Assertions.checkDelete(Optional.some({ section: 0, row: 0, column: 0 }),
+    Optional.some(deleteExpected6),
 
     '<table><tbody>' +
       '<tr><th>A1</th><td>B1</td><td>C1</td><td>D1</td></tr>' +
@@ -153,8 +153,8 @@ UnitTest.test('EraseOperationsTest', function () {
     normal: deleteExpectedContent7,
     ie: deleteExpectedContent7
   };
-  Assertions.checkDelete(Option.some({ section: 0, row: 0, column: 0 }),
-    Option.some(deleteExpected7),
+  Assertions.checkDelete(Optional.some({ section: 0, row: 0, column: 0 }),
+    Optional.some(deleteExpected7),
 
     '<table><tbody>' +
       '<tr><th>' +
@@ -180,8 +180,8 @@ UnitTest.test('EraseOperationsTest', function () {
     normal: deleteExpectedContent8,
     ie: deleteExpectedContent8
   };
-  Assertions.checkDelete(Option.some({ section: 0, row: 0, column: 0 }),
-    Option.some(deleteExpected8),
+  Assertions.checkDelete(Optional.some({ section: 0, row: 0, column: 0 }),
+    Optional.some(deleteExpected8),
 
     '<table><tbody>' +
       '<tr><th rowspan="3">A1</th><td>B1</td><td>C1</td><td>D1</td></tr>' +
@@ -201,8 +201,8 @@ UnitTest.test('EraseOperationsTest', function () {
     normal: deleteExpectedContent9,
     ie: deleteExpectedContent9
   };
-  Assertions.checkDelete(Option.some({ section: 0, row: 0, column: 0 }),
-    Option.some(deleteExpected9),
+  Assertions.checkDelete(Optional.some({ section: 0, row: 0, column: 0 }),
+    Optional.some(deleteExpected9),
 
     '<table border="1">' +
     '<tbody><tr><td colspan="2">AB</td><td>C</td></tr>' +
@@ -228,8 +228,8 @@ UnitTest.test('EraseOperationsTest', function () {
     normal: deleteExpectedContent10,
     ie: deleteExpectedContent10
   };
-  Assertions.checkDelete(Option.some({ section: 0, row: 1, column: 2 }),
-    Option.some(deleteExpected10),
+  Assertions.checkDelete(Optional.some({ section: 0, row: 1, column: 2 }),
+    Optional.some(deleteExpected10),
 
     '<table border="1">' +
      '<tbody><tr><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td></tr>' +
@@ -282,8 +282,8 @@ UnitTest.test('EraseOperationsTest', function () {
       '</tbody>' +
     '</table>'
   };
-  Assertions.checkDelete(Option.some({ section: 0, row: 1, column: 1 }),
-    Option.some(deleteExpected11),
+  Assertions.checkDelete(Optional.some({ section: 0, row: 1, column: 1 }),
+    Optional.some(deleteExpected11),
 
     '<table border="1">' +
        '<tbody><tr><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td></tr>' +
@@ -322,8 +322,8 @@ UnitTest.test('EraseOperationsTest', function () {
     normal: deleteExpectedContent12,
     ie: deleteExpectedContent12
   };
-  Assertions.checkDelete(Option.some({ section: 0, row: 3, column: 3 }),
-    Option.some(deleteExpected12),
+  Assertions.checkDelete(Optional.some({ section: 0, row: 3, column: 3 }),
+    Optional.some(deleteExpected12),
 
     '<table border="1">' +
     '<tbody><tr><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td></tr>' +
@@ -368,8 +368,8 @@ UnitTest.test('EraseOperationsTest', function () {
     '<tr><td>90</td><td>91</td><td>92</td><td>93</td><td>94</td><td>95</td><td>96</td><td>97</td><td>98</td><td>99</td></tr></tbody>' +
     '</table>'
   };
-  Assertions.checkDelete(Option.some({ section: 0, row: 3, column: 3 }),
-    Option.some(deleteExpected13),
+  Assertions.checkDelete(Optional.some({ section: 0, row: 3, column: 3 }),
+    Optional.some(deleteExpected13),
 
     '<table border="1">' +
     '<tbody><tr><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td></tr>' +
@@ -404,8 +404,8 @@ UnitTest.test('EraseOperationsTest', function () {
     normal: deleteExpectedContent14,
     ie: deleteExpectedContent14
   };
-  Assertions.checkDelete(Option.some({ section: 0, row: 4, column: 7 }),
-    Option.some(deleteExpected14),
+  Assertions.checkDelete(Optional.some({ section: 0, row: 4, column: 7 }),
+    Optional.some(deleteExpected14),
 
     '<table border="1">' +
     '<tbody><tr><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td></tr>' +
@@ -438,8 +438,8 @@ UnitTest.test('EraseOperationsTest', function () {
     normal: deleteExpectedContent15,
     ie: deleteExpectedContent15
   };
-  Assertions.checkDelete(Option.some({ section: 0, row: 0, column: 1 }),
-    Option.some(deleteExpected15),
+  Assertions.checkDelete(Optional.some({ section: 0, row: 0, column: 1 }),
+    Optional.some(deleteExpected15),
 
     '<table border="1"><tbody>' +
     '<tr><td rowspan="2">row 0 cell 0 row 1 cell 0 </td><td>row 0 cell 1</td><td rowspan="3">row 0 cell 2 row 1 cell 2 row 2 cell 2 </td></tr>' +
@@ -465,8 +465,8 @@ UnitTest.test('EraseOperationsTest', function () {
     normal: deleteExpectedContent16,
     ie: deleteExpectedContent16
   };
-  Assertions.checkDelete(Option.some({ section: 0, row: 0, column: 1 }),
-    Option.some(deleteExpected16),
+  Assertions.checkDelete(Optional.some({ section: 0, row: 0, column: 1 }),
+    Optional.some(deleteExpected16),
 
     '<table border="1"><tbody>' +
     '<tr><td rowspan="2">row 0 cell 0 row 1 cell 0 </td><td>row 0 cell 1</td><td rowspan="3">row 0 cell 2 row 1 cell 2 row 2 cell 2 </td></tr>' +
@@ -495,8 +495,8 @@ UnitTest.test('EraseOperationsTest', function () {
     normal: deleteExpectedContent17,
     ie: deleteExpectedContent17
   };
-  Assertions.checkDelete(Option.some({ section: 0, row: 0, column: 1 }),
-    Option.some(deleteExpected17),
+  Assertions.checkDelete(Optional.some({ section: 0, row: 0, column: 1 }),
+    Optional.some(deleteExpected17),
 
     '<table border="1"><tbody>' +
     '<tr><td rowspan="2">row 0 cell 0 row 1 cell 0 </td><td>row 0 cell 1</td><td rowspan="3">row 0 cell 2 row 1 cell 2 row 2 cell 2 </td></tr>' +
@@ -525,8 +525,8 @@ UnitTest.test('EraseOperationsTest', function () {
     normal: deleteExpectedContent18,
     ie: deleteExpectedContent18
   };
-  Assertions.checkDelete(Option.some({ section: 0, row: 0, column: 0 }),
-    Option.some(deleteExpected18),
+  Assertions.checkDelete(Optional.some({ section: 0, row: 0, column: 0 }),
+    Optional.some(deleteExpected18),
 
     '<table border="1"><tbody>' +
     '<tr><td rowspan="2">row 0 cell 0 row 1 cell 0 </td><td>row 0 cell 1</td><td rowspan="3">row 0 cell 2 row 1 cell 2 row 2 cell 2 </td></tr>' +
@@ -547,8 +547,8 @@ UnitTest.test('EraseOperationsTest', function () {
     platform
   );
 
-  Assertions.checkDelete(Option.none(),
-    Option.none(),
+  Assertions.checkDelete(Optional.none(),
+    Optional.none(),
 
     '<table border="1"><tbody>' +
     '<tr><td rowspan="2">row 0 cell 0 row 1 cell 0 </td><td>row 0 cell 1</td><td rowspan="3">row 0 cell 2 row 1 cell 2 row 2 cell 2 </td></tr>' +
@@ -569,8 +569,8 @@ UnitTest.test('EraseOperationsTest', function () {
     platform
   );
 
-  Assertions.checkDelete(Option.none(),
-    Option.none(),
+  Assertions.checkDelete(Optional.none(),
+    Optional.none(),
 
     '<table border="1"><tbody>' +
     '<tr><td rowspan="2">row 0 cell 0 row 1 cell 0 </td><td>row 0 cell 1</td><td rowspan="3">row 0 cell 2 row 1 cell 2 row 2 cell 2 </td></tr>' +
@@ -595,8 +595,8 @@ UnitTest.test('EraseOperationsTest', function () {
     normal: deleteExpectedContent19,
     ie: deleteExpectedContent19
   };
-  Assertions.checkDelete(Option.some({ section: 0, row: 0, column: 0 }),
-    Option.some(deleteExpected19),
+  Assertions.checkDelete(Optional.some({ section: 0, row: 0, column: 0 }),
+    Optional.some(deleteExpected19),
 
     '<table><thead>' +
       '<tr><th>A1</th><td>B1</td><td>C1</td><td>D1</td></tr>' +
@@ -618,8 +618,8 @@ UnitTest.test('EraseOperationsTest', function () {
     normal: deleteExpectedContent20,
     ie: deleteExpectedContent20
   };
-  Assertions.checkDelete(Option.some({ section: 0, row: 0, column: 0 }),
-    Option.some(deleteExpected20),
+  Assertions.checkDelete(Optional.some({ section: 0, row: 0, column: 0 }),
+    Optional.some(deleteExpected20),
 
     '<table><thead>' +
       '<tr><th>A1</th><td>B1</td><td>C1</td><td>D1</td></tr>' +
@@ -634,8 +634,8 @@ UnitTest.test('EraseOperationsTest', function () {
     platform
   );
 
-  Assertions.checkDelete(Option.none(),
-    Option.none(),
+  Assertions.checkDelete(Optional.none(),
+    Optional.none(),
 
     '<table><thead>' +
       '<tr><th>A1</th><td>B1</td><td>C1</td><td>D1</td></tr>' +
@@ -661,8 +661,8 @@ UnitTest.test('EraseOperationsTest', function () {
     normal: deleteExpectedContent21,
     ie: deleteExpectedContent21
   };
-  Assertions.checkDelete(Option.some({ section: 0, row: 0, column: 0 }),
-    Option.some(deleteExpected21),
+  Assertions.checkDelete(Optional.some({ section: 0, row: 0, column: 0 }),
+    Optional.some(deleteExpected21),
 
     '<table><thead>' +
       '<tr><th>A1</th><td>B1</td><td>C1</td><td>D1</td></tr>' +
@@ -687,8 +687,8 @@ UnitTest.test('EraseOperationsTest', function () {
     normal: deleteExpectedContent22,
     ie: deleteExpectedContent22
   };
-  Assertions.checkDelete(Option.some({ section: 0, row: 0, column: 0 }),
-    Option.some(deleteExpected22),
+  Assertions.checkDelete(Optional.some({ section: 0, row: 0, column: 0 }),
+    Optional.some(deleteExpected22),
 
     '<table><thead>' +
       '<tr><th>A1</th><td>B1</td><td>C1</td><td>D1</td></tr>' +
@@ -713,8 +713,8 @@ UnitTest.test('EraseOperationsTest', function () {
     ie: deleteExpectedContent23
   };
 
-  Assertions.checkDelete(Option.some({ section: 0, row: 1, column: 0 }),
-    Option.some(deleteExpected23),
+  Assertions.checkDelete(Optional.some({ section: 0, row: 1, column: 0 }),
+    Optional.some(deleteExpected23),
 
     '<table><tbody>' +
       '<tr><th>A1</th><td>B1</td><td>C1</td><td>D1</td></tr>' +
@@ -734,8 +734,8 @@ UnitTest.test('EraseOperationsTest', function () {
     normal: deleteExpectedContent24,
     ie: deleteExpectedContent24
   };
-  Assertions.checkDelete(Option.some({ section: 0, row: 0, column: 0 }),
-    Option.some(deleteExpected24),
+  Assertions.checkDelete(Optional.some({ section: 0, row: 0, column: 0 }),
+    Optional.some(deleteExpected24),
 
     '<table><tbody>' +
       '<tr><th>A1</th><td>B1</td><td>C1</td><td>D1</td></tr>' +

@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { SugarElement, SugarShadowDom } from '@ephox/sugar';
 import { StyleSheetLoader, StyleSheetLoaderSettings } from 'tinymce/core/api/dom/StyleSheetLoader';
 
@@ -24,7 +24,7 @@ export const create = (): StyleSheetLoaderRegistry => {
     const root = SugarShadowDom.getRootNode(referenceElement);
 
     const rootDom = root.dom();
-    return Option.from(map.get(rootDom)).getOrThunk(() => {
+    return Optional.from(map.get(rootDom)).getOrThunk(() => {
       const sl = StyleSheetLoader(rootDom, settings);
       map.set(rootDom, sl);
       return sl;

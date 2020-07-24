@@ -1,5 +1,5 @@
 import { Assert, assert, UnitTest } from '@ephox/bedrock-client';
-import { Option, OptionInstances } from '@ephox/katamari';
+import { Optional, OptionalInstances } from '@ephox/katamari';
 import * as Compare from 'ephox/sugar/api/dom/Compare';
 import * as Focus from 'ephox/sugar/api/dom/Focus';
 import * as Insert from 'ephox/sugar/api/dom/Insert';
@@ -10,7 +10,7 @@ import { tElement } from 'ephox/sugar/api/node/SugarElementInstances';
 import * as Attribute from 'ephox/sugar/api/properties/Attribute';
 import { withShadowElement } from 'ephox/sugar/test/WithHelpers';
 
-const tOption = OptionInstances.tOption;
+const tOptional = OptionalInstances.tOptional;
 
 UnitTest.test('FocusTest', () => {
   const div = SugarElement.fromTag('div');
@@ -46,12 +46,12 @@ UnitTest.test('Focus.active in ShadowRoot', () => {
     Insert.append(SugarBody.body(), outerInput);
 
     Focus.focus(innerInput);
-    Assert.eq('ShadowRoot\'s active element is the inner input box', Focus.active(sr), Option.some(innerInput), tOption(tElement()));
-    Assert.eq('Document\'s active element is the shadow host', Focus.active(), Option.some(sh), tOption(tElement()));
+    Assert.eq('ShadowRoot\'s active element is the inner input box', Focus.active(sr), Optional.some(innerInput), tOptional(tElement()));
+    Assert.eq('Document\'s active element is the shadow host', Focus.active(), Optional.some(sh), tOptional(tElement()));
 
     Focus.focus(outerInput);
-    Assert.eq('ShadowRoot\'s active element should be none', Focus.active(sr), Option.none(), tOption(tElement()));
-    Assert.eq('Document\'s active element is the outer input box', Focus.active(), Option.some(outerInput), tOption(tElement()));
+    Assert.eq('ShadowRoot\'s active element should be none', Focus.active(sr), Optional.none(), tOptional(tElement()));
+    Assert.eq('Document\'s active element is the outer input box', Focus.active(), Optional.some(outerInput), tOptional(tElement()));
 
     Remove.remove(outerInput);
   });
@@ -66,16 +66,16 @@ UnitTest.test('Focus.search in ShadowRoot', () => {
     Insert.append(SugarBody.body(), outerInput);
 
     Focus.focus(innerInput);
-    Assert.eq('Searching from div inside shadow root should yield focused input box', Focus.search(id), Option.some(innerInput), tOption(tElement()));
-    Assert.eq('Searching from shadow root should yield focused input box', Focus.search(sr), Option.some(innerInput), tOption(tElement()));
-    Assert.eq('Searching from shadow host should yield shadow host', Focus.search(sh), Option.some(sh), tOption(tElement()));
-    Assert.eq('Searching from body should yield shadow host', Focus.search(SugarBody.body()), Option.some(sh), tOption(tElement()));
+    Assert.eq('Searching from div inside shadow root should yield focused input box', Focus.search(id), Optional.some(innerInput), tOptional(tElement()));
+    Assert.eq('Searching from shadow root should yield focused input box', Focus.search(sr), Optional.some(innerInput), tOptional(tElement()));
+    Assert.eq('Searching from shadow host should yield shadow host', Focus.search(sh), Optional.some(sh), tOptional(tElement()));
+    Assert.eq('Searching from body should yield shadow host', Focus.search(SugarBody.body()), Optional.some(sh), tOptional(tElement()));
 
     Focus.focus(outerInput);
-    Assert.eq('Searching from div inside shadow root should yield none', Focus.search(id), Option.none(), tOption(tElement()));
-    Assert.eq('Searching from shadow root should yield none', Focus.search(sr), Option.none(), tOption(tElement()));
-    Assert.eq('Searching from shadow host should yield none', Focus.search(sh), Option.none(), tOption(tElement()));
-    Assert.eq('Searching from body should yield outer input box', Focus.search(SugarBody.body()), Option.some(outerInput), tOption(tElement()));
+    Assert.eq('Searching from div inside shadow root should yield none', Focus.search(id), Optional.none(), tOptional(tElement()));
+    Assert.eq('Searching from shadow root should yield none', Focus.search(sr), Optional.none(), tOptional(tElement()));
+    Assert.eq('Searching from shadow host should yield none', Focus.search(sh), Optional.none(), tOptional(tElement()));
+    Assert.eq('Searching from body should yield outer input box', Focus.search(SugarBody.body()), Optional.some(outerInput), tOptional(tElement()));
 
     Remove.remove(outerInput);
   });

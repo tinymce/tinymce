@@ -8,7 +8,7 @@
 import { AlloyComponent, AlloyEvents, AlloyTriggers, Disabling, Memento, MementoRecord, Representing, SystemEvents } from '@ephox/alloy';
 import { ValueSchema } from '@ephox/boulder';
 import { Toolbar } from '@ephox/bridge';
-import { Arr, Fun, Option } from '@ephox/katamari';
+import { Arr, Fun, Optional } from '@ephox/katamari';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { internalToolbarButtonExecute, InternalToolbarButtonExecuteEvent } from '../toolbar/button/ButtonEvents';
@@ -81,11 +81,11 @@ const generate = (memInput: MementoRecord, buttons: Array<Toolbar.ContextToggleB
 
   const asSpecs = () => Arr.map(mementos, (mem) => mem.asSpec());
 
-  const findPrimary = (compInSystem: AlloyComponent): Option<AlloyComponent> => Arr.findMap(buttons, (button, i) => {
+  const findPrimary = (compInSystem: AlloyComponent): Optional<AlloyComponent> => Arr.findMap(buttons, (button, i) => {
     if (button.primary) {
-      return Option.from(mementos[i]).bind((mem) => mem.getOpt(compInSystem)).filter(Fun.not(Disabling.isDisabled));
+      return Optional.from(mementos[i]).bind((mem) => mem.getOpt(compInSystem)).filter(Fun.not(Disabling.isDisabled));
     } else {
-      return Option.none();
+      return Optional.none();
     }
   });
 

@@ -1,4 +1,4 @@
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import { Compare, Insert, SugarElement } from '@ephox/sugar';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
@@ -43,9 +43,9 @@ const remove = (component: AlloyComponent, replaceConfig: ReplacingConfig, repla
 // TODO: Rename
 const contents = (component: AlloyComponent, _replaceConfig: ReplacingConfig): AlloyComponent[] => component.components();
 
-const replaceAt = (component: AlloyComponent, replaceConfig: ReplacingConfig, replaceState: Stateless, replaceeIndex: number, replacer: Option<AlloySpec>): Option<AlloyComponent> => {
+const replaceAt = (component: AlloyComponent, replaceConfig: ReplacingConfig, replaceState: Stateless, replaceeIndex: number, replacer: Optional<AlloySpec>): Optional<AlloyComponent> => {
   const children = contents(component, replaceConfig);
-  return Option.from(children[replaceeIndex]).map((replacee) => {
+  return Optional.from(children[replaceeIndex]).map((replacee) => {
     // remove it.
     remove(component, replaceConfig, replaceState, replacee);
 
@@ -58,7 +58,7 @@ const replaceAt = (component: AlloyComponent, replaceConfig: ReplacingConfig, re
   });
 };
 
-const replaceBy = (component: AlloyComponent, replaceConfig: ReplacingConfig, replaceState: Stateless, replaceePred: (comp: AlloyComponent) => boolean, replacer: Option<AlloySpec>): Option<AlloyComponent> => {
+const replaceBy = (component: AlloyComponent, replaceConfig: ReplacingConfig, replaceState: Stateless, replaceePred: (comp: AlloyComponent) => boolean, replacer: Optional<AlloySpec>): Optional<AlloyComponent> => {
   const children = contents(component, replaceConfig);
   return Arr.findIndex(children, replaceePred).bind((replaceeIndex) => replaceAt(component, replaceConfig, replaceState, replaceeIndex, replacer));
 };

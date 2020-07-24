@@ -1,5 +1,5 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import { Gene } from 'ephox/boss/api/Gene';
 import * as Down from 'ephox/boss/mutant/Down';
 import * as Locator from 'ephox/boss/mutant/Locator';
@@ -21,7 +21,7 @@ UnitTest.test('DownTest', function () {
           Gene('1.1.4.1', 'duck', [])
         ])
       ])
-    ]), Option.none());
+    ]), Optional.none());
 
   const check = function (expected: string[], actual: Gene[]) {
     assert.eq(expected, Arr.map(actual, function (item) {

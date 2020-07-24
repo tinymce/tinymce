@@ -1,4 +1,4 @@
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { Class, SugarElement } from '@ephox/sugar';
 
 import { Positioning } from 'ephox/alloy/api/behaviour/Positioning';
@@ -72,7 +72,7 @@ export default (): void => {
           Positioning.position(sink, {
             anchor: 'node',
             root: button.getSystem().getByUid(`inner-${id}-editor`).getOrDie().element(),
-            node: Option.from(button.getSystem().getByUid(`inner-${id}-editor`).getOrDie().element()),
+            node: Optional.from(button.getSystem().getByUid(`inner-${id}-editor`).getOrDie().element()),
             layouts
           }, popup);
         }

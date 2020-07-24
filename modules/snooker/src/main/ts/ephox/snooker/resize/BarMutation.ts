@@ -1,4 +1,4 @@
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { Bindable, Event, Events } from '@ephox/porkbun';
 import { SugarElement } from '@ephox/sugar';
 import { DragDistanceEvent, Mutation } from './Mutation';
@@ -18,7 +18,7 @@ interface DragDistanceEvents {
 
 export interface BarMutation {
   assign: (t: SugarElement) => void;
-  get: () => Option<SugarElement>;
+  get: () => Optional<SugarElement>;
   mutate: (x: number, y: number) => void;
   events: {
     drag: Bindable<DragEvent>;
@@ -30,7 +30,7 @@ export const BarMutation = function (): BarMutation {
     drag: Event([ 'xDelta', 'yDelta', 'target' ])
   }) as DragDistanceEvents;
 
-  let target = Option.none<SugarElement>();
+  let target = Optional.none<SugarElement>();
 
   const delegate = Mutation();
 
@@ -42,7 +42,7 @@ export const BarMutation = function (): BarMutation {
   });
 
   const assign = function (t: SugarElement) {
-    target = Option.some(t);
+    target = Optional.some(t);
   };
 
   const get = function () {

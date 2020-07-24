@@ -1,4 +1,4 @@
-import { Arr, Fun, Option } from '@ephox/katamari';
+import { Arr, Fun, Optional } from '@ephox/katamari';
 import { EventArgs, Situ, SugarElement } from '@ephox/sugar';
 import * as KeySelection from '../keyboard/KeySelection';
 import * as VerticalMovement from '../keyboard/VerticalMovement';
@@ -35,7 +35,7 @@ const keyboard = function (win: Window, container: SugarElement, isRoot: (e: Sug
 
   const clearToNavigate = function () {
     annotations.clear(container);
-    return Option.none<Response>();
+    return Optional.none<Response>();
   };
 
   const keydown = function (event: EventArgs, start: SugarElement, soffset: number, finish: SugarElement, foffset: number, direction: typeof SelectionKeys.ltr) {
@@ -54,7 +54,7 @@ const keyboard = function (win: Window, container: SugarElement, isRoot: (e: Sug
       } else if (SelectionKeys.isUp(keycode)) { // Up should predict the movement and set the cursor
         return Fun.curry(VerticalMovement.navigate, bridge, isRoot, KeyDirection.up, finish, start, VerticalMovement.firstUpCheck);
       } else {
-        return Option.none;
+        return Optional.none;
       }
     }, function (selected) {
 
@@ -72,10 +72,10 @@ const keyboard = function (win: Window, container: SugarElement, isRoot: (e: Sug
               const relative = SelectionKeys.isDown(keycode) || direction.isForward(keycode) ? Situ.after : Situ.before;
               bridge.setRelativeSelection(Situ.on(edges.first(), 0), relative(edges.table()));
               annotations.clear(container);
-              return Response.create(Option.none(), true);
+              return Response.create(Optional.none(), true);
             });
           }, function (_) {
-            return Option.some(Response.create(Option.none(), true));
+            return Optional.some(Response.create(Optional.none(), true));
           });
         };
       };
@@ -91,7 +91,7 @@ const keyboard = function (win: Window, container: SugarElement, isRoot: (e: Sug
       } else if (SelectionKeys.isNavigation(keycode) && shiftKey === false) { // Clear the selection on normal arrow keys.
         return clearToNavigate;
       } else {
-        return Option.none;
+        return Optional.none;
       }
     });
 
@@ -99,19 +99,19 @@ const keyboard = function (win: Window, container: SugarElement, isRoot: (e: Sug
   };
 
   const keyup = function (event: EventArgs, start: SugarElement, soffset: number, finish: SugarElement, foffset: number) {
-    return CellSelection.retrieve(container, annotations.selectedSelector).fold<Option<Response>>(function () {
+    return CellSelection.retrieve(container, annotations.selectedSelector).fold<Optional<Response>>(function () {
       const realEvent = event.raw() as KeyboardEvent;
       const keycode = realEvent.which;
       const shiftKey = realEvent.shiftKey === true;
       if (shiftKey === false) {
-        return Option.none<Response>();
+        return Optional.none<Response>();
       }
       if (SelectionKeys.isNavigation(keycode)) {
         return KeySelection.sync(container, isRoot, start, soffset, finish, foffset, annotations.selectRange);
       } else {
-        return Option.none<Response>();
+        return Optional.none<Response>();
       }
-    }, Option.none);
+    }, Optional.none);
   };
 
   return {

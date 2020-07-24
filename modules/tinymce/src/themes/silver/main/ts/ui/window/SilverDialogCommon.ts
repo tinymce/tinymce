@@ -8,7 +8,7 @@ import {
   AlloyEvents, AlloyParts, AlloySpec, AlloyTriggers, Behaviour, DomFactory, GuiFactory, ModalDialog, Reflecting, SystemEvents
 } from '@ephox/alloy';
 import { DialogManager, Types } from '@ephox/bridge';
-import { Arr, Cell, Option } from '@ephox/katamari';
+import { Arr, Cell, Optional } from '@ephox/katamari';
 
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { RepresentingConfigs } from '../alien/RepresentingConfigs';
@@ -26,7 +26,7 @@ export interface WindowExtra {
 export interface DialogSpec {
   header: AlloySpec;
   body: AlloyParts.ConfiguredPart;
-  footer: Option<AlloyParts.ConfiguredPart>;
+  footer: Optional<AlloyParts.ConfiguredPart>;
   extraClasses: string[];
   extraStyles: Record<string, string>;
   extraBehaviours: Behaviour.NamedConfiguredBehaviour<any, any>[];
@@ -69,7 +69,7 @@ const getEventExtras = (lazyDialog, extra: WindowExtra) => ({
 });
 
 const renderModalDialog = (spec: DialogSpec, initialData, dialogEvents: AlloyEvents.AlloyEventKeyAndHandler<any>[], backstage: UiFactoryBackstage) => {
-  const updateState = (_comp, incoming) => Option.some(incoming);
+  const updateState = (_comp, incoming) => Optional.some(incoming);
 
   return GuiFactory.build(Dialogs.renderDialog({
     ...spec,

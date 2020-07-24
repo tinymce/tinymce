@@ -1,4 +1,4 @@
-import { Arr, Cell, Obj, Option, Options } from '@ephox/katamari';
+import { Arr, Cell, Obj, Optional, Optionals } from '@ephox/katamari';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { MenuPreparation } from '../../ui/single/TieredMenuSpec';
@@ -14,24 +14,24 @@ export interface LayeredItemTrigger { triggeringItem: AlloyComponent; triggeredM
 export interface LayeredState {
   setContents: (sPrimary: string, sMenus: Record<string, MenuPreparation>, sExpansions: Record<string, string>, dir: MenuDirectory) => void;
   setMenuBuilt: (menuName: string, built: AlloyComponent) => void;
-  expand: (itemValue: string) => Option<string[]>;
-  refresh: (itemValue: string) => Option<string[]>;
-  collapse: (itemValue: string) => Option<string[]>;
-  lookupMenu: (menuValue: string) => Option<MenuPreparation>;
-  lookupItem: (itemValue: string) => Option<string>;
+  expand: (itemValue: string) => Optional<string[]>;
+  refresh: (itemValue: string) => Optional<string[]>;
+  collapse: (itemValue: string) => Optional<string[]>;
+  lookupMenu: (menuValue: string) => Optional<MenuPreparation>;
+  lookupItem: (itemValue: string) => Optional<string>;
   otherMenus: (path: string[]) => string[];
-  getPrimary: () => Option<AlloyComponent>;
+  getPrimary: () => Optional<AlloyComponent>;
   getMenus: () => Record<string, MenuPreparation>;
   clear: () => void;
   isClear: () => boolean;
-  getTriggeringPath: (itemValue: string, getItemByValue: (itemValue: string) => Option<AlloyComponent>) => Option<LayeredItemTrigger[]>;
+  getTriggeringPath: (itemValue: string, getItemByValue: (itemValue: string) => Optional<AlloyComponent>) => Optional<LayeredItemTrigger[]>;
 }
 
 const init = (): LayeredState => {
   const expansions: Cell<Record<string, string>> = Cell({ });
   const menus: Cell<Record<string, MenuPreparation>> = Cell({ });
   const paths: Cell<Record<string, string[]>> = Cell({ });
-  const primary: Cell<Option<string>> = Cell(Option.none());
+  const primary: Cell<Optional<string>> = Cell(Optional.none());
 
   // Probably think of a better way to store this information.
   const directory: Cell<MenuDirectory> = Cell({ });
@@ -40,7 +40,7 @@ const init = (): LayeredState => {
     expansions.set({});
     menus.set({});
     paths.set({});
-    primary.set(Option.none());
+    primary.set(Optional.none());
   };
 
   const isClear = (): boolean => primary.get().isNone();
@@ -56,7 +56,7 @@ const init = (): LayeredState => {
   };
 
   const setContents = (sPrimary: string, sMenus: Record<string, MenuPreparation>, sExpansions: Record<string, string>, dir: MenuDirectory): void => {
-    primary.set(Option.some(sPrimary));
+    primary.set(Optional.some(sPrimary));
     expansions.set(sExpansions);
     menus.set(sMenus);
     directory.set(dir);
@@ -64,16 +64,16 @@ const init = (): LayeredState => {
     paths.set(sPaths);
   };
 
-  const getTriggeringItem = (menuValue: string): Option<string> => Obj.find(expansions.get(), (v, _k) => v === menuValue);
+  const getTriggeringItem = (menuValue: string): Optional<string> => Obj.find(expansions.get(), (v, _k) => v === menuValue);
 
-  const getTriggerData = (menuValue: string, getItemByValue: (v: string) => Option<AlloyComponent>, path: string[]): Option<LayeredItemTrigger> =>
+  const getTriggerData = (menuValue: string, getItemByValue: (v: string) => Optional<AlloyComponent>, path: string[]): Optional<LayeredItemTrigger> =>
     getPreparedMenu(menuValue).bind((menu) => getTriggeringItem(menuValue).bind((triggeringItemValue) => getItemByValue(triggeringItemValue).map((triggeredItem) => ({
       triggeredMenu: menu,
       triggeringItem: triggeredItem,
       triggeringPath: path
     }))));
 
-  const getTriggeringPath = (itemValue: string, getItemByValue: (v: string) => Option<AlloyComponent>): Option<LayeredItemTrigger[]> => {
+  const getTriggeringPath = (itemValue: string, getItemByValue: (v: string) => Optional<AlloyComponent>): Optional<LayeredItemTrigger[]> => {
     // Get the path up to the last item
     const extraPath: string[] = Arr.filter(lookupItem(itemValue).toArray(), (menuValue) => getPreparedMenu(menuValue).isSome());
 
@@ -85,39 +85,39 @@ const init = (): LayeredState => {
       // straightforward version when prototyping
       const revPath = Arr.reverse(extraPath.concat(path));
 
-      const triggers: Array<Option<LayeredItemTrigger>> = Arr.bind(revPath, (menuValue, menuIndex) =>
+      const triggers: Array<Optional<LayeredItemTrigger>> = Arr.bind(revPath, (menuValue, menuIndex) =>
         // finding menuValue, it should match the trigger
         getTriggerData(menuValue, getItemByValue, revPath.slice(0, menuIndex + 1)).fold(
-          () => primary.get().is(menuValue) ? [ ] : [ Option.none() ],
-          (data) => [ Option.some(data) ]
+          () => primary.get().is(menuValue) ? [ ] : [ Optional.none() ],
+          (data) => [ Optional.some(data) ]
         )
       );
 
-      // Convert List<Option<X>> to Option<List<X>> if ALL are Some
-      return Options.sequence(triggers);
+      // Convert List<Optional<X>> to Optional<List<X>> if ALL are Some
+      return Optionals.sequence(triggers);
     });
   };
 
   // Given an item, return a list of all menus including the one that it triggered (if there is one)
-  const expand = (itemValue: string): Option<string[]> => Obj.get(expansions.get(), itemValue).map((menu: string) => {
+  const expand = (itemValue: string): Optional<string[]> => Obj.get(expansions.get(), itemValue).map((menu: string) => {
     const current: string[] = Obj.get(paths.get(), itemValue).getOr([ ]);
     return [ menu ].concat(current);
   });
 
-  const collapse = (itemValue: string): Option<string[]> =>
+  const collapse = (itemValue: string): Optional<string[]> =>
     // Look up which key has the itemValue
-    Obj.get(paths.get(), itemValue).bind((path) => path.length > 1 ? Option.some(path.slice(1)) : Option.none());
+    Obj.get(paths.get(), itemValue).bind((path) => path.length > 1 ? Optional.some(path.slice(1)) : Optional.none());
 
-  const refresh = (itemValue: string): Option<string[]> => Obj.get(paths.get(), itemValue);
+  const refresh = (itemValue: string): Optional<string[]> => Obj.get(paths.get(), itemValue);
 
-  const getPreparedMenu = (menuValue: string): Option<AlloyComponent> => lookupMenu(menuValue).bind(extractPreparedMenu);
+  const getPreparedMenu = (menuValue: string): Optional<AlloyComponent> => lookupMenu(menuValue).bind(extractPreparedMenu);
 
-  const lookupMenu = (menuValue: string): Option<MenuPreparation> => Obj.get(
+  const lookupMenu = (menuValue: string): Optional<MenuPreparation> => Obj.get(
     menus.get(),
     menuValue
   );
 
-  const lookupItem = (itemValue: string): Option<string> => Obj.get(
+  const lookupItem = (itemValue: string): Optional<string> => Obj.get(
     expansions.get(),
     itemValue
   );
@@ -127,7 +127,7 @@ const init = (): LayeredState => {
     return Arr.difference(Obj.keys(menuValues), path);
   };
 
-  const getPrimary = (): Option<AlloyComponent> => primary.get().bind(getPreparedMenu);
+  const getPrimary = (): Optional<AlloyComponent> => primary.get().bind(getPreparedMenu);
 
   const getMenus = (): Record<string, MenuPreparation> => menus.get();
 
@@ -148,7 +148,7 @@ const init = (): LayeredState => {
   };
 };
 
-const extractPreparedMenu = (prep: MenuPreparation): Option<AlloyComponent> => prep.type === 'prepared' ? Option.some(prep.menu) : Option.none();
+const extractPreparedMenu = (prep: MenuPreparation): Optional<AlloyComponent> => prep.type === 'prepared' ? Optional.some(prep.menu) : Optional.none();
 
 export const LayeredState = {
   init,

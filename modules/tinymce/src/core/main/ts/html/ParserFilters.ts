@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Obj, Option, Unicode } from '@ephox/katamari';
+import { Arr, Obj, Optional, Unicode } from '@ephox/katamari';
 import Env from '../api/Env';
 import DomParser, { DomParserSettings } from '../api/html/DomParser';
 import AstNode from '../api/html/Node';
@@ -44,7 +44,7 @@ const registerBase64ImageFilter = (parser: DomParser, settings: DomParserSetting
     }
 
     parseDataUri(inputSrc).filter(() => isValidDataImg(img, settings)).bind(({ type, data }) =>
-      Option.from(blobCache.getByData(data, type)).orThunk(() =>
+      Optional.from(blobCache.getByData(data, type)).orThunk(() =>
         Conversions.buildBlob(type, data).map((blob) => {
           const blobInfo = blobCache.create(uniqueId(), blob, data);
           blobCache.add(blobInfo);

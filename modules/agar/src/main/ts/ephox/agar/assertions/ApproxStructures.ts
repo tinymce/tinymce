@@ -1,5 +1,5 @@
 import { Assert, assert, TestLabel } from '@ephox/bedrock-client';
-import { Arr, Fun, Obj, Option } from '@ephox/katamari';
+import { Arr, Fun, Obj, Optional } from '@ephox/katamari';
 import { Attribute, Classes, Css, Html, SugarElement, SugarNode, SugarText, Traverse, Truncate, Value } from '@ephox/sugar';
 
 import * as ApproxComparisons from './ApproxComparisons';
@@ -16,9 +16,9 @@ export interface ArrayAssert {
 
 export interface ElementQueue {
   context(): string;
-  current(): Option<SugarElement<any>>;
-  peek(): Option<SugarElement<any>>;
-  take(): Option<SugarElement<any>>;
+  current(): Optional<SugarElement<any>>;
+  peek(): Optional<SugarElement<any>>;
+  take(): Optional<SugarElement<any>>;
   mark(): {
     reset: () => void ;
     atMark: () => boolean;
@@ -46,7 +46,7 @@ export interface ElementFields {
   children?: StructAssert[];
 }
 
-const elementQueue = (items: SugarElement<any>[], container: Option<SugarElement<any>>): ElementQueue => {
+const elementQueue = (items: SugarElement<any>[], container: Optional<SugarElement<any>>): ElementQueue => {
   let i = -1;
 
   const context = () => {
@@ -69,9 +69,9 @@ const elementQueue = (items: SugarElement<any>[], container: Option<SugarElement
     );
   };
 
-  const current = () => i >= 0 && i < items.length ? Option.some(items[i]) : Option.none<SugarElement<any>>();
+  const current = () => i >= 0 && i < items.length ? Optional.some(items[i]) : Optional.none<SugarElement<any>>();
 
-  const peek = () => i + 1 < items.length ? Option.some(items[i + 1]) : Option.none<SugarElement<any>>();
+  const peek = () => i + 1 < items.length ? Optional.some(items[i + 1]) : Optional.none<SugarElement<any>>();
 
   const take = () => {
     i += 1;
@@ -105,9 +105,9 @@ const element = (tag: string, fields: ElementFields): StructAssert => {
     const attrs = fields.attrs !== undefined ? fields.attrs : {};
     const classes = fields.classes !== undefined ? fields.classes : [];
     const styles = fields.styles !== undefined ? fields.styles : {};
-    const html = fields.html !== undefined ? Option.some(fields.html) : Option.none<StringAssert>();
-    const value = fields.value !== undefined ? Option.some(fields.value) : Option.none<StringAssert>();
-    const children = fields.children !== undefined ? Option.some(fields.children) : Option.none<StructAssert[]>();
+    const html = fields.html !== undefined ? Optional.some(fields.html) : Optional.none<StringAssert>();
+    const value = fields.value !== undefined ? Optional.some(fields.value) : Optional.none<StringAssert>();
+    const children = fields.children !== undefined ? Optional.some(fields.children) : Optional.none<StructAssert[]>();
     assertAttrs(attrs, actual);
     assertClasses(classes, actual);
     assertStyles(styles, actual);
@@ -253,7 +253,7 @@ const assertStyles = (expectedStyles: Record<string, StringAssert>, actual: Suga
   });
 };
 
-const assertHtml = (expectedHtml: Option<StringAssert>, actual: SugarElement<any>) => {
+const assertHtml = (expectedHtml: Optional<StringAssert>, actual: SugarElement<any>) => {
   expectedHtml.each((expected) => {
     const actualHtml = Html.get(actual);
     if (expected.strAssert === undefined) {
@@ -263,7 +263,7 @@ const assertHtml = (expectedHtml: Option<StringAssert>, actual: SugarElement<any
   });
 };
 
-const assertValue = (expectedValue: Option<StringAssert>, actual: SugarElement<any>) => {
+const assertValue = (expectedValue: Optional<StringAssert>, actual: SugarElement<any>) => {
   expectedValue.each((v) => {
     if (v.strAssert === undefined) {
       throw new Error(JSON.stringify(v) + ' is not a *string assertion*.\nSpecified in *expected* value of ' + Truncate.getHtml(actual));
@@ -275,9 +275,9 @@ const assertValue = (expectedValue: Option<StringAssert>, actual: SugarElement<a
   });
 };
 
-const assertChildren = (expectedChildren: Option<StructAssert[]>, actual) => {
+const assertChildren = (expectedChildren: Optional<StructAssert[]>, actual) => {
   expectedChildren.each((expected) => {
-    const children = elementQueue(Traverse.children(actual), Option.some(actual));
+    const children = elementQueue(Traverse.children(actual), Optional.some(actual));
     Arr.each(expected, (structExpectation, i) => {
       if (structExpectation.doAssert === undefined) {
         throw new Error(JSON.stringify(structExpectation) + ' is not a *structure assertion*.\n' +

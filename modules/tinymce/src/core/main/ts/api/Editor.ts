@@ -6,7 +6,7 @@
  */
 
 import { Registry } from '@ephox/bridge';
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import * as EditorContent from '../content/EditorContent';
 import * as NodeType from '../dom/NodeType';
 import * as EditorRemove from '../EditorRemove';
@@ -226,7 +226,7 @@ class Editor implements EditorObservable {
   // Arguments set later, for example by InitContentBody.ts
   public annotator: Annotator;
   public bodyElement: HTMLElement;
-  public bookmark: Option<{}>;
+  public bookmark: Optional<{}>;
   public composing: boolean;
   public container: HTMLElement;
   public contentAreaContainer: HTMLElement;

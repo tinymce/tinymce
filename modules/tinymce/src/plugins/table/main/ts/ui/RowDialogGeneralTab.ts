@@ -6,7 +6,7 @@
  */
 
 import { Types } from '@ephox/bridge';
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { getRowClassList } from '../api/Settings';
 import * as Helpers from './Helpers';
@@ -14,14 +14,14 @@ import * as Helpers from './Helpers';
 const getClassList = (editor: Editor) => {
   const classes = Helpers.buildListItems(getRowClassList(editor));
   if (classes.length > 0) {
-    return Option.some<Types.Dialog.BodyComponentApi>({
+    return Optional.some<Types.Dialog.BodyComponentApi>({
       name: 'class',
       type: 'selectbox',
       label: 'Class',
       items: classes
     });
   }
-  return Option.none<Types.Dialog.BodyComponentApi>();
+  return Optional.none<Types.Dialog.BodyComponentApi>();
 };
 
 const formChildren: Types.Dialog.BodyComponentApi[] = [

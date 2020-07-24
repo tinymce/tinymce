@@ -1,5 +1,5 @@
 import { Universe } from '@ephox/boss';
-import { Adt, Arr, Option } from '@ephox/katamari';
+import { Adt, Arr, Optional } from '@ephox/katamari';
 import { Descent, Gather, Spot, Transition } from '@ephox/phoenix';
 import * as Structure from '../api/general/Structure';
 
@@ -102,21 +102,21 @@ const walk = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) => boolea
  * to hit the target or a leaf. Note, resuming should not start again from the same
  * boundary that the previous clump finished within.
  */
-const resume = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) => boolean, boundary: E, target: E): Option<E> {
+const resume = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) => boolean, boundary: E, target: E): Optional<E> {
   // I have to sidestep here so I don't descend down the same boundary.
   const next = skipToRight(universe, isRoot, boundary);
   return next.fold(function () {
-    return Option.none<E>();
+    return Optional.none<E>();
   }, function (n) {
     if (universe.eq(n, target)) {
-      return Option.some(target);
+      return Optional.some(target);
     } else if (isParent(universe, boundary, n)) {
       return resume(universe, isRoot, n, target);
     } else if (isBlock(universe, n)) {
       const leaf = descendBlock(universe, isRoot, n);
-      return Option.some(leaf.element());
+      return Optional.some(leaf.element());
     }
-    return Option.some(n);
+    return Optional.some(n);
   });
 };
 
@@ -140,7 +140,7 @@ const scan = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) => boolea
     // Logic .. if this boundary was a parent, then sidestep.
     const resumption = isParent(universe, element, boundary) ? resume(universe, isRoot, boundary, target) : (function () {
       const leaf = descendBlock(universe, isRoot, boundary);
-      return !universe.eq(leaf.element(), boundary) ? Option.some(leaf.element()) : Gather.walk(universe, boundary, Gather.advance, Gather.walkers().right()).map(function (g) { return g.item(); });
+      return !universe.eq(leaf.element(), boundary) ? Optional.some(leaf.element()) : Gather.walk(universe, boundary, Gather.advance, Gather.walkers().right()).map(function (g) { return g.item(); });
     })();
 
     // We have hit a boundary, so stop the current clump, and start a new from the next starting point.

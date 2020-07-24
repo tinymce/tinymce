@@ -1,4 +1,4 @@
-import { Adt, Arr, Fun, Obj, Option } from '@ephox/katamari';
+import { Adt, Arr, Fun, Obj, Optional } from '@ephox/katamari';
 
 import { AlloySpec } from '../api/component/SpecTypes';
 import { CompositeSketchDetail } from '../api/ui/Sketcher';
@@ -39,7 +39,7 @@ const adt: {
 
 const isSubstituted = (spec: any): spec is ConfiguredPart => Obj.has(spec, 'uiType');
 
-const subPlaceholder = <D extends CompositeSketchDetail>(owner: Option<string>, detail: D, compSpec: ConfiguredPart, placeholders: Record<string, Replacement>): UiSubstitutesAdt => {
+const subPlaceholder = <D extends CompositeSketchDetail>(owner: Optional<string>, detail: D, compSpec: ConfiguredPart, placeholders: Record<string, Replacement>): UiSubstitutesAdt => {
   if (owner.exists((o) => o !== compSpec.owner)) { return adt.single(true, Fun.constant(compSpec)); }
   // Ignore having to find something for the time being.
   return Obj.get(placeholders as any, compSpec.name).fold(() => {
@@ -52,7 +52,7 @@ const subPlaceholder = <D extends CompositeSketchDetail>(owner: Option<string>, 
   );
 };
 
-const scan = <D extends CompositeSketchDetail>(owner: Option<string>, detail: D, compSpec: AlloySpec, placeholders: Record<string, Replacement>): UiSubstitutesAdt => {
+const scan = <D extends CompositeSketchDetail>(owner: Optional<string>, detail: D, compSpec: AlloySpec, placeholders: Record<string, Replacement>): UiSubstitutesAdt => {
   if (isSubstituted(compSpec) && compSpec.uiType === _placeholder) {
     return subPlaceholder(owner, detail, compSpec, placeholders);
   } else {
@@ -60,7 +60,7 @@ const scan = <D extends CompositeSketchDetail>(owner: Option<string>, detail: D,
   }
 };
 
-const substitute = <D extends CompositeSketchDetail>(owner: Option<string>, detail: D, compSpec: AlloySpec, placeholders: Record<string, Replacement>): AlloySpec[] => {
+const substitute = <D extends CompositeSketchDetail>(owner: Optional<string>, detail: D, compSpec: AlloySpec, placeholders: Record<string, Replacement>): AlloySpec[] => {
   const base = scan(owner, detail, compSpec, placeholders);
 
   return base.fold(
@@ -88,7 +88,7 @@ const substitute = <D extends CompositeSketchDetail>(owner: Option<string>, deta
   );
 };
 
-const substituteAll = <D extends CompositeSketchDetail>(owner: Option<string>, detail: D, components: AlloySpec[], placeholders: Record<string, Replacement>): AlloySpec[] => Arr.bind(components, (c) => substitute(owner, detail, c, placeholders));
+const substituteAll = <D extends CompositeSketchDetail>(owner: Optional<string>, detail: D, components: AlloySpec[], placeholders: Record<string, Replacement>): AlloySpec[] => Arr.bind(components, (c) => substitute(owner, detail, c, placeholders));
 
 const oneReplace = (label: string, replacements: UiSubstitutesAdt): Replacement => {
   let called = false;
@@ -113,7 +113,7 @@ const oneReplace = (label: string, replacements: UiSubstitutesAdt): Replacement 
   };
 };
 
-const substitutePlaces = <D extends CompositeSketchDetail>(owner: Option<string>, detail: D, components: AlloySpec[], placeholders: Record<string, UiSubstitutesAdt>) => {
+const substitutePlaces = <D extends CompositeSketchDetail>(owner: Optional<string>, detail: D, components: AlloySpec[], placeholders: Record<string, UiSubstitutesAdt>) => {
   const ps = Obj.map(placeholders, (ph, name) => oneReplace(name, ph));
 
   const outcome = substituteAll(owner, detail, components, ps);

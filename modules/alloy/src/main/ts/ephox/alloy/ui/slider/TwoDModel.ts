@@ -1,4 +1,4 @@
-import { Fun, Option } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 import { Css, Height, SugarPosition, Width } from '@ephox/sugar';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
@@ -33,7 +33,7 @@ const setValueFrom = (spectrum: AlloyComponent, detail: TwoDSliderDetail, value:
 };
 
 // move in a direction by step size. Fire change at the end
-const moveBy = (direction: number, isVerticalMovement: boolean, spectrum: AlloyComponent, detail: TwoDSliderDetail): Option<number> => {
+const moveBy = (direction: number, isVerticalMovement: boolean, spectrum: AlloyComponent, detail: TwoDSliderDetail): Optional<number> => {
   const f = (direction > 0) ? SliderModel.increaseBy : SliderModel.reduceBy;
   const xValue = isVerticalMovement ? currentValue(detail).x() :
     f(currentValue(detail).x(), minX(detail), maxX(detail), step(detail));
@@ -41,10 +41,10 @@ const moveBy = (direction: number, isVerticalMovement: boolean, spectrum: AlloyC
     f(currentValue(detail).y(), minY(detail), maxY(detail), step(detail));
 
   fireSliderChange(spectrum, sliderValue(xValue, yValue));
-  return Option.some(xValue);
+  return Optional.some(xValue);
 };
 
-const handleMovement = (direction: number, isVerticalMovement: boolean) => (spectrum: AlloyComponent, detail: TwoDSliderDetail): Option<boolean> => moveBy(direction, isVerticalMovement, spectrum, detail).map((): boolean => true);
+const handleMovement = (direction: number, isVerticalMovement: boolean) => (spectrum: AlloyComponent, detail: TwoDSliderDetail): Optional<boolean> => moveBy(direction, isVerticalMovement, spectrum, detail).map((): boolean => true);
 
 // fire a slider change event with the minimum value
 const setToMin = (spectrum: AlloyComponent, detail: TwoDSliderDetail): void => {
@@ -61,7 +61,7 @@ const setToMax = (spectrum: AlloyComponent, detail: TwoDSliderDetail): void => {
 };
 
 // get event data as a SugarPosition
-const getValueFromEvent = (simulatedEvent: NativeSimulatedEvent): Option<SugarPosition> => ModelCommon.getEventSource(simulatedEvent);
+const getValueFromEvent = (simulatedEvent: NativeSimulatedEvent): Optional<SugarPosition> => ModelCommon.getEventSource(simulatedEvent);
 
 // update the position of the thumb from the slider's current value
 const setPositionFromValue = (slider: AlloyComponent, thumb: AlloyComponent, detail: TwoDSliderDetail, edges: SliderModelDetailParts): void => {
@@ -96,14 +96,14 @@ const onDown = handleMovement(1, true);
 
 // Edge Click Actions
 const edgeActions = {
-  'top-left': Option.some(EdgeActions.setToTLEdgeXY),
-  'top': Option.some(EdgeActions.setToTEdgeXY),
-  'top-right': Option.some(EdgeActions.setToTREdgeXY),
-  'right': Option.some(EdgeActions.setToREdgeXY),
-  'bottom-right': Option.some(EdgeActions.setToBREdgeXY),
-  'bottom': Option.some(EdgeActions.setToBEdgeXY),
-  'bottom-left': Option.some(EdgeActions.setToBLEdgeXY),
-  'left': Option.some(EdgeActions.setToLEdgeXY)
+  'top-left': Optional.some(EdgeActions.setToTLEdgeXY),
+  'top': Optional.some(EdgeActions.setToTEdgeXY),
+  'top-right': Optional.some(EdgeActions.setToTREdgeXY),
+  'right': Optional.some(EdgeActions.setToREdgeXY),
+  'bottom-right': Optional.some(EdgeActions.setToBREdgeXY),
+  'bottom': Optional.some(EdgeActions.setToBEdgeXY),
+  'bottom-left': Optional.some(EdgeActions.setToBLEdgeXY),
+  'left': Optional.some(EdgeActions.setToLEdgeXY)
 };
 
 export {

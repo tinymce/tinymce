@@ -1,4 +1,4 @@
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
 import * as Behaviour from '../../api/behaviour/Behaviour';
@@ -34,9 +34,9 @@ export interface DragStartingConfig {
   type: string;
   phoneyTypes: string[];
   effectAllowed: string;
-  getData: Option<(component: AlloyComponent) => string>;
-  getImageParent: Option<(component: AlloyComponent) => SugarElement>;
-  getImage: Option<(component: AlloyComponent) => {
+  getData: Optional<(component: AlloyComponent) => string>;
+  getImageParent: Optional<(component: AlloyComponent) => SugarElement>;
+  getImage: Optional<(component: AlloyComponent) => {
     element: () => SugarElement;
     x: () => number;
     y: () => number;

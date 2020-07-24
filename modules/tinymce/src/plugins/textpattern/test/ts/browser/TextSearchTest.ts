@@ -1,6 +1,6 @@
 import { Assertions, Log, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { SugarElement } from '@ephox/sugar';
 
@@ -35,7 +35,7 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextSearchTest', (succes
     );
   };
 
-  const assertSpot = (label: string, spotOpt: Option<SpotPoint<Text>>, elementText: String, offset: number) => {
+  const assertSpot = (label: string, spotOpt: Optional<SpotPoint<Text>>, elementText: String, offset: number) => {
     const spot = spotOpt.getOrDie(`${label} - Spot not found`);
 
     Assertions.assertEq(label, elementText, spot.container.textContent);

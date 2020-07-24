@@ -1,5 +1,5 @@
 import { Chain, GeneralSteps, Step } from '@ephox/agar';
-import { Cell, Option } from '@ephox/katamari';
+import { Cell, Optional } from '@ephox/katamari';
 import { createFileList } from './FileList';
 
 interface Props {
@@ -7,7 +7,7 @@ interface Props {
   click: () => void;
 }
 
-const inputPrototypeState = Cell(Option.none<Props>());
+const inputPrototypeState = Cell(Optional.none<Props>());
 
 const createChangeEvent = (win: Window): Event => {
   const event: any = document.createEvent('CustomEvent');
@@ -32,7 +32,7 @@ const cPatchInputElement = (files: File[]) => Chain.op<any>(() => {
     click: HTMLInputElement.prototype.click
   };
 
-  inputPrototypeState.set(Option.some(currentProps));
+  inputPrototypeState.set(Optional.some(currentProps));
 
   Object.defineProperty(HTMLInputElement.prototype, 'files', {
     get: () => createFileList(files)

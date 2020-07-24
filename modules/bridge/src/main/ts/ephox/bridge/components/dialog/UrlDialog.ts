@@ -1,6 +1,6 @@
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
-import { Fun, Option, Result } from '@ephox/katamari';
-import { DialogNormalButton, DialogNormalButtonApi, dialogButtonFields } from './Dialog';
+import { Fun, Optional, Result } from '@ephox/katamari';
+import { dialogButtonFields, DialogNormalButton, DialogNormalButtonApi } from './Dialog';
 
 export interface UrlDialogInstanceApi {
   block: (msg: string) => void;
@@ -58,9 +58,9 @@ export interface UrlDialogApi {
 export interface UrlDialog {
   title: string;
   url: string;
-  height: Option<number>;
-  width: Option<number>;
-  buttons: Option<UrlDialogButton[]>;
+  height: Optional<number>;
+  width: Optional<number>;
+  buttons: Optional<UrlDialogButton[]>;
 
   onAction: UrlDialogActionHandler;
   onClose: UrlDialogCloseHandler;

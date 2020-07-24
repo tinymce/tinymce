@@ -1,4 +1,4 @@
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 
 import { Composing } from '../../api/behaviour/Composing';
 import { Highlighting } from '../../api/behaviour/Highlighting';
@@ -33,7 +33,7 @@ const make: CompositeSketchFactory<MenuDetail, MenuSpec> = (detail, components, 
         }
       }),
       Composing.config({
-        find: Option.some
+        find: Optional.some
       }),
       Keying.config(detail.movement.config(detail, detail.movement))
     ]

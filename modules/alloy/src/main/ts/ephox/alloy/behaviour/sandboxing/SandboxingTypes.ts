@@ -1,4 +1,4 @@
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
 import * as Behaviour from '../../api/behaviour/Behaviour';
@@ -15,8 +15,8 @@ export interface SandboxingBehaviour extends Behaviour.AlloyBehaviour<Sandboxing
   close: (sandbox: AlloyComponent) => void;
   isOpen: (sandbox: AlloyComponent) => boolean;
   isPartOf: (sandbox: AlloyComponent, candidate: () => SugarElement) => boolean;
-  getState: (sandbox: AlloyComponent) => Option<AlloyComponent>;
-  setContent: (sandbox: AlloyComponent, thing: AlloySpec) => Option<AlloyComponent>;
+  getState: (sandbox: AlloyComponent) => Optional<AlloyComponent>;
+  setContent: (sandbox: AlloyComponent, thing: AlloySpec) => Optional<AlloyComponent>;
   closeSandbox: (sandbox: AlloyComponent) => void;
 }
 
@@ -37,7 +37,7 @@ export interface SandboxingConfig extends Behaviour.BehaviourConfigDetail {
 }
 
 export interface SandboxingState extends BehaviourState {
-  get: () => Option<AlloyComponent>;
+  get: () => Optional<AlloyComponent>;
   set: (comp: AlloyComponent) => void;
   isOpen: () => boolean;
   clear: () => void;

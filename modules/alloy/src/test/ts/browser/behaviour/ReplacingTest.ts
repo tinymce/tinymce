@@ -1,13 +1,13 @@
 import { ApproxStructure, Assertions, Logger, Step } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Replacing } from 'ephox/alloy/api/behaviour/Replacing';
-import { AlloySpec } from 'ephox/alloy/api/component/SpecTypes';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import { Container } from 'ephox/alloy/api/ui/Container';
+import { AlloySpec } from 'ephox/alloy/api/component/SpecTypes';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
+import { Container } from 'ephox/alloy/api/ui/Container';
 
 UnitTest.asynctest('ReplacingTest', (success, failure) => {
 
@@ -36,7 +36,7 @@ UnitTest.asynctest('ReplacingTest', (success, failure) => {
         Replacing.set(component,
           Arr.map(inputClasses, (ic) => makeTag('div', [ ic ]))
         );
-        Replacing.replaceAt(component, replaceeIndex, Option.some(makeTag('div', [ replaceClass ])));
+        Replacing.replaceAt(component, replaceeIndex, Optional.some(makeTag('div', [ replaceClass ])));
         Assertions.assertStructure(
           'Asserting structure',
           ApproxStructure.build((s, _str, arr) => s.element('div', {

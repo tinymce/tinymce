@@ -1,4 +1,4 @@
-import { Option, Type } from '@ephox/katamari';
+import { Optional, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import * as Insert from '../dom/Insert';
 import * as Remove from '../dom/Remove';
@@ -54,10 +54,10 @@ const preserve = (doc: SugarElement<Document>, f: () => void) => {
 
 // capture the current scroll location and provide save and restore methods
 const capture = (doc: SugarElement<Document>) => {
-  let previous = Option.none<SugarPosition>();
+  let previous = Optional.none<SugarPosition>();
 
   const save = () => {
-    previous = Option.some(get(doc));
+    previous = Optional.some(get(doc));
   };
 
   // TODO: this is quite similar to the code in nomad.

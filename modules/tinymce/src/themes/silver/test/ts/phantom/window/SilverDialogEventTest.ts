@@ -3,7 +3,7 @@ import { Behaviour, GuiFactory, ModalDialog, Positioning, TestHelpers } from '@e
 import { UnitTest } from '@ephox/bedrock-client';
 import { ValueSchema } from '@ephox/boulder';
 import { DialogManager } from '@ephox/bridge';
-import { Fun, Option, Result } from '@ephox/katamari';
+import { Fun, Optional, Result } from '@ephox/katamari';
 import { SugarBody } from '@ephox/sugar';
 
 import I18n from 'tinymce/core/api/util/I18n';
@@ -31,7 +31,7 @@ UnitTest.asynctest('SilverDialog Event Test', (success, failure) => {
             align: 'end',
             primary: false,
             disabled: false,
-            icon: Option.none()
+            icon: Optional.none()
           },
           {
             type: 'submit',
@@ -40,7 +40,7 @@ UnitTest.asynctest('SilverDialog Event Test', (success, failure) => {
             align: 'end',
             primary: true,
             disabled: false,
-            icon: Option.none()
+            icon: Optional.none()
           }
         ],
         initialData: {},

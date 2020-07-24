@@ -1,5 +1,5 @@
 import { Objects } from '@ephox/boulder';
-import { Arr, Cell, Fun, Global, Obj, Option } from '@ephox/katamari';
+import { Arr, Cell, Fun, Global, Obj, Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
 import { AlloyComponent } from '../api/component/ComponentApi';
@@ -30,7 +30,7 @@ type LookupInfo = { [key: string]: InspectorInfo } | { error: string };
 
 export interface Inspector {
   systems: Record<string, GuiSystem>;
-  lookup: (uid: string) => Option<LookupInfo>;
+  lookup: (uid: string) => Optional<LookupInfo>;
   events: {
     setToNormal: (eventName: string) => void;
     setToLogging: (eventName: string) => void;
@@ -104,7 +104,7 @@ const makeEventLogger = (eventName: string, initialTarget: SugarElement): Debugg
 const processEvent = (eventName: string, initialTarget: SugarElement, f: EventProcessor) => {
   const status = Obj.get(eventConfig.get(), eventName).orThunk(() => {
     const patterns = Obj.keys(eventConfig.get());
-    return Arr.findMap(patterns, (p) => eventName.indexOf(p) > -1 ? Option.some(eventConfig.get()[p]) : Option.none());
+    return Arr.findMap(patterns, (p) => eventName.indexOf(p) > -1 ? Optional.some(eventConfig.get()[p]) : Optional.none());
   }).getOr(
     EventConfiguration.NORMAL
   );
@@ -181,7 +181,7 @@ const inspectorInfo = (comp: AlloyComponent) => {
 const getOrInitConnection = () => {
   const win: AlloyGlobal = Global;
   // The format of the global is going to be:
-  // lookup(uid) -> Option { name => data }
+  // lookup(uid) -> Optional { name => data }
   // systems: Set AlloyRoots
   if (win[CHROME_INSPECTOR_GLOBAL] !== undefined) {
     return win[CHROME_INSPECTOR_GLOBAL];
@@ -199,8 +199,8 @@ const getOrInitConnection = () => {
         const connections: string[] = Obj.keys(systems);
         return Arr.findMap(connections, (conn) => {
           const connGui = systems[conn];
-          return connGui.getByUid(uid).toOption().map((comp): LookupInfo => Objects.wrap(AlloyLogger.element(comp.element()), inspectorInfo(comp)));
-        }).orThunk(() => Option.some<LookupInfo>({
+          return connGui.getByUid(uid).toOptional().map((comp): LookupInfo => Objects.wrap(AlloyLogger.element(comp.element()), inspectorInfo(comp)));
+        }).orThunk(() => Optional.some<LookupInfo>({
           error: 'Systems (' + connections.join(', ') + ') did not contain uid: ' + uid
         }));
       },

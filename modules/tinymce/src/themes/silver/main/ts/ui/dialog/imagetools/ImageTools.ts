@@ -10,7 +10,7 @@ import {
 } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
 import { ImageResult, ResultConversions } from '@ephox/imagetools';
-import { Fun, Option } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
 import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
@@ -72,12 +72,12 @@ export const renderImageTools = (detail: ImageToolsSpec, providersBackstage: UiF
     AlloyTriggers.emitWith(anyInSystem, ImageToolsEvents.external.formActionEvent, { name: ImageToolsEvents.external.enable(), value: { }});
   };
 
-  const updateSrc = (anyInSystem: AlloyComponent, src: string): Promise<Option<SugarElement>> => {
+  const updateSrc = (anyInSystem: AlloyComponent, src: string): Promise<Optional<SugarElement>> => {
     block(anyInSystem);
     return imagePanel.updateSrc(anyInSystem, src);
   };
 
-  const blobManipulate = (anyInSystem: AlloyComponent, blob: Blob, filter: (ir: ImageResult) => ImageResult | PromiseLike<ImageResult>, action: (blob: Blob) => string, swap: () => void): Promise<Option<SugarElement>> => {
+  const blobManipulate = (anyInSystem: AlloyComponent, blob: Blob, filter: (ir: ImageResult) => ImageResult | PromiseLike<ImageResult>, action: (blob: Blob) => string, swap: () => void): Promise<Optional<SugarElement>> => {
     block(anyInSystem);
     return ResultConversions.blobToImageResult(blob).
       then(filter).

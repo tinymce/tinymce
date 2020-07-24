@@ -1,4 +1,4 @@
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as ToolbarSchema from '../../ui/schema/ToolbarSchema';
@@ -24,7 +24,7 @@ const factory: CompositeSketchFactory<ToolbarDetail, ToolbarSpec> = (detail, com
     });
   };
 
-  const getGroupContainer = (component: AlloyComponent) => detail.shell ? Option.some(component) : AlloyParts.getPart(component, detail, 'groups');
+  const getGroupContainer = (component: AlloyComponent) => detail.shell ? Optional.some(component) : AlloyParts.getPart(component, detail, 'groups');
 
   // In shell mode, the group overrides need to be added to the main container, and there can be no children
   const extra: {

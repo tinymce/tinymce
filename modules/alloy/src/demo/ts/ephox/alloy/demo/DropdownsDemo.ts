@@ -1,4 +1,4 @@
-import { Arr, Future, Obj, Option, Result } from '@ephox/katamari';
+import { Arr, Future, Obj, Optional, Result } from '@ephox/katamari';
 import { Class, SugarElement } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
@@ -103,7 +103,7 @@ export default (): void => {
         });
 
         return Future.pure(
-          Option.some(TieredMenu.singleData('name', wMenu))
+          Optional.some(TieredMenu.singleData('name', wMenu))
         );
       },
       lazySink,
@@ -152,7 +152,7 @@ export default (): void => {
           items: [ wDoubleInput ]
         });
 
-        return Future.pure(menu).map(() => Option.some(TieredMenu.singleData('demo.2.menu', menu)));
+        return Future.pure(menu).map(() => Optional.some(TieredMenu.singleData('demo.2.menu', menu)));
       }
     })
   );
@@ -203,7 +203,7 @@ export default (): void => {
               items: [ wDoubleInput ]
             });
 
-            return Future.pure(menu).map(() => Option.some(TieredMenu.singleData('demo.2.menu', menu)));
+            return Future.pure(menu).map(() => Optional.some(TieredMenu.singleData('demo.2.menu', menu)));
           }
         })
       ]
@@ -249,7 +249,7 @@ export default (): void => {
             columns: 2,
             rows: 2
           });
-          return Option.some(TieredMenu.singleData('grid-list', menu));
+          return Optional.some(TieredMenu.singleData('grid-list', menu));
         });
       },
 
@@ -298,7 +298,7 @@ export default (): void => {
             value: 'demo.4.menu',
             items
           });
-          return Option.some(TieredMenu.singleData('basic-list', menu));
+          return Optional.some(TieredMenu.singleData('basic-list', menu));
         });
       },
       onExecute(sandbox, item) {
@@ -441,7 +441,7 @@ export default (): void => {
           }
         });
 
-        return future.map((f) => Option.from(TieredMenu.tieredData(f.primary, f.menus, f.expansions)));
+        return future.map((f) => Optional.from(TieredMenu.tieredData(f.primary, f.menus, f.expansions)));
       }
     })
   );

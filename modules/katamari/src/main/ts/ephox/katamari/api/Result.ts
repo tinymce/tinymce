@@ -1,5 +1,5 @@
 import * as Fun from './Fun';
-import { Option } from './Option';
+import { Optional } from './Optional';
 
 export interface Result<T, E> {
   is: (value: T) => boolean;
@@ -12,7 +12,7 @@ export interface Result<T, E> {
   fold: <U> (whenError: (err: E) => U, mapper: (value: T) => U) => U;
   exists: (predicate: (value: T) => boolean) => boolean;
   forall: (predicate: (value: T) => boolean) => boolean;
-  toOption: () => Option<T>;
+  toOptional: () => Optional<T>;
   isValue: () => boolean;
   isError: () => boolean;
   getOr: (defaultValue: T) => T;
@@ -30,7 +30,7 @@ export interface Result<T, E> {
  * fold :: this Result a -> (_ -> b, a -> b) -> b
  * exists :: this Result a -> (a -> Bool) -> Bool
  * forall :: this Result a -> (a -> Bool) -> Bool
- * toOption :: this Result a -> Option a
+ * toOptional :: this Result a -> Optional a
  * isValue :: this Result a -> Bool
  * isError :: this Result a -> Bool
  * getOr :: this Result a -> a -> a
@@ -79,8 +79,8 @@ const value = function <T, E = any> (o: T): Result<T, E> {
     return f(o);
   };
 
-  const toOption = function () {
-    return Option.some(o);
+  const toOptional = function () {
+    return Optional.some(o);
   };
 
   return {
@@ -99,7 +99,7 @@ const value = function <T, E = any> (o: T): Result<T, E> {
     bind,
     exists,
     forall,
-    toOption
+    toOptional
   };
 };
 
@@ -152,11 +152,11 @@ const error = function <T = any, E = any> (message: E): Result<T, E> {
     bind,
     exists: Fun.never,
     forall: Fun.always,
-    toOption: Option.none
+    toOptional: Optional.none
   };
 };
 
-const fromOption = <T, E>(opt: Option<T>, err: E): Result<T, E> => opt.fold(
+const fromOption = <T, E>(opt: Optional<T>, err: E): Result<T, E> => opt.fold(
   () => error(err),
   value
 );

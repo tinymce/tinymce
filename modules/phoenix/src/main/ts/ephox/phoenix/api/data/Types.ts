@@ -1,5 +1,5 @@
 import { Universe } from '@ephox/boss';
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 
 export interface SpotPoint<E> {
   readonly element: () => E;
@@ -34,11 +34,11 @@ export interface SearchResult<E> {
 }
 
 export interface Direction {
-  readonly sibling: <E, D>(universe: Universe<E, D>, item: E) => Option<E>;
-  readonly first: <E>(children: E[]) => Option<E>;
+  readonly sibling: <E, D>(universe: Universe<E, D>, item: E) => Optional<E>;
+  readonly first: <E>(children: E[]) => Optional<E>;
 }
 
-export type Transition = <E, D> (universe: Universe<E, D>, item: E, direction: Direction, _transition?: Transition) => Option<Traverse<E>>;
+export type Transition = <E, D> (universe: Universe<E, D>, item: E, direction: Direction, _transition?: Transition) => Optional<Traverse<E>>;
 
 export interface Traverse<E> {
   readonly item: () => E;
@@ -48,7 +48,7 @@ export interface Traverse<E> {
 export type Successor = {
   readonly current: Transition;
   readonly next: Transition;
-  readonly fallback: Option<Transition>;
+  readonly fallback: Optional<Transition>;
 };
 
 export interface Wrapter<E> {

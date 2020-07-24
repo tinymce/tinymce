@@ -1,16 +1,16 @@
 import { DomUniverse } from '@ephox/boss';
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import { TextSeekerPhaseProcessor } from '../../textdata/TextSeeker';
 import { TextSearch, TextSearchSeeker } from '../general/TextSearch';
 
 const universe = DomUniverse();
 
-const previousChar = function (text: string, offset: Option<number>) {
+const previousChar = function (text: string, offset: Optional<number>) {
   return TextSearch.previousChar(text, offset);
 };
 
-const nextChar = function (text: string, offset: Option<number>) {
+const nextChar = function (text: string, offset: Optional<number>) {
   return TextSearch.nextChar(text, offset);
 };
 

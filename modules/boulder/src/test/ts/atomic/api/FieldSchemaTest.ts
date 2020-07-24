@@ -1,9 +1,9 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import * as FieldSchema from 'ephox/boulder/api/FieldSchema';
-import * as ValueSchema from 'ephox/boulder/api/ValueSchema';
-import { FieldProcessorAdt } from 'ephox/boulder/api/Main';
-import { Obj, Option } from '@ephox/katamari';
+import { Obj, Optional } from '@ephox/katamari';
 import { KAssert } from '@ephox/katamari-assertions';
+import * as FieldSchema from 'ephox/boulder/api/FieldSchema';
+import { FieldProcessorAdt } from 'ephox/boulder/api/Main';
+import * as ValueSchema from 'ephox/boulder/api/ValueSchema';
 
 UnitTest.test('Atomic Test: api.FieldSchemaTest', function () {
   const assertFieldValue = (label: string, expected: any, input: any, field: FieldProcessorAdt) => {
@@ -28,7 +28,7 @@ UnitTest.test('Atomic Test: api.FieldSchemaTest', function () {
     );
   };
 
-  const assertOptionalFieldValue = (expected: Record<string, Option<any>>, input: any, field: FieldProcessorAdt) => {
+  const assertOptionalFieldValue = (expected: Record<string, Optional<any>>, input: any, field: FieldProcessorAdt) => {
     const schema = ValueSchema.objOf([
       field
     ]);
@@ -37,7 +37,7 @@ UnitTest.test('Atomic Test: api.FieldSchemaTest', function () {
       (_err) => Assert.fail('Should not fail'),
       (actual: any) => {
         Obj.each(expected, (expectedValueOpt, expectedKey) => {
-          KAssert.eqOption('eq', expectedValueOpt, actual[expectedKey]);
+          KAssert.eqOptional('eq', expectedValueOpt, actual[expectedKey]);
         });
       }
     );
@@ -54,10 +54,10 @@ UnitTest.test('Atomic Test: api.FieldSchemaTest', function () {
   assertFieldValue('Should be specified value b', { key: 'b' }, { key: 'b' }, FieldSchema.strictStringEnum('key', [ 'a', 'b' ]));
   assertFieldError('Should fail on undefined value variant', { key: 'c' }, FieldSchema.strictStringEnum('key', [ 'a', 'b' ]));
 
-  assertOptionalFieldValue({ key: Option.some('a') }, { key: 'a' }, FieldSchema.optionStringEnum('key', [ 'a', 'b' ]));
-  assertOptionalFieldValue({ key: Option.some('b') }, { key: 'b' }, FieldSchema.optionStringEnum('key', [ 'a', 'b' ]));
+  assertOptionalFieldValue({ key: Optional.some('a') }, { key: 'a' }, FieldSchema.optionStringEnum('key', [ 'a', 'b' ]));
+  assertOptionalFieldValue({ key: Optional.some('b') }, { key: 'b' }, FieldSchema.optionStringEnum('key', [ 'a', 'b' ]));
   assertFieldError('Should be fail on unspecified value', { key: 'c' }, FieldSchema.optionStringEnum('key', [ 'a', 'b' ]));
-  assertOptionalFieldValue({ key: Option.none() }, { }, FieldSchema.optionStringEnum('key', [ 'a', 'b' ]));
-  assertOptionalFieldValue({ key: Option.some([ 'b' ]) }, { key: [ 'b' ] }, FieldSchema.optionArrayOf('key', ValueSchema.string));
-  assertOptionalFieldValue({ key: Option.none() }, { }, FieldSchema.optionArrayOf('key', ValueSchema.string));
+  assertOptionalFieldValue({ key: Optional.none() }, { }, FieldSchema.optionStringEnum('key', [ 'a', 'b' ]));
+  assertOptionalFieldValue({ key: Optional.some([ 'b' ]) }, { key: [ 'b' ] }, FieldSchema.optionArrayOf('key', ValueSchema.string));
+  assertOptionalFieldValue({ key: Optional.none() }, { }, FieldSchema.optionArrayOf('key', ValueSchema.string));
 });

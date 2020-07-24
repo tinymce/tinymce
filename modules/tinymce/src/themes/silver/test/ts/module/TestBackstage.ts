@@ -1,5 +1,5 @@
 import { AlloyComponent, HotspotAnchorSpec } from '@ephox/alloy';
-import { Cell, Fun, Future, Option, Result } from '@ephox/katamari';
+import { Cell, Fun, Future, Optional, Result } from '@ephox/katamari';
 import { SugarBody } from '@ephox/sugar';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 import { ApiUrlData } from 'tinymce/themes/silver/backstage/UrlInputBackstage';
@@ -40,9 +40,9 @@ export default function (sink?: AlloyComponent): UiFactoryBackstage {
     urlinput: {
       getHistory: () => [],
       addToHistory: () => {},
-      getLinkInformation: () => Option.none(),
-      getValidationHandler: () => Option.none(),
-      getUrlPicker: (_filetype) => Option.some((entry: ApiUrlData) => Future.pure(entry))
+      getLinkInformation: () => Optional.none(),
+      getValidationHandler: () => Optional.none(),
+      getUrlPicker: (_filetype) => Optional.some((entry: ApiUrlData) => Future.pure(entry))
     },
     dialog: {
       isDraggableModal: () => false

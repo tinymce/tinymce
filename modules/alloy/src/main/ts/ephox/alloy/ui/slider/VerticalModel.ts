@@ -1,4 +1,4 @@
-import { Fun, Option } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 import { Css, Height } from '@ephox/sugar';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
@@ -61,17 +61,17 @@ const setToMax = (spectrum: AlloyComponent, detail: VerticalSliderDetail): void 
 };
 
 // move in a direction by step size. Fire change at the end
-const moveBy = (direction: number, spectrum: AlloyComponent, detail: VerticalSliderDetail): Option<number> => {
+const moveBy = (direction: number, spectrum: AlloyComponent, detail: VerticalSliderDetail): Optional<number> => {
   const f = (direction > 0) ? SliderModel.increaseBy : SliderModel.reduceBy;
   const yValue = f(currentValue(detail).y(), minY(detail), maxY(detail), step(detail));
   fireSliderChange(spectrum, sliderValue(yValue));
-  return Option.some(yValue);
+  return Optional.some(yValue);
 };
 
-const handleMovement = (direction: number) => (spectrum: AlloyComponent, detail: VerticalSliderDetail): Option<boolean> => moveBy(direction, spectrum, detail).map((): boolean => true);
+const handleMovement = (direction: number) => (spectrum: AlloyComponent, detail: VerticalSliderDetail): Optional<boolean> => moveBy(direction, spectrum, detail).map((): boolean => true);
 
 // get y offset from event
-const getValueFromEvent = (simulatedEvent: NativeSimulatedEvent): Option<number> => {
+const getValueFromEvent = (simulatedEvent: NativeSimulatedEvent): Optional<number> => {
   const pos = ModelCommon.getEventSource(simulatedEvent);
   return pos.map(function (p) {
     return p.top();
@@ -79,13 +79,13 @@ const getValueFromEvent = (simulatedEvent: NativeSimulatedEvent): Option<number>
 };
 
 // find the y offset of a given value from the model
-const findOffsetOfValue = (spectrum: AlloyComponent, detail: VerticalSliderDetail, value: number, minEdge: Option<AlloyComponent>, maxEdge: Option<AlloyComponent>): number => {
+const findOffsetOfValue = (spectrum: AlloyComponent, detail: VerticalSliderDetail, value: number, minEdge: Optional<AlloyComponent>, maxEdge: Optional<AlloyComponent>): number => {
   const minOffset = 0;
   const maxOffset = getYScreenRange(spectrum);
   const centerMinEdge = minEdge.bind((edge: AlloyComponent) =>
-    Option.some(getYCenterOffSetOf(edge, spectrum))).getOr(minOffset);
+    Optional.some(getYCenterOffSetOf(edge, spectrum))).getOr(minOffset);
   const centerMaxEdge = maxEdge.bind((edge: AlloyComponent) =>
-    Option.some(getYCenterOffSetOf(edge, spectrum))).getOr(maxOffset);
+    Optional.some(getYCenterOffSetOf(edge, spectrum))).getOr(maxOffset);
 
   const args = {
     min: minY(detail),
@@ -105,7 +105,7 @@ const findOffsetOfValue = (spectrum: AlloyComponent, detail: VerticalSliderDetai
 };
 
 // find left offset for absolute positioning from a given value
-const findPositionOfValue = (slider: AlloyComponent, spectrum: AlloyComponent, value: number, minEdge: Option<AlloyComponent>, maxEdge: Option<AlloyComponent>, detail: VerticalSliderDetail): number => {
+const findPositionOfValue = (slider: AlloyComponent, spectrum: AlloyComponent, value: number, minEdge: Optional<AlloyComponent>, maxEdge: Optional<AlloyComponent>, detail: VerticalSliderDetail): number => {
   const offset = findOffsetOfValue(spectrum, detail, value, minEdge, maxEdge);
   return (getMinYBounds(spectrum) - getMinYBounds(slider)) + offset;
 };
@@ -126,21 +126,21 @@ const setPositionFromValue = (slider: AlloyComponent, thumb: AlloyComponent, det
 };
 
 // Key Events
-const onLeft = Option.none;
-const onRight = Option.none;
+const onLeft = Optional.none;
+const onRight = Optional.none;
 const onUp = handleMovement(-1);
 const onDown = handleMovement(1);
 
 // Edge Click Actions
 const edgeActions = {
-  'top-left': Option.none(),
-  'top': Option.some(EdgeActions.setToTEdge),
-  'top-right': Option.none(),
-  'right': Option.none(),
-  'bottom-right': Option.none(),
-  'bottom': Option.some(EdgeActions.setToBEdge),
-  'bottom-left': Option.none(),
-  'left': Option.none()
+  'top-left': Optional.none(),
+  'top': Optional.some(EdgeActions.setToTEdge),
+  'top-right': Optional.none(),
+  'right': Optional.none(),
+  'bottom-right': Optional.none(),
+  'bottom': Optional.some(EdgeActions.setToBEdge),
+  'bottom-left': Optional.none(),
+  'left': Optional.none()
 };
 
 export {

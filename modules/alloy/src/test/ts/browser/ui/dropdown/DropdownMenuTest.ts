@@ -1,6 +1,6 @@
 import { FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, Touch, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Arr, Fun, Future, Obj, Option, Result } from '@ephox/katamari';
+import { Arr, Fun, Future, Obj, Optional, Result } from '@ephox/katamari';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
@@ -132,7 +132,7 @@ UnitTest.asynctest('DropdownMenuTest', (success, failure) => {
         },
 
         fetch() {
-          return Future.pure(testData).map((d) => Option.from(TieredMenu.tieredData(d.primary, d.menus, d.expansions)));
+          return Future.pure(testData).map((d) => Optional.from(TieredMenu.tieredData(d.primary, d.menus, d.expansions)));
         }
       })
     );

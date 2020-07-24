@@ -1,5 +1,5 @@
 import { Universe } from '@ephox/boss';
-import { Contracts, Fun, Option } from '@ephox/katamari';
+import { Contracts, Fun, Optional } from '@ephox/katamari';
 import { Gather, Spot, SpotPoint } from '@ephox/phoenix';
 import * as TextSearchBase from '../../textdata/TextSearch';
 import { TextSeeker, TextSeekerOutcome, TextSeekerPhase, TextSeekerPhaseConstructor, TextSeekerPhaseProcessor } from '../../textdata/TextSeeker';
@@ -13,10 +13,10 @@ export interface TextSearchSeeker {
 
 const seekerSig = Contracts.exactly([ 'regex', 'attempt' ]);
 
-type PreviousCharFn = (text: string, offset: Option<number>) => Option<CharPos>;
+type PreviousCharFn = (text: string, offset: Optional<number>) => Optional<CharPos>;
 const previousChar: PreviousCharFn = TextSearchBase.previous;
 
-type NextCharFn = (text: string, offset: Option<number>) => Option<CharPos>;
+type NextCharFn = (text: string, offset: Optional<number>) => Optional<CharPos>;
 const nextChar: NextCharFn = TextSearchBase.next;
 
 // Returns: a TextSeeker outcome ADT of 'aborted', 'success', or 'edge'.
@@ -80,12 +80,12 @@ const expandRight = function <E, D> (universe: Universe<E, D>, item: E, offset: 
 // Identify the (element, offset) pair ignoring potential fragmentation. Follow the offset
 // through until the offset left is 0. This is designed to find text node positions that
 // have been fragmented.
-const scanRight = function <E, D> (universe: Universe<E, D>, item: E, originalOffset: number): Option<SpotPoint<E>> {
+const scanRight = function <E, D> (universe: Universe<E, D>, item: E, originalOffset: number): Optional<SpotPoint<E>> {
   const isRoot = Fun.constant(false);
-  if (!universe.property().isText(item)) { return Option.none(); }
+  if (!universe.property().isText(item)) { return Optional.none(); }
   const text = universe.property().getText(item);
   if (originalOffset <= text.length) {
-    return Option.some(Spot.point(item, originalOffset));
+    return Optional.some(Spot.point(item, originalOffset));
   } else {
     return Gather.seekRight(universe, item, universe.property().isText, isRoot).bind(function (next) {
       return scanRight(universe, next, originalOffset - text.length);

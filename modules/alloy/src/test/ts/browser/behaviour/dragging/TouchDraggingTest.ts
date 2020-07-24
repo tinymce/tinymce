@@ -1,6 +1,6 @@
 import { Chain, Guard, NamedChain, Touch, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Option, Result } from '@ephox/katamari';
+import { Optional, Result } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Css, Scroll, SugarPosition } from '@ephox/sugar';
 
@@ -43,7 +43,7 @@ UnitTest.asynctest('TouchDraggingTest', (success, failure) => {
                 Dragging.snap({
                   sensor: DragCoord.fixed(300, 10),
                   range: SugarPosition(1000, 30),
-                  output: DragCoord.fixed(Option.none<number>(), Option.some(10))
+                  output: DragCoord.fixed(Optional.none<number>(), Optional.some(10))
                 })
               ];
             },

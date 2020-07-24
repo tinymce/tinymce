@@ -1,4 +1,4 @@
-import { Arr, Id, Option, Type } from '@ephox/katamari';
+import { Arr, Id, Optional, Type } from '@ephox/katamari';
 import { createFileList } from '../file/FileList';
 import { getData } from './DataTransferItem';
 import { createDataTransferItemList } from './DataTransferItemList';
@@ -20,9 +20,9 @@ const setDragImage = (transfer: DataTransfer, imageData: DragImageData) => {
   dt[imageId] = imageData;
 };
 
-const getDragImage = (transfer: DataTransfer): Option<DragImageData> => {
+const getDragImage = (transfer: DataTransfer): Optional<DragImageData> => {
   const dt: any = transfer;
-  return Option.from(dt[imageId]);
+  return Optional.from(dt[imageId]);
 };
 
 const normalize = (format: string) => {

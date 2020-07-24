@@ -1,6 +1,6 @@
 import { Assertions, Chain, Logger, Pipeline } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { Fun, Option } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 import { KAssert } from '@ephox/katamari-assertions';
 import { Hierarchy, Remove, SimSelection, SugarElement, Traverse, WindowSelection } from '@ephox/sugar';
 import * as SelectionBookmark from 'tinymce/core/selection/SelectionBookmark';
@@ -45,11 +45,11 @@ UnitTest.asynctest('browser.tinymce.core.selection.SelectionBookmarkTest', funct
     });
   };
 
-  const cAssertNone = <T> () => Chain.op(function (x: Option<T>) {
+  const cAssertNone = <T> () => Chain.op(function (x: Optional<T>) {
     KAssert.eqNone('should be none', x);
   });
 
-  const cAssertSome = Chain.op(function (x: Option<any>) {
+  const cAssertSome = Chain.op(function (x: Optional<any>) {
     Assert.eq('should be some', true, x.isSome());
   });
 
@@ -70,7 +70,7 @@ UnitTest.asynctest('browser.tinymce.core.selection.SelectionBookmarkTest', funct
   };
 
   const cManipulateBookmarkOffsets = function (startPad, finishPad) {
-    return Chain.mapper(function (bookmark: Option<any>) {
+    return Chain.mapper(function (bookmark: Optional<any>) {
       return bookmark
         .map(function (bm) {
           return SimSelection.range(bm.start(), bm.soffset() + startPad, bm.finish(), bm.foffset() + finishPad);
@@ -85,7 +85,7 @@ UnitTest.asynctest('browser.tinymce.core.selection.SelectionBookmarkTest', funct
   };
 
   const cAssertBookmark = function (startPath, startOffset, finishPath, finishOffset) {
-    return Chain.op(function (input: Option<any>) {
+    return Chain.op(function (input: Optional<any>) {
       const sc = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), startPath).getOrDie();
       const fc = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), finishPath).getOrDie();
 
@@ -98,7 +98,7 @@ UnitTest.asynctest('browser.tinymce.core.selection.SelectionBookmarkTest', funct
     });
   };
 
-  const cSetSelectionFromBookmark = Chain.op(function (bookmark: Option<any>) {
+  const cSetSelectionFromBookmark = Chain.op(function (bookmark: Optional<any>) {
     bookmark.each(function (b) {
       const root = SugarElement.fromDom(viewBlock.get());
       const win = Traverse.defaultView(root);
@@ -196,7 +196,7 @@ UnitTest.asynctest('browser.tinymce.core.selection.SelectionBookmarkTest', funct
       cValidateBookmark([]),
       cAssertBookmark([ 0, 0 ], 2, [ 1, 0 ], 3)
     ])),
-    Logger.t('readRange with with win without getSelection should return Option.none', Chain.asStep({}, [
+    Logger.t('readRange with with win without getSelection should return Optional.none', Chain.asStep({}, [
       Chain.injectThunked(function () {
         const mockWin = { getSelection: Fun.constant(null) };
         return SelectionBookmark.readRange(mockWin);

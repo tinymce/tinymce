@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Disabling, Toggling, ItemTypes } from '@ephox/alloy';
+import { Disabling, ItemTypes, Toggling } from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
-import { Merger, Option } from '@ephox/katamari';
+import { Merger, Optional } from '@ephox/katamari';
 import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
 import * as ItemClasses from '../ItemClasses';
 import ItemResponse from '../ItemResponse';
@@ -35,10 +35,10 @@ const renderToggleMenuItem = (
   const structure = renderItemStructure({
     iconContent: spec.icon,
     textContent: spec.text,
-    htmlContent: Option.none(),
+    htmlContent: Optional.none(),
     ariaLabel: spec.text,
-    checkMark: Option.some(renderCheckmark(providersBackstage.icons)),
-    caret: Option.none(),
+    checkMark: Optional.some(renderCheckmark(providersBackstage.icons)),
+    caret: Optional.none(),
     shortcutContent: spec.shortcut,
     presets: 'normal',
     meta: spec.meta

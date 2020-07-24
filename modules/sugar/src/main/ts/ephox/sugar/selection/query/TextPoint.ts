@@ -1,4 +1,4 @@
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import { SugarElement } from '../../api/node/SugarElement';
 import * as SugarText from '../../api/node/SugarText';
 import * as Geometry from '../alien/Geometry';
@@ -26,7 +26,7 @@ const locate = (doc: SugarElement<Document>, node: SugarElement<Text>, x: number
   r.selectNode(node.dom());
   const rects = r.getClientRects();
   const foundRect = Arr.findMap<ClientRect | DOMRect, ClientRect | DOMRect>(rects, (rect) =>
-    Geometry.inRect(rect, x, y) ? Option.some(rect) : Option.none());
+    Geometry.inRect(rect, x, y) ? Optional.some(rect) : Optional.none());
 
   return foundRect.map((rect) => locateOffset(doc, node, x, y, rect));
 };

@@ -1,5 +1,5 @@
 import { Objects } from '@ephox/boulder';
-import { Arr, Fun, Obj, Option, Result } from '@ephox/katamari';
+import { Arr, Fun, Obj, Optional, Result } from '@ephox/katamari';
 
 import * as ObjIndex from '../alien/ObjIndex';
 import * as PrioritySort from '../alien/PrioritySort';
@@ -29,7 +29,7 @@ import * as EventHandler from './EventHandler';
  * So at the end, you should have Result(eventName -> single function)
  */
 
-type Info = Record<string, () => Option<BehaviourBlob.BehaviourConfigAndState<any, BehaviourState>>>;
+type Info = Record<string, () => Optional<BehaviourBlob.BehaviourConfigAndState<any, BehaviourState>>>;
 
 type BehaviourTuple<T extends EventFormat> = {
   name: () => string;

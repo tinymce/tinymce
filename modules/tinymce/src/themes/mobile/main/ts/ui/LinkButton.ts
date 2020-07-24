@@ -6,7 +6,7 @@
  */
 
 import { Representing, SketchSpec } from '@ephox/alloy';
-import { Option, Thunk } from '@ephox/katamari';
+import { Optional, Thunk } from '@ephox/katamari';
 
 import * as LinkBridge from '../bridge/LinkBridge';
 import * as RangePreserver from '../util/RangePreserver';
@@ -31,7 +31,7 @@ const getGroups = Thunk.cached(function (realm, editor) {
           // Do not include link
           maxFieldIndex: [ 'url', 'text', 'title', 'target' ].length - 1,
           getInitialValue(/* dialog */) {
-            return Option.some(
+            return Optional.some(
               LinkBridge.getInfo(editor)
             );
           },

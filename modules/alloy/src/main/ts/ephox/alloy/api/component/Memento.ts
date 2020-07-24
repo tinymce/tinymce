@@ -1,4 +1,4 @@
-import { Obj, Option } from '@ephox/katamari';
+import { Obj, Optional } from '@ephox/katamari';
 
 import * as Tagger from '../../registry/Tagger';
 import { isSketchSpec } from '../ui/Sketcher';
@@ -7,7 +7,7 @@ import { SimpleOrSketchSpec } from './SpecTypes';
 
 export interface MementoRecord {
   get: (comp: AlloyComponent) => AlloyComponent;
-  getOpt: (comp: AlloyComponent) => Option<AlloyComponent>;
+  getOpt: (comp: AlloyComponent) => Optional<AlloyComponent>;
   asSpec: () => SimpleOrSketchSpec;
 }
 
@@ -16,7 +16,7 @@ const record = (spec: SimpleOrSketchSpec): MementoRecord => {
 
   const get = (anyInSystem: AlloyComponent): AlloyComponent => anyInSystem.getSystem().getByUid(uid).getOrDie();
 
-  const getOpt = (anyInSystem: AlloyComponent): Option<AlloyComponent> => anyInSystem.getSystem().getByUid(uid).toOption();
+  const getOpt = (anyInSystem: AlloyComponent): Optional<AlloyComponent> => anyInSystem.getSystem().getByUid(uid).toOptional();
 
   const asSpec = (): SimpleOrSketchSpec => ({
     ...spec,

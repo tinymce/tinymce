@@ -1,5 +1,5 @@
 import { Universe } from '@ephox/boss';
-import { Adt, Option } from '@ephox/katamari';
+import { Adt, Optional } from '@ephox/katamari';
 import { Gather, Transition } from '@ephox/phoenix';
 import { ZonePosition } from '../api/general/ZonePosition';
 import { ZoneViewports } from '../api/general/ZoneViewports';
@@ -9,27 +9,27 @@ import { LanguageZones, ZoneDetails } from './LanguageZones';
 
 interface ZoneWalkerState<E> {
   fold: <T> (
-    inline: (item: E, mode: Transition, lang: Option<string>) => T,
+    inline: (item: E, mode: Transition, lang: Optional<string>) => T,
     text: (item: E, mode: Transition) => T,
     empty: (item: E, mode: Transition) => T,
-    boundary: (item: E, mode: Transition, lang: Option<string>) => T,
+    boundary: (item: E, mode: Transition, lang: Optional<string>) => T,
     concluded: (item: E, mode: Transition) => T
   ) => T;
   match: <T> (branches: {
-    inline: (item: E, mode: Transition, lang: Option<string>) => T;
+    inline: (item: E, mode: Transition, lang: Optional<string>) => T;
     text: (item: E, mode: Transition) => T;
     empty: (item: E, mode: Transition) => T;
-    boundary: (item: E, mode: Transition, lang: Option<string>) => T;
+    boundary: (item: E, mode: Transition, lang: Optional<string>) => T;
     concluded: (item: E, mode: Transition) => T;
   }) => T;
   log: (label: string) => void;
 }
 
 const adt: {
-  inline: <E> (item: E, mode: Transition, lang: Option<string>) => ZoneWalkerState<E>;
+  inline: <E> (item: E, mode: Transition, lang: Optional<string>) => ZoneWalkerState<E>;
   text: <E> (item: E, mode: Transition) => ZoneWalkerState<E>;
   empty: <E> (item: E, mode: Transition) => ZoneWalkerState<E>;
-  boundary: <E> (item: E, mode: Transition, lang: Option<string>) => ZoneWalkerState<E>;
+  boundary: <E> (item: E, mode: Transition, lang: Optional<string>) => ZoneWalkerState<E>;
   concluded: <E> (item: E, mode: Transition) => ZoneWalkerState<E>;
 } = Adt.generate([
   // an inline element, so use the lang to identify if a new zone is needed
@@ -51,8 +51,8 @@ const analyse = <E, D> (
 ): ZoneWalkerState<E> => {
   // Find if the current item has a lang property on it.
   const currentLang = universe.property().isElement(item) ?
-    Option.from(universe.attrs().get(item, 'lang')) :
-    Option.none<string>();
+    Optional.from(universe.attrs().get(item, 'lang')) :
+    Optional.none<string>();
 
   if (universe.property().isText(item)) {
     return adt.text(item, mode);

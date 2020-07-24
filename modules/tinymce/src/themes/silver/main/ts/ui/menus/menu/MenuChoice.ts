@@ -1,5 +1,5 @@
 import { Menu as BridgeMenu, Types } from '@ephox/bridge';
-import { Arr, Option, Options } from '@ephox/katamari';
+import { Arr, Optional, Optionals } from '@ephox/katamari';
 
 import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
 import { renderChoiceItem } from '../item/build/ChoiceItem';
@@ -33,12 +33,12 @@ export const createChoiceItems = (
   itemResponse: ItemResponse,
   select: (value: string) => boolean,
   providersBackstage: UiFactoryBackstageProviders
-) => Options.cat(
+) => Optionals.cat(
   Arr.map(items, (item) => {
     if (item.type === 'choiceitem') {
       return BridgeMenu.createChoiceMenuItem(item).fold(
         MenuUtils.handleError,
-        (d: BridgeMenu.ChoiceMenuItem) => Option.some(renderChoiceItem(
+        (d: BridgeMenu.ChoiceMenuItem) => Optional.some(renderChoiceItem(
           d, columns === 1,
           itemPresets,
           onItemValueHandler,
@@ -49,7 +49,7 @@ export const createChoiceItems = (
         ))
       );
     } else {
-      return Option.none();
+      return Optional.none();
     }
   })
 );

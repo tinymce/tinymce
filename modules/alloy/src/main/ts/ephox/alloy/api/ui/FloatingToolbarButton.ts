@@ -1,4 +1,4 @@
-import { Fun, Option } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
 import * as ComponentStructure from '../../alien/ComponentStructure';
@@ -87,7 +87,7 @@ const makeSandbox = (button: AlloyComponent, spec: FloatingToolbarButtonSpec, de
           mode: 'special',
           onEscape: (comp) => {
             Sandboxing.close(comp);
-            return Option.some<boolean>(true);
+            return Optional.some<boolean>(true);
           }
         }),
         Sandboxing.config({

@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import { Attribute, Class, SelectorFilter, SugarElement } from '@ephox/sugar';
 import Editor from '../api/Editor';
 import VK from '../api/util/VK';
@@ -51,7 +51,7 @@ const switchOnContentEditableTrue = (elm: SugarElement) => {
 };
 
 const removeFakeSelection = (editor: Editor) => {
-  Option.from(editor.selection.getNode()).each((elm) => {
+  Optional.from(editor.selection.getNode()).each((elm) => {
     elm.removeAttribute('data-mce-selected');
   });
 };

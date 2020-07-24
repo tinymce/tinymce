@@ -1,5 +1,5 @@
 import { FieldProcessorAdt } from '@ephox/boulder';
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { EventArgs } from '@ephox/sugar';
 
 import DelayedFunction from '../../alien/DelayedFunction';
@@ -22,7 +22,7 @@ const events = <E>(dragConfig: MouseDraggingConfig<E>, dragState: DraggingState,
     if (raw.button !== 0) { return; }
     simulatedEvent.stop();
 
-    const stop = () => DragUtils.stop(component, Option.some(blocker), dragConfig, dragState);
+    const stop = () => DragUtils.stop(component, Optional.some(blocker), dragConfig, dragState);
 
     // If the user has moved something outside the area, and has not come back within
     // 200 ms, then drop

@@ -37,7 +37,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
               return SelectorFind.ancestor(handle, '[role="dialog"]').getOr(handle);
             },
             blockerClass: detail.dragBlockClass.getOrDie(
-              // TODO: Support errors in Option getOrDie.
+              // TODO: Support errors in Optional getOrDie.
               new Error(
                 'The drag blocker class was not specified for a dialog with a drag handle: \n' +
                 JSON.stringify(spec, null, 2)

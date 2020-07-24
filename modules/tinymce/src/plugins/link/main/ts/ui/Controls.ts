@@ -6,7 +6,7 @@
  */
 
 import { Toolbar } from '@ephox/bridge';
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 
 import * as Settings from '../api/Settings';
@@ -109,14 +109,14 @@ const setupContextToolbars = function (editor: Editor) {
           if (!anchor) {
             const attachState = { href: value, attach: () => { } };
             const onlyText = Utils.isOnlyTextSelected(editor);
-            const text: Option<string> = onlyText ? Option.some(Utils.getAnchorText(editor.selection, anchor)).filter((t) => t.length > 0).or(Option.from(value)) : Option.none();
+            const text: Optional<string> = onlyText ? Optional.some(Utils.getAnchorText(editor.selection, anchor)).filter((t) => t.length > 0).or(Optional.from(value)) : Optional.none();
             Utils.link(editor, attachState, {
               href: value,
               text,
-              title: Option.none(),
-              rel: Option.none(),
-              target: Option.none(),
-              class: Option.none()
+              title: Optional.none(),
+              rel: Optional.none(),
+              target: Optional.none(),
+              class: Optional.none()
             });
             formApi.hide();
           } else {

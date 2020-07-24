@@ -7,7 +7,7 @@
 /* eslint-disable max-len */
 import { AlloyEvents, FocusManagers, ItemTypes, Keying, MenuTypes, TieredMenu, TieredMenuTypes } from '@ephox/alloy';
 import { InlineContent, Menu as BridgeMenu, Types } from '@ephox/bridge';
-import { Arr, Option, Options } from '@ephox/katamari';
+import { Arr, Optional, Optionals } from '@ephox/katamari';
 import { UiFactoryBackstage, UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
 import { detectSize } from '../../alien/FlatgridAutodetect';
 import { SimpleBehaviours } from '../../alien/SimpleBehaviours';
@@ -31,20 +31,20 @@ const createMenuItemFromBridge = (
   backstage: UiFactoryBackstage,
   menuHasIcons: boolean,
   isHorizontalMenu: boolean
-): Option<ItemTypes.ItemSpec> => {
+): Optional<ItemTypes.ItemSpec> => {
   const providersBackstage = backstage.shared.providers;
   // If we're making a horizontal menu (mobile context menu) we want text OR icons
   // to simplify the UI. We also don't want shortcut text.
   const parseForHorizontalMenu = (menuitem) => !isHorizontalMenu ? menuitem : ({
     ...menuitem,
-    shortcut: Option.none(),
-    icon: menuitem.text.isSome() ? Option.none() : menuitem.icon
+    shortcut: Optional.none(),
+    icon: menuitem.text.isSome() ? Optional.none() : menuitem.icon
   });
   switch (item.type) {
     case 'menuitem':
       return BridgeMenu.createMenuItem(item).fold(
         MenuUtils.handleError,
-        (d) => Option.some(MenuItems.normal(
+        (d) => Optional.some(MenuItems.normal(
           parseForHorizontalMenu(d),
           itemResponse,
           providersBackstage,
@@ -55,7 +55,7 @@ const createMenuItemFromBridge = (
     case 'nestedmenuitem':
       return BridgeMenu.createNestedMenuItem(item).fold(
         MenuUtils.handleError,
-        (d) => Option.some(MenuItems.nested(
+        (d) => Optional.some(MenuItems.nested(
           parseForHorizontalMenu(d),
           itemResponse,
           providersBackstage,
@@ -67,7 +67,7 @@ const createMenuItemFromBridge = (
     case 'togglemenuitem':
       return BridgeMenu.createToggleMenuItem(item).fold(
         MenuUtils.handleError,
-        (d) => Option.some(MenuItems.toggle(
+        (d) => Optional.some(MenuItems.toggle(
           parseForHorizontalMenu(d),
           itemResponse,
           providersBackstage,
@@ -77,7 +77,7 @@ const createMenuItemFromBridge = (
     case 'separator':
       return BridgeMenu.createSeparatorMenuItem(item).fold(
         MenuUtils.handleError,
-        (d) => Option.some(MenuItems.separator(d))
+        (d) => Optional.some(MenuItems.separator(d))
       );
     case 'fancymenuitem':
       return BridgeMenu.createFancyMenuItem(item).fold(
@@ -87,7 +87,7 @@ const createMenuItemFromBridge = (
     default: {
       // eslint-disable-next-line no-console
       console.error('Unknown item in general menu', item);
-      return Option.none();
+      return Optional.none();
     }
   }
 };
@@ -103,17 +103,17 @@ export const createAutocompleteItems = (
   // Render text and icons if we're using a single column, otherwise only render icons
   const renderText = columns === 1;
   const renderIcons = !renderText || MenuUtils.menuHasIcons(items);
-  return Options.cat(
+  return Optionals.cat(
     Arr.map(items, (item) => {
       if (item.type === 'separator') {
         return InlineContent.createSeparatorItem(item).fold(
           MenuUtils.handleError,
-          (d) => Option.some(MenuItems.separator(d))
+          (d) => Optional.some(MenuItems.separator(d))
         );
       } else {
         return InlineContent.createAutocompleterItem(item).fold(
           MenuUtils.handleError,
-          (d: InlineContent.AutocompleterItem) => Option.some(MenuItems.autocomplete(
+          (d: InlineContent.AutocompleterItem) => Optional.some(MenuItems.autocomplete(
             d,
             matchText,
             renderText,
@@ -138,7 +138,7 @@ export const createPartialMenu = (
 ): PartialMenuSpec => {
   const hasIcons = MenuUtils.menuHasIcons(items);
 
-  const alloyItems = Options.cat(
+  const alloyItems = Optionals.cat(
     Arr.map(items, (item: SingleMenuItemApi) => {
       // Have to check each item for an icon, instead of as part of hasIcons above,
       // else in horizontal menus, items with an icon but without text will display

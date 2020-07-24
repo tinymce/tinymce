@@ -5,11 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import {
-  AlloyComponent, Behaviour, Container, DomFactory, Memento, MementoRecord, ModalDialog, Reflecting, SketchSpec
-} from '@ephox/alloy';
+import { AlloyComponent, Behaviour, Container, DomFactory, Memento, MementoRecord, ModalDialog, Reflecting, SketchSpec } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { renderFooterButton } from '../general/Button';
@@ -64,7 +62,7 @@ const renderFooter = (initSpec: WindowFooterSpec, backstage: UiFactoryBackstage)
       buttonName: string
     ) => lookup(compInSystem, footerButtons, buttonName);
 
-    return Option.some({
+    return Optional.some({
       lookupByName,
       footerButtons
     });

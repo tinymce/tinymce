@@ -1,7 +1,7 @@
 import { AlloyEvents, DomFactory, GuiFactory, Input as AlloyInput, Memento, Representing, SimpleSpec } from '@ephox/alloy';
 import { ValueSchema } from '@ephox/boulder';
 import { Types } from '@ephox/bridge';
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { UiFactoryBackstage, UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
 import { renderBodyPanel } from 'tinymce/themes/silver/ui/dialog/BodyPanel';
 import { renderCollection } from 'tinymce/themes/silver/ui/dialog/Collection';
@@ -36,23 +36,23 @@ export default () => {
 
   const iframeSpec = renderIFrame({
     name: 'iframe',
-    label: Option.some('Iframe'),
+    label: Optional.some('Iframe'),
     sandboxed: true
   }, sharedBackstage.providers);
 
   const inputSpec = renderInput({
     name: 'input',
-    label: Option.some('Beta'),
-    inputMode: Option.none(),
-    placeholder: Option.none(),
+    label: Optional.some('Beta'),
+    inputMode: Optional.none(),
+    placeholder: Optional.none(),
     maximized: false,
     disabled: false
   }, sharedBackstage.providers);
 
   const textareaSpec = renderTextarea({
     name: 'textarea',
-    label: Option.some('Gamma'),
-    placeholder: Option.none(),
+    label: Optional.some('Gamma'),
+    placeholder: Optional.none(),
     maximized: false,
     disabled: false
   }, sharedBackstage.providers);
@@ -71,9 +71,9 @@ export default () => {
         disabled: false
       }, sharedBackstage.providers) as any,
       renderInput({
-        label: Option.some('Sample input'),
-        inputMode: Option.none(),
-        placeholder: Option.none(),
+        label: Optional.some('Sample input'),
+        inputMode: Optional.none(),
+        placeholder: Optional.none(),
         name: 'exampleinputfieldname',
         maximized: false,
         disabled: false
@@ -92,7 +92,7 @@ export default () => {
             text: 'Click Me!',
             primary: false,
             disabled: false,
-            icon: Option.none(),
+            icon: Optional.none(),
             borderless: false
           }, () => {
             console.log('clicked on the button in the grid wrapped by a label');
@@ -108,9 +108,9 @@ export default () => {
             disabled: false
           }, sharedBackstage.providers) as any,
           renderInput({
-            label: Option.some('Sample input'),
-            inputMode: Option.none(),
-            placeholder: Option.none(),
+            label: Optional.some('Sample input'),
+            inputMode: Optional.none(),
+            placeholder: Optional.none(),
             name: 'exampleinputfieldname',
             maximized: false,
             disabled: false
@@ -129,7 +129,7 @@ export default () => {
         text: 'Click Me!',
         primary: false,
         disabled: false,
-        icon: Option.none(),
+        icon: Optional.none(),
         borderless: false
       }, () => {
         console.log('clicked on the button in the grid');
@@ -142,7 +142,7 @@ export default () => {
     text: 'Text',
     primary: false,
     disabled: false,
-    icon: Option.none(),
+    icon: Optional.none(),
     borderless: false
   }, () => {
     console.log('clicked on the button');
@@ -182,23 +182,23 @@ export default () => {
 
   const colorInputSpec = renderColorInput({
     name: 'colorinput-demo',
-    label: Option.some('Color input label')
+    label: Optional.some('Color input label')
   }, sharedBackstage, backstage.colorinput);
 
   const colorPickerSpec = renderColorPicker({
     name: 'colorpicker-demo',
-    label: Option.some('Color picker label')
+    label: Optional.some('Color picker label')
   });
 
   const dropzoneSpec = renderDropZone({
     name: 'dropzone-demo',
-    label: Option.some('Dropzone label')
+    label: Optional.some('Dropzone label')
   }, sharedBackstage.providers);
 
   const selectBoxSpec = renderSelectBox({
     name: 'selectbox-demo',
     size: 1,
-    label: Option.some('Select one from'),
+    label: Optional.some('Select one from'),
     disabled: false,
     items: [
       { value: 'one', text: 'One' },
@@ -209,7 +209,7 @@ export default () => {
   const selectBoxSizeSpec = renderSelectBox({
     name: 'selectbox-demo',
     size: 6,
-    label: Option.some('Select one from'),
+    label: Optional.some('Select one from'),
     disabled: false,
     items: [
       { value: 'one', text: 'One' },
@@ -224,13 +224,13 @@ export default () => {
   const sizeInputSpec = renderSizeInput({
     constrain: true,
     name: 'sizeinput-demo',
-    label: Option.some('kustom fixed ratio'),
+    label: Optional.some('kustom fixed ratio'),
     disabled: false
   }, sharedBackstage.providers);
 
   const urlInputSpec = renderUrlInput({
     name: 'blah',
-    label: Option.some('Url'),
+    label: Optional.some('Url'),
     filetype: 'image', // 'image' || 'media'
     disabled: false
   }, backstage, backstage.urlinput);
@@ -286,7 +286,7 @@ export default () => {
     renderCollection({
       columns: 1,
       name: 'collection',
-      label: Option.some('Collection: ')
+      label: Optional.some('Collection: ')
     }, sharedBackstage.providers)
   );
 

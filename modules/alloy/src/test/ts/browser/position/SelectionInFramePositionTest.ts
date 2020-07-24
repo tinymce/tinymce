@@ -1,6 +1,6 @@
 import { Chain, Cursors, Guard, NamedChain } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Option, Result } from '@ephox/katamari';
+import { Optional, Result } from '@ephox/katamari';
 import { Css, DomEvent, Scroll, SelectorFind, SimRange, SugarElement, SugarNode, Traverse, WindowSelection } from '@ephox/sugar';
 
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
@@ -161,7 +161,7 @@ UnitTest.asynctest('SelectionInFramePositionTest', (success, failure) => {
               NamedChain.direct('range2', Chain.binder((range2: SimRange) => {
                 const start = range2.start();
                 // NOTE: Safari likes to select the text node.
-                const optElement = SugarNode.isText(start) ? Traverse.parentNode(start) : Option.some(start);
+                const optElement = SugarNode.isText(start) ? Traverse.parentNode(start) : Optional.some(start);
                 return optElement.filter(SugarNode.isHTMLElement).map((elem) => {
                   elem.dom().scrollIntoView();
                   return Scroll.get(Traverse.owner(elem));

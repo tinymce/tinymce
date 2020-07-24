@@ -1,5 +1,5 @@
 import { Chain, Guard, NamedChain } from '@ephox/agar';
-import { Option, Result } from '@ephox/katamari';
+import { Optional, Result } from '@ephox/katamari';
 import { Css, Scroll, SugarElement, Traverse } from '@ephox/sugar';
 
 import { Bounds } from 'ephox/alloy/alien/Boxes';
@@ -23,14 +23,14 @@ const cAddPopupToSink = (sinkName: string) => NamedChain.bundle((data: any) => {
 
 const cAddPopupToSinkWithin = (sinkName: string, elem: SugarElement) => NamedChain.bundle((data: any) => {
   const sink = data[sinkName];
-  const boxElement = Option.some(elem);
+  const boxElement = Optional.some(elem);
   const positioner = () => Positioning.positionWithin(sink, data.anchor, data.popup, boxElement);
   return cAddPopupToSinkCommon(data, sink, positioner);
 });
 
 const cAddPopupToSinkWithinBounds = (sinkName: string, bounds: Bounds) => NamedChain.bundle((data: any) => {
   const sink = data[sinkName];
-  const optBounds = Option.some(bounds);
+  const optBounds = Optional.some(bounds);
   const positioner = () => Positioning.positionWithinBounds(sink, data.anchor, data.popup, optBounds);
   return cAddPopupToSinkCommon(data, sink, positioner);
 });

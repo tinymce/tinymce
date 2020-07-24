@@ -2,7 +2,7 @@ import { ApproxStructure, Assertions, Logger, Mouse, Step, Waiter } from '@ephox
 import { AlloyComponent, GuiFactory, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Menu, Toolbar } from '@ephox/bridge';
-import { Arr, Cell, Option } from '@ephox/katamari';
+import { Arr, Cell, Optional } from '@ephox/katamari';
 import { Attribute, Class, SelectorFind } from '@ephox/sugar';
 import { renderMenuButton } from 'tinymce/themes/silver/ui/button/MenuButton';
 import { renderSplitButton, renderToolbarButton, renderToolbarToggleButton } from 'tinymce/themes/silver/ui/toolbar/button/ToolbarButtons';
@@ -32,9 +32,9 @@ UnitTest.asynctest('Toolbar Buttons Test', (success, failure) => {
               renderToolbarButton({
                 type: 'button',
                 disabled: false,
-                tooltip: Option.some('tooltip'),
-                icon: Option.none(),
-                text: Option.some('button1'),
+                tooltip: Optional.some('tooltip'),
+                icon: Optional.none(),
+                text: Optional.some('button1'),
                 onSetup: (_api: Toolbar.ToolbarButtonInstanceApi) => {
                   store.adder('onSetup.1')();
                   return () => { };
@@ -57,9 +57,9 @@ UnitTest.asynctest('Toolbar Buttons Test', (success, failure) => {
                 type: 'togglebutton',
                 disabled: false,
                 active: false,
-                tooltip: Option.some('tooltip'),
-                icon: Option.none(),
-                text: Option.some('button2'),
+                tooltip: Optional.some('tooltip'),
+                icon: Optional.none(),
+                text: Optional.some('button2'),
                 onSetup: (_api: Toolbar.ToolbarToggleButtonInstanceApi) => {
                   store.adder('onSetup.2')();
                   return () => { };
@@ -81,12 +81,12 @@ UnitTest.asynctest('Toolbar Buttons Test', (success, failure) => {
             components: [
               renderSplitButton({
                 type: 'splitbutton',
-                tooltip: Option.some('tooltip'),
-                icon: Option.none(),
-                text: Option.some('button3'),
+                tooltip: Optional.some('tooltip'),
+                icon: Optional.none(),
+                text: Optional.some('button3'),
                 columns: 1,
                 presets: 'normal',
-                select: Option.none(),
+                select: Optional.none(),
                 fetch: (callback) => {
                   callback([
                     {
@@ -119,9 +119,9 @@ UnitTest.asynctest('Toolbar Buttons Test', (success, failure) => {
             },
             components: [
               renderMenuButton({
-                tooltip: Option.some('tooltip'),
-                icon: Option.none(),
-                text: Option.some('button4'),
+                tooltip: Optional.some('tooltip'),
+                icon: Optional.none(),
+                text: Optional.some('button4'),
                 fetch: (callback) => {
                   callback([
                     {
@@ -137,7 +137,7 @@ UnitTest.asynctest('Toolbar Buttons Test', (success, failure) => {
                   store.adder('onSetup.4')();
                   return () => { };
                 }
-              }, 'tox-mbtn', helpers.backstage, Option.none())
+              }, 'tox-mbtn', helpers.backstage, Optional.none())
             ]
           }
         ]

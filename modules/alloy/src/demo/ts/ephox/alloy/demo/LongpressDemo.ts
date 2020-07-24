@@ -1,4 +1,4 @@
-import { Arr, Future, Option, Result } from '@ephox/katamari';
+import { Arr, Future, Optional, Result } from '@ephox/katamari';
 import { Class, SugarElement } from '@ephox/sugar';
 
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
@@ -44,7 +44,7 @@ export default (): void => {
             return Result.value(sink);
           },
           fetch() {
-            return Future.pure(Option.from(Arr.map([
+            return Future.pure(Optional.from(Arr.map([
               { type: 'item', data: { value: 'alpha', meta: { text: 'Alpha' }}},
               { type: 'item', data: { value: 'beta', meta: { text: 'Beta' }}}
             ], DemoRenders.orb)));

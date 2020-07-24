@@ -1,12 +1,12 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { Option, OptionInstances } from '@ephox/katamari';
+import { Optional, OptionalInstances } from '@ephox/katamari';
 import { Css, Insert, Remove, SelectorFind, SugarBody, SugarElement, Width } from '@ephox/sugar';
 import { ResizeDirection } from 'ephox/snooker/api/ResizeDirection';
 import { TableSize } from 'ephox/snooker/api/TableSize';
 import { Warehouse } from 'ephox/snooker/model/Warehouse';
 import * as fc from 'fast-check';
 
-const tOption = OptionInstances.tOption;
+const tOptional = OptionalInstances.tOptional;
 
 const pixelTableHtml = '<table style="width: 400px"><tbody><tr><td style="width: 200px"></td><td style="width: 200px"></td></tr></tbody></table>';
 const percentTableHtml = '<table style="width: 80%"><tbody><tr><td style="width: 50%"></td><td style="width: 50%"></td></tr></tbody></table>';
@@ -47,13 +47,13 @@ UnitTest.test('TableSize.pixelSizing', () => {
   }));
 
   sizing.adjustTableWidth(-200);
-  Assert.eq('Table raw width after resizing is 200px', Option.some('200px'), Css.getRaw(table, 'width'), tOption());
+  Assert.eq('Table raw width after resizing is 200px', Optional.some('200px'), Css.getRaw(table, 'width'), tOptional());
   Assert.eq('Table width after resizing is 200px', 200, sizing.width());
   Assert.eq('Table pixel width after resizing is 200px', 200, sizing.pixelWidth());
 
   const cell = SelectorFind.descendant<HTMLTableCellElement>(table, 'td').getOrDie();
   sizing.setElementWidth(cell, 50);
-  Assert.eq('Cell width after resizing is 50px', Option.some('50px'), Css.getRaw(cell, 'width'), tOption());
+  Assert.eq('Cell width after resizing is 50px', Optional.some('50px'), Css.getRaw(cell, 'width'), tOptional());
 
   Remove.remove(table);
 });
@@ -79,13 +79,13 @@ UnitTest.test('TableSize.percentageSizing', () => {
   }));
 
   sizing.adjustTableWidth(-25);
-  Assert.eq('Table raw width after resizing is 25% less of the original 80%', Option.some('60%'), Css.getRaw(table, 'width'), tOption());
+  Assert.eq('Table raw width after resizing is 25% less of the original 80%', Optional.some('60%'), Css.getRaw(table, 'width'), tOptional());
   Assert.eq('Table width after resizing is 60%', 60, sizing.width());
   Assert.eq('Table pixel width after resizing is 300px', 300, sizing.pixelWidth());
 
   const cell = SelectorFind.descendant<HTMLTableCellElement>(table, 'td').getOrDie();
   sizing.setElementWidth(cell, 25);
-  Assert.eq('Cell width after resizing is 25%', Option.some('25%'), Css.getRaw(cell, 'width'), tOption());
+  Assert.eq('Cell width after resizing is 25%', Optional.some('25%'), Css.getRaw(cell, 'width'), tOptional());
 
   Remove.remove(container);
 });
@@ -112,13 +112,13 @@ UnitTest.test('TableSize.noneSizing', () => {
   }));
 
   sizing.adjustTableWidth(-20);
-  Assert.eq('Table raw width after resizing is unchanged', Option.none<string>(), Css.getRaw(table, 'width'), tOption());
+  Assert.eq('Table raw width after resizing is unchanged', Optional.none<string>(), Css.getRaw(table, 'width'), tOptional());
   Assert.eq('Table width after resizing is unchanged', width, sizing.width());
   Assert.eq('Table pixel width after resizing is unchanged', width, sizing.pixelWidth());
 
   const cell = SelectorFind.descendant<HTMLTableCellElement>(table, 'td').getOrDie();
   sizing.setElementWidth(cell, 20);
-  Assert.eq('Cell width after resizing is unchanged', Option.none<string>(), Css.getRaw(cell, 'width'), tOption());
+  Assert.eq('Cell width after resizing is unchanged', Optional.none<string>(), Css.getRaw(cell, 'width'), tOptional());
 
   Remove.remove(table);
 });

@@ -1,4 +1,4 @@
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 
 interface ChoiceOption<T> {
@@ -21,8 +21,8 @@ const isOfSize = (width: number, height: number) => window.screen.width >= width
 
 const choice = <T> (options: ChoiceOption<T>[], fallback: T): T => {
   const target = Arr.foldl(options, (b, option) => b.orThunk(() =>
-    option.predicate() ? Option.some(option.value()) : Option.none<T>()
-  ), Option.none<T>());
+    option.predicate() ? Optional.some(option.value()) : Optional.none<T>()
+  ), Optional.none<T>());
 
   return target.getOr(fallback);
 };

@@ -1,24 +1,24 @@
-import { ApproxStructure, Assertions, FocusTools, Keyboard, Keys, Logger, Mouse, UiFinder, Waiter, Chain, GeneralSteps, Step } from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Arr, Fun, Future, Result, Option } from '@ephox/katamari';
+import { Arr, Fun, Future, Optional, Result } from '@ephox/katamari';
 import { Compare, Focus } from '@ephox/sugar';
+import * as AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviour';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Positioning } from 'ephox/alloy/api/behaviour/Positioning';
+import { Representing } from 'ephox/alloy/api/behaviour/Representing';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as Memento from 'ephox/alloy/api/component/Memento';
+import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
+import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
+import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { Dropdown } from 'ephox/alloy/api/ui/Dropdown';
 import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import * as DropdownAssertions from 'ephox/alloy/test/dropdown/DropdownAssertions';
 import * as TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import * as NavigationUtils from 'ephox/alloy/test/NavigationUtils';
 import * as TestBroadcasts from 'ephox/alloy/test/TestBroadcasts';
-import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
-import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
-import * as AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviour';
-import { Representing } from 'ephox/alloy/api/behaviour/Representing';
 
 UnitTest.asynctest('Dropdown List', (success, failure) => {
 
@@ -91,7 +91,7 @@ UnitTest.asynctest('Dropdown List', (success, failure) => {
               value: 'v',
               items: Arr.map(f, TestDropdownMenu.renderItem)
             });
-            return Option.some(TieredMenu.singleData('test', menu));
+            return Optional.some(TieredMenu.singleData('test', menu));
           });
         }
       })

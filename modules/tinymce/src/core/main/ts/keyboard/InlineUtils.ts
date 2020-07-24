@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Fun, Option } from '@ephox/katamari';
+import { Arr, Fun, Optional } from '@ephox/katamari';
 import { Selectors, SugarElement } from '@ephox/sugar';
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
@@ -27,7 +27,7 @@ const findInlineParents = (isInlineTarget: (node: Node) => boolean, rootNode: No
 
 const findRootInline = (isInlineTarget: (node: Node) => boolean, rootNode: Node, pos: CaretPosition) => {
   const parents = findInlineParents(isInlineTarget, rootNode, pos);
-  return Option.from(parents[parents.length - 1]);
+  return Optional.from(parents[parents.length - 1]);
 };
 
 const hasSameParentBlock = (rootNode: Node, node1: Node, node2: Node) => {

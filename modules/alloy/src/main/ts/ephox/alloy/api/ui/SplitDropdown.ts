@@ -1,4 +1,4 @@
-import { Fun, Id, Option } from '@ephox/katamari';
+import { Fun, Id, Optional } from '@ephox/katamari';
 import { Attribute } from '@ephox/sugar';
 
 import * as DropdownUtils from '../../dropdown/DropdownUtils';
@@ -35,13 +35,13 @@ const factory: CompositeSketchFactory<SplitDropdownDetail, SplitDropdownSpec> = 
 
   const openMenu = (comp: AlloyComponent) => {
     action(comp);
-    return Option.some(true);
+    return Optional.some(true);
   };
 
   const executeOnButton = (comp: AlloyComponent) => {
     const button = AlloyParts.getPartOrDie(comp, detail, 'button');
     AlloyTriggers.emitExecute(button);
-    return Option.some(true);
+    return Optional.some(true);
   };
 
   const buttonEvents = {
@@ -55,7 +55,7 @@ const factory: CompositeSketchFactory<SplitDropdownDetail, SplitDropdownSpec> = 
         });
       })
     ]),
-    ...ButtonBase.events(Option.some(action))
+    ...ButtonBase.events(Optional.some(action))
   };
 
   const apis: SplitDropdownApis = {

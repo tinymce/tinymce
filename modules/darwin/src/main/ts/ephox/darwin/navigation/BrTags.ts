@@ -1,4 +1,4 @@
-import { Fun, Option } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 import { Spot, SpotPoint } from '@ephox/phoenix';
 import { Awareness, ElementAddress, Situ, SugarElement, SugarNode, SugarText, Traverse } from '@ephox/sugar';
 import { BeforeAfter } from './BeforeAfter';
@@ -8,9 +8,9 @@ const isBr = function (elem: SugarElement) {
   return SugarNode.name(elem) === 'br';
 };
 
-const gatherer = function (cand: SugarElement, gather: KeyDirection['gather'], isRoot: (e: SugarElement) => boolean): Option<SugarElement> {
+const gatherer = function (cand: SugarElement, gather: KeyDirection['gather'], isRoot: (e: SugarElement) => boolean): Optional<SugarElement> {
   return gather(cand, isRoot).bind(function (target) {
-    return SugarNode.isText(target) && SugarText.get(target).trim().length === 0 ? gatherer(target, gather, isRoot) : Option.some(target);
+    return SugarNode.isText(target) && SugarText.get(target).trim().length === 0 ? gatherer(target, gather, isRoot) : Optional.some(target);
   });
 };
 
@@ -59,19 +59,19 @@ const tryBr = function (isRoot: (e: SugarElement) => boolean, element: SugarElem
   });
 };
 
-const process = function (analysis: BeforeAfter): Option<SpotPoint<SugarElement>> {
+const process = function (analysis: BeforeAfter): Optional<SpotPoint<SugarElement>> {
   return BeforeAfter.cata(analysis,
     function (_message) {
-      return Option.none();
+      return Optional.none();
     },
     function () {
-      return Option.none();
+      return Optional.none();
     },
     function (cell) {
-      return Option.some(Spot.point(cell, 0));
+      return Optional.some(Spot.point(cell, 0));
     },
     function (cell) {
-      return Option.some(Spot.point(cell, Awareness.getEnd(cell)));
+      return Optional.some(Spot.point(cell, Awareness.getEnd(cell)));
     }
   );
 };

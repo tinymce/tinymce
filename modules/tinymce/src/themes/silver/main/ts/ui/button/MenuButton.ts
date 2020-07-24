@@ -7,7 +7,7 @@
 
 import { AlloyComponent, AlloyTriggers, Disabling, MementoRecord, SketchSpec, Tabstopping } from '@ephox/alloy';
 import { Menu, Toolbar, Types } from '@ephox/bridge';
-import { Arr, Cell, Option } from '@ephox/katamari';
+import { Arr, Cell, Optional } from '@ephox/katamari';
 import { Attribute, Class, Focus } from '@ephox/sugar';
 import { formActionEvent } from 'tinymce/themes/silver/ui/general/FormEvents';
 import { UiFactoryBackstage } from '../../backstage/Backstage';
@@ -37,7 +37,7 @@ const getMenuButtonApi = (component: AlloyComponent): Toolbar.ToolbarMenuButtonI
   isActive: () => Class.has(component.element(), ToolbarButtonClasses.Ticked)
 });
 
-const renderMenuButton = (spec: MenuButtonSpec, prefix: string, backstage: UiFactoryBackstage, role: Option<string>): SketchSpec => renderCommonDropdown({
+const renderMenuButton = (spec: MenuButtonSpec, prefix: string, backstage: UiFactoryBackstage, role: Optional<string>): SketchSpec => renderCommonDropdown({
   text: spec.text,
   icon: spec.icon,
   tooltip: spec.tooltip,

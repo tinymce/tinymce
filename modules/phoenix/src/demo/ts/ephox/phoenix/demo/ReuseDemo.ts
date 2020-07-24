@@ -1,4 +1,4 @@
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import { Css, DomEvent, Insert, SelectorFind, SugarElement, SugarNode } from '@ephox/sugar';
 import * as DomWrapping from 'ephox/phoenix/api/dom/DomWrapping';
 
@@ -12,7 +12,7 @@ const ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
 
 DomEvent.bind(SugarElement.fromDom(document), 'keydown', function (event) {
   if (event.raw().keyCode === 13) {
-    Option.from(window.getSelection()).each((selection) => {
+    Optional.from(window.getSelection()).each((selection) => {
       if (selection.rangeCount > 0) {
         const spans = DomWrapping.reuse(SugarElement.fromDom(selection.anchorNode), selection.anchorOffset, SugarElement.fromDom(selection.focusNode), selection.focusOffset, function (elem) {
           return SugarNode.name(elem) === 'span';

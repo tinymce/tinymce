@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Fun, Option } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import DomTreeWalker from '../api/dom/TreeWalker';
 import * as NodeType from '../dom/NodeType';
@@ -275,8 +275,8 @@ const normalizeRange = (direction: number, root: Node, range: Range): Range => {
   return range;
 };
 
-const getRelativeCefElm = (forward: boolean, caretPosition: CaretPosition): Option<HTMLElement> =>
-  Option.from(getChildNodeAtRelativeOffset(forward ? 0 : -1, caretPosition)).filter(isContentEditableFalse);
+const getRelativeCefElm = (forward: boolean, caretPosition: CaretPosition): Optional<HTMLElement> =>
+  Optional.from(getChildNodeAtRelativeOffset(forward ? 0 : -1, caretPosition)).filter(isContentEditableFalse);
 
 const getNormalizedRangeEndPoint = (direction: number, root: Node, range: Range): CaretPosition => {
   const normalizedRange = normalizeRange(direction, root, range);
@@ -288,8 +288,8 @@ const getNormalizedRangeEndPoint = (direction: number, root: Node, range: Range)
   return CaretPosition.fromRangeEnd(normalizedRange);
 };
 
-const getElementFromPosition = (pos: CaretPosition): Option<SugarElement> => Option.from(pos.getNode()).map(SugarElement.fromDom);
-const getElementFromPrevPosition = (pos: CaretPosition): Option<SugarElement> => Option.from(pos.getNode(true)).map(SugarElement.fromDom);
+const getElementFromPosition = (pos: CaretPosition): Optional<SugarElement> => Optional.from(pos.getNode()).map(SugarElement.fromDom);
+const getElementFromPrevPosition = (pos: CaretPosition): Optional<SugarElement> => Optional.from(pos.getNode(true)).map(SugarElement.fromDom);
 
 const getVisualCaretPosition = (walkFn, caretPosition: CaretPosition): CaretPosition => {
   while ((caretPosition = walkFn(caretPosition))) {

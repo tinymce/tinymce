@@ -5,10 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Option, Type } from '@ephox/katamari';
+import { Types } from '@ephox/bridge';
+import { Optional, Type } from '@ephox/katamari';
 import Tools from 'tinymce/core/api/util/Tools';
 import { ListItem } from '../ui/DialogTypes';
-import { Types } from '@ephox/bridge';
 
 const getValue = (item): string => Type.isString(item.value) ? item.value : '';
 
@@ -30,9 +30,9 @@ const sanitizeList = (list, extractValue: (item) => string): ListItem[] => {
   return out;
 };
 
-const sanitizeWith = (extracter: (item: any) => string = getValue) => (list: any[]): Option<ListItem[]> => Option.from(list).map((list) => sanitizeList(list, extracter));
+const sanitizeWith = (extracter: (item: any) => string = getValue) => (list: any[]): Optional<ListItem[]> => Optional.from(list).map((list) => sanitizeList(list, extracter));
 
-const sanitize = (list: any[]): Option<ListItem[]> => sanitizeWith(getValue)(list);
+const sanitize = (list: any[]): Optional<ListItem[]> => sanitizeWith(getValue)(list);
 
 // NOTE: May need to care about flattening.
 const createUi = (name: string, label: string) => (items: ListItem[]): Types.Dialog.BodyComponentApi => ({

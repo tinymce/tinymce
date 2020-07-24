@@ -3,7 +3,7 @@ import {
 } from '@ephox/agar';
 import { AlloyTriggers, Container, GuiFactory, Invalidating, NativeEvents, Representing, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { SelectorFind, SugarElement, Traverse } from '@ephox/sugar';
 
 import { renderColorInput } from 'tinymce/themes/silver/ui/dialog/ColorInput';
@@ -26,7 +26,7 @@ UnitTest.asynctest('Color input component Test', (success, failure) => {
         components: [
           renderColorInput({
             name: 'alpha',
-            label: Option.some('test-color-input')
+            label: Optional.some('test-color-input')
           }, helpers.shared, {
             colorPicker: (_callback, _value) => {},
             hasCustomColors: () => true,

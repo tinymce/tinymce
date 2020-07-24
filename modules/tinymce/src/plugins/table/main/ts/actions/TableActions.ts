@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Fun, Obj, Option } from '@ephox/katamari';
+import { Arr, Fun, Obj, Optional } from '@ephox/katamari';
 import { DomDescent } from '@ephox/phoenix';
 import { CellMutations, ResizeWire, RunOperation, TableDirection, TableFill, TableGridSize, TableOperations } from '@ephox/snooker';
 import { SugarElement, SugarNode } from '@ephox/sugar';
@@ -19,7 +19,7 @@ import * as Direction from '../queries/Direction';
 import * as TableSize from '../queries/TableSize';
 import { getCellsFromSelection, getRowsFromSelection } from '../selection/TableSelection';
 
-type TableAction<T> = (table: SugarElement<HTMLTableElement>, target: T) => Option<Range>;
+type TableAction<T> = (table: SugarElement<HTMLTableElement>, target: T) => Optional<Range>;
 export type SimpleTableAction = (editor: Editor, args: Record<string, any>) => void;
 export type CombinedTargetsTableAction = TableAction<RunOperation.CombinedTargets>;
 export type PasteTableAction = TableAction<RunOperation.TargetPaste>;
@@ -57,11 +57,11 @@ export const TableActions = (editor: Editor, lazyWire: () => ResizeWire): TableA
   const lastColumnGuard = (table: SugarElement<HTMLTableElement>) =>
     isTableBody(editor) === false || TableGridSize.getGridSize(table).columns() > 1;
 
-  // Option.none gives the default cloneFormats.
+  // Optional.none gives the default cloneFormats.
   const cloneFormats = getCloneElements(editor);
 
   const execute = <T> (operation: RunOperation.OperationCallback<T>, guard, mutate, lazyWire) =>
-    (table: SugarElement<HTMLTableElement>, target: T): Option<Range> => {
+    (table: SugarElement<HTMLTableElement>, target: T): Optional<Range> => {
       Util.removeDataStyle(table);
       const wire = lazyWire();
       const doc = SugarElement.fromDom(editor.getDoc());
@@ -82,7 +82,7 @@ export const TableActions = (editor: Editor, lazyWire: () => ResizeWire): TableA
           rng.setEnd(des.element().dom(), des.offset());
           return rng;
         });
-      }) : Option.none();
+      }) : Optional.none();
     };
 
   const deleteRow = execute(TableOperations.eraseRows, lastRowGuard, Fun.noop, lazyWire);

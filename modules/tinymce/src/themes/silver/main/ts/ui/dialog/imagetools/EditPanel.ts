@@ -10,7 +10,7 @@ import {
   Representing, Slider, SliderTypes
 } from '@ephox/alloy';
 import { ImageResult, ImageTransformations } from '@ephox/imagetools';
-import { Fun, Option } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 
 import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
 import { renderButton, renderIconButton } from '../../general/Button';
@@ -23,14 +23,14 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
     text,
     disabled,
     primary,
-    icon: Option.none(),
+    icon: Optional.none(),
     borderless: false
   }, action, providersBackstage));
 
   const createIconButton = (icon: string, tooltip: string, action: (button: AlloyComponent) => void, disabled: boolean): Memento.MementoRecord => Memento.record(renderIconButton({
     name: icon,
-    icon: Option.some(icon),
-    tooltip: Option.some(tooltip),
+    icon: Optional.some(icon),
+    tooltip: Optional.some(tooltip),
     disabled,
     primary: false,
     borderless: false
@@ -148,7 +148,7 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
   const memSize = Memento.record(
     renderSizeInput({
       name: 'size',
-      label: Option.none(),
+      label: Optional.none(),
       constrain: true,
       disabled: false
     }, providersBackstage)
@@ -379,7 +379,7 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
     components: colorizePanelComponents.map((mem) => mem.asSpec())
   });
 
-  const getTransformPanelEvent = (panel: AlloySpec, transform: Option<(ir: ImageResult) => Promise<ImageResult>>, update: (container: AlloyComponent) => void): ((button: AlloyComponent) => void) => (button: AlloyComponent): void => {
+  const getTransformPanelEvent = (panel: AlloySpec, transform: Optional<(ir: ImageResult) => Promise<ImageResult>>, update: (container: AlloyComponent) => void): ((button: AlloyComponent) => void) => (button: AlloyComponent): void => {
     const swap = () => {
       memContainer.getOpt(button).each((container) => {
         Replacing.set(container, [ panel ]);
@@ -408,18 +408,18 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
     });
   };
 
-  const sharpenTransform = Option.some(ImageTransformations.sharpen);
-  const invertTransform = Option.some(ImageTransformations.invert);
+  const sharpenTransform = Optional.some(ImageTransformations.sharpen);
+  const invertTransform = Optional.some(ImageTransformations.invert);
 
   const buttonPanelComponents = [
-    createIconButton('crop', 'Crop', getTransformPanelEvent(CropPanel, Option.none(), cropPanelUpdate), false),
-    createIconButton('resize', 'Resize', getTransformPanelEvent(ResizePanel, Option.none(), resizePanelUpdate), false),
-    createIconButton('orientation', 'Orientation', getTransformPanelEvent(FlipRotatePanel, Option.none(), noop), false),
-    createIconButton('brightness', 'Brightness', getTransformPanelEvent(BrightnessPanel, Option.none(), noop), false),
+    createIconButton('crop', 'Crop', getTransformPanelEvent(CropPanel, Optional.none(), cropPanelUpdate), false),
+    createIconButton('resize', 'Resize', getTransformPanelEvent(ResizePanel, Optional.none(), resizePanelUpdate), false),
+    createIconButton('orientation', 'Orientation', getTransformPanelEvent(FlipRotatePanel, Optional.none(), noop), false),
+    createIconButton('brightness', 'Brightness', getTransformPanelEvent(BrightnessPanel, Optional.none(), noop), false),
     createIconButton('sharpen', 'Sharpen', getTransformPanelEvent(FilterPanel, sharpenTransform, noop), false),
-    createIconButton('contrast', 'Contrast', getTransformPanelEvent(ContrastPanel, Option.none(), noop), false),
-    createIconButton('color-levels', 'Color levels', getTransformPanelEvent(ColorizePanel, Option.none(), noop), false),
-    createIconButton('gamma', 'Gamma', getTransformPanelEvent(GammaPanel, Option.none(), noop), false),
+    createIconButton('contrast', 'Contrast', getTransformPanelEvent(ContrastPanel, Optional.none(), noop), false),
+    createIconButton('color-levels', 'Color levels', getTransformPanelEvent(ColorizePanel, Optional.none(), noop), false),
+    createIconButton('gamma', 'Gamma', getTransformPanelEvent(GammaPanel, Optional.none(), noop), false),
     createIconButton('invert', 'Invert', getTransformPanelEvent(FilterPanel, invertTransform, noop), false)
   ];
 
@@ -442,7 +442,7 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
 
   const memContainer = Memento.record(container);
 
-  const getApplyButton = (anyInSystem: AlloyComponent): Option<AlloyComponent> => memContainer.getOpt(anyInSystem).map((container) => {
+  const getApplyButton = (anyInSystem: AlloyComponent): Optional<AlloyComponent> => memContainer.getOpt(anyInSystem).map((container) => {
     const panel = container.components()[0];
     return panel.components()[panel.components().length - 1];
   });

@@ -1,4 +1,4 @@
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import { SugarElement } from '../../api/node/SugarElement';
 import * as SugarNode from '../../api/node/SugarNode';
 import * as Traverse from '../../api/search/Traverse';
@@ -16,7 +16,7 @@ import * as TextPoint from './TextPoint';
  * (repartee does something similar).
  */
 
-const searchInChildren = (doc: SugarElement<Document>, node: SugarElement<Node>, x: number, y: number): Option<Range> => {
+const searchInChildren = (doc: SugarElement<Document>, node: SugarElement<Node>, x: number, y: number): Optional<Range> => {
   const r = doc.dom().createRange();
   const nodes = Traverse.children(node);
   return Arr.findMap(nodes, (n) => {
@@ -24,7 +24,7 @@ const searchInChildren = (doc: SugarElement<Document>, node: SugarElement<Node>,
     r.selectNode(n.dom());
     return Geometry.inRect(r.getBoundingClientRect(), x, y) ?
       locateNode(doc, n, x, y) :
-      Option.none<Range>();
+      Optional.none<Range>();
   });
 };
 

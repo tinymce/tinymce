@@ -1,4 +1,4 @@
-import { Adt, Fun, Option, Thunk } from '@ephox/katamari';
+import { Adt, Fun, Optional, Thunk } from '@ephox/katamari';
 import { SugarElement } from '../../api/node/SugarElement';
 import { SimSelection } from '../../api/selection/SimSelection';
 import * as NativeRange from './NativeRange';
@@ -32,26 +32,26 @@ const fromRange = (win: Window, type: SelectionDirectionConstructor, range: Rang
 
 interface LtrRtlRanges {
   ltr: () => Range;
-  rtl: () => Option<Range>;
+  rtl: () => Optional<Range>;
 }
 
 const getRanges = (win: Window, selection: SimSelection): LtrRtlRanges => selection.match<LtrRtlRanges>({
   domRange(rng) {
     return {
       ltr: Fun.constant(rng),
-      rtl: Option.none
+      rtl: Optional.none
     };
   },
   relative(startSitu, finishSitu) {
     return {
       ltr: Thunk.cached(() => NativeRange.relativeToNative(win, startSitu, finishSitu)),
-      rtl: Thunk.cached(() => Option.some(NativeRange.relativeToNative(win, finishSitu, startSitu)))
+      rtl: Thunk.cached(() => Optional.some(NativeRange.relativeToNative(win, finishSitu, startSitu)))
     };
   },
   exact(start: SugarElement<Node>, soffset: number, finish: SugarElement<Node>, foffset: number) {
     return {
       ltr: Thunk.cached(() => NativeRange.exactToNative(win, start, soffset, finish, foffset)),
-      rtl: Thunk.cached(() => Option.some(NativeRange.exactToNative(win, finish, foffset, start, soffset)))
+      rtl: Thunk.cached(() => Optional.some(NativeRange.exactToNative(win, finish, foffset, start, soffset)))
     };
   }
 });

@@ -63,11 +63,11 @@ UnitTest.asynctest('Focus Modes Test', (success, failure) => {
     );
 
   }, (doc, _body, _gui, component, _store) => {
-    const onApiComp = SelectorFind.descendant(component.element(), '.onApi').bind((elem) => component.getSystem().getByDom(elem).toOption()).getOrDie('Could not find "onApi" div');
+    const onApiComp = SelectorFind.descendant(component.element(), '.onApi').bind((elem) => component.getSystem().getByDom(elem).toOptional()).getOrDie('Could not find "onApi" div');
 
-    const onEnterOrSpaceComp = SelectorFind.descendant(component.element(), '.onKeyboard').bind((elem) => component.getSystem().getByDom(elem).toOption()).getOrDie('Could not find "onKeyboard" div');
+    const onEnterOrSpaceComp = SelectorFind.descendant(component.element(), '.onKeyboard').bind((elem) => component.getSystem().getByDom(elem).toOptional()).getOrDie('Could not find "onKeyboard" div');
 
-    const onFocusComp = SelectorFind.descendant(component.element(), '.onFocus').bind((elem) => component.getSystem().getByDom(elem).toOption()).getOrDie('Could not find "onFocus" div');
+    const onFocusComp = SelectorFind.descendant(component.element(), '.onFocus').bind((elem) => component.getSystem().getByDom(elem).toOptional()).getOrDie('Could not find "onFocus" div');
 
     const sResetFocus = Step.sync(() => {
       Focus.focus(SugarBody.body());

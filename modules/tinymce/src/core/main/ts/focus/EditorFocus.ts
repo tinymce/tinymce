@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { Compare, Focus, SugarElement } from '@ephox/sugar';
 import EditorSelection from '../api/dom/Selection';
 import Editor from '../api/Editor';
@@ -20,15 +20,15 @@ import * as FocusController from './FocusController';
 const getContentEditableHost = (editor: Editor, node: Node): Element =>
   editor.dom.getParent(node, (node) => editor.dom.getContentEditable(node) === 'true');
 
-const getCollapsedNode = (rng: Range): Option<SugarElement<Node>> => rng.collapsed ? Option.from(RangeNodes.getNode(rng.startContainer, rng.startOffset)).map(SugarElement.fromDom) : Option.none();
+const getCollapsedNode = (rng: Range): Optional<SugarElement<Node>> => rng.collapsed ? Optional.from(RangeNodes.getNode(rng.startContainer, rng.startOffset)).map(SugarElement.fromDom) : Optional.none();
 
-const getFocusInElement = (root: SugarElement<any>, rng: Range): Option<SugarElement<any>> => getCollapsedNode(rng).bind(function (node) {
+const getFocusInElement = (root: SugarElement<any>, rng: Range): Optional<SugarElement<any>> => getCollapsedNode(rng).bind(function (node) {
   if (ElementType.isTableSection(node)) {
-    return Option.some(node);
+    return Optional.some(node);
   } else if (Compare.contains(root, node) === false) {
-    return Option.some(root);
+    return Optional.some(root);
   } else {
-    return Option.none();
+    return Optional.none();
   }
 });
 

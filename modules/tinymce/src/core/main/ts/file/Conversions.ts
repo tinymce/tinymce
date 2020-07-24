@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import Promise from '../api/util/Promise';
 
 /**
@@ -64,14 +64,14 @@ const parseDataUri = function (uri: string) {
   };
 };
 
-const buildBlob = (type: string, data: string): Option<Blob> => {
+const buildBlob = (type: string, data: string): Optional<Blob> => {
   let str: string;
 
   // Might throw error if data isn't proper base64
   try {
     str = atob(data);
   } catch (e) {
-    return Option.none();
+    return Optional.none();
   }
 
   const arr = new Uint8Array(str.length);
@@ -80,7 +80,7 @@ const buildBlob = (type: string, data: string): Option<Blob> => {
     arr[i] = str.charCodeAt(i);
   }
 
-  return Option.some(new Blob([ arr ], { type }));
+  return Optional.some(new Blob([ arr ], { type }));
 };
 
 const dataUriToBlob = function (uri: string): Promise<Blob> {

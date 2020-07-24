@@ -1,6 +1,6 @@
 import { Assertions, Log, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
 
@@ -118,7 +118,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.ListOptionsTest', (success, fai
           { value: 'just one', text: 'Just One' }
         ]),
         Step.sync(() => {
-          const rels = RelOptions.getRels(editor, Option.some('initial-target'));
+          const rels = RelOptions.getRels(editor, Optional.some('initial-target'));
           Assertions.assertEq(
             'Checking rel_list output',
             [

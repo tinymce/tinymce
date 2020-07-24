@@ -1,4 +1,4 @@
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { Spot } from '@ephox/phoenix';
 import { PlatformDetection } from '@ephox/sand';
 import { Awareness, Compare, SugarElement } from '@ephox/sugar';
@@ -19,7 +19,7 @@ const MAX_RETRIES = 20;
 const findSpot = function (bridge: WindowBridge, isRoot: (e: SugarElement) => boolean, direction: KeyDirection) {
   return bridge.getSelection().bind(function (sel) {
     return BrTags.tryBr(isRoot, sel.finish(), sel.foffset(), direction).fold(function () {
-      return Option.some(Spot.point(sel.finish(), sel.foffset()));
+      return Optional.some(Spot.point(sel.finish(), sel.foffset()));
     }, function (brNeighbour) {
       const range = bridge.fromSitus(brNeighbour);
       const analysis = BeforeAfter.verify(bridge, sel.finish(), sel.foffset(), range.finish(), range.foffset(), direction.failure, isRoot);
@@ -28,18 +28,18 @@ const findSpot = function (bridge: WindowBridge, isRoot: (e: SugarElement) => bo
   });
 };
 
-const scan = function (bridge: WindowBridge, isRoot: (e: SugarElement) => boolean, element: SugarElement, offset: number, direction: KeyDirection, numRetries: number): Option<Situs> {
-  if (numRetries === 0) { return Option.none(); }
+const scan = function (bridge: WindowBridge, isRoot: (e: SugarElement) => boolean, element: SugarElement, offset: number, direction: KeyDirection, numRetries: number): Optional<Situs> {
+  if (numRetries === 0) { return Optional.none(); }
   // Firstly, move the (x, y) and see what element we end up on.
   return tryCursor(bridge, isRoot, element, offset, direction).bind(function (situs) {
     const range = bridge.fromSitus(situs);
     // Now, check to see if the element is a new cell.
     const analysis = BeforeAfter.verify(bridge, element, offset, range.finish(), range.foffset(), direction.failure, isRoot);
     return BeforeAfter.cata(analysis, function () {
-      return Option.none<Situs>();
+      return Optional.none<Situs>();
     }, function () {
       // We have a new cell, so we stop looking.
-      return Option.some(situs);
+      return Optional.some(situs);
     }, function (cell) {
       if (Compare.eq(element, cell) && offset === 0) {
         return tryAgain(bridge, element, offset, Carets.moveUp, direction);
@@ -71,7 +71,7 @@ const tryAt = function (bridge: WindowBridge, direction: KeyDirection, box: Care
   } else if (browser.isIE()) {
     return direction.ieRetry(bridge, box);
   } else {
-    return Option.none<Situs>();
+    return Optional.none<Situs>();
   }
 };
 

@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { ResizeBehaviour, ResizeWire, Sizes, TableDirection, TableResize } from '@ephox/snooker';
 import { Css, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
@@ -18,15 +18,15 @@ import { enforcePercentage, enforcePixels, syncPixels } from './EnforceUnit';
 import * as TableWire from './TableWire';
 
 export interface ResizeHandler {
-  lazyResize: () => Option<TableResize>;
+  lazyResize: () => Optional<TableResize>;
   lazyWire: () => any;
   destroy: () => void;
 }
 
 export const getResizeHandler = function (editor: Editor): ResizeHandler {
-  let selectionRng = Option.none<Range>();
-  let resize = Option.none<TableResize>();
-  let wire = Option.none();
+  let selectionRng = Optional.none<Range>();
+  let resize = Optional.none<TableResize>();
+  let wire = Optional.none();
   let startW: number;
   let startRawW: string;
 
@@ -55,14 +55,14 @@ export const getResizeHandler = function (editor: Editor): ResizeHandler {
   editor.on('init', function () {
     const direction = TableDirection(Direction.directionAt);
     const rawWire = TableWire.get(editor);
-    wire = Option.some(rawWire);
+    wire = Optional.some(rawWire);
     if (Settings.hasObjectResizing(editor) && Settings.hasTableResizeBars(editor)) {
       const lazySizing = (table: SugarElement<HTMLTableElement>) => TableSize.get(editor, table);
       const resizing = Settings.getColumnResizingBehaviour(editor) === 'resizetable' ? ResizeBehaviour.resizeTable() : ResizeBehaviour.preserveTable();
       const sz = TableResize.create(rawWire, direction, resizing, lazySizing);
       sz.on();
       sz.events.startDrag.bind(function (_event) {
-        selectionRng = Option.some(editor.selection.getRng());
+        selectionRng = Optional.some(editor.selection.getRng());
       });
 
       sz.events.beforeResize.bind(function (event) {
@@ -84,7 +84,7 @@ export const getResizeHandler = function (editor: Editor): ResizeHandler {
         editor.undoManager.add();
       });
 
-      resize = Option.some(sz);
+      resize = Optional.some(sz);
     }
   });
 

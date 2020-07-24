@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, Chain, FocusTools, Mouse, UiFinder } from '@ephox/agar';
 import { GuiFactory, NativeEvents, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 
 import { renderSizeInput } from 'tinymce/themes/silver/ui/dialog/SizeInput';
 import { DomSteps } from '../../../module/DomSteps';
@@ -14,7 +14,7 @@ UnitTest.asynctest('SizeInput component Test', (success, failure) => {
     (_store, _doc, _body) => GuiFactory.build(
       renderSizeInput({
         name: 'dimensions',
-        label: Option.some('size'),
+        label: Optional.some('size'),
         constrain: true,
         disabled: false
       }, TestProviders)

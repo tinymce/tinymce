@@ -7,7 +7,7 @@
 
 import { AlloyComponent, MementoRecord, Representing } from '@ephox/alloy';
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
-import { Fun, Merger, Option } from '@ephox/katamari';
+import { Fun, Merger, Optional } from '@ephox/katamari';
 import { Html, SugarElement, Value } from '@ephox/sugar';
 
 const processors = ValueSchema.objOf([
@@ -34,7 +34,7 @@ const memento = (mem: MementoRecord, rawProcessors) => {
   });
 };
 
-const withComp = <D>(optInitialValue: Option<D>, getter: (c: AlloyComponent) => D, setter: (c: AlloyComponent, v: D) => void) => Representing.config(
+const withComp = <D>(optInitialValue: Optional<D>, getter: (c: AlloyComponent) => D, setter: (c: AlloyComponent, v: D) => void) => Representing.config(
   Merger.deepMerge(
     {
       store: {
@@ -51,15 +51,15 @@ const withComp = <D>(optInitialValue: Option<D>, getter: (c: AlloyComponent) => 
   )
 );
 
-const withElement = <D>(initialValue: Option<D>, getter: (elem: SugarElement) => D, setter: (elem: SugarElement, v: D) => void) => withComp(
+const withElement = <D>(initialValue: Optional<D>, getter: (elem: SugarElement) => D, setter: (elem: SugarElement, v: D) => void) => withComp(
   initialValue,
   (c) => getter(c.element()),
   (c, v) => setter(c.element(), v)
 );
 
-const domValue = (optInitialValue: Option<string>) => withElement(optInitialValue, Value.get, Value.set);
+const domValue = (optInitialValue: Optional<string>) => withElement(optInitialValue, Value.get, Value.set);
 
-const domHtml = (optInitialValue: Option<string>) => withElement(optInitialValue, Html.get, Html.set);
+const domHtml = (optInitialValue: Optional<string>) => withElement(optInitialValue, Html.get, Html.set);
 
 const memory = <D>(initialValue) => Representing.config({
   store: {

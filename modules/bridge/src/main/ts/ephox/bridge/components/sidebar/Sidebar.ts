@@ -1,5 +1,5 @@
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
-import { Fun, Option, Result } from '@ephox/katamari';
+import { Fun, Optional, Result } from '@ephox/katamari';
 
 export interface SidebarInstanceApi {
   element: () => HTMLElement;
@@ -14,8 +14,8 @@ export interface SidebarApi {
 }
 
 export interface Sidebar {
-  icon: Option<string>;
-  tooltip: Option<string>;
+  icon: Optional<string>;
+  tooltip: Optional<string>;
   onShow: (api: SidebarInstanceApi) => void;
   onSetup: (api: SidebarInstanceApi) => (api: SidebarInstanceApi) => void;
   onHide: (api: SidebarInstanceApi) => void;

@@ -1,5 +1,5 @@
 import { Universe } from '@ephox/boss';
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import * as Spot from '../api/data/Spot';
 import { Wrapter } from '../api/data/Types';
 import * as Split from '../api/general/Split';
@@ -38,7 +38,7 @@ const wrapper = function <E, D> (universe: Universe<E, D>, wrapped: E[], nu: () 
  * Return the cursor positions at the start and end of a collection of wrapper elements
  */
 const endPoints = function <E, D> (universe: Universe<E, D>, wrapped: E[]) {
-  return Option.from(wrapped[0]).map(function (first) {
+  return Optional.from(wrapped[0]).map(function (first) {
     // INVESTIGATE: Should this one navigate to the next child when first isn't navigating down a level?
     const last = Navigation.toLower(universe, wrapped[wrapped.length - 1]);
     return Spot.points(

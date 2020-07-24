@@ -1,5 +1,5 @@
 import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
-import { Fun, Option } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { Focusing } from '../../api/behaviour/Focusing';
@@ -60,7 +60,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
             onEscape: (comp) => {
               AlloyParts.getPart(comp, detail, 'button').each(Focusing.focus);
               // Don't return true here, as we need to allow the sandbox to handle the escape to close the overflow
-              return Option.none();
+              return Optional.none();
             }
           })
         ])

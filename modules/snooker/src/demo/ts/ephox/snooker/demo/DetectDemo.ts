@@ -1,4 +1,4 @@
-import { Fun, Obj, Option, Options } from '@ephox/katamari';
+import { Fun, Obj, Optional, Optionals } from '@ephox/katamari';
 import {
   Attribute, Css, Direction, DomEvent, EventArgs, Insert, InsertAll, Ready, Replication, SelectorFind, SugarElement, SugarNode
 } from '@ephox/sugar';
@@ -188,14 +188,14 @@ Ready.execute(function () {
   const makeRowHeader = makeButton('makeRowHeader');
   const unmakeRowHeader = makeButton('unmakeRowHeader');
 
-  const detection = (): Option<SugarElement<Element>> =>
-    Option.from(window.getSelection()).bind((selection) => {
+  const detection = (): Optional<SugarElement<Element>> =>
+    Optional.from(window.getSelection()).bind((selection) => {
       if (selection.rangeCount > 0) {
         const range = selection.getRangeAt(0);
         const firstElement = range.startContainer.nodeType === 3 ? range.startContainer.parentNode : range.startContainer;
-        return Options.mapFrom(firstElement, SugarElement.fromDom).filter(SugarNode.isElement);
+        return Optionals.mapFrom(firstElement, SugarElement.fromDom).filter(SugarNode.isElement);
       } else {
-        return Option.none();
+        return Optional.none();
       }
     });
 
@@ -232,7 +232,7 @@ Ready.execute(function () {
     gap
   };
 
-  const runOperation = function (operation: (wire: ResizeWire, table: SugarElement, target: TargetElement & TargetSelection, generators: Generators, direction: BarPositions<ColInfo>, tableSize: TableSize) => Option<RunOperationOutput>) {
+  const runOperation = function (operation: (wire: ResizeWire, table: SugarElement, target: TargetElement & TargetSelection, generators: Generators, direction: BarPositions<ColInfo>, tableSize: TableSize) => Optional<RunOperationOutput>) {
     return function (_event: EventArgs) {
       detection().each(function (start) {
         const dir = Direction.getDirection(start);

@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import { GuiFactory } from '@ephox/alloy';
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 
 import { identifyButtons } from 'tinymce/themes/silver/ui/toolbar/Integration';
@@ -102,7 +102,7 @@ export default function () {
       { label: 'SplitButton', button: 'beta' },
       { label: 'StyleButton', button: 'styleselect' }
     ], ({ label, button }) => {
-      const groups = identifyButtons(mockEditor, { buttons, toolbar: button, allowToolbarGroups: true }, helpers.extras, Option.none());
+      const groups = identifyButtons(mockEditor, { buttons, toolbar: button, allowToolbarGroups: true }, helpers.extras, Optional.none());
       const buttonComponents = Arr.flatten(Arr.map(groups, (group) => group.items));
       return {
         dom: {

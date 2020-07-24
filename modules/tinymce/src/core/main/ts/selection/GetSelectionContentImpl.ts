@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import Editor from '../api/Editor';
 import Env from '../api/Env';
@@ -31,7 +31,7 @@ const getInnerText = (bin: HTMLElement) => {
   return Env.browser.isIE() ? trimLeadingCollapsibleText(text) : text;
 };
 
-const getTextContent = (editor: Editor): string => Option.from(editor.selection.getRng()).map((rng) => {
+const getTextContent = (editor: Editor): string => Optional.from(editor.selection.getRng()).map((rng) => {
   const bin = editor.dom.add(editor.getBody(), 'div', {
     'data-mce-bogus': 'all',
     'style': 'overflow: hidden; opacity: 0;'

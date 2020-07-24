@@ -1,4 +1,4 @@
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { BehaviourStateInitialiser } from '../../behaviour/common/BehaviourState';
 
 import * as DraggingApis from '../../behaviour/dragging/DraggingApis';
@@ -23,7 +23,7 @@ const Dragging: DraggingBehaviour<any> = Behaviour.createModes({
       sensor: sConfig.sensor,
       range: sConfig.range,
       output: sConfig.output,
-      extra: Option.from(sConfig.extra)
+      extra: Optional.from(sConfig.extra)
     })
   },
   state: DragState as BehaviourStateInitialiser<DraggingConfig<any>, DraggingState>,

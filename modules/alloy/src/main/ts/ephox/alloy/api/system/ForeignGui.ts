@@ -1,5 +1,5 @@
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
-import { Arr, Fun, Obj, Option } from '@ephox/katamari';
+import { Arr, Fun, Obj, Optional } from '@ephox/katamari';
 import { DomEvent, EventArgs, Insert, SugarElement } from '@ephox/sugar';
 
 import { UncurriedHandler } from '../../events/EventRegistry';
@@ -25,7 +25,7 @@ export interface DispatchedAlloyConfig {
 }
 
 export interface Dispatcher {
-  readonly getTarget: (elem: SugarElement) => Option<SugarElement>;
+  readonly getTarget: (elem: SugarElement) => Optional<SugarElement>;
   readonly alloyConfig: DispatchedAlloyConfig;
 }
 
@@ -93,7 +93,7 @@ interface DispatcherMission {
 
 // Find the dispatcher information for the target if available. Note, the
 // dispatcher may also change the target.
-const findDispatcher = (dispatchers: Dispatcher[], target: SugarElement): Option<DispatcherMission> => Arr.findMap(dispatchers, (dispatcher: Dispatcher) => dispatcher.getTarget(target).map((newTarget) => ({
+const findDispatcher = (dispatchers: Dispatcher[], target: SugarElement): Optional<DispatcherMission> => Arr.findMap(dispatchers, (dispatcher: Dispatcher) => dispatcher.getTarget(target).map((newTarget) => ({
   target: newTarget,
   dispatcher
 })));

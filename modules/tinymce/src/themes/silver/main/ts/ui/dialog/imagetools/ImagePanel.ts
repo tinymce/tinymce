@@ -6,7 +6,7 @@
  */
 
 import { AddEventsBehaviour, AlloyComponent, AlloyEvents, Behaviour, Container, GuiFactory, Memento, Replacing } from '@ephox/alloy';
-import { Cell, Option } from '@ephox/katamari';
+import { Cell, Optional } from '@ephox/katamari';
 import { Attribute, Css, Height, SugarElement, Width } from '@ephox/sugar';
 import Rect from 'tinymce/core/api/geom/Rect';
 import Promise from 'tinymce/core/api/util/Promise';
@@ -39,7 +39,7 @@ const renderImagePanel = (initialUrl: string) => {
   );
 
   const zoomState = Cell(1);
-  const cropRect = Cell(Option.none<CropRect>());
+  const cropRect = Cell(Optional.none<CropRect>());
   const rectState = Cell({
     x: 0,
     y: 0,
@@ -117,7 +117,7 @@ const renderImagePanel = (initialUrl: string) => {
     });
   };
 
-  const updateSrc = (anyInSystem: AlloyComponent, url: string): Promise<Option<SugarElement>> => {
+  const updateSrc = (anyInSystem: AlloyComponent, url: string): Promise<Optional<SugarElement>> => {
     const img = SugarElement.fromTag('img');
     Attribute.set(img, 'src', url);
     return loadImage(img.dom()).then(() => memContainer.getOpt(anyInSystem).map((panel) => {
@@ -125,7 +125,7 @@ const renderImagePanel = (initialUrl: string) => {
         element: img
       });
 
-      Replacing.replaceAt(panel, 1, Option.some(aImg));
+      Replacing.replaceAt(panel, 1, Optional.some(aImg));
 
       const lastViewRect = viewRectState.get();
       const viewRect = {
@@ -215,7 +215,7 @@ const renderImagePanel = (initialUrl: string) => {
                   };
                   rectState.set(newRect);
                 });
-                cropRect.set(Option.some(cRect));
+                cropRect.set(Optional.some(cRect));
               });
             })
           ])

@@ -7,7 +7,7 @@
 
 import { AlloyComponent, Behaviour, Focusing, FormField, Tabstopping } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
-import { Cell, Option } from '@ephox/katamari';
+import { Cell, Optional } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Attribute } from '@ephox/sugar';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
@@ -79,7 +79,7 @@ const renderIFrame = (spec: IframeSpec, providersBackstage: UiFactoryBackstagePr
       behaviours: Behaviour.derive([
         Tabstopping.config({ }),
         Focusing.config({ }),
-        RepresentingConfigs.withComp(Option.none(), sourcing.getValue, sourcing.setValue)
+        RepresentingConfigs.withComp(Optional.none(), sourcing.getValue, sourcing.setValue)
       ])
     }
   );

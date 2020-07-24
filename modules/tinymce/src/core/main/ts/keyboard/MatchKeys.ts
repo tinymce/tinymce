@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Fun, Option } from '@ephox/katamari';
+import { Arr, Fun, Optional } from '@ephox/katamari';
 
 export interface KeyPattern {
   shiftKey?: boolean;
@@ -39,7 +39,7 @@ const match = (patterns: KeyPattern[], evt: KeyboardEvent) =>
 
 const action = <T extends (...args: any[]) => any>(f: T, ...x: Parameters<T>) => (): ReturnType<T> => f.apply(null, x);
 
-const execute = (patterns: KeyPattern[], evt: KeyboardEvent): Option<KeyPattern> =>
+const execute = (patterns: KeyPattern[], evt: KeyboardEvent): Optional<KeyPattern> =>
   Arr.find(match(patterns, evt), (pattern) => pattern.action());
 
 export {

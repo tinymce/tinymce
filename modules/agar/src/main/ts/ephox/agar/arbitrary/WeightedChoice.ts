@@ -1,4 +1,4 @@
-import { Arr, Obj, Option, Struct } from '@ephox/katamari';
+import { Arr, Obj, Optional, Struct } from '@ephox/katamari';
 import Jsc from '@ephox/wrap-jsverify';
 
 interface WeightedItem {
@@ -38,7 +38,7 @@ const gChoose = <T extends WeightedItem>(weighted: WeightedList<T>) => Jsc.numbe
   );
 
   const keys = raw.map(Obj.keys).getOr([]);
-  return keys.length === [ 'weight', 'accWeight' ].length ? Option.none() : raw;
+  return keys.length === [ 'weight', 'accWeight' ].length ? Optional.none() : raw;
 });
 
 const generator = <T extends WeightedItem>(candidates: T[]) => {

@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import * as EditorView from '../EditorView';
 import { NotificationManagerImpl } from '../ui/NotificationManagerImpl';
 import Editor from './Editor';
@@ -66,8 +66,8 @@ function NotificationManager(editor: Editor): NotificationManager {
     return theme && theme.getNotificationManagerImpl ? theme.getNotificationManagerImpl() : NotificationManagerImpl();
   };
 
-  const getTopNotification = function (): Option<NotificationApi> {
-    return Option.from(notifications[0]);
+  const getTopNotification = function (): Optional<NotificationApi> {
+    return Optional.from(notifications[0]);
   };
 
   const isEqual = function (a: NotificationSpec, b: NotificationSpec) {

@@ -6,7 +6,7 @@
  */
 
 import { BlobConversions, ImageTransformations, ResultConversions } from '@ephox/imagetools';
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { SelectorFind, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 
@@ -31,9 +31,9 @@ const getEditableImage = (editor: Editor, elem) => {
 
   if (isFigure(editor, elem)) {
     const imgOpt = getFigureImg(elem);
-    return imgOpt.map((img) => isEditable(img.dom()) ? Option.some(img.dom()) : Option.none());
+    return imgOpt.map((img) => isEditable(img.dom()) ? Optional.some(img.dom()) : Optional.none());
   }
-  return isEditable(elem) ? Option.some(elem) : Option.none();
+  return isEditable(elem) ? Optional.some(elem) : Optional.none();
 };
 
 const displayError = function (editor: Editor, error) {
@@ -43,12 +43,12 @@ const displayError = function (editor: Editor, error) {
   });
 };
 
-const getSelectedImage = (editor: Editor): Option<SugarElement> => {
+const getSelectedImage = (editor: Editor): Optional<SugarElement> => {
   const elem = editor.selection.getNode();
   if (isFigure(editor, elem)) {
     return getFigureImg(elem);
   } else {
-    return Option.some(SugarElement.fromDom(elem));
+    return Optional.some(SugarElement.fromDom(elem));
   }
 };
 

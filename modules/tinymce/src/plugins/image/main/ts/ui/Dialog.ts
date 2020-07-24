@@ -6,7 +6,7 @@
  */
 
 import { Types } from '@ephox/bridge';
-import { Arr, Merger, Option, Type } from '@ephox/katamari';
+import { Arr, Merger, Optional, Type } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 import { BlobInfo } from 'tinymce/core/api/file/BlobCache';
@@ -43,7 +43,7 @@ interface Helpers {
 }
 
 interface ImageDialogState {
-  prevImage: Option<ListValue>;
+  prevImage: Optional<ListValue>;
   prevAlt: string;
   open: boolean;
 }
@@ -93,17 +93,17 @@ const toImageData = (data: ImageDialogData, removeEmptyAlt: boolean): ImageData 
   isDecorative: data.isDecorative
 });
 
-const addPrependUrl2 = (info: ImageDialogInfo, srcURL: string): Option<string> => {
+const addPrependUrl2 = (info: ImageDialogInfo, srcURL: string): Optional<string> => {
   // Add the prependURL
   if (!/^(?:[a-zA-Z]+:)?\/\//.test(srcURL)) {
     return info.prependURL.bind((prependUrl) => {
       if (srcURL.substring(0, prependUrl.length) !== prependUrl) {
-        return Option.some(prependUrl + srcURL);
+        return Optional.some(prependUrl + srcURL);
       }
-      return Option.none();
+      return Optional.none();
     });
   }
-  return Option.none();
+  return Optional.none();
 };
 
 const addPrependUrl = (info: ImageDialogInfo, api: API) => {

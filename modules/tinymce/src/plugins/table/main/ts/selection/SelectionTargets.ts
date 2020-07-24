@@ -1,4 +1,4 @@
-import { Arr, Cell, Option, Thunk } from '@ephox/katamari';
+import { Arr, Cell, Optional, Thunk } from '@ephox/katamari';
 import { RunOperation, TableLookup } from '@ephox/snooker';
 import { SugarElement, SugarNode } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
@@ -9,10 +9,10 @@ import * as TableSelection from './TableSelection';
 export type SelectionTargets = ReturnType<typeof getSelectionTargets>;
 
 export const getSelectionTargets = (editor: Editor, selections: Selections) => {
-  const targets = Cell<Option<RunOperation.CombinedTargets>>(Option.none());
+  const targets = Cell<Optional<RunOperation.CombinedTargets>>(Optional.none());
   const changeHandlers = Cell([]);
 
-  const findTargets = (): Option<RunOperation.CombinedTargets> => TableSelection.getSelectionStartCellOrCaption(editor).bind((cellOrCaption) => {
+  const findTargets = (): Optional<RunOperation.CombinedTargets> => TableSelection.getSelectionStartCellOrCaption(editor).bind((cellOrCaption) => {
     const table = TableLookup.table(cellOrCaption);
     const isCaption = (elem: SugarElement<HTMLTableCaptionElement | HTMLTableCellElement>): elem is SugarElement<HTMLTableCaptionElement> =>
       SugarNode.name(elem) === 'caption';
@@ -53,7 +53,7 @@ export const getSelectionTargets = (editor: Editor, selections: Selections) => {
 
   const onSetupTable = (api) => onSetup(api, (_) => false);
   const onSetupCellOrRow = (api) => onSetup(api, (targets) => SugarNode.name(targets.element()) === 'caption');
-  const onSetupPasteable = (getClipboardData: () => Option<SugarElement[]>) => (api) => onSetup(api, (targets) =>
+  const onSetupPasteable = (getClipboardData: () => Optional<SugarElement[]>) => (api) => onSetup(api, (targets) =>
     SugarNode.name(targets.element()) === 'caption' || getClipboardData().isNone()
   );
   const onSetupMergeable = (api) => onSetup(api, (targets) => targets.mergable().isNone());

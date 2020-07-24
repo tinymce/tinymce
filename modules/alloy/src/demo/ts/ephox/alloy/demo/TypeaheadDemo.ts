@@ -1,4 +1,4 @@
-import { Arr, Future, Option, Result, Strings } from '@ephox/katamari';
+import { Arr, Future, Optional, Result, Strings } from '@ephox/katamari';
 import { Class, SugarElement, Value } from '@ephox/sugar';
 
 import { Representing } from 'ephox/alloy/api/behaviour/Representing';
@@ -122,13 +122,13 @@ export default (): void => {
           value: 'blah.value',
           items: Arr.map(items, DemoRenders.item)
         });
-        return Option.some(TieredMenu.singleData('blah', menu));
+        return Optional.some(TieredMenu.singleData('blah', menu));
       });
     },
     onExecute(sandbox, item, _itemValue) {
       const value = Representing.getValue(item);
       console.log('*** typeahead menu demo execute on: ', value, ' ***');
-      return Option.some(true);
+      return Optional.some(true);
     }
   });
 

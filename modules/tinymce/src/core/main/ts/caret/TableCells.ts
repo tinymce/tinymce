@@ -6,7 +6,7 @@
  */
 
 // eslint-disable-next-line max-len
-import { Arr, Fun, Option } from '@ephox/katamari';
+import { Arr, Fun, Optional } from '@ephox/katamari';
 import { SelectorFilter, SugarElement } from '@ephox/sugar';
 import { clone as roundRect } from '../geom/ClientRect';
 import { CaretPosition } from './CaretPosition';
@@ -38,15 +38,15 @@ const getCorners = (getYAxisValue, tds: HTMLElement[]): Corner[] => Arr.bind(tds
   ];
 });
 
-const findClosestCorner = (corners: Corner[], x: number, y: number): Option<Corner> =>
+const findClosestCorner = (corners: Corner[], x: number, y: number): Optional<Corner> =>
   Arr.foldl(corners, (acc, newCorner) => acc.fold(
-    () => Option.some(newCorner),
+    () => Optional.some(newCorner),
     (oldCorner) => {
       const oldDist = Math.sqrt(Math.abs(oldCorner.x - x) + Math.abs(oldCorner.y - y));
       const newDist = Math.sqrt(Math.abs(newCorner.x - x) + Math.abs(newCorner.y - y));
-      return Option.some(newDist < oldDist ? newCorner : oldCorner);
+      return Optional.some(newDist < oldDist ? newCorner : oldCorner);
     }
-  ), Option.none());
+  ), Optional.none());
 
 const getClosestCell = (
   getYAxisValue: GetAxisValue,
@@ -54,7 +54,7 @@ const getClosestCell = (
   table: HTMLElement,
   x: number,
   y: number
-): Option<HTMLElement> => {
+): Optional<HTMLElement> => {
   type TableThing = HTMLTableDataCellElement | HTMLTableHeaderCellElement | HTMLTableCaptionElement;
   const cells = SelectorFilter.descendants<TableThing>(
     SugarElement.fromDom(table),
@@ -76,12 +76,12 @@ const isBelow = (corner: Corner, y: number) => corner.y > y;
 const getClosestCellAbove = Fun.curry(getClosestCell, getBottomValue, isAbove);
 const getClosestCellBelow = Fun.curry(getClosestCell, getTopValue, isBelow);
 
-const findClosestPositionInAboveCell = (table: HTMLElement, pos: CaretPosition): Option<CaretPosition> =>
+const findClosestPositionInAboveCell = (table: HTMLElement, pos: CaretPosition): Optional<CaretPosition> =>
   Arr.head(pos.getClientRects()).
     bind((rect) => getClosestCellAbove(table, rect.left, rect.top)).
     bind((cell) => findClosestHorizontalPosition(getLastLinePositions(cell), pos));
 
-const findClosestPositionInBelowCell = (table: HTMLElement, pos: CaretPosition): Option<CaretPosition> =>
+const findClosestPositionInBelowCell = (table: HTMLElement, pos: CaretPosition): Optional<CaretPosition> =>
   Arr.last(pos.getClientRects()).
     bind((rect) => getClosestCellBelow(table, rect.left, rect.top)).
     bind((cell) => findClosestHorizontalPosition(getFirstLinePositions(cell), pos));

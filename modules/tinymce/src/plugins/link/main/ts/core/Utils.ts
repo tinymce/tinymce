@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Obj, Option, Type } from '@ephox/katamari';
+import { Arr, Obj, Optional, Type } from '@ephox/katamari';
 import DomTreeWalker from 'tinymce/core/api/dom/TreeWalker';
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
@@ -117,7 +117,7 @@ const applyLinkOverrides = (editor: Editor, linkAttrs: Record<string, string>) =
     newLinkAttrs.rel = newRel ? newRel : null;
   }
 
-  if (Option.from(newLinkAttrs.target).isNone() && Settings.getTargetList(editor) === false) {
+  if (Optional.from(newLinkAttrs.target).isNone() && Settings.getTargetList(editor) === false) {
     newLinkAttrs.target = Settings.getDefaultLinkTarget(editor);
   }
 
@@ -126,7 +126,7 @@ const applyLinkOverrides = (editor: Editor, linkAttrs: Record<string, string>) =
   return newLinkAttrs;
 };
 
-const updateLink = (editor: Editor, anchorElm: HTMLAnchorElement, text: Option<string>, linkAttrs: Record<string, string>) => {
+const updateLink = (editor: Editor, anchorElm: HTMLAnchorElement, text: Optional<string>, linkAttrs: Record<string, string>) => {
   // If we have text, then update the anchor elements text content
   text.each((text) => {
     if (anchorElm.hasOwnProperty('innerText')) {
@@ -140,7 +140,7 @@ const updateLink = (editor: Editor, anchorElm: HTMLAnchorElement, text: Option<s
   editor.selection.select(anchorElm);
 };
 
-const createLink = (editor: Editor, selectedElm: Element, text: Option<string>, linkAttrs: Record<string, string>) => {
+const createLink = (editor: Editor, selectedElm: Element, text: Optional<string>, linkAttrs: Record<string, string>) => {
   if (isImageFigure(selectedElm)) {
     linkImageFigure(editor, selectedElm, linkAttrs);
   } else {

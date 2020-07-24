@@ -1,4 +1,4 @@
-import { Fun, Option } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 import { DomGather } from '@ephox/phoenix';
 import { PlatformDetection } from '@ephox/sand';
 import { Awareness, Compare, CursorPosition, PredicateExists, SelectorFilter, SelectorFind, SimRange, SugarElement, Traverse } from '@ephox/sugar';
@@ -29,7 +29,7 @@ const simulate = function (bridge: WindowBridge, isRoot: (e: SugarElement) => bo
   return SelectorFind.closest(initial, 'td,th', isRoot).bind(function (start) {
     return SelectorFind.closest(start, 'table', isRoot).bind(function (table) {
       if (!inSameTable(anchor, table)) {
-        return Option.none<Simulated>();
+        return Optional.none<Simulated>();
       }
       return TableKeys.handle(bridge, isRoot, direction).bind(function (range) {
         return SelectorFind.closest(range.finish(), 'td,th', isRoot).map<Simulated>(function (finish) {
@@ -45,16 +45,16 @@ const simulate = function (bridge: WindowBridge, isRoot: (e: SugarElement) => bo
 };
 
 const navigate = function (bridge: WindowBridge, isRoot: (e: SugarElement) => boolean, direction: KeyDirection, initial: SugarElement,
-                           anchor: SugarElement, precheck: (initial: SugarElement, isRoot: (e: SugarElement) => boolean) => Option<Response>) {
+                           anchor: SugarElement, precheck: (initial: SugarElement, isRoot: (e: SugarElement) => boolean) => Optional<Response>) {
   // Do not override the up/down keys on IE.
   if (PlatformDetection.detect().browser.isIE()) {
-    return Option.none<Response>();
+    return Optional.none<Response>();
   } else {
     return precheck(initial, isRoot).orThunk(function () {
       return simulate(bridge, isRoot, direction, initial, anchor).map(function (info) {
         const range = info.range();
         return Response.create(
-          Option.some(Util.makeSitus(range.start(), range.soffset(), range.finish(), range.foffset())),
+          Optional.some(Util.makeSitus(range.start(), range.soffset(), range.finish(), range.foffset())),
           true
         );
       });
@@ -72,12 +72,12 @@ const firstUpCheck = function (initial: SugarElement, isRoot: (e: SugarElement) 
         }, isRoot).map(function (last) {
           const lastOffset = Awareness.getEnd(last);
           return Response.create(
-            Option.some(Util.makeSitus(last, lastOffset, last, lastOffset)),
+            Optional.some(Util.makeSitus(last, lastOffset, last, lastOffset)),
             true
           );
         });
       } else {
-        return Option.none<Response>();
+        return Optional.none<Response>();
       }
     });
   });
@@ -92,12 +92,12 @@ const lastDownCheck = function (initial: SugarElement, isRoot: (e: SugarElement)
           return CursorPosition.first(element).isSome();
         }, isRoot).map(function (first) {
           return Response.create(
-            Option.some(Util.makeSitus(first, 0, first, 0)),
+            Optional.some(Util.makeSitus(first, 0, first, 0)),
             true
           );
         });
       } else {
-        return Option.none<Response>();
+        return Optional.none<Response>();
       }
     });
   });

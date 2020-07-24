@@ -1,12 +1,12 @@
 import { ApproxStructure, Assertions } from '@ephox/agar';
 import { GuiFactory, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 
 import { renderTextarea } from 'tinymce/themes/silver/ui/dialog/TextField';
+import { DisablingSteps } from '../../../module/DisablingSteps';
 import { RepresentingSteps } from '../../../module/ReperesentingSteps';
 import TestProviders from '../../../module/TestProviders';
-import { DisablingSteps } from '../../../module/DisablingSteps';
 
 UnitTest.asynctest('Textarea component Test', (success, failure) => {
 
@@ -14,8 +14,8 @@ UnitTest.asynctest('Textarea component Test', (success, failure) => {
     (_store, _doc, _body) => GuiFactory.build(
       renderTextarea({
         name: 'textarea',
-        label: Option.some('LabelA'),
-        placeholder: Option.none(),
+        label: Optional.some('LabelA'),
+        placeholder: Optional.none(),
         maximized: false,
         disabled: false
       }, TestProviders)

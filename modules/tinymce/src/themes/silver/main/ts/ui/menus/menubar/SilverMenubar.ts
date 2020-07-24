@@ -11,7 +11,7 @@ import {
 } from '@ephox/alloy';
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Toolbar } from '@ephox/bridge';
-import { Arr, Fun, Option } from '@ephox/katamari';
+import { Arr, Fun, Optional } from '@ephox/katamari';
 import { Compare, SelectorFind } from '@ephox/sugar';
 import { TranslatedString } from 'tinymce/core/api/util/I18n';
 
@@ -65,7 +65,7 @@ const factory: UiSketcher.SingleSketchFactory<SilverMenubarDetail, SilverMenubar
         MenuButtonClasses.Button,
         spec.backstage,
         // https://www.w3.org/TR/wai-aria-practices/examples/menubar/menubar-2/menubar-2.html
-        Option.some('menuitem')
+        Optional.some('menuitem')
       );
     });
 
@@ -108,8 +108,8 @@ const factory: UiSketcher.SingleSketchFactory<SilverMenubarDetail, SilverMenubar
         }),
 
         AlloyEvents.run<SystemEvents.AlloyFocusShiftedEvent>(SystemEvents.focusShifted(), (comp, se) => {
-          se.event().prevFocus().bind((prev) => comp.getSystem().getByDom(prev).toOption()).each((prev) => {
-            se.event().newFocus().bind((nu) => comp.getSystem().getByDom(nu).toOption()).each((nu) => {
+          se.event().prevFocus().bind((prev) => comp.getSystem().getByDom(prev).toOptional()).each((prev) => {
+            se.event().newFocus().bind((nu) => comp.getSystem().getByDom(nu).toOptional()).each((nu) => {
               if (Dropdown.isOpen(prev)) {
                 Dropdown.expand(nu);
                 Dropdown.close(prev);
@@ -123,7 +123,7 @@ const factory: UiSketcher.SingleSketchFactory<SilverMenubarDetail, SilverMenubar
         selector: '.' + MenuButtonClasses.Button,
         onEscape: (comp) => {
           detail.onEscape(comp);
-          return Option.some(true);
+          return Optional.some(true);
         }
       }),
       Tabstopping.config({ })

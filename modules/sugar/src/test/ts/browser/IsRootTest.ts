@@ -1,5 +1,5 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
-import { Fun, Option } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 import * as Compare from 'ephox/sugar/api/dom/Compare';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
 import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
@@ -18,14 +18,14 @@ UnitTest.test('IsRootTest', () => {
 
   const isRoot = (e: SugarElement<unknown>) => Compare.eq(TestPage.d1, e);
 
-  const checkNone = <T extends Node>(optElement: Option<SugarElement<T>>) => Checkers.checkOpt(Option.none<SugarElement<T>>(), optElement);
+  const checkNone = <T extends Node>(optElement: Optional<SugarElement<T>>) => Checkers.checkOpt(Optional.none<SugarElement<T>>(), optElement);
 
   checkNone(SelectorFind.ancestor(TestPage.t6, 'li', isRoot));
   checkNone(SelectorFind.ancestor(TestPage.t6, 'ol,ul', isRoot));
   checkNone(PredicateFind.ancestor(TestPage.t6, Checkers.isName('li'), isRoot));
 
-  Checkers.checkOpt(Option.some(TestPage.d1), SelectorFind.ancestor(TestPage.t6, 'div', isRoot));
-  Checkers.checkOpt<HTMLDivElement>(Option.some(TestPage.d1), PredicateFind.ancestor(TestPage.t6, Checkers.isName('div'), isRoot));
+  Checkers.checkOpt(Optional.some(TestPage.d1), SelectorFind.ancestor(TestPage.t6, 'div', isRoot));
+  Checkers.checkOpt<HTMLDivElement>(Optional.some(TestPage.d1), PredicateFind.ancestor(TestPage.t6, Checkers.isName('div'), isRoot));
 
   checkNone(SelectorFind.closest(TestPage.t6, 'li', isRoot));
   checkNone(SelectorFind.closest(TestPage.t6, 'ol,ul', isRoot));
@@ -33,10 +33,10 @@ UnitTest.test('IsRootTest', () => {
   checkNone(PredicateFind.closest(TestPage.t6, Checkers.isName('li'), isRoot));
   checkNone(PredicateFind.closest(TestPage.d1, Checkers.isName('li'), isRoot));
 
-  Checkers.checkOpt(Option.some(TestPage.d1), SelectorFind.closest(TestPage.t6, 'div', isRoot));
-  Checkers.checkOpt(Option.some(TestPage.d1), SelectorFind.closest(TestPage.d1, 'div', isRoot));
-  Checkers.checkOpt(Option.some(TestPage.d1), PredicateFind.closest(TestPage.t6, Checkers.isName('div'), isRoot));
-  Checkers.checkOpt(Option.some(TestPage.d1), PredicateFind.closest(TestPage.d1, Checkers.isName('div'), isRoot));
+  Checkers.checkOpt(Optional.some(TestPage.d1), SelectorFind.closest(TestPage.t6, 'div', isRoot));
+  Checkers.checkOpt(Optional.some(TestPage.d1), SelectorFind.closest(TestPage.d1, 'div', isRoot));
+  Checkers.checkOpt(Optional.some(TestPage.d1), PredicateFind.closest(TestPage.t6, Checkers.isName('div'), isRoot));
+  Checkers.checkOpt(Optional.some(TestPage.d1), PredicateFind.closest(TestPage.d1, Checkers.isName('div'), isRoot));
 
   Checkers.checkList([ TestPage.d1 ], SelectorFilter.ancestors(TestPage.p3, '*', isRoot));
   Checkers.checkList([ TestPage.d1 ], PredicateFilter.ancestors(TestPage.p3, Fun.constant(true), isRoot));

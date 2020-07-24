@@ -10,7 +10,7 @@ import {
   NativeEvents, Representing, SimpleSpec, Tabstopping, Unselecting
 } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
-import { Fun, Option } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as ReadOnly from '../../ReadOnly';
 
@@ -38,7 +38,7 @@ export const renderCheckbox = (spec: CheckboxSpec, providerBackstage: UiFactoryB
 
   const toggleCheckboxHandler = (comp) => {
     comp.element().dom().click();
-    return Option.some(true);
+    return Optional.some(true);
   };
 
   const pField = AlloyFormField.parts().field({

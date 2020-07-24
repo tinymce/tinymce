@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Option, Strings } from '@ephox/katamari';
+import { Arr, Optional, Strings } from '@ephox/katamari';
 import { TableLookup } from '@ephox/snooker';
 import { Attribute, Compare, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
@@ -29,9 +29,9 @@ const removeDataStyle = (table: SugarElement<HTMLElement>): void => {
   Arr.each(TableLookup.cells(table), (cell) => Attribute.remove(cell, 'data-mce-style'));
 };
 
-const getRawWidth = (editor: Editor, elm: HTMLElement): Option<string> => {
+const getRawWidth = (editor: Editor, elm: HTMLElement): Optional<string> => {
   const raw = editor.dom.getStyle(elm, 'width') || editor.dom.getAttrib(elm, 'width');
-  return Option.from(raw).filter(Strings.isNotEmpty);
+  return Optional.from(raw).filter(Strings.isNotEmpty);
 };
 
 const isPercentage = (value: string): boolean => /^(\d+(\.\d+)?)%$/.test(value);

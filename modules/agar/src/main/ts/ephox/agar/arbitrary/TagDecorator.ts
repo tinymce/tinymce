@@ -1,4 +1,4 @@
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import Jsc from '@ephox/wrap-jsverify';
 
 import { WeightedChoice } from './WeightedChoice';
@@ -10,7 +10,7 @@ interface Decorator {
 }
 
 const gOne = (wDecorations: Decorator[]) =>
-  WeightedChoice.generator(wDecorations).flatMap((choice: Option<Decorator>) =>
+  WeightedChoice.generator(wDecorations).flatMap((choice: Optional<Decorator>) =>
     choice.fold(() =>
       Jsc.constant({}).generator,
     (c) => c.value.map((v) => {

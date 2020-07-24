@@ -123,7 +123,7 @@ const runWithTarget = function <T extends EventFormat> (name: string, f: (compon
       // until we find an alloy component? Performance concern?
       // TODO: Write tests for this.
       () => {
-        const closest = TransformFind.closest(ev.target(), (el) => component.getSystem().getByDom(el).toOption(), Fun.constant(false));
+        const closest = TransformFind.closest(ev.target(), (el) => component.getSystem().getByDom(el).toOptional(), Fun.constant(false));
 
         // If we still found nothing ... fire on component itself;
         return closest.getOr(component);

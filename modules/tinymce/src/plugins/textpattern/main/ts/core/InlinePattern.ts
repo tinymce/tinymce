@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Id, Option, Strings } from '@ephox/katamari';
+import { Arr, Id, Optional, Strings } from '@ephox/katamari';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import * as TextSearch from '../text/TextSearch';
@@ -43,7 +43,7 @@ const matchesPattern = (dom: DOMUtils, block: Node, patternContent: string) => (
   }
 };
 
-const findPatternStartFromSpot = (dom: DOMUtils, pattern: InlinePattern, block: Node, spot: Spot.SpotPoint<Text>): Option<Range> => {
+const findPatternStartFromSpot = (dom: DOMUtils, pattern: InlinePattern, block: Node, spot: Spot.SpotPoint<Text>): Optional<Range> => {
   const startPattern = pattern.start;
   const startSpot = TextSearch.repeatLeft(dom, spot.container, spot.offset, matchesPattern(dom, block, startPattern), block);
   return startSpot.bind((spot) => {
@@ -52,7 +52,7 @@ const findPatternStartFromSpot = (dom: DOMUtils, pattern: InlinePattern, block: 
       const rng = dom.createRng();
       rng.setStart(spot.container, spot.offset - startPattern.length);
       rng.setEnd(spot.container, spot.offset);
-      return Option.some(rng);
+      return Optional.some(rng);
     } else {
       // Partial match so lean left to see if the string exists over fragmented text nodes
       const offset = spot.offset - startPattern.length;
@@ -73,12 +73,12 @@ const findPatternStartFromSpot = (dom: DOMUtils, pattern: InlinePattern, block: 
   });
 };
 
-const findPatternStart = (dom: DOMUtils, pattern: InlinePattern, node: Node, offset: number, block: Node, requireGap = false): Option<Range> => {
+const findPatternStart = (dom: DOMUtils, pattern: InlinePattern, node: Node, offset: number, block: Node, requireGap = false): Optional<Range> => {
   if (pattern.start.length === 0 && !requireGap) {
     const rng = dom.createRng();
     rng.setStart(node, offset);
     rng.setEnd(node, offset);
-    return Option.some(rng);
+    return Optional.some(rng);
   }
 
   return TextSearch.textBefore(node, offset, block).bind((spot) => {
@@ -86,18 +86,18 @@ const findPatternStart = (dom: DOMUtils, pattern: InlinePattern, node: Node, off
     return start.bind((startRange: Range) => {
       if (requireGap) {
         if (startRange.endContainer === spot.container && startRange.endOffset === spot.offset) {
-          return Option.none();
+          return Optional.none();
         } else if (spot.offset === 0 && startRange.endContainer.textContent.length === startRange.endOffset) {
-          return Option.none();
+          return Optional.none();
         }
       }
 
-      return Option.some(startRange);
+      return Optional.some(startRange);
     });
   });
 };
 
-const findPattern = (editor: Editor, block: Node, details: PatternDetails): Option<SearchResults> => {
+const findPattern = (editor: Editor, block: Node, details: PatternDetails): Optional<SearchResults> => {
   const dom = editor.dom;
   const root = dom.getRoot();
   const pattern = details.pattern;
@@ -110,7 +110,7 @@ const findPattern = (editor: Editor, block: Node, details: PatternDetails): Opti
 
     // If we have a replacement pattern, then it can't have nested patterns so just return immediately
     if (Utils.isReplacementPattern(pattern)) {
-      return Option.some({
+      return Optional.some({
         matches: [{
           pattern,
           startRng: endPathRng,
@@ -148,7 +148,7 @@ const findPattern = (editor: Editor, block: Node, details: PatternDetails): Opti
 // 3. Patterns will not extend outside of the root element
 // 4. All pattern ends must be directly before the cursor (represented by node + offset)
 // 5. Only text nodes matter
-const findPatternsRec = (editor: Editor, patterns: InlinePattern[], node: Node, offset: number, block: Node): Option<SearchResults> => {
+const findPatternsRec = (editor: Editor, patterns: InlinePattern[], node: Node, offset: number, block: Node): Optional<SearchResults> => {
   const dom = editor.dom;
 
   return TextSearch.textBefore(node, offset, dom.getRoot()).bind((endSpot) => {
@@ -180,7 +180,7 @@ const findPatternsRec = (editor: Editor, patterns: InlinePattern[], node: Node, 
       }
     }
 
-    return Option.none();
+    return Optional.none();
   });
 };
 

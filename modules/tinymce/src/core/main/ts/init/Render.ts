@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Fun, Option, Options, Type } from '@ephox/katamari';
+import { Arr, Fun, Optional, Optionals, Type } from '@ephox/katamari';
 import { Attribute, SugarElement } from '@ephox/sugar';
 import { UrlObject } from '../api/AddOnManager';
 import DOMUtils from '../api/dom/DOMUtils';
@@ -70,28 +70,28 @@ const loadTheme = function (scriptLoader: ScriptLoader, editor: Editor, suffix, 
 
 interface UrlMeta {
   url: string;
-  name: Option<string>;
+  name: Optional<string>;
 }
 
-const getIconsUrlMetaFromUrl = (editor: Editor): Option<UrlMeta> => Option.from(Settings.getIconsUrl(editor))
+const getIconsUrlMetaFromUrl = (editor: Editor): Optional<UrlMeta> => Optional.from(Settings.getIconsUrl(editor))
   .filter((url) => url.length > 0)
   .map((url) => ({
     url,
-    name: Option.none()
+    name: Optional.none()
   }));
 
-const getIconsUrlMetaFromName = (editor: Editor, name: string | undefined, suffix: string): Option<UrlMeta> => Option.from(name)
+const getIconsUrlMetaFromName = (editor: Editor, name: string | undefined, suffix: string): Optional<UrlMeta> => Optional.from(name)
   .filter((name) => name.length > 0 && !IconManager.has(name))
   .map((name) => ({
     url: `${editor.editorManager.baseURL}/icons/${name}/icons${suffix}.js`,
-    name: Option.some(name)
+    name: Optional.some(name)
   }));
 
 const loadIcons = (scriptLoader: ScriptLoader, editor: Editor, suffix: string) => {
   const defaultIconsUrl = getIconsUrlMetaFromName(editor, 'default', suffix);
   const customIconsUrl = getIconsUrlMetaFromUrl(editor).orThunk(() => getIconsUrlMetaFromName(editor, Settings.getIconPackName(editor), ''));
 
-  Arr.each(Options.cat([ defaultIconsUrl, customIconsUrl ]), (urlMeta) => {
+  Arr.each(Optionals.cat([ defaultIconsUrl, customIconsUrl ]), (urlMeta) => {
     scriptLoader.add(urlMeta.url, Fun.noop, undefined, () => {
       ErrorReporter.iconsLoadError(editor, urlMeta.url, urlMeta.name.getOrUndefined());
     });

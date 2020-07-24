@@ -1,5 +1,5 @@
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
-import { Fun, Option, Result } from '@ephox/katamari';
+import { Fun, Optional, Result } from '@ephox/katamari';
 import { BaseToolbarButton, BaseToolbarButtonApi, baseToolbarButtonFields, BaseToolbarButtonInstanceApi } from './ToolbarButton';
 import {
   BaseToolbarToggleButton, BaseToolbarToggleButtonApi, baseToolbarToggleButtonFields, BaseToolbarToggleButtonInstanceApi
@@ -98,8 +98,8 @@ export interface ContextFormApi extends ContextBarApi {
 export interface ContextForm extends ContextBar {
   type: 'contextform';
   initValue: () => string;
-  label: Option<string>;
-  launch: Option<ContextFormLaunchButton | ContextFormLaunchToggleButton>;
+  label: Optional<string>;
+  launch: Optional<ContextFormLaunchButton | ContextFormLaunchToggleButton>;
   commands: Array<ContextToggleButton | ContextButton>;
 }
 

@@ -1,6 +1,6 @@
 import { Logger } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { Obj, Option } from '@ephox/katamari';
+import { Obj, Optional } from '@ephox/katamari';
 import { KAssert } from '@ephox/katamari-assertions';
 import { Base64Extract, extractBase64DataUris, parseDataUri, restoreDataUris, UriMap } from 'tinymce/core/html/Base64Uris';
 
@@ -114,10 +114,10 @@ UnitTest.test('Base64Uris Test', () => {
   });
 
   Logger.sync('parseDataUri', () => {
-    KAssert.eqOption('Plain text mime', Option.some({ type: 'image/png', data: 'R0/yw==' }), parseDataUri('data:image/png;base64,R0/yw=='));
-    KAssert.eqOption('Mime with dash', Option.some({ type: 'image/x-icon', data: 'R1/yw==' }), parseDataUri('data:image/x-icon;base64,R1/yw=='));
-    KAssert.eqOption('Mime with plus', Option.some({ type: 'image/svg+xml', data: 'R2/yw==' }), parseDataUri('data:image/svg+xml;base64,R2/yw=='));
-    KAssert.eqOption('Data uri without mime', Option.none(), parseDataUri('data:base64,R3/yw=='));
-    KAssert.eqOption('Data uri without base64', Option.none(), parseDataUri('data:image/svg+xml,R4/yw=='));
+    KAssert.eqOptional('Plain text mime', Optional.some({ type: 'image/png', data: 'R0/yw==' }), parseDataUri('data:image/png;base64,R0/yw=='));
+    KAssert.eqOptional('Mime with dash', Optional.some({ type: 'image/x-icon', data: 'R1/yw==' }), parseDataUri('data:image/x-icon;base64,R1/yw=='));
+    KAssert.eqOptional('Mime with plus', Optional.some({ type: 'image/svg+xml', data: 'R2/yw==' }), parseDataUri('data:image/svg+xml;base64,R2/yw=='));
+    KAssert.eqOptional('Data uri without mime', Optional.none(), parseDataUri('data:base64,R3/yw=='));
+    KAssert.eqOptional('Data uri without base64', Optional.none(), parseDataUri('data:image/svg+xml,R4/yw=='));
   });
 });

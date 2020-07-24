@@ -1,4 +1,4 @@
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
 import { Bounds } from '../../alien/Boxes';
@@ -9,8 +9,8 @@ import { AnchorSpec } from '../../positioning/mode/Anchoring';
 export interface PositioningBehaviour extends Behaviour.AlloyBehaviour<PositioningConfigSpec, PositioningConfig> {
   config: (config: PositioningConfigSpec) => Behaviour.NamedConfiguredBehaviour<PositioningConfigSpec, PositioningConfig>;
   position: (component: AlloyComponent, anchor: AnchorSpec, placee: AlloyComponent) => void;
-  positionWithin: (component: AlloyComponent, anchor: AnchorSpec, placee: AlloyComponent, boxElement: Option<SugarElement>) => void;
-  positionWithinBounds: (component: AlloyComponent, anchor: AnchorSpec, placee: AlloyComponent, bounds: Option<Bounds>) => void;
+  positionWithin: (component: AlloyComponent, anchor: AnchorSpec, placee: AlloyComponent, boxElement: Optional<SugarElement>) => void;
+  positionWithinBounds: (component: AlloyComponent, anchor: AnchorSpec, placee: AlloyComponent, bounds: Optional<Bounds>) => void;
   getMode: (component: AlloyComponent) => string;
 }
 
@@ -21,5 +21,5 @@ export interface PositioningConfigSpec extends Behaviour.BehaviourConfigSpec {
 
 export interface PositioningConfig extends Behaviour.BehaviourConfigDetail {
   useFixed: () => boolean;
-  getBounds: Option<() => Bounds>; // TODO: Strengthen types
+  getBounds: Optional<() => Bounds>; // TODO: Strengthen types
 }

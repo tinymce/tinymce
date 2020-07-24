@@ -1,8 +1,8 @@
-import { Option, Struct } from '@ephox/katamari';
+import { Optional, Struct } from '@ephox/katamari';
 
 export interface BeforeAfter {
-  before: () => Option<number>;
-  after: () => Option<number>;
+  before: () => Optional<number>;
+  after: () => Optional<number>;
 }
 
-export const BeforeAfter: (before: Option<number>, after: Option<number>) => BeforeAfter = Struct.immutable('before', 'after');
+export const BeforeAfter: (before: Optional<number>, after: Optional<number>) => BeforeAfter = Struct.immutable('before', 'after');

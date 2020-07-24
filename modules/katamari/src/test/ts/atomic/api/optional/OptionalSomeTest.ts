@@ -1,10 +1,10 @@
-import * as Fun from 'ephox/katamari/api/Fun';
-import { Option } from 'ephox/katamari/api/Option';
-import { tOption } from 'ephox/katamari/api/OptionInstances';
-import * as ArbDataTypes from 'ephox/katamari/test/arb/ArbDataTypes';
-import fc from 'fast-check';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Testable } from '@ephox/dispute';
+import * as Fun from 'ephox/katamari/api/Fun';
+import { Optional } from 'ephox/katamari/api/Optional';
+import { tOptional } from 'ephox/katamari/api/OptionalInstances';
+import * as ArbDataTypes from 'ephox/katamari/test/arb/ArbDataTypes';
+import fc from 'fast-check';
 
 const { tNumber, tString } = Testable;
 
@@ -13,38 +13,38 @@ UnitTest.test('OptionSomeTest', () => {
     throw new Error('Should not be called');
   };
 
-  const s = Option.some(5);
+  const s = Optional.some(5);
   Assert.eq('getOrDie', 5, s.getOrDie('Died!'));
-  Assert.eq('or', Option.some(5), s.or(Option.some(6)), tOption(tNumber));
-  Assert.eq('orThunk', Option.some(5), s.orThunk(boom), tOption(tNumber));
+  Assert.eq('or', Optional.some(5), s.or(Optional.some(6)), tOptional(tNumber));
+  Assert.eq('orThunk', Optional.some(5), s.orThunk(boom), tOptional(tNumber));
 
   Assert.eq('map', 10, s.map((v) => v * 2).getOrDie());
 
-  Assert.eq('bind', Option.some('test5'), s.bind((v) => Option.some('test' + v)), tOption(tString));
+  Assert.eq('bind', Optional.some('test5'), s.bind((v) => Optional.some('test' + v)), tOptional(tString));
 
-  Assert.eq('from', Option.some(5), Option.from(5), tOption(tNumber));
+  Assert.eq('from', Optional.some(5), Optional.from(5), tOptional(tNumber));
 
-  Assert.eq('toArray 1', [ 1 ], Option.some(1).toArray());
-  Assert.eq('toArray 2', [{ cat: 'dog' }], Option.some({ cat: 'dog' }).toArray());
-  Assert.eq('toArray 3', [[ 1 ]], Option.some([ 1 ]).toArray());
+  Assert.eq('toArray 1', [ 1 ], Optional.some(1).toArray());
+  Assert.eq('toArray 2', [{ cat: 'dog' }], Optional.some({ cat: 'dog' }).toArray());
+  Assert.eq('toArray 3', [[ 1 ]], Optional.some([ 1 ]).toArray());
 
-  Assert.eq('or some', true, Option.some(6).or(Option.some(7)).equals(Option.some(6)));
-  Assert.eq('or none', true, Option.some(3).or(Option.none()).equals(Option.some(3)));
+  Assert.eq('or some', true, Optional.some(6).or(Optional.some(7)).equals(Optional.some(6)));
+  Assert.eq('or none', true, Optional.some(3).or(Optional.none()).equals(Optional.some(3)));
 
   Assert.eq('fold 1', 11, s.fold(boom, (v) => v + 6));
-  Assert.eq('fold 2', 'a', Option.some('a').fold(Fun.die('boom'), Fun.identity));
-  Assert.eq('fold 3', [ 'z' ], Option.some('z').fold(Fun.die('boom'), function () {
+  Assert.eq('fold 2', 'a', Optional.some('a').fold(Fun.die('boom'), Fun.identity));
+  Assert.eq('fold 3', [ 'z' ], Optional.some('z').fold(Fun.die('boom'), function () {
     return Array.prototype.slice.call(arguments);
   }));
-  Assert.eq('fold 4', 'az', Option.some('a').fold(Fun.die('boom'), (x) => x + 'z'));
+  Assert.eq('fold 4', 'az', Optional.some('a').fold(Fun.die('boom'), (x) => x + 'z'));
 });
 
-const arbOptionSome = ArbDataTypes.arbOptionSome;
-const arbOptionNone = ArbDataTypes.arbOptionNone;
+const arbOptionSome = ArbDataTypes.arbOptionalSome;
+const arbOptionNone = ArbDataTypes.arbOptionalNone;
 
 UnitTest.test('Checking some(x).fold(die, id) === x', () => {
   fc.assert(fc.property(fc.integer(), (json) => {
-    const opt = Option.some(json);
+    const opt = Optional.some(json);
     const actual = opt.fold(Fun.die('Should not be none!'), Fun.identity);
     Assert.eq('eq', json, actual);
   }));
@@ -52,7 +52,7 @@ UnitTest.test('Checking some(x).fold(die, id) === x', () => {
 
 UnitTest.test('Checking some(x).is(x) === true', () => {
   fc.assert(fc.property(fc.integer(), (json) => {
-    const opt = Option.some(json);
+    const opt = Optional.some(json);
     Assert.eq('eq', true, opt.is(json));
   }));
 });
@@ -67,40 +67,40 @@ UnitTest.test('Checking some(x).isNone === false', () => {
 
 UnitTest.test('Checking some(x).getOr(v) === x', () => {
   fc.assert(fc.property(arbOptionSome(fc.integer()), arbOptionSome(fc.integer()), (a, b) => {
-    Assert.eq('eq', a, Option.some(a).getOr(b));
+    Assert.eq('eq', a, Optional.some(a).getOr(b));
   }));
 });
 
 UnitTest.test('Checking some(x).getOrThunk(_ -> v) === x', () => {
   fc.assert(fc.property(fc.integer(), fc.func(fc.integer()), (a, thunk) => {
-    Assert.eq('eq', a, Option.some(a).getOrThunk(thunk));
+    Assert.eq('eq', a, Optional.some(a).getOrThunk(thunk));
   }));
 });
 
 UnitTest.test('Checking some.getOrDie() never throws', () => {
   fc.assert(fc.property(fc.integer(), fc.string(1, 40), (i, s) => {
-    const opt = Option.some(i);
+    const opt = Optional.some(i);
     opt.getOrDie(s);
   }));
 });
 
 UnitTest.test('Checking some(x).or(oSomeValue) === some(x)', () => {
   fc.assert(fc.property(fc.integer(), arbOptionSome(fc.integer()), (json, other) => {
-    const output = Option.some(json).or(other);
+    const output = Optional.some(json).or(other);
     Assert.eq('eq', true, output.is(json));
   }));
 });
 
 UnitTest.test('Checking some(x).orThunk(_ -> oSomeValue) === some(x)', () => {
   fc.assert(fc.property(fc.integer(), arbOptionSome(fc.integer()), (i, other) => {
-    const output = Option.some(i).orThunk(() => other);
+    const output = Optional.some(i).orThunk(() => other);
     Assert.eq('eq', true, output.is(i));
   }));
 });
 
 UnitTest.test('Checking some(x).map(f) === some(f(x))', () => {
   fc.assert(fc.property(fc.integer(), fc.func(fc.integer()), (a, f) => {
-    const opt = Option.some(a);
+    const opt = Optional.some(a);
     const actual = opt.map(f);
     Assert.eq('eq', f(a), actual.getOrDie());
   }));
@@ -119,15 +119,15 @@ UnitTest.test('Checking some(x).each(f) === undefined and f gets x', () => {
 
 UnitTest.test('Given f :: s -> some(b), checking some(x).bind(f) === some(b)', () => {
   fc.assert(fc.property(fc.integer(), fc.func(arbOptionSome(fc.integer())), (i, f) => {
-    const actual = Option.some(i).bind(f);
-    Assert.eq('eq', f(i), actual, tOption(tNumber));
+    const actual = Optional.some(i).bind(f);
+    Assert.eq('eq', f(i), actual, tOptional(tNumber));
   }));
 });
 
 UnitTest.test('Given f :: s -> none, checking some(x).bind(f) === none', () => {
   fc.assert(fc.property(arbOptionSome(fc.integer()), fc.func(arbOptionNone()), (opt, f) => {
     const actual = opt.bind(f);
-    Assert.eq('eq', Option.none(), actual, tOption(tNumber));
+    Assert.eq('eq', Optional.none(), actual, tOptional(tNumber));
   }));
 });
 
@@ -141,7 +141,7 @@ UnitTest.test('Checking some(x).exists(_ -> true) === true', () => {
 
 UnitTest.test('Checking some(x).exists(f) iff. f(x)', () => {
   fc.assert(fc.property(fc.integer(), fc.func(fc.boolean()), (i, f) => {
-    const opt = Option.some(i);
+    const opt = Optional.some(i);
     if (f(i)) {
       Assert.eq('eq', true, opt.exists(f));
     } else {
@@ -160,7 +160,7 @@ UnitTest.test('Checking some(x).forall(_ -> true) === true', () => {
 
 UnitTest.test('Checking some(x).forall(f) iff. f(x)', () => {
   fc.assert(fc.property(fc.integer(), fc.func(fc.boolean()), (i, f) => {
-    const opt = Option.some(i);
+    const opt = Optional.some(i);
     if (f(i)) {
       Assert.eq('eq', true, opt.forall(f));
     } else {
@@ -171,12 +171,12 @@ UnitTest.test('Checking some(x).forall(f) iff. f(x)', () => {
 
 UnitTest.test('Checking some(x).toArray equals [ x ]', () => {
   fc.assert(fc.property(fc.integer(), (json) => {
-    Assert.eq('eq', [ json ], Option.some(json).toArray());
+    Assert.eq('eq', [ json ], Optional.some(json).toArray());
   }));
 });
 
 UnitTest.test('Checking some(x).toString equals "some(x)"', () => {
   fc.assert(fc.property(fc.integer(), (json) => {
-    Assert.eq('toString', 'some(' + json + ')', Option.some(json).toString());
+    Assert.eq('toString', 'some(' + json + ')', Optional.some(json).toString());
   }));
 });

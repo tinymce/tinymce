@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Obj, Option, Type } from '@ephox/katamari';
+import { Arr, Obj, Optional, Type } from '@ephox/katamari';
 import { SelectorFind, SugarBody, SugarElement, SugarShadowDom } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
@@ -39,12 +39,12 @@ const isSkinDisabled = (editor: Editor) => editor.getParam('skin') === false;
 
 const getHeightSetting = (editor: Editor): string | number => editor.getParam('height', Math.max(editor.getElement().offsetHeight, 200));
 const getWidthSetting = (editor: Editor): string | number => editor.getParam('width', DOMUtils.DOM.getStyle(editor.getElement(), 'width'));
-const getMinWidthSetting = (editor: Editor): Option<number> => Option.from(editor.getParam('min_width')).filter(Type.isNumber);
-const getMinHeightSetting = (editor: Editor): Option<number> => Option.from(editor.getParam('min_height')).filter(Type.isNumber);
-const getMaxWidthSetting = (editor: Editor): Option<number> => Option.from(editor.getParam('max_width')).filter(Type.isNumber);
-const getMaxHeightSetting = (editor: Editor): Option<number> => Option.from(editor.getParam('max_height')).filter(Type.isNumber);
+const getMinWidthSetting = (editor: Editor): Optional<number> => Optional.from(editor.getParam('min_width')).filter(Type.isNumber);
+const getMinHeightSetting = (editor: Editor): Optional<number> => Optional.from(editor.getParam('min_height')).filter(Type.isNumber);
+const getMaxWidthSetting = (editor: Editor): Optional<number> => Optional.from(editor.getParam('max_width')).filter(Type.isNumber);
+const getMaxHeightSetting = (editor: Editor): Optional<number> => Optional.from(editor.getParam('max_height')).filter(Type.isNumber);
 
-const getUserStyleFormats = (editor: Editor): Option<AllowedFormat[]> => Option.from(editor.getParam('style_formats')).filter(Type.isArray);
+const getUserStyleFormats = (editor: Editor): Optional<AllowedFormat[]> => Optional.from(editor.getParam('style_formats')).filter(Type.isArray);
 const isMergeStyleFormats = (editor: Editor): boolean => editor.getParam('style_formats_merge', false, 'boolean');
 
 const getRemovedMenuItems = (editor: Editor): string => editor.getParam('removed_menuitems', '');
@@ -60,10 +60,10 @@ const isToolbarEnabled = (editor: Editor): boolean => {
 };
 
 // Convert toolbar<n> into toolbars array
-const getMultipleToolbarsSetting = (editor: Editor): Option<string[]> => {
+const getMultipleToolbarsSetting = (editor: Editor): Optional<string[]> => {
   const toolbars = Arr.range(9, (num) => editor.getParam('toolbar' + (num + 1), false, 'string'));
   const toolbarArray = Arr.filter(toolbars, (toolbar) => typeof toolbar === 'string');
-  return toolbarArray.length > 0 ? Option.some(toolbarArray) : Option.none();
+  return toolbarArray.length > 0 ? Optional.some(toolbarArray) : Optional.none();
 };
 
 // Check if multiple toolbars is enabled
@@ -99,10 +99,10 @@ const isToolbarLocationBottom = (editor: Editor) => getToolbarLocation(editor) =
 
 const fixedContainerSelector = (editor): string => editor.getParam('fixed_toolbar_container', '', 'string');
 
-const fixedContainerElement = (editor): Option<SugarElement> => {
+const fixedContainerElement = (editor): Optional<SugarElement> => {
   const selector = fixedContainerSelector(editor);
   // If we have a valid selector and are in inline mode, try to get the fixed_toolbar_container
-  return selector.length > 0 && editor.inline ? SelectorFind.descendant(SugarBody.body(), selector) : Option.none();
+  return selector.length > 0 && editor.inline ? SelectorFind.descendant(SugarBody.body(), selector) : Optional.none();
 };
 
 const useFixedContainer = (editor): boolean => editor.inline && fixedContainerElement(editor).isSome();

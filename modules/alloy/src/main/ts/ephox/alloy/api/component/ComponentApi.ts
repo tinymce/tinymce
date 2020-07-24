@@ -1,4 +1,4 @@
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
 import { BehaviourConfigAndState } from '../../behaviour/common/BehaviourBlob';
@@ -8,7 +8,7 @@ import { AlloySystemApi } from '../system/SystemApi';
 
 export interface AlloyComponent {
   getSystem: () => AlloySystemApi;
-  config: (behaviour: AlloyBehaviour<any, any>) => Option<BehaviourConfigAndState<any, any>>;
+  config: (behaviour: AlloyBehaviour<any, any>) => Optional<BehaviourConfigAndState<any, any>>;
   hasConfigured: (behaviour: AlloyBehaviour<any, any>) => boolean;
   spec: () => any;
   readState: (behaviourName: string) => any;

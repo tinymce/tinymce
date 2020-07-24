@@ -1,21 +1,21 @@
-import { Num, Option } from '@ephox/katamari';
+import { Num, Optional } from '@ephox/katamari';
 import { Attribute, SugarElement, SugarNode } from '@ephox/sugar';
 
 import * as DomPinpoint from './DomPinpoint';
 
-const horizontal = (container: SugarElement<HTMLElement>, selector: string, current: SugarElement<HTMLElement>, delta: number): Option<SugarElement> => {
+const horizontal = (container: SugarElement<HTMLElement>, selector: string, current: SugarElement<HTMLElement>, delta: number): Optional<SugarElement> => {
 
   const isDisabledButton = (candidate: SugarElement<HTMLElement>) =>
     SugarNode.name(candidate) === 'button' && Attribute.get(candidate, 'disabled') === 'disabled';
 
-  const tryCycle = (initial: number, index: number, candidates: Array<SugarElement<HTMLElement>>): Option<SugarElement<HTMLElement>> => {
+  const tryCycle = (initial: number, index: number, candidates: Array<SugarElement<HTMLElement>>): Optional<SugarElement<HTMLElement>> => {
     const newIndex = Num.cycleBy(index, delta, 0, candidates.length - 1);
     if (newIndex === initial) { // If we've cycled back to the original index, we've failed to find a new valid candidate
-      return Option.none();
+      return Optional.none();
     } else {
       return isDisabledButton(candidates[newIndex]) ?
         tryCycle(initial, newIndex, candidates) :
-        Option.from(candidates[newIndex]);
+        Optional.from(candidates[newIndex]);
     }
   };
 

@@ -1,5 +1,5 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import { KAssert } from '@ephox/katamari-assertions';
 import { PlatformDetection } from '@ephox/sand';
 import * as Insert from 'ephox/sugar/api/dom/Insert';
@@ -60,7 +60,7 @@ UnitTest.test('CssTest', () => {
     Assert.eq('getRaw display 1', true, Css.getRaw(d, 'display').isNone());
     Css.set(d, 'display', 'inline-block');
     Assert.eq('getRaw display 2', true, Css.getRaw(d, 'display').isSome());
-    Assert.eq('getRaw display 3', 'inline-block', Css.getRaw(d, 'display').getOrDie('Option expecting: inline-block'));
+    Assert.eq('getRaw display 3', 'inline-block', Css.getRaw(d, 'display').getOrDie('Optional expecting: inline-block'));
     Css.remove(d, 'display');
     Assert.eq('getRaw display 4', true, Css.getRaw(d, 'display').isNone());
     Assert.eq('has', false, Attribute.has(d, 'style'));
@@ -69,7 +69,7 @@ UnitTest.test('CssTest', () => {
     Css.remove(d, 'font-size');
     Assert.eq('getRaw font-size 2', false, Css.getRaw(d, 'font-size').isSome());
     Css.set(d, 'background-color', 'rgb(12, 213, 12)');
-    Assert.eq('getRaw background-color', 'rgb(12, 213, 12)', Css.getRaw(d, 'background-color').getOrDie('Option expecting: rgb(12,213,12)'));
+    Assert.eq('getRaw background-color', 'rgb(12, 213, 12)', Css.getRaw(d, 'background-color').getOrDie('Optional expecting: rgb(12,213,12)'));
     Css.remove(d, 'background-color');
 
     // getAllRaw
@@ -120,12 +120,12 @@ UnitTest.test('CssTest', () => {
     Assert.eq('Font size should have been preserved', true, Css.getRaw(play, 'font-size').isSome());
 
     Css.setOptions(play, {
-      'left': Option.none(),
-      'right': Option.none(),
-      'top': Option.some('0px'),
-      'bottom': Option.some('0px'),
-      'font-size': Option.none(),
-      'font-family': Option.some('Arial')
+      'left': Optional.none(),
+      'right': Optional.none(),
+      'top': Optional.some('0px'),
+      'bottom': Optional.some('0px'),
+      'font-size': Optional.none(),
+      'font-family': Optional.some('Arial')
     });
 
     KAssert.eqNone('getRaw left', Css.getRaw(play, 'left'));

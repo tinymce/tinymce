@@ -1,5 +1,5 @@
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
-import { Option, Result } from '@ephox/katamari';
+import { Optional, Result } from '@ephox/katamari';
 
 import { SeparatorMenuItem, SeparatorMenuItemApi, separatorMenuItemSchema } from '../menu/SeparatorMenuItem';
 import { ColumnTypes } from '../toolbar/ToolbarSplitButton';
@@ -19,8 +19,8 @@ export type SeparatorItem = SeparatorMenuItem;
 export interface AutocompleterItem {
   type: 'autocompleteitem';
   value: string;
-  text: Option<string>;
-  icon: Option<string>;
+  text: Optional<string>;
+  icon: Optional<string>;
   active: boolean;
   disabled: boolean;
   meta: Record<string, any>;
@@ -47,7 +47,7 @@ export interface Autocompleter {
   ch: string;
   minChars: number;
   columns: ColumnTypes;
-  matches: Option<(rng: Range, text: string, pattern: string) => boolean>;
+  matches: Optional<(rng: Range, text: string, pattern: string) => boolean>;
   fetch: (pattern: string, maxResults: number, fetchOptions: Record<string, any>) => Promise<AutocompleterContents[]>;
   onAction: (autocompleterApi: AutocompleterInstanceApi, rng, value: string, meta: Record<string, any>) => void;
   maxResults: number;

@@ -1,4 +1,4 @@
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { Compare, SugarElement } from '@ephox/sugar';
 import { Warehouse } from '../model/Warehouse';
 import * as CellFinder from '../selection/CellFinder';
@@ -19,8 +19,8 @@ const intercepts = function (table: SugarElement, first: SugarElement, last: Sug
 
 const nestedIntercepts = function (table: SugarElement, first: SugarElement, firstTable: SugarElement, last: SugarElement, lastTable: SugarElement) {
   const warehouse = getWarehouse(table);
-  const optStartCell = Compare.eq(table, firstTable) ? Option.some(first) : CellFinder.parentCell(warehouse, first);
-  const optLastCell = Compare.eq(table, lastTable) ? Option.some(last) : CellFinder.parentCell(warehouse, last);
+  const optStartCell = Compare.eq(table, firstTable) ? Optional.some(first) : CellFinder.parentCell(warehouse, first);
+  const optLastCell = Compare.eq(table, lastTable) ? Optional.some(last) : CellFinder.parentCell(warehouse, last);
   return optStartCell.bind(
     (startCell) => optLastCell.bind(
       (lastCell) => CellFinder.intercepts(warehouse, startCell, lastCell)

@@ -1,4 +1,4 @@
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { EventArgs, Height, SugarPosition, Width } from '@ephox/sugar';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
@@ -26,7 +26,7 @@ const move = <E, ET extends Event>(component: AlloyComponent, dragConfig: Draggi
   });
 };
 
-const stop = <E>(component: AlloyComponent, blocker: Option<AlloyComponent>, dragConfig: DraggingConfig<E>, dragState: DraggingState) => {
+const stop = <E>(component: AlloyComponent, blocker: Optional<AlloyComponent>, dragConfig: DraggingConfig<E>, dragState: DraggingState) => {
   blocker.each(BlockerUtils.discard);
   dragConfig.snaps.each((snapInfo) => {
     Snappables.stopDrag(component, snapInfo);

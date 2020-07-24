@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Option, Options } from '@ephox/katamari';
+import { Arr, Optional, Optionals } from '@ephox/katamari';
 import { Attribute, Css, Insert, InsertAll, Replication, SugarElement, SugarNode } from '@ephox/sugar';
 import { Entry } from './Entry';
 import { ListType } from './Util';
@@ -26,7 +26,7 @@ const joinSegments = (segments: Segment[]): void => {
 };
 
 const appendSegments = (head: Segment[], tail: Segment[]): void => {
-  Options.lift2(Arr.last(head), Arr.head(tail), joinSegment);
+  Optionals.lift2(Arr.last(head), Arr.head(tail), joinSegment);
 };
 
 const createSegment = (scope: Document, listType: ListType): Segment => {
@@ -97,7 +97,7 @@ const writeDeep = (scope: Document, cast: Segment[], entry: Entry): Segment[] =>
   return cast.concat(segments);
 };
 
-const composeList = (scope: Document, entries: Entry[]): Option<SugarElement> => {
+const composeList = (scope: Document, entries: Entry[]): Optional<SugarElement> => {
   const cast: Segment[] = Arr.foldl(entries, (cast, entry) => entry.depth > cast.length ? writeDeep(scope, cast, entry) : writeShallow(scope, cast, entry), []);
 
   return Arr.head(cast).map((segment) => segment.list);

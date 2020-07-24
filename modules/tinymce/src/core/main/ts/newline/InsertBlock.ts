@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Obj, Option, Options } from '@ephox/katamari';
+import { Arr, Obj, Optional, Optionals } from '@ephox/katamari';
 import { Css, PredicateFilter, SugarElement, SugarNode } from '@ephox/sugar';
 import DOMUtils from '../api/dom/DOMUtils';
 import DomTreeWalker from '../api/dom/TreeWalker';
@@ -136,7 +136,7 @@ const applyAttributes = (editor: Editor, node: Element, forcedRootBlockAttrs: Re
   const dom = editor.dom;
 
   // Merge and apply style attribute
-  Option.from(forcedRootBlockAttrs.style)
+  Optional.from(forcedRootBlockAttrs.style)
     .map(dom.parseStyle)
     .each((attrStyles) => {
       const currentStyles = Css.getAllRaw(SugarElement.fromDom(node));
@@ -145,9 +145,9 @@ const applyAttributes = (editor: Editor, node: Element, forcedRootBlockAttrs: Re
     });
 
   // Merge and apply class attribute
-  const attrClassesOpt = Option.from(forcedRootBlockAttrs.class).map((attrClasses) => attrClasses.split(/\s+/));
-  const currentClassesOpt = Option.from(node.className).map((currentClasses) => Arr.filter(currentClasses.split(/\s+/), (clazz) => clazz !== ''));
-  Options.lift2(attrClassesOpt, currentClassesOpt, (attrClasses, currentClasses) => {
+  const attrClassesOpt = Optional.from(forcedRootBlockAttrs.class).map((attrClasses) => attrClasses.split(/\s+/));
+  const currentClassesOpt = Optional.from(node.className).map((currentClasses) => Arr.filter(currentClasses.split(/\s+/), (clazz) => clazz !== ''));
+  Optionals.lift2(attrClassesOpt, currentClassesOpt, (attrClasses, currentClasses) => {
     const filteredClasses = Arr.filter(currentClasses, (clazz) => !Arr.contains(attrClasses, clazz));
     const newClasses = [ ...attrClasses, ...filteredClasses ];
     dom.setAttrib(node, 'class', newClasses.join(' '));

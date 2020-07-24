@@ -10,7 +10,7 @@ import {
   Representing
 } from '@ephox/alloy';
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
-import { Arr, Cell, Option, Singleton } from '@ephox/katamari';
+import { Arr, Cell, Optional, Singleton } from '@ephox/katamari';
 import { Css, SelectorFilter, SelectorFind, Width } from '@ephox/sugar';
 
 import * as Receivers from '../channels/Receivers';
@@ -78,7 +78,7 @@ const sketch = function (rawSpec) {
   // Unfortunately we need to inspect the DOM to find the input that is currently on screen
   const focusInput = function (dialog) {
     const inputs = SelectorFilter.descendants(dialog.element(), 'input');
-    const optInput = Option.from(inputs[spec.state.currentScreen.get()]);
+    const optInput = Optional.from(inputs[spec.state.currentScreen.get()]);
     optInput.each(function (input) {
       dialog.getSystem().getByDom(input).each(function (inputComp) {
         AlloyTriggers.dispatchFocus(dialog, inputComp.element());
@@ -124,11 +124,11 @@ const sketch = function (rawSpec) {
             },
             onTab(dialog, _specialInfo) {
               navigate(dialog, +1);
-              return Option.some(true);
+              return Optional.some(true);
             },
             onShiftTab(dialog, _specialInfo) {
               navigate(dialog, -1);
-              return Option.some(true);
+              return Optional.some(true);
             }
           }),
 

@@ -1,6 +1,6 @@
 import { Chain, FocusTools, GeneralSteps, Keyboard, Keys, Log, NamedChain, Pipeline, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { TinyApis, TinyDom, TinyLoader, TinyUi, UiChains } from '@ephox/mcagar';
 import { SugarElement } from '@ephox/sugar';
 
@@ -67,7 +67,7 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.ContextToolbarTest', (suc
           Chain.label('Store img src before flip', NamedChain.write('srcBeforeFlip', cGetImageSrc)),
           Chain.label('Flip image', NamedChain.read('editor', cClickContextToolbarButton(label))),
           Waiter.cTryUntilPredicate('Wait for image to flip', (state: Record<string, any>) => {
-            const oldSrc = Option.from(state.srcBeforeFlip).getOrDie();
+            const oldSrc = Optional.from(state.srcBeforeFlip).getOrDie();
             const newSrc = getImageSrc();
             return newSrc !== oldSrc;
           })

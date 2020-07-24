@@ -1,4 +1,4 @@
-import { Cell, Fun, Option, Throttler } from '@ephox/katamari';
+import { Cell, Fun, Optional, Throttler } from '@ephox/katamari';
 import Editor from '../api/Editor';
 
 // This is based heavily on Alloy's TapEvent.ts, just modified to use TinyMCE's event system.
@@ -12,11 +12,11 @@ export interface TouchHistoryData {
   target: () => any;
 }
 
-const getTouch = (event): Option<Touch> => {
+const getTouch = (event): Optional<Touch> => {
   if (event.touches === undefined || event.touches.length !== 1) {
-    return Option.none();
+    return Optional.none();
   }
-  return Option.some(event.touches[0]);
+  return Optional.some(event.touches[0]);
 };
 
 const isFarEnough = (touch: Touch, data: TouchHistoryData): boolean => {
@@ -26,7 +26,7 @@ const isFarEnough = (touch: Touch, data: TouchHistoryData): boolean => {
 };
 
 const setup = (editor: Editor) => {
-  const startData = Cell<Option<TouchHistoryData>>(Option.none());
+  const startData = Cell<Optional<TouchHistoryData>>(Optional.none());
   const longpressFired = Cell<boolean>(false);
 
   const debounceLongpress = Throttler.last((e) => {
@@ -46,7 +46,7 @@ const setup = (editor: Editor) => {
 
       debounceLongpress.throttle(e);
       longpressFired.set(false);
-      startData.set(Option.some(data));
+      startData.set(Optional.some(data));
     });
   }, true);
 
@@ -55,7 +55,7 @@ const setup = (editor: Editor) => {
     getTouch(e).each((touch) => {
       startData.get().each((data) => {
         if (isFarEnough(touch, data)) {
-          startData.set(Option.none());
+          startData.set(Optional.none());
           longpressFired.set(false);
           editor.fire('longpresscancel');
         }

@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import TextSeeker from 'tinymce/core/api/dom/TextSeeker';
 import * as Spot from './Spot';
@@ -19,14 +19,14 @@ export type ProcessCallback = (element: Text, offset: number, text: string) => n
 // See robins `Structure.isEmptyTag` for the list of quasi block elements
 const isBoundary = (dom: DOMUtils, node: Node) => dom.isBlock(node) || Arr.contains([ 'BR', 'IMG', 'HR', 'INPUT' ], node.nodeName) || dom.getContentEditable(node) === 'false';
 
-const repeatLeft = (dom: DOMUtils, node: Node, offset: number, process: ProcessCallback, rootNode: Node): Option<Spot.SpotPoint<Text>> => {
+const repeatLeft = (dom: DOMUtils, node: Node, offset: number, process: ProcessCallback, rootNode: Node): Optional<Spot.SpotPoint<Text>> => {
   const search = TextSeeker(dom, (node) => isBoundary(dom, node));
-  return Option.from(search.backwards(node, offset, process, rootNode));
+  return Optional.from(search.backwards(node, offset, process, rootNode));
 };
 
-const repeatRight = (dom: DOMUtils, node: Node, offset: number, process: ProcessCallback, rootNode: Node): Option<Spot.SpotPoint<Text>> => {
+const repeatRight = (dom: DOMUtils, node: Node, offset: number, process: ProcessCallback, rootNode: Node): Optional<Spot.SpotPoint<Text>> => {
   const search = TextSeeker(dom, (node) => isBoundary(dom, node));
-  return Option.from(search.forwards(node, offset, process, rootNode));
+  return Optional.from(search.forwards(node, offset, process, rootNode));
 };
 
 export {

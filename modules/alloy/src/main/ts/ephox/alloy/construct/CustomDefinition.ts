@@ -1,5 +1,5 @@
 import { FieldPresence, FieldSchema, ValueSchema } from '@ephox/boulder';
-import { Arr, Option, Result } from '@ephox/katamari';
+import { Arr, Optional, Result } from '@ephox/katamari';
 
 import { AlloyComponent } from '../api/component/ComponentApi';
 import { ComponentDetail, SimpleOrSketchSpec, StructDomSchema } from '../api/component/SpecTypes';
@@ -16,7 +16,7 @@ export interface CustomDetail<A> {
   events: AlloyEventRecord;
   apis: A;
   eventOrder: Record<string, string[]>;
-  domModification: Option<DomModification>;
+  domModification: Optional<DomModification>;
   originalSpec: SimpleOrSketchSpec;
   'debug.sketcher': string;
 }

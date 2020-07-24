@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Fun, Option } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 import { Compare, Css, SugarElement, Traverse } from '@ephox/sugar';
 import Editor from './api/Editor';
 
@@ -54,7 +54,7 @@ const isXYInContentArea = function (editor: Editor, clientX, clientY) {
 };
 
 const fromDomSafe = function (node) {
-  return Option.from(node).map(SugarElement.fromDom);
+  return Optional.from(node).map(SugarElement.fromDom);
 };
 
 const isEditorAttachedToDom = function (editor: Editor) {

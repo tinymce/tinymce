@@ -6,7 +6,7 @@
  */
 
 import { MakeshiftAnchorSpec, NodeAnchorSpec, SelectionAnchorSpec } from '@ephox/alloy';
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
@@ -75,6 +75,6 @@ export const getSelectionAnchor = function (editor: Editor): SelectionAnchorSpec
 
 export const getNodeAnchor = (editor: Editor): NodeAnchorSpec => ({
   anchor: 'node',
-  node: Option.some(SugarElement.fromDom(editor.selection.getNode())),
+  node: Optional.some(SugarElement.fromDom(editor.selection.getNode())),
   root: SugarElement.fromDom(editor.getBody())
 });

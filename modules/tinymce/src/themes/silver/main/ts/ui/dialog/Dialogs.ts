@@ -8,7 +8,7 @@ import {
   AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyParts, AlloySpec, Behaviour, Button, Container, DomFactory, Focusing, Keying, ModalDialog,
   NativeEvents, SystemEvents, Tabstopping
 } from '@ephox/alloy';
-import { Option, Result } from '@ephox/katamari';
+import { Optional, Result } from '@ephox/katamari';
 import { Class, SugarBody } from '@ephox/sugar';
 import Env from 'tinymce/core/api/Env';
 
@@ -118,7 +118,7 @@ export interface DialogSpec {
   lazySink: () => Result<AlloyComponent, any>;
   header: AlloySpec;
   body: AlloyParts.ConfiguredPart;
-  footer: Option<AlloyParts.ConfiguredPart>;
+  footer: Optional<AlloyParts.ConfiguredPart>;
   onEscape: (comp: AlloyComponent) => void;
   extraClasses: string[];
   extraBehaviours: Behaviour.NamedConfiguredBehaviour<any, any>[];
@@ -139,7 +139,7 @@ const renderDialog = (spec: DialogSpec) => {
       onEscape: (comp) => {
         spec.onEscape(comp);
         // TODO: Make a strong type for Handled KeyEvent
-        return Option.some(true);
+        return Optional.some(true);
       },
       useTabstopAt: (elem) => !NavigableObject.isPseudoStop(elem),
       dom: {

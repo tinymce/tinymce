@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Fun, Option } from '@ephox/katamari';
+import { Arr, Fun, Optional } from '@ephox/katamari';
 import { Remove, SelectorFilter, SugarElement } from '@ephox/sugar';
 import Editor from '../api/Editor';
 import CaretPosition from '../caret/CaretPosition';
@@ -32,7 +32,7 @@ const moveToPosition = (editor: Editor) => (pos: CaretPosition) => {
   return true;
 };
 
-const getAncestorCe = (editor: Editor, node: Node) => Option.from(CefUtils.getContentEditableRoot(editor.getBody(), node));
+const getAncestorCe = (editor: Editor, node: Node) => Optional.from(CefUtils.getContentEditableRoot(editor.getBody(), node));
 
 const backspaceDeleteCaret = (editor: Editor, forward: boolean) => {
   const selectedNode = editor.selection.getNode(); // is the parent node if cursor before/after cef

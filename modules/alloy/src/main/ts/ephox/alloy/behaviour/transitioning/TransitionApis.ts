@@ -1,4 +1,4 @@
-import { Obj, Option } from '@ephox/katamari';
+import { Obj, Optional } from '@ephox/katamari';
 import { Attribute, Class } from '@ephox/sugar';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
@@ -11,7 +11,7 @@ export interface TransitionRoute {
 }
 
 // TYPIFY
-const findRoute = function (component: AlloyComponent, transConfig: TransitioningConfig, transState: Stateless, route: TransitionRoute): Option<TransitionProperties> {
+const findRoute = function (component: AlloyComponent, transConfig: TransitioningConfig, transState: Stateless, route: TransitionRoute): Optional<TransitionProperties> {
   return Obj.get(transConfig.routes, route.start).bind((sConfig) => Obj.get(sConfig, route.destination));
 };
 
@@ -21,7 +21,7 @@ const getTransition = (comp: AlloyComponent, transConfig: TransitioningConfig, t
 };
 
 type TransitionInfo = { transition: { property: string; transitionClass: string }; route: TransitionProperties };
-const getTransitionOf = (comp: AlloyComponent, transConfig: TransitioningConfig, transState: Stateless, route: TransitionRoute): Option<TransitionInfo> =>
+const getTransitionOf = (comp: AlloyComponent, transConfig: TransitioningConfig, transState: Stateless, route: TransitionRoute): Optional<TransitionInfo> =>
   findRoute(comp, transConfig, transState, route).bind((r: TransitionProperties) => r.transition.map((t) => ({
     transition: t,
     route: r
@@ -42,7 +42,7 @@ const getNewRoute = (comp: AlloyComponent, transConfig: TransitioningConfig, tra
   destination
 });
 
-const getCurrentRoute = (comp: AlloyComponent, transConfig: TransitioningConfig, _transState: Stateless): Option<TransitionRoute> => {
+const getCurrentRoute = (comp: AlloyComponent, transConfig: TransitioningConfig, _transState: Stateless): Optional<TransitionRoute> => {
   const el = comp.element();
   return Attribute.getOpt(el, transConfig.destinationAttr).map((destination) => ({
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -81,7 +81,7 @@ const progressTo = (comp: AlloyComponent, transConfig: TransitioningConfig, tran
   });
 };
 
-const getState = (comp: AlloyComponent, transConfig: TransitioningConfig, _transState: Stateless): Option<string> =>
+const getState = (comp: AlloyComponent, transConfig: TransitioningConfig, _transState: Stateless): Optional<string> =>
   Attribute.getOpt(comp.element(), transConfig.stateAttr);
 
 export {

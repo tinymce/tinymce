@@ -10,7 +10,7 @@ import {
   SimpleOrSketchSpec, SketchSpec, Tabstopping
 } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
-import { Fun, Merger, Option } from '@ephox/katamari';
+import { Fun, Merger, Optional } from '@ephox/katamari';
 import { formActionEvent, formCancelEvent, formSubmitEvent } from 'tinymce/themes/silver/ui/general/FormEvents';
 
 import { UiFactoryBackstage, UiFactoryBackstageProviders } from '../../backstage/Backstage';
@@ -29,10 +29,10 @@ type ButtonSpec = Omit<Types.Button.Button, 'type'>;
 type FooterButtonSpec = Omit<Types.Dialog.DialogNormalButton, 'type'> | Omit<Types.Dialog.DialogMenuButton, 'type'>;
 
 export interface IconButtonWrapper extends Omit<ButtonSpec, 'text'> {
-  tooltip: Option<string>;
+  tooltip: Optional<string>;
 }
 
-const renderCommonSpec = (spec, actionOpt: Option<(comp: AlloyComponent) => void>, extraBehaviours = [], dom, components, providersBackstage: UiFactoryBackstageProviders) => {
+const renderCommonSpec = (spec, actionOpt: Optional<(comp: AlloyComponent) => void>, extraBehaviours = [], dom, components, providersBackstage: UiFactoryBackstageProviders) => {
   const action = actionOpt.fold(() => ({}), (action) => ({
     action
   }));
@@ -57,7 +57,7 @@ const renderCommonSpec = (spec, actionOpt: Option<(comp: AlloyComponent) => void
   return Merger.deepMerge(domFinal, { components });
 };
 
-export const renderIconButtonSpec = (spec: IconButtonWrapper, action: Option<(comp: AlloyComponent) => void>, providersBackstage: UiFactoryBackstageProviders, extraBehaviours = []) => {
+export const renderIconButtonSpec = (spec: IconButtonWrapper, action: Optional<(comp: AlloyComponent) => void>, providersBackstage: UiFactoryBackstageProviders, extraBehaviours = []) => {
   const tooltipAttributes = spec.tooltip.map<{}>((tooltip) => ({
     'aria-label': providersBackstage.translate(tooltip),
     'title': providersBackstage.translate(tooltip)
@@ -75,16 +75,16 @@ export const renderIconButtonSpec = (spec: IconButtonWrapper, action: Option<(co
 };
 
 export const renderIconButton = (spec: IconButtonWrapper, action: (comp: AlloyComponent) => void, providersBackstage: UiFactoryBackstageProviders, extraBehaviours = []): SketchSpec => {
-  const iconButtonSpec = renderIconButtonSpec(spec, Option.some(action), providersBackstage, extraBehaviours);
+  const iconButtonSpec = renderIconButtonSpec(spec, Optional.some(action), providersBackstage, extraBehaviours);
   return AlloyButton.sketch(iconButtonSpec);
 };
 
 // Maybe the list of extraBehaviours is better than doing a Merger.deepMerge that
 // we do elsewhere? Not sure.
-export const renderButtonSpec = (spec: ButtonSpec, action: Option<(comp: AlloyComponent) => void>, providersBackstage: UiFactoryBackstageProviders, extraBehaviours = [], extraClasses = []) => {
+export const renderButtonSpec = (spec: ButtonSpec, action: Optional<(comp: AlloyComponent) => void>, providersBackstage: UiFactoryBackstageProviders, extraBehaviours = [], extraClasses = []) => {
   const translatedText = providersBackstage.translate(spec.text);
 
-  const icon: Option<AlloySpec> = spec.icon ? spec.icon.map((iconName) => renderIconFromPack(iconName, providersBackstage.icons)) : Option.none();
+  const icon: Optional<AlloySpec> = spec.icon ? spec.icon.map((iconName) => renderIconFromPack(iconName, providersBackstage.icons)) : Optional.none();
   const components = icon.isSome() ? componentRenderPipeline([ icon ]) : [];
 
   const innerHtml = icon.isSome() ? {} : {
@@ -110,7 +110,7 @@ export const renderButtonSpec = (spec: ButtonSpec, action: Option<(comp: AlloyCo
 };
 
 export const renderButton = (spec: ButtonSpec, action: (comp: AlloyComponent) => void, providersBackstage: UiFactoryBackstageProviders, extraBehaviours = [], extraClasses = []): SketchSpec => {
-  const buttonSpec = renderButtonSpec(spec, Option.some(action), providersBackstage, extraBehaviours, extraClasses);
+  const buttonSpec = renderButtonSpec(spec, Optional.some(action), providersBackstage, extraBehaviours, extraClasses);
   return AlloyButton.sketch(buttonSpec);
 };
 
@@ -149,7 +149,7 @@ export const renderFooterButton = (spec: FooterButtonSpec, buttonType: string, b
       fetch: getFetch(menuButtonSpec.items, getButton, backstage)
     };
 
-    const memButton = Memento.record(renderMenuButton(fixedSpec, ToolbarButtonClasses.Button, backstage, Option.none()));
+    const memButton = Memento.record(renderMenuButton(fixedSpec, ToolbarButtonClasses.Button, backstage, Optional.none()));
 
     return memButton.asSpec();
   } else if (isNormalFooterButtonSpec(spec, buttonType)) {
@@ -167,9 +167,9 @@ export const renderFooterButton = (spec: FooterButtonSpec, buttonType: string, b
 
 export const renderDialogButton = (spec: ButtonSpec, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
   const action = getAction(spec.name, 'custom');
-  return renderFormField(Option.none(), AlloyFormField.parts().field({
+  return renderFormField(Optional.none(), AlloyFormField.parts().field({
     factory: AlloyButton,
-    ...renderButtonSpec(spec, Option.some(action), providersBackstage, [
+    ...renderButtonSpec(spec, Optional.some(action), providersBackstage, [
       RepresentingConfigs.memory(''),
       ComposingConfigs.self()
     ])

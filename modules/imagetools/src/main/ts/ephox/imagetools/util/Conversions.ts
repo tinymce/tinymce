@@ -1,4 +1,4 @@
-import { Option, Type } from '@ephox/katamari';
+import { Optional, Type } from '@ephox/katamari';
 import * as Canvas from './Canvas';
 import * as ImageSize from './ImageSize';
 import { Promise } from './Promise';
@@ -80,11 +80,11 @@ function anyUriToBlob(url: string): Promise<Blob> {
   });
 }
 
-function dataUriToBlobSync(uri: string): Option<Blob> {
+function dataUriToBlobSync(uri: string): Optional<Blob> {
   const data = uri.split(',');
 
   const matches = /data:([^;]+)/.exec(data[0]);
-  if (!matches) { return Option.none(); }
+  if (!matches) { return Optional.none(); }
 
   const mimetype = matches[1];
   const base64 = data[1];
@@ -107,7 +107,7 @@ function dataUriToBlobSync(uri: string): Option<Blob> {
     }
     byteArrays[sliceIndex] = new Uint8Array(bytes);
   }
-  return Option.some(new Blob(byteArrays, { type: mimetype }));
+  return Optional.some(new Blob(byteArrays, { type: mimetype }));
 }
 
 function dataUriToBlob(uri: string): Promise<Blob> {

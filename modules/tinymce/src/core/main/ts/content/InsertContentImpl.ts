@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import DOMUtils from '../api/dom/DOMUtils';
 import ElementUtils from '../api/dom/ElementUtils';
@@ -72,7 +72,7 @@ const validInsertion = function (editor: Editor, value: string, parentNode: Elem
 };
 
 const trimBrsFromTableCell = function (dom: DOMUtils, elm: Element) {
-  Option.from(dom.getParent(elm, 'td,th')).map(SugarElement.fromDom).each(PaddingBr.trimBlockTrailingBr);
+  Optional.from(dom.getParent(elm, 'td,th')).map(SugarElement.fromDom).each(PaddingBr.trimBlockTrailingBr);
 };
 
 const reduceInlineTextElements = (editor: Editor, merge: boolean) => {

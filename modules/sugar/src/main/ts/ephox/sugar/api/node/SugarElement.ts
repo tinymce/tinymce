@@ -1,4 +1,4 @@
-import { Fun, Option } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 
 interface SugarElement<T = any> {
   dom: () => T;
@@ -38,9 +38,9 @@ const fromDom = <T extends Node | Window> (node: T | null): SugarElement<T> => {
   };
 };
 
-const fromPoint = (docElm: SugarElement<Document>, x: number, y: number): Option<SugarElement<Element>> => {
+const fromPoint = (docElm: SugarElement<Document>, x: number, y: number): Optional<SugarElement<Element>> => {
   const doc = docElm.dom();
-  return Option.from(doc.elementFromPoint(x, y)).map(fromDom);
+  return Optional.from(doc.elementFromPoint(x, y)).map(fromDom);
 };
 
 // tslint:disable-next-line:variable-name

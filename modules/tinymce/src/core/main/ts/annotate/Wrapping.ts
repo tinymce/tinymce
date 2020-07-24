@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Cell, Id, Option, Unicode } from '@ephox/katamari';
+import { Arr, Cell, Id, Optional, Unicode } from '@ephox/katamari';
 import { Attribute, Class, Classes, Html, Insert, Replication, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 import Editor from '../api/Editor';
 import * as ExpandRange from '../fmt/ExpandRange';
@@ -53,12 +53,12 @@ const annotate = (editor: Editor, rng: Range, annotationName: string, decorate: 
   const master = makeAnnotation(editor.getDoc(), data, annotationName, decorate);
 
   // Set the current wrapping element
-  const wrapper = Cell(Option.none<SugarElement<any>>());
+  const wrapper = Cell(Optional.none<SugarElement<any>>());
 
   // Clear the current wrapping element, so that subsequent calls to
   // getOrOpenWrapper spawns a new one.
   const finishWrapper = () => {
-    wrapper.set(Option.none());
+    wrapper.set(Optional.none());
   };
 
   // Get the existing wrapper, or spawn a new one.
@@ -66,7 +66,7 @@ const annotate = (editor: Editor, rng: Range, annotationName: string, decorate: 
     wrapper.get().getOrThunk(() => {
       const nu = Replication.shallow(master);
       newWrappers.push(nu);
-      wrapper.set(Option.some(nu));
+      wrapper.set(Optional.some(nu));
       return nu;
     });
 

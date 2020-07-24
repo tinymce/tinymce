@@ -5,14 +5,14 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Css, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
 const browser = PlatformDetection.detect().browser;
 
-const firstElement = (nodes: SugarElement<Node>[]): Option<SugarElement<HTMLElement>> =>
-  Arr.find(nodes, SugarNode.isElement) as Option<SugarElement<HTMLElement>>;
+const firstElement = (nodes: SugarElement<Node>[]): Optional<SugarElement<HTMLElement>> =>
+  Arr.find(nodes, SugarNode.isElement) as Optional<SugarElement<HTMLElement>>;
 
 // Firefox has a bug where caption height is not included correctly in offset calculations of tables
 // this tries to compensate for that by detecting if that offsets are incorrect and then remove the height

@@ -1,5 +1,5 @@
-import { Fun, Option } from '@ephox/katamari';
 import { FieldSchema } from '@ephox/boulder';
+import { Fun, Optional } from '@ephox/katamari';
 
 import { NestedMenuItemContents } from '../components/menu/NestedMenuItem';
 
@@ -15,9 +15,9 @@ export interface BaseMenuButtonApi {
 }
 
 export interface BaseMenuButton {
-  text: Option<string>;
-  tooltip: Option<string>;
-  icon: Option<string>;
+  text: Optional<string>;
+  tooltip: Optional<string>;
+  icon: Optional<string>;
   fetch: (success: SuccessCallback) => void;
   onSetup: (api: BaseMenuButtonInstanceApi) => (api: BaseMenuButtonInstanceApi) => void;
 }

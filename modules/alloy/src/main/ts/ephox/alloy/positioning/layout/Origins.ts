@@ -1,4 +1,4 @@
-import { Adt, Fun, Option } from '@ephox/katamari';
+import { Adt, Fun, Optional } from '@ephox/katamari';
 import { Height, Scroll, SugarElement, SugarPosition, Width } from '@ephox/sugar';
 
 import * as Boxes from '../../alien/Boxes';
@@ -43,11 +43,11 @@ const positionWithDirection = (posName: string, decision: RepositionDecision, x:
   const decisionRight = width - (decisionX + decisionWidth);
   const decisionBottom = height - (decisionY + decisionHeight);
 
-  const left = Option.some(decisionX);
-  const top = Option.some(decisionY);
-  const right = Option.some(decisionRight);
-  const bottom = Option.some(decisionBottom);
-  const none = Option.none<number>();
+  const left = Optional.some(decisionX);
+  const top = Optional.some(decisionY);
+  const right = Optional.some(decisionRight);
+  const bottom = Optional.some(decisionBottom);
+  const none = Optional.none<number>();
 
   return Direction.cata(decision.direction,
     () => NuPositionCss(posName, left, top, none, none), // southeast
@@ -62,7 +62,7 @@ const positionWithDirection = (posName: string, decision: RepositionDecision, x:
 };
 
 const reposition = (origin: OriginAdt, decision: RepositionDecision): PositionCss => origin.fold(function () {
-  return NuPositionCss('absolute', Option.some(decision.x), Option.some(decision.y), Option.none(), Option.none());
+  return NuPositionCss('absolute', Optional.some(decision.x), Optional.some(decision.y), Optional.none(), Optional.none());
 }, function (x, y, width, height) {
   return positionWithDirection('absolute', decision, x, y, width, height);
 }, function (x, y, width, height) {
@@ -82,7 +82,7 @@ const toBox = (origin: OriginAdt, element: SugarElement): Boxes.Bounds => {
   return Boxes.bounds(position.left(), position.top(), width, height);
 };
 
-const viewport = (origin: OriginAdt, getBounds: Option<() => Boxes.Bounds>): Boxes.Bounds => getBounds.fold(() =>
+const viewport = (origin: OriginAdt, getBounds: Optional<() => Boxes.Bounds>): Boxes.Bounds => getBounds.fold(() =>
 /* There are no bounds supplied */
   origin.fold(Boxes.win, Boxes.win, Boxes.bounds)
 , (b) =>

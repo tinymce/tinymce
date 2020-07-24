@@ -6,7 +6,7 @@
  */
 
 import { AlloyComponent, AlloyEvents, Replacing, SystemEvents, TabbarTypes, TabSection } from '@ephox/alloy';
-import { Arr, Cell, Option } from '@ephox/katamari';
+import { Arr, Cell, Optional } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Css, Focus, Height, SelectorFind, SugarElement, Traverse, Width } from '@ephox/sugar';
 import Delay from 'tinymce/core/api/util/Delay';
@@ -72,7 +72,7 @@ const setTabviewHeight = (tabview: SugarElement<Element>, height: number) => {
   }
 };
 
-const updateTabviewHeight = (dialogBody: SugarElement, tabview: SugarElement, maxTabHeight: Cell<Option<number>>) => {
+const updateTabviewHeight = (dialogBody: SugarElement, tabview: SugarElement, maxTabHeight: Cell<Optional<number>>) => {
   SelectorFind.ancestor(dialogBody, '[role="dialog"]').each((dialog) => {
     SelectorFind.descendant(dialog, '[role="tablist"]').each((tablist) => {
       maxTabHeight.get().map((height) => {
@@ -91,7 +91,7 @@ const getTabview = (dialog: SugarElement<Element>) => SelectorFind.descendant(di
 
 const setMode = (allTabs: Array<Partial<TabbarTypes.TabButtonWithViewSpec>>) => {
   const smartTabHeight = (() => {
-    const maxTabHeight = Cell<Option<number>>(Option.none());
+    const maxTabHeight = Cell<Optional<number>>(Optional.none());
 
     const extraEvents = [
       AlloyEvents.runOnAttached((comp) => {
@@ -100,7 +100,7 @@ const setMode = (allTabs: Array<Partial<TabbarTypes.TabButtonWithViewSpec>>) => 
           Css.set(tabview, 'visibility', 'hidden');
 
           // Determine the maximum heights of each tab
-          comp.getSystem().getByDom(tabview).toOption().each((tabviewComp) => {
+          comp.getSystem().getByDom(tabview).toOptional().each((tabviewComp) => {
             const heights = measureHeights(allTabs, tabview, tabviewComp);
 
             // Calculate the maximum tab height and store it
@@ -140,7 +140,7 @@ const setMode = (allTabs: Array<Partial<TabbarTypes.TabButtonWithViewSpec>>) => 
           const hasGrown = oldHeight.forall((h) => newHeight > h);
 
           if (hasGrown) {
-            maxTabHeight.set(Option.from(newHeight));
+            maxTabHeight.set(Optional.from(newHeight));
             updateTabviewHeight(dialog, tabview, maxTabHeight);
           } else {
             oldHeight.each((h) => {

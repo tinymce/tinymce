@@ -1,5 +1,5 @@
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
-import { Fun, Option } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
 import { NamedConfiguredBehaviour } from '../api/behaviour/Behaviour';
@@ -13,7 +13,7 @@ import { ReceivingConfig, ReceivingConfigSpec } from '../behaviour/receiving/Rec
 
 interface DismissalReceivingDetail {
   isExtraPart: (sandbox: AlloyComponent, target: () => SugarElement) => boolean;
-  fireEventInstead: Option<{
+  fireEventInstead: Optional<{
     event: string;
   }>;
 }

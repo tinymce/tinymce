@@ -1,4 +1,4 @@
-import { Arr, Fun, Option } from '@ephox/katamari';
+import { Arr, Fun, Optional } from '@ephox/katamari';
 import { Height, SugarElement, SugarLocation, Width } from '@ephox/sugar';
 
 export interface RowInfo {
@@ -14,7 +14,7 @@ export interface ColInfo {
 export interface BarPositions<T> {
   readonly delta: (delta: number, table: SugarElement) => number;
   readonly edge: (e: SugarElement) => number;
-  readonly positions: (array: Option<SugarElement>[], table: SugarElement) => Option<T>[];
+  readonly positions: (array: Optional<SugarElement>[], table: SugarElement) => Optional<T>[];
 }
 
 const rowInfo = (row: number, y: number): RowInfo => ({
@@ -56,7 +56,7 @@ const getBottomEdge = function (index: number, cell: SugarElement) {
   return rowInfo(index, getTop(cell) + Height.getOuter(cell));
 };
 
-const findPositions = function <T> (getInnerEdge: (idx: number, ele: SugarElement) => T, getOuterEdge: (idx: number, ele: SugarElement) => T, array: Option<SugarElement>[]) {
+const findPositions = function <T> (getInnerEdge: (idx: number, ele: SugarElement) => T, getOuterEdge: (idx: number, ele: SugarElement) => T, array: Optional<SugarElement>[]) {
   if (array.length === 0 ) { return []; }
   const lines = Arr.map(array.slice(1), function (cellOption, index) {
     return cellOption.map(function (cell) {
@@ -77,20 +77,20 @@ const negate = function (step: number) {
 
 const height: BarPositions<RowInfo> = {
   delta: Fun.identity,
-  positions: (optElements: Option<SugarElement>[]) => findPositions(getTopEdge, getBottomEdge, optElements),
+  positions: (optElements: Optional<SugarElement>[]) => findPositions(getTopEdge, getBottomEdge, optElements),
   edge: getTop
 };
 
 const ltr: BarPositions<ColInfo> = {
   delta: Fun.identity,
   edge: ltrEdge,
-  positions: (optElements: Option<SugarElement>[]) => findPositions(getLeftEdge, getRightEdge, optElements)
+  positions: (optElements: Optional<SugarElement>[]) => findPositions(getLeftEdge, getRightEdge, optElements)
 };
 
 const rtl: BarPositions<ColInfo> = {
   delta: negate,
   edge: rtlEdge,
-  positions: (optElements: Option<SugarElement>[]) => findPositions(getRightEdge, getLeftEdge, optElements)
+  positions: (optElements: Optional<SugarElement>[]) => findPositions(getRightEdge, getLeftEdge, optElements)
 };
 
 export {

@@ -1,5 +1,5 @@
-import { ValueSchema, FieldSchema } from '@ephox/boulder';
-import { Result, Option, Fun } from '@ephox/katamari';
+import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { Fun, Optional, Result } from '@ephox/katamari';
 
 export interface BaseToolbarButtonApi<I extends BaseToolbarButtonInstanceApi> {
   disabled?: boolean;
@@ -26,9 +26,9 @@ export interface ToolbarButtonInstanceApi extends BaseToolbarButtonInstanceApi {
 
 export interface BaseToolbarButton<I extends BaseToolbarButtonInstanceApi> {
   disabled: boolean;
-  tooltip: Option<string>;
-  icon: Option<string>;
-  text: Option<string>;
+  tooltip: Optional<string>;
+  icon: Optional<string>;
+  text: Optional<string>;
   onSetup: (api: I) => (api: I) => void;
 }
 

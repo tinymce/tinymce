@@ -1,4 +1,4 @@
-import { Arr, Obj, Option } from '@ephox/katamari';
+import { Arr, Obj, Optional } from '@ephox/katamari';
 import { Attribute, Compare, Css, CursorPosition, Insert, Replication, SelectorFilter, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 import { CellSpan, Generators, SimpleGenerators } from './Generators';
 
@@ -51,7 +51,7 @@ const cloneFormats = function (oldCell: SugarElement, newCell: SugarElement, for
   }).getOr(newCell);
 };
 
-const cellOperations = function (mutate: (e1: SugarElement, e2: SugarElement) => void, doc: SugarElement, formatsToClone: Option<string[]>): Generators {
+const cellOperations = function (mutate: (e1: SugarElement, e2: SugarElement) => void, doc: SugarElement, formatsToClone: Optional<string[]>): Generators {
   const newCell = function (prev: CellSpan) {
     const docu = Traverse.owner(prev.element());
     const td = SugarElement.fromTag(SugarNode.name(prev.element()), docu.dom());

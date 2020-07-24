@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Fun, Option } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 import { Css, SugarElement } from '@ephox/sugar';
 import * as NodeType from '../dom/NodeType';
 import { isWhiteSpace } from '../text/CharType';
@@ -13,7 +13,7 @@ import CaretPosition from './CaretPosition';
 import { getChildNodeAtRelativeOffset } from './CaretUtils';
 
 const isChar = (forward: boolean, predicate: (chr: string) => boolean, pos: CaretPosition) =>
-  Option.from(pos.container()).filter(NodeType.isText).exists((text: Text) => {
+  Optional.from(pos.container()).filter(NodeType.isText).exists((text: Text) => {
     const delta = forward ? 0 : -1;
     return predicate(text.data.charAt(pos.offset() + delta));
   });
@@ -27,7 +27,7 @@ const isEmptyText = (pos: CaretPosition) => {
 };
 
 const matchesElementPosition = (before: boolean, predicate: (node: Node) => boolean) => (pos: CaretPosition) =>
-  Option.from(getChildNodeAtRelativeOffset(before ? 0 : -1, pos)).filter(predicate).isSome();
+  Optional.from(getChildNodeAtRelativeOffset(before ? 0 : -1, pos)).filter(predicate).isSome();
 
 const isImageBlock = (node: Node) => NodeType.isImg(node) && Css.get(SugarElement.fromDom(node), 'display') === 'block';
 

@@ -1,4 +1,4 @@
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import { Gene } from '../api/Gene';
 import TagBoundaries from '../common/TagBoundaries';
 
@@ -10,7 +10,7 @@ const name = function (item: Gene) {
   return item.name;
 };
 
-const parent = function (item: Gene): Option<Gene> {
+const parent = function (item: Gene): Optional<Gene> {
   return item.parent;
 };
 
@@ -31,7 +31,7 @@ const isElement = function (item: Gene) {
 };
 
 const getText = function (item: Gene) {
-  return Option.from(item.text).getOrDie('Text not available on this node');
+  return Optional.from(item.text).getOrDie('Text not available on this node');
 };
 
 const setText = function (item: Gene, value: string | undefined) {

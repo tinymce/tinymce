@@ -1,6 +1,6 @@
 import { Assertions, Chain, GeneralSteps, Logger, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Fun, Option } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 import { Hierarchy, SugarElement } from '@ephox/sugar';
 import * as CefDeleteAction from 'tinymce/core/delete/CefDeleteAction';
 import ViewBlock from '../../module/test/ViewBlock';
@@ -25,7 +25,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteActionTest', (success, 
   };
 
   const cAssertRemoveElementAction = function (elementPath) {
-    return Chain.op(function (actionOption: Option<any>) {
+    return Chain.op(function (actionOption: Optional<any>) {
       const element = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), elementPath).getOrDie();
       const action = actionOption.getOrDie();
       Assertions.assertEq('Should be expected action type', 'remove', actionName(action));
@@ -34,7 +34,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteActionTest', (success, 
   };
 
   const cAssertMoveToElementAction = function (elementPath) {
-    return Chain.op(function (actionOption: Option<any>) {
+    return Chain.op(function (actionOption: Optional<any>) {
       const element = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), elementPath).getOrDie();
       const action = actionOption.getOrDie();
       Assertions.assertEq('Should be expected action type', 'moveToElement', actionName(action));
@@ -43,7 +43,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteActionTest', (success, 
   };
 
   const cAssertMoveToPositionAction = function (elementPath, offset) {
-    return Chain.op(function (actionOption: Option<any>) {
+    return Chain.op(function (actionOption: Optional<any>) {
       const container = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), elementPath).getOrDie();
       const action = actionOption.getOrDie();
       Assertions.assertEq('Should be expected action type', 'moveToPosition', actionName(action));
@@ -52,7 +52,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteActionTest', (success, 
     });
   };
 
-  const cAssertActionNone = Chain.op(function (actionOption: Option<any>) {
+  const cAssertActionNone = Chain.op(function (actionOption: Optional<any>) {
     Assertions.assertEq('Action value should be none', true, actionOption.isNone());
   });
 

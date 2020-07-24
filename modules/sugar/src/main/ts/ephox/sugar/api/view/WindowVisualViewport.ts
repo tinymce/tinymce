@@ -1,4 +1,4 @@
-import { Fun, Option } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 import { fromRawEvent } from '../../impl/FilteredEvent';
 import { EventHandler } from '../events/Types';
 import { SugarElement } from '../node/SugarElement';
@@ -27,10 +27,10 @@ interface WindowVisualViewport {
   readonly removeEventListener: (event: string, handler: EventListenerOrEventListenerObject) => void;
 }
 
-const get = (_win?: Window): Option<WindowVisualViewport> => {
+const get = (_win?: Window): Optional<WindowVisualViewport> => {
   const win = _win === undefined ? window : _win;
   // eslint-disable-next-line dot-notation
-  return Option.from((win as any)['visualViewport']);
+  return Optional.from((win as any)['visualViewport']);
 };
 
 const bounds = (x: number, y: number, width: number, height: number): Bounds => ({

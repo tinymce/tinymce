@@ -52,7 +52,7 @@ const renderMobileTheme = (editor: Editor) => {
     Attachment.attachSystemAfter(original, realm.system());
 
     const findFocusIn = (elem) => Focus.search(elem).bind((focused) =>
-      realm.system().getByDom(focused).toOption());
+      realm.system().getByDom(focused).toOptional());
 
     const outerWindow = targetNode.ownerDocument.defaultView;
     const orientation = Orientation.onChange(outerWindow, {

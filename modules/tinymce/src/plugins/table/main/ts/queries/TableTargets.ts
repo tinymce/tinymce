@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Fun, Option } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 import { RunOperation, SimpleGenerators } from '@ephox/snooker';
 import { SugarElement } from '@ephox/sugar';
 import { Selections } from '../selection/Selections';
@@ -13,8 +13,8 @@ import * as CellOperations from './CellOperations';
 
 const noMenu = (cell: SugarElement<HTMLTableCellElement | HTMLTableCaptionElement>): RunOperation.CombinedTargets => ({
   element: Fun.constant(cell),
-  mergable: Option.none,
-  unmergable: Option.none,
+  mergable: Optional.none,
+  unmergable: Optional.none,
   selection: Fun.constant([ cell ])
 });
 

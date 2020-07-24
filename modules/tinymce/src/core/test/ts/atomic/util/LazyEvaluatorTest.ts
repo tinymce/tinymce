@@ -1,20 +1,20 @@
 import { Assertions, Pipeline, Step } from '@ephox/agar';
-import { Option } from '@ephox/katamari';
-import * as LazyEvaluator from 'tinymce/core/util/LazyEvaluator';
 import { UnitTest } from '@ephox/bedrock-client';
+import { Optional } from '@ephox/katamari';
+import * as LazyEvaluator from 'tinymce/core/util/LazyEvaluator';
 
 UnitTest.asynctest('atomic.tinymce.core.util.LazyEvaluatorTest', function (success, failure) {
 
   const sTestEvaluateUntil = Step.sync(function () {
     const operations = [
       function (a, b) {
-        return a === 1 && b === 'a' ? Option.some(1) : Option.none();
+        return a === 1 && b === 'a' ? Optional.some(1) : Optional.none();
       },
       function (a, b) {
-        return a === 2 && b === 'b' ? Option.some(2) : Option.none();
+        return a === 2 && b === 'b' ? Optional.some(2) : Optional.none();
       },
       function (a, b) {
-        return a === 3 && b === 'c' ? Option.some(3) : Option.none();
+        return a === 3 && b === 'c' ? Optional.some(3) : Optional.none();
       }
     ];
 

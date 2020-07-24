@@ -1,5 +1,5 @@
 import { FieldSchema } from '@ephox/boulder';
-import { Fun, Option } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 import { SelectorFind, SugarElement } from '@ephox/sugar';
 
 import * as Keys from '../alien/Keys';
@@ -30,7 +30,7 @@ const focusIn = (component: AlloyComponent, gridConfig: FlatgridConfig, _gridSta
   });
 };
 
-const findCurrent = (component: AlloyComponent, gridConfig: FlatgridConfig): Option<SugarElement> =>
+const findCurrent = (component: AlloyComponent, gridConfig: FlatgridConfig): Optional<SugarElement> =>
   gridConfig.focusManager.get(component).bind((elem) => SelectorFind.closest(elem, gridConfig.selector));
 
 const execute = (
@@ -38,7 +38,7 @@ const execute = (
   simulatedEvent: NativeSimulatedEvent,
   gridConfig: FlatgridConfig,
   _gridState: FlatgridState
-): Option<boolean> =>
+): Optional<boolean> =>
   findCurrent(component, gridConfig).
     bind((focused) => gridConfig.execute(component, simulatedEvent, focused));
 
@@ -55,7 +55,7 @@ const doMove = (
       ));
 
 const handleTab: KeyRuleHandler<FlatgridConfig, FlatgridState> = (_component, _simulatedEvent, gridConfig) =>
-  gridConfig.captureTab ? Option.some<boolean>(true) : Option.none();
+  gridConfig.captureTab ? Optional.some<boolean>(true) : Optional.none();
 
 const doEscape: KeyRuleHandler<FlatgridConfig, FlatgridState> = (component, simulatedEvent, gridConfig) =>
   gridConfig.onEscape(component, simulatedEvent);
@@ -88,5 +88,5 @@ export default KeyingType.typical(
   KeyingState.flatgrid,
   getKeydownRules,
   getKeyupRules,
-  () => Option.some(focusIn)
+  () => Optional.some(focusIn)
 );

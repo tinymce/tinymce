@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Fun, Option } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import Editor from '../api/Editor';
 import * as CaretFinder from '../caret/CaretFinder';
@@ -15,7 +15,7 @@ import * as BoundaryLocation from './BoundaryLocation';
 import * as InlineUtils from './InlineUtils';
 import { needsToHaveNbsp } from './Nbsps';
 
-const insertSpaceOrNbspAtPosition = (root: SugarElement, pos: CaretPosition): Option<CaretPosition> =>
+const insertSpaceOrNbspAtPosition = (root: SugarElement, pos: CaretPosition): Optional<CaretPosition> =>
   needsToHaveNbsp(root, pos) ? insertNbspAtPosition(pos) : insertSpaceAtPosition(pos);
 
 const locationToCaretPosition = (root: SugarElement) => (location: BoundaryLocation.LocationAdt) => location.fold(

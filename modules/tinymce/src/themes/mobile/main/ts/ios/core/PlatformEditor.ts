@@ -5,19 +5,19 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Fun, Option } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 import { Compare, DomEvent, RawRect, StructRect, SugarElement, WindowSelection } from '@ephox/sugar';
 
 const getBodyFromFrame = function (frame) {
-  return Option.some(SugarElement.fromDom(frame.dom().contentWindow.document.body));
+  return Optional.some(SugarElement.fromDom(frame.dom().contentWindow.document.body));
 };
 
 const getDocFromFrame = function (frame) {
-  return Option.some(SugarElement.fromDom(frame.dom().contentWindow.document));
+  return Optional.some(SugarElement.fromDom(frame.dom().contentWindow.document));
 };
 
 const getWinFromFrame = function (frame) {
-  return Option.from(frame.dom().contentWindow);
+  return Optional.from(frame.dom().contentWindow);
 };
 
 const getSelectionFromFrame = function (frame) {
@@ -74,7 +74,7 @@ const getActiveApi = function (editor) {
 
     const toStartRect = function (sel) {
       const rect = sel.start().dom().getBoundingClientRect();
-      return rect.width > 0 || rect.height > 0 ? Option.some(rect).map(toRect) : Option.none<StructRect>();
+      return rect.width > 0 || rect.height > 0 ? Optional.some(rect).map(toRect) : Optional.none<StructRect>();
     };
 
     return WindowSelection.getExact(win).filter(isCollapsed).bind(toStartRect);

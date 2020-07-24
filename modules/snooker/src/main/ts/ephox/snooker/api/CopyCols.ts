@@ -1,4 +1,4 @@
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import { Attribute, InsertAll, Replication, SugarElement } from '@ephox/sugar';
 import { onCells, TargetSelection } from '../model/RunOperation';
 import { Warehouse } from '../model/Warehouse';
@@ -13,7 +13,7 @@ const constrainSpan = (element: SugarElement, property: 'colspan' | 'rowspan', v
   }
 };
 
-const copyCols = (table: SugarElement, target: TargetSelection): Option<SugarElement<HTMLTableRowElement>[]> => {
+const copyCols = (table: SugarElement, target: TargetSelection): Optional<SugarElement<HTMLTableRowElement>[]> => {
   const house = Warehouse.fromTable(table);
   const details = onCells(house, target);
   return details.map((selectedCells) => {

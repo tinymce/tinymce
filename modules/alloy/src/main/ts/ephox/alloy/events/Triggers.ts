@@ -1,4 +1,4 @@
-import { Adt, Arr, Cell, Option } from '@ephox/katamari';
+import { Adt, Arr, Cell, Optional } from '@ephox/katamari';
 import { SugarElement, Traverse } from '@ephox/sugar';
 
 import { DebuggerLogger } from '../debugging/Debugging';
@@ -7,7 +7,7 @@ import { ElementAndHandler, UidAndHandler } from './EventRegistry';
 import * as EventSource from './EventSource';
 import { EventFormat, fromExternal, fromSource } from './SimulatedEvent';
 
-type LookupEvent = (eventName: string, target: SugarElement) => Option<ElementAndHandler>;
+type LookupEvent = (eventName: string, target: SugarElement) => Optional<ElementAndHandler>;
 
 export interface TriggerAdt {
   fold: <T>(

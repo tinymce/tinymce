@@ -9,7 +9,7 @@ import {
   AddEventsBehaviour, AlloyEvents, AlloyTriggers, Behaviour, Button, Composing, Container, DataField, Input, Keying, Memento, NativeEvents,
   Representing, Tabstopping, Toggling
 } from '@ephox/alloy';
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 
 import I18n from 'tinymce/core/api/util/I18n';
 
@@ -27,7 +27,7 @@ const field = function (name, placeholder) {
     },
     inputBehaviours: Behaviour.derive([
       Composing.config({
-        find: Option.some
+        find: Optional.some
       }),
       Tabstopping.config({ }),
       Keying.config({
@@ -61,7 +61,7 @@ const field = function (name, placeholder) {
         }),
         Composing.config({
           find(comp) {
-            return Option.some(inputSpec.get(comp));
+            return Optional.some(inputSpec.get(comp));
           }
         }),
         AddEventsBehaviour.config(clearInputBehaviour, [
@@ -89,7 +89,7 @@ const hidden = (name) => ({
       }
     },
     getInitialValue() {
-      return Option.none();
+      return Optional.none();
     }
   })
 });

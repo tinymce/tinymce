@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Cell, Fun, Option, Options } from '@ephox/katamari';
+import { Cell, Fun, Optional, Optionals } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import Editor from '../api/Editor';
 import * as Settings from '../api/Settings';
@@ -29,7 +29,7 @@ const rangeFromPositions = (from: CaretPosition, to: CaretPosition) => {
 
 // Checks for delete at <code>|a</code> when there is only one item left except the zwsp caret container nodes
 const hasOnlyTwoOrLessPositionsLeft = (elm: Node) =>
-  Options.lift2(
+  Optionals.lift2(
     CaretFinder.firstPositionIn(elm),
     CaretFinder.lastPositionIn(elm),
     (firstPos, lastPos) => {
@@ -74,17 +74,17 @@ const backspaceDeleteCollapsed = (editor: Editor, caret: Cell<Text>, forward: bo
   return fromLocation.bind((location) => {
     if (forward) {
       return location.fold(
-        Fun.constant(Option.some(BoundaryLocation.inside(location))), // Before
-        Option.none, // Start
-        Fun.constant(Option.some(BoundaryLocation.outside(location))), // End
-        Option.none  // After
+        Fun.constant(Optional.some(BoundaryLocation.inside(location))), // Before
+        Optional.none, // Start
+        Fun.constant(Optional.some(BoundaryLocation.outside(location))), // End
+        Optional.none  // After
       );
     } else {
       return location.fold(
-        Option.none, // Before
-        Fun.constant(Option.some(BoundaryLocation.outside(location))), // Start
-        Option.none, // End
-        Fun.constant(Option.some(BoundaryLocation.inside(location)))  // After
+        Optional.none, // Before
+        Fun.constant(Optional.some(BoundaryLocation.outside(location))), // Start
+        Optional.none, // End
+        Fun.constant(Optional.some(BoundaryLocation.inside(location)))  // After
       );
     }
   })
@@ -93,7 +93,7 @@ const backspaceDeleteCollapsed = (editor: Editor, caret: Cell<Text>, forward: bo
       const toPosition = CaretFinder.navigate(forward, rootNode, from);
       const toLocation = toPosition.bind((pos) => BoundaryLocation.readLocation(isInlineTarget, rootNode, pos));
 
-      return Options.lift2(fromLocation, toLocation, () =>
+      return Optionals.lift2(fromLocation, toLocation, () =>
         InlineUtils.findRootInline(isInlineTarget, rootNode, from).exists((elm) => {
           if (hasOnlyTwoOrLessPositionsLeft(elm)) {
             DeleteElement.deleteElement(editor, forward, SugarElement.fromDom(elm));

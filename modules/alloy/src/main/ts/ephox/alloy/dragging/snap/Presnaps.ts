@@ -1,4 +1,4 @@
-import { Option, Type } from '@ephox/katamari';
+import { Optional, Type } from '@ephox/katamari';
 import { Attribute, SugarElement, SugarPosition } from '@ephox/sugar';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
@@ -10,11 +10,11 @@ const parseAttrToInt = (element: SugarElement, name: string): number => {
 };
 
 // NOTE: Moved from ego with some parameterisation
-const get = <E>(component: AlloyComponent, snapsInfo: SnapsConfig<E>): Option<SugarPosition> => {
+const get = <E>(component: AlloyComponent, snapsInfo: SnapsConfig<E>): Optional<SugarPosition> => {
   const element = component.element();
   const x = parseAttrToInt(element, snapsInfo.leftAttr);
   const y = parseAttrToInt(element, snapsInfo.topAttr);
-  return isNaN(x) || isNaN(y) ? Option.none() : Option.some(
+  return isNaN(x) || isNaN(y) ? Optional.none() : Optional.some(
     SugarPosition(x, y)
   );
 };

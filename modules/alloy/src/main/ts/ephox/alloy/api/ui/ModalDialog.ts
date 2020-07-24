@@ -1,4 +1,4 @@
-import { Cell, Id, Option } from '@ephox/katamari';
+import { Cell, Id, Optional } from '@ephox/katamari';
 import { Attribute, Traverse } from '@ephox/sugar';
 
 import * as AriaDescribe from '../../aria/AriaDescribe';
@@ -36,8 +36,8 @@ const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (det
     // Trap the "Tab" key and don't let it escape.
     Keying.config({
       mode: 'special',
-      onTab: () => Option.some<boolean>(true),
-      onShiftTab: () => Option.some<boolean>(true)
+      onTab: () => Optional.some<boolean>(true),
+      onShiftTab: () => Optional.some<boolean>(true)
     }),
     Focusing.config({ })
   ]);
@@ -46,7 +46,7 @@ const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (det
   const showDialog = (dialog: AlloyComponent) => {
     const sink = detail.lazySink(dialog).getOrDie();
 
-    const busyComp = Cell(Option.none<AlloyComponent>());
+    const busyComp = Cell(Optional.none<AlloyComponent>());
 
     const externalBlocker = externals.blocker();
 
@@ -79,7 +79,7 @@ const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (det
             });
             const busySpec = getBusySpec(dialog, busyBehaviours);
             const busy = blocker.getSystem().build(busySpec);
-            busyComp.set(Option.some(busy));
+            busyComp.set(Optional.some(busy));
             Replacing.append(dialog, GuiFactory.premade(busy));
             if (busy.hasConfigured(Keying)) {
               Keying.focusIn(busy);

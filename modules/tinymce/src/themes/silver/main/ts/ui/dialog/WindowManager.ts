@@ -11,7 +11,7 @@ import {
 } from '@ephox/alloy';
 import { Processor, ValueSchema } from '@ephox/boulder';
 import { DialogManager, Types } from '@ephox/bridge';
-import { Option, Singleton } from '@ephox/katamari';
+import { Optional, Singleton } from '@ephox/katamari';
 import { SelectorExists, SugarBody, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -46,7 +46,7 @@ const inlineAdditionalBehaviours = (editor: Editor, isStickyToolbar: boolean, is
     return [
       Docking.config({
         contextual: {
-          lazyContext: () => Option.some(Boxes.box(SugarElement.fromDom(editor.getContentAreaContainer()))),
+          lazyContext: () => Optional.some(Boxes.box(SugarElement.fromDom(editor.getContentAreaContainer()))),
           fadeInClass: 'tox-dialog-dock-fadein',
           fadeOutClass: 'tox-dialog-dock-fadeout',
           transitionClass: 'tox-dialog-dock-transition'
@@ -187,7 +187,7 @@ const setup = (extras: WindowManagerSetup) => {
         inlineDialogComp,
         anchor,
         GuiFactory.premade(dialogUi.dialog),
-        Option.some(SugarBody.body())
+        Optional.some(SugarBody.body())
       );
 
       // Refresh the docking position if not using a sticky toolbar

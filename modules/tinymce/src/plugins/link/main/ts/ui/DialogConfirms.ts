@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
 import Promise from 'tinymce/core/api/util/Promise';
@@ -32,26 +32,26 @@ interface Transformer {
   preprocess: (d: LinkDialogOutput) => LinkDialogOutput;
 }
 
-const tryEmailTransform = (data: LinkDialogOutput): Option<Transformer> => {
+const tryEmailTransform = (data: LinkDialogOutput): Optional<Transformer> => {
   const url = data.href;
   const suggestMailTo = url.indexOf('@') > 0 && url.indexOf('/') === -1 && url.indexOf('mailto:') === -1;
-  return suggestMailTo ? Option.some({
+  return suggestMailTo ? Optional.some({
     message: 'The URL you entered seems to be an email address. Do you want to add the required mailto: prefix?',
     preprocess: (oldData) => ({ ...oldData, href: 'mailto:' + url })
-  }) : Option.none();
+  }) : Optional.none();
 };
 
-const tryProtocolTransform = (assumeExternalTargets: AssumeExternalTargets, defaultLinkProtocol: string) => (data: LinkDialogOutput): Option<Transformer> => {
+const tryProtocolTransform = (assumeExternalTargets: AssumeExternalTargets, defaultLinkProtocol: string) => (data: LinkDialogOutput): Optional<Transformer> => {
   const url = data.href;
   const suggestProtocol = (
     assumeExternalTargets === AssumeExternalTargets.WARN && !Utils.hasProtocol(url) ||
     assumeExternalTargets === AssumeExternalTargets.OFF && /^\s*www[\.|\d\.]/i.test(url)
   );
 
-  return suggestProtocol ? Option.some({
+  return suggestProtocol ? Optional.some({
     message: `The URL you entered seems to be an external link. Do you want to add the required ${defaultLinkProtocol}:// prefix?`,
     preprocess: (oldData) => ({ ...oldData, href: defaultLinkProtocol + '://' + url })
-  }) : Option.none();
+  }) : Optional.none();
 };
 
 const preprocess = (editor: Editor, data: LinkDialogOutput): Promise<LinkDialogOutput> => Arr.findMap(

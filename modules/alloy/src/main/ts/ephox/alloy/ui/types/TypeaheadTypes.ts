@@ -1,4 +1,4 @@
-import { Cell, Future, Option, Result } from '@ephox/katamari';
+import { Cell, Future, Optional, Result } from '@ephox/katamari';
 
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
@@ -31,7 +31,7 @@ export interface TypeaheadDetail extends CommonDropdownDetail<TieredData>, Input
   onItemExecute: (typeahead: AlloyComponent, sandbox: AlloyComponent, item: AlloyComponent, value: any) => void;
   dismissOnBlur: boolean;
 
-  initialData: Option<TypeaheadData>;
+  initialData: Optional<TypeaheadData>;
 
   markers: {
     openClass: string;
@@ -47,12 +47,12 @@ export interface TypeaheadSpec extends CompositeSketchSpec {
   // TODO: Add everything else.
   uid?: string;
   lazySink?: (comp: AlloyComponent) => Result<AlloyComponent, Error>;
-  fetch: (comp: AlloyComponent) => Future<Option<TieredData>>;
+  fetch: (comp: AlloyComponent) => Future<Optional<TieredData>>;
   components?: AlloySpec[];
   typeaheadBehaviours?: AlloyBehaviourRecord;
   sandboxClasses?: string[];
   sandboxBehaviours?: AlloyBehaviourRecord;
-  getHotspot?: (comp: AlloyComponent) => Option<AlloyComponent>;
+  getHotspot?: (comp: AlloyComponent) => Optional<AlloyComponent>;
   inputClasses?: string[];
   inputAttributes?: { };
   inputStyles?: { };

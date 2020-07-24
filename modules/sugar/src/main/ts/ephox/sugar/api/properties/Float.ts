@@ -1,4 +1,4 @@
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import * as Style from '../../impl/Style';
 import { SugarElement } from '../node/SugarElement';
 import * as Css from './Css';
@@ -14,12 +14,12 @@ const isCentered = (element: SugarElement<Node>): boolean => {
   }
 };
 
-const divine = (element: SugarElement<Element>): Option<string> => {
+const divine = (element: SugarElement<Element>): Optional<string> => {
   if (isCentered(element)) {
-    return Option.some('center');
+    return Optional.some('center');
   } else {
     const val = Css.getRaw(element, 'float').getOrThunk(() => Css.get(element, 'float'));
-    return val !== undefined && val !== null && val.length > 0 ? Option.some(val) : Option.none<string>();
+    return val !== undefined && val !== null && val.length > 0 ? Optional.some(val) : Optional.none<string>();
   }
 };
 

@@ -1,4 +1,4 @@
-import { Arr, Num, Option, Options, Result } from '@ephox/katamari';
+import { Arr, Num, Optional, Optionals, Result } from '@ephox/katamari';
 import { Class, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
@@ -72,40 +72,42 @@ const highlightBy = (component: AlloyComponent, hConfig: HighlightingConfig, hSt
 
 const isHighlighted = (component: AlloyComponent, hConfig: HighlightingConfig, hState: Stateless, queryTarget: AlloyComponent): boolean => Class.has(queryTarget.element(), hConfig.highlightClass);
 
-const getHighlighted = (component: AlloyComponent, hConfig: HighlightingConfig, _hState: Stateless): Option<AlloyComponent> => SelectorFind.descendant(component.element(), '.' + hConfig.highlightClass).bind((e) => component.getSystem().getByDom(e).toOption());
+const getHighlighted = (component: AlloyComponent, hConfig: HighlightingConfig, _hState: Stateless): Optional<AlloyComponent> =>
+  SelectorFind.descendant(component.element(), '.' + hConfig.highlightClass).bind((e) => component.getSystem().getByDom(e).toOptional());
 
 const getByIndex = (component: AlloyComponent, hConfig: HighlightingConfig, hState: Stateless, index: number): Result<AlloyComponent, string> => {
   const items = SelectorFilter.descendants(component.element(), '.' + hConfig.itemClass);
 
-  return Option.from(items[index]).fold(() => Result.error<AlloyComponent, any>('No element found with index ' + index), component.getSystem().getByDom);
+  return Optional.from(items[index]).fold(() => Result.error<AlloyComponent, any>('No element found with index ' + index), component.getSystem().getByDom);
 };
 
-const getFirst = (component: AlloyComponent, hConfig: HighlightingConfig, _hState: Stateless): Option<AlloyComponent> => SelectorFind.descendant(component.element(), '.' + hConfig.itemClass).bind((e) => component.getSystem().getByDom(e).toOption());
+const getFirst = (component: AlloyComponent, hConfig: HighlightingConfig, _hState: Stateless): Optional<AlloyComponent> =>
+  SelectorFind.descendant(component.element(), '.' + hConfig.itemClass).bind((e) => component.getSystem().getByDom(e).toOptional());
 
-const getLast = (component: AlloyComponent, hConfig: HighlightingConfig, _hState: Stateless): Option<AlloyComponent> => {
+const getLast = (component: AlloyComponent, hConfig: HighlightingConfig, _hState: Stateless): Optional<AlloyComponent> => {
   const items: SugarElement[] = SelectorFilter.descendants(component.element(), '.' + hConfig.itemClass);
-  const last = items.length > 0 ? Option.some(items[items.length - 1]) : Option.none<SugarElement<any>>();
-  return last.bind((c) => component.getSystem().getByDom(c).toOption());
+  const last = items.length > 0 ? Optional.some(items[items.length - 1]) : Optional.none<SugarElement<any>>();
+  return last.bind((c) => component.getSystem().getByDom(c).toOptional());
 };
 
-const getDelta = (component: AlloyComponent, hConfig: HighlightingConfig, hState: Stateless, delta: number): Option<AlloyComponent> => {
+const getDelta = (component: AlloyComponent, hConfig: HighlightingConfig, hState: Stateless, delta: number): Optional<AlloyComponent> => {
   const items = SelectorFilter.descendants(component.element(), '.' + hConfig.itemClass);
   const current = Arr.findIndex(items, (item) => Class.has(item, hConfig.highlightClass));
 
   return current.bind((selected) => {
     const dest = Num.cycleBy(selected, delta, 0, items.length - 1);
-    return component.getSystem().getByDom(items[dest]).toOption();
+    return component.getSystem().getByDom(items[dest]).toOptional();
   });
 };
 
-const getPrevious = (component: AlloyComponent, hConfig: HighlightingConfig, hState: Stateless): Option<AlloyComponent> => getDelta(component, hConfig, hState, -1);
+const getPrevious = (component: AlloyComponent, hConfig: HighlightingConfig, hState: Stateless): Optional<AlloyComponent> => getDelta(component, hConfig, hState, -1);
 
-const getNext = (component: AlloyComponent, hConfig: HighlightingConfig, hState: Stateless): Option<AlloyComponent> => getDelta(component, hConfig, hState, +1);
+const getNext = (component: AlloyComponent, hConfig: HighlightingConfig, hState: Stateless): Optional<AlloyComponent> => getDelta(component, hConfig, hState, +1);
 
 const getCandidates = (component: AlloyComponent, hConfig: HighlightingConfig, _hState: Stateless): AlloyComponent[] => {
   const items = SelectorFilter.descendants(component.element(), '.' + hConfig.itemClass);
-  return Options.cat(
-    Arr.map(items, (i) => component.getSystem().getByDom(i).toOption())
+  return Optionals.cat(
+    Arr.map(items, (i) => component.getSystem().getByDom(i).toOptional())
   );
 };
 

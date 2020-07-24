@@ -1,4 +1,4 @@
-import { Arr, Cell, Obj, Option } from '@ephox/katamari';
+import { Arr, Cell, Obj, Optional } from '@ephox/katamari';
 
 import { ItemDataTuple } from '../../ui/types/ItemTypes';
 import { nuState } from '../common/BehaviourState';
@@ -54,7 +54,7 @@ const dataset = (): DatasetRepresentingState => {
 
   // itemString can be matching value or text.
   // TODO: type problem - impossible to correctly return value when type parameter only exists in return type
-  const lookup = <T extends ItemDataTuple>(itemString: string): Option<T> => Obj.get<any, string>(dataByValue.get(), itemString).orThunk(() => Obj.get<any, string>(dataByText.get(), itemString));
+  const lookup = <T extends ItemDataTuple>(itemString: string): Optional<T> => Obj.get<any, string>(dataByValue.get(), itemString).orThunk(() => Obj.get<any, string>(dataByText.get(), itemString));
 
   const update = <T extends ItemDataTuple>(items: T[]): void => {
     const currentDataByValue = dataByValue.get();

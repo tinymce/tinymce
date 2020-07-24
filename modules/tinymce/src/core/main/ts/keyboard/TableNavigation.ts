@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Fun, Option } from '@ephox/katamari';
+import { Arr, Fun, Optional } from '@ephox/katamari';
 import { Attribute, Insert, SugarElement } from '@ephox/sugar';
 import Editor from '../api/Editor';
 import * as Settings from '../api/Settings';
@@ -73,9 +73,9 @@ const getClosestBelowPosition = (root: HTMLElement, table: HTMLElement, start: C
   () => Arr.head(start.getClientRects()).bind((rect) => findClosestHorizontalPositionFromPoint(getPositionsBelow(root, CaretPosition.after(table)), rect.left))
 ).getOr(CaretPosition.after(table));
 
-const getTable = (previous: boolean, pos: CaretPosition): Option<HTMLElement> => {
+const getTable = (previous: boolean, pos: CaretPosition): Optional<HTMLElement> => {
   const node = pos.getNode(previous);
-  return NodeType.isElement(node) && node.nodeName === 'TABLE' ? Option.some(node) : Option.none();
+  return NodeType.isElement(node) && node.nodeName === 'TABLE' ? Optional.some(node) : Optional.none();
 };
 
 const renderBlock = (down: boolean, editor: Editor, table: HTMLElement, pos: CaretPosition) => {
@@ -135,8 +135,8 @@ const navigateVertically = (editor: Editor, down: boolean, table: HTMLElement, t
 };
 
 const move = (editor: Editor, forward: boolean, mover: (editor: Editor, forward: boolean, table: HTMLTableElement, td: HTMLTableCellElement) => boolean) =>
-  Option.from(editor.dom.getParent<HTMLTableCellElement>(editor.selection.getNode(), 'td,th'))
-    .bind((td) => Option.from(editor.dom.getParent(td, 'table'))
+  Optional.from(editor.dom.getParent<HTMLTableCellElement>(editor.selection.getNode(), 'td,th'))
+    .bind((td) => Optional.from(editor.dom.getParent(td, 'table'))
       .map((table) => mover(editor, forward, table, td))
     ).getOr(false);
 

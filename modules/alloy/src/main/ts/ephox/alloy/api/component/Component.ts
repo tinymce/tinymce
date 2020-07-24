@@ -1,5 +1,5 @@
 import { ValueSchema } from '@ephox/boulder';
-import { Arr, Cell, Fun, Option, Type } from '@ephox/katamari';
+import { Arr, Cell, Fun, Optional, Type } from '@ephox/katamari';
 import { Traverse } from '@ephox/sugar';
 
 import * as BehaviourBlob from '../../behaviour/common/BehaviourBlob';
@@ -23,7 +23,7 @@ import { ComponentDetail } from './SpecTypes';
 const getDomDefinition = (
   info: CustomDefinition.CustomDetail<any>,
   bList: Array<AlloyBehaviour<any, any>>,
-  bData: Record<string, () => Option<BehaviourBlob.BehaviourConfigAndState<any, BehaviourState>>>
+  bData: Record<string, () => Optional<BehaviourBlob.BehaviourConfigAndState<any, BehaviourState>>>
 ): DomDefinitionDetail => {
   // Get the current DOM definition from the spec
   const definition = CustomDefinition.toDefinition(info);
@@ -46,7 +46,7 @@ const getDomDefinition = (
 const getEvents = (
   info: CustomDefinition.CustomDetail<any>,
   bList: Array<AlloyBehaviour<any, any>>,
-  bData: Record<string, () => Option<BehaviourBlob.BehaviourConfigAndState<any, BehaviourState>>>
+  bData: Record<string, () => Optional<BehaviourBlob.BehaviourConfigAndState<any, BehaviourState>>>
 ): Record<string, UncurriedHandler> => {
   const baseEvents = {
     'alloy.base.behaviour': CustomDefinition.toEvents(info)
@@ -92,7 +92,7 @@ const build = (spec: ComponentDetail): AlloyComponent => {
   };
 
   // TYPIFY (any here is for the info.apis() pathway)
-  const config = (behaviour: AlloyBehaviour<any, any>): Option<BehaviourBlob.BehaviourConfigAndState<any, any>> => {
+  const config = (behaviour: AlloyBehaviour<any, any>): Optional<BehaviourBlob.BehaviourConfigAndState<any, any>> => {
     const b = bData;
     const f = Type.isFunction(b[behaviour.name()]) ? b[behaviour.name()] : () => {
       throw new Error('Could not find ' + behaviour.name() + ' in ' + JSON.stringify(spec, null, 2));

@@ -1,6 +1,6 @@
 import { ApproxStructure, Assertions, Chain, Logger, Step, StructAssert, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Arr, Future, Option } from '@ephox/katamari';
+import { Arr, Future, Optional } from '@ephox/katamari';
 import { Class, SugarElement } from '@ephox/sugar';
 
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
@@ -94,7 +94,7 @@ UnitTest.asynctest('Browser Test: ui.touch.TouchMenuTest', (success, failure) =>
 
         fetch() {
           return Future.pure(
-            Option.from(Arr.map([
+            Optional.from(Arr.map([
               { type: 'item', data: { value: 'dog', meta: { text: 'Dog' }}},
               { type: 'item', data: { value: 'elephant', meta: { text: 'Elephant' }}}
             ], munge))

@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Cell, Option } from '@ephox/katamari';
+import { Cell, Optional } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { SelectorFilter, SugarElement } from '@ephox/sugar';
 import DomQuery from '../api/dom/DomQuery';
@@ -102,7 +102,7 @@ const trimInlineCaretContainers = (root: HTMLElement): void => {
 };
 
 export const FakeCaret = (editor: Editor, root: HTMLElement, isBlock: (node: Node) => boolean, hasFocus: () => boolean): FakeCaret => {
-  const lastVisualCaret = Cell<Option<CaretState>>(Option.none());
+  const lastVisualCaret = Cell<Optional<CaretState>>(Optional.none());
   let cursorInterval, caretContainerNode;
   const rootBlock = Settings.getForcedRootBlock(editor);
   const caretBlock = rootBlock.length > 0 ? rootBlock : 'p';
@@ -122,7 +122,7 @@ export const FakeCaret = (editor: Editor, root: HTMLElement, isBlock: (node: Nod
       DomQuery(caretContainerNode).css('top', clientRect.top);
 
       const caret = DomQuery('<div class="mce-visual-caret" data-mce-bogus="all"></div>').css(clientRect).appendTo(root)[0];
-      lastVisualCaret.set(Option.some({ caret, element, before }));
+      lastVisualCaret.set(Optional.some({ caret, element, before }));
 
       lastVisualCaret.get().each((caretState) => {
         if (before) {
@@ -165,7 +165,7 @@ export const FakeCaret = (editor: Editor, root: HTMLElement, isBlock: (node: Nod
 
     lastVisualCaret.get().each((caretState) => {
       DomQuery(caretState.caret).remove();
-      lastVisualCaret.set(Option.none());
+      lastVisualCaret.set(Optional.none());
     });
 
     if (cursorInterval) {

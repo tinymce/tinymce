@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import { TableLookup } from '@ephox/snooker';
 import { SelectorFilter, SugarElement } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
@@ -31,12 +31,12 @@ const mapSectionNameToType = (section: string): 'header' | 'footer' | 'body' => 
   }
 };
 
-const detectHeaderRow = (editor: Editor, elm: HTMLTableRowElement): Option<HeaderRowConfiguration> => {
+const detectHeaderRow = (editor: Editor, elm: HTMLTableRowElement): Optional<HeaderRowConfiguration> => {
   // Header rows can use a combination of theads and ths - want to detect the 3 combinations
   const isThead = getSection(elm) === 'thead';
   const areAllCellsThs = !Arr.exists(elm.cells, (c) => Util.getNodeName(c) !== 'th');
 
-  return isThead || areAllCellsThs ? Option.some({ thead: isThead, ths: areAllCellsThs }) : Option.none();
+  return isThead || areAllCellsThs ? Optional.some({ thead: isThead, ths: areAllCellsThs }) : Optional.none();
 };
 
 const getRowType = (editor: Editor, elm: HTMLTableRowElement) => mapSectionNameToType(detectHeaderRow(editor, elm).fold(

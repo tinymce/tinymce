@@ -1,6 +1,6 @@
 import { Assertions, Cursors, Step, Waiter } from '@ephox/agar';
 import { GuiFactory } from '@ephox/alloy';
-import { Fun, Option } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 import { Attribute, Focus, SugarElement, WindowSelection } from '@ephox/sugar';
 
 import TestEditor from './TestEditor';
@@ -58,7 +58,7 @@ export default function () {
         const fbody = SugarElement.fromDom(frame.dom().contentWindow.document.body);
         const elem = Cursors.calculateOne(fbody, [ 0 ]);
         WindowSelection.setExact(win, elem, 0, elem, 0);
-        return Option.none();
+        return Optional.none();
       });
     },
     ui: {

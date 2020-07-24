@@ -1,6 +1,6 @@
 import { FieldPresence, FieldSchema, ValueSchema } from '@ephox/boulder';
-import { Id, Option } from '@ephox/katamari';
-import { DialogToggleMenuItemApi, dialogToggleMenuItemSchema, DialogToggleMenuItem as DialogToggleMenuItemType } from './ToggleMenuItem';
+import { Id, Optional } from '@ephox/katamari';
+import { DialogToggleMenuItem as DialogToggleMenuItemType, DialogToggleMenuItemApi, dialogToggleMenuItemSchema } from './ToggleMenuItem';
 
 export type DialogMenuButtonItemTypes = DialogToggleMenuItemApi;
 export type DialogToggleMenuItem = DialogToggleMenuItemType;
@@ -34,7 +34,7 @@ interface BaseDialogButton {
   align: 'start' | 'end';
   primary: boolean;
   disabled: boolean;
-  icon: Option<string>;
+  icon: Optional<string>;
 }
 
 export interface DialogNormalButton extends BaseDialogButton {
@@ -44,9 +44,9 @@ export interface DialogNormalButton extends BaseDialogButton {
 
 export interface DialogMenuButton extends BaseDialogButton {
   type: 'menu';
-  text: Option<string>;
-  tooltip: Option<string>;
-  icon: Option<string>;
+  text: Optional<string>;
+  tooltip: Optional<string>;
+  icon: Optional<string>;
   items: DialogToggleMenuItem[];
 }
 

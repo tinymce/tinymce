@@ -7,7 +7,7 @@
 
 import { Behaviour, GuiFactory, ItemTypes, MaxHeight, Tooltipping } from '@ephox/alloy';
 import { InlineContent, Types } from '@ephox/bridge';
-import { Obj, Option } from '@ephox/katamari';
+import { Obj, Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import I18n from 'tinymce/core/api/util/I18n';
@@ -79,13 +79,13 @@ const renderAutocompleteItem = (
 ): ItemTypes.ItemSpec => {
   const structure = renderItemStructure({
     presets,
-    textContent: Option.none(),
-    htmlContent: useText ? spec.text.map((text) => replaceText(text, matchText)) : Option.none(),
+    textContent: Optional.none(),
+    htmlContent: useText ? spec.text.map((text) => replaceText(text, matchText)) : Optional.none(),
     ariaLabel: spec.text,
     iconContent: spec.icon,
-    shortcutContent: Option.none(),
-    checkMark: Option.none(),
-    caret: Option.none(),
+    shortcutContent: Optional.none(),
+    checkMark: Optional.none(),
+    caret: Optional.none(),
     value: spec.value
   }, sharedBackstage.providers, renderIcons, spec.icon);
 

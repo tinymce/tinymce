@@ -1,4 +1,4 @@
-import { Fun, Option } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
 import { Bounds } from '../../alien/Boxes';
@@ -21,7 +21,7 @@ export interface ReparteeOptions {
 const defaultOr = <K extends keyof AnchorOverrides>(options: AnchorOverrides, key: K, dephault: NonNullable<AnchorOverrides[K]>): NonNullable<AnchorOverrides[K]> => options[key] === undefined ? dephault : options[key] as NonNullable<AnchorOverrides[K]>;
 
 // This takes care of everything when you are positioning UI that can go anywhere on the screen
-const simple = (anchor: Anchor, element: SugarElement, bubble: Bubble, layouts: LayoutTypes.AnchorLayout[], getBounds: Option<() => Bounds>, overrideOptions: AnchorOverrides): void => {
+const simple = (anchor: Anchor, element: SugarElement, bubble: Bubble, layouts: LayoutTypes.AnchorLayout[], getBounds: Optional<() => Bounds>, overrideOptions: AnchorOverrides): void => {
   // the only supported override at the moment. Once relative has been deleted, maybe this can be optional in the bag
   const maxHeightFunction: MaxHeightFunction = defaultOr(overrideOptions, 'maxHeightFunction', MaxHeight.anchored());
   const maxWidthFunction: MaxWidthFunction = defaultOr(overrideOptions, 'maxWidthFunction', Fun.noop);

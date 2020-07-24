@@ -1,12 +1,12 @@
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import { SugarElement, Traverse } from '@ephox/sugar';
 import Sizzle from '@ephox/wrap-sizzle';
 
-const toOptionEl = (output: Element[]): Option<SugarElement<Element>> =>
-  output.length === 0 ? Option.none() : Option.from(output[0]).map(SugarElement.fromDom);
+const toOptionEl = (output: Element[]): Optional<SugarElement<Element>> =>
+  output.length === 0 ? Optional.none() : Optional.from(output[0]).map(SugarElement.fromDom);
 
 /* Petrie makes extensive use of :visible, :has() and :contains() which are sizzle extensions */
-const descendant = (sugarElement: SugarElement<any>, selector: string): Option<SugarElement<Element>> => {
+const descendant = (sugarElement: SugarElement<any>, selector: string): Optional<SugarElement<Element>> => {
   const siz: Element[] = Sizzle(selector, sugarElement.dom());
   return toOptionEl(siz);
 };
@@ -21,7 +21,7 @@ const descendants = (sugarElement: SugarElement<any>, selector: string): SugarEl
 const matches = (sugarElement: SugarElement<any>, selector: string): boolean =>
   Sizzle.matchesSelector(sugarElement.dom(), selector);
 
-const child = (sugarElement: SugarElement<any>, selector: string): Option<SugarElement<any>> => {
+const child = (sugarElement: SugarElement<any>, selector: string): Optional<SugarElement<any>> => {
   const children = Traverse.children(sugarElement);
   return Arr.find(children, (child) => matches(child, selector));
 };

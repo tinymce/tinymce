@@ -6,7 +6,7 @@
  */
 
 import { AlloyComponent, AlloySpec, Behaviour, DomFactory, Focusing, Keying, Replacing } from '@ephox/alloy';
-import { Cell, Option, Type } from '@ephox/katamari';
+import { Cell, Optional, Type } from '@ephox/katamari';
 import { Attribute, Css } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
@@ -29,8 +29,8 @@ const renderSpinner = (providerBackstage: UiFactoryBackstageProviders): AlloySpe
     // Trap the "Tab" key and don't let it escape.
     Keying.config({
       mode: 'special',
-      onTab: () => Option.some(true),
-      onShiftTab: () => Option.some(true)
+      onTab: () => Optional.some(true),
+      onShiftTab: () => Optional.some(true)
     }),
     Focusing.config({ })
   ])
@@ -69,7 +69,7 @@ const renderThrobber = (spec): AlloySpec => ({
 
 const setup = (editor: Editor, lazyThrobber: () => AlloyComponent, sharedBackstage: UiFactoryBackstageShared) => {
   const throbberState = Cell<boolean>(false);
-  const timer = Cell<Option<number>>(Option.none());
+  const timer = Cell<Optional<number>>(Optional.none());
 
   const toggle = (state: boolean) => {
     if (state !== throbberState.get()) {
@@ -82,10 +82,10 @@ const setup = (editor: Editor, lazyThrobber: () => AlloyComponent, sharedBacksta
     timer.get().each(Delay.clearTimeout);
     if (Type.isNumber(e.time)) {
       const timerId = Delay.setEditorTimeout(editor, () => toggle(e.state), e.time);
-      timer.set(Option.some(timerId));
+      timer.set(Optional.some(timerId));
     } else {
       toggle(e.state);
-      timer.set(Option.none());
+      timer.set(Optional.none());
     }
   });
 };

@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import { SandHTMLElement } from '@ephox/sand';
 import DomQuery from 'tinymce/core/api/dom/DomQuery';
 import Editor from 'tinymce/core/api/Editor';
@@ -67,7 +67,7 @@ const getClosestListRootElm = function (editor, elm) {
   return root;
 };
 
-const findLastParentListNode = (editor: Editor, elm: Node): Option<Node> => {
+const findLastParentListNode = (editor: Editor, elm: Node): Optional<Node> => {
   const parentLists = editor.dom.getParents(elm, 'ol,ul', getClosestListRootElm(editor, elm));
   return Arr.last(parentLists);
 };
