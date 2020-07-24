@@ -7,7 +7,7 @@
 
 import { Optional } from '@ephox/katamari';
 import { SugarElement, SugarShadowDom } from '@ephox/sugar';
-import { StyleSheetLoader, StyleSheetLoaderSettings } from 'tinymce/core/api/dom/StyleSheetLoader';
+import { StyleSheetLoader, StyleSheetLoaderSettings } from '../api/dom/StyleSheetLoader';
 
 export interface StyleSheetLoaderRegistry {
   readonly forElement: (referenceElement: SugarElement<Node>, settings: Partial<StyleSheetLoaderSettings>) => StyleSheetLoader;
