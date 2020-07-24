@@ -7,20 +7,20 @@
 
 import { HTMLElement } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
-import { Element, Elements } from '@ephox/sugar';
+import { SugarElement, SugarElements } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { insertTableWithDataValidation } from '../actions/InsertTable';
 import { ResizeHandler } from '../actions/ResizeHandler';
 import { Clipboard } from '../core/Clipboard';
 import { SelectionTargets } from '../selection/SelectionTargets';
 
-const getClipboardElements = (getClipboard: () => Option<Element[]>) => (): HTMLElement[] => getClipboard().fold(
+const getClipboardElements = (getClipboard: () => Option<SugarElement[]>) => (): HTMLElement[] => getClipboard().fold(
   () => [],
   (elems) => Arr.map(elems, (e) => e.dom())
 );
 
-const setClipboardElements = (setClipboard: (elems: Option<Element[]>) => void) => (elems: HTMLElement[]): void => {
-  const elmsOpt = elems.length > 0 ? Option.some(Elements.fromDom(elems)) : Option.none<Element[]>();
+const setClipboardElements = (setClipboard: (elems: Option<SugarElement[]>) => void) => (elems: HTMLElement[]): void => {
+  const elmsOpt = elems.length > 0 ? Option.some(SugarElements.fromDom(elems)) : Option.none<SugarElement[]>();
   setClipboard(elmsOpt);
 };
 

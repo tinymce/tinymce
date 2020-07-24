@@ -2,7 +2,7 @@ import { ApproxStructure, Assertions, Log, NamedChain, Pipeline, UiFinder } from
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr, Id, Result } from '@ephox/katamari';
 import { Editor as McagarEditor } from '@ephox/mcagar';
-import { Body } from '@ephox/sugar';
+import { SugarBody } from '@ephox/sugar';
 
 import SilverTheme from 'tinymce/themes/silver/Theme';
 import { cCountNumber, cExtractOnlyOne } from '../../../module/UiChainUtils';
@@ -37,7 +37,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
   Pipeline.async({}, [
     Log.chainsAsStep('TBA', 'Testing menubar: false should not create menubar at all', [
       NamedChain.asChain([
-        NamedChain.writeValue('body', Body.body()),
+        NamedChain.writeValue('body', SugarBody.body()),
         NamedChain.write('editor', cCreateEditorWithMenubar(false)),
         NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for container', '.tox-tinymce'), '_tiny'),
         NamedChain.direct('body', cCountNumber('.tox-menubar'), 'numMenubars'),
@@ -49,7 +49,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
 
     Log.chainsAsStep('TBA', 'Testing menubar: true should create default menubar', [
       NamedChain.asChain([
-        NamedChain.writeValue('body', Body.body()),
+        NamedChain.writeValue('body', SugarBody.body()),
         NamedChain.write('editor', cCreateEditorWithMenubar(true)),
         NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
         NamedChain.direct('body', cExtractOnlyOne('.tox-menubar'), 'menubar'),
@@ -61,7 +61,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
 
     Log.chainsAsStep('TBA', 'Testing menubar: undefined should create default menubar', [
       NamedChain.asChain([
-        NamedChain.writeValue('body', Body.body()),
+        NamedChain.writeValue('body', SugarBody.body()),
         NamedChain.write('editor', cCreateEditorWithMenubar(undefined)),
         NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
         NamedChain.direct('body', cExtractOnlyOne('.tox-menubar'), 'menubar'),
@@ -73,7 +73,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
 
     Log.chainsAsStep('TBA', 'Testing menubar: "file edit" should create "file edit" menubar', [
       NamedChain.asChain([
-        NamedChain.writeValue('body', Body.body()),
+        NamedChain.writeValue('body', SugarBody.body()),
         NamedChain.write('editor', cCreateEditorWithMenubar('file edit')),
         NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
         NamedChain.direct('body', cExtractOnlyOne('.tox-menubar'), 'menubar'),

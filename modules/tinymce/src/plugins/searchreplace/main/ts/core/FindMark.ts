@@ -7,7 +7,7 @@
 
 import { HTMLElement, Node } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
-import { Attr, Element, Insert, Text } from '@ephox/sugar';
+import { Attribute, Insert, SugarElement, SugarText } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Selection from 'tinymce/core/api/dom/Selection';
 import * as TextCollect from './TextCollect';
@@ -16,7 +16,7 @@ import { Pattern, TextMatch, TextSection } from './Types';
 
 const find = (pattern: Pattern, sections: TextSection[]) => Arr.bind(sections, (section) => {
   const elements = section.elements;
-  const content = Arr.map(elements, Text.get).join('');
+  const content = Arr.map(elements, SugarText.get).join('');
   const positions = TextPosition.find(content, pattern, section.sOffset, content.length - section.fOffset);
   return TextPosition.extract(elements, positions);
 });
@@ -26,8 +26,8 @@ const mark = (matches: TextMatch[][], replacementNode: HTMLElement) => {
   // Note: We need to walk backwards so the position indexes don't change
   Arr.eachr(matches, (match, idx) => {
     Arr.eachr(match, (pos) => {
-      const wrapper = Element.fromDom(replacementNode.cloneNode(false) as HTMLElement);
-      Attr.set(wrapper, 'data-mce-index', idx);
+      const wrapper = SugarElement.fromDom(replacementNode.cloneNode(false) as HTMLElement);
+      Attribute.set(wrapper, 'data-mce-index', idx);
       const textNode = pos.element.dom();
       if (textNode.length === pos.finish && pos.start === 0) {
         Insert.wrap(pos.element, wrapper);
@@ -36,7 +36,7 @@ const mark = (matches: TextMatch[][], replacementNode: HTMLElement) => {
           textNode.splitText(pos.finish);
         }
         const matchNode = textNode.splitText(pos.start);
-        Insert.wrap(Element.fromDom(matchNode), wrapper);
+        Insert.wrap(SugarElement.fromDom(matchNode), wrapper);
       }
     });
   });

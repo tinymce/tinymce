@@ -1,10 +1,10 @@
 import { assert } from '@ephox/bedrock-client';
 import { Arr, Result } from '@ephox/katamari';
+import { SugarElement } from '@ephox/sugar';
+import { SimpleGenerators } from 'ephox/snooker/api/Generators';
 import * as Structs from 'ephox/snooker/api/Structs';
 import * as TableMerge from 'ephox/snooker/model/TableMerge';
 import * as Fitment from 'ephox/snooker/test/Fitment';
-import { SimpleGenerators } from 'ephox/snooker/api/Generators';
-import { Element } from '@ephox/sugar';
 
 const mapToStructGrid = function (grid: Structs.ElementNew[][]) {
   return Arr.map(grid, function (row) {
@@ -29,7 +29,7 @@ const mergeTest = function (
   gridA: () => Structs.ElementNew[][],
   gridB: () => Structs.ElementNew[][],
   generator: () => SimpleGenerators,
-  comparator: (a: Element, b: Element) => boolean
+  comparator: (a: SugarElement, b: SugarElement) => boolean
 ) {
   // The last step, merge cells from gridB into gridA
   const nuGrid = TableMerge.merge(
@@ -61,7 +61,7 @@ const mergeIVTest = function (
   gridSpecA: Spec,
   gridSpecB: Spec,
   generator: () => SimpleGenerators,
-  comparator: (a: Element, b: Element) => boolean
+  comparator: (a: SugarElement, b: SugarElement) => boolean
 ) {
   // The last step, merge cells from gridB into gridA
   const nuGrid = TableMerge.merge(
@@ -80,7 +80,7 @@ const suite = function (
   gridA: () => Structs.ElementNew[][],
   gridB: () => Structs.ElementNew[][],
   generator: () => SimpleGenerators,
-  comparator: (a: Element, b: Element) => boolean,
+  comparator: (a: SugarElement, b: SugarElement) => boolean,
   expectedMeasure: {rowDelta: number; colDelta: number },
   expectedTailor: Structs.ElementNew[][],
   expectedMergeGrids: Structs.ElementNew[][]

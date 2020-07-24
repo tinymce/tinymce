@@ -5,26 +5,26 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Element } from '@ephox/dom-globals';
 import { Arr, Fun } from '@ephox/katamari';
-import * as Parents from '../dom/Parents';
-import { Element, Compare } from '@ephox/sugar';
-import { CaretPosition } from './CaretPosition';
-import * as CaretFinder from './CaretFinder';
+import { Compare, SugarElement } from '@ephox/sugar';
 import * as ElementType from '../dom/ElementType';
-import { isInSameBlock } from './CaretUtils';
-import { Element as DomElement } from '@ephox/dom-globals';
+import * as Parents from '../dom/Parents';
+import * as CaretFinder from './CaretFinder';
+import { CaretPosition } from './CaretPosition';
 import { isEmptyText } from './CaretPositionPredicates';
+import { isInSameBlock } from './CaretUtils';
 
-const navigateIgnoreEmptyTextNodes = (forward: boolean, root: DomElement, from: CaretPosition) => CaretFinder.navigateIgnore(forward, root, from, isEmptyText);
+const navigateIgnoreEmptyTextNodes = (forward: boolean, root: Element, from: CaretPosition) => CaretFinder.navigateIgnore(forward, root, from, isEmptyText);
 
-const getClosestBlock = (root: Element, pos: CaretPosition) => Arr.find(Parents.parentsAndSelf(Element.fromDom(pos.container()), root), ElementType.isBlock);
+const getClosestBlock = (root: SugarElement, pos: CaretPosition) => Arr.find(Parents.parentsAndSelf(SugarElement.fromDom(pos.container()), root), ElementType.isBlock);
 
-const isAtBeforeAfterBlockBoundary = (forward: boolean, root: Element, pos: CaretPosition) => navigateIgnoreEmptyTextNodes(forward, root.dom(), pos).forall((newPos) => getClosestBlock(root, pos).fold(
+const isAtBeforeAfterBlockBoundary = (forward: boolean, root: SugarElement, pos: CaretPosition) => navigateIgnoreEmptyTextNodes(forward, root.dom(), pos).forall((newPos) => getClosestBlock(root, pos).fold(
   () => isInSameBlock(newPos, pos, root.dom()) === false,
-  (fromBlock) => isInSameBlock(newPos, pos, root.dom()) === false && Compare.contains(fromBlock, Element.fromDom(newPos.container()))
+  (fromBlock) => isInSameBlock(newPos, pos, root.dom()) === false && Compare.contains(fromBlock, SugarElement.fromDom(newPos.container()))
 ));
 
-const isAtBlockBoundary = (forward: boolean, root: Element, pos: CaretPosition) => getClosestBlock(root, pos).fold(
+const isAtBlockBoundary = (forward: boolean, root: SugarElement, pos: CaretPosition) => getClosestBlock(root, pos).fold(
   () => navigateIgnoreEmptyTextNodes(forward, root.dom(), pos).forall((newPos) => isInSameBlock(newPos, pos, root.dom()) === false),
   (parent) => navigateIgnoreEmptyTextNodes(forward, parent.dom(), pos).isNone()
 );

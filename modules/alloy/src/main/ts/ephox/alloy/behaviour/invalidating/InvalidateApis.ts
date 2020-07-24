@@ -1,8 +1,8 @@
 import { Arr, Future, Result } from '@ephox/katamari';
-import { Attr, Class, Element, Html, Node } from '@ephox/sugar';
+import { Attribute, Class, Html, SugarElement, SugarNode } from '@ephox/sugar';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
-import { Stateless } from '../../behaviour/common/BehaviourState';
+import { Stateless } from '../common/BehaviourState';
 import { InvalidatingConfig } from './InvalidateTypes';
 
 const ariaElements = [
@@ -10,8 +10,8 @@ const ariaElements = [
   'textarea'
 ];
 
-const isAriaElement = (elem: Element) => {
-  const name = Node.name(elem);
+const isAriaElement = (elem: SugarElement) => {
+  const name = SugarNode.name(elem);
   return Arr.contains(ariaElements, name);
 };
 
@@ -20,7 +20,7 @@ const markValid = (component: AlloyComponent, invalidConfig: InvalidatingConfig)
   Class.remove(elem, invalidConfig.invalidClass);
   invalidConfig.notify.each((notifyInfo) => {
     if (isAriaElement(component.element())) {
-      Attr.set(component.element(), 'aria-invalid', false);
+      Attribute.set(component.element(), 'aria-invalid', false);
     }
     notifyInfo.getContainer(component).each((container) => {
       Html.set(container, notifyInfo.validHtml);
@@ -35,7 +35,7 @@ const markInvalid = (component: AlloyComponent, invalidConfig: InvalidatingConfi
   Class.add(elem, invalidConfig.invalidClass);
   invalidConfig.notify.each((notifyInfo) => {
     if (isAriaElement(component.element())) {
-      Attr.set(component.element(), 'aria-invalid', true);
+      Attribute.set(component.element(), 'aria-invalid', true);
     }
     notifyInfo.getContainer(component).each((container) => {
       // TODO: Should we just use Text here, not HTML?

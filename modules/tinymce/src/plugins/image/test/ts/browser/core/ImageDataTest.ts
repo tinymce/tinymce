@@ -1,13 +1,13 @@
 import { ApproxStructure, Assertions, Chain, Guard, Log, Pipeline, Step } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr, Obj } from '@ephox/katamari';
-import { Element, Html, Node, SelectorFind } from '@ephox/sugar';
+import { Html, SelectorFind, SugarElement, SugarNode } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import { create, defaultData, getStyleValue, ImageData, isFigure, isImage, read, write } from 'tinymce/plugins/image/core/ImageData';
 
 UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success, failure) => {
   const cSetHtml = (html: string) => Chain.control(
-    Chain.op(function (elm: Element) {
+    Chain.op(function (elm: SugarElement) {
       Html.set(elm, html);
     }),
     Guard.addLogging('Set html')
@@ -25,12 +25,12 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
   };
 
   const cCreate = (data: ImageData) => Chain.control(
-    Chain.inject(Element.fromDom(create(normalizeCss, data))),
+    Chain.inject(SugarElement.fromDom(create(normalizeCss, data))),
     Guard.addLogging(`Create ${data}`)
   );
   const cReadFromImage = Chain.control(
-    Chain.mapper(function (elm: Element) {
-      const img = Node.name(elm) === 'img' ? elm : SelectorFind.descendant(elm, 'img').getOrDie('failed to find image');
+    Chain.mapper(function (elm: SugarElement) {
+      const img = SugarNode.name(elm) === 'img' ? elm : SelectorFind.descendant(elm, 'img').getOrDie('failed to find image');
       return { model: read(normalizeCss, img.dom()), image: img, parent: elm };
     }),
     Guard.addLogging('Read from image')
@@ -320,7 +320,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
       })),
       cAssertImage
     ]),
-    Chain.asStep(Element.fromTag('div'), Log.chains('TBA', 'Image: Read/write model to simple image without change', [
+    Chain.asStep(SugarElement.fromTag('div'), Log.chains('TBA', 'Image: Read/write model to simple image without change', [
       cSetHtml('<img src="some.gif">'),
       cReadFromImage,
       cAssertModel({
@@ -365,7 +365,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
         });
       }))
     ])),
-    Chain.asStep(Element.fromTag('div'), Log.chains('TBA', 'Image: Read/write model to complex image without change', [
+    Chain.asStep(SugarElement.fromTag('div'), Log.chains('TBA', 'Image: Read/write model to complex image without change', [
       cSetHtml('<img src="some.gif" class="class" width="100" height="200" style="margin: 1px 2px; border: 1px solid red" alt="alt" title="title">'),
       cReadFromImage,
       cAssertModel({
@@ -410,7 +410,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
         });
       }))
     ])),
-    Chain.asStep(Element.fromTag('div'), Log.chains('TBA', 'Image: Read/write model to simple image with changes', [
+    Chain.asStep(SugarElement.fromTag('div'), Log.chains('TBA', 'Image: Read/write model to simple image with changes', [
       cSetHtml('<img src="some.gif">'),
       cReadFromImage,
       cUpdateModel({
@@ -455,7 +455,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
         });
       }))
     ])),
-    Chain.asStep(Element.fromTag('div'), Log.chains('TBA', 'Image: Read/write model to complex image with changes', [
+    Chain.asStep(SugarElement.fromTag('div'), Log.chains('TBA', 'Image: Read/write model to complex image with changes', [
       cSetHtml('<img src="some.gif" class="class" width="100" height="200" style="margin: 1px 2px; border: 1px solid red" alt="alt" title="title">'),
       cReadFromImage,
       cUpdateModel({
@@ -500,7 +500,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
         });
       }))
     ])),
-    Chain.asStep(Element.fromTag('div'), Log.chains('TBA', 'Image: write null as alt will remove the attribute', [
+    Chain.asStep(SugarElement.fromTag('div'), Log.chains('TBA', 'Image: write null as alt will remove the attribute', [
       cSetHtml('<img src="some.gif" alt="alt">'),
       cReadFromImage,
       cUpdateModel({
@@ -532,7 +532,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
         });
       }))
     ])),
-    Chain.asStep(Element.fromTag('div'), Log.chains('TBA', 'Image: Toggle caption on', [
+    Chain.asStep(SugarElement.fromTag('div'), Log.chains('TBA', 'Image: Toggle caption on', [
       cSetHtml('<img src="some.gif">'),
       cReadFromImage,
       cUpdateModel({
@@ -567,7 +567,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
         });
       }))
     ])),
-    Chain.asStep(Element.fromTag('div'), Log.chains('TBA', 'Image: Toggle caption off', [
+    Chain.asStep(SugarElement.fromTag('div'), Log.chains('TBA', 'Image: Toggle caption off', [
       cSetHtml('<figure class="image" contenteditable="false"><img src="some.gif"><figcaption contenteditable="true">Caption</figcaption></figure>'),
       cReadFromImage,
       cUpdateModel({
@@ -586,7 +586,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
         });
       }))
     ])),
-    Chain.asStep(Element.fromTag('div'), Log.chains('TBA', 'Image: Update figure image data', [
+    Chain.asStep(SugarElement.fromTag('div'), Log.chains('TBA', 'Image: Update figure image data', [
       cSetHtml('<figure class="image" contenteditable="false"><img src="some.gif"><figcaption contenteditable="true">Caption</figcaption></figure>'),
       cReadFromImage,
       cUpdateModel({
@@ -621,7 +621,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
         });
       }))
     ])),
-    Chain.asStep(Element.fromTag('div'), Log.chains('TBA', 'Image: Read/write model to image with style size without change', [
+    Chain.asStep(SugarElement.fromTag('div'), Log.chains('TBA', 'Image: Read/write model to image with style size without change', [
       cSetHtml('<img src="some.gif" style="width: 100px; height: 200px">'),
       cReadFromImage,
       cAssertModel({
@@ -667,7 +667,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
         });
       }))
     ])),
-    Chain.asStep(Element.fromTag('div'), Log.chains('TBA', 'Image: Read/write model to image with style size with size change', [
+    Chain.asStep(SugarElement.fromTag('div'), Log.chains('TBA', 'Image: Read/write model to image with style size with size change', [
       cSetHtml('<img src="some.gif" style="width: 100px; height: 200px">'),
       cReadFromImage,
       cAssertModel({

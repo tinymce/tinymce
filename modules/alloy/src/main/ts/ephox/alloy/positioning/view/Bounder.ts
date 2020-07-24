@@ -1,4 +1,5 @@
 import { Adt, Arr, Fun, Num } from '@ephox/katamari';
+
 import * as Boxes from '../../alien/Boxes';
 import { Bubble } from '../layout/Bubble';
 import * as Direction from '../layout/Direction';

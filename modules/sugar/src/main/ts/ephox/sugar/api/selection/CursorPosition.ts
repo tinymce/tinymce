@@ -1,20 +1,20 @@
-import { ChildNode, Node as DomNode } from '@ephox/dom-globals';
+import { ChildNode, Node } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
-import Element from '../node/Element';
+import { SugarElement } from '../node/SugarElement';
 import * as PredicateFind from '../search/PredicateFind';
 import * as Traverse from '../search/Traverse';
 import * as Awareness from './Awareness';
 
-const first = (element: Element<DomNode>) => PredicateFind.descendant(element, Awareness.isCursorPosition);
+const first = (element: SugarElement<Node>) => PredicateFind.descendant(element, Awareness.isCursorPosition);
 
-const last = (element: Element<DomNode>) => descendantRtl(element, Awareness.isCursorPosition);
+const last = (element: SugarElement<Node>) => descendantRtl(element, Awareness.isCursorPosition);
 
 // Note, sugar probably needs some RTL traversals.
 const descendantRtl: {
-  <T extends DomNode = DomNode>(scope: Element<DomNode>, predicate: (e: Element<DomNode>) => e is Element<T>): Option<Element<T & ChildNode>>;
-  (scope: Element<DomNode>, predicate: (e: Element<DomNode>) => boolean): Option<Element<DomNode & ChildNode>>;
-} = (scope: Element<DomNode>, predicate: (e: Element<DomNode>) => boolean): Option<Element<DomNode & ChildNode>> => {
-  const descend = (element: Element<DomNode>): Option<Element<DomNode & ChildNode>> => {
+  <T extends Node = Node>(scope: SugarElement<Node>, predicate: (e: SugarElement<Node>) => e is SugarElement<T>): Option<SugarElement<T & ChildNode>>;
+  (scope: SugarElement<Node>, predicate: (e: SugarElement<Node>) => boolean): Option<SugarElement<Node & ChildNode>>;
+} = (scope: SugarElement<Node>, predicate: (e: SugarElement<Node>) => boolean): Option<SugarElement<Node & ChildNode>> => {
+  const descend = (element: SugarElement<Node>): Option<SugarElement<Node & ChildNode>> => {
     const children = Traverse.children(element);
     for (let i = children.length - 1; i >= 0; i--) {
       const child = children[i];
@@ -27,7 +27,7 @@ const descendantRtl: {
       }
     }
 
-    return Option.none<Element<DomNode & ChildNode>>();
+    return Option.none<SugarElement<Node & ChildNode>>();
   };
 
   return descend(scope);

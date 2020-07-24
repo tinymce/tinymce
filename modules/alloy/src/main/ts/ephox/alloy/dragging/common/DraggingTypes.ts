@@ -1,6 +1,6 @@
 import { Event } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
-import { Element, EventArgs, Position } from '@ephox/sugar';
+import { EventArgs, SugarElement, SugarPosition } from '@ephox/sugar';
 
 import { Bounds } from '../../alien/Boxes';
 import * as Behaviour from '../../api/behaviour/Behaviour';
@@ -30,14 +30,14 @@ export type OutputCoords = (x: Option<number>, y: Option<number>) => CoordAdt;
 
 export interface SnapConfig<E> {
   readonly sensor: CoordAdt;
-  readonly range: Position;
+  readonly range: SugarPosition;
   readonly output: CoordAdt<Option<number>>;
   readonly extra: Option<E>;
 }
 
 export interface SnapConfigSpec<E> {
   readonly sensor: CoordAdt;
-  readonly range: Position;
+  readonly range: SugarPosition;
   readonly output: CoordAdt<Option<number>>;
   readonly extra?: E;
 }
@@ -71,11 +71,11 @@ export interface SnapsConfigSpec<E> {
 }
 
 export interface DraggingConfig<E> {
-  readonly getTarget: (comp: Element) => Element;
+  readonly getTarget: (comp: SugarElement) => SugarElement;
   readonly snaps: Option<SnapsConfig<E>>;
-  readonly onDrop: (comp: AlloyComponent, target: Element) => void;
+  readonly onDrop: (comp: AlloyComponent, target: SugarElement) => void;
   readonly repositionTarget: boolean;
-  readonly onDrag: (comp: AlloyComponent, target: Element, delta: Position) => void;
+  readonly onDrag: (comp: AlloyComponent, target: SugarElement, delta: SugarPosition) => void;
   readonly getBounds: () => Bounds;
   readonly blockerClass: string;
   readonly dragger: {
@@ -85,10 +85,10 @@ export interface DraggingConfig<E> {
 
 export interface CommonDraggingConfigSpec<E> {
   readonly useFixed?: () => boolean;
-  readonly onDrop?: (comp: AlloyComponent, target: Element) => void;
+  readonly onDrop?: (comp: AlloyComponent, target: SugarElement) => void;
   readonly repositionTarget?: boolean;
-  readonly onDrag?: (comp: AlloyComponent, target: Element, delta: Position) => void;
-  readonly getTarget?: (elem: Element) => Element;
+  readonly onDrag?: (comp: AlloyComponent, target: SugarElement, delta: SugarPosition) => void;
+  readonly getTarget?: (elem: SugarElement) => SugarElement;
   readonly getBounds?: () => Bounds;
   readonly snaps?: SnapsConfigSpec<E>;
   readonly blockerClass: string;
@@ -114,4 +114,4 @@ export interface BaseDraggingState<T> extends BehaviourState {
   readonly reset: () => void;
 }
 
-export interface DraggingState extends BaseDraggingState<Position> { }
+export interface DraggingState extends BaseDraggingState<SugarPosition> { }

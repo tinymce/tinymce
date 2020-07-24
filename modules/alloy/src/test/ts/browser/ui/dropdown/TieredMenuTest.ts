@@ -74,12 +74,12 @@ UnitTest.asynctest('TieredMenuTest', (success, failure) => {
   ), (doc, _body, _gui, component, store) => {
     // TODO: Flesh out test.
     // const cAssertStructure = (label, expected) => {
-    //   return Chain.op((element: Element) => {
+    //   return Chain.op((element: SugarElement) => {
     //     Assertions.assertStructure(label, expected, element);
     //   });
     // };
     //
-    // const cTriggerFocusItem = Chain.op((target: Element) => {
+    // const cTriggerFocusItem = Chain.op((target: SugarElement) => {
     //   AlloyTriggers.dispatch(component, target, SystemEvents.focusItem());
     // });
     //

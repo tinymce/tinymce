@@ -1,8 +1,8 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { createFile } from 'ephox/agar/api/Files';
 import { Blob } from '@ephox/dom-globals';
-import { createFileList } from 'ephox/agar/file/FileList';
 import { Type } from '@ephox/katamari';
+import { createFile } from 'ephox/agar/api/Files';
+import { createFileList } from 'ephox/agar/file/FileList';
 
 UnitTest.test('FileListTest', () => {
   const files = createFileList([

@@ -1,38 +1,38 @@
-import { Element as DomElement, Node as DomNode } from '@ephox/dom-globals';
+import { Element, Node } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import * as ClassList from '../../impl/ClassList';
-import Element from '../node/Element';
+import { SugarElement } from '../node/SugarElement';
 import * as Class from './Class';
 
 /*
  * ClassList is IE10 minimum:
  * https://developer.mozilla.org/en-US/docs/Web/API/Element.classList
  */
-const add = (element: Element<DomElement>, classes: string[]): void => {
+const add = (element: SugarElement<Element>, classes: string[]): void => {
   Arr.each(classes, (x) => {
     Class.add(element, x);
   });
 };
 
-const remove = (element: Element<DomElement>, classes: string[]): void => {
+const remove = (element: SugarElement<Element>, classes: string[]): void => {
   Arr.each(classes, (x) => {
     Class.remove(element, x);
   });
 };
 
-const toggle = (element: Element<DomElement>, classes: string[]): void => {
+const toggle = (element: SugarElement<Element>, classes: string[]): void => {
   Arr.each(classes, (x) => {
     Class.toggle(element, x);
   });
 };
 
-const hasAll = (element: Element<DomNode>, classes: string[]): boolean =>
+const hasAll = (element: SugarElement<Node>, classes: string[]): boolean =>
   Arr.forall(classes, (clazz) => Class.has(element, clazz));
 
-const hasAny = (element: Element<DomNode>, classes: string[]): boolean =>
+const hasAny = (element: SugarElement<Node>, classes: string[]): boolean =>
   Arr.exists(classes, (clazz) => Class.has(element, clazz));
 
-const getNative = (element: Element<DomElement>): string[] => {
+const getNative = (element: SugarElement<Element>): string[] => {
   const classList = element.dom().classList;
   const r: Array<string> = new Array(classList.length);
   for (let i = 0; i < classList.length; i++) {
@@ -44,7 +44,7 @@ const getNative = (element: Element<DomElement>): string[] => {
   return r;
 };
 
-const get = (element: Element<DomElement>): string[] =>
+const get = (element: SugarElement<Element>): string[] =>
   ClassList.supports(element) ? getNative(element) : ClassList.get(element);
 
 export {

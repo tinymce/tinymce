@@ -1,5 +1,5 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { Position } from '@ephox/sugar';
+import { SugarPosition } from '@ephox/sugar';
 
 import { Bounds, bounds } from 'ephox/alloy/alien/Boxes';
 import { Bubble, BubbleInstance } from 'ephox/alloy/positioning/layout/Bubble';
@@ -28,49 +28,49 @@ UnitTest.test('BounderToolbuttonTest', () => {
   const chameleonBubble = (width: number): Bubble => {
     // no it's not a joke, this is a copy of ephox.chameleon.popup.Bubble
     const northeast = (): BubbleInstance => ({
-      offset: () => Position(-1, 1),
+      offset: () => SugarPosition(-1, 1),
       classesOn: () => [ ],
       classesOff: () => [ ]
     });
 
     const northwest = (): BubbleInstance => ({
-      offset: () => Position(width - 1, 1),
+      offset: () => SugarPosition(width - 1, 1),
       classesOn: () => [ ],
       classesOff: () => [ ]
     });
 
     const southeast = (): BubbleInstance => ({
-      offset: () => Position(-1, -2),
+      offset: () => SugarPosition(-1, -2),
       classesOn: () => [ ],
       classesOff: () => [ ]
     });
 
     const southwest = (): BubbleInstance => ({
-      offset: () => Position(width - 1, -2),
+      offset: () => SugarPosition(width - 1, -2),
       classesOn: () => [ ],
       classesOff: () => [ ]
     });
 
     const south = (): BubbleInstance => ({
-      offset: () => Position(-1, 1),
+      offset: () => SugarPosition(-1, 1),
       classesOn: () => [ ],
       classesOff: () => [ ]
     });
 
     const north = (): BubbleInstance => ({
-      offset: () => Position(-1, 1),
+      offset: () => SugarPosition(-1, 1),
       classesOn: () => [ ],
       classesOff: () => [ ]
     });
 
     const east = (): BubbleInstance => ({
-      offset: () => Position(-1, 1),
+      offset: () => SugarPosition(-1, 1),
       classesOn: () => [ ],
       classesOff: () => [ ]
     });
 
     const west = (): BubbleInstance => ({
-      offset: () => Position(-1, 1),
+      offset: () => SugarPosition(-1, 1),
       classesOn: () => [ ],
       classesOff: () => [ ]
     });

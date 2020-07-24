@@ -1,6 +1,6 @@
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { Position } from '@ephox/sugar';
+import { SugarPosition } from '@ephox/sugar';
 import Jsc from '@ephox/wrap-jsverify';
 
 import * as DragCoord from 'ephox/alloy/api/data/DragCoord';
@@ -8,11 +8,11 @@ import * as DragCoord from 'ephox/alloy/api/data/DragCoord';
 interface TestConversion {
   mode: string;
   nu: (x: number, y: number) => DragCoord.CoordAdt<number>;
-  asPoint: (coord: DragCoord.CoordAdt<number>, scroll: Position, origin: Position) => Position;
+  asPoint: (coord: DragCoord.CoordAdt<number>, scroll: SugarPosition, origin: SugarPosition) => SugarPosition;
 }
 
 UnitTest.test('DragCoordTest', () => {
-  const assertPt = (label: string, expected: Position, actual: Position) => {
+  const assertPt = (label: string, expected: SugarPosition, actual: SugarPosition) => {
     const comparing = label + '\nCoordinate Expected: (' + expected.left() + ', ' + expected.top() + ')' +
       '\nCoordinate Actual: (' + actual.left() + ', ' + actual.top() + ')';
 
@@ -29,9 +29,9 @@ UnitTest.test('DragCoordTest', () => {
   const arbPosition = (name: string) =>
     Jsc.tuple([ Jsc.integer, Jsc.integer ]).
       smap(
-        (arr: [ number, number ]) => Position(arr[0], arr[1]),
-        (pos: Position) => [ pos.left(), pos.top() ],
-        (pos: Position) => name + ': { left: ' + pos.left() + ', top: ' + pos.top() + '}'
+        (arr: [ number, number ]) => SugarPosition(arr[0], arr[1]),
+        (pos: SugarPosition) => [ pos.left(), pos.top() ],
+        (pos: SugarPosition) => name + ': { left: ' + pos.left() + ', top: ' + pos.top() + '}'
       );
 
   Jsc.property(
@@ -44,9 +44,9 @@ UnitTest.test('DragCoordTest', () => {
     (
       original: TestConversion,
       transformations: TestConversion[],
-      coord: Position,
-      scroll: Position,
-      origin: Position
+      coord: SugarPosition,
+      scroll: SugarPosition,
+      origin: SugarPosition
     ) => {
       const o = original.nu(coord.left(), coord.top());
 

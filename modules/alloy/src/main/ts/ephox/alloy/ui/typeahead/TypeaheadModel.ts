@@ -1,6 +1,6 @@
 import { HTMLInputElement } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
-import { Attr, Value } from '@ephox/sugar';
+import { Attribute, Value } from '@ephox/sugar';
 
 import { Representing } from '../../api/behaviour/Representing';
 import { AlloyComponent } from '../../api/component/ComponentApi';
@@ -18,7 +18,7 @@ const setSelectionOn = (input: AlloyComponent, f: (node: HTMLInputElement, value
   const value = Value.get(el);
   const node = el.dom() as HTMLInputElement;
   // Only do for valid input types.
-  if (Attr.get(el, 'type') !== 'number') {
+  if (Attribute.get(el, 'type') !== 'number') {
     f(node, value);
   }
 };

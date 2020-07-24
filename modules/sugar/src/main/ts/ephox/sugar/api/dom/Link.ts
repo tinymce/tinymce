@@ -1,23 +1,20 @@
-import { document, Document, HTMLLinkElement, Node as DomNode } from '@ephox/dom-globals';
-import Element from '../node/Element';
-import * as Attr from '../properties/Attr';
+import { document, Document, HTMLLinkElement, Node } from '@ephox/dom-globals';
+import { SugarElement } from '../node/SugarElement';
+import * as SugarHead from '../node/SugarHead';
+import * as Attribute from '../properties/Attribute';
 import * as Insert from './Insert';
 
-const addToHead = (doc: Element<Document>, tag: Element<DomNode>): void => {
-  /*
-   * IE9 and above per
-   * https://developer.mozilla.org/en-US/docs/Web/API/Document/head
-   */
-  const head = Element.fromDom(doc.dom().head);
+const addToHead = (doc: SugarElement<Document>, tag: SugarElement<Node>): void => {
+  const head = SugarHead.getHead(doc);
   Insert.append(head, tag);
 };
 
-const addStylesheet = (url: string, scope?: Element<Document>): Element<HTMLLinkElement> => {
-  const doc = scope || Element.fromDom(document);
+const addStylesheet = (url: string, scope?: SugarElement<Document>): SugarElement<HTMLLinkElement> => {
+  const doc = scope || SugarElement.fromDom(document);
 
-  const link = Element.fromTag('link', doc.dom()); // We really need to fix that Element API
+  const link = SugarElement.fromTag('link', doc.dom()); // We really need to fix that SugarElement API
 
-  Attr.setAll(link, {
+  Attribute.setAll(link, {
     rel: 'stylesheet',
     type: 'text/css',
     href: url

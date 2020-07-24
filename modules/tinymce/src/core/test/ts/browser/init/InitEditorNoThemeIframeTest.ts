@@ -1,8 +1,8 @@
 import { Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Element, SelectorFind, Traverse } from '@ephox/sugar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
+import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import { SelectorFind, SugarElement, Traverse } from '@ephox/sugar';
 
 UnitTest.asynctest('browser.tinymce.core.init.InitEditorNoThemeIframeTest', function (success, failure) {
 
@@ -15,13 +15,13 @@ UnitTest.asynctest('browser.tinymce.core.init.InitEditorNoThemeIframeTest', func
         tinyApis.sAssertContent('<p>a</p>')
       ])),
       Logger.t('Editor element properties', Step.sync(function () {
-        const body = Element.fromDom(document.body);
+        const body = SugarElement.fromDom(document.body);
         const targetElement = SelectorFind.descendant(body, '#' + editor.id).getOrDie('No elm');
         const editorElement = Traverse.nextSibling(targetElement).getOrDie('No elm');
 
-        Assertions.assertDomEq('Should be expected element', editorElement, Element.fromDom(editor.editorContainer));
-        Assertions.assertDomEq('Should be expected element', editorElement, Element.fromDom(editor.contentAreaContainer));
-        Assertions.assertDomEq('Should be expected element', targetElement, Element.fromDom(editor.getElement()));
+        Assertions.assertDomEq('Should be expected element', editorElement, SugarElement.fromDom(editor.editorContainer));
+        Assertions.assertDomEq('Should be expected element', editorElement, SugarElement.fromDom(editor.contentAreaContainer));
+        Assertions.assertDomEq('Should be expected element', targetElement, SugarElement.fromDom(editor.getElement()));
       }))
     ], onSuccess, onFailure);
   }, {

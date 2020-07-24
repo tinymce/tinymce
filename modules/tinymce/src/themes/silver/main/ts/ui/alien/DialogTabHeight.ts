@@ -5,11 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyComponent, AlloyEvents, Replacing, SystemEvents, TabSection, TabbarTypes } from '@ephox/alloy';
-import { Element as DomElement, window } from '@ephox/dom-globals';
+import { AlloyComponent, AlloyEvents, Replacing, SystemEvents, TabbarTypes, TabSection } from '@ephox/alloy';
+import { Element, window } from '@ephox/dom-globals';
 import { Arr, Cell, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Css, Element, Focus, Height, SelectorFind, Traverse, Width } from '@ephox/sugar';
+import { Css, Focus, Height, SelectorFind, SugarElement, Traverse, Width } from '@ephox/sugar';
 import Delay from 'tinymce/core/api/util/Delay';
 import { formResizeEvent } from '../general/FormEvents';
 
@@ -30,7 +30,7 @@ const getMaxHeight = (heights: number[]) => Arr.head(Arr.sort(heights, (a, b) =>
   }
 }));
 
-const getMaxTabviewHeight = (dialog: Element, tabview: Element, tablist: Element) => {
+const getMaxTabviewHeight = (dialog: SugarElement, tabview: SugarElement, tablist: SugarElement) => {
   const documentElement = Traverse.documentElement(dialog).dom();
   const rootElm = SelectorFind.ancestor(dialog, '.tox-dialog-wrap').getOr(dialog);
   const isFixed = Css.get(rootElm, 'position') === 'fixed';
@@ -62,7 +62,7 @@ const showTab = (allTabs: Array<Partial<TabbarTypes.TabButtonWithViewSpec>>, com
   Arr.head(allTabs).each((tab) => TabSection.showTab(comp, tab.value));
 };
 
-const setTabviewHeight = (tabview: Element<DomElement>, height: number) => {
+const setTabviewHeight = (tabview: SugarElement<Element>, height: number) => {
   // Set both height and flex-basis as some browsers don't support flex-basis. However don't set it on
   // IE 11 since it incorrectly includes margins in the flex-basis calculations so it can't be relied on.
   Css.set(tabview, 'height', height + 'px');
@@ -73,7 +73,7 @@ const setTabviewHeight = (tabview: Element<DomElement>, height: number) => {
   }
 };
 
-const updateTabviewHeight = (dialogBody: Element, tabview: Element, maxTabHeight: Cell<Option<number>>) => {
+const updateTabviewHeight = (dialogBody: SugarElement, tabview: SugarElement, maxTabHeight: Cell<Option<number>>) => {
   SelectorFind.ancestor(dialogBody, '[role="dialog"]').each((dialog) => {
     SelectorFind.descendant(dialog, '[role="tablist"]').each((tablist) => {
       maxTabHeight.get().map((height) => {
@@ -88,7 +88,7 @@ const updateTabviewHeight = (dialogBody: Element, tabview: Element, maxTabHeight
   });
 };
 
-const getTabview = (dialog: Element<DomElement>) => SelectorFind.descendant(dialog, '[role="tabpanel"]');
+const getTabview = (dialog: SugarElement<Element>) => SelectorFind.descendant(dialog, '[role="tabpanel"]');
 
 const setMode = (allTabs: Array<Partial<TabbarTypes.TabButtonWithViewSpec>>) => {
   const smartTabHeight = (() => {

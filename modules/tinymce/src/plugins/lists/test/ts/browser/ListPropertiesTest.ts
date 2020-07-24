@@ -2,7 +2,7 @@ import { Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Log, Pipel
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
-import { Body, Element, Value } from '@ephox/sugar';
+import { SugarBody, SugarElement, Value } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/lists/Plugin';
@@ -21,7 +21,7 @@ UnitTest.asynctest('tinymce.lists.browser.ListPropertiesTest', (success, failure
   ]);
 
   const sOpenDialog = (editor: Editor, tinyUi: TinyUi, contextMenuSelector: string) => {
-    const doc = Element.fromDom(document);
+    const doc = SugarElement.fromDom(document);
     return GeneralSteps.sequence([
       sOpenContextMenu(editor, tinyUi, contextMenuSelector),
       FocusTools.sTryOnSelector('Wait for the context menu to be focused', doc, contentMenuSelector),
@@ -31,7 +31,7 @@ UnitTest.asynctest('tinymce.lists.browser.ListPropertiesTest', (success, failure
   };
 
   const sUpdateStart = (currentValue: string, newValue: string) => {
-    const doc = Element.fromDom(document);
+    const doc = SugarElement.fromDom(document);
     return GeneralSteps.sequence([
       FocusTools.sIsOnSelector('Check focus is on the input field', doc, inputSelector),
       Chain.asStep(doc, [
@@ -50,7 +50,7 @@ UnitTest.asynctest('tinymce.lists.browser.ListPropertiesTest', (success, failure
     tinyUi.sSubmitDialog('[role=dialog]')
   ]);
 
-  const sAssertListPropMenuNotVisible = UiFinder.sNotExists(Body.body(), contentMenuSelector);
+  const sAssertListPropMenuNotVisible = UiFinder.sNotExists(SugarBody.body(), contentMenuSelector);
 
   TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);

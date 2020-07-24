@@ -1,8 +1,8 @@
 import { Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Element, SelectorFind, Traverse } from '@ephox/sugar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
+import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import { SelectorFind, SugarElement, Traverse } from '@ephox/sugar';
 
 UnitTest.asynctest('browser.tinymce.core.init.InitEditorNoThemeInlineTest', function (success, failure) {
 
@@ -15,15 +15,15 @@ UnitTest.asynctest('browser.tinymce.core.init.InitEditorNoThemeInlineTest', func
         tinyApis.sAssertContent('<p>a</p>')
       ])),
       Logger.t('Editor element properties', Step.sync(function () {
-        const body = Element.fromDom(document.body);
+        const body = SugarElement.fromDom(document.body);
         const targetElement = SelectorFind.descendant(body, '#' + editor.id).getOrDie('No elm');
         const nextElement = Traverse.nextSibling(targetElement);
 
         // TODO FIXME this seems like an odd exception
         Assertions.assertEq('Should be null since inline without a theme does not set editorContainer', null, editor.editorContainer);
-        Assertions.assertDomEq('Should be expected editor body element', targetElement, Element.fromDom(editor.getBody()));
-        Assertions.assertDomEq('Should be expected editor target element', targetElement, Element.fromDom(editor.getElement()));
-        Assertions.assertDomEq('Editor.contentAreaContainer should equal target element', targetElement, Element.fromDom(editor.contentAreaContainer));
+        Assertions.assertDomEq('Should be expected editor body element', targetElement, SugarElement.fromDom(editor.getBody()));
+        Assertions.assertDomEq('Should be expected editor target element', targetElement, SugarElement.fromDom(editor.getElement()));
+        Assertions.assertDomEq('Editor.contentAreaContainer should equal target element', targetElement, SugarElement.fromDom(editor.contentAreaContainer));
         Assertions.assertEq('Should be no element after target', true, nextElement.isNone());
       }))
     ], onSuccess, onFailure);

@@ -1,5 +1,5 @@
 import { Option } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 
 import { Bounds } from '../../alien/Boxes';
 import * as Behaviour from '../../api/behaviour/Behaviour';
@@ -9,7 +9,7 @@ import { AnchorSpec } from '../../positioning/mode/Anchoring';
 export interface PositioningBehaviour extends Behaviour.AlloyBehaviour<PositioningConfigSpec, PositioningConfig> {
   config: (config: PositioningConfigSpec) => Behaviour.NamedConfiguredBehaviour<PositioningConfigSpec, PositioningConfig>;
   position: (component: AlloyComponent, anchor: AnchorSpec, placee: AlloyComponent) => void;
-  positionWithin: (component: AlloyComponent, anchor: AnchorSpec, placee: AlloyComponent, boxElement: Option<Element>) => void;
+  positionWithin: (component: AlloyComponent, anchor: AnchorSpec, placee: AlloyComponent, boxElement: Option<SugarElement>) => void;
   positionWithinBounds: (component: AlloyComponent, anchor: AnchorSpec, placee: AlloyComponent, bounds: Option<Bounds>) => void;
   getMode: (component: AlloyComponent) => string;
 }

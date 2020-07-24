@@ -3,7 +3,6 @@ import { Css, Focus, Width } from '@ephox/sugar';
 
 import { Coupling } from '../api/behaviour/Coupling';
 import { Focusing } from '../api/behaviour/Focusing';
-
 import { Replacing } from '../api/behaviour/Replacing';
 import { AlloyComponent } from '../api/component/ComponentApi';
 import * as GuiFactory from '../api/component/GuiFactory';

@@ -1,6 +1,6 @@
 import { AlloyComponent, HotspotAnchorSpec } from '@ephox/alloy';
 import { Cell, Fun, Future, Option, Result } from '@ephox/katamari';
-import { Body } from '@ephox/sugar';
+import { SugarBody } from '@ephox/sugar';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 import { ApiUrlData } from 'tinymce/themes/silver/backstage/UrlInputBackstage';
 import TestProviders from './TestProviders';
@@ -22,11 +22,11 @@ export default function (sink?: AlloyComponent): UiFactoryBackstage {
         banner: hotspotAnchorFn,
         cursor: () => ({
           anchor: 'selection',
-          root: Body.body()
+          root: SugarBody.body()
         }),
         node: (elem) => ({
           anchor: 'node',
-          root: Body.body(),
+          root: SugarBody.body(),
           node: elem
         })
       },

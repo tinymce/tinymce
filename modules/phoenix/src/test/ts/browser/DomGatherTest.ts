@@ -1,23 +1,23 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr, Option } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import * as DomGather from 'ephox/phoenix/api/dom/DomGather';
 import { Page } from '../module/ephox/phoenix/test/Page';
 
 UnitTest.test('DomGatherTest', function () {
   const page = Page();
 
-  const is = function (x: Element) {
-    return function (e: Element) {
+  const is = function (x: SugarElement) {
+    return function (e: SugarElement) {
       return e.dom() === x.dom();
     };
   };
 
   interface CheckItem {
-    seek: (element: Element, predicate: (e: Element) => boolean, isRoot: (e: Element) => boolean) => Option<Element>;
-    element: Element;
-    predicate: (e: Element) => boolean;
-    expected: Element;
+    seek: (element: SugarElement, predicate: (e: SugarElement) => boolean, isRoot: (e: SugarElement) => boolean) => Option<SugarElement>;
+    element: SugarElement;
+    predicate: (e: SugarElement) => boolean;
+    expected: SugarElement;
   }
 
   const check = function (spec: CheckItem) {

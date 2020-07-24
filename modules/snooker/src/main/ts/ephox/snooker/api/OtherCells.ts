@@ -1,13 +1,13 @@
 import { HTMLTableElement } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import { onCells, TargetSelection, toDetailList } from '../model/RunOperation';
 import * as Transitions from '../model/Transitions';
 import { Warehouse } from '../model/Warehouse';
 import { Generators } from './Generators';
 import { DetailExt, RowCells } from './Structs';
 
-const getUpOrLeftCells = (grid: RowCells[], selectedCells: DetailExt[], generators: Generators): Element[] => {
+const getUpOrLeftCells = (grid: RowCells[], selectedCells: DetailExt[], generators: Generators): SugarElement[] => {
   // Get rows up or at the row of the bottom right cell
   const upGrid = grid.slice(0, selectedCells[selectedCells.length - 1].row() + 1);
   const upDetails = toDetailList(upGrid, generators);
@@ -18,7 +18,7 @@ const getUpOrLeftCells = (grid: RowCells[], selectedCells: DetailExt[], generato
   });
 };
 
-const getDownOrRightCells = (grid: RowCells[], selectedCells: DetailExt[], generators: Generators): Element[] => {
+const getDownOrRightCells = (grid: RowCells[], selectedCells: DetailExt[], generators: Generators): SugarElement[] => {
   // Get rows down or at the row of the top left cell (including rowspans)
   const downGrid = grid.slice(selectedCells[0].row() + selectedCells[0].rowspan() - 1, grid.length);
   const downDetails = toDetailList(downGrid, generators);
@@ -29,7 +29,7 @@ const getDownOrRightCells = (grid: RowCells[], selectedCells: DetailExt[], gener
   });
 };
 
-const getOtherCells = (table: Element<HTMLTableElement>, target: TargetSelection, generators: Generators) => {
+const getOtherCells = (table: SugarElement<HTMLTableElement>, target: TargetSelection, generators: Generators) => {
   const house = Warehouse.fromTable(table);
   const details = onCells(house, target);
   return details.map(function (selectedCells) {

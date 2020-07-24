@@ -3,18 +3,18 @@ import * as Compare from 'ephox/sugar/api/dom/Compare';
 import * as Hierarchy from 'ephox/sugar/api/dom/Hierarchy';
 import * as Insert from 'ephox/sugar/api/dom/Insert';
 import * as InsertAll from 'ephox/sugar/api/dom/InsertAll';
-import Element from 'ephox/sugar/api/node/Element';
+import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
 
 UnitTest.test('HierarchyTest', () => {
-  const div = Element.fromTag('div');
-  const p1 = Element.fromTag('p');
-  const p2 = Element.fromTag('p');
-  const p1text = Element.fromText('One');
-  const p1textb = Element.fromText(', two');
-  const p1span = Element.fromTag('span');
-  const p1span1 = Element.fromText('cat');
-  const p1span2 = Element.fromText(' dog ');
-  const p2br = Element.fromTag('br');
+  const div = SugarElement.fromTag('div');
+  const p1 = SugarElement.fromTag('p');
+  const p2 = SugarElement.fromTag('p');
+  const p1text = SugarElement.fromText('One');
+  const p1textb = SugarElement.fromText(', two');
+  const p1span = SugarElement.fromTag('span');
+  const p1span1 = SugarElement.fromText('cat');
+  const p1span2 = SugarElement.fromText(' dog ');
+  const p2br = SugarElement.fromTag('br');
 
   InsertAll.append(div, [ p1, p2 ]);
   InsertAll.append(p1, [ p1text, p1textb, p1span ]);

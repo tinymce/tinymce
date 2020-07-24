@@ -7,18 +7,18 @@
 
 import { Node } from '@ephox/dom-globals';
 import { Arr, Fun, Option } from '@ephox/katamari';
-import { Element, Selectors } from '@ephox/sugar';
+import { Selectors, SugarElement } from '@ephox/sugar';
+import DOMUtils from '../api/dom/DOMUtils';
+import Editor from '../api/Editor';
+import * as Settings from '../api/Settings';
 import * as CaretContainer from '../caret/CaretContainer';
 import CaretPosition from '../caret/CaretPosition';
 import * as CaretUtils from '../caret/CaretUtils';
-import DOMUtils from '../api/dom/DOMUtils';
 import * as NodeType from '../dom/NodeType';
 import * as Bidi from '../text/Bidi';
-import Editor from '../api/Editor';
-import * as Settings from '../api/Settings';
 
 const isInlineTarget = (editor: Editor, elm: Node): boolean =>
-  Selectors.is(Element.fromDom(elm), Settings.getInlineBoundarySelector(editor));
+  Selectors.is(SugarElement.fromDom(elm), Settings.getInlineBoundarySelector(editor));
 
 const isRtl = (element: Node) =>
   DOMUtils.DOM.getStyle(element, 'direction', true) === 'rtl' || Bidi.hasStrongRtl(element.textContent);

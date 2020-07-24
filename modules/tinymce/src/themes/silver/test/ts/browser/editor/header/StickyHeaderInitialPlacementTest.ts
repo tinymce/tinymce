@@ -1,7 +1,7 @@
 import { Chain, Log, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Editor as McEditor, TinyApis } from '@ephox/mcagar';
-import { Body } from '@ephox/sugar';
+import { SugarBody } from '@ephox/sugar';
 import { ToolbarLocation } from 'tinymce/themes/silver/api/Settings';
 import Theme from 'tinymce/themes/silver/Theme';
 import * as StickyUtils from '../../../module/StickyHeaderUtils';
@@ -12,7 +12,7 @@ UnitTest.asynctest('browser.tinymce.themes.silver.editor.header.StickyHeaderInit
   const sTestStickyHeader = (toolbarLocation: ToolbarLocation, height: number, expectDocked: boolean) => {
     const isToolbarTop = toolbarLocation === ToolbarLocation.top;
 
-    return Chain.asStep(Body.body(), [
+    return Chain.asStep(SugarBody.body(), [
       McEditor.cFromSettings({
         theme: 'silver',
         base_url: '/project/tinymce/js/tinymce',

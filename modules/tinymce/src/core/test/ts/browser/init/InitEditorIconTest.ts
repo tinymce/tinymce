@@ -1,10 +1,10 @@
-import { Assertions, Pipeline, UiFinder, Log } from '@ephox/agar';
+import { Assertions, Log, Pipeline, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyLoader } from '@ephox/mcagar';
-import { Body } from '@ephox/sugar';
-import Theme from 'tinymce/themes/silver/Theme';
-import IconManager from 'tinymce/core/api/IconManager';
+import { SugarBody } from '@ephox/sugar';
 import { getAll as getDefaultIcons } from '@tinymce/oxide-icons-default';
+import IconManager from 'tinymce/core/api/IconManager';
+import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.core.init.InitEditorIconTest', (success, failure) => {
   Theme();
@@ -24,7 +24,7 @@ UnitTest.asynctest('browser.tinymce.core.init.InitEditorIconTest', (success, fai
 
     Pipeline.async({}, [
       Log.stepsAsStep('TBA', 'Should have been able to load custom icon pack', [
-        UiFinder.sNotExists(Body.body(), '.tox-notification'),
+        UiFinder.sNotExists(SugarBody.body(), '.tox-notification'),
         Assertions.sAssertEq('IconManager should have custom icon pack', customIconPack, IconManager.get('custom'))
       ]),
       Log.stepsAsStep('TBA', 'Icon overrides', [

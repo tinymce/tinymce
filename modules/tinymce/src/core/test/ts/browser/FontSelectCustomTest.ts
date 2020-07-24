@@ -3,14 +3,14 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { Fun, Strings } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Element, TextContent } from '@ephox/sugar';
+import { SugarElement, TextContent } from '@ephox/sugar';
 import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.core.FontSelectCustomTest', function (success, failure) {
   Theme();
 
   const sAssertSelectBoxDisplayValue = function (editor, title, expectedValue) {
-    return Chain.asStep(Element.fromDom(document.body), [
+    return Chain.asStep(SugarElement.fromDom(document.body), [
       UiFinder.cFindIn('*[title="' + title + '"]'),
       Chain.mapper(Fun.compose(Strings.trim, TextContent.get)),
       Assertions.cAssertEq('Should be the expected display value', expectedValue)

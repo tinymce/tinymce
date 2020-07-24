@@ -1,9 +1,9 @@
 import { Logger } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Option } from '@ephox/katamari';
+
 import { CompositeSketchDetail } from 'ephox/alloy/api/ui/Sketcher';
 import { ConfiguredPart } from 'ephox/alloy/parts/AlloyParts';
-
 import * as UiSubstitutes from 'ephox/alloy/spec/UiSubstitutes';
 
 interface SubstitutedPart extends ConfiguredPart {

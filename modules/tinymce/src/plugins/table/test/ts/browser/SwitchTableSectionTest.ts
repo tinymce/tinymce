@@ -1,7 +1,7 @@
 import { Chain, Log, Pipeline, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { ApiChains, Editor as McEditor } from '@ephox/mcagar';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import * as TableSections from 'tinymce/plugins/table/core/TableSections';
 import Plugin from 'tinymce/plugins/table/Plugin';
@@ -12,7 +12,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.SwitchTableSectionTest', (succ
   SilverTheme();
 
   const cSwitchSection = (rowSelector: string, newSectionType: string) => Chain.op((editor: Editor) => {
-    const row = UiFinder.findIn(Element.fromDom(editor.getBody()), rowSelector).getOrDie();
+    const row = UiFinder.findIn(SugarElement.fromDom(editor.getBody()), rowSelector).getOrDie();
     TableSections.switchSectionType(editor, row.dom(), newSectionType);
   });
 

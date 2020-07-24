@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Text as DomText } from '@ephox/dom-globals';
+import { Text } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
-import { Element, Text } from '@ephox/sugar';
+import { SugarElement, SugarText } from '@ephox/sugar';
 import { Pattern, Position, TextMatch } from './Types';
 
 interface IndexedTextMatch extends TextMatch {
@@ -38,10 +38,10 @@ const find = (text: string, pattern: Pattern, start = 0, finish = text.length): 
   return results;
 };
 
-const extract = (elements: Element<DomText>[], matches: Position[]): TextMatch[][] => {
+const extract = (elements: SugarElement<Text>[], matches: Position[]): TextMatch[][] => {
   // Walk over each text node and compare with the matches
   const nodePositions = Arr.foldl(elements, (acc, element) => {
-    const content = Text.get(element);
+    const content = SugarText.get(element);
     const start = acc.last;
     const finish = start + content.length;
 

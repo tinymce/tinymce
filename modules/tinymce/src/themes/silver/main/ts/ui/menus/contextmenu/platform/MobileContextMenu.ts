@@ -2,7 +2,7 @@ import { AlloyComponent, Bubble, InlineView, Layout, LayoutInside, MaxHeight, Ma
 import { MouseEvent, TouchEvent } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Selection, WindowSelection } from '@ephox/sugar';
+import { SimSelection, WindowSelection } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
@@ -43,7 +43,7 @@ const isTouchWithinSelection = (editor: Editor, e: EditorEvent<TouchEvent>) => {
   } else {
     const touch = e.touches[0];
     const rng = selection.getRng();
-    const rngRectOpt = WindowSelection.getFirstRect(editor.getWin(), Selection.domRange(rng));
+    const rngRectOpt = WindowSelection.getFirstRect(editor.getWin(), SimSelection.domRange(rng));
     return rngRectOpt.exists((rngRect) => rngRect.left() <= touch.clientX &&
       rngRect.right() >= touch.clientX &&
       rngRect.top() <= touch.clientY &&

@@ -1,23 +1,25 @@
 import { Arr } from '@ephox/katamari';
 
-import * as AddEventsBehaviour from '../../api/behaviour/AddEventsBehaviour';
-import { Coupling } from '../../api/behaviour/Coupling';
-import * as SketchBehaviours from '../../api/component/SketchBehaviours';
-import { AlloySpec } from '../../api/component/SpecTypes';
-import * as AlloyEvents from '../../api/events/AlloyEvents';
-import * as AlloyTriggers from '../../api/events/AlloyTriggers';
-import { Button } from '../../api/ui/Button';
-import { ToolbarGroup } from '../../api/ui/ToolbarGroup';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as SplitToolbarUtils from '../../toolbar/SplitToolbarUtils';
 import * as SplitSlidingToolbarSchema from '../../ui/schema/SplitSlidingToolbarSchema';
-import { SplitSlidingToolbarApis, SplitSlidingToolbarDetail, SplitSlidingToolbarSketcher, SplitSlidingToolbarSpec } from '../../ui/types/SplitSlidingToolbarTypes';
+import {
+  SplitSlidingToolbarApis, SplitSlidingToolbarDetail, SplitSlidingToolbarSketcher, SplitSlidingToolbarSpec
+} from '../../ui/types/SplitSlidingToolbarTypes';
+import * as AddEventsBehaviour from '../behaviour/AddEventsBehaviour';
+import { Coupling } from '../behaviour/Coupling';
 import { Sliding } from '../behaviour/Sliding';
 import { Toggling } from '../behaviour/Toggling';
 import { AlloyComponent } from '../component/ComponentApi';
 import * as GuiFactory from '../component/GuiFactory';
+import * as SketchBehaviours from '../component/SketchBehaviours';
+import { AlloySpec } from '../component/SpecTypes';
+import * as AlloyEvents from '../events/AlloyEvents';
+import * as AlloyTriggers from '../events/AlloyTriggers';
+import { Button } from './Button';
 import * as Sketcher from './Sketcher';
 import { Toolbar } from './Toolbar';
+import { ToolbarGroup } from './ToolbarGroup';
 import { CompositeSketchFactory } from './UiSketcher';
 
 const toggleToolbar = (toolbar: AlloyComponent, detail: SplitSlidingToolbarDetail) => {

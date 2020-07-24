@@ -1,7 +1,7 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { console } from '@ephox/dom-globals';
 import { Arr, Fun, Result } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import { SimpleGenerators } from 'ephox/snooker/api/Generators';
 import * as Structs from 'ephox/snooker/api/Structs';
 import * as Fitment from 'ephox/snooker/test/Fitment';
@@ -9,7 +9,7 @@ import * as TableMerge from 'ephox/snooker/test/TableMerge';
 
 UnitTest.test('FitmentIVTest', () => {
   const en = (fakeElement: any, isNew: boolean) =>
-    Structs.elementnew(fakeElement as Element, isNew);
+    Structs.elementnew(fakeElement as SugarElement, isNew);
 
   // Spend 5 seconds running as many iterations as we can (there are three cycles, so 15s total)
   const CYCLE_TIME = 5000;

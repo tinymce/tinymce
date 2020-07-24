@@ -5,14 +5,14 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyComponent, Memento, Replacing, Behaviour, GuiFactory, AlloyEvents, AddEventsBehaviour, Container } from '@ephox/alloy';
-import { Element, Attr, Css, Width, Height } from '@ephox/sugar';
+import { AddEventsBehaviour, AlloyComponent, AlloyEvents, Behaviour, Container, GuiFactory, Memento, Replacing } from '@ephox/alloy';
 import { Cell, Option } from '@ephox/katamari';
-import { CropRect } from './CropRect';
+import { Attribute, Css, Height, SugarElement, Width } from '@ephox/sugar';
 import Rect from 'tinymce/core/api/geom/Rect';
 import Promise from 'tinymce/core/api/util/Promise';
+import { CropRect } from './CropRect';
 
-const loadImage = (image): Promise<Element> => new Promise(function (resolve) {
+const loadImage = (image): Promise<SugarElement> => new Promise(function (resolve) {
   const loaded = function () {
     image.removeEventListener('load', loaded);
     resolve(image);
@@ -53,7 +53,7 @@ const renderImagePanel = (initialUrl: string) => {
     h: 1
   });
 
-  const repaintImg = (anyInSystem: AlloyComponent, img: Element): void => {
+  const repaintImg = (anyInSystem: AlloyComponent, img: SugarElement): void => {
     memContainer.getOpt(anyInSystem).each((panel) => {
       const zoom = zoomState.get();
 
@@ -101,7 +101,7 @@ const renderImagePanel = (initialUrl: string) => {
     });
   };
 
-  const zoomFit = (anyInSystem: AlloyComponent, img: Element): void => {
+  const zoomFit = (anyInSystem: AlloyComponent, img: SugarElement): void => {
     memContainer.getOpt(anyInSystem).each((panel) => {
       const panelW = Width.get(panel.element());
       const panelH = Height.get(panel.element());
@@ -117,9 +117,9 @@ const renderImagePanel = (initialUrl: string) => {
     });
   };
 
-  const updateSrc = (anyInSystem: AlloyComponent, url: string): Promise<Option<Element>> => {
-    const img = Element.fromTag('img');
-    Attr.set(img, 'src', url);
+  const updateSrc = (anyInSystem: AlloyComponent, url: string): Promise<Option<SugarElement>> => {
+    const img = SugarElement.fromTag('img');
+    Attribute.set(img, 'src', url);
     return loadImage(img.dom()).then(() => memContainer.getOpt(anyInSystem).map((panel) => {
       const aImg = GuiFactory.external({
         element: img

@@ -1,6 +1,6 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr, Option } from '@ephox/katamari';
-import { Body, Css, Element, Html, Insert, InsertAll, Remove } from '@ephox/sugar';
+import { Css, Html, Insert, InsertAll, Remove, SugarBody, SugarElement } from '@ephox/sugar';
 import { ResizeDirection } from 'ephox/snooker/api/ResizeDirection';
 import * as Sizes from 'ephox/snooker/api/Sizes';
 import { TableSize } from 'ephox/snooker/api/TableSize';
@@ -53,15 +53,15 @@ UnitTest.test('Table Sizes Test (fusebox)', function () {
   '</table';
 
   const generateW = function (info: string[][], totalWidth: string) {
-    const table = Element.fromTag('table');
+    const table = SugarElement.fromTag('table');
     Css.set(table, 'width', totalWidth);
-    const tbody = Element.fromTag('tbody');
+    const tbody = SugarElement.fromTag('tbody');
     const trows = Arr.map(info, function (row, r) {
-      const tr = Element.fromTag('tr');
+      const tr = SugarElement.fromTag('tr');
       const cells = Arr.map(row, function (width, c) {
-        const td = Element.fromTag('td');
+        const td = SugarElement.fromTag('td');
         Css.set(td, 'width', width);
-        Insert.append(td, Element.fromText(String.fromCharCode('A'.charCodeAt(0) + c) + r));
+        Insert.append(td, SugarElement.fromText(String.fromCharCode('A'.charCodeAt(0) + c) + r));
         return td;
       });
       InsertAll.append(tr, cells);
@@ -73,15 +73,15 @@ UnitTest.test('Table Sizes Test (fusebox)', function () {
   };
 
   const generateH = function (info: string[][], totalHeight: string) {
-    const table = Element.fromTag('table');
+    const table = SugarElement.fromTag('table');
     Css.set(table, 'height', totalHeight);
-    const tbody = Element.fromTag('tbody');
+    const tbody = SugarElement.fromTag('tbody');
     const trows = Arr.map(info, function (row, r) {
-      const tr = Element.fromTag('tr');
+      const tr = SugarElement.fromTag('tr');
       const cells = Arr.map(row, function (height, c) {
-        const td = Element.fromTag('td');
+        const td = SugarElement.fromTag('td');
         Css.set(td, 'height', height);
-        Insert.append(td, Element.fromText(String.fromCharCode('A'.charCodeAt(0) + c) + r));
+        Insert.append(td, SugarElement.fromText(String.fromCharCode('A'.charCodeAt(0) + c) + r));
         return td;
       });
       InsertAll.append(tr, cells);
@@ -105,8 +105,8 @@ UnitTest.test('Table Sizes Test (fusebox)', function () {
 
   assert.eq([[ '1px', '2px' ], [ '1px', '2px' ]], readWidth(generateW([[ '1px', '2px' ], [ '1px', '2px' ]], '3px')));
 
-  const checkWidth = function (expected: string[][], table: Element, newWidth: string) {
-    Insert.append(Body.body(), table);
+  const checkWidth = function (expected: string[][], table: SugarElement, newWidth: string) {
+    Insert.append(SugarBody.body(), table);
     Sizes.redistribute(table, Option.some(newWidth), Option.none(), ResizeDirection.ltr, TableSize.getTableSize(table));
     assert.eq(expected, readWidth(table));
     Remove.remove(table);
@@ -117,8 +117,8 @@ UnitTest.test('Table Sizes Test (fusebox)', function () {
     checkWidth(expected, table, newWidth);
   };
 
-  const checkHeight = function (expected: string[][], table: Element, newHeight: string) {
-    Insert.append(Body.body(), table);
+  const checkHeight = function (expected: string[][], table: SugarElement, newHeight: string) {
+    Insert.append(SugarBody.body(), table);
     Sizes.redistribute(table, Option.none(), Option.some(newHeight), ResizeDirection.ltr, TableSize.getTableSize(table));
     assert.eq(expected, readHeight(table));
     Remove.remove(table);
@@ -148,81 +148,81 @@ UnitTest.test('Table Sizes Test (fusebox)', function () {
     [ '140px', '40px', '40px', '140px' ],
     [ '250px', '100px', '100px' ],
     [ '150px', '150px', '150px', '150px' ]
-  ], Element.fromHtml(pixelTableHeight), '300px');
+  ], SugarElement.fromHtml(pixelTableHeight), '300px');
 
   checkHeight([
     [ '70px', '20px', '20px', '70px' ],
     [ '125px', '50px', '50px' ],
     [ '75px', '75px', '75px', '75px' ]
-  ], Element.fromHtml(pixelTableHeight), '150px');
+  ], SugarElement.fromHtml(pixelTableHeight), '150px');
 
   checkHeight([
     [ '46.7%', '13.3%', '13.3%', '46.7%' ],
     [ '83.3%', '33.3%', '33.3%' ],
     [ '50%', '50%', '50%', '50%' ]
-  ], Element.fromHtml(pixelTableHeight), '100%');
+  ], SugarElement.fromHtml(pixelTableHeight), '100%');
 
   checkHeight([
     [ '46.7%', '13.3%', '13.3%', '46.7%' ],
     [ '83.3%', '33.3%', '33.3%' ],
     [ '50%', '50%', '50%', '50%' ]
-  ], Element.fromHtml(pixelTableHeight), '150%');
+  ], SugarElement.fromHtml(pixelTableHeight), '150%');
 
   checkWidth([
     [ '10px', '30px', '20px', '25px', '15px' ],
     [ '60px', '25px', '15px' ],
     [ '40px', '60px' ],
     [ '100px' ]
-  ], Element.fromHtml(pixelTable), '100px');
+  ], SugarElement.fromHtml(pixelTable), '100px');
 
   checkWidth([
     [ '100px', '300px', '200px', '250px', '150px' ],
     [ '600px', '250px', '150px' ],
     [ '400px', '600px' ],
     [ '1000px' ]
-  ], Element.fromHtml(pixelTable), '1000px');
+  ], SugarElement.fromHtml(pixelTable), '1000px');
 
   checkWidth([
     [ '10%', '30%', '20%', '25%', '15%' ],
     [ '60%', '25%', '15%' ],
     [ '40%', '60%' ],
     [ '100%' ]
-  ], Element.fromHtml(pixelTable), '50%');
+  ], SugarElement.fromHtml(pixelTable), '50%');
 
   checkWidth([
     [ '10%', '30%', '20%', '25%', '15%' ],
     [ '60%', '25%', '15%' ],
     [ '40%', '60%' ],
     [ '100%' ]
-  ], Element.fromHtml(pixelTable), '100%');
+  ], SugarElement.fromHtml(pixelTable), '100%');
 
   checkWidth([
     [ '10%', '30%', '20%', '25%', '15%' ],
     [ '60%', '25%', '15%' ],
     [ '40%', '60%' ],
     [ '100%' ]
-  ], Element.fromHtml(percentTable), '100%');
+  ], SugarElement.fromHtml(percentTable), '100%');
 
   checkWidth([
     [ '10%', '30%', '20%', '25%', '15%' ],
     [ '60%', '25%', '15%' ],
     [ '40%', '60%' ],
     [ '100%' ]
-  ], Element.fromHtml(percentTable), '50%');
+  ], SugarElement.fromHtml(percentTable), '50%');
 
   checkWidth([
     [ '10px', '30px', '20px', '25px', '15px' ],
     [ '60px', '25px', '15px' ],
     [ '40px', '60px' ],
     [ '100px' ]
-  ], Element.fromHtml(percentTable), '100px');
+  ], SugarElement.fromHtml(percentTable), '100px');
 
   checkWidth([
     [ '30px', '90px', '60px', '75px', '45px' ],
     [ '180px', '75px', '45px' ],
     [ '120px', '180px' ],
     [ '300px' ]
-  ], Element.fromHtml(percentTable), '300px');
+  ], SugarElement.fromHtml(percentTable), '300px');
 
   styles.remove();
 });

@@ -2,7 +2,7 @@ import { Chain, FocusTools, GeneralSteps, Keyboard, Keys, Log, Logger, Pipeline,
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 
 import Tools from 'tinymce/core/api/util/Tools';
 import SearchReplacePlugin from 'tinymce/plugins/searchreplace/Plugin';
@@ -20,8 +20,8 @@ UnitTest.asynctest('browser.tinymce.plugins.searchreplace.SearchReplaceKeyboardN
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
     const tinyUi = TinyUi(editor);
-    const doc = Element.fromDom(document);
-    const body = Element.fromDom(document.body);
+    const doc = SugarElement.fromDom(document);
+    const body = SugarElement.fromDom(document.body);
 
     const sPressTab = Keyboard.sKeydown(doc, Keys.tab(), {});
     const sPressEsc = Keyboard.sKeydown(doc, Keys.escape(), {});

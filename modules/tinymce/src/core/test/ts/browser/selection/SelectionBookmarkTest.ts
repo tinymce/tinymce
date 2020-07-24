@@ -1,10 +1,10 @@
 import { Assertions, Chain, Logger, Pipeline } from '@ephox/agar';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Fun, Option } from '@ephox/katamari';
-import { Element, Hierarchy, Remove, Selection, Traverse, WindowSelection } from '@ephox/sugar';
+import { KAssert } from '@ephox/katamari-assertions';
+import { Hierarchy, Remove, SimSelection, SugarElement, Traverse, WindowSelection } from '@ephox/sugar';
 import * as SelectionBookmark from 'tinymce/core/selection/SelectionBookmark';
 import ViewBlock from '../../module/test/ViewBlock';
-import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { KAssert } from '@ephox/katamari-assertions';
 
 UnitTest.asynctest('browser.tinymce.core.selection.SelectionBookmarkTest', function (success, failure) {
 
@@ -18,8 +18,8 @@ UnitTest.asynctest('browser.tinymce.core.selection.SelectionBookmarkTest', funct
 
   const cSetSelection = function (startPath, soffset, finishPath, foffset) {
     return Chain.op(function () {
-      const sc = Hierarchy.follow(Element.fromDom(viewBlock.get()), startPath).getOrDie('invalid startPath');
-      const fc = Hierarchy.follow(Element.fromDom(viewBlock.get()), finishPath).getOrDie('invalid finishPath');
+      const sc = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), startPath).getOrDie('invalid startPath');
+      const fc = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), finishPath).getOrDie('invalid finishPath');
       const win = Traverse.defaultView(sc);
 
       WindowSelection.setExact(
@@ -30,14 +30,14 @@ UnitTest.asynctest('browser.tinymce.core.selection.SelectionBookmarkTest', funct
 
   const cGetBookmark = function (rootPath) {
     return Chain.injectThunked(function () {
-      const root = Hierarchy.follow(Element.fromDom(viewBlock.get()), rootPath).getOrDie();
+      const root = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), rootPath).getOrDie();
       return SelectionBookmark.getBookmark(root);
     });
   };
 
   const cValidateBookmark = function (rootPath) {
     return Chain.async(function (input: any, next) {
-      const root = Hierarchy.follow(Element.fromDom(viewBlock.get()), rootPath).getOrDie();
+      const root = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), rootPath).getOrDie();
 
       return input.each(function (b) {
         return next(SelectionBookmark.validate(root, b));
@@ -55,10 +55,10 @@ UnitTest.asynctest('browser.tinymce.core.selection.SelectionBookmarkTest', funct
 
   const cAssertSelection = function (startPath, startOffset, finishPath, finishOffset) {
     return Chain.op(function () {
-      const sc = Hierarchy.follow(Element.fromDom(viewBlock.get()), startPath).getOrDie();
-      const fc = Hierarchy.follow(Element.fromDom(viewBlock.get()), finishPath).getOrDie();
+      const sc = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), startPath).getOrDie();
+      const fc = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), finishPath).getOrDie();
 
-      const win = Traverse.defaultView(Element.fromDom(viewBlock.get()));
+      const win = Traverse.defaultView(SugarElement.fromDom(viewBlock.get()));
 
       const sel = WindowSelection.getExact(win.dom()).getOrDie('no selection');
 
@@ -73,21 +73,21 @@ UnitTest.asynctest('browser.tinymce.core.selection.SelectionBookmarkTest', funct
     return Chain.mapper(function (bookmark: Option<any>) {
       return bookmark
         .map(function (bm) {
-          return Selection.range(bm.start(), bm.soffset() + startPad, bm.finish(), bm.foffset() + finishPad);
+          return SimSelection.range(bm.start(), bm.soffset() + startPad, bm.finish(), bm.foffset() + finishPad);
         });
     });
   };
 
   const cDeleteElement = function (path) {
     return Chain.op(function () {
-      Hierarchy.follow(Element.fromDom(viewBlock.get()), path).each(Remove.remove);
+      Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), path).each(Remove.remove);
     });
   };
 
   const cAssertBookmark = function (startPath, startOffset, finishPath, finishOffset) {
     return Chain.op(function (input: Option<any>) {
-      const sc = Hierarchy.follow(Element.fromDom(viewBlock.get()), startPath).getOrDie();
-      const fc = Hierarchy.follow(Element.fromDom(viewBlock.get()), finishPath).getOrDie();
+      const sc = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), startPath).getOrDie();
+      const fc = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), finishPath).getOrDie();
 
       const bookmarkRng = input.getOrDie('no bookmark!');
 
@@ -100,7 +100,7 @@ UnitTest.asynctest('browser.tinymce.core.selection.SelectionBookmarkTest', funct
 
   const cSetSelectionFromBookmark = Chain.op(function (bookmark: Option<any>) {
     bookmark.each(function (b) {
-      const root = Element.fromDom(viewBlock.get());
+      const root = SugarElement.fromDom(viewBlock.get());
       const win = Traverse.defaultView(root);
 
       SelectionBookmark.validate(root, b)

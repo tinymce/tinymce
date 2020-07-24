@@ -1,6 +1,6 @@
 /* tslint:disable:no-console */
 import { console } from '@ephox/dom-globals';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 
@@ -14,7 +14,7 @@ export default function () {
       tooltip: 'Tooltip for ' + name,
       onSetup: (api) => {
         console.log('onSetup ' + name);
-        const box = Element.fromHtml('<div style="width: ' + width + 'px; background: ' + background + ';"></div>');
+        const box = SugarElement.fromHtml('<div style="width: ' + width + 'px; background: ' + background + ';"></div>');
         api.element().appendChild(box.dom());
         return () => {
           api.element().removeChild(box.dom());

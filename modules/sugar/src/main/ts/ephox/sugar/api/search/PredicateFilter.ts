@@ -1,40 +1,40 @@
-import { Node as DomNode } from '@ephox/dom-globals';
+import { Node } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
-import * as Body from '../node/Body';
-import Element from '../node/Element';
+import * as SugarBody from '../node/SugarBody';
+import { SugarElement } from '../node/SugarElement';
 import * as Traverse from './Traverse';
 
 // maybe TraverseWith, similar to traverse but with a predicate?
 
 const all: {
-  <T extends DomNode = DomNode>(predicate: (e: Element<DomNode>) => e is Element<T>): Element<T>[];
-  (predicate: (e: Element<DomNode>) => boolean): Element<DomNode>[];
-} = (predicate: (e: Element<DomNode>) => boolean) =>
-  descendants(Body.body(), predicate);
+  <T extends Node = Node>(predicate: (e: SugarElement<Node>) => e is SugarElement<T>): SugarElement<T>[];
+  (predicate: (e: SugarElement<Node>) => boolean): SugarElement<Node>[];
+} = (predicate: (e: SugarElement<Node>) => boolean) =>
+  descendants(SugarBody.body(), predicate);
 
 const ancestors: {
-  <T extends DomNode = DomNode>(scope: Element<DomNode>, predicate: (e: Element<DomNode>) => e is Element<T>, isRoot?: (e: Element<DomNode>) => boolean): Element<T>[];
-  (scope: Element<DomNode>, predicate: (e: Element<DomNode>) => boolean, isRoot?: (e: Element<DomNode>) => boolean): Element<DomNode>[];
-} = (scope: Element<DomNode>, predicate: (e: Element<DomNode>) => boolean, isRoot?: (e: Element<DomNode>) => boolean) =>
+  <T extends Node = Node>(scope: SugarElement<Node>, predicate: (e: SugarElement<Node>) => e is SugarElement<T>, isRoot?: (e: SugarElement<Node>) => boolean): SugarElement<T>[];
+  (scope: SugarElement<Node>, predicate: (e: SugarElement<Node>) => boolean, isRoot?: (e: SugarElement<Node>) => boolean): SugarElement<Node>[];
+} = (scope: SugarElement<Node>, predicate: (e: SugarElement<Node>) => boolean, isRoot?: (e: SugarElement<Node>) => boolean) =>
   Arr.filter(Traverse.parents(scope, isRoot), predicate);
 
 const siblings: {
-  <T extends DomNode = DomNode>(scope: Element<DomNode>, predicate: (e: Element<DomNode>) => e is Element<T>): Element<T>[];
-  (scope: Element<DomNode>, predicate: (e: Element<DomNode>) => boolean): Element<DomNode>[];
-} = (scope: Element<DomNode>, predicate: (e: Element<DomNode>) => boolean) =>
+  <T extends Node = Node>(scope: SugarElement<Node>, predicate: (e: SugarElement<Node>) => e is SugarElement<T>): SugarElement<T>[];
+  (scope: SugarElement<Node>, predicate: (e: SugarElement<Node>) => boolean): SugarElement<Node>[];
+} = (scope: SugarElement<Node>, predicate: (e: SugarElement<Node>) => boolean) =>
   Arr.filter(Traverse.siblings(scope), predicate);
 
 const children: {
-  <T extends DomNode = DomNode>(scope: Element<DomNode>, predicate: (e: Element<DomNode>) => e is Element<T>): Element<T>[];
-  (scope: Element<DomNode>, predicate: (e: Element<DomNode>) => boolean): Element<DomNode>[];
-} = (scope: Element<DomNode>, predicate: (e: Element<DomNode>) => boolean) =>
+  <T extends Node = Node>(scope: SugarElement<Node>, predicate: (e: SugarElement<Node>) => e is SugarElement<T>): SugarElement<T>[];
+  (scope: SugarElement<Node>, predicate: (e: SugarElement<Node>) => boolean): SugarElement<Node>[];
+} = (scope: SugarElement<Node>, predicate: (e: SugarElement<Node>) => boolean) =>
   Arr.filter(Traverse.children(scope), predicate);
 
 const descendants: {
-  <T extends DomNode = DomNode>(scope: Element<DomNode>, predicate: (e: Element<DomNode>) => e is Element<T>): Element<T>[];
-  (scope: Element<DomNode>, predicate: (e: Element<DomNode>) => boolean): Element<DomNode>[];
-} = (scope: Element<DomNode>, predicate: (e: Element<DomNode>) => boolean) => {
-  let result: Element<DomNode>[] = [];
+  <T extends Node = Node>(scope: SugarElement<Node>, predicate: (e: SugarElement<Node>) => e is SugarElement<T>): SugarElement<T>[];
+  (scope: SugarElement<Node>, predicate: (e: SugarElement<Node>) => boolean): SugarElement<Node>[];
+} = (scope: SugarElement<Node>, predicate: (e: SugarElement<Node>) => boolean) => {
+  let result: SugarElement<Node>[] = [];
 
   // Recurse.toArray() might help here
   Arr.each(Traverse.children(scope), (x) => {

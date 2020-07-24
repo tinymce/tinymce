@@ -3,9 +3,9 @@ import { Fun } from '@ephox/katamari';
 import { TransformFind } from '@ephox/sugar';
 
 import * as EventRoot from '../../alien/EventRoot';
-import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as EventHandler from '../../construct/EventHandler';
 import { EventFormat, SimulatedEvent } from '../../events/SimulatedEvent';
+import { AlloyComponent } from '../component/ComponentApi';
 import { CompositeSketchDetail } from '../ui/Sketcher';
 import * as AlloyTriggers from './AlloyTriggers';
 import * as SystemEvents from './SystemEvents';

@@ -1,21 +1,21 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { HTMLDivElement, HTMLTableElement } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
-import { Body, Css, Element, Insert, Remove } from '@ephox/sugar';
+import { Css, Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
 import * as ResizeBehaviour from 'ephox/snooker/api/ResizeBehaviour';
 import { ResizeDirection } from 'ephox/snooker/api/ResizeDirection';
-import * as Adjustments from 'ephox/snooker/resize/Adjustments';
 import { TableSize } from 'ephox/snooker/api/TableSize';
+import * as Adjustments from 'ephox/snooker/resize/Adjustments';
 
 UnitTest.test('TableAdjustmentsTest', () => {
   const preserveTable = ResizeBehaviour.preserveTable();
   const resizeTable = ResizeBehaviour.resizeTable();
 
   const boundBox = '<div style="width: 800px; height: 600px; display: block;"></div>';
-  const box = Element.fromHtml<HTMLDivElement>(boundBox);
-  Insert.append(Body.body(), box);
+  const box = SugarElement.fromHtml<HTMLDivElement>(boundBox);
+  Insert.append(SugarBody.body(), box);
 
-  const relativeTable = () => Element.fromHtml<HTMLTableElement>(`<table style="border-collapse: collapse; width: 50%;" border="1">
+  const relativeTable = () => SugarElement.fromHtml<HTMLTableElement>(`<table style="border-collapse: collapse; width: 50%;" border="1">
   <tbody>
   <tr>
   <td style="width: 25%;">a</td>
@@ -32,7 +32,7 @@ UnitTest.test('TableAdjustmentsTest', () => {
   </tbody>
   </table>`);
 
-  const pixelTable = () => Element.fromHtml<HTMLTableElement>(`<table style="border-collapse: collapse; width: 400px;" border="1">
+  const pixelTable = () => SugarElement.fromHtml<HTMLTableElement>(`<table style="border-collapse: collapse; width: 400px;" border="1">
   <tbody>
   <tr>
   <td style="width: 96.75px;">a</td>
@@ -51,9 +51,9 @@ UnitTest.test('TableAdjustmentsTest', () => {
 
   const percentageToStep = (percentage: number, width: number) => percentage / 100 * width;
   // Note: Will not work for tables with colspans or rowspans
-  const getColumnWidths = (table: Element<HTMLTableElement>) => Arr.map(table.dom().rows[0].cells, (cell) => parseFloat(Css.getRaw(Element.fromDom(cell), 'width').getOr('0')));
+  const getColumnWidths = (table: SugarElement<HTMLTableElement>) => Arr.map(table.dom().rows[0].cells, (cell) => parseFloat(Css.getRaw(SugarElement.fromDom(cell), 'width').getOr('0')));
 
-  const testAdjustWidth = (msg: string, expectedWidth: number, expectedColumnWidths: number[], table: Element<HTMLTableElement>, step: number, index: number, direction: ResizeDirection, columnSizing: ResizeBehaviour.ResizeBehaviour) => {
+  const testAdjustWidth = (msg: string, expectedWidth: number, expectedColumnWidths: number[], table: SugarElement<HTMLTableElement>, step: number, index: number, direction: ResizeDirection, columnSizing: ResizeBehaviour.ResizeBehaviour) => {
     Insert.append(box, table);
     Adjustments.adjustWidth(table, step, index, direction, columnSizing, TableSize.getTableSize(table));
 

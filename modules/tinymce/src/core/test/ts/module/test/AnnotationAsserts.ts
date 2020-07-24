@@ -2,7 +2,7 @@ import { ApproxStructure, Assertions, Step } from '@ephox/agar';
 import { Element } from '@ephox/dom-globals';
 import { Arr, Obj } from '@ephox/katamari';
 import { TinyApis } from '@ephox/mcagar';
-import { Element as SugarElement } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 
 const sAnnotate = <T> (editor: Editor, name: string, uid: string, data: { }): Step<T, T> =>

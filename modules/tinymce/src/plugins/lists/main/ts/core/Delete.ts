@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element, HTMLLIElement, Node, Range as DomRange } from '@ephox/dom-globals';
+import { Element, HTMLLIElement, Node, Range } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
-import { Compare, Element as SugarElement } from '@ephox/sugar';
+import { Compare, SugarElement } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import RangeUtils from 'tinymce/core/api/dom/RangeUtils';
 import TreeWalker from 'tinymce/core/api/dom/TreeWalker';
@@ -18,10 +18,10 @@ import * as ToggleList from '../actions/ToggleList';
 import * as Bookmark from './Bookmark';
 import * as NodeType from './NodeType';
 import * as NormalizeLists from './NormalizeLists';
-import * as Range from './Range';
+import * as ListRangeUtils from './RangeUtils';
 import * as Selection from './Selection';
 
-const findNextCaretContainer = function (editor: Editor, rng: DomRange, isForward: Boolean, root: Node): Node {
+const findNextCaretContainer = function (editor: Editor, rng: Range, isForward: Boolean, root: Node): Node {
   let node = rng.startContainer;
   const offset = rng.startOffset;
 
@@ -134,7 +134,7 @@ const mergeIntoEmptyLi = function (editor: Editor, fromLi: HTMLLIElement, toLi: 
   editor.selection.setCursorLocation(toLi);
 };
 
-const mergeForward = function (editor: Editor, rng: DomRange, fromLi: HTMLLIElement, toLi: HTMLLIElement) {
+const mergeForward = function (editor: Editor, rng: Range, fromLi: HTMLLIElement, toLi: HTMLLIElement) {
   const dom = editor.dom;
 
   if (dom.isEmpty(toLi)) {
@@ -146,7 +146,7 @@ const mergeForward = function (editor: Editor, rng: DomRange, fromLi: HTMLLIElem
   }
 };
 
-const mergeBackward = function (editor: Editor, rng: DomRange, fromLi: HTMLLIElement, toLi: HTMLLIElement) {
+const mergeBackward = function (editor: Editor, rng: Range, fromLi: HTMLLIElement, toLi: HTMLLIElement) {
   const bookmark = Bookmark.createBookmark(rng);
   mergeLiElements(editor.dom, fromLi, toLi);
   const resolvedBookmark = Bookmark.resolveBookmark(bookmark);
@@ -165,7 +165,7 @@ const backspaceDeleteFromListToListCaret = function (editor: Editor, isForward: 
       return true;
     }
 
-    const rng = Range.normalizeRange(selection.getRng());
+    const rng = ListRangeUtils.normalizeRange(selection.getRng());
     const otherLi = dom.getParent(findNextCaretContainer(editor, rng, isForward, root), 'LI', root) as HTMLLIElement;
 
     if (otherLi && otherLi !== li) {
@@ -212,7 +212,7 @@ const backspaceDeleteIntoListCaret = function (editor: Editor, isForward: boolea
   const block = dom.getParent(selectionStartElm, dom.isBlock, root);
 
   if (block && dom.isEmpty(block)) {
-    const rng = Range.normalizeRange(editor.selection.getRng());
+    const rng = ListRangeUtils.normalizeRange(editor.selection.getRng());
     const otherLi = dom.getParent(findNextCaretContainer(editor, rng, isForward, root), 'LI', root);
 
     if (otherLi) {

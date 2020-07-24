@@ -5,16 +5,16 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Behaviour, Focusing, Tabstopping, FormField, AlloyComponent } from '@ephox/alloy';
+import { AlloyComponent, Behaviour, Focusing, FormField, Tabstopping } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
 import { Cell, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Attr } from '@ephox/sugar';
+import { Attribute } from '@ephox/sugar';
+import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
+import { renderFormFieldWith, renderLabel } from '../alien/FieldLabeller';
 
 import { RepresentingConfigs } from '../alien/RepresentingConfigs';
 import * as NavigableObject from '../general/NavigableObject';
-import { renderLabel, renderFormFieldWith } from '../alien/FieldLabeller';
-import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { Omit } from '../Omit';
 
 const platformNeedsSandboxing = !(PlatformDetection.detect().browser.isIE() || PlatformDetection.detect().browser.isEdge());
@@ -35,7 +35,7 @@ const getDynamicSource = (isSandbox): IFrameSourcing => {
     setValue: (frameComponent: AlloyComponent, html: string) => {
 
       if (!isSandbox) {
-        Attr.set(frameComponent.element(), 'src', `javascript:''`);
+        Attribute.set(frameComponent.element(), 'src', `javascript:''`);
         // IE 6-11 doesn't support data uris on iframeComponents
         // and Edge only supports upto ~4000 chars in data uris
         // so I guess they will have to be less secure since we can't sandbox on those
@@ -49,7 +49,7 @@ const getDynamicSource = (isSandbox): IFrameSourcing => {
       } else {
         // TINY-3769: We need to use srcdoc here, instead of src with a data URI, otherwise browsers won't retain the Origin.
         // See https://bugs.chromium.org/p/chromium/issues/detail?id=58999#c11
-        Attr.set(frameComponent.element(), 'srcdoc', html);
+        Attribute.set(frameComponent.element(), 'srcdoc', html);
       }
       cachedValue.set(html);
     }

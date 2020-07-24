@@ -1,6 +1,6 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
-import { Element, Value } from '@ephox/sugar';
+import { SugarElement, Value } from '@ephox/sugar';
 import * as Assertions from 'ephox/agar/api/Assertions';
 import { Chain } from 'ephox/agar/api/Chain';
 import * as FocusTools from 'ephox/agar/api/FocusTools';
@@ -11,8 +11,8 @@ import * as DomContainers from 'ephox/agar/test/DomContainers';
 
 UnitTest.asynctest('FocusToolsTest', (success, failure) => {
 
-  const doc = Element.fromDom(document);
-  const docNode = Element.fromDom(document.documentElement);
+  const doc = SugarElement.fromDom(document);
+  const docNode = SugarElement.fromDom(document.documentElement);
 
   Pipeline.async({}, [
     DomContainers.mSetup,
@@ -50,7 +50,7 @@ UnitTest.asynctest('FocusToolsTest', (success, failure) => {
 
     // Check that try until not is working for sIsOn, sIsOnSelector and sTryOnSelector
     Step.control(
-      FocusTools.sIsOn('tryUntilNotCheck (sIsOn)', Element.fromTag('span')),
+      FocusTools.sIsOn('tryUntilNotCheck (sIsOn)', SugarElement.fromTag('span')),
       Guard.tryUntilNot(
         'Focus should not be on something that is not in the DOM'
       )

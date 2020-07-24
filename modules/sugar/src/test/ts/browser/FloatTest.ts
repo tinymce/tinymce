@@ -1,20 +1,20 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import * as Insert from 'ephox/sugar/api/dom/Insert';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
-import * as Body from 'ephox/sugar/api/node/Body';
-import Element from 'ephox/sugar/api/node/Element';
+import * as SugarBody from 'ephox/sugar/api/node/SugarBody';
+import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
 import * as Css from 'ephox/sugar/api/properties/Css';
 import * as Float from 'ephox/sugar/api/properties/Float';
 import MathElement from 'ephox/sugar/test/MathElement';
 
 UnitTest.test('FloatTest', () => {
-  const image = Element.fromTag('table');
+  const image = SugarElement.fromTag('table');
   const m = MathElement();
   assert.eq(null, Float.getRaw(image));
   Float.getRaw(m);
 
-  Insert.append(Body.body(), image);
-  Insert.append(Body.body(), m);
+  Insert.append(SugarBody.body(), image);
+  Insert.append(SugarBody.body(), m);
   Css.setAll(image, {
     'margin-left': 'auto',
     'margin-right': 'auto'

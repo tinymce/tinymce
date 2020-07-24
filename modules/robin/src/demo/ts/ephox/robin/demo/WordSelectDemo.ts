@@ -1,16 +1,16 @@
 import { console, document, window } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
-import { DomEvent, Element, Insert, SelectorFind } from '@ephox/sugar';
+import { DomEvent, Insert, SelectorFind, SugarElement } from '@ephox/sugar';
 import * as DomSmartSelect from 'ephox/robin/api/dom/DomSmartSelect';
 
 const ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
 
-const editor = Element.fromHtml('<div contenteditable="true" style="width: 500px; height: 300px; border: 1px solid black;">' +
+const editor = SugarElement.fromHtml('<div contenteditable="true" style="width: 500px; height: 300px; border: 1px solid black;">' +
   'This is <span style="color: red;">som</span>eth<b>ing that you should</b> see.<img src="http://www.google.com/google.jpg">The<br>dog</div>');
 
 Insert.append(ephoxUi, editor);
 
-const select = function (s: Element, so: number, f: Element, fo: number) {
+const select = function (s: SugarElement, so: number, f: SugarElement, fo: number) {
   const selection = window.getSelection();
   selection.removeAllRanges();
   const range = document.createRange();
@@ -28,9 +28,9 @@ const getSelection = function () {
     // tslint:disable-next-line:no-console
     console.log('range: ', range);
     return {
-      startContainer: Fun.constant(Element.fromDom(range.startContainer)),
+      startContainer: Fun.constant(SugarElement.fromDom(range.startContainer)),
       startOffset: Fun.constant(range.startOffset),
-      endContainer: Fun.constant(Element.fromDom(range.endContainer)),
+      endContainer: Fun.constant(SugarElement.fromDom(range.endContainer)),
       endOffset: Fun.constant(range.endOffset),
       collapsed: Fun.constant(range.collapsed)
     };

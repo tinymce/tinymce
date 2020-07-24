@@ -1,10 +1,10 @@
-import { Pipeline, Log, FocusTools, Keyboard, Keys } from '@ephox/agar';
+import { FocusTools, Keyboard, Keys, Log, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Element } from '@ephox/sugar';
 import { document } from '@ephox/dom-globals';
-import Theme from 'tinymce/themes/silver/Theme';
+import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import { SugarElement } from '@ephox/sugar';
 import HelpPlugin from 'tinymce/plugins/help/Plugin';
+import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.plugins.help.DialogKeyboardNavTest', (success, failure) => {
 
@@ -13,7 +13,7 @@ UnitTest.asynctest('browser.tinymce.plugins.help.DialogKeyboardNavTest', (succes
 
   TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
-    const doc = Element.fromDom(document);
+    const doc = SugarElement.fromDom(document);
 
     // Tab key press
     const sPressTabKey = Keyboard.sKeydown(doc, Keys.tab(), { });

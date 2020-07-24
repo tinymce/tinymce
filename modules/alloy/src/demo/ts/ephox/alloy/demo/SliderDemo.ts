@@ -1,23 +1,23 @@
 import { document } from '@ephox/dom-globals';
 import { Fun, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
+import { Class, Css, DomEvent, Insert, SugarElement } from '@ephox/sugar';
 
-import { Class, Css, DomEvent, Element, Insert } from '@ephox/sugar';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Keying } from 'ephox/alloy/api/behaviour/Keying';
 import { Replacing } from 'ephox/alloy/api/behaviour/Replacing';
 import { Toggling } from 'ephox/alloy/api/behaviour/Toggling';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as Gui from 'ephox/alloy/api/system/Gui';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { Slider } from 'ephox/alloy/api/ui/Slider';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 import { SliderValue, SliderValueX, SliderValueY } from 'ephox/alloy/ui/types/SliderTypes';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 export default (): void => {
   const gui = Gui.create();
-  const body = Element.fromDom(document.body);
+  const body = SugarElement.fromDom(document.body);
   Class.add(gui.element(), 'gui-root-demo-container');
   Insert.append(body, gui.element());
 

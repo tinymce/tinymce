@@ -2,7 +2,7 @@ import { ApproxStructure, Log, Pipeline, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyDom, TinyLoader } from '@ephox/mcagar';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
@@ -16,7 +16,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.AlignedCellRowStyleChangeTest'
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, Log.steps('TBA', 'Table: Set background color on selected table row with text-align: center', [
-      UiFinder.sWaitForVisible('waiting for editor', Element.fromDom(document.body), 'div.tox-tinymce'),
+      UiFinder.sWaitForVisible('waiting for editor', SugarElement.fromDom(document.body), 'div.tox-tinymce'),
       tinyApis.sFocus(),
       tinyApis.sSetContent(
         '<table style="border-collapse: collapse; width: 100%;" border="1">' +

@@ -1,12 +1,10 @@
-import {
-  ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Log, Pipeline, Touch, UiFinder, Waiter
-} from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Log, Pipeline, Touch, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { TinyApis, TinyDom, TinyLoader, TinyUi } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
-import { Body, Element } from '@ephox/sugar';
+import { SugarBody, SugarElement } from '@ephox/sugar';
 import ImagePlugin from 'tinymce/plugins/image/Plugin';
 import ImageToolsPlugin from 'tinymce/plugins/imagetools/Plugin';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
@@ -39,9 +37,9 @@ UnitTest.asynctest('MobileContextMenuTest', (success, failure) => {
     const tinyApis = TinyApis(editor);
     const tinyUi = TinyUi(editor);
 
-    const doc = Element.fromDom(document);
-    const dialogRoot = Body.body();
-    const editorBody = Element.fromDom(editor.getBody());
+    const doc = SugarElement.fromDom(document);
+    const dialogRoot = SugarBody.body();
+    const editorBody = SugarElement.fromDom(editor.getBody());
 
     const sOpenContextMenu = (target: string) => Chain.asStep(target, [
       Chain.inject(editorBody),
@@ -113,7 +111,7 @@ UnitTest.asynctest('MobileContextMenuTest', (success, failure) => {
       ]
     })), editorBody);
 
-    const sAssertMenuItems = (items: string[]) => Chain.asStep(Body.body(), [
+    const sAssertMenuItems = (items: string[]) => Chain.asStep(SugarBody.body(), [
       Chain.fromParent(UiFinder.cFindIn(mobileContextMenuSelector), Arr.map(items, UiFinder.cExists))
     ]);
 
@@ -149,7 +147,7 @@ UnitTest.asynctest('MobileContextMenuTest', (success, failure) => {
         ]),
         sPressEscKey,
         sOpenContextMenu('a'),
-        FocusTools.sSetFocus('focus the first menu item', Body.body(), selectors.link),
+        FocusTools.sSetFocus('focus the first menu item', SugarBody.body(), selectors.link),
         sPressDownArrowKey,
         sPressEnterKey,
         sAssertRemoveLinkHtmlStructure
@@ -165,7 +163,7 @@ UnitTest.asynctest('MobileContextMenuTest', (success, failure) => {
           selectors.tableprops,
           selectors.deletetable
         ]),
-        FocusTools.sSetFocus('focus the table props item', Body.body(), selectors.tableprops),
+        FocusTools.sSetFocus('focus the table props item', SugarBody.body(), selectors.tableprops),
         sPressEnterKey,
         sWaitForAndCloseDialog
       ]),
@@ -182,12 +180,12 @@ UnitTest.asynctest('MobileContextMenuTest', (success, failure) => {
           selectors.tableprops,
           selectors.deletetable
         ]),
-        FocusTools.sSetFocus('focus the image item', Body.body(), selectors.image),
+        FocusTools.sSetFocus('focus the image item', SugarBody.body(), selectors.image),
         sPressEnterKey,
         sWaitForAndCloseDialog,
         sOpenContextMenu('img'),
         // Navigate to the "Image tools" menu item
-        FocusTools.sSetFocus('focus the first menu item', Body.body(), selectors.link),
+        FocusTools.sSetFocus('focus the first menu item', SugarBody.body(), selectors.link),
         sRepeatDownArrowKey(2),
         sPressEnterKey,
         sWaitForAndCloseDialog

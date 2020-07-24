@@ -1,15 +1,15 @@
 // TODO: Expose properly through alloy.
-import { ApproxStructure, Assertions, Logger, Step, Waiter, Cleaner } from '@ephox/agar';
+import { ApproxStructure, Assertions, Cleaner, Logger, Step, Waiter } from '@ephox/agar';
 import { GuiFactory, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Global, Cell } from '@ephox/katamari';
-import { renderCustomEditor } from 'tinymce/themes/silver/ui/dialog/CustomEditor';
-import { RepresentingSteps } from '../../../module/ReperesentingSteps';
+import { HTMLElement } from '@ephox/dom-globals';
+import { Cell, Global } from '@ephox/katamari';
+import { Class, SugarElement } from '@ephox/sugar';
 import Resource from 'tinymce/core/api/Resource';
 import Delay from 'tinymce/core/api/util/Delay';
 import Promise from 'tinymce/core/api/util/Promise';
-import { Element, Class } from '@ephox/sugar';
-import { HTMLElement } from '@ephox/dom-globals';
+import { renderCustomEditor } from 'tinymce/themes/silver/ui/dialog/CustomEditor';
+import { RepresentingSteps } from '../../../module/ReperesentingSteps';
 
 declare const tinymce: { Resource: Resource };
 
@@ -34,7 +34,7 @@ UnitTest.asynctest('CustomEditor component Test', (success, failure) => {
     const intervalId = Delay.setInterval(() => {
       if (resolveInit.get()) {
         Delay.clearInterval(intervalId);
-        Class.add(Element.fromDom(e), 'my-custom-editor');
+        Class.add(SugarElement.fromDom(e), 'my-custom-editor');
         resolve({
           setValue(s: string) { customEditorValue.set(s); },
           getValue() { return customEditorValue.get(); },

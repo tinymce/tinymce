@@ -4,7 +4,7 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { ValueSchema } from '@ephox/boulder';
 import { DialogManager } from '@ephox/bridge';
 import { Fun, Option, Result } from '@ephox/katamari';
-import { Body } from '@ephox/sugar';
+import { SugarBody } from '@ephox/sugar';
 
 import I18n from 'tinymce/core/api/util/I18n';
 import { renderDialog } from 'tinymce/themes/silver/ui/window/SilverDialog';
@@ -103,7 +103,7 @@ UnitTest.asynctest('SilverDialog Event Test', (success, failure) => {
           }),
           Waiter.sTryUntil(
             'Waiting for blocker to disappear after clicking close',
-            UiFinder.sExists(Body.body(), '.tox-dialog-wrap')
+            UiFinder.sExists(SugarBody.body(), '.tox-dialog-wrap')
           ),
           Mouse.sClickOn(sink.element(), selector),
           store.sAssertEq('Check event sequence', sequence),

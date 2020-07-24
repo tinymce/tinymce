@@ -3,7 +3,7 @@ import { AlloyComponent, GuiFactory, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Menu, Toolbar } from '@ephox/bridge';
 import { Arr, Cell, Option } from '@ephox/katamari';
-import { Attr, Class, SelectorFind } from '@ephox/sugar';
+import { Attribute, Class, SelectorFind } from '@ephox/sugar';
 import { renderMenuButton } from 'tinymce/themes/silver/ui/button/MenuButton';
 import { renderSplitButton, renderToolbarButton, renderToolbarToggleButton } from 'tinymce/themes/silver/ui/toolbar/button/ToolbarButtons';
 import TestExtras from '../../module/TestExtras';
@@ -159,12 +159,12 @@ UnitTest.asynctest('Toolbar Buttons Test', (success, failure) => {
       });
 
       const sAssertSplitButtonDisabledState = (label: string, expected: boolean, button: AlloyComponent) => Step.sync(() => {
-        Assertions.assertEq('Checking if aria-disabled attr is present: ' + label, expected, Attr.get(button.element(), 'aria-disabled') === 'true');
+        Assertions.assertEq('Checking if aria-disabled attr is present: ' + label, expected, Attribute.get(button.element(), 'aria-disabled') === 'true');
         Assertions.assertEq('Checking if disabled class is present: ' + label, expected, Class.has(button.element(), 'tox-tbtn--disabled'));
       });
 
       const sAssertSplitButtonActiveState = (label: string, expected: boolean, button: AlloyComponent) => Step.sync(() => {
-        Assertions.assertEq(label, expected, Attr.get(button.element(), 'aria-pressed') === 'true');
+        Assertions.assertEq(label, expected, Attribute.get(button.element(), 'aria-pressed') === 'true');
       });
 
       return Arr.flatten([

@@ -1,5 +1,5 @@
 import { Fun } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 
 export interface Dimension {
   readonly width: () => number;
@@ -27,7 +27,7 @@ export interface Coords {
 }
 
 export interface Detail {
-  readonly element: () => Element;
+  readonly element: () => SugarElement;
   readonly rowspan: () => number;
   readonly colspan: () => number;
 }
@@ -49,7 +49,7 @@ export interface RowCells {
 }
 
 export interface RowData<T> {
-  readonly element: () => Element;
+  readonly element: () => SugarElement;
   readonly cells: () => T[];
   readonly section: () => Section;
 }
@@ -59,7 +59,7 @@ export interface RowDataNew<T> extends RowData<T> {
 }
 
 export interface ElementNew {
-  readonly element: () => Element;
+  readonly element: () => SugarElement;
   readonly isNew: () => boolean;
 }
 
@@ -116,7 +116,7 @@ const coords = (
 });
 
 const detail = (
-  element: Element,
+  element: SugarElement,
   rowspan: number,
   colspan: number
 ): Detail => ({
@@ -126,7 +126,7 @@ const detail = (
 });
 
 const detailnew = (
-  element: Element,
+  element: SugarElement,
   rowspan: number,
   colspan: number,
   isNew: boolean
@@ -138,7 +138,7 @@ const detailnew = (
 });
 
 const extended = (
-  element: Element,
+  element: SugarElement,
   rowspan: number,
   colspan: number,
   row: number,
@@ -152,7 +152,7 @@ const extended = (
 });
 
 const rowdata = <T> (
-  element: Element,
+  element: SugarElement,
   cells: T[],
   section: Section
 ): RowData<T> => ({
@@ -162,7 +162,7 @@ const rowdata = <T> (
 });
 
 const elementnew = (
-  element: Element,
+  element: SugarElement,
   isNew: boolean
 ): ElementNew => ({
   element: Fun.constant(element),
@@ -170,7 +170,7 @@ const elementnew = (
 });
 
 const rowdatanew = <T> (
-  element: Element,
+  element: SugarElement,
   cells: T[],
   section: Section,
   isNew: boolean

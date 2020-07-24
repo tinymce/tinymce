@@ -1,25 +1,25 @@
 import { Assertions, Chain, UiFinder, Waiter } from '@ephox/agar';
-import { Id } from '@ephox/katamari';
-import { Attr, Class, Css, Element, Insert, Remove, SelectorFind } from '@ephox/sugar';
 import { document, navigator } from '@ephox/dom-globals';
+import { Id } from '@ephox/katamari';
+import { Attribute, Class, Css, Insert, Remove, SelectorFind, SugarElement } from '@ephox/sugar';
 
 const styleClass = Id.generate('ui-test-styles');
 
 const addStyles = function () {
-  const link = Element.fromTag('link');
-  Attr.setAll(link, {
+  const link = SugarElement.fromTag('link');
+  Attribute.setAll(link, {
     rel: 'Stylesheet',
     href: '/project/tinymce/js/tinymce/skins/ui/oxide/skin.mobile.min.css',
     type: 'text/css'
   });
   Class.add(link, styleClass);
 
-  const head = Element.fromDom(document.head);
+  const head = SugarElement.fromDom(document.head);
   Insert.append(head, link);
 };
 
 const removeStyles = function () {
-  const head = Element.fromDom(document.head);
+  const head = SugarElement.fromDom(document.head);
   SelectorFind.descendant(head, '.' + styleClass).each(Remove.remove);
 };
 

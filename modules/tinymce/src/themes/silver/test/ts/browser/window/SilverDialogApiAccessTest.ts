@@ -4,7 +4,7 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { Types } from '@ephox/bridge';
 import { Cell } from '@ephox/katamari';
 import { TinyLoader } from '@ephox/mcagar';
-import { Body } from '@ephox/sugar';
+import { SugarBody } from '@ephox/sugar';
 import Delay from 'tinymce/core/api/util/Delay';
 
 import Theme from 'tinymce/themes/silver/Theme';
@@ -95,7 +95,7 @@ UnitTest.asynctest('WindowManager:simple-dialog access Test', (success, failure)
 
         Logger.t(
           'Trigger the async functions by clicking on the button',
-          Mouse.sClickOn(Body.body(), 'button:contains("Call")')
+          Mouse.sClickOn(SugarBody.body(), 'button:contains("Call")')
         ),
 
         Logger.t(

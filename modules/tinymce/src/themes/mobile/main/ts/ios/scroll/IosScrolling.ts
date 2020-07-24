@@ -6,7 +6,7 @@
  */
 
 import { Fun, Future } from '@ephox/katamari';
-import { Attr, Css, Traverse } from '@ephox/sugar';
+import { Attribute, Css, Traverse } from '@ephox/sugar';
 
 import * as Styles from '../../style/Styles';
 import * as DataAttributes from '../../util/DataAttributes';
@@ -52,7 +52,7 @@ const moveScrollAndTop = function (element, destination, finalTop) {
 const moveOnlyScroll = function (element, destination) {
   return Future.nu(function (callback) {
     const getCurrent = Fun.curry(getScrollTop, element);
-    Attr.set(element, lastScroll, getCurrent());
+    Attribute.set(element, lastScroll, getCurrent());
 
     const update = function (newScroll, abort) {
       const previous = DataAttributes.safeParse(element, lastScroll);
@@ -62,13 +62,13 @@ const moveOnlyScroll = function (element, destination) {
         abort(element.dom().scrollTop);
       } else {
         element.dom().scrollTop = newScroll;
-        Attr.set(element, lastScroll, newScroll);
+        Attribute.set(element, lastScroll, newScroll);
       }
     };
 
     const finish = function (/* dest */) {
       element.dom().scrollTop = destination;
-      Attr.set(element, lastScroll, destination);
+      Attribute.set(element, lastScroll, destination);
       callback(destination);
     };
 

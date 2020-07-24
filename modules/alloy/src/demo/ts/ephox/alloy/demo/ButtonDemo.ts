@@ -1,5 +1,5 @@
-import { document, console } from '@ephox/dom-globals';
-import { Class, Element } from '@ephox/sugar';
+import { console, document } from '@ephox/dom-globals';
+import { Class, SugarElement } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Toggling } from 'ephox/alloy/api/behaviour/Toggling';
@@ -13,7 +13,7 @@ import * as DomModification from 'ephox/alloy/dom/DomModification';
 
 export default (): void => {
   const gui = Gui.create();
-  const body = Element.fromDom(document.body);
+  const body = SugarElement.fromDom(document.body);
   Class.add(gui.element(), 'gui-root-demo-container');
   Attachment.attachSystem(body, gui);
 

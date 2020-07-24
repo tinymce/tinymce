@@ -1,5 +1,5 @@
-import { Event, Events, Bindable } from '@ephox/porkbun';
-import { Css, Location, Element } from '@ephox/sugar';
+import { Bindable, Event, Events } from '@ephox/porkbun';
+import { Css, SugarElement, SugarLocation } from '@ephox/sugar';
 
 export interface RelocateEvent {
   x: () => number;
@@ -15,9 +15,9 @@ interface RelocateEvents {
   };
 }
 
-const both = function (element: Element) {
+const both = function (element: SugarElement) {
   const mutate = function (x: number, y: number) {
-    const location = Location.absolute(element);
+    const location = SugarLocation.absolute(element);
     Css.setAll(element, {
       left: (location.left() + x) + 'px',
       top: (location.top() + y) + 'px'

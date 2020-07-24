@@ -1,14 +1,14 @@
-import { Element, SelectionDirection, Selection, SimRange } from '@ephox/sugar';
 import { Window } from '@ephox/dom-globals';
+import { SelectionDirection, SimRange, SimSelection, SugarElement } from '@ephox/sugar';
 import { Situs } from './Situs';
 
-const convertToRange = function (win: Window, selection: Selection) {
+const convertToRange = function (win: Window, selection: SimSelection) {
   // TODO: Use API packages of sugar
   const rng = SelectionDirection.asLtrRange(win, selection);
   return SimRange.create(
-    Element.fromDom(rng.startContainer),
+    SugarElement.fromDom(rng.startContainer),
     rng.startOffset,
-    Element.fromDom(rng.endContainer),
+    SugarElement.fromDom(rng.endContainer),
     rng.endOffset);
 };
 

@@ -1,18 +1,16 @@
-import {
-  Chain, Cleaner, Cursors, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Pipeline, Step, Touch, UiFinder
-} from '@ephox/agar';
+import { Chain, Cleaner, Cursors, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Pipeline, Step, Touch, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
-import { Attr, DomEvent, Element, EventArgs, Insert, Node, Remove, Text } from '@ephox/sugar';
-import { TestStore } from 'ephox/alloy/api/testhelpers/TestStore';
+import { Attribute, DomEvent, EventArgs, Insert, Remove, SugarElement, SugarNode, SugarText } from '@ephox/sugar';
 
+import { TestStore } from 'ephox/alloy/api/testhelpers/TestStore';
 import * as GuiEvents from 'ephox/alloy/events/GuiEvents';
 
 UnitTest.asynctest('GuiEventsTest', (success, failure) => {
 
   const cleanup = Cleaner();
 
-  const page = Element.fromHtml(
+  const page = SugarElement.fromHtml(
     `<div class="gui-events-test-container">
       <input class="test-input" />
       <div class="test-contenteditable"  contenteditable="true"></div>
@@ -23,8 +21,8 @@ UnitTest.asynctest('GuiEventsTest', (success, failure) => {
     </div>`
   );
 
-  const doc = Element.fromDom(document);
-  const body = Element.fromDom(document.body);
+  const doc = SugarElement.fromDom(document);
+  const body = SugarElement.fromDom(document.body);
   Insert.append(body, page);
   cleanup.add(() => Remove.remove(page));
 
@@ -33,14 +31,14 @@ UnitTest.asynctest('GuiEventsTest', (success, failure) => {
 
   const onBodyKeydown = DomEvent.bind(body, 'keydown', (evt) => {
     if (evt.raw().which === Keys.backspace()) {
-      outerStore.adder('Backspace on ' + Node.name(evt.target()) + ': preventDefault = ' + evt.raw().defaultPrevented)();
+      outerStore.adder('Backspace on ' + SugarNode.name(evt.target()) + ': preventDefault = ' + evt.raw().defaultPrevented)();
     }
   });
   cleanup.add(onBodyKeydown.unbind);
 
   const triggerEvent = (eventName: string, event: EventArgs) => {
     const target = event.target();
-    const targetValue = Node.isText(target) ? 'text(' + Text.get(target) + ')' : Attr.get(target, 'class');
+    const targetValue = SugarNode.isText(target) ? 'text(' + SugarText.get(target) + ')' : Attribute.get(target, 'class');
     store.adder({ eventName, target: targetValue })();
   };
 

@@ -5,17 +5,17 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Fun, Option } from '@ephox/katamari';
-import { Compare, Insert, InsertAll, Replication, Element, Attr, SelectorFilter } from '@ephox/sugar';
 import { HTMLTableCellElement } from '@ephox/dom-globals';
+import { Arr, Fun, Option } from '@ephox/katamari';
+import { Attribute, Compare, Insert, InsertAll, Replication, SelectorFilter, SugarElement } from '@ephox/sugar';
 
-const tableModel = (element: Element<unknown>, width: number, rows: Element<unknown>[]) => ({
+const tableModel = (element: SugarElement<unknown>, width: number, rows: SugarElement<unknown>[]) => ({
   element: Fun.constant(element),
   width: Fun.constant(width),
   rows: Fun.constant(rows)
 });
 
-const tableRow = (element: Element<unknown>, cells: Element<unknown>[]) => ({
+const tableRow = (element: SugarElement<unknown>, cells: SugarElement<unknown>[]) => ({
   element: Fun.constant(element),
   cells: Fun.constant(cells)
 });
@@ -26,7 +26,7 @@ const cellPosition = (x: number, y: number) => ({
 });
 
 const getSpan = function (td, key) {
-  const value = parseInt(Attr.get(td, key), 10);
+  const value = parseInt(Attribute.get(td, key), 10);
   return isNaN(value) ? 1 : value;
 };
 
@@ -107,7 +107,7 @@ const subTable = function (table, startPos, endPos) {
 
 const createDomTable = function (table, rows) {
   const tableElement = Replication.shallow(table.element());
-  const tableBody = Element.fromTag('tbody');
+  const tableBody = SugarElement.fromTag('tbody');
 
   InsertAll.append(tableBody, rows);
   Insert.append(tableElement, tableBody);
@@ -117,10 +117,10 @@ const createDomTable = function (table, rows) {
 
 const modelRowsToDomRows = function (table) {
   return Arr.map(table.rows(), function (row) {
-    const cells = Arr.map(row.cells(), function (cell: Element<HTMLTableCellElement>) {
+    const cells = Arr.map(row.cells(), function (cell: SugarElement<HTMLTableCellElement>) {
       const td = Replication.deep(cell);
-      Attr.remove(td, 'colspan');
-      Attr.remove(td, 'rowspan');
+      Attribute.remove(td, 'colspan');
+      Attribute.remove(td, 'rowspan');
       return td;
     });
 

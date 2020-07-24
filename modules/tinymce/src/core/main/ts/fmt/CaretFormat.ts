@@ -7,7 +7,7 @@
 
 import { Document, Node, Range } from '@ephox/dom-globals';
 import { Arr, Fun, Obj, Option } from '@ephox/katamari';
-import { Attr, Element, Insert, Node as SugarNode, Remove } from '@ephox/sugar';
+import { Attribute, Insert, Remove, SugarElement, SugarNode } from '@ephox/sugar';
 import TreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
 import { FormatVars } from '../api/fmt/Format';
@@ -66,9 +66,9 @@ const findFirstTextNode = function (node: Node) {
 };
 
 const createCaretContainer = function (fill: boolean) {
-  const caretContainer = Element.fromTag('span');
+  const caretContainer = SugarElement.fromTag('span');
 
-  Attr.setAll(caretContainer, {
+  Attribute.setAll(caretContainer, {
     // style: 'color:red',
     'id': CARET_ID,
     'data-mce-bogus': '1',
@@ -76,7 +76,7 @@ const createCaretContainer = function (fill: boolean) {
   });
 
   if (fill) {
-    Insert.append(caretContainer, Element.fromText(ZWSP));
+    Insert.append(caretContainer, SugarElement.fromText(ZWSP));
   }
 
   return caretContainer;
@@ -95,7 +95,7 @@ const removeCaretContainerNode = (editor: Editor, node: Node, moveCaret: boolean
   const dom = editor.dom, selection = editor.selection;
 
   if (isCaretContainerEmpty(node)) {
-    DeleteElement.deleteElement(editor, false, Element.fromDom(node), moveCaret);
+    DeleteElement.deleteElement(editor, false, SugarElement.fromDom(node), moveCaret);
   } else {
     const rng = selection.getRng();
     const block = dom.getParent(node, dom.isBlock);
@@ -119,7 +119,7 @@ const removeCaretContainerNode = (editor: Editor, node: Node, moveCaret: boolean
     }
 
     if (block && dom.isEmpty(block)) {
-      PaddingBr.fillWithPaddingBr(Element.fromDom(block));
+      PaddingBr.fillWithPaddingBr(SugarElement.fromDom(block));
     }
 
     selection.setRng(rng);
@@ -149,7 +149,7 @@ const insertCaretContainerNode = function (editor: Editor, caretContainer: Node,
     // Replace formatNode with caretContainer when removing format from empty block like <p><b>|</b></p>
     formatNode.parentNode.replaceChild(caretContainer, formatNode);
   } else {
-    PaddingBr.removeTrailingBr(Element.fromDom(formatNode));
+    PaddingBr.removeTrailingBr(SugarElement.fromDom(formatNode));
     if (dom.isEmpty(formatNode)) {
       formatNode.parentNode.replaceChild(caretContainer, formatNode);
     } else {
@@ -342,18 +342,18 @@ const setup = function (editor: Editor) {
 const replaceWithCaretFormat = function (targetNode: Node, formatNodes: Node[]) {
   const caretContainer = createCaretContainer(false);
   const innerMost = insertFormatNodesIntoCaretContainer(formatNodes, caretContainer.dom());
-  Insert.before(Element.fromDom(targetNode), caretContainer);
-  Remove.remove(Element.fromDom(targetNode));
+  Insert.before(SugarElement.fromDom(targetNode), caretContainer);
+  Remove.remove(SugarElement.fromDom(targetNode));
 
   return CaretPosition(innerMost, 0);
 };
 
-const isFormatElement = function (editor: Editor, element: Element) {
+const isFormatElement = function (editor: Editor, element: SugarElement) {
   const inlineElements = editor.schema.getTextInlineElements();
   return inlineElements.hasOwnProperty(SugarNode.name(element)) && !isCaretNode(element.dom()) && !NodeType.isBogus(element.dom());
 };
 
-const isEmptyCaretFormatElement = function (element: Element) {
+const isEmptyCaretFormatElement = function (element: SugarElement) {
   return isCaretNode(element.dom()) && isCaretContainerEmpty(element.dom());
 };
 

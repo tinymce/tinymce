@@ -3,7 +3,7 @@ import { AlloyTriggers, Focusing, GuiFactory, NativeEvents, Representing, TestHe
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { Future, Option } from '@ephox/katamari';
-import { Element, SelectorFind, Value } from '@ephox/sugar';
+import { SelectorFind, SugarElement, Value } from '@ephox/sugar';
 import { ApiUrlData } from 'tinymce/themes/silver/backstage/UrlInputBackstage';
 import { LinkTargetType } from 'tinymce/themes/silver/ui/core/LinkTargets';
 import { renderUrlInput } from 'tinymce/themes/silver/ui/dialog/UrlInput';
@@ -12,7 +12,7 @@ import TestExtras from '../../../module/TestExtras';
 
 UnitTest.asynctest('UrlInput component Test', (success, failure) => {
   const helpers = TestExtras();
-  const sink = Element.fromDom(document.querySelector('.mce-silver-sink'));
+  const sink = SugarElement.fromDom(document.querySelector('.mce-silver-sink'));
 
   TestHelpers.GuiSetup.setup(
     (store, _doc, _body) => GuiFactory.build(

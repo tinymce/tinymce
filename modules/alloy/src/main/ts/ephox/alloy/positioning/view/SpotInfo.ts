@@ -1,4 +1,5 @@
 import { Fun } from '@ephox/katamari';
+
 import { BubbleInstance } from '../layout/Bubble';
 import { DirectionAdt } from '../layout/Direction';
 import { BoundsRestriction } from '../layout/LayoutBounds';

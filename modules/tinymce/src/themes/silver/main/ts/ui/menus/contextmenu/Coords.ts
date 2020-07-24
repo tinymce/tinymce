@@ -5,12 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { NodeAnchorSpec, MakeshiftAnchorSpec, SelectionAnchorSpec } from '@ephox/alloy';
+import { MakeshiftAnchorSpec, NodeAnchorSpec, SelectionAnchorSpec } from '@ephox/alloy';
+import { HTMLElement, MouseEvent, TouchEvent } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
-import { HTMLElement, MouseEvent, TouchEvent } from '@ephox/dom-globals';
 
 type Position = {
   x: number;
@@ -70,12 +70,12 @@ export const getPointAnchor = function (editor: Editor, e: MouseEvent | TouchEve
 export const getSelectionAnchor = function (editor: Editor): SelectionAnchorSpec {
   return {
     anchor: 'selection',
-    root: Element.fromDom(editor.selection.getNode())
+    root: SugarElement.fromDom(editor.selection.getNode())
   };
 };
 
 export const getNodeAnchor = (editor: Editor): NodeAnchorSpec => ({
   anchor: 'node',
-  node: Option.some(Element.fromDom(editor.selection.getNode())),
-  root: Element.fromDom(editor.getBody())
+  node: Option.some(SugarElement.fromDom(editor.selection.getNode())),
+  root: SugarElement.fromDom(editor.getBody())
 });

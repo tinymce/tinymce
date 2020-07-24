@@ -4,7 +4,7 @@ import { TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document, window } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 import TestExtras from '../../module/TestExtras';
 
@@ -12,7 +12,7 @@ UnitTest.asynctest('Dialog Focus Test (webdriver)', (success, failure) => {
   const helpers = TestExtras();
   const windowManager = WindowManager.setup(helpers.extras);
 
-  const doc = Element.fromDom(document);
+  const doc = SugarElement.fromDom(document);
 
   const isPhantomJs = function () {
     return /PhantomJS/.test(window.navigator.userAgent);

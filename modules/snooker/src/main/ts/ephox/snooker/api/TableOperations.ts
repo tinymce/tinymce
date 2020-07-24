@@ -1,7 +1,9 @@
 import { Arr, Fun, Option } from '@ephox/katamari';
-import { Element, Node, Remove } from '@ephox/sugar';
+import { Remove, SugarElement, SugarNode } from '@ephox/sugar';
 import * as DetailsList from '../model/DetailsList';
-import { ExtractMergable, ExtractPaste, ExtractPasteRows, onCell, onCells, onMergable, onPaste, onPasteByEditor, onUnmergable, run, TargetSelection } from '../model/RunOperation';
+import {
+  ExtractMergable, ExtractPaste, ExtractPasteRows, onCell, onCells, onMergable, onPaste, onPasteByEditor, onUnmergable, run, TargetSelection
+} from '../model/RunOperation';
 import * as TableMerge from '../model/TableMerge';
 import * as Transitions from '../model/Transitions';
 import { Warehouse } from '../model/Warehouse';
@@ -16,19 +18,19 @@ import * as TableLookup from './TableLookup';
 
 export interface TableOperationResult {
   readonly grid: () => Structs.RowCells[];
-  readonly cursor: () => Option<Element>;
+  readonly cursor: () => Option<SugarElement>;
 }
 
-type CompElm = (e1: Element, e2: Element) => boolean;
+type CompElm = (e1: SugarElement, e2: SugarElement) => boolean;
 
-const prune = function (table: Element) {
+const prune = function (table: SugarElement) {
   const cells = TableLookup.cells(table);
   if (cells.length === 0) {
     Remove.remove(table);
   }
 };
 
-const outcome = (grid: Structs.RowCells[], cursor: Option<Element>): TableOperationResult => ({
+const outcome = (grid: Structs.RowCells[], cursor: Option<SugarElement>): TableOperationResult => ({
   grid: Fun.constant(grid),
   cursor: Fun.constant(cursor)
 });
@@ -192,7 +194,7 @@ const opMergeCells = function (grid: Structs.RowCells[], mergable: ExtractMergab
   return outcome(newGrid, Option.from(cells[0]));
 };
 
-const opUnmergeCells = function (grid: Structs.RowCells[], unmergable: Element[], comparator: CompElm, genWrappers: GeneratorsMerging) {
+const opUnmergeCells = function (grid: Structs.RowCells[], unmergable: SugarElement[], comparator: CompElm, genWrappers: GeneratorsMerging) {
   const newGrid = Arr.foldr(unmergable, function (b, cell) {
     return MergingOperations.unmerge(b, cell, comparator, genWrappers.combine(cell));
   }, grid);
@@ -200,7 +202,7 @@ const opUnmergeCells = function (grid: Structs.RowCells[], unmergable: Element[]
 };
 
 const opPasteCells = function (grid: Structs.RowCells[], pasteDetails: ExtractPaste, comparator: CompElm, _genWrappers: GeneratorsModification) {
-  const gridify = function (table: Element, generators: SimpleGenerators) {
+  const gridify = function (table: SugarElement, generators: SimpleGenerators) {
     const wh = Warehouse.fromTable(table);
     return Transitions.toGrid(wh, generators, true);
   };
@@ -215,7 +217,7 @@ const opPasteCells = function (grid: Structs.RowCells[], pasteDetails: ExtractPa
   });
 };
 
-const gridifyRows = function (rows: Element[], generators: Generators, example: Structs.RowCells) {
+const gridifyRows = function (rows: SugarElement[], generators: Generators, example: Structs.RowCells) {
   const pasteDetails = DetailsList.fromPastedRows(rows, example);
   const wh = Warehouse.generate(pasteDetails);
   return Transitions.toGrid(wh, generators, true);
@@ -257,7 +259,7 @@ const opPasteRowsAfter = function (grid: Structs.RowCells[], pasteDetails: Extra
   return outcome(mergedGrid, cursor);
 };
 
-const opGetColumnType = (table: Element, target: TargetSelection): string => {
+const opGetColumnType = (table: SugarElement, target: TargetSelection): string => {
   const house = Warehouse.fromTable(table);
   const details = onCells(house, target);
   return details.bind((selectedCells): Option<string> => {
@@ -266,7 +268,7 @@ const opGetColumnType = (table: Element, target: TargetSelection): string => {
     const maxColRange = lastSelectedCell.column() + lastSelectedCell.colspan();
     const selectedColumnCells = Arr.flatten(Arr.map(house.all, (row) =>
       Arr.filter(row.cells(), (cell) => cell.column() >= minColRange && cell.column() < maxColRange)));
-    return getCellsType(selectedColumnCells, (cell) => Node.name(cell.element()) === 'th');
+    return getCellsType(selectedColumnCells, (cell) => SugarNode.name(cell.element()) === 'th');
   }).getOr('');
 };
 

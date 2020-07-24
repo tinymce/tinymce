@@ -5,29 +5,29 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Text, Element as DomElement } from '@ephox/dom-globals';
-import { Strings, Option, Arr, Unicode } from '@ephox/katamari';
-import { Element, PredicateFind, Node, Css } from '@ephox/sugar';
-import { CaretPosition } from '../caret/CaretPosition';
+import { Element, Text } from '@ephox/dom-globals';
+import { Arr, Option, Strings, Unicode } from '@ephox/katamari';
+import { Css, PredicateFind, SugarElement, SugarNode } from '@ephox/sugar';
 import Editor from '../api/Editor';
+import { isAfterBlock, isAtEndOfBlock, isAtStartOfBlock, isBeforeBlock } from '../caret/BlockBoundary';
+import { isAfterBr, isBeforeBr } from '../caret/CaretBr';
+import * as CaretFinder from '../caret/CaretFinder';
+import { CaretPosition } from '../caret/CaretPosition';
+import { isAfterSpace, isBeforeSpace } from '../caret/CaretPositionPredicates';
+import { getElementFromPosition } from '../caret/CaretUtils';
+import * as ElementType from '../dom/ElementType';
 import * as NodeType from '../dom/NodeType';
 import * as Parents from '../dom/Parents';
-import * as ElementType from '../dom/ElementType';
-import { getElementFromPosition } from '../caret/CaretUtils';
-import * as CaretFinder from '../caret/CaretFinder';
-import { isAtStartOfBlock, isAtEndOfBlock, isAfterBlock, isBeforeBlock } from '../caret/BlockBoundary';
-import { isNbsp, isContent } from '../text/CharType';
-import { isAfterBr, isBeforeBr } from '../caret/CaretBr';
-import { isAfterSpace, isBeforeSpace } from '../caret/CaretPositionPredicates';
+import { isContent, isNbsp } from '../text/CharType';
 
 const isInMiddleOfText = (pos: CaretPosition) => CaretPosition.isTextPosition(pos) && !pos.isAtStart() && !pos.isAtEnd();
 
-const getClosestBlock = (root: Element, pos: CaretPosition): Element => {
-  const parentBlocks = Arr.filter(Parents.parentsAndSelf(Element.fromDom(pos.container()), root), ElementType.isBlock);
+const getClosestBlock = (root: SugarElement, pos: CaretPosition): SugarElement => {
+  const parentBlocks = Arr.filter(Parents.parentsAndSelf(SugarElement.fromDom(pos.container()), root), ElementType.isBlock);
   return Arr.head(parentBlocks).getOr(root);
 };
 
-const hasSpaceBefore = (root: Element, pos: CaretPosition): boolean => {
+const hasSpaceBefore = (root: SugarElement, pos: CaretPosition): boolean => {
   if (isInMiddleOfText(pos)) {
     return isAfterSpace(pos);
   } else {
@@ -35,7 +35,7 @@ const hasSpaceBefore = (root: Element, pos: CaretPosition): boolean => {
   }
 };
 
-const hasSpaceAfter = (root: Element, pos: CaretPosition): boolean => {
+const hasSpaceAfter = (root: SugarElement, pos: CaretPosition): boolean => {
   if (isInMiddleOfText(pos)) {
     return isBeforeSpace(pos);
   } else {
@@ -46,13 +46,13 @@ const hasSpaceAfter = (root: Element, pos: CaretPosition): boolean => {
 const isPreValue = (value: string) => Arr.contains([ 'pre', 'pre-wrap' ], value);
 
 const isInPre = (pos: CaretPosition) => getElementFromPosition(pos)
-  .bind((elm) => PredicateFind.closest(elm, Node.isElement))
-  .exists((elm: Element<DomElement>) => isPreValue(Css.get(elm, 'white-space')));
+  .bind((elm) => PredicateFind.closest(elm, SugarNode.isElement))
+  .exists((elm: SugarElement<Element>) => isPreValue(Css.get(elm, 'white-space')));
 
-const isAtBeginningOfBody = (root: Element, pos: CaretPosition) => CaretFinder.prevPosition(root.dom(), pos).isNone();
-const isAtEndOfBody = (root: Element, pos: CaretPosition) => CaretFinder.nextPosition(root.dom(), pos).isNone();
+const isAtBeginningOfBody = (root: SugarElement, pos: CaretPosition) => CaretFinder.prevPosition(root.dom(), pos).isNone();
+const isAtEndOfBody = (root: SugarElement, pos: CaretPosition) => CaretFinder.nextPosition(root.dom(), pos).isNone();
 
-const isAtLineBoundary = (root: Element, pos: CaretPosition) => (
+const isAtLineBoundary = (root: SugarElement, pos: CaretPosition) => (
   isAtBeginningOfBody(root, pos) ||
     isAtEndOfBody(root, pos) ||
     isAtStartOfBlock(root, pos) ||
@@ -61,7 +61,7 @@ const isAtLineBoundary = (root: Element, pos: CaretPosition) => (
     isBeforeBr(root, pos)
 );
 
-const needsToHaveNbsp = (root: Element, pos: CaretPosition) => {
+const needsToHaveNbsp = (root: SugarElement, pos: CaretPosition) => {
   if (isInPre(pos)) {
     return false;
   } else {
@@ -69,7 +69,7 @@ const needsToHaveNbsp = (root: Element, pos: CaretPosition) => {
   }
 };
 
-const needsToBeNbspLeft = (root: Element, pos: CaretPosition) => {
+const needsToBeNbspLeft = (root: SugarElement, pos: CaretPosition) => {
   if (isInPre(pos)) {
     return false;
   } else {
@@ -88,7 +88,7 @@ const leanRight = (pos: CaretPosition): CaretPosition => {
   }
 };
 
-const needsToBeNbspRight = (root: Element, pos: CaretPosition) => {
+const needsToBeNbspRight = (root: SugarElement, pos: CaretPosition) => {
   const afterPos = leanRight(pos);
   if (isInPre(afterPos)) {
     return false;
@@ -97,7 +97,7 @@ const needsToBeNbspRight = (root: Element, pos: CaretPosition) => {
   }
 };
 
-const needsToBeNbsp = (root: Element, pos: CaretPosition) => needsToBeNbspLeft(root, pos) || needsToBeNbspRight(root, pos);
+const needsToBeNbsp = (root: SugarElement, pos: CaretPosition) => needsToBeNbspLeft(root, pos) || needsToBeNbspRight(root, pos);
 
 const isNbspAt = (text: string, offset: number) => isNbsp(text.charAt(offset));
 
@@ -117,7 +117,7 @@ const normalizeNbspMiddle = (text: string): string => {
   }).join('');
 };
 
-const normalizeNbspAtStart = (root: Element, node: Text): boolean => {
+const normalizeNbspAtStart = (root: SugarElement, node: Text): boolean => {
   const text = node.data;
   const firstPos = CaretPosition(node, 0);
 
@@ -140,7 +140,7 @@ const normalizeNbspInMiddleOfTextNode = (node: Text): boolean => {
   }
 };
 
-const normalizeNbspAtEnd = (root: Element, node: Text): boolean => {
+const normalizeNbspAtEnd = (root: SugarElement, node: Text): boolean => {
   const text = node.data;
   const lastPos = CaretPosition(node, text.length - 1);
   if (isNbspAt(text, text.length - 1) && !needsToBeNbsp(root, lastPos)) {
@@ -151,14 +151,14 @@ const normalizeNbspAtEnd = (root: Element, node: Text): boolean => {
   }
 };
 
-const normalizeNbsps = (root: Element, pos: CaretPosition): Option<CaretPosition> => Option.some(pos).filter(hasNbsp).bind((pos) => {
+const normalizeNbsps = (root: SugarElement, pos: CaretPosition): Option<CaretPosition> => Option.some(pos).filter(hasNbsp).bind((pos) => {
   const container = pos.container() as Text;
   const normalized = normalizeNbspAtStart(root, container) || normalizeNbspInMiddleOfTextNode(container) || normalizeNbspAtEnd(root, container);
   return normalized ? Option.some(pos) : Option.none();
 });
 
 const normalizeNbspsInEditor = (editor: Editor) => {
-  const root = Element.fromDom(editor.getBody());
+  const root = SugarElement.fromDom(editor.getBody());
 
   if (editor.selection.isCollapsed()) {
     normalizeNbsps(root, CaretPosition.fromRangeStart(editor.selection.getRng())).each((pos) => {

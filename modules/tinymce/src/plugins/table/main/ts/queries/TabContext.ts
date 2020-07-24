@@ -8,7 +8,7 @@
 import { KeyboardEvent } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
 import { CellNavigation, TableLookup } from '@ephox/snooker';
-import { Compare, CursorPosition, Element, Node, Selection, SelectorFilter, SelectorFind, WindowSelection } from '@ephox/sugar';
+import { Compare, CursorPosition, SelectorFilter, SelectorFind, SimSelection, SugarElement, SugarNode, WindowSelection } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import VK from 'tinymce/core/api/util/VK';
@@ -26,7 +26,7 @@ const backward = function (editor: Editor, isRoot, cell, lazyWire) {
 };
 
 const getCellFirstCursorPosition = function (editor: Editor, cell) {
-  const selection = Selection.exact(cell, 0, cell, 0);
+  const selection = SimSelection.exact(cell, 0, cell, 0);
   return WindowSelection.toNative(selection);
 };
 
@@ -61,13 +61,13 @@ const handle = function (event: KeyboardEvent, editor: Editor, actions: TableAct
   if (event.keyCode === VK.TAB) {
     const body = Util.getBody(editor);
     const isRoot = function (element) {
-      const name = Node.name(element);
+      const name = SugarNode.name(element);
       return Compare.eq(element, body) || Arr.contains(rootElements, name);
     };
 
     const rng = editor.selection.getRng();
     if (rng.collapsed) {
-      const start = Element.fromDom(rng.startContainer);
+      const start = SugarElement.fromDom(rng.startContainer);
       TableLookup.cell(start, isRoot).each(function (cell) {
         event.preventDefault();
         const navigation: any = event.shiftKey ? backward : forward;

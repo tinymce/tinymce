@@ -6,12 +6,12 @@
  */
 
 // eslint-disable-next-line max-len
-import { ClientRect, HTMLElement, HTMLTableDataCellElement, HTMLTableHeaderCellElement, HTMLTableCaptionElement } from '@ephox/dom-globals';
+import { ClientRect, HTMLElement, HTMLTableCaptionElement, HTMLTableDataCellElement, HTMLTableHeaderCellElement } from '@ephox/dom-globals';
 import { Arr, Fun, Option } from '@ephox/katamari';
-import { Element, SelectorFilter } from '@ephox/sugar';
-import { findClosestHorizontalPosition, getLastLinePositions, getFirstLinePositions } from './LineReader';
-import { CaretPosition } from './CaretPosition';
+import { SelectorFilter, SugarElement } from '@ephox/sugar';
 import { clone as roundRect } from '../geom/ClientRect';
+import { CaretPosition } from './CaretPosition';
+import { findClosestHorizontalPosition, getFirstLinePositions, getLastLinePositions } from './LineReader';
 
 type GetAxisValue = (rect: ClientRect) => number;
 type IsTargetCorner = (corner: Corner, y: number) => boolean;
@@ -58,7 +58,7 @@ const getClosestCell = (
 ): Option<HTMLElement> => {
   type TableThing = HTMLTableDataCellElement | HTMLTableHeaderCellElement | HTMLTableCaptionElement;
   const cells = SelectorFilter.descendants<TableThing>(
-    Element.fromDom(table),
+    SugarElement.fromDom(table),
     'td,th,caption'
   ).map((e) => e.dom());
   const corners = Arr.filter(

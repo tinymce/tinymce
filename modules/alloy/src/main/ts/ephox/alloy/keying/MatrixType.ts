@@ -1,6 +1,6 @@
 import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
 import { Arr, Fun, Option } from '@ephox/katamari';
-import { Element, Focus, SelectorFilter, SelectorFind } from '@ephox/sugar';
+import { Focus, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
 
 import * as Keys from '../alien/Keys';
 import { AlloyComponent } from '../api/component/ComponentApi';
@@ -39,9 +39,9 @@ const focusIn = (component: AlloyComponent, matrixConfig: MatrixConfig, _state: 
 
 const execute: KeyRuleHandler<MatrixConfig, Stateless> = (component, simulatedEvent, matrixConfig) => Focus.search(component.element()).bind((focused) => matrixConfig.execute(component, simulatedEvent, focused));
 
-const toMatrix = (rows: Element[], matrixConfig: MatrixConfig): Element[][] => Arr.map(rows, (row) => SelectorFilter.descendants(row, matrixConfig.selectors.cell));
+const toMatrix = (rows: SugarElement[], matrixConfig: MatrixConfig): SugarElement[][] => Arr.map(rows, (row) => SelectorFilter.descendants(row, matrixConfig.selectors.cell));
 
-const doMove = (ifCycle: MatrixNavigation.MatrixNavigationFunc<Element>, ifMove: MatrixNavigation.MatrixNavigationFunc<Element>): DomMovement.ElementMover<MatrixConfig, Stateless> => (element, focused, matrixConfig) => {
+const doMove = (ifCycle: MatrixNavigation.MatrixNavigationFunc<SugarElement>, ifMove: MatrixNavigation.MatrixNavigationFunc<SugarElement>): DomMovement.ElementMover<MatrixConfig, Stateless> => (element, focused, matrixConfig) => {
   const move = matrixConfig.cycles ? ifCycle : ifMove;
   return SelectorFind.closest(focused, matrixConfig.selectors.row).bind((inRow) => {
     const cellsInRow = SelectorFilter.descendants(inRow, matrixConfig.selectors.cell);

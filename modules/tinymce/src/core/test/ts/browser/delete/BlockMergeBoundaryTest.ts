@@ -1,10 +1,10 @@
 import { Assertions, Chain, GeneralSteps, Logger, Pipeline } from '@ephox/agar';
-import { Hierarchy, Element } from '@ephox/sugar';
-import * as BlockMergeBoundary from 'tinymce/core/delete/BlockMergeBoundary';
-import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
+import { Hierarchy, SugarElement } from '@ephox/sugar';
+import * as BlockMergeBoundary from 'tinymce/core/delete/BlockMergeBoundary';
+import ViewBlock from '../../module/test/ViewBlock';
 
 type BlockBoundary = BlockMergeBoundary.BlockBoundary;
 
@@ -19,7 +19,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.BlockMergeBoundary', function (s
 
   const cReadBlockBoundary = function (forward, cursorPath, cursorOffset) {
     return Chain.mapper(function (viewBlock: any) {
-      const container = Hierarchy.follow(Element.fromDom(viewBlock.get()), cursorPath).getOrDie();
+      const container = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), cursorPath).getOrDie();
       const rng = document.createRange();
       rng.setStart(container.dom(), cursorOffset);
       rng.setEnd(container.dom(), cursorOffset);
@@ -29,21 +29,21 @@ UnitTest.asynctest('browser.tinymce.core.delete.BlockMergeBoundary', function (s
 
   const cAssertBlockBoundaryPositions = function (fromPath, fromOffset, toPath, toOffset): Chain<Option<BlockBoundary>, Option<BlockBoundary>> {
     return Chain.op(function (blockBoundaryOption: Option<BlockMergeBoundary.BlockBoundary>) {
-      const fromContainer = Hierarchy.follow(Element.fromDom(viewBlock.get()), fromPath).getOrDie();
-      const toContainer = Hierarchy.follow(Element.fromDom(viewBlock.get()), toPath).getOrDie();
+      const fromContainer = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), fromPath).getOrDie();
+      const toContainer = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), toPath).getOrDie();
       const blockBoundary = blockBoundaryOption.getOrDie();
 
-      Assertions.assertDomEq('Should be expected from container', fromContainer, Element.fromDom(blockBoundary.from.position.container()));
+      Assertions.assertDomEq('Should be expected from container', fromContainer, SugarElement.fromDom(blockBoundary.from.position.container()));
       Assertions.assertEq('Should be expected from offset', fromOffset, blockBoundary.from.position.offset());
-      Assertions.assertDomEq('Should be expected to container', toContainer, Element.fromDom(blockBoundary.to.position.container()));
+      Assertions.assertDomEq('Should be expected to container', toContainer, SugarElement.fromDom(blockBoundary.to.position.container()));
       Assertions.assertEq('Should be expected to offset', toOffset, blockBoundary.to.position.offset());
     });
   };
 
   const cAssertBlockBoundaryBlocks = function (fromBlockPath: number[], toBlockPath: number[]): Chain<Option<BlockBoundary>, Option<BlockBoundary>> {
     return Chain.op(function (blockBoundaryOption: Option<BlockBoundary>) {
-      const expectedFromBlock = Hierarchy.follow(Element.fromDom(viewBlock.get()), fromBlockPath).getOrDie();
-      const expectedToBlock = Hierarchy.follow(Element.fromDom(viewBlock.get()), toBlockPath).getOrDie();
+      const expectedFromBlock = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), fromBlockPath).getOrDie();
+      const expectedToBlock = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), toBlockPath).getOrDie();
       const blockBoundary = blockBoundaryOption.getOrDie();
 
       Assertions.assertDomEq('Should be expected from block', expectedFromBlock, blockBoundary.from.block);

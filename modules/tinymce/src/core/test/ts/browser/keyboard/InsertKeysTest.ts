@@ -4,7 +4,7 @@ import { document } from '@ephox/dom-globals';
 import { Arr, Fun } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
-import { Element, Insert } from '@ephox/sugar';
+import { Insert, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
@@ -21,11 +21,11 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.InsertKeysTest', (success, fai
     editor.fire('keypress');
   });
 
-  const sInsertEmptyTextNodesAt = (editor: Editor, count: number, path: number[], insert: (marker: Element, element: Element) => void) => Chain.asStep(Element.fromDom(editor.getBody()), [
+  const sInsertEmptyTextNodesAt = (editor: Editor, count: number, path: number[], insert: (marker: SugarElement, element: SugarElement) => void) => Chain.asStep(SugarElement.fromDom(editor.getBody()), [
     Cursors.cFollow(path),
     Chain.op((elm) => {
       Arr.each(Arr.range(count, Fun.identity), () => {
-        insert(elm, Element.fromDom(document.createTextNode('')));
+        insert(elm, SugarElement.fromDom(document.createTextNode('')));
       });
     })
   ]);

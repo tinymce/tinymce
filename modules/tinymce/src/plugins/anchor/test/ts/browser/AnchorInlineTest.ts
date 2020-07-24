@@ -2,7 +2,7 @@ import { Chain, Keys, Log, Mouse, Pipeline, UiControls, UiFinder } from '@ephox/
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import AnchorPlugin from 'tinymce/plugins/anchor/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 
@@ -21,7 +21,7 @@ UnitTest.asynctest('Browser Test: .AnchorInlineTest', (success, failure) => {
         tinyApis.sSetSelection([ 0, 0 ], 4, [ 0, 0 ], 7),
         tinyActions.sContentKeystroke(Keys.space(), {}),
         tinyApis.sExecCommand('mceanchor'),
-        Chain.asStep(Element.fromDom(document.body), [
+        Chain.asStep(SugarElement.fromDom(document.body), [
           Chain.fromParent(UiFinder.cWaitForVisible('wait for dialog', 'div[role="dialog"].tox-dialog'),
             [
               Chain.fromChains([

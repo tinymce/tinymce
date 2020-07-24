@@ -5,7 +5,7 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Body, Element } from '@ephox/sugar';
+import { SugarBody, SugarElement } from '@ephox/sugar';
 
 import Theme from 'tinymce/themes/silver/Theme';
 import * as MenuUtils from '../../../module/MenuUtils';
@@ -15,7 +15,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
   TinyLoader.setup(
     (editor, onSuccess, onFailure) => {
       const tinyApis = TinyApis(editor);
-      const doc = Element.fromDom(document);
+      const doc = SugarElement.fromDom(document);
 
       const sAssertFocusOnItem = (itemText: string) => FocusTools.sTryOnSelector(
         `Focus should be on ${itemText}`,
@@ -37,7 +37,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
 
       const sAssertItemTicks = (label: string, expectedTicks: boolean[]) => Logger.t(
         `Checking tick state of items (${label})`,
-        Chain.asStep(Body.body(), [
+        Chain.asStep(SugarBody.body(), [
           UiFinder.cFindIn('.tox-selected-menu .tox-collection__group'),
           Assertions.cAssertStructure('Checking structure', ApproxStructure.build((s, str, arr) => s.element('div', {
             classes: [ arr.has('tox-collection__group') ],
@@ -60,7 +60,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
           sAssertItemTicks('Checking ticks at location', expectedTicks),
           afterStep,
           Keyboard.sKeydown(doc, Keys.escape(), { }),
-          UiFinder.sNotExists(Body.body(), '[role="menu"]')
+          UiFinder.sNotExists(SugarBody.body(), '[role="menu"]')
         ])
       );
 
@@ -85,7 +85,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
         Keyboard.sKeydown(doc, Keys.down(), { }),
         sAssertFocusOnItem('Center'),
         Keyboard.sKeydown(doc, Keys.enter(), { }),
-        UiFinder.sNotExists(Body.body(), '[role="menu"]'),
+        UiFinder.sNotExists(SugarBody.body(), '[role="menu"]'),
 
         sCheckAlignItemsAtLocation(
           'First paragraph after "centering"',
@@ -123,7 +123,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
         MenuUtils.sOpenMenu('FontSelect', 'Verdana'),
         sAssertFocusOnItem('Andale Mono'),
         Keyboard.sKeydown(doc, Keys.enter(), { }),
-        UiFinder.sNotExists(Body.body(), '[role="menu"]'),
+        UiFinder.sNotExists(SugarBody.body(), '[role="menu"]'),
 
         sCheckItemsAtLocation(
           'First paragraph after "Andale Mono"',
@@ -153,7 +153,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
         MenuUtils.sOpenMenu('FontSelect', '12pt'), // This might be fragile.
         sAssertFocusOnItem('8pt'),
         Keyboard.sKeydown(doc, Keys.enter(), { }),
-        UiFinder.sNotExists(Body.body(), '[role="menu"]'),
+        UiFinder.sNotExists(SugarBody.body(), '[role="menu"]'),
 
         sCheckItemsAtLocation(
           'First paragraph after "8pt',
@@ -185,7 +185,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
         Keyboard.sKeydown(doc, Keys.down(), { }),
         sAssertFocusOnItem('Heading 1'),
         Keyboard.sKeydown(doc, Keys.enter(), { }),
-        UiFinder.sNotExists(Body.body(), '[role="menu"]'),
+        UiFinder.sNotExists(SugarBody.body(), '[role="menu"]'),
 
         sCheckItemsAtLocation(
           'First block after "h1',
@@ -209,7 +209,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
         ),
 
         // Check that the menus are working also
-        Mouse.sClickOn(Body.body(), '[role="menubar"] [role="menuitem"]:contains("Format")'),
+        Mouse.sClickOn(SugarBody.body(), '[role="menubar"] [role="menuitem"]:contains("Format")'),
         sAssertFocusOnItem('Bold'),
         Keyboard.sKeydown(doc, Keys.down(), { }),
         sAssertFocusOnItem('Italic'),
@@ -244,7 +244,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
         Keyboard.sKeydown(doc, Keys.right(), { }),
         sAssertFocusOnItem('Heading 1'),
         Keyboard.sKeydown(doc, Keys.enter(), { }),
-        UiFinder.sNotExists(Body.body(), '[role="menu"]'),
+        UiFinder.sNotExists(SugarBody.body(), '[role="menu"]'),
 
         sCheckSubItemsAtLocation('Heading 1')(
           'First block after "h1',
@@ -268,7 +268,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
         ),
 
         // Check that the menus are working also
-        Mouse.sClickOn(Body.body(), '[role="menubar"] [role="menuitem"]:contains("Format")'),
+        Mouse.sClickOn(SugarBody.body(), '[role="menubar"] [role="menuitem"]:contains("Format")'),
         sAssertFocusOnItem('Bold'),
         Keyboard.sKeydown(doc, Keys.down(), { }),
         sAssertFocusOnItem('Italic'),
@@ -307,12 +307,12 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
         // Check moving left and right closes the open dropdown and navigates to the next item
         Keyboard.sKeydown(doc, Keys.right(), { }),
         sAssertFocusOnToolbarButton('Verdana'), // Font Select
-        UiFinder.sNotExists(Body.body(), '[role="menu"]'),
+        UiFinder.sNotExists(SugarBody.body(), '[role="menu"]'),
         Keyboard.sKeydown(doc, Keys.down(), { }),
         sAssertFocusOnItem('Andale Mono'),
         Keyboard.sKeydown(doc, Keys.left(), { }),
         sAssertFocusOnAlignToolbarButton(), // Alignment
-        UiFinder.sNotExists(Body.body(), '[role="menu"]')
+        UiFinder.sNotExists(SugarBody.body(), '[role="menu"]')
       ]);
 
       Pipeline.async({ }, [

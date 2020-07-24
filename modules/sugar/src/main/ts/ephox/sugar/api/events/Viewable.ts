@@ -1,6 +1,6 @@
 import { clearInterval, HTMLElement, MutationObserver, setInterval } from '@ephox/dom-globals';
 import { Fun, Throttler } from '@ephox/katamari';
-import Element from '../node/Element';
+import { SugarElement } from '../node/SugarElement';
 import * as Traverse from '../search/Traverse';
 import * as Visibility from '../view/Visibility';
 
@@ -14,13 +14,13 @@ declare const window: any;
  * It's a bit harder to manage, though, because visibility is a one-shot listener.
  */
 
-const poll = (element: Element<HTMLElement>, f: () => void): () => void => {
+const poll = (element: SugarElement<HTMLElement>, f: () => void): () => void => {
   const poller = setInterval(f, 500);
 
   return () => clearInterval(poller);
 };
 
-const mutate = (element: Element<HTMLElement>, f: () => void): () => void => {
+const mutate = (element: SugarElement<HTMLElement>, f: () => void): () => void => {
   const observer: MutationObserver = new window.MutationObserver(f);
 
   const unbindMutate = () => observer.disconnect();
@@ -35,7 +35,7 @@ const mutate = (element: Element<HTMLElement>, f: () => void): () => void => {
 // IE11 and above, not using numerosity so we can poll on IE10
 const wait = window.MutationObserver !== undefined && window.MutationObserver !== null ? mutate : poll;
 
-const onShow = (element: Element<HTMLElement>, f: () => void): () => void => {
+const onShow = (element: SugarElement<HTMLElement>, f: () => void): () => void => {
   if (Visibility.isVisible(element)) {
     window.requestAnimationFrame(f);
     return Fun.noop;

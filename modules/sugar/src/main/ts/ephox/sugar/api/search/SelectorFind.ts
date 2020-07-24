@@ -1,30 +1,30 @@
-import { Element as DomElement, Node as DomNode } from '@ephox/dom-globals';
+import { Element, Node } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import ClosestOrAncestor from '../../impl/ClosestOrAncestor';
-import Element from '../node/Element';
+import { SugarElement } from '../node/SugarElement';
 import * as PredicateFind from './PredicateFind';
 import * as Selectors from './Selectors';
 
-// TODO: An internal SelectorFilter module that doesn't Element.fromDom() everything
+// TODO: An internal SelectorFilter module that doesn't SugarElement.fromDom() everything
 
-const first = <T extends DomElement = DomElement> (selector: string) =>
+const first = <T extends Element = Element> (selector: string) =>
   Selectors.one<T>(selector);
 
-const ancestor = <T extends DomElement = DomElement> (scope: Element<DomNode>, selector: string, isRoot?: (e: Element<DomNode>) => boolean) =>
-  PredicateFind.ancestor(scope, (e): e is Element<T> => Selectors.is<T>(e, selector), isRoot);
+const ancestor = <T extends Element = Element> (scope: SugarElement<Node>, selector: string, isRoot?: (e: SugarElement<Node>) => boolean) =>
+  PredicateFind.ancestor(scope, (e): e is SugarElement<T> => Selectors.is<T>(e, selector), isRoot);
 
-const sibling = <T extends DomElement = DomElement> (scope: Element<DomNode>, selector: string) =>
-  PredicateFind.sibling(scope, (e): e is Element<T> => Selectors.is<T>(e, selector));
+const sibling = <T extends Element = Element> (scope: SugarElement<Node>, selector: string) =>
+  PredicateFind.sibling(scope, (e): e is SugarElement<T> => Selectors.is<T>(e, selector));
 
-const child = <T extends DomElement = DomElement> (scope: Element<DomNode>, selector: string) =>
-  PredicateFind.child(scope, (e): e is Element<T> => Selectors.is<T>(e, selector));
+const child = <T extends Element = Element> (scope: SugarElement<Node>, selector: string) =>
+  PredicateFind.child(scope, (e): e is SugarElement<T> => Selectors.is<T>(e, selector));
 
-const descendant = <T extends DomElement = DomElement> (scope: Element<DomNode>, selector: string) =>
+const descendant = <T extends Element = Element> (scope: SugarElement<Node>, selector: string) =>
   Selectors.one<T>(selector, scope);
 
 // Returns Some(closest ancestor element (sugared)) matching 'selector' up to isRoot, or None() otherwise
-const closest = <T extends DomElement = DomElement> (scope: Element<DomNode>, selector: string, isRoot?: (e: Element<DomNode>) => boolean): Option<Element<T>> => {
-  const is = (element: Element<DomNode>, selector: string): element is Element<T> => Selectors.is<T>(element, selector);
+const closest = <T extends Element = Element> (scope: SugarElement<Node>, selector: string, isRoot?: (e: SugarElement<Node>) => boolean): Option<SugarElement<T>> => {
+  const is = (element: SugarElement<Node>, selector: string): element is SugarElement<T> => Selectors.is<T>(element, selector);
   return ClosestOrAncestor<string, T>(is, ancestor, scope, selector, isRoot);
 };
 

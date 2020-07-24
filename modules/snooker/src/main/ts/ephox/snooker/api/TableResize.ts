@@ -1,6 +1,6 @@
 import { HTMLTableElement } from '@ephox/dom-globals';
 import { Bindable, Event, Events } from '@ephox/porkbun';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import * as Adjustments from '../resize/Adjustments';
 import { BarManager } from '../resize/BarManager';
 import * as BarPositions from '../resize/BarPositions';
@@ -12,11 +12,11 @@ type ColInfo = BarPositions.ColInfo;
 type BarPositions<A> = BarPositions.BarPositions<A>;
 
 export interface BeforeTableResizeEvent {
-  readonly table: () => Element;
+  readonly table: () => SugarElement;
 }
 
 export interface AfterTableResizeEvent {
-  readonly table: () => Element;
+  readonly table: () => SugarElement;
 }
 
 type TableResizeEventRegistry = {
@@ -28,8 +28,8 @@ type TableResizeEventRegistry = {
 interface TableResizeEvents {
   readonly registry: TableResizeEventRegistry;
   readonly trigger: {
-    readonly beforeResize: (table: Element) => void;
-    readonly afterResize: (table: Element) => void;
+    readonly beforeResize: (table: SugarElement) => void;
+    readonly afterResize: (table: SugarElement) => void;
     readonly startDrag: () => void;
   };
 }
@@ -43,7 +43,7 @@ export interface TableResize {
   readonly events: TableResizeEventRegistry;
 }
 
-const create = (wire: ResizeWire, vdirection: BarPositions<ColInfo>, resizing: ResizeBehaviour, lazySizing: (element: Element<HTMLTableElement>) => TableSize): TableResize => {
+const create = (wire: ResizeWire, vdirection: BarPositions<ColInfo>, resizing: ResizeBehaviour, lazySizing: (element: SugarElement<HTMLTableElement>) => TableSize): TableResize => {
   const hdirection = BarPositions.height;
   const manager = BarManager(wire, vdirection, hdirection);
 

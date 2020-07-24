@@ -1,11 +1,11 @@
 import { Chain, Keyboard, Keys, Log, Mouse, Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 
 import ImagePlugin from 'tinymce/plugins/image/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.plugins.image.ContextMenuTest', (success, failure) => {
   SilverTheme();
@@ -15,7 +15,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ContextMenuTest', (success, fa
     const tinyApis = TinyApis(editor);
     const tinyUi = TinyUi(editor);
 
-    const rootDoc = Element.fromDom(document);
+    const rootDoc = SugarElement.fromDom(document);
 
     const sOpenContextMenu = (target) => Chain.asStep(editor, [
       tinyUi.cTriggerContextMenu('trigger image context menu', target, '.tox-silver-sink [role="menuitem"]'),

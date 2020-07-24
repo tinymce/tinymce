@@ -1,6 +1,6 @@
 import { ApproxStructure, Assertions, Chain, Mouse, NamedChain, Pipeline, Step, StructAssert, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Body, Element } from '@ephox/sugar';
+import { SugarBody, SugarElement } from '@ephox/sugar';
 import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 import TestExtras from '../../module/TestExtras';
 
@@ -8,7 +8,7 @@ UnitTest.asynctest('WindowManager:tabbed-dialog Test', (success, failure) => {
   const helpers = TestExtras();
   const windowManager = WindowManager.setup(helpers.extras);
 
-  const cAssertFormContents = (label: string, f: (s, str, arr) => StructAssert) => Chain.op((tabview: Element) => {
+  const cAssertFormContents = (label: string, f: (s, str, arr) => StructAssert) => Chain.op((tabview: SugarElement) => {
     Assertions.assertStructure(
       'Checking tabview: ' + label,
       ApproxStructure.build((s, str, arr) => s.element('div', {
@@ -102,7 +102,7 @@ UnitTest.asynctest('WindowManager:tabbed-dialog Test', (success, failure) => {
 
     Chain.asStep({ }, [
       NamedChain.asChain([
-        NamedChain.writeValue('page', Body.body()),
+        NamedChain.writeValue('page', SugarBody.body()),
         NamedChain.direct('page', UiFinder.cFindIn('[role="dialog"]'), 'dialog'),
         NamedChain.direct('dialog', UiFinder.cFindIn('[role="tab"]:contains("Basic")'), 'basicTab'),
         NamedChain.direct('dialog', UiFinder.cFindIn('[role="tab"]:contains("Advanced")'), 'advancedTab'),

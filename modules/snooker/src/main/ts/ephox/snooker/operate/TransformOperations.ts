@@ -1,10 +1,10 @@
 import { Arr } from '@ephox/katamari';
+import { SugarElement } from '@ephox/sugar';
 import * as Structs from '../api/Structs';
 import * as GridRow from '../model/GridRow';
-import { Element } from '@ephox/sugar';
 
-type CompElm = (e1: Element, e2: Element) => boolean;
-type Subst = (element: Element, comparator: CompElm) => Element;
+type CompElm = (e1: SugarElement, e2: SugarElement) => boolean;
+type Subst = (element: SugarElement, comparator: CompElm) => SugarElement;
 
 // substitution :: (item, comparator) -> item
 const replaceIn = function (grid: Structs.RowCells[], targets: Structs.ElementNew[], comparator: CompElm, substitution: Subst) {

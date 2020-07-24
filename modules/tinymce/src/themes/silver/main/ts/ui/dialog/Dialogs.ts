@@ -5,11 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyParts, AlloySpec, Behaviour, Button, Container, DomFactory, Focusing, Keying,
-  ModalDialog, NativeEvents, SystemEvents, Tabstopping
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyParts, AlloySpec, Behaviour, Button, Container, DomFactory, Focusing, Keying, ModalDialog,
+  NativeEvents, SystemEvents, Tabstopping
 } from '@ephox/alloy';
 import { Option, Result } from '@ephox/katamari';
-import { Body, Class } from '@ephox/sugar';
+import { Class, SugarBody } from '@ephox/sugar';
 import Env from 'tinymce/core/api/Env';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
@@ -181,10 +181,10 @@ const renderDialog = (spec: DialogSpec) => {
         ])),
         AddEventsBehaviour.config('scroll-lock', [
           AlloyEvents.runOnAttached(() => {
-            Class.add(Body.body(), scrollLockClass);
+            Class.add(SugarBody.body(), scrollLockClass);
           }),
           AlloyEvents.runOnDetached(() => {
-            Class.remove(Body.body(), scrollLockClass);
+            Class.remove(SugarBody.body(), scrollLockClass);
           })
         ]),
         ...spec.extraBehaviours

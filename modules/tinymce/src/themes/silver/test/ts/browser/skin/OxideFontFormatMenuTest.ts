@@ -4,7 +4,7 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
-import { Body, Element } from '@ephox/sugar';
+import { SugarBody, SugarElement } from '@ephox/sugar';
 
 import Theme from 'tinymce/themes/silver/Theme';
 
@@ -14,7 +14,7 @@ UnitTest.asynctest('OxideFontFormatMenuTest', (success, failure) => {
 
   TinyLoader.setup(
     (editor, onSuccess, onFailure) => {
-      const doc = Element.fromDom(document);
+      const doc = SugarElement.fromDom(document);
 
       const apis = TinyApis(editor);
       const tinyUi = TinyUi(editor);
@@ -30,8 +30,8 @@ UnitTest.asynctest('OxideFontFormatMenuTest', (success, failure) => {
           Step.label('Set cursor position', apis.sSetCursor([ 0, 0 ], 'Te'.length)),
 
           tinyUi.sClickOnToolbar('Click on the style select button', 'button'),
-          Step.label('Wait for the style select menu', UiFinder.sWaitForVisible('Waiting for menu', Body.body(), '[role="menu"]')),
-          Step.label('Checking menu structure', Chain.asStep(Body.body(), [
+          Step.label('Wait for the style select menu', UiFinder.sWaitForVisible('Waiting for menu', SugarBody.body(), '[role="menu"]')),
+          Step.label('Checking menu structure', Chain.asStep(SugarBody.body(), [
             UiFinder.cFindIn('[role="menu"]'),
             Assertions.cAssertStructure(
               'Checking structure',

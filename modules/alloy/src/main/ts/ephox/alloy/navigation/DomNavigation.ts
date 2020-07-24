@@ -1,14 +1,15 @@
 import { HTMLElement } from '@ephox/dom-globals';
-import { Option, Num } from '@ephox/katamari';
-import { Element, Attr, Node } from '@ephox/sugar';
+import { Num, Option } from '@ephox/katamari';
+import { Attribute, SugarElement, SugarNode } from '@ephox/sugar';
 
 import * as DomPinpoint from './DomPinpoint';
 
-const horizontal = (container: Element<HTMLElement>, selector: string, current: Element<HTMLElement>, delta: number): Option<Element> => {
+const horizontal = (container: SugarElement<HTMLElement>, selector: string, current: SugarElement<HTMLElement>, delta: number): Option<SugarElement> => {
 
-  const isDisabledButton = (candidate: Element<HTMLElement>) => Node.name(candidate) === 'button' && Attr.get(candidate, 'disabled') === 'disabled';
+  const isDisabledButton = (candidate: SugarElement<HTMLElement>) =>
+    SugarNode.name(candidate) === 'button' && Attribute.get(candidate, 'disabled') === 'disabled';
 
-  const tryCycle = (initial: number, index: number, candidates: Array<Element<HTMLElement>>): Option<Element<HTMLElement>> => {
+  const tryCycle = (initial: number, index: number, candidates: Array<SugarElement<HTMLElement>>): Option<SugarElement<HTMLElement>> => {
     const newIndex = Num.cycleBy(index, delta, 0, candidates.length - 1);
     if (newIndex === initial) { // If we've cycled back to the original index, we've failed to find a new valid candidate
       return Option.none();

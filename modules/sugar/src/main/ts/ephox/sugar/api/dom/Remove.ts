@@ -1,10 +1,10 @@
-import { Node as DomNode } from '@ephox/dom-globals';
+import { Node } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
-import Element from '../node/Element';
+import { SugarElement } from '../node/SugarElement';
 import * as Traverse from '../search/Traverse';
 import * as InsertAll from './InsertAll';
 
-const empty = (element: Element<DomNode>): void => {
+const empty = (element: SugarElement<Node>): void => {
   // shortcut "empty node" trick. Requires IE 9.
   element.dom().textContent = '';
 
@@ -17,14 +17,14 @@ const empty = (element: Element<DomNode>): void => {
   });
 };
 
-const remove = (element: Element<DomNode>): void => {
+const remove = (element: SugarElement<Node>): void => {
   const dom = element.dom();
   if (dom.parentNode !== null) {
     dom.parentNode.removeChild(dom);
   }
 };
 
-const unwrap = (wrapper: Element<DomNode>): void => {
+const unwrap = (wrapper: SugarElement<Node>): void => {
   const children = Traverse.children(wrapper);
   if (children.length > 0) {
     InsertAll.before(wrapper, children);

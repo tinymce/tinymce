@@ -1,7 +1,7 @@
+import { Unicode } from '@ephox/katamari';
 import Jsc from '@ephox/wrap-jsverify';
 
 import * as ArbNodes from './ArbNodes';
-import { Unicode } from '@ephox/katamari';
 
 const formatting = {
   type: 'composite',

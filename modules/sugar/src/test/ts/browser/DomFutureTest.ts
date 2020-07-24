@@ -1,11 +1,11 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import * as Compare from 'ephox/sugar/api/dom/Compare';
 import * as DomFuture from 'ephox/sugar/api/dom/DomFuture';
-import Element from 'ephox/sugar/api/node/Element';
+import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
 
 UnitTest.asynctest('Browser Test: .DomFutureTest', (success) => {
 
-  const testElement = Element.fromTag('button');
+  const testElement = SugarElement.fromTag('button');
 
   DomFuture.waitFor(testElement, 'click', 1000).get((res) => {
     assert.eq(true, res.isError(), 'Result should be error as click has not yet occurred.');

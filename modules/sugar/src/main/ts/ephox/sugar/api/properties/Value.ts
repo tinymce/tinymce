@@ -1,12 +1,12 @@
 import { HTMLButtonElement, HTMLInputElement, HTMLOptionElement, HTMLSelectElement, HTMLTextAreaElement } from '@ephox/dom-globals';
-import Element from '../node/Element';
+import { SugarElement } from '../node/SugarElement';
 
 type TogglableElement = HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | HTMLOptionElement | HTMLButtonElement;
 
-const get = (element: Element<TogglableElement>): string =>
+const get = (element: SugarElement<TogglableElement>): string =>
   element.dom().value;
 
-const set = (element: Element<TogglableElement>, value: string): void => {
+const set = (element: SugarElement<TogglableElement>, value: string): void => {
   if (value === undefined) {
     throw new Error('Value.set was undefined');
   }

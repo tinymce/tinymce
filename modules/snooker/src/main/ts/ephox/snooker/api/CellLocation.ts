@@ -1,5 +1,5 @@
 import { Adt } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 
 /*
  * The CellLocation ADT is used to represent a cell when navigating. The
@@ -7,10 +7,10 @@ import { Element } from '@ephox/sugar';
  * when navigating past the last cell (e.g. create a new row).
  */
 
-type NoneHandler<T> = (current: Element | undefined) => T;
-type FirstHandler<T> = (current: Element) => T;
-type MiddleHandler<T> = (current: Element, target: any) => T;
-type LastHandler<T> = (current: Element) => T;
+type NoneHandler<T> = (current: SugarElement | undefined) => T;
+type FirstHandler<T> = (current: SugarElement) => T;
+type MiddleHandler<T> = (current: SugarElement, target: any) => T;
+type LastHandler<T> = (current: SugarElement) => T;
 
 export interface CellLocation {
   fold: <T> (
@@ -29,10 +29,10 @@ export interface CellLocation {
 }
 
 const adt: {
-  none: (current: Element | undefined) => CellLocation;
-  first: (current: Element) => CellLocation;
-  middle: (current: Element, target: Element) => CellLocation;
-  last: (current: Element) => CellLocation;
+  none: (current: SugarElement | undefined) => CellLocation;
+  first: (current: SugarElement) => CellLocation;
+  middle: (current: SugarElement, target: SugarElement) => CellLocation;
+  last: (current: SugarElement) => CellLocation;
 } = Adt.generate([
   { none: [ 'current' ] },
   { first: [ 'current' ] },
@@ -40,7 +40,7 @@ const adt: {
   { last: [ 'current' ] }
 ]);
 
-const none = (current: Element | undefined = undefined) => adt.none(current);
+const none = (current: SugarElement | undefined = undefined) => adt.none(current);
 
 export const CellLocation = {
   ...adt,

@@ -8,7 +8,7 @@
 import { Attachment } from '@ephox/alloy';
 import { Cell, Throttler } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Css, DomEvent, Element, Position, ShadowDom } from '@ephox/sugar';
+import { Css, DomEvent, SugarElement, SugarPosition, SugarShadowDom } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import * as Events from '../api/Events';
@@ -29,14 +29,14 @@ const setupEvents = (editor: Editor) => {
   const contentWindow = editor.getWin();
   const initialDocEle = editor.getDoc().documentElement;
 
-  const lastWindowDimensions = Cell(Position(contentWindow.innerWidth, contentWindow.innerHeight));
-  const lastDocumentDimensions = Cell(Position(initialDocEle.offsetWidth, initialDocEle.offsetHeight));
+  const lastWindowDimensions = Cell(SugarPosition(contentWindow.innerWidth, contentWindow.innerHeight));
+  const lastDocumentDimensions = Cell(SugarPosition(initialDocEle.offsetWidth, initialDocEle.offsetHeight));
 
   const resizeWindow = (e) => {
     // Check if the window dimensions have changed and if so then trigger a content resize event
     const outer = lastWindowDimensions.get();
     if (outer.left() !== contentWindow.innerWidth || outer.top() !== contentWindow.innerHeight) {
-      lastWindowDimensions.set(Position(contentWindow.innerWidth, contentWindow.innerHeight));
+      lastWindowDimensions.set(SugarPosition(contentWindow.innerWidth, contentWindow.innerHeight));
       Events.fireResizeContent(editor, e);
     }
   };
@@ -48,7 +48,7 @@ const setupEvents = (editor: Editor) => {
     // Check if the document dimensions have changed and if so then trigger a content resize event
     const inner = lastDocumentDimensions.get();
     if (inner.left() !== docEle.offsetWidth || inner.top() !== docEle.offsetHeight) {
-      lastDocumentDimensions.set(Position(docEle.offsetWidth, docEle.offsetHeight));
+      lastDocumentDimensions.set(SugarPosition(docEle.offsetWidth, docEle.offsetHeight));
       Events.fireResizeContent(editor, e);
     }
   };
@@ -59,7 +59,7 @@ const setupEvents = (editor: Editor) => {
   DOM.bind(contentWindow, 'scroll', scroll);
 
   // Bind to async load events and trigger a content resize event if the size has changed
-  const elementLoad = DomEvent.capture(Element.fromDom(editor.getBody()), 'load', resizeDocument);
+  const elementLoad = DomEvent.capture(SugarElement.fromDom(editor.getBody()), 'load', resizeDocument);
 
   editor.on('NodeChange', resizeDocument);
   editor.on('remove', () => {
@@ -74,8 +74,8 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
 
   loadIframeSkin(editor);
 
-  const eTargetNode = Element.fromDom(args.targetNode);
-  const uiRoot = ShadowDom.getContentContainer(ShadowDom.getRootNode(eTargetNode));
+  const eTargetNode = SugarElement.fromDom(args.targetNode);
+  const uiRoot = SugarShadowDom.getContentContainer(SugarShadowDom.getRootNode(eTargetNode));
 
   Attachment.attachSystemAfter(eTargetNode, uiComponents.mothership);
   Attachment.attachSystem(uiRoot, uiComponents.uiMothership);

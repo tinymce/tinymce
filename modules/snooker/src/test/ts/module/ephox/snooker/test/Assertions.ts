@@ -2,7 +2,7 @@ import { assert } from '@ephox/bedrock-client';
 import { HTMLTableDataCellElement, HTMLTableElement, HTMLTableHeaderCellElement } from '@ephox/dom-globals';
 import { Arr, Fun, Option, Options } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Attr, Body, Css, Element, Hierarchy, Html, Insert, Remove, SelectorFilter, Traverse } from '@ephox/sugar';
+import { Attribute, Css, Hierarchy, Html, Insert, Remove, SelectorFilter, SugarBody, SugarElement, Traverse } from '@ephox/sugar';
 import { Generators, SimpleGenerators } from 'ephox/snooker/api/Generators';
 import { ResizeDirection } from 'ephox/snooker/api/ResizeDirection';
 import { ResizeWire } from 'ephox/snooker/api/ResizeWire';
@@ -14,7 +14,7 @@ import * as Bridge from 'ephox/snooker/test/Bridge';
 
 type Op<T> = (
   wire: ResizeWire,
-  table: Element,
+  table: SugarElement,
   target: T,
   generators: Generators,
   direction: BarPositions<ColInfo>
@@ -30,9 +30,9 @@ const checkOld = (
   column: number,
   direction: BarPositions<ColInfo> = ResizeDirection.ltr
 ) => {
-  const table = Element.fromHtml<HTMLTableElement>(input);
-  Insert.append(Body.body(), table);
-  const wire = ResizeWire.only(Body.body());
+  const table = SugarElement.fromHtml<HTMLTableElement>(input);
+  Insert.append(SugarBody.body(), table);
+  const wire = ResizeWire.only(SugarBody.body());
   const result = operation(wire, table, {
     element: Fun.constant(Hierarchy.follow(table, [ section, row, column, 0 ]).getOrDie())
   }, Bridge.generators, direction);
@@ -62,11 +62,11 @@ const checkPaste = (
   column: number,
   direction: BarPositions<ColInfo> = ResizeDirection.ltr
 ) => {
-  const table = Element.fromHtml<HTMLTableElement>(input);
-  Insert.append(Body.body(), table);
-  const wire = ResizeWire.only(Body.body());
+  const table = SugarElement.fromHtml<HTMLTableElement>(input);
+  Insert.append(SugarBody.body(), table);
+  const wire = ResizeWire.only(SugarBody.body());
 
-  const pasteTable = Element.fromHtml<HTMLTableElement>('<table><tbody>' + pasteHtml + '</tbody></table>');
+  const pasteTable = SugarElement.fromHtml<HTMLTableElement>('<table><tbody>' + pasteHtml + '</tbody></table>');
   operation(
     wire,
     table,
@@ -96,9 +96,9 @@ const checkStructure = (
   column: number,
   direction: BarPositions<ColInfo> = ResizeDirection.ltr
 ) => {
-  const table = Element.fromHtml<HTMLTableElement>(input);
-  Insert.append(Body.body(), table);
-  const wire = ResizeWire.only(Body.body());
+  const table = SugarElement.fromHtml<HTMLTableElement>(input);
+  Insert.append(SugarBody.body(), table);
+  const wire = ResizeWire.only(SugarBody.body());
   const result = operation(wire, table, {
     element: Fun.constant(Hierarchy.follow(table, [ section, row, column, 0 ]).getOrDie())
   }, Bridge.generators, direction);
@@ -126,9 +126,9 @@ const checkDelete = (
   platform: ReturnType<typeof PlatformDetection.detect>,
   direction: BarPositions<ColInfo> = ResizeDirection.ltr
 ) => {
-  const table = Element.fromHtml<HTMLTableElement>(input);
-  Insert.append(Body.body(), table);
-  const wire = ResizeWire.only(Body.body());
+  const table = SugarElement.fromHtml<HTMLTableElement>(input);
+  Insert.append(SugarBody.body(), table);
+  const wire = ResizeWire.only(SugarBody.body());
   const cellz = Arr.map(cells, (cell) =>
     Hierarchy.follow(table, [ cell.section, cell.row, cell.column, 0 ]).getOrDie('Could not find cell')
   );
@@ -177,13 +177,13 @@ const checkMerge = (
   bounds: {startRow: number; startCol: number; finishRow: number; finishCol: number},
   direction: BarPositions<ColInfo> = ResizeDirection.ltr
 ) => {
-  const table = Element.fromHtml<HTMLTableElement>(input);
-  const expectedDom = Element.fromHtml(expected);
+  const table = SugarElement.fromHtml<HTMLTableElement>(input);
+  const expectedDom = SugarElement.fromHtml(expected);
 
-  Insert.append(Body.body(), expectedDom);
-  Insert.append(Body.body(), table);
+  Insert.append(SugarBody.body(), expectedDom);
+  Insert.append(SugarBody.body(), table);
 
-  const wire = ResizeWire.only(Body.body());
+  const wire = ResizeWire.only(SugarBody.body());
   const target = Bridge.targetStub(selection, bounds, table);
   const generators = Bridge.generators;
 
@@ -193,9 +193,9 @@ const checkMerge = (
   const all = [ table ].concat(SelectorFilter.descendants(table, 'td,th'));
   Arr.each(all, (elem) => Css.remove(elem, 'width') );
 
-  assert.eq('1', Attr.get(table, 'border'));
+  assert.eq('1', Attribute.get(table, 'border'));
   // Get around ordering of attribute differences.
-  Attr.remove(table, 'border');
+  Attribute.remove(table, 'border');
   assert.eq(expected, Html.getOuter(table));
 
   Remove.remove(table);
@@ -209,9 +209,9 @@ const checkUnmerge = (
   unmergablePaths: { section: number; row: number; column: number }[],
   direction: BarPositions<ColInfo> = ResizeDirection.ltr
 ) => {
-  const table = Element.fromHtml<HTMLTableElement>(input);
-  Insert.append(Body.body(), table);
-  const wire = ResizeWire.only(Body.body());
+  const table = SugarElement.fromHtml<HTMLTableElement>(input);
+  Insert.append(SugarBody.body(), table);
+  const wire = ResizeWire.only(SugarBody.body());
   const unmergables = Arr.map(unmergablePaths, (path) =>
     Hierarchy.follow(table, [ path.section, path.row, path.column ])
   );

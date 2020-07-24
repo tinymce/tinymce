@@ -1,17 +1,17 @@
 import { ValueSchema } from '@ephox/boulder';
 import { document } from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
-import { Css, Element, Location } from '@ephox/sugar';
+import { Css, SugarElement, SugarLocation } from '@ephox/sugar';
+
 import { Bounds, box } from '../../alien/Boxes';
 import { AlloyComponent } from '../../api/component/ComponentApi';
-
 import * as AriaFocus from '../../aria/AriaFocus';
-import { Stateless } from '../../behaviour/common/BehaviourState';
 import * as Anchor from '../../positioning/layout/Anchor';
 import * as Origins from '../../positioning/layout/Origins';
 import * as SimpleLayout from '../../positioning/layout/SimpleLayout';
 import { AnchorDetail, Anchoring, AnchorSpec } from '../../positioning/mode/Anchoring';
 import AnchorSchema from '../../positioning/mode/AnchorSchema';
+import { Stateless } from '../common/BehaviourState';
 import { PositioningConfig } from './PositioningTypes';
 
 const getFixedOrigin = (): Origins.OriginAdt => {
@@ -22,7 +22,7 @@ const getFixedOrigin = (): Origins.OriginAdt => {
 };
 
 const getRelativeOrigin = (component: AlloyComponent): Origins.OriginAdt => {
-  const position = Location.absolute(component.element());
+  const position = SugarLocation.absolute(component.element());
   const bounds = component.element().dom().getBoundingClientRect();
 
   // We think that this just needs to be kept consistent with Boxes.win. If we remove the scroll values from Boxes.win, we
@@ -39,7 +39,7 @@ const position = (component: AlloyComponent, posConfig: PositioningConfig, posSt
   positionWithin(component, posConfig, posState, anchor, placee, Option.none());
 };
 
-const positionWithin = (component: AlloyComponent, posConfig: PositioningConfig, posState: Stateless, anchor: AnchorSpec, placee: AlloyComponent, boxElement: Option<Element>): void => {
+const positionWithin = (component: AlloyComponent, posConfig: PositioningConfig, posState: Stateless, anchor: AnchorSpec, placee: AlloyComponent, boxElement: Option<SugarElement>): void => {
   const boundsBox = boxElement.map(box);
   return positionWithinBounds(component, posConfig, posState, anchor, placee, boundsBox);
 };

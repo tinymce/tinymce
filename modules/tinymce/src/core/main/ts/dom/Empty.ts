@@ -7,14 +7,14 @@
 
 import { Node } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
-import { Compare, Element, SelectorExists } from '@ephox/sugar';
+import { Compare, SelectorExists, SugarElement } from '@ephox/sugar';
 import TreeWalker from '../api/dom/TreeWalker';
 import * as CaretCandidate from '../caret/CaretCandidate';
 import * as NodeType from './NodeType';
 
 const hasWhitespacePreserveParent = function (rootNode: Node, node: Node) {
-  const rootElement = Element.fromDom(rootNode);
-  const startNode = Element.fromDom(node);
+  const rootElement = SugarElement.fromDom(rootNode);
+  const startNode = SugarElement.fromDom(node);
   return SelectorExists.ancestor(startNode, 'pre,code', Fun.curry(Compare.eq, rootElement));
 };
 
@@ -76,7 +76,7 @@ const isEmptyNode = function (targetNode: Node, skipBogus: boolean) {
   }
 };
 
-const isEmpty = (elm: Element<Node>, skipBogus: boolean = true) => isEmptyNode(elm.dom(), skipBogus);
+const isEmpty = (elm: SugarElement<Node>, skipBogus: boolean = true) => isEmptyNode(elm.dom(), skipBogus);
 
 export {
   isEmpty

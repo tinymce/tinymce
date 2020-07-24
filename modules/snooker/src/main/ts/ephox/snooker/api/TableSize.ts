@@ -1,6 +1,6 @@
 import { HTMLElement, HTMLTableElement } from '@ephox/dom-globals';
 import { Cell, Fun } from '@ephox/katamari';
-import { Element, Width } from '@ephox/sugar';
+import { SugarElement, Width } from '@ephox/sugar';
 import { Warehouse } from '../model/Warehouse';
 import { BarPositions, ColInfo } from '../resize/BarPositions';
 import * as ColumnSizes from '../resize/ColumnSizes';
@@ -14,13 +14,13 @@ export interface TableSize {
   readonly getCellDelta: (delta: number) => number;
   readonly singleColumnWidth: (w: number, delta: number) => number[];
   readonly minCellWidth: () => number;
-  readonly setElementWidth: (element: Element<HTMLElement>, width: number) => void;
+  readonly setElementWidth: (element: SugarElement<HTMLElement>, width: number) => void;
   readonly adjustTableWidth: (delta: number) => void;
   readonly isRelative: boolean;
   readonly label: string;
 }
 
-const noneSize = (table: Element<HTMLTableElement>): TableSize => {
+const noneSize = (table: SugarElement<HTMLTableElement>): TableSize => {
   const getWidth = () => Width.get(table);
   const zero = Fun.constant(0);
 
@@ -40,7 +40,7 @@ const noneSize = (table: Element<HTMLTableElement>): TableSize => {
   };
 };
 
-const percentageSize = (initialWidth: string, table: Element<HTMLTableElement>): TableSize => {
+const percentageSize = (initialWidth: string, table: SugarElement<HTMLTableElement>): TableSize => {
   const floatWidth = Cell(parseFloat(initialWidth));
   const pixelWidth = Cell(Width.get(table));
   const getCellDelta = (delta: number) => delta / pixelWidth.get() * 100;
@@ -71,7 +71,7 @@ const percentageSize = (initialWidth: string, table: Element<HTMLTableElement>):
   };
 };
 
-const pixelSize = (initialWidth: number, table: Element<HTMLTableElement>): TableSize => {
+const pixelSize = (initialWidth: number, table: SugarElement<HTMLTableElement>): TableSize => {
   const width = Cell(initialWidth);
   const getWidth = width.get;
   const getCellDelta = Fun.identity;
@@ -99,7 +99,7 @@ const pixelSize = (initialWidth: number, table: Element<HTMLTableElement>): Tabl
   };
 };
 
-const chooseSize = (element: Element<HTMLTableElement>, width: string) => {
+const chooseSize = (element: SugarElement<HTMLTableElement>, width: string) => {
   const percentMatch = Sizes.percentageBasedSizeRegex().exec(width);
   if (percentMatch !== null) {
     return percentageSize(percentMatch[1], element);
@@ -113,7 +113,7 @@ const chooseSize = (element: Element<HTMLTableElement>, width: string) => {
   return pixelSize(fallbackWidth, element);
 };
 
-const getTableSize = (table: Element<HTMLTableElement>) => {
+const getTableSize = (table: SugarElement<HTMLTableElement>) => {
   const width = Sizes.getRawWidth(table);
   return width.fold(
     () => noneSize(table),

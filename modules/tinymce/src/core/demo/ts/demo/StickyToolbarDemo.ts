@@ -1,4 +1,4 @@
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 
 declare let tinymce: any;
 
@@ -9,7 +9,7 @@ export default function () {
       icon: 'comment',
       tooltip: 'Tooltip for ' + name,
       onSetup: (api) => {
-        const box = Element.fromHtml('<div style="width: ' + width + 'px; background: ' + background + ';"></div>');
+        const box = SugarElement.fromHtml('<div style="width: ' + width + 'px; background: ' + background + ';"></div>');
         api.element().appendChild(box.dom());
         return () => {
           api.element().removeChild(box.dom());

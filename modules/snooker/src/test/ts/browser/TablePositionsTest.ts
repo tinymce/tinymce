@@ -1,15 +1,15 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { document, HTMLElement } from '@ephox/dom-globals';
-import { Element, Insert, InsertAll, Remove, SelectorFilter, SelectorFind } from '@ephox/sugar';
-import * as TablePositions from 'ephox/snooker/api/TablePositions';
 import { Option } from '@ephox/katamari';
+import { Insert, InsertAll, Remove, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
+import * as TablePositions from 'ephox/snooker/api/TablePositions';
 
 UnitTest.test('RectangularTest', function () {
   const body = SelectorFind.first('body').getOrDie();
-  const div = Element.fromTag('div');
+  const div = SugarElement.fromTag('div');
   Insert.append(body, div);
 
-  const table = Element.fromHtml(
+  const table = SugarElement.fromHtml(
     '<table id="tableA" border=1>' +
        '<tbody>' +
          '<tr>' +
@@ -40,7 +40,7 @@ UnitTest.test('RectangularTest', function () {
      '</table>'
   );
 
-  const table2 = Element.fromHtml('<table id="tableB" border="1" cellspacing="0" cellpadding="0" style="border-collapse:collapse;border:none;">' +
+  const table2 = SugarElement.fromHtml('<table id="tableB" border="1" cellspacing="0" cellpadding="0" style="border-collapse:collapse;border:none;">' +
    '<tbody><tr>' +
       '<td id="TBA0" style="min-width: 100px; height: 40px" rowspan="3">A0</td>' +
       '<td id="TBA1" style="min-width: 100px; height: 40px">A1 </td>' +
@@ -73,7 +73,7 @@ UnitTest.test('RectangularTest', function () {
 
   InsertAll.append(div, [ table, table2 ] );
 
-  const check = function (tableTarget: Element, from: string, to: string, expected: boolean) {
+  const check = function (tableTarget: SugarElement, from: string, to: string, expected: boolean) {
     [].forEach.call(tableTarget.dom().querySelectorAll('td'), function (td: HTMLElement) {
       td.style.background = '';
     });

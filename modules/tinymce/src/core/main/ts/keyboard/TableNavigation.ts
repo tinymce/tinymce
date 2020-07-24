@@ -7,7 +7,7 @@
 
 import { Element, HTMLElement, HTMLTableCellElement, HTMLTableElement, Range } from '@ephox/dom-globals';
 import { Arr, Fun, Option } from '@ephox/katamari';
-import { Attr, Element as SugarElement, Insert } from '@ephox/sugar';
+import { Attribute, Insert, SugarElement } from '@ephox/sugar';
 import Editor from '../api/Editor';
 import * as Settings from '../api/Settings';
 import * as CaretFinder from '../caret/CaretFinder';
@@ -85,7 +85,7 @@ const renderBlock = (down: boolean, editor: Editor, table: HTMLElement, pos: Car
   if (forcedRootBlock) {
     editor.undoManager.transact(() => {
       const element = SugarElement.fromTag(forcedRootBlock);
-      Attr.setAll(element, Settings.getForcedRootBlockAttrs(editor));
+      Attribute.setAll(element, Settings.getForcedRootBlockAttrs(editor));
       Insert.append(element, SugarElement.fromTag('br'));
 
       if (down) {

@@ -8,14 +8,14 @@
 import { document, Range } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Compare, Element, Node, Text, Traverse, Selection } from '@ephox/sugar';
+import { Compare, SimSelection, SugarElement, SugarNode, SugarText, Traverse } from '@ephox/sugar';
 import Editor from '../api/Editor';
 import * as NodeType from '../dom/NodeType';
 
 const browser = PlatformDetection.detect().browser;
 
 const clamp = function (offset, element) {
-  const max = Node.isText(element) ? Text.get(element).length : Traverse.children(element).length + 1;
+  const max = SugarNode.isText(element) ? SugarText.get(element).length : Traverse.children(element).length + 1;
 
   if (offset > max) {
     return max;
@@ -27,7 +27,7 @@ const clamp = function (offset, element) {
 };
 
 const normalizeRng = function (rng) {
-  return Selection.range(
+  return SimSelection.range(
     rng.start(),
     clamp(rng.soffset(), rng.start()),
     rng.finish(),
@@ -35,7 +35,7 @@ const normalizeRng = function (rng) {
   );
 };
 
-const isOrContains = function (root: Element, elm: Element) {
+const isOrContains = function (root: SugarElement, elm: SugarElement) {
   return !NodeType.isRestrictedNode(elm.dom()) && (Compare.contains(root, elm) || Compare.eq(root, elm));
 };
 
@@ -50,7 +50,7 @@ const shouldStore = function (editor: Editor) {
 };
 
 const nativeRangeToSelectionRange = function (r) {
-  return Selection.range(Element.fromDom(r.startContainer), r.startOffset, Element.fromDom(r.endContainer), r.endOffset);
+  return SimSelection.range(SugarElement.fromDom(r.startContainer), r.startOffset, SugarElement.fromDom(r.endContainer), r.endOffset);
 };
 
 const readRange = function (win) {
@@ -86,13 +86,13 @@ const bookmarkToNativeRng = function (bookmark): Option<Range> {
 };
 
 const store = function (editor: Editor) {
-  const newBookmark = shouldStore(editor) ? getBookmark(Element.fromDom(editor.getBody())) : Option.none();
+  const newBookmark = shouldStore(editor) ? getBookmark(SugarElement.fromDom(editor.getBody())) : Option.none();
 
   editor.bookmark = newBookmark.isSome() ? newBookmark : editor.bookmark;
 };
 
 const storeNative = function (editor: Editor, rng) {
-  const root = Element.fromDom(editor.getBody());
+  const root = SugarElement.fromDom(editor.getBody());
   const range = shouldStore(editor) ? Option.from(rng) : Option.none();
 
   const newBookmark = range.map(nativeRangeToSelectionRange)
@@ -105,7 +105,7 @@ const getRng = function (editor: Editor): Option<Range> {
   const bookmark = editor.bookmark ? editor.bookmark : Option.none();
 
   return bookmark
-    .bind((x) => validate(Element.fromDom(editor.getBody()), x))
+    .bind((x) => validate(SugarElement.fromDom(editor.getBody()), x))
     .bind(bookmarkToNativeRng);
 };
 

@@ -7,7 +7,7 @@
 
 import { Range, Text } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import { repeatLeft } from '../alien/TextSearch';
 import * as AutocompleteTag from './AutocompleteTag';
@@ -72,7 +72,7 @@ const findStart = (dom: DOMUtils, initRange: Range, ch: string, minChars: number
   });
 };
 
-const getContext = (dom: DOMUtils, initRange: Range, ch: string, minChars: number = 0): Option<AutocompleteContext> => AutocompleteTag.detect(Element.fromDom(initRange.startContainer)).fold(
+const getContext = (dom: DOMUtils, initRange: Range, ch: string, minChars: number = 0): Option<AutocompleteContext> => AutocompleteTag.detect(SugarElement.fromDom(initRange.startContainer)).fold(
   () => findStart(dom, initRange, ch, minChars),
   (elm) => {
     const range = dom.createRng();

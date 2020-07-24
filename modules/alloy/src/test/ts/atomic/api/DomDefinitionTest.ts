@@ -1,7 +1,8 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr, Obj, Option } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import Jsc from '@ephox/wrap-jsverify';
+
 import * as DomModification from 'ephox/alloy/dom/DomModification';
 
 interface ModifiationType {
@@ -18,7 +19,7 @@ interface DefinitionType {
   styles: Record<string, string>;
   value: Option<string>;
   innerHtml: Option<string>;
-  domChildren: Element[];
+  domChildren: SugarElement[];
 }
 
 UnitTest.test('DomDefinitionTest', () => {
@@ -57,7 +58,7 @@ UnitTest.test('DomDefinitionTest', () => {
       styles: arr[4],
       value: arr[5],
       innerHtml: arr[6],
-      domChildren: [ ] as Element[]
+      domChildren: [ ] as SugarElement[]
     }),
     (defn: DefinitionType) => [ defn.uid, defn.tag, defn.classes, defn.attributes, defn.styles, defn.value, defn.innerHtml, defn.domChildren ],
     (defn: DefinitionType) => JSON.stringify({

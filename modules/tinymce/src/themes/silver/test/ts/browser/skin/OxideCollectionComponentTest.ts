@@ -1,12 +1,10 @@
-import {
-  ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Log, Logger, Mouse, Pipeline, UiFinder
-} from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Log, Logger, Mouse, Pipeline, UiFinder } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document, navigator } from '@ephox/dom-globals';
 import { Arr, Option, Options, Result } from '@ephox/katamari';
 import { TinyLoader, TinyUi } from '@ephox/mcagar';
-import { Attr, Body, Element } from '@ephox/sugar';
+import { Attribute, SugarBody, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
@@ -21,7 +19,7 @@ UnitTest.asynctest('OxideCollectionComponentTest', (success, failure) => {
   TinyLoader.setup(
     (editor, onSuccess, onFailure) => {
       const tinyUi = TinyUi(editor);
-      const doc = Element.fromDom(document);
+      const doc = SugarElement.fromDom(document);
 
       const structureItem = (optText: Option<string>, optIcon: Option<string>) => (s, str, arr) => s.element('div', {
         classes: [ arr.has('tox-collection__item') ],
@@ -38,7 +36,7 @@ UnitTest.asynctest('OxideCollectionComponentTest', (success, failure) => {
         ])
       });
 
-      const cFindNthIn = (selector, n) => Chain.binder((elem: Element) => {
+      const cFindNthIn = (selector, n) => Chain.binder((elem: SugarElement) => {
         const matches = UiFinder.findAllIn(elem, selector);
         return matches.length > 0 && n < matches.length ? Result.value(matches[n]) :
           Result.error(`Could not find match ${n} of selector: ${selector}`);
@@ -51,7 +49,7 @@ UnitTest.asynctest('OxideCollectionComponentTest', (success, failure) => {
             ':focus { outline: 2px solid green; }'
           ]),
           tinyUi.sClickOnToolbar('Click on toolbar button', 'button'),
-          UiFinder.sWaitForVisible('Waiting for dialog', Body.body(), '[role="dialog"]'),
+          UiFinder.sWaitForVisible('Waiting for dialog', SugarBody.body(), '[role="dialog"]'),
 
           FocusTools.sTryOnSelector('Focus should start on input', doc, 'input'),
           Keyboard.sKeydown(doc, Keys.tab(), { }),
@@ -59,7 +57,7 @@ UnitTest.asynctest('OxideCollectionComponentTest', (success, failure) => {
           Logger.t(
             'Checking the first collection: columns = 1, list',
             GeneralSteps.sequence([
-              Chain.asStep(Body.body(), [
+              Chain.asStep(SugarBody.body(), [
                 cFindNthIn('[role="dialog"] .tox-form__group .tox-collection', 0),
                 Assertions.cAssertStructure(
                   'Checking structure',
@@ -86,11 +84,11 @@ UnitTest.asynctest('OxideCollectionComponentTest', (success, failure) => {
 
           // NOTE: We need a layout engine to use flex-wrap navigation.
           navigator.userAgent.indexOf('PhantomJS') > -1 ?
-            FocusTools.sSetFocus('Force focus to F on phantom', Body.body(), '.tox-collection__item:contains("F")')
+            FocusTools.sSetFocus('Force focus to F on phantom', SugarBody.body(), '.tox-collection__item:contains("F")')
             : Logger.t(
               'Checking the second collection: columns = auto',
               GeneralSteps.sequence([
-                Chain.asStep(Body.body(), [
+                Chain.asStep(SugarBody.body(), [
                   cFindNthIn('[role="dialog"] .tox-form__group .tox-collection', 1),
                   Assertions.cAssertStructure(
                     'Checking structure',
@@ -120,7 +118,7 @@ UnitTest.asynctest('OxideCollectionComponentTest', (success, failure) => {
           Logger.t(
             'Checking the third collection: columns = 2',
             GeneralSteps.sequence([
-              Chain.asStep(Body.body(), [
+              Chain.asStep(SugarBody.body(), [
                 cFindNthIn('[role="dialog"] .tox-form__group .tox-collection', 2),
                 Assertions.cAssertStructure(
                   'Checking structure',
@@ -154,11 +152,11 @@ UnitTest.asynctest('OxideCollectionComponentTest', (success, failure) => {
           ),
 
           Log.stepsAsStep('TBA', 'Check focus follows mouse also', [
-            Mouse.sHoverOn(Body.body(), '.tox-collection__item:contains(G)'),
-            Chain.asStep(Body.body(), [
+            Mouse.sHoverOn(SugarBody.body(), '.tox-collection__item:contains(G)'),
+            Chain.asStep(SugarBody.body(), [
               UiFinder.cFindIn('.tox-collection__item--active'),
               Chain.op((activeElem) => {
-                const value = Attr.get(activeElem, 'data-collection-item-value');
+                const value = Attribute.get(activeElem, 'data-collection-item-value');
                 Assertions.assertEq('Checking selected value', 'g', value);
               })
             ])

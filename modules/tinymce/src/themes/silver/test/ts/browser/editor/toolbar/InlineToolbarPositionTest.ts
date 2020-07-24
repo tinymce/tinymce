@@ -1,12 +1,10 @@
-import {
-  ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Log, NamedChain, Pipeline, Step, UiFinder, Waiter
-} from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Log, NamedChain, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
 import { Boxes } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document, HTMLElement } from '@ephox/dom-globals';
 import { Arr, Strings } from '@ephox/katamari';
 import { Editor as McEditor, TinyApis } from '@ephox/mcagar';
-import { Body, Css, Element, Insert, Remove, SelectorFind } from '@ephox/sugar';
+import { Css, Insert, Remove, SelectorFind, SugarBody, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 
 import Theme from 'tinymce/themes/silver/Theme';
@@ -14,11 +12,11 @@ import Theme from 'tinymce/themes/silver/Theme';
 UnitTest.asynctest('Inline Editor Toolbar Position test', (success, failure) => {
   Theme();
 
-  const sAssertStaticPos = (container: Element) => Waiter.sTryUntil('Wait for toolbar to be absolute', Step.sync(() => {
+  const sAssertStaticPos = (container: SugarElement) => Waiter.sTryUntil('Wait for toolbar to be absolute', Step.sync(() => {
     Assertions.assertEq('Container should be statically positioned', 'static', Css.get(container, 'position'));
   }));
 
-  const sAssertAbsolutePos = (container: Element, contentArea: Element, position: 'above' | 'below') => Waiter.sTryUntil('Wait for toolbar to be absolute', Step.sync(() => {
+  const sAssertAbsolutePos = (container: SugarElement, contentArea: SugarElement, position: 'above' | 'below') => Waiter.sTryUntil('Wait for toolbar to be absolute', Step.sync(() => {
     const left = Css.get(container, 'left');
     const top = parseInt(Strings.removeTrailing(Css.get(container, 'top'), 'px'), 10);
 
@@ -32,7 +30,7 @@ UnitTest.asynctest('Inline Editor Toolbar Position test', (success, failure) => 
     Assertions.assertEq(`Container should be positioned ${position} contentarea, ${top}px should be ~${assertTop}px`, true, Math.abs(top - assertTop) < 3);
   }));
 
-  const sAssertDockedPos = (header: Element, position: 'top' | 'bottom') => Waiter.sTryUntil('Wait for toolbar to be docked', Step.sync(() => {
+  const sAssertDockedPos = (header: SugarElement, position: 'top' | 'bottom') => Waiter.sTryUntil('Wait for toolbar to be docked', Step.sync(() => {
     const left = Css.get(header, 'left');
     const top = parseInt(Strings.removeTrailing(Css.get(header, position), 'px'), 10);
 
@@ -43,12 +41,12 @@ UnitTest.asynctest('Inline Editor Toolbar Position test', (success, failure) => 
     Assertions.assertEq(`Header container should be docked to ${position}, ${top}px should be ~${assertTop}px`, true, Math.abs(top - assertTop) < 3);
   }));
 
-  const sScrollToElement = (contentAreaContainer: Element, selector: string, alignWindowBottom = false) => Step.sync(() => {
+  const sScrollToElement = (contentAreaContainer: SugarElement, selector: string, alignWindowBottom = false) => Step.sync(() => {
     const elm = UiFinder.findIn(contentAreaContainer, selector).getOrDie();
     elm.dom().scrollIntoView(alignWindowBottom);
   });
 
-  const sScrollToElementAndActivate = (tinyApis: TinyApis, element: Element, selector: string, alignWindowBottom = false) => Step.label('Activate editor', GeneralSteps.sequence([
+  const sScrollToElementAndActivate = (tinyApis: TinyApis, element: SugarElement, selector: string, alignWindowBottom = false) => Step.label('Activate editor', GeneralSteps.sequence([
     sScrollToElement(element, selector, alignWindowBottom),
     tinyApis.sSelect(selector, []),
     sActiveEditor(tinyApis)
@@ -57,19 +55,19 @@ UnitTest.asynctest('Inline Editor Toolbar Position test', (success, failure) => 
   const sActiveEditor = (tinyApis: TinyApis) => GeneralSteps.sequence([
     tinyApis.sFocus(),
     tinyApis.sNodeChanged(),
-    UiFinder.sWaitForVisible('Wait for editor to be visible', Body.body(), '.tox-editor-header')
+    UiFinder.sWaitForVisible('Wait for editor to be visible', SugarBody.body(), '.tox-editor-header')
   ]);
 
   const sDeactivateEditor = (editor: Editor) => Step.label('Deactivate editor', GeneralSteps.sequence([
-    FocusTools.sSetFocus('Focus outside editor', Element.fromDom(document.documentElement), 'div.scroll-div'),
+    FocusTools.sSetFocus('Focus outside editor', SugarElement.fromDom(document.documentElement), 'div.scroll-div'),
     Step.sync(() => {
       editor.fire('focusout');
     }),
-    UiFinder.sWaitForHidden('Wait for editor to hide', Body.body(), '.tox.tox-tinymce-inline')
+    UiFinder.sWaitForHidden('Wait for editor to hide', SugarBody.body(), '.tox.tox-tinymce-inline')
   ]));
 
-  const setupPageScroll = (contentAreaContainer: Element) => {
-    const createScrollDiv = () => Element.fromHtml<HTMLElement>('<div tabindex="0" class="scroll-div" style="height: 500px;"></div>');
+  const setupPageScroll = (contentAreaContainer: SugarElement) => {
+    const createScrollDiv = () => SugarElement.fromHtml<HTMLElement>('<div tabindex="0" class="scroll-div" style="height: 500px;"></div>');
 
     const divBefore = createScrollDiv();
     const divAfter = createScrollDiv();
@@ -86,16 +84,16 @@ UnitTest.asynctest('Inline Editor Toolbar Position test', (success, failure) => 
   interface Data {
     editor: Editor;
     tinyApis: TinyApis;
-    header: Element;
-    container: Element;
-    contentAreaContainer: Element;
+    header: SugarElement;
+    container: SugarElement;
+    contentAreaContainer: SugarElement;
   }
 
   const cTest = (getSteps: (data: Data) => Step<any, any>[]) => Chain.runStepsOnValue((editor: Editor) => {
     const tinyApis = TinyApis(editor);
-    const container = Element.fromDom(editor.getContainer());
-    const contentAreaContainer = Element.fromDom(editor.getContentAreaContainer());
-    const header = SelectorFind.descendant(Element.fromDom(editor.getContainer()), '.tox-editor-header').getOr(container);
+    const container = SugarElement.fromDom(editor.getContainer());
+    const contentAreaContainer = SugarElement.fromDom(editor.getContentAreaContainer());
+    const header = SelectorFind.descendant(SugarElement.fromDom(editor.getContainer()), '.tox-editor-header').getOr(container);
     editor.setContent('<p>START CONTENT</p>' + Arr.range(98, (i) => i === 49 ? '<p>STOP AND CLICK HERE</p>' : '<p>Some content...</p>').join('\n') + '<p>END CONTENT</p>');
 
     let teardownScroll: () => void;
@@ -252,7 +250,7 @@ UnitTest.asynctest('Inline Editor Toolbar Position test', (success, failure) => 
         ...getTopPositionSteps({ editor, tinyApis, header, container, contentAreaContainer }),
         Log.stepsAsStep('TINY-3161', 'Select item at the top of content, when there\'s no room to render above (docked position)', [
           Step.sync(() => {
-            const editorBody = Element.fromDom(editor.getBody());
+            const editorBody = SugarElement.fromDom(editor.getBody());
             Css.set(editorBody, 'position', 'absolute');
             Css.set(editorBody, 'top', '0');
             Css.set(editorBody, 'left', '0');
@@ -267,7 +265,7 @@ UnitTest.asynctest('Inline Editor Toolbar Position test', (success, failure) => 
           sAssertDockedPos(header, 'top'),
           sDeactivateEditor(editor),
           Step.sync(() => {
-            const editorBody = Element.fromDom(editor.getBody());
+            const editorBody = SugarElement.fromDom(editor.getBody());
             Css.remove(editorBody, 'position');
             Css.remove(editorBody, 'top');
           })
@@ -279,8 +277,8 @@ UnitTest.asynctest('Inline Editor Toolbar Position test', (success, failure) => 
     Log.chainsAsStep('TINY-5955', 'Test fixed toolbar position', [
       NamedChain.asChain([
         NamedChain.write('toolbar', Chain.mapper(() => {
-          const toolbar = Element.fromHtml('<div id="toolbar"></div>');
-          Insert.append(Body.body(), toolbar);
+          const toolbar = SugarElement.fromHtml('<div id="toolbar"></div>');
+          Insert.append(SugarBody.body(), toolbar);
           return toolbar;
         })),
         NamedChain.write('editor', McEditor.cFromSettings({

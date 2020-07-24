@@ -8,7 +8,7 @@
 import { Blob, HTMLImageElement, URL } from '@ephox/dom-globals';
 import { BlobConversions, ImageTransformations, ResultConversions } from '@ephox/imagetools';
 import { Option } from '@ephox/katamari';
-import { Element, SelectorFind } from '@ephox/sugar';
+import { SelectorFind, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 
 import Delay from 'tinymce/core/api/util/Delay';
@@ -22,7 +22,7 @@ import * as Proxy from './Proxy';
 
 let count = 0;
 
-const getFigureImg = (elem) => SelectorFind.child(Element.fromDom(elem), 'img');
+const getFigureImg = (elem) => SelectorFind.child(SugarElement.fromDom(elem), 'img');
 
 const isFigure = (editor: Editor, elem) => editor.dom.is(elem, 'figure');
 
@@ -44,12 +44,12 @@ const displayError = function (editor: Editor, error) {
   });
 };
 
-const getSelectedImage = (editor: Editor): Option<Element> => {
+const getSelectedImage = (editor: Editor): Option<SugarElement> => {
   const elem = editor.selection.getNode();
   if (isFigure(editor, elem)) {
     return getFigureImg(elem);
   } else {
-    return Option.some(Element.fromDom(elem));
+    return Option.some(SugarElement.fromDom(elem));
   }
 };
 

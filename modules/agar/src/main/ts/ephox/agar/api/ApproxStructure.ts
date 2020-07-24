@@ -1,5 +1,5 @@
 import { Arr, Obj } from '@ephox/katamari';
-import { Attr, Classes, Css, Element, Node, Traverse } from '@ephox/sugar';
+import { Attribute, Classes, Css, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
 import * as ApproxComparisons from '../assertions/ApproxComparisons';
 import * as ApproxStructures from '../assertions/ApproxStructures';
@@ -44,8 +44,8 @@ const arrApi = {
 const build = <T>(f: Builder<T>): T =>
   f(structApi, strApi, arrApi);
 
-const getAttrsExcept = (node: Element<any>, exclude: string[]): Record<string, string> =>
-  Obj.bifilter(Attr.clone(node), (value, key) => !Arr.contains(exclude, key)).t;
+const getAttrsExcept = (node: SugarElement<any>, exclude: string[]): Record<string, string> =>
+  Obj.bifilter(Attribute.clone(node), (value, key) => !Arr.contains(exclude, key)).t;
 
 const toAssertableObj = (obj: Record<string, string>): Record<string, CombinedAssert> =>
   Obj.map(obj, ApproxComparisons.is);
@@ -53,21 +53,21 @@ const toAssertableObj = (obj: Record<string, string>): Record<string, CombinedAs
 const toAssertableArr = (arr: string[]): (StringAssert & ArrayAssert)[] =>
   Arr.map(arr, ApproxComparisons.has);
 
-const fromElement = (node: Element<any>): StructAssert => {
-  if (Node.isElement(node)) {
-    return ApproxStructures.element(Node.name(node), {
+const fromElement = (node: SugarElement<any>): StructAssert => {
+  if (SugarNode.isElement(node)) {
+    return ApproxStructures.element(SugarNode.name(node), {
       children: Arr.map(Traverse.children(node), fromElement),
       attrs: toAssertableObj(getAttrsExcept(node, [ 'style', 'class' ])),
       styles: toAssertableObj(Css.getAllRaw(node)),
       classes: toAssertableArr(Classes.get(node))
     });
   } else {
-    return ApproxStructures.text(ApproxComparisons.is(Node.value(node)), true);
+    return ApproxStructures.text(ApproxComparisons.is(SugarNode.value(node)), true);
   }
 };
 
 const fromHtml = (html: string): StructAssertBasic | StructAssertAdv =>
-  fromElement(Element.fromHtml(html));
+  fromElement(SugarElement.fromHtml(html));
 
 export {
   build,

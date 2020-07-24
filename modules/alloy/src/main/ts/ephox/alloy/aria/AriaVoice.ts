@@ -1,7 +1,7 @@
 import { HTMLDocument, setTimeout } from '@ephox/dom-globals';
 import { Id } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Attr, Css, Element, Insert, Remove, Traverse } from '@ephox/sugar';
+import { Attribute, Css, Insert, Remove, SugarElement, Traverse } from '@ephox/sugar';
 
 const offscreen = {
   position: 'absolute',
@@ -11,28 +11,28 @@ const offscreen = {
 const tokenSelector = (): string => 'span[id^="ephox-alloy-aria-voice"]';
 
 // INVESTIGATE: Aria is special for insertion. Think about it more.
-const create = (doc: Element<HTMLDocument>, text: string): Element => {
-  const span: Element = Element.fromTag('span', doc.dom());
-  Attr.set(span, 'role', 'presentation');
+const create = (doc: SugarElement<HTMLDocument>, text: string): SugarElement => {
+  const span: SugarElement = SugarElement.fromTag('span', doc.dom());
+  Attribute.set(span, 'role', 'presentation');
   // This stops it saying other things (possibly blank) between transitions.
-  const contents: Element = Element.fromText(text, doc.dom());
+  const contents: SugarElement = SugarElement.fromText(text, doc.dom());
   Insert.append(span, contents);
   return span;
 };
 
-const linkToDescription = (item: Element, token: Element): void => {
+const linkToDescription = (item: SugarElement, token: SugarElement): void => {
   const id = Id.generate('ephox-alloy-aria-voice');
-  Attr.set(token, 'id', id);
-  Attr.set(item, 'aria-describedby', id);
+  Attribute.set(token, 'id', id);
+  Attribute.set(item, 'aria-describedby', id);
 };
 
-const describe = (item: Element, description: string): Element => {
+const describe = (item: SugarElement, description: string): SugarElement => {
   const doc = Traverse.owner(item);
   const token = create(doc, description);
 
   // We may not be able to get rid of them, so we'll make them display: none;
   Css.set(token, 'display', 'none');
-  Attr.set(token, 'aria-hidden', 'true'); // aria-hidden needs to be in sync with dom visibility
+  Attribute.set(token, 'aria-hidden', 'true'); // aria-hidden needs to be in sync with dom visibility
   // Although described-by does not appear to work in IE10, we are currently only supporting JAWS in Firefox (and IE11),
   // and this does work for those browsers.
   linkToDescription(item, token);
@@ -40,7 +40,7 @@ const describe = (item: Element, description: string): Element => {
   return token;
 };
 
-const base = (getAttrs: (string: string) => { }, parent: Element, text: string): void => {
+const base = (getAttrs: (string: string) => { }, parent: SugarElement, text: string): void => {
   const doc = Traverse.owner(parent);
 
   // firefox needs aria-describedby to speak a role=alert token, which causes IE11 to read twice
@@ -50,7 +50,7 @@ const base = (getAttrs: (string: string) => { }, parent: Element, text: string):
   }
 
   // Make it speak as soon as it is in the DOM (politely)
-  Attr.setAll(token, getAttrs(text));
+  Attribute.setAll(token, getAttrs(text));
   Css.setAll(token, offscreen);
 
   Insert.append(parent, token);
@@ -58,7 +58,7 @@ const base = (getAttrs: (string: string) => { }, parent: Element, text: string):
   // Remove the token later.
   setTimeout(() => {
     // If you don't remove this attribute, IE11 speaks the removal
-    Attr.remove(token, 'aria-live');
+    Attribute.remove(token, 'aria-live');
     Remove.remove(token);
   }, 1000);
 };
@@ -77,9 +77,9 @@ const getShoutAttrs = (_text: string) => ({
   'role': 'alert'
 });
 
-const speak = (parent: Element, text: string): void => base(getSpeakAttrs, parent, text);
+const speak = (parent: SugarElement, text: string): void => base(getSpeakAttrs, parent, text);
 
-const shout = (parent: Element, text: string): void => base(getShoutAttrs, parent, text);
+const shout = (parent: SugarElement, text: string): void => base(getShoutAttrs, parent, text);
 
 export {
   describe,

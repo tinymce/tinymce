@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { navigator, Document as DomDocument, Node as DomNode, ShadowRoot } from '@ephox/dom-globals';
+import { Document, navigator, Node, ShadowRoot } from '@ephox/dom-globals';
 import { Arr, Fun, Future, Futures, Result, Results } from '@ephox/katamari';
-import { Attr, Element, Insert, ShadowDom, Traverse } from '@ephox/sugar';
+import { Attribute, Insert, SugarElement, SugarShadowDom, Traverse } from '@ephox/sugar';
 import { ReferrerPolicy } from '../SettingsTypes';
 import Delay from '../util/Delay';
 import Tools from '../util/Tools';
@@ -30,11 +30,11 @@ export interface StyleSheetLoaderSettings {
   referrerPolicy: ReferrerPolicy;
 }
 
-export function StyleSheetLoader(documentOrShadowRoot: DomDocument | ShadowRoot, settings: Partial<StyleSheetLoaderSettings> = {}): StyleSheetLoader {
+export function StyleSheetLoader(documentOrShadowRoot: Document | ShadowRoot, settings: Partial<StyleSheetLoaderSettings> = {}): StyleSheetLoader {
   let idCount = 0;
   const loadedStates = {};
 
-  const edos = Element.fromDom(documentOrShadowRoot);
+  const edos = SugarElement.fromDom(documentOrShadowRoot);
   const doc = Traverse.documentOrOwner(edos);
 
   const maxLoadTime = settings.maxLoadTime || 5000;
@@ -43,8 +43,8 @@ export function StyleSheetLoader(documentOrShadowRoot: DomDocument | ShadowRoot,
     settings.referrerPolicy = referrerPolicy;
   };
 
-  const addStyle = (element: Element<DomNode>) => {
-    Insert.append(ShadowDom.getStyleContainer(edos), element);
+  const addStyle = (element: SugarElement<Node>) => {
+    Insert.append(SugarShadowDom.getStyleContainer(edos), element);
   };
 
   /**
@@ -197,7 +197,7 @@ export function StyleSheetLoader(documentOrShadowRoot: DomDocument | ShadowRoot,
 
     if (settings.referrerPolicy) {
       // Note: Don't use link.referrerPolicy = ... here as it doesn't work on Safari
-      Attr.set(Element.fromDom(link), 'referrerpolicy', settings.referrerPolicy);
+      Attribute.set(SugarElement.fromDom(link), 'referrerpolicy', settings.referrerPolicy);
     }
 
     // Feature detect onload on link element and sniff older webkits since it has an broken onload event
@@ -212,7 +212,7 @@ export function StyleSheetLoader(documentOrShadowRoot: DomDocument | ShadowRoot,
         style = doc.dom().createElement('style');
         style.textContent = '@import "' + url + '"';
         waitForGeckoLinkLoaded();
-        addStyle(Element.fromDom(style));
+        addStyle(SugarElement.fromDom(style));
         return;
       }
 
@@ -220,7 +220,7 @@ export function StyleSheetLoader(documentOrShadowRoot: DomDocument | ShadowRoot,
       waitForWebKitLinkLoaded();
     }
 
-    addStyle(Element.fromDom(link));
+    addStyle(SugarElement.fromDom(link));
     link.href = url;
   };
 

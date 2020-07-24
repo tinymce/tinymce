@@ -1,44 +1,47 @@
-import { Document, Node as DomNode } from '@ephox/dom-globals';
+import { Document, Node } from '@ephox/dom-globals';
 import { Arr, Fun } from '@ephox/katamari';
-import { Attr, Compare, Css, Element, Insert, InsertAll, Node, PredicateFilter, PredicateFind, Remove, SelectorFilter, SelectorFind, Text, Traverse } from '@ephox/sugar';
+import {
+  Attribute, Compare, Css, Insert, InsertAll, PredicateFilter, PredicateFind, Remove, SelectorFilter, SelectorFind, SugarElement, SugarNode,
+  SugarText, Traverse
+} from '@ephox/sugar';
 import TagBoundaries from '../common/TagBoundaries';
 import { Universe } from './Universe';
 
-export default function (): Universe<Element, Document> {
-  const clone = function (element: Element) {
-    return Element.fromDom((element.dom() as DomNode).cloneNode(false));
+export default function (): Universe<SugarElement, Document> {
+  const clone = function (element: SugarElement<Node>) {
+    return SugarElement.fromDom(element.dom().cloneNode(false));
   };
 
-  const document = function (element: Element) {
-    return (element.dom() as DomNode).ownerDocument;
+  const document = function (element: SugarElement<Node>) {
+    return element.dom().ownerDocument;
   };
 
-  const isBoundary = function (element: Element) {
-    if (!Node.isElement(element)) {
+  const isBoundary = function (element: SugarElement) {
+    if (!SugarNode.isElement(element)) {
       return false;
     }
-    if (Node.name(element) === 'body') {
+    if (SugarNode.name(element) === 'body') {
       return true;
     }
-    return Arr.contains(TagBoundaries, Node.name(element));
+    return Arr.contains(TagBoundaries, SugarNode.name(element));
   };
 
-  const isEmptyTag = function (element: Element) {
-    if (!Node.isElement(element)) {
+  const isEmptyTag = function (element: SugarElement) {
+    if (!SugarNode.isElement(element)) {
       return false;
     }
-    return Arr.contains([ 'br', 'img', 'hr', 'input' ], Node.name(element));
+    return Arr.contains([ 'br', 'img', 'hr', 'input' ], SugarNode.name(element));
   };
 
-  const isNonEditable = (element: Element) => Node.isElement(element) && Attr.get(element, 'contenteditable') === 'false';
+  const isNonEditable = (element: SugarElement) => SugarNode.isElement(element) && Attribute.get(element, 'contenteditable') === 'false';
 
-  const comparePosition = function (element: Element, other: Element) {
-    return (element.dom() as DomNode).compareDocumentPosition(other.dom() as DomNode);
+  const comparePosition = function (element: SugarElement<Node>, other: SugarElement<Node>) {
+    return element.dom().compareDocumentPosition(other.dom());
   };
 
-  const copyAttributesTo = function (source: Element, destination: Element) {
-    const as = Attr.clone(source);
-    Attr.setAll(destination, as);
+  const copyAttributesTo = function (source: SugarElement, destination: SugarElement) {
+    const as = Attribute.clone(source);
+    Attribute.setAll(destination, as);
   };
 
   return {
@@ -59,9 +62,9 @@ export default function (): Universe<Element, Document> {
       remove: Css.remove
     }),
     attrs: Fun.constant({
-      get: Attr.get,
-      set: Attr.set,
-      remove: Attr.remove,
+      get: Attribute.get,
+      set: Attribute.set,
+      remove: Attribute.remove,
       copyTo: copyAttributesTo
     }),
     insert: Fun.constant({
@@ -78,9 +81,9 @@ export default function (): Universe<Element, Document> {
       remove: Remove.remove
     }),
     create: Fun.constant({
-      nu: Element.fromTag,
+      nu: SugarElement.fromTag,
       clone,
-      text: Element.fromText
+      text: SugarElement.fromText
     }),
     query: Fun.constant({
       comparePosition,
@@ -89,14 +92,14 @@ export default function (): Universe<Element, Document> {
     }),
     property: Fun.constant({
       children: Traverse.children,
-      name: Node.name,
+      name: SugarNode.name,
       parent: Traverse.parent,
       document,
-      isText: Node.isText,
-      isComment: Node.isComment,
-      isElement: Node.isElement,
-      getText: Text.get,
-      setText: Text.set,
+      isText: SugarNode.isText,
+      isComment: SugarNode.isComment,
+      isElement: SugarNode.isElement,
+      getText: SugarText.get,
+      setText: SugarText.set,
       isBoundary,
       isEmptyTag,
       isNonEditable

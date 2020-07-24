@@ -2,7 +2,7 @@ import { Log, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import AnchorPlugin from 'tinymce/plugins/anchor/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
@@ -28,7 +28,7 @@ UnitTest.asynctest('browser.tinymce.plugins.anchor.AnchorAlertTest', (success, f
     const tinyUi = TinyUi(editor);
     const tinyApis = TinyApis(editor);
 
-    const docBody = Element.fromDom(document.body);
+    const docBody = SugarElement.fromDom(document.body);
     const dialogSelector = 'div[role="dialog"].tox-dialog';
     const alertDialogSelector = 'div[role="dialog"].tox-dialog.tox-alert-dialog';
 

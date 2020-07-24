@@ -1,11 +1,11 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
-import { document, Node as DomNode, Window } from '@ephox/dom-globals';
-import Element from 'ephox/sugar/api/node/Element';
+import { document, Node, Window } from '@ephox/dom-globals';
+import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
 
-type ElementConstructor<T extends DomNode | Window> = typeof Element.fromDom;
+type ElementConstructor<T extends Node | Window> = typeof SugarElement.fromDom;
 
 UnitTest.test('ElementTest', () => {
-  const checkErr = <T extends DomNode | Window>(f: ElementConstructor<T>, node: T | undefined | null) => {
+  const checkErr = <T extends Node | Window>(f: ElementConstructor<T>, node: T | undefined | null) => {
     try {
       f(node as T);
     } catch (e) {
@@ -15,12 +15,12 @@ UnitTest.test('ElementTest', () => {
     assert.fail('function did not throw an error');
   };
 
-  const checkEl = <T extends DomNode | Window>(f: ElementConstructor<T>, el: T, expt: T) => {
+  const checkEl = <T extends Node | Window>(f: ElementConstructor<T>, el: T, expt: T) => {
     const element = f(el);
     assert.eq(true, expt === element.dom());
   };
 
-  checkErr(Element.fromDom, undefined);
-  checkErr(Element.fromDom, null);
-  checkEl(Element.fromDom, document.body, document.body);
+  checkErr(SugarElement.fromDom, undefined);
+  checkErr(SugarElement.fromDom, null);
+  checkEl(SugarElement.fromDom, document.body, document.body);
 });

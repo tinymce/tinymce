@@ -1,6 +1,6 @@
 import { HTMLTableElement } from '@ephox/dom-globals';
 import { Arr, Fun, Option, Options } from '@ephox/katamari';
-import { Compare, Element, Traverse } from '@ephox/sugar';
+import { Compare, SugarElement, Traverse } from '@ephox/sugar';
 import { Generators, GeneratorsWrapper, SimpleGenerators } from '../api/Generators';
 import { ResizeWire } from '../api/ResizeWire';
 import * as Structs from '../api/Structs';
@@ -20,17 +20,17 @@ type ColInfo = BarPositions.ColInfo;
 type BarPositions<A> = BarPositions.BarPositions<A>;
 
 export interface RunOperationOutput {
-  readonly cursor: () => Option<Element>;
-  readonly newRows: () => Element[];
-  readonly newCells: () => Element[];
+  readonly cursor: () => Option<SugarElement>;
+  readonly newRows: () => SugarElement[];
+  readonly newCells: () => SugarElement[];
 }
 
 export interface TargetElement {
-  readonly element: () => Element;
+  readonly element: () => SugarElement;
 }
 
 export interface TargetSelection {
-  readonly selection: () => Element[];
+  readonly selection: () => SugarElement[];
 }
 
 export interface TargetMergable {
@@ -38,38 +38,38 @@ export interface TargetMergable {
 }
 
 export interface TargetUnmergable {
-  readonly unmergable: () => Option<Element[]>;
+  readonly unmergable: () => Option<SugarElement[]>;
 }
 
 // combines the above 4 interfaces because this is what data we actually get from TinyMCE
 export interface CombinedTargets extends TargetElement, TargetSelection, TargetMergable, TargetUnmergable { };
 
 export interface TargetPaste {
-  readonly element: () => Element;
+  readonly element: () => SugarElement;
   readonly generators: () => SimpleGenerators;
-  readonly clipboard: () => Element;
+  readonly clipboard: () => SugarElement;
 }
 
 export interface TargetPasteRows {
-  readonly selection: () => Element[];
+  readonly selection: () => SugarElement[];
   readonly generators: () => SimpleGenerators;
-  readonly clipboard: () => Element[];
+  readonly clipboard: () => SugarElement[];
 }
 
 export interface ExtractMergable {
-  readonly cells: () => Element[];
+  readonly cells: () => SugarElement[];
   readonly bounds: () => Structs.Bounds;
 }
 
 export interface ExtractPaste extends Structs.DetailExt {
   readonly generators: () => SimpleGenerators;
-  readonly clipboard: () => Element;
+  readonly clipboard: () => SugarElement;
 }
 
 export interface ExtractPasteRows {
   readonly cells: Structs.DetailExt[];
   readonly generators: () => SimpleGenerators;
-  readonly clipboard: () => Element[];
+  readonly clipboard: () => SugarElement[];
 }
 
 const fromWarehouse = (warehouse: Warehouse, generators: Generators) =>
@@ -97,22 +97,22 @@ const toDetailList = (grid: Structs.RowCells[], generators: Generators): RowData
   return deriveRows(rendered, generators);
 };
 
-const findInWarehouse = (warehouse: Warehouse, element: Element): Option<DetailExt> => Arr.findMap(warehouse.all, (r) =>
+const findInWarehouse = (warehouse: Warehouse, element: SugarElement): Option<DetailExt> => Arr.findMap(warehouse.all, (r) =>
   Arr.find(r.cells(), (e) => Compare.eq(element, e.element()))
 );
 
-type EqEle = (e1: Element, e2: Element) => boolean;
+type EqEle = (e1: SugarElement, e2: SugarElement) => boolean;
 type Operation<INFO, GW extends GeneratorsWrapper> = (model: Structs.RowCells[], info: INFO, eq: EqEle, w: GW) => TableOperationResult;
 type Extract<RAW, INFO> = (warehouse: Warehouse, target: RAW) => Option<INFO>;
-type Adjustment = <T extends Structs.DetailNew>(table: Element, grid: Structs.RowDataNew<T>[], direction: BarPositions<ColInfo>, tableSize: TableSize) => void;
-type PostAction = (e: Element) => void;
+type Adjustment = <T extends Structs.DetailNew>(table: SugarElement, grid: Structs.RowDataNew<T>[], direction: BarPositions<ColInfo>, tableSize: TableSize) => void;
+type PostAction = (e: SugarElement) => void;
 type GenWrap<GW extends GeneratorsWrapper> = (g: Generators) => GW;
 
-export type OperationCallback<T> = (wire: ResizeWire, table: Element<HTMLTableElement>, target: T, generators: Generators, direction: BarPositions<ColInfo>, sizing?: TableSize) => Option<RunOperationOutput>;
+export type OperationCallback<T> = (wire: ResizeWire, table: SugarElement<HTMLTableElement>, target: T, generators: Generators, direction: BarPositions<ColInfo>, sizing?: TableSize) => Option<RunOperationOutput>;
 
 const run = <RAW, INFO, GW extends GeneratorsWrapper>
 (operation: Operation<INFO, GW>, extract: Extract<RAW, INFO>, adjustment: Adjustment, postAction: PostAction, genWrappers: GenWrap<GW>): OperationCallback<RAW> =>
-  (wire: ResizeWire, table: Element, target: RAW, generators: Generators, direction: BarPositions<ColInfo>, sizing?: TableSize): Option<RunOperationOutput> => {
+  (wire: ResizeWire, table: SugarElement, target: RAW, generators: Generators, direction: BarPositions<ColInfo>, sizing?: TableSize): Option<RunOperationOutput> => {
     const warehouse = Warehouse.fromTable(table);
     const output = extract(warehouse, target).map((info) => {
       const model = fromWarehouse(warehouse, generators);
@@ -164,7 +164,7 @@ const onPasteByEditor = (warehouse: Warehouse, target: TargetPasteRows): Option<
 const onMergable = (_warehouse: Warehouse, target: TargetMergable): Option<ExtractMergable> =>
   target.mergable();
 
-const onUnmergable = (_warehouse: Warehouse, target: TargetUnmergable): Option<Element[]> =>
+const onUnmergable = (_warehouse: Warehouse, target: TargetUnmergable): Option<SugarElement[]> =>
   target.unmergable();
 
 const onCells = (warehouse: Warehouse, target: TargetSelection): Option<DetailExt[]> => {

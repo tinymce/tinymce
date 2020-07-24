@@ -1,15 +1,15 @@
-import { Node as DomNode } from '@ephox/dom-globals';
-import Element from '../node/Element';
+import { Node } from '@ephox/dom-globals';
+import { SugarElement } from '../node/SugarElement';
 import * as Traverse from '../search/Traverse';
 
-const before = (marker: Element<DomNode>, element: Element<DomNode>): void => {
+const before = (marker: SugarElement<Node>, element: SugarElement<Node>): void => {
   const parent = Traverse.parent(marker);
   parent.each((v) => {
     v.dom().insertBefore(element.dom(), marker.dom());
   });
 };
 
-const after = (marker: Element<DomNode>, element: Element<DomNode>): void => {
+const after = (marker: SugarElement<Node>, element: SugarElement<Node>): void => {
   const sibling = Traverse.nextSibling(marker);
   sibling.fold(() => {
     const parent = Traverse.parent(marker);
@@ -21,7 +21,7 @@ const after = (marker: Element<DomNode>, element: Element<DomNode>): void => {
   });
 };
 
-const prepend = (parent: Element<DomNode>, element: Element<DomNode>): void => {
+const prepend = (parent: SugarElement<Node>, element: SugarElement<Node>): void => {
   const firstChild = Traverse.firstChild(parent);
   firstChild.fold(() => {
     append(parent, element);
@@ -30,11 +30,11 @@ const prepend = (parent: Element<DomNode>, element: Element<DomNode>): void => {
   });
 };
 
-const append = (parent: Element<DomNode>, element: Element<DomNode>): void => {
+const append = (parent: SugarElement<Node>, element: SugarElement<Node>): void => {
   parent.dom().appendChild(element.dom());
 };
 
-const appendAt = (parent: Element<DomNode>, element: Element<DomNode>, index: number): void => {
+const appendAt = (parent: SugarElement<Node>, element: SugarElement<Node>, index: number): void => {
   Traverse.child(parent, index).fold(() => {
     append(parent, element);
   }, (v) => {
@@ -42,7 +42,7 @@ const appendAt = (parent: Element<DomNode>, element: Element<DomNode>, index: nu
   });
 };
 
-const wrap = (element: Element<DomNode>, wrapper: Element<DomNode>): void => {
+const wrap = (element: SugarElement<Node>, wrapper: SugarElement<Node>): void => {
   before(element, wrapper);
   append(wrapper, element);
 };

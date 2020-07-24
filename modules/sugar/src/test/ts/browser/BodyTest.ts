@@ -1,50 +1,50 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { document } from '@ephox/dom-globals';
 import * as Insert from 'ephox/sugar/api/dom/Insert';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
-import * as Body from 'ephox/sugar/api/node/Body';
-import Element from 'ephox/sugar/api/node/Element';
+import * as SugarBody from 'ephox/sugar/api/node/SugarBody';
+import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
+import * as SugarShadowDom from 'ephox/sugar/api/node/SugarShadowDom';
 import * as SelectorFind from 'ephox/sugar/api/search/SelectorFind';
-import * as ShadowDom from 'ephox/sugar/api/node/ShadowDom';
 import { withShadowElement } from 'ephox/sugar/test/WithHelpers';
-import { document } from '@ephox/dom-globals';
 
 UnitTest.test('Body.inBody - detached elements and their descendents', () => {
-  const div = Element.fromTag('div');
-  const child = Element.fromTag('span');
-  const text = Element.fromText('hi');
+  const div = SugarElement.fromTag('div');
+  const child = SugarElement.fromTag('span');
+  const text = SugarElement.fromText('hi');
   Insert.append(child, text);
   Insert.append(div, child);
-  Assert.eq('should not be in body', false, Body.inBody(div));
-  Assert.eq('should not be in body', false, Body.inBody(child));
-  Assert.eq('should not be in body', false, Body.inBody(text));
+  Assert.eq('should not be in body', false, SugarBody.inBody(div));
+  Assert.eq('should not be in body', false, SugarBody.inBody(child));
+  Assert.eq('should not be in body', false, SugarBody.inBody(text));
 });
 
 UnitTest.test('Body.inBody - elements in body', () => {
   const body = SelectorFind.first('body').getOrDie();
 
-  const div = Element.fromTag('div');
-  const child = Element.fromTag('span');
-  const text = Element.fromText('hi');
+  const div = SugarElement.fromTag('div');
+  const child = SugarElement.fromTag('span');
+  const text = SugarElement.fromText('hi');
   Insert.append(child, text);
   Insert.append(div, child);
   Insert.append(body, div);
-  Assert.eq('should be in body', true, Body.inBody(div));
-  Assert.eq('should be in body', true, Body.inBody(child));
-  Assert.eq('should be in body', true, Body.inBody(text));
-  Assert.eq('should be in body', true, Body.inBody(body));
+  Assert.eq('should be in body', true, SugarBody.inBody(div));
+  Assert.eq('should be in body', true, SugarBody.inBody(child));
+  Assert.eq('should be in body', true, SugarBody.inBody(text));
+  Assert.eq('should be in body', true, SugarBody.inBody(body));
   Remove.remove(div);
 });
 
-if (ShadowDom.isSupported()) {
+if (SugarShadowDom.isSupported()) {
   UnitTest.test('Body.inBody - shadow root', () => {
     withShadowElement((sr) => {
-      Assert.eq('should be inBody', true, Body.inBody(sr));
+      Assert.eq('should be inBody', true, SugarBody.inBody(sr));
     });
   });
 
   UnitTest.test('Body.inBody - element in shadow root', () => {
     withShadowElement((sr) => {
-      Assert.eq('should be inBody', true, Body.inBody(sr));
+      Assert.eq('should be inBody', true, SugarBody.inBody(sr));
     });
   });
 
@@ -63,13 +63,13 @@ if (ShadowDom.isSupported()) {
     const div4 = document.createElement('div');
     div3.appendChild(div4);
 
-    Assert.eq('div1 should be inBody', true, Body.inBody(Element.fromDom(div1)));
-    Assert.eq('div2 should be inBody', true, Body.inBody(Element.fromDom(div2)));
-    Assert.eq('div3 should be inBody', true, Body.inBody(Element.fromDom(div3)));
-    Assert.eq('div4 should be inBody', true, Body.inBody(Element.fromDom(div4)));
+    Assert.eq('div1 should be inBody', true, SugarBody.inBody(SugarElement.fromDom(div1)));
+    Assert.eq('div2 should be inBody', true, SugarBody.inBody(SugarElement.fromDom(div2)));
+    Assert.eq('div3 should be inBody', true, SugarBody.inBody(SugarElement.fromDom(div3)));
+    Assert.eq('div4 should be inBody', true, SugarBody.inBody(SugarElement.fromDom(div4)));
 
-    Assert.eq('sr1 should be inBody', true, Body.inBody(Element.fromDom(sr1)));
-    Assert.eq('sr2 should be inBody', true, Body.inBody(Element.fromDom(sr2)));
+    Assert.eq('sr1 should be inBody', true, SugarBody.inBody(SugarElement.fromDom(sr1)));
+    Assert.eq('sr2 should be inBody', true, SugarBody.inBody(SugarElement.fromDom(sr2)));
     document.body.removeChild(div1);
   });
 }

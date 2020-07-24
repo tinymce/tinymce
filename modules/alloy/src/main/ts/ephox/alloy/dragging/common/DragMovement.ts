@@ -1,5 +1,5 @@
 import { Num, Option, Options } from '@ephox/katamari';
-import { Css, Element, Location, Position, Scroll, Traverse } from '@ephox/sugar';
+import { Css, Scroll, SugarElement, SugarLocation, SugarPosition, Traverse } from '@ephox/sugar';
 
 import * as OffsetOrigin from '../../alien/OffsetOrigin';
 import { AlloyComponent } from '../../api/component/ComponentApi';
@@ -7,18 +7,19 @@ import * as DragCoord from '../../api/data/DragCoord';
 import * as Snappables from '../snap/Snappables';
 import { DraggingConfig, DragStartData, SnapsConfig } from './DraggingTypes';
 
-const getCurrentCoord = (target: Element): DragCoord.CoordAdt => Options.lift3(Css.getRaw(target, 'left'), Css.getRaw(target, 'top'), Css.getRaw(target, 'position'), (left, top, position) => {
-  const nu = position === 'fixed' ? DragCoord.fixed : DragCoord.offset;
-  return nu(
-    parseInt(left, 10),
-    parseInt(top, 10)
-  );
-}).getOrThunk(() => {
-  const location = Location.absolute(target);
-  return DragCoord.absolute(location.left(), location.top());
-});
+const getCurrentCoord = (target: SugarElement): DragCoord.CoordAdt =>
+  Options.lift3(Css.getRaw(target, 'left'), Css.getRaw(target, 'top'), Css.getRaw(target, 'position'), (left, top, position) => {
+    const nu = position === 'fixed' ? DragCoord.fixed : DragCoord.offset;
+    return nu(
+      parseInt(left, 10),
+      parseInt(top, 10)
+    );
+  }).getOrThunk(() => {
+    const location = SugarLocation.absolute(target);
+    return DragCoord.absolute(location.left(), location.top());
+  });
 
-const clampCoords = (component: AlloyComponent, coords: DragCoord.CoordAdt, scroll: Position, origin: Position, startData: DragStartData): DragCoord.CoordAdt => {
+const clampCoords = (component: AlloyComponent, coords: DragCoord.CoordAdt, scroll: SugarPosition, origin: SugarPosition, startData: DragStartData): DragCoord.CoordAdt => {
   const bounds = startData.bounds;
   const absoluteCoord = DragCoord.asAbsolute(coords, scroll, origin);
 
@@ -43,7 +44,7 @@ const clampCoords = (component: AlloyComponent, coords: DragCoord.CoordAdt, scro
   );
 };
 
-const calcNewCoord = <E>(component: AlloyComponent, optSnaps: Option<SnapsConfig<E>>, currentCoord: DragCoord.CoordAdt, scroll: Position, origin: Position, delta: Position, startData: DragStartData): DragCoord.CoordAdt => {
+const calcNewCoord = <E>(component: AlloyComponent, optSnaps: Option<SnapsConfig<E>>, currentCoord: DragCoord.CoordAdt, scroll: SugarPosition, origin: SugarPosition, delta: SugarPosition, startData: DragStartData): DragCoord.CoordAdt => {
   const newCoord = optSnaps.fold(() => {
     // When not docking, use fixed coordinates.
     const translated = DragCoord.translate(currentCoord, delta.left(), delta.top());
@@ -61,7 +62,7 @@ const calcNewCoord = <E>(component: AlloyComponent, optSnaps: Option<SnapsConfig
   return clampCoords(component, newCoord, scroll, origin, startData);
 };
 
-const dragBy = <E>(component: AlloyComponent, dragConfig: DraggingConfig<E>, startData: DragStartData, delta: Position): void => {
+const dragBy = <E>(component: AlloyComponent, dragConfig: DraggingConfig<E>, startData: DragStartData, delta: SugarPosition): void => {
   const target = dragConfig.getTarget(component.element());
 
   if (dragConfig.repositionTarget) {

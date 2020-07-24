@@ -7,7 +7,7 @@
 
 import { TableSelection } from '@ephox/darwin';
 import { Arr, Fun, Option } from '@ephox/katamari';
-import { Attr } from '@ephox/sugar';
+import { Attribute } from '@ephox/sugar';
 import * as Ephemera from '../selection/Ephemera';
 import * as SelectionTypes from '../selection/SelectionTypes';
 
@@ -22,8 +22,8 @@ const selection = function (cell, selections) {
 
 const unmergable = function (cell, selections): Option<any> {
   const hasSpan = function (elem) {
-    return (Attr.has(elem, 'rowspan') && parseInt(Attr.get(elem, 'rowspan'), 10) > 1) ||
-           (Attr.has(elem, 'colspan') && parseInt(Attr.get(elem, 'colspan'), 10) > 1);
+    return (Attribute.has(elem, 'rowspan') && parseInt(Attribute.get(elem, 'rowspan'), 10) > 1) ||
+           (Attribute.has(elem, 'colspan') && parseInt(Attribute.get(elem, 'colspan'), 10) > 1);
   };
 
   const candidates = selection(cell, selections);

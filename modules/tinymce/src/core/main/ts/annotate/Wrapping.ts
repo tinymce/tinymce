@@ -7,7 +7,7 @@
 
 import { Document, Range } from '@ephox/dom-globals';
 import { Arr, Cell, Id, Option, Unicode } from '@ephox/katamari';
-import { Attr, Class, Classes, Element, Html, Insert, Node, Replication, Traverse } from '@ephox/sugar';
+import { Attribute, Class, Classes, Html, Insert, Replication, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 import Editor from '../api/Editor';
 import * as ExpandRange from '../fmt/ExpandRange';
 import * as RangeWalk from '../selection/RangeWalk';
@@ -34,14 +34,14 @@ const applyWordGrab = (editor: Editor, rng: Range): void => {
   editor.selection.setRng(rng);
 };
 
-const makeAnnotation = (eDoc: Document, { uid = Id.generate('mce-annotation'), ...data }, annotationName: string, decorate: Decorator): Element => {
-  const master = Element.fromTag('span', eDoc);
+const makeAnnotation = (eDoc: Document, { uid = Id.generate('mce-annotation'), ...data }, annotationName: string, decorate: Decorator): SugarElement => {
+  const master = SugarElement.fromTag('span', eDoc);
   Class.add(master, Markings.annotation());
-  Attr.set(master, `${Markings.dataAnnotationId()}`, uid);
-  Attr.set(master, `${Markings.dataAnnotation()}`, annotationName);
+  Attribute.set(master, `${Markings.dataAnnotationId()}`, uid);
+  Attribute.set(master, `${Markings.dataAnnotation()}`, annotationName);
 
   const { attributes = { }, classes = [ ] } = decorate(uid, data);
-  Attr.setAll(master, attributes);
+  Attribute.setAll(master, attributes);
   Classes.add(master, classes);
   return master;
 };
@@ -54,7 +54,7 @@ const annotate = (editor: Editor, rng: Range, annotationName: string, decorate: 
   const master = makeAnnotation(editor.getDoc(), data, annotationName, decorate);
 
   // Set the current wrapping element
-  const wrapper = Cell(Option.none<Element<any>>());
+  const wrapper = Cell(Option.none<SugarElement<any>>());
 
   // Clear the current wrapping element, so that subsequent calls to
   // getOrOpenWrapper spawns a new one.
@@ -63,7 +63,7 @@ const annotate = (editor: Editor, rng: Range, annotationName: string, decorate: 
   };
 
   // Get the existing wrapper, or spawn a new one.
-  const getOrOpenWrapper = (): Element<any> =>
+  const getOrOpenWrapper = (): SugarElement<any> =>
     wrapper.get().getOrThunk(() => {
       const nu = Replication.shallow(master);
       newWrappers.push(nu);
@@ -76,7 +76,7 @@ const annotate = (editor: Editor, rng: Range, annotationName: string, decorate: 
   };
 
   const processElement = (elem) => {
-    const ctx = context(editor, elem, 'span', Node.name(elem));
+    const ctx = context(editor, elem, 'span', SugarNode.name(elem));
 
     switch (ctx) {
       case ChildContext.InvalidChild: {
@@ -103,7 +103,7 @@ const annotate = (editor: Editor, rng: Range, annotationName: string, decorate: 
   };
 
   const processNodes = (nodes) => {
-    const elems = Arr.map(nodes, Element.fromDom);
+    const elems = Arr.map(nodes, SugarElement.fromDom);
     processElements(elems);
   };
 

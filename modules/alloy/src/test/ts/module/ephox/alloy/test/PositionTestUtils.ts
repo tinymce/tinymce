@@ -1,7 +1,7 @@
 import { Chain, Guard, NamedChain } from '@ephox/agar';
 import { window } from '@ephox/dom-globals';
-import { Result, Option } from '@ephox/katamari';
-import { Css, Element, Scroll, Traverse } from '@ephox/sugar';
+import { Option, Result } from '@ephox/katamari';
+import { Css, Scroll, SugarElement, Traverse } from '@ephox/sugar';
 
 import { Bounds } from 'ephox/alloy/alien/Boxes';
 import { Positioning } from 'ephox/alloy/api/behaviour/Positioning';
@@ -22,7 +22,7 @@ const cAddPopupToSink = (sinkName: string) => NamedChain.bundle((data: any) => {
   return cAddPopupToSinkCommon(data, sink, positioner);
 });
 
-const cAddPopupToSinkWithin = (sinkName: string, elem: Element) => NamedChain.bundle((data: any) => {
+const cAddPopupToSinkWithin = (sinkName: string, elem: SugarElement) => NamedChain.bundle((data: any) => {
   const sink = data[sinkName];
   const boxElement = Option.some(elem);
   const positioner = () => Positioning.positionWithin(sink, data.anchor, data.popup, boxElement);
@@ -83,7 +83,7 @@ const cTestSink = (label: string, sinkName: string) => ChainUtils.cLogging(
   ]
 );
 
-const cTestSinkWithin = (label: string, sinkName: string, elem: Element) => ChainUtils.cLogging(
+const cTestSinkWithin = (label: string, sinkName: string, elem: SugarElement) => ChainUtils.cLogging(
   label,
   [
     cAddPopupToSinkWithin(sinkName, elem),

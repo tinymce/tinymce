@@ -1,18 +1,18 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
-import { Element, Html, Insert } from '@ephox/sugar';
+import { Html, Insert, SugarElement } from '@ephox/sugar';
 import { CellSpan } from 'ephox/snooker/api/Generators';
 import * as TableFill from 'ephox/snooker/api/TableFill';
 
 UnitTest.test('CloneFormatsTest', function () {
-  const doc = Element.fromDom(document);
+  const doc = SugarElement.fromDom(document);
   const noCloneFormats = Option.some([] as string[]);
   const cloneTableFill = TableFill.cellOperations(Fun.noop, doc, Option.none());
   const noCloneTableFill = TableFill.cellOperations(Fun.noop, doc, noCloneFormats);
 
-  const cellElement = Element.fromTag('td');
-  const cellContent = Element.fromHtml('<strong contenteditable="false"><em>stuff</em></strong>');
+  const cellElement = SugarElement.fromTag('td');
+  const cellContent = SugarElement.fromHtml('<strong contenteditable="false"><em>stuff</em></strong>');
   Insert.append(cellElement, cellContent);
   const cell: CellSpan = {
     element: Fun.constant(cellElement),

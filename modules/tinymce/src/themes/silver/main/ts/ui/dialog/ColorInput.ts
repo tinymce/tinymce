@@ -6,12 +6,12 @@
  */
 
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, Composing, CustomEvent, Disabling, Focusing,
-  FormField, Input, Invalidating, Layout, Memento, Representing, SimpleSpec, Tabstopping
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, Composing, CustomEvent, Disabling, Focusing, FormField, Input,
+  Invalidating, Layout, Memento, Representing, SimpleSpec, Tabstopping
 } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
 import { Future, Id, Option, Result } from '@ephox/katamari';
-import { Css, Element, Traverse } from '@ephox/sugar';
+import { Css, SugarElement, Traverse } from '@ephox/sugar';
 
 import { UiFactoryBackstageShared } from '../../backstage/Backstage';
 import { UiFactoryBackstageForColorInput } from '../../backstage/ColorInputBackstage';
@@ -75,7 +75,7 @@ export const renderColorInput = (spec: ColorInputSpec, sharedBackstage: UiFactor
             if (inputValue.length === 0) {
               return Future.pure(Result.value(true));
             } else {
-              const span = Element.fromTag('span');
+              const span = SugarElement.fromTag('span');
               Css.set(span, 'background-color', inputValue);
 
               const res = Css.getRaw(span, 'background-color').fold(

@@ -7,7 +7,7 @@
 
 import { Text } from '@ephox/dom-globals';
 import { Arr, Strings, Unicode } from '@ephox/katamari';
-import { Element, Remove } from '@ephox/sugar';
+import { Remove, SugarElement } from '@ephox/sugar';
 import { isNbsp, isWhiteSpace } from '../text/CharType';
 
 const normalizeContent = (content: string, isStartOfContent: boolean, isEndOfContent: boolean): string => {
@@ -61,7 +61,7 @@ const mergeTextNodes = (prevNode: Text, nextNode: Text, normalizeWhitespace?: bo
   const whitespaceOffset = Strings.rTrim(prevNode.data).length;
   // Merge the elements
   prevNode.appendData(nextNode.data);
-  Remove.remove(Element.fromDom(nextNode));
+  Remove.remove(SugarElement.fromDom(nextNode));
 
   // Normalize the whitespace around the merged elements, to ensure it doesn't get lost
   if (normalizeWhitespace) {

@@ -1,18 +1,18 @@
 import { ApproxStructure, Assertions, Chain, GeneralSteps, Guard, Logger, Step, UiControls, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Cell, Future, Option, Result } from '@ephox/katamari';
-import { Element, Value } from '@ephox/sugar';
+import { SugarElement, Value } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Invalidating } from 'ephox/alloy/api/behaviour/Invalidating';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 UnitTest.asynctest('InvalidatingTest', (success, failure) => {
 
-  const root = Cell(Option.none<Element<any>>());
+  const root = Cell(Option.none<SugarElement<any>>());
 
   GuiSetup.setup((_store, _doc, _body) => GuiFactory.build({
     dom: {

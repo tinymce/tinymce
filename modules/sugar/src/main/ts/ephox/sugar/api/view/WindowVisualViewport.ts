@@ -2,7 +2,7 @@ import { Event, EventListenerOrEventListenerObject, Window, window } from '@epho
 import { Fun, Option } from '@ephox/katamari';
 import { fromRawEvent } from '../../impl/FilteredEvent';
 import { EventHandler } from '../events/Types';
-import Element from '../node/Element';
+import { SugarElement } from '../node/SugarElement';
 import * as Scroll from './Scroll';
 
 export interface Bounds {
@@ -15,7 +15,8 @@ export interface Bounds {
 }
 
 // Experimental support for visual viewport
-interface VisualViewport {
+// TODO: Remove this once using the TS dom library
+interface WindowVisualViewport {
   readonly offsetLeft: number;
   readonly offsetTop: number;
   readonly pageLeft: number;
@@ -27,7 +28,7 @@ interface VisualViewport {
   readonly removeEventListener: (event: string, handler: EventListenerOrEventListenerObject) => void;
 }
 
-const get = (_win?: Window): Option<VisualViewport> => {
+const get = (_win?: Window): Option<WindowVisualViewport> => {
   const win = _win === undefined ? window : _win;
   // eslint-disable-next-line dot-notation
   return Option.from((win as any)['visualViewport']);
@@ -45,7 +46,7 @@ const bounds = (x: number, y: number, width: number, height: number): Bounds => 
 const getBounds = (_win?: Window): Bounds => {
   const win = _win === undefined ? window : _win;
   const doc = win.document;
-  const scroll = Scroll.get(Element.fromDom(doc));
+  const scroll = Scroll.get(SugarElement.fromDom(doc));
   return get(win).fold(
     () => {
       const html = win.document.documentElement;
@@ -78,5 +79,5 @@ export {
   bind,
   get,
   getBounds,
-  VisualViewport
+  WindowVisualViewport
 };

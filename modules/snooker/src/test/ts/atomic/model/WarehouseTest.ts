@@ -1,8 +1,8 @@
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Obj } from '@ephox/katamari';
+import { SugarElement } from '@ephox/sugar';
 import * as Structs from 'ephox/snooker/api/Structs';
 import { Warehouse } from 'ephox/snooker/model/Warehouse';
-import { UnitTest, assert } from '@ephox/bedrock-client';
-import { Element } from '@ephox/sugar';
 
 UnitTest.test('WarehouseTest', function () {
   const check = function (expected: Record<string, string>, input: Structs.RowData<Structs.Detail>[]) {
@@ -10,8 +10,8 @@ UnitTest.test('WarehouseTest', function () {
     assert.eq(expected, Obj.map(actual.access, function (x) { return x.element(); }));
   };
 
-  const s = (fakeEle: any, rowspan: number, colspan: number) => Structs.detail(fakeEle as Element, rowspan, colspan);
-  const f = (fakeEle: any, cells: Structs.Detail[], section: 'tbody' | 'thead' | 'tfoot') => Structs.rowdata(fakeEle as Element, cells, section);
+  const s = (fakeEle: any, rowspan: number, colspan: number) => Structs.detail(fakeEle as SugarElement, rowspan, colspan);
+  const f = (fakeEle: any, cells: Structs.Detail[], section: 'tbody' | 'thead' | 'tfoot') => Structs.rowdata(fakeEle as SugarElement, cells, section);
 
   const testTable = [
     f('r1', [ s('a', 1, 2), s('b', 1, 1), s('c', 1, 1), s('d', 1, 1), s('e', 1, 1), s('f', 1, 1) ], 'thead'),

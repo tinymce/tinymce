@@ -3,7 +3,7 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { TinyApis, TinyDom, TinyLoader, TinyUi, UiChains } from '@ephox/mcagar';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 
 import ImagePlugin from 'tinymce/plugins/image/Plugin';
 import ImageToolsPlugin from 'tinymce/plugins/imagetools/Plugin';
@@ -22,8 +22,8 @@ UnitTest.asynctest('SilverContextMenuTest', (success, failure) => {
     const tinyApis = TinyApis(editor);
     const tinyUi = TinyUi(editor);
 
-    const doc = Element.fromDom(document);
-    const editorBody = Element.fromDom(editor.getBody());
+    const doc = SugarElement.fromDom(document);
+    const editorBody = SugarElement.fromDom(editor.getBody());
 
     const sOpenContextMenu = (target) => Chain.asStep(editor, [
       tinyUi.cTriggerContextMenu('trigger context menu', target, '.tox-silver-sink .tox-collection [role="menuitem"]'),

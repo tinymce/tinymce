@@ -1,10 +1,10 @@
 import { Option } from '@ephox/katamari';
 
-import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { AlloyEventRecord } from '../../api/events/AlloyEvents';
 import { DomModification } from '../../dom/DomModification';
 import { ConfiguredPart } from '../../parts/AlloyParts';
+import { AlloyBehaviourRecord } from '../behaviour/Behaviour';
+import { AlloyEventRecord } from '../events/AlloyEvents';
+import { AlloyComponent } from './ComponentApi';
 
 export type AlloySpec = SimpleOrSketchSpec | PremadeSpec | ConfiguredPart;
 

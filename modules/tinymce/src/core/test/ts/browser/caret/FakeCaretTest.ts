@@ -2,7 +2,7 @@ import { Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
 import { LegacyUnit } from '@ephox/mcagar';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import $ from 'tinymce/core/api/dom/DomQuery';
 import Env from 'tinymce/core/api/Env';
 import { FakeCaret, isFakeCaretTarget } from 'tinymce/core/caret/FakeCaret';
@@ -114,9 +114,9 @@ UnitTest.asynctest('browser.tinymce.core.caret.FakeCaretTest', function (success
   });
 
   suite.test('isFakeCaretTarget', function () {
-    LegacyUnit.equal(false, isFakeCaretTarget(Element.fromHtml('<p></p>').dom()), 'Should not need a fake caret');
-    LegacyUnit.equal(true, isFakeCaretTarget(Element.fromHtml('<p contenteditable="false"></p>').dom()), 'Should always need a fake caret');
-    LegacyUnit.equal(isFakeCaretTableBrowser(), isFakeCaretTarget(Element.fromHtml('<table></table>').dom()), 'Should on some browsers need a fake caret');
+    LegacyUnit.equal(false, isFakeCaretTarget(SugarElement.fromHtml('<p></p>').dom()), 'Should not need a fake caret');
+    LegacyUnit.equal(true, isFakeCaretTarget(SugarElement.fromHtml('<p contenteditable="false"></p>').dom()), 'Should always need a fake caret');
+    LegacyUnit.equal(isFakeCaretTableBrowser(), isFakeCaretTarget(SugarElement.fromHtml('<table></table>').dom()), 'Should on some browsers need a fake caret');
   });
 
   viewBlock.attach();

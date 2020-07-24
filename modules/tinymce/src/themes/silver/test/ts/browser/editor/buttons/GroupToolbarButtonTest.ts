@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, Chain, Log, Mouse, NamedChain, Pipeline, StructAssert, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Editor as McEditor } from '@ephox/mcagar';
-import { Body } from '@ephox/sugar';
+import { SugarBody } from '@ephox/sugar';
 import Theme from 'tinymce/themes/silver/Theme';
 import { cExtractOnlyOne } from '../../../module/UiChainUtils';
 
@@ -42,7 +42,7 @@ UnitTest.asynctest('GroupToolbarButtonTest', (success, failure) => {
   }));
 
   const cTestWithEditor = (settings: Record<string, any>, chains: NamedChain[]): Chain<any, any> => NamedChain.asChain([
-    NamedChain.writeValue('body', Body.body()),
+    NamedChain.writeValue('body', SugarBody.body()),
     NamedChain.write('editor', McEditor.cFromSettings({
       theme: 'silver',
       base_url: '/project/tinymce/js/tinymce',

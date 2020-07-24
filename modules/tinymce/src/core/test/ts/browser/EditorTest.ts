@@ -1,15 +1,15 @@
-import { Pipeline, UiFinder, Log, Step } from '@ephox/agar';
-import { UnitTest, Assert } from '@ephox/bedrock-client';
+import { Log, Pipeline, Step, UiFinder } from '@ephox/agar';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
-import { TinyLoader, TinyApis } from '@ephox/mcagar';
-import { Body, Attr, Class } from '@ephox/sugar';
+import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import { Attribute, Class, SugarBody } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import Env from 'tinymce/core/api/Env';
-import * as HtmlUtils from '../module/test/HtmlUtils';
+import PluginManager from 'tinymce/core/api/PluginManager';
 import URI from 'tinymce/core/api/util/URI';
 import Theme from 'tinymce/themes/silver/Theme';
-import PluginManager from 'tinymce/core/api/PluginManager';
+import * as HtmlUtils from '../module/test/HtmlUtils';
 
 UnitTest.asynctest('browser.tinymce.core.EditorTest', (success, failure) => {
   Theme();
@@ -363,8 +363,8 @@ UnitTest.asynctest('browser.tinymce.core.EditorTest', (success, failure) => {
     let clickCount = 0;
 
     const isDisabled = (selector) => {
-      const elm = UiFinder.findIn(Body.body(), selector);
-      return elm.forall((elm) => Attr.has(elm, 'disabled') || Class.has(elm, 'tox-tbtn--disabled'));
+      const elm = UiFinder.findIn(SugarBody.body(), selector);
+      return elm.forall((elm) => Attribute.has(elm, 'disabled') || Class.has(elm, 'tox-tbtn--disabled'));
     };
 
     editor.on('click', () => {

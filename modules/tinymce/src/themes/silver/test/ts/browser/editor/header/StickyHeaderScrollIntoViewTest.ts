@@ -1,11 +1,11 @@
-import { Assertions, GeneralSteps, Logger, Pipeline, Step, Waiter, Cursors } from '@ephox/agar';
+import { Assertions, Cursors, GeneralSteps, Logger, Pipeline, Step, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { window } from '@ephox/dom-globals';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Element, Location, Scroll } from '@ephox/sugar';
+import { Scroll, SugarElement, SugarLocation } from '@ephox/sugar';
+import Editor from 'tinymce/core/api/Editor';
 import * as ScrollIntoView from 'tinymce/core/dom/ScrollIntoView';
 import Theme from 'tinymce/themes/silver/Theme';
-import Editor from 'tinymce/core/api/Editor';
 
 UnitTest.asynctest('browser.tinymce.themes.silver.editor.header.StickyHeaderScrollIntoViewTest', (success, failure) => {
   Theme();
@@ -26,7 +26,7 @@ UnitTest.asynctest('browser.tinymce.themes.silver.editor.header.StickyHeaderScro
   });
 
   const sScrollRangeIntoView = (editor: Editor, path: number[], offset: number, alignToTop?: boolean) => Step.sync(() => {
-    const x = Cursors.calculateOne(Element.fromDom(editor.getBody()), path);
+    const x = Cursors.calculateOne(SugarElement.fromDom(editor.getBody()), path);
     const rng = editor.dom.createRng();
     rng.setStart(x.dom(), offset);
     rng.setEnd(x.dom(), offset);
@@ -35,7 +35,7 @@ UnitTest.asynctest('browser.tinymce.themes.silver.editor.header.StickyHeaderScro
   });
 
   const sAssertApproxScrollPosition = (editor: Editor, x: number, y: number) => Step.sync(() => {
-    const scrollPos = Scroll.get(Element.fromDom(editor.getDoc()));
+    const scrollPos = Scroll.get(SugarElement.fromDom(editor.getDoc()));
     const actualX = scrollPos.left();
     const actualY = scrollPos.top();
     Assertions.assertEq(`Scroll position X should be expected value: ${x} got ${actualX}`, true, Math.abs(x - actualX) < 5);
@@ -46,9 +46,9 @@ UnitTest.asynctest('browser.tinymce.themes.silver.editor.header.StickyHeaderScro
 
   TinyLoader.setup((editor: Editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
-    const container = Element.fromDom(editor.getContentAreaContainer());
+    const container = SugarElement.fromDom(editor.getContentAreaContainer());
     const viewHeight = window.innerHeight;
-    const initialContainerPos = Location.absolute(container);
+    const initialContainerPos = SugarLocation.absolute(container);
     const headerHeight = 79;
 
     const expectedSecondParaScrollBottomPos = 2000 - viewHeight + initialContainerPos.top();

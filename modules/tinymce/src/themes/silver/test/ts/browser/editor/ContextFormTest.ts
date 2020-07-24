@@ -4,7 +4,7 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
-import { Body, Element } from '@ephox/sugar';
+import { SugarBody, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 
@@ -19,7 +19,7 @@ UnitTest.asynctest('Editor ContextForm test', (success, failure) => {
   TinyLoader.setupLight(
     (editor, onSuccess, onFailure) => {
       const tinyApis = TinyApis(editor);
-      const doc = Element.fromDom(document);
+      const doc = SugarElement.fromDom(document);
 
       const sOpen = (toolbarKey: string) => Step.sync(() => {
         editor.fire('contexttoolbar-show', {
@@ -27,7 +27,7 @@ UnitTest.asynctest('Editor ContextForm test', (success, failure) => {
         });
       });
 
-      const sCheckLastButtonGroup = (label: string, children: (s, str, arr) => any) => Chain.asStep(Body.body(), [
+      const sCheckLastButtonGroup = (label: string, children: (s, str, arr) => any) => Chain.asStep(SugarBody.body(), [
         UiFinder.cFindIn('.tox-pop .tox-toolbar__group:last'),
         Assertions.cAssertStructure(label, ApproxStructure.build((s, str, arr) => s.element('div', {
           children: children(s, str, arr)
@@ -38,7 +38,7 @@ UnitTest.asynctest('Editor ContextForm test', (success, failure) => {
         editor.fire(event, object);
       });
 
-      const sHasDialog = (label: string) => Chain.asStep(Body.body(), [
+      const sHasDialog = (label: string) => Chain.asStep(SugarBody.body(), [
         UiFinder.cFindIn('.tox-pop'),
         Assertions.cAssertStructure(
           `${label}: Checking pop has a dialog`,
@@ -60,7 +60,7 @@ UnitTest.asynctest('Editor ContextForm test', (success, failure) => {
 
       const sCheckNoPopDialog = Waiter.sTryUntil(
         'Pop dialog should disappear (soon)',
-        UiFinder.sNotExists(Body.body(), '.tox-pop')
+        UiFinder.sNotExists(SugarBody.body(), '.tox-pop')
       );
 
       Pipeline.async({ }, [
@@ -78,7 +78,7 @@ UnitTest.asynctest('Editor ContextForm test', (success, failure) => {
           Step.label('Check the action of button "B" fired', store.sAssertEq('B should have fired because it is primary', [ 'B.Words' ])),
           Step.label('Check that a dialog is displayed', sHasDialog('Immediate context form should have an inner dialog class')),
           Step.label('Press escape', Keyboard.sKeydown(doc, Keys.escape(), { })),
-          Step.label('Check that the context popup still exists', UiFinder.sExists(Body.body(), '.tox-pop')),
+          Step.label('Check that the context popup still exists', UiFinder.sExists(SugarBody.body(), '.tox-pop')),
           Step.label('Check that the editor still has focus', tinyApis.sTryAssertFocus()),
           Step.label('Simulate clicking elsewhere in the editor (fire node change)', sClickAway),
           Step.label('Check that the popup dialog closes', sCheckNoPopDialog)
@@ -98,7 +98,7 @@ UnitTest.asynctest('Editor ContextForm test', (success, failure) => {
           Step.label('Check focus returns to context toolbar', FocusTools.sTryOnSelector('Focus should have shifted back to the triggering toolbar', doc, '.tox-pop button')),
           Step.label('Check context toolbar has inner dialog class', sHasDialog('Restored context toolbar (esc from form) should have an inner dialog class')),
           Step.label('Press escape (again)', Keyboard.sKeydown(doc, Keys.escape(), { })),
-          Step.label('Check that the context popup still exists', UiFinder.sExists(Body.body(), '.tox-pop')),
+          Step.label('Check that the context popup still exists', UiFinder.sExists(SugarBody.body(), '.tox-pop')),
           Step.label('Check that the editor still has focus', tinyApis.sTryAssertFocus()),
           Step.label('Simulate clicking elsewhere in the editor (fire node change)', sClickAway),
           Step.label('Check that the popup dialog closes', sCheckNoPopDialog)

@@ -2,7 +2,7 @@ import { ApproxStructure, Assertions, FocusTools, GeneralSteps, Logger, Mouse, P
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
-import { Body, Element as SugarElement, Element } from '@ephox/sugar';
+import { SugarBody, SugarElement as SugarElement } from '@ephox/sugar';
 import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 import TestExtras from '../../module/TestExtras';
 
@@ -12,10 +12,10 @@ UnitTest.asynctest('WindowManager:alert Test', (success, failure) => {
   const sink = document.querySelector('.mce-silver-sink');
 
   const sTeardown = GeneralSteps.sequence([
-    Mouse.sClickOn(Body.body(), '.tox-button--icon[aria-label="Close"]'),
+    Mouse.sClickOn(SugarBody.body(), '.tox-button--icon[aria-label="Close"]'),
     Waiter.sTryUntil(
       'Waiting for blocker to disappear after clicking close',
-      UiFinder.sNotExists(Body.body(), '.tox-dialog-wrap')
+      UiFinder.sNotExists(SugarBody.body(), '.tox-dialog-wrap')
     )
   ]);
 
@@ -120,7 +120,7 @@ UnitTest.asynctest('WindowManager:alert Test', (success, failure) => {
 
   const sWaitForDialog = Waiter.sTryUntil(
     'alert dialog shows',
-    UiFinder.sExists(Body.body(), '.tox-dialog__body'),
+    UiFinder.sExists(SugarBody.body(), '.tox-dialog__body'),
     10,
     10000
   );
@@ -161,10 +161,10 @@ UnitTest.asynctest('WindowManager:alert Test', (success, failure) => {
         windowManager.alert(label, testCallback);
         Assertions.assertEq('callback should not have been called yet', 0, calls);
       }),
-      Mouse.sClickOn(Body.body(), '.tox-button--icon[aria-label="Close"]'),
+      Mouse.sClickOn(SugarBody.body(), '.tox-button--icon[aria-label="Close"]'),
       Waiter.sTryUntil(
         'Waiting for blocker to disappear after clicking close',
-        UiFinder.sNotExists(Body.body(), '.tox-dialog-wrap')
+        UiFinder.sNotExists(SugarBody.body(), '.tox-dialog-wrap')
       ),
       Step.sync(() => {
         Assertions.assertEq('Clicking on close should call the callback fn once', 1, calls);
@@ -175,15 +175,15 @@ UnitTest.asynctest('WindowManager:alert Test', (success, failure) => {
 
   const sShouldFocusOnOkButton = GeneralSteps.sequence([
     sCreateAlert('initial focus should be on ok button', Fun.noop),
-    FocusTools.sTryOnSelector('When the alert dialog loads, focus should be on the ok button', Element.fromDom(document), 'button:contains(OK)'),
+    FocusTools.sTryOnSelector('When the alert dialog loads, focus should be on the ok button', SugarElement.fromDom(document), 'button:contains(OK)'),
     sTeardown
   ]);
 
   const sClickShouldFocusOnFirstButton = GeneralSteps.sequence([
     sCreateAlert('Click should focus ok button', Fun.noop),
-    FocusTools.sTryOnSelector('When the alert dialog loads, focus should be on the ok button', Element.fromDom(document), 'button:contains(OK)'),
-    Mouse.sTrueClickOn(Element.fromDom(document), '.tox-dialog'),
-    FocusTools.sTryOnSelector('Focus should still be on the ok button', Element.fromDom(document), 'button:contains(OK)'),
+    FocusTools.sTryOnSelector('When the alert dialog loads, focus should be on the ok button', SugarElement.fromDom(document), 'button:contains(OK)'),
+    Mouse.sTrueClickOn(SugarElement.fromDom(document), '.tox-dialog'),
+    FocusTools.sTryOnSelector('Focus should still be on the ok button', SugarElement.fromDom(document), 'button:contains(OK)'),
     sTeardown
   ]);
 
@@ -191,8 +191,8 @@ UnitTest.asynctest('WindowManager:alert Test', (success, failure) => {
     'Check that clicking ok in the dialog makes the dialog go away',
     GeneralSteps.sequence([
       sCreateAlert('Showing an alert', Fun.noop),
-      Mouse.sClickOn(Body.body(), '.tox-button:contains("OK")'),
-      UiFinder.sNotExists(Body.body(), '[role="dialog"]')
+      Mouse.sClickOn(SugarBody.body(), '.tox-button:contains("OK")'),
+      UiFinder.sNotExists(SugarBody.body(), '[role="dialog"]')
     ])
   );
 

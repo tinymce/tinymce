@@ -6,11 +6,10 @@
  */
 
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, CustomEvent, GuiFactory, InlineView, Keying,
-  NativeEvents
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, CustomEvent, GuiFactory, InlineView, Keying, NativeEvents
 } from '@ephox/alloy';
 import { Arr, Cell, Id, Option, Result } from '@ephox/katamari';
-import { Class, Css, Element, EventArgs, Focus, Width } from '@ephox/sugar';
+import { Class, Css, EventArgs, Focus, SugarElement, Width } from '@ephox/sugar';
 import Delay from 'tinymce/core/api/util/Delay';
 
 const forwardSlideEvent = Id.generate('forward-slide');
@@ -25,7 +24,7 @@ export interface BackwardSlideEvent extends CustomEvent { }
 const changeSlideEvent = Id.generate('change-slide-event');
 export interface ChangeSlideEvent extends CustomEvent {
   contents: () => AlloySpec;
-  focus: () => Option<Element>;
+  focus: () => Option<SugarElement>;
 }
 
 const resizingClass = 'tox-pop--resizing';

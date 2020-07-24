@@ -1,6 +1,6 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { Attr, Class, Element, Html, InsertAll } from '@ephox/sugar';
+import { Attribute, Class, Html, InsertAll, SugarElement } from '@ephox/sugar';
 import * as CopySelected from 'ephox/snooker/api/CopySelected';
 
 interface TestData {
@@ -15,8 +15,8 @@ UnitTest.test('CopySelectedTest', function () {
   const SEL_CLASS = 'copy-selected';
 
   // traverse really needs this built in
-  const traverseChildElements = function (e: Element) {
-    return Arr.map(e.dom().children, Element.fromDom);
+  const traverseChildElements = function (e: SugarElement) {
+    return Arr.map(e.dom().children, SugarElement.fromDom);
   };
 
   // data objects for input/expected
@@ -41,15 +41,15 @@ UnitTest.test('CopySelectedTest', function () {
 
   // generate a table structure from a nested array
   const generateInput = function (input: TestData[][]) {
-    const table = Element.fromTag('table');
+    const table = SugarElement.fromTag('table');
     const rows = Arr.map(input, function (row) {
       const cells = Arr.map(row, function (cell) {
-        const td = Element.fromTag('td');
+        const td = SugarElement.fromTag('td');
         if (cell.rowspan !== undefined) {
-          Attr.set(td, 'rowspan', cell.rowspan);
+          Attribute.set(td, 'rowspan', cell.rowspan);
         }
         if (cell.colspan !== undefined) {
-          Attr.set(td, 'colspan', cell.colspan);
+          Attribute.set(td, 'colspan', cell.colspan);
         }
         if (cell.selected) {
           Class.add(td, SEL_CLASS);
@@ -57,14 +57,14 @@ UnitTest.test('CopySelectedTest', function () {
         Html.set(td, cell.html);
         return td;
       });
-      const tr = Element.fromTag('tr');
+      const tr = SugarElement.fromTag('tr');
       InsertAll.append(tr, cells);
       return tr;
     });
     const withNewlines = Arr.bind(rows, function (row) {
-      return [ Element.fromText('\n'), row ];
+      return [ SugarElement.fromText('\n'), row ];
     });
-    InsertAll.append(table, withNewlines.concat(Element.fromText('\n')));
+    InsertAll.append(table, withNewlines.concat(SugarElement.fromText('\n')));
     return table;
   };
 
@@ -86,8 +86,8 @@ UnitTest.test('CopySelectedTest', function () {
       Arr.each(row, function (cell, j) {
         const domCell = domCells[j];
         assertWithInfo(cell.html, Html.get(domCell), 'cell text');
-        assertWithInfo(cell.rowspan, Attr.get(domCell, 'rowspan'), 'rowspan');
-        assertWithInfo(cell.colspan, Attr.get(domCell, 'colspan'), 'colspan');
+        assertWithInfo(cell.rowspan, Attribute.get(domCell, 'rowspan'), 'rowspan');
+        assertWithInfo(cell.colspan, Attribute.get(domCell, 'colspan'), 'colspan');
         assertWithInfo(cell.selected, Class.has(domCell, SEL_CLASS), 'selected class');
       });
     });

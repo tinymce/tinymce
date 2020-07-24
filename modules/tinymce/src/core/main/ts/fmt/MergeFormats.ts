@@ -6,17 +6,17 @@
  */
 
 import { Element, Node } from '@ephox/dom-globals';
-import * as Bookmarks from '../bookmark/Bookmarks';
+import DOMUtils from '../api/dom/DOMUtils';
 import ElementUtils from '../api/dom/ElementUtils';
+import Editor from '../api/Editor';
+import { FormatVars } from '../api/fmt/Format';
+import Tools from '../api/util/Tools';
+import * as Bookmarks from '../bookmark/Bookmarks';
 import * as NodeType from '../dom/NodeType';
+import { isCaretNode } from '../fmt/FormatContainer';
 import * as FormatUtils from './FormatUtils';
 import * as MatchFormat from './MatchFormat';
 import * as RemoveFormat from './RemoveFormat';
-import Tools from '../api/util/Tools';
-import { isCaretNode } from '../fmt/FormatContainer';
-import Editor from '../api/Editor';
-import DOMUtils from '../api/dom/DOMUtils';
-import { FormatVars } from '../api/fmt/Format';
 
 const each = Tools.each;
 

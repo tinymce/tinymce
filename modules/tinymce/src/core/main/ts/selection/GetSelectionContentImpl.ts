@@ -7,7 +7,7 @@
 
 import { HTMLElement } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import Editor from '../api/Editor';
 import Env from '../api/Env';
 import { Content, ContentFormat, GetContentArgs } from '../content/ContentTypes';
@@ -66,7 +66,7 @@ const getSerializedContent = (editor: Editor, args: GetSelectionContentArgs): Co
   const sel = editor.selection.getSel();
   const ranges = EventProcessRanges.processRanges(editor, MultiRange.getRanges(sel));
 
-  const fragment = args.contextual ? FragmentReader.read(Element.fromDom(editor.getBody()), ranges).dom() : rng.cloneContents();
+  const fragment = args.contextual ? FragmentReader.read(SugarElement.fromDom(editor.getBody()), ranges).dom() : rng.cloneContents();
   if (fragment) {
     tmpElm.appendChild(fragment);
   }

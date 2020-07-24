@@ -1,11 +1,11 @@
-import { Arr, Option, Options, Result, Num } from '@ephox/katamari';
-import { Class, SelectorFilter, SelectorFind, Element } from '@ephox/sugar';
+import { Arr, Num, Option, Options, Result } from '@ephox/katamari';
+import { Class, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as AlloyTriggers from '../../api/events/AlloyTriggers';
 import * as SystemEvents from '../../api/events/SystemEvents';
-import { HighlightingConfig } from '../../behaviour/highlighting/HighlightingTypes';
-import { Stateless } from '../../behaviour/common/BehaviourState';
+import { Stateless } from '../common/BehaviourState';
+import { HighlightingConfig } from './HighlightingTypes';
 
 // THIS IS NOT API YET
 const dehighlightAllExcept = (component: AlloyComponent, hConfig: HighlightingConfig, hState: Stateless, skip: AlloyComponent[]): void => {
@@ -83,8 +83,8 @@ const getByIndex = (component: AlloyComponent, hConfig: HighlightingConfig, hSta
 const getFirst = (component: AlloyComponent, hConfig: HighlightingConfig, _hState: Stateless): Option<AlloyComponent> => SelectorFind.descendant(component.element(), '.' + hConfig.itemClass).bind((e) => component.getSystem().getByDom(e).toOption());
 
 const getLast = (component: AlloyComponent, hConfig: HighlightingConfig, _hState: Stateless): Option<AlloyComponent> => {
-  const items: Element[] = SelectorFilter.descendants(component.element(), '.' + hConfig.itemClass);
-  const last = items.length > 0 ? Option.some(items[items.length - 1]) : Option.none<Element<any>>();
+  const items: SugarElement[] = SelectorFilter.descendants(component.element(), '.' + hConfig.itemClass);
+  const last = items.length > 0 ? Option.some(items[items.length - 1]) : Option.none<SugarElement<any>>();
   return last.bind((c) => component.getSystem().getByDom(c).toOption());
 };
 

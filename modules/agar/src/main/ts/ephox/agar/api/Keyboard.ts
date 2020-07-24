@@ -1,5 +1,5 @@
 import { Arr } from '@ephox/katamari';
-import { Element, Traverse } from '@ephox/sugar';
+import { SugarElement, Traverse } from '@ephox/sugar';
 
 import { keyevent, MixedKeyModifiers } from '../keyboard/FakeKeys';
 import { Chain } from './Chain';
@@ -12,18 +12,18 @@ import { Step } from './Step';
   modifiers - { shift: BOOL, alt: BOOL }
   dispatcher - dispatch event from some element
 */
-const fakeKeys = (types: string[]) => (value: number, modifiers: MixedKeyModifiers, dispatcher: Element<any>) => {
+const fakeKeys = (types: string[]) => (value: number, modifiers: MixedKeyModifiers, dispatcher: SugarElement<any>) => {
   const doc = Traverse.owner(dispatcher);
   Arr.each(types, (type) => {
     keyevent(type, doc, value, modifiers, dispatcher);
   });
 };
 
-const cFakeKey = (types: string[], keyvalue: number, modifiers: MixedKeyModifiers) => Chain.op((dispatcher: Element<any>) => {
+const cFakeKey = (types: string[], keyvalue: number, modifiers: MixedKeyModifiers) => Chain.op((dispatcher: SugarElement<any>) => {
   fakeKeys(types)(keyvalue, modifiers, dispatcher);
 });
 
-const sFakeKey = (types: string[]) => <T>(doc: Element<any>, keyvalue: number, modifiers: MixedKeyModifiers): Step<T, T> => Chain.asStep<T, Element>(doc, [
+const sFakeKey = (types: string[]) => <T>(doc: SugarElement<any>, keyvalue: number, modifiers: MixedKeyModifiers): Step<T, T> => Chain.asStep<T, SugarElement>(doc, [
   FocusTools.cGetFocused,
   cFakeKey(types, keyvalue, modifiers)
 ]);

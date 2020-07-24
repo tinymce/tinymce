@@ -1,12 +1,12 @@
 import { Arr, Fun, Obj, Option, Options } from '@ephox/katamari';
-import { Attr, Css, Element, Hierarchy, Insert, Node, Replication } from '@ephox/sugar';
+import { Attribute, Css, Hierarchy, Insert, Replication, SugarElement, SugarNode } from '@ephox/sugar';
 import { Generators } from 'ephox/snooker/api/Generators';
-import { Structs } from '../../../../../../main/ts/ephox/snooker/api/Main';
-import { TargetMergable } from '../../../../../../main/ts/ephox/snooker/model/RunOperation';
+import * as Structs from 'ephox/snooker/api/Structs';
+import { TargetMergable } from 'ephox/snooker/model/RunOperation';
 
 // Mock/Stub out helper functions
 
-const targetStub = function (selection: { section: number; row: number; column: number}[], bounds: { startRow: number; startCol: number; finishRow: number; finishCol: number}, table: Element): TargetMergable {
+const targetStub = function (selection: { section: number; row: number; column: number}[], bounds: { startRow: number; startCol: number; finishRow: number; finishCol: number}, table: SugarElement): TargetMergable {
   const cells = Options.cat(Arr.map(selection, function (path) {
     return Hierarchy.follow(table, [ path.section, path.row, path.column ]);
   }));
@@ -21,11 +21,11 @@ const targetStub = function (selection: { section: number; row: number; column: 
 
 const generators: Generators = {
   row() {
-    return Element.fromTag('tr');
+    return SugarElement.fromTag('tr');
   },
   cell(prev) {
-    const tag = Element.fromTag(Node.name(prev.element()));
-    Insert.append(tag, Element.fromText('?'));
+    const tag = SugarElement.fromTag(SugarNode.name(prev.element()));
+    Insert.append(tag, SugarElement.fromText('?'));
     // We aren't halving widths here, so table widths will not be preserved.p
     Css.getRaw(prev.element(), 'width').each(function (w) {
       Css.set(tag, 'width', w);
@@ -37,16 +37,16 @@ const generators: Generators = {
     // TODO: Snooker passes null to indicate 'remove attribute'
     Obj.each(attrs, function (v, k) {
       if (v === null) {
-        Attr.remove(replica, k);
+        Attribute.remove(replica, k);
       } else {
-        Attr.set(replica, k, v);
+        Attribute.set(replica, k, v);
       }
     });
     return replica;
   },
   gap() {
-    const tag = Element.fromTag('td');
-    Insert.append(tag, Element.fromText('?'));
+    const tag = SugarElement.fromTag('td');
+    Insert.append(tag, SugarElement.fromText('?'));
     return tag;
   }
 };

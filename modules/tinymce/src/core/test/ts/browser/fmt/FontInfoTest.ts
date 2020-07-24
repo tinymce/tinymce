@@ -2,7 +2,7 @@ import { Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { LegacyUnit } from '@ephox/mcagar';
-import { Element, Hierarchy } from '@ephox/sugar';
+import { Hierarchy, SugarElement } from '@ephox/sugar';
 import * as FontInfo from 'tinymce/core/fmt/FontInfo';
 
 UnitTest.asynctest('browser.tinymce.core.fmt.FontInfoTest', function (success, failure) {
@@ -15,7 +15,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.FontInfoTest', function (success, f
     document.body.appendChild(div);
     div.style[fontProp] = expected;
     div.innerHTML = html;
-    const elm = Hierarchy.follow(Element.fromDom(div), path).getOrDie('oh no! ' + path.toString() + '  path was bad');
+    const elm = Hierarchy.follow(SugarElement.fromDom(div), path).getOrDie('oh no! ' + path.toString() + '  path was bad');
     const actual = fontGetProp(div, elm.dom());
     LegacyUnit.equal(
       actual,
@@ -31,7 +31,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.FontInfoTest', function (success, f
 
     document.body.appendChild(div);
     div.innerHTML = html;
-    const elm = Hierarchy.follow(Element.fromDom(div), path).getOrDie('oh no! ' + path.toString() + '  path was bad');
+    const elm = Hierarchy.follow(SugarElement.fromDom(div), path).getOrDie('oh no! ' + path.toString() + '  path was bad');
     const actual = fontGetProp(div, elm.dom());
     LegacyUnit.equal(
       actual,

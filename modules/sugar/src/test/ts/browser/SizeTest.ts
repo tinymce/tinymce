@@ -2,16 +2,16 @@ import { assert, UnitTest } from '@ephox/bedrock-client';
 import { HTMLElement } from '@ephox/dom-globals';
 import * as Insert from 'ephox/sugar/api/dom/Insert';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
-import * as Body from 'ephox/sugar/api/node/Body';
-import Element from 'ephox/sugar/api/node/Element';
+import * as SugarBody from 'ephox/sugar/api/node/SugarBody';
+import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
 import * as Css from 'ephox/sugar/api/properties/Css';
 import * as Height from 'ephox/sugar/api/view/Height';
 import * as Width from 'ephox/sugar/api/view/Width';
 import Div from 'ephox/sugar/test/Div';
 
 interface SizeApi {
-  get: (element: Element<HTMLElement>) => number;
-  set: (element: Element<HTMLElement>, value: number | string) => void;
+  get: (element: SugarElement<HTMLElement>) => number;
+  set: (element: SugarElement<HTMLElement>, value: number | string) => void;
 }
 
 
@@ -43,8 +43,8 @@ UnitTest.test('SizeTest', () => {
     Css.set(c, cssProp, '85%');
     assert.eq('85%', exact());
 
-    if (Body.inBody(c)) {
-      // percentage height is calcualted as zero, but percentage width works just fine
+    if (SugarBody.inBody(c)) {
+      // percentage height is calculated as zero, but percentage width works just fine
       if (cssProp === 'height') {
         assert.eq(0, api.get(c));
       } else {
@@ -59,7 +59,7 @@ UnitTest.test('SizeTest', () => {
 
   checker('height', Height);
   checker('width', Width);
-  Insert.append(Body.body(), c);
+  Insert.append(SugarBody.body(), c);
   checker('height', Height);
   checker('width', Width);
 

@@ -1,10 +1,10 @@
 import { ApproxStructure, Assertions, Chain, Keyboard, Keys, NamedChain, StructAssert, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
+
 import * as AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviour';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
-
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
 import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
@@ -57,11 +57,11 @@ UnitTest.asynctest('GridMenuTest', (success, failure) => {
     })
   ), (_doc, _body, _gui, component, store) => {
     // TODO: Flesh out test.
-    const cAssertStructure = (label: string, expected: StructAssert) => Chain.op((element: Element) => {
+    const cAssertStructure = (label: string, expected: StructAssert) => Chain.op((element: SugarElement) => {
       Assertions.assertStructure(label, expected, element);
     });
 
-    const cTriggerFocusItem = Chain.op((target: Element) => {
+    const cTriggerFocusItem = Chain.op((target: SugarElement) => {
       AlloyTriggers.dispatch(component, target, SystemEvents.focusItem());
     });
 

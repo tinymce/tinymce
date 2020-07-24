@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element as DomElement, Node, Range } from '@ephox/dom-globals';
+import { Element, Node, Range } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import DOMUtils from '../api/dom/DOMUtils';
 import ElementUtils from '../api/dom/ElementUtils';
 import Selection from '../api/dom/Selection';
@@ -15,6 +15,7 @@ import Editor from '../api/Editor';
 import Env from '../api/Env';
 import ParserNode from '../api/html/Node';
 import Serializer from '../api/html/Serializer';
+import * as Settings from '../api/Settings';
 import Tools from '../api/util/Tools';
 import CaretPosition from '../caret/CaretPosition';
 import { CaretWalker } from '../caret/CaretWalker';
@@ -24,7 +25,6 @@ import * as PaddingBr from '../dom/PaddingBr';
 import * as RangeNormalizer from '../selection/RangeNormalizer';
 import * as SelectionUtils from '../selection/SelectionUtils';
 import * as InsertList from './InsertList';
-import * as Settings from '../api/Settings';
 import { isAfterNbsp, trimNbspAfterDeleteAndPadValue, trimOrPadLeftRight } from './NbspTrim';
 
 const isTableCell = NodeType.isTableCell;
@@ -32,7 +32,7 @@ const isTableCell = NodeType.isTableCell;
 const isTableCellContentSelected = (dom: DOMUtils, rng: Range, cell: Node | null) => {
   if (cell !== null) {
     const endCell = dom.getParent(rng.endContainer, isTableCell);
-    return cell === endCell && SelectionUtils.hasAllContentsSelected(Element.fromDom(cell), rng);
+    return cell === endCell && SelectionUtils.hasAllContentsSelected(SugarElement.fromDom(cell), rng);
   } else {
     return false;
   }
@@ -55,7 +55,7 @@ const selectionSetContent = (editor: Editor, content: string) => {
   selection.setContent(content);
 };
 
-const validInsertion = function (editor: Editor, value: string, parentNode: DomElement) {
+const validInsertion = function (editor: Editor, value: string, parentNode: Element) {
   // Should never insert content into bogus elements, since these can
   // be resize handles or similar
   if (parentNode.getAttribute('data-mce-bogus') === 'all') {
@@ -72,8 +72,8 @@ const validInsertion = function (editor: Editor, value: string, parentNode: DomE
   }
 };
 
-const trimBrsFromTableCell = function (dom: DOMUtils, elm: DomElement) {
-  Option.from(dom.getParent(elm, 'td,th')).map(Element.fromDom).each(PaddingBr.trimBlockTrailingBr);
+const trimBrsFromTableCell = function (dom: DOMUtils, elm: Element) {
+  Option.from(dom.getParent(elm, 'td,th')).map(SugarElement.fromDom).each(PaddingBr.trimBlockTrailingBr);
 };
 
 const reduceInlineTextElements = (editor: Editor, merge: boolean) => {
@@ -103,13 +103,13 @@ const markFragmentElements = (fragment: ParserNode) => {
   }
 };
 
-const unmarkFragmentElements = (elm: DomElement) => {
-  Tools.each(elm.getElementsByTagName('*'), (elm: DomElement) => {
+const unmarkFragmentElements = (elm: Element) => {
+  Tools.each(elm.getElementsByTagName('*'), (elm: Element) => {
     elm.removeAttribute('data-mce-fragment');
   });
 };
 
-const isPartOfFragment = function (node: DomElement) {
+const isPartOfFragment = function (node: Element) {
   return !!node.getAttribute('data-mce-fragment');
 };
 
@@ -211,7 +211,7 @@ const deleteSelectedContent = (editor: Editor) => {
   // when using the native delete command. As such we need to manually delete the cell content instead
   const startCell = dom.getParent(rng.startContainer, isTableCell);
   if (isTableCellContentSelected(dom, rng, startCell)) {
-    TableDelete.deleteCellContents(editor, rng, Element.fromDom(startCell));
+    TableDelete.deleteCellContents(editor, rng, SugarElement.fromDom(startCell));
   } else {
     editor.getDoc().execCommand('Delete', false, null);
   }

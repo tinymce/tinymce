@@ -7,7 +7,7 @@
 
 import { HTMLElement } from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import Editor from '../api/Editor';
 import Node from '../api/html/Node';
 import * as Settings from '../api/Settings';
@@ -44,7 +44,7 @@ const getContentFromBody = (editor: Editor, args: GetContentArgs, format: Conten
     content = trimEmptyContents(editor, editor.serializer.serialize(body, args));
   }
 
-  if (args.format !== 'text' && !isWsPreserveElement(Element.fromDom(body))) {
+  if (args.format !== 'text' && !isWsPreserveElement(SugarElement.fromDom(body))) {
     args.content = Tools.trim(content);
   } else {
     args.content = content;

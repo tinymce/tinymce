@@ -8,7 +8,7 @@
 import { Element, HTMLElement, Node, Range } from '@ephox/dom-globals';
 import { Cell, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Element as SugarElement, SelectorFilter } from '@ephox/sugar';
+import { SelectorFilter, SugarElement } from '@ephox/sugar';
 import DomQuery from '../api/dom/DomQuery';
 import Editor from '../api/Editor';
 import * as Settings from '../api/Settings';

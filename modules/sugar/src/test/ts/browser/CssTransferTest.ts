@@ -1,7 +1,7 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
-import { Element as DomElement } from '@ephox/dom-globals';
+import { Element } from '@ephox/dom-globals';
 import { Arr, Obj } from '@ephox/katamari';
-import Element from 'ephox/sugar/api/node/Element';
+import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
 import * as Css from 'ephox/sugar/api/properties/Css';
 import Div from 'ephox/sugar/test/Div';
 
@@ -32,7 +32,7 @@ UnitTest.test('CssTransfer', () => {
     return r;
   };
 
-  const check = (expectedPresent: Record<string, string>, expectedAbsent: string[], source: Element<DomElement>, destination: Element<DomElement>, styles: string[]) => {
+  const check = (expectedPresent: Record<string, string>, expectedAbsent: string[], source: SugarElement<Element>, destination: SugarElement<Element>, styles: string[]) => {
     Css.transfer(source, destination, styles);
     Arr.each(expectedAbsent, (k) => {
       if (Css.getRaw(destination, k).isSome()) {

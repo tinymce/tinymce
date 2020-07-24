@@ -1,7 +1,7 @@
 import { Assertions, Chain, GeneralSteps, Log, Pipeline, UiControls, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
-import { Attr, Body } from '@ephox/sugar';
+import { Attribute, SugarBody } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/image/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
@@ -38,42 +38,42 @@ UnitTest.asynctest('browser.tinymce.plugins.image.A11yImageTest', (success, fail
     const testUiStateDisabled = Log.stepsAsStep('FOAM-11', 'Test image UI state', [
       api.sExecCommand('mceImage', true),
       ui.sWaitForPopup('Wait for Image dialog', 'div[role="dialog"]'),
-      UiFinder.sExists(Body.body(), generalTabSelectors.alt + ':disabled'),
+      UiFinder.sExists(SugarBody.body(), generalTabSelectors.alt + ':disabled'),
       ui.sClickOnUi('click save', 'div[role="dialog"] button:contains("Save")'),
-      UiFinder.sNotExists(Body.body(), 'div[role="dialog"]')
+      UiFinder.sNotExists(SugarBody.body(), 'div[role="dialog"]')
     ]);
 
     const testUiStateEnabled = (alt: string) => Log.stepsAsStep('FOAM-11', 'Test image UI state', [
       api.sExecCommand('mceImage', true),
       ui.sWaitForPopup('Wait for Image dialog', 'div[role="dialog"]'),
-      Chain.asStep(Body.body(), [
+      Chain.asStep(SugarBody.body(), [
         UiFinder.cFindIn(generalTabSelectors.alt),
         UiControls.cGetValue,
         Assertions.cAssertEq('Assert input value', alt)
       ]),
       ui.sClickOnUi('click save', 'div[role="dialog"] button:contains("Save")'),
-      UiFinder.sNotExists(Body.body(), 'div[role="dialog"]')
+      UiFinder.sNotExists(SugarBody.body(), 'div[role="dialog"]')
     ]);
 
     const suiteArr = [
       Log.stepsAsStep('TBA', 'Check the decorative checkbox toggles the alt text input', [
         sInitAndOpenDialog('', { elementPath: [ 0 ], offset: 0 }),
         Chain.asStep({}, [
-          Chain.inject(Body.body()),
-          UiFinder.cWaitForState('Check alt text input is enabled', generalTabSelectors.alt, (e) => !Attr.has(e, 'disabled'))
+          Chain.inject(SugarBody.body()),
+          UiFinder.cWaitForState('Check alt text input is enabled', generalTabSelectors.alt, (e) => !Attribute.has(e, 'disabled'))
         ]),
         ui.sClickOnUi('Click on decorative checkbox', generalTabSelectors.decorative),
         Chain.asStep({}, [
-          Chain.inject(Body.body()),
-          UiFinder.cWaitForState('Check alt text input is enabled', generalTabSelectors.alt, (e) => Attr.has(e, 'disabled') && Attr.get(e, 'disabled') === 'disabled')
+          Chain.inject(SugarBody.body()),
+          UiFinder.cWaitForState('Check alt text input is enabled', generalTabSelectors.alt, (e) => Attribute.has(e, 'disabled') && Attribute.get(e, 'disabled') === 'disabled')
         ]),
         ui.sClickOnUi('Click on decorative checkbox', generalTabSelectors.decorative),
         Chain.asStep({}, [
-          Chain.inject(Body.body()),
-          UiFinder.cWaitForState('Check alt text input is enabled', generalTabSelectors.alt, (e) => !Attr.has(e, 'disabled'))
+          Chain.inject(SugarBody.body()),
+          UiFinder.cWaitForState('Check alt text input is enabled', generalTabSelectors.alt, (e) => !Attribute.has(e, 'disabled'))
         ]),
         ui.sClickOnUi('click save', 'div[role="dialog"] button:contains("Save")'),
-        UiFinder.sNotExists(Body.body(), 'div[role="dialog"]')
+        UiFinder.sNotExists(SugarBody.body(), 'div[role="dialog"]')
       ]),
       createTestOnEmptyEditor(
         'Image with alt text',

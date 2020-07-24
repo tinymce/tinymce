@@ -2,7 +2,7 @@ import { ApproxStructure, Assertions, GeneralSteps, Keys, Logger, Pipeline, Step
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import * as Zwsp from 'tinymce/core/text/Zwsp';
@@ -126,7 +126,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.ArrowKeysAnchorTest', function
 
   const sAssertContentStructure = function (editor: Editor, expected: StructAssert) {
     return Step.sync(function () {
-      const actual = Element.fromHtml(editor.getBody().innerHTML);
+      const actual = SugarElement.fromHtml(editor.getBody().innerHTML);
       return Assertions.assertStructure('Should be the same structure', expected, actual);
     });
   };

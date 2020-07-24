@@ -1,7 +1,7 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { DomUniverse } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
-import { Body, Compare, Element, Hierarchy, Insert, Remove } from '@ephox/sugar';
+import { Compare, Hierarchy, Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
 import * as Clumps from 'ephox/robin/clumps/Clumps';
 
 UnitTest.test('ClumpsTest', function () {
@@ -12,9 +12,9 @@ UnitTest.test('ClumpsTest', function () {
     return Hierarchy.follow(container, path).getOrDie('Could not find the path: ' + path.join(','));
   };
 
-  const body = Body.body();
+  const body = SugarBody.body();
 
-  const container = Element.fromTag('div');
+  const container = SugarElement.fromTag('div');
   container.dom().innerHTML =
     '<p>This is <b>the word</b> that I can understand, even if <i>it</i> is not the same as before.</p>' +
     '<p>And another <u>paragraph</u></p>' +
@@ -23,7 +23,7 @@ UnitTest.test('ClumpsTest', function () {
 
   Insert.append(body, container);
 
-  const isRoot = function (elem: Element) {
+  const isRoot = function (elem: SugarElement) {
     return Compare.eq(elem, container);
   };
 

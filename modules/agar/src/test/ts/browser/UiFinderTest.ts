@@ -1,6 +1,6 @@
 import { UnitTest } from '@ephox/bedrock-client';
 import { document, setTimeout } from '@ephox/dom-globals';
-import { Class, Css, Element, Hierarchy, Html, Insert, Node, Remove } from '@ephox/sugar';
+import { Class, Css, Hierarchy, Html, Insert, Remove, SugarElement, SugarNode } from '@ephox/sugar';
 import * as Assertions from 'ephox/agar/api/Assertions';
 import { Chain } from 'ephox/agar/api/Chain';
 import { Pipeline } from 'ephox/agar/api/Pipeline';
@@ -9,13 +9,13 @@ import * as UiFinder from 'ephox/agar/api/UiFinder';
 
 UnitTest.asynctest('UiFinderTest', (success, failure) => {
 
-  const container = Element.fromHtml(
+  const container = SugarElement.fromHtml(
     '<div>' +
     '<p>this is something <strong>bold</strong> here</p>' +
     '<p>there is something else here</p>' +
     '</div>'
   );
-  Insert.append(Element.fromDom(document.body), container);
+  Insert.append(SugarElement.fromDom(document.body), container);
 
   const teardown = () => {
     Remove.remove(container);
@@ -43,7 +43,7 @@ UnitTest.asynctest('UiFinderTest', (success, failure) => {
       UiFinder.cFindAllIn('p'),
       Chain.op((ps) => {
         Assertions.assertEq('Should find two paragraphs', 2, ps.length);
-        Assertions.assertEq('Should be sugared paragraphs', 'p', Node.name(ps[0]));
+        Assertions.assertEq('Should be sugared paragraphs', 'p', SugarNode.name(ps[0]));
       })
     ]),
 

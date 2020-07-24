@@ -1,12 +1,13 @@
 import { Assertions, Chain, Mouse, NamedChain, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Result } from '@ephox/katamari';
-import { Css, Element } from '@ephox/sugar';
+import { Css, SugarElement } from '@ephox/sugar';
+
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Dragging } from 'ephox/alloy/api/behaviour/Dragging';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
+import { Container } from 'ephox/alloy/api/ui/Container';
 
 UnitTest.asynctest('MouseDragEventTest', (success, failure) => {
   GuiSetup.setup((store, _doc, _body) => GuiFactory.build(
@@ -30,7 +31,7 @@ UnitTest.asynctest('MouseDragEventTest', (success, failure) => {
       ])
     })
   ), (_doc, _body, gui, component, store) => {
-    const cAssertNoPositionInfo = Chain.op((box: Element) => {
+    const cAssertNoPositionInfo = Chain.op((box: SugarElement) => {
       Assertions.assertEq('Should be no "left"', true, Css.getRaw(box, 'left').isNone());
       Assertions.assertEq('Should be no "top"', true, Css.getRaw(box, 'top').isNone());
     });

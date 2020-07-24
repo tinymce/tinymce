@@ -5,7 +5,7 @@ import { GuiFactory, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { Arr, Fun, Strings } from '@ephox/katamari';
-import { Element, SelectorFind, Selectors } from '@ephox/sugar';
+import { SelectorFind, Selectors, SugarElement } from '@ephox/sugar';
 
 import SilverMenubar from 'tinymce/themes/silver/ui/menus/menubar/SilverMenubar';
 
@@ -14,7 +14,7 @@ import TestExtras from '../../module/TestExtras';
 // TODO: Expose properly through alloy.
 UnitTest.asynctest('SilverMenubar Test', (success, failure) => {
   const helpers = TestExtras();
-  const sink = Element.fromDom(document.querySelector('.mce-silver-sink'));
+  const sink = SugarElement.fromDom(document.querySelector('.mce-silver-sink'));
 
   TestHelpers.GuiSetup.setup(
     (store, _doc, _body) => GuiFactory.build({

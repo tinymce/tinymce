@@ -9,7 +9,7 @@ import { AddEventsBehaviour, AlloyEvents, AlloyParts, Receiving } from '@ephox/a
 import { Types } from '@ephox/bridge';
 import { HTMLIFrameElement, MessageEvent, window } from '@ephox/dom-globals';
 import { Cell, Obj, Option, Type } from '@ephox/katamari';
-import { DomEvent, Element, EventUnbinder, SelectorFind } from '@ephox/sugar';
+import { DomEvent, EventUnbinder, SelectorFind, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import URI from 'tinymce/core/api/util/URI';
@@ -86,7 +86,7 @@ const renderUrlDialog = (internalDialog: Types.UrlDialog.UrlDialog, extra: Windo
     AddEventsBehaviour.config('messages', [
       // When the dialog is opened, bind a window message listener for the spec url
       AlloyEvents.runOnAttached(() => {
-        const unbind = DomEvent.bind<MessageEvent>(Element.fromDom(window), 'message', (e) => {
+        const unbind = DomEvent.bind<MessageEvent>(SugarElement.fromDom(window), 'message', (e) => {
           // Validate that the request came from the correct domain
           if (iframeUri.isSameOrigin(new URI(e.raw().origin))) {
             const data = e.raw().data;

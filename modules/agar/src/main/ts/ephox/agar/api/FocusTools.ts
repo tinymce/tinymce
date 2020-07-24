@@ -1,52 +1,52 @@
+import { Document, Node } from '@ephox/dom-globals';
 import { Result } from '@ephox/katamari';
-import { Compare, Element, Focus, Traverse, Truncate } from '@ephox/sugar';
+import { Compare, Focus, SugarElement, Traverse, Truncate } from '@ephox/sugar';
 
 import * as SizzleFind from '../alien/SizzleFind';
 import { Chain } from './Chain';
 import * as Guard from './Guard';
 import * as Logger from './Logger';
+import { Step } from './Step';
 import * as UiControls from './UiControls';
 import * as UiFinder from './UiFinder';
 import * as Waiter from './Waiter';
-import { Step } from './Step';
-import { Document, Node } from '@ephox/dom-globals';
 
-const cGetFocused: Chain<Element<any>, Element<any>> =
+const cGetFocused: Chain<SugarElement<any>, SugarElement<any>> =
   Chain.binder((doc) =>
     Focus.active(doc).fold(
       () => Result.error('Could not find active element'),
       Result.value)
   );
 
-const cSetFocused: Chain<Element<any>, Element<any>> =
+const cSetFocused: Chain<SugarElement<any>, SugarElement<any>> =
   Chain.op(Focus.focus);
 
-const cGetOwnerDoc: Chain<Element<Node>, Element<Document>> =
+const cGetOwnerDoc: Chain<SugarElement<Node>, SugarElement<Document>> =
   Chain.mapper(Traverse.owner);
 
-const sIsOn = <T>(label: string, element: Element<any>): Step<T, T> =>
-  Chain.asStep<T, Element>(element, [
+const sIsOn = <T>(label: string, element: SugarElement<any>): Step<T, T> =>
+  Chain.asStep<T, SugarElement>(element, [
     cGetOwnerDoc,
     cGetFocused,
-    Chain.binder((active: Element<any>): Result<Element, string> =>
+    Chain.binder((active: SugarElement<any>): Result<SugarElement, string> =>
       Compare.eq(element, active) ? Result.value(active) : Result.error(
         label + '\nExpected focus: ' + Truncate.getHtml(element) + '\nActual focus: ' + Truncate.getHtml(active)
       ))
   ]);
 
-const sIsOnSelector = <T>(label: string, doc: Element<any>, selector: string): Step<T, T> =>
+const sIsOnSelector = <T>(label: string, doc: SugarElement<any>, selector: string): Step<T, T> =>
   Logger.t(
     `${label}: sIsOnSelector(${selector})`,
-    Chain.asStep<T, Element>(doc, [
+    Chain.asStep<T, SugarElement>(doc, [
       cGetFocused,
-      Chain.binder((active: Element<any>): Result<Element, string> =>
+      Chain.binder((active: SugarElement<any>): Result<SugarElement, string> =>
         SizzleFind.matches(active, selector) ? Result.value(active) : Result.error(
           label + '\nExpected focus $("' + selector + '")]\nActual focus: ' + Truncate.getHtml(active)
         ))
     ])
   );
 
-const sTryOnSelector = <T>(label: string, doc: Element<any>, selector: string): Step<T, T> =>
+const sTryOnSelector = <T>(label: string, doc: SugarElement<any>, selector: string): Step<T, T> =>
   Logger.t<T, T>(
     label + '. Focus did not match: ' + selector,
     Waiter.sTryUntil(
@@ -56,17 +56,17 @@ const sTryOnSelector = <T>(label: string, doc: Element<any>, selector: string): 
     )
   );
 
-const cSetFocus = (label: string, selector: string): Chain<Element, Element> =>
+const cSetFocus = (label: string, selector: string): Chain<SugarElement, SugarElement> =>
   // Input: container
   Chain.fromChains([
-    Chain.control<Element, Element, Element>(
+    Chain.control<SugarElement, SugarElement, SugarElement>(
       UiFinder.cFindIn(selector),
       Guard.addLogging(label)
     ),
     cSetFocused
   ]);
 
-const cSetActiveValue = (newValue: string): Chain<Element, Element> =>
+const cSetActiveValue = (newValue: string): Chain<SugarElement, SugarElement> =>
   // Input: container
   Chain.fromChains([
     cGetOwnerDoc,
@@ -75,18 +75,18 @@ const cSetActiveValue = (newValue: string): Chain<Element, Element> =>
   ]);
 
 // Input: container
-const cGetActiveValue: Chain<Element, string> =
+const cGetActiveValue: Chain<SugarElement, string> =
   Chain.fromChains([
     cGetOwnerDoc,
     cGetFocused,
     UiControls.cGetValue
   ]);
 
-const sSetFocus = <T>(label: string, container: Element<any>, selector: string): Step<T, T> =>
-  Chain.asStep<T, Element>(container, [ cSetFocus(label, selector) ]);
+const sSetFocus = <T>(label: string, container: SugarElement<any>, selector: string): Step<T, T> =>
+  Chain.asStep<T, SugarElement>(container, [ cSetFocus(label, selector) ]);
 
-const sSetActiveValue = <T>(doc: Element<any>, newValue: string): Step<T, T> =>
-  Chain.asStep<T, Element>(doc, [
+const sSetActiveValue = <T>(doc: SugarElement<any>, newValue: string): Step<T, T> =>
+  Chain.asStep<T, SugarElement>(doc, [
     cGetFocused,
     UiControls.cSetValue(newValue)
   ]);

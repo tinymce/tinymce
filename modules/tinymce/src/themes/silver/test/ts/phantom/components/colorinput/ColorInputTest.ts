@@ -5,7 +5,7 @@ import { AlloyTriggers, Container, GuiFactory, Invalidating, NativeEvents, Repre
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
-import { Element, SelectorFind, Traverse } from '@ephox/sugar';
+import { SelectorFind, SugarElement, Traverse } from '@ephox/sugar';
 
 import { renderColorInput } from 'tinymce/themes/silver/ui/dialog/ColorInput';
 
@@ -16,7 +16,7 @@ const choiceItem: 'choiceitem' = 'choiceitem';
 // TODO: Expose properly through alloy.
 UnitTest.asynctest('Color input component Test', (success, failure) => {
   const helpers = TestExtras();
-  const sink = Element.fromDom(document.querySelector('.mce-silver-sink'));
+  const sink = SugarElement.fromDom(document.querySelector('.mce-silver-sink'));
 
   TestHelpers.GuiSetup.setup(
     (_store, _doc, _body) => GuiFactory.build(

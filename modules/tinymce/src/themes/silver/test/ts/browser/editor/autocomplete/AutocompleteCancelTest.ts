@@ -3,7 +3,7 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { TinyActions, TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Promise from 'tinymce/core/api/util/Promise';
@@ -156,7 +156,7 @@ UnitTest.asynctest('Editor Autocompleter Cancel test', (success, failure) => {
         expectedAutocompletePara(':a')(s, str),
         s.element('p', {})
       ]),
-      action: Mouse.sTrueClickOn(Element.fromDom(editor.getBody()), 'p:contains(new node)'),
+      action: Mouse.sTrueClickOn(SugarElement.fromDom(editor.getBody()), 'p:contains(new node)'),
       assertion: (s, str) => [
         expectedSimplePara(':a')(s, str),
         s.element('p', { })

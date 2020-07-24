@@ -1,6 +1,6 @@
 import { Arr, Fun } from '@ephox/katamari';
+import { SugarElement } from '@ephox/sugar';
 import { Warehouse } from '../model/Warehouse';
-import { Element } from '@ephox/sugar';
 
 // Returns the sum of elements of measures in the half-open range [start, end)
 // Measures is in pixels, treated as an array of integers or integers in string format.
@@ -16,7 +16,7 @@ const total = function (start: number, end: number, measures: number[]): number 
 interface CellWidthSpan {
   readonly colspan: number;
   readonly width: number;
-  readonly element: Element;
+  readonly element: SugarElement;
 }
 
 // Returns an array of all cells in warehouse with updated cell-widths, using

@@ -1,13 +1,13 @@
 import { Assertions, Chain, FocusTools, Logger, Step, UiFinder, Waiter } from '@ephox/agar';
 import { HTMLDocument, HTMLInputElement } from '@ephox/dom-globals';
-import { Element, Value } from '@ephox/sugar';
+import { SugarElement, Value } from '@ephox/sugar';
 
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
 import * as NativeEvents from 'ephox/alloy/api/events/NativeEvents';
 import { GuiSystem } from 'ephox/alloy/api/system/Gui';
 
-export default (doc: Element<HTMLDocument>, gui: GuiSystem, typeahead: AlloyComponent) => {
+export default (doc: SugarElement<HTMLDocument>, gui: GuiSystem, typeahead: AlloyComponent) => {
   const sWaitForMenu = (label: string) => Logger.t(
     label,
     Waiter.sTryUntil(

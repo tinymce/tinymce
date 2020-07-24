@@ -2,7 +2,7 @@ import { Log, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { TinyLoader } from '@ephox/mcagar';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import CodePlugin from 'tinymce/plugins/codesample/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 import * as TestUtils from '../module/CodeSampleTestUtils';
@@ -14,7 +14,7 @@ UnitTest.asynctest('browser.tinymce.plugins.codesample.CodeSampleSanityTest', (s
 
   TinyLoader.setupLight((editor, onSuccess, onFailure) => {
 
-    const docBody = Element.fromDom(document.body);
+    const docBody = SugarElement.fromDom(document.body);
     const editorBody = editor.contentDocument.body;
     const markupContent = '<p>hello world</p>';
     const newContent = 'editor content should not change to this';

@@ -1,20 +1,20 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { DomUniverse, Universe } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
-import { Body, Element, Hierarchy, Insert, InsertAll, Remove, Replication } from '@ephox/sugar';
+import { Hierarchy, Insert, InsertAll, Remove, Replication, SugarBody, SugarElement } from '@ephox/sugar';
 import * as LeftBlock from 'ephox/robin/api/general/LeftBlock';
 
 UnitTest.test('LeftBlockTest', function () {
   const universe = DomUniverse();
 
-  const editor = Element.fromTag('div');
+  const editor = SugarElement.fromTag('div');
 
   const reset = function () {
     editor.dom().innerHTML = '<p>alpha<span>cat</span><b>hello<i>word</i>hi</b>there</p>';
   };
 
   const setup = function () {
-    Insert.append(Body.body(), editor);
+    Insert.append(SugarBody.body(), editor);
   };
 
   const cleanup = function () {
@@ -28,7 +28,7 @@ UnitTest.test('LeftBlockTest', function () {
     ele.each(function (start) {
       const group = method(universe, start);
       const clones = Arr.map(group, Replication.deep);
-      const div = Element.fromTag('div');
+      const div = SugarElement.fromTag('div');
       InsertAll.append(div, clones);
       assert.eq(expected, div.dom().innerHTML);
     });

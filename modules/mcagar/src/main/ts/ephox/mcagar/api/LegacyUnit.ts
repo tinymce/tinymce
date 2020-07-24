@@ -1,7 +1,7 @@
 import { Assertions, Logger, Step } from '@ephox/agar';
-import { Node as DomNode } from '@ephox/dom-globals';
-import { TinyDom } from './TinyDom';
+import { Node } from '@ephox/dom-globals';
 import { Editor } from '../alien/EditorTypes';
+import { TinyDom } from './TinyDom';
 
 type SyncTestCallback<T> = (initValue: T) => void;
 type AsyncTestCallback<T> = (initValue: T, done: () => void, die: (err?: any) => void) => void;
@@ -55,7 +55,7 @@ const execCommand = function <T extends Editor = Editor> (editor: T, cmd: string
   }
 };
 
-const findContainer = function <T extends Editor = Editor> (editor: T, selector: string | DomNode) {
+const findContainer = function <T extends Editor = Editor> (editor: T, selector: string | Node) {
   let container;
 
   if (typeof selector === 'string') {
@@ -76,7 +76,7 @@ const setSelection = function <T extends Editor = Editor> (editor: T, startSelec
   const endContainer = findContainer(editor, endSelector ? endSelector : startSelector);
   const rng = editor.dom.createRng();
 
-  const setRange = function (container: DomNode, offset: Offset | undefined, start: boolean) {
+  const setRange = function (container: Node, offset: Offset | undefined, start: boolean) {
     offset = offset ? offset : 0;
 
     if (offset === 'after') {
@@ -88,7 +88,7 @@ const setSelection = function <T extends Editor = Editor> (editor: T, startSelec
 
       return;
     } else if (offset === 'afterNextCharacter') {
-      container = container.nextSibling as DomNode;
+      container = container.nextSibling as Node;
       offset = 1;
     }
 
@@ -108,7 +108,7 @@ const trimBrs = function (html: string) {
   return html.toLowerCase().replace(/<br[^>]*>|[\r\n]+/gi, '');
 };
 
-const equalDom = function <T extends DomNode> (actual: T, expected: T, message?: string) {
+const equalDom = function <T extends Node> (actual: T, expected: T, message?: string) {
   Assertions.assertDomEq(typeof message !== 'undefined' ? message : 'Nodes are not equal', TinyDom.fromDom(expected), TinyDom.fromDom(actual));
 };
 

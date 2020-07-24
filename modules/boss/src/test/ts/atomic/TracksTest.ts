@@ -1,7 +1,7 @@
-import * as Tracks from 'ephox/boss/mutant/Tracks';
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Option } from '@ephox/katamari';
-import { UnitTest, assert } from '@ephox/bedrock-client';
 import { Gene } from 'ephox/boss/api/Gene';
+import * as Tracks from 'ephox/boss/mutant/Tracks';
 
 UnitTest.test('TracksTest', function () {
   const family = Gene('A', '.', [

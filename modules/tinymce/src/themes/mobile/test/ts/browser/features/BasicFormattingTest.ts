@@ -2,7 +2,7 @@ import { GeneralSteps, Pipeline } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
 import { PlatformDetection } from '@ephox/sand';
-import { Body, Traverse } from '@ephox/sugar';
+import { SugarBody, Traverse } from '@ephox/sugar';
 
 import * as TestTheme from '../../module/test/theme/TestTheme';
 import * as TestUi from '../../module/test/ui/TestUi';
@@ -11,7 +11,7 @@ UnitTest.asynctest('Browser Test: features.BasicFormattingTest', function (succe
   const browser = PlatformDetection.detect().browser;
 
   /* This test is going to create a toolbar with bold, italic, underline in it */
-  const body = Body.body();
+  const body = SugarBody.body();
 
   TestTheme.setup({
     container: body,

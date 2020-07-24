@@ -1,21 +1,21 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
-import { Node as DomNode } from '@ephox/dom-globals';
+import { Node } from '@ephox/dom-globals';
 import * as Compare from 'ephox/sugar/api/dom/Compare';
 import * as DocumentPosition from 'ephox/sugar/api/dom/DocumentPosition';
 import * as Insert from 'ephox/sugar/api/dom/Insert';
 import * as InsertAll from 'ephox/sugar/api/dom/InsertAll';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
-import * as Body from 'ephox/sugar/api/node/Body';
-import Element from 'ephox/sugar/api/node/Element';
+import * as SugarBody from 'ephox/sugar/api/node/SugarBody';
+import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
 import * as Html from 'ephox/sugar/api/properties/Html';
 
 UnitTest.test('DocumentPositionTest', () => {
-  const container = Element.fromTag('div');
-  const p1 = Element.fromTag('p');
-  const p1t1 = Element.fromText('p1text');
-  const p1t2 = Element.fromText('p2text');
-  const p1s1 = Element.fromTag('span');
-  const p1s1t1 = Element.fromText('spantext');
+  const container = SugarElement.fromTag('div');
+  const p1 = SugarElement.fromTag('p');
+  const p1t1 = SugarElement.fromText('p1text');
+  const p1t2 = SugarElement.fromText('p2text');
+  const p1s1 = SugarElement.fromTag('span');
+  const p1s1t1 = SugarElement.fromText('spantext');
 
   /* Note: this looks like
    * <div>
@@ -33,9 +33,9 @@ UnitTest.test('DocumentPositionTest', () => {
   InsertAll.append(p1, [ p1t1, p1t2, p1s1 ]);
   InsertAll.append(p1s1, [ p1s1t1 ]);
 
-  Insert.append(Body.body(), container);
+  Insert.append(SugarBody.body(), container);
 
-  const check = (expected: boolean, start: Element<DomNode>, soffset: number, finish: Element<DomNode>, foffset: number, msg: string) => {
+  const check = (expected: boolean, start: SugarElement<Node>, soffset: number, finish: SugarElement<Node>, foffset: number, msg: string) => {
     assert.eq(expected, DocumentPosition.after(start, soffset, finish, foffset), msg);
   };
 
@@ -55,15 +55,15 @@ UnitTest.test('DocumentPositionTest', () => {
 
   // commonAncestorContainer tests
   (() => {
-    const div = Element.fromTag('div');
-    const p11 = Element.fromTag('p');
-    const p2 = Element.fromTag('p');
-    const p1text = Element.fromText('One');
-    const p1textb = Element.fromText(', two');
-    const p1span = Element.fromTag('span');
-    const p1span1 = Element.fromText('cat');
-    const p1span2 = Element.fromText(' dog ');
-    const p2br = Element.fromTag('br');
+    const div = SugarElement.fromTag('div');
+    const p11 = SugarElement.fromTag('p');
+    const p2 = SugarElement.fromTag('p');
+    const p1text = SugarElement.fromText('One');
+    const p1textb = SugarElement.fromText(', two');
+    const p1span = SugarElement.fromTag('span');
+    const p1span1 = SugarElement.fromText('cat');
+    const p1span2 = SugarElement.fromText(' dog ');
+    const p2br = SugarElement.fromTag('br');
 
     InsertAll.append(div, [ p11, p2 ]);
     InsertAll.append(p11, [ p1text, p1textb, p1span ]);

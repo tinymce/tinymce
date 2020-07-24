@@ -2,7 +2,7 @@ import { ApproxStructure, Assertions, Log, NamedChain, Pipeline, UiFinder } from
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr, Id, Result } from '@ephox/katamari';
 import { Editor as McagarEditor } from '@ephox/mcagar';
-import { Body } from '@ephox/sugar';
+import { SugarBody } from '@ephox/sugar';
 
 import SilverTheme from 'tinymce/themes/silver/Theme';
 import { cCountNumber, cExtractOnlyOne } from '../../../module/UiChainUtils';
@@ -32,7 +32,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
   Pipeline.async({}, [
     Log.chainsAsStep('TBA', 'Testing toolbar: false should not create toolbar at all', [
       NamedChain.asChain([
-        NamedChain.writeValue('body', Body.body()),
+        NamedChain.writeValue('body', SugarBody.body()),
         NamedChain.write('editor', cCreateEditorWithToolbar(false)),
         NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
         NamedChain.direct('body', cCountNumber('.tox-toolbar'), 'numToolbars'),
@@ -44,7 +44,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
 
     Log.chainsAsStep('TBA', 'Testing toolbar: true should create default toolbar', [
       NamedChain.asChain([
-        NamedChain.writeValue('body', Body.body()),
+        NamedChain.writeValue('body', SugarBody.body()),
         NamedChain.write('editor', cCreateEditorWithToolbar(true)),
         NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
         NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar'), 'toolbar'),
@@ -56,7 +56,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
 
     Log.chainsAsStep('TBA', 'Testing toolbar: undefined should create default toolbar', [
       NamedChain.asChain([
-        NamedChain.writeValue('body', Body.body()),
+        NamedChain.writeValue('body', SugarBody.body()),
         NamedChain.write('editor', cCreateEditorWithToolbar(undefined)),
         NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
         NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar'), 'toolbar'),
@@ -68,7 +68,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
 
     Log.chainsAsStep('TBA', 'Testing toolbar: "bold italic" should create "bold italic" toolbar', [
       NamedChain.asChain([
-        NamedChain.writeValue('body', Body.body()),
+        NamedChain.writeValue('body', SugarBody.body()),
         NamedChain.write('editor', cCreateEditorWithToolbar('bold italic')),
         NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
         NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar'), 'toolbar'),
@@ -94,7 +94,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
 
     Log.chainsAsStep('TBA', 'Testing toolbar: "bold italic | stufffffed | strikethrough underline" should create "bold italic | strikethrough underline" toolbar', [
       NamedChain.asChain([
-        NamedChain.writeValue('body', Body.body()),
+        NamedChain.writeValue('body', SugarBody.body()),
         NamedChain.write('editor', cCreateEditorWithToolbar('bold italic | stufffffed | strikethrough underline')),
         NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
         NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar'), 'toolbar'),
@@ -127,7 +127,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
 
     Log.chainsAsStep('TBA', 'Testing toolbar: ["bold italic", "underline | strikethrough"] should create "bold italic" and "underline | strikethrough" toolbars', [
       NamedChain.asChain([
-        NamedChain.writeValue('body', Body.body()),
+        NamedChain.writeValue('body', SugarBody.body()),
         NamedChain.write('editor', cCreateEditorWithToolbar([ 'bold italic', 'underline | strikethrough' ])),
         NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
         NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar-overlord'), 'multiple-toolbars'),
@@ -177,7 +177,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
 
     Log.chainsAsStep('TBA', 'Testing toolbar: ["bold"] should create "bold" toolbar', [
       NamedChain.asChain([
-        NamedChain.writeValue('body', Body.body()),
+        NamedChain.writeValue('body', SugarBody.body()),
         NamedChain.write('editor', cCreateEditorWithToolbar([ 'bold' ])),
         NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
         NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar-overlord'), 'multiple-toolbars'),
@@ -208,7 +208,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
 
     Log.chainsAsStep('TBA', 'Testing toolbar: empty array should not create toolbar at all', [
       NamedChain.asChain([
-        NamedChain.writeValue('body', Body.body()),
+        NamedChain.writeValue('body', SugarBody.body()),
         NamedChain.write('editor', cCreateEditorWithToolbar([])),
         NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
         NamedChain.direct('body', cCountNumber('.tox-toolbar'), 'numToolbars'),
@@ -220,7 +220,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
 
     Log.chainsAsStep('TBA', 'Testing multiple toolbars: toolbar: "link", toolbar1: "bold italic underline" and toolbar2: "strikethrough" should create a "bold italic underline" toolbar and a "strikethrough" toolbar', [
       NamedChain.asChain([
-        NamedChain.writeValue('body', Body.body()),
+        NamedChain.writeValue('body', SugarBody.body()),
         NamedChain.write('editor', cCreateEditorWithToolbar('link', 'bold italic underline', 'strikethrough')),
         NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
         NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar-overlord'), 'multiple-toolbars'),
@@ -265,7 +265,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
 
     Log.chainsAsStep('TBA', 'Testing multiple toolbars: toolbar1: "bold italic underline" and toolbar2: ["strikethrough"] should create "bold italic underline" toolbar and ignore toolbar2', [
       NamedChain.asChain([
-        NamedChain.writeValue('body', Body.body()),
+        NamedChain.writeValue('body', SugarBody.body()),
         NamedChain.write('editor', cCreateEditorWithToolbar(true, 'bold italic underline', [ 'strikethrough' ])),
         NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
         NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar-overlord'), 'multiple-toolbars'),
@@ -298,7 +298,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
 
     Log.chainsAsStep('TBA', 'Testing multiple toolbars: toolbar: false and toolbar2: "bold italic" should create "bold italic" toolbar and ignore toolbar', [
       NamedChain.asChain([
-        NamedChain.writeValue('body', Body.body()),
+        NamedChain.writeValue('body', SugarBody.body()),
         NamedChain.write('editor', cCreateEditorWithToolbar(false, false, 'bold italic')),
         NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
         NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar-overlord'), 'multiple-toolbars'),
@@ -330,7 +330,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
 
     Log.chainsAsStep('TBA', 'Testing multiple toolbars: toolbar: empty array and toolbar1: "bold italic" and toolbar2: "strikethrough" should create a "bold italic" toolbar and a "strikethrough" toolbar and ignore toolbar', [
       NamedChain.asChain([
-        NamedChain.writeValue('body', Body.body()),
+        NamedChain.writeValue('body', SugarBody.body()),
         NamedChain.write('editor', cCreateEditorWithToolbar([], 'bold italic', 'strikethrough')),
         NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
         NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar-overlord'), 'multiple-toolbars'),
@@ -374,7 +374,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
 
     Log.chainsAsStep('TBA', 'Testing multiple toolbars: toolbar1: false and toolbar2: "bold italic underline" should create "bold italic underline toolbar and ignore toolbar1', [
       NamedChain.asChain([
-        NamedChain.writeValue('body', Body.body()),
+        NamedChain.writeValue('body', SugarBody.body()),
         NamedChain.write('editor', cCreateEditorWithToolbar(true, false, 'bold italic underline')),
         NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
         NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar-overlord'), 'multiple-toolbars'),
@@ -407,7 +407,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
 
     Log.chainsAsStep('TBA', 'Testing multiple toolbars: toolbar1: "bold italic | underline" and toolbar9: "strikethrough" should create a "bold italic | underline" toolbar and a "strikethrough" toolbar', [
       NamedChain.asChain([
-        NamedChain.writeValue('body', Body.body()),
+        NamedChain.writeValue('body', SugarBody.body()),
         NamedChain.write('editor', cCreateEditorWithToolbar(true, 'bold italic | underline', false, 'strikethrough')),
         NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
         NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar-overlord'), 'multiple-toolbars'),
@@ -457,7 +457,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
 
     Log.chainsAsStep('TBA', 'Testing multiple toolbars: toolbar1: [] and toolbar2: false should create default toolbar', [
       NamedChain.asChain([
-        NamedChain.writeValue('body', Body.body()),
+        NamedChain.writeValue('body', SugarBody.body()),
         NamedChain.write('editor', cCreateEditorWithToolbar(true, [], false)),
         NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
         NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar'), 'toolbar'),
@@ -469,7 +469,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
 
     Log.chainsAsStep('TBA', 'Testing multiple toolbars: toolbar25: "bold italic underline" should create default toolbar', [
       NamedChain.asChain([
-        NamedChain.writeValue('body', Body.body()),
+        NamedChain.writeValue('body', SugarBody.body()),
         NamedChain.write('editor', cCreateEditorWithToolbar(true, false, false, false, 'bold italic underline')),
         NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
         NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar'), 'toolbar'),
@@ -481,7 +481,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
 
     Log.chainsAsStep('TBA', 'Testing invalid toolbar type should not create a toolbar at all', [
       NamedChain.asChain([
-        NamedChain.writeValue('body', Body.body()),
+        NamedChain.writeValue('body', SugarBody.body()),
         NamedChain.write('editor', cCreateEditorWithToolbar(1)),
         NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
         NamedChain.direct('body', cCountNumber('.tox-toolbar'), 'numToolbars'),
@@ -493,7 +493,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
 
     Log.chainsAsStep('TBA', 'Testing toolbar with toolbar group names: toolbar: [ { name: "history", items: [ "undo", "redo" ] }, { name: "formatting", items: [ "bold", "italic" ] } ] should create a "undo redo | bold italic" toolbar', [
       NamedChain.asChain([
-        NamedChain.writeValue('body', Body.body()),
+        NamedChain.writeValue('body', SugarBody.body()),
         NamedChain.write('editor', cCreateEditorWithToolbar([{ name: 'history', items: [ 'undo', 'redo' ] }, { name: 'formatting', items: [ 'bold', 'italic' ] }])),
         NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
         NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar'), 'toolbar'),

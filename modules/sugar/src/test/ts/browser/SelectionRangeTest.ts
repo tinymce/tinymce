@@ -5,12 +5,12 @@ import * as Compare from 'ephox/sugar/api/dom/Compare';
 import * as Hierarchy from 'ephox/sugar/api/dom/Hierarchy';
 import * as Insert from 'ephox/sugar/api/dom/Insert';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
-import * as Body from 'ephox/sugar/api/node/Body';
-import Element from 'ephox/sugar/api/node/Element';
-import * as Attr from 'ephox/sugar/api/properties/Attr';
+import * as SugarBody from 'ephox/sugar/api/node/SugarBody';
+import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
+import * as Attribute from 'ephox/sugar/api/properties/Attribute';
 import * as Class from 'ephox/sugar/api/properties/Class';
 import * as Html from 'ephox/sugar/api/properties/Html';
-import { Selection } from 'ephox/sugar/api/selection/Selection';
+import { SimSelection } from 'ephox/sugar/api/selection/SimSelection';
 import { Situ } from 'ephox/sugar/api/selection/Situ';
 import * as WindowSelection from 'ephox/sugar/api/selection/WindowSelection';
 
@@ -26,11 +26,11 @@ interface Variants {
 }
 
 UnitTest.test('WindowSelectionTest', () => {
-  const container = Element.fromTag('div');
+  const container = SugarElement.fromTag('div');
   Class.add(container, 'window-selection-test');
-  Attr.set(container, 'contenteditable', 'true');
+  Attribute.set(container, 'contenteditable', 'true');
 
-  const body = Body.body();
+  const body = SugarBody.body();
   Insert.append(body, container);
 
   Html.set(container, '<p>This <strong>world</strong> is not <strong>w<em>ha</em>t</strong> I<br><br>wanted</p><p><br>And even more</p>');
@@ -76,7 +76,7 @@ UnitTest.test('WindowSelectionTest', () => {
 
   const checkStringAt = (label: string, expectedStr: string, start: Situ, finish: Situ) => {
     // dont need to set a selection range, just extract the Situ.on() element/offset pair
-    const actual = WindowSelection.getAsString(window, Selection.relative(start, finish));
+    const actual = WindowSelection.getAsString(window, SimSelection.relative(start, finish));
     assert.eq(expectedStr, actual, 'Actual was not expected [' + expectedStr + '|' + actual + ']');
   };
 
@@ -184,7 +184,7 @@ UnitTest.test('WindowSelectionTest', () => {
   );
 
   checkSelection(
-    'RTL Selection (This world is not what I wanted)',
+    'RTL SimSelection (This world is not what I wanted)',
     {
       // '<p>]This <strong>world</strong> is not <strong>w<em>ha</em>t</strong> I<br><br>wanted[</p><p><br>And even more</p>';
       fallback: {
@@ -238,7 +238,7 @@ UnitTest.test('WindowSelectionTest', () => {
   );
 
   checkSelection(
-    'RTL Selection (t I)',
+    'RTL SimSelection (t I)',
     {
       // '<p>This <strong>world</strong> is not <strong>w<em>ha]</em>t</strong> I<br><br>[wanted</p><p><br>And even more</p>';
       fallback: {
@@ -287,7 +287,7 @@ UnitTest.test('WindowSelectionTest', () => {
   );
 
   checkStringAt(
-    'RTL Selection (This world is not what I)',
+    'RTL SimSelection (This world is not what I)',
     'This world is not what I',
     Situ.on(find( [ 0 ]), 7),
     Situ.on(find( [ 0 ]), 0)

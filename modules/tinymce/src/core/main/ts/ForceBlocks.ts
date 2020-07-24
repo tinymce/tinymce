@@ -7,7 +7,7 @@
 
 import { Node } from '@ephox/dom-globals';
 import { Arr, Fun } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import Editor from './api/Editor';
 import * as Settings from './api/Settings';
 import * as Bookmarks from './bookmark/Bookmarks';
@@ -37,7 +37,7 @@ const isValidTarget = function (blockElements, node) {
 };
 
 const hasBlockParent = function (blockElements, root, node) {
-  return Arr.exists(Parents.parents(Element.fromDom(node), Element.fromDom(root)), function (elm) {
+  return Arr.exists(Parents.parents(SugarElement.fromDom(node), SugarElement.fromDom(root)), function (elm) {
     return isBlockElement(blockElements, elm.dom());
   });
 };

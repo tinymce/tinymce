@@ -1,7 +1,7 @@
 import { Chain, FocusTools, Log, Pipeline, Step, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
-import { Body, Document } from '@ephox/sugar';
+import { SugarBody, SugarDocument } from '@ephox/sugar';
 import LocalStorage from 'tinymce/core/api/util/LocalStorage';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
@@ -15,7 +15,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.AnchorFalseTest', (success, fai
   TinyLoader.setup((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
     const tinyUi = TinyUi(editor);
-    const doc = Document.getDocument();
+    const doc = SugarDocument.getDocument();
 
     Pipeline.async({}, [
       tinyApis.sFocus(),
@@ -32,8 +32,8 @@ UnitTest.asynctest('browser.tinymce.plugins.link.AnchorFalseTest', (success, fai
           TestLinkUi.cFireEvent('input')
         ]),
         tinyUi.sWaitForUi('Wait for the typeahead to open', '.tox-dialog__popups .tox-menu'),
-        UiFinder.sNotExists(Body.body(), '.tox-dialog__popups .tox-menu .tox-collection__item:contains(<top>)'),
-        UiFinder.sNotExists(Body.body(), '.tox-dialog__popups .tox-menu .tox-collection__item:contains(<bottom>)')
+        UiFinder.sNotExists(SugarBody.body(), '.tox-dialog__popups .tox-menu .tox-collection__item:contains(<top>)'),
+        UiFinder.sNotExists(SugarBody.body(), '.tox-dialog__popups .tox-menu .tox-collection__item:contains(<bottom>)')
       ]),
       Step.sync(() => {
         LocalStorage.removeItem('tinymce-url-history');

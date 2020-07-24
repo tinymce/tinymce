@@ -1,7 +1,7 @@
 import { Assertions, Chain, Guard, Mouse, NamedChain, Pipeline, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyLoader } from '@ephox/mcagar';
-import { Body, Element } from '@ephox/sugar';
+import { SugarBody, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 
 import Theme from 'tinymce/themes/silver/Theme';
@@ -12,7 +12,7 @@ UnitTest.asynctest('Editor resize test', (success, failure) => {
 
   TinyLoader.setup((editor: Editor, onSuccess, onFailure) => {
     const cAssertEditorSize = (expectedWidth: number, expectedHeight: number) => Chain.control(
-      Chain.op((container: Element) => {
+      Chain.op((container: SugarElement) => {
         Assertions.assertEq(`Editor should be ${expectedHeight}px high`, expectedHeight, container.dom().offsetHeight);
         Assertions.assertEq(`Editor should be ${expectedWidth}px wide`, expectedWidth, container.dom().offsetWidth);
       }),
@@ -20,7 +20,7 @@ UnitTest.asynctest('Editor resize test', (success, failure) => {
     );
 
     Pipeline.async({ }, [
-      Chain.asStep(Body.body(), [
+      Chain.asStep(SugarBody.body(), [
         Chain.op(() => {
           // Add a border to ensure we're using the correct height/width (ie border-box sizing)
           editor.dom.setStyles(editor.getContainer(), {
@@ -29,7 +29,7 @@ UnitTest.asynctest('Editor resize test', (success, failure) => {
         }),
         Chain.label('Test resize with max/min sizing', NamedChain.asChain([
           NamedChain.direct(NamedChain.inputName(), Chain.identity, 'body'),
-          NamedChain.writeValue('container', Element.fromDom(editor.getContainer())),
+          NamedChain.writeValue('container', SugarElement.fromDom(editor.getContainer())),
           NamedChain.direct('body', UiFinder.cFindIn('.tox-statusbar__resize-handle'), 'resizeHandle'),
 
           // Shrink to 300px

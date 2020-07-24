@@ -6,13 +6,14 @@
  */
 
 import {
-  Attr, Document, document, DocumentFragment, Element, HTMLElement, HTMLElementEventMap, HTMLElementTagNameMap, NamedNodeMap, Node, Range,
-  Window, window
+  Attr, Document, document, DocumentFragment, Element, HTMLElement, HTMLElementEventMap, HTMLElementTagNameMap, NamedNodeMap, Node, Range, Window,
+  window
 } from '@ephox/dom-globals';
 import { Type } from '@ephox/katamari';
-import { VisualViewport, Element as SugarElement } from '@ephox/sugar';
+import { SugarElement, WindowVisualViewport } from '@ephox/sugar';
 import * as NodeType from '../../dom/NodeType';
 import * as Position from '../../dom/Position';
+import * as StyleSheetLoaderRegistry from '../../dom/StyleSheetLoaderRegistry';
 import * as TrimNode from '../../dom/TrimNode';
 import Env from '../Env';
 import { GeomRect } from '../geom/Rect';
@@ -26,7 +27,6 @@ import EventUtils, { EventUtilsCallback } from './EventUtils';
 import Sizzle from './Sizzle';
 import { StyleSheetLoader } from './StyleSheetLoader';
 import TreeWalker from './TreeWalker';
-import * as StyleSheetLoaderRegistry from '../../dom/StyleSheetLoaderRegistry';
 
 /**
  * Utility class for various DOM manipulation and retrieval functions.
@@ -415,7 +415,7 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
   const getRoot = (): HTMLElement => settings.root_element || doc.body;
 
   const getViewPort = (argWin?: Window): GeomRect => {
-    const vp = VisualViewport.getBounds(argWin);
+    const vp = WindowVisualViewport.getBounds(argWin);
 
     // Returns viewport size excluding scrollbars
     return {
@@ -1205,9 +1205,9 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
 
   const dumpRng = (r: Range) => (
     'startContainer: ' + r.startContainer.nodeName +
-      ', startOffset: ' + r.startOffset +
-      ', endContainer: ' + r.endContainer.nodeName +
-      ', endOffset: ' + r.endOffset
+    ', startOffset: ' + r.startOffset +
+    ', endContainer: ' + r.endContainer.nodeName +
+    ', endOffset: ' + r.endOffset
   );
 
   const self: DOMUtils = {

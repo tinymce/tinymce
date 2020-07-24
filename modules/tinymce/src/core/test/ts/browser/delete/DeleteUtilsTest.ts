@@ -1,10 +1,10 @@
 import { Assertions, Chain, GeneralSteps, Logger, Pipeline } from '@ephox/agar';
-import { Hierarchy, Element } from '@ephox/sugar';
+import { UnitTest } from '@ephox/bedrock-client';
+import { Option } from '@ephox/katamari';
+import { Hierarchy, SugarElement } from '@ephox/sugar';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import * as DeleteUtils from 'tinymce/core/delete/DeleteUtils';
 import ViewBlock from '../../module/test/ViewBlock';
-import { UnitTest } from '@ephox/bedrock-client';
-import { Option } from '@ephox/katamari';
 
 UnitTest.asynctest('browser.tinymce.core.delete.DeleteUtilsTest', function (success, failure) {
   const viewBlock = ViewBlock();
@@ -17,22 +17,22 @@ UnitTest.asynctest('browser.tinymce.core.delete.DeleteUtilsTest', function (succ
 
   const cGetParentTextBlock = function (elementPath) {
     return Chain.mapper(function (viewBlock: any) {
-      const element = Hierarchy.follow(Element.fromDom(viewBlock.get()), elementPath).getOrDie();
-      return DeleteUtils.getParentBlock(Element.fromDom(viewBlock.get()), element);
+      const element = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), elementPath).getOrDie();
+      return DeleteUtils.getParentBlock(SugarElement.fromDom(viewBlock.get()), element);
     });
   };
 
   const cAssertBlock = function (elementPath) {
     return Chain.op(function (actualBlock: Option<any>) {
-      const expectedBlock = Hierarchy.follow(Element.fromDom(viewBlock.get()), elementPath).getOrDie();
+      const expectedBlock = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), elementPath).getOrDie();
       Assertions.assertDomEq('Should be the expected block element', expectedBlock, actualBlock.getOrDie());
     });
   };
 
   const cWillDeleteLastPositionInElement = function (forward, caretPath, caretOffset, elementPath) {
     return Chain.injectThunked(function () {
-      const element = Hierarchy.follow(Element.fromDom(viewBlock.get()), elementPath).getOrDie();
-      const caretNode = Hierarchy.follow(Element.fromDom(viewBlock.get()), caretPath).getOrDie();
+      const element = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), elementPath).getOrDie();
+      const caretNode = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), caretPath).getOrDie();
 
       return DeleteUtils.willDeleteLastPositionInElement(forward, CaretPosition(caretNode.dom(), caretOffset), element.dom());
     });

@@ -1,14 +1,14 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
-import { Node as DomNode } from '@ephox/dom-globals';
+import { Node } from '@ephox/dom-globals';
 import * as Compare from 'ephox/sugar/api/dom/Compare';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
-import Element from 'ephox/sugar/api/node/Element';
+import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
 import * as TestPage from 'ephox/sugar/test/TestPage';
 
 UnitTest.test('CompareTest', () => {
   TestPage.connect(); // description of structure is in TestPage
 
-  const check = (expected: boolean, e1: Element<unknown>, e2: Element<unknown>) => {
+  const check = (expected: boolean, e1: SugarElement<unknown>, e2: SugarElement<unknown>) => {
     assert.eq(expected, Compare.eq(e1, e2));
   };
 
@@ -22,12 +22,12 @@ UnitTest.test('CompareTest', () => {
   assert.eq(true, Compare.member(TestPage.p1, [ TestPage.t2, TestPage.p1 ]));
   assert.eq(false, Compare.member(TestPage.p1, [ TestPage.t2 ]));
 
-  const checkIsEqualNode = (expected: boolean, e1: Element<DomNode>, e2: Element<DomNode>) => {
+  const checkIsEqualNode = (expected: boolean, e1: SugarElement<Node>, e2: SugarElement<Node>) => {
     assert.eq(expected, Compare.isEqualNode(e1, e2));
   };
 
-  checkIsEqualNode(true, Element.fromTag('p'), Element.fromTag('p'));
-  checkIsEqualNode(false, Element.fromTag('p'), Element.fromTag('span'));
+  checkIsEqualNode(true, SugarElement.fromTag('p'), SugarElement.fromTag('p'));
+  checkIsEqualNode(false, SugarElement.fromTag('p'), SugarElement.fromTag('span'));
   // Tests for compareDocumentPosition() that returns the raw bitmask were added and checked working 31/8/16
   // They are commented out since if we expose this method in future it would return some sort of 'case type'
   // not the raw bitmask.

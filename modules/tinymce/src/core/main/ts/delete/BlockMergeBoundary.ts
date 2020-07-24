@@ -7,7 +7,7 @@
 
 import { Node, Range } from '@ephox/dom-globals';
 import { Option, Options } from '@ephox/katamari';
-import { Compare, Element, Traverse } from '@ephox/sugar';
+import { Compare, SugarElement, Traverse } from '@ephox/sugar';
 import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import * as Empty from '../dom/Empty';
@@ -15,7 +15,7 @@ import * as NodeType from '../dom/NodeType';
 import * as DeleteUtils from './DeleteUtils';
 
 export interface BlockPosition {
-  readonly block: Element<Node>;
+  readonly block: SugarElement<Node>;
   readonly position: CaretPosition;
 }
 
@@ -24,7 +24,7 @@ export interface BlockBoundary {
   readonly to: BlockPosition;
 }
 
-const blockPosition = (block: Element<Node>, position: CaretPosition): BlockPosition => ({
+const blockPosition = (block: SugarElement<Node>, position: CaretPosition): BlockPosition => ({
   block,
   position
 });
@@ -35,8 +35,8 @@ const blockBoundary = (from: BlockPosition, to: BlockPosition): BlockBoundary =>
 });
 
 const getBlockPosition = (rootNode: Node, pos: CaretPosition): Option<BlockPosition> => {
-  const rootElm = Element.fromDom(rootNode);
-  const containerElm = Element.fromDom(pos.container());
+  const rootElm = SugarElement.fromDom(rootNode);
+  const containerElm = SugarElement.fromDom(pos.container());
   return DeleteUtils.getParentBlock(rootElm, containerElm).map((block) => blockPosition(block, pos));
 };
 

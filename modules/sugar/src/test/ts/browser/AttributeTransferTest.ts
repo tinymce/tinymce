@@ -1,14 +1,14 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
-import { Element as DomElement } from '@ephox/dom-globals';
+import { Element } from '@ephox/dom-globals';
 import { Arr, Obj } from '@ephox/katamari';
-import Element from 'ephox/sugar/api/node/Element';
-import * as Attr from 'ephox/sugar/api/properties/Attr';
+import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
+import * as Attribute from 'ephox/sugar/api/properties/Attribute';
 import Div from 'ephox/sugar/test/Div';
 
-UnitTest.test('AttrTransfer', () => {
+UnitTest.test('AttributeTransfer', () => {
   const alpha = () => {
     const r = Div();
-    Attr.setAll(r, {
+    Attribute.setAll(r, {
       title: 'monkey',
       placeholder: 'start typing'
     });
@@ -17,7 +17,7 @@ UnitTest.test('AttrTransfer', () => {
 
   const beta = () => {
     const r = Div();
-    Attr.setAll(r, {
+    Attribute.setAll(r, {
       title: 'chimp',
       name: 'anon'
     });
@@ -26,23 +26,23 @@ UnitTest.test('AttrTransfer', () => {
 
   const gamma = () => {
     const r = Div();
-    Attr.setAll(r, {
+    Attribute.setAll(r, {
       placeholder: 'lookup'
     });
     return r;
   };
 
-  const check = (expectedPresent: Record<string, any>, expectedAbsent: string[], source: Element<DomElement>, destination: Element<DomElement>, attributes: string[]) => {
-    Attr.transfer(source, destination, attributes);
+  const check = (expectedPresent: Record<string, any>, expectedAbsent: string[], source: SugarElement<Element>, destination: SugarElement<Element>, attributes: string[]) => {
+    Attribute.transfer(source, destination, attributes);
     Arr.each(expectedAbsent, (k) => {
-      if (Attr.has(destination, k)) {
+      if (Attribute.has(destination, k)) {
         assert.fail('Result should not have attribute: ' + k);
       }
     });
 
     Obj.each(expectedPresent, (v, k) => {
-      if (!Attr.has(destination, k)) {
-        assert.fail('Result should have attribute: ' + k); } else { assert.eq(v, Attr.get(destination, k));
+      if (!Attribute.has(destination, k)) {
+        assert.fail('Result should have attribute: ' + k); } else { assert.eq(v, Attribute.get(destination, k));
       }
     });
   };

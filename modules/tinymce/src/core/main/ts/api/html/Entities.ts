@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import Tools from '../util/Tools';
 
 export interface EntitiesMap { [name: string]: string }
@@ -62,7 +62,7 @@ const reverseEntities = {
 
 // Decodes text by using the browser
 const nativeDecode = (text: string): string => {
-  const elm = Element.fromTag('div').dom();
+  const elm = SugarElement.fromTag('div').dom();
   elm.innerHTML = text;
 
   return elm.textContent || elm.innerText || text;

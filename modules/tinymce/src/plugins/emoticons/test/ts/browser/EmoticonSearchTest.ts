@@ -2,7 +2,7 @@ import { Assertions, Chain, FocusTools, Keyboard, Keys, Log, Pipeline, UiFinder,
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
-import { Attr, Body, Element } from '@ephox/sugar';
+import { Attribute, SugarBody, SugarElement } from '@ephox/sugar';
 
 import EmoticonsPlugin from 'tinymce/plugins/emoticons/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
@@ -15,7 +15,7 @@ UnitTest.asynctest('browser.tinymce.plugins.emoticons.SearchTest', (success, fai
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
     const tinyUi = TinyUi(editor);
-    const doc = Element.fromDom(document);
+    const doc = SugarElement.fromDom(document);
 
     Pipeline.async({},
       Log.steps('TBA', 'Emoticons: Open dialog, Search for "rainbow", Rainbow should be first option', [
@@ -32,9 +32,9 @@ UnitTest.asynctest('browser.tinymce.plugins.emoticons.SearchTest', (success, fai
         ]),
         Waiter.sTryUntil(
           'Wait until rainbow is the first choice (search should filter)',
-          Chain.asStep(Body.body(), [
+          Chain.asStep(SugarBody.body(), [
             UiFinder.cFindIn('.tox-collection__item:first'),
-            Chain.mapper((item) => Attr.get(item, 'data-collection-item-value')),
+            Chain.mapper((item) => Attribute.get(item, 'data-collection-item-value')),
             Assertions.cAssertEq('Search should show rainbow', '🌈')
           ])
         ),

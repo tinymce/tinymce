@@ -1,6 +1,6 @@
 import { UnitTest } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import * as Structs from 'ephox/snooker/api/Structs';
 import * as Fitment from 'ephox/snooker/test/Fitment';
 import * as TableMerge from 'ephox/snooker/test/TableMerge';
@@ -13,7 +13,7 @@ UnitTest.test('FitmentTest', function () {
   const tailorTest = Fitment.tailorTest;
   const mergeGridsTest = TableMerge.mergeTest;
 
-  const en = (fakeElement: any, isNew: boolean) => Structs.elementnew(fakeElement as Element, isNew);
+  const en = (fakeElement: any, isNew: boolean) => Structs.elementnew(fakeElement as SugarElement, isNew);
 
   const check = function <T extends (...args: A) => void, A extends any[]>(test: T, ...args: A) {
     test.apply(null, args);

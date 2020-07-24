@@ -1,33 +1,33 @@
-import { Element, Insert, InsertAll, Remove, SelectorFind } from '@ephox/sugar';
+import { Insert, InsertAll, Remove, SelectorFind, SugarElement } from '@ephox/sugar';
 
 export const Page = function () {
 
-  const container = Element.fromTag('div');
-  const div1 = Element.fromTag('div');
-  const p1 = Element.fromTag('p');
-  const t1 = Element.fromText('First paragraph');
-  const p2 = Element.fromTag('p');
-  const t2 = Element.fromText('Second ');
+  const container = SugarElement.fromTag('div');
+  const div1 = SugarElement.fromTag('div');
+  const p1 = SugarElement.fromTag('p');
+  const t1 = SugarElement.fromText('First paragraph');
+  const p2 = SugarElement.fromTag('p');
+  const t2 = SugarElement.fromText('Second ');
 
-  const s1 = Element.fromTag('span');
-  const t3 = Element.fromText('here');
+  const s1 = SugarElement.fromTag('span');
+  const t3 = SugarElement.fromText('here');
 
-  const s2 = Element.fromTag('span');
-  const t4 = Element.fromText(' is ');
+  const s2 = SugarElement.fromTag('span');
+  const t4 = SugarElement.fromText(' is ');
 
-  const s3 = Element.fromTag('span');
-  const t5 = Element.fromText('something');
-  const p3 = Element.fromTag('p');
-  const t6 = Element.fromText('More data');
+  const s3 = SugarElement.fromTag('span');
+  const t5 = SugarElement.fromText('something');
+  const p3 = SugarElement.fromTag('p');
+  const t6 = SugarElement.fromText('More data');
 
-  const div2 = Element.fromTag('div');
-  const t7 = Element.fromText('Next ');
-  const p4 = Element.fromTag('p');
-  const t8 = Element.fromText('Section ');
+  const div2 = SugarElement.fromTag('div');
+  const t7 = SugarElement.fromText('Next ');
+  const p4 = SugarElement.fromTag('p');
+  const t8 = SugarElement.fromText('Section ');
 
-  const s4 = Element.fromTag('span');
-  const t9 = Element.fromText('no');
-  const t10 = Element.fromText('w');
+  const s4 = SugarElement.fromTag('span');
+  const t9 = SugarElement.fromText('no');
+  const t10 = SugarElement.fromText('w');
 
   InsertAll.append(container, [ div1, div2 ]);
   InsertAll.append(div1, [ p1, p2, p3 ]);

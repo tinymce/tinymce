@@ -3,7 +3,7 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import { TinyApis, TinyDom, TinyLoader, TinyUi, UiChains } from '@ephox/mcagar';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 
 import ImagePlugin from 'tinymce/plugins/image/Plugin';
 import ImageToolsPlugin from 'tinymce/plugins/imagetools/Plugin';
@@ -19,7 +19,7 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.ContextToolbarTest', (suc
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
     const tinyUi = TinyUi(editor);
-    const doc = Element.fromDom(document);
+    const doc = SugarElement.fromDom(document);
     const imgOps = ImageOps(editor);
 
     const srcUrl = '/project/tinymce/src/plugins/imagetools/demo/img/dogleft.gif';
@@ -31,7 +31,7 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.ContextToolbarTest', (suc
     ]);
 
     // Use keyboard shortcut ctrl+F9 to navigate to the context toolbar
-    const sPressKeyboardShortcutKey = Keyboard.sKeydown(Element.fromDom(editor.getDoc()), 120, { ctrl: true });
+    const sPressKeyboardShortcutKey = Keyboard.sKeydown(SugarElement.fromDom(editor.getDoc()), 120, { ctrl: true });
     const sPressRightArrowKey = Keyboard.sKeydown(doc, Keys.right(), { });
 
     // Assert focus is on the expected toolbar button

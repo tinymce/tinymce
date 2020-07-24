@@ -1,5 +1,5 @@
 import { Arr, Fun, Option } from '@ephox/katamari';
-import { Css, Element } from '@ephox/sugar';
+import { Css, SugarElement } from '@ephox/sugar';
 import { TableSize } from '../api/TableSize';
 import * as Blocks from '../lookup/Blocks';
 import { Warehouse } from '../model/Warehouse';
@@ -8,7 +8,7 @@ import * as Util from '../util/Util';
 import { BarPositions, ColInfo, RowInfo } from './BarPositions';
 import * as Sizes from './Sizes';
 
-const getRaw = function (cell: Element, property: string, getter: (e: Element) => number) {
+const getRaw = function (cell: SugarElement, property: string, getter: (e: SugarElement) => number) {
   return Css.getRaw(cell, property).fold(function () {
     return getter(cell) + 'px';
   }, function (raw) {
@@ -16,15 +16,15 @@ const getRaw = function (cell: Element, property: string, getter: (e: Element) =
   });
 };
 
-const getRawW = function (cell: Element, tableSize: TableSize) {
-  return getRaw(cell, 'width', (e: Element) => Sizes.getPixelWidth(e, tableSize));
+const getRawW = function (cell: SugarElement, tableSize: TableSize) {
+  return getRaw(cell, 'width', (e: SugarElement) => Sizes.getPixelWidth(e, tableSize));
 };
 
-const getRawH = function (cell: Element) {
+const getRawH = function (cell: SugarElement) {
   return getRaw(cell, 'height', Sizes.getHeight);
 };
 
-const getWidthFrom = function <T> (warehouse: Warehouse, direction: BarPositions<ColInfo>, getWidth: (cell: Element, tableSize: TableSize) => T, fallback: (deduced: Option<number>) => T, tableSize: TableSize) {
+const getWidthFrom = function <T> (warehouse: Warehouse, direction: BarPositions<ColInfo>, getWidth: (cell: SugarElement, tableSize: TableSize) => T, fallback: (deduced: Option<number>) => T, tableSize: TableSize) {
   const columns = Blocks.columns(warehouse);
 
   const backups = Arr.map(columns, function (cellOption) {
@@ -69,7 +69,7 @@ const getPixelWidths = function (warehouse: Warehouse, direction: BarPositions<C
   }, tableSize);
 };
 
-const getHeightFrom = function <T> (warehouse: Warehouse, direction: BarPositions<RowInfo>, getHeight: (cell: Element) => T, fallback: (deduced: Option<number>) => T) {
+const getHeightFrom = function <T> (warehouse: Warehouse, direction: BarPositions<RowInfo>, getHeight: (cell: SugarElement) => T, fallback: (deduced: Option<number>) => T) {
   const rows = Blocks.rows(warehouse);
 
   const backups = Arr.map(rows, function (cellOption) {

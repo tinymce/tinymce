@@ -1,5 +1,5 @@
 import { Arr, Fun, Obj, Option } from '@ephox/katamari';
-import { Position } from '@ephox/sugar';
+import { SugarPosition } from '@ephox/sugar';
 import * as Boxes from '../../alien/Boxes';
 import { AnchorBox } from './LayoutTypes';
 
@@ -43,7 +43,7 @@ export const boundsRestriction = (
   )
 );
 
-export const adjustBounds = (bounds: Boxes.Bounds, boundsRestrictions: BoundsRestriction, bubbleOffsets: Position) => {
+export const adjustBounds = (bounds: Boxes.Bounds, boundsRestrictions: BoundsRestriction, bubbleOffsets: SugarPosition) => {
   const applyRestriction = (dir: BoundsRestrictionKeys, current: number) => {
     const bubbleOffset = dir === 'top' || dir === 'bottom' ? bubbleOffsets.top() : bubbleOffsets.left();
     return Obj.get(boundsRestrictions, dir).bind(Fun.identity)

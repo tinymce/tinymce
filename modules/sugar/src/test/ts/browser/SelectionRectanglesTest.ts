@@ -2,19 +2,19 @@ import { assert, UnitTest } from '@ephox/bedrock-client';
 import { window } from '@ephox/dom-globals';
 import * as InsertAll from 'ephox/sugar/api/dom/InsertAll';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
-import * as Body from 'ephox/sugar/api/node/Body';
-import Element from 'ephox/sugar/api/node/Element';
-import { Selection } from 'ephox/sugar/api/selection/Selection';
+import * as SugarBody from 'ephox/sugar/api/node/SugarBody';
+import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
+import { SimSelection } from 'ephox/sugar/api/selection/SimSelection';
 import * as WindowSelection from 'ephox/sugar/api/selection/WindowSelection';
 
 UnitTest.test('Browser Test: SelectionRectanglesTest', () => {
-  const p1 = Element.fromHtml('<p>This is the <strong>first</strong> paragraph</p>');
-  const p2 = Element.fromHtml('<p>This is the <em>second</em> paragraph</p>');
+  const p1 = SugarElement.fromHtml('<p>This is the <strong>first</strong> paragraph</p>');
+  const p2 = SugarElement.fromHtml('<p>This is the <em>second</em> paragraph</p>');
 
-  InsertAll.append(Body.body(), [ p1, p2 ]);
+  InsertAll.append(SugarBody.body(), [ p1, p2 ]);
 
-  const selP1 = Selection.exact(p1, 0, p1, 1);
-  const selP2 = Selection.exact(p2, 0, p2, 1);
+  const selP1 = SimSelection.exact(p1, 0, p1, 1);
+  const selP2 = SimSelection.exact(p2, 0, p2, 1);
 
   const rect1 = WindowSelection.getFirstRect(window, selP1).getOrDie(
     'There should be a rectangle for paragraph 1'

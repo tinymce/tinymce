@@ -1,8 +1,8 @@
 import { window } from '@ephox/dom-globals';
-import { Height, Location, Width, Element, VisualViewport } from '@ephox/sugar';
+import { Height, SugarElement, SugarLocation, Width, WindowVisualViewport } from '@ephox/sugar';
+import * as OuterPosition from '../frame/OuterPosition';
 
 import { CssPositionAdt } from './CssPosition';
-import * as OuterPosition from '../frame/OuterPosition';
 
 const pointed = (point: CssPositionAdt, width: number, height: number): BoxByPoint => ({
   point,
@@ -48,8 +48,8 @@ const bounds = (x: number, y: number, width: number, height: number): Bounds => 
   bottom: y + height
 });
 
-const box = (element: Element): Bounds => {
-  const xy = Location.absolute(element);
+const box = (element: SugarElement): Bounds => {
+  const xy = SugarLocation.absolute(element);
   const w = Width.getOuter(element);
   const h = Height.getOuter(element);
   return bounds(xy.left(), xy.top(), w, h);
@@ -57,14 +57,14 @@ const box = (element: Element): Bounds => {
 
 // NOTE: We used to use AriaFocus.preserve here, but there is no reason to do that now that
 // we are not changing the visibility of the element. Hopefully (2015-09-29).
-const absolute = (element: Element): Bounds => {
+const absolute = (element: SugarElement): Bounds => {
   const position = OuterPosition.find(element);
   const width = Width.getOuter(element);
   const height = Height.getOuter(element);
   return bounds(position.left(), position.top(), width, height);
 };
 
-const win = (): Bounds => VisualViewport.getBounds(window);
+const win = (): Bounds => WindowVisualViewport.getBounds(window);
 
 export {
   pointed,

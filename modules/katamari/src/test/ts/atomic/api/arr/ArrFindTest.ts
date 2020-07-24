@@ -1,9 +1,9 @@
+import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { Testable } from '@ephox/dispute';
 import * as Arr from 'ephox/katamari/api/Arr';
 import { Option } from 'ephox/katamari/api/Option';
 import { tOption } from 'ephox/katamari/api/OptionInstances';
-import { Assert, UnitTest } from '@ephox/bedrock-client';
 import fc from 'fast-check';
-import { Testable } from '@ephox/dispute';
 
 const { tNumber } = Testable;
 

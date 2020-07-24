@@ -1,7 +1,7 @@
 import { Chain, FocusTools, Keyboard, NamedChain } from '@ephox/agar';
-import { Fun } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
 import { document } from '@ephox/dom-globals';
+import { Fun } from '@ephox/katamari';
+import { SugarElement } from '@ephox/sugar';
 import { Editor } from '../alien/EditorTypes';
 
 export interface ActionChains {
@@ -13,14 +13,14 @@ export interface ActionChains {
 }
 
 const cIDoc = Chain.mapper(function (editor: Editor) {
-  return Element.fromDom(editor.getDoc());
+  return SugarElement.fromDom(editor.getDoc());
 });
 
 const cUiDoc = Chain.injectThunked(function () {
-  return Element.fromDom(document);
+  return SugarElement.fromDom(document);
 });
 
-const cTriggerKeyEvent = function <T> (cTarget: Chain<T, Element>, evtType: 'keydown' | 'keyup' | 'keypress' | 'keystroke', code: number, modifiers = {}) {
+const cTriggerKeyEvent = function <T> (cTarget: Chain<T, SugarElement>, evtType: 'keydown' | 'keyup' | 'keypress' | 'keystroke', code: number, modifiers = {}) {
   return NamedChain.asChain([
     NamedChain.direct(NamedChain.inputName(), cTarget, 'doc'),
     NamedChain.direct('doc', FocusTools.cGetFocused, 'activeElement'),

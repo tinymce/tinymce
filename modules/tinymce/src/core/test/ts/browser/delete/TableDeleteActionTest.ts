@@ -2,14 +2,14 @@ import { Assertions, Chain, Logger, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { Arr, Fun, Option, Result } from '@ephox/katamari';
-import { Element, Hierarchy, Html } from '@ephox/sugar';
+import { Hierarchy, Html, SugarElement } from '@ephox/sugar';
 import * as TableDeleteAction from 'tinymce/core/delete/TableDeleteAction';
 
 UnitTest.asynctest('browser.tinymce.core.delete.TableDeleteActionTest', function (success, failure) {
 
   const cFromHtml = (html, startPath, startOffset, endPath, endOffset) =>
     Chain.injectThunked(() => {
-      const elm = Element.fromHtml(html);
+      const elm = SugarElement.fromHtml(html);
       const sc = Hierarchy.follow(elm, startPath).getOrDie();
       const ec = Hierarchy.follow(elm, endPath).getOrDie();
       const rng = document.createRange();

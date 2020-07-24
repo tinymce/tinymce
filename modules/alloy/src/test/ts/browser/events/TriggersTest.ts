@@ -2,7 +2,7 @@ import { Assertions, Logger, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { Arr, Fun, Obj } from '@ephox/katamari';
-import { Attr, Element, EventArgs, Html, Insert, SelectorFind } from '@ephox/sugar';
+import { Attribute, EventArgs, Html, Insert, SelectorFind, SugarElement } from '@ephox/sugar';
 
 import * as Debugging from 'ephox/alloy/debugging/Debugging';
 import * as Triggers from 'ephox/alloy/events/Triggers';
@@ -61,8 +61,8 @@ UnitTest.asynctest('TriggersTest', (success, failure) => {
 
   const logger = Debugging.noLogger();
 
-  const lookup = (eventType: string, target: Element) =>
-    Attr.getOpt(target, 'data-event-id').bind((targetId) =>
+  const lookup = (eventType: string, target: SugarElement) =>
+    Attribute.getOpt(target, 'data-event-id').bind((targetId) =>
       Obj.get(domEvents as any, eventType).bind((x) => Obj.get(x, targetId)).map((h: Function) => ({
         descHandler: {
           cHandler: h,
@@ -71,8 +71,8 @@ UnitTest.asynctest('TriggersTest', (success, failure) => {
         element: target
       })));
 
-  const container = Element.fromTag('div');
-  const body = Element.fromDom(document.body);
+  const container = SugarElement.fromTag('div');
+  const body = SugarElement.fromDom(document.body);
 
   const sCheck = (label: string, expected: string[], target: string, eventType: string) => Logger.t(label, Step.sync(() => {
     Html.set(container, '<div data-event-id="alpha"><div data-event-id="beta"><div data-event-id="gamma"></div></div></div>');

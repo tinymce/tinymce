@@ -2,7 +2,7 @@ import { FocusTools, Log, Pipeline, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyDom, TinyLoader, TinyUi } from '@ephox/mcagar';
-import { Body } from '@ephox/sugar';
+import { SugarBody } from '@ephox/sugar';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 import { TestLinkUi } from '../module/TestLinkUi';
@@ -24,7 +24,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.SelectedImageTest', (success, f
         tinyApis.sSelect('img', []),
         TestLinkUi.sOpenLinkDialog(tinyUi),
         FocusTools.sSetActiveValue(doc, 'http://something'),
-        UiFinder.sNotExists(Body.body(), '.tox-label:contains("Text to display")'),
+        UiFinder.sNotExists(SugarBody.body(), '.tox-label:contains("Text to display")'),
         TestLinkUi.sClickSave,
         Waiter.sTryUntil(
           'Wait until link is inserted',
@@ -40,7 +40,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.SelectedImageTest', (success, f
         tinyApis.sSelect('a', []),
         TestLinkUi.sOpenLinkDialog(tinyUi),
         FocusTools.sSetActiveValue(doc, 'http://something'),
-        UiFinder.sNotExists(Body.body(), '.tox-label:contains("Text to display")'),
+        UiFinder.sNotExists(SugarBody.body(), '.tox-label:contains("Text to display")'),
         TestLinkUi.sClickSave,
         Waiter.sTryUntil(
           'Wait until link is updated',

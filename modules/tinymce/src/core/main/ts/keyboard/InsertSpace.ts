@@ -5,27 +5,27 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Option, Fun } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
-import CaretPosition from '../caret/CaretPosition';
+import { Fun, Option } from '@ephox/katamari';
+import { SugarElement } from '@ephox/sugar';
 import Editor from '../api/Editor';
-import { insertNbspAtPosition, insertSpaceAtPosition } from '../caret/InsertText';
-import * as InlineUtils from './InlineUtils';
-import * as BoundaryLocation from './BoundaryLocation';
-import { needsToHaveNbsp } from './Nbsps';
 import * as CaretFinder from '../caret/CaretFinder';
+import CaretPosition from '../caret/CaretPosition';
+import { insertNbspAtPosition, insertSpaceAtPosition } from '../caret/InsertText';
+import * as BoundaryLocation from './BoundaryLocation';
+import * as InlineUtils from './InlineUtils';
+import { needsToHaveNbsp } from './Nbsps';
 
-const insertSpaceOrNbspAtPosition = (root: Element, pos: CaretPosition): Option<CaretPosition> =>
+const insertSpaceOrNbspAtPosition = (root: SugarElement, pos: CaretPosition): Option<CaretPosition> =>
   needsToHaveNbsp(root, pos) ? insertNbspAtPosition(pos) : insertSpaceAtPosition(pos);
 
-const locationToCaretPosition = (root: Element) => (location: BoundaryLocation.LocationAdt) => location.fold(
+const locationToCaretPosition = (root: SugarElement) => (location: BoundaryLocation.LocationAdt) => location.fold(
   (element) => CaretFinder.prevPosition(root.dom(), CaretPosition.before(element)),
   (element) => CaretFinder.firstPositionIn(element),
   (element) => CaretFinder.lastPositionIn(element),
   (element) => CaretFinder.nextPosition(root.dom(), CaretPosition.after(element))
 );
 
-const insertInlineBoundarySpaceOrNbsp = (root: Element, pos: CaretPosition) => (checkPos: CaretPosition) =>
+const insertInlineBoundarySpaceOrNbsp = (root: SugarElement, pos: CaretPosition) => (checkPos: CaretPosition) =>
   needsToHaveNbsp(root, checkPos) ? insertNbspAtPosition(pos) : insertSpaceAtPosition(pos);
 
 const setSelection = (editor: Editor) => (pos: CaretPosition) => {
@@ -36,7 +36,7 @@ const setSelection = (editor: Editor) => (pos: CaretPosition) => {
 
 const insertSpaceOrNbspAtSelection = (editor: Editor): boolean => {
   const pos = CaretPosition.fromRangeStart(editor.selection.getRng());
-  const root = Element.fromDom(editor.getBody());
+  const root = SugarElement.fromDom(editor.getBody());
 
   if (editor.selection.isCollapsed()) {
     const isInlineTarget = Fun.curry(InlineUtils.isInlineTarget, editor);

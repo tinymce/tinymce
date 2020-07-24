@@ -7,13 +7,13 @@
 
 import { Document } from '@ephox/dom-globals';
 import { Arr, Option, Options } from '@ephox/katamari';
-import { Attr, Css, Element, Insert, InsertAll, Node, Replication } from '@ephox/sugar';
+import { Attribute, Css, Insert, InsertAll, Replication, SugarElement, SugarNode } from '@ephox/sugar';
 import { Entry } from './Entry';
 import { ListType } from './Util';
 
 interface Segment {
-  list: Element;
-  item: Element;
+  list: SugarElement;
+  item: SugarElement;
 }
 
 const joinSegment = (parent: Segment, child: Segment): void => {
@@ -32,8 +32,8 @@ const appendSegments = (head: Segment[], tail: Segment[]): void => {
 
 const createSegment = (scope: Document, listType: ListType): Segment => {
   const segment: Segment = {
-    list: Element.fromTag(listType, scope),
-    item: Element.fromTag('li', scope)
+    list: SugarElement.fromTag(listType, scope),
+    item: SugarElement.fromTag('li', scope)
   };
   Insert.append(segment.list, segment.item);
   return segment;
@@ -52,27 +52,27 @@ const populateSegments = (segments: Segment[], entry: Entry): void => {
     Css.set(segments[i].item, 'list-style-type', 'none');
   }
   Arr.last(segments).each((segment) => {
-    Attr.setAll(segment.list, entry.listAttributes);
-    Attr.setAll(segment.item, entry.itemAttributes);
+    Attribute.setAll(segment.list, entry.listAttributes);
+    Attribute.setAll(segment.item, entry.itemAttributes);
     InsertAll.append(segment.item, entry.content);
   });
 };
 
 const normalizeSegment = (segment: Segment, entry: Entry): void => {
-  if (Node.name(segment.list) !== entry.listType) {
+  if (SugarNode.name(segment.list) !== entry.listType) {
     segment.list = Replication.mutate(segment.list, entry.listType);
   }
-  Attr.setAll(segment.list, entry.listAttributes);
+  Attribute.setAll(segment.list, entry.listAttributes);
 };
 
-const createItem = (scope: Document, attr: Record<string, any>, content: Element[]): Element => {
-  const item = Element.fromTag('li', scope);
-  Attr.setAll(item, attr);
+const createItem = (scope: Document, attr: Record<string, any>, content: SugarElement[]): SugarElement => {
+  const item = SugarElement.fromTag('li', scope);
+  Attribute.setAll(item, attr);
   InsertAll.append(item, content);
   return item;
 };
 
-const appendItem = (segment: Segment, item: Element): void => {
+const appendItem = (segment: Segment, item: SugarElement): void => {
   Insert.append(segment.list, item);
   segment.item = item;
 };
@@ -98,7 +98,7 @@ const writeDeep = (scope: Document, cast: Segment[], entry: Entry): Segment[] =>
   return cast.concat(segments);
 };
 
-const composeList = (scope: Document, entries: Entry[]): Option<Element> => {
+const composeList = (scope: Document, entries: Entry[]): Option<SugarElement> => {
   const cast: Segment[] = Arr.foldl(entries, (cast, entry) => entry.depth > cast.length ? writeDeep(scope, cast, entry) : writeShallow(scope, cast, entry), []);
 
   return Arr.head(cast).map((segment) => segment.list);

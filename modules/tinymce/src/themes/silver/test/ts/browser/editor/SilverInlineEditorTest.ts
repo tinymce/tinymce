@@ -4,7 +4,7 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { console, document } from '@ephox/dom-globals';
 import { Arr, Cell } from '@ephox/katamari';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
-import { Body, Css, Element } from '@ephox/sugar';
+import { Css, SugarBody, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 
 import Env from 'tinymce/core/api/Env';
@@ -15,7 +15,7 @@ UnitTest.asynctest('Inline Editor (Silver) test', (success, failure) => {
 
   const store = Cell([ ]);
 
-  const sUiContainerTest = (editor: Editor, container: Element, tinyApis: TinyApis, tinyUi: TinyUi) => Logger.ts('Check basic container structure and actions', [
+  const sUiContainerTest = (editor: Editor, container: SugarElement, tinyApis: TinyApis, tinyUi: TinyUi) => Logger.ts('Check basic container structure and actions', [
     tinyApis.sFocus(),
     Assertions.sAssertStructure(
       'Container structure',
@@ -205,8 +205,8 @@ UnitTest.asynctest('Inline Editor (Silver) test', (success, failure) => {
 
     Log.stepsAsStep('TBA', 'Menu appearing from menubar should have svg icons', [
       tinyUi.sClickOnMenu('Click on test menu', 'button[role="menuitem"]:contains("test")'),
-      UiFinder.sWaitForVisible('Waiting for menu to appear', Body.body(), '[role="menu"]'),
-      Chain.asStep(Body.body(), [
+      UiFinder.sWaitForVisible('Waiting for menu to appear', SugarBody.body(), '[role="menu"]'),
+      Chain.asStep(SugarBody.body(), [
         UiFinder.cFindIn('[role="menu"] .tox-collection__item--active'),
         Assertions.cAssertStructure(
           'Checking item has svg icon and text',
@@ -231,8 +231,8 @@ UnitTest.asynctest('Inline Editor (Silver) test', (success, failure) => {
           }))
         )
       ]),
-      Keyboard.sKeydown(Element.fromDom(document), Keys.escape(), { }),
-      UiFinder.sNotExists(Body.body(), '[role="menu"]')
+      Keyboard.sKeydown(SugarElement.fromDom(document), Keys.escape(), { }),
+      UiFinder.sNotExists(SugarBody.body(), '[role="menu"]')
     ]),
 
     Log.stepsAsStep('TBA', 'Clicking on a toggle button should not toggle. It is up to the setActive api to do that', [
@@ -302,8 +302,8 @@ UnitTest.asynctest('Inline Editor (Silver) test', (success, failure) => {
   ]);
 
   TinyLoader.setup((editor: Editor, onSuccess, onFailure) => {
-    const uiContainer = Element.fromDom(editor.getContainer());
-    const contentAreaContainer = Element.fromDom(editor.getContentAreaContainer());
+    const uiContainer = SugarElement.fromDom(editor.getContainer());
+    const contentAreaContainer = SugarElement.fromDom(editor.getContentAreaContainer());
 
     const tinyApis = TinyApis(editor);
     const tinyUi = TinyUi(editor);

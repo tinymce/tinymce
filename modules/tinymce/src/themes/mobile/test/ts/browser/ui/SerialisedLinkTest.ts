@@ -1,13 +1,10 @@
-import {
-  ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse,
-  Pipeline, Step, UiFinder
-} from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Pipeline, Step, UiFinder } from '@ephox/agar';
 import { Attachment, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Body, Class, Element, Focus, Traverse } from '@ephox/sugar';
+import { Class, Focus, SugarBody, SugarElement, Traverse } from '@ephox/sugar';
 
 import IosRealm from 'tinymce/themes/mobile/ui/IosRealm';
 import * as LinkButton from 'tinymce/themes/mobile/ui/LinkButton';
@@ -24,7 +21,7 @@ UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', (success, failure) => 
   // Make toolbar appear
   Class.add(realm.system().element(), 'tinymce-mobile-fullscreen-maximized');
 
-  const body = Body.body();
+  const body = SugarBody.body();
   Attachment.attachSystem(body, realm.system());
 
   const doc = Traverse.owner(body);
@@ -146,7 +143,7 @@ UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', (success, failure) => 
     const scenario = ValueSchema.asRawOrDie('Checking scenario', ValueSchema.objOf([
       FieldSchema.strict('label'),
       FieldSchema.defaulted('content', ''),
-      FieldSchema.defaulted('node', Element.fromText('')),
+      FieldSchema.defaulted('node', SugarElement.fromText('')),
       FieldSchema.strictObjOf('fields', [
         FieldSchema.option('url'),
         FieldSchema.option('text'),
@@ -198,7 +195,7 @@ UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', (success, failure) => 
 
     TestStyles.sWaitForToolstrip(realm),
 
-    tEditor.sPrepareState(Element.fromText('hi'), 'link-text'),
+    tEditor.sPrepareState(SugarElement.fromText('hi'), 'link-text'),
 
     sClickLink,
     FocusTools.sTryOnSelector('Focus should be on input with link URL', doc, 'input[placeholder="Type or paste URL"]'),
@@ -337,7 +334,7 @@ UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', (success, failure) => 
 
     sTestScenario({
       label: 'Testing hitting ENTER after filling in nothing with an existing link with url',
-      node: Element.fromHtml('<a href="http://prepared-url">Prepared</a>'),
+      node: SugarElement.fromHtml('<a href="http://prepared-url">Prepared</a>'),
       fields: { },
       expected: [ ],
       mutations(node) {
@@ -354,7 +351,7 @@ UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', (success, failure) => 
 
     sTestScenario({
       label: 'Testing hitting ENTER after filling in URL with an existing link with url (and text content did not match URL previously)',
-      node: Element.fromHtml('<a href="http://prepared-url">Prepared</a>'),
+      node: SugarElement.fromHtml('<a href="http://prepared-url">Prepared</a>'),
       fields: {
         url: 'http://new-url'
       },
@@ -373,7 +370,7 @@ UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', (success, failure) => 
 
     sTestScenario({
       label: 'Testing hitting ENTER after filling in URL with an existing link with url (and text content matched URL previously)',
-      node: Element.fromHtml('<a href="http://prepared-url">http://prepared-url</a>'),
+      node: SugarElement.fromHtml('<a href="http://prepared-url">http://prepared-url</a>'),
       fields: {
         url: 'http://new-url'
       },
@@ -392,7 +389,7 @@ UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', (success, failure) => 
 
     sTestScenario({
       label: 'Testing hitting ENTER after filling in URL and text with an existing link with url',
-      node: Element.fromHtml('<a href="http://prepared-url">any text</a>'),
+      node: SugarElement.fromHtml('<a href="http://prepared-url">any text</a>'),
       fields: {
         url: 'http://new-url',
         text: 'new-text'

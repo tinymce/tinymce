@@ -1,5 +1,5 @@
 import { UnitTest } from '@ephox/bedrock-client';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import * as ApproxStructure from 'ephox/agar/api/ApproxStructure';
 import * as Assertions from 'ephox/agar/api/Assertions';
 
@@ -12,7 +12,7 @@ UnitTest.test('Approx Structures Tutorial Test', () => {
     '</div>';
 
   const check = (expected, input): void => {
-    const target = Element.fromHtml(input);
+    const target = SugarElement.fromHtml(input);
     Assertions.assertStructure('Test', expected, target);
   };
 

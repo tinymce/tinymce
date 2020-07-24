@@ -1,9 +1,9 @@
 import { Option } from '@ephox/katamari';
-import { Attr, Element, SelectorFind } from '@ephox/sugar';
+import { Attribute, SelectorFind, SugarElement } from '@ephox/sugar';
 
-const isContentEditableTrue = (elm: Element) => Attr.get(elm, 'contenteditable') === 'true';
+const isContentEditableTrue = (elm: SugarElement) => Attribute.get(elm, 'contenteditable') === 'true';
 
-const findClosestContentEditable = (target: Element, isRoot: (elm: Element) => boolean): Option<Element> => SelectorFind.closest(target, '[contenteditable]', isRoot);
+const findClosestContentEditable = (target: SugarElement, isRoot: (elm: SugarElement) => boolean): Option<SugarElement> => SelectorFind.closest(target, '[contenteditable]', isRoot);
 
 export {
   isContentEditableTrue,

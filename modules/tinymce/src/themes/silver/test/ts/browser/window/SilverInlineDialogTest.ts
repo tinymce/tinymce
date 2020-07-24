@@ -5,7 +5,7 @@ import { Types } from '@ephox/bridge';
 import { document } from '@ephox/dom-globals';
 import { Cell, Strings } from '@ephox/katamari';
 import { TinyLoader } from '@ephox/mcagar';
-import { Body, Element } from '@ephox/sugar';
+import { SugarBody, SugarElement } from '@ephox/sugar';
 
 import Theme from 'tinymce/themes/silver/Theme';
 import * as DialogUtils from '../../module/DialogUtils';
@@ -80,22 +80,22 @@ UnitTest.asynctest('WindowManager:inline-dialog Test', (success, failure) => {
       const dialogSelector = `.tox-${type}-dialog`;
       return GeneralSteps.sequence([
         store.sClear,
-        Mouse.sTrueClickOn(Body.body(), '[role=dialog] button:contains(' + buttonSelector + ')'),
+        Mouse.sTrueClickOn(SugarBody.body(), '[role=dialog] button:contains(' + buttonSelector + ')'),
         DialogUtils.sWaitForOpen(dialogSelector),
         store.sAssertEq('Checking onAction called', [ 'onAction' ]),
-        Mouse.sTrueClickOn(Body.body(), dialogSelector + ' .tox-dialog__footer button'),
-        Waiter.sTryUntil('Wait for dialog to close', UiFinder.sNotExists(Body.body(), dialogSelector))
+        Mouse.sTrueClickOn(SugarBody.body(), dialogSelector + ' .tox-dialog__footer button'),
+        Waiter.sTryUntil('Wait for dialog to close', UiFinder.sNotExists(SugarBody.body(), dialogSelector))
       ]);
     };
 
     Pipeline.async({}, [
-      TestHelpers.GuiSetup.mAddStyles(Element.fromDom(document), [
+      TestHelpers.GuiSetup.mAddStyles(SugarElement.fromDom(document), [
         '.tox-dialog { background: white; border: 2px solid black; padding: 1em; margin: 1em; }'
       ]),
       sTestOpen({ inline: 'magic' }),
       FocusTools.sTryOnSelector(
         'Focus should start on the input',
-        Element.fromDom(document),
+        SugarElement.fromDom(document),
         'input'
       ),
       Step.sync(() => {
@@ -115,14 +115,14 @@ UnitTest.asynctest('WindowManager:inline-dialog Test', (success, failure) => {
       sTestOpen({ inline: 'toolbar' }),
       FocusTools.sTryOnSelector(
         'Focus should start on the input',
-        Element.fromDom(document),
+        SugarElement.fromDom(document),
         'input'
       ),
       Assertions.sAssertStructure('"tox-dialog__scroll-disable" should not have been added to the body',
         ApproxStructure.build((s, str, arr) => s.element('body', {
           classes: [ arr.not('tox-dialog__disable-scroll') ]
         })),
-        Body.body()
+        SugarBody.body()
       ),
 
       // Ensure the dialog isn't dismissed when clicking on alert or confirm dialogs
@@ -131,7 +131,7 @@ UnitTest.asynctest('WindowManager:inline-dialog Test', (success, failure) => {
       store.sClear,
 
       // Clicking elsewhere should close the dialog
-      Mouse.sTrueClickOn(Body.body(), 'root:body'),
+      Mouse.sTrueClickOn(SugarBody.body(), 'root:body'),
       Waiter.sTryUntil(
         'Waiting for all dialog events when closing via dismiss',
         store.sAssertEq('Checking stuff', [
@@ -141,7 +141,7 @@ UnitTest.asynctest('WindowManager:inline-dialog Test', (success, failure) => {
       ),
       Logger.t(
         'After broadcasting dismiss, dialog should be removed',
-        UiFinder.sNotExists(Body.body(), '[role="dialog"]')
+        UiFinder.sNotExists(SugarBody.body(), '[role="dialog"]')
       ),
       TestHelpers.GuiSetup.mRemoveStyles
     ], onSuccess, onFailure);

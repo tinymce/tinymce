@@ -1,5 +1,5 @@
 import { Arr } from '@ephox/katamari';
-import { Body, Insert, Remove } from '@ephox/sugar';
+import { Insert, Remove, SugarBody } from '@ephox/sugar';
 
 import { AlloyComponent } from '../api/component/ComponentApi';
 import * as AlloyTriggers from '../api/events/AlloyTriggers';
@@ -47,7 +47,9 @@ const replaceChildren = (component: AlloyComponent, newChildren: AlloyComponent[
     if (!childComp.getSystem().isConnected()) {
       component.getSystem().addToWorld(childComp);
       attach(component, childComp);
-      if (Body.inBody(component.element())) { fireAttaching(childComp); }
+      if (SugarBody.inBody(component.element())) {
+        fireAttaching(childComp);
+      }
     } else {
       attach(component, childComp);
     }

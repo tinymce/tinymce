@@ -1,7 +1,7 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { HTMLDivElement, HTMLTableElement } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
-import { Body, Css, Element, Insert, Remove } from '@ephox/sugar';
+import { Css, Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
 import * as ResizeBehaviour from 'ephox/snooker/api/ResizeBehaviour';
 import { ResizeDirection } from 'ephox/snooker/api/ResizeDirection';
 import { TableSize } from 'ephox/snooker/api/TableSize';
@@ -13,13 +13,13 @@ UnitTest.test('ResizeTest', function () {
   const direction = ResizeDirection.ltr;
 
   const boundBox = '<div style="width: 800px; height: 600px; display: block;"></div>';
-  const box = Element.fromHtml<HTMLDivElement>(boundBox);
-  Insert.append(Body.body(), box);
+  const box = SugarElement.fromHtml<HTMLDivElement>(boundBox);
+  Insert.append(SugarBody.body(), box);
 
   const percentTablePercentCellsTest = function () {
     const delta = 200;
 
-    const table = Element.fromHtml<HTMLTableElement>(`<table style="border-collapse: collapse; width: 100%;">
+    const table = SugarElement.fromHtml<HTMLTableElement>(`<table style="border-collapse: collapse; width: 100%;">
     <tbody>
     <tr>
     <td style="width: 50%;">A</td>
@@ -68,7 +68,7 @@ UnitTest.test('ResizeTest', function () {
   const percentTablePixelCellsTest = function () {
     const delta = 200;
 
-    const table = Element.fromHtml<HTMLTableElement>(`<table style="border-collapse: collapse; width: 100%;">
+    const table = SugarElement.fromHtml<HTMLTableElement>(`<table style="border-collapse: collapse; width: 100%;">
     <tbody>
     <tr>
     <td style="width: 400px;">A</td>
@@ -126,7 +126,7 @@ UnitTest.test('ResizeTest', function () {
   const pixelTablePixelCellsTest = function () {
     const delta = 200;
 
-    const table = Element.fromHtml<HTMLTableElement>(`<table style="border-collapse: collapse; width: 800px;">
+    const table = SugarElement.fromHtml<HTMLTableElement>(`<table style="border-collapse: collapse; width: 800px;">
     <tbody>
     <tr>
     <td style="width: 400px;">A</td>
@@ -171,7 +171,7 @@ UnitTest.test('ResizeTest', function () {
   const pixelTablePercentCellsTest = function () {
     const delta = 200;
 
-    const table = Element.fromHtml<HTMLTableElement>(`<table style="border-collapse: collapse; width: 800px;">
+    const table = SugarElement.fromHtml<HTMLTableElement>(`<table style="border-collapse: collapse; width: 800px;">
     <tbody>
     <tr>
     <td style="width: 50%;">A</td>

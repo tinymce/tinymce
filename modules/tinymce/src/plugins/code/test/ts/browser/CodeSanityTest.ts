@@ -2,7 +2,7 @@ import { FocusTools, GeneralSteps, Log, Logger, Mouse, Pipeline, Step, UiFinder,
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import CodePlugin from 'tinymce/plugins/code/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
@@ -18,7 +18,7 @@ UnitTest.asynctest('browser.tinymce.plugins.code.CodeSanityTest', (success, fail
   TinyLoader.setupLight((editor: Editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
 
-    const docBody = Element.fromDom(document.body);
+    const docBody = SugarElement.fromDom(document.body);
 
     const sSetTextareaContent = (content) => Logger.t('Changing textarea content to ' + content, Step.sync(() => {
       const textarea: any = document.querySelector('div[role="dialog"] textarea');
@@ -38,7 +38,7 @@ UnitTest.asynctest('browser.tinymce.plugins.code.CodeSanityTest', (success, fail
 
     Pipeline.async({}, [
       Log.stepsAsStep('TBA', 'Code: Set content in empty editor and assert values', [
-        Mouse.sClickOn(Element.fromDom(editor.getContainer()), toolbarButtonSelector),
+        Mouse.sClickOn(SugarElement.fromDom(editor.getContainer()), toolbarButtonSelector),
         UiFinder.sWaitForVisible('Waited for dialog to be visible', docBody, dialogSelector),
         sAssertTextareaContent(''),
         sSetTextareaContent('<em>a</em>'),
@@ -47,7 +47,7 @@ UnitTest.asynctest('browser.tinymce.plugins.code.CodeSanityTest', (success, fail
       ]),
 
       Log.stepsAsStep('TBA', 'Code: Reopen dialog and check textarea content is correct', [
-        Mouse.sClickOn(Element.fromDom(editor.getContainer()), toolbarButtonSelector),
+        Mouse.sClickOn(SugarElement.fromDom(editor.getContainer()), toolbarButtonSelector),
         UiFinder.sWaitForVisible('Waited for dialog to be visible', docBody, dialogSelector),
         sAssertTextareaContent('<p><em>a</em></p>')
       ]),

@@ -1,10 +1,10 @@
+import { TestLabel } from '@ephox/bedrock-client';
 import { console } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import * as ErrorTypes from '../alien/ErrorTypes';
 import { DieFn, NextFn } from '../pipe/Pipe';
 import { Step } from './Step';
 import { addLogEntry, popLogLevel, pushLogLevel, TestLogs } from './TestLogs';
-import { TestLabel } from '@ephox/bedrock-client';
 
 const t = <T, U>(label: string, f: Step<T, U>): Step<T, U> => {
   const enrich = (err) => ErrorTypes.enrichWith(label, err);

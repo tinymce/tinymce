@@ -1,10 +1,10 @@
 import { Chain, Log, Mouse, Pipeline, UiFinder } from '@ephox/agar';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Element } from '@ephox/sugar';
+import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import { SugarElement } from '@ephox/sugar';
+import Plugin from 'tinymce/plugins/table/Plugin';
 
 import Theme from 'tinymce/themes/silver/Theme';
-import Plugin from 'tinymce/plugins/table/Plugin';
 
 UnitTest.asynctest('browser.tinymce.plugins.table.DragSelectionTest', (success, failure) => {
   Theme();
@@ -34,7 +34,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DragSelectionTest', (success, 
       </div>`),
 
       Log.chainsAsStep('TINY-5950', 'Drag and drop should not select', [
-        Chain.mapper(() => Element.fromDom(editor.getBody())),
+        Chain.mapper(() => SugarElement.fromDom(editor.getBody())),
         Chain.fromIsolatedChains([
           UiFinder.cFindIn('#dragfrom'),
           Mouse.cMouseDownWith({ }),

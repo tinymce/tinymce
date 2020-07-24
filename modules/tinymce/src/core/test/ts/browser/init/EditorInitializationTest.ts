@@ -1,9 +1,9 @@
 import { ApproxStructure, Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { HTMLElement, console, document, window } from '@ephox/dom-globals';
+import { console, document, HTMLElement, window } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { LegacyUnit } from '@ephox/mcagar';
-import { Attr, Element, SelectorFilter } from '@ephox/sugar';
+import { Attribute, SelectorFilter, SugarElement } from '@ephox/sugar';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import Env from 'tinymce/core/api/Env';
 import Tools from 'tinymce/core/api/util/Tools';
@@ -161,8 +161,8 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
   });
 
   const getSkinCssFilenames = function () {
-    return Arr.bind(SelectorFilter.descendants(Element.fromDom(document), 'link'), function (link) {
-      const href = Attr.get(link, 'href');
+    return Arr.bind(SelectorFilter.descendants(SugarElement.fromDom(document), 'link'), function (link) {
+      const href = Attribute.get(link, 'href');
       const fileName = href.split('/').slice(-1).join('');
       const isSkin = href.indexOf('oxide/') > -1;
       return isSkin ? [ fileName ] : [ ];
@@ -219,8 +219,8 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
         })
       ]
     }));
-    Assertions.assertStructure('Editor container should match expected structure', containerApproxStructure, Element.fromDom(editors[0].editorContainer));
-    Assertions.assertStructure('Editor container should match expected structure', containerApproxStructure, Element.fromDom(editors[1].editorContainer));
+    Assertions.assertStructure('Editor container should match expected structure', containerApproxStructure, SugarElement.fromDom(editors[0].editorContainer));
+    Assertions.assertStructure('Editor container should match expected structure', containerApproxStructure, SugarElement.fromDom(editors[1].editorContainer));
 
     Assertions.assertEq(
       'Should only be two skin files the skin and the content for inline mode',

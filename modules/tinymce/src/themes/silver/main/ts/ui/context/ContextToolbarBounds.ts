@@ -7,7 +7,7 @@
 
 import { Bounds, Boxes } from '@ephox/alloy';
 import { window } from '@ephox/dom-globals';
-import { Element, SelectorFind, VisualViewport } from '@ephox/sugar';
+import { SelectorFind, SugarElement, WindowVisualViewport } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import * as Settings from '../../api/Settings';
 import { UiFactoryBackstageShared } from '../../backstage/Backstage';
@@ -21,7 +21,7 @@ const getHorizontalBounds = (contentAreaBox: Bounds, viewportBounds: Bounds): { 
 };
 
 const getVerticalBounds = (editor: Editor, contentAreaBox: Bounds, viewportBounds: Bounds, isToolbarLocationTop: boolean): { y: number; bottom: number } => {
-  const container = Element.fromDom(editor.getContainer());
+  const container = SugarElement.fromDom(editor.getContainer());
   const header = SelectorFind.descendant(container, '.tox-editor-header').getOr(container);
   const headerBox = Boxes.box(header);
   const isToolbarBelowContentArea = headerBox.y >= contentAreaBox.bottom;
@@ -61,8 +61,8 @@ const getVerticalBounds = (editor: Editor, contentAreaBox: Bounds, viewportBound
 };
 
 const getContextToolbarBounds = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => {
-  const viewportBounds = VisualViewport.getBounds(window);
-  const contentAreaBox = Boxes.box(Element.fromDom(editor.getContentAreaContainer()));
+  const viewportBounds = WindowVisualViewport.getBounds(window);
+  const contentAreaBox = Boxes.box(SugarElement.fromDom(editor.getContentAreaContainer()));
   const toolbarOrMenubarEnabled = Settings.isMenubarEnabled(editor) || Settings.isToolbarEnabled(editor) || Settings.isMultipleToolbars(editor);
 
   const { x, width } = getHorizontalBounds(contentAreaBox, viewportBounds);

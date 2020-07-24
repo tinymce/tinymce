@@ -6,23 +6,23 @@
  */
 
 import { Arr, Cell, Option } from '@ephox/katamari';
-import { Compare, Element, Traverse } from '@ephox/sugar';
+import { Compare, SugarElement, Traverse } from '@ephox/sugar';
 import { createEntry, Entry } from './Entry';
 import { isList } from './Util';
 
-type Parser = (depth: number, itemSelection: Option<ItemSelection>, selectionState: Cell<boolean>, element: Element) => Entry[];
+type Parser = (depth: number, itemSelection: Option<ItemSelection>, selectionState: Cell<boolean>, element: SugarElement) => Entry[];
 
 export interface ItemSelection {
-  start: Element;
-  end: Element;
+  start: SugarElement;
+  end: SugarElement;
 }
 
 export interface EntrySet {
   entries: Entry[];
-  sourceList: Element;
+  sourceList: SugarElement;
 }
 
-const parseItem: Parser = (depth: number, itemSelection: Option<ItemSelection>, selectionState: Cell<boolean>, item: Element): Entry[] => Traverse.firstChild(item).filter(isList).fold(() => {
+const parseItem: Parser = (depth: number, itemSelection: Option<ItemSelection>, selectionState: Cell<boolean>, item: SugarElement): Entry[] => Traverse.firstChild(item).filter(isList).fold(() => {
 
   // Update selectionState (start)
   itemSelection.each((selection) => {
@@ -48,13 +48,13 @@ const parseItem: Parser = (depth: number, itemSelection: Option<ItemSelection>, 
   return currentItemEntry.toArray().concat(childListEntries);
 }, (list) => parseList(depth, itemSelection, selectionState, list));
 
-const parseList: Parser = (depth: number, itemSelection: Option<ItemSelection>, selectionState: Cell<boolean>, list: Element): Entry[] => Arr.bind(Traverse.children(list), (element) => {
+const parseList: Parser = (depth: number, itemSelection: Option<ItemSelection>, selectionState: Cell<boolean>, list: SugarElement): Entry[] => Arr.bind(Traverse.children(list), (element) => {
   const parser = isList(element) ? parseList : parseItem;
   const newDepth = depth + 1;
   return parser(newDepth, itemSelection, selectionState, element);
 });
 
-const parseLists = (lists: Element[], itemSelection: Option<ItemSelection>): EntrySet[] => {
+const parseLists = (lists: SugarElement[], itemSelection: Option<ItemSelection>): EntrySet[] => {
   const selectionState = Cell(false);
   const initialDepth = 0;
 

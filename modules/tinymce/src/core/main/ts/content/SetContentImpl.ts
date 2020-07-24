@@ -7,7 +7,7 @@
 
 import { HTMLElement } from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import Editor from '../api/Editor';
 import Node from '../api/html/Node';
 import Serializer from '../api/html/Serializer';
@@ -78,7 +78,7 @@ const setContentString = (editor: Editor, body: HTMLElement, content: string, ar
       );
     }
 
-    args.content = isWsPreserveElement(Element.fromDom(body)) ? content : Tools.trim(content);
+    args.content = isWsPreserveElement(SugarElement.fromDom(body)) ? content : Tools.trim(content);
     setEditorHtml(editor, args.content);
 
     if (!args.no_events) {
@@ -94,7 +94,7 @@ const setContentTree = (editor: Editor, body: HTMLElement, content: Node, args: 
 
   const html = Serializer({ validate: editor.validate }, editor.schema).serialize(content);
 
-  args.content = isWsPreserveElement(Element.fromDom(body)) ? html : Tools.trim(html);
+  args.content = isWsPreserveElement(SugarElement.fromDom(body)) ? html : Tools.trim(html);
   setEditorHtml(editor, args.content);
 
   if (!args.no_events) {

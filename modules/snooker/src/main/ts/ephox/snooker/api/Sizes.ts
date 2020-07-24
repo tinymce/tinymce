@@ -1,5 +1,5 @@
 import { Arr, Fun, Option } from '@ephox/katamari';
-import { Css, Element, Height, Width } from '@ephox/sugar';
+import { Css, Height, SugarElement, Width } from '@ephox/sugar';
 import { Warehouse } from '../model/Warehouse';
 import * as BarPositions from '../resize/BarPositions';
 import * as ColumnSizes from '../resize/ColumnSizes';
@@ -38,7 +38,7 @@ const getUnit = function (newSize: string) {
 
 // Procedure to resize table dimensions to optWidth x optHeight and redistribute cell and row dimensions.
 // Updates CSS of the table, rows, and cells.
-const redistribute = function (table: Element, optWidth: Option<string>, optHeight: Option<string>, direction: BarPositions<ColInfo>, tableSize: TableSize) {
+const redistribute = function (table: SugarElement, optWidth: Option<string>, optHeight: Option<string>, direction: BarPositions<ColInfo>, tableSize: TableSize) {
   const warehouse = Warehouse.fromTable(table);
   const rows = warehouse.all;
   const cells = Warehouse.justCells(warehouse);

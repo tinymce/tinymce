@@ -1,9 +1,7 @@
-import {
-  ApproxStructure, Assertions, Chain, FocusTools, Keyboard, Keys, Logger, Mouse, NamedChain, Step, StructAssert, UiFinder
-} from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, FocusTools, Keyboard, Keys, Logger, Mouse, NamedChain, Step, StructAssert, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Result } from '@ephox/katamari';
-import { Attr, Class, Compare } from '@ephox/sugar';
+import { Attribute, Class, Compare } from '@ephox/sugar';
 
 import * as AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviour';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
@@ -198,10 +196,10 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
           NamedChain.direct(NamedChain.inputName(), UiFinder.cFindIn('.test-dialog-title'), 'title'),
           NamedChain.direct(NamedChain.inputName(), UiFinder.cFindIn('.test-dialog'), 'dialog'),
           NamedChain.bundle((f) => {
-            const titleId = Attr.get(f.title, 'id') || '';
-            Assertions.assertEq('titleId should be set', true, Attr.has(f.title, 'id'));
+            const titleId = Attribute.get(f.title, 'id') || '';
+            Assertions.assertEq('titleId should be set', true, Attribute.has(f.title, 'id'));
             Assertions.assertEq('titleId should not be empty', true, titleId.length > 0);
-            const dialogLabelledBy = Attr.get(f.dialog, 'aria-labelledby');
+            const dialogLabelledBy = Attribute.get(f.dialog, 'aria-labelledby');
             Assertions.assertEq('Labelledby blah better error message', titleId, dialogLabelledBy);
             return Result.value(f);
           })
@@ -213,10 +211,10 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
           NamedChain.direct(NamedChain.inputName(), UiFinder.cFindIn('.test-dialog-body'), 'body'),
           NamedChain.direct(NamedChain.inputName(), UiFinder.cFindIn('.test-dialog'), 'dialog'),
           NamedChain.bundle((f) => {
-            const describeId = Attr.get(f.body, 'id') || '';
-            Assertions.assertEq('describeId should be set', true, Attr.has(f.body, 'id'));
+            const describeId = Attribute.get(f.body, 'id') || '';
+            Assertions.assertEq('describeId should be set', true, Attribute.has(f.body, 'id'));
             Assertions.assertEq('describeId should not be empty', true, describeId.length > 0);
-            const dialogDescribedBy = Attr.get(f.dialog, 'aria-describedby');
+            const dialogDescribedBy = Attribute.get(f.dialog, 'aria-describedby');
             Assertions.assertEq('aria-describedby should be set to describeId', describeId, dialogDescribedBy);
             return Result.value(f);
           })

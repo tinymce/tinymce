@@ -8,7 +8,7 @@
 import { AlloyComponent, MementoRecord, Representing } from '@ephox/alloy';
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Fun, Merger, Option } from '@ephox/katamari';
-import { Element, Html, Value } from '@ephox/sugar';
+import { Html, SugarElement, Value } from '@ephox/sugar';
 
 const processors = ValueSchema.objOf([
   FieldSchema.defaulted('preprocess', Fun.identity),
@@ -51,7 +51,7 @@ const withComp = <D>(optInitialValue: Option<D>, getter: (c: AlloyComponent) => 
   )
 );
 
-const withElement = <D>(initialValue: Option<D>, getter: (elem: Element) => D, setter: (elem: Element, v: D) => void) => withComp(
+const withElement = <D>(initialValue: Option<D>, getter: (elem: SugarElement) => D, setter: (elem: SugarElement, v: D) => void) => withComp(
   initialValue,
   (c) => getter(c.element()),
   (c, v) => setter(c.element(), v)

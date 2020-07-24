@@ -7,11 +7,12 @@
 
 import { document, window } from '@ephox/dom-globals';
 import { Obj, Type } from '@ephox/katamari';
-import { Attr, Element, Insert } from '@ephox/sugar';
+import { Attribute, Insert, SugarElement } from '@ephox/sugar';
 import Annotator from '../api/Annotator';
 import DOMUtils from '../api/dom/DOMUtils';
 import Selection from '../api/dom/Selection';
 import DomSerializer, { SerializerSettings } from '../api/dom/Serializer';
+import { StyleSheetLoader } from '../api/dom/StyleSheetLoader';
 import Editor from '../api/Editor';
 import EditorUpload from '../api/EditorUpload';
 import Env from '../api/Env';
@@ -40,17 +41,16 @@ import * as SelectionBookmark from '../selection/SelectionBookmark';
 import { hasAnyRanges } from '../selection/SelectionUtils';
 import SelectionOverrides from '../SelectionOverrides';
 import Quirks from '../util/Quirks';
-import { StyleSheetLoader } from '../api/dom/StyleSheetLoader';
 
 declare const escape: any;
 
 const DOM = DOMUtils.DOM;
 
 const appendStyle = function (editor: Editor, text: string) {
-  const head = Element.fromDom(editor.getDoc().head);
-  const tag = Element.fromTag('style');
-  Attr.set(tag, 'type', 'text/css');
-  Insert.append(tag, Element.fromText(text));
+  const head = SugarElement.fromDom(editor.getDoc().head);
+  const tag = SugarElement.fromTag('style');
+  Attribute.set(tag, 'type', 'text/css');
+  Insert.append(tag, SugarElement.fromText(text));
   Insert.append(head, tag);
 };
 

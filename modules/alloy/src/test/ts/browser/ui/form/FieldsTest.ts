@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Arr, Fun, Option } from '@ephox/katamari';
-import { Attr, SelectorFind } from '@ephox/sugar';
+import { Arr, Fun } from '@ephox/katamari';
+import { Attribute, SelectorFind } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Replacing } from 'ephox/alloy/api/behaviour/Replacing';
@@ -175,8 +175,8 @@ UnitTest.asynctest('FieldsTest', (success, failure) => {
         const input = SelectorFind.descendant(inputA.element(), 'input').getOrDie('input element child was not found');
         const span = SelectorFind.descendant(inputA.element(), 'span').getOrDie('span element child was not found');
 
-        const inputID = Option.from(Attr.get(input, 'id')).getOrDie('Expected value for input.id');
-        const spanID = Option.from(Attr.get(span, 'id')).getOrDie('Expected value for span.id');
+        const inputID = Attribute.getOpt(input, 'id').getOrDie('Expected value for input.id');
+        const spanID = Attribute.getOpt(span, 'id').getOrDie('Expected value for span.id');
         return s.element('div', {
           children: [
             s.element('input', {

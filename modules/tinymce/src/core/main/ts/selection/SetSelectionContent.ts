@@ -7,7 +7,7 @@
 
 import { DocumentFragment, Range, Text } from '@ephox/dom-globals';
 import { Option, Options } from '@ephox/katamari';
-import { Element, Node, Remove, Traverse } from '@ephox/sugar';
+import { Remove, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 import Editor from '../api/Editor';
 import Serializer from '../api/html/Serializer';
 import { EditorEvent } from '../api/util/EventDispatcher';
@@ -22,7 +22,7 @@ const prependData = (target: Text, data: string): void => {
   target.insertData(0, data);
 };
 
-const removeEmpty = (text: Element): Option<Element> => {
+const removeEmpty = (text: SugarElement): Option<SugarElement> => {
   if (text.dom().length === 0) {
     Remove.remove(text);
     return Option.none();
@@ -31,23 +31,23 @@ const removeEmpty = (text: Element): Option<Element> => {
 };
 
 const rngSetContent = (rng: Range, fragment: DocumentFragment): void => {
-  const firstChild = Option.from(fragment.firstChild).map(Element.fromDom);
-  const lastChild = Option.from(fragment.lastChild).map(Element.fromDom);
+  const firstChild = Option.from(fragment.firstChild).map(SugarElement.fromDom);
+  const lastChild = Option.from(fragment.lastChild).map(SugarElement.fromDom);
 
   rng.deleteContents();
   rng.insertNode(fragment);
 
-  const prevText = firstChild.bind(Traverse.prevSibling).filter(Node.isText).bind(removeEmpty);
-  const nextText = lastChild.bind(Traverse.nextSibling).filter(Node.isText).bind(removeEmpty);
+  const prevText = firstChild.bind(Traverse.prevSibling).filter(SugarNode.isText).bind(removeEmpty);
+  const nextText = lastChild.bind(Traverse.nextSibling).filter(SugarNode.isText).bind(removeEmpty);
 
   // Join start
-  Options.lift2(prevText, firstChild.filter(Node.isText), (prev: Element, start: Element) => {
+  Options.lift2(prevText, firstChild.filter(SugarNode.isText), (prev: SugarElement, start: SugarElement) => {
     prependData(start.dom(), prev.dom().data);
     Remove.remove(prev);
   });
 
   // Join end
-  Options.lift2(nextText, lastChild.filter(Node.isText), (next: Element, end: Element) => {
+  Options.lift2(nextText, lastChild.filter(SugarNode.isText), (next: SugarElement, end: SugarElement) => {
     const oldLength = end.dom().length;
     end.dom().appendData(next.dom().data);
     rng.setEnd(end.dom(), oldLength);

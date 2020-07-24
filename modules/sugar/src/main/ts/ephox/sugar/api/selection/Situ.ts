@@ -1,25 +1,25 @@
-import { Node as DomNode } from '@ephox/dom-globals';
+import { Node } from '@ephox/dom-globals';
 import { Adt, Fun } from '@ephox/katamari';
-import Element from '../node/Element';
+import { SugarElement } from '../node/SugarElement';
 
 export interface Situ {
   fold: <U> (
-    before: (element: Element<DomNode>) => U,
-    on: (element: Element<DomNode>, offset: number) => U,
-    after: (element: Element<DomNode>) => U
+    before: (element: SugarElement<Node>) => U,
+    on: (element: SugarElement<Node>, offset: number) => U,
+    after: (element: SugarElement<Node>) => U
   ) => U;
   match: <U> (branches: {
-    before: (element: Element<DomNode>) => U;
-    on: (element: Element<DomNode>, offset: number) => U;
-    after: (element: Element<DomNode>) => U;
+    before: (element: SugarElement<Node>) => U;
+    on: (element: SugarElement<Node>, offset: number) => U;
+    after: (element: SugarElement<Node>) => U;
   }) => U;
   log: (label: string) => void;
 }
 
 const adt: {
-  before: (element: Element<DomNode>) => Situ;
-  on: (element: Element<DomNode>, offset: number) => Situ;
-  after: (element: Element<DomNode>) => Situ;
+  before: (element: SugarElement<Node>) => Situ;
+  on: (element: SugarElement<Node>, offset: number) => Situ;
+  after: (element: SugarElement<Node>) => Situ;
 } = Adt.generate([
   { before: [ 'element' ] },
   { on: [ 'element', 'offset' ] },
@@ -27,7 +27,7 @@ const adt: {
 ]);
 
 // Probably don't need this given that we now have "match"
-const cata = <U> (subject: Situ, onBefore: (element: Element<DomNode>) => U, onOn: (element: Element<DomNode>, offset: number) => U, onAfter: (element: Element<DomNode>) => U) =>
+const cata = <U> (subject: Situ, onBefore: (element: SugarElement<Node>) => U, onOn: (element: SugarElement<Node>, offset: number) => U, onAfter: (element: SugarElement<Node>) => U) =>
   subject.fold(onBefore, onOn, onAfter);
 
 const getStart = (situ: Situ) => situ.fold(Fun.identity, Fun.identity, Fun.identity);

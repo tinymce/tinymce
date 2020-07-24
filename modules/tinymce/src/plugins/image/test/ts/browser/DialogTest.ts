@@ -2,7 +2,7 @@ import { FocusTools, Keyboard, Keys, Log, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 
 import Plugin from 'tinymce/plugins/image/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
@@ -14,7 +14,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.DialogTest', (success, failure
 
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const api = TinyApis(editor);
-    const doc = Element.fromDom(document);
+    const doc = SugarElement.fromDom(document);
 
     const sPressTab = Keyboard.sKeydown(doc, Keys.tab(), {});
     const sPressEsc = Keyboard.sKeydown(doc, Keys.escape(), {});

@@ -1,6 +1,6 @@
 import { Pipeline, Step } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { Attr, Body, Node, Traverse } from '@ephox/sugar';
+import { Attribute, SugarBody, SugarNode, Traverse } from '@ephox/sugar';
 
 import * as EventRoot from 'ephox/alloy/alien/EventRoot';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
@@ -8,8 +8,8 @@ import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
 import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
-import { Container } from 'ephox/alloy/api/ui/Container';
 import { TestStore } from 'ephox/alloy/api/testhelpers/TestStore';
+import { Container } from 'ephox/alloy/api/ui/Container';
 
 UnitTest.asynctest('Browser Test: events.AttachingEventTest', (success, failure) => {
 
@@ -39,18 +39,18 @@ UnitTest.asynctest('Browser Test: events.AttachingEventTest', (success, failure)
         events: AlloyEvents.derive([
           AlloyEvents.runOnAttached((comp, simulatedEvent) => {
             simulatedEvent.stop();
-            const parent = Traverse.parent(comp.element()).filter(Node.isElement).getOrDie(
+            const parent = Traverse.parent(comp.element()).filter(SugarNode.isElement).getOrDie(
               'At attachedToDom, a DOM parent must exist'
             );
-            store.adder('attached-to:' + Attr.get(parent, 'class'))();
+            store.adder('attached-to:' + Attribute.get(parent, 'class'))();
           }),
 
           AlloyEvents.runOnDetached((comp, simulatedEvent) => {
             simulatedEvent.stop();
-            const parent = Traverse.parent(comp.element()).filter(Node.isElement).getOrDie(
+            const parent = Traverse.parent(comp.element()).filter(SugarNode.isElement).getOrDie(
               'At detachedFromDom, a DOM parent must exist'
             );
-            store.adder('detached-from:' + Attr.get(parent, 'class'))();
+            store.adder('detached-from:' + Attribute.get(parent, 'class'))();
           }),
 
           AlloyEvents.run(SystemEvents.systemInit(), (comp, simulatedEvent) => {
@@ -93,7 +93,7 @@ UnitTest.asynctest('Browser Test: events.AttachingEventTest', (success, failure)
     store.sClear,
 
     Step.sync(() => {
-      Attachment.attachSystem(Body.body(), gui);
+      Attachment.attachSystem(SugarBody.body(), gui);
     }),
 
     Step.sync(() => {

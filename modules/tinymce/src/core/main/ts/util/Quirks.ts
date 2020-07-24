@@ -5,8 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Attr, document, Range, Selection as DomSelection } from '@ephox/dom-globals';
-import Selection from '../api/dom/Selection';
+import { Attr, document, Range, Selection } from '@ephox/dom-globals';
 import Editor from '../api/Editor';
 import Env from '../api/Env';
 import * as Settings from '../api/Settings';
@@ -30,7 +29,7 @@ interface Quirks {
 
 const Quirks = function (editor: Editor): Quirks {
   const each = Tools.each;
-  const BACKSPACE = VK.BACKSPACE, DELETE = VK.DELETE, dom = editor.dom, selection: Selection = editor.selection, parser = editor.parser;
+  const BACKSPACE = VK.BACKSPACE, DELETE = VK.DELETE, dom = editor.dom, selection = editor.selection, parser = editor.parser;
   const isGecko = Env.gecko, isIE = Env.ie, isWebKit = Env.webkit;
   const mceInternalUrlPrefix = 'data:text/mce-internal,';
   const mceInternalDataType = isIE ? 'Text' : 'URL';
@@ -610,7 +609,7 @@ const Quirks = function (editor: Editor): Quirks {
         if (VK.metaKeyPressed(e) && !e.shiftKey && (e.keyCode === 37 || e.keyCode === 39)) {
           e.preventDefault();
           // The modify component isn't part of the standard spec, so we need to add the type here
-          const selection = editor.selection.getSel() as DomSelection & { modify: Function };
+          const selection = editor.selection.getSel() as Selection & { modify: Function };
           selection.modify('move', e.keyCode === 37 ? 'backward' : 'forward', 'lineboundary');
         }
       });

@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { document, Element, Event, MouseEvent, Node } from '@ephox/dom-globals';
+import { document, Element, MouseEvent, Node } from '@ephox/dom-globals';
 import { Obj } from '@ephox/katamari';
-import { Element as SugarElement, Selectors } from '@ephox/sugar';
+import { Selectors, SugarElement } from '@ephox/sugar';
 import * as CefUtils from '../../dom/CefUtils';
 import * as NodeType from '../../dom/NodeType';
 import * as RangePoint from '../../dom/RangePoint';
@@ -16,6 +16,7 @@ import Env from '../Env';
 import * as Events from '../Events';
 import * as Settings from '../Settings';
 import Delay from '../util/Delay';
+import { EditorEvent } from '../util/EventDispatcher';
 import Tools from '../util/Tools';
 import VK from '../util/VK';
 import Selection from './Selection';
@@ -24,7 +25,7 @@ interface ControlSelection {
   isResizable (elm: Element): boolean;
   showResizeRect (elm: Element): void;
   hideResizeRect (): void;
-  updateResizeRect (evt: Event): void;
+  updateResizeRect (evt: EditorEvent<any>): void;
   destroy (): void;
 }
 

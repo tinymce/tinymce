@@ -1,7 +1,7 @@
 import { TestLogs } from '@ephox/agar';
 import { console, document, setTimeout } from '@ephox/dom-globals';
 import { Arr, Fun, Global, Id, Option } from '@ephox/katamari';
-import { Attr, Body, Element, Insert, Remove, SelectorFilter, ShadowDom } from '@ephox/sugar';
+import { Attribute, Insert, Remove, SelectorFilter, SugarBody, SugarElement, SugarShadowDom } from '@ephox/sugar';
 import { Editor } from '../alien/EditorTypes';
 
 export type SuccessCallback = (v?: any, logs?: TestLogs) => void;
@@ -15,7 +15,7 @@ interface Callbacks {
   failure: FailureCallback;
 }
 
-const createTarget = (inline: boolean) => Element.fromTag(inline ? 'div' : 'textarea');
+const createTarget = (inline: boolean) => SugarElement.fromTag(inline ? 'div' : 'textarea');
 
 const removeTinymceElements = () => {
   // NOTE: Don't remove the link/scripts added, as those are part of the global tinymce which we don't clean up
@@ -23,19 +23,19 @@ const removeTinymceElements = () => {
     // Some older versions of tinymce leaves elements behind in the dom
     SelectorFilter.all('.mce-notification,.mce-window,#mce-modal-block'),
     // TinyMCE leaves inline editor content_styles in the dom
-    SelectorFilter.children(Element.fromDom(document.head), 'style')
+    SelectorFilter.children(SugarElement.fromDom(document.head), 'style')
   ]);
 
   Arr.each(elements, Remove.remove);
 };
 
-const setup = (callbacks: Callbacks, settings: Record<string, any>, elementOpt: Option<Element>) => {
+const setup = (callbacks: Callbacks, settings: Record<string, any>, elementOpt: Option<SugarElement>) => {
   const target = elementOpt.getOrThunk(() => createTarget(settings.inline));
   const randomId = Id.generate('tiny-loader');
-  Attr.set(target, 'id', randomId);
+  Attribute.set(target, 'id', randomId);
 
-  if (!Body.inBody(target)) {
-    Insert.append(Body.body(), target);
+  if (!SugarBody.inBody(target)) {
+    Insert.append(SugarBody.body(), target);
   }
 
   const teardown = () => {
@@ -68,7 +68,7 @@ const setup = (callbacks: Callbacks, settings: Record<string, any>, elementOpt: 
   } else {
     callbacks.preInit(tinymce, settings);
 
-    const targetSettings = ShadowDom.isInShadowRoot(target) ? ({ target: target.dom() }) : ({ selector: '#' + randomId });
+    const targetSettings = SugarShadowDom.isInShadowRoot(target) ? ({ target: target.dom() }) : ({ selector: '#' + randomId });
 
     tinymce.init({
       ...settings,

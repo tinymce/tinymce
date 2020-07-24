@@ -1,7 +1,7 @@
 import { Fun } from '@ephox/katamari';
 
-import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as AlloyLogger from '../../log/AlloyLogger';
+import { AlloyComponent } from '../component/ComponentApi';
 import { AlloySystemApi } from './SystemApi';
 
 const NoContextApi = (getComp?: () => AlloyComponent): AlloySystemApi => {

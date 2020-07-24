@@ -5,26 +5,26 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { document, Element as DomElement, Node as DomNode, FocusEvent } from '@ephox/dom-globals';
+import { document, Element, FocusEvent, Node } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
+import { Focus, SugarElement, SugarShadowDom } from '@ephox/sugar';
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
 import EditorManager from '../api/EditorManager';
 import FocusManager from '../api/FocusManager';
+import * as Settings from '../api/Settings';
 import Delay from '../api/util/Delay';
 import * as SelectionRestore from '../selection/SelectionRestore';
-import * as Settings from '../api/Settings';
-import { Element, Focus, ShadowDom } from '@ephox/sugar';
 
 let documentFocusInHandler;
 const DOM = DOMUtils.DOM;
 
-const isEditorUIElement = function (elm: DomElement) {
+const isEditorUIElement = function (elm: Element) {
   // Since this can be overridden by third party we need to use the API reference here
   return FocusManager.isEditorUIElement(elm);
 };
 
-const isEditorContentAreaElement = function (elm: DomElement) {
+const isEditorContentAreaElement = function (elm: Element) {
   const classList = elm.classList;
   if (classList !== undefined) {
     // tox-edit-area__iframe === iframe container element
@@ -35,7 +35,7 @@ const isEditorContentAreaElement = function (elm: DomElement) {
   }
 };
 
-const isUIElement = function (editor: Editor, elm: DomNode) {
+const isUIElement = function (editor: Editor, elm: Node) {
   const customSelector = Settings.getCustomUiSelector(editor);
   const parent = DOM.getParent(elm, function (elm) {
     return (
@@ -46,9 +46,9 @@ const isUIElement = function (editor: Editor, elm: DomNode) {
   return parent !== null;
 };
 
-const getActiveElement = function (editor: Editor): DomElement {
+const getActiveElement = function (editor: Editor): Element {
   try {
-    const root = ShadowDom.getRootNode(Element.fromDom(editor.getElement()));
+    const root = SugarShadowDom.getRootNode(SugarElement.fromDom(editor.getElement()));
     return Focus.active(root).fold(
       () => document.body,
       (x) => x.dom()
@@ -101,7 +101,7 @@ const registerEvents = function (editorManager: EditorManager, e: { editor: Edit
       const activeEditor = editorManager.activeEditor;
 
       if (activeEditor) {
-        ShadowDom.getOriginalEventTarget(e).each((target: DomElement) => {
+        SugarShadowDom.getOriginalEventTarget(e).each((target: Element) => {
           if (target.ownerDocument === document) {
             // Fire a blur event if the element isn't a UI element
             if (target !== document.body && !isUIElement(activeEditor, target) && editorManager.focusedEditor === activeEditor) {

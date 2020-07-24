@@ -6,7 +6,7 @@
  */
 
 import { Arr, Obj, Option, Type } from '@ephox/katamari';
-import { Body, Element, SelectorFind, ShadowDom } from '@ephox/sugar';
+import { SelectorFind, SugarBody, SugarElement, SugarShadowDom } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
@@ -99,18 +99,18 @@ const isToolbarLocationBottom = (editor: Editor) => getToolbarLocation(editor) =
 
 const fixedContainerSelector = (editor): string => editor.getParam('fixed_toolbar_container', '', 'string');
 
-const fixedContainerElement = (editor): Option<Element> => {
+const fixedContainerElement = (editor): Option<SugarElement> => {
   const selector = fixedContainerSelector(editor);
   // If we have a valid selector and are in inline mode, try to get the fixed_toolbar_container
-  return selector.length > 0 && editor.inline ? SelectorFind.descendant(Body.body(), selector) : Option.none();
+  return selector.length > 0 && editor.inline ? SelectorFind.descendant(SugarBody.body(), selector) : Option.none();
 };
 
 const useFixedContainer = (editor): boolean => editor.inline && fixedContainerElement(editor).isSome();
 
-const getUiContainer = (editor: Editor): Element => {
+const getUiContainer = (editor: Editor): SugarElement => {
   const fixedContainer = fixedContainerElement(editor);
   return fixedContainer.getOrThunk(() =>
-    ShadowDom.getContentContainer(ShadowDom.getRootNode(Element.fromDom(editor.getElement())))
+    SugarShadowDom.getContentContainer(SugarShadowDom.getRootNode(SugarElement.fromDom(editor.getElement())))
   );
 };
 

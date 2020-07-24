@@ -7,7 +7,7 @@
 
 import { Element, Node, Range, Text } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
-import { Element as SugarElement, Node as SugarNode, Traverse } from '@ephox/sugar';
+import { SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 import DOMUtils from '../api/dom/DOMUtils';
 import TreeWalker from '../api/dom/TreeWalker';
 import * as NodeType from '../dom/NodeType';

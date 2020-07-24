@@ -1,5 +1,5 @@
 import { Arr, Cell, Fun, Obj, Option, Options } from '@ephox/katamari';
-import { Attr, Body, Class, Classes, SelectorFilter, SelectorFind } from '@ephox/sugar';
+import { Attribute, Class, Classes, SelectorFilter, SelectorFind, SugarBody } from '@ephox/sugar';
 
 import * as EditableFields from '../../alien/EditableFields';
 import { Composing } from '../../api/behaviour/Composing';
@@ -108,7 +108,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, _ra
   const getSubmenuParents = (container: AlloyComponent): Record<string, AlloyComponent> => submenuParentItems.get().getOrThunk(() => {
     const r: Record<string, AlloyComponent> = { };
     const items = SelectorFilter.descendants(container.element(), `.${detail.markers.item}`);
-    const parentItems = Arr.filter(items, (i) => Attr.get(i, 'aria-haspopup') === 'true');
+    const parentItems = Arr.filter(items, (i) => Attribute.get(i, 'aria-haspopup') === 'true');
     Arr.each(parentItems, (i) => {
       container.getSystem().getByDom(i).each((itemComp) => {
         const key = getItemValue(itemComp);
@@ -125,31 +125,32 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, _ra
     Obj.each(parentItems, (v, k) => {
       // Really should turn path into a Set
       const expanded = Arr.contains(path, k);
-      Attr.set(v.element(), 'aria-expanded', expanded);
+      Attribute.set(v.element(), 'aria-expanded', expanded);
     });
   };
 
-  const updateMenuPath = (container: AlloyComponent, state: LayeredState, path: string[]): Option<AlloyComponent> => Option.from(path[0]).bind((latestMenuName) => state.lookupMenu(latestMenuName).bind((menuPrep: MenuPreparation) => {
-    if (menuPrep.type === 'notbuilt') {
-      return Option.none();
-    } else {
-      const activeMenu = menuPrep.menu;
-      const rest = getMenus(state, path.slice(1));
-      Arr.each(rest, (r) => {
-        Class.add(r.element(), detail.markers.backgroundMenu);
-      });
+  const updateMenuPath = (container: AlloyComponent, state: LayeredState, path: string[]): Option<AlloyComponent> =>
+    Option.from(path[0]).bind((latestMenuName) => state.lookupMenu(latestMenuName).bind((menuPrep: MenuPreparation) => {
+      if (menuPrep.type === 'notbuilt') {
+        return Option.none();
+      } else {
+        const activeMenu = menuPrep.menu;
+        const rest = getMenus(state, path.slice(1));
+        Arr.each(rest, (r) => {
+          Class.add(r.element(), detail.markers.backgroundMenu);
+        });
 
-      if (!Body.inBody(activeMenu.element())) {
-        Replacing.append(container, GuiFactory.premade(activeMenu));
+        if (!SugarBody.inBody(activeMenu.element())) {
+          Replacing.append(container, GuiFactory.premade(activeMenu));
+        }
+
+        // Remove the background-menu class from the active menu
+        Classes.remove(activeMenu.element(), [ detail.markers.backgroundMenu ]);
+        setActiveMenu(container, activeMenu);
+        closeOthers(container, state, path);
+        return Option.some(activeMenu);
       }
-
-      // Remove the background-menu class from the active menu
-      Classes.remove(activeMenu.element(), [ detail.markers.backgroundMenu ]);
-      setActiveMenu(container, activeMenu);
-      closeOthers(container, state, path);
-      return Option.some(activeMenu);
-    }
-  }));
+    }));
 
   enum ExpandHighlightDecision { HighlightSubmenu, HighlightParent }
 
@@ -173,7 +174,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, _ra
         const activeMenu = buildIfRequired(container, menuName, activeMenuPrep);
 
         // DUPE with above. Fix later.
-        if (!Body.inBody(activeMenu.element())) {
+        if (!SugarBody.inBody(activeMenu.element())) {
           Replacing.append(container, GuiFactory.premade(activeMenu));
         }
 
@@ -304,7 +305,8 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, _ra
     });
   };
 
-  const extractMenuFromContainer = (container: AlloyComponent) => Option.from(container.components()[0]).filter((comp) => Attr.get(comp.element(), 'role') === 'menu');
+  const extractMenuFromContainer = (container: AlloyComponent) =>
+    Option.from(container.components()[0]).filter((comp) => Attribute.get(comp.element(), 'role') === 'menu');
 
   const repositionMenus = (container: AlloyComponent): void => {
     // Get the primary menu

@@ -3,7 +3,7 @@ import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { HTMLElement } from '@ephox/dom-globals';
 import { Cell, Obj, Strings } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Css, Element, Hierarchy } from '@ephox/sugar';
+import { Css, Hierarchy, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
@@ -12,7 +12,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.ControlSelectionTest', function (su
   const eventCounter = Cell<Record<string, number>>({ });
 
   const sContextMenuClickInMiddleOf = (editor: Editor, elementPath: number[]) => Step.sync(() => {
-    const element = Hierarchy.follow(Element.fromDom(editor.getBody()), elementPath).getOrDie().dom() as HTMLElement;
+    const element = Hierarchy.follow(SugarElement.fromDom(editor.getBody()), elementPath).getOrDie().dom() as HTMLElement;
     const rect = element.getBoundingClientRect();
     const clientX = (rect.left + rect.width / 2), clientY = (rect.top + rect.height / 2);
     editor.fire('mousedown', { target: element, clientX, clientY, button: 2 });
@@ -26,7 +26,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.ControlSelectionTest', function (su
     Assert.eq(`Check ${type} event count is ${count}`, count, Obj.get(eventCounter.get(), type.toLowerCase()).getOr(0));
   });
 
-  const sResizeAndAssertEventCount = (editorBody: Element, resizeSelector: string, delta: number, expectedCount: number) => GeneralSteps.sequence([
+  const sResizeAndAssertEventCount = (editorBody: SugarElement, resizeSelector: string, delta: number, expectedCount: number) => GeneralSteps.sequence([
     Chain.asStep(editorBody, [
       UiFinder.cWaitForVisible('Wait for resize handlers to show', resizeSelector),
       Mouse.cMouseDown
@@ -42,7 +42,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.ControlSelectionTest', function (su
     sAssertEventCount('ObjectResized', expectedCount)
   ]);
 
-  const cGetElementDimensions = (name: string) => Chain.mapper((element: Element): number =>
+  const cGetElementDimensions = (name: string) => Chain.mapper((element: SugarElement): number =>
     Css.getRaw(element, name).map((v) => parseInt(v, 10)).getOr(0));
 
   const cAssertElementDimension = (label: string, expectedDimension: number) => Chain.op((dimension: number) => {
@@ -58,7 +58,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.ControlSelectionTest', function (su
     NamedChain.outputInput
   ]);
 
-  const sResizeAndAssertDimensions = (editorBody: Element, targetSelector: string, resizeSelector: string, delta: number, width: number, height: number) => {
+  const sResizeAndAssertDimensions = (editorBody: SugarElement, targetSelector: string, resizeSelector: string, delta: number, width: number, height: number) => {
     const expectedWidth = Strings.endsWith(resizeSelector, 'sw') || Strings.endsWith(resizeSelector, 'nw') ? width - delta : width + delta;
     const expectedHeight = Strings.endsWith(resizeSelector, 'nw') || Strings.endsWith(resizeSelector, 'ne') ? height - delta : height + delta;
 
@@ -81,7 +81,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.ControlSelectionTest', function (su
 
   TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
-    const editorBody = Element.fromDom(editor.getBody());
+    const editorBody = SugarElement.fromDom(editor.getBody());
     editor.on('ObjectResizeStart ObjectResized', (e) => {
       const counter = eventCounter.get();
       counter[e.type] = (counter[e.type] || 0) + 1;

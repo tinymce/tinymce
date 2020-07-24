@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node as DomNode } from '@ephox/dom-globals';
+import { Node } from '@ephox/dom-globals';
 import { Fun, Obj, Option, Options } from '@ephox/katamari';
-import { Element, Insert, Node as SugarNode, Node, PredicateFind, Remove, Traverse } from '@ephox/sugar';
+import { Insert, PredicateFind, Remove, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 import Editor from '../api/Editor';
 import * as CaretCandidate from '../caret/CaretCandidate';
 import * as CaretFinder from '../caret/CaretFinder';
@@ -16,22 +16,22 @@ import * as Empty from '../dom/Empty';
 import * as NodeType from '../dom/NodeType';
 import * as MergeText from './MergeText';
 
-const needsReposition = (pos: CaretPosition, elm: DomNode) => {
+const needsReposition = (pos: CaretPosition, elm: Node) => {
   const container = pos.container();
   const offset = pos.offset();
   return CaretPosition.isTextPosition(pos) === false && container === elm.parentNode && offset > CaretPosition.before(elm).offset();
 };
 
-const reposition = (elm: DomNode, pos: CaretPosition) =>
+const reposition = (elm: Node, pos: CaretPosition) =>
   needsReposition(pos, elm) ? CaretPosition(pos.container(), pos.offset() - 1) : pos;
 
-const beforeOrStartOf = (node: DomNode) =>
+const beforeOrStartOf = (node: Node) =>
   NodeType.isText(node) ? CaretPosition(node, 0) : CaretPosition.before(node);
 
-const afterOrEndOf = (node: DomNode) =>
+const afterOrEndOf = (node: Node) =>
   NodeType.isText(node) ? CaretPosition(node, node.data.length) : CaretPosition.after(node);
 
-const getPreviousSiblingCaretPosition = (elm: DomNode): Option<CaretPosition> => {
+const getPreviousSiblingCaretPosition = (elm: Node): Option<CaretPosition> => {
   if (CaretCandidate.isCaretCandidate(elm.previousSibling)) {
     return Option.some(afterOrEndOf(elm.previousSibling));
   } else {
@@ -39,7 +39,7 @@ const getPreviousSiblingCaretPosition = (elm: DomNode): Option<CaretPosition> =>
   }
 };
 
-const getNextSiblingCaretPosition = (elm: DomNode): Option<CaretPosition> => {
+const getNextSiblingCaretPosition = (elm: Node): Option<CaretPosition> => {
   if (CaretCandidate.isCaretCandidate(elm.nextSibling)) {
     return Option.some(beforeOrStartOf(elm.nextSibling));
   } else {
@@ -47,7 +47,7 @@ const getNextSiblingCaretPosition = (elm: DomNode): Option<CaretPosition> => {
   }
 };
 
-const findCaretPositionBackwardsFromElm = (rootElement: DomNode, elm: DomNode) => {
+const findCaretPositionBackwardsFromElm = (rootElement: Node, elm: Node) => {
   const startPosition = CaretPosition.before(elm.previousSibling ? elm.previousSibling : elm.parentNode);
   return CaretFinder.prevPosition(rootElement, startPosition).fold(
     () => CaretFinder.nextPosition(rootElement, CaretPosition.after(elm)),
@@ -55,25 +55,25 @@ const findCaretPositionBackwardsFromElm = (rootElement: DomNode, elm: DomNode) =
   );
 };
 
-const findCaretPositionForwardsFromElm = (rootElement: DomNode, elm: DomNode) =>
+const findCaretPositionForwardsFromElm = (rootElement: Node, elm: Node) =>
   CaretFinder.nextPosition(rootElement, CaretPosition.after(elm)).fold(
     () => CaretFinder.prevPosition(rootElement, CaretPosition.before(elm)),
     Option.some
   );
 
-const findCaretPositionBackwards = (rootElement: DomNode, elm: DomNode) =>
+const findCaretPositionBackwards = (rootElement: Node, elm: Node) =>
   getPreviousSiblingCaretPosition(elm).orThunk(() => getNextSiblingCaretPosition(elm))
     .orThunk(() => findCaretPositionBackwardsFromElm(rootElement, elm));
 
-const findCaretPositionForward = (rootElement: DomNode, elm: DomNode) =>
+const findCaretPositionForward = (rootElement: Node, elm: Node) =>
   getNextSiblingCaretPosition(elm)
     .orThunk(() => getPreviousSiblingCaretPosition(elm))
     .orThunk(() => findCaretPositionForwardsFromElm(rootElement, elm));
 
-const findCaretPosition = (forward: boolean, rootElement: DomNode, elm: DomNode) =>
+const findCaretPosition = (forward: boolean, rootElement: Node, elm: Node) =>
   forward ? findCaretPositionForward(rootElement, elm) : findCaretPositionBackwards(rootElement, elm);
 
-const findCaretPosOutsideElmAfterDelete = (forward: boolean, rootElement: DomNode, elm: DomNode) =>
+const findCaretPosOutsideElmAfterDelete = (forward: boolean, rootElement: Node, elm: Node) =>
   findCaretPosition(forward, rootElement, elm).map(Fun.curry(reposition, elm));
 
 const setSelection = (editor: Editor, forward: boolean, pos: Option<CaretPosition>) => {
@@ -87,14 +87,14 @@ const setSelection = (editor: Editor, forward: boolean, pos: Option<CaretPositio
   );
 };
 
-const eqRawNode = (rawNode: DomNode) => (elm: Element) => elm.dom() === rawNode;
+const eqRawNode = (rawNode: Node) => (elm: SugarElement) => elm.dom() === rawNode;
 
-const isBlock = (editor: Editor, elm: Element) =>
+const isBlock = (editor: Editor, elm: SugarElement) =>
   elm && Obj.has(editor.schema.getBlockElements(), SugarNode.name(elm));
 
-const paddEmptyBlock = (elm: Element): Option<CaretPosition> => {
+const paddEmptyBlock = (elm: SugarElement): Option<CaretPosition> => {
   if (Empty.isEmpty(elm)) {
-    const br = Element.fromHtml('<br data-mce-bogus="1">');
+    const br = SugarElement.fromHtml('<br data-mce-bogus="1">');
     Remove.empty(elm);
     Insert.append(elm, br);
     return Option.some(CaretPosition.before(br.dom()));
@@ -103,9 +103,9 @@ const paddEmptyBlock = (elm: Element): Option<CaretPosition> => {
   }
 };
 
-const deleteNormalized = (elm: Element, afterDeletePosOpt: Option<CaretPosition>, normalizeWhitespace?: boolean): Option<CaretPosition> => {
-  const prevTextOpt = Traverse.prevSibling(elm).filter(Node.isText);
-  const nextTextOpt = Traverse.nextSibling(elm).filter(Node.isText);
+const deleteNormalized = (elm: SugarElement, afterDeletePosOpt: Option<CaretPosition>, normalizeWhitespace?: boolean): Option<CaretPosition> => {
+  const prevTextOpt = Traverse.prevSibling(elm).filter(SugarNode.isText);
+  const nextTextOpt = Traverse.nextSibling(elm).filter(SugarNode.isText);
 
   // Delete the element
   Remove.remove(elm);
@@ -127,10 +127,10 @@ const deleteNormalized = (elm: Element, afterDeletePosOpt: Option<CaretPosition>
   });
 };
 
-const isInlineElement = (editor: Editor, element: Element): boolean =>
+const isInlineElement = (editor: Editor, element: SugarElement): boolean =>
   Obj.has(editor.schema.getTextInlineElements(), SugarNode.name(element));
 
-const deleteElement = (editor: Editor, forward: boolean, elm: Element, moveCaret: boolean = true) => {
+const deleteElement = (editor: Editor, forward: boolean, elm: SugarElement, moveCaret: boolean = true) => {
   const afterDeletePos = findCaretPosOutsideElmAfterDelete(forward, editor.getBody(), elm.dom());
   const parentBlock = PredicateFind.ancestor(elm, Fun.curry(isBlock, editor), eqRawNode(editor.getBody()));
   const normalizedAfterDeletePos = deleteNormalized(elm, afterDeletePos, isInlineElement(editor, elm));

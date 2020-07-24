@@ -6,7 +6,7 @@
  */
 
 import { Fun, Option } from '@ephox/katamari';
-import { Attr, Element, SelectorFind, TextContent } from '@ephox/sugar';
+import { Attribute, SelectorFind, SugarElement, TextContent } from '@ephox/sugar';
 
 const isNotEmpty = function (val) {
   return val.length > 0;
@@ -29,9 +29,9 @@ const noLink = function (editor) {
 
 const fromLink = function (link) {
   const text = TextContent.get(link);
-  const url = Attr.get(link, 'href');
-  const title = Attr.get(link, 'title');
-  const target = Attr.get(link, 'target');
+  const url = Attribute.get(link, 'href');
+  const title = Attribute.get(link, 'title');
+  const target = Attribute.get(link, 'target');
   return {
     url: defaultToEmpty(url),
     text: text !== url ? defaultToEmpty(text) : '',
@@ -54,7 +54,7 @@ const getInfo = function (editor) {
 };
 
 const wasSimple = function (link) {
-  const prevHref = Attr.get(link, 'href');
+  const prevHref = Attribute.get(link, 'href');
   const prevText = TextContent.get(link);
   return prevHref === prevText;
 };
@@ -99,7 +99,7 @@ const applyInfo = function (editor, info) {
       editor.insertContent(editor.dom.createHTML('a', attrs, editor.dom.encode(text)));
     }, function (link) {
       const text = getTextToApply(link, url, info);
-      Attr.setAll(link, attrs);
+      Attribute.setAll(link, attrs);
       text.each(function (newText) {
         TextContent.set(link, newText);
       });
@@ -108,7 +108,7 @@ const applyInfo = function (editor, info) {
 };
 
 const query = function (editor) {
-  const start = Element.fromDom(editor.selection.getStart());
+  const start = SugarElement.fromDom(editor.selection.getStart());
   return SelectorFind.closest(start, 'a');
 };
 

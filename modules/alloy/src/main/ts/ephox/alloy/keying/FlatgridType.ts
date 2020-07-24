@@ -1,7 +1,7 @@
 import { FieldSchema } from '@ephox/boulder';
 import { HTMLElement } from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
-import { Element, SelectorFind } from '@ephox/sugar';
+import { SelectorFind, SugarElement } from '@ephox/sugar';
 
 import * as Keys from '../alien/Keys';
 import { AlloyComponent } from '../api/component/ComponentApi';
@@ -26,12 +26,12 @@ const schema = [
 ];
 
 const focusIn = (component: AlloyComponent, gridConfig: FlatgridConfig, _gridState: FlatgridState): void => {
-  SelectorFind.descendant(component.element(), gridConfig.selector).each((first: Element) => {
+  SelectorFind.descendant(component.element(), gridConfig.selector).each((first: SugarElement) => {
     gridConfig.focusManager.set(component, first);
   });
 };
 
-const findCurrent = (component: AlloyComponent, gridConfig: FlatgridConfig): Option<Element> =>
+const findCurrent = (component: AlloyComponent, gridConfig: FlatgridConfig): Option<SugarElement> =>
   gridConfig.focusManager.get(component).bind((elem) => SelectorFind.closest(elem, gridConfig.selector));
 
 const execute = (
@@ -44,7 +44,7 @@ const execute = (
     bind((focused) => gridConfig.execute(component, simulatedEvent, focused));
 
 const doMove = (
-  cycle: WrapArrNavigation.ArrNavigationFunc<Element<HTMLElement>>
+  cycle: WrapArrNavigation.ArrNavigationFunc<SugarElement<HTMLElement>>
 ): DomMovement.ElementMover<FlatgridConfig, FlatgridState> =>
   (element, focused, gridConfig, gridState) =>
     DomPinpoint.locateVisible(element, focused, gridConfig.selector).

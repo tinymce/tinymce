@@ -7,7 +7,7 @@
 
 import { AlloyComponent, AlloySpec, Behaviour, DomFactory, Focusing, Keying, Replacing } from '@ephox/alloy';
 import { Cell, Option, Type } from '@ephox/katamari';
-import { Attr, Css } from '@ephox/sugar';
+import { Attribute, Css } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
 import { UiFactoryBackstageProviders, UiFactoryBackstageShared } from '../../backstage/Backstage';
@@ -41,11 +41,11 @@ const toggleThrobber = (comp: AlloyComponent, state: boolean, providerBackstage:
   if (state === true) {
     Replacing.set(comp, [ renderSpinner(providerBackstage) ]);
     Css.remove(element, 'display');
-    Attr.remove(element, 'aria-hidden');
+    Attribute.remove(element, 'aria-hidden');
   } else {
     Replacing.set(comp, [ ]);
     Css.set(element, 'display', 'none');
-    Attr.set(element, 'aria-hidden', 'true');
+    Attribute.set(element, 'aria-hidden', 'true');
   }
 };
 

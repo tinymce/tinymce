@@ -2,7 +2,7 @@ import { FocusTools, Keyboard, Keys, Log, Pipeline, Step } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { TinyLoader } from '@ephox/mcagar';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import Tools from 'tinymce/core/api/util/Tools';
 
 import * as Settings from 'tinymce/plugins/spellchecker/api/Settings';
@@ -21,7 +21,7 @@ UnitTest.asynctest('browser.tinymce.plugins.spellchecker.SpellcheckerTest', func
   };
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    const doc = Element.fromDom(document);
+    const doc = SugarElement.fromDom(document);
 
     const sPressTab = Keyboard.sKeydown(doc, Keys.tab(), {});
     const sPressEsc = Keyboard.sKeydown(doc, Keys.escape(), {});

@@ -2,7 +2,7 @@ import { Chain, Cursors, Guard, NamedChain } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Window } from '@ephox/dom-globals';
 import { Option, Result } from '@ephox/katamari';
-import { Css, DomEvent, Element, Node, Scroll, SelectorFind, SimRange, Traverse, WindowSelection } from '@ephox/sugar';
+import { Css, DomEvent, Scroll, SelectorFind, SimRange, SugarElement, SugarNode, Traverse, WindowSelection } from '@ephox/sugar';
 
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
@@ -14,7 +14,7 @@ import * as Frames from '../../../../demo/ts/ephox/alloy/demo/frames/Frames';
 
 UnitTest.asynctest('SelectionInFramePositionTest', (success, failure) => {
 
-  const frame = Element.fromTag('iframe');
+  const frame = SugarElement.fromTag('iframe');
 
   GuiSetup.setup((_store, _doc, _body) => {
     let content = '';
@@ -50,7 +50,7 @@ UnitTest.asynctest('SelectionInFramePositionTest', (success, failure) => {
   }, (_doc, _body, gui, _component, _store) => {
     const cSetupAnchor = Chain.mapper((data: any) => ({
       anchor: 'selection',
-      root: Element.fromDom(data.classic.element().dom().contentWindow.document.body)
+      root: SugarElement.fromDom(data.classic.element().dom().contentWindow.document.body)
     }));
 
     const cGetWin = Chain.mapper((frame: any) => frame.element().dom().contentWindow);
@@ -59,7 +59,7 @@ UnitTest.asynctest('SelectionInFramePositionTest', (success, failure) => {
       const path = Cursors.path(rawPath);
 
       return Chain.binder((win: Window) => {
-        const body = Element.fromDom(win.document.body);
+        const body = SugarElement.fromDom(win.document.body);
         const range = Cursors.calculate(body, path);
         WindowSelection.setExact(
           win,
@@ -89,7 +89,7 @@ UnitTest.asynctest('SelectionInFramePositionTest', (success, failure) => {
             [
               Chain.control(
                 Chain.binder((data: any) => {
-                  const root = Element.fromDom(data.classic.element().dom().contentWindow.document.body);
+                  const root = SugarElement.fromDom(data.classic.element().dom().contentWindow.document.body);
                   return SelectorFind.descendant(root, 'p').fold(() => Result.error('Could not find paragraph yet'), (_p) => Result.value(data));
                 }),
                 Guard.tryUntil('Waiting for content to load in iframe', 10, 10000)
@@ -162,8 +162,8 @@ UnitTest.asynctest('SelectionInFramePositionTest', (success, failure) => {
               NamedChain.direct('range2', Chain.binder((range2: SimRange) => {
                 const start = range2.start();
                 // NOTE: Safari likes to select the text node.
-                const optElement = Node.isText(start) ? Traverse.parent(start) : Option.some(start);
-                return optElement.filter(Node.isHTMLElement).map((elem) => {
+                const optElement = SugarNode.isText(start) ? Traverse.parent(start) : Option.some(start);
+                return optElement.filter(SugarNode.isHTMLElement).map((elem) => {
                   elem.dom().scrollIntoView();
                   return Scroll.get(
                     Traverse.owner(elem)

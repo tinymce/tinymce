@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element as DomElement, HTMLElement, Node as DomNode, Range, Text } from '@ephox/dom-globals';
+import { Element, HTMLElement, Node, Range, Text } from '@ephox/dom-globals';
 import { Option, Options } from '@ephox/katamari';
 import DOMUtils from '../api/dom/DOMUtils';
 import Selection from '../api/dom/Selection';
@@ -21,7 +21,7 @@ import {
 } from './BookmarkTypes';
 import * as CaretBookmark from './CaretBookmark';
 
-const addBogus = (dom: DOMUtils, node: DomNode): DomNode => {
+const addBogus = (dom: DOMUtils, node: Node): Node => {
   // Adds a bogus BR element for empty block elements
   if (NodeType.isElement(node) && dom.isBlock(node) && !node.innerHTML && !Env.ie) {
     node.innerHTML = '<br data-mce-bogus="1" />';
@@ -43,16 +43,16 @@ const resolveCaretPositionBookmark = (dom: DOMUtils, bookmark) => {
   return rng;
 };
 
-const insertZwsp = (node: DomNode, rng: Range) => {
+const insertZwsp = (node: Node, rng: Range) => {
   const textNode = node.ownerDocument.createTextNode(Zwsp.ZWSP);
   node.appendChild(textNode);
   rng.setStart(textNode, 0);
   rng.setEnd(textNode, 0);
 };
 
-const isEmpty = (node: DomNode) => node.hasChildNodes() === false;
+const isEmpty = (node: Node) => node.hasChildNodes() === false;
 
-const tryFindRangePosition = (node: DomElement, rng: Range): boolean =>
+const tryFindRangePosition = (node: Element, rng: Range): boolean =>
   CaretFinder.lastPositionIn(node).fold(
     () => false,
     (pos) => {
@@ -64,7 +64,7 @@ const tryFindRangePosition = (node: DomElement, rng: Range): boolean =>
 
 // Since we trim zwsp from undo levels the caret format containers
 // may be empty if so pad them with a zwsp and move caret there
-const padEmptyCaretContainer = (root: HTMLElement, node: DomNode, rng: Range): boolean => {
+const padEmptyCaretContainer = (root: HTMLElement, node: Node, rng: Range): boolean => {
   if (isEmpty(node) && getParentCaretContainer(root, node)) {
     insertZwsp(node, rng);
     return true;
@@ -121,7 +121,7 @@ const setEndPoint = (dom: DOMUtils, start: boolean, bookmark: PathBookmark, rng:
   return true;
 };
 
-const isValidTextNode = (node: DomNode): node is Text => NodeType.isText(node) && node.data.length > 0;
+const isValidTextNode = (node: Node): node is Text => NodeType.isText(node) && node.data.length > 0;
 
 const restoreEndPoint = (dom: DOMUtils, suffix: string, bookmark: IdBookmark): Option<CaretPosition> => {
   let marker = dom.get(bookmark.id + '_' + suffix), node, idx, next, prev;

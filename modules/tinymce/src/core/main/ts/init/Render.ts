@@ -5,13 +5,14 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element as DomElement, HTMLFormElement, window } from '@ephox/dom-globals';
+import { Element, HTMLFormElement, window } from '@ephox/dom-globals';
 import { Arr, Fun, Option, Options, Type } from '@ephox/katamari';
-import { Attr, Element } from '@ephox/sugar';
+import { Attribute, SugarElement } from '@ephox/sugar';
 import { UrlObject } from '../api/AddOnManager';
 import DOMUtils from '../api/dom/DOMUtils';
 import EventUtils from '../api/dom/EventUtils';
 import ScriptLoader from '../api/dom/ScriptLoader';
+import { StyleSheetLoader } from '../api/dom/StyleSheetLoader';
 import Editor from '../api/Editor';
 import Env from '../api/Env';
 import IconManager from '../api/IconManager';
@@ -23,10 +24,9 @@ import I18n from '../api/util/I18n';
 import Tools from '../api/util/Tools';
 import WindowManager from '../api/WindowManager';
 import * as NodeType from '../dom/NodeType';
+import * as StyleSheetLoaderRegistry from '../dom/StyleSheetLoaderRegistry';
 import * as ErrorReporter from '../ErrorReporter';
 import * as Init from './Init';
-import { StyleSheetLoader } from '../api/dom/StyleSheetLoader';
-import * as StyleSheetLoaderRegistry from '../dom/StyleSheetLoaderRegistry';
 
 const DOM = DOMUtils.DOM;
 
@@ -164,7 +164,7 @@ const loadScripts = function (editor: Editor, suffix: string) {
   });
 };
 
-const getStyleSheetLoader = (element: Element<DomElement>, editor: Editor): StyleSheetLoader =>
+const getStyleSheetLoader = (element: SugarElement<Element>, editor: Editor): StyleSheetLoader =>
   StyleSheetLoaderRegistry.instance.forElement(element, {
     contentCssCors: Settings.hasContentCssCors(editor),
     referrerPolicy: Settings.getReferrerPolicy(editor)
@@ -198,13 +198,13 @@ const render = function (editor: Editor) {
   }
 
   // snapshot the element we're going to render to
-  const element = Element.fromDom(editor.getElement());
-  const snapshot = Attr.clone(element);
+  const element = SugarElement.fromDom(editor.getElement());
+  const snapshot = Attribute.clone(element);
   editor.on('remove', () => {
     Arr.eachr(element.dom().attributes, (attr) =>
-      Attr.remove(element, attr.name)
+      Attribute.remove(element, attr.name)
     );
-    Attr.setAll(element, snapshot);
+    Attribute.setAll(element, snapshot);
   });
 
   editor.ui.styleSheetLoader = getStyleSheetLoader(element, editor);

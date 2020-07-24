@@ -2,7 +2,7 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { DomEvent, Element, Insert, Remove } from '@ephox/sugar';
+import { DomEvent, Insert, Remove, SugarElement } from '@ephox/sugar';
 import * as Assertions from 'ephox/agar/api/Assertions';
 import { Chain } from 'ephox/agar/api/Chain';
 import * as GeneralSteps from 'ephox/agar/api/GeneralSteps';
@@ -12,13 +12,13 @@ import * as Touch from 'ephox/agar/api/Touch';
 import * as UiFinder from 'ephox/agar/api/UiFinder';
 
 UnitTest.asynctest('TouchTest', (success, failure) => {
-  const input = Element.fromTag('input');
-  const container = Element.fromTag('container');
+  const input = SugarElement.fromTag('input');
+  const container = SugarElement.fromTag('container');
 
   const platform = PlatformDetection.detect();
 
   // Add to the DOM so focus calls happen
-  Insert.append(Element.fromDom(document.body), container);
+  Insert.append(SugarElement.fromDom(document.body), container);
 
   let repository = [];
 

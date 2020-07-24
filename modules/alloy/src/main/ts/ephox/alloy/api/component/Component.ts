@@ -2,9 +2,6 @@ import { ValueSchema } from '@ephox/boulder';
 import { Arr, Cell, Fun, Option, Type } from '@ephox/katamari';
 import { Traverse } from '@ephox/sugar';
 
-import { AlloyBehaviour } from '../../api/behaviour/Behaviour';
-import { ComponentDetail } from '../../api/component/SpecTypes';
-import { AlloySystemApi } from '../../api/system/SystemApi';
 import * as BehaviourBlob from '../../behaviour/common/BehaviourBlob';
 import { BehaviourState } from '../../behaviour/common/BehaviourState';
 import * as ComponentDom from '../../construct/ComponentDom';
@@ -14,9 +11,12 @@ import { DomDefinitionDetail } from '../../dom/DomDefinition';
 import * as DomModification from '../../dom/DomModification';
 import * as DomRender from '../../dom/DomRender';
 import { UncurriedHandler } from '../../events/EventRegistry';
+import { AlloyBehaviour } from '../behaviour/Behaviour';
 import { NoContextApi, singleton } from '../system/NoContextApi';
+import { AlloySystemApi } from '../system/SystemApi';
 import * as CompBehaviours from './CompBehaviours';
 import { AlloyComponent } from './ComponentApi';
+import { ComponentDetail } from './SpecTypes';
 
 // This is probably far too complicated. I think DomModification is probably
 // questionable as a concept. Maybe it should be deprecated.

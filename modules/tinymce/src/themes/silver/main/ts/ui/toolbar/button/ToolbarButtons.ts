@@ -12,9 +12,10 @@ import {
 } from '@ephox/alloy';
 import { Toolbar, Types } from '@ephox/bridge';
 import { Arr, Cell, Fun, Future, Id, Merger, Option } from '@ephox/katamari';
-import { Attr, SelectorFind } from '@ephox/sugar';
+import { Attribute, SelectorFind } from '@ephox/sugar';
 
 import I18n from 'tinymce/core/api/util/I18n';
+import { ToolbarGroupSetting } from 'tinymce/themes/silver/api/Settings';
 import { UiFactoryBackstage, UiFactoryBackstageProviders, UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
 import * as ReadOnly from '../../../ReadOnly';
 import { DisablingConfigs } from '../../alien/DisablingConfigs';
@@ -33,7 +34,6 @@ import { createTieredDataFrom } from '../../menus/menu/SingleMenu';
 import { ToolbarButtonClasses } from '../button/ButtonClasses';
 import { onToolbarButtonExecute, toolbarButtonEventOrder } from '../button/ButtonEvents';
 import { renderToolbarGroup, ToolbarGroup } from '../CommonToolbar';
-import { ToolbarGroupSetting } from 'tinymce/themes/silver/api/Settings';
 
 interface Specialisation<T> {
   toolbarButtonBehaviours: Array<Behaviour.NamedConfiguredBehaviour<Behaviour.BehaviourConfigSpec, Behaviour.BehaviourConfigDetail>>;
@@ -270,17 +270,17 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
     setDisabled: (state: boolean) => Disabling.set(comp, state),
     setIconFill: (id, value) => {
       SelectorFind.descendant(comp.element(), 'svg path[id="' + id + '"], rect[id="' + id + '"]').each((underlinePath) => {
-        Attr.set(underlinePath, 'fill', value);
+        Attribute.set(underlinePath, 'fill', value);
       });
     },
     setIconStroke: (id, value) => {
       SelectorFind.descendant(comp.element(), 'svg path[id="' + id + '"], rect[id="' + id + '"]').each((underlinePath) => {
-        Attr.set(underlinePath, 'stroke', value);
+        Attribute.set(underlinePath, 'stroke', value);
       });
     },
     setActive: (state) => {
       // Toggle the pressed aria state component
-      Attr.set(comp.element(), 'aria-pressed', state);
+      Attribute.set(comp.element(), 'aria-pressed', state);
       // Toggle the inner button state, as that's the toggle component of the split button
       SelectorFind.descendant(comp.element(), 'span').each((button) => {
         comp.getSystem().getByDom(button).each((buttonComp) => Toggling.set(buttonComp, state));

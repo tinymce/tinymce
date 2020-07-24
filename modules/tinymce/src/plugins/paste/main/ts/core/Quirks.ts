@@ -5,13 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Element } from '@ephox/dom-globals';
+import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import Tools from 'tinymce/core/api/util/Tools';
 import * as Settings from '../api/Settings';
 import * as Utils from './Utils';
 import * as WordFilter from './WordFilter';
-import Editor from 'tinymce/core/api/Editor';
-import { Element } from '@ephox/dom-globals';
 
 /**
  * This class contains various fixes for browsers. These issues can not be feature

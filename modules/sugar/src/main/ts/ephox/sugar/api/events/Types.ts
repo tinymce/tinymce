@@ -1,8 +1,8 @@
 import { Event } from '@ephox/dom-globals';
-import Element from '../node/Element';
+import { SugarElement } from '../node/SugarElement';
 
 export interface EventArgs<T = Event> {
-  target: () => Element;
+  target: () => SugarElement;
   x: () => number;
   y: () => number;
   stop: () => void;

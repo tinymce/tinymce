@@ -1,10 +1,10 @@
 import { Assertions, Chain, GeneralSteps, Guard, UiControls, UiFinder, Waiter } from '@ephox/agar';
 import { document } from '@ephox/dom-globals';
 import { TinyUi } from '@ephox/mcagar';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 
 const cFakeEvent = (name: string) => Chain.label('Fake event',
-  Chain.op((elm: Element) => {
+  Chain.op((elm: SugarElement) => {
     const evt = document.createEvent('HTMLEvents');
     evt.initEvent(name, true, true);
     elm.dom().dispatchEvent(evt);

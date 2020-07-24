@@ -7,7 +7,9 @@
 
 import { HTMLElement, Range, window } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
-import { Css, Element as SugarElement, Height, Insert, Location, Node, Position, Remove, Scroll, Text, Traverse, VisualViewport } from '@ephox/sugar';
+import {
+  Css, Height, Insert, Remove, Scroll, SugarElement, SugarLocation, SugarNode, SugarPosition, SugarText, Traverse, WindowVisualViewport
+} from '@ephox/sugar';
 import Editor from '../api/Editor';
 import { ScrollIntoViewEvent } from '../api/EventTypes';
 import * as OuterPosition from '../frames/OuterPosition';
@@ -17,13 +19,13 @@ interface MarkerInfo {
   readonly element: SugarElement;
   readonly bottom: number;
   readonly height: number;
-  readonly pos: Position;
+  readonly pos: SugarPosition;
   readonly cleanup: () => void;
 }
 
 type ScrollFunc = (doc: SugarElement, scrollTop: number, marker: MarkerInfo, alignToTop?: boolean) => void;
 
-const excludeFromDescend = (element: SugarElement) => Node.name(element) === 'textarea';
+const excludeFromDescend = (element: SugarElement) => SugarNode.name(element) === 'textarea';
 
 const fireScrollIntoViewEvent = (editor: Editor, data: ScrollIntoViewEvent): boolean => {
   const scrollEvent = editor.fire('ScrollIntoView', data);
@@ -45,10 +47,10 @@ const descend = (element: SugarElement, offset: number): { element: SugarElement
     if (excludeFromDescend(last)) {
       return { element, offset };
     } else {
-      if (Node.name(last) === 'img') {
+      if (SugarNode.name(last) === 'img') {
         return { element: last, offset: 1 };
-      } else if (Node.isText(last)) {
-        return { element: last, offset: Text.get(last).length };
+      } else if (SugarNode.isText(last)) {
+        return { element: last, offset: SugarText.get(last).length };
       } else {
         return { element: last, offset: Traverse.children(last).length };
       }
@@ -57,7 +59,7 @@ const descend = (element: SugarElement, offset: number): { element: SugarElement
 };
 
 const markerInfo = (element: SugarElement, cleanupFun: () => void): MarkerInfo => {
-  const pos = Location.absolute(element);
+  const pos = SugarLocation.absolute(element);
   const height = Height.get(element);
   return {
     element,
@@ -166,7 +168,7 @@ const intoFrame = (doc: SugarElement, scrollTop: number, marker: MarkerInfo, ali
 
   // If the new position is outside the window viewport, scroll to it
   const op = OuterPosition.find(marker.element);
-  const viewportBounds = VisualViewport.getBounds(window);
+  const viewportBounds = WindowVisualViewport.getBounds(window);
   if (op.top() < viewportBounds.y) {
     Scroll.intoView(marker.element, alignToTop !== false);
   } else if (op.top() > viewportBounds.bottom) {

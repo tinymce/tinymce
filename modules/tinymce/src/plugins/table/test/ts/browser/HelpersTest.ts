@@ -1,7 +1,7 @@
-import { Assertions, Chain, Pipeline, UiFinder, Log } from '@ephox/agar';
+import { Assertions, Chain, Log, Pipeline, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import * as Helpers from 'tinymce/plugins/table/ui/Helpers';
@@ -26,7 +26,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.HelpersTest', (success, failur
           '</tr></tbody>' +
           '</table>'
         ),
-        Chain.asStep(Element.fromDom(editor.getBody()), [
+        Chain.asStep(SugarElement.fromDom(editor.getBody()), [
           UiFinder.cFindIn('td.foo'),
           Chain.op((td) => {
             const cellData = Helpers.extractDataFromCellElement(editor, td.dom(), true);
@@ -55,7 +55,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.HelpersTest', (success, failur
           '</tr></tbody>' +
           '</table>'
         ),
-        Chain.asStep(Element.fromDom(editor.getBody()), [
+        Chain.asStep(SugarElement.fromDom(editor.getBody()), [
           UiFinder.cFindIn('td.foo'),
           Chain.op((td) => {
             const cellData = Helpers.extractDataFromCellElement(editor, td.dom(), true);
@@ -75,7 +75,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.HelpersTest', (success, failur
           '</tr></tbody>' +
           '</table>'
         ),
-        Chain.asStep(Element.fromDom(editor.getBody()), [
+        Chain.asStep(SugarElement.fromDom(editor.getBody()), [
           UiFinder.cFindIn('td.foo'),
           Chain.op((td) => {
             const cellData = Helpers.extractDataFromCellElement(editor, td.dom(), true);
@@ -92,7 +92,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.HelpersTest', (success, failur
           'border-style: dashed; border-color: #d91111"><td>a</td></tr>' +
           '</tbody></table>'
         ),
-        Chain.asStep(Element.fromDom(editor.getBody()), [
+        Chain.asStep(SugarElement.fromDom(editor.getBody()), [
           UiFinder.cFindIn('tr.foo'),
           Chain.op((tr) => {
             const rowData = Helpers.extractDataFromRowElement(editor, tr.dom(), true);
@@ -114,7 +114,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.HelpersTest', (success, failur
           '<caption>A caption</caption><tbody><tr><td>a</td></tr></tbody>' +
           '</table>'
         ),
-        Chain.asStep(Element.fromDom(editor.getBody()), [
+        Chain.asStep(SugarElement.fromDom(editor.getBody()), [
           UiFinder.cFindIn('table.foo'),
           Chain.op((table) => {
             const tableData = Helpers.extractDataFromTableElement(editor, table.dom(), true);
@@ -133,7 +133,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.HelpersTest', (success, failur
         tinyApis.sSetContent(
           '<table class="foo" style="float: right;"><tbody><tr><td style="padding: 99px;">a</td></tr></tbody></table>'
         ),
-        Chain.asStep(Element.fromDom(editor.getBody()), [
+        Chain.asStep(SugarElement.fromDom(editor.getBody()), [
           UiFinder.cFindIn('table.foo'),
           Chain.op((table) => {
             const tableData = Helpers.extractDataFromTableElement(editor, table.dom(), true);
@@ -147,7 +147,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.HelpersTest', (success, failur
         tinyApis.sSetContent(
           '<table class="foo" style="float: left;"><tbody><tr><td style="padding: 99px;">a</td></tr></tbody></table>'
         ),
-        Chain.asStep(Element.fromDom(editor.getBody()), [
+        Chain.asStep(SugarElement.fromDom(editor.getBody()), [
           UiFinder.cFindIn('table.foo'),
           Chain.op((table) => {
             const tableData = Helpers.extractDataFromTableElement(editor, table.dom(), true);
@@ -161,7 +161,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.HelpersTest', (success, failur
         tinyApis.sSetContent(
           '<table class="foo" style="border-width: 5px" border="1"><tbody><tr><td>a</td></tr></tbody></table>'
         ),
-        Chain.asStep(Element.fromDom(editor.getBody()), [
+        Chain.asStep(SugarElement.fromDom(editor.getBody()), [
           UiFinder.cFindIn('table.foo'),
           Chain.op((table) => {
             const tableData = Helpers.extractDataFromTableElement(editor, table.dom(), true);
@@ -174,7 +174,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.HelpersTest', (success, failur
         tinyApis.sSetContent(
           '<table class="foo" style="border: 5px solid red" border="1"><tbody><tr><td>a</td></tr></tbody></table>'
         ),
-        Chain.asStep(Element.fromDom(editor.getBody()), [
+        Chain.asStep(SugarElement.fromDom(editor.getBody()), [
           UiFinder.cFindIn('table.foo'),
           Chain.op((table) => {
             const tableData = Helpers.extractDataFromTableElement(editor, table.dom(), true);
@@ -187,7 +187,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.HelpersTest', (success, failur
         tinyApis.sSetContent(
           '<table class="foo" border="5"><tbody><tr><td>a</td></tr></tbody></table>'
         ),
-        Chain.asStep(Element.fromDom(editor.getBody()), [
+        Chain.asStep(SugarElement.fromDom(editor.getBody()), [
           UiFinder.cFindIn('table.foo'),
           Chain.op((table) => {
             const tableData = Helpers.extractDataFromTableElement(editor, table.dom(), true);
@@ -200,7 +200,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.HelpersTest', (success, failur
         tinyApis.sSetContent(
           '<table class="foo"><tbody><tr><td style="border-width: 5px;">a</td></tr></tbody></table>'
         ),
-        Chain.asStep(Element.fromDom(editor.getBody()), [
+        Chain.asStep(SugarElement.fromDom(editor.getBody()), [
           UiFinder.cFindIn('table.foo'),
           Chain.op((table) => {
             const tableData = Helpers.extractDataFromTableElement(editor, table.dom(), true);
@@ -214,7 +214,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.HelpersTest', (success, failur
         tinyApis.sSetContent(
           '<table class="foo" style="border: 5px double red" border="1"><tbody><tr><td>a</td></tr></tbody></table>'
         ),
-        Chain.asStep(Element.fromDom(editor.getBody()), [
+        Chain.asStep(SugarElement.fromDom(editor.getBody()), [
           UiFinder.cFindIn('table.foo'),
           Chain.op((table) => {
             const tableData = Helpers.extractDataFromTableElement(editor, table.dom(), true);

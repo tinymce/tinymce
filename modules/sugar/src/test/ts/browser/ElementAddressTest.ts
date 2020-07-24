@@ -1,14 +1,14 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { Node as DomNode } from '@ephox/dom-globals';
+import { Node } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { KAssert } from '@ephox/katamari-assertions';
 import * as Hierarchy from 'ephox/sugar/api/dom/Hierarchy';
 import * as Insert from 'ephox/sugar/api/dom/Insert';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
-import * as Body from 'ephox/sugar/api/node/Body';
-import Element from 'ephox/sugar/api/node/Element';
-import * as Node from 'ephox/sugar/api/node/Node';
-import * as Attr from 'ephox/sugar/api/properties/Attr';
+import * as SugarBody from 'ephox/sugar/api/node/SugarBody';
+import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
+import * as SugarNode from 'ephox/sugar/api/node/SugarNode';
+import * as Attribute from 'ephox/sugar/api/properties/Attribute';
 import * as Html from 'ephox/sugar/api/properties/Html';
 import * as ElementAddress from 'ephox/sugar/api/search/ElementAddress';
 
@@ -27,7 +27,7 @@ interface TestAncestorSpec {
 }
 
 UnitTest.test('ElementAddressTest', () => {
-  const page = Element.fromHtml(
+  const page = SugarElement.fromHtml(
     '<div>' +
       '<p id="p1">This is a paragraph <span id="s1">word</span> and another <span id="s2">word</span> and another <span id="s3">word</span> and more</p>' +
       '<table>' +
@@ -64,7 +64,7 @@ UnitTest.test('ElementAddressTest', () => {
     '</div>'
   );
 
-  Insert.append(Body.body(), page);
+  Insert.append(SugarBody.body(), page);
 
   const checkChild = (expected: string, path: number[]) => {
     const element = Hierarchy.follow(page, path).getOrDie('Could not find path: ' + path.join(','));
@@ -72,13 +72,13 @@ UnitTest.test('ElementAddressTest', () => {
     Assert.eq('eq', expected, toStr(actual));
   };
 
-  const toStr = (element: Element<DomNode>) => {
-    if (Node.isElement(element) && Attr.has(element, 'id')) {
-      return Node.name(element) + '#' + Attr.get(element, 'id');
-    } else if (Node.name(element) === 'td' || Node.name(element) === 'th') {
+  const toStr = (element: SugarElement<Node>) => {
+    if (SugarNode.isElement(element) && Attribute.has(element, 'id')) {
+      return SugarNode.name(element) + '#' + Attribute.get(element, 'id');
+    } else if (SugarNode.name(element) === 'td' || SugarNode.name(element) === 'th') {
       return Html.getOuter(element);
     } else {
-      return Node.name(element);
+      return SugarNode.name(element);
     }
   };
 
@@ -211,9 +211,9 @@ UnitTest.test('ElementAddressTest', () => {
   );
 
   (() => {
-    const alpha = Element.fromTag('div');
-    const beta = Element.fromTag('div');
-    const gamma = Element.fromTag('div');
+    const alpha = SugarElement.fromTag('div');
+    const beta = SugarElement.fromTag('div');
+    const gamma = SugarElement.fromTag('div');
     KAssert.eqNone('Expected nothing in list.', ElementAddress.indexOf([], alpha));
     KAssert.eqSome('alpha indexOf([alpha]) = 0', 0, ElementAddress.indexOf([ alpha ], alpha));
     KAssert.eqNone('Alpha not in list [beta]', ElementAddress.indexOf([ beta ], alpha));

@@ -1,16 +1,16 @@
-import { ClientRect, DOMRect, Node as DomNode, Range, Window } from '@ephox/dom-globals';
+import { ClientRect, DOMRect, Node, Range, Window } from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
-import Element from '../../api/node/Element';
+import { SugarElement } from '../../api/node/SugarElement';
 import { StructRect } from '../../api/selection/Rect';
 import { Situ } from '../../api/selection/Situ';
 
-const selectNodeContents = (win: Window, element: Element<DomNode>) => {
+const selectNodeContents = (win: Window, element: SugarElement<Node>) => {
   const rng = win.document.createRange();
   selectNodeContentsUsing(rng, element);
   return rng;
 };
 
-const selectNodeContentsUsing = (rng: Range, element: Element<DomNode>) => rng.selectNodeContents(element.dom());
+const selectNodeContentsUsing = (rng: Range, element: SugarElement<Node>) => rng.selectNodeContents(element.dom());
 
 const isWithin = (outerRange: Range, innerRange: Range) =>
   // Adapted from: http://stackoverflow.com/questions/5605401/insert-link-in-contenteditable-element
@@ -39,7 +39,7 @@ const setFinish = (rng: Range, situ: Situ) => {
   });
 };
 
-const replaceWith = (rng: Range, fragment: Element<DomNode>) => {
+const replaceWith = (rng: Range, fragment: SugarElement<Node>) => {
   // Note: this document fragment approach may not work on IE9.
   deleteContents(rng);
   rng.insertNode(fragment.dom());
@@ -52,7 +52,7 @@ const relativeToNative = (win: Window, startSitu: Situ, finishSitu: Situ) => {
   return range;
 };
 
-const exactToNative = (win: Window, start: Element<DomNode>, soffset: number, finish: Element<DomNode>, foffset: number) => {
+const exactToNative = (win: Window, start: SugarElement<Node>, soffset: number, finish: SugarElement<Node>, foffset: number) => {
   const rng = win.document.createRange();
   rng.setStart(start.dom(), soffset);
   rng.setEnd(finish.dom(), foffset);
@@ -65,7 +65,7 @@ const deleteContents = (rng: Range) => {
 
 const cloneFragment = (rng: Range) => {
   const fragment = rng.cloneContents();
-  return Element.fromDom(fragment);
+  return SugarElement.fromDom(fragment);
 };
 
 const toRect = (rect: ClientRect | DOMRect): StructRect => ({

@@ -1,8 +1,8 @@
+import { Fun, Id } from '@ephox/katamari';
+import { Attribute, SugarElement } from '@ephox/sugar';
 import * as SeleniumAction from '../server/SeleniumAction';
 import { Chain } from './Chain';
 import { Step } from './Step';
-import { Id, Fun } from '@ephox/katamari';
-import { Attr, Element } from '@ephox/sugar';
 
 const BedrockIdAttribute = 'data-bedrockid';
 
@@ -36,15 +36,15 @@ const cAction = (action) =>
 const cClick = () =>
   Chain.fromParent(Chain.mapper(Fun.identity), [
     Chain.fromChains([
-      Chain.mapper((elem: Element<any>) => {
+      Chain.mapper((elem: SugarElement<any>) => {
         const id = Id.generate('');
-        Attr.set(elem, BedrockIdAttribute, id);
+        Attribute.set(elem, BedrockIdAttribute, id);
         return `[${BedrockIdAttribute}="${id}"]`;
       }),
       cAction('click')
     ]),
-    Chain.op((elem: Element<any>) => {
-      Attr.remove(elem, BedrockIdAttribute);
+    Chain.op((elem: SugarElement<any>) => {
+      Attribute.remove(elem, BedrockIdAttribute);
     })
   ]);
 

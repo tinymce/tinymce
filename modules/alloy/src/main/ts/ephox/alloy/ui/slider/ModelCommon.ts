@@ -1,6 +1,6 @@
 import { MouseEvent, Touch, TouchEvent } from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
-import { Position } from '@ephox/sugar';
+import { SugarPosition } from '@ephox/sugar';
 
 import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
 
@@ -9,15 +9,15 @@ const sliderChangeEvent = Fun.constant(_sliderChangeEvent);
 
 const isTouchEvent = (evt: MouseEvent | TouchEvent): evt is TouchEvent => evt.type.indexOf('touch') !== -1;
 
-const getEventSource = (simulatedEvent: NativeSimulatedEvent): Option<Position> => {
+const getEventSource = (simulatedEvent: NativeSimulatedEvent): Option<SugarPosition> => {
   const evt = simulatedEvent.event().raw();
   if (isTouchEvent(evt)) {
     const touchEvent = evt;
     return touchEvent.touches !== undefined && touchEvent.touches.length === 1 ?
-      Option.some(touchEvent.touches[0]).map((t: Touch) => Position(t.clientX, t.clientY)) : Option.none();
+      Option.some(touchEvent.touches[0]).map((t: Touch) => SugarPosition(t.clientX, t.clientY)) : Option.none();
   } else {
     const mouseEvent = evt;
-    return mouseEvent.clientX !== undefined ? Option.some(mouseEvent).map((me) => Position(me.clientX, me.clientY)) : Option.none();
+    return mouseEvent.clientX !== undefined ? Option.some(mouseEvent).map((me) => SugarPosition(me.clientX, me.clientY)) : Option.none();
   }
 };
 

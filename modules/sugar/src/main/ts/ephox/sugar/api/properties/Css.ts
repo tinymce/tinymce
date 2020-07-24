@@ -1,12 +1,12 @@
-import { console, CSSStyleDeclaration, Element as DomElement, HTMLElement, Node as DomNode, window } from '@ephox/dom-globals';
+import { console, CSSStyleDeclaration, Element, HTMLElement, Node, window } from '@ephox/dom-globals';
 import { Arr, Obj, Option, Strings, Type } from '@ephox/katamari';
 import * as Style from '../../impl/Style';
-import * as Body from '../node/Body';
-import Element from '../node/Element';
-import * as Node from '../node/Node';
-import * as Attr from './Attr';
+import * as SugarBody from '../node/SugarBody';
+import { SugarElement } from '../node/SugarElement';
+import * as SugarNode from '../node/SugarNode';
+import * as Attribute from './Attribute';
 
-const internalSet = (dom: DomNode, property: string, value: string): void => {
+const internalSet = (dom: Node, property: string, value: string): void => {
   // This is going to hurt. Apologies.
   // JQuery coerces numbers to pixels for certain property names, and other times lets numbers through.
   // we're going to be explicit; strings only.
@@ -22,7 +22,7 @@ const internalSet = (dom: DomNode, property: string, value: string): void => {
   }
 };
 
-const internalRemove = (dom: DomNode, property: string): void => {
+const internalRemove = (dom: Node, property: string): void => {
   /*
    * IE9 and above - MDN doesn't have details, but here's a couple of random internet claims
    *
@@ -34,12 +34,12 @@ const internalRemove = (dom: DomNode, property: string): void => {
   }
 };
 
-const set = (element: Element<DomNode>, property: string, value: string): void => {
+const set = (element: SugarElement<Node>, property: string, value: string): void => {
   const dom = element.dom();
   internalSet(dom, property, value);
 };
 
-const setAll = (element: Element<DomNode>, css: Record<string, string>): void => {
+const setAll = (element: SugarElement<Node>, css: Record<string, string>): void => {
   const dom = element.dom();
 
   Obj.each(css, (v, k) => {
@@ -47,7 +47,7 @@ const setAll = (element: Element<DomNode>, css: Record<string, string>): void =>
   });
 };
 
-const setOptions = (element: Element<DomNode>, css: Record<string, Option<string>>): void => {
+const setOptions = (element: SugarElement<Node>, css: Record<string, Option<string>>): void => {
   const dom = element.dom();
 
   Obj.each(css, (v, k) => {
@@ -65,7 +65,7 @@ const setOptions = (element: Element<DomNode>, css: Record<string, Option<string
  *
  * https://developer.mozilla.org/en-US/docs/Web/CSS/used_value
  */
-const get = (element: Element<DomElement>, property: string): string => {
+const get = (element: SugarElement<Element>, property: string): string => {
   const dom = element.dom();
   /*
    * IE9 and above per
@@ -81,12 +81,12 @@ const get = (element: Element<DomElement>, property: string): string => {
 
   // jquery-ism: If r is an empty string, check that the element is not in a document. If it isn't, return the raw value.
   // Turns out we do this a lot.
-  return (r === '' && !Body.inBody(element)) ? getUnsafeProperty(dom, property) : r;
+  return (r === '' && !SugarBody.inBody(element)) ? getUnsafeProperty(dom, property) : r;
 };
 
 // removed: support for dom().style[property] where prop is camel case instead of normal property name
 // empty string is what the browsers (IE11 and Chrome) return when the propertyValue doesn't exists.
-const getUnsafeProperty = (dom: DomNode, property: string): string =>
+const getUnsafeProperty = (dom: Node, property: string): string =>
   Style.isSupported(dom) ? dom.style.getPropertyValue(property) : '';
 
 /*
@@ -95,7 +95,7 @@ const getUnsafeProperty = (dom: DomNode, property: string): string =>
  *
  * Returns NONE if the property isn't set, or the value is an empty string.
  */
-const getRaw = (element: Element<DomNode>, property: string): Option<string> => {
+const getRaw = (element: SugarElement<Node>, property: string): Option<string> => {
   const dom = element.dom();
   const raw = getUnsafeProperty(dom, property);
 
@@ -103,7 +103,7 @@ const getRaw = (element: Element<DomNode>, property: string): Option<string> => 
 };
 
 // TODO: TINY-3312: when we update dom-globals, this return type will need to change
-const getAllRaw = (element: Element<DomNode>): Record<string, string> => {
+const getAllRaw = (element: SugarElement<Node>): Record<string, string> => {
   const css: Record<string, string> = {};
   const dom = element.dom();
 
@@ -117,35 +117,35 @@ const getAllRaw = (element: Element<DomNode>): Record<string, string> => {
 };
 
 const isValidValue = (tag: string, property: string, value: string): boolean => {
-  const element = Element.fromTag(tag);
+  const element = SugarElement.fromTag(tag);
   set(element, property, value);
   const style = getRaw(element, property);
   return style.isSome();
 };
 
-const remove = (element: Element<DomNode>, property: string): void => {
+const remove = (element: SugarElement<Node>, property: string): void => {
   const dom = element.dom();
 
   internalRemove(dom, property);
 
-  if (Attr.getOpt(element as Element<DomElement>, 'style').map(Strings.trim).is('')) {
+  if (Attribute.getOpt(element as SugarElement<Element>, 'style').map(Strings.trim).is('')) {
     // No more styles left, remove the style attribute as well
-    Attr.remove(element as Element<DomElement>, 'style');
+    Attribute.remove(element as SugarElement<Element>, 'style');
   }
 };
 
-const preserve = <E extends DomElement, T> (element: Element<E>, f: (e: Element<E>) => T): T => {
-  const oldStyles = Attr.get(element, 'style');
+const preserve = <E extends Element, T> (element: SugarElement<E>, f: (e: SugarElement<E>) => T): T => {
+  const oldStyles = Attribute.get(element, 'style');
   const result = f(element);
   if (oldStyles === undefined) {
-    Attr.remove(element, 'style');
+    Attribute.remove(element, 'style');
   } else {
-    Attr.set(element, 'style', oldStyles);
+    Attribute.set(element, 'style', oldStyles);
   }
   return result;
 };
 
-const copy = (source: Element<DomNode>, target: Element<HTMLElement>): void => {
+const copy = (source: SugarElement<Node>, target: SugarElement<HTMLElement>): void => {
   const sourceDom = source.dom();
   const targetDom = target.dom();
   if (Style.isSupported(sourceDom) && Style.isSupported(targetDom)) {
@@ -157,10 +157,10 @@ const copy = (source: Element<DomNode>, target: Element<HTMLElement>): void => {
 The value itself is not used.
 Be sure to not use the return value, and that it is not removed by a minifier.
  */
-const reflow = (e: Element<HTMLElement>): void =>
+const reflow = (e: SugarElement<HTMLElement>): void =>
   e.dom().offsetWidth as unknown as void;
 
-const transferOne = (source: Element<DomNode>, destination: Element<DomNode>, style: string): void => {
+const transferOne = (source: SugarElement<Node>, destination: SugarElement<Node>, style: string): void => {
   getRaw(source, style).each((value) => {
     // NOTE: We don't want to clobber any existing inline styles.
     if (getRaw(destination, style).isNone()) {
@@ -169,8 +169,8 @@ const transferOne = (source: Element<DomNode>, destination: Element<DomNode>, st
   });
 };
 
-const transfer = (source: Element<DomNode>, destination: Element<DomNode>, styles: string[]): void => {
-  if (!Node.isElement(source) || !Node.isElement(destination)) {
+const transfer = (source: SugarElement<Node>, destination: SugarElement<Node>, styles: string[]): void => {
+  if (!SugarNode.isElement(source) || !SugarNode.isElement(destination)) {
     return;
   }
   Arr.each(styles, (style) => {

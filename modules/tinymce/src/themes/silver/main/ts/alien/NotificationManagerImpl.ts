@@ -6,9 +6,9 @@
  */
 
 import { Gui, GuiFactory, InlineView, Layout, LayoutInside, NodeAnchorSpec } from '@ephox/alloy';
-import { Element as DomElement } from '@ephox/dom-globals';
+import { Element } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
-import { Body, Element } from '@ephox/sugar';
+import { SugarBody, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { NotificationApi, NotificationManagerImpl, NotificationSpec } from 'tinymce/core/api/NotificationManager';
 import Delay from 'tinymce/core/api/util/Delay';
@@ -104,13 +104,13 @@ export default function (editor: Editor, extras, uiMothership: Gui.GuiSystem): N
           y
         }, GuiFactory.premade(notification));
       },
-      moveRel: (element: DomElement, rel: 'tc-tc' | 'bc-bc' | 'bc-tc' | 'tc-bc' | 'banner') => {
+      moveRel: (element: Element, rel: 'tc-tc' | 'bc-bc' | 'bc-tc' | 'tc-bc' | 'banner') => {
         if (rel !== 'banner') {
           const layoutDirection = getLayoutDirection(rel);
           const nodeAnchor: NodeAnchorSpec = {
             anchor: 'node',
-            root: Body.body(),
-            node: Option.some(Element.fromDom(element)),
+            root: SugarBody.body(),
+            node: Option.some(SugarElement.fromDom(element)),
             layouts: {
               onRtl: () => [ layoutDirection ],
               onLtr: () => [ layoutDirection ]

@@ -1,10 +1,10 @@
-import { Element as DomElement, Node as DomNode } from '@ephox/dom-globals';
+import { Element, Node } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import * as Style from '../../impl/Style';
-import Element from '../node/Element';
+import { SugarElement } from '../node/SugarElement';
 import * as Css from './Css';
 
-const isCentered = (element: Element<DomNode>): boolean => {
+const isCentered = (element: SugarElement<Node>): boolean => {
   const dom = element.dom();
   if (Style.isSupported(dom)) {
     const marginLeft = dom.style.marginRight;
@@ -15,7 +15,7 @@ const isCentered = (element: Element<DomNode>): boolean => {
   }
 };
 
-const divine = (element: Element<DomElement>): Option<string> => {
+const divine = (element: SugarElement<Element>): Option<string> => {
   if (isCentered(element)) {
     return Option.some('center');
   } else {
@@ -24,10 +24,10 @@ const divine = (element: Element<DomElement>): Option<string> => {
   }
 };
 
-const getRaw = (element: Element<DomNode>): string | null =>
+const getRaw = (element: SugarElement<Node>): string | null =>
   Css.getRaw(element, 'float').getOrNull();
 
-const setCentered = (element: Element<DomNode>): void => {
+const setCentered = (element: SugarElement<Node>): void => {
   Css.setAll(element, {
     'margin-left': 'auto',
     'margin-right': 'auto'

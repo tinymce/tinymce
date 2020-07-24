@@ -1,13 +1,13 @@
 import { Assertions, Chain, Log, NamedChain, Pipeline } from '@ephox/agar';
-import { Editor as McEditor } from '@ephox/mcagar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Attr, Element, Remove, Truncate } from '@ephox/sugar';
 import { HTMLDivElement } from '@ephox/dom-globals';
+import { Editor as McEditor } from '@ephox/mcagar';
+import { Attribute, Remove, SugarElement, Truncate } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { RawEditorSettings } from 'tinymce/core/api/SettingsTypes';
-import Theme from 'tinymce/themes/silver/Theme';
 import VisualBlocksPlugin from 'tinymce/plugins/visualblocks/Plugin';
+import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.core.EditorCleanupTest', (success, failure) => {
   Theme();
@@ -16,10 +16,10 @@ UnitTest.asynctest('browser.tinymce.core.EditorCleanupTest', (success, failure) 
   const cTestCleanup = (settings: RawEditorSettings, html: string = '<div></div>') => NamedChain.asChain([
     // spin the editor up and down, getting a reference to its target element inbetween
     NamedChain.write('editor', McEditor.cFromHtml(html, { base_url: '/project/tinymce/js/tinymce', ...settings })),
-    NamedChain.direct('editor', Chain.mapper((editor: Editor) => Element.fromDom(editor.getElement())), 'element'),
+    NamedChain.direct('editor', Chain.mapper((editor: Editor) => SugarElement.fromDom(editor.getElement())), 'element'),
     NamedChain.read('editor', Chain.op((editor: Editor) => editor.remove())),
     // first, remove the id of the element, as that's inserted from McEditor.cFromHtml and is out of our control
-    NamedChain.read('element', Chain.op((element: Element<HTMLDivElement>) => Attr.remove(element, 'id'))),
+    NamedChain.read('element', Chain.op((element: SugarElement<HTMLDivElement>) => Attribute.remove(element, 'id'))),
     // assert that the html of the element is correct
     NamedChain.direct('element', Chain.mapper(Truncate.getHtml), 'raw-html'),
     NamedChain.read('raw-html', Assertions.cAssertHtml('all properties on the element should be cleaned up', html)),

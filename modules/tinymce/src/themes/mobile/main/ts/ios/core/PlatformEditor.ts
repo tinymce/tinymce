@@ -6,14 +6,14 @@
  */
 
 import { Fun, Option } from '@ephox/katamari';
-import { Compare, DomEvent, Element, WindowSelection, StructRect, RawRect } from '@ephox/sugar';
+import { Compare, DomEvent, RawRect, StructRect, SugarElement, WindowSelection } from '@ephox/sugar';
 
 const getBodyFromFrame = function (frame) {
-  return Option.some(Element.fromDom(frame.dom().contentWindow.document.body));
+  return Option.some(SugarElement.fromDom(frame.dom().contentWindow.document.body));
 };
 
 const getDocFromFrame = function (frame) {
-  return Option.some(Element.fromDom(frame.dom().contentWindow.document));
+  return Option.some(SugarElement.fromDom(frame.dom().contentWindow.document));
 };
 
 const getWinFromFrame = function (frame) {
@@ -84,7 +84,7 @@ const getActiveApi = function (editor) {
     return getDocFromFrame(frame).bind(function (doc) {
       return getWinFromFrame(frame).map(function (win) {
 
-        const html = Element.fromDom(doc.dom().documentElement);
+        const html = SugarElement.fromDom(doc.dom().documentElement);
 
         const getCursorBox = editor.getCursorBox.getOrThunk(function () {
           return function () {

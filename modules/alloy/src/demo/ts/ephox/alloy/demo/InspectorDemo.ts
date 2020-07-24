@@ -1,5 +1,5 @@
 import { console } from '@ephox/dom-globals';
-import { Body } from '@ephox/sugar';
+import { SugarBody } from '@ephox/sugar';
 
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
@@ -16,7 +16,7 @@ import { FormParts } from 'ephox/alloy/ui/types/FormTypes';
 export default (): void => {
   const gui = Gui.create();
 
-  const body = Body.body();
+  const body = SugarBody.body();
   Attachment.attachSystem(body, gui);
 
   Debugging.registerInspector('inspector-demo', gui);

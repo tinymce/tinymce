@@ -7,27 +7,27 @@
 
 import { HTMLElement } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
-import { Element, Traverse, Css, PredicateFind } from '@ephox/sugar';
+import { Css, PredicateFind, SugarElement, Traverse } from '@ephox/sugar';
 import Editor from '../api/Editor';
-import { isListItem, isList, isTable } from '../dom/ElementType';
 import * as Settings from '../api/Settings';
+import { isList, isListItem, isTable } from '../dom/ElementType';
 import * as NodeType from '../dom/NodeType';
 
-const isEditable = (target: Element) => PredicateFind.closest(target, (elm) => NodeType.isContentEditableTrue(elm.dom()) || NodeType.isContentEditableFalse(elm.dom())).exists((elm) => NodeType.isContentEditableTrue(elm.dom()));
+const isEditable = (target: SugarElement) => PredicateFind.closest(target, (elm) => NodeType.isContentEditableTrue(elm.dom()) || NodeType.isContentEditableFalse(elm.dom())).exists((elm) => NodeType.isContentEditableTrue(elm.dom()));
 
 const parseIndentValue = (value: string) => {
   const number = parseInt(value, 10);
   return isNaN(number) ? 0 : number;
 };
 
-const getIndentStyleName = (useMargin: boolean, element: Element) => {
+const getIndentStyleName = (useMargin: boolean, element: SugarElement) => {
   const indentStyleName = useMargin || isTable(element) ? 'margin' : 'padding';
   const suffix = Css.get(element, 'direction') === 'rtl' ? '-right' : '-left';
   return indentStyleName + suffix;
 };
 
 const indentElement = (dom, command: string, useMargin: boolean, value: number, unit: string, element: HTMLElement) => {
-  const indentStyleName = getIndentStyleName(useMargin, Element.fromDom(element));
+  const indentStyleName = getIndentStyleName(useMargin, SugarElement.fromDom(element));
 
   if (command === 'outdent') {
     const styleValue = Math.max(0, parseIndentValue(element.style[indentStyleName]) - value);
@@ -38,7 +38,7 @@ const indentElement = (dom, command: string, useMargin: boolean, value: number, 
   }
 };
 
-const validateBlocks = (editor: Editor, blocks: Element[]) => Arr.forall(blocks, (block) => {
+const validateBlocks = (editor: Editor, blocks: SugarElement[]) => Arr.forall(blocks, (block) => {
   const indentStyleName = getIndentStyleName(Settings.shouldIndentUseMargin(editor), block);
   const intentValue = Css.getRaw(block, indentStyleName).map(parseIndentValue).getOr(0);
   const contentEditable = editor.dom.getContentEditable(block.dom());
@@ -50,13 +50,13 @@ const canOutdent = (editor: Editor) => {
   return !editor.mode.isReadOnly() && (blocks.length > 1 || validateBlocks(editor, blocks));
 };
 
-const isListComponent = (el: Element) => isList(el) || isListItem(el);
+const isListComponent = (el: SugarElement) => isList(el) || isListItem(el);
 
-const parentIsListComponent = (el: Element) => Traverse.parent(el).map(isListComponent).getOr(false);
+const parentIsListComponent = (el: SugarElement) => Traverse.parent(el).map(isListComponent).getOr(false);
 
-const getBlocksToIndent = (editor: Editor) => Arr.filter(Arr.map(editor.selection.getSelectedBlocks(), Element.fromDom), (el) =>
+const getBlocksToIndent = (editor: Editor) => Arr.filter(Arr.map(editor.selection.getSelectedBlocks(), SugarElement.fromDom), (el) =>
   !isListComponent(el) && !parentIsListComponent(el) && isEditable(el)
-) as Element<HTMLElement>[];
+) as SugarElement<HTMLElement>[];
 
 const handle = (editor: Editor, command: string) => {
   const { dom, selection, formatter } = editor;

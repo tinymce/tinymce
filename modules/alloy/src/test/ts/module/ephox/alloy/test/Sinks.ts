@@ -1,5 +1,5 @@
 import { Fun } from '@ephox/katamari';
-import { Compare, Element, PredicateExists } from '@ephox/sugar';
+import { Compare, PredicateExists, SugarElement } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Positioning } from 'ephox/alloy/api/behaviour/Positioning';
@@ -55,7 +55,7 @@ const popup = () => GuiFactory.build(
 );
 
 const isInside = (sinkComponent: AlloyComponent, popupComponent: AlloyComponent) => {
-  const isSink = (el: Element) => Compare.eq(el, sinkComponent.element());
+  const isSink = (el: SugarElement) => Compare.eq(el, sinkComponent.element());
 
   return PredicateExists.closest(popupComponent.element(), isSink);
 };

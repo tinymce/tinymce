@@ -5,7 +5,7 @@ import { Types } from '@ephox/bridge';
 import { document } from '@ephox/dom-globals';
 import { Result } from '@ephox/katamari';
 import { TinyLoader } from '@ephox/mcagar';
-import { Attr, Body, Element } from '@ephox/sugar';
+import { Attribute, SugarBody, SugarElement } from '@ephox/sugar';
 
 import Theme from 'tinymce/themes/silver/Theme';
 import * as DialogUtils from '../../module/DialogUtils';
@@ -14,16 +14,16 @@ UnitTest.asynctest('WindowManager:inline-dialog Test', (success, failure) => {
   Theme();
 
   TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const cGetDialogLabelId = Chain.binder((dialogE: Element) => {
-      if (Attr.has(dialogE, 'aria-labelledby')) {
-        const labelId = Attr.get(dialogE, 'aria-labelledby');
+    const cGetDialogLabelId = Chain.binder((dialogE: SugarElement) => {
+      if (Attribute.has(dialogE, 'aria-labelledby')) {
+        const labelId = Attribute.get(dialogE, 'aria-labelledby');
         return labelId.length > 0 ? Result.value(labelId) : Result.error('Dialog has zero length aria-labelledby attribute');
       } else {
         return Result.error('Dialog has no aria-labelledby attribute');
       }
     });
 
-    const sAssertDialogLabelledBy = Chain.asStep(Body.body(), [ NamedChain.asChain([
+    const sAssertDialogLabelledBy = Chain.asStep(SugarBody.body(), [ NamedChain.asChain([
       NamedChain.direct(NamedChain.inputName(), UiFinder.cFindIn('[role="dialog"]'), 'dialog'),
       NamedChain.direct('dialog', cGetDialogLabelId, 'labelId'),
       NamedChain.bundle((obj) => UiFinder.findIn(obj.dialog, `#${obj.labelId}`))
@@ -49,7 +49,7 @@ UnitTest.asynctest('WindowManager:inline-dialog Test', (success, failure) => {
       );
 
     Pipeline.async({}, [
-      TestHelpers.GuiSetup.mAddStyles(Element.fromDom(document), [
+      TestHelpers.GuiSetup.mAddStyles(SugarElement.fromDom(document), [
         '.tox-dialog { background: white; border: 2px solid black; padding: 1em; margin: 1em; }'
       ]),
       sTestDialogLabelled({ inline: 'toolbar' }),

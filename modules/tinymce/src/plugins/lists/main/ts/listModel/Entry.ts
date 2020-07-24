@@ -6,7 +6,7 @@
  */
 
 import { Arr, Option } from '@ephox/katamari';
-import { Attr, Element, Node, Replication, Traverse } from '@ephox/sugar';
+import { Attribute, Replication, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 import { hasLastChildList, ListType } from './Util';
 
 /*
@@ -27,7 +27,7 @@ General workflow: Parse lists to entries -> Manipulate entries -> Compose entrie
 export interface Entry {
   depth: number;
   dirty: boolean;
-  content: Element[];
+  content: SugarElement[];
   isSelected: boolean;
   listType: ListType;
   listAttributes: Record<string, any>;
@@ -38,20 +38,20 @@ const isIndented = (entry: Entry) => entry.depth > 0;
 
 const isSelected = (entry: Entry) => entry.isSelected;
 
-const cloneItemContent = (li: Element): Element[] => {
+const cloneItemContent = (li: SugarElement): SugarElement[] => {
   const children = Traverse.children(li);
   const content = hasLastChildList(li) ? children.slice(0, -1) : children;
   return Arr.map(content, Replication.deep);
 };
 
-const createEntry = (li: Element, depth: number, isSelected: boolean): Option<Entry> => Traverse.parent(li).filter(Node.isElement).map((list) => ({
+const createEntry = (li: SugarElement, depth: number, isSelected: boolean): Option<Entry> => Traverse.parent(li).filter(SugarNode.isElement).map((list) => ({
   depth,
   dirty: false,
   isSelected,
   content: cloneItemContent(li),
-  itemAttributes: Attr.clone(li),
-  listAttributes: Attr.clone(list),
-  listType: Node.name(list) as ListType
+  itemAttributes: Attribute.clone(li),
+  listAttributes: Attribute.clone(list),
+  listType: SugarNode.name(list) as ListType
 }));
 
 export {

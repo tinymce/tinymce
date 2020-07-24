@@ -2,7 +2,7 @@ import { Assertions, Chain, GeneralSteps, Logger, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { HTMLElement } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
-import { Element, Hierarchy } from '@ephox/sugar';
+import { Hierarchy, SugarElement } from '@ephox/sugar';
 import * as CaretFinder from 'tinymce/core/caret/CaretFinder';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import ViewBlock from '../../module/test/ViewBlock';
@@ -18,7 +18,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretFinderTest', function (success, fa
 
   const cCreateFromPosition = function (path, offset) {
     return Chain.mapper(function (viewBlock: any) {
-      const container = Hierarchy.follow(Element.fromDom(viewBlock.get()), path).getOrDie();
+      const container = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), path).getOrDie();
       return CaretPosition(container.dom(), offset);
     });
   };
@@ -26,8 +26,8 @@ UnitTest.asynctest('browser.tinymce.core.CaretFinderTest', function (success, fa
   const cAssertCaretPosition = function (path, expectedOffset) {
     return Chain.op(function (posOption: Option<any>) {
       const pos = posOption.getOrDie();
-      const expectedContainer = Hierarchy.follow(Element.fromDom(viewBlock.get()), path).getOrDie();
-      Assertions.assertDomEq('Should be the expected container', expectedContainer, Element.fromDom(pos.container()));
+      const expectedContainer = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), path).getOrDie();
+      Assertions.assertDomEq('Should be the expected container', expectedContainer, SugarElement.fromDom(pos.container()));
       Assertions.assertEq('Should be the expected offset', expectedOffset, pos.offset());
     });
   };
@@ -50,7 +50,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretFinderTest', function (success, fa
 
   const cPositionIn = function (forward, path) {
     return Chain.injectThunked(function () {
-      const element = Hierarchy.follow(Element.fromDom(viewBlock.get()), path).getOrDie() as Element<HTMLElement>;
+      const element = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), path).getOrDie() as SugarElement<HTMLElement>;
       return CaretFinder.positionIn(forward, element.dom());
     });
   };

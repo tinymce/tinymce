@@ -1,32 +1,32 @@
 import { DomUniverse } from '@ephox/boss';
-import { Element } from '@ephox/sugar';
-import * as Extract from '../general/Extract';
 import { Option } from '@ephox/katamari';
+import { SugarElement } from '@ephox/sugar';
 import { SpotPoint } from '../data/Types';
+import * as Extract from '../general/Extract';
 
 const universe = DomUniverse();
 
-const from = function (element: Element, optimise?: (e: Element) => boolean) {
+const from = function (element: SugarElement, optimise?: (e: SugarElement) => boolean) {
   return Extract.from(universe, element, optimise);
 };
 
-const all = function (element: Element, optimise?: (e: Element) => boolean) {
+const all = function (element: SugarElement, optimise?: (e: SugarElement) => boolean) {
   return Extract.all(universe, element, optimise);
 };
 
-const extract = function (child: Element, offset: number, optimise?: (e: Element) => boolean) {
+const extract = function (child: SugarElement, offset: number, optimise?: (e: SugarElement) => boolean) {
   return Extract.extract(universe, child, offset, optimise);
 };
 
-const extractTo = function (child: Element, offset: number, pred: (e: Element) => boolean, optimise?: (e: Element) => boolean) {
+const extractTo = function (child: SugarElement, offset: number, pred: (e: SugarElement) => boolean, optimise?: (e: SugarElement) => boolean) {
   return Extract.extractTo(universe, child, offset, pred, optimise);
 };
 
-const find = function (parent: Element, offset: number, optimise?: (e: Element) => boolean): Option<SpotPoint<Element>> {
+const find = function (parent: SugarElement, offset: number, optimise?: (e: SugarElement) => boolean): Option<SpotPoint<SugarElement>> {
   return Extract.find(universe, parent, offset, optimise);
 };
 
-const toText = function (element: Element, optimise?: (e: Element) => boolean) {
+const toText = function (element: SugarElement, optimise?: (e: SugarElement) => boolean) {
   return Extract.toText(universe, element, optimise);
 };
 

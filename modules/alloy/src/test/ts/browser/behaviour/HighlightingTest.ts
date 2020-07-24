@@ -1,7 +1,7 @@
 import { Assertions, Chain, NamedChain, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr, Result } from '@ephox/katamari';
-import { Attr, Class, Compare, Truncate } from '@ephox/sugar';
+import { Attribute, Class, Compare, Truncate } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Highlighting } from 'ephox/alloy/api/behaviour/Highlighting';
@@ -65,7 +65,7 @@ UnitTest.asynctest('HighlightingTest', (success, failure) => {
       NamedChain.direct('container', UiFinder.cFindIn('.test-selected'), 'selected'),
       NamedChain.direct('selected', Chain.binder((sel) => Class.has(sel, expected) ? Result.value(sel) :
         Result.error(label + '\nIncorrect element selected. Expected: ' + expected + ', but was: ' +
-              Attr.get(sel, 'class'))), '_')
+          Attribute.get(sel, 'class'))), '_')
     ]);
 
     const cHighlight: Chain<any, any> = Chain.op((item: AlloyComponent) => {

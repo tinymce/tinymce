@@ -8,10 +8,10 @@
 import { HTMLElement, HTMLTableDataCellElement, HTMLTableElement, HTMLTableHeaderCellElement, HTMLTableRowElement } from '@ephox/dom-globals';
 import { Arr, Fun, Type } from '@ephox/katamari';
 import { TableRender } from '@ephox/snooker';
-import { Attr, Html, SelectorFilter, SelectorFind } from '@ephox/sugar';
+import { Attribute, Html, SelectorFilter, SelectorFind } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { fireNewCell, fireNewRow } from '../api/Events';
-import { getDefaultAttributes, getDefaultStyles, isPercentagesForced, isPixelsForced, isResponsiveForced, getTableHeaderType } from '../api/Settings';
+import { getDefaultAttributes, getDefaultStyles, getTableHeaderType, isPercentagesForced, isPixelsForced, isResponsiveForced } from '../api/Settings';
 import * as Util from '../core/Util';
 import { enforceNone, enforcePercentage, enforcePixels } from './EnforceUnit';
 
@@ -44,7 +44,7 @@ const insert = (editor: Editor, columns: number, rows: number, colHeaders: numbe
   };
 
   const table = TableRender.render(rows, columns, rowHeaders, colHeaders, getTableHeaderType(editor), options);
-  Attr.set(table, 'data-mce-id', '__mce');
+  Attribute.set(table, 'data-mce-id', '__mce');
 
   const html = Html.getOuter(table);
   editor.insertContent(html);
@@ -58,7 +58,7 @@ const insert = (editor: Editor, columns: number, rows: number, colHeaders: numbe
       enforcePercentage(editor, table);
     }
     Util.removeDataStyle(table);
-    Attr.remove(table, 'data-mce-id');
+    Attribute.remove(table, 'data-mce-id');
     fireEvents(editor, table);
     selectFirstCellInTable(editor, table);
     return table.dom();

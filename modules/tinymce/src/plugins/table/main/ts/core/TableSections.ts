@@ -8,7 +8,7 @@
 import { HTMLElement, HTMLTableCellElement, HTMLTableRowElement } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
 import { TableLookup } from '@ephox/snooker';
-import { Element, SelectorFilter } from '@ephox/sugar';
+import { SelectorFilter, SugarElement } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import { getTableHeaderType } from '../api/Settings';
@@ -59,7 +59,7 @@ const switchRowSection = (dom: DOMUtils, rowElm: HTMLElement, newSectionName: st
       const firstTableChild = tableElm.firstChild;
 
       if (newSectionName === 'thead') {
-        Arr.last(SelectorFilter.children(Element.fromDom(tableElm), 'caption,colgroup')).fold(
+        Arr.last(SelectorFilter.children(SugarElement.fromDom(tableElm), 'caption,colgroup')).fold(
           () => tableElm.insertBefore(sectionElm, firstTableChild),
           (c) => dom.insertAfter(sectionElm, c.dom())
         );
@@ -90,9 +90,9 @@ const switchCellType = (dom: DOMUtils, cells: ArrayLike<HTMLTableCellElement>, n
 const switchSectionType = (editor: Editor, rowElm: HTMLTableRowElement, newType: string) => {
   const determineHeaderRowType = (): 'section' | 'cells' | 'sectionCells' => {
     // default if all else fails is thead > tr > tds aka 'section' mode
-    const allTableRows = TableLookup.table(Element.fromDom(rowElm.cells[0]))
+    const allTableRows = TableLookup.table(SugarElement.fromDom(rowElm.cells[0]))
       .map((table) => TableLookup.rows(table)).getOr([]);
-    return Arr.findMap<Element<HTMLTableRowElement>, HeaderRowConfiguration>(allTableRows, (row) => detectHeaderRow(editor, row.dom())).map((detectedType) => {
+    return Arr.findMap<SugarElement<HTMLTableRowElement>, HeaderRowConfiguration>(allTableRows, (row) => detectHeaderRow(editor, row.dom())).map((detectedType) => {
       if (detectedType.thead && detectedType.ths) {
         return 'sectionCells';
       } else {

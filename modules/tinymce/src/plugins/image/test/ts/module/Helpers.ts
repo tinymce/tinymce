@@ -2,7 +2,7 @@ import { Assertions, Chain, Guard, Mouse, UiControls, UiFinder } from '@ephox/ag
 import { document } from '@ephox/dom-globals';
 import { Arr, Obj, Result } from '@ephox/katamari';
 import { TinyUi } from '@ephox/mcagar';
-import { Body, Checked, Element, Focus, Node, SelectTag, Value } from '@ephox/sugar';
+import { Checked, Focus, SelectTag, SugarBody, SugarElement, SugarNode, Value } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 
 export type ImageDialogData = {
@@ -47,26 +47,26 @@ export const advancedTabSelectors = {
 
 const cGetTopmostDialog = Chain.control(
   Chain.fromChains([
-    Chain.inject(Body.body()),
+    Chain.inject(SugarBody.body()),
     UiFinder.cFindIn('[role=dialog]')
   ]),
   Guard.addLogging('Get top most dialog')
 );
 
 const cGotoAdvancedTab = Chain.fromChains([
-  Chain.inject(Body.body()),
+  Chain.inject(SugarBody.body()),
   UiFinder.cFindIn('div.tox-tab:contains(Advanced)'),
   Mouse.cClick
 ]);
 
 const cSetFieldValue = (selector, value) => Chain.fromChains([
-  Chain.inject(Body.body()),
+  Chain.inject(SugarBody.body()),
   UiFinder.cFindIn(selector),
   Chain.op(Focus.focus),
   Chain.op((element) => {
     if (element.dom().type === 'checkbox') {
       Checked.set(element, value);
-    } else if (Node.name(element) === 'select' && typeof value === 'number') {
+    } else if (SugarNode.name(element) === 'select' && typeof value === 'number') {
       SelectTag.setSelected(element, value);
     } else {
       Value.set(element, value);
@@ -108,7 +108,7 @@ const cFillActiveDialog = (data: Partial<ImageDialogData>, hasAdvanced = false) 
 };
 
 const cFakeEvent = (name: string) => Chain.control(
-  Chain.op(function (elm: Element) {
+  Chain.op(function (elm: SugarElement) {
     const evt = document.createEvent('HTMLEvents');
     evt.initEvent(name, true, true);
     elm.dom().dispatchEvent(evt);
@@ -152,7 +152,7 @@ const cWaitForDialog = () => Chain.control(
 );
 
 const cSubmitDialog = () => Chain.control(
-  Chain.fromIsolatedChainsWith(Body.body(), [
+  Chain.fromIsolatedChainsWith(SugarBody.body(), [
     Mouse.cClickOn('.tox-button:contains("Save")')
   ]),
   Guard.addLogging('Submit dialog')
@@ -168,15 +168,15 @@ const cAssertCleanHtml = (label: string, expected: string) => Chain.control(
   Guard.addLogging('Assert clean html')
 );
 
-const cAssertInputValue = (selector: string, value: string) => Chain.fromChainsWith(Body.body(), [
+const cAssertInputValue = (selector: string, value: string) => Chain.fromChainsWith(SugarBody.body(), [
   UiFinder.cFindIn(selector),
   UiControls.cGetValue,
   Assertions.cAssertEq(`input value should be ${value}`, value)
 ]);
 
-const cAssertInputCheckbox = (selector: string, expectedState: boolean) => Chain.fromChainsWith(Body.body(), [
+const cAssertInputCheckbox = (selector: string, expectedState: boolean) => Chain.fromChainsWith(SugarBody.body(), [
   UiFinder.cFindIn(selector),
-  Chain.mapper((elm: Element<HTMLInputElement>) => elm.dom().checked),
+  Chain.mapper((elm: SugarElement<HTMLInputElement>) => elm.dom().checked),
   Assertions.cAssertEq(`input value should be ${expectedState}`, expectedState)
 ]);
 

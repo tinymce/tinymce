@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import * as SetSelectionContent from 'tinymce/core/selection/SetSelectionContent';
 import Theme from 'tinymce/themes/silver/Theme';
 
@@ -32,7 +32,7 @@ UnitTest.asynctest('browser.tinymce.selection.SetSelectionContentTest', function
 
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
-    const root = Element.fromDom(editor.getBody());
+    const root = SugarElement.fromDom(editor.getBody());
 
     Pipeline.async({}, [
       Logger.t('Should insert a before b', GeneralSteps.sequence([

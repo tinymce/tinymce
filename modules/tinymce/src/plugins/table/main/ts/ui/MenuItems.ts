@@ -6,7 +6,7 @@
  */
 
 import { Menu } from '@ephox/bridge';
-import { Node } from '@ephox/sugar';
+import { SugarNode } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import * as InsertTable from '../actions/InsertTable';
 import { hasTableGrid } from '../api/Settings';
@@ -205,7 +205,7 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets, clipbo
       // ignoring element since it's monitored elsewhere
       return selectionTargets.targets().fold(() => '', (targets) => {
         // If clicking in a caption, then we shouldn't show the cell/row/column options
-        if (Node.name(targets.element()) === 'caption') {
+        if (SugarNode.name(targets.element()) === 'caption') {
           return 'tableprops deletetable';
         } else {
           return 'cell row column | advtablesort | tableprops deletetable';

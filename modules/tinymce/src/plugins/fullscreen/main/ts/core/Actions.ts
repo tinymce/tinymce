@@ -4,20 +4,21 @@
  * For LGPL see License.txt in the project root for license information.
  * For commercial licenses see https://www.tiny.cloud/
  */
+
 import { document, window } from '@ephox/dom-globals';
-import { Fun, Singleton, Cell } from '@ephox/katamari';
-import { Css, Element, VisualViewport } from '@ephox/sugar';
+import { Cell, Fun, Singleton } from '@ephox/katamari';
+import { Css, SugarElement, WindowVisualViewport } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import Delay from 'tinymce/core/api/util/Delay';
 import * as Events from '../api/Events';
 import * as Thor from './Thor';
-import Editor from 'tinymce/core/api/Editor';
 
 const DOM = DOMUtils.DOM;
 
 const getScrollPos = () => {
-  const vp = VisualViewport.getBounds(window);
+  const vp = WindowVisualViewport.getBounds(window);
 
   return {
     x: vp.x,
@@ -29,10 +30,10 @@ const setScrollPos = (pos) => {
   window.scrollTo(pos.x, pos.y);
 };
 
-const viewportUpdate = VisualViewport.get().fold(
+const viewportUpdate = WindowVisualViewport.get().fold(
   () => ({ bind: Fun.noop, unbind: Fun.noop }),
   (visualViewport) => {
-    const editorContainer = Singleton.value<Element>();
+    const editorContainer = Singleton.value<SugarElement>();
     const resizeBinder = Singleton.unbindable();
     const scrollBinder = Singleton.unbindable();
 
@@ -60,8 +61,8 @@ const viewportUpdate = VisualViewport.get().fold(
     const bind = (element) => {
       editorContainer.set(element);
       update();
-      resizeBinder.set(VisualViewport.bind('resize', update));
-      scrollBinder.set(VisualViewport.bind('scroll', update));
+      resizeBinder.set(WindowVisualViewport.bind('resize', update));
+      scrollBinder.set(WindowVisualViewport.bind('scroll', update));
     };
 
     const unbind = () => {
@@ -83,10 +84,10 @@ const toggleFullscreen = (editor: Editor, fullscreenState: Cell<any>) => {
   const body = document.body;
   const documentElement = document.documentElement;
   const editorContainer = editor.getContainer();
-  const editorContainerS = Element.fromDom(editorContainer);
+  const editorContainerS = SugarElement.fromDom(editorContainer);
 
   const fullscreenInfo = fullscreenState.get();
-  const editorBody = Element.fromDom(editor.getBody());
+  const editorBody = SugarElement.fromDom(editor.getBody());
 
   const isTouch = Env.deviceType.isTouch();
 

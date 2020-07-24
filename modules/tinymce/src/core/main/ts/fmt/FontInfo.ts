@@ -7,7 +7,7 @@
 
 import { Element, HTMLElement, Node } from '@ephox/dom-globals';
 import { Fun, Obj, Option } from '@ephox/katamari';
-import { Attr, Compare, Css, Element as SugarElement, Node as SugarNode, TransformFind } from '@ephox/sugar';
+import { Attribute, Compare, Css, SugarElement, SugarNode, TransformFind } from '@ephox/sugar';
 import DOMUtils from '../api/dom/DOMUtils';
 
 const legacyPropNames: Record<string, string> = {
@@ -18,7 +18,7 @@ const legacyPropNames: Record<string, string> = {
 const getSpecifiedFontProp = (propName: string, rootElm: Element, elm: HTMLElement): Option<string> => {
   const getProperty = (elm: SugarElement) => Css.getRaw(elm, propName).orThunk(() => {
     if (SugarNode.name(elm) === 'font') {
-      return Obj.get(legacyPropNames, propName).bind((legacyPropName) => Attr.getOpt(elm, legacyPropName));
+      return Obj.get(legacyPropNames, propName).bind((legacyPropName) => Attribute.getOpt(elm, legacyPropName));
     } else {
       return Option.none();
     }

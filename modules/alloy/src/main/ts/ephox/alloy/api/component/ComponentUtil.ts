@@ -1,8 +1,9 @@
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { Element } from '@ephox/sugar';
 import { Option } from '@ephox/katamari';
+import { SugarElement } from '@ephox/sugar';
 
-const toElem = (component: AlloyComponent): Element => component.element();
+import { AlloyComponent } from './ComponentApi';
+
+const toElem = (component: AlloyComponent): SugarElement => component.element();
 
 const getByUid = (component: AlloyComponent, uid: string): Option<AlloyComponent> => component.getSystem().getByUid(uid).toOption();
 

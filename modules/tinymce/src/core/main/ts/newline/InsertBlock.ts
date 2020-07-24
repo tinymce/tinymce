@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { DocumentFragment, Element as DomElement, KeyboardEvent } from '@ephox/dom-globals';
+import { DocumentFragment, Element, KeyboardEvent } from '@ephox/dom-globals';
 import { Arr, Obj, Option, Options } from '@ephox/katamari';
-import { Css, Element, Node, PredicateFilter } from '@ephox/sugar';
+import { Css, PredicateFilter, SugarElement, SugarNode } from '@ephox/sugar';
 import DOMUtils from '../api/dom/DOMUtils';
 import TreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
@@ -23,13 +23,13 @@ import * as InsertLi from './InsertLi';
 import * as NewLineUtils from './NewLineUtils';
 
 const trimZwsp = (fragment: DocumentFragment) => {
-  Arr.each(PredicateFilter.descendants(Element.fromDom(fragment), Node.isText), (text) => {
+  Arr.each(PredicateFilter.descendants(SugarElement.fromDom(fragment), SugarNode.isText), (text) => {
     const rawNode = text.dom();
     rawNode.nodeValue = Zwsp.trim(rawNode.nodeValue);
   });
 };
 
-const isEmptyAnchor = function (dom: DOMUtils, elm: DomElement) {
+const isEmptyAnchor = function (dom: DOMUtils, elm: Element) {
   return elm && elm.nodeName === 'A' && dom.isEmpty(elm);
 };
 
@@ -133,14 +133,14 @@ const getEditableRoot = function (dom, node) {
   return parent !== root ? editableRoot : root;
 };
 
-const applyAttributes = (editor: Editor, node: DomElement, forcedRootBlockAttrs: Record<string, string>) => {
+const applyAttributes = (editor: Editor, node: Element, forcedRootBlockAttrs: Record<string, string>) => {
   const dom = editor.dom;
 
   // Merge and apply style attribute
   Option.from(forcedRootBlockAttrs.style)
     .map(dom.parseStyle)
     .each((attrStyles) => {
-      const currentStyles = Css.getAllRaw(Element.fromDom(node));
+      const currentStyles = Css.getAllRaw(SugarElement.fromDom(node));
       const newStyles = { ...currentStyles, ...attrStyles };
       dom.setStyles(node, newStyles);
     });

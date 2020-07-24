@@ -1,7 +1,8 @@
 import { GeneralSteps, Pipeline } from '@ephox/agar';
 import { Attachment, Memento, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Body, Class, Traverse } from '@ephox/sugar';
+import { Fun } from '@ephox/katamari';
+import { Class, SugarBody, Traverse } from '@ephox/sugar';
 
 import * as TinyChannels from 'tinymce/themes/mobile/channels/TinyChannels';
 import * as Buttons from 'tinymce/themes/mobile/ui/Buttons';
@@ -10,7 +11,6 @@ import IosRealm from 'tinymce/themes/mobile/ui/IosRealm';
 import TestEditor from '../../module/test/ui/TestEditor';
 import * as TestStyles from '../../module/test/ui/TestStyles';
 import * as TestUi from '../../module/test/ui/TestUi';
-import { Fun } from '@ephox/katamari';
 
 UnitTest.asynctest('Browser Test: ui.ButtonsTest', function (success, failure) {
 
@@ -23,7 +23,7 @@ UnitTest.asynctest('Browser Test: ui.ButtonsTest', function (success, failure) {
 
   const realm = IosRealm(Fun.noop);
 
-  const body = Body.body();
+  const body = SugarBody.body();
   Attachment.attachSystem(body, realm.system());
 
   // Make toolbar appear

@@ -1,5 +1,5 @@
 import { Arr } from '@ephox/katamari';
-import { Attr, Css, Element } from '@ephox/sugar';
+import { Attribute, Css, SugarElement } from '@ephox/sugar';
 
 import { Positioning } from '../../api/behaviour/Positioning';
 import { AlloyComponent } from '../../api/component/ComponentApi';
@@ -55,7 +55,7 @@ const close = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: Sandb
 
 const isOpen = (_sandbox: AlloyComponent, _sConfig: SandboxingConfig, sState: SandboxingState) => sState.isOpen();
 
-const isPartOf = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: SandboxingState, queryElem: Element) =>
+const isPartOf = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: SandboxingState, queryElem: SugarElement) =>
   isOpen(sandbox, sConfig, sState) && sState.get().exists(
     (data) => sConfig.isPartOf(sandbox, data, queryElem)
   );
@@ -65,15 +65,15 @@ const getState = (_sandbox: AlloyComponent, _sConfig: SandboxingConfig, sState: 
 
 const store = (sandbox: AlloyComponent, cssKey: string, attr: string, newValue: string) => {
   Css.getRaw(sandbox.element(), cssKey).fold(() => {
-    Attr.remove(sandbox.element(), attr);
+    Attribute.remove(sandbox.element(), attr);
   }, (v) => {
-    Attr.set(sandbox.element(), attr, v);
+    Attribute.set(sandbox.element(), attr, v);
   });
   Css.set(sandbox.element(), cssKey, newValue);
 };
 
 const restore = (sandbox: AlloyComponent, cssKey: string, attr: string) => {
-  Attr.getOpt(sandbox.element(), attr).fold(
+  Attribute.getOpt(sandbox.element(), attr).fold(
     () => Css.remove(sandbox.element(), cssKey),
     (oldValue) => Css.set(sandbox.element(), cssKey, oldValue)
   );
@@ -87,7 +87,7 @@ const cloak = (sandbox: AlloyComponent, sConfig: SandboxingConfig, _sState: Sand
   store(sandbox, 'visibility', sConfig.cloakVisibilityAttr, 'hidden');
 };
 
-const hasPosition = (element: Element) => Arr.exists(
+const hasPosition = (element: SugarElement) => Arr.exists(
   [ 'top', 'left', 'right', 'bottom' ],
   (pos) => Css.getRaw(element, pos).isSome()
 );

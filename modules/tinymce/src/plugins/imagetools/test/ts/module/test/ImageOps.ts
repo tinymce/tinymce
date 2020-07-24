@@ -1,7 +1,7 @@
-import { Chain, Guard, Mouse, Pipeline, Step, UiFinder, Logger } from '@ephox/agar';
+import { Chain, Guard, Logger, Mouse, Pipeline, Step, UiFinder } from '@ephox/agar';
 import { Fun, Result } from '@ephox/katamari';
 import { TinyDom, TinyUi } from '@ephox/mcagar';
-import { Attr } from '@ephox/sugar';
+import { Attribute } from '@ephox/sugar';
 
 export default function (editor) {
   const ui = TinyUi(editor);
@@ -91,7 +91,7 @@ export default function (editor) {
       Chain.fromChains([
         cWaitForUi('wait for ' + text + ' button', 'button:contains(' + text + ')'),
         cWaitForState(function (el) {
-          return Attr.get(el, 'disabled') === undefined;
+          return Attribute.get(el, 'disabled') === undefined;
         }),
         Mouse.cClick
       ]),
@@ -104,7 +104,7 @@ export default function (editor) {
       Chain.fromChains([
         UiFinder.cFindIn('button[aria-label="' + label + '"]'),
         cWaitForState(function (el) {
-          return Attr.get(el, 'disabled') === undefined;
+          return Attribute.get(el, 'disabled') === undefined;
         }),
         Mouse.cClick
       ]),
@@ -115,7 +115,7 @@ export default function (editor) {
   const sWaitForUrlChange = function (imgEl, origUrl) {
     return Logger.t('Wait for url change', Chain.asStep(imgEl, [
       cWaitForState(function (el) {
-        return Attr.get(el, 'src') !== origUrl;
+        return Attribute.get(el, 'src') !== origUrl;
       })
     ]));
   };
@@ -123,7 +123,7 @@ export default function (editor) {
   const sExec = function (execFromToolbar, label) {
     return Logger.t(`Execute ${label}`, Step.async(function (next, die) {
       const imgEl = TinyDom.fromDom(editor.selection.getNode());
-      const origUrl = Attr.get(imgEl, 'src');
+      const origUrl = Attribute.get(imgEl, 'src');
 
       Pipeline.async({}, [
         Chain.asStep(imgEl, [

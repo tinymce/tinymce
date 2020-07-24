@@ -1,7 +1,7 @@
 import { Objects } from '@ephox/boulder';
 import { console, Node } from '@ephox/dom-globals';
 import { Arr, Cell, Fun, Global, Obj, Option } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 
 import { AlloyComponent } from '../api/component/ComponentApi';
 import * as SystemEvents from '../api/events/SystemEvents';
@@ -9,11 +9,11 @@ import { GuiSystem } from '../api/system/Gui';
 import * as AlloyLogger from '../log/AlloyLogger';
 
 export interface DebuggerLogger {
-  logEventCut: (eventName: string, target: Element, purpose: string) => void;
-  logEventStopped: (eventName: string, target: Element, purpose: string) => void;
-  logNoParent: (eventName: string, target: Element, purpose: string) => void;
-  logEventNoHandlers: (eventName: string, target: Element) => void;
-  logEventResponse: (eventName: string, target: Element, purpose: string) => void;
+  logEventCut: (eventName: string, target: SugarElement, purpose: string) => void;
+  logEventStopped: (eventName: string, target: SugarElement, purpose: string) => void;
+  logNoParent: (eventName: string, target: SugarElement, purpose: string) => void;
+  logEventNoHandlers: (eventName: string, target: SugarElement) => void;
+  logEventResponse: (eventName: string, target: SugarElement, purpose: string) => void;
   write: () => void;
 }
 
@@ -66,24 +66,24 @@ const eventConfig = Cell<Record<string, EventConfiguration>>({ });
 
 export type EventProcessor = (logger: DebuggerLogger) => boolean;
 
-const makeEventLogger = (eventName: string, initialTarget: Element): DebuggerLogger => {
-  const sequence: Array<{ outcome: string; target: Element; purpose?: string }> = [ ];
+const makeEventLogger = (eventName: string, initialTarget: SugarElement): DebuggerLogger => {
+  const sequence: Array<{ outcome: string; target: SugarElement; purpose?: string }> = [ ];
   const startTime = new Date().getTime();
 
   return {
-    logEventCut(_name: string, target: Element, purpose: string) {
+    logEventCut(_name: string, target: SugarElement, purpose: string) {
       sequence.push({ outcome: 'cut', target, purpose });
     },
-    logEventStopped(_name: string, target: Element, purpose: string) {
+    logEventStopped(_name: string, target: SugarElement, purpose: string) {
       sequence.push({ outcome: 'stopped', target, purpose });
     },
-    logNoParent(_name: string, target: Element, purpose: string) {
+    logNoParent(_name: string, target: SugarElement, purpose: string) {
       sequence.push({ outcome: 'no-parent', target, purpose });
     },
-    logEventNoHandlers(_name: string, target: Element) {
+    logEventNoHandlers(_name: string, target: SugarElement) {
       sequence.push({ outcome: 'no-handlers-left', target });
     },
-    logEventResponse(_name: string, target: Element, purpose: string) {
+    logEventResponse(_name: string, target: SugarElement, purpose: string) {
       sequence.push({ outcome: 'response', purpose, target });
     },
     write() {
@@ -102,7 +102,7 @@ const makeEventLogger = (eventName: string, initialTarget: Element): DebuggerLog
   };
 };
 
-const processEvent = (eventName: string, initialTarget: Element, f: EventProcessor) => {
+const processEvent = (eventName: string, initialTarget: SugarElement, f: EventProcessor) => {
   const status = Obj.get(eventConfig.get(), eventName).orThunk(() => {
     const patterns = Obj.keys(eventConfig.get());
     return Arr.findMap(patterns, (p) => eventName.indexOf(p) > -1 ? Option.some(eventConfig.get()[p]) : Option.none());
@@ -155,7 +155,7 @@ const ignoreEvent = {
   write: Fun.noop
 };
 
-const monitorEvent = (eventName: string, initialTarget: Element, f: EventProcessor): boolean => processEvent(eventName, initialTarget, f);
+const monitorEvent = (eventName: string, initialTarget: SugarElement, f: EventProcessor): boolean => processEvent(eventName, initialTarget, f);
 
 const inspectorInfo = (comp: AlloyComponent) => {
   const go = (c: AlloyComponent): InspectorInfo => {
