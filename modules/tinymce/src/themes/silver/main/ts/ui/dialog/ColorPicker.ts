@@ -7,12 +7,11 @@
 
 import { ColourPicker } from '@ephox/acid';
 import { AlloyTriggers, Behaviour, Composing, Form, Memento, NativeEvents, Representing, SimpleSpec } from '@ephox/alloy';
-import { Types } from '@ephox/bridge';
+import { Dialog } from '@ephox/bridge';
 import { Optional } from '@ephox/katamari';
 
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 import { formActionEvent } from '../general/FormEvents';
-import { Omit } from '../Omit';
 
 // import I18n from 'tinymce/core/api/util/I18n';
 
@@ -48,7 +47,7 @@ const translate = function (key) {
   return getEnglishText(key);
 };
 
-type ColorPickerSpec = Omit<Types.ColorPicker.ColorPicker, 'type'>;
+type ColorPickerSpec = Omit<Dialog.ColorPicker, 'type'>;
 
 export const renderColorPicker = (_spec: ColorPickerSpec): SimpleSpec => {
   const getClass = (key: string) => 'tox-' + key;

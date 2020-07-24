@@ -1,12 +1,12 @@
 import { ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Pipeline, Step, UiFinder } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Menu } from '@ephox/bridge';
 import { Arr } from '@ephox/katamari';
 import { TinyLoader } from '@ephox/mcagar';
 import { SugarBody, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
+import { Menu } from 'tinymce/core/api/ui/Ui';
 import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('OxideGridCollectionMenuTest', (success, failure) => {
@@ -84,7 +84,7 @@ UnitTest.asynctest('OxideGridCollectionMenuTest', (success, failure) => {
                 value: num,
                 text: num,
                 icon: 'fake-icon-name'
-              } as Menu.ChoiceMenuItemApi))
+              } as Menu.ChoiceMenuItemSpec))
             );
           },
           onAction: store.adder('onAction'),

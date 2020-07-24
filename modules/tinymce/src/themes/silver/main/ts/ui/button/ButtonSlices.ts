@@ -6,7 +6,6 @@
  */
 
 import { Behaviour, Replacing, SimpleOrSketchSpec } from '@ephox/alloy';
-import { TranslateIfNeeded } from 'tinymce/core/api/util/I18n';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { get as getIcon, IconProvider } from '../icons/Icons';
@@ -30,7 +29,7 @@ const renderReplacableIconFromPack = (iconName: string, iconsProvider: IconProvi
   ])
 });
 
-const renderLabel = (text: TranslateIfNeeded, prefix: string, providersBackstage: UiFactoryBackstageProviders) => ({
+const renderLabel = (text: string, prefix: string, providersBackstage: UiFactoryBackstageProviders) => ({
   dom: {
     tag: 'span',
     innerHtml: providersBackstage.translate(text),

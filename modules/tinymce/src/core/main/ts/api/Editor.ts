@@ -6,7 +6,7 @@
  */
 
 import { Registry } from '@ephox/bridge';
-import { Arr, Optional } from '@ephox/katamari';
+import { Arr } from '@ephox/katamari';
 import * as EditorContent from '../content/EditorContent';
 import * as NodeType from '../dom/NodeType';
 import * as EditorRemove from '../EditorRemove';
@@ -35,7 +35,7 @@ import Formatter from './Formatter';
 import DomParser from './html/DomParser';
 import AstNode from './html/Node';
 import Schema from './html/Schema';
-import { create, Mode } from './Mode';
+import { create, EditorMode } from './Mode';
 import NotificationManager from './NotificationManager';
 import PluginManager, { Plugin } from './PluginManager';
 import * as Settings from './Settings';
@@ -69,7 +69,7 @@ import WindowManager from './WindowManager';
  * ed.render();
  */
 
-export interface Ui {
+export interface EditorUi {
   registry: Registry.Registry;
   /** StyleSheetLoader for styles in the editor UI. For content styles, use editor.dom.styleSheetLoader. */
   styleSheetLoader: StyleSheetLoader;
@@ -177,7 +177,7 @@ class Editor implements EditorObservable {
    * @property ui
    * @type tinymce.editor.ui.Ui
    */
-  public ui: Ui;
+  public ui: EditorUi;
 
   /**
    * Editor mode API
@@ -185,7 +185,7 @@ class Editor implements EditorObservable {
    * @property mode
    * @type tinymce.EditorMode
    */
-  public mode: Mode;
+  public mode: EditorMode;
 
   /**
    * Sets the editor mode. For example: "design", "code" or "readonly".
@@ -226,7 +226,7 @@ class Editor implements EditorObservable {
   // Arguments set later, for example by InitContentBody.ts
   public annotator: Annotator;
   public bodyElement: HTMLElement;
-  public bookmark: Optional<{}>;
+  public bookmark: any; // Note: Intentionally any so as to not expose Optional
   public composing: boolean;
   public container: HTMLElement;
   public contentAreaContainer: HTMLElement;
@@ -444,7 +444,7 @@ class Editor implements EditorObservable {
    */
   public getParam <K extends keyof ParamTypeMap>(name: string, defaultVal: ParamTypeMap[K], type: K): ParamTypeMap[K];
   public getParam <K extends keyof EditorSettings>(name: K, defaultVal?: EditorSettings[K], type?: string): EditorSettings[K];
-  public getParam <T>(name: string, defaultVal: T, type: string): T;
+  public getParam <T>(name: string, defaultVal: T, type?: string): T;
   public getParam(name: string, defaultVal?: any, type?: string): any {
     return getParam(this, name, defaultVal, type);
   }
@@ -526,7 +526,7 @@ class Editor implements EditorObservable {
    * @param {addQueryStateHandlerCallback} callback Function to execute when the command state retrieval occurs.
    * @param {Object} scope Optional scope to execute the function in.
    */
-  public addQueryStateHandler(name: string, callback: () => boolean, scope?: {}) {
+  public addQueryStateHandler(name: string, callback: () => boolean, scope?: any) {
     /**
      * Callback function that gets called when a queryCommandState is executed.
      *
@@ -545,7 +545,7 @@ class Editor implements EditorObservable {
    * @param {addQueryValueHandlerCallback} callback Function to execute when the command value retrieval occurs.
    * @param {Object} scope Optional scope to execute the function in.
    */
-  public addQueryValueHandler(name: string, callback: () => string, scope?: {}) {
+  public addQueryValueHandler(name: string, callback: () => string, scope?: any) {
     /**
      * Callback function that gets called when a queryCommandValue is executed.
      *
@@ -582,7 +582,7 @@ class Editor implements EditorObservable {
    *    editor.execCommand('mceInsertContent', false, 'Hello, World!');
    * });
    */
-  public addShortcut(pattern: string, desc: string, cmdFunc: string | any[] | Function, scope?: {}) {
+  public addShortcut(pattern: string, desc: string, cmdFunc: string | [string, boolean, any] | (() => void), scope?: any) {
     this.shortcuts.add(pattern, desc, cmdFunc, scope);
   }
 

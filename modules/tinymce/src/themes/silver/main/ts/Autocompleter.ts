@@ -6,7 +6,7 @@
  */
 
 import { AddEventsBehaviour, AlloyEvents, Behaviour, GuiFactory, Highlighting, InlineView, ItemTypes, Menu, SystemEvents } from '@ephox/alloy';
-import { InlineContent, Types } from '@ephox/bridge';
+import { InlineContent } from '@ephox/bridge';
 import { Arr, Cell, Optional, Throttler, Thunk } from '@ephox/katamari';
 import { Remove, SugarElement } from '@ephox/sugar';
 
@@ -134,7 +134,7 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => 
     ac.matchLength = context.text.length;
 
     // Display the autocompleter menu
-    const columns: Types.ColumnTypes = Arr.findMap(lookupData, (ld) => Optional.from(ld.columns)).getOr(1);
+    const columns: InlineContent.ColumnTypes = Arr.findMap(lookupData, (ld) => Optional.from(ld.columns)).getOr(1);
     InlineView.showAt(
       autocompleter,
       {

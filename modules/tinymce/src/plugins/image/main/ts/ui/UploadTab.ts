@@ -5,11 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Dialog } from 'tinymce/core/api/ui/Ui';
 import { ImageDialogInfo } from './DialogTypes';
-import { Types } from '@ephox/bridge';
 
 const makeTab = (_info: ImageDialogInfo) => {
-  const items: Types.Dialog.BodyComponentApi[] = [
+  const items: Dialog.BodyComponentSpec[] = [
     {
       type: 'dropzone',
       name: 'fileinput'

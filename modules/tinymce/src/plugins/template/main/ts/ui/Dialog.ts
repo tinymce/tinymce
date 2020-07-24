@@ -5,10 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Types } from '@ephox/bridge';
 import { Arr, Optional } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
+import { Dialog } from 'tinymce/core/api/ui/Ui';
 import Promise from 'tinymce/core/api/util/Promise';
 import Tools from 'tinymce/core/api/util/Tools';
 import XHR from 'tinymce/core/api/util/XHR';
@@ -45,7 +45,7 @@ type DialogData = {
   preview: string;
 };
 
-type UpdateDialogCallback = (dialogApi: Types.Dialog.DialogInstanceApi<DialogData>, template: InternalTemplate, previewHtml: string) => void;
+type UpdateDialogCallback = (dialogApi: Dialog.DialogInstanceApi<DialogData>, template: InternalTemplate, previewHtml: string) => void;
 
 const getPreviewContent = (editor: Editor, html: string) => {
   if (html.indexOf('<html>') === -1) {
@@ -132,7 +132,7 @@ const open = (editor: Editor, templateList: ExternalTemplate[]) => {
 
   const findTemplate = (templates: InternalTemplate[], templateTitle: string) => Arr.find(templates, (t) => t.text === templateTitle);
 
-  const loadFailedAlert = (api: Types.Dialog.DialogInstanceApi<DialogData>) => {
+  const loadFailedAlert = (api: Dialog.DialogInstanceApi<DialogData>) => {
     editor.windowManager.alert('Could not load the specified template.', () => api.focus('template'));
   };
 
@@ -148,23 +148,24 @@ const open = (editor: Editor, templateList: ExternalTemplate[]) => {
     }));
   });
 
-  const onChange = (templates: InternalTemplate[], updateDialog: UpdateDialogCallback) => (api: Types.Dialog.DialogInstanceApi<DialogData>, change: { name: string }) => {
-    if (change.name === 'template') {
-      const newTemplateTitle = api.getData().template;
-      findTemplate(templates, newTemplateTitle).each((t) => {
-        api.block('Loading...');
-        getTemplateContent(t).then((previewHtml) => {
-          updateDialog(api, t, previewHtml);
-        }).catch(() => {
-          updateDialog(api, t, '');
-          api.disable('save');
-          loadFailedAlert(api);
+  const onChange = (templates: InternalTemplate[], updateDialog: UpdateDialogCallback) =>
+    (api: Dialog.DialogInstanceApi<DialogData>, change: { name: string }) => {
+      if (change.name === 'template') {
+        const newTemplateTitle = api.getData().template;
+        findTemplate(templates, newTemplateTitle).each((t) => {
+          api.block('Loading...');
+          getTemplateContent(t).then((previewHtml) => {
+            updateDialog(api, t, previewHtml);
+          }).catch(() => {
+            updateDialog(api, t, '');
+            api.disable('save');
+            loadFailedAlert(api);
+          });
         });
-      });
-    }
-  };
+      }
+    };
 
-  const onSubmit = (templates: InternalTemplate[]) => (api: Types.Dialog.DialogInstanceApi<DialogData>) => {
+  const onSubmit = (templates: InternalTemplate[]) => (api: Dialog.DialogInstanceApi<DialogData>) => {
     const data = api.getData();
     findTemplate(templates, data.template).each((t) => {
       getTemplateContent(t).then((previewHtml) => {
@@ -180,7 +181,7 @@ const open = (editor: Editor, templateList: ExternalTemplate[]) => {
   const openDialog = (templates: InternalTemplate[]) => {
     const selectBoxItems = createSelectBoxItems(templates);
 
-    const buildDialogSpec = (bodyItems: Types.Dialog.BodyComponentApi[], initialData: DialogData): Types.Dialog.DialogApi<DialogData> => ({
+    const buildDialogSpec = (bodyItems: Dialog.BodyComponentSpec[], initialData: DialogData): Dialog.DialogSpec<DialogData> => ({
       title: 'Insert Template',
       size: 'large',
       body: {
@@ -205,9 +206,9 @@ const open = (editor: Editor, templateList: ExternalTemplate[]) => {
       onChange: onChange(templates, updateDialog)
     });
 
-    const updateDialog = (dialogApi: Types.Dialog.DialogInstanceApi<DialogData>, template: InternalTemplate, previewHtml: string) => {
+    const updateDialog = (dialogApi: Dialog.DialogInstanceApi<DialogData>, template: InternalTemplate, previewHtml: string) => {
       const content = getPreviewContent(editor, previewHtml);
-      const bodyItems: Types.Dialog.BodyComponentApi[] = [
+      const bodyItems: Dialog.BodyComponentSpec[] = [
         {
           type: 'selectbox',
           name: 'template',

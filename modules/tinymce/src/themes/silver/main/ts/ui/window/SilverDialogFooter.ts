@@ -6,7 +6,7 @@
  */
 
 import { AlloyComponent, Behaviour, Container, DomFactory, Memento, MementoRecord, ModalDialog, Reflecting, SketchSpec } from '@ephox/alloy';
-import { Types } from '@ephox/bridge';
+import { Dialog } from '@ephox/bridge';
 import { Arr, Optional } from '@ephox/katamari';
 
 import { UiFactoryBackstage } from '../../backstage/Backstage';
@@ -15,16 +15,16 @@ import { footerChannel } from './DialogChannels';
 
 // FIX spelling and import location
 export interface DialogMemButton {
-  name: Types.Dialog.DialogButton['name'];
-  align: Types.Dialog.DialogButton['align'];
+  name: Dialog.DialogFooterButton['name'];
+  align: Dialog.DialogFooterButton['align'];
   memento: MementoRecord;
 }
 
 export interface WindowFooterSpec {
-  buttons: Types.Dialog.DialogButton[];
+  buttons: Dialog.DialogFooterButton[];
 }
 
-const makeButton = (button: Types.Dialog.DialogButton, backstage: UiFactoryBackstage) => renderFooterButton(button, button.type, backstage);
+const makeButton = (button: Dialog.DialogFooterButton, backstage: UiFactoryBackstage) => renderFooterButton(button, button.type, backstage);
 
 const lookup = (compInSystem: AlloyComponent, footerButtons: DialogMemButton[], buttonName: string) => Arr.find(footerButtons, (button) => button.name === buttonName).bind((memButton) => memButton.memento.getOpt(compInSystem));
 

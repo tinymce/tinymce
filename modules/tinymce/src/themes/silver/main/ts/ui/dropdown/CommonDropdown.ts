@@ -5,12 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-/* eslint-disable max-len */
 import {
   AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, CustomEvent, Dropdown as AlloyDropdown, Focusing, GuiFactory, Keying,
   Memento, Replacing, Representing, SimulatedEvent, SketchSpec, TieredData, Unselecting
 } from '@ephox/alloy';
-import { Types } from '@ephox/bridge';
+import { Toolbar } from '@ephox/bridge';
 import { Arr, Cell, Fun, Future, Id, Merger, Optional } from '@ephox/katamari';
 import { EventArgs } from '@ephox/sugar';
 import { toolbarButtonEventOrder } from 'tinymce/themes/silver/ui/toolbar/button/ButtonEvents';
@@ -23,7 +22,6 @@ import { onControlAttached, onControlDetached, OnDestroy } from '../controls/Con
 import * as Icons from '../icons/Icons';
 import { componentRenderPipeline } from '../menus/item/build/CommonMenuItem';
 import * as MenuParts from '../menus/menu/MenuParts';
-/* eslint-enable max-len */
 
 export const updateMenuText = Id.generate('update-menu-text');
 export const updateMenuIcon = Id.generate('update-menu-icon');
@@ -45,8 +43,8 @@ export interface CommonDropdownSpec<T> {
   fetch: (callback: (tdata: Optional<TieredData>) => void) => void;
   onSetup: (itemApi: T) => OnDestroy<T>;
   getApi: (comp: AlloyComponent) => T;
-  columns: Types.ColumnTypes;
-  presets: Types.PresetTypes;
+  columns: Toolbar.ColumnTypes;
+  presets: Toolbar.PresetTypes;
   classes: string[];
   dropdownBehaviours: Array<Behaviour.NamedConfiguredBehaviour<
   Behaviour.BehaviourConfigSpec, Behaviour.BehaviourConfigDetail>>;

@@ -4,9 +4,9 @@
  * For LGPL see License.txt in the project root for license information.
  * For commercial licenses see https://www.tiny.cloud/
  */
-/* eslint-disable max-len */
+
 import { AlloyEvents, FocusManagers, ItemTypes, Keying, MenuTypes, TieredMenu, TieredMenuTypes } from '@ephox/alloy';
-import { InlineContent, Menu as BridgeMenu, Types } from '@ephox/bridge';
+import { InlineContent, Menu as BridgeMenu, Toolbar } from '@ephox/bridge';
 import { Arr, Optional, Optionals } from '@ephox/katamari';
 import { UiFactoryBackstage, UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
 import { detectSize } from '../../alien/FlatgridAutodetect';
@@ -16,8 +16,7 @@ import * as MenuItems from '../item/MenuItems';
 import { deriveMenuMovement } from './MenuMovement';
 import { markers as getMenuMarkers } from './MenuParts';
 import * as MenuUtils from './MenuUtils';
-import { SingleMenuItemApi } from './SingleMenuTypes';
-/* eslint-enable max-len */
+import { SingleMenuItemSpec } from './SingleMenuTypes';
 
 type PartialMenuSpec = MenuUtils.PartialMenuSpec;
 
@@ -26,7 +25,7 @@ export type ItemChoiceActionHandler = (value: string) => void;
 export enum FocusMode { ContentFocus, UiFocus }
 
 const createMenuItemFromBridge = (
-  item: SingleMenuItemApi,
+  item: SingleMenuItemSpec,
   itemResponse: ItemResponse,
   backstage: UiFactoryBackstage,
   menuHasIcons: boolean,
@@ -131,7 +130,7 @@ export const createAutocompleteItems = (
 
 export const createPartialMenu = (
   value: string,
-  items: SingleMenuItemApi[],
+  items: SingleMenuItemSpec[],
   itemResponse: ItemResponse,
   backstage: UiFactoryBackstage,
   isHorizontalMenu: boolean
@@ -139,12 +138,12 @@ export const createPartialMenu = (
   const hasIcons = MenuUtils.menuHasIcons(items);
 
   const alloyItems = Optionals.cat(
-    Arr.map(items, (item: SingleMenuItemApi) => {
+    Arr.map(items, (item: SingleMenuItemSpec) => {
       // Have to check each item for an icon, instead of as part of hasIcons above,
       // else in horizontal menus, items with an icon but without text will display
       // with neither
-      const itemHasIcon = (i: SingleMenuItemApi) => isHorizontalMenu ? !i.hasOwnProperty('text') : hasIcons;
-      const createItem = (i: SingleMenuItemApi) => createMenuItemFromBridge(
+      const itemHasIcon = (i: SingleMenuItemSpec) => isHorizontalMenu ? !i.hasOwnProperty('text') : hasIcons;
+      const createItem = (i: SingleMenuItemSpec) => createMenuItemFromBridge(
         i,
         itemResponse,
         backstage,
@@ -171,7 +170,7 @@ export const createMenuFrom = (
   partialMenu: PartialMenuSpec,
   columns: number | 'auto',
   focusMode: FocusMode,
-  presets: Types.PresetTypes
+  presets: Toolbar.PresetTypes
 ): MenuTypes.MenuSpec => {
   const focusManager = focusMode === FocusMode.ContentFocus ? FocusManagers.highlights() : FocusManagers.dom();
 

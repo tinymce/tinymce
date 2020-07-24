@@ -6,7 +6,7 @@
  */
 
 import { Behaviour, GuiFactory, ItemTypes, MaxHeight, Tooltipping } from '@ephox/alloy';
-import { InlineContent, Types } from '@ephox/bridge';
+import { InlineContent, Toolbar } from '@ephox/bridge';
 import { Obj, Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
@@ -71,7 +71,7 @@ const renderAutocompleteItem = (
   spec: InlineContent.AutocompleterItem,
   matchText: string,
   useText: boolean,
-  presets: Types.PresetItemTypes,
+  presets: Toolbar.PresetItemTypes,
   onItemValueHandler: ItemValueHandler,
   itemResponse: ItemResponse,
   sharedBackstage: UiFactoryBackstageShared,

@@ -1,7 +1,7 @@
 import { FieldPresence, FieldProcessorAdt, FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Id, Optional } from '@ephox/katamari';
 
-export interface CommonMenuItemApi {
+export interface CommonMenuItemSpec {
   disabled?: boolean;
   text?: string;
   value?: string;

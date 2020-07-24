@@ -6,7 +6,6 @@
  */
 
 import Delay from './Delay';
-import { NativeEventMap } from './EventDispatcher';
 import Observable from './Observable';
 import Tools from './Tools';
 
@@ -16,17 +15,18 @@ export interface XHRSettings {
   crossDomain?: boolean;
   data?: string;
   requestheaders?: Record<string, { key: string; value: string}>;
-  scope?: {};
+  scope?: any;
   type?: string;
   url: string;
-  error_scope?: {};
-  success_scope?: {};
+  error_scope?: any;
+  success_scope?: any;
   error? (message: 'TIMED_OUT' | 'GENERAL', xhr: XMLHttpRequest, settings: XHRSettings): void;
   success? (text: string, xhr: XMLHttpRequest, settings: XHRSettings): void;
 }
 
-export interface XHREventMap extends NativeEventMap {
-  'beforeInitialize': { settings: XHRSettings };
+export interface XHREventMap {
+  beforeInitialize: { settings: XHRSettings };
+  beforeSend: { xhr: XMLHttpRequest; settings: XHRSettings };
 }
 
 interface XHR extends Observable<XHREventMap> {

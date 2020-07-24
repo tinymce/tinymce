@@ -6,7 +6,7 @@
  */
 
 import { AlloyComponent, AlloyTriggers, Disabling, MementoRecord, SketchSpec, Tabstopping } from '@ephox/alloy';
-import { Menu, Toolbar, Types } from '@ephox/bridge';
+import { Dialog, Menu, Toolbar } from '@ephox/bridge';
 import { Arr, Cell, Optional } from '@ephox/katamari';
 import { Attribute, Class, Focus } from '@ephox/sugar';
 import { formActionEvent } from 'tinymce/themes/silver/ui/general/FormEvents';
@@ -14,7 +14,6 @@ import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { renderCommonDropdown } from '../dropdown/CommonDropdown';
 import ItemResponse from '../menus/item/ItemResponse';
 import * as NestedMenus from '../menus/menu/NestedMenus';
-import { Omit } from '../Omit';
 import { ToolbarButtonClasses } from '../toolbar/button/ButtonClasses';
 
 export type MenuButtonSpec = Omit<Toolbar.ToolbarMenuButton, 'type'>;
@@ -62,11 +61,11 @@ const renderMenuButton = (spec: MenuButtonSpec, prefix: string, backstage: UiFac
 prefix,
 backstage.shared);
 
-interface StoragedMenuItem extends Types.Dialog.DialogToggleMenuItem {
+interface StoragedMenuItem extends Dialog.DialogFooterToggleMenuItem {
   storage: Cell<boolean>;
 }
 
-interface StoragedMenuButton extends Omit<Types.Dialog.DialogMenuButton, 'items'> {
+interface StoragedMenuButton extends Omit<Dialog.DialogFooterMenuButton, 'items'> {
   items: StoragedMenuItem[];
 }
 

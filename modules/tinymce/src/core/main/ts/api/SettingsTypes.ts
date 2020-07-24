@@ -175,7 +175,7 @@ interface BaseEditorSettings {
   toolbar_mode?: ToolbarMode;
   typeahead_urls?: boolean;
   url_converter?: URLConverter;
-  url_converter_scope?: {};
+  url_converter_scope?: any;
   urlconverter_callback?: string | URLConverterCallback;
   valid_children?: string;
   valid_classes?: string | Record<string, string>;

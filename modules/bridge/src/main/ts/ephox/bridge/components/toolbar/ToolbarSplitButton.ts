@@ -1,10 +1,10 @@
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Fun, Optional, Result } from '@ephox/katamari';
 
-import { ChoiceMenuItemApi, SeparatorMenuItemApi } from '../../api/Menu';
+import { ChoiceMenuItemSpec, SeparatorMenuItemSpec } from '../../api/Menu';
 
 // Temporarily disable separators until things are clearer
-export type ToolbarSplitButtonItemTypes = ChoiceMenuItemApi | SeparatorMenuItemApi;
+export type ToolbarSplitButtonItemTypes = ChoiceMenuItemSpec | SeparatorMenuItemSpec;
 export type SuccessCallback = (menu: ToolbarSplitButtonItemTypes[]) => void;
 export type SelectPredicate = (value: string) => boolean;
 
@@ -12,7 +12,7 @@ export type PresetTypes = 'color' | 'normal' | 'listpreview';
 export type PresetItemTypes = 'color' | 'normal';
 export type ColumnTypes = number | 'auto';
 
-export interface ToolbarSplitButtonApi {
+export interface ToolbarSplitButtonSpec {
   type?: 'splitbutton';
   tooltip?: string;
   icon?: string;
@@ -66,5 +66,5 @@ export const splitButtonSchema = ValueSchema.objOf([
 
 export const isSplitButtonButton = (spec: any): spec is ToolbarSplitButton => spec.type === 'splitbutton';
 
-export const createSplitButton = (spec: any): Result<ToolbarSplitButton, ValueSchema.SchemaError<any>> =>
+export const createSplitButton = (spec: ToolbarSplitButtonSpec): Result<ToolbarSplitButton, ValueSchema.SchemaError<any>> =>
   ValueSchema.asRaw<ToolbarSplitButton>('SplitButton', splitButtonSchema, spec);

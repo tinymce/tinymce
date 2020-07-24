@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import EventDispatcher, { EditorEvent, NativeEventMap } from './EventDispatcher';
+import EventDispatcher, { EditorEvent } from './EventDispatcher';
 
-interface Observable<T extends NativeEventMap> {
+interface Observable<T> {
   fire <K extends keyof T>(name: K, args?: T[K], bubble?: boolean): EditorEvent<T[K]>;
   fire <U = any>(name: string, args?: U, bubble?: boolean): EditorEvent<U>;
   on <K extends keyof T>(name: K, callback: (event: EditorEvent<T[K]>) => void, prepend?: boolean): EventDispatcher<T>;

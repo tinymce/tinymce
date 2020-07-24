@@ -6,7 +6,7 @@
  */
 
 import { AlloyComponent, AlloyEvents, AlloyTriggers, CustomEvent, Keying, NativeEvents, Reflecting, Representing } from '@ephox/alloy';
-import { DialogManager, Types } from '@ephox/bridge';
+import { Dialog, DialogManager } from '@ephox/bridge';
 import { Result } from '@ephox/katamari';
 import { Attribute, Compare, Focus, SugarElement } from '@ephox/sugar';
 
@@ -43,15 +43,16 @@ const initCommonEvents = (fireApiEvent: <E extends CustomEvent>(name: string, f:
   AlloyEvents.run<FormBlockEvent>(formBlockEvent, (_c, se) => extras.onBlock(se.event()))
 ];
 
-const initUrlDialog = <T>(getInstanceApi: () => Types.UrlDialog.UrlDialogInstanceApi, extras: ExtraListeners) => {
-  const fireApiEvent = <E extends CustomEvent>(eventName: string, f: (api: Types.UrlDialog.UrlDialogInstanceApi, spec: Types.UrlDialog.UrlDialog, e: E, c: AlloyComponent) => void) => AlloyEvents.run<E>(eventName, (c, se) => {
-    withSpec(c, (spec, _c) => {
-      f(getInstanceApi(), spec, se.event(), c);
+const initUrlDialog = <T>(getInstanceApi: () => Dialog.UrlDialogInstanceApi, extras: ExtraListeners) => {
+  const fireApiEvent = <E extends CustomEvent>(eventName: string, f: (api: Dialog.UrlDialogInstanceApi, spec: Dialog.UrlDialog, e: E, c: AlloyComponent) => void) =>
+    AlloyEvents.run<E>(eventName, (c, se) => {
+      withSpec(c, (spec, _c) => {
+        f(getInstanceApi(), spec, se.event(), c);
+      });
     });
-  });
 
-  const withSpec = (c: AlloyComponent, f: (spec: Types.UrlDialog.UrlDialog, c: AlloyComponent) => void): void => {
-    Reflecting.getState(c).get().each((currentDialog: Types.UrlDialog.UrlDialog) => {
+  const withSpec = (c: AlloyComponent, f: (spec: Dialog.UrlDialog, c: AlloyComponent) => void): void => {
+    Reflecting.getState(c).get().each((currentDialog: Dialog.UrlDialog) => {
       f(currentDialog, c);
     });
   };
@@ -64,14 +65,15 @@ const initUrlDialog = <T>(getInstanceApi: () => Types.UrlDialog.UrlDialogInstanc
   ];
 };
 
-const initDialog = <T>(getInstanceApi: () => Types.Dialog.DialogInstanceApi<T>, extras: ExtraListeners, getSink: () => Result<AlloyComponent, any>) => {
-  const fireApiEvent = <E extends CustomEvent>(eventName: string, f: (api: Types.Dialog.DialogInstanceApi<T>, spec: Types.Dialog.Dialog<T>, e: E, c: AlloyComponent) => void) => AlloyEvents.run<E>(eventName, (c, se) => {
-    withSpec(c, (spec, _c) => {
-      f(getInstanceApi(), spec, se.event(), c);
+const initDialog = <T>(getInstanceApi: () => Dialog.DialogInstanceApi<T>, extras: ExtraListeners, getSink: () => Result<AlloyComponent, any>) => {
+  const fireApiEvent = <E extends CustomEvent>(eventName: string, f: (api: Dialog.DialogInstanceApi<T>, spec: Dialog.Dialog<T>, e: E, c: AlloyComponent) => void) =>
+    AlloyEvents.run<E>(eventName, (c, se) => {
+      withSpec(c, (spec, _c) => {
+        f(getInstanceApi(), spec, se.event(), c);
+      });
     });
-  });
 
-  const withSpec = (c: AlloyComponent, f: (spec: Types.Dialog.Dialog<T>, c: AlloyComponent) => void): void => {
+  const withSpec = (c: AlloyComponent, f: (spec: Dialog.Dialog<T>, c: AlloyComponent) => void): void => {
     Reflecting.getState(c).get().each((currentDialogInit: DialogManager.DialogInit<T>) => {
       f(currentDialogInit.internalDialog, c);
     });

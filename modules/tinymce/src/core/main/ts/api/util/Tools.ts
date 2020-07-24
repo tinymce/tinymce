@@ -13,7 +13,7 @@ type ObjCallback<T, R> = (value: T[keyof T], key: string, obj: T) => R;
 
 interface Tools {
   is (obj: any, type: string): boolean;
-  isArray <T>(T: any): T is ArrayLike<T>;
+  isArray <T>(arr: any): arr is Array<T>;
   inArray <T>(arr: ArrayLike<T>, value: T): number;
   grep <T>(arr: ArrayLike<T>, pred?: ArrayCallback<T, boolean>);
   trim (str: string): string;
@@ -24,11 +24,11 @@ interface Tools {
   each <T>(obj: T, cb: ObjCallback<T, any>, scope?: any): void;
   map <T, U>(arr: ArrayLike<T>, cb: ArrayCallback<T, U>, scope?: any): Array<U>;
   map <T, U>(obj: T, cb: ObjCallback<T, U>, scope?: any): Array<U>;
-  extend (obj: {}, ext: {}, ...objs: {}[]): any;
-  create (name: string, p: {}, root?: {});
-  walk <T = {}>(obj: T, f: Function, n?: keyof T, scope?: any): void;
-  createNS (name: string, o?: {}): any;
-  resolve (path: string, o?: {}): any;
+  extend (obj: Object, ext: Object, ...objs: Object[]): any;
+  create (name: string, p: Object, root?: Object);
+  walk <T = any>(obj: T, f: Function, n?: keyof T, scope?: any): void;
+  createNS (name: string, o?: Object): any;
+  resolve (path: string, o?: Object): any;
   explode (s: string, d?: string | RegExp): string[];
   _addCacheSuffix (url: string): string;
 }
@@ -61,7 +61,7 @@ const trim = function (str) {
  * @param {string} type Optional type to check for.
  * @return {Boolean} true/false if the object is of the specified type.
  */
-const is = function (obj: Record<string, any> | {}, type: string) {
+const is = function (obj: any, type: string) {
   if (!type) {
     return obj !== undefined;
   }

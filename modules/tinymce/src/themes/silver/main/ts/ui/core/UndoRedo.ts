@@ -6,7 +6,7 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
-import { Menu } from '@ephox/bridge';
+import { Menu } from 'tinymce/core/api/ui/Ui';
 
 const toggleUndoRedoState = (api: Menu.MenuItemInstanceApi, editor: Editor, type: 'hasUndo' | 'hasRedo') => {
   const checkState = () => editor.undoManager ? editor.undoManager[type]() : false;

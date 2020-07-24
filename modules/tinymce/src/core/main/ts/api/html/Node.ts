@@ -70,6 +70,14 @@ const isNonEmptyElement = (node: AstNode) => {
   return (node.attr('name') || (node.attr('id') && !node.firstChild) || node.attr('data-mce-bookmark') || isNamedAnchor);
 };
 
+export interface AstNodeConstructor {
+  readonly prototype: AstNode;
+
+  new (name: string, type: number): AstNode;
+
+  create(name: string, attrs?: Record<string, string>): AstNode;
+}
+
 /**
  * This class is a minimalistic implementation of a DOM like node used by the DomParser class.
  *

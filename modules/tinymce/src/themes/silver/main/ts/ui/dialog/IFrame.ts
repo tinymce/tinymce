@@ -6,7 +6,7 @@
  */
 
 import { AlloyComponent, Behaviour, Focusing, FormField, Tabstopping } from '@ephox/alloy';
-import { Types } from '@ephox/bridge';
+import { Dialog } from '@ephox/bridge';
 import { Cell, Optional } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Attribute } from '@ephox/sugar';
@@ -15,7 +15,6 @@ import { renderFormFieldWith, renderLabel } from '../alien/FieldLabeller';
 
 import { RepresentingConfigs } from '../alien/RepresentingConfigs';
 import * as NavigableObject from '../general/NavigableObject';
-import { Omit } from '../Omit';
 
 const platformNeedsSandboxing = !(PlatformDetection.detect().browser.isIE() || PlatformDetection.detect().browser.isEdge());
 
@@ -24,7 +23,7 @@ interface IFrameSourcing {
   setValue: (frame: AlloyComponent, value: string) => void;
 }
 
-type IframeSpec = Omit<Types.Iframe.Iframe, 'type'>;
+type IframeSpec = Omit<Dialog.Iframe, 'type'>;
 
 const getDynamicSource = (isSandbox): IFrameSourcing => {
   const cachedValue = Cell('');

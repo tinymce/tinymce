@@ -9,17 +9,15 @@ import {
   AddEventsBehaviour, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, Disabling, FormField as AlloyFormField, HtmlSelect as AlloyHtmlSelect,
   NativeEvents, SimpleSpec, SketchSpec, Tabstopping
 } from '@ephox/alloy';
-import { Types } from '@ephox/bridge';
+import { Dialog } from '@ephox/bridge';
 import { Arr, Optional } from '@ephox/katamari';
 import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
 import { renderLabel } from 'tinymce/themes/silver/ui/alien/FieldLabeller';
 import * as Icons from 'tinymce/themes/silver/ui/icons/Icons';
 import * as ReadOnly from '../../ReadOnly';
-
 import { formChangeEvent } from '../general/FormEvents';
-import { Omit } from '../Omit';
 
-type SelectBoxSpec = Omit<Types.SelectBox.SelectBox, 'type'>;
+type SelectBoxSpec = Omit<Dialog.SelectBox, 'type'>;
 
 export const renderSelectBox = (spec: SelectBoxSpec, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
   const translatedOptions = Arr.map(spec.items, (item) => ({

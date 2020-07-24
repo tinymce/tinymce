@@ -6,7 +6,7 @@
  */
 
 import { Disabling, Toggling } from '@ephox/alloy';
-import { Menu, Types } from '@ephox/bridge';
+import { Menu, Toolbar } from '@ephox/bridge';
 import { Merger, Optional } from '@ephox/katamari';
 import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
 import * as ItemClasses from '../ItemClasses';
@@ -18,7 +18,7 @@ import { buildData, renderCommonItem } from './CommonMenuItem';
 const renderChoiceItem = (
   spec: Menu.ChoiceMenuItem,
   useText: boolean,
-  presets: Types.PresetItemTypes,
+  presets: Toolbar.PresetItemTypes,
   onItemValueHandler: (itemValue: string) => void,
   isSelected: boolean, itemResponse: ItemResponse,
   providersBackstage: UiFactoryBackstageProviders,

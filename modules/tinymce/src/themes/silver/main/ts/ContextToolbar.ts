@@ -9,7 +9,7 @@ import {
   AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, AnchorSpec, Behaviour, Boxes, Bubble, GuiFactory, InlineView, Keying,
   Layout, LayoutInside, MaxHeight, MaxWidth, Positioning
 } from '@ephox/alloy';
-import { Toolbar } from '@ephox/bridge';
+import { InlineContent, Toolbar } from '@ephox/bridge';
 import { Arr, Cell, Id, Merger, Obj, Optional, Thunk } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Css, Focus, Scroll, SugarElement } from '@ephox/sugar';
@@ -28,7 +28,7 @@ import { identifyButtons } from './ui/toolbar/Integration';
 
 type ScopedToolbars = ToolbarScopes.ScopedToolbars;
 
-export type ContextTypes = Toolbar.ContextToolbar | Toolbar.ContextForm;
+export type ContextTypes = InlineContent.ContextToolbar | InlineContent.ContextForm;
 
 interface Extras {
   backstage: UiFactoryBackstage;
@@ -66,7 +66,7 @@ const mobileAnchorSpecLayouts = {
     LayoutInside.north, LayoutInside.south, LayoutInside.northwest, LayoutInside.southwest, LayoutInside.northeast, LayoutInside.southeast ]
 };
 
-const getAnchorLayout = (position: Toolbar.ContextToolbarPosition, isTouch: boolean): Partial<AnchorSpec> => {
+const getAnchorLayout = (position: InlineContent.ContextPosition, isTouch: boolean): Partial<AnchorSpec> => {
   if (position === 'line') {
     return {
       bubble: Bubble.nu(bubbleSize, 0, bubbleAlignments),
@@ -183,11 +183,12 @@ const register = (editor: Editor, registryContextToolbars, sink: AlloyComponent,
     });
   }));
 
-  type ContextToolbarButtonTypes = Toolbar.ToolbarButtonApi | Toolbar.ToolbarMenuButtonApi | Toolbar.ToolbarSplitButtonApi | Toolbar.ToolbarToggleButtonApi | Toolbar.GroupToolbarButtonApi;
+  type ContextToolbarButtonTypes = Toolbar.ToolbarButtonSpec | Toolbar.ToolbarMenuButtonSpec | Toolbar.ToolbarSplitButtonSpec | Toolbar.ToolbarToggleButtonSpec | Toolbar.GroupToolbarButtonSpec;
 
-  const buildContextToolbarGroups = (allButtons: Record<string, ContextToolbarButtonTypes>, ctx: Toolbar.ContextToolbar) => identifyButtons(editor, { buttons: allButtons, toolbar: ctx.items, allowToolbarGroups: false }, extras, Optional.some([ 'form:' ]));
+  const buildContextToolbarGroups = (allButtons: Record<string, ContextToolbarButtonTypes>, ctx: InlineContent.ContextToolbar) =>
+    identifyButtons(editor, { buttons: allButtons, toolbar: ctx.items, allowToolbarGroups: false }, extras, Optional.some([ 'form:' ]));
 
-  const buildContextMenuGroups = (ctx: Toolbar.ContextForm, providers: UiFactoryBackstageProviders) => ContextForm.buildInitGroups(ctx, providers);
+  const buildContextMenuGroups = (ctx: InlineContent.ContextForm, providers: UiFactoryBackstageProviders) => ContextForm.buildInitGroups(ctx, providers);
 
   const buildToolbar = (toolbars: Array<ContextTypes>): AlloySpec => {
     const { buttons } = editor.ui.registry.getAll();
@@ -198,7 +199,9 @@ const register = (editor: Editor, registryContextToolbars, sink: AlloyComponent,
     // to scrolling or wrapping (default)
     const toolbarType = getToolbarMode(editor) === ToolbarMode.scrolling ? ToolbarMode.scrolling : ToolbarMode.default;
 
-    const initGroups = Arr.flatten(Arr.map(toolbars, (ctx) => ctx.type === 'contexttoolbar' ? buildContextToolbarGroups(allButtons, ctx) : buildContextMenuGroups(ctx, extras.backstage.shared.providers)));
+    const initGroups = Arr.flatten(Arr.map(toolbars, (ctx) =>
+      ctx.type === 'contexttoolbar' ? buildContextToolbarGroups(allButtons, ctx) : buildContextMenuGroups(ctx, extras.backstage.shared.providers)
+    ));
 
     return renderToolbar({
       type: toolbarType,
@@ -221,7 +224,7 @@ const register = (editor: Editor, registryContextToolbars, sink: AlloyComponent,
     });
   });
 
-  const getAnchor = (position: Toolbar.ContextToolbarPosition, element: Optional<SugarElement>): AnchorSpec => {
+  const getAnchor = (position: InlineContent.ContextPosition, element: Optional<SugarElement>): AnchorSpec => {
     const anchorage = position === 'node' ? extras.backstage.shared.anchors.node(element) : extras.backstage.shared.anchors.cursor();
     return Merger.deepMerge(
       anchorage,

@@ -6,13 +6,13 @@
  */
 
 import { Menu as AlloyMenu, TieredMenuTypes } from '@ephox/alloy';
+import { Toolbar } from '@ephox/bridge';
 import { Arr } from '@ephox/katamari';
 
 import { classForPreset } from '../item/ItemClasses';
 import { classes as getMenuClasses } from './MenuClasses';
-import { Types } from '@ephox/bridge';
 
-const markers = (presets: Types.PresetTypes) => {
+const markers = (presets: Toolbar.PresetTypes) => {
   const menuClasses = getMenuClasses(presets);
 
   return {
@@ -24,7 +24,7 @@ const markers = (presets: Types.PresetTypes) => {
   };
 };
 
-const dom = (hasIcons: boolean, columns: Types.ColumnTypes, presets: Types.PresetTypes) => {
+const dom = (hasIcons: boolean, columns: Toolbar.ColumnTypes, presets: Toolbar.PresetTypes) => {
   const menuClasses = getMenuClasses(presets);
   return {
     tag: 'div',
@@ -40,7 +40,7 @@ const components = [
 ];
 
 // NOTE: Up to here.
-const part = (hasIcons: boolean, columns: Types.ColumnTypes, presets: Types.PresetTypes): Partial<TieredMenuTypes.TieredMenuSpec> => {
+const part = (hasIcons: boolean, columns: Toolbar.ColumnTypes, presets: Toolbar.PresetTypes): Partial<TieredMenuTypes.TieredMenuSpec> => {
   const menuClasses = getMenuClasses(presets);
   const d = {
     tag: 'div',

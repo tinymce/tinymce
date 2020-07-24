@@ -1,6 +1,6 @@
 import { Log, Pipeline, Step } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { Toolbar } from '@ephox/bridge';
+import { InlineContent } from '@ephox/bridge';
 import { Arr, Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import { ContextTypes } from 'tinymce/themes/silver/ContextToolbar';
@@ -8,7 +8,7 @@ import { matchStartNode } from 'tinymce/themes/silver/ui/context/ContextToolbarL
 
 UnitTest.asynctest('Context toolbar prioritisation on lookup test', (success, failure) => {
 
-  const createToolbar = (items): Toolbar.ContextToolbar => ({
+  const createToolbar = (items): InlineContent.ContextToolbar => ({
     type: 'contexttoolbar',
     items,
     predicate: () => true,
@@ -16,7 +16,7 @@ UnitTest.asynctest('Context toolbar prioritisation on lookup test', (success, fa
     scope: 'node'
   });
 
-  const createForm = (): Toolbar.ContextForm =>({
+  const createForm = (): InlineContent.ContextForm =>({
     type: 'contextform',
     initValue: () => 'test',
     label: Optional.none(),

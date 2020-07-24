@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Types } from '@ephox/bridge';
 import { Arr, Cell, Optional, Throttler } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
+import { Dialog } from 'tinymce/core/api/ui/Ui';
 import { insertEmoticon } from '../core/Actions';
 import { ALL_CATEGORY, EmojiDatabase } from '../core/EmojiDatabase';
 import { emojisFrom } from '../core/Lookup';
@@ -37,21 +37,21 @@ const open = function (editor: Editor, database: EmojiDatabase) {
     scan(dialogApi);
   }, 200);
 
-  const searchField: Types.Dialog.BodyComponentApi = {
+  const searchField: Dialog.BodyComponentSpec = {
     label: 'Search',
     type: 'input',
     name: patternName
   };
 
-  const resultsField: Types.Dialog.BodyComponentApi = {
+  const resultsField: Dialog.BodyComponentSpec = {
     type: 'collection',
     name: 'results'
     // TODO TINY-3229 implement collection columns properly
     // columns: 'auto'
   };
 
-  const getInitialState = (): Types.Dialog.DialogApi<typeof initialState> => {
-    const body: Types.Dialog.TabPanelApi = {
+  const getInitialState = (): Dialog.DialogSpec<typeof initialState> => {
+    const body: Dialog.TabPanelSpec = {
       type: 'tabpanel',
       // All tabs have the same fields.
       tabs: Arr.map(database.listCategories(), (cat) => ({

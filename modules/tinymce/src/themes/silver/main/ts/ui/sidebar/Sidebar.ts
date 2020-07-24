@@ -19,7 +19,7 @@ import { onControlAttached, onControlDetached } from 'tinymce/themes/silver/ui/c
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 import { SimpleBehaviours } from '../alien/SimpleBehaviours';
 
-export type SidebarConfig = Record<string, BridgeSidebar.SidebarApi>;
+export type SidebarConfig = Record<string, BridgeSidebar.SidebarSpec>;
 
 const setup = (editor: Editor) => {
   const { sidebars } = editor.ui.registry.getAll();

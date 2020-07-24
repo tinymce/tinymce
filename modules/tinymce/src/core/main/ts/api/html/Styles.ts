@@ -25,9 +25,18 @@
  */
 
 import { Obj, Unicode } from '@ephox/katamari';
+import { URLConverter } from '../SettingsTypes';
 import Schema from './Schema';
 
 export interface StyleMap { [s: string]: string | number }
+
+export interface StylesSettings {
+  allow_script_urls?: boolean;
+  allow_svg_data_urls?: boolean;
+  url_converter?: URLConverter;
+  url_converter_scope?: any;
+}
+
 interface Styles {
   toHex(color: string): string;
   parse(css: string): Record<string, string>;
@@ -44,7 +53,7 @@ const toHex = (match: string, r: string, g: string, b: string) => {
   return '#' + hex(r) + hex(g) + hex(b);
 };
 
-const Styles = function (settings?, schema?: Schema): Styles {
+const Styles = function (settings?: StylesSettings, schema?: Schema): Styles {
   /* jshint maxlen:255 */
   /* eslint max-len:0 */
   const rgbRegExp = /rgb\s*\(\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9]+)\s*\)/gi;

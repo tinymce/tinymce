@@ -10,7 +10,7 @@ import {
   Keying, NativeEvents, Reflecting, Replacing, SketchSpec, SplitDropdown as AlloySplitDropdown, SystemEvents, TieredData, TieredMenuTypes, Toggling,
   Unselecting
 } from '@ephox/alloy';
-import { Toolbar, Types } from '@ephox/bridge';
+import { Toolbar } from '@ephox/bridge';
 import { Arr, Cell, Fun, Future, Id, Merger, Optional } from '@ephox/katamari';
 import { Attribute, SelectorFind } from '@ephox/sugar';
 
@@ -228,7 +228,7 @@ const renderToolbarToggleButtonWith = (spec: Toolbar.ToolbarToggleButton, provid
 interface ChoiceFetcher {
   fetch: (callback: Function) => void;
   columns: 'auto' | number;
-  presets: Types.PresetTypes;
+  presets: Toolbar.PresetTypes;
   onItemAction: (api: Toolbar.ToolbarSplitButtonInstanceApi, value: string) => void;
   select: Optional<(value: string) => boolean>;
 }

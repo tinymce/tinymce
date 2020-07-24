@@ -1,9 +1,9 @@
-import { Types } from '@ephox/bridge';
+import { Dialog } from 'tinymce/core/api/ui/Ui';
 import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 
 import { setupDemo } from '../DemoHelpers';
 
-export const SearchReplaceDialogSpec: Types.Dialog.DialogApi<any> = {
+export const SearchReplaceDialogSpec: Dialog.DialogSpec<any> = {
   title: 'Find and replace',
   body: {
     type: 'panel',

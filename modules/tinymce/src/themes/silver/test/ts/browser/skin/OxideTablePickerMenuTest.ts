@@ -1,9 +1,9 @@
 import { ApproxStructure, Assertions, Chain, FocusTools, Keyboard, Keys, Log, Pipeline, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Menu } from '@ephox/bridge';
 import { TinyLoader, TinyUi } from '@ephox/mcagar';
 import { SugarBody, SugarElement } from '@ephox/sugar';
 
+import { Menu } from 'tinymce/core/api/ui/Ui';
 import Theme from 'tinymce/themes/silver/Theme';
 
 const tableCellsApprox = (s, arr, selectedRows, selectedCols) => {
@@ -91,7 +91,7 @@ UnitTest.asynctest('OxideTablePickerMenuTest', (success, failure) => {
               {
                 type: 'fancymenuitem',
                 fancytype: 'inserttable'
-              } as Menu.FancyMenuItemApi
+              } as Menu.FancyMenuItemSpec
             ]);
           }
         });

@@ -7,7 +7,7 @@
 
 import { AlloyComponent, AlloyTriggers, Composing, Disabling, Focusing, Form, Reflecting, Representing, TabSection } from '@ephox/alloy';
 import { ValueSchema } from '@ephox/boulder';
-import { DialogManager, Types } from '@ephox/bridge';
+import { Dialog, DialogManager } from '@ephox/bridge';
 import { Cell, Obj, Optional, Type } from '@ephox/katamari';
 
 import { formBlockEvent, formCloseEvent, formUnblockEvent } from '../general/FormEvents';
@@ -44,11 +44,11 @@ export interface DialogAccess {
   getFormWrapper: () => AlloyComponent;
 }
 
-const getDialogApi = <T extends Types.Dialog.DialogData>(
+const getDialogApi = <T extends Dialog.DialogData>(
   access: DialogAccess,
-  doRedial: (newConfig: Types.Dialog.DialogApi<T>) => DialogManager.DialogInit<T>,
+  doRedial: (newConfig: Dialog.DialogSpec<T>) => DialogManager.DialogInit<T>,
   menuItemStates: Record<string, Cell<Boolean>>
-): Types.Dialog.DialogInstanceApi<T> => {
+): Dialog.DialogInstanceApi<T> => {
   const withRoot = (f: (r: AlloyComponent) => void): void => {
     const root = access.getRoot();
     if (root.getSystem().isConnected()) {
@@ -122,7 +122,7 @@ const getDialogApi = <T extends Types.Dialog.DialogData>(
     });
   };
 
-  const redial = (d: Types.Dialog.DialogApi<T>): void => {
+  const redial = (d: Dialog.DialogSpec<T>): void => {
     withRoot((root) => {
       const dialogInit = doRedial(d);
       root.getSystem().broadcastOn([ dialogChannel ], dialogInit);

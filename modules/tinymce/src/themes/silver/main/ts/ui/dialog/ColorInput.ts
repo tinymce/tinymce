@@ -9,7 +9,7 @@ import {
   AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, Composing, CustomEvent, Disabling, Focusing, FormField, Input,
   Invalidating, Layout, Memento, Representing, SimpleSpec, Tabstopping
 } from '@ephox/alloy';
-import { Types } from '@ephox/bridge';
+import { Dialog } from '@ephox/bridge';
 import { Future, Id, Optional, Result } from '@ephox/katamari';
 import { Css, SugarElement, Traverse } from '@ephox/sugar';
 
@@ -21,7 +21,6 @@ import * as ColorSwatch from '../core/color/ColorSwatch';
 import * as Settings from '../core/color/Settings';
 import { formChangeEvent } from '../general/FormEvents';
 import { renderPanelButton } from '../general/PanelButton';
-import { Omit } from '../Omit';
 
 const colorInputChangeEvent = Id.generate('color-input-change');
 const colorSwatchChangeEvent = Id.generate('color-swatch-change');
@@ -39,7 +38,7 @@ interface ColorPickerCancelEvent extends CustomEvent {
   value: () => string;
 }
 
-type ColorInputSpec = Omit<Types.ColorInput.ColorInput, 'type'>;
+type ColorInputSpec = Omit<Dialog.ColorInput, 'type'>;
 
 export const renderColorInput = (spec: ColorInputSpec, sharedBackstage: UiFactoryBackstageShared, colorInputBackstage: UiFactoryBackstageForColorInput): SimpleSpec => {
   const pField = FormField.parts().field({

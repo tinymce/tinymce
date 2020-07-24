@@ -13,10 +13,10 @@ import ItemResponse from '../item/ItemResponse';
 
 import { expand } from './MenuConversion';
 import { createPartialMenu } from './SingleMenu';
-import { SingleMenuItemApi } from './SingleMenuTypes';
+import { SingleMenuItemSpec } from './SingleMenuTypes';
 
 // TODO: Consider moving the expansion part to alloy?
-const build = (items: string | Array<string | SingleMenuItemApi>, itemResponse: ItemResponse, backstage: UiFactoryBackstage, isHorizontalMenu: boolean): Optional<TieredData> => {
+const build = (items: string | Array<string | SingleMenuItemSpec>, itemResponse: ItemResponse, backstage: UiFactoryBackstage, isHorizontalMenu: boolean): Optional<TieredData> => {
   const primary = Id.generate('primary-menu');
   const data = expand(items, backstage.shared.providers.menuItems());
   if (data.items.length === 0) {

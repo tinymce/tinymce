@@ -199,7 +199,7 @@ class EditorCommands {
     });
   }
 
-  public addCommand(command: string, callback: EditorCommandCallback, scope?: {}) {
+  public addCommand(command: string, callback: EditorCommandCallback, scope?: any) {
     command = command.toLowerCase();
     this.commands.exec[command] = (command, ui, value, args) => callback.call(scope || this.editor, ui, value, args);
   }
@@ -228,12 +228,12 @@ class EditorCommands {
     return false;
   }
 
-  public addQueryStateHandler(command: string, callback: () => boolean, scope?: {}) {
+  public addQueryStateHandler(command: string, callback: () => boolean, scope?: any) {
     command = command.toLowerCase();
     this.commands.state[command] = () => callback.call(scope || this.editor);
   }
 
-  public addQueryValueHandler(command: string, callback: () => string, scope?: {}) {
+  public addQueryValueHandler(command: string, callback: () => string, scope?: any) {
     command = command.toLowerCase();
     this.commands.value[command] = () => callback.call(scope || this.editor);
   }

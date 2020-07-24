@@ -6,7 +6,7 @@
  */
 
 import { Behaviour, Form as AlloyForm, Keying, Memento, SimpleSpec } from '@ephox/alloy';
-import { Types } from '@ephox/bridge';
+import { Dialog } from '@ephox/bridge';
 import { Arr, Fun } from '@ephox/katamari';
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 
@@ -15,9 +15,8 @@ import { RepresentingConfigs } from '../alien/RepresentingConfigs';
 import * as FormValues from '../general/FormValues';
 import * as NavigableObject from '../general/NavigableObject';
 import { interpretInForm } from '../general/UiFactory';
-import { Omit } from '../Omit';
 
-export type BodyPanelSpec = Omit<Types.Dialog.Panel, 'type'>;
+export type BodyPanelSpec = Omit<Dialog.Panel, 'type'>;
 
 const renderBodyPanel = (spec: BodyPanelSpec, backstage: UiFactoryBackstage): SimpleSpec => {
   const memForm = Memento.record(

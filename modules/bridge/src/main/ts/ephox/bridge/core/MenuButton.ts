@@ -6,7 +6,7 @@ import { NestedMenuItemContents } from '../components/menu/NestedMenuItem';
 export type MenuButtonItemTypes = NestedMenuItemContents;
 export type SuccessCallback = (menu: string | MenuButtonItemTypes[]) => void;
 
-export interface BaseMenuButtonApi {
+export interface BaseMenuButtonSpec {
   text?: string;
   tooltip?: string;
   icon?: string;

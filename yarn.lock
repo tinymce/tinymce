@@ -130,7 +130,7 @@
     "@babel/traverse" "^7.10.1"
     "@babel/types" "^7.10.1"
 
-"@babel/highlight@^7.10.1", "@babel/highlight@^7.10.4":
+"@babel/highlight@^7.10.4":
   version "7.10.4"
   resolved "https://registry.yarnpkg.com/@babel/highlight/-/highlight-7.10.4.tgz#7d1bdfd65753538fabe6c38596cdb76d9ac60143"
   integrity sha512-i6rgnR/YgPEQzZZnbTHHuZdlE8qyoBNalD6F+q4vAFlcMEcqmkoG+mPqJYJCo63qPf74+Y1UZsl3l6f7/RIkmA==
@@ -8471,11 +8471,6 @@ path-is-absolute@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/path-is-absolute/-/path-is-absolute-1.0.1.tgz#174b9268735534ffbc7ace6bf53a5a9e1b5c5f5f"
   integrity sha1-F0uSaHNVNP+8es5r9TpanhtcX18=
-
-path-is-absolute@~2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/path-is-absolute/-/path-is-absolute-2.0.0.tgz#cba416f4f3be5d068afe2083d9b3b3707414533d"
-  integrity sha512-ajROpjq1SLxJZsgSVCcVIt+ZebVH+PwJtPnVESjfg6JKwJGwAgHRC3zIcjvI0LnecjIHCJhtfNZ/Y/RregqyXg==
 
 path-is-inside@^1.0.2:
   version "1.0.2"
