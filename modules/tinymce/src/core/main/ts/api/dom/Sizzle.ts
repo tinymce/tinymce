@@ -26,8 +26,6 @@ import { Arr } from '@ephox/katamari';
 
 /* eslint-disable no-bitwise, prefer-const */
 
-/* tslint:disable */
-
 let support,
   Expr,
   getText,
@@ -177,7 +175,7 @@ try {
   );
   // Support: Android<4.0
   // Detect silently failing push.apply
-  // tslint:disable-next-line:no-unused-expression
+  // eslint-disable-next-line no-unused-expressions
   arr[preferredDoc.childNodes.length].nodeType;
 } catch (e) {
   push = {
@@ -1342,7 +1340,7 @@ Expr = Sizzle.selectors = {
       // Accessing this property makes selected-by-default
       // options in Safari work properly
       if (elem.parentNode) {
-        // tslint:disable-next-line:no-unused-expression
+        // eslint-disable-next-line no-unused-expressions
         elem.parentNode.selectedIndex;
       }
 

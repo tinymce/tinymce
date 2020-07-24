@@ -125,9 +125,7 @@ UnitTest.asynctest('CustomComponentTest', (success, failure) => {
       'behaviour.b.event'
     ]),
 
-    Step.sync(() => {
-        bA.get()?.behaveA(component);
-    }),
+    Step.sync(() => bA.get()?.behaveA(component)),
 
     store.sAssertEq('Should now have an Api log', [
       'behaviour.a.event',

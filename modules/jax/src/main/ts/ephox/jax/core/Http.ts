@@ -175,7 +175,7 @@ const fetchDownload = (init: HttpTypes.DownloadHttpRequest): FutureResult<Blob, 
     }
   };
 
-  fetch(init.url, {
+  window.fetch(init.url, {
     method: 'get',
     headers: init.headers,
     credentials: init.credentials ? 'include' : 'omit'
