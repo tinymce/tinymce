@@ -34,7 +34,7 @@ export const renderCustomEditor = (spec: CustomEditorSpec): SimpleSpec => {
       classes: [ 'tox-custom-editor' ]
     },
     behaviours: Behaviour.derive([
-      AddEventsBehaviour.config('editor-foo-events', [
+      AddEventsBehaviour.config('custom-editor-events', [
         AlloyEvents.runOnAttached((component) => {
           memReplaced.getOpt(component).each((ta) => {
             (isOldCustomEditor(spec)
