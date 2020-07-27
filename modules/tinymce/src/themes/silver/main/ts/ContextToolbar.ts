@@ -12,7 +12,7 @@ import {
 import { Toolbar } from '@ephox/bridge';
 import { Arr, Cell, Id, Merger, Obj, Optional, Thunk } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Css, Focus, Scroll, SugarElement } from '@ephox/sugar';
+import { Css, Focus, Scroll, SugarBody, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
 import { getToolbarMode, ToolbarMode } from './api/Settings';
@@ -103,7 +103,10 @@ const register = (editor: Editor, registryContextToolbars, sink: AlloyComponent,
   const isRangeOverlapping = (aTop: number, aBottom: number, bTop: number, bBottom: number) => Math.max(aTop, bTop) <= Math.min(aBottom, bBottom);
 
   const getLastElementVerticalBound = () => {
-    const nodeBounds = lastElement.get().map((ele) => ele.getBoundingClientRect()).getOrThunk(() => editor.selection.getRng().getBoundingClientRect());
+    const nodeBounds = lastElement.get()
+      .filter((ele) => SugarBody.inBody(SugarElement.fromDom(ele)))
+      .map((ele) => ele.getBoundingClientRect())
+      .getOrThunk(() => editor.selection.getRng().getBoundingClientRect());
 
     // Translate to the top level document, as nodeBounds is relative to the iframe viewport
     const diffTop = editor.inline ? Scroll.get().top() : Boxes.absolute(SugarElement.fromDom(editor.getBody())).y;
