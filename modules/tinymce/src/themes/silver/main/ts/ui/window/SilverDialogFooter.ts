@@ -84,7 +84,7 @@ const renderFooter = (initSpec: WindowFooterSpec, backstage: UiFactoryBackstage)
 
 const renderInlineFooter = (initSpec: WindowFooterSpec, backstage: UiFactoryBackstage) => renderFooter(initSpec, backstage);
 
-const renderModalFooter = (initSpec: WindowFooterSpec, backstage: UiFactoryBackstage) => ModalDialog.parts().footer(
+const renderModalFooter = (initSpec: WindowFooterSpec, backstage: UiFactoryBackstage) => ModalDialog.parts.footer(
   renderFooter(initSpec, backstage)
 );
 

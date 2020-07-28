@@ -38,7 +38,7 @@ UnitTest.asynctest('MatrixMenuTest', (success, failure) => {
       },
 
       components: [
-        Menu.parts().items({
+        Menu.parts.items({
           preprocess: (items: AlloySpec[]) => {
             const chunks = Arr.chunk(items, 2);
             return Arr.map(chunks, (c) => ({

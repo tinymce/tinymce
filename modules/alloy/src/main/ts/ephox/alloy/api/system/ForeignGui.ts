@@ -1,5 +1,5 @@
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
-import { Arr, Fun, Obj, Optional } from '@ephox/katamari';
+import { Arr, Obj, Optional } from '@ephox/katamari';
 import { DomEvent, EventArgs, Insert, SugarElement } from '@ephox/sugar';
 
 import { UncurriedHandler } from '../../events/EventRegistry';
@@ -107,8 +107,8 @@ const getProxy = <T extends SimulatedEvent.EventFormat>(event: T, target: SugarE
   const simulatedEvent = SimulatedEvent.fromTarget(event, target);
 
   return {
-    component: Fun.constant(component),
-    simulatedEvent: Fun.constant(simulatedEvent)
+    component,
+    simulatedEvent
   };
 };
 
@@ -129,11 +129,11 @@ const engage = (spec: ForeignGuiSpec) => {
   const proxyFor = <T extends SimulatedEvent.EventFormat>(event: T, target: SugarElement, descHandler: UncurriedHandler) => {
     // create a simple alloy wrapping around the element, and add it to the world
     const proxy = getProxy(event, target);
-    const component = proxy.component();
+    const component = proxy.component;
     gui.addToWorld(component);
     // fire the event
     const handler = descHandler.handler;
-    handler(component, proxy.simulatedEvent());
+    handler(component, proxy.simulatedEvent);
 
     // now remove from the world and revoke any alloy ids
     unproxy(component);

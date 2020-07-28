@@ -44,8 +44,8 @@ const makeSlider = (spec): SketchSpec => {
   return Slider.sketch({
     dom: UiDomFactory.dom('<div class="${prefix}-slider ${prefix}-hue-slider-container"></div>'),
     components: [
-      Slider.parts()['left-edge'](UiDomFactory.spec('<div class="${prefix}-hue-slider-black"></div>')),
-      Slider.parts().spectrum({
+      Slider.parts['left-edge'](UiDomFactory.spec('<div class="${prefix}-hue-slider-black"></div>')),
+      Slider.parts.spectrum({
         dom: UiDomFactory.dom('<div class="${prefix}-slider-gradient-container"></div>'),
         components: [
           UiDomFactory.spec('<div class="${prefix}-slider-gradient"></div>')
@@ -56,8 +56,8 @@ const makeSlider = (spec): SketchSpec => {
           })
         ])
       }),
-      Slider.parts()['right-edge'](UiDomFactory.spec('<div class="${prefix}-hue-slider-white"></div>')),
-      Slider.parts().thumb({
+      Slider.parts['right-edge'](UiDomFactory.spec('<div class="${prefix}-hue-slider-white"></div>')),
+      Slider.parts.thumb({
         dom: UiDomFactory.dom('<div class="${prefix}-slider-thumb"></div>'),
         behaviours: Behaviour.derive([
           Toggling.config({

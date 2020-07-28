@@ -51,7 +51,7 @@ UnitTest.asynctest('MultipleToolbarTest', (success, failure) => {
         },
 
         components: [
-          ToolbarGroup.parts().items({ })
+          ToolbarGroup.parts.items({ })
         ],
 
         items: spec.items,

@@ -69,7 +69,7 @@ export default (): void => {
                 tag: 'div'
               },
               components: [
-                Menu.parts().items({ })
+                Menu.parts.items({ })
               ],
               items: [],
               value: 'touchmenu',

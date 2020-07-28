@@ -88,11 +88,11 @@ const rgbFormFactory = (
   ) => {
     const helptext = translate(translatePrefix + 'range');
 
-    const pLabel = FormField.parts().label({
+    const pLabel = FormField.parts.label({
       dom: { tag: 'label', innerHtml: label, attributes: { 'aria-label': description }}
     });
 
-    const pField = FormField.parts().field({
+    const pField = FormField.parts.field({
       data,
       factory: Input,
       inputAttributes: {
@@ -117,7 +117,7 @@ const rgbFormFactory = (
     });
 
     const comps = [ pLabel, pField ];
-    const concats = name !== 'hex' ? [ FormField.parts()['aria-descriptor']({
+    const concats = name !== 'hex' ? [ FormField.parts['aria-descriptor']({
       text: helptext
     }) ] : [];
     const components = comps.concat(concats);

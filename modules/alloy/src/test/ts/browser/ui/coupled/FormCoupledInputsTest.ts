@@ -40,8 +40,8 @@ UnitTest.asynctest('FormCoupledInputsTest', (success, failure) => {
       classes: [ className ]
     },
     components: [
-      FormField.parts().label(labelSpec),
-      FormField.parts().field({ factory: Input })
+      FormField.parts.label(labelSpec),
+      FormField.parts.field({ factory: Input })
     ]
   });
 
@@ -59,9 +59,9 @@ UnitTest.asynctest('FormCoupledInputsTest', (success, failure) => {
       classes: [ config.className ]
     },
     components: [
-      FormCoupledInputs.parts().field1(coupledSpec('field1')),
-      FormCoupledInputs.parts().field2(coupledSpec('field2')),
-      FormCoupledInputs.parts().lock(lockSpec)
+      FormCoupledInputs.parts.field1(coupledSpec('field1')),
+      FormCoupledInputs.parts.field2(coupledSpec('field2')),
+      FormCoupledInputs.parts.lock(lockSpec)
     ],
     onLockedChange(current, other) {
       Representing.setValueFrom(other, current);

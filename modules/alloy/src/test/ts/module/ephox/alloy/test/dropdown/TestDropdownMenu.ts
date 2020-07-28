@@ -21,7 +21,7 @@ const renderMenu = (spec: { value: string; text?: string; items: ItemSpec[] }): 
   },
   items: spec.items,
   components: [
-    Menu.parts().items({ })
+    Menu.parts.items({ })
   ]
 });
 
@@ -36,7 +36,7 @@ const renderItem = (spec: { type: any; widget?: any; data: { value: string; meta
     classes: [ 'item-widget' ]
   },
   components: [
-    ItemWidget.parts().widget(spec.widget)
+    ItemWidget.parts.widget(spec.widget)
   ]
 } : {
   type: spec.type,

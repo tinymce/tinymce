@@ -233,7 +233,7 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
   });
 
   const makeSlider = (label: string, onChoose: (slider: AlloyComponent, thumb: AlloyComponent, value: SliderTypes.SliderValueX) => void, min: number, value: number, max: number): Memento.MementoRecord => {
-    const labelPart = Slider.parts().label({
+    const labelPart = Slider.parts.label({
       dom: {
         tag: 'label',
         classes: [ 'tox-label' ],
@@ -241,7 +241,7 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
       }
     });
 
-    const spectrum = Slider.parts().spectrum({
+    const spectrum = Slider.parts.spectrum({
       dom: {
         tag: 'div',
         classes: [ 'tox-slider__rail' ],
@@ -251,7 +251,7 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
       }
     });
 
-    const thumb = Slider.parts().thumb({
+    const thumb = Slider.parts.thumb({
       dom: {
         tag: 'div',
         classes: [ 'tox-slider__handle' ],

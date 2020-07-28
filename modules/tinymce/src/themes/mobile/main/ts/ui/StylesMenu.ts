@@ -120,7 +120,7 @@ const makeMenu = function (value, items, memMenuThunk, collapsable) {
           classes: [ Styles.resolve('styles-menu-items-container') ]
         },
         components: [
-          Menu.parts().items({ })
+          Menu.parts.items({ })
         ],
 
         behaviours: Behaviour.derive([

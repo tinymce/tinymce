@@ -332,12 +332,12 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
     },
 
     components: [
-      AlloySplitDropdown.parts().button(
+      AlloySplitDropdown.parts.button(
         renderCommonStructure(spec.icon, spec.text, Optional.none(), Optional.some(displayChannel), Optional.some([
           Toggling.config({ toggleClass: ToolbarButtonClasses.Ticked, toggleOnExecute: false })
         ]), sharedBackstage.providers)
       ),
-      AlloySplitDropdown.parts().arrow({
+      AlloySplitDropdown.parts.arrow({
         dom: {
           tag: 'button',
           classes: [ ToolbarButtonClasses.Button, 'tox-split-button__chevron' ],
@@ -348,7 +348,7 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
           ReadOnly.receivingConfig()
         ])
       }),
-      AlloySplitDropdown.parts()['aria-descriptor']({
+      AlloySplitDropdown.parts['aria-descriptor']({
         text: sharedBackstage.providers.translate('To open the popup, press Shift+Enter')
       })
     ]

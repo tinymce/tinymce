@@ -16,7 +16,7 @@ UnitTest.asynctest('SplitSlidingToolbarTest', (success, failure) => {
   if (PhantomSkipper.skip()) { return success(); }
 
   GuiSetup.setup((store, _doc, _body) => {
-    const pPrimary = SplitSlidingToolbar.parts().primary({
+    const pPrimary = SplitSlidingToolbar.parts.primary({
       dom: {
         tag: 'div',
         classes: [ 'test-toolbar-primary' ]
@@ -24,7 +24,7 @@ UnitTest.asynctest('SplitSlidingToolbarTest', (success, failure) => {
       shell: true
     });
 
-    const pOverflow = SplitSlidingToolbar.parts().overflow({
+    const pOverflow = SplitSlidingToolbar.parts.overflow({
       dom: {
         tag: 'div',
         classes: [ 'test-toolbar-overflow' ]

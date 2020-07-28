@@ -24,7 +24,7 @@ UnitTest.asynctest('TieredMenuTest', (success, failure) => {
         classes: [ 'test-menu' ]
       },
       components: [
-        Menu.parts().items({ })
+        Menu.parts.items({ })
       ],
 
       markers: TestDropdownMenu.markers(),

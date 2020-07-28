@@ -55,7 +55,7 @@ const renderToolbarGroupCommon = (toolbarGroup: ToolbarGroup) => {
     },
 
     components: [
-      AlloyToolbarGroup.parts().items({})
+      AlloyToolbarGroup.parts.items({})
     ],
 
     items: toolbarGroup.items,
@@ -126,7 +126,7 @@ const renderFloatingMoreToolbar = (toolbarSpec: MoreDrawerToolbarSpec) => {
   const baseSpec = renderMoreToolbarCommon(toolbarSpec);
   const overflowXOffset = 4;
 
-  const primary = AlloySplitFloatingToolbar.parts().primary({
+  const primary = AlloySplitFloatingToolbar.parts.primary({
     dom: {
       tag: 'div',
       classes: [ 'tox-toolbar__primary' ]
@@ -168,14 +168,14 @@ const renderFloatingMoreToolbar = (toolbarSpec: MoreDrawerToolbarSpec) => {
 };
 
 const renderSlidingMoreToolbar = (toolbarSpec: MoreDrawerToolbarSpec) => {
-  const primary = AlloySplitSlidingToolbar.parts().primary({
+  const primary = AlloySplitSlidingToolbar.parts.primary({
     dom: {
       tag: 'div',
       classes: [ 'tox-toolbar__primary' ]
     }
   });
 
-  const overflow = AlloySplitSlidingToolbar.parts().overflow({
+  const overflow = AlloySplitSlidingToolbar.parts.overflow({
     dom: {
       tag: 'div',
       classes: [ 'tox-toolbar__overflow' ]
@@ -215,7 +215,7 @@ const renderToolbar = (toolbarSpec: ToolbarSpec) => {
       )
     },
     components: [
-      AlloyToolbar.parts().groups({})
+      AlloyToolbar.parts.groups({})
     ],
 
     toolbarBehaviours: getToolbarbehaviours(toolbarSpec, modeName)

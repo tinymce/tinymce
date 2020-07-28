@@ -69,7 +69,7 @@ const renderTextField = function (spec: TextField, providersBackstage: UiFactory
     ...inputMode
   };
 
-  const pField = AlloyFormField.parts().field({
+  const pField = AlloyFormField.parts.field({
     tag: spec.multiline === true ? 'textarea' : 'input',
     inputAttributes,
     inputClasses: [ spec.classname ],

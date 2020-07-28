@@ -188,7 +188,7 @@ const widgetItem = (itemSpec: DemoWidgetItem): WidgetItemSpec => {
       classes: [ 'demo-alloy-item' ]
     },
     components: [
-      ItemWidget.parts().widget(spec.widget)
+      ItemWidget.parts.widget(spec.widget)
     ]
   };
 };
@@ -211,7 +211,7 @@ const gridMenu = (menuSpec: DemoMenu & { columns: number; rows: number }) => {
       }
     },
     components: [
-      Menu.parts().items({ })
+      Menu.parts.items({ })
     ],
     items: spec.items
   } as PartialMenuSpec;
@@ -229,7 +229,7 @@ const menu = (menuSpec: DemoMenu) => {
     },
     items: spec.items,
     components: [
-      Menu.parts().items({ })
+      Menu.parts.items({ })
     ]
   };
 };
@@ -276,7 +276,7 @@ const toolbarGroup = (group: { label?: string; items: AlloySpec[] }) => {
     },
 
     components: [
-      ToolbarGroup.parts().items({ })
+      ToolbarGroup.parts.items({ })
     ],
 
     items: spec.items,

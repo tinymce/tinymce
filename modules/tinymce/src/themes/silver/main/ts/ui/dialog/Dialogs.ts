@@ -40,7 +40,7 @@ const defaultHeader = (title: AlloyParts.ConfiguredPart, close: AlloyParts.Confi
   ]
 });
 
-const pClose = (onClose: () => void, providersBackstage: UiFactoryBackstageProviders) => ModalDialog.parts().close(
+const pClose = (onClose: () => void, providersBackstage: UiFactoryBackstageProviders) => ModalDialog.parts.close(
   // Need to find a way to make it clear in the docs whether parts can be sketches
   Button.sketch({
     dom: {
@@ -58,7 +58,7 @@ const pClose = (onClose: () => void, providersBackstage: UiFactoryBackstageProvi
   })
 );
 
-const pUntitled = () => ModalDialog.parts().title({
+const pUntitled = () => ModalDialog.parts.title({
   dom: {
     tag: 'div',
     classes: [ 'tox-dialog__title' ],
@@ -69,7 +69,7 @@ const pUntitled = () => ModalDialog.parts().title({
   }
 });
 
-const pBodyMessage = (message: string, providersBackstage: UiFactoryBackstageProviders) => ModalDialog.parts().body({
+const pBodyMessage = (message: string, providersBackstage: UiFactoryBackstageProviders) => ModalDialog.parts.body({
   dom: {
     tag: 'div',
     classes: [ 'tox-dialog__body' ]
@@ -89,7 +89,7 @@ const pBodyMessage = (message: string, providersBackstage: UiFactoryBackstagePro
   ]
 });
 
-const pFooter = (buttons: AlloySpec[]) => ModalDialog.parts().footer({
+const pFooter = (buttons: AlloySpec[]) => ModalDialog.parts.footer({
   dom: {
     tag: 'div',
     classes: [ 'tox-dialog__footer' ]

@@ -21,12 +21,12 @@ UnitTest.asynctest('TabSectionSelectFirst Test', (success, failure) => {
         },
         selectFirst: false,
         components: [
-          TabSection.parts().tabbar({
+          TabSection.parts.tabbar({
             dom: {
               tag: 'div'
             },
             components: [
-              Tabbar.parts().tabs({ })
+              Tabbar.parts.tabs({ })
             ],
             markers: {
               tabClass: 'test-tab-button',
@@ -36,7 +36,7 @@ UnitTest.asynctest('TabSectionSelectFirst Test', (success, failure) => {
               Tabstopping.config({ })
             ])
           }),
-          TabSection.parts().tabview({
+          TabSection.parts.tabview({
             dom: {
               tag: 'div',
               classes: [ 'test-tabview' ]

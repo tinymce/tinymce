@@ -25,7 +25,7 @@ UnitTest.asynctest('ExpandableFormTest', (success, failure) => {
 
   GuiSetup.setup((_store, _doc, _body) => {
 
-    const pMinimal = ExpandableForm.parts().minimal(
+    const pMinimal = ExpandableForm.parts.minimal(
       Form.sketch((parts: FormParts) => ({
         dom: {
           tag: 'div',
@@ -38,21 +38,21 @@ UnitTest.asynctest('ExpandableFormTest', (success, failure) => {
               tag: 'div'
             },
             components: [
-              FormField.parts().field({
+              FormField.parts.field({
                 factory: Input,
                 data: 'init',
                 inputBehaviours: Behaviour.derive([
                   Tabstopping.config({ })
                 ])
               }),
-              FormField.parts().label({ dom: { tag: 'label', innerHtml: 'a' }, components: [ ] })
+              FormField.parts.label({ dom: { tag: 'label', innerHtml: 'a' }, components: [ ] })
             ]
           }))
         ]
       }))
     );
 
-    const pExtra = ExpandableForm.parts().extra(
+    const pExtra = ExpandableForm.parts.extra(
       Form.sketch((parts: FormParts) => ({
         dom: {
           tag: 'div',
@@ -66,7 +66,7 @@ UnitTest.asynctest('ExpandableFormTest', (success, failure) => {
               tag: 'div'
             },
             components: [
-              FormField.parts().field({
+              FormField.parts.field({
                 factory: HtmlSelect,
                 selectBehaviours: Behaviour.derive([
                   Tabstopping.config({ })
@@ -78,7 +78,7 @@ UnitTest.asynctest('ExpandableFormTest', (success, failure) => {
                 ]
               }),
 
-              FormField.parts().label({ dom: { tag: 'label', innerHtml: 'a' }, components: [ ] })
+              FormField.parts.label({ dom: { tag: 'label', innerHtml: 'a' }, components: [ ] })
             ]
           }))
         ]
@@ -93,7 +93,7 @@ UnitTest.asynctest('ExpandableFormTest', (success, failure) => {
 
         components: [
           pMinimal,
-          ExpandableForm.parts().expander({
+          ExpandableForm.parts.expander({
             dom: {
               tag: 'button',
               innerHtml: '+',
@@ -119,7 +119,7 @@ UnitTest.asynctest('ExpandableFormTest', (success, failure) => {
             ])
           }),
 
-          ExpandableForm.parts().controls({
+          ExpandableForm.parts.controls({
             dom: {
               tag: 'div',
               classes: [ 'form-controls' ]

@@ -39,52 +39,52 @@ UnitTest.asynctest('Browser Test: ui.slider.TwoDSliderTest', (success, failure) 
       snapToGrid: true,
 
       components: [
-        Slider.parts()['top-left-edge']({ dom: { tag: 'div', classes: [ 'twod-slider-test-top-left-edge' ], styles: {
+        Slider.parts['top-left-edge']({ dom: { tag: 'div', classes: [ 'twod-slider-test-top-left-edge' ], styles: {
           width: '25px',
           height: '25px',
           background: 'black'
         }}}),
-        Slider.parts()['top-edge']({ dom: { tag: 'div', classes: [ 'twod-slider-test-top-edge' ], styles: {
+        Slider.parts['top-edge']({ dom: { tag: 'div', classes: [ 'twod-slider-test-top-edge' ], styles: {
           width: '150px',
           height: '25px',
           background: 'white'
         }}}),
-        Slider.parts()['top-right-edge']({ dom: { tag: 'div', classes: [ 'twod-slider-test-top-right-edge' ], styles: {
+        Slider.parts['top-right-edge']({ dom: { tag: 'div', classes: [ 'twod-slider-test-top-right-edge' ], styles: {
           width: '25px',
           height: '25px',
           background: 'black'
         }}}),
-        Slider.parts()['left-edge']({ dom: { tag: 'div', classes: [ 'twod-slider-test-left-edge' ], styles: {
+        Slider.parts['left-edge']({ dom: { tag: 'div', classes: [ 'twod-slider-test-left-edge' ], styles: {
           width: '25px',
           height: '150px',
           background: 'white'
         }}}),
-        Slider.parts().spectrum({ dom: { tag: 'div', classes: [ 'twod-slider-test-spectrum' ], styles: {
+        Slider.parts.spectrum({ dom: { tag: 'div', classes: [ 'twod-slider-test-spectrum' ], styles: {
           width: '150px',
           height: '150px',
           background: 'green'
         }}}),
-        Slider.parts()['right-edge']({ dom: { tag: 'div', classes: [ 'twod-slider-test-right-edge' ], styles: {
+        Slider.parts['right-edge']({ dom: { tag: 'div', classes: [ 'twod-slider-test-right-edge' ], styles: {
           width: '25px',
           height: '150px',
           background: 'white'
         }}}),
-        Slider.parts()['bottom-left-edge']({ dom: { tag: 'div', classes: [ 'twod-slider-test-bottom-left-edge' ], styles: {
+        Slider.parts['bottom-left-edge']({ dom: { tag: 'div', classes: [ 'twod-slider-test-bottom-left-edge' ], styles: {
           width: '25px',
           height: '25px',
           background: 'black'
         }}}),
-        Slider.parts()['bottom-edge']({ dom: { tag: 'div', classes: [ 'twod-slider-test-bottom-edge' ], styles: {
+        Slider.parts['bottom-edge']({ dom: { tag: 'div', classes: [ 'twod-slider-test-bottom-edge' ], styles: {
           width: '150px',
           height: '25px',
           background: 'white'
         }}}),
-        Slider.parts()['bottom-right-edge']({ dom: { tag: 'div', classes: [ 'twod-slider-test-bottom-right-edge' ], styles: {
+        Slider.parts['bottom-right-edge']({ dom: { tag: 'div', classes: [ 'twod-slider-test-bottom-right-edge' ], styles: {
           width: '25px',
           height: '25px',
           background: 'black'
         }}}),
-        Slider.parts().thumb({ dom: { tag: 'div', classes: [ 'twod-slider-test-thumb' ], styles: {
+        Slider.parts.thumb({ dom: { tag: 'div', classes: [ 'twod-slider-test-thumb' ], styles: {
           width: '20px',
           height: '20px',
           background: 'gray'

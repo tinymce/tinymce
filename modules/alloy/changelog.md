@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+# [8.0.0] - TBD
+
+### Changed
+- Changed some public APIs (eg Components, Custom Events) to no longer be thunked.
+
 # [7.0.2] - 2020-05-25
 
 ### Fixed

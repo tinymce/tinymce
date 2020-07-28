@@ -84,7 +84,7 @@ const renderIFrame = (spec: IframeSpec, providersBackstage: UiFactoryBackstagePr
   );
 
   // Note, it's not going to handle escape at this point.
-  const pField = FormField.parts().field({
+  const pField = FormField.parts.field({
     factory: { sketch: factory }
   });
 

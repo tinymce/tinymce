@@ -29,7 +29,7 @@ export const renderSizeInput = (spec: SizeInputSpec, providersBackstage: UiFacto
 
   const ratioEvent = Id.generate('ratio-event');
 
-  const pLock = AlloyFormCoupledInputs.parts().lock({
+  const pLock = AlloyFormCoupledInputs.parts.lock({
     dom: {
       tag: 'button',
       classes: [ 'tox-lock', 'tox-button', 'tox-button--naked', 'tox-button--icon' ],
@@ -70,7 +70,7 @@ export const renderSizeInput = (spec: SizeInputSpec, providersBackstage: UiFacto
     components
   });
 
-  const getFieldPart = (isField1: boolean) => AlloyFormField.parts().field({
+  const getFieldPart = (isField1: boolean) => AlloyFormField.parts.field({
     factory: AlloyInput,
     inputClasses: [ 'tox-textfield' ],
     inputBehaviours: Behaviour.derive([
@@ -99,12 +99,12 @@ export const renderSizeInput = (spec: SizeInputSpec, providersBackstage: UiFacto
     }
   });
 
-  const widthField = AlloyFormCoupledInputs.parts().field1(
-    formGroup([ AlloyFormField.parts().label(getLabel('Width')), getFieldPart(true) ])
+  const widthField = AlloyFormCoupledInputs.parts.field1(
+    formGroup([ AlloyFormField.parts.label(getLabel('Width')), getFieldPart(true) ])
   );
 
-  const heightField = AlloyFormCoupledInputs.parts().field2(
-    formGroup([ AlloyFormField.parts().label(getLabel('Height')), getFieldPart(false) ])
+  const heightField = AlloyFormCoupledInputs.parts.field2(
+    formGroup([ AlloyFormField.parts.label(getLabel('Height')), getFieldPart(false) ])
   );
 
   return AlloyFormCoupledInputs.sketch({

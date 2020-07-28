@@ -166,7 +166,7 @@ export const renderFooterButton = (spec: FooterButtonSpec, buttonType: string, b
 
 export const renderDialogButton = (spec: ButtonSpec, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
   const action = getAction(spec.name, 'custom');
-  return renderFormField(Optional.none(), AlloyFormField.parts().field({
+  return renderFormField(Optional.none(), AlloyFormField.parts.field({
     factory: AlloyButton,
     ...renderButtonSpec(spec, Optional.some(action), providersBackstage, [
       RepresentingConfigs.memory(''),

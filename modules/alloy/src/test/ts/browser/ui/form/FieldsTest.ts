@@ -48,12 +48,12 @@ UnitTest.asynctest('FieldsTest', (success, failure) => {
         tag: 'div'
       },
       components: [
-        FormField.parts().field({
+        FormField.parts.field({
           factory: Input,
           data: 'init'
         }),
-        FormField.parts().label(labelSpec),
-        FormField.parts()['aria-descriptor']({
+        FormField.parts.label(labelSpec),
+        FormField.parts['aria-descriptor']({
           text: 'help'
         })
       ]
@@ -66,8 +66,8 @@ UnitTest.asynctest('FieldsTest', (success, failure) => {
       },
       components: [
         // TODO: Do not recalculate
-        FormField.parts().label(labelSpec),
-        FormField.parts().field({
+        FormField.parts.label(labelSpec),
+        FormField.parts.field({
           factory: HtmlSelect,
           options: [
             { value: 'select-b-init', text: 'Select-b-init' }
@@ -82,8 +82,8 @@ UnitTest.asynctest('FieldsTest', (success, failure) => {
         tag: 'div'
       },
       components: [
-        FormChooser.parts().legend({ }),
-        FormChooser.parts().choices({ })
+        FormChooser.parts.legend({ }),
+        FormChooser.parts.choices({ })
       ],
 
       markers: {
@@ -102,8 +102,8 @@ UnitTest.asynctest('FieldsTest', (success, failure) => {
         tag: 'div'
       },
       components: [
-        FormField.parts().label(labelSpec),
-        FormField.parts().field({
+        FormField.parts.label(labelSpec),
+        FormField.parts.field({
           factory: Input
         })
       ]
@@ -115,9 +115,9 @@ UnitTest.asynctest('FieldsTest', (success, failure) => {
         classes: [ 'coupled-group' ]
       },
       components: [
-        FormCoupledInputs.parts().field1(coupledDText),
-        FormCoupledInputs.parts().field2(coupledDText),
-        FormCoupledInputs.parts().lock({
+        FormCoupledInputs.parts.field1(coupledDText),
+        FormCoupledInputs.parts.field2(coupledDText),
+        FormCoupledInputs.parts.lock({
           dom: {
             tag: 'button',
             innerHtml: '+'

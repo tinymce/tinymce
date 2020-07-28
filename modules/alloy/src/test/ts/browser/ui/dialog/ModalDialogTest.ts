@@ -23,7 +23,7 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
       Tabstopping.config({ })
     ]);
 
-    const pDraghandle = ModalDialog.parts().draghandle({
+    const pDraghandle = ModalDialog.parts.draghandle({
       dom: {
         tag: 'div',
         styles: {
@@ -34,7 +34,7 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
       }
     });
 
-    const pTitle = ModalDialog.parts().title({
+    const pTitle = ModalDialog.parts.title({
       dom: {
         tag: 'div',
         innerHtml: 'Title',
@@ -44,7 +44,7 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
       components: [ ]
     });
 
-    const pClose = ModalDialog.parts().close({
+    const pClose = ModalDialog.parts.close({
       dom: {
         tag: 'div',
         innerHtml: 'X'
@@ -52,7 +52,7 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
       components: [ ]
     });
 
-    const pBody = ModalDialog.parts().body({
+    const pBody = ModalDialog.parts.body({
       dom: {
         tag: 'div',
         classes: [ 'test-dialog-body' ]
@@ -73,7 +73,7 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
       ]
     });
 
-    const pFooter = ModalDialog.parts().footer({
+    const pFooter = ModalDialog.parts.footer({
       dom: {
         tag: 'div',
         classes: [ 'test-dialog-footer' ],

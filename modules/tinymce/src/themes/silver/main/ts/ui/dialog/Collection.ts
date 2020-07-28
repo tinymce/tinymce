@@ -108,7 +108,7 @@ export const renderCollection = (spec: CollectionSpec, providersBackstage: UiFac
 
   const iterCollectionItems = (comp, applyAttributes) => Arr.map(SelectorFilter.descendants(comp.element, '.tox-collection__item'), applyAttributes);
 
-  const pField = AlloyFormField.parts().field({
+  const pField = AlloyFormField.parts.field({
     dom: {
       tag: 'div',
       // FIX: Read from columns

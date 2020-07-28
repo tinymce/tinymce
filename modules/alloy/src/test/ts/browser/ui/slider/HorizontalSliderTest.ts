@@ -36,21 +36,21 @@ UnitTest.asynctest('Browser Test: ui.slider.HorizontalSliderTest', (success, fai
       snapToGrid: true,
 
       components: [
-        Slider.parts()['left-edge']({ dom: { tag: 'div', classes: [ 'horizontal-slider-test-left-edge' ], styles: {
+        Slider.parts['left-edge']({ dom: { tag: 'div', classes: [ 'horizontal-slider-test-left-edge' ], styles: {
           width: '40px',
           height: '20px',
           background: 'black'
         }}}),
-        Slider.parts().spectrum({ dom: { tag: 'div', classes: [ 'horizontal-slider-test-spectrum' ], styles: {
+        Slider.parts.spectrum({ dom: { tag: 'div', classes: [ 'horizontal-slider-test-spectrum' ], styles: {
           height: '150px',
           background: 'green'
         }}}),
-        Slider.parts()['right-edge']({ dom: { tag: 'div', classes: [ 'horizontal-slider-test-right-edge' ], styles: {
+        Slider.parts['right-edge']({ dom: { tag: 'div', classes: [ 'horizontal-slider-test-right-edge' ], styles: {
           width: '40px',
           height: '20px',
           background: 'white'
         }}}),
-        Slider.parts().thumb({ dom: { tag: 'div', classes: [ 'horizontal-slider-test-thumb' ], styles: {
+        Slider.parts.thumb({ dom: { tag: 'div', classes: [ 'horizontal-slider-test-thumb' ], styles: {
           width: '20px',
           height: '20px',
           background: 'gray'

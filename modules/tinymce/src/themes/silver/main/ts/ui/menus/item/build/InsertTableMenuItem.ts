@@ -108,7 +108,7 @@ export const renderInsertTableMenuItem = (spec: Menu.FancyMenuItem): ItemTypes.W
       classes: [ 'tox-fancymenuitem' ]
     },
     autofocus: true,
-    components: [ ItemWidget.parts().widget({
+    components: [ ItemWidget.parts.widget({
       dom: {
         tag: 'div',
         classes: [ 'tox-insert-table-picker' ]

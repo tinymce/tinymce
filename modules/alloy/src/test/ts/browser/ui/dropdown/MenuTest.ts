@@ -28,7 +28,7 @@ UnitTest.asynctest('MenuTest', (success, failure) => {
         classes: [ 'test-menu' ]
       },
       components: [
-        Menu.parts().items({ })
+        Menu.parts.items({ })
       ],
 
       markers: {

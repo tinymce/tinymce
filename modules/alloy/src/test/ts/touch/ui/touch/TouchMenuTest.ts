@@ -45,7 +45,7 @@ UnitTest.asynctest('Browser Test: ui.touch.TouchMenuTest', (success, failure) =>
         }
       },
       components: [
-        Menu.parts().items({ })
+        Menu.parts.items({ })
       ],
 
       items: [],
@@ -81,7 +81,7 @@ UnitTest.asynctest('Browser Test: ui.touch.TouchMenuTest', (success, failure) =>
             }
           },
           // TODO: Test lazy sink
-          TouchMenu.parts().sink({ })
+          TouchMenu.parts.sink({ })
         ],
 
         parts: {

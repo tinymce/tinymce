@@ -111,7 +111,7 @@ export default (): void => {
             }
           },
           components: [
-            Toolbar.parts().groups({ })
+            Toolbar.parts.groups({ })
           ]
         })
       ]
@@ -143,7 +143,7 @@ export default (): void => {
         }
       },
       components: [
-        SplitSlidingToolbar.parts().primary({
+        SplitSlidingToolbar.parts.primary({
           dom: {
             tag: 'div',
             styles: {
@@ -151,7 +151,7 @@ export default (): void => {
             }
           }
         }),
-        SplitSlidingToolbar.parts().overflow({
+        SplitSlidingToolbar.parts.overflow({
           dom: {
             tag: 'div',
             styles: {
@@ -207,7 +207,7 @@ export default (): void => {
         }
       },
       components: [
-        SplitFloatingToolbar.parts().primary({
+        SplitFloatingToolbar.parts.primary({
           dom: {
             tag: 'div',
             styles: {

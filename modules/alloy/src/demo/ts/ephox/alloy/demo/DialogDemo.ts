@@ -25,22 +25,22 @@ export default (): void => {
 
   const lazySink = () => Result.value(sink);
 
-  const pTitle = ModalDialog.parts().title({
+  const pTitle = ModalDialog.parts.title({
     dom: DomFactory.fromHtml('<div class="mce-title">Insert Link</div>')
   });
 
-  const pDraghandle = ModalDialog.parts().draghandle({
+  const pDraghandle = ModalDialog.parts.draghandle({
     dom: DomFactory.fromHtml('<div class="mce-dragh"></div>')
   });
 
-  const pClose = ModalDialog.parts().close({
+  const pClose = ModalDialog.parts.close({
     dom: DomFactory.fromHtml('<button type="button" aria-hidden="true" class="mce-close"></button>'),
     components: [
       Container.sketch({ dom: { tag: 'i', classes: [ 'mce-ico', 'mce-i-remove' ] }})
     ]
   });
 
-  const pBody = ModalDialog.parts().body({
+  const pBody = ModalDialog.parts.body({
     dom: DomFactory.fromHtml('<div></div>'),
     components: [
       Container.sketch({
@@ -93,7 +93,7 @@ export default (): void => {
     ]
   });
 
-  const pFooter = ModalDialog.parts().footer({
+  const pFooter = ModalDialog.parts.footer({
     dom: {
       tag: 'div'
     }

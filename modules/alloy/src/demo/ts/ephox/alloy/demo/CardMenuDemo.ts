@@ -71,7 +71,7 @@ export default (): void => {
           classes: [ 'menu-items-container' ]
         },
         components: [
-          Menu.parts().items({ })
+          Menu.parts.items({ })
         ]
       }
     ],

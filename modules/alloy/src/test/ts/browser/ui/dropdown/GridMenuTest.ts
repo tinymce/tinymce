@@ -41,7 +41,7 @@ UnitTest.asynctest('GridMenuTest', (success, failure) => {
       },
 
       components: [
-        Menu.parts().items({ })
+        Menu.parts.items({ })
       ],
 
       markers: {

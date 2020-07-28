@@ -48,8 +48,8 @@ const doMove = (
   (element, focused, gridConfig, gridState) =>
     DomPinpoint.locateVisible(element, focused, gridConfig.selector).
       bind((identified) => cycle(
-        identified.candidates(),
-        identified.index(),
+        identified.candidates,
+        identified.index,
         gridState.getNumRows().getOr(gridConfig.initSize.numRows),
         gridState.getNumColumns().getOr(gridConfig.initSize.numColumns)
       ));

@@ -115,13 +115,13 @@ export const renderTabPanel = (spec: TabPanelSpec, backstage: UiFactoryBackstage
     tabs: allTabs,
 
     components: [
-      AlloyTabSection.parts().tabbar({
+      AlloyTabSection.parts.tabbar({
         dom: {
           tag: 'div',
           classes: [ 'tox-dialog__body-nav' ]
         },
         components: [
-          AlloyTabbar.parts().tabs({ })
+          AlloyTabbar.parts.tabs({ })
         ],
         markers: {
           tabClass: 'tox-tab',
@@ -132,7 +132,7 @@ export const renderTabPanel = (spec: TabPanelSpec, backstage: UiFactoryBackstage
           Tabstopping.config({ })
         ])
       }),
-      AlloyTabSection.parts().tabview({
+      AlloyTabSection.parts.tabview({
         dom: {
           tag: 'div',
           classes: [ 'tox-dialog__body-content' ]

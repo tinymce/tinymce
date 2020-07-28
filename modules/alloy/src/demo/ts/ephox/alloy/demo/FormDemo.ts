@@ -85,14 +85,14 @@ export default (): void => {
             tag: 'span'
           },
           components: [
-            FormField.parts().label({
+            FormField.parts.label({
               dom: {
                 tag: 'label',
                 innerHtml: 'aria test'
               }
             }),
-            FormField.parts().field({ factory: Input }),
-            FormField.parts()['aria-descriptor']({
+            FormField.parts.field({ factory: Input }),
+            FormField.parts['aria-descriptor']({
               text: 'aria descriptor'
             })
           ]
@@ -164,7 +164,7 @@ export default (): void => {
       },
 
       components: [
-        ExpandableForm.parts().minimal(
+        ExpandableForm.parts.minimal(
           Form.sketch((parts: FormParts) => ({
             dom: {
               tag: 'div',
@@ -179,7 +179,7 @@ export default (): void => {
           }))
         ),
 
-        ExpandableForm.parts().extra(
+        ExpandableForm.parts.extra(
           Form.sketch((parts: FormParts) => ({
             dom: {
               tag: 'div',
@@ -203,7 +203,7 @@ export default (): void => {
             ]
           }))
         ),
-        ExpandableForm.parts().expander({
+        ExpandableForm.parts.expander({
           dom: {
             tag: 'button',
             innerHtml: 'v'
@@ -212,7 +212,7 @@ export default (): void => {
             Tabstopping.config({ })
           ])
         }),
-        ExpandableForm.parts().controls({
+        ExpandableForm.parts.controls({
           dom: {
             tag: 'div'
           },

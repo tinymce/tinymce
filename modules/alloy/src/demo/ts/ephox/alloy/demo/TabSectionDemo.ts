@@ -30,12 +30,12 @@ export default (): void => {
     ]
   });
 
-  const pTabbar = TabSection.parts().tabbar({
+  const pTabbar = TabSection.parts.tabbar({
     dom: {
       tag: 'div'
     },
     components: [
-      Tabbar.parts().tabs({ })
+      Tabbar.parts.tabs({ })
     ],
     markers: {
       tabClass: 'demo-tab',
@@ -50,7 +50,7 @@ export default (): void => {
       },
       components: [
         pTabbar,
-        TabSection.parts().tabview({
+        TabSection.parts.tabview({
           dom: {
             tag: 'div'
           }

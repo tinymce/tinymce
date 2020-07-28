@@ -33,7 +33,7 @@ UnitTest.asynctest('BasicToolbarTest', (success, failure) => {
             classes: [ 'not-shell-toolbar' ]
           },
           components: [
-            Toolbar.parts().groups({
+            Toolbar.parts.groups({
               dom: {
                 tag: 'div',
                 attributes: {

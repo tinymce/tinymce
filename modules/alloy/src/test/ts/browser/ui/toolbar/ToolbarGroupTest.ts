@@ -44,7 +44,7 @@ UnitTest.asynctest('ToolbarGroupTest', (success, failure) => {
             classes: [ 'test-group1' ]
           },
           components: [
-            ToolbarGroup.parts().items({
+            ToolbarGroup.parts.items({
               dom: {
                 tag: 'div',
                 classes: [ 'group-items' ]

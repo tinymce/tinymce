@@ -19,11 +19,11 @@ UnitTest.asynctest('Basic Form', (success, failure) => {
       tag: 'div'
     },
     components: [
-      FormField.parts().field({
+      FormField.parts.field({
         factory: Input,
         data: 'Init'
       }),
-      FormField.parts().label({
+      FormField.parts.label({
         dom: { tag: 'label', innerHtml: 'a' },
         components: [ ]
       })
@@ -36,14 +36,14 @@ UnitTest.asynctest('Basic Form', (success, failure) => {
       tag: 'div'
     },
     components: [
-      FormField.parts().field({
+      FormField.parts.field({
         factory: HtmlSelect,
         options: [
           { value: 'select-b-init', text: 'Select-b-init' },
           { value: 'select-b-other', text: 'Select-b-other' }
         ]
       }),
-      FormField.parts().label({ dom: { tag: 'label', innerHtml: 'a' }, components: [ ] })
+      FormField.parts.label({ dom: { tag: 'label', innerHtml: 'a' }, components: [ ] })
     ]
   };
 

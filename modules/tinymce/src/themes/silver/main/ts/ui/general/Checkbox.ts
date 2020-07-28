@@ -40,7 +40,7 @@ export const renderCheckbox = (spec: CheckboxSpec, providerBackstage: UiFactoryB
     return Optional.some(true);
   };
 
-  const pField = AlloyFormField.parts().field({
+  const pField = AlloyFormField.parts.field({
     factory: { sketch: Fun.identity },
     dom: {
       tag: 'input',
@@ -72,7 +72,7 @@ export const renderCheckbox = (spec: CheckboxSpec, providerBackstage: UiFactoryB
     ])
   });
 
-  const pLabel = AlloyFormField.parts().label({
+  const pLabel = AlloyFormField.parts.label({
     dom: {
       tag: 'span',
       classes: [ 'tox-checkbox__label' ],

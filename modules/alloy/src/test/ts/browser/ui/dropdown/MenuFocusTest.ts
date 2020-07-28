@@ -30,7 +30,7 @@ UnitTest.asynctest('MenuFocusTest', (success, failure) => {
           classes: [ `alpha-widget-${suffix}` ]
         },
         components: [
-          ItemWidget.parts().widget({
+          ItemWidget.parts.widget({
             dom: {
               tag: 'div',
               classes: [ 'internal-widget' ],
@@ -70,7 +70,7 @@ UnitTest.asynctest('MenuFocusTest', (success, failure) => {
         classes: [ 'test-menu' ]
       },
       components: [
-        Menu.parts().items({ })
+        Menu.parts.items({ })
       ],
 
       markers
@@ -84,7 +84,7 @@ UnitTest.asynctest('MenuFocusTest', (success, failure) => {
         classes: [ 'test-menu' ]
       },
       components: [
-        Menu.parts().items({ })
+        Menu.parts.items({ })
       ],
       fakeFocus: true,
       focusManager: FocusManagers.highlights(),

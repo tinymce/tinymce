@@ -54,7 +54,7 @@ UnitTest.asynctest('SplitDropdown List', (success, failure) => {
         },
 
         components: [
-          SplitDropdown.parts().button({
+          SplitDropdown.parts.button({
             dom: {
               tag: 'button',
               classes: [ 'test-split-button-action' ],
@@ -71,7 +71,7 @@ UnitTest.asynctest('SplitDropdown List', (success, failure) => {
               }
             ]
           }),
-          SplitDropdown.parts().arrow({
+          SplitDropdown.parts.arrow({
             dom: {
               tag: 'button',
               innerHtml: 'v',

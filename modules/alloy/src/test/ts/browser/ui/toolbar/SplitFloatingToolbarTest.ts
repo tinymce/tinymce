@@ -28,7 +28,7 @@ UnitTest.asynctest('SplitFloatingToolbarTest', (success, failure) => {
   }));
 
   GuiSetup.setup((_store, _doc, _body) => {
-    const pPrimary = SplitFloatingToolbar.parts().primary({
+    const pPrimary = SplitFloatingToolbar.parts.primary({
       dom: {
         tag: 'div',
         classes: [ 'test-toolbar-primary' ]

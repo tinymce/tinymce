@@ -81,20 +81,20 @@ export default (): void => {
         tag: 'div'
       },
       components: [
-        SplitDropdown.parts().button({
+        SplitDropdown.parts.button({
           dom: {
             tag: 'button',
             innerHtml: 'Run'
           },
           uid: 'supplied'
         }),
-        SplitDropdown.parts().arrow({
+        SplitDropdown.parts.arrow({
           dom: {
             tag: 'button',
             innerHtml: 'v'
           }
         }),
-        SplitDropdown.parts().sink({ })
+        SplitDropdown.parts.sink({ })
       ],
       fetch() {
         const wMenu = DemoRenders.menu({
@@ -266,7 +266,7 @@ export default (): void => {
         innerHtml: 'Click me to expand'
       },
       components: [
-        Dropdown.parts().sink({ })
+        Dropdown.parts.sink({ })
       ],
 
       toggleClass: 'demo-selected',

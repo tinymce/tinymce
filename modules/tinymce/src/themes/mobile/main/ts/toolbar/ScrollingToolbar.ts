@@ -44,7 +44,7 @@ export const ScrollingToolbar = function (): ScrollingToolbar {
       components: [
         Container.sketch({
           components: [
-            ToolbarGroup.parts().items({ })
+            ToolbarGroup.parts.items({ })
           ]
         })
       ],
@@ -66,7 +66,7 @@ export const ScrollingToolbar = function (): ScrollingToolbar {
       {
         dom: UiDomFactory.dom('<div class="${prefix}-toolbar"></div>'),
         components: [
-          Toolbar.parts().groups({ })
+          Toolbar.parts.groups({ })
         ],
         toolbarBehaviours: Behaviour.derive([
           Toggling.config({

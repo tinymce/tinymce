@@ -37,7 +37,7 @@ export default (): void => {
       snapToGrid: true,
 
       components: [
-        Slider.parts().spectrum({
+        Slider.parts.spectrum({
           dom: {
             tag: 'div',
             styles: {
@@ -47,7 +47,7 @@ export default (): void => {
             }
           }
         }),
-        Slider.parts().thumb({
+        Slider.parts.thumb({
           dom: {
             tag: 'div',
             styles: {
@@ -95,7 +95,7 @@ export default (): void => {
       },
 
       components: [
-        Slider.parts().spectrum({
+        Slider.parts.spectrum({
           dom: {
             tag: 'div',
             styles: {
@@ -103,7 +103,7 @@ export default (): void => {
             }
           }
         }),
-        Slider.parts().thumb({
+        Slider.parts.thumb({
           dom: {
             tag: 'div',
             styles: {
@@ -179,7 +179,7 @@ export default (): void => {
             }
           },
           components: [
-            Slider.parts()['left-edge']({
+            Slider.parts['left-edge']({
               dom: {
                 tag: 'div',
                 styles: {
@@ -189,7 +189,7 @@ export default (): void => {
                 }
               }
             }),
-            Slider.parts().spectrum({
+            Slider.parts.spectrum({
               dom: {
                 tag: 'div',
                 styles: {
@@ -199,7 +199,7 @@ export default (): void => {
                 }
               }
             }),
-            Slider.parts()['right-edge']({
+            Slider.parts['right-edge']({
               dom: {
                 tag: 'div',
                 styles: {
@@ -211,7 +211,7 @@ export default (): void => {
             })
           ]
         }),
-        Slider.parts().thumb({
+        Slider.parts.thumb({
           dom: {
             tag: 'div',
             classes: [ 'demo-sliding-thumb' ],

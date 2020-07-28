@@ -31,7 +31,7 @@ const munge = (spec: { items: AlloySpec[] }) => ({
     classes: [ 'test-toolbar-group' ]
   },
   components: [
-    ToolbarGroup.parts().items({ })
+    ToolbarGroup.parts.items({ })
   ],
   items: Arr.map(spec.items, mungeItem),
   markers: itemMarkers
