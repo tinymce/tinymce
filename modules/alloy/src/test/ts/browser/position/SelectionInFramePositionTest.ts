@@ -62,10 +62,10 @@ UnitTest.asynctest('SelectionInFramePositionTest', (success, failure) => {
         const range = Cursors.calculate(body, path);
         WindowSelection.setExact(
           win,
-          range.start(),
-          range.soffset(),
-          range.finish(),
-          range.foffset()
+          range.start,
+          range.soffset,
+          range.finish,
+          range.foffset
         );
         return WindowSelection.getExact(win).fold(() => Result.error('Could not retrieve the set selection'), Result.value);
       });
@@ -159,7 +159,7 @@ UnitTest.asynctest('SelectionInFramePositionTest', (success, failure) => {
                 foffset: 0
               }), 'range2'),
               NamedChain.direct('range2', Chain.binder((range2: SimRange) => {
-                const start = range2.start();
+                const start = range2.start;
                 // NOTE: Safari likes to select the text node.
                 const optElement = SugarNode.isText(start) ? Traverse.parentNode(start) : Optional.some(start);
                 return optElement.filter(SugarNode.isHTMLElement).map((elem) => {

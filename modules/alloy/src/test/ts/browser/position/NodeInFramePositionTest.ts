@@ -68,10 +68,10 @@ UnitTest.asynctest('SelectionInFramePositionTest', (success, failure) => {
         const range = Cursors.calculate(body, path);
         WindowSelection.setExact(
           win,
-          range.start(),
-          range.soffset(),
-          range.finish(),
-          range.foffset()
+          range.start,
+          range.soffset,
+          range.finish,
+          range.foffset
         );
         return WindowSelection.getExact(win).fold(() => Result.error('Could not retrieve the set selection'), Result.value);
       });

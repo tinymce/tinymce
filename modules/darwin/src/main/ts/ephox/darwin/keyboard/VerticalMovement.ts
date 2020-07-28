@@ -32,7 +32,7 @@ const simulate = function (bridge: WindowBridge, isRoot: (e: SugarElement) => bo
         return Optional.none<Simulated>();
       }
       return TableKeys.handle(bridge, isRoot, direction).bind(function (range) {
-        return SelectorFind.closest(range.finish(), 'td,th', isRoot).map<Simulated>(function (finish) {
+        return SelectorFind.closest(range.finish, 'td,th', isRoot).map<Simulated>(function (finish) {
           return {
             start: Fun.constant(start),
             finish: Fun.constant(finish),
@@ -54,7 +54,7 @@ const navigate = function (bridge: WindowBridge, isRoot: (e: SugarElement) => bo
       return simulate(bridge, isRoot, direction, initial, anchor).map(function (info) {
         const range = info.range();
         return Response.create(
-          Optional.some(Util.makeSitus(range.start(), range.soffset(), range.finish(), range.foffset())),
+          Optional.some(Util.makeSitus(range.start, range.soffset, range.finish, range.foffset)),
           true
         );
       });

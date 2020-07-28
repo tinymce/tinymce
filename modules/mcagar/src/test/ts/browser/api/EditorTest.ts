@@ -3,7 +3,7 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { ApiChains } from 'ephox/mcagar/api/ApiChains';
 import * as Editor from 'ephox/mcagar/api/Editor';
 
-UnitTest.asynctest('SelectionTest', (success, failure) => {
+UnitTest.asynctest('EditorTest', (success, failure) => {
   const cAssertEditorExists = Chain.op(function (editor) {
     Assertions.assertEq('asserting that editor is truthy', true, !!editor);
   });

@@ -76,7 +76,7 @@ export default function (editor: Editor, lazyResize: () => Optional<TableResize>
         event.kill();
       }
       response.selection().each((ns) => {
-        const relative = SimSelection.relative(ns.start(), ns.finish());
+        const relative = SimSelection.relative(ns.start, ns.finish);
         const rng = SelectionDirection.asLtrRange(win, relative);
         editor.selection.setRng(rng);
       });

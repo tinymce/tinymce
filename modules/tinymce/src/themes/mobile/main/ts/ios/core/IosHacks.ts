@@ -22,7 +22,7 @@ const setSelectionAtTouch = function (editorApi, touchEvent: EventArgs<TouchEven
   // we have to live with this until we control selection
   const touch = touchEvent.raw.changedTouches[0];
   WindowSelection.getAtPoint(editorApi.win(), touch.pageX, touch.pageY).each(function (raw) {
-    editorApi.setSelection(raw.start(), raw.soffset(), raw.finish(), raw.foffset());
+    editorApi.setSelection(raw.start, raw.soffset, raw.finish, raw.foffset);
   });
 };
 

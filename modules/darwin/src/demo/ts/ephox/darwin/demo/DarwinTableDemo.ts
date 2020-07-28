@@ -100,11 +100,10 @@ const handleResponse = function (event: EventArgs, response: Response) {
     event.kill();
   }
   response.selection().each(function (ns) {
-    // ns is {start(): Situ, finish(): Situ}
-    const relative = SimSelection.relative(ns.start(), ns.finish());
+    const relative = SimSelection.relative(ns.start, ns.finish);
     const range = Util.convertToRange(window, relative);
-    WindowSelection.setExact(window, range.start(), range.soffset(), range.finish(), range.foffset());
-    // WindowSelection.setExact(window, ns.start(), ns.soffset(), ns.finish(), ns.foffset());
+    WindowSelection.setExact(window, range.start, range.soffset, range.finish, range.foffset);
+    // WindowSelection.setExact(window, ns.start, ns.soffset, ns.finish, ns.foffset);
   });
 };
 
@@ -112,7 +111,7 @@ DomEvent.bind(ephoxUi, 'keyup', function (event) {
   // Note, this is an optimisation.
   if (event.raw.shiftKey && event.raw.which >= 37 && event.raw.which <= 40) {
     WindowSelection.getExact(window).each(function (sel) {
-      keyHandlers.keyup(event, sel.start(), sel.soffset(), sel.finish(), sel.foffset()).each(function (response) {
+      keyHandlers.keyup(event, sel.start, sel.soffset, sel.finish, sel.foffset).each(function (response) {
         handleResponse(event, response);
       });
     });
@@ -122,9 +121,9 @@ DomEvent.bind(ephoxUi, 'keyup', function (event) {
 DomEvent.bind(ephoxUi, 'keydown', function (event) {
   // This might get expensive.
   WindowSelection.getExact(window).each(function (sel) {
-    const target = (SugarNode.isText(sel.start()) ? Traverse.parentNode(sel.start()) : Optional.some(sel.start())).filter(SugarNode.isElement);
+    const target = (SugarNode.isText(sel.start) ? Traverse.parentNode(sel.start) : Optional.some(sel.start)).filter(SugarNode.isElement);
     const direction = target.map(Direction.getDirection).getOr('ltr');
-    keyHandlers.keydown(event, sel.start(), sel.soffset(), sel.finish(), sel.foffset(), direction === 'ltr' ? SelectionKeys.ltr : SelectionKeys.rtl).each(function (response) {
+    keyHandlers.keydown(event, sel.start, sel.soffset, sel.finish, sel.foffset, direction === 'ltr' ? SelectionKeys.ltr : SelectionKeys.rtl).each(function (response) {
       handleResponse(event, response);
     });
   });

@@ -29,8 +29,8 @@ UnitTest.test('api.Split.(split,splitByPair)', function () {
   const checkSplit = function (before: Optional<string>, after: Optional<string>, text: string, position: number) {
     const input = generate(text);
     const actual = Split.split(input.universe, input.item, position);
-    assert.eq(true, isEq(before, actual.before()));
-    assert.eq(true, isEq(after, actual.after()));
+    assert.eq(true, isEq(before, actual.before));
+    assert.eq(true, isEq(after, actual.after));
   };
 
   const checkPair = function (expected: string, middle: string, text: string, start: number, finish: number) {

@@ -65,7 +65,7 @@ export const TinyApis = function (editor: Editor): TinyApis {
 
   const sSetSelectionFrom = function <T> (spec: Cursors.CursorSpec | Cursors.RangeSpec) {
     const path = Cursors.pathFrom(spec);
-    return sSetSelection<T>(path.startPath(), path.soffset(), path.finishPath(), path.foffset());
+    return sSetSelection<T>(path.startPath, path.soffset, path.finishPath, path.foffset);
   };
 
   const sSetCursor = function <T> (elementPath: number[], offset: number) {

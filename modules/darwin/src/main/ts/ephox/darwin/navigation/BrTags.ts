@@ -1,6 +1,7 @@
-import { Fun, Optional } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { Spot, SpotPoint } from '@ephox/phoenix';
 import { Awareness, ElementAddress, Situ, SugarElement, SugarNode, SugarText, Traverse } from '@ephox/sugar';
+import { Situs } from '../selection/Situs';
 import { BeforeAfter } from './BeforeAfter';
 import { KeyDirection } from './KeyDirection';
 
@@ -43,7 +44,7 @@ const handleParent = function (isRoot: (e: SugarElement) => boolean, element: Su
   });
 };
 
-const tryBr = function (isRoot: (e: SugarElement) => boolean, element: SugarElement, offset: number, direction: KeyDirection) {
+const tryBr = function (isRoot: (e: SugarElement) => boolean, element: SugarElement, offset: number, direction: KeyDirection): Optional<Situs> {
   // Three different situations
   // 1. the br is the child, and it has a previous sibling. Use parent, index-1)
   // 2. the br is the child and it has no previous sibling, set to before the previous gather result
@@ -53,8 +54,8 @@ const tryBr = function (isRoot: (e: SugarElement) => boolean, element: SugarElem
   const target = isBr(element) ? handleBr(isRoot, element, direction) : handleParent(isRoot, element, offset, direction);
   return target.map(function (tgt) {
     return {
-      start: Fun.constant(tgt),
-      finish: Fun.constant(tgt)
+      start: tgt,
+      finish: tgt
     };
   });
 };

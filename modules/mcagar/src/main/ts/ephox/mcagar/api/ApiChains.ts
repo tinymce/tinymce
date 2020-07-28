@@ -45,7 +45,7 @@ const cSetRawContent = function <T extends Editor> (html: string): Chain<T, T> {
 
 const cSetSelectionFrom = function <T extends Editor> (spec: Cursors.CursorSpec | Cursors.RangeSpec): Chain<T, T> {
   const path = Cursors.pathFrom(spec);
-  return cSetSelection(path.startPath(), path.soffset(), path.finishPath(), path.foffset());
+  return cSetSelection(path.startPath, path.soffset, path.finishPath, path.foffset);
 };
 
 const cSetCursor = function <T extends Editor> (elementPath: number[], offset: number): Chain<T, T> {

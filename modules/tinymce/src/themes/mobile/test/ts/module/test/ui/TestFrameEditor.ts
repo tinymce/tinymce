@@ -34,7 +34,7 @@ export default function () {
     selection: {
       getStart() {
         return WindowSelection.getExact(frame.dom.contentWindow).map(function (sel) {
-          return sel.start().dom;
+          return sel.start.dom;
         }).getOr(null);
       },
       getContent() {

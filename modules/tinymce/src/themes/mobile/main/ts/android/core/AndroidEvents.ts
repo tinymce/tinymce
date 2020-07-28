@@ -8,7 +8,7 @@
 import { Toggling } from '@ephox/alloy';
 import { Arr, Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Compare, DomEvent, Focus, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
+import { Compare, DomEvent, Focus, SimRange, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
 import * as TappingEvent from '../../util/TappingEvent';
 
@@ -30,8 +30,8 @@ const initEvents = function (editorApi, toolstrip, alloy) {
   const tapping = TappingEvent.monitor(editorApi);
   const outerDoc = Traverse.owner(toolstrip);
 
-  const isRanged = function (sel) {
-    return !Compare.eq(sel.start(), sel.finish()) || sel.soffset() !== sel.foffset();
+  const isRanged = function (sel: SimRange) {
+    return !Compare.eq(sel.start, sel.finish) || sel.soffset !== sel.foffset;
   };
 
   const hasRangeInUi = function () {

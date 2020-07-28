@@ -136,7 +136,7 @@ const getExact = (win: Window) =>
 
 // TODO: Test this.
 const get = (win: Window) =>
-  getExact(win).map((range) => SimSelection.exact(range.start(), range.soffset(), range.finish(), range.foffset()));
+  getExact(win).map((range) => SimSelection.exact(range.start, range.soffset, range.finish, range.foffset));
 
 const getFirstRect = (win: Window, selection: SimSelection) => {
   const rng = SelectionDirection.asLtrRange(win, selection);

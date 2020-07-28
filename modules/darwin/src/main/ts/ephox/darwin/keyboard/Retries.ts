@@ -134,7 +134,7 @@ const adjustTil = function (bridge: WindowBridge, movement: CaretMovement, origi
   }
 
   return bridge.situsFromPoint(caret.left, movement.point(caret)).bind(function (guess) {
-    return guess.start().fold<Optional<Carets>>(Optional.none, function (element) {
+    return guess.start.fold<Optional<Carets>>(Optional.none, function (element) {
       return Rectangles.getEntireBox(bridge, element).bind(function (guessBox) {
         return movement.adjuster(bridge, element, guessBox, original, caret).fold<Optional<Carets>>(
           Optional.none,

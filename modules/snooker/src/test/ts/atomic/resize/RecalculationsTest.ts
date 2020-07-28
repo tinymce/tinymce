@@ -6,7 +6,7 @@ import { Warehouse } from 'ephox/snooker/model/Warehouse';
 import * as Recalculations from 'ephox/snooker/resize/Recalculations';
 
 UnitTest.test('RecalculationsTest', function () {
-  const dimensions = Structs.dimensions; // Struct.immutable('width', 'height');
+  const dimensions = Structs.dimensions;
 
   interface Parts {
     widths: Array<{

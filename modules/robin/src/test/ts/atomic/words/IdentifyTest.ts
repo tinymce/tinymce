@@ -11,15 +11,15 @@ UnitTest.test('words :: Identify', function () {
     const actual = Identify.words(input);
     assert.eq(expected.length, actual.length);
     Arr.map(expected, function (x, i) {
-      assert.eq(expected[i].word(), actual[i].word());
-      assert.eq(true, expected[i].left().equals(actual[i].left()));
-      assert.eq(true, expected[i].right().equals(actual[i].right()));
+      assert.eq(expected[i].word, actual[i].word);
+      assert.eq(true, expected[i].left.equals(actual[i].left));
+      assert.eq(true, expected[i].right.equals(actual[i].right));
     });
   };
 
   const checkWords = function (expected: string[], input: string) {
     const actual = Identify.words(input);
-    assert.eq(expected, Arr.map(actual, function (a) { return a.word(); }));
+    assert.eq(expected, Arr.map(actual, function (a) { return a.word; }));
   };
 
   check([], '');

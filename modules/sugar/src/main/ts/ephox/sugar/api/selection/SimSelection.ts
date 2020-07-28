@@ -29,7 +29,7 @@ const adt: {
   { exact: [ 'start', 'soffset', 'finish', 'foffset' ] }
 ]);
 
-const exactFromRange = (simRange: SimRange) => adt.exact(simRange.start(), simRange.soffset(), simRange.finish(), simRange.foffset());
+const exactFromRange = (simRange: SimRange) => adt.exact(simRange.start, simRange.soffset, simRange.finish, simRange.foffset);
 
 const getStart = (selection: SimSelection) => selection.match({
   domRange: (rng) => SugarElement.fromDom(rng.startContainer),

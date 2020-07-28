@@ -36,10 +36,10 @@ UnitTest.test('Browser Test: SelectionTest', () => {
     WindowSelection.getExact(window).fold(() => {
       assert.fail('After setting selection ' + label + ', could not find a selection');
     }, (sel) => {
-      assert.eq(true, Compare.eq(sel.start(), expStart), () => 'Start container should be: ' + Html.getOuter(expStart) + '\n' + label);
-      assert.eq(expSoffset, sel.soffset());
-      assert.eq(true, Compare.eq(sel.finish(), expFinish), () => 'Finish container should be ' + Html.getOuter(expFinish) + '\n' + label);
-      assert.eq(expFoffset, sel.foffset());
+      assert.eq(true, Compare.eq(sel.start, expStart), () => 'Start container should be: ' + Html.getOuter(expStart) + '\n' + label);
+      assert.eq(expSoffset, sel.soffset);
+      assert.eq(true, Compare.eq(sel.finish, expFinish), () => 'Finish container should be ' + Html.getOuter(expFinish) + '\n' + label);
+      assert.eq(expFoffset, sel.foffset);
     });
   };
 

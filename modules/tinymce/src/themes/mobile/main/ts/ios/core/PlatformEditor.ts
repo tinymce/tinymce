@@ -6,7 +6,7 @@
  */
 
 import { Fun, Optional } from '@ephox/katamari';
-import { Compare, DomEvent, RawRect, StructRect, SugarElement, WindowSelection } from '@ephox/sugar';
+import { Compare, DomEvent, RawRect, SimRange, StructRect, SugarElement, WindowSelection } from '@ephox/sugar';
 
 const getBodyFromFrame = function (frame) {
   return Optional.some(SugarElement.fromDom(frame.dom.contentWindow.document.body));
@@ -67,13 +67,13 @@ const getActiveApi = function (editor) {
 
   // Empty paragraphs can have no rectangle size, so let's just use the start container
   // if it is collapsed;
-  const tryFallbackBox = function (win) {
-    const isCollapsed = function (sel) {
-      return Compare.eq(sel.start(), sel.finish()) && sel.soffset() === sel.foffset();
+  const tryFallbackBox = function (win: Window) {
+    const isCollapsed = function (sel: SimRange) {
+      return Compare.eq(sel.start, sel.finish) && sel.soffset === sel.foffset;
     };
 
     const toStartRect = function (sel) {
-      const rect = sel.start().dom.getBoundingClientRect();
+      const rect = sel.start.dom.getBoundingClientRect();
       return rect.width > 0 || rect.height > 0 ? Optional.some(rect).map(toRect) : Optional.none<StructRect>();
     };
 

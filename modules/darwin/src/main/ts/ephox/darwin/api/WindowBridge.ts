@@ -41,13 +41,13 @@ export const WindowBridge = function (win: Window): WindowBridge {
   };
 
   const fromSitus = function (situs: Situs) {
-    const relative = SimSelection.relative(situs.start(), situs.finish());
+    const relative = SimSelection.relative(situs.start, situs.finish);
     return Util.convertToRange(win, relative);
   };
 
   const situsFromPoint = function (x: number, y: number) {
     return WindowSelection.getAtPoint(win, x, y).map(function (exact) {
-      return Situs.create(exact.start(), exact.soffset(), exact.finish(), exact.foffset());
+      return Situs.create(exact.start, exact.soffset, exact.finish, exact.foffset);
     });
   };
 
@@ -75,7 +75,7 @@ export const WindowBridge = function (win: Window): WindowBridge {
   };
 
   const setSelection = function (sel: SimRange) {
-    WindowSelection.setExact(win, sel.start(), sel.soffset(), sel.finish(), sel.foffset());
+    WindowSelection.setExact(win, sel.start, sel.soffset, sel.finish, sel.foffset);
   };
 
   const setRelativeSelection = function (start: Situ, finish: Situ) {

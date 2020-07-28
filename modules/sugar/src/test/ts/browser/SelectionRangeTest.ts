@@ -61,10 +61,10 @@ UnitTest.test('WindowSelectionTest', () => {
     const expStart = find(expected.start);
     const expFinish = find(expected.finish);
 
-    assert.eq(true, Compare.eq(expStart, actual.start()), 'Start element different');
-    assert.eq(true, Compare.eq(expFinish, actual.finish()), 'Finish element different');
-    assert.eq(expected.soffset, actual.soffset());
-    assert.eq(expected.foffset, actual.foffset());
+    assert.eq(true, Compare.eq(expStart, actual.start), 'Start element different');
+    assert.eq(true, Compare.eq(expFinish, actual.finish), 'Finish element different');
+    assert.eq(expected.soffset, actual.soffset);
+    assert.eq(expected.foffset, actual.foffset);
   };
 
   const checkUniCodeSelection = (content: string) => {
