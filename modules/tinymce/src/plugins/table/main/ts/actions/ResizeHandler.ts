@@ -66,12 +66,12 @@ export const getResizeHandler = function (editor: Editor): ResizeHandler {
       });
 
       sz.events.beforeResize.bind(function (event) {
-        const rawTable = event.table().dom;
+        const rawTable = event.table.dom;
         Events.fireObjectResizeStart(editor, rawTable, Util.getPixelWidth(rawTable), Util.getPixelHeight(rawTable));
       });
 
       sz.events.afterResize.bind(function (event) {
-        const table = event.table();
+        const table = event.table;
         const rawTable = table.dom;
         Util.removeDataStyle(table);
 

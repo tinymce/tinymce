@@ -11,15 +11,15 @@ import { BarPositions, ColInfo, RowInfo } from './BarPositions';
 import * as Bars from './Bars';
 
 export interface DragAdjustHeightEvent {
-  table: () => SugarElement;
-  delta: () => number;
-  row: () => number;
+  readonly table: SugarElement;
+  readonly delta: number;
+  readonly row: number;
 }
 
 export interface DragAdjustWidthEvent {
-  table: () => SugarElement;
-  delta: () => number;
-  column: () => number;
+  readonly table: SugarElement;
+  readonly delta: number;
+  readonly column: number;
 }
 
 export interface DragAdjustEvents {
@@ -49,14 +49,14 @@ export const BarManager = function (wire: ResizeWire, direction: BarPositions<Co
 
   /* Reposition the bar as the user drags */
   mutation.events.drag.bind(function (event) {
-    getResizer(event.target(), 'data-row').each(function (_dataRow) {
-      const currentRow = CellUtils.getCssValue(event.target(), 'top');
-      Css.set(event.target(), 'top', currentRow + event.yDelta() + 'px');
+    getResizer(event.target, 'data-row').each(function (_dataRow) {
+      const currentRow = CellUtils.getCssValue(event.target, 'top');
+      Css.set(event.target, 'top', currentRow + event.yDelta + 'px');
     });
 
-    getResizer(event.target(), 'data-column').each(function (_dataCol) {
-      const currentCol = CellUtils.getCssValue(event.target(), 'left');
-      Css.set(event.target(), 'left', currentCol + event.xDelta() + 'px');
+    getResizer(event.target, 'data-column').each(function (_dataCol) {
+      const currentCol = CellUtils.getCssValue(event.target, 'left');
+      Css.set(event.target, 'left', currentCol + event.xDelta + 'px');
     });
   });
 

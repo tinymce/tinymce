@@ -2,8 +2,8 @@ import { Bindable, Event, Events } from '@ephox/porkbun';
 import { Css, SugarElement, SugarLocation } from '@ephox/sugar';
 
 export interface RelocateEvent {
-  x: () => number;
-  y: () => number;
+  readonly x: number;
+  readonly y: number;
 }
 
 interface RelocateEvents {
