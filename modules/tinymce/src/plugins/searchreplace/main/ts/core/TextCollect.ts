@@ -140,17 +140,17 @@ const collect = (dom: DOMUtils, rootNode: Node, startNode: Node, endNode?: Node,
 
 const collectRangeSections = (dom: DOMUtils, rng: Range): TextSection[] => {
   const start = toLeaf(rng.startContainer, rng.startOffset);
-  const startNode = start.element().dom;
+  const startNode = start.element.dom;
   const end = toLeaf(rng.endContainer, rng.endOffset);
-  const endNode = end.element().dom;
+  const endNode = end.element.dom;
 
   return collect(dom, rng.commonAncestorContainer, startNode, endNode, {
     text: (node, section) => {
       // Set the start/end offset of the section
       if (node === endNode) {
-        section.fOffset += node.length - end.offset();
+        section.fOffset += node.length - end.offset;
       } else if (node === startNode) {
-        section.sOffset += start.offset();
+        section.sOffset += start.offset;
       }
     },
     cef: (node) => {

@@ -97,13 +97,13 @@ const hasChildNodes = (element: SugarElement<Node>): boolean =>
   element.dom.hasChildNodes();
 
 export interface ElementAndOffset<E> {
-  readonly element: () => SugarElement<E>;
-  readonly offset: () => number;
+  readonly element: SugarElement<E>;
+  readonly offset: number;
 }
 
 const spot = <E>(element: SugarElement<E>, offset: number): ElementAndOffset<E> => ({
-  element: Fun.constant(element),
-  offset: Fun.constant(offset)
+  element,
+  offset
 });
 
 const leaf = (element: SugarElement<Node>, offset: number): ElementAndOffset<Node> => {
