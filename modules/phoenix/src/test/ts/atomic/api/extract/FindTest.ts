@@ -36,8 +36,8 @@ UnitTest.test('api.Extract.find', function () {
       actual.fold(function () {
         assert.fail('Expected some, actual: none');
       }, function (act) {
-        assert.eq(exp.id, act.element().id);
-        assert.eq(exp.offset, act.offset());
+        assert.eq(exp.id, act.element.id);
+        assert.eq(exp.offset, act.offset);
       });
     });
   };

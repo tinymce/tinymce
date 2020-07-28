@@ -78,8 +78,8 @@ export const TableActions = (editor: Editor, lazyWire: () => ResizeWire): TableA
         return result.cursor().map((cell) => {
           const des = DomDescent.freefallRtl(cell);
           const rng = editor.dom.createRng();
-          rng.setStart(des.element().dom, des.offset());
-          rng.setEnd(des.element().dom, des.offset());
+          rng.setStart(des.element.dom, des.offset);
+          rng.setEnd(des.element.dom, des.offset);
           return rng;
         });
       }) : Optional.none();

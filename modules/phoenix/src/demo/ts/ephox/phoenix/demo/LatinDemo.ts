@@ -39,7 +39,7 @@ DomEvent.bind(button, 'click', function (_event) {
 const highlight = function (words: string[], nu: () => Wrapter<SugarElement>) {
   const matches = DomSearch.safeWords([ p ], words);
   Arr.each(matches, function (x) {
-    DomWrapping.wrapper(x.elements(), nu);
+    DomWrapping.wrapper(x.elements, nu);
   });
 };
 

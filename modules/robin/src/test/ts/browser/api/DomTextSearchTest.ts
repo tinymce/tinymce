@@ -25,9 +25,9 @@ UnitTest.test('DomTextSearchTest', function () {
     }, function () {
       Assert.fail('Unexpected edge');
     }, function (info) {
-      const isSame = Compare.eq(info.element(), expectedElement);
+      const isSame = Compare.eq(info.element, expectedElement);
       Assert.eq('eq', true, isSame);
-      Assert.eq('eq', info.offset(), expectedOffset);
+      Assert.eq('eq', info.offset, expectedOffset);
     });
   };
 
@@ -204,8 +204,8 @@ UnitTest.test('DomTextSearchTest', function () {
 
     const checkScan = function (label: string, expected: { element: SugarElement; offset: number }, start: SugarElement, offset: number) {
       const actual = DomTextSearch.scanRight(start, offset).getOrDie('Could not find scan result for: ' + label);
-      Assert.eq('eq', expected.offset, actual.offset());
-      Assert.eq('Element did not match scan: (' + label + ')', true, Compare.eq(expected.element, actual.element()));
+      Assert.eq('eq', expected.offset, actual.offset);
+      Assert.eq('Element did not match scan: (' + label + ')', true, Compare.eq(expected.element, actual.element));
     };
 
     checkNoneScan('Alpha:exceed', alphaText, 'alphabeta\uFEFFepisilon!'.length);

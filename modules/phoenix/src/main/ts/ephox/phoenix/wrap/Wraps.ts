@@ -1,5 +1,4 @@
 import { Universe } from '@ephox/boss';
-import { Fun } from '@ephox/katamari';
 import { Wrapter } from '../api/data/Types';
 
 export const Wraps = function <E, D> (universe: Universe<E, D>, item: E): Wrapter<E> {
@@ -8,7 +7,7 @@ export const Wraps = function <E, D> (universe: Universe<E, D>, item: E): Wrapte
   };
 
   return {
-    element: Fun.constant(item),
+    element: item,
     wrap
   };
 };

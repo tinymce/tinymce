@@ -9,8 +9,8 @@ UnitTest.test('DomSearchingTest', function () {
   root.dom.innerHTML = 'This is some<ol><li>text</li></ol>';
 
   const result = DomSearch.run([ root ], [{
-    word: Fun.constant('sometext'),
-    pattern: Fun.constant(Pattern.unsafetoken('sometext'))
+    word: 'sometext',
+    pattern: Pattern.unsafetoken('sometext')
   }], Fun.constant(false));
 
   assert.eq(0, result.length, 'There should be no matches, because some and text are separated by a list boundary');

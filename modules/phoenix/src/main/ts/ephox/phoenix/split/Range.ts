@@ -18,7 +18,7 @@ const diff = function <E, D> (universe: Universe<E, D>, base: E, baseOffset: num
   }, function (before) {
     return Spot.delta(before, 1);
   });
-  return Family.range(universe, start.element(), start.deltaOffset(), finish.element(), finish.deltaOffset());
+  return Family.range(universe, start.element, start.deltaOffset, finish.element, finish.deltaOffset);
 };
 
 /**

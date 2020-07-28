@@ -16,8 +16,8 @@ UnitTest.test('DomExtractTest', function () {
     // Test extractTo
     const check = function (eNode: SugarElement, eOffset: number, cNode: SugarElement, cOffset: number, predicate: (e: SugarElement) => boolean) {
       const actual = DomExtract.extractTo(cNode, cOffset, predicate, optimise);
-      Assert.eq('eq', true, Compare.eq(eNode, actual.element()));
-      Assert.eq('eq', eOffset, actual.offset());
+      Assert.eq('eq', true, Compare.eq(eNode, actual.element));
+      Assert.eq('eq', eOffset, actual.offset);
     };
 
     check(page.div1, 'First paragraphSecond here'.length + 1, page.t4, 1, function (element) {
@@ -29,8 +29,8 @@ UnitTest.test('DomExtractTest', function () {
     // Test find.
     const check = function (eNode: SugarElement, eOffset: number, pNode: SugarElement, pOffset: number) {
       const actual = DomExtract.find(pNode, pOffset, optimise).getOrDie();
-      Assert.eq('eq', true, Compare.eq(eNode, actual.element()));
-      Assert.eq('eq', eOffset, actual.offset());
+      Assert.eq('eq', true, Compare.eq(eNode, actual.element));
+      Assert.eq('eq', eOffset, actual.offset);
     };
 
     const checkNone = function (pNode: SugarElement, pOffset: number) {
@@ -49,8 +49,8 @@ UnitTest.test('DomExtractTest', function () {
     // Test extract
     const check = function (eNode: SugarElement, eOffset: number, cNode: SugarElement, cOffset: number) {
       const actual = DomExtract.extract(cNode, cOffset, optimise);
-      Assert.eq('eq', true, Compare.eq(eNode, actual.element()));
-      Assert.eq('eq', eOffset, actual.offset());
+      Assert.eq('eq', true, Compare.eq(eNode, actual.element));
+      Assert.eq('eq', eOffset, actual.offset);
     };
 
     check(page.p1, 1, page.t1, 1);

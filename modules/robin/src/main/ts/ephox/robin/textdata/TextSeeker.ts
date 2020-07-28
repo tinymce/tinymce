@@ -71,7 +71,7 @@ const repeat = function <E, D> (universe: Universe<E, D>, item: E, mode: Transit
     return Gather.walk(universe, item, mode, walking).fold(
       terminate,
       function (prev) {
-        return repeat(universe, prev.item(), prev.mode(), Optional.none(), process, walking, newRecent);
+        return repeat(universe, prev.item, prev.mode, Optional.none(), process, walking, newRecent);
       }
     );
   };
@@ -97,7 +97,7 @@ const descendToLeft = function <E, D> (universe: Universe<E, D>, item: E, offset
   if (universe.property().isText(item)) {
     return Optional.none<SpotPoint<E>>();
   } else {
-    return Seeker.left(universe, descended.element(), universe.property().isText, isRoot).map(function (t) {
+    return Seeker.left(universe, descended.element, universe.property().isText, isRoot).map(function (t) {
       return Spot.point(t, universe.property().getText(t).length);
     });
   }
@@ -108,7 +108,7 @@ const descendToRight = function <E, D> (universe: Universe<E, D>, item: E, offse
   if (universe.property().isText(item)) {
     return Optional.none<SpotPoint<E>>();
   } else {
-    return Seeker.right(universe, descended.element(), universe.property().isText, isRoot).map(function (t) {
+    return Seeker.right(universe, descended.element, universe.property().isText, isRoot).map(function (t) {
       return Spot.point(t, 0);
     });
   }
@@ -123,12 +123,12 @@ const findTextNeighbour = function <E, D> (universe: Universe<E, D>, item: E, of
 
 const repeatLeft = function <E, D> (universe: Universe<E, D>, item: E, offset: number, process: TextSeekerPhaseProcessor<E, D>) {
   const initial = findTextNeighbour(universe, item, offset);
-  return repeat(universe, initial.element(), Gather.sidestep, Optional.some(initial.offset()), process, walkLeft, Optional.none());
+  return repeat(universe, initial.element, Gather.sidestep, Optional.some(initial.offset), process, walkLeft, Optional.none());
 };
 
 const repeatRight = function <E, D> (universe: Universe<E, D>, item: E, offset: number, process: TextSeekerPhaseProcessor<E, D>) {
   const initial = findTextNeighbour(universe, item, offset);
-  return repeat(universe, initial.element(), Gather.sidestep, Optional.some(initial.offset()), process, walkRight, Optional.none());
+  return repeat(universe, initial.element, Gather.sidestep, Optional.some(initial.offset), process, walkRight, Optional.none());
 };
 
 export const TextSeeker = {

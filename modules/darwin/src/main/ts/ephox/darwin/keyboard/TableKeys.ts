@@ -84,7 +84,7 @@ const tryCursor = function (bridge: WindowBridge, isRoot: (e: SugarElement) => b
 const handle = function (bridge: WindowBridge, isRoot: (e: SugarElement) => boolean, direction: KeyDirection) {
   return findSpot(bridge, isRoot, direction).bind(function (spot) {
     // There is a point to start doing box-hitting from
-    return scan(bridge, isRoot, spot.element(), spot.offset(), direction, MAX_RETRIES).map(bridge.fromSitus);
+    return scan(bridge, isRoot, spot.element, spot.offset, direction, MAX_RETRIES).map(bridge.fromSitus);
   });
 };
 

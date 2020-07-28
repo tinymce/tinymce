@@ -58,9 +58,9 @@ UnitTest.test('SearcherTest', function () {
 
     const processed = Arr.map(actual, function (match): CheckItem {
       return {
-        items: TestRenders.texts(match.elements()),
-        word: match.word(),
-        exact: match.exact()
+        items: TestRenders.texts(match.elements),
+        word: match.word,
+        exact: match.exact
       };
     });
     assert.eq(expected, processed);

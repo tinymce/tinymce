@@ -40,14 +40,14 @@ const refresh = (toolbar: AlloyComponent, detail: SplitToolbarBaseDetail, setOve
 
   const overflows = Overflows.partition(availableWidth, detail.builtGroups.get(), (comp) => Width.get(comp.element), overflowGroup);
 
-  if (overflows.extra().length === 0) {
+  if (overflows.extra.length === 0) {
     // Not ideal. Breaking abstraction somewhat, though remove is better than insert
     // Can just reset the toolbar groups also ... but may be a bit slower.
     Replacing.remove(primary, overflowGroup);
     setOverflow([]);
   } else {
-    setGroups(primary, overflows.within());
-    setOverflow(overflows.extra());
+    setGroups(primary, overflows.within);
+    setOverflow(overflows.extra);
   }
 
   Css.remove(primary.element, 'visibility');

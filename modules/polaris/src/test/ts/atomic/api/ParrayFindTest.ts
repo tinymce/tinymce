@@ -7,12 +7,12 @@ import * as Parrays from 'ephox/polaris/test/Parrays';
 UnitTest.test('api.PositionArray.find', function () {
   const check = function (expected: Optional<string>, input: string[], value: string | null) {
     const pred = function (unit: Parrays.PArrayTestItem) {
-      return unit.item() === value;
+      return unit.item === value;
     };
 
     const parray = Parrays.make(input);
     const actual = PositionArray.find(parray, pred);
-    KAssert.eqOptional('eq', expected, actual.map((x) => x.item()));
+    KAssert.eqOptional('eq', expected, actual.map((x) => x.item));
   };
 
   check(Optional.none(), [], null);
