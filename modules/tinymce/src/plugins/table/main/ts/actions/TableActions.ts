@@ -69,13 +69,13 @@ export const TableActions = (editor: Editor, lazyWire: () => ResizeWire): TableA
       const generators = TableFill.cellOperations(mutate, doc, cloneFormats);
       const sizing = TableSize.get(editor, table);
       return guard(table) ? operation(wire, table, target, generators, direction, sizing).bind((result) => {
-        Arr.each(result.newRows(), (row) => {
+        Arr.each(result.newRows, (row) => {
           fireNewRow(editor, row.dom);
         });
-        Arr.each(result.newCells(), (cell) => {
+        Arr.each(result.newCells, (cell) => {
           fireNewCell(editor, cell.dom);
         });
-        return result.cursor().map((cell) => {
+        return result.cursor.map((cell) => {
           const des = DomDescent.freefallRtl(cell);
           const rng = editor.dom.createRng();
           rng.setStart(des.element.dom, des.offset);

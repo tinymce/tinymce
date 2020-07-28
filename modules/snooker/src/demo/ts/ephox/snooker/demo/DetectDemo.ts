@@ -1,4 +1,4 @@
-import { Fun, Obj, Optional, Optionals } from '@ephox/katamari';
+import { Obj, Optional, Optionals } from '@ephox/katamari';
 import {
   Attribute, Css, Direction, DomEvent, EventArgs, Insert, InsertAll, Ready, Replication, SelectorFind, SugarElement, SugarNode
 } from '@ephox/sugar';
@@ -238,8 +238,8 @@ Ready.execute(function () {
         const dir = Direction.getDirection(start);
         const direction = dir === 'rtl' ? ResizeDirection.rtl : ResizeDirection.ltr;
         const target = {
-          element: Fun.constant(start),
-          selection: Fun.constant([ start ])
+          element: start,
+          selection: [ start ]
         };
 
         // wire, table, target, generators, direction

@@ -7,12 +7,14 @@
 
 import { TableSelection } from '@ephox/darwin';
 import { Arr, Fun, Optional } from '@ephox/katamari';
-import { Attribute } from '@ephox/sugar';
+import { RunOperation } from '@ephox/snooker';
+import { Attribute, SugarElement } from '@ephox/sugar';
 import * as Ephemera from '../selection/Ephemera';
+import { Selections } from '../selection/Selections';
 import * as SelectionTypes from '../selection/SelectionTypes';
 
 // Return an array of the selected elements
-const selection = function (cell, selections) {
+const selection = function (cell: SugarElement, selections: Selections): SugarElement[] {
   return SelectionTypes.cata(selections.get(),
     Fun.constant([]),
     Fun.identity,
@@ -20,8 +22,8 @@ const selection = function (cell, selections) {
   );
 };
 
-const unmergable = function (cell, selections): Optional<any> {
-  const hasSpan = function (elem) {
+const unmergable = function (cell: SugarElement, selections: Selections): Optional<SugarElement[]> {
+  const hasSpan = function (elem: SugarElement) {
     return (Attribute.has(elem, 'rowspan') && parseInt(Attribute.get(elem, 'rowspan'), 10) > 1) ||
            (Attribute.has(elem, 'colspan') && parseInt(Attribute.get(elem, 'colspan'), 10) > 1);
   };
@@ -31,7 +33,7 @@ const unmergable = function (cell, selections): Optional<any> {
   return candidates.length > 0 && Arr.forall(candidates, hasSpan) ? Optional.some(candidates) : Optional.none();
 };
 
-const mergable = function (table, selections): Optional<any> {
+const mergable = function (table: SugarElement<HTMLTableElement>, selections: Selections): Optional<RunOperation.ExtractMergable> {
   return SelectionTypes.cata(selections.get(),
     Optional.none,
     function (cells, _env) {
@@ -40,8 +42,8 @@ const mergable = function (table, selections): Optional<any> {
       }
       return TableSelection.retrieveBox(table, Ephemera.firstSelectedSelector, Ephemera.lastSelectedSelector).bind(function (bounds) {
         return cells.length > 1 ? Optional.some({
-          bounds: Fun.constant(bounds),
-          cells: Fun.constant(cells)
+          bounds,
+          cells
         }) : Optional.none();
       });
     },

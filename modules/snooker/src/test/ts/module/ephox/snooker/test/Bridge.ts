@@ -1,4 +1,4 @@
-import { Arr, Fun, Obj, Optional, Optionals } from '@ephox/katamari';
+import { Arr, Obj, Optional, Optionals } from '@ephox/katamari';
 import { Attribute, Css, Hierarchy, Insert, Replication, SugarElement, SugarNode } from '@ephox/sugar';
 import { Generators } from 'ephox/snooker/api/Generators';
 import * as Structs from 'ephox/snooker/api/Structs';
@@ -12,10 +12,10 @@ const targetStub = function (selection: { section: number; row: number; column: 
   }));
 
   return {
-    mergable: Fun.constant(Optional.some({
-      cells: Fun.constant(cells),
-      bounds: Fun.constant(Structs.bounds(bounds.startRow, bounds.startCol, bounds.finishRow, bounds.finishCol))
-    }))
+    mergable: Optional.some({
+      cells,
+      bounds: Structs.bounds(bounds.startRow, bounds.startCol, bounds.finishRow, bounds.finishCol)
+    })
   };
 };
 

@@ -52,12 +52,12 @@ export const getSelectionTargets = (editor: Editor, selections: Selections) => {
   };
 
   const onSetupTable = (api) => onSetup(api, (_) => false);
-  const onSetupCellOrRow = (api) => onSetup(api, (targets) => SugarNode.name(targets.element()) === 'caption');
+  const onSetupCellOrRow = (api) => onSetup(api, (targets) => SugarNode.name(targets.element) === 'caption');
   const onSetupPasteable = (getClipboardData: () => Optional<SugarElement[]>) => (api) => onSetup(api, (targets) =>
-    SugarNode.name(targets.element()) === 'caption' || getClipboardData().isNone()
+    SugarNode.name(targets.element) === 'caption' || getClipboardData().isNone()
   );
-  const onSetupMergeable = (api) => onSetup(api, (targets) => targets.mergable().isNone());
-  const onSetupUnmergeable = (api) => onSetup(api, (targets) => targets.unmergable().isNone());
+  const onSetupMergeable = (api) => onSetup(api, (targets) => targets.mergable.isNone());
+  const onSetupUnmergeable = (api) => onSetup(api, (targets) => targets.unmergable.isNone());
 
   editor.on('NodeChange ExecCommand TableSelectorChange', resetTargets);
 

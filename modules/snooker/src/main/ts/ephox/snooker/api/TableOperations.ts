@@ -17,8 +17,8 @@ import * as TableContent from './TableContent';
 import * as TableLookup from './TableLookup';
 
 export interface TableOperationResult {
-  readonly grid: () => Structs.RowCells[];
-  readonly cursor: () => Optional<SugarElement>;
+  readonly grid: Structs.RowCells[];
+  readonly cursor: Optional<SugarElement>;
 }
 
 type CompElm = (e1: SugarElement, e2: SugarElement) => boolean;
@@ -31,8 +31,8 @@ const prune = function (table: SugarElement) {
 };
 
 const outcome = (grid: Structs.RowCells[], cursor: Optional<SugarElement>): TableOperationResult => ({
-  grid: Fun.constant(grid),
-  cursor: Fun.constant(cursor)
+  grid,
+  cursor
 });
 
 const elementFromGrid = function (grid: Structs.RowCells[], row: number, column: number) {
@@ -188,9 +188,9 @@ const opEraseRows = function (grid: Structs.RowCells[], details: Structs.DetailE
 };
 
 const opMergeCells = function (grid: Structs.RowCells[], mergable: ExtractMergable, comparator: CompElm, _genWrappers: GeneratorsMerging) {
-  const cells = mergable.cells();
+  const cells = mergable.cells;
   TableContent.merge(cells);
-  const newGrid = MergingOperations.merge(grid, mergable.bounds(), comparator, Fun.constant(cells[0]));
+  const newGrid = MergingOperations.merge(grid, mergable.bounds, comparator, Fun.constant(cells[0]));
   return outcome(newGrid, Optional.from(cells[0]));
 };
 
@@ -206,9 +206,9 @@ const opPasteCells = function (grid: Structs.RowCells[], pasteDetails: ExtractPa
     const wh = Warehouse.fromTable(table);
     return Transitions.toGrid(wh, generators, true);
   };
-  const gridB = gridify(pasteDetails.clipboard(), pasteDetails.generators());
+  const gridB = gridify(pasteDetails.clipboard, pasteDetails.generators);
   const startAddress = Structs.address(pasteDetails.row, pasteDetails.column);
-  const mergedGrid = TableMerge.merge(startAddress, grid, gridB, pasteDetails.generators(), comparator);
+  const mergedGrid = TableMerge.merge(startAddress, grid, gridB, pasteDetails.generators, comparator);
   return mergedGrid.fold(function () {
     return outcome(grid, Optional.some(pasteDetails.element));
   }, function (nuGrid) {
@@ -226,8 +226,8 @@ const gridifyRows = function (rows: SugarElement[], generators: Generators, exam
 const opPasteColsBefore = (grid: Structs.RowCells[], pasteDetails: ExtractPasteRows, comparator: CompElm, _genWrappers: GeneratorsModification) => {
   const example = grid[pasteDetails.cells[0].row];
   const index = pasteDetails.cells[0].column;
-  const gridB = gridifyRows(pasteDetails.clipboard(), pasteDetails.generators(), example);
-  const mergedGrid = TableMerge.insertCols(index, grid, gridB, pasteDetails.generators(), comparator);
+  const gridB = gridifyRows(pasteDetails.clipboard, pasteDetails.generators, example);
+  const mergedGrid = TableMerge.insertCols(index, grid, gridB, pasteDetails.generators, comparator);
   const cursor = elementFromGrid(mergedGrid, pasteDetails.cells[0].row, pasteDetails.cells[0].column);
   return outcome(mergedGrid, cursor);
 };
@@ -235,8 +235,8 @@ const opPasteColsBefore = (grid: Structs.RowCells[], pasteDetails: ExtractPasteR
 const opPasteColsAfter = (grid: Structs.RowCells[], pasteDetails: ExtractPasteRows, comparator: CompElm, _genWrappers: GeneratorsModification) => {
   const example = grid[pasteDetails.cells[0].row];
   const index = pasteDetails.cells[pasteDetails.cells.length - 1].column + pasteDetails.cells[pasteDetails.cells.length - 1].colspan;
-  const gridB = gridifyRows(pasteDetails.clipboard(), pasteDetails.generators(), example);
-  const mergedGrid = TableMerge.insertCols(index, grid, gridB, pasteDetails.generators(), comparator);
+  const gridB = gridifyRows(pasteDetails.clipboard, pasteDetails.generators, example);
+  const mergedGrid = TableMerge.insertCols(index, grid, gridB, pasteDetails.generators, comparator);
   const cursor = elementFromGrid(mergedGrid, pasteDetails.cells[0].row, pasteDetails.cells[0].column);
   return outcome(mergedGrid, cursor);
 };
@@ -244,8 +244,8 @@ const opPasteColsAfter = (grid: Structs.RowCells[], pasteDetails: ExtractPasteRo
 const opPasteRowsBefore = function (grid: Structs.RowCells[], pasteDetails: ExtractPasteRows, comparator: CompElm, _genWrappers: GeneratorsModification) {
   const example = grid[pasteDetails.cells[0].row];
   const index = pasteDetails.cells[0].row;
-  const gridB = gridifyRows(pasteDetails.clipboard(), pasteDetails.generators(), example);
-  const mergedGrid = TableMerge.insertRows(index, grid, gridB, pasteDetails.generators(), comparator);
+  const gridB = gridifyRows(pasteDetails.clipboard, pasteDetails.generators, example);
+  const mergedGrid = TableMerge.insertRows(index, grid, gridB, pasteDetails.generators, comparator);
   const cursor = elementFromGrid(mergedGrid, pasteDetails.cells[0].row, pasteDetails.cells[0].column);
   return outcome(mergedGrid, cursor);
 };
@@ -253,8 +253,8 @@ const opPasteRowsBefore = function (grid: Structs.RowCells[], pasteDetails: Extr
 const opPasteRowsAfter = function (grid: Structs.RowCells[], pasteDetails: ExtractPasteRows, comparator: CompElm, _genWrappers: GeneratorsModification) {
   const example = grid[pasteDetails.cells[0].row];
   const index = pasteDetails.cells[pasteDetails.cells.length - 1].row + pasteDetails.cells[pasteDetails.cells.length - 1].rowspan;
-  const gridB = gridifyRows(pasteDetails.clipboard(), pasteDetails.generators(), example);
-  const mergedGrid = TableMerge.insertRows(index, grid, gridB, pasteDetails.generators(), comparator);
+  const gridB = gridifyRows(pasteDetails.clipboard, pasteDetails.generators, example);
+  const mergedGrid = TableMerge.insertRows(index, grid, gridB, pasteDetails.generators, comparator);
   const cursor = elementFromGrid(mergedGrid, pasteDetails.cells[0].row, pasteDetails.cells[0].column);
   return outcome(mergedGrid, cursor);
 };

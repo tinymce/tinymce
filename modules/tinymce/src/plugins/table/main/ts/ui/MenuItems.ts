@@ -205,7 +205,7 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets, clipbo
       // ignoring element since it's monitored elsewhere
       return selectionTargets.targets().fold(() => '', (targets) => {
         // If clicking in a caption, then we shouldn't show the cell/row/column options
-        if (SugarNode.name(targets.element()) === 'caption') {
+        if (SugarNode.name(targets.element) === 'caption') {
           return 'tableprops deletetable';
         } else {
           return 'cell row column | advtablesort | tableprops deletetable';
