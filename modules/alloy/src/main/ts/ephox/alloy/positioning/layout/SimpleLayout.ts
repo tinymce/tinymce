@@ -26,8 +26,8 @@ const simple = (anchor: Anchor, element: SugarElement, bubble: Bubble, layouts: 
   const maxHeightFunction: MaxHeightFunction = defaultOr(overrideOptions, 'maxHeightFunction', MaxHeight.anchored());
   const maxWidthFunction: MaxWidthFunction = defaultOr(overrideOptions, 'maxWidthFunction', Fun.noop);
 
-  const anchorBox = anchor.anchorBox();
-  const origin = anchor.origin();
+  const anchorBox = anchor.anchorBox;
+  const origin = anchor.origin;
 
   const options: ReparteeOptions = {
     bounds: Origins.viewport(origin, getBounds),
