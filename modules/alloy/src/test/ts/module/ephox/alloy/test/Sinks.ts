@@ -55,9 +55,9 @@ const popup = () => GuiFactory.build(
 );
 
 const isInside = (sinkComponent: AlloyComponent, popupComponent: AlloyComponent) => {
-  const isSink = (el: SugarElement) => Compare.eq(el, sinkComponent.element());
+  const isSink = (el: SugarElement) => Compare.eq(el, sinkComponent.element);
 
-  return PredicateExists.closest(popupComponent.element(), isSink);
+  return PredicateExists.closest(popupComponent.element, isSink);
 };
 
 export {

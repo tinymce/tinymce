@@ -10,7 +10,7 @@ import { Arr, Optional } from '@ephox/katamari';
 import { SelectorFilter } from '@ephox/sugar';
 
 const detectSize = (comp: AlloyComponent, margin: number, selectorClass: string): Optional<{ numColumns: number; numRows: number}> => {
-  const descendants = SelectorFilter.descendants(comp.element(), '.' + selectorClass);
+  const descendants = SelectorFilter.descendants(comp.element, '.' + selectorClass);
 
   // TODO: This seems to cause performance issues in the emoji dialog
   if (descendants.length > 0) {

@@ -24,7 +24,7 @@ const setupDemo = () => {
   });
 
   const uiMothership = Gui.create();
-  Class.add(uiMothership.element(), 'tox');
+  Class.add(uiMothership.element, 'tox');
 
   const fakeHistory = (fileType: string): string[] => {
     if (fileType === 'image') {

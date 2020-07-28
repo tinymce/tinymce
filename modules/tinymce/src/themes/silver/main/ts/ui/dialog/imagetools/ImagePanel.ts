@@ -57,8 +57,8 @@ const renderImagePanel = (initialUrl: string) => {
     memContainer.getOpt(anyInSystem).each((panel) => {
       const zoom = zoomState.get();
 
-      const panelW = Width.get(panel.element());
-      const panelH = Height.get(panel.element());
+      const panelW = Width.get(panel.element);
+      const panelH = Height.get(panel.element);
       const width = img.dom.naturalWidth * zoom;
       const height = img.dom.naturalHeight * zoom;
       const left = Math.max(0, panelW / 2 - width / 2);
@@ -74,7 +74,7 @@ const renderImagePanel = (initialUrl: string) => {
 
       Css.setAll(img, css);
       memBg.getOpt(panel).each((bg) => {
-        Css.setAll(bg.element(), css);
+        Css.setAll(bg.element, css);
       });
 
       cropRect.get().each((cRect) => {
@@ -103,8 +103,8 @@ const renderImagePanel = (initialUrl: string) => {
 
   const zoomFit = (anyInSystem: AlloyComponent, img: SugarElement): void => {
     memContainer.getOpt(anyInSystem).each((panel) => {
-      const panelW = Width.get(panel.element());
-      const panelH = Height.get(panel.element());
+      const panelW = Width.get(panel.element);
+      const panelH = Height.get(panel.element);
       const width = img.dom.naturalWidth;
       const height = img.dom.naturalHeight;
       const zoom = Math.min((panelW) / width, (panelH) / height);
@@ -153,7 +153,7 @@ const renderImagePanel = (initialUrl: string) => {
     zoomState.set(newZoom);
 
     memContainer.getOpt(anyInSystem).each((panel) => {
-      const img = panel.components()[1].element(); // TODO: Do this better
+      const img = panel.components()[1].element; // TODO: Do this better
       repaintImg(panel, img);
     });
   };
@@ -195,7 +195,7 @@ const renderImagePanel = (initialUrl: string) => {
           AddEventsBehaviour.config('image-panel-crop-events', [
             AlloyEvents.runOnAttached((comp) => {
               memContainer.getOpt(comp).each((container) => {
-                const el = container.element().dom;
+                const el = container.element.dom;
                 const cRect = CropRect.create(
                   { x: 10, y: 10, w: 100, h: 100 },
                   { x: 0, y: 0, w: 200, h: 200 },

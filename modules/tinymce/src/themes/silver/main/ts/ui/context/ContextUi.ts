@@ -44,39 +44,39 @@ const renderContextToolbar = (spec: { onEscape: () => Optional<boolean>; sink: A
     onShow: (comp) => {
       stack.set([ ]);
       InlineView.getContent(comp).each((c) => {
-        Css.remove(c.element(), 'visibility');
+        Css.remove(c.element, 'visibility');
       });
-      Class.remove(comp.element(), resizingClass);
-      Css.remove(comp.element(), 'width');
+      Class.remove(comp.element, resizingClass);
+      Css.remove(comp.element, 'width');
     },
 
     inlineBehaviours: Behaviour.derive([
       AddEventsBehaviour.config('context-toolbar-events', [
         AlloyEvents.runOnSource<EventArgs>(NativeEvents.transitionend(), (comp, _se) => {
-          Class.remove(comp.element(), resizingClass);
-          Css.remove(comp.element(), 'width');
+          Class.remove(comp.element, resizingClass);
+          Css.remove(comp.element, 'width');
         }),
 
         AlloyEvents.run<ChangeSlideEvent>(changeSlideEvent, (comp, se) => {
           // If it was partially through a slide, clear that and measure afresh
-          Css.remove(comp.element(), 'width');
-          const currentWidth = Width.get(comp.element());
+          Css.remove(comp.element, 'width');
+          const currentWidth = Width.get(comp.element);
 
           InlineView.setContent(comp, se.event().contents());
-          Class.add(comp.element(), resizingClass);
-          const newWidth = Width.get(comp.element());
-          Css.set(comp.element(), 'width', currentWidth + 'px');
+          Class.add(comp.element, resizingClass);
+          const newWidth = Width.get(comp.element);
+          Css.set(comp.element, 'width', currentWidth + 'px');
           InlineView.getContent(comp).each((newContents) => {
             se.event().focus().bind((f) => {
               Focus.focus(f);
-              return Focus.search(comp.element());
+              return Focus.search(comp.element);
             }).orThunk(() => {
               Keying.focusIn(newContents);
               return Focus.active();
             });
           });
           Delay.setTimeout(() => {
-            Css.set(comp.element(), 'width', newWidth + 'px');
+            Css.set(comp.element, 'width', newWidth + 'px');
           }, 0);
         }),
 

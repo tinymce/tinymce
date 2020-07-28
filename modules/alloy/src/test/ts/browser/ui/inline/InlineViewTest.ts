@@ -25,7 +25,7 @@ UnitTest.asynctest('InlineViewTest', (success, failure) => {
         },
 
         lazySink(comp) {
-          Assertions.assertEq('Checking InlineView passed through to lazySink', true, Compare.eq(inline.element(), comp.element()));
+          Assertions.assertEq('Checking InlineView passed through to lazySink', true, Compare.eq(inline.element, comp.element));
           return Result.value(component);
         },
 
@@ -55,7 +55,7 @@ UnitTest.asynctest('InlineViewTest', (success, failure) => {
       GeneralSteps.sequence([
         Waiter.sTryUntil(
           'Test inline should not be DOM',
-          UiFinder.sExists(gui.element(), '.test-inline')
+          UiFinder.sExists(gui.element, '.test-inline')
         ),
         Step.sync(() => {
           Assertions.assertEq('Checking isOpen API', true, InlineView.isOpen(inline));
@@ -68,7 +68,7 @@ UnitTest.asynctest('InlineViewTest', (success, failure) => {
       GeneralSteps.sequence([
         Waiter.sTryUntil(
           'Test inline should not be in DOM',
-          UiFinder.sNotExists(gui.element(), '.test-inline')
+          UiFinder.sNotExists(gui.element, '.test-inline')
         ),
         Step.sync(() => {
           Assertions.assertEq('Checking isOpen API', false, InlineView.isOpen(inline));
@@ -77,7 +77,7 @@ UnitTest.asynctest('InlineViewTest', (success, failure) => {
     );
 
     return [
-      UiFinder.sNotExists(gui.element(), '.test-inline'),
+      UiFinder.sNotExists(gui.element, '.test-inline'),
 
       Logger.t(
         'Check that getContent is none for an inline menu that has not shown anything',
@@ -90,7 +90,7 @@ UnitTest.asynctest('InlineViewTest', (success, failure) => {
       Step.sync(() => {
         InlineView.showAt(inline, {
           anchor: 'selection',
-          root: gui.element()
+          root: gui.element
         }, Container.sketch({
           dom: {
             innerHtml: 'Inner HTML'
@@ -105,7 +105,7 @@ UnitTest.asynctest('InlineViewTest', (success, failure) => {
           const contents = InlineView.getContent(inline);
           Assertions.assertEq('Checking HTML of inline contents', 'Inner HTML', Html.get(contents.getOrDie(
             'Could not find contents'
-          ).element()));
+          ).element));
         })
       ),
 
@@ -122,13 +122,13 @@ UnitTest.asynctest('InlineViewTest', (success, failure) => {
           const contents = InlineView.getContent(inline);
           Assertions.assertEq('Checking HTML of inline contents has changed', 'changed-html', Html.get(contents.getOrDie(
             'Could not find contents'
-          ).element()));
+          ).element));
         })
       ),
 
       Logger.t(
         'Check that changed content is in the DOM',
-        Chain.asStep(component.element(), [
+        Chain.asStep(component.element, [
           UiFinder.cFindIn('.test-inline'),
           Assertions.cAssertStructure(
             'Checking structure of changed content',
@@ -173,7 +173,7 @@ UnitTest.asynctest('InlineViewTest', (success, failure) => {
 
       Logger.t(
         'Check that inline view has a top and left',
-        Chain.asStep(gui.element(), [
+        Chain.asStep(gui.element, [
           UiFinder.cFindIn('.test-inline'),
           Chain.op((value) => {
             Assertions.assertEq('Check view CSS top is 50px', '50px', Css.getRaw(value, 'top').getOr('no top found'));
@@ -223,7 +223,7 @@ UnitTest.asynctest('InlineViewTest', (success, failure) => {
 
           InlineView.showAt(inline, {
             anchor: 'selection',
-            root: gui.element()
+            root: gui.element
           }, Container.sketch({
             components: [
               Button.sketch({ uid: 'bold-button', dom: { tag: 'button', innerHtml: 'B', classes: [ 'bold-button' ] }, action: store.adder('bold') }),
@@ -247,12 +247,12 @@ UnitTest.asynctest('InlineViewTest', (success, failure) => {
       sCheckOpen('Broadcasting dismiss on button should not close inline toolbar'),
 
       store.sAssertEq('Check that the store is empty initially', [ ]),
-      Mouse.sClickOn(gui.element(), 'button:contains("B")'),
+      Mouse.sClickOn(gui.element, 'button:contains("B")'),
       store.sAssertEq('Check that bold activated', [ 'bold' ]),
 
       store.sClear,
       store.sAssertEq('Check that the store is empty initially', [ ]),
-      Touch.sTapOn(gui.element(), 'button:contains("B")'),
+      Touch.sTapOn(gui.element, 'button:contains("B")'),
       store.sAssertEq('Check that bold activated', [ 'bold' ]),
 
       // TODO: Make it not close if the inline toolbar had a dropdown, and the dropdown
@@ -261,11 +261,11 @@ UnitTest.asynctest('InlineViewTest', (success, failure) => {
         'Check that clicking on a dropdown item in the inline toolbar does not dismiss popup',
         GeneralSteps.sequence([
           // Click on the dropdown
-          Mouse.sClickOn(gui.element(), 'button:contains(+)'),
+          Mouse.sClickOn(gui.element, 'button:contains(+)'),
           // Wait until dropdown loads.
           Waiter.sTryUntil(
             'Waiting for dropdown list to appear',
-            UiFinder.sExists(gui.element(), 'li:contains("Option-1")')
+            UiFinder.sExists(gui.element, 'li:contains("Option-1")')
           ),
           TestBroadcasts.sDismissOn(
             'dropdown item: should not close',
@@ -280,11 +280,11 @@ UnitTest.asynctest('InlineViewTest', (success, failure) => {
         'Check that tapping on a dropdown item in the inline toolbar does not dismiss popup',
         GeneralSteps.sequence([
           // Tap on the dropdown
-          Touch.sTapOn(gui.element(), 'button:contains(-)'),
+          Touch.sTapOn(gui.element, 'button:contains(-)'),
           // Wait until dropdown loads.
           Waiter.sTryUntil(
             'Waiting for dropdown list to appear',
-            UiFinder.sExists(gui.element(), 'li:contains("Item-1")')
+            UiFinder.sExists(gui.element, 'li:contains("Item-1")')
           ),
           TestBroadcasts.sDismissOn(
             'dropdown item: should not close',
@@ -298,14 +298,14 @@ UnitTest.asynctest('InlineViewTest', (success, failure) => {
       TestBroadcasts.sDismiss(
         'related element: should not close',
         gui,
-        related.element()
+        related.element
       ),
       sCheckOpen('The inline view should not have closed when broadcasting on related'),
 
       TestBroadcasts.sDismiss(
         'outer gui element: should close',
         gui,
-        gui.element()
+        gui.element
       ),
 
       sCheckClosed('Broadcasting dismiss on a external element should close inline toolbar')

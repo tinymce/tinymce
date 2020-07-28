@@ -52,7 +52,7 @@ const events = (pinchConfig: PinchingConfig, pinchState: PinchingState): AlloyEv
       const changeY = multiplier * Math.abs(dlt.deltaY);
 
       const f = multiplier === 1 ? pinchConfig.onPunch : pinchConfig.onPinch;
-      f(component.element(), changeX, changeY);
+      f(component.element, changeX, changeY);
     });
   }),
 

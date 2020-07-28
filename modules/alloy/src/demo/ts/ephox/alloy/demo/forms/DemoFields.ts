@@ -182,7 +182,7 @@ const typeaheadMunger = (spec: { label: string; lazySink: LazySink; dataset: any
 
     fetch(input: AlloyComponent) {
 
-      const text = Value.get(input.element());
+      const text = Value.get(input.element);
       const matching: DemoRenders.DemoItems[] = Arr.bind(spec.dataset, (d) => {
         const index = d.indexOf(text.toLowerCase());
         if (index > -1) {

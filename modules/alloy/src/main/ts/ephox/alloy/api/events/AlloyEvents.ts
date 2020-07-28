@@ -104,7 +104,7 @@ const runOnSourceName = function <T extends EventFormat> (name: string): RunOnSo
 const redirectToUid = function <T extends EventFormat> (name: string, uid: string): AlloyEventKeyAndHandler<T> {
   return run(name, (component: AlloyComponent, simulatedEvent: SimulatedEvent<T>) => {
     component.getSystem().getByUid(uid).each((redirectee) => {
-      AlloyTriggers.dispatchEvent(redirectee, redirectee.element(), name, simulatedEvent);
+      AlloyTriggers.dispatchEvent(redirectee, redirectee.element, name, simulatedEvent);
     });
   });
 };

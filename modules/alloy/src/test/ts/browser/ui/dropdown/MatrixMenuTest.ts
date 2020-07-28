@@ -98,7 +98,7 @@ UnitTest.asynctest('MatrixMenuTest', (success, failure) => {
     return [
       Chain.asStep({}, [
         NamedChain.asChain([
-          NamedChain.writeValue('menu', component.element()),
+          NamedChain.writeValue('menu', component.element),
           NamedChain.direct('menu', UiFinder.cFindIn('li[data-value="alpha"]'), 'alpha'),
           NamedChain.direct('menu', UiFinder.cFindIn('li[data-value="beta"]'), 'beta'),
 

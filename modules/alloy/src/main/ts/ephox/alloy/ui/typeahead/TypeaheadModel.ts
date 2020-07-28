@@ -13,7 +13,7 @@ const setValueFromItem = (model: TypeaheadModelDetail, input: AlloyComponent, it
 };
 
 const setSelectionOn = (input: AlloyComponent, f: (node: HTMLInputElement, value: string) => void) => {
-  const el = input.element();
+  const el = input.element;
   const value = Value.get(el);
   const node = el.dom as HTMLInputElement;
   // Only do for valid input types.

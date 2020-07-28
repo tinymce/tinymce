@@ -44,7 +44,7 @@ const schema = ValueSchema.objOfOnly([
     FieldSchema.strict('alloyConfig')
   ]),
   FieldSchema.defaulted('insertion', (root: SugarElement, system: AlloyComponent) => {
-    Insert.append(root, system.element());
+    Insert.append(root, system.element);
   })
 ]);
 
@@ -153,7 +153,7 @@ const engage = (spec: ForeignGuiSpec) => {
      * c) execute the event handler
      * d) remove it from the internal system and clear any DOM markers (alloy-ids etc)
      */
-    if (gui.element().dom.contains(event.target().dom)) { return; }
+    if (gui.element.dom.contains(event.target().dom)) { return; }
 
     // Find if the target has an assigned dispatcher
     findDispatcher(detail.dispatchers, event.target()).each((mission) => {
@@ -170,7 +170,7 @@ const engage = (spec: ForeignGuiSpec) => {
   // Remove any traces of the foreign component from the internal alloy system.
   const unproxy = (component: AlloyComponent): void => {
     gui.removeFromWorld(component);
-    Tagger.revoke(component.element());
+    Tagger.revoke(component.element);
   };
 
   // Disconnect the foreign GUI

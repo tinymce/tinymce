@@ -63,10 +63,10 @@ const calcNewCoord = <E>(component: AlloyComponent, optSnaps: Optional<SnapsConf
 };
 
 const dragBy = <E>(component: AlloyComponent, dragConfig: DraggingConfig<E>, startData: DragStartData, delta: SugarPosition): void => {
-  const target = dragConfig.getTarget(component.element());
+  const target = dragConfig.getTarget(component.element);
 
   if (dragConfig.repositionTarget) {
-    const doc = Traverse.owner(component.element());
+    const doc = Traverse.owner(component.element);
     const scroll = Scroll.get(doc);
 
     const origin = OffsetOrigin.getOrigin(target);

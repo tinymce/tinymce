@@ -86,7 +86,7 @@ UnitTest.asynctest('TabSection Test', (success, failure) => {
     const alpha = component.getSystem().getByUid('alpha-tab').getOrDie();
     const beta = component.getSystem().getByUid('beta-tab').getOrDie();
     const tview = component.getSystem().getByDom(
-      SelectorFind.descendant(component.element(), '.test-tabview').getOrDie('Could not find tabview')
+      SelectorFind.descendant(component.element, '.test-tabview').getOrDie('Could not find tabview')
     ).getOrDie();
 
     const sAssertTabSelection = (label: string, expected: boolean, element: SugarElement) =>
@@ -100,7 +100,7 @@ UnitTest.asynctest('TabSection Test', (success, failure) => {
     const sAssertTabView = (label: string, expected: ApproxStructure.Builder<StructAssert[]>) =>
       Assertions.sAssertStructure(label + ' (asserting structure)', ApproxStructure.build((s, str, arr) => s.element('div', {
         children: expected(s, str, arr)
-      })), tview.element());
+      })), tview.element);
 
     return [
       GuiSetup.mAddStyles(doc, [
@@ -141,7 +141,7 @@ UnitTest.asynctest('TabSection Test', (success, failure) => {
             classes: [ arr.has('test-tabview') ]
           })
         ]
-      })), component.element()),
+      })), component.element),
 
       Logger.t(
         'Execute alpha, check tabs and tabview',
@@ -149,8 +149,8 @@ UnitTest.asynctest('TabSection Test', (success, failure) => {
           Step.sync(() => {
             AlloyTriggers.emitExecute(alpha);
           }),
-          sAssertTabSelection('Check Alpha', true, alpha.element()),
-          sAssertTabSelection('Check Beta', false, beta.element()),
+          sAssertTabSelection('Check Alpha', true, alpha.element),
+          sAssertTabSelection('Check Beta', false, beta.element),
           sAssertTabView('Check TabView', (s, str, _arr) => [
             s.element('div', {
               html: str.is('This is the view for "A1"')
@@ -165,8 +165,8 @@ UnitTest.asynctest('TabSection Test', (success, failure) => {
           Step.sync(() => {
             AlloyTriggers.emitExecute(beta);
           }),
-          sAssertTabSelection('Check Alpha', false, alpha.element()),
-          sAssertTabSelection('Check Beta', true, beta.element()),
+          sAssertTabSelection('Check Alpha', false, alpha.element),
+          sAssertTabSelection('Check Beta', true, beta.element),
           sAssertTabView('Check TabView', (s, str, _arr) => [
             s.element('div', {
               html: str.is('This is the view for "B1"')
@@ -181,8 +181,8 @@ UnitTest.asynctest('TabSection Test', (success, failure) => {
           Step.sync(() => {
             AlloyTriggers.emitExecute(alpha);
           }),
-          sAssertTabSelection('Check Alpha', true, alpha.element()),
-          sAssertTabSelection('Check Beta', false, beta.element()),
+          sAssertTabSelection('Check Alpha', true, alpha.element),
+          sAssertTabSelection('Check Beta', false, beta.element),
           sAssertTabView('Check TabView', (s, str, _arr) => [
             s.element('div', {
               html: str.is('This is the view for "A2"')
@@ -197,8 +197,8 @@ UnitTest.asynctest('TabSection Test', (success, failure) => {
           Step.sync(() => {
             AlloyTriggers.emitExecute(alpha);
           }),
-          sAssertTabSelection('Check Alpha', true, alpha.element()),
-          sAssertTabSelection('Check Beta', false, beta.element()),
+          sAssertTabSelection('Check Alpha', true, alpha.element),
+          sAssertTabSelection('Check Beta', false, beta.element),
           sAssertTabView('Check TabView', (s, str, _arr) => [
             s.element('div', {
               html: str.is('This is the view for "A2"')
@@ -213,8 +213,8 @@ UnitTest.asynctest('TabSection Test', (success, failure) => {
           Step.sync(() => {
             TabSection.showTab(component, 'alpha');
           }),
-          sAssertTabSelection('Check Alpha', true, alpha.element()),
-          sAssertTabSelection('Check Beta', false, beta.element()),
+          sAssertTabSelection('Check Alpha', true, alpha.element),
+          sAssertTabSelection('Check Beta', false, beta.element),
           sAssertTabView('Check TabView', (s, str, _arr) => [
             s.element('div', {
               html: str.is('This is the view for "A2"')
@@ -229,8 +229,8 @@ UnitTest.asynctest('TabSection Test', (success, failure) => {
           Step.sync(() => {
             TabSection.showTab(component, 'alpha');
           }),
-          sAssertTabSelection('Check Alpha', true, alpha.element()),
-          sAssertTabSelection('Check Beta', false, beta.element()),
+          sAssertTabSelection('Check Alpha', true, alpha.element),
+          sAssertTabSelection('Check Beta', false, beta.element),
           sAssertTabView('Check TabView', (s, str, _arr) => [
             s.element('div', {
               html: str.is('This is the view for "A2"')
@@ -245,8 +245,8 @@ UnitTest.asynctest('TabSection Test', (success, failure) => {
           Step.sync(() => {
             TabSection.showTab(component, 'beta');
           }),
-          sAssertTabSelection('Check Alpha', false, alpha.element()),
-          sAssertTabSelection('Check Beta', true, beta.element()),
+          sAssertTabSelection('Check Alpha', false, alpha.element),
+          sAssertTabSelection('Check Beta', true, beta.element),
           sAssertTabView('Check TabView', (s, str, _arr) => [
             s.element('div', {
               html: str.is('This is the view for "B2"')

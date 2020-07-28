@@ -62,7 +62,7 @@ const updateIframeContentFlow = (header: AlloyComponent): void => {
       (parseInt(Css.get(elm, 'margin-top'), 10) || 0) +
       (parseInt(Css.get(elm, 'margin-bottom'), 10) || 0) ;
 
-  const elm = header.element();
+  const elm = header.element;
   Traverse.parent(elm).each((parentElem: SugarElement<HTMLElement>) => {
     const padding = 'padding-' + Docking.getModes(header)[0];
 
@@ -114,7 +114,7 @@ const restoreFocus = (headerElem: SugarElement, focusedElem: SugarElement) => {
 const findFocusedElem = (rootElm: SugarElement, lazySink: () => Result<AlloyComponent, Error>): Optional<SugarElement> =>
   // Check to see if an element is focused inside the header or inside the sink
   // and if so store the element so we can restore it later
-  Focus.search(rootElm).orThunk(() => lazySink().toOptional().bind((sink) => Focus.search(sink.element())));
+  Focus.search(rootElm).orThunk(() => lazySink().toOptional().bind((sink) => Focus.search(sink.element)));
 
 const setup = (editor: Editor, sharedBackstage: UiFactoryBackstageShared, lazyHeader: () => Optional<AlloyComponent>): void => {
   if (!editor.inline) {
@@ -156,7 +156,7 @@ const setup = (editor: Editor, sharedBackstage: UiFactoryBackstageShared, lazyHe
       Docking.refresh(header);
 
       // If the header element is still visible, then adjust the scroll position if required
-      const headerElem = header.element();
+      const headerElem = header.element;
       if (Visibility.isVisible(headerElem)) {
         scrollFromBehindHeader(e, headerElem);
       }
@@ -186,7 +186,7 @@ const getBehaviours = (editor: Editor, sharedBackstage: UiFactoryBackstageShared
   const lazySink = sharedBackstage.getSink;
 
   const runOnSinkElement = (f: (sink: SugarElement) => void) => {
-    lazySink().each((sink) => f(sink.element()));
+    lazySink().each((sink) => f(sink.element));
   };
 
   const onDockingSwitch = (comp: AlloyComponent) => {
@@ -205,7 +205,7 @@ const getBehaviours = (editor: Editor, sharedBackstage: UiFactoryBackstageShared
     Docking.config({
       contextual: {
         lazyContext(comp) {
-          const headerHeight = Height.getOuter(comp.element());
+          const headerHeight = Height.getOuter(comp.element);
           const container = editor.inline ? editor.getContentAreaContainer() : editor.getContainer();
           const box = Boxes.box(SugarElement.fromDom(container));
           // Force the header to hide before it overflows outside the container
@@ -220,12 +220,12 @@ const getBehaviours = (editor: Editor, sharedBackstage: UiFactoryBackstageShared
           runOnSinkElement((elem) => Classes.remove(elem, [ visibility.transitionClass, visibility.fadeInClass ]));
           // Restore focus and reset the stored focused element
           focusedElm.get().each((elem) => {
-            restoreFocus(comp.element(), elem);
+            restoreFocus(comp.element, elem);
             focusedElm.set(Optional.none());
           });
         },
         onHide: (comp) => {
-          focusedElm.set(findFocusedElem(comp.element(), lazySink));
+          focusedElm.set(findFocusedElem(comp.element, lazySink));
           runOnSinkElement((elem) => updateSinkVisibility(elem, false));
         },
         onHidden: () => {

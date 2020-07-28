@@ -66,7 +66,7 @@ const part = (store: TestStore) => ({
 });
 
 const mStoreMenuUid = (component: AlloyComponent) => Step.stateful((value: any, next, _die) => {
-  const menu = SelectorFind.descendant(component.element(), '.menu').getOrDie('Could not find menu');
+  const menu = SelectorFind.descendant(component.element, '.menu').getOrDie('Could not find menu');
   const uid = Tagger.readOrDie(menu);
   next(
     Merger.deepMerge(value, { menuUid: uid })
@@ -79,7 +79,7 @@ const mWaitForNewMenu = (component: AlloyComponent) =>
     Waiter.sTryUntil(
       'Waiting for a new menu (different uid)',
       Step.sync(() => {
-        SelectorFind.descendant(component.element(), '.menu').filter((menu) => {
+        SelectorFind.descendant(component.element, '.menu').filter((menu) => {
           const uid = Tagger.readOrDie(menu);
           return value.menuUid !== uid;
         }).getOrDie('New menu has not appeared');
@@ -95,7 +95,7 @@ const assertLazySinkArgs = (expectedTag: string, expectedClass: string, comp: Al
     ApproxStructure.build((s, _str, arr) => s.element(expectedTag, {
       classes: [ arr.has(expectedClass) ]
     })),
-    comp.element()
+    comp.element
   );
 };
 

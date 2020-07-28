@@ -73,7 +73,7 @@ UnitTest.asynctest('TouchDraggingTest', (success, failure) => {
     })
   ), (_doc, _body, gui, component, _store) => {
 
-    const cSubject = Chain.mapper(() => subject.get(component).element());
+    const cSubject = Chain.mapper(() => subject.get(component).element);
 
     const cEnsurePositionChanged = Chain.control(
       Chain.binder((all: any) => all.box_position1.left !== all.box_position2.left &&
@@ -171,7 +171,7 @@ UnitTest.asynctest('TouchDraggingTest', (success, failure) => {
         NamedChain.asChain([
           NamedChain.write('box', cSubject),
           NamedChain.direct('box', Touch.cTouchStart, '_'),
-          NamedChain.writeValue('container', gui.element()),
+          NamedChain.writeValue('container', gui.element),
           NamedChain.direct('container', UiFinder.cFindIn('.test-blocker'), 'blocker'),
 
           NamedChain.direct('blocker', Touch.cTouchMoveTo(100, 200), '_'),

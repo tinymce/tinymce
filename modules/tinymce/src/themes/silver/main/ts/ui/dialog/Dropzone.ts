@@ -132,7 +132,7 @@ export const renderDropZone = (spec: DropZoneSpec, providersBackstage: UiFactory
             ],
             action: (comp) => {
               const inputComp = memInput.get(comp);
-              inputComp.element().dom.click();
+              inputComp.element.dom.click();
             },
             buttonBehaviours: Behaviour.derive([
               Tabstopping.config({ }),

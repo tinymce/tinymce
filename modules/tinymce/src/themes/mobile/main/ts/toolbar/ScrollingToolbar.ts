@@ -5,17 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import {
-  AddEventsBehaviour,
-  AlloyEvents,
-  Behaviour,
-  Container,
-  GuiFactory,
-  Keying,
-  Toggling,
-  Toolbar,
-  ToolbarGroup
-} from '@ephox/alloy';
+import { AddEventsBehaviour, AlloyEvents, Behaviour, Container, GuiFactory, Keying, Toggling, Toolbar, ToolbarGroup } from '@ephox/alloy';
 import { Arr, Cell, Fun } from '@ephox/katamari';
 import { Css } from '@ephox/sugar';
 
@@ -24,7 +14,18 @@ import * as Styles from '../style/Styles';
 import * as Scrollable from '../touch/scroll/Scrollable';
 import * as UiDomFactory from '../util/UiDomFactory';
 
-export default function () {
+export interface ScrollingToolbar {
+  readonly wrapper: any;
+  readonly toolbar: any;
+  readonly createGroups: (gs) => void;
+  readonly setGroups: (gs) => void;
+  readonly setContextToolbar: (gs) => void;
+  readonly restoreToolbar: () => void;
+  readonly refresh: () => void;
+  readonly focus: () => void;
+}
+
+export const ScrollingToolbar = function (): ScrollingToolbar {
   const makeGroup = function (gSpec) {
     const scrollClass = gSpec.scrollable === true ? '${prefix}-toolbar-scrollable-group' : '';
     return {
@@ -33,9 +34,9 @@ export default function () {
       tgroupBehaviours: Behaviour.derive([
         AddEventsBehaviour.config('adhoc-scrollable-toolbar', gSpec.scrollable === true ? [
           AlloyEvents.runOnInit(function (component, _simulatedEvent) {
-            Css.set(component.element(), 'overflow-x', 'auto');
-            Scrollables.markAsHorizontal(component.element());
-            Scrollable.register(component.element());
+            Css.set(component.element, 'overflow-x', 'auto');
+            Scrollables.markAsHorizontal(component.element);
+            Scrollable.register(component.element);
           })
         ] : [ ])
       ]),
@@ -138,8 +139,8 @@ export default function () {
   };
 
   return {
-    wrapper: Fun.constant(wrapper),
-    toolbar: Fun.constant(toolbar),
+    wrapper,
+    toolbar,
     createGroups,
     setGroups,
     setContextToolbar,
@@ -147,4 +148,4 @@ export default function () {
     refresh,
     focus
   };
-}
+};

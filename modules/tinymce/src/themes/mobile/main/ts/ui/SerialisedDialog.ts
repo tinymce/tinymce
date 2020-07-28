@@ -56,14 +56,14 @@ const sketch = function (rawSpec) {
   };
 
   const reposition = function (dialog, message) {
-    SelectorFind.descendant(dialog.element(), '.' + Styles.resolve('serialised-dialog-chain')).each(function (parent) {
+    SelectorFind.descendant(dialog.element, '.' + Styles.resolve('serialised-dialog-chain')).each(function (parent) {
       Css.set(parent, 'left', (-spec.state.currentScreen.get() * message.width) + 'px');
     });
   };
 
   const navigate = function (dialog, direction) {
-    const screens = SelectorFilter.descendants<HTMLElement>(dialog.element(), '.' + Styles.resolve('serialised-dialog-screen'));
-    SelectorFind.descendant(dialog.element(), '.' + Styles.resolve('serialised-dialog-chain')).each(function (parent) {
+    const screens = SelectorFilter.descendants<HTMLElement>(dialog.element, '.' + Styles.resolve('serialised-dialog-screen'));
+    SelectorFind.descendant(dialog.element, '.' + Styles.resolve('serialised-dialog-chain')).each(function (parent) {
       if ((spec.state.currentScreen.get() + direction) >= 0 && (spec.state.currentScreen.get() + direction) < screens.length) {
         Css.getRaw(parent, 'left').each(function (left) {
           const currentLeft = parseInt(left, 10);
@@ -77,11 +77,11 @@ const sketch = function (rawSpec) {
 
   // Unfortunately we need to inspect the DOM to find the input that is currently on screen
   const focusInput = function (dialog) {
-    const inputs = SelectorFilter.descendants(dialog.element(), 'input');
+    const inputs = SelectorFilter.descendants(dialog.element, 'input');
     const optInput = Optional.from(inputs[spec.state.currentScreen.get()]);
     optInput.each(function (input) {
       dialog.getSystem().getByDom(input).each(function (inputComp) {
-        AlloyTriggers.dispatchFocus(dialog, inputComp.element());
+        AlloyTriggers.dispatchFocus(dialog, inputComp.element);
       });
     });
     const dotitems = memDots.get(dialog);

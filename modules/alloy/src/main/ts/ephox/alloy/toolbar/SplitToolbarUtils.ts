@@ -16,14 +16,14 @@ const setGroups = (toolbar: AlloyComponent, storedGroups: AlloyComponent[]) => {
   Toolbar.setGroups(toolbar, bGroups);
 };
 
-const findFocusedComp = (comps: AlloyComponent[]): Optional<AlloyComponent> => Arr.findMap(comps, (comp) => Focus.search(comp.element()).bind((focusedElm) => comp.getSystem().getByDom(focusedElm).toOptional()));
+const findFocusedComp = (comps: AlloyComponent[]): Optional<AlloyComponent> => Arr.findMap(comps, (comp) => Focus.search(comp.element).bind((focusedElm) => comp.getSystem().getByDom(focusedElm).toOptional()));
 
 const refresh = (toolbar: AlloyComponent, detail: SplitToolbarBaseDetail, setOverflow: (groups: AlloyComponent[]) => void) => {
   const primary = AlloyParts.getPartOrDie(toolbar, detail, 'primary');
   const overflowGroup = Coupling.getCoupled(toolbar, 'overflowGroup');
 
   // Set the primary toolbar to have visibility hidden;
-  Css.set(primary.element(), 'visibility', 'hidden');
+  Css.set(primary.element, 'visibility', 'hidden');
 
   const groups = detail.builtGroups.get().concat([ overflowGroup ]);
 
@@ -36,9 +36,9 @@ const refresh = (toolbar: AlloyComponent, detail: SplitToolbarBaseDetail, setOve
   // Put all the groups inside the primary toolbar
   setGroups(primary, groups);
 
-  const availableWidth = Width.get(primary.element());
+  const availableWidth = Width.get(primary.element);
 
-  const overflows = Overflows.partition(availableWidth, detail.builtGroups.get(), (comp) => Width.get(comp.element()), overflowGroup);
+  const overflows = Overflows.partition(availableWidth, detail.builtGroups.get(), (comp) => Width.get(comp.element), overflowGroup);
 
   if (overflows.extra().length === 0) {
     // Not ideal. Breaking abstraction somewhat, though remove is better than insert
@@ -50,8 +50,8 @@ const refresh = (toolbar: AlloyComponent, detail: SplitToolbarBaseDetail, setOve
     setOverflow(overflows.extra());
   }
 
-  Css.remove(primary.element(), 'visibility');
-  Css.reflow(primary.element());
+  Css.remove(primary.element, 'visibility');
+  Css.reflow(primary.element);
 
   // Restore the focus
   focusedComp.each(Focusing.focus);

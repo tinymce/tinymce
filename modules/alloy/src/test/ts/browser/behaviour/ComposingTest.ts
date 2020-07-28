@@ -39,14 +39,14 @@ UnitTest.asynctest('Browser Test: behaviour.ComposingTest', (success, failure) =
             })
           ]
         })),
-        component.element()
+        component.element
       ),
       Step.sync(() => {
         const delegate = Composing.getCurrent(component).getOrDie('Could not find delegate');
         Assertions.assertStructure(
           'Checking delegate structure',
           ApproxStructure.build((s, str, _arr) => s.element('span', { html: str.is('inner') })),
-          delegate.element()
+          delegate.element
         );
       })
     ],

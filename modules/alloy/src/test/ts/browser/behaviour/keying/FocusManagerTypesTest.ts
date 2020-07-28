@@ -56,7 +56,7 @@ UnitTest.asynctest('Browser Test: behaviour.keying.FocusManagersTest', (success,
       const highlightManager = FocusManagers.highlights();
       const domManager = FocusManagers.dom();
 
-      const sFireFocusOn = (focusManager: FocusManagers.FocusManager, selector: string) => Chain.asStep(component.element(), [
+      const sFireFocusOn = (focusManager: FocusManagers.FocusManager, selector: string) => Chain.asStep(component.element, [
         UiFinder.cFindIn(selector),
         Chain.op((elem) => {
           focusManager.set(component, elem);
@@ -71,13 +71,13 @@ UnitTest.asynctest('Browser Test: behaviour.keying.FocusManagersTest', (success,
           GeneralSteps.sequence([
             Assertions.sAssertPresence('Checking no selected items', {
               '.selected-candidate': 0
-            }, component.element()),
+            }, component.element),
 
             sFireFocusOn(highlightManager, '[data-index="1"]'),
             store.sAssertEq('Checking highlights transitioned from none to 1', [ '{none}->1' ]),
             Assertions.sAssertPresence('Checking a selected item', {
               '.selected-candidate': 1
-            }, component.element()),
+            }, component.element),
             store.sClear,
 
             sFireFocusOn(highlightManager, '[data-index="2"]'),

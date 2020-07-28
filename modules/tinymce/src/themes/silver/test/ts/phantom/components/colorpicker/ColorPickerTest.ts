@@ -21,7 +21,7 @@ UnitTest.asynctest('ColorPicker component Test', (success, failure) => {
           label,
           Waiter.sTryUntil(
             'Waiting until hex updates the other fields',
-            Chain.asStep(component.element(), [
+            Chain.asStep(component.element, [
               UiFinder.cFindIn(`label:contains("${labelText}") + input`),
               UiControls.cGetValue,
               Assertions.cAssertEq('Checking value in input', expected)

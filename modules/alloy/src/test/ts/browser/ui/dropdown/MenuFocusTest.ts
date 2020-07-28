@@ -114,8 +114,8 @@ UnitTest.asynctest('MenuFocusTest', (success, failure) => {
     const sAssertFocusShift = (label: string, expected: string, focusTarget: string) => Logger.t(
       label,
       GeneralSteps.sequence([
-        FocusTools.sSetFocus('Focus input field', component.element(), 'input'),
-        Chain.asStep(component.element(), [
+        FocusTools.sSetFocus('Focus input field', component.element, 'input'),
+        Chain.asStep(component.element, [
           UiFinder.cFindIn(focusTarget),
           Chain.op((alphaWidget) => {
             Focusing.focus(component.getSystem().getByDom(alphaWidget).toOptional().getOrDie('Could not find selector: ' + focusTarget));

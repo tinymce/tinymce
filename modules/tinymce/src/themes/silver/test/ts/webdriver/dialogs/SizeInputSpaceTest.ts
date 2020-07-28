@@ -20,7 +20,7 @@ UnitTest.asynctest('SizeInput <space> webdriver Test', (success, failure) => {
     (_doc, _body, _gui, component, _store) => {
       const sAssertLockedStatus = (label: string, expected: boolean) => Logger.t(
         label,
-        Chain.asStep(component.element(), [
+        Chain.asStep(component.element, [
           UiFinder.cFindIn('.tox-lock'),
           Assertions.cAssertStructure(
             'Checking the state of the lock button. Should be: ' + expected,
@@ -40,7 +40,7 @@ UnitTest.asynctest('SizeInput <space> webdriver Test', (success, failure) => {
       ]);
 
       return [
-        FocusTools.sSetFocus('Focus the constrain button', component.element(), '.tox-lock'),
+        FocusTools.sSetFocus('Focus the constrain button', component.element, '.tox-lock'),
         sAssertLockedStatus('Initially: ', true),
         sSendRealSpace,
         sAssertLockedStatus('Firing space on a pressed button', false),

@@ -25,7 +25,7 @@ const removeStyles = function () {
 const sWaitForToolstrip = function (realm) {
   return Waiter.sTryUntil(
     'Waiting until CSS has loaded',
-    Chain.asStep(realm.element(), [
+    Chain.asStep(realm.element, [
       UiFinder.cFindIn('.tinymce-mobile-toolstrip'),
       Chain.op(function (toolstrip) {
         if (navigator.userAgent.indexOf('PhantomJS') === -1) {

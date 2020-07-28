@@ -79,7 +79,7 @@ UnitTest.asynctest('Basic Form', (success, failure) => {
             })
           ]
         })),
-        component.element()
+        component.element
       );
     });
 
@@ -150,7 +150,7 @@ UnitTest.asynctest('Basic Form', (success, failure) => {
         GeneralSteps.sequence([
           Step.sync(() => {
             const field = Form.getField(component, 'form.bull').getOrDie('Could not find field');
-            Assertions.assertEq('Checking value', 'select-b-other', Value.get(field.element()));
+            Assertions.assertEq('Checking value', 'select-b-other', Value.get(field.element));
           })
         ])
       )

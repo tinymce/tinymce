@@ -22,7 +22,7 @@ const events = (receiveConfig: ReceivingConfig) => AlloyEvents.derive([
       const channelInfo = channelMap[ch];
       const channelSchema = channelInfo.schema;
       const data = ValueSchema.asRawOrDie(
-        'channel[' + ch + '] data\nReceiver: ' + AlloyLogger.element(component.element()),
+        'channel[' + ch + '] data\nReceiver: ' + AlloyLogger.element(component.element),
         channelSchema, receivingData.data()
       );
       channelInfo.onReceive(component, data);

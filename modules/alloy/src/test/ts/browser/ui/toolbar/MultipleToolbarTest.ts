@@ -99,7 +99,7 @@ UnitTest.asynctest('MultipleToolbarTest', (success, failure) => {
           toolbar
         ]
       })),
-      component.element()
+      component.element
     );
 
     const toolbarList = component.getSystem().getByUid('multiple-toolbar').getOrDie();

@@ -13,10 +13,10 @@ import * as Receivers from '../channels/Receivers';
 import * as Styles from '../style/Styles';
 
 export interface DropUp {
-  appear: (menu: any, update: any, component: any) => void;
-  disappear: (onReadyToShrink: any) => void;
-  component: () => AlloyComponent;
-  element: () => SugarElement;
+  readonly appear: (menu: any, update: any, component: any) => void;
+  readonly disappear: (onReadyToShrink: any) => void;
+  readonly component: AlloyComponent;
+  readonly element: SugarElement;
 }
 
 const build = (refresh, scrollIntoView): DropUp => {
@@ -77,7 +77,7 @@ const build = (refresh, scrollIntoView): DropUp => {
   return {
     appear,
     disappear,
-    component: Fun.constant(dropup),
+    component: dropup,
     element: dropup.element
   };
 };

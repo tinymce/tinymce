@@ -34,12 +34,12 @@ const getDynamicSource = (isSandbox): IFrameSourcing => {
     setValue: (frameComponent: AlloyComponent, html: string) => {
 
       if (!isSandbox) {
-        Attribute.set(frameComponent.element(), 'src', `javascript:''`);
+        Attribute.set(frameComponent.element, 'src', `javascript:''`);
         // IE 6-11 doesn't support data uris on iframeComponents
         // and Edge only supports upto ~4000 chars in data uris
         // so I guess they will have to be less secure since we can't sandbox on those
         // TODO: Use sandbox if future versions of IE/Edge supports iframeComponents with data: uris.
-        const doc = frameComponent.element().dom.contentWindow.document;
+        const doc = frameComponent.element.dom.contentWindow.document;
 
         doc.open();
         doc.write(html);
@@ -48,7 +48,7 @@ const getDynamicSource = (isSandbox): IFrameSourcing => {
       } else {
         // TINY-3769: We need to use srcdoc here, instead of src with a data URI, otherwise browsers won't retain the Origin.
         // See https://bugs.chromium.org/p/chromium/issues/detail?id=58999#c11
-        Attribute.set(frameComponent.element(), 'srcdoc', html);
+        Attribute.set(frameComponent.element, 'srcdoc', html);
       }
       cachedValue.set(html);
     }

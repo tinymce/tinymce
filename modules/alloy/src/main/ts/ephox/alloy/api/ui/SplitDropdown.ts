@@ -50,8 +50,8 @@ const factory: CompositeSketchFactory<SplitDropdownDetail, SplitDropdownSpec> = 
         const ariaDescriptor = AlloyParts.getPart(component, detail, 'aria-descriptor');
         ariaDescriptor.each((descriptor) => {
           const descriptorId = Id.generate('aria');
-          Attribute.set(descriptor.element(), 'id', descriptorId);
-          Attribute.set(component.element(), 'aria-describedby', descriptorId);
+          Attribute.set(descriptor.element, 'id', descriptorId);
+          Attribute.set(component.element, 'aria-describedby', descriptorId);
         });
       })
     ]),

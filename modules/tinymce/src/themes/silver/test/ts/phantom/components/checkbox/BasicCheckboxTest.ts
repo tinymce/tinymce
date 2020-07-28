@@ -29,7 +29,7 @@ UnitTest.asynctest('Checkbox component Test', (success, failure) => {
 
       const sAssertCheckboxState = (label: string, expChecked: boolean) => Logger.t(
         label,
-        Chain.asStep(component.element(), [
+        Chain.asStep(component.element, [
           UiFinder.cFindIn('input'),
           Chain.op((input) => {
             const node = input.dom as HTMLInputElement;
@@ -43,7 +43,7 @@ UnitTest.asynctest('Checkbox component Test', (success, failure) => {
         Representing.setValue(component, state);
       });
 
-      const sPressKeyOnCheckbox = (keyCode: number, modifiers: object) => Chain.asStep(component.element(), [
+      const sPressKeyOnCheckbox = (keyCode: number, modifiers: object) => Chain.asStep(component.element, [
         UiFinder.cFindIn('input'),
         Chain.op((input) => {
           Keyboard.keydown(keyCode, modifiers, input);
@@ -81,7 +81,7 @@ UnitTest.asynctest('Checkbox component Test', (success, failure) => {
               })
             ]
           })),
-          component.element()
+          component.element
         ),
 
         // Representing state updates

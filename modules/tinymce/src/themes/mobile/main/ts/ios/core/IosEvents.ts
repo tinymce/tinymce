@@ -113,7 +113,7 @@ const initEvents = (editorApi, iosApi, toolstrip, socket, _dropup): { destroy: (
 
     // Scroll to element
     editorApi.onScrollToElement((event) => {
-      scrollToElement(event.element());
+      scrollToElement(event.element);
     }),
 
     // Focus the content and show the keyboard

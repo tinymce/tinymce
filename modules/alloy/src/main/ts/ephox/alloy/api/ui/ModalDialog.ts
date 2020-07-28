@@ -64,14 +64,14 @@ const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (det
           }),
 
           AlloyEvents.run(dialogIdleEvent, (_blocker, _se) => {
-            if (Attribute.has(dialog.element(), 'aria-busy')) {
-              Attribute.remove(dialog.element(), 'aria-busy');
+            if (Attribute.has(dialog.element, 'aria-busy')) {
+              Attribute.remove(dialog.element, 'aria-busy');
               busyComp.get().each((bc) => Replacing.remove(dialog, bc));
             }
           }),
 
           AlloyEvents.run<DialogBusyEvent>(dialogBusyEvent, (blocker, se) => {
-            Attribute.set(dialog.element(), 'aria-busy', 'true');
+            Attribute.set(dialog.element, 'aria-busy', 'true');
             const getBusySpec = se.event().getBusySpec();
 
             busyComp.get().each((bc) => {
@@ -94,7 +94,7 @@ const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (det
   };
 
   const hideDialog = (dialog: AlloyComponent) => {
-    Traverse.parent(dialog.element()).each((blockerDom) => {
+    Traverse.parent(dialog.element).each((blockerDom) => {
       dialog.getSystem().getByDom(blockerDom).each((blocker) => {
         Attachment.detach(blocker);
       });
@@ -152,8 +152,8 @@ const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (det
         }),
         AddEventsBehaviour.config(modalEventsId, [
           AlloyEvents.runOnAttached((c) => {
-            AriaLabel.labelledBy(c.element(), AlloyParts.getPartOrDie(c, detail, 'title').element());
-            AriaDescribe.describedBy(c.element(), AlloyParts.getPartOrDie(c, detail, 'body').element());
+            AriaLabel.labelledBy(c.element, AlloyParts.getPartOrDie(c, detail, 'title').element);
+            AriaDescribe.describedBy(c.element, AlloyParts.getPartOrDie(c, detail, 'body').element);
           })
         ])
       ]

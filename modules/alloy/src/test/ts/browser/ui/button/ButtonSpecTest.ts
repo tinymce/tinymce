@@ -1,4 +1,6 @@
-import { ApproxStructure, Assertions, Chain, Cursors, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, Touch, UiFinder } from '@ephox/agar';
+import {
+  ApproxStructure, Assertions, Chain, Cursors, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, Touch, UiFinder
+} from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
@@ -35,12 +37,12 @@ UnitTest.asynctest('ButtonSpecTest', (success, failure) => {
           },
           html: str.is('ButtonSpecTest.button')
         })),
-        component.element()
+        component.element
       );
     });
 
     const testAlloyUid = Step.sync(() => {
-      const actual = Tagger.readOrDie(component.element());
+      const actual = Tagger.readOrDie(component.element);
       Assertions.assertEq('Checking alloy uid', 'test-button-id', actual);
     });
 
@@ -48,10 +50,10 @@ UnitTest.asynctest('ButtonSpecTest', (success, failure) => {
       'testing button click',
       GeneralSteps.sequence([
         store.sAssertEq('step 1: no clicks', [ ]),
-        Mouse.sClickOn(gui.element(), 'button'),
+        Mouse.sClickOn(gui.element, 'button'),
         store.sAssertEq('step 2: post click', [ 'button.action' ]),
         store.sClear,
-        Chain.asStep(gui.element(), [
+        Chain.asStep(gui.element, [
           UiFinder.cFindIn('button'),
           Cursors.cFollow([ 0 ]),
           Mouse.cClick
@@ -65,10 +67,10 @@ UnitTest.asynctest('ButtonSpecTest', (success, failure) => {
       'testing button tap',
       GeneralSteps.sequence([
         store.sAssertEq('step 1: no taps', [ ]),
-        Touch.sTapOn(gui.element(), 'button'),
+        Touch.sTapOn(gui.element, 'button'),
         store.sAssertEq('step 2: post tap', [ 'button.action' ]),
         store.sClear,
-        Chain.asStep(gui.element(), [
+        Chain.asStep(gui.element, [
           UiFinder.cFindIn('button'),
           Cursors.cFollow([ 0 ]),
           Touch.cTap
@@ -94,7 +96,7 @@ UnitTest.asynctest('ButtonSpecTest', (success, failure) => {
     const testFocusing = Logger.t(
       'test focusing',
       GeneralSteps.sequence([
-        FocusTools.sSetFocus('Setting focus on button', gui.element(), '.test-button'),
+        FocusTools.sSetFocus('Setting focus on button', gui.element, '.test-button'),
         FocusTools.sTryOnSelector('Checking focus on button', doc, '.test-button')
       ])
     );

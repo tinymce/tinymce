@@ -103,7 +103,7 @@ UnitTest.asynctest('TieredMenuWithoutImmediateHighlightTest', (success, failure)
           })
         ]
       })),
-      component.element()
+      component.element
     ),
 
     store.sAssertEq('Focus is fired as soon as the tiered menu is active', [
@@ -149,7 +149,7 @@ UnitTest.asynctest('TieredMenuWithoutImmediateHighlightTest', (success, failure)
           })
         ]
       })),
-      component.element()
+      component.element
     )
   ], () => { success(); }, failure);
 });

@@ -66,7 +66,7 @@ UnitTest.asynctest('ToolbarGroupTest', (success, failure) => {
   ), (doc, _body, _gui, component: AlloyComponent, _store) => {
 
     const group1 = component.getSystem().getByDom(
-      SelectorFind.descendant(component.element(), '.test-group1').getOrDie('Could not find test-group1')
+      SelectorFind.descendant(component.element, '.test-group1').getOrDie('Could not find test-group1')
     ).getOrDie();
 
     return [
@@ -83,7 +83,7 @@ UnitTest.asynctest('ToolbarGroupTest', (success, failure) => {
             s.element('button', { html: str.is('B'), classes: [ arr.has('toolbar-item') ] })
           ]
         })),
-        group1.element()
+        group1.element
       ),
 
       Step.sync(() => {

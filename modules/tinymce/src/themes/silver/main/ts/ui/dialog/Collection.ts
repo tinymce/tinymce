@@ -68,7 +68,7 @@ export const renderCollection = (spec: CollectionSpec, providersBackstage: UiFac
     const chunks = spec.columns > 1 && spec.columns !== 'auto' ? Arr.chunk(htmlLines, spec.columns) : [ htmlLines ];
     const html = Arr.map(chunks, (ch) => `<div class="tox-collection__group">${ch.join('')}</div>`);
 
-    Html.set(comp.element(), html.join(''));
+    Html.set(comp.element, html.join(''));
   };
 
   const onClick = runOnItem((comp, se, tgt, itemValue) => {
@@ -88,13 +88,13 @@ export const renderCollection = (spec: CollectionSpec, providersBackstage: UiFac
     AlloyEvents.run<EventArgs>(NativeEvents.click(), onClick),
     AlloyEvents.run<EventArgs>(SystemEvents.tap(), onClick),
     AlloyEvents.run(NativeEvents.focusin(), runOnItem((comp, se, tgt) => {
-      SelectorFind.descendant(comp.element(), '.' + ItemClasses.activeClass).each((currentActive) => {
+      SelectorFind.descendant(comp.element, '.' + ItemClasses.activeClass).each((currentActive) => {
         Class.remove(currentActive, ItemClasses.activeClass);
       });
       Class.add(tgt, ItemClasses.activeClass);
     })),
     AlloyEvents.run(NativeEvents.focusout(), runOnItem((comp) => {
-      SelectorFind.descendant(comp.element(), '.' + ItemClasses.activeClass).each((currentActive) => {
+      SelectorFind.descendant(comp.element, '.' + ItemClasses.activeClass).each((currentActive) => {
         Class.remove(currentActive, ItemClasses.activeClass);
       });
     })),
@@ -106,7 +106,7 @@ export const renderCollection = (spec: CollectionSpec, providersBackstage: UiFac
     }))
   ];
 
-  const iterCollectionItems = (comp, applyAttributes) => Arr.map(SelectorFilter.descendants(comp.element(), '.tox-collection__item'), applyAttributes);
+  const iterCollectionItems = (comp, applyAttributes) => Arr.map(SelectorFilter.descendants(comp.element, '.tox-collection__item'), applyAttributes);
 
   const pField = AlloyFormField.parts().field({
     dom: {

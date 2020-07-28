@@ -25,7 +25,7 @@ const schema = [
 ];
 
 const focusIn = (component: AlloyComponent, gridConfig: FlatgridConfig, _gridState: FlatgridState): void => {
-  SelectorFind.descendant(component.element(), gridConfig.selector).each((first: SugarElement) => {
+  SelectorFind.descendant(component.element, gridConfig.selector).each((first: SugarElement) => {
     gridConfig.focusManager.set(component, first);
   });
 };

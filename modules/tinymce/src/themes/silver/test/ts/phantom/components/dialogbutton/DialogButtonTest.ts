@@ -28,11 +28,11 @@ UnitTest.asynctest('DialogButton component Test', (success, failure) => {
             s.text( str.is('ButtonText') )
           ]
         })),
-        component.element()
+        component.element
       ),
 
       store.sAssertEq('No button action should have fired yet', [ ]),
-      Mouse.sClickOn(gui.element(), '.tox-button'),
+      Mouse.sClickOn(gui.element, '.tox-button'),
       store.sAssertEq('Button action should have fired', [ 'button.action' ])
     ],
     success,

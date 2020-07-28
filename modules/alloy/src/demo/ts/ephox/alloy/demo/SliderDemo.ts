@@ -17,8 +17,8 @@ import { SliderValue, SliderValueX, SliderValueY } from 'ephox/alloy/ui/types/Sl
 export default (): void => {
   const gui = Gui.create();
   const body = SugarElement.fromDom(document.body);
-  Class.add(gui.element(), 'gui-root-demo-container');
-  Insert.append(body, gui.element());
+  Class.add(gui.element, 'gui-root-demo-container');
+  Insert.append(body, gui.element);
 
   const slider1 = HtmlDisplay.section(
     gui,
@@ -136,7 +136,7 @@ export default (): void => {
 
   const setColor = (thumb: AlloyComponent, hue: number) => {
     const color = (hue < 0) ? 'black' : (hue > 360) ? 'white' : 'hsl(' + hue + ', 100%, 50%)';
-    Css.set(thumb.element(), 'background', color);
+    Css.set(thumb.element, 'background', color);
   };
 
   HtmlDisplay.section(

@@ -40,7 +40,7 @@ const calcSnap = (selectorOpt: Optional<AlloyComponent>, td: SugarElement<HTMLTa
   const sensorTop = y - snapOffset;
   const sensorWidth = snapWidth; // box.width();
   const sensorHeight = snapWidth; // box.height();
-  const rect = selectorHandle.element().dom.getBoundingClientRect();
+  const rect = selectorHandle.element.dom.getBoundingClientRect();
   // insertDebugDiv(sensorLeft, sensorTop, sensorWidth, sensorHeight, 'green', 'top-left-snap-debug');
   return Dragging.snap({
     sensor: DragCoord.absolute(sensorLeft, sensorTop),
@@ -147,12 +147,12 @@ const setup = (editor: Editor, sink: AlloyComponent) => {
 
   const showOrHideHandle = (selector: AlloyComponent, cell: SugarElement<HTMLTableDataCellElement>, isAbove: (rect: ClientRect) => boolean, isBelow: (rect: ClientRect, viewportHeight: number) => boolean) => {
     const cellRect = cell.dom.getBoundingClientRect();
-    Css.remove(selector.element(), 'display');
+    Css.remove(selector.element, 'display');
     const viewportHeight = Traverse.defaultView(SugarElement.fromDom(editor.getBody())).dom.innerHeight;
     const aboveViewport = isAbove(cellRect);
     const belowViewport = isBelow(cellRect, viewportHeight);
     if (aboveViewport || belowViewport) {
-      Css.set(selector.element(), 'display', 'none');
+      Css.set(selector.element, 'display', 'none');
     }
   };
 

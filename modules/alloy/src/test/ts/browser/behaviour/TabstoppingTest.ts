@@ -4,8 +4,8 @@ import { UnitTest } from '@ephox/bedrock-client';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Tabstopping } from 'ephox/alloy/api/behaviour/Tabstopping';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
+import { Container } from 'ephox/alloy/api/ui/Container';
 
 UnitTest.asynctest('TabstoppingTest', (success, failure) => {
 
@@ -23,7 +23,7 @@ UnitTest.asynctest('TabstoppingTest', (success, failure) => {
           'data-alloy-tabstop': str.is('true')
         }
       })),
-      component.element()
+      component.element
     )
   ], () => { success(); }, failure);
 });

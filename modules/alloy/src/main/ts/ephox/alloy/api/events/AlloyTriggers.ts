@@ -6,11 +6,11 @@ import { AlloyComponent } from '../component/ComponentApi';
 import * as SystemEvents from './SystemEvents';
 
 const emit = (component: AlloyComponent, event: string): void => {
-  dispatchWith(component, component.element(), event, { });
+  dispatchWith(component, component.element, event, { });
 };
 
 const emitWith = (component: AlloyComponent, event: string, properties: Record<string, any>): void => {
-  dispatchWith(component, component.element(), event, properties);
+  dispatchWith(component, component.element, event, properties);
 };
 
 const emitExecute = (component: AlloyComponent): void => {
@@ -34,7 +34,7 @@ const dispatchEvent = function <T extends EventFormat> (component: AlloyComponen
 };
 
 const dispatchFocus = (component: AlloyComponent, target: SugarElement): void => {
-  component.getSystem().triggerFocus(target, component.element());
+  component.getSystem().triggerFocus(target, component.element);
 };
 
 export {

@@ -47,14 +47,14 @@ const factory: CompositeSketchFactory<FormFieldDetail, FormFieldSpec> = (detail,
         const id = Id.generate(detail.prefix);
         ps.label().each((label) => {
           // TODO: Find a nicer way of doing this.
-          Attribute.set(label.element(), 'for', id);
-          Attribute.set(field.element(), 'id', id);
+          Attribute.set(label.element, 'for', id);
+          Attribute.set(field.element, 'id', id);
         });
 
         ps['aria-descriptor']().each((descriptor) => {
           const descriptorId = Id.generate(detail.prefix);
-          Attribute.set(descriptor.element(), 'id', descriptorId);
-          Attribute.set(field.element(), 'aria-describedby', descriptorId);
+          Attribute.set(descriptor.element, 'id', descriptorId);
+          Attribute.set(field.element, 'aria-describedby', descriptorId);
         });
       });
     })

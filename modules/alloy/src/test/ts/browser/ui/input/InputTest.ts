@@ -34,7 +34,7 @@ UnitTest.asynctest('InputTest', (success, failure) => {
           ],
           value: str.is('initial-value')
         })),
-        component.element()
+        component.element
       );
     });
 
@@ -42,12 +42,12 @@ UnitTest.asynctest('InputTest', (success, failure) => {
       Assertions.assertEq(
         label + '\nChecking selectionStart',
         expected.start,
-        component.element().dom.selectionStart
+        component.element.dom.selectionStart
       );
       Assertions.assertEq(
         label + '\nChecking selectionEnd',
         expected.end,
-        component.element().dom.selectionEnd
+        component.element.dom.selectionEnd
       );
     });
 
@@ -83,7 +83,7 @@ UnitTest.asynctest('InputTest', (success, failure) => {
             },
             value: str.is('v')
           })),
-          component.element()
+          component.element
         );
       })
 

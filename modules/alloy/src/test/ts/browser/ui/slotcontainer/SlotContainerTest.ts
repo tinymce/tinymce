@@ -56,7 +56,7 @@ UnitTest.asynctest('SlotContainerTest', (success, failure) => {
         Assertions.assertStructure(
           label,
           ApproxStructure.build(expectedStructure),
-          c.element()
+          c.element
         );
       })
     ]);
@@ -146,7 +146,7 @@ UnitTest.asynctest('SlotContainerTest', (success, failure) => {
             })
           ]
         })),
-        component.element()
+        component.element
       ),
 
       sAssertButtonShowing('button: Before any APIs are called'),

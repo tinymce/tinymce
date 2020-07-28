@@ -62,7 +62,7 @@ const component = (spec, component: AlloyComponent) => {
 
   const defaults = {
     // Expose more as required
-    element: component.element().dom,
+    element: component.element.dom,
     isDisabled: () => Disabling.isDisabled(component),
     setDisabled: (state: boolean) => Disabling.set(component, state)
   };

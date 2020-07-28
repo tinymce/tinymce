@@ -138,7 +138,7 @@ const renderFloatingMoreToolbar = (toolbarSpec: MoreDrawerToolbarSpec) => {
     lazySink: toolbarSpec.getSink,
     getOverflowBounds: () => {
       // Restrict the left/right bounds to the editor header width, but don't restrict the top/bottom
-      const headerElem = toolbarSpec.moreDrawerData.lazyHeader().element();
+      const headerElem = toolbarSpec.moreDrawerData.lazyHeader().element;
       const headerBounds = Boxes.absolute(headerElem);
       const docElem = Traverse.documentElement(headerElem);
       const docBounds = Boxes.absolute(docElem);

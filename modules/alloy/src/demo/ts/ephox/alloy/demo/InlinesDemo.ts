@@ -28,7 +28,7 @@ import * as DemoRenders from './forms/DemoRenders';
 export default (): void => {
   const gui = Gui.create();
   const body = SugarElement.fromDom(document.body);
-  Class.add(gui.element(), 'gui-root-demo-container');
+  Class.add(gui.element, 'gui-root-demo-container');
   Attachment.attachSystem(body, gui);
 
   const sink = DemoSink.make();
@@ -205,10 +205,10 @@ export default (): void => {
 
                 const nonEmptyAnchor: SelectionAnchorSpec = {
                   anchor: 'selection',
-                  root: gui.element()
+                  root: gui.element
                 };
 
-                const anchor: AnchorSpec = Value.get(input.element()).length > 0 ? nonEmptyAnchor : emptyAnchor;
+                const anchor: AnchorSpec = Value.get(input.element).length > 0 ? nonEmptyAnchor : emptyAnchor;
                 InlineView.showAt(inlineComp, anchor, Container.sketch({
                   containerBehaviours: Behaviour.derive([
                     Keying.config({

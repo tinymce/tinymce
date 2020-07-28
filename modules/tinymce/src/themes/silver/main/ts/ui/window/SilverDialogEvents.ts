@@ -105,7 +105,7 @@ const initDialog = <T>(getInstanceApi: () => Dialog.DialogInstanceApi<T>, extras
         // Lastly if something outside the sink has focus then return the focus back to the dialog
         } else {
           getSink().toOptional()
-            .filter((sink) => !Compare.contains(sink.element(), focused))
+            .filter((sink) => !Compare.contains(sink.element, focused))
             .each(focusIn);
         }
       });

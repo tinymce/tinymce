@@ -25,7 +25,7 @@ UnitTest.asynctest('SandboxingTest', (success, failure) => {
         containerBehaviours: Behaviour.derive([
           Sandboxing.config({
             getAttachPoint(c) {
-              Assertions.assertEq('Checking getAttachPoint gets given sandbox', sandbox.element(), c.element());
+              Assertions.assertEq('Checking getAttachPoint gets given sandbox', sandbox.element, c.element);
               return sink;
             },
 
@@ -58,13 +58,13 @@ UnitTest.asynctest('SandboxingTest', (success, failure) => {
       label,
       GeneralSteps.sequence([
         sCheckShowing(label, true),
-        UiFinder.sExists(gui.element(), 'input[data-test-input="' + expected.data + '"]'),
-        UiFinder.sExists(gui.element(), '.test-sandbox'),
+        UiFinder.sExists(gui.element, 'input[data-test-input="' + expected.data + '"]'),
+        UiFinder.sExists(gui.element, '.test-sandbox'),
         store.sAssertEq('Checking store', expected.store),
         store.sClear,
         Step.sync(() => {
           const state = Sandboxing.getState(sandbox);
-          Assertions.assertEq(label + '\nChecking state node name', 'input', SugarNode.name(state.getOrDie().element()));
+          Assertions.assertEq(label + '\nChecking state node name', 'input', SugarNode.name(state.getOrDie().element));
         })
       ])
     );
@@ -73,8 +73,8 @@ UnitTest.asynctest('SandboxingTest', (success, failure) => {
       label,
       GeneralSteps.sequence([
         sCheckShowing(label, false),
-        UiFinder.sNotExists(gui.element(), 'input[data-test-input]'),
-        UiFinder.sNotExists(gui.element(), '.test-sandbox'),
+        UiFinder.sNotExists(gui.element, 'input[data-test-input]'),
+        UiFinder.sNotExists(gui.element, '.test-sandbox'),
         store.sAssertEq(label, expected.store),
         store.sClear,
         Step.sync(() => {
@@ -123,7 +123,7 @@ UnitTest.asynctest('SandboxingTest', (success, failure) => {
         'Firing sandbox close system event',
 
         Chain.asStep({}, [
-          Chain.inject(sandbox.element()),
+          Chain.inject(sandbox.element),
           UiFinder.cFindIn('input'),
           Chain.op((input) => {
             AlloyTriggers.dispatch(sandbox, input, SystemEvents.sandboxClose());

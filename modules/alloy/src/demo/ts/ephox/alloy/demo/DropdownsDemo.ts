@@ -35,8 +35,8 @@ const makeItem = (v: string, t: string, c?: string): DemoRenders.DemoItem => ({
 export default (): void => {
   const gui = Gui.create();
   const body = SugarElement.fromDom(document.body);
-  Class.add(gui.element(), 'gui-root-demo-container');
-  // Css.set(gui.element(), 'direction', 'rtl');
+  Class.add(gui.element, 'gui-root-demo-container');
+  // Css.set(gui.element, 'direction', 'rtl');
 
   Attachment.attachSystem(body, gui);
 

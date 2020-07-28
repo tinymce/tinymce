@@ -112,7 +112,7 @@ UnitTest.asynctest('TieredMenuTest', (success, failure) => {
         classes: [ arr.has('test-menu') ],
         children: Arr.map(structureMenus, (sm) => sm(s, str, arr))
       })),
-      component.element()
+      component.element
     );
 
     return [
@@ -124,7 +124,7 @@ UnitTest.asynctest('TieredMenuTest', (success, failure) => {
             structureMenu(true, [ true, false, false ], [ false, true, false ], [ false, false, false ])(s, str, arr)
           ]
         })),
-        component.element()
+        component.element
       ),
 
       Step.sync(() => {
@@ -169,7 +169,7 @@ UnitTest.asynctest('TieredMenuTest', (success, failure) => {
         ]
       ),
 
-      Mouse.sHoverOn(component.element(), 'li:contains("a-Beta")'),
+      Mouse.sHoverOn(component.element, 'li:contains("a-Beta")'),
       sAssertMenu(
         'Post hover on item with submenu structure test',
         [

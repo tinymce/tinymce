@@ -23,7 +23,7 @@ const execute: KeyRuleHandler<MenuConfig, Stateless> = (component, simulatedEven
 
 const focusIn = (component: AlloyComponent, menuConfig: MenuConfig, _state: Stateless): void => {
   // Maybe keep selection if it was there before
-  SelectorFind.descendant(component.element(), menuConfig.selector).each((first) => {
+  SelectorFind.descendant(component.element, menuConfig.selector).each((first) => {
     menuConfig.focusManager.set(component, first);
   });
 };

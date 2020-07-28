@@ -53,7 +53,7 @@ UnitTest.asynctest('AlertBanner component Test', (success, failure) => {
             })
           ]
         })),
-        component.element()
+        component.element
       )
     ],
     success,

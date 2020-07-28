@@ -30,7 +30,7 @@ const sDismissOn = (label: string, gui: GuiSystem, selector: string) => Logger.t
   'Broadcast dismiss: ' + label,
   GeneralSteps.sequence([
     Step.sync(() => {
-      const item = UiFinder.findIn(gui.element(), selector).getOrDie();
+      const item = UiFinder.findIn(gui.element, selector).getOrDie();
 
       dismiss(gui, item);
     })

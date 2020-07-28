@@ -67,7 +67,7 @@ UnitTest.asynctest('Browser Test: .ui.button.ButtonTypeTest', (success, failure)
       label,
       Step.sync(() => {
         const button = memento.get(component);
-        Assertions.assertEq('"type" attribute', expected, Attribute.get(button.element(), 'type'));
+        Assertions.assertEq('"type" attribute', expected, Attribute.get(button.element, 'type'));
       })
     );
 

@@ -341,14 +341,14 @@ const setup = (editor: Editor): RenderInfo => {
     if (!editor.inline) {
       // Update the width
       if (Css.isValidValue('div', 'width', parsedWidth)) {
-        Css.set(outerContainer.element(), 'width', parsedWidth);
+        Css.set(outerContainer.element, 'width', parsedWidth);
       }
 
       // Update the height
       if (Css.isValidValue('div', 'height', parsedHeight)) {
-        Css.set(outerContainer.element(), 'height', parsedHeight);
+        Css.set(outerContainer.element, 'height', parsedHeight);
       } else {
-        Css.set(outerContainer.element(), 'height', '200px');
+        Css.set(outerContainer.element, 'height', '200px');
       }
     }
 

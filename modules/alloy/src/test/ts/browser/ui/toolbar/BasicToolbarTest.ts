@@ -83,7 +83,7 @@ UnitTest.asynctest('BasicToolbarTest', (success, failure) => {
             })
           ]
         })),
-        component.element()
+        component.element
       ),
 
       Step.sync(() => {
@@ -126,7 +126,7 @@ UnitTest.asynctest('BasicToolbarTest', (success, failure) => {
             })
           ]
         })),
-        component.element()
+        component.element
       ),
 
       Step.sync(() => {
@@ -179,7 +179,7 @@ UnitTest.asynctest('BasicToolbarTest', (success, failure) => {
             })
           ]
         })),
-        component.element()
+        component.element
       ),
 
       GuiSetup.mRemoveStyles

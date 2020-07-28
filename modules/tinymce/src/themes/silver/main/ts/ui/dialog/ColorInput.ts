@@ -55,7 +55,7 @@ export const renderColorInput = (spec: ColorInputSpec, sharedBackstage: UiFactor
       Tabstopping.config({ }),
       Invalidating.config({
         invalidClass: 'tox-textbox-field-invalid',
-        getRoot: (comp) => Traverse.parent(comp.element()),
+        getRoot: (comp) => Traverse.parent(comp.element),
         notify: {
           onValid: (comp) => {
             // onValid should pass through the value here
@@ -162,7 +162,7 @@ export const renderColorInput = (spec: ColorInputSpec, sharedBackstage: UiFactor
       AddEventsBehaviour.config('form-field-events', [
         AlloyEvents.run<ColorInputChangeEvent>(colorInputChangeEvent, (comp, se) => {
           memColorButton.getOpt(comp).each((colorButton) => {
-            Css.set(colorButton.element(), 'background-color', se.event().color());
+            Css.set(colorButton.element, 'background-color', se.event().color());
           });
           AlloyTriggers.emitWith(comp, formChangeEvent, { name: spec.name } );
         }),

@@ -39,7 +39,7 @@ UnitTest.asynctest('Browser Test: events.AttachingEventTest', (success, failure)
         events: AlloyEvents.derive([
           AlloyEvents.runOnAttached((comp, simulatedEvent) => {
             simulatedEvent.stop();
-            const parent = Traverse.parent(comp.element()).filter(SugarNode.isElement).getOrDie(
+            const parent = Traverse.parent(comp.element).filter(SugarNode.isElement).getOrDie(
               'At attachedToDom, a DOM parent must exist'
             );
             store.adder('attached-to:' + Attribute.get(parent, 'class'))();
@@ -47,7 +47,7 @@ UnitTest.asynctest('Browser Test: events.AttachingEventTest', (success, failure)
 
           AlloyEvents.runOnDetached((comp, simulatedEvent) => {
             simulatedEvent.stop();
-            const parent = Traverse.parent(comp.element()).filter(SugarNode.isElement).getOrDie(
+            const parent = Traverse.parent(comp.element).filter(SugarNode.isElement).getOrDie(
               'At detachedFromDom, a DOM parent must exist'
             );
             store.adder('detached-from:' + Attribute.get(parent, 'class'))();
@@ -69,7 +69,7 @@ UnitTest.asynctest('Browser Test: events.AttachingEventTest', (success, failure)
       Assert.eq(
         'Checking that the component has no size',
         0,
-        wrapper.element().dom.getBoundingClientRect().width
+        wrapper.element.dom.getBoundingClientRect().width
       );
     }),
 
@@ -86,7 +86,7 @@ UnitTest.asynctest('Browser Test: events.AttachingEventTest', (success, failure)
       Assert.eq(
         'Even though added to system, not added to DOM yet so still size 0',
         0,
-        wrapper.element().dom.getBoundingClientRect().width
+        wrapper.element.dom.getBoundingClientRect().width
       );
     }),
     store.sAssertEq('After adding to system and waiting, still only init should have fired', [ 'init' ]),
@@ -100,7 +100,7 @@ UnitTest.asynctest('Browser Test: events.AttachingEventTest', (success, failure)
       Assert.eq(
         'Now added to the DOM, so should have size 100',
         100,
-        wrapper.element().dom.getBoundingClientRect().width
+        wrapper.element.dom.getBoundingClientRect().width
       );
     }),
 

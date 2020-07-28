@@ -14,7 +14,7 @@ const getOffset = <I extends SelectionAnchor | NodeAnchor>(component: AlloyCompo
 
   const hasSameOwner = (frame: SugarElement<HTMLFrameElement>) => {
     const frameOwner = Traverse.owner(frame);
-    const compOwner = Traverse.owner(component.element());
+    const compOwner = Traverse.owner(component.element);
     return Compare.eq(frameOwner, compOwner);
   };
 
@@ -23,7 +23,7 @@ const getOffset = <I extends SelectionAnchor | NodeAnchor>(component: AlloyCompo
 };
 
 const getRootPoint = <I extends SelectionAnchor | NodeAnchor>(component: AlloyComponent, origin: OriginAdt, anchorInfo: I): CssPosition.CssPositionAdt => {
-  const doc = Traverse.owner(component.element());
+  const doc = Traverse.owner(component.element);
   const outerScroll = Scroll.get(doc);
 
   const offset = getOffset(component, origin, anchorInfo).getOr(outerScroll);

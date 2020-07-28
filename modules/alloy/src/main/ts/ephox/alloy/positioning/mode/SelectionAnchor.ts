@@ -58,7 +58,7 @@ const placement = (component: AlloyComponent, anchorInfo: SelectionAnchor, origi
 
   const targetElement: Optional<SugarElement> = getAnchorSelection(win, anchorInfo)
     .bind((sel) => SugarNode.isElement(sel.start()) ? Optional.some(sel.start()) : Traverse.parentNode(sel.start()));
-  const elem = targetElement.getOr(component.element());
+  const elem = targetElement.getOr(component.element);
 
   return ContentAnchorCommon.calcNewAnchor(selectionBox, rootPoint, anchorInfo, origin, elem);
 };

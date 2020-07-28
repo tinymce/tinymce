@@ -5,15 +5,15 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Behaviour, Slider, Toggling, SketchSpec } from '@ephox/alloy';
+import { Behaviour, SketchSpec, Slider, Toggling } from '@ephox/alloy';
 import { Css } from '@ephox/sugar';
+import Editor from 'tinymce/core/api/Editor';
 
 import * as Receivers from '../channels/Receivers';
 import * as Styles from '../style/Styles';
+import { MobileRealm } from '../ui/IosRealm';
 import * as UiDomFactory from '../util/UiDomFactory';
 import * as ToolbarWidgets from './ToolbarWidgets';
-import Editor from 'tinymce/core/api/Editor';
-import { MobileRealm } from '../ui/IosRealm';
 
 const BLACK = -1;
 
@@ -32,12 +32,12 @@ const makeSlider = (spec): SketchSpec => {
   // Does not fire change intentionally.
   const onInit = (slider, thumb, spectrum, value): void => {
     const color = getColor(value.x());
-    Css.set(thumb.element(), 'background-color', color);
+    Css.set(thumb.element, 'background-color', color);
   };
 
   const onChange = (slider, thumb, value): void => {
     const color = getColor(value.x());
-    Css.set(thumb.element(), 'background-color', color);
+    Css.set(thumb.element, 'background-color', color);
     spec.onChange(slider, thumb, color);
   };
 

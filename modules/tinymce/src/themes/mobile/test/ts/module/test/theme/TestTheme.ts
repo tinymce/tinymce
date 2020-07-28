@@ -37,8 +37,8 @@ const setup = function (info, onSuccess, onFailure) {
   alloy.add(socket);
 
   const realm: MobileRealm = {
-    dropup: Fun.die('not implemented'),
-    element: Fun.die('not implemented'),
+    dropup: null,
+    element: null,
     exit: Fun.die('not implemented'),
     focusToolbar: Fun.die('not implemented'),
     init: Fun.die('not implemented'),
@@ -46,8 +46,8 @@ const setup = function (info, onSuccess, onFailure) {
     setContextToolbar: Fun.die('not implemented'),
     setToolbarGroups: Fun.die('not implemented'),
     updateMode: Fun.die('not implemented'),
-    system: Fun.constant(alloy),
-    socket: Fun.constant(socket)
+    system: alloy,
+    socket
   };
 
   ThemeManager.add(strName, function (editor) {
@@ -55,8 +55,8 @@ const setup = function (info, onSuccess, onFailure) {
       renderUI() {
         editor.fire('SkinLoaded');
         return {
-          iframeContainer: socket.element().dom,
-          editorContainer: alloy.element().dom
+          iframeContainer: socket.element.dom,
+          editorContainer: alloy.element.dom
         };
       }
     };

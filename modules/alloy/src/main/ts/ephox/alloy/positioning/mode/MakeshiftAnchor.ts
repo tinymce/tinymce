@@ -15,7 +15,7 @@ const placement = (component: AlloyComponent, anchorInfo: MakeshiftAnchor, origi
   const anchorBox = bounds(pos.left(), pos.top(), anchorInfo.width, anchorInfo.height);
 
   const layouts = AnchorLayouts.get(
-    component.element(),
+    component.element,
     anchorInfo,
     Layout.all(),
     Layout.allRtl(),

@@ -63,7 +63,7 @@ const triggerTab = function (placeholder, shiftKey) {
 };
 
 const onFocus = function (container, targetComp) {
-  const target = targetComp.element();
+  const target = targetComp.element;
   // If focus has shifted naturally to a before object, the tab direction is backwards.
   if (Class.has(target, beforeObject)) { triggerTab(container, true); } else if (Class.has(target, afterObject)) { triggerTab(container, false); }
 };

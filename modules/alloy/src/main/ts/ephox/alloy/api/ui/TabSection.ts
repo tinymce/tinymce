@@ -25,8 +25,8 @@ const factory: CompositeSketchFactory<TabSectionDetail, TabSectionSpec> = (detai
         const panel = tabData.view();
 
         // Update the tabview to refer to the current tab.
-        Attribute.getOpt(button.element(), 'id').each((id) => {
-          Attribute.set(tabview.element(), 'aria-labelledby', id);
+        Attribute.getOpt(button.element, 'id').each((id) => {
+          Attribute.set(tabview.element, 'aria-labelledby', id);
         });
         Replacing.set(tabview, panel);
         detail.onChangeTab(tabview, button, panel);

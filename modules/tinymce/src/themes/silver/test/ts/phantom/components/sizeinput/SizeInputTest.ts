@@ -28,7 +28,7 @@ UnitTest.asynctest('SizeInput component Test', (success, failure) => {
       const sAssertDimensions = (width: string, height: string) => RepresentingSteps.sAssertValue('dimensions', { width, height }, component);
 
       const sAssertLocked = (locked: boolean) =>
-        Chain.asStep(component.element(), [
+        Chain.asStep(component.element, [
           UiFinder.cFindIn('.tox-lock'),
           Chain.op((lock) => {
             Assertions.assertStructure(
@@ -99,19 +99,19 @@ UnitTest.asynctest('SizeInput component Test', (success, failure) => {
               })
             ]
           })),
-          component.element()
+          component.element
         ),
         sAssertLocked(true),
         sSetDimensions('100px', '200px'),
-        FocusTools.sSetFocus('Focusing the first field', component.element(), 'input:first'),
+        FocusTools.sSetFocus('Focusing the first field', component.element, 'input:first'),
         FocusTools.sSetActiveValue(doc, '50'),
         sTriggerInput,
         sAssertDimensions('50', '100px'),
         // toggle off the lock
-        Mouse.sClickOn(component.element(), 'button.tox-lock'),
+        Mouse.sClickOn(component.element, 'button.tox-lock'),
         sAssertLocked(false),
         // now when we update the first field it will not update the second field
-        FocusTools.sSetFocus('Focusing the first field', component.element(), 'input:first'),
+        FocusTools.sSetFocus('Focusing the first field', component.element, 'input:first'),
         FocusTools.sSetActiveValue(doc, '300px'),
         sTriggerInput,
         sAssertDimensions('300px', '100px')

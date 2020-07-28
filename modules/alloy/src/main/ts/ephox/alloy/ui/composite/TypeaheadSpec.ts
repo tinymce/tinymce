@@ -58,7 +58,7 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
         Highlighting.getHighlighted(menu).fold(() => {
           highlighter(menu);
         }, () => {
-          AlloyTriggers.dispatchEvent(sandbox, menu.element(), 'keydown', simulatedEvent);
+          AlloyTriggers.dispatchEvent(sandbox, menu.element, 'keydown', simulatedEvent);
         });
       });
     } else {
@@ -90,14 +90,14 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
       onSetValue: detail.onSetValue,
       store: {
         mode: 'dataset',
-        getDataKey: (comp) => Value.get(comp.element()),
+        getDataKey: (comp) => Value.get(comp.element),
         // This really needs to be configurable
         getFallbackEntry: (itemString) => ({
           value: itemString,
           meta: { }
         }),
         setValue: (comp, data) => {
-          Value.set(comp.element(), detail.model.getDisplayText(data));
+          Value.set(comp.element, detail.model.getDisplayText(data));
         },
         ...detail.initialData.map((d) => Objects.wrap('initialValue', d)).getOr({ })
       }
@@ -114,7 +114,7 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
         const focusInInput = Focusing.isFocused(component);
         // You don't want it to change when something else has triggered the change.
         if (focusInInput) {
-          if (Value.get(component.element()).length >= detail.minChars) {
+          if (Value.get(component.element).length >= detail.minChars) {
 
             const previousValue = Composing.getCurrent(sandbox).bind((menu) => Highlighting.getHighlighted(menu).map(Representing.getValue) as Optional<TypeaheadData>);
 
@@ -226,7 +226,7 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
       AlloyEvents.run(SystemEvents.postBlur(), (typeahead) => {
         const sandbox = Coupling.getCoupled(typeahead, 'sandbox');
         // Only close the sandbox if the focus isn't inside it!
-        if (Focus.search(sandbox.element()).isNone()) {
+        if (Focus.search(sandbox.element).isNone()) {
           Sandboxing.close(sandbox);
         }
       })

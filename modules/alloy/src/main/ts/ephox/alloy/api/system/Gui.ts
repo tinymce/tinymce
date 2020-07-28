@@ -16,22 +16,22 @@ import * as Attachment from './Attachment';
 import { AlloySystemApi } from './SystemApi';
 
 export interface GuiSystem {
-  root: () => AlloyComponent;
-  element: () => SugarElement;
-  destroy: () => void;
-  add: (component: AlloyComponent) => void;
-  remove: (component: AlloyComponent) => void;
-  getByUid: (uid: string) => Result<AlloyComponent, Error>;
-  getByDom: (element: SugarElement) => Result<AlloyComponent, Error>;
+  readonly root: AlloyComponent;
+  readonly element: SugarElement;
+  readonly destroy: () => void;
+  readonly add: (component: AlloyComponent) => void;
+  readonly remove: (component: AlloyComponent) => void;
+  readonly getByUid: (uid: string) => Result<AlloyComponent, Error>;
+  readonly getByDom: (element: SugarElement) => Result<AlloyComponent, Error>;
 
-  addToWorld: (comp: AlloyComponent) => void;
-  removeFromWorld: (comp: AlloyComponent) => void;
+  readonly addToWorld: (comp: AlloyComponent) => void;
+  readonly removeFromWorld: (comp: AlloyComponent) => void;
 
-  broadcast: <T>(message: T) => void;
-  broadcastOn: <T>(channels: string[], message: T) => void;
+  readonly broadcast: <T>(message: T) => void;
+  readonly broadcastOn: <T>(channels: string[], message: T) => void;
 
   // TODO FIXME this is no longer tested directly
-  broadcastEvent: (eventName: string, event: EventArgs) => void;
+  readonly broadcastEvent: (eventName: string, event: EventArgs) => void;
 }
 
 export type message = Record<string, any>;
@@ -48,7 +48,7 @@ const create = (): GuiSystem => {
 };
 
 const takeover = (root: AlloyComponent): GuiSystem => {
-  const isAboveRoot = (el: SugarElement): boolean => Traverse.parent(root.element()).fold(
+  const isAboveRoot = (el: SugarElement): boolean => Traverse.parent(root.element).fold(
     () => true,
     (parent) => Compare.eq(el, parent)
   );
@@ -57,7 +57,7 @@ const takeover = (root: AlloyComponent): GuiSystem => {
 
   const lookup = (eventName: string, target: SugarElement) => registry.find(isAboveRoot, eventName, target);
 
-  const domEvents = GuiEvents.setup(root.element(), {
+  const domEvents = GuiEvents.setup(root.element, {
     triggerEvent(eventName: string, event: EventArgs) {
       return Debugging.monitorEvent(eventName, event.target(), (logger: Debugging.DebuggerLogger) => Triggers.triggerUntilStopped(lookup, eventName, event, logger));
     }
@@ -93,7 +93,7 @@ const takeover = (root: AlloyComponent): GuiSystem => {
     },
 
     triggerEscape(comp, simulatedEvent) {
-      systemApi.triggerEvent('keydown', comp.element(), simulatedEvent.event());
+      systemApi.triggerEvent('keydown', comp.element, simulatedEvent.event());
     },
 
     getByUid(uid) {
@@ -121,15 +121,15 @@ const takeover = (root: AlloyComponent): GuiSystem => {
 
   const addToWorld = (component: AlloyComponent) => {
     component.connect(systemApi);
-    if (!SugarNode.isText(component.element())) {
+    if (!SugarNode.isText(component.element)) {
       registry.register(component);
       Arr.each(component.components(), addToWorld);
-      systemApi.triggerEvent(SystemEvents.systemInit(), component.element(), { target: Fun.constant(component.element()) });
+      systemApi.triggerEvent(SystemEvents.systemInit(), component.element, { target: Fun.constant(component.element) });
     }
   };
 
   const removeFromWorld = (component: AlloyComponent) => {
-    if (!SugarNode.isText(component.element())) {
+    if (!SugarNode.isText(component.element)) {
       Arr.each(component.components(), removeFromWorld);
       registry.unregister(component);
     }
@@ -147,7 +147,7 @@ const takeover = (root: AlloyComponent): GuiSystem => {
   const destroy = () => {
     // INVESTIGATE: something with registry?
     domEvents.unbind();
-    Remove.remove(root.element());
+    Remove.remove(root.element);
   };
 
   const broadcastData = (data: { universal: () => boolean; data: () => any; channels?: () => string[] }) => {
@@ -195,7 +195,7 @@ const takeover = (root: AlloyComponent): GuiSystem => {
   addToWorld(root);
 
   return {
-    root: Fun.constant(root),
+    root,
     element: root.element,
     destroy,
     add,

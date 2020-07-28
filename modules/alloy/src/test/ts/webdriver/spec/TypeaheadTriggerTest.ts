@@ -38,7 +38,7 @@ UnitTest.asynctest('TypeaheadTriggerTest (webdriver)', (success, failure) => {
             },
 
             fetch(input: AlloyComponent) {
-              const text = Value.get(input.element());
+              const text = Value.get(input.element);
               const future = Future.pure([
                 { type: 'item', data: { value: text + '1', meta: { text: text + '1' }}},
                 { type: 'item', data: { value: text + '2', meta: { text: text + '2' }}}
@@ -76,14 +76,14 @@ UnitTest.asynctest('TypeaheadTriggerTest (webdriver)', (success, failure) => {
     const steps = TestTypeaheadSteps(doc, gui, typeahead);
 
     return [
-      FocusTools.sSetFocus('Focusing typeahead', gui.element(), 'input'),
+      FocusTools.sSetFocus('Focusing typeahead', gui.element, 'input'),
 
       GuiSetup.mAddStyles(doc, [
         '.test-typeahead-selected-item { background-color: #cadbee; }'
       ]),
 
       steps.sAssertValue('Initial value of typeahead', 'initial-value'),
-      UiControls.sSetValue(typeahead.element(), 'a-'),
+      UiControls.sSetValue(typeahead.element, 'a-'),
 
       // check that the typeahead is not open.
       steps.sWaitForNoMenu('Initially, there should be no menu'),

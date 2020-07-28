@@ -47,7 +47,7 @@ const setup = (editor: Editor) => {
 };
 
 const getApi = (comp: AlloyComponent): BridgeSidebar.SidebarInstanceApi => ({
-  element: (): HTMLElement => comp.element().dom
+  element: (): HTMLElement => comp.element.dom
 });
 
 const makePanels = (parts: SlotContainerTypes.SlotContainerParts, panelConfigs: SidebarConfig) => {
@@ -189,10 +189,10 @@ const renderSidebar = (spec) => ({
             AlloyTriggers.emit(slider, autoSize);
           },
           onStartGrow: (slider: AlloyComponent) => {
-            AlloyTriggers.emitWith(slider, fixSize, { width: Css.getRaw(slider.element(), 'width').getOr('') });
+            AlloyTriggers.emitWith(slider, fixSize, { width: Css.getRaw(slider.element, 'width').getOr('') });
           },
           onStartShrink: (slider: AlloyComponent) => {
-            AlloyTriggers.emitWith(slider, fixSize, { width: Width.get(slider.element()) + 'px' });
+            AlloyTriggers.emitWith(slider, fixSize, { width: Width.get(slider.element) + 'px' });
           }
         }),
         Replacing.config({}),
@@ -209,10 +209,10 @@ const renderSidebar = (spec) => ({
     ComposingConfigs.childAt(0),
     AddEventsBehaviour.config('sidebar-sliding-events', [
       AlloyEvents.run<FixSizeEvent>(fixSize, (comp, se) => {
-        Css.set(comp.element(), 'width', se.event().width());
+        Css.set(comp.element, 'width', se.event().width());
       }),
       AlloyEvents.run(autoSize, (comp, _se) => {
-        Css.remove(comp.element(), 'width');
+        Css.remove(comp.element, 'width');
       })
     ])
   ])

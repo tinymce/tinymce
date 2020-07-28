@@ -81,7 +81,7 @@ UnitTest.asynctest('SplitSlidingToolbarTest', (success, failure) => {
     });
 
     const sResetWidth = (px: string) => Step.sync(() => {
-      Css.set(component.element(), 'width', px);
+      Css.set(component.element, 'width', px);
       SplitSlidingToolbar.refresh(component);
     });
 
@@ -131,7 +131,7 @@ UnitTest.asynctest('SplitSlidingToolbarTest', (success, failure) => {
           })
         ]
       })),
-      component.element()
+      component.element
     );
 
     return [

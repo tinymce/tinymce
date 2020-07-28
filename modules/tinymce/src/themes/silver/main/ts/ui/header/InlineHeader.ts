@@ -50,7 +50,7 @@ export const InlineHeader = (editor: Editor, targetElm: SugarElement, uiComponen
   const calcToolbarOffset = (toolbar: Optional<AlloyComponent>) => isSplitToolbar ?
     toolbar.fold(() => 0, (tbar) =>
       // If we have an overflow toolbar, we need to offset the positioning by the height of the overflow toolbar
-      tbar.components().length > 1 ? Height.get(tbar.components()[1].element()) : 0
+      tbar.components().length > 1 ? Height.get(tbar.components()[1].element) : 0
     ) : 0;
 
   const calcMode = (container: AlloyComponent): 'top' | 'bottom' => {
@@ -58,7 +58,7 @@ export const InlineHeader = (editor: Editor, targetElm: SugarElement, uiComponen
       case ToolbarLocation.auto:
         const toolbar = OuterContainer.getToolbar(outerContainer);
         const offset = calcToolbarOffset(toolbar);
-        const toolbarHeight = Height.get(container.element()) - offset;
+        const toolbarHeight = Height.get(container.element) - offset;
         const targetBounds = Boxes.box(targetElm);
 
         // Determine if the toolbar has room to render at the top/bottom of the document
@@ -98,7 +98,7 @@ export const InlineHeader = (editor: Editor, targetElm: SugarElement, uiComponen
 
     // Update the vertical menu direction
     const verticalDir = isPositionedAtTop() ? VerticalDir.AttributeValue.TopToBottom : VerticalDir.AttributeValue.BottomToTop;
-    Attribute.set(container.element(), VerticalDir.Attribute, verticalDir);
+    Attribute.set(container.element, VerticalDir.Attribute, verticalDir);
   };
 
   const updateChromeWidth = () => {
@@ -108,7 +108,7 @@ export const InlineHeader = (editor: Editor, targetElm: SugarElement, uiComponen
       const bodyMargin = Utils.parseToInt(Css.get(SugarBody.body(), 'margin-left')).getOr(0);
       return Width.get(SugarBody.body()) - SugarLocation.absolute(targetElm).left() + bodyMargin;
     });
-    Css.set(floatContainer.get().element(), 'max-width', maxWidth + 'px');
+    Css.set(floatContainer.get().element, 'max-width', maxWidth + 'px');
   };
 
   const updateChromePosition = () => {
@@ -119,10 +119,10 @@ export const InlineHeader = (editor: Editor, targetElm: SugarElement, uiComponen
     // so we need to round this to account for that.
     const targetBounds = Boxes.box(targetElm);
     const top = isPositionedAtTop() ?
-      Math.max(targetBounds.y - Height.get(floatContainer.get().element()) + offset, 0) :
+      Math.max(targetBounds.y - Height.get(floatContainer.get().element) + offset, 0) :
       targetBounds.bottom;
 
-    Css.setAll(outerContainer.element(), {
+    Css.setAll(outerContainer.element, {
       position: 'absolute',
       top: Math.round(top) + 'px',
       left: Math.round(targetBounds.x) + 'px'
@@ -189,9 +189,9 @@ export const InlineHeader = (editor: Editor, targetElm: SugarElement, uiComponen
 
   const show = () => {
     visible.set(true);
-    Css.set(outerContainer.element(), 'display', 'flex');
+    Css.set(outerContainer.element, 'display', 'flex');
     DOM.addClass(editor.getBody(), 'mce-edit-focus');
-    Css.remove(uiMothership.element(), 'display');
+    Css.remove(uiMothership.element, 'display');
     updateMode(false);
     updateChromeUi();
   };
@@ -199,10 +199,10 @@ export const InlineHeader = (editor: Editor, targetElm: SugarElement, uiComponen
   const hide = () => {
     visible.set(false);
     if (uiComponents.outerContainer) {
-      Css.set(outerContainer.element(), 'display', 'none');
+      Css.set(outerContainer.element, 'display', 'none');
       DOM.removeClass(editor.getBody(), 'mce-edit-focus');
     }
-    Css.set(uiMothership.element(), 'display', 'none');
+    Css.set(uiMothership.element, 'display', 'none');
   };
 
   return {

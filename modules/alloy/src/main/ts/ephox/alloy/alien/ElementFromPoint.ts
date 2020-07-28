@@ -9,7 +9,7 @@ const elementFromPoint = (doc: SugarElement<HTMLDocument>, x: number, y: number)
 ).map(SugarElement.fromDom);
 
 const insideComponent = (component: AlloyComponent, x: number, y: number): Optional<SugarElement> => {
-  const isInside = (node: SugarElement) => component.element().dom.contains(node.dom);
+  const isInside = (node: SugarElement) => component.element.dom.contains(node.dom);
 
   const hasValidRect = (node: SugarElement): boolean => {
     const elem: Optional<SugarElement> = SugarNode.isText(node) ? Traverse.parent(node) : Optional.some(node);
@@ -19,7 +19,7 @@ const insideComponent = (component: AlloyComponent, x: number, y: number): Optio
     });
   };
 
-  const doc = Traverse.owner(component.element());
+  const doc = Traverse.owner(component.element);
   return elementFromPoint(doc, x, y).filter(isInside).filter(hasValidRect);
 };
 

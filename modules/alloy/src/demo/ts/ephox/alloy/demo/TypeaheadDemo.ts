@@ -18,7 +18,7 @@ import * as DemoRenders from './forms/DemoRenders';
 export default (): void => {
   const gui = Gui.create();
   const body = SugarElement.fromDom(document.body);
-  Class.add(gui.element(), 'gui-root-demo-container');
+  Class.add(gui.element, 'gui-root-demo-container');
   Attachment.attachSystem(body, gui);
 
   const sink = DemoSink.make();
@@ -84,7 +84,7 @@ export default (): void => {
     model,
 
     fetch(input) {
-      const inputValue = Value.get(input.element());
+      const inputValue = Value.get(input.element);
       console.log('text', inputValue);
       const matching: DemoRenders.DemoItems[] = Arr.bind(dataset, (d) => {
         const lText = d.text.toLowerCase();

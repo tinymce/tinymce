@@ -12,8 +12,8 @@ import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 export default (): void => {
   const gui = Gui.create();
   const body = SugarElement.fromDom(document.body);
-  Class.add(gui.element(), 'gui-root-demo-container');
-  // Css.set(gui.element(), 'direction', 'rtl');
+  Class.add(gui.element, 'gui-root-demo-container');
+  // Css.set(gui.element, 'direction', 'rtl');
 
   Attachment.attachSystem(body, gui);
   Css.set(body, 'margin-bottom', '2000px');
@@ -82,7 +82,7 @@ export default (): void => {
         getImage(component) {
           return {
             element() {
-              const clone = Replication.deep(component.element());
+              const clone = Replication.deep(component.element);
               Css.set(clone, 'background-color', 'blue');
               return clone;
             },
@@ -94,13 +94,13 @@ export default (): void => {
         // console.log('canDrag');
           true,
         onDragstart: (_component, _simulatedEvent) => {
-          // console.log('onDragstart', component.element().dom);
+          // console.log('onDragstart', component.element.dom);
         },
         onDragover: (_component, _simulatedEvent) => {
-          // console.log('onDragover', component.element().dom);
+          // console.log('onDragover', component.element.dom);
         },
         onDragend: (_component, _simulatedEvent) => {
-          // console.log('onDragend', component.element().dom);
+          // console.log('onDragend', component.element.dom);
         }
       })
     ])

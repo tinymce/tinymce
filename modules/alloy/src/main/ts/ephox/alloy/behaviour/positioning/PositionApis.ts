@@ -21,8 +21,8 @@ const getFixedOrigin = (): Origins.OriginAdt => {
 };
 
 const getRelativeOrigin = (component: AlloyComponent): Origins.OriginAdt => {
-  const position = SugarLocation.absolute(component.element());
-  const bounds = component.element().dom.getBoundingClientRect();
+  const position = SugarLocation.absolute(component.element);
+  const bounds = component.element.dom.getBoundingClientRect();
 
   // We think that this just needs to be kept consistent with Boxes.win. If we remove the scroll values from Boxes.win, we
   // should change this to just bounds.left and bounds.top from getBoundingClientRect
@@ -31,7 +31,7 @@ const getRelativeOrigin = (component: AlloyComponent): Origins.OriginAdt => {
 
 const place = (component: AlloyComponent, origin: Origins.OriginAdt, anchoring: Anchoring, getBounds: Optional<() => Bounds>, placee: AlloyComponent): void => {
   const anchor = Anchor.box(anchoring.anchorBox, origin);
-  SimpleLayout.simple(anchor, placee.element(), anchoring.bubble, anchoring.layouts, getBounds, anchoring.overrides);
+  SimpleLayout.simple(anchor, placee.element, anchoring.bubble, anchoring.layouts, getBounds, anchoring.overrides);
 };
 
 const position = (component: AlloyComponent, posConfig: PositioningConfig, posState: Stateless, anchor: AnchorSpec, placee: AlloyComponent): void => {
@@ -50,10 +50,10 @@ const positionWithinBounds = (component: AlloyComponent, posConfig: PositioningC
   AriaFocus.preserve(() => {
     // We set it to be fixed, so that it doesn't interfere with the layout of anything
     // when calculating anchors
-    Css.set(placee.element(), 'position', 'fixed');
+    Css.set(placee.element, 'position', 'fixed');
 
-    const oldVisibility = Css.getRaw(placee.element(), 'visibility');
-    Css.set(placee.element(), 'visibility', 'hidden');
+    const oldVisibility = Css.getRaw(placee.element, 'visibility');
+    Css.set(placee.element, 'visibility', 'hidden');
 
     // We need to calculate the origin (esp. the bounding client rect) *after* we have done
     // all the preprocessing of the component and placee. Otherwise, the relative positions
@@ -70,20 +70,20 @@ const positionWithinBounds = (component: AlloyComponent, posConfig: PositioningC
     });
 
     oldVisibility.fold(() => {
-      Css.remove(placee.element(), 'visibility');
+      Css.remove(placee.element, 'visibility');
     }, (vis) => {
-      Css.set(placee.element(), 'visibility', vis);
+      Css.set(placee.element, 'visibility', vis);
     });
 
     // We need to remove position: fixed put on by above code if it is not needed.
     if (
-      Css.getRaw(placee.element(), 'left').isNone() &&
-      Css.getRaw(placee.element(), 'top').isNone() &&
-      Css.getRaw(placee.element(), 'right').isNone() &&
-      Css.getRaw(placee.element(), 'bottom').isNone() &&
-      Css.getRaw(placee.element(), 'position').is('fixed')
-    ) { Css.remove(placee.element(), 'position'); }
-  }, placee.element());
+      Css.getRaw(placee.element, 'left').isNone() &&
+      Css.getRaw(placee.element, 'top').isNone() &&
+      Css.getRaw(placee.element, 'right').isNone() &&
+      Css.getRaw(placee.element, 'bottom').isNone() &&
+      Css.getRaw(placee.element, 'position').is('fixed')
+    ) { Css.remove(placee.element, 'position'); }
+  }, placee.element);
 };
 
 const getMode = (component: AlloyComponent, pConfig: PositioningConfig, _pState: Stateless): string => pConfig.useFixed() ? 'fixed' : 'absolute';

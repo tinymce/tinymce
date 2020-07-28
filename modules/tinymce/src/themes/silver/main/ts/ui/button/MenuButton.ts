@@ -24,7 +24,7 @@ const getMenuButtonApi = (component: AlloyComponent): Toolbar.ToolbarMenuButtonI
   setActive: (state: boolean) => {
     // Note: We can't use the toggling behaviour here, as the dropdown for the menu also relies on it.
     // As such, we'll need to do this manually
-    const elm = component.element();
+    const elm = component.element;
     if (state) {
       Class.add(elm, ToolbarButtonClasses.Ticked);
       Attribute.set(elm, 'aria-pressed', true);
@@ -33,7 +33,7 @@ const getMenuButtonApi = (component: AlloyComponent): Toolbar.ToolbarMenuButtonI
       Attribute.remove(elm, 'aria-pressed');
     }
   },
-  isActive: () => Class.has(component.element(), ToolbarButtonClasses.Ticked)
+  isActive: () => Class.has(component.element, ToolbarButtonClasses.Ticked)
 });
 
 const renderMenuButton = (spec: MenuButtonSpec, prefix: string, backstage: UiFactoryBackstage, role: Optional<string>): SketchSpec => renderCommonDropdown({
@@ -79,7 +79,7 @@ const getFetch = (items: StoragedMenuItem[], getButton: () => MementoRecord, bac
     // Fire the form action event
     backstage.shared.getSink().each((sink) => {
       getButton().getOpt(sink).each((orig) => {
-        Focus.focus(orig.element());
+        Focus.focus(orig.element);
         AlloyTriggers.emitWith(orig, formActionEvent, {
           name: item.name,
           value: item.storage.get()

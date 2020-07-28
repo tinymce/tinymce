@@ -64,18 +64,18 @@ const getState = (_sandbox: AlloyComponent, _sConfig: SandboxingConfig, sState: 
   sState.get();
 
 const store = (sandbox: AlloyComponent, cssKey: string, attr: string, newValue: string) => {
-  Css.getRaw(sandbox.element(), cssKey).fold(() => {
-    Attribute.remove(sandbox.element(), attr);
+  Css.getRaw(sandbox.element, cssKey).fold(() => {
+    Attribute.remove(sandbox.element, attr);
   }, (v) => {
-    Attribute.set(sandbox.element(), attr, v);
+    Attribute.set(sandbox.element, attr, v);
   });
-  Css.set(sandbox.element(), cssKey, newValue);
+  Css.set(sandbox.element, cssKey, newValue);
 };
 
 const restore = (sandbox: AlloyComponent, cssKey: string, attr: string) => {
-  Attribute.getOpt(sandbox.element(), attr).fold(
-    () => Css.remove(sandbox.element(), cssKey),
-    (oldValue) => Css.set(sandbox.element(), cssKey, oldValue)
+  Attribute.getOpt(sandbox.element, attr).fold(
+    () => Css.remove(sandbox.element, cssKey),
+    (oldValue) => Css.set(sandbox.element, cssKey, oldValue)
   );
 };
 
@@ -83,7 +83,7 @@ const cloak = (sandbox: AlloyComponent, sConfig: SandboxingConfig, _sState: Sand
   const sink = sConfig.getAttachPoint(sandbox);
   // Use the positioning mode of the sink, so that it does not interfere with the sink's positioning
   // We add it here to stop it causing layout problems.
-  Css.set(sandbox.element(), 'position', Positioning.getMode(sink));
+  Css.set(sandbox.element, 'position', Positioning.getMode(sink));
   store(sandbox, 'visibility', sConfig.cloakVisibilityAttr, 'hidden');
 };
 
@@ -93,10 +93,10 @@ const hasPosition = (element: SugarElement) => Arr.exists(
 );
 
 const decloak = (sandbox: AlloyComponent, sConfig: SandboxingConfig, _sState: SandboxingState) => {
-  if (!hasPosition(sandbox.element())) {
+  if (!hasPosition(sandbox.element)) {
     // If a position value was not added to the sandbox during cloaking, remove it
     // otherwise certain position values (absolute, relative) will impact the child that _was_ positioned
-    Css.remove(sandbox.element(), 'position');
+    Css.remove(sandbox.element, 'position');
   }
 
   restore(sandbox, 'visibility', sConfig.cloakVisibilityAttr);

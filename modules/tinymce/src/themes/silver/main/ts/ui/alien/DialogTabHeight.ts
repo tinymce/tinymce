@@ -95,7 +95,7 @@ const setMode = (allTabs: Array<Partial<TabbarTypes.TabButtonWithViewSpec>>) => 
 
     const extraEvents = [
       AlloyEvents.runOnAttached((comp) => {
-        const dialog = comp.element();
+        const dialog = comp.element;
         getTabview(dialog).each((tabview) => {
           Css.set(tabview, 'visibility', 'hidden');
 
@@ -123,13 +123,13 @@ const setMode = (allTabs: Array<Partial<TabbarTypes.TabButtonWithViewSpec>>) => 
         });
       }),
       AlloyEvents.run(SystemEvents.windowResize(), (comp) => {
-        const dialog = comp.element();
+        const dialog = comp.element;
         getTabview(dialog).each((tabview) => {
           updateTabviewHeight(dialog, tabview, maxTabHeight);
         });
       }),
       AlloyEvents.run(formResizeEvent, (comp, _se) => {
-        const dialog = comp.element();
+        const dialog = comp.element;
         getTabview(dialog).each((tabview) => {
           const oldFocus = Focus.active();
           Css.set(tabview, 'visibility', 'hidden');

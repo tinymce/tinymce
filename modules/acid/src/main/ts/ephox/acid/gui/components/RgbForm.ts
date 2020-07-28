@@ -170,7 +170,7 @@ const rgbFormFactory = (
 
   const updatePreview = (anyInSystem: AlloyComponent, hex: Hex) => {
     memPreview.getOpt(anyInSystem).each((preview: AlloyComponent) => {
-      Css.set(preview.element(), 'background-color', '#' + hex.value);
+      Css.set(preview.element, 'background-color', '#' + hex.value);
     });
   };
 

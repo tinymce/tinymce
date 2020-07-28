@@ -65,7 +65,7 @@ UnitTest.asynctest('Browser Test: ui.slider.VerticalSliderTest', (success, failu
     const cGetComponent = Chain.binder((elem: SugarElement) => component.getSystem().getByDom(elem));
 
     const cGetParts = NamedChain.asChain([
-      NamedChain.writeValue('slider', component.element()),
+      NamedChain.writeValue('slider', component.element),
       NamedChain.direct('slider', UiFinder.cFindIn('.vertical-slider-test-thumb'), 'thumb'),
       NamedChain.direct('slider', UiFinder.cFindIn('.vertical-slider-test-top-edge'), 'tedge'),
       NamedChain.direct('slider', UiFinder.cFindIn('.vertical-slider-test-bottom-edge'), 'bedge'),

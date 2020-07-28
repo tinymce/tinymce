@@ -160,7 +160,7 @@ UnitTest.asynctest('Redraw Section Order Test', (success, failure) => {
       })), table);
     })),
     Logger.t('Assert that theads go after caption elements', Step.sync(() => {
-      const table = SugarElement.fromHtml(`<table><caption>some caption</caption<tbody><tr><td>one</td><td>&nbsp;</td><td>&nbsp;</td></tr></tbody></table>`);
+      const table = SugarElement.fromHtml(`<table><caption>some caption</caption><tbody><tr><td>one</td><td>&nbsp;</td><td>&nbsp;</td></tr></tbody></table>`);
 
       Assertions.assertStructure('Should be a basic table with a caption', ApproxStructure.build((s, str, _arr) => s.element('table', {
         children: [

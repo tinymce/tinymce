@@ -121,8 +121,8 @@ const setPositionFromValue = (slider: AlloyComponent, thumb: AlloyComponent, det
     edges.getBottomEdge(slider),
     detail
   );
-  const thumbRadius = Height.get(thumb.element()) / 2;
-  Css.set(thumb.element(), 'top', (pos - thumbRadius) + 'px');
+  const thumbRadius = Height.get(thumb.element) / 2;
+  Css.set(thumb.element, 'top', (pos - thumbRadius) + 'px');
 };
 
 // Key Events

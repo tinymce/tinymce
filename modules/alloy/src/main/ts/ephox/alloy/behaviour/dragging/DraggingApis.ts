@@ -7,9 +7,9 @@ import { DraggingConfig, DraggingState, SnapConfig } from '../../dragging/common
 import * as Snappables from '../../dragging/snap/Snappables';
 
 const snapTo = <E>(component: AlloyComponent, dragConfig: DraggingConfig<E>, _state: DraggingState, snap: SnapConfig<E>): void => {
-  const target = dragConfig.getTarget(component.element());
+  const target = dragConfig.getTarget(component.element);
   if (dragConfig.repositionTarget) {
-    const doc = Traverse.owner(component.element());
+    const doc = Traverse.owner(component.element);
     const scroll = Scroll.get(doc);
 
     const origin = OffsetOrigin.getOrigin(target);

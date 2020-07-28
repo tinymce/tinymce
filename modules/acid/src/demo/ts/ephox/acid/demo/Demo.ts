@@ -6,8 +6,8 @@ import { strings } from '../../../../i18n/en';
 
 const gui = Gui.create();
 const body = SugarElement.fromDom(document.body);
-Class.add(gui.element(), 'gui-root-demo-container');
-Insert.append(body, gui.element());
+Class.add(gui.element, 'gui-root-demo-container');
+Insert.append(body, gui.element);
 
 DomEvent.bind(SugarElement.fromDom(document), 'mouseup', (evt) => {
   if (evt.raw().button === 0) {

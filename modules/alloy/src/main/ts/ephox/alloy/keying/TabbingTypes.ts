@@ -36,7 +36,7 @@ const create = (cyclicField: FieldProcessorAdt) => {
   };
 
   const findInitial = (component: AlloyComponent, tabbingConfig: TabbingConfig): Optional<SugarElement> => {
-    const tabstops: SugarElement[] = SelectorFilter.descendants(component.element(), tabbingConfig.selector);
+    const tabstops: SugarElement[] = SelectorFilter.descendants(component.element, tabbingConfig.selector);
     const visibles: SugarElement[] = Arr.filter(tabstops, (elem) => isVisible(tabbingConfig, elem));
 
     return Optional.from(visibles[tabbingConfig.firstTabstop]);
@@ -84,7 +84,7 @@ const create = (cyclicField: FieldProcessorAdt) => {
     // 2. Find the index of that tabstop
     // 3. Cycle the tabstop
     // 4. Fire alloy focus on the resultant tabstop
-    const tabstops: SugarElement[] = SelectorFilter.descendants(component.element(), tabbingConfig.selector);
+    const tabstops: SugarElement[] = SelectorFilter.descendants(component.element, tabbingConfig.selector);
     return findCurrent(component, tabbingConfig).bind((tabstop) => {
       // focused component
       const optStopIndex = Arr.findIndex(tabstops, Fun.curry(Compare.eq, tabstop));

@@ -65,7 +65,7 @@ const create = function (platform, mask) {
           ceBody: editorApi.body(),
           socket: platform.socket,
           toolstrip: platform.toolstrip,
-          dropup: platform.dropup.element(),
+          dropup: platform.dropup.element,
           contentElement: editorApi.frame(),
           outerBody: platform.body,
           outerWindow: platform.win,

@@ -111,7 +111,7 @@ const renderUrlDialog = (internalDialog: Dialog.UrlDialog, extra: WindowExtra, e
         [bodySendMessageChannel]: {
           onReceive: (comp, data) => {
             // Send the message to the iframe via postMessage
-            SelectorFind.descendant<HTMLIFrameElement>(comp.element(), 'iframe').each((iframeEle) => {
+            SelectorFind.descendant<HTMLIFrameElement>(comp.element, 'iframe').each((iframeEle) => {
               const iframeWin = iframeEle.dom.contentWindow;
               iframeWin.postMessage(data, iframeDomain);
             });

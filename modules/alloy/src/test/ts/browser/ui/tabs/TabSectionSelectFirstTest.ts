@@ -4,10 +4,10 @@ import { UnitTest } from '@ephox/bedrock-client';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Tabstopping } from 'ephox/alloy/api/behaviour/Tabstopping';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { Tabbar } from 'ephox/alloy/api/ui/Tabbar';
 import { TabSection } from 'ephox/alloy/api/ui/TabSection';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 
 UnitTest.asynctest('TabSectionSelectFirst Test', (success, failure) => {
   GuiSetup.setup((_store, _doc, _body) => {
@@ -120,7 +120,7 @@ UnitTest.asynctest('TabSectionSelectFirst Test', (success, failure) => {
           classes: [ arr.has('test-tabview') ]
         })
       ]
-    })), component.element()),
+    })), component.element),
 
     GuiSetup.mRemoveStyles
   ], () => { success(); }, failure);

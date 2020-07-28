@@ -26,7 +26,7 @@ UnitTest.asynctest('XXX Behaviour', (success, failure) => {
         ApproxStructure.build((s, str, arr) => {
           return s.anything();
         }),
-        component.element()
+        component.element
       )
     ];
   }, () => { success(); }, failure);

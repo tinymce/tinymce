@@ -29,7 +29,7 @@ const schema: FieldProcessorAdt[] = [
 const focusIn = (component: AlloyComponent, matrixConfig: MatrixConfig, _state: Stateless): void => {
   const focused = matrixConfig.previousSelector(component).orThunk(() => {
     const selectors = matrixConfig.selectors;
-    return SelectorFind.descendant(component.element(), selectors.cell);
+    return SelectorFind.descendant(component.element, selectors.cell);
   });
 
   focused.each((cell) => {
@@ -37,7 +37,7 @@ const focusIn = (component: AlloyComponent, matrixConfig: MatrixConfig, _state: 
   });
 };
 
-const execute: KeyRuleHandler<MatrixConfig, Stateless> = (component, simulatedEvent, matrixConfig) => Focus.search(component.element()).bind((focused) => matrixConfig.execute(component, simulatedEvent, focused));
+const execute: KeyRuleHandler<MatrixConfig, Stateless> = (component, simulatedEvent, matrixConfig) => Focus.search(component.element).bind((focused) => matrixConfig.execute(component, simulatedEvent, focused));
 
 const toMatrix = (rows: SugarElement[], matrixConfig: MatrixConfig): SugarElement[][] => Arr.map(rows, (row) => SelectorFilter.descendants(row, matrixConfig.selectors.cell));
 

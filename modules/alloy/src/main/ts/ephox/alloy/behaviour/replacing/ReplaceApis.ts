@@ -16,7 +16,7 @@ const set = (component: AlloyComponent, replaceConfig: ReplacingConfig, replaceS
   AriaFocus.preserve(() => {
     const newChildren = Arr.map(data, component.getSystem().build);
     InternalAttachment.replaceChildren(component, newChildren);
-  }, component.element());
+  }, component.element);
 };
 
 const insert = (component: AlloyComponent, replaceConfig: ReplacingConfig, insertion: (p: SugarElement, c: SugarElement) => void, childSpec: AlloySpec): void => {
@@ -35,7 +35,7 @@ const prepend = (component: AlloyComponent, replaceConfig: ReplacingConfig, repl
 // NOTE: Removee is going to be a component, not a spec.
 const remove = (component: AlloyComponent, replaceConfig: ReplacingConfig, replaceState: Stateless, removee: AlloyComponent): void => {
   const children = contents(component, replaceConfig);
-  const foundChild = Arr.find(children, (child) => Compare.eq(removee.element(), child.element()));
+  const foundChild = Arr.find(children, (child) => Compare.eq(removee.element, child.element));
 
   foundChild.each(Attachment.detach);
 };
