@@ -38,7 +38,7 @@ const handleParent = function (isRoot: (e: SugarElement) => boolean, element: Su
       return gatherer(br, direction.gather, isRoot).map(direction.relative);
     }, function (adjacent) {
       return ElementAddress.indexInParent(adjacent).map(function (info) {
-        return Situ.on(info.parent(), info.index());
+        return Situ.on(info.parent, info.index);
       });
     });
   });

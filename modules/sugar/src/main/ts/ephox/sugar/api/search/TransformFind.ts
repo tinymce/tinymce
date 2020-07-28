@@ -1,7 +1,7 @@
 import { Fun, Optional, Type } from '@ephox/katamari';
 import { SugarElement } from '../node/SugarElement';
 
-const ensureIsRoot = (isRoot?: (e: SugarElement<Node>) => boolean) => Type.isFunction(isRoot) ? isRoot : Fun.constant(false);
+const ensureIsRoot = (isRoot?: (e: SugarElement<Node>) => boolean) => Type.isFunction(isRoot) ? isRoot : Fun.never;
 
 const ancestor = <A> (scope: SugarElement<Node>, transform: (e: SugarElement<Node>) => Optional<A>, isRoot?: (e: SugarElement<Node>) => boolean): Optional<A> => {
   let element = scope.dom;

@@ -15,7 +15,7 @@ const ancestor: {
   (scope: SugarElement<Node>, predicate: (e: SugarElement<Node>) => boolean, isRoot?: (e: SugarElement<Node>) => boolean): Optional<SugarElement<Node>>;
 } = (scope: SugarElement<Node>, predicate: (e: SugarElement<Node>) => boolean, isRoot?: (e: SugarElement<Node>) => boolean) => {
   let element = scope.dom;
-  const stop = Type.isFunction(isRoot) ? isRoot : Fun.constant(false);
+  const stop = Type.isFunction(isRoot) ? isRoot : Fun.never;
 
   while (element.parentNode) {
     element = element.parentNode;

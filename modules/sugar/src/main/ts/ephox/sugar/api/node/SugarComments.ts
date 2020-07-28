@@ -27,7 +27,7 @@ const getNodes = <T extends Node> (texas: TreeWalker): SugarElement<T>[] => {
 };
 
 // Weird, but oh well
-const noFilter = Fun.constant(Fun.constant(true));
+const noFilter = Fun.constant(Fun.always);
 
 const find = (node: SugarElement<Node>, filterOpt: Optional<(n: string | null) => boolean>) => {
 
