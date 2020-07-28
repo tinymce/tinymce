@@ -31,7 +31,7 @@ UnitTest.asynctest('Browser Test: ui.slider.TwoDSliderTest', (success, failure) 
         mode: 'xy',
         minX: 50,
         maxX: 200,
-        getInitialValue: Fun.constant({ x: Fun.constant(200), y: Fun.constant(200) }),
+        getInitialValue: Fun.constant({ x: 200, y: 200 }),
         minY: 50,
         maxY: 200
       },

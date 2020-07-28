@@ -17,10 +17,11 @@ import * as SystemEvents from '../../api/events/SystemEvents';
 import * as FocusManagers from '../../api/focus/FocusManagers';
 import { Menu } from '../../api/ui/Menu';
 import { SingleSketchFactory } from '../../api/ui/UiSketcher';
-import { CustomEvent, NativeSimulatedEvent } from '../../events/SimulatedEvent';
+import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
 import { LayeredState } from '../../menu/layered/LayeredState';
 import * as ItemEvents from '../../menu/util/ItemEvents';
 import * as MenuEvents from '../../menu/util/MenuEvents';
+import { MenuFocusEvent, MenuItemHoverEvent } from '../types/MenuTypes';
 import { PartialMenuSpec, TieredMenuApis, TieredMenuDetail, TieredMenuSpec } from '../types/TieredMenuTypes';
 
 export type MenuPreparation = MenuPrepared | MenuNotBuilt;
@@ -237,14 +238,14 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, _ra
 
   const events = AlloyEvents.derive([
     // Set "active-menu" for the menu with focus
-    AlloyEvents.run<CustomEvent>(MenuEvents.focus(), (sandbox, simulatedEvent) => {
+    AlloyEvents.run<MenuFocusEvent>(MenuEvents.focus(), (sandbox, simulatedEvent) => {
       // Ensure the item is actually part of this menu structure, and not part of another menu structure that's bubbling.
-      const item = simulatedEvent.event().item();
+      const item = simulatedEvent.event.item;
       layeredState.lookupItem(getItemValue(item)).each(() => {
-        const menu = simulatedEvent.event().menu();
+        const menu = simulatedEvent.event.menu;
         Highlighting.highlight(sandbox, menu);
 
-        const value = getItemValue(simulatedEvent.event().item());
+        const value = getItemValue(simulatedEvent.event.item);
         layeredState.refresh(value).each((path) => closeOthers(sandbox, layeredState, path));
       });
     }),
@@ -252,7 +253,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, _ra
     AlloyEvents.runOnExecute((component, simulatedEvent) => {
       // Trigger on execute on the targeted element
       // I.e. clicking on menu item
-      const target = simulatedEvent.event().target();
+      const target = simulatedEvent.event.target;
       component.getSystem().getByDom(target).each((item) => {
         const itemValue = getItemValue(item);
 
@@ -283,8 +284,8 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, _ra
   ].concat(detail.navigateOnHover ? [
     // Hide any irrelevant submenus and expand any submenus based
     // on hovered item
-    AlloyEvents.run<CustomEvent>(ItemEvents.hover(), (sandbox, simulatedEvent) => {
-      const item = simulatedEvent.event().item();
+    AlloyEvents.run<MenuItemHoverEvent>(ItemEvents.hover(), (sandbox, simulatedEvent) => {
+      const item = simulatedEvent.event.item;
       updateView(sandbox, item);
       expandRight(sandbox, item, ExpandHighlightDecision.HighlightParent);
       detail.onHover(sandbox, item);

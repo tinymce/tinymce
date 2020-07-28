@@ -7,8 +7,8 @@
 
 /* eslint-disable max-len */
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, CustomEvent, Focusing, GuiFactory, ItemTypes,
-  ItemWidget, Keying, Memento, NativeEvents, NativeSimulatedEvent, Replacing, SystemEvents, Toggling
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, CustomEvent, Focusing, GuiFactory, ItemTypes, ItemWidget,
+  Keying, Memento, NativeEvents, NativeSimulatedEvent, Replacing, SystemEvents, Toggling
 } from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
 import { Arr, Id } from '@ephox/katamari';
@@ -18,8 +18,8 @@ const cellOverEvent = Id.generate('cell-over');
 const cellExecuteEvent = Id.generate('cell-execute');
 
 interface CellEvent extends CustomEvent {
-  col: () => number;
-  row: () => number;
+  readonly col: number;
+  readonly row: number;
 }
 
 const makeCell = (row, col, labelId) => {
@@ -117,13 +117,13 @@ export const renderInsertTableMenuItem = (spec: Menu.FancyMenuItem): ItemTypes.W
       behaviours: Behaviour.derive([
         AddEventsBehaviour.config('insert-table-picker', [
           AlloyEvents.runWithTarget<CellEvent>(cellOverEvent, (c, t, e) => {
-            const row = e.event().row();
-            const col = e.event().col();
+            const row = e.event.row;
+            const col = e.event.col;
             selectCells(cells, row, col, numRows, numColumns);
             Replacing.set(memLabel.get(c), [ makeLabelText(row, col) ]);
           }),
           AlloyEvents.runWithTarget<CellEvent>(cellExecuteEvent, (c, _, e) => {
-            spec.onAction({ numRows: e.event().row() + 1, numColumns: e.event().col() + 1 });
+            spec.onAction({ numRows: e.event.row + 1, numColumns: e.event.col + 1 });
             AlloyTriggers.emit(c, SystemEvents.sandboxClose());
           })
         ]),

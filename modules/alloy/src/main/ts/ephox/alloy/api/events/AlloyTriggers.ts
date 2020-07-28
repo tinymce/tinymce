@@ -1,4 +1,3 @@
-import { Fun, Obj } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
 import { EventFormat, SimulatedEvent } from '../../events/SimulatedEvent';
@@ -26,11 +25,11 @@ const dispatchWith = (component: AlloyComponent, target: SugarElement, event: st
     target,
     ...properties
   };
-  component.getSystem().triggerEvent(event, target, Obj.map(data, Fun.constant));
+  component.getSystem().triggerEvent(event, target, data);
 };
 
 const dispatchEvent = function <T extends EventFormat> (component: AlloyComponent, target: SugarElement, event: string, simulatedEvent: SimulatedEvent<T>): void {
-  component.getSystem().triggerEvent(event, target, simulatedEvent.event());
+  component.getSystem().triggerEvent(event, target, simulatedEvent.event);
 };
 
 const dispatchFocus = (component: AlloyComponent, target: SugarElement): void => {

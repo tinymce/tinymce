@@ -46,7 +46,7 @@ const getEventExtras = (lazyDialog, extra: WindowExtra) => ({
         tag: 'div',
         classes: [ 'tox-dialog__busy-spinner' ],
         attributes: {
-          'aria-label': blockEvent.message()
+          'aria-label': blockEvent.message
         },
         styles: {
           left: '0px',

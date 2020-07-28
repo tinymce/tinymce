@@ -6,22 +6,26 @@ import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
-import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
+import { CustomEvent, NativeSimulatedEvent } from '../../events/SimulatedEvent';
 
 export interface SliderValueX {
-  x: () => number;
+  readonly x: number;
 }
 
 export interface SliderValueY {
-  y: () => number;
+  readonly y: number;
 }
 
 export interface SliderValueXY {
-  x: () => number;
-  y: () => number;
+  readonly x: number;
+  readonly y: number;
 }
 
 export type SliderValue = SliderValueX | SliderValueY | SliderValueXY;
+
+export interface SliderUpdateEvent extends CustomEvent {
+  value: SliderValue;
+}
 
 export interface SliderModelDetailParts {
   getSpectrum: (component: AlloyComponent) => AlloyComponent;

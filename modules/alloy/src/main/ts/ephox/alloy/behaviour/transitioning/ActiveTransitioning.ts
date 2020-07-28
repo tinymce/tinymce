@@ -8,7 +8,7 @@ import { TransitioningConfig } from './TransitioningTypes';
 
 const events = (transConfig: TransitioningConfig, transState: Stateless): AlloyEvents.AlloyEventRecord => AlloyEvents.derive([
   AlloyEvents.run<EventArgs<TransitionEvent>>(NativeEvents.transitionend(), (component, simulatedEvent) => {
-    const raw = simulatedEvent.event().raw();
+    const raw = simulatedEvent.event.raw;
     TransitionApis.getCurrentRoute(component, transConfig, transState).each((route) => {
       TransitionApis.findRoute(component, transConfig, transState, route).each((rInfo) => {
         rInfo.transition.each((rTransition) => {

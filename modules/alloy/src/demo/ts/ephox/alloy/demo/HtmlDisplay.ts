@@ -83,9 +83,9 @@ const section = (gui: GuiSystem, instructions: string, spec: AlloySpec): AlloyCo
   gui.add(all);
 
   DomEvent.bind(SugarElement.fromDom(document), 'mousedown', (evt) => {
-    if (evt.raw().button === 0) {
+    if (evt.raw.button === 0) {
       gui.broadcastOn([ Channels.dismissPopups() ], {
-        target: evt.target()
+        target: evt.target
       });
     }
   });

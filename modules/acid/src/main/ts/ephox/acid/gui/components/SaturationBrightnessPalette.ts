@@ -69,8 +69,8 @@ const paletteFactory = (_translate: (key: string) => string, getClass: (key: str
 
   const factory: UiSketcher.SingleSketchFactory<SaturationBrightnessPaletteDetail, SaturationBrightnessPaletteSpec> = (_detail): SketchSpec => {
     const getInitialValue = Fun.constant({
-      x: Fun.constant(0),
-      y: Fun.constant(0)
+      x: 0,
+      y: 0
     });
 
     const onChange = (slider: AlloyComponent, _thumb: AlloyComponent, value: number | SliderTypes.SliderValue) => {

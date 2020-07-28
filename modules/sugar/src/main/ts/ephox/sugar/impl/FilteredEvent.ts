@@ -5,17 +5,15 @@ import * as SugarShadowDom from '../api/node/SugarShadowDom';
 
 type WrappedHandler<T> = (rawEvent: T) => void;
 
-const mkEvent = <T extends Event>(target: SugarElement, x: number, y: number, stop: () => void, prevent: () => void, kill: () => void, raw: T): EventArgs<T> =>
-  // switched from a struct to manual Fun.constant() because we are passing functions now, not just values
-  ({
-    target:  Fun.constant(target),
-    x:       Fun.constant(x),
-    y:       Fun.constant(y),
-    stop,
-    prevent,
-    kill,
-    raw:     Fun.constant(raw)
-  });
+const mkEvent = <T extends Event>(target: SugarElement, x: number, y: number, stop: () => void, prevent: () => void, kill: () => void, raw: T): EventArgs<T> => ({
+  target,
+  x,
+  y,
+  stop,
+  prevent,
+  kill,
+  raw
+});
 
 /** Wraps an Event in an EventArgs structure.
  * The returned EventArgs structure has its target set to the "original" target if possible.

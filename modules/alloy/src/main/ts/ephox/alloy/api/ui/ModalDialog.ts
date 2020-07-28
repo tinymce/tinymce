@@ -29,7 +29,7 @@ const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (det
   const dialogIdleEvent = Id.generate('alloy.dialog.idle');
 
   interface DialogBusyEvent extends CustomEvent {
-    getBusySpec: () => GetBusySpec;
+    getBusySpec: GetBusySpec;
   }
 
   const busyBehaviours = Behaviour.derive([
@@ -72,7 +72,7 @@ const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (det
 
           AlloyEvents.run<DialogBusyEvent>(dialogBusyEvent, (blocker, se) => {
             Attribute.set(dialog.element, 'aria-busy', 'true');
-            const getBusySpec = se.event().getBusySpec();
+            const getBusySpec = se.event.getBusySpec;
 
             busyComp.get().each((bc) => {
               Replacing.remove(dialog, bc);

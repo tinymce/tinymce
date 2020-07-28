@@ -30,7 +30,7 @@ export const renderCollection = (spec: CollectionSpec, providersBackstage: UiFac
   const pLabel = spec.label.map((label) => renderLabel(label, providersBackstage));
 
   const runOnItem = <T extends EventFormat>(f: (c: AlloyComponent, se: SimulatedEvent<T>, tgt: SugarElement, itemValue: string) => void) => (comp: AlloyComponent, se: SimulatedEvent<T>) => {
-    SelectorFind.closest(se.event().target(), '[data-collection-item-value]').each((target: SugarElement<HTMLElement>) => {
+    SelectorFind.closest(se.event.target, '[data-collection-item-value]').each((target: SugarElement<HTMLElement>) => {
       f(comp, se, target, Attribute.get(target, 'data-collection-item-value'));
     });
   };

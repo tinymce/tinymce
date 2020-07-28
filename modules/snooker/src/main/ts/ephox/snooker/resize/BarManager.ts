@@ -99,12 +99,12 @@ export const BarManager = function (wire: ResizeWire, direction: BarPositions<Co
 
   /* mousedown on resize bar: start dragging when the bar is clicked, storing the initial position. */
   const mousedown = DomEvent.bind(wire.parent(), 'mousedown', function (event) {
-    if (Bars.isRowBar(event.target())) {
-      handler(event.target(), 'top');
+    if (Bars.isRowBar(event.target)) {
+      handler(event.target, 'top');
     }
 
-    if (Bars.isColBar(event.target())) {
-      handler(event.target(), 'left');
+    if (Bars.isColBar(event.target)) {
+      handler(event.target, 'left');
     }
   });
 
@@ -116,14 +116,14 @@ export const BarManager = function (wire: ResizeWire, direction: BarPositions<Co
 
   /* mouseover on table: When the mouse moves within the CONTENT AREA (NOT THE TABLE), refresh the bars. */
   const mouseover = DomEvent.bind(wire.view(), 'mouseover', function (event) {
-    findClosestEditableTable(event.target()).fold(
+    findClosestEditableTable(event.target).fold(
       () => {
         /*
         * mouseout is not reliable within ContentEditable, so for all other mouseover events we clear bars.
         * This is fairly safe to do frequently; it's a single querySelectorAll() on the content and Arr.map on the result.
         * If we _really_ need to optimise it further, we can start caching the bar references in the wire somehow.
         */
-        if (SugarBody.inBody(event.target())) {
+        if (SugarBody.inBody(event.target)) {
           Bars.destroy(wire);
         }
       },

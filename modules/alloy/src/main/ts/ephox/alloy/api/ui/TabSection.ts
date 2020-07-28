@@ -57,11 +57,11 @@ const factory: CompositeSketchFactory<TabSectionDetail, TabSectionSpec> = (detai
 
         [
           AlloyEvents.run<SystemEvents.AlloyChangeTabEvent>(SystemEvents.changeTab(), (section, simulatedEvent) => {
-            const button = simulatedEvent.event().button();
+            const button = simulatedEvent.event.button;
             changeTab(button);
           }),
           AlloyEvents.run<SystemEvents.AlloyDismissTabEvent>(SystemEvents.dismissTab(), (section, simulatedEvent) => {
-            const button = simulatedEvent.event().button();
+            const button = simulatedEvent.event.button;
             detail.onDismissTab(section, button);
           })
         ]

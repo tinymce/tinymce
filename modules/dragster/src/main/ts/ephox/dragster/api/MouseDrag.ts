@@ -8,7 +8,7 @@ const compare = function (old: SugarPosition, nu: SugarPosition) {
 };
 
 const extract = function (event: EventArgs) {
-  return Optional.some(SugarPosition(event.x(), event.y()));
+  return Optional.some(SugarPosition(event.x, event.y));
 };
 
 const mutate = function (mutation: DragMutation, info: SugarPosition) {

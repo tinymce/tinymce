@@ -84,7 +84,7 @@ Insert.append(SugarBody.body(), cloneDiv);
 
 Insert.append(SugarBody.body(), SugarElement.fromHtml('<span id="coords">(0, 0)</span>'));
 DomEvent.bind(SugarBody.body(), 'mousemove', function (event) {
-  Optional.from(document.querySelector('#coords')).getOrDie('Could not find ID "coords"').innerHTML = '(' + event.raw().clientX + ', ' + event.raw().clientY + ')';
+  Optional.from(document.querySelector('#coords')).getOrDie('Could not find ID "coords"').innerHTML = '(' + event.raw.clientX + ', ' + event.raw.clientY + ')';
 });
 
 const annotations = SelectionAnnotation.byClass(Ephemera);
@@ -110,7 +110,7 @@ const handleResponse = function (event: EventArgs, response: Response) {
 
 DomEvent.bind(ephoxUi, 'keyup', function (event) {
   // Note, this is an optimisation.
-  if (event.raw().shiftKey && event.raw().which >= 37 && event.raw().which <= 40) {
+  if (event.raw.shiftKey && event.raw.which >= 37 && event.raw.which <= 40) {
     WindowSelection.getExact(window).each(function (sel) {
       keyHandlers.keyup(event, sel.start(), sel.soffset(), sel.finish(), sel.foffset()).each(function (response) {
         handleResponse(event, response);

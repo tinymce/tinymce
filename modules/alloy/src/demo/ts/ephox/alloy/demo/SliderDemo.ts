@@ -31,7 +31,7 @@ export default (): void => {
         mode: 'x',
         minX: 20,
         maxX: 100,
-        getInitialValue: Fun.constant({ x: Fun.constant(80) })
+        getInitialValue: Fun.constant({ x: 80 })
       },
       stepSize: 10,
       snapToGrid: true,
@@ -70,7 +70,7 @@ export default (): void => {
       dom: { tag: 'div', styles: { 'margin-bottom': '40px' }},
       model: {
         mode: 'y',
-        getInitialValue: Fun.constant({ y: Fun.constant(35) })
+        getInitialValue: Fun.constant({ y: 35 })
       },
 
       stepSize: 40,
@@ -82,14 +82,14 @@ export default (): void => {
       onChange(_slider, thumb, value: SliderValue) {
         if (isValueY(value)) {
           Replacing.set(thumb, [
-            GuiFactory.text(value.y().toString())
+            GuiFactory.text(value.y.toString())
           ]);
         }
       },
       onInit(_slider, thumb, _spectrum, value: SliderValue) {
         if (isValueY(value)) {
           Replacing.set(thumb, [
-            GuiFactory.text(value.y().toString())
+            GuiFactory.text(value.y.toString())
           ]);
         }
       },
@@ -152,19 +152,19 @@ export default (): void => {
         maxX: 360,
         minY: 0,
         maxY: 360,
-        getInitialValue: Fun.constant({ x: Fun.constant(120), y: Fun.constant(120) })
+        getInitialValue: Fun.constant({ x: 120, y: 120 })
       },
       stepSize: 10,
 
       onChange(_slider, thumb, value: SliderValue) {
         if (isValueX(value)) {
-          setColor(thumb, value.x());
+          setColor(thumb, value.x);
         }
       },
 
       onInit(_slider, thumb, _spectrum, value: SliderValue) {
         if (isValueX(value)) {
-          setColor(thumb, value.x());
+          setColor(thumb, value.x);
         }
       },
 

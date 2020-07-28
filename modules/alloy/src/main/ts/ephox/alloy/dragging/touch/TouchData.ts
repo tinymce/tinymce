@@ -7,7 +7,7 @@ const getDataFrom = (touches: TouchList): Optional<SugarPosition> => {
 };
 
 const getData = (event: EventArgs<TouchEvent>): Optional<SugarPosition> => {
-  const raw = event.raw();
+  const raw = event.raw;
   const touches = raw.touches;
   return touches.length === 1 ? getDataFrom(touches) : Optional.none();
 };

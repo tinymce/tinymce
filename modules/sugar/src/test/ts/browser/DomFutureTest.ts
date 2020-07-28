@@ -16,7 +16,7 @@ UnitTest.asynctest('Browser Test: .DomFutureTest', (success) => {
           assert.fail('Future should have returned value(event). Instead returned error(' + err + ')');
         },
         (val) => {
-          assert.eq(true, Compare.eq(testElement, val.target()), 'Checking that the target of the event is correct');
+          assert.eq(true, Compare.eq(testElement, val.target), 'Checking that the target of the event is correct');
           success();
         }
       );

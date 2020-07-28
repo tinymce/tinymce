@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Behaviour, Slider, Toggling, SketchSpec } from '@ephox/alloy';
+import { Behaviour, SketchSpec, Slider, Toggling } from '@ephox/alloy';
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
 
 import * as Receivers from '../channels/Receivers';
@@ -53,7 +53,7 @@ const sketch = function (rawSpec): SketchSpec {
       minX: 0,
       maxX: spec.sizes.length - 1,
       getInitialValue: () => ({
-        x: () => spec.getInitialValue()
+        x: spec.getInitialValue()
       })
     },
     stepSize: 1,

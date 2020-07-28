@@ -36,7 +36,7 @@ UnitTest.asynctest('Browser Test: api.ForeignGuiTest', (success, failure) => {
             AlloyEvents.run<EventArgs>(NativeEvents.click(), (component, simulatedEvent) => {
               // We have to remove the proxy first, because we are during a proxied event (click)
               connection.unproxy(component);
-              connection.dispatchTo(SystemEvents.execute(), simulatedEvent.event());
+              connection.dispatchTo(SystemEvents.execute(), simulatedEvent.event);
             })
           ])
         }

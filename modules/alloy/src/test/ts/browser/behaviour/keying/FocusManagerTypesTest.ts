@@ -42,8 +42,8 @@ UnitTest.asynctest('Browser Test: behaviour.keying.FocusManagersTest', (success,
 
         AddEventsBehaviour.config('focus-manager-events', [
           AlloyEvents.run<SystemEvents.AlloyFocusShiftedEvent>(SystemEvents.focusShifted(), (_comp, se) => {
-            const prevFocus = se.event().prevFocus();
-            const newFocus = se.event().newFocus();
+            const prevFocus = se.event.prevFocus;
+            const newFocus = se.event.newFocus;
             const prevIndex = prevFocus.map((p) => Attribute.get(p, 'data-index')).getOr('{none}');
             const newIndex = newFocus.map((p) => Attribute.get(p, 'data-index')).getOr('{none}');
             store.adder(prevIndex + '->' + newIndex)();

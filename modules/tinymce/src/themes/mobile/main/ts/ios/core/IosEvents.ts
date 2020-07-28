@@ -125,14 +125,14 @@ const initEvents = (editorApi, iosApi, toolstrip, socket, _dropup): { destroy: (
     // If the user is touching outside the content, but on the body(?) or html elements, find the nearest selection
     // and focus that.
     DomEvent.bind(editorApi.doc(), 'touchend', (touchEvent) => {
-      if (Compare.eq(editorApi.html(), touchEvent.target()) || Compare.eq(editorApi.body(), touchEvent.target())) {
+      if (Compare.eq(editorApi.html(), touchEvent.target) || Compare.eq(editorApi.body(), touchEvent.target)) {
         // IosHacks.setSelectionAtTouch(editorApi, touchEvent);
       }
     }),
 
     // Listen to the toolstrip growing animation so that we can update the position of the socket once it is done.
     DomEvent.bind<TransitionEvent>(toolstrip, 'transitionend', (transitionEvent) => {
-      if (transitionEvent.raw().propertyName === 'height') {
+      if (transitionEvent.raw.propertyName === 'height') {
         reposition();
       }
     }),

@@ -46,14 +46,14 @@ export const renderDropZone = (spec: DropZoneSpec, providersBackstage: UiFactory
 
   const onDrop: AlloyEvents.EventRunHandler<EventArgs> = (comp, se) => {
     if (!Disabling.isDisabled(comp)) {
-      const transferEvent = se.event().raw() as DragEvent;
+      const transferEvent = se.event.raw as DragEvent;
       handleFiles(comp, transferEvent.dataTransfer.files);
     }
   };
 
-  const onSelect = (component, simulatedEvent) => {
-    const files = simulatedEvent.event().raw().target.files;
-    handleFiles(component, files);
+  const onSelect = (component: AlloyComponent, simulatedEvent: SimulatedEvent<EventArgs>) => {
+    const input = simulatedEvent.event.raw.target as HTMLInputElement;
+    handleFiles(component, input.files);
   };
 
   const handleFiles = (component, files: FileList) => {

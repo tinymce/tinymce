@@ -14,17 +14,16 @@ import Delay from 'tinymce/core/api/util/Delay';
 
 const forwardSlideEvent = Id.generate('forward-slide');
 export interface ForwardSlideEvent extends CustomEvent {
-  forwardContents: () => AlloySpec;
+  readonly forwardContents: AlloySpec;
 }
 
 const backSlideEvent = Id.generate('backward-slide');
-// tslint:disable-next-line:no-empty-interface
 export interface BackwardSlideEvent extends CustomEvent { }
 
 const changeSlideEvent = Id.generate('change-slide-event');
 export interface ChangeSlideEvent extends CustomEvent {
-  contents: () => AlloySpec;
-  focus: () => Optional<SugarElement>;
+  readonly contents: AlloySpec;
+  readonly focus: Optional<SugarElement>;
 }
 
 const resizingClass = 'tox-pop--resizing';
@@ -62,12 +61,12 @@ const renderContextToolbar = (spec: { onEscape: () => Optional<boolean>; sink: A
           Css.remove(comp.element, 'width');
           const currentWidth = Width.get(comp.element);
 
-          InlineView.setContent(comp, se.event().contents());
+          InlineView.setContent(comp, se.event.contents);
           Class.add(comp.element, resizingClass);
           const newWidth = Width.get(comp.element);
           Css.set(comp.element, 'width', currentWidth + 'px');
           InlineView.getContent(comp).each((newContents) => {
-            se.event().focus().bind((f) => {
+            se.event.focus.bind((f) => {
               Focus.focus(f);
               return Focus.search(comp.element);
             }).orThunk(() => {
@@ -91,7 +90,7 @@ const renderContextToolbar = (spec: { onEscape: () => Optional<boolean>; sink: A
             ]));
           });
           AlloyTriggers.emitWith(comp, changeSlideEvent, {
-            contents: se.event().forwardContents(),
+            contents: se.event.forwardContents,
             focus: Optional.none()
           });
         }),

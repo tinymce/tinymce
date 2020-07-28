@@ -1,6 +1,8 @@
 import { Optional } from '@ephox/katamari';
 
-import { HorizontalSliderDetail, SliderDetail, VerticalSliderDetail } from '../types/SliderTypes';
+import {
+  HorizontalSliderDetail, SliderDetail, SliderValueX, SliderValueXY, SliderValueY, TwoDSliderDetail, VerticalSliderDetail
+} from '../types/SliderTypes';
 
 const t = 'top',
   r = 'right',
@@ -43,7 +45,11 @@ const hasTEdge = (detail: SliderDetail): boolean => hasEdge(detail, t);
 const hasBEdge = (detail: SliderDetail): boolean => hasEdge(detail, b);
 
 // Ew, any
-const currentValue = (detail: SliderDetail): any => detail.model.value.get();
+const currentValue: {
+  (detail: TwoDSliderDetail): SliderValueXY;
+  (detail: HorizontalSliderDetail): SliderValueX;
+  (detail: VerticalSliderDetail): SliderValueY;
+} = (detail: SliderDetail): any => detail.model.value.get();
 
 export {
   minX,

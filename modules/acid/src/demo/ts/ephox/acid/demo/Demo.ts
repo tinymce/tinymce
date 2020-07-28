@@ -10,9 +10,9 @@ Class.add(gui.element, 'gui-root-demo-container');
 Insert.append(body, gui.element);
 
 DomEvent.bind(SugarElement.fromDom(document), 'mouseup', (evt) => {
-  if (evt.raw().button === 0) {
+  if (evt.raw.button === 0) {
     gui.broadcastOn([ Channels.mouseReleased() ], {
-      target: evt.target()
+      target: evt.target
     });
   }
 });

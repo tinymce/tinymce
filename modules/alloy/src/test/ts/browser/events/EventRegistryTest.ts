@@ -59,9 +59,9 @@ UnitTest.asynctest('EventRegistryTest', (success, failure) => {
     const filtered = events.filterByType(type);
     const raw = Arr.map(filtered, (f) => ({
       // Invoke the handler
-      handler: f.descHandler().cHandler(),
-      purpose: f.descHandler().purpose(),
-      id: f.id()
+      handler: f.descHandler.cHandler(),
+      purpose: f.descHandler.purpose,
+      id: f.id
     })).sort((f, g) => {
       if (f.id < g.id) { return -1; } else if (f.id > g.id) { return +1; } else { return 0; }
     });

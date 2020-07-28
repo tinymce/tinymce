@@ -1,4 +1,4 @@
-import { Fun, Optional } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { Css, Height, SugarPosition, Width } from '@ephox/sugar';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
@@ -18,8 +18,8 @@ const fireSliderChange = (spectrum: AlloyComponent, value: SliderValueXY): void 
 };
 
 const sliderValue = (x: number, y: number): SliderValueXY => ({
-  x: Fun.constant(x),
-  y: Fun.constant(y)
+  x,
+  y
 });
 
 // find both values of x and y offsets of where the mouse was clicked from the model.
@@ -35,10 +35,10 @@ const setValueFrom = (spectrum: AlloyComponent, detail: TwoDSliderDetail, value:
 // move in a direction by step size. Fire change at the end
 const moveBy = (direction: number, isVerticalMovement: boolean, spectrum: AlloyComponent, detail: TwoDSliderDetail): Optional<number> => {
   const f = (direction > 0) ? SliderModel.increaseBy : SliderModel.reduceBy;
-  const xValue = isVerticalMovement ? currentValue(detail).x() :
-    f(currentValue(detail).x(), minX(detail), maxX(detail), step(detail));
-  const yValue = !isVerticalMovement ? currentValue(detail).y() :
-    f(currentValue(detail).y(), minY(detail), maxY(detail), step(detail));
+  const xValue = isVerticalMovement ? currentValue(detail).x :
+    f(currentValue(detail).x, minX(detail), maxX(detail), step(detail));
+  const yValue = !isVerticalMovement ? currentValue(detail).y :
+    f(currentValue(detail).y, minY(detail), maxY(detail), step(detail));
 
   fireSliderChange(spectrum, sliderValue(xValue, yValue));
   return Optional.some(xValue);
@@ -69,7 +69,7 @@ const setPositionFromValue = (slider: AlloyComponent, thumb: AlloyComponent, det
   const xPos = HorizontalModel.findPositionOfValue(
     slider,
     edges.getSpectrum(slider),
-    value.x(),
+    value.x,
     edges.getLeftEdge(slider),
     edges.getRightEdge(slider),
     detail
@@ -77,7 +77,7 @@ const setPositionFromValue = (slider: AlloyComponent, thumb: AlloyComponent, det
   const yPos = VerticalModel.findPositionOfValue(
     slider,
     edges.getSpectrum(slider),
-    value.y(),
+    value.y,
     edges.getTopEdge(slider),
     edges.getBottomEdge(slider),
     detail

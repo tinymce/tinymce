@@ -12,7 +12,7 @@ const SIGNIFICANT_MOVE = 5;
 const LONGPRESS_DELAY = 400;
 
 const getTouch = (event: EventArgs<TouchEvent>): Optional<Touch> => {
-  const raw = event.raw();
+  const raw = event.raw;
   if (raw.touches === undefined || raw.touches.length !== 1) { return Optional.none(); }
   return Optional.some(raw.touches[0]);
 };
@@ -51,7 +51,7 @@ const monitor = (settings: GuiEventSettings) => {
       const data = {
         x: touch.clientX,
         y: touch.clientY,
-        target: event.target()
+        target: event.target
       };
 
       longpress.schedule(event);
@@ -74,7 +74,7 @@ const monitor = (settings: GuiEventSettings) => {
   const handleTouchend = (event: EventArgs): Optional<boolean> => {
     longpress.cancel();
 
-    const isSame = (data: TouchHistoryData) => Compare.eq(data.target, event.target());
+    const isSame = (data: TouchHistoryData) => Compare.eq(data.target, event.target);
 
     return startData.get().filter(isSame).map((_data) => {
       if (longpressFired.get()) {

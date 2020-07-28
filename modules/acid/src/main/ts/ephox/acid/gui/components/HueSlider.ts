@@ -34,7 +34,7 @@ const sliderFactory = (translate: (key: string) => string, getClass: (key: strin
     rounded: false,
     model: {
       mode: 'y',
-      getInitialValue: Fun.constant({ y: Fun.constant(0) })
+      getInitialValue: Fun.constant({ y: 0 })
     },
     components: [
       spectrum,

@@ -53,15 +53,15 @@ const schema: FieldProcessorAdt[] = [
     const handlers = (config: DragStartingConfig): AlloyEvents.AlloyEventRecord => AlloyEvents.derive([
       AlloyEvents.run(NativeEvents.dragover(), config.onDragover),
       AlloyEvents.run(NativeEvents.dragend(), config.onDragend),
-      AlloyEvents.run<EventArgs>(NativeEvents.dragstart(), (component, simulatedEvent) => {
-        const target = simulatedEvent.event().target();
+      AlloyEvents.run<EventArgs<DragEvent>>(NativeEvents.dragstart(), (component, simulatedEvent) => {
+        const target = simulatedEvent.event.target;
         const transfer: DataTransfer = DataTransfers.getDataTransferFromEvent(simulatedEvent);
 
         if (config.canDrag(component, target)) {
           dragStart(component, target, config, transfer);
           config.onDragstart(component, simulatedEvent);
         } else {
-          simulatedEvent.event().prevent();
+          simulatedEvent.event.prevent();
         }
       })
     ]);

@@ -153,10 +153,10 @@ const engage = (spec: ForeignGuiSpec) => {
      * c) execute the event handler
      * d) remove it from the internal system and clear any DOM markers (alloy-ids etc)
      */
-    if (gui.element.dom.contains(event.target().dom)) { return; }
+    if (gui.element.dom.contains(event.target.dom)) { return; }
 
     // Find if the target has an assigned dispatcher
-    findDispatcher(detail.dispatchers, event.target()).each((mission) => {
+    findDispatcher(detail.dispatchers, event.target).each((mission) => {
 
       // get any info for this current element, creating it if necessary
       const data = cache.getEvents(mission.target, mission.dispatcher.alloyConfig);

@@ -28,10 +28,10 @@ UnitTest.asynctest('Browser Test: events.BroadcastingEventsTest', (success, fail
       },
       events: AlloyEvents.derive([
         AlloyEvents.run<EventArgs>(SystemEvents.windowScroll(), (_component, simulatedEvent) => {
-          store.adder(simulatedEvent.event().raw().type)();
+          store.adder(simulatedEvent.event.raw.type)();
         }),
         AlloyEvents.run<EventArgs>(SystemEvents.windowResize(), (_component, simulatedEvent) => {
-          store.adder(simulatedEvent.event().raw().type)();
+          store.adder(simulatedEvent.event.raw.type)();
         })
       ])
     })

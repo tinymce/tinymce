@@ -5,9 +5,9 @@ import { Attribute, Css, DomEvent, Insert, Remove, Replication, SugarElement } f
 import * as DataTransfers from './DataTransfers';
 
 export interface DragnDropImageClone {
-  element: () => SugarElement;
-  x: () => number;
-  y: () => number;
+  readonly element: () => SugarElement;
+  readonly x: () => number;
+  readonly y: () => number;
 }
 
 const createGhostClone = (image: DragnDropImageClone) => {
@@ -70,8 +70,8 @@ const setDragImageFromCloneEdgeFallback = (image: DragnDropImageClone, parent: S
 
   const drag = DomEvent.bind(target, 'drag', (evt) => {
     // The calculated position needs to at least be cord + 1 since it would otherwise interfere with dropping
-    const x = evt.x() + Math.max(image.x() + 1, 1);
-    const y = evt.y() + Math.max(image.y() + 1, 1);
+    const x = evt.x + Math.max(image.x() + 1, 1);
+    const y = evt.y + Math.max(image.y() + 1, 1);
 
     const ghost = ghostState.get().getOrThunk(() => {
       const newGhost = createGhostClone(image);

@@ -76,10 +76,10 @@ const makePanels = (parts: SlotContainerTypes.SlotContainerParts, panelConfigs: 
           onControlAttached(spec, editorOffCell),
           onControlDetached(spec, editorOffCell),
           AlloyEvents.run<SystemEvents.AlloySlotVisibilityEvent>(SystemEvents.slotVisibility(), (sidepanel, se) => {
-            const data = se.event();
-            const optSidePanelSpec = Arr.find(specs, (config) => config.name === data.name());
+            const data = se.event;
+            const optSidePanelSpec = Arr.find(specs, (config) => config.name === data.name);
             optSidePanelSpec.each((sidePanelSpec) => {
-              const handler = data.visible() ? sidePanelSpec.onShow : sidePanelSpec.onHide;
+              const handler = data.visible ? sidePanelSpec.onShow : sidePanelSpec.onHide;
               handler(sidePanelSpec.getApi(sidepanel));
             });
           })
@@ -146,7 +146,7 @@ const whichSidebar = (sidebar: AlloyComponent): Optional<string> => {
 };
 
 interface FixSizeEvent extends CustomEvent {
-  width: () => string;
+  readonly width: string;
 }
 const fixSize = Id.generate('FixSizeEvent');
 const autoSize = Id.generate('AutoSizeEvent');
@@ -209,7 +209,7 @@ const renderSidebar = (spec) => ({
     ComposingConfigs.childAt(0),
     AddEventsBehaviour.config('sidebar-sliding-events', [
       AlloyEvents.run<FixSizeEvent>(fixSize, (comp, se) => {
-        Css.set(comp.element, 'width', se.event().width());
+        Css.set(comp.element, 'width', se.event.width);
       }),
       AlloyEvents.run(autoSize, (comp, _se) => {
         Css.remove(comp.element, 'width');

@@ -170,7 +170,7 @@ const checkOriginalEventTarget = (mode: 'open' | 'closed', success: UnitTest.Suc
   const unbinder = DomEvent.bind(SugarBody.body(), 'click', (evt) => {
     try {
       const expected = mode === 'open' ? i2 : shadowHost;
-      Assert.eq('Check event target', expected, evt.target(), tElement());
+      Assert.eq('Check event target', expected, evt.target, tElement());
       unbinder.unbind();
       Remove.remove(i1);
       Remove.remove(shadowHost);

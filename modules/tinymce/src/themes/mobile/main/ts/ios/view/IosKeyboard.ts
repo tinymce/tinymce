@@ -60,7 +60,7 @@ const stubborn: IosKeyboardConstructor = (outerBody: SugarElement<Node>, cWin: W
 
   const captureInput = DomEvent.bind(page, 'keydown', function (evt) {
     // Think about killing the event.
-    if (!Arr.contains([ 'input', 'textarea' ], SugarNode.name(evt.target()))) {
+    if (!Arr.contains([ 'input', 'textarea' ], SugarNode.name(evt.target))) {
 
       // FIX: Close the menus
       // closeMenus()

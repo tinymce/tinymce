@@ -8,7 +8,7 @@ import { PinchDragData, PinchingConfig, PinchingState } from './PinchingTypes';
 
 const mode: DragModeDeltas<TouchEvent, PinchDragData> = {
   getData(e: EventArgs<TouchEvent>) {
-    const raw = e.raw();
+    const raw = e.raw;
     const touches = raw.touches;
     if (touches.length < 2) { return Optional.none(); }
 
@@ -45,7 +45,7 @@ const events = (pinchConfig: PinchingConfig, pinchState: PinchingState): AlloyEv
   AlloyEvents.run<EventArgs<TouchEvent>>(NativeEvents.touchmove(), (component, simulatedEvent) => {
     simulatedEvent.stop();
 
-    const delta = pinchState.update(mode, simulatedEvent.event());
+    const delta = pinchState.update(mode, simulatedEvent.event);
     delta.each((dlt) => {
       const multiplier = dlt.deltaDistance > 0 ? 1 : -1;
       const changeX = multiplier * Math.abs(dlt.deltaX);

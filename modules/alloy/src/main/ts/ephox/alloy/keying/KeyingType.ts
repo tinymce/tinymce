@@ -35,7 +35,7 @@ const typical = <C extends GeneralKeyingConfig, S extends BehaviourState>(
   const processKey = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent, getRules: GetRulesFunc<C, S>, keyingConfig: C, keyingState: S): Optional<boolean> => {
     const rules = getRules(component, simulatedEvent, keyingConfig, keyingState);
 
-    return KeyRules.choose(rules, simulatedEvent.event()).bind((rule) => rule(component, simulatedEvent, keyingConfig, keyingState));
+    return KeyRules.choose(rules, simulatedEvent.event).bind((rule) => rule(component, simulatedEvent, keyingConfig, keyingState));
   };
 
   const toEvents = (keyingConfig: C, keyingState: S): AlloyEvents.AlloyEventRecord => {
@@ -50,7 +50,7 @@ const typical = <C extends GeneralKeyingConfig, S extends BehaviourState>(
 
     // On enter or space on root element, if using EnterOrSpace focus mode, fire a focusIn on the component
     const tryGoInsideComponent = (component: AlloyComponent, simulatedEvent: SimulatedEvent<EventArgs<KeyboardEvent>>) => {
-      const isEnterOrSpace = inSet(Keys.SPACE.concat(Keys.ENTER))(simulatedEvent.event());
+      const isEnterOrSpace = inSet(Keys.SPACE.concat(Keys.ENTER))(simulatedEvent.event);
 
       if (keyingConfig.focusInside === FocusInsideModes.OnEnterOrSpaceMode && isEnterOrSpace && EventRoot.isSource(component, simulatedEvent)) {
         optFocusIn(keyingConfig).each((focusIn) => {

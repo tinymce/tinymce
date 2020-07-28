@@ -27,11 +27,11 @@ export const updateMenuText = Id.generate('update-menu-text');
 export const updateMenuIcon = Id.generate('update-menu-icon');
 
 export interface UpdateMenuTextEvent extends CustomEvent {
-  text: () => string;
+  readonly text: string;
 }
 
 export interface UpdateMenuIconEvent extends CustomEvent {
-  icon: () => string;
+  readonly icon: string;
 }
 
 export interface CommonDropdownSpec<T> {
@@ -79,7 +79,7 @@ const renderCommonDropdown = <T>(
     // Focus the dropdown. Current workaround required to make flow recognise the current focus
     Focusing.focus(dropdown);
     AlloyTriggers.emitWith(dropdown, 'keydown', {
-      raw: se.event().raw()
+      raw: se.event.raw
     });
 
     // Close the dropdown
@@ -139,13 +139,13 @@ const renderCommonDropdown = <T>(
         AddEventsBehaviour.config('menubutton-update-display-text', [
           AlloyEvents.run<UpdateMenuTextEvent>(updateMenuText, (comp, se) => {
             optMemDisplayText.bind((mem) => mem.getOpt(comp)).each((displayText) => {
-              Replacing.set(displayText, [ GuiFactory.text(sharedBackstage.providers.translate(se.event().text())) ] );
+              Replacing.set(displayText, [ GuiFactory.text(sharedBackstage.providers.translate(se.event.text)) ] );
             });
           }),
           AlloyEvents.run<UpdateMenuIconEvent>(updateMenuIcon, (comp, se) => {
             optMemDisplayIcon.bind((mem) => mem.getOpt(comp)).each((displayIcon) => {
               Replacing.set(displayIcon, [
-                renderReplacableIconFromPack(se.event().icon(), sharedBackstage.providers.icons)
+                renderReplacableIconFromPack(se.event.icon, sharedBackstage.providers.icons)
               ] );
             });
           })

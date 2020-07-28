@@ -6,17 +6,17 @@
  */
 
 import { AlloyEvents, AlloyTriggers, CustomEvent } from '@ephox/alloy';
-import { GetApiType, runWithApi } from '../../controls/Controls';
 import { Id } from '@ephox/katamari';
+import { GetApiType, runWithApi } from '../../controls/Controls';
 
 export interface OnMenuItemExecuteType<T> extends GetApiType<T> {
-  onAction: (itemApi: T) => void;
+  readonly onAction: (itemApi: T) => void;
 }
 
 export const internalToolbarButtonExecute = Id.generate('toolbar.button.execute');
 
 export interface InternalToolbarButtonExecuteEvent<T> extends CustomEvent {
-  buttonApi: () => T;
+  readonly buttonApi: T;
 }
 
 // Perform `action` when an item is clicked on, close menus, and stop event

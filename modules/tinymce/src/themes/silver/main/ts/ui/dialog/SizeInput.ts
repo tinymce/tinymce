@@ -19,7 +19,7 @@ import * as Icons from '../icons/Icons';
 import { formatSize, makeRatioConverter, noSizeConversion, parseSize, SizeConversion } from '../sizeinput/SizeInputModel';
 
 interface RatioEvent extends CustomEvent {
-  isField1: () => boolean;
+  isField1: boolean;
 }
 
 type SizeInputSpec = Omit<Dialog.SizeInput, 'type'>;
@@ -70,7 +70,7 @@ export const renderSizeInput = (spec: SizeInputSpec, providersBackstage: UiFacto
     components
   });
 
-  const getFieldPart = (isField1) => AlloyFormField.parts().field({
+  const getFieldPart = (isField1: boolean) => AlloyFormField.parts().field({
     factory: AlloyInput,
     inputClasses: [ 'tox-textfield' ],
     inputBehaviours: Behaviour.derive([
@@ -160,7 +160,7 @@ export const renderSizeInput = (spec: SizeInputSpec, providersBackstage: UiFacto
       ReadOnly.receivingConfig(),
       AddEventsBehaviour.config('size-input-events2', [
         AlloyEvents.run<RatioEvent>(ratioEvent, function (component, simulatedEvent) {
-          const isField1 = simulatedEvent.event().isField1();
+          const isField1 = simulatedEvent.event.isField1;
           const optCurrent = isField1 ? AlloyFormCoupledInputs.getField1(component) : AlloyFormCoupledInputs.getField2(component);
           const optOther = isField1 ? AlloyFormCoupledInputs.getField2(component) : AlloyFormCoupledInputs.getField1(component);
           const value1 = optCurrent.map<string>(Representing.getValue).getOr('');

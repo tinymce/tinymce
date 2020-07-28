@@ -88,7 +88,7 @@ const factory: CompositeSketchFactory<TouchMenuDetail, TouchMenuSpec> = (detail,
                 inlineBehaviours: Behaviour.derive([
                   AddEventsBehaviour.config('execute-for-menu', [
                     AlloyEvents.runOnExecute((c, s) => {
-                      const target = s.event().target();
+                      const target = s.event.target;
                       c.getSystem().getByDom(target).each((item) => {
                         detail.onExecute(hotspot, c, item, Representing.getValue(item));
                       });
@@ -159,8 +159,8 @@ const factory: CompositeSketchFactory<TouchMenuDetail, TouchMenuSpec> = (detail,
       //   - if over items, trigger mousemover on item (and hoverOff on button)
       //   - if over button, (dehighlight all items and trigger hoverOn on button if required)
       //   - if over nothing (dehighlight all items and trigger hoverOff on button if required)
-      AlloyEvents.run<EventArgs>(NativeEvents.touchmove(), (component, simulatedEvent) => {
-        const raw = simulatedEvent.event().raw() as TouchEvent;
+      AlloyEvents.run<EventArgs<TouchEvent>>(NativeEvents.touchmove(), (component, simulatedEvent) => {
+        const raw = simulatedEvent.event.raw;
         const e = raw.touches[0];
         getMenu(component).each((iMenu) => {
           ElementFromPoint.insideComponent(iMenu, e.clientX, e.clientY).fold(() => {

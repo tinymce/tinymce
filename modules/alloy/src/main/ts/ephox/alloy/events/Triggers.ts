@@ -49,18 +49,18 @@ const doTriggerHandler = (lookup: LookupEvent, eventType: string, rawEvent: Even
 
     // Now, check if the event was stopped.
     if (simulatedEvent.isStopped()) {
-      logger.logEventStopped(eventType, handlerInfo.element, descHandler.purpose());
+      logger.logEventStopped(eventType, handlerInfo.element, descHandler.purpose);
       return adt.stopped();
     } else if (simulatedEvent.isCut()) {
-      logger.logEventCut(eventType, handlerInfo.element, descHandler.purpose());
+      logger.logEventCut(eventType, handlerInfo.element, descHandler.purpose);
       return adt.complete();
     } else {
       return Traverse.parent(handlerInfo.element).fold(() => {
-        logger.logNoParent(eventType, handlerInfo.element, descHandler.purpose());
+        logger.logNoParent(eventType, handlerInfo.element, descHandler.purpose);
         // No parent, so complete.
         return adt.complete();
       }, (parent) => {
-        logger.logEventResponse(eventType, handlerInfo.element, descHandler.purpose());
+        logger.logEventResponse(eventType, handlerInfo.element, descHandler.purpose);
         // Resume at parent
         return adt.resume(parent);
       });
@@ -87,7 +87,7 @@ const broadcast = (listeners: UidAndHandler[], rawEvent: EventFormat, _logger?: 
   const simulatedEvent = fromExternal(rawEvent);
 
   Arr.each(listeners, (listener) => {
-    const descHandler = listener.descHandler();
+    const descHandler = listener.descHandler;
     const handler = DescribedHandler.getCurried(descHandler);
     handler(simulatedEvent);
   });
@@ -95,10 +95,8 @@ const broadcast = (listeners: UidAndHandler[], rawEvent: EventFormat, _logger?: 
   return simulatedEvent.isStopped();
 };
 
-const triggerUntilStopped = (lookup: LookupEvent, eventType: string, rawEvent: EventFormat, logger: DebuggerLogger): boolean => {
-  const rawTarget = rawEvent.target();
-  return triggerOnUntilStopped(lookup, eventType, rawEvent, rawTarget, logger);
-};
+const triggerUntilStopped = (lookup: LookupEvent, eventType: string, rawEvent: EventFormat, logger: DebuggerLogger): boolean =>
+  triggerOnUntilStopped(lookup, eventType, rawEvent, rawEvent.target, logger);
 
 const triggerOnUntilStopped = (lookup: LookupEvent, eventType: string, rawEvent: EventFormat, rawTarget: SugarElement, logger: DebuggerLogger): boolean => {
   const source = EventSource.derive(rawEvent, rawTarget);

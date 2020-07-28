@@ -8,7 +8,7 @@
 import { AddEventsBehaviour, AlloyComponent, AlloyEvents, Behaviour, Container, GuiFactory, Memento, Replacing } from '@ephox/alloy';
 import { Cell, Optional } from '@ephox/katamari';
 import { Attribute, Css, Height, SugarElement, Width } from '@ephox/sugar';
-import Rect from 'tinymce/core/api/geom/Rect';
+import Rect, { GeomRect } from 'tinymce/core/api/geom/Rect';
 import Promise from 'tinymce/core/api/util/Promise';
 import { CropRect } from './CropRect';
 
@@ -170,7 +170,7 @@ const renderImagePanel = (initialUrl: string) => {
     });
   };
 
-  const getRect = (): any => rectState.get();
+  const getRect = (): GeomRect => rectState.get();
 
   const container = Container.sketch({
     dom: {

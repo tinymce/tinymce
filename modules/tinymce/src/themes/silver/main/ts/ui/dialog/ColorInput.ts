@@ -27,15 +27,15 @@ const colorSwatchChangeEvent = Id.generate('color-swatch-change');
 const colorPickerCancelEvent = Id.generate('color-picker-cancel');
 
 interface ColorInputChangeEvent extends CustomEvent {
-  color: () => string;
+  readonly color: string;
 }
 
 interface ColorSwatchChangeEvent extends CustomEvent {
-  value: () => string;
+  readonly value: string;
 }
 
 interface ColorPickerCancelEvent extends CustomEvent {
-  value: () => string;
+  readonly value: string;
 }
 
 type ColorInputSpec = Omit<Dialog.ColorInput, 'type'>;
@@ -162,13 +162,13 @@ export const renderColorInput = (spec: ColorInputSpec, sharedBackstage: UiFactor
       AddEventsBehaviour.config('form-field-events', [
         AlloyEvents.run<ColorInputChangeEvent>(colorInputChangeEvent, (comp, se) => {
           memColorButton.getOpt(comp).each((colorButton) => {
-            Css.set(colorButton.element, 'background-color', se.event().color());
+            Css.set(colorButton.element, 'background-color', se.event.color);
           });
           AlloyTriggers.emitWith(comp, formChangeEvent, { name: spec.name } );
         }),
         AlloyEvents.run<ColorSwatchChangeEvent>(colorSwatchChangeEvent, (comp, se) => {
           FormField.getField(comp).each((field) => {
-            Representing.setValue(field, se.event().value());
+            Representing.setValue(field, se.event.value);
             // Focus the field now that we've set its value
             Composing.getCurrent(comp).each(Focusing.focus);
           });

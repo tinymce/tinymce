@@ -116,8 +116,8 @@ UnitTest.asynctest('DragnDropTest', (success, failure) => {
 
         createDraggable(store, 'draggableDataC', {
           onDragstart: (_comp, simulatedEvent) => {
-            const rawEvent: any = simulatedEvent.event().raw();
-            const transfer: DataTransfer = rawEvent.dataTransfer;
+            const rawEvent = simulatedEvent.event.raw;
+            const transfer = rawEvent.dataTransfer as DataTransfer;
             transfer.items.add('c', 'text/plain');
             store.add('onDragstart');
           }
@@ -135,8 +135,8 @@ UnitTest.asynctest('DragnDropTest', (success, failure) => {
 
         createDraggable(store, 'draggableFilesA', {
           onDragstart: (_comp, simulatedEvent) => {
-            const rawEvent: any = simulatedEvent.event().raw();
-            const transfer: DataTransfer = rawEvent.dataTransfer;
+            const rawEvent = simulatedEvent.event.raw;
+            const transfer = rawEvent.dataTransfer as DataTransfer;
             transfer.items.add(Files.createFile('a.html', 1234, new Blob([ 'abc' ], { type: 'text/html' })));
             transfer.items.add(Files.createFile('b.txt', 123, new Blob([ 'abcd' ], { type: 'text/plain' })));
             store.add('onDragstart');

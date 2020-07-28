@@ -29,7 +29,7 @@ UnitTest.asynctest('Browser Test: ui.slider.HorizontalSliderTest', (success, fai
       model: {
         mode: 'x',
         minX: 50,
-        getInitialValue: Fun.constant({ x: Fun.constant(200) }),
+        getInitialValue: Fun.constant({ x: 200 }),
         maxX: 200
       },
       stepSize: 10,

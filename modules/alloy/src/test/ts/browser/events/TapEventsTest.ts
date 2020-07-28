@@ -1,6 +1,5 @@
 import { GeneralSteps, Logger, Pipeline, Step, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Fun } from '@ephox/katamari';
 import { EventArgs, SugarElement } from '@ephox/sugar';
 
 import * as NativeEvents from 'ephox/alloy/api/events/NativeEvents';
@@ -23,12 +22,12 @@ UnitTest.asynctest('browser events.TapEventsTest', (success, failure) => {
   const alpha = SugarElement.fromText('alpha');
 
   const touches = (x: number, y: number, target: SugarElement) => ({
-    raw: Fun.constant({
+    raw: {
       touches: [
         { clientX: x, clientY: y }
       ]
-    }),
-    target: Fun.constant(target)
+    },
+    target
   } as unknown as EventArgs<TouchEvent>);
 
   const sFireIfReady = (event: EventArgs, type: string) => Step.sync(() => {

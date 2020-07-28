@@ -10,9 +10,9 @@ import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
 import * as Channels from '../../api/messages/Channels';
 import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
-import { CustomEvent, EventFormat, NativeSimulatedEvent } from '../../events/SimulatedEvent';
+import { EventFormat, NativeSimulatedEvent } from '../../events/SimulatedEvent';
 import * as AlloyParts from '../../parts/AlloyParts';
-import { SliderDetail, SliderSpec, SliderValue } from '../types/SliderTypes';
+import { SliderDetail, SliderSpec, SliderUpdateEvent, SliderValue } from '../types/SliderTypes';
 import * as ModelCommon from './ModelCommon';
 
 const sketch: CompositeSketchFactory<SliderDetail, SliderSpec> = (detail: SliderDetail, components: AlloySpec[], _spec: SliderSpec, _externals) => {
@@ -116,8 +116,8 @@ const sketch: CompositeSketchFactory<SliderDetail, SliderSpec> = (detail: Slider
     ),
 
     events: AlloyEvents.derive([
-      AlloyEvents.run<CustomEvent>(ModelCommon.sliderChangeEvent(), (slider, simulatedEvent) => {
-        changeValue(slider, simulatedEvent.event().value());
+      AlloyEvents.run<SliderUpdateEvent>(ModelCommon.sliderChangeEvent(), (slider, simulatedEvent) => {
+        changeValue(slider, simulatedEvent.event.value);
       }) as AlloyEvents.AlloyEventKeyAndHandler<EventFormat>,
       AlloyEvents.runOnAttached((slider, _simulatedEvent) => {
         // Set the initial value

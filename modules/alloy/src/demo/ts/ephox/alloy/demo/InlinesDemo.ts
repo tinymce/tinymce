@@ -165,11 +165,11 @@ export default (): void => {
       },
       events: AlloyEvents.derive([
         AlloyEvents.run<EventArgs>(NativeEvents.contextmenu(), (component, simulatedEvent) => {
-          simulatedEvent.event().kill();
+          simulatedEvent.event.kill();
           InlineView.showAt(inlineComp, {
             anchor: 'makeshift',
-            x: simulatedEvent.event().x(),
-            y: simulatedEvent.event().y()
+            x: simulatedEvent.event.x,
+            y: simulatedEvent.event.y
           }, inlineMenu);
         })
       ])

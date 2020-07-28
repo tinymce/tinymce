@@ -26,7 +26,7 @@ const defaultExecute = (
   simulatedEvent: NativeSimulatedEvent,
   focused: SugarElement
 ): Optional<boolean> => {
-  const isComplex = EditableFields.inside(focused) && KeyMatch.inSet(Keys.SPACE)(simulatedEvent.event());
+  const isComplex = EditableFields.inside(focused) && KeyMatch.inSet(Keys.SPACE)(simulatedEvent.event);
   return isComplex ? Optional.none() : doDefaultExecute(component, simulatedEvent, focused);
 };
 

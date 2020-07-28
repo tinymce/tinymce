@@ -21,9 +21,9 @@ InsertAll.append(container, [ button, input ]);
 
 const doc = SugarElement.fromDom(document);
 DomEvent.bind(doc, 'click', function (event) {
-  console.log('target: ', event.target().dom);
-  console.log('x: ', event.x());
-  console.log('y: ', event.y());
+  console.log('target: ', event.target.dom);
+  console.log('x: ', event.x);
+  console.log('y: ', event.y);
 
   Css.remove(div, 'width');
 });

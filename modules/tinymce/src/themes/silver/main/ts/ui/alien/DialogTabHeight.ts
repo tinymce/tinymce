@@ -12,7 +12,7 @@ import { Css, Focus, Height, SelectorFind, SugarElement, Traverse, Width } from 
 import Delay from 'tinymce/core/api/util/Delay';
 import { formResizeEvent } from '../general/FormEvents';
 
-const measureHeights = (allTabs: Array<Partial<TabbarTypes.TabButtonWithViewSpec>>, tabview, tabviewComp): number[] => Arr.map(allTabs, (_tab, i) => {
+const measureHeights = (allTabs: Array<Partial<TabbarTypes.TabButtonWithViewSpec>>, tabview: SugarElement, tabviewComp: AlloyComponent): number[] => Arr.map(allTabs, (_tab, i) => {
   Replacing.set(tabviewComp, allTabs[i].view());
   const rect = tabview.dom.getBoundingClientRect();
   Replacing.set(tabviewComp, [ ]);

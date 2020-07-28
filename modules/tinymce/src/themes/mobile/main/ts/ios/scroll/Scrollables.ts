@@ -48,8 +48,8 @@ const hasScroll = function (container) {
  */
 const exclusive = function (scope, selector) {
   return DomEvent.bind(scope, 'touchmove', function (event) {
-    SelectorFind.closest(event.target(), selector).filter(hasScroll).fold(function () {
-      event.raw().preventDefault();
+    SelectorFind.closest(event.target, selector).filter(hasScroll).fold(function () {
+      event.prevent();
     }, Fun.noop);
   });
 };

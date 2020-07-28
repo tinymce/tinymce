@@ -29,7 +29,7 @@ import * as InputBase from '../common/InputBase';
 import * as TypeaheadEvents from './TypeaheadEvents';
 
 interface ItemExecuteEvent extends CustomEvent {
-  item: () => AlloyComponent;
+  readonly item: AlloyComponent;
 }
 
 // TODO: Fix this.
@@ -215,9 +215,9 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
       AlloyEvents.run<ItemExecuteEvent>(TypeaheadEvents.itemExecute(), (comp, se) => {
         const sandbox = Coupling.getCoupled(comp, 'sandbox');
 
-        setValueFromItem(detail.model, comp, se.event().item());
+        setValueFromItem(detail.model, comp, se.event.item);
         AlloyTriggers.emit(comp, SystemEvents.typeaheadCancel());
-        detail.onItemExecute(comp, sandbox, se.event().item(), Representing.getValue(comp));
+        detail.onItemExecute(comp, sandbox, se.event.item, Representing.getValue(comp));
 
         Sandboxing.close(sandbox);
         setCursorAtEnd(comp);

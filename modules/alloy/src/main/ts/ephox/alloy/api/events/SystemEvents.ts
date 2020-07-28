@@ -72,8 +72,8 @@ const dismissRequested = Fun.constant('alloy.system.dismissRequested');
 const repositionRequested = Fun.constant('alloy.system.repositionRequested');
 
 export interface AlloyFocusShiftedEvent extends CustomEvent {
-  prevFocus: () => Optional<SugarElement>;
-  newFocus: () => Optional<SugarElement>;
+  readonly prevFocus: Optional<SugarElement>;
+  readonly newFocus: Optional<SugarElement>;
 }
 
 const focusShifted = Fun.constant('alloy.focusmanager.shifted');
@@ -81,16 +81,16 @@ const focusShifted = Fun.constant('alloy.focusmanager.shifted');
 const slotVisibility = Fun.constant('alloy.slotcontainer.visibility');
 
 export interface AlloySlotVisibilityEvent extends CustomEvent {
-  name: () => string;
-  visible: () => boolean;
+  readonly name: string;
+  readonly visible: boolean;
 }
 
 export interface AlloyChangeTabEvent extends CustomEvent {
-  button: () => AlloyComponent;
+  readonly button: AlloyComponent;
 }
 
 export interface AlloyDismissTabEvent extends CustomEvent {
-  button: () => AlloyComponent;
+  readonly button: AlloyComponent;
 }
 const changeTab = Fun.constant('alloy.change.tab');
 const dismissTab = Fun.constant('alloy.dismiss.tab');

@@ -40,14 +40,14 @@ const initCommonEvents = (fireApiEvent: <E extends CustomEvent>(name: string, f:
 
   AlloyEvents.run<FormUnblockEvent>(formUnblockEvent, (_c, _se) => extras.onUnblock()),
 
-  AlloyEvents.run<FormBlockEvent>(formBlockEvent, (_c, se) => extras.onBlock(se.event()))
+  AlloyEvents.run<FormBlockEvent>(formBlockEvent, (_c, se) => extras.onBlock(se.event))
 ];
 
 const initUrlDialog = <T>(getInstanceApi: () => Dialog.UrlDialogInstanceApi, extras: ExtraListeners) => {
   const fireApiEvent = <E extends CustomEvent>(eventName: string, f: (api: Dialog.UrlDialogInstanceApi, spec: Dialog.UrlDialog, e: E, c: AlloyComponent) => void) =>
     AlloyEvents.run<E>(eventName, (c, se) => {
       withSpec(c, (spec, _c) => {
-        f(getInstanceApi(), spec, se.event(), c);
+        f(getInstanceApi(), spec, se.event, c);
       });
     });
 
@@ -60,7 +60,7 @@ const initUrlDialog = <T>(getInstanceApi: () => Dialog.UrlDialogInstanceApi, ext
     ...initCommonEvents(fireApiEvent, extras),
 
     fireApiEvent<FormActionEvent>(formActionEvent, (api, spec, event) => {
-      spec.onAction(api, { name: event.name() });
+      spec.onAction(api, { name: event.name });
     })
   ];
 };
@@ -69,7 +69,7 @@ const initDialog = <T>(getInstanceApi: () => Dialog.DialogInstanceApi<T>, extras
   const fireApiEvent = <E extends CustomEvent>(eventName: string, f: (api: Dialog.DialogInstanceApi<T>, spec: Dialog.Dialog<T>, e: E, c: AlloyComponent) => void) =>
     AlloyEvents.run<E>(eventName, (c, se) => {
       withSpec(c, (spec, _c) => {
-        f(getInstanceApi(), spec, se.event(), c);
+        f(getInstanceApi(), spec, se.event, c);
       });
     });
 
@@ -85,7 +85,7 @@ const initDialog = <T>(getInstanceApi: () => Dialog.DialogInstanceApi<T>, extras
     fireApiEvent<FormSubmitEvent>(formSubmitEvent, (api, spec) => spec.onSubmit(api)),
 
     fireApiEvent<FormChangeEvent<T>>(formChangeEvent, (api, spec, event) => {
-      spec.onChange(api, { name: event.name() });
+      spec.onChange(api, { name: event.name });
     }),
 
     fireApiEvent<FormActionEvent>(formActionEvent, (api, spec, event, component) => {
@@ -93,7 +93,7 @@ const initDialog = <T>(getInstanceApi: () => Dialog.DialogInstanceApi<T>, extras
       const isDisabled = (focused: SugarElement<HTMLElement>) => Attribute.has(focused, 'disabled') || Attribute.getOpt(focused, 'aria-disabled').exists((val) => val === 'true');
       const current = Focus.active();
 
-      spec.onAction(api, { name: event.name(), value: event.value() });
+      spec.onAction(api, { name: event.name, value: event.value });
 
       Focus.active().fold(focusIn, (focused) => {
         // We need to check if the focused element is disabled because apparently firefox likes to leave focus on disabled elements.
@@ -112,7 +112,7 @@ const initDialog = <T>(getInstanceApi: () => Dialog.DialogInstanceApi<T>, extras
     }),
 
     fireApiEvent<FormTabChangeEvent>(formTabChangeEvent, (api, spec, event) => {
-      spec.onTabChange(api, { newTabName: event.name(), oldTabName: event.oldName() });
+      spec.onTabChange(api, { newTabName: event.name, oldTabName: event.oldName });
     }),
 
     // When the dialog is being closed, store the current state of the form

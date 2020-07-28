@@ -81,7 +81,7 @@ const makeSlider = (spec): SketchSpec => {
       minX: 0,
       maxX: 360,
       getInitialValue: () => ({
-        x: () => spec.getInitialValue()
+        x: spec.getInitialValue()
       })
     },
 

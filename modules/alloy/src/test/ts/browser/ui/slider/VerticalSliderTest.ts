@@ -30,7 +30,7 @@ UnitTest.asynctest('Browser Test: ui.slider.VerticalSliderTest', (success, failu
       model: {
         mode: 'y',
         minY: 50,
-        getInitialValue: Fun.constant({ y: Fun.constant(200) }),
+        getInitialValue: Fun.constant({ y: 200 }),
         maxY: 200
       },
       stepSize: 10,

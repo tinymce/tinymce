@@ -4,7 +4,7 @@ import { Compare, EventArgs, Focus, Remove, SugarElement, SugarNode, Traverse } 
 import * as Debugging from '../../debugging/Debugging';
 import * as DescribedHandler from '../../events/DescribedHandler';
 import * as GuiEvents from '../../events/GuiEvents';
-import { FocusingEvent } from '../../events/SimulatedEvent';
+import { FocusingEvent, ReceivingInternalEvent } from '../../events/SimulatedEvent';
 import * as Triggers from '../../events/Triggers';
 import Registry from '../../registry/Registry';
 import * as Tagger from '../../registry/Tagger';
@@ -59,7 +59,7 @@ const takeover = (root: AlloyComponent): GuiSystem => {
 
   const domEvents = GuiEvents.setup(root.element, {
     triggerEvent(eventName: string, event: EventArgs) {
-      return Debugging.monitorEvent(eventName, event.target(), (logger: Debugging.DebuggerLogger) => Triggers.triggerUntilStopped(lookup, eventName, event, logger));
+      return Debugging.monitorEvent(eventName, event.target, (logger: Debugging.DebuggerLogger) => Triggers.triggerUntilStopped(lookup, eventName, event, logger));
     }
   });
 
@@ -82,10 +82,10 @@ const takeover = (root: AlloyComponent): GuiSystem => {
           Triggers.triggerHandler<FocusingEvent>(lookup, SystemEvents.focus(), {
             // originator is used by the default events to ensure that focus doesn't
             // get called infinitely
-            originator: Fun.constant(originator),
+            originator,
             kill: Fun.noop,
             prevent: Fun.noop,
-            target: Fun.constant(target)
+            target
           }, target, logger);
           return false;
         });
@@ -93,7 +93,7 @@ const takeover = (root: AlloyComponent): GuiSystem => {
     },
 
     triggerEscape(comp, simulatedEvent) {
-      systemApi.triggerEvent('keydown', comp.element, simulatedEvent.event());
+      systemApi.triggerEvent('keydown', comp.element, simulatedEvent.event);
     },
 
     getByUid(uid) {
@@ -124,7 +124,7 @@ const takeover = (root: AlloyComponent): GuiSystem => {
     if (!SugarNode.isText(component.element)) {
       registry.register(component);
       Arr.each(component.components(), addToWorld);
-      systemApi.triggerEvent(SystemEvents.systemInit(), component.element, { target: Fun.constant(component.element) });
+      systemApi.triggerEvent(SystemEvents.systemInit(), component.element, { target: component.element });
     }
   };
 
@@ -150,10 +150,10 @@ const takeover = (root: AlloyComponent): GuiSystem => {
     Remove.remove(root.element);
   };
 
-  const broadcastData = (data: { universal: () => boolean; data: () => any; channels?: () => string[] }) => {
+  const broadcastData = (data: ReceivingInternalEvent) => {
     const receivers = registry.filter(SystemEvents.receive());
     Arr.each(receivers, (receiver) => {
-      const descHandler = receiver.descHandler();
+      const descHandler = receiver.descHandler;
       const handler = DescribedHandler.getCurried(descHandler);
       handler(data);
     });
@@ -161,16 +161,16 @@ const takeover = (root: AlloyComponent): GuiSystem => {
 
   const broadcast = <T>(message: T) => {
     broadcastData({
-      universal: Fun.constant(true),
-      data: Fun.constant(message)
+      universal: true,
+      data: message
     });
   };
 
   const broadcastOn = <T>(channels: string[], message: T) => {
     broadcastData({
-      universal: Fun.constant(false),
-      channels: Fun.constant(channels),
-      data: Fun.constant(message)
+      universal: false,
+      channels,
+      data: message
     });
   };
 
