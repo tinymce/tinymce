@@ -5,6 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Ephemera } from '@ephox/darwin';
+
 const strSelected = 'data-mce-selected';
 const strSelectedSelector = 'td[' + strSelected + '],th[' + strSelected + ']';
 // used with not selectors
@@ -14,10 +16,13 @@ const strFirstSelectedSelector = 'td[' + strFirstSelected + '],th[' + strFirstSe
 const strLastSelected = 'data-mce-last-selected';
 const strLastSelectedSelector = 'td[' + strLastSelected + '],th[' + strLastSelected + ']';
 
-export const selected = strSelected;
-export const selectedSelector = strSelectedSelector;
 export const attributeSelector = strAttributeSelector;
-export const firstSelected = strFirstSelected;
-export const firstSelectedSelector = strFirstSelectedSelector;
-export const lastSelected = strLastSelected;
-export const lastSelectedSelector = strLastSelectedSelector;
+
+export const ephemera: Ephemera = {
+  selected: strSelected,
+  selectedSelector: strSelectedSelector,
+  firstSelected: strFirstSelected,
+  firstSelectedSelector: strFirstSelectedSelector,
+  lastSelected: strLastSelected,
+  lastSelectedSelector: strLastSelectedSelector
+};

@@ -25,6 +25,9 @@ import * as TableRender from './TableRender';
 import { TableResize } from './TableResize';
 import { TableSize } from './TableSize';
 import * as Direction from '../queries/Direction';
+import * as CellOperations from '../queries/CellOperations';
+import * as SelectionTypes from '../selection/SelectionTypes';
+import { Selections } from '../selection/Selections';
 
 export {
   CellLocation,
@@ -54,5 +57,8 @@ export {
   RunOperation,
   GridRow,
   OtherCells,
-  Direction
+  Direction,
+  CellOperations,
+  SelectionTypes,
+  Selections
 };

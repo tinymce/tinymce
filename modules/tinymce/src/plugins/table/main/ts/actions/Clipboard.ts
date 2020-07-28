@@ -6,15 +6,11 @@
  */
 
 import { Arr, Fun, Optional } from '@ephox/katamari';
-import { CopySelected, TableFill, TableLookup } from '@ephox/snooker';
+import { CopySelected, TableFill, TableLookup, Selections, SelectionTypes } from '@ephox/snooker';
 import { Replication, SugarElement, SugarElements, SugarNode } from '@ephox/sugar';
-
 import Editor from 'tinymce/core/api/Editor';
-
 import * as TableTargets from '../queries/TableTargets';
 import * as Ephemera from '../selection/Ephemera';
-import { Selections } from '../selection/Selections';
-import * as SelectionTypes from '../selection/SelectionTypes';
 import { TableActions } from './TableActions';
 
 const extractSelected = function (cells) {
@@ -72,6 +68,5 @@ const registerEvents = function (editor: Editor, selections: Selections, actions
   });
 };
 
-export {
-  registerEvents
-};
+export { registerEvents };
+

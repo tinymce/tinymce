@@ -6,7 +6,7 @@
  */
 
 import { Arr, Fun, Obj, Optional, Type } from '@ephox/katamari';
-import { CopyCols, CopyRows, Sizes, TableFill, TableLookup } from '@ephox/snooker';
+import { CopyCols, CopyRows, Sizes, TableFill, TableLookup, Selections } from '@ephox/snooker';
 import { Insert, Remove, Replication, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { enforceNone, enforcePercentage, enforcePixels } from '../actions/EnforceUnit';
@@ -16,17 +16,20 @@ import { Clipboard } from '../core/Clipboard';
 import * as Util from '../core/Util';
 import * as TableTargets from '../queries/TableTargets';
 import { CellSelectionApi } from '../selection/CellSelection';
-import { Selections } from '../selection/Selections';
 import * as TableSelection from '../selection/TableSelection';
 import * as CellDialog from '../ui/CellDialog';
 import { DomModifier } from '../ui/DomModifier';
 import * as RowDialog from '../ui/RowDialog';
 import * as TableDialog from '../ui/TableDialog';
 import { isPercentagesForced, isPixelsForced, isResponsiveForced } from './Settings';
+import { ephemera } from '../selection/Ephemera';
+
+const getSelectionStartCellOrCaption = (editor: Editor) => TableSelection.getSelectionStartCellOrCaption(Util.getSelectionStart(editor));
+const getSelectionStartCell = (editor: Editor) => TableSelection.getSelectionStartCell(Util.getSelectionStart(editor));
 
 const registerCommands = (editor: Editor, actions: TableActions, cellSelection: CellSelectionApi, selections: Selections, clipboard: Clipboard) => {
   const isRoot = Util.getIsRoot(editor);
-  const eraseTable = () => TableSelection.getSelectionStartCellOrCaption(editor).each((cellOrCaption) => {
+  const eraseTable = () => getSelectionStartCellOrCaption(editor).each((cellOrCaption) => {
     TableLookup.table(cellOrCaption, isRoot).filter(Fun.not(isRoot)).each((table) => {
       const cursor = SugarElement.fromText('');
       Insert.after(table, cursor);
@@ -45,7 +48,7 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
     });
   });
 
-  const setSizingMode = (sizing: string) => TableSelection.getSelectionStartCellOrCaption(editor).each((cellOrCaption) => {
+  const setSizingMode = (sizing: string) => getSelectionStartCellOrCaption(editor).each((cellOrCaption) => {
     // Do nothing if tables are forced to use a specific sizing mode
     const isForcedSizing = isResponsiveForced(editor) || isPixelsForced(editor) || isPercentagesForced(editor);
     if (!isForcedSizing) {
@@ -64,9 +67,9 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
 
   const getTableFromCell = (cell: SugarElement): Optional<SugarElement> => TableLookup.table(cell, isRoot);
 
-  const actOnSelection = (execute: CombinedTargetsTableAction): void => TableSelection.getSelectionStartCell(editor).each((cell) => {
+  const actOnSelection = (execute: CombinedTargetsTableAction): void => getSelectionStartCell(editor).each((cell) => {
     getTableFromCell(cell).each((table) => {
-      const targets = TableTargets.forMenu(selections, table, cell);
+      const targets = TableTargets.forMenu(selections, table, cell, ephemera);
       execute(table, targets).each((rng) => {
         editor.selection.setRng(rng);
         editor.focus();
@@ -76,16 +79,16 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
     });
   });
 
-  const copyRowSelection = () => TableSelection.getSelectionStartCell(editor).map((cell) =>
+  const copyRowSelection = () => getSelectionStartCell(editor).map((cell) =>
     getTableFromCell(cell).bind((table) => {
-      const targets = TableTargets.forMenu(selections, table, cell);
+      const targets = TableTargets.forMenu(selections, table, cell, ephemera);
       const generators = TableFill.cellOperations(Fun.noop, SugarElement.fromDom(editor.getDoc()), Optional.none());
       return CopyRows.copyRows(table, targets, generators);
     }));
 
-  const copyColSelection = () => TableSelection.getSelectionStartCell(editor).map((cell) =>
+  const copyColSelection = () => getSelectionStartCell(editor).map((cell) =>
     getTableFromCell(cell).bind((table) => {
-      const targets = TableTargets.forMenu(selections, table, cell);
+      const targets = TableTargets.forMenu(selections, table, cell, ephemera);
       return CopyCols.copyCols(table, targets);
     }));
 
@@ -93,7 +96,7 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
     // If we have clipboard rows to paste
     getRows().each((rows) => {
       const clonedRows = Arr.map(rows, (row) => Replication.deep(row));
-      TableSelection.getSelectionStartCell(editor).each((cell) =>
+      getSelectionStartCell(editor).each((cell) =>
         getTableFromCell(cell).each((table) => {
           const generators = TableFill.paste(SugarElement.fromDom(editor.getDoc()));
           const targets = TableTargets.pasteRows(selections, cell, clonedRows, generators);
@@ -169,7 +172,7 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
       return;
     }
 
-    const cells = TableSelection.getCellsFromSelection(editor);
+    const cells = TableSelection.getCellsFromSelection(Util.getSelectionStart(editor), selections);
     if (cells.length === 0) {
       return;
     }
@@ -178,7 +181,7 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
       const formatName = 'tablecell' + style.toLowerCase().replace('-', '');
       if (editor.formatter.has(formatName) && Type.isString(value)) {
         Arr.each(cells, (cell) => {
-          DomModifier.normal(editor, cell).setFormat(formatName, value);
+          DomModifier.normal(editor, cell.dom()).setFormat(formatName, value);
         });
       }
     });
