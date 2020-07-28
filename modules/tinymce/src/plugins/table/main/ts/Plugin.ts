@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Selections } from '@ephox/snooker';
 import Editor from 'tinymce/core/api/Editor';
 import PluginManager from 'tinymce/core/api/PluginManager';
 import * as Clipboard from './actions/Clipboard';
@@ -25,9 +24,10 @@ import * as Buttons from './ui/Buttons';
 import * as MenuItems from './ui/MenuItems';
 import * as Util from './core/Util';
 import { getSelectionStartCellOrCaption } from './selection/TableSelection';
+import { Selections } from '@ephox/darwin';
 
 function Plugin(editor: Editor) {
-  const selections = Selections(Util.getBody(editor), () => getSelectionStartCellOrCaption(Util.getSelectionStart(editor)), ephemera.selectedSelector);
+  const selections = Selections(() => Util.getBody(editor), () => getSelectionStartCellOrCaption(Util.getSelectionStart(editor)), ephemera.selectedSelector);
   const selectionTargets = getSelectionTargets(editor, selections);
   const resizeHandler = getResizeHandler(editor);
   const cellSelection = CellSelection(editor, resizeHandler.lazyResize, selectionTargets);

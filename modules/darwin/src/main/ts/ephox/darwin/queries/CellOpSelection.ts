@@ -1,9 +1,10 @@
-import { TableSelection } from '@ephox/darwin';
 import { Arr, Fun, Optional } from '@ephox/katamari';
 import { Attribute, SugarElement } from '@ephox/sugar';
-import * as Structs from '../api/Structs';
+import { Structs } from '@ephox/snooker';
 import { Selections } from '../selection/Selections';
-import SelectionTypes from '../selection/SelectionTypes';
+import * as TableSelection from '../api/TableSelection';
+import { Ephemera } from '../api/Ephemera';
+import * as SelectionTypes from '../selection/SelectionTypes';
 
 export interface Mergable {
   bounds: () => Structs.Bounds;
@@ -15,7 +16,7 @@ const selection = (selections: Selections): SugarElement[] =>
   SelectionTypes.cata(selections.get(),
     Fun.constant([]),
     Fun.identity,
-    Fun.identity
+    Arr.pure
   );
 
 const unmergable = (selections: Selections): Optional<SugarElement[]> => {
@@ -27,14 +28,14 @@ const unmergable = (selections: Selections): Optional<SugarElement[]> => {
   return candidates.length > 0 && Arr.forall(candidates, hasSpan) ? Optional.some(candidates) : Optional.none();
 };
 
-const mergable = (table: SugarElement<HTMLTableElement>, selections: Selections, firstSelectedSelector: string, lastSelectedSelector: string): Optional<Mergable> =>
+const mergable = (table: SugarElement<HTMLTableElement>, selections: Selections, ephemera: Ephemera): Optional<Mergable> =>
   SelectionTypes.cata<Optional<Mergable>>(selections.get(),
     Optional.none,
-    (cells) => {
+    (cells: SugarElement<Element>[]) => {
       if (cells.length === 0) {
         return Optional.none();
       }
-      return TableSelection.retrieveBox(table, firstSelectedSelector, lastSelectedSelector).bind((bounds: Structs.Bounds) =>
+      return TableSelection.retrieveBox(table, ephemera.firstSelectedSelector, ephemera.lastSelectedSelector).bind((bounds: Structs.Bounds) =>
         cells.length > 1 ? Optional.some({
           bounds: Fun.constant(bounds),
           cells: Fun.constant(cells)
@@ -44,3 +45,4 @@ const mergable = (table: SugarElement<HTMLTableElement>, selections: Selections,
   );
 
 export { mergable, unmergable, selection };
+

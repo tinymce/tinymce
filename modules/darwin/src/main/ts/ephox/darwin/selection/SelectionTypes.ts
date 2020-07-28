@@ -15,22 +15,19 @@ export interface SelectionType {
   log: (label: string) => void;
 }
 
-const type = Adt.generate<{
+const type: {
   none: () => SelectionType;
   multiple: (elements: SugarElement<Element>[]) => SelectionType;
   single: (element: SugarElement<Element>) => SelectionType;
-}>([
-      { none: [] },
-      { multiple: [ 'elements' ] },
-      { single: [ 'element' ] }
-    ]);
+} = Adt.generate([
+  { none: [] },
+  { multiple: [ 'elements' ] },
+  { single: [ 'element' ] }
+]);
 
-const cata = <T> (subject: SelectionType, onNone: () => T, onMultiple: (multiple: SugarElement<Element>[]) => T, onSingle: (element: SugarElement<Element>) => T) =>
+export const cata = <T> (subject: SelectionType, onNone: () => T, onMultiple: (multiple: SugarElement<Element>[]) => T, onSingle: (element: SugarElement<Element>) => T) =>
   subject.fold(onNone, onMultiple, onSingle);
 
-export default {
-  cata,
-  none: type.none,
-  multiple: type.multiple,
-  single: type.single
-};
+export const none = type.none;
+export const multiple = type.multiple;
+export const single = type.single;

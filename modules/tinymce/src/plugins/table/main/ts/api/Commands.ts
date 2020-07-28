@@ -5,8 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Selections } from '@ephox/darwin';
 import { Arr, Fun, Obj, Optional, Type } from '@ephox/katamari';
-import { CopyCols, CopyRows, Sizes, TableFill, TableLookup, Selections } from '@ephox/snooker';
+import { CopyCols, CopyRows, Sizes, TableFill, TableLookup } from '@ephox/snooker';
 import { Insert, Remove, Replication, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { enforceNone, enforcePercentage, enforcePixels } from '../actions/EnforceUnit';
@@ -16,13 +17,13 @@ import { Clipboard } from '../core/Clipboard';
 import * as Util from '../core/Util';
 import * as TableTargets from '../queries/TableTargets';
 import { CellSelectionApi } from '../selection/CellSelection';
+import { ephemera } from '../selection/Ephemera';
 import * as TableSelection from '../selection/TableSelection';
 import * as CellDialog from '../ui/CellDialog';
 import { DomModifier } from '../ui/DomModifier';
 import * as RowDialog from '../ui/RowDialog';
 import * as TableDialog from '../ui/TableDialog';
 import { isPercentagesForced, isPixelsForced, isResponsiveForced } from './Settings';
-import { ephemera } from '../selection/Ephemera';
 
 const getSelectionStartCellOrCaption = (editor: Editor) => TableSelection.getSelectionStartCellOrCaption(Util.getSelectionStart(editor));
 const getSelectionStartCell = (editor: Editor) => TableSelection.getSelectionStartCell(Util.getSelectionStart(editor));
@@ -152,7 +153,7 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
     // AP-101 TableDialog.open renders a slightly different dialog if isNew is true
     mceTableProps: Fun.curry(TableDialog.open, editor, false),
     mceTableRowProps: Fun.curry(RowDialog.open, editor),
-    mceTableCellProps: Fun.curry(CellDialog.open, editor)
+    mceTableCellProps: Fun.curry(CellDialog.open, editor, selections)
   }, (func, name) => editor.addCommand(name, () => func()));
 
   editor.addCommand('mceInsertTable', (_ui, args) => {
@@ -190,3 +191,4 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
 };
 
 export { registerCommands };
+

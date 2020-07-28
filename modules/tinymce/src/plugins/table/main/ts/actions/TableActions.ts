@@ -7,7 +7,7 @@
 
 import { Arr, Fun, Obj, Optional } from '@ephox/katamari';
 import { DomDescent } from '@ephox/phoenix';
-import { CellMutations, Direction, ResizeWire, RunOperation, Selections, TableDirection, TableFill, TableGridSize, TableOperations } from '@ephox/snooker';
+import { CellMutations, Direction, ResizeWire, RunOperation, TableDirection, TableFill, TableGridSize, TableOperations } from '@ephox/snooker';
 import { SugarElement, SugarNode } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { fireNewCell, fireNewRow } from '../api/Events';
@@ -17,7 +17,7 @@ import * as Util from '../core/Util';
 import * as TableSize from '../queries/TableSize';
 import { ephemera } from '../selection/Ephemera';
 import { getCellsFromSelection, getRowsFromSelection } from '../selection/TableSelection';
-
+import { Selections } from '@ephox/darwin';
 
 type TableAction<T> = (table: SugarElement<HTMLTableElement>, target: T) => Optional<Range>;
 export type SimpleTableAction = (editor: Editor, args: Record<string, any>) => void;
@@ -116,7 +116,8 @@ export const TableActions = (editor: Editor, lazyWire: () => ResizeWire, selecti
 
   const setTableCellType = (editor: Editor, args: Record<string, any>) =>
     extractType(args, [ 'td', 'th' ]).each((type) => {
-      switchCellType(editor.dom, getCellsFromSelection(Util.getSelectionStart(editor), selections), type, null);
+      const cells = Arr.map(getCellsFromSelection(Util.getSelectionStart(editor), selections), (c) => c.dom());
+      switchCellType(editor.dom, cells, type, null);
     });
 
   const setTableRowType = (editor: Editor, args: Record<string, any>) =>

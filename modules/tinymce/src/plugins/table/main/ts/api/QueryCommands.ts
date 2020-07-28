@@ -5,15 +5,16 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Selections } from '@ephox/darwin';
 import { Obj, Optional } from '@ephox/katamari';
-import { TableLookup, Selections } from '@ephox/snooker';
+import { TableLookup } from '@ephox/snooker';
 import { SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { TableActions } from '../actions/TableActions';
 import * as Util from '../core/Util';
 import * as TableTargets from '../queries/TableTargets';
-import * as TableSelection from '../selection/TableSelection';
 import { ephemera } from '../selection/Ephemera';
+import * as TableSelection from '../selection/TableSelection';
 
 const registerQueryCommands = (editor: Editor, actions: TableActions, selections: Selections) => {
   const isRoot = Util.getIsRoot(editor);

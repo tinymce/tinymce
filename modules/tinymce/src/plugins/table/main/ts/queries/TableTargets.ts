@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Ephemera } from '@ephox/darwin';
+import { Ephemera, Selections, CellOpSelection } from '@ephox/darwin';
 import { Fun, Optional } from '@ephox/katamari';
-import { CellOperations, RunOperation, Selections, SimpleGenerators } from '@ephox/snooker';
+import { RunOperation, SimpleGenerators } from '@ephox/snooker';
 import { SugarElement } from '@ephox/sugar';
 
 const noMenu = (cell: SugarElement<HTMLTableCellElement | HTMLTableCaptionElement>): RunOperation.CombinedTargets => ({
@@ -19,9 +19,9 @@ const noMenu = (cell: SugarElement<HTMLTableCellElement | HTMLTableCaptionElemen
 
 const forMenu = (selections: Selections, table: SugarElement<HTMLTableElement>, cell: SugarElement<HTMLTableCellElement>, ephemera: Ephemera): RunOperation.CombinedTargets => ({
   element: Fun.constant(cell),
-  mergable: Fun.constant(CellOperations.mergable(table, selections, ephemera)),
-  unmergable: Fun.constant(CellOperations.unmergable(cell, selections)),
-  selection: Fun.constant(CellOperations.selection(cell, selections))
+  mergable: Fun.constant(CellOpSelection.mergable(table, selections, ephemera)),
+  unmergable: Fun.constant(CellOpSelection.unmergable(selections)),
+  selection: Fun.constant(CellOpSelection.selection(selections))
 });
 
 const paste = (element: SugarElement<Element>, clipboard: SugarElement<HTMLTableElement>, generators: SimpleGenerators): RunOperation.TargetPaste => ({
@@ -31,7 +31,7 @@ const paste = (element: SugarElement<Element>, clipboard: SugarElement<HTMLTable
 });
 
 const pasteRows = (selections: Selections, cell: SugarElement<HTMLTableCellElement>, clipboard: SugarElement<HTMLTableRowElement>[], generators: SimpleGenerators): RunOperation.TargetPasteRows => ({
-  selection: Fun.constant(CellOperations.selection(cell, selections)),
+  selection: Fun.constant(CellOpSelection.selection(selections)),
   clipboard: Fun.constant(clipboard),
   generators: Fun.constant(generators)
 });

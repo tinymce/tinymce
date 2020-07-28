@@ -7,7 +7,8 @@
 
 import { Arr, Optionals } from '@ephox/katamari';
 import { Attribute, Compare, SugarElement, SugarElements, SelectorFind } from '@ephox/sugar';
-import { CellOperations, TableLookup, Selections } from '@ephox/snooker';
+import { TableLookup } from '@ephox/snooker';
+import { Selections, CellOpSelection } from '@ephox/darwin';
 
 const getSelectionStartFromSelector = <T extends Element>(selector: string) => (start: SugarElement<Node>) =>
   SelectorFind.closest<T>(start, selector);
@@ -20,7 +21,7 @@ const getSelectionStartCellOrCaption = getSelectionStartFromSelector<HTMLTableCe
 
 const getCellsFromSelection = (start: SugarElement<Node>, selections: Selections): SugarElement<HTMLTableCellElement>[] =>
   getSelectionStartCell(start)
-    .map((_cell) => CellOperations.selection(selections))
+    .map((_cell) => CellOpSelection.selection(selections))
     .getOr([]);
 
 const getRowsFromSelection = (start: SugarElement<Node>, selector: string): SugarElement<HTMLTableRowElement>[] => {
