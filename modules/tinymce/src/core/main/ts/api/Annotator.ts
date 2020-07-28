@@ -100,7 +100,7 @@ const Annotator = function (editor: Editor): Annotator {
      */
     getAll: (name: string): Record<string, Element[]> => {
       const directory = findAll(editor, name);
-      return Obj.map(directory, (elems) => Arr.map(elems, (elem) => elem.dom()));
+      return Obj.map(directory, (elems) => Arr.map(elems, (elem) => elem.dom));
     }
   };
 };

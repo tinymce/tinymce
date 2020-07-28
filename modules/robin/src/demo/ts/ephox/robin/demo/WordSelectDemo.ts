@@ -13,10 +13,10 @@ const select = function (s: SugarElement, so: number, f: SugarElement, fo: numbe
   Optional.from(window.getSelection()).each((selection) => {
     selection.removeAllRanges();
     const range = document.createRange();
-    range.setStart(s.dom(), so);
-    range.setEnd(f.dom(), fo);
+    range.setStart(s.dom, so);
+    range.setEnd(f.dom, fo);
     // eslint-disable-next-line no-console
-    console.log('setting range: ', s.dom(), so, f.dom(), fo);
+    console.log('setting range: ', s.dom, so, f.dom, fo);
     selection.addRange(range);
   });
 };

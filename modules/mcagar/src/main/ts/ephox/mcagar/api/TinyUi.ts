@@ -110,7 +110,7 @@ export const TinyUi = function (editor: Editor): TinyUi {
 
   const getDialogByElement = function (element: SugarElement) {
     return Arr.find(editor.windowManager.getWindows(), function (win) {
-      return element.dom().id === win._id;
+      return element.dom.id === win._id;
     });
   };
 

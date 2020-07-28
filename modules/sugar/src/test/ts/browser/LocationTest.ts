@@ -59,7 +59,7 @@ UnitTest.asynctest('LocationTest', (success, failure) => {
       run.unbind();
       try {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        const iframeWin = iframe.dom().contentWindow!;
+        const iframeWin = iframe.dom.contentWindow!;
         const iframeDoc = iframeWin.document;
         const html = SugarElement.fromDom(iframeDoc.documentElement);
         const body = SugarElement.fromDom(iframeDoc.body);

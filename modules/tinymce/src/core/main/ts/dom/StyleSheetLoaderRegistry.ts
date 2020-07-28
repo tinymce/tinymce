@@ -23,7 +23,7 @@ export const create = (): StyleSheetLoaderRegistry => {
   const forElement = (referenceElement: SugarElement<Node>, settings: StyleSheetLoaderSettings) => {
     const root = SugarShadowDom.getRootNode(referenceElement);
 
-    const rootDom = root.dom();
+    const rootDom = root.dom;
     return Optional.from(map.get(rootDom)).getOrThunk(() => {
       const sl = StyleSheetLoader(rootDom, settings);
       map.set(rootDom, sl);

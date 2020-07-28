@@ -8,7 +8,7 @@ interface VendorElement extends Element {
 }
 
 const is = <T extends Element = Element> (element: SugarElement<Node>, selector: string): element is SugarElement<T> => {
-  const dom = element.dom();
+  const dom = element.dom;
   if (dom.nodeType !== ELEMENT) {
     return false;
   } else {
@@ -36,12 +36,12 @@ const bypassSelector = (dom: Node) =>
     (dom as Element | Document | DocumentFragment).childElementCount === 0;
 
 const all = <T extends Element = Element> (selector: string, scope?: SugarElement<Node>): SugarElement<T>[] => {
-  const base = scope === undefined ? document : scope.dom();
+  const base = scope === undefined ? document : scope.dom;
   return bypassSelector(base) ? [] : Arr.map((base as Element | Document).querySelectorAll<T>(selector), SugarElement.fromDom);
 };
 
 const one = <T extends Element = Element> (selector: string, scope?: SugarElement<Node>) => {
-  const base = scope === undefined ? document : scope.dom();
+  const base = scope === undefined ? document : scope.dom;
   return bypassSelector(base) ? Optional.none<SugarElement<T>>() : Optional.from((base as Element | Document).querySelector<T>(selector)).map(SugarElement.fromDom);
 };
 

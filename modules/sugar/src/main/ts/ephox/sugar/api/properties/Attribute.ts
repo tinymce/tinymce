@@ -18,18 +18,18 @@ const rawSet = (dom: Element, key: string, value: string | boolean | number): vo
 };
 
 const set = (element: SugarElement<Element>, key: string, value: string | boolean | number): void => {
-  rawSet(element.dom(), key, value);
+  rawSet(element.dom, key, value);
 };
 
 const setAll = (element: SugarElement<Element>, attrs: Record<string, string | boolean | number>): void => {
-  const dom = element.dom();
+  const dom = element.dom;
   Obj.each(attrs, (v, k) => {
     rawSet(dom, k, v);
   });
 };
 
 const get = (element: SugarElement<Element>, key: string): undefined | string => {
-  const v = element.dom().getAttribute(key);
+  const v = element.dom.getAttribute(key);
 
   // undefined is the more appropriate value for JS, and this matches JQuery
   return v === null ? undefined : v;
@@ -39,23 +39,23 @@ const getOpt = (element: SugarElement<Element>, key: string): Optional<string> =
   Optional.from(get(element, key));
 
 const has = (element: SugarElement<Node>, key: string): boolean => {
-  const dom = element.dom();
+  const dom = element.dom;
 
   // return false for non-element nodes, no point in throwing an error
   return dom && (dom as Element).hasAttribute ? (dom as Element).hasAttribute(key) : false;
 };
 
 const remove = (element: SugarElement<Element>, key: string): void => {
-  element.dom().removeAttribute(key);
+  element.dom.removeAttribute(key);
 };
 
 const hasNone = (element: SugarElement<Node>): boolean => {
-  const attrs = (element.dom() as Element).attributes;
+  const attrs = (element.dom as Element).attributes;
   return attrs === undefined || attrs === null || attrs.length === 0;
 };
 
 const clone = (element: SugarElement<Element>): Record<string, string> =>
-  Arr.foldl(element.dom().attributes, (acc, attr) => {
+  Arr.foldl(element.dom.attributes, (acc, attr) => {
     acc[attr.name] = attr.value;
     return acc;
   }, {} as Record<string, string>);

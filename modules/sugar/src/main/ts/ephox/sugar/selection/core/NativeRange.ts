@@ -9,7 +9,7 @@ const selectNodeContents = (win: Window, element: SugarElement<Node>) => {
   return rng;
 };
 
-const selectNodeContentsUsing = (rng: Range, element: SugarElement<Node>) => rng.selectNodeContents(element.dom());
+const selectNodeContentsUsing = (rng: Range, element: SugarElement<Node>) => rng.selectNodeContents(element.dom);
 
 const isWithin = (outerRange: Range, innerRange: Range) =>
   // Adapted from: http://stackoverflow.com/questions/5605401/insert-link-in-contenteditable-element
@@ -20,28 +20,28 @@ const create = (win: Window) => win.document.createRange();
 // NOTE: Mutates the range.
 const setStart = (rng: Range, situ: Situ) => {
   situ.fold((e) => {
-    rng.setStartBefore(e.dom());
+    rng.setStartBefore(e.dom);
   }, (e, o) => {
-    rng.setStart(e.dom(), o);
+    rng.setStart(e.dom, o);
   }, (e) => {
-    rng.setStartAfter(e.dom());
+    rng.setStartAfter(e.dom);
   });
 };
 
 const setFinish = (rng: Range, situ: Situ) => {
   situ.fold((e) => {
-    rng.setEndBefore(e.dom());
+    rng.setEndBefore(e.dom);
   }, (e, o) => {
-    rng.setEnd(e.dom(), o);
+    rng.setEnd(e.dom, o);
   }, (e) => {
-    rng.setEndAfter(e.dom());
+    rng.setEndAfter(e.dom);
   });
 };
 
 const replaceWith = (rng: Range, fragment: SugarElement<Node>) => {
   // Note: this document fragment approach may not work on IE9.
   deleteContents(rng);
-  rng.insertNode(fragment.dom());
+  rng.insertNode(fragment.dom);
 };
 
 const relativeToNative = (win: Window, startSitu: Situ, finishSitu: Situ) => {
@@ -53,8 +53,8 @@ const relativeToNative = (win: Window, startSitu: Situ, finishSitu: Situ) => {
 
 const exactToNative = (win: Window, start: SugarElement<Node>, soffset: number, finish: SugarElement<Node>, foffset: number) => {
   const rng = win.document.createRange();
-  rng.setStart(start.dom(), soffset);
-  rng.setEnd(finish.dom(), foffset);
+  rng.setStart(start.dom, soffset);
+  rng.setEnd(finish.dom, foffset);
   return rng;
 };
 

@@ -117,7 +117,7 @@ UnitTest.asynctest('SelectionInDocPositionTest', (success, failure) => {
                 const root = data.inline.element();
                 const path = data.path;
                 const range = Cursors.calculate(root, path);
-                range.start().dom().scrollIntoView();
+                range.start().dom.scrollIntoView();
                 return Result.value(data);
               }),
 

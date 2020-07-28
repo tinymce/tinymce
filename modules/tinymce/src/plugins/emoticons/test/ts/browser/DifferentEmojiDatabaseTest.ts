@@ -35,7 +35,7 @@ UnitTest.asynctest('browser.tinymce.plugins.emoticons.DifferentEmojiDatabaseTest
         ),
         Chain.asStep(SugarBody.body(), [
           UiFinder.cFindAllIn('[role="tab"]'),
-          Chain.mapper((elements: SugarElement[]) => Arr.map(elements, (elm: SugarElement) => elm.dom().textContent)),
+          Chain.mapper((elements: SugarElement[]) => Arr.map(elements, (elm: SugarElement) => elm.dom.textContent)),
           Assertions.cAssertEq('Categories match', categories)
         ])
       ], onSuccess, onFailure);

@@ -26,7 +26,7 @@ const mutate = (element: SugarElement<HTMLElement>, f: () => void): () => void =
 
   // childList is super expensive, but required on Safari where the iframe has no width or height immediately.
   // If it becomes a performance issue, we can make childList === isSafari but thus far Sugar has no platform detection so that would be a sad day.
-  observer.observe(Traverse.owner(element).dom(), { attributes: true, subtree: true, childList: true, attributeFilter: [ 'style', 'class' ] });
+  observer.observe(Traverse.owner(element).dom, { attributes: true, subtree: true, childList: true, attributeFilter: [ 'style', 'class' ] });
 
   return unbindMutate;
 };

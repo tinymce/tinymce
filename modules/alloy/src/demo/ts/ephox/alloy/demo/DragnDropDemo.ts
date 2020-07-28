@@ -94,13 +94,13 @@ export default (): void => {
         // console.log('canDrag');
           true,
         onDragstart: (_component, _simulatedEvent) => {
-          // console.log('onDragstart', component.element().dom());
+          // console.log('onDragstart', component.element().dom);
         },
         onDragover: (_component, _simulatedEvent) => {
-          // console.log('onDragover', component.element().dom());
+          // console.log('onDragover', component.element().dom);
         },
         onDragend: (_component, _simulatedEvent) => {
-          // console.log('onDragend', component.element().dom());
+          // console.log('onDragend', component.element().dom);
         }
       })
     ])

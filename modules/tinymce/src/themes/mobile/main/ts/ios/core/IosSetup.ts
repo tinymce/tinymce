@@ -32,7 +32,7 @@ const register = function (toolstrip, socket, container, outerWindow, structure,
   const scrollBounds = function () {
     const rects = Rectangles.getRectangles(cWin);
     return Optional.from(rects[0]).bind(function (rect) {
-      const viewTop = rect.top() - socket.dom().scrollTop;
+      const viewTop = rect.top() - socket.dom.scrollTop;
       const outside = viewTop > outerWindow.innerHeight + VIEW_MARGIN || viewTop < -VIEW_MARGIN;
       return outside ? Optional.some({
         top: Fun.constant(viewTop),
@@ -50,7 +50,7 @@ const register = function (toolstrip, socket, container, outerWindow, structure,
         const extraScroll = scrollBounds();
         extraScroll.each(function (extra) {
           // TODO: Smoothly animate this in a way that doesn't conflict with anything else.
-          socket.dom().scrollTop = socket.dom().scrollTop + extra.top();
+          socket.dom.scrollTop = socket.dom.scrollTop + extra.top();
         });
         scroller.start(0);
         structure.refresh();
@@ -191,7 +191,7 @@ const setup = function (bag: IosSetupOptions) {
   };
 
   const syncHeight = function () {
-    Css.set(contentElement, 'height', contentElement.dom().contentWindow.document.body.scrollHeight + 'px');
+    Css.set(contentElement, 'height', contentElement.dom.contentWindow.document.body.scrollHeight + 'px');
   };
 
   const setViewportOffset = function (newYOffset) {

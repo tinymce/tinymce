@@ -15,7 +15,7 @@ export type LookupResult = { toolbars: ContextTypes[]; elem: SugarElement };
 type MatchResult = { contextToolbars: ContextTypes[]; contextForms: ContextTypes[] };
 
 const matchTargetWith = (elem: SugarElement, candidates: ContextTypes[]): MatchResult => {
-  const ctxs = Arr.filter(candidates, (toolbarApi) => toolbarApi.predicate(elem.dom()));
+  const ctxs = Arr.filter(candidates, (toolbarApi) => toolbarApi.predicate(elem.dom));
   // TODO: somehow type this properly (Arr.partition can't)
   // e.g. here pass is Toolbar.ContextToolbar and fail is Toolbar.ContextForm
   const { pass, fail } = Arr.partition(ctxs, (t) => t.type === 'contexttoolbar');

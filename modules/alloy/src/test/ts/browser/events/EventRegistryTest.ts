@@ -90,7 +90,7 @@ UnitTest.asynctest('EventRegistryTest', (success, failure) => {
 
   const sAssertFind = (label: string, expected: ExpectedType, type: string, id: string) => {
     const cFindHandler = Chain.binder((target: SugarElement) => events.find(isRoot, type, target).fold(
-      () => Result.error('No event handler for ' + type + ' on ' + target.dom()),
+      () => Result.error('No event handler for ' + type + ' on ' + target.dom),
       Result.value
     ));
 

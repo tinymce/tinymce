@@ -39,7 +39,7 @@ const getAnchorSelection = (win: Window, anchorInfo: SelectionAnchor): Optional<
 };
 
 const placement = (component: AlloyComponent, anchorInfo: SelectionAnchor, origin: Origins.OriginAdt): Optional<Anchoring> => {
-  const win: Window = Traverse.defaultView(anchorInfo.root).dom();
+  const win: Window = Traverse.defaultView(anchorInfo.root).dom;
   const rootPoint = ContainerOffsets.getRootPoint(component, origin, anchorInfo);
 
   const selectionBox = getAnchorSelection(win, anchorInfo).bind((sel) => {

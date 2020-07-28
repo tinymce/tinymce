@@ -11,7 +11,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.ControlSelectionTest', function (su
   const eventCounter = Cell<Record<string, number>>({ });
 
   const sContextMenuClickInMiddleOf = (editor: Editor, elementPath: number[]) => Step.sync(() => {
-    const element = Hierarchy.follow(SugarElement.fromDom(editor.getBody()), elementPath).getOrDie().dom() as HTMLElement;
+    const element = Hierarchy.follow(SugarElement.fromDom(editor.getBody()), elementPath).getOrDie().dom as HTMLElement;
     const rect = element.getBoundingClientRect();
     const clientX = (rect.left + rect.width / 2), clientY = (rect.top + rect.height / 2);
     editor.fire('mousedown', { target: element, clientX, clientY, button: 2 });

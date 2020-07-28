@@ -6,7 +6,7 @@ import * as DomSearch from 'ephox/phoenix/api/dom/DomSearch';
 
 UnitTest.test('DomSearchingTest', function () {
   const root = SugarElement.fromTag('div');
-  root.dom().innerHTML = 'This is some<ol><li>text</li></ol>';
+  root.dom.innerHTML = 'This is some<ol><li>text</li></ol>';
 
   const result = DomSearch.run([ root ], [{
     word: Fun.constant('sometext'),

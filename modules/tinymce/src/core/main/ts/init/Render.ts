@@ -200,7 +200,7 @@ const render = function (editor: Editor) {
   const element = SugarElement.fromDom(editor.getElement());
   const snapshot = Attribute.clone(element);
   editor.on('remove', () => {
-    Arr.eachr(element.dom().attributes, (attr) =>
+    Arr.eachr(element.dom.attributes, (attr) =>
       Attribute.remove(element, attr.name)
     );
     Attribute.setAll(element, snapshot);

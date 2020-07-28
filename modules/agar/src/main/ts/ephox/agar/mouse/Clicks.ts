@@ -45,10 +45,10 @@ const event = (type: EventType, { dx, dy, ...settings }: Settings) => (element: 
       cancelable: true,
       ...settings
     });
-    element.dom().dispatchEvent(event);
+    element.dom.dispatchEvent(event);
   } else {
     // Adapted from: http://stackoverflow.com/questions/17468611/triggering-click-event-phantomjs
-    const event: MouseEvent = (<Document> element.dom().ownerDocument).createEvent('MouseEvents');
+    const event: MouseEvent = (<Document> element.dom.ownerDocument).createEvent('MouseEvents');
     event.initMouseEvent(
       type,
       true, /* bubble */ true, /* cancelable */
@@ -62,12 +62,12 @@ const event = (type: EventType, { dx, dy, ...settings }: Settings) => (element: 
       Obj.get(settings, 'button').getOr(0), /* button */
       null
     );
-    element.dom().dispatchEvent(event);
+    element.dom.dispatchEvent(event);
   }
 };
 
 const click = (settings: Settings) => (element: SugarElement<Node>) => {
-  const dom = element.dom();
+  const dom = element.dom;
   Obj.get(dom as any, 'click').fold(() => event('click', settings)(element), Fun.call);
 };
 const mouseDown = Fun.curry(event, 'mousedown');
@@ -79,7 +79,7 @@ const contextMenu = (settings: Settings) => event('contextmenu', { button: right
 
 // Note: This can be used for phantomjs.
 const trigger = function (element: SugarElement<any>): any {
-  const ele: HTMLElement = element.dom();
+  const ele: HTMLElement = element.dom;
   if (ele.click !== undefined) {
     return ele.click();
   }
@@ -90,7 +90,7 @@ const trigger = function (element: SugarElement<any>): any {
 
 const point = (type: string, button: number, element: SugarElement<any>, x: number, y: number): void => {
   // Adapted from: http://stackoverflow.com/questions/17468611/triggering-click-event-phantomjs
-  const ev: MouseEvent = (<Document> element.dom().ownerDocument).createEvent('MouseEvents');
+  const ev: MouseEvent = (<Document> element.dom.ownerDocument).createEvent('MouseEvents');
   ev.initMouseEvent(
     type,
     true /* bubble */, true /* cancelable */,
@@ -99,7 +99,7 @@ const point = (type: string, button: number, element: SugarElement<any>, x: numb
     false, false, false, false, /* modifier keys */
     button, null
   );
-  element.dom().dispatchEvent(ev);
+  element.dom.dispatchEvent(ev);
 };
 
 export {

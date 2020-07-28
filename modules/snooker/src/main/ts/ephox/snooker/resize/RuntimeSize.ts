@@ -14,7 +14,7 @@ const toNumber = (px: string, fallback: number) => {
 const getProp = (elm: SugarElement, name: string, fallback: number) => toNumber(Css.get(elm, name), fallback);
 
 const getCalculatedHeight = (cell: SugarElement<HTMLElement>) => {
-  const height = cell.dom().getBoundingClientRect().height;
+  const height = cell.dom.getBoundingClientRect().height;
   const boxSizing = Css.get(cell, 'box-sizing');
   if (boxSizing === 'border-box') {
     return height;
@@ -30,7 +30,7 @@ const getCalculatedHeight = (cell: SugarElement<HTMLElement>) => {
 };
 
 const getCalculatedWidth = (cell: SugarElement<HTMLElement>) => {
-  const width = cell.dom().getBoundingClientRect().width;
+  const width = cell.dom.getBoundingClientRect().width;
   const boxSizing = Css.get(cell, 'box-sizing');
   if (boxSizing === 'border-box') {
     return width;

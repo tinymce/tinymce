@@ -228,11 +228,11 @@ UnitTest.test('Arbitraries Test', () => {
         // // Not sure how to handle window selection ... will do it without fussy for now.
         const selection = window.getSelection();
         const rng = document.createRange();
-        rng.setStart(scenario.selection().start().dom(), scenario.selection().soffset());
-        rng.setEnd(scenario.selection().finish().dom(), scenario.selection().foffset());
+        rng.setStart(scenario.selection().start().dom, scenario.selection().soffset());
+        rng.setEnd(scenario.selection().finish().dom, scenario.selection().foffset());
         selection.removeAllRanges();
 
-        Assertions.assertEq('There should be no blockquotes', 0, scenario.root().dom().querySelectorAll('strike').length);
+        Assertions.assertEq('There should be no blockquotes', 0, scenario.root().dom.querySelectorAll('strike').length);
 
         // TODO: Note, this isn't going to handle backwards ranges. (Fussy does...)
         selection.addRange(rng);

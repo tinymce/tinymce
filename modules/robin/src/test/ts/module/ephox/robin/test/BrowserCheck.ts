@@ -11,7 +11,7 @@ const run = function (input: string, f: (e: SugarElement) => void) {
   const body = SelectorFind.first('body').getOrDie();
   const container = SugarElement.fromTag('div');
   Insert.append(body, container);
-  container.dom().innerHTML = input;
+  container.dom.innerHTML = input;
   const node = getNode(container);
   f(node);
   Remove.remove(container);

@@ -4,7 +4,7 @@ import * as Css from '../properties/Css';
 
 const api = Dimension('width', (element: SugarElement<HTMLElement>) =>
   // IMO passing this function is better than using dom['offset' + 'width']
-  element.dom().offsetWidth
+  element.dom.offsetWidth
 );
 
 const set = (element: SugarElement<HTMLElement>, h: string | number) => api.set(element, h);

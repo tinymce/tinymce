@@ -27,8 +27,8 @@ UnitTest.asynctest('browser.tinymce.themes.silver.editor.header.StickyHeaderScro
   const sScrollRangeIntoView = (editor: Editor, path: number[], offset: number, alignToTop?: boolean) => Step.sync(() => {
     const x = Cursors.calculateOne(SugarElement.fromDom(editor.getBody()), path);
     const rng = editor.dom.createRng();
-    rng.setStart(x.dom(), offset);
-    rng.setEnd(x.dom(), offset);
+    rng.setStart(x.dom, offset);
+    rng.setEnd(x.dom, offset);
 
     ScrollIntoView.scrollRangeIntoView(editor, rng, alignToTop);
   });

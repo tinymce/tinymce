@@ -4,7 +4,7 @@ import { SugarElement } from '../node/SugarElement';
 const ensureIsRoot = (isRoot?: (e: SugarElement<Node>) => boolean) => Type.isFunction(isRoot) ? isRoot : Fun.constant(false);
 
 const ancestor = <A> (scope: SugarElement<Node>, transform: (e: SugarElement<Node>) => Optional<A>, isRoot?: (e: SugarElement<Node>) => boolean): Optional<A> => {
-  let element = scope.dom();
+  let element = scope.dom;
   const stop = ensureIsRoot(isRoot);
 
   while (element.parentNode) {

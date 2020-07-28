@@ -25,7 +25,7 @@ const editorStickyOffClass = 'tox-tinymce--toolbar-sticky-off';
 
 const scrollFromBehindHeader = (e: ScrollIntoViewEvent, containerHeader: SugarElement) => {
   const doc = Traverse.owner(containerHeader);
-  const viewHeight = doc.dom().defaultView.innerHeight;
+  const viewHeight = doc.dom.defaultView.innerHeight;
   const scrollPos = Scroll.get(doc);
 
   const markerElement = SugarElement.fromDom(e.elm);
@@ -107,7 +107,7 @@ const restoreFocus = (headerElem: SugarElement, focusedElem: SugarElement) => {
     !Compare.eq(focusedElem, activeElm)
   ).filter((activeElm) =>
     // Only attempt to refocus if the current focus is the body or is in the header element
-    Compare.eq(activeElm, SugarElement.fromDom(ownerDoc.dom().body)) || Compare.contains(headerElem, activeElm)
+    Compare.eq(activeElm, SugarElement.fromDom(ownerDoc.dom.body)) || Compare.contains(headerElem, activeElm)
   ).each(() => Focus.focus(focusedElem));
 };
 

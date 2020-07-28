@@ -84,7 +84,7 @@ UnitTest.asynctest('tinymce.themes.silver.test.browser.sidebar.SidebarTest', fun
         store.adder(entry)();
       };
       const handleSetup = (eventName: string) => (api: Sidebar.SidebarInstanceApi) => {
-        api.element().appendChild(SugarElement.fromHtml('<div style="width: 200px; background: red;"></div>').dom());
+        api.element().appendChild(SugarElement.fromHtml('<div style="width: 200px; background: red;"></div>').dom);
         logEvent(eventName)(api);
         return () => {};
       };

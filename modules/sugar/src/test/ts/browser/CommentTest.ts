@@ -8,7 +8,7 @@ UnitTest.test('CommentTest', () => {
   const ensureClobberedTextNodeDoesNotThrow = () => {
     const span = SugarElement.fromHtml<HTMLSpanElement>('<span><!--a--></span>');
     Traverse.child(span, 0).filter(SugarNode.isComment).each((text0) => {
-      span.dom().innerHTML = 'smashed';
+      span.dom.innerHTML = 'smashed';
       const v = SugarComment.get(text0); // Throws in IE10.
       assert.eq('string', typeof v);
     });
@@ -20,7 +20,7 @@ UnitTest.test('CommentTest', () => {
   const c = SugarElement.fromHtml<Comment>('<!--a-->');
   assert.eq('a', SugarComment.get(c));
   SugarComment.set(c, 'blue');
-  assert.eq('blue', c.dom().nodeValue);
+  assert.eq('blue', c.dom.nodeValue);
 
   try {
     SugarComment.get(notComment as any);

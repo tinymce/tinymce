@@ -4,8 +4,8 @@ import { TinyApis, TinyLoader } from '@ephox/mcagar';
 
 import ThemeManager from 'tinymce/core/api/ThemeManager';
 import * as Features from 'tinymce/themes/mobile/features/Features';
-import * as FormatChangers from 'tinymce/themes/mobile/util/FormatChangers';
 import { MobileRealm } from 'tinymce/themes/mobile/ui/IosRealm';
+import * as FormatChangers from 'tinymce/themes/mobile/util/FormatChangers';
 
 const strName = 'test';
 
@@ -55,8 +55,8 @@ const setup = function (info, onSuccess, onFailure) {
       renderUI() {
         editor.fire('SkinLoaded');
         return {
-          iframeContainer: socket.element().dom(),
-          editorContainer: alloy.element().dom()
+          iframeContainer: socket.element().dom,
+          editorContainer: alloy.element().dom
         };
       }
     };

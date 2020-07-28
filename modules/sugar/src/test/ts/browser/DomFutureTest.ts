@@ -23,6 +23,6 @@ UnitTest.asynctest('Browser Test: .DomFutureTest', (success) => {
     });
 
     // TODO: test timeout on click
-    testElement.dom().click();
+    testElement.dom.click();
   });
 });

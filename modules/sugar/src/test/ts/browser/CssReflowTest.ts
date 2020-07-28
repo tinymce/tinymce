@@ -26,7 +26,7 @@ UnitTest.asynctest('CssReflowTest', (success, failure) => {
 
   const checks = () => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const iframeWin = iframe.dom().contentWindow!;
+    const iframeWin = iframe.dom.contentWindow!;
     const iframeDoc = iframeWin.document;
 
     const styles = SugarElement.fromTag('style', iframeDoc);

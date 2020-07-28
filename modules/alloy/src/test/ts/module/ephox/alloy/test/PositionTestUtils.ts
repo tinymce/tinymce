@@ -48,7 +48,7 @@ const cTestPopupInSink = (label: string, sinkName: string) => Chain.control(
 
 const cTestPopupInViewport = (sinkName: string) => Chain.control(
   NamedChain.bundle((data: any) => {
-    const bounds = data.popup.element().dom().getBoundingClientRect();
+    const bounds = data.popup.element().dom.getBoundingClientRect();
     const inside = bounds.top >= 0 && bounds.left >= 0 && bounds.top <= window.innerHeight && bounds.left <= window.innerWidth;
     return inside ? Result.value(data) : Result.error(
       new Error('The popup does not appear within window viewport for the ' + sinkName + ' sink')
@@ -58,7 +58,7 @@ const cTestPopupInViewport = (sinkName: string) => Chain.control(
 );
 
 const cScrollTo = Chain.mapper((component: AlloyComponent) => {
-  component.element().dom().scrollIntoView();
+  component.element().dom.scrollIntoView();
   const doc = Traverse.owner(component.element());
   return Scroll.get(doc);
 });

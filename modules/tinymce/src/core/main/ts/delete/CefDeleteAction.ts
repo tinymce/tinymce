@@ -57,7 +57,7 @@ const isDeleteFromCefDifferentBlocks = (root: Node, forward: boolean, from: Care
 const deleteEmptyBlockOrMoveToCef = (root: Node, forward: boolean, from: CaretPosition, to: CaretPosition): Optional<DeleteActionAdt> => {
   const toCefElm = to.getNode(forward === false);
   return DeleteUtils.getParentBlock(SugarElement.fromDom(root), SugarElement.fromDom(from.getNode())).map((blockElm) =>
-    Empty.isEmpty(blockElm) ? DeleteAction.remove(blockElm.dom()) : DeleteAction.moveToElement(toCefElm)
+    Empty.isEmpty(blockElm) ? DeleteAction.remove(blockElm.dom) : DeleteAction.moveToElement(toCefElm)
   ).orThunk(() => Optional.some(DeleteAction.moveToElement(toCefElm)));
 };
 

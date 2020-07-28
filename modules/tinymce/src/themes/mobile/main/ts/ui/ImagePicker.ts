@@ -65,7 +65,7 @@ const sketch = (editor): SketchSpec => {
     action(button) {
       const picker = memPicker.get(button);
       // Trigger a dom click for the file input
-      picker.element().dom().click();
+      picker.element().dom.click();
     }
   });
 };

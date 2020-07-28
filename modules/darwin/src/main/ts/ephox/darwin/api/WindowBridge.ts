@@ -26,7 +26,7 @@ export const WindowBridge = function (win: Window): WindowBridge {
   };
 
   const getRect = function (element: SugarElement<Element>) {
-    return element.dom().getBoundingClientRect();
+    return element.dom.getBoundingClientRect();
   };
 
   const getRangedRect = function (start: SugarElement, soffset: number, finish: SugarElement, foffset: number): Optional<RawRect> {

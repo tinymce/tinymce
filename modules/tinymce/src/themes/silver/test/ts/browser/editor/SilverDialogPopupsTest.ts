@@ -22,7 +22,7 @@ UnitTest.asynctest('Editor Dialog Popups Test', (success, failure) => {
 
       const sAssertVisibleFocusInside = (cGetFocused, selector: string) => Chain.asStep(doc, [
         cGetFocused,
-        Chain.mapper((elem) => elem.dom().getBoundingClientRect()),
+        Chain.mapper((elem) => elem.dom.getBoundingClientRect()),
         Chain.binder((rect: ClientRect) => {
           const middle = { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
           const range = document.caretRangeFromPoint(middle.x, middle.y);

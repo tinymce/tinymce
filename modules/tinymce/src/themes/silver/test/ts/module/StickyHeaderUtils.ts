@@ -95,7 +95,7 @@ const expectedInFullView = (s, str, arr): StructAssert[] => [
 
 const cScrollRelativeEditor = (delta: number, scrollRelativeTop: boolean) => Chain.op(() => {
   const editorContainer = SelectorFind.descendant(SugarBody.body(), '.tox-tinymce').getOrDie();
-  editorContainer.dom().scrollIntoView(scrollRelativeTop);
+  editorContainer.dom.scrollIntoView(scrollRelativeTop);
   Scroll.to(0, window.pageYOffset + (scrollRelativeTop ? delta : -delta));
 });
 

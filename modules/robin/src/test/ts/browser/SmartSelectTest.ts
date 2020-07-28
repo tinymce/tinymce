@@ -74,8 +74,8 @@ UnitTest.test('SmartSelectTest', function () {
       assert.eq(expected.finish.offset, act.endOffset());
 
       const range = document.createRange();
-      range.setStart(act.startContainer().dom(), act.startOffset());
-      range.setEnd(act.endContainer().dom(), act.endOffset());
+      range.setStart(act.startContainer().dom, act.startOffset());
+      range.setEnd(act.endContainer().dom, act.endOffset());
       assert.eq(expected.word, range.toString());
     });
   };

@@ -5,8 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Replacing, Gui, AlloyComponent } from '@ephox/alloy';
+import { AlloyComponent, Gui, Replacing } from '@ephox/alloy';
 import { Fun, Singleton } from '@ephox/katamari';
+import { SugarElement } from '@ephox/sugar';
 
 import * as IosWebapp from '../api/IosWebapp';
 import * as Styles from '../style/Styles';
@@ -14,7 +15,6 @@ import ScrollingToolbar from '../toolbar/ScrollingToolbar';
 import * as CommonRealm from './CommonRealm';
 import * as Dropup from './Dropup';
 import OuterContainer from './OuterContainer';
-import { SugarElement } from '../alien/TypeDefinitions';
 
 type MobileWebApp = IosWebapp.MobileWebApp;
 

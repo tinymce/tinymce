@@ -34,12 +34,12 @@ const internalRemove = (dom: Node, property: string): void => {
 };
 
 const set = (element: SugarElement<Node>, property: string, value: string): void => {
-  const dom = element.dom();
+  const dom = element.dom;
   internalSet(dom, property, value);
 };
 
 const setAll = (element: SugarElement<Node>, css: Record<string, string>): void => {
-  const dom = element.dom();
+  const dom = element.dom;
 
   Obj.each(css, (v, k) => {
     internalSet(dom, k, v);
@@ -47,7 +47,7 @@ const setAll = (element: SugarElement<Node>, css: Record<string, string>): void 
 };
 
 const setOptions = (element: SugarElement<Node>, css: Record<string, Optional<string>>): void => {
-  const dom = element.dom();
+  const dom = element.dom;
 
   Obj.each(css, (v, k) => {
     v.fold(() => {
@@ -65,7 +65,7 @@ const setOptions = (element: SugarElement<Node>, css: Record<string, Optional<st
  * https://developer.mozilla.org/en-US/docs/Web/CSS/used_value
  */
 const get = (element: SugarElement<Element>, property: string): string => {
-  const dom = element.dom();
+  const dom = element.dom;
   /*
    * IE9 and above per
    * https://developer.mozilla.org/en/docs/Web/API/window.getComputedStyle
@@ -95,7 +95,7 @@ const getUnsafeProperty = (dom: Node, property: string): string =>
  * Returns NONE if the property isn't set, or the value is an empty string.
  */
 const getRaw = (element: SugarElement<Node>, property: string): Optional<string> => {
-  const dom = element.dom();
+  const dom = element.dom;
   const raw = getUnsafeProperty(dom, property);
 
   return Optional.from(raw).filter((r) => r.length > 0);
@@ -103,7 +103,7 @@ const getRaw = (element: SugarElement<Node>, property: string): Optional<string>
 
 const getAllRaw = (element: SugarElement<Node>): Record<string, string> => {
   const css: Record<string, string> = {};
-  const dom = element.dom();
+  const dom = element.dom;
 
   if (Style.isSupported(dom)) {
     for (let i = 0; i < dom.style.length; i++) {
@@ -122,7 +122,7 @@ const isValidValue = (tag: string, property: string, value: string): boolean => 
 };
 
 const remove = (element: SugarElement<Node>, property: string): void => {
-  const dom = element.dom();
+  const dom = element.dom;
 
   internalRemove(dom, property);
 
@@ -144,8 +144,8 @@ const preserve = <E extends Element, T> (element: SugarElement<E>, f: (e: SugarE
 };
 
 const copy = (source: SugarElement<Node>, target: SugarElement<HTMLElement>): void => {
-  const sourceDom = source.dom();
-  const targetDom = target.dom();
+  const sourceDom = source.dom;
+  const targetDom = target.dom;
   if (Style.isSupported(sourceDom) && Style.isSupported(targetDom)) {
     targetDom.style.cssText = sourceDom.style.cssText;
   }
@@ -156,7 +156,7 @@ The value itself is not used.
 Be sure to not use the return value, and that it is not removed by a minifier.
  */
 const reflow = (e: SugarElement<HTMLElement>): void =>
-  e.dom().offsetWidth as unknown as void;
+  e.dom.offsetWidth as unknown as void;
 
 const transferOne = (source: SugarElement<Node>, destination: SugarElement<Node>, style: string): void => {
   getRaw(source, style).each((value) => {

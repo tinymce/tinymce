@@ -20,7 +20,7 @@ const isMatch = (n: SugarElement) => {
 // inlined sugars PredicateFilter.descendants for file size
 const filterDescendants = (scope: SugarElement, predicate: (x: SugarElement) => boolean) => {
   let result: SugarElement[] = [];
-  const dom = scope.dom();
+  const dom = scope.dom;
   const children = Arr.map(dom.childNodes, SugarElement.fromDom);
 
   Arr.each(children, (x) => {

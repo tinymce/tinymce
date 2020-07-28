@@ -46,11 +46,11 @@ export default ValueSchema.objOf([
   FieldSchema.strict('container'),
   FieldSchema.strict('alloy'),
   FieldSchema.state('win', function (spec) {
-    return Traverse.owner(spec.socket).dom().defaultView;
+    return Traverse.owner(spec.socket).dom.defaultView;
   }),
   FieldSchema.state('body', function (spec) {
     return SugarElement.fromDom(
-      spec.socket.dom().ownerDocument.body
+      spec.socket.dom.ownerDocument.body
     );
   }),
   FieldSchema.defaulted('translate', Fun.identity),

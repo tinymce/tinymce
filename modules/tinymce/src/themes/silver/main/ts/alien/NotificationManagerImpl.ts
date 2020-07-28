@@ -125,7 +125,7 @@ export default function (editor: Editor, extras, uiMothership: Gui.GuiSystem): N
         Notification.updateText(notification, nuText);
       },
       settings,
-      getEl: () => notification.element().dom(),
+      getEl: () => notification.element().dom,
       progressBar: {
         value: (percent: number) => {
           Notification.updateProgress(notification, percent);

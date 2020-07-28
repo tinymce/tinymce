@@ -20,8 +20,8 @@ UnitTest.asynctest('browser.tinymce.core.selection.FragmentReaderTest', function
       const ec = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), endPath).getOrDie();
       const rng = document.createRange();
 
-      rng.setStart(sc.dom(), startOffset);
-      rng.setEnd(ec.dom(), endOffset);
+      rng.setStart(sc.dom, startOffset);
+      rng.setEnd(ec.dom, endOffset);
 
       return FragmentReader.read(SugarElement.fromDom(viewBlock.get()), [ rng ]);
     });
@@ -32,7 +32,7 @@ UnitTest.asynctest('browser.tinymce.core.selection.FragmentReaderTest', function
       const ranges = Arr.map(paths, function (path) {
         const container = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), path).getOrDie();
         const rng = document.createRange();
-        rng.selectNode(container.dom());
+        rng.selectNode(container.dom);
         return rng;
       });
 

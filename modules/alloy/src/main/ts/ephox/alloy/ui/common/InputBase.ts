@@ -28,7 +28,7 @@ const focusBehaviours = (detail: InputDetail): Behaviour.AlloyBehaviourRecord =>
     onFocus: !detail.selectOnFocus ? Fun.noop : (component) => {
       const input = component.element();
       const value = Value.get(input);
-      input.dom().setSelectionRange(0, value.length);
+      input.dom.setSelectionRange(0, value.length);
     }
   })
 ]);

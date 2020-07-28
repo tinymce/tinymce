@@ -7,12 +7,12 @@ const getValueFromIndex = (options: HTMLOptionsCollection, index: number) => {
 };
 
 const getValue = (select: SugarElement<HTMLSelectElement>) => {
-  const selectDom = select.dom();
+  const selectDom = select.dom;
   return getValueFromIndex(selectDom.options, selectDom.selectedIndex);
 };
 
 const add = (select: SugarElement<HTMLSelectElement>, option: SugarElement<HTMLOptionElement>) => {
-  select.dom().add(option.dom());
+  select.dom.add(option.dom);
 };
 
 const addAll = (select: SugarElement<HTMLSelectElement>, options: SugarElement<HTMLOptionElement>[]) => {
@@ -22,7 +22,7 @@ const addAll = (select: SugarElement<HTMLSelectElement>, options: SugarElement<H
 };
 
 const setSelected = (select: SugarElement<HTMLSelectElement>, index: number) => {
-  select.dom().selectedIndex = index;
+  select.dom.selectedIndex = index;
 };
 
 export {

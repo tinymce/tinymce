@@ -50,15 +50,15 @@ UnitTest.asynctest('SelectionInFramePositionTest', (success, failure) => {
 
   }, (_doc, _body, gui, _component, _store) => {
     const cSetupAnchor = Chain.mapper((data: any) => {
-      const node = data.classic.element().dom().contentWindow.document.querySelector('#p3');
+      const node = data.classic.element().dom.contentWindow.document.querySelector('#p3');
       return {
         anchor: 'node',
-        root: SugarElement.fromDom(data.classic.element().dom().contentWindow.document.body),
+        root: SugarElement.fromDom(data.classic.element().dom.contentWindow.document.body),
         node: Optional.some(SugarElement.fromDom(node))
       };
     });
 
-    const cGetWin = Chain.mapper((frame: AlloyComponent) => frame.element().dom().contentWindow);
+    const cGetWin = Chain.mapper((frame: AlloyComponent) => frame.element().dom.contentWindow);
 
     const cSetPath = (rawPath: { startPath: number[]; soffset: number; finishPath: number[]; foffset: number }) => {
       const path = Cursors.path(rawPath);
@@ -94,7 +94,7 @@ UnitTest.asynctest('SelectionInFramePositionTest', (success, failure) => {
             [
               Chain.control(
                 Chain.binder((data: any) => {
-                  const root = SugarElement.fromDom(data.classic.element().dom().contentWindow.document.body);
+                  const root = SugarElement.fromDom(data.classic.element().dom.contentWindow.document.body);
                   return SelectorFind.descendant(root, 'p').fold(() => Result.error('Could not find paragraph yet'), (_p) => Result.value(data));
                 }),
                 Guard.tryUntil('Waiting for content to load in iframe', 10, 10000)

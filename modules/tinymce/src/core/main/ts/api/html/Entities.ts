@@ -62,7 +62,7 @@ const reverseEntities = {
 
 // Decodes text by using the browser
 const nativeDecode = (text: string): string => {
-  const elm = SugarElement.fromTag('div').dom();
+  const elm = SugarElement.fromTag('div').dom;
   elm.innerHTML = text;
 
   return elm.textContent || elm.innerText || text;

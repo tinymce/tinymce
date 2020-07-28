@@ -8,7 +8,7 @@ UnitTest.test('TextTest', () => {
   const ensureClobberedTextNodeDoesNotThrow = () => {
     const span = SugarElement.fromHtml<HTMLSpanElement>('<span>hi</span>');
     Traverse.child(span, 0).filter(SugarNode.isText).each((text0) => {
-      span.dom().innerHTML = 'smashed';
+      span.dom.innerHTML = 'smashed';
       const v = SugarText.get(text0); // Throws in IE10.
       assert.eq('string', typeof v);
     });
@@ -20,7 +20,7 @@ UnitTest.test('TextTest', () => {
   const t = SugarElement.fromText('a');
   assert.eq('a', SugarText.get(t));
   SugarText.set(t, 'blue');
-  assert.eq('blue', t.dom().nodeValue);
+  assert.eq('blue', t.dom.nodeValue);
 
   try {
     SugarText.get(notText as any);

@@ -181,7 +181,7 @@ export function StyleSheetLoader(documentOrShadowRoot: Document | ShadowRoot, se
     // Start loading
     state.status = 1;
     // TODO: Use Sugar to create this element
-    link = doc.dom().createElement('link');
+    link = doc.dom.createElement('link');
     link.rel = 'stylesheet';
     link.type = 'text/css';
     link.id = 'u' + (idCount++);
@@ -207,7 +207,7 @@ export function StyleSheetLoader(documentOrShadowRoot: Document | ShadowRoot, se
       // TODO: Remove this in the future when everyone uses modern browsers
       if (navigator.userAgent.indexOf('Firefox') > 0) {
         // TODO: Use Sugar to create this element
-        style = doc.dom().createElement('style');
+        style = doc.dom.createElement('style');
         style.textContent = '@import "' + url + '"';
         waitForGeckoLinkLoaded();
         addStyle(SugarElement.fromDom(style));

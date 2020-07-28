@@ -44,7 +44,7 @@ const fireEvent = (elem: SugarElement, event: string) => {
     evt = document.createEvent('Event');
     evt.initEvent(event, true, true);
   }
-  elem.dom().dispatchEvent(evt);
+  elem.dom.dispatchEvent(evt);
 };
 
 const cFireEvent = (event: string) => Chain.control(
@@ -66,8 +66,8 @@ const sAssertInputValue = (label, selector, expected) => Logger.t(label,
   Chain.asStep({}, [
     cGetInput(selector),
     Chain.op((element) => {
-      if (element.dom().type === 'checkbox') {
-        Assertions.assertEq(`The input value for ${label} should be: `, expected, element.dom().checked);
+      if (element.dom.type === 'checkbox') {
+        Assertions.assertEq(`The input value for ${label} should be: `, expected, element.dom.checked);
         return;
       }
       Assertions.assertEq(`The input value for ${label} should be: `, expected, Value.get(element));

@@ -33,8 +33,8 @@ UnitTest.asynctest('browser.tinymce.core.selection.NormalizeRangeTest', function
       const ec = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), endPath).getOrDie();
       const rng = document.createRange();
 
-      rng.setStart(sc.dom(), startOffset);
-      rng.setEnd(ec.dom(), endOffset);
+      rng.setStart(sc.dom, startOffset);
+      rng.setEnd(ec.dom, endOffset);
 
       return NormalizeRange.normalize(DOMUtils(document, { root_element: viewBlock.get() }), rng);
     });

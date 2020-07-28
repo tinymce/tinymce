@@ -83,7 +83,7 @@ const clean = (table: SugarElement, stats: StatsStruct): void => {
   // can't use :empty selector as that will not include TRs made up of whitespace
   const emptyRows = Arr.filter(LayerSelector.firstLayer(table, 'tr'), (row) =>
     // there is no sugar method for this, and Traverse.children() does too much processing
-    (row.dom() as HTMLElement).childElementCount === 0
+    (row.dom as HTMLElement).childElementCount === 0
   );
   Arr.each(emptyRows, Remove.remove);
 

@@ -9,7 +9,7 @@ UnitTest.test('DomGatherTest', function () {
 
   const is = function (x: SugarElement) {
     return function (e: SugarElement) {
-      return e.dom() === x.dom();
+      return e.dom === x.dom;
     };
   };
 
@@ -22,7 +22,7 @@ UnitTest.test('DomGatherTest', function () {
 
   const check = function (spec: CheckItem) {
     const actual = spec.seek(spec.element, spec.predicate, is(page.container)).getOrDie('No actual element found.');
-    assert.eq(spec.expected.dom(), actual.dom());
+    assert.eq(spec.expected.dom, actual.dom);
   };
 
   const cases: CheckItem[] = [

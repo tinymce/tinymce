@@ -7,7 +7,7 @@
 
 import { AlloyComponent, Behaviour, Container, GuiFactory, Replacing, Sliding } from '@ephox/alloy';
 import { Fun } from '@ephox/katamari';
-import { SugarElement } from 'tinymce/themes/mobile/alien/TypeDefinitions';
+import { SugarElement } from '@ephox/sugar';
 
 import * as Receivers from '../channels/Receivers';
 import * as Styles from '../style/Styles';

@@ -67,7 +67,7 @@ export const InlineHeader = (editor: Editor, targetElm: SugarElement, uiComponen
           return 'top';
         } else {
           const doc = Traverse.documentElement(targetElm);
-          const docHeight = Math.max(doc.dom().scrollHeight, Height.get(doc));
+          const docHeight = Math.max(doc.dom.scrollHeight, Height.get(doc));
           const roomAtBottom = targetBounds.bottom < docHeight - toolbarHeight;
 
           // If there isn't ever room to add the toolbar above the target element, then place the toolbar at the bottom.

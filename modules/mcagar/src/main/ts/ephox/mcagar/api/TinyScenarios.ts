@@ -31,8 +31,8 @@ export const TinyScenarios = function (editor: Editor): TinyScenarios {
       return Generators.selection(SugarElement.fromDom(editor.getBody()), selectionExclusions).map(function (selection: SimRange) {
         const win = editor.selection.win;
         const rng = win.document.createRange();
-        rng.setStart(selection.start().dom(), selection.soffset());
-        rng.setEnd(selection.finish().dom(), selection.foffset());
+        rng.setStart(selection.start().dom, selection.soffset());
+        rng.setEnd(selection.finish().dom, selection.foffset());
         editor.selection.setRng(rng);
         return {
           input: html,

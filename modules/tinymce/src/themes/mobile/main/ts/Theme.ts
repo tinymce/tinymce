@@ -152,7 +152,7 @@ const renderMobileTheme = (editor: Editor) => {
             const target = evt.target();
             // If the user has tapped (touchstart, touchend without movement) on an image, select it.
             if (SugarNode.name(target) === 'img') {
-              editor.selection.select(target.dom());
+              editor.selection.select(target.dom);
               // Prevent the default behaviour from firing so that the image stays selected
               evt.kill();
             } else if (SugarNode.name(target) === 'a') {
@@ -160,7 +160,7 @@ const renderMobileTheme = (editor: Editor) => {
               component.each((container) => {
                 // view mode
                 if (Swapping.isAlpha(container)) {
-                  TinyCodeDupe.openLink(target.dom());
+                  TinyCodeDupe.openLink(target.dom);
                 }
               });
             }
@@ -253,8 +253,8 @@ const renderMobileTheme = (editor: Editor) => {
     });
 
     return {
-      iframeContainer: realm.socket().element().dom() as HTMLIFrameElement,
-      editorContainer: realm.element().dom()
+      iframeContainer: realm.socket().element().dom as HTMLIFrameElement,
+      editorContainer: realm.element().dom
     };
   };
 

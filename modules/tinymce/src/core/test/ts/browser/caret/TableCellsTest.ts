@@ -28,28 +28,28 @@ UnitTest.asynctest('browser.tinymce.core.caret.TableCellsTest', function (succes
   });
 
   const cGetClosestCellAbove = (x: number, y: number) => Chain.mapper(function (viewBlock: any) {
-    const table = SelectorFind.descendant<HTMLTableElement>(SugarElement.fromDom(viewBlock.get()), 'table').getOrDie('Could not find table').dom();
+    const table = SelectorFind.descendant<HTMLTableElement>(SugarElement.fromDom(viewBlock.get()), 'table').getOrDie('Could not find table').dom;
     const rect = table.getBoundingClientRect();
     return getClosestCellAbove(table, rect.left + x, rect.top + y);
   });
 
   const cGetClosestCellBelow = (x: number, y: number) => Chain.mapper(function (viewBlock: any) {
-    const table = SelectorFind.descendant<HTMLTableElement>(SugarElement.fromDom(viewBlock.get()), 'table').getOrDie('Could not find table').dom();
+    const table = SelectorFind.descendant<HTMLTableElement>(SugarElement.fromDom(viewBlock.get()), 'table').getOrDie('Could not find table').dom;
     const rect = table.getBoundingClientRect();
     return getClosestCellBelow(table, rect.left + x, rect.top + y);
   });
 
   const cFindClosestPositionInAboveCell = (path: number[], offset: number) => Chain.mapper(function (viewBlock: any) {
-    const table = SelectorFind.descendant<HTMLTableElement>(SugarElement.fromDom(viewBlock.get()), 'table').getOrDie('Could not find table').dom();
+    const table = SelectorFind.descendant<HTMLTableElement>(SugarElement.fromDom(viewBlock.get()), 'table').getOrDie('Could not find table').dom;
     const container = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), path).getOrDie();
-    const pos = CaretPosition(container.dom(), offset);
+    const pos = CaretPosition(container.dom, offset);
     return findClosestPositionInAboveCell(table, pos);
   });
 
   const cFindClosestPositionInBelowCell = (path: number[], offset: number) => Chain.mapper(function (viewBlock: any) {
-    const table = SelectorFind.descendant<HTMLTableElement>(SugarElement.fromDom(viewBlock.get()), 'table').getOrDie('Could not find table').dom();
+    const table = SelectorFind.descendant<HTMLTableElement>(SugarElement.fromDom(viewBlock.get()), 'table').getOrDie('Could not find table').dom;
     const container = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), path).getOrDie();
-    const pos = CaretPosition(container.dom(), offset);
+    const pos = CaretPosition(container.dom, offset);
     return findClosestPositionInBelowCell(table, pos);
   });
 

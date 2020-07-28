@@ -70,16 +70,16 @@ export const TableActions = (editor: Editor, lazyWire: () => ResizeWire): TableA
       const sizing = TableSize.get(editor, table);
       return guard(table) ? operation(wire, table, target, generators, direction, sizing).bind((result) => {
         Arr.each(result.newRows(), (row) => {
-          fireNewRow(editor, row.dom());
+          fireNewRow(editor, row.dom);
         });
         Arr.each(result.newCells(), (cell) => {
-          fireNewCell(editor, cell.dom());
+          fireNewCell(editor, cell.dom);
         });
         return result.cursor().map((cell) => {
           const des = DomDescent.freefallRtl(cell);
           const rng = editor.dom.createRng();
-          rng.setStart(des.element().dom(), des.offset());
-          rng.setEnd(des.element().dom(), des.offset());
+          rng.setStart(des.element().dom, des.offset());
+          rng.setEnd(des.element().dom, des.offset());
           return rng;
         });
       }) : Optional.none();

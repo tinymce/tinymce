@@ -17,7 +17,7 @@ export const setupShadowRoot = (mode: 'open' | 'closed'): { shadowRoot: SugarEle
   const shadowHost = SugarElement.fromTag('div', document);
   Attribute.set(shadowHost, 'data-description', 'shadowHost');
   Insert.append(SugarBody.body(), shadowHost);
-  const shadowRoot = SugarElement.fromDom(shadowHost.dom().attachShadow({ mode }));
+  const shadowRoot = SugarElement.fromDom(shadowHost.dom.attachShadow({ mode }));
 
   const innerDiv = SugarElement.fromTag('div', document);
   Attribute.set(innerDiv, 'data-description', 'innerDiv');
@@ -43,7 +43,7 @@ export const withIframe = (f: (div: SugarElement<HTMLElement>, iframe: SugarElem
   const iframe = SugarElement.fromTag('iframe');
   Insert.append(SugarBody.body(), iframe);
 
-  const cw = iframe.dom().contentWindow;
+  const cw = iframe.dom.contentWindow;
   if (cw === null) {
     throw new Error('contentWindow was null');
   }

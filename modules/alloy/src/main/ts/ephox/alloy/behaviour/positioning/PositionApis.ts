@@ -22,7 +22,7 @@ const getFixedOrigin = (): Origins.OriginAdt => {
 
 const getRelativeOrigin = (component: AlloyComponent): Origins.OriginAdt => {
   const position = SugarLocation.absolute(component.element());
-  const bounds = component.element().dom().getBoundingClientRect();
+  const bounds = component.element().dom.getBoundingClientRect();
 
   // We think that this just needs to be kept consistent with Boxes.win. If we remove the scroll values from Boxes.win, we
   // should change this to just bounds.left and bounds.top from getBoundingClientRect

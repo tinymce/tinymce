@@ -39,7 +39,7 @@ const getDynamicSource = (isSandbox): IFrameSourcing => {
         // and Edge only supports upto ~4000 chars in data uris
         // so I guess they will have to be less secure since we can't sandbox on those
         // TODO: Use sandbox if future versions of IE/Edge supports iframeComponents with data: uris.
-        const doc = frameComponent.element().dom().contentWindow.document;
+        const doc = frameComponent.element().dom.contentWindow.document;
 
         doc.open();
         doc.write(html);

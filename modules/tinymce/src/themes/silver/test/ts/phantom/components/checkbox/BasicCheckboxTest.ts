@@ -32,7 +32,7 @@ UnitTest.asynctest('Checkbox component Test', (success, failure) => {
         Chain.asStep(component.element(), [
           UiFinder.cFindIn('input'),
           Chain.op((input) => {
-            const node = input.dom() as HTMLInputElement;
+            const node = input.dom as HTMLInputElement;
             Assertions.assertEq('Checking "checked" flag', expChecked, node.checked);
             Assertions.assertEq('Checking "indeterminate" flag', false, node.indeterminate);
           })

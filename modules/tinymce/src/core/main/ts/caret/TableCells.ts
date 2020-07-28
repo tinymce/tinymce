@@ -59,7 +59,7 @@ const getClosestCell = (
   const cells = SelectorFilter.descendants<TableThing>(
     SugarElement.fromDom(table),
     'td,th,caption'
-  ).map((e) => e.dom());
+  ).map((e) => e.dom);
   const corners = Arr.filter(
     getCorners(getYAxisValue, cells),
     (corner) => isTargetCorner(corner, y)

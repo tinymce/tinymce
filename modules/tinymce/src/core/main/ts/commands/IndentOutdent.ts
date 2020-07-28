@@ -12,7 +12,7 @@ import * as Settings from '../api/Settings';
 import { isList, isListItem, isTable } from '../dom/ElementType';
 import * as NodeType from '../dom/NodeType';
 
-const isEditable = (target: SugarElement) => PredicateFind.closest(target, (elm) => NodeType.isContentEditableTrue(elm.dom()) || NodeType.isContentEditableFalse(elm.dom())).exists((elm) => NodeType.isContentEditableTrue(elm.dom()));
+const isEditable = (target: SugarElement) => PredicateFind.closest(target, (elm) => NodeType.isContentEditableTrue(elm.dom) || NodeType.isContentEditableFalse(elm.dom)).exists((elm) => NodeType.isContentEditableTrue(elm.dom));
 
 const parseIndentValue = (value: string) => {
   const number = parseInt(value, 10);
@@ -40,7 +40,7 @@ const indentElement = (dom, command: string, useMargin: boolean, value: number, 
 const validateBlocks = (editor: Editor, blocks: SugarElement[]) => Arr.forall(blocks, (block) => {
   const indentStyleName = getIndentStyleName(Settings.shouldIndentUseMargin(editor), block);
   const intentValue = Css.getRaw(block, indentStyleName).map(parseIndentValue).getOr(0);
-  const contentEditable = editor.dom.getContentEditable(block.dom());
+  const contentEditable = editor.dom.getContentEditable(block.dom);
   return contentEditable !== 'false' && intentValue > 0;
 });
 
@@ -73,7 +73,7 @@ const handle = (editor: Editor, command: string) => {
   }
 
   Arr.each(getBlocksToIndent(editor), (block) => {
-    indentElement(dom, command, useMargin, indentValue, indentUnit, block.dom());
+    indentElement(dom, command, useMargin, indentValue, indentUnit, block.dom);
   });
 };
 

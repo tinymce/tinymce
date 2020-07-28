@@ -41,7 +41,7 @@ UnitTest.asynctest('Browser Test: SimSelection.getAtPoint', (success, failure) =
 
   const checks = () => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const iframeWin = iframe.dom().contentWindow!;
+    const iframeWin = iframe.dom.contentWindow!;
     const iframeDoc = SugarElement.fromDom(iframeWin.document);
 
     const get = (selector: string) => Selectors.one(selector, iframeDoc).getOrDie('element with selector "' + selector + '" not found');

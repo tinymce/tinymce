@@ -48,7 +48,7 @@ UnitTest.asynctest('ScrollTest', (success, failure) => {
       run.unbind();
       try {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        const iframeWin = iframe.dom().contentWindow!;
+        const iframeWin = iframe.dom.contentWindow!;
         const iframeDoc = iframeWin.document;
         const html = SugarElement.fromDom(iframeDoc.documentElement);
         const body = SugarElement.fromDom(iframeDoc.body);
@@ -127,7 +127,7 @@ UnitTest.asynctest('ScrollTest', (success, failure) => {
     const bod0 = Css.get(doc.body, 'border');
     const bodyBorder = parseInt(bod0 || '', 10) || 0;
     const mar = parseInt(mar0 || '', 10) || 0;
-    const hgt = doc.body.dom().scrollHeight;
+    const hgt = doc.body.dom.scrollHeight;
     const scrollBarWidth = Scroll.scrollBarWidth();
     const cEl = doc.byId('centre1');
     const center = SugarLocation.absolute(cEl);

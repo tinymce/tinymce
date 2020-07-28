@@ -126,8 +126,8 @@ const insertBrAfter = function (editor: Editor, inline) {
 
   const br = SugarElement.fromTag('br');
   Insert.after(SugarElement.fromDom(inline), br);
-  scrollToBr(editor.dom, editor.selection, br.dom());
-  moveSelectionToBr(editor.dom, editor.selection, br.dom(), false);
+  scrollToBr(editor.dom, editor.selection, br.dom);
+  moveSelectionToBr(editor.dom, editor.selection, br.dom, false);
   editor.undoManager.add();
 };
 

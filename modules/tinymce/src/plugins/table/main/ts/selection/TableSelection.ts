@@ -25,17 +25,17 @@ const getSelectionStartCellOrCaption = getSelectionStartFromSelector<HTMLTableCe
 const getCellsFromSelection = (editor: Editor): HTMLTableCellElement[] =>
   getSelectionStartCell(editor)
     .map((cell) => CellOperations.selection(cell, Selections(editor)))
-    .map((cells) => Arr.map(cells, (cell) => cell.dom()))
+    .map((cells) => Arr.map(cells, (cell) => cell.dom))
     .getOr([]);
 
 const getRowsFromSelection = (editor: Editor): HTMLTableRowElement[] => {
   const cellOpt = getSelectionStartCell(editor);
   const rowsOpt = cellOpt.bind((cell) => TableLookup.table(cell))
     .map((table) => TableLookup.rows(table))
-    .map((rows) => Arr.map(rows, (row) => row.dom()));
+    .map((rows) => Arr.map(rows, (row) => row.dom));
 
   return Optionals.lift2(cellOpt, rowsOpt, (cell, rows) =>
-    Arr.filter(rows, (row) => Arr.exists(row.cells, (rowCell) => editor.dom.getAttrib(rowCell, Ephemera.selected) === '1' || rowCell === cell.dom()))
+    Arr.filter(rows, (row) => Arr.exists(row.cells, (rowCell) => editor.dom.getAttrib(rowCell, Ephemera.selected) === '1' || rowCell === cell.dom))
   ).getOr([]);
 };
 

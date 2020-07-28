@@ -139,8 +139,8 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
   }
 
   return {
-    iframeContainer: socket.element().dom(),
-    editorContainer: uiComponents.outerContainer.element().dom()
+    iframeContainer: socket.element().dom,
+    editorContainer: uiComponents.outerContainer.element().dom
   };
 };
 

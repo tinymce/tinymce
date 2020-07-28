@@ -11,12 +11,12 @@ UnitTest.asynctest('PatchFileInputTest', (success, failure) => {
 
   const pickFiles = (body: SugarElement<any>, next: (files: FileList) => void) => {
     const elm = SugarElement.fromHtml<HTMLInputElement>('<input type="file">');
-    elm.dom().onchange = () => {
+    elm.dom.onchange = () => {
       Remove.remove(elm);
-      next(elm.dom().files);
+      next(elm.dom.files);
     };
     Insert.append(body, elm);
-    elm.dom().click();
+    elm.dom.click();
   };
 
   const cPickFiles = Chain.async<SugarElement, FileList>((input, next, _die) => pickFiles(input, next));

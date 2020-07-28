@@ -8,10 +8,10 @@ import { Universe } from './Universe';
 
 export default function (): Universe<SugarElement, Document> {
   const clone = function (element: SugarElement<Node>) {
-    return SugarElement.fromDom(element.dom().cloneNode(false));
+    return SugarElement.fromDom(element.dom.cloneNode(false));
   };
 
-  const document = (element: SugarElement<Node>) => Traverse.documentOrOwner(element).dom();
+  const document = (element: SugarElement<Node>) => Traverse.documentOrOwner(element).dom;
 
   const isBoundary = function (element: SugarElement) {
     if (!SugarNode.isElement(element)) {
@@ -33,7 +33,7 @@ export default function (): Universe<SugarElement, Document> {
   const isNonEditable = (element: SugarElement) => SugarNode.isElement(element) && Attribute.get(element, 'contenteditable') === 'false';
 
   const comparePosition = function (element: SugarElement<Node>, other: SugarElement<Node>) {
-    return element.dom().compareDocumentPosition(other.dom());
+    return element.dom.compareDocumentPosition(other.dom);
   };
 
   const copyAttributesTo = function (source: SugarElement, destination: SugarElement) {

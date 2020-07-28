@@ -50,7 +50,7 @@ const sOpenToolbarOn = function (editor, selector, path) {
     UiFinder.cFindIn(selector),
     Cursors.cFollow(path),
     Chain.op(function (target) {
-      editor.selection.select(target.dom());
+      editor.selection.select(target.dom);
     }),
     Mouse.cClick
   ]));
@@ -268,7 +268,7 @@ const cDragResizeBar = (rowOrCol: 'row' | 'column', index: number, dx: number, d
 const cGetWidth = Chain.control(
   Chain.mapper(function (input: any) {
     const editor = input.editor;
-    const elm = input.element.dom();
+    const elm = input.element.dom;
     return getWidths(editor, elm);
   }),
   Guard.addLogging('Get table width')
@@ -280,7 +280,7 @@ const cGetCellWidth = (rowNumber: number, columnNumber: number) => Chain.control
     const elm = input.element;
     const row = SelectorFilter.descendants<HTMLTableRowElement>(elm, 'tr')[rowNumber];
     const cell = SelectorFilter.descendants<HTMLTableCellElement>(row, 'th,td')[columnNumber];
-    return getWidths(editor, cell.dom());
+    return getWidths(editor, cell.dom);
   }),
   Guard.addLogging('Get cell width')
 );
@@ -298,8 +298,8 @@ const sAssertInputValue = (label, selector, expected) => Logger.t(label,
   Chain.asStep({}, [
     cGetInput(selector),
     Chain.op((element) => {
-      if (element.dom().type === 'checkbox') {
-        Assertions.assertEq(`The input value for ${label} should be: `, expected, element.dom().checked);
+      if (element.dom.type === 'checkbox') {
+        Assertions.assertEq(`The input value for ${label} should be: `, expected, element.dom.checked);
         return;
       }
       Assertions.assertEq(`The input value for ${label} should be: `, expected, Value.get(element));
@@ -311,8 +311,8 @@ const sSetInputValue = (label, selector, value) => Logger.t(label,
   Chain.asStep({}, [
     cGetInput(selector),
     Chain.op((element) => {
-      if (element.dom().type === 'checkbox') {
-        element.dom().checked = value;
+      if (element.dom.type === 'checkbox') {
+        element.dom.checked = value;
         return;
       }
       Value.set(element, value);

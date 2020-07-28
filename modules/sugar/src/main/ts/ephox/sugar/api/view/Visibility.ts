@@ -24,7 +24,7 @@ const displayToggler = (element: SugarElement<Element>, value: string) => visibi
 
 const isHidden = (dom: HTMLElement): boolean => dom.offsetWidth <= 0 && dom.offsetHeight <= 0;
 
-const isVisible = (element: SugarElement<HTMLElement>): boolean => !isHidden(element.dom());
+const isVisible = (element: SugarElement<HTMLElement>): boolean => !isHidden(element.dom);
 
 export {
   toggler,

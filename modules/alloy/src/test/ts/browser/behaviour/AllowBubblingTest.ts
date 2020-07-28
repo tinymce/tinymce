@@ -8,7 +8,7 @@ import { Container } from 'ephox/alloy/api/ui/Container';
 
 UnitTest.asynctest('AllowBubblingTest', (success, failure) => {
   const sDispatchScrollEvent = <T> (comp: AlloyComponent): Step<T, T> => Step.sync(() => {
-    const rawEl: Element = comp.element().dom();
+    const rawEl: Element = comp.element().dom;
     rawEl.dispatchEvent(new Event('scroll'));
   });
 

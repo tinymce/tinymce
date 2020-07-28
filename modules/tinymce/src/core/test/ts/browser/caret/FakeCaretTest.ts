@@ -114,9 +114,9 @@ UnitTest.asynctest('browser.tinymce.core.caret.FakeCaretTest', function (success
   });
 
   suite.test('isFakeCaretTarget', function () {
-    LegacyUnit.equal(false, isFakeCaretTarget(SugarElement.fromHtml('<p></p>').dom()), 'Should not need a fake caret');
-    LegacyUnit.equal(true, isFakeCaretTarget(SugarElement.fromHtml('<p contenteditable="false"></p>').dom()), 'Should always need a fake caret');
-    LegacyUnit.equal(isFakeCaretTableBrowser(), isFakeCaretTarget(SugarElement.fromHtml('<table></table>').dom()), 'Should on some browsers need a fake caret');
+    LegacyUnit.equal(false, isFakeCaretTarget(SugarElement.fromHtml('<p></p>').dom), 'Should not need a fake caret');
+    LegacyUnit.equal(true, isFakeCaretTarget(SugarElement.fromHtml('<p contenteditable="false"></p>').dom), 'Should always need a fake caret');
+    LegacyUnit.equal(isFakeCaretTableBrowser(), isFakeCaretTarget(SugarElement.fromHtml('<table></table>').dom), 'Should on some browsers need a fake caret');
   });
 
   viewBlock.attach();

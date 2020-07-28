@@ -47,7 +47,7 @@ const setup = (editor: Editor) => {
 };
 
 const getApi = (comp: AlloyComponent): BridgeSidebar.SidebarInstanceApi => ({
-  element: (): HTMLElement => comp.element().dom()
+  element: (): HTMLElement => comp.element().dom
 });
 
 const makePanels = (parts: SlotContainerTypes.SlotContainerParts, panelConfigs: SidebarConfig) => {

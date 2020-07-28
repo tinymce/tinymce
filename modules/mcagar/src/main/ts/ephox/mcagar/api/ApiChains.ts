@@ -76,7 +76,7 @@ const cSelect = function <T extends Editor> (selector: string, path: number[]): 
   return Chain.op(function (editor: T) {
     const container = UiFinder.findIn(lazyBody(editor), selector).getOrDie();
     const target = Cursors.calculateOne(container, path);
-    editor.selection.select(target.dom());
+    editor.selection.select(target.dom);
   });
 };
 
@@ -123,7 +123,7 @@ const assertPath = function (label: string, root: SugarElement, expPath: number[
     const actPath = Hierarchy.path(root, actual).getOrDie('could not find path to root');
     return 'Expected path: ' + JSON.stringify(expPath) + '.\nActual path: ' + JSON.stringify(actPath);
   };
-  Assertions.assertEq(() => 'Assert incorrect for ' + label + '.\n' + message(), true, expected.dom() === actElement);
+  Assertions.assertEq(() => 'Assert incorrect for ' + label + '.\n' + message(), true, expected.dom === actElement);
   Assertions.assertEq(() => 'Offset mismatch for ' + label + ' in :\n' + Html.getOuter(expected), expOffset, actOffset);
 };
 

@@ -30,4 +30,4 @@ DomEvent.bind(SugarElement.fromDom(document), 'keydown', function (event) {
 
 Insert.append(ephoxUi, editor);
 
-editor.dom().innerHTML = 'Hello <span style="background-color: blue;">world</span> again<br/>, this is Earth.';
+editor.dom.innerHTML = 'Hello <span style="background-color: blue;">world</span> again<br/>, this is Earth.';

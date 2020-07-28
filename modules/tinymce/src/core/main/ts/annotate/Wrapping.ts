@@ -130,8 +130,8 @@ const annotateWithBookmark = (editor: Editor, name: string, settings: AnnotatorS
       const wrapper = makeAnnotation(editor.getDoc(), data, name, settings.decorate);
       // Put something visible in the marker
       Html.set(wrapper, Unicode.nbsp);
-      selection.getRng().insertNode(wrapper.dom());
-      selection.select(wrapper.dom());
+      selection.getRng().insertNode(wrapper.dom);
+      selection.select(wrapper.dom);
     } else {
       // The bookmark is responsible for splitting the nodes beforehand at the selection points
       // The "false" here means a zero width cursor is NOT put in the bookmark. It seems to be required

@@ -274,7 +274,7 @@ const register = (editor: Editor, registryContextToolbars, sink: AlloyComponent,
       },
 
       (info) => {
-        launchContext(info.toolbars, Optional.some(info.elem.dom()));
+        launchContext(info.toolbars, Optional.some(info.elem.dom));
       }
     );
   };

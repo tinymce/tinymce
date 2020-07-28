@@ -23,7 +23,7 @@ UnitTest.asynctest('browser.tinymce.core.selection.SelectionBookmarkTest', funct
       const win = Traverse.defaultView(sc);
 
       WindowSelection.setExact(
-        win.dom(), sc, soffset, fc, foffset
+        win.dom, sc, soffset, fc, foffset
       );
     });
   };
@@ -60,7 +60,7 @@ UnitTest.asynctest('browser.tinymce.core.selection.SelectionBookmarkTest', funct
 
       const win = Traverse.defaultView(SugarElement.fromDom(viewBlock.get()));
 
-      const sel = WindowSelection.getExact(win.dom()).getOrDie('no selection');
+      const sel = WindowSelection.getExact(win.dom).getOrDie('no selection');
 
       Assertions.assertDomEq('sc', sc, sel.start());
       Assertions.assertEq('soffset', startOffset, sel.soffset());
@@ -105,7 +105,7 @@ UnitTest.asynctest('browser.tinymce.core.selection.SelectionBookmarkTest', funct
 
       SelectionBookmark.validate(root, b)
         .each(function (rng) {
-          WindowSelection.setExact(win.dom(), rng.start(), rng.soffset(), rng.finish(), rng.foffset());
+          WindowSelection.setExact(win.dom, rng.start(), rng.soffset(), rng.finish(), rng.foffset());
         });
     });
   });

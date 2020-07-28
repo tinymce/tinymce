@@ -11,10 +11,10 @@ const tokenSelector = (): string => 'span[id^="ephox-alloy-aria-voice"]';
 
 // INVESTIGATE: Aria is special for insertion. Think about it more.
 const create = (doc: SugarElement<HTMLDocument>, text: string): SugarElement => {
-  const span: SugarElement = SugarElement.fromTag('span', doc.dom());
+  const span: SugarElement = SugarElement.fromTag('span', doc.dom);
   Attribute.set(span, 'role', 'presentation');
   // This stops it saying other things (possibly blank) between transitions.
-  const contents: SugarElement = SugarElement.fromText(text, doc.dom());
+  const contents: SugarElement = SugarElement.fromText(text, doc.dom);
   Insert.append(span, contents);
   return span;
 };

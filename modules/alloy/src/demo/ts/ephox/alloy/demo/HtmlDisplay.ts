@@ -66,7 +66,7 @@ const section = (gui: GuiSystem, instructions: string, spec: AlloySpec): AlloyCo
     updateHtml();
   });
 
-  observer.observe(component.element().dom(), { attributes: true, childList: true, characterData: true, subtree: true });
+  observer.observe(component.element().dom, { attributes: true, childList: true, characterData: true, subtree: true });
 
   const all = GuiFactory.build(
     Container.sketch({

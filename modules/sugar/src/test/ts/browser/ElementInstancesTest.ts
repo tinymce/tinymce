@@ -9,7 +9,7 @@ UnitTest.test('SugarElement testable/eq', () => {
   const span1: SugarElement<Element> = SugarElement.fromTag('span');
   Assert.eq('span === span', span1, span1, tElement<Element>());
 
-  const span2 = SugarElement.fromDom(span1.dom());
+  const span2 = SugarElement.fromDom(span1.dom);
   Assert.eq('spans should be equal when they refer to the same underlying element', span1, span2, tElement<Element>());
 
   const span3 = SugarElement.fromTag('span');

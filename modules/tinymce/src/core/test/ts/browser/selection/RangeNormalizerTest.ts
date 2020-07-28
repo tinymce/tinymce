@@ -22,8 +22,8 @@ UnitTest.asynctest('browser.tinymce.core.selection.RangeNormalizerTest', functio
       const startContainer = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), startPath).getOrDie();
       const endContainer = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), endPath).getOrDie();
       const rng = document.createRange();
-      rng.setStart(startContainer.dom(), startOffset);
-      rng.setEnd(endContainer.dom(), endOffset);
+      rng.setStart(startContainer.dom, startOffset);
+      rng.setEnd(endContainer.dom, endOffset);
       next(rng);
     });
   };

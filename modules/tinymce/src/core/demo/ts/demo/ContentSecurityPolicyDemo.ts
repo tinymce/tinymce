@@ -15,9 +15,9 @@ const makeSidebar = (ed, name: string, background: string, width: number) => {
         width: width + 'px',
         background
       });
-      api.element().appendChild(box.dom());
+      api.element().appendChild(box.dom);
       return () => {
-        api.element().removeChild(box.dom());
+        api.element().removeChild(box.dom);
       };
     },
     onShow: (_api) => {

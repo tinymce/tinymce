@@ -7,7 +7,7 @@ const all = <T extends Element = Element> (selector: string): SugarElement<T>[] 
 
 // For all of the following:
 //
-// jQuery does siblings of firstChild. IE9+ supports scope.dom().children (similar to Traverse.children but elements only).
+// jQuery does siblings of firstChild. IE9+ supports scope.dom.children (similar to Traverse.children but elements only).
 // Traverse should also do this (but probably not by default).
 //
 

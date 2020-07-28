@@ -142,7 +142,7 @@ const renderFloatingMoreToolbar = (toolbarSpec: MoreDrawerToolbarSpec) => {
       const headerBounds = Boxes.absolute(headerElem);
       const docElem = Traverse.documentElement(headerElem);
       const docBounds = Boxes.absolute(docElem);
-      const height = Math.max(docElem.dom().scrollHeight, docBounds.height);
+      const height = Math.max(docElem.dom.scrollHeight, docBounds.height);
       return Boxes.bounds(
         headerBounds.x + overflowXOffset,
         docBounds.y,

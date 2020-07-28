@@ -29,7 +29,7 @@ const pasteReplace = function (cell: SugarElement) {
 
 const newRow = function (doc: SugarElement) {
   return function () {
-    return SugarElement.fromTag('tr', doc.dom());
+    return SugarElement.fromTag('tr', doc.dom);
   };
 };
 
@@ -54,7 +54,7 @@ const cloneFormats = function (oldCell: SugarElement, newCell: SugarElement, for
 const cellOperations = function (mutate: (e1: SugarElement, e2: SugarElement) => void, doc: SugarElement, formatsToClone: Optional<string[]>): Generators {
   const newCell = function (prev: CellSpan) {
     const docu = Traverse.owner(prev.element());
-    const td = SugarElement.fromTag(SugarNode.name(prev.element()), docu.dom());
+    const td = SugarElement.fromTag(SugarNode.name(prev.element()), docu.dom);
 
     const formats = formatsToClone.getOr([ 'strong', 'em', 'b', 'i', 'span', 'font', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'div' ]);
 

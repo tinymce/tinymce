@@ -15,7 +15,7 @@ import { SelectionTargets } from '../selection/SelectionTargets';
 
 const getClipboardElements = (getClipboard: () => Optional<SugarElement[]>) => (): HTMLElement[] => getClipboard().fold(
   () => [],
-  (elems) => Arr.map(elems, (e) => e.dom())
+  (elems) => Arr.map(elems, (e) => e.dom)
 );
 
 const setClipboardElements = (setClipboard: (elems: Optional<SugarElement[]>) => void) => (elems: HTMLElement[]): void => {

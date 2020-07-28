@@ -63,7 +63,7 @@ const paletteFactory = (_translate: (key: string) => string, getClass: (key: str
 
   const setSliderColour = (slider: AlloyComponent, rgba: Rgba): void => {
     // Very open to a better way of doing this.
-    const canvas = slider.components()[0].element().dom();
+    const canvas = slider.components()[0].element().dom;
     setColour(canvas, RgbaColour.toString(rgba));
   };
 
@@ -81,7 +81,7 @@ const paletteFactory = (_translate: (key: string) => string, getClass: (key: str
 
     const onInit = (_slider: AlloyComponent, _thumb: AlloyComponent, spectrum: AlloyComponent, _value: number | SliderTypes.SliderValue) => {
       // Maybe make this initial value configurable?
-      setColour(spectrum.element().dom(), RgbaColour.toString(RgbaColour.red));
+      setColour(spectrum.element().dom, RgbaColour.toString(RgbaColour.red));
     };
 
     const sliderBehaviours = Behaviour.derive([

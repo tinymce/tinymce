@@ -16,7 +16,7 @@ import * as CaretContainer from './CaretContainer';
 
 const findBlockCaretContainer = function (editor: Editor) {
   return SelectorFind.descendant(SugarElement.fromDom(editor.getBody()), '*[data-mce-caret]').fold(Fun.constant(null), function (elm) {
-    return elm.dom();
+    return elm.dom;
   });
 };
 

@@ -59,8 +59,8 @@ const renderImagePanel = (initialUrl: string) => {
 
       const panelW = Width.get(panel.element());
       const panelH = Height.get(panel.element());
-      const width = img.dom().naturalWidth * zoom;
-      const height = img.dom().naturalHeight * zoom;
+      const width = img.dom.naturalWidth * zoom;
+      const height = img.dom.naturalHeight * zoom;
       const left = Math.max(0, panelW / 2 - width / 2);
       const top = Math.max(0, panelH / 2 - height / 2);
 
@@ -105,8 +105,8 @@ const renderImagePanel = (initialUrl: string) => {
     memContainer.getOpt(anyInSystem).each((panel) => {
       const panelW = Width.get(panel.element());
       const panelH = Height.get(panel.element());
-      const width = img.dom().naturalWidth;
-      const height = img.dom().naturalHeight;
+      const width = img.dom.naturalWidth;
+      const height = img.dom.naturalHeight;
       const zoom = Math.min((panelW) / width, (panelH) / height);
 
       if (zoom >= 1) {
@@ -120,7 +120,7 @@ const renderImagePanel = (initialUrl: string) => {
   const updateSrc = (anyInSystem: AlloyComponent, url: string): Promise<Optional<SugarElement>> => {
     const img = SugarElement.fromTag('img');
     Attribute.set(img, 'src', url);
-    return loadImage(img.dom()).then(() => memContainer.getOpt(anyInSystem).map((panel) => {
+    return loadImage(img.dom).then(() => memContainer.getOpt(anyInSystem).map((panel) => {
       const aImg = GuiFactory.external({
         element: img
       });
@@ -131,8 +131,8 @@ const renderImagePanel = (initialUrl: string) => {
       const viewRect = {
         x: 0,
         y: 0,
-        w: img.dom().naturalWidth,
-        h: img.dom().naturalHeight
+        w: img.dom.naturalWidth,
+        h: img.dom.naturalHeight
       };
       viewRectState.set(viewRect);
       const rect = Rect.inflate(viewRect, -20, -20);
@@ -195,7 +195,7 @@ const renderImagePanel = (initialUrl: string) => {
           AddEventsBehaviour.config('image-panel-crop-events', [
             AlloyEvents.runOnAttached((comp) => {
               memContainer.getOpt(comp).each((container) => {
-                const el = container.element().dom();
+                const el = container.element().dom;
                 const cRect = CropRect.create(
                   { x: 10, y: 10, w: 100, h: 100 },
                   { x: 0, y: 0, w: 200, h: 200 },

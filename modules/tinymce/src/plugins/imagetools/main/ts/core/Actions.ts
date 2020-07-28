@@ -31,7 +31,7 @@ const getEditableImage = (editor: Editor, elem) => {
 
   if (isFigure(editor, elem)) {
     const imgOpt = getFigureImg(elem);
-    return imgOpt.map((img) => isEditable(img.dom()) ? Optional.some(img.dom()) : Optional.none());
+    return imgOpt.map((img) => isEditable(img.dom) ? Optional.some(img.dom) : Optional.none());
   }
   return isEditable(elem) ? Optional.some(elem) : Optional.none();
 };
@@ -184,11 +184,11 @@ const selectedImageOperation = function (editor: Editor, imageUploadTimerState, 
     return imgOpt.fold(() => {
       displayError(editor, 'Could not find selected image');
     }, (img) => editor._scanForImages().
-      then(() => findBlob(editor, img.dom())).
+      then(() => findBlob(editor, img.dom)).
       then(ResultConversions.blobToImageResult).
       then(fn).
       then(function (imageResult) {
-        return updateSelectedImage(editor, imageResult, false, imageUploadTimerState, img.dom(), size);
+        return updateSelectedImage(editor, imageResult, false, imageUploadTimerState, img.dom, size);
       }, function (error) {
         displayError(editor, error);
       }));
@@ -199,7 +199,7 @@ const rotate = function (editor: Editor, imageUploadTimerState, angle) {
   return function () {
     const imgOpt = getSelectedImage(editor);
     const flippedSize = imgOpt.fold(() => null, (img) => {
-      const size = ImageSize.getImageSize(img.dom());
+      const size = ImageSize.getImageSize(img.dom);
       return size ? { w: size.h, h: size.w } : null;
     });
 

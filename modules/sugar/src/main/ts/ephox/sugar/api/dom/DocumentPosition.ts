@@ -7,9 +7,9 @@ const makeRange = (start: SugarElement<Node>, soffset: number, finish: SugarElem
 
   // TODO: We need to think about a better place to put native range creation code. Does it even belong in sugar?
   // Could the `Compare` checks (node.compareDocumentPosition) handle these situations better?
-  const rng = doc.dom().createRange();
-  rng.setStart(start.dom(), soffset);
-  rng.setEnd(finish.dom(), foffset);
+  const rng = doc.dom.createRange();
+  rng.setStart(start.dom, soffset);
+  rng.setEnd(finish.dom, foffset);
   return rng;
 };
 

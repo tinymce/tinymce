@@ -46,8 +46,8 @@ const isSelectionInTable = (root: SugarElement<Node>, rng: Range) =>
   isRawNodeInTable(root, rng.startContainer) || isRawNodeInTable(root, rng.endContainer);
 
 const isEverythingSelected = (root: SugarElement<Node>, rng: Range) => {
-  const noPrevious = CaretFinder.prevPosition(root.dom(), CaretPosition.fromRangeStart(rng)).isNone();
-  const noNext = CaretFinder.nextPosition(root.dom(), CaretPosition.fromRangeEnd(rng)).isNone();
+  const noPrevious = CaretFinder.prevPosition(root.dom, CaretPosition.fromRangeStart(rng)).isNone();
+  const noNext = CaretFinder.nextPosition(root.dom, CaretPosition.fromRangeEnd(rng)).isNone();
   return !isSelectionInTable(root, rng) && noPrevious && noNext;
 };
 

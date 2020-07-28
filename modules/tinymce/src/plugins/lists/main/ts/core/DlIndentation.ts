@@ -15,7 +15,7 @@ const outdentDlItem = (editor: Editor, item: SugarElement): void => {
   if (Compare.is(item, 'dd')) {
     Replication.mutate(item, 'dt');
   } else if (Compare.is(item, 'dt')) {
-    Traverse.parent(item).each((dl) => SplitList.splitList(editor, dl.dom(), item.dom()));
+    Traverse.parent(item).each((dl) => SplitList.splitList(editor, dl.dom, item.dom));
   }
 };
 

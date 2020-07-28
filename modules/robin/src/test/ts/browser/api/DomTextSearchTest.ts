@@ -59,8 +59,8 @@ UnitTest.test('DomTextSearchTest', function () {
   const text = SugarElement.fromText('@maurizio@ ');
   Insert.append(element, text);
 
-  Assert.eq('eq', 1, element.dom().childNodes.length); // Range offsets [0, 1)
-  Assert.eq('eq', 11, text.dom().length);              // Range offsets [0, 11)
+  Assert.eq('eq', 1, element.dom.childNodes.length); // Range offsets [0, 1)
+  Assert.eq('eq', 11, text.dom.length);              // Range offsets [0, 11)
 
   const elemResult = DomTextSearch.expandRight(element, 0, { regex: wordbreaker, attempt: stopAtGap });
   checkAbort(elemResult);
@@ -103,14 +103,14 @@ UnitTest.test('DomTextSearchTest', function () {
   //
   const textR = SugarElement.fromText('   words');
   //                     Pos:  0  23    8
-  Assert.eq('eq', 8, textR.dom().length);
+  Assert.eq('eq', 8, textR.dom.length);
   checkInfo(DomTextSearch.expandRight(textR, 0, { regex: wordfinder, attempt: stopAtGap }),
     textR, 3); // 3 is the location after the last space, starting from the left
   checkInfo(DomTextSearch.expandLeft(textR, 8, { regex: wordbreaker, attempt: stopAtGap }),
     textR, 2); // 2 is the location after the last character, starting from the right
   const textL = SugarElement.fromText('words   ');
   //                     Pos:  0    45  8
-  Assert.eq('eq', 8, textL.dom().length);
+  Assert.eq('eq', 8, textL.dom.length);
   checkInfo(DomTextSearch.expandRight(textL, 0, { regex: wordbreaker, attempt: stopAtGap }),
     textL, 5); // 5 is the location after the last character, starting from the left
   checkInfo(DomTextSearch.expandLeft(textL, 8, { regex: wordfinder, attempt: stopAtGap }),
@@ -128,9 +128,9 @@ UnitTest.test('DomTextSearchTest', function () {
   Insert.append(span2, w2);
   InsertAll.append(element, [ w1, span2, w3 ]);
 
-  Assert.eq('eq', 3, element.dom().childNodes.length); // Range offsets [0, 3)
-  Assert.eq('eq', 1, span2.dom().childNodes.length);              // Range offsets [0, 1)
-  Assert.eq('eq', 9, w1.dom().length);                 // Range offsets [0, 7)
+  Assert.eq('eq', 3, element.dom.childNodes.length); // Range offsets [0, 3)
+  Assert.eq('eq', 1, span2.dom.childNodes.length);              // Range offsets [0, 1)
+  Assert.eq('eq', 9, w1.dom.length);                 // Range offsets [0, 7)
   Assert.eq('eq', '<div>  wordy  <span>  words  </span>  wordd  </div>', Html.getOuter(element));
 
   const r0 = DomTextSearch.expandRight(w1, 0, { regex: wordfinder, attempt: stopAtGap });

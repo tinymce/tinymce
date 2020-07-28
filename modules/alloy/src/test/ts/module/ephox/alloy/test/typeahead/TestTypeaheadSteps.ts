@@ -20,7 +20,7 @@ export default (doc: SugarElement<HTMLDocument>, gui: GuiSystem, typeahead: Allo
   const sAssertTextSelection = (label: string, start: number, finish: number) => Logger.t(
     label + ' sAssertTextSelection',
     Step.sync(() => {
-      const node = typeahead.element().dom() as HTMLInputElement;
+      const node = typeahead.element().dom as HTMLInputElement;
       Assertions.assertEq(label + ' start cursor', start, node.selectionStart);
       Assertions.assertEq(label + ' finish cursor', finish, node.selectionEnd);
     })

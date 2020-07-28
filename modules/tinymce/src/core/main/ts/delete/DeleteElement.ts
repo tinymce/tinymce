@@ -86,7 +86,7 @@ const setSelection = (editor: Editor, forward: boolean, pos: Optional<CaretPosit
   );
 };
 
-const eqRawNode = (rawNode: Node) => (elm: SugarElement) => elm.dom() === rawNode;
+const eqRawNode = (rawNode: Node) => (elm: SugarElement) => elm.dom === rawNode;
 
 const isBlock = (editor: Editor, elm: SugarElement) =>
   elm && Obj.has(editor.schema.getBlockElements(), SugarNode.name(elm));
@@ -96,7 +96,7 @@ const paddEmptyBlock = (elm: SugarElement): Optional<CaretPosition> => {
     const br = SugarElement.fromHtml('<br data-mce-bogus="1">');
     Remove.empty(elm);
     Insert.append(elm, br);
-    return Optional.some(CaretPosition.before(br.dom()));
+    return Optional.some(CaretPosition.before(br.dom));
   } else {
     return Optional.none();
   }
@@ -112,15 +112,15 @@ const deleteNormalized = (elm: SugarElement, afterDeletePosOpt: Optional<CaretPo
   // Merge and normalize any prev/next text nodes, so that they are merged and don't lose meaningful whitespace
   // eg. <p>a <span></span> b</p> -> <p>a &nsbp;b</p> or <p><span></span> a</p> -> <p>&nbsp;a</a>
   return Optionals.lift3(prevTextOpt, nextTextOpt, afterDeletePosOpt, (prev, next, pos) => {
-    const prevNode = prev.dom(), nextNode = next.dom();
+    const prevNode = prev.dom, nextNode = next.dom;
     const offset = prevNode.data.length;
     MergeText.mergeTextNodes(prevNode, nextNode, normalizeWhitespace);
     // Update the cursor position if required
     return pos.container() === nextNode ? CaretPosition(prevNode, offset) : pos;
   }).orThunk(() => {
     if (normalizeWhitespace) {
-      prevTextOpt.each((elm) => MergeText.normalizeWhitespaceBefore(elm.dom(), elm.dom().length));
-      nextTextOpt.each((elm) => MergeText.normalizeWhitespaceAfter(elm.dom(), 0));
+      prevTextOpt.each((elm) => MergeText.normalizeWhitespaceBefore(elm.dom, elm.dom.length));
+      nextTextOpt.each((elm) => MergeText.normalizeWhitespaceAfter(elm.dom, 0));
     }
     return afterDeletePosOpt;
   });
@@ -130,7 +130,7 @@ const isInlineElement = (editor: Editor, element: SugarElement): boolean =>
   Obj.has(editor.schema.getTextInlineElements(), SugarNode.name(element));
 
 const deleteElement = (editor: Editor, forward: boolean, elm: SugarElement, moveCaret: boolean = true) => {
-  const afterDeletePos = findCaretPosOutsideElmAfterDelete(forward, editor.getBody(), elm.dom());
+  const afterDeletePos = findCaretPosOutsideElmAfterDelete(forward, editor.getBody(), elm.dom);
   const parentBlock = PredicateFind.ancestor(elm, Fun.curry(isBlock, editor), eqRawNode(editor.getBody()));
   const normalizedAfterDeletePos = deleteNormalized(elm, afterDeletePos, isInlineElement(editor, elm));
 

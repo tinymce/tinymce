@@ -30,8 +30,8 @@ const findWithin = (win: Window, selection: SimSelection, selector: string): Sug
   Within.find(win, selection, selector);
 
 const setLegacyRtlRange = (win: Window, selection: Selection, start: SugarElement<Node>, soffset: number, finish: SugarElement<Node>, foffset: number): void => {
-  selection.collapse(start.dom(), soffset);
-  selection.extend(finish.dom(), foffset);
+  selection.collapse(start.dom, soffset);
+  selection.extend(finish.dom, foffset);
 };
 
 const setRangeFromRelative = (win: Window, relative: SimSelection): void =>
@@ -43,7 +43,7 @@ const setRangeFromRelative = (win: Window, relative: SimSelection): void =>
       getNativeSelection(win).each((selection) => {
         // If this selection is backwards, then we need to use extend.
         if (selection.setBaseAndExtent) {
-          selection.setBaseAndExtent(start.dom(), soffset, finish.dom(), foffset);
+          selection.setBaseAndExtent(start.dom, soffset, finish.dom, foffset);
         } else if ((selection as any).extend) {
           // This try catch is for older browsers (Firefox 52) as they're sometimes unable to handle setting backwards selections using selection.extend and error out.
           try {
@@ -72,7 +72,7 @@ const setRelative = (win: Window, startSitu: Situ, finishSitu: Situ): void => {
 };
 
 const toNative = (selection: SimSelection): Range => {
-  const win: Window = SimSelection.getWin(selection).dom();
+  const win: Window = SimSelection.getWin(selection).dom;
   const getDomRange = (start: SugarElement<Node>, soffset: number, finish: SugarElement<Node>, foffset: number) => NativeRange.exactToNative(win, start, soffset, finish, foffset);
   const filtered = Prefilter.preprocess(selection);
   return SelectionDirection.diagnose(win, filtered).match({

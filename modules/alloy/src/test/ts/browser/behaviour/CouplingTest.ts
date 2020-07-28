@@ -60,7 +60,7 @@ UnitTest.asynctest('CouplingTest', (success, failure) => {
     Step.sync(() => {
       const secondary1 = Coupling.getCoupled(component, 'secondary-1');
       gui.add(secondary1);
-      secondary1.element().dom().click();
+      secondary1.element().dom.click();
     }),
     store.sAssertEq(
       'After clicking, store should have message',

@@ -46,7 +46,7 @@ UnitTest.asynctest('browser.tinymce.plugins.template.TemplateSanityTest', (succe
         Chain.asStep(docBody, [
           UiFinder.cFindIn(dialogSelector),
           UiFinder.cWaitForState('iframe is loaded', 'iframe', (elm) => {
-            const iframeDoc = elm.dom().contentDocument || elm.dom().contentWindow.document;
+            const iframeDoc = elm.dom.contentDocument || elm.dom.contentWindow.document;
             return iframeDoc.body.firstChild !== null;
           })
         ]),

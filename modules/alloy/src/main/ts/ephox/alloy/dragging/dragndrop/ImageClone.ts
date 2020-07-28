@@ -33,7 +33,7 @@ const setDragImageFromClone = (transfer: DataTransfer, parent: SugarElement, ima
   const ghost = createGhostClone(image);
 
   Insert.append(parent, ghost);
-  DataTransfers.setDragImage(transfer, ghost.dom(), image.x(), image.y());
+  DataTransfers.setDragImage(transfer, ghost.dom, image.x(), image.y());
 
   setTimeout(() => {
     Remove.remove(ghost);

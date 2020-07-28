@@ -37,7 +37,7 @@ const find = (node: SugarElement<Node>, filterOpt: Optional<(n: string | null) =
   // http://www.bennadel.com/blog/2607-finding-html-comment-nodes-in-the-dom-using-treewalker.htm
   vmlFilter.acceptNode = vmlFilter;
 
-  const texas = document.createTreeWalker(node.dom(), NodeFilter.SHOW_COMMENT, vmlFilter, false);
+  const texas = document.createTreeWalker(node.dom, NodeFilter.SHOW_COMMENT, vmlFilter, false);
 
   return getNodes<Comment>(texas);
 };

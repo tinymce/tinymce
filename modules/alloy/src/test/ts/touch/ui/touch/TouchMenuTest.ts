@@ -130,7 +130,7 @@ UnitTest.asynctest('Browser Test: ui.touch.TouchMenuTest', (success, failure) =>
     const sFireTouchmoveOn = (container: SugarElement, selector: string) => Chain.asStep(gui.element(), [
       UiFinder.cFindIn(selector),
       Chain.op((target) => {
-        const rect = target.dom().getBoundingClientRect();
+        const rect = target.dom.getBoundingClientRect();
         AlloyTriggers.dispatchWith(component, container, NativeEvents.touchmove(), {
           raw: {
             touches: [
@@ -156,7 +156,7 @@ UnitTest.asynctest('Browser Test: ui.touch.TouchMenuTest', (success, failure) =>
       Step.sync(() => {
         store.assertEq('Checking no messages', [ ]);
         Assertions.assertEq('Checking selected class should be off initially', false, Class.has(component.element(), 'touch-menu-open'));
-        const rect = component.element().dom().getBoundingClientRect();
+        const rect = component.element().dom.getBoundingClientRect();
         fireTouchstart(component.element(), rect.x, rect.y);
         Assertions.assertEq('Checking selected class should be on', true, Class.has(component.element(), 'touch-menu-open'));
         store.assertEq('Checking no hovering messages until menu appears', [ ]);
@@ -171,7 +171,7 @@ UnitTest.asynctest('Browser Test: ui.touch.TouchMenuTest', (success, failure) =>
 
       Step.sync(() => {
         store.assertEq('Checking no messages', [ ]);
-        const rect = component.element().dom().getBoundingClientRect();
+        const rect = component.element().dom.getBoundingClientRect();
         fireTouchstart(component.element(), rect.x, rect.y);
         Step.wait(300);
         fireLongpress(component.element());

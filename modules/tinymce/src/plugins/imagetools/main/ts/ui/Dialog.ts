@@ -54,7 +54,7 @@ const makeOpen = (editor: Editor, imageUploadTimerState) => () => {
       const blob = api.getData().imagetools.blob;
       originalImgOpt.each((originalImg) => {
         originalSizeOpt.each((originalSize) => {
-          Actions.handleDialogBlob(editor, imageUploadTimerState, originalImg.dom(), originalSize, blob);
+          Actions.handleDialogBlob(editor, imageUploadTimerState, originalImg.dom, originalSize, blob);
         });
       });
       api.close();
@@ -81,12 +81,12 @@ const makeOpen = (editor: Editor, imageUploadTimerState) => () => {
   });
 
   const originalImgOpt = Actions.getSelectedImage(editor);
-  const originalSizeOpt = originalImgOpt.map((origImg) => ImageSize.getNaturalImageSize(origImg.dom()));
+  const originalSizeOpt = originalImgOpt.map((origImg) => ImageSize.getNaturalImageSize(origImg.dom));
 
   const imgOpt = Actions.getSelectedImage(editor);
   imgOpt.each((img) => {
-    Actions.getEditableImage(editor, img.dom()).each((_) => {
-      Actions.findBlob(editor, img.dom()).then((blob) => {
+    Actions.getEditableImage(editor, img.dom).each((_) => {
+      Actions.findBlob(editor, img.dom).then((blob) => {
         const state = createState(blob);
         editor.windowManager.open(getLoadedSpec(state));
       });

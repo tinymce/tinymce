@@ -70,8 +70,8 @@ UnitTest.test('TraverseTest', () => {
   checkSiblings([ c6 ], c5, Traverse.nextSiblings);
 
   const el = SugarElement.fromTag('div');
-  Assert.eq('eq', true, Traverse.owner(el).dom() === document);
-  Assert.eq('eq', true, Traverse.defaultView(el).dom() === window);
+  Assert.eq('eq', true, Traverse.owner(el).dom === document);
+  Assert.eq('eq', true, Traverse.defaultView(el).dom === window);
 
   const n = node('n');
   c1 = node('c1');

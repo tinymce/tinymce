@@ -80,7 +80,7 @@ const setupInShadowRoot = (
   }
   const sh = SugarElement.fromTag('div');
   Insert.append(SugarBody.body(), sh);
-  const sr = SugarElement.fromDom(sh.dom().attachShadow({ mode: 'open' }));
+  const sr = SugarElement.fromDom(sh.dom.attachShadow({ mode: 'open' }));
   setupIn(sr, createComponent, f, () => {
     Remove.remove(sh);
     success();

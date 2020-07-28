@@ -181,7 +181,7 @@ export default (): void => {
             Attachment.attach(sink, popup);
             Positioning.position(sink, {
               anchor: 'selection',
-              root: SugarElement.fromDom(Traverse.defaultView(frame).dom().document.body)
+              root: SugarElement.fromDom(Traverse.defaultView(frame).dom.document.body)
             }, popup);
           }
         })

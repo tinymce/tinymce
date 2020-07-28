@@ -9,15 +9,15 @@ import { Fun, Optional } from '@ephox/katamari';
 import { Compare, DomEvent, RawRect, StructRect, SugarElement, WindowSelection } from '@ephox/sugar';
 
 const getBodyFromFrame = function (frame) {
-  return Optional.some(SugarElement.fromDom(frame.dom().contentWindow.document.body));
+  return Optional.some(SugarElement.fromDom(frame.dom.contentWindow.document.body));
 };
 
 const getDocFromFrame = function (frame) {
-  return Optional.some(SugarElement.fromDom(frame.dom().contentWindow.document));
+  return Optional.some(SugarElement.fromDom(frame.dom.contentWindow.document));
 };
 
 const getWinFromFrame = function (frame) {
-  return Optional.from(frame.dom().contentWindow);
+  return Optional.from(frame.dom.contentWindow);
 };
 
 const getSelectionFromFrame = function (frame) {
@@ -73,7 +73,7 @@ const getActiveApi = function (editor) {
     };
 
     const toStartRect = function (sel) {
-      const rect = sel.start().dom().getBoundingClientRect();
+      const rect = sel.start().dom.getBoundingClientRect();
       return rect.width > 0 || rect.height > 0 ? Optional.some(rect).map(toRect) : Optional.none<StructRect>();
     };
 
@@ -84,7 +84,7 @@ const getActiveApi = function (editor) {
     return getDocFromFrame(frame).bind(function (doc) {
       return getWinFromFrame(frame).map(function (win) {
 
-        const html = SugarElement.fromDom(doc.dom().documentElement);
+        const html = SugarElement.fromDom(doc.dom.documentElement);
 
         const getCursorBox = editor.getCursorBox.getOrThunk(function () {
           return function () {

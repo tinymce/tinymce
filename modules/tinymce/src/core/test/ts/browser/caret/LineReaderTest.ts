@@ -33,31 +33,31 @@ UnitTest.asynctest('browser.tinymce.core.caret.LineReader', (success, failure) =
 
   const cGetPositionsUntilPreviousLine = (path: number[], offset: number) => Chain.mapper(function (scope: any) {
     const container = Hierarchy.follow(SugarElement.fromDom(scope.get()), path).getOrDie();
-    const pos = CaretPosition(container.dom(), offset);
+    const pos = CaretPosition(container.dom, offset);
     return getPositionsUntilPreviousLine(scope.get(), pos);
   });
 
   const cGetPositionsUntilNextLine = (path: number[], offset: number) => Chain.mapper(function (scope: any) {
     const container = Hierarchy.follow(SugarElement.fromDom(scope.get()), path).getOrDie();
-    const pos = CaretPosition(container.dom(), offset);
+    const pos = CaretPosition(container.dom, offset);
     return getPositionsUntilNextLine(scope.get(), pos);
   });
 
   const cGetAbovePositions = (path: number[], offset: number) => Chain.mapper(function (scope: any) {
     const container = Hierarchy.follow(SugarElement.fromDom(scope.get()), path).getOrDie();
-    const pos = CaretPosition(container.dom(), offset);
+    const pos = CaretPosition(container.dom, offset);
     return getPositionsAbove(scope.get(), pos);
   });
 
   const cGetBelowPositions = (path: number[], offset: number) => Chain.mapper(function (scope: any) {
     const container = Hierarchy.follow(SugarElement.fromDom(scope.get()), path).getOrDie();
-    const pos = CaretPosition(container.dom(), offset);
+    const pos = CaretPosition(container.dom, offset);
     return getPositionsBelow(scope.get(), pos);
   });
 
   const cFindClosestHorizontalPosition = (path: number[], offset: number) => Chain.mapper(function (positions: CaretPosition[]) {
     const container = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), path).getOrDie();
-    const pos = CaretPosition(container.dom(), offset);
+    const pos = CaretPosition(container.dom, offset);
     return findClosestHorizontalPosition(positions, pos);
   });
 
@@ -122,7 +122,7 @@ UnitTest.asynctest('browser.tinymce.core.caret.LineReader', (success, failure) =
 
   const cVisualCaretCheck = (predicate, path: number[], offset: number) => Chain.mapper(function (scope: any) {
     const container = Hierarchy.follow(SugarElement.fromDom(scope.get()), path).getOrDie();
-    const pos = CaretPosition(container.dom(), offset);
+    const pos = CaretPosition(container.dom, offset);
     return predicate(scope.get(), pos);
   });
 

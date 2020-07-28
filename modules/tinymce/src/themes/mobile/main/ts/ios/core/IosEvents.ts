@@ -28,7 +28,7 @@ const initEvents = (editorApi, iosApi, toolstrip, socket, _dropup): { destroy: (
     // anything visible inside the iframe actually has a top value (for bounding
     // rectangle) > socket.scrollTop. The rectangle is with respect to the top of
     // the iframe, which has scrolled up above the socket viewport.
-    const y = yTop - socket.dom().scrollTop;
+    const y = yTop - socket.dom.scrollTop;
     iosApi.run((api) => {
       api.scrollIntoView(y, y + height);
     });

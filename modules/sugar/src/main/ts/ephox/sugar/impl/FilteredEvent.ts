@@ -43,7 +43,7 @@ const handle = <T extends Event>(filter: EventFilter<T>, handler: EventHandler<T
 const binder = <T extends Event>(element: SugarElement, event: string, filter: EventFilter<T>, handler: EventHandler<T>, useCapture: boolean): EventUnbinder => {
   const wrapped = handle(filter, handler);
   // IE9 minimum
-  element.dom().addEventListener(event, wrapped, useCapture);
+  element.dom.addEventListener(event, wrapped, useCapture);
 
   return {
     unbind: Fun.curry(unbind, element, event, wrapped, useCapture)
@@ -58,7 +58,7 @@ const capture = <T extends Event>(element: SugarElement, event: string, filter: 
 
 const unbind = <T extends Event>(element: SugarElement, event: string, handler: WrappedHandler<T>, useCapture: boolean) => {
   // IE9 minimum
-  element.dom().removeEventListener(event, handler, useCapture);
+  element.dom.removeEventListener(event, handler, useCapture);
 };
 
 export { bind, capture, fromRawEvent };

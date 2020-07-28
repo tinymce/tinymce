@@ -73,7 +73,7 @@ UnitTest.test('RectangularTest', function () {
   InsertAll.append(div, [ table, table2 ] );
 
   const check = function (tableTarget: SugarElement, from: string, to: string, expected: boolean) {
-    [].forEach.call(tableTarget.dom().querySelectorAll('td'), function (td: HTMLElement) {
+    [].forEach.call(tableTarget.dom.querySelectorAll('td'), function (td: HTMLElement) {
       td.style.background = '';
     });
     Optional.from(document.querySelector(from) as HTMLElement).getOrDie('Missing element for "from" selector').style.background = '#cadbee';

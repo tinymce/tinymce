@@ -50,7 +50,7 @@ const getActiveElement = function (editor: Editor): Element {
     const root = SugarShadowDom.getRootNode(SugarElement.fromDom(editor.getElement()));
     return Focus.active(root).fold(
       () => document.body,
-      (x) => x.dom()
+      (x) => x.dom
     );
   } catch (ex) {
     // IE sometimes fails to get the activeElement when resizing table

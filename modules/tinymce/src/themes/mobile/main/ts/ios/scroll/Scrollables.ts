@@ -13,25 +13,25 @@ import * as Styles from '../../style/Styles';
 const dataHorizontal = 'data-' + Styles.resolve('horizontal-scroll');
 
 const canScrollVertically = function (container) {
-  container.dom().scrollTop = 1;
-  const result = container.dom().scrollTop !== 0;
-  container.dom().scrollTop = 0;
+  container.dom.scrollTop = 1;
+  const result = container.dom.scrollTop !== 0;
+  container.dom.scrollTop = 0;
   return result;
 };
 
 const canScrollHorizontally = function (container) {
-  container.dom().scrollLeft = 1;
-  const result = container.dom().scrollLeft !== 0;
-  container.dom().scrollLeft = 0;
+  container.dom.scrollLeft = 1;
+  const result = container.dom.scrollLeft !== 0;
+  container.dom.scrollLeft = 0;
   return result;
 };
 
 const hasVerticalScroll = function (container) {
-  return container.dom().scrollTop > 0 || canScrollVertically(container);
+  return container.dom.scrollTop > 0 || canScrollVertically(container);
 };
 
 const hasHorizontalScroll = function (container) {
-  return container.dom().scrollLeft > 0 || canScrollHorizontally(container);
+  return container.dom.scrollLeft > 0 || canScrollHorizontally(container);
 };
 
 const markAsHorizontal = function (container) {

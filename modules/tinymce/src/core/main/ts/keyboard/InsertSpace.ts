@@ -19,10 +19,10 @@ const insertSpaceOrNbspAtPosition = (root: SugarElement, pos: CaretPosition): Op
   needsToHaveNbsp(root, pos) ? insertNbspAtPosition(pos) : insertSpaceAtPosition(pos);
 
 const locationToCaretPosition = (root: SugarElement) => (location: BoundaryLocation.LocationAdt) => location.fold(
-  (element) => CaretFinder.prevPosition(root.dom(), CaretPosition.before(element)),
+  (element) => CaretFinder.prevPosition(root.dom, CaretPosition.before(element)),
   (element) => CaretFinder.firstPositionIn(element),
   (element) => CaretFinder.lastPositionIn(element),
-  (element) => CaretFinder.nextPosition(root.dom(), CaretPosition.after(element))
+  (element) => CaretFinder.nextPosition(root.dom, CaretPosition.after(element))
 );
 
 const insertInlineBoundarySpaceOrNbsp = (root: SugarElement, pos: CaretPosition) => (checkPos: CaretPosition) =>

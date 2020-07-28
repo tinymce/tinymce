@@ -11,7 +11,7 @@ import * as ElementType from './ElementType';
 
 const getLastChildren = function (elm) {
   const children = [];
-  let rawNode = elm.dom();
+  let rawNode = elm.dom;
 
   while (rawNode) {
     children.push(SugarElement.fromDom(rawNode));

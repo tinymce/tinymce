@@ -16,7 +16,7 @@ const cPasteDataTransfer = (mutator: (dataTransfer: DataTransfer) => void): Chai
 
     mutator(dataTransfer);
 
-    target.dom().dispatchEvent(event);
+    target.dom.dispatchEvent(event);
   });
 
 const cPasteItems = (items: Record<string, string>): Chain<SugarElement<any>, SugarElement<any>> =>
@@ -60,7 +60,7 @@ const cCut: Chain<SugarElement<any>, DataTransfer> =
     const dataTransfer = createDataTransfer();
     const event = createCutEvent(win, 0, 0, dataTransfer);
 
-    target.dom().dispatchEvent(event);
+    target.dom.dispatchEvent(event);
 
     return dataTransfer;
   });
@@ -71,7 +71,7 @@ const cCopy: Chain<SugarElement<any>, DataTransfer> =
     const dataTransfer = createDataTransfer();
     const event = createCopyEvent(win, 0, 0, dataTransfer);
 
-    target.dom().dispatchEvent(event);
+    target.dom.dispatchEvent(event);
 
     return dataTransfer;
   });

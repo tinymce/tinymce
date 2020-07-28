@@ -33,7 +33,7 @@ const setEditorCommandState = (editor: Editor, cmd: string, state: boolean) => {
 };
 
 const setContentEditable = (elm: SugarElement, state: boolean) => {
-  elm.dom().contentEditable = state ? 'true' : 'false';
+  elm.dom.contentEditable = state ? 'true' : 'false';
 };
 
 const switchOffContentEditableTrue = (elm: SugarElement) => {

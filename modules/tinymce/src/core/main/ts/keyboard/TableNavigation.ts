@@ -94,8 +94,8 @@ const renderBlock = (down: boolean, editor: Editor, table: HTMLElement, pos: Car
       }
 
       const rng = editor.dom.createRng();
-      rng.setStart(element.dom(), 0);
-      rng.setEnd(element.dom(), 0);
+      rng.setStart(element.dom, 0);
+      rng.setEnd(element.dom, 0);
       NavigationUtils.moveToRange(editor, rng);
     });
   } else {

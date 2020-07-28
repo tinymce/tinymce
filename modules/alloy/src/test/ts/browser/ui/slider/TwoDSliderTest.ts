@@ -93,7 +93,7 @@ UnitTest.asynctest('Browser Test: ui.slider.TwoDSliderTest', (success, failure) 
     })
   ), (doc, _body, _gui, component, _store) => {
 
-    const cGetBounds = Chain.mapper((elem: SugarElement) => elem.dom().getBoundingClientRect());
+    const cGetBounds = Chain.mapper((elem: SugarElement) => elem.dom.getBoundingClientRect());
 
     const cGetComponent = Chain.binder((elem: SugarElement) => component.getSystem().getByDom(elem));
 

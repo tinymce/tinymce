@@ -55,7 +55,7 @@ export default (): void => {
         '</body>' +
       '</html>'
     );
-    const root = SugarElement.fromDom(Frames.readDoc(frame).dom().documentElement);
+    const root = SugarElement.fromDom(Frames.readDoc(frame).dom.documentElement);
     addAsForeign(root);
   });
 

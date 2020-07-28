@@ -82,9 +82,9 @@ UnitTest.test('Browser Test: SelectionTest', () => {
   const assertRng = (selection: SimSelection, expStart: SugarElement<Node>, expSoffset: number, expFinish: SugarElement<Node>, expFoffset: number) => {
     const r = WindowSelection.toNative(selection);
 
-    assert.eq(expStart.dom(), r.startContainer, () => 'Start Container should be: ' + Html.getOuter(expStart));
+    assert.eq(expStart.dom, r.startContainer, () => 'Start Container should be: ' + Html.getOuter(expStart));
     assert.eq(expSoffset, r.startOffset, 'Start offset should be: ' + expSoffset);
-    assert.eq(expFinish.dom(), r.endContainer, () => 'End Container should be: ' + Html.getOuter(expFinish));
+    assert.eq(expFinish.dom, r.endContainer, () => 'End Container should be: ' + Html.getOuter(expFinish));
     assert.eq(expFoffset, r.endOffset, 'End offset should be: ' + expFoffset);
 
     return r;

@@ -27,7 +27,7 @@ const mark = (matches: TextMatch[][], replacementNode: HTMLElement) => {
     Arr.eachr(match, (pos) => {
       const wrapper = SugarElement.fromDom(replacementNode.cloneNode(false) as HTMLElement);
       Attribute.set(wrapper, 'data-mce-index', idx);
-      const textNode = pos.element.dom();
+      const textNode = pos.element.dom;
       if (textNode.length === pos.finish && pos.start === 0) {
         Insert.wrap(pos.element, wrapper);
       } else {

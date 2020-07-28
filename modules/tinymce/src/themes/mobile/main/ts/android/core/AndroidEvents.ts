@@ -38,12 +38,12 @@ const initEvents = function (editorApi, toolstrip, alloy) {
     return Focus.active(outerDoc).filter(function (input) {
       return SugarNode.name(input) === 'input';
     }).exists(function (input: SugarElement<HTMLInputElement>) {
-      return input.dom().selectionStart !== input.dom().selectionEnd;
+      return input.dom.selectionStart !== input.dom.selectionEnd;
     });
   };
 
   const updateMargin = function () {
-    const rangeInContent = editorApi.doc().dom().hasFocus() && editorApi.getSelection().exists(isRanged);
+    const rangeInContent = editorApi.doc().dom.hasFocus() && editorApi.getSelection().exists(isRanged);
     alloy.getByDom(toolstrip).each((rangeInContent || hasRangeInUi()) === true ? Toggling.on : Toggling.off);
   };
 

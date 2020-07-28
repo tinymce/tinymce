@@ -84,7 +84,7 @@ const withMarker = (editor: Editor, f: ScrollFunc, rng: Range, alignToTop?: bool
 };
 
 const withScrollEvents = (editor: Editor, doc: SugarElement, f: ScrollFunc, marker: MarkerInfo, alignToTop?: boolean) => {
-  const data = { elm: marker.element.dom(), alignToTop };
+  const data = { elm: marker.element.dom, alignToTop };
   if (fireScrollIntoViewEvent(editor, data)) {
     return;
   }
@@ -155,12 +155,12 @@ const intoWindowIfNeeded = (doc: SugarElement, scrollTop: number, viewHeight: nu
 };
 
 const intoWindow = (doc: SugarElement, scrollTop: number, marker: MarkerInfo, alignToTop?: boolean) => {
-  const viewHeight = doc.dom().defaultView.innerHeight;
+  const viewHeight = doc.dom.defaultView.innerHeight;
   intoWindowIfNeeded(doc, scrollTop, viewHeight, marker, alignToTop);
 };
 
 const intoFrame = (doc: SugarElement, scrollTop: number, marker: MarkerInfo, alignToTop?: boolean) => {
-  const frameViewHeight = doc.dom().defaultView.innerHeight; // height of iframe container
+  const frameViewHeight = doc.dom.defaultView.innerHeight; // height of iframe container
 
   // If the position is outside the iframe viewport, scroll to it
   intoWindowIfNeeded(doc, scrollTop, frameViewHeight, marker, alignToTop);

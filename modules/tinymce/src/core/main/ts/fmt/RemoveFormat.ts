@@ -99,7 +99,7 @@ const wrapWithSiblings = (dom: DOMUtils, node: Node, next: boolean, name: string
     Insert.append(wrapper, start);
   }
 
-  return wrapper.dom();
+  return wrapper.dom;
 };
 
 /**

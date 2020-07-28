@@ -215,7 +215,7 @@ const setupDemo = () => {
     //       getCssText: (name) => {
     //         const span = SugarElement.fromTag('span');
     //         Css.setAll(span, formats[name].styles || { });
-    //         console.log('span', span.dom());
+    //         console.log('span', span.dom);
     //         return Attribute.get(span, 'style') || '';
     //       }
     //     };

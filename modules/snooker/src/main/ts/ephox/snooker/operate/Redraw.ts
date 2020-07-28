@@ -26,7 +26,7 @@ const render = function <T extends DetailNew> (table: SugarElement, grid: RowDat
 
   const renderSection = function (gridSection: RowDataNew<T>[], sectionName: 'thead' | 'tbody' | 'tfoot') {
     const section = SelectorFind.child(table, sectionName).getOrThunk(function () {
-      const tb = SugarElement.fromTag(sectionName, Traverse.owner(table).dom());
+      const tb = SugarElement.fromTag(sectionName, Traverse.owner(table).dom);
       sectionName === 'thead' ? insertThead(tb) : Insert.append(table, tb); // mutation
       return tb;
     });

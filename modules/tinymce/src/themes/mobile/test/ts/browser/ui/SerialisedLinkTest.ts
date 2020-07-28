@@ -158,7 +158,7 @@ UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', (success, failure) => 
     return Logger.t(
       scenario.label,
       GeneralSteps.sequence([
-        tEditor.sPrepareState(scenario.node.dom(), scenario.content),
+        tEditor.sPrepareState(scenario.node.dom, scenario.content),
         sClickLink,
         TestUi.sSetFieldOptValue(scenario.fields.url),
         sClickNext,
