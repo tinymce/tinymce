@@ -96,10 +96,10 @@ DomEvent.bind(ephoxUi, 'mouseover', mouseHandlers.mouseover);
 DomEvent.bind(ephoxUi, 'mouseup', mouseHandlers.mouseup);
 
 const handleResponse = function (event: EventArgs, response: Response) {
-  if (response.kill()) {
+  if (response.kill) {
     event.kill();
   }
-  response.selection().each(function (ns) {
+  response.selection.each(function (ns) {
     const relative = SimSelection.relative(ns.start, ns.finish);
     const range = Util.convertToRange(window, relative);
     WindowSelection.setExact(window, range.start, range.soffset, range.finish, range.foffset);

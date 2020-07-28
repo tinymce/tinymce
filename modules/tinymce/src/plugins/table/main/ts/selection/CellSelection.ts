@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { InputHandlers, SelectionAnnotation, SelectionKeys } from '@ephox/darwin';
+import { InputHandlers, Response, SelectionAnnotation, SelectionKeys } from '@ephox/darwin';
 import { Cell, Fun, Optional } from '@ephox/katamari';
 import { DomParent } from '@ephox/robin';
 import { OtherCells, TableFill, TableLookup, TableResize } from '@ephox/snooker';
@@ -66,16 +66,16 @@ export default function (editor: Editor, lazyResize: () => Optional<TableResize>
 
     editor.on('TableSelectorChange', (e) => external(e.start, e.finish));
 
-    const handleResponse = (event: EventArgs<KeyboardEvent>, response) => {
+    const handleResponse = (event: EventArgs<KeyboardEvent>, response: Response) => {
       // Only handle shift key non shiftkey cell navigation is handled by core
       if (!hasShiftKey(event)) {
         return;
       }
 
-      if (response.kill()) {
+      if (response.kill) {
         event.kill();
       }
-      response.selection().each((ns) => {
+      response.selection.each((ns) => {
         const relative = SimSelection.relative(ns.start, ns.finish);
         const rng = SelectionDirection.asLtrRange(win, relative);
         editor.selection.setRng(rng);
