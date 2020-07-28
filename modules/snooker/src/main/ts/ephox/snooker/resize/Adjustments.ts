@@ -17,7 +17,7 @@ const adjustWidth = (table: SugarElement, delta: number, index: number, directio
   const warehouse = Warehouse.fromTable(table);
   const step = tableSize.getCellDelta(delta);
   const widths = tableSize.getWidths(warehouse, direction, tableSize);
-  const isLastColumn = index === warehouse.grid.columns() - 1;
+  const isLastColumn = index === warehouse.grid.columns - 1;
   const clampedStep = resizing.clampTableDelta(widths, index, step, tableSize.minCellWidth(), isLastColumn);
 
   // Calculate all of the new widths for columns
@@ -43,11 +43,11 @@ const adjustHeight = (table: SugarElement, delta: number, index: number, directi
   const newRowSizes = Recalculations.matchRowHeight(warehouse, newHeights);
 
   Arr.each(newRowSizes, (row) => {
-    Sizes.setHeight(row.element(), row.height());
+    Sizes.setHeight(row.element, row.height);
   });
 
   Arr.each(newCellSizes, (cell) => {
-    Sizes.setHeight(cell.element(), cell.height());
+    Sizes.setHeight(cell.element, cell.height);
   });
 
   const total = sumUp(newHeights);

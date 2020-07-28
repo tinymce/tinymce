@@ -202,8 +202,8 @@ Ready.execute(function () {
   const newCell: Generators['cell'] = function (prev) {
     const td = SugarElement.fromTag('td');
     Insert.append(td, SugarElement.fromText('?'));
-    if (prev.colspan() === 1) { Css.set(td, 'width', Css.get(prev.element(), 'width')); }
-    if (prev.rowspan() === 1) { Css.set(td, 'height', Css.get(prev.element(), 'height')); }
+    if (prev.colspan === 1) { Css.set(td, 'width', Css.get(prev.element, 'width')); }
+    if (prev.rowspan === 1) { Css.set(td, 'height', Css.get(prev.element, 'height')); }
     return td;
   };
 

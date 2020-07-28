@@ -7,8 +7,8 @@ UnitTest.test('Table grid size test', function () {
     const tbl = SugarElement.fromHtml(html);
     const size = TableGridSize.getGridSize(tbl);
 
-    assert.eq(expectedColumnCount, size.columns(), 'Should be expected column count');
-    assert.eq(expectedRowCount, size.rows(), 'Should be expected row count');
+    assert.eq(expectedColumnCount, size.columns, 'Should be expected column count');
+    assert.eq(expectedRowCount, size.rows, 'Should be expected row count');
 
     Remove.remove(tbl);
   };

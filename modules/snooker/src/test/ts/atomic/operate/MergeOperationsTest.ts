@@ -15,11 +15,11 @@ UnitTest.test('MergeOperationsTest', function () {
       const actual = MergingOperations.merge(grid, bounds, Fun.tripleEquals, Fun.constant(lead as unknown as SugarElement));
       assert.eq(expected.length, actual.length);
       Arr.each(expected, function (row, i) {
-        Arr.each(row.cells(), function (cell, j) {
-          assert.eq(cell.element(), actual[i].cells()[j].element());
-          assert.eq(cell.isNew(), actual[i].cells()[j].isNew());
+        Arr.each(row.cells, function (cell, j) {
+          assert.eq(cell.element, actual[i].cells[j].element);
+          assert.eq(cell.isNew, actual[i].cells[j].isNew);
         });
-        assert.eq(row.section(), actual[i].section());
+        assert.eq(row.section, actual[i].section);
       });
     };
 
@@ -86,11 +86,11 @@ UnitTest.test('MergeOperationsTest', function () {
       const actual = MergingOperations.unmerge(grid, target as unknown as SugarElement, Fun.tripleEquals, Fun.constant('?') as any);
       assert.eq(expected.length, actual.length);
       Arr.each(expected, function (row, i) {
-        Arr.each(row.cells(), function (cell, j) {
-          assert.eq(cell.element(), actual[i].cells()[j].element());
-          assert.eq(cell.isNew(), actual[i].cells()[j].isNew());
+        Arr.each(row.cells, function (cell, j) {
+          assert.eq(cell.element, actual[i].cells[j].element);
+          assert.eq(cell.isNew, actual[i].cells[j].isNew);
         });
-        assert.eq(row.section(), actual[i].section());
+        assert.eq(row.section, actual[i].section);
       });
     };
 

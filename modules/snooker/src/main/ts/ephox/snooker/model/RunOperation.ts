@@ -77,7 +77,7 @@ const fromWarehouse = (warehouse: Warehouse, generators: Generators) =>
 const deriveRows = (rendered: Structs.RowDetails[], generators: Generators) => {
   // The row is either going to be a new row, or the row of any of the cells.
   const findRow = (details: Structs.DetailNew[]) => {
-    const rowOfCells = Arr.findMap(details, (detail) => Traverse.parent(detail.element()).map((row) => {
+    const rowOfCells = Arr.findMap(details, (detail) => Traverse.parent(detail.element).map((row) => {
       // If the row has a parent, it's within the existing table, otherwise it's a copied row
       const isNew = Traverse.parent(row).isNone();
       return Structs.elementnew(row, isNew);
@@ -86,8 +86,8 @@ const deriveRows = (rendered: Structs.RowDetails[], generators: Generators) => {
   };
 
   return Arr.map(rendered, (details) => {
-    const row = findRow(details.details());
-    return Structs.rowdatanew(row.element(), details.details(), details.section(), row.isNew());
+    const row = findRow(details.details);
+    return Structs.rowdatanew(row.element, details.details, details.section, row.isNew);
   });
 };
 
@@ -97,7 +97,7 @@ const toDetailList = (grid: Structs.RowCells[], generators: Generators): RowData
 };
 
 const findInWarehouse = (warehouse: Warehouse, element: SugarElement): Optional<DetailExt> => Arr.findMap(warehouse.all, (r) =>
-  Arr.find(r.cells(), (e) => Compare.eq(element, e.element()))
+  Arr.find(r.cells, (e) => Compare.eq(element, e.element))
 );
 
 type EqEle = (e1: SugarElement, e2: SugarElement) => boolean;

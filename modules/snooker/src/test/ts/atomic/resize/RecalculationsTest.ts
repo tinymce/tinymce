@@ -1,5 +1,5 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
-import { Arr, Struct } from '@ephox/katamari';
+import { Arr } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import * as Structs from 'ephox/snooker/api/Structs';
 import { Warehouse } from 'ephox/snooker/model/Warehouse';
@@ -9,35 +9,38 @@ UnitTest.test('RecalculationsTest', function () {
   const dimensions = Structs.dimensions; // Struct.immutable('width', 'height');
 
   interface Parts {
-    widths: () => Array<{
+    widths: Array<{
       element: string;
       width: number;
     }>;
-    heights: () => Array<{
+    heights: Array<{
       element: string;
       height: number;
     }>;
   }
 
-  const expectedParts: (widths: {element: string; width: number}[], heights: {element: string; height: number}[]) => Parts = Struct.immutable('widths', 'heights');
+  const expectedParts = (widths: {element: string; width: number}[], heights: {element: string; height: number}[]): Parts => ({
+    widths,
+    heights
+  });
 
   const check = function (expected: Parts[], input: Structs.RowData<Structs.Detail>[], sizes: Structs.Dimensions) {
     const warehouse = Warehouse.generate(input);
-    const actualW = Recalculations.recalculateWidth(warehouse, sizes.width());
-    const actualH = Recalculations.recalculateHeight(warehouse, sizes.height());
+    const actualW = Recalculations.recalculateWidth(warehouse, sizes.width);
+    const actualH = Recalculations.recalculateHeight(warehouse, sizes.height);
 
     Arr.each(expected, function (expt) {
-      assert.eq(expt.widths(), Arr.map(actualW, function (cell) {
+      assert.eq(expt.widths, Arr.map(actualW, function (cell) {
         return {
           element: cell.element,
           width: cell.width
         };
       }));
 
-      assert.eq(expt.heights(), Arr.map(actualH, function (cell) {
+      assert.eq(expt.heights, Arr.map(actualH, function (cell) {
         return {
-          element: cell.element(),
-          height: cell.height()
+          element: cell.element,
+          height: cell.height
         };
       }));
 

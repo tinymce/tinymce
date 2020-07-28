@@ -20,14 +20,14 @@ const getAt = function (warehouse: Warehouse, row: number, column: number) {
 
 const findItem = function <T> (warehouse: Warehouse, item: T, comparator: (a: T, b: SugarElement) => boolean) {
   const filtered = filterItems(warehouse, function (detail) {
-    return comparator(item, detail.element());
+    return comparator(item, detail.element);
   });
 
   return filtered.length > 0 ? Optional.some(filtered[0]) : Optional.none<Structs.DetailExt>();
 };
 
 const filterItems = function (warehouse: Warehouse, predicate: (x: Structs.DetailExt, i: number) => boolean) {
-  const all = Arr.bind(warehouse.all, function (r) { return r.cells(); });
+  const all = Arr.bind(warehouse.all, function (r) { return r.cells; });
   return Arr.filter(all, predicate);
 };
 
@@ -53,7 +53,7 @@ const generate = function <T extends Structs.Detail> (list: Structs.RowData<T>[]
 
   Arr.each(list, function (details, r) {
     const currentRow: Structs.DetailExt[] = [];
-    Arr.each(details.cells(), function (detail) {
+    Arr.each(details.cells, function (detail) {
       let start = 0;
 
       // If this spot has been taken by a previous rowspan, skip it.
@@ -61,11 +61,11 @@ const generate = function <T extends Structs.Detail> (list: Structs.RowData<T>[]
         start++;
       }
 
-      const current = Structs.extended(detail.element(), detail.rowspan(), detail.colspan(), r, start);
+      const current = Structs.extended(detail.element, detail.rowspan, detail.colspan, r, start);
 
       // Occupy all the (row, column) positions that this cell spans for.
-      for (let i = 0; i < detail.colspan(); i++) {
-        for (let j = 0; j < detail.rowspan(); j++) {
+      for (let i = 0; i < detail.colspan; i++) {
+        for (let j = 0; j < detail.rowspan; j++) {
           const cr = r + j;
           const cc = start + i;
           const newpos = key(cr, cc);
@@ -77,7 +77,7 @@ const generate = function <T extends Structs.Detail> (list: Structs.RowData<T>[]
       currentRow.push(current);
     });
 
-    cells.push(Structs.rowdata(details.element(), currentRow, details.section()));
+    cells.push(Structs.rowdata(details.element, currentRow, details.section));
   });
 
   const grid = Structs.grid(maxRows, maxColumns);
@@ -95,7 +95,7 @@ const fromTable = (table: SugarElement<HTMLTableElement>) => {
 };
 
 const justCells = function (warehouse: Warehouse) {
-  const rows = Arr.map(warehouse.all, (w) => w.cells());
+  const rows = Arr.map(warehouse.all, (w) => w.cells);
 
   return Arr.flatten(rows);
 };

@@ -38,7 +38,7 @@ const fromPastedRows = function (rows: SugarElement[], example: Structs.RowCells
       return Structs.detail(cell, rowspan, colspan);
     });
 
-    return Structs.rowdata(row, cells, example.section());
+    return Structs.rowdata(row, cells, example.section);
   });
 };
 

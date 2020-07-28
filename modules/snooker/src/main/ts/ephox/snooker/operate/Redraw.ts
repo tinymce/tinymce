@@ -34,18 +34,18 @@ const render = function <T extends DetailNew> (table: SugarElement, grid: RowDat
     Remove.empty(section);
 
     const rows = Arr.map(gridSection, function (row) {
-      if (row.isNew()) {
-        newRows.push(row.element());
+      if (row.isNew) {
+        newRows.push(row.element);
       }
-      const tr = row.element();
+      const tr = row.element;
       Remove.empty(tr);
-      Arr.each(row.cells(), function (cell) {
-        if (cell.isNew()) {
-          newCells.push(cell.element());
+      Arr.each(row.cells, function (cell) {
+        if (cell.isNew) {
+          newCells.push(cell.element);
         }
-        setIfNot(cell.element(), 'colspan', cell.colspan(), 1);
-        setIfNot(cell.element(), 'rowspan', cell.rowspan(), 1);
-        Insert.append(tr, cell.element());
+        setIfNot(cell.element, 'colspan', cell.colspan, 1);
+        setIfNot(cell.element, 'rowspan', cell.rowspan, 1);
+        Insert.append(tr, cell.element);
       });
       return tr;
     });
@@ -70,7 +70,7 @@ const render = function <T extends DetailNew> (table: SugarElement, grid: RowDat
   const footSection: RowDataNew<T>[] = [];
 
   Arr.each(grid, function (row) {
-    switch (row.section()) {
+    switch (row.section) {
       case 'thead':
         headSection.push(row);
         break;
@@ -95,11 +95,11 @@ const render = function <T extends DetailNew> (table: SugarElement, grid: RowDat
 
 const copy = <T extends Detail> (grid: RowDataNew<T>[]): SugarElement<HTMLTableRowElement>[] => Arr.map(grid, (row) => {
   // Shallow copy the row element
-  const tr = Replication.shallow(row.element());
-  Arr.each(row.cells(), (cell) => {
-    const clonedCell = Replication.deep(cell.element());
-    setIfNot(clonedCell, 'colspan', cell.colspan(), 1);
-    setIfNot(clonedCell, 'rowspan', cell.rowspan(), 1);
+  const tr = Replication.shallow(row.element);
+  Arr.each(row.cells, (cell) => {
+    const clonedCell = Replication.deep(cell.element);
+    setIfNot(clonedCell, 'colspan', cell.colspan, 1);
+    setIfNot(clonedCell, 'rowspan', cell.rowspan, 1);
     Insert.append(tr, clonedCell);
   });
   return tr;

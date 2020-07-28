@@ -52,10 +52,10 @@ export interface TableActions {
 export const TableActions = (editor: Editor, lazyWire: () => ResizeWire): TableActions => {
   const isTableBody = (editor: Editor) => SugarNode.name(Util.getBody(editor)) === 'table';
 
-  const lastRowGuard = (table: SugarElement<HTMLTableElement>) => isTableBody(editor) === false || TableGridSize.getGridSize(table).rows() > 1;
+  const lastRowGuard = (table: SugarElement<HTMLTableElement>) => isTableBody(editor) === false || TableGridSize.getGridSize(table).rows > 1;
 
   const lastColumnGuard = (table: SugarElement<HTMLTableElement>) =>
-    isTableBody(editor) === false || TableGridSize.getGridSize(table).columns() > 1;
+    isTableBody(editor) === false || TableGridSize.getGridSize(table).columns > 1;
 
   // Optional.none gives the default cloneFormats.
   const cloneFormats = getCloneElements(editor);

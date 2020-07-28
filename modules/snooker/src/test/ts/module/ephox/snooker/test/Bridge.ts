@@ -24,10 +24,10 @@ const generators: Generators = {
     return SugarElement.fromTag('tr');
   },
   cell(prev) {
-    const tag = SugarElement.fromTag(SugarNode.name(prev.element()));
+    const tag = SugarElement.fromTag(SugarNode.name(prev.element));
     Insert.append(tag, SugarElement.fromText('?'));
     // We aren't halving widths here, so table widths will not be preserved.p
-    Css.getRaw(prev.element(), 'width').each(function (w) {
+    Css.getRaw(prev.element, 'width').each(function (w) {
       Css.set(tag, 'width', w);
     });
     return tag;

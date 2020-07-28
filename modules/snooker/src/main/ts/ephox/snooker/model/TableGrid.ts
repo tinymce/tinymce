@@ -19,7 +19,7 @@ const findDiff = function (xs: ElementNew[], comp: (a: SugarElement, b: SugarEle
   }
   const first = xs[0];
   const index = Arr.findIndex(xs, function (x) {
-    return !comp(first.element(), x.element());
+    return !comp(first.element, x.element);
   });
   return index.fold(function () {
     return xs.length;
@@ -38,7 +38,7 @@ const findDiff = function (xs: ElementNew[], comp: (a: SugarElement, b: SugarEle
  *   rowspan: row span of the cell at (row, column)
  */
 const subgrid = function (grid: RowCells[], row: number, column: number, comparator: (a: SugarElement, b: SugarElement) => boolean): { colspan: number; rowspan: number } {
-  const restOfRow = getRow(grid, row).cells().slice(column);
+  const restOfRow = getRow(grid, row).cells.slice(column);
   const endColIndex = findDiff(restOfRow, comparator);
 
   const restOfColumn = getColumn(grid, column).slice(row);

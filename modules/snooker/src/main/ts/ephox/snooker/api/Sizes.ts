@@ -14,21 +14,21 @@ type BarPositions<A> = BarPositions.BarPositions<A>;
 
 const redistributeToW = function (newWidths: string[], cells: DetailExt[], unit: string) {
   Arr.each(cells, function (cell) {
-    const widths = newWidths.slice(cell.column(), cell.colspan() + cell.column());
+    const widths = newWidths.slice(cell.column, cell.colspan + cell.column);
     const w = Redistribution.sum(widths, CellUtils.minWidth());
-    Css.set(cell.element(), 'width', w + unit);
+    Css.set(cell.element, 'width', w + unit);
   });
 };
 
 const redistributeToH = function <T> (newHeights: string[], rows: RowData<T>[], cells: DetailExt[], unit: string) {
   Arr.each(cells, function (cell) {
-    const heights = newHeights.slice(cell.row(), cell.rowspan() + cell.row());
+    const heights = newHeights.slice(cell.row, cell.rowspan + cell.row);
     const h = Redistribution.sum(heights, CellUtils.minHeight());
-    Css.set(cell.element(), 'height', h + unit);
+    Css.set(cell.element, 'height', h + unit);
   });
 
   Arr.each(rows, function (row, i) {
-    Css.set(row.element(), 'height', newHeights[i]);
+    Css.set(row.element, 'height', newHeights[i]);
   });
 };
 
