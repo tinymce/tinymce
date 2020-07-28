@@ -48,9 +48,9 @@ const adt: {
   { fixed: [ 'x', 'y' ] }
 ]);
 
-const subtract = (change: SugarPosition): CoordTransform => (point) => point.translate(-change.left(), -change.top());
+const subtract = (change: SugarPosition): CoordTransform => (point) => point.translate(-change.left, -change.top);
 
-const add = (change: SugarPosition): CoordTransform => (point) => point.translate(change.left(), change.top());
+const add = (change: SugarPosition): CoordTransform => (point) => point.translate(change.left, change.top);
 
 const transform = (changes: CoordTransform[]) => (x: number, y: number): SugarPosition => Arr.foldl(changes, (rest, f) => f(rest), SugarPosition(x, y));
 
@@ -91,17 +91,17 @@ const withinRange = (coord1: CoordAdt<number>, coord2: CoordAdt<number>, xRange:
   const a1 = asAbsolute(coord1, scroll, origin);
   const a2 = asAbsolute(coord2, scroll, origin);
   // eslint-disable-next-line no-console
-  // console.log(`a1.left(): ${a1.left()}, a2.left(): ${a2.left()}, leftDelta: ${a1.left() - a2.left()}, xRange: ${xRange}, lD <= xRange: ${Math.abs(a1.left() - a2.left()) <= xRange}`);
-  // console.log(`a1.top(): ${a1.top()}, a2.top(): ${a2.top()}, topDelta: ${a1.top() - a2.top()}, yRange: ${yRange}, lD <= xRange: ${Math.abs(a1.top() - a2.top()) <= yRange}`);
-  return Math.abs(a1.left() - a2.left()) <= xRange &&
-    Math.abs(a1.top() - a2.top()) <= yRange;
+  // console.log(`a1.left: ${a1.left}, a2.left: ${a2.left}, leftDelta: ${a1.left - a2.left}, xRange: ${xRange}, lD <= xRange: ${Math.abs(a1.left - a2.left) <= xRange}`);
+  // console.log(`a1.top: ${a1.top}, a2.top: ${a2.top}, topDelta: ${a1.top - a2.top}, yRange: ${yRange}, lD <= xRange: ${Math.abs(a1.top - a2.top) <= yRange}`);
+  return Math.abs(a1.left - a2.left) <= xRange &&
+    Math.abs(a1.top - a2.top) <= yRange;
 };
 
 const getDeltas = (coord1: CoordAdt<number>, coord2: CoordAdt<number>, xRange: number, yRange: number, scroll: SugarPosition, origin: SugarPosition): SugarPosition => {
   const a1 = asAbsolute(coord1, scroll, origin);
   const a2 = asAbsolute(coord2, scroll, origin);
-  const left = Math.abs(a1.left() - a2.left());
-  const top = Math.abs(a1.top() - a2.top());
+  const left = Math.abs(a1.left - a2.left);
+  const top = Math.abs(a1.top - a2.top);
   return SugarPosition(left, top);
 };
 
@@ -110,7 +110,7 @@ const toStyles = (coord: CoordAdt<number>, scroll: SugarPosition, origin: SugarP
     (x, y) =>
       ({ position: Optional.some('absolute'), left: Optional.some(x + 'px'), top: Optional.some(y + 'px') }), // offset
     (x, y) =>
-      ({ position: Optional.some('absolute'), left: Optional.some((x - origin.left()) + 'px'), top: Optional.some((y - origin.top()) + 'px') }), // absolute
+      ({ position: Optional.some('absolute'), left: Optional.some((x - origin.left) + 'px'), top: Optional.some((y - origin.top) + 'px') }), // absolute
     (x, y) =>
       ({ position: Optional.some('fixed'), left: Optional.some(x + 'px'), top: Optional.some(y + 'px') }) // fixed
   );
@@ -127,7 +127,7 @@ const translate = (coord: CoordAdt<number>, deltaX: number, deltaY: number): Coo
 const absorb = (partialCoord: CoordAdt<Optional<number>>, originalCoord: CoordAdt<number>, scroll: SugarPosition, origin: SugarPosition): CoordAdt<number> => {
   const absorbOne = (stencil: CoordStencil, nu: DragCoords) => (optX: Optional<number>, optY: Optional<number>): CoordAdt => {
     const original = stencil(originalCoord, scroll, origin);
-    return nu(optX.getOr(original.left()), optY.getOr(original.top()));
+    return nu(optX.getOr(original.left), optY.getOr(original.top));
   };
 
   return partialCoord.fold(

@@ -16,15 +16,15 @@ const getCurrentCoord = (target: SugarElement): DragCoord.CoordAdt =>
     );
   }).getOrThunk(() => {
     const location = SugarLocation.absolute(target);
-    return DragCoord.absolute(location.left(), location.top());
+    return DragCoord.absolute(location.left, location.top);
   });
 
 const clampCoords = (component: AlloyComponent, coords: DragCoord.CoordAdt, scroll: SugarPosition, origin: SugarPosition, startData: DragStartData): DragCoord.CoordAdt => {
   const bounds = startData.bounds;
   const absoluteCoord = DragCoord.asAbsolute(coords, scroll, origin);
 
-  const newX = Num.clamp(absoluteCoord.left(), bounds.x, bounds.x + bounds.width - startData.width);
-  const newY = Num.clamp(absoluteCoord.top(), bounds.y, bounds.y + bounds.height - startData.height);
+  const newX = Num.clamp(absoluteCoord.left, bounds.x, bounds.x + bounds.width - startData.width);
+  const newY = Num.clamp(absoluteCoord.top, bounds.y, bounds.y + bounds.height - startData.height);
   const newCoords = DragCoord.absolute(newX, newY);
 
   // Translate the absolute coord back into the previous type
@@ -32,14 +32,14 @@ const clampCoords = (component: AlloyComponent, coords: DragCoord.CoordAdt, scro
     // offset
     () => {
       const offset = DragCoord.asOffset(newCoords, scroll, origin);
-      return DragCoord.offset(offset.left(), offset.top());
+      return DragCoord.offset(offset.left, offset.top);
     },
     // absolute
     () => newCoords,
     // fixed
     () => {
       const fixed = DragCoord.asFixed(newCoords, scroll, origin);
-      return DragCoord.fixed(fixed.left(), fixed.top());
+      return DragCoord.fixed(fixed.left, fixed.top);
     },
   );
 };
@@ -47,9 +47,9 @@ const clampCoords = (component: AlloyComponent, coords: DragCoord.CoordAdt, scro
 const calcNewCoord = <E>(component: AlloyComponent, optSnaps: Optional<SnapsConfig<E>>, currentCoord: DragCoord.CoordAdt, scroll: SugarPosition, origin: SugarPosition, delta: SugarPosition, startData: DragStartData): DragCoord.CoordAdt => {
   const newCoord = optSnaps.fold(() => {
     // When not docking, use fixed coordinates.
-    const translated = DragCoord.translate(currentCoord, delta.left(), delta.top());
+    const translated = DragCoord.translate(currentCoord, delta.left, delta.top);
     const fixedCoord = DragCoord.asFixed(translated, scroll, origin);
-    return DragCoord.fixed(fixedCoord.left(), fixedCoord.top());
+    return DragCoord.fixed(fixedCoord.left, fixedCoord.top);
   }, (snapInfo) => {
     const snapping = Snappables.moveOrSnap(component, snapInfo, currentCoord, delta, scroll, origin);
     snapping.extra.each((extra: any) => {

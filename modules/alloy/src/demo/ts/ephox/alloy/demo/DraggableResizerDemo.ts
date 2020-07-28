@@ -24,7 +24,7 @@ export default (): void => {
     Traverse.parent(targetElement).bind(Traverse.parent).bind(Traverse.firstChild).each((box) => {
       Css.getRaw(box, 'height').each((h) => {
         const parsedHeight = parseInt(h, 10);
-        const newHeight = parsedHeight + delta.top();
+        const newHeight = parsedHeight + delta.top;
         Css.set(box, 'height', newHeight + 'px');
       });
     });

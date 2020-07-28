@@ -30,7 +30,7 @@ const toFixed = (pos: CssPositionAdt): SugarPosition =>
 
 const toAbsolute = (pos: CssPositionAdt): SugarPosition => pos.fold(Fun.identity, Fun.identity);
 
-const sum = (points: SugarPosition[]): SugarPosition => Arr.foldl(points, (b, a) => b.translate(a.left(), a.top()), SugarPosition(0, 0));
+const sum = (points: SugarPosition[]): SugarPosition => Arr.foldl(points, (b, a) => b.translate(a.left, a.top), SugarPosition(0, 0));
 
 const sumAsFixed = (positions: CssPositionAdt[]): SugarPosition => {
   const points = Arr.map(positions, toFixed);

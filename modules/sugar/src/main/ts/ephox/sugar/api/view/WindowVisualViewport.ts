@@ -53,12 +53,12 @@ const getBounds = (_win?: Window): Bounds => {
       // since the right/bottom position is based on the edge of the scrollbar not the window
       const width = html.clientWidth;
       const height = html.clientHeight;
-      return bounds(scroll.left(), scroll.top(), width, height);
+      return bounds(scroll.left, scroll.top, width, height);
     },
     (visualViewport) =>
       // iOS doesn't update the pageTop/pageLeft when element.scrollIntoView() is called, so we need to fallback to the
       // scroll position which will always be less than the page top/left values when page top/left are accurate/correct.
-      bounds(Math.max(visualViewport.pageLeft, scroll.left()), Math.max(visualViewport.pageTop, scroll.top()), visualViewport.width, visualViewport.height)
+      bounds(Math.max(visualViewport.pageLeft, scroll.left), Math.max(visualViewport.pageTop, scroll.top), visualViewport.width, visualViewport.height)
 
   );
 };

@@ -26,7 +26,7 @@ const getRelativeOrigin = (component: AlloyComponent): Origins.OriginAdt => {
 
   // We think that this just needs to be kept consistent with Boxes.win. If we remove the scroll values from Boxes.win, we
   // should change this to just bounds.left and bounds.top from getBoundingClientRect
-  return Origins.relative(position.left(), position.top(), bounds.width, bounds.height);
+  return Origins.relative(position.left, position.top, bounds.width, bounds.height);
 };
 
 const place = (component: AlloyComponent, origin: Origins.OriginAdt, anchoring: Anchoring, getBounds: Optional<() => Bounds>, placee: AlloyComponent): void => {

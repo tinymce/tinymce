@@ -25,8 +25,8 @@ const sliderValue = (x: number, y: number): SliderValueXY => ({
 // find both values of x and y offsets of where the mouse was clicked from the model.
 // then fire a slider change event with those values, returning the values
 const setValueFrom = (spectrum: AlloyComponent, detail: TwoDSliderDetail, value: SugarPosition): SliderValueXY => {
-  const xValue = HorizontalModel.findValueOfOffset(spectrum, detail, value.left());
-  const yValue = VerticalModel.findValueOfOffset(spectrum, detail, value.top());
+  const xValue = HorizontalModel.findValueOfOffset(spectrum, detail, value.left);
+  const yValue = VerticalModel.findValueOfOffset(spectrum, detail, value.top);
   const val = sliderValue(xValue, yValue);
   fireSliderChange(spectrum, val);
   return val;

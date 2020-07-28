@@ -21,8 +21,8 @@ const get = <E>(component: AlloyComponent, snapsInfo: SnapsConfig<E>): Optional<
 
 const set = <E>(component: AlloyComponent, snapsInfo: SnapsConfig<E>, pt: SugarPosition): void => {
   const element = component.element;
-  Attribute.set(element, snapsInfo.leftAttr, pt.left() + 'px');
-  Attribute.set(element, snapsInfo.topAttr, pt.top() + 'px');
+  Attribute.set(element, snapsInfo.leftAttr, pt.left + 'px');
+  Attribute.set(element, snapsInfo.topAttr, pt.top + 'px');
 };
 
 const clear = <E>(component: AlloyComponent, snapsInfo: SnapsConfig<E>): void => {

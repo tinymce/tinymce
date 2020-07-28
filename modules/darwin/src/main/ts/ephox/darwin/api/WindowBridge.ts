@@ -88,7 +88,7 @@ export const WindowBridge = function (win: Window): WindowBridge {
 
   const getScrollY = function () {
     const pos = Scroll.get(SugarElement.fromDom(win.document));
-    return pos.top();
+    return pos.top;
   };
 
   const scrollBy = function (x: number, y: number) {

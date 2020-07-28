@@ -37,10 +37,10 @@ const event = (type: EventType, { dx, dy, ...settings }: Settings) => (element: 
   // IE doesn't support MouseEvent constructor
   if (typeof MouseEvent === 'function') {
     const event = new MouseEvent(type, {
-      screenX: location.left(),
-      screenY: location.top(),
-      clientX: location.left(),
-      clientY: location.top(),
+      screenX: location.left,
+      screenY: location.top,
+      clientX: location.left,
+      clientY: location.top,
       bubbles: true,
       cancelable: true,
       ...settings
@@ -53,8 +53,8 @@ const event = (type: EventType, { dx, dy, ...settings }: Settings) => (element: 
       type,
       true, /* bubble */ true, /* cancelable */
       window, null,
-      location.left(), location.top(), /* screen coordinates */
-      location.left(), location.top(), /* client coordinates, hope they're the same */
+      location.left, location.top, /* screen coordinates */
+      location.left, location.top, /* client coordinates, hope they're the same */
       Obj.get(settings, 'ctrlKey').getOr(false), /* meta key */
       Obj.get(settings, 'shiftKey').getOr(false),
       Obj.get(settings, 'altKey').getOr(false),

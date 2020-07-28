@@ -43,18 +43,18 @@ UnitTest.asynctest('Editor Floating Toolbar Drawer Position test', (success, fai
       ...PlatformDetection.detect().browser.isFirefox() ? [ Step.wait(100) ] : [ ],
       Log.stepsAsStep('TBA', 'Editor in the page', [
         // Top of screen
-        sOpenFloatingToolbarAndAssertPosition(tinyUi, () => initialContainerPos.top() + toolbarHeight, [ // top of ui container + toolbar height
+        sOpenFloatingToolbarAndAssertPosition(tinyUi, () => initialContainerPos.top + toolbarHeight, [ // top of ui container + toolbar height
           sAssertFloatingToolbarHeight(tinyUi, toolbarDrawerHeight)
         ]),
         sAddMargins,
         // Top of screen + scrolled
-        sScrollTo(0, initialContainerPos.top() + 2000),
-        sOpenFloatingToolbarAndAssertPosition(tinyUi, () => initialContainerPos.top() + toolbarHeight + 2000, [ // top of ui container + toolbar height + scroll pos
+        sScrollTo(0, initialContainerPos.top + 2000),
+        sOpenFloatingToolbarAndAssertPosition(tinyUi, () => initialContainerPos.top + toolbarHeight + 2000, [ // top of ui container + toolbar height + scroll pos
           sAssertFloatingToolbarHeight(tinyUi, toolbarDrawerHeight)
         ]),
         // Bottom of screen + scrolled
-        sScrollTo(0, initialContainerPos.top() + 2000 - windowBottomOffset),
-        sOpenFloatingToolbarAndAssertPosition(tinyUi, () => initialContainerPos.top() + toolbarHeight + 2000, [ // top of ui container + toolbar height + scroll pos
+        sScrollTo(0, initialContainerPos.top + 2000 - windowBottomOffset),
+        sOpenFloatingToolbarAndAssertPosition(tinyUi, () => initialContainerPos.top + toolbarHeight + 2000, [ // top of ui container + toolbar height + scroll pos
           sAssertFloatingToolbarHeight(tinyUi, toolbarDrawerHeight)
         ]),
         sRemoveMargins
@@ -65,18 +65,18 @@ UnitTest.asynctest('Editor Floating Toolbar Drawer Position test', (success, fai
         }),
         sScrollTo(0, 0),
         // Top of screen
-        sOpenFloatingToolbarAndAssertPosition(tinyUi, () => initialContainerPos.top() + toolbarHeight, [ // top of ui container + toolbar height
+        sOpenFloatingToolbarAndAssertPosition(tinyUi, () => initialContainerPos.top + toolbarHeight, [ // top of ui container + toolbar height
           sAssertFloatingToolbarHeight(tinyUi, toolbarDrawerHeight)
         ]),
         sAddMargins,
         // Top of screen + scrolled
-        sScrollTo(0, initialContainerPos.top() + 2000),
-        sOpenFloatingToolbarAndAssertPosition(tinyUi, () => initialContainerPos.top() + toolbarHeight + 2000, [ // top of ui container + toolbar height + scroll pos
+        sScrollTo(0, initialContainerPos.top + 2000),
+        sOpenFloatingToolbarAndAssertPosition(tinyUi, () => initialContainerPos.top + toolbarHeight + 2000, [ // top of ui container + toolbar height + scroll pos
           sAssertFloatingToolbarHeight(tinyUi, toolbarDrawerHeight)
         ]),
         // Bottom of screen + scrolled
-        sScrollTo(0, initialContainerPos.top() + 2000 - windowBottomOffset),
-        sOpenFloatingToolbarAndAssertPosition(tinyUi, () => initialContainerPos.top() + toolbarHeight + 2000, [ // top of ui container + toolbar height + scroll pos
+        sScrollTo(0, initialContainerPos.top + 2000 - windowBottomOffset),
+        sOpenFloatingToolbarAndAssertPosition(tinyUi, () => initialContainerPos.top + toolbarHeight + 2000, [ // top of ui container + toolbar height + scroll pos
           sAssertFloatingToolbarHeight(tinyUi, toolbarDrawerHeight)
         ]),
         sRemoveMargins

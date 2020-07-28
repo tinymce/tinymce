@@ -43,7 +43,7 @@ UnitTest.asynctest('MouseDraggingTest', (success, failure) => {
           },
           getBounds: () => {
             const scroll = Scroll.get();
-            return Boxes.bounds(scroll.left(), scroll.top(), 500, 500);
+            return Boxes.bounds(scroll.left, scroll.top, 500, 500);
           }
         })
       ])

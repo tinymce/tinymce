@@ -29,11 +29,11 @@ const colInfo = (col: number, x: number): ColInfo => ({
 
 const rtlEdge = function (cell: SugarElement) {
   const pos = SugarLocation.absolute(cell);
-  return pos.left() + Width.getOuter(cell);
+  return pos.left + Width.getOuter(cell);
 };
 
 const ltrEdge = function (cell: SugarElement) {
-  return SugarLocation.absolute(cell).left();
+  return SugarLocation.absolute(cell).left;
 };
 
 const getLeftEdge = function (index: number, cell: SugarElement) {
@@ -45,7 +45,7 @@ const getRightEdge = function (index: number, cell: SugarElement) {
 };
 
 const getTop = function (cell: SugarElement) {
-  return SugarLocation.absolute(cell).top();
+  return SugarLocation.absolute(cell).top;
 };
 
 const getTopEdge = function (index: number, cell: SugarElement) {

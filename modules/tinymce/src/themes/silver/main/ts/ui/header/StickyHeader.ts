@@ -36,22 +36,22 @@ const scrollFromBehindHeader = (e: ScrollIntoViewEvent, containerHeader: SugarEl
 
   const editorHeaderPos = SugarLocation.absolute(containerHeader);
   const editorHeaderHeight = Height.get(containerHeader);
-  const editorHeaderTop = editorHeaderPos.top();
+  const editorHeaderTop = editorHeaderPos.top;
   const editorHeaderBottom = editorHeaderTop + editorHeaderHeight;
 
   // Check to see if the header is docked to the top/bottom of the page (eg is floating)
-  const editorHeaderDockedAtTop = Math.abs(editorHeaderTop - scrollPos.top()) < 2;
-  const editorHeaderDockedAtBottom = Math.abs(editorHeaderBottom - (scrollPos.top() + viewHeight)) < 2;
+  const editorHeaderDockedAtTop = Math.abs(editorHeaderTop - scrollPos.top) < 2;
+  const editorHeaderDockedAtBottom = Math.abs(editorHeaderBottom - (scrollPos.top + viewHeight)) < 2;
 
   // If the element is behind the header at the top of the page, then
   // scroll the element down by the header height
   if (editorHeaderDockedAtTop && markerTop < editorHeaderBottom) {
-    Scroll.to(scrollPos.left(), markerTop - editorHeaderHeight, doc);
+    Scroll.to(scrollPos.left, markerTop - editorHeaderHeight, doc);
     // If the element is behind the header at the bottom of the page, then
     // scroll the element up by the header height
   } else if (editorHeaderDockedAtBottom && markerBottom > editorHeaderTop) {
     const y = (markerTop - viewHeight) + markerHeight + editorHeaderHeight;
-    Scroll.to(scrollPos.left(), y, doc);
+    Scroll.to(scrollPos.left, y, doc);
   }
 };
 

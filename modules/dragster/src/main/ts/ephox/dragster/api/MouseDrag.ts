@@ -4,7 +4,7 @@ import { Blocker, BlockerOptions } from '../detect/Blocker';
 import { DragApi, DragMode, DragMutation, DragSink } from './DragApis';
 
 const compare = function (old: SugarPosition, nu: SugarPosition) {
-  return SugarPosition(nu.left() - old.left(), nu.top() - old.top());
+  return SugarPosition(nu.left - old.left, nu.top - old.top);
 };
 
 const extract = function (event: EventArgs) {
@@ -12,7 +12,7 @@ const extract = function (event: EventArgs) {
 };
 
 const mutate = function (mutation: DragMutation, info: SugarPosition) {
-  mutation.mutate(info.left(), info.top());
+  mutation.mutate(info.left, info.top);
 };
 
 const sink = function (dragApi: DragApi, settings: Partial<BlockerOptions>) {

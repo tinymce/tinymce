@@ -25,7 +25,7 @@ UnitTest.asynctest('MouseDragEventTest', (success, failure) => {
           repositionTarget: false,
           blockerClass: 'test-blocker',
           onDrag: (_comp, _targetElem, delta) => {
-            store.adder({ left: delta.left(), top: delta.top() })();
+            store.adder({ left: delta.left, top: delta.top })();
           }
         })
       ])

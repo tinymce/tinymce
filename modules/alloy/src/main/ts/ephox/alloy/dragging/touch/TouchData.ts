@@ -14,7 +14,7 @@ const getData = (event: EventArgs<TouchEvent>): Optional<SugarPosition> => {
 
 // When dragging the touch, the delta is simply the difference
 // between the two touch positions (previous/old and next/nu)
-const getDelta = (old: SugarPosition, nu: SugarPosition): SugarPosition => SugarPosition(nu.left() - old.left(), nu.top() - old.top());
+const getDelta = (old: SugarPosition, nu: SugarPosition): SugarPosition => SugarPosition(nu.left - old.left, nu.top - old.top);
 
 export {
   getData,

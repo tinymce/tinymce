@@ -14,7 +14,7 @@ const morphToStatic = (component: AlloyComponent, config: DockingConfig): void =
 
 const morphToCoord = (component: AlloyComponent, config: DockingConfig, position: PositionCss): void => {
   applyPositionCss(component.element, position);
-  const method = position.position() === 'fixed' ? config.onDocked : config.onUndocked;
+  const method = position.position === 'fixed' ? config.onDocked : config.onUndocked;
   method(component);
 };
 

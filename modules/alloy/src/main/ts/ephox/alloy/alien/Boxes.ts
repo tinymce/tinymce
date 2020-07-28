@@ -51,7 +51,7 @@ const box = (element: SugarElement): Bounds => {
   const xy = SugarLocation.absolute(element);
   const w = Width.getOuter(element);
   const h = Height.getOuter(element);
-  return bounds(xy.left(), xy.top(), w, h);
+  return bounds(xy.left, xy.top, w, h);
 };
 
 // NOTE: We used to use AriaFocus.preserve here, but there is no reason to do that now that
@@ -60,7 +60,7 @@ const absolute = (element: SugarElement): Bounds => {
   const position = OuterPosition.find(element);
   const width = Width.getOuter(element);
   const height = Height.getOuter(element);
-  return bounds(position.left(), position.top(), width, height);
+  return bounds(position.left, position.top, width, height);
 };
 
 const win = (): Bounds => WindowVisualViewport.getBounds(window);

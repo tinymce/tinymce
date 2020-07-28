@@ -69,14 +69,14 @@ const calcReposition = (newX: number, newY: number, width: number, height: numbe
 };
 
 const attempt = (candidate: SpotInfo, width: number, height: number, bounds: Boxes.Bounds): BounderAttemptAdt => {
-  const candidateX = candidate.x();
-  const candidateY = candidate.y();
-  const bubbleOffsets = candidate.bubble().offset();
-  const bubbleLeft = bubbleOffsets.left();
-  const bubbleTop = bubbleOffsets.top();
+  const candidateX = candidate.x;
+  const candidateY = candidate.y;
+  const bubbleOffsets = candidate.bubble.offset;
+  const bubbleLeft = bubbleOffsets.left;
+  const bubbleTop = bubbleOffsets.top;
 
   // adjust the bounds to account for the layout and bubble restrictions
-  const adjustedBounds = LayoutBounds.adjustBounds(bounds, candidate.boundsRestriction(), bubbleOffsets);
+  const adjustedBounds = LayoutBounds.adjustBounds(bounds, candidate.boundsRestriction, bubbleOffsets);
   const boundsY = adjustedBounds.y;
   const boundsBottom = adjustedBounds.bottom;
   const boundsX = adjustedBounds.x;
@@ -93,11 +93,11 @@ const attempt = (candidate: SpotInfo, width: number, height: number, bounds: Box
   // As of TBIO-4291, we provide all available space for both up and down.
   const upAvailable = Fun.constant((limitY + deltaH) - boundsY);
   const downAvailable = Fun.constant(boundsBottom - limitY);
-  const maxHeight = Direction.cataVertical(candidate.direction(), downAvailable, /* middle */ downAvailable, upAvailable);
+  const maxHeight = Direction.cataVertical(candidate.direction, downAvailable, /* middle */ downAvailable, upAvailable);
 
   const westAvailable = Fun.constant((limitX + deltaW) - boundsX);
   const eastAvailable = Fun.constant(boundsRight - limitX);
-  const maxWidth = Direction.cataHorizontal(candidate.direction(), eastAvailable, /* middle */ eastAvailable, westAvailable);
+  const maxWidth = Direction.cataHorizontal(candidate.direction, eastAvailable, /* middle */ eastAvailable, westAvailable);
 
   const reposition: RepositionDecision = {
     x: limitX,
@@ -106,12 +106,12 @@ const attempt = (candidate: SpotInfo, width: number, height: number, bounds: Box
     height: deltaH,
     maxHeight,
     maxWidth,
-    direction: candidate.direction(),
+    direction: candidate.direction,
     classes: {
-      on: candidate.bubble().classesOn(),
-      off: candidate.bubble().classesOff()
+      on: candidate.bubble.classesOn,
+      off: candidate.bubble.classesOff
     },
-    label: candidate.label(),
+    label: candidate.label,
     candidateYforTest: newY
   };
 

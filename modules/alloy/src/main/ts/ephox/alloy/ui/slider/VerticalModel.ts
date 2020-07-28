@@ -74,7 +74,7 @@ const handleMovement = (direction: number) => (spectrum: AlloyComponent, detail:
 const getValueFromEvent = (simulatedEvent: NativeSimulatedEvent): Optional<number> => {
   const pos = ModelCommon.getEventSource(simulatedEvent);
   return pos.map(function (p) {
-    return p.top();
+    return p.top;
   });
 };
 

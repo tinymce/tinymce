@@ -106,7 +106,7 @@ export const InlineHeader = (editor: Editor, targetElm: SugarElement, uiComponen
     const maxWidth = editorMaxWidthOpt.getOrThunk(() => {
       // No max width, so use the body width, minus the left pos as the maximum
       const bodyMargin = Utils.parseToInt(Css.get(SugarBody.body(), 'margin-left')).getOr(0);
-      return Width.get(SugarBody.body()) - SugarLocation.absolute(targetElm).left() + bodyMargin;
+      return Width.get(SugarBody.body()) - SugarLocation.absolute(targetElm).left + bodyMargin;
     });
     Css.set(floatContainer.get().element, 'max-width', maxWidth + 'px');
   };

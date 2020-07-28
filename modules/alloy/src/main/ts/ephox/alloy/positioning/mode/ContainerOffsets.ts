@@ -27,7 +27,7 @@ const getRootPoint = <I extends SelectionAnchor | NodeAnchor>(component: AlloyCo
   const outerScroll = Scroll.get(doc);
 
   const offset = getOffset(component, origin, anchorInfo).getOr(outerScroll);
-  return CssPosition.absolute(offset, outerScroll.left(), outerScroll.top());
+  return CssPosition.absolute(offset, outerScroll.left, outerScroll.top);
 };
 
 export {

@@ -35,7 +35,7 @@ const setupEvents = (editor: Editor) => {
   const resizeWindow = (e) => {
     // Check if the window dimensions have changed and if so then trigger a content resize event
     const outer = lastWindowDimensions.get();
-    if (outer.left() !== contentWindow.innerWidth || outer.top() !== contentWindow.innerHeight) {
+    if (outer.left !== contentWindow.innerWidth || outer.top !== contentWindow.innerHeight) {
       lastWindowDimensions.set(SugarPosition(contentWindow.innerWidth, contentWindow.innerHeight));
       Events.fireResizeContent(editor, e);
     }
@@ -47,7 +47,7 @@ const setupEvents = (editor: Editor) => {
 
     // Check if the document dimensions have changed and if so then trigger a content resize event
     const inner = lastDocumentDimensions.get();
-    if (inner.left() !== docEle.offsetWidth || inner.top() !== docEle.offsetHeight) {
+    if (inner.left !== docEle.offsetWidth || inner.top !== docEle.offsetHeight) {
       lastDocumentDimensions.set(SugarPosition(docEle.offsetWidth, docEle.offsetHeight));
       Events.fireResizeContent(editor, e);
     }

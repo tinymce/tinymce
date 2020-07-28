@@ -39,7 +39,7 @@ const by = (x: number, y: number, _DOC?: SugarElement<Document>) => {
 const setToElement = (win: Window, element: SugarElement<Element>) => {
   const pos = SugarLocation.absolute(element);
   const doc = SugarElement.fromDom(win.document);
-  to(pos.left(), pos.top(), doc);
+  to(pos.left, pos.top, doc);
 };
 
 // call f() preserving the original scroll position relative to document doc
@@ -47,8 +47,8 @@ const preserve = (doc: SugarElement<Document>, f: () => void) => {
   const before = get(doc);
   f();
   const after = get(doc);
-  if (before.top() !== after.top() || before.left() !== after.left()) {
-    to(before.left(), before.top(), doc);
+  if (before.top !== after.top || before.left !== after.left) {
+    to(before.left, before.top, doc);
   }
 };
 
@@ -63,7 +63,7 @@ const capture = (doc: SugarElement<Document>) => {
   // TODO: this is quite similar to the code in nomad.
   const restore = () => {
     previous.each((p) => {
-      to(p.left(), p.top(), doc);
+      to(p.left, p.top, doc);
     });
   };
 

@@ -19,8 +19,8 @@ const both = function (element: SugarElement) {
   const mutate = function (x: number, y: number) {
     const location = SugarLocation.absolute(element);
     Css.setAll(element, {
-      left: (location.left() + x) + 'px',
-      top: (location.top() + y) + 'px'
+      left: (location.left + x) + 'px',
+      top: (location.top + y) + 'px'
     });
     events.trigger.relocate(x, y);
   };

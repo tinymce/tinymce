@@ -43,7 +43,7 @@ UnitTest.asynctest('LocationTest', (success, failure) => {
   const leftScrollBarWidth = (doc: TestDocSpec) =>
     // Tries to detect the width of the left scrollbar by checking the offsetLeft of the documentElement
     // Chrome adds the scrollbar to the left in rtl mode as of Chrome 70+
-    SugarLocation.relative(Traverse.documentElement(doc.body)).left();
+    SugarLocation.relative(Traverse.documentElement(doc.body)).left;
 
   const asserteq = <T>(expected: T, actual: T, message: string) => {
     // I wish assert.eq printed expected and actual on failure
@@ -127,28 +127,28 @@ UnitTest.asynctest('LocationTest', (success, failure) => {
     // these checks actually depend on the tunic stylesheet. They might not actually be useful.
     const body = SugarBody.body();
     let pos = SugarLocation.absolute(body);
-    assert.eq(0, pos.top());
-    assert.eq(0, pos.left());
+    assert.eq(0, pos.top);
+    assert.eq(0, pos.left);
     pos = SugarLocation.relative(body);
-    assert.eq(0, pos.top()); // JQuery doesn't return 0, but this makes more sense
-    assert.eq(0, pos.left());
+    assert.eq(0, pos.top); // JQuery doesn't return 0, but this makes more sense
+    assert.eq(0, pos.left);
     pos = SugarLocation.viewport(body);
-    assert.eq(0, pos.top());
-    assert.eq(0, pos.left());
+    assert.eq(0, pos.top);
+    assert.eq(0, pos.left);
     assert.eq(true, scrollBarWidth > 5 && scrollBarWidth < 50 || (platform.os.isOSX() && scrollBarWidth === 0), 'scroll bar width, got=' + scrollBarWidth);
   };
 
   const disconnectedChecks = () => {
     const div = SugarElement.fromTag('div');
     let pos = SugarLocation.absolute(div);
-    assert.eq(0, pos.top());
-    assert.eq(0, pos.left());
+    assert.eq(0, pos.top);
+    assert.eq(0, pos.left);
     pos = SugarLocation.relative(div);
-    assert.eq(0, pos.top());
-    assert.eq(0, pos.left());
+    assert.eq(0, pos.top);
+    assert.eq(0, pos.left);
     pos = SugarLocation.viewport(div);
-    assert.eq(0, pos.top());
-    assert.eq(0, pos.left());
+    assert.eq(0, pos.top);
+    assert.eq(0, pos.left);
   };
 
   const absoluteChecks = (doc: TestDocSpec) => {
@@ -402,8 +402,8 @@ UnitTest.asynctest('LocationTest', (success, failure) => {
     runChecks(doc, noScroll);
 
     const scr = Scroll.get(doc.rawDoc);
-    assert.eq(0, scr.left(), 'expected 0, left is=' + scr.left());
-    assert.eq(0, scr.top(), 'expected 0, top is ' + scr.top());
+    assert.eq(0, scr.left, 'expected 0, left is=' + scr.left);
+    assert.eq(0, scr.top, 'expected 0, top is ' + scr.top);
 
     Scroll.by(leftScroll, topScroll, doc.rawDoc);
     runChecks(doc, withScroll);
@@ -415,14 +415,14 @@ UnitTest.asynctest('LocationTest', (success, failure) => {
   const bodyChecks = (doc: TestDocSpec) => {
     Scroll.to(1000, 1000, doc.rawDoc);
     let pos = SugarLocation.absolute(doc.body);
-    assert.eq(0, pos.top());
-    assert.eq(0, pos.left());
+    assert.eq(0, pos.top);
+    assert.eq(0, pos.left);
     pos = SugarLocation.relative(doc.body);
-    assert.eq(0, pos.top());
-    assert.eq(0, pos.left());
+    assert.eq(0, pos.top);
+    assert.eq(0, pos.left);
     pos = SugarLocation.viewport(doc.body);
-    assert.eq(0, pos.top());
-    assert.eq(0, pos.left());
+    assert.eq(0, pos.top);
+    assert.eq(0, pos.left);
   };
 
   /* Simple verification logic */
@@ -431,14 +431,14 @@ UnitTest.asynctest('LocationTest', (success, failure) => {
       const div = doc.byId(t.id);
 
       let pos = SugarLocation.absolute(div);
-      asserteq(t.absolute.top, pos.top(), '.absolute().top  ' + t.id);
-      asserteq(t.absolute.left[doc.dir], pos.left(), '.absolute().left.' + doc.dir + ' ' + t.id);
+      asserteq(t.absolute.top, pos.top, '.absolute().top  ' + t.id);
+      asserteq(t.absolute.left[doc.dir], pos.left, '.absolute().left.' + doc.dir + ' ' + t.id);
       pos = SugarLocation.relative(div);
-      asserteq(t.relative.top, pos.top(), '.relative().top  ' + t.id);
-      asserteq(t.relative.left[doc.dir], pos.left(), '.relative().left.' + doc.dir + ' ' + t.id);
+      asserteq(t.relative.top, pos.top, '.relative().top  ' + t.id);
+      asserteq(t.relative.left[doc.dir], pos.left, '.relative().left.' + doc.dir + ' ' + t.id);
       pos = SugarLocation.viewport(div);
-      asserteq(t.viewport.top, pos.top(), '.viewport().top  ' + t.id);
-      asserteq(t.viewport.left[doc.dir], pos.left(), '.viewport().left.' + doc.dir + ' ' + t.id);
+      asserteq(t.viewport.top, pos.top, '.viewport().top  ' + t.id);
+      asserteq(t.viewport.left[doc.dir], pos.left, '.viewport().left.' + doc.dir + ' ' + t.id);
     });
   };
 });

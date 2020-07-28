@@ -51,12 +51,12 @@ const point = (type: string, element: SugarElement<any>, x: number, y: number): 
 
 const touch = (eventType: string) => (element: SugarElement<any>): void => {
   const position = SugarLocation.absolute(SugarNode.isText(element) ? Traverse.parent(element).getOrDie() : element);
-  point(eventType, element, position.left(), position.top());
+  point(eventType, element, position.left, position.top);
 };
 
 const touchAt = (eventType: string) => (dx: number, dy: number) => (element: SugarElement<any>): void => {
   const position = SugarLocation.absolute(SugarNode.isText(element) ? Traverse.parent(element).getOrDie() : element);
-  point(eventType, element, position.left() + dx, position.top() + dy);
+  point(eventType, element, position.left + dx, position.top + dy);
 };
 
 const touchstart = touch('touchstart');

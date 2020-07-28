@@ -33,8 +33,8 @@ const calcNewAnchor = (optBox: Optional<Boxes.BoxByPoint>, rootPoint: CssPositio
   );
 
   const anchorBox = Boxes.rect(
-    topLeft.left(),
-    topLeft.top(),
+    topLeft.left,
+    topLeft.top,
     box.width,
     box.height
   );

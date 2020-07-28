@@ -100,8 +100,8 @@ UnitTest.asynctest('ScrollTest', (success, failure) => {
   const scrollCheck = (x: number, y: number, epsX: number, epsY: number, doc: TestDocSpec, msg: string) => {
     Css.reflow(doc.body);
     const scr = Scroll.get(doc.rawDoc);
-    assert.eq(true, within(x, scr.left(), epsX), msg + ' (' + doc.dir + ') Expected scrollCheck x=' + x + ', got=' + scr.left() + ', eps=' + epsX);
-    assert.eq(true, within(y, scr.top(), epsY), msg + ' (' + doc.dir + ') Expected scrollCheck y=' + y + ', got=' + scr.top() + ', eps=' + epsY);
+    assert.eq(true, within(x, scr.left, epsX), msg + ' (' + doc.dir + ') Expected scrollCheck x=' + x + ', got=' + scr.left + ', eps=' + epsX);
+    assert.eq(true, within(y, scr.top, epsY), msg + ' (' + doc.dir + ') Expected scrollCheck y=' + y + ', got=' + scr.top + ', eps=' + epsY);
   };
 
   // scroll to (x,y) and check position
@@ -119,7 +119,7 @@ UnitTest.asynctest('ScrollTest', (success, failure) => {
   const scrollBy = (x: number, y: number, doc: TestDocSpec, msg: string) => {
     const scr0 = Scroll.get(doc.rawDoc);
     Scroll.by(x, y, doc.rawDoc);
-    scrollCheck(scr0.left() + x, scr0.top() + y, 0, 0, doc, 'scrollBy(' + x + ',' + y + '): ' + msg);
+    scrollCheck(scr0.left + x, scr0.top + y, 0, 0, doc, 'scrollBy(' + x + ',' + y + '): ' + msg);
   };
 
   const runTests = (doc: TestDocSpec) => {
@@ -131,8 +131,8 @@ UnitTest.asynctest('ScrollTest', (success, failure) => {
     const scrollBarWidth = Scroll.scrollBarWidth();
     const cEl = doc.byId('centre1');
     const center = SugarLocation.absolute(cEl);
-    const cX = Math.round(center.left());
-    const cY = Math.round(center.top());
+    const cX = Math.round(center.left);
+    const cY = Math.round(center.top);
 
     assert.eq(true, scrollBarWidth > 5 && scrollBarWidth < 50 || (platform.os.isOSX() && scrollBarWidth === 0), 'scroll bar width, got=' + scrollBarWidth);
 
@@ -142,7 +142,7 @@ UnitTest.asynctest('ScrollTest', (success, failure) => {
     if ( !(doc.rtl && (platform.browser.isIE() || platform.browser.isEdge())) ) {
 
       const cPos = SugarLocation.absolute(cEl);
-      setToElement(doc, cEl, cPos.left(), cPos.top(), 1, 1, 'set to centre el');
+      setToElement(doc, cEl, cPos.left, cPos.top, 1, 1, 'set to centre el');
 
       // scroll text of the centre cell into view (right-aligned in RTL mode)
       const x = cX + (doc.rtl ? (Width.get(cEl) - Width.get(doc.iframe)) : 0);
@@ -155,14 +155,14 @@ UnitTest.asynctest('ScrollTest', (success, failure) => {
 
       // scroll to top el
       const pos = SugarLocation.absolute(doc.byId('top1'));
-      setToElement(doc, doc.byId('top1'), pos.left(), pos.top(), 0, 0, 'set to top');
+      setToElement(doc, doc.byId('top1'), pos.left, pos.top, 0, 0, 'set to top');
 
       scrollTo(x, cY, doc); // scroll back to centre
 
       // scroll to bottom el
       const bot1Pos = SugarLocation.absolute(doc.byId('top1'));
       const bot = hgt + 2 * bodyBorder + 2 * mar - (doc.rawWin.innerHeight - scrollBarWidth); // content height minus viewport-excluding-the-bottom-scrollbar
-      setToElement(doc, doc.byId('bot1'), bot1Pos.left(), bot, 0, 20, 'set to bottom');
+      setToElement(doc, doc.byId('bot1'), bot1Pos.left, bot, 0, 20, 'set to bottom');
 
       scrollTo(x, cY, doc); // scroll back to centre
       Scroll.preserve(doc.rawDoc, () => {
