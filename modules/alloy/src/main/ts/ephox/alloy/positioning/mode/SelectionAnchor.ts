@@ -53,7 +53,7 @@ const placement = (component: AlloyComponent, anchorInfo: SelectionAnchor, origi
         return rect;
       });
     });
-    return optRect.bind((rawRect) => ContentAnchorCommon.capRect(rawRect.left(), rawRect.top(), rawRect.width(), rawRect.height()));
+    return optRect.bind((rawRect) => ContentAnchorCommon.capRect(rawRect.left, rawRect.top, rawRect.width, rawRect.height));
   });
 
   const targetElement: Optional<SugarElement> = getAnchorSelection(win, anchorInfo)

@@ -1,6 +1,6 @@
-import { Fun, Optional } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { SugarElement } from '../../api/node/SugarElement';
-import { StructRect } from '../../api/selection/Rect';
+import { RawRect } from '../../api/selection/Rect';
 import { Situ } from '../../api/selection/Situ';
 
 const selectNodeContents = (win: Window, element: SugarElement<Node>) => {
@@ -67,25 +67,25 @@ const cloneFragment = (rng: Range) => {
   return SugarElement.fromDom(fragment);
 };
 
-const toRect = (rect: ClientRect | DOMRect): StructRect => ({
-  left: Fun.constant(rect.left),
-  top: Fun.constant(rect.top),
-  right: Fun.constant(rect.right),
-  bottom: Fun.constant(rect.bottom),
-  width: Fun.constant(rect.width),
-  height: Fun.constant(rect.height)
+const toRect = (rect: ClientRect | DOMRect): RawRect => ({
+  left: rect.left,
+  top: rect.top,
+  right: rect.right,
+  bottom: rect.bottom,
+  width: rect.width,
+  height: rect.height
 });
 
-const getFirstRect = (rng: Range) => {
+const getFirstRect = (rng: Range): Optional<RawRect> => {
   const rects = rng.getClientRects();
   // ASSUMPTION: The first rectangle is the start of the selection
   const rect = rects.length > 0 ? rects[0] : rng.getBoundingClientRect();
-  return rect.width > 0 || rect.height > 0 ? Optional.some(rect).map(toRect) : Optional.none<StructRect>();
+  return rect.width > 0 || rect.height > 0 ? Optional.some(rect).map(toRect) : Optional.none();
 };
 
-const getBounds = (rng: Range) => {
+const getBounds = (rng: Range): Optional<RawRect> => {
   const rect = rng.getBoundingClientRect();
-  return rect.width > 0 || rect.height > 0 ? Optional.some(rect).map(toRect) : Optional.none<StructRect>();
+  return rect.width > 0 || rect.height > 0 ? Optional.some(rect).map(toRect) : Optional.none();
 };
 
 const toString = (rng: Range) => rng.toString();

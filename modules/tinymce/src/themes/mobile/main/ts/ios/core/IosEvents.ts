@@ -40,7 +40,7 @@ const initEvents = (editorApi, iosApi, toolstrip, socket, _dropup): { destroy: (
 
   const scrollToCursor = (): void => {
     editorApi.getCursorBox().each((box) => {
-      scrollToY(box.top(), box.height());
+      scrollToY(box.top, box.height);
     });
   };
 

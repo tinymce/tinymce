@@ -1,4 +1,5 @@
 import { Optional } from '@ephox/katamari';
+import { RawRect } from '@ephox/sugar';
 import * as NativeRange from '../../selection/core/NativeRange';
 import * as SelectionDirection from '../../selection/core/SelectionDirection';
 import * as CaretRange from '../../selection/query/CaretRange';
@@ -138,12 +139,12 @@ const getExact = (win: Window) =>
 const get = (win: Window) =>
   getExact(win).map((range) => SimSelection.exact(range.start, range.soffset, range.finish, range.foffset));
 
-const getFirstRect = (win: Window, selection: SimSelection) => {
+const getFirstRect = (win: Window, selection: SimSelection): Optional<RawRect> => {
   const rng = SelectionDirection.asLtrRange(win, selection);
   return NativeRange.getFirstRect(rng);
 };
 
-const getBounds = (win: Window, selection: SimSelection) => {
+const getBounds = (win: Window, selection: SimSelection): Optional<RawRect> => {
   const rng = SelectionDirection.asLtrRange(win, selection);
   return NativeRange.getBounds(rng);
 };

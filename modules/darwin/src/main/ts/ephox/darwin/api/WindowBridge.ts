@@ -1,5 +1,5 @@
 import { Optional } from '@ephox/katamari';
-import { RawRect, Rect, Scroll, SimRange, SimSelection, Situ, SugarElement, WindowSelection } from '@ephox/sugar';
+import { RawRect, Scroll, SimRange, SimSelection, Situ, SugarElement, WindowSelection } from '@ephox/sugar';
 import { Situs } from '../selection/Situs';
 import * as Util from '../selection/Util';
 
@@ -31,7 +31,7 @@ export const WindowBridge = function (win: Window): WindowBridge {
 
   const getRangedRect = function (start: SugarElement, soffset: number, finish: SugarElement, foffset: number): Optional<RawRect> {
     const sel = SimSelection.exact(start, soffset, finish, foffset);
-    return WindowSelection.getFirstRect(win, sel).map(Rect.toRaw);
+    return WindowSelection.getFirstRect(win, sel);
   };
 
   const getSelection = function () {

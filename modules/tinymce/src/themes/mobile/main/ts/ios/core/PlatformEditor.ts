@@ -6,7 +6,7 @@
  */
 
 import { Fun, Optional } from '@ephox/katamari';
-import { Compare, DomEvent, RawRect, SimRange, StructRect, SugarElement, WindowSelection } from '@ephox/sugar';
+import { Compare, DomEvent, RawRect, SimRange, SugarElement, WindowSelection } from '@ephox/sugar';
 
 const getBodyFromFrame = function (frame) {
   return Optional.some(SugarElement.fromDom(frame.dom.contentWindow.document.body));
@@ -50,18 +50,6 @@ const getOrListen = function (editor, doc, name, type: string) {
   });
 };
 
-// TODO: This function belongs in modules/sugar/src/main/ts/ephox/sugar/api/selection/Rect.ts
-const toRect = function (rect: RawRect): StructRect {
-  return {
-    left: Fun.constant(rect.left),
-    top: Fun.constant(rect.top),
-    right: Fun.constant(rect.right),
-    bottom: Fun.constant(rect.bottom),
-    width: Fun.constant(rect.width),
-    height: Fun.constant(rect.height)
-  };
-};
-
 const getActiveApi = function (editor) {
   const frame = getFrame(editor);
 
@@ -72,9 +60,9 @@ const getActiveApi = function (editor) {
       return Compare.eq(sel.start, sel.finish) && sel.soffset === sel.foffset;
     };
 
-    const toStartRect = function (sel) {
+    const toStartRect = function (sel): Optional<RawRect> {
       const rect = sel.start.dom.getBoundingClientRect();
-      return rect.width > 0 || rect.height > 0 ? Optional.some(rect).map(toRect) : Optional.none<StructRect>();
+      return rect.width > 0 || rect.height > 0 ? Optional.some(rect) : Optional.none();
     };
 
     return WindowSelection.getExact(win).filter(isCollapsed).bind(toStartRect);
@@ -86,7 +74,7 @@ const getActiveApi = function (editor) {
 
         const html = SugarElement.fromDom(doc.dom.documentElement);
 
-        const getCursorBox = editor.getCursorBox.getOrThunk(function () {
+        const getCursorBox: () => Optional<RawRect> = editor.getCursorBox.getOrThunk(function () {
           return function () {
             return WindowSelection.get(win).bind(function (sel) {
               return WindowSelection.getFirstRect(win, sel).orThunk(function () {

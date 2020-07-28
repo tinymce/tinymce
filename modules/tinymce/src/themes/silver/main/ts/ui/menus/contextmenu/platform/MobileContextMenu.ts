@@ -43,10 +43,10 @@ const isTouchWithinSelection = (editor: Editor, e: EditorEvent<TouchEvent>) => {
     const touch = e.touches[0];
     const rng = selection.getRng();
     const rngRectOpt = WindowSelection.getFirstRect(editor.getWin(), SimSelection.domRange(rng));
-    return rngRectOpt.exists((rngRect) => rngRect.left() <= touch.clientX &&
-      rngRect.right() >= touch.clientX &&
-      rngRect.top() <= touch.clientY &&
-      rngRect.bottom() >= touch.clientY
+    return rngRectOpt.exists((rngRect) => rngRect.left <= touch.clientX &&
+      rngRect.right >= touch.clientX &&
+      rngRect.top <= touch.clientY &&
+      rngRect.bottom >= touch.clientY
     );
   }
 };
