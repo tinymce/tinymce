@@ -70,7 +70,7 @@ const keyboard = function (win: Window, container: SugarElement, isRoot: (e: Sug
             // the table
             return CellSelection.getEdges(container, annotations.firstSelectedSelector, annotations.lastSelectedSelector).map(function (edges) {
               const relative = SelectionKeys.isDown(keycode) || direction.isForward(keycode) ? Situ.after : Situ.before;
-              bridge.setRelativeSelection(Situ.on(edges.first(), 0), relative(edges.table()));
+              bridge.setRelativeSelection(Situ.on(edges.first, 0), relative(edges.table));
               annotations.clear(container);
               return Response.create(Optional.none(), true);
             });
