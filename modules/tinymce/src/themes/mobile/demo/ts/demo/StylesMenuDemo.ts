@@ -12,18 +12,18 @@ export default function () {
     formats: {
       menus: {
         Beta: [
-          { title: 'Beta-1', isSelected: Fun.constant(false), getPreview: Fun.constant('') },
-          { title: 'Beta-2', isSelected: Fun.constant(false), getPreview: Fun.constant('') },
-          { title: 'Beta-3', isSelected: Fun.constant(false), getPreview: Fun.constant('') }
+          { title: 'Beta-1', isSelected: Fun.never, getPreview: Fun.constant('') },
+          { title: 'Beta-2', isSelected: Fun.never, getPreview: Fun.constant('') },
+          { title: 'Beta-3', isSelected: Fun.never, getPreview: Fun.constant('') }
         ]
       },
       expansions: {
         Beta: 'Beta'
       },
       items: [
-        { title: 'Alpha', isSelected: Fun.constant(false), getPreview: Fun.constant('') },
-        { title: 'Beta', isSelected: Fun.constant(false), getPreview: Fun.constant('') },
-        { title: 'Gamma', isSelected: Fun.constant(true), getPreview: Fun.constant('') }
+        { title: 'Alpha', isSelected: Fun.never, getPreview: Fun.constant('') },
+        { title: 'Beta', isSelected: Fun.never, getPreview: Fun.constant('') },
+        { title: 'Gamma', isSelected: Fun.never, getPreview: Fun.constant('') }
       ]
     },
     handle(format) {

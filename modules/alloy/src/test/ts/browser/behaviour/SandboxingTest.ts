@@ -32,7 +32,7 @@ UnitTest.asynctest('SandboxingTest', (success, failure) => {
             onOpen: store.adder('onOpen'),
             onClose: store.adder('onClose'),
 
-            isPartOf: Fun.constant(false)
+            isPartOf: Fun.never
           })
         ])
       })

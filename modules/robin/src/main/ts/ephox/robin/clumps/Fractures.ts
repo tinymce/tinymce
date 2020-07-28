@@ -22,7 +22,7 @@ const slice = function <E, D> (universe: Universe<E, D>, parent: E, first: Optio
 const breakPath = function <E, D> (universe: Universe<E, D>, element: E, common: E, breaker: (universe: Universe<E, D>, parent: E, child: E) => Optional<LeftRight<E>>) {
   const isTop = function (elem: E) {
     return universe.property().parent(elem).fold(
-      Fun.constant(true),
+      Fun.always,
       Fun.curry(universe.eq, common)
     );
   };

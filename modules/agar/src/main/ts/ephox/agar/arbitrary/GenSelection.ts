@@ -7,7 +7,7 @@ export interface SelectionExclusions {
 }
 
 const defaultExclusions: SelectionExclusions = {
-  containers: Fun.constant(false)
+  containers: Fun.never
   /* Maybe support offsets later if it makes sense to do so */
 };
 

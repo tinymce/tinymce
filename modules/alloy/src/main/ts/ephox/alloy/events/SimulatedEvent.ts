@@ -85,7 +85,7 @@ const fromExternal = <T extends EventFormat>(event: T): SimulatedEvent<T> => {
     stop,
     cut: Fun.noop, // cutting has no meaning for a broadcasted event
     isStopped: stopper.get,
-    isCut: Fun.constant(false),
+    isCut: Fun.never,
     event,
     // Nor do targets really
     setSource: Fun.die('Cannot set source of a broadcasted event'),

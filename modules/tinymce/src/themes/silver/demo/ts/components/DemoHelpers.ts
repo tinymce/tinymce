@@ -66,7 +66,7 @@ const setupDemo = () => {
   // This is fake because ColorInputBackstage requires Editor constructor
   const fakecolorinputBackstage = {
     colorPicker: Fun.noop,
-    hasCustomColors: Fun.constant(false),
+    hasCustomColors: Fun.never,
     getColors: () => [
       { type: choiceItem, text: 'Turquoise', value: '#18BC9B' },
       { type: choiceItem, text: 'Green', value: '#2FCC71' },

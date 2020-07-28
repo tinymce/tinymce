@@ -39,7 +39,7 @@ const schema: FieldProcessorAdt[] = [
   FieldSchema.optionFunction('getImageParent'),
   FieldSchema.optionFunction('getImage'),
   // Use this to ensure that drag and dropping only happens when within this selector.
-  FieldSchema.defaultedFunction('canDrag', Fun.constant(true)),
+  FieldSchema.defaultedFunction('canDrag', Fun.always),
   FieldSchema.defaultedFunction('onDragstart', Fun.identity),
   FieldSchema.defaultedFunction('onDragover', Fun.identity),
   FieldSchema.defaultedFunction('onDragend', Fun.identity),

@@ -10,7 +10,7 @@ UnitTest.test('DomExtractTest', function () {
   // IMPORTANT: Otherwise CSS display does not work.
   const page = Page();
 
-  const optimise = Fun.constant(false);
+  const optimise = Fun.never;
 
   (function () {
     // Test extractTo

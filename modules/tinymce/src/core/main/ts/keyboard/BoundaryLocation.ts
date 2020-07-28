@@ -143,7 +143,7 @@ const betweenInlines = (forward: boolean, isInlineTarget: (node: Node) => boolea
     }).getOr(location);
 
 const skipNoMovement = (fromLocation: Optional<LocationAdt>, toLocation: LocationAdt) => fromLocation.fold(
-  Fun.constant(true),
+  Fun.always,
   (fromLocation) => !isEq(fromLocation, toLocation)
 );
 

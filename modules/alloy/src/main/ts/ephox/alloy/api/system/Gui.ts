@@ -116,7 +116,7 @@ const takeover = (root: AlloyComponent): GuiSystem => {
     broadcastEvent(eventName: string, event: EventArgs) {
       broadcastEvent(eventName, event);
     },
-    isConnected: Fun.constant(true)
+    isConnected: Fun.always
   };
 
   const addToWorld = (component: AlloyComponent) => {

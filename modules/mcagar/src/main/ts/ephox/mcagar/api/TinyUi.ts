@@ -95,7 +95,7 @@ export const TinyUi = function (editor: Editor): TinyUi {
   };
 
   const cWaitForUi = function (label: string, selector: string) {
-    return cWaitForState(Fun.constant(true))(label, selector);
+    return cWaitForState(Fun.always)(label, selector);
   };
 
   const cTriggerContextMenu = function (label: string, target: string, menu: string) {

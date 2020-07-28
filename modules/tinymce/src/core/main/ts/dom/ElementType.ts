@@ -39,7 +39,7 @@ const wsElements = [ 'pre', 'script', 'textarea', 'style' ];
 const lazyLookup = function <T = HTMLElement> (items) {
   let lookup;
   return (node: SugarElement): node is SugarElement<T> => {
-    lookup = lookup ? lookup : Arr.mapToObject(items, Fun.constant(true));
+    lookup = lookup ? lookup : Arr.mapToObject(items, Fun.always);
     return lookup.hasOwnProperty(SugarNode.name(node));
   };
 };

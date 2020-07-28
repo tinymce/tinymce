@@ -18,7 +18,7 @@ const create = (cyclicField: FieldProcessorAdt) => {
     FieldSchema.option('onEnter'),
     FieldSchema.defaulted('selector', '[data-alloy-tabstop="true"]:not(:disabled)'),
     FieldSchema.defaulted('firstTabstop', 0),
-    FieldSchema.defaulted('useTabstopAt', Fun.constant(true)),
+    FieldSchema.defaulted('useTabstopAt', Fun.always),
     // Maybe later we should just expose isVisible
     FieldSchema.option('visibilitySelector')
   ].concat([

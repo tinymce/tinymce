@@ -15,7 +15,7 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.strict('lazySink'),
   FieldSchema.option('dragBlockClass'),
   FieldSchema.defaultedFunction('getBounds', Boxes.win),
-  FieldSchema.defaulted('useTabstopAt', Fun.constant(true)),
+  FieldSchema.defaulted('useTabstopAt', Fun.always),
   FieldSchema.defaulted('eventOrder', {}),
   SketchBehaviours.field('modalBehaviours', [ Keying ]),
 

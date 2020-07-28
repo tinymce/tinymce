@@ -72,7 +72,7 @@ UnitTest.test('none !== some, for any predicate', () => {
 
 UnitTest.test('Checking some(x).equals_(some(y), _, _ -> false) === false', () => {
   fc.assert(fc.property(arbOptionSome(fc.integer()), arbOptionSome(fc.integer()), (opt1, opt2) => {
-    Assert.eq('eq', false, opt1.equals_(opt2, Fun.constant(false)));
+    Assert.eq('eq', false, opt1.equals_(opt2, Fun.never));
   }));
 });
 
@@ -80,7 +80,7 @@ UnitTest.test('Checking some(x).equals_(some(y), _, _ -> true) === true', () => 
   fc.assert(fc.property(fc.integer(), fc.integer(), (a, b) => {
     const opt1 = Optional.some(a);
     const opt2 = Optional.some(b);
-    Assert.eq('eq', true, opt1.equals_(opt2, Fun.constant(true)));
+    Assert.eq('eq', true, opt1.equals_(opt2, Fun.always));
   }));
 });
 

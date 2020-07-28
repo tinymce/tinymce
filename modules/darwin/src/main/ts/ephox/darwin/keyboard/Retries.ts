@@ -48,7 +48,7 @@ const isOutside = function (caret: Carets, box: Carets): boolean {
 
 // Find the block and determine whether or not that block is outside. If it is outside, move up/down and right.
 const inOutsideBlock = function (bridge: WindowBridge, element: SugarElement, caret: Carets) {
-  return PredicateFind.closest(element, DomStructure.isBlock).fold(Fun.constant(false), function (cell) {
+  return PredicateFind.closest(element, DomStructure.isBlock).fold(Fun.never, function (cell) {
     return Rectangles.getEntireBox(bridge, cell).exists(function (box) {
       return isOutside(caret, box);
     });

@@ -69,7 +69,7 @@ const onFocus = function (container, targetComp) {
 };
 
 const isPseudoStop = function (element) {
-  return SelectorExists.closest(element, [ '.' + beforeObject, '.' + afterObject ].join(','), Fun.constant(false));
+  return SelectorExists.closest(element, [ '.' + beforeObject, '.' + afterObject ].join(','), Fun.never);
 };
 
 export {

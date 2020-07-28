@@ -131,7 +131,7 @@ const factory: CompositeSketchFactory<TouchMenuDetail, TouchMenuSpec> = (detail,
 
     events: AlloyEvents.derive([
 
-      AlloyEvents.abort(NativeEvents.contextmenu(), Fun.constant(true)),
+      AlloyEvents.abort(NativeEvents.contextmenu(), Fun.always),
 
       AlloyEvents.run(NativeEvents.touchstart(), (comp, _se) => {
         Toggling.on(comp);

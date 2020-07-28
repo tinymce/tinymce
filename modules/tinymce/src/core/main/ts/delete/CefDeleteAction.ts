@@ -49,7 +49,7 @@ const isDeleteFromCefDifferentBlocks = (root: Node, forward: boolean, from: Care
   const inSameBlock = (elm: Element) => ElementType.isInline(SugarElement.fromDom(elm)) && !CaretUtils.isInSameBlock(from, to, root);
 
   return CaretUtils.getRelativeCefElm(!forward, from).fold(
-    () => CaretUtils.getRelativeCefElm(forward, to).fold(Fun.constant(false), inSameBlock),
+    () => CaretUtils.getRelativeCefElm(forward, to).fold(Fun.never, inSameBlock),
     inSameBlock
   );
 };

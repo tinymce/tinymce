@@ -151,10 +151,10 @@ const isAnchorLink = function (elm) {
 
 const isInsideAnchor = function (location) {
   return location.fold(
-    Fun.constant(false),
+    Fun.never,
     isAnchorLink,
     isAnchorLink,
-    Fun.constant(false)
+    Fun.never
   );
 };
 

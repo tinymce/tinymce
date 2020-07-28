@@ -30,7 +30,7 @@ UnitTest.asynctest('browser.tinymce.core.caret.FakeCaretTest', function (success
   };
 
   const setup = function () {
-    fakeCaret = FakeCaret(mockEditor, getRoot(), isBlock, Fun.constant(true));
+    fakeCaret = FakeCaret(mockEditor, getRoot(), isBlock, Fun.always);
   };
 
   const teardown = function () {

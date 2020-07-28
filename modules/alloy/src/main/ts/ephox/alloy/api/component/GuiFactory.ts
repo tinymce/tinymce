@@ -68,7 +68,7 @@ const external = (spec: ExternalElement): PremadeSpec => {
   const me: AlloyComponent = {
     getSystem: systemApi.get,
     config: Optional.none,
-    hasConfigured: Fun.constant(false),
+    hasConfigured: Fun.never,
     connect,
     disconnect,
     getApis: <A>(): A => ({ } as any),
