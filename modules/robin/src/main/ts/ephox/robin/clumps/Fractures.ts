@@ -72,7 +72,7 @@ const breakToCommon = function <E, D> (universe: Universe<E, D>, common: E, star
 // Find the shared ancestor that we are going to split up to.
 const shared = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) => boolean, start: E, finish: E, ceiling: (e: E) => E) {
   const subset = Subset.ancestors(universe, start, finish, isRoot);
-  return subset.shared().orThunk(function () {
+  return subset.shared.orThunk(function () {
     // Default to shared root, if we don't have a shared ancestor.
     return Parent.sharedOne(universe, function (_, elem) {
       return isRoot(elem) ? Optional.some(elem) : universe.up().predicate(elem, isRoot);

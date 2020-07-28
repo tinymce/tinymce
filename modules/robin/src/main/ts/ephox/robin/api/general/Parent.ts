@@ -11,9 +11,9 @@ type SubsetFn = <E, D>(universe: Universe<E, D>, start: E, end: E) => Optional<E
 const subset: SubsetFn = SubsetFn.subset;
 
 type AncestorsFnResult<E> = {
-  firstpath: () => E[];
-  secondpath: () => E[];
-  shared: () => Optional<E>;
+  readonly firstpath: E[];
+  readonly secondpath: E[];
+  readonly shared: Optional<E>;
 };
 type AncestorsFn = <E, D>(universe: Universe<E, D>, start: E, finish: E, isRoot?: ((x: E) => boolean) | undefined) => AncestorsFnResult<E>;
 const ancestors: AncestorsFn = SubsetFn.ancestors;

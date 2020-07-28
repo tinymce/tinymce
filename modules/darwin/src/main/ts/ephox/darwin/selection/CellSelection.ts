@@ -54,7 +54,7 @@ const identify = function (start: SugarElement, finish: SugarElement, isRoot?: (
             finish: startCell
           });
         } else { // Selecting from a nested table to a different nested table.
-          return DomParent.ancestors(start, finish).shared().bind(function (lca) {
+          return DomParent.ancestors(start, finish).shared.bind(function (lca) {
             return SelectorFind.closest(lca, 'table', isRoot).bind(function (lcaTable) {
               const finishAncestorCells = SelectorFilter.ancestors(finish, 'td,th', getIsRoot(lcaTable));
               const finishCell = finishAncestorCells.length > 0 ? finishAncestorCells[finishAncestorCells.length - 1] : finish;

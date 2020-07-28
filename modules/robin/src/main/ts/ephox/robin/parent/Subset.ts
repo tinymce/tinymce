@@ -66,9 +66,9 @@ const ancestors = function <E, D> (universe: Universe<E, D>, start: E, end: E, i
   });
 
   return {
-    firstpath: Fun.constant(pruned1),
-    secondpath: Fun.constant(pruned2),
-    shared: Fun.constant(shared)
+    firstpath: pruned1,
+    secondpath: pruned2,
+    shared
   };
 };
 
@@ -79,8 +79,8 @@ const ancestors = function <E, D> (universe: Universe<E, D>, start: E, end: E, i
  */
 const subset = function <E, D> (universe: Universe<E, D>, start: E, end: E) {
   const ancs = ancestors(universe, start, end);
-  return ancs.shared().bind(function (shared) {
-    return unsafeSubset(universe, shared, ancs.firstpath(), ancs.secondpath());
+  return ancs.shared.bind(function (shared) {
+    return unsafeSubset(universe, shared, ancs.firstpath, ancs.secondpath);
   });
 };
 
