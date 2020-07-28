@@ -64,19 +64,19 @@ const getKeydownRules = (
   flowConfig: FlowConfig,
   _flowState: Stateless
 ): Array<KeyRules.KeyRule<FlowConfig, Stateless>> => {
-  const westMovers = Keys.LEFT().concat(flowConfig.allowVertical ? Keys.UP() : [ ]);
-  const eastMovers = Keys.RIGHT().concat(flowConfig.allowVertical ? Keys.DOWN() : [ ]);
+  const westMovers = Keys.LEFT.concat(flowConfig.allowVertical ? Keys.UP : [ ]);
+  const eastMovers = Keys.RIGHT.concat(flowConfig.allowVertical ? Keys.DOWN : [ ]);
   return [
     KeyRules.rule(KeyMatch.inSet(westMovers), doMove(DomMovement.west(moveLeft, moveRight))),
     KeyRules.rule(KeyMatch.inSet(eastMovers), doMove(DomMovement.east(moveLeft, moveRight))),
-    KeyRules.rule(KeyMatch.inSet(Keys.ENTER()), execute),
-    KeyRules.rule(KeyMatch.inSet(Keys.SPACE()), execute),
-    KeyRules.rule(KeyMatch.inSet(Keys.ESCAPE()), doEscape)
+    KeyRules.rule(KeyMatch.inSet(Keys.ENTER), execute),
+    KeyRules.rule(KeyMatch.inSet(Keys.SPACE), execute),
+    KeyRules.rule(KeyMatch.inSet(Keys.ESCAPE), doEscape)
   ];
 };
 
 const getKeyupRules: () => Array<KeyRules.KeyRule<FlowConfig, Stateless>> = Fun.constant([
-  KeyRules.rule(KeyMatch.inSet(Keys.SPACE()), KeyingTypes.stopEventForFirefox)
+  KeyRules.rule(KeyMatch.inSet(Keys.SPACE), KeyingTypes.stopEventForFirefox)
 ]);
 
 export default KeyingType.typical(schema, NoState.init, getKeydownRules, getKeyupRules, () => Optional.some(focusIn));

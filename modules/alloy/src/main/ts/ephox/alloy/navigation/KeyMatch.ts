@@ -3,7 +3,7 @@ import { EventArgs } from '@ephox/sugar';
 
 export type KeyMatcher = (evt: EventArgs<KeyboardEvent>) => boolean;
 
-const inSet = (keys: number[]): KeyMatcher => (event: EventArgs<KeyboardEvent>) => {
+const inSet = (keys: ReadonlyArray<number>): KeyMatcher => (event: EventArgs<KeyboardEvent>) => {
   const raw = event.raw();
   return Arr.contains(keys, raw.which);
 };

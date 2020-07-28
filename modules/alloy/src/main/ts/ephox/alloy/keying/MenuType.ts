@@ -37,16 +37,16 @@ const fireShiftTab: KeyRuleHandler<MenuConfig, Stateless> = (component, simulate
 const fireTab: KeyRuleHandler<MenuConfig, Stateless> = (component, simulatedEvent, menuConfig, menuState) => menuConfig.moveOnTab ? DomMovement.move(moveDown)(component, simulatedEvent, menuConfig, menuState) : Optional.none();
 
 const getKeydownRules = Fun.constant([
-  KeyRules.rule(KeyMatch.inSet(Keys.UP()), DomMovement.move(moveUp)),
-  KeyRules.rule(KeyMatch.inSet(Keys.DOWN()), DomMovement.move(moveDown)),
-  KeyRules.rule(KeyMatch.and([ KeyMatch.isShift, KeyMatch.inSet(Keys.TAB()) ]), fireShiftTab),
-  KeyRules.rule(KeyMatch.and([ KeyMatch.isNotShift, KeyMatch.inSet(Keys.TAB()) ]), fireTab),
-  KeyRules.rule(KeyMatch.inSet(Keys.ENTER()), execute),
-  KeyRules.rule(KeyMatch.inSet(Keys.SPACE()), execute)
+  KeyRules.rule(KeyMatch.inSet(Keys.UP), DomMovement.move(moveUp)),
+  KeyRules.rule(KeyMatch.inSet(Keys.DOWN), DomMovement.move(moveDown)),
+  KeyRules.rule(KeyMatch.and([ KeyMatch.isShift, KeyMatch.inSet(Keys.TAB) ]), fireShiftTab),
+  KeyRules.rule(KeyMatch.and([ KeyMatch.isNotShift, KeyMatch.inSet(Keys.TAB) ]), fireTab),
+  KeyRules.rule(KeyMatch.inSet(Keys.ENTER), execute),
+  KeyRules.rule(KeyMatch.inSet(Keys.SPACE), execute)
 ]);
 
 const getKeyupRules = Fun.constant([
-  KeyRules.rule(KeyMatch.inSet(Keys.SPACE()), KeyingTypes.stopEventForFirefox)
+  KeyRules.rule(KeyMatch.inSet(Keys.SPACE), KeyingTypes.stopEventForFirefox)
 ]);
 
 export default KeyingType.typical(schema, NoState.init, getKeydownRules, getKeyupRules, () => Optional.some(focusIn));

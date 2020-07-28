@@ -11,7 +11,7 @@ import * as TapEvent from './TapEvent';
 const isDangerous = (event: EventArgs<KeyboardEvent>): boolean => {
   // Will trigger the Back button in the browser
   const keyEv = event.raw();
-  return keyEv.which === Keys.BACKSPACE()[0] && !Arr.contains([ 'input', 'textarea' ], SugarNode.name(event.target())) && !SelectorExists.closest(event.target(), '[contenteditable="true"]');
+  return keyEv.which === Keys.BACKSPACE[0] && !Arr.contains([ 'input', 'textarea' ], SugarNode.name(event.target())) && !SelectorExists.closest(event.target(), '[contenteditable="true"]');
 };
 
 const isFirefox = (): boolean => PlatformDetection.detect().browser.isFirefox();
