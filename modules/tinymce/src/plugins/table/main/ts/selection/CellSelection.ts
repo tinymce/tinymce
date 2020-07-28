@@ -8,7 +8,7 @@
 import { InputHandlers, SelectionAnnotation, SelectionKeys } from '@ephox/darwin';
 import { Cell, Fun, Optional } from '@ephox/katamari';
 import { DomParent } from '@ephox/robin';
-import { OtherCells, TableFill, TableLookup, TableResize } from '@ephox/snooker';
+import { OtherCells, TableFill, TableLookup, TableResize, Direction } from '@ephox/snooker';
 import { Class, Compare, DomEvent, SelectionDirection, SimSelection, SugarElement, SugarNode } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -17,7 +17,6 @@ import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import * as Events from '../api/Events';
 import { getCloneElements } from '../api/Settings';
 import * as Util from '../core/Util';
-import * as Direction from '../queries/Direction';
 import * as Ephemera from './Ephemera';
 import { SelectionTargets } from './SelectionTargets';
 

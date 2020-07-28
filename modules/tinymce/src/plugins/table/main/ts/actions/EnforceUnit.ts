@@ -6,10 +6,9 @@
  */
 
 import { Arr } from '@ephox/katamari';
-import { TableConversions, TableDirection, TableLookup } from '@ephox/snooker';
+import { TableConversions, TableDirection, TableLookup, Direction } from '@ephox/snooker';
 import { Attribute, Css, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
-import * as Direction from '../queries/Direction';
 import * as TableSize from '../queries/TableSize';
 
 const enforcePercentage = (editor: Editor, table: SugarElement<HTMLTableElement>) => {

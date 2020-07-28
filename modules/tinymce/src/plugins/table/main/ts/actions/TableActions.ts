@@ -7,7 +7,7 @@
 
 import { Arr, Fun, Obj, Optional } from '@ephox/katamari';
 import { DomDescent } from '@ephox/phoenix';
-import { CellMutations, ResizeWire, RunOperation, TableDirection, TableFill, TableGridSize, TableOperations } from '@ephox/snooker';
+import { CellMutations, ResizeWire, RunOperation, TableDirection, TableFill, TableGridSize, TableOperations, Direction } from '@ephox/snooker';
 import { SugarElement, SugarNode } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -15,7 +15,6 @@ import { fireNewCell, fireNewRow } from '../api/Events';
 import { getCloneElements } from '../api/Settings';
 import { getRowType, switchCellType, switchSectionType } from '../core/TableSections';
 import * as Util from '../core/Util';
-import * as Direction from '../queries/Direction';
 import * as TableSize from '../queries/TableSize';
 import { getCellsFromSelection, getRowsFromSelection } from '../selection/TableSelection';
 

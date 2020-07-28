@@ -6,7 +6,7 @@
  */
 
 import { Fun } from '@ephox/katamari';
-import { Direction } from '@ephox/sugar';
+import { Direction, SugarElement } from '@ephox/sugar';
 
 const ltr = {
   isRtl: Fun.constant(false)
@@ -17,10 +17,7 @@ const rtl = {
 };
 
 // Get the directionality from the position in the content
-const directionAt = function (element) {
-  const dir = Direction.getDirection(element);
-  return dir === 'rtl' ? rtl : ltr;
-};
+const directionAt = (element: SugarElement<Element>) => Direction.getDirection(element) === 'rtl' ? rtl : ltr;
 
 export {
   directionAt

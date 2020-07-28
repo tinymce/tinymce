@@ -6,13 +6,12 @@
  */
 
 import { Optional } from '@ephox/katamari';
-import { ResizeBehaviour, ResizeWire, Sizes, TableDirection, TableResize } from '@ephox/snooker';
+import { ResizeBehaviour, ResizeWire, Sizes, TableDirection, TableResize, Direction } from '@ephox/snooker';
 import { Css, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import * as Events from '../api/Events';
 import * as Settings from '../api/Settings';
 import * as Util from '../core/Util';
-import * as Direction from '../queries/Direction';
 import * as TableSize from '../queries/TableSize';
 import { enforcePercentage, enforcePixels, syncPixels } from './EnforceUnit';
 import * as TableWire from './TableWire';
