@@ -32,7 +32,7 @@ export default (scrollIntoView: () => void): MobileRealm => {
 
   const dropup = Dropup.build(Fun.noop, scrollIntoView);
 
-  alloy.add(toolbar.wrapper());
+  alloy.add(toolbar.wrapper);
   alloy.add(socket);
   alloy.add(dropup.component);
 

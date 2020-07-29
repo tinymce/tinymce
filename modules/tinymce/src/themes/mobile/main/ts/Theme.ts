@@ -8,7 +8,7 @@
 import { AlloyTriggers, Attachment, Swapping } from '@ephox/alloy';
 import { Cell, Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Focus, SugarElement, SugarNode } from '@ephox/sugar';
+import { EventArgs, Focus, SugarElement, SugarNode } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import { NotificationSpec } from 'tinymce/core/api/NotificationManager';
@@ -148,8 +148,8 @@ const renderMobileTheme = (editor: Editor) => {
             hideDropup();
           },
 
-          onTapContent(evt) {
-            const target = evt.target();
+          onTapContent(evt: EventArgs<TouchEvent>) {
+            const target = evt.target;
             // If the user has tapped (touchstart, touchend without movement) on an image, select it.
             if (SugarNode.name(target) === 'img') {
               editor.selection.select(target.dom);

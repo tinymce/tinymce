@@ -5,7 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AddEventsBehaviour, AlloyEvents, Behaviour, Container, GuiFactory, Keying, Toggling, Toolbar, ToolbarGroup } from '@ephox/alloy';
+import {
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, Behaviour, Container, GuiFactory, Keying, Toggling, Toolbar, ToolbarGroup
+} from '@ephox/alloy';
 import { Arr, Cell, Fun } from '@ephox/katamari';
 import { Css } from '@ephox/sugar';
 
@@ -15,8 +17,8 @@ import * as Scrollable from '../touch/scroll/Scrollable';
 import * as UiDomFactory from '../util/UiDomFactory';
 
 export interface ScrollingToolbar {
-  readonly wrapper: any;
-  readonly toolbar: any;
+  readonly wrapper: AlloyComponent;
+  readonly toolbar: AlloyComponent;
   readonly createGroups: (gs) => void;
   readonly setGroups: (gs) => void;
   readonly setContextToolbar: (gs) => void;

@@ -9,6 +9,7 @@ import { Toggling } from '@ephox/alloy';
 import { Arr, Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Compare, DomEvent, Focus, SimRange, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
+import { PlatformEditor } from '../../ios/core/PlatformEditor';
 
 import * as TappingEvent from '../../util/TappingEvent';
 
@@ -25,7 +26,7 @@ const isAndroid6 = PlatformDetection.detect().os.version.major >= 6;
   an input or textarea
 
 */
-const initEvents = function (editorApi, toolstrip, alloy) {
+const initEvents = function (editorApi: PlatformEditor, toolstrip, alloy) {
 
   const tapping = TappingEvent.monitor(editorApi);
   const outerDoc = Traverse.owner(toolstrip);
@@ -43,12 +44,12 @@ const initEvents = function (editorApi, toolstrip, alloy) {
   };
 
   const updateMargin = function () {
-    const rangeInContent = editorApi.doc().dom.hasFocus() && editorApi.getSelection().exists(isRanged);
+    const rangeInContent = editorApi.doc.dom.hasFocus() && editorApi.getSelection().exists(isRanged);
     alloy.getByDom(toolstrip).each((rangeInContent || hasRangeInUi()) === true ? Toggling.on : Toggling.off);
   };
 
   const listeners = [
-    DomEvent.bind(editorApi.body(), 'touchstart', function (evt) {
+    DomEvent.bind(editorApi.body, 'touchstart', function (evt) {
       editorApi.onTouchContent();
       tapping.fireTouchstart(evt);
     }),
@@ -60,7 +61,7 @@ const initEvents = function (editorApi, toolstrip, alloy) {
     }),
 
     editorApi.onToReading(function () {
-      Focus.blur(editorApi.body());
+      Focus.blur(editorApi.body);
     }),
     editorApi.onToEditing(Fun.noop),
 
@@ -68,7 +69,7 @@ const initEvents = function (editorApi, toolstrip, alloy) {
     editorApi.onScrollToCursor(function (tinyEvent) {
       tinyEvent.preventDefault();
       editorApi.getCursorBox().each(function (bounds) {
-        const cWin = editorApi.win();
+        const cWin = editorApi.win;
         // The goal here is to shift as little as required.
         const isOutside = bounds.top > cWin.innerHeight || bounds.bottom > cWin.innerHeight;
         const cScrollBy = isOutside ? bounds.bottom - cWin.innerHeight + 50 /* EXTRA_SPACING*/ : 0;
@@ -79,11 +80,11 @@ const initEvents = function (editorApi, toolstrip, alloy) {
     })
   ].concat(
     isAndroid6 === true ? [ ] : [
-      DomEvent.bind(SugarElement.fromDom(editorApi.win()), 'blur', function () {
+      DomEvent.bind(SugarElement.fromDom(editorApi.win), 'blur', function () {
         alloy.getByDom(toolstrip).each(Toggling.off);
       }),
       DomEvent.bind(outerDoc, 'select', updateMargin),
-      DomEvent.bind(editorApi.doc(), 'selectionchange', updateMargin)
+      DomEvent.bind(editorApi.doc, 'selectionchange', updateMargin)
     ]
   );
 

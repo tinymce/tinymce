@@ -6,7 +6,36 @@
  */
 
 import { Fun, Optional } from '@ephox/katamari';
-import { Compare, DomEvent, RawRect, SimRange, SugarElement, WindowSelection } from '@ephox/sugar';
+import { Compare, DomEvent, EventArgs, RawRect, SimRange, SugarElement, WindowSelection } from '@ephox/sugar';
+
+// TODO finish adding the full types
+export interface PlatformEditor {
+  readonly body: SugarElement<HTMLElement>;
+  readonly doc: SugarElement<Document>;
+  readonly win: Window;
+  readonly html: SugarElement<HTMLElement>;
+
+  readonly getSelection: () => Optional<SimRange>;
+  readonly setSelection: (start, soffset, finish, foffset) => void;
+  readonly clearSelection: () => void;
+  readonly frame: SugarElement<HTMLIFrameElement>;
+
+  readonly onKeyup: (handler: (event) => void) => { unbind: () => void };
+  readonly onNodeChanged: (handler: (event) => void) => { unbind: () => void };
+  readonly onDomChanged: (handler: (event) => void) => { unbind: () => void };
+
+  readonly onScrollToCursor: (handler: (event) => void) => { unbind: () => void };
+  readonly onScrollToElement: (handler: (event) => void) => { unbind: () => void };
+  readonly onToReading: (handler: (event) => void) => { unbind: () => void };
+  readonly onToEditing: (handler: (event) => void) => { unbind: () => void };
+
+  readonly onToolbarScrollStart: () => void;
+  readonly onTouchContent: () => void;
+  readonly onTapContent: (event: EventArgs<TouchEvent>) => void;
+  readonly onTouchToolstrip: () => void;
+
+  readonly getCursorBox: () => Optional<RawRect>;
+}
 
 const getBodyFromFrame = function (frame) {
   return Optional.some(SugarElement.fromDom(frame.dom.contentWindow.document.body));
@@ -50,7 +79,7 @@ const getOrListen = function (editor, doc, name, type: string) {
   });
 };
 
-const getActiveApi = function (editor) {
+const getActiveApi = function (editor): Optional<PlatformEditor> {
   const frame = getFrame(editor);
 
   // Empty paragraphs can have no rectangle size, so let's just use the start container
@@ -97,14 +126,14 @@ const getActiveApi = function (editor) {
         });
 
         return {
-          body: Fun.constant(body),
-          doc: Fun.constant(doc),
-          win: Fun.constant(win),
-          html: Fun.constant(html),
+          body,
+          doc,
+          win,
+          html,
           getSelection: Fun.curry(getSelectionFromFrame, frame),
           setSelection,
           clearSelection,
-          frame: Fun.constant(frame),
+          frame,
 
           onKeyup: getOrListen(editor, doc, 'onKeyup', 'keyup'),
           onNodeChanged: getOrListen(editor, doc, 'onNodeChanged', 'SelectionChange'),

@@ -38,7 +38,7 @@ const create = function (platform, mask) {
 
       priorState.set({
         socketHeight: Css.getRaw(platform.socket, 'height'),
-        iframeHeight: Css.getRaw(editorApi.frame(), 'height'),
+        iframeHeight: Css.getRaw(editorApi.frame, 'height'),
         outerScroll: document.body.scrollTop
       });
 
@@ -49,7 +49,7 @@ const create = function (platform, mask) {
       });
 
       Class.add(platform.container, Styles.resolve('fullscreen-maximized'));
-      Thor.clobberStyles(platform.container, editorApi.body());
+      Thor.clobberStyles(platform.container, editorApi.body);
       meta.maximize();
 
       /* NOTE: Making the toolbar scrollable is now done when the middle group is created */
@@ -57,16 +57,16 @@ const create = function (platform, mask) {
       Css.set(platform.socket, 'overflow', 'scroll');
       Css.set(platform.socket, '-webkit-overflow-scrolling', 'touch');
 
-      Focus.focus(editorApi.body());
+      Focus.focus(editorApi.body);
 
       iosApi.set(
         IosSetup.setup({
-          cWin: editorApi.win(),
-          ceBody: editorApi.body(),
+          cWin: editorApi.win,
+          ceBody: editorApi.body,
           socket: platform.socket,
           toolstrip: platform.toolstrip,
           dropup: platform.dropup.element,
-          contentElement: editorApi.frame(),
+          contentElement: editorApi.frame,
           outerBody: platform.body,
           outerWindow: platform.win,
           keyboardType: IosKeyboard.stubborn

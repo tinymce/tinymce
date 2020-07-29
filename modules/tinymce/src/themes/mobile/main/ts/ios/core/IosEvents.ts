@@ -9,8 +9,9 @@ import { Arr, Throttler } from '@ephox/katamari';
 import { Compare, DomEvent, Height } from '@ephox/sugar';
 
 import * as TappingEvent from '../../util/TappingEvent';
+import { PlatformEditor } from './PlatformEditor';
 
-const initEvents = (editorApi, iosApi, toolstrip, socket, _dropup): { destroy: () => void } => {
+const initEvents = (editorApi: PlatformEditor, iosApi, toolstrip, socket, _dropup): { destroy: () => void } => {
   const saveSelectionFirst = () => {
     iosApi.run((api) => {
       api.highlightSelection();
@@ -124,8 +125,8 @@ const initEvents = (editorApi, iosApi, toolstrip, socket, _dropup): { destroy: (
 
     // If the user is touching outside the content, but on the body(?) or html elements, find the nearest selection
     // and focus that.
-    DomEvent.bind(editorApi.doc(), 'touchend', (touchEvent) => {
-      if (Compare.eq(editorApi.html(), touchEvent.target) || Compare.eq(editorApi.body(), touchEvent.target)) {
+    DomEvent.bind(editorApi.doc, 'touchend', (touchEvent) => {
+      if (Compare.eq(editorApi.html, touchEvent.target) || Compare.eq(editorApi.body, touchEvent.target)) {
         // IosHacks.setSelectionAtTouch(editorApi, touchEvent);
       }
     }),
@@ -154,7 +155,7 @@ const initEvents = (editorApi, iosApi, toolstrip, socket, _dropup): { destroy: (
     }),
 
     // When the user clicks back into the content, clear any fake selections
-    DomEvent.bind(editorApi.body(), 'touchstart', (evt) => {
+    DomEvent.bind(editorApi.body, 'touchstart', (evt) => {
       clearSelection();
       editorApi.onTouchContent();
       tapping.fireTouchstart(evt);
@@ -164,7 +165,7 @@ const initEvents = (editorApi, iosApi, toolstrip, socket, _dropup): { destroy: (
     tapping.onTouchend(),
 
     // Stop any "clicks" being processed in the body at alls
-    DomEvent.bind(editorApi.body(), 'click', (event) => {
+    DomEvent.bind(editorApi.body, 'click', (event) => {
       event.kill();
     }),
 

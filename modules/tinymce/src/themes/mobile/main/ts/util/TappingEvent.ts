@@ -7,9 +7,10 @@
 
 import { TapEvent } from '@ephox/alloy';
 import { DomEvent, EventUnbinder } from '@ephox/sugar';
+import { PlatformEditor } from '../ios/core/PlatformEditor';
 
 // TODO: TapEvent needs to be exposed in alloy's API somehow
-const monitor = (editorApi) => {
+const monitor = (editorApi: PlatformEditor) => {
   const tapEvent = TapEvent.monitor({
     triggerEvent(type, evt) {
       editorApi.onTapContent(evt);
@@ -17,11 +18,11 @@ const monitor = (editorApi) => {
   } as any);
 
   // convenience methods
-  const onTouchend = (): EventUnbinder => DomEvent.bind(editorApi.body(), 'touchend', (evt) => {
+  const onTouchend = (): EventUnbinder => DomEvent.bind(editorApi.body, 'touchend', (evt) => {
     tapEvent.fireIfReady(evt, 'touchend');
   });
 
-  const onTouchmove = (): EventUnbinder => DomEvent.bind(editorApi.body(), 'touchmove', (evt) => {
+  const onTouchmove = (): EventUnbinder => DomEvent.bind(editorApi.body, 'touchmove', (evt) => {
     tapEvent.fireIfReady(evt, 'touchmove');
   });
 
