@@ -19,6 +19,7 @@ import { AlloySpec } from '../component/SpecTypes';
 import * as AlloyEvents from '../events/AlloyEvents';
 import * as AlloyTriggers from '../events/AlloyTriggers';
 import * as NativeEvents from '../events/NativeEvents';
+import * as SystemEvents from '../events/SystemEvents';
 import * as Attachment from '../system/Attachment';
 import * as Sketcher from './Sketcher';
 import { CompositeSketchFactory } from './UiSketcher';
@@ -118,7 +119,7 @@ const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (det
   const modalEventsId = Id.generate('modal-events');
   const eventOrder = {
     ...detail.eventOrder,
-    'alloy.system.attached': [ modalEventsId ].concat(detail.eventOrder['alloy.system.attached'] || [])
+    [SystemEvents.attachedToDom()]: [ modalEventsId ].concat(detail.eventOrder['alloy.system.attached'] || [])
   };
 
   return {

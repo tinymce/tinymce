@@ -6,30 +6,32 @@ import { CustomEvent } from '../../events/SimulatedEvent';
 import { AlloyComponent } from '../component/ComponentApi';
 import * as NativeEvents from './NativeEvents';
 
-const alloy = { tap: Fun.constant('alloy.tap') };
+const prefixName = (name: string) => Fun.constant('alloy.' + name);
+
+const alloy = { tap: prefixName('tap') };
 
 // This is used to pass focus to a component. A component might interpret
 // this event and pass the DOM focus to one of its children, depending on its
 // focus model.
-const focus = Fun.constant('alloy.focus');
+const focus = prefixName('focus');
 
 // This event is fired a small amount of time after the blur has fired. This
 // allows the handler to know what was the focused element, and what is now.
-const postBlur = Fun.constant('alloy.blur.post');
+const postBlur = prefixName('blur.post');
 
 // This event is fired a small amount of time after the paste event has fired.
-const postPaste = Fun.constant('alloy.paste.post');
+const postPaste = prefixName('paste.post');
 
 // This event is fired by gui.broadcast*. It is defined by 'receivers'
-const receive = Fun.constant('alloy.receive');
+const receive = prefixName('receive');
 
 // This event is for executing buttons and things that have (mostly) enter actions
-const execute = Fun.constant('alloy.execute');
+const execute = prefixName('execute');
 
 // This event is used by a menu to tell an item to focus itself because it has been
 // selected. This might automatically focus inside the item, it might focus the outer
 // part of the widget etc.
-const focusItem = Fun.constant('alloy.focus.item');
+const focusItem = prefixName('focus.item');
 
 // This event represents a touchstart and touchend on the same location, and fires on
 // the touchend
@@ -42,43 +44,43 @@ const tap = alloy.tap;
 const tapOrClick = () => PlatformDetection.detect().deviceType.isTouch() ? alloy.tap() : NativeEvents.click();
 
 // This event represents a longpress on the same location
-const longpress = Fun.constant('alloy.longpress');
+const longpress = prefixName('longpress');
 
 // Fire by a child element to tell the outer element to close
-const sandboxClose = Fun.constant('alloy.sandbox.close');
+const sandboxClose = prefixName('sandbox.close');
 
 // Tell the typeahead to cancel any pending fetches (that haven't already executed)
-const typeaheadCancel = Fun.constant('alloy.typeahead.cancel');
+const typeaheadCancel = prefixName('typeahead.cancel');
 
 // Fired when adding to a world
-const systemInit = Fun.constant('alloy.system.init');
+const systemInit = prefixName('system.init');
 
 // Fired when a touchmove on the document happens
-const documentTouchmove = Fun.constant('alloy.system.touchmove');
+const documentTouchmove = prefixName('system.touchmove');
 
 // Fired when a touchend on the document happens
-const documentTouchend = Fun.constant('alloy.system.touchend');
+const documentTouchend = prefixName('system.touchend');
 
 // Fired when the window scrolls
-const windowScroll = Fun.constant('alloy.system.scroll');
+const windowScroll = prefixName('system.scroll');
 
 // Fired when the window resizes
-const windowResize = Fun.constant('alloy.system.resize');
+const windowResize = prefixName('system.resize');
 
-const attachedToDom = Fun.constant('alloy.system.attached');
-const detachedFromDom = Fun.constant('alloy.system.detached');
+const attachedToDom = prefixName('system.attached');
+const detachedFromDom = prefixName('system.detached');
 
-const dismissRequested = Fun.constant('alloy.system.dismissRequested');
-const repositionRequested = Fun.constant('alloy.system.repositionRequested');
+const dismissRequested = prefixName('system.dismissRequested');
+const repositionRequested = prefixName('system.repositionRequested');
 
 export interface AlloyFocusShiftedEvent extends CustomEvent {
   readonly prevFocus: Optional<SugarElement>;
   readonly newFocus: Optional<SugarElement>;
 }
 
-const focusShifted = Fun.constant('alloy.focusmanager.shifted');
+const focusShifted = prefixName('focusmanager.shifted');
 // Fired when slots are made hidden/shown
-const slotVisibility = Fun.constant('alloy.slotcontainer.visibility');
+const slotVisibility = prefixName('slotcontainer.visibility');
 
 export interface AlloySlotVisibilityEvent extends CustomEvent {
   readonly name: string;
@@ -92,11 +94,11 @@ export interface AlloyChangeTabEvent extends CustomEvent {
 export interface AlloyDismissTabEvent extends CustomEvent {
   readonly button: AlloyComponent;
 }
-const changeTab = Fun.constant('alloy.change.tab');
-const dismissTab = Fun.constant('alloy.dismiss.tab');
+const changeTab = prefixName('change.tab');
+const dismissTab = prefixName('dismiss.tab');
 
-const highlight = Fun.constant('alloy.highlight');
-const dehighlight = Fun.constant('alloy.dehighlight');
+const highlight = prefixName('highlight');
+const dehighlight = prefixName('dehighlight');
 
 export {
 

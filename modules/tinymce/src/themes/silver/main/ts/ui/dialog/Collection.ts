@@ -157,7 +157,7 @@ export const renderCollection = (spec: CollectionSpec, providersBackstage: UiFac
       AddEventsBehaviour.config('collection-events', collectionEvents)
     ]),
     eventOrder: {
-      'alloy.execute': [ 'disabling', 'alloy.base.behaviour', 'collection-events' ]
+      [SystemEvents.execute()]: [ 'disabling', 'alloy.base.behaviour', 'collection-events' ]
     }
   });
 
