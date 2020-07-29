@@ -5,13 +5,13 @@ import { Attribute, Css, DomEvent, Insert, Remove, Replication, SugarElement } f
 import * as DataTransfers from './DataTransfers';
 
 export interface DragnDropImageClone {
-  readonly element: () => SugarElement;
-  readonly x: () => number;
-  readonly y: () => number;
+  readonly element: SugarElement;
+  readonly x: number;
+  readonly y: number;
 }
 
 const createGhostClone = (image: DragnDropImageClone) => {
-  const ghost = Replication.deep(image.element());
+  const ghost = Replication.deep(image.element);
 
   // Firefox will scale down non ghost images to 175px so lets limit the size to 175px in general
   Css.setAll(ghost, {
@@ -33,7 +33,7 @@ const setDragImageFromClone = (transfer: DataTransfer, parent: SugarElement, ima
   const ghost = createGhostClone(image);
 
   Insert.append(parent, ghost);
-  DataTransfers.setDragImage(transfer, ghost.dom, image.x(), image.y());
+  DataTransfers.setDragImage(transfer, ghost.dom, image.x, image.y);
 
   setTimeout(() => {
     Remove.remove(ghost);
@@ -70,8 +70,8 @@ const setDragImageFromCloneEdgeFallback = (image: DragnDropImageClone, parent: S
 
   const drag = DomEvent.bind(target, 'drag', (evt) => {
     // The calculated position needs to at least be cord + 1 since it would otherwise interfere with dropping
-    const x = evt.x + Math.max(image.x() + 1, 1);
-    const y = evt.y + Math.max(image.y() + 1, 1);
+    const x = evt.x + Math.max(image.x + 1, 1);
+    const y = evt.y + Math.max(image.y + 1, 1);
 
     const ghost = ghostState.get().getOrThunk(() => {
       const newGhost = createGhostClone(image);

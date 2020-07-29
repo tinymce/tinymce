@@ -1,4 +1,3 @@
-import { Fun } from '@ephox/katamari';
 import { Class, Css, Replication, SugarElement } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
@@ -80,14 +79,12 @@ export default (): void => {
           return data;
         },
         getImage(component) {
+          const clone = Replication.deep(component.element);
+          Css.set(clone, 'background-color', 'blue');
           return {
-            element() {
-              const clone = Replication.deep(component.element);
-              Css.set(clone, 'background-color', 'blue');
-              return clone;
-            },
-            x: Fun.constant(0),
-            y: Fun.constant(0)
+            element: clone,
+            x: 0,
+            y: 0
           };
         },
         canDrag: (_component, _target) =>
