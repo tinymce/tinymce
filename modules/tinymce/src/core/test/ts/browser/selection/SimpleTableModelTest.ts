@@ -6,15 +6,15 @@ import * as SimpleTableModel from 'tinymce/core/selection/SimpleTableModel';
 
 UnitTest.asynctest('browser.tinymce.core.selection.SimpleTableModel', function (success, failure) {
 
-  const cFromDom = function (html) {
+  const cFromDom = function (html: string) {
     return Chain.injectThunked(function () {
       return SimpleTableModel.fromDom(SugarElement.fromHtml(html));
     });
   };
 
-  const cFromDomSubSection = function (html, startPath, endPath) {
+  const cFromDomSubSection = function (html: string, startPath: number[], endPath: number[]) {
     return Chain.binder(function (_) {
-      const tableElm = SugarElement.fromHtml(html);
+      const tableElm = SugarElement.fromHtml<HTMLTableElement>(html);
       const startElm = Hierarchy.follow(tableElm, startPath).getOrDie();
       const endElm = Hierarchy.follow(tableElm, endPath).getOrDie();
       return SimpleTableModel.subsection(SimpleTableModel.fromDom(tableElm), startElm, endElm).fold(
@@ -24,20 +24,20 @@ UnitTest.asynctest('browser.tinymce.core.selection.SimpleTableModel', function (
     });
   };
 
-  const cAssertWidth = function (expectedWidth) {
-    return Chain.op(function (tableModel: any) {
-      Assertions.assertEq('Should be expected width', expectedWidth, tableModel.width());
+  const cAssertWidth = function (expectedWidth: number) {
+    return Chain.op(function (tableModel: SimpleTableModel.TableModel) {
+      Assertions.assertEq('Should be expected width', expectedWidth, tableModel.width);
     });
   };
 
-  const cAssertHeight = function (expectedWidth) {
-    return Chain.op(function (tableModel: any) {
-      Assertions.assertEq('Should be expected height', expectedWidth, tableModel.rows().length);
+  const cAssertHeight = function (expectedWidth: number) {
+    return Chain.op(function (tableModel: SimpleTableModel.TableModel) {
+      Assertions.assertEq('Should be expected height', expectedWidth, tableModel.rows.length);
     });
   };
 
-  const cAssertModelAsHtml = function (expectedHtml) {
-    return Chain.op(function (tableModel) {
+  const cAssertModelAsHtml = function (expectedHtml: string) {
+    return Chain.op(function (tableModel: SimpleTableModel.TableModel) {
       const actualHtml = Html.getOuter(SimpleTableModel.toDom(tableModel));
       Assertions.assertHtml('Should be expected table html', expectedHtml, actualHtml);
     });

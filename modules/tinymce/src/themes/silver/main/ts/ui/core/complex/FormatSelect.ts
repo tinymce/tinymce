@@ -6,7 +6,7 @@
  */
 
 import { AlloyComponent, AlloyTriggers } from '@ephox/alloy';
-import { Fun, Optional } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { UiFactoryBackstage } from '../../../backstage/Backstage';
 import { updateMenuText } from '../../dropdown/CommonDropdown';
@@ -60,7 +60,7 @@ const getSpec = (editor: Editor): SelectSpec => {
     tooltip: 'Blocks',
     icon: Optional.none(),
     isSelectedFor,
-    getCurrentValue: Fun.constant(Optional.none()),
+    getCurrentValue: Optional.none,
     getPreviewFor,
     onAction: onActionToggleFormat(editor),
     setInitialValue,
