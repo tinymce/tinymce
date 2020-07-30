@@ -60,7 +60,7 @@ const create = (): Resource => {
     }
   };
 
-  const add = <T>(id: string, data: T) => {
+  const add = (id: string, data: any) => {
     if (resultFns[id] !== undefined) {
       resultFns[id](data);
       delete resultFns[id];
