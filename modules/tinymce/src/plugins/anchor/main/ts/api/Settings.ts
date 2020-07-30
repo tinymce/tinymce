@@ -5,15 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import * as Dialog from '../ui/Dialog';
 import Editor from 'tinymce/core/api/Editor';
 
-const register = (editor: Editor) => {
-  editor.addCommand('mceAnchor', () => {
-    Dialog.open(editor);
-  });
-};
+const isHtmlInNamedAnchorAllowed = (editor: Editor) => editor.getParam('allow_html_in_named_anchor', false, 'boolean');
 
 export {
-  register
+  isHtmlInNamedAnchorAllowed
 };
