@@ -9,17 +9,16 @@ import {
   AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Disabling, Focusing, FormField as AlloyFormField, Keying, Memento,
   NativeEvents, Representing, SimpleSpec, Tabstopping, Unselecting
 } from '@ephox/alloy';
-import { Types } from '@ephox/bridge';
+import { Dialog } from '@ephox/bridge';
 import { Fun, Optional } from '@ephox/katamari';
+
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as ReadOnly from '../../ReadOnly';
-
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 import * as Icons from '../icons/Icons';
-import { Omit } from '../Omit';
 import { formChangeEvent } from './FormEvents';
 
-type CheckboxSpec = Omit<Types.Checkbox.Checkbox, 'type'>;
+type CheckboxSpec = Omit<Dialog.Checkbox, 'type'>;
 
 export const renderCheckbox = (spec: CheckboxSpec, providerBackstage: UiFactoryBackstageProviders): SimpleSpec => {
   const repBehaviour = Representing.config({

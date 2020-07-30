@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Toolbar } from '@ephox/bridge';
 import { Optional } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
+import { InlineContent } from 'tinymce/core/api/ui/Ui';
 
 import * as Settings from '../api/Settings';
 import * as Actions from '../core/Actions';
@@ -72,7 +72,7 @@ const setupContextToolbars = function (editor: Editor) {
     editor.selection.collapse(false);
   };
 
-  const onSetupLink = (buttonApi: Toolbar.ContextButtonInstanceApi) => {
+  const onSetupLink = (buttonApi: InlineContent.ContextFormButtonInstanceApi) => {
     const node = editor.selection.getNode();
     buttonApi.setDisabled(!Utils.getAnchorElement(editor, node));
     return () => { };

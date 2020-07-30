@@ -9,7 +9,7 @@ import {
   AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Button, Disabling, FormField as AlloyFormField, Memento, NativeEvents,
   Representing, SimpleSpec, SimulatedEvent, SystemEvents, Tabstopping, Toggling
 } from '@ephox/alloy';
-import { Types } from '@ephox/bridge';
+import { Dialog } from '@ephox/bridge';
 import { Arr } from '@ephox/katamari';
 import { EventArgs } from '@ephox/sugar';
 
@@ -20,7 +20,6 @@ import { DisablingConfigs } from '../alien/DisablingConfigs';
 import { renderFormFieldWith, renderLabel } from '../alien/FieldLabeller';
 import { RepresentingConfigs } from '../alien/RepresentingConfigs';
 import { formChangeEvent } from '../general/FormEvents';
-import { Omit } from '../Omit';
 
 const extensionsAccepted = '.jpg,.jpeg,.png,.gif';
 
@@ -29,7 +28,7 @@ const filterByExtension = function (files: FileList) {
   return Arr.filter(Arr.from(files), (file) => re.test(file.name));
 };
 
-type DropZoneSpec = Omit<Types.DropZone.DropZone, 'type'>;
+type DropZoneSpec = Omit<Dialog.DropZone, 'type'>;
 
 export const renderDropZone = (spec: DropZoneSpec, providersBackstage: UiFactoryBackstageProviders): SimpleSpec => {
 

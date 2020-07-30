@@ -1,10 +1,10 @@
 import { GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { InlineContent } from '@ephox/bridge';
 import { Arr, Obj } from '@ephox/katamari';
 import { TinyActions, TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
+import { InlineContent } from 'tinymce/core/api/ui/Ui';
 import Promise from 'tinymce/core/api/util/Promise';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 

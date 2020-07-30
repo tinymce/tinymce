@@ -1,7 +1,7 @@
 import { FieldSchema } from '@ephox/boulder';
 import { Optional } from '@ephox/katamari';
 
-export interface FormComponentApi {
+export interface FormComponentSpec {
   type: string;
   name: string;
 }
@@ -11,7 +11,7 @@ export interface FormComponent {
   name: string;
 }
 
-export interface FormComponentWithLabelApi extends FormComponentApi {
+export interface FormComponentWithLabelSpec extends FormComponentSpec {
   label?: string;
 }
 

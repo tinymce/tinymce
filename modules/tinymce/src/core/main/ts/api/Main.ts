@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { TinyMCE, tinymce } from './Tinymce';
+import { tinymce, TinyMCE } from './Tinymce';
 
 declare const module: any;
 declare const window: any;

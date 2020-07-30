@@ -100,7 +100,7 @@ const applyFormat = function (ed: Editor, name: string, vars?: FormatVars, node?
   };
 
   const applyRngStyle = function (dom: DOMUtils, rng: RangeLikeObject, bookmark: IdBookmark | IndexBookmark, nodeSpecific?: boolean) {
-    const newWrappers: Node[] = [];
+    const newWrappers: Element[] = [];
     let contentEditable = true;
 
     // Setup wrapper element
@@ -149,9 +149,9 @@ const applyFormat = function (ed: Editor, name: string, vars?: FormatVars, node?
         // TODO: Break this if up, too complex
         if (contentEditable && !hasContentEditableState && format.block &&
           !format.wrapper && FormatUtils.isTextBlock(ed, nodeName) && FormatUtils.isValid(ed, parentName, wrapName)) {
-          node = dom.rename(node, wrapName);
-          setElementFormat(node);
-          newWrappers.push(node);
+          const elm = dom.rename(node as Element, wrapName);
+          setElementFormat(elm);
+          newWrappers.push(elm);
           currentWrapElm = 0;
           return;
         }
@@ -243,7 +243,7 @@ const applyFormat = function (ed: Editor, name: string, vars?: FormatVars, node?
         return child;
       };
 
-      const mergeStyles = function (node: Node) {
+      const mergeStyles = function (node: Element) {
         let clone;
 
         const child = getChildElementNode(node);
@@ -253,6 +253,7 @@ const applyFormat = function (ed: Editor, name: string, vars?: FormatVars, node?
           clone = dom.clone(child, false);
           setElementFormat(clone);
 
+          // "matchName" will made sure we're dealing with an element, so cast as one
           dom.replace(clone, node, true);
           dom.remove(child, true);
         }

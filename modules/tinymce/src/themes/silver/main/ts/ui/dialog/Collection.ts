@@ -9,7 +9,7 @@ import {
   AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Disabling, EventFormat, FormField as AlloyFormField, Keying,
   NativeEvents, Replacing, Representing, SimulatedEvent, SketchSpec, SystemEvents, Tabstopping
 } from '@ephox/alloy';
-import { Types } from '@ephox/bridge';
+import { Dialog } from '@ephox/bridge';
 import { Arr, Fun } from '@ephox/katamari';
 
 import { Attribute, Class, EventArgs, Focus, Html, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
@@ -22,9 +22,8 @@ import { detectSize } from '../alien/FlatgridAutodetect';
 import { formActionEvent, formResizeEvent } from '../general/FormEvents';
 import * as ItemClasses from '../menus/item/ItemClasses';
 import { deriveCollectionMovement } from '../menus/menu/MenuMovement';
-import { Omit } from '../Omit';
 
-type CollectionSpec = Omit<Types.Collection.Collection, 'type'>;
+type CollectionSpec = Omit<Dialog.Collection, 'type'>;
 
 export const renderCollection = (spec: CollectionSpec, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
   // DUPE with TextField.

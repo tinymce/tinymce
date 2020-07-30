@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Types } from '@ephox/bridge';
+import { Dialog } from 'tinymce/core/api/ui/Ui';
 
 // TODO: When we translate this, we should pull the HTML out into a HTML file, the way TBIO does it.
 // That requires webpack and rollup changes though, so inlining it for now.
@@ -73,8 +73,8 @@ const description = `<h1>Editor UI keyboard navigation</h1>
 <p>When a tabbed dialog is opened, the first button in the tab menu is focused. Pressing tab will navigate to the first interactive component in that tab, and will cycle through the tab’s components, the footer buttons, then back to the tab button. To switch to another tab, focus the tab button for the current tab, then use the arrow keys to cycle through the tab buttons.</p>`;
 /* eslint-enable max-len */
 
-const tab = (): Types.Dialog.TabApi => {
-  const body: Types.Dialog.BodyComponentApi = {
+const tab = (): Dialog.TabSpec => {
+  const body: Dialog.BodyComponentSpec = {
     type: 'htmlpanel',
     presets: 'document',
     html: description

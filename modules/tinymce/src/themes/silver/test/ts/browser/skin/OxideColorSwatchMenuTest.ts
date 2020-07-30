@@ -1,12 +1,12 @@
 import { ApproxStructure, Assertions, Chain, FocusTools, Guard, Keyboard, Keys, Logger, Mouse, Pipeline, UiFinder } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Menu } from '@ephox/bridge';
 import { Arr } from '@ephox/katamari';
 import { TinyLoader } from '@ephox/mcagar';
 import { SugarBody, SugarElement } from '@ephox/sugar';
-import Editor from 'tinymce/core/api/Editor';
 
+import Editor from 'tinymce/core/api/Editor';
+import { Menu } from 'tinymce/core/api/ui/Ui';
 import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('OxideColorSwatchMenuTest', (success, failure) => {
@@ -118,7 +118,7 @@ UnitTest.asynctest('OxideColorSwatchMenuTest', (success, failure) => {
               'blue',
               'black',
               'white'
-            ], (c) => ({ type: 'choiceitem', text: c, value: c } as Menu.ChoiceMenuItemApi));
+            ], (c) => ({ type: 'choiceitem', text: c, value: c } as Menu.ChoiceMenuItemSpec));
             callback(items.concat([
               {
                 type: 'choiceitem',

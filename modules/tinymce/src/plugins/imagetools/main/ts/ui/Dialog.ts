@@ -5,8 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Types } from '@ephox/bridge';
 import Editor from 'tinymce/core/api/Editor';
+import { Dialog } from 'tinymce/core/api/ui/Ui';
 import * as Actions from '../core/Actions';
 import * as ImageSize from '../core/ImageSize';
 import * as ImageToolsEvents from './ImageToolsEvents';
@@ -22,7 +22,7 @@ const createState = (blob: Blob): ImageToolsState => ({
 });
 
 const makeOpen = (editor: Editor, imageUploadTimerState) => () => {
-  const getLoadedSpec = (currentState: ImageToolsState): Types.Dialog.DialogApi<{ imagetools: ImageToolsState }> => ({
+  const getLoadedSpec = (currentState: ImageToolsState): Dialog.DialogSpec<{ imagetools: ImageToolsState }> => ({
     title: 'Edit Image',
     size: 'large',
     body: {

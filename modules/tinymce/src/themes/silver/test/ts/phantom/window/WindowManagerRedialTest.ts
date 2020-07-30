@@ -1,10 +1,10 @@
 import { Assertions, Chain, GeneralSteps, Logger, Mouse, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
-
 import { TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Types } from '@ephox/bridge';
 import { Cell } from '@ephox/katamari';
 import { SugarBody, Value } from '@ephox/sugar';
+
+import { Dialog } from 'tinymce/core/api/ui/Ui';
 import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 import TestExtras from '../../module/TestExtras';
 
@@ -12,11 +12,11 @@ UnitTest.asynctest('WindowManager:redial Test', (success, failure) => {
   const helpers = TestExtras();
   const windowManager = WindowManager.setup(helpers.extras);
 
-  const currentDialogApi = Cell<Types.Dialog.DialogInstanceApi<any>>({ } as any);
+  const currentDialogApi = Cell<Dialog.DialogInstanceApi<any>>({ } as any);
 
   const store = TestHelpers.TestStore();
 
-  const dialogA: Types.Dialog.DialogApi<any> = {
+  const dialogA: Dialog.DialogSpec<{}> = {
     title: 'DialogA',
     body: {
       type: 'panel',
@@ -60,7 +60,7 @@ UnitTest.asynctest('WindowManager:redial Test', (success, failure) => {
     }
   };
 
-  const dialogB: Types.Dialog.DialogApi<any> = {
+  const dialogB: Dialog.DialogSpec<{}> = {
     title: 'DialogB',
     body: {
       type: 'panel',
@@ -86,7 +86,7 @@ UnitTest.asynctest('WindowManager:redial Test', (success, failure) => {
     }
   };
 
-  const dialogC: Types.Dialog.DialogApi<any> = {
+  const dialogC: Dialog.DialogSpec<{ 'c.alpha': string }> = {
     title: 'DialogC',
     body: {
       type: 'tabpanel',

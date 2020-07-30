@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Types } from '@ephox/bridge';
+import { Dialog } from '@ephox/bridge';
 import { Future, Obj, Optional, Type } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -32,7 +32,7 @@ export interface ValidationResult {
 
 export interface UrlValidationQuery {
   url: string;
-  type: Types.UrlInput.UrlInput['filetype'];
+  type: Dialog.UrlInput['filetype'];
 }
 
 export type UrlValidationCallback = (result: ValidationResult) => void;

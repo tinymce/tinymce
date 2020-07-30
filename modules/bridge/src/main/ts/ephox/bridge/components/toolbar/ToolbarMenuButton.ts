@@ -1,11 +1,11 @@
 import { ValueSchema, FieldSchema } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
-import { BaseMenuButton, BaseMenuButtonApi, baseMenuButtonFields, BaseMenuButtonInstanceApi, MenuButtonItemTypes } from '../../core/MenuButton';
+import { BaseMenuButton, BaseMenuButtonSpec, baseMenuButtonFields, BaseMenuButtonInstanceApi, MenuButtonItemTypes } from '../../core/MenuButton';
 
 export type ToolbarMenuButtonItemTypes = MenuButtonItemTypes;
 export type SuccessCallback = (menu: string | ToolbarMenuButtonItemTypes[]) => void;
 
-export interface ToolbarMenuButtonApi extends BaseMenuButtonApi {
+export interface ToolbarMenuButtonSpec extends BaseMenuButtonSpec {
   type?: 'menubutton';
   onSetup?: (api: ToolbarMenuButtonInstanceApi) => (api: ToolbarMenuButtonInstanceApi) => void;
 }
@@ -24,4 +24,5 @@ export const MenuButtonSchema = ValueSchema.objOf([
 
 export const isMenuButtonButton = (spec: any): spec is ToolbarMenuButton => spec.type === 'menubutton';
 
-export const createMenuButton = (spec: any): Result<ToolbarMenuButton, ValueSchema.SchemaError<any>> => ValueSchema.asRaw<ToolbarMenuButton>('menubutton', MenuButtonSchema, spec);
+export const createMenuButton = (spec: ToolbarMenuButtonSpec): Result<ToolbarMenuButton, ValueSchema.SchemaError<any>> =>
+  ValueSchema.asRaw<ToolbarMenuButton>('menubutton', MenuButtonSchema, spec);

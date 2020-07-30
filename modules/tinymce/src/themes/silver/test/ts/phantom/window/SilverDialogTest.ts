@@ -1,10 +1,10 @@
 import { ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Mouse, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Types } from '@ephox/bridge';
-
 import { Cell } from '@ephox/katamari';
 import { SugarBody, SugarElement } from '@ephox/sugar';
+
+import { Dialog } from 'tinymce/core/api/ui/Ui';
 import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 import TestExtras from '../../module/TestExtras';
 
@@ -12,7 +12,7 @@ UnitTest.asynctest('WindowManager:simple-dialog Test', (success, failure) => {
   const helpers = TestExtras();
   const windowManager = WindowManager.setup(helpers.extras);
 
-  const currentApi = Cell<Types.Dialog.DialogInstanceApi<any>>({ } as any);
+  const currentApi = Cell<Dialog.DialogInstanceApi<any>>({ } as any);
 
   const store = TestHelpers.TestStore();
 

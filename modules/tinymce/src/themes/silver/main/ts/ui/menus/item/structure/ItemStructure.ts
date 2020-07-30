@@ -6,7 +6,7 @@
  */
 
 import { AlloySpec, RawDomSchema } from '@ephox/alloy';
-import { Types } from '@ephox/bridge';
+import { Toolbar } from '@ephox/bridge';
 import { Arr, Fun, Obj, Optional } from '@ephox/katamari';
 import I18n from 'tinymce/core/api/util/I18n';
 import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
@@ -20,7 +20,7 @@ export interface ItemStructure {
 }
 
 export interface ItemStructureSpec {
-  presets: Types.PresetItemTypes;
+  presets: Toolbar.PresetItemTypes;
   iconContent: Optional<string>;
   textContent: Optional<string>;
   htmlContent: Optional<string>;

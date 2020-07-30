@@ -198,7 +198,7 @@ UnitTest.asynctest('browser.tinymce.core.selection.SelectionBookmarkTest', funct
     ])),
     Logger.t('readRange with with win without getSelection should return Optional.none', Chain.asStep({}, [
       Chain.injectThunked(function () {
-        const mockWin = { getSelection: Fun.constant(null) };
+        const mockWin = { getSelection: Fun.constant(null) } as Window;
         return SelectionBookmark.readRange(mockWin);
       }),
       cAssertNone()

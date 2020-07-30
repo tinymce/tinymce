@@ -159,7 +159,7 @@ const combinePlugins = function (forcedPlugins: string[], plugins: string[]): st
   return [].concat(normalizePlugins(forcedPlugins)).concat(normalizePlugins(plugins));
 };
 
-const processPlugins = function (isMobileDevice: boolean, sectionResult: SectionResult, defaultOverrideSettings: RawEditorSettings, settings: RawEditorSettings): EditorSettings {
+const processPlugins = function (isMobileDevice: boolean, sectionResult: SectionResult, defaultOverrideSettings: RawEditorSettings, settings: RawEditorSettings & { external_plugins: Record<string, string> }): EditorSettings {
   const forcedPlugins = normalizePlugins(defaultOverrideSettings.forced_plugins);
   const desktopPlugins = normalizePlugins(settings.plugins);
 

@@ -5,8 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Types } from '@ephox/bridge';
 import { Optional } from '@ephox/katamari';
+import { Dialog } from 'tinymce/core/api/ui/Ui';
 
 import { ImageData } from '../core/ImageData';
 import { UploadHandler } from '../core/Uploader';
@@ -81,4 +81,4 @@ export interface ImageDialogData {
   isDecorative: boolean;
 }
 
-export type API = Types.Dialog.DialogInstanceApi<ImageDialogData>;
+export type API = Dialog.DialogInstanceApi<ImageDialogData>;

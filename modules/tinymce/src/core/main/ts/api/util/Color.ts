@@ -37,6 +37,8 @@ interface Color {
   parse (value: string | RGB | HSV): Color;
 }
 
+export type ColorConstructor = new (value?: string | RGB | HSV) => Color;
+
 /**
  * Constructs a new color instance.
  *
@@ -44,7 +46,7 @@ interface Color {
  * @method Color
  * @param {String} value Optional initial value to parse.
  */
-const Color = function (value?): Color {
+const Color = function (value?: string | RGB | HSV): Color {
   const self: any = {};
   let r = 0, g = 0, b = 0;
 

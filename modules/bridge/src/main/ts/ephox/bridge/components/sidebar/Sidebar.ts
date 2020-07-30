@@ -5,7 +5,7 @@ export interface SidebarInstanceApi {
   element: () => HTMLElement;
 }
 
-export interface SidebarApi {
+export interface SidebarSpec {
   icon?: string;
   tooltip?: string;
   onShow?: (api: SidebarInstanceApi) => void;
@@ -29,4 +29,4 @@ export const sidebarSchema = ValueSchema.objOf([
   FieldSchema.defaultedFunction('onSetup', () => Fun.noop)
 ]);
 
-export const createSidebar = <T>(spec: SidebarApi): Result<Sidebar, ValueSchema.SchemaError<any>> => ValueSchema.asRaw('sidebar', sidebarSchema, spec);
+export const createSidebar = (spec: SidebarSpec): Result<Sidebar, ValueSchema.SchemaError<any>> => ValueSchema.asRaw('sidebar', sidebarSchema, spec);

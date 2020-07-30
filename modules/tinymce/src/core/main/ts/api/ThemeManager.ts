@@ -21,4 +21,7 @@ export type Theme = {
   getWindowManagerImpl? (): WindowManagerImpl;
 };
 
-export default AddOnManager.ThemeManager as AddOnManager<Theme>;
+type ThemeManager = AddOnManager<Theme>;
+const ThemeManager: ThemeManager = AddOnManager.ThemeManager;
+
+export default ThemeManager;

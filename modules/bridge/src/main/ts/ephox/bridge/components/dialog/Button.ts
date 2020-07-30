@@ -1,7 +1,7 @@
 import { FieldPresence, FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Id, Optional, Result } from '@ephox/katamari';
 
-export interface ButtonApi {
+export interface ButtonSpec {
   type: 'button';
   text: string;
   disabled?: boolean;
@@ -38,4 +38,5 @@ const buttonFields = [
 
 export const buttonSchema = ValueSchema.objOf(buttonFields);
 
-export const createButton = (spec: ButtonApi): Result<Button, ValueSchema.SchemaError<any>> => ValueSchema.asRaw<Button>('button', buttonSchema, spec);
+export const createButton = (spec: ButtonSpec): Result<Button, ValueSchema.SchemaError<any>> =>
+  ValueSchema.asRaw<Button>('button', buttonSchema, spec);

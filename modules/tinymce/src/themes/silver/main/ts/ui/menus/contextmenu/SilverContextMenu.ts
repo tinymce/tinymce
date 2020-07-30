@@ -15,15 +15,15 @@ import * as DesktopContextMenu from './platform/DesktopContextMenu';
 import * as MobileContextMenu from './platform/MobileContextMenu';
 import * as Settings from './Settings';
 
-type MenuItem = string | Menu.MenuItemApi | Menu.NestedMenuItemApi | Menu.SeparatorMenuItemApi;
+type MenuItem = string | Menu.MenuItemSpec | Menu.NestedMenuItemSpec | Menu.SeparatorMenuItemSpec;
 
 const isSeparator = (item: MenuItem): boolean => Type.isString(item) ? item === '|' : item.type === 'separator';
 
-const separator: Menu.SeparatorMenuItemApi = {
+const separator: Menu.SeparatorMenuItemSpec = {
   type: 'separator'
 };
 
-const makeContextItem = (item: string | Menu.ContextMenuItem | Menu.SeparatorMenuItemApi | Menu.ContextSubMenu): MenuItem => {
+const makeContextItem = (item: string | Menu.ContextMenuItem | Menu.SeparatorMenuItemSpec | Menu.ContextSubMenu): MenuItem => {
   if (Type.isString(item)) {
     return item;
   } else {

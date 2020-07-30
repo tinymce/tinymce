@@ -515,7 +515,7 @@ UnitTest.test('DOMUtils.remove', () => {
   Assert.eq('', '<span>test</span><span>test2</span>', DOM.get('test').innerHTML.toLowerCase());
 
   DOM.setHTML('test', '<span id="test2"><span>test</span><span>test2</span></span>');
-  Assert.eq('', 'SPAN', DOM.remove('test2').nodeName);
+  Assert.eq('', 'SPAN', (DOM.remove('test2') as Node).nodeName);
 
   DOM.remove('test');
 });

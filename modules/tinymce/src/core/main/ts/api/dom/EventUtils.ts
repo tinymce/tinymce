@@ -26,12 +26,12 @@ interface PartialEvent {
 export type EventUtilsEvent<T> = T & {
   type: string;
   target: any;
-  readonly isDefaultPrevented: () => boolean;
-  readonly preventDefault: () => void;
-  readonly isPropagationStopped: () => boolean;
-  readonly stopPropagation: () => void;
-  readonly isImmediatePropagationStopped: () => boolean;
-  readonly stopImmediatePropagation: () => void;
+  isDefaultPrevented: () => boolean;
+  preventDefault: () => void;
+  isPropagationStopped: () => boolean;
+  stopPropagation: () => void;
+  isImmediatePropagationStopped: () => boolean;
+  stopImmediatePropagation: () => void;
 };
 
 /**
@@ -215,9 +215,9 @@ const bindOnReady = function (win, callback, eventUtils) {
 export interface EventUtilsConstructor {
   readonly prototype: EventUtils;
 
-  Event: EventUtils;
-
   new (): EventUtils;
+
+  Event: EventUtils;
 }
 
 /**
@@ -253,9 +253,9 @@ class EventUtils {
    * @param {Object} scope Scope to call the callback function on, defaults to target.
    * @return {function} Callback function that got bound.
    */
-  public bind <K extends keyof HTMLElementEventMap>(target: any, name: K, callback: EventUtilsCallback<HTMLElementEventMap[K]>, scope?: {}): EventUtilsCallback<HTMLElementEventMap[K]>;
-  public bind <T = any>(target: any, names: string, callback: EventUtilsCallback<T>, scope?: {}): EventUtilsCallback<T>;
-  public bind(target: any, names: string, callback: EventUtilsCallback<any>, scope?: {}): EventUtilsCallback<any> {
+  public bind <K extends keyof HTMLElementEventMap>(target: any, name: K, callback: EventUtilsCallback<HTMLElementEventMap[K]>, scope?: any): EventUtilsCallback<HTMLElementEventMap[K]>;
+  public bind <T = any>(target: any, names: string, callback: EventUtilsCallback<T>, scope?: any): EventUtilsCallback<T>;
+  public bind(target: any, names: string, callback: EventUtilsCallback<any>, scope?: any): EventUtilsCallback<any> {
     const self = this;
     let id, callbackList, i, name, fakeName, nativeHandler, capture;
     const win = window;

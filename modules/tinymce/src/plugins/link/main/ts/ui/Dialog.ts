@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Types } from '@ephox/bridge';
 import { Arr, Optional, Optionals } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
+import { Dialog } from 'tinymce/core/api/ui/Ui';
 
 import * as Settings from '../api/Settings';
 import { ListOptions } from '../core/ListOptions';
@@ -17,7 +17,7 @@ import { DialogConfirms } from './DialogConfirms';
 import { DialogInfo } from './DialogInfo';
 import { LinkDialogData, LinkDialogInfo } from './DialogTypes';
 
-const handleSubmit = (editor: Editor, info: LinkDialogInfo) => (api: Types.Dialog.DialogInstanceApi<LinkDialogData>) => {
+const handleSubmit = (editor: Editor, info: LinkDialogInfo) => (api: Dialog.DialogInstanceApi<LinkDialogData>) => {
   const data: LinkDialogData = api.getData();
 
   if (!data.url.value) {
@@ -80,9 +80,9 @@ const getInitialData = (info: LinkDialogInfo, defaultTarget: Optional<string>): 
   linkClass: info.anchor.linkClass.getOr('')
 });
 
-const makeDialog = (settings: LinkDialogInfo, onSubmit, editor: Editor): Types.Dialog.DialogApi<LinkDialogData> => {
+const makeDialog = (settings: LinkDialogInfo, onSubmit, editor: Editor): Dialog.DialogSpec<LinkDialogData> => {
 
-  const urlInput: Types.Dialog.BodyComponentApi[] = [
+  const urlInput: Dialog.UrlInputSpec[] = [
     {
       name: 'url',
       type: 'urlinput',
@@ -91,7 +91,7 @@ const makeDialog = (settings: LinkDialogInfo, onSubmit, editor: Editor): Types.D
     }
   ];
 
-  const displayText = settings.anchor.text.map<Types.Dialog.BodyComponentApi>(() => (
+  const displayText = settings.anchor.text.map<Dialog.InputSpec>(() => (
     {
       name: 'text',
       type: 'input',
@@ -99,7 +99,7 @@ const makeDialog = (settings: LinkDialogInfo, onSubmit, editor: Editor): Types.D
     }
   )).toArray();
 
-  const titleText: Types.Dialog.BodyComponentApi[] = settings.flags.titleEnabled ? [
+  const titleText: Dialog.InputSpec[] = settings.flags.titleEnabled ? [
     {
       name: 'title',
       type: 'input',
@@ -113,13 +113,13 @@ const makeDialog = (settings: LinkDialogInfo, onSubmit, editor: Editor): Types.D
   const dialogDelta = DialogChanges.init(initialData, settings);
   const catalogs = settings.catalogs;
 
-  const body: Types.Dialog.PanelApi = {
+  const body: Dialog.PanelSpec = {
     type: 'panel',
-    items: Arr.flatten([
+    items: Arr.flatten<Dialog.BodyComponentSpec>([
       urlInput,
       displayText,
       titleText,
-      Optionals.cat<Types.Dialog.BodyComponentApi>([
+      Optionals.cat([
         catalogs.anchor.map(ListOptions.createUi('anchor', 'Anchors')),
         catalogs.rels.map(ListOptions.createUi('rel', 'Rel')),
         catalogs.targets.map(ListOptions.createUi('target', 'Open link in...')),
@@ -146,7 +146,7 @@ const makeDialog = (settings: LinkDialogInfo, onSubmit, editor: Editor): Types.D
       }
     ],
     initialData,
-    onChange: (api: Types.Dialog.DialogInstanceApi<LinkDialogData>, { name }) => {
+    onChange: (api: Dialog.DialogInstanceApi<LinkDialogData>, { name }) => {
       dialogDelta.onChange(api.getData, { name }).each((newData) => {
         api.setData(newData);
       });

@@ -16,7 +16,7 @@ import { isReadOnly, registerReadOnlyContentFilters, registerReadOnlySelectionBl
  * @class tinymce.EditorMode
  */
 
-export interface Mode {
+export interface EditorMode {
   /**
    * @method isReadOnly
    * @return {Boolean} true if the editor is in a readonly state.
@@ -41,12 +41,12 @@ export interface Mode {
    * Registers a new editor mode.
    *
    * @method register
-   * @param {ModeApi} api Activation and Deactivation API for the new mode.
+   * @param {EditorModeApi} api Activation and Deactivation API for the new mode.
    */
-  register: (mode: string, api: ModeApi) => void;
+  register: (mode: string, api: EditorModeApi) => void;
 }
 
-export interface ModeApi {
+export interface EditorModeApi {
   /**
    * Handler to activate this mode, called before deactivating the previous mode.
    *
@@ -70,9 +70,9 @@ export interface ModeApi {
   editorReadOnly: boolean;
 }
 
-export const create = (editor: Editor): Mode => {
+export const create = (editor: Editor): EditorMode => {
   const activeMode = Cell('design');
-  const availableModes = Cell<Record<string, ModeApi>>({
+  const availableModes = Cell<Record<string, EditorModeApi>>({
     design: {
       activate: Fun.noop,
       deactivate: Fun.noop,
@@ -92,7 +92,7 @@ export const create = (editor: Editor): Mode => {
     isReadOnly: () => isReadOnly(editor),
     set: (mode: string) => setMode(editor, availableModes.get(), activeMode, mode),
     get: () => activeMode.get(),
-    register: (mode: string, api: ModeApi) => {
+    register: (mode: string, api: EditorModeApi) => {
       availableModes.set(registerMode(availableModes.get(), mode, api));
     }
   };

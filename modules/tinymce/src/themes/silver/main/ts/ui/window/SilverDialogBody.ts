@@ -6,7 +6,7 @@
  */
 
 import { AlloySpec, Behaviour, Focusing, Keying, ModalDialog, Reflecting, Tabstopping } from '@ephox/alloy';
-import { Types } from '@ephox/bridge';
+import { Dialog } from '@ephox/bridge';
 import { Fun, Optional } from '@ephox/katamari';
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { ComposingConfigs } from '../alien/ComposingConfigs';
@@ -17,7 +17,7 @@ import { bodyChannel } from './DialogChannels';
 
 // TypeScript allows some pretty weird stuff.
 type WindowBodySpec = {
-  body: Types.Dialog.Dialog<unknown>['body'];
+  body: Dialog.Dialog<unknown>['body'];
 };
 
 // ariaAttrs is being passed through to silver inline dialog
@@ -78,7 +78,7 @@ const renderModalBody = (spec: WindowBodySpec, backstage: UiFactoryBackstage) =>
   );
 };
 
-const renderIframeBody = (spec: Types.UrlDialog.UrlDialog) => {
+const renderIframeBody = (spec: Dialog.UrlDialog) => {
   const bodySpec = {
     dom: {
       tag: 'div',

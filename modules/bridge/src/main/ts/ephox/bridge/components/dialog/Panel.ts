@@ -1,4 +1,4 @@
-import { BodyComponentApi, BodyComponent } from './BodyComponent';
+import { BodyComponentSpec, BodyComponent } from './BodyComponent';
 import { Result } from '@ephox/katamari';
 import { ValueSchema, FieldSchema, FieldPresence } from '@ephox/boulder';
 import { alertBannerSchema } from './AlertBanner';
@@ -22,10 +22,10 @@ import { collectionSchema } from './Collection';
 import { createLabelFields } from './Label';
 import { tableSchema } from './Table';
 
-export interface PanelApi {
+export interface PanelSpec {
   type: 'panel';
   classes?: string[];
-  items: BodyComponentApi[];
+  items: BodyComponentSpec[];
 }
 
 export interface Panel {
@@ -79,4 +79,5 @@ const panelFields = [
 
 export const panelSchema = ValueSchema.objOf(panelFields);
 
-export const createPanel = (spec: PanelApi): Result<Panel, ValueSchema.SchemaError<any>> => ValueSchema.asRaw<Panel>('panel', panelSchema, spec);
+export const createPanel = (spec: PanelSpec): Result<Panel, ValueSchema.SchemaError<any>> =>
+  ValueSchema.asRaw<Panel>('panel', panelSchema, spec);

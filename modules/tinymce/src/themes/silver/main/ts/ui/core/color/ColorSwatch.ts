@@ -6,9 +6,9 @@
  */
 
 import { HexColour, RgbaColour } from '@ephox/acid';
-import { Menu, Toolbar, Types } from '@ephox/bridge';
 import { Cell, Fun, Optional, Strings } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
+import { Dialog, Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
 import * as Events from '../../../api/Events';
 import * as Settings from './Settings';
 
@@ -64,7 +64,7 @@ const getColorCols = function (editor: Editor) {
   return Settings.getColorCols(editor, defaultCols);
 };
 
-const getAdditionalColors = (hasCustom: boolean): Menu.ChoiceMenuItemApi[] => {
+const getAdditionalColors = (hasCustom: boolean): Menu.ChoiceMenuItemSpec[] => {
   const type: 'choiceitem' = 'choiceitem';
   const remove = {
     type,
@@ -103,9 +103,9 @@ const applyColor = function (editor: Editor, format, value, onChoice: (v: string
   }
 };
 
-const getColors = (colors: Menu.ChoiceMenuItemApi[], hasCustom: boolean): Menu.ChoiceMenuItemApi[] => colors.concat(Settings.getCurrentColors().concat(getAdditionalColors(hasCustom)));
+const getColors = (colors: Menu.ChoiceMenuItemSpec[], hasCustom: boolean): Menu.ChoiceMenuItemSpec[] => colors.concat(Settings.getCurrentColors().concat(getAdditionalColors(hasCustom)));
 
-const getFetch = (colors: Menu.ChoiceMenuItemApi[], hasCustom: boolean) => (callback) => {
+const getFetch = (colors: Menu.ChoiceMenuItemSpec[], hasCustom: boolean) => (callback) => {
   callback(getColors(colors, hasCustom));
 };
 
@@ -191,7 +191,7 @@ const colorPickerDialog = (editor: Editor) => (callback, value: string) => {
     api.close();
   };
 
-  const onAction = (api: Types.Dialog.DialogInstanceApi<ColorSwatchDialogData>, details) => {
+  const onAction = (api: Dialog.DialogInstanceApi<ColorSwatchDialogData>, details) => {
     if (details.name === 'hex-valid') {
       if (details.value) {
         api.enable('ok');

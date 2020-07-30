@@ -5,13 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Types } from '@ephox/bridge';
+import { KeyingConfigSpec, MenuTypes } from '@ephox/alloy';
+import { Toolbar } from '@ephox/bridge';
+import { colorClass, selectableClass } from '../item/ItemClasses';
 
 import { markers as getMenuMarkers } from './MenuParts';
-import { selectableClass, colorClass } from '../item/ItemClasses';
-import { MenuTypes, KeyingConfigSpec } from '@ephox/alloy';
 
-export const deriveMenuMovement = (columns: number | 'auto', presets: Types.PresetTypes): MenuTypes.MenuMovementSpec => {
+export const deriveMenuMovement = (columns: number | 'auto', presets: Toolbar.PresetTypes): MenuTypes.MenuMovementSpec => {
   const menuMarkers = getMenuMarkers(presets);
   if (columns === 1) {
     return { mode: 'menu', moveOnTab: true } as MenuTypes.MenuNormalMovementSpec;
@@ -33,7 +33,7 @@ export const deriveMenuMovement = (columns: number | 'auto', presets: Types.Pres
   }
 };
 
-export const deriveCollectionMovement = (columns: number | 'auto', presets: Types.PresetTypes): KeyingConfigSpec => {
+export const deriveCollectionMovement = (columns: number | 'auto', presets: Toolbar.PresetTypes): KeyingConfigSpec => {
   if (columns === 1) {
     return {
       mode: 'menu',

@@ -5,15 +5,15 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Menu } from '@ephox/bridge';
 import Editor from 'tinymce/core/api/Editor';
+import { Menu } from 'tinymce/core/api/ui/Ui';
 import { isOlNode } from '../core/NodeType';
 import { getParentList } from '../core/Selection';
 import * as Util from '../core/Util';
 import * as Dialog from './Dialog';
 
 const register = (editor: Editor) => {
-  const listProperties: Menu.MenuItemApi = {
+  const listProperties: Menu.MenuItemSpec = {
     text: 'List properties...',
     icon: 'ordered-list',
     onAction: () => Dialog.open(editor),

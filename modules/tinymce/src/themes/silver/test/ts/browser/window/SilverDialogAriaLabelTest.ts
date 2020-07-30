@@ -1,11 +1,11 @@
 import { Chain, GeneralSteps, Logger, NamedChain, Pipeline, UiFinder } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Types } from '@ephox/bridge';
 import { Result } from '@ephox/katamari';
 import { TinyLoader } from '@ephox/mcagar';
 import { Attribute, SugarBody, SugarElement } from '@ephox/sugar';
 
+import { Dialog } from 'tinymce/core/api/ui/Ui';
 import Theme from 'tinymce/themes/silver/Theme';
 import * as DialogUtils from '../../module/DialogUtils';
 
@@ -28,7 +28,7 @@ UnitTest.asynctest('WindowManager:inline-dialog Test', (success, failure) => {
       NamedChain.bundle((obj) => UiFinder.findIn(obj.dialog, `#${obj.labelId}`))
     ]) ]);
 
-    const dialogSpec: Types.Dialog.DialogApi<{}> = {
+    const dialogSpec: Dialog.DialogSpec<{}> = {
       title: 'Silver Test Inline (Toolbar) Dialog',
       body: {
         type: 'panel',

@@ -230,7 +230,7 @@ const removeFormat = (ed: Editor, format: RemoveFormatPartial, vars?: FormatVars
     // Note: If there are no attributes left, the element will be removed as normal at the end of the function
     if (attrsToPreserve.length > 0) {
       // Convert inline element to span if necessary
-      ed.dom.rename(node, 'span');
+      ed.dom.rename(elm, 'span');
       return true;
     }
   }

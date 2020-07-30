@@ -1,4 +1,5 @@
 Version 5.5.0 (TBD)
+    Added a TypeScript declaration file to the bundle output for TinyMCE core #TINY-3785
     Added new `table_column_resizing` setting to control how the table is affected when resizing columns using the resize bars #TINY-6001
     Added ability to load TinyMCE in inline mode within a ShadowRoot #TINY-6128
     Added the ability to remove images on a failed upload using the `images_upload_handler` failure callback #TINY-6011

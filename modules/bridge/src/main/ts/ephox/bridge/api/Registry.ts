@@ -1,54 +1,55 @@
-import { AutocompleterApi } from '../components/content/Autocompleter';
+import { AutocompleterSpec } from '../components/content/Autocompleter';
+import { ContextFormSpec } from '../components/content/ContextForm';
+import { ContextToolbarSpec } from '../components/content/ContextToolbar';
 import { ContextMenuApi } from '../components/menu/ContextMenu';
-import { MenuItemApi } from '../components/menu/MenuItem';
-import { NestedMenuItemApi } from '../components/menu/NestedMenuItem';
-import { ToggleMenuItemApi } from '../components/menu/ToggleMenuItem';
-import { SidebarApi } from '../components/sidebar/Sidebar';
-import { ContextFormApi, ContextToolbarApi } from '../components/toolbar/ContextToolbar';
-import { GroupToolbarButtonApi } from '../components/toolbar/GroupToolbarButton';
-import { ToolbarButtonApi } from '../components/toolbar/ToolbarButton';
-import { ToolbarMenuButtonApi } from '../components/toolbar/ToolbarMenuButton';
-import { ToolbarSplitButtonApi } from '../components/toolbar/ToolbarSplitButton';
-import { ToolbarToggleButtonApi } from '../components/toolbar/ToolbarToggleButton';
+import { MenuItemSpec } from '../components/menu/MenuItem';
+import { NestedMenuItemSpec } from '../components/menu/NestedMenuItem';
+import { ToggleMenuItemSpec } from '../components/menu/ToggleMenuItem';
+import { SidebarSpec } from '../components/sidebar/Sidebar';
+import { GroupToolbarButtonSpec } from '../components/toolbar/GroupToolbarButton';
+import { ToolbarButtonSpec } from '../components/toolbar/ToolbarButton';
+import { ToolbarMenuButtonSpec } from '../components/toolbar/ToolbarMenuButton';
+import { ToolbarSplitButtonSpec } from '../components/toolbar/ToolbarSplitButton';
+import { ToolbarToggleButtonSpec } from '../components/toolbar/ToolbarToggleButton';
 
 // This would be part of the tinymce api under editor.ui.* so editor.ui.addButton('bold', ...)
 // TODO: This should maybe not be part of this project but rather something built into tinymce core using these public types
 
 export interface Registry {
-  addButton: (name: string, spec: ToolbarButtonApi) => void;
-  addGroupToolbarButton: (name: string, spec: GroupToolbarButtonApi) => void;
-  addToggleButton: (name: string, spec: ToolbarToggleButtonApi) => void;
-  addMenuButton: (name: string, spec: ToolbarMenuButtonApi) => void;
-  addSplitButton: (name: string, spec: ToolbarSplitButtonApi) => void;
-  addMenuItem: (name: string, spec: MenuItemApi) => void;
-  addNestedMenuItem: (name: string, spec: NestedMenuItemApi) => void;
-  addToggleMenuItem: (name: string, spec: ToggleMenuItemApi) => void;
+  addButton: (name: string, spec: ToolbarButtonSpec) => void;
+  addGroupToolbarButton: (name: string, spec: GroupToolbarButtonSpec) => void;
+  addToggleButton: (name: string, spec: ToolbarToggleButtonSpec) => void;
+  addMenuButton: (name: string, spec: ToolbarMenuButtonSpec) => void;
+  addSplitButton: (name: string, spec: ToolbarSplitButtonSpec) => void;
+  addMenuItem: (name: string, spec: MenuItemSpec) => void;
+  addNestedMenuItem: (name: string, spec: NestedMenuItemSpec) => void;
+  addToggleMenuItem: (name: string, spec: ToggleMenuItemSpec) => void;
   addContextMenu: (name: string, spec: ContextMenuApi) => void;
-  addContextToolbar: (name: string, spec: ContextToolbarApi) => void;
-  addContextForm: (name: string, spec: ContextFormApi) => void;
+  addContextToolbar: (name: string, spec: ContextToolbarSpec) => void;
+  addContextForm: (name: string, spec: ContextFormSpec) => void;
   addIcon: (name: string, svgData: string) => void;
-  addAutocompleter: (name: string, spec: AutocompleterApi) => void;
-  addSidebar: (name: string, spec: SidebarApi) => void;
+  addAutocompleter: (name: string, spec: AutocompleterSpec) => void;
+  addSidebar: (name: string, spec: SidebarSpec) => void;
 
   getAll: () => {
-    buttons: Record<string, ToolbarButtonApi | GroupToolbarButtonApi | ToolbarMenuButtonApi | ToolbarSplitButtonApi | ToolbarToggleButtonApi>;
-    menuItems: Record<string, MenuItemApi | NestedMenuItemApi | ToggleMenuItemApi>;
-    popups: Record<string, AutocompleterApi>;
+    buttons: Record<string, ToolbarButtonSpec | GroupToolbarButtonSpec | ToolbarMenuButtonSpec | ToolbarSplitButtonSpec | ToolbarToggleButtonSpec>;
+    menuItems: Record<string, MenuItemSpec | NestedMenuItemSpec | ToggleMenuItemSpec>;
+    popups: Record<string, AutocompleterSpec>;
     contextMenus: Record<string, ContextMenuApi>;
-    contextToolbars: Record<string, ContextToolbarApi | ContextFormApi>;
+    contextToolbars: Record<string, ContextToolbarSpec | ContextFormSpec>;
     icons: Record<string, string>;
-    sidebars: Record<string, SidebarApi>;
+    sidebars: Record<string, SidebarSpec>;
   };
 }
 
 export const create = (): Registry => {
-  const buttons: Record<string, ToolbarButtonApi | ToolbarMenuButtonApi | ToolbarSplitButtonApi | ToolbarToggleButtonApi> = {};
-  const menuItems: Record<string, MenuItemApi | ToggleMenuItemApi> = {};
-  const popups: Record<string, AutocompleterApi> = {};
+  const buttons: Record<string, ToolbarButtonSpec | ToolbarMenuButtonSpec | ToolbarSplitButtonSpec | ToolbarToggleButtonSpec> = {};
+  const menuItems: Record<string, MenuItemSpec | ToggleMenuItemSpec> = {};
+  const popups: Record<string, AutocompleterSpec> = {};
   const icons: Record<string, string> = {};
   const contextMenus: Record<string, ContextMenuApi> = {};
-  const contextToolbars: Record<string, ContextToolbarApi | ContextFormApi> = {};
-  const sidebars: Record<string, SidebarApi> = {};
+  const contextToolbars: Record<string, ContextToolbarSpec | ContextFormSpec> = {};
+  const sidebars: Record<string, SidebarSpec> = {};
   const add = (collection, type: string) => (name: string, spec: any): void => collection[name.toLowerCase()] = { ...spec, type };
   const addIcon = (name: string, svgData: string) => icons[name.toLowerCase()] = svgData;
 

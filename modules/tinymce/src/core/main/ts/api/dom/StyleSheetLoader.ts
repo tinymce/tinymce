@@ -17,18 +17,18 @@ import Tools from '../util/Tools';
  */
 
 export interface StyleSheetLoader {
-  load: (url: string, loadedCallback: Function, errorCallback?: Function) => void;
-  loadAll: (urls: string[], success: Function, failure: Function) => void;
+  load: (url: string, success: () => void, failure?: () => void) => void;
+  loadAll: (urls: string[], success: (urls: string[]) => void, failure: (urls: string[]) => void) => void;
   _setReferrerPolicy: (referrerPolicy: ReferrerPolicy) => void;
 }
 
 export interface StyleSheetLoaderSettings {
-  maxLoadTime: number;
-  contentCssCors: boolean;
-  referrerPolicy: ReferrerPolicy;
+  maxLoadTime?: number;
+  contentCssCors?: boolean;
+  referrerPolicy?: ReferrerPolicy;
 }
 
-export function StyleSheetLoader(documentOrShadowRoot: Document | ShadowRoot, settings: Partial<StyleSheetLoaderSettings> = {}): StyleSheetLoader {
+export function StyleSheetLoader(documentOrShadowRoot: Document | ShadowRoot, settings: StyleSheetLoaderSettings = {}): StyleSheetLoader {
   let idCount = 0;
   const loadedStates = {};
 
@@ -50,10 +50,10 @@ export function StyleSheetLoader(documentOrShadowRoot: Document | ShadowRoot, se
    *
    * @method load
    * @param {String} url Url to be loaded.
-   * @param {Function} loadedCallback Callback to be executed when loaded.
-   * @param {Function} errorCallback Callback to be executed when failed loading.
+   * @param {Function} success Callback to be executed when loaded.
+   * @param {Function} failure Callback to be executed when failed loading.
    */
-  const load = function (url: string, loadedCallback: Function, errorCallback?: Function) {
+  const load = function (url: string, success: () => void, failure?: () => void) {
     let link, style, state;
 
     const resolve = (status: number) => {
@@ -153,12 +153,12 @@ export function StyleSheetLoader(documentOrShadowRoot: Document | ShadowRoot, se
       state = loadedStates[url];
     }
 
-    if (loadedCallback) {
-      state.passed.push(loadedCallback);
+    if (success) {
+      state.passed.push(success);
     }
 
-    if (errorCallback) {
-      state.failed.push(errorCallback);
+    if (failure) {
+      state.failed.push(failure);
     }
 
     // Is loading wait for it to pass
@@ -222,7 +222,7 @@ export function StyleSheetLoader(documentOrShadowRoot: Document | ShadowRoot, se
     link.href = url;
   };
 
-  const loadF = function (url) {
+  const loadF = function (url: string): Future<Result<string, string>> {
     return Future.nu(function (resolve) {
       load(
         url,
@@ -240,7 +240,7 @@ export function StyleSheetLoader(documentOrShadowRoot: Document | ShadowRoot, se
    * @param {Function} success Callback to be executed when the style sheets have been successfully loaded.
    * @param {Function} failure Callback to be executed when the style sheets fail to load.
    */
-  const loadAll = function (urls: string[], success: Function, failure: Function) {
+  const loadAll = function (urls: string[], success: (urls: string[]) => void, failure: (urls: string[]) => void) {
     Futures.par(Arr.map(urls, loadF)).get(function (result) {
       const parts = Arr.partition(result, function (r) {
         return r.isValue();
