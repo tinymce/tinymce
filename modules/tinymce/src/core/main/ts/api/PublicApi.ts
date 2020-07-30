@@ -87,7 +87,7 @@ export {
 
   // dom
   DomQuery,
-  DomTreeWalker as TreeWalker,
+  DomTreeWalker,
   TextSeeker,
   DOMUtils,
   ScriptLoader,
@@ -102,7 +102,7 @@ export {
   // html
   Styles,
   Entities,
-  AstNode as Node,
+  AstNode,
   Schema,
   SaxParser,
   DomParser,
