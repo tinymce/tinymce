@@ -1,8 +1,8 @@
 import { ApproxStructure, Assertions, Chain, Guard, Mouse, NamedChain, Pipeline, UiFinder } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { HTMLElement } from '@ephox/dom-globals';
 import { Editor as McEditor } from '@ephox/mcagar';
-import { Body, Element, Traverse } from '@ephox/sugar';
+import { Body, Compare, Element, Focus, Traverse } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { NotificationApi } from 'tinymce/core/api/NotificationManager';
@@ -24,6 +24,13 @@ UnitTest.asynctest('NotificationManagerImpl test', (success, failure) => {
 
   const cSetProgress = (progress: number) => Chain.op((notification: NotificationApi) => {
     notification.progressBar.value(progress);
+  });
+
+  const cAssertFocusable = Chain.op((notification: NotificationApi) => {
+    const elm = Element.fromDom(notification.getEl());
+    Focus.focus(elm);
+    const notificationFocused = Focus.active().exists((focusedElm) => Compare.eq(elm, focusedElm));
+    Assert.eq('Notification should be focused', true, notificationFocused);
   });
 
   const cAssertPosition = (prefix: string, x: number, y: number, diff: number = 5) => Chain.op((notification: NotificationApi) => {
@@ -203,6 +210,10 @@ UnitTest.asynctest('NotificationManagerImpl test', (success, failure) => {
             // Check items are positioned so that they are stacked
             NamedChain.direct('nError', cAssertPosition('Error notification', 220, -299), '_'),
             NamedChain.direct('nWarn', cAssertPosition('Warning notification', 220, -251), '_'),
+
+            // Check the notification can be focused
+            NamedChain.read('nError', cAssertFocusable),
+            NamedChain.read('nWarn', cAssertFocusable),
 
             NamedChain.direct('nError', cCloseNotification, '_'),
             NamedChain.direct('nWarn', cCloseNotification, '_')

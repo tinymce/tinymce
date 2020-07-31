@@ -5,12 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element } from '@ephox/dom-globals';
+import { Element, HTMLElement } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
 import * as EditorView from '../EditorView';
 import { NotificationManagerImpl } from '../ui/NotificationManagerImpl';
-import * as Settings from './Settings';
 import Editor from './Editor';
+import * as Settings from './Settings';
 import Delay from './util/Delay';
 
 export interface NotificationManagerImpl {
@@ -37,7 +37,7 @@ export interface NotificationApi {
   text: (text: string) => void;
   moveTo: (x: number, y: number) => void;
   moveRel: (element: Element, rel: 'tc-tc' | 'bc-bc' | 'bc-tc' | 'tc-bc' | 'banner') => void;
-  getEl: () => Element;
+  getEl: () => HTMLElement;
   settings: NotificationSpec;
 }
 
