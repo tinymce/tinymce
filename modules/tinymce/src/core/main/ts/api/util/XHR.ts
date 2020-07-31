@@ -81,7 +81,7 @@ const XHR: XHR = {
    * <td>
    * <p><code>string</code></p>
    * </td>
-   * <td>Address to send the request to such as the back-end server.</td>
+   * <td>Address to send the request to, such as the back-end server.</td>
    * </tr>
    * <tr>
    * <td>
