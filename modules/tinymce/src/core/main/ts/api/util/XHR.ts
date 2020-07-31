@@ -61,7 +61,7 @@ const XHR: XHR = {
    * Sends a XMLHTTPRequest.
    *
    * @method send
-   * @param {Object} settings Object will target URL, callbacks and other info needed to make the request.<br />
+   * @param {Object} settings Object will target URL, callbacks and other info needed to make the request.<br /><br />
    * <div>
    * <table>
    * <thead>
@@ -113,7 +113,7 @@ const XHR: XHR = {
    * <td>
    * <p><code>boolean</code></p>
    * </td>
-   * <td>When <code>true</code>, withCredentials property will be set to <code>true</code>.
+   * <td>When <code>true</code>, the withCredentials property will be set to <code>true</code>.
    * For information on the withCredentials property, see:
    * <a href="https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/withCredentials">
    * MDN Web Docs - XMLHttpRequest.withCredentials</a>.</td>
@@ -180,7 +180,7 @@ const XHR: XHR = {
    * <p><code>object</code></p>
    * </td>
    * <td>Sets the <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/this">
-   * '<code>this</code>'</a> operator of the success callback function.</td>
+   * '<code>this</code>'</a> value of the success callback function.</td>
    * </tr>
    * <tr>
    * <td>
