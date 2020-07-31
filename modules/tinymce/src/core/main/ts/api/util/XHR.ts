@@ -61,7 +61,7 @@ const XHR: XHR = {
    * Sends a XMLHTTPRequest.
    *
    * @method send
-   * @param {Object} settings Object will target URL, callbacks and other info needed to make the request.<br /><br />
+   * @param {Object} settings An object containing the target URL, callbacks, and other information needed to make the request. For information on valid settings, see the table below.<br /><br />
    * <div>
    * <table>
    * <thead>
@@ -169,7 +169,7 @@ const XHR: XHR = {
    * <p><code>object</code></p>
    * </td>
    * <td>Sets the <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/this">
-   * '<code>this</code>'</a> operator of the error callback function.</td>
+   * '<code>this</code>'</a> value of the error callback function.</td>
    * </tr>
    * <tr>
    * <td>
