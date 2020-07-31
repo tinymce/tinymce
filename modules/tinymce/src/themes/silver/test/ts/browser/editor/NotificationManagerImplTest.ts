@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, Chain, Guard, Mouse, NamedChain, Pipeline, UiFinder } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Editor as McEditor } from '@ephox/mcagar';
-import { SugarBody, SugarElement, Traverse } from '@ephox/sugar';
+import { Compare, Focus, SugarBody, SugarElement, Traverse } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { NotificationApi } from 'tinymce/core/api/NotificationManager';
@@ -11,7 +11,8 @@ import { cResizeToPos } from '../../module/UiChainUtils';
 UnitTest.asynctest('NotificationManagerImpl test', (success, failure) => {
   Theme();
 
-  const cOpenNotification = (editor: Editor, type: 'info' | 'warning' | 'error' | 'success', text: string, progressBar = false) => Chain.injectThunked(() => editor.notificationManager.open({ type, text, progressBar }));
+  const cOpenNotification = (editor: Editor, type: 'info' | 'warning' | 'error' | 'success', text: string, progressBar = false) =>
+    Chain.injectThunked(() => editor.notificationManager.open({ type, text, progressBar }));
 
   const cCloseNotification = Chain.op((notification: NotificationApi) => {
     notification.close();
@@ -23,6 +24,13 @@ UnitTest.asynctest('NotificationManagerImpl test', (success, failure) => {
 
   const cSetProgress = (progress: number) => Chain.op((notification: NotificationApi) => {
     notification.progressBar.value(progress);
+  });
+
+  const cAssertFocusable = Chain.op((notification: NotificationApi) => {
+    const elm = SugarElement.fromDom(notification.getEl());
+    Focus.focus(elm);
+    const notificationFocused = Focus.active().exists((focusedElm) => Compare.eq(elm, focusedElm));
+    Assert.eq('Notification should be focused', true, notificationFocused);
   });
 
   const cAssertPosition = (prefix: string, x: number, y: number, diff: number = 5) => Chain.op((notification: NotificationApi) => {
@@ -202,6 +210,10 @@ UnitTest.asynctest('NotificationManagerImpl test', (success, failure) => {
             // Check items are positioned so that they are stacked
             NamedChain.direct('nError', cAssertPosition('Error notification', 220, -299), '_'),
             NamedChain.direct('nWarn', cAssertPosition('Warning notification', 220, -251), '_'),
+
+            // Check the notification can be focused
+            NamedChain.read('nError', cAssertFocusable),
+            NamedChain.read('nWarn', cAssertFocusable),
 
             NamedChain.direct('nError', cCloseNotification, '_'),
             NamedChain.direct('nWarn', cCloseNotification, '_')

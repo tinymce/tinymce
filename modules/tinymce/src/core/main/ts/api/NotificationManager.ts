@@ -36,7 +36,7 @@ export interface NotificationApi {
   text: (text: string) => void;
   moveTo: (x: number, y: number) => void;
   moveRel: (element: Element, rel: 'tc-tc' | 'bc-bc' | 'bc-tc' | 'tc-bc' | 'banner') => void;
-  getEl: () => Element;
+  getEl: () => HTMLElement;
   settings: NotificationSpec;
 }
 
