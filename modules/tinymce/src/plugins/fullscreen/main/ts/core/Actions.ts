@@ -5,14 +5,28 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Cell, Fun, Singleton } from '@ephox/katamari';
-import { Css, SugarElement, WindowVisualViewport } from '@ephox/sugar';
+import { Cell, Fun, Singleton, Optional } from '@ephox/katamari';
+import { Css, SugarElement, WindowVisualViewport, DomEvent, Traverse, EventUnbinder, SugarShadowDom, SugarBody } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import Delay from 'tinymce/core/api/util/Delay';
 import * as Events from '../api/Events';
 import * as Thor from './Thor';
+
+export interface ScrollInfo {
+  scrollPos: {
+    x: number;
+    y: number;
+  };
+  containerWidth: string;
+  containerHeight: string;
+  containerTop: string;
+  containerLeft: string;
+  iframeWidth: string;
+  iframeHeight: string;
+  fullscreenChangeHandler: EventUnbinder;
+};
 
 const DOM = DOMUtils.DOM;
 
@@ -79,13 +93,23 @@ const viewportUpdate = WindowVisualViewport.get().fold(
   }
 );
 
-const toggleFullscreen = (editor: Editor, fullscreenState: Cell<any>) => {
+const getFullscreenRoot = (editor: Editor): SugarElement<Element> => {
+  const elem = SugarElement.fromDom(editor.getElement());
+  return SugarShadowDom.getShadowRoot(elem).map(SugarShadowDom.getShadowHost).
+    getOrThunk(() => SugarBody.getBody(Traverse.owner(elem)));
+};
+
+const isFullscreenElement = (elem: SugarElement<Element>) =>
+  elem.dom() === Traverse.owner(elem).dom().fullscreenElement;
+
+const toggleFullscreen = (editor: Editor, fullscreenState: Cell<ScrollInfo | null>) => {
   const body = document.body;
   const documentElement = document.documentElement;
   const editorContainer = editor.getContainer();
   const editorContainerS = SugarElement.fromDom(editorContainer);
+  const fullscreenRoot = getFullscreenRoot(editor);
 
-  const fullscreenInfo = fullscreenState.get();
+  const fullscreenInfo: ScrollInfo | null = fullscreenState.get();
   const editorBody = SugarElement.fromDom(editor.getBody());
 
   const isTouch = Env.deviceType.isTouch();
@@ -105,9 +129,18 @@ const toggleFullscreen = (editor: Editor, fullscreenState: Cell<any>) => {
     DOM.removeClass(editorContainer, 'tox-fullscreen');
 
     viewportUpdate.unbind();
+    Optional.from(fullscreenState.get()).each((info) => info.fullscreenChangeHandler.unbind());
   };
 
   if (!fullscreenInfo) {
+    const fullscreenChangeHandler = DomEvent.bind(fullscreenRoot, 'fullscreenchange', (_evt) => {
+      // if we have exited browser fullscreen with Escape then exit editor fullscreen too
+      if (!isFullscreenElement(fullscreenRoot) && fullscreenState.get() !== null) {
+        toggleFullscreen(editor, fullscreenState);
+      }
+    });
+
+
     const newFullScreenInfo = {
       scrollPos: getScrollPos(),
       containerWidth: editorContainerStyle.width,
@@ -115,7 +148,8 @@ const toggleFullscreen = (editor: Editor, fullscreenState: Cell<any>) => {
       containerTop: editorContainerStyle.top,
       containerLeft: editorContainerStyle.left,
       iframeWidth: iframeStyle.width,
-      iframeHeight: iframeStyle.height
+      iframeHeight: iframeStyle.height,
+      fullscreenChangeHandler
     };
 
     if (isTouch) {
@@ -134,8 +168,13 @@ const toggleFullscreen = (editor: Editor, fullscreenState: Cell<any>) => {
     editor.on('remove', cleanup);
 
     fullscreenState.set(newFullScreenInfo);
+    fullscreenRoot.dom().requestFullscreen();
     Events.fireFullscreenStateChanged(editor, true);
   } else {
+    fullscreenInfo.fullscreenChangeHandler.unbind();
+    if (isFullscreenElement(fullscreenRoot)) {
+      Traverse.owner(fullscreenRoot).dom().exitFullscreen();
+    }
     iframeStyle.width = fullscreenInfo.iframeWidth;
     iframeStyle.height = fullscreenInfo.iframeHeight;
 
