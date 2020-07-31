@@ -61,7 +61,9 @@ const XHR: XHR = {
    * Sends a XMLHTTPRequest.
    *
    * @method send
-   * @param {Object} settings An object containing the target URL, callbacks, and other information needed to make the request. For information on valid settings, see the table below.<br /><br />
+   * @param {Object} settings An object containing the target URL,
+   * callbacks, and other information needed to make the request.
+   * For information on valid settings, see the table below.<br /><br />
    * <div>
    * <table>
    * <thead>
@@ -91,7 +93,11 @@ const XHR: XHR = {
    * <td>
    * <p><code>boolean</code></p>
    * </td>
-   * <td>When <code>false</code>, the request will be synchronous. Set to <code>true</code> by default.</td>
+   * <td>When <code>false</code>, the request will be synchronous.
+   * Set to <code>true</code> by default.
+   * <strong>NOTE</strong>: Synchronous requests have been deprecated on some browsers.
+   * For details, see: <a href="https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/open#Syntax">
+   * MDN Web Docs - XMLHttpRequest.open() Syntax</a>.</td>
    * </tr>
    * <tr>
    * <td>
@@ -124,7 +130,7 @@ const XHR: XHR = {
    * </td>
    * <td>Optional</td>
    * <td>
-   * <p><code>any</code></p>
+   * <p><code>Document | Blob | FormData | string</code></p>
    * </td>
    * <td>The data to be sent to the specified URL (<code>url</code>). For information on valid data inputs,
    *  see: <a href="https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/send#Syntax">
@@ -152,8 +158,8 @@ const XHR: XHR = {
    * </td>
    * <td>
    * <p>The <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods">HTTP request method</a>,
-   *  such as: <code>'GET'</code>, <code>'POST'</code>, <code>'PUT'</code> and <code>'DELETE'</code>.</p>
-   * <p>By default:</p>
+   *  such as: <code>'GET'</code>, <code>'POST'</code>, <code>'PUT'</code> and <code>'DELETE'</code>.
+   * By default:</p>
    * <ul>
    * <li>If no data is provided with the request, the <code>'GET'</code> method will be used.</li>
    * <li>If data is provided with the request, the <code>'POST'</code> method will be used.</li>
@@ -190,7 +196,15 @@ const XHR: XHR = {
    * <td>
    * <p><code>callback function</code></p>
    * </td>
-   * <td>The callback function called when an error occurs.</td>
+   * <td>
+   * <p>The callback function called when an error occurs.
+   * The callback function will be passed the following arguments:</p>
+   * <ul>
+   * <li><code>message</code>: Passed either <code>'TIMED_OUT'</code> or <code>'GENERAL'</code>.</li>
+   * <li><code>xhr</code>: Passed the XMLHttpRequest.</li>
+   * <li><code>setting</code>: Passed the XMLHttpRequest settings.</li>
+   * </ul>
+   * </td>
    * </tr>
    * <tr>
    * <td>
@@ -200,7 +214,18 @@ const XHR: XHR = {
    * <td>
    * <p><code>callback function</code></p>
    * </td>
-   * <td>The callback function called when the request is successful.</td>
+   * <td>
+   * <p>The callback function called when the request is successful.
+   * The callback function will be passed the following arguments:</p>
+   * <ul>
+   * <li><code>text</code>: The text response from the server.
+   * For information the response text, see:
+   * <a href="https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/responseText">
+   * MDN Web Docs - XMLHttpRequest.responseText</a>.</li>
+   * <li><code>xhr</code>: Passed the XMLHttpRequest.</li>
+   * <li><code>setting</code>: Passed the XMLHttpRequest settings.</li>
+   * </ul>
+   * </td>
    * </tr>
    * </tbody>
    * </table>
