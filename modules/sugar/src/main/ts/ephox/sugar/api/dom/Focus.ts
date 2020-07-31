@@ -6,19 +6,19 @@ import * as SugarShadowDom from '../node/SugarShadowDom';
 type RootNode = SugarShadowDom.RootNode;
 
 const focus = (element: SugarElement<HTMLElement>): void =>
-  element.dom().focus();
+  element.dom.focus();
 
 const blur = (element: SugarElement<HTMLElement>): void =>
-  element.dom().blur();
+  element.dom.blur();
 
 const hasFocus = (element: SugarElement<Node>): boolean => {
-  const root = SugarShadowDom.getRootNode(element).dom();
-  return element.dom() === root.activeElement;
+  const root = SugarShadowDom.getRootNode(element).dom;
+  return element.dom === root.activeElement;
 };
 
 // Note: assuming that activeElement will always be a HTMLElement (maybe we should add a runtime check?)
 const active = (root: RootNode = SugarDocument.getDocument()): Optional<SugarElement<HTMLElement>> =>
-  Optional.from(root.dom().activeElement as HTMLElement).map(SugarElement.fromDom);
+  Optional.from(root.dom.activeElement as HTMLElement).map(SugarElement.fromDom);
 
 /** Focus the specified element, unless one of its descendents already has focus. */
 const focusInside = (element: SugarElement<HTMLElement>): void => {
@@ -35,6 +35,6 @@ const focusInside = (element: SugarElement<HTMLElement>): void => {
  */
 const search = (element: SugarElement<Node>): Optional<SugarElement<HTMLElement>> =>
   active(SugarShadowDom.getRootNode(element))
-    .filter((e) => element.dom().contains(e.dom()));
+    .filter((e) => element.dom.contains(e.dom));
 
 export { hasFocus, focus, blur, active, search, focusInside };

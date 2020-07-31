@@ -39,7 +39,7 @@ UnitTest.asynctest('Input component Test', (success, failure) => {
             })
           ]
         })),
-        component.element()
+        component.element
       ),
 
       RepresentingSteps.sSetValue('Setting to new value', component, 'New-Value'),

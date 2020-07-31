@@ -1,23 +1,21 @@
-import { Fun } from '@ephox/katamari';
-
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as AlloyTriggers from '../../api/events/AlloyTriggers';
-import { SliderValue, TwoDSliderDetail } from '../types/SliderTypes';
+import { SliderValue, SliderValueX, SliderValueXY, SliderValueY, TwoDSliderDetail } from '../types/SliderTypes';
 
 import * as ModelCommon from './ModelCommon';
 import { halfX, halfY, max1X, max1Y, min1X, min1Y } from './SliderValues';
 
-const xValue = (x: number) => ({
-  x: Fun.constant(x)
+const xValue = (x: number): SliderValueX => ({
+  x
 });
 
-const yValue = (y: number) => ({
-  y: Fun.constant(y)
+const yValue = (y: number): SliderValueY => ({
+  y
 });
 
-const xyValue = (x: number, y: number) => ({
-  x: Fun.constant(x),
-  y: Fun.constant(y)
+const xyValue = (x: number, y: number): SliderValueXY => ({
+  x,
+  y
 });
 
 const fireSliderChange = (component: AlloyComponent, value: SliderValue): void => {

@@ -14,7 +14,7 @@ const findAllIn = (container: SugarElement<any>, selector: string): SugarElement
   UiSearcher.findAllIn(container, selector);
 
 const cWaitFor = (message: string, selector: string): Chain<SugarElement<any>, SugarElement<any>> =>
-  cWaitForState(message, selector, Fun.constant(true));
+  cWaitForState(message, selector, Fun.always);
 
 const sWaitFor = <T>(message: string, container: SugarElement<any>, selector: string): Step<T, T> =>
   Chain.asStep<T, SugarElement>(container, [ cWaitFor(message, selector) ]);

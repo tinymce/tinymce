@@ -5,15 +5,15 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Behaviour, Slider, Toggling, SketchSpec } from '@ephox/alloy';
+import { Behaviour, SketchSpec, Slider, Toggling } from '@ephox/alloy';
 import { Css } from '@ephox/sugar';
+import Editor from 'tinymce/core/api/Editor';
 
 import * as Receivers from '../channels/Receivers';
 import * as Styles from '../style/Styles';
+import { MobileRealm } from '../ui/IosRealm';
 import * as UiDomFactory from '../util/UiDomFactory';
 import * as ToolbarWidgets from './ToolbarWidgets';
-import Editor from 'tinymce/core/api/Editor';
-import { MobileRealm } from '../ui/IosRealm';
 
 const BLACK = -1;
 
@@ -32,20 +32,20 @@ const makeSlider = (spec): SketchSpec => {
   // Does not fire change intentionally.
   const onInit = (slider, thumb, spectrum, value): void => {
     const color = getColor(value.x());
-    Css.set(thumb.element(), 'background-color', color);
+    Css.set(thumb.element, 'background-color', color);
   };
 
   const onChange = (slider, thumb, value): void => {
     const color = getColor(value.x());
-    Css.set(thumb.element(), 'background-color', color);
+    Css.set(thumb.element, 'background-color', color);
     spec.onChange(slider, thumb, color);
   };
 
   return Slider.sketch({
     dom: UiDomFactory.dom('<div class="${prefix}-slider ${prefix}-hue-slider-container"></div>'),
     components: [
-      Slider.parts()['left-edge'](UiDomFactory.spec('<div class="${prefix}-hue-slider-black"></div>')),
-      Slider.parts().spectrum({
+      Slider.parts['left-edge'](UiDomFactory.spec('<div class="${prefix}-hue-slider-black"></div>')),
+      Slider.parts.spectrum({
         dom: UiDomFactory.dom('<div class="${prefix}-slider-gradient-container"></div>'),
         components: [
           UiDomFactory.spec('<div class="${prefix}-slider-gradient"></div>')
@@ -56,8 +56,8 @@ const makeSlider = (spec): SketchSpec => {
           })
         ])
       }),
-      Slider.parts()['right-edge'](UiDomFactory.spec('<div class="${prefix}-hue-slider-white"></div>')),
-      Slider.parts().thumb({
+      Slider.parts['right-edge'](UiDomFactory.spec('<div class="${prefix}-hue-slider-white"></div>')),
+      Slider.parts.thumb({
         dom: UiDomFactory.dom('<div class="${prefix}-slider-thumb"></div>'),
         behaviours: Behaviour.derive([
           Toggling.config({
@@ -81,7 +81,7 @@ const makeSlider = (spec): SketchSpec => {
       minX: 0,
       maxX: 360,
       getInitialValue: () => ({
-        x: () => spec.getInitialValue()
+        x: spec.getInitialValue()
       })
     },
 

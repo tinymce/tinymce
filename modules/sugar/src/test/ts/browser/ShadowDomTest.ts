@@ -29,7 +29,7 @@ UnitTest.test('ShadowDom - SelectorFind.descendant', () => {
         Insert.append(ss, inner);
 
         const frog: SugarElement<Element> = SelectorFind.descendant(ss, `#${id}`).getOrDie('Element not found');
-        Assert.eq('textcontent', text, frog.dom().textContent);
+        Assert.eq('textcontent', text, frog.dom.textContent);
       });
     }));
   }
@@ -88,7 +88,7 @@ UnitTest.test('shadow root is shadow root', () => {
 
 UnitTest.test('getRootNode in iframe', () => {
   withIframe((div, iframe, cw) => {
-    Assert.eq('should be inner doc', cw.document, SugarShadowDom.getRootNode(div).dom(), Testable.tStrict);
+    Assert.eq('should be inner doc', cw.document, SugarShadowDom.getRootNode(div).dom, Testable.tStrict);
   });
 });
 
@@ -165,12 +165,12 @@ const checkOriginalEventTarget = (mode: 'open' | 'closed', success: UnitTest.Suc
   const i1 = input('i2', SugarBody.body());
   const i2 = input('i2', innerDiv);
 
-  i1.dom().click();
+  i1.dom.click();
 
   const unbinder = DomEvent.bind(SugarBody.body(), 'click', (evt) => {
     try {
       const expected = mode === 'open' ? i2 : shadowHost;
-      Assert.eq('Check event target', expected, evt.target(), tElement());
+      Assert.eq('Check event target', expected, evt.target, tElement());
       unbinder.unbind();
       Remove.remove(i1);
       Remove.remove(shadowHost);
@@ -179,7 +179,7 @@ const checkOriginalEventTarget = (mode: 'open' | 'closed', success: UnitTest.Suc
       failure(e);
     }
   });
-  i2.dom().click();
+  i2.dom.click();
 };
 
 UnitTest.asynctest('getOriginalEventTarget on a closed shadow root', (success, failure) => {
@@ -217,6 +217,6 @@ if (SugarShadowDom.isSupported()) {
     withShadowElement((sr) => {
       roots.push(sr);
     });
-    Assert.eq('open then closed', [ 'open', 'closed' ], Arr.map(roots, (r) => (r.dom() as any).mode ));
+    Assert.eq('open then closed', [ 'open', 'closed' ], Arr.map(roots, (r) => (r.dom as any).mode ));
   });
 }

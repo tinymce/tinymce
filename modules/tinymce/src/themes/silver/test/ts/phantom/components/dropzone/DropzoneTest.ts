@@ -27,12 +27,12 @@ UnitTest.asynctest('Dropzone component Test', (success, failure) => {
             s.element('div', { })
           ]
         })),
-        component.element()
+        component.element
       ),
 
       Logger.t(
         'Trigger drop on zone',
-        Chain.asStep(component.element(), [
+        Chain.asStep(component.element, [
           UiFinder.cFindIn('.tox-dropzone'),
           Chain.binder(component.getSystem().getByDom),
           Chain.op((zone) => {

@@ -1,10 +1,10 @@
-import { Logger, Pipeline, Step, ApproxStructure, Assertions } from '@ephox/agar';
+import { ApproxStructure, Assertions, Logger, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { HtmlSelect } from 'ephox/alloy/api/ui/HtmlSelect';
 import * as RepresentPipes from 'ephox/alloy/test/behaviour/RepresentPipes';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 
 UnitTest.asynctest('HtmlSelectTest', (success, failure) => {
 
@@ -59,7 +59,7 @@ UnitTest.asynctest('HtmlSelectTest', (success, failure) => {
             s.element('option', { value: str.is('gamma'), html: str.is('Gamma') })
           ]
         })),
-        component.element()
+        component.element
       ),
 
       RepresentPipes.sAssertValue('Checking initial value', 'gamma', component),

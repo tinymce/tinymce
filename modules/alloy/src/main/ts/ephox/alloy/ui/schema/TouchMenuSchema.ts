@@ -15,13 +15,13 @@ import * as Layout from '../../positioning/layout/Layout';
 import { TouchMenuDetail } from '../types/TouchMenuTypes';
 
 const anchorAtCentre = (component: AlloyComponent) => {
-  const pos = SugarLocation.absolute(component.element());
-  const w = Width.get(component.element());
-  const h = Height.get(component.element());
+  const pos = SugarLocation.absolute(component.element);
+  const w = Width.get(component.element);
+  const h = Height.get(component.element);
   return {
     anchor: 'makeshift',
-    x: pos.left() + w / 2,
-    y: pos.top() + h / 2,
+    x: pos.left + w / 2,
+    y: pos.top + h / 2,
     layouts: {
       onLtr: () => [ Layout.south, Layout.north ],
       onRtl: () => [ Layout.south, Layout.north ]

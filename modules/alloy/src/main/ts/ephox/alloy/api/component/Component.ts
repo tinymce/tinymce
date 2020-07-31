@@ -1,5 +1,5 @@
 import { ValueSchema } from '@ephox/boulder';
-import { Arr, Cell, Fun, Optional, Type } from '@ephox/katamari';
+import { Arr, Cell, Optional, Type } from '@ephox/katamari';
 import { Traverse } from '@ephox/sugar';
 
 import * as BehaviourBlob from '../../behaviour/common/BehaviourBlob';
@@ -110,16 +110,16 @@ const build = (spec: ComponentDetail): AlloyComponent => {
     getSystem: systemApi.get,
     config,
     hasConfigured,
-    spec: Fun.constant(spec),
+    spec,
     readState,
     getApis,
 
     connect,
     disconnect,
-    element: Fun.constant(item),
+    element: item,
     syncComponents,
     components: subcomponents.get,
-    events: Fun.constant(events)
+    events
   };
 
   return me;

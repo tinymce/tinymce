@@ -34,7 +34,7 @@ const getFocusInElement = (root: SugarElement<any>, rng: Range): Optional<SugarE
 
 const normalizeSelection = (editor: Editor, rng: Range): void => {
   getFocusInElement(SugarElement.fromDom(editor.getBody()), rng).bind(function (elm) {
-    return CaretFinder.firstPositionIn(elm.dom());
+    return CaretFinder.firstPositionIn(elm.dom);
   }).fold(
     () => { editor.selection.normalize(); return; },
     (caretPos: CaretPosition) => editor.selection.setRng(caretPos.toRange())
@@ -67,7 +67,7 @@ const hasInlineFocus = (editor: Editor): boolean => {
 const hasUiFocus = (editor: Editor): boolean =>
   // Editor container is the obvious one (Menubar, Toolbar, Status bar, Sidebar) and dialogs and menus are in an auxiliary element (silver theme specific)
   // This can't use Focus.search() because only the theme has this element reference
-  Focus.active().filter((elem) => !FocusController.isEditorContentAreaElement(elem.dom()) && FocusController.isUIElement(editor, elem.dom())).isSome();
+  Focus.active().filter((elem) => !FocusController.isEditorContentAreaElement(elem.dom) && FocusController.isUIElement(editor, elem.dom)).isSome();
 
 const hasFocus = (editor: Editor): boolean => editor.inline ? hasInlineFocus(editor) : hasIframeFocus(editor);
 

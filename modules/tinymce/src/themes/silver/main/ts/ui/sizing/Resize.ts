@@ -6,7 +6,7 @@
  */
 
 import { Obj } from '@ephox/katamari';
-import { Css, Height, SugarElement, Width } from '@ephox/sugar';
+import { Css, Height, SugarElement, SugarPosition, Width } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import * as Events from '../../api/Events';
 import { getMaxHeightSetting, getMaxWidthSetting, getMinHeightSetting, getMinWidthSetting } from '../../api/Settings';
@@ -21,19 +21,19 @@ export enum ResizeTypes {
   None, Both, Vertical
 }
 
-export const getDimensions = (editor, deltas, resizeType: ResizeTypes, originalHeight, originalWidth) => {
+export const getDimensions = (editor: Editor, deltas: SugarPosition, resizeType: ResizeTypes, originalHeight, originalWidth) => {
   const dimensions: EditorDimensions = {};
 
-  dimensions.height = Utils.calcCappedSize(originalHeight + deltas.top(), getMinHeightSetting(editor), getMaxHeightSetting(editor));
+  dimensions.height = Utils.calcCappedSize(originalHeight + deltas.top, getMinHeightSetting(editor), getMaxHeightSetting(editor));
 
   if (resizeType === ResizeTypes.Both) {
-    dimensions.width = Utils.calcCappedSize(originalWidth + deltas.left(), getMinWidthSetting(editor), getMaxWidthSetting(editor));
+    dimensions.width = Utils.calcCappedSize(originalWidth + deltas.left, getMinWidthSetting(editor), getMaxWidthSetting(editor));
   }
 
   return dimensions;
 };
 
-export const resize = (editor: Editor, deltas, resizeType: ResizeTypes) => {
+export const resize = (editor: Editor, deltas: SugarPosition, resizeType: ResizeTypes) => {
   const container = SugarElement.fromDom(editor.getContainer());
 
   const dimensions = getDimensions(editor, deltas, resizeType, Height.get(container), Width.get(container));

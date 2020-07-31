@@ -11,16 +11,16 @@ import * as AnchorLayouts from './AnchorLayouts';
 
 const placement = (component: AlloyComponent, anchorInfo: HotspotAnchor, origin: Origins.OriginAdt): Optional<Anchoring> => {
   const hotspot = anchorInfo.hotspot;
-  const anchorBox = Origins.toBox(origin, hotspot.element());
+  const anchorBox = Origins.toBox(origin, hotspot.element);
 
   const layouts = AnchorLayouts.get(
-    component.element(),
+    component.element,
     anchorInfo,
     Layout.belowOrAbove(),
     Layout.belowOrAboveRtl(),
     Layout.aboveOrBelow(),
     Layout.aboveOrBelowRtl(),
-    Optional.some(anchorInfo.hotspot.element())
+    Optional.some(anchorInfo.hotspot.element)
   );
 
   return Optional.some(

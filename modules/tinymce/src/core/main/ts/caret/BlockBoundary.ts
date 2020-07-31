@@ -18,14 +18,14 @@ const navigateIgnoreEmptyTextNodes = (forward: boolean, root: Element, from: Car
 
 const getClosestBlock = (root: SugarElement, pos: CaretPosition) => Arr.find(Parents.parentsAndSelf(SugarElement.fromDom(pos.container()), root), ElementType.isBlock);
 
-const isAtBeforeAfterBlockBoundary = (forward: boolean, root: SugarElement, pos: CaretPosition) => navigateIgnoreEmptyTextNodes(forward, root.dom(), pos).forall((newPos) => getClosestBlock(root, pos).fold(
-  () => isInSameBlock(newPos, pos, root.dom()) === false,
-  (fromBlock) => isInSameBlock(newPos, pos, root.dom()) === false && Compare.contains(fromBlock, SugarElement.fromDom(newPos.container()))
+const isAtBeforeAfterBlockBoundary = (forward: boolean, root: SugarElement, pos: CaretPosition) => navigateIgnoreEmptyTextNodes(forward, root.dom, pos).forall((newPos) => getClosestBlock(root, pos).fold(
+  () => isInSameBlock(newPos, pos, root.dom) === false,
+  (fromBlock) => isInSameBlock(newPos, pos, root.dom) === false && Compare.contains(fromBlock, SugarElement.fromDom(newPos.container()))
 ));
 
 const isAtBlockBoundary = (forward: boolean, root: SugarElement, pos: CaretPosition) => getClosestBlock(root, pos).fold(
-  () => navigateIgnoreEmptyTextNodes(forward, root.dom(), pos).forall((newPos) => isInSameBlock(newPos, pos, root.dom()) === false),
-  (parent) => navigateIgnoreEmptyTextNodes(forward, parent.dom(), pos).isNone()
+  () => navigateIgnoreEmptyTextNodes(forward, root.dom, pos).forall((newPos) => isInSameBlock(newPos, pos, root.dom) === false),
+  (parent) => navigateIgnoreEmptyTextNodes(forward, parent.dom, pos).isNone()
 );
 
 const isAtStartOfBlock = Fun.curry(isAtBlockBoundary, false);

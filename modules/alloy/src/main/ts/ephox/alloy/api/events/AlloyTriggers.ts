@@ -1,4 +1,3 @@
-import { Fun, Obj } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
 import { EventFormat, SimulatedEvent } from '../../events/SimulatedEvent';
@@ -6,11 +5,11 @@ import { AlloyComponent } from '../component/ComponentApi';
 import * as SystemEvents from './SystemEvents';
 
 const emit = (component: AlloyComponent, event: string): void => {
-  dispatchWith(component, component.element(), event, { });
+  dispatchWith(component, component.element, event, { });
 };
 
 const emitWith = (component: AlloyComponent, event: string, properties: Record<string, any>): void => {
-  dispatchWith(component, component.element(), event, properties);
+  dispatchWith(component, component.element, event, properties);
 };
 
 const emitExecute = (component: AlloyComponent): void => {
@@ -26,15 +25,15 @@ const dispatchWith = (component: AlloyComponent, target: SugarElement, event: st
     target,
     ...properties
   };
-  component.getSystem().triggerEvent(event, target, Obj.map(data, Fun.constant));
+  component.getSystem().triggerEvent(event, target, data);
 };
 
 const dispatchEvent = function <T extends EventFormat> (component: AlloyComponent, target: SugarElement, event: string, simulatedEvent: SimulatedEvent<T>): void {
-  component.getSystem().triggerEvent(event, target, simulatedEvent.event());
+  component.getSystem().triggerEvent(event, target, simulatedEvent.event);
 };
 
 const dispatchFocus = (component: AlloyComponent, target: SugarElement): void => {
-  component.getSystem().triggerFocus(target, component.element());
+  component.getSystem().triggerFocus(target, component.element);
 };
 
 export {

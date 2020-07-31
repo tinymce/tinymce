@@ -37,8 +37,8 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
         editor.selection.setCursorLocation();
       } else {
         const rng = editor.dom.createRng();
-        rng.setStart(cursor.dom(), 0);
-        rng.setEnd(cursor.dom(), 0);
+        rng.setStart(cursor.dom, 0);
+        rng.setEnd(cursor.dom, 0);
         editor.selection.setRng(rng);
         editor.nodeChanged();
       }

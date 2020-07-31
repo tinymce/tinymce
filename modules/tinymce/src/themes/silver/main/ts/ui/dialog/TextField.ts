@@ -48,7 +48,7 @@ const renderTextField = function (spec: TextField, providersBackstage: UiFactory
 
   const validatingBehaviours = spec.validation.map((vl) => Invalidating.config({
     getRoot(input) {
-      return Traverse.parent(input.element());
+      return Traverse.parent(input.element);
     },
     invalidClass: 'tox-invalid',
     validator: {
@@ -69,7 +69,7 @@ const renderTextField = function (spec: TextField, providersBackstage: UiFactory
     ...inputMode
   };
 
-  const pField = AlloyFormField.parts().field({
+  const pField = AlloyFormField.parts.field({
     tag: spec.multiline === true ? 'textarea' : 'input',
     inputAttributes,
     inputClasses: [ spec.classname ],

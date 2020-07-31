@@ -121,7 +121,7 @@ const runOnRanges = (editor: Editor, executor: (rng: Range, fake: boolean) => vo
   const fakeSelectionNodes = TableCellSelection.getCellsFromEditor(editor);
   if (fakeSelectionNodes.length > 0) {
     Arr.each(fakeSelectionNodes, (elem) => {
-      const node = elem.dom();
+      const node = elem.dom;
       const fakeNodeRng = editor.dom.createRng();
       fakeNodeRng.setStartBefore(node);
       fakeNodeRng.setEndAfter(node);

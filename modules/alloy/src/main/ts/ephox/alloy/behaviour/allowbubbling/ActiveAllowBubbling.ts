@@ -3,7 +3,7 @@ import { DomEvent } from '@ephox/sugar';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
-import { AllowBubblingState, AllowBubblingConfig } from './AllowBubblingTypes';
+import { AllowBubblingConfig, AllowBubblingState } from './AllowBubblingTypes';
 
 const unbind = (bubblingState: AllowBubblingState) => {
   Arr.each(bubblingState.get(), (unbinder) => {
@@ -12,8 +12,8 @@ const unbind = (bubblingState: AllowBubblingState) => {
 };
 
 const bind = (comp: AlloyComponent, bubblingConfig: AllowBubblingConfig, bubblingState: AllowBubblingState) => {
-  const unbinders = Arr.map(bubblingConfig.events, (eventConfig) => DomEvent.bind(comp.element(), eventConfig.native, (event) => {
-    comp.getSystem().triggerEvent(eventConfig.simulated, comp.element(), event);
+  const unbinders = Arr.map(bubblingConfig.events, (eventConfig) => DomEvent.bind(comp.element, eventConfig.native, (event) => {
+    comp.getSystem().triggerEvent(eventConfig.simulated, comp.element, event);
   }));
 
   bubblingState.set(unbinders);

@@ -24,7 +24,7 @@ UnitTest.asynctest('CouplingTest', (success, failure) => {
                 dom: {
                   tag: 'button'
                 },
-                action: store.adder('clicked on coupled button of: ' + Tagger.read(primary.element()).getOr('No UID'))
+                action: store.adder('clicked on coupled button of: ' + Tagger.read(primary.element).getOr('No UID'))
               });
             }
           }
@@ -44,14 +44,14 @@ UnitTest.asynctest('CouplingTest', (success, failure) => {
       'Testing getCoupled with valid name: secondary-1',
       Step.sync(() => {
         const secondary1 = Coupling.getCoupled(component, 'secondary-1');
-        const button1 = secondary1.element();
+        const button1 = secondary1.element;
         Assertions.assertEq('secondary1 should be a button', 'button', SugarNode.name(button1));
         Attribute.set(button1, 'data-test', 'marked');
 
         Assertions.assertEq(
           'secondary1 is not recreated. Should still have attribute: data-test',
           'marked',
-          Attribute.get(Coupling.getCoupled(component, 'secondary-1').element(), 'data-test')
+          Attribute.get(Coupling.getCoupled(component, 'secondary-1').element, 'data-test')
         );
       })
     ),
@@ -60,7 +60,7 @@ UnitTest.asynctest('CouplingTest', (success, failure) => {
     Step.sync(() => {
       const secondary1 = Coupling.getCoupled(component, 'secondary-1');
       gui.add(secondary1);
-      secondary1.element().dom().click();
+      secondary1.element.dom.click();
     }),
     store.sAssertEq(
       'After clicking, store should have message',

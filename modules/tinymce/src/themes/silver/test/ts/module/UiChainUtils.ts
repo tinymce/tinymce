@@ -42,7 +42,7 @@ const cResizeToPos = (sx: number, sy: number, dx: number, dy: number, delta: num
 
 const cScrollRelativeEditor = (editor: Editor, relative: 'top' | 'bottom' = 'top', deltaY: number) => Chain.op(() => {
   const target = SugarElement.fromDom(editor.inline ? editor.getBody() : editor.getContainer());
-  target.dom().scrollIntoView(relative === 'top');
+  target.dom.scrollIntoView(relative === 'top');
   Scroll.to(0, window.pageYOffset + deltaY);
 });
 

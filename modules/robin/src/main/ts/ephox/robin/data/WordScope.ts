@@ -1,9 +1,13 @@
-import { Optional, Struct } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 
 export interface WordScope {
-  word: () => string;
-  left: () => Optional<string>;
-  right: () => Optional<string>;
+  readonly word: string;
+  readonly left: Optional<string>;
+  readonly right: Optional<string>;
 }
 
-export const WordScope: (word: string, left: Optional<string>, right: Optional<string>) => WordScope = Struct.immutable('word', 'left', 'right');
+export const WordScope = (word: string, left: Optional<string>, right: Optional<string>): WordScope => ({
+  word,
+  left,
+  right
+});

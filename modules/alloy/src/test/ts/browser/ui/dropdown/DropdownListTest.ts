@@ -133,22 +133,22 @@ UnitTest.asynctest('Dropdown List', (success, failure) => {
             'type': str.is('button')
           }
         })),
-        component.element()
+        component.element
       ),
 
-      Mouse.sClickOn(gui.element(), focusables.button.selector),
+      Mouse.sClickOn(gui.element, focusables.button.selector),
 
       FocusTools.sTryOnSelector('Focus should be on alpha', doc, 'li:contains(Alpha)'),
 
       store.sClear,
-      Chain.asStep(gui.element(), [
+      Chain.asStep(gui.element, [
         UiFinder.cFindIn('.my-test-sandbox'),
         Chain.binder((sandbox) => component.getSystem().getByDom(sandbox)),
         Chain.op((sandboxComp) => {
           AlloyTriggers.emit(sandboxComp, 'made-up-event');
         }),
         Chain.op((sandboxComp) => {
-          Assertions.assertEq('Checking Representing.getValue of sandbox is dropdown', true, Compare.eq(component.element(), Representing.getValue(sandboxComp).element()));
+          Assertions.assertEq('Checking Representing.getValue of sandbox is dropdown', true, Compare.eq(component.element, Representing.getValue(sandboxComp).element));
         })
       ]),
       store.sAssertEq('Checking sandbox is getting event', [ 'received made-up-event' ]),
@@ -160,13 +160,13 @@ UnitTest.asynctest('Dropdown List', (success, failure) => {
         FocusTools.sTryOnSelector('Focus should be back on button', doc, 'button')
       ),
 
-      UiFinder.sNotExists(gui.element(), '.menu'),
+      UiFinder.sNotExists(gui.element, '.menu'),
       Keyboard.sKeydown(doc, Keys.enter(), { }),
 
       Waiter.sTryUntil(
         'Wait until dropdown content loads',
         // Just check the sandbox class is there.
-        UiFinder.sExists(gui.element(), '.my-test-sandbox .menu')
+        UiFinder.sExists(gui.element, '.my-test-sandbox .menu')
       ),
 
       FocusTools.sTryOnSelector(
@@ -207,7 +207,7 @@ UnitTest.asynctest('Dropdown List', (success, failure) => {
       store.sAssertEq('after executing item: gamma', [ 'dropdown.menu.execute: gamma' ]),
       store.sClear,
 
-      Mouse.sClickOn(gui.element(), focusables.alpha.selector),
+      Mouse.sClickOn(gui.element, focusables.alpha.selector),
       store.sAssertEq('after executing item: alpha', [ 'dropdown.menu.execute: alpha' ]),
       store.sClear,
 
@@ -218,7 +218,7 @@ UnitTest.asynctest('Dropdown List', (success, failure) => {
         focusables.button.selector
       ),
 
-      Mouse.sClickOn(gui.element(), focusables.button.selector),
+      Mouse.sClickOn(gui.element, focusables.button.selector),
 
       FocusTools.sTryOnSelector(
         '2. focus should start on alpha',
@@ -229,7 +229,7 @@ UnitTest.asynctest('Dropdown List', (success, failure) => {
       TestBroadcasts.sDismiss(
         'button: should not close',
         gui,
-        component.element()
+        component.element
       ),
 
       FocusTools.sIsOnSelector(
@@ -253,12 +253,12 @@ UnitTest.asynctest('Dropdown List', (success, failure) => {
       TestBroadcasts.sDismiss(
         'outer element: should close',
         gui,
-        gui.element()
+        gui.element
       ),
 
       Logger.t(
         'After broadcasting dismiss popup on a non popup element, the menu should not longer exist in the DOM',
-        UiFinder.sNotExists(gui.element(), '.menu')
+        UiFinder.sNotExists(gui.element, '.menu')
       ),
 
       Logger.t(
@@ -278,12 +278,12 @@ UnitTest.asynctest('Dropdown List', (success, failure) => {
         GeneralSteps.sequence([
           store.sClear,
           Step.sync(() => {
-            Focus.focus(component.element());
+            Focus.focus(component.element);
           }),
           Step.sync(() => {
             Dropdown.expand(component);
           }),
-          UiFinder.sWaitForVisible('Waiting for menu to appear', sink.element(), '.menu'),
+          UiFinder.sWaitForVisible('Waiting for menu to appear', sink.element, '.menu'),
           Step.sync(() => Assertions.assertEq('isOpen should be true', true, Dropdown.isOpen(component))),
           FocusTools.sTryOnSelector('Focus should still be on button (expand does not shift it)', doc, 'button')
         ])
@@ -302,12 +302,12 @@ UnitTest.asynctest('Dropdown List', (success, failure) => {
         'Closing the dropdown should hide the menu. Currently, it will not shift focus.',
         GeneralSteps.sequence([
           Step.sync(() => {
-            Focus.focus(inputForFocus.element());
+            Focus.focus(inputForFocus.element);
           }),
           Step.sync(() => {
             Dropdown.close(component);
           }),
-          UiFinder.sNotExists(sink.element(), '.menu'),
+          UiFinder.sNotExists(sink.element, '.menu'),
           Step.sync(() => Assertions.assertEq('isOpen should be false', false, Dropdown.isOpen(component))),
           FocusTools.sTryOnSelector('Focus should not be shifted by the close call', doc, 'input')
         ])
@@ -319,7 +319,7 @@ UnitTest.asynctest('Dropdown List', (success, failure) => {
           Step.sync(() => {
             Dropdown.open(component);
           }),
-          UiFinder.sWaitForVisible('Waiting for menu to appear', sink.element(), '.menu'),
+          UiFinder.sWaitForVisible('Waiting for menu to appear', sink.element, '.menu'),
           Step.sync(() => Assertions.assertEq('isOpen should be true', true, Dropdown.isOpen(component))),
           FocusTools.sTryOnSelector('Focus should still be on button (expand does not shift it)', doc, 'li:contains("Alpha")')
         ])

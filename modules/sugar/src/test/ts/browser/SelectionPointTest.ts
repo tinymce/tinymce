@@ -41,7 +41,7 @@ UnitTest.asynctest('Browser Test: SimSelection.getAtPoint', (success, failure) =
 
   const checks = () => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const iframeWin = iframe.dom().contentWindow!;
+    const iframeWin = iframe.dom.contentWindow!;
     const iframeDoc = SugarElement.fromDom(iframeWin.document);
 
     const get = (selector: string) => Selectors.one(selector, iframeDoc).getOrDie('element with selector "' + selector + '" not found');
@@ -49,14 +49,14 @@ UnitTest.asynctest('Browser Test: SimSelection.getAtPoint', (success, failure) =
     const check = (x: number, y: number, expected: SimRange) => {
       const found = WindowSelection.getAtPoint(iframeWin, x, y);
       const raw = found.getOrDie('point ' + x + ',' + y + ' not found');
-      WindowSelection.setExact(iframeWin, raw.start(), raw.soffset(), raw.finish(), raw.foffset());
+      WindowSelection.setExact(iframeWin, raw.start, raw.soffset, raw.finish, raw.foffset);
 
       const range = WindowSelection.getExact(iframeWin).getOrDie('Could not get window selection after setting it');
-      const starts = Compare.eq(expected.start(), range.start());
-      assert.eq(true, starts, () => 'start elements were not equal, was ' + SugarNode.name(range.start()) + ', expected ' + SugarNode.name(expected.start()));
-      assert.eq(expected.soffset(), range.soffset());
-      assert.eq(true, Compare.eq(expected.finish(), range.finish()), () => 'finish elements were not equal, was ' + SugarNode.name(range.finish()));
-      assert.eq(expected.foffset(), range.foffset());
+      const starts = Compare.eq(expected.start, range.start);
+      assert.eq(true, starts, () => 'start elements were not equal, was ' + SugarNode.name(range.start) + ', expected ' + SugarNode.name(expected.start));
+      assert.eq(expected.soffset, range.soffset);
+      assert.eq(true, Compare.eq(expected.finish, range.finish), () => 'finish elements were not equal, was ' + SugarNode.name(range.finish));
+      assert.eq(expected.foffset, range.foffset);
     };
 
     const outside = Traverse.children(get('.outside'))[0];

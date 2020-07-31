@@ -14,14 +14,14 @@ export default (bridge: WindowBridge, container: SugarElement, isRoot: (e: Sugar
   /* Keep this as lightweight as possible when we're not in a table selection, it runs constantly */
   const mousedown = (event: EventArgs) => {
     annotations.clear(container);
-    findCell(event.target(), isRoot).each(cursor.set);
+    findCell(event.target, isRoot).each(cursor.set);
   };
 
   /* Keep this as lightweight as possible when we're not in a table selection, it runs constantly */
   const mouseover = (event: EventArgs) => {
     cursor.on((start) => {
       annotations.clearBeforeUpdate(container);
-      findCell(event.target(), isRoot).each((finish) => {
+      findCell(event.target, isRoot).each((finish) => {
         CellSelection.identify(start, finish, isRoot).each((cellSel) => {
           const boxes = cellSel.boxes.getOr([]);
           // Wait until we have more than one, otherwise you can't do text selection inside a cell.

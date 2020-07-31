@@ -1,4 +1,4 @@
-import { Fun, Obj, Optional, Optionals } from '@ephox/katamari';
+import { Obj, Optional, Optionals } from '@ephox/katamari';
 import {
   Attribute, Css, Direction, DomEvent, EventArgs, Insert, InsertAll, Ready, Replication, SelectorFind, SugarElement, SugarNode
 } from '@ephox/sugar';
@@ -202,8 +202,8 @@ Ready.execute(function () {
   const newCell: Generators['cell'] = function (prev) {
     const td = SugarElement.fromTag('td');
     Insert.append(td, SugarElement.fromText('?'));
-    if (prev.colspan() === 1) { Css.set(td, 'width', Css.get(prev.element(), 'width')); }
-    if (prev.rowspan() === 1) { Css.set(td, 'height', Css.get(prev.element(), 'height')); }
+    if (prev.colspan === 1) { Css.set(td, 'width', Css.get(prev.element, 'width')); }
+    if (prev.rowspan === 1) { Css.set(td, 'height', Css.get(prev.element, 'height')); }
     return td;
   };
 
@@ -238,8 +238,8 @@ Ready.execute(function () {
         const dir = Direction.getDirection(start);
         const direction = dir === 'rtl' ? ResizeDirection.rtl : ResizeDirection.ltr;
         const target = {
-          element: Fun.constant(start),
-          selection: Fun.constant([ start ])
+          element: start,
+          selection: [ start ]
         };
 
         // wire, table, target, generators, direction

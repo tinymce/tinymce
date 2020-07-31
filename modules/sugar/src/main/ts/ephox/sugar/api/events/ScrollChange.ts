@@ -12,7 +12,7 @@ const bind = (doc: SugarElement<Document>, handler: (pos: SugarPosition) => void
   let lastScroll = Scroll.get(doc);
   const scrollBinder = DomEvent.bind(doc, 'scroll', (_event) => {
     const scroll = Scroll.get(doc);
-    if ( (scroll.top() !== lastScroll.top()) || (scroll.left() !== lastScroll.left()) ) {
+    if ( (scroll.top !== lastScroll.top) || (scroll.left !== lastScroll.left) ) {
       handler(scroll);
     }
     lastScroll = scroll;

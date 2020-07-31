@@ -40,7 +40,7 @@ const insertCharAtSelection = function (doc, chr) {
 
 const sInsertCharAtSelection = function (doc, chr) {
   return Step.sync(function () {
-    insertCharAtSelection(doc.dom(), chr);
+    insertCharAtSelection(doc.dom, chr);
   });
 };
 

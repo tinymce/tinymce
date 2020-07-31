@@ -28,7 +28,7 @@ UnitTest.asynctest('MenuTest', (success, failure) => {
         classes: [ 'test-menu' ]
       },
       components: [
-        Menu.parts().items({ })
+        Menu.parts.items({ })
       ],
 
       markers: {
@@ -63,7 +63,7 @@ UnitTest.asynctest('MenuTest', (success, failure) => {
     return [
       Chain.asStep({}, [
         NamedChain.asChain([
-          NamedChain.writeValue('menu', component.element()),
+          NamedChain.writeValue('menu', component.element),
           NamedChain.direct('menu', UiFinder.cFindIn('li[data-value="alpha"]'), 'alpha'),
           NamedChain.direct('menu', UiFinder.cFindIn('li[data-value="beta"]'), 'beta'),
 

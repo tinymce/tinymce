@@ -74,12 +74,12 @@ const toBox = (origin: OriginAdt, element: SugarElement): Boxes.Bounds => {
   const position = origin.fold(rel, rel, () => {
     const scroll = Scroll.get();
     // TODO: Make adding the scroll in OuterPosition.find optional.
-    return OuterPosition.find(element).translate(-scroll.left(), -scroll.top());
+    return OuterPosition.find(element).translate(-scroll.left, -scroll.top);
   });
 
   const width = Width.getOuter(element);
   const height = Height.getOuter(element);
-  return Boxes.bounds(position.left(), position.top(), width, height);
+  return Boxes.bounds(position.left, position.top, width, height);
 };
 
 const viewport = (origin: OriginAdt, getBounds: Optional<() => Boxes.Bounds>): Boxes.Bounds => getBounds.fold(() =>
@@ -90,7 +90,7 @@ const viewport = (origin: OriginAdt, getBounds: Optional<() => Boxes.Bounds>): B
   origin.fold(b, b, () => {
     const bounds = b();
     const pos = translate(origin, bounds.x, bounds.y);
-    return Boxes.bounds(pos.left(), pos.top(), bounds.width, bounds.height);
+    return Boxes.bounds(pos.left, pos.top, bounds.width, bounds.height);
   })
 );
 
@@ -98,7 +98,7 @@ const translate = (origin: OriginAdt, x: number, y: number): SugarPosition => {
   const pos = SugarPosition(x, y);
   const removeScroll = () => {
     const outerScroll = Scroll.get();
-    return pos.translate(-outerScroll.left(), -outerScroll.top());
+    return pos.translate(-outerScroll.left, -outerScroll.top);
   };
   // This could use cata if it wasn't a circular reference
   return origin.fold(Fun.constant(pos), Fun.constant(pos), removeScroll);

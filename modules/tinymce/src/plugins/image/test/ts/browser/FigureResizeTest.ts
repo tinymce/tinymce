@@ -20,7 +20,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.FigureResizeTest', (success, f
 
   const cGetElementSize = Chain.control(
     Chain.mapper(function (elm: any) {
-      const elmStyle = elm.dom().style;
+      const elmStyle = elm.dom.style;
       return { w: elmStyle.width, h: elmStyle.height };
     }),
     Guard.addLogging('Get element size')
@@ -30,7 +30,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.FigureResizeTest', (success, f
     return Chain.control(
       Chain.op(function (input: any) {
         const dom = input.editor.dom;
-        const target = input.resizeSE.dom();
+        const target = input.resizeSE.dom;
         const pos = dom.getPos(target);
 
         dom.fire(target, 'mousedown', { screenX: pos.x, screenY: pos.y });

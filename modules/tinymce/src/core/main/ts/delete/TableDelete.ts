@@ -26,7 +26,7 @@ const freefallRtl = (root: SugarElement<Node>): Optional<SugarElement<Node>> => 
 
 const emptyCells = (editor: Editor, cells: SugarElement<HTMLTableCellElement>[]) => {
   Arr.each(cells, PaddingBr.fillWithPaddingBr);
-  editor.selection.setCursorLocation(cells[0].dom(), 0);
+  editor.selection.setCursorLocation(cells[0].dom, 0);
   return true;
 };
 
@@ -34,10 +34,10 @@ const deleteCellContents = (editor: Editor, rng: Range, cell: SugarElement<HTMLT
   rng.deleteContents();
   // Pad the last block node
   const lastNode = freefallRtl(cell).getOr(cell);
-  const lastBlock = SugarElement.fromDom(editor.dom.getParent(lastNode.dom(), editor.dom.isBlock));
+  const lastBlock = SugarElement.fromDom(editor.dom.getParent(lastNode.dom, editor.dom.isBlock));
   if (Empty.isEmpty(lastBlock)) {
     PaddingBr.fillWithPaddingBr(lastBlock);
-    editor.selection.setCursorLocation(lastBlock.dom(), 0);
+    editor.selection.setCursorLocation(lastBlock.dom, 0);
   }
   // Clean up any additional leftover nodes. If the last block wasn't a direct child, then we also need to clean up siblings
   if (!Compare.eq(cell, lastBlock)) {
@@ -96,13 +96,13 @@ const deleteBetweenCells = (editor: Editor, rootElm: SugarElement<Node>, forward
 
 const emptyElement = (editor: Editor, elm: SugarElement<Node>) => {
   PaddingBr.fillWithPaddingBr(elm);
-  editor.selection.setCursorLocation(elm.dom(), 0);
+  editor.selection.setCursorLocation(elm.dom, 0);
   return Optional.some(true);
 };
 
 const isDeleteOfLastCharPos = (fromCaption: SugarElement<HTMLTableCaptionElement>, forward: boolean, from: CaretPosition, to: CaretPosition) =>
-  CaretFinder.firstPositionIn(fromCaption.dom()).bind(
-    (first) => CaretFinder.lastPositionIn(fromCaption.dom()).map(
+  CaretFinder.firstPositionIn(fromCaption.dom).bind(
+    (first) => CaretFinder.lastPositionIn(fromCaption.dom).map(
       (last) => forward ?
         from.isEqual(first) && to.isEqual(last) :
         from.isEqual(last) && to.isEqual(first))

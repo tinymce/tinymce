@@ -112,7 +112,7 @@ UnitTest.asynctest('ReflectingTest', (success, failure) => {
       })
     );
   }, (_doc, _body, gui, component, store) => {
-    const sAssertReflectState = (label: string, expected: any, selector: string) => Chain.asStep(component.element(), [
+    const sAssertReflectState = (label: string, expected: any, selector: string) => Chain.asStep(component.element, [
       UiFinder.cFindIn(selector),
       Chain.binder(component.getSystem().getByDom),
       Chain.op((r1) => {
@@ -163,7 +163,7 @@ UnitTest.asynctest('ReflectingTest', (success, failure) => {
             })
           ]
         })),
-        component.element()
+        component.element
       ),
 
       Step.sync(() => {
@@ -222,7 +222,7 @@ UnitTest.asynctest('ReflectingTest', (success, failure) => {
             })
           ]
         })),
-        component.element()
+        component.element
       ),
 
       Step.sync(() => {
@@ -263,7 +263,7 @@ UnitTest.asynctest('ReflectingTest', (success, failure) => {
             })
           ]
         })),
-        component.element()
+        component.element
       ),
 
       sAssertReflectState('reflector3', [ 'gamma' ], '.reflector-3')

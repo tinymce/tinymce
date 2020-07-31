@@ -27,16 +27,16 @@ UnitTest.asynctest('browser.tinymce.themes.silver.editor.header.StickyHeaderScro
   const sScrollRangeIntoView = (editor: Editor, path: number[], offset: number, alignToTop?: boolean) => Step.sync(() => {
     const x = Cursors.calculateOne(SugarElement.fromDom(editor.getBody()), path);
     const rng = editor.dom.createRng();
-    rng.setStart(x.dom(), offset);
-    rng.setEnd(x.dom(), offset);
+    rng.setStart(x.dom, offset);
+    rng.setEnd(x.dom, offset);
 
     ScrollIntoView.scrollRangeIntoView(editor, rng, alignToTop);
   });
 
   const sAssertApproxScrollPosition = (editor: Editor, x: number, y: number) => Step.sync(() => {
     const scrollPos = Scroll.get(SugarElement.fromDom(editor.getDoc()));
-    const actualX = scrollPos.left();
-    const actualY = scrollPos.top();
+    const actualX = scrollPos.left;
+    const actualY = scrollPos.top;
     Assertions.assertEq(`Scroll position X should be expected value: ${x} got ${actualX}`, true, Math.abs(x - actualX) < 5);
     Assertions.assertEq(`Scroll position Y should be expected value: ${y} got ${actualY}`, true, Math.abs(y - actualY) < 5);
   });
@@ -50,8 +50,8 @@ UnitTest.asynctest('browser.tinymce.themes.silver.editor.header.StickyHeaderScro
     const initialContainerPos = SugarLocation.absolute(container);
     const headerHeight = 79;
 
-    const expectedSecondParaScrollBottomPos = 2000 - viewHeight + initialContainerPos.top();
-    const expectedSecondParaScrollTopPos = 2000 + initialContainerPos.top() - headerHeight;
+    const expectedSecondParaScrollBottomPos = 2000 - viewHeight + initialContainerPos.top;
+    const expectedSecondParaScrollTopPos = 2000 + initialContainerPos.top - headerHeight;
 
     const steps = [
       tinyApis.sFocus(),
@@ -76,11 +76,11 @@ UnitTest.asynctest('browser.tinymce.themes.silver.editor.header.StickyHeaderScro
           Step.label('Scroll to second paragraph', sScrollRangeIntoView(editor, [ 1, 0 ], 0)),
           sAssertApproxScrollPosition(editor, 0, expectedSecondParaScrollBottomPos + 17), // expected pos + para line height
           Step.label('Scroll back to first paragraph', sScrollRangeIntoView(editor, [ 0, 0 ], 0)),
-          sAssertApproxScrollPosition(editor, 0, initialContainerPos.top() - headerHeight),
+          sAssertApproxScrollPosition(editor, 0, initialContainerPos.top - headerHeight),
           Step.label('Scroll to last paragraph', sScrollRangeIntoView(editor, [ 2, 0 ], 0)),
           sAssertApproxScrollPosition(editor, 0, expectedSecondParaScrollBottomPos + 50 + 17), // expected pos + second para height + para line height,
           Step.label('Scroll back to first paragraph', sScrollRangeIntoView(editor, [ 0, 0 ], 0)),
-          sAssertApproxScrollPosition(editor, 0, initialContainerPos.top() - headerHeight),
+          sAssertApproxScrollPosition(editor, 0, initialContainerPos.top - headerHeight),
           Step.label('Scroll to second paragraph to the top', sScrollRangeIntoView(editor, [ 1, 0 ], 0, true)),
           sAssertApproxScrollPosition(editor, 0, expectedSecondParaScrollTopPos)
         ]))

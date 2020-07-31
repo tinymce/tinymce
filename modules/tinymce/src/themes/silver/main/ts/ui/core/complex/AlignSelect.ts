@@ -6,7 +6,7 @@
  */
 
 import { AlloyComponent, AlloyTriggers } from '@ephox/alloy';
-import { Arr, Fun, Optional } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 import { updateMenuIcon } from '../../dropdown/CommonDropdown';
@@ -50,7 +50,7 @@ const getSpec = (editor: Editor): SelectSpec => {
     tooltip: 'Align',
     icon: Optional.some('align-left'),
     isSelectedFor,
-    getCurrentValue: Fun.constant(Optional.none()),
+    getCurrentValue: Optional.none,
     getPreviewFor,
     onAction,
     setInitialValue,

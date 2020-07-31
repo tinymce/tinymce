@@ -1,4 +1,4 @@
-import { Fun, Optional } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { DomGather } from '@ephox/phoenix';
 import { PlatformDetection } from '@ephox/sand';
 import { Awareness, Compare, CursorPosition, PredicateExists, SelectorFilter, SelectorFind, SimRange, SugarElement, Traverse } from '@ephox/sugar';
@@ -18,9 +18,9 @@ const inSameTable = function (elem: SugarElement, table: SugarElement) {
 };
 
 interface Simulated {
-  start: () => SugarElement;
-  finish: () => SugarElement;
-  range: () => SimRange;
+  readonly start: SugarElement;
+  readonly finish: SugarElement;
+  readonly range: SimRange;
 }
 
 // Note: initial is the finishing element, because that's where the cursor starts from
@@ -32,11 +32,11 @@ const simulate = function (bridge: WindowBridge, isRoot: (e: SugarElement) => bo
         return Optional.none<Simulated>();
       }
       return TableKeys.handle(bridge, isRoot, direction).bind(function (range) {
-        return SelectorFind.closest(range.finish(), 'td,th', isRoot).map<Simulated>(function (finish) {
+        return SelectorFind.closest(range.finish, 'td,th', isRoot).map<Simulated>(function (finish) {
           return {
-            start: Fun.constant(start),
-            finish: Fun.constant(finish),
-            range: Fun.constant(range)
+            start,
+            finish,
+            range
           };
         });
       });
@@ -52,9 +52,9 @@ const navigate = function (bridge: WindowBridge, isRoot: (e: SugarElement) => bo
   } else {
     return precheck(initial, isRoot).orThunk(function () {
       return simulate(bridge, isRoot, direction, initial, anchor).map(function (info) {
-        const range = info.range();
+        const range = info.range;
         return Response.create(
-          Optional.some(Util.makeSitus(range.start(), range.soffset(), range.finish(), range.foffset())),
+          Optional.some(Util.makeSitus(range.start, range.soffset, range.finish, range.foffset)),
           true
         );
       });
@@ -106,7 +106,7 @@ const lastDownCheck = function (initial: SugarElement, isRoot: (e: SugarElement)
 const select = function (bridge: WindowBridge, container: SugarElement, isRoot: (e: SugarElement) => boolean, direction: KeyDirection, initial: SugarElement,
                          anchor: SugarElement, selectRange: (container: SugarElement, boxes: SugarElement[], start: SugarElement, finish: SugarElement) => void) {
   return simulate(bridge, isRoot, direction, initial, anchor).bind(function (info) {
-    return KeySelection.detect(container, isRoot, info.start(), info.finish(), selectRange);
+    return KeySelection.detect(container, isRoot, info.start, info.finish, selectRange);
   });
 };
 

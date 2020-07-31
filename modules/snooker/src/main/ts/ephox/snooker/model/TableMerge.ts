@@ -8,7 +8,7 @@ import * as GridRow from './GridRow';
 
 const isSpanning = (grid: Structs.RowCells[], row: number, col: number, comparator: (a: SugarElement, b: SugarElement) => boolean) => {
   const candidate = GridRow.getCell(grid[row], col);
-  const matching = Fun.curry(comparator, candidate.element());
+  const matching = Fun.curry(comparator, candidate.element);
   const currentRow = grid[row];
 
   // sanity check, 1x1 has no spans
@@ -18,7 +18,7 @@ const isSpanning = (grid: Structs.RowCells[], row: number, col: number, comparat
       // search down, if we're not on the bottom edge
       (col > 0 && matching(GridRow.getCellElement(currentRow, col - 1))) ||
       // search right, if we're not on the right edge
-      (col < currentRow.cells().length - 1 && matching(GridRow.getCellElement(currentRow, col + 1))) ||
+      (col < currentRow.cells.length - 1 && matching(GridRow.getCellElement(currentRow, col + 1))) ||
       // search up, if we're not on the top edge
       (row > 0 && matching(GridRow.getCellElement(grid[row - 1], col))) ||
       (row < grid.length - 1 && matching(GridRow.getCellElement(grid[row + 1], col)))
@@ -28,8 +28,8 @@ const isSpanning = (grid: Structs.RowCells[], row: number, col: number, comparat
 const mergeTables = (startAddress: Structs.Address, gridA: Structs.RowCells[], gridB: Structs.RowCells[], generator: SimpleGenerators, comparator: (a: SugarElement, b: SugarElement) => boolean) => {
   // Assumes
   //  - gridA is square and gridB is square
-  const startRow = startAddress.row();
-  const startCol = startAddress.column();
+  const startRow = startAddress.row;
+  const startCol = startAddress.column;
   const mergeHeight = gridB.length;
   const mergeWidth = GridRow.cellLength(gridB[0]);
   const endRow = startRow + mergeHeight;
@@ -67,7 +67,7 @@ const insertCols = (index: number, gridA: Structs.RowCells[], gridB: Structs.Row
   const fittedOldGrid = Fitment.tailor(gridA, secondDelta, generator);
 
   return Arr.map(fittedOldGrid, (gridRow, i) => {
-    const newCells = gridRow.cells().slice(0, index).concat(fittedNewGrid[i].cells()).concat(gridRow.cells().slice(index, gridRow.cells().length));
+    const newCells = gridRow.cells.slice(0, index).concat(fittedNewGrid[i].cells).concat(gridRow.cells.slice(index, gridRow.cells.length));
     return GridRow.setCells(gridRow, newCells);
   });
 };

@@ -42,7 +42,7 @@ UnitTest.asynctest('ReplacingTest', (success, failure) => {
           ApproxStructure.build((s, _str, arr) => s.element('div', {
             children: Arr.map(expectedClasses, (ec) => s.element('div', { classes: [ arr.has(ec) ] }))
           })),
-          component.element()
+          component.element
         );
       })
     );
@@ -55,7 +55,7 @@ UnitTest.asynctest('ReplacingTest', (success, failure) => {
             s.element('span', { })
           ]
         })),
-        component.element()
+        component.element
       ),
 
       Step.sync(() => {
@@ -69,7 +69,7 @@ UnitTest.asynctest('ReplacingTest', (success, failure) => {
         ApproxStructure.build((s, _str, _arr) => s.element('div', {
           children: [ ]
         })),
-        component.element()
+        component.element
       ),
       Step.sync(() => {
         Assert.eq('Should have no contents', [ ], Replacing.contents(component));
@@ -90,7 +90,7 @@ UnitTest.asynctest('ReplacingTest', (success, failure) => {
             s.element('div', { })
           ]
         })),
-        component.element()
+        component.element
       ),
       Step.sync(() => {
         Assert.eq('Should have 2 children', 2, Replacing.contents(component).length);
@@ -113,7 +113,7 @@ UnitTest.asynctest('ReplacingTest', (success, failure) => {
             s.element('div', { })
           ]
         })),
-        component.element()
+        component.element
       ),
       Step.sync(() => {
         Assert.eq('Should have 2 children still', 2, Replacing.contents(component).length);
@@ -134,7 +134,7 @@ UnitTest.asynctest('ReplacingTest', (success, failure) => {
             s.element('span', { })
           ]
         })),
-        component.element()
+        component.element
       ),
       Step.sync(() => {
         Assert.eq('Should have 3 children now', 3, Replacing.contents(component).length);
@@ -161,7 +161,7 @@ UnitTest.asynctest('ReplacingTest', (success, failure) => {
             s.element('span', { })
           ]
         })),
-        component.element()
+        component.element
       ),
       Step.sync(() => {
         Assert.eq('Should have 4 children now', 4, Replacing.contents(component).length);
@@ -184,7 +184,7 @@ UnitTest.asynctest('ReplacingTest', (success, failure) => {
             s.element('span', { })
           ]
         })),
-        component.element()
+        component.element
       ),
       Step.sync(() => {
         Assert.eq('Should have 3 children again', 3, Replacing.contents(component).length);
@@ -207,7 +207,7 @@ UnitTest.asynctest('ReplacingTest', (success, failure) => {
             s.element('div', { })
           ]
         })),
-        component.element()
+        component.element
       ),
       Step.sync(() => {
         Assert.eq('Should have 4 children again', 4, Replacing.contents(component).length);

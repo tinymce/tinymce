@@ -27,13 +27,13 @@ UnitTest.asynctest('RepresentingTest (mode: dataset)', (success, failure) => {
               }
             },
             getDataKey(component) {
-              return Value.get(component.element());
+              return Value.get(component.element);
             },
             getFallbackEntry(key) {
               return { value: 'fallback.' + key.toLowerCase(), meta: { text: key }};
             },
             setValue: (comp, data) => {
-              Value.set(comp.element(), data.meta.text);
+              Value.set(comp.element, data.meta.text);
             }
           }
         })
@@ -56,12 +56,12 @@ UnitTest.asynctest('RepresentingTest (mode: dataset)', (success, failure) => {
         ApproxStructure.build((s, str, _arr) => s.element('input', {
           value: str.is('Hund')
         })),
-        component.element()
+        component.element
       ),
 
       sAssertRepValue('Checking represented value on load', { value: 'dog', meta: { text: 'Hund' }}),
 
-      FocusTools.sSetFocus('Setting of focus on input field', gui.element(), 'input'),
+      FocusTools.sSetFocus('Setting of focus on input field', gui.element, 'input'),
       FocusTools.sSetActiveValue(doc, 'Katze'),
 
       sAssertRepValue('Checking represented value after change', {
@@ -95,7 +95,7 @@ UnitTest.asynctest('RepresentingTest (mode: dataset)', (success, failure) => {
         ApproxStructure.build((s, str, _arr) => s.element('input', {
           value: str.is('Elephant')
         })),
-        component.element()
+        component.element
       )
     ];
   }, () => { success(); }, failure);

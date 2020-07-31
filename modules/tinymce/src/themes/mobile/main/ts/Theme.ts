@@ -8,7 +8,7 @@
 import { AlloyTriggers, Attachment, Swapping } from '@ephox/alloy';
 import { Cell, Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Focus, SugarElement, SugarNode } from '@ephox/sugar';
+import { EventArgs, Focus, SugarElement, SugarNode } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import { NotificationSpec } from 'tinymce/core/api/NotificationManager';
@@ -49,15 +49,15 @@ const renderMobileTheme = (editor: Editor) => {
 
     const realm = PlatformDetection.detect().os.isAndroid() ? AndroidRealm(doScrollIntoView) : IosRealm(doScrollIntoView);
     const original = SugarElement.fromDom(targetNode);
-    Attachment.attachSystemAfter(original, realm.system());
+    Attachment.attachSystemAfter(original, realm.system);
 
     const findFocusIn = (elem) => Focus.search(elem).bind((focused) =>
-      realm.system().getByDom(focused).toOptional());
+      realm.system.getByDom(focused).toOptional());
 
     const outerWindow = targetNode.ownerDocument.defaultView;
     const orientation = Orientation.onChange(outerWindow, {
       onChange() {
-        const alloy = realm.system();
+        const alloy = realm.system;
         alloy.broadcastOn([ TinyChannels.orientationChanged ], { width: Orientation.getActualWidth(outerWindow) });
       },
       onReady: Fun.noop
@@ -148,19 +148,19 @@ const renderMobileTheme = (editor: Editor) => {
             hideDropup();
           },
 
-          onTapContent(evt) {
-            const target = evt.target();
+          onTapContent(evt: EventArgs<TouchEvent>) {
+            const target = evt.target;
             // If the user has tapped (touchstart, touchend without movement) on an image, select it.
             if (SugarNode.name(target) === 'img') {
-              editor.selection.select(target.dom());
+              editor.selection.select(target.dom);
               // Prevent the default behaviour from firing so that the image stays selected
               evt.kill();
             } else if (SugarNode.name(target) === 'a') {
-              const component = realm.system().getByDom(SugarElement.fromDom(editor.editorContainer));
+              const component = realm.system.getByDom(SugarElement.fromDom(editor.editorContainer));
               component.each((container) => {
                 // view mode
                 if (Swapping.isAlpha(container)) {
-                  TinyCodeDupe.openLink(target.dom());
+                  TinyCodeDupe.openLink(target.dom);
                 }
               });
             }
@@ -170,8 +170,8 @@ const renderMobileTheme = (editor: Editor) => {
         socket: SugarElement.fromDom(editor.contentAreaContainer),
         toolstrip: SugarElement.fromDom(editor.editorContainer.querySelector('.' + Styles.resolve('toolstrip'))),
         toolbar: SugarElement.fromDom(editor.editorContainer.querySelector('.' + Styles.resolve('toolbar'))),
-        dropup: realm.dropup(),
-        alloy: realm.system(),
+        dropup: realm.dropup,
+        alloy: realm.system,
         translate: Fun.noop,
 
         setReadOnly(ro) {
@@ -184,8 +184,8 @@ const renderMobileTheme = (editor: Editor) => {
       });
 
       const hideDropup = () => {
-        realm.dropup().disappear(() => {
-          realm.system().broadcastOn([ TinyChannels.dropupDismissed ], { });
+        realm.dropup.disappear(() => {
+          realm.system.broadcastOn([ TinyChannels.dropupDismissed ], { });
         });
       };
 
@@ -248,13 +248,13 @@ const renderMobileTheme = (editor: Editor) => {
     });
 
     editor.on('detach', () => {
-      Attachment.detachSystem(realm.system());
-      realm.system().destroy();
+      Attachment.detachSystem(realm.system);
+      realm.system.destroy();
     });
 
     return {
-      iframeContainer: realm.socket().element().dom() as HTMLIFrameElement,
-      editorContainer: realm.element().dom()
+      iframeContainer: realm.socket.element.dom as HTMLIFrameElement,
+      editorContainer: realm.element.dom
     };
   };
 

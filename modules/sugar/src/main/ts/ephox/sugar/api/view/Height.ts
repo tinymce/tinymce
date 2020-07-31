@@ -5,7 +5,7 @@ import * as Css from '../properties/Css';
 
 const api = Dimension('height', (element: SugarElement<HTMLElement>) => {
   // getBoundingClientRect gives better results than offsetHeight for tables with captions on Firefox
-  const dom = element.dom();
+  const dom = element.dom;
   return SugarBody.inBody(element) ? dom.getBoundingClientRect().height : dom.offsetHeight;
 });
 

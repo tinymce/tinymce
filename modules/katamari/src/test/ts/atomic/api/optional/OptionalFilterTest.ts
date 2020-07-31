@@ -6,29 +6,28 @@ import { tOptional } from 'ephox/katamari/api/OptionalInstances';
 import { arbOptionalSome as arbOptionSome } from 'ephox/katamari/test/arb/ArbDataTypes';
 import fc from 'fast-check';
 
-const { die, constant } = Fun;
 const { some, none } = Optional;
 const { tNumber } = Testable;
 
 UnitTest.test('Optional.filter', () => {
-  Assert.eq('filter #1', none(), none<number>().filter(constant(true)), tOptional());
-  Assert.eq('filter #2', none(), none<number>().filter(constant(false)), tOptional());
-  Assert.eq('filter #3', none(), none<number>().filter(die('oof')), tOptional());
-  Assert.eq('filter #4', none(), none().filter(die('boom')), tOptional());
+  Assert.eq('filter #1', none(), none<number>().filter(Fun.always), tOptional());
+  Assert.eq('filter #2', none(), none<number>().filter(Fun.never), tOptional());
+  Assert.eq('filter #3', none(), none<number>().filter(Fun.die('oof')), tOptional());
+  Assert.eq('filter #4', none(), none().filter(Fun.die('boom')), tOptional());
   Assert.eq('filter #5', none(), some(5).filter((x) => x === 8), tOptional(tNumber));
-  Assert.eq('filter #6', none(), some(5).filter(constant(false)), tOptional(tNumber));
-  Assert.eq('filter #7', none(), none().filter(die('boom')), tOptional());
+  Assert.eq('filter #6', none(), some(5).filter(Fun.never), tOptional(tNumber));
+  Assert.eq('filter #7', none(), none().filter(Fun.die('boom')), tOptional());
   Assert.eq('filter #8', some(6), some(6).filter((x) => x === 6), tOptional(tNumber));
-  Assert.eq('filter #9', some(6), some(6).filter(Fun.constant(true)), tOptional(tNumber));
-  Assert.eq('filter', some(5), some(5).filter(Fun.constant(true)), tOptional(tNumber));
-  Assert.eq('filter', none(), some(5).filter(Fun.constant(false)), tOptional(tNumber));
+  Assert.eq('filter #9', some(6), some(6).filter(Fun.always), tOptional(tNumber));
+  Assert.eq('filter', some(5), some(5).filter(Fun.always), tOptional(tNumber));
+  Assert.eq('filter', none(), some(5).filter(Fun.never), tOptional(tNumber));
 });
 
 UnitTest.test('Checking some(x).filter(_ -> false) === none', () => {
   fc.assert(fc.property(arbOptionSome(fc.integer()), (opt) => {
     Assert.eq('eq', true, tOptional().eq(
       none(),
-      opt.filter(Fun.constant(false))));
+      opt.filter(Fun.never)));
   }));
 });
 
@@ -36,7 +35,7 @@ UnitTest.test('Checking some(x).filter(_ -> true) === some(x)', () => {
   fc.assert(fc.property(fc.integer(), (x) => {
     Assert.eq('eq', true, tOptional().eq(
       some(x),
-      some(x).filter(Fun.constant(true))
+      some(x).filter(Fun.always)
     ));
   }));
 });

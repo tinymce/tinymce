@@ -52,19 +52,19 @@ UnitTest.asynctest('SlidingInterruptedTest', (success, failure) => {
   ), (doc, _body, _gui, component, _store) => {
 
     const sIsGrowing = Step.sync(() => {
-      Assertions.assertEq('Ensuring still growing', true, Class.has(component.element(), 'test-sliding-width-growing'));
+      Assertions.assertEq('Ensuring still growing', true, Class.has(component.element, 'test-sliding-width-growing'));
     });
 
     const sIsNotGrowing = Step.sync(() => {
-      Assertions.assertEq('Ensuring stopped growing', false, Class.has(component.element(), 'test-sliding-width-growing'));
+      Assertions.assertEq('Ensuring stopped growing', false, Class.has(component.element, 'test-sliding-width-growing'));
     });
 
     const sIsShrinking = Step.sync(() => {
-      Assertions.assertEq('Ensuring still shrinking', true, Class.has(component.element(), 'test-sliding-width-shrinking'));
+      Assertions.assertEq('Ensuring still shrinking', true, Class.has(component.element, 'test-sliding-width-shrinking'));
     });
 
     const sIsNotShrinking = Step.sync(() => {
-      Assertions.assertEq('Ensuring stopped shrinking', false, Class.has(component.element(), 'test-sliding-width-shrinking'));
+      Assertions.assertEq('Ensuring stopped shrinking', false, Class.has(component.element, 'test-sliding-width-shrinking'));
     });
 
     const sGrow = Step.sync(() => Sliding.grow(component));
@@ -93,14 +93,14 @@ UnitTest.asynctest('SlidingInterruptedTest', (success, failure) => {
         Step.stateful((value, next, _die) => {
           next({
             ...value,
-            width: Width.get(component.element())
+            width: Width.get(component.element)
           });
         }),
         sGrow,
         Logger.t(
           'Check when the shrinking bar starts growing again, its width does not jump to either 0 or max',
           Step.stateful((value, next, _die) => {
-            const actualWidth = Width.get(component.element());
+            const actualWidth = Width.get(component.element);
             Assertions.assertEq(
               `Width should stay about the same. Should have been about: ${value.width}px, was: ${actualWidth}px`,
               true,

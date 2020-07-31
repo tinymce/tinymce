@@ -62,7 +62,7 @@ const makeSandbox = (button: AlloyComponent, spec: FloatingToolbarButtonSpec, de
   const onOpen = (sandbox: AlloyComponent, toolbar: AlloyComponent) => {
     detail.fetch().get((groups) => {
       setGroups(button, toolbar, detail, spec.layouts, groups);
-      ariaOwner.link(button.element());
+      ariaOwner.link(button.element);
       Keying.focusIn(toolbar);
     });
   };
@@ -71,7 +71,7 @@ const makeSandbox = (button: AlloyComponent, spec: FloatingToolbarButtonSpec, de
     // Toggle and focus the button
     Toggling.off(button);
     Focusing.focus(button);
-    ariaOwner.unlink(button.element());
+    ariaOwner.unlink(button.element);
   };
 
   return {

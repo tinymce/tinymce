@@ -58,7 +58,7 @@ const setupInShadowRoot = (callback: (editor: any, shadowRoot: SugarElement<Shad
   const shadowHost: SugarElement<HTMLElement> = SugarElement.fromTag('div', document);
 
   Insert.append(SugarBody.body(), shadowHost);
-  const sr: SugarElement<ShadowRoot> = SugarElement.fromDom(shadowHost.dom().attachShadow({ mode: 'open' }));
+  const sr: SugarElement<ShadowRoot> = SugarElement.fromDom(shadowHost.dom.attachShadow({ mode: 'open' }));
   const editorDiv: SugarElement<HTMLElement> = SugarElement.fromTag('div', document);
 
   Insert.append(sr, editorDiv);

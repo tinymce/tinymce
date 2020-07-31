@@ -26,7 +26,7 @@ UnitTest.test('Browser Test: behaviour.ToggleModesTest', () => {
           'aria-pressed': str.is('true')
         }
       })),
-      button.element()
+      button.element
     );
   });
 
@@ -46,7 +46,7 @@ UnitTest.test('Browser Test: behaviour.ToggleModesTest', () => {
           'aria-pressed': str.is('true')
         }
       })),
-      listbox.element()
+      listbox.element
     );
   });
 
@@ -66,7 +66,7 @@ UnitTest.test('Browser Test: behaviour.ToggleModesTest', () => {
           'aria-pressed': str.none()
         }
       })),
-      menuitem.element()
+      menuitem.element
     );
   });
 });

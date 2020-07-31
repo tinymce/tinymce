@@ -7,7 +7,7 @@
 
 import { Optional } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Compare, SimSelection, SugarElement, SugarNode, SugarText, Traverse, SimRange } from '@ephox/sugar';
+import { Compare, SimRange, SimSelection, SugarElement, SugarNode, SugarText, Traverse } from '@ephox/sugar';
 import Editor from '../api/Editor';
 import * as NodeType from '../dom/NodeType';
 
@@ -27,17 +27,17 @@ const clamp = (offset: number, element: SugarElement<Node>): number => {
 
 const normalizeRng = (rng: SimRange): SimRange =>
   SimSelection.range(
-    rng.start(),
-    clamp(rng.soffset(), rng.start()),
-    rng.finish(),
-    clamp(rng.foffset(), rng.finish())
+    rng.start,
+    clamp(rng.soffset, rng.start),
+    rng.finish,
+    clamp(rng.foffset, rng.finish)
   );
 
 const isOrContains = (root: SugarElement<Node>, elm: SugarElement<Node>): boolean =>
-  !NodeType.isRestrictedNode(elm.dom()) && (Compare.contains(root, elm) || Compare.eq(root, elm));
+  !NodeType.isRestrictedNode(elm.dom) && (Compare.contains(root, elm) || Compare.eq(root, elm));
 
 const isRngInRoot = (root: SugarElement<Node>) => (rng: SimRange): boolean =>
-  isOrContains(root, rng.start()) && isOrContains(root, rng.finish());
+  isOrContains(root, rng.start) && isOrContains(root, rng.finish);
 
 const shouldStore = (editor: Editor) => editor.inline === true || browser.isIE();
 
@@ -53,7 +53,7 @@ const readRange = (win: Window): Optional<SimRange> => {
 const getBookmark = (root: SugarElement<Node>): Optional<SimRange> => {
   const win = Traverse.defaultView(root);
 
-  return readRange(win.dom())
+  return readRange(win.dom)
     .filter(isRngInRoot(root));
 };
 
@@ -67,8 +67,8 @@ const bookmarkToNativeRng = (bookmark: SimRange): Optional<Range> => {
 
   try {
     // Might throw IndexSizeError
-    rng.setStart(bookmark.start().dom(), bookmark.soffset());
-    rng.setEnd(bookmark.finish().dom(), bookmark.foffset());
+    rng.setStart(bookmark.start.dom, bookmark.soffset);
+    rng.setEnd(bookmark.finish.dom, bookmark.foffset);
     return Optional.some(rng);
   } catch (_) {
     return Optional.none();

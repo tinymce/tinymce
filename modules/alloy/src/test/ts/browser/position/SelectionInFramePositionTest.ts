@@ -33,7 +33,7 @@ UnitTest.asynctest('SelectionInFramePositionTest', (success, failure) => {
       })
     );
 
-    Css.set(classicEditor.element(), 'margin-top', '300px');
+    Css.set(classicEditor.element, 'margin-top', '300px');
 
     return GuiFactory.build(
       Container.sketch({
@@ -49,10 +49,10 @@ UnitTest.asynctest('SelectionInFramePositionTest', (success, failure) => {
   }, (_doc, _body, gui, _component, _store) => {
     const cSetupAnchor = Chain.mapper((data: any) => ({
       anchor: 'selection',
-      root: SugarElement.fromDom(data.classic.element().dom().contentWindow.document.body)
+      root: SugarElement.fromDom(data.classic.element.dom.contentWindow.document.body)
     }));
 
-    const cGetWin = Chain.mapper((frame: any) => frame.element().dom().contentWindow);
+    const cGetWin = Chain.mapper((frame: any) => frame.element.dom.contentWindow);
 
     const cSetPath = (rawPath: { startPath: number[]; soffset: number; finishPath: number[]; foffset: number }) => {
       const path = Cursors.path(rawPath);
@@ -62,10 +62,10 @@ UnitTest.asynctest('SelectionInFramePositionTest', (success, failure) => {
         const range = Cursors.calculate(body, path);
         WindowSelection.setExact(
           win,
-          range.start(),
-          range.soffset(),
-          range.finish(),
-          range.foffset()
+          range.start,
+          range.soffset,
+          range.finish,
+          range.foffset
         );
         return WindowSelection.getExact(win).fold(() => Result.error('Could not retrieve the set selection'), Result.value);
       });
@@ -88,7 +88,7 @@ UnitTest.asynctest('SelectionInFramePositionTest', (success, failure) => {
             [
               Chain.control(
                 Chain.binder((data: any) => {
-                  const root = SugarElement.fromDom(data.classic.element().dom().contentWindow.document.body);
+                  const root = SugarElement.fromDom(data.classic.element.dom.contentWindow.document.body);
                   return SelectorFind.descendant(root, 'p').fold(() => Result.error('Could not find paragraph yet'), (_p) => Result.value(data));
                 }),
                 Guard.tryUntil('Waiting for content to load in iframe', 10, 10000)
@@ -159,11 +159,11 @@ UnitTest.asynctest('SelectionInFramePositionTest', (success, failure) => {
                 foffset: 0
               }), 'range2'),
               NamedChain.direct('range2', Chain.binder((range2: SimRange) => {
-                const start = range2.start();
+                const start = range2.start;
                 // NOTE: Safari likes to select the text node.
                 const optElement = SugarNode.isText(start) ? Traverse.parentNode(start) : Optional.some(start);
                 return optElement.filter(SugarNode.isHTMLElement).map((elem) => {
-                  elem.dom().scrollIntoView();
+                  elem.dom.scrollIntoView();
                   return Scroll.get(Traverse.owner(elem));
                 }).fold(() => Result.error('Could not scroll to 13th paragraph'), Result.value);
               }), 'scroll2'),

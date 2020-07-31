@@ -20,7 +20,7 @@ const parentsUntil = (start: SugarElement, root: SugarElement, predicate: (elm: 
   }
 };
 
-const parents = (start: SugarElement, root: SugarElement): SugarElement[] => parentsUntil(start, root, Fun.constant(false));
+const parents = (start: SugarElement, root: SugarElement): SugarElement[] => parentsUntil(start, root, Fun.never);
 
 const parentsAndSelf = (start: SugarElement, root: SugarElement): SugarElement[] => [ start ].concat(parents(start, root));
 

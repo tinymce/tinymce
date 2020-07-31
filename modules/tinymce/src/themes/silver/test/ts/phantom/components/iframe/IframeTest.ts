@@ -47,7 +47,7 @@ UnitTest.asynctest('IFrame component Test', (success, failure) => {
         children: [ labelStructure, iframeStructure ]
       });
     }),
-    component.element()
+    component.element
   );
 
   const sAssertSandboxedIframeContent = (frame: AlloyComponent, content: string) =>
@@ -61,7 +61,7 @@ UnitTest.asynctest('IFrame component Test', (success, failure) => {
           srcdoc: str.contains(content)
         }
       })),
-      frame.element()
+      frame.element
     );
 
   const sAssertStandardIframeContent = (frame: AlloyComponent) =>
@@ -75,7 +75,7 @@ UnitTest.asynctest('IFrame component Test', (success, failure) => {
           src: str.is(`javascript:''`)
         }
       })),
-      frame.element()
+      frame.element
     );
 
   TestHelpers.GuiSetup.setup(

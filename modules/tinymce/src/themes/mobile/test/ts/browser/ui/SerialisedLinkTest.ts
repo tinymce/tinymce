@@ -19,10 +19,10 @@ UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', (success, failure) => 
 
   const realm = IosRealm(Fun.noop);
   // Make toolbar appear
-  Class.add(realm.system().element(), 'tinymce-mobile-fullscreen-maximized');
+  Class.add(realm.element, 'tinymce-mobile-fullscreen-maximized');
 
   const body = SugarBody.body();
-  Attachment.attachSystem(body, realm.system());
+  Attachment.attachSystem(body, realm.system);
 
   const doc = Traverse.owner(body);
 
@@ -30,7 +30,7 @@ UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', (success, failure) => 
 
   const unload = function () {
     TestStyles.removeStyles();
-    Attachment.detachSystem(realm.system());
+    Attachment.detachSystem(realm.system);
   };
 
   const tEditor = TestEditor();
@@ -137,7 +137,7 @@ UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', (success, failure) => 
     sAssertUrlFocused
   ]);
 
-  const sClickLink = Mouse.sClickOn(realm.element(), TestSelectors.link());
+  const sClickLink = Mouse.sClickOn(realm.element, TestSelectors.link());
 
   const sTestScenario = function (rawScenario) {
     const scenario = ValueSchema.asRawOrDie('Checking scenario', ValueSchema.objOf([
@@ -158,7 +158,7 @@ UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', (success, failure) => 
     return Logger.t(
       scenario.label,
       GeneralSteps.sequence([
-        tEditor.sPrepareState(scenario.node.dom(), scenario.content),
+        tEditor.sPrepareState(scenario.node.dom, scenario.content),
         sClickLink,
         TestUi.sSetFieldOptValue(scenario.fields.url),
         sClickNext,

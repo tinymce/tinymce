@@ -40,7 +40,7 @@ UnitTest.asynctest('Textarea component Test', (success, failure) => {
               })
             ]
           })),
-          component.element()
+          component.element
         ),
 
         RepresentingSteps.sSetValue('basic', component, 'New-Value'),

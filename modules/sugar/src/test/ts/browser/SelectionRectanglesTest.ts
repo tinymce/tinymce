@@ -24,8 +24,8 @@ UnitTest.test('Browser Test: SelectionRectanglesTest', () => {
   );
 
   assert.eq(
-    true, rect1.top() < rect2.top(), 'Rect 1 should be above Rect 2. (1) was ' +
-    rect1.top() + ', and (2) was ' + rect2.top()
+    true, rect1.top < rect2.top, 'Rect 1 should be above Rect 2. (1) was ' +
+    rect1.top + ', and (2) was ' + rect2.top
   );
 
   const bounds1 = WindowSelection.getBounds(window, selP1).getOrDie(
@@ -36,9 +36,9 @@ UnitTest.test('Browser Test: SelectionRectanglesTest', () => {
   );
   assert.eq(
     true,
-    bounds1.top() < bounds2.top(),
-    'Bounds 1 should be above bound 2. (1) was ' + bounds1.top() + ', and (2)' +
-    ' was ' + bounds2.top()
+    bounds1.top < bounds2.top,
+    'Bounds 1 should be above bound 2. (1) was ' + bounds1.top + ', and (2)' +
+    ' was ' + bounds2.top
   );
 
   Remove.remove(p1);

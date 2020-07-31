@@ -17,14 +17,14 @@ const word = function <E, D> (universe: Universe<E, D>, item: E, offset: number)
   // Identify the index of a word break before the current offset and after the current offset
   // if possible.
   const breaks = CurrentWord.around(text, offset);
-  return breaks.before().fold(function () {
-    return breaks.after().fold(function () {
+  return breaks.before.fold(function () {
+    return breaks.after.fold(function () {
       return EndofWord.neither(universe, item, offset);
     }, function (a) {
       return EndofWord.after(universe, item, offset, a);
     });
   }, function (b) {
-    return breaks.after().fold(function () {
+    return breaks.after.fold(function () {
       return EndofWord.before(universe, item, offset, b);
     }, function (a) {
       return EndofWord.both(universe, item, offset, b, a);

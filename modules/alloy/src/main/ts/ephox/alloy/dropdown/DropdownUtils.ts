@@ -171,11 +171,11 @@ const togglePopup = (
 
 const matchWidth = (hotspot: AlloyComponent, container: AlloyComponent, useMinWidth: boolean) => {
   const menu = Composing.getCurrent(container).getOr(container);
-  const buttonWidth = Width.get(hotspot.element());
+  const buttonWidth = Width.get(hotspot.element);
   if (useMinWidth) {
-    Css.set(menu.element(), 'min-width', buttonWidth + 'px');
+    Css.set(menu.element, 'min-width', buttonWidth + 'px');
   } else {
-    Width.set(menu.element(), buttonWidth);
+    Width.set(menu.element, buttonWidth);
   }
 };
 
@@ -215,7 +215,7 @@ const makeSandbox = (
 
   const onOpen = (component: AlloyComponent, menu: AlloyComponent) => {
     const anchor = getAnchor(detail, hotspot);
-    ariaOwner.link(hotspot.element());
+    ariaOwner.link(hotspot.element);
     if (detail.matchWidth) {
       matchWidth(anchor.hotspot, menu, detail.useMinWidth);
     }
@@ -226,7 +226,7 @@ const makeSandbox = (
   };
 
   const onClose = (component: AlloyComponent, menu: AlloyComponent) => {
-    ariaOwner.unlink(hotspot.element());
+    ariaOwner.unlink(hotspot.element);
     if (extras !== undefined && extras.onClose !== undefined) {
       extras.onClose(component, menu);
     }

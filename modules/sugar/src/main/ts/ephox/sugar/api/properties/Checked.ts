@@ -3,7 +3,7 @@ import { SugarElement } from '../node/SugarElement';
 import * as SelectorFind from '../search/SelectorFind';
 
 const set = (element: SugarElement<HTMLInputElement>, status: boolean): void => {
-  element.dom().checked = status;
+  element.dom.checked = status;
 };
 
 // :checked selector requires IE9

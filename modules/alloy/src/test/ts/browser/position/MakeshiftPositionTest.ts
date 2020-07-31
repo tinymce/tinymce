@@ -47,7 +47,7 @@ UnitTest.asynctest('MakeshiftPositionTest', (success, failure) => {
     }));
 
     const cAssertPopupNotInNoFitPosition = Chain.op((popup: AlloyComponent) => {
-      const box = popup.element().dom().getBoundingClientRect();
+      const box = popup.element.dom.getBoundingClientRect();
       Assertions.assertEq('Assert not attached to the bottom of the viewport (eg nofit)', true, box.bottom !== window.innerHeight);
     });
 

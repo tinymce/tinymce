@@ -14,7 +14,7 @@ import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 export default (): void => {
   const gui = Gui.create();
   const body = SugarElement.fromDom(document.body);
-  Class.add(gui.element(), 'gui-root-demo-container');
+  Class.add(gui.element, 'gui-root-demo-container');
   Attachment.attachSystem(body, gui);
 
   HtmlDisplay.section(
@@ -31,7 +31,7 @@ export default (): void => {
               },
               onStream: (comp) => {
                 comp.getSystem().broadcastOn([ 'reflecting-channel' ], {
-                  items: Value.get(comp.element()).split(',')
+                  items: Value.get(comp.element).split(',')
                 });
               }
             })

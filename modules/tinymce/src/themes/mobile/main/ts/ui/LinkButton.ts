@@ -64,7 +64,7 @@ const sketch = function (realm, editor): SketchSpec {
     });
 
     LinkBridge.query(editor).each(function (link) {
-      editor.selection.select(link.dom());
+      editor.selection.select(link.dom);
     });
   });
 };

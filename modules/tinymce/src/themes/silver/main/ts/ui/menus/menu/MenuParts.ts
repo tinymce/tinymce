@@ -36,7 +36,7 @@ const dom = (hasIcons: boolean, columns: Toolbar.ColumnTypes, presets: Toolbar.P
 };
 
 const components = [
-  AlloyMenu.parts().items({ })
+  AlloyMenu.parts.items({ })
 ];
 
 // NOTE: Up to here.

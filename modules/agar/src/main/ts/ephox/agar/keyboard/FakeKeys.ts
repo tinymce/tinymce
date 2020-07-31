@@ -26,7 +26,7 @@ const newModifiers = (modifiers: MixedKeyModifiers): KeyModifiers => isNewKeyMod
 // Take from Orwellophile's answer on
 // http://stackoverflow.com/questions/10455626/keydown-simulation-in-chrome-fires-normally-but-not-the-correct-key
 const keyevent = (type: string, doc: SugarElement<any>, value: number, modifiers: MixedKeyModifiers, focus?: SugarElement<any>): void => {
-  const domDoc: Document = doc.dom();
+  const domDoc: Document = doc.dom;
   const mod = newModifiers(modifiers);
   const oEvent = domDoc.createEvent('KeyboardEvent');
   const getter = () => value;
@@ -64,12 +64,12 @@ const keyevent = (type: string, doc: SugarElement<any>, value: number, modifiers
       anyEvent.initKeyEvent(type, canBubble, cancellable, domDoc.defaultView, ctrlKey, altKey, shiftKey, metaKey, value, type === 'keypress' && platform.browser.isFirefox() ? value : 0);
     }
 
-    dispatcher.dom().dispatchEvent(oEvent);
+    dispatcher.dom.dispatchEvent(oEvent);
   }
 };
 
 const safari = (type: string, doc: SugarElement<any>, value: number, modifiers: KeyModifiers, dispatcher: SugarElement<any>): void => {
-  const oEvent = (<Document> doc.dom()).createEvent('Events');
+  const oEvent = (<Document> doc.dom).createEvent('Events');
   oEvent.initEvent(type, true, true);
 
   (<any> oEvent).which = value;
@@ -79,7 +79,7 @@ const safari = (type: string, doc: SugarElement<any>, value: number, modifiers: 
   (<any> oEvent).metaKey = modifiers.metaKey === true;
   (<any> oEvent).altKey = modifiers.altKey === true;
 
-  (<HTMLElement> dispatcher.dom()).dispatchEvent(oEvent);
+  (<HTMLElement> dispatcher.dom).dispatchEvent(oEvent);
 };
 
 export {

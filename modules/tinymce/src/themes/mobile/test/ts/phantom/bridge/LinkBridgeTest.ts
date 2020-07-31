@@ -48,7 +48,7 @@ UnitTest.test('Test: phantom.bridge.LinkBridgeTest', function () {
     const scenario = ValueSchema.asRawOrDie(rawScenario.label, schema, rawScenario);
 
     Logger.sync('getInfo ... ' + scenario.label, function () {
-      editorState.start.set(SugarElement.fromText(scenario.nodeText).dom());
+      editorState.start.set(SugarElement.fromText(scenario.nodeText).dom);
       editorState.content.set(scenario.selection);
       const info = LinkBridge.getInfo(editor);
       Assert.eq('Checking getInfo (no link)', {
@@ -72,7 +72,7 @@ UnitTest.test('Test: phantom.bridge.LinkBridgeTest', function () {
     const scenario = ValueSchema.asRawOrDie(rawScenario.label, schema, rawScenario);
 
     Logger.sync('getInfo ... ' + scenario.label + ', link: ' + scenario.linkHtml, function () {
-      editorState.start.set(SugarElement.fromHtml(scenario.linkHtml).dom());
+      editorState.start.set(SugarElement.fromHtml(scenario.linkHtml).dom);
       editorState.content.set(scenario.selection);
       const info = LinkBridge.getInfo(editor);
       Assert.eq('Checking getInfo (link)', scenario.expected, Objects.narrow(info, [ 'url', 'text', 'target', 'title' ]));

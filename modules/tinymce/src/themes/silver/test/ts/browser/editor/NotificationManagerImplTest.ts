@@ -35,8 +35,8 @@ UnitTest.asynctest('NotificationManagerImpl test', (success, failure) => {
 
   const cAssertPosition = (prefix: string, x: number, y: number, diff: number = 5) => Chain.op((notification: NotificationApi) => {
     const elem = Traverse.parent(SugarElement.fromDom(notification.getEl())).getOrDie() as SugarElement<HTMLElement>;
-    const top = elem.dom().offsetTop;
-    const left = elem.dom().offsetLeft;
+    const top = elem.dom.offsetTop;
+    const left = elem.dom.offsetLeft;
     Assertions.assertEq(`${prefix} top position should be ${y}px~=${top}px`, true, Math.abs(y - top) < diff);
     Assertions.assertEq(`${prefix} left position should be ${x}px~=${left}px`, true, Math.abs(x - left) < diff);
   });

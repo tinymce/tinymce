@@ -22,7 +22,7 @@ const prependData = (target: Text, data: string): void => {
 };
 
 const removeEmpty = (text: SugarElement): Optional<SugarElement> => {
-  if (text.dom().length === 0) {
+  if (text.dom.length === 0) {
     Remove.remove(text);
     return Optional.none();
   }
@@ -41,15 +41,15 @@ const rngSetContent = (rng: Range, fragment: DocumentFragment): void => {
 
   // Join start
   Optionals.lift2(prevText, firstChild.filter(SugarNode.isText), (prev: SugarElement, start: SugarElement) => {
-    prependData(start.dom(), prev.dom().data);
+    prependData(start.dom, prev.dom.data);
     Remove.remove(prev);
   });
 
   // Join end
   Optionals.lift2(nextText, lastChild.filter(SugarNode.isText), (next: SugarElement, end: SugarElement) => {
-    const oldLength = end.dom().length;
-    end.dom().appendData(next.dom().data);
-    rng.setEnd(end.dom(), oldLength);
+    const oldLength = end.dom.length;
+    end.dom.appendData(next.dom.data);
+    rng.setEnd(end.dom, oldLength);
     Remove.remove(next);
   });
 

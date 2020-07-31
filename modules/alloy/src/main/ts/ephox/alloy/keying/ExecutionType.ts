@@ -24,7 +24,7 @@ const execute: KeyRuleHandler<ExecutingConfig, Stateless> = (
   component: AlloyComponent,
   simulatedEvent: NativeSimulatedEvent,
   executeConfig: ExecutingConfig
-) => executeConfig.execute(component, simulatedEvent, component.element());
+) => executeConfig.execute(component, simulatedEvent, component.element);
 
 const getKeydownRules = (
   component: AlloyComponent,
@@ -32,15 +32,15 @@ const getKeydownRules = (
   executeConfig: ExecutingConfig,
   _executeState: Stateless
 ): Array<KeyRules.KeyRule<ExecutingConfig, Stateless>> => {
-  const spaceExec = executeConfig.useSpace && !EditableFields.inside(component.element()) ? Keys.SPACE() : [ ];
-  const enterExec = executeConfig.useEnter ? Keys.ENTER() : [ ];
-  const downExec = executeConfig.useDown ? Keys.DOWN() : [ ];
+  const spaceExec = executeConfig.useSpace && !EditableFields.inside(component.element) ? Keys.SPACE : [ ];
+  const enterExec = executeConfig.useEnter ? Keys.ENTER : [ ];
+  const downExec = executeConfig.useDown ? Keys.DOWN : [ ];
   const execKeys = spaceExec.concat(enterExec).concat(downExec);
 
   return [
     KeyRules.rule(KeyMatch.inSet(execKeys), execute)
   ].concat(executeConfig.useControlEnter ? [
-    KeyRules.rule(KeyMatch.and([ KeyMatch.isControl, KeyMatch.inSet(Keys.ENTER()) ]), execute)
+    KeyRules.rule(KeyMatch.and([ KeyMatch.isControl, KeyMatch.inSet(Keys.ENTER) ]), execute)
   ] : [ ]);
 };
 
@@ -50,8 +50,8 @@ const getKeyupRules = (
   executeConfig: ExecutingConfig,
   _executeState: Stateless
 ): Array<KeyRules.KeyRule<ExecutingConfig, Stateless>> =>
-  executeConfig.useSpace && !EditableFields.inside(component.element()) ?
-    [ KeyRules.rule(KeyMatch.inSet(Keys.SPACE()), KeyingTypes.stopEventForFirefox) ] :
+  executeConfig.useSpace && !EditableFields.inside(component.element) ?
+    [ KeyRules.rule(KeyMatch.inSet(Keys.SPACE), KeyingTypes.stopEventForFirefox) ] :
     [ ];
 
 export default KeyingType.typical(

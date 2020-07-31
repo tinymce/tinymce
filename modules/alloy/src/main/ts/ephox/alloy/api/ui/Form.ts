@@ -64,7 +64,7 @@ const make = (detail: FormDetail, components: AlloySpec[]) => ({
             return Obj.map(resPs, (resPThunk, pName) => resPThunk().bind((v) => {
               const opt = Composing.getCurrent(v);
               return toResult(opt, new Error(
-                `Cannot find a current component to extract the value from for form part '${pName}': ` + AlloyLogger.element(v.element())
+                `Cannot find a current component to extract the value from for form part '${pName}': ` + AlloyLogger.element(v.element)
               ));
             }).map(Representing.getValue));
           },

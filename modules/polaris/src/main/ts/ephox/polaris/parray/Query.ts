@@ -5,7 +5,7 @@ import { PRange } from '../pattern/Types';
  * Simple "is position within unit" utility function
  */
 const inUnit = function (unit: PRange, position: number) {
-  return position >= unit.start() && position <= unit.finish();
+  return position >= unit.start && position <= unit.finish;
 };
 
 /**
@@ -19,12 +19,12 @@ const get = function <T extends PRange> (parray: T[], offset: number) {
 
 const startindex = function (parray: PRange[], offset: number) {
   return Arr.findIndex(parray, function (unit) {
-    return unit.start() === offset;
+    return unit.start === offset;
   });
 };
 
 const tryend = function (parray: PRange[], finish: number) {
-  const finishes = parray[parray.length - 1] && parray[parray.length - 1].finish() === finish;
+  const finishes = parray[parray.length - 1] && parray[parray.length - 1].finish === finish;
   return finishes ? parray.length + 1 : -1;
 };
 

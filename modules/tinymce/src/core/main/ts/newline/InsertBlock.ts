@@ -23,7 +23,7 @@ import * as NewLineUtils from './NewLineUtils';
 
 const trimZwsp = (fragment: DocumentFragment) => {
   Arr.each(PredicateFilter.descendants(SugarElement.fromDom(fragment), SugarNode.isText), (text) => {
-    const rawNode = text.dom();
+    const rawNode = text.dom;
     rawNode.nodeValue = Zwsp.trim(rawNode.nodeValue);
   });
 };

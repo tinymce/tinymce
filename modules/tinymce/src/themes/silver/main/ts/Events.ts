@@ -23,7 +23,7 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMothership: Gui.GuiS
     });
   };
 
-  const fireDismissPopups = (evt: EventArgs) => broadcastOn(Channels.dismissPopups(), { target: evt.target() });
+  const fireDismissPopups = (evt: EventArgs) => broadcastOn(Channels.dismissPopups(), { target: evt.target });
 
   // Document touch events
   const onTouchstart = DomEvent.bind(SugarElement.fromDom(document), 'touchstart', fireDismissPopups);
@@ -33,8 +33,8 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMothership: Gui.GuiS
   // Document mouse events
   const onMousedown = DomEvent.bind(SugarElement.fromDom(document), 'mousedown', fireDismissPopups);
   const onMouseup = DomEvent.bind(SugarElement.fromDom(document), 'mouseup', (evt) => {
-    if (evt.raw().button === 0) {
-      broadcastOn(Channels.mouseReleased(), { target: evt.target() });
+    if (evt.raw.button === 0) {
+      broadcastOn(Channels.mouseReleased(), { target: evt.target });
     }
   });
 

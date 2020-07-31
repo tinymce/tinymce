@@ -30,7 +30,7 @@ const drawBar = function <T> (wire: ResizeWire, positions: Optional<T>[], create
 
 const refreshCol = function (wire: ResizeWire, colPositions: Optional<ColInfo>[], position: SugarPosition, tableHeight: number) {
   drawBar(wire, colPositions, function (origin, cp) {
-    const colBar = Bar.col(cp.col, cp.x - origin.left(), position.top() - origin.top(), BAR_THICKNESS, tableHeight);
+    const colBar = Bar.col(cp.col, cp.x - origin.left, position.top - origin.top, BAR_THICKNESS, tableHeight);
     Class.add(colBar, resizeColBar);
     return colBar;
   });
@@ -38,7 +38,7 @@ const refreshCol = function (wire: ResizeWire, colPositions: Optional<ColInfo>[]
 
 const refreshRow = function (wire: ResizeWire, rowPositions: Optional<RowInfo>[], position: SugarPosition, tableWidth: number) {
   drawBar(wire, rowPositions, function (origin, cp) {
-    const rowBar = Bar.row(cp.row, position.left() - origin.left(), cp.y - origin.top(), tableWidth, BAR_THICKNESS);
+    const rowBar = Bar.row(cp.row, position.left - origin.left, cp.y - origin.top, tableWidth, BAR_THICKNESS);
     Class.add(rowBar, resizeRowBar);
     return rowBar;
   });

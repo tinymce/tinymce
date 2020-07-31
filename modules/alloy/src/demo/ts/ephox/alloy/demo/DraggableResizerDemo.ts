@@ -14,8 +14,8 @@ import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 export default (): void => {
   const gui = Gui.create();
   const body = SugarElement.fromDom(document.body);
-  Class.add(gui.element(), 'gui-root-demo-container');
-  // Css.set(gui.element(), 'direction', 'rtl');
+  Class.add(gui.element, 'gui-root-demo-container');
+  // Css.set(gui.element, 'direction', 'rtl');
 
   Attachment.attachSystem(body, gui);
   Css.set(body, 'margin-bottom', '2000px');
@@ -24,7 +24,7 @@ export default (): void => {
     Traverse.parent(targetElement).bind(Traverse.parent).bind(Traverse.firstChild).each((box) => {
       Css.getRaw(box, 'height').each((h) => {
         const parsedHeight = parseInt(h, 10);
-        const newHeight = parsedHeight + delta.top();
+        const newHeight = parsedHeight + delta.top;
         Css.set(box, 'height', newHeight + 'px');
       });
     });

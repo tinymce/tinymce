@@ -27,7 +27,7 @@ const cFromElement = function <T extends EditorType = EditorType> (element: Suga
       setTinymceBaseUrl(Global.tinymce, '/project/node_modules/tinymce');
     }
 
-    const targetSettings = SugarShadowDom.isInShadowRoot(element) ? ({ target: element.dom() }) : ({ selector: '#' + randomId });
+    const targetSettings = SugarShadowDom.isInShadowRoot(element) ? ({ target: element.dom }) : ({ selector: '#' + randomId });
 
     tinymce.init({
       ...nuSettings,

@@ -1,6 +1,6 @@
 import { Assertions, Logger, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Arr, Fun, Obj } from '@ephox/katamari';
+import { Arr, Obj } from '@ephox/katamari';
 import { Attribute, EventArgs, Html, Insert, SelectorFind, SugarElement } from '@ephox/sugar';
 
 import * as Debugging from 'ephox/alloy/debugging/Debugging';
@@ -65,7 +65,7 @@ UnitTest.asynctest('TriggersTest', (success, failure) => {
       Obj.get(domEvents as any, eventType).bind((x) => Obj.get(x, targetId)).map((h: Function) => ({
         descHandler: {
           cHandler: h,
-          purpose: Fun.constant('purpose')
+          purpose: 'purpose'
         },
         element: target
       })));

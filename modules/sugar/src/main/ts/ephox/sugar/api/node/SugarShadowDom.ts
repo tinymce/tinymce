@@ -28,7 +28,7 @@ export const isSupported = Fun.constant(supported);
 
 export const getRootNode: (e: SugarElement<Node>) => RootNode =
   supported
-    ? (e) => SugarElement.fromDom((e.dom() as any).getRootNode())
+    ? (e) => SugarElement.fromDom((e.dom as any).getRootNode())
     : Traverse.documentOrOwner;
 
 /** Create an element, using the actual document. */
@@ -36,7 +36,7 @@ export const createElement: {
   <K extends keyof HTMLElementTagNameMap>(dos: RootNode, tag: K): SugarElement<HTMLElementTagNameMap[K]>;
   (dos: RootNode, tag: string): SugarElement<HTMLElement>;
 } = (dos: RootNode, tag: string) =>
-  SugarElement.fromTag(tag, Traverse.documentOrOwner(dos).dom());
+  SugarElement.fromTag(tag, Traverse.documentOrOwner(dos).dom);
 
 /** Where style tags need to go. ShadowRoot or document head */
 export const getStyleContainer = (dos: RootNode): SugarElement<Node> =>
@@ -45,7 +45,7 @@ export const getStyleContainer = (dos: RootNode): SugarElement<Node> =>
 /** Where content needs to go. ShadowRoot or document body */
 export const getContentContainer = (dos: RootNode): SugarElement<Node> =>
   // Can't use SugarBody.body without causing a circular module reference (since SugarBody.inBody uses SugarShadowDom)
-  isShadowRoot(dos) ? dos : SugarElement.fromDom(Traverse.documentOrOwner(dos).dom().body);
+  isShadowRoot(dos) ? dos : SugarElement.fromDom(Traverse.documentOrOwner(dos).dom.body);
 
 /** Is this element either a ShadowRoot or a descendent of a ShadowRoot. */
 export const isInShadowRoot = (e: SugarElement<Node>): boolean =>
@@ -63,7 +63,7 @@ export const getShadowRoot = (e: SugarElement<Node>): Optional<SugarElement<Shad
  * If you actually have a ShadowRoot, this shouldn't happen.
  */
 export const getShadowHost = (e: SugarElement<ShadowRoot>): SugarElement<Element> =>
-  SugarElement.fromDom(e.dom().host);
+  SugarElement.fromDom(e.dom.host);
 
 /**
  * When Events bubble up through a ShadowRoot, the browser changes the target to be the shadow host.
@@ -89,13 +89,13 @@ export const getOriginalEventTarget = (event: Event): Optional<EventTarget> => {
 };
 
 export const isOpenShadowRoot = (sr: SugarElement<ShadowRoot>): boolean =>
-  sr.dom().mode === 'open';
+  sr.dom.mode === 'open';
 
 export const isClosedShadowRoot = (sr: SugarElement<ShadowRoot>): boolean =>
-  sr.dom().mode === 'closed';
+  sr.dom.mode === 'closed';
 
 /** Return true if the element is a host of an open shadow root.
  *  Return false if the element is a host of a closed shadow root, or if the element is not a host.
  */
 export const isOpenShadowHost = (element: SugarElement<Element>): boolean =>
-  Type.isNonNullable(element.dom().shadowRoot);
+  Type.isNonNullable(element.dom.shadowRoot);

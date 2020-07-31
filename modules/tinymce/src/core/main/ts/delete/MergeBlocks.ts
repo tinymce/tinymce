@@ -38,14 +38,14 @@ const isEmptyBefore = (el: SugarElement) => Arr.filter(Traverse.prevSiblings(el)
 const nestedBlockMerge = (rootNode: SugarElement, fromBlock: SugarElement, toBlock: SugarElement, insertionPoint: SugarElement): Optional<CaretPosition> => {
   if (Empty.isEmpty(toBlock)) {
     PaddingBr.fillWithPaddingBr(toBlock);
-    return CaretFinder.firstPositionIn(toBlock.dom());
+    return CaretFinder.firstPositionIn(toBlock.dom);
   }
 
   if (isEmptyBefore(insertionPoint) && Empty.isEmpty(fromBlock)) {
     Insert.before(insertionPoint, SugarElement.fromTag('br'));
   }
 
-  const position = CaretFinder.prevPosition(toBlock.dom(), CaretPosition.before(insertionPoint.dom()));
+  const position = CaretFinder.prevPosition(toBlock.dom, CaretPosition.before(insertionPoint.dom));
   Arr.each(extractChildren(fromBlock), (child) => {
     Insert.before(insertionPoint, child);
   });
@@ -59,10 +59,10 @@ const sidelongBlockMerge = (rootNode: SugarElement, fromBlock: SugarElement, toB
     if (Empty.isEmpty(fromBlock)) {
       PaddingBr.fillWithPaddingBr(fromBlock);
     }
-    return CaretFinder.firstPositionIn(fromBlock.dom());
+    return CaretFinder.firstPositionIn(fromBlock.dom);
   }
 
-  const position = CaretFinder.lastPositionIn(toBlock.dom());
+  const position = CaretFinder.lastPositionIn(toBlock.dom);
   Arr.each(extractChildren(fromBlock), (child) => {
     Insert.append(toBlock, child);
   });
@@ -79,7 +79,7 @@ const getInsertionPoint = (fromBlock: SugarElement, toBlock: SugarElement): Opti
   Compare.contains(toBlock, fromBlock) ? findInsertionPoint(toBlock, fromBlock) : Optional.none();
 
 const trimBr = (first: boolean, block: SugarElement) => {
-  CaretFinder.positionIn(first, block.dom())
+  CaretFinder.positionIn(first, block.dom)
     .map((position) => position.getNode())
     .map(SugarElement.fromDom)
     .filter(ElementType.isBr)

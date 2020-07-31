@@ -10,7 +10,7 @@ UnitTest.test('LeftBlockTest', function () {
   const editor = SugarElement.fromTag('div');
 
   const reset = function () {
-    editor.dom().innerHTML = '<p>alpha<span>cat</span><b>hello<i>word</i>hi</b>there</p>';
+    editor.dom.innerHTML = '<p>alpha<span>cat</span><b>hello<i>word</i>hi</b>there</p>';
   };
 
   const setup = function () {
@@ -30,7 +30,7 @@ UnitTest.test('LeftBlockTest', function () {
       const clones = Arr.map(group, Replication.deep);
       const div = SugarElement.fromTag('div');
       InsertAll.append(div, clones);
-      assert.eq(expected, div.dom().innerHTML);
+      assert.eq(expected, div.dom.innerHTML);
     });
   };
 

@@ -9,13 +9,13 @@ const whitelist = Arr.bind(quoteList, function (q) {
 });
 
 const trimStart = function (ws: WordScope) {
-  const word = ws.word();
-  return WordScope(word.substring(1), Optional.some(word.charAt(0)), ws.right());
+  const word = ws.word;
+  return WordScope(word.substring(1), Optional.some(word.charAt(0)), ws.right);
 };
 
 const trimEnd = function (ws: WordScope) {
-  const word = ws.word();
-  return WordScope(word.substring(0, word.length - 1), ws.left(), Optional.some(word.charAt(word.length - 1)));
+  const word = ws.word;
+  return WordScope(word.substring(0, word.length - 1), ws.left, Optional.some(word.charAt(word.length - 1)));
 };
 
 const isQuote = function (s: string) {
@@ -23,13 +23,13 @@ const isQuote = function (s: string) {
 };
 
 const rhs = function (ws: WordScope) {
-  const word = ws.word();
+  const word = ws.word;
   const trailing = word.length >= 2 && isQuote(word.charAt(word.length - 1)) && !isQuote(word.charAt(word.length - 2));
   return trailing ? trimEnd(ws) : ws;
 };
 
 const lhs = function (ws: WordScope) {
-  const word = ws.word();
+  const word = ws.word;
   const whitelisted = Arr.exists(whitelist, function (x) {
     return word.indexOf(x) > -1;
   });
@@ -58,7 +58,7 @@ const scope = function (ws: WordScope) {
 const text = function (word: string) {
   const ws = WordScope(word, Optional.none(), Optional.none());
   const r = scope(ws);
-  return r.word();
+  return r.word;
 };
 
 export {

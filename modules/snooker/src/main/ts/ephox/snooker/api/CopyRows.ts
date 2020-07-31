@@ -11,7 +11,7 @@ const copyRows = function (table: SugarElement, target: TargetSelection, generat
   const details = onCells(house, target);
   return details.map(function (selectedCells) {
     const grid = Transitions.toGrid(house, generators, false);
-    const slicedGrid = grid.slice(selectedCells[0].row(), selectedCells[selectedCells.length - 1].row() + selectedCells[selectedCells.length - 1].rowspan());
+    const slicedGrid = grid.slice(selectedCells[0].row, selectedCells[selectedCells.length - 1].row + selectedCells[selectedCells.length - 1].rowspan);
     const slicedDetails = toDetailList(slicedGrid, generators);
     return Redraw.copy(slicedDetails);
   });

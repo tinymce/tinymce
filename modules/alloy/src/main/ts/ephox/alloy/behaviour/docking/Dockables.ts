@@ -38,7 +38,7 @@ const morphAdt: MorphConstructor = Adt.generate([
 ]);
 
 const appear = (component: AlloyComponent, contextualInfo: DockingContext): void => {
-  const elem = component.element();
+  const elem = component.element;
   Class.add(elem, contextualInfo.transitionClass);
   Class.remove(elem, contextualInfo.fadeOutClass);
   Class.add(elem, contextualInfo.fadeInClass);
@@ -46,7 +46,7 @@ const appear = (component: AlloyComponent, contextualInfo: DockingContext): void
 };
 
 const disappear = (component: AlloyComponent, contextualInfo: DockingContext): void => {
-  const elem = component.element();
+  const elem = component.element;
   Class.add(elem, contextualInfo.transitionClass);
   Class.remove(elem, contextualInfo.fadeInClass);
   Class.add(elem, contextualInfo.fadeOutClass);
@@ -146,13 +146,13 @@ const morphToFixed = (elem: SugarElement<HTMLElement>, viewport: Boxes.Bounds, s
 };
 
 const getMorph = (component: AlloyComponent, viewport: Boxes.Bounds, state: DockingState): Optional<MorphAdt> => {
-  const elem = component.element();
+  const elem = component.element;
   const isDocked = Css.getRaw(elem, 'position').is('fixed');
   return isDocked ? morphToOriginal(elem, viewport, state) : morphToFixed(elem, viewport, state);
 };
 
 const getMorphToOriginal = (component: AlloyComponent, state: DockingState): Optional<MorphAdt> => {
-  const elem = component.element();
+  const elem = component.element;
   return getPrior(elem, state).bind((box) => revertToOriginal(elem, box, state));
 };
 

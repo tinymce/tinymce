@@ -31,8 +31,8 @@ UnitTest.asynctest(
         Insert.after(SugarElement.fromDom(target), elm);
 
         return {
-          editorContainer: elm.dom(),
-          iframeContainer: elm.dom().lastChild
+          editorContainer: elm.dom,
+          iframeContainer: elm.dom.lastChild
         };
       },
       base_url: '/project/tinymce/js/tinymce',

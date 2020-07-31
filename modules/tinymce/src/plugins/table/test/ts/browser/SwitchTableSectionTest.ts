@@ -13,7 +13,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.SwitchTableSectionTest', (succ
 
   const cSwitchSection = (rowSelector: string, newSectionType: string) => Chain.op((editor: Editor) => {
     const row = UiFinder.findIn(SugarElement.fromDom(editor.getBody()), rowSelector).getOrDie();
-    TableSections.switchSectionType(editor, row.dom(), newSectionType);
+    TableSections.switchSectionType(editor, row.dom, newSectionType);
   });
 
   const basicContent = `<table>

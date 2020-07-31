@@ -10,14 +10,15 @@ import { FocusingEvent } from './SimulatedEvent';
 // to recurse infinitely. Essentially, if the originator of the focus call is the same
 // as the element receiving it, and it wasn't its own target, then stop the focus call
 // and log a warning.
-const isRecursive = (component: AlloyComponent, originator: SugarElement, target: SugarElement): boolean => Compare.eq(originator, component.element()) &&
+const isRecursive = (component: AlloyComponent, originator: SugarElement, target: SugarElement): boolean => Compare.eq(originator, component.element) &&
     !Compare.eq(originator, target);
 
 const events: AlloyEvents.AlloyEventRecord = AlloyEvents.derive([
   AlloyEvents.can<FocusingEvent>(SystemEvents.focus(), (component, simulatedEvent) => {
     // originator may not always be there. Will need to check this.
-    const originator: SugarElement = simulatedEvent.event().originator();
-    const target: SugarElement = simulatedEvent.event().target();
+    const event = simulatedEvent.event;
+    const originator = event.originator;
+    const target = event.target;
     if (isRecursive(component, originator, target)) {
       // eslint-disable-next-line no-console
       console.warn(

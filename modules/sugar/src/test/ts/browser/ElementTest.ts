@@ -16,7 +16,7 @@ UnitTest.test('ElementTest', () => {
 
   const checkEl = <T extends Node | Window>(f: ElementConstructor<T>, el: T, expt: T) => {
     const element = f(el);
-    assert.eq(true, expt === element.dom());
+    assert.eq(true, expt === element.dom);
   };
 
   checkErr(SugarElement.fromDom, undefined);

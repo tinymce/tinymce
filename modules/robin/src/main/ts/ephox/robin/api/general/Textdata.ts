@@ -23,7 +23,7 @@ const get = function <E, D> (universe: Universe<E, D>, elements: E[]) {
   });
 
   const allText = Arr.foldr(list, function (b, a) {
-    return universe.property().getText(a.element()) + b;
+    return universe.property().getText(a.element) + b;
   }, '');
 
   return {
@@ -34,9 +34,9 @@ const get = function <E, D> (universe: Universe<E, D>, elements: E[]) {
 
 const cursor = function <E, D> (universe: Universe<E, D>, data: TextdataGet<E>, current: E, offset: number): Textdata<E> {
   const position = PositionArray.find(data.list, function (item) {
-    return universe.eq(item.element(), current);
+    return universe.eq(item.element, current);
   }).map(function (element) {
-    return element.start() + offset;
+    return element.start + offset;
   });
 
   return {

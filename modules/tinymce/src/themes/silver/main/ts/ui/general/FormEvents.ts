@@ -5,11 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Id } from '@ephox/katamari';
 import { CustomEvent } from '@ephox/alloy';
+import { Id } from '@ephox/katamari';
 
 export interface FormChangeEvent<T> extends CustomEvent {
-  name: () => keyof T;
+  readonly name: keyof T;
 }
 
 // tslint:disable-next-line:no-empty-interface
@@ -23,8 +23,8 @@ export interface FormCancelEvent extends CustomEvent {
 }
 
 export interface FormActionEvent extends CustomEvent {
-  name: () => string;
-  value: () => any;
+  readonly name: string;
+  readonly value: any;
 }
 
 // tslint:disable-next-line:no-empty-interface
@@ -34,7 +34,7 @@ export interface FormSubmitEvent extends CustomEvent {
 
 // tslint:disable-next-line:no-empty-interface
 export interface FormBlockEvent extends CustomEvent {
-  message: () => string;
+  readonly message: string;
 }
 
 // tslint:disable-next-line:no-empty-interface
@@ -43,8 +43,8 @@ export interface FormUnblockEvent extends CustomEvent {
 }
 
 export interface FormTabChangeEvent extends CustomEvent {
-  name: () => string;
-  oldName: () => string;
+  readonly name: string;
+  readonly oldName: string;
 }
 
 const formChangeEvent = Id.generate('form-component-change');

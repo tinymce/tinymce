@@ -50,7 +50,7 @@ const setup = (editor: Editor, _registry: AnnotationsRegistry): AnnotationChange
     withCallbacks(name, (data) => {
       Arr.each(data.listeners, (f) => f(true, name, {
         uid,
-        nodes: Arr.map(elements, (elem) => elem.dom())
+        nodes: Arr.map(elements, (elem) => elem.dom)
       }));
     });
   };

@@ -9,6 +9,8 @@ import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 import { SugarElement, Traverse } from '@ephox/sugar';
 
+const unbindNoop = Fun.constant({ unbind: Fun.noop });
+
 export default ValueSchema.objOf([
   FieldSchema.strictObjOf('editor', [
     // Maybe have frame as a method, but I doubt it ... I think we pretty much need a frame
@@ -32,10 +34,10 @@ export default ValueSchema.objOf([
     FieldSchema.defaulted('onTapContent', Fun.noop),
     FieldSchema.defaulted('onTouchToolstrip', Fun.noop),
 
-    FieldSchema.defaulted('onScrollToCursor', Fun.constant({ unbind: Fun.noop })),
-    FieldSchema.defaulted('onScrollToElement', Fun.constant({ unbind: Fun.noop })),
-    FieldSchema.defaulted('onToEditing', Fun.constant({ unbind: Fun.noop })),
-    FieldSchema.defaulted('onToReading', Fun.constant({ unbind: Fun.noop })),
+    FieldSchema.defaulted('onScrollToCursor', unbindNoop),
+    FieldSchema.defaulted('onScrollToElement', unbindNoop),
+    FieldSchema.defaulted('onToEditing', unbindNoop),
+    FieldSchema.defaulted('onToReading', unbindNoop),
     FieldSchema.defaulted('onToolbarScrollStart', Fun.identity)
   ]),
 
@@ -46,14 +48,14 @@ export default ValueSchema.objOf([
   FieldSchema.strict('container'),
   FieldSchema.strict('alloy'),
   FieldSchema.state('win', function (spec) {
-    return Traverse.owner(spec.socket).dom().defaultView;
+    return Traverse.owner(spec.socket).dom.defaultView;
   }),
   FieldSchema.state('body', function (spec) {
     return SugarElement.fromDom(
-      spec.socket.dom().ownerDocument.body
+      spec.socket.dom.ownerDocument.body
     );
   }),
   FieldSchema.defaulted('translate', Fun.identity),
   FieldSchema.defaulted('setReadOnly', Fun.noop),
-  FieldSchema.defaulted('readOnlyOnInit', Fun.constant(true))
+  FieldSchema.defaulted('readOnlyOnInit', Fun.always)
 ]);

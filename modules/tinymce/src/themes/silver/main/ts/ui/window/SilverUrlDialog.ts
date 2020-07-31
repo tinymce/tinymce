@@ -87,8 +87,8 @@ const renderUrlDialog = (internalDialog: Dialog.UrlDialog, extra: WindowExtra, e
       AlloyEvents.runOnAttached(() => {
         const unbind = DomEvent.bind<MessageEvent>(SugarElement.fromDom(window), 'message', (e) => {
           // Validate that the request came from the correct domain
-          if (iframeUri.isSameOrigin(new URI(e.raw().origin))) {
-            const data = e.raw().data;
+          if (iframeUri.isSameOrigin(new URI(e.raw.origin))) {
+            const data = e.raw.data;
 
             // Handle the message if it has the 'mceAction' key, otherwise just ignore it
             if (isSupportedMessage(data)) {
@@ -111,8 +111,8 @@ const renderUrlDialog = (internalDialog: Dialog.UrlDialog, extra: WindowExtra, e
         [bodySendMessageChannel]: {
           onReceive: (comp, data) => {
             // Send the message to the iframe via postMessage
-            SelectorFind.descendant<HTMLIFrameElement>(comp.element(), 'iframe').each((iframeEle) => {
-              const iframeWin = iframeEle.dom().contentWindow;
+            SelectorFind.descendant<HTMLIFrameElement>(comp.element, 'iframe').each((iframeEle) => {
+              const iframeWin = iframeEle.dom.contentWindow;
               iframeWin.postMessage(data, iframeDomain);
             });
           }

@@ -13,11 +13,11 @@ interface TestSpec {
 UnitTest.test('ReplicationTest', () => {
   const checkValues = (expected: TestSpec, actual: SugarElement<HTMLElement>) => {
     assert.eq(expected.name, 'span');
-    assert.eq(expected.attrs.href, actual.dom().getAttribute('href'));
-    assert.eq(expected.attrs['data-color'], actual.dom().getAttribute('data-color'));
+    assert.eq(expected.attrs.href, actual.dom.getAttribute('href'));
+    assert.eq(expected.attrs['data-color'], actual.dom.getAttribute('data-color'));
 
-    assert.eq(expected.styles.margin, actual.dom().style.getPropertyValue('margin'));
-    assert.eq(expected.styles.padding, actual.dom().style.getPropertyValue('padding'));
+    assert.eq(expected.styles.margin, actual.dom.style.getPropertyValue('margin'));
+    assert.eq(expected.styles.padding, actual.dom.style.getPropertyValue('padding'));
   };
 
   const checkCopy = (expected: TestSpec, input: string) => {

@@ -47,7 +47,7 @@ export default () => {
         AddEventsBehaviour.config('events', [
           AlloyEvents.run('bubbled.scroll', (comp, e) => {
             // eslint-disable-next-line no-console
-            console.log(e.event().raw());
+            console.log(e.event.raw);
           })
         ])
       ])

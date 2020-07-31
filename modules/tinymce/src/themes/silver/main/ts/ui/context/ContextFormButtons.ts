@@ -26,7 +26,7 @@ const getFormApi = (input): InlineContent.ContextFormInstanceApi => ({
 const runOnExecute = <T>(memInput: MementoRecord, original: { onAction: (formApi, buttonApi: T) => void }) => AlloyEvents.run<InternalToolbarButtonExecuteEvent<T>>(internalToolbarButtonExecute, (comp, se) => {
   const input = memInput.get(comp);
   const formApi = getFormApi(input);
-  original.onAction(formApi, se.event().buttonApi());
+  original.onAction(formApi, se.event.buttonApi);
 });
 
 const renderContextButton = (memInput: MementoRecord, button: InlineContent.ContextFormButton, extras) => {

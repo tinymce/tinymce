@@ -4,6 +4,8 @@ import { Arr, Optional, Result } from '@ephox/katamari';
 import { AlloyComponent } from '../api/component/ComponentApi';
 import { ComponentDetail, SimpleOrSketchSpec, StructDomSchema } from '../api/component/SpecTypes';
 import { AlloyEventRecord } from '../api/events/AlloyEvents';
+import * as NativeEvents from '../api/events/NativeEvents';
+import * as SystemEvents from '../api/events/SystemEvents';
 import { DomDefinitionDetail } from '../dom/DomDefinition';
 import { DomModification, nu as NuModification } from '../dom/DomModification';
 
@@ -20,6 +22,8 @@ export interface CustomDetail<A> {
   originalSpec: SimpleOrSketchSpec;
   'debug.sketcher': string;
 }
+
+const baseBehaviour = 'alloy.base.behaviour';
 
 const toInfo = <A>(spec: ComponentDetail): Result<CustomDetail<A>, any> => ValueSchema.asRaw('custom.definition', ValueSchema.objOf([
   FieldSchema.field('dom', 'dom', FieldPresence.strict(), ValueSchema.objOf([
@@ -43,15 +47,15 @@ const toInfo = <A>(spec: ComponentDetail): Result<CustomDetail<A>, any> => Value
     'eventOrder',
     FieldPresence.mergeWith({
       // Note, not using constant behaviour names to avoid code size of unused behaviours
-      'alloy.execute': [ 'disabling', 'alloy.base.behaviour', 'toggling', 'typeaheadevents' ],
-      'alloy.focus': [ 'alloy.base.behaviour', 'focusing', 'keying' ],
-      'alloy.system.init': [ 'alloy.base.behaviour', 'disabling', 'toggling', 'representing' ],
-      'input': [ 'alloy.base.behaviour', 'representing', 'streaming', 'invalidating' ],
-      'alloy.system.detached': [ 'alloy.base.behaviour', 'representing', 'item-events', 'tooltipping' ],
-      'mousedown': [ 'focusing', 'alloy.base.behaviour', 'item-type-events' ],
-      'touchstart': [ 'focusing', 'alloy.base.behaviour', 'item-type-events' ],
-      'mouseover': [ 'item-type-events', 'tooltipping' ],
-      'alloy.receive': [ 'receiving', 'reflecting', 'tooltipping' ]
+      [SystemEvents.execute()]: [ 'disabling', baseBehaviour, 'toggling', 'typeaheadevents' ],
+      [SystemEvents.focus()]: [ baseBehaviour, 'focusing', 'keying' ],
+      [SystemEvents.systemInit()]: [ baseBehaviour, 'disabling', 'toggling', 'representing' ],
+      [NativeEvents.input()]: [ baseBehaviour, 'representing', 'streaming', 'invalidating' ],
+      [SystemEvents.detachedFromDom()]: [ baseBehaviour, 'representing', 'item-events', 'tooltipping' ],
+      [NativeEvents.mousedown()]: [ 'focusing', baseBehaviour, 'item-type-events' ],
+      [NativeEvents.touchstart()]: [ 'focusing', baseBehaviour, 'item-type-events' ],
+      [NativeEvents.mouseover()]: [ 'item-type-events', 'tooltipping' ],
+      [SystemEvents.receive()]: [ 'receiving', 'reflecting', 'tooltipping' ]
     }),
     ValueSchema.anyValue()
   ),
@@ -64,7 +68,7 @@ const toDefinition = (detail: CustomDetail<any>): DomDefinitionDetail =>
   ({
     ...detail.dom,
     uid: detail.uid,
-    domChildren: Arr.map(detail.components, (comp) => comp.element())
+    domChildren: Arr.map(detail.components, (comp) => comp.element)
   });
 
 const toModification = (detail: CustomDetail<any>): DomModification => detail.domModification.fold(() => NuModification({ }), NuModification);

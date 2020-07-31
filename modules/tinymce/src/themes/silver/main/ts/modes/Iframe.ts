@@ -35,7 +35,7 @@ const setupEvents = (editor: Editor) => {
   const resizeWindow = (e) => {
     // Check if the window dimensions have changed and if so then trigger a content resize event
     const outer = lastWindowDimensions.get();
-    if (outer.left() !== contentWindow.innerWidth || outer.top() !== contentWindow.innerHeight) {
+    if (outer.left !== contentWindow.innerWidth || outer.top !== contentWindow.innerHeight) {
       lastWindowDimensions.set(SugarPosition(contentWindow.innerWidth, contentWindow.innerHeight));
       Events.fireResizeContent(editor, e);
     }
@@ -47,7 +47,7 @@ const setupEvents = (editor: Editor) => {
 
     // Check if the document dimensions have changed and if so then trigger a content resize event
     const inner = lastDocumentDimensions.get();
-    if (inner.left() !== docEle.offsetWidth || inner.top() !== docEle.offsetHeight) {
+    if (inner.left !== docEle.offsetWidth || inner.top !== docEle.offsetHeight) {
       lastDocumentDimensions.set(SugarPosition(docEle.offsetWidth, docEle.offsetHeight));
       Events.fireResizeContent(editor, e);
     }
@@ -71,6 +71,7 @@ const setupEvents = (editor: Editor) => {
 
 const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: RenderUiConfig, backstage: UiFactoryBackstage, args: RenderArgs): ModeRenderInfo => {
   const lastToolbarWidth = Cell(0);
+  const outerContainer = uiComponents.outerContainer;
 
   loadIframeSkin(editor);
 
@@ -85,22 +86,22 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
     lastToolbarWidth.set(editor.getWin().innerWidth);
 
     OuterContainer.setMenubar(
-      uiComponents.outerContainer,
+      outerContainer,
       identifyMenus(editor, rawUiConfig)
     );
 
     OuterContainer.setSidebar(
-      uiComponents.outerContainer,
+      outerContainer,
       rawUiConfig.sidebar
     );
 
     setupEvents(editor);
   });
 
-  const socket = OuterContainer.getSocket(uiComponents.outerContainer).getOrDie('Could not find expected socket element');
+  const socket = OuterContainer.getSocket(outerContainer).getOrDie('Could not find expected socket element');
 
   if (isiOS12 === true) {
-    Css.setAll(socket.element(), {
+    Css.setAll(socket.element, {
       'overflow': 'scroll',
       '-webkit-overflow-scrolling': 'touch' // required for ios < 13 content scrolling
     });
@@ -109,17 +110,17 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
       editor.fire('ScrollContent');
     }, 20);
 
-    DomEvent.bind(socket.element(), 'scroll', limit.throttle);
+    DomEvent.bind(socket.element, 'scroll', limit.throttle);
   }
 
   ReadOnly.setupReadonlyModeSwitch(editor, uiComponents);
 
   editor.addCommand('ToggleSidebar', (ui: boolean, value: string) => {
-    OuterContainer.toggleSidebar(uiComponents.outerContainer, value);
+    OuterContainer.toggleSidebar(outerContainer, value);
     editor.fire('ToggleSidebar');
   });
 
-  editor.addQueryValueHandler('ToggleSidebar', () => OuterContainer.whichSidebar(uiComponents.outerContainer));
+  editor.addQueryValueHandler('ToggleSidebar', () => OuterContainer.whichSidebar(outerContainer));
 
   const toolbarMode = Settings.getToolbarMode(editor);
 
@@ -139,8 +140,8 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
   }
 
   return {
-    iframeContainer: socket.element().dom(),
-    editorContainer: uiComponents.outerContainer.element().dom()
+    iframeContainer: socket.element.dom,
+    editorContainer: outerContainer.element.dom
   };
 };
 

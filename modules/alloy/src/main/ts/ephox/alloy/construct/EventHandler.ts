@@ -10,8 +10,8 @@ const nu = <T extends EventFormat>(parts: Partial<AlloyEventHandler<T>>): AlloyE
   );
   }
   return ValueSchema.asRawOrDie('Extracting event.handler', ValueSchema.objOfOnly([
-    FieldSchema.defaulted('can', Fun.constant(true)),
-    FieldSchema.defaulted('abort', Fun.constant(false)),
+    FieldSchema.defaulted('can', Fun.always),
+    FieldSchema.defaulted('abort', Fun.never),
     FieldSchema.defaulted('run', Fun.noop)
   ]), parts);
 };

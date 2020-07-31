@@ -19,15 +19,15 @@ const getCollapseDirection = (rect: ClientRect | DOMRect, x: number) =>
   x - rect.left < rect.right - x ? COLLAPSE_TO_LEFT : COLLAPSE_TO_RIGHT;
 
 const createCollapsedNode = (doc: SugarElement<Document>, target: SugarElement<Node>, collapseDirection: boolean) => {
-  const r = doc.dom().createRange();
-  r.selectNode(target.dom());
+  const r = doc.dom.createRange();
+  r.selectNode(target.dom);
   r.collapse(collapseDirection);
   return r;
 };
 
 const locateInElement = (doc: SugarElement<Document>, node: SugarElement<Element>, x: number) => {
-  const cursorRange = doc.dom().createRange();
-  cursorRange.selectNode(node.dom());
+  const cursorRange = doc.dom.createRange();
+  cursorRange.selectNode(node.dom);
   const rect = cursorRange.getBoundingClientRect();
   const collapseDirection = getCollapseDirection(rect, x);
 
@@ -36,7 +36,7 @@ const locateInElement = (doc: SugarElement<Document>, node: SugarElement<Element
 };
 
 const locateInEmpty = (doc: SugarElement<Document>, node: SugarElement<Element>, x: number) => {
-  const rect = node.dom().getBoundingClientRect();
+  const rect = node.dom.getBoundingClientRect();
   const collapseDirection = getCollapseDirection(rect, x);
   return Optional.some(createCollapsedNode(doc, node, collapseDirection));
 };

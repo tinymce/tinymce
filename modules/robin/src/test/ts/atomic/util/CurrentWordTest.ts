@@ -8,12 +8,12 @@ UnitTest.test('CurrentWordTest', function () {
     Assert.eq(
       'Checking before :: Optional',
       (expected.before as Optional<number | string>).getOr('none'),
-      (actual.before() as Optional<number | string>).getOr('none')
+      (actual.before as Optional<number | string>).getOr('none')
     );
     Assert.eq(
       'Checking after :: Optional',
       (expected.after as Optional<number | string>).getOr('none'),
-      (actual.after() as Optional<number | string>).getOr('none')
+      (actual.after as Optional<number | string>).getOr('none')
     );
   };
 

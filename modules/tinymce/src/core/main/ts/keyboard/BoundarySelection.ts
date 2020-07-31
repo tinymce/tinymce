@@ -50,7 +50,7 @@ const findLocation = (editor: Editor, caret: Cell<Text>, forward: boolean) => {
 };
 
 const toggleInlines = (isInlineTarget: NodePredicate, dom: DOMUtils, elms: Node[]) => {
-  const inlineBoundaries = Arr.map(SelectorFilter.descendants(SugarElement.fromDom(dom.getRoot()), '*[data-mce-selected="inline-boundary"]'), (e) => e.dom());
+  const inlineBoundaries = Arr.map(SelectorFilter.descendants(SugarElement.fromDom(dom.getRoot()), '*[data-mce-selected="inline-boundary"]'), (e) => e.dom);
   const selectedInlines = Arr.filter(inlineBoundaries, isInlineTarget);
   const targetInlines = Arr.filter(elms, isInlineTarget);
   Arr.each(Arr.difference(selectedInlines, targetInlines), Fun.curry(setSelected, false));

@@ -26,7 +26,7 @@ import * as Relocate from 'ephox/dragster/transform/Relocate';
 //   dialog.setContent(SugarElement.fromText('new content'));
 // }, 5000);
 
-// container.append(dialog.element().dom());
+// container.append(dialog.element().dom);
 
 // $('#ephox-ui').append(container);
 

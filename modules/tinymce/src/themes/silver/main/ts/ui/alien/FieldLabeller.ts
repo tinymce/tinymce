@@ -35,7 +35,7 @@ const renderFormFieldDomWith = (extraClasses): RawDomSchema => ({
   classes: [ 'tox-form__group' ].concat(extraClasses)
 });
 
-const renderLabel = (label: string, providersBackstage: UiFactoryBackstageProviders): AlloySpec => AlloyFormField.parts().label({
+const renderLabel = (label: string, providersBackstage: UiFactoryBackstageProviders): AlloySpec => AlloyFormField.parts.label({
   dom: {
     tag: 'label',
     classes: [ 'tox-label' ],

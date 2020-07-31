@@ -30,28 +30,28 @@ UnitTest.asynctest('Browser Test: ui.slider.VerticalSliderTest', (success, failu
       model: {
         mode: 'y',
         minY: 50,
-        getInitialValue: Fun.constant({ y: Fun.constant(200) }),
+        getInitialValue: Fun.constant({ y: 200 }),
         maxY: 200
       },
       stepSize: 10,
       snapToGrid: true,
 
       components: [
-        Slider.parts()['top-edge']({ dom: { tag: 'div', classes: [ 'vertical-slider-test-top-edge' ], styles: {
+        Slider.parts['top-edge']({ dom: { tag: 'div', classes: [ 'vertical-slider-test-top-edge' ], styles: {
           height: '40px',
           width: '20px',
           background: 'black'
         }}}),
-        Slider.parts().spectrum({ dom: { tag: 'div', classes: [ 'vertical-slider-test-spectrum' ], styles: {
+        Slider.parts.spectrum({ dom: { tag: 'div', classes: [ 'vertical-slider-test-spectrum' ], styles: {
           height: '150px',
           background: 'green'
         }}}),
-        Slider.parts()['bottom-edge']({ dom: { tag: 'div', classes: [ 'vertical-slider-test-bottom-edge' ], styles: {
+        Slider.parts['bottom-edge']({ dom: { tag: 'div', classes: [ 'vertical-slider-test-bottom-edge' ], styles: {
           height: '40px',
           width: '20px',
           background: 'white'
         }}}),
-        Slider.parts().thumb({ dom: { tag: 'div', classes: [ 'vertical-slider-test-thumb' ], styles: {
+        Slider.parts.thumb({ dom: { tag: 'div', classes: [ 'vertical-slider-test-thumb' ], styles: {
           height: '20px',
           width: '20px',
           background: 'gray'
@@ -60,12 +60,12 @@ UnitTest.asynctest('Browser Test: ui.slider.VerticalSliderTest', (success, failu
     })
   ), (doc, _body, _gui, component, _store) => {
 
-    const cGetBounds = Chain.mapper((elem: SugarElement) => elem.dom().getBoundingClientRect());
+    const cGetBounds = Chain.mapper((elem: SugarElement) => elem.dom.getBoundingClientRect());
 
     const cGetComponent = Chain.binder((elem: SugarElement) => component.getSystem().getByDom(elem));
 
     const cGetParts = NamedChain.asChain([
-      NamedChain.writeValue('slider', component.element()),
+      NamedChain.writeValue('slider', component.element),
       NamedChain.direct('slider', UiFinder.cFindIn('.vertical-slider-test-thumb'), 'thumb'),
       NamedChain.direct('slider', UiFinder.cFindIn('.vertical-slider-test-top-edge'), 'tedge'),
       NamedChain.direct('slider', UiFinder.cFindIn('.vertical-slider-test-bottom-edge'), 'bedge'),

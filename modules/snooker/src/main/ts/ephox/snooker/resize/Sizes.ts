@@ -6,8 +6,8 @@ import { getSpan } from '../util/CellUtils';
 import * as RuntimeSize from './RuntimeSize';
 
 export interface GenericWidth {
-  width: () => number;
-  unit: () => string;
+  readonly width: number;
+  readonly unit: string;
 }
 
 const rGenericSizeRegex = /(\d+(\.\d+)?)(\w|%)*/;
@@ -136,8 +136,8 @@ export const getGenericWidth = function (cell: SugarElement): Optional<GenericWi
     const match = rGenericSizeRegex.exec(w);
     if (match !== null) {
       return Optional.some({
-        width: Fun.constant(parseFloat(match[1])),
-        unit: Fun.constant(match[3])
+        width: parseFloat(match[1]),
+        unit: match[3]
       });
     } else {
       return Optional.none<GenericWidth>();

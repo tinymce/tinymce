@@ -35,8 +35,8 @@ UnitTest.asynctest(
       const fc = Hierarchy.follow(SugarElement.fromDom(editor.getBody()), start).getOrDie();
 
       const rng = document.createRange();
-      rng.setStart(sc.dom(), soffset);
-      rng.setEnd(fc.dom(), foffset);
+      rng.setStart(sc.dom, soffset);
+      rng.setEnd(fc.dom, foffset);
 
       editor.selection.setRng(rng);
     };
@@ -48,7 +48,7 @@ UnitTest.asynctest(
         const actPath = Hierarchy.path(root, actual).getOrDie('could not find path to root');
         return 'Expected path: ' + JSON.stringify(expPath) + '.\nActual path: ' + JSON.stringify(actPath);
       };
-      Assertions.assertEq(() => 'Assert incorrect for ' + label + '.\n' + message(), true, expected.dom() === actElement);
+      Assertions.assertEq(() => 'Assert incorrect for ' + label + '.\n' + message(), true, expected.dom === actElement);
       Assertions.assertEq(() => 'Offset mismatch for ' + label + ' in :\n' + Html.getOuter(expected), expOffset, actOffset);
     };
 

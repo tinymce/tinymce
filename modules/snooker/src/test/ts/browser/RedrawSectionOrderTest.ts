@@ -13,7 +13,7 @@ UnitTest.asynctest('Redraw Section Order Test', (success, failure) => {
   const getRowData = (table: SugarElement) => {
     const findRow = (details: Structs.DetailNew[]) => {
       const rowOfCells = Arr.findMap(details, (detail) =>
-        Traverse.parent(detail.element()).map((row) =>
+        Traverse.parent(detail.element).map((row) =>
           Structs.elementnew(row, false)));
       return rowOfCells.getOrThunk(() => Structs.elementnew(Bridge.generators.row(), true));
     };
@@ -23,14 +23,14 @@ UnitTest.asynctest('Redraw Section Order Test', (success, failure) => {
     const rendered = Transitions.toDetails(model, Compare.eq);
 
     return Arr.map(rendered, (details) => {
-      const row = findRow(details.details());
-      return Structs.rowdatanew(row.element(), details.details(), details.section(), row.isNew());
+      const row = findRow(details.details);
+      return Structs.rowdatanew(row.element, details.details, details.section, row.isNew);
     });
   };
 
   const changeTableSections = (table: SugarElement<any>, rowIndex: number, newSection: Structs.Section) => {
     const updatedModelData = Arr.map(getRowData(table), (row, i) =>
-      i === rowIndex ? Structs.rowdatanew(row.element(), row.cells(), newSection, row.isNew()) : row);
+      i === rowIndex ? Structs.rowdatanew(row.element, row.cells, newSection, row.isNew) : row);
     Redraw.render(table, updatedModelData);
   };
 
@@ -160,7 +160,7 @@ UnitTest.asynctest('Redraw Section Order Test', (success, failure) => {
       })), table);
     })),
     Logger.t('Assert that theads go after caption elements', Step.sync(() => {
-      const table = SugarElement.fromHtml(`<table><caption>some caption</caption<tbody><tr><td>one</td><td>&nbsp;</td><td>&nbsp;</td></tr></tbody></table>`);
+      const table = SugarElement.fromHtml(`<table><caption>some caption</caption><tbody><tr><td>one</td><td>&nbsp;</td><td>&nbsp;</td></tr></tbody></table>`);
 
       Assertions.assertStructure('Should be a basic table with a caption', ApproxStructure.build((s, str, _arr) => s.element('table', {
         children: [

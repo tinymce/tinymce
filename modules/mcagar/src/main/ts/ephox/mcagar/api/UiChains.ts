@@ -87,7 +87,7 @@ const cWaitForPopup = function <T> (label: string, selector: string) {
 };
 
 const cWaitForUi = function <T> (label: string, selector: string) {
-  return cWaitForState<T>(Fun.constant(true))(label, selector);
+  return cWaitForState<T>(Fun.always)(label, selector);
 };
 
 const cTriggerContextMenu = function (label: string, target: string, menu: string) {

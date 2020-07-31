@@ -18,8 +18,8 @@ import * as Frames from './frames/Frames';
 export default (): void => {
   const gui = Gui.create();
   const body = SugarElement.fromDom(document.body);
-  Css.set(gui.element(), 'direction', 'rtl');
-  Class.add(gui.element(), 'gui-root-demo-container');
+  Css.set(gui.element, 'direction', 'rtl');
+  Class.add(gui.element, 'gui-root-demo-container');
   Attachment.attachSystem(body, gui);
 
   const sink = DemoSink.make();
@@ -146,7 +146,7 @@ export default (): void => {
             Attachment.attach(sink, popup);
             Positioning.position(sink, {
               anchor: 'selection',
-              root: button.getSystem().getByUid('text-editor').getOrDie().element()
+              root: button.getSystem().getByUid('text-editor').getOrDie().element
             }, popup);
           }
         })
@@ -181,7 +181,7 @@ export default (): void => {
             Attachment.attach(sink, popup);
             Positioning.position(sink, {
               anchor: 'selection',
-              root: SugarElement.fromDom(Traverse.defaultView(frame).dom().document.body)
+              root: SugarElement.fromDom(Traverse.defaultView(frame).dom.document.body)
             }, popup);
           }
         })

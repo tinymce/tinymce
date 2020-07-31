@@ -33,8 +33,8 @@ UnitTest.asynctest('WindowManager:inline-dialog Position Test', (success, failur
     Chain.op((dialog: SugarElement<HTMLElement>) => {
       const diff = 5;
       const position = Css.get(dialog, 'position');
-      const top = dialog.dom().offsetTop;
-      const left = dialog.dom().offsetLeft;
+      const top = dialog.dom.offsetTop;
+      const left = dialog.dom.offsetLeft;
       Assertions.assertEq(`Dialog position (${position}) should be ${pos}`, pos, position);
       Assertions.assertEq(`Dialog top position (${top}px) should be ~${y}px`, true, Math.abs(top - y) < diff);
       Assertions.assertEq(`Dialog left position (${left}px) should be ~${x}px`, true, Math.abs(left - x) < diff);

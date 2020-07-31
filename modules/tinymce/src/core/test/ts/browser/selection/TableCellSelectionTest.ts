@@ -23,7 +23,7 @@ UnitTest.asynctest('browser.tinymce.core.selection.TableCellSelectionTest', func
       const ranges = Arr.map(paths, function (path) {
         const container = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), path).getOrDie();
         const rng = document.createRange();
-        rng.selectNode(container.dom());
+        rng.selectNode(container.dom);
         return rng;
       });
 

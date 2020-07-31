@@ -22,11 +22,11 @@ export interface FocusManager {
 }
 
 const dom = (): FocusManager => {
-  const get = (component: AlloyComponent) => Focus.search(component.element());
+  const get = (component: AlloyComponent) => Focus.search(component.element);
 
   const set = (component: AlloyComponent, focusee: SugarElement) => {
     const prevFocus = get(component);
-    component.getSystem().triggerFocus(focusee, component.element());
+    component.getSystem().triggerFocus(focusee, component.element);
     const newFocus = get(component);
     reportFocusShifting(component, prevFocus, newFocus);
   };
@@ -38,7 +38,7 @@ const dom = (): FocusManager => {
 };
 
 const highlights = (): FocusManager => {
-  const get = (component: AlloyComponent) => Highlighting.getHighlighted(component).map((item) => item.element());
+  const get = (component: AlloyComponent) => Highlighting.getHighlighted(component).map((item) => item.element);
 
   const set = (component: AlloyComponent, element: SugarElement) => {
     const prevFocus = get(component);

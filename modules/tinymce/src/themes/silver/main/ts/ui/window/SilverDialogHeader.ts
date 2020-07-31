@@ -106,15 +106,15 @@ const renderInlineHeader = (
 });
 
 const renderModalHeader = (spec: WindowHeaderSpec, providersBackstage: UiFactoryBackstageProviders): AlloySpec => {
-  const pTitle = ModalDialog.parts().title(
+  const pTitle = ModalDialog.parts.title(
     renderTitle(spec, Optional.none(), providersBackstage)
   );
 
-  const pHandle = ModalDialog.parts().draghandle(
+  const pHandle = ModalDialog.parts.draghandle(
     renderDragHandle()
   );
 
-  const pClose = ModalDialog.parts().close(
+  const pClose = ModalDialog.parts.close(
     renderClose(providersBackstage)
   );
 

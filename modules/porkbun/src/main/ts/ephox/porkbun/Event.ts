@@ -1,4 +1,4 @@
-import { Arr, Struct } from '@ephox/katamari';
+import { Arr } from '@ephox/katamari';
 
 export type EventHandler<T> = (event: T) => void;
 
@@ -12,8 +12,6 @@ export interface Event extends Bindable<any> {
 }
 
 export const Event = function (fields: string[]): Event {
-  const struct = Struct.immutable.apply(null, fields);
-
   let handlers: EventHandler<any>[] = [];
 
   const bind = function (handler: EventHandler<any>) {
@@ -31,8 +29,11 @@ export const Event = function (fields: string[]): Event {
     });
   };
 
-  const trigger = function (...args: any[]) {
-    const event = struct.apply(null, args);
+  const trigger = function <T> (...args: T[]) {
+    const event: Record<string, T> = {};
+    Arr.each(fields, function (name, i) {
+      event[name] = args[i];
+    });
     Arr.each(handlers, function (handler) {
       handler(event);
     });

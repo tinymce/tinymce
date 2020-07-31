@@ -10,7 +10,7 @@ import { Arr, Fun, Obj, Optional } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { UiFactoryBackstage } from '../../../backstage/Backstage';
 import { updateMenuText } from '../../dropdown/CommonDropdown';
-import { createMenuItems, createSelectButton, FormatterFormatItem, SelectSpec } from './BespokeSelect';
+import { createMenuItems, createSelectButton, FormatterFormatItem, PreviewSpec, SelectSpec } from './BespokeSelect';
 import { buildBasicSettingsDataset, Delimiter } from './SelectDatasets';
 import * as FormatRegister from './utils/FormatRegister';
 
@@ -67,7 +67,7 @@ const getSpec = (editor: Editor): SelectSpec => {
     return matchOpt;
   };
 
-  const getPreviewFor: FormatRegister.GetPreviewForType = Fun.constant(Fun.constant(Optional.none()));
+  const getPreviewFor: FormatRegister.GetPreviewForType = Fun.constant(Optional.none as () => Optional<PreviewSpec>);
 
   const onAction = (rawItem: FormatterFormatItem) => () => {
     editor.undoManager.transact(() => {

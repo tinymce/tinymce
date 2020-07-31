@@ -48,11 +48,11 @@ const hasSameParent = (blockBoundary: BlockBoundary): boolean =>
   ).isSome();
 
 const isEditable = (blockBoundary: BlockBoundary): boolean =>
-  NodeType.isContentEditableFalse(blockBoundary.from.block.dom()) === false && NodeType.isContentEditableFalse(blockBoundary.to.block.dom()) === false;
+  NodeType.isContentEditableFalse(blockBoundary.from.block.dom) === false && NodeType.isContentEditableFalse(blockBoundary.to.block.dom) === false;
 
 const skipLastBr = (rootNode: Node, forward: boolean, blockPosition: BlockPosition): BlockPosition => {
   if (NodeType.isBr(blockPosition.position.getNode()) && Empty.isEmpty(blockPosition.block) === false) {
-    return CaretFinder.positionIn(false, blockPosition.block.dom()).bind((lastPositionInBlock) => {
+    return CaretFinder.positionIn(false, blockPosition.block.dom).bind((lastPositionInBlock) => {
       if (lastPositionInBlock.isEqual(blockPosition.position)) {
         return CaretFinder.fromPosition(forward, rootNode, lastPositionInBlock).bind((to) => getBlockPosition(rootNode, to));
       } else {

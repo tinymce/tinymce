@@ -109,7 +109,7 @@ const register = (editor: Editor, registryContextToolbars, sink: AlloyComponent,
       .getOrThunk(() => editor.selection.getRng().getBoundingClientRect());
 
     // Translate to the top level document, as nodeBounds is relative to the iframe viewport
-    const diffTop = editor.inline ? Scroll.get().top() : Boxes.absolute(SugarElement.fromDom(editor.getBody())).y;
+    const diffTop = editor.inline ? Scroll.get().top : Boxes.absolute(SugarElement.fromDom(editor.getBody())).y;
 
     return {
       y: nodeBounds.top + diffTop,
@@ -142,7 +142,7 @@ const register = (editor: Editor, registryContextToolbars, sink: AlloyComponent,
   // FIX: make a lot nicer.
   const hideOrRepositionIfNecessary = () => {
     lastAnchor.get().each((anchor) => {
-      const contextBarEle = contextbar.element();
+      const contextBarEle = contextbar.element;
       Css.remove(contextBarEle, 'display');
       if (shouldContextToolbarHide()) {
         Css.set(contextBarEle, 'display', 'none');
@@ -253,7 +253,7 @@ const register = (editor: Editor, registryContextToolbars, sink: AlloyComponent,
 
     lastAnchor.set(Optional.some((anchor)));
     lastElement.set(elem);
-    const contextBarEle = contextbar.element();
+    const contextBarEle = contextbar.element;
     Css.remove(contextBarEle, 'display');
     InlineView.showWithinBounds(contextbar, anchor, wrapInPopDialog(toolbarSpec), () => Optional.some(getBounds()));
 
@@ -277,7 +277,7 @@ const register = (editor: Editor, registryContextToolbars, sink: AlloyComponent,
       },
 
       (info) => {
-        launchContext(info.toolbars, Optional.some(info.elem.dom()));
+        launchContext(info.toolbars, Optional.some(info.elem.dom));
       }
     );
   };
@@ -309,7 +309,7 @@ const register = (editor: Editor, registryContextToolbars, sink: AlloyComponent,
 
     editor.on('focusout', (_e) => {
       Delay.setEditorTimeout(editor, () => {
-        if (Focus.search(sink.element()).isNone() && Focus.search(contextbar.element()).isNone()) {
+        if (Focus.search(sink.element).isNone() && Focus.search(contextbar.element).isNone()) {
           lastAnchor.set(Optional.none());
           InlineView.hide(contextbar);
         }
@@ -324,7 +324,7 @@ const register = (editor: Editor, registryContextToolbars, sink: AlloyComponent,
     });
 
     editor.on('NodeChange', (_e) => {
-      Focus.search(contextbar.element()).fold(
+      Focus.search(contextbar.element).fold(
         () => {
           resetTimer(
             Delay.setEditorTimeout(editor, launchContextToolbar, 0)

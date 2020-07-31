@@ -120,7 +120,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
   ReadOnly.setupReadonlyModeSwitch(editor, uiComponents);
 
   return {
-    editorContainer: outerContainer.element().dom()
+    editorContainer: outerContainer.element.dom
   };
 };
 

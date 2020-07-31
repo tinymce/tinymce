@@ -4,7 +4,7 @@ import { SugarElement } from '../node/SugarElement';
 import * as Css from './Css';
 
 const isCentered = (element: SugarElement<Node>): boolean => {
-  const dom = element.dom();
+  const dom = element.dom;
   if (Style.isSupported(dom)) {
     const marginLeft = dom.style.marginRight;
     const marginRight = dom.style.marginLeft;

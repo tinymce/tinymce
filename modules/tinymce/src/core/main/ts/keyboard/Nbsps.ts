@@ -30,7 +30,7 @@ const hasSpaceBefore = (root: SugarElement, pos: CaretPosition): boolean => {
   if (isInMiddleOfText(pos)) {
     return isAfterSpace(pos);
   } else {
-    return isAfterSpace(pos) || CaretFinder.prevPosition(getClosestBlock(root, pos).dom(), pos).exists(isAfterSpace);
+    return isAfterSpace(pos) || CaretFinder.prevPosition(getClosestBlock(root, pos).dom, pos).exists(isAfterSpace);
   }
 };
 
@@ -38,7 +38,7 @@ const hasSpaceAfter = (root: SugarElement, pos: CaretPosition): boolean => {
   if (isInMiddleOfText(pos)) {
     return isBeforeSpace(pos);
   } else {
-    return isBeforeSpace(pos) || CaretFinder.nextPosition(getClosestBlock(root, pos).dom(), pos).exists(isBeforeSpace);
+    return isBeforeSpace(pos) || CaretFinder.nextPosition(getClosestBlock(root, pos).dom, pos).exists(isBeforeSpace);
   }
 };
 
@@ -48,8 +48,8 @@ const isInPre = (pos: CaretPosition) => getElementFromPosition(pos)
   .bind((elm) => PredicateFind.closest(elm, SugarNode.isElement))
   .exists((elm: SugarElement<Element>) => isPreValue(Css.get(elm, 'white-space')));
 
-const isAtBeginningOfBody = (root: SugarElement, pos: CaretPosition) => CaretFinder.prevPosition(root.dom(), pos).isNone();
-const isAtEndOfBody = (root: SugarElement, pos: CaretPosition) => CaretFinder.nextPosition(root.dom(), pos).isNone();
+const isAtBeginningOfBody = (root: SugarElement, pos: CaretPosition) => CaretFinder.prevPosition(root.dom, pos).isNone();
+const isAtEndOfBody = (root: SugarElement, pos: CaretPosition) => CaretFinder.nextPosition(root.dom, pos).isNone();
 
 const isAtLineBoundary = (root: SugarElement, pos: CaretPosition) => (
   isAtBeginningOfBody(root, pos) ||

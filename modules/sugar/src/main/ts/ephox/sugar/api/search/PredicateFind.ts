@@ -14,8 +14,8 @@ const ancestor: {
   <T extends Node = Node> (scope: SugarElement<Node>, predicate: (e: SugarElement<Node>) => e is SugarElement<T>, isRoot?: (e: SugarElement<Node>) => boolean): Optional<SugarElement<T>>;
   (scope: SugarElement<Node>, predicate: (e: SugarElement<Node>) => boolean, isRoot?: (e: SugarElement<Node>) => boolean): Optional<SugarElement<Node>>;
 } = (scope: SugarElement<Node>, predicate: (e: SugarElement<Node>) => boolean, isRoot?: (e: SugarElement<Node>) => boolean) => {
-  let element = scope.dom();
-  const stop = Type.isFunction(isRoot) ? isRoot : Fun.constant(false);
+  let element = scope.dom;
+  const stop = Type.isFunction(isRoot) ? isRoot : Fun.never;
 
   while (element.parentNode) {
     element = element.parentNode;
@@ -43,7 +43,7 @@ const sibling: {
   <T extends Node = Node> (scope: SugarElement<Node>, predicate: (e: SugarElement<Node>) => e is SugarElement<T>): Optional<SugarElement<T & ChildNode>>;
   (scope: SugarElement<Node>, predicate: (e: SugarElement<Node>) => boolean): Optional<SugarElement<Node & ChildNode>>;
 } = (scope: SugarElement<Node>, predicate: (e: SugarElement<Node>) => boolean): Optional<SugarElement<Node & ChildNode>> => {
-  const element = scope.dom();
+  const element = scope.dom;
   if (!element.parentNode) {
     return Optional.none<SugarElement<Node & ChildNode>>();
   }
@@ -56,7 +56,7 @@ const child: {
   (scope: SugarElement<Node>, predicate: (e: SugarElement<Node>) => boolean): Optional<SugarElement<Node & ChildNode>>;
 } = (scope: SugarElement<Node>, predicate: (e: SugarElement<Node>) => boolean) => {
   const pred = (node: Node) => predicate(SugarElement.fromDom(node));
-  const result = Arr.find(scope.dom().childNodes, pred);
+  const result = Arr.find(scope.dom.childNodes, pred);
   return result.map(SugarElement.fromDom);
 };
 
@@ -81,7 +81,7 @@ const descendant: {
     return Optional.none<SugarElement<Node & ChildNode>>();
   };
 
-  return descend(scope.dom());
+  return descend(scope.dom);
 };
 
 export { first, ancestor, closest, sibling, child, descendant };

@@ -16,8 +16,8 @@ UnitTest.test('Runtime Size Test', () => {
 
   const random = (min: number, max: number) => Math.round(Math.random() * (max - min) + min);
 
-  const getOuterHeight = (elm: SugarElement) => Math.round(elm.dom().getBoundingClientRect().height);
-  const getOuterWidth = (elm: SugarElement) => Math.round(elm.dom().getBoundingClientRect().width);
+  const getOuterHeight = (elm: SugarElement) => Math.round(elm.dom.getBoundingClientRect().height);
+  const getOuterWidth = (elm: SugarElement) => Math.round(elm.dom.getBoundingClientRect().width);
 
   const measureCells = (getSize: (e: SugarElement) => number, table: SugarElement) => Arr.map(SelectorFilter.descendants(table, 'td'), getSize);
 

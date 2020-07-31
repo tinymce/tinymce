@@ -58,7 +58,7 @@ const preventDefault = function <T extends EventFormat> (name: string): AlloyEve
     key: name,
     value: EventHandler.nu({
       run(component: AlloyComponent, simulatedEvent: SimulatedEvent<T>) {
-        simulatedEvent.event().prevent();
+        simulatedEvent.event.prevent();
       }
     })
   };
@@ -104,7 +104,7 @@ const runOnSourceName = function <T extends EventFormat> (name: string): RunOnSo
 const redirectToUid = function <T extends EventFormat> (name: string, uid: string): AlloyEventKeyAndHandler<T> {
   return run(name, (component: AlloyComponent, simulatedEvent: SimulatedEvent<T>) => {
     component.getSystem().getByUid(uid).each((redirectee) => {
-      AlloyTriggers.dispatchEvent(redirectee, redirectee.element(), name, simulatedEvent);
+      AlloyTriggers.dispatchEvent(redirectee, redirectee.element, name, simulatedEvent);
     });
   });
 };
@@ -116,14 +116,14 @@ const redirectToPart = function <T extends EventFormat> (name: string, detail: C
 
 const runWithTarget = function <T extends EventFormat> (name: string, f: (component: AlloyComponent, target: AlloyComponent, se: SimulatedEvent<T>) => void): AlloyEventKeyAndHandler<T> {
   return run(name, (component, simulatedEvent) => {
-    const ev: T = simulatedEvent.event();
+    const ev: T = simulatedEvent.event;
 
-    const target = component.getSystem().getByDom(ev.target()).fold(
+    const target = component.getSystem().getByDom(ev.target).fold(
       // If we don't find an alloy component for the target, I guess we go up the tree
       // until we find an alloy component? Performance concern?
       // TODO: Write tests for this.
       () => {
-        const closest = TransformFind.closest(ev.target(), (el) => component.getSystem().getByDom(el).toOptional(), Fun.constant(false));
+        const closest = TransformFind.closest(ev.target, (el) => component.getSystem().getByDom(el).toOptional(), Fun.never);
 
         // If we still found nothing ... fire on component itself;
         return closest.getOr(component);

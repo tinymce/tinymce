@@ -10,7 +10,7 @@ import { Compare, Css, SugarElement, Traverse } from '@ephox/sugar';
 import Editor from './api/Editor';
 
 const getProp = function (propName, elm) {
-  const rawElm = elm.dom();
+  const rawElm = elm.dom;
   return rawElm[propName];
 };
 
@@ -24,7 +24,7 @@ const getMarginTop = Fun.curry(getComputedSizeProp, 'margin-top');
 const getMarginLeft = Fun.curry(getComputedSizeProp, 'margin-left');
 
 const getBoundingClientRect = function (elm) {
-  return elm.dom().getBoundingClientRect();
+  return elm.dom.getBoundingClientRect();
 };
 
 const isInsideElementContentArea = function (bodyElm, clientX, clientY) {
@@ -36,8 +36,8 @@ const isInsideElementContentArea = function (bodyElm, clientX, clientY) {
 
 const transpose = function (inline, elm, clientX, clientY) {
   const clientRect = getBoundingClientRect(elm);
-  const deltaX = inline ? clientRect.left + elm.dom().clientLeft + getMarginLeft(elm) : 0;
-  const deltaY = inline ? clientRect.top + elm.dom().clientTop + getMarginTop(elm) : 0;
+  const deltaX = inline ? clientRect.left + elm.dom.clientLeft + getMarginLeft(elm) : 0;
+  const deltaY = inline ? clientRect.top + elm.dom.clientTop + getMarginTop(elm) : 0;
   const x = clientX - deltaX;
   const y = clientY - deltaY;
 

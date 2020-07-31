@@ -90,14 +90,14 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
     const sAssertSrcTextValue = (expectedValue: string) => Waiter.sTryUntil('Waited for input to change to expected value', Chain.asStep(SugarBody.body(), [
       UiFinder.cFindIn('label.tox-label:contains("Source") + div > div > input.tox-textfield'),
       Chain.op((input) => {
-        Assertions.assertEq('Assert field source value ', expectedValue, input.dom().value);
+        Assertions.assertEq('Assert field source value ', expectedValue, input.dom.value);
       })
     ]), 10, 10000);
 
     const sAssertSrcTextValueStartsWith = (expectedValue: string) => Waiter.sTryUntil('Waited for input to change to start with expected value', Chain.asStep(SugarBody.body(), [
       UiFinder.cFindIn('label.tox-label:contains("Source") + div > div > input.tox-textfield'),
       Chain.op((input) => {
-        Assertions.assertEq('Assert field source value ', true, Strings.startsWith(input.dom().value, expectedValue));
+        Assertions.assertEq('Assert field source value ', true, Strings.startsWith(input.dom.value, expectedValue));
       })
     ]), 10, 10000);
 

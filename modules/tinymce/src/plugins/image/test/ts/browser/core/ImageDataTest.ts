@@ -31,14 +31,14 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
   const cReadFromImage = Chain.control(
     Chain.mapper(function (elm: SugarElement) {
       const img = SugarNode.name(elm) === 'img' ? elm : SelectorFind.descendant(elm, 'img').getOrDie('failed to find image');
-      return { model: read(normalizeCss, img.dom()), image: img, parent: elm };
+      return { model: read(normalizeCss, img.dom), image: img, parent: elm };
     }),
     Guard.addLogging('Read from image')
   );
 
   const cWriteToImage = Chain.control(
     Chain.op(function (data: any) {
-      write(normalizeCss, data.model, data.image.dom());
+      write(normalizeCss, data.model, data.image.dom);
     }),
     Guard.addLogging('Write to image')
   );
@@ -66,13 +66,13 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
 
   const cAssertImage = Chain.control(
     Chain.op(function (data: any) {
-      Assert.eq('Should be an image', true, isImage(data.image.dom()));
+      Assert.eq('Should be an image', true, isImage(data.image.dom));
     }),
     Guard.addLogging('Assert image')
   );
 
   const cAssertFigure = Chain.op(function (data: any) {
-    Assert.eq('Parent should be a figure', true, isFigure(data.image.dom().parentNode));
+    Assert.eq('Parent should be a figure', true, isFigure(data.image.dom.parentNode));
   });
 
   Pipeline.async({}, [

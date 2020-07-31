@@ -25,7 +25,7 @@ UnitTest.asynctest('HtmlPanel component Test', (success, failure) => {
             s.element('hr', { })
           ]
         })),
-        component.element()
+        component.element
       )
     ],
     success,
@@ -51,7 +51,7 @@ UnitTest.asynctest('HtmlPanel component Test', (success, failure) => {
             s.element('hr', { })
           ]
         })),
-        component.element()
+        component.element
       )
     ],
     success,

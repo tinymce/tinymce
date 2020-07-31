@@ -25,7 +25,6 @@ import * as Results from './Results';
 import * as Singleton from './Singleton';
 import { StringMatch } from './StringMatch';
 import * as Strings from './Strings';
-import * as Struct from './Struct';
 import * as Throttler from './Throttler';
 import * as Thunk from './Thunk';
 import * as Type from './Type';
@@ -61,7 +60,6 @@ export {
   Singleton,
   StringMatch,
   Strings,
-  Struct,
   Throttler,
   Thunk,
   Type,

@@ -4,7 +4,7 @@ import * as Traverse from '../search/Traverse';
 const before = (marker: SugarElement<Node>, element: SugarElement<Node>): void => {
   const parent = Traverse.parent(marker);
   parent.each((v) => {
-    v.dom().insertBefore(element.dom(), marker.dom());
+    v.dom.insertBefore(element.dom, marker.dom);
   });
 };
 
@@ -25,12 +25,12 @@ const prepend = (parent: SugarElement<Node>, element: SugarElement<Node>): void 
   firstChild.fold(() => {
     append(parent, element);
   }, (v) => {
-    parent.dom().insertBefore(element.dom(), v.dom());
+    parent.dom.insertBefore(element.dom, v.dom);
   });
 };
 
 const append = (parent: SugarElement<Node>, element: SugarElement<Node>): void => {
-  parent.dom().appendChild(element.dom());
+  parent.dom.appendChild(element.dom);
 };
 
 const appendAt = (parent: SugarElement<Node>, element: SugarElement<Node>, index: number): void => {

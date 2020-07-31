@@ -68,14 +68,14 @@ UnitTest.test('SmartSelectTest', function () {
     }, function (act) {
       const expStart = Hierarchy.follow(editor, expected.start.element).getOrDie('Could not find expected start');
       const expFinish = Hierarchy.follow(editor, expected.finish.element).getOrDie('Could not find expected finish');
-      assert.eq(true, Compare.eq(expStart, act.startContainer()));
-      assert.eq(expected.start.offset, act.startOffset());
-      assert.eq(true, Compare.eq(expFinish, act.endContainer()));
-      assert.eq(expected.finish.offset, act.endOffset());
+      assert.eq(true, Compare.eq(expStart, act.startContainer));
+      assert.eq(expected.start.offset, act.startOffset);
+      assert.eq(true, Compare.eq(expFinish, act.endContainer));
+      assert.eq(expected.finish.offset, act.endOffset);
 
       const range = document.createRange();
-      range.setStart(act.startContainer().dom(), act.startOffset());
-      range.setEnd(act.endContainer().dom(), act.endOffset());
+      range.setStart(act.startContainer.dom, act.startOffset);
+      range.setEnd(act.endContainer.dom, act.endOffset);
       assert.eq(expected.word, range.toString());
     });
   };

@@ -1,4 +1,4 @@
-import { Cell, Fun, Optional, Throttler } from '@ephox/katamari';
+import { Cell, Optional, Throttler } from '@ephox/katamari';
 import Editor from '../api/Editor';
 
 // This is based heavily on Alloy's TapEvent.ts, just modified to use TinyMCE's event system.
@@ -7,12 +7,12 @@ const SIGNIFICANT_MOVE = 5;
 const LONGPRESS_DELAY = 400;
 
 export interface TouchHistoryData {
-  x: () => number;
-  y: () => number;
-  target: () => any;
+  readonly x: number;
+  readonly y: number;
+  readonly target: Node;
 }
 
-const getTouch = (event): Optional<Touch> => {
+const getTouch = (event: TouchEvent): Optional<Touch> => {
   if (event.touches === undefined || event.touches.length !== 1) {
     return Optional.none();
   }
@@ -20,8 +20,8 @@ const getTouch = (event): Optional<Touch> => {
 };
 
 const isFarEnough = (touch: Touch, data: TouchHistoryData): boolean => {
-  const distX = Math.abs(touch.clientX - data.x());
-  const distY = Math.abs(touch.clientY - data.y());
+  const distX = Math.abs(touch.clientX - data.x);
+  const distY = Math.abs(touch.clientY - data.y);
   return distX > SIGNIFICANT_MOVE || distY > SIGNIFICANT_MOVE;
 };
 
@@ -38,10 +38,10 @@ const setup = (editor: Editor) => {
     getTouch(e).each((touch) => {
       debounceLongpress.cancel();
 
-      const data = {
-        x: Fun.constant(touch.clientX),
-        y: Fun.constant(touch.clientY),
-        target: Fun.constant(e.target)
+      const data: TouchHistoryData = {
+        x: touch.clientX,
+        y: touch.clientY,
+        target: e.target
       };
 
       debounceLongpress.throttle(e);
@@ -72,7 +72,7 @@ const setup = (editor: Editor) => {
 
     // Cancel the touchend event if a longpress was fired, otherwise fire the tap event
     startData.get()
-      .filter((data) => data.target().isEqualNode(e.target))
+      .filter((data) => data.target.isEqualNode(e.target))
       .each(() => {
         if (longpressFired.get()) {
           e.preventDefault();

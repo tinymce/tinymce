@@ -75,7 +75,7 @@ const getAbsoluteClientRect = (root: HTMLElement, element: HTMLElement, before: 
 const trimInlineCaretContainers = (root: HTMLElement): void => {
   const fakeCaretTargetNodes = SelectorFilter.descendants(SugarElement.fromDom(root), inlineFakeCaretSelector);
   for (let i = 0; i < fakeCaretTargetNodes.length; i++) {
-    const node = fakeCaretTargetNodes[i].dom();
+    const node = fakeCaretTargetNodes[i].dom;
 
     let sibling = node.previousSibling;
     if (CaretContainer.endsWithCaretContainer(sibling)) {

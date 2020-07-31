@@ -14,9 +14,7 @@ UnitTest.test('TableCounterTest', function () {
     const actual = Transitions.toDetails(input, Fun.tripleEquals);
     const cleaner = function (obj: Structs.RowDetails[]) {
       return Arr.map(obj, function (row) {
-        return Arr.map(row.details(), function (c) {
-          return { element: c.element(), rowspan: c.rowspan(), colspan: c.colspan() };
-        });
+        return row.details;
       });
     };
     assert.eq(cleaner(expected), cleaner(actual));

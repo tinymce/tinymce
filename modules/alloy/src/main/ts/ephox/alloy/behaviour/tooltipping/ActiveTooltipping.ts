@@ -10,7 +10,7 @@ import * as AlloyTriggers from '../../api/events/AlloyTriggers';
 import * as NativeEvents from '../../api/events/NativeEvents';
 import * as SystemEvents from '../../api/events/SystemEvents';
 import * as Attachment from '../../api/system/Attachment';
-import { ReceivingInternalEvent } from '../../events/SimulatedEvent';
+import { ReceivingEvent, ReceivingInternalEvent } from '../../events/SimulatedEvent';
 import * as TooltippingApis from './TooltippingApis';
 import { ExclusivityChannel, HideTooltipEvent, ShowTooltipEvent } from './TooltippingCommunication';
 import { TooltippingConfig, TooltippingState } from './TooltippingTypes';
@@ -69,11 +69,15 @@ const events = (tooltipConfig: TooltippingConfig, state: TooltippingState): Allo
           hide(comp);
         }, tooltipConfig.delay);
       }),
-      AlloyEvents.run(SystemEvents.receive(), (comp, message) => {
+      AlloyEvents.run<ReceivingEvent>(SystemEvents.receive(), (comp, message) => {
         // TODO: Think about the types for this, or find a better way for this
         // to rely on receiving.
         const receivingData = message as unknown as ReceivingInternalEvent;
-        if (Arr.contains(receivingData.channels(), ExclusivityChannel)) { hide(comp); }
+        if (!receivingData.universal) {
+          if (Arr.contains(receivingData.channels, ExclusivityChannel)) {
+            hide(comp);
+          }
+        }
       }),
       AlloyEvents.runOnDetached((comp) => {
         hide(comp);

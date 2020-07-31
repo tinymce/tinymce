@@ -4,7 +4,7 @@ import { SugarElement } from '@ephox/sugar';
 import { DragDistanceEvent, Mutation } from './Mutation';
 
 export interface DragEvent extends DragDistanceEvent {
-  target: () => SugarElement;
+  readonly target: SugarElement;
 }
 
 interface DragDistanceEvents {
@@ -37,7 +37,7 @@ export const BarMutation = function (): BarMutation {
   delegate.events.drag.bind(function (event) {
     target.each(function (t) {
       // There is always going to be this padding / border collapse / margin problem with widths. I'll have to resolve that.
-      events.trigger.drag(event.xDelta(), event.yDelta(), t);
+      events.trigger.drag(event.xDelta, event.yDelta, t);
     });
   });
 

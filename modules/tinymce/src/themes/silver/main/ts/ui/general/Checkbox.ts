@@ -25,22 +25,22 @@ export const renderCheckbox = (spec: CheckboxSpec, providerBackstage: UiFactoryB
     store: {
       mode: 'manual',
       getValue: (comp: AlloyComponent): boolean => {
-        const el = comp.element().dom() as HTMLInputElement;
+        const el = comp.element.dom as HTMLInputElement;
         return el.checked;
       },
       setValue: (comp: AlloyComponent, value: boolean) => {
-        const el = comp.element().dom() as HTMLInputElement;
+        const el = comp.element.dom as HTMLInputElement;
         el.checked = value;
       }
     }
   });
 
   const toggleCheckboxHandler = (comp) => {
-    comp.element().dom().click();
+    comp.element.dom.click();
     return Optional.some(true);
   };
 
-  const pField = AlloyFormField.parts().field({
+  const pField = AlloyFormField.parts.field({
     factory: { sketch: Fun.identity },
     dom: {
       tag: 'input',
@@ -72,7 +72,7 @@ export const renderCheckbox = (spec: CheckboxSpec, providerBackstage: UiFactoryB
     ])
   });
 
-  const pLabel = AlloyFormField.parts().label({
+  const pLabel = AlloyFormField.parts.label({
     dom: {
       tag: 'span',
       classes: [ 'tox-checkbox__label' ],

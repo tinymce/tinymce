@@ -17,12 +17,12 @@ UnitTest.test('DomSearchTest', function () {
     Remove.empty(container);
     InsertAll.append(container, elements);
 
-    const snapshots = DomSearch.safeWords(elements, words, Fun.constant(false));
+    const snapshots = DomSearch.safeWords(elements, words, Fun.never);
 
     Arr.each(snapshots, function (x) {
-      DomWrapping.wrapper(x.elements(), function () {
+      DomWrapping.wrapper(x.elements, function () {
         const span = SugarElement.fromTag('span');
-        Attribute.set(span, 'data-word', x.word());
+        Attribute.set(span, 'data-word', x.word);
         return DomWrapping.nu(span);
       });
     });

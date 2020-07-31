@@ -1,8 +1,8 @@
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import * as Arr from 'ephox/katamari/api/Arr';
 import * as Fun from 'ephox/katamari/api/Fun';
 import * as Obj from 'ephox/katamari/api/Obj';
 import fc from 'fast-check';
-import { UnitTest, Assert } from '@ephox/bedrock-client';
 
 UnitTest.test('ObjFindTest', function () {
   const checkNone = function (input, pred) {
@@ -51,7 +51,7 @@ UnitTest.test('If predicate is always false, then find is always none', () => {
   fc.assert(fc.property(
     fc.dictionary(fc.asciiString(), fc.json()),
     function (obj) {
-      const value = Obj.find(obj, Fun.constant(false));
+      const value = Obj.find(obj, Fun.never);
       return value.isNone();
     }
   ));
@@ -71,7 +71,7 @@ UnitTest.test('If predicate is always true, then value is always the some(first)
   fc.assert(fc.property(
     fc.dictionary(fc.asciiString(), fc.json()),
     function (obj) {
-      const value = Obj.find(obj, Fun.constant(true));
+      const value = Obj.find(obj, Fun.always);
       // No order is specified, so we cannot know what "first" is
       return Obj.keys(obj).length === 0 ? value.isNone() : true;
     }

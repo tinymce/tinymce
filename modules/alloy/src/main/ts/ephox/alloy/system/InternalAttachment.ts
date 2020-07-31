@@ -18,14 +18,14 @@ const fireAttaching = (component: AlloyComponent) => {
 };
 
 const attach = (parent: AlloyComponent, child: AlloyComponent) => {
-  Insert.append(parent.element(), child.element());
+  Insert.append(parent.element, child.element);
 };
 
 const detachChildren = (component: AlloyComponent): void => {
   // This will not detach the component, but will detach its children and sync at the end.
-  Arr.each(component.components(), (childComp) => Remove.remove(childComp.element()));
+  Arr.each(component.components(), (childComp) => Remove.remove(childComp.element));
   // Clear the component also.
-  Remove.empty(component.element());
+  Remove.empty(component.element);
   component.syncComponents();
 };
 
@@ -47,7 +47,7 @@ const replaceChildren = (component: AlloyComponent, newChildren: AlloyComponent[
     if (!childComp.getSystem().isConnected()) {
       component.getSystem().addToWorld(childComp);
       attach(component, childComp);
-      if (SugarBody.inBody(component.element())) {
+      if (SugarBody.inBody(component.element)) {
         fireAttaching(childComp);
       }
     } else {

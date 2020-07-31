@@ -28,7 +28,7 @@ UnitTest.asynctest('SelectionInDocPositionTest', (success, failure) => {
       })
     );
 
-    Css.setAll(inlineEditor.element(), {
+    Css.setAll(inlineEditor.element, {
       'margin-top': '300px',
       'height': '200px',
       'overflow': 'scroll',
@@ -49,10 +49,10 @@ UnitTest.asynctest('SelectionInDocPositionTest', (success, failure) => {
   }, (_doc, _body, gui, _component, _store) => {
     const cSetupAnchor = Chain.mapper((data: any) => ({
       anchor: 'selection',
-      root: data.inline.element(),
+      root: data.inline.element,
       getSelection() {
         return Optional.some(
-          Cursors.calculate(data.inline.element(), data.path)
+          Cursors.calculate(data.inline.element, data.path)
         );
       }
     }));
@@ -114,10 +114,10 @@ UnitTest.asynctest('SelectionInDocPositionTest', (success, failure) => {
                 foffset: 0
               })),
               NamedChain.bundle((data: any) => {
-                const root = data.inline.element();
+                const root = data.inline.element;
                 const path = data.path;
                 const range = Cursors.calculate(root, path);
-                range.start().dom().scrollIntoView();
+                range.start.dom.scrollIntoView();
                 return Result.value(data);
               }),
 

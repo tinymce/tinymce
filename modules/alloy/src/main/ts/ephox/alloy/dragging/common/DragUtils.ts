@@ -14,8 +14,8 @@ type EventsFunc<C extends DraggingConfig<E>, A extends EventFormat, E> = (dragCo
 
 const calcStartData = <E>(dragConfig: DraggingConfig<E>, comp: AlloyComponent): DragStartData => ({
   bounds: dragConfig.getBounds(),
-  height: Height.getOuter(comp.element()),
-  width: Width.getOuter(comp.element())
+  height: Height.getOuter(comp.element),
+  width: Width.getOuter(comp.element)
 });
 
 const move = <E, ET extends Event>(component: AlloyComponent, dragConfig: DraggingConfig<E>, dragState: DraggingState, dragMode: DragModeDeltas<ET, SugarPosition>, event: EventArgs<ET>) => {
@@ -31,7 +31,7 @@ const stop = <E>(component: AlloyComponent, blocker: Optional<AlloyComponent>, d
   dragConfig.snaps.each((snapInfo) => {
     Snappables.stopDrag(component, snapInfo);
   });
-  const target = dragConfig.getTarget(component.element());
+  const target = dragConfig.getTarget(component.element);
   dragState.reset();
   dragConfig.onDrop(component, target);
 };

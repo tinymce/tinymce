@@ -15,7 +15,7 @@ UnitTest.test('ClumpsTest', function () {
   const body = SugarBody.body();
 
   const container = SugarElement.fromTag('div');
-  container.dom().innerHTML =
+  container.dom.innerHTML =
     '<p>This is <b>the word</b> that I can understand, even if <i>it</i> is not the same as before.</p>' +
     '<p>And another <u>paragraph</u></p>' +
     '<p>Plus one more.</p>' +
@@ -42,7 +42,7 @@ UnitTest.test('ClumpsTest', function () {
     });
   };
 
-  container.dom().innerHTML =
+  container.dom.innerHTML =
     '<p>This is <b>the word</b> that I can understand, even if <i>it</i> is not the same as before.</p>' +
     '<p>And another <u>paragraph</u></p>' +
     '<p>Plus one more.</p>' +
@@ -58,7 +58,7 @@ UnitTest.test('ClumpsTest', function () {
     { start: [ 3, 0 ], end: [ 3, 0 ] }
   ], [ 0, 1, 0 ], 'the'.length, [ 3, 0 ], 'Last'.length);
 
-  container.dom().innerHTML =
+  container.dom.innerHTML =
     '<p>This is <b>the word</b> that I can understand, even if <i>it</i> is not the same as before.</p>' +
     '<p>And another <u>paragraph</u></p>' +
     '<p>Plus one more.</p>' +
@@ -70,7 +70,7 @@ UnitTest.test('ClumpsTest', function () {
     { start: [ 1, 0 ], end: [ 1, 1, 0 ] }
   ], [ 0, 1, 0 ], 'the'.length, [ 1, 1, 0 ], 'par'.length);
 
-  container.dom().innerHTML =
+  container.dom.innerHTML =
     '<p>This is <b>the word</b> that I can understand, even if <i>it</i> is not the same as before.</p>' +
     '<p>And another <u>paragraph</u></p>' +
     '<p>Plus one more.</p>' +
@@ -80,7 +80,7 @@ UnitTest.test('ClumpsTest', function () {
     { start: [ 0, 1, 0 ], end: [ 0, 1, 0 ] }
   ], [ 0, 1, 0 ], 'the'.length, [ 0, 1, 0 ], 'the wor'.length);
 
-  container.dom().innerHTML =
+  container.dom.innerHTML =
     '<p>This is <b>the word</b> that I can understand, even if <i>it</i> is not the same as before.</p>' +
     '<p>And another <u>paragraph</u></p>' +
     '<p>Plus one more.</p>' +
@@ -90,7 +90,7 @@ UnitTest.test('ClumpsTest', function () {
     { start: [ 0, 1, 0 ], end: [ 0, 3, 0 ] }
   ], [ 0, 1, 0 ], 'the'.length, [ 0, 3, 0 ], 'i'.length);
 
-  container.dom().innerHTML =
+  container.dom.innerHTML =
     '<p>This is <span>completely <i>different <b>from</b> </i>what you would<span>_expect_</span></span></p>' +
     '<p>And more <u>of this is <span>here</span> again</u>.</p>';
   check([
@@ -100,7 +100,7 @@ UnitTest.test('ClumpsTest', function () {
     { start: [ 1, 0 ], end: [ 1, 1, 1, 0 ] }
   ], [ 0, 1, 1, 1, 0 ], 'f'.length, [ 1, 1, 1, 0 ], 'h'.length);
 
-  container.dom().innerHTML =
+  container.dom.innerHTML =
     '<table><tbody><tr><td>One</td></td><td>Two</td></tr></tbody></table><p>Paragraph</p>';
   check([
     // One -> One
@@ -109,7 +109,7 @@ UnitTest.test('ClumpsTest', function () {
     { start: [ 0, 0, 0, 1, 0 ], end: [ 0, 0, 0, 1, 0 ] }
   ], [ 0, 0, 0, 0 ], 0, [ 0, 0, 0, 1 ], 1);
 
-  container.dom().innerHTML =
+  container.dom.innerHTML =
     '<p>Text</p><table><tbody><tr><td>One</td></td><td>Two</td></tr></tbody></table><p>Paragraph</p>';
   check([
     { start: [ 1, 0, 0, 0, 0 ], end: [ 1, 0, 0, 0, 0 ] },

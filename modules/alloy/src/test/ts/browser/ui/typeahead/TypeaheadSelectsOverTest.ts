@@ -105,7 +105,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoSelectsOverTest', (su
       const steps = TestTypeaheadSteps(doc, gui, typeahead);
 
       return [
-        FocusTools.sSetFocus('Focusing typeahead with selectover', gui.element(), '.with-selectover'),
+        FocusTools.sSetFocus('Focusing typeahead with selectover', gui.element, '.with-selectover'),
         FocusTools.sSetActiveValue(doc, 'al'),
         steps.sTriggerInputEvent('Simulate typing to show menu with "al"'),
         steps.sWaitForMenu('"Typing" should activate menu'),
@@ -130,7 +130,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoSelectsOverTest', (su
       const steps = TestTypeaheadSteps(doc, gui, typeahead);
 
       return [
-        FocusTools.sSetFocus('Focusing typeahead without selectover', gui.element(), '.without-selectover'),
+        FocusTools.sSetFocus('Focusing typeahead without selectover', gui.element, '.without-selectover'),
         FocusTools.sSetActiveValue(doc, 'al'),
         steps.sTriggerInputEvent('Simulate typing to show menu with "al"'),
         steps.sWaitForMenu('"Typing" should activate menu'),

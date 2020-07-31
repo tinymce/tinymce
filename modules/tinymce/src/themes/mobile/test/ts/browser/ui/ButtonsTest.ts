@@ -24,10 +24,10 @@ UnitTest.asynctest('Browser Test: ui.ButtonsTest', function (success, failure) {
   const realm = IosRealm(Fun.noop);
 
   const body = SugarBody.body();
-  Attachment.attachSystem(body, realm.system());
+  Attachment.attachSystem(body, realm.system);
 
   // Make toolbar appear
-  Class.add(realm.system().element(), 'tinymce-mobile-fullscreen-maximized');
+  Class.add(realm.element, 'tinymce-mobile-fullscreen-maximized');
 
   const doc = Traverse.owner(body);
 
@@ -35,7 +35,7 @@ UnitTest.asynctest('Browser Test: ui.ButtonsTest', function (success, failure) {
 
   const unload = function () {
     TestStyles.removeStyles();
-    Attachment.detachSystem(realm.system());
+    Attachment.detachSystem(realm.system);
   };
 
   /* The test editor puts execCommand and insertContent calls into the store */

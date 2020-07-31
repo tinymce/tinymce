@@ -7,31 +7,31 @@ import * as SelectorFind from './SelectorFind';
 import * as Traverse from './Traverse';
 
 export interface AddressInAncestor<A, D, E> {
-  ancestor: () => SugarElement<A>;
-  descendants: () => SugarElement<D>[];
-  element: () => SugarElement<E>;
-  index: () => number;
+  readonly ancestor: SugarElement<A>;
+  readonly descendants: ReadonlyArray<SugarElement<D>>;
+  readonly element: SugarElement<E>;
+  readonly index: number;
 }
 
 export interface AddressInParent<P, C, E> {
-  parent: () => SugarElement<P>;
-  children: () => SugarElement<C>[];
-  element: () => SugarElement<E>;
-  index: () => number;
+  readonly parent: SugarElement<P>;
+  readonly children: ReadonlyArray<SugarElement<C>>;
+  readonly element: SugarElement<E>;
+  readonly index: number;
 }
 
 const inAncestor = <A, D, E> (ancestor: SugarElement<A>, descendants: SugarElement<D>[], element: SugarElement<E>, index: number): AddressInAncestor<A, D, E> => ({
-  ancestor: Fun.constant(ancestor),
-  descendants: Fun.constant(descendants),
-  element: Fun.constant(element),
-  index: Fun.constant(index)
+  ancestor,
+  descendants,
+  element,
+  index
 });
 
 const inParent = <P, C, E>(parent: SugarElement<P>, children: SugarElement<C>[], element: SugarElement<E>, index: number): AddressInParent<P, C, E> => ({
-  parent: Fun.constant(parent),
-  children: Fun.constant(children),
-  element: Fun.constant(element),
-  index: Fun.constant(index)
+  parent,
+  children,
+  element,
+  index
 });
 
 const childOf = (element: SugarElement<Node>, ancestor: SugarElement<Node>) =>

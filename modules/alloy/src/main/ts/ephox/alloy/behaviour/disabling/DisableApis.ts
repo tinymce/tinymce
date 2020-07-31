@@ -19,32 +19,32 @@ const onLoad = (component: AlloyComponent, disableConfig: DisableConfig, disable
 };
 
 const hasNative = (component: AlloyComponent, config: DisableConfig): boolean =>
-  config.useNative === true && Arr.contains(nativeDisabled, SugarNode.name(component.element()));
+  config.useNative === true && Arr.contains(nativeDisabled, SugarNode.name(component.element));
 
-const nativeIsDisabled = (component: AlloyComponent): boolean => Attribute.has(component.element(), 'disabled');
+const nativeIsDisabled = (component: AlloyComponent): boolean => Attribute.has(component.element, 'disabled');
 
 const nativeDisable = (component: AlloyComponent): void => {
-  Attribute.set(component.element(), 'disabled', 'disabled');
+  Attribute.set(component.element, 'disabled', 'disabled');
 };
 
 const nativeEnable = (component: AlloyComponent): void => {
-  Attribute.remove(component.element(), 'disabled');
+  Attribute.remove(component.element, 'disabled');
 };
 
 const ariaIsDisabled = (component: AlloyComponent): boolean =>
-  Attribute.get(component.element(), 'aria-disabled') === 'true';
+  Attribute.get(component.element, 'aria-disabled') === 'true';
 
 const ariaDisable = (component: AlloyComponent): void => {
-  Attribute.set(component.element(), 'aria-disabled', 'true');
+  Attribute.set(component.element, 'aria-disabled', 'true');
 };
 
 const ariaEnable = (component: AlloyComponent): void => {
-  Attribute.set(component.element(), 'aria-disabled', 'false');
+  Attribute.set(component.element, 'aria-disabled', 'false');
 };
 
 const disable = (component: AlloyComponent, disableConfig: DisableConfig, _disableState: Stateless): void => {
   disableConfig.disableClass.each((disableClass) => {
-    Class.add(component.element(), disableClass);
+    Class.add(component.element, disableClass);
   });
   const f = hasNative(component, disableConfig) ? nativeDisable : ariaDisable;
   f(component);
@@ -53,7 +53,7 @@ const disable = (component: AlloyComponent, disableConfig: DisableConfig, _disab
 
 const enable = (component: AlloyComponent, disableConfig: DisableConfig, _disableState: Stateless): void => {
   disableConfig.disableClass.each((disableClass) => {
-    Class.remove(component.element(), disableClass);
+    Class.remove(component.element, disableClass);
   });
   const f = hasNative(component, disableConfig) ? nativeEnable : ariaEnable;
   f(component);

@@ -13,7 +13,7 @@ interface Edges<E> {
 // This identifies the inline edges to the left and right, ignoring any language
 // boundaries
 const byBoundary = function <E, D> (universe: Universe<E, D>, item: E): Edges<E> {
-  const isCustomBoundary = Fun.constant(false);
+  const isCustomBoundary = Fun.never;
 
   const edges = getEdges(universe, item, item, isCustomBoundary);
 

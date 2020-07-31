@@ -37,12 +37,12 @@ const factory: SingleSketchFactory<HtmlSelectDetail, HtmlSelectSpec> = (detail, 
           store: {
             mode: 'manual',
             getValue(select) {
-              return Value.get(select.element());
+              return Value.get(select.element);
             },
             setValue(select, newValue) {
               // This is probably generically useful ... may become a part of Representing.
               const found = Arr.find(detail.options, (opt) => opt.value === newValue);
-              if (found.isSome()) { Value.set(select.element(), newValue); }
+              if (found.isSome()) { Value.set(select.element, newValue); }
             },
             ...initialValues
           }

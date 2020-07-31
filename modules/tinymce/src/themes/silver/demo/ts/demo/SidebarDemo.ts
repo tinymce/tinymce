@@ -14,9 +14,9 @@ export default function () {
       onSetup: (api) => {
         console.log('onSetup ' + name);
         const box = SugarElement.fromHtml('<div style="width: ' + width + 'px; background: ' + background + ';"></div>');
-        api.element().appendChild(box.dom());
+        api.element().appendChild(box.dom);
         return () => {
-          api.element().removeChild(box.dom());
+          api.element().removeChild(box.dom);
         };
       },
       onShow: (_api) => {

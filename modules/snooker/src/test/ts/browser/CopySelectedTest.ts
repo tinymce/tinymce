@@ -16,7 +16,7 @@ UnitTest.test('CopySelectedTest', function () {
 
   // traverse really needs this built in
   const traverseChildElements = function (e: SugarElement) {
-    return Arr.map(e.dom().children, SugarElement.fromDom);
+    return Arr.map(e.dom.children, SugarElement.fromDom);
   };
 
   // data objects for input/expected

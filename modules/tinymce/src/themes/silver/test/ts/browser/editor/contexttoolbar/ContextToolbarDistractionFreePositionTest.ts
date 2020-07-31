@@ -25,7 +25,7 @@ UnitTest.asynctest('Distraction free editor ContextToolbar Position test', (succ
 
       const sScrollTo = (x: number, y: number) => Step.sync(() => {
         const editorPos = SugarLocation.absolute(SugarElement.fromDom(editor.getContentAreaContainer()));
-        Scroll.to(editorPos.left() + x, editorPos.top() + y);
+        Scroll.to(editorPos.left + x, editorPos.top + y);
       });
 
       const sAssertPosition = (position: string, value: number, diff = 5) => Step.sync(() => {

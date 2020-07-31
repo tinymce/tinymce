@@ -64,7 +64,7 @@ UnitTest.asynctest('CustomEditor component Test', (success, failure) => {
             })
           ]
         })),
-        component.element()
+        component.element
       ),
 
       RepresentingSteps.sAssertRoundtrip(
@@ -91,7 +91,7 @@ UnitTest.asynctest('CustomEditor component Test', (success, failure) => {
               })
             ]
           })),
-          component.element()
+          component.element
         )
       ),
 

@@ -75,7 +75,7 @@ const takeStep = <E, D> (
 ): ZoneWalkerState<E> =>
   Gather.walk(universe, item, mode, Gather.walkers().right()).fold(
     () => adt.concluded(item, mode),
-    (n) => analyse(universe, n.item(), n.mode(), stopOn)
+    (n) => analyse(universe, n.item, n.mode, stopOn)
   );
 
 const process = <E, D> (

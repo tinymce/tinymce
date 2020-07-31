@@ -69,7 +69,7 @@ UnitTest.asynctest('FloatingToolbarButtonTest', (success, failure) => {
             s.text(str.is('+'))
           ]
         })),
-        component.element()
+        component.element
       )
     ]);
 
@@ -106,12 +106,12 @@ UnitTest.asynctest('FloatingToolbarButtonTest', (success, failure) => {
             })
           ]
         })),
-        sinkComp.element()
+        sinkComp.element
       )
     ]);
 
     const sAssertFloatingToolbarClosed = () => Step.sync(() => {
-      Assertions.assertEq('Floating toolbar should not exist', false, SelectorExists.descendant(sinkComp.element(), 'test-toolbar'));
+      Assertions.assertEq('Floating toolbar should not exist', false, SelectorExists.descendant(sinkComp.element, 'test-toolbar'));
     });
 
     return [
@@ -125,7 +125,7 @@ UnitTest.asynctest('FloatingToolbarButtonTest', (success, failure) => {
       ]),
 
       Log.stepsAsStep('', 'Clicking on button should open floating toolbar', [
-        Mouse.sClickOn(gui.element(), 'button'),
+        Mouse.sClickOn(gui.element, 'button'),
         sAssertButtonStructure(true),
         sAssertFloatingToolbarOpened()
       ]),

@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Behaviour, Slider, Toggling, SketchSpec } from '@ephox/alloy';
+import { Behaviour, SketchSpec, Slider, Toggling } from '@ephox/alloy';
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
 
 import * as Receivers from '../channels/Receivers';
@@ -53,7 +53,7 @@ const sketch = function (rawSpec): SketchSpec {
       minX: 0,
       maxX: spec.sizes.length - 1,
       getInitialValue: () => ({
-        x: () => spec.getInitialValue()
+        x: spec.getInitialValue()
       })
     },
     stepSize: 1,
@@ -64,14 +64,14 @@ const sketch = function (rawSpec): SketchSpec {
     ]),
 
     components: [
-      Slider.parts().spectrum({
+      Slider.parts.spectrum({
         dom: UiDomFactory.dom('<div class="${prefix}-slider-size-container"></div>'),
         components: [
           UiDomFactory.spec('<div class="${prefix}-slider-size-line"></div>')
         ]
       }),
 
-      Slider.parts().thumb({
+      Slider.parts.thumb({
         dom: UiDomFactory.dom('<div class="${prefix}-slider-thumb"></div>'),
         behaviours: Behaviour.derive([
           Toggling.config({

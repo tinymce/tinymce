@@ -4,17 +4,17 @@ import { CurriedHandler, UncurriedHandler } from './EventRegistry';
 
 const uncurried = (handler: Function, purpose: string): UncurriedHandler => ({
   handler,
-  purpose: Fun.constant(purpose)
+  purpose
 });
 
 const curried = (handler: Function, purpose: string): CurriedHandler => ({
   cHandler: handler,
-  purpose: Fun.constant(purpose)
+  purpose
 });
 
 const curryArgs = (descHandler: UncurriedHandler, extraArgs: any[]): CurriedHandler => curried(
   Fun.curry.apply(undefined, ([ descHandler.handler ] as any).concat(extraArgs)),
-  descHandler.purpose()
+  descHandler.purpose
 );
 
 const getCurried = (descHandler: CurriedHandler): Function => descHandler.cHandler;

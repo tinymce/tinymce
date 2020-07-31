@@ -20,12 +20,12 @@ const create = (editor: Editor, range: Range): SugarElement =>
 
     // Wrap the content
     Insert.append(wrapper, SugarElement.fromDom(range.extractContents()));
-    range.insertNode(wrapper.dom());
-    Traverse.parent(wrapper).each((elm) => elm.dom().normalize());
+    range.insertNode(wrapper.dom);
+    Traverse.parent(wrapper).each((elm) => elm.dom.normalize());
 
     // Update the cursor position
     CursorPosition.last(wrapper).map((last) => {
-      editor.selection.setCursorLocation(last.dom(), Awareness.getEnd(last));
+      editor.selection.setCursorLocation(last.dom, Awareness.getEnd(last));
     });
 
     return wrapper;

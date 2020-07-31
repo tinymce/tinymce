@@ -1,5 +1,5 @@
 import { Fun, Merger } from '@ephox/katamari';
-import { PredicateFilter, SugarElement, SugarNode, SugarText, Traverse } from '@ephox/sugar';
+import { PredicateFilter, SimRange, SugarElement, SugarNode, SugarText, Traverse } from '@ephox/sugar';
 import Jsc from '@ephox/wrap-jsverify';
 
 export interface SelectionExclusions {
@@ -7,7 +7,7 @@ export interface SelectionExclusions {
 }
 
 const defaultExclusions: SelectionExclusions = {
-  containers: Fun.constant(false)
+  containers: Fun.never
   /* Maybe support offsets later if it makes sense to do so */
 };
 
@@ -26,13 +26,13 @@ const gChooseFrom = (root: SugarElement<any>, exclusions: SelectionExclusions) =
   return Jsc.elements(everything.length > 0 ? everything : [ root ]).generator.flatMap(gChooseIn);
 };
 
-const selection = (root: SugarElement<any>, rawExclusions: SelectionExclusions) => {
+const selection = (root: SugarElement<any>, rawExclusions: SelectionExclusions): SimRange[] => {
   const exclusions: SelectionExclusions = Merger.deepMerge(defaultExclusions, rawExclusions);
   return gChooseFrom(root, exclusions).flatMap((start) => gChooseFrom(root, exclusions).map((finish) => ({
-    start: Fun.constant(start.element),
-    soffset: Fun.constant(start.offset),
-    finish: Fun.constant(finish.element),
-    foffset: Fun.constant(finish.offset)
+    start: start.element,
+    soffset: start.offset,
+    finish: finish.element,
+    foffset: finish.offset
   })));
 };
 

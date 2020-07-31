@@ -16,7 +16,7 @@ export interface ResizeWire {
 
 const only = function (element: SugarElement): ResizeWire {
   // If element is a 'document', use the document element ('HTML' tag) for appending.
-  const parent = Optional.from(element.dom().documentElement).map(SugarElement.fromDom).getOr(element);
+  const parent = Optional.from(element.dom.documentElement).map(SugarElement.fromDom).getOr(element);
   return {
     parent: Fun.constant(parent),
     view: Fun.constant(element),

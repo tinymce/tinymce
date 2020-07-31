@@ -23,7 +23,7 @@ const outdentedComposer = (editor: Editor, entries: Entry[]): SugarElement[] => 
   const normalizedEntries = normalizeEntries(entries);
   return Arr.map(normalizedEntries, (entry) => {
     const content = SugarFragment.fromElements(entry.content);
-    return SugarElement.fromDom(createTextBlock(editor, content.dom()));
+    return SugarElement.fromDom(createTextBlock(editor, content.dom));
   });
 };
 
@@ -57,7 +57,7 @@ const listIndentation = (editor: Editor, lists: SugarElement[], indentation: Ind
     indentSelectedEntries(entrySet.entries, indentation);
     const composedLists = composeEntries(editor, entrySet.entries);
     Arr.each(composedLists, (composedList) => {
-      fireListEvent(editor, indentation === Indentation.Indent ? ListAction.IndentList : ListAction.OutdentList, composedList.dom());
+      fireListEvent(editor, indentation === Indentation.Indent ? ListAction.IndentList : ListAction.OutdentList, composedList.dom);
     });
     InsertAll.before(entrySet.sourceList, composedLists);
     Remove.remove(entrySet.sourceList);

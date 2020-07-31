@@ -73,7 +73,7 @@ const renderInlineBody = (spec: WindowBodySpec, contentId: string, backstage: Ui
 
 const renderModalBody = (spec: WindowBodySpec, backstage: UiFactoryBackstage) => {
   const bodySpec = renderBody(spec, Optional.none(), backstage, false);
-  return ModalDialog.parts().body(
+  return ModalDialog.parts.body(
     bodySpec
   );
 };
@@ -114,7 +114,7 @@ const renderIframeBody = (spec: Dialog.UrlDialog) => {
     ])
   };
 
-  return ModalDialog.parts().body(
+  return ModalDialog.parts.body(
     bodySpec
   );
 };

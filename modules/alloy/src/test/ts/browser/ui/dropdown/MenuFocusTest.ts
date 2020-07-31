@@ -30,7 +30,7 @@ UnitTest.asynctest('MenuFocusTest', (success, failure) => {
           classes: [ `alpha-widget-${suffix}` ]
         },
         components: [
-          ItemWidget.parts().widget({
+          ItemWidget.parts.widget({
             dom: {
               tag: 'div',
               classes: [ 'internal-widget' ],
@@ -70,7 +70,7 @@ UnitTest.asynctest('MenuFocusTest', (success, failure) => {
         classes: [ 'test-menu' ]
       },
       components: [
-        Menu.parts().items({ })
+        Menu.parts.items({ })
       ],
 
       markers
@@ -84,7 +84,7 @@ UnitTest.asynctest('MenuFocusTest', (success, failure) => {
         classes: [ 'test-menu' ]
       },
       components: [
-        Menu.parts().items({ })
+        Menu.parts.items({ })
       ],
       fakeFocus: true,
       focusManager: FocusManagers.highlights(),
@@ -114,8 +114,8 @@ UnitTest.asynctest('MenuFocusTest', (success, failure) => {
     const sAssertFocusShift = (label: string, expected: string, focusTarget: string) => Logger.t(
       label,
       GeneralSteps.sequence([
-        FocusTools.sSetFocus('Focus input field', component.element(), 'input'),
-        Chain.asStep(component.element(), [
+        FocusTools.sSetFocus('Focus input field', component.element, 'input'),
+        Chain.asStep(component.element, [
           UiFinder.cFindIn(focusTarget),
           Chain.op((alphaWidget) => {
             Focusing.focus(component.getSystem().getByDom(alphaWidget).toOptional().getOrDie('Could not find selector: ' + focusTarget));

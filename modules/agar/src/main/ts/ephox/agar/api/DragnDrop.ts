@@ -37,8 +37,8 @@ const checkNotDefaultPrevented = (evt: DragEvent): void => {
 const dragnDrop = (from: SugarElement<any>, to: SugarElement<any>, prevented: boolean = true): void => {
   const fromWin = getWindowFromElement(from);
   const toWin = getWindowFromElement(to);
-  const fromRect = from.dom().getBoundingClientRect();
-  const toRect = from.dom().getBoundingClientRect();
+  const fromRect = from.dom.getBoundingClientRect();
+  const toRect = from.dom.getBoundingClientRect();
   const transfer = createDataTransfer();
 
   if (isDraggable(from) === false) {
@@ -57,7 +57,7 @@ const dragnDrop = (from: SugarElement<any>, to: SugarElement<any>, prevented: bo
 
 const drop = (to: SugarElement<any>, prevented: boolean, addItems: (transfer: DataTransfer) => void): void => {
   const toWin = getWindowFromElement(to);
-  const toRect = to.dom().getBoundingClientRect();
+  const toRect = to.dom.getBoundingClientRect();
   const transfer = createDataTransfer();
 
   addItems(transfer);

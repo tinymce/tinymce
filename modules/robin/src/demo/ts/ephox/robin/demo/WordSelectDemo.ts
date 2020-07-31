@@ -13,10 +13,10 @@ const select = function (s: SugarElement, so: number, f: SugarElement, fo: numbe
   Optional.from(window.getSelection()).each((selection) => {
     selection.removeAllRanges();
     const range = document.createRange();
-    range.setStart(s.dom(), so);
-    range.setEnd(f.dom(), fo);
+    range.setStart(s.dom, so);
+    range.setEnd(f.dom, fo);
     // eslint-disable-next-line no-console
-    console.log('setting range: ', s.dom(), so, f.dom(), fo);
+    console.log('setting range: ', s.dom, so, f.dom, fo);
     selection.addRange(range);
   });
 };
@@ -28,11 +28,11 @@ const getSelection = function () {
       // eslint-disable-next-line no-console
       console.log('range: ', range);
       return {
-        startContainer: Fun.constant(SugarElement.fromDom(range.startContainer)),
-        startOffset: Fun.constant(range.startOffset),
-        endContainer: Fun.constant(SugarElement.fromDom(range.endContainer)),
-        endOffset: Fun.constant(range.endOffset),
-        collapsed: Fun.constant(range.collapsed)
+        startContainer: SugarElement.fromDom(range.startContainer),
+        startOffset: range.startOffset,
+        endContainer: SugarElement.fromDom(range.endContainer),
+        endOffset: range.endOffset,
+        collapsed: range.collapsed
       };
     } else {
       return null;
@@ -42,10 +42,10 @@ const getSelection = function () {
 
 DomEvent.bind(editor, 'click', function (_event) {
   const current = getSelection();
-  if (current !== null && current.collapsed()) {
-    const wordRange = DomSmartSelect.word(current.startContainer(), current.startOffset(), Fun.constant(false));
+  if (current !== null && current.collapsed) {
+    const wordRange = DomSmartSelect.word(current.startContainer, current.startOffset, Fun.never);
     wordRange.each(function (wr) {
-      select(wr.startContainer(), wr.startOffset(), wr.endContainer(), wr.endOffset());
+      select(wr.startContainer, wr.startOffset, wr.endContainer, wr.endOffset);
     });
   }
 });

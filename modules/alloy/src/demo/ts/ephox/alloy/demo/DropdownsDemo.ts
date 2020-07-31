@@ -35,8 +35,8 @@ const makeItem = (v: string, t: string, c?: string): DemoRenders.DemoItem => ({
 export default (): void => {
   const gui = Gui.create();
   const body = SugarElement.fromDom(document.body);
-  Class.add(gui.element(), 'gui-root-demo-container');
-  // Css.set(gui.element(), 'direction', 'rtl');
+  Class.add(gui.element, 'gui-root-demo-container');
+  // Css.set(gui.element, 'direction', 'rtl');
 
   Attachment.attachSystem(body, gui);
 
@@ -81,20 +81,20 @@ export default (): void => {
         tag: 'div'
       },
       components: [
-        SplitDropdown.parts().button({
+        SplitDropdown.parts.button({
           dom: {
             tag: 'button',
             innerHtml: 'Run'
           },
           uid: 'supplied'
         }),
-        SplitDropdown.parts().arrow({
+        SplitDropdown.parts.arrow({
           dom: {
             tag: 'button',
             innerHtml: 'v'
           }
         }),
-        SplitDropdown.parts().sink({ })
+        SplitDropdown.parts.sink({ })
       ],
       fetch() {
         const wMenu = DemoRenders.menu({
@@ -266,7 +266,7 @@ export default (): void => {
         innerHtml: 'Click me to expand'
       },
       components: [
-        Dropdown.parts().sink({ })
+        Dropdown.parts.sink({ })
       ],
 
       toggleClass: 'demo-selected',

@@ -49,7 +49,7 @@ const isDeleteFromCefDifferentBlocks = (root: Node, forward: boolean, from: Care
   const inSameBlock = (elm: Element) => ElementType.isInline(SugarElement.fromDom(elm)) && !CaretUtils.isInSameBlock(from, to, root);
 
   return CaretUtils.getRelativeCefElm(!forward, from).fold(
-    () => CaretUtils.getRelativeCefElm(forward, to).fold(Fun.constant(false), inSameBlock),
+    () => CaretUtils.getRelativeCefElm(forward, to).fold(Fun.never, inSameBlock),
     inSameBlock
   );
 };
@@ -57,7 +57,7 @@ const isDeleteFromCefDifferentBlocks = (root: Node, forward: boolean, from: Care
 const deleteEmptyBlockOrMoveToCef = (root: Node, forward: boolean, from: CaretPosition, to: CaretPosition): Optional<DeleteActionAdt> => {
   const toCefElm = to.getNode(forward === false);
   return DeleteUtils.getParentBlock(SugarElement.fromDom(root), SugarElement.fromDom(from.getNode())).map((blockElm) =>
-    Empty.isEmpty(blockElm) ? DeleteAction.remove(blockElm.dom()) : DeleteAction.moveToElement(toCefElm)
+    Empty.isEmpty(blockElm) ? DeleteAction.remove(blockElm.dom) : DeleteAction.moveToElement(toCefElm)
   ).orThunk(() => Optional.some(DeleteAction.moveToElement(toCefElm)));
 };
 

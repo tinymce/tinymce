@@ -17,7 +17,7 @@ import { ItemSpec } from 'ephox/alloy/ui/types/ItemTypes';
 export default (): void => {
   const gui = Gui.create();
   const body = SugarElement.fromDom(document.body);
-  Class.add(gui.element(), 'gui-root-demo-container');
+  Class.add(gui.element, 'gui-root-demo-container');
   Attachment.attachSystem(body, gui);
 
   const makeBack = (text: string): ItemSpec => ({
@@ -71,7 +71,7 @@ export default (): void => {
           classes: [ 'menu-items-container' ]
         },
         components: [
-          Menu.parts().items({ })
+          Menu.parts.items({ })
         ]
       }
     ],
@@ -113,17 +113,17 @@ export default (): void => {
       return Optional.some<boolean>(true);
     },
     onOpenMenu(container: AlloyComponent, menu: AlloyComponent) {
-      const w = Width.get(container.element());
-      Width.set(menu.element(), w);
+      const w = Width.get(container.element);
+      Width.set(menu.element, w);
       if (Transitioning.jumpTo) {
         Transitioning.jumpTo(menu, 'current');
       }
     },
     onOpenSubmenu(container, item, submenu) {
-      const w = Width.get(container.element());
-      const menu = SelectorFind.ancestor(item.element(), '[role="menu"]').getOrDie('hacky');
+      const w = Width.get(container.element);
+      const menu = SelectorFind.ancestor(item.element, '[role="menu"]').getOrDie('hacky');
       const menuComp = container.getSystem().getByDom(menu).getOrDie();
-      Width.set(submenu.element(), w);
+      Width.set(submenu.element, w);
 
       if (Transitioning.progressTo && Transitioning.jumpTo) {
         Transitioning.progressTo(menuComp, 'before');
@@ -133,7 +133,7 @@ export default (): void => {
     },
 
     onCollapseMenu(container, item, menu) {
-      const submenu = SelectorFind.ancestor(item.element(), '[role="menu"]').getOrDie('hacky');
+      const submenu = SelectorFind.ancestor(item.element, '[role="menu"]').getOrDie('hacky');
       const submenuComp = container.getSystem().getByDom(submenu).getOrDie();
       if (Transitioning.progressTo) {
         Transitioning.progressTo(submenuComp, 'after');

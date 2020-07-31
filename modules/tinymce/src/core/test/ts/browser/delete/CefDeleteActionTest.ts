@@ -18,8 +18,8 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteActionTest', (success, 
     return Chain.mapper(function (viewBlock: any) {
       const container = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), cursorPath).getOrDie();
       const rng = document.createRange();
-      rng.setStart(container.dom(), cursorOffset);
-      rng.setEnd(container.dom(), cursorOffset);
+      rng.setStart(container.dom, cursorOffset);
+      rng.setEnd(container.dom, cursorOffset);
       return CefDeleteAction.read(viewBlock.get(), forward, rng);
     });
   };

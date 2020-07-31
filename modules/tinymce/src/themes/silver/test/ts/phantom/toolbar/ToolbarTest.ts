@@ -98,7 +98,7 @@ UnitTest.asynctest('Toolbar Test', (success, failure) => {
             })
           ]
         })),
-        toolbar.element()
+        toolbar.element
       ),
 
       Step.sync(() => {

@@ -11,7 +11,7 @@ const addToHead = (doc: SugarElement<Document>, tag: SugarElement<Node>): void =
 const addStylesheet = (url: string, scope?: SugarElement<Document>): SugarElement<HTMLLinkElement> => {
   const doc = scope || SugarElement.fromDom(document);
 
-  const link = SugarElement.fromTag('link', doc.dom()); // We really need to fix that SugarElement API
+  const link = SugarElement.fromTag('link', doc.dom); // We really need to fix that SugarElement API
 
   Attribute.setAll(link, {
     rel: 'stylesheet',

@@ -49,8 +49,8 @@ const getComputedFontProp = (propName: string, elm: HTMLElement): Optional<strin
 const getFontProp = (propName: string) => (rootElm: Element, elm: Node): string => Optional.from(elm)
   .map(SugarElement.fromDom)
   .filter(SugarNode.isElement)
-  .bind((element: any) => getSpecifiedFontProp(propName, rootElm, element.dom())
-    .or(getComputedFontProp(propName, element.dom())))
+  .bind((element: any) => getSpecifiedFontProp(propName, rootElm, element.dom)
+    .or(getComputedFontProp(propName, element.dom)))
   .getOr('');
 
 const getFontSize = getFontProp('font-size');

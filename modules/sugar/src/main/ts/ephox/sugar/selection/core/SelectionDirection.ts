@@ -85,15 +85,15 @@ const asLtrRange = (win: Window, selection: SimSelection) => {
   return diagnosis.match({
     ltr: (start, soffset, finish, foffset): Range => {
       const rng = win.document.createRange();
-      rng.setStart(start.dom(), soffset);
-      rng.setEnd(finish.dom(), foffset);
+      rng.setStart(start.dom, soffset);
+      rng.setEnd(finish.dom, foffset);
       return rng;
     },
     rtl: (start, soffset, finish, foffset) => {
       // NOTE: Reversing start and finish
       const rng = win.document.createRange();
-      rng.setStart(finish.dom(), foffset);
-      rng.setEnd(start.dom(), soffset);
+      rng.setStart(finish.dom, foffset);
+      rng.setEnd(start.dom, soffset);
       return rng;
     }
   });

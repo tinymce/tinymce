@@ -52,7 +52,7 @@ const events = <E>(dragConfig: TouchDraggingConfig<E>, dragState: DraggingState,
     }),
     AlloyEvents.run<EventArgs<TouchEvent>>(NativeEvents.touchmove(), (component, simulatedEvent) => {
       simulatedEvent.stop();
-      DragUtils.move(component, dragConfig, dragState, TouchData, simulatedEvent.event());
+      DragUtils.move(component, dragConfig, dragState, TouchData, simulatedEvent.event);
     }),
     AlloyEvents.run(NativeEvents.touchend(), (component, simulatedEvent) => {
       simulatedEvent.stop();

@@ -62,7 +62,7 @@ export const renderUrlInput = (spec: UrlInputSpec, backstage: UiFactoryBackstage
   };
 
   // TODO: Make alloy's typeahead only swallow enter and escape if menu is open
-  const pField = AlloyFormField.parts().field({
+  const pField = AlloyFormField.parts.field({
     factory: AlloyTypeahead,
     dismissOnBlur: true,
     inputClasses: [ 'tox-textfield' ],
@@ -89,12 +89,12 @@ export const renderUrlInput = (spec: UrlInputSpec, backstage: UiFactoryBackstage
     typeaheadBehaviours: Behaviour.derive(Arr.flatten([
       urlBackstage.getValidationHandler().map(
         (handler) => Invalidating.config({
-          getRoot: (comp) => Traverse.parent(comp.element()),
+          getRoot: (comp) => Traverse.parent(comp.element),
           invalidClass: 'tox-control-wrap--status-invalid',
           notify: {
             onInvalid: (comp: AlloyComponent, err: string) => {
               memInvalidIcon.getOpt(comp).each((invalidComp) => {
-                Attribute.set(invalidComp.element(), 'title', providersBackstage.translate(err));
+                Attribute.set(invalidComp.element, 'title', providersBackstage.translate(err));
               });
             }
           },

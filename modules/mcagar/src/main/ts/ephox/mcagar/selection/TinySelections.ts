@@ -2,10 +2,10 @@ import { Chain, Cursors } from '@ephox/agar';
 import { SimRange, SugarElement, Traverse } from '@ephox/sugar';
 
 const toDomRange = function (range: SimRange) {
-  const doc = Traverse.owner(range.start());
-  const rng = doc.dom().createRange();
-  rng.setStart(range.start().dom(), range.soffset());
-  rng.setEnd(range.finish().dom(), range.foffset());
+  const doc = Traverse.owner(range.start);
+  const rng = doc.dom.createRange();
+  rng.setStart(range.start.dom, range.soffset);
+  rng.setEnd(range.finish.dom, range.foffset);
   return rng;
 };
 

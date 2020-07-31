@@ -37,7 +37,7 @@ const isValidTarget = function (blockElements, node) {
 
 const hasBlockParent = function (blockElements, root, node) {
   return Arr.exists(Parents.parents(SugarElement.fromDom(node), SugarElement.fromDom(root)), function (elm) {
-    return isBlockElement(blockElements, elm.dom());
+    return isBlockElement(blockElements, elm.dom);
   });
 };
 

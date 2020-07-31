@@ -229,7 +229,7 @@ UnitTest.test('TextZoneTest', function () {
   PropertyAssertions.check(
     'Check any tag range',
     [
-      arbRangeIds(doc1, Fun.constant(true))
+      arbRangeIds(doc1, Fun.always)
     ],
     checkRangeProp
   );

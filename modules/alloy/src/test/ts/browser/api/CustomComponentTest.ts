@@ -106,10 +106,10 @@ UnitTest.asynctest('CustomComponentTest', (success, failure) => {
           'data-alloy-id': str.none()
         }
       })),
-      component.element()
+      component.element
     ),
     Step.sync(() => {
-      Assertions.assertEq('Tagger should read custom-uid', 'custom-uid', Tagger.readOrDie(component.element()));
+      Assertions.assertEq('Tagger should read custom-uid', 'custom-uid', Tagger.readOrDie(component.element));
     }),
 
     store.sAssertEq('Nothing in store yet', [ ]),

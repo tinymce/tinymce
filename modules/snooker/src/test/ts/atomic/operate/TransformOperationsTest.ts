@@ -18,11 +18,11 @@ UnitTest.test('TransformOperationsTest', function () {
   const assertGrids = function (expected: Structs.RowCells[], actual: Structs.RowCells[]) {
     assert.eq(expected.length, actual.length);
     Arr.each(expected, function (row, i) {
-      Arr.each(row.cells(), function (cell, j) {
-        assert.eq(cell.element(), actual[i].cells()[j].element());
-        assert.eq(cell.isNew(), actual[i].cells()[j].isNew());
+      Arr.each(row.cells, function (cell, j) {
+        assert.eq(cell.element, actual[i].cells[j].element);
+        assert.eq(cell.isNew, actual[i].cells[j].isNew);
       });
-      assert.eq(row.section(), actual[i].section());
+      assert.eq(row.section, actual[i].section);
     });
   };
 

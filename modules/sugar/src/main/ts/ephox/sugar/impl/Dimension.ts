@@ -8,7 +8,7 @@ export default (name: string, getOffset: (e: SugarElement<HTMLElement>) => numbe
     if (!Type.isNumber(h) && !h.match(/^[0-9]+$/)) {
       throw new Error(name + '.set accepts only positive integer values. Value was ' + h);
     }
-    const dom = element.dom();
+    const dom = element.dom;
     if (Style.isSupported(dom)) {
       dom.style[name as any] = h + 'px';
     }
@@ -21,7 +21,7 @@ export default (name: string, getOffset: (e: SugarElement<HTMLElement>) => numbe
    */
   /*
   var getDocumentWidth = (element) => {
-    var dom = element.dom();
+    var dom = element.dom;
     if (Node.isDocument(element)) {
       var body = dom.body;
       var doc = dom.documentElement;
@@ -36,7 +36,7 @@ export default (name: string, getOffset: (e: SugarElement<HTMLElement>) => numbe
   };
 
   var getWindowWidth = (element) => {
-    var dom = element.dom();
+    var dom = element.dom;
     if (dom.window === dom) {
       // There is no offsetHeight on a window, so use the clientHeight of the document
       return dom.document.documentElement.clientHeight;

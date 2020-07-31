@@ -3,7 +3,7 @@ import { SugarElement } from '../api/node/SugarElement';
 import * as AttrList from '../api/properties/AttrList';
 
 // IE11 Can return undefined for a classList on elements such as math, so we make sure it's not undefined before attempting to use it.
-const supports = (element: SugarElement<Node>): element is SugarElement<Element> => (element.dom() as Element).classList !== undefined;
+const supports = (element: SugarElement<Node>): element is SugarElement<Element> => (element.dom as Element).classList !== undefined;
 
 const get = (element: SugarElement<Element>) => AttrList.read(element, 'class');
 

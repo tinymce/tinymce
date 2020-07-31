@@ -13,8 +13,8 @@ UnitTest.asynctest('browser.tinymce.core.delete.TableDeleteActionTest', function
       const ec = Hierarchy.follow(elm, endPath).getOrDie();
       const rng = document.createRange();
 
-      rng.setStart(sc.dom(), startOffset);
-      rng.setEnd(ec.dom(), endOffset);
+      rng.setStart(sc.dom, startOffset);
+      rng.setEnd(ec.dom, endOffset);
 
       return TableDeleteAction.getActionFromRange(elm, rng);
     });

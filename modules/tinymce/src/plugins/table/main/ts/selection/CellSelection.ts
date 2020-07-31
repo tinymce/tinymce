@@ -5,11 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { InputHandlers, SelectionAnnotation, SelectionKeys } from '@ephox/darwin';
+import { InputHandlers, Response, SelectionAnnotation, SelectionKeys } from '@ephox/darwin';
 import { Cell, Fun, Optional } from '@ephox/katamari';
 import { DomParent } from '@ephox/robin';
 import { OtherCells, TableFill, TableLookup, TableResize } from '@ephox/snooker';
-import { Class, Compare, DomEvent, SelectionDirection, SimSelection, SugarElement, SugarNode } from '@ephox/sugar';
+import { Class, Compare, DomEvent, EventArgs, SelectionDirection, SimSelection, SugarElement, SugarNode } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
@@ -62,30 +62,30 @@ export default function (editor: Editor, lazyResize: () => Optional<TableResize>
     const mouseHandlers = InputHandlers.mouse(win, body, isRoot, annotations);
     const keyHandlers = InputHandlers.keyboard(win, body, isRoot, annotations);
     const external = InputHandlers.external(win, body, isRoot, annotations);
-    const hasShiftKey = (event) => event.raw().shiftKey === true;
+    const hasShiftKey = (event) => event.raw.shiftKey === true;
 
     editor.on('TableSelectorChange', (e) => external(e.start, e.finish));
 
-    const handleResponse = (event, response) => {
+    const handleResponse = (event: EventArgs<KeyboardEvent>, response: Response) => {
       // Only handle shift key non shiftkey cell navigation is handled by core
       if (!hasShiftKey(event)) {
         return;
       }
 
-      if (response.kill()) {
+      if (response.kill) {
         event.kill();
       }
-      response.selection().each((ns) => {
-        const relative = SimSelection.relative(ns.start(), ns.finish());
+      response.selection.each((ns) => {
+        const relative = SimSelection.relative(ns.start, ns.finish);
         const rng = SelectionDirection.asLtrRange(win, relative);
         editor.selection.setRng(rng);
       });
     };
 
-    const keyup = (event) => {
+    const keyup = (event: KeyboardEvent) => {
       const wrappedEvent = DomEvent.fromRawEvent(event);
       // Note, this is an optimisation.
-      if (wrappedEvent.raw().shiftKey && SelectionKeys.isNavigation(wrappedEvent.raw().which)) {
+      if (wrappedEvent.raw.shiftKey && SelectionKeys.isNavigation(wrappedEvent.raw.which)) {
         const rng = editor.selection.getRng();
         const start = SugarElement.fromDom(rng.startContainer);
         const end = SugarElement.fromDom(rng.endContainer);

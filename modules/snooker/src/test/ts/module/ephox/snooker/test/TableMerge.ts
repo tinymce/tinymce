@@ -15,27 +15,27 @@ const mapToStructGrid = function (grid: Structs.ElementNew[][]) {
 const assertGrids = function (expected: Structs.RowCells[], actual: Structs.RowCells[]) {
   assert.eq(expected.length, actual.length);
   Arr.each(expected, function (row, i) {
-    Arr.each(row.cells(), function (cell, j) {
-      assert.eq(cell.element(), actual[i].cells()[j].element());
-      assert.eq(cell.isNew(), actual[i].cells()[j].isNew());
+    Arr.each(row.cells, function (cell, j) {
+      assert.eq(cell.element, actual[i].cells[j].element);
+      assert.eq(cell.isNew, actual[i].cells[j].isNew);
     });
-    assert.eq(row.section(), actual[i].section());
+    assert.eq(row.section, actual[i].section);
   });
 };
 
 const mergeTest = function (
   expected: Structs.ElementNew[][] | { error: string },
   startAddress: Structs.Address,
-  gridA: () => Structs.ElementNew[][],
-  gridB: () => Structs.ElementNew[][],
+  gridA: Structs.ElementNew[][],
+  gridB: Structs.ElementNew[][],
   generator: () => SimpleGenerators,
   comparator: (a: SugarElement, b: SugarElement) => boolean
 ) {
   // The last step, merge cells from gridB into gridA
   const nuGrid = TableMerge.merge(
     startAddress,
-    mapToStructGrid(gridA()),
-    mapToStructGrid(gridB()),
+    mapToStructGrid(gridA),
+    mapToStructGrid(gridB),
     generator(),
     comparator
   );
@@ -53,7 +53,7 @@ const mergeTest = function (
     }
   });
 };
-type Spec = { rows: () => number; cols: () => number; grid: () => Structs.ElementNew[][] };
+type Spec = { rows: number; cols: number; grid: Structs.ElementNew[][] };
 type Asserter = (result: Result<Structs.RowCells[], string>, s: Structs.Address, specA: Spec, specB: Spec) => void;
 const mergeIVTest = function (
   asserter: Asserter,
@@ -66,8 +66,8 @@ const mergeIVTest = function (
   // The last step, merge cells from gridB into gridA
   const nuGrid = TableMerge.merge(
     startAddress,
-    mapToStructGrid(gridSpecA.grid()),
-    mapToStructGrid(gridSpecB.grid()),
+    mapToStructGrid(gridSpecA.grid),
+    mapToStructGrid(gridSpecB.grid),
     generator(),
     comparator
   );
@@ -77,11 +77,11 @@ const mergeIVTest = function (
 const suite = function (
   label: string,
   startAddress: Structs.Address,
-  gridA: () => Structs.ElementNew[][],
-  gridB: () => Structs.ElementNew[][],
+  gridA: Structs.ElementNew[][],
+  gridB: Structs.ElementNew[][],
   generator: () => SimpleGenerators,
   comparator: (a: SugarElement, b: SugarElement) => boolean,
-  expectedMeasure: {rowDelta: number; colDelta: number },
+  expectedMeasure: { rowDelta: number; colDelta: number },
   expectedTailor: Structs.ElementNew[][],
   expectedMergeGrids: Structs.ElementNew[][]
 ) {

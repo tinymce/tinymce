@@ -54,7 +54,7 @@ UnitTest.test('tinymce.lists.browser.ListModelTest', () => {
       itemAttributes: ${JSON.stringify(entry.itemAttributes)}
     }`;
 
-  const serializeElements = (elms: SugarElement[]): string => Arr.map(elms, (el) => el.dom().outerHTML).join('');
+  const serializeElements = (elms: SugarElement[]): string => Arr.map(elms, (el) => el.dom.outerHTML).join('');
 
   Jsc.assert(composeParseProperty, {
     size: 500,

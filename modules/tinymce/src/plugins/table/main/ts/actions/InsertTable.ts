@@ -15,7 +15,7 @@ import * as Util from '../core/Util';
 import { enforceNone, enforcePercentage, enforcePixels } from './EnforceUnit';
 
 const placeCaretInCell = (editor: Editor, cell) => {
-  editor.selection.select(cell.dom(), true);
+  editor.selection.select(cell.dom, true);
   editor.selection.collapse(true);
 };
 
@@ -25,10 +25,10 @@ const selectFirstCellInTable = (editor: Editor, tableElm) => {
 
 const fireEvents = (editor: Editor, table) => {
   Arr.each(SelectorFilter.descendants<HTMLTableRowElement>(table, 'tr'), (row) => {
-    fireNewRow(editor, row.dom());
+    fireNewRow(editor, row.dom);
 
     Arr.each(SelectorFilter.descendants<HTMLTableDataCellElement | HTMLTableHeaderCellElement>(row, 'th,td'), (cell) => {
-      fireNewCell(editor, cell.dom());
+      fireNewCell(editor, cell.dom);
     });
   });
 };
@@ -60,7 +60,7 @@ const insert = (editor: Editor, columns: number, rows: number, colHeaders: numbe
     Attribute.remove(table, 'data-mce-id');
     fireEvents(editor, table);
     selectFirstCellInTable(editor, table);
-    return table.dom();
+    return table.dom;
   }).getOr(null);
 };
 

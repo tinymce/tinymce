@@ -8,8 +8,8 @@ import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
 import { Keying } from 'ephox/alloy/api/behaviour/Keying';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
-import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
+import { Container } from 'ephox/alloy/api/ui/Container';
 import * as NavigationUtils from 'ephox/alloy/test/NavigationUtils';
 
 UnitTest.asynctest('Matrix Keying Test', (success, failure) => {
@@ -91,7 +91,7 @@ UnitTest.asynctest('Matrix Keying Test', (success, failure) => {
 
     return [
       GuiSetup.mSetupKeyLogger(body),
-      FocusTools.sSetFocus('Initial focus', gui.element(), '.c11'),
+      FocusTools.sSetFocus('Initial focus', gui.element, '.c11'),
       NavigationUtils.sequence(
         doc,
         Keys.down(),

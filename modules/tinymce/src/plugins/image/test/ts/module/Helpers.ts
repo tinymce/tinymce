@@ -63,7 +63,7 @@ const cSetFieldValue = (selector, value) => Chain.fromChains([
   UiFinder.cFindIn(selector),
   Chain.op(Focus.focus),
   Chain.op((element) => {
-    if (element.dom().type === 'checkbox') {
+    if (element.dom.type === 'checkbox') {
       Checked.set(element, value);
     } else if (SugarNode.name(element) === 'select' && typeof value === 'number') {
       SelectTag.setSelected(element, value);
@@ -110,7 +110,7 @@ const cFakeEvent = (name: string) => Chain.control(
   Chain.op(function (elm: SugarElement) {
     const evt = document.createEvent('HTMLEvents');
     evt.initEvent(name, true, true);
-    elm.dom().dispatchEvent(evt);
+    elm.dom.dispatchEvent(evt);
   }),
   Guard.addLogging('Fake event')
 );
@@ -175,7 +175,7 @@ const cAssertInputValue = (selector: string, value: string) => Chain.fromChainsW
 
 const cAssertInputCheckbox = (selector: string, expectedState: boolean) => Chain.fromChainsWith(SugarBody.body(), [
   UiFinder.cFindIn(selector),
-  Chain.mapper((elm: SugarElement<HTMLInputElement>) => elm.dom().checked),
+  Chain.mapper((elm: SugarElement<HTMLInputElement>) => elm.dom.checked),
   Assertions.cAssertEq(`input value should be ${expectedState}`, expectedState)
 ]);
 

@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloySpec, Menu as AlloyMenu, RawDomSchema, ItemTypes } from '@ephox/alloy';
+import { AlloySpec, ItemTypes, Menu as AlloyMenu, RawDomSchema } from '@ephox/alloy';
 import { Arr, Fun, Obj } from '@ephox/katamari';
 
 const chunk = <I>(rowDom: RawDomSchema, numColumns: number) => (items: I[]) => {
@@ -28,7 +28,7 @@ const forSwatch = (columns: number | 'auto') => ({
         classes: [ 'tox-swatches' ]
       },
       components: [
-        AlloyMenu.parts().items({
+        AlloyMenu.parts.items({
           preprocess: columns !== 'auto' ? chunk(
             {
               tag: 'div',
@@ -49,7 +49,7 @@ const forToolbar = (columns: number) => ({
     classes: [ 'tox-menu', 'tox-collection', 'tox-collection--toolbar', 'tox-collection--toolbar-lg' ]
   },
   components: [
-    AlloyMenu.parts().items({
+    AlloyMenu.parts.items({
       preprocess: chunk(
         {
           tag: 'div',
@@ -99,7 +99,7 @@ const forCollection = (columns: number | 'auto', initItems, _hasIcons: boolean =
   },
   components: [
     // TODO: Clean up code and test atomically
-    AlloyMenu.parts().items({
+    AlloyMenu.parts.items({
       preprocess: (items) => {
         if (columns !== 'auto' && columns > 1) {
           return chunk<AlloySpec>({
@@ -120,7 +120,7 @@ const forHorizontalCollection = (initItems, _hasIcons: boolean = true) => ({
     classes: [ 'tox-collection', 'tox-collection--horizontal' ]
   },
   components: [
-    AlloyMenu.parts().items({
+    AlloyMenu.parts.items({
       preprocess: (items: ItemTypes.ItemSpec[]) => preprocessCollection(items, (_item, i) => initItems[i].type === 'separator')
     })
   ]

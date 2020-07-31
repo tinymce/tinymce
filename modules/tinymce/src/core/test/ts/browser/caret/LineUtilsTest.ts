@@ -31,12 +31,12 @@ UnitTest.test('browser.tinymce.core.LineUtilsTest - findLineNodeRects', () => {
   InsertAll.append(container, [ para, multiLinePara, table, paraWithCef, paraWithVideo ]);
   Insert.append(SugarBody.body(), container);
 
-  const paraLines = LineUtils.findLineNodeRects(container.dom(), getClientRects([ para.dom().firstChild ])[0]);
-  const multiParaLines = LineUtils.findLineNodeRects(container.dom(), getClientRects([ multiLinePara.dom().lastChild ])[0]);
-  const tableLines = LineUtils.findLineNodeRects(container.dom(), getClientRects([ table.dom() ])[0], false);
-  const tableLinesWithChildren = LineUtils.findLineNodeRects(container.dom(), getClientRects([ table.dom() ])[0]);
-  const cefLines = LineUtils.findLineNodeRects(container.dom(), getClientRects([ cef.dom() ])[0]);
-  const videoLines = LineUtils.findLineNodeRects(container.dom(), getClientRects([ video.dom() ])[0]);
+  const paraLines = LineUtils.findLineNodeRects(container.dom, getClientRects([ para.dom.firstChild ])[0]);
+  const multiParaLines = LineUtils.findLineNodeRects(container.dom, getClientRects([ multiLinePara.dom.lastChild ])[0]);
+  const tableLines = LineUtils.findLineNodeRects(container.dom, getClientRects([ table.dom ])[0], false);
+  const tableLinesWithChildren = LineUtils.findLineNodeRects(container.dom, getClientRects([ table.dom ])[0]);
+  const cefLines = LineUtils.findLineNodeRects(container.dom, getClientRects([ cef.dom ])[0]);
+  const videoLines = LineUtils.findLineNodeRects(container.dom, getClientRects([ video.dom ])[0]);
 
   Assert.eq('Should only find one line rect for a para', 1, paraLines.length);
   Assert.eq('Should only find one line rect for a multiline para', 1, multiParaLines.length);

@@ -21,7 +21,7 @@ export default () => {
   });
 
   const uiMothership = Gui.create();
-  Class.add(uiMothership.element(), 'tox');
+  Class.add(uiMothership.element, 'tox');
 
   const backstage = TestBackstage(sink);
   const settings = {};

@@ -1,7 +1,7 @@
 import { Bindable } from 'ephox/porkbun/Event';
 
 export interface ShootEvent {
-  target: () => any;
+  readonly target: any;
 }
 
 export interface DieEvent {
@@ -31,8 +31,8 @@ export interface Saloon {
 }
 
 export interface ShootingEvent {
-  shooter: () => Outlaw;
-  target: () => Outlaw;
+  readonly shooter: Outlaw;
+  readonly target: Outlaw;
 }
 
 export interface Sherif {

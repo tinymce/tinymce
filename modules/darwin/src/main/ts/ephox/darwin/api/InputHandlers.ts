@@ -38,8 +38,8 @@ const keyboard = function (win: Window, container: SugarElement, isRoot: (e: Sug
     return Optional.none<Response>();
   };
 
-  const keydown = function (event: EventArgs, start: SugarElement, soffset: number, finish: SugarElement, foffset: number, direction: typeof SelectionKeys.ltr) {
-    const realEvent = event.raw() as KeyboardEvent;
+  const keydown = function (event: EventArgs<KeyboardEvent>, start: SugarElement, soffset: number, finish: SugarElement, foffset: number, direction: typeof SelectionKeys.ltr) {
+    const realEvent = event.raw;
     const keycode = realEvent.which;
     const shiftKey = realEvent.shiftKey === true;
 
@@ -70,7 +70,7 @@ const keyboard = function (win: Window, container: SugarElement, isRoot: (e: Sug
             // the table
             return CellSelection.getEdges(container, annotations.firstSelectedSelector, annotations.lastSelectedSelector).map(function (edges) {
               const relative = SelectionKeys.isDown(keycode) || direction.isForward(keycode) ? Situ.after : Situ.before;
-              bridge.setRelativeSelection(Situ.on(edges.first(), 0), relative(edges.table()));
+              bridge.setRelativeSelection(Situ.on(edges.first, 0), relative(edges.table));
               annotations.clear(container);
               return Response.create(Optional.none(), true);
             });
@@ -98,9 +98,9 @@ const keyboard = function (win: Window, container: SugarElement, isRoot: (e: Sug
     return handler();
   };
 
-  const keyup = function (event: EventArgs, start: SugarElement, soffset: number, finish: SugarElement, foffset: number) {
+  const keyup = function (event: EventArgs<KeyboardEvent>, start: SugarElement, soffset: number, finish: SugarElement, foffset: number) {
     return CellSelection.retrieve(container, annotations.selectedSelector).fold<Optional<Response>>(function () {
-      const realEvent = event.raw() as KeyboardEvent;
+      const realEvent = event.raw;
       const keycode = realEvent.which;
       const shiftKey = realEvent.shiftKey === true;
       if (shiftKey === false) {

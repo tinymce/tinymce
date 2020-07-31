@@ -24,7 +24,7 @@ UnitTest.test('WordDecisionTest', function () {
   );
 
   const check = function (items: string[], abort: boolean, id: string, slicer: (text: string) => Optional<[number, number]>, _currLanguage: Optional<string>) {
-    const isCustomBoundary = Fun.constant(false);
+    const isCustomBoundary = Fun.never;
     const actual = WordDecision.decide(universe, universe.find(universe.get(), id).getOrDie(), slicer, isCustomBoundary);
     assert.eq(items, Arr.map(actual.items, function (item) { return item.item.id; }));
     assert.eq(abort, actual.abort);

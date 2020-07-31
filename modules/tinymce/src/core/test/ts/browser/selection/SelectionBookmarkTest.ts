@@ -2,7 +2,7 @@ import { Assertions, Chain, Logger, Pipeline } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Fun, Optional } from '@ephox/katamari';
 import { KAssert } from '@ephox/katamari-assertions';
-import { Hierarchy, Remove, SimSelection, SugarElement, Traverse, WindowSelection } from '@ephox/sugar';
+import { Hierarchy, Remove, SimRange, SimSelection, SugarElement, Traverse, WindowSelection } from '@ephox/sugar';
 import * as SelectionBookmark from 'tinymce/core/selection/SelectionBookmark';
 import ViewBlock from '../../module/test/ViewBlock';
 
@@ -10,33 +10,33 @@ UnitTest.asynctest('browser.tinymce.core.selection.SelectionBookmarkTest', funct
 
   const viewBlock = ViewBlock();
 
-  const cSetHtml = function (html) {
+  const cSetHtml = function (html: string) {
     return Chain.op(function (vb: any) {
       vb.update(html);
     });
   };
 
-  const cSetSelection = function (startPath, soffset, finishPath, foffset) {
+  const cSetSelection = function (startPath: number[], soffset: number, finishPath: number[], foffset: number) {
     return Chain.op(function () {
       const sc = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), startPath).getOrDie('invalid startPath');
       const fc = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), finishPath).getOrDie('invalid finishPath');
       const win = Traverse.defaultView(sc);
 
       WindowSelection.setExact(
-        win.dom(), sc, soffset, fc, foffset
+        win.dom, sc, soffset, fc, foffset
       );
     });
   };
 
-  const cGetBookmark = function (rootPath) {
+  const cGetBookmark = function (rootPath: number[]) {
     return Chain.injectThunked(function () {
       const root = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), rootPath).getOrDie();
       return SelectionBookmark.getBookmark(root);
     });
   };
 
-  const cValidateBookmark = function (rootPath) {
-    return Chain.async(function (input: any, next) {
+  const cValidateBookmark = function (rootPath: number[]) {
+    return Chain.async(function (input: Optional<SimRange>, next) {
       const root = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), rootPath).getOrDie();
 
       return input.each(function (b) {
@@ -53,59 +53,59 @@ UnitTest.asynctest('browser.tinymce.core.selection.SelectionBookmarkTest', funct
     Assert.eq('should be some', true, x.isSome());
   });
 
-  const cAssertSelection = function (startPath, startOffset, finishPath, finishOffset) {
+  const cAssertSelection = function (startPath: number[], startOffset: number, finishPath: number[], finishOffset: number) {
     return Chain.op(function () {
       const sc = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), startPath).getOrDie();
       const fc = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), finishPath).getOrDie();
 
       const win = Traverse.defaultView(SugarElement.fromDom(viewBlock.get()));
 
-      const sel = WindowSelection.getExact(win.dom()).getOrDie('no selection');
+      const sel = WindowSelection.getExact(win.dom).getOrDie('no selection');
 
-      Assertions.assertDomEq('sc', sc, sel.start());
-      Assertions.assertEq('soffset', startOffset, sel.soffset());
-      Assertions.assertDomEq('fc', fc, sel.finish());
-      Assertions.assertEq('foffset', finishOffset, sel.foffset());
+      Assertions.assertDomEq('sc', sc, sel.start);
+      Assertions.assertEq('soffset', startOffset, sel.soffset);
+      Assertions.assertDomEq('fc', fc, sel.finish);
+      Assertions.assertEq('foffset', finishOffset, sel.foffset);
     });
   };
 
-  const cManipulateBookmarkOffsets = function (startPad, finishPad) {
-    return Chain.mapper(function (bookmark: Optional<any>) {
+  const cManipulateBookmarkOffsets = function (startPad: number, finishPad: number) {
+    return Chain.mapper(function (bookmark: Optional<SimRange>) {
       return bookmark
         .map(function (bm) {
-          return SimSelection.range(bm.start(), bm.soffset() + startPad, bm.finish(), bm.foffset() + finishPad);
+          return SimSelection.range(bm.start, bm.soffset + startPad, bm.finish, bm.foffset + finishPad);
         });
     });
   };
 
-  const cDeleteElement = function (path) {
+  const cDeleteElement = function (path: number[]) {
     return Chain.op(function () {
       Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), path).each(Remove.remove);
     });
   };
 
-  const cAssertBookmark = function (startPath, startOffset, finishPath, finishOffset) {
-    return Chain.op(function (input: Optional<any>) {
+  const cAssertBookmark = function (startPath: number[], startOffset: number, finishPath: number[], finishOffset: number) {
+    return Chain.op(function (input: Optional<SimRange>) {
       const sc = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), startPath).getOrDie();
       const fc = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), finishPath).getOrDie();
 
       const bookmarkRng = input.getOrDie('no bookmark!');
 
-      Assertions.assertDomEq('sc', sc, bookmarkRng.start());
-      Assertions.assertEq('soffset', startOffset, bookmarkRng.soffset());
-      Assertions.assertDomEq('fc', fc, bookmarkRng.finish());
-      Assertions.assertEq('foffset', finishOffset, bookmarkRng.foffset());
+      Assertions.assertDomEq('sc', sc, bookmarkRng.start);
+      Assertions.assertEq('soffset', startOffset, bookmarkRng.soffset);
+      Assertions.assertDomEq('fc', fc, bookmarkRng.finish);
+      Assertions.assertEq('foffset', finishOffset, bookmarkRng.foffset);
     });
   };
 
-  const cSetSelectionFromBookmark = Chain.op(function (bookmark: Optional<any>) {
+  const cSetSelectionFromBookmark = Chain.op(function (bookmark: Optional<SimRange>) {
     bookmark.each(function (b) {
       const root = SugarElement.fromDom(viewBlock.get());
       const win = Traverse.defaultView(root);
 
       SelectionBookmark.validate(root, b)
         .each(function (rng) {
-          WindowSelection.setExact(win.dom(), rng.start(), rng.soffset(), rng.finish(), rng.foffset());
+          WindowSelection.setExact(win.dom, rng.start, rng.soffset, rng.finish, rng.foffset);
         });
     });
   });

@@ -11,8 +11,8 @@ const words = function (allText: string) {
 
   // FIX ... I may possibly index strings elsewhere.
   return Arr.map(matches, function (x) {
-    const start = x.start();
-    const finish = x.finish();
+    const start = x.start;
+    const finish = x.finish;
     const text = allText.substring(start, finish);
     const prev = start > 0 ? Optional.some(allText.charAt(start - 1)) : Optional.none<string>();
     const next = finish < len ? Optional.some(allText.charAt(finish)) : Optional.none<string>();

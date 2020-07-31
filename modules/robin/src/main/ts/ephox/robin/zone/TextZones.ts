@@ -36,7 +36,7 @@ const fromBounded = function <E, D> (universe: Universe<E, D>, left: E, right: E
 };
 
 const fromRange = function <E, D> (universe: Universe<E, D>, start: E, finish: E, envLang: string, viewport: ZoneViewports<E>) {
-  const edges = Clustering.getEdges(universe, start, finish, Fun.constant(false));
+  const edges = Clustering.getEdges(universe, start, finish, Fun.never);
   const transform = transformEdges(edges.left, edges.right);
   return fromBoundedWith(universe, edges.left.item, edges.right.item, envLang, transform, viewport);
 };

@@ -60,12 +60,12 @@ export const TinyApis = function (editor: Editor): TinyApis {
   });
 
   const cSelectElement: Chain<SugarElement, SugarElement> = Chain.op(function (target: SugarElement) {
-    editor.selection.select(target.dom());
+    editor.selection.select(target.dom);
   });
 
   const sSetSelectionFrom = function <T> (spec: Cursors.CursorSpec | Cursors.RangeSpec) {
     const path = Cursors.pathFrom(spec);
-    return sSetSelection<T>(path.startPath(), path.soffset(), path.finishPath(), path.foffset());
+    return sSetSelection<T>(path.startPath, path.soffset, path.finishPath, path.foffset);
   };
 
   const sSetCursor = function <T> (elementPath: number[], offset: number) {
@@ -142,7 +142,7 @@ export const TinyApis = function (editor: Editor): TinyApis {
       const actPath = Hierarchy.path(root, actual).getOrDie('could not find path to root');
       return 'Expected path: ' + JSON.stringify(expPath) + '.\nActual path: ' + JSON.stringify(actPath);
     };
-    Assertions.assertEq(() => 'Assert incorrect for ' + label + '.\n' + message(), true, expected.dom() === actElement);
+    Assertions.assertEq(() => 'Assert incorrect for ' + label + '.\n' + message(), true, expected.dom === actElement);
     Assertions.assertEq(() => 'Offset mismatch for ' + label + ' in :\n' + Html.getOuter(expected), expOffset, actOffset);
   };
 

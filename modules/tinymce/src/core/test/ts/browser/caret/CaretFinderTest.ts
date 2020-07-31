@@ -18,7 +18,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretFinderTest', function (success, fa
   const cCreateFromPosition = function (path, offset) {
     return Chain.mapper(function (viewBlock: any) {
       const container = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), path).getOrDie();
-      return CaretPosition(container.dom(), offset);
+      return CaretPosition(container.dom, offset);
     });
   };
 
@@ -50,7 +50,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretFinderTest', function (success, fa
   const cPositionIn = function (forward, path) {
     return Chain.injectThunked(function () {
       const element = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), path).getOrDie() as SugarElement<HTMLElement>;
-      return CaretFinder.positionIn(forward, element.dom());
+      return CaretFinder.positionIn(forward, element.dom);
     });
   };
 

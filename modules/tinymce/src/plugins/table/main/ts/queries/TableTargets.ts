@@ -5,36 +5,36 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Fun, Optional } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { RunOperation, SimpleGenerators } from '@ephox/snooker';
 import { SugarElement } from '@ephox/sugar';
 import { Selections } from '../selection/Selections';
 import * as CellOperations from './CellOperations';
 
 const noMenu = (cell: SugarElement<HTMLTableCellElement | HTMLTableCaptionElement>): RunOperation.CombinedTargets => ({
-  element: Fun.constant(cell),
-  mergable: Optional.none,
-  unmergable: Optional.none,
-  selection: Fun.constant([ cell ])
+  element: cell,
+  mergable: Optional.none(),
+  unmergable: Optional.none(),
+  selection: [ cell ]
 });
 
 const forMenu = (selections: Selections, table: SugarElement<HTMLTableElement>, cell: SugarElement<HTMLTableCellElement>): RunOperation.CombinedTargets => ({
-  element: Fun.constant(cell),
-  mergable: Fun.constant(CellOperations.mergable(table, selections)),
-  unmergable: Fun.constant(CellOperations.unmergable(cell, selections)),
-  selection: Fun.constant(CellOperations.selection(cell, selections))
+  element: cell,
+  mergable: CellOperations.mergable(table, selections),
+  unmergable: CellOperations.unmergable(cell, selections),
+  selection: CellOperations.selection(cell, selections)
 });
 
 const paste = (element: SugarElement<Element>, clipboard: SugarElement<HTMLTableElement>, generators: SimpleGenerators): RunOperation.TargetPaste => ({
-  element: Fun.constant(element),
-  clipboard: Fun.constant(clipboard),
-  generators: Fun.constant(generators)
+  element,
+  clipboard,
+  generators
 });
 
 const pasteRows = (selections: Selections, cell: SugarElement<HTMLTableCellElement>, clipboard: SugarElement<HTMLTableRowElement>[], generators: SimpleGenerators): RunOperation.TargetPasteRows => ({
-  selection: Fun.constant(CellOperations.selection(cell, selections)),
-  clipboard: Fun.constant(clipboard),
-  generators: Fun.constant(generators)
+  selection: CellOperations.selection(cell, selections),
+  clipboard,
+  generators
 });
 
 export { noMenu, forMenu, paste, pasteRows };

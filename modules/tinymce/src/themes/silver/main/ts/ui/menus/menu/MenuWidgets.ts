@@ -33,7 +33,7 @@ export const renderWidgetMenu = (spec: WidgetMenuSpec): Partial<MenuTypes.MenuSp
           tag: 'div'
         },
         components: [
-          ItemWidget.parts().widget(
+          ItemWidget.parts.widget(
             {
               dom: {
                 tag: 'div',
@@ -56,7 +56,7 @@ export const renderWidgetMenu = (spec: WidgetMenuSpec): Partial<MenuTypes.MenuSp
     ],
     dom: menuDom(false, 1, 'normal'),
     components: [
-      Menu.parts().items({ })
+      Menu.parts.items({ })
     ]
   };
 };

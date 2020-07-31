@@ -20,12 +20,12 @@ const find = (element: SugarElement): SugarPosition => {
   const r = Arr.foldr(frames, (b, a) => {
     const loc = SugarLocation.viewport(a);
     return {
-      left: b.left + loc.left(),
-      top: b.top + loc.top()
+      left: b.left + loc.left,
+      top: b.top + loc.top
     };
   }, { left: 0, top: 0 });
 
-  return SugarPosition(r.left + offset.left() + scroll.left(), r.top + offset.top() + scroll.top());
+  return SugarPosition(r.left + offset.left + scroll.left, r.top + offset.top + scroll.top);
 };
 
 export {

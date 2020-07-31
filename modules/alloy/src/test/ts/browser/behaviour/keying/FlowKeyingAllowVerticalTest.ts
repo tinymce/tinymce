@@ -74,7 +74,7 @@ UnitTest.asynctest('Flow Keying Allow Vertical Test', (success, failure) => {
 
     return [
       GuiSetup.mSetupKeyLogger(body),
-      FocusTools.sSetFocus('Initial focus', gui.element(), '.one'),
+      FocusTools.sSetFocus('Initial focus', gui.element, '.one'),
       NavigationUtils.sequence(
         doc,
         Keys.right(),

@@ -21,7 +21,7 @@ UnitTest.asynctest('Inline Editor Toolbar Position test', (success, failure) => 
 
     const containerAreaBounds = Boxes.box(contentArea);
     const assertTop = position === 'above' ?
-      containerAreaBounds.y - container.dom().clientHeight :
+      containerAreaBounds.y - container.dom.clientHeight :
       containerAreaBounds.bottom;
 
     Assertions.assertEq('Container should be absolutely positioned', 'absolute', Css.get(container, 'position'));
@@ -42,7 +42,7 @@ UnitTest.asynctest('Inline Editor Toolbar Position test', (success, failure) => 
 
   const sScrollToElement = (contentAreaContainer: SugarElement, selector: string, alignWindowBottom = false) => Step.sync(() => {
     const elm = UiFinder.findIn(contentAreaContainer, selector).getOrDie();
-    elm.dom().scrollIntoView(alignWindowBottom);
+    elm.dom.scrollIntoView(alignWindowBottom);
   });
 
   const sScrollToElementAndActivate = (tinyApis: TinyApis, element: SugarElement, selector: string, alignWindowBottom = false) => Step.label('Activate editor', GeneralSteps.sequence([

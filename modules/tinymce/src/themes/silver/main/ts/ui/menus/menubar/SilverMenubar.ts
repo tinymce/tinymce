@@ -12,7 +12,7 @@ import {
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Toolbar } from '@ephox/bridge';
 import { Arr, Fun, Optional } from '@ephox/katamari';
-import { Compare, SelectorFind } from '@ephox/sugar';
+import { Compare, EventArgs, SelectorFind } from '@ephox/sugar';
 import { Menu } from 'tinymce/core/api/ui/Ui';
 import { TranslatedString } from 'tinymce/core/api/util/I18n';
 
@@ -89,10 +89,10 @@ const factory: UiSketcher.SingleSketchFactory<SilverMenubarDetail, SilverMenubar
           detail.onSetup(component);
         }),
 
-        AlloyEvents.run(NativeEvents.mouseover(), (comp, se) => {
+        AlloyEvents.run<EventArgs<MouseEvent>>(NativeEvents.mouseover(), (comp, se) => {
           // TODO: Use constants
-          SelectorFind.descendant(comp.element(), '.' + MenuButtonClasses.Active).each((activeButton) => {
-            SelectorFind.closest(se.event().target(), '.' + MenuButtonClasses.Button).each((hoveredButton) => {
+          SelectorFind.descendant(comp.element, '.' + MenuButtonClasses.Active).each((activeButton) => {
+            SelectorFind.closest(se.event.target, '.' + MenuButtonClasses.Button).each((hoveredButton) => {
               if (!Compare.eq(activeButton, hoveredButton)) {
                 // Now, find the components, and expand the hovered one, and close the active one
                 comp.getSystem().getByDom(activeButton).each((activeComp) => {
@@ -108,8 +108,8 @@ const factory: UiSketcher.SingleSketchFactory<SilverMenubarDetail, SilverMenubar
         }),
 
         AlloyEvents.run<SystemEvents.AlloyFocusShiftedEvent>(SystemEvents.focusShifted(), (comp, se) => {
-          se.event().prevFocus().bind((prev) => comp.getSystem().getByDom(prev).toOptional()).each((prev) => {
-            se.event().newFocus().bind((nu) => comp.getSystem().getByDom(nu).toOptional()).each((nu) => {
+          se.event.prevFocus.bind((prev) => comp.getSystem().getByDom(prev).toOptional()).each((prev) => {
+            se.event.newFocus.bind((nu) => comp.getSystem().getByDom(nu).toOptional()).each((nu) => {
               if (Dropdown.isOpen(prev)) {
                 Dropdown.expand(nu);
                 Dropdown.close(prev);

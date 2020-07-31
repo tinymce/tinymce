@@ -35,7 +35,7 @@ UnitTest.asynctest('DragnDropTest', (success, failure) => {
   });
 
   const dragStartUnbinder = DomEvent.bind(draggable, 'dragstart', (evt) => {
-    const dataTransfer = evt.raw().dataTransfer;
+    const dataTransfer = evt.raw.dataTransfer;
 
     evt.kill();
 
@@ -54,7 +54,7 @@ UnitTest.asynctest('DragnDropTest', (success, failure) => {
   });
 
   const dropUnbinder = DomEvent.bind(dropzone, 'drop', (evt) => {
-    const dataTransfer = evt.raw().dataTransfer;
+    const dataTransfer = evt.raw.dataTransfer;
 
     evt.kill();
 

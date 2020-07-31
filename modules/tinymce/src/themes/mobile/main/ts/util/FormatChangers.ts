@@ -14,7 +14,7 @@ import { MobileRealm } from '../ui/IosRealm';
 const fontSizesArray: readonly string[] = [ 'x-small', 'small', 'medium', 'large', 'x-large' ];
 
 const fireChange = (realm: MobileRealm, command: string, state: boolean): void => {
-  realm.system().broadcastOn([ TinyChannels.formatChanged ], {
+  realm.system.broadcastOn([ TinyChannels.formatChanged ], {
     command,
     state
   });

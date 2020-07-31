@@ -1,7 +1,7 @@
-import { Fun, Optional } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 
 interface SugarElement<T = any> {
-  dom: () => T;
+  readonly dom: T;
 }
 
 const fromHtml = <E extends Node = Node & ChildNode> (html: string, scope?: Document | null): SugarElement<E> => {
@@ -34,14 +34,12 @@ const fromText = (text: string, scope?: Document | null): SugarElement<Text> => 
 const fromDom = <T extends Node | Window> (node: T | null): SugarElement<T> => {
   if (node === null || node === undefined) { throw new Error('Node cannot be null or undefined'); }
   return {
-    dom: Fun.constant(node)
+    dom: node
   };
 };
 
-const fromPoint = (docElm: SugarElement<Document>, x: number, y: number): Optional<SugarElement<Element>> => {
-  const doc = docElm.dom();
-  return Optional.from(doc.elementFromPoint(x, y)).map(fromDom);
-};
+const fromPoint = (docElm: SugarElement<Document>, x: number, y: number): Optional<SugarElement<Element>> =>
+  Optional.from(docElm.dom.elementFromPoint(x, y)).map(fromDom);
 
 // tslint:disable-next-line:variable-name
 const SugarElement = {

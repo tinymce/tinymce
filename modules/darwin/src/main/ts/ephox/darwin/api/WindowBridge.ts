@@ -1,5 +1,5 @@
 import { Optional } from '@ephox/katamari';
-import { RawRect, Rect, Scroll, SimRange, SimSelection, Situ, SugarElement, WindowSelection } from '@ephox/sugar';
+import { RawRect, Scroll, SimRange, SimSelection, Situ, SugarElement, WindowSelection } from '@ephox/sugar';
 import { Situs } from '../selection/Situs';
 import * as Util from '../selection/Util';
 
@@ -26,12 +26,12 @@ export const WindowBridge = function (win: Window): WindowBridge {
   };
 
   const getRect = function (element: SugarElement<Element>) {
-    return element.dom().getBoundingClientRect();
+    return element.dom.getBoundingClientRect();
   };
 
   const getRangedRect = function (start: SugarElement, soffset: number, finish: SugarElement, foffset: number): Optional<RawRect> {
     const sel = SimSelection.exact(start, soffset, finish, foffset);
-    return WindowSelection.getFirstRect(win, sel).map(Rect.toRaw);
+    return WindowSelection.getFirstRect(win, sel);
   };
 
   const getSelection = function () {
@@ -41,13 +41,13 @@ export const WindowBridge = function (win: Window): WindowBridge {
   };
 
   const fromSitus = function (situs: Situs) {
-    const relative = SimSelection.relative(situs.start(), situs.finish());
+    const relative = SimSelection.relative(situs.start, situs.finish);
     return Util.convertToRange(win, relative);
   };
 
   const situsFromPoint = function (x: number, y: number) {
     return WindowSelection.getAtPoint(win, x, y).map(function (exact) {
-      return Situs.create(exact.start(), exact.soffset(), exact.finish(), exact.foffset());
+      return Situs.create(exact.start, exact.soffset, exact.finish, exact.foffset);
     });
   };
 
@@ -75,7 +75,7 @@ export const WindowBridge = function (win: Window): WindowBridge {
   };
 
   const setSelection = function (sel: SimRange) {
-    WindowSelection.setExact(win, sel.start(), sel.soffset(), sel.finish(), sel.foffset());
+    WindowSelection.setExact(win, sel.start, sel.soffset, sel.finish, sel.foffset);
   };
 
   const setRelativeSelection = function (start: Situ, finish: Situ) {
@@ -88,7 +88,7 @@ export const WindowBridge = function (win: Window): WindowBridge {
 
   const getScrollY = function () {
     const pos = Scroll.get(SugarElement.fromDom(win.document));
-    return pos.top();
+    return pos.top;
   };
 
   const scrollBy = function (x: number, y: number) {

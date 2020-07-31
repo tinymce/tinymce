@@ -12,9 +12,9 @@ UnitTest.test('Word Sanitiser', function () {
 
   const check = function (expected: WordScope, input: WordScope) {
     const actual = WordSanitiser.scope(input);
-    assert.eq(expected.word(), actual.word());
-    assert.eq(true, expected.left().equals(actual.left()));
-    assert.eq(true, expected.right().equals(actual.right()));
+    assert.eq(expected.word, actual.word);
+    assert.eq(true, expected.left.equals(actual.left));
+    assert.eq(true, expected.right.equals(actual.right));
   };
 
   check(ss('one', '<', '>'), ss('one', '<', '>'));

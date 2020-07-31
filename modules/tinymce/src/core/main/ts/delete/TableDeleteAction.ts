@@ -73,7 +73,7 @@ const getTableFromCellRng = (cellRng: TableCellRng, isRoot: IsRootFn): Optional<
 
 const isSingleCellTable = (cellRng: TableCellRng, isRoot: IsRootFn) => !isExpandedCellRng(cellRng) &&
   getTableFromCellRng(cellRng, isRoot).exists((table) => {
-    const rows = table.dom().rows;
+    const rows = table.dom.rows;
     return rows.length === 1 && rows[0].cells.length === 1;
   });
 

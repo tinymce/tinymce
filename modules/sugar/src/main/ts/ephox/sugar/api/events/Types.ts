@@ -1,13 +1,13 @@
 import { SugarElement } from '../node/SugarElement';
 
 export interface EventArgs<T = Event> {
-  target: () => SugarElement;
-  x: () => number;
-  y: () => number;
-  stop: () => void;
-  prevent: () => void;
-  kill: () => void;
-  raw: () => T;
+  readonly target: SugarElement;
+  readonly x: number;
+  readonly y: number;
+  readonly stop: () => void;
+  readonly prevent: () => void;
+  readonly kill: () => void;
+  readonly raw: T;
 }
 
 export interface EventUnbinder {

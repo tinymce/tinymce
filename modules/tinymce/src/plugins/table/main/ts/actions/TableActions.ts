@@ -52,10 +52,10 @@ export interface TableActions {
 export const TableActions = (editor: Editor, lazyWire: () => ResizeWire): TableActions => {
   const isTableBody = (editor: Editor) => SugarNode.name(Util.getBody(editor)) === 'table';
 
-  const lastRowGuard = (table: SugarElement<HTMLTableElement>) => isTableBody(editor) === false || TableGridSize.getGridSize(table).rows() > 1;
+  const lastRowGuard = (table: SugarElement<HTMLTableElement>) => isTableBody(editor) === false || TableGridSize.getGridSize(table).rows > 1;
 
   const lastColumnGuard = (table: SugarElement<HTMLTableElement>) =>
-    isTableBody(editor) === false || TableGridSize.getGridSize(table).columns() > 1;
+    isTableBody(editor) === false || TableGridSize.getGridSize(table).columns > 1;
 
   // Optional.none gives the default cloneFormats.
   const cloneFormats = getCloneElements(editor);
@@ -69,17 +69,17 @@ export const TableActions = (editor: Editor, lazyWire: () => ResizeWire): TableA
       const generators = TableFill.cellOperations(mutate, doc, cloneFormats);
       const sizing = TableSize.get(editor, table);
       return guard(table) ? operation(wire, table, target, generators, direction, sizing).bind((result) => {
-        Arr.each(result.newRows(), (row) => {
-          fireNewRow(editor, row.dom());
+        Arr.each(result.newRows, (row) => {
+          fireNewRow(editor, row.dom);
         });
-        Arr.each(result.newCells(), (cell) => {
-          fireNewCell(editor, cell.dom());
+        Arr.each(result.newCells, (cell) => {
+          fireNewCell(editor, cell.dom);
         });
-        return result.cursor().map((cell) => {
+        return result.cursor.map((cell) => {
           const des = DomDescent.freefallRtl(cell);
           const rng = editor.dom.createRng();
-          rng.setStart(des.element().dom(), des.offset());
-          rng.setEnd(des.element().dom(), des.offset());
+          rng.setStart(des.element.dom, des.offset);
+          rng.setEnd(des.element.dom, des.offset);
           return rng;
         });
       }) : Optional.none();

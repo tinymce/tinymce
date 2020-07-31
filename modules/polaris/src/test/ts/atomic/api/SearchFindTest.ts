@@ -1,5 +1,5 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
-import { Arr, Struct, Unicode } from '@ephox/katamari';
+import { Arr, Unicode } from '@ephox/katamari';
 import * as Pattern from 'ephox/polaris/api/Pattern';
 import * as Search from 'ephox/polaris/api/Search';
 import * as Safe from 'ephox/polaris/pattern/Safe';
@@ -10,19 +10,22 @@ UnitTest.test('api.Search.findall (using api.Pattern)', function () {
     const actual = Search.findall(input, pattern);
     assert.eq(expected.length, actual.length);
     Arr.each(expected, function (exp, i) {
-      assert.eq(exp[0], actual[i].start());
-      assert.eq(exp[1], actual[i].finish());
+      assert.eq(exp[0], actual[i].start);
+      assert.eq(exp[1], actual[i].finish);
     });
   };
-  const testData: (pattern: PRegExp, name: string) => { pattern: () => PRegExp; name: () => string } = Struct.immutable('pattern', 'name');
+  const testData = (pattern: PRegExp, name: string) => ({
+    pattern,
+    name
+  });
 
   const checkMany = function (expected: [number, number, string][], text: string, targets: ReturnType<typeof testData>[]) {
     const actual = Search.findmany(text, targets);
     assert.eq(expected.length, actual.length);
     Arr.each(expected, function (exp, i) {
-      assert.eq(exp[0], actual[i].start());
-      assert.eq(exp[1], actual[i].finish());
-      assert.eq(exp[2], actual[i].name());
+      assert.eq(exp[0], actual[i].start);
+      assert.eq(exp[1], actual[i].finish);
+      assert.eq(exp[2], actual[i].name);
     });
   };
 

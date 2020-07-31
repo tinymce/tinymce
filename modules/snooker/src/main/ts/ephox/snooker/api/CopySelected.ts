@@ -20,8 +20,8 @@ const statsStruct = (minRow: number, minCol: number, maxRow: number, maxCol: num
 });
 
 const findSelectedStats = (house: Warehouse, isSelected: (detail: DetailExt) => boolean): StatsStruct => {
-  const totalColumns = house.grid.columns();
-  const totalRows = house.grid.rows();
+  const totalColumns = house.grid.columns;
+  const totalRows = house.grid.rows;
 
   /* Refactor into a method returning a struct to hide the mutation */
   let minRow = totalRows;
@@ -30,10 +30,10 @@ const findSelectedStats = (house: Warehouse, isSelected: (detail: DetailExt) => 
   let maxCol = 0;
   Obj.each(house.access, (detail) => {
     if (isSelected(detail)) {
-      const startRow = detail.row();
-      const endRow = startRow + detail.rowspan() - 1;
-      const startCol = detail.column();
-      const endCol = startCol + detail.colspan() - 1;
+      const startRow = detail.row;
+      const endRow = startRow + detail.rowspan - 1;
+      const startCol = detail.column;
+      const endCol = startCol + detail.colspan - 1;
       if (startRow < minRow) {
         minRow = startRow;
       } else if (endRow > maxRow) {
@@ -52,7 +52,7 @@ const findSelectedStats = (house: Warehouse, isSelected: (detail: DetailExt) => 
 
 const makeCell = <T>(list: RowData<T>[], seenSelected: boolean, rowIndex: number): void => {
   // no need to check bounds, as anything outside this index is removed in the nested for loop
-  const row = list[rowIndex].element();
+  const row = list[rowIndex].element;
   const td = SugarElement.fromTag('td');
   Insert.append(td, SugarElement.fromTag('br'));
   const f = seenSelected ? Insert.append : Insert.prepend;
@@ -60,8 +60,8 @@ const makeCell = <T>(list: RowData<T>[], seenSelected: boolean, rowIndex: number
 };
 
 const fillInGaps = <T>(list: RowData<T>[], house: Warehouse, stats: StatsStruct, isSelected: (detail: DetailExt) => boolean) => {
-  const totalColumns = house.grid.columns();
-  const totalRows = house.grid.rows();
+  const totalColumns = house.grid.columns;
+  const totalRows = house.grid.rows;
   // unselected cells have been deleted, now fill in the gaps in the model
   for (let i = 0; i < totalRows; i++) {
     let seenSelected = false;
@@ -83,7 +83,7 @@ const clean = (table: SugarElement, stats: StatsStruct): void => {
   // can't use :empty selector as that will not include TRs made up of whitespace
   const emptyRows = Arr.filter(LayerSelector.firstLayer(table, 'tr'), (row) =>
     // there is no sugar method for this, and Traverse.children() does too much processing
-    (row.dom() as HTMLElement).childElementCount === 0
+    (row.dom as HTMLElement).childElementCount === 0
   );
   Arr.each(emptyRows, Remove.remove);
 
@@ -102,7 +102,7 @@ const clean = (table: SugarElement, stats: StatsStruct): void => {
 };
 
 const extract = (table: SugarElement, selectedSelector: string): SugarElement => {
-  const isSelected = (detail: DetailExt) => Selectors.is(detail.element(), selectedSelector);
+  const isSelected = (detail: DetailExt) => Selectors.is(detail.element, selectedSelector);
 
   const list = DetailsList.fromTable(table);
   const house = Warehouse.generate(list);
