@@ -219,7 +219,7 @@ const XHR: XHR = {
    * The callback function will be passed the following arguments:</p>
    * <ul>
    * <li><code>text</code>: The text response from the server.
-   * For information the response text, see:
+   * For information on the response text, see:
    * <a href="https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/responseText">
    * MDN Web Docs - XMLHttpRequest.responseText</a>.</li>
    * <li><code>xhr</code>: Passed the XMLHttpRequest.</li>
