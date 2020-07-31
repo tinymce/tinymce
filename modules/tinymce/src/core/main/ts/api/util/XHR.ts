@@ -5,17 +5,17 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { XMLHttpRequest } from '@ephox/dom-globals';
+import { BodyInit, Document, XMLHttpRequest } from '@ephox/dom-globals';
 import Delay from './Delay';
+import { NativeEventMap } from './EventDispatcher';
 import Observable from './Observable';
 import Tools from './Tools';
-import { NativeEventMap } from './EventDispatcher';
 
 export interface XHRSettings {
   async?: boolean;
   content_type?: string;
   crossDomain?: boolean;
-  data?: any;
+  data?: Document | BodyInit;
   requestheaders?: Record<string, { key: string; value: string}>;
   scope?: {};
   type?: string;
