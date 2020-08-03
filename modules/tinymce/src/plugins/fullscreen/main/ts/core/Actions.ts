@@ -168,11 +168,13 @@ const toggleFullscreen = (editor: Editor, fullscreenState: Cell<ScrollInfo | nul
     editor.on('remove', cleanup);
 
     fullscreenState.set(newFullScreenInfo);
-    fullscreenRoot.dom.requestFullscreen();
+    if (fullscreenRoot.dom.requestFullscreen) {
+      fullscreenRoot.dom.requestFullscreen();
+    }
     Events.fireFullscreenStateChanged(editor, true);
   } else {
     fullscreenInfo.fullscreenChangeHandler.unbind();
-    if (isFullscreenElement(fullscreenRoot)) {
+    if (isFullscreenElement(fullscreenRoot) && document.exitFullscreen) {
       Traverse.owner(fullscreenRoot).dom.exitFullscreen();
     }
     iframeStyle.width = fullscreenInfo.iframeWidth;
