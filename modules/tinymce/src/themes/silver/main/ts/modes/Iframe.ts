@@ -26,7 +26,7 @@ const DOM = DOMUtils.DOM;
 const detection = PlatformDetection.detect();
 const isiOS12 = detection.os.isiOS() && detection.os.version.major <= 12;
 
-const setupEvents = (editor: Editor) => {
+const setupEvents = (editor: Editor, uiComponents: RenderUiComponents) => {
   const contentWindow = editor.getWin();
   const initialDocEle = editor.getDoc().documentElement;
 
@@ -62,6 +62,13 @@ const setupEvents = (editor: Editor) => {
   // Bind to async load events and trigger a content resize event if the size has changed
   const elementLoad = DomEvent.capture(SugarElement.fromDom(editor.getBody()), 'load', (e) => resizeDocument(e.raw));
 
+  editor.on('hide', () => {
+    Css.set(uiComponents.uiMothership.element, 'display', 'none');
+  });
+  editor.on('show', () => {
+    Css.remove(uiComponents.uiMothership.element, 'display');
+  });
+
   editor.on('NodeChange', resizeDocument);
   editor.on('remove', () => {
     elementLoad.unbind();
@@ -96,7 +103,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
       rawUiConfig.sidebar
     );
 
-    setupEvents(editor);
+    setupEvents(editor, uiComponents);
   });
 
   const socket = OuterContainer.getSocket(outerContainer).getOrDie('Could not find expected socket element');

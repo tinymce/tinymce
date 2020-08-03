@@ -101,6 +101,26 @@ const fromIsolatedChainsWith = <T, U = any>(initial: T, chains: Chain<any, any>[
     [ inject(initial) ].concat(chains)
   );
 
+// Find the first chain which doesn't fail, and use its value. Fails if no chain passes.
+const exists = <T, U>(chains: Chain<T, U>[]): Chain<T, U> => {
+  const cs = Arr.map(chains, extract);
+  let index = 0;
+
+  const attempt = (value: T, next: NextFn<U>, die: DieFn, initLogs: TestLogs): void => {
+    let replacementDie = die;
+    if (index + 1 < cs.length) {
+      replacementDie = () => {
+        index += 1;
+        attempt(value, next, die, initLogs);
+      }
+    }
+
+    Pipeline.runStep(value, cs[index], next, replacementDie, initLogs)
+  }
+
+  return on(attempt);
+};
+
 const fromParent = <T, U, V>(parent: Chain<T, U>, chains: Chain<U, V>[]): Chain<T, U> =>
   on((cvalue: T, cnext: NextFn<U>, cdie: DieFn, clogs: TestLogs) => {
     Pipeline.async(cvalue, [ extract(parent) ], (value: U, parentLogs: TestLogs) => {
@@ -210,6 +230,7 @@ export const Chain = {
   fromChainsWith,
   fromIsolatedChains,
   fromIsolatedChainsWith,
+  exists,
   fromParent,
   asStep,
   isolate,

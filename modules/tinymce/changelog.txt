@@ -13,6 +13,7 @@ Version 5.5.0 (TBD)
     Fixed the `media` plugin not saving the alternative source url in some situations #TINY-4113
     Fixed an issue where column resizing using the resize bars was inconsistent between fixed and relative table widths #TINY-6001
     Fixed an issue where dragging and dropping within a table would select table cells #TINY-5950
+    Fixed an issue where dialog boxes would sometimes not be shown or hidden when calling show or hide methods on the editor #TINY-6048
     Fixed up and down keyboard navigation not working for inline `contenteditable="false"` elements #TINY-6226
     Fixed the `unlink` toolbar button not working when selecting multiple links #TINY-4867
     Fixed the `link` dialog not showing the "Text to display" field in some valid cases #TINY-5205
