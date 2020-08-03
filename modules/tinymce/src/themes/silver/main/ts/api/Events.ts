@@ -17,7 +17,7 @@ const fireBeforeRenderUI = (editor: Editor) => editor.fire('BeforeRenderUI');
 
 const fireResizeContent = (editor: Editor, e: UIEvent) => editor.fire('ResizeContent', e);
 
-const fireScrollContent = (editor: Editor, e: UIEvent) => editor.fire('ScrollContent', e);
+const fireScrollContent = (editor: Editor, e: Event) => editor.fire('ScrollContent', e);
 
 const fireTextColorChange = (editor: Editor, data: { name: string; color: string }) => editor.fire('TextColorChange', data);
 

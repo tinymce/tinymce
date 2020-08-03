@@ -10,6 +10,7 @@ import { Cell, Throttler } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Css, DomEvent, SugarElement, SugarPosition, SugarShadowDom } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+import { EventUtilsEvent } from 'tinymce/core/api/dom/EventUtils';
 import Editor from 'tinymce/core/api/Editor';
 import * as Events from '../api/Events';
 import * as Settings from '../api/Settings';
@@ -32,7 +33,7 @@ const setupEvents = (editor: Editor) => {
   const lastWindowDimensions = Cell(SugarPosition(contentWindow.innerWidth, contentWindow.innerHeight));
   const lastDocumentDimensions = Cell(SugarPosition(initialDocEle.offsetWidth, initialDocEle.offsetHeight));
 
-  const resizeWindow = (e) => {
+  const resizeWindow = (e: EventUtilsEvent<UIEvent>) => {
     // Check if the window dimensions have changed and if so then trigger a content resize event
     const outer = lastWindowDimensions.get();
     if (outer.left !== contentWindow.innerWidth || outer.top !== contentWindow.innerHeight) {
@@ -41,7 +42,7 @@ const setupEvents = (editor: Editor) => {
     }
   };
 
-  const resizeDocument = (e) => {
+  const resizeDocument = (e: UIEvent) => {
     // Don't use the initial doc ele, as there's a small chance it may have changed
     const docEle = editor.getDoc().documentElement;
 
@@ -53,13 +54,13 @@ const setupEvents = (editor: Editor) => {
     }
   };
 
-  const scroll = (e) => Events.fireScrollContent(editor, e);
+  const scroll = (e: EventUtilsEvent<Event>) => Events.fireScrollContent(editor, e);
 
   DOM.bind(contentWindow, 'resize', resizeWindow);
   DOM.bind(contentWindow, 'scroll', scroll);
 
   // Bind to async load events and trigger a content resize event if the size has changed
-  const elementLoad = DomEvent.capture(SugarElement.fromDom(editor.getBody()), 'load', resizeDocument);
+  const elementLoad = DomEvent.capture(SugarElement.fromDom(editor.getBody()), 'load', (e) => resizeDocument(e.raw));
 
   editor.on('NodeChange', resizeDocument);
   editor.on('remove', () => {
@@ -100,7 +101,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
 
   const socket = OuterContainer.getSocket(outerContainer).getOrDie('Could not find expected socket element');
 
-  if (isiOS12 === true) {
+  if (isiOS12) {
     Css.setAll(socket.element, {
       'overflow': 'scroll',
       '-webkit-overflow-scrolling': 'touch' // required for ios < 13 content scrolling
@@ -115,7 +116,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
 
   ReadOnly.setupReadonlyModeSwitch(editor, uiComponents);
 
-  editor.addCommand('ToggleSidebar', (ui: boolean, value: string) => {
+  editor.addCommand('ToggleSidebar', (_ui: boolean, value: string) => {
     OuterContainer.toggleSidebar(outerContainer, value);
     editor.fire('ToggleSidebar');
   });

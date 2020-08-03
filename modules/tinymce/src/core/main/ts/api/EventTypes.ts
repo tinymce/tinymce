@@ -44,11 +44,11 @@ export type PlaceholderToggleEvent = { state: boolean };
 
 export type LoadErrorEvent = { message: string };
 
-export interface EditorEventMap extends NativeEventMap {
+export interface EditorEventMap extends Omit<NativeEventMap, 'blur' | 'focus'> {
   'activate': { relatedTarget: Editor };
   'deactivate': { relatedTarget: Editor };
-  'focus': FocusEvent & { blurredEditor?: Editor };
-  'blur': FocusEvent & { focusedEditor?: Editor };
+  'focus': { blurredEditor?: Editor };
+  'blur': { focusedEditor?: Editor };
   'resize': UIEvent;
   'scroll': UIEvent;
   'detach': { };
