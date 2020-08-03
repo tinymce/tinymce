@@ -1,4 +1,4 @@
-import { getDemoRegistry } from './../buttons/DemoRegistry';
+import { getDemoRegistry } from '../buttons/DemoRegistry';
 
 export const registerCodeItems = () => {
   getDemoRegistry().addButton('code', {
