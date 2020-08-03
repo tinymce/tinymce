@@ -100,8 +100,55 @@ const getFullscreenRoot = (editor: Editor): SugarElement<Element> => {
     getOrThunk(() => SugarBody.getBody(Traverse.owner(elem)));
 };
 
+const getFullscreenElement = (root: DocumentOrShadowRoot) => {
+  if (root.fullscreenElement !== undefined) {
+    return root.fullscreenElement;
+  } else if ((root as any).msFullscreenElement !== undefined) {
+    return (root as any).msFullscreenElement;
+  } else if ((root as any).webkitFullscreenElement !== undefined) {
+    return (root as any).webkitFullscreenElement;
+  } else {
+    return null;
+  }
+};
+
+const getFullscreenchangeEventName = () => {
+  if (document.fullscreenElement !== undefined) {
+    return 'fullscreenchange';
+  }
+  else if ((document as any).msFullscreenElement !== undefined) {
+    return 'MSFullscreenChange'; // warning, seems to be case sensitive
+  }
+  else if ((document as any).webkitFullscreenElement !== undefined) {
+    return 'webkitfullscreenchange';
+  }
+  else {
+    return 'fullscreenchange';
+  }
+};
+
+const requestFullscreen = (elem: Element) => {
+  if (elem.requestFullscreen) {
+    elem.requestFullscreen();
+  } else if ((elem as any).msRequestFullscreen) {
+    (elem as any).msRequestFullscreen();
+  } else if ((elem as any).webkitRequestFullScreen) {
+    (elem as any).webkitRequestFullScreen();
+  }
+};
+
+const exitFullscreen = (doc: Document) => {
+  if (doc.exitFullscreen) {
+    doc.exitFullscreen();
+  } else if ((doc as any).msExitFullscreen) {
+    (doc as any).msExitFullscreen();
+  } else if ((doc as any).webkitCancelFullScreen) {
+    (doc as any).webkitCancelFullScreen();
+  }
+};
+
 const isFullscreenElement = (elem: SugarElement<Element>) =>
-  elem.dom === Traverse.owner(elem).dom.fullscreenElement;
+  elem.dom === getFullscreenElement(Traverse.owner(elem).dom);
 
 const toggleFullscreen = (editor: Editor, fullscreenState: Cell<ScrollInfo | null>) => {
   const body = document.body;
@@ -134,7 +181,7 @@ const toggleFullscreen = (editor: Editor, fullscreenState: Cell<ScrollInfo | nul
   };
 
   if (!fullscreenInfo) {
-    const fullscreenChangeHandler = DomEvent.bind(fullscreenRoot, 'fullscreenchange', (_evt) => {
+    const fullscreenChangeHandler = DomEvent.bind(Traverse.owner(fullscreenRoot), getFullscreenchangeEventName(), (_evt) => {
       if (Settings.getFullscreenNative(editor)) {
         // if we have exited browser fullscreen with Escape then exit editor fullscreen too
         if (!isFullscreenElement(fullscreenRoot) && fullscreenState.get() !== null) {
@@ -171,14 +218,14 @@ const toggleFullscreen = (editor: Editor, fullscreenState: Cell<ScrollInfo | nul
     editor.on('remove', cleanup);
 
     fullscreenState.set(newFullScreenInfo);
-    if (Settings.getFullscreenNative(editor) && fullscreenRoot.dom.requestFullscreen) {
-      fullscreenRoot.dom.requestFullscreen();
+    if (Settings.getFullscreenNative(editor)) {
+      requestFullscreen(fullscreenRoot.dom);
     }
     Events.fireFullscreenStateChanged(editor, true);
   } else {
     fullscreenInfo.fullscreenChangeHandler.unbind();
-    if (Settings.getFullscreenNative(editor) && document.exitFullscreen && isFullscreenElement(fullscreenRoot)) {
-      Traverse.owner(fullscreenRoot).dom.exitFullscreen();
+    if (Settings.getFullscreenNative(editor) && isFullscreenElement(fullscreenRoot)) {
+      exitFullscreen(Traverse.owner(fullscreenRoot).dom);
     }
     iframeStyle.width = fullscreenInfo.iframeWidth;
     iframeStyle.height = fullscreenInfo.iframeHeight;
