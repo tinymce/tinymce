@@ -1,7 +1,7 @@
 import { Processor, ValueSchema } from '@ephox/boulder';
 import { Cell } from '@ephox/katamari';
 import { DialogManager } from '../../../main/ts/ephox/bridge/api/DialogManager';
-import { Dialog, DialogSpec, DialogInstanceApi } from '../../../main/ts/ephox/bridge/components/dialog/Dialog';
+import { Dialog, DialogInstanceApi, DialogSpec } from '../../../main/ts/ephox/bridge/components/dialog/Dialog';
 
 // This is the function that would be implemented in modern theme/silver theme for creating dialogs
 const createDemoApi = <T>(internalStructure: Dialog<T>, initalData: T, dataValidator: Processor): DialogInstanceApi<T> => {

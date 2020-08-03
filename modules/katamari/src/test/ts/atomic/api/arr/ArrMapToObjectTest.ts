@@ -1,6 +1,6 @@
-import { UnitTest, assert } from '@ephox/bedrock-client';
-import * as fc from 'fast-check';
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Eq } from '@ephox/dispute';
+import * as fc from 'fast-check';
 import * as Arr from 'ephox/katamari/api/Arr';
 import * as Obj from 'ephox/katamari/api/Obj';
 import * as Unique from 'ephox/katamari/api/Unique';

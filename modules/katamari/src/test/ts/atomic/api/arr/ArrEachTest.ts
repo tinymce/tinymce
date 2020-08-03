@@ -1,4 +1,4 @@
-import { UnitTest, Assert } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import * as fc from 'fast-check';
 import * as Arr from 'ephox/katamari/api/Arr';
 

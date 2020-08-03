@@ -18,7 +18,6 @@
     "@typescript-eslint/prefer-regexp-exec": "off",
     "@typescript-eslint/unbound-method": "off",
     "comma-dangle": ["error", "never"],
-    "import/no-useless-path-segments": "error",
     "import/order": ["error", {
       "groups": ["builtin", "external", "internal", "parent", "sibling", "index"]
     }],

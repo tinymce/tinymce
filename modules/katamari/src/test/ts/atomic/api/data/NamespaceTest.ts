@@ -1,4 +1,4 @@
-import { UnitTest, Assert } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import * as Namespace from 'ephox/katamari/api/Namespace';
 
 UnitTest.test('NamespaceTest', function () {

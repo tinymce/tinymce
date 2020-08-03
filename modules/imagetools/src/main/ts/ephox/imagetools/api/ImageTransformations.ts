@@ -1,6 +1,6 @@
+import * as JPEGMeta from '../meta/JPEGMeta';
 import * as Filters from '../transformations/Filters';
 import * as ImageTools from '../transformations/ImageTools';
-import * as JPEGMeta from '../meta/JPEGMeta';
 import { ImageResult } from '../util/ImageResult';
 
 const invert = function (ir: ImageResult): Promise<ImageResult> {

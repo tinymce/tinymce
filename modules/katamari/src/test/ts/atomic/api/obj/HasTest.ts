@@ -1,4 +1,4 @@
-import { UnitTest, Assert } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import * as Obj from 'ephox/katamari/api/Obj';
 
 UnitTest.test('HasTest', () => {

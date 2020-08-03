@@ -1,5 +1,5 @@
-import { Arr } from '@ephox/katamari';
 import { TestUniverse } from '@ephox/boss';
+import { Arr } from '@ephox/katamari';
 
 const get = function (universe: TestUniverse, id: string) {
   return universe.find(universe.get(), id).getOrDie('Test element "' + id + '" not found');
