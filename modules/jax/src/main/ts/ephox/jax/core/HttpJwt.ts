@@ -1,8 +1,8 @@
-import { JwtTokenFactory, PostPutInit, GetDelInit, JwtToken, HttpRequest } from './HttpTypes';
-import * as Http from './Http';
 import { FutureResult } from '@ephox/katamari';
+import * as Http from './Http';
 import { ResponseBodyDataTypes, ResponseTypeMap } from './HttpData';
 import { HttpError, HttpErrorCode } from './HttpError';
+import { GetDelInit, HttpRequest, JwtToken, JwtTokenFactory, PostPutInit } from './HttpTypes';
 
 const headers = (headersInput: HttpRequest<ResponseBodyDataTypes>['headers'], token: string) => {
   const authHeader = { Authorization: 'Bearer ' + token };

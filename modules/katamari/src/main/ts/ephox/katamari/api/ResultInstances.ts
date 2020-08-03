@@ -1,6 +1,6 @@
+import { Eq, Pnode, Pprint, Testable } from '@ephox/dispute';
 import * as Fun from './Fun';
 import { Result } from './Result';
-import { Pprint, Eq, Testable, Pnode } from '@ephox/dispute';
 
 type Pprint<A> = Pprint.Pprint<A>;
 type Eq<A> = Eq.Eq<A>;

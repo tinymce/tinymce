@@ -1,7 +1,7 @@
+import { EventArgs } from '@ephox/sugar';
+import { DragMode } from '../api/DragApis';
 import InDrag from './InDrag';
 import NoDrag from './NoDrag';
-import { DragMode } from '../api/DragApis';
-import { EventArgs } from '@ephox/sugar';
 
 interface DragState {
   onEvent: (event: EventArgs, mode: DragMode) => void;

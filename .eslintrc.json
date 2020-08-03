@@ -21,6 +21,7 @@
     "no-empty": "off",
     "no-shadow": "off",
     "no-underscore-dangle": "off",
+    "import/order": "error",
     "one-var": "off",
     "prefer-rest-params": "off",
     "prefer-spread": "off",

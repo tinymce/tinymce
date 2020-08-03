@@ -5,10 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AssumeExternalTargets } from './Types';
+import { Type } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { ListItem } from '../ui/DialogTypes';
-import { Type } from '@ephox/katamari';
+import { AssumeExternalTargets } from './Types';
 
 const assumeExternalTargets = (editor: Editor): AssumeExternalTargets => {
   const externalTargets = editor.getParam('link_assume_external_targets', false);

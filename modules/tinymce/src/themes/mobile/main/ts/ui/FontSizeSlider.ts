@@ -5,12 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import * as SizeSlider from './SizeSlider';
-import * as ToolbarWidgets from './ToolbarWidgets';
+import { SketchSpec } from '@ephox/alloy';
 import * as FontSizes from '../util/FontSizes';
 import * as UiDomFactory from '../util/UiDomFactory';
-import { SketchSpec } from '@ephox/alloy';
-import { MobileRealm } from '../ui/IosRealm';
+import { MobileRealm } from './IosRealm';
+import * as SizeSlider from './SizeSlider';
+import * as ToolbarWidgets from './ToolbarWidgets';
 
 const sizes = FontSizes.candidates();
 

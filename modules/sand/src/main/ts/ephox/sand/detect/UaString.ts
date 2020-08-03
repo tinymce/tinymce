@@ -1,6 +1,6 @@
 import { Arr } from '@ephox/katamari';
-import { Version } from './Version';
 import { PlatformInfo } from '../info/PlatformInfo';
+import { Version } from './Version';
 
 export interface UaString {
   current: string | undefined;

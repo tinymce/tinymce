@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import Editor from '../api/Editor';
 import * as NodeType from '../dom/NodeType';
 import * as NewLineUtils from './NewLineUtils';
-import Editor from '../api/Editor';
 
 const hasFirstChild = function (elm, name) {
   return elm.firstChild && elm.firstChild.nodeName === name;

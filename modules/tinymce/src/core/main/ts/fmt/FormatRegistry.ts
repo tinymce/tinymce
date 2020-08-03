@@ -6,11 +6,11 @@
  */
 
 import { Obj, Type } from '@ephox/katamari';
-import * as DefaultFormats from './DefaultFormats';
-import * as Settings from '../api/Settings';
-import { Format, Formats } from '../api/fmt/Format';
-import Tools from '../api/util/Tools';
 import Editor from '../api/Editor';
+import { Format, Formats } from '../api/fmt/Format';
+import * as Settings from '../api/Settings';
+import Tools from '../api/util/Tools';
+import * as DefaultFormats from './DefaultFormats';
 
 export interface FormatRegistry {
   get (name?: string): Format[] | Record<string, Format[]>;

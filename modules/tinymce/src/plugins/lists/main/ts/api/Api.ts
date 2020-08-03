@@ -5,8 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import * as Delete from '../core/Delete';
 import Editor from 'tinymce/core/api/Editor';
+import * as Delete from '../core/Delete';
 
 const get = function (editor: Editor) {
   return {

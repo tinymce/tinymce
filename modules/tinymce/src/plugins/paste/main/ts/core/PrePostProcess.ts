@@ -5,8 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import * as Settings from '../api/Settings';
 import Editor from 'tinymce/core/api/Editor';
+import * as Settings from '../api/Settings';
 
 const setup = function (editor: Editor) {
   const plugin = editor.plugins.paste;
