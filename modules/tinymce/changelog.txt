@@ -2,6 +2,7 @@ Version 5.4.2 (TBD)
     Fixed clicking on notifications causing inline editors to hide #TINY-6058
     Fixed a regression where the `anchor_top` and `anchor_bottom` settings weren't working when set to `false` #TINY-6256
     Fixed an exception thrown when positioning the context toolbar on Internet Explorer 11 in some edge cases #TINY-6271
+    Fixed list toolbar buttons not showing as active when a list is selected #TINY-6286
 Version 5.4.1 (2020-07-08)
     Fixed the Search and Replace plugin incorrectly including zero-width caret characters in search results #TINY-4599
     Fixed dragging and dropping unsupported files navigating the browser away from the editor #TINY-6027
