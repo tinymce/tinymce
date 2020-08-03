@@ -108,7 +108,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
     editor.nodeChanged();
   };
 
-  editor.on('focus', render);
+  editor.on('focus show', render);
   editor.on('blur hide', ui.hide);
 
   editor.on('init', () => {
