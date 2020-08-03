@@ -116,7 +116,6 @@ const hasOwnProperty = function (obj, prop) {
 
 /**
  * Creates a class, subclass or static singleton.
- * More details on this method can be found in the TinyMCE Documentation.
  *
  * @method create
  * @param {String} s Class name, inheritance and prefix.
