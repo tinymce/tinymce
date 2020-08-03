@@ -1,6 +1,6 @@
-import * as Arr from 'ephox/katamari/api/Arr';
 import { UnitTest, Assert } from '@ephox/bedrock-client';
 import * as fc from 'fast-check';
+import * as Arr from 'ephox/katamari/api/Arr';
 
 interface Z<T> {
   index: number;

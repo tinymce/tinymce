@@ -1,6 +1,6 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import * as Thunk from 'ephox/katamari/api/Thunk';
 import fc from 'fast-check';
+import * as Thunk from 'ephox/katamari/api/Thunk';
 
 UnitTest.test('ThunkTest', () => {
   let callArgs: any[] | null = null;

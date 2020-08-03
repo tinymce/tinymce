@@ -1,6 +1,6 @@
-import * as Id from 'ephox/katamari/api/Id';
 import { UnitTest, Assert } from '@ephox/bedrock-client';
 import fc from 'fast-check';
+import * as Id from 'ephox/katamari/api/Id';
 
 UnitTest.test('Id: Unit Tests', () => {
   const one = Id.generate('test');

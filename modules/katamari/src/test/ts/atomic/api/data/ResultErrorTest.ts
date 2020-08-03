@@ -1,12 +1,12 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Testable } from '@ephox/dispute';
+import fc from 'fast-check';
 import * as Fun from 'ephox/katamari/api/Fun';
 import { Optional } from 'ephox/katamari/api/Optional';
 import { tOptional } from 'ephox/katamari/api/OptionalInstances';
 import { Result } from 'ephox/katamari/api/Result';
 import { tResult } from 'ephox/katamari/api/ResultInstances';
 import { arbResultError, arbResultValue } from 'ephox/katamari/test/arb/ArbDataTypes';
-import fc from 'fast-check';
 
 const { tNumber } = Testable;
 

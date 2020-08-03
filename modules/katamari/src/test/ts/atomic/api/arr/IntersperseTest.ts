@@ -1,7 +1,7 @@
-import * as Arr from 'ephox/katamari/api/Arr';
-import * as Jam from 'ephox/katamari/api/Jam';
 import { UnitTest, Assert } from '@ephox/bedrock-client';
 import fc from 'fast-check';
+import * as Arr from 'ephox/katamari/api/Arr';
+import * as Jam from 'ephox/katamari/api/Jam';
 import { arbNegativeInteger } from 'ephox/katamari/test/arb/ArbDataTypes';
 
 UnitTest.test('Intersperse', () => {

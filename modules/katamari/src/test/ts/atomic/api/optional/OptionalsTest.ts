@@ -1,10 +1,10 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
+import fc from 'fast-check';
 import * as Arr from 'ephox/katamari/api/Arr';
 import * as Fun from 'ephox/katamari/api/Fun';
 import { Optional } from 'ephox/katamari/api/Optional';
 import * as Optionals from 'ephox/katamari/api/Optionals';
 import * as ArbDataTypes from 'ephox/katamari/test/arb/ArbDataTypes';
-import fc from 'fast-check';
 
 UnitTest.test('OptionsTest', () => {
   const arr1 = [ Optional.some(1), Optional.none(), Optional.some(2), Optional.some(3), Optional.none(), Optional.none(), Optional.none(), Optional.none(), Optional.some(4) ];

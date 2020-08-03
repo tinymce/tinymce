@@ -1,8 +1,8 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
+import fc from 'fast-check';
 import { Optional } from 'ephox/katamari/api/Optional';
 import { tOptional } from 'ephox/katamari/api/OptionalInstances';
 import * as Optionals from 'ephox/katamari/api/Optionals';
-import fc from 'fast-check';
 
 UnitTest.test('Optionals.flatten: unit tests', function () {
   Assert.eq('none', Optional.none(), Optionals.flatten(Optional.none<Optional<string>>()), tOptional());

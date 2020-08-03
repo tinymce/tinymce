@@ -1,7 +1,7 @@
-import * as Arr from 'ephox/katamari/api/Arr';
-import * as Obj from 'ephox/katamari/api/Obj';
 import { UnitTest, Assert } from '@ephox/bedrock-client';
 import fc from 'fast-check';
+import * as Arr from 'ephox/katamari/api/Arr';
+import * as Obj from 'ephox/katamari/api/Obj';
 
 UnitTest.test('Obj.keys: unit tests', () => {
   const check = (expKeys, input) => {

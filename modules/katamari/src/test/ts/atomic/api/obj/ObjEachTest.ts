@@ -1,6 +1,6 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import * as Obj from 'ephox/katamari/api/Obj';
 import fc from 'fast-check';
+import * as Obj from 'ephox/katamari/api/Obj';
 
 UnitTest.test('ObjEachTest', function () {
   const check = function <T> (expected: Array<{index: string; value: T}>, input: Record<string, T>) {

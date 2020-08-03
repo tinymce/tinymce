@@ -1,6 +1,6 @@
-import * as Arr from 'ephox/katamari/api/Arr';
 import { UnitTest, Assert } from '@ephox/bedrock-client';
 import fc from 'fast-check';
+import * as Arr from 'ephox/katamari/api/Arr';
 
 UnitTest.test('difference: unit tests', () => {
   const check = <T>(expected, a1: T[], a2: T[]) => {

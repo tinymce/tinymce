@@ -1,6 +1,6 @@
-import * as Strings from 'ephox/katamari/api/Strings';
 import { UnitTest, Assert } from '@ephox/bedrock-client';
 import fc from 'fast-check';
+import * as Strings from 'ephox/katamari/api/Strings';
 
 UnitTest.test('removeTrailing: unit tests', () => {
   function check(expected, str, trail) {

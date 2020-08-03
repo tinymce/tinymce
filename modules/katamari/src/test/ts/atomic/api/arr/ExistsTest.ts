@@ -1,6 +1,6 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import * as Arr from 'ephox/katamari/api/Arr';
 import fc from 'fast-check';
+import * as Arr from 'ephox/katamari/api/Arr';
 
 const eqc = (x) => (a) => x === a;
 const never = () => false;

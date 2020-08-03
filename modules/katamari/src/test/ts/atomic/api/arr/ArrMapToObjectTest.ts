@@ -1,9 +1,9 @@
-import * as Arr from 'ephox/katamari/api/Arr';
-import * as Obj from 'ephox/katamari/api/Obj';
-import * as Unique from 'ephox/katamari/api/Unique';
 import { UnitTest, assert } from '@ephox/bedrock-client';
 import * as fc from 'fast-check';
 import { Eq } from '@ephox/dispute';
+import * as Arr from 'ephox/katamari/api/Arr';
+import * as Obj from 'ephox/katamari/api/Obj';
+import * as Unique from 'ephox/katamari/api/Unique';
 
 UnitTest.test('Arr.mapToObject', () => {
   const checkToObject = (expected, input: any[], f) => {
