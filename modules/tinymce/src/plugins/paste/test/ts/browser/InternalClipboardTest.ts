@@ -33,7 +33,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.InternalClipboardTest', (succe
   const sPasteDataTransferEvent = function (editor: Editor, data: Record<string, string>) {
     return Logger.t('Paste data transfer event', Step.sync(function () {
       dataTransfer = MockDataTransfer.create(data);
-      editor.fire('paste', { clipboardData: dataTransfer });
+      editor.fire('paste', { clipboardData: dataTransfer } as ClipboardEvent);
     }));
   };
 

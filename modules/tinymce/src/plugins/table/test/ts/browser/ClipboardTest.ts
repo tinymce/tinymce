@@ -18,8 +18,8 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ClipboardTest', (success, fail
   const selectOne = (editor: Editor, start) => {
     start = editor.$(start)[0];
 
-    editor.fire('mousedown', { target: start, button: 0 });
-    editor.fire('mouseup', { target: start, button: 0 });
+    editor.fire('mousedown', { target: start, button: 0 } as MouseEvent);
+    editor.fire('mouseup', { target: start, button: 0 } as MouseEvent);
 
     LegacyUnit.setSelection(editor, start, 0);
   };

@@ -8,7 +8,7 @@ UnitTest.asynctest('browser.tinymce.core.selection.MultiClickSelectionTest', (su
   Theme();
 
   const sFakeMultiClick = (editor: Editor, clickCount) => Step.sync(() => {
-    editor.fire('click', { detail: clickCount });
+    editor.fire('click', { detail: clickCount } as MouseEvent);
   });
 
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
