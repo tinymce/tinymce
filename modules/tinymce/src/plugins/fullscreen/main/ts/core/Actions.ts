@@ -5,14 +5,15 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Cell, Fun, Singleton, Optional } from '@ephox/katamari';
-import { Css, SugarElement, WindowVisualViewport, DomEvent, Traverse, EventUnbinder, SugarShadowDom, SugarBody } from '@ephox/sugar';
+import { Cell, Fun, Optional, Singleton } from '@ephox/katamari';
+import { Css, DomEvent, EventUnbinder, SugarElement, Traverse, WindowVisualViewport } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import Delay from 'tinymce/core/api/util/Delay';
 import * as Events from '../api/Events';
 import * as Settings from '../api/Settings';
+import { exitFullscreen, getFullscreenchangeEventName, getFullscreenRoot, isFullscreenElement, requestFullscreen } from './NativeFullscreen';
 import * as Thor from './Thor';
 
 export interface ScrollInfo {
@@ -94,62 +95,6 @@ const viewportUpdate = WindowVisualViewport.get().fold(
   }
 );
 
-const getFullscreenRoot = (editor: Editor): SugarElement<Element> => {
-  const elem = SugarElement.fromDom(editor.getElement());
-  return SugarShadowDom.getShadowRoot(elem).map(SugarShadowDom.getShadowHost).
-    getOrThunk(() => SugarBody.getBody(Traverse.owner(elem)));
-};
-
-const getFullscreenElement = (root: DocumentOrShadowRoot) => {
-  if (root.fullscreenElement !== undefined) {
-    return root.fullscreenElement;
-  } else if ((root as any).msFullscreenElement !== undefined) {
-    return (root as any).msFullscreenElement;
-  } else if ((root as any).webkitFullscreenElement !== undefined) {
-    return (root as any).webkitFullscreenElement;
-  } else {
-    return null;
-  }
-};
-
-const getFullscreenchangeEventName = () => {
-  if (document.fullscreenElement !== undefined) {
-    return 'fullscreenchange';
-  }
-  else if ((document as any).msFullscreenElement !== undefined) {
-    return 'MSFullscreenChange'; // warning, seems to be case sensitive
-  }
-  else if ((document as any).webkitFullscreenElement !== undefined) {
-    return 'webkitfullscreenchange';
-  }
-  else {
-    return 'fullscreenchange';
-  }
-};
-
-const requestFullscreen = (elem: Element) => {
-  if (elem.requestFullscreen) {
-    elem.requestFullscreen();
-  } else if ((elem as any).msRequestFullscreen) {
-    (elem as any).msRequestFullscreen();
-  } else if ((elem as any).webkitRequestFullScreen) {
-    (elem as any).webkitRequestFullScreen();
-  }
-};
-
-const exitFullscreen = (doc: Document) => {
-  if (doc.exitFullscreen) {
-    doc.exitFullscreen();
-  } else if ((doc as any).msExitFullscreen) {
-    (doc as any).msExitFullscreen();
-  } else if ((doc as any).webkitCancelFullScreen) {
-    (doc as any).webkitCancelFullScreen();
-  }
-};
-
-const isFullscreenElement = (elem: SugarElement<Element>) =>
-  elem.dom === getFullscreenElement(Traverse.owner(elem).dom);
-
 const toggleFullscreen = (editor: Editor, fullscreenState: Cell<ScrollInfo | null>) => {
   const body = document.body;
   const documentElement = document.documentElement;
@@ -219,13 +164,13 @@ const toggleFullscreen = (editor: Editor, fullscreenState: Cell<ScrollInfo | nul
 
     fullscreenState.set(newFullScreenInfo);
     if (Settings.getFullscreenNative(editor)) {
-      requestFullscreen(fullscreenRoot.dom);
+      requestFullscreen(fullscreenRoot);
     }
     Events.fireFullscreenStateChanged(editor, true);
   } else {
     fullscreenInfo.fullscreenChangeHandler.unbind();
     if (Settings.getFullscreenNative(editor) && isFullscreenElement(fullscreenRoot)) {
-      exitFullscreen(Traverse.owner(fullscreenRoot).dom);
+      exitFullscreen(Traverse.owner(fullscreenRoot));
     }
     iframeStyle.width = fullscreenInfo.iframeWidth;
     iframeStyle.height = fullscreenInfo.iframeHeight;

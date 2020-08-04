@@ -1,9 +1,9 @@
+import { Chain, Log, NamedChain, Pipeline, RealMouse, Step, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-
 import { Editor as McEditor } from '@ephox/mcagar';
 import FullscreenPlugin from 'tinymce/plugins/fullscreen/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
-import { Pipeline, Log, NamedChain, Chain, UiFinder, RealMouse, Waiter, Step } from '@ephox/agar';
+import { getFullscreenElement } from '../../../main/ts/core/NativeFullscreen';
 
 UnitTest.asynctest('browser.tinymce.plugins.fullscreen.FullScreenPluginNativeModeTest', (success, failure) => {
   FullscreenPlugin();
@@ -17,23 +17,11 @@ UnitTest.asynctest('browser.tinymce.plugins.fullscreen.FullScreenPluginNativeMod
     fullscreen_native: true
   });
 
-  const getFullscreenElement = () => {
-    if (document.fullscreenElement !== undefined) {
-      return document.fullscreenElement;
-    } else if ((document as any).msFullscreenElement !== undefined) {
-      return (document as any).msFullscreenElement;
-    } else if ((document as any).webkitFullscreenElement !== undefined) {
-      return (document as any).webkitFullscreenElement;
-    } else {
-      return undefined;
-    }
-  };
-
   const cIsFullscreen = (fullscreen: boolean) => Waiter.cTryUntilPredicate('Waiting for fullscreen mode to ' + (fullscreen ? 'start' : 'end'), (_v) => {
     if (fullscreen) {
-      return getFullscreenElement() === document.body;
+      return getFullscreenElement(document) === document.body;
     } else {
-      return getFullscreenElement() === null;
+      return getFullscreenElement(document) === null;
     }
   });
 
