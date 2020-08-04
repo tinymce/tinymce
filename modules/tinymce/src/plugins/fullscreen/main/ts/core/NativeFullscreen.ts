@@ -14,19 +14,19 @@ export const getFullscreenRoot = (editor: Editor): SugarElement<Element> => {
     getOrThunk(() => SugarBody.getBody(Traverse.owner(elem)));
 };
 
-export const getFullscreenElement = (root: DocumentOrShadowRoot) => {
+export const getFullscreenElement = (root: DocumentOrShadowRoot): Element | null => {
   if (root.fullscreenElement !== undefined) {
     return root.fullscreenElement;
   } else if ((root as any).msFullscreenElement !== undefined) {
-    return (root as any).msFullscreenElement;
+    return (root as any).msFullscreenElement as Element | null;
   } else if ((root as any).webkitFullscreenElement !== undefined) {
-    return (root as any).webkitFullscreenElement;
+    return (root as any).webkitFullscreenElement as Element | null;
   } else {
     return null;
   }
 };
 
-export const getFullscreenchangeEventName = () => {
+export const getFullscreenchangeEventName = (): string => {
   if (document.fullscreenElement !== undefined) {
     return 'fullscreenchange';
   } else if ((document as any).msFullscreenElement !== undefined) {
@@ -38,7 +38,7 @@ export const getFullscreenchangeEventName = () => {
   }
 };
 
-export const requestFullscreen = (sugarElem: SugarElement<Element>) => {
+export const requestFullscreen = (sugarElem: SugarElement<Element>): void => {
   const elem = sugarElem.dom;
   if (elem.requestFullscreen) {
     elem.requestFullscreen();
@@ -49,7 +49,7 @@ export const requestFullscreen = (sugarElem: SugarElement<Element>) => {
   }
 };
 
-export const exitFullscreen = (sugarDoc: SugarElement<Document>) => {
+export const exitFullscreen = (sugarDoc: SugarElement<Document>): void => {
   const doc = sugarDoc.dom;
   if (doc.exitFullscreen) {
     doc.exitFullscreen();
@@ -60,5 +60,5 @@ export const exitFullscreen = (sugarDoc: SugarElement<Document>) => {
   }
 };
 
-export const isFullscreenElement = (elem: SugarElement<Element>) =>
+export const isFullscreenElement = (elem: SugarElement<Element>): boolean =>
   elem.dom === getFullscreenElement(Traverse.owner(elem).dom);
