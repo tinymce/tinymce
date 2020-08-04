@@ -385,7 +385,10 @@ const wrapAndSplit = (editor: Editor, formatList: RemoveFormatPartial[], formatR
 
     // Never split block elements if the format is mixed
     if (split && (!format.mixed || !dom.isBlock(formatRoot))) {
-      container = dom.split(formatRoot, container);
+      container = dom.split(formatRoot, container, undefined, {
+        skipTrimAfter: true,
+        skipTrimBefore: true
+      });
     }
 
     // Wrap container in cloned formats

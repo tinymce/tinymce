@@ -28,7 +28,7 @@ const isBookmarkNode = function (node) {
 //   <p>text 1<span></span></p><b>CHOP</b><p><span></span>text 2</p>
 // this function will then trim off empty edges and produce:
 //   <p>text 1</p><b>CHOP</b><p>text 2</p>
-const trimNode = function (dom, node) {
+const trimNode = function (dom, node: Node, doNotTrimSpaces?: boolean) {
   let i, children = node.childNodes;
 
   if (NodeType.isElement(node) && isBookmarkNode(node)) {
@@ -36,12 +36,17 @@ const trimNode = function (dom, node) {
   }
 
   for (i = children.length - 1; i >= 0; i--) {
-    trimNode(dom, children[i]);
+    trimNode(dom, children[i], doNotTrimSpaces);
   }
 
   if (NodeType.isDocument(node) === false) {
     // Keep non whitespace text nodes
     if (NodeType.isText(node) && node.nodeValue.length > 0) {
+      // Do not trim nodes that contain spaces.
+      if (doNotTrimSpaces) {
+        return;
+      }
+
       // Keep if parent element is a block or if there is some useful content
       const trimmedLength = Tools.trim(node.nodeValue).length;
       if (dom.isBlock(node.parentNode) || trimmedLength > 0) {
