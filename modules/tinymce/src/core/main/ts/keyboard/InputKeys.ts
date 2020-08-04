@@ -5,10 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Throttler } from '@ephox/katamari';
+import { PlatformDetection } from '@ephox/sand';
 import Editor from '../api/Editor';
 import { normalizeNbspsInEditor } from './Nbsps';
-import { PlatformDetection } from '@ephox/sand';
-import { Throttler } from '@ephox/katamari';
 
 const browser = PlatformDetection.detect().browser;
 

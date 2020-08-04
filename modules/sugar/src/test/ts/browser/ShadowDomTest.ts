@@ -2,6 +2,7 @@ import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Testable } from '@ephox/dispute';
 import { Arr } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
+import fc from 'fast-check';
 import * as Insert from 'ephox/sugar/api/dom/Insert';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
 import * as DomEvent from 'ephox/sugar/api/events/DomEvent';
@@ -16,7 +17,6 @@ import * as Attribute from 'ephox/sugar/api/properties/Attribute';
 import * as SelectorFind from 'ephox/sugar/api/search/SelectorFind';
 import { htmlBlockTagName, htmlInlineTagName } from 'ephox/sugar/test/Arbitrary';
 import { setupShadowRoot, withIframe, withNormalElement, withShadowElement, withShadowElementInMode } from 'ephox/sugar/test/WithHelpers';
-import fc from 'fast-check';
 
 type RootNode = SugarShadowDom.RootNode;
 

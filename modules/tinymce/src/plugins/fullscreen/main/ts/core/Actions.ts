@@ -28,7 +28,7 @@ export interface ScrollInfo {
   iframeWidth: string;
   iframeHeight: string;
   fullscreenChangeHandler: EventUnbinder;
-};
+}
 
 const DOM = DOMUtils.DOM;
 

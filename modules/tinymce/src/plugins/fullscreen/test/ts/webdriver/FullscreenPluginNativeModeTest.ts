@@ -1,9 +1,9 @@
 import { Chain, Log, NamedChain, Pipeline, RealMouse, Step, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Editor as McEditor } from '@ephox/mcagar';
+import { getFullscreenElement } from 'tinymce/plugins/fullscreen/core/NativeFullscreen';
 import FullscreenPlugin from 'tinymce/plugins/fullscreen/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
-import { getFullscreenElement } from '../../../main/ts/core/NativeFullscreen';
 
 UnitTest.asynctest('browser.tinymce.plugins.fullscreen.FullScreenPluginNativeModeTest', (success, failure) => {
   FullscreenPlugin();

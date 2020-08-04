@@ -1,9 +1,9 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
+import fc from 'fast-check';
 import * as Arr from 'ephox/katamari/api/Arr';
 import { Optional } from 'ephox/katamari/api/Optional';
 import { tOptional } from 'ephox/katamari/api/OptionalInstances';
 import * as Optionals from 'ephox/katamari/api/Optionals';
-import fc from 'fast-check';
 
 UnitTest.test('Optionals.sequence: unit tests', () => {
   Assert.eq('eq', Optional.some([]), Optionals.sequence<number>([]), tOptional());

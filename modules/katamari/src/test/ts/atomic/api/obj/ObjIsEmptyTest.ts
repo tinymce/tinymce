@@ -1,6 +1,6 @@
-import * as Obj from 'ephox/katamari/api/Obj';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import fc from 'fast-check';
-import { UnitTest, Assert } from '@ephox/bedrock-client';
+import * as Obj from 'ephox/katamari/api/Obj';
 
 UnitTest.test('Obj.isEmpty: unit tests', () => {
   Assert.eq('eq', true, Obj.isEmpty({}));

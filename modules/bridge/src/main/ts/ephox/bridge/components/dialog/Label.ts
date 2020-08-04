@@ -1,5 +1,5 @@
-import { BodyComponentSpec, BodyComponent } from './BodyComponent';
-import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
+import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
+import { BodyComponent, BodyComponentSpec } from './BodyComponent';
 
 export interface LabelSpec {
   type: 'label';

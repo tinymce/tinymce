@@ -7,8 +7,8 @@
 
 import { Cell } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
-import * as Dialog from './Dialog';
 import { SearchState } from '../core/Actions';
+import * as Dialog from './Dialog';
 
 const showDialog = function (editor: Editor, currentSearchState: Cell<SearchState>) {
   return function () {

@@ -1,4 +1,4 @@
-import { Registry } from '../../../main/ts/ephox/bridge/api/Main';
+import * as Registry from '../../../main/ts/ephox/bridge/api/Registry';
 
 const editorButtons = Registry.create();
 

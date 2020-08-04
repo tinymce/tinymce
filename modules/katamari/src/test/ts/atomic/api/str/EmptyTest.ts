@@ -1,6 +1,6 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import * as Strings from 'ephox/katamari/api/Strings';
 import fc from 'fast-check';
+import * as Strings from 'ephox/katamari/api/Strings';
 
 UnitTest.test('isEmpty: unit test', () => {
   const check = (expected, str) => {

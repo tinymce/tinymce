@@ -1,6 +1,6 @@
-import { Cell } from 'ephox/katamari/api/Cell';
-import { UnitTest, Assert } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import fc from 'fast-check';
+import { Cell } from 'ephox/katamari/api/Cell';
 
 UnitTest.test('Cell: unit test', () => {
   const single = Cell('hello world');

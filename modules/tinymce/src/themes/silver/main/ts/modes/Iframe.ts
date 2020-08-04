@@ -18,7 +18,7 @@ import * as ReadOnly from '../ReadOnly';
 import { ModeRenderInfo, RenderArgs, RenderUiComponents, RenderUiConfig } from '../Render';
 import OuterContainer from '../ui/general/OuterContainer';
 import { identifyMenus } from '../ui/menus/menubar/Integration';
-import { iframe as loadIframeSkin } from './../ui/skin/Loader';
+import { iframe as loadIframeSkin } from '../ui/skin/Loader';
 import { setToolbar } from './Toolbars';
 
 const DOM = DOMUtils.DOM;

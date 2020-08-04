@@ -1,8 +1,8 @@
-import { Browser } from './Browser';
-import { OperatingSystem } from './OperatingSystem';
 import { DeviceType } from '../detect/DeviceType';
 import { UaString } from '../detect/UaString';
 import { PlatformInfo } from '../info/PlatformInfo';
+import { Browser } from './Browser';
+import { OperatingSystem } from './OperatingSystem';
 
 export interface PlatformDetection {
   browser: Browser;

@@ -1,6 +1,6 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { Optional } from 'ephox/katamari/api/Optional';
 import fc from 'fast-check';
+import { Optional } from 'ephox/katamari/api/Optional';
 
 UnitTest.test('Optional.isSome: none is not some', () => {
   Assert.eq('none is not some', false, Optional.none().isSome());

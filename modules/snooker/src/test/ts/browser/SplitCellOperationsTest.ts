@@ -1,6 +1,6 @@
+import { UnitTest } from '@ephox/bedrock-client';
 import * as TableOperations from 'ephox/snooker/api/TableOperations';
 import * as Assertions from 'ephox/snooker/test/Assertions';
-import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.test('MergeOperationsTest', function () {
   Assertions.checkOld({ section: 0, row: 0, column: 0 },

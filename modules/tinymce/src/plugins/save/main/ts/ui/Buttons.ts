@@ -5,8 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import * as Settings from '../api/Settings';
 import Editor from 'tinymce/core/api/Editor';
+import * as Settings from '../api/Settings';
 
 const stateToggle = function (editor: Editor) {
   return function (api) {

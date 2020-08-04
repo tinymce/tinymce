@@ -1,8 +1,10 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { Arr, Fun, Optional, OptionalInstances, Optionals } from 'ephox/katamari/api/Main';
 import fc from 'fast-check';
-
-const { tOptional } = OptionalInstances;
+import * as Arr from 'ephox/katamari/api/Arr';
+import * as Fun from 'ephox/katamari/api/Fun';
+import { Optional } from 'ephox/katamari/api/Optional';
+import { tOptional } from 'ephox/katamari/api/OptionalInstances';
+import * as Optionals from 'ephox/katamari/api/Optionals';
 
 UnitTest.test('Arr.findMap of empty is none', () => {
   Assert.eq('eq', Optional.none(), Arr.findMap([], Fun.die('⊥')), tOptional());

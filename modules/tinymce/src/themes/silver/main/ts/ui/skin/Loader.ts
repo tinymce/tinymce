@@ -5,10 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { getSkinUrl, isSkinDisabled } from '../../api/Settings';
-import Editor from 'tinymce/core/api/Editor';
-import * as SkinLoaded from './SkinLoaded';
 import { Fun } from '@ephox/katamari';
+import Editor from 'tinymce/core/api/Editor';
+import { getSkinUrl, isSkinDisabled } from '../../api/Settings';
+import * as SkinLoaded from './SkinLoaded';
 
 const loadSkin = (isInline: boolean, editor: Editor) => {
   const skinUrl = getSkinUrl(editor);

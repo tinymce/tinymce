@@ -1,10 +1,10 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Testable } from '@ephox/dispute';
+import fc from 'fast-check';
 import * as Arr from 'ephox/katamari/api/Arr';
 import { Optional } from 'ephox/katamari/api/Optional';
 import { tOptional } from 'ephox/katamari/api/OptionalInstances';
 import { arbNegativeInteger } from 'ephox/katamari/test/arb/ArbDataTypes';
-import fc from 'fast-check';
 
 const { tNumber } = Testable;
 

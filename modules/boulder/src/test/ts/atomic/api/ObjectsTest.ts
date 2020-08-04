@@ -1,9 +1,8 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr, Obj, Result } from '@ephox/katamari';
+import { KAssert } from '@ephox/katamari-assertions';
 import Jsc from '@ephox/wrap-jsverify';
 import * as Objects from 'ephox/boulder/api/Objects';
-
-import { KAssert } from '@ephox/katamari-assertions';
 
 UnitTest.test('ObjectsTest', () => {
   const smallSet = Jsc.nestring;

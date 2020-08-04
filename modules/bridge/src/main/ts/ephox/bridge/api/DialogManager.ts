@@ -1,7 +1,7 @@
-import { ValueSchema, Processor } from '@ephox/boulder';
-import { createDialog, DialogSpec, Dialog, DialogData, DialogInstanceApi } from '../components/dialog/Dialog';
+import { Processor, ValueSchema } from '@ephox/boulder';
+import { createDialog, Dialog, DialogData, DialogInstanceApi, DialogSpec } from '../components/dialog/Dialog';
+import { createUrlDialog, UrlDialog, UrlDialogInstanceApi, UrlDialogSpec } from '../components/dialog/UrlDialog';
 import { createDataValidator } from '../core/DialogData';
-import { createUrlDialog, UrlDialog, UrlDialogSpec, UrlDialogInstanceApi } from '../components/dialog/UrlDialog';
 
 interface DialogManager {
   open: <T extends DialogData>(factory: DialogFactory<T>, structure: DialogSpec<T>) => DialogInstanceApi<T>;

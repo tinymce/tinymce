@@ -5,8 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import * as Dialog from './Dialog';
 import Editor from 'tinymce/core/api/Editor';
+import * as Dialog from './Dialog';
 
 const register = function (editor: Editor) {
   editor.ui.registry.addButton('code', {

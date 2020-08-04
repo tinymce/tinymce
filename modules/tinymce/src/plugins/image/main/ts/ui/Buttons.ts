@@ -6,9 +6,9 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
-import { Dialog } from './Dialog';
 import { isFigure, isImage } from '../core/ImageData';
 import * as Utils from '../core/Utils';
+import { Dialog } from './Dialog';
 
 const register = (editor: Editor) => {
   editor.ui.registry.addToggleButton('image', {

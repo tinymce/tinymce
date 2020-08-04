@@ -1,7 +1,7 @@
+import fc from 'fast-check';
 import { Future } from 'ephox/katamari/api/Future';
 import { Optional } from 'ephox/katamari/api/Optional';
 import { Result } from 'ephox/katamari/api/Result';
-import fc from 'fast-check';
 
 type Arbitrary<A> = fc.Arbitrary<A>;
 

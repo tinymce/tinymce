@@ -1,7 +1,7 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
+import fc from 'fast-check';
 import * as Fun from 'ephox/katamari/api/Fun';
 import { Optional } from 'ephox/katamari/api/Optional';
-import fc from 'fast-check';
 
 UnitTest.test('Optional.getOr', () => {
   fc.assert(fc.property(fc.integer(), (x) => {

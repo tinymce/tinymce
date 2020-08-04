@@ -10,10 +10,10 @@ import * as ErrorReporter from '../ErrorReporter';
 import { BlobInfoImagePair, ImageScanner } from '../file/ImageScanner';
 import { Uploader } from '../file/Uploader';
 import UploadStatus from '../file/UploadStatus';
+import * as Rtc from '../Rtc';
 import Editor from './Editor';
 import { BlobCache, BlobInfo } from './file/BlobCache';
 import * as Settings from './Settings';
-import * as Rtc from '../Rtc';
 
 /**
  * Handles image uploads, updates undo stack and patches over various internal functions.

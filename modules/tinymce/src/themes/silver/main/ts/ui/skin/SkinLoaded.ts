@@ -5,8 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import * as Events from '../../api/Events';
 import Editor from 'tinymce/core/api/Editor';
+import * as Events from '../../api/Events';
 
 const fireSkinLoaded = (editor: Editor) => {
   const done = () => {

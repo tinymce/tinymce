@@ -1,8 +1,6 @@
 import { Arr, Result } from '@ephox/katamari';
 import { SimpleResult } from '../alien/SimpleResult';
-import {
-  anyValue, arrOf, arrOfObj, field, FieldProcessorAdt, objOf, objOfOnly, Processor, state as valueState, value
-} from '../core/ValueProcessor';
+import { anyValue, arrOf, arrOfObj, field, FieldProcessorAdt, objOf, objOfOnly, Processor, state as valueState, value } from '../core/ValueProcessor';
 import * as FieldPresence from './FieldPresence';
 import * as ValueSchema from './ValueSchema';
 

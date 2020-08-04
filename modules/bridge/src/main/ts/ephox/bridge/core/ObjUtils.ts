@@ -1,4 +1,4 @@
-import { Obj, Arr, Type } from '@ephox/katamari';
+import { Arr, Obj, Type } from '@ephox/katamari';
 
 export const getAllObjects = (obj: any) => {
   if (Type.isObject(obj)) {

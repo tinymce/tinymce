@@ -1,9 +1,9 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
+import fc from 'fast-check';
 import * as Fun from 'ephox/katamari/api/Fun';
 import { Result } from 'ephox/katamari/api/Result';
 import { tResult } from 'ephox/katamari/api/ResultInstances';
 import { arbResultError, arbResultValue } from 'ephox/katamari/test/arb/ArbDataTypes';
-import fc from 'fast-check';
 
 UnitTest.test('Result.value: unit tests', () => {
   const s = Result.value(5);

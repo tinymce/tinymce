@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import * as Actions from '../core/Actions';
 import { Cell } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
+import * as Actions from '../core/Actions';
 
 const register = (editor: Editor, fullscreenState: Cell<Actions.ScrollInfo | null>) => {
   editor.addCommand('mceFullScreen', () => {
