@@ -1,7 +1,7 @@
 import { Assertions, Chain, Guard, Pipeline, Log, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Editor as McEditor, ApiChains, UiChains } from '@ephox/mcagar';
-import { SugarBody, Visibility } from '@ephox/sugar';
+import { Body, Visibility } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
@@ -13,7 +13,7 @@ UnitTest.asynctest('browser.tinymce/themes.silver.ShowHideTest', (success, failu
   const cWaitForVisible = UiChains.cWaitForState(Visibility.isVisible);
   const cWaitForInvisible = (label: string, selector: string) => Chain.control(
     Chain.fromIsolatedChains([
-      Chain.injectThunked(SugarBody.body),
+      Chain.injectThunked(Body.body),
       Chain.exists([
         UiFinder.cNotExists(selector),
         Chain.fromIsolatedChains([
@@ -23,7 +23,7 @@ UnitTest.asynctest('browser.tinymce/themes.silver.ShowHideTest', (success, failu
         ])
       ])
     ]),
-    Guard.tryUntil(label, 10, 10000)
+    Guard.tryUntil(label)
   );
 
   const cHide = Chain.op((editor: Editor) => editor.hide());
@@ -100,6 +100,6 @@ UnitTest.asynctest('browser.tinymce/themes.silver.ShowHideTest', (success, failu
       cShow,
       cWaitForVisible('Dialog should be back on the scren', '.tox-dialog'),
       McEditor.cRemove
-    ]),
+    ])
   ], success, failure);
 });

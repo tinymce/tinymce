@@ -8,6 +8,7 @@
 import { Attachment } from '@ephox/alloy';
 import { Cell, Throttler } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
+import { Event } from '@ephox/dom-globals';
 import { Css, DomEvent, Element, Position, ShadowDom } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import { EventUtilsEvent } from 'tinymce/core/api/dom/EventUtils';
@@ -33,7 +34,7 @@ const setupEvents = (editor: Editor, uiComponents: RenderUiComponents) => {
   const lastWindowDimensions = Cell(Position(contentWindow.innerWidth, contentWindow.innerHeight));
   const lastDocumentDimensions = Cell(Position(initialDocEle.offsetWidth, initialDocEle.offsetHeight));
 
-  const resizeWindow = (e: EventUtilsEvent<UIEvent>) => {
+  const resizeWindow = (e: EventUtilsEvent<Event>) => {
     // Check if the window dimensions have changed and if so then trigger a content resize event
     const outer = lastWindowDimensions.get();
     if (outer.left() !== contentWindow.innerWidth || outer.top() !== contentWindow.innerHeight) {
@@ -42,7 +43,7 @@ const setupEvents = (editor: Editor, uiComponents: RenderUiComponents) => {
     }
   };
 
-  const resizeDocument = (e: UIEvent) => {
+  const resizeDocument = (e: Event) => {
     // Don't use the initial doc ele, as there's a small chance it may have changed
     const docEle = editor.getDoc().documentElement;
 
@@ -60,13 +61,14 @@ const setupEvents = (editor: Editor, uiComponents: RenderUiComponents) => {
   DOM.bind(contentWindow, 'scroll', scroll);
 
   // Bind to async load events and trigger a content resize event if the size has changed
-  const elementLoad = DomEvent.capture(Element.fromDom(editor.getBody()), 'load', (e) => resizeDocument(e.raw));
+  const elementLoad = DomEvent.capture(Element.fromDom(editor.getBody()), 'load', (e) => resizeDocument(e.raw()));
 
+  const mothership = uiComponents.uiMothership.element();
   editor.on('hide', () => {
-    Css.set(uiComponents.uiMothership.element, 'display', 'none');
+    Css.set(mothership, 'display', 'none');
   });
   editor.on('show', () => {
-    Css.remove(uiComponents.uiMothership.element, 'display');
+    Css.remove(mothership, 'display');
   });
 
   editor.on('NodeChange', resizeDocument);

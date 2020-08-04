@@ -113,11 +113,11 @@ const exists = <T, U>(chains: Chain<T, U>[]): Chain<T, U> => {
       replacementDie = () => {
         index += 1;
         attempt(value, next, die, initLogs);
-      }
+      };
     }
 
-    Pipeline.runStep(value, cs[index], next, replacementDie, initLogs)
-  }
+    Pipeline.runStep(value, cs[index], next, replacementDie, initLogs);
+  };
 
   return on(attempt);
 };

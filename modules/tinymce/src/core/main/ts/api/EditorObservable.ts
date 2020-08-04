@@ -137,6 +137,11 @@ const bindEventDelegate = function (editor: Editor, eventName: string) {
   }
 };
 
+// EditorEventMap does not strictly inherit from NativeEventMap, which makes it
+// an invalid type parameter for Observable. We fix this by overriding
+// toggleNativeEvent, and deliberately excluding the native event types we
+// don't support.
+// @ts-ignore
 interface EditorObservable extends Observable<EditorEventMap> {
   bindPendingEventDelegates (): void;
   toggleNativeEvent (name: string, state: boolean);

@@ -6,7 +6,7 @@
  */
 
 import { Types } from '@ephox/bridge';
-import { Element, Event, FocusEvent, HTMLElement, Node, Range, TouchEvent, UIEvent } from '@ephox/dom-globals';
+import { Element, Event, HTMLElement, Node, Range, TouchEvent, UIEvent } from '@ephox/dom-globals';
 import { GetContentArgs, SetContentArgs } from '../content/ContentTypes';
 import { UndoLevel } from '../undo/UndoManagerTypes';
 import Editor from './Editor';
@@ -48,8 +48,8 @@ export type LoadErrorEvent = { message: string };
 export interface EditorEventMap extends Omit<NativeEventMap, 'blur' | 'focus'> {
   'activate': { relatedTarget: Editor };
   'deactivate': { relatedTarget: Editor };
-  'focus': { blurredEditor?: Editor };
-  'blur': { focusedEditor?: Editor };
+  'focus': { blurredEditor: Editor };
+  'blur': { focusedEditor: Editor };
   'resize': UIEvent;
   'scroll': UIEvent;
   'detach': { };
