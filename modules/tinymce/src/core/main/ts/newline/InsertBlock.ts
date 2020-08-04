@@ -21,6 +21,7 @@ import * as NormalizeRange from '../selection/NormalizeRange';
 import * as Zwsp from '../text/Zwsp';
 import * as InsertLi from './InsertLi';
 import * as NewLineUtils from './NewLineUtils';
+import { isWhitespaceText } from '../text/Whitespace';
 
 const trimZwsp = (fragment: DocumentFragment) => {
   Arr.each(PredicateFilter.descendants(Element.fromDom(fragment), Node.isText), (text) => {
@@ -342,7 +343,7 @@ const insert = function (editor: Editor, evt?: EditorEvent<KeyboardEvent>) {
             return false;
           }
         }
-      } else if (NodeType.isText(node) && !/^[ \t\r\n]*$/.test(node.nodeValue)) {
+      } else if (NodeType.isText(node) && !isWhitespaceText(node.nodeValue)) {
         return false;
       }
 
