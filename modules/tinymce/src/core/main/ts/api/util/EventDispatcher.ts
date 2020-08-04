@@ -7,6 +7,7 @@
 
 import { Fun, Obj } from '@ephox/katamari';
 import Tools from './Tools';
+import { MappedEvent } from './Observable';
 
 export interface NativeEventMap {
   'beforepaste': Event;
@@ -112,7 +113,7 @@ class EventDispatcher<T> {
   private readonly settings: Record<string, any>;
   private readonly scope: {};
   private readonly toggleEvent: (name: string, toggle: boolean) => void;
-  private bindings = {};
+  private bindings = {} as { [K in string]?: { func: (event: EditorEvent<MappedEvent<T, K>>) => void; once?: true }[]; };
 
   public constructor(settings?: Record<string, any>) {
     this.settings = settings || {};
@@ -130,11 +131,9 @@ class EventDispatcher<T> {
    * @example
    * instance.fire('event', {...});
    */
-  public fire <K extends keyof T>(name: K, args?: T[K]): EditorEvent<T[K]>;
-  public fire <U = any>(name: string, args?: U): EditorEvent<U>;
-  public fire(name: string, args?: any): EditorEvent<any> {
-    name = name.toLowerCase();
-    args = args || {};
+  public fire <K extends string, U extends MappedEvent<T, K>>(nameIn: K, argsIn?: U): EditorEvent<U> {
+    const name = nameIn.toLowerCase();
+    const args = argsIn || {} as any;
     args.type = name;
 
     // Setup target is there isn't one
@@ -209,12 +208,7 @@ class EventDispatcher<T> {
    *     // Callback logic
    * });
    */
-  public on <K extends keyof T>(name: K, callback: (event: EditorEvent<T[K]>) => void, prepend?: boolean, extra?: {}): this;
-  public on <U = any>(name: string, callback: (event: EditorEvent<U>) => void, prepend?: boolean, extra?: {}): this;
-  public on (name: string, callback: false, prepend?: boolean, extra?: {}): this;
-  public on(name: string, callback: false | ((event: EditorEvent<any>) => void), prepend?: boolean, extra?: {}): this {
-    let handlers, names, i;
-
+  public on <K extends string>(name: K, callback: false | ((event: EditorEvent<MappedEvent<T, K>>) => void), prepend?: boolean, extra?: {}): this {
     if (callback === false) {
       callback = Fun.never;
     }
@@ -228,11 +222,11 @@ class EventDispatcher<T> {
         Tools.extend(wrappedCallback, extra);
       }
 
-      names = name.toLowerCase().split(' ');
-      i = names.length;
+      const names = name.toLowerCase().split(' ');
+      let i = names.length;
       while (i--) {
-        name = names[i];
-        handlers = this.bindings[name];
+        const name = names[i];
+        let handlers = this.bindings[name];
         if (!handlers) {
           handlers = this.bindings[name] = [];
           this.toggleEvent(name, true);
@@ -266,18 +260,13 @@ class EventDispatcher<T> {
    * // Unbind all events
    * instance.off();
    */
-  public off <K extends keyof T>(name: K, callback: (event: EditorEvent<T[K]>) => void): this;
-  public off <U = any>(name: string, callback: (event: EditorEvent<U>) => void): this;
-  public off (name?: string): this;
-  public off(name?: string, callback?: (event: EditorEvent<any>) => void): this {
-    let i, handlers, names, hi;
-
+  public off <K extends string>(name?: K, callback?: (event: EditorEvent<MappedEvent<T, K>>) => void): this {
     if (name) {
-      names = name.toLowerCase().split(' ');
-      i = names.length;
+      const names = name.toLowerCase().split(' ');
+      let i = names.length;
       while (i--) {
-        name = names[i];
-        handlers = this.bindings[name];
+        const name = names[i];
+        let handlers = this.bindings[name];
 
         // Unbind all handlers
         if (!name) {
@@ -295,7 +284,7 @@ class EventDispatcher<T> {
             handlers.length = 0;
           } else {
             // Unbind specific ones
-            hi = handlers.length;
+            let hi = handlers.length;
             while (hi--) {
               if (handlers[hi].func === callback) {
                 handlers = handlers.slice(0, hi).concat(handlers.slice(hi + 1));
@@ -335,9 +324,7 @@ class EventDispatcher<T> {
    *     // Callback logic
    * });
    */
-  public once <K extends keyof T>(name: K, callback: (event: EditorEvent<T[K]>) => void, prepend?: boolean): this;
-  public once <U = any>(name: string, callback: (event: EditorEvent<U>) => void, prepend?: boolean): this;
-  public once(name: string, callback: (event: EditorEvent<any>) => void, prepend?: boolean): this {
+  public once <K extends string>(name: K, callback: (event: EditorEvent<MappedEvent<T, K>>) => void, prepend?: boolean): this {
     return this.on(name, callback, prepend, { once: true });
   }
 

@@ -7,10 +7,10 @@
 
 import EventDispatcher, { EditorEvent } from './EventDispatcher';
 
-type MappedEvent<T, K extends string> = K extends keyof T ? T[K] : any;
+export type MappedEvent<T, K extends string> = K extends keyof T ? T[K] : any;
 
 interface Observable<T> {
-  fire <K extends string>(name: K, args?: MappedEvent<T, K>, bubble?: boolean): EditorEvent<MappedEvent<T, K>>;
+  fire <K extends string, U extends MappedEvent<T, K>>(name: K, args?: U, bubble?: boolean): EditorEvent<U>;
   on <K extends string>(name: K, callback: (event: EditorEvent<MappedEvent<T, K>>) => void, prepend?: boolean): EventDispatcher<T>;
   off <K extends string>(name?: K, callback?: (event: EditorEvent<MappedEvent<T, K>>) => void): EventDispatcher<T>;
   once <K extends string>(name: K, callback: (event: EditorEvent<MappedEvent<T, K>>) => void): EventDispatcher<T>;

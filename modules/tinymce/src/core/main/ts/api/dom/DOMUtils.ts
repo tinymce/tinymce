@@ -18,6 +18,7 @@ import Schema from '../html/Schema';
 import Styles, { StyleMap } from '../html/Styles';
 import { URLConverter } from '../SettingsTypes';
 import Tools from '../util/Tools';
+import { MappedEvent } from '../util/Observable';
 import DomQuery, { DomQueryConstructor } from './DomQuery';
 import EventUtils, { EventUtilsCallback } from './EventUtils';
 import Sizzle from './Sizzle';
@@ -258,10 +259,8 @@ interface DOMUtils {
   nodeIndex (node: Node, normalized?: boolean): number;
   split <T extends Node>(parentElm: Node, splitElm: Node, replacementElm: T): T;
   split <T extends Node>(parentElm: Node, splitElm: T): T;
-  bind <K extends keyof HTMLElementEventMap, T extends Target>(target: T, name: K, func: EventUtilsCallback<HTMLElementEventMap[K]>, scope?: any): T extends [] ? EventUtilsCallback<HTMLElementEventMap[K]>[] : EventUtilsCallback<HTMLElementEventMap[K]>;
-  bind <E = any, T extends Target = Target>(target: T, name: string, func: EventUtilsCallback<E>, scope?: any): T extends [] ? EventUtilsCallback<E>[] : EventUtilsCallback<E>;
-  unbind <K extends keyof HTMLElementEventMap, T extends Target = Target>(target: T, name: K, func: EventUtilsCallback<HTMLElementEventMap[K]>): T extends [] ? EventUtils[] : EventUtils;
-  unbind <E = any, T extends Target = Target>(target: T, name?: string, func?: EventUtilsCallback<E>): T extends [] ? EventUtils[] : EventUtils;
+  bind <K extends string, T extends Target, F extends EventUtilsCallback<MappedEvent<HTMLElementEventMap, K>>>(target: T, name: K, func: F, scope?: any): T extends [] ? F[] : F;
+  unbind <K extends string, T extends Target>(target: T, name?: K, func?: EventUtilsCallback<MappedEvent<HTMLElementEventMap, K>>): T extends [] ? EventUtils[] : EventUtils;
   fire (target: Node | Window, name: string, evt?: {}): EventUtils;
   getContentEditable (node: Node): string | null;
   getContentEditableParent (node: Node): string | null;
@@ -1090,43 +1089,45 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     }
   };
 
-  const bind = <T = any>(target: Target, name: string, func: EventUtilsCallback<T>, scope?: any): EventUtilsCallback<T>[] | EventUtilsCallback<T> => {
-    if (Tools.isArray(target)) {
+  const bind = <
+    K extends string,
+    T extends Target,
+    F extends EventUtilsCallback<MappedEvent<HTMLElementEventMap, K>>
+  >(target: T, name: string, func: F, scope?: any): T extends [] ? F[] : F => {
+    if (Tools.isArray<Node | Window>(target)) {
       let i = target.length;
-      const rv = [];
+      const rv = [] as F[];
 
       while (i--) {
         rv[i] = bind(target[i], name, func, scope);
       }
 
-      return rv;
+      return rv as T extends [] ? F[] : F;
     }
 
     // Collect all window/document events bound by editor instance
-    if (settings.collect && (target === doc || (target as any) === win)) {
+    if (settings.collect && ((target as any) === doc || (target as any) === win)) {
       boundEvents.push([ target, name, func, scope ]);
     }
 
-    return events.bind(target, name, func, scope || self);
+    return events.bind(target, name, func, scope || self) as T extends [] ? F[] : F;
   };
 
-  const unbind = <T = any>(target: Target, name?: string, func?: EventUtilsCallback<T>): EventUtils | EventUtils[] => {
-    let i;
-
-    if (Tools.isArray(target)) {
-      i = target.length;
-      const rv = [];
+  const unbind = <K extends string, T extends Target>(target: T, name: K, func: EventUtilsCallback<MappedEvent<HTMLElementEventMap, K>>): T extends [] ? EventUtils[] : EventUtils => {
+    if (Tools.isArray<Node | Window>(target)) {
+      let i = target.length;
+      const rv = [] as EventUtils[];
 
       while (i--) {
         rv[i] = unbind(target[i], name, func);
       }
 
-      return rv;
+      return rv as T extends [] ? EventUtils[] : EventUtils;
     }
 
     // Remove any bound events matching the input
-    if (boundEvents.length > 0 && (target === doc || (target as any) === win)) {
-      i = boundEvents.length;
+    if (boundEvents.length > 0 && ((target as any) === doc || (target as any) === win)) {
+      let i = boundEvents.length;
 
       while (i--) {
         const item = boundEvents[i];
@@ -1137,7 +1138,7 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
       }
     }
 
-    return events.unbind(target, name, func);
+    return events.unbind(target, name, func) as T extends [] ? EventUtils[] : EventUtils;
   };
 
   const fire = (target: Node | Window, name: string, evt?) => events.fire(target, name, evt);
