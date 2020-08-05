@@ -72,8 +72,10 @@ const mergeSiblingsNodes = (dom: DOMUtils, prev: Node, next: Node) => {
 const mergeSiblings = (dom: DOMUtils, format, vars: FormatVars, node: Node) => {
   // Merge next and previous siblings if they are similar <b>text</b><b>text</b> becomes <b>texttext</b>
   if (node && format.merge_siblings !== false) {
-    node = mergeSiblingsNodes(dom, FormatUtils.getNonWhiteSpaceSibling(node), node);
-    node = mergeSiblingsNodes(dom, node, FormatUtils.getNonWhiteSpaceSibling(node, true));
+    // Previous sibling
+    const newNode = mergeSiblingsNodes(dom, FormatUtils.getNonWhiteSpaceSibling(node), node);
+    // Next sibling
+    mergeSiblingsNodes(dom, newNode, FormatUtils.getNonWhiteSpaceSibling(newNode, true));
   }
 };
 
