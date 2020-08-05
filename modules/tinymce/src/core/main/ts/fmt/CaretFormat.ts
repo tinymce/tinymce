@@ -6,7 +6,7 @@
  */
 
 import { Document, Node, Range } from '@ephox/dom-globals';
-import { Arr, Fun, Obj, Option } from '@ephox/katamari';
+import { Arr, Fun, Obj, Option, Strings } from '@ephox/katamari';
 import { Attr, Element, Insert, Node as SugarNode, Remove } from '@ephox/sugar';
 import TreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
@@ -176,7 +176,7 @@ const cleanFormatNode = (editor: Editor, caretContainer: Node, formatNode: Node,
   const dom = editor.dom;
 
   // Find all formats present on the format node
-  const validFormats = Arr.filter(Obj.keys(formatter.get()), (formatName) => formatName !== 'removeformat' && formatName !== name);
+  const validFormats = Arr.filter(Obj.keys(formatter.get()), (formatName) => formatName !== name && !Strings.contains(formatName, 'removeformat'));
   const matchedFormats = MatchFormat.matchAllOnNode(editor, formatNode, validFormats);
   // Filter out any matched formats that are 'visually' equivalent to the 'name' format since they are not unique formats on the node
   const uniqueFormats = Arr.filter(matchedFormats, (fmtName) => !FormatUtils.areSimilarFormats(editor, fmtName, name));
