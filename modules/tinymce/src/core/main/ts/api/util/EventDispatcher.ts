@@ -108,7 +108,7 @@ const nativeEvents = Tools.makeMap(
   ' '
 );
 
-class EventDispatcher<T extends NativeEventMap> {
+class EventDispatcher<T> {
   /**
    * Returns true/false if the specified event name is a native browser event or not.
    *
