@@ -7,7 +7,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.TrimNodeTest', function (success, f
 
   const dom = DOMUtils(document, {});
 
-  const sTestTrim = function (inputHtml, expectedTrimmedHtml) {
+  const sTestTrim = function (inputHtml: string, expectedTrimmedHtml: string) {
     return Step.sync(function () {
       const elm = document.createElement('div');
       elm.innerHTML = inputHtml;
@@ -31,6 +31,9 @@ UnitTest.asynctest('browser.tinymce.core.dom.TrimNodeTest', function (success, f
     sTestTrim('<p><span>x</span>&nbsp;<span>x</span></p>', '<p><span>x</span>&nbsp;<span>x</span></p>'),
     sTestTrim('<p><span data-mce-type="bookmark"></span> y</p>', '<p><span data-mce-type="bookmark"></span> y</p>'),
     sTestTrim('<p>a <span>b <span data-mce-type="bookmark"></span> c</span></p>', '<p>a <span>b <span data-mce-type="bookmark"></span> c</span></p>'),
+    sTestTrim('<p><strong><span>x</span>&nbsp;</strong></p>', '<p><strong><span>x</span>&nbsp;</strong></p>'),
+    sTestTrim('<p><a id="anchor"></a><span>x</span></p>', '<p><a id="anchor"></a><span>x</span></p>'),
+    sTestTrim('<p><br data-mce-bogus="1"></p>', '<p><br data-mce-bogus="1"></p>'),
     sTestTrimDocumentNode
   ], function () {
     success();

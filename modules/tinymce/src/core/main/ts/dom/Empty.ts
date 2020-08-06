@@ -22,7 +22,7 @@ const isWhitespace = function (rootNode: Node, node: Node) {
 };
 
 const isNamedAnchor = function (node: Node) {
-  return NodeType.isElement(node) && node.nodeName === 'A' && node.hasAttribute('name');
+  return NodeType.isElement(node) && node.nodeName === 'A' && !node.hasAttribute('href') && (node.hasAttribute('name') || node.hasAttribute('id'));
 };
 
 const isContent = function (rootNode: Node, node: Node) {
