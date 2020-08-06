@@ -2,7 +2,7 @@ import { ApproxStructure, Assertions, Chain, Guard, Mouse, NamedChain, Pipeline,
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { HTMLElement } from '@ephox/dom-globals';
 import { Editor as McEditor } from '@ephox/mcagar';
-import { Body, Compare, Element, Focus, Traverse } from '@ephox/sugar';
+import { Body, Element, Focus, Traverse } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { NotificationApi } from 'tinymce/core/api/NotificationManager';
@@ -29,7 +29,7 @@ UnitTest.asynctest('NotificationManagerImpl test', (success, failure) => {
   const cAssertFocusable = Chain.op((notification: NotificationApi) => {
     const elm = Element.fromDom(notification.getEl());
     Focus.focus(elm);
-    const notificationFocused = Focus.active().exists((focusedElm) => Compare.eq(elm, focusedElm));
+    const notificationFocused = Focus.search(elm).isSome();
     Assert.eq('Notification should be focused', true, notificationFocused);
   });
 
