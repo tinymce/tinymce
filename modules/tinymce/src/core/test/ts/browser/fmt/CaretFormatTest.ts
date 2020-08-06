@@ -534,6 +534,16 @@ UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function (success
   }, {
     plugins: '',
     toolbar: '',
-    base_url: '/project/tinymce/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce',
+    formats: {
+      formatpainter_removeformat: [
+        {
+          selector: 'b,strong,em,i,font,u,strike,sub,sup,dfn,code,samp,kbd,var,cite,mark,q,del,ins',
+          remove: 'all', split: true, expand: false, block_expand: true, deep: true
+        },
+        { selector: 'span', attributes: [ 'style', 'class' ], remove: 'empty', split: true, expand: false, deep: true },
+        { selector: '*:not(tr,td,th,table)', attributes: [ 'style', 'class' ], split: false, expand: false, deep: true }
+      ]
+    }
   }, success, failure);
 });
