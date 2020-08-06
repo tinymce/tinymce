@@ -7,7 +7,8 @@
 
 import { Fun, Obj } from '@ephox/katamari';
 import Tools from './Tools';
-import { MappedEvent } from './Observable';
+
+export type MappedEvent<T, K extends string> = K extends keyof T ? T[K] : any;
 
 export interface NativeEventMap {
   'beforepaste': Event;
@@ -97,6 +98,15 @@ const nativeEvents = Tools.makeMap(
   ' '
 );
 
+interface Binding<T, K extends string> {
+  func: (event: EditorEvent<MappedEvent<T, K>>) => void;
+  once?: true;
+}
+
+type Bindings<T> = {
+  [K in string]?: Binding<T, K>[];
+}
+
 class EventDispatcher<T> {
   /**
    * Returns true/false if the specified event name is a native browser event or not.
@@ -113,7 +123,7 @@ class EventDispatcher<T> {
   private readonly settings: Record<string, any>;
   private readonly scope: {};
   private readonly toggleEvent: (name: string, toggle: boolean) => void;
-  private bindings = {} as { [K in string]?: { func: (event: EditorEvent<MappedEvent<T, K>>) => void; once?: true }[]; };
+  private bindings: Bindings<T> = {};
 
   public constructor(settings?: Record<string, any>) {
     this.settings = settings || {};
@@ -225,11 +235,11 @@ class EventDispatcher<T> {
       const names = name.toLowerCase().split(' ');
       let i = names.length;
       while (i--) {
-        const name = names[i];
-        let handlers = this.bindings[name];
+        const currentName = names[i];
+        let handlers = this.bindings[currentName];
         if (!handlers) {
-          handlers = this.bindings[name] = [];
-          this.toggleEvent(name, true);
+          handlers = this.bindings[currentName] = [];
+          this.toggleEvent(currentName, true);
         }
 
         if (prepend) {
@@ -265,11 +275,11 @@ class EventDispatcher<T> {
       const names = name.toLowerCase().split(' ');
       let i = names.length;
       while (i--) {
-        const name = names[i];
-        let handlers = this.bindings[name];
+        const currentName = names[i];
+        let handlers = this.bindings[currentName];
 
         // Unbind all handlers
-        if (!name) {
+        if (!currentName) {
           Obj.each(this.bindings, (_value, bindingName) => {
             this.toggleEvent(bindingName, false);
             delete this.bindings[bindingName];
@@ -288,14 +298,14 @@ class EventDispatcher<T> {
             while (hi--) {
               if (handlers[hi].func === callback) {
                 handlers = handlers.slice(0, hi).concat(handlers.slice(hi + 1));
-                this.bindings[name] = handlers;
+                this.bindings[currentName] = handlers;
               }
             }
           }
 
           if (!handlers.length) {
             this.toggleEvent(name, false);
-            delete this.bindings[name];
+            delete this.bindings[currentName];
           }
         }
       }

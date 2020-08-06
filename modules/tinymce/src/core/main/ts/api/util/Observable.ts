@@ -5,9 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import EventDispatcher, { EditorEvent } from './EventDispatcher';
-
-export type MappedEvent<T, K extends string> = K extends keyof T ? T[K] : any;
+import EventDispatcher, { EditorEvent, MappedEvent } from './EventDispatcher';
 
 interface Observable<T> {
   fire <K extends string, U extends MappedEvent<T, K>>(name: K, args?: U, bubble?: boolean): EditorEvent<U>;

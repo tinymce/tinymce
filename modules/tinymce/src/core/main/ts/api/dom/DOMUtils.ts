@@ -18,7 +18,7 @@ import Schema from '../html/Schema';
 import Styles, { StyleMap } from '../html/Styles';
 import { URLConverter } from '../SettingsTypes';
 import Tools from '../util/Tools';
-import { MappedEvent } from '../util/Observable';
+import { MappedEvent } from '../util/EventDispatcher';
 import DomQuery, { DomQueryConstructor } from './DomQuery';
 import EventUtils, { EventUtilsCallback } from './EventUtils';
 import Sizzle from './Sizzle';
@@ -170,6 +170,7 @@ export interface DOMUtilsSettings {
 export type Target = Node | Window | Array<Node | Window>;
 export type RunArguments<T extends Node = Node> = string | T | Array<string | T>;
 export type BoundEvent = [ Target, string, EventUtilsCallback<any>, any ];
+type Callback<K extends string> = EventUtilsCallback<MappedEvent<HTMLElementEventMap, K>>;
 
 interface DOMUtils {
   doc: Document;
@@ -259,7 +260,7 @@ interface DOMUtils {
   nodeIndex (node: Node, normalized?: boolean): number;
   split <T extends Node>(parentElm: Node, splitElm: Node, replacementElm: T): T;
   split <T extends Node>(parentElm: Node, splitElm: T): T;
-  bind <K extends string, T extends Target, F extends EventUtilsCallback<MappedEvent<HTMLElementEventMap, K>>>(target: T, name: K, func: F, scope?: any): T extends [] ? F[] : F;
+  bind <K extends string>(target: Target, name: K, func: Callback<K>, scope?: any): (typeof target) extends [] ? Callback<K>[] : Callback<K>;
   unbind <K extends string, T extends Target>(target: T, name?: K, func?: EventUtilsCallback<MappedEvent<HTMLElementEventMap, K>>): T extends [] ? EventUtils[] : EventUtils;
   fire (target: Node | Window, name: string, evt?: {}): EventUtils;
   getContentEditable (node: Node): string | null;
@@ -1089,20 +1090,16 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     }
   };
 
-  const bind = <
-    K extends string,
-    T extends Target,
-    F extends EventUtilsCallback<MappedEvent<HTMLElementEventMap, K>>
-  >(target: T, name: string, func: F, scope?: any): T extends [] ? F[] : F => {
+  const bind = <T extends Target, K extends string>(target: T, name: string, func: Callback<K>, scope?: any): T extends [] ? Callback<K>[] : Callback<K> => {
     if (Tools.isArray<Node | Window>(target)) {
       let i = target.length;
-      const rv = [] as F[];
+      const rv: Callback<K>[] = [];
 
       while (i--) {
         rv[i] = bind(target[i], name, func, scope);
       }
 
-      return rv as T extends [] ? F[] : F;
+      return rv as T extends [] ? Callback<K>[] : Callback<K>;
     }
 
     // Collect all window/document events bound by editor instance
@@ -1110,7 +1107,8 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
       boundEvents.push([ target, name, func, scope ]);
     }
 
-    return events.bind(target, name, func, scope || self) as T extends [] ? F[] : F;
+    const output: Callback<K> = events.bind(target, name, func, scope || self);
+    return output as T extends [] ? Callback<K>[] : Callback<K>;
   };
 
   const unbind = <K extends string, T extends Target>(target: T, name: K, func: EventUtilsCallback<MappedEvent<HTMLElementEventMap, K>>): T extends [] ? EventUtils[] : EventUtils => {
