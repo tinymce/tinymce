@@ -16,7 +16,7 @@ const fireResizeEditor = (editor: Editor) => editor.fire('ResizeEditor');
 
 const fireBeforeRenderUI = (editor: Editor) => editor.fire('BeforeRenderUI');
 
-const fireResizeContent = (editor: Editor, e: Event) => editor.fire('ResizeContent', e);
+const fireResizeContent = (editor: Editor, e?: Event) => editor.fire('ResizeContent', e);
 
 const fireScrollContent = (editor: Editor, e: Event) => editor.fire('ScrollContent', e);
 

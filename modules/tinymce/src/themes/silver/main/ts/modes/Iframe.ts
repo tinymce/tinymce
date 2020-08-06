@@ -34,16 +34,16 @@ const setupEvents = (editor: Editor, uiComponents: RenderUiComponents) => {
   const lastWindowDimensions = Cell(Position(contentWindow.innerWidth, contentWindow.innerHeight));
   const lastDocumentDimensions = Cell(Position(initialDocEle.offsetWidth, initialDocEle.offsetHeight));
 
-  const resizeWindow = (e: EventUtilsEvent<Event>) => {
+  const resizeWindow = () => {
     // Check if the window dimensions have changed and if so then trigger a content resize event
     const outer = lastWindowDimensions.get();
     if (outer.left() !== contentWindow.innerWidth || outer.top() !== contentWindow.innerHeight) {
       lastWindowDimensions.set(Position(contentWindow.innerWidth, contentWindow.innerHeight));
-      Events.fireResizeContent(editor, e);
+      Events.fireResizeContent(editor);
     }
   };
 
-  const resizeDocument = (e: Event) => {
+  const resizeDocument = () => {
     // Don't use the initial doc ele, as there's a small chance it may have changed
     const docEle = editor.getDoc().documentElement;
 
@@ -51,7 +51,7 @@ const setupEvents = (editor: Editor, uiComponents: RenderUiComponents) => {
     const inner = lastDocumentDimensions.get();
     if (inner.left() !== docEle.offsetWidth || inner.top() !== docEle.offsetHeight) {
       lastDocumentDimensions.set(Position(docEle.offsetWidth, docEle.offsetHeight));
-      Events.fireResizeContent(editor, e);
+      Events.fireResizeContent(editor);
     }
   };
 
@@ -61,7 +61,7 @@ const setupEvents = (editor: Editor, uiComponents: RenderUiComponents) => {
   DOM.bind(contentWindow, 'scroll', scroll);
 
   // Bind to async load events and trigger a content resize event if the size has changed
-  const elementLoad = DomEvent.capture(Element.fromDom(editor.getBody()), 'load', (e) => resizeDocument(e.raw()));
+  const elementLoad = DomEvent.capture(Element.fromDom(editor.getBody()), 'load', resizeDocument);
 
   const mothership = uiComponents.uiMothership.element();
   editor.on('hide', () => {
