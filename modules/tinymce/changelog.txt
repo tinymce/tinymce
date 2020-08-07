@@ -22,6 +22,7 @@ Version 5.5.0 (TBD)
 Version 5.4.2 (TBD)
     Fixed clicking on notifications causing inline editors to hide #TINY-6058
     Fixed a regression where the `anchor_top` and `anchor_bottom` settings weren't working when set to `false` #TINY-6256
+    Fixed an exception thrown when removing inline formats that contained additional styles or classes #TINY-6288
     Fixed an exception thrown when positioning the context toolbar on Internet Explorer 11 in some edge cases #TINY-6271
     Fixed inline formats not removed when more than one `removeformat` format rule existed #TINY-6216
     Fixed list toolbar buttons not showing as active when a list is selected #TINY-6286
