@@ -57,9 +57,17 @@ UnitTest.asynctest('browser.tinymce.plugins.anchor.AnchorAllowHtmlTest', (succes
         sAddAnchor(tinyApis, tinyUi, 'abc'),
         sAssertContentStructure('abc', true, 'abc'),
         // Latest html: <p><a id="abc">abc</a></p>
-        tinyApis.sSetSelection([ 0, 0 ], 1, [ 0, 0 ], 1),
+        tinyApis.sSetSelection([ 0, 0, 0 ], 1, [ 0, 0, 0 ], 1),
         sAddAnchor(tinyApis, tinyUi, 'def'),
         sAssertContentStructure('def', true, 'abc')
+      ]),
+      Log.stepsAsStep('TINY-6236', 'Anchor: Check bare anchor can be converted to a named anchor', [
+        tinyApis.sSetContent('<p><a>abc</a></p>'),
+        tinyApis.sFocus(),
+        tinyApis.sSetCursor([ 0, 0, 0 ], 1),
+        sAddAnchor(tinyApis, tinyUi, 'abc'),
+        sAssertAnchorPresence(tinyApis, 1),
+        sAssertContentStructure('abc', true, 'abc')
       ]),
       Log.stepsAsStep('TINY-6236', 'Anchor: Select over existing anchor and insert new anchor, check existing anchor is removed and new anchor is inserted', [
         // Test for empty anchor

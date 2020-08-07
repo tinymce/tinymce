@@ -18,19 +18,24 @@ UnitTest.asynctest('browser.tinymce.plugins.anchor.AnchorFormatsTest', (success,
     });
 
     Pipeline.async({}, [
-      Log.stepsAsStep('TINY-6236', 'Anchor: Check that namedAnchor format matches on named anchors', [
+      Log.stepsAsStep('TINY-6236', 'Anchor: Check that namedAnchor format matches on empty named anchor', [
         tinyApis.sSetContent('<p><a id="abc"></a></p>'),
-        tinyApis.sSelect('a.mce-item-anchor', []),
-        sTestMatchFormat(editor, true),
+        tinyApis.sSelect('a', []),
+        sTestMatchFormat(editor, true)
+      ]),
+      Log.stepsAsStep('TINY-6236', 'Anchor: Check that namedAnchor format matches on non-empty named anchor', [
         tinyApis.sSetContent('<p><a id="abc">abc</a></p>'),
         tinyApis.sSetSelection([ 0, 0, 0 ], 1, [ 0, 0, 0 ], 1),
-        sTestMatchFormat(editor, true),
-        tinyApis.sSetSelection([ 0, 0, 0 ], 0, [ 0, 0, 0 ], 3),
         sTestMatchFormat(editor, true)
       ]),
       Log.stepsAsStep('TINY-6236', 'Anchor: Check that namedAnchor format does not match on normal text', [
         tinyApis.sSetContent('<p>abc</p>'),
         tinyApis.sSetSelection([ 0, 0 ], 1, [ 0, 0 ], 1),
+        sTestMatchFormat(editor, false)
+      ]),
+      Log.stepsAsStep('TINY-6236', 'Anchor: Check that namedAnchor format does not match on bare anchor', [
+        tinyApis.sSetContent('<p><a>abc</a></p>'),
+        tinyApis.sSetSelection([ 0, 0, 0 ], 1, [ 0, 0, 0 ], 1),
         sTestMatchFormat(editor, false)
       ]),
       Log.stepsAsStep('TINY-6236', 'Anchor: Check that namedAnchor format does not match on normal link', [

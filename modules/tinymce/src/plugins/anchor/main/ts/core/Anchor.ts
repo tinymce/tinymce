@@ -62,6 +62,7 @@ const createAnchor = (editor: Editor, id: string): void => {
 const updateAnchor = (editor: Editor, id: string, anchorElement: HTMLAnchorElement): void => {
   anchorElement.removeAttribute('name');
   anchorElement.id = id;
+  editor.addVisual(); // Need to add visual classes to anchors if required
   editor.undoManager.add();
 };
 

@@ -45,6 +45,15 @@ UnitTest.asynctest('browser.tinymce.plugins.anchor.AnchorSanityTest', (success, 
         sAddAnchor(tinyApis, tinyUi, 'def'),
         sAssertAnchorPresence(tinyApis, 2),
         tinyApis.sAssertContent('<p><a id="abc"></a><a id="def"></a></p>')
+      ]),
+      Log.stepsAsStep('TINY-6236', 'Anchor: Check bare anchor can be converted to a named anchor', [
+        tinyApis.sSetContent('<p><a>abc</a></p>'),
+        tinyApis.sFocus(),
+        tinyApis.sSetCursor([ 0, 0, 0 ], 1),
+        sAddAnchor(tinyApis, tinyUi, 'abc'),
+        sAssertAnchorPresence(tinyApis, 1),
+        // Text is shifted outside anchor since 'allow_html_in_named_anchor' setting is false by default
+        tinyApis.sAssertContent('<p><a id="abc"></a>abc</p>')
       ])
     ], onSuccess, onFailure);
   }, {

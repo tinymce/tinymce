@@ -9,7 +9,7 @@ import { Node } from '@ephox/dom-globals';
 import Editor from 'tinymce/core/api/Editor';
 import * as Utils from './Utils';
 
-const registerFormat = (editor: Editor) => {
+const registerFormats = (editor: Editor) => {
   editor.formatter.register('namedAnchor', {
     inline: 'a',
     selector: Utils.namedAnchorSelector,
@@ -26,5 +26,5 @@ const registerFormat = (editor: Editor) => {
 };
 
 export {
-  registerFormat
+  registerFormats
 };
