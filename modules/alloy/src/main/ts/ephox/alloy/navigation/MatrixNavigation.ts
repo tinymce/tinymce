@@ -1,4 +1,4 @@
-import { Num, Option } from '@ephox/katamari';
+import { Num, Optional } from '@ephox/katamari';
 
 export type MatrixNavigationOutcome<A> = {
   readonly rowIndex: number;
@@ -6,9 +6,9 @@ export type MatrixNavigationOutcome<A> = {
   readonly cell: A;
 };
 
-export type MatrixNavigationFunc<A> = (matrix: A[][], startRow: number, startCol: number) => Option<MatrixNavigationOutcome<A>>;
+export type MatrixNavigationFunc<A> = (matrix: A[][], startRow: number, startCol: number) => Optional<MatrixNavigationOutcome<A>>;
 
-const toCell = <A>(matrix: A[][], rowIndex: number, columnIndex: number): Option<MatrixNavigationOutcome<A>> => Option.from(matrix[rowIndex]).bind((row) => Option.from(row[columnIndex]).map((cell) => ({
+const toCell = <A>(matrix: A[][], rowIndex: number, columnIndex: number): Optional<MatrixNavigationOutcome<A>> => Optional.from(matrix[rowIndex]).bind((row) => Optional.from(row[columnIndex]).map((cell) => ({
   rowIndex,
   columnIndex,
   cell

@@ -1,11 +1,11 @@
-import { Adt, Fun, Option } from '@ephox/katamari';
+import { Adt, Fun, Optional } from '@ephox/katamari';
 import { DomGather } from '@ephox/phoenix';
 import { DomStructure } from '@ephox/robin';
-import { Node, PredicateFind, Element } from '@ephox/sugar';
-import * as Carets from './Carets';
-import * as Rectangles from './Rectangles';
+import { PredicateFind, SugarElement, SugarNode } from '@ephox/sugar';
 import { WindowBridge } from '../api/WindowBridge';
 import { Situs } from '../selection/Situs';
+import * as Carets from './Carets';
+import * as Rectangles from './Rectangles';
 
 type Carets = Carets.Carets;
 
@@ -26,9 +26,9 @@ export interface Retries {
 
 export interface CaretMovement {
   point: (caret: Carets) => number;
-  adjuster: (bridge: WindowBridge, element: Element, guessBox: Carets, original: Carets, caret: Carets) => Retries;
+  adjuster: (bridge: WindowBridge, element: SugarElement, guessBox: Carets, original: Carets, caret: Carets) => Retries;
   move: (caret: Carets, amount: number) => Carets;
-  gather: (element: Element, isRoot: (e: Element) => boolean) => Option<Element>;
+  gather: (element: SugarElement, isRoot: (e: SugarElement) => boolean) => Optional<SugarElement>;
 }
 
 const JUMP_SIZE = 5;
@@ -47,8 +47,8 @@ const isOutside = function (caret: Carets, box: Carets): boolean {
 };
 
 // Find the block and determine whether or not that block is outside. If it is outside, move up/down and right.
-const inOutsideBlock = function (bridge: WindowBridge, element: Element, caret: Carets) {
-  return PredicateFind.closest(element, DomStructure.isBlock).fold(Fun.constant(false), function (cell) {
+const inOutsideBlock = function (bridge: WindowBridge, element: SugarElement, caret: Carets) {
+  return PredicateFind.closest(element, DomStructure.isBlock).fold(Fun.never, function (cell) {
     return Rectangles.getEntireBox(bridge, cell).exists(function (box) {
       return isOutside(caret, box);
     });
@@ -75,7 +75,7 @@ const inOutsideBlock = function (bridge: WindowBridge, element: Element, caret: 
  *    because the guess is GOOD.
  */
 
-const adjustDown = function (bridge: WindowBridge, element: Element, guessBox: Carets, original: Carets, caret: Carets): Retries {
+const adjustDown = function (bridge: WindowBridge, element: SugarElement, guessBox: Carets, original: Carets, caret: Carets): Retries {
   const lowerCaret = Carets.moveDown(caret, JUMP_SIZE);
   if (Math.abs(guessBox.bottom - original.bottom) < 1) {
     return adt.retry(lowerCaret);
@@ -88,7 +88,7 @@ const adjustDown = function (bridge: WindowBridge, element: Element, guessBox: C
   }
 };
 
-const adjustUp = function (bridge: WindowBridge, element: Element, guessBox: Carets, original: Carets, caret: Carets): Retries {
+const adjustUp = function (bridge: WindowBridge, element: SugarElement, guessBox: Carets, original: Carets, caret: Carets): Retries {
   const higherCaret = Carets.moveUp(caret, JUMP_SIZE);
   if (Math.abs(guessBox.top - original.top) < 1) {
     return adt.retry(higherCaret);
@@ -117,7 +117,7 @@ const downMovement: CaretMovement = {
 
 const isAtTable = function (bridge: WindowBridge, x: number, y: number): boolean {
   return bridge.elementFromPoint(x, y).filter(function (elm) {
-    return Node.name(elm) === 'table';
+    return SugarNode.name(elm) === 'table';
   }).isSome();
 };
 
@@ -125,50 +125,50 @@ const adjustForTable = function (bridge: WindowBridge, movement: CaretMovement, 
   return adjustTil(bridge, movement, original, movement.move(caret, JUMP_SIZE), numRetries);
 };
 
-const adjustTil = function (bridge: WindowBridge, movement: CaretMovement, original: Carets, caret: Carets, numRetries: number): Option<Carets> {
+const adjustTil = function (bridge: WindowBridge, movement: CaretMovement, original: Carets, caret: Carets, numRetries: number): Optional<Carets> {
   if (numRetries === 0) {
-    return Option.some(caret);
+    return Optional.some(caret);
   }
   if (isAtTable(bridge, caret.left, movement.point(caret))) {
     return adjustForTable(bridge, movement, original, caret, numRetries - 1);
   }
 
   return bridge.situsFromPoint(caret.left, movement.point(caret)).bind(function (guess) {
-    return guess.start().fold<Option<Carets>>(Option.none, function (element) {
+    return guess.start.fold<Optional<Carets>>(Optional.none, function (element) {
       return Rectangles.getEntireBox(bridge, element).bind(function (guessBox) {
-        return movement.adjuster(bridge, element, guessBox, original, caret).fold<Option<Carets>>(
-          Option.none,
+        return movement.adjuster(bridge, element, guessBox, original, caret).fold<Optional<Carets>>(
+          Optional.none,
           function (newCaret) {
             return adjustTil(bridge, movement, original, newCaret, numRetries - 1);
           }
         );
       }).orThunk(function () {
-        return Option.some(caret);
+        return Optional.some(caret);
       });
-    }, Option.none);
+    }, Optional.none);
   });
 };
 
-const ieTryDown = function (bridge: WindowBridge, caret: Carets): Option<Situs> {
+const ieTryDown = function (bridge: WindowBridge, caret: Carets): Optional<Situs> {
   return bridge.situsFromPoint(caret.left, caret.bottom + JUMP_SIZE);
 };
 
-const ieTryUp = function (bridge: WindowBridge, caret: Carets): Option<Situs> {
+const ieTryUp = function (bridge: WindowBridge, caret: Carets): Optional<Situs> {
   return bridge.situsFromPoint(caret.left, caret.top - JUMP_SIZE);
 };
 
-const checkScroll = function (movement: CaretMovement, adjusted: Carets, bridge: WindowBridge): Option<number> {
+const checkScroll = function (movement: CaretMovement, adjusted: Carets, bridge: WindowBridge): Optional<number> {
   // I'm not convinced that this is right. Let's re-examine it later.
   if (movement.point(adjusted) > bridge.getInnerHeight()) {
-    return Option.some(movement.point(adjusted) - bridge.getInnerHeight());
+    return Optional.some(movement.point(adjusted) - bridge.getInnerHeight());
   } else if (movement.point(adjusted) < 0) {
-    return Option.some(-movement.point(adjusted));
+    return Optional.some(-movement.point(adjusted));
   } else {
-    return Option.none<number>();
+    return Optional.none<number>();
   }
 };
 
-const retry = function (movement: CaretMovement, bridge: WindowBridge, caret: Carets): Option<Situs> {
+const retry = function (movement: CaretMovement, bridge: WindowBridge, caret: Carets): Optional<Situs> {
   const moved = movement.move(caret, JUMP_SIZE);
   const adjusted = adjustTil(bridge, movement, caret, moved, NUM_RETRIES).getOr(moved);
   return checkScroll(movement, adjusted, bridge).fold(function () {

@@ -1,10 +1,9 @@
 import { Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Cell, Fun } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock-client';
-import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.core.dom.SelectionEventsTest', function (success, failure) {
 
@@ -69,14 +68,14 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionEventsTest', function (suc
   const assertSelectAllRange = function (editor, actualRng) {
     Assertions.assertDomEq(
       'Should be expected startContainer',
-      Element.fromDom(editor.getBody()),
-      Element.fromDom(actualRng.startContainer)
+      SugarElement.fromDom(editor.getBody()),
+      SugarElement.fromDom(actualRng.startContainer)
     );
 
     Assertions.assertDomEq(
       'Should be expected endContainer',
-      Element.fromDom(editor.getBody()),
-      Element.fromDom(actualRng.endContainer)
+      SugarElement.fromDom(editor.getBody()),
+      SugarElement.fromDom(actualRng.endContainer)
     );
   };
 

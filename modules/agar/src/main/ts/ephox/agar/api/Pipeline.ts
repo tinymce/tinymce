@@ -1,4 +1,3 @@
-import { console } from '@ephox/dom-globals';
 import { Arr, Type } from '@ephox/katamari';
 
 import { DieFn, NextFn } from '../pipe/Pipe';
@@ -15,7 +14,7 @@ const assertSteps = (steps: Step<any, any>[]) => {
     }
 
     if (msg !== undefined) {
-      // tslint:disable-next-line:no-console
+      // eslint-disable-next-line no-console
       console.trace(msg, steps);
       throw new Error(msg);
     }

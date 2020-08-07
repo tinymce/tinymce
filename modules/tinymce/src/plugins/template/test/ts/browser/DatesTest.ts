@@ -1,8 +1,7 @@
 import { Log, Logger, Mouse, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import TemplatePlugin from 'tinymce/plugins/template/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 
@@ -14,7 +13,7 @@ UnitTest.asynctest('browser.tinymce.plugins.template.DatesTest', (success, failu
   TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
 
-    const docBody = Element.fromDom(document.body);
+    const docBody = SugarElement.fromDom(document.body);
     const dialogSelector = 'div.tox-dialog';
     const toolbarButtonSelector = '[role="toolbar"] button[aria-label="Insert template"]';
 
@@ -26,7 +25,7 @@ UnitTest.asynctest('browser.tinymce.plugins.template.DatesTest', (success, failu
       Log.stepsAsStep('TBA', 'Template: Test cdate in snippet with default class', [
         tinyApis.sSetSetting('templates', [{ title: 'a', description: 'b', content: '<p class="cdate">x</p>' }]),
         tinyApis.sSetSetting('template_cdate_format', 'fake date'),
-        Mouse.sClickOn(Element.fromDom(editor.getContainer()), toolbarButtonSelector),
+        Mouse.sClickOn(SugarElement.fromDom(editor.getContainer()), toolbarButtonSelector),
         UiFinder.sWaitForVisible('Waited for dialog to be visible', docBody, dialogSelector),
         Mouse.sClickOn(docBody, 'button.tox-button:contains(Save)'),
         Waiter.sTryUntil('Dialog should close', UiFinder.sNotExists(docBody, dialogSelector)),
@@ -38,7 +37,7 @@ UnitTest.asynctest('browser.tinymce.plugins.template.DatesTest', (success, failu
         tinyApis.sSetSetting('template_cdate_classes', 'customCdateClass'),
         tinyApis.sSetSetting('templates', [{ title: 'a', description: 'b', content: '<p class="customCdateClass">x</p>' }]),
         tinyApis.sSetSetting('template_cdate_format', 'fake date'),
-        Mouse.sClickOn(Element.fromDom(editor.getContainer()), toolbarButtonSelector),
+        Mouse.sClickOn(SugarElement.fromDom(editor.getContainer()), toolbarButtonSelector),
         UiFinder.sWaitForVisible('Waited for dialog to be visible', docBody, dialogSelector),
         Mouse.sClickOn(docBody, 'button.tox-button:contains(Save)'),
         Waiter.sTryUntil('Dialog should close', UiFinder.sNotExists(docBody, dialogSelector)),
@@ -56,7 +55,7 @@ UnitTest.asynctest('browser.tinymce.plugins.template.DatesTest', (success, failu
         ),
         tinyApis.sSetSetting('template_mdate_format', 'fake modified date'),
         tinyApis.sSetSetting('template_cdate_format', 'fake created date'),
-        Mouse.sClickOn(Element.fromDom(editor.getContainer()), toolbarButtonSelector),
+        Mouse.sClickOn(SugarElement.fromDom(editor.getContainer()), toolbarButtonSelector),
         UiFinder.sWaitForVisible('Waited for dialog to be visible', docBody, dialogSelector),
         Mouse.sClickOn(docBody, 'button.tox-button:contains(Save)'),
         Waiter.sTryUntil('Dialog should close', UiFinder.sNotExists(docBody, dialogSelector)),
@@ -77,7 +76,7 @@ UnitTest.asynctest('browser.tinymce.plugins.template.DatesTest', (success, failu
         ),
         tinyApis.sSetSetting('template_mdate_format', 'fake modified date'),
         tinyApis.sSetSetting('template_cdate_format', 'fake created date'),
-        Mouse.sClickOn(Element.fromDom(editor.getContainer()), toolbarButtonSelector),
+        Mouse.sClickOn(SugarElement.fromDom(editor.getContainer()), toolbarButtonSelector),
         UiFinder.sWaitForVisible('Waited for dialog to be visible', docBody, dialogSelector),
         Mouse.sClickOn(docBody, 'button.tox-button:contains(Save)'),
         Waiter.sTryUntil('Dialog should close', UiFinder.sNotExists(docBody, dialogSelector)),

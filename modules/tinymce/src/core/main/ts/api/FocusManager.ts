@@ -5,8 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element } from '@ephox/dom-globals';
-
 /**
  * This class manages the focus/blur state of the editor. This class is needed since some
  * browsers fire false focus/blur states when the selection is moved to a UI dialog or similar.

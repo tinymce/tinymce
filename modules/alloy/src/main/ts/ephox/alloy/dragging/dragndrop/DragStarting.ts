@@ -1,7 +1,6 @@
-import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
-import { DataTransfer } from '@ephox/dom-globals';
+import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
-import { Element, Traverse, Body, EventArgs } from '@ephox/sugar';
+import { EventArgs, SugarBody, SugarElement, Traverse } from '@ephox/sugar';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
@@ -11,7 +10,7 @@ import * as DataTransfers from './DataTransfers';
 import { DragStartingConfig } from './DragnDropTypes';
 import { setImageClone } from './ImageClone';
 
-const dragStart = (component: AlloyComponent, target: Element, config: DragStartingConfig, transfer: DataTransfer) => {
+const dragStart = (component: AlloyComponent, target: SugarElement, config: DragStartingConfig, transfer: DataTransfer) => {
   DataTransfers.setEffectAllowed(transfer, config.effectAllowed);
 
   config.getData.each((getData) => {
@@ -24,7 +23,7 @@ const dragStart = (component: AlloyComponent, target: Element, config: DragStart
   config.getImage.each((f) => {
     const image = f(component);
     const parent = config.getImageParent.fold(
-      () => Traverse.parent(target).getOr(Body.body()),
+      () => Traverse.parent(target).getOr(SugarBody.body()),
       (f) => f(component)
     );
 
@@ -40,7 +39,7 @@ const schema: FieldProcessorAdt[] = [
   FieldSchema.optionFunction('getImageParent'),
   FieldSchema.optionFunction('getImage'),
   // Use this to ensure that drag and dropping only happens when within this selector.
-  FieldSchema.defaultedFunction('canDrag', Fun.constant(true)),
+  FieldSchema.defaultedFunction('canDrag', Fun.always),
   FieldSchema.defaultedFunction('onDragstart', Fun.identity),
   FieldSchema.defaultedFunction('onDragover', Fun.identity),
   FieldSchema.defaultedFunction('onDragend', Fun.identity),
@@ -54,15 +53,15 @@ const schema: FieldProcessorAdt[] = [
     const handlers = (config: DragStartingConfig): AlloyEvents.AlloyEventRecord => AlloyEvents.derive([
       AlloyEvents.run(NativeEvents.dragover(), config.onDragover),
       AlloyEvents.run(NativeEvents.dragend(), config.onDragend),
-      AlloyEvents.run<EventArgs>(NativeEvents.dragstart(), (component, simulatedEvent) => {
-        const target = simulatedEvent.event().target();
+      AlloyEvents.run<EventArgs<DragEvent>>(NativeEvents.dragstart(), (component, simulatedEvent) => {
+        const target = simulatedEvent.event.target;
         const transfer: DataTransfer = DataTransfers.getDataTransferFromEvent(simulatedEvent);
 
         if (config.canDrag(component, target)) {
           dragStart(component, target, config, transfer);
           config.onDragstart(component, simulatedEvent);
         } else {
-          simulatedEvent.event().prevent();
+          simulatedEvent.event.prevent();
         }
       })
     ]);

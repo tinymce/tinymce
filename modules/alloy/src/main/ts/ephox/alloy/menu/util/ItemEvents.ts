@@ -14,7 +14,7 @@ const onHover = (item: AlloyComponent) => {
   // and it has the focus, so as you slightly adjust the mouse, you don't
   // want to lose focus on the widget. Note, that because this isn't API based
   // (i.e. we are manually searching for focus), it may not be that flexible.
-  if (Focus.search(item.element()).isNone() || Focusing.isFocused(item)) {
+  if (Focus.search(item.element).isNone() || Focusing.isFocused(item)) {
     if (!Focusing.isFocused(item)) { Focusing.focus(item); }
     AlloyTriggers.emitWith(item, hoverEvent, { item });
   }

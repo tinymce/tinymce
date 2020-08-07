@@ -8,9 +8,9 @@
 import { Unicode } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import DomParser from 'tinymce/core/api/html/DomParser';
-import Node from 'tinymce/core/api/html/Node';
+import AstNode from 'tinymce/core/api/html/Node';
 import Schema from 'tinymce/core/api/html/Schema';
-import Serializer from 'tinymce/core/api/html/Serializer';
+import HtmlSerializer from 'tinymce/core/api/html/Serializer';
 import Tools from 'tinymce/core/api/util/Tools';
 import * as Settings from '../api/Settings';
 import * as Utils from './Utils';
@@ -140,7 +140,7 @@ function convertFakeListsToProperLists(node) {
 
     if (!currentListNode || currentListNode.name !== listName) {
       prevListNode = prevListNode || currentListNode;
-      currentListNode = new Node(listName, 1);
+      currentListNode = new AstNode(listName, 1);
 
       if (start > 1) {
         currentListNode.attr('start', '' + start);
@@ -303,13 +303,13 @@ function filterStyles(editor, validStyles, node, styleValue) {
   // Convert bold style to "b" element
   if (/(bold)/i.test(outputStyles['font-weight'])) {
     delete outputStyles['font-weight'];
-    node.wrap(new Node('b', 1));
+    node.wrap(new AstNode('b', 1));
   }
 
   // Convert italic style to "i" element
   if (/(italic)/i.test(outputStyles['font-style'])) {
     delete outputStyles['font-style'];
-    node.wrap(new Node('i', 1));
+    node.wrap(new AstNode('i', 1));
   }
 
   // Serialize the styles and see if there is something left to keep
@@ -473,7 +473,7 @@ const filterWordContent = function (editor: Editor, content: string) {
   }
 
   // Serialize DOM back to HTML
-  content = Serializer({
+  content = HtmlSerializer({
     validate: Settings.getValidate(editor)
   }, schema).serialize(rootNode);
 

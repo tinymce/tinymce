@@ -5,16 +5,16 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import Delay from 'tinymce/core/api/util/Delay';
 
 const adjust = function (value, destination, amount) {
   if (Math.abs(value - destination) <= amount) {
-    return Option.none();
+    return Optional.none();
   } else if (value < destination) {
-    return Option.some(value + amount);
+    return Optional.some(value + amount);
   } else {
-    return Option.some(value - amount);
+    return Optional.some(value - amount);
   }
 };
 

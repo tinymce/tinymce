@@ -2,7 +2,7 @@ import { Assertions, Chain, Logger, NamedChain, Pipeline } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr, Result } from '@ephox/katamari';
 import { ApiChains, Editor } from '@ephox/mcagar';
-import { Element, Hierarchy, Html, Remove, Replication, SelectorFilter } from '@ephox/sugar';
+import { Hierarchy, Html, Remove, Replication, SelectorFilter, SugarElement } from '@ephox/sugar';
 import { isIdBookmark, isIndexBookmark, isPathBookmark, isRangeBookmark, isStringPathBookmark } from 'tinymce/core/bookmark/BookmarkTypes';
 import * as GetBookmark from 'tinymce/core/bookmark/GetBookmark';
 import * as ResolveBookmark from 'tinymce/core/bookmark/ResolveBookmark';
@@ -19,9 +19,9 @@ UnitTest.asynctest('browser.tinymce.core.bookmark.BookmarksTest', (success, fail
     const startContainer = Hierarchy.follow(element, startPath).getOrDie();
     const endContainer = Hierarchy.follow(element, endPath).getOrDie();
 
-    Assertions.assertDomEq('Should be expected start container', startContainer, Element.fromDom(rng.startContainer));
+    Assertions.assertDomEq('Should be expected start container', startContainer, SugarElement.fromDom(rng.startContainer));
     Assertions.assertEq('Should be expected start offset', startOffset, rng.startOffset);
-    Assertions.assertDomEq('Should be expected end container', endContainer, Element.fromDom(rng.endContainer));
+    Assertions.assertDomEq('Should be expected end container', endContainer, SugarElement.fromDom(rng.endContainer));
     Assertions.assertEq('Should be expected end offset', endOffset, rng.endOffset);
   };
 
@@ -60,7 +60,7 @@ UnitTest.asynctest('browser.tinymce.core.bookmark.BookmarksTest', (success, fail
 
   const cAssertRangeBookmark = (spath, soffset, fpath, foffset) => cBundleOp((input) => {
     Assert.eq('Should be a range bookmark', true, isRangeBookmark(input.bookmark));
-    assertRawRange(Element.fromDom(input.editor.getBody()), input.bookmark.rng, spath, soffset, fpath, foffset);
+    assertRawRange(SugarElement.fromDom(input.editor.getBody()), input.bookmark.rng, spath, soffset, fpath, foffset);
   });
 
   const cAssertPathBookmark = (expectedStart, expectedEnd) => cBundleOp((input) => {
@@ -86,7 +86,7 @@ UnitTest.asynctest('browser.tinymce.core.bookmark.BookmarksTest', (success, fail
   });
 
   const cAssertApproxRawContent = (expectedHtml) => NamedChain.read('editor', Chain.op((editor) => {
-    const elm = Replication.deep(Element.fromDom(editor.getBody()));
+    const elm = Replication.deep(SugarElement.fromDom(editor.getBody()));
     Arr.each(SelectorFilter.descendants(elm, '*[data-mce-bogus="all"]'), Remove.remove);
     const actualHtml = Html.get(elm);
     Assertions.assertHtmlStructure('Should expected structure', `<body>${expectedHtml}</body>`, `<body>${actualHtml}</body>`);

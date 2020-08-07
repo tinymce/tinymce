@@ -17,7 +17,6 @@
   "dependencies": {
     "@ephox/bedrock-client": "^9.3.2",
     "@ephox/dispute": "^1.0.3",
-    "@ephox/dom-globals": "^1.1.2",
     "@ephox/katamari": "^6.1.1",
     "@ephox/wrap-promise-polyfill": "^2.2.0",
     "tslib": "^2.0.0"

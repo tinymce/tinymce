@@ -1,5 +1,5 @@
 import { Universe } from '@ephox/boss';
-import { Arr, Fun, Option } from '@ephox/katamari';
+import { Arr, Fun, Optional } from '@ephox/katamari';
 
 interface Bisect<E> {
   readonly before: E[];
@@ -18,7 +18,7 @@ export interface BrokenPathSplits<E> {
 
 export interface BrokenPath<E> {
   readonly first: E;
-  readonly second: Option<E>;
+  readonly second: Optional<E>;
   readonly splits: BrokenPathSplits<E>[];
 }
 
@@ -27,13 +27,13 @@ const leftRight = <E> (left: E, right: E): LeftRight<E> => ({
   right
 });
 
-const brokenPath = <E> (first: E, second: Option<E>, splits: BrokenPathSplits<E>[]): BrokenPath<E> => ({
+const brokenPath = <E> (first: E, second: Optional<E>, splits: BrokenPathSplits<E>[]): BrokenPath<E> => ({
   first,
   second,
   splits
 });
 
-const bisect = function <E, D> (universe: Universe<E, D>, parent: E, child: E): Option<Bisect<E>> {
+const bisect = function <E, D> (universe: Universe<E, D>, parent: E, child: E): Optional<Bisect<E>> {
   const children = universe.property().children(parent);
   const index = Arr.findIndex(children, Fun.curry(universe.eq, child));
   return index.map(function (ind) {
@@ -78,10 +78,10 @@ const breakToLeft = function <E, D> (universe: Universe<E, D>, parent: E, child:
  *   second: the optional element representing second part of the top-level split if the breaking completed successfully to the top
  *   splits: a list of (Element, Element) pairs that represent the splits that have occurred on the way to the top.
  */
-const breakPath = function <E, D> (universe: Universe<E, D>, item: E, isTop: (e: E) => boolean, breaker: (universe: Universe<E, D>, parent: E, child: E) => Option<LeftRight<E>>) {
+const breakPath = function <E, D> (universe: Universe<E, D>, item: E, isTop: (e: E) => boolean, breaker: (universe: Universe<E, D>, parent: E, child: E) => Optional<LeftRight<E>>) {
 
-  const next = function (child: E, group: Option<E>, splits: BrokenPathSplits<E>[]): BrokenPath<E> {
-    const fallback = brokenPath(child, Option.none(), splits);
+  const next = function (child: E, group: Optional<E>, splits: BrokenPathSplits<E>[]): BrokenPath<E> {
+    const fallback = brokenPath(child, Optional.none(), splits);
     // Found the top, so stop.
     if (isTop(child)) {
       return brokenPath(child, group, splits);
@@ -92,13 +92,13 @@ const breakPath = function <E, D> (universe: Universe<E, D>, item: E, isTop: (e:
           const extra = [{ first: breakage.left, second: breakage.right }];
           // Our isTop is based on the left-side parent, so keep it regardless of split.
           const nextChild = isTop(parent) ? parent : breakage.left;
-          return next(nextChild, Option.some(breakage.right), splits.concat(extra));
+          return next(nextChild, Optional.some(breakage.right), splits.concat(extra));
         });
       }).getOr(fallback);
     }
   };
 
-  return next(item, Option.none(), []);
+  return next(item, Optional.none(), []);
 };
 
 export { breakToLeft, breakToRight, breakPath };

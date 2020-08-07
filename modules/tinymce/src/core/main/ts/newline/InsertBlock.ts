@@ -5,11 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { DocumentFragment, Element as DomElement, KeyboardEvent } from '@ephox/dom-globals';
-import { Arr, Obj, Option, Options } from '@ephox/katamari';
-import { Css, Element, Node, PredicateFilter } from '@ephox/sugar';
+import { Arr, Obj, Optional, Optionals } from '@ephox/katamari';
+import { Css, PredicateFilter, SugarElement, SugarNode } from '@ephox/sugar';
 import DOMUtils from '../api/dom/DOMUtils';
-import TreeWalker from '../api/dom/TreeWalker';
+import DomTreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
 import * as Settings from '../api/Settings';
 import { EditorEvent } from '../api/util/EventDispatcher';
@@ -23,13 +22,13 @@ import * as InsertLi from './InsertLi';
 import * as NewLineUtils from './NewLineUtils';
 
 const trimZwsp = (fragment: DocumentFragment) => {
-  Arr.each(PredicateFilter.descendants(Element.fromDom(fragment), Node.isText), (text) => {
-    const rawNode = text.dom();
+  Arr.each(PredicateFilter.descendants(SugarElement.fromDom(fragment), SugarNode.isText), (text) => {
+    const rawNode = text.dom;
     rawNode.nodeValue = Zwsp.trim(rawNode.nodeValue);
   });
 };
 
-const isEmptyAnchor = function (dom: DOMUtils, elm: DomElement) {
+const isEmptyAnchor = function (dom: DOMUtils, elm: Element) {
   return elm && elm.nodeName === 'A' && dom.isEmpty(elm);
 };
 
@@ -133,29 +132,31 @@ const getEditableRoot = function (dom, node) {
   return parent !== root ? editableRoot : root;
 };
 
-const applyAttributes = (editor: Editor, node: DomElement, forcedRootBlockAttrs: Record<string, string>) => {
+const applyAttributes = (editor: Editor, node: Element, forcedRootBlockAttrs: Record<string, string>) => {
+  const dom = editor.dom;
+
   // Merge and apply style attribute
-  Option.from(forcedRootBlockAttrs.style)
-    .map(editor.dom.parseStyle)
+  Optional.from(forcedRootBlockAttrs.style)
+    .map(dom.parseStyle)
     .each((attrStyles) => {
-      const currentStyles = Css.getAllRaw(Element.fromDom(node));
+      const currentStyles = Css.getAllRaw(SugarElement.fromDom(node));
       const newStyles = { ...currentStyles, ...attrStyles };
-      editor.dom.setStyles(node, newStyles);
+      dom.setStyles(node, newStyles);
     });
 
   // Merge and apply class attribute
-  const attrClassesOpt = Option.from(forcedRootBlockAttrs.class).map((attrClasses) => attrClasses.split(/\s+/));
-  const currentClassesOpt = Option.from(node.className).map((currentClasses) => Arr.filter(currentClasses.split(/\s+/), (clazz) => clazz !== ''));
-  Options.lift2(attrClassesOpt, currentClassesOpt, (attrClasses, currentClasses) => {
+  const attrClassesOpt = Optional.from(forcedRootBlockAttrs.class).map((attrClasses) => attrClasses.split(/\s+/));
+  const currentClassesOpt = Optional.from(node.className).map((currentClasses) => Arr.filter(currentClasses.split(/\s+/), (clazz) => clazz !== ''));
+  Optionals.lift2(attrClassesOpt, currentClassesOpt, (attrClasses, currentClasses) => {
     const filteredClasses = Arr.filter(currentClasses, (clazz) => !Arr.contains(attrClasses, clazz));
     const newClasses = [ ...attrClasses, ...filteredClasses ];
-    editor.dom.setAttrib(node, 'class', newClasses.join(' '));
+    dom.setAttrib(node, 'class', newClasses.join(' '));
   });
 
   // Apply any remaining forced root block attributes
   const appliedAttrs = [ 'style', 'class' ];
   const remainingAttrs = Obj.filter(forcedRootBlockAttrs, (_, attrs) => !Arr.contains(appliedAttrs, attrs));
-  editor.dom.setAttribs(node, remainingAttrs);
+  dom.setAttribs(node, remainingAttrs);
 };
 
 const setForcedBlockAttrs = function (editor: Editor, node) {
@@ -321,7 +322,7 @@ const insert = function (editor: Editor, evt?: EditorEvent<KeyboardEvent>) {
     }
 
     // Walk the DOM and look for text nodes or non empty elements
-    const walker = new TreeWalker(container, parentBlock);
+    const walker = new DomTreeWalker(container, parentBlock);
 
     // If caret is in beginning or end of a text block then jump to the next/previous node
     if (NodeType.isText(container)) {

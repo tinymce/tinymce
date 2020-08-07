@@ -5,10 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { navigator, Document as DomDocument, Node as DomNode, ShadowRoot } from '@ephox/dom-globals';
 import { Arr, Fun, Future, Futures, Result, Results } from '@ephox/katamari';
-import { Attr, Element, Insert, ShadowDom, Traverse } from '@ephox/sugar';
-import { ReferrerPolicy } from '../SettingsTypes';
+import { Attribute, Insert, SugarElement, SugarShadowDom, Traverse } from '@ephox/sugar';
 import Delay from '../util/Delay';
 import Tools from '../util/Tools';
 
@@ -19,22 +17,22 @@ import Tools from '../util/Tools';
  */
 
 export interface StyleSheetLoader {
-  load: (url: string, loadedCallback: Function, errorCallback?: Function) => void;
-  loadAll: (urls: string[], success: Function, failure: Function) => void;
+  load: (url: string, success: () => void, failure?: () => void) => void;
+  loadAll: (urls: string[], success: (urls: string[]) => void, failure: (urls: string[]) => void) => void;
   _setReferrerPolicy: (referrerPolicy: ReferrerPolicy) => void;
 }
 
 export interface StyleSheetLoaderSettings {
-  maxLoadTime: number;
-  contentCssCors: boolean;
-  referrerPolicy: ReferrerPolicy;
+  maxLoadTime?: number;
+  contentCssCors?: boolean;
+  referrerPolicy?: ReferrerPolicy;
 }
 
-export function StyleSheetLoader(documentOrShadowRoot: DomDocument | ShadowRoot, settings: Partial<StyleSheetLoaderSettings> = {}): StyleSheetLoader {
+export function StyleSheetLoader(documentOrShadowRoot: Document | ShadowRoot, settings: StyleSheetLoaderSettings = {}): StyleSheetLoader {
   let idCount = 0;
   const loadedStates = {};
 
-  const edos = Element.fromDom(documentOrShadowRoot);
+  const edos = SugarElement.fromDom(documentOrShadowRoot);
   const doc = Traverse.documentOrOwner(edos);
 
   const maxLoadTime = settings.maxLoadTime || 5000;
@@ -43,8 +41,8 @@ export function StyleSheetLoader(documentOrShadowRoot: DomDocument | ShadowRoot,
     settings.referrerPolicy = referrerPolicy;
   };
 
-  const addStyle = (element: Element<DomNode>) => {
-    Insert.append(ShadowDom.getStyleContainer(edos), element);
+  const addStyle = (element: SugarElement<Node>) => {
+    Insert.append(SugarShadowDom.getStyleContainer(edos), element);
   };
 
   /**
@@ -52,10 +50,10 @@ export function StyleSheetLoader(documentOrShadowRoot: DomDocument | ShadowRoot,
    *
    * @method load
    * @param {String} url Url to be loaded.
-   * @param {Function} loadedCallback Callback to be executed when loaded.
-   * @param {Function} errorCallback Callback to be executed when failed loading.
+   * @param {Function} success Callback to be executed when loaded.
+   * @param {Function} failure Callback to be executed when failed loading.
    */
-  const load = function (url: string, loadedCallback: Function, errorCallback?: Function) {
+  const load = function (url: string, success: () => void, failure?: () => void) {
     let link, style, state;
 
     const resolve = (status: number) => {
@@ -155,12 +153,12 @@ export function StyleSheetLoader(documentOrShadowRoot: DomDocument | ShadowRoot,
       state = loadedStates[url];
     }
 
-    if (loadedCallback) {
-      state.passed.push(loadedCallback);
+    if (success) {
+      state.passed.push(success);
     }
 
-    if (errorCallback) {
-      state.failed.push(errorCallback);
+    if (failure) {
+      state.failed.push(failure);
     }
 
     // Is loading wait for it to pass
@@ -183,7 +181,7 @@ export function StyleSheetLoader(documentOrShadowRoot: DomDocument | ShadowRoot,
     // Start loading
     state.status = 1;
     // TODO: Use Sugar to create this element
-    link = doc.dom().createElement('link');
+    link = doc.dom.createElement('link');
     link.rel = 'stylesheet';
     link.type = 'text/css';
     link.id = 'u' + (idCount++);
@@ -197,7 +195,7 @@ export function StyleSheetLoader(documentOrShadowRoot: DomDocument | ShadowRoot,
 
     if (settings.referrerPolicy) {
       // Note: Don't use link.referrerPolicy = ... here as it doesn't work on Safari
-      Attr.set(Element.fromDom(link), 'referrerpolicy', settings.referrerPolicy);
+      Attribute.set(SugarElement.fromDom(link), 'referrerpolicy', settings.referrerPolicy);
     }
 
     // Feature detect onload on link element and sniff older webkits since it has an broken onload event
@@ -209,10 +207,10 @@ export function StyleSheetLoader(documentOrShadowRoot: DomDocument | ShadowRoot,
       // TODO: Remove this in the future when everyone uses modern browsers
       if (navigator.userAgent.indexOf('Firefox') > 0) {
         // TODO: Use Sugar to create this element
-        style = doc.dom().createElement('style');
+        style = doc.dom.createElement('style');
         style.textContent = '@import "' + url + '"';
         waitForGeckoLinkLoaded();
-        addStyle(Element.fromDom(style));
+        addStyle(SugarElement.fromDom(style));
         return;
       }
 
@@ -220,11 +218,11 @@ export function StyleSheetLoader(documentOrShadowRoot: DomDocument | ShadowRoot,
       waitForWebKitLinkLoaded();
     }
 
-    addStyle(Element.fromDom(link));
+    addStyle(SugarElement.fromDom(link));
     link.href = url;
   };
 
-  const loadF = function (url) {
+  const loadF = function (url: string): Future<Result<string, string>> {
     return Future.nu(function (resolve) {
       load(
         url,
@@ -242,7 +240,7 @@ export function StyleSheetLoader(documentOrShadowRoot: DomDocument | ShadowRoot,
    * @param {Function} success Callback to be executed when the style sheets have been successfully loaded.
    * @param {Function} failure Callback to be executed when the style sheets fail to load.
    */
-  const loadAll = function (urls: string[], success: Function, failure: Function) {
+  const loadAll = function (urls: string[], success: (urls: string[]) => void, failure: (urls: string[]) => void) {
     Futures.par(Arr.map(urls, loadF)).get(function (result) {
       const parts = Arr.partition(result, function (r) {
         return r.isValue();

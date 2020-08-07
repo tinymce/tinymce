@@ -1,12 +1,12 @@
 import { UnitTest } from '@ephox/bedrock-client';
 import { Gene, TestUniverse, TextGene } from '@ephox/boss';
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
+import { KAssert } from '@ephox/katamari-assertions';
 import * as Gather from 'ephox/phoenix/api/general/Gather';
 import * as Finder from 'ephox/phoenix/test/Finder';
-import { KAssert } from '@ephox/katamari-assertions';
 
 UnitTest.test('Seeker Test', function () {
-  const some = Option.some;
+  const some = Optional.some;
 
   const universe = TestUniverse(
     Gene('root', 'root', [
@@ -43,17 +43,17 @@ UnitTest.test('Seeker Test', function () {
     return item.id === 'root';
   };
 
-  const check = function (expected: Option<string>, actual: Option<Gene>) {
-    KAssert.eqOption('eq', expected, actual.map((x) => x.id));
+  const check = function (expected: Optional<string>, actual: Optional<Gene>) {
+    KAssert.eqOptional('eq', expected, actual.map((x) => x.id));
   };
 
-  const checkBefore = function (expected: Option<string>, id: string) {
+  const checkBefore = function (expected: Optional<string>, id: string) {
     const item = Finder.get(universe, id);
     const actual = Gather.before(universe, item, isRoot);
     check(expected, actual);
   };
 
-  const checkAfter = function (expected: Option<string>, id: string) {
+  const checkAfter = function (expected: Optional<string>, id: string) {
     const item = Finder.get(universe, id);
     const actual = Gather.after(universe, item, isRoot);
     check(expected, actual);
@@ -62,8 +62,8 @@ UnitTest.test('Seeker Test', function () {
   checkBefore(some('aab'), 'aac');
   checkBefore(some('aaa'), 'aab');
 
-  checkBefore(Option.none(), 'aaa');
-  checkBefore(Option.none(), 'aa');
+  checkBefore(Optional.none(), 'aaa');
+  checkBefore(Optional.none(), 'aa');
   checkBefore(some('aac'), 'aba');
   checkBefore(some('aba'), 'abb');
   checkBefore(some('abb'), 'ba');
@@ -81,5 +81,5 @@ UnitTest.test('Seeker Test', function () {
   checkAfter(some('cb'), 'caaa');
   checkAfter(some('cca'), 'cb');
   checkAfter(some('d'), 'cca');
-  checkAfter(Option.none(), 'd');
+  checkAfter(Optional.none(), 'd');
 });

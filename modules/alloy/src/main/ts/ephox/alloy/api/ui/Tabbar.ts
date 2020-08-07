@@ -1,4 +1,4 @@
-import { Attr } from '@ephox/sugar';
+import { Attribute } from '@ephox/sugar';
 
 import * as TabbarSchema from '../../ui/schema/TabbarSchema';
 import { TabbarDetail, TabbarSketcher, TabbarSpec } from '../../ui/types/TabbarTypes';
@@ -31,10 +31,10 @@ const factory: CompositeSketchFactory<TabbarDetail, TabbarSpec> = (detail, compo
         // Consider a more seam-less way of combining highlighting and toggling
         onHighlight(tabbar, tab) {
           // TODO: Integrate highlighting and toggling in a nice way
-          Attr.set(tab.element(), 'aria-selected', 'true');
+          Attribute.set(tab.element, 'aria-selected', 'true');
         },
         onDehighlight(tabbar, tab) {
-          Attr.set(tab.element(), 'aria-selected', 'false');
+          Attribute.set(tab.element, 'aria-selected', 'false');
         }
       }),
 
@@ -42,7 +42,7 @@ const factory: CompositeSketchFactory<TabbarDetail, TabbarSpec> = (detail, compo
         mode: 'flow',
         getInitial(tabbar) {
           // Restore focus to the previously highlighted tab.
-          return Highlighting.getHighlighted(tabbar).map((tab) => tab.element());
+          return Highlighting.getHighlighted(tabbar).map((tab) => tab.element);
         },
         selector: '.' + detail.markers.tabClass,
         executeOnMove: true

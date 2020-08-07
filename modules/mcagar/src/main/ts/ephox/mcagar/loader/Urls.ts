@@ -1,5 +1,3 @@
-import { document } from '@ephox/dom-globals';
-
 export const setTinymceBaseUrl = (tinymce: any, baseUrl: string) => {
   const prefix = document.location.protocol + '//' + document.location.host;
   tinymce.baseURL = baseUrl.indexOf('://') === -1 ? prefix + baseUrl : baseUrl;

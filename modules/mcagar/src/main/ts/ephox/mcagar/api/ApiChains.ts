@@ -1,6 +1,5 @@
 import { Assertions, Chain, Cursors, StructAssert, UiFinder } from '@ephox/agar';
-import { Node as DomNode } from '@ephox/dom-globals';
-import { Element, Hierarchy, Html } from '@ephox/sugar';
+import { Hierarchy, Html, SugarElement } from '@ephox/sugar';
 import { Editor } from '../alien/EditorTypes';
 import * as TinySelections from '../selection/TinySelections';
 import { Presence } from './TinyApis';
@@ -25,7 +24,7 @@ export interface ApiChains {
 }
 
 const lazyBody = function (editor: Editor) {
-  return Element.fromDom(editor.getBody());
+  return SugarElement.fromDom(editor.getBody());
 };
 
 const cNodeChanged = <T extends Editor> (): Chain<T, T> => Chain.op(function (editor: T) {
@@ -46,7 +45,7 @@ const cSetRawContent = function <T extends Editor> (html: string): Chain<T, T> {
 
 const cSetSelectionFrom = function <T extends Editor> (spec: Cursors.CursorSpec | Cursors.RangeSpec): Chain<T, T> {
   const path = Cursors.pathFrom(spec);
-  return cSetSelection(path.startPath(), path.soffset(), path.finishPath(), path.foffset());
+  return cSetSelection(path.startPath, path.soffset, path.finishPath, path.foffset);
 };
 
 const cSetCursor = function <T extends Editor> (elementPath: number[], offset: number): Chain<T, T> {
@@ -77,7 +76,7 @@ const cSelect = function <T extends Editor> (selector: string, path: number[]): 
   return Chain.op(function (editor: T) {
     const container = UiFinder.findIn(lazyBody(editor), selector).getOrDie();
     const target = Cursors.calculateOne(container, path);
-    editor.selection.select(target.dom());
+    editor.selection.select(target.dom);
   });
 };
 
@@ -117,14 +116,14 @@ const cAssertContentStructure = function <T extends Editor> (expected: StructAss
   });
 };
 
-const assertPath = function (label: string, root: Element, expPath: number[], expOffset: number, actElement: DomNode, actOffset: number) {
+const assertPath = function (label: string, root: SugarElement, expPath: number[], expOffset: number, actElement: Node, actOffset: number) {
   const expected = Cursors.calculateOne(root, expPath);
   const message = function () {
-    const actual = Element.fromDom(actElement);
+    const actual = SugarElement.fromDom(actElement);
     const actPath = Hierarchy.path(root, actual).getOrDie('could not find path to root');
     return 'Expected path: ' + JSON.stringify(expPath) + '.\nActual path: ' + JSON.stringify(actPath);
   };
-  Assertions.assertEq(() => 'Assert incorrect for ' + label + '.\n' + message(), true, expected.dom() === actElement);
+  Assertions.assertEq(() => 'Assert incorrect for ' + label + '.\n' + message(), true, expected.dom === actElement);
   Assertions.assertEq(() => 'Offset mismatch for ' + label + ' in :\n' + Html.getOuter(expected), expOffset, actOffset);
 };
 

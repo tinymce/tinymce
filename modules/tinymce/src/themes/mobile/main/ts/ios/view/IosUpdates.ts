@@ -22,7 +22,7 @@ const updateScrollingFixed = function (element, winY, offsetY) {
   const oldProp = Css.getRaw(element, 'top').getOr(offsetY);
   // While we are changing top, aim to scroll by the same amount to keep the cursor in the same location.
   const delta = destTop - parseInt(oldProp, 10);
-  const destScroll = element.dom().scrollTop + delta;
+  const destScroll = element.dom.scrollTop + delta;
   return IosScrolling.moveScrollAndTop(element, destScroll, destTop);
 };
 

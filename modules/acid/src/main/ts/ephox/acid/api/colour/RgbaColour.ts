@@ -1,4 +1,4 @@
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { Hex, Hsv, Rgba } from './ColourTypes';
 import * as HexColour from './HexColour';
 
@@ -104,19 +104,19 @@ const fromStringValues = (red: string, green: string, blue: string, alpha: strin
   return rgbaColour(r, g, b, a);
 };
 
-const fromString = (rgbaString: string): Option<Rgba> => {
+const fromString = (rgbaString: string): Optional<Rgba> => {
   if (rgbaString === 'transparent') {
-    return Option.some(rgbaColour(0, 0, 0, 0));
+    return Optional.some(rgbaColour(0, 0, 0, 0));
   }
   const rgbMatch = rgbRegex.exec(rgbaString);
   if (rgbMatch !== null) {
-    return Option.some(fromStringValues(rgbMatch[1], rgbMatch[2], rgbMatch[3], '1'));
+    return Optional.some(fromStringValues(rgbMatch[1], rgbMatch[2], rgbMatch[3], '1'));
   }
   const rgbaMatch = rgbaRegex.exec(rgbaString);
   if (rgbaMatch !== null) {
-    return Option.some(fromStringValues(rgbaMatch[1], rgbaMatch[2], rgbaMatch[3], rgbaMatch[4]));
+    return Optional.some(fromStringValues(rgbaMatch[1], rgbaMatch[2], rgbaMatch[3], rgbaMatch[4]));
   }
-  return Option.none();
+  return Optional.none();
 };
 
 const toString = (rgba: Rgba): string => `rgba(${rgba.red},${rgba.green},${rgba.blue},${rgba.alpha})`;

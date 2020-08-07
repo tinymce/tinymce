@@ -4,8 +4,8 @@ import { UnitTest } from '@ephox/bedrock-client';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Unselecting } from 'ephox/alloy/api/behaviour/Unselecting';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
+import { Container } from 'ephox/alloy/api/ui/Container';
 
 UnitTest.asynctest('UnselectingTest', (success, failure) => {
 
@@ -32,7 +32,7 @@ UnitTest.asynctest('UnselectingTest', (success, failure) => {
           unselectable: str.is('on')
         }
       })),
-      component.element()
+      component.element
     )
   ], () => { success(); }, failure);
 });

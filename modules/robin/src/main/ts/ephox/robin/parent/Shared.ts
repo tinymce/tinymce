@@ -1,9 +1,9 @@
 import { Universe } from '@ephox/boss';
-import { Arr, Fun, Option } from '@ephox/katamari';
+import { Arr, Fun, Optional } from '@ephox/katamari';
 
-export type Looker<E, D> = (universe: Universe<E, D>, elem: E) => Option<E>;
+export type Looker<E, D> = (universe: Universe<E, D>, elem: E) => Optional<E>;
 
-const all = function <E, D> (universe: Universe<E, D>, look: Looker<E, D>, elements: E[], f: (universe: Universe<E, D>, look: Looker<E, D>, head: E, tail: E[]) => Option<E>) {
+const all = function <E, D> (universe: Universe<E, D>, look: Looker<E, D>, elements: E[], f: (universe: Universe<E, D>, look: Looker<E, D>, head: E, tail: E[]) => Optional<E>) {
   const head = elements[0];
   const tail = elements.slice(1);
   return f(universe, look, head, tail);
@@ -15,7 +15,7 @@ const all = function <E, D> (universe: Universe<E, D>, look: Looker<E, D>, eleme
 const oneAll = function <E, D> (universe: Universe<E, D>, look: Looker<E, D>, elements: E[]) {
   return elements.length > 0 ?
     all(universe, look, elements, unsafeOne) :
-    Option.none<E>();
+    Optional.none<E>();
 };
 
 const unsafeOne = function <E, D> (universe: Universe<E, D>, look: Looker<E, D>, head: E, tail: E[]) {
@@ -26,7 +26,7 @@ const unsafeOne = function <E, D> (universe: Universe<E, D>, look: Looker<E, D>,
   }, start);
 };
 
-const commonElement = function <E, D> (universe: Universe<E, D>, start: Option<E>, end: Option<E>): Option<E> {
+const commonElement = function <E, D> (universe: Universe<E, D>, start: Optional<E>, end: Optional<E>): Optional<E> {
   return start.bind(function (s) {
     return end.filter(Fun.curry(universe.eq, s));
   });

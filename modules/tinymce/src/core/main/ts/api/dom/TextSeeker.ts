@@ -1,5 +1,11 @@
-import { Node, Text } from '@ephox/dom-globals';
-import { Option } from '@ephox/katamari';
+/**
+ * Copyright (c) Tiny Technologies, Inc. All rights reserved.
+ * Licensed under the LGPL or a commercial license.
+ * For LGPL see License.txt in the project root for license information.
+ * For commercial licenses see https://www.tiny.cloud/
+ */
+
+import { Optional } from '@ephox/katamari';
 import * as NodeType from '../../dom/NodeType';
 import { TextWalker } from '../../dom/TextWalker';
 import DOMUtils from './DOMUtils';
@@ -41,11 +47,11 @@ interface TextSeeker {
 const TextSeeker = (dom: DOMUtils, isBoundary?: (node: Node) => boolean): TextSeeker => {
   const isBlockBoundary = isBoundary ? isBoundary : (node: Node) => dom.isBlock(node) || NodeType.isBr(node) || NodeType.isContentEditableFalse(node);
 
-  const walk = (node: Node, offset: number, walker: () => Option<Spot>, process: TextProcessCallback): Option<Spot> => {
+  const walk = (node: Node, offset: number, walker: () => Optional<Spot>, process: TextProcessCallback): Optional<Spot> => {
     if (NodeType.isText(node)) {
       const newOffset = process(node, offset, node.data);
       if (newOffset !== -1) {
-        return Option.some({ container: node, offset: newOffset });
+        return Optional.some({ container: node, offset: newOffset });
       }
     }
 

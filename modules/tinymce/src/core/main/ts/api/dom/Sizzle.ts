@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { window } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 
 /* jshint bitwise:false, expr:true, noempty:false, sub:true, eqnull:true, latedef:false, maxlen:255 */
@@ -26,8 +25,6 @@ import { Arr } from '@ephox/katamari';
 /* eslint-enable */
 
 /* eslint-disable no-bitwise, prefer-const */
-
-/* tslint:disable */
 
 let support,
   Expr,
@@ -178,7 +175,7 @@ try {
   );
   // Support: Android<4.0
   // Detect silently failing push.apply
-  // tslint:disable-next-line:no-unused-expression
+  // eslint-disable-next-line no-unused-expressions
   arr[preferredDoc.childNodes.length].nodeType;
 } catch (e) {
   push = {
@@ -1343,7 +1340,7 @@ Expr = Sizzle.selectors = {
       // Accessing this property makes selected-by-default
       // options in Safari work properly
       if (elem.parentNode) {
-        // tslint:disable-next-line:no-unused-expression
+        // eslint-disable-next-line no-unused-expressions
         elem.parentNode.selectedIndex;
       }
 

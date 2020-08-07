@@ -24,7 +24,6 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@ephox/bedrock-client": "^9.3.2",
-    "@ephox/dom-globals": "^1.1.2",
     "@ephox/jax": "^4.1.35",
     "@ephox/sand": "^3.1.10",
     "@ephox/sugar": "^6.1.1",

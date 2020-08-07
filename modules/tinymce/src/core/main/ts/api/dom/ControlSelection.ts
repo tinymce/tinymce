@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { document, Element, Event, MouseEvent, Node } from '@ephox/dom-globals';
 import { Obj } from '@ephox/katamari';
-import { Element as SugarElement, Selectors } from '@ephox/sugar';
+import { Selectors, SugarElement } from '@ephox/sugar';
+import * as CefUtils from '../../dom/CefUtils';
 import * as NodeType from '../../dom/NodeType';
 import * as RangePoint from '../../dom/RangePoint';
 import Editor from '../Editor';
@@ -15,15 +15,16 @@ import Env from '../Env';
 import * as Events from '../Events';
 import * as Settings from '../Settings';
 import Delay from '../util/Delay';
+import { EditorEvent } from '../util/EventDispatcher';
 import Tools from '../util/Tools';
 import VK from '../util/VK';
-import Selection from './Selection';
+import EditorSelection from './Selection';
 
 interface ControlSelection {
   isResizable (elm: Element): boolean;
   showResizeRect (elm: Element): void;
   hideResizeRect (): void;
-  updateResizeRect (evt: Event): void;
+  updateResizeRect (evt: EditorEvent<any>): void;
   destroy (): void;
 }
 
@@ -37,21 +38,8 @@ interface ControlSelection {
  */
 
 const isContentEditableFalse = NodeType.isContentEditableFalse;
-const isContentEditableTrue = NodeType.isContentEditableTrue;
 
-const getContentEditableRoot = function (root: Node, node: Node) {
-  while (node && node !== root) {
-    if (isContentEditableTrue(node) || isContentEditableFalse(node)) {
-      return node;
-    }
-
-    node = node.parentNode;
-  }
-
-  return null;
-};
-
-const ControlSelection = (selection: Selection, editor: Editor): ControlSelection => {
+const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSelection => {
   const dom = editor.dom, each = Tools.each;
   let selectedElm, selectedElmGhost, resizeHelper, selectedHandle;
   let startX, startY, selectedElmX, selectedElmY, startW, startH, ratio, resizeStarted;
@@ -99,14 +87,10 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
   const getResizeTarget = (elm: Element) => editor.dom.is(elm, 'figure.image') ? elm.querySelector('img') : elm;
 
   const isResizable = (elm: Element) => {
-    let selector = Settings.getObjectResizing(editor);
+    const selector = Settings.getObjectResizing(editor);
 
-    if (selector === false || Env.iOS) {
+    if (!selector) {
       return false;
-    }
-
-    if (typeof selector !== 'string') {
-      selector = 'table,img,figure.image,div';
     }
 
     if (elm.getAttribute('data-mce-resize') === 'false') {
@@ -209,7 +193,7 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
     const wasResizeStarted = resizeStarted;
     resizeStarted = false;
 
-    const setSizeProp = (name: string, value: number) =>{
+    const setSizeProp = (name: string, value: number) => {
       if (value) {
         // Resize by using style or attribute
         if (selectedElm.style[name] || !editor.schema.isValid(selectedElm.nodeName.toLowerCase(), name)) {
@@ -417,7 +401,7 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
   };
 
   const isWithinContentEditableFalse = function (elm) {
-    return isContentEditableFalse(getContentEditableRoot(editor.getBody(), elm));
+    return isContentEditableFalse(CefUtils.getContentEditableRoot(editor.getBody(), elm));
   };
 
   const unbindResizeHandleEvents = function () {
@@ -432,7 +416,7 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
   const disableGeckoResize = function () {
     try {
       // Disable object resizing on Gecko
-      editor.getDoc().execCommand('enableObjectResizing', false, false);
+      editor.getDoc().execCommand('enableObjectResizing', false, 'false');
     } catch (ex) {
       // Ignore
     }
@@ -465,7 +449,7 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
           Delay.setEditorTimeout(editor, () => editor.selection.select(node));
         };
 
-        if (isWithinContentEditableFalse(e.target)) {
+        if (isWithinContentEditableFalse(e.target) || NodeType.isMedia(e.target)) {
           e.preventDefault();
           delayedSelect(e.target);
           return;

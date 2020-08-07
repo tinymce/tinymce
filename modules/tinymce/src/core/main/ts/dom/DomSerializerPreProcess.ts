@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { document, Element } from '@ephox/dom-globals';
 import Editor from '../api/Editor';
 import * as Events from '../api/Events';
 import Tools from '../api/util/Tools';

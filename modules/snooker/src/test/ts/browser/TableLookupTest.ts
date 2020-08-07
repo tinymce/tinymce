@@ -1,19 +1,19 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { Body, Compare, Element, Insert, Remove, SelectorFilter, SelectorFind } from '@ephox/sugar';
+import { Compare, Insert, Remove, SelectorFilter, SelectorFind, SugarBody, SugarElement } from '@ephox/sugar';
 import * as TableLookup from 'ephox/snooker/api/TableLookup';
 
 UnitTest.test('TableLookupTest', function () {
   const testerFound = function (html: string, triggerSelector: string, resultSelector: string, label: string) {
-    const element = Element.fromHtml(html);
-    Insert.append(Body.body(), element);
+    const element = SugarElement.fromHtml(html);
+    Insert.append(SugarBody.body(), element);
 
-    SelectorFind.descendant(Body.body(), triggerSelector).fold(function () {
+    SelectorFind.descendant(SugarBody.body(), triggerSelector).fold(function () {
       assert.fail('Could not find anything with ' + triggerSelector);
     }, function (triggerElement) {
       const result = TableLookup.cell(triggerElement);
       assert.eq(true, result.isSome(), label + ': Expected the result to find something');
-      const expectedElement = SelectorFilter.descendants(Body.body(), resultSelector);
+      const expectedElement = SelectorFilter.descendants(SugarBody.body(), resultSelector);
       assert.eq(true, expectedElement.length === 1, label + ': Expected to find only one element in the DOM with the selector ' + resultSelector + ' found: ' + expectedElement.length);
       assert.eq(true, Compare.eq(expectedElement[0], result.getOrDie()), label + ': The result and the expectation should be the same element');
       Remove.remove(element);
@@ -21,10 +21,10 @@ UnitTest.test('TableLookupTest', function () {
   };
 
   const testerShouldNotFind = function (html: string, selector: string, label: string) {
-    const element = Element.fromHtml(html);
-    Insert.append(Body.body(), element);
+    const element = SugarElement.fromHtml(html);
+    Insert.append(SugarBody.body(), element);
 
-    SelectorFind.descendant(Body.body(), selector).fold(function () {
+    SelectorFind.descendant(SugarBody.body(), selector).fold(function () {
       assert.fail('Could not find anything with ' + selector);
     }, function (triggerElement) {
       const result = TableLookup.cell(triggerElement);
@@ -158,10 +158,10 @@ UnitTest.test('TableLookupTest', function () {
 
   const testCellShouldAlwaysReturnTheSameCell = function (html: string, label: string) {
 
-    const element = Element.fromHtml(html);
-    Insert.append(Body.body(), element);
+    const element = SugarElement.fromHtml(html);
+    Insert.append(SugarBody.body(), element);
 
-    const cells = SelectorFilter.descendants(Body.body(), 'td');
+    const cells = SelectorFilter.descendants(SugarBody.body(), 'td');
     if (cells.length === 0) { assert.fail('Could not find any table cell element'); } else {
       Arr.each(cells, function (cell) {
         const result = TableLookup.cell(cell);
@@ -175,10 +175,10 @@ UnitTest.test('TableLookupTest', function () {
 
   const testRowShouldNotReturn = function (html: string, label: string) {
 
-    const element = Element.fromHtml(html);
-    Insert.append(Body.body(), element);
+    const element = SugarElement.fromHtml(html);
+    Insert.append(SugarBody.body(), element);
 
-    const rows = SelectorFilter.descendants(Body.body(), 'tr');
+    const rows = SelectorFilter.descendants(SugarBody.body(), 'tr');
     if (rows.length === 0) { assert.fail('Could not find any table row elements'); } else {
       Arr.each(rows, function (row) {
         const result = TableLookup.cell(row);

@@ -5,9 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element, Node } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
-import { Class, Element as SugarElement, Node as SugarNode } from '@ephox/sugar';
+import { Class, SugarElement, SugarNode } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import * as Data from './Data';
 import * as Nodes from './Nodes';
@@ -18,7 +17,7 @@ const show = (editor: Editor, rootElm: Node) => {
   const nodeList = Nodes.filterDescendants(SugarElement.fromDom(rootElm), Nodes.isMatch);
 
   Arr.each(nodeList, (n) => {
-    const parent = n.dom().parentNode;
+    const parent = n.dom.parentNode;
     if (isWrappedNbsp(parent)) {
       Class.add(SugarElement.fromDom(parent), Data.nbspClass);
     } else {
@@ -27,16 +26,16 @@ const show = (editor: Editor, rootElm: Node) => {
       const div = editor.dom.create('div', null, withSpans);
       let node: any;
       while ((node = div.lastChild)) {
-        editor.dom.insertAfter(node, n.dom());
+        editor.dom.insertAfter(node, n.dom);
       }
 
-      editor.dom.remove(n.dom());
+      editor.dom.remove(n.dom);
     }
   });
 };
 
 const hide = (editor: Editor, rootElm: Node) => {
-  const nodeList = editor.dom.select(Data.selector, rootElm as Element);
+  const nodeList = editor.dom.select(Data.selector, rootElm);
 
   Arr.each(nodeList, (node) => {
     if (isWrappedNbsp(node)) {

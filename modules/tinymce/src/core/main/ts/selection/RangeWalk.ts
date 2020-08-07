@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node } from '@ephox/dom-globals';
 import DOMUtils from '../api/dom/DOMUtils';
 import { RangeLikeObject } from './RangeTypes';
 

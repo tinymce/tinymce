@@ -2,7 +2,7 @@ import { Assertions, GeneralSteps, Keyboard, Keys, Logger, Pipeline, Step } from
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Attr, Element, Html, Remove, Replication, SelectorFilter } from '@ephox/sugar';
+import { Attribute, Html, Remove, Replication, SelectorFilter, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import * as TableDelete from 'tinymce/core/delete/TableDelete';
 import Theme from 'tinymce/themes/silver/Theme';
@@ -11,12 +11,12 @@ UnitTest.asynctest('browser.tinymce.core.delete.TableDeleteTest', (success, fail
   Theme();
 
   const sAssertRawNormalizedContent = (editor: Editor, expectedContent: string) => Step.sync(() => {
-    const element = Replication.deep(Element.fromDom(editor.getBody()));
+    const element = Replication.deep(SugarElement.fromDom(editor.getBody()));
 
     // Remove internal selection dom items
     Arr.each(SelectorFilter.descendants(element, '*[data-mce-bogus="all"]'), Remove.remove);
     Arr.each(SelectorFilter.descendants(element, '*'), (elm) => {
-      Attr.remove(elm, 'data-mce-selected');
+      Attribute.remove(elm, 'data-mce-selected');
     });
 
     Assertions.assertHtml('Should be expected contents', expectedContent, Html.get(element));
@@ -42,7 +42,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.TableDeleteTest', (success, fail
     Assertions.assertEq('Should return false since the operation is a noop', false, returnVal);
   });
 
-  const sKeyboardBackspace = (editor: Editor) => Keyboard.sKeystroke(Element.fromDom(editor.getDoc()), Keys.backspace(), {});
+  const sKeyboardBackspace = (editor: Editor) => Keyboard.sKeystroke(SugarElement.fromDom(editor.getDoc()), Keys.backspace(), {});
 
   TinyLoader.setupLight((editor: Editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);

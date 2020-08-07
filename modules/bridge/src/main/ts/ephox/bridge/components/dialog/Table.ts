@@ -1,7 +1,7 @@
 import { Result } from '@ephox/katamari';
 import { ValueSchema, FieldSchema } from '@ephox/boulder';
 
-export interface TableApi {
+export interface TableSpec {
   type: 'table';
   header: string[];
   cells: string[][];
@@ -21,4 +21,5 @@ const tableFields = [
 
 export const tableSchema = ValueSchema.objOf(tableFields);
 
-export const createTable = (spec: TableApi): Result<Table, ValueSchema.SchemaError<any>> => ValueSchema.asRaw<Table>('table', tableSchema, spec);
+export const createTable = (spec: TableSpec): Result<Table, ValueSchema.SchemaError<any>> =>
+  ValueSchema.asRaw<Table>('table', tableSchema, spec);

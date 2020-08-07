@@ -1,5 +1,4 @@
-/* tslint:disable:no-console */
-import { console } from '@ephox/dom-globals';
+/* eslint-disable no-console */
 import Editor from 'tinymce/core/api/Editor';
 import ButtonSetupDemo from './ButtonSetupDemo';
 

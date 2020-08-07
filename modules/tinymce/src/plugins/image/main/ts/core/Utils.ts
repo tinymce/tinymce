@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Blob, document, Element, FileReader, HTMLElement } from '@ephox/dom-globals';
 import Editor from 'tinymce/core/api/Editor';
 import { StyleMap } from 'tinymce/core/api/html/Styles';
 import Promise from 'tinymce/core/api/util/Promise';
@@ -148,7 +147,7 @@ const waitLoadImage = (editor: Editor, data: ImageData, imgElm: HTMLElement) => 
 const blobToDataUri = (blob: Blob) => new Promise<string>((resolve, reject) => {
   const reader = new FileReader();
   reader.onload = () => {
-    resolve(reader.result);
+    resolve(reader.result as string);
   };
   reader.onerror = () => {
     reject(reader.error.message);

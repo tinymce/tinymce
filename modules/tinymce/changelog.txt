@@ -1,7 +1,11 @@
 Version 5.5.0 (TBD)
+    Added a TypeScript declaration file to the bundle output for TinyMCE core #TINY-3785
     Added new `table_column_resizing` setting to control how the table is affected when resizing columns using the resize bars #TINY-6001
     Added ability to load TinyMCE in inline mode within a ShadowRoot #TINY-6128
+    Added the ability to remove images on a failed upload using the `images_upload_handler` failure callback #TINY-6011
     Added `hasPlugin` function to the editor API to determine if a plugin exists or not #TINY-766
+    Added the ability to delete and navigate HTML media elements without the media plugin #TINY-4211
+    Added `fullscreen_native` setting to the fullscreen plugin to enable use of the entire monitor #TINY-6284
     Changed the `target` property on fired events to use the native event target. The original target for an open shadow root can be obtained using `event.getComposedPath()` #TINY-6128
     Changed `imagetools` context menu icon for accessing the `image` settings to use the same icon #TINY-4141
     Deprecated the `Env.experimentalShadowDom` flag #TINY-6128
@@ -15,6 +19,12 @@ Version 5.5.0 (TBD)
     Fixed the `link` dialog not showing the "Text to display" field in some valid cases #TINY-5205
     Fixed pressing escape not focusing the editor when using multiple toolbars #TINY-6230
     Fixed the `dirty` flag not being correctly set during an `AddUndo` event #TINY-4707
+Version 5.4.2 (TBD)
+    Fixed clicking on notifications causing inline editors to hide #TINY-6058
+    Fixed a regression where the `anchor_top` and `anchor_bottom` settings weren't working when set to `false` #TINY-6256
+    Fixed an exception thrown when positioning the context toolbar on Internet Explorer 11 in some edge cases #TINY-6271
+    Fixed inline formats not removed when more than one `removeformat` format rule existed #TINY-6216
+    Fixed list toolbar buttons not showing as active when a list is selected #TINY-6286
 Version 5.4.1 (2020-07-08)
     Fixed the Search and Replace plugin incorrectly including zero-width caret characters in search results #TINY-4599
     Fixed dragging and dropping unsupported files navigating the browser away from the editor #TINY-6027

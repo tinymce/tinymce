@@ -5,7 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-const get = function (fullscreenState) {
+import { Cell } from '@ephox/katamari';
+import { ScrollInfo } from '../core/Actions';
+
+const get = function (fullscreenState: Cell<ScrollInfo | null>) {
   return {
     isFullscreen() {
       return fullscreenState.get() !== null;

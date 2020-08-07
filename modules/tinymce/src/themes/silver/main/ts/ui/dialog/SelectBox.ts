@@ -6,20 +6,18 @@
  */
 
 import {
-  AddEventsBehaviour, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, Disabling, FormField as AlloyFormField,
-  HtmlSelect as AlloyHtmlSelect, NativeEvents, SimpleSpec, SketchSpec, Tabstopping
+  AddEventsBehaviour, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, Disabling, FormField as AlloyFormField, HtmlSelect as AlloyHtmlSelect,
+  NativeEvents, SimpleSpec, SketchSpec, Tabstopping
 } from '@ephox/alloy';
-import { Types } from '@ephox/bridge';
-import { Arr, Option } from '@ephox/katamari';
+import { Dialog } from '@ephox/bridge';
+import { Arr, Optional } from '@ephox/katamari';
 import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
 import { renderLabel } from 'tinymce/themes/silver/ui/alien/FieldLabeller';
 import * as Icons from 'tinymce/themes/silver/ui/icons/Icons';
 import * as ReadOnly from '../../ReadOnly';
-
 import { formChangeEvent } from '../general/FormEvents';
-import { Omit } from '../Omit';
 
-type SelectBoxSpec = Omit<Types.SelectBox.SelectBox, 'type'>;
+type SelectBoxSpec = Omit<Dialog.SelectBox, 'type'>;
 
 export const renderSelectBox = (spec: SelectBoxSpec, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
   const translatedOptions = Arr.map(spec.items, (item) => ({
@@ -30,7 +28,7 @@ export const renderSelectBox = (spec: SelectBoxSpec, providersBackstage: UiFacto
   // DUPE with TextField.
   const pLabel = spec.label.map((label) => renderLabel(label, providersBackstage));
 
-  const pField = AlloyFormField.parts().field({
+  const pField = AlloyFormField.parts.field({
     // TODO: Alloy should not allow dom changing of an HTML select!
     dom: { },
     selectAttributes: {
@@ -51,8 +49,8 @@ export const renderSelectBox = (spec: SelectBoxSpec, providersBackstage: UiFacto
     ])
   });
 
-  const chevron: Option<AlloySpec> = spec.size > 1 ? Option.none() :
-    Option.some({
+  const chevron: Optional<AlloySpec> = spec.size > 1 ? Optional.none() :
+    Optional.some({
       dom: {
         tag: 'div',
         classes: [ 'tox-selectfield__icon-js' ],

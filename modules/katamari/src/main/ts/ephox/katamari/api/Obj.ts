@@ -1,6 +1,6 @@
 import { Eq } from '@ephox/dispute';
 import * as Fun from './Fun';
-import { Option } from './Option';
+import { Optional } from './Optional';
 
 // There are many variations of Object iteration that are faster than the 'for-in' style:
 // http://jsperf.com/object-keys-iteration/107
@@ -68,16 +68,16 @@ export const mapToArray = function <T, R> (obj: T, f: (value: T[keyof T], key: s
   return r;
 };
 
-export const find = function <T> (obj: T, pred: (value: T[keyof T], key: string, obj: T) => boolean): Option<T[keyof T]> {
+export const find = function <T> (obj: T, pred: (value: T[keyof T], key: string, obj: T) => boolean): Optional<T[keyof T]> {
   const props = keys(obj);
   for (let k = 0, len = props.length; k < len; k++) {
     const i = props[k];
     const x = obj[i];
     if (pred(x, i, obj)) {
-      return Option.some(x);
+      return Optional.some(x);
     }
   }
-  return Option.none();
+  return Optional.none();
 };
 
 export const values = function <T> (obj: T) {
@@ -90,8 +90,8 @@ export const size = function (obj: {}) {
   return keys(obj).length;
 };
 
-export const get = function <T, K extends keyof T> (obj: T, key: K): Option<NonNullable<T[K]>> {
-  return has(obj, key) ? Option.from(obj[key] as NonNullable<T[K]>) : Option.none();
+export const get = function <T, K extends keyof T> (obj: T, key: K): Optional<NonNullable<T[K]>> {
+  return has(obj, key) ? Optional.from(obj[key] as NonNullable<T[K]>) : Optional.none();
 };
 
 export const has = <T, K extends keyof T>(obj: T, key: K): boolean =>

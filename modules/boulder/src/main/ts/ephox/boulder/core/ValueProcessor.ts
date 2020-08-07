@@ -1,4 +1,4 @@
-import { Adt, Arr, Fun, Merger, Obj, Option, Thunk, Type } from '@ephox/katamari';
+import { Adt, Arr, Fun, Merger, Obj, Optional, Thunk, Type } from '@ephox/katamari';
 import { SimpleResult, SimpleResultType } from '../alien/SimpleResult';
 
 import * as FieldPresence from '../api/FieldPresence';
@@ -86,12 +86,12 @@ const cExtractOne = function (path, obj, field, strength) {
 
       const bundleAsOption = function (optValue) {
         return optValue.fold(function () {
-          const outcome = ObjWriter.wrap(okey, strength(Option.none()));
+          const outcome = ObjWriter.wrap(okey, strength(Optional.none()));
           return SimpleResult.svalue(outcome);
         }, function (ov) {
           const result: SimpleResult<any, any> = prop.extract(path.concat([ key ]), strength, ov);
           return SimpleResult.map(result, function (res) {
-            return ObjWriter.wrap(okey, strength(Option.some(res)));
+            return ObjWriter.wrap(okey, strength(Optional.some(res)));
           });
         });
       };

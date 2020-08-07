@@ -1,5 +1,5 @@
 import { Universe } from '@ephox/boss';
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import { Pattern, PositionArray, Search } from '@ephox/polaris';
 import { NamedPattern } from '../api/data/NamedPattern';
 import * as Spot from '../api/data/Spot';
@@ -11,7 +11,7 @@ import * as MatchSplitter from './MatchSplitter';
 const gen = function <E, D> (universe: Universe<E, D>, input: E[]) {
   return PositionArray.generate(input, function (unit, offset) {
     const finish = offset + universe.property().getText(unit).length;
-    return Option.from(Spot.range(unit, offset, finish));
+    return Optional.from(Spot.range(unit, offset, finish));
   });
 };
 

@@ -5,8 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element, HTMLElement, Node, Range, Text } from '@ephox/dom-globals';
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import DOMUtils from '../api/dom/DOMUtils';
 import TextSeeker from '../api/dom/TextSeeker';
 import Editor from '../api/Editor';
@@ -72,7 +71,7 @@ const findWordEndPoint = (
   const walk = (container: Node, offset: number, pred: (start: boolean, node: Text, offset?: number) => number) => {
     const textSeeker = TextSeeker(dom);
     const walker = start ? textSeeker.backwards : textSeeker.forwards;
-    return Option.from(walker(container, offset, (text, textOffset) => {
+    return Optional.from(walker(container, offset, (text, textOffset) => {
       if (isBookmarkNode(text.parentNode)) {
         return -1;
       } else {
@@ -86,11 +85,11 @@ const findWordEndPoint = (
   return spaceResult.bind(
     (result) => includeTrailingSpaces ?
       walk(result.container, result.offset + (start ? -1 : 0), findContent) :
-      Option.some(result)
+      Optional.some(result)
   ).orThunk(
     () => lastTextNode ?
-      Option.some({ container: lastTextNode, offset: start ? 0 : lastTextNode.length }) :
-      Option.none()
+      Optional.some({ container: lastTextNode, offset: start ? 0 : lastTextNode.length }) :
+      Optional.none()
   );
 };
 

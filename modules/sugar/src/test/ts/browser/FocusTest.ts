@@ -1,26 +1,25 @@
 import { Assert, assert, UnitTest } from '@ephox/bedrock-client';
+import { Optional, OptionalInstances } from '@ephox/katamari';
 import * as Compare from 'ephox/sugar/api/dom/Compare';
 import * as Focus from 'ephox/sugar/api/dom/Focus';
 import * as Insert from 'ephox/sugar/api/dom/Insert';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
-import * as Body from 'ephox/sugar/api/node/Body';
-import Element from 'ephox/sugar/api/node/Element';
-import * as Attr from 'ephox/sugar/api/properties/Attr';
+import * as SugarBody from 'ephox/sugar/api/node/SugarBody';
+import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
+import { tElement } from 'ephox/sugar/api/node/SugarElementInstances';
+import * as Attribute from 'ephox/sugar/api/properties/Attribute';
 import { withShadowElement } from 'ephox/sugar/test/WithHelpers';
-import { Option, OptionInstances } from '@ephox/katamari';
-import { tElement } from 'ephox/sugar/api/node/ElementInstances';
-import { HTMLElement } from '@ephox/dom-globals';
 
-const tOption = OptionInstances.tOption;
+const tOptional = OptionalInstances.tOptional;
 
 UnitTest.test('FocusTest', () => {
-  const div = Element.fromTag('div');
-  Attr.set(div, 'tabindex', '-1');
+  const div = SugarElement.fromTag('div');
+  Attribute.set(div, 'tabindex', '-1');
 
-  const input = Element.fromTag('input');
+  const input = SugarElement.fromTag('input');
 
   Insert.append(div, input);
-  Insert.append(Body.body(), div);
+  Insert.append(SugarBody.body(), div);
 
   Focus.focus(input);
   assert.eq(true, Compare.eq(Focus.active().getOrDie(), input));
@@ -40,19 +39,19 @@ UnitTest.test('FocusTest', () => {
 
 UnitTest.test('Focus.active in ShadowRoot', () => {
   withShadowElement((sr, id, sh) => {
-    const innerInput: Element<HTMLElement> = Element.fromTag('input');
+    const innerInput: SugarElement<HTMLElement> = SugarElement.fromTag('input');
     Insert.append(sr, innerInput);
 
-    const outerInput: Element<HTMLElement> = Element.fromTag('input');
-    Insert.append(Body.body(), outerInput);
+    const outerInput: SugarElement<HTMLElement> = SugarElement.fromTag('input');
+    Insert.append(SugarBody.body(), outerInput);
 
     Focus.focus(innerInput);
-    Assert.eq('ShadowRoot\'s active element is the inner input box', Focus.active(sr), Option.some(innerInput), tOption(tElement()));
-    Assert.eq('Document\'s active element is the shadow host', Focus.active(), Option.some(sh), tOption(tElement()));
+    Assert.eq('ShadowRoot\'s active element is the inner input box', Focus.active(sr), Optional.some(innerInput), tOptional(tElement()));
+    Assert.eq('Document\'s active element is the shadow host', Focus.active(), Optional.some(sh), tOptional(tElement()));
 
     Focus.focus(outerInput);
-    Assert.eq('ShadowRoot\'s active element should be none', Focus.active(sr), Option.none(), tOption(tElement()));
-    Assert.eq('Document\'s active element is the outer input box', Focus.active(), Option.some(outerInput), tOption(tElement()));
+    Assert.eq('ShadowRoot\'s active element should be none', Focus.active(sr), Optional.none(), tOptional(tElement()));
+    Assert.eq('Document\'s active element is the outer input box', Focus.active(), Optional.some(outerInput), tOptional(tElement()));
 
     Remove.remove(outerInput);
   });
@@ -60,23 +59,23 @@ UnitTest.test('Focus.active in ShadowRoot', () => {
 
 UnitTest.test('Focus.search in ShadowRoot', () => {
   withShadowElement((sr, id, sh) => {
-    const innerInput: Element<HTMLElement> = Element.fromTag('input');
+    const innerInput: SugarElement<HTMLElement> = SugarElement.fromTag('input');
     Insert.append(id, innerInput);
 
-    const outerInput: Element<HTMLElement> = Element.fromTag('input');
-    Insert.append(Body.body(), outerInput);
+    const outerInput: SugarElement<HTMLElement> = SugarElement.fromTag('input');
+    Insert.append(SugarBody.body(), outerInput);
 
     Focus.focus(innerInput);
-    Assert.eq('Searching from div inside shadow root should yield focused input box', Focus.search(id), Option.some(innerInput), tOption(tElement()));
-    Assert.eq('Searching from shadow root should yield focused input box', Focus.search(sr), Option.some(innerInput), tOption(tElement()));
-    Assert.eq('Searching from shadow host should yield shadow host', Focus.search(sh), Option.some(sh), tOption(tElement()));
-    Assert.eq('Searching from body should yield shadow host', Focus.search(Body.body()), Option.some(sh), tOption(tElement()));
+    Assert.eq('Searching from div inside shadow root should yield focused input box', Focus.search(id), Optional.some(innerInput), tOptional(tElement()));
+    Assert.eq('Searching from shadow root should yield focused input box', Focus.search(sr), Optional.some(innerInput), tOptional(tElement()));
+    Assert.eq('Searching from shadow host should yield shadow host', Focus.search(sh), Optional.some(sh), tOptional(tElement()));
+    Assert.eq('Searching from body should yield shadow host', Focus.search(SugarBody.body()), Optional.some(sh), tOptional(tElement()));
 
     Focus.focus(outerInput);
-    Assert.eq('Searching from div inside shadow root should yield none', Focus.search(id), Option.none(), tOption(tElement()));
-    Assert.eq('Searching from shadow root should yield none', Focus.search(sr), Option.none(), tOption(tElement()));
-    Assert.eq('Searching from shadow host should yield none', Focus.search(sh), Option.none(), tOption(tElement()));
-    Assert.eq('Searching from body should yield outer input box', Focus.search(Body.body()), Option.some(outerInput), tOption(tElement()));
+    Assert.eq('Searching from div inside shadow root should yield none', Focus.search(id), Optional.none(), tOptional(tElement()));
+    Assert.eq('Searching from shadow root should yield none', Focus.search(sr), Optional.none(), tOptional(tElement()));
+    Assert.eq('Searching from shadow host should yield none', Focus.search(sh), Optional.none(), tOptional(tElement()));
+    Assert.eq('Searching from body should yield outer input box', Focus.search(SugarBody.body()), Optional.some(outerInput), tOptional(tElement()));
 
     Remove.remove(outerInput);
   });
@@ -84,11 +83,11 @@ UnitTest.test('Focus.search in ShadowRoot', () => {
 
 UnitTest.test('Focus.hasFocus in ShadowRoot', () => {
   withShadowElement((shadowRoot, innerDiv, shadowHost) => {
-    const innerInput: Element<HTMLElement> = Element.fromTag('input');
+    const innerInput: SugarElement<HTMLElement> = SugarElement.fromTag('input');
     Insert.append(innerDiv, innerInput);
 
-    const outerInput: Element<HTMLElement> = Element.fromTag('input');
-    Insert.append(Body.body(), outerInput);
+    const outerInput: SugarElement<HTMLElement> = SugarElement.fromTag('input');
+    Insert.append(SugarBody.body(), outerInput);
 
     Focus.focus(innerInput);
     Assert.eq('innerInput should have focus', true, Focus.hasFocus(innerInput));
@@ -110,10 +109,10 @@ UnitTest.test('Focus.hasFocus in ShadowRoot', () => {
 
 UnitTest.test('Focus.focusInside in ShadowRoot', () => {
   withShadowElement((shadowRoot, innerDiv, shadowHost) => {
-    const innerInput: Element<HTMLElement> = Element.fromTag('input');
+    const innerInput: SugarElement<HTMLElement> = SugarElement.fromTag('input');
     Insert.append(innerDiv, innerInput);
 
-    Attr.set(innerDiv, 'tabindex', '-1');
+    Attribute.set(innerDiv, 'tabindex', '-1');
 
     Focus.focus(innerInput);
     Assert.eq('innerInput should have focus', true, Focus.hasFocus(innerInput));

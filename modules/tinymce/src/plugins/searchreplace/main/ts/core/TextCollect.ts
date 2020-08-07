@@ -5,12 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node, Range, Text } from '@ephox/dom-globals';
 import { Arr, Fun, Obj } from '@ephox/katamari';
-import { Node as SandNode } from '@ephox/sand';
-import { Element, SelectorFilter, Traverse } from '@ephox/sugar';
+import { SandNode } from '@ephox/sand';
+import { SelectorFilter, SugarElement, Traverse } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
-import TreeWalker from 'tinymce/core/api/dom/TreeWalker';
+import DomTreeWalker from 'tinymce/core/api/dom/TreeWalker';
 import { TextSection } from './Types';
 
 interface WalkerCallbacks {
@@ -37,7 +36,7 @@ const nuSection = (): TextSection => ({
   elements: []
 });
 
-const toLeaf = (node: Node, offset: number) => Traverse.leaf(Element.fromDom(node), offset);
+const toLeaf = (node: Node, offset: number) => Traverse.leaf(SugarElement.fromDom(node), offset);
 
 const walk = (dom: DOMUtils, walkerFn: (shallow?: boolean) => Node, startNode: Node, callbacks: WalkerCallbacks, endNode?: Node, skipStart: boolean = true) => {
   let next = skipStart ? walkerFn(false) : startNode;
@@ -75,7 +74,7 @@ const collectTextToBoundary = (dom: DOMUtils, section: TextSection, node: Node, 
   }
 
   const rootBlock = dom.getParent(rootNode, dom.isBlock);
-  const walker = new TreeWalker(node, rootBlock);
+  const walker = new DomTreeWalker(node, rootBlock);
   const walkerFn = forwards ? walker.next : walker.prev;
 
   // Walk over and add text nodes to the section and increase the offsets
@@ -89,13 +88,13 @@ const collectTextToBoundary = (dom: DOMUtils, section: TextSection, node: Node, 
       } else {
         section.sOffset += next.length;
       }
-      section.elements.push(Element.fromDom(next));
+      section.elements.push(SugarElement.fromDom(next));
     }
   });
 };
 
 const collect = (dom: DOMUtils, rootNode: Node, startNode: Node, endNode?: Node, callbacks?: CollectCallbacks, skipStart: boolean = true) => {
-  const walker = new TreeWalker(startNode, rootNode);
+  const walker = new DomTreeWalker(startNode, rootNode);
   const sections: TextSection[] = [];
   let current: TextSection = nuSection();
 
@@ -123,7 +122,7 @@ const collect = (dom: DOMUtils, rootNode: Node, startNode: Node, endNode?: Node,
       return false;
     },
     text: (next) => {
-      current.elements.push(Element.fromDom(next));
+      current.elements.push(SugarElement.fromDom(next));
       if (callbacks) {
         callbacks.text(next, current);
       }
@@ -141,27 +140,27 @@ const collect = (dom: DOMUtils, rootNode: Node, startNode: Node, endNode?: Node,
 
 const collectRangeSections = (dom: DOMUtils, rng: Range): TextSection[] => {
   const start = toLeaf(rng.startContainer, rng.startOffset);
-  const startNode = start.element().dom();
+  const startNode = start.element.dom;
   const end = toLeaf(rng.endContainer, rng.endOffset);
-  const endNode = end.element().dom();
+  const endNode = end.element.dom;
 
   return collect(dom, rng.commonAncestorContainer, startNode, endNode, {
     text: (node, section) => {
       // Set the start/end offset of the section
       if (node === endNode) {
-        section.fOffset += node.length - end.offset();
+        section.fOffset += node.length - end.offset;
       } else if (node === startNode) {
-        section.sOffset += start.offset();
+        section.sOffset += start.offset;
       }
     },
     cef: (node) => {
       // Collect the sections and then order them appropriately, as nested sections maybe out of order
       // TODO: See if we can improve this to avoid the sort overhead
-      const sections = Arr.bind(SelectorFilter.descendants(Element.fromDom(node), '*[contenteditable=true]'), (e) => {
-        const ceTrueNode = e.dom();
+      const sections = Arr.bind(SelectorFilter.descendants(SugarElement.fromDom(node), '*[contenteditable=true]'), (e) => {
+        const ceTrueNode = e.dom;
         return collect(dom, ceTrueNode, ceTrueNode);
       });
-      return Arr.sort(sections, (a, b) => (SandNode.documentPositionPreceding(a.elements[0].dom(), b.elements[0].dom())) ? 1 : -1);
+      return Arr.sort(sections, (a, b) => (SandNode.documentPositionPreceding(a.elements[0].dom, b.elements[0].dom)) ? 1 : -1);
     }
   }, false);
 };

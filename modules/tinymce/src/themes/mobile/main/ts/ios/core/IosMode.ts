@@ -6,7 +6,7 @@
  */
 
 import { Singleton } from '@ephox/katamari';
-import { Class, Css, Element, Focus } from '@ephox/sugar';
+import { Class, Css, Focus, SugarElement } from '@ephox/sugar';
 
 import * as Styles from '../../style/Styles';
 import * as Scrollable from '../../touch/scroll/Scrollable';
@@ -17,7 +17,6 @@ import * as IosKeyboard from '../view/IosKeyboard';
 import * as IosEvents from './IosEvents';
 import * as IosSetup from './IosSetup';
 import * as PlatformEditor from './PlatformEditor';
-import { document } from '@ephox/dom-globals';
 
 type IosApi = IosSetup.IosApi;
 
@@ -32,14 +31,14 @@ const create = function (platform, mask) {
 
   const enter = function () {
     mask.hide();
-    const doc = Element.fromDom(document);
+    const doc = SugarElement.fromDom(document);
     PlatformEditor.getActiveApi(platform.editor).each(function (editorApi) {
       // TODO: Orientation changes.
       // orientation = Orientation.onChange();
 
       priorState.set({
         socketHeight: Css.getRaw(platform.socket, 'height'),
-        iframeHeight: Css.getRaw(editorApi.frame(), 'height'),
+        iframeHeight: Css.getRaw(editorApi.frame, 'height'),
         outerScroll: document.body.scrollTop
       });
 
@@ -50,7 +49,7 @@ const create = function (platform, mask) {
       });
 
       Class.add(platform.container, Styles.resolve('fullscreen-maximized'));
-      Thor.clobberStyles(platform.container, editorApi.body());
+      Thor.clobberStyles(platform.container, editorApi.body);
       meta.maximize();
 
       /* NOTE: Making the toolbar scrollable is now done when the middle group is created */
@@ -58,16 +57,16 @@ const create = function (platform, mask) {
       Css.set(platform.socket, 'overflow', 'scroll');
       Css.set(platform.socket, '-webkit-overflow-scrolling', 'touch');
 
-      Focus.focus(editorApi.body());
+      Focus.focus(editorApi.body);
 
       iosApi.set(
         IosSetup.setup({
-          cWin: editorApi.win(),
-          ceBody: editorApi.body(),
+          cWin: editorApi.win,
+          ceBody: editorApi.body,
           socket: platform.socket,
           toolstrip: platform.toolstrip,
-          dropup: platform.dropup.element(),
-          contentElement: editorApi.frame(),
+          dropup: platform.dropup.element,
+          contentElement: editorApi.frame,
           outerBody: platform.body,
           outerWindow: platform.win,
           keyboardType: IosKeyboard.stubborn

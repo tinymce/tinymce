@@ -1,4 +1,4 @@
-import { Future, Option } from '@ephox/katamari';
+import { Future, Optional } from '@ephox/katamari';
 
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { LazySink } from '../../api/component/CommonTypes';
@@ -9,7 +9,7 @@ import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../
 import { TransitionProperties } from '../../behaviour/transitioning/TransitioningTypes';
 import { AnchorSpec } from '../../positioning/mode/Anchoring';
 import { CommonDropdownDetail } from './DropdownTypes';
-import { ItemSpec, ItemDataTuple } from './ItemTypes';
+import { ItemDataTuple, ItemSpec } from './ItemTypes';
 import { TabviewSpec } from './TabviewTypes';
 import { PartialMenuSpec } from './TieredMenuTypes';
 
@@ -31,12 +31,12 @@ export interface TouchMenuDetail extends CommonDropdownDetail<ItemSpec[]>, Compo
   onOpen: (anchor: AnchorSpec, comp: AlloyComponent, menu: AlloyComponent) => void;
   onClosed: (sandbox: AlloyComponent, inline: AlloyComponent) => void;
   eventOrder: Record<string, string[]>;
-  role: Option<string>;
+  role: Optional<string>;
 
   getAnchor: (comp: AlloyComponent) => AnchorSpec;
-  lazySink: Option<LazySink>;
+  lazySink: Optional<LazySink>;
 
-  fetch: (comp: AlloyComponent) => Future<Option<ItemSpec[]>>;
+  fetch: (comp: AlloyComponent) => Future<Optional<ItemSpec[]>>;
 }
 
 export interface TouchMenuSpec extends CompositeSketchSpec {
@@ -63,7 +63,7 @@ export interface TouchMenuSpec extends CompositeSketchSpec {
 
   lazySink?: LazySink;
 
-  fetch: (comp: AlloyComponent) => Future<Option<ItemSpec[]>>;
+  fetch: (comp: AlloyComponent) => Future<Optional<ItemSpec[]>>;
   matchWidth?: boolean;
   useMinWidth?: boolean;
 

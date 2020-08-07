@@ -5,10 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Blob, HTMLImageElement, URL } from '@ephox/dom-globals';
 import { BlobConversions, ImageTransformations, ResultConversions } from '@ephox/imagetools';
-import { Option } from '@ephox/katamari';
-import { Element, SelectorFind } from '@ephox/sugar';
+import { Optional } from '@ephox/katamari';
+import { SelectorFind, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 
 import Delay from 'tinymce/core/api/util/Delay';
@@ -22,7 +21,7 @@ import * as Proxy from './Proxy';
 
 let count = 0;
 
-const getFigureImg = (elem) => SelectorFind.child(Element.fromDom(elem), 'img');
+const getFigureImg = (elem) => SelectorFind.child(SugarElement.fromDom(elem), 'img');
 
 const isFigure = (editor: Editor, elem) => editor.dom.is(elem, 'figure');
 
@@ -32,9 +31,9 @@ const getEditableImage = (editor: Editor, elem) => {
 
   if (isFigure(editor, elem)) {
     const imgOpt = getFigureImg(elem);
-    return imgOpt.map((img) => isEditable(img.dom()) ? Option.some(img.dom()) : Option.none());
+    return imgOpt.map((img) => isEditable(img.dom) ? Optional.some(img.dom) : Optional.none());
   }
-  return isEditable(elem) ? Option.some(elem) : Option.none();
+  return isEditable(elem) ? Optional.some(elem) : Optional.none();
 };
 
 const displayError = function (editor: Editor, error) {
@@ -44,12 +43,12 @@ const displayError = function (editor: Editor, error) {
   });
 };
 
-const getSelectedImage = (editor: Editor): Option<Element> => {
+const getSelectedImage = (editor: Editor): Optional<SugarElement> => {
   const elem = editor.selection.getNode();
   if (isFigure(editor, elem)) {
     return getFigureImg(elem);
   } else {
-    return Option.some(Element.fromDom(elem));
+    return Optional.some(SugarElement.fromDom(elem));
   }
 };
 
@@ -185,11 +184,11 @@ const selectedImageOperation = function (editor: Editor, imageUploadTimerState, 
     return imgOpt.fold(() => {
       displayError(editor, 'Could not find selected image');
     }, (img) => editor._scanForImages().
-      then(() => findBlob(editor, img.dom())).
+      then(() => findBlob(editor, img.dom)).
       then(ResultConversions.blobToImageResult).
       then(fn).
       then(function (imageResult) {
-        return updateSelectedImage(editor, imageResult, false, imageUploadTimerState, img.dom(), size);
+        return updateSelectedImage(editor, imageResult, false, imageUploadTimerState, img.dom, size);
       }, function (error) {
         displayError(editor, error);
       }));
@@ -200,7 +199,7 @@ const rotate = function (editor: Editor, imageUploadTimerState, angle) {
   return function () {
     const imgOpt = getSelectedImage(editor);
     const flippedSize = imgOpt.fold(() => null, (img) => {
-      const size = ImageSize.getImageSize(img.dom());
+      const size = ImageSize.getImageSize(img.dom);
       return size ? { w: size.h, h: size.w } : null;
     });
 

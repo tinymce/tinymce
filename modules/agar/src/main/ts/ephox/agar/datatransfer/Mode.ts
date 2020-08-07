@@ -1,5 +1,4 @@
-import { Id, Option } from '@ephox/katamari';
-import { DataTransfer } from '@ephox/dom-globals';
+import { Id, Optional } from '@ephox/katamari';
 
 const enum Mode {
   ReadWrite,
@@ -16,7 +15,7 @@ const setMode = (mode: Mode) => (transfer: DataTransfer): void => {
 
 const checkMode = (expectedMode: Mode) => (transfer: DataTransfer): boolean => {
   const dt: any = transfer;
-  return Option.from(dt[modeId]).exists((mode) => mode === expectedMode);
+  return Optional.from(dt[modeId]).exists((mode) => mode === expectedMode);
 };
 
 const setReadWriteMode = setMode(Mode.ReadWrite);

@@ -8,7 +8,6 @@
     "ephox"
   ],
   "dependencies": {
-    "@ephox/dom-globals": "^1.1.2",
     "tslib": "^2.0.0"
   },
   "scripts": {

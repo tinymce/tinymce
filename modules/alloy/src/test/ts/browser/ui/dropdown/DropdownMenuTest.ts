@@ -1,6 +1,6 @@
 import { FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, Touch, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Arr, Fun, Future, Obj, Option, Result } from '@ephox/katamari';
+import { Arr, Fun, Future, Obj, Optional, Result } from '@ephox/katamari';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
@@ -132,7 +132,7 @@ UnitTest.asynctest('DropdownMenuTest', (success, failure) => {
         },
 
         fetch() {
-          return Future.pure(testData).map((d) => Option.from(TieredMenu.tieredData(d.primary, d.menus, d.expansions)));
+          return Future.pure(testData).map((d) => Optional.from(TieredMenu.tieredData(d.primary, d.menus, d.expansions)));
         }
       })
     );
@@ -170,17 +170,17 @@ UnitTest.asynctest('DropdownMenuTest', (success, failure) => {
     const sTestMenus = (label: string, stored: string[], focused: TestFocusable, active: TestFocusable[], background: TestFocusable[], others: TestFocusable[]) => {
       const sCheckBackground = GeneralSteps.sequence(
         Arr.bind(background, (bg) => [
-          UiFinder.sExists(gui.element(), bg.selector),
-          UiFinder.sNotExists(gui.element(), bg.selector + '.selected-menu')
+          UiFinder.sExists(gui.element, bg.selector),
+          UiFinder.sNotExists(gui.element, bg.selector + '.selected-menu')
         ])
       );
 
       const sCheckActive = GeneralSteps.sequence(
-        Arr.map(active, (o) => UiFinder.sExists(gui.element(), o.selector + '.selected-menu'))
+        Arr.map(active, (o) => UiFinder.sExists(gui.element, o.selector + '.selected-menu'))
       );
 
       const sCheckOthers = GeneralSteps.sequence(
-        Arr.map(others, (o) => UiFinder.sNotExists(gui.element(), o.selector))
+        Arr.map(others, (o) => UiFinder.sNotExists(gui.element, o.selector))
       );
 
       return Logger.t(
@@ -219,7 +219,7 @@ UnitTest.asynctest('DropdownMenuTest', (success, failure) => {
 
       Waiter.sTryUntil(
         'Wait until dropdown content loads',
-        UiFinder.sExists(gui.element(), '.menu')
+        UiFinder.sExists(gui.element, '.menu')
       ),
 
       sTestMenus(
@@ -347,7 +347,7 @@ UnitTest.asynctest('DropdownMenuTest', (success, failure) => {
       ),
 
       // Hover on "strings"
-      Mouse.sHoverOn(gui.element(), focusables.strings.selector),
+      Mouse.sHoverOn(gui.element, focusables.strings.selector),
       sTestMenus(
         'After hovering on "strings" (should only expand)',
         [ ],
@@ -358,19 +358,19 @@ UnitTest.asynctest('DropdownMenuTest', (success, failure) => {
       ),
 
       // Click on "about"
-      Mouse.sClickOn(gui.element(), focusables.about.selector),
+      Mouse.sClickOn(gui.element, focusables.about.selector),
       // Menus are somewhat irrelevant here, because the hover would have changed them,
       // not the click
       store.sAssertEq('Checking about fired', [ 'dropdown.menu.execute: about' ]),
       store.sClear,
 
       // Tap on "about"
-      Touch.sTapOn(gui.element(), focusables.about.selector),
+      Touch.sTapOn(gui.element, focusables.about.selector),
       store.sAssertEq('Checking about fired', [ 'dropdown.menu.execute: about' ]),
       store.sClear,
 
       // Hover on "about"
-      Mouse.sHoverOn(gui.element(), focusables.about.selector),
+      Mouse.sHoverOn(gui.element, focusables.about.selector),
       sTestMenus(
         'After hovering on "strings"',
         [ ],

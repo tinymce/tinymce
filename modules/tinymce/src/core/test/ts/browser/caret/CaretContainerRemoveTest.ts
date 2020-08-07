@@ -1,11 +1,11 @@
 import { Assertions, Logger, Pipeline, Step } from '@ephox/agar';
-import { Element } from '@ephox/sugar';
+import { UnitTest } from '@ephox/bedrock-client';
+import { SugarElement } from '@ephox/sugar';
+import Env from 'tinymce/core/api/Env';
 import * as CaretContainer from 'tinymce/core/caret/CaretContainer';
 import * as CaretContainerRemove from 'tinymce/core/caret/CaretContainerRemove';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
-import Env from 'tinymce/core/api/Env';
 import ViewBlock from '../../module/test/ViewBlock';
-import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.core.CaretContainerRemoveTest', function (success, failure) {
   const viewBlock = ViewBlock();
@@ -45,7 +45,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretContainerRemoveTest', function (su
 
       const pos = CaretContainerRemove.removeAndReposition(getRoot().firstChild, CaretPosition(getRoot(), 0));
       Assertions.assertEq('Should be unchanged offset', 0, pos.offset());
-      Assertions.assertDomEq('Should be unchanged container', Element.fromDom(getRoot()), Element.fromDom(pos.container()));
+      Assertions.assertDomEq('Should be unchanged container', SugarElement.fromDom(getRoot()), SugarElement.fromDom(pos.container()));
       Assertions.assertEq('Should not be block container', false, CaretContainer.isCaretContainerBlock(getRoot().firstChild));
     })
   );
@@ -60,7 +60,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretContainerRemoveTest', function (su
 
       const pos = CaretContainerRemove.removeAndReposition(getRoot().childNodes[1], CaretPosition(getRoot(), 0));
       Assertions.assertEq('Should be unchanged offset', 0, pos.offset());
-      Assertions.assertDomEq('Should be unchanged container', Element.fromDom(getRoot()), Element.fromDom(pos.container()));
+      Assertions.assertDomEq('Should be unchanged container', SugarElement.fromDom(getRoot()), SugarElement.fromDom(pos.container()));
       Assertions.assertEq('Should not be block container', false, CaretContainer.isCaretContainerBlock(getRoot().childNodes[1]));
     })
   );
@@ -75,7 +75,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretContainerRemoveTest', function (su
 
       const pos = CaretContainerRemove.removeAndReposition(getRoot().childNodes[1], CaretPosition(getRoot(), 3));
       Assertions.assertEq('Should be changed offset', 2, pos.offset());
-      Assertions.assertDomEq('Should be unchanged container', Element.fromDom(getRoot()), Element.fromDom(pos.container()));
+      Assertions.assertDomEq('Should be unchanged container', SugarElement.fromDom(getRoot()), SugarElement.fromDom(pos.container()));
       Assertions.assertEq('Should not be block container', false, CaretContainer.isCaretContainerBlock(getRoot().childNodes[1]));
     })
   );

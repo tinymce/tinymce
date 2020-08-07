@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import Editor from 'tinymce/core/api/Editor';
 import * as Settings from '../api/Settings';
 import * as CodeSample from './CodeSample';
-import Editor from 'tinymce/core/api/Editor';
 
 export interface LanguageSpec {
   text: string;

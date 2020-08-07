@@ -1,6 +1,5 @@
-import { Event } from '@ephox/dom-globals';
-import { Option } from '@ephox/katamari';
-import { Element, EventArgs, Position } from '@ephox/sugar';
+import { Optional } from '@ephox/katamari';
+import { EventArgs, SugarElement, SugarPosition } from '@ephox/sugar';
 
 import { Bounds } from '../../alien/Boxes';
 import * as Behaviour from '../../api/behaviour/Behaviour';
@@ -26,30 +25,30 @@ export interface DraggingBehaviour<E> extends Behaviour.AlloyBehaviour<DraggingC
  */
 export type DraggingMode = 'touch' | 'mouse' | 'mouseOrTouch';
 export type SensorCoords = (x: number, y: number) => CoordAdt;
-export type OutputCoords = (x: Option<number>, y: Option<number>) => CoordAdt;
+export type OutputCoords = (x: Optional<number>, y: Optional<number>) => CoordAdt;
 
 export interface SnapConfig<E> {
   readonly sensor: CoordAdt;
-  readonly range: Position;
-  readonly output: CoordAdt<Option<number>>;
-  readonly extra: Option<E>;
+  readonly range: SugarPosition;
+  readonly output: CoordAdt<Optional<number>>;
+  readonly extra: Optional<E>;
 }
 
 export interface SnapConfigSpec<E> {
   readonly sensor: CoordAdt;
-  readonly range: Position;
-  readonly output: CoordAdt<Option<number>>;
+  readonly range: SugarPosition;
+  readonly output: CoordAdt<Optional<number>>;
   readonly extra?: E;
 }
 
 export interface SnapOutput<E> {
   readonly output: CoordAdt;
-  readonly extra: Option<E>;
+  readonly extra: Optional<E>;
 }
 
 export interface SnapPin<E> {
   readonly coord: CoordAdt;
-  readonly extra: Option<E>;
+  readonly extra: Optional<E>;
 }
 
 export interface SnapsConfig<E> {
@@ -71,11 +70,11 @@ export interface SnapsConfigSpec<E> {
 }
 
 export interface DraggingConfig<E> {
-  readonly getTarget: (comp: Element) => Element;
-  readonly snaps: Option<SnapsConfig<E>>;
-  readonly onDrop: (comp: AlloyComponent, target: Element) => void;
+  readonly getTarget: (comp: SugarElement) => SugarElement;
+  readonly snaps: Optional<SnapsConfig<E>>;
+  readonly onDrop: (comp: AlloyComponent, target: SugarElement) => void;
   readonly repositionTarget: boolean;
-  readonly onDrag: (comp: AlloyComponent, target: Element, delta: Position) => void;
+  readonly onDrag: (comp: AlloyComponent, target: SugarElement, delta: SugarPosition) => void;
   readonly getBounds: () => Bounds;
   readonly blockerClass: string;
   readonly dragger: {
@@ -85,10 +84,10 @@ export interface DraggingConfig<E> {
 
 export interface CommonDraggingConfigSpec<E> {
   readonly useFixed?: () => boolean;
-  readonly onDrop?: (comp: AlloyComponent, target: Element) => void;
+  readonly onDrop?: (comp: AlloyComponent, target: SugarElement) => void;
   readonly repositionTarget?: boolean;
-  readonly onDrag?: (comp: AlloyComponent, target: Element, delta: Position) => void;
-  readonly getTarget?: (elem: Element) => Element;
+  readonly onDrag?: (comp: AlloyComponent, target: SugarElement, delta: SugarPosition) => void;
+  readonly getTarget?: (elem: SugarElement) => SugarElement;
   readonly getBounds?: () => Bounds;
   readonly snaps?: SnapsConfigSpec<E>;
   readonly blockerClass: string;
@@ -97,7 +96,7 @@ export interface CommonDraggingConfigSpec<E> {
 export type DraggingConfigSpec<E> = MouseDraggingConfigSpec<E> | TouchDraggingConfigSpec<E> | MouseOrTouchDraggingConfigSpec<E>;
 
 export interface DragModeDeltas<E extends Event, T> {
-  readonly getData: (event: EventArgs<E>) => Option<T>;
+  readonly getData: (event: EventArgs<E>) => Optional<T>;
   readonly getDelta: (old: T, nu: T) => T;
 }
 
@@ -108,10 +107,10 @@ export interface DragStartData {
 }
 
 export interface BaseDraggingState<T> extends BehaviourState {
-  readonly update: <E extends Event>(mode: DragModeDeltas<E, T>, dragEvent: EventArgs<E>) => Option<T>;
+  readonly update: <E extends Event>(mode: DragModeDeltas<E, T>, dragEvent: EventArgs<E>) => Optional<T>;
   readonly setStartData: (data: DragStartData) => void;
-  readonly getStartData: () => Option<DragStartData>;
+  readonly getStartData: () => Optional<DragStartData>;
   readonly reset: () => void;
 }
 
-export interface DraggingState extends BaseDraggingState<Position> { }
+export interface DraggingState extends BaseDraggingState<SugarPosition> { }

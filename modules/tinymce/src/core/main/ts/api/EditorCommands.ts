@@ -5,12 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLElement } from '@ephox/dom-globals';
 import { Bookmark } from '../bookmark/BookmarkTypes';
 import * as FontCommands from '../commands/FontCommands';
 import * as IndentOutdent from '../commands/IndentOutdent';
 import * as InsertContent from '../content/InsertContent';
-import * as DeleteCommands from '../delete/DeleteCommands';
 import * as NodeType from '../dom/NodeType';
 import * as InsertBr from '../newline/InsertBr';
 import * as InsertNewLine from '../newline/InsertNewLine';
@@ -201,7 +199,7 @@ class EditorCommands {
     });
   }
 
-  public addCommand(command: string, callback: EditorCommandCallback, scope?: {}) {
+  public addCommand(command: string, callback: EditorCommandCallback, scope?: any) {
     command = command.toLowerCase();
     this.commands.exec[command] = (command, ui, value, args) => callback.call(scope || this.editor, ui, value, args);
   }
@@ -230,12 +228,12 @@ class EditorCommands {
     return false;
   }
 
-  public addQueryStateHandler(command: string, callback: () => boolean, scope?: {}) {
+  public addQueryStateHandler(command: string, callback: () => boolean, scope?: any) {
     command = command.toLowerCase();
     this.commands.state[command] = () => callback.call(scope || this.editor);
   }
 
-  public addQueryValueHandler(command: string, callback: () => string, scope?: {}) {
+  public addQueryValueHandler(command: string, callback: () => string, scope?: any) {
     command = command.toLowerCase();
     this.commands.value[command] = () => callback.call(scope || this.editor);
   }
@@ -512,14 +510,6 @@ class EditorCommands {
         }
       },
 
-      'delete'() {
-        DeleteCommands.deleteCommand(editor);
-      },
-
-      'forwardDelete'() {
-        DeleteCommands.forwardDeleteCommand(editor);
-      },
-
       'mceNewDocument'() {
         editor.setContent('');
       },
@@ -531,7 +521,8 @@ class EditorCommands {
     });
 
     const alignStates = (name: string) => () => {
-      const nodes = editor.selection.isCollapsed() ? [ editor.dom.getParent(editor.selection.getNode(), editor.dom.isBlock) ] : editor.selection.getSelectedBlocks();
+      const selection = editor.selection;
+      const nodes = selection.isCollapsed() ? [ editor.dom.getParent(selection.getNode(), editor.dom.isBlock) ] : selection.getSelectedBlocks();
       const matches = map(nodes, function (node) {
         return !!editor.formatter.matchNode(node, name);
       });

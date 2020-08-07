@@ -7,7 +7,7 @@
 
 import { Arr } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Attr, Css, SelectorFilter } from '@ephox/sugar';
+import { Attribute, Css, SelectorFilter } from '@ephox/sugar';
 
 const attr = 'data-ephox-mobile-fullscreen-style';
 const siblingStyles = 'display:none!important;';
@@ -27,22 +27,22 @@ const matchColor = (editorBody): string => {
 
 // We clobber all tags, direct ancestors to the editorBody get ancestorStyles, everything else gets siblingStyles
 const clobberStyles = (container, editorBody): void => {
-  const gatherSibilings = (element) => SelectorFilter.siblings(element, '*');
+  const gatherSiblings = (element) => SelectorFilter.siblings(element, '*');
 
   const clobber = (clobberStyle) => (element) => {
-    const styles = Attr.get(element, 'style');
+    const styles = Attribute.get(element, 'style');
     const backup = styles === undefined ? 'no-styles' : styles.trim();
 
     if (backup === clobberStyle) {
       return;
     } else {
-      Attr.set(element, attr, backup);
-      Attr.set(element, 'style', clobberStyle);
+      Attribute.set(element, attr, backup);
+      Attribute.set(element, 'style', clobberStyle);
     }
   };
 
   const ancestors = SelectorFilter.ancestors(container, '*');
-  const siblings = Arr.bind(ancestors, gatherSibilings);
+  const siblings = Arr.bind(ancestors, gatherSiblings);
   const bgColor = matchColor(editorBody);
 
   /* NOTE: This assumes that container has no siblings itself */
@@ -56,13 +56,13 @@ const clobberStyles = (container, editorBody): void => {
 const restoreStyles = (): void => {
   const clobberedEls = SelectorFilter.all('[' + attr + ']');
   Arr.each(clobberedEls, (element) => {
-    const restore = Attr.get(element, attr);
+    const restore = Attribute.get(element, attr);
     if (restore !== 'no-styles') {
-      Attr.set(element, 'style', restore);
+      Attribute.set(element, 'style', restore);
     } else {
-      Attr.remove(element, 'style');
+      Attribute.remove(element, 'style');
     }
-    Attr.remove(element, attr);
+    Attribute.remove(element, attr);
   });
 };
 

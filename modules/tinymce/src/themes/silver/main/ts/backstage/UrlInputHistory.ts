@@ -5,8 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Type, Obj } from '@ephox/katamari';
-import { console } from '@ephox/dom-globals';
+import { Arr, Obj, Type } from '@ephox/katamari';
 import LocalStorage from 'tinymce/core/api/util/LocalStorage';
 
 const STORAGE_KEY = 'tinymce-url-history';
@@ -30,7 +29,7 @@ const getAllHistory = function (): Record<string, string[]> {
     history = JSON.parse(unparsedHistory);
   } catch (e) {
     if (e instanceof SyntaxError) {
-      // tslint:disable-next-line:no-console
+      // eslint-disable-next-line no-console
       console.log('Local storage ' + STORAGE_KEY + ' was not valid JSON', e);
       return {};
     }
@@ -38,7 +37,7 @@ const getAllHistory = function (): Record<string, string[]> {
   }
   // validate the parsed value
   if (!isRecordOfUrlArray(history)) {
-    // tslint:disable-next-line:no-console
+    // eslint-disable-next-line no-console
     console.log('Local storage ' + STORAGE_KEY + ' was not valid format', history);
     return {};
   }

@@ -5,7 +5,5 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Selection } from '@ephox/dom-globals';
-
 // tslint:disable-next-line:no-empty-interface
 export interface NativeSelection extends Selection {}

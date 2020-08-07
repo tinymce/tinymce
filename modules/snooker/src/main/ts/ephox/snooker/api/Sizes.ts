@@ -1,5 +1,5 @@
-import { Arr, Fun, Option } from '@ephox/katamari';
-import { Css, Element, Height, Width } from '@ephox/sugar';
+import { Arr, Fun, Optional } from '@ephox/katamari';
+import { Css, Height, SugarElement, Width } from '@ephox/sugar';
 import { Warehouse } from '../model/Warehouse';
 import * as BarPositions from '../resize/BarPositions';
 import * as ColumnSizes from '../resize/ColumnSizes';
@@ -14,21 +14,21 @@ type BarPositions<A> = BarPositions.BarPositions<A>;
 
 const redistributeToW = function (newWidths: string[], cells: DetailExt[], unit: string) {
   Arr.each(cells, function (cell) {
-    const widths = newWidths.slice(cell.column(), cell.colspan() + cell.column());
+    const widths = newWidths.slice(cell.column, cell.colspan + cell.column);
     const w = Redistribution.sum(widths, CellUtils.minWidth());
-    Css.set(cell.element(), 'width', w + unit);
+    Css.set(cell.element, 'width', w + unit);
   });
 };
 
 const redistributeToH = function <T> (newHeights: string[], rows: RowData<T>[], cells: DetailExt[], unit: string) {
   Arr.each(cells, function (cell) {
-    const heights = newHeights.slice(cell.row(), cell.rowspan() + cell.row());
+    const heights = newHeights.slice(cell.row, cell.rowspan + cell.row);
     const h = Redistribution.sum(heights, CellUtils.minHeight());
-    Css.set(cell.element(), 'height', h + unit);
+    Css.set(cell.element, 'height', h + unit);
   });
 
   Arr.each(rows, function (row, i) {
-    Css.set(row.element(), 'height', newHeights[i]);
+    Css.set(row.element, 'height', newHeights[i]);
   });
 };
 
@@ -38,7 +38,7 @@ const getUnit = function (newSize: string) {
 
 // Procedure to resize table dimensions to optWidth x optHeight and redistribute cell and row dimensions.
 // Updates CSS of the table, rows, and cells.
-const redistribute = function (table: Element, optWidth: Option<string>, optHeight: Option<string>, direction: BarPositions<ColInfo>, tableSize: TableSize) {
+const redistribute = function (table: SugarElement, optWidth: Optional<string>, optHeight: Optional<string>, direction: BarPositions<ColInfo>, tableSize: TableSize) {
   const warehouse = Warehouse.fromTable(table);
   const rows = warehouse.all;
   const cells = Warehouse.justCells(warehouse);

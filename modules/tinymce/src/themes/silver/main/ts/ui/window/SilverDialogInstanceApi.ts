@@ -7,13 +7,13 @@
 
 import { AlloyComponent, AlloyTriggers, Composing, Disabling, Focusing, Form, Reflecting, Representing, TabSection } from '@ephox/alloy';
 import { ValueSchema } from '@ephox/boulder';
-import { DialogManager, Types } from '@ephox/bridge';
-import { Cell, Obj, Option, Type } from '@ephox/katamari';
+import { Dialog, DialogManager } from '@ephox/bridge';
+import { Cell, Obj, Optional, Type } from '@ephox/katamari';
 
 import { formBlockEvent, formCloseEvent, formUnblockEvent } from '../general/FormEvents';
 import { bodyChannel, dialogChannel, footerChannel, titleChannel } from './DialogChannels';
 
-const getCompByName = (access: DialogAccess, name: string): Option<AlloyComponent> => {
+const getCompByName = (access: DialogAccess, name: string): Optional<AlloyComponent> => {
   // TODO: Add API to alloy to find the inner most component of a Composing chain.
   const root = access.getRoot();
   // This is just to avoid throwing errors if the dialog closes before this. We should take it out
@@ -24,9 +24,9 @@ const getCompByName = (access: DialogAccess, name: string): Option<AlloyComponen
       const footer = access.getFooter();
       const footerState = Reflecting.getState(footer);
       return footerState.get().bind((f) => f.lookupByName(form, name));
-    }, (comp) => Option.some(comp));
+    }, (comp) => Optional.some(comp));
   } else {
-    return Option.none();
+    return Optional.none();
   }
 };
 
@@ -44,11 +44,11 @@ export interface DialogAccess {
   getFormWrapper: () => AlloyComponent;
 }
 
-const getDialogApi = <T extends Types.Dialog.DialogData>(
+const getDialogApi = <T extends Dialog.DialogData>(
   access: DialogAccess,
-  doRedial: (newConfig: Types.Dialog.DialogApi<T>) => DialogManager.DialogInit<T>,
+  doRedial: (newConfig: Dialog.DialogSpec<T>) => DialogManager.DialogInit<T>,
   menuItemStates: Record<string, Cell<Boolean>>
-): Types.Dialog.DialogInstanceApi<T> => {
+): Dialog.DialogInstanceApi<T> => {
   const withRoot = (f: (r: AlloyComponent) => void): void => {
     const root = access.getRoot();
     if (root.getSystem().isConnected()) {
@@ -122,7 +122,7 @@ const getDialogApi = <T extends Types.Dialog.DialogData>(
     });
   };
 
-  const redial = (d: Types.Dialog.DialogApi<T>): void => {
+  const redial = (d: Dialog.DialogSpec<T>): void => {
     withRoot((root) => {
       const dialogInit = doRedial(d);
       root.getSystem().broadcastOn([ dialogChannel ], dialogInit);

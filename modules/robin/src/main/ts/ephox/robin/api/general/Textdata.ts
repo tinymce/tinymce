@@ -1,5 +1,5 @@
 import { Universe } from '@ephox/boss';
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import { Spot, SpotRange } from '@ephox/phoenix';
 import { PositionArray } from '@ephox/polaris';
 
@@ -9,7 +9,7 @@ interface TextdataGet<E> {
 }
 
 export interface Textdata<E> extends TextdataGet<E> {
-  readonly cursor: Option<number>;
+  readonly cursor: Optional<number>;
 }
 
 /**
@@ -18,12 +18,12 @@ export interface Textdata<E> extends TextdataGet<E> {
 const get = function <E, D> (universe: Universe<E, D>, elements: E[]) {
   const list = PositionArray.generate(elements, function (x, start) {
     return universe.property().isText(x) ?
-      Option.some(Spot.range(x, start, start + universe.property().getText(x).length)) :
-      Option.none<SpotRange<E>>();
+      Optional.some(Spot.range(x, start, start + universe.property().getText(x).length)) :
+      Optional.none<SpotRange<E>>();
   });
 
   const allText = Arr.foldr(list, function (b, a) {
-    return universe.property().getText(a.element()) + b;
+    return universe.property().getText(a.element) + b;
   }, '');
 
   return {
@@ -34,9 +34,9 @@ const get = function <E, D> (universe: Universe<E, D>, elements: E[]) {
 
 const cursor = function <E, D> (universe: Universe<E, D>, data: TextdataGet<E>, current: E, offset: number): Textdata<E> {
   const position = PositionArray.find(data.list, function (item) {
-    return universe.eq(item.element(), current);
+    return universe.eq(item.element, current);
   }).map(function (element) {
-    return element.start() + offset;
+    return element.start + offset;
   });
 
   return {

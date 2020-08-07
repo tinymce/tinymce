@@ -1,6 +1,6 @@
+import * as AsyncValues from '../async/AsyncValues';
 import * as Arr from './Arr';
 import { Future } from './Future';
-import * as AsyncValues from '../async/AsyncValues';
 
 export const par = <T>(futures: ArrayLike<Future<T>>): Future<Array<T>> =>
   AsyncValues.par(futures, Future.nu);

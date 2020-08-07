@@ -1,5 +1,5 @@
 import { Universe } from '@ephox/boss';
-import { Fun, Option } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 import * as Parent from '../api/general/Parent';
 import { ZoneViewports } from '../api/general/ZoneViewports';
 import * as Clustering from '../words/Clustering';
@@ -11,7 +11,7 @@ import * as ZoneWalker from './ZoneWalker';
 type Zones<E> = Zones.Zones<E>;
 
 const rangeOn = function <E, D> (universe: Universe<E, D>, first: E, last: E, envLang: string, transform: (universe: Universe<E, D>, item: E) => WordDecisionItem<E>, viewport: ZoneViewports<E>) {
-  const ancestor = universe.eq(first, last) ? Option.some(first) : universe.property().parent(first);
+  const ancestor = universe.eq(first, last) ? Optional.some(first) : universe.property().parent(first);
   return ancestor.map(function (parent) {
     const defaultLang = LanguageZones.calculate(universe, parent).getOr(envLang);
     return ZoneWalker.walk(universe, first, last, defaultLang, transform, viewport);
@@ -21,7 +21,7 @@ const rangeOn = function <E, D> (universe: Universe<E, D>, first: E, last: E, en
 const fromBoundedWith = function <E, D> (universe: Universe<E, D>, left: E, right: E, envLang: string, transform: (universe: Universe<E, D>, item: E) => WordDecisionItem<E>, viewport: ZoneViewports<E>) {
   const groups: ZoneDetails<E>[] = Parent.subset(universe, left, right).bind(function (children) {
     if (children.length === 0) {
-      return Option.none<ZoneDetails<E>[]>();
+      return Optional.none<ZoneDetails<E>[]>();
     }
     const first = children[0];
     const last = children[children.length - 1];
@@ -36,7 +36,7 @@ const fromBounded = function <E, D> (universe: Universe<E, D>, left: E, right: E
 };
 
 const fromRange = function <E, D> (universe: Universe<E, D>, start: E, finish: E, envLang: string, viewport: ZoneViewports<E>) {
-  const edges = Clustering.getEdges(universe, start, finish, Fun.constant(false));
+  const edges = Clustering.getEdges(universe, start, finish, Fun.never);
   const transform = transformEdges(edges.left, edges.right);
   return fromBoundedWith(universe, edges.left.item, edges.right.item, envLang, transform, viewport);
 };

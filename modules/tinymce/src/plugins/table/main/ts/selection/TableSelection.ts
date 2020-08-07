@@ -5,16 +5,16 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element as DomElement, HTMLTableCellElement, HTMLTableRowElement, HTMLTableCaptionElement } from '@ephox/dom-globals';
-import { Arr, Option, Options } from '@ephox/katamari';
+import { Arr, Optional, Optionals } from '@ephox/katamari';
 import { TableLookup } from '@ephox/snooker';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import * as CellOperations from '../queries/CellOperations';
-import { Selections } from '../selection/Selections';
 import * as Ephemera from './Ephemera';
+import { Selections } from './Selections';
 
-const getSelectionStartFromSelector = <T extends DomElement>(selector: string) => (editor: Editor) => Option.from(editor.dom.getParent(editor.selection.getStart(), selector)).map((n) => Element.fromDom(n) as Element<T>);
+const getSelectionStartFromSelector = <T extends Element>(selector: string) => (editor: Editor) =>
+  Optional.from(editor.dom.getParent<T>(editor.selection.getStart(), selector)).map((n) => SugarElement.fromDom(n));
 
 const getSelectionStartCaption = getSelectionStartFromSelector<HTMLTableCaptionElement>('caption');
 
@@ -25,17 +25,17 @@ const getSelectionStartCellOrCaption = getSelectionStartFromSelector<HTMLTableCe
 const getCellsFromSelection = (editor: Editor): HTMLTableCellElement[] =>
   getSelectionStartCell(editor)
     .map((cell) => CellOperations.selection(cell, Selections(editor)))
-    .map((cells) => Arr.map(cells, (cell) => cell.dom()))
+    .map((cells) => Arr.map(cells, (cell) => cell.dom))
     .getOr([]);
 
 const getRowsFromSelection = (editor: Editor): HTMLTableRowElement[] => {
   const cellOpt = getSelectionStartCell(editor);
   const rowsOpt = cellOpt.bind((cell) => TableLookup.table(cell))
     .map((table) => TableLookup.rows(table))
-    .map((rows) => Arr.map(rows, (row) => row.dom()));
+    .map((rows) => Arr.map(rows, (row) => row.dom));
 
-  return Options.lift2(cellOpt, rowsOpt, (cell, rows) =>
-    Arr.filter(rows, (row) => Arr.exists(row.cells, (rowCell) => editor.dom.getAttrib(rowCell, Ephemera.selected) === '1' || rowCell === cell.dom()))
+  return Optionals.lift2(cellOpt, rowsOpt, (cell, rows) =>
+    Arr.filter(rows, (row) => Arr.exists(row.cells, (rowCell) => editor.dom.getAttrib(rowCell, Ephemera.selected) === '1' || rowCell === cell.dom))
   ).getOr([]);
 };
 

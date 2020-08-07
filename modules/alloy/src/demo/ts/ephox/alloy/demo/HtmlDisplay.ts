@@ -1,6 +1,5 @@
-import { document, MutationObserver } from '@ephox/dom-globals';
 import { Id, Thunk } from '@ephox/katamari';
-import { DomEvent, Element, Html, TextContent } from '@ephox/sugar';
+import { DomEvent, Html, SugarElement, TextContent } from '@ephox/sugar';
 
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
@@ -44,7 +43,7 @@ const section = (gui: GuiSystem, instructions: string, spec: AlloySpec): AlloyCo
 
   const dumpUid = Id.generate('html-dump');
 
-  const htmlDump = Html.getOuter(component.element());
+  const htmlDump = Html.getOuter(component.element);
   const dump = Container.sketch({
     uid: dumpUid,
     dom: {
@@ -58,8 +57,8 @@ const section = (gui: GuiSystem, instructions: string, spec: AlloySpec): AlloyCo
 
   const updateHtml = () => {
     gui.getByUid(dumpUid).each((dumpC) => {
-      // NOTE: Use Body.body() here for more information.
-      TextContent.set(dumpC.element(), Html.getOuter(component.element()));
+      // NOTE: Use SugarBody.body() here for more information.
+      TextContent.set(dumpC.element, Html.getOuter(component.element));
     });
   };
 
@@ -67,7 +66,7 @@ const section = (gui: GuiSystem, instructions: string, spec: AlloySpec): AlloyCo
     updateHtml();
   });
 
-  observer.observe(component.element().dom(), { attributes: true, childList: true, characterData: true, subtree: true });
+  observer.observe(component.element.dom, { attributes: true, childList: true, characterData: true, subtree: true });
 
   const all = GuiFactory.build(
     Container.sketch({
@@ -83,10 +82,10 @@ const section = (gui: GuiSystem, instructions: string, spec: AlloySpec): AlloyCo
 
   gui.add(all);
 
-  DomEvent.bind(Element.fromDom(document), 'mousedown', (evt) => {
-    if (evt.raw().button === 0) {
+  DomEvent.bind(SugarElement.fromDom(document), 'mousedown', (evt) => {
+    if (evt.raw.button === 0) {
       gui.broadcastOn([ Channels.dismissPopups() ], {
-        target: evt.target()
+        target: evt.target
       });
     }
   });

@@ -1,5 +1,5 @@
-import { Option } from './Option';
 import { Cell } from './Cell';
+import { Optional } from './Optional';
 
 interface Singleton<T> {
   clear: () => void;
@@ -18,20 +18,20 @@ export interface Value<T> extends Singleton<T> {
 }
 
 const revocable = <T> (doRevoke: (data: T) => void): Singleton<T> => {
-  const subject = Cell(Option.none<T>());
+  const subject = Cell(Optional.none<T>());
 
   const revoke = (): void => subject.get().each(doRevoke);
 
   const clear = () => {
     revoke();
-    subject.set(Option.none());
+    subject.set(Optional.none());
   };
 
   const isSet = () => subject.get().isSome();
 
   const set = (s: T) => {
     revoke();
-    subject.set(Option.some(s));
+    subject.set(Optional.some(s));
   };
 
   return {
@@ -46,18 +46,18 @@ export const destroyable = <T extends { destroy: () => void }> (): Revocable<T> 
 export const unbindable = <T extends { unbind: () => void }> (): Revocable<T> => revocable<T>((s) => s.unbind());
 
 export const api = <T extends { destroy: () => void }> (): Api<T> => {
-  const subject = Cell(Option.none<T>());
+  const subject = Cell(Optional.none<T>());
 
   const revoke = () => subject.get().each((s) => s.destroy());
 
   const clear = () => {
     revoke();
-    subject.set(Option.none());
+    subject.set(Optional.none());
   };
 
   const set = (s: T) => {
     revoke();
-    subject.set(Option.some(s));
+    subject.set(Optional.some(s));
   };
 
   const run = (f: (data: T) => void) => subject.get().each(f);
@@ -73,11 +73,11 @@ export const api = <T extends { destroy: () => void }> (): Api<T> => {
 };
 
 export const value = <T> (): Value<T> => {
-  const subject = Cell(Option.none<T>());
+  const subject = Cell(Optional.none<T>());
 
-  const clear = () => subject.set(Option.none());
+  const clear = () => subject.set(Optional.none());
 
-  const set = (s: T) => subject.set(Option.some(s));
+  const set = (s: T) => subject.set(Optional.some(s));
 
   const isSet = () => subject.get().isSome();
 

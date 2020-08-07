@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Fun, Merger, Obj, Option, Strings, Type } from '@ephox/katamari';
+import { Arr, Fun, Merger, Obj, Optional, Strings, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 
 import Editor from './api/Editor';
@@ -159,7 +159,7 @@ const combinePlugins = function (forcedPlugins: string[], plugins: string[]): st
   return [].concat(normalizePlugins(forcedPlugins)).concat(normalizePlugins(plugins));
 };
 
-const processPlugins = function (isMobileDevice: boolean, sectionResult: SectionResult, defaultOverrideSettings: RawEditorSettings, settings: RawEditorSettings): EditorSettings {
+const processPlugins = function (isMobileDevice: boolean, sectionResult: SectionResult, defaultOverrideSettings: RawEditorSettings, settings: RawEditorSettings & { external_plugins: Record<string, string> }): EditorSettings {
   const forcedPlugins = normalizePlugins(defaultOverrideSettings.forced_plugins);
   const desktopPlugins = normalizePlugins(settings.plugins);
 
@@ -218,7 +218,7 @@ const getEditorSettings = function (editor: Editor, id: string, documentBaseUrl:
   return combineSettings(isPhone || isTablet, isPhone, defaultSettings, defaultOverrideSettings, settings);
 };
 
-const getFiltered = <K extends keyof EditorSettings> (predicate: (x: any) => boolean, editor: Editor, name: K): Option<EditorSettings[K]> => Option.from(editor.settings[name]).filter(predicate);
+const getFiltered = <K extends keyof EditorSettings> (predicate: (x: any) => boolean, editor: Editor, name: K): Optional<EditorSettings[K]> => Optional.from(editor.settings[name]).filter(predicate);
 
 const getParamObject = (value: string) => {
   let output = {};

@@ -1,5 +1,3 @@
-import { console } from '@ephox/dom-globals';
-
 export default {
   title: 'Insert template',
   body: {
@@ -47,7 +45,7 @@ export default {
   onSubmit: (api) => {
     const data = api.getData();
 
-    // tslint:disable-next-line:no-console
+    // eslint-disable-next-line no-console
     console.log({
       template: data.template
     });

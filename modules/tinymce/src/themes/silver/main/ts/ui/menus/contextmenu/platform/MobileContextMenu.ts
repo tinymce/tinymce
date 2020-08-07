@@ -1,8 +1,7 @@
 import { AlloyComponent, Bubble, InlineView, Layout, LayoutInside, MaxHeight, MaxWidth } from '@ephox/alloy';
-import { MouseEvent, TouchEvent } from '@ephox/dom-globals';
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Selection, WindowSelection } from '@ephox/sugar';
+import { SimSelection, WindowSelection } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
@@ -12,10 +11,10 @@ import { getContextToolbarBounds } from '../../../context/ContextToolbarBounds';
 import ItemResponse from '../../item/ItemResponse';
 import * as MenuParts from '../../menu/MenuParts';
 import * as NestedMenus from '../../menu/NestedMenus';
-import { SingleMenuItemApi } from '../../menu/SingleMenuTypes';
+import { SingleMenuItemSpec } from '../../menu/SingleMenuTypes';
 import { getNodeAnchor, getPointAnchor } from '../Coords';
 
-type MenuItems = string | Array<string | SingleMenuItemApi>;
+type MenuItems = string | Array<string | SingleMenuItemSpec>;
 
 const layouts = {
   onLtr: () => [ Layout.south, Layout.southeast, Layout.southwest, Layout.northeast, Layout.northwest, Layout.north,
@@ -43,11 +42,11 @@ const isTouchWithinSelection = (editor: Editor, e: EditorEvent<TouchEvent>) => {
   } else {
     const touch = e.touches[0];
     const rng = selection.getRng();
-    const rngRectOpt = WindowSelection.getFirstRect(editor.getWin(), Selection.domRange(rng));
-    return rngRectOpt.exists((rngRect) => rngRect.left() <= touch.clientX &&
-      rngRect.right() >= touch.clientX &&
-      rngRect.top() <= touch.clientY &&
-      rngRect.bottom() >= touch.clientY
+    const rngRectOpt = WindowSelection.getFirstRect(editor.getWin(), SimSelection.domRange(rng));
+    return rngRectOpt.exists((rngRect) => rngRect.left <= touch.clientX &&
+      rngRect.right >= touch.clientX &&
+      rngRect.top <= touch.clientY &&
+      rngRect.bottom >= touch.clientY
     );
   }
 };
@@ -110,7 +109,7 @@ const show = (editor: Editor, e: EditorEvent<TouchEvent>, items: MenuItems, back
       },
       data: menuData,
       type: 'horizontal'
-    }, () => Option.some(getContextToolbarBounds(editor, backstage.shared)));
+    }, () => Optional.some(getContextToolbarBounds(editor, backstage.shared)));
 
     // Ensure the context toolbar is hidden
     editor.fire(hideContextToolbarEvent);

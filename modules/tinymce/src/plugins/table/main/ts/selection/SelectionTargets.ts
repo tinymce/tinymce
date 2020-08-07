@@ -1,7 +1,6 @@
-import { HTMLTableCaptionElement, HTMLTableCellElement } from '@ephox/dom-globals';
-import { Arr, Cell, Option, Thunk } from '@ephox/katamari';
+import { Arr, Cell, Optional, Thunk } from '@ephox/katamari';
 import { RunOperation, TableLookup } from '@ephox/snooker';
-import { Element, Node } from '@ephox/sugar';
+import { SugarElement, SugarNode } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import * as TableTargets from '../queries/TableTargets';
 import { Selections } from './Selections';
@@ -10,12 +9,13 @@ import * as TableSelection from './TableSelection';
 export type SelectionTargets = ReturnType<typeof getSelectionTargets>;
 
 export const getSelectionTargets = (editor: Editor, selections: Selections) => {
-  const targets = Cell<Option<RunOperation.CombinedTargets>>(Option.none());
+  const targets = Cell<Optional<RunOperation.CombinedTargets>>(Optional.none());
   const changeHandlers = Cell([]);
 
-  const findTargets = (): Option<RunOperation.CombinedTargets> => TableSelection.getSelectionStartCellOrCaption(editor).bind((cellOrCaption) => {
+  const findTargets = (): Optional<RunOperation.CombinedTargets> => TableSelection.getSelectionStartCellOrCaption(editor).bind((cellOrCaption) => {
     const table = TableLookup.table(cellOrCaption);
-    const isCaption = (elem: Element<HTMLTableCaptionElement | HTMLTableCellElement>): elem is Element<HTMLTableCaptionElement> => Node.name(elem) === 'caption';
+    const isCaption = (elem: SugarElement<HTMLTableCaptionElement | HTMLTableCellElement>): elem is SugarElement<HTMLTableCaptionElement> =>
+      SugarNode.name(elem) === 'caption';
     return table.map((table) => {
       if (isCaption(cellOrCaption)) {
         return TableTargets.noMenu(cellOrCaption);
@@ -52,12 +52,12 @@ export const getSelectionTargets = (editor: Editor, selections: Selections) => {
   };
 
   const onSetupTable = (api) => onSetup(api, (_) => false);
-  const onSetupCellOrRow = (api) => onSetup(api, (targets) => Node.name(targets.element()) === 'caption');
-  const onSetupPasteable = (getClipboardData: () => Option<Element[]>) => (api) => onSetup(api, (targets) =>
-    Node.name(targets.element()) === 'caption' || getClipboardData().isNone()
+  const onSetupCellOrRow = (api) => onSetup(api, (targets) => SugarNode.name(targets.element) === 'caption');
+  const onSetupPasteable = (getClipboardData: () => Optional<SugarElement[]>) => (api) => onSetup(api, (targets) =>
+    SugarNode.name(targets.element) === 'caption' || getClipboardData().isNone()
   );
-  const onSetupMergeable = (api) => onSetup(api, (targets) => targets.mergable().isNone());
-  const onSetupUnmergeable = (api) => onSetup(api, (targets) => targets.unmergable().isNone());
+  const onSetupMergeable = (api) => onSetup(api, (targets) => targets.mergable.isNone());
+  const onSetupUnmergeable = (api) => onSetup(api, (targets) => targets.unmergable.isNone());
 
   editor.on('NodeChange ExecCommand TableSelectorChange', resetTargets);
 

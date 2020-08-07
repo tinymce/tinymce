@@ -1,10 +1,10 @@
 import { DomUniverse } from '@ephox/boss';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import * as Injection from '../general/Injection';
 
 const universe = DomUniverse();
 
-const atStartOf = function (element: Element, offset: number, injection: Element) {
+const atStartOf = function (element: SugarElement, offset: number, injection: SugarElement) {
   Injection.atStartOf(universe, element, offset, injection);
 };
 

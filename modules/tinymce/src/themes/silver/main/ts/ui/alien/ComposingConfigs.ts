@@ -5,13 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Composing, MementoRecord, AlloyComponent } from '@ephox/alloy';
-import { Option } from '@ephox/katamari';
+import { AlloyComponent, Composing, MementoRecord } from '@ephox/alloy';
+import { Optional } from '@ephox/katamari';
 import { Traverse } from '@ephox/sugar';
 
 // TODO: Move this to alloy if the concept works out
 const self = () => Composing.config({
-  find: Option.some
+  find: Optional.some
 });
 
 const memento = (mem: MementoRecord) => Composing.config({
@@ -19,7 +19,8 @@ const memento = (mem: MementoRecord) => Composing.config({
 });
 
 const childAt = (index: number) => Composing.config({
-  find: (comp: AlloyComponent) => Traverse.child(comp.element(), index).bind((element) => comp.getSystem().getByDom(element).toOption())
+  find: (comp: AlloyComponent) => Traverse.child(comp.element, index)
+    .bind((element) => comp.getSystem().getByDom(element).toOptional())
 });
 
 export const ComposingConfigs = {

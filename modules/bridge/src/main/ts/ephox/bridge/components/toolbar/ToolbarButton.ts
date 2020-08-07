@@ -1,7 +1,7 @@
-import { ValueSchema, FieldSchema } from '@ephox/boulder';
-import { Result, Option, Fun } from '@ephox/katamari';
+import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { Fun, Optional, Result } from '@ephox/katamari';
 
-export interface BaseToolbarButtonApi<I extends BaseToolbarButtonInstanceApi> {
+export interface BaseToolbarButtonSpec<I extends BaseToolbarButtonInstanceApi> {
   disabled?: boolean;
   tooltip?: string;
   icon?: string;
@@ -14,7 +14,7 @@ export interface BaseToolbarButtonInstanceApi {
   setDisabled: (state: boolean) => void;
 }
 
-export interface ToolbarButtonApi extends BaseToolbarButtonApi<ToolbarButtonInstanceApi> {
+export interface ToolbarButtonSpec extends BaseToolbarButtonSpec<ToolbarButtonInstanceApi> {
   type?: 'button';
   onAction: (api: ToolbarButtonInstanceApi) => void;
 }
@@ -26,9 +26,9 @@ export interface ToolbarButtonInstanceApi extends BaseToolbarButtonInstanceApi {
 
 export interface BaseToolbarButton<I extends BaseToolbarButtonInstanceApi> {
   disabled: boolean;
-  tooltip: Option<string>;
-  icon: Option<string>;
-  text: Option<string>;
+  tooltip: Optional<string>;
+  icon: Optional<string>;
+  text: Optional<string>;
   onSetup: (api: I) => (api: I) => void;
 }
 
@@ -50,4 +50,5 @@ export const toolbarButtonSchema = ValueSchema.objOf([
   FieldSchema.strictFunction('onAction')
 ].concat(baseToolbarButtonFields));
 
-export const createToolbarButton = (spec: ToolbarButtonApi): Result<ToolbarButton, ValueSchema.SchemaError<any>> => ValueSchema.asRaw('toolbarbutton', toolbarButtonSchema, spec);
+export const createToolbarButton = (spec: ToolbarButtonSpec): Result<ToolbarButton, ValueSchema.SchemaError<any>> =>
+  ValueSchema.asRaw('toolbarbutton', toolbarButtonSchema, spec);

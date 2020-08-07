@@ -1,12 +1,12 @@
 import { ApproxStructure, Assertions } from '@ephox/agar';
 import { GuiFactory, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 
 import { renderInput } from 'tinymce/themes/silver/ui/dialog/TextField';
+import { DisablingSteps } from '../../../module/DisablingSteps';
 import { RepresentingSteps } from '../../../module/ReperesentingSteps';
 import TestProviders from '../../../module/TestProviders';
-import { DisablingSteps } from '../../../module/DisablingSteps';
 
 UnitTest.asynctest('Input component Test', (success, failure) => {
 
@@ -14,9 +14,9 @@ UnitTest.asynctest('Input component Test', (success, failure) => {
     (_store, _doc, _body) => GuiFactory.build(
       renderInput({
         name: 'input',
-        label: Option.some('LabelA'),
-        inputMode: Option.none(),
-        placeholder: Option.none(),
+        label: Optional.some('LabelA'),
+        inputMode: Optional.none(),
+        placeholder: Optional.none(),
         maximized: false,
         disabled: false
       }, TestProviders)
@@ -39,7 +39,7 @@ UnitTest.asynctest('Input component Test', (success, failure) => {
             })
           ]
         })),
-        component.element()
+        component.element
       ),
 
       RepresentingSteps.sSetValue('Setting to new value', component, 'New-Value'),

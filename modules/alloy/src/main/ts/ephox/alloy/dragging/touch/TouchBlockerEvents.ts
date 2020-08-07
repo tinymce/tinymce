@@ -1,4 +1,3 @@
-import { TouchEvent } from '@ephox/dom-globals';
 import { EventArgs } from '@ephox/sugar';
 
 import * as AlloyEvents from '../../api/events/AlloyEvents';
@@ -18,7 +17,7 @@ const init = (dragApi: BlockerDragApi<TouchEvent>): AlloyEvents.AlloyEventRecord
   // As the user moves their finger around (while pressed down), we move the
   // component around
   AlloyEvents.run<EventArgs<TouchEvent>>(NativeEvents.touchmove(), (comp, simulatedEvent) => {
-    dragApi.move(simulatedEvent.event());
+    dragApi.move(simulatedEvent.event);
   })
 ]);
 

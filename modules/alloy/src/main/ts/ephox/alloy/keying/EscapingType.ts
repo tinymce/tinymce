@@ -1,4 +1,4 @@
-import { Fun, Option } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 
 import * as Keys from '../alien/Keys';
 import { NoState, Stateless } from '../behaviour/common/BehaviourState';
@@ -16,9 +16,9 @@ const schema = [
 const doEscape: KeyRuleHandler<EscapingConfig, Stateless> = (component, simulatedEvent, escapeConfig, _escapeState) => escapeConfig.onEscape(component, simulatedEvent);
 
 const getKeydownRules: () => Array<KeyRules.KeyRule<EscapingConfig, Stateless>> = Fun.constant([
-  KeyRules.rule(KeyMatch.inSet(Keys.ESCAPE()), doEscape)
+  KeyRules.rule(KeyMatch.inSet(Keys.ESCAPE), doEscape)
 ]);
 
 const getKeyupRules = Fun.constant([ ]);
 
-export default KeyingType.typical(schema, NoState.init, getKeydownRules, getKeyupRules, () => Option.none());
+export default KeyingType.typical(schema, NoState.init, getKeydownRules, getKeyupRules, () => Optional.none());

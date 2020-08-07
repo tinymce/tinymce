@@ -1,8 +1,8 @@
 import { Arr, Future, Result } from '@ephox/katamari';
-import { Attr, Class, Element, Html, Node } from '@ephox/sugar';
+import { Attribute, Class, Html, SugarElement, SugarNode } from '@ephox/sugar';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
-import { Stateless } from '../../behaviour/common/BehaviourState';
+import { Stateless } from '../common/BehaviourState';
 import { InvalidatingConfig } from './InvalidateTypes';
 
 const ariaElements = [
@@ -10,17 +10,17 @@ const ariaElements = [
   'textarea'
 ];
 
-const isAriaElement = (elem: Element) => {
-  const name = Node.name(elem);
+const isAriaElement = (elem: SugarElement) => {
+  const name = SugarNode.name(elem);
   return Arr.contains(ariaElements, name);
 };
 
 const markValid = (component: AlloyComponent, invalidConfig: InvalidatingConfig): void => {
-  const elem = invalidConfig.getRoot(component).getOr(component.element());
+  const elem = invalidConfig.getRoot(component).getOr(component.element);
   Class.remove(elem, invalidConfig.invalidClass);
   invalidConfig.notify.each((notifyInfo) => {
-    if (isAriaElement(component.element())) {
-      Attr.set(component.element(), 'aria-invalid', false);
+    if (isAriaElement(component.element)) {
+      Attribute.set(component.element, 'aria-invalid', false);
     }
     notifyInfo.getContainer(component).each((container) => {
       Html.set(container, notifyInfo.validHtml);
@@ -31,11 +31,11 @@ const markValid = (component: AlloyComponent, invalidConfig: InvalidatingConfig)
 };
 
 const markInvalid = (component: AlloyComponent, invalidConfig: InvalidatingConfig, invalidState: Stateless, text: string): void => {
-  const elem = invalidConfig.getRoot(component).getOr(component.element());
+  const elem = invalidConfig.getRoot(component).getOr(component.element);
   Class.add(elem, invalidConfig.invalidClass);
   invalidConfig.notify.each((notifyInfo) => {
-    if (isAriaElement(component.element())) {
-      Attr.set(component.element(), 'aria-invalid', true);
+    if (isAriaElement(component.element)) {
+      Attribute.set(component.element, 'aria-invalid', true);
     }
     notifyInfo.getContainer(component).each((container) => {
       // TODO: Should we just use Text here, not HTML?
@@ -73,7 +73,7 @@ const run = (component: AlloyComponent, invalidConfig: InvalidatingConfig, inval
 };
 
 const isInvalid = (component: AlloyComponent, invalidConfig: InvalidatingConfig): boolean => {
-  const elem = invalidConfig.getRoot(component).getOr(component.element());
+  const elem = invalidConfig.getRoot(component).getOr(component.element);
   return Class.has(elem, invalidConfig.invalidClass);
 };
 

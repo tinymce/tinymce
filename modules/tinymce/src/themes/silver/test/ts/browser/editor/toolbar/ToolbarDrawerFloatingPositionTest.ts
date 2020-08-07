@@ -1,9 +1,8 @@
 import { Log, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { window } from '@ephox/dom-globals';
 import { TinyLoader, TinyUi } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
-import { Body, Css, Element, Insert, Location, Scroll } from '@ephox/sugar';
+import { Css, Insert, Scroll, SugarBody, SugarElement, SugarLocation } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
@@ -18,16 +17,16 @@ UnitTest.asynctest('Editor Floating Toolbar Drawer Position test', (success, fai
   const sScrollTo = (x: number, y: number) => Step.sync(() => Scroll.to(x, y));
 
   // Setup the element to render to
-  const rootElement = Element.fromTag('div');
-  const editorElement = Element.fromTag('textarea');
+  const rootElement = SugarElement.fromTag('div');
+  const editorElement = SugarElement.fromTag('textarea');
   Css.set(rootElement, 'margin-left', '100px');
   Insert.append(rootElement, editorElement);
-  Insert.append(Body.body(), rootElement);
+  Insert.append(SugarBody.body(), rootElement);
 
   TinyLoader.setupFromElement((editor: Editor, onSuccess, onFailure) => {
     const tinyUi = TinyUi(editor);
-    const uiContainer = Element.fromDom(editor.getContainer());
-    const initialContainerPos = Location.absolute(uiContainer);
+    const uiContainer = SugarElement.fromDom(editor.getContainer());
+    const initialContainerPos = SugarLocation.absolute(uiContainer);
 
     const sAddMargins = Step.sync(() => {
       Css.set(uiContainer, 'margin-top', '2000px');
@@ -44,18 +43,18 @@ UnitTest.asynctest('Editor Floating Toolbar Drawer Position test', (success, fai
       ...PlatformDetection.detect().browser.isFirefox() ? [ Step.wait(100) ] : [ ],
       Log.stepsAsStep('TBA', 'Editor in the page', [
         // Top of screen
-        sOpenFloatingToolbarAndAssertPosition(tinyUi, () => initialContainerPos.top() + toolbarHeight, [ // top of ui container + toolbar height
+        sOpenFloatingToolbarAndAssertPosition(tinyUi, () => initialContainerPos.top + toolbarHeight, [ // top of ui container + toolbar height
           sAssertFloatingToolbarHeight(tinyUi, toolbarDrawerHeight)
         ]),
         sAddMargins,
         // Top of screen + scrolled
-        sScrollTo(0, initialContainerPos.top() + 2000),
-        sOpenFloatingToolbarAndAssertPosition(tinyUi, () => initialContainerPos.top() + toolbarHeight + 2000, [ // top of ui container + toolbar height + scroll pos
+        sScrollTo(0, initialContainerPos.top + 2000),
+        sOpenFloatingToolbarAndAssertPosition(tinyUi, () => initialContainerPos.top + toolbarHeight + 2000, [ // top of ui container + toolbar height + scroll pos
           sAssertFloatingToolbarHeight(tinyUi, toolbarDrawerHeight)
         ]),
         // Bottom of screen + scrolled
-        sScrollTo(0, initialContainerPos.top() + 2000 - windowBottomOffset),
-        sOpenFloatingToolbarAndAssertPosition(tinyUi, () => initialContainerPos.top() + toolbarHeight + 2000, [ // top of ui container + toolbar height + scroll pos
+        sScrollTo(0, initialContainerPos.top + 2000 - windowBottomOffset),
+        sOpenFloatingToolbarAndAssertPosition(tinyUi, () => initialContainerPos.top + toolbarHeight + 2000, [ // top of ui container + toolbar height + scroll pos
           sAssertFloatingToolbarHeight(tinyUi, toolbarDrawerHeight)
         ]),
         sRemoveMargins
@@ -66,18 +65,18 @@ UnitTest.asynctest('Editor Floating Toolbar Drawer Position test', (success, fai
         }),
         sScrollTo(0, 0),
         // Top of screen
-        sOpenFloatingToolbarAndAssertPosition(tinyUi, () => initialContainerPos.top() + toolbarHeight, [ // top of ui container + toolbar height
+        sOpenFloatingToolbarAndAssertPosition(tinyUi, () => initialContainerPos.top + toolbarHeight, [ // top of ui container + toolbar height
           sAssertFloatingToolbarHeight(tinyUi, toolbarDrawerHeight)
         ]),
         sAddMargins,
         // Top of screen + scrolled
-        sScrollTo(0, initialContainerPos.top() + 2000),
-        sOpenFloatingToolbarAndAssertPosition(tinyUi, () => initialContainerPos.top() + toolbarHeight + 2000, [ // top of ui container + toolbar height + scroll pos
+        sScrollTo(0, initialContainerPos.top + 2000),
+        sOpenFloatingToolbarAndAssertPosition(tinyUi, () => initialContainerPos.top + toolbarHeight + 2000, [ // top of ui container + toolbar height + scroll pos
           sAssertFloatingToolbarHeight(tinyUi, toolbarDrawerHeight)
         ]),
         // Bottom of screen + scrolled
-        sScrollTo(0, initialContainerPos.top() + 2000 - windowBottomOffset),
-        sOpenFloatingToolbarAndAssertPosition(tinyUi, () => initialContainerPos.top() + toolbarHeight + 2000, [ // top of ui container + toolbar height + scroll pos
+        sScrollTo(0, initialContainerPos.top + 2000 - windowBottomOffset),
+        sOpenFloatingToolbarAndAssertPosition(tinyUi, () => initialContainerPos.top + toolbarHeight + 2000, [ // top of ui container + toolbar height + scroll pos
           sAssertFloatingToolbarHeight(tinyUi, toolbarDrawerHeight)
         ]),
         sRemoveMargins

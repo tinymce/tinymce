@@ -6,10 +6,10 @@ import { GuiSystem } from 'ephox/alloy/api/system/Gui';
 
 const sSameWidth = (label: string, gui: GuiSystem, dropdown: AlloyComponent, menuSelector: string) => Logger.t(
   label + '\nChecking that the hotspot width is passed onto the menu width',
-  Chain.asStep(gui.element(), [
+  Chain.asStep(gui.element, [
     UiFinder.cFindIn(menuSelector),
     Chain.op((menu) => {
-      const dropdownWidth = Width.get(dropdown.element());
+      const dropdownWidth = Width.get(dropdown.element);
       const menuWidth = parseInt(
         Css.getRaw(menu, 'width').getOrDie('Menu must have a width property'),
         10

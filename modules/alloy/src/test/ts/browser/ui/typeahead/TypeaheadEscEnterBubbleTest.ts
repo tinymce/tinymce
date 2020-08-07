@@ -1,7 +1,7 @@
 import { FocusTools, Keyboard, Keys } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Arr, Future, Option, Result } from '@ephox/katamari';
-import { Node } from '@ephox/sugar';
+import { Arr, Future, Optional, Result } from '@ephox/katamari';
+import { SugarNode } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
@@ -45,7 +45,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadEscEnterBubbleTest', (s
                 { type: 'item', data: { value: '2', meta: { text: '2' }}}
               ];
 
-              return Future.pure(Option.some(TieredMenu.singleData('blah.overall', TestDropdownMenu.renderMenu({
+              return Future.pure(Optional.some(TieredMenu.singleData('blah.overall', TestDropdownMenu.renderMenu({
                 value: 'blah',
                 items: Arr.map(items, TestDropdownMenu.renderItem)
               }))));
@@ -61,7 +61,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadEscEnterBubbleTest', (s
             },
             onExecute: store.adder('***onExecute***'),
             onItemExecute: (typeahead, sandbox, item, value) => {
-              store.adder(value.value + '(' + Arr.map([ typeahead.element(), sandbox.element(), item.element() ], Node.name).join('-') + ')')();
+              store.adder(value.value + '(' + Arr.map([ typeahead.element, sandbox.element, item.element ], SugarNode.name).join('-') + ')')();
             }
           })
         ],
@@ -83,14 +83,14 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadEscEnterBubbleTest', (s
       GuiSetup.mAddStyles(doc, [
         '.selected-item { background-color: #cadbee; }'
       ]),
-      FocusTools.sSetFocus('Focusing typeahead', gui.element(), 'input'),
+      FocusTools.sSetFocus('Focusing typeahead', gui.element, 'input'),
       Keyboard.sKeydown(doc, Keys.down(), { }),
       steps.sWaitForMenu('Down to activate menu'),
       Keyboard.sKeydown(doc, Keys.escape(), {}),
       steps.sWaitForNoMenu('Esc to close menu'),
       Keyboard.sKeydown(doc, Keys.escape(), {}),
 
-      FocusTools.sSetFocus('Focusing typeahead', gui.element(), 'input'),
+      FocusTools.sSetFocus('Focusing typeahead', gui.element, 'input'),
       Keyboard.sKeydown(doc, Keys.down(), { }),
       steps.sWaitForMenu('Down to activate menu'),
       Keyboard.sKeydown(doc, Keys.enter(), {}),
@@ -98,7 +98,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadEscEnterBubbleTest', (s
       Keyboard.sKeydown(doc, Keys.enter(), {}),
       store.sAssertEq('Should have item1 and onExecute', [ '1(input-div-li)', '***onExecute***' ]),
 
-      FocusTools.sSetFocus('Focusing typeahead to open preview mode', gui.element(), 'input'),
+      FocusTools.sSetFocus('Focusing typeahead to open preview mode', gui.element, 'input'),
       FocusTools.sSetActiveValue(doc, 'al'),
       steps.sTriggerInputEvent('Simulate typing to show menu with "al"'),
       steps.sWaitForMenu('"Typing" should activate menu'),

@@ -6,7 +6,6 @@
  */
 
 import { AlloySpec, FormTypes, SimpleOrSketchSpec } from '@ephox/alloy';
-import { console } from '@ephox/dom-globals';
 import { Merger, Obj } from '@ephox/katamari';
 
 import { BridgedType, UiFactoryBackstage } from '../../backstage/Backstage';
@@ -31,7 +30,7 @@ import { renderDialogButton } from './Button';
 import { renderCheckbox } from './Checkbox';
 import { renderHtmlPanel } from './HtmlPanel';
 
-// tslint:disable:no-console
+/* eslint-disable no-console */
 
 export type FormPartRenderer = (parts: FormTypes.FormParts, spec: BridgedType, backstage: UiFactoryBackstage) => AlloySpec;
 export type NoFormRenderer = (spec: BridgedType, backstage: UiFactoryBackstage) => AlloySpec;

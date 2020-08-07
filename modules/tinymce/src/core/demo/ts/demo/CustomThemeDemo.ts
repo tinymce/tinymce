@@ -1,5 +1,3 @@
-import { document } from '@ephox/dom-globals';
-
 declare const tinymce: any;
 
 export default function () {

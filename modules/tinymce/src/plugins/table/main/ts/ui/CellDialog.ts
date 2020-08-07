@@ -5,10 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Types } from '@ephox/bridge';
-import { HTMLTableCellElement } from '@ephox/dom-globals';
 import { Arr, Fun } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
+import { Dialog } from 'tinymce/core/api/ui/Ui';
 import * as Styles from '../actions/Styles';
 import { hasAdvancedCellTab } from '../api/Settings';
 import * as Util from '../core/Util';
@@ -102,7 +101,7 @@ const open = (editor: Editor) => {
   );
   const data = Helpers.getSharedValues<CellData>(cellsData);
 
-  const dialogTabPanel: Types.Dialog.TabPanelApi = {
+  const dialogTabPanel: Dialog.TabPanelSpec = {
     type: 'tabpanel',
     tabs: [
       {
@@ -113,7 +112,7 @@ const open = (editor: Editor) => {
       Helpers.getAdvancedTab('cell')
     ]
   };
-  const dialogPanel: Types.Dialog.PanelApi = {
+  const dialogPanel: Dialog.PanelSpec = {
     type: 'panel',
     items: [
       {

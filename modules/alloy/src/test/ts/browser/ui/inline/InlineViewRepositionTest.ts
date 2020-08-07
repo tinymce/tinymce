@@ -1,7 +1,7 @@
 import { Assertions, GeneralSteps, Logger, Step, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Option, Result } from '@ephox/katamari';
-import { Css, Element } from '@ephox/sugar';
+import { Optional, Result } from '@ephox/katamari';
+import { Css, SugarElement } from '@ephox/sugar';
 
 import * as AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviour';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
@@ -77,7 +77,7 @@ UnitTest.asynctest('InlineViewRepositionTest', (success, failure) => {
       GeneralSteps.sequence([
         Waiter.sTryUntil(
           'Test inline should not be DOM',
-          UiFinder.sExists(gui.element(), selector)
+          UiFinder.sExists(gui.element, selector)
         ),
         Step.sync(() => {
           Assertions.assertEq('Checking isOpen API', true, InlineView.isOpen(component));
@@ -85,7 +85,7 @@ UnitTest.asynctest('InlineViewRepositionTest', (success, failure) => {
       ])
     );
 
-    const sCheckPosition = (label: string, element: Element, x: number, y: number) => Logger.t(
+    const sCheckPosition = (label: string, element: SugarElement, x: number, y: number) => Logger.t(
       label,
       Step.sync(() => {
         const top = parseInt(Css.get(element, 'top').replace('px', ''), 10);
@@ -97,8 +97,8 @@ UnitTest.asynctest('InlineViewRepositionTest', (success, failure) => {
 
     const anchorSpec: NodeAnchorSpec = {
       anchor: 'node',
-      root: gui.element(),
-      node: Option.some(anchor.element()),
+      root: gui.element,
+      node: Optional.some(anchor.element),
       layouts: {
         onLtr: () => [ Layout.southeast ],
         onRtl: () => [ Layout.southeast ]
@@ -116,11 +116,11 @@ UnitTest.asynctest('InlineViewRepositionTest', (success, failure) => {
               ]
             }));
           }),
-          sCheckPosition('Check initial position', inline.element(), 200, 210),
+          sCheckPosition('Check initial position', inline.element, 200, 210),
 
           Step.sync(() => {
-            Css.set(anchor.element(), 'top', '150px');
-            Css.set(anchor.element(), 'left', '150px');
+            Css.set(anchor.element, 'top', '150px');
+            Css.set(anchor.element, 'left', '150px');
           }),
 
           TestBroadcasts.sReposition(
@@ -129,7 +129,7 @@ UnitTest.asynctest('InlineViewRepositionTest', (success, failure) => {
           ),
 
           sCheckOpen('Dialog should still be open', inline, '.test-inline'),
-          sCheckPosition('Check inline view has not moved', inline.element(), 200, 210),
+          sCheckPosition('Check inline view has not moved', inline.element, 200, 210),
           store.sAssertEq('Broadcasting SHOULD fire reposition event', [ 'test-reposition-fired' ])
         ])
       ),
@@ -149,11 +149,11 @@ UnitTest.asynctest('InlineViewRepositionTest', (success, failure) => {
               ]
             }));
           }),
-          sCheckPosition('Check initial position', inline2.element(), 150, 160),
+          sCheckPosition('Check initial position', inline2.element, 150, 160),
 
           Step.sync(() => {
-            Css.set(anchor.element(), 'top', '200px');
-            Css.set(anchor.element(), 'left', '200px');
+            Css.set(anchor.element, 'top', '200px');
+            Css.set(anchor.element, 'left', '200px');
           }),
 
           TestBroadcasts.sReposition(
@@ -162,7 +162,7 @@ UnitTest.asynctest('InlineViewRepositionTest', (success, failure) => {
           ),
 
           sCheckOpen('Dialog should still be open', inline2, '.test-inline2'),
-          sCheckPosition('Check inline view has moved', inline2.element(), 200, 210),
+          sCheckPosition('Check inline view has moved', inline2.element, 200, 210),
           store.sAssertEq('Broadcasting should NOT fire reposition event', [ ])
         ])
       )

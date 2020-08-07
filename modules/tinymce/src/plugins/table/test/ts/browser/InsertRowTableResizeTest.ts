@@ -134,7 +134,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.InsertRowTableResizeTest', (su
       const bodyElem = TinyDom.fromDom(editor.getBody());
       const tableElem = UiFinder.findIn(bodyElem, 'table').getOr(bodyElem);
       SelectorFind.descendant(tableElem, 'td,th').each((cell) => {
-        editor.selection.select(cell.dom(), true);
+        editor.selection.select(cell.dom, true);
         editor.selection.collapse(true);
       });
       return tableElem;

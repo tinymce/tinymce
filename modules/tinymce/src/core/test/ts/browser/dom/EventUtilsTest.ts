@@ -1,6 +1,5 @@
 import { Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { window } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { LegacyUnit } from '@ephox/mcagar';
 import EventUtils from 'tinymce/core/api/dom/EventUtils';

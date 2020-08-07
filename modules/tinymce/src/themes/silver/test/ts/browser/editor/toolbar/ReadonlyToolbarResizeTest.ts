@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, Chain, Guard, Log, Mouse, NamedChain, Pipeline, StructAssert, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyLoader } from '@ephox/mcagar';
-import { Body } from '@ephox/sugar';
+import { SugarBody } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { ToolbarMode } from 'tinymce/themes/silver/api/Settings';
 import SilverTheme from 'tinymce/themes/silver/Theme';
@@ -18,13 +18,13 @@ UnitTest.asynctest('Toolbar with toolbar drawer readonly mode test', (success, f
       });
 
       const cResizeTo = (sx: number, sy: number, dx: number, dy: number) => NamedChain.asChain([
-        NamedChain.writeValue('body', Body.body()),
+        NamedChain.writeValue('body', SugarBody.body()),
         NamedChain.direct('body', UiFinder.cFindIn('.tox-statusbar__resize-handle'), 'resizeHandle'),
         NamedChain.direct('resizeHandle', Mouse.cMouseDown, '_'),
         NamedChain.direct('body', cResizeToPos(sx, sy, dx, dy), '_')
       ]);
 
-      const cAssertToolbarButtonState = (label: string, disabled: boolean, f: ApproxStructure.Builder<StructAssert[]>) => Chain.fromChainsWith(Body.body(), [
+      const cAssertToolbarButtonState = (label: string, disabled: boolean, f: ApproxStructure.Builder<StructAssert[]>) => Chain.fromChainsWith(SugarBody.body(), [
         UiFinder.cFindIn('.tox-toolbar-overlord'),
         Chain.control(
           Assertions.cAssertStructure(label, ApproxStructure.build((s, str, arr) =>
@@ -46,7 +46,7 @@ UnitTest.asynctest('Toolbar with toolbar drawer readonly mode test', (success, f
         )
       ]);
 
-      const cAssertToolbarDrawerButtonState = (label: string, f: (s, str, arr) => StructAssert[]) => Chain.fromChainsWith(Body.body(), [
+      const cAssertToolbarDrawerButtonState = (label: string, f: (s, str, arr) => StructAssert[]) => Chain.fromChainsWith(SugarBody.body(), [
         UiFinder.cFindIn('.tox-toolbar__overflow'),
         Chain.control(
           Assertions.cAssertStructure(label, ApproxStructure.build((s, str, arr) =>

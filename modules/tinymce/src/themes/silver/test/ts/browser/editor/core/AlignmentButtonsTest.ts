@@ -2,7 +2,7 @@ import { ApproxStructure, Assertions, Log, NamedChain, Pipeline, UiFinder } from
 import { UnitTest } from '@ephox/bedrock-client';
 import { Id, Result } from '@ephox/katamari';
 import { Editor as McEditor } from '@ephox/mcagar';
-import { Body } from '@ephox/sugar';
+import { SugarBody } from '@ephox/sugar';
 
 import Theme from 'tinymce/themes/silver/Theme';
 import { cExtractOnlyOne } from '../../../module/UiChainUtils';
@@ -13,7 +13,7 @@ UnitTest.asynctest('Editor alignment toolbar buttons test', (success, failure) =
   Pipeline.async({}, [
     Log.chainsAsStep('TBA', 'Testing toolbar: toolbar alignment buttons', [
       NamedChain.asChain([
-        NamedChain.writeValue('body', Body.body()),
+        NamedChain.writeValue('body', SugarBody.body()),
         NamedChain.write('editor', McEditor.cFromSettings({
           toolbar: 'alignleft aligncenter alignright alignjustify alignnone',
           theme: 'silver',

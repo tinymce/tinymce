@@ -65,11 +65,11 @@ UnitTest.asynctest('SlidingTest', (success, failure) => {
   ), (doc, _body, _gui, component, store) => {
 
     const sIsNotGrowing = Step.sync(() => {
-      Assertions.assertEq('Ensuring stopped growing', false, Class.has(component.element(), 'test-sliding-width-growing'));
+      Assertions.assertEq('Ensuring stopped growing', false, Class.has(component.element, 'test-sliding-width-growing'));
     });
 
     const sIsNotShrinking = Step.sync(() => {
-      Assertions.assertEq('Ensuring stopped shrinking', false, Class.has(component.element(), 'test-sliding-width-shrinking'));
+      Assertions.assertEq('Ensuring stopped shrinking', false, Class.has(component.element, 'test-sliding-width-shrinking'));
     });
 
     const sGrowingSteps = (label: string) => Logger.t(
@@ -89,7 +89,7 @@ UnitTest.asynctest('SlidingTest', (success, failure) => {
               width: str.is('300px')
             }
           })),
-          component.element()
+          component.element
         ),
 
         Waiter.sTryUntil(
@@ -125,7 +125,7 @@ UnitTest.asynctest('SlidingTest', (success, failure) => {
               width: str.is('0px')
             }
           })),
-          component.element()
+          component.element
         ),
 
         Waiter.sTryUntil(
@@ -154,7 +154,7 @@ UnitTest.asynctest('SlidingTest', (success, failure) => {
             arr.has('test-sliding-closed')
           ]
         })),
-        component.element()
+        component.element
       ),
 
       store.sClear,
@@ -208,7 +208,7 @@ UnitTest.asynctest('SlidingTest', (success, failure) => {
             width: str.is('0px')
           }
         })),
-        component.element()
+        component.element
       ),
       Step.sync(() => {
         Assertions.assertEq('Checking hasGrown = false (immediateShrink)', false, Sliding.hasGrown(component));
@@ -216,7 +216,7 @@ UnitTest.asynctest('SlidingTest', (success, failure) => {
       store.sClear,
       Step.sync(() => {
         // test firing a transitionend inside
-        Traverse.firstChild(component.element()).each((child) => {
+        Traverse.firstChild(component.element).each((child) => {
           Css.set(child, 'width', '10px');
         });
       }),

@@ -6,8 +6,7 @@
  */
 
 import { Arr, Fun } from '@ephox/katamari';
-import { Node, Element } from '@ephox/sugar';
-import { HTMLHeadingElement, HTMLElement, HTMLTableElement, HTMLBRElement } from '@ephox/dom-globals';
+import { SugarElement, SugarNode } from '@ephox/sugar';
 
 const blocks = [
   'article', 'aside', 'details', 'div', 'dt', 'figcaption', 'footer',
@@ -39,23 +38,23 @@ const wsElements = [ 'pre', 'script', 'textarea', 'style' ];
 
 const lazyLookup = function <T = HTMLElement> (items) {
   let lookup;
-  return (node: Element): node is Element<T> => {
-    lookup = lookup ? lookup : Arr.mapToObject(items, Fun.constant(true));
-    return lookup.hasOwnProperty(Node.name(node));
+  return (node: SugarElement): node is SugarElement<T> => {
+    lookup = lookup ? lookup : Arr.mapToObject(items, Fun.always);
+    return lookup.hasOwnProperty(SugarNode.name(node));
   };
 };
 
 const isHeading = lazyLookup<HTMLHeadingElement>(headings);
 const isBlock = lazyLookup(blocks);
-const isTable = (node: Element): node is Element<HTMLTableElement> => Node.name(node) === 'table';
-const isInline = (node: Element): node is Element<HTMLElement> => Node.isElement(node) && !isBlock(node);
-const isBr = (node: Element): node is Element<HTMLBRElement> => Node.isElement(node) && Node.name(node) === 'br';
+const isTable = (node: SugarElement): node is SugarElement<HTMLTableElement> => SugarNode.name(node) === 'table';
+const isInline = (node: SugarElement): node is SugarElement<HTMLElement> => SugarNode.isElement(node) && !isBlock(node);
+const isBr = (node: SugarElement): node is SugarElement<HTMLBRElement> => SugarNode.isElement(node) && SugarNode.name(node) === 'br';
 const isTextBlock = lazyLookup(textBlocks);
 const isList = lazyLookup(lists);
 const isListItem = lazyLookup(listItems);
 const isVoid = lazyLookup(voids);
 const isTableSection = lazyLookup(tableSections);
-const isTableCell = lazyLookup(tableCells);
+const isTableCell = lazyLookup<HTMLTableCellElement>(tableCells);
 const isWsPreserveElement = lazyLookup(wsElements);
 
 export {

@@ -3,8 +3,8 @@ import { Behaviour, GuiFactory, ModalDialog, Positioning, TestHelpers } from '@e
 import { UnitTest } from '@ephox/bedrock-client';
 import { ValueSchema } from '@ephox/boulder';
 import { DialogManager } from '@ephox/bridge';
-import { Fun, Option, Result } from '@ephox/katamari';
-import { Body } from '@ephox/sugar';
+import { Fun, Optional, Result } from '@ephox/katamari';
+import { SugarBody } from '@ephox/sugar';
 
 import I18n from 'tinymce/core/api/util/I18n';
 import { renderDialog } from 'tinymce/themes/silver/ui/window/SilverDialog';
@@ -31,7 +31,7 @@ UnitTest.asynctest('SilverDialog Event Test', (success, failure) => {
             align: 'end',
             primary: false,
             disabled: false,
-            icon: Option.none()
+            icon: Optional.none()
           },
           {
             type: 'submit',
@@ -40,7 +40,7 @@ UnitTest.asynctest('SilverDialog Event Test', (success, failure) => {
             align: 'end',
             primary: true,
             disabled: false,
-            icon: Option.none()
+            icon: Optional.none()
           }
         ],
         initialData: {},
@@ -103,9 +103,9 @@ UnitTest.asynctest('SilverDialog Event Test', (success, failure) => {
           }),
           Waiter.sTryUntil(
             'Waiting for blocker to disappear after clicking close',
-            UiFinder.sExists(Body.body(), '.tox-dialog-wrap')
+            UiFinder.sExists(SugarBody.body(), '.tox-dialog-wrap')
           ),
-          Mouse.sClickOn(sink.element(), selector),
+          Mouse.sClickOn(sink.element, selector),
           store.sAssertEq('Check event sequence', sequence),
           store.sClear
         ];

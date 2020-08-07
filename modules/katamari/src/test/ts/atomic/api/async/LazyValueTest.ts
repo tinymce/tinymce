@@ -1,13 +1,12 @@
-/* tslint:disable:no-unimported-promise */
+import Promise from '@ephox/wrap-promise-polyfill';
+import fc from 'fast-check';
 import * as Arr from 'ephox/katamari/api/Arr';
 import * as Fun from 'ephox/katamari/api/Fun';
 import { LazyValue } from 'ephox/katamari/api/LazyValue';
 import * as LazyValues from 'ephox/katamari/api/LazyValues';
-import { Option } from 'ephox/katamari/api/Option';
-import { setTimeout } from '@ephox/dom-globals';
+import { Optional } from 'ephox/katamari/api/Optional';
+import { tOptional } from 'ephox/katamari/api/OptionalInstances';
 import { eqAsync, promiseTest } from 'ephox/katamari/test/AsyncProps';
-import fc from 'fast-check';
-import { tOption } from 'ephox/katamari/api/OptionInstances';
 
 const lazyCounter = () => {
   let counter = 0;
@@ -128,7 +127,7 @@ promiseTest('LazyValue: TINY-6106: LazyValue should only use the value from the 
 promiseTest('LazyValue: TINY-6107: LazyValues.withTimeout - never returns', () => new Promise((resolve, reject) => {
   LazyValues.withTimeout(() => {
   }, 1).get((actual) => {
-    eqAsync('should time out', Option.none(), actual, reject, tOption());
+    eqAsync('should time out', Optional.none(), actual, reject, tOptional());
     resolve();
   });
 }));
@@ -137,7 +136,7 @@ promiseTest('LazyValue: TINY-6107: LazyValues.withTimeout - times out before it 
   LazyValues.withTimeout((cb) => {
     setTimeout(() => cb(88), 50);
   }, 1).get((actual) => {
-    eqAsync('should timeout', Option.none(), actual, reject, tOption());
+    eqAsync('should timeout', Optional.none(), actual, reject, tOptional());
     resolve();
   });
 }));
@@ -148,7 +147,7 @@ promiseTest('LazyValue: TINY-6107: LazyValues.withTimeout - times out after it r
       cb('cat');
     }, 10);
   }, 100).get((actual) => {
-    eqAsync('should not timeout', Option.some('cat'), actual, reject, tOption());
+    eqAsync('should not timeout', Optional.some('cat'), actual, reject, tOptional());
     resolve();
   });
 }));

@@ -5,8 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node } from '@ephox/dom-globals';
-
 export type ApplyFormat = BlockFormat | InlineFormat | SelectorFormat;
 export type RemoveFormat = RemoveBlockFormat | RemoveInlineFormat | RemoveSelectorFormat;
 export type Format = ApplyFormat | RemoveFormat;

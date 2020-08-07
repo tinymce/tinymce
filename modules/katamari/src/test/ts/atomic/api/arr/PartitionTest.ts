@@ -1,7 +1,7 @@
+import { Assert, UnitTest } from '@ephox/bedrock-client';
+import fc from 'fast-check';
 import * as Arr from 'ephox/katamari/api/Arr';
 import * as Fun from 'ephox/katamari/api/Fun';
-import { UnitTest, Assert } from '@ephox/bedrock-client';
-import fc from 'fast-check';
 
 UnitTest.test('Arr.partition: unit tests', () => {
   const check = (input: unknown[], expected) => {
@@ -32,7 +32,7 @@ UnitTest.test('Check that if the filter always returns false, then everything is
   fc.assert(fc.property(
     fc.array(fc.integer()),
     (arr) => {
-      const output = Arr.partition(arr, Fun.constant(false));
+      const output = Arr.partition(arr, Fun.never);
       Assert.eq('eq', 0, output.pass.length);
       Assert.eq('eq', arr, output.fail);
     }
@@ -43,7 +43,7 @@ UnitTest.test('Check that if the filter always returns true, then everything is 
   fc.assert(fc.property(
     fc.array(fc.integer()),
     (arr) => {
-      const output = Arr.partition(arr, Fun.constant(true));
+      const output = Arr.partition(arr, Fun.always);
       Assert.eq('eq', 0, output.fail.length);
       Assert.eq('eq', arr, output.pass);
     }

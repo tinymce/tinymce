@@ -23,7 +23,7 @@ UnitTest.asynctest('TieredMenuWithoutImmediateHighlightTest', (success, failure)
         classes: [ 'test-menu' ]
       },
       components: [
-        Menu.parts().items({ })
+        Menu.parts.items({ })
       ],
 
       markers: TestDropdownMenu.markers(),
@@ -103,7 +103,7 @@ UnitTest.asynctest('TieredMenuWithoutImmediateHighlightTest', (success, failure)
           })
         ]
       })),
-      component.element()
+      component.element
     ),
 
     store.sAssertEq('Focus is fired as soon as the tiered menu is active', [
@@ -149,7 +149,7 @@ UnitTest.asynctest('TieredMenuWithoutImmediateHighlightTest', (success, failure)
           })
         ]
       })),
-      component.element()
+      component.element
     )
   ], () => { success(); }, failure);
 });

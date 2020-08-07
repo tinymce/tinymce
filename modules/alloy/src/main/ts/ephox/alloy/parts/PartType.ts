@@ -1,6 +1,6 @@
 import { SimpleOrSketchSpec } from '@ephox/alloy';
 import { FieldPresence, FieldProcessorAdt, FieldSchema, Processor, ValueSchema } from '@ephox/boulder';
-import { Adt, Fun, Id, Option } from '@ephox/katamari';
+import { Adt, Fun, Id, Optional } from '@ephox/katamari';
 
 import { CompositeSketchDetail } from '../api/ui/Sketcher';
 
@@ -108,8 +108,8 @@ const groupSpec = ValueSchema.objOf([
   fPname, fDefaults, fOverrides
 ]);
 
-const asNamedPart = function <T> (part: PartTypeAdt<T>): Option<T> {
-  return part.fold(Option.some, Option.none as () => Option<T>, Option.some, Option.some);
+const asNamedPart = function <T> (part: PartTypeAdt<T>): Optional<T> {
+  return part.fold(Optional.some, Optional.none as () => Optional<T>, Optional.some, Optional.some);
 };
 
 const name = <T extends { name: string }>(part: PartTypeAdt<T>): string => {

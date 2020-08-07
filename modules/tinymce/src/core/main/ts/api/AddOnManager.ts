@@ -98,7 +98,7 @@ interface AddOnManager<T> {
   remove (name: string): void;
   createUrl (baseUrl: UrlObject, dep: string | UrlObject): UrlObject;
   addComponents (pluginName: string, scripts: string[]): void;
-  load (name: string, addOnUrl: string | UrlObject, success?: () => void, scope?: {}, failure?: () => void): void;
+  load (name: string, addOnUrl: string | UrlObject, success?: () => void, scope?: any, failure?: () => void): void;
   waitFor (name: string, callback: () => void, state?: WaitState): void;
 }
 
@@ -197,7 +197,7 @@ function AddOnManager<T>(): AddOnManager<T> {
     }
   };
 
-  const load = (name: string, addOnUrl: string | UrlObject, success?: () => void, scope?: {}, failure?: () => void) => {
+  const load = (name: string, addOnUrl: string | UrlObject, success?: () => void, scope?: any, failure?: () => void) => {
     if (urls[name]) {
       return;
     }
@@ -327,9 +327,9 @@ function AddOnManager<T>(): AddOnManager<T> {
 }
 
 namespace AddOnManager {
-  export let language;
-  export let languageLoad;
-  export let baseURL;
+  export let language: string;
+  export let languageLoad: boolean;
+  export let baseURL: string;
   export const PluginManager: AddOnManager<any> = AddOnManager();
   export const ThemeManager: AddOnManager<any> = AddOnManager();
 }

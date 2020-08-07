@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { document, Element, Node, Range } from '@ephox/dom-globals';
 import * as NodeType from '../dom/NodeType';
 import * as Zwsp from '../text/Zwsp';
 import { CaretPosition } from './CaretPosition';
@@ -147,8 +146,8 @@ const insertBlock = (blockName: string, node: Node, before: boolean): Node => {
   return blockNode;
 };
 
-const startsWithCaretContainer = (node: Node): boolean => isText(node) && node.data[0] === Zwsp.ZWSP;
-const endsWithCaretContainer = (node: Node): boolean => isText(node) && node.data[node.data.length - 1] === Zwsp.ZWSP;
+const startsWithCaretContainer = (node: Node): node is Text => isText(node) && node.data[0] === Zwsp.ZWSP;
+const endsWithCaretContainer = (node: Node): node is Text => isText(node) && node.data[node.data.length - 1] === Zwsp.ZWSP;
 
 const trimBogusBr = (elm: Element): void => {
   const brs = elm.getElementsByTagName('br');

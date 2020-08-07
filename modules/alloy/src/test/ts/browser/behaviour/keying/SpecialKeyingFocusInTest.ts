@@ -1,6 +1,6 @@
 import { FocusTools, GeneralSteps, Log, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Body, Focus, SelectorFind } from '@ephox/sugar';
+import { Focus, SelectorFind, SugarBody } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
@@ -48,14 +48,14 @@ UnitTest.asynctest('SpecialKeyingFocusInTest', (success, failure) => {
       ]
     }
   ), (doc, body, _gui, component, store) => {
-    const oneComp = SelectorFind.descendant(component.element(), '.one').bind((elem) => component.getSystem().getByDom(elem).toOption()).getOrDie('Could not find "one" div');
+    const oneComp = SelectorFind.descendant(component.element, '.one').bind((elem) => component.getSystem().getByDom(elem).toOptional()).getOrDie('Could not find "one" div');
 
-    const twoComp = SelectorFind.descendant(component.element(), '.two').bind((elem) => component.getSystem().getByDom(elem).toOption()).getOrDie('Could not find "two" div');
+    const twoComp = SelectorFind.descendant(component.element, '.two').bind((elem) => component.getSystem().getByDom(elem).toOptional()).getOrDie('Could not find "two" div');
 
     return [
       GuiSetup.mSetupKeyLogger(body),
       Step.sync(() => {
-        Focus.focus(Body.body());
+        Focus.focus(SugarBody.body());
       }),
       FocusTools.sTryOnSelector('Focus should start on body', doc, 'body'),
 

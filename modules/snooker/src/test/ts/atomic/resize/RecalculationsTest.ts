@@ -1,43 +1,46 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
-import { Arr, Struct } from '@ephox/katamari';
+import { Arr } from '@ephox/katamari';
+import { SugarElement } from '@ephox/sugar';
 import * as Structs from 'ephox/snooker/api/Structs';
 import { Warehouse } from 'ephox/snooker/model/Warehouse';
 import * as Recalculations from 'ephox/snooker/resize/Recalculations';
-import { Element } from '@ephox/sugar';
 
 UnitTest.test('RecalculationsTest', function () {
-  const dimensions = Structs.dimensions; // Struct.immutable('width', 'height');
+  const dimensions = Structs.dimensions;
 
   interface Parts {
-    widths: () => Array<{
+    widths: Array<{
       element: string;
       width: number;
     }>;
-    heights: () => Array<{
+    heights: Array<{
       element: string;
       height: number;
     }>;
   }
 
-  const expectedParts: (widths: {element: string; width: number}[], heights: {element: string; height: number}[]) => Parts = Struct.immutable('widths', 'heights');
+  const expectedParts = (widths: {element: string; width: number}[], heights: {element: string; height: number}[]): Parts => ({
+    widths,
+    heights
+  });
 
   const check = function (expected: Parts[], input: Structs.RowData<Structs.Detail>[], sizes: Structs.Dimensions) {
     const warehouse = Warehouse.generate(input);
-    const actualW = Recalculations.recalculateWidth(warehouse, sizes.width());
-    const actualH = Recalculations.recalculateHeight(warehouse, sizes.height());
+    const actualW = Recalculations.recalculateWidth(warehouse, sizes.width);
+    const actualH = Recalculations.recalculateHeight(warehouse, sizes.height);
 
     Arr.each(expected, function (expt) {
-      assert.eq(expt.widths(), Arr.map(actualW, function (cell) {
+      assert.eq(expt.widths, Arr.map(actualW, function (cell) {
         return {
           element: cell.element,
           width: cell.width
         };
       }));
 
-      assert.eq(expt.heights(), Arr.map(actualH, function (cell) {
+      assert.eq(expt.heights, Arr.map(actualH, function (cell) {
         return {
-          element: cell.element(),
-          height: cell.height()
+          element: cell.element,
+          height: cell.height
         };
       }));
 
@@ -45,8 +48,8 @@ UnitTest.test('RecalculationsTest', function () {
 
   };
 
-  const d = (fakeEle: any, rowspan: number, colspan: number) => Structs.detail(fakeEle as Element, rowspan, colspan);
-  const r = (fakeEle: any, cells: Structs.Detail[], section: 'tbody') => Structs.rowdata(fakeEle as Element, cells, section);
+  const d = (fakeEle: any, rowspan: number, colspan: number) => Structs.detail(fakeEle as SugarElement, rowspan, colspan);
+  const r = (fakeEle: any, cells: Structs.Detail[], section: 'tbody') => Structs.rowdata(fakeEle as SugarElement, cells, section);
 
   check([ expectedParts([{ element: 'a', width: 10 }], [{ element: 'a', height: 10 }]) ], [
     r('r0', [ d('a', 1, 1) ], 'tbody')

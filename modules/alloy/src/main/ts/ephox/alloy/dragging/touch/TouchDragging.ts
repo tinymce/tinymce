@@ -1,6 +1,5 @@
 import { FieldProcessorAdt } from '@ephox/boulder';
-import { TouchEvent } from '@ephox/dom-globals';
-import { Cell, Option } from '@ephox/katamari';
+import { Cell, Optional } from '@ephox/katamari';
 import { EventArgs } from '@ephox/sugar';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
@@ -17,7 +16,7 @@ import * as TouchData from './TouchData';
 import { TouchDraggingConfig } from './TouchDraggingTypes';
 
 const events = <E>(dragConfig: TouchDraggingConfig<E>, dragState: DraggingState, updateStartState: (comp: AlloyComponent) => void) => {
-  const blockerCell = Cell<Option<AlloyComponent>>(Option.none());
+  const blockerCell = Cell<Optional<AlloyComponent>>(Optional.none());
 
   // Android fires events on the component at all times, while iOS initially fires on the component
   // but once moved off the component then fires on the element behind. As such we need to use
@@ -28,7 +27,7 @@ const events = <E>(dragConfig: TouchDraggingConfig<E>, dragState: DraggingState,
 
       const stop = () => {
         DragUtils.stop(component, blockerCell.get(), dragConfig, dragState);
-        blockerCell.set(Option.none());
+        blockerCell.set(Optional.none());
       };
 
       const dragApi: BlockerDragApi<TouchEvent> = {
@@ -42,7 +41,7 @@ const events = <E>(dragConfig: TouchDraggingConfig<E>, dragState: DraggingState,
       };
 
       const blocker = BlockerUtils.createComponent(component, dragConfig.blockerClass, TouchBlockerEvents.init(dragApi));
-      blockerCell.set(Option.some(blocker));
+      blockerCell.set(Optional.some(blocker));
 
       const start = () => {
         updateStartState(component);
@@ -53,16 +52,16 @@ const events = <E>(dragConfig: TouchDraggingConfig<E>, dragState: DraggingState,
     }),
     AlloyEvents.run<EventArgs<TouchEvent>>(NativeEvents.touchmove(), (component, simulatedEvent) => {
       simulatedEvent.stop();
-      DragUtils.move(component, dragConfig, dragState, TouchData, simulatedEvent.event());
+      DragUtils.move(component, dragConfig, dragState, TouchData, simulatedEvent.event);
     }),
     AlloyEvents.run(NativeEvents.touchend(), (component, simulatedEvent) => {
       simulatedEvent.stop();
       DragUtils.stop(component, blockerCell.get(), dragConfig, dragState);
-      blockerCell.set(Option.none());
+      blockerCell.set(Optional.none());
     }),
     AlloyEvents.run(NativeEvents.touchcancel(), (component) => {
       DragUtils.stop(component, blockerCell.get(), dragConfig, dragState);
-      blockerCell.set(Option.none());
+      blockerCell.set(Optional.none());
     })
   ];
 };

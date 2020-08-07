@@ -1,6 +1,6 @@
 import { FocusTools, Keyboard, Keys, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
@@ -57,7 +57,7 @@ UnitTest.asynctest('Widget Keying Test', (success, failure) => {
           focusInside: FocusInsideModes.OnEnterOrSpaceMode,
           onEscape: (comp) => {
             Focusing.focus(comp);
-            return Option.some<boolean>(true);
+            return Optional.some<boolean>(true);
           }
         }),
         Focusing.config({ }),

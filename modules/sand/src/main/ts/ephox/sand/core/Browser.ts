@@ -1,6 +1,6 @@
 import { Fun } from '@ephox/katamari';
-import { Version } from '../detect/Version';
 import { UaString } from '../detect/UaString';
+import { Version } from '../detect/Version';
 
 const edge = 'Edge';
 const chrome = 'Chrome';

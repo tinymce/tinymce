@@ -5,8 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Css, Element, Height, Traverse } from '@ephox/sugar';
-import { HTMLElement, Node as DomNode, Window } from '@ephox/dom-globals';
+import { Css, Height, SugarElement, Traverse } from '@ephox/sugar';
 
 import * as Orientation from '../../touch/view/Orientation';
 import * as Devices from './Devices';
@@ -47,15 +46,15 @@ const accountableKeyboardHeight = (outerWindow: Window): number => {
   return (visualScreenHeight - outerWindow.innerHeight) > keyboard ? 0 : keyboard;
 };
 
-const getGreenzone = (socket: Element<HTMLElement>, dropup: Element<HTMLElement>): number => {
-  const outerWindow = Traverse.owner(socket).dom().defaultView;
+const getGreenzone = (socket: SugarElement<HTMLElement>, dropup: SugarElement<HTMLElement>): number => {
+  const outerWindow = Traverse.owner(socket).dom.defaultView;
   // Include the dropup for this calculation because it represents the total viewable height.
   const viewportHeight = Height.get(socket) + Height.get(dropup);
   const acc = accountableKeyboardHeight(outerWindow);
   return viewportHeight - acc;
 };
 
-const updatePadding = (contentBody: Element<DomNode>, socket: Element<HTMLElement>, dropup: Element<HTMLElement>): void => {
+const updatePadding = (contentBody: SugarElement<Node>, socket: SugarElement<HTMLElement>, dropup: SugarElement<HTMLElement>): void => {
   const greenzoneHeight = getGreenzone(socket, dropup);
   const deltaHeight = (Height.get(socket) + Height.get(dropup)) - greenzoneHeight;
   // TBIO-3878 Changed the element that was receiving the padding from the iframe to the body of the

@@ -1,4 +1,3 @@
-import { SketchSpec } from '../../api/component/SpecTypes';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as ExpandableFormSchema from '../../ui/schema/ExpandableFormSchema';
 import { ExpandableFormApis, ExpandableFormDetail, ExpandableFormSketcher, ExpandableFormSpec } from '../../ui/types/ExpandableFormTypes';
@@ -6,6 +5,7 @@ import { Representing } from '../behaviour/Representing';
 import { Sliding } from '../behaviour/Sliding';
 import { AlloyComponent } from '../component/ComponentApi';
 import * as SketchBehaviours from '../component/SketchBehaviours';
+import { SketchSpec } from '../component/SpecTypes';
 import { Form } from './Form';
 import * as Sketcher from './Sketcher';
 import { CompositeSketchFactory } from './UiSketcher';

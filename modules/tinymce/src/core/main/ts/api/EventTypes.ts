@@ -5,11 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Types } from '@ephox/bridge';
-import { Element, Event, FocusEvent, HTMLElement, Node, Range, TouchEvent, UIEvent } from '@ephox/dom-globals';
 import { GetContentArgs, SetContentArgs } from '../content/ContentTypes';
 import { UndoLevel } from '../undo/UndoManagerTypes';
 import Editor from './Editor';
+import { Dialog } from './ui/Ui';
 import { NativeEventMap } from './util/EventDispatcher';
 
 export type ExecCommandEvent = { command: string; ui?: boolean; value?: any };
@@ -37,7 +36,7 @@ export type SwitchModeEvent = { mode: string };
 export type AddUndoEvent = { level: UndoLevel; lastLevel: UndoLevel; originalEvent: Event };
 export type UndoRedoEvent = { level: UndoLevel };
 
-export type WindowEvent<T extends Types.Dialog.DialogData> = { dialog: Types.Dialog.DialogInstanceApi<T> };
+export type WindowEvent<T extends Dialog.DialogData> = { dialog: Dialog.DialogInstanceApi<T> };
 
 export type ProgressStateEvent = { state: boolean; time?: number };
 
@@ -103,7 +102,7 @@ export interface EditorEventMap extends NativeEventMap {
   'longpresscancel': { };
 }
 
-export interface EditorManagerEventMap extends NativeEventMap {
+export interface EditorManagerEventMap {
   'AddEditor': { editor: Editor };
   'RemoveEditor': { editor: Editor };
   'BeforeUnload': { returnValue: any };

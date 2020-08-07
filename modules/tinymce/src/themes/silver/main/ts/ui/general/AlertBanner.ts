@@ -5,14 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { AlloyTriggers, Button, Container, SketchSpec } from '@ephox/alloy';
+import { Dialog } from '@ephox/bridge';
 import { formActionEvent } from 'tinymce/themes/silver/ui/general/FormEvents';
+import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as Icons from '../icons/Icons';
-import { Types } from '@ephox/bridge';
-import { Omit } from '../Omit';
 
-type AlertBannerSpec = Omit<Types.AlertBanner.AlertBanner, 'type'>;
+type AlertBannerSpec = Omit<Dialog.AlertBanner, 'type'>;
 
 export interface AlertBannerWrapper extends AlertBannerSpec {
   iconTooltip: string;

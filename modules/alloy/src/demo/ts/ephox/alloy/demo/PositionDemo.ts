@@ -1,5 +1,4 @@
-import { document } from '@ephox/dom-globals';
-import { Class, Css, DomEvent, Element, Traverse } from '@ephox/sugar';
+import { Class, Css, DomEvent, SugarElement, Traverse } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Positioning } from 'ephox/alloy/api/behaviour/Positioning';
@@ -18,9 +17,9 @@ import * as Frames from './frames/Frames';
 
 export default (): void => {
   const gui = Gui.create();
-  const body = Element.fromDom(document.body);
-  Css.set(gui.element(), 'direction', 'rtl');
-  Class.add(gui.element(), 'gui-root-demo-container');
+  const body = SugarElement.fromDom(document.body);
+  Css.set(gui.element, 'direction', 'rtl');
+  Class.add(gui.element, 'gui-root-demo-container');
   Attachment.attachSystem(body, gui);
 
   const sink = DemoSink.make();
@@ -48,7 +47,7 @@ export default (): void => {
 
   HtmlDisplay.section(
     gui,
-    'Position anchoring to button',
+    'SugarPosition anchoring to button',
     Button.sketch({
       dom: {
         tag: 'button',
@@ -82,7 +81,7 @@ export default (): void => {
 
   HtmlDisplay.section(
     gui,
-    'Position anchoring to menu',
+    'SugarPosition anchoring to menu',
     Container.sketch({
       dom: {
         tag: 'ol',
@@ -116,7 +115,7 @@ export default (): void => {
 
   HtmlDisplay.section(
     gui,
-    'Position anchoring to text selection',
+    'SugarPosition anchoring to text selection',
     Container.sketch({
       dom: {
         tag: 'div'
@@ -147,7 +146,7 @@ export default (): void => {
             Attachment.attach(sink, popup);
             Positioning.position(sink, {
               anchor: 'selection',
-              root: button.getSystem().getByUid('text-editor').getOrDie().element()
+              root: button.getSystem().getByUid('text-editor').getOrDie().element
             }, popup);
           }
         })
@@ -156,7 +155,7 @@ export default (): void => {
   );
 
   // Maybe make a component.
-  const frame = Element.fromTag('iframe');
+  const frame = SugarElement.fromTag('iframe');
   const onLoad = DomEvent.bind(frame, 'load', () => {
     onLoad.unbind();
 
@@ -166,7 +165,7 @@ export default (): void => {
 
   HtmlDisplay.section(
     gui,
-    'Position anchoring to text selection [iframe]',
+    'SugarPosition anchoring to text selection [iframe]',
     Container.sketch({
       components: [
         GuiFactory.external({
@@ -182,7 +181,7 @@ export default (): void => {
             Attachment.attach(sink, popup);
             Positioning.position(sink, {
               anchor: 'selection',
-              root: Element.fromDom(Traverse.defaultView(frame).dom().document.body)
+              root: SugarElement.fromDom(Traverse.defaultView(frame).dom.document.body)
             }, popup);
           }
         })

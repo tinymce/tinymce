@@ -1,7 +1,6 @@
-import { console } from '@ephox/dom-globals';
 import { openDemoDialog } from './DemoDialogHelpers';
 
-// tslint:disable:no-console
+/* eslint-disable no-console */
 
 export const createColorPickerDialog = () => {
   openDemoDialog(

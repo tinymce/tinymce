@@ -5,10 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Types } from '@ephox/bridge';
-import { HTMLAnchorElement } from '@ephox/dom-globals';
-import { Arr, Option, Options } from '@ephox/katamari';
+import { Arr, Optional, Optionals } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
+import { Dialog } from 'tinymce/core/api/ui/Ui';
 
 import * as Settings from '../api/Settings';
 import { ListOptions } from '../core/ListOptions';
@@ -18,7 +17,7 @@ import { DialogConfirms } from './DialogConfirms';
 import { DialogInfo } from './DialogInfo';
 import { LinkDialogData, LinkDialogInfo } from './DialogTypes';
 
-const handleSubmit = (editor: Editor, info: LinkDialogInfo) => (api: Types.Dialog.DialogInstanceApi<LinkDialogData>) => {
+const handleSubmit = (editor: Editor, info: LinkDialogInfo) => (api: Dialog.DialogInstanceApi<LinkDialogData>) => {
   const data: LinkDialogData = api.getData();
 
   if (!data.url.value) {
@@ -30,7 +29,7 @@ const handleSubmit = (editor: Editor, info: LinkDialogInfo) => (api: Types.Dialo
 
   // Check if a key is defined, meaning it was a field in the dialog. If it is,
   // then check if it's changed and return none if nothing has changed.
-  const getChangedValue = (key: string) => Option.from(data[key]).filter((value) => !info.anchor[key].is(value));
+  const getChangedValue = (key: string) => Optional.from(data[key]).filter((value) => !info.anchor[key].is(value));
 
   const changedData = {
     href: data.url.value,
@@ -58,7 +57,7 @@ const collectData = (editor): Promise<LinkDialogInfo> => {
   return DialogInfo.collect(editor, anchorNode);
 };
 
-const getInitialData = (info: LinkDialogInfo, defaultTarget: Option<string>): LinkDialogData => ({
+const getInitialData = (info: LinkDialogInfo, defaultTarget: Optional<string>): LinkDialogData => ({
   url: {
     value: info.anchor.url.getOr(''),
     meta: {
@@ -81,9 +80,9 @@ const getInitialData = (info: LinkDialogInfo, defaultTarget: Option<string>): Li
   linkClass: info.anchor.linkClass.getOr('')
 });
 
-const makeDialog = (settings: LinkDialogInfo, onSubmit, editor: Editor): Types.Dialog.DialogApi<LinkDialogData> => {
+const makeDialog = (settings: LinkDialogInfo, onSubmit, editor: Editor): Dialog.DialogSpec<LinkDialogData> => {
 
-  const urlInput: Types.Dialog.BodyComponentApi[] = [
+  const urlInput: Dialog.UrlInputSpec[] = [
     {
       name: 'url',
       type: 'urlinput',
@@ -92,7 +91,7 @@ const makeDialog = (settings: LinkDialogInfo, onSubmit, editor: Editor): Types.D
     }
   ];
 
-  const displayText = settings.anchor.text.map<Types.Dialog.BodyComponentApi>(() => (
+  const displayText = settings.anchor.text.map<Dialog.InputSpec>(() => (
     {
       name: 'text',
       type: 'input',
@@ -100,7 +99,7 @@ const makeDialog = (settings: LinkDialogInfo, onSubmit, editor: Editor): Types.D
     }
   )).toArray();
 
-  const titleText: Types.Dialog.BodyComponentApi[] = settings.flags.titleEnabled ? [
+  const titleText: Dialog.InputSpec[] = settings.flags.titleEnabled ? [
     {
       name: 'title',
       type: 'input',
@@ -108,19 +107,19 @@ const makeDialog = (settings: LinkDialogInfo, onSubmit, editor: Editor): Types.D
     }
   ] : [];
 
-  const defaultTarget: Option<string> = Option.from(Settings.getDefaultLinkTarget(editor));
+  const defaultTarget: Optional<string> = Optional.from(Settings.getDefaultLinkTarget(editor));
 
   const initialData = getInitialData(settings, defaultTarget);
   const dialogDelta = DialogChanges.init(initialData, settings);
   const catalogs = settings.catalogs;
 
-  const body: Types.Dialog.PanelApi = {
+  const body: Dialog.PanelSpec = {
     type: 'panel',
-    items: Arr.flatten([
+    items: Arr.flatten<Dialog.BodyComponentSpec>([
       urlInput,
       displayText,
       titleText,
-      Options.cat<Types.Dialog.BodyComponentApi>([
+      Optionals.cat([
         catalogs.anchor.map(ListOptions.createUi('anchor', 'Anchors')),
         catalogs.rels.map(ListOptions.createUi('rel', 'Rel')),
         catalogs.targets.map(ListOptions.createUi('target', 'Open link in...')),
@@ -147,7 +146,7 @@ const makeDialog = (settings: LinkDialogInfo, onSubmit, editor: Editor): Types.D
       }
     ],
     initialData,
-    onChange: (api: Types.Dialog.DialogInstanceApi<LinkDialogData>, { name }) => {
+    onChange: (api: Dialog.DialogInstanceApi<LinkDialogData>, { name }) => {
       dialogDelta.onChange(api.getData, { name }).each((newData) => {
         api.setData(newData);
       });

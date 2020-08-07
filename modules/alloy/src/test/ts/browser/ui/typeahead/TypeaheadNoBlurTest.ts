@@ -1,6 +1,6 @@
 import { Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Arr, Future, Option, Result } from '@ephox/katamari';
+import { Arr, Future, Optional, Result } from '@ephox/katamari';
 import { Focus } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
@@ -54,7 +54,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoBlurTest', (success, 
                   value: 'blah',
                   items: Arr.map(items, TestDropdownMenu.renderItem)
                 });
-                return Option.some(TieredMenu.singleData('blah.overall', menu));
+                return Optional.some(TieredMenu.singleData('blah.overall', menu));
               });
             },
 
@@ -85,14 +85,14 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoBlurTest', (success, 
       GuiSetup.mAddStyles(doc, [
         '.selected-item { background-color: #cadbee; }'
       ]),
-      FocusTools.sSetFocus('Focusing typeahead', gui.element(), 'input'),
+      FocusTools.sSetFocus('Focusing typeahead', gui.element, 'input'),
       Keyboard.sKeydown(doc, Keys.down(), { }),
       steps.sWaitForMenu('Down to activate menu'),
 
       TestBroadcasts.sDismiss(
         'outer gui element: should close',
         gui,
-        gui.element()
+        gui.element
       ),
       steps.sWaitForNoMenu('Broadcasting dismiss on outer gui context should close popup'),
 
@@ -100,13 +100,13 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoBlurTest', (success, 
       steps.sWaitForMenu('Down to activate menu'),
       // Focus something else.
       Step.sync(() => {
-        Focus.focus(component.element());
+        Focus.focus(component.element);
       }),
       Step.wait(100),
       steps.sWaitForMenu('Blurring should NOT dismiss popup due to setting'),
 
       Step.sync(() => {
-        Focus.focus(typeahead.element());
+        Focus.focus(typeahead.element);
       }),
       Keyboard.sKeydown(doc, Keys.escape(), { }),
       steps.sWaitForNoMenu('Escape should still dismiss regardless of setting'),
@@ -120,7 +120,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoBlurTest', (success, 
             'Choose an item with <enter> key',
             Keyboard.sKeydown(doc, Keys.enter(), { })
           ),
-          Chain.asStep(component.element(), [
+          Chain.asStep(component.element, [
             FocusTools.cGetActiveValue,
             Assertions.cAssertEq('Active value should be the first option', 'choice1')
           ]),

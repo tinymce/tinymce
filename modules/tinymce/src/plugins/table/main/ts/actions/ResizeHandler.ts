@@ -5,10 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLTableElement, Node, Range } from '@ephox/dom-globals';
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { ResizeBehaviour, ResizeWire, Sizes, TableDirection, TableResize } from '@ephox/snooker';
-import { Css, Element, Element as SugarElement } from '@ephox/sugar';
+import { Css, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import * as Events from '../api/Events';
 import * as Settings from '../api/Settings';
@@ -19,15 +18,15 @@ import { enforcePercentage, enforcePixels, syncPixels } from './EnforceUnit';
 import * as TableWire from './TableWire';
 
 export interface ResizeHandler {
-  lazyResize: () => Option<TableResize>;
+  lazyResize: () => Optional<TableResize>;
   lazyWire: () => any;
   destroy: () => void;
 }
 
 export const getResizeHandler = function (editor: Editor): ResizeHandler {
-  let selectionRng = Option.none<Range>();
-  let resize = Option.none<TableResize>();
-  let wire = Option.none();
+  let selectionRng = Optional.none<Range>();
+  let resize = Optional.none<TableResize>();
+  let wire = Optional.none();
   let startW: number;
   let startRawW: string;
 
@@ -56,24 +55,24 @@ export const getResizeHandler = function (editor: Editor): ResizeHandler {
   editor.on('init', function () {
     const direction = TableDirection(Direction.directionAt);
     const rawWire = TableWire.get(editor);
-    wire = Option.some(rawWire);
+    wire = Optional.some(rawWire);
     if (Settings.hasObjectResizing(editor) && Settings.hasTableResizeBars(editor)) {
       const lazySizing = (table: SugarElement<HTMLTableElement>) => TableSize.get(editor, table);
       const resizing = Settings.getColumnResizingBehaviour(editor) === 'resizetable' ? ResizeBehaviour.resizeTable() : ResizeBehaviour.preserveTable();
       const sz = TableResize.create(rawWire, direction, resizing, lazySizing);
       sz.on();
       sz.events.startDrag.bind(function (_event) {
-        selectionRng = Option.some(editor.selection.getRng());
+        selectionRng = Optional.some(editor.selection.getRng());
       });
 
       sz.events.beforeResize.bind(function (event) {
-        const rawTable = event.table().dom();
+        const rawTable = event.table.dom;
         Events.fireObjectResizeStart(editor, rawTable, Util.getPixelWidth(rawTable), Util.getPixelHeight(rawTable));
       });
 
       sz.events.afterResize.bind(function (event) {
-        const table = event.table();
-        const rawTable = table.dom();
+        const table = event.table;
+        const rawTable = table.dom;
         Util.removeDataStyle(table);
 
         selectionRng.each(function (rng) {
@@ -85,7 +84,7 @@ export const getResizeHandler = function (editor: Editor): ResizeHandler {
         editor.undoManager.add();
       });
 
-      resize = Option.some(sz);
+      resize = Optional.some(sz);
     }
   });
 
@@ -93,7 +92,7 @@ export const getResizeHandler = function (editor: Editor): ResizeHandler {
   editor.on('ObjectResizeStart', function (e) {
     const targetElm = e.target;
     if (isTable(targetElm)) {
-      const table = Element.fromDom(targetElm);
+      const table = SugarElement.fromDom(targetElm);
 
       if (!Sizes.isPixelSizing(table) && Settings.isPixelsForced(editor)) {
         enforcePixels(editor, table);
@@ -109,7 +108,7 @@ export const getResizeHandler = function (editor: Editor): ResizeHandler {
   editor.on('ObjectResized', function (e) {
     const targetElm = e.target;
     if (isTable(targetElm)) {
-      const table = Element.fromDom(targetElm);
+      const table = SugarElement.fromDom(targetElm);
 
       if (startRawW === '' || (!Util.isPercentage(startRawW) && Settings.isResponsiveForced(editor))) {
         // Responsive tables don't have a width so we need to convert it to a relative/percent

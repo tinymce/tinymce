@@ -1,6 +1,5 @@
-import { HTMLInputElement } from '@ephox/dom-globals';
-import { Option } from '@ephox/katamari';
-import { Attr, Value } from '@ephox/sugar';
+import { Optional } from '@ephox/katamari';
+import { Attribute, Value } from '@ephox/sugar';
 
 import { Representing } from '../../api/behaviour/Representing';
 import { AlloyComponent } from '../../api/component/ComponentApi';
@@ -14,11 +13,11 @@ const setValueFromItem = (model: TypeaheadModelDetail, input: AlloyComponent, it
 };
 
 const setSelectionOn = (input: AlloyComponent, f: (node: HTMLInputElement, value: string) => void) => {
-  const el = input.element();
+  const el = input.element;
   const value = Value.get(el);
-  const node = el.dom() as HTMLInputElement;
+  const node = el.dom as HTMLInputElement;
   // Only do for valid input types.
-  if (Attr.get(el, 'type') !== 'number') {
+  if (Attribute.get(el, 'type') !== 'number') {
     f(node, value);
   }
 };
@@ -31,9 +30,9 @@ const setSelectionToEnd = (input: AlloyComponent, startOffset: number): void => 
   setSelectionOn(input, (node, value) => node.setSelectionRange(startOffset, value.length));
 };
 
-const attemptSelectOver = (model: TypeaheadModelDetail, input: AlloyComponent, item: AlloyComponent): Option<() => void> => {
+const attemptSelectOver = (model: TypeaheadModelDetail, input: AlloyComponent, item: AlloyComponent): Optional<() => void> => {
   if (!model.selectsOver) {
-    return Option.none();
+    return Optional.none();
   } else {
     const currentValue = Representing.getValue(input);
     const inputDisplay = model.getDisplayText(currentValue);
@@ -42,11 +41,11 @@ const attemptSelectOver = (model: TypeaheadModelDetail, input: AlloyComponent, i
     const itemDisplay = model.getDisplayText(itemValue);
 
     return itemDisplay.indexOf(inputDisplay) === 0 ?
-      Option.some(() => {
+      Optional.some(() => {
         setValueFromItem(model, input, item);
         setSelectionToEnd(input, inputDisplay.length);
       })
-      : Option.none();
+      : Optional.none();
   }
 };
 

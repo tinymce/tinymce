@@ -1,5 +1,5 @@
 import { Objects } from '@ephox/boulder';
-import { Arr, Fun, Merger, Obj, Option } from '@ephox/katamari';
+import { Arr, Fun, Merger, Obj, Optional } from '@ephox/katamari';
 import { EventArgs, Focus, Value } from '@ephox/sugar';
 
 import * as AddEventsBehaviour from '../../api/behaviour/AddEventsBehaviour';
@@ -29,7 +29,7 @@ import * as InputBase from '../common/InputBase';
 import * as TypeaheadEvents from './TypeaheadEvents';
 
 interface ItemExecuteEvent extends CustomEvent {
-  item: () => AlloyComponent;
+  readonly item: AlloyComponent;
 }
 
 // TODO: Fix this.
@@ -58,7 +58,7 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
         Highlighting.getHighlighted(menu).fold(() => {
           highlighter(menu);
         }, () => {
-          AlloyTriggers.dispatchEvent(sandbox, menu.element(), 'keydown', simulatedEvent);
+          AlloyTriggers.dispatchEvent(sandbox, menu.element, 'keydown', simulatedEvent);
         });
       });
     } else {
@@ -73,7 +73,7 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
   // (easily) the same representing logic as input fields.
   const focusBehaviours = InputBase.focusBehaviours(detail);
 
-  const mapFetch = (comp: AlloyComponent) => (tdata: Option<TieredData>): Option<TieredData> => tdata.map((data) => {
+  const mapFetch = (comp: AlloyComponent) => (tdata: Optional<TieredData>): Optional<TieredData> => tdata.map((data) => {
     const menus = Obj.values(data.menus);
     const items = Arr.bind(menus, (menu) => Arr.filter(menu.items, (item): item is NormalItemSpec => item.type === 'item'));
 
@@ -90,14 +90,14 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
       onSetValue: detail.onSetValue,
       store: {
         mode: 'dataset',
-        getDataKey: (comp) => Value.get(comp.element()),
+        getDataKey: (comp) => Value.get(comp.element),
         // This really needs to be configurable
         getFallbackEntry: (itemString) => ({
           value: itemString,
           meta: { }
         }),
         setValue: (comp, data) => {
-          Value.set(comp.element(), detail.model.getDisplayText(data));
+          Value.set(comp.element, detail.model.getDisplayText(data));
         },
         ...detail.initialData.map((d) => Objects.wrap('initialValue', d)).getOr({ })
       }
@@ -114,9 +114,9 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
         const focusInInput = Focusing.isFocused(component);
         // You don't want it to change when something else has triggered the change.
         if (focusInInput) {
-          if (Value.get(component.element()).length >= detail.minChars) {
+          if (Value.get(component.element).length >= detail.minChars) {
 
-            const previousValue = Composing.getCurrent(sandbox).bind((menu) => Highlighting.getHighlighted(menu).map(Representing.getValue) as Option<TypeaheadData>);
+            const previousValue = Composing.getCurrent(sandbox).bind((menu) => Highlighting.getHighlighted(menu).map(Representing.getValue) as Optional<TypeaheadData>);
 
             detail.previewing.set(true);
 
@@ -133,7 +133,7 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
                   // Highlight first if could not find it?
                   Highlighting.getHighlighted(menu).orThunk(() => {
                     Highlighting.highlightFirst(menu);
-                    return Option.none();
+                    return Optional.none();
                   });
                 });
               });
@@ -150,19 +150,19 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
       mode: 'special',
       onDown(comp, simulatedEvent) {
         navigateList(comp, simulatedEvent, Highlighting.highlightFirst);
-        return Option.some<boolean>(true);
+        return Optional.some<boolean>(true);
       },
-      onEscape(comp): Option<boolean> {
+      onEscape(comp): Optional<boolean> {
         const sandbox = Coupling.getCoupled(comp, 'sandbox');
         if (Sandboxing.isOpen(sandbox)) {
           Sandboxing.close(sandbox);
-          return Option.some<boolean>(true);
+          return Optional.some<boolean>(true);
         }
-        return Option.none();
+        return Optional.none();
       },
       onUp(comp, simulatedEvent) {
         navigateList(comp, simulatedEvent, Highlighting.highlightLast);
-        return Option.some<boolean>(true);
+        return Optional.some<boolean>(true);
       },
       onEnter(comp) {
         const sandbox = Coupling.getCoupled(comp, 'sandbox');
@@ -185,7 +185,7 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
           if (sandboxIsOpen) {
             Sandboxing.close(sandbox);
           }
-          return Option.some<boolean>(true);
+          return Optional.some<boolean>(true);
         }
       }
     }),
@@ -215,9 +215,9 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
       AlloyEvents.run<ItemExecuteEvent>(TypeaheadEvents.itemExecute(), (comp, se) => {
         const sandbox = Coupling.getCoupled(comp, 'sandbox');
 
-        setValueFromItem(detail.model, comp, se.event().item());
+        setValueFromItem(detail.model, comp, se.event.item);
         AlloyTriggers.emit(comp, SystemEvents.typeaheadCancel());
-        detail.onItemExecute(comp, sandbox, se.event().item(), Representing.getValue(comp));
+        detail.onItemExecute(comp, sandbox, se.event.item, Representing.getValue(comp));
 
         Sandboxing.close(sandbox);
         setCursorAtEnd(comp);
@@ -226,7 +226,7 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
       AlloyEvents.run(SystemEvents.postBlur(), (typeahead) => {
         const sandbox = Coupling.getCoupled(typeahead, 'sandbox');
         // Only close the sandbox if the focus isn't inside it!
-        if (Focus.search(sandbox.element()).isNone()) {
+        if (Focus.search(sandbox.element).isNone()) {
           Sandboxing.close(sandbox);
         }
       })

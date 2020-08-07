@@ -1,10 +1,9 @@
-import { Assertions, GeneralSteps, Logger, Pipeline, Step, Chain } from '@ephox/agar';
+import { Assertions, Chain, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Element, Css, SelectorFind, Scroll } from '@ephox/sugar';
+import { Css, Scroll, SelectorFind, SugarElement } from '@ephox/sugar';
 import * as EditorView from 'tinymce/core/EditorView';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock-client';
-import { window } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.core.EditorViewIframeTest', function (success, failure) {
 
@@ -17,8 +16,8 @@ UnitTest.asynctest('browser.tinymce.core.EditorViewIframeTest', function (succes
   };
 
   const getIframeClientRect = function (editor) {
-    return SelectorFind.descendant(Element.fromDom(editor.getContentAreaContainer()), 'iframe').map(function (elm) {
-      return elm.dom().getBoundingClientRect();
+    return SelectorFind.descendant(SugarElement.fromDom(editor.getContentAreaContainer()), 'iframe').map(function (elm) {
+      return elm.dom.getBoundingClientRect();
     }).getOrDie();
   };
 
@@ -26,7 +25,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorViewIframeTest', function (succes
     return Step.label(
       'sSetBodyStyles ' + JSON.stringify(css),
       Step.sync(function () {
-        Css.setAll(Element.fromDom(editor.getBody()), css);
+        Css.setAll(SugarElement.fromDom(editor.getBody()), css);
       })
     );
   };

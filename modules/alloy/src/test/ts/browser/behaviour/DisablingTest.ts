@@ -55,7 +55,7 @@ UnitTest.asynctest('DisablingTest', (success, failure) => {
     )), (_doc, _body, _gui, component, store) => {
 
     const sClickButton = Chain.asStep({ }, [
-      Chain.mapper(() => memDisabledButton.get(component).element()),
+      Chain.mapper(() => memDisabledButton.get(component).element),
       Mouse.cClick
     ]);
 
@@ -69,7 +69,7 @@ UnitTest.asynctest('DisablingTest', (success, failure) => {
             disabled: str.is('disabled')
           }
         })),
-        disabledButton.element()
+        disabledButton.element
       ),
       Assertions.sAssertStructure(
         'Enabled should not  have a disabled attribute or class',
@@ -79,7 +79,7 @@ UnitTest.asynctest('DisablingTest', (success, failure) => {
           },
           classes: [ arr.not('btn-disabled') ]
         })),
-        enabledButton.element()
+        enabledButton.element
       ),
 
       Logger.t(
@@ -87,7 +87,7 @@ UnitTest.asynctest('DisablingTest', (success, failure) => {
         GeneralSteps.sequence([
           Step.sync(() => {
             // TODO: Maybe replace with an alloy focus call
-            Focus.focus(disabledButton.element());
+            Focus.focus(disabledButton.element);
           }),
           sClickButton,
           store.sAssertEq('Execute did not get past disabled button', [ ])
@@ -108,7 +108,7 @@ UnitTest.asynctest('DisablingTest', (success, failure) => {
             disabled: str.none()
           }
         })),
-        disabledButton.element()
+        disabledButton.element
       ),
 
       Logger.t(
@@ -116,7 +116,7 @@ UnitTest.asynctest('DisablingTest', (success, failure) => {
         GeneralSteps.sequence([
           Step.sync(() => {
             // TODO: Maybe replace with an alloy focus call
-            Focus.focus(disabledButton.element());
+            Focus.focus(disabledButton.element);
           }),
           sClickButton,
           store.sAssertEq('Execute did not get past disabled button', [ 'execute.reached' ])
@@ -137,7 +137,7 @@ UnitTest.asynctest('DisablingTest', (success, failure) => {
             disabled: str.is('disabled')
           }
         })),
-        disabledButton.element()
+        disabledButton.element
       ),
 
       Logger.t(
@@ -154,7 +154,7 @@ UnitTest.asynctest('DisablingTest', (success, failure) => {
             disabled: str.none()
           }
         })),
-        disabledButton.element()
+        disabledButton.element
       )
     ];
   }, () => { success(); }, failure);

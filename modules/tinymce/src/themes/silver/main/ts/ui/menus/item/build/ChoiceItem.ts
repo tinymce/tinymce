@@ -6,8 +6,8 @@
  */
 
 import { Disabling, Toggling } from '@ephox/alloy';
-import { Menu, Types } from '@ephox/bridge';
-import { Merger, Option } from '@ephox/katamari';
+import { Menu, Toolbar } from '@ephox/bridge';
+import { Merger, Optional } from '@ephox/katamari';
 import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
 import * as ItemClasses from '../ItemClasses';
 import ItemResponse from '../ItemResponse';
@@ -18,7 +18,7 @@ import { buildData, renderCommonItem } from './CommonMenuItem';
 const renderChoiceItem = (
   spec: Menu.ChoiceMenuItem,
   useText: boolean,
-  presets: Types.PresetItemTypes,
+  presets: Toolbar.PresetItemTypes,
   onItemValueHandler: (itemValue: string) => void,
   isSelected: boolean, itemResponse: ItemResponse,
   providersBackstage: UiFactoryBackstageProviders,
@@ -35,17 +35,17 @@ const renderChoiceItem = (
 
   const structure = renderItemStructure({
     presets,
-    textContent:  useText ? spec.text : Option.none(),
-    htmlContent: Option.none(),
+    textContent:  useText ? spec.text : Optional.none(),
+    htmlContent: Optional.none(),
     ariaLabel: spec.text,
     iconContent: spec.icon,
-    shortcutContent: useText ? spec.shortcut : Option.none(),
+    shortcutContent: useText ? spec.shortcut : Optional.none(),
 
     // useText essentially says that we have one column. In one column lists, we should show a tick
     // The tick is controlled by the tickedClass (via css). It is always present
     // but is hidden unless the tickedClass is present.
-    checkMark: useText ? Option.some(renderCheckmark(providersBackstage.icons)) : Option.none(),
-    caret: Option.none(),
+    checkMark: useText ? Optional.some(renderCheckmark(providersBackstage.icons)) : Optional.none(),
+    caret: Optional.none(),
     value: spec.value
   }, providersBackstage, renderIcons);
 

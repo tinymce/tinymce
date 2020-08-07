@@ -1,5 +1,5 @@
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 
 import { NamedConfiguredBehaviour } from '../api/behaviour/Behaviour';
 import { Receiving } from '../api/behaviour/Receiving';
@@ -12,7 +12,7 @@ import { ReceivingConfig, ReceivingConfigSpec } from '../behaviour/receiving/Rec
 
 export interface RepositionReceivingDetail {
   doReposition: (sandbox: AlloyComponent) => void;
-  fireEventInstead: Option<{
+  fireEventInstead: Optional<{
     event: string;
   }>;
 }

@@ -1,35 +1,35 @@
 import { Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
-import { Hierarchy, Element, SelectorFind, Selectors } from '@ephox/sugar';
+import { Hierarchy, SelectorFind, Selectors, SugarElement } from '@ephox/sugar';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import * as BoundaryLocation from 'tinymce/core/keyboard/BoundaryLocation';
-import ViewBlock from '../../module/test/ViewBlock';
 import * as Zwsp from 'tinymce/core/text/Zwsp';
-import { UnitTest } from '@ephox/bedrock-client';
+import ViewBlock from '../../module/test/ViewBlock';
 
 UnitTest.asynctest('browser.tinymce.core.keyboard.BoundaryLocationTest', function (success, failure) {
   const ZWSP = Zwsp.ZWSP;
   const viewBlock = ViewBlock();
 
   const isInlineTarget = function (elm) {
-    return Selectors.is(Element.fromDom(elm), 'a[href],code');
+    return Selectors.is(SugarElement.fromDom(elm), 'a[href],code');
   };
 
   const createViewElement = function (html) {
     viewBlock.update(html);
-    return Element.fromDom(viewBlock.get());
+    return SugarElement.fromDom(viewBlock.get());
   };
 
   const createLocation = function (elm, elementPath, offset) {
     const container = Hierarchy.follow(elm, elementPath);
-    const pos = CaretPosition(container.getOrDie().dom(), offset);
-    const location = BoundaryLocation.readLocation(isInlineTarget, elm.dom(), pos);
+    const pos = CaretPosition(container.getOrDie().dom, offset);
+    const location = BoundaryLocation.readLocation(isInlineTarget, elm.dom, pos);
     return location;
   };
 
   const createPosition = function (elm, elementPath, offset) {
     const container = Hierarchy.follow(elm, elementPath);
-    return CaretPosition(container.getOrDie().dom(), offset);
+    return CaretPosition(container.getOrDie().dom, offset);
   };
 
   const locationName = function (location) {
@@ -42,7 +42,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.BoundaryLocationTest', functio
   };
 
   const locationElement = function (location) {
-    return Element.fromDom(location.fold(
+    return SugarElement.fromDom(location.fold(
       Fun.identity,
       Fun.identity,
       Fun.identity,
@@ -72,7 +72,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.BoundaryLocationTest', functio
     return Step.sync(function () {
       const elm = createViewElement(html);
       const position = createPosition(elm, elementPath, offset);
-      const location = BoundaryLocation.findLocation(forward, isInlineTarget, elm.dom(), position);
+      const location = BoundaryLocation.findLocation(forward, isInlineTarget, elm.dom, position);
 
       Assertions.assertDomEq('Should be expected element', SelectorFind.descendant(elm, expectedInline).getOrDie(), locationElement(location.getOrDie()));
       Assertions.assertEq('Should be a valid location: ' + html, true, location.isSome());
@@ -84,7 +84,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.BoundaryLocationTest', functio
     return Step.sync(function () {
       const elm = createViewElement(html);
       const position = createPosition(elm, elementPath, offset);
-      const location = BoundaryLocation.findLocation(forward, isInlineTarget, elm.dom(), position);
+      const location = BoundaryLocation.findLocation(forward, isInlineTarget, elm.dom, position);
       Assertions.assertEq('Should not be a valid location: ' + html, true, location.isNone());
     });
   };

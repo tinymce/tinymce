@@ -1,20 +1,19 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
-import { window } from '@ephox/dom-globals';
 import * as InsertAll from 'ephox/sugar/api/dom/InsertAll';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
-import * as Body from 'ephox/sugar/api/node/Body';
-import Element from 'ephox/sugar/api/node/Element';
-import { Selection } from 'ephox/sugar/api/selection/Selection';
+import * as SugarBody from 'ephox/sugar/api/node/SugarBody';
+import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
+import { SimSelection } from 'ephox/sugar/api/selection/SimSelection';
 import * as WindowSelection from 'ephox/sugar/api/selection/WindowSelection';
 
 UnitTest.test('Browser Test: SelectionRectanglesTest', () => {
-  const p1 = Element.fromHtml('<p>This is the <strong>first</strong> paragraph</p>');
-  const p2 = Element.fromHtml('<p>This is the <em>second</em> paragraph</p>');
+  const p1 = SugarElement.fromHtml('<p>This is the <strong>first</strong> paragraph</p>');
+  const p2 = SugarElement.fromHtml('<p>This is the <em>second</em> paragraph</p>');
 
-  InsertAll.append(Body.body(), [ p1, p2 ]);
+  InsertAll.append(SugarBody.body(), [ p1, p2 ]);
 
-  const selP1 = Selection.exact(p1, 0, p1, 1);
-  const selP2 = Selection.exact(p2, 0, p2, 1);
+  const selP1 = SimSelection.exact(p1, 0, p1, 1);
+  const selP2 = SimSelection.exact(p2, 0, p2, 1);
 
   const rect1 = WindowSelection.getFirstRect(window, selP1).getOrDie(
     'There should be a rectangle for paragraph 1'
@@ -25,8 +24,8 @@ UnitTest.test('Browser Test: SelectionRectanglesTest', () => {
   );
 
   assert.eq(
-    true, rect1.top() < rect2.top(), 'Rect 1 should be above Rect 2. (1) was ' +
-    rect1.top() + ', and (2) was ' + rect2.top()
+    true, rect1.top < rect2.top, 'Rect 1 should be above Rect 2. (1) was ' +
+    rect1.top + ', and (2) was ' + rect2.top
   );
 
   const bounds1 = WindowSelection.getBounds(window, selP1).getOrDie(
@@ -37,9 +36,9 @@ UnitTest.test('Browser Test: SelectionRectanglesTest', () => {
   );
   assert.eq(
     true,
-    bounds1.top() < bounds2.top(),
-    'Bounds 1 should be above bound 2. (1) was ' + bounds1.top() + ', and (2)' +
-    ' was ' + bounds2.top()
+    bounds1.top < bounds2.top,
+    'Bounds 1 should be above bound 2. (1) was ' + bounds1.top + ', and (2)' +
+    ' was ' + bounds2.top
   );
 
   Remove.remove(p1);

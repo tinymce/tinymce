@@ -29,7 +29,6 @@
   "author": "Ephox Corporation",
   "license": "Apache-2.0",
   "dependencies": {
-    "@ephox/dom-globals": "^1.1.2",
     "@ephox/katamari": "^6.1.1",
     "tslib": "^2.0.0"
   },

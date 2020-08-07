@@ -1,4 +1,4 @@
-import { Arr, Option, Result, Type } from '@ephox/katamari';
+import { Arr, Optional, Result, Type } from '@ephox/katamari';
 import { BinaryReader } from './BinaryReader';
 import { readByte, readList, readLong, readShort, readSignedLong, readString } from './BinaryReaderUtils';
 
@@ -9,8 +9,8 @@ export interface TiffTags {
   Make?: string;
   Model?: string;
   Software?: string;
-  ExifIFDPointer: Option<number>;
-  GPSInfoIFDPointer: Option<number>;
+  ExifIFDPointer: Optional<number>;
+  GPSInfoIFDPointer: Optional<number>;
 }
 
 export interface GPSTags {
@@ -239,7 +239,7 @@ const extractTags = (reader: BinaryReader, ifdOffset: number, tiffHeaderOffset: 
     10: { name: 'SRATIONAL', size: 8, read: readSignedRational }
   };
 
-  const withTag = (tag: string) => (value: unknown) => Option.some<[string, unknown]>([ tag, value ]);
+  const withTag = (tag: string) => (value: unknown) => Optional.some<[string, unknown]>([ tag, value ]);
 
   // TODO: maybe escape and sanitize
   const cleanupString = (str: string) => str.replace(/\0$/, '').trim();
@@ -264,12 +264,12 @@ const extractTags = (reader: BinaryReader, ifdOffset: number, tiffHeaderOffset: 
         const tagItem = readShort(reader, offset + ID_OFFSET).bind(
           (tagId) => readShort(reader, offset + TYPE_OFFSET).bind(
             (typeId) => readLong(reader, offset + COUNT_OFFSET).bind(
-              (count): Result<Option<[string, unknown]>, string> => {
+              (count): Result<Optional<[string, unknown]>, string> => {
                 // now see if we're interested in the tag
                 const tag = tags2extract[tagId];
                 if (tag === undefined) {
                   // skip tag, we're not interested in it
-                  return Result.value(Option.none());
+                  return Result.value(Optional.none());
                 }
                 const type = types[typeId];
                 if (type === undefined) {
@@ -283,7 +283,7 @@ const extractTags = (reader: BinaryReader, ifdOffset: number, tiffHeaderOffset: 
                   // instead of data, the tag contains an offset of the data
                   const indirectDataOffset = readLong(reader, offset + DATA_OFFSET);
                   if (indirectDataOffset.isError()) {
-                    return indirectDataOffset.map((_value) => Option.none<[string, unknown]>());
+                    return indirectDataOffset.map((_value) => Optional.none<[string, unknown]>());
                   }
                   dataOffset = indirectDataOffset.getOrDie() + tiffHeaderOffset;
                 }
@@ -322,13 +322,13 @@ const extractTags = (reader: BinaryReader, ifdOffset: number, tiffHeaderOffset: 
 };
 
 const parseTiffTags = (data: Record<string, unknown>): TiffTags => ({
-  Orientation: Option.from(data.Orientation).filter(Type.isNumber).getOrUndefined(),
-  ImageDescription: Option.from(data.ImageDescription).filter(Type.isString).getOrUndefined(),
-  Make: Option.from(data.Make).filter(Type.isString).getOrUndefined(),
-  Model: Option.from(data.Model).filter(Type.isString).getOrUndefined(),
-  Software: Option.from(data.Software).filter(Type.isString).getOrUndefined(),
-  ExifIFDPointer: Option.from(data.ExifIFDPointer).filter(Type.isNumber),
-  GPSInfoIFDPointer: Option.from(data.GPSInfoIFDPointer).filter(Type.isNumber)
+  Orientation: Optional.from(data.Orientation).filter(Type.isNumber).getOrUndefined(),
+  ImageDescription: Optional.from(data.ImageDescription).filter(Type.isString).getOrUndefined(),
+  Make: Optional.from(data.Make).filter(Type.isString).getOrUndefined(),
+  Model: Optional.from(data.Model).filter(Type.isString).getOrUndefined(),
+  Software: Optional.from(data.Software).filter(Type.isString).getOrUndefined(),
+  ExifIFDPointer: Optional.from(data.ExifIFDPointer).filter(Type.isNumber),
+  GPSInfoIFDPointer: Optional.from(data.GPSInfoIFDPointer).filter(Type.isNumber)
 });
 
 const parseExifTags = (data: Record<string, unknown>): ExifTags => {
@@ -351,26 +351,26 @@ const parseExifTags = (data: Record<string, unknown>): ExifTags => {
 
   return {
     ExifVersion,
-    ColorSpace: Option.from(data.ColorSpace).filter(Type.isString).getOrUndefined(),
-    PixelXDimension: Option.from(data.PixelXDimension).filter(Type.isNumber).getOrUndefined(),
-    PixelYDimension: Option.from(data.PixelYDimension).filter(Type.isNumber).getOrUndefined(),
-    DateTimeOriginal: Option.from(data.DateTimeOriginal).filter(Type.isString).getOrUndefined(),
-    ExposureTime: Option.from(data.ExposureTime).filter(Type.isNumber).getOrUndefined(),
-    FNumber: Option.from(data.FNumber).filter(Type.isNumber).getOrUndefined(),
-    ISOSpeedRatings: Option.from(data.ISOSpeedRatings).filter(Type.isNumber).getOrUndefined(),
-    ShutterSpeedValue: Option.from(data.ShutterSpeedValue).filter(Type.isNumber).getOrUndefined(),
-    ApertureValue: Option.from(data.ApertureValue).filter(Type.isNumber).getOrUndefined(),
-    MeteringMode: Option.from(data.MeteringMode).filter(Type.isString).getOrUndefined(),
-    LightSource: Option.from(data.LightSource).filter(Type.isString).getOrUndefined(),
-    Flash: Option.from(data.Flash).filter(Type.isString).getOrUndefined(),
-    FocalLength: Option.from(data.FocalLength).filter(Type.isNumber).getOrUndefined(),
-    ExposureMode: Option.from(data.ExposureMode).filter(Type.isString).getOrUndefined(),
-    WhiteBalance: Option.from(data.WhiteBalance).filter(Type.isString).getOrUndefined(),
-    SceneCaptureType: Option.from(data.SceneCaptureType).filter(Type.isString).getOrUndefined(),
-    DigitalZoomRatio: Option.from(data.DigitalZoomRatio).filter(Type.isNumber).getOrUndefined(),
-    Contrast: Option.from(data.Contrast).filter(Type.isString).getOrUndefined(),
-    Saturation: Option.from(data.Saturation).filter(Type.isString).getOrUndefined(),
-    Sharpness: Option.from(data.Sharpness).filter(Type.isString).getOrUndefined()
+    ColorSpace: Optional.from(data.ColorSpace).filter(Type.isString).getOrUndefined(),
+    PixelXDimension: Optional.from(data.PixelXDimension).filter(Type.isNumber).getOrUndefined(),
+    PixelYDimension: Optional.from(data.PixelYDimension).filter(Type.isNumber).getOrUndefined(),
+    DateTimeOriginal: Optional.from(data.DateTimeOriginal).filter(Type.isString).getOrUndefined(),
+    ExposureTime: Optional.from(data.ExposureTime).filter(Type.isNumber).getOrUndefined(),
+    FNumber: Optional.from(data.FNumber).filter(Type.isNumber).getOrUndefined(),
+    ISOSpeedRatings: Optional.from(data.ISOSpeedRatings).filter(Type.isNumber).getOrUndefined(),
+    ShutterSpeedValue: Optional.from(data.ShutterSpeedValue).filter(Type.isNumber).getOrUndefined(),
+    ApertureValue: Optional.from(data.ApertureValue).filter(Type.isNumber).getOrUndefined(),
+    MeteringMode: Optional.from(data.MeteringMode).filter(Type.isString).getOrUndefined(),
+    LightSource: Optional.from(data.LightSource).filter(Type.isString).getOrUndefined(),
+    Flash: Optional.from(data.Flash).filter(Type.isString).getOrUndefined(),
+    FocalLength: Optional.from(data.FocalLength).filter(Type.isNumber).getOrUndefined(),
+    ExposureMode: Optional.from(data.ExposureMode).filter(Type.isString).getOrUndefined(),
+    WhiteBalance: Optional.from(data.WhiteBalance).filter(Type.isString).getOrUndefined(),
+    SceneCaptureType: Optional.from(data.SceneCaptureType).filter(Type.isString).getOrUndefined(),
+    DigitalZoomRatio: Optional.from(data.DigitalZoomRatio).filter(Type.isNumber).getOrUndefined(),
+    Contrast: Optional.from(data.Contrast).filter(Type.isString).getOrUndefined(),
+    Saturation: Optional.from(data.Saturation).filter(Type.isString).getOrUndefined(),
+    Sharpness: Optional.from(data.Sharpness).filter(Type.isString).getOrUndefined()
   };
 };
 
@@ -395,10 +395,10 @@ const parseGpsTags = (data: Record<string, unknown>): GPSTags => {
 
   return {
     GPSVersionID,
-    GPSLatitudeRef: Option.from(data.GPSLatitudeRef).filter(Type.isString).getOrUndefined(),
-    GPSLatitude: Option.from(data.GPSLatitude).filter(Type.isNumber).getOrUndefined(),
-    GPSLongitudeRef: Option.from(data.GPSLongitudeRef).filter(Type.isString).getOrUndefined(),
-    GPSLongitude: Option.from(data.GPSLongitude).filter(Type.isNumber).getOrUndefined()
+    GPSLatitudeRef: Optional.from(data.GPSLatitudeRef).filter(Type.isString).getOrUndefined(),
+    GPSLatitude: Optional.from(data.GPSLatitude).filter(Type.isNumber).getOrUndefined(),
+    GPSLongitudeRef: Optional.from(data.GPSLongitudeRef).filter(Type.isString).getOrUndefined(),
+    GPSLongitude: Optional.from(data.GPSLongitude).filter(Type.isNumber).getOrUndefined()
   };
 };
 
@@ -425,9 +425,9 @@ const parseThumbTags = (data: Record<string, unknown>): Result<ThumbTags, string
 
 export interface MetaData {
   tiff: Result<TiffTags, string>;
-  exif: Result<Option<ExifTags>, string>;
-  gps: Result<Option<GPSTags>, string>;
-  thumb: Result<Option<ArrayBuffer>, string>;
+  exif: Result<Optional<ExifTags>, string>;
+  gps: Result<Optional<GPSTags>, string>;
+  thumb: Result<Optional<ArrayBuffer>, string>;
 }
 
 export const readMetaData = (ar: ArrayBuffer): MetaData => {
@@ -452,15 +452,15 @@ export const readMetaData = (ar: ArrayBuffer): MetaData => {
   const tiff = ifd0.bind((ifb0Start) => extractTags(reader, ifb0Start, TIFF_HEADER, tags.tiff).map(parseTiffTags));
 
   const exif = tiff.bind((tiffTags) => tiffTags.ExifIFDPointer.fold(
-    () => Result.value(Option.none<ExifTags>()),
+    () => Result.value(Optional.none<ExifTags>()),
     (exifOffset) => extractTags(reader, TIFF_HEADER + exifOffset, TIFF_HEADER, tags.exif)
-      .map(parseExifTags).map(Option.some)
+      .map(parseExifTags).map(Optional.some)
   ));
 
   const gps = tiff.bind((tiffTags) => tiffTags.GPSInfoIFDPointer.fold(
-    () => Result.value(Option.none<GPSTags>()),
+    () => Result.value(Optional.none<GPSTags>()),
     (gpsOffset) => extractTags(reader, TIFF_HEADER + gpsOffset, TIFF_HEADER, tags.gps)
-      .map(parseGpsTags).map(Option.some)
+      .map(parseGpsTags).map(Optional.some)
   ));
 
   const exififd = ifd0.bind((ifb0Start) => readShort(reader, ifb0Start).map((ifb0Length) => ifb0Start + 2 + (ifb0Length * 12)));
@@ -470,7 +470,7 @@ export const readMetaData = (ar: ArrayBuffer): MetaData => {
   const thumb = ifd1.bind((ifd1Start) => extractTags(reader, ifd1Start, TIFF_HEADER, tags.thumb)
     .bind(parseThumbTags)
     .map((tags) => reader.segment(TIFF_HEADER + tags.JPEGInterchangeFormat, tags.JPEGInterchangeFormatLength))
-    .map(Option.some));
+    .map(Optional.some));
 
   return {
     tiff,

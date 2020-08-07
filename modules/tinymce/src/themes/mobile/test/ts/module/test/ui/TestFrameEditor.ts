@@ -1,18 +1,18 @@
-import { Cursors, Waiter, Step, Assertions } from '@ephox/agar';
+import { Assertions, Cursors, Step, Waiter } from '@ephox/agar';
 import { GuiFactory } from '@ephox/alloy';
-import { Fun, Option } from '@ephox/katamari';
-import { Attr, Element, Focus, WindowSelection } from '@ephox/sugar';
+import { Fun, Optional } from '@ephox/katamari';
+import { Attribute, Focus, SugarElement, WindowSelection } from '@ephox/sugar';
 
 import TestEditor from './TestEditor';
 
 export default function () {
-  const frame = Element.fromTag('iframe');
-  Attr.set(frame, 'src', '/project/tinymce/src/themes/mobile/test/html/editor.html');
+  const frame = SugarElement.fromTag('iframe');
+  Attribute.set(frame, 'src', '/project/tinymce/src/themes/mobile/test/html/editor.html');
 
   const sWaitForEditorLoaded = Waiter.sTryUntil(
     'Waiting for iframe to load',
     Step.sync(() => {
-      Assertions.assertEq('Check for a content editable body', 'true', frame.dom().contentWindow.document.body.contentEditable);
+      Assertions.assertEq('Check for a content editable body', 'true', frame.dom.contentWindow.document.body.contentEditable);
     }),
     100,
     8000
@@ -33,18 +33,18 @@ export default function () {
   const editor = {
     selection: {
       getStart() {
-        return WindowSelection.getExact(frame.dom().contentWindow).map(function (sel) {
-          return sel.start().dom();
+        return WindowSelection.getExact(frame.dom.contentWindow).map(function (sel) {
+          return sel.start.dom;
         }).getOr(null);
       },
       getContent() {
-        return frame.dom().contentWindow.document.body.innerHTML;
+        return frame.dom.contentWindow.document.body.innerHTML;
       },
       select: Fun.noop
     },
 
     getBody() {
-      return frame.dom().contentWindow.document.body;
+      return frame.dom.contentWindow.document.body;
     },
 
     insertContent: dEditor.insertContent,
@@ -53,12 +53,12 @@ export default function () {
     // Maybe this should be implemented
     focus() {
       Focus.focus(frame);
-      const win = frame.dom().contentWindow;
+      const win = frame.dom.contentWindow;
       WindowSelection.getExact(win).orThunk(function () {
-        const fbody = Element.fromDom(frame.dom().contentWindow.document.body);
+        const fbody = SugarElement.fromDom(frame.dom.contentWindow.document.body);
         const elem = Cursors.calculateOne(fbody, [ 0 ]);
         WindowSelection.setExact(win, elem, 0, elem, 0);
-        return Option.none();
+        return Optional.none();
       });
     },
     ui: {

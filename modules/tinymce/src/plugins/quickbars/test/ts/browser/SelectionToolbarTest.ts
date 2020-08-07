@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, Chain, GeneralSteps, Guard, Log, Pipeline, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
-import { Body } from '@ephox/sugar';
+import { SugarBody } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
@@ -22,7 +22,7 @@ UnitTest.asynctest('browser.tinymce.plugins.quickbars.SelectionToolbarTest', (su
     Center = 'center'
   }
 
-  const sAssertButtonToggledState = (name: string, state: boolean) => Chain.asStep(Body.body(), [
+  const sAssertButtonToggledState = (name: string, state: boolean) => Chain.asStep(SugarBody.body(), [
     Chain.control(
       Chain.fromChains( [
         UiFinder.cFindIn(`.tox-toolbar button[aria-label="${name}"]`),

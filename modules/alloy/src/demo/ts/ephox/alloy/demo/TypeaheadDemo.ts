@@ -1,6 +1,5 @@
-import { console, document } from '@ephox/dom-globals';
-import { Arr, Future, Option, Result, Strings } from '@ephox/katamari';
-import { Class, Element, Value } from '@ephox/sugar';
+import { Arr, Future, Optional, Result, Strings } from '@ephox/katamari';
+import { Class, SugarElement, Value } from '@ephox/sugar';
 
 import { Representing } from 'ephox/alloy/api/behaviour/Representing';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
@@ -14,12 +13,12 @@ import { TypeaheadData } from 'ephox/alloy/ui/types/TypeaheadTypes';
 
 import * as DemoRenders from './forms/DemoRenders';
 
-// tslint:disable:no-console
+/* eslint-disable no-console */
 
 export default (): void => {
   const gui = Gui.create();
-  const body = Element.fromDom(document.body);
-  Class.add(gui.element(), 'gui-root-demo-container');
+  const body = SugarElement.fromDom(document.body);
+  Class.add(gui.element, 'gui-root-demo-container');
   Attachment.attachSystem(body, gui);
 
   const sink = DemoSink.make();
@@ -85,7 +84,7 @@ export default (): void => {
     model,
 
     fetch(input) {
-      const inputValue = Value.get(input.element());
+      const inputValue = Value.get(input.element);
       console.log('text', inputValue);
       const matching: DemoRenders.DemoItems[] = Arr.bind(dataset, (d) => {
         const lText = d.text.toLowerCase();
@@ -123,13 +122,13 @@ export default (): void => {
           value: 'blah.value',
           items: Arr.map(items, DemoRenders.item)
         });
-        return Option.some(TieredMenu.singleData('blah', menu));
+        return Optional.some(TieredMenu.singleData('blah', menu));
       });
     },
     onExecute(sandbox, item, _itemValue) {
       const value = Representing.getValue(item);
       console.log('*** typeahead menu demo execute on: ', value, ' ***');
-      return Option.some(true);
+      return Optional.some(true);
     }
   });
 

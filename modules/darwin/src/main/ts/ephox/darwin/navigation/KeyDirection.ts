@@ -1,18 +1,18 @@
+import { Optional } from '@ephox/katamari';
 import { DomGather } from '@ephox/phoenix';
-import { Situ, Traverse, Element } from '@ephox/sugar';
-import { Retries } from '../keyboard/Retries';
-import { BeforeAfter, BeforeAfterFailureConstructor } from './BeforeAfter';
-import { Option } from '@ephox/katamari';
+import { Situ, SugarElement, Traverse } from '@ephox/sugar';
 import { WindowBridge } from '../api/WindowBridge';
 import { Carets } from '../keyboard/Carets';
+import { Retries } from '../keyboard/Retries';
 import { Situs } from '../selection/Situs';
+import { BeforeAfter, BeforeAfterFailureConstructor } from './BeforeAfter';
 
 export interface KeyDirection {
-  traverse: (element: Element) => Option<Element>;
-  gather: (element: Element, isRoot: (e: Element) => boolean) => Option<Element>;
-  relative: (element: Element) => Situ;
-  otherRetry: (bridge: WindowBridge, caret: Carets) => Option<Situs>;
-  ieRetry: (bridge: WindowBridge, caret: Carets) => Option<Situs>;
+  traverse: (element: SugarElement) => Optional<SugarElement>;
+  gather: (element: SugarElement, isRoot: (e: SugarElement) => boolean) => Optional<SugarElement>;
+  relative: (element: SugarElement) => Situ;
+  otherRetry: (bridge: WindowBridge, caret: Carets) => Optional<Situs>;
+  ieRetry: (bridge: WindowBridge, caret: Carets) => Optional<Situs>;
   failure: BeforeAfterFailureConstructor;
 }
 

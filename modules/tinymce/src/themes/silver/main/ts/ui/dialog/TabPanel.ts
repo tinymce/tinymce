@@ -6,23 +6,11 @@
  */
 
 import {
-  AddEventsBehaviour,
-  AlloyComponent,
-  AlloyEvents,
-  AlloyTriggers,
-  Behaviour,
-  Composing,
-  Form as AlloyForm,
-  Keying,
-  Receiving,
-  Representing,
-  SketchSpec,
-  Tabbar as AlloyTabbar,
-  TabbarTypes,
-  TabSection as AlloyTabSection,
-  Tabstopping
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Composing, Form as AlloyForm, Keying, Receiving, Representing,
+  SketchSpec, Tabbar as AlloyTabbar, TabbarTypes, TabSection as AlloyTabSection, Tabstopping
 } from '@ephox/alloy';
 import { Objects } from '@ephox/boulder';
+import { Dialog } from '@ephox/bridge';
 import { Arr, Cell, Fun, Merger } from '@ephox/katamari';
 import { toValidValues } from 'tinymce/themes/silver/ui/general/FormValues';
 import { interpretInForm } from 'tinymce/themes/silver/ui/general/UiFactory';
@@ -30,15 +18,13 @@ import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { setMode } from '../alien/DialogTabHeight';
 import { formTabChangeEvent } from '../general/FormEvents';
 import * as NavigableObject from '../general/NavigableObject';
-import { Types } from '@ephox/bridge';
-import { Omit } from '../Omit';
 
 const SendDataToSectionChannel = 'send-data-to-section';
 const SendDataToViewChannel = 'send-data-to-view';
 
 export type TabData = Record<string, any>;
 
-type TabPanelSpec = Omit<Types.Dialog.TabPanel, 'type'>;
+type TabPanelSpec = Omit<Dialog.TabPanel, 'type'>;
 
 export const renderTabPanel = (spec: TabPanelSpec, backstage: UiFactoryBackstage): SketchSpec => {
   const storedValue = Cell<TabData>({ });
@@ -129,13 +115,13 @@ export const renderTabPanel = (spec: TabPanelSpec, backstage: UiFactoryBackstage
     tabs: allTabs,
 
     components: [
-      AlloyTabSection.parts().tabbar({
+      AlloyTabSection.parts.tabbar({
         dom: {
           tag: 'div',
           classes: [ 'tox-dialog__body-nav' ]
         },
         components: [
-          AlloyTabbar.parts().tabs({ })
+          AlloyTabbar.parts.tabs({ })
         ],
         markers: {
           tabClass: 'tox-tab',
@@ -146,7 +132,7 @@ export const renderTabPanel = (spec: TabPanelSpec, backstage: UiFactoryBackstage
           Tabstopping.config({ })
         ])
       }),
-      AlloyTabSection.parts().tabview({
+      AlloyTabSection.parts.tabview({
         dom: {
           tag: 'div',
           classes: [ 'tox-dialog__body-content' ]

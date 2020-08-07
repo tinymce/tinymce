@@ -5,11 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element, Node, Range, Text } from '@ephox/dom-globals';
-import { Option } from '@ephox/katamari';
-import { Element as SugarElement, Node as SugarNode, Traverse } from '@ephox/sugar';
+import { Optional } from '@ephox/katamari';
+import { SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 import DOMUtils from '../api/dom/DOMUtils';
-import TreeWalker from '../api/dom/TreeWalker';
+import DomTreeWalker from '../api/dom/TreeWalker';
 import * as NodeType from '../dom/NodeType';
 import { moveEndPoint } from './SelectionUtils';
 
@@ -23,12 +22,12 @@ const getEndpointElement = (
   const container = start ? rng.startContainer : rng.endContainer;
   const offset = start ? rng.startOffset : rng.endOffset;
 
-  return Option.from(container).
-    map(SugarElement.fromDom).
-    map((elm) => !real || !rng.collapsed ? Traverse.child(elm, resolve(elm, offset)).getOr(elm) : elm).
-    bind((elm) => SugarNode.isElement(elm) ? Option.some(elm) : Traverse.parent(elm).filter(SugarNode.isElement)).
-    map((elm) => elm.dom()).
-    getOr(root);
+  return Optional.from(container)
+    .map(SugarElement.fromDom)
+    .map((elm) => !real || !rng.collapsed ? Traverse.child(elm, resolve(elm, offset)).getOr(elm) : elm)
+    .bind((elm) => SugarNode.isElement(elm) ? Optional.some(elm) : Traverse.parent(elm).filter(SugarNode.isElement))
+    .map((elm) => elm.dom)
+    .getOr(root);
 };
 
 const getStart = (root: Element, rng: Range, real?: boolean): Element =>
@@ -118,7 +117,7 @@ const getSelectedBlocks = (dom: DOMUtils, rng: Range, startElm?: Element, endElm
   if (startElm && endElm && startElm !== endElm) {
     node = startElm;
 
-    const walker = new TreeWalker(startElm, root);
+    const walker = new DomTreeWalker(startElm, root);
     while ((node = walker.next()) && node !== endElm) {
       if (dom.isBlock(node)) {
         selectedBlocks.push(node);
@@ -133,7 +132,7 @@ const getSelectedBlocks = (dom: DOMUtils, rng: Range, startElm?: Element, endElm
   return selectedBlocks;
 };
 
-const select = (dom, node: Node, content?: boolean) => Option.from(node).map((node) => {
+const select = (dom, node: Node, content?: boolean) => Optional.from(node).map((node) => {
   const idx = dom.nodeIndex(node);
   const rng = dom.createRng();
 

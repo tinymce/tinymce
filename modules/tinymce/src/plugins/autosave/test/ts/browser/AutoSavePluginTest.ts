@@ -1,6 +1,5 @@
-import { Pipeline, Log } from '@ephox/agar';
-import { UnitTest, Assert } from '@ephox/bedrock-client';
-import { document, window, history } from '@ephox/dom-globals';
+import { Log, Pipeline } from '@ephox/agar';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/autosave/Plugin';
@@ -87,7 +86,7 @@ UnitTest.asynctest('browser.tinymce.plugins.autosave.AutoSavePluginTest', (succe
 
     Assert.eq('Check if it notices a hash change', editor.plugins.autosave.hasDraft(), false);
 
-    history.replaceState('', document.title, window.location.pathname + window.location.search);
+    window.history.replaceState('', document.title, window.location.pathname + window.location.search);
   });
 
   TinyLoader.setupLight((editor, onSuccess, onFailure) => {

@@ -1,5 +1,5 @@
 import { UnitTest } from '@ephox/bedrock-client';
-import { Element, Insert } from '@ephox/sugar';
+import { Insert, SugarElement } from '@ephox/sugar';
 import * as Assertions from 'ephox/agar/api/Assertions';
 import { Chain } from 'ephox/agar/api/Chain';
 import { Pipeline } from 'ephox/agar/api/Pipeline';
@@ -7,8 +7,8 @@ import * as UiControls from 'ephox/agar/api/UiControls';
 
 UnitTest.asynctest('UiControlsTest', function (success, failure) {
 
-  const input = Element.fromTag('input');
-  const container = Element.fromTag('container');
+  const input = SugarElement.fromTag('input');
+  const container = SugarElement.fromTag('container');
 
   Insert.append(container, input);
 

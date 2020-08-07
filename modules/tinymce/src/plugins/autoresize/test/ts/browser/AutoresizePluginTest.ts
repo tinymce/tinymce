@@ -1,6 +1,5 @@
 import { Assertions, Log, Logger, Pipeline, Step, Waiter } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { navigator, Window, window } from '@ephox/dom-globals';
 import { Cell } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import Editor from 'tinymce/core/api/Editor';

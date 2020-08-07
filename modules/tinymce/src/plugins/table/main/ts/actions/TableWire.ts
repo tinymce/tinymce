@@ -6,13 +6,13 @@
  */
 
 import { ResizeWire } from '@ephox/snooker';
-import { Body, Css, Element, Insert, Remove } from '@ephox/sugar';
+import { Css, Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 
 import * as Util from '../core/Util';
 
 const createContainer = function () {
-  const container = Element.fromTag('div');
+  const container = SugarElement.fromTag('div');
 
   Css.setAll(container, {
     position: 'static',
@@ -23,13 +23,13 @@ const createContainer = function () {
     border: '0'
   });
 
-  Insert.append(Body.body(), container);
+  Insert.append(SugarBody.body(), container);
 
   return container;
 };
 
 const get = function (editor: Editor, _container?) {
-  return editor.inline ? ResizeWire.body(Util.getBody(editor), createContainer()) : ResizeWire.only(Element.fromDom(editor.getDoc()));
+  return editor.inline ? ResizeWire.body(Util.getBody(editor), createContainer()) : ResizeWire.only(SugarElement.fromDom(editor.getDoc()));
 };
 
 const remove = function (editor: Editor, wire) {

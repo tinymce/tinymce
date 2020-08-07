@@ -1,3 +1,4 @@
+import * as SelectionDirection from '../selection/core/SelectionDirection'; // Used directly by dawin
 import * as Compare from './dom/Compare';
 import * as DocumentPosition from './dom/DocumentPosition';
 import * as DomFuture from './dom/DomFuture';
@@ -8,28 +9,29 @@ import * as InsertAll from './dom/InsertAll';
 import * as Link from './dom/Link';
 import * as Remove from './dom/Remove';
 import * as Replication from './dom/Replication';
-import { EventArgs, EventFilter, EventHandler, EventUnbinder } from './events/Types';
+import * as Truncate from './dom/Truncate';
 import * as DomEvent from './events/DomEvent';
-import * as MouseEvent from './events/MouseEvent';
+import * as MouseEvents from './events/MouseEvents';
 import * as Ready from './events/Ready';
 import * as Resize from './events/Resize';
 import * as ScrollChange from './events/ScrollChange';
+import { EventArgs, EventFilter, EventHandler, EventUnbinder } from './events/Types';
 import * as Viewable from './events/Viewable';
-import * as Body from './node/Body';
-import * as Comment from './node/Comment';
-import * as Comments from './node/Comments';
-import Element from './node/Element';
-import * as ElementInstances from './node/ElementInstances';
-import * as Document from './node/Document';
-import * as Head from './node/Head';
-import * as Elements from './node/Elements';
-import * as Fragment from './node/Fragment';
-import * as Node from './node/Node';
 import * as NodeTypes from './node/NodeTypes';
-import * as ShadowDom from './node/ShadowDom';
-import * as Text from './node/Text';
+import * as SugarBody from './node/SugarBody';
+import * as SugarComment from './node/SugarComment';
+import * as SugarComments from './node/SugarComments';
+import * as SugarDocument from './node/SugarDocument';
+import { SugarElement } from './node/SugarElement';
+import * as SugarElementInstances from './node/SugarElementInstances';
+import * as SugarElements from './node/SugarElements';
+import * as SugarFragment from './node/SugarFragment';
+import * as SugarHead from './node/SugarHead';
+import * as SugarNode from './node/SugarNode';
+import * as SugarShadowDom from './node/SugarShadowDom';
+import * as SugarText from './node/SugarText';
 import * as Alignment from './properties/Alignment';
-import * as Attr from './properties/Attr';
+import * as Attribute from './properties/Attribute';
 import AttributeProperty from './properties/AttributeProperty';
 import * as AttrList from './properties/AttrList';
 import * as Checked from './properties/Checked';
@@ -58,23 +60,21 @@ import * as Traverse from './search/Traverse';
 import * as Awareness from './selection/Awareness';
 import * as CursorPosition from './selection/CursorPosition';
 import * as Edge from './selection/Edge';
-import { Selection } from './selection/Selection';
+import { RawRect, Rect, StructRect } from './selection/Rect';
 import { SimRange } from './selection/SimRange';
+import { SimSelection } from './selection/SimSelection';
 import { Situ } from './selection/Situ';
 import * as WindowSelection from './selection/WindowSelection';
 import * as OptionTag from './tag/OptionTag';
 import * as SelectTag from './tag/SelectTag';
 import * as Height from './view/Height';
-import * as Location from './view/Location';
 import * as Platform from './view/Platform';
-import { Position } from './view/Position';
 import * as Scroll from './view/Scroll';
+import * as SugarLocation from './view/SugarLocation';
+import { SugarPosition } from './view/SugarPosition';
 import * as Visibility from './view/Visibility';
-import * as VisualViewport from './view/VisualViewport';
 import * as Width from './view/Width';
-import * as SelectionDirection from '../selection/core/SelectionDirection'; // Used directly by dawin
-import { StructRect, RawRect, Rect } from './selection/Rect';
-import * as Truncate from './dom/Truncate';
+import * as WindowVisualViewport from './view/WindowVisualViewport';
 
 export {
   Compare,
@@ -92,26 +92,26 @@ export {
   EventHandler,
   EventUnbinder,
   DomEvent,
-  MouseEvent,
+  MouseEvents,
   Ready,
   Resize,
   ScrollChange,
   Viewable,
-  Body,
-  Comment,
-  Comments,
-  Document,
-  Element,
-  ElementInstances,
-  Elements,
-  Fragment,
-  Head,
-  Node,
+  SugarComment,
+  SugarComments,
+  SugarBody,
+  SugarDocument,
+  SugarElement,
+  SugarElementInstances,
+  SugarElements,
+  SugarFragment,
+  SugarHead,
+  SugarNode,
   NodeTypes,
-  ShadowDom,
-  Text,
+  SugarShadowDom,
+  SugarText,
   Alignment,
-  Attr,
+  Attribute,
   AttributeProperty,
   AttrList,
   Checked,
@@ -140,7 +140,7 @@ export {
   Awareness,
   CursorPosition,
   Edge,
-  Selection,
+  SimSelection,
   SimRange,
   Situ,
   WindowSelection,
@@ -148,12 +148,12 @@ export {
   SelectTag,
   Truncate,
   Height,
-  Location,
+  SugarLocation,
   Platform,
-  Position,
+  SugarPosition,
   Scroll,
   Visibility,
-  VisualViewport,
+  WindowVisualViewport,
   Width,
   SelectionDirection,
   StructRect,

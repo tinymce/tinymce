@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element, Node } from '@ephox/dom-globals';
 import { Arr, Fun } from '@ephox/katamari';
 import * as NodeType from '../dom/NodeType';
 import * as ArrUtils from '../util/ArrUtils';
@@ -194,7 +193,7 @@ const findCaretPosition = (direction: HDirection, startPos: CaretPosition, root:
   }
 
   if ((isForwards(direction) && caretPosition.isAtEnd()) || (isBackwards(direction) && caretPosition.isAtStart())) {
-    node = findNode(node, direction, Fun.constant(true), root, true);
+    node = findNode(node, direction, Fun.always, root, true);
     if (isEditableCaretCandidate(node, root)) {
       return getCaretCandidatePosition(direction, node);
     }

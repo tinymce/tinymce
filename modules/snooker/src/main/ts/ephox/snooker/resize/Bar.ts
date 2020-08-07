@@ -1,7 +1,7 @@
-import { Attr, Css, Element } from '@ephox/sugar';
+import { Attribute, Css, SugarElement } from '@ephox/sugar';
 
 const col = function (column: number, x: number, y: number, w: number, h: number) {
-  const bar = Element.fromTag('div');
+  const bar = SugarElement.fromTag('div');
   Css.setAll(bar, {
     position: 'absolute',
     left: x - w / 2 + 'px',
@@ -10,12 +10,12 @@ const col = function (column: number, x: number, y: number, w: number, h: number
     width: w + 'px'
   });
 
-  Attr.setAll(bar, { 'data-column': column, 'role': 'presentation' });
+  Attribute.setAll(bar, { 'data-column': column, 'role': 'presentation' });
   return bar;
 };
 
 const row = function (r: number, x: number, y: number, w: number, h: number) {
-  const bar = Element.fromTag('div');
+  const bar = SugarElement.fromTag('div');
   Css.setAll(bar, {
     position: 'absolute',
     left: x + 'px',
@@ -24,7 +24,7 @@ const row = function (r: number, x: number, y: number, w: number, h: number) {
     width: w + 'px'
   });
 
-  Attr.setAll(bar, { 'data-row': r, 'role': 'presentation' });
+  Attribute.setAll(bar, { 'data-row': r, 'role': 'presentation' });
   return bar;
 };
 

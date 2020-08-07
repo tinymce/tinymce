@@ -1,10 +1,9 @@
 import { Assertions, Chain, Logger, Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { Hierarchy, Element, Html } from '@ephox/sugar';
+import { Hierarchy, Html, SugarElement } from '@ephox/sugar';
 import * as TableCellSelection from 'tinymce/core/selection/TableCellSelection';
 import ViewBlock from '../../module/test/ViewBlock';
-import { UnitTest } from '@ephox/bedrock-client';
-import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.core.selection.TableCellSelectionTest', function (success, failure) {
   const viewBlock = ViewBlock();
@@ -16,15 +15,15 @@ UnitTest.asynctest('browser.tinymce.core.selection.TableCellSelectionTest', func
   };
 
   const cGetCellsFromElement = Chain.mapper(function (viewBlock: any) {
-    return TableCellSelection.getCellsFromElement(Element.fromDom(viewBlock.get()));
+    return TableCellSelection.getCellsFromElement(SugarElement.fromDom(viewBlock.get()));
   });
 
   const cGetCellsFromRanges = function (paths) {
     return Chain.mapper(function (viewBlock: any) {
       const ranges = Arr.map(paths, function (path) {
-        const container = Hierarchy.follow(Element.fromDom(viewBlock.get()), path).getOrDie();
+        const container = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), path).getOrDie();
         const rng = document.createRange();
-        rng.selectNode(container.dom());
+        rng.selectNode(container.dom);
         return rng;
       });
 
@@ -33,7 +32,7 @@ UnitTest.asynctest('browser.tinymce.core.selection.TableCellSelectionTest', func
   };
 
   const cAssertCellContents = function (expectedContents) {
-    return Chain.op(function (cells: Element[]) {
+    return Chain.op(function (cells: SugarElement[]) {
       const actualContents = Arr.map(cells, Html.get);
       Assertions.assertEq('Should be expected cell contents', expectedContents, actualContents);
     });

@@ -6,12 +6,12 @@
  */
 
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, Composing, CustomEvent, Disabling, Focusing,
-  FormField, Input, Invalidating, Layout, Memento, Representing, SimpleSpec, Tabstopping
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, Composing, CustomEvent, Disabling, Focusing, FormField, Input,
+  Invalidating, Layout, Memento, Representing, SimpleSpec, Tabstopping
 } from '@ephox/alloy';
-import { Types } from '@ephox/bridge';
-import { Future, Id, Option, Result } from '@ephox/katamari';
-import { Css, Element, Traverse } from '@ephox/sugar';
+import { Dialog } from '@ephox/bridge';
+import { Future, Id, Optional, Result } from '@ephox/katamari';
+import { Css, SugarElement, Traverse } from '@ephox/sugar';
 
 import { UiFactoryBackstageShared } from '../../backstage/Backstage';
 import { UiFactoryBackstageForColorInput } from '../../backstage/ColorInputBackstage';
@@ -21,28 +21,27 @@ import * as ColorSwatch from '../core/color/ColorSwatch';
 import * as Settings from '../core/color/Settings';
 import { formChangeEvent } from '../general/FormEvents';
 import { renderPanelButton } from '../general/PanelButton';
-import { Omit } from '../Omit';
 
 const colorInputChangeEvent = Id.generate('color-input-change');
 const colorSwatchChangeEvent = Id.generate('color-swatch-change');
 const colorPickerCancelEvent = Id.generate('color-picker-cancel');
 
 interface ColorInputChangeEvent extends CustomEvent {
-  color: () => string;
+  readonly color: string;
 }
 
 interface ColorSwatchChangeEvent extends CustomEvent {
-  value: () => string;
+  readonly value: string;
 }
 
 interface ColorPickerCancelEvent extends CustomEvent {
-  value: () => string;
+  readonly value: string;
 }
 
-type ColorInputSpec = Omit<Types.ColorInput.ColorInput, 'type'>;
+type ColorInputSpec = Omit<Dialog.ColorInput, 'type'>;
 
 export const renderColorInput = (spec: ColorInputSpec, sharedBackstage: UiFactoryBackstageShared, colorInputBackstage: UiFactoryBackstageForColorInput): SimpleSpec => {
-  const pField = FormField.parts().field({
+  const pField = FormField.parts.field({
     factory: Input,
     inputClasses: [ 'tox-textfield' ],
 
@@ -56,7 +55,7 @@ export const renderColorInput = (spec: ColorInputSpec, sharedBackstage: UiFactor
       Tabstopping.config({ }),
       Invalidating.config({
         invalidClass: 'tox-textbox-field-invalid',
-        getRoot: (comp) => Traverse.parent(comp.element()),
+        getRoot: (comp) => Traverse.parent(comp.element),
         notify: {
           onValid: (comp) => {
             // onValid should pass through the value here
@@ -75,7 +74,7 @@ export const renderColorInput = (spec: ColorInputSpec, sharedBackstage: UiFactor
             if (inputValue.length === 0) {
               return Future.pure(Result.value(true));
             } else {
-              const span = Element.fromTag('span');
+              const span = SugarElement.fromTag('span');
               Css.set(span, 'background-color', inputValue);
 
               const res = Css.getRaw(span, 'background-color').fold(
@@ -93,7 +92,7 @@ export const renderColorInput = (spec: ColorInputSpec, sharedBackstage: UiFactor
     selectOnFocus: false
   });
 
-  const pLabel: Option<AlloySpec> = spec.label.map((label) => renderLabel(label, sharedBackstage.providers));
+  const pLabel: Optional<AlloySpec> = spec.label.map((label) => renderLabel(label, sharedBackstage.providers));
 
   const emitSwatchChange = (colorBit, value) => {
     AlloyTriggers.emitWith(colorBit, colorSwatchChangeEvent, {
@@ -163,13 +162,13 @@ export const renderColorInput = (spec: ColorInputSpec, sharedBackstage: UiFactor
       AddEventsBehaviour.config('form-field-events', [
         AlloyEvents.run<ColorInputChangeEvent>(colorInputChangeEvent, (comp, se) => {
           memColorButton.getOpt(comp).each((colorButton) => {
-            Css.set(colorButton.element(), 'background-color', se.event().color());
+            Css.set(colorButton.element, 'background-color', se.event.color);
           });
           AlloyTriggers.emitWith(comp, formChangeEvent, { name: spec.name } );
         }),
         AlloyEvents.run<ColorSwatchChangeEvent>(colorSwatchChangeEvent, (comp, se) => {
           FormField.getField(comp).each((field) => {
-            Representing.setValue(field, se.event().value());
+            Representing.setValue(field, se.event.value);
             // Focus the field now that we've set its value
             Composing.getCurrent(comp).each(Focusing.focus);
           });

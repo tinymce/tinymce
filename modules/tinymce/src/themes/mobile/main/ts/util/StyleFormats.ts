@@ -7,11 +7,11 @@
 
 import { Toggling } from '@ephox/alloy';
 import { Arr, Fun, Id, Merger, Obj } from '@ephox/katamari';
+import Editor from 'tinymce/core/api/Editor';
+import * as Settings from '../api/Settings';
 
 import * as StylesMenu from '../ui/StylesMenu';
 import * as StyleConversions from './StyleConversions';
-import Editor from 'tinymce/core/api/Editor';
-import * as Settings from '../api/Settings';
 
 const register = (editor: Editor) => {
 
@@ -30,7 +30,7 @@ const register = (editor: Editor) => {
   // Item that triggers a submenu
   const enrichMenu = (item) =>
     Merger.deepMerge(item, {
-      isSelected: Fun.constant(false),
+      isSelected: Fun.never,
       getPreview: Fun.constant('')
     });
 

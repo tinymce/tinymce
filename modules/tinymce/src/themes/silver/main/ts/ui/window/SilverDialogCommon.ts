@@ -4,11 +4,12 @@
  * For LGPL see License.txt in the project root for license information.
  * For commercial licenses see https://www.tiny.cloud/
  */
+
 import {
   AlloyEvents, AlloyParts, AlloySpec, AlloyTriggers, Behaviour, DomFactory, GuiFactory, ModalDialog, Reflecting, SystemEvents
 } from '@ephox/alloy';
-import { DialogManager, Types } from '@ephox/bridge';
-import { Arr, Cell, Option } from '@ephox/katamari';
+import { Dialog, DialogManager } from '@ephox/bridge';
+import { Arr, Cell, Optional } from '@ephox/katamari';
 
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { RepresentingConfigs } from '../alien/RepresentingConfigs';
@@ -19,14 +20,14 @@ import { dialogChannel } from './DialogChannels';
 import { renderModalHeader } from './SilverDialogHeader';
 
 export interface WindowExtra {
-  redial?: <T extends Types.Dialog.DialogData>(newConfig: Types.Dialog.DialogApi<T>) => DialogManager.DialogInit<T>;
+  redial?: <T extends Dialog.DialogData>(newConfig: Dialog.DialogSpec<T>) => DialogManager.DialogInit<T>;
   closeWindow: () => void;
 }
 
 export interface DialogSpec {
   header: AlloySpec;
   body: AlloyParts.ConfiguredPart;
-  footer: Option<AlloyParts.ConfiguredPart>;
+  footer: Optional<AlloyParts.ConfiguredPart>;
   extraClasses: string[];
   extraStyles: Record<string, string>;
   extraBehaviours: Behaviour.NamedConfiguredBehaviour<any, any>[];
@@ -45,7 +46,7 @@ const getEventExtras = (lazyDialog, extra: WindowExtra) => ({
         tag: 'div',
         classes: [ 'tox-dialog__busy-spinner' ],
         attributes: {
-          'aria-label': blockEvent.message()
+          'aria-label': blockEvent.message
         },
         styles: {
           left: '0px',
@@ -69,7 +70,7 @@ const getEventExtras = (lazyDialog, extra: WindowExtra) => ({
 });
 
 const renderModalDialog = (spec: DialogSpec, initialData, dialogEvents: AlloyEvents.AlloyEventKeyAndHandler<any>[], backstage: UiFactoryBackstage) => {
-  const updateState = (_comp, incoming) => Option.some(incoming);
+  const updateState = (_comp, incoming) => Optional.some(incoming);
 
   return GuiFactory.build(Dialogs.renderDialog({
     ...spec,
@@ -95,9 +96,9 @@ const renderModalDialog = (spec: DialogSpec, initialData, dialogEvents: AlloyEve
   }));
 };
 
-const mapMenuButtons = (buttons: Types.Dialog.DialogButton[]): (Types.Dialog.DialogButton | StoragedMenuButton)[] => {
-  const mapItems = (button: Types.Dialog.DialogMenuButton): StoragedMenuButton => {
-    const items = Arr.map(button.items, (item: Types.Dialog.DialogToggleMenuItem): StoragedMenuItem => {
+const mapMenuButtons = (buttons: Dialog.DialogFooterButton[]): (Dialog.DialogFooterButton | StoragedMenuButton)[] => {
+  const mapItems = (button: Dialog.DialogFooterMenuButton): StoragedMenuButton => {
+    const items = Arr.map(button.items, (item: Dialog.DialogFooterToggleMenuItem): StoragedMenuItem => {
       const cell = Cell<boolean>(false);
       return {
         ...item,
@@ -110,7 +111,7 @@ const mapMenuButtons = (buttons: Types.Dialog.DialogButton[]): (Types.Dialog.Dia
     };
   };
 
-  return Arr.map(buttons, (button: Types.Dialog.DialogMenuButton) => {
+  return Arr.map(buttons, (button: Dialog.DialogFooterMenuButton) => {
     if (button.type === 'menu') {
       return mapItems(button);
     }
@@ -118,16 +119,17 @@ const mapMenuButtons = (buttons: Types.Dialog.DialogButton[]): (Types.Dialog.Dia
   });
 };
 
-const extractCellsToObject = (buttons: (StoragedMenuButton | Types.Dialog.DialogMenuButton | Types.Dialog.DialogNormalButton)[]) => Arr.foldl(buttons, (acc, button) => {
-  if (button.type === 'menu') {
-    const menuButton = button as StoragedMenuButton;
-    return Arr.foldl(menuButton.items, (innerAcc, item) => {
-      innerAcc[item.name] = item.storage;
-      return innerAcc;
-    }, acc);
-  }
-  return acc;
-}, {});
+const extractCellsToObject = (buttons: (StoragedMenuButton | Dialog.DialogFooterMenuButton | Dialog.DialogFooterNormalButton)[]) =>
+  Arr.foldl(buttons, (acc, button) => {
+    if (button.type === 'menu') {
+      const menuButton = button as StoragedMenuButton;
+      return Arr.foldl(menuButton.items, (innerAcc, item) => {
+        innerAcc[item.name] = item.storage;
+        return innerAcc;
+      }, acc);
+    }
+    return acc;
+  }, {});
 
 export {
   getHeader,

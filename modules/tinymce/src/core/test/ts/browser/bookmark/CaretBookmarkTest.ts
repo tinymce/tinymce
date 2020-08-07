@@ -1,11 +1,10 @@
-import { LegacyUnit } from '@ephox/mcagar';
 import { Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
+import { LegacyUnit } from '@ephox/mcagar';
 import * as CaretBookmark from 'tinymce/core/bookmark/CaretBookmark';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import * as CaretAsserts from '../../module/test/CaretAsserts';
 import ViewBlock from '../../module/test/ViewBlock';
-import { UnitTest } from '@ephox/bedrock-client';
-import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.core.CaretBookmarkTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();

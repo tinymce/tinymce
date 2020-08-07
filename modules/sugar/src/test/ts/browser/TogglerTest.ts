@@ -1,7 +1,7 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import * as Insert from 'ephox/sugar/api/dom/Insert';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
-import * as Body from 'ephox/sugar/api/node/Body';
+import * as SugarBody from 'ephox/sugar/api/node/SugarBody';
 import * as Class from 'ephox/sugar/api/properties/Class';
 import * as Css from 'ephox/sugar/api/properties/Css';
 import * as Visibility from 'ephox/sugar/api/view/Visibility';
@@ -51,7 +51,7 @@ UnitTest.test('TogglerTest', () => {
   let c = Div();
   runCheck(Class.toggler(c, 'blob'), checkClass);
   c = Div();
-  Insert.append(Body.body(), c);
+  Insert.append(SugarBody.body(), c);
   runCheck(Class.toggler(c, 'blob'), checkClass);
   Remove.remove(c);
 
@@ -68,7 +68,7 @@ UnitTest.test('TogglerTest', () => {
   // behaviour when not connected and not specified - which the link dialog relies on
   c = Div();
   let vis = Visibility.displayToggler(c, 'block');
-  Insert.append(Body.body(), c);
+  Insert.append(SugarBody.body(), c);
   runCheck(vis, checkDisplayBlockRemoved);
   Remove.remove(c);
 
@@ -81,7 +81,7 @@ UnitTest.test('TogglerTest', () => {
   c = Div();
   Css.set(c, 'display', 'none');
   runCheck(Visibility.displayToggler(c, 'block'), checkDisplayBlockNone);
-  Insert.append(Body.body(), c);
+  Insert.append(SugarBody.body(), c);
   runCheck(Visibility.displayToggler(c, 'block'), checkDisplayBlockNone);
   Remove.remove(c);
 
@@ -93,7 +93,7 @@ UnitTest.test('TogglerTest', () => {
   // behaviour when not connected and not specified
   c = Div();
   vis = Visibility.toggler(c);
-  Insert.append(Body.body(), c);
+  Insert.append(SugarBody.body(), c);
   runCheck(vis, checkVisibilityVisibleRemoved);
   Remove.remove(c);
 
@@ -106,7 +106,7 @@ UnitTest.test('TogglerTest', () => {
   c = Div();
   Css.set(c, 'visibility', 'hidden');
   runCheck(Visibility.toggler(c), checkVisibilityVisibleHidden);
-  Insert.append(Body.body(), c);
+  Insert.append(SugarBody.body(), c);
   runCheck(Visibility.toggler(c), checkVisibilityVisibleHidden);
   Remove.remove(c);
 });

@@ -1,6 +1,5 @@
-import { HTMLCanvasElement, ImageData } from '@ephox/dom-globals';
 import * as Canvas from '../util/Canvas';
-import { ImageResult, fromCanvas } from '../util/ImageResult';
+import { fromCanvas, ImageResult } from '../util/ImageResult';
 import * as ColorMatrix from './ColorMatrix';
 
 function colorFilter(ir: ImageResult, matrix: ColorMatrix.Matrix): Promise<ImageResult> {

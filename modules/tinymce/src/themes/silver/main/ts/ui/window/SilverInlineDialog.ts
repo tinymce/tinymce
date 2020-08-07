@@ -7,14 +7,14 @@
 
 // DUPE with SilverDialog. Cleaning up.
 import {
-  AddEventsBehaviour, AlloyEvents, AlloyTriggers, Behaviour, Composing, Focusing, GuiFactory, Keying, Memento, NativeEvents, Receiving,
-  Reflecting, SimpleSpec, SystemEvents
+  AddEventsBehaviour, AlloyEvents, AlloyTriggers, Behaviour, Composing, Focusing, GuiFactory, Keying, Memento, NativeEvents, Receiving, Reflecting,
+  SimpleSpec, SystemEvents
 } from '@ephox/alloy';
 import { DialogManager } from '@ephox/bridge';
-import { Id, Option } from '@ephox/katamari';
-import { Attr, Node } from '@ephox/sugar';
-import { UiFactoryBackstage } from '../../backstage/Backstage';
+import { Id, Optional } from '@ephox/katamari';
+import { Attribute, SugarNode } from '@ephox/sugar';
 
+import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { RepresentingConfigs } from '../alien/RepresentingConfigs';
 import { formCloseEvent } from '../general/FormEvents';
 import * as NavigableObject from '../general/NavigableObject';
@@ -30,7 +30,7 @@ const renderInlineDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: S
   const dialogLabelId = Id.generate('dialog-label');
   const dialogContentId = Id.generate('dialog-content');
 
-  const updateState = (_comp, incoming: DialogManager.DialogInit<T>) => Option.some(incoming);
+  const updateState = (_comp, incoming: DialogManager.DialogInit<T>) => Optional.some(incoming);
 
   const memHeader = Memento.record(
     renderInlineHeader({
@@ -89,10 +89,10 @@ const renderInlineDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: S
         mode: 'cyclic',
         onEscape: (c) => {
           AlloyTriggers.emit(c, formCloseEvent);
-          return Option.some(true);
+          return Optional.some(true);
         },
         useTabstopAt: (elem) => !NavigableObject.isPseudoStop(elem) && (
-          Node.name(elem) !== 'button' || Attr.get(elem, 'disabled') !== 'disabled'
+          SugarNode.name(elem) !== 'button' || Attribute.get(elem, 'disabled') !== 'disabled'
         )
       }),
       Reflecting.config({

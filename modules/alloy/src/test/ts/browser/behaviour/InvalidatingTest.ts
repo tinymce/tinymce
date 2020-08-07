@@ -1,18 +1,18 @@
 import { ApproxStructure, Assertions, Chain, GeneralSteps, Guard, Logger, Step, UiControls, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Cell, Future, Option, Result } from '@ephox/katamari';
-import { Element, Value } from '@ephox/sugar';
+import { Cell, Future, Optional, Result } from '@ephox/katamari';
+import { SugarElement, Value } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Invalidating } from 'ephox/alloy/api/behaviour/Invalidating';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 UnitTest.asynctest('InvalidatingTest', (success, failure) => {
 
-  const root = Cell(Option.none<Element<any>>());
+  const root = Cell(Optional.none<SugarElement<any>>());
 
   GuiSetup.setup((_store, _doc, _body) => GuiFactory.build({
     dom: {
@@ -25,7 +25,7 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
         notify: {},
         validator: {
           validate(input) {
-            const value = Value.get(input.element());
+            const value = Value.get(input.element);
             const res = value === 'good-value' ? Result.value('good-value') : Result.error('bad value: ' + value);
             return Future.pure(res);
           },
@@ -55,7 +55,7 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
               arr.not('test-invalid')
             ]
           })),
-          comp.element()
+          comp.element
         ),
         Guard.tryUntil('valid')
       )
@@ -71,7 +71,7 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
               arr.has('test-invalid')
             ]
           })),
-          comp.element()
+          comp.element
         ),
         Guard.tryUntil('invalid')
       )
@@ -109,7 +109,7 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
               'aria-invalid': str.is('true')
             }
           })),
-          comp.element()
+          comp.element
         ),
         Guard.tryUntil('valid')
       )
@@ -125,7 +125,7 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
               'aria-invalid': str.is('false')
             }
           })),
-          comp.element()
+          comp.element
         ),
         Guard.tryUntil('invalid')
       )
@@ -202,11 +202,11 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
       sCheckIsInvalid('the isInvalid API should return true'),
       sCheckHasAriaInvalid('the field should have aria-invalid'),
 
-      UiControls.sSetValueOn(gui.element(), 'input', 'good-value'),
+      UiControls.sSetValueOn(gui.element, 'input', 'good-value'),
       sValidate,
       sCheckValid('validation should have fixed it (eventually... because future based)'),
 
-      UiControls.sSetValueOn(gui.element(), 'input', 'bad-value'),
+      UiControls.sSetValueOn(gui.element, 'input', 'bad-value'),
       sValidate,
       sCheckInvalid('validation should fail (eventually... because future based)'),
       sCheckHasAriaInvalid('the field should have aria-invalid'),
@@ -217,7 +217,7 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
       ]),
       sCheckInvalid('validation should fail (eventually... because future based)'),
 
-      UiControls.sSetValueOn(gui.element(), 'input', 'good-value'),
+      UiControls.sSetValueOn(gui.element, 'input', 'good-value'),
       Chain.asStep({ }, [
         cQueryApi,
         cCheckValidationPasses('Querying "good-value"', 'good-value')
@@ -230,7 +230,7 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
       ]),
       sCheckValid('run API should update classes on the input to success'),
 
-      UiControls.sSetValueOn(gui.element(), 'input', 'bad-value'),
+      UiControls.sSetValueOn(gui.element, 'input', 'bad-value'),
       Chain.asStep({ }, [
         cRunApi,
         cCheckValidationFails('Running on "bad-value"', 'bad value: bad-value')
@@ -244,7 +244,7 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
 
       sCheckValidOf('Other should initially be valid', other),
       Step.sync(() => {
-        root.set(Option.some(other.element()));
+        root.set(Optional.some(other.element));
       }),
 
       Chain.asStep({ }, [
@@ -254,7 +254,7 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
       sCheckInvalidOf('After running validation, the "other" should be invalid now', other),
       sCheckValid('The first input should stay valid the whole time'),
 
-      UiControls.sSetValueOn(gui.element(), 'input', 'good-value'),
+      UiControls.sSetValueOn(gui.element, 'input', 'good-value'),
       Chain.asStep({ }, [
         cRunApi,
         cCheckValidationPasses('Running on "good-value"', 'good-value')

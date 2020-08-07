@@ -5,8 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Range } from '@ephox/dom-globals';
-
 export const isValidTextRange = (rng: Range): boolean => rng.collapsed && rng.startContainer.nodeType === 3;
 
 // Normalize the text by replacing non-breaking spaces with regular spaces and stripping zero-width spaces (fake carets).

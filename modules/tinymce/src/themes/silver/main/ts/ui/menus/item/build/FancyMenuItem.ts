@@ -5,23 +5,23 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Menu } from '@ephox/bridge';
-import { renderInsertTableMenuItem } from './InsertTableMenuItem';
-import { Option } from '@ephox/katamari';
 import { ItemTypes } from '@ephox/alloy';
+import { Menu } from '@ephox/bridge';
+import { Optional } from '@ephox/katamari';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 import { renderColorSwatchItem } from './ColorSwatchItem';
+import { renderInsertTableMenuItem } from './InsertTableMenuItem';
 
 const fancyMenuItems: Record<keyof Menu.FancyActionArgsMap, (mi: Menu.FancyMenuItem, bs: UiFactoryBackstage) => ItemTypes.WidgetItemSpec> = {
   inserttable: renderInsertTableMenuItem,
   colorswatch: renderColorSwatchItem
 };
 
-const valueOpt = <T>(obj: Record<string, T>, key): Option<T> => Object.prototype.hasOwnProperty.call(obj, key)
-  ? Option.some(obj[key])
-  : Option.none();
+const valueOpt = <T>(obj: Record<string, T>, key): Optional<T> => Object.prototype.hasOwnProperty.call(obj, key)
+  ? Optional.some(obj[key])
+  : Optional.none();
 
-const renderFancyMenuItem = (spec: Menu.FancyMenuItem, backstage: UiFactoryBackstage): Option<ItemTypes.WidgetItemSpec> => valueOpt(fancyMenuItems, spec.fancytype).map((render) => render(spec, backstage));
+const renderFancyMenuItem = (spec: Menu.FancyMenuItem, backstage: UiFactoryBackstage): Optional<ItemTypes.WidgetItemSpec> => valueOpt(fancyMenuItems, spec.fancytype).map((render) => render(spec, backstage));
 
 export {
   renderFancyMenuItem

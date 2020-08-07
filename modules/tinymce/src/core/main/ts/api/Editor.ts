@@ -6,8 +6,7 @@
  */
 
 import { Registry } from '@ephox/bridge';
-import { Document, Element, Event, HTMLElement, HTMLIFrameElement, Window } from '@ephox/dom-globals';
-import { Option, Arr } from '@ephox/katamari';
+import { Arr } from '@ephox/katamari';
 import * as EditorContent from '../content/EditorContent';
 import * as NodeType from '../dom/NodeType';
 import * as EditorRemove from '../EditorRemove';
@@ -24,8 +23,9 @@ import Annotator from './Annotator';
 import DomQuery, { DomQueryConstructor } from './dom/DomQuery';
 import DOMUtils from './dom/DOMUtils';
 import ScriptLoader from './dom/ScriptLoader';
-import Selection from './dom/Selection';
+import EditorSelection from './dom/Selection';
 import DomSerializer from './dom/Serializer';
+import { StyleSheetLoader } from './dom/StyleSheetLoader';
 import EditorCommands, { EditorCommandCallback } from './EditorCommands';
 import EditorManager from './EditorManager';
 import EditorObservable from './EditorObservable';
@@ -33,11 +33,12 @@ import EditorUpload, { UploadCallback, UploadResult } from './EditorUpload';
 import Env from './Env';
 import Formatter from './Formatter';
 import DomParser from './html/DomParser';
-import Node from './html/Node';
+import AstNode from './html/Node';
 import Schema from './html/Schema';
-import { create, Mode } from './Mode';
+import { create, EditorMode } from './Mode';
 import NotificationManager from './NotificationManager';
 import PluginManager, { Plugin } from './PluginManager';
+import * as Settings from './Settings';
 import { EditorSettings, RawEditorSettings } from './SettingsTypes';
 import Shortcuts from './Shortcuts';
 import { Theme } from './ThemeManager';
@@ -47,8 +48,6 @@ import I18n, { TranslatedString, Untranslated } from './util/I18n';
 import Tools from './util/Tools';
 import URI from './util/URI';
 import WindowManager from './WindowManager';
-import { StyleSheetLoader } from './dom/StyleSheetLoader';
-import * as Settings from './Settings';
 
 /**
  * This class contains the core logic for a TinyMCE editor.
@@ -70,7 +69,7 @@ import * as Settings from './Settings';
  * ed.render();
  */
 
-export interface Ui {
+export interface EditorUi {
   registry: Registry.Registry;
   /** StyleSheetLoader for styles in the editor UI. For content styles, use editor.dom.styleSheetLoader. */
   styleSheetLoader: StyleSheetLoader;
@@ -178,7 +177,7 @@ class Editor implements EditorObservable {
    * @property ui
    * @type tinymce.editor.ui.Ui
    */
-  public ui: Ui;
+  public ui: EditorUi;
 
   /**
    * Editor mode API
@@ -186,7 +185,7 @@ class Editor implements EditorObservable {
    * @property mode
    * @type tinymce.EditorMode
    */
-  public mode: Mode;
+  public mode: EditorMode;
 
   /**
    * Sets the editor mode. For example: "design", "code" or "readonly".
@@ -227,7 +226,7 @@ class Editor implements EditorObservable {
   // Arguments set later, for example by InitContentBody.ts
   public annotator: Annotator;
   public bodyElement: HTMLElement;
-  public bookmark: Option<{}>;
+  public bookmark: any; // Note: Intentionally any so as to not expose Optional
   public composing: boolean;
   public container: HTMLElement;
   public contentAreaContainer: HTMLElement;
@@ -255,7 +254,7 @@ class Editor implements EditorObservable {
   public readonly: boolean;
   public removed: boolean;
   public schema: Schema;
-  public selection: Selection;
+  public selection: EditorSelection;
   public serializer: DomSerializer;
   public startContent: string;
   public targetElm: HTMLElement;
@@ -445,7 +444,7 @@ class Editor implements EditorObservable {
    */
   public getParam <K extends keyof ParamTypeMap>(name: string, defaultVal: ParamTypeMap[K], type: K): ParamTypeMap[K];
   public getParam <K extends keyof EditorSettings>(name: K, defaultVal?: EditorSettings[K], type?: string): EditorSettings[K];
-  public getParam <T>(name: string, defaultVal: T, type: string): T;
+  public getParam <T>(name: string, defaultVal: T, type?: string): T;
   public getParam(name: string, defaultVal?: any, type?: string): any {
     return getParam(this, name, defaultVal, type);
   }
@@ -527,7 +526,7 @@ class Editor implements EditorObservable {
    * @param {addQueryStateHandlerCallback} callback Function to execute when the command state retrieval occurs.
    * @param {Object} scope Optional scope to execute the function in.
    */
-  public addQueryStateHandler(name: string, callback: () => boolean, scope?: {}) {
+  public addQueryStateHandler(name: string, callback: () => boolean, scope?: any) {
     /**
      * Callback function that gets called when a queryCommandState is executed.
      *
@@ -546,7 +545,7 @@ class Editor implements EditorObservable {
    * @param {addQueryValueHandlerCallback} callback Function to execute when the command value retrieval occurs.
    * @param {Object} scope Optional scope to execute the function in.
    */
-  public addQueryValueHandler(name: string, callback: () => string, scope?: {}) {
+  public addQueryValueHandler(name: string, callback: () => string, scope?: any) {
     /**
      * Callback function that gets called when a queryCommandValue is executed.
      *
@@ -583,7 +582,7 @@ class Editor implements EditorObservable {
    *    editor.execCommand('mceInsertContent', false, 'Hello, World!');
    * });
    */
-  public addShortcut(pattern: string, desc: string, cmdFunc: string | any[] | Function, scope?: {}) {
+  public addShortcut(pattern: string, desc: string, cmdFunc: string | [string, boolean, any] | (() => void), scope?: any) {
     this.shortcuts.add(pattern, desc, cmdFunc, scope);
   }
 
@@ -841,7 +840,7 @@ class Editor implements EditorObservable {
    * tinymce.activeEditor.setContent('<p>Some html</p>', {format: 'html'});
    */
   public setContent (content: string, args?: EditorContent.SetContentArgs): string;
-  public setContent (content: Node, args?: EditorContent.SetContentArgs): Node;
+  public setContent (content: AstNode, args?: EditorContent.SetContentArgs): AstNode;
   public setContent(content: EditorContent.Content, args?: EditorContent.SetContentArgs): EditorContent.Content {
     return EditorContent.setContent(this, content, args);
   }
@@ -863,7 +862,7 @@ class Editor implements EditorObservable {
    * // Get content of a specific editor:
    * tinymce.get('content id').getContent()
    */
-  public getContent (args: { format: 'tree' } & EditorContent.GetContentArgs): Node;
+  public getContent (args: { format: 'tree' } & EditorContent.GetContentArgs): AstNode;
   public getContent (args?: EditorContent.GetContentArgs): string;
   public getContent(args?: EditorContent.GetContentArgs): EditorContent.Content {
     return EditorContent.getContent(this, args);

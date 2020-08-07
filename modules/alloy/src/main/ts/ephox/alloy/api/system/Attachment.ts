@@ -1,29 +1,29 @@
 import { Arr } from '@ephox/katamari';
-import { Body, Insert, Element, Traverse, Remove } from '@ephox/sugar';
+import { Insert, Remove, SugarBody, SugarElement, Traverse } from '@ephox/sugar';
 
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { GuiSystem } from '../../api/system/Gui';
 import * as InternalAttachment from '../../system/InternalAttachment';
+import { AlloyComponent } from '../component/ComponentApi';
+import { GuiSystem } from './Gui';
 
 const attach = (parent: AlloyComponent, child: AlloyComponent): void => {
   attachWith(parent, child, Insert.append);
 };
 
-const attachWith = (parent: AlloyComponent, child: AlloyComponent, insertion: (parent: Element, child: Element) => void): void => {
+const attachWith = (parent: AlloyComponent, child: AlloyComponent, insertion: (parent: SugarElement, child: SugarElement) => void): void => {
   parent.getSystem().addToWorld(child);
-  insertion(parent.element(), child.element());
-  if (Body.inBody(parent.element())) { InternalAttachment.fireAttaching(child); }
+  insertion(parent.element, child.element);
+  if (SugarBody.inBody(parent.element)) { InternalAttachment.fireAttaching(child); }
   parent.syncComponents();
 };
 
 const doDetach = (component: AlloyComponent) => {
   InternalAttachment.fireDetaching(component);
-  Remove.remove(component.element());
+  Remove.remove(component.element);
   component.getSystem().removeFromWorld(component);
 };
 
 const detach = (component: AlloyComponent): void => {
-  const parent = Traverse.parent(component.element()).bind((p) => component.getSystem().getByDom(p).toOption());
+  const parent = Traverse.parent(component.element).bind((p) => component.getSystem().getByDom(p).toOptional());
 
   doDetach(component);
   parent.each((p) => {
@@ -36,32 +36,32 @@ const detachChildren = (component: AlloyComponent): void => {
   const subs = component.components();
   Arr.each(subs, doDetach);
   // Clear the component also.
-  Remove.empty(component.element());
+  Remove.empty(component.element);
   component.syncComponents();
 };
 
-const attachSystem = (element: Element, guiSystem: GuiSystem): void => {
+const attachSystem = (element: SugarElement, guiSystem: GuiSystem): void => {
   attachSystemWith(element, guiSystem, Insert.append);
 };
 
-const attachSystemAfter = (element: Element, guiSystem: GuiSystem): void => {
+const attachSystemAfter = (element: SugarElement, guiSystem: GuiSystem): void => {
   attachSystemWith(element, guiSystem, Insert.after);
 };
 
-const attachSystemWith = (element: Element, guiSystem: GuiSystem, inserter: (marker: Element, element: Element) => void): void => {
-  inserter(element, guiSystem.element());
-  const children = Traverse.children(guiSystem.element());
+const attachSystemWith = (element: SugarElement, guiSystem: GuiSystem, inserter: (marker: SugarElement, element: SugarElement) => void): void => {
+  inserter(element, guiSystem.element);
+  const children = Traverse.children(guiSystem.element);
   Arr.each(children, (child) => {
     guiSystem.getByDom(child).each(InternalAttachment.fireAttaching);
   });
 };
 
 const detachSystem = (guiSystem: GuiSystem): void => {
-  const children = Traverse.children(guiSystem.element());
+  const children = Traverse.children(guiSystem.element);
   Arr.each(children, (child) => {
     guiSystem.getByDom(child).each(InternalAttachment.fireDetaching);
   });
-  Remove.remove(guiSystem.element());
+  Remove.remove(guiSystem.element);
 };
 
 export {

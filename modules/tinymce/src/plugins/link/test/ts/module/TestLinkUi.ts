@@ -1,8 +1,7 @@
 import { Assertions, Chain, FocusTools, GeneralSteps, Guard, Logger, Mouse, Step, UiControls, UiFinder, Waiter } from '@ephox/agar';
-import { document, Event, localStorage } from '@ephox/dom-globals';
 import { Obj, Type } from '@ephox/katamari';
 import { TinyApis, TinyDom, TinyUi } from '@ephox/mcagar';
-import { Body, Element, Value } from '@ephox/sugar';
+import { SugarBody, SugarElement, Value } from '@ephox/sugar';
 
 const doc = TinyDom.fromDom(document);
 
@@ -34,7 +33,7 @@ const sClickOnConfirmDialog = (label: string, state: boolean) => Logger.t('Click
   )
 ]));
 
-const fireEvent = (elem: Element, event: string) => {
+const fireEvent = (elem: SugarElement, event: string) => {
   let evt;
   if (Type.isFunction(Event)) {
     evt = new Event(event, {
@@ -45,11 +44,11 @@ const fireEvent = (elem: Element, event: string) => {
     evt = document.createEvent('Event');
     evt.initEvent(event, true, true);
   }
-  elem.dom().dispatchEvent(evt);
+  elem.dom.dispatchEvent(evt);
 };
 
 const cFireEvent = (event: string) => Chain.control(
-  Chain.op((elem: Element) => {
+  Chain.op((elem: SugarElement) => {
     fireEvent(elem, event);
   }),
   Guard.addLogging('Fire event')
@@ -57,7 +56,7 @@ const cFireEvent = (event: string) => Chain.control(
 
 const cGetInput = (selector: string) => Chain.control(
   Chain.fromChains([
-    Chain.inject(Body.body()),
+    Chain.inject(SugarBody.body()),
     UiFinder.cFindIn(selector)
   ]),
   Guard.addLogging('Get input')
@@ -67,8 +66,8 @@ const sAssertInputValue = (label, selector, expected) => Logger.t(label,
   Chain.asStep({}, [
     cGetInput(selector),
     Chain.op((element) => {
-      if (element.dom().type === 'checkbox') {
-        Assertions.assertEq(`The input value for ${label} should be: `, expected, element.dom().checked);
+      if (element.dom.type === 'checkbox') {
+        Assertions.assertEq(`The input value for ${label} should be: `, expected, element.dom.checked);
         return;
       }
       Assertions.assertEq(`The input value for ${label} should be: `, expected, Value.get(element));

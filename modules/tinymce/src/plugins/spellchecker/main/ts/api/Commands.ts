@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import * as Actions from '../core/Actions';
-import Editor from 'tinymce/core/api/Editor';
 import { Cell } from '@ephox/katamari';
+import Editor from 'tinymce/core/api/Editor';
+import * as Actions from '../core/Actions';
 import { DomTextMatcher } from '../core/DomTextMatcher';
 
 type LastSuggestion = Actions.LastSuggestion;

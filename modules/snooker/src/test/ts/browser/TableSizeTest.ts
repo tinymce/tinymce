@@ -1,26 +1,25 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { HTMLTableCellElement, HTMLTableElement } from '@ephox/dom-globals';
-import { Option, OptionInstances } from '@ephox/katamari';
-import { Body, Css, Element, Insert, Remove, SelectorFind, Width } from '@ephox/sugar';
+import { Optional, OptionalInstances } from '@ephox/katamari';
+import { Css, Insert, Remove, SelectorFind, SugarBody, SugarElement, Width } from '@ephox/sugar';
+import * as fc from 'fast-check';
 import { ResizeDirection } from 'ephox/snooker/api/ResizeDirection';
 import { TableSize } from 'ephox/snooker/api/TableSize';
 import { Warehouse } from 'ephox/snooker/model/Warehouse';
-import * as fc from 'fast-check';
 
-const tOption = OptionInstances.tOption;
+const tOptional = OptionalInstances.tOptional;
 
 const pixelTableHtml = '<table style="width: 400px"><tbody><tr><td style="width: 200px"></td><td style="width: 200px"></td></tr></tbody></table>';
 const percentTableHtml = '<table style="width: 80%"><tbody><tr><td style="width: 50%"></td><td style="width: 50%"></td></tr></tbody></table>';
 const noneTableHtml = '<table><tbody><tr><td></td><td></td></tr></tbody></table>';
 
 UnitTest.test('TableSize.getTableSize', () => {
-  const noneTable = Element.fromHtml<HTMLTableElement>(noneTableHtml);
+  const noneTable = SugarElement.fromHtml<HTMLTableElement>(noneTableHtml);
   const noneSizing = TableSize.getTableSize(noneTable);
   Assert.eq('None sizing detected', 'none', noneSizing.label);
 
   fc.assert(fc.property(fc.integer(100, 1000), fc.float(1, 100), (pixel, percent) => {
-    const pixelTable = Element.fromHtml<HTMLTableElement>(pixelTableHtml.replace('400px', pixel + 'px'));
-    const percentageTable = Element.fromHtml<HTMLTableElement>(percentTableHtml.replace('80%', percent + '%'));
+    const pixelTable = SugarElement.fromHtml<HTMLTableElement>(pixelTableHtml.replace('400px', pixel + 'px'));
+    const percentageTable = SugarElement.fromHtml<HTMLTableElement>(percentTableHtml.replace('80%', percent + '%'));
 
     const pixelSizing = TableSize.getTableSize(pixelTable);
     const percentageSizing = TableSize.getTableSize(percentageTable);
@@ -31,8 +30,8 @@ UnitTest.test('TableSize.getTableSize', () => {
 });
 
 UnitTest.test('TableSize.pixelSizing', () => {
-  const table = Element.fromHtml<HTMLTableElement>(pixelTableHtml);
-  Insert.append(Body.body(), table);
+  const table = SugarElement.fromHtml<HTMLTableElement>(pixelTableHtml);
+  Insert.append(SugarBody.body(), table);
 
   const sizing = TableSize.getTableSize(table);
   const warehouse = Warehouse.fromTable(table);
@@ -48,22 +47,22 @@ UnitTest.test('TableSize.pixelSizing', () => {
   }));
 
   sizing.adjustTableWidth(-200);
-  Assert.eq('Table raw width after resizing is 200px', Option.some('200px'), Css.getRaw(table, 'width'), tOption());
+  Assert.eq('Table raw width after resizing is 200px', Optional.some('200px'), Css.getRaw(table, 'width'), tOptional());
   Assert.eq('Table width after resizing is 200px', 200, sizing.width());
   Assert.eq('Table pixel width after resizing is 200px', 200, sizing.pixelWidth());
 
   const cell = SelectorFind.descendant<HTMLTableCellElement>(table, 'td').getOrDie();
   sizing.setElementWidth(cell, 50);
-  Assert.eq('Cell width after resizing is 50px', Option.some('50px'), Css.getRaw(cell, 'width'), tOption());
+  Assert.eq('Cell width after resizing is 50px', Optional.some('50px'), Css.getRaw(cell, 'width'), tOptional());
 
   Remove.remove(table);
 });
 
 UnitTest.test('TableSize.percentageSizing', () => {
-  const container = Element.fromHtml('<div style="position: absolute; left: 0; top: 0; width: 500px"></div>');
-  const table = Element.fromHtml<HTMLTableElement>(percentTableHtml);
+  const container = SugarElement.fromHtml('<div style="position: absolute; left: 0; top: 0; width: 500px"></div>');
+  const table = SugarElement.fromHtml<HTMLTableElement>(percentTableHtml);
   Insert.append(container, table);
-  Insert.append(Body.body(), container);
+  Insert.append(SugarBody.body(), container);
 
   const sizing = TableSize.getTableSize(table);
   const warehouse = Warehouse.fromTable(table);
@@ -80,20 +79,20 @@ UnitTest.test('TableSize.percentageSizing', () => {
   }));
 
   sizing.adjustTableWidth(-25);
-  Assert.eq('Table raw width after resizing is 25% less of the original 80%', Option.some('60%'), Css.getRaw(table, 'width'), tOption());
+  Assert.eq('Table raw width after resizing is 25% less of the original 80%', Optional.some('60%'), Css.getRaw(table, 'width'), tOptional());
   Assert.eq('Table width after resizing is 60%', 60, sizing.width());
   Assert.eq('Table pixel width after resizing is 300px', 300, sizing.pixelWidth());
 
   const cell = SelectorFind.descendant<HTMLTableCellElement>(table, 'td').getOrDie();
   sizing.setElementWidth(cell, 25);
-  Assert.eq('Cell width after resizing is 25%', Option.some('25%'), Css.getRaw(cell, 'width'), tOption());
+  Assert.eq('Cell width after resizing is 25%', Optional.some('25%'), Css.getRaw(cell, 'width'), tOptional());
 
   Remove.remove(container);
 });
 
 UnitTest.test('TableSize.noneSizing', () => {
-  const table = Element.fromHtml<HTMLTableElement>(noneTableHtml);
-  Insert.append(Body.body(), table);
+  const table = SugarElement.fromHtml<HTMLTableElement>(noneTableHtml);
+  Insert.append(SugarBody.body(), table);
 
   const sizing = TableSize.getTableSize(table);
   const warehouse = Warehouse.fromTable(table);
@@ -113,13 +112,13 @@ UnitTest.test('TableSize.noneSizing', () => {
   }));
 
   sizing.adjustTableWidth(-20);
-  Assert.eq('Table raw width after resizing is unchanged', Option.none<string>(), Css.getRaw(table, 'width'), tOption());
+  Assert.eq('Table raw width after resizing is unchanged', Optional.none<string>(), Css.getRaw(table, 'width'), tOptional());
   Assert.eq('Table width after resizing is unchanged', width, sizing.width());
   Assert.eq('Table pixel width after resizing is unchanged', width, sizing.pixelWidth());
 
   const cell = SelectorFind.descendant<HTMLTableCellElement>(table, 'td').getOrDie();
   sizing.setElementWidth(cell, 20);
-  Assert.eq('Cell width after resizing is unchanged', Option.none<string>(), Css.getRaw(cell, 'width'), tOption());
+  Assert.eq('Cell width after resizing is unchanged', Optional.none<string>(), Css.getRaw(cell, 'width'), tOptional());
 
   Remove.remove(table);
 });

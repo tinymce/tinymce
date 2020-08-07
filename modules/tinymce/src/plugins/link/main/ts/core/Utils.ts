@@ -5,9 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element, HTMLAnchorElement, Node, Range } from '@ephox/dom-globals';
-import { Arr, Obj, Option, Type } from '@ephox/katamari';
-import TreeWalker from 'tinymce/core/api/dom/TreeWalker';
+import { Arr, Obj, Optional, Type } from '@ephox/katamari';
+import DomTreeWalker from 'tinymce/core/api/dom/TreeWalker';
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import * as Settings from '../api/Settings';
@@ -22,9 +21,9 @@ const collectNodesInRange = <T extends Node>(rng: Range, predicate: (node) => no
     return [];
   } else {
     const contents = rng.cloneContents();
-    const walker = new TreeWalker(contents.firstChild, contents);
+    const walker = new DomTreeWalker(contents.firstChild, contents);
     const elements: T[] = [];
-    let current = contents.firstChild;
+    let current: Node = contents.firstChild;
     do {
       if (predicate(current)) {
         elements.push(current);
@@ -118,7 +117,7 @@ const applyLinkOverrides = (editor: Editor, linkAttrs: Record<string, string>) =
     newLinkAttrs.rel = newRel ? newRel : null;
   }
 
-  if (Option.from(newLinkAttrs.target).isNone() && Settings.getTargetList(editor) === false) {
+  if (Optional.from(newLinkAttrs.target).isNone() && Settings.getTargetList(editor) === false) {
     newLinkAttrs.target = Settings.getDefaultLinkTarget(editor);
   }
 
@@ -127,7 +126,7 @@ const applyLinkOverrides = (editor: Editor, linkAttrs: Record<string, string>) =
   return newLinkAttrs;
 };
 
-const updateLink = (editor: Editor, anchorElm: HTMLAnchorElement, text: Option<string>, linkAttrs: Record<string, string>) => {
+const updateLink = (editor: Editor, anchorElm: HTMLAnchorElement, text: Optional<string>, linkAttrs: Record<string, string>) => {
   // If we have text, then update the anchor elements text content
   text.each((text) => {
     if (anchorElm.hasOwnProperty('innerText')) {
@@ -141,7 +140,7 @@ const updateLink = (editor: Editor, anchorElm: HTMLAnchorElement, text: Option<s
   editor.selection.select(anchorElm);
 };
 
-const createLink = (editor: Editor, selectedElm: Element, text: Option<string>, linkAttrs: Record<string, string>) => {
+const createLink = (editor: Editor, selectedElm: Element, text: Optional<string>, linkAttrs: Record<string, string>) => {
   if (isImageFigure(selectedElm)) {
     linkImageFigure(editor, selectedElm, linkAttrs);
   } else {

@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, Chain, FocusTools, Logger, RealKeys, UiFinder } from '@ephox/agar';
 import { GuiFactory, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 
 import { renderSizeInput } from 'tinymce/themes/silver/ui/dialog/SizeInput';
 import TestProviders from '../../module/TestProviders';
@@ -12,7 +12,7 @@ UnitTest.asynctest('SizeInput <space> webdriver Test', (success, failure) => {
     (_store, _doc, _body) => GuiFactory.build(
       renderSizeInput({
         name: 'dimensions',
-        label: Option.some('size'),
+        label: Optional.some('size'),
         constrain: true,
         disabled: false
       }, TestProviders)
@@ -20,7 +20,7 @@ UnitTest.asynctest('SizeInput <space> webdriver Test', (success, failure) => {
     (_doc, _body, _gui, component, _store) => {
       const sAssertLockedStatus = (label: string, expected: boolean) => Logger.t(
         label,
-        Chain.asStep(component.element(), [
+        Chain.asStep(component.element, [
           UiFinder.cFindIn('.tox-lock'),
           Assertions.cAssertStructure(
             'Checking the state of the lock button. Should be: ' + expected,
@@ -40,7 +40,7 @@ UnitTest.asynctest('SizeInput <space> webdriver Test', (success, failure) => {
       ]);
 
       return [
-        FocusTools.sSetFocus('Focus the constrain button', component.element(), '.tox-lock'),
+        FocusTools.sSetFocus('Focus the constrain button', component.element, '.tox-lock'),
         sAssertLockedStatus('Initially: ', true),
         sSendRealSpace,
         sAssertLockedStatus('Firing space on a pressed button', false),

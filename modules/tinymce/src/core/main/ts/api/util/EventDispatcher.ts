@@ -5,20 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import {
-  ClipboardEvent, DataTransfer, DragEvent, Event, FocusEvent, KeyboardEvent, MouseEvent, PointerEvent, TouchEvent, WheelEvent
-} from '@ephox/dom-globals';
 import { Fun, Obj } from '@ephox/katamari';
 import Tools from './Tools';
-
-// InputEvent is experimental so we don't have an actual type
-// See https://developer.mozilla.org/en-US/docs/Web/API/InputEvent
-export interface InputEvent extends Event {
-  readonly data: string;
-  readonly dataTransfer: DataTransfer;
-  readonly inputType: string;
-  readonly isComposing: boolean;
-}
 
 export interface NativeEventMap {
   'beforepaste': Event;
@@ -75,7 +63,7 @@ export type EditorEvent<T> = T & {
 };
 
 export interface EventDispatcherSettings {
-  scope?: {};
+  scope?: any;
   toggleEvent?: (name: string, state: boolean) => void | boolean;
   beforeFire?: <T>(args: EditorEvent<T>) => void;
 }
@@ -108,7 +96,7 @@ const nativeEvents = Tools.makeMap(
   ' '
 );
 
-class EventDispatcher<T extends NativeEventMap> {
+class EventDispatcher<T> {
   /**
    * Returns true/false if the specified event name is a native browser event or not.
    *

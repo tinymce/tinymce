@@ -5,13 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Types } from '@ephox/bridge';
-import { File, URL } from '@ephox/dom-globals';
-import { Arr, Merger, Option, Type } from '@ephox/katamari';
-
+import { Arr, Merger, Optional, Type } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { BlobInfo } from 'tinymce/core/api/file/BlobCache';
 import { StyleMap } from 'tinymce/core/api/html/Styles';
+import { Dialog as DialogType } from 'tinymce/core/api/ui/Ui';
+
 import { getStyleValue, ImageData } from '../core/ImageData';
 import { normalizeCss as doNormalizeCss } from '../core/ImageSelection';
 import { ListUtils } from '../core/ListUtils';
@@ -44,7 +43,7 @@ interface Helpers {
 }
 
 interface ImageDialogState {
-  prevImage: Option<ListValue>;
+  prevImage: Optional<ListValue>;
   prevAlt: string;
   open: boolean;
 }
@@ -94,17 +93,17 @@ const toImageData = (data: ImageDialogData, removeEmptyAlt: boolean): ImageData 
   isDecorative: data.isDecorative
 });
 
-const addPrependUrl2 = (info: ImageDialogInfo, srcURL: string): Option<string> => {
+const addPrependUrl2 = (info: ImageDialogInfo, srcURL: string): Optional<string> => {
   // Add the prependURL
   if (!/^(?:[a-zA-Z]+:)?\/\//.test(srcURL)) {
     return info.prependURL.bind((prependUrl) => {
       if (srcURL.substring(0, prependUrl.length) !== prependUrl) {
-        return Option.some(prependUrl + srcURL);
+        return Optional.some(prependUrl + srcURL);
       }
-      return Option.none();
+      return Optional.none();
     });
   }
-  return Option.none();
+  return Optional.none();
 };
 
 const addPrependUrl = (info: ImageDialogInfo, api: API) => {
@@ -337,7 +336,7 @@ const closeHandler = (state: ImageDialogState) => () => {
 
 const makeDialogBody = (info: ImageDialogInfo) => {
   if (info.hasAdvTab || info.hasUploadUrl || info.hasUploadHandler) {
-    const tabPanel: Types.Dialog.TabPanelApi = {
+    const tabPanel: DialogType.TabPanelSpec = {
       type: 'tabpanel',
       tabs: Arr.flatten([
         [ MainTab.makeTab(info) ],
@@ -347,7 +346,7 @@ const makeDialogBody = (info: ImageDialogInfo) => {
     };
     return tabPanel;
   } else {
-    const panel: Types.Dialog.PanelApi = {
+    const panel: DialogType.PanelSpec = {
       type: 'panel',
       items: MainTab.makeItems(info)
     };
@@ -355,7 +354,7 @@ const makeDialogBody = (info: ImageDialogInfo) => {
   }
 };
 
-const makeDialog = (helpers: Helpers) => (info: ImageDialogInfo): Types.Dialog.DialogApi<ImageDialogData> => {
+const makeDialog = (helpers: Helpers) => (info: ImageDialogInfo): DialogType.DialogSpec<ImageDialogData> => {
   const state = createState(info);
   return {
     title: 'Insert/Edit Image',

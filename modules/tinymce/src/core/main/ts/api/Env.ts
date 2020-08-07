@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { document, navigator, URL, window } from '@ephox/dom-globals';
 import { PlatformDetection } from '@ephox/sand';
 
 /**

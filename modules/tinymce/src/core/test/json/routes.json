@@ -331,5 +331,50 @@
         }
       }
     }
+  },
+
+  {
+    "request": {
+      "method": "get",
+      "path": "/custom/video.mp4"
+    },
+
+    "response": {
+      "headers": {
+        "content-type": "video/mp4"
+      },
+      "status": 404,
+      "json": {}
+    }
+  },
+
+  {
+    "request": {
+      "method": "get",
+      "path": "/custom/audio.mp3"
+    },
+
+    "response": {
+      "headers": {
+        "content-type": "audio/mpeg"
+      },
+      "status": 404,
+      "json": {}
+    }
+  },
+
+  {
+    "request": {
+      "method": "get",
+      "path": "/custom/file.pdf"
+    },
+
+    "response": {
+      "headers": {
+        "content-type": "application/pdf"
+      },
+      "status": 404,
+      "json": {}
+    }
   }
 ]

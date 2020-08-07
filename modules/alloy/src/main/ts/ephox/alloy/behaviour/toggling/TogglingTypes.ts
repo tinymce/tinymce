@@ -1,4 +1,4 @@
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
@@ -22,7 +22,7 @@ export interface AriaTogglingConfig {
 export type TogglingState = BehaviourCellState<boolean>;
 
 export interface TogglingConfig extends Behaviour.BehaviourConfigDetail {
-  toggleClass: Option<string>;
+  toggleClass: Optional<string>;
   aria: AriaTogglingConfig;
   toggleOnExecute: boolean;
   selected: boolean;

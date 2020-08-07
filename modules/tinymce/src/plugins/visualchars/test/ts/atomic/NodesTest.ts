@@ -1,9 +1,8 @@
 import { Assertions } from '@ephox/agar';
-import { Element } from '@ephox/sugar';
-import * as Nodes from 'tinymce/plugins/visualchars/core/Nodes';
 import { UnitTest } from '@ephox/bedrock-client';
-import { document } from '@ephox/dom-globals';
 import { Unicode } from '@ephox/katamari';
+import { SugarElement } from '@ephox/sugar';
+import * as Nodes from 'tinymce/plugins/visualchars/core/Nodes';
 
 UnitTest.test('atomic.tinymce.plugins.visualchars.NodesTest', function () {
   const testReplaceWithSpans = function () {
@@ -24,7 +23,7 @@ UnitTest.test('atomic.tinymce.plugins.visualchars.NodesTest', function () {
     Assertions.assertEq(
       'should return list with nodes with shy or nbsp in it',
       2,
-      Nodes.filterDescendants(Element.fromDom(div), Nodes.isMatch).length
+      Nodes.filterDescendants(SugarElement.fromDom(div), Nodes.isMatch).length
     );
   };
 
@@ -38,7 +37,7 @@ UnitTest.test('atomic.tinymce.plugins.visualchars.NodesTest', function () {
     Assertions.assertEq(
       'should return list with nodes with shy or nbsp in it',
       4,
-      Nodes.filterDescendants(Element.fromDom(div), Nodes.isMatch).length
+      Nodes.filterDescendants(SugarElement.fromDom(div), Nodes.isMatch).length
     );
   };
 

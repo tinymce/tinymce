@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import * as Dialog from './Dialog';
 import Editor from 'tinymce/core/api/Editor';
 import { EmojiDatabase } from '../core/EmojiDatabase';
+import * as Dialog from './Dialog';
 
 const register = function (editor: Editor, database: EmojiDatabase): void {
   const onAction = () => Dialog.open(editor, database);

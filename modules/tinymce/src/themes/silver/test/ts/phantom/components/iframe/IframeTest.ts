@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions } from '@ephox/agar';
 import { AlloyComponent, Composing, GuiFactory, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 
 import { renderIFrame } from 'tinymce/themes/silver/ui/dialog/IFrame';
@@ -47,7 +47,7 @@ UnitTest.asynctest('IFrame component Test', (success, failure) => {
         children: [ labelStructure, iframeStructure ]
       });
     }),
-    component.element()
+    component.element
   );
 
   const sAssertSandboxedIframeContent = (frame: AlloyComponent, content: string) =>
@@ -61,7 +61,7 @@ UnitTest.asynctest('IFrame component Test', (success, failure) => {
           srcdoc: str.contains(content)
         }
       })),
-      frame.element()
+      frame.element
     );
 
   const sAssertStandardIframeContent = (frame: AlloyComponent) =>
@@ -75,14 +75,14 @@ UnitTest.asynctest('IFrame component Test', (success, failure) => {
           src: str.is(`javascript:''`)
         }
       })),
-      frame.element()
+      frame.element
     );
 
   TestHelpers.GuiSetup.setup(
     (_store, _doc, _body) => GuiFactory.build(
       renderIFrame({
         name: 'frame-a',
-        label: Option.some('iframe label'),
+        label: Optional.some('iframe label'),
         sandboxed: true
       }, TestProviders)
     ),

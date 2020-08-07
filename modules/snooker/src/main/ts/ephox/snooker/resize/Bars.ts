@@ -1,5 +1,5 @@
-import { Arr, Option } from '@ephox/katamari';
-import { Class, Css, Element, Height, Insert, Location, Position, Remove, SelectorFilter, Width } from '@ephox/sugar';
+import { Arr, Optional } from '@ephox/katamari';
+import { Class, Css, Height, Insert, Remove, SelectorFilter, SugarElement, SugarLocation, SugarPosition, Width } from '@ephox/sugar';
 import { ResizeWire } from '../api/ResizeWire';
 import * as Blocks from '../lookup/Blocks';
 import { Warehouse } from '../model/Warehouse';
@@ -17,7 +17,7 @@ const destroy = function (wire: ResizeWire) {
   Arr.each(previous, Remove.remove);
 };
 
-const drawBar = function <T> (wire: ResizeWire, positions: Option<T>[], create: (origin: Position, info: T) => Element) {
+const drawBar = function <T> (wire: ResizeWire, positions: Optional<T>[], create: (origin: SugarPosition, info: T) => SugarElement) {
   const origin = wire.origin();
   Arr.each(positions, function (cpOption) {
     cpOption.each(function (cp) {
@@ -28,24 +28,24 @@ const drawBar = function <T> (wire: ResizeWire, positions: Option<T>[], create: 
   });
 };
 
-const refreshCol = function (wire: ResizeWire, colPositions: Option<ColInfo>[], position: Position, tableHeight: number) {
+const refreshCol = function (wire: ResizeWire, colPositions: Optional<ColInfo>[], position: SugarPosition, tableHeight: number) {
   drawBar(wire, colPositions, function (origin, cp) {
-    const colBar = Bar.col(cp.col, cp.x - origin.left(), position.top() - origin.top(), BAR_THICKNESS, tableHeight);
+    const colBar = Bar.col(cp.col, cp.x - origin.left, position.top - origin.top, BAR_THICKNESS, tableHeight);
     Class.add(colBar, resizeColBar);
     return colBar;
   });
 };
 
-const refreshRow = function (wire: ResizeWire, rowPositions: Option<RowInfo>[], position: Position, tableWidth: number) {
+const refreshRow = function (wire: ResizeWire, rowPositions: Optional<RowInfo>[], position: SugarPosition, tableWidth: number) {
   drawBar(wire, rowPositions, function (origin, cp) {
-    const rowBar = Bar.row(cp.row, position.left() - origin.left(), cp.y - origin.top(), tableWidth, BAR_THICKNESS);
+    const rowBar = Bar.row(cp.row, position.left - origin.left, cp.y - origin.top, tableWidth, BAR_THICKNESS);
     Class.add(rowBar, resizeRowBar);
     return rowBar;
   });
 };
 
-const refreshGrid = function (wire: ResizeWire, table: Element, rows: Option<Element>[], cols: Option<Element>[], hdirection: BarPositions<RowInfo>, vdirection: BarPositions<ColInfo>) {
-  const position = Location.absolute(table);
+const refreshGrid = function (wire: ResizeWire, table: SugarElement, rows: Optional<SugarElement>[], cols: Optional<SugarElement>[], hdirection: BarPositions<RowInfo>, vdirection: BarPositions<ColInfo>) {
+  const position = SugarLocation.absolute(table);
   const rowPositions = rows.length > 0 ? hdirection.positions(rows, table) : [];
   refreshRow(wire, rowPositions, position, Width.getOuter(table));
 
@@ -53,7 +53,7 @@ const refreshGrid = function (wire: ResizeWire, table: Element, rows: Option<Ele
   refreshCol(wire, colPositions, position, Height.getOuter(table));
 };
 
-const refresh = function (wire: ResizeWire, table: Element, hdirection: BarPositions<RowInfo>, vdirection: BarPositions<ColInfo>) {
+const refresh = function (wire: ResizeWire, table: SugarElement, hdirection: BarPositions<RowInfo>, vdirection: BarPositions<ColInfo>) {
   destroy(wire);
 
   const warehouse = Warehouse.fromTable(table);
@@ -63,7 +63,7 @@ const refresh = function (wire: ResizeWire, table: Element, hdirection: BarPosit
   refreshGrid(wire, table, rows, cols, hdirection, vdirection);
 };
 
-const each = function (wire: ResizeWire, f: (bar: Element, idx: number) => void) {
+const each = function (wire: ResizeWire, f: (bar: SugarElement, idx: number) => void) {
   const bars = SelectorFilter.descendants(wire.parent(), '.' + resizeBar);
   Arr.each(bars, f);
 };
@@ -80,11 +80,11 @@ const show = function (wire: ResizeWire) {
   });
 };
 
-const isRowBar = function (element: Element) {
+const isRowBar = function (element: SugarElement) {
   return Class.has(element, resizeRowBar);
 };
 
-const isColBar = function (element: Element) {
+const isColBar = function (element: SugarElement) {
   return Class.has(element, resizeColBar);
 };
 

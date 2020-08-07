@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { window } from '@ephox/dom-globals';
 import Editor from 'tinymce/core/api/Editor';
 
 const hasProPlugin = function (editor: Editor) {

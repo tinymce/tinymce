@@ -1,7 +1,7 @@
 import { Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { LegacyUnit } from '@ephox/mcagar';
-import Node from 'tinymce/core/api/html/Node';
+import AstNode from 'tinymce/core/api/html/Node';
 
 UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
@@ -13,39 +13,39 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function (success, fail
   suite.test('construction', function () {
     let node;
 
-    node = new Node('#text', 3);
+    node = new AstNode('#text', 3);
     LegacyUnit.equal(node.name, '#text');
     LegacyUnit.equal(node.type, 3);
 
-    node = new Node('#comment', 8);
+    node = new AstNode('#comment', 8);
     LegacyUnit.equal(node.name, '#comment');
     LegacyUnit.equal(node.type, 8);
 
-    node = new Node('b', 1);
+    node = new AstNode('b', 1);
     LegacyUnit.equal(node.name, 'b');
     LegacyUnit.equal(node.type, 1);
     LegacyUnit.deepEqual(node.attributes, []);
 
-    node = new Node('#pi', 7);
+    node = new AstNode('#pi', 7);
     LegacyUnit.equal(node.name, '#pi');
     LegacyUnit.equal(node.type, 7);
 
-    node = new Node('#doctype', 10);
+    node = new AstNode('#doctype', 10);
     LegacyUnit.equal(node.name, '#doctype');
     LegacyUnit.equal(node.type, 10);
 
-    node = new Node('#cdata', 4);
+    node = new AstNode('#cdata', 4);
     LegacyUnit.equal(node.name, '#cdata');
     LegacyUnit.equal(node.type, 4);
 
-    node = new Node('#frag', 11);
+    node = new AstNode('#frag', 11);
     LegacyUnit.equal(node.name, '#frag');
     LegacyUnit.equal(node.type, 11);
   });
 
   suite.test('append inside empty node', function () {
-    const root = new Node('#frag', 11);
-    const node = root.append(new Node('b', 1));
+    const root = new AstNode('#frag', 11);
+    const node = root.append(new AstNode('b', 1));
     LegacyUnit.equal(root.firstChild.parent === root, true);
     LegacyUnit.equal(root.firstChild.next, undefined);
     LegacyUnit.equal(root.firstChild.prev, undefined);
@@ -59,9 +59,9 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function (success, fail
   });
 
   suite.test('append node after node', function () {
-    const root = new Node('#frag', 11);
-    const node2 = root.append(new Node('a', 1));
-    const node = root.append(new Node('b', 1));
+    const root = new AstNode('#frag', 11);
+    const node2 = root.append(new AstNode('a', 1));
+    const node = root.append(new AstNode('b', 1));
     ok(root.firstChild.parent === root, 'root.firstChild.parent === root');
     ok(root.firstChild === node2, 'root.firstChild');
     ok(root.lastChild === node, 'root.firstChild');
@@ -82,9 +82,9 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function (success, fail
   });
 
   suite.test('append existing node before other existing node', function () {
-    const root = new Node('#frag', 11);
-    const node = root.append(new Node('a', 1));
-    const node2 = root.append(new Node('b', 1));
+    const root = new AstNode('#frag', 11);
+    const node = root.append(new AstNode('a', 1));
+    const node2 = root.append(new AstNode('b', 1));
     root.append(node);
     ok(root.firstChild === node2, 'root.firstChild');
     ok(root.lastChild === node, 'root.lastChild');
@@ -97,12 +97,12 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function (success, fail
   });
 
   suite.test('remove unattached node', function () {
-    ok(!new Node('#text', 3).remove().parent);
+    ok(!new AstNode('#text', 3).remove().parent);
   });
 
   suite.test('remove single child', function () {
-    const root = new Node('#frag', 11);
-    root.append(new Node('p', 1));
+    const root = new AstNode('#frag', 11);
+    root.append(new AstNode('p', 1));
     const node = root.firstChild.remove();
     LegacyUnit.equal(root.firstChild, undefined);
     LegacyUnit.equal(root.lastChild, undefined);
@@ -113,10 +113,10 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function (success, fail
   });
 
   suite.test('remove middle node', function () {
-    const root = new Node('#frag', 11);
-    const node = root.append(new Node('a', 1));
-    const node2 = root.append(new Node('b', 1));
-    const node3 = root.append(new Node('c', 1));
+    const root = new AstNode('#frag', 11);
+    const node = root.append(new AstNode('a', 1));
+    const node2 = root.append(new AstNode('b', 1));
+    const node3 = root.append(new AstNode('c', 1));
     node2.remove();
     LegacyUnit.equal(node2.parent, null);
     LegacyUnit.equal(node2.next, null);
@@ -130,10 +130,10 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function (success, fail
   });
 
   suite.test('insert after last', function () {
-    const fragment = new Node('#frag', 11);
-    const root = fragment.append(new Node('body', 1));
-    const node = root.append(new Node('a', 1));
-    const node2 = root.insert(new Node('x', 1), node);
+    const fragment = new AstNode('#frag', 11);
+    const root = fragment.append(new AstNode('body', 1));
+    const node = root.append(new AstNode('a', 1));
+    const node2 = root.insert(new AstNode('x', 1), node);
     ok(root.firstChild === node, 'root.firstChild');
     ok(root.lastChild === node2, 'root.lastChild');
     ok(node.next === node2, 'node.next');
@@ -142,10 +142,10 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function (success, fail
   });
 
   suite.test('insert before first', function () {
-    const fragment = new Node('#frag', 11);
-    const root = fragment.append(new Node('body', 1));
-    const node = root.append(new Node('a', 1));
-    const node2 = root.insert(new Node('x', 1), node, true);
+    const fragment = new AstNode('#frag', 11);
+    const root = fragment.append(new AstNode('body', 1));
+    const node = root.append(new AstNode('a', 1));
+    const node2 = root.insert(new AstNode('x', 1), node, true);
     ok(root.firstChild === node2, 'root.firstChild');
     ok(root.lastChild === node, 'root.lastChild');
     ok(node2.parent === root, 'node2.lastChild');
@@ -157,11 +157,11 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function (success, fail
   });
 
   suite.test('insert before second', function () {
-    const fragment = new Node('#frag', 11);
-    const root = fragment.append(new Node('body', 1));
-    const node = root.append(new Node('a', 1));
-    const node2 = root.append(new Node('b', 1));
-    const node3 = root.insert(new Node('x', 1), node2, true);
+    const fragment = new AstNode('#frag', 11);
+    const root = fragment.append(new AstNode('body', 1));
+    const node = root.append(new AstNode('a', 1));
+    const node2 = root.append(new AstNode('b', 1));
+    const node3 = root.insert(new AstNode('x', 1), node2, true);
     ok(root.firstChild === node, 'root.firstChild');
     ok(root.lastChild === node2, 'root.lastChild');
     ok(node3.parent === root, 'node3.parent');
@@ -170,11 +170,11 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function (success, fail
   });
 
   suite.test('insert after and between two nodes', function () {
-    const fragment = new Node('#frag', 11);
-    const root = fragment.append(new Node('body', 1));
-    const node = root.append(new Node('a', 1));
-    const node2 = root.append(new Node('b', 1));
-    const node3 = root.insert(new Node('x', 1), node);
+    const fragment = new AstNode('#frag', 11);
+    const root = fragment.append(new AstNode('body', 1));
+    const node = root.append(new AstNode('a', 1));
+    const node2 = root.append(new AstNode('b', 1));
+    const node3 = root.insert(new AstNode('x', 1), node);
     ok(root.firstChild === node, 'root.firstChild');
     ok(root.lastChild === node2, 'root.lastChild');
     ok(node.next === node3, 'node.next');
@@ -185,9 +185,9 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function (success, fail
   });
 
   suite.test('replace single child', function () {
-    const root = new Node('#frag', 11);
-    const node1 = root.append(new Node('b', 1));
-    const node2 = root.append(new Node('em', 1));
+    const root = new AstNode('#frag', 11);
+    const node1 = root.append(new AstNode('b', 1));
+    const node2 = root.append(new AstNode('em', 1));
     node1.replace(node2);
     ok(root.firstChild === node2, 'root.firstChild');
     ok(root.lastChild === node2, 'root.lastChild');
@@ -197,10 +197,10 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function (success, fail
   });
 
   suite.test('replace first child', function () {
-    const root = new Node('#frag', 11);
-    const node1 = root.append(new Node('b', 1));
-    const node2 = root.append(new Node('em', 1));
-    const node3 = root.append(new Node('b', 1));
+    const root = new AstNode('#frag', 11);
+    const node1 = root.append(new AstNode('b', 1));
+    const node2 = root.append(new AstNode('em', 1));
+    const node3 = root.append(new AstNode('b', 1));
     node1.replace(node2);
     ok(root.firstChild === node2, 'root.firstChild');
     ok(root.lastChild === node3, 'root.lastChild');
@@ -210,10 +210,10 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function (success, fail
   });
 
   suite.test('replace last child', function () {
-    const root = new Node('#frag', 11);
-    const node1 = root.append(new Node('b', 1));
-    const node3 = root.append(new Node('b', 1));
-    const node2 = root.append(new Node('em', 1));
+    const root = new AstNode('#frag', 11);
+    const node1 = root.append(new AstNode('b', 1));
+    const node3 = root.append(new AstNode('b', 1));
+    const node2 = root.append(new AstNode('em', 1));
     node3.replace(node2);
     ok(root.firstChild === node1, 'root.firstChild');
     ok(root.lastChild === node2, 'root.lastChild');
@@ -223,11 +223,11 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function (success, fail
   });
 
   suite.test('replace middle child', function () {
-    const root = new Node('#frag', 11);
-    const node1 = root.append(new Node('b', 1));
-    const node2 = root.append(new Node('b', 1));
-    const node3 = root.append(new Node('b', 1));
-    const node4 = root.append(new Node('em', 1));
+    const root = new AstNode('#frag', 11);
+    const node1 = root.append(new AstNode('b', 1));
+    const node2 = root.append(new AstNode('b', 1));
+    const node3 = root.append(new AstNode('b', 1));
+    const node4 = root.append(new AstNode('em', 1));
     node2.replace(node4);
     ok(root.firstChild === node1, 'root.firstChild');
     ok(root.lastChild === node3, 'root.lastChild');
@@ -239,7 +239,7 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function (success, fail
   suite.test('attr', function () {
     let node;
 
-    node = new Node('b', 1);
+    node = new AstNode('b', 1);
     LegacyUnit.deepEqual(node.attributes, []);
     node.attr('attr1', 'value1');
     LegacyUnit.equal(node.attr('attr1'), 'value1');
@@ -247,7 +247,7 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function (success, fail
     LegacyUnit.deepEqual(node.attributes, [{ name: 'attr1', value: 'value1' }]);
     LegacyUnit.deepEqual(node.attributes.map, { attr1: 'value1' });
 
-    node = new Node('b', 1);
+    node = new AstNode('b', 1);
     LegacyUnit.deepEqual(node.attributes, []);
     node.attr('attr1', 'value1');
     node.attr('attr1', 'valueX');
@@ -255,7 +255,7 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function (success, fail
     LegacyUnit.deepEqual(node.attributes, [{ name: 'attr1', value: 'valueX' }]);
     LegacyUnit.deepEqual(node.attributes.map, { attr1: 'valueX' });
 
-    node = new Node('b', 1);
+    node = new AstNode('b', 1);
     LegacyUnit.deepEqual(node.attributes, []);
     node.attr('attr1', 'value1');
     node.attr('attr2', 'value2');
@@ -264,7 +264,7 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function (success, fail
     LegacyUnit.deepEqual(node.attributes, [{ name: 'attr1', value: 'value1' }, { name: 'attr2', value: 'value2' }]);
     LegacyUnit.deepEqual(node.attributes.map, { attr1: 'value1', attr2: 'value2' });
 
-    node = new Node('b', 1);
+    node = new AstNode('b', 1);
     LegacyUnit.deepEqual(node.attributes, []);
     node.attr('attr1', 'value1');
     node.attr('attr1', null);
@@ -272,12 +272,12 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function (success, fail
     LegacyUnit.deepEqual(node.attributes, []);
     LegacyUnit.deepEqual(node.attributes.map, {});
 
-    node = new Node('b', 1);
+    node = new AstNode('b', 1);
     node.attr({ a: '1', b: '2' });
     LegacyUnit.deepEqual(node.attributes, [{ name: 'a', value: '1' }, { name: 'b', value: '2' }]);
     LegacyUnit.deepEqual(node.attributes.map, { a: '1', b: '2' });
 
-    node = new Node('b', 1);
+    node = new AstNode('b', 1);
     node.attr(null);
     LegacyUnit.deepEqual(node.attributes, []);
     LegacyUnit.deepEqual(node.attributes.map, {});
@@ -286,7 +286,7 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function (success, fail
   suite.test('clone', function () {
     let node, clone;
 
-    node = new Node('#text', 3);
+    node = new AstNode('#text', 3);
     node.value = 'value';
     clone = node.clone();
     LegacyUnit.equal(clone.name, '#text');
@@ -296,8 +296,8 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function (success, fail
     LegacyUnit.equal(clone.next, undefined);
     LegacyUnit.equal(clone.prev, undefined);
 
-    const root = new Node('#frag', 11);
-    node = new Node('#text', 3);
+    const root = new AstNode('#frag', 11);
+    node = new AstNode('#text', 3);
     node.value = 'value';
     root.append(node);
     LegacyUnit.equal(clone.name, '#text');
@@ -307,7 +307,7 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function (success, fail
     LegacyUnit.equal(clone.next, undefined);
     LegacyUnit.equal(clone.prev, undefined);
 
-    node = new Node('b', 1);
+    node = new AstNode('b', 1);
     node.attr('id', 'id');
     node.attr('class', 'class');
     node.attr('title', 'title');
@@ -321,18 +321,18 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function (success, fail
   suite.test('unwrap', function () {
     let root, node1, node2;
 
-    root = new Node('#frag', 11);
-    node1 = root.append(new Node('b', 1));
-    node2 = node1.append(new Node('em', 1));
+    root = new AstNode('#frag', 11);
+    node1 = root.append(new AstNode('b', 1));
+    node2 = node1.append(new AstNode('em', 1));
     node1.unwrap();
     ok(root.firstChild === node2, 'root.firstChild');
     ok(root.lastChild === node2, 'root.lastChild');
     ok(node2.parent === root, 'node2.parent');
 
-    root = new Node('#frag', 11);
-    node1 = root.append(new Node('b', 1));
-    node2 = node1.append(new Node('em', 1));
-    const node3 = node1.append(new Node('span', 1));
+    root = new AstNode('#frag', 11);
+    node1 = root.append(new AstNode('b', 1));
+    node2 = node1.append(new AstNode('em', 1));
+    const node3 = node1.append(new AstNode('span', 1));
     node1.unwrap();
     ok(root.firstChild === node2, 'root.firstChild');
     ok(root.lastChild === node3, 'root.lastChild');
@@ -341,8 +341,8 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function (success, fail
   });
 
   suite.test('empty', function () {
-    const root = new Node('#frag', 11);
-    const node1 = root.append(new Node('b', 1));
+    const root = new AstNode('#frag', 11);
+    const node1 = root.append(new AstNode('b', 1));
     node1.empty();
     ok(root.firstChild === node1, 'root.firstChild');
     ok(root.lastChild === node1, 'root.firstChild');
@@ -353,46 +353,46 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function (success, fail
   suite.test('isEmpty', function () {
     let root, node1, node2;
 
-    root = new Node('#frag', 11);
-    node1 = root.append(new Node('p', 1));
-    node2 = node1.append(new Node('b', 1));
+    root = new AstNode('#frag', 11);
+    node1 = root.append(new AstNode('p', 1));
+    node2 = node1.append(new AstNode('b', 1));
     ok(root.isEmpty({ img: 1 }), 'Is empty 1');
     ok(node1.isEmpty({ img: 1 }), 'Is empty 2');
 
-    root = new Node('#frag', 11);
-    node1 = root.append(new Node('p', 1));
-    node2 = node1.append(new Node('img', 1));
+    root = new AstNode('#frag', 11);
+    node1 = root.append(new AstNode('p', 1));
+    node2 = node1.append(new AstNode('img', 1));
     ok(!root.isEmpty({ img: 1 }), 'Is not empty 1');
     ok(!node1.isEmpty({ img: 1 }), 'Is not empty 2');
 
-    root = new Node('#frag', 11);
-    node1 = root.append(new Node('p', 1));
-    node2 = node1.append(new Node('#text', 3));
+    root = new AstNode('#frag', 11);
+    node1 = root.append(new AstNode('p', 1));
+    node2 = node1.append(new AstNode('#text', 3));
     node2.value = 'X';
     ok(!root.isEmpty({ img: 1 }), 'Is not empty 3');
     ok(!node1.isEmpty({ img: 1 }), 'Is not empty 4');
 
-    root = new Node('#frag', 11);
-    node1 = root.append(new Node('p', 1));
-    node2 = node1.append(new Node('#text', 3));
+    root = new AstNode('#frag', 11);
+    node1 = root.append(new AstNode('p', 1));
+    node2 = node1.append(new AstNode('#text', 3));
     node2.value = '';
     ok(root.isEmpty({ img: 1 }), 'Is empty 4');
     ok(node1.isEmpty({ img: 1 }), 'Is empty 5');
 
-    root = new Node('#frag', 11);
-    node1 = root.append(new Node('a', 1)).attr('name', 'x');
+    root = new AstNode('#frag', 11);
+    node1 = root.append(new AstNode('a', 1)).attr('name', 'x');
     ok(!root.isEmpty({ img: 1 }), 'Contains anchor with name attribute.');
 
     const isSpan = function (node) {
       return node.name === 'span';
     };
 
-    root = new Node('#frag', 11);
-    node1 = root.append(new Node('span', 1));
+    root = new AstNode('#frag', 11);
+    node1 = root.append(new AstNode('span', 1));
     LegacyUnit.equal(root.isEmpty({ img: 1 }, {}, isSpan), false, 'Should be false since the predicate says true.');
 
-    root = new Node('#frag', 11);
-    node1 = root.append(new Node('b', 1));
+    root = new AstNode('#frag', 11);
+    node1 = root.append(new AstNode('b', 1));
     LegacyUnit.equal(root.isEmpty({ img: 1 }, {}, isSpan), true, 'Should be true since the predicate says false.');
   });
 

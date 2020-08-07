@@ -1,5 +1,5 @@
 import { Universe } from '@ephox/boss';
-import { Arr, Fun, Option } from '@ephox/katamari';
+import { Arr, Fun, Optional } from '@ephox/katamari';
 
 const eq = function <E, D> (universe: Universe<E, D>, item: E) {
   return Fun.curry(universe.eq, item);
@@ -8,10 +8,10 @@ const eq = function <E, D> (universe: Universe<E, D>, item: E) {
 const unsafeSubset = function <E, D> (universe: Universe<E, D>, common: E, ps1: E[], ps2: E[]) {
   const children = universe.property().children(common);
   if (universe.eq(common, ps1[0])) {
-    return Option.some([ ps1[0] ]);
+    return Optional.some([ ps1[0] ]);
   }
   if (universe.eq(common, ps2[0])) {
-    return Option.some([ ps2[0] ]);
+    return Optional.some([ ps2[0] ]);
   }
 
   const finder = function (ps: E[]) {
@@ -66,9 +66,9 @@ const ancestors = function <E, D> (universe: Universe<E, D>, start: E, end: E, i
   });
 
   return {
-    firstpath: Fun.constant(pruned1),
-    secondpath: Fun.constant(pruned2),
-    shared: Fun.constant(shared)
+    firstpath: pruned1,
+    secondpath: pruned2,
+    shared
   };
 };
 
@@ -79,8 +79,8 @@ const ancestors = function <E, D> (universe: Universe<E, D>, start: E, end: E, i
  */
 const subset = function <E, D> (universe: Universe<E, D>, start: E, end: E) {
   const ancs = ancestors(universe, start, end);
-  return ancs.shared().bind(function (shared) {
-    return unsafeSubset(universe, shared, ancs.firstpath(), ancs.secondpath());
+  return ancs.shared.bind(function (shared) {
+    return unsafeSubset(universe, shared, ancs.firstpath, ancs.secondpath);
   });
 };
 

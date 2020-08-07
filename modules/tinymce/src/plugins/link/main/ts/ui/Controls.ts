@@ -5,10 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Toolbar } from '@ephox/bridge';
-import { HTMLAnchorElement } from '@ephox/dom-globals';
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
+import { InlineContent } from 'tinymce/core/api/ui/Ui';
 
 import * as Settings from '../api/Settings';
 import * as Actions from '../core/Actions';
@@ -73,7 +72,7 @@ const setupContextToolbars = function (editor: Editor) {
     editor.selection.collapse(false);
   };
 
-  const onSetupLink = (buttonApi: Toolbar.ContextButtonInstanceApi) => {
+  const onSetupLink = (buttonApi: InlineContent.ContextFormButtonInstanceApi) => {
     const node = editor.selection.getNode();
     buttonApi.setDisabled(!Utils.getAnchorElement(editor, node));
     return () => { };
@@ -110,14 +109,14 @@ const setupContextToolbars = function (editor: Editor) {
           if (!anchor) {
             const attachState = { href: value, attach: () => { } };
             const onlyText = Utils.isOnlyTextSelected(editor);
-            const text: Option<string> = onlyText ? Option.some(Utils.getAnchorText(editor.selection, anchor)).filter((t) => t.length > 0).or(Option.from(value)) : Option.none();
+            const text: Optional<string> = onlyText ? Optional.some(Utils.getAnchorText(editor.selection, anchor)).filter((t) => t.length > 0).or(Optional.from(value)) : Optional.none();
             Utils.link(editor, attachState, {
               href: value,
               text,
-              title: Option.none(),
-              rel: Option.none(),
-              target: Option.none(),
-              class: Option.none()
+              title: Optional.none(),
+              rel: Optional.none(),
+              target: Optional.none(),
+              class: Optional.none()
             });
             formApi.hide();
           } else {

@@ -5,13 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Range, Node } from '@ephox/dom-globals';
-import { Arr, Option, Strings } from '@ephox/katamari';
+import { Arr, Optional, Strings } from '@ephox/katamari';
 import Editor from '../api/Editor';
 import * as Settings from '../api/Settings';
-import * as FontInfo from '../fmt/FontInfo';
 import * as CaretFinder from '../caret/CaretFinder';
 import * as NodeType from '../dom/NodeType';
+import * as FontInfo from '../fmt/FontInfo';
 
 const findFirstCaretElement = (editor: Editor) => CaretFinder.firstPositionIn(editor.getBody()).map((caret) => {
   const container = caret.container();
@@ -20,9 +19,9 @@ const findFirstCaretElement = (editor: Editor) => CaretFinder.firstPositionIn(ed
 
 const isRangeAtStartOfNode = (rng: Range, root: Node) => rng.startContainer === root && rng.startOffset === 0;
 
-const getCaretElement = (editor: Editor): Option<Node> => Option.from(editor.selection.getRng()).bind((rng) => {
+const getCaretElement = (editor: Editor): Optional<Node> => Optional.from(editor.selection.getRng()).bind((rng) => {
   const root = editor.getBody();
-  return isRangeAtStartOfNode(rng, root) ? Option.none() : Option.from(editor.selection.getStart(true));
+  return isRangeAtStartOfNode(rng, root) ? Optional.none() : Optional.from(editor.selection.getStart(true));
 });
 
 const fromFontSizeNumber = (editor: Editor, value: string): string => {

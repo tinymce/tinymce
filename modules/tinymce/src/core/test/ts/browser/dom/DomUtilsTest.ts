@@ -1,6 +1,5 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Testable } from '@ephox/dispute';
-import { document, Element, HTMLIFrameElement, HTMLLinkElement, HTMLMetaElement, window } from '@ephox/dom-globals';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Env from 'tinymce/core/api/Env';
 import Schema from 'tinymce/core/api/html/Schema';
@@ -516,7 +515,7 @@ UnitTest.test('DOMUtils.remove', () => {
   Assert.eq('', '<span>test</span><span>test2</span>', DOM.get('test').innerHTML.toLowerCase());
 
   DOM.setHTML('test', '<span id="test2"><span>test</span><span>test2</span></span>');
-  Assert.eq('', 'SPAN', DOM.remove('test2').nodeName);
+  Assert.eq('', 'SPAN', (DOM.remove('test2') as Node).nodeName);
 
   DOM.remove('test');
 });

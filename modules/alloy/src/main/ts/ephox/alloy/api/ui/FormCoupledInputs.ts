@@ -1,13 +1,15 @@
-import { Obj, Option } from '@ephox/katamari';
+import { Obj, Optional } from '@ephox/katamari';
 
-import { SketchSpec } from '../../api/component/SpecTypes';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as FormCoupledInputsSchema from '../../ui/schema/FormCoupledInputsSchema';
-import { FormCoupledInputsApis, FormCoupledInputsDetail, FormCoupledInputsSketcher, FormCoupledInputsSpec } from '../../ui/types/FormCoupledInputsTypes';
+import {
+  FormCoupledInputsApis, FormCoupledInputsDetail, FormCoupledInputsSketcher, FormCoupledInputsSpec
+} from '../../ui/types/FormCoupledInputsTypes';
 import { Composing } from '../behaviour/Composing';
 import { Representing } from '../behaviour/Representing';
 import { AlloyComponent } from '../component/ComponentApi';
 import { SketchBehaviours } from '../component/SketchBehaviours';
+import { SketchSpec } from '../component/SpecTypes';
 import * as Sketcher from './Sketcher';
 import { CompositeSketchFactory } from './UiSketcher';
 
@@ -19,7 +21,7 @@ const factory: CompositeSketchFactory<FormCoupledInputsDetail, FormCoupledInputs
   behaviours: SketchBehaviours.augment(
     detail.coupledFieldBehaviours,
     [
-      Composing.config({ find: Option.some }),
+      Composing.config({ find: Optional.some }),
 
       Representing.config({
         store: {

@@ -1,17 +1,16 @@
 import { AlloyComponent, InlineView } from '@ephox/alloy';
-import { PointerEvent } from '@ephox/dom-globals';
 import Editor from 'tinymce/core/api/Editor';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import { UiFactoryBackstage } from '../../../../backstage/Backstage';
-import * as NestedMenus from '../../menu/NestedMenus';
 import ItemResponse from '../../item/ItemResponse';
 import * as MenuParts from '../../menu/MenuParts';
+import * as NestedMenus from '../../menu/NestedMenus';
+import { SingleMenuItemSpec } from '../../menu/SingleMenuTypes';
 import { getNodeAnchor, getPointAnchor } from '../Coords';
-import { SingleMenuItemApi } from '../../menu/SingleMenuTypes';
 
 const getAnchorSpec = (editor: Editor, e: EditorEvent<PointerEvent>, isTriggeredByKeyboardEvent: boolean) => isTriggeredByKeyboardEvent ? getNodeAnchor(editor) : getPointAnchor(editor, e);
 
-export const initAndShow = (editor: Editor, e: EditorEvent<PointerEvent>, buildMenu: () => string | Array<string | SingleMenuItemApi>, backstage: UiFactoryBackstage, contextmenu: AlloyComponent, isTriggeredByKeyboardEvent: boolean) => {
+export const initAndShow = (editor: Editor, e: EditorEvent<PointerEvent>, buildMenu: () => string | Array<string | SingleMenuItemSpec>, backstage: UiFactoryBackstage, contextmenu: AlloyComponent, isTriggeredByKeyboardEvent: boolean) => {
   const items = buildMenu();
   const anchorSpec = getAnchorSpec(editor, e, isTriggeredByKeyboardEvent);
 

@@ -5,13 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { TransitionEvent } from '@ephox/dom-globals';
 import { Arr, Throttler } from '@ephox/katamari';
 import { Compare, DomEvent, Height } from '@ephox/sugar';
 
 import * as TappingEvent from '../../util/TappingEvent';
+import { PlatformEditor } from './PlatformEditor';
 
-const initEvents = (editorApi, iosApi, toolstrip, socket, _dropup): { destroy: () => void } => {
+const initEvents = (editorApi: PlatformEditor, iosApi, toolstrip, socket, _dropup): { destroy: () => void } => {
   const saveSelectionFirst = () => {
     iosApi.run((api) => {
       api.highlightSelection();
@@ -29,7 +29,7 @@ const initEvents = (editorApi, iosApi, toolstrip, socket, _dropup): { destroy: (
     // anything visible inside the iframe actually has a top value (for bounding
     // rectangle) > socket.scrollTop. The rectangle is with respect to the top of
     // the iframe, which has scrolled up above the socket viewport.
-    const y = yTop - socket.dom().scrollTop;
+    const y = yTop - socket.dom.scrollTop;
     iosApi.run((api) => {
       api.scrollIntoView(y, y + height);
     });
@@ -41,7 +41,7 @@ const initEvents = (editorApi, iosApi, toolstrip, socket, _dropup): { destroy: (
 
   const scrollToCursor = (): void => {
     editorApi.getCursorBox().each((box) => {
-      scrollToY(box.top(), box.height());
+      scrollToY(box.top, box.height);
     });
   };
 
@@ -114,7 +114,7 @@ const initEvents = (editorApi, iosApi, toolstrip, socket, _dropup): { destroy: (
 
     // Scroll to element
     editorApi.onScrollToElement((event) => {
-      scrollToElement(event.element());
+      scrollToElement(event.element);
     }),
 
     // Focus the content and show the keyboard
@@ -125,15 +125,15 @@ const initEvents = (editorApi, iosApi, toolstrip, socket, _dropup): { destroy: (
 
     // If the user is touching outside the content, but on the body(?) or html elements, find the nearest selection
     // and focus that.
-    DomEvent.bind(editorApi.doc(), 'touchend', (touchEvent) => {
-      if (Compare.eq(editorApi.html(), touchEvent.target()) || Compare.eq(editorApi.body(), touchEvent.target())) {
+    DomEvent.bind(editorApi.doc, 'touchend', (touchEvent) => {
+      if (Compare.eq(editorApi.html, touchEvent.target) || Compare.eq(editorApi.body, touchEvent.target)) {
         // IosHacks.setSelectionAtTouch(editorApi, touchEvent);
       }
     }),
 
     // Listen to the toolstrip growing animation so that we can update the position of the socket once it is done.
     DomEvent.bind<TransitionEvent>(toolstrip, 'transitionend', (transitionEvent) => {
-      if (transitionEvent.raw().propertyName === 'height') {
+      if (transitionEvent.raw.propertyName === 'height') {
         reposition();
       }
     }),
@@ -155,7 +155,7 @@ const initEvents = (editorApi, iosApi, toolstrip, socket, _dropup): { destroy: (
     }),
 
     // When the user clicks back into the content, clear any fake selections
-    DomEvent.bind(editorApi.body(), 'touchstart', (evt) => {
+    DomEvent.bind(editorApi.body, 'touchstart', (evt) => {
       clearSelection();
       editorApi.onTouchContent();
       tapping.fireTouchstart(evt);
@@ -165,7 +165,7 @@ const initEvents = (editorApi, iosApi, toolstrip, socket, _dropup): { destroy: (
     tapping.onTouchend(),
 
     // Stop any "clicks" being processed in the body at alls
-    DomEvent.bind(editorApi.body(), 'click', (event) => {
+    DomEvent.bind(editorApi.body, 'click', (event) => {
       event.kill();
     }),
 

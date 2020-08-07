@@ -1,6 +1,5 @@
 import { Assertions, Log, Logger, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { HTMLTableCellElement } from '@ephox/dom-globals';
 import { LegacyUnit, TinyApis, TinyLoader } from '@ephox/mcagar';
 
 import Tools from 'tinymce/core/api/util/Tools';

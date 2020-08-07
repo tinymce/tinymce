@@ -1,10 +1,10 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Gene, TestUniverse, TextGene } from '@ephox/boss';
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { LanguageZones } from 'ephox/robin/zone/LanguageZones';
 
 UnitTest.test('LanguageGetTest', function () {
-  const check = function (doc: TestUniverse, id: string, lang: Option<string>) {
+  const check = function (doc: TestUniverse, id: string, lang: Optional<string>) {
     const item = doc.find(doc.get(), id).getOrDie();
     const itemLang = LanguageZones.calculate(doc, item);
     Assert.eq(
@@ -67,16 +67,16 @@ UnitTest.test('LanguageGetTest', function () {
     ]) // root
   );
 
-  check(doc, 'p1', Option.none());
-  check(doc, 'p1s1', Option.none());
-  check(doc, 'p1s2', Option.none());
-  check(doc, 'p1s3', Option.some('FR'));
-  check(doc, 'p2', Option.some('DE'));
-  check(doc, 'p2s1', Option.some('DE'));
-  check(doc, 'p2s2', Option.some('DE'));
-  check(doc, 'p2s3', Option.some('DE'));
-  check(doc, 'p3', Option.some('DE'));
-  check(doc, 'p3s1', Option.some('DE'));
-  check(doc, 'p3s2', Option.some('DE'));
-  check(doc, 'p3s3', Option.some('FR'));
+  check(doc, 'p1', Optional.none());
+  check(doc, 'p1s1', Optional.none());
+  check(doc, 'p1s2', Optional.none());
+  check(doc, 'p1s3', Optional.some('FR'));
+  check(doc, 'p2', Optional.some('DE'));
+  check(doc, 'p2s1', Optional.some('DE'));
+  check(doc, 'p2s2', Optional.some('DE'));
+  check(doc, 'p2s3', Optional.some('DE'));
+  check(doc, 'p3', Optional.some('DE'));
+  check(doc, 'p3s1', Optional.some('DE'));
+  check(doc, 'p3s2', Optional.some('DE'));
+  check(doc, 'p3s3', Optional.some('FR'));
 });

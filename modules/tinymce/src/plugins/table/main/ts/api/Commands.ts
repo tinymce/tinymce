@@ -5,10 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLTableRowElement } from '@ephox/dom-globals';
-import { Arr, Fun, Obj, Option, Type } from '@ephox/katamari';
+import { Arr, Fun, Obj, Optional, Type } from '@ephox/katamari';
 import { CopyCols, CopyRows, Sizes, TableFill, TableLookup } from '@ephox/snooker';
-import { Element, Insert, Remove, Replication } from '@ephox/sugar';
+import { Insert, Remove, Replication, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { enforceNone, enforcePercentage, enforcePixels } from '../actions/EnforceUnit';
 import { insertTableWithDataValidation } from '../actions/InsertTable';
@@ -29,7 +28,7 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
   const isRoot = Util.getIsRoot(editor);
   const eraseTable = () => TableSelection.getSelectionStartCellOrCaption(editor).each((cellOrCaption) => {
     TableLookup.table(cellOrCaption, isRoot).filter(Fun.not(isRoot)).each((table) => {
-      const cursor = Element.fromText('');
+      const cursor = SugarElement.fromText('');
       Insert.after(table, cursor);
       Remove.remove(table);
 
@@ -38,8 +37,8 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
         editor.selection.setCursorLocation();
       } else {
         const rng = editor.dom.createRng();
-        rng.setStart(cursor.dom(), 0);
-        rng.setEnd(cursor.dom(), 0);
+        rng.setStart(cursor.dom, 0);
+        rng.setEnd(cursor.dom, 0);
         editor.selection.setRng(rng);
         editor.nodeChanged();
       }
@@ -63,7 +62,7 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
     }
   });
 
-  const getTableFromCell = (cell: Element): Option<Element> => TableLookup.table(cell, isRoot);
+  const getTableFromCell = (cell: SugarElement): Optional<SugarElement> => TableLookup.table(cell, isRoot);
 
   const actOnSelection = (execute: CombinedTargetsTableAction): void => TableSelection.getSelectionStartCell(editor).each((cell) => {
     getTableFromCell(cell).each((table) => {
@@ -80,7 +79,7 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
   const copyRowSelection = () => TableSelection.getSelectionStartCell(editor).map((cell) =>
     getTableFromCell(cell).bind((table) => {
       const targets = TableTargets.forMenu(selections, table, cell);
-      const generators = TableFill.cellOperations(Fun.noop, Element.fromDom(editor.getDoc()), Option.none());
+      const generators = TableFill.cellOperations(Fun.noop, SugarElement.fromDom(editor.getDoc()), Optional.none());
       return CopyRows.copyRows(table, targets, generators);
     }));
 
@@ -90,13 +89,13 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
       return CopyCols.copyCols(table, targets);
     }));
 
-  const pasteOnSelection = (execute: AdvancedPasteTableAction, getRows: () => Option<Element<HTMLTableRowElement>[]>) =>
+  const pasteOnSelection = (execute: AdvancedPasteTableAction, getRows: () => Optional<SugarElement<HTMLTableRowElement>[]>) =>
     // If we have clipboard rows to paste
     getRows().each((rows) => {
       const clonedRows = Arr.map(rows, (row) => Replication.deep(row));
       TableSelection.getSelectionStartCell(editor).each((cell) =>
         getTableFromCell(cell).each((table) => {
-          const generators = TableFill.paste(Element.fromDom(editor.getDoc()));
+          const generators = TableFill.paste(SugarElement.fromDom(editor.getDoc()));
           const targets = TableTargets.pasteRows(selections, cell, clonedRows, generators);
           execute(table, targets).each((rng) => {
             editor.selection.setRng(rng);

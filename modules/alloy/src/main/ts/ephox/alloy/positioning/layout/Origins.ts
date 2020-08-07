@@ -1,11 +1,11 @@
-import { Adt, Fun, Option } from '@ephox/katamari';
-import { Element, Height, Position, Scroll, Width } from '@ephox/sugar';
+import { Adt, Fun, Optional } from '@ephox/katamari';
+import { Height, Scroll, SugarElement, SugarPosition, Width } from '@ephox/sugar';
 
 import * as Boxes from '../../alien/Boxes';
 import * as OuterPosition from '../../frame/OuterPosition';
+import { NuPositionCss, PositionCss } from '../view/PositionCss';
 import { RepositionDecision } from '../view/Reposition';
 import * as Direction from './Direction';
-import { PositionCss, NuPositionCss } from '../view/PositionCss';
 
 type NoneOrigin<T> = () => T;
 type RelativeOrigin<T> = (x: number, y: number, width: number, height: number) => T;
@@ -43,11 +43,11 @@ const positionWithDirection = (posName: string, decision: RepositionDecision, x:
   const decisionRight = width - (decisionX + decisionWidth);
   const decisionBottom = height - (decisionY + decisionHeight);
 
-  const left = Option.some(decisionX);
-  const top = Option.some(decisionY);
-  const right = Option.some(decisionRight);
-  const bottom = Option.some(decisionBottom);
-  const none = Option.none<number>();
+  const left = Optional.some(decisionX);
+  const top = Optional.some(decisionY);
+  const right = Optional.some(decisionRight);
+  const bottom = Optional.some(decisionBottom);
+  const none = Optional.none<number>();
 
   return Direction.cata(decision.direction,
     () => NuPositionCss(posName, left, top, none, none), // southeast
@@ -62,27 +62,27 @@ const positionWithDirection = (posName: string, decision: RepositionDecision, x:
 };
 
 const reposition = (origin: OriginAdt, decision: RepositionDecision): PositionCss => origin.fold(function () {
-  return NuPositionCss('absolute', Option.some(decision.x), Option.some(decision.y), Option.none(), Option.none());
+  return NuPositionCss('absolute', Optional.some(decision.x), Optional.some(decision.y), Optional.none(), Optional.none());
 }, function (x, y, width, height) {
   return positionWithDirection('absolute', decision, x, y, width, height);
 }, function (x, y, width, height) {
   return positionWithDirection('fixed', decision, x, y, width, height);
 });
 
-const toBox = (origin: OriginAdt, element: Element): Boxes.Bounds => {
+const toBox = (origin: OriginAdt, element: SugarElement): Boxes.Bounds => {
   const rel = Fun.curry(OuterPosition.find, element);
   const position = origin.fold(rel, rel, () => {
     const scroll = Scroll.get();
     // TODO: Make adding the scroll in OuterPosition.find optional.
-    return OuterPosition.find(element).translate(-scroll.left(), -scroll.top());
+    return OuterPosition.find(element).translate(-scroll.left, -scroll.top);
   });
 
   const width = Width.getOuter(element);
   const height = Height.getOuter(element);
-  return Boxes.bounds(position.left(), position.top(), width, height);
+  return Boxes.bounds(position.left, position.top, width, height);
 };
 
-const viewport = (origin: OriginAdt, getBounds: Option<() => Boxes.Bounds>): Boxes.Bounds => getBounds.fold(() =>
+const viewport = (origin: OriginAdt, getBounds: Optional<() => Boxes.Bounds>): Boxes.Bounds => getBounds.fold(() =>
 /* There are no bounds supplied */
   origin.fold(Boxes.win, Boxes.win, Boxes.bounds)
 , (b) =>
@@ -90,15 +90,15 @@ const viewport = (origin: OriginAdt, getBounds: Option<() => Boxes.Bounds>): Box
   origin.fold(b, b, () => {
     const bounds = b();
     const pos = translate(origin, bounds.x, bounds.y);
-    return Boxes.bounds(pos.left(), pos.top(), bounds.width, bounds.height);
+    return Boxes.bounds(pos.left, pos.top, bounds.width, bounds.height);
   })
 );
 
-const translate = (origin: OriginAdt, x: number, y: number): Position => {
-  const pos = Position(x, y);
+const translate = (origin: OriginAdt, x: number, y: number): SugarPosition => {
+  const pos = SugarPosition(x, y);
   const removeScroll = () => {
     const outerScroll = Scroll.get();
-    return pos.translate(-outerScroll.left(), -outerScroll.top());
+    return pos.translate(-outerScroll.left, -outerScroll.top);
   };
   // This could use cata if it wasn't a circular reference
   return origin.fold(Fun.constant(pos), Fun.constant(pos), removeScroll);

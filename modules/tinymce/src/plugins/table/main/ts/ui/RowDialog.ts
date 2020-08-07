@@ -5,10 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Types } from '@ephox/bridge';
-import { HTMLTableRowElement } from '@ephox/dom-globals';
 import { Arr, Fun } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
+import { Dialog } from 'tinymce/core/api/ui/Ui';
 import * as Styles from '../actions/Styles';
 import { hasAdvancedRowTab } from '../api/Settings';
 import { switchSectionType } from '../core/TableSections';
@@ -78,7 +77,7 @@ const open = (editor: Editor) => {
   const rowsData: RowData[] = Arr.map(rows, (rowElm) => Helpers.extractDataFromRowElement(editor, rowElm, hasAdvancedRowTab(editor)));
   const data = Helpers.getSharedValues<RowData>(rowsData);
 
-  const dialogTabPanel: Types.Dialog.TabPanelApi = {
+  const dialogTabPanel: Dialog.TabPanelSpec = {
     type: 'tabpanel',
     tabs: [
       {
@@ -89,7 +88,7 @@ const open = (editor: Editor) => {
       Helpers.getAdvancedTab('row')
     ]
   };
-  const dialogPanel: Types.Dialog.PanelApi = {
+  const dialogPanel: Dialog.PanelSpec = {
     type: 'panel',
     items: [
       {

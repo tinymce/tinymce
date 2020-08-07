@@ -5,13 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Types } from '@ephox/bridge';
-import { Element } from '@ephox/dom-globals';
 import { Fun, Type, Unicode } from '@ephox/katamari';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import { StyleMap } from 'tinymce/core/api/html/Styles';
+import { Dialog } from 'tinymce/core/api/ui/Ui';
 import * as InsertTable from '../actions/InsertTable';
 import * as Styles from '../actions/Styles';
 import { getDefaultAttributes, getDefaultStyles, getTableClassList, hasAdvancedTableTab, shouldStyleWithCss } from '../api/Settings';
@@ -88,7 +87,7 @@ const applyDataToElement = (editor: Editor, tableElm, data: TableData) => {
   dom.setAttribs(tableElm, { ...getDefaultAttributes(editor), ...attrs });
 };
 
-const onSubmitTableForm = (editor: Editor, tableElm: Element, api: Types.Dialog.DialogInstanceApi<TableData>) => {
+const onSubmitTableForm = (editor: Editor, tableElm: Element, api: Dialog.DialogInstanceApi<TableData>) => {
   const dom = editor.dom;
   let captionElm;
   const data = api.getData();
@@ -176,18 +175,18 @@ const open = (editor: Editor, insertNewTable: boolean) => {
     }
   }
 
-  const generalPanel: Types.Dialog.BodyComponentApi = {
+  const generalPanel: Dialog.GridSpec = {
     type: 'grid',
     columns: 2,
     items: TableDialogGeneralTab.getItems(editor, classes, insertNewTable)
   };
 
-  const nonAdvancedForm = (): Types.Dialog.PanelApi => ({
+  const nonAdvancedForm = (): Dialog.PanelSpec => ({
     type: 'panel',
     items: [ generalPanel ]
   });
 
-  const advancedForm = (): Types.Dialog.TabPanelApi => ({
+  const advancedForm = (): Dialog.TabPanelSpec => ({
     type: 'tabpanel',
     tabs: [
       {

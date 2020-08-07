@@ -5,10 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Document, Node, Range } from '@ephox/dom-globals';
-import { Arr, Fun, Obj, Option } from '@ephox/katamari';
-import { Attr, Element, Insert, Node as SugarNode, Remove } from '@ephox/sugar';
-import TreeWalker from '../api/dom/TreeWalker';
+import { Arr, Fun, Obj, Optional, Strings } from '@ephox/katamari';
+import { Attribute, Insert, Remove, SugarElement, SugarNode } from '@ephox/sugar';
+import DomTreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
 import { FormatVars } from '../api/fmt/Format';
 import CaretPosition from '../caret/CaretPosition';
@@ -53,7 +52,7 @@ const isCaretContainerEmpty = function (node: Node) {
 
 const findFirstTextNode = function (node: Node) {
   if (node) {
-    const walker = new TreeWalker(node, node);
+    const walker = new DomTreeWalker(node, node);
 
     for (node = walker.current(); node; node = walker.next()) {
       if (NodeType.isText(node)) {
@@ -66,9 +65,9 @@ const findFirstTextNode = function (node: Node) {
 };
 
 const createCaretContainer = function (fill: boolean) {
-  const caretContainer = Element.fromTag('span');
+  const caretContainer = SugarElement.fromTag('span');
 
-  Attr.setAll(caretContainer, {
+  Attribute.setAll(caretContainer, {
     // style: 'color:red',
     'id': CARET_ID,
     'data-mce-bogus': '1',
@@ -76,7 +75,7 @@ const createCaretContainer = function (fill: boolean) {
   });
 
   if (fill) {
-    Insert.append(caretContainer, Element.fromText(ZWSP));
+    Insert.append(caretContainer, SugarElement.fromText(ZWSP));
   }
 
   return caretContainer;
@@ -95,7 +94,7 @@ const removeCaretContainerNode = (editor: Editor, node: Node, moveCaret: boolean
   const dom = editor.dom, selection = editor.selection;
 
   if (isCaretContainerEmpty(node)) {
-    DeleteElement.deleteElement(editor, false, Element.fromDom(node), moveCaret);
+    DeleteElement.deleteElement(editor, false, SugarElement.fromDom(node), moveCaret);
   } else {
     const rng = selection.getRng();
     const block = dom.getParent(node, dom.isBlock);
@@ -119,7 +118,7 @@ const removeCaretContainerNode = (editor: Editor, node: Node, moveCaret: boolean
     }
 
     if (block && dom.isEmpty(block)) {
-      PaddingBr.fillWithPaddingBr(Element.fromDom(block));
+      PaddingBr.fillWithPaddingBr(SugarElement.fromDom(block));
     }
 
     selection.setRng(rng);
@@ -149,7 +148,7 @@ const insertCaretContainerNode = function (editor: Editor, caretContainer: Node,
     // Replace formatNode with caretContainer when removing format from empty block like <p><b>|</b></p>
     formatNode.parentNode.replaceChild(caretContainer, formatNode);
   } else {
-    PaddingBr.removeTrailingBr(Element.fromDom(formatNode));
+    PaddingBr.removeTrailingBr(SugarElement.fromDom(formatNode));
     if (dom.isEmpty(formatNode)) {
       formatNode.parentNode.replaceChild(caretContainer, formatNode);
     } else {
@@ -171,12 +170,12 @@ const insertFormatNodesIntoCaretContainer = function (formatNodes: Node[], caret
   return appendNode(innerMostFormatNode, innerMostFormatNode.ownerDocument.createTextNode(ZWSP));
 };
 
-const cleanFormatNode = (editor: Editor, caretContainer: Node, formatNode: Node, name: string, vars: FormatVars, similar: boolean): Option<Node> => {
+const cleanFormatNode = (editor: Editor, caretContainer: Node, formatNode: Node, name: string, vars: FormatVars, similar: boolean): Optional<Node> => {
   const formatter = editor.formatter;
   const dom = editor.dom;
 
   // Find all formats present on the format node
-  const validFormats = Arr.filter(Obj.keys(formatter.get()), (formatName) => formatName !== 'removeformat' && formatName !== name);
+  const validFormats = Arr.filter(Obj.keys(formatter.get()), (formatName) => formatName !== name && !Strings.contains(formatName, 'removeformat'));
   const matchedFormats = MatchFormat.matchAllOnNode(editor, formatNode, validFormats);
   // Filter out any matched formats that are 'visually' equivalent to the 'name' format since they are not unique formats on the node
   const uniqueFormats = Arr.filter(matchedFormats, (fmtName) => !FormatUtils.areSimilarFormats(editor, fmtName, name));
@@ -188,9 +187,9 @@ const cleanFormatNode = (editor: Editor, caretContainer: Node, formatNode: Node,
     dom.add(caretContainer, clonedFormatNode);
     formatter.remove(name, vars, clonedFormatNode, similar);
     dom.remove(clonedFormatNode);
-    return Option.some(clonedFormatNode);
+    return Optional.some(clonedFormatNode);
   } else {
-    return Option.none();
+    return Optional.none();
   }
 };
 
@@ -230,7 +229,7 @@ const applyCaretFormat = function (editor: Editor, name: string, vars: FormatVar
   } else {
     if (!caretContainer || textNode.nodeValue !== ZWSP) {
       // Need to import the node into the document on IE or we get a lovely WrongDocument exception
-      caretContainer = importNode(editor.getDoc(), createCaretContainer(true).dom());
+      caretContainer = importNode(editor.getDoc(), createCaretContainer(true).dom);
       textNode = caretContainer.firstChild;
 
       selectionRng.insertNode(caretContainer);
@@ -301,7 +300,7 @@ const removeCaretFormat = function (editor: Editor, name: string, vars: FormatVa
     selection.moveToBookmark(bookmark);
   } else {
     const caretContainer = getParentCaretContainer(editor.getBody(), formatNode);
-    const newCaretContainer = createCaretContainer(false).dom();
+    const newCaretContainer = createCaretContainer(false).dom;
 
     insertCaretContainerNode(editor, newCaretContainer, caretContainer !== null ? caretContainer : formatNode);
 
@@ -341,20 +340,20 @@ const setup = function (editor: Editor) {
 
 const replaceWithCaretFormat = function (targetNode: Node, formatNodes: Node[]) {
   const caretContainer = createCaretContainer(false);
-  const innerMost = insertFormatNodesIntoCaretContainer(formatNodes, caretContainer.dom());
-  Insert.before(Element.fromDom(targetNode), caretContainer);
-  Remove.remove(Element.fromDom(targetNode));
+  const innerMost = insertFormatNodesIntoCaretContainer(formatNodes, caretContainer.dom);
+  Insert.before(SugarElement.fromDom(targetNode), caretContainer);
+  Remove.remove(SugarElement.fromDom(targetNode));
 
   return CaretPosition(innerMost, 0);
 };
 
-const isFormatElement = function (editor: Editor, element: Element) {
+const isFormatElement = function (editor: Editor, element: SugarElement) {
   const inlineElements = editor.schema.getTextInlineElements();
-  return inlineElements.hasOwnProperty(SugarNode.name(element)) && !isCaretNode(element.dom()) && !NodeType.isBogus(element.dom());
+  return inlineElements.hasOwnProperty(SugarNode.name(element)) && !isCaretNode(element.dom) && !NodeType.isBogus(element.dom);
 };
 
-const isEmptyCaretFormatElement = function (element: Element) {
-  return isCaretNode(element.dom()) && isCaretContainerEmpty(element.dom());
+const isEmptyCaretFormatElement = function (element: SugarElement) {
+  return isCaretNode(element.dom) && isCaretContainerEmpty(element.dom);
 };
 
 export {

@@ -6,12 +6,12 @@
  */
 
 import { Arr } from '@ephox/katamari';
+import DomParser, { DomParserSettings } from '../api/html/DomParser';
+import AstNode from '../api/html/Node';
 import Styles from '../api/html/Styles';
 import Tools from '../api/util/Tools';
-import DomParser, { DomParserSettings } from '../api/html/DomParser';
-import Node from '../api/html/Node';
 
-const removeAttrs = (node: Node, names: string[]) => {
+const removeAttrs = (node: AstNode, names: string[]) => {
   Arr.each(names, (name) => {
     node.attr(name, null);
   });

@@ -5,12 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Types } from '@ephox/bridge';
-import { Element as DomElement, HTMLElement, HTMLTableRowElement, Node } from '@ephox/dom-globals';
 import { Arr, Fun, Obj, Strings } from '@ephox/katamari';
-import { Css, Element } from '@ephox/sugar';
+import { Css, SugarElement } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
+import { Dialog } from 'tinymce/core/api/ui/Ui';
 import * as Styles from '../actions/Styles';
 import { getDefaultAttributes, getDefaultStyles, shouldStyleWithCss } from '../api/Settings';
 import { getRowType } from '../core/TableSections';
@@ -27,7 +26,7 @@ interface ExternalClassListItem {
   value: string;
 }
 
-type InternalClassListItem = Types.SelectBox.ExternalSelectBoxItem;
+type InternalClassListItem = Dialog.SelectBoxItemSpec;
 
 const buildListItems = (inputList: any, startItems?: InternalClassListItem[]): InternalClassListItem[] => {
   // Used to also take a callback (that in all instances applied an item.textStyles property using Formatter)
@@ -47,7 +46,7 @@ const buildListItems = (inputList: any, startItems?: InternalClassListItem[]): I
 const rgbToHex = (dom: DOMUtils) => (value: string) => Strings.startsWith(value, 'rgb') ? dom.toHex(value) : value;
 
 const extractAdvancedStyles = (dom: DOMUtils, elm: Node) => {
-  const element = Element.fromDom(elm);
+  const element = SugarElement.fromDom(elm);
   return {
     borderwidth: Css.getRaw(element, 'border-width').getOr(''),
     borderstyle: Css.getRaw(element, 'border-style').getOr(''),
@@ -80,7 +79,7 @@ const getSharedValues = <T>(data: Array<T>) => {
 };
 
 const getAdvancedTab = (dialogName: 'table' | 'row' | 'cell') => {
-  const advTabItems: Types.Dialog.BodyComponentApi[] = [
+  const advTabItems: Dialog.BodyComponentSpec[] = [
     {
       name: 'borderstyle',
       type: 'selectbox',
@@ -111,13 +110,13 @@ const getAdvancedTab = (dialogName: 'table' | 'row' | 'cell') => {
     }
   ];
 
-  const borderWidth: Types.Input.InputApi = {
+  const borderWidth: Dialog.InputSpec = {
     name: 'borderwidth',
     type: 'input',
     label: 'Border width'
   };
 
-  const items = dialogName === 'cell' ? ([ borderWidth ] as Types.Dialog.BodyComponentApi[]).concat(advTabItems) : advTabItems;
+  const items = dialogName === 'cell' ? ([ borderWidth ] as Dialog.BodyComponentSpec[]).concat(advTabItems) : advTabItems;
 
   return {
     title: 'Advanced',
@@ -201,14 +200,14 @@ const extractDataFromSettings = (editor: Editor, hasAdvTableTab: boolean): Table
   return data;
 };
 
-const extractDataFromTableElement = (editor: Editor, elm: DomElement, hasAdvTableTab: boolean): TableData => {
-  const getBorder = (dom: DOMUtils, elm: DomElement) => {
+const extractDataFromTableElement = (editor: Editor, elm: Element, hasAdvTableTab: boolean): TableData => {
+  const getBorder = (dom: DOMUtils, elm: Element) => {
     // Cases (in order to check):
     // 1. shouldStyleWithCss - extract border-width style if it exists
     // 2. !shouldStyleWithCss && border attribute - set border attribute as value
     // 3. !shouldStyleWithCss && nothing on the table - grab styles from the first th or td
 
-    const optBorderWidth = Css.getRaw(Element.fromDom(elm), 'border-width');
+    const optBorderWidth = Css.getRaw(SugarElement.fromDom(elm), 'border-width');
     if (shouldStyleWithCss(editor) && optBorderWidth.isSome()) {
       return optBorderWidth.getOr('');
     }

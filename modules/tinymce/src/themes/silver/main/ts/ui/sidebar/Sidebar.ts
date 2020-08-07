@@ -6,13 +6,12 @@
  */
 
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Composing, CustomEvent, Focusing, Replacing, Sliding,
-  SlotContainer, SlotContainerTypes, SystemEvents, Tabstopping
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Composing, CustomEvent, Focusing, Replacing, Sliding, SlotContainer,
+  SlotContainerTypes, SystemEvents, Tabstopping
 } from '@ephox/alloy';
 import { ValueSchema } from '@ephox/boulder';
 import { Sidebar as BridgeSidebar } from '@ephox/bridge';
-import { HTMLElement } from '@ephox/dom-globals';
-import { Arr, Cell, Fun, Id, Obj, Option } from '@ephox/katamari';
+import { Arr, Cell, Fun, Id, Obj, Optional } from '@ephox/katamari';
 import { Css, Width } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { onControlAttached, onControlDetached } from 'tinymce/themes/silver/ui/controls/Controls';
@@ -20,7 +19,7 @@ import { onControlAttached, onControlDetached } from 'tinymce/themes/silver/ui/c
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 import { SimpleBehaviours } from '../alien/SimpleBehaviours';
 
-export type SidebarConfig = Record<string, BridgeSidebar.SidebarApi>;
+export type SidebarConfig = Record<string, BridgeSidebar.SidebarSpec>;
 
 const setup = (editor: Editor) => {
   const { sidebars } = editor.ui.registry.getAll();
@@ -28,7 +27,7 @@ const setup = (editor: Editor) => {
   // Setup each registered sidebar
   Arr.each(Obj.keys(sidebars), (name) => {
     const spec = sidebars[name];
-    const isActive = () => Option.from(editor.queryCommandValue('ToggleSidebar')).is(name);
+    const isActive = () => Optional.from(editor.queryCommandValue('ToggleSidebar')).is(name);
     editor.ui.registry.addToggleButton(name, {
       icon: spec.icon,
       tooltip: spec.tooltip,
@@ -48,7 +47,7 @@ const setup = (editor: Editor) => {
 };
 
 const getApi = (comp: AlloyComponent): BridgeSidebar.SidebarInstanceApi => ({
-  element: (): HTMLElement => comp.element().dom()
+  element: (): HTMLElement => comp.element.dom
 });
 
 const makePanels = (parts: SlotContainerTypes.SlotContainerParts, panelConfigs: SidebarConfig) => {
@@ -77,10 +76,10 @@ const makePanels = (parts: SlotContainerTypes.SlotContainerParts, panelConfigs: 
           onControlAttached(spec, editorOffCell),
           onControlDetached(spec, editorOffCell),
           AlloyEvents.run<SystemEvents.AlloySlotVisibilityEvent>(SystemEvents.slotVisibility(), (sidepanel, se) => {
-            const data = se.event();
-            const optSidePanelSpec = Arr.find(specs, (config) => config.name === data.name());
+            const data = se.event;
+            const optSidePanelSpec = Arr.find(specs, (config) => config.name === data.name);
             optSidePanelSpec.each((sidePanelSpec) => {
-              const handler = data.visible() ? sidePanelSpec.onShow : sidePanelSpec.onHide;
+              const handler = data.visible ? sidePanelSpec.onShow : sidePanelSpec.onHide;
               handler(sidePanelSpec.getApi(sidepanel));
             });
           })
@@ -129,7 +128,7 @@ const toggleSidebar = (sidebar: AlloyComponent, name: string) => {
   });
 };
 
-const whichSidebar = (sidebar: AlloyComponent): Option<string> => {
+const whichSidebar = (sidebar: AlloyComponent): Optional<string> => {
   const optSlider = Composing.getCurrent(sidebar);
   return optSlider.bind((slider) => {
     const sidebarOpen = Sliding.isGrowing(slider) || Sliding.hasGrown(slider);
@@ -141,13 +140,13 @@ const whichSidebar = (sidebar: AlloyComponent): Option<string> => {
         )
       );
     } else {
-      return Option.none();
+      return Optional.none();
     }
   });
 };
 
 interface FixSizeEvent extends CustomEvent {
-  width: () => string;
+  readonly width: string;
 }
 const fixSize = Id.generate('FixSizeEvent');
 const autoSize = Id.generate('AutoSizeEvent');
@@ -190,10 +189,10 @@ const renderSidebar = (spec) => ({
             AlloyTriggers.emit(slider, autoSize);
           },
           onStartGrow: (slider: AlloyComponent) => {
-            AlloyTriggers.emitWith(slider, fixSize, { width: Css.getRaw(slider.element(), 'width').getOr('') });
+            AlloyTriggers.emitWith(slider, fixSize, { width: Css.getRaw(slider.element, 'width').getOr('') });
           },
           onStartShrink: (slider: AlloyComponent) => {
-            AlloyTriggers.emitWith(slider, fixSize, { width: Width.get(slider.element()) + 'px' });
+            AlloyTriggers.emitWith(slider, fixSize, { width: Width.get(slider.element) + 'px' });
           }
         }),
         Replacing.config({}),
@@ -210,10 +209,10 @@ const renderSidebar = (spec) => ({
     ComposingConfigs.childAt(0),
     AddEventsBehaviour.config('sidebar-sliding-events', [
       AlloyEvents.run<FixSizeEvent>(fixSize, (comp, se) => {
-        Css.set(comp.element(), 'width', se.event().width());
+        Css.set(comp.element, 'width', se.event.width);
       }),
       AlloyEvents.run(autoSize, (comp, _se) => {
-        Css.remove(comp.element(), 'width');
+        Css.remove(comp.element, 'width');
       })
     ])
   ])

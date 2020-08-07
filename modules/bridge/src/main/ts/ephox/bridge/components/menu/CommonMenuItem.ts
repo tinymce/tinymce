@@ -1,7 +1,7 @@
 import { FieldPresence, FieldProcessorAdt, FieldSchema, ValueSchema } from '@ephox/boulder';
-import { Id, Option } from '@ephox/katamari';
+import { Id, Optional } from '@ephox/katamari';
 
-export interface CommonMenuItemApi {
+export interface CommonMenuItemSpec {
   disabled?: boolean;
   text?: string;
   value?: string;
@@ -16,10 +16,10 @@ export interface CommonMenuItemInstanceApi {
 
 export interface CommonMenuItem {
   disabled: boolean;
-  text: Option<string>;
+  text: Optional<string>;
   value: string;
   meta: Record<string, any>;
-  shortcut: Option<string>;
+  shortcut: Optional<string>;
 }
 
 export const commonMenuItemFields: FieldProcessorAdt[] = [

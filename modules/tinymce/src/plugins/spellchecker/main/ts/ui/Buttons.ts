@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Menu, Toolbar } from '@ephox/bridge';
 import { Cell } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
+import { Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
 import Tools from 'tinymce/core/api/util/Tools';
 import * as Settings from '../api/Settings';
 import * as Actions from '../core/Actions';
@@ -48,7 +48,7 @@ const register = function (editor: Editor, pluginUrl: string, startedState: Cell
     Actions.spellcheck(editor, pluginUrl, startedState, textMatcherState, lastSuggestionsState, currentLanguageState);
   };
 
-  const buttonArgs: Toolbar.ToolbarToggleButtonApi = {
+  const buttonArgs: Toolbar.ToolbarToggleButtonSpec = {
     tooltip: 'Spellcheck',
     onAction: startSpellchecking,
     icon: 'spell-check',
@@ -63,12 +63,12 @@ const register = function (editor: Editor, pluginUrl: string, startedState: Cell
     }
   };
 
-  const splitButtonArgs: Toolbar.ToolbarSplitButtonApi = {
+  const splitButtonArgs: Toolbar.ToolbarSplitButtonSpec = {
     ...buttonArgs,
     type : 'splitbutton',
     select : (value) => value === currentLanguageState.get(),
     fetch : (callback) => {
-      const items = Tools.map(languageMenuItems, (languageItem): Menu.ChoiceMenuItemApi => ({
+      const items = Tools.map(languageMenuItems, (languageItem): Menu.ChoiceMenuItemSpec => ({
         type: 'choiceitem',
         value: languageItem.data,
         text: languageItem.text

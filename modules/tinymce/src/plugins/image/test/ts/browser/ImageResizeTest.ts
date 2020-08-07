@@ -1,6 +1,5 @@
 import { Chain, Guard, Log, Mouse, Pipeline, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { console } from '@ephox/dom-globals';
 import { TinyLoader, TinyUi } from '@ephox/mcagar';
 import ImagePlugin from 'tinymce/plugins/image/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
@@ -48,7 +47,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImageResizeTest', (success, fa
     toolbar: 'image',
     base_url: '/project/tinymce/js/tinymce',
     file_picker_callback(callback) {
-      // tslint:disable-next-line:no-console
+      // eslint-disable-next-line no-console
       console.log('file picker pressed');
       callback('data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7');
     }

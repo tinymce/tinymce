@@ -1,29 +1,26 @@
-import { Event, Node } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
 import { EventArgs, EventFilter, EventHandler, EventUnbinder } from '../api/events/Types';
-import Element from '../api/node/Element';
-import * as ShadowDom from '../api/node/ShadowDom';
+import { SugarElement } from '../api/node/SugarElement';
+import * as SugarShadowDom from '../api/node/SugarShadowDom';
 
 type WrappedHandler<T> = (rawEvent: T) => void;
 
-const mkEvent = <T extends Event>(target: Element, x: number, y: number, stop: () => void, prevent: () => void, kill: () => void, raw: T): EventArgs<T> =>
-  // switched from a struct to manual Fun.constant() because we are passing functions now, not just values
-  ({
-    target:  Fun.constant(target),
-    x:       Fun.constant(x),
-    y:       Fun.constant(y),
-    stop,
-    prevent,
-    kill,
-    raw:     Fun.constant(raw)
-  });
+const mkEvent = <T extends Event>(target: SugarElement, x: number, y: number, stop: () => void, prevent: () => void, kill: () => void, raw: T): EventArgs<T> => ({
+  target,
+  x,
+  y,
+  stop,
+  prevent,
+  kill,
+  raw
+});
 
 /** Wraps an Event in an EventArgs structure.
  * The returned EventArgs structure has its target set to the "original" target if possible.
- * See ShadowDom.getOriginalEventTarget
+ * See SugarShadowDom.getOriginalEventTarget
  */
 const fromRawEvent = <T extends Event>(rawEvent: T) => {
-  const target = Element.fromDom(ShadowDom.getOriginalEventTarget(rawEvent).getOr(rawEvent.target) as Node);
+  const target = SugarElement.fromDom(SugarShadowDom.getOriginalEventTarget(rawEvent).getOr(rawEvent.target) as Node);
 
   const stop = () => rawEvent.stopPropagation();
 
@@ -41,25 +38,25 @@ const handle = <T extends Event>(filter: EventFilter<T>, handler: EventHandler<T
   }
 };
 
-const binder = <T extends Event>(element: Element, event: string, filter: EventFilter<T>, handler: EventHandler<T>, useCapture: boolean): EventUnbinder => {
+const binder = <T extends Event>(element: SugarElement, event: string, filter: EventFilter<T>, handler: EventHandler<T>, useCapture: boolean): EventUnbinder => {
   const wrapped = handle(filter, handler);
   // IE9 minimum
-  element.dom().addEventListener(event, wrapped, useCapture);
+  element.dom.addEventListener(event, wrapped, useCapture);
 
   return {
     unbind: Fun.curry(unbind, element, event, wrapped, useCapture)
   };
 };
 
-const bind = <T extends Event>(element: Element, event: string, filter: EventFilter<T>, handler: EventHandler<T>) =>
+const bind = <T extends Event>(element: SugarElement, event: string, filter: EventFilter<T>, handler: EventHandler<T>) =>
   binder<T>(element, event, filter, handler, false);
 
-const capture = <T extends Event>(element: Element, event: string, filter: EventFilter<T>, handler: EventHandler<T>) =>
+const capture = <T extends Event>(element: SugarElement, event: string, filter: EventFilter<T>, handler: EventHandler<T>) =>
   binder<T>(element, event, filter, handler, true);
 
-const unbind = <T extends Event>(element: Element, event: string, handler: WrappedHandler<T>, useCapture: boolean) => {
+const unbind = <T extends Event>(element: SugarElement, event: string, handler: WrappedHandler<T>, useCapture: boolean) => {
   // IE9 minimum
-  element.dom().removeEventListener(event, handler, useCapture);
+  element.dom.removeEventListener(event, handler, useCapture);
 };
 
 export { bind, capture, fromRawEvent };

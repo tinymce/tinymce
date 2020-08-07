@@ -5,37 +5,36 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element as DomElement, HTMLTableCaptionElement, HTMLTableCellElement, HTMLTableElement, HTMLTableRowElement } from '@ephox/dom-globals';
-import { Fun, Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { RunOperation, SimpleGenerators } from '@ephox/snooker';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import { Selections } from '../selection/Selections';
 import * as CellOperations from './CellOperations';
 
-const noMenu = (cell: Element<HTMLTableCellElement | HTMLTableCaptionElement>): RunOperation.CombinedTargets => ({
-  element: Fun.constant(cell),
-  mergable: Option.none,
-  unmergable: Option.none,
-  selection: Fun.constant([ cell ])
+const noMenu = (cell: SugarElement<HTMLTableCellElement | HTMLTableCaptionElement>): RunOperation.CombinedTargets => ({
+  element: cell,
+  mergable: Optional.none(),
+  unmergable: Optional.none(),
+  selection: [ cell ]
 });
 
-const forMenu = (selections: Selections, table: Element<HTMLTableElement>, cell: Element<HTMLTableCellElement>): RunOperation.CombinedTargets => ({
-  element: Fun.constant(cell),
-  mergable: Fun.constant(CellOperations.mergable(table, selections)),
-  unmergable: Fun.constant(CellOperations.unmergable(cell, selections)),
-  selection: Fun.constant(CellOperations.selection(cell, selections))
+const forMenu = (selections: Selections, table: SugarElement<HTMLTableElement>, cell: SugarElement<HTMLTableCellElement>): RunOperation.CombinedTargets => ({
+  element: cell,
+  mergable: CellOperations.mergable(table, selections),
+  unmergable: CellOperations.unmergable(cell, selections),
+  selection: CellOperations.selection(cell, selections)
 });
 
-const paste = (element: Element<DomElement>, clipboard: Element<HTMLTableElement>, generators: SimpleGenerators): RunOperation.TargetPaste => ({
-  element: Fun.constant(element),
-  clipboard: Fun.constant(clipboard),
-  generators: Fun.constant(generators)
+const paste = (element: SugarElement<Element>, clipboard: SugarElement<HTMLTableElement>, generators: SimpleGenerators): RunOperation.TargetPaste => ({
+  element,
+  clipboard,
+  generators
 });
 
-const pasteRows = (selections: Selections, cell: Element<HTMLTableCellElement>, clipboard: Element<HTMLTableRowElement>[], generators: SimpleGenerators): RunOperation.TargetPasteRows => ({
-  selection: Fun.constant(CellOperations.selection(cell, selections)),
-  clipboard: Fun.constant(clipboard),
-  generators: Fun.constant(generators)
+const pasteRows = (selections: Selections, cell: SugarElement<HTMLTableCellElement>, clipboard: SugarElement<HTMLTableRowElement>[], generators: SimpleGenerators): RunOperation.TargetPasteRows => ({
+  selection: CellOperations.selection(cell, selections),
+  clipboard,
+  generators
 });
 
 export { noMenu, forMenu, paste, pasteRows };

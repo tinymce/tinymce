@@ -1,4 +1,3 @@
-import { console } from '@ephox/dom-globals';
 import { openDemoDialog } from './DemoDialogHelpers';
 
 export const createLinkDialog = () => {
@@ -63,7 +62,7 @@ export const createLinkDialog = () => {
       onSubmit: (api) => {
         const data = api.getData();
 
-        // tslint:disable-next-line:no-console
+        // eslint-disable-next-line no-console
         console.log({
           url: data.url,
           text: data.text,

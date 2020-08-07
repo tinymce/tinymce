@@ -5,16 +5,17 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Cell } from '@ephox/katamari';
+import Editor from '../api/Editor';
+import * as CaretContainerInput from '../caret/CaretContainerInput';
+import * as Rtc from '../Rtc';
 import * as ArrowKeys from './ArrowKeys';
 import * as BoundarySelection from './BoundarySelection';
 import * as DeleteBackspaceKeys from './DeleteBackspaceKeys';
 import * as EnterKey from './EnterKey';
-import * as SpaceKey from './SpaceKey';
-import * as CaretContainerInput from '../caret/CaretContainerInput';
-import Editor from '../api/Editor';
-import * as InputKeys from './InputKeys';
 import * as HomeEndKeys from './HomeEndKeys';
-import * as Rtc from '../Rtc';
+import * as InputKeys from './InputKeys';
+import * as SpaceKey from './SpaceKey';
 
 const registerKeyboardOverrides = (editor: Editor) => {
   const caret = BoundarySelection.setupSelectedState(editor);
@@ -26,11 +27,15 @@ const registerKeyboardOverrides = (editor: Editor) => {
   SpaceKey.setup(editor);
   InputKeys.setup(editor);
   HomeEndKeys.setup(editor);
+
+  return caret;
 };
 
-const setup = (editor: Editor): void => {
+const setup = (editor: Editor): Cell<Text> => {
   if (!Rtc.isRtc(editor)) {
-    registerKeyboardOverrides(editor);
+    return registerKeyboardOverrides(editor);
+  } else {
+    return Cell(null);
   }
 };
 

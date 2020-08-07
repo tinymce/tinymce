@@ -1,5 +1,5 @@
-import { Attr, Css, Element, Insert, InsertAll } from '@ephox/sugar';
 import { Arr } from '@ephox/katamari';
+import { Attribute, Css, Insert, InsertAll, SugarElement } from '@ephox/sugar';
 
 export interface RenderOptions {
   styles: Record<string, string>;
@@ -16,20 +16,20 @@ const DefaultRenderOptions: RenderOptions = {
   }
 };
 
-const tableHeaderCell = () => Element.fromTag('th');
+const tableHeaderCell = () => SugarElement.fromTag('th');
 
-const tableCell = () => Element.fromTag('td');
+const tableCell = () => SugarElement.fromTag('td');
 
 const createRow = (columns: number, rowHeaders: number, columnHeaders: number, rowIndex: number) => {
-  const tr = Element.fromTag('tr');
+  const tr = SugarElement.fromTag('tr');
   for (let j = 0; j < columns; j++) {
 
     const td = rowIndex < rowHeaders || j < columnHeaders ? tableHeaderCell() : tableCell();
-    if (j < columnHeaders) { Attr.set(td, 'scope', 'row'); }
-    if (rowIndex < rowHeaders) { Attr.set(td, 'scope', 'col'); }
+    if (j < columnHeaders) { Attribute.set(td, 'scope', 'row'); }
+    if (rowIndex < rowHeaders) { Attribute.set(td, 'scope', 'col'); }
 
     // Note, this is a placeholder so that the cells have height. The unicode character didn't work in IE10.
-    Insert.append(td, Element.fromTag('br'));
+    Insert.append(td, SugarElement.fromTag('br'));
     Insert.append(tr, td);
   }
   return tr;
@@ -39,16 +39,16 @@ const createRows = (rows: number, columns: number, rowHeaders: number, columnHea
   Arr.range(rows, (r) => createRow(columns, rowHeaders, columnHeaders, r));
 
 const render = (rows: number, columns: number, rowHeaders: number, columnHeaders: number, headerType: string, renderOpts: RenderOptions = DefaultRenderOptions) => {
-  const table = Element.fromTag('table');
+  const table = SugarElement.fromTag('table');
   const rowHeadersGoInThead = headerType !== 'cells';
 
   Css.setAll(table, renderOpts.styles);
-  Attr.setAll(table, renderOpts.attributes);
+  Attribute.setAll(table, renderOpts.attributes);
 
   const actualRowHeaders = Math.min(rows, rowHeaders);
 
   if (rowHeadersGoInThead && rowHeaders > 0) {
-    const thead = Element.fromTag('thead');
+    const thead = SugarElement.fromTag('thead');
     Insert.append(table, thead);
 
     const theadRowHeaders = headerType === 'sectionCells' ? actualRowHeaders : 0;
@@ -56,7 +56,7 @@ const render = (rows: number, columns: number, rowHeaders: number, columnHeaders
     InsertAll.append(thead, theadRows);
   }
 
-  const tbody = Element.fromTag('tbody');
+  const tbody = SugarElement.fromTag('tbody');
   Insert.append(table, tbody);
 
   const numRows = rowHeadersGoInThead ? rows - actualRowHeaders : rows;

@@ -5,25 +5,24 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLElement } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
-import { Insert, Element } from '@ephox/sugar';
+import { Insert, SugarElement } from '@ephox/sugar';
+import DOMUtils from '../api/dom/DOMUtils';
+import EditorSelection from '../api/dom/Selection';
+import DomTreeWalker from '../api/dom/TreeWalker';
+import Editor from '../api/Editor';
+import Schema from '../api/html/Schema';
 import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import * as NodeType from '../dom/NodeType';
-import TreeWalker from '../api/dom/TreeWalker';
 import * as BoundaryLocation from '../keyboard/BoundaryLocation';
 import * as InlineUtils from '../keyboard/InlineUtils';
 import * as NormalizeRange from '../selection/NormalizeRange';
-import Selection from '../api/dom/Selection';
 import { rangeInsertNode } from '../selection/RangeInsertNode';
-import Editor from '../api/Editor';
-import DOMUtils from '../api/dom/DOMUtils';
-import Schema from '../api/html/Schema';
 
 // Walks the parent block to the right and look for BR elements
 const hasRightSideContent = function (schema: Schema, container, parentBlock) {
-  const walker = new TreeWalker(container, parentBlock);
+  const walker = new DomTreeWalker(container, parentBlock);
   let node;
   const nonEmptyElementsMap = schema.getNonEmptyElements();
 
@@ -34,7 +33,7 @@ const hasRightSideContent = function (schema: Schema, container, parentBlock) {
   }
 };
 
-const scrollToBr = function (dom: DOMUtils, selection: Selection, brElm) {
+const scrollToBr = function (dom: DOMUtils, selection: EditorSelection, brElm) {
   // Insert temp marker and scroll to that
   const marker = dom.create('span', {}, '&nbsp;');
   brElm.parentNode.insertBefore(marker, brElm);
@@ -42,7 +41,7 @@ const scrollToBr = function (dom: DOMUtils, selection: Selection, brElm) {
   dom.remove(marker);
 };
 
-const moveSelectionToBr = function (dom: DOMUtils, selection: Selection, brElm, extraBr) {
+const moveSelectionToBr = function (dom: DOMUtils, selection: EditorSelection, brElm, extraBr) {
   const rng = dom.createRng();
 
   if (!extraBr) {
@@ -115,20 +114,20 @@ const insertBrAtCaret = function (editor: Editor, evt?) {
 };
 
 const insertBrBefore = function (editor: Editor, inline) {
-  const br = Element.fromTag('br');
-  Insert.before(Element.fromDom(inline), br);
+  const br = SugarElement.fromTag('br');
+  Insert.before(SugarElement.fromDom(inline), br);
   editor.undoManager.add();
 };
 
 const insertBrAfter = function (editor: Editor, inline) {
   if (!hasBrAfter(editor.getBody(), inline)) {
-    Insert.after(Element.fromDom(inline), Element.fromTag('br'));
+    Insert.after(SugarElement.fromDom(inline), SugarElement.fromTag('br'));
   }
 
-  const br = Element.fromTag('br');
-  Insert.after(Element.fromDom(inline), br);
-  scrollToBr(editor.dom, editor.selection, br.dom());
-  moveSelectionToBr(editor.dom, editor.selection, br.dom(), false);
+  const br = SugarElement.fromTag('br');
+  Insert.after(SugarElement.fromDom(inline), br);
+  scrollToBr(editor.dom, editor.selection, br.dom);
+  moveSelectionToBr(editor.dom, editor.selection, br.dom, false);
   editor.undoManager.add();
 };
 
@@ -152,10 +151,10 @@ const isAnchorLink = function (elm) {
 
 const isInsideAnchor = function (location) {
   return location.fold(
-    Fun.constant(false),
+    Fun.never,
     isAnchorLink,
     isAnchorLink,
-    Fun.constant(false)
+    Fun.never
   );
 };
 

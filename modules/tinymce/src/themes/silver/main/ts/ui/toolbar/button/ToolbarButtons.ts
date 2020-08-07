@@ -10,11 +10,12 @@ import {
   Keying, NativeEvents, Reflecting, Replacing, SketchSpec, SplitDropdown as AlloySplitDropdown, SystemEvents, TieredData, TieredMenuTypes, Toggling,
   Unselecting
 } from '@ephox/alloy';
-import { Toolbar, Types } from '@ephox/bridge';
-import { Arr, Cell, Fun, Future, Id, Merger, Option } from '@ephox/katamari';
-import { Attr, SelectorFind } from '@ephox/sugar';
+import { Toolbar } from '@ephox/bridge';
+import { Arr, Cell, Fun, Future, Id, Merger, Optional } from '@ephox/katamari';
+import { Attribute, SelectorFind } from '@ephox/sugar';
 
 import I18n from 'tinymce/core/api/util/I18n';
+import { ToolbarGroupSetting } from 'tinymce/themes/silver/api/Settings';
 import { UiFactoryBackstage, UiFactoryBackstageProviders, UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
 import * as ReadOnly from '../../../ReadOnly';
 import { DisablingConfigs } from '../../alien/DisablingConfigs';
@@ -33,7 +34,6 @@ import { createTieredDataFrom } from '../../menus/menu/SingleMenu';
 import { ToolbarButtonClasses } from '../button/ButtonClasses';
 import { onToolbarButtonExecute, toolbarButtonEventOrder } from '../button/ButtonEvents';
 import { renderToolbarGroup, ToolbarGroup } from '../CommonToolbar';
-import { ToolbarGroupSetting } from 'tinymce/themes/silver/api/Settings';
 
 interface Specialisation<T> {
   toolbarButtonBehaviours: Array<Behaviour.NamedConfiguredBehaviour<Behaviour.BehaviourConfigSpec, Behaviour.BehaviourConfigDetail>>;
@@ -55,15 +55,15 @@ const getToggleApi = (component: AlloyComponent): Toolbar.ToolbarToggleButtonIns
   setDisabled: (state: boolean) => Disabling.set(component, state)
 });
 
-const getTooltipAttributes = (tooltip: Option<string>, providersBackstage: UiFactoryBackstageProviders) => tooltip.map<{}>((tooltip) => ({
+const getTooltipAttributes = (tooltip: Optional<string>, providersBackstage: UiFactoryBackstageProviders) => tooltip.map<{}>((tooltip) => ({
   'aria-label': providersBackstage.translate(tooltip),
   'title': providersBackstage.translate(tooltip)
 })).getOr({});
 
 interface GeneralToolbarButton<T> {
-  icon: Option<string>;
-  text: Option<string>;
-  tooltip: Option<string>;
+  icon: Optional<string>;
+  text: Optional<string>;
+  tooltip: Optional<string>;
   onAction: (api: T) => void;
   disabled: boolean;
 }
@@ -88,11 +88,11 @@ const rtlTransform = [
 
 type Behaviours = Behaviour.NamedConfiguredBehaviour<Behaviour.BehaviourConfigSpec, Behaviour.BehaviourConfigDetail>[];
 const renderCommonStructure = (
-  icon: Option<string>,
-  text: Option<string>,
-  tooltip: Option<string>,
-  receiver: Option<string>,
-  behaviours: Option<Behaviours>,
+  icon: Optional<string>,
+  text: Optional<string>,
+  tooltip: Optional<string>,
+  receiver: Optional<string>,
+  behaviours: Optional<Behaviours>,
   providersBackstage: UiFactoryBackstageProviders
 ) => {
 
@@ -157,7 +157,7 @@ const renderFloatingToolbarButton = (spec: Toolbar.GroupToolbarButton, backstage
       toggledClass: ToolbarButtonClasses.Ticked
     },
     parts: {
-      button: renderCommonStructure(spec.icon, spec.text, spec.tooltip, Option.none(), Option.none(), sharedBackstage.providers),
+      button: renderCommonStructure(spec.icon, spec.text, spec.tooltip, Optional.none(), Optional.none(), sharedBackstage.providers),
       toolbar: {
         dom: {
           tag: 'div',
@@ -171,7 +171,7 @@ const renderFloatingToolbarButton = (spec: Toolbar.GroupToolbarButton, backstage
 
 const renderCommonToolbarButton = <T>(spec: GeneralToolbarButton<T>, specialisation: Specialisation<T>, providersBackstage: UiFactoryBackstageProviders) => {
   const editorOffCell = Cell(Fun.noop);
-  const structure = renderCommonStructure(spec.icon, spec.text, spec.tooltip, Option.none(), Option.none(), providersBackstage);
+  const structure = renderCommonStructure(spec.icon, spec.text, spec.tooltip, Optional.none(), Optional.none(), providersBackstage);
   return AlloyButton.sketch({
     dom: structure.dom,
     components: structure.components,
@@ -228,12 +228,12 @@ const renderToolbarToggleButtonWith = (spec: Toolbar.ToolbarToggleButton, provid
 interface ChoiceFetcher {
   fetch: (callback: Function) => void;
   columns: 'auto' | number;
-  presets: Types.PresetTypes;
+  presets: Toolbar.PresetTypes;
   onItemAction: (api: Toolbar.ToolbarSplitButtonInstanceApi, value: string) => void;
-  select: Option<(value: string) => boolean>;
+  select: Optional<(value: string) => boolean>;
 }
 
-const fetchChoices = (getApi, spec: ChoiceFetcher, providersBackstage: UiFactoryBackstageProviders) => (comp: AlloyComponent): Future<Option<TieredData>> => Future.nu((callback) => spec.fetch(callback)).map((items) => Option.from(createTieredDataFrom(
+const fetchChoices = (getApi, spec: ChoiceFetcher, providersBackstage: UiFactoryBackstageProviders) => (comp: AlloyComponent): Future<Optional<TieredData>> => Future.nu((callback) => spec.fetch(callback)).map((items) => Optional.from(createTieredDataFrom(
   Merger.deepMerge(
     createPartialChoiceMenu(
       Id.generate('menu-value'),
@@ -269,24 +269,24 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
     isDisabled: () => Disabling.isDisabled(comp),
     setDisabled: (state: boolean) => Disabling.set(comp, state),
     setIconFill: (id, value) => {
-      SelectorFind.descendant(comp.element(), 'svg path[id="' + id + '"], rect[id="' + id + '"]').each((underlinePath) => {
-        Attr.set(underlinePath, 'fill', value);
+      SelectorFind.descendant(comp.element, 'svg path[id="' + id + '"], rect[id="' + id + '"]').each((underlinePath) => {
+        Attribute.set(underlinePath, 'fill', value);
       });
     },
     setIconStroke: (id, value) => {
-      SelectorFind.descendant(comp.element(), 'svg path[id="' + id + '"], rect[id="' + id + '"]').each((underlinePath) => {
-        Attr.set(underlinePath, 'stroke', value);
+      SelectorFind.descendant(comp.element, 'svg path[id="' + id + '"], rect[id="' + id + '"]').each((underlinePath) => {
+        Attribute.set(underlinePath, 'stroke', value);
       });
     },
     setActive: (state) => {
       // Toggle the pressed aria state component
-      Attr.set(comp.element(), 'aria-pressed', state);
+      Attribute.set(comp.element, 'aria-pressed', state);
       // Toggle the inner button state, as that's the toggle component of the split button
-      SelectorFind.descendant(comp.element(), 'span').each((button) => {
+      SelectorFind.descendant(comp.element, 'span').each((button) => {
         comp.getSystem().getByDom(button).each((buttonComp) => Toggling.set(buttonComp, state));
       });
     },
-    isActive: () => SelectorFind.descendant(comp.element(), 'span').exists((button) => comp.getSystem().getByDom(button).exists(Toggling.isOn))
+    isActive: () => SelectorFind.descendant(comp.element, 'span').exists((button) => comp.getSystem().getByDom(button).exists(Toggling.isOn))
   });
 
   const editorOffCell = Cell(Fun.noop);
@@ -332,12 +332,12 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
     },
 
     components: [
-      AlloySplitDropdown.parts().button(
-        renderCommonStructure(spec.icon, spec.text, Option.none(), Option.some(displayChannel), Option.some([
+      AlloySplitDropdown.parts.button(
+        renderCommonStructure(spec.icon, spec.text, Optional.none(), Optional.some(displayChannel), Optional.some([
           Toggling.config({ toggleClass: ToolbarButtonClasses.Ticked, toggleOnExecute: false })
         ]), sharedBackstage.providers)
       ),
-      AlloySplitDropdown.parts().arrow({
+      AlloySplitDropdown.parts.arrow({
         dom: {
           tag: 'button',
           classes: [ ToolbarButtonClasses.Button, 'tox-split-button__chevron' ],
@@ -348,7 +348,7 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
           ReadOnly.receivingConfig()
         ])
       }),
-      AlloySplitDropdown.parts()['aria-descriptor']({
+      AlloySplitDropdown.parts['aria-descriptor']({
         text: sharedBackstage.providers.translate('To open the popup, press Shift+Enter')
       })
     ]

@@ -1,6 +1,6 @@
 import { FieldSchema } from '@ephox/boulder';
-import { Fun, Option } from '@ephox/katamari';
-import { Element, SelectorFind } from '@ephox/sugar';
+import { Fun, Optional } from '@ephox/katamari';
+import { SelectorFind, SugarElement } from '@ephox/sugar';
 
 import * as Keys from '../alien/Keys';
 import { AlloyComponent } from '../api/component/ComponentApi';
@@ -17,7 +17,7 @@ import * as KeyingTypes from './KeyingTypes';
 
 const schema = [
   FieldSchema.strict('selector'),
-  FieldSchema.defaulted('getInitial', Option.none),
+  FieldSchema.defaulted('getInitial', Optional.none),
   FieldSchema.defaulted('execute', KeyingTypes.defaultExecute),
   Fields.onKeyboardHandler('onEscape'),
   FieldSchema.defaulted('executeOnMove', false),
@@ -26,24 +26,24 @@ const schema = [
 
 // TODO: Remove dupe.
 // TODO: Probably use this for not just execution.
-const findCurrent = (component: AlloyComponent, flowConfig: FlowConfig): Option<Element> =>
+const findCurrent = (component: AlloyComponent, flowConfig: FlowConfig): Optional<SugarElement> =>
   flowConfig.focusManager.get(component).bind((elem) => SelectorFind.closest(elem, flowConfig.selector));
 
-const execute = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent, flowConfig: FlowConfig): Option<boolean> =>
+const execute = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent, flowConfig: FlowConfig): Optional<boolean> =>
   findCurrent(component, flowConfig).bind((focused) => flowConfig.execute(component, simulatedEvent, focused));
 
 const focusIn = (component: AlloyComponent, flowConfig: FlowConfig, _state: Stateless): void => {
   flowConfig.getInitial(component).orThunk(
-    () => SelectorFind.descendant(component.element(), flowConfig.selector)
+    () => SelectorFind.descendant(component.element, flowConfig.selector)
   ).each((first) => {
     flowConfig.focusManager.set(component, first);
   });
 };
 
-const moveLeft = (element: Element, focused: Element, info: FlowConfig): Option<Element> =>
+const moveLeft = (element: SugarElement, focused: SugarElement, info: FlowConfig): Optional<SugarElement> =>
   DomNavigation.horizontal(element, info.selector, focused, -1);
 
-const moveRight = (element: Element, focused: Element, info: FlowConfig): Option<Element> =>
+const moveRight = (element: SugarElement, focused: SugarElement, info: FlowConfig): Optional<SugarElement> =>
   DomNavigation.horizontal(element, info.selector, focused, +1);
 
 const doMove = (movement: KeyRuleHandler<FlowConfig, Stateless>): KeyRuleHandler<FlowConfig, Stateless> =>
@@ -52,7 +52,7 @@ const doMove = (movement: KeyRuleHandler<FlowConfig, Stateless>): KeyRuleHandler
       () =>
         flowConfig.executeOnMove ?
           execute(component, simulatedEvent, flowConfig) :
-          Option.some<boolean>(true)
+          Optional.some<boolean>(true)
     );
 
 const doEscape: KeyRuleHandler<FlowConfig, Stateless> = (component, simulatedEvent, flowConfig) =>
@@ -64,19 +64,19 @@ const getKeydownRules = (
   flowConfig: FlowConfig,
   _flowState: Stateless
 ): Array<KeyRules.KeyRule<FlowConfig, Stateless>> => {
-  const westMovers = Keys.LEFT().concat(flowConfig.allowVertical ? Keys.UP() : [ ]);
-  const eastMovers = Keys.RIGHT().concat(flowConfig.allowVertical ? Keys.DOWN() : [ ]);
+  const westMovers = Keys.LEFT.concat(flowConfig.allowVertical ? Keys.UP : [ ]);
+  const eastMovers = Keys.RIGHT.concat(flowConfig.allowVertical ? Keys.DOWN : [ ]);
   return [
     KeyRules.rule(KeyMatch.inSet(westMovers), doMove(DomMovement.west(moveLeft, moveRight))),
     KeyRules.rule(KeyMatch.inSet(eastMovers), doMove(DomMovement.east(moveLeft, moveRight))),
-    KeyRules.rule(KeyMatch.inSet(Keys.ENTER()), execute),
-    KeyRules.rule(KeyMatch.inSet(Keys.SPACE()), execute),
-    KeyRules.rule(KeyMatch.inSet(Keys.ESCAPE()), doEscape)
+    KeyRules.rule(KeyMatch.inSet(Keys.ENTER), execute),
+    KeyRules.rule(KeyMatch.inSet(Keys.SPACE), execute),
+    KeyRules.rule(KeyMatch.inSet(Keys.ESCAPE), doEscape)
   ];
 };
 
 const getKeyupRules: () => Array<KeyRules.KeyRule<FlowConfig, Stateless>> = Fun.constant([
-  KeyRules.rule(KeyMatch.inSet(Keys.SPACE()), KeyingTypes.stopEventForFirefox)
+  KeyRules.rule(KeyMatch.inSet(Keys.SPACE), KeyingTypes.stopEventForFirefox)
 ]);
 
-export default KeyingType.typical(schema, NoState.init, getKeydownRules, getKeyupRules, () => Option.some(focusIn));
+export default KeyingType.typical(schema, NoState.init, getKeydownRules, getKeyupRules, () => Optional.some(focusIn));

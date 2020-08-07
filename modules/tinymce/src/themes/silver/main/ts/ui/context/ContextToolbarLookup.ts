@@ -5,18 +5,17 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node as DomNode } from '@ephox/dom-globals';
-import { Arr, Option } from '@ephox/katamari';
-import { Compare, Element, TransformFind } from '@ephox/sugar';
+import { Arr, Optional } from '@ephox/katamari';
+import { Compare, SugarElement, TransformFind } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { ContextTypes } from '../../ContextToolbar';
 import { ScopedToolbars } from './ContextToolbarScopes';
 
-export type LookupResult = { toolbars: ContextTypes[]; elem: Element };
+export type LookupResult = { toolbars: ContextTypes[]; elem: SugarElement };
 type MatchResult = { contextToolbars: ContextTypes[]; contextForms: ContextTypes[] };
 
-const matchTargetWith = (elem: Element, candidates: ContextTypes[]): MatchResult => {
-  const ctxs = Arr.filter(candidates, (toolbarApi) => toolbarApi.predicate(elem.dom()));
+const matchTargetWith = (elem: SugarElement, candidates: ContextTypes[]): MatchResult => {
+  const ctxs = Arr.filter(candidates, (toolbarApi) => toolbarApi.predicate(elem.dom));
   // TODO: somehow type this properly (Arr.partition can't)
   // e.g. here pass is Toolbar.ContextToolbar and fail is Toolbar.ContextForm
   const { pass, fail } = Arr.partition(ctxs, (t) => t.type === 'contexttoolbar');
@@ -65,7 +64,7 @@ const filterByPositionForAncestorNode = (toolbars: ContextTypes[]) => {
   }
 };
 
-const matchStartNode = (elem: Element, nodeCandidates: ContextTypes[], editorCandidates: ContextTypes[]): Option<LookupResult> => {
+const matchStartNode = (elem: SugarElement, nodeCandidates: ContextTypes[], editorCandidates: ContextTypes[]): Optional<LookupResult> => {
   // requirements:
   // 1. prioritise context forms over context menus
   // 2. prioritise node scoped over editor scoped context forms
@@ -75,44 +74,44 @@ const matchStartNode = (elem: Element, nodeCandidates: ContextTypes[], editorCan
   const nodeMatches = matchTargetWith(elem, nodeCandidates);
 
   if (nodeMatches.contextForms.length > 0) {
-    return Option.some({ elem, toolbars: [ nodeMatches.contextForms[ 0 ] ] });
+    return Optional.some({ elem, toolbars: [ nodeMatches.contextForms[ 0 ] ] });
   } else {
     const editorMatches = matchTargetWith(elem, editorCandidates);
 
     if (editorMatches.contextForms.length > 0) {
-      return Option.some({ elem, toolbars: [ editorMatches.contextForms[ 0 ] ] });
+      return Optional.some({ elem, toolbars: [ editorMatches.contextForms[ 0 ] ] });
     } else if (nodeMatches.contextToolbars.length > 0 || editorMatches.contextToolbars.length > 0) {
       const toolbars = filterByPositionForStartNode(nodeMatches.contextToolbars.concat(editorMatches.contextToolbars));
-      return Option.some({ elem, toolbars });
+      return Optional.some({ elem, toolbars });
     } else {
-      return Option.none();
+      return Optional.none();
     }
   }
 };
 
-const matchAncestor = (isRoot, startNode, scopes): Option<LookupResult> => {
+const matchAncestor = (isRoot, startNode, scopes): Optional<LookupResult> => {
   // Don't continue to traverse if the start node is the root node
   if (isRoot(startNode)) {
-    return Option.none();
+    return Optional.none();
   } else {
     return TransformFind.ancestor(startNode, (ancestorElem) => {
       const { contextToolbars, contextForms } = matchTargetWith(ancestorElem, scopes.inNodeScope);
       const toolbars = contextForms.length > 0 ? contextForms : filterByPositionForAncestorNode(contextToolbars);
-      return toolbars.length > 0 ? Option.some({ elem: ancestorElem, toolbars }) : Option.none();
+      return toolbars.length > 0 ? Optional.some({ elem: ancestorElem, toolbars }) : Optional.none();
     }, isRoot);
   }
 };
 
-const lookup = (scopes: ScopedToolbars, editor: Editor): Option<LookupResult> => {
-  const rootElem = Element.fromDom(editor.getBody());
-  const isRoot = (elem: Element<DomNode>) => Compare.eq(elem, rootElem);
-  const isOutsideRoot = (startNode: Element<DomNode>) => !isRoot(startNode) && !Compare.contains(rootElem, startNode);
+const lookup = (scopes: ScopedToolbars, editor: Editor): Optional<LookupResult> => {
+  const rootElem = SugarElement.fromDom(editor.getBody());
+  const isRoot = (elem: SugarElement<Node>) => Compare.eq(elem, rootElem);
+  const isOutsideRoot = (startNode: SugarElement<Node>) => !isRoot(startNode) && !Compare.contains(rootElem, startNode);
 
-  const startNode = Element.fromDom(editor.selection.getNode());
+  const startNode = SugarElement.fromDom(editor.selection.getNode());
 
   // Ensure the lookup doesn't start on a parent or sibling element of the root node
   if (isOutsideRoot(startNode)) {
-    return Option.none();
+    return Optional.none();
   }
   return matchStartNode(startNode, scopes.inNodeScope, scopes.inEditorScope).orThunk(() => matchAncestor(isRoot, startNode, scopes));
 };

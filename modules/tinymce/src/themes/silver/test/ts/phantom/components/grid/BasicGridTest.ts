@@ -1,9 +1,9 @@
 import { ApproxStructure, Assertions } from '@ephox/agar';
 import { GuiFactory, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
-import { renderGrid } from 'tinymce/themes/silver/ui/dialog/Grid';
 
 import I18n from 'tinymce/core/api/util/I18n';
+import { renderGrid } from 'tinymce/themes/silver/ui/dialog/Grid';
 
 // TODO: Expose properly through alloy.
 UnitTest.asynctest('Grid component Test', (success, failure) => {
@@ -47,7 +47,7 @@ UnitTest.asynctest('Grid component Test', (success, failure) => {
             })
           ]
         })),
-        component.element()
+        component.element
       )
     ],
     success,

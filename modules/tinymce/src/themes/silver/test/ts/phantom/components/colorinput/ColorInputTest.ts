@@ -3,9 +3,8 @@ import {
 } from '@ephox/agar';
 import { AlloyTriggers, Container, GuiFactory, Invalidating, NativeEvents, Representing, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
-import { document } from '@ephox/dom-globals';
-import { Option } from '@ephox/katamari';
-import { Element, SelectorFind, Traverse } from '@ephox/sugar';
+import { Optional } from '@ephox/katamari';
+import { SelectorFind, SugarElement, Traverse } from '@ephox/sugar';
 
 import { renderColorInput } from 'tinymce/themes/silver/ui/dialog/ColorInput';
 
@@ -16,7 +15,7 @@ const choiceItem: 'choiceitem' = 'choiceitem';
 // TODO: Expose properly through alloy.
 UnitTest.asynctest('Color input component Test', (success, failure) => {
   const helpers = TestExtras();
-  const sink = Element.fromDom(document.querySelector('.mce-silver-sink'));
+  const sink = SugarElement.fromDom(document.querySelector('.mce-silver-sink'));
 
   TestHelpers.GuiSetup.setup(
     (_store, _doc, _body) => GuiFactory.build(
@@ -27,7 +26,7 @@ UnitTest.asynctest('Color input component Test', (success, failure) => {
         components: [
           renderColorInput({
             name: 'alpha',
-            label: Option.some('test-color-input')
+            label: Optional.some('test-color-input')
           }, helpers.shared, {
             colorPicker: (_callback, _value) => {},
             hasCustomColors: () => true,
@@ -45,12 +44,12 @@ UnitTest.asynctest('Color input component Test', (success, failure) => {
     ),
     (doc, _body, _gui, component, _store) => {
       const input = component.getSystem().getByDom(
-        SelectorFind.descendant(component.element(), 'input').getOrDie('Could not find input in colorinput')
+        SelectorFind.descendant(component.element, 'input').getOrDie('Could not find input in colorinput')
       ).getOrDie();
 
       const legend = component.getSystem().getByDom(
         // Intentionally, only finding direct child
-        SelectorFind.descendant(component.element(), 'span').getOrDie('Could not find legend in colorinput')
+        SelectorFind.descendant(component.element, 'span').getOrDie('Could not find legend in colorinput')
       ).getOrDie();
 
       const sSetColorInputValue = (newValue: string) => Step.sync(() => {
@@ -62,7 +61,7 @@ UnitTest.asynctest('Color input component Test', (success, failure) => {
       const sOpenPicker = Logger.t(
         'Clicking the legend should bring up the colorswatch',
         GeneralSteps.sequence([
-          Mouse.sClickOn(legend.element(), 'root:span'),
+          Mouse.sClickOn(legend.element, 'root:span'),
           UiFinder.sWaitFor('Waiting for colorswatch to show up!', sink, '.tox-swatches')
         ])
       );
@@ -79,7 +78,7 @@ UnitTest.asynctest('Color input component Test', (success, failure) => {
             'background-color': f(s, str, arr)
           }
         })),
-        legend.element()
+        legend.element
       );
 
       const sAssertContainerClasses = (label: string, f) => Waiter.sTryUntil(
@@ -90,7 +89,7 @@ UnitTest.asynctest('Color input component Test', (success, failure) => {
             classes: f(s, str, arr)
             // ignore children
           })),
-          Traverse.parent(input.element()).getOrDie('Could not find parent of input')
+          Traverse.parent(input.element).getOrDie('Could not find parent of input')
         )
       );
 
@@ -118,7 +117,7 @@ UnitTest.asynctest('Color input component Test', (success, failure) => {
               })
             ]
           })),
-          component.element()
+          component.element
         ),
 
         Logger.t(
@@ -131,7 +130,7 @@ UnitTest.asynctest('Color input component Test', (success, failure) => {
         Logger.t(
           'Type an invalid colour: "notblue"',
           GeneralSteps.sequence([
-            FocusTools.sSetFocus('Move focus to input field', component.element(), 'input'),
+            FocusTools.sSetFocus('Move focus to input field', component.element, 'input'),
             FocusTools.sSetActiveValue(doc, 'notblue'),
             Step.sync(() => {
               AlloyTriggers.emit(input, NativeEvents.input());
@@ -174,19 +173,19 @@ UnitTest.asynctest('Color input component Test', (success, failure) => {
         Log.stepsAsStep('TBA', 'Check that validating an empty string passes (first time)', [
           sSetColorInputValue(''),
           Step.wait(50),
-          UiFinder.sNotExists(component.element(), '.tox-textbox-field-invalid')
+          UiFinder.sNotExists(component.element, '.tox-textbox-field-invalid')
         ]),
 
         Log.stepsAsStep('TBA', 'Check that validating an incorrect value fails', [
           sSetColorInputValue('dog'),
           Step.wait(50),
-          UiFinder.sExists(component.element(), '.tox-textbox-field-invalid')
+          UiFinder.sExists(component.element, '.tox-textbox-field-invalid')
         ]),
 
         Log.stepsAsStep('TBA', 'Check that validating an empty is string passes', [
           sSetColorInputValue(''),
           Step.wait(50),
-          UiFinder.sNotExists(component.element(), '.tox-textbox-field-invalid')
+          UiFinder.sNotExists(component.element, '.tox-textbox-field-invalid')
         ]),
 
         TestHelpers.GuiSetup.mRemoveStyles

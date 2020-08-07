@@ -1,7 +1,5 @@
 import { Logger, Step, StepSequence } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Element, Event } from '@ephox/dom-globals';
-
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { AddEventsBehaviour, AllowBubbling, AlloyComponent, AlloyEvents } from 'ephox/alloy/api/Main';
@@ -10,7 +8,7 @@ import { Container } from 'ephox/alloy/api/ui/Container';
 
 UnitTest.asynctest('AllowBubblingTest', (success, failure) => {
   const sDispatchScrollEvent = <T> (comp: AlloyComponent): Step<T, T> => Step.sync(() => {
-    const rawEl: Element = comp.element().dom();
+    const rawEl: Element = comp.element.dom;
     rawEl.dispatchEvent(new Event('scroll'));
   });
 

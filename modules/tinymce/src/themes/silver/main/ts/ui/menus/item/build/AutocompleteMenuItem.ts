@@ -6,10 +6,9 @@
  */
 
 import { Behaviour, GuiFactory, ItemTypes, MaxHeight, Tooltipping } from '@ephox/alloy';
-import { InlineContent, Types } from '@ephox/bridge';
-import { HTMLElement } from '@ephox/dom-globals';
-import { Obj, Option } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { InlineContent, Toolbar } from '@ephox/bridge';
+import { Obj, Optional } from '@ephox/katamari';
+import { SugarElement } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import I18n from 'tinymce/core/api/util/I18n';
 import { UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
@@ -47,7 +46,7 @@ const tooltipBehaviour = (
         onShow: (component, _tooltip) => {
           tooltipWorker((elm) => {
             Tooltipping.setComponents(component, [
-              GuiFactory.external({ element: Element.fromDom(elm) })
+              GuiFactory.external({ element: SugarElement.fromDom(elm) })
             ]);
           });
         }
@@ -72,7 +71,7 @@ const renderAutocompleteItem = (
   spec: InlineContent.AutocompleterItem,
   matchText: string,
   useText: boolean,
-  presets: Types.PresetItemTypes,
+  presets: Toolbar.PresetItemTypes,
   onItemValueHandler: ItemValueHandler,
   itemResponse: ItemResponse,
   sharedBackstage: UiFactoryBackstageShared,
@@ -80,13 +79,13 @@ const renderAutocompleteItem = (
 ): ItemTypes.ItemSpec => {
   const structure = renderItemStructure({
     presets,
-    textContent: Option.none(),
-    htmlContent: useText ? spec.text.map((text) => replaceText(text, matchText)) : Option.none(),
+    textContent: Optional.none(),
+    htmlContent: useText ? spec.text.map((text) => replaceText(text, matchText)) : Optional.none(),
     ariaLabel: spec.text,
     iconContent: spec.icon,
-    shortcutContent: Option.none(),
-    checkMark: Option.none(),
-    caret: Option.none(),
+    shortcutContent: Optional.none(),
+    checkMark: Optional.none(),
+    caret: Optional.none(),
     value: spec.value
   }, sharedBackstage.providers, renderIcons, spec.icon);
 

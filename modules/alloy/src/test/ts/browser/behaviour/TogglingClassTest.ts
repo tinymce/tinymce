@@ -5,8 +5,8 @@ import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Toggling } from 'ephox/alloy/api/behaviour/Toggling';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
-import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
+import { Container } from 'ephox/alloy/api/ui/Container';
 
 UnitTest.asynctest('TogglingClassTest', (success, failure) => {
 
@@ -46,7 +46,7 @@ UnitTest.asynctest('TogglingClassTest', (success, failure) => {
             'aria-expanded': str.none()
           }
         })),
-        component.element()
+        component.element
       );
     });
 
@@ -63,7 +63,7 @@ UnitTest.asynctest('TogglingClassTest', (success, failure) => {
             'aria-expanded': str.none()
           }
         })),
-        component.element()
+        component.element
       );
     });
 

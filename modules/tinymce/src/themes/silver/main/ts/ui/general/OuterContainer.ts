@@ -5,9 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyComponent, AlloySpec, Behaviour, Composite, CustomList, Keying, RawDomSchema, Sketcher, SketchSpec, Toolbar, UiSketcher } from '@ephox/alloy';
+import {
+  AlloyComponent, AlloySpec, Behaviour, Composite, CustomList, Keying, RawDomSchema, Sketcher, SketchSpec, Toolbar, UiSketcher
+} from '@ephox/alloy';
 import { FieldSchema } from '@ephox/boulder';
-import { Arr, Id, Option, Result } from '@ephox/katamari';
+import { Arr, Id, Optional, Result } from '@ephox/katamari';
 import { ToolbarMode } from '../../api/Settings';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 
@@ -15,7 +17,9 @@ import { HeaderSpec, renderHeader } from '../header/CommonHeader';
 import SilverMenubar, { SilverMenubarSpec } from '../menus/menubar/SilverMenubar';
 import * as Sidebar from '../sidebar/Sidebar';
 import * as Throbber from '../throbber/Throbber';
-import { MoreDrawerData, MoreDrawerToolbarSpec, renderFloatingMoreToolbar, renderSlidingMoreToolbar, renderToolbar, renderToolbarGroup } from '../toolbar/CommonToolbar';
+import {
+  MoreDrawerData, MoreDrawerToolbarSpec, renderFloatingMoreToolbar, renderSlidingMoreToolbar, renderToolbar, renderToolbarGroup
+} from '../toolbar/CommonToolbar';
 
 export interface OuterContainerSketchSpec extends Sketcher.CompositeSketchSpec {
   dom: RawDomSchema;
@@ -50,17 +54,17 @@ interface ToolbarSketchSpec extends MoreDrawerData {
 }
 
 interface OuterContainerApis {
-  getHeader: (comp: AlloyComponent) => Option<AlloyComponent>;
-  getSocket: (comp: AlloyComponent) => Option<AlloyComponent>;
+  getHeader: (comp: AlloyComponent) => Optional<AlloyComponent>;
+  getSocket: (comp: AlloyComponent) => Optional<AlloyComponent>;
   setSidebar: (comp: AlloyComponent, panelConfigs: Sidebar.SidebarConfig) => void;
   toggleSidebar: (comp: AlloyComponent, name: string) => void;
   whichSidebar: (comp: AlloyComponent) => string | null;
   // Maybe just change to ToolbarAnchor.
-  getToolbar: (comp: AlloyComponent) => Option<AlloyComponent>;
+  getToolbar: (comp: AlloyComponent) => Optional<AlloyComponent>;
   setToolbar: (comp: AlloyComponent, groups) => void;
   setToolbars: (comp: AlloyComponent, toolbars) => void;
   refreshToolbar: (comp: AlloyComponent) => void;
-  getThrobber: (comp: AlloyComponent) => Option<AlloyComponent>;
+  getThrobber: (comp: AlloyComponent) => Optional<AlloyComponent>;
   focusToolbar: (comp: AlloyComponent) => void;
   setMenubar: (comp: AlloyComponent, groups) => void;
   focusMenubar: (comp: AlloyComponent) => void;
@@ -181,7 +185,7 @@ const partMultipleToolbar = Composite.partType.optional<OuterContainerSketchDeta
         providers: spec.providers,
         onEscape: () => {
           spec.onEscape();
-          return Option.some(true);
+          return Optional.some(true);
         }
       }),
       setupItem: (_mToolbar, tc, data, _index) => {
@@ -206,7 +210,7 @@ const partToolbar = Composite.partType.optional<OuterContainerSketchDetail, Tool
         uid: spec.uid,
         onEscape: () => {
           spec.onEscape();
-          return Option.some(true);
+          return Optional.some(true);
         },
         cyclicKeying: false,
         initGroups: [],

@@ -1,4 +1,4 @@
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
@@ -23,8 +23,8 @@ export interface FormFieldSpec extends CompositeSketchSpec {
 }
 
 export interface FormFieldApis {
-  getField: (container: AlloyComponent) => Option<AlloyComponent>;
-  getLabel: (container: AlloyComponent) => Option<AlloyComponent>;
+  getField: (container: AlloyComponent) => Optional<AlloyComponent>;
+  getLabel: (container: AlloyComponent) => Optional<AlloyComponent>;
 }
 
 export interface FormFieldSketcher extends CompositeSketch<FormFieldSpec>, FormFieldApis { }

@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Arr } from '@ephox/katamari';
 import Editor from '../api/Editor';
 import * as Settings from '../api/Settings';
-import { Arr } from '@ephox/katamari';
 
 const isContentCssSkinName = (url: string) => /^[a-z0-9\-]+$/i.test(url);
 

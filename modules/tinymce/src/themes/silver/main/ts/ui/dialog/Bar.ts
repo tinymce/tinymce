@@ -6,12 +6,11 @@
  */
 
 import { SimpleSpec } from '@ephox/alloy';
-import { Types } from '@ephox/bridge';
+import { Dialog } from '@ephox/bridge';
 import { Arr } from '@ephox/katamari';
 import { UiFactoryBackstageShared } from '../../backstage/Backstage';
-import { Omit } from '../Omit';
 
-type BarSpec = Omit<Types.Bar.Bar, 'type'>;
+type BarSpec = Omit<Dialog.Bar, 'type'>;
 
 export const renderBar = (spec: BarSpec, backstage: UiFactoryBackstageShared): SimpleSpec => ({
   dom: {

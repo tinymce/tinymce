@@ -1,17 +1,17 @@
 import { FocusTools, Keyboard, Keys, RealKeys, UiControls } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Arr, Future, Result, Option } from '@ephox/katamari';
+import { Arr, Future, Optional, Result } from '@ephox/katamari';
 import { Value } from '@ephox/sugar';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import { Typeahead } from 'ephox/alloy/api/ui/Typeahead';
 import * as TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import * as Sinks from 'ephox/alloy/test/Sinks';
 import TestTypeaheadSteps from 'ephox/alloy/test/typeahead/TestTypeaheadSteps';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 UnitTest.asynctest('TypeaheadTriggerTest (webdriver)', (success, failure) => {
   GuiSetup.setup((store, _doc, _body) => {
@@ -38,7 +38,7 @@ UnitTest.asynctest('TypeaheadTriggerTest (webdriver)', (success, failure) => {
             },
 
             fetch(input: AlloyComponent) {
-              const text = Value.get(input.element());
+              const text = Value.get(input.element);
               const future = Future.pure([
                 { type: 'item', data: { value: text + '1', meta: { text: text + '1' }}},
                 { type: 'item', data: { value: text + '2', meta: { text: text + '2' }}}
@@ -53,7 +53,7 @@ UnitTest.asynctest('TypeaheadTriggerTest (webdriver)', (success, failure) => {
                   value: 'blah',
                   items: Arr.map(items, TestDropdownMenu.renderItem)
                 });
-                return Option.some(TieredMenu.singleData('blah.overall', menu));
+                return Optional.some(TieredMenu.singleData('blah.overall', menu));
               });
             },
 
@@ -76,14 +76,14 @@ UnitTest.asynctest('TypeaheadTriggerTest (webdriver)', (success, failure) => {
     const steps = TestTypeaheadSteps(doc, gui, typeahead);
 
     return [
-      FocusTools.sSetFocus('Focusing typeahead', gui.element(), 'input'),
+      FocusTools.sSetFocus('Focusing typeahead', gui.element, 'input'),
 
       GuiSetup.mAddStyles(doc, [
         '.test-typeahead-selected-item { background-color: #cadbee; }'
       ]),
 
       steps.sAssertValue('Initial value of typeahead', 'initial-value'),
-      UiControls.sSetValue(typeahead.element(), 'a-'),
+      UiControls.sSetValue(typeahead.element, 'a-'),
 
       // check that the typeahead is not open.
       steps.sWaitForNoMenu('Initially, there should be no menu'),

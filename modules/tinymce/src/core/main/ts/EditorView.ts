@@ -5,12 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Fun, Option } from '@ephox/katamari';
-import { Compare, Element, Css, Traverse } from '@ephox/sugar';
+import { Fun, Optional } from '@ephox/katamari';
+import { Compare, Css, SugarElement, Traverse } from '@ephox/sugar';
 import Editor from './api/Editor';
 
 const getProp = function (propName, elm) {
-  const rawElm = elm.dom();
+  const rawElm = elm.dom;
   return rawElm[propName];
 };
 
@@ -24,7 +24,7 @@ const getMarginTop = Fun.curry(getComputedSizeProp, 'margin-top');
 const getMarginLeft = Fun.curry(getComputedSizeProp, 'margin-left');
 
 const getBoundingClientRect = function (elm) {
-  return elm.dom().getBoundingClientRect();
+  return elm.dom.getBoundingClientRect();
 };
 
 const isInsideElementContentArea = function (bodyElm, clientX, clientY) {
@@ -36,8 +36,8 @@ const isInsideElementContentArea = function (bodyElm, clientX, clientY) {
 
 const transpose = function (inline, elm, clientX, clientY) {
   const clientRect = getBoundingClientRect(elm);
-  const deltaX = inline ? clientRect.left + elm.dom().clientLeft + getMarginLeft(elm) : 0;
-  const deltaY = inline ? clientRect.top + elm.dom().clientTop + getMarginTop(elm) : 0;
+  const deltaX = inline ? clientRect.left + elm.dom.clientLeft + getMarginLeft(elm) : 0;
+  const deltaY = inline ? clientRect.top + elm.dom.clientTop + getMarginTop(elm) : 0;
   const x = clientX - deltaX;
   const y = clientY - deltaY;
 
@@ -46,7 +46,7 @@ const transpose = function (inline, elm, clientX, clientY) {
 
 // Checks if the specified coordinate is within the visual content area excluding the scrollbars
 const isXYInContentArea = function (editor: Editor, clientX, clientY) {
-  const bodyElm = Element.fromDom(editor.getBody());
+  const bodyElm = SugarElement.fromDom(editor.getBody());
   const targetElm = editor.inline ? bodyElm : Traverse.documentElement(bodyElm);
   const transposedPoint = transpose(editor.inline, targetElm, clientX, clientY);
 
@@ -54,7 +54,7 @@ const isXYInContentArea = function (editor: Editor, clientX, clientY) {
 };
 
 const fromDomSafe = function (node) {
-  return Option.from(node).map(Element.fromDom);
+  return Optional.from(node).map(SugarElement.fromDom);
 };
 
 const isEditorAttachedToDom = function (editor: Editor) {

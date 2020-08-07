@@ -5,10 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Menu, Toolbar } from '@ephox/bridge';
-import { Node } from '@ephox/dom-globals';
 import Editor from 'tinymce/core/api/Editor';
 import { NodeChangeEvent } from 'tinymce/core/api/EventTypes';
+import { Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
 import VK from 'tinymce/core/api/util/VK';
 import * as Settings from '../api/Settings';
 import * as Dialog from '../ui/Dialog';

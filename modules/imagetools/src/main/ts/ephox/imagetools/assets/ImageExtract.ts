@@ -1,4 +1,3 @@
-import { Blob, URL } from '@ephox/dom-globals';
 import { Future, Futures, Id } from '@ephox/katamari';
 import * as BlobConversions from '../api/BlobConversions';
 import * as ResultConversions from '../api/ResultConversions';

@@ -5,14 +5,14 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Node from 'tinymce/core/api/html/Node';
 import Editor from 'tinymce/core/api/Editor';
+import AstNode from 'tinymce/core/api/html/Node';
 
 // Note: node.firstChild check is for the 'allow_html_in_named_anchor' setting
 // Only want to add contenteditable attributes if there is no text within the anchor
-const isNamedAnchorNode = (node: Node) => !node.attr('href') && (node.attr('id') || node.attr('name')) && !node.firstChild;
+const isNamedAnchorNode = (node: AstNode) => !node.attr('href') && (node.attr('id') || node.attr('name')) && !node.firstChild;
 
-const setContentEditable = (state: string | null) => (nodes: Node[]) => {
+const setContentEditable = (state: string | null) => (nodes: AstNode[]) => {
   for (let i = 0; i < nodes.length; i++) {
     if (isNamedAnchorNode(nodes[i])) {
       nodes[i].attr('contenteditable', state);

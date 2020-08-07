@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLElement, HTMLImageElement, Node, ReferrerPolicy as DomReferrerPolicy } from '@ephox/dom-globals';
 import { UploadHandler } from '../file/Uploader';
 import Editor from './Editor';
 import { Formats } from './fmt/Format';
@@ -27,9 +26,6 @@ export type FilePickerCallback = (callback: Function, value: any, meta: Record<s
 export type FilePickerValidationStatus = 'valid' | 'unknown' | 'invalid' | 'none';
 export type FilePickerValidationCallback = (info: { type: string; url: string }, callback: (validation: { status: FilePickerValidationStatus; message: string}) => void) => void;
 
-// dom-globals is outdated and missing a number of valid values
-export type ReferrerPolicy = DomReferrerPolicy | 'origin' | 'same-origin' | 'strict-origin' | 'strict-origin-when-cross-origin';
-
 export type URLConverter = (url: string, name: string, elm?: HTMLElement) => string;
 export type URLConverterCallback = (url: string, node: Node, on_save: boolean, name: string) => void;
 
@@ -48,8 +44,8 @@ interface BaseEditorSettings {
   allow_html_in_named_anchor?: boolean;
   allow_script_urls?: boolean;
   allow_unsafe_link_target?: boolean;
-  anchor_bottom?: boolean | string;
-  anchor_top?: boolean | string;
+  anchor_bottom?: false | string;
+  anchor_top?: false | string;
   auto_focus?: string | true;
   automatic_uploads?: boolean;
   base_url?: string;
@@ -179,7 +175,7 @@ interface BaseEditorSettings {
   toolbar_mode?: ToolbarMode;
   typeahead_urls?: boolean;
   url_converter?: URLConverter;
-  url_converter_scope?: {};
+  url_converter_scope?: any;
   urlconverter_callback?: string | URLConverterCallback;
   valid_children?: string;
   valid_classes?: string | Record<string, string>;

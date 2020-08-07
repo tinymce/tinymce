@@ -1,5 +1,4 @@
-import { document, console } from '@ephox/dom-globals';
-import { Class, Element } from '@ephox/sugar';
+import { Class, SugarElement } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Toggling } from 'ephox/alloy/api/behaviour/Toggling';
@@ -9,12 +8,12 @@ import { Button } from 'ephox/alloy/api/ui/Button';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 import * as DomModification from 'ephox/alloy/dom/DomModification';
 
-// tslint:disable:no-console
+/* eslint-disable no-console */
 
 export default (): void => {
   const gui = Gui.create();
-  const body = Element.fromDom(document.body);
-  Class.add(gui.element(), 'gui-root-demo-container');
+  const body = SugarElement.fromDom(document.body);
+  Class.add(gui.element, 'gui-root-demo-container');
   Attachment.attachSystem(body, gui);
 
   const redBehaviour = Behaviour.create({

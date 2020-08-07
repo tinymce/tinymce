@@ -5,18 +5,17 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLElement, HTMLTableDataCellElement, HTMLTableElement, HTMLTableHeaderCellElement, HTMLTableRowElement } from '@ephox/dom-globals';
 import { Arr, Fun, Type } from '@ephox/katamari';
 import { TableRender } from '@ephox/snooker';
-import { Attr, Html, SelectorFilter, SelectorFind } from '@ephox/sugar';
+import { Attribute, Html, SelectorFilter, SelectorFind } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { fireNewCell, fireNewRow } from '../api/Events';
-import { getDefaultAttributes, getDefaultStyles, isPercentagesForced, isPixelsForced, isResponsiveForced, getTableHeaderType } from '../api/Settings';
+import { getDefaultAttributes, getDefaultStyles, getTableHeaderType, isPercentagesForced, isPixelsForced, isResponsiveForced } from '../api/Settings';
 import * as Util from '../core/Util';
 import { enforceNone, enforcePercentage, enforcePixels } from './EnforceUnit';
 
 const placeCaretInCell = (editor: Editor, cell) => {
-  editor.selection.select(cell.dom(), true);
+  editor.selection.select(cell.dom, true);
   editor.selection.collapse(true);
 };
 
@@ -26,10 +25,10 @@ const selectFirstCellInTable = (editor: Editor, tableElm) => {
 
 const fireEvents = (editor: Editor, table) => {
   Arr.each(SelectorFilter.descendants<HTMLTableRowElement>(table, 'tr'), (row) => {
-    fireNewRow(editor, row.dom());
+    fireNewRow(editor, row.dom);
 
     Arr.each(SelectorFilter.descendants<HTMLTableDataCellElement | HTMLTableHeaderCellElement>(row, 'th,td'), (cell) => {
-      fireNewCell(editor, cell.dom());
+      fireNewCell(editor, cell.dom);
     });
   });
 };
@@ -44,7 +43,7 @@ const insert = (editor: Editor, columns: number, rows: number, colHeaders: numbe
   };
 
   const table = TableRender.render(rows, columns, rowHeaders, colHeaders, getTableHeaderType(editor), options);
-  Attr.set(table, 'data-mce-id', '__mce');
+  Attribute.set(table, 'data-mce-id', '__mce');
 
   const html = Html.getOuter(table);
   editor.insertContent(html);
@@ -58,10 +57,10 @@ const insert = (editor: Editor, columns: number, rows: number, colHeaders: numbe
       enforcePercentage(editor, table);
     }
     Util.removeDataStyle(table);
-    Attr.remove(table, 'data-mce-id');
+    Attribute.remove(table, 'data-mce-id');
     fireEvents(editor, table);
     selectFirstCellInTable(editor, table);
-    return table.dom();
+    return table.dom;
   }).getOr(null);
 };
 

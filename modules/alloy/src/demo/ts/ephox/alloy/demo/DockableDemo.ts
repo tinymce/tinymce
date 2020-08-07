@@ -1,28 +1,27 @@
-import { document, window } from '@ephox/dom-globals';
-import { Class, Css, Element, DomEvent } from '@ephox/sugar';
+import { Class, Css, DomEvent, SugarElement } from '@ephox/sugar';
 
 import * as Boxes from 'ephox/alloy/alien/Boxes';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Docking } from 'ephox/alloy/api/behaviour/Docking';
 import { Dragging } from 'ephox/alloy/api/behaviour/Dragging';
+import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
-import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
 
 export default (): void => {
   const gui = Gui.create();
-  const body = Element.fromDom(document.body);
-  Class.add(gui.element(), 'gui-root-demo-container');
-  // Css.set(gui.element(), 'direction', 'rtl');
+  const body = SugarElement.fromDom(document.body);
+  Class.add(gui.element, 'gui-root-demo-container');
+  // Css.set(gui.element, 'direction', 'rtl');
 
   Attachment.attachSystem(body, gui);
   // Css.set(body, 'margin-top', '2000px');
   Css.set(body, 'margin-bottom', '2000px');
 
   /* As of alloy 3.51.0, alloy root contains must be told about scroll events */
-  DomEvent.bind(Element.fromDom(window), 'scroll', (evt) => {
+  DomEvent.bind(SugarElement.fromDom(window), 'scroll', (evt) => {
     gui.broadcastEvent(SystemEvents.windowScroll(), evt);
   });
 
@@ -65,7 +64,7 @@ export default (): void => {
                 transitionClass: 'demo-alloy-dock-transition',
                 fadeOutClass: 'demo-alloy-dock-fade-out',
                 fadeInClass: 'demo-alloy-dock-fade-in',
-                lazyContext: (component) => component.getSystem().getByUid('panel-container').toOption().map((comp) => Boxes.box(comp.element()))
+                lazyContext: (component) => component.getSystem().getByUid('panel-container').toOptional().map((comp) => Boxes.box(comp.element))
               }
             })
           ])

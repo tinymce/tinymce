@@ -24,7 +24,7 @@ UnitTest.asynctest('TieredMenuTest', (success, failure) => {
         classes: [ 'test-menu' ]
       },
       components: [
-        Menu.parts().items({ })
+        Menu.parts.items({ })
       ],
 
       markers: TestDropdownMenu.markers(),
@@ -74,12 +74,12 @@ UnitTest.asynctest('TieredMenuTest', (success, failure) => {
   ), (doc, _body, _gui, component, store) => {
     // TODO: Flesh out test.
     // const cAssertStructure = (label, expected) => {
-    //   return Chain.op((element: Element) => {
+    //   return Chain.op((element: SugarElement) => {
     //     Assertions.assertStructure(label, expected, element);
     //   });
     // };
     //
-    // const cTriggerFocusItem = Chain.op((target: Element) => {
+    // const cTriggerFocusItem = Chain.op((target: SugarElement) => {
     //   AlloyTriggers.dispatch(component, target, SystemEvents.focusItem());
     // });
     //
@@ -112,7 +112,7 @@ UnitTest.asynctest('TieredMenuTest', (success, failure) => {
         classes: [ arr.has('test-menu') ],
         children: Arr.map(structureMenus, (sm) => sm(s, str, arr))
       })),
-      component.element()
+      component.element
     );
 
     return [
@@ -124,7 +124,7 @@ UnitTest.asynctest('TieredMenuTest', (success, failure) => {
             structureMenu(true, [ true, false, false ], [ false, true, false ], [ false, false, false ])(s, str, arr)
           ]
         })),
-        component.element()
+        component.element
       ),
 
       Step.sync(() => {
@@ -169,7 +169,7 @@ UnitTest.asynctest('TieredMenuTest', (success, failure) => {
         ]
       ),
 
-      Mouse.sHoverOn(component.element(), 'li:contains("a-Beta")'),
+      Mouse.sHoverOn(component.element, 'li:contains("a-Beta")'),
       sAssertMenu(
         'Post hover on item with submenu structure test',
         [

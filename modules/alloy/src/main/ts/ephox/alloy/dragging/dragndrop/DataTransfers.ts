@@ -1,4 +1,3 @@
-import { DataTransfer, Element } from '@ephox/dom-globals';
 import { Arr, Strings, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 
@@ -74,12 +73,13 @@ const isValidDrop = (transfer: DataTransfer) => {
   return effectAllowed === 'all' || effectAllowed === 'uninitialized' || Strings.contains(effectAllowed, dropEffect);
 };
 
-const getDataTransferFromEvent = (simulatedEvent: NativeSimulatedEvent): DataTransfer => {
-  const rawEvent: any = simulatedEvent.event().raw();
-  return rawEvent.dataTransfer;
+const getDataTransferFromEvent = (simulatedEvent: NativeSimulatedEvent<DragEvent>): DataTransfer => {
+  const rawEvent = simulatedEvent.event.raw;
+  // TODO: Should this handle if dataTransfer is null?
+  return rawEvent.dataTransfer as DataTransfer;
 };
 
-const setDropEffectOnEvent = (simulatedEvent: NativeSimulatedEvent, dropEffect: string) => {
+const setDropEffectOnEvent = (simulatedEvent: NativeSimulatedEvent<DragEvent>, dropEffect: string) => {
   setDropEffect(getDataTransferFromEvent(simulatedEvent), dropEffect);
 };
 

@@ -1,4 +1,4 @@
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 
 import { Composing } from '../../api/behaviour/Composing';
 import { Highlighting } from '../../api/behaviour/Highlighting';
@@ -33,7 +33,7 @@ const make: CompositeSketchFactory<MenuDetail, MenuSpec> = (detail, components, 
         }
       }),
       Composing.config({
-        find: Option.some
+        find: Optional.some
       }),
       Keying.config(detail.movement.config(detail, detail.movement))
     ]
@@ -42,8 +42,8 @@ const make: CompositeSketchFactory<MenuDetail, MenuSpec> = (detail, components, 
     // This is dispatched from a menu to tell an item to be highlighted.
     AlloyEvents.run(ItemEvents.focus(), (menu, simulatedEvent) => {
       // Highlight the item
-      const event = simulatedEvent.event();
-      menu.getSystem().getByDom(event.target()).each((item) => {
+      const event = simulatedEvent.event;
+      menu.getSystem().getByDom(event.target).each((item) => {
         Highlighting.highlight(menu, item);
 
         simulatedEvent.stop();
@@ -56,7 +56,7 @@ const make: CompositeSketchFactory<MenuDetail, MenuSpec> = (detail, components, 
     // Highlight the item that the cursor is over. The onHighlight
     // code needs to handle updating focus if required
     AlloyEvents.run<MenuItemHoverEvent>(ItemEvents.hover(), (menu, simulatedEvent) => {
-      const item = simulatedEvent.event().item();
+      const item = simulatedEvent.event.item;
       Highlighting.highlight(menu, item);
     })
   ]),

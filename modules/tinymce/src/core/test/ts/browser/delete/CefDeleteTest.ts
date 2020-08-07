@@ -1,7 +1,7 @@
 import { ApproxStructure, GeneralSteps, Keyboard, Keys, Logger, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
@@ -10,7 +10,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteTest', function (succes
   Theme();
 
   const sKeyUp = function (editor, key) {
-    const iDoc = Element.fromDom(editor.getDoc());
+    const iDoc = SugarElement.fromDom(editor.getDoc());
     return Keyboard.sKeyup(iDoc, key, {});
   };
 

@@ -1,5 +1,4 @@
-import { document } from '@ephox/dom-globals';
-import { Css, DomEvent, Element, Insert, SelectorFind } from '@ephox/sugar';
+import { Css, DomEvent, Insert, SelectorFind, SugarElement } from '@ephox/sugar';
 import * as Dragger from 'ephox/dragster/api/Dragger';
 import Sizers from 'ephox/dragster/demo/Sizers';
 import * as Grow from 'ephox/dragster/transform/Grow';
@@ -9,11 +8,11 @@ import * as Relocate from 'ephox/dragster/transform/Relocate';
 
 // const dialog = Dragster();
 
-// const titlebar = Element.fromText('title', document);
+// const titlebar = SugarElement.fromText('title', document);
 
 // const content = (function () {
-//   const text = Element.fromText('This is the body of the text ...', document);
-//   const p = Element.fromTag('p');
+//   const text = SugarElement.fromText('This is the body of the text ...', document);
+//   const p = SugarElement.fromTag('p');
 //   Insert.append(p, text);
 //   return p;
 // })();
@@ -23,17 +22,17 @@ import * as Relocate from 'ephox/dragster/transform/Relocate';
 
 // // Demonstrate that dialog can change after being created.
 // setTimeout(function () {
-//   dialog.setHeader(Element.fromText('blah'));
-//   dialog.setContent(Element.fromText('new content'));
+//   dialog.setHeader(SugarElement.fromText('blah'));
+//   dialog.setContent(SugarElement.fromText('new content'));
 // }, 5000);
 
-// container.append(dialog.element().dom());
+// container.append(dialog.element().dom);
 
 // $('#ephox-ui').append(container);
 
 // dialog.show(10, 10);
 
-const div = Element.fromTag('div');
+const div = SugarElement.fromTag('div');
 Css.setAll(div, {
   position: 'absolute',
   left: '10px',
@@ -83,6 +82,6 @@ relocater.events.stop.bind(function () {
   sizers.show();
 });
 DomEvent.bind(div, 'mousedown', function () {
-  relocater.go(Element.fromDom(document.body));
+  relocater.go(SugarElement.fromDom(document.body));
 });
 relocater.off();

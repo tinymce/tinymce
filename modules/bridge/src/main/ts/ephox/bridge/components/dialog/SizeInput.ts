@@ -1,8 +1,8 @@
 import { ValueSchema, FieldSchema } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
-import { FormComponentWithLabel, FormComponentWithLabelApi, formComponentWithLabelFields } from './FormComponent';
+import { FormComponentWithLabel, FormComponentWithLabelSpec, formComponentWithLabelFields } from './FormComponent';
 
-export interface SizeInputApi extends FormComponentWithLabelApi {
+export interface SizeInputSpec extends FormComponentWithLabelSpec {
   type: 'sizeinput';
   constrain?: boolean;
   disabled?: boolean;
@@ -26,4 +26,5 @@ export const sizeInputDataProcessor = ValueSchema.objOf([
   FieldSchema.strictString('height')
 ]);
 
-export const createSizeInput = (spec: SizeInputApi): Result<SizeInput, ValueSchema.SchemaError<any>> => ValueSchema.asRaw<SizeInput>('sizeinput', sizeInputSchema, spec);
+export const createSizeInput = (spec: SizeInputSpec): Result<SizeInput, ValueSchema.SchemaError<any>> =>
+  ValueSchema.asRaw<SizeInput>('sizeinput', sizeInputSchema, spec);

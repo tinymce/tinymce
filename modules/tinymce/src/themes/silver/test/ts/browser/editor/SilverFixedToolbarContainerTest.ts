@@ -1,14 +1,14 @@
 import { ApproxStructure, Assertions, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Body, Element, Insert, Remove } from '@ephox/sugar';
+import { Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('Silver fixed_toolbar_container test', (success, failure) => {
   SilverTheme();
 
-  const toolbarContainer = Element.fromHtml('<div id="toolbar" style="margin: 50px 0;"></div>');
-  Insert.append(Body.body(), toolbarContainer);
+  const toolbarContainer = SugarElement.fromHtml('<div id="toolbar" style="margin: 50px 0;"></div>');
+  Insert.append(SugarBody.body(), toolbarContainer);
 
   const sToolbarTest = () => Assertions.sAssertStructure(
     'Container structure',

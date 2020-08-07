@@ -1,8 +1,8 @@
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
-import { Option, Result } from '@ephox/katamari';
-import { FormComponentWithLabelApi, FormComponentWithLabel, formComponentWithLabelFields } from './FormComponent';
+import { Optional, Result } from '@ephox/katamari';
+import { FormComponentWithLabel, FormComponentWithLabelSpec, formComponentWithLabelFields } from './FormComponent';
 
-export interface InputApi extends FormComponentWithLabelApi {
+export interface InputSpec extends FormComponentWithLabelSpec {
   type: 'input';
   inputMode?: string;
   placeholder?: string;
@@ -12,8 +12,8 @@ export interface InputApi extends FormComponentWithLabelApi {
 
 export interface Input extends FormComponentWithLabel {
   type: 'input';
-  inputMode: Option<string>;
-  placeholder: Option<string>;
+  inputMode: Optional<string>;
+  placeholder: Optional<string>;
   maximized: boolean;
   disabled: boolean;
 }
@@ -29,4 +29,5 @@ export const inputSchema = ValueSchema.objOf(inputFields);
 
 export const inputDataProcessor = ValueSchema.string;
 
-export const createInput = (spec: InputApi): Result<Input, ValueSchema.SchemaError<any>> => ValueSchema.asRaw<Input>('input', inputSchema, spec);
+export const createInput = (spec: InputSpec): Result<Input, ValueSchema.SchemaError<any>> =>
+  ValueSchema.asRaw<Input>('input', inputSchema, spec);

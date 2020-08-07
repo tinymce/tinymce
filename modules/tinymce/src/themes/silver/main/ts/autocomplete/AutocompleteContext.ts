@@ -5,9 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Range, Text } from '@ephox/dom-globals';
-import { Option } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { Optional } from '@ephox/katamari';
+import { SugarElement } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import { repeatLeft } from '../alien/TextSearch';
 import * as AutocompleteTag from './AutocompleteTag';
@@ -21,14 +20,14 @@ export interface AutocompleteContext {
 
 const stripTriggerChar = (text: string, triggerCh: string) => text.substring(triggerCh.length);
 
-const findChar = (text: string, index: number, ch: string): Option<number> => {
+const findChar = (text: string, index: number, ch: string): Optional<number> => {
   // Identify the `char` in, and start the text from that point forward. If there is ever any whitespace, fail
   let i;
 
   for (i = index - 1; i >= 0; i--) {
     const char = text.charAt(i);
     if (isWhitespace(char)) {
-      return Option.none();
+      return Optional.none();
     }
 
     if (char === ch) {
@@ -36,16 +35,16 @@ const findChar = (text: string, index: number, ch: string): Option<number> => {
     }
   }
 
-  return Option.some(i);
+  return Optional.some(i);
 };
 
-const findStart = (dom: DOMUtils, initRange: Range, ch: string, minChars: number = 0): Option<AutocompleteContext> => {
+const findStart = (dom: DOMUtils, initRange: Range, ch: string, minChars: number = 0): Optional<AutocompleteContext> => {
   if (!isValidTextRange(initRange)) {
-    return Option.none();
+    return Optional.none();
   }
 
   const findTriggerChIndex = (element: Text, offset: number, text: string) =>
-    // Stop searching by just returning the current offset if whitespace was found (eg Option.none())
+    // Stop searching by just returning the current offset if whitespace was found (eg Optional.none())
     // and we'll handle the final checks below instead
     findChar(text, offset, ch).getOr(offset);
 
@@ -57,7 +56,7 @@ const findStart = (dom: DOMUtils, initRange: Range, ch: string, minChars: number
 
     // If the range is collapsed then we didn't find a match so abort
     if (range.collapsed) {
-      return Option.none();
+      return Optional.none();
     }
 
     const text = getText(range);
@@ -65,20 +64,20 @@ const findStart = (dom: DOMUtils, initRange: Range, ch: string, minChars: number
 
     // If the match doesn't start with the trigger char (eg whitespace found) or the match is less than the minimum number of chars then abort
     if (triggerCharIndex !== 0 || stripTriggerChar(text, ch).length < minChars ) {
-      return Option.none();
+      return Optional.none();
     } else {
-      return Option.some({ text: stripTriggerChar(text, ch), range, triggerChar: ch });
+      return Optional.some({ text: stripTriggerChar(text, ch), range, triggerChar: ch });
     }
   });
 };
 
-const getContext = (dom: DOMUtils, initRange: Range, ch: string, minChars: number = 0): Option<AutocompleteContext> => AutocompleteTag.detect(Element.fromDom(initRange.startContainer)).fold(
+const getContext = (dom: DOMUtils, initRange: Range, ch: string, minChars: number = 0): Optional<AutocompleteContext> => AutocompleteTag.detect(SugarElement.fromDom(initRange.startContainer)).fold(
   () => findStart(dom, initRange, ch, minChars),
   (elm) => {
     const range = dom.createRng();
-    range.selectNode(elm.dom());
+    range.selectNode(elm.dom);
     const text = getText(range);
-    return Option.some({ range, text: stripTriggerChar(text, ch), triggerChar: ch });
+    return Optional.some({ range, text: stripTriggerChar(text, ch), triggerChar: ch });
   }
 );
 

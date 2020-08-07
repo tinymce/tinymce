@@ -5,11 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLTableElement, Range } from '@ephox/dom-globals';
-import { Arr, Fun, Obj, Option } from '@ephox/katamari';
+import { Arr, Fun, Obj, Optional } from '@ephox/katamari';
 import { DomDescent } from '@ephox/phoenix';
 import { CellMutations, ResizeWire, RunOperation, TableDirection, TableFill, TableGridSize, TableOperations } from '@ephox/snooker';
-import { Element, Node } from '@ephox/sugar';
+import { SugarElement, SugarNode } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { fireNewCell, fireNewRow } from '../api/Events';
@@ -20,7 +19,7 @@ import * as Direction from '../queries/Direction';
 import * as TableSize from '../queries/TableSize';
 import { getCellsFromSelection, getRowsFromSelection } from '../selection/TableSelection';
 
-type TableAction<T> = (table: Element<HTMLTableElement>, target: T) => Option<Range>;
+type TableAction<T> = (table: SugarElement<HTMLTableElement>, target: T) => Optional<Range>;
 export type SimpleTableAction = (editor: Editor, args: Record<string, any>) => void;
 export type CombinedTargetsTableAction = TableAction<RunOperation.CombinedTargets>;
 export type PasteTableAction = TableAction<RunOperation.TargetPaste>;
@@ -47,43 +46,43 @@ export interface TableActions {
   unmakeColumnHeader: ElementTableAction;
   getTableRowType: (editor: Editor) => string;
   getTableCellType: (editor: Editor) => string;
-  getTableColType: (table: Element<HTMLTableElement>, target: RunOperation.TargetSelection) => string;
+  getTableColType: (table: SugarElement<HTMLTableElement>, target: RunOperation.TargetSelection) => string;
 }
 
 export const TableActions = (editor: Editor, lazyWire: () => ResizeWire): TableActions => {
-  const isTableBody = (editor: Editor) => Node.name(Util.getBody(editor)) === 'table';
+  const isTableBody = (editor: Editor) => SugarNode.name(Util.getBody(editor)) === 'table';
 
-  const lastRowGuard = (table: Element<HTMLTableElement>) => isTableBody(editor) === false || TableGridSize.getGridSize(table).rows() > 1;
+  const lastRowGuard = (table: SugarElement<HTMLTableElement>) => isTableBody(editor) === false || TableGridSize.getGridSize(table).rows > 1;
 
-  const lastColumnGuard = (table: Element<HTMLTableElement>) =>
-    isTableBody(editor) === false || TableGridSize.getGridSize(table).columns() > 1;
+  const lastColumnGuard = (table: SugarElement<HTMLTableElement>) =>
+    isTableBody(editor) === false || TableGridSize.getGridSize(table).columns > 1;
 
-  // Option.none gives the default cloneFormats.
+  // Optional.none gives the default cloneFormats.
   const cloneFormats = getCloneElements(editor);
 
   const execute = <T> (operation: RunOperation.OperationCallback<T>, guard, mutate, lazyWire) =>
-    (table: Element<HTMLTableElement>, target: T): Option<Range> => {
+    (table: SugarElement<HTMLTableElement>, target: T): Optional<Range> => {
       Util.removeDataStyle(table);
       const wire = lazyWire();
-      const doc = Element.fromDom(editor.getDoc());
+      const doc = SugarElement.fromDom(editor.getDoc());
       const direction = TableDirection(Direction.directionAt);
       const generators = TableFill.cellOperations(mutate, doc, cloneFormats);
       const sizing = TableSize.get(editor, table);
       return guard(table) ? operation(wire, table, target, generators, direction, sizing).bind((result) => {
-        Arr.each(result.newRows(), (row) => {
-          fireNewRow(editor, row.dom());
+        Arr.each(result.newRows, (row) => {
+          fireNewRow(editor, row.dom);
         });
-        Arr.each(result.newCells(), (cell) => {
-          fireNewCell(editor, cell.dom());
+        Arr.each(result.newCells, (cell) => {
+          fireNewCell(editor, cell.dom);
         });
-        return result.cursor().map((cell) => {
+        return result.cursor.map((cell) => {
           const des = DomDescent.freefallRtl(cell);
           const rng = editor.dom.createRng();
-          rng.setStart(des.element().dom(), des.offset());
-          rng.setEnd(des.element().dom(), des.offset());
+          rng.setStart(des.element.dom, des.offset);
+          rng.setEnd(des.element.dom, des.offset);
           return rng;
         });
-      }) : Option.none();
+      }) : Optional.none();
     };
 
   const deleteRow = execute(TableOperations.eraseRows, lastRowGuard, Fun.noop, lazyWire);

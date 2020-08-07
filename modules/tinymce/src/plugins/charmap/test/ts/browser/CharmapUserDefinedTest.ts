@@ -1,17 +1,16 @@
 import { Chain, FocusTools, Guard, Log, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import CharmapPlugin from 'tinymce/plugins/charmap/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 
 const cFakeEvent = function (name) {
   return Chain.control(
-    Chain.op(function (elm: Element) {
+    Chain.op(function (elm: SugarElement) {
       const evt = document.createEvent('HTMLEvents');
       evt.initEvent(name, true, true);
-      elm.dom().dispatchEvent(evt);
+      elm.dom.dispatchEvent(evt);
     }),
     Guard.addLogging('Fake event')
   );
@@ -25,7 +24,7 @@ UnitTest.asynctest('browser.tinymce.plugins.charmap.CharmapUserDefinedTest', (su
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
     const tinyUi = TinyUi(editor);
-    const doc = Element.fromDom(document);
+    const doc = SugarElement.fromDom(document);
 
     Pipeline.async({},
       Log.steps('TBA', 'Charmap: User defined charmap', [

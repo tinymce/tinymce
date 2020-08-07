@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element, Node } from '@ephox/dom-globals';
 import { Cell } from '@ephox/katamari';
 import { Pattern as PolarisPattern } from '@ephox/polaris';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';

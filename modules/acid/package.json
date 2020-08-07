@@ -9,7 +9,6 @@
   "dependencies": {
     "@ephox/alloy": "^7.0.5",
     "@ephox/boulder": "^4.0.7",
-    "@ephox/dom-globals": "^1.1.2",
     "@ephox/katamari": "^6.1.1",
     "@ephox/sugar": "^6.1.1",
     "tslib": "^2.0.0"

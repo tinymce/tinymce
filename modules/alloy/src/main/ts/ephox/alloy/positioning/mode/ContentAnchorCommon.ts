@@ -1,15 +1,15 @@
-import { Option } from '@ephox/katamari';
-import { Element, Position } from '@ephox/sugar';
+import { Optional } from '@ephox/katamari';
+import { SugarElement, SugarPosition } from '@ephox/sugar';
 
 import * as Boxes from '../../alien/Boxes';
 import * as CssPosition from '../../alien/CssPosition';
 import * as Bubble from '../layout/Bubble';
 import * as Layout from '../layout/Layout';
 import * as Origins from '../layout/Origins';
-import { nu as NuAnchor, SelectionAnchor, NodeAnchor } from './Anchoring';
+import { NodeAnchor, nu as NuAnchor, SelectionAnchor } from './Anchoring';
 import * as AnchorLayouts from './AnchorLayouts';
 
-const capRect = (left: number, top: number, width: number, height: number): Option<Boxes.BoxByPoint> => {
+const capRect = (left: number, top: number, width: number, height: number): Optional<Boxes.BoxByPoint> => {
   let newLeft = left, newTop = top, newWidth = width, newHeight = height;
   // Try to prevent the context toolbar from getting above the editor toolbar
   if (left < 0) {
@@ -20,11 +20,11 @@ const capRect = (left: number, top: number, width: number, height: number): Opti
     newTop = 0;
     newHeight = height + top;
   }
-  const point = CssPosition.screen(Position(newLeft, newTop));
-  return Option.some(Boxes.pointed(point, newWidth, newHeight));
+  const point = CssPosition.screen(SugarPosition(newLeft, newTop));
+  return Optional.some(Boxes.pointed(point, newWidth, newHeight));
 };
 
-const calcNewAnchor = (optBox: Option<Boxes.BoxByPoint>, rootPoint: CssPosition.CssPositionAdt, anchorInfo: SelectionAnchor | NodeAnchor, origin: Origins.OriginAdt, elem: Element) => optBox.map((box) => {
+const calcNewAnchor = (optBox: Optional<Boxes.BoxByPoint>, rootPoint: CssPosition.CssPositionAdt, anchorInfo: SelectionAnchor | NodeAnchor, origin: Origins.OriginAdt, elem: SugarElement) => optBox.map((box) => {
   const points = [ rootPoint, box.point ];
   const topLeft = Origins.cata(origin,
     () => CssPosition.sumAsAbsolute(points),
@@ -33,8 +33,8 @@ const calcNewAnchor = (optBox: Option<Boxes.BoxByPoint>, rootPoint: CssPosition.
   );
 
   const anchorBox = Boxes.rect(
-    topLeft.left(),
-    topLeft.top(),
+    topLeft.left,
+    topLeft.top,
     box.width,
     box.height
   );
@@ -54,7 +54,7 @@ const calcNewAnchor = (optBox: Option<Boxes.BoxByPoint>, rootPoint: CssPosition.
     layoutsRtl,
     layoutsLtr,
     layoutsRtl,
-    Option.none()
+    Optional.none()
   );
 
   return NuAnchor({
@@ -62,7 +62,7 @@ const calcNewAnchor = (optBox: Option<Boxes.BoxByPoint>, rootPoint: CssPosition.
     bubble: anchorInfo.bubble.getOr(Bubble.fallback()),
     overrides: anchorInfo.overrides,
     layouts,
-    placer: Option.none()
+    placer: Optional.none()
   });
 });
 

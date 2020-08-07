@@ -5,8 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import * as FilterContent from '../core/FilterContent';
 import Editor from 'tinymce/core/api/Editor';
+import * as FilterContent from '../core/FilterContent';
 import * as Settings from './Settings';
 
 const register = (editor: Editor) => {

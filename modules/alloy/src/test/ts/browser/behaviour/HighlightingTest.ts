@@ -1,7 +1,7 @@
 import { Assertions, Chain, NamedChain, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr, Result } from '@ephox/katamari';
-import { Attr, Class, Compare, Truncate } from '@ephox/sugar';
+import { Attribute, Class, Compare, Truncate } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Highlighting } from 'ephox/alloy/api/behaviour/Highlighting';
@@ -65,7 +65,7 @@ UnitTest.asynctest('HighlightingTest', (success, failure) => {
       NamedChain.direct('container', UiFinder.cFindIn('.test-selected'), 'selected'),
       NamedChain.direct('selected', Chain.binder((sel) => Class.has(sel, expected) ? Result.value(sel) :
         Result.error(label + '\nIncorrect element selected. Expected: ' + expected + ', but was: ' +
-              Attr.get(sel, 'class'))), '_')
+          Attribute.get(sel, 'class'))), '_')
     ]);
 
     const cHighlight: Chain<any, any> = Chain.op((item: AlloyComponent) => {
@@ -104,14 +104,14 @@ UnitTest.asynctest('HighlightingTest', (success, failure) => {
 
     const cGetHighlightedOrDie = Chain.binder(() => Highlighting.getHighlighted(component).fold(() => Result.error(new Error('getHighlighted did not find a selection')), Result.value));
 
-    const cGetHighlightedIsNone = Chain.binder((v) => Highlighting.getHighlighted(component).fold(() => Result.value(v), (comp) => Result.error('Highlighted value should be nothing. Was: ' + Truncate.getHtml(comp.element()))));
+    const cGetHighlightedIsNone = Chain.binder((v) => Highlighting.getHighlighted(component).fold(() => Result.value(v), (comp) => Result.error('Highlighted value should be nothing. Was: ' + Truncate.getHtml(comp.element))));
 
     const cGetFirst = Chain.binder(() => Highlighting.getFirst(component).fold(() => Result.error(new Error('getFirst found nothing')), Result.value));
 
     const cGetLast = Chain.binder(() => Highlighting.getLast(component).fold(() => Result.error(new Error('getLast found nothing')), Result.value));
 
     const cHasClass = (clazz: string) => Chain.binder((comp: AlloyComponent) => {
-      const elem = comp.element();
+      const elem = comp.element;
       return Class.has(elem, clazz) ? Result.value(elem) :
         Result.error('element ' + Truncate.getHtml(elem) + ' did not have class: ' + clazz);
     });
@@ -124,7 +124,7 @@ UnitTest.asynctest('HighlightingTest', (success, failure) => {
     return [
       Chain.asStep({}, [
         NamedChain.asChain([
-          NamedChain.writeValue('container', component.element()),
+          NamedChain.writeValue('container', component.element),
           NamedChain.direct('container', cFindComponent('.alpha'), 'alpha'),
           NamedChain.direct('container', cFindComponent('.beta'), 'beta'),
           NamedChain.direct('container', cFindComponent('.gamma'), 'gamma'),
@@ -174,7 +174,7 @@ UnitTest.asynctest('HighlightingTest', (success, failure) => {
           NamedChain.direct('container', cGetHighlightedIsNone, '_'),
 
           Chain.op((_input) => {
-            Highlighting.highlightBy(component, (comp) => Class.has(comp.element(), 'beta'));
+            Highlighting.highlightBy(component, (comp) => Class.has(comp.element, 'beta'));
           }),
 
           NamedChain.direct('container', cGetHighlightedOrDie, 'blah'),
@@ -188,7 +188,7 @@ UnitTest.asynctest('HighlightingTest', (success, failure) => {
               const actual = candidates[i];
               Assertions.assertEq(
                 'Checking DOM element at index: ' + i, true,
-                Compare.eq(exp.element(), actual.element())
+                Compare.eq(exp.element, actual.element)
               );
             });
 

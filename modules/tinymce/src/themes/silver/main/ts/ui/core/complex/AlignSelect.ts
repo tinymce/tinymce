@@ -6,11 +6,11 @@
  */
 
 import { AlloyComponent, AlloyTriggers } from '@ephox/alloy';
-import { Arr, Option, Fun } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 import { updateMenuIcon } from '../../dropdown/CommonDropdown';
-import { createMenuItems, createSelectButton, FormatItem, PreviewSpec, SelectSpec, FormatterFormatItem } from './BespokeSelect';
+import { createMenuItems, createSelectButton, FormatItem, FormatterFormatItem, PreviewSpec, SelectSpec } from './BespokeSelect';
 import { buildBasicStaticDataset } from './SelectDatasets';
 import { IsSelectedForType } from './utils/FormatRegister';
 
@@ -22,11 +22,11 @@ const alignMenuItems = [
 ];
 
 const getSpec = (editor: Editor): SelectSpec => {
-  const getMatchingValue = (): Option<Partial<FormatItem>> => Arr.find(alignMenuItems, (item) => editor.formatter.match(item.format));
+  const getMatchingValue = (): Optional<Partial<FormatItem>> => Arr.find(alignMenuItems, (item) => editor.formatter.match(item.format));
 
   const isSelectedFor: IsSelectedForType = (format: string) => () => editor.formatter.match(format);
 
-  const getPreviewFor = (_format: string) => () => Option.none<PreviewSpec>();
+  const getPreviewFor = (_format: string) => () => Optional.none<PreviewSpec>();
 
   const updateSelectMenuIcon = (comp: AlloyComponent) => {
     const match = getMatchingValue();
@@ -36,9 +36,9 @@ const getSpec = (editor: Editor): SelectSpec => {
     });
   };
 
-  const nodeChangeHandler = Option.some((comp: AlloyComponent) => () => updateSelectMenuIcon(comp));
+  const nodeChangeHandler = Optional.some((comp: AlloyComponent) => () => updateSelectMenuIcon(comp));
 
-  const setInitialValue = Option.some((comp: AlloyComponent) => updateSelectMenuIcon(comp));
+  const setInitialValue = Optional.some((comp: AlloyComponent) => updateSelectMenuIcon(comp));
 
   const dataset = buildBasicStaticDataset(alignMenuItems);
 
@@ -48,9 +48,9 @@ const getSpec = (editor: Editor): SelectSpec => {
 
   return {
     tooltip: 'Align',
-    icon: Option.some('align-left'),
+    icon: Optional.some('align-left'),
     isSelectedFor,
-    getCurrentValue: Fun.constant(Option.none()),
+    getCurrentValue: Optional.none,
     getPreviewFor,
     onAction,
     setInitialValue,

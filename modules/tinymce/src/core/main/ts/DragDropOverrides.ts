@@ -5,19 +5,18 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { document, DragEvent, Element, Node, HTMLElement, MouseEvent } from '@ephox/dom-globals';
 import { Arr, Singleton } from '@ephox/katamari';
 import DOMUtils from './api/dom/DOMUtils';
-import Selection from './api/dom/Selection';
+import EditorSelection from './api/dom/Selection';
 import Editor from './api/Editor';
 import * as Settings from './api/Settings';
 import Delay from './api/util/Delay';
 import { EditorEvent } from './api/util/EventDispatcher';
 import * as MousePosition from './dom/MousePosition';
 import * as NodeType from './dom/NodeType';
+import * as ErrorReporter from './ErrorReporter';
 import { isUIElement } from './focus/FocusController';
 import * as Predicate from './util/Predicate';
-import * as ErrorReporter from './ErrorReporter';
 
 /**
  * This module contains logic overriding the drag/drop logic of the editor.
@@ -61,19 +60,20 @@ const cloneElement = (elm: HTMLElement) => {
 };
 
 const createGhost = (editor: Editor, elm: HTMLElement, width: number, height: number) => {
+  const dom = editor.dom;
   const clonedElm = elm.cloneNode(true);
 
-  editor.dom.setStyles(clonedElm, { width, height });
-  editor.dom.setAttrib(clonedElm, 'data-mce-selected', null);
+  dom.setStyles(clonedElm, { width, height });
+  dom.setAttrib(clonedElm, 'data-mce-selected', null);
 
-  const ghostElm = editor.dom.create('div', {
+  const ghostElm = dom.create('div', {
     'class': 'mce-drag-container',
     'data-mce-bogus': 'all',
     'unselectable': 'on',
     'contenteditable': 'false'
   });
 
-  editor.dom.setStyles(ghostElm, {
+  dom.setStyles(ghostElm, {
     position: 'absolute',
     opacity: 0.5,
     overflow: 'hidden',
@@ -84,7 +84,7 @@ const createGhost = (editor: Editor, elm: HTMLElement, width: number, height: nu
     height
   });
 
-  editor.dom.setStyles(clonedElm, {
+  dom.setStyles(clonedElm, {
     margin: 0,
     boxSizing: 'border-box'
   });
@@ -196,7 +196,7 @@ const move = (state: Singleton.Value<State>, editor: Editor) => {
 };
 
 // Returns the raw element instead of the fake cE=false element
-const getRawTarget = (selection: Selection) => {
+const getRawTarget = (selection: EditorSelection) => {
   const rng = selection.getSel().getRangeAt(0);
   const startContainer = rng.startContainer;
   return startContainer.nodeType === 3 ? startContainer.parentNode : startContainer;
@@ -274,7 +274,7 @@ const blockIeDrop = (editor: Editor) => {
     // FF doesn't pass out clientX/clientY for drop since this is for IE we just use null instead
     const realTarget = typeof e.clientX !== 'undefined' ? editor.getDoc().elementFromPoint(e.clientX, e.clientY) : null;
 
-    if (isContentEditableFalse(realTarget) || isContentEditableFalse(editor.dom.getContentEditableParent(realTarget))) {
+    if (isContentEditableFalse(realTarget) || editor.dom.getContentEditableParent(realTarget) === 'false') {
       e.preventDefault();
     }
   });

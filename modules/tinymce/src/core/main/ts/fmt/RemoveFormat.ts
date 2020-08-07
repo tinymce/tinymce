@@ -5,11 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element as DomElement, Node, Range } from '@ephox/dom-globals';
-import { Arr, Option, Type } from '@ephox/katamari';
-import { Element, Insert, InsertAll, Traverse } from '@ephox/sugar';
+import { Arr, Optional, Type } from '@ephox/katamari';
+import { Insert, InsertAll, SugarElement, Traverse } from '@ephox/sugar';
 import DOMUtils from '../api/dom/DOMUtils';
-import TreeWalker from '../api/dom/TreeWalker';
+import DomTreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
 import { FormatAttrOrStyleValue, FormatVars, RemoveFormatPartial } from '../api/fmt/Format';
 import * as Settings from '../api/Settings';
@@ -52,12 +51,12 @@ const getContainer = (ed: Editor, rng: RangeLikeObject, start?: boolean) => {
 
   // If start text node is excluded then walk to the next node
   if (NodeType.isText(container) && start && offset >= container.nodeValue.length) {
-    container = new TreeWalker(container, ed.getBody()).next() || container;
+    container = new DomTreeWalker(container, ed.getBody()).next() || container;
   }
 
   // If end text node is excluded then walk to the previous node
   if (NodeType.isText(container) && !start && offset === 0) {
-    container = new TreeWalker(container, ed.getBody()).prev() || container;
+    container = new DomTreeWalker(container, ed.getBody()).prev() || container;
   }
 
   return container;
@@ -87,8 +86,8 @@ const wrap = (dom: DOMUtils, node: Node, name: string, attrs?: Record<string, st
 };
 
 const wrapWithSiblings = (dom: DOMUtils, node: Node, next: boolean, name: string, attrs?: Record<string, string>): Node => {
-  const start = Element.fromDom(node);
-  const wrapper = Element.fromDom(dom.create(name, attrs));
+  const start = SugarElement.fromDom(node);
+  const wrapper = SugarElement.fromDom(dom.create(name, attrs));
   const siblings = next ? Traverse.nextSiblings(start) : Traverse.prevSiblings(start);
 
   InsertAll.append(wrapper, siblings);
@@ -100,7 +99,7 @@ const wrapWithSiblings = (dom: DOMUtils, node: Node, next: boolean, name: string
     Insert.append(wrapper, start);
   }
 
-  return wrapper.dom();
+  return wrapper.dom;
 };
 
 /**
@@ -220,7 +219,7 @@ const removeFormat = (ed: Editor, format: RemoveFormatPartial, vars?: FormatVars
   }
 
   // "matchName" will made sure we're dealing with an element, so cast as one
-  const elm = node as DomElement;
+  const elm = node as Element;
 
   // Applies to styling elements like strong, em, i, u, etc. so that if they have styling attributes, the attributes can be kept but the styling element is removed
   if (format.inline && format.remove === 'all' && Type.isArray(format.preserve_attributes)) {
@@ -231,7 +230,7 @@ const removeFormat = (ed: Editor, format: RemoveFormatPartial, vars?: FormatVars
     // Note: If there are no attributes left, the element will be removed as normal at the end of the function
     if (attrsToPreserve.length > 0) {
       // Convert inline element to span if necessary
-      ed.dom.rename(node, 'span');
+      ed.dom.rename(elm, 'span');
       return true;
     }
   }
@@ -494,7 +493,7 @@ const remove = (ed: Editor, name: string, vars?: FormatVars, node?: Node | Range
 
         // Wrap and split if nested
         if (isChildOfInlineParent(dom, startContainer, endContainer)) {
-          const marker = Option.from(startContainer.firstChild).getOr(startContainer);
+          const marker = Optional.from(startContainer.firstChild).getOr(startContainer);
           splitToFormatRoot(wrapWithSiblings(dom, marker, true, 'span', { 'id': '_start', 'data-mce-type': 'bookmark' }));
           unwrap(true);
           return;
@@ -502,7 +501,7 @@ const remove = (ed: Editor, name: string, vars?: FormatVars, node?: Node | Range
 
         // Wrap and split if nested
         if (isChildOfInlineParent(dom, endContainer, startContainer)) {
-          const marker = Option.from(endContainer.lastChild).getOr(endContainer);
+          const marker = Optional.from(endContainer.lastChild).getOr(endContainer);
           splitToFormatRoot(wrapWithSiblings(dom, marker, false, 'span', { 'id': '_end', 'data-mce-type': 'bookmark' }));
           unwrap(false);
           return;

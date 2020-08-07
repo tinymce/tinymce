@@ -5,8 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import * as Actions from '../core/Actions';
 import Editor from 'tinymce/core/api/Editor';
+import * as Actions from '../core/Actions';
 
 const register = function (editor: Editor) {
   const cmd = (command: string) => () => editor.execCommand(command);
@@ -43,7 +43,7 @@ const register = function (editor: Editor) {
       const setDisabled = () => {
         const elementOpt = Actions.getSelectedImage(editor);
         elementOpt.each((element) => {
-          const disabled = Actions.getEditableImage(editor, element.dom()).isNone();
+          const disabled = Actions.getEditableImage(editor, element.dom).isNone();
           buttonApi.setDisabled(disabled);
         });
       };

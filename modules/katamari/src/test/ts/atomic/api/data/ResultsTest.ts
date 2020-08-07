@@ -1,9 +1,9 @@
+import { Assert, UnitTest } from '@ephox/bedrock-client';
+import fc from 'fast-check';
 import * as Fun from 'ephox/katamari/api/Fun';
 import { Result } from 'ephox/katamari/api/Result';
 import * as Results from 'ephox/katamari/api/Results';
-import { arbResultValue, arbResultError, arbResult } from 'ephox/katamari/test/arb/ArbDataTypes';
-import fc from 'fast-check';
-import { UnitTest, Assert } from '@ephox/bedrock-client';
+import { arbResult, arbResultError, arbResultValue } from 'ephox/katamari/test/arb/ArbDataTypes';
 
 UnitTest.test('ResultsTest', function () {
   const actual = Results.partition([
@@ -70,10 +70,10 @@ UnitTest.test('Check that two errors always equal comparison.bothErrors', () => 
     function (r1, r2) {
       const comparison = Results.compare(r1, r2);
       return comparison.match({
-        bothErrors: Fun.constant(true),
-        firstError: Fun.constant(false),
-        secondError: Fun.constant(false),
-        bothValues: Fun.constant(false)
+        bothErrors: Fun.always,
+        firstError: Fun.never,
+        secondError: Fun.never,
+        bothValues: Fun.never
       });
     }
   ));
@@ -86,10 +86,10 @@ UnitTest.test('Check that error, value always equal comparison.firstError', () =
     function (r1, r2) {
       const comparison = Results.compare(r1, r2);
       return comparison.match({
-        bothErrors: Fun.constant(false),
-        firstError: Fun.constant(true),
-        secondError: Fun.constant(false),
-        bothValues: Fun.constant(false)
+        bothErrors: Fun.never,
+        firstError: Fun.always,
+        secondError: Fun.never,
+        bothValues: Fun.never
       });
     }
   ));
@@ -102,10 +102,10 @@ UnitTest.test('Check that value, error always equal comparison.secondError', () 
     function (r1, r2) {
       const comparison = Results.compare(r1, r2);
       return comparison.match({
-        bothErrors: Fun.constant(false),
-        firstError: Fun.constant(false),
-        secondError: Fun.constant(true),
-        bothValues: Fun.constant(false)
+        bothErrors: Fun.never,
+        firstError: Fun.never,
+        secondError: Fun.always,
+        bothValues: Fun.never
       });
     }
   ));
@@ -118,10 +118,10 @@ UnitTest.test('Check that value, value always equal comparison.bothValues', () =
     function (r1, r2) {
       const comparison = Results.compare(r1, r2);
       return comparison.match({
-        bothErrors: Fun.constant(false),
-        firstError: Fun.constant(false),
-        secondError: Fun.constant(false),
-        bothValues: Fun.constant(true)
+        bothErrors: Fun.never,
+        firstError: Fun.never,
+        secondError: Fun.never,
+        bothValues: Fun.always
       });
     }
   ));

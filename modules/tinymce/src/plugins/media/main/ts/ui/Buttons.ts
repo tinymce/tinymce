@@ -6,7 +6,7 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
-import { Toolbar } from '@ephox/bridge';
+import { Toolbar } from 'tinymce/core/api/ui/Ui';
 
 const stateSelectorAdapter = (editor: Editor, selector: string[]) => (buttonApi: Toolbar.ToolbarToggleButtonInstanceApi) =>
   editor.selection.selectorChangedWithUnbind(selector.join(','), buttonApi.setActive).unbind;

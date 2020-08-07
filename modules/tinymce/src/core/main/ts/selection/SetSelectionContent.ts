@@ -5,11 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { DocumentFragment, Range, Text } from '@ephox/dom-globals';
-import { Option, Options } from '@ephox/katamari';
-import { Element, Node, Remove, Traverse } from '@ephox/sugar';
+import { Optional, Optionals } from '@ephox/katamari';
+import { Remove, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 import Editor from '../api/Editor';
-import Serializer from '../api/html/Serializer';
+import HtmlSerializer from '../api/html/Serializer';
 import { EditorEvent } from '../api/util/EventDispatcher';
 import { SetContentArgs } from '../content/ContentTypes';
 import * as ScrollIntoView from '../dom/ScrollIntoView';
@@ -22,35 +21,35 @@ const prependData = (target: Text, data: string): void => {
   target.insertData(0, data);
 };
 
-const removeEmpty = (text: Element): Option<Element> => {
-  if (text.dom().length === 0) {
+const removeEmpty = (text: SugarElement): Optional<SugarElement> => {
+  if (text.dom.length === 0) {
     Remove.remove(text);
-    return Option.none();
+    return Optional.none();
   }
-  return Option.some(text);
+  return Optional.some(text);
 };
 
 const rngSetContent = (rng: Range, fragment: DocumentFragment): void => {
-  const firstChild = Option.from(fragment.firstChild).map(Element.fromDom);
-  const lastChild = Option.from(fragment.lastChild).map(Element.fromDom);
+  const firstChild = Optional.from(fragment.firstChild).map(SugarElement.fromDom);
+  const lastChild = Optional.from(fragment.lastChild).map(SugarElement.fromDom);
 
   rng.deleteContents();
   rng.insertNode(fragment);
 
-  const prevText = firstChild.bind(Traverse.prevSibling).filter(Node.isText).bind(removeEmpty);
-  const nextText = lastChild.bind(Traverse.nextSibling).filter(Node.isText).bind(removeEmpty);
+  const prevText = firstChild.bind(Traverse.prevSibling).filter(SugarNode.isText).bind(removeEmpty);
+  const nextText = lastChild.bind(Traverse.nextSibling).filter(SugarNode.isText).bind(removeEmpty);
 
   // Join start
-  Options.lift2(prevText, firstChild.filter(Node.isText), (prev: Element, start: Element) => {
-    prependData(start.dom(), prev.dom().data);
+  Optionals.lift2(prevText, firstChild.filter(SugarNode.isText), (prev: SugarElement, start: SugarElement) => {
+    prependData(start.dom, prev.dom.data);
     Remove.remove(prev);
   });
 
   // Join end
-  Options.lift2(nextText, lastChild.filter(Node.isText), (next: Element, end: Element) => {
-    const oldLength = end.dom().length;
-    end.dom().appendData(next.dom().data);
-    rng.setEnd(end.dom(), oldLength);
+  Optionals.lift2(nextText, lastChild.filter(SugarNode.isText), (next: SugarElement, end: SugarElement) => {
+    const oldLength = end.dom.length;
+    end.dom.appendData(next.dom.data);
+    rng.setEnd(end.dom, oldLength);
     Remove.remove(next);
   });
 
@@ -68,7 +67,7 @@ const setupArgs = (args: Partial<SelectionSetContentArgs>, content: string): Sel
 const cleanContent = (editor: Editor, args: SelectionSetContentArgs) => {
   if (args.format !== 'raw') {
     const node = editor.parser.parse(args.content, { isRootContent: true, forced_root_block: false, ...args });
-    return Serializer({ validate: editor.validate }, editor.schema).serialize(node);
+    return HtmlSerializer({ validate: editor.validate }, editor.schema).serialize(node);
   } else {
     return args.content;
   }

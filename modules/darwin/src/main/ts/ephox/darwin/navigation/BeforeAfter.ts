@@ -1,12 +1,12 @@
 import { Adt } from '@ephox/katamari';
 import { DomParent } from '@ephox/robin';
-import { Awareness, Compare, SelectorFind, Element } from '@ephox/sugar';
+import { Awareness, Compare, SelectorFind, SugarElement } from '@ephox/sugar';
 import { WindowBridge } from '../api/WindowBridge';
 
 type NoneHandler<T> = (message: string) => T;
 type SuccessHandler<T> = () => T;
-type FailedUpHandler<T> = (cell: Element) => T;
-type FailedDownHandler<T> = (cell: Element) => T;
+type FailedUpHandler<T> = (cell: SugarElement) => T;
+type FailedDownHandler<T> = (cell: SugarElement) => T;
 
 export interface BeforeAfter {
   fold: <T> (
@@ -24,7 +24,7 @@ export interface BeforeAfter {
   log: (label: string) => void;
 }
 
-export type BeforeAfterFailureConstructor = (cell: Element) => BeforeAfter;
+export type BeforeAfterFailureConstructor = (cell: SugarElement) => BeforeAfter;
 
 const adt: {
   none: (message: string) => BeforeAfter;
@@ -39,17 +39,17 @@ const adt: {
 ]);
 
 // Let's get some bounding rects, and see if they overlap (x-wise)
-const isOverlapping = function (bridge: WindowBridge, before: Element, after: Element) {
+const isOverlapping = function (bridge: WindowBridge, before: SugarElement, after: SugarElement) {
   const beforeBounds = bridge.getRect(before);
   const afterBounds = bridge.getRect(after);
   return afterBounds.right > beforeBounds.left && afterBounds.left < beforeBounds.right;
 };
 
-const isRow = function (elem: Element) {
+const isRow = function (elem: SugarElement) {
   return SelectorFind.closest(elem, 'tr');
 };
 
-const verify = function (bridge: WindowBridge, before: Element, beforeOffset: number, after: Element, afterOffset: number, failure: BeforeAfterFailureConstructor, isRoot: (e: Element) => boolean) {
+const verify = function (bridge: WindowBridge, before: SugarElement, beforeOffset: number, after: SugarElement, afterOffset: number, failure: BeforeAfterFailureConstructor, isRoot: (e: SugarElement) => boolean) {
   // Identify the cells that the before and after are in.
   return SelectorFind.closest(after, 'td,th', isRoot).bind(function (afterCell) {
     return SelectorFind.closest(before, 'td,th', isRoot).map(function (beforeCell) {

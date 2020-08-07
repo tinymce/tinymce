@@ -1,8 +1,8 @@
-import { Assertions, GeneralSteps, Keys, Keyboard, Logger, Pipeline, Step } from '@ephox/agar';
-import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Element } from '@ephox/sugar';
-import Theme from 'tinymce/themes/silver/Theme';
+import { Assertions, GeneralSteps, Keyboard, Keys, Logger, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
+import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
+import { SugarElement } from '@ephox/sugar';
+import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.core.dom.SelectionQuirksTest', function (success, failure) {
 
@@ -81,9 +81,9 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionQuirksTest', function (suc
         sResetNormalizeCounter(),
         tinyApis.sSetContent('<p><b>a</b><i>a</i></p>'),
         tinyApis.sSetSelection([ 0, 0, 0 ], 0, [ 0, 0 ], 0),
-        Keyboard.sKeyup(Element.fromDom(editor.getDoc()), Keys.left(), { shift: true }),
+        Keyboard.sKeyup(SugarElement.fromDom(editor.getDoc()), Keys.left(), { shift: true }),
         sAssertNormalizeCounter(0),
-        Keyboard.sKeyup(Element.fromDom(editor.getDoc()), 17, {}), // single ctrl
+        Keyboard.sKeyup(SugarElement.fromDom(editor.getDoc()), 17, {}), // single ctrl
         sAssertNormalizeCounter(1),
         tinyApis.sAssertSelection([ 0, 0 ], 0, [ 0, 0 ], 0)
       ]))

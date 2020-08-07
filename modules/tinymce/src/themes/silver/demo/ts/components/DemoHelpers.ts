@@ -1,7 +1,6 @@
 import { Attachment, Behaviour, Channels, Debugging, DomFactory, Gui, GuiFactory, Positioning } from '@ephox/alloy';
-import { console, document, window } from '@ephox/dom-globals';
-import { Fun, Future, Id, Option, Result } from '@ephox/katamari';
-import { Body, Class } from '@ephox/sugar';
+import { Fun, Future, Id, Optional, Result } from '@ephox/katamari';
+import { Class, SugarBody } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import I18n from 'tinymce/core/api/util/I18n';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
@@ -25,7 +24,7 @@ const setupDemo = () => {
   });
 
   const uiMothership = Gui.create();
-  Class.add(uiMothership.element(), 'tox');
+  Class.add(uiMothership.element, 'tox');
 
   const fakeHistory = (fileType: string): string[] => {
     if (fileType === 'image') {
@@ -42,7 +41,7 @@ const setupDemo = () => {
     targets: [
       { type: 'anchor', title: 'Google', url: 'http://www.google.com.au', level: 0, attach: Fun.noop },
       { type: 'header', title: 'Header', url: '#header', level: 1, attach: () => {
-        // tslint:disable-next-line:no-console
+        // eslint-disable-next-line no-console
         console.log('This is where the ID would be attached to the header so it can be linked');
       } }
     ],
@@ -67,7 +66,7 @@ const setupDemo = () => {
   // This is fake because ColorInputBackstage requires Editor constructor
   const fakecolorinputBackstage = {
     colorPicker: Fun.noop,
-    hasCustomColors: Fun.constant(false),
+    hasCustomColors: Fun.never,
     getColors: () => [
       { type: choiceItem, text: 'Turquoise', value: '#18BC9B' },
       { type: choiceItem, text: 'Green', value: '#2FCC71' },
@@ -126,13 +125,13 @@ const setupDemo = () => {
           // NOTE: Non-sensical
           ({
             anchor: 'selection',
-            root: Body.body()
+            root: SugarBody.body()
           }),
         node: (elem) =>
           // NOTE: Non-sensical
           ({
             anchor: 'node',
-            root: Body.body(),
+            root: SugarBody.body(),
             node: elem
           })
       }
@@ -141,10 +140,10 @@ const setupDemo = () => {
     urlinput: {
       getHistory: fakeHistory,
       addToHistory: (_url: string, _fileType: string) => {},
-      getLinkInformation: () => Option.some(fakeLinkInfo),
-      getValidationHandler: () => Option.some(fakeValidator),
-      getUrlPicker: (_filetype) => Option.some((entry: ApiUrlData) => {
-        const newUrl = Option.from(window.prompt('File browser would show instead of this...', entry.value));
+      getLinkInformation: () => Optional.some(fakeLinkInfo),
+      getValidationHandler: () => Optional.some(fakeValidator),
+      getUrlPicker: (_filetype) => Optional.some((entry: ApiUrlData) => {
+        const newUrl = Optional.from(window.prompt('File browser would show instead of this...', entry.value));
         return Future.pure({ ...entry, value: newUrl.getOr(entry.value) });
       })
     }
@@ -214,10 +213,10 @@ const setupDemo = () => {
     //       canApply: () => true,
     //       get,
     //       getCssText: (name) => {
-    //         const span = Element.fromTag('span');
+    //         const span = SugarElement.fromTag('span');
     //         Css.setAll(span, formats[name].styles || { });
-    //         console.log('span', span.dom());
-    //         return Attr.get(span, 'style') || '';
+    //         console.log('span', span.dom);
+    //         return Attribute.get(span, 'style') || '';
     //       }
     //     };
     //   })()
@@ -236,7 +235,7 @@ const setupDemo = () => {
   };
 
   uiMothership.add(sink);
-  Attachment.attachSystem(Body.body(), uiMothership);
+  Attachment.attachSystem(SugarBody.body(), uiMothership);
 
   const destroy = () => {
     uiMothership.remove(sink);

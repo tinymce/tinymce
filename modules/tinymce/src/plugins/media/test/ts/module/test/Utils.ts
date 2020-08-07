@@ -1,9 +1,8 @@
 import { Assertions, Chain, GeneralSteps, Guard, Logger, Mouse, Step, UiControls, UiFinder, Waiter } from '@ephox/agar';
 import { Assert } from '@ephox/bedrock-client';
-import { document, Event, HTMLElement } from '@ephox/dom-globals';
 import { Arr, Type } from '@ephox/katamari';
 import { TinyApis, TinyUi } from '@ephox/mcagar';
-import { Body, Element, Focus } from '@ephox/sugar';
+import { Focus, SugarBody, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 
 const selectors = {
@@ -134,8 +133,8 @@ const sCloseDialog = function (ui: TinyUi) {
 
 const cFakeEvent = function (name: string) {
   return Chain.control(
-    Chain.op(function (elm: Element) {
-      const element: HTMLElement = elm.dom();
+    Chain.op(function (elm: SugarElement) {
+      const element: HTMLElement = elm.dom;
       // NOTE we can't fake a paste event here.
       let event;
       if (Type.isFunction(Event)) {
@@ -183,7 +182,7 @@ const sAssertEmbedData = function (ui: TinyUi, content: string) {
   return GeneralSteps.sequence([
     ui.sClickOnUi('Switch to Embed tab', '.tox-tab:contains("Embed")'),
     Waiter.sTryUntil('Textarea should have a proper value',
-      Chain.asStep(Body.body(), [
+      Chain.asStep(SugarBody.body(), [
         cFindInDialog(selectors.embed)(ui),
         UiControls.cGetValue,
         Assertions.cAssertEq('embed content', content)
@@ -235,7 +234,7 @@ const sSetSetting = function (editorSetting: Record<string, any>, key: string, v
 };
 
 const cNotExists = (selector: string) => Chain.control(
-  Chain.op((container: Element) => {
+  Chain.op((container: SugarElement) => {
     UiFinder.findIn(container, selector).fold(
       () => Assert.eq('should not find anything', true, true),
       () => Assert.eq('Expected ' + selector + ' not to exist.', true, false)
@@ -245,7 +244,7 @@ const cNotExists = (selector: string) => Chain.control(
 );
 
 const cExists = (selector: string) => Chain.control(
-  Chain.op((container: Element) => {
+  Chain.op((container: SugarElement) => {
     UiFinder.findIn(container, selector).fold(
       () => Assert.eq('Expected ' + selector + ' to exist.', true, false),
       () => Assert.eq('found element', true, true)

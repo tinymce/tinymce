@@ -1,12 +1,11 @@
 import { ApproxStructure, Assertions, Chain, FocusTools, Keyboard, Keys, Logger, Pipeline, UiFinder } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Menu } from '@ephox/bridge';
-import { document } from '@ephox/dom-globals';
 import { TinyLoader, TinyUi } from '@ephox/mcagar';
-import { Body, Element } from '@ephox/sugar';
+import { SugarBody, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
+import { Menu } from 'tinymce/core/api/ui/Ui';
 import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('OxideListCollectionMenuTest', (success, failure) => {
@@ -17,7 +16,7 @@ UnitTest.asynctest('OxideListCollectionMenuTest', (success, failure) => {
   TinyLoader.setup(
     (editor, onSuccess, onFailure) => {
       const tinyUi = TinyUi(editor);
-      const doc = Element.fromDom(document);
+      const doc = SugarElement.fromDom(document);
 
       Pipeline.async({ }, Logger.ts(
         'Check structure of list collection',
@@ -26,8 +25,8 @@ UnitTest.asynctest('OxideListCollectionMenuTest', (success, failure) => {
             ':focus { background-color: rgb(222, 224, 226); }'
           ]),
           tinyUi.sClickOnToolbar('Click on toolbar button', 'button'),
-          UiFinder.sWaitForVisible('Waiting for menu', Body.body(), '[role="menu"]'),
-          Chain.asStep(Body.body(), [
+          UiFinder.sWaitForVisible('Waiting for menu', SugarBody.body(), '[role="menu"]'),
+          Chain.asStep(SugarBody.body(), [
             UiFinder.cFindIn('[role="menu"]'),
             Assertions.cAssertStructure(
               'Checking structure',
@@ -140,7 +139,7 @@ UnitTest.asynctest('OxideListCollectionMenuTest', (success, failure) => {
                 shortcut: 'Ctrl+A',
                 icon: 'fake-icon-name',
                 onAction: store.adder('togglemenuitem.onAction')
-              } as Menu.ToggleMenuItemApi,
+              } as Menu.ToggleMenuItemSpec,
               {
                 type: 'nestedmenuitem',
                 text: 'Beta',
@@ -151,7 +150,7 @@ UnitTest.asynctest('OxideListCollectionMenuTest', (success, failure) => {
                     text: 'Beta-1'
                   }
                 ]
-              } as Menu.NestedMenuItemApi,
+              } as Menu.NestedMenuItemSpec,
               {
                 type: 'separator'
               },
@@ -160,7 +159,7 @@ UnitTest.asynctest('OxideListCollectionMenuTest', (success, failure) => {
                 text: 'Gamma',
                 shortcut: 'Ctrl+C',
                 icon: 'fake-icon-name'
-              } as Menu.MenuItemApi
+              } as Menu.MenuItemSpec
             ]);
           }
         });

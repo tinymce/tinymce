@@ -5,47 +5,47 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Storage, Window } from '@ephox/dom-globals';
+import { UndoManager as UndoManagerType } from '../undo/UndoManagerTypes';
 import AddOnManager from './AddOnManager';
-import { Theme } from './ThemeManager';
-import { Plugin } from './PluginManager';
 import Annotator from './Annotator';
+import BookmarkManager from './dom/BookmarkManager';
+import ControlSelection from './dom/ControlSelection';
+import DomQuery, { DomQueryConstructor } from './dom/DomQuery';
+import DOMUtils, { DOMUtilsSettings } from './dom/DOMUtils';
+import EventUtils, { EventUtilsConstructor } from './dom/EventUtils';
+import RangeUtils from './dom/RangeUtils';
+import ScriptLoader, { ScriptLoaderConstructor } from './dom/ScriptLoader';
+import EditorSelection from './dom/Selection';
+import DomSerializer, { DomSerializerSettings } from './dom/Serializer';
+import Sizzle from './dom/Sizzle';
+import { StyleSheetLoader, StyleSheetLoaderSettings } from './dom/StyleSheetLoader';
+import TextSeeker from './dom/TextSeeker';
+import DomTreeWalker, { DomTreeWalkerConstructor } from './dom/TreeWalker';
 import Editor, { EditorConstructor } from './Editor';
 import EditorCommands, { EditorCommandsConstructor } from './EditorCommands';
 import EditorManager from './EditorManager';
 import EditorObservable from './EditorObservable';
 import Env from './Env';
-import Shortcuts, { ShortcutsConstructor } from './Shortcuts';
-import UndoManager from './UndoManager';
 import FocusManager from './FocusManager';
 import Formatter from './Formatter';
-import NotificationManager from './NotificationManager';
-import WindowManager from './WindowManager';
-import IconManager from './IconManager';
-import BookmarkManager from './dom/BookmarkManager';
-import RangeUtils from './dom/RangeUtils';
-import DomSerializer, { SerializerSettings as DomSerializerSettings } from './dom/Serializer';
-import ControlSelection from './dom/ControlSelection';
-import DOMUtils from './dom/DOMUtils';
-import DomQuery, { DomQueryConstructor } from './dom/DomQuery';
-import EventUtils, { EventUtilsConstructor } from './dom/EventUtils';
-import ScriptLoader, { ScriptLoaderConstructor } from './dom/ScriptLoader';
-import Resource from './Resource';
-import Selection from './dom/Selection';
-import Sizzle from './dom/Sizzle';
-import TextSeeker from './dom/TextSeeker';
-import TreeWalker, { TreeWalkerConstructor } from './dom/TreeWalker';
 import Rect from './geom/Rect';
 import DomParser, { DomParserSettings } from './html/DomParser';
 import Entities from './html/Entities';
-import Node from './html/Node';
+import AstNode, { AstNodeConstructor } from './html/Node';
 import SaxParser, { SaxParserSettings } from './html/SaxParser';
 import Schema, { SchemaSettings } from './html/Schema';
-import HtmlSerializer, { SerializerSettings as HtmlSerializerSettings } from './html/Serializer';
-import Styles from './html/Styles';
+import HtmlSerializer, { HtmlSerializerSettings } from './html/Serializer';
+import Styles, { StylesSettings } from './html/Styles';
 import Writer, { WriterSettings } from './html/Writer';
+import IconManager from './IconManager';
+import NotificationManager from './NotificationManager';
+import PluginManager from './PluginManager';
+import Resource from './Resource';
+import Shortcuts, { ShortcutsConstructor } from './Shortcuts';
+import ThemeManager from './ThemeManager';
+import UndoManager from './UndoManager';
 import Class from './util/Class';
-import Color from './util/Color';
+import Color, { ColorConstructor } from './util/Color';
 import Delay from './util/Delay';
 import EventDispatcher, { EventDispatcherConstructor } from './util/EventDispatcher';
 import I18n from './util/I18n';
@@ -59,10 +59,9 @@ import Tools from './util/Tools';
 import URI, { URIConstructor } from './util/URI';
 import VK from './util/VK';
 import XHR from './util/XHR';
-import { UndoManager as UndoManagerType } from '../undo/UndoManagerTypes';
-import { StyleSheetLoader } from './dom/StyleSheetLoader';
+import WindowManager from './WindowManager';
 
-export interface TinyMCE extends EditorManager {
+interface TinyMCE extends EditorManager {
 
   geom: {
     Rect: Rect;
@@ -83,56 +82,56 @@ export interface TinyMCE extends EditorManager {
     JSONRequest: JSONRequestConstructor;
     JSONP: JSONP;
     LocalStorage: Storage;
-    Color: Color;
+    Color: ColorConstructor;
   };
 
   dom: {
     EventUtils: EventUtilsConstructor;
     Sizzle: any;
     DomQuery: DomQueryConstructor;
-    TreeWalker: TreeWalkerConstructor;
-    TextSeeker: (dom: DOMUtils, isBlockBoundary?: (node: Node) => boolean) => TextSeeker;
-    DOMUtils: DOMUtils;
+    TreeWalker: DomTreeWalkerConstructor;
+    TextSeeker: new (dom: DOMUtils, isBlockBoundary?: (node: Node) => boolean) => TextSeeker;
+    DOMUtils: new (doc: Document, settings: Partial<DOMUtilsSettings>) => DOMUtils;
     ScriptLoader: ScriptLoaderConstructor;
-    RangeUtils: (dom: DOMUtils) => RangeUtils;
-    Serializer: (settings: DomSerializerSettings, editor?: Editor) => DomSerializer;
-    ControlSelection: (selection: Selection, editor: Editor) => ControlSelection;
-    BookmarkManager: (selection: Selection) => BookmarkManager;
-    Selection: (dom: DOMUtils, win: Window, serializer, editor: Editor) => Selection;
-    StyleSheetLoader: StyleSheetLoader;
+    RangeUtils: new (dom: DOMUtils) => RangeUtils;
+    Serializer: new (settings: DomSerializerSettings, editor?: Editor) => DomSerializer;
+    ControlSelection: (selection: EditorSelection, editor: Editor) => ControlSelection;
+    BookmarkManager: (selection: EditorSelection) => BookmarkManager;
+    Selection: new (dom: DOMUtils, win: Window, serializer: DomSerializer, editor: Editor) => EditorSelection;
+    StyleSheetLoader: new (documentOrShadowRoot: Document | ShadowRoot, settings: StyleSheetLoaderSettings) => StyleSheetLoader;
     Event: EventUtils;
   };
 
   html: {
-    Styles: Styles;
+    Styles: new (settings?: StylesSettings, schema?: Schema) => Styles;
     Entities: Entities;
-    Node: Node;
-    Schema: (settings?: SchemaSettings) => Schema;
-    SaxParser: (settings?: SaxParserSettings, schema?: Schema) => SaxParser;
-    DomParser: (settings?: DomParserSettings, schema?: Schema) => DomParser;
-    Writer: (settings?: WriterSettings) => Writer;
-    Serializer: (settings?: HtmlSerializerSettings, schema?: Schema) => HtmlSerializer;
+    Node: AstNodeConstructor;
+    Schema: new (settings?: SchemaSettings) => Schema;
+    SaxParser: new (settings?: SaxParserSettings, schema?: Schema) => SaxParser;
+    DomParser: new (settings?: DomParserSettings, schema?: Schema) => DomParser;
+    Writer: new (settings?: WriterSettings) => Writer;
+    Serializer: new (settings?: HtmlSerializerSettings, schema?: Schema) => HtmlSerializer;
   };
 
-  AddOnManager: <T>() => AddOnManager<T>;
-  Annotator: (editor: Editor) => Annotator;
+  AddOnManager: new <T>() => AddOnManager<T>;
+  Annotator: new (editor: Editor) => Annotator;
   Editor: EditorConstructor;
   EditorCommands: EditorCommandsConstructor;
   EditorManager: EditorManager;
   EditorObservable: EditorObservable;
   Env: Env;
   FocusManager: FocusManager;
-  Formatter: (editor: Editor) => Formatter;
-  NotificationManager: (editor: Editor) => NotificationManager;
+  Formatter: new (editor: Editor) => Formatter;
+  NotificationManager: new (editor: Editor) => NotificationManager;
   Shortcuts: ShortcutsConstructor;
-  UndoManager: (editor: Editor) => UndoManagerType;
-  WindowManager: (editor: Editor) => WindowManager;
+  UndoManager: new (editor: Editor) => UndoManagerType;
+  WindowManager: new (editor: Editor) => WindowManager;
 
   // Global instances
   DOM: DOMUtils;
   ScriptLoader: ScriptLoader;
-  PluginManager: AddOnManager<void | Plugin>;
-  ThemeManager: AddOnManager<Theme>;
+  PluginManager: PluginManager;
+  ThemeManager: ThemeManager;
   IconManager: IconManager;
   Resource: Resource;
 
@@ -157,7 +156,7 @@ export interface TinyMCE extends EditorManager {
   // Legacy browser detection
   isOpera: boolean;
   isWebKit: boolean;
-  isIE: boolean;
+  isIE: false | number;
   isGecko: boolean;
   isMac: boolean;
 }
@@ -221,7 +220,7 @@ const publicApi = {
     EventUtils,
     Sizzle,
     DomQuery,
-    TreeWalker,
+    TreeWalker: DomTreeWalker,
     TextSeeker,
     DOMUtils,
     ScriptLoader,
@@ -230,14 +229,14 @@ const publicApi = {
     StyleSheetLoader,
     ControlSelection,
     BookmarkManager,
-    Selection,
+    Selection: EditorSelection,
     Event: EventUtils.Event
   },
 
   html: {
     Styles,
     Entities,
-    Node,
+    Node: AstNode,
     Schema,
     SaxParser,
     DomParser,
@@ -262,8 +261,8 @@ const publicApi = {
   // Global instances
   DOM: DOMUtils.DOM,
   ScriptLoader: ScriptLoader.ScriptLoader,
-  PluginManager: AddOnManager.PluginManager,
-  ThemeManager: AddOnManager.ThemeManager,
+  PluginManager,
+  ThemeManager,
   IconManager,
   Resource,
 
@@ -293,4 +292,8 @@ const publicApi = {
   isMac: Env.mac
 };
 
-export const tinymce: TinyMCE = Tools.extend(EditorManager, publicApi);
+const tinymce: TinyMCE = Tools.extend(EditorManager, publicApi);
+export {
+  TinyMCE,
+  tinymce
+};

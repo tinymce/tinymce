@@ -6,7 +6,6 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
-import { Element } from '@ephox/dom-globals';
 
 const isNamedAnchor = (editor: Editor, node: Element) => node.tagName === 'A' && editor.dom.getAttrib(node, 'href') === '';
 

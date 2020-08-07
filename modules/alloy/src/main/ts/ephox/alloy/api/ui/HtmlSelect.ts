@@ -2,11 +2,11 @@ import { FieldSchema, Objects } from '@ephox/boulder';
 import { Arr } from '@ephox/katamari';
 import { Value } from '@ephox/sugar';
 
-import { SketchSpec } from '../../api/component/SpecTypes';
 import { HtmlSelectDetail, HtmlSelectSketcher, HtmlSelectSpec } from '../../ui/types/HtmlSelectTypes';
 import { Focusing } from '../behaviour/Focusing';
 import { Representing } from '../behaviour/Representing';
 import * as SketchBehaviours from '../component/SketchBehaviours';
+import { SketchSpec } from '../component/SpecTypes';
 import * as Sketcher from './Sketcher';
 import { SingleSketchFactory } from './UiSketcher';
 
@@ -37,12 +37,12 @@ const factory: SingleSketchFactory<HtmlSelectDetail, HtmlSelectSpec> = (detail, 
           store: {
             mode: 'manual',
             getValue(select) {
-              return Value.get(select.element());
+              return Value.get(select.element);
             },
             setValue(select, newValue) {
               // This is probably generically useful ... may become a part of Representing.
               const found = Arr.find(detail.options, (opt) => opt.value === newValue);
-              if (found.isSome()) { Value.set(select.element(), newValue); }
+              if (found.isSome()) { Value.set(select.element, newValue); }
             },
             ...initialValues
           }

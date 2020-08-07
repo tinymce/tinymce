@@ -1,7 +1,7 @@
-import { Fun, Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { DomGather } from '@ephox/phoenix';
 import { PlatformDetection } from '@ephox/sand';
-import { Awareness, Compare, CursorPosition, Element, PredicateExists, SelectorFilter, SelectorFind, SimRange, Traverse } from '@ephox/sugar';
+import { Awareness, Compare, CursorPosition, PredicateExists, SelectorFilter, SelectorFind, SimRange, SugarElement, Traverse } from '@ephox/sugar';
 import { WindowBridge } from '../api/WindowBridge';
 import { KeyDirection } from '../navigation/KeyDirection';
 import { Response } from '../selection/Response';
@@ -9,7 +9,7 @@ import * as Util from '../selection/Util';
 import * as KeySelection from './KeySelection';
 import * as TableKeys from './TableKeys';
 
-const inSameTable = function (elem: Element, table: Element) {
+const inSameTable = function (elem: SugarElement, table: SugarElement) {
   return PredicateExists.ancestor(elem, function (e) {
     return Traverse.parent(e).exists(function (p) {
       return Compare.eq(p, table);
@@ -18,25 +18,25 @@ const inSameTable = function (elem: Element, table: Element) {
 };
 
 interface Simulated {
-  start: () => Element;
-  finish: () => Element;
-  range: () => SimRange;
+  readonly start: SugarElement;
+  readonly finish: SugarElement;
+  readonly range: SimRange;
 }
 
 // Note: initial is the finishing element, because that's where the cursor starts from
 // Anchor is the starting element, and is only used to work out if we are in the same table
-const simulate = function (bridge: WindowBridge, isRoot: (e: Element) => boolean, direction: KeyDirection, initial: Element, anchor: Element) {
+const simulate = function (bridge: WindowBridge, isRoot: (e: SugarElement) => boolean, direction: KeyDirection, initial: SugarElement, anchor: SugarElement) {
   return SelectorFind.closest(initial, 'td,th', isRoot).bind(function (start) {
     return SelectorFind.closest(start, 'table', isRoot).bind(function (table) {
       if (!inSameTable(anchor, table)) {
-        return Option.none<Simulated>();
+        return Optional.none<Simulated>();
       }
       return TableKeys.handle(bridge, isRoot, direction).bind(function (range) {
-        return SelectorFind.closest(range.finish(), 'td,th', isRoot).map<Simulated>(function (finish) {
+        return SelectorFind.closest(range.finish, 'td,th', isRoot).map<Simulated>(function (finish) {
           return {
-            start: Fun.constant(start),
-            finish: Fun.constant(finish),
-            range: Fun.constant(range)
+            start,
+            finish,
+            range
           };
         });
       });
@@ -44,16 +44,17 @@ const simulate = function (bridge: WindowBridge, isRoot: (e: Element) => boolean
   });
 };
 
-const navigate = function (bridge: WindowBridge, isRoot: (e: Element) => boolean, direction: KeyDirection, initial: Element, anchor: Element, precheck: (initial: Element, isRoot: (e: Element) => boolean) => Option<Response>) {
+const navigate = function (bridge: WindowBridge, isRoot: (e: SugarElement) => boolean, direction: KeyDirection, initial: SugarElement,
+                           anchor: SugarElement, precheck: (initial: SugarElement, isRoot: (e: SugarElement) => boolean) => Optional<Response>) {
   // Do not override the up/down keys on IE.
   if (PlatformDetection.detect().browser.isIE()) {
-    return Option.none<Response>();
+    return Optional.none<Response>();
   } else {
     return precheck(initial, isRoot).orThunk(function () {
       return simulate(bridge, isRoot, direction, initial, anchor).map(function (info) {
-        const range = info.range();
+        const range = info.range;
         return Response.create(
-          Option.some(Util.makeSitus(range.start(), range.soffset(), range.finish(), range.foffset())),
+          Optional.some(Util.makeSitus(range.start, range.soffset, range.finish, range.foffset)),
           true
         );
       });
@@ -61,7 +62,7 @@ const navigate = function (bridge: WindowBridge, isRoot: (e: Element) => boolean
   }
 };
 
-const firstUpCheck = function (initial: Element, isRoot: (e: Element) => boolean) {
+const firstUpCheck = function (initial: SugarElement, isRoot: (e: SugarElement) => boolean) {
   return SelectorFind.closest(initial, 'tr', isRoot).bind(function (startRow) {
     return SelectorFind.closest(startRow, 'table', isRoot).bind(function (table) {
       const rows = SelectorFilter.descendants(table, 'tr');
@@ -71,18 +72,18 @@ const firstUpCheck = function (initial: Element, isRoot: (e: Element) => boolean
         }, isRoot).map(function (last) {
           const lastOffset = Awareness.getEnd(last);
           return Response.create(
-            Option.some(Util.makeSitus(last, lastOffset, last, lastOffset)),
+            Optional.some(Util.makeSitus(last, lastOffset, last, lastOffset)),
             true
           );
         });
       } else {
-        return Option.none<Response>();
+        return Optional.none<Response>();
       }
     });
   });
 };
 
-const lastDownCheck = function (initial: Element, isRoot: (e: Element) => boolean) {
+const lastDownCheck = function (initial: SugarElement, isRoot: (e: SugarElement) => boolean) {
   return SelectorFind.closest(initial, 'tr', isRoot).bind(function (startRow) {
     return SelectorFind.closest(startRow, 'table', isRoot).bind(function (table) {
       const rows = SelectorFilter.descendants(table, 'tr');
@@ -91,20 +92,21 @@ const lastDownCheck = function (initial: Element, isRoot: (e: Element) => boolea
           return CursorPosition.first(element).isSome();
         }, isRoot).map(function (first) {
           return Response.create(
-            Option.some(Util.makeSitus(first, 0, first, 0)),
+            Optional.some(Util.makeSitus(first, 0, first, 0)),
             true
           );
         });
       } else {
-        return Option.none<Response>();
+        return Optional.none<Response>();
       }
     });
   });
 };
 
-const select = function (bridge: WindowBridge, container: Element, isRoot: (e: Element) => boolean, direction: KeyDirection, initial: Element, anchor: Element, selectRange: (container: Element, boxes: Element[], start: Element, finish: Element) => void) {
+const select = function (bridge: WindowBridge, container: SugarElement, isRoot: (e: SugarElement) => boolean, direction: KeyDirection, initial: SugarElement,
+                         anchor: SugarElement, selectRange: (container: SugarElement, boxes: SugarElement[], start: SugarElement, finish: SugarElement) => void) {
   return simulate(bridge, isRoot, direction, initial, anchor).bind(function (info) {
-    return KeySelection.detect(container, isRoot, info.start(), info.finish(), selectRange);
+    return KeySelection.detect(container, isRoot, info.start, info.finish, selectRange);
   });
 };
 

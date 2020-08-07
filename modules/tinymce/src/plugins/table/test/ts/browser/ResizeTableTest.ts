@@ -2,7 +2,7 @@ import { Assertions, Chain, Log, Mouse, NamedChain, Pipeline, TestLogs } from '@
 import { UnitTest } from '@ephox/bedrock-client';
 import { Cell } from '@ephox/katamari';
 import { ApiChains, Editor as McEditor } from '@ephox/mcagar';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
@@ -60,7 +60,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
 
   const cResizeWithHandle = TableTestUtils.cDragHandle('se', -100, -20);
 
-  const cInsertResizeMeasure = (cResize: Chain<any, any>, cInsert: Chain<Editor, Element>) => NamedChain.asChain([
+  const cInsertResizeMeasure = (cResize: Chain<any, any>, cInsert: Chain<Editor, SugarElement>) => NamedChain.asChain([
     NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
     NamedChain.write('events', cBindResizeEvents),
     NamedChain.direct('editor', cInsert, 'element'),

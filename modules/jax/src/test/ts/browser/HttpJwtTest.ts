@@ -1,12 +1,11 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
-import { console } from '@ephox/dom-globals';
 import { Arr, FutureResult, Result } from '@ephox/katamari';
 import { DataType } from 'ephox/jax/core/DataType';
 import { HttpError } from 'ephox/jax/core/HttpError';
 import * as HttpJwt from 'ephox/jax/core/HttpJwt';
 import { JwtTokenFactory } from 'ephox/jax/core/HttpTypes';
 
-/* tslint:disable:no-console */
+/* eslint-disable no-console */
 
 const expectError = (label: string, response: FutureResult<any, HttpError>, expectedCalls: string[], actualCalls: string[]) => FutureResult.nu((callback) => {
   response.get((res) => {

@@ -1,4 +1,4 @@
-import { Fun, Option } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 import { Pattern, Search } from '@ephox/polaris';
 
 const wordstart = new RegExp(Pattern.wordbreak() + '+', 'g');
@@ -27,9 +27,9 @@ const firstWord = function (text: string) {
  * Returns the index position of a break when going left (i.e. last word break)
  */
 const leftBreak = function (text: string) {
-  const indices = Search.findall(text, Pattern.custom(Pattern.wordbreak(), zero, zero, Option.none()));
-  return Option.from(indices[indices.length - 1]).map(function (match) {
-    return match.start();
+  const indices = Search.findall(text, Pattern.custom(Pattern.wordbreak(), zero, zero, Optional.none()));
+  return Optional.from(indices[indices.length - 1]).map(function (match) {
+    return match.start;
   });
 };
 
@@ -39,7 +39,7 @@ const leftBreak = function (text: string) {
 const rightBreak = function (text: string) {
   // ASSUMPTION: search is sufficient because we only need to find the first one.
   const index = text.search(wordstart);
-  return index > -1 ? Option.some(index) : Option.none<number>();
+  return index > -1 ? Optional.some(index) : Optional.none<number>();
 };
 
 const hasBreak = function (text: string) {

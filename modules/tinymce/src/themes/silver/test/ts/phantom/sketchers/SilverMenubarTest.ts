@@ -3,9 +3,8 @@ import {
 } from '@ephox/agar';
 import { GuiFactory, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
-import { document } from '@ephox/dom-globals';
 import { Arr, Fun, Strings } from '@ephox/katamari';
-import { Element, SelectorFind, Selectors } from '@ephox/sugar';
+import { SelectorFind, Selectors, SugarElement } from '@ephox/sugar';
 
 import SilverMenubar from 'tinymce/themes/silver/ui/menus/menubar/SilverMenubar';
 
@@ -14,7 +13,7 @@ import TestExtras from '../../module/TestExtras';
 // TODO: Expose properly through alloy.
 UnitTest.asynctest('SilverMenubar Test', (success, failure) => {
   const helpers = TestExtras();
-  const sink = Element.fromDom(document.querySelector('.mce-silver-sink'));
+  const sink = SugarElement.fromDom(document.querySelector('.mce-silver-sink'));
 
   TestHelpers.GuiSetup.setup(
     (store, _doc, _body) => GuiFactory.build({
@@ -35,7 +34,7 @@ UnitTest.asynctest('SilverMenubar Test', (success, failure) => {
       ]
     }),
     (doc, _body, _gui, testContainer, store) => {
-      const menubarEl = SelectorFind.descendant(testContainer.element(), '.test-menubar').getOrDie('Could not find menubar to test');
+      const menubarEl = SelectorFind.descendant(testContainer.element, '.test-menubar').getOrDie('Could not find menubar to test');
 
       const menubar = testContainer.getSystem().getByDom(menubarEl).getOrDie();
 
@@ -125,7 +124,7 @@ UnitTest.asynctest('SilverMenubar Test', (success, failure) => {
             },
             children: [ ]
           })),
-          menubar.element()
+          menubar.element
         ),
 
         Logger.t(
@@ -267,10 +266,10 @@ UnitTest.asynctest('SilverMenubar Test', (success, failure) => {
         store.sAssertEq('Pressing escape in menubar should fire event', [ 'Menubar.escape' ]),
 
         Log.stepsAsStep('TBA', 'AP-307: Once a menu is expanded, hovering on buttons should switch which menu is expanded', [
-          Mouse.sHoverOn(menubar.element(), 'button[role="menuitem"]:contains("Basic Menu Button")'),
+          Mouse.sHoverOn(menubar.element, 'button[role="menuitem"]:contains("Basic Menu Button")'),
           Step.wait(100),
           UiFinder.sNotExists(sink, '[role="menu"]'),
-          Mouse.sClickOn(menubar.element(), 'button[role="menuitem"]:contains("Changes")'),
+          Mouse.sClickOn(menubar.element, 'button[role="menuitem"]:contains("Changes")'),
           UiFinder.sWaitForVisible(
             'Waiting for changes menu',
             sink,
@@ -279,7 +278,7 @@ UnitTest.asynctest('SilverMenubar Test', (success, failure) => {
           sAssertMenuItemGroups('After clicking on "Changes"', [
             [ 'Remember me' ]
           ], false, true),
-          Mouse.sHoverOn(menubar.element(), 'button[role="menuitem"]:contains("Basic Menu Button")'),
+          Mouse.sHoverOn(menubar.element, 'button[role="menuitem"]:contains("Basic Menu Button")'),
           UiFinder.sWaitForVisible(
             'Waiting for basic menu',
             sink,

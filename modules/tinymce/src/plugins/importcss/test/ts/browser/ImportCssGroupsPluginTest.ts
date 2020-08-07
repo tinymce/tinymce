@@ -1,9 +1,8 @@
-import { GeneralSteps, Log, Pipeline, Step, Keys, Keyboard, Assertions } from '@ephox/agar';
+import { Assertions, GeneralSteps, Keyboard, Keys, Log, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { console, document } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { TinyLoader, TinyUi } from '@ephox/mcagar';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import Plugin from 'tinymce/plugins/importcss/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
@@ -16,7 +15,7 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssGroupsTest', (suc
 
   const sTestEditorWithSettings = (assertions, pluginSettings) => Step.async((onStepSuccess, onStepFailure) => {
     TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-      const doc = Element.fromDom(document);
+      const doc = SugarElement.fromDom(document);
 
       const tinyUi = TinyUi(editor);
 
@@ -33,7 +32,7 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssGroupsTest', (suc
             {
               [assertions.choice.presence]: 0
             },
-            Element.fromDom(editor.getBody())
+            SugarElement.fromDom(editor.getBody())
           )
         ],
         [ sOpenStyleMenu ],
@@ -46,7 +45,7 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssGroupsTest', (suc
             {
               [assertions.choice.presence]: 1
             },
-            Element.fromDom(editor.getBody())
+            SugarElement.fromDom(editor.getBody())
           )
         ]
       ]), onSuccess, onFailure);
@@ -128,7 +127,7 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssGroupsTest', (suc
               title: 'Advanced',
               filter: /.adv/,
               selector_converter: (selector, group) => {
-                // tslint:disable-next-line:no-console
+                // eslint-disable-next-line no-console
                 console.log('selector', selector, 'group', group);
                 return {
                   title: selector + '.AdvGroup',

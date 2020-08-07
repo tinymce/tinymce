@@ -4,7 +4,6 @@ import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
 
 import TabfocusPlugin from 'tinymce/plugins/tabfocus/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
-import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.plugins.tabfocus.TabfocusSanityTest', (success, failure) => {
 

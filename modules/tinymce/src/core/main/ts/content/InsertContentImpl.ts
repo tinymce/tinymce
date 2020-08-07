@@ -5,16 +5,16 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element as DomElement, Node, Range } from '@ephox/dom-globals';
-import { Option } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { Optional } from '@ephox/katamari';
+import { SugarElement } from '@ephox/sugar';
 import DOMUtils from '../api/dom/DOMUtils';
 import ElementUtils from '../api/dom/ElementUtils';
-import Selection from '../api/dom/Selection';
+import EditorSelection from '../api/dom/Selection';
 import Editor from '../api/Editor';
 import Env from '../api/Env';
-import ParserNode from '../api/html/Node';
-import Serializer from '../api/html/Serializer';
+import AstNode from '../api/html/Node';
+import HtmlSerializer from '../api/html/Serializer';
+import * as Settings from '../api/Settings';
 import Tools from '../api/util/Tools';
 import CaretPosition from '../caret/CaretPosition';
 import { CaretWalker } from '../caret/CaretWalker';
@@ -24,22 +24,22 @@ import * as PaddingBr from '../dom/PaddingBr';
 import * as RangeNormalizer from '../selection/RangeNormalizer';
 import * as SelectionUtils from '../selection/SelectionUtils';
 import * as InsertList from './InsertList';
-import * as Settings from '../api/Settings';
 import { isAfterNbsp, trimNbspAfterDeleteAndPadValue, trimOrPadLeftRight } from './NbspTrim';
 
-const isTableCell = NodeType.matchNodeNames([ 'td', 'th' ]);
+const isTableCell = NodeType.isTableCell;
 
 const isTableCellContentSelected = (dom: DOMUtils, rng: Range, cell: Node | null) => {
   if (cell !== null) {
     const endCell = dom.getParent(rng.endContainer, isTableCell);
-    return cell === endCell && SelectionUtils.hasAllContentsSelected(Element.fromDom(cell), rng);
+    return cell === endCell && SelectionUtils.hasAllContentsSelected(SugarElement.fromDom(cell), rng);
   } else {
     return false;
   }
 };
 
 const selectionSetContent = (editor: Editor, content: string) => {
-  const rng = editor.selection.getRng();
+  const selection = editor.selection;
+  const rng = selection.getRng();
   const container = rng.startContainer;
   const offset = rng.startOffset;
 
@@ -48,13 +48,13 @@ const selectionSetContent = (editor: Editor, content: string) => {
     container.deleteData(offset, 1);
     rng.setStart(container, offset);
     rng.setEnd(container, offset);
-    editor.selection.setRng(rng);
+    selection.setRng(rng);
   }
 
-  editor.selection.setContent(content);
+  selection.setContent(content);
 };
 
-const validInsertion = function (editor: Editor, value: string, parentNode: DomElement) {
+const validInsertion = function (editor: Editor, value: string, parentNode: Element) {
   // Should never insert content into bogus elements, since these can
   // be resize handles or similar
   if (parentNode.getAttribute('data-mce-bogus') === 'all') {
@@ -71,8 +71,8 @@ const validInsertion = function (editor: Editor, value: string, parentNode: DomE
   }
 };
 
-const trimBrsFromTableCell = function (dom: DOMUtils, elm: DomElement) {
-  Option.from(dom.getParent(elm, 'td,th')).map(Element.fromDom).each(PaddingBr.trimBlockTrailingBr);
+const trimBrsFromTableCell = function (dom: DOMUtils, elm: Element) {
+  Optional.from(dom.getParent(elm, 'td,th')).map(SugarElement.fromDom).each(PaddingBr.trimBlockTrailingBr);
 };
 
 const reduceInlineTextElements = (editor: Editor, merge: boolean) => {
@@ -92,7 +92,7 @@ const reduceInlineTextElements = (editor: Editor, merge: boolean) => {
   }
 };
 
-const markFragmentElements = (fragment: ParserNode) => {
+const markFragmentElements = (fragment: AstNode) => {
   let node = fragment;
 
   while ((node = node.walk())) {
@@ -102,13 +102,13 @@ const markFragmentElements = (fragment: ParserNode) => {
   }
 };
 
-const unmarkFragmentElements = (elm: DomElement) => {
-  Tools.each(elm.getElementsByTagName('*'), (elm: DomElement) => {
+const unmarkFragmentElements = (elm: Element) => {
+  Tools.each(elm.getElementsByTagName('*'), (elm: Element) => {
     elm.removeAttribute('data-mce-fragment');
   });
 };
 
-const isPartOfFragment = function (node: DomElement) {
+const isPartOfFragment = function (node: Element) {
   return !!node.getAttribute('data-mce-fragment');
 };
 
@@ -125,7 +125,7 @@ const moveSelectionToMarker = function (editor: Editor, marker) {
     const root = editor.getBody();
 
     for (; node && node !== root; node = node.parentNode) {
-      if (editor.dom.getContentEditable(node) === 'false') {
+      if (dom.getContentEditable(node) === 'false') {
         return node;
       }
     }
@@ -137,7 +137,7 @@ const moveSelectionToMarker = function (editor: Editor, marker) {
     return;
   }
 
-  editor.selection.scrollIntoView(marker);
+  selection.scrollIntoView(marker);
 
   // If marker is in cE=false then move selection to that element instead
   const parentEditableFalseElm = getContentEditableFalseParent(marker);
@@ -210,7 +210,7 @@ const deleteSelectedContent = (editor: Editor) => {
   // when using the native delete command. As such we need to manually delete the cell content instead
   const startCell = dom.getParent(rng.startContainer, isTableCell);
   if (isTableCellContentSelected(dom, rng, startCell)) {
-    TableDelete.deleteCellContents(editor, rng, Element.fromDom(startCell));
+    TableDelete.deleteCellContents(editor, rng, SugarElement.fromDom(startCell));
   } else {
     editor.getDoc().execCommand('Delete', false, null);
   }
@@ -219,7 +219,7 @@ const deleteSelectedContent = (editor: Editor) => {
 export const insertHtmlAtCaret = function (editor: Editor, value: string, details) {
   let parentNode, rootNode, args;
   let marker, rng, node;
-  const selection: Selection = editor.selection, dom = editor.dom;
+  const selection: EditorSelection = editor.selection, dom = editor.dom;
 
   // Check for whitespace before/after value
   if (/^ | $/.test(value)) {
@@ -230,7 +230,7 @@ export const insertHtmlAtCaret = function (editor: Editor, value: string, detail
   const parser = editor.parser;
   const merge = details.merge;
 
-  const serializer = Serializer({
+  const serializer = HtmlSerializer({
     validate: Settings.shouldValidate(editor)
   }, editor.schema);
   const bookmarkHtml = '<span id="mce_marker" data-mce-type="bookmark">&#xFEFF;&#x200B;</span>';
@@ -269,7 +269,7 @@ export const insertHtmlAtCaret = function (editor: Editor, value: string, detail
   // Insert node maker where we will insert the new HTML and get it's parent
   if (!selection.isCollapsed()) {
     deleteSelectedContent(editor);
-    value = trimNbspAfterDeleteAndPadValue(editor.selection.getRng(), value);
+    value = trimNbspAfterDeleteAndPadValue(selection.getRng(), value);
   }
 
   parentNode = selection.getNode();
@@ -280,8 +280,8 @@ export const insertHtmlAtCaret = function (editor: Editor, value: string, detail
 
   // Custom handling of lists
   if (details.paste === true && InsertList.isListFragment(editor.schema, fragment) && InsertList.isParentBlockLi(dom, parentNode)) {
-    rng = InsertList.insertAtCaret(serializer, dom, editor.selection.getRng(), fragment);
-    editor.selection.setRng(rng);
+    rng = InsertList.insertAtCaret(serializer, dom, selection.getRng(), fragment);
+    selection.setRng(rng);
     editor.fire('SetContent', args);
     return;
   }
@@ -353,7 +353,7 @@ export const insertHtmlAtCaret = function (editor: Editor, value: string, detail
   reduceInlineTextElements(editor, merge);
   moveSelectionToMarker(editor, dom.get('mce_marker'));
   unmarkFragmentElements(editor.getBody());
-  trimBrsFromTableCell(editor.dom, editor.selection.getStart());
+  trimBrsFromTableCell(dom, selection.getStart());
 
   editor.fire('SetContent', args);
   editor.addVisual();

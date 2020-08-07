@@ -6,18 +6,17 @@
  */
 
 import {
-  AddEventsBehaviour, AlloyEvents, AlloyTriggers, Behaviour, Disabling, FormField as AlloyFormField, Input as AlloyInput, Invalidating,
-  Keying, NativeEvents, Representing, SketchSpec, SystemEvents, Tabstopping
+  AddEventsBehaviour, AlloyEvents, AlloyTriggers, Behaviour, Disabling, FormField as AlloyFormField, Input as AlloyInput, Invalidating, Keying,
+  NativeEvents, Representing, SketchSpec, SystemEvents, Tabstopping
 } from '@ephox/alloy';
-import { Types } from '@ephox/bridge';
-import { Arr, Fun, Future, Option, Result } from '@ephox/katamari';
+import { Dialog } from '@ephox/bridge';
+import { Arr, Fun, Future, Optional, Result } from '@ephox/katamari';
 import { Traverse } from '@ephox/sugar';
 import { renderFormFieldWith, renderLabel } from 'tinymce/themes/silver/ui/alien/FieldLabeller';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as ReadOnly from '../../ReadOnly';
 import { formChangeEvent, formSubmitEvent } from '../general/FormEvents';
-import { Omit } from '../Omit';
 
 const renderTextField = function (spec: TextField, providersBackstage: UiFactoryBackstageProviders) {
   const pLabel = spec.label.map((label) => renderLabel(label, providersBackstage));
@@ -33,7 +32,7 @@ const renderTextField = function (spec: TextField, providersBackstage: UiFactory
       useControlEnter: spec.multiline === true,
       execute: (comp) => {
         AlloyTriggers.emit(comp, formSubmitEvent);
-        return Option.some(true);
+        return Optional.some(true);
       }
     }),
     AddEventsBehaviour.config('textfield-change', [
@@ -49,7 +48,7 @@ const renderTextField = function (spec: TextField, providersBackstage: UiFactory
 
   const validatingBehaviours = spec.validation.map((vl) => Invalidating.config({
     getRoot(input) {
-      return Traverse.parent(input.element());
+      return Traverse.parent(input.element);
     },
     invalidClass: 'tox-invalid',
     validator: {
@@ -70,7 +69,7 @@ const renderTextField = function (spec: TextField, providersBackstage: UiFactory
     ...inputMode
   };
 
-  const pField = AlloyFormField.parts().field({
+  const pField = AlloyFormField.parts.field({
     tag: spec.multiline === true ? 'textarea' : 'input',
     inputAttributes,
     inputClasses: [ spec.classname ],
@@ -110,20 +109,20 @@ export interface TextField {
   name: string;
   classname: string;
   flex: boolean;
-  label: Option<string>;
-  inputMode: Option<string>;
-  placeholder: Option<string>;
+  label: Optional<string>;
+  inputMode: Optional<string>;
+  placeholder: Optional<string>;
   disabled: boolean;
-  validation: Option<{
+  validation: Optional<{
     validator: Validator;
     validateOnLoad?: boolean;
   }>;
   maximized: boolean;
 }
 
-type InputSpec = Omit<Types.Input.Input, 'type'>;
+type InputSpec = Omit<Dialog.Input, 'type'>;
 
-type TextAreaSpec = Omit<Types.TextArea.TextArea, 'type'>;
+type TextAreaSpec = Omit<Dialog.TextArea, 'type'>;
 
 const renderInput = (spec: InputSpec, providersBackstage: UiFactoryBackstageProviders): SketchSpec => renderTextField({
   name: spec.name,
@@ -134,7 +133,7 @@ const renderInput = (spec: InputSpec, providersBackstage: UiFactoryBackstageProv
   flex: false,
   disabled: spec.disabled,
   classname: 'tox-textfield',
-  validation: Option.none(),
+  validation: Optional.none(),
   maximized: spec.maximized
 }, providersBackstage);
 
@@ -142,12 +141,12 @@ const renderTextarea = (spec: TextAreaSpec, providersBackstage: UiFactoryBacksta
   name: spec.name,
   multiline: true,
   label: spec.label,
-  inputMode: Option.none(), // type attribute is not valid for textareas
+  inputMode: Optional.none(), // type attribute is not valid for textareas
   placeholder: spec.placeholder,
   flex: true,
   disabled: spec.disabled,
   classname: 'tox-textarea',
-  validation: Option.none(),
+  validation: Optional.none(),
   maximized: spec.maximized
 }, providersBackstage);
 
