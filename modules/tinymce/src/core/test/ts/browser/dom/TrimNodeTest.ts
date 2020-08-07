@@ -25,6 +25,17 @@ UnitTest.asynctest('browser.tinymce.core.dom.TrimNodeTest', function (success, f
     Assert.eq('Should return document as is', true, actual === expected);
   });
 
+  const sTestTrimFragmentedTextNode = Step.sync(() => {
+    const emptyTextNode = document.createTextNode(' ');
+    const elm = document.createElement('div');
+    elm.innerHTML = '<strong>abc</strong>abc';
+    elm.insertBefore(emptyTextNode, elm.lastChild);
+
+    const actual = TrimNode.trimNode(dom, elm);
+
+    Assert.eq('Empty text node shouldn\'t be trimmed', '<strong>abc</strong> abc', actual.innerHTML);
+  });
+
   Pipeline.async({}, [
     sTestTrim('<p><span></span>x</p>', '<p>x</p>'),
     sTestTrim('<p><span>x</span>&nbsp;</p>', '<p><span>x</span>&nbsp;</p>'),
@@ -34,6 +45,8 @@ UnitTest.asynctest('browser.tinymce.core.dom.TrimNodeTest', function (success, f
     sTestTrim('<p><strong><span>x</span>&nbsp;</strong></p>', '<p><strong><span>x</span>&nbsp;</strong></p>'),
     sTestTrim('<p><a id="anchor"></a><span>x</span></p>', '<p><a id="anchor"></a><span>x</span></p>'),
     sTestTrim('<p><br data-mce-bogus="1"></p>', '<p><br data-mce-bogus="1"></p>'),
+    sTestTrim('<p><strong>x</strong> <em>y</em></p>', '<p><strong>x</strong> <em>y</em></p>'),
+    sTestTrimFragmentedTextNode,
     sTestTrimDocumentNode
   ], function () {
     success();

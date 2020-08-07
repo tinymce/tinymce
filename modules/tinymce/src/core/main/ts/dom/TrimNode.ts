@@ -8,16 +8,23 @@
 import { Arr, Strings } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import DOMUtils from '../api/dom/DOMUtils';
+import * as ElementType from './ElementType';
 import * as NodeType from './NodeType';
 import * as Empty from './Empty';
 
 const isSpan = (node: Node): node is HTMLSpanElement =>
-  node && node.nodeName.toLowerCase() === 'span';
+  node.nodeName.toLowerCase() === 'span';
 
-const surroundedBySpans = (node: Node) => {
-  const previousIsSpan = isSpan(node.previousSibling);
-  const nextIsSpan = isSpan(node.nextSibling);
-  return previousIsSpan && nextIsSpan;
+const isNonEmptyText = (node: Node) =>
+  NodeType.isText(node) && Strings.trim(node.data).length !== 0;
+
+const isInlineContent = (node: Node | null) =>
+  node && (isNonEmptyText(node) || ElementType.isInline(SugarElement.fromDom(node)));
+
+const surroundedByInlineContent = (node: Node) => {
+  const prevIsInline = isInlineContent(node.previousSibling);
+  const nextIsInline = isInlineContent(node.nextSibling);
+  return prevIsInline && nextIsInline;
 };
 
 const isBookmarkNode = (node: Node) =>
@@ -26,7 +33,7 @@ const isBookmarkNode = (node: Node) =>
 // Keep text nodes with only spaces if surrounded by spans.
 // eg. "<p><span>a</span> <span>b</span></p>" should keep space between a and b
 const isKeepTextNode = (node: Node) =>
-  NodeType.isText(node) && (Strings.trim(node.data).length !== 0 || surroundedBySpans(node));
+  isNonEmptyText(node) || (NodeType.isText(node) && surroundedByInlineContent(node));
 
 const isDocument = (node: Node) => NodeType.isDocumentFragment(node) || NodeType.isDocument(node);
 
@@ -38,7 +45,7 @@ const isDocument = (node: Node) => NodeType.isDocumentFragment(node) || NodeType
 //   <p>text 1<span></span></p><b>CHOP</b><p><span></span>text 2</p>
 // this function will then trim off empty edges and produce:
 //   <p>text 1</p><b>CHOP</b><p>text 2</p>
-const trimNode = (dom: DOMUtils, node: Node): Node => {
+const trimNode = <T extends Node>(dom: DOMUtils, node: T): T => {
   if (NodeType.isElement(node) && isBookmarkNode(node)) {
     return node;
   }
