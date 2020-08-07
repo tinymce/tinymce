@@ -9,10 +9,10 @@ import { Arr, Fun, Optional } from '@ephox/katamari';
 import { CopySelected, TableFill, TableLookup } from '@ephox/snooker';
 import { Replication, SugarElement, SugarElements, SugarNode } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
+import { SelectionTypes, Selections } from '@ephox/darwin';
 import * as TableTargets from '../queries/TableTargets';
 import * as Ephemera from '../selection/Ephemera';
 import { TableActions } from './TableActions';
-import { SelectionTypes, Selections } from '@ephox/darwin';
 
 const extractSelected = function (cells) {
   // Assume for now that we only have one table (also handles the case where we multi select outside a table)

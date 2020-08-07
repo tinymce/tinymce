@@ -1,5 +1,6 @@
 import * as GridRow from '../model/GridRow';
 import * as RunOperation from '../model/RunOperation';
+import * as Direction from '../queries/Direction';
 import { CellLocation } from './CellLocation';
 import * as CellMutations from './CellMutations';
 import * as CellNavigation from './CellNavigation';
@@ -24,7 +25,6 @@ import * as TablePositions from './TablePositions';
 import * as TableRender from './TableRender';
 import { TableResize } from './TableResize';
 import { TableSize } from './TableSize';
-import * as Direction from '../queries/Direction';
 
 export {
   CellLocation,

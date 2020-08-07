@@ -7,6 +7,7 @@
 
 import Editor from 'tinymce/core/api/Editor';
 import PluginManager from 'tinymce/core/api/PluginManager';
+import { Selections } from '@ephox/darwin';
 import * as Clipboard from './actions/Clipboard';
 import { getResizeHandler } from './actions/ResizeHandler';
 import { TableActions } from './actions/TableActions';
@@ -24,7 +25,6 @@ import * as Buttons from './ui/Buttons';
 import * as MenuItems from './ui/MenuItems';
 import * as Util from './core/Util';
 import { getSelectionStartCellOrCaption } from './selection/TableSelection';
-import { Selections } from '@ephox/darwin';
 
 function Plugin(editor: Editor) {
   const selections = Selections(() => Util.getBody(editor), () => getSelectionStartCellOrCaption(Util.getSelectionStart(editor)), ephemera.selectedSelector);

@@ -10,6 +10,7 @@ import { DomDescent } from '@ephox/phoenix';
 import { CellMutations, Direction, ResizeWire, RunOperation, TableDirection, TableFill, TableGridSize, TableOperations } from '@ephox/snooker';
 import { SugarElement, SugarNode } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
+import { Selections } from '@ephox/darwin';
 import { fireNewCell, fireNewRow } from '../api/Events';
 import { getCloneElements } from '../api/Settings';
 import { getRowType, switchCellType, switchSectionType } from '../core/TableSections';
@@ -17,7 +18,6 @@ import * as Util from '../core/Util';
 import * as TableSize from '../queries/TableSize';
 import { ephemera } from '../selection/Ephemera';
 import { getCellsFromSelection, getRowsFromSelection } from '../selection/TableSelection';
-import { Selections } from '@ephox/darwin';
 
 type TableAction<T> = (table: SugarElement<HTMLTableElement>, target: T) => Optional<Range>;
 export type SimpleTableAction = (editor: Editor, args: Record<string, any>) => void;

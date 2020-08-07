@@ -2,11 +2,11 @@ import { Arr, Cell, Optional, Thunk } from '@ephox/katamari';
 import { RunOperation, TableLookup } from '@ephox/snooker';
 import { SugarElement, SugarNode } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
+import { Selections } from '@ephox/darwin';
 import * as TableTargets from '../queries/TableTargets';
+import * as Util from '../core/Util';
 import { ephemera } from './Ephemera';
 import * as TableSelection from './TableSelection';
-import * as Util from '../core/Util';
-import { Selections } from '@ephox/darwin';
 
 export type SelectionTargets = ReturnType<typeof getSelectionTargets>;
 

@@ -8,6 +8,7 @@
 import { Arr, Fun } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { Dialog } from 'tinymce/core/api/ui/Ui';
+import { Selections } from '@ephox/darwin';
 import * as Styles from '../actions/Styles';
 import { hasAdvancedCellTab } from '../api/Settings';
 import * as Util from '../core/Util';
@@ -15,7 +16,6 @@ import * as TableSelection from '../selection/TableSelection';
 import * as CellDialogGeneralTab from './CellDialogGeneralTab';
 import { DomModifier } from './DomModifier';
 import * as Helpers from './Helpers';
-import { Selections } from '@ephox/darwin';
 
 type CellData = Helpers.CellData;
 

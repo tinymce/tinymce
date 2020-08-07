@@ -13,10 +13,10 @@ import { hasAdvancedRowTab } from '../api/Settings';
 import { switchSectionType } from '../core/TableSections';
 import * as Util from '../core/Util';
 import * as TableSelection from '../selection/TableSelection';
+import { ephemera } from '../selection/Ephemera';
 import { DomModifier } from './DomModifier';
 import * as Helpers from './Helpers';
 import * as RowDialogGeneralTab from './RowDialogGeneralTab';
-import { ephemera } from '../selection/Ephemera';
 
 type RowData = Helpers.RowData;
 
