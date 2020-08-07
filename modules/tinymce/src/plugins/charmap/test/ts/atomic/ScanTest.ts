@@ -1,7 +1,7 @@
 import { Assertions } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import * as Scan from 'tinymce/plugins/charmap/core/Scan';
 import { CharMap } from 'tinymce/plugins/charmap/core/CharMap';
+import * as Scan from 'tinymce/plugins/charmap/core/Scan';
 
 UnitTest.test('atomic.tinymce.plugins.charmap.ScanTest', () => {
   const charMap: CharMap = {

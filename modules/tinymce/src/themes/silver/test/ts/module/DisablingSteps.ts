@@ -1,4 +1,4 @@
-import { Step, Assertions, Logger, Chain } from '@ephox/agar';
+import { Assertions, Chain, Logger, Step } from '@ephox/agar';
 import { AlloyComponent, Disabling } from '@ephox/alloy';
 
 const sAssertDisabled = (label: string, expected: boolean, component: AlloyComponent) => Logger.t(

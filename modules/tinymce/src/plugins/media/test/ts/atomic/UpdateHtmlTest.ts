@@ -1,6 +1,6 @@
-import * as UpdateHtml from 'tinymce/plugins/media/core/UpdateHtml';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { MediaData } from 'tinymce/plugins/media/core/Types';
+import * as UpdateHtml from 'tinymce/plugins/media/core/UpdateHtml';
 
 UnitTest.test('atomic.plugins.media.UpdateHtmlTest', () => {
   const testHtmlUpdate = (description: string, html: string, newData: Partial<MediaData>, updateAll: boolean, expected: string) => {

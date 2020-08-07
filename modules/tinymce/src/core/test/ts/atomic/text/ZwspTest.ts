@@ -1,5 +1,5 @@
-import * as Zwsp from 'tinymce/core/text/Zwsp';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
+import * as Zwsp from 'tinymce/core/text/Zwsp';
 
 UnitTest.test('atomic.tinymce.core.text.ZwspTest', () => {
   Assert.eq('ZWSP should be FEFF', '\uFEFF', Zwsp.ZWSP);

@@ -30,6 +30,6 @@
     "max-len": ["warn", 260]
   },
   "settings": {
-    "import/internal-regex": "^ephox/.*"
+    "import/internal-regex": "^(ephox|tinymce)/.*"
   }
 }

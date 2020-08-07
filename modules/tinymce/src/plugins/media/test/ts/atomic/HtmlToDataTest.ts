@@ -1,5 +1,5 @@
-import * as HtmlToData from 'tinymce/plugins/media/core/HtmlToData';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
+import * as HtmlToData from 'tinymce/plugins/media/core/HtmlToData';
 
 UnitTest.test('atomic.core.HtmlToDataTest', function () {
   const testHtmlToData = function (html, expected) {

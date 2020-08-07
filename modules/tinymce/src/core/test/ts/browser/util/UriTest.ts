@@ -1,7 +1,7 @@
-import { LegacyUnit } from '@ephox/mcagar';
 import { Pipeline } from '@ephox/agar';
-import URI from 'tinymce/core/api/util/URI';
 import { UnitTest } from '@ephox/bedrock-client';
+import { LegacyUnit } from '@ephox/mcagar';
+import URI from 'tinymce/core/api/util/URI';
 
 UnitTest.asynctest('browser.tinymce.core.util.UriTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();

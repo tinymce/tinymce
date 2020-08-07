@@ -1,5 +1,5 @@
-import * as Data from 'tinymce/plugins/visualchars/core/Data';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
+import * as Data from 'tinymce/plugins/visualchars/core/Data';
 
 UnitTest.test('atomic.tinymce.plugins.visualchars.DataTest', function () {
   Assert.eq(

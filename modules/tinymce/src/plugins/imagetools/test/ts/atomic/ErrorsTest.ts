@@ -1,5 +1,5 @@
-import * as Errors from 'tinymce/plugins/imagetools/core/Errors';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
+import * as Errors from 'tinymce/plugins/imagetools/core/Errors';
 
 UnitTest.test('atomic.tinymce.plugins.imagetools.ErrorsTest', function () {
   const testHttpErrors = function () {
