@@ -1,10 +1,10 @@
 import { Universe } from '@ephox/boss';
-import { Arr, Fun, Optional } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import { Direction, Successor, Transition, Traverse } from '../api/data/Types';
 
 const traverse = <E>(item: E, mode: Transition): Traverse<E> => ({
-  item: Fun.constant(item),
-  mode: Fun.constant(mode)
+  item,
+  mode
 });
 
 const backtrack: Transition = function (universe, item, _direction, transition = sidestep) {

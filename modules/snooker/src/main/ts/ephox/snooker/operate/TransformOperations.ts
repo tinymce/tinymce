@@ -10,13 +10,13 @@ type Subst = (element: SugarElement, comparator: CompElm) => SugarElement;
 const replaceIn = function (grid: Structs.RowCells[], targets: Structs.ElementNew[], comparator: CompElm, substitution: Subst) {
   const isTarget = function (cell: Structs.ElementNew) {
     return Arr.exists(targets, function (target) {
-      return comparator(cell.element(), target.element());
+      return comparator(cell.element, target.element);
     });
   };
 
   return Arr.map(grid, function (row) {
     return GridRow.mapCells(row, function (cell) {
-      return isTarget(cell) ? Structs.elementnew(substitution(cell.element(), comparator), true) : cell;
+      return isTarget(cell) ? Structs.elementnew(substitution(cell.element, comparator), true) : cell;
     });
   });
 };
@@ -44,7 +44,7 @@ const replaceColumn = function (grid: Structs.RowCells[], index: number, compara
 // substitution :: (item, comparator) -> item
 const replaceRow = function (grid: Structs.RowCells[], index: number, comparator: CompElm, substitution: Subst) {
   const targetRow = grid[index];
-  const targets = Arr.bind(targetRow.cells(), function (item, i) {
+  const targets = Arr.bind(targetRow.cells, function (item, i) {
     // Check that we haven't already added this one.
     const alreadyAdded = notStartRow(grid, index, i, comparator) || notStartColumn(targetRow, i, comparator);
     return alreadyAdded ? [] : [ item ];

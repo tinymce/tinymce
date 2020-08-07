@@ -9,19 +9,19 @@ import { Objects } from '@ephox/boulder';
 import { Menu } from '@ephox/bridge';
 import { Arr, Obj, Id, Merger, Type } from '@ephox/katamari';
 
-import { SingleMenuItemApi } from './SingleMenuTypes';
+import { SingleMenuItemSpec } from './SingleMenuTypes';
 
-type MenuItemRegistry = Record<string, Menu.MenuItemApi | Menu.NestedMenuItemApi | Menu.ToggleMenuItemApi>;
+type MenuItemRegistry = Record<string, Menu.MenuItemSpec | Menu.NestedMenuItemSpec | Menu.ToggleMenuItemSpec>;
 
-const isMenuItemReference = (item: string | SingleMenuItemApi): item is string => Type.isString(item);
-const isSeparator = (item: SingleMenuItemApi): item is Menu.SeparatorMenuItemApi => item.type === 'separator';
-const isExpandingMenuItem = (item: SingleMenuItemApi): item is Menu.NestedMenuItemApi => Obj.has(item as Record<string, any>, 'getSubmenuItems');
+const isMenuItemReference = (item: string | SingleMenuItemSpec): item is string => Type.isString(item);
+const isSeparator = (item: SingleMenuItemSpec): item is Menu.SeparatorMenuItemSpec => item.type === 'separator';
+const isExpandingMenuItem = (item: SingleMenuItemSpec): item is Menu.NestedMenuItemSpec => Obj.has(item as Record<string, any>, 'getSubmenuItems');
 
-const separator: Menu.SeparatorMenuItemApi = {
+const separator: Menu.SeparatorMenuItemSpec = {
   type: 'separator'
 };
 
-const unwrapReferences = (items: Array<string | SingleMenuItemApi>, menuItems: MenuItemRegistry): SingleMenuItemApi[] => {
+const unwrapReferences = (items: Array<string | SingleMenuItemSpec>, menuItems: MenuItemRegistry): SingleMenuItemSpec[] => {
   // Unwrap any string based menu item references
   const realItems = Arr.foldl(items, (acc, item) => {
     if (isMenuItemReference(item)) {
@@ -50,7 +50,7 @@ const unwrapReferences = (items: Array<string | SingleMenuItemApi>, menuItems: M
   return realItems;
 };
 
-const getFromExpandingItem = (item: Menu.NestedMenuItemApi, menuItems: MenuItemRegistry) => {
+const getFromExpandingItem = (item: Menu.NestedMenuItemSpec, menuItems: MenuItemRegistry) => {
   const submenuItems = item.getSubmenuItems();
   const rest = expand(submenuItems, menuItems);
 
@@ -73,13 +73,13 @@ const getFromExpandingItem = (item: Menu.NestedMenuItemApi, menuItems: MenuItemR
   };
 };
 
-const getFromItem = (item: SingleMenuItemApi, menuItems: MenuItemRegistry) => isExpandingMenuItem(item) ? getFromExpandingItem(item, menuItems) : {
+const getFromItem = (item: SingleMenuItemSpec, menuItems: MenuItemRegistry) => isExpandingMenuItem(item) ? getFromExpandingItem(item, menuItems) : {
   item,
   menus: { },
   expansions: { }
 };
 
-const generateValueIfRequired = (item: SingleMenuItemApi): SingleMenuItemApi => {
+const generateValueIfRequired = (item: SingleMenuItemSpec): SingleMenuItemSpec => {
   // Separators don't have a value, so just return the item
   if (isSeparator(item)) {
     return item;
@@ -91,7 +91,7 @@ const generateValueIfRequired = (item: SingleMenuItemApi): SingleMenuItemApi => 
 };
 
 // Takes items, and consolidates them into its return value
-const expand = (items: string | Array<string | SingleMenuItemApi>, menuItems: MenuItemRegistry) => {
+const expand = (items: string | Array<string | SingleMenuItemSpec>, menuItems: MenuItemRegistry) => {
   const realItems = unwrapReferences(Type.isString(items) ? items.split(' ') : items, menuItems);
   return Arr.foldr(realItems, (acc, item) => {
     const itemWithValue = generateValueIfRequired(item);

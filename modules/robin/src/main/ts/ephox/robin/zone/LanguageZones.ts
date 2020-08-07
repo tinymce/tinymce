@@ -118,11 +118,11 @@ const nu = function <E> (defaultLang: string): LanguageZones<E> {
 };
 
 // Returns: Optional(string) of the LANG attribute of the closest ancestor element or None.
-//  - uses Fun.constant(false) for isRoot parameter to search even the top HTML element
+//  - uses Fun.never for isRoot parameter to search even the top HTML element
 //    (regardless of 'classic'/iframe or 'inline'/div mode).
 // Note: there may be descendant elements with a different language
 const calculate = function <E, D> (universe: Universe<E, D>, item: E) {
-  return universe.up().closest(item, '[lang]', Fun.constant(false)).bind(function (el) {
+  return universe.up().closest(item, '[lang]', Fun.never).bind(function (el) {
     const lang = universe.attrs().get(el, 'lang');
     return lang === undefined ? Optional.none<string>() : Optional.some(lang);
   });

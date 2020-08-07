@@ -1,6 +1,6 @@
-import * as Resolve from 'ephox/katamari/api/Resolve';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import fc from 'fast-check';
-import { UnitTest, Assert } from '@ephox/bedrock-client';
+import * as Resolve from 'ephox/katamari/api/Resolve';
 
 UnitTest.test('Resolve.namespace', function () {
   const survivor = 'i want to survive this namespacing';

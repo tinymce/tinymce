@@ -1,6 +1,6 @@
 import { AlloyEvents, DomFactory, GuiFactory, Input as AlloyInput, Memento, Representing, SimpleSpec } from '@ephox/alloy';
 import { ValueSchema } from '@ephox/boulder';
-import { Types } from '@ephox/bridge';
+import { Dialog } from '@ephox/bridge';
 import { Optional } from '@ephox/katamari';
 import { UiFactoryBackstage, UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
 import { renderBodyPanel } from 'tinymce/themes/silver/ui/dialog/BodyPanel';
@@ -319,7 +319,7 @@ export default () => {
   helpers.uiMothership.add(everything);
   memCollection.getOpt(everything).each((collection) => {
     Representing.setValue(collection,
-      ValueSchema.asRawOrDie('dialogComponentsDemo.collection', Types.Collection.collectionDataProcessor, [
+      ValueSchema.asRawOrDie('dialogComponentsDemo.collection', Dialog.collectionDataProcessor, [
         {
           value: 'a',
           text: 'A',

@@ -4,7 +4,7 @@ import { EventArgs, SugarPosition } from '@ephox/sugar';
 import { DragMode } from '../api/DragApis';
 
 export interface InDragEvent {
-  info: () => SugarPosition;
+  readonly info: SugarPosition;
 }
 
 interface InDragEvents {

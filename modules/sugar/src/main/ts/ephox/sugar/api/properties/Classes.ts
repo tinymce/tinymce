@@ -32,7 +32,7 @@ const hasAny = (element: SugarElement<Node>, classes: string[]): boolean =>
   Arr.exists(classes, (clazz) => Class.has(element, clazz));
 
 const getNative = (element: SugarElement<Element>): string[] => {
-  const classList = element.dom().classList;
+  const classList = element.dom.classList;
   const r: Array<string> = new Array(classList.length);
   for (let i = 0; i < classList.length; i++) {
     const item = classList.item(i);

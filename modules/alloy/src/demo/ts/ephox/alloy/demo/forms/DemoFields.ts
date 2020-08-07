@@ -43,11 +43,11 @@ const invalidation = (validate: (v: string) => Result<Record<string, string>, st
 const rawTextMunger = (spec: TextMungerSpec) => {
   const invalidUid = Tagger.generate('demo-invalid-uid');
 
-  const pLabel = FormField.parts().label({
+  const pLabel = FormField.parts.label({
     dom: { tag: 'label', innerHtml: spec.label }
   });
 
-  const pField = FormField.parts().field({
+  const pField = FormField.parts.field({
     factory: Input,
     inputBehaviours: Behaviour.derive([
       invalidation((v) => v.indexOf('a') === 0 ? Result.error('Do not start with a!') : Result.value({ }), invalidUid),
@@ -73,11 +73,11 @@ const textMunger = (spec: TextMungerSpec): SketchSpec => {
 };
 
 const selectMunger = (spec: { label: string; options: Array<{ value: string; text: string }> }): SketchSpec => {
-  const pLabel = FormField.parts().label({
+  const pLabel = FormField.parts.label({
     dom: { tag: 'label', innerHtml: spec.label }
   });
 
-  const pField = FormField.parts().field({
+  const pField = FormField.parts.field({
     factory: HtmlSelect,
     dom: {
       classes: [ 'ephox-select-wrapper' ]
@@ -103,13 +103,13 @@ const selectMunger = (spec: { label: string; options: Array<{ value: string; tex
 };
 
 const chooserMunger = (spec: { legend: string; choices: Array<{ text: string; value: string }> }): SketchSpec => {
-  const pLegend = FormChooser.parts().legend({
+  const pLegend = FormChooser.parts.legend({
     dom: {
       innerHtml: spec.legend
     }
   });
 
-  const pChoices = FormChooser.parts().choices({ });
+  const pChoices = FormChooser.parts.choices({ });
 
   return FormChooser.sketch({
     markers: {
@@ -132,14 +132,14 @@ const chooserMunger = (spec: { legend: string; choices: Array<{ text: string; va
 };
 
 const coupledTextMunger = (spec: { field1: TextMungerSpec; field2: TextMungerSpec }): SketchSpec => {
-  const pField1 = FormCoupledInputs.parts().field1(
+  const pField1 = FormCoupledInputs.parts.field1(
     rawTextMunger(spec.field1)
   );
-  const pField2 = FormCoupledInputs.parts().field2(
+  const pField2 = FormCoupledInputs.parts.field2(
     rawTextMunger(spec.field2)
   );
 
-  const pLock = FormCoupledInputs.parts().lock({
+  const pLock = FormCoupledInputs.parts.lock({
     dom: { tag: 'button', innerHtml: 'x' },
     buttonBehaviours: Behaviour.derive([
       Tabstopping.config({ })
@@ -167,14 +167,14 @@ const coupledTextMunger = (spec: { field1: TextMungerSpec; field2: TextMungerSpe
 };
 
 const typeaheadMunger = (spec: { label: string; lazySink: LazySink; dataset: any[] }): SketchSpec => {
-  const pLabel = FormField.parts().label({
+  const pLabel = FormField.parts.label({
     dom: {
       tag: 'label',
       innerHtml: spec.label
     }
   });
 
-  const pField = FormField.parts().field({
+  const pField = FormField.parts.field({
     factory: Typeahead,
     minChars: 1,
 
@@ -182,7 +182,7 @@ const typeaheadMunger = (spec: { label: string; lazySink: LazySink; dataset: any
 
     fetch(input: AlloyComponent) {
 
-      const text = Value.get(input.element());
+      const text = Value.get(input.element);
       const matching: DemoRenders.DemoItems[] = Arr.bind(spec.dataset, (d) => {
         const index = d.indexOf(text.toLowerCase());
         if (index > -1) {

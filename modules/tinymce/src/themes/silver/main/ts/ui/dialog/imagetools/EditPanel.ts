@@ -233,7 +233,7 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
   });
 
   const makeSlider = (label: string, onChoose: (slider: AlloyComponent, thumb: AlloyComponent, value: SliderTypes.SliderValueX) => void, min: number, value: number, max: number): Memento.MementoRecord => {
-    const labelPart = Slider.parts().label({
+    const labelPart = Slider.parts.label({
       dom: {
         tag: 'label',
         classes: [ 'tox-label' ],
@@ -241,7 +241,7 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
       }
     });
 
-    const spectrum = Slider.parts().spectrum({
+    const spectrum = Slider.parts.spectrum({
       dom: {
         tag: 'div',
         classes: [ 'tox-slider__rail' ],
@@ -251,7 +251,7 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
       }
     });
 
-    const thumb = Slider.parts().thumb({
+    const thumb = Slider.parts.thumb({
       dom: {
         tag: 'div',
         classes: [ 'tox-slider__handle' ],
@@ -273,7 +273,7 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
         mode: 'x',
         minX: min,
         maxX: max,
-        getInitialValue: Fun.constant({ x: Fun.constant(value) })
+        getInitialValue: Fun.constant({ x: value })
       },
       components: [
         labelPart,
@@ -289,7 +289,7 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
 
   const makeVariableSlider = (label: string, transform: (ir: ImageResult, adjust: number) => Promise<ImageResult>, min: number, value: number, max: number): Memento.MementoRecord => {
     const onChoose = (slider: AlloyComponent, _thumb: AlloyComponent, value: SliderTypes.SliderValueX): void => {
-      const valTransform = makeValueTransform(transform, value.x() / 100);
+      const valTransform = makeValueTransform(transform, value.x / 100);
       // TODO: Fire the disable event on mousedown and enable on mouseup for silder
       emitTransform(slider, valTransform);
     };
@@ -346,9 +346,9 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
       redOpt.each((red) => {
         blueOpt.each((blue) => {
           greenOpt.each((green) => {
-            const r = Representing.getValue(red).x() / 100;
-            const g = Representing.getValue(green).x() / 100;
-            const b = Representing.getValue(blue).x() / 100;
+            const r = Representing.getValue(red).x / 100;
+            const g = Representing.getValue(green).x / 100;
+            const b = Representing.getValue(blue).x / 100;
             const transform = makeColorTransform(r, g, b);
             emitTransform(slider, transform);
           });

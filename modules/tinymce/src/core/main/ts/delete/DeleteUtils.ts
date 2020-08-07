@@ -14,7 +14,7 @@ import { isListItem, isTextBlock } from '../dom/ElementType';
 import * as InlineUtils from '../keyboard/InlineUtils';
 
 const isBeforeRoot = (rootNode: SugarElement<any>) => (elm: SugarElement<any>): boolean =>
-  Compare.eq(rootNode, SugarElement.fromDom(elm.dom().parentNode));
+  Compare.eq(rootNode, SugarElement.fromDom(elm.dom.parentNode));
 
 const getParentBlock = (rootNode: SugarElement<Node>, elm: SugarElement<Node>): Optional<SugarElement<Node>> =>
   (Compare.contains(rootNode, elm)

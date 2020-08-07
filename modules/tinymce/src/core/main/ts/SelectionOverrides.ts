@@ -338,7 +338,7 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
     const $ = editor.$;
     let $realSelectionContainer = SelectorFind.descendant(SugarElement.fromDom(editor.getBody()), '#' + realSelectionId).fold(
       () => $([]),
-      (elm) => $([ elm.dom() ])
+      (elm) => $([ elm.dom ])
     );
 
     if ($realSelectionContainer.length === 0) {

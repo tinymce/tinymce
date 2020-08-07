@@ -1,9 +1,9 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { ValueSchema } from '@ephox/boulder';
-import { Types } from '@ephox/bridge';
+import { Dialog } from '@ephox/bridge';
 
 UnitTest.test('Custom Editor Schema Test', () => {
-  const schema = Types.CustomEditor.customEditorSchema;
+  const schema = Dialog.customEditorSchema;
 
   Assert.eq('Expect empty not not be valid', true, ValueSchema.asRaw('empty', schema, {
   }).isError());

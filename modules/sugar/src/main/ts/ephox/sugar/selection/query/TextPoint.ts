@@ -5,8 +5,8 @@ import * as Geometry from '../alien/Geometry';
 
 const locateOffset = (doc: SugarElement<Document>, textnode: SugarElement<Text>, x: number, y: number, rect: ClientRect | DOMRect) => {
   const rangeForOffset = (o: number) => {
-    const r = doc.dom().createRange();
-    r.setStart(textnode.dom(), o);
+    const r = doc.dom.createRange();
+    r.setStart(textnode.dom, o);
     r.collapse(true);
     return r;
   };
@@ -22,8 +22,8 @@ const locateOffset = (doc: SugarElement<Document>, textnode: SugarElement<Text>,
 };
 
 const locate = (doc: SugarElement<Document>, node: SugarElement<Text>, x: number, y: number) => {
-  const r = doc.dom().createRange();
-  r.selectNode(node.dom());
+  const r = doc.dom.createRange();
+  r.selectNode(node.dom);
   const rects = r.getClientRects();
   const foundRect = Arr.findMap<ClientRect | DOMRect, ClientRect | DOMRect>(rects, (rect) =>
     Geometry.inRect(rect, x, y) ? Optional.some(rect) : Optional.none());

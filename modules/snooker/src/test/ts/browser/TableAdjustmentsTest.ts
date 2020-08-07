@@ -50,7 +50,7 @@ UnitTest.test('TableAdjustmentsTest', () => {
 
   const percentageToStep = (percentage: number, width: number) => percentage / 100 * width;
   // Note: Will not work for tables with colspans or rowspans
-  const getColumnWidths = (table: SugarElement<HTMLTableElement>) => Arr.map(table.dom().rows[0].cells, (cell) => parseFloat(Css.getRaw(SugarElement.fromDom(cell), 'width').getOr('0')));
+  const getColumnWidths = (table: SugarElement<HTMLTableElement>) => Arr.map(table.dom.rows[0].cells, (cell) => parseFloat(Css.getRaw(SugarElement.fromDom(cell), 'width').getOr('0')));
 
   const testAdjustWidth = (msg: string, expectedWidth: number, expectedColumnWidths: number[], table: SugarElement<HTMLTableElement>, step: number, index: number, direction: ResizeDirection, columnSizing: ResizeBehaviour.ResizeBehaviour) => {
     Insert.append(box, table);

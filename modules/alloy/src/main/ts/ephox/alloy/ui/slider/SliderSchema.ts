@@ -49,8 +49,8 @@ const SliderSchema: FieldProcessorAdt[] = [
         FieldSchema.defaulted('minY', 0),
         FieldSchema.defaulted('maxY', 100),
         FieldSchema.state('value', (spec: SliderModelSpec) => Cell({
-          x: Fun.constant(spec.mode.minX),
-          y: Fun.constant(spec.mode.minY)
+          x: spec.mode.minX,
+          y: spec.mode.minY
         })),
         FieldSchema.strict('getInitialValue'),
         Fields.output('manager', TwoDModel)

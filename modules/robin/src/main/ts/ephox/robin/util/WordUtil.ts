@@ -29,7 +29,7 @@ const firstWord = function (text: string) {
 const leftBreak = function (text: string) {
   const indices = Search.findall(text, Pattern.custom(Pattern.wordbreak(), zero, zero, Optional.none()));
   return Optional.from(indices[indices.length - 1]).map(function (match) {
-    return match.start();
+    return match.start;
   });
 };
 

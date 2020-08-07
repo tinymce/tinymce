@@ -10,11 +10,11 @@ import { NodeAnchor, SelectionAnchor } from './Anchoring';
 // same document as the positioning element (component), then identify the offset
 // difference between the iframe and the component.
 const getOffset = <I extends SelectionAnchor | NodeAnchor>(component: AlloyComponent, origin: OriginAdt, anchorInfo: I): Optional<SugarPosition> => {
-  const win = Traverse.defaultView(anchorInfo.root).dom();
+  const win = Traverse.defaultView(anchorInfo.root).dom;
 
   const hasSameOwner = (frame: SugarElement<HTMLFrameElement>) => {
     const frameOwner = Traverse.owner(frame);
-    const compOwner = Traverse.owner(component.element());
+    const compOwner = Traverse.owner(component.element);
     return Compare.eq(frameOwner, compOwner);
   };
 
@@ -23,11 +23,11 @@ const getOffset = <I extends SelectionAnchor | NodeAnchor>(component: AlloyCompo
 };
 
 const getRootPoint = <I extends SelectionAnchor | NodeAnchor>(component: AlloyComponent, origin: OriginAdt, anchorInfo: I): CssPosition.CssPositionAdt => {
-  const doc = Traverse.owner(component.element());
+  const doc = Traverse.owner(component.element);
   const outerScroll = Scroll.get(doc);
 
   const offset = getOffset(component, origin, anchorInfo).getOr(outerScroll);
-  return CssPosition.absolute(offset, outerScroll.left(), outerScroll.top());
+  return CssPosition.absolute(offset, outerScroll.left, outerScroll.top);
 };
 
 export {

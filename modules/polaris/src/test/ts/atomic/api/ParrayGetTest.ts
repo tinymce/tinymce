@@ -8,7 +8,7 @@ UnitTest.test('api.PositionArray.get', function () {
   const check = function (expected: Optional<string>, input: string[], offset: number) {
     const parray = Parrays.make(input);
     const actual = PositionArray.get(parray, offset);
-    KAssert.eqOptional('eq', expected, actual.map((x) => x.item()));
+    KAssert.eqOptional('eq', expected, actual.map((x) => x.item));
   };
 
   check(Optional.none(), [], 0);

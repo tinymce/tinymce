@@ -6,7 +6,7 @@ import * as InsertAll from './InsertAll';
 import * as Remove from './Remove';
 
 const clone = <E extends Node> (original: SugarElement<E>, isDeep: boolean): SugarElement<E> =>
-  SugarElement.fromDom(original.dom().cloneNode(isDeep) as E);
+  SugarElement.fromDom(original.dom.cloneNode(isDeep) as E);
 
 /** Shallow clone - just the tag, no children */
 const shallow = <E extends Node> (original: SugarElement<E>): SugarElement<E> =>
@@ -32,7 +32,7 @@ const copy = <K extends keyof HTMLElementTagNameMap> (original: SugarElement<Ele
 
   // NOTE
   // previously this used serialisation:
-  // nu.dom().innerHTML = original.dom().innerHTML;
+  // nu.dom.innerHTML = original.dom.innerHTML;
   //
   // Clone should be equivalent (and faster), but if TD <-> TH toggle breaks, put it back.
 

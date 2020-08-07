@@ -23,7 +23,7 @@ UnitTest.test('FamilyGroupTest', function () {
   // is a section that is bounded by blocks.
 
   const check = function (expected: string[][], input: SugarElement[]) {
-    const rawActual = Family.group(universe, input, Fun.constant(false) as (e: SugarElement) => boolean);
+    const rawActual = Family.group(universe, input, Fun.never as (e: SugarElement) => boolean);
     const actual = Arr.map(rawActual, function (a) {
       return Arr.map(a, toStr);
     });

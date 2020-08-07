@@ -47,7 +47,7 @@ UnitTest.asynctest('SnapToTest', (success, failure) => {
           },
           getBounds: () => {
             const scroll = Scroll.get();
-            return Boxes.bounds(scroll.left(), scroll.top(), 500, 500);
+            return Boxes.bounds(scroll.left, scroll.top, 500, 500);
           }
         })
       ])
@@ -68,7 +68,7 @@ UnitTest.asynctest('SnapToTest', (success, failure) => {
     })
   ), (_doc, _body, _gui, component, _store) => {
 
-    const cSubject = Chain.injectThunked(() => subject.get(component).element());
+    const cSubject = Chain.injectThunked(() => subject.get(component).element);
 
     const cRecordPosition = Chain.fromChains([
       Chain.control(

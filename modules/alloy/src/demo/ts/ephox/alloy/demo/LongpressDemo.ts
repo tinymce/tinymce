@@ -19,7 +19,7 @@ export default (): void => {
   Debugging.registerInspector('gui', gui);
 
   const body = SugarElement.fromDom(document.body);
-  Class.add(gui.element(), 'gui-root-demo-container');
+  Class.add(gui.element, 'gui-root-demo-container');
   Attachment.attachSystem(body, gui);
 
   const sink = DemoSink.make();
@@ -69,7 +69,7 @@ export default (): void => {
                 tag: 'div'
               },
               components: [
-                Menu.parts().items({ })
+                Menu.parts.items({ })
               ],
               items: [],
               value: 'touchmenu',

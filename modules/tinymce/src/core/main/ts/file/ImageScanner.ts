@@ -97,7 +97,7 @@ export function ImageScanner(uploadStatus, blobCache: BlobCache): ImageScanner {
 
   const findAll = function (elm: HTMLElement, predicate?: (img: HTMLImageElement) => boolean) {
     if (!predicate) {
-      predicate = Fun.constant(true);
+      predicate = Fun.always;
     }
 
     const images = Arr.filter(getAllImages(elm), function (img) {

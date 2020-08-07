@@ -13,6 +13,7 @@ interface KeyboardLikeEvent {
   altKey: boolean;
   metaKey: boolean;
 }
+
 interface VK {
   BACKSPACE: number;
   DELETE: number;

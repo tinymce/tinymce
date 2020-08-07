@@ -13,18 +13,18 @@ export default () => {
   const components: Record<string, AlloyComponent> = { };
 
   const readOrTag = (component: AlloyComponent): string => {
-    const elem = component.element();
+    const elem = component.element;
     return Tagger.read(elem).fold(() =>
       // No existing tag, so add one.
-      Tagger.write('uid-', component.element())
+      Tagger.write('uid-', component.element)
     , (uid) => uid);
   };
 
   const failOnDuplicate = (component: AlloyComponent, tagId: string): void => {
     const conflict = components[tagId];
     if (conflict === component) { unregister(component); } else { throw new Error(
-      'The tagId "' + tagId + '" is already used by: ' + AlloyLogger.element(conflict.element()) + '\nCannot use it for: ' + AlloyLogger.element(component.element()) + '\n' +
-        'The conflicting element is' + (SugarBody.inBody(conflict.element()) ? ' ' : ' not ') + 'already in the DOM'
+      'The tagId "' + tagId + '" is already used by: ' + AlloyLogger.element(conflict.element) + '\nCannot use it for: ' + AlloyLogger.element(component.element) + '\n' +
+        'The conflicting element is' + (SugarBody.inBody(conflict.element) ? ' ' : ' not ') + 'already in the DOM'
     );
     }
   };
@@ -34,12 +34,12 @@ export default () => {
     if (Obj.hasNonNullableKey(components, tagId)) { failOnDuplicate(component, tagId); }
     // Component is passed through an an extra argument to all events
     const extraArgs = [ component ];
-    events.registerId(extraArgs, tagId, component.events());
+    events.registerId(extraArgs, tagId, component.events);
     components[tagId] = component;
   };
 
   const unregister = (component: AlloyComponent): void => {
-    Tagger.read(component.element()).each((tagId) => {
+    Tagger.read(component.element).each((tagId) => {
       delete components[tagId];
       events.unregisterId(tagId);
     });

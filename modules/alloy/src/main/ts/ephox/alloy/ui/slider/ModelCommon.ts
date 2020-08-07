@@ -8,8 +8,8 @@ const sliderChangeEvent = Fun.constant(_sliderChangeEvent);
 
 const isTouchEvent = (evt: MouseEvent | TouchEvent): evt is TouchEvent => evt.type.indexOf('touch') !== -1;
 
-const getEventSource = (simulatedEvent: NativeSimulatedEvent): Optional<SugarPosition> => {
-  const evt = simulatedEvent.event().raw();
+const getEventSource = (simulatedEvent: NativeSimulatedEvent<MouseEvent | TouchEvent>): Optional<SugarPosition> => {
+  const evt = simulatedEvent.event.raw;
   if (isTouchEvent(evt)) {
     const touchEvent = evt;
     return touchEvent.touches !== undefined && touchEvent.touches.length === 1 ?

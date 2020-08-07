@@ -1,8 +1,9 @@
 import { ApproxStructure, Assertions, Chain, GeneralSteps, Logger, Mouse, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Types } from '@ephox/bridge';
 import { Fun } from '@ephox/katamari';
 import { SugarBody, SugarElement } from '@ephox/sugar';
+
+import { Dialog } from 'tinymce/core/api/ui/Ui';
 import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 import TestExtras from '../../module/TestExtras';
 
@@ -207,7 +208,7 @@ UnitTest.asynctest('WindowManager:configurations Test', (success, failure) => {
     'Initial Data test',
     GeneralSteps.sequence([
       Step.sync(function () {
-        const conf: Types.Dialog.DialogApi<any> = {
+        const conf: Dialog.DialogSpec<any> = {
           title: 'test',
           body: {
             type: 'panel',

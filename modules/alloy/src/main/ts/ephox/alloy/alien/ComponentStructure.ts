@@ -9,7 +9,7 @@ const isAriaPartOf = (component: AlloyComponent, queryElem: SugarElement): boole
   AriaOwner.find(queryElem).exists((owner: SugarElement) => isPartOf(component, owner));
 
 const isPartOf = (component: AlloyComponent, queryElem: SugarElement): boolean =>
-  PredicateExists.closest(queryElem, (el: SugarElement) => Compare.eq(el, component.element()), Fun.constant(false)) || isAriaPartOf(component, queryElem);
+  PredicateExists.closest(queryElem, (el: SugarElement) => Compare.eq(el, component.element), Fun.never) || isAriaPartOf(component, queryElem);
 
 const isPartOfAnchor = (anchor: AnchorSpec, queryElem: SugarElement): boolean =>
   anchor.anchor === 'hotspot' && isPartOf(anchor.hotspot, queryElem);

@@ -72,7 +72,7 @@ const getFontStyleValues = (editor: Editor): string[] => Tools.explode(editor.ge
 
 const getFontSizeClasses = (editor: Editor): string[] => Tools.explode(editor.getParam('font_size_classes', ''));
 
-const getImagesDataImgFilter = (editor: Editor): (imgElm: HTMLImageElement) => boolean => editor.getParam('images_dataimg_filter', Fun.constant(true), 'function');
+const getImagesDataImgFilter = (editor: Editor): (imgElm: HTMLImageElement) => boolean => editor.getParam('images_dataimg_filter', Fun.always, 'function');
 
 const isAutomaticUploadsEnabled = (editor: Editor): boolean => editor.getParam('automatic_uploads', true, 'boolean');
 

@@ -36,9 +36,9 @@ UnitTest.test('DomDescentTest', function () {
   }
 
   const check = function (expected: CheckItem, actual: SpotPoint<SugarElement>) {
-    const aPath = Hierarchy.path(root, actual.element()).getOrDie('Could not extract path');
+    const aPath = Hierarchy.path(root, actual.element).getOrDie('Could not extract path');
     assert.eq(expected.path, aPath);
-    assert.eq(expected.offset, actual.offset());
+    assert.eq(expected.offset, actual.offset);
   };
 
   // Descending into div should take you to first whitspace node.

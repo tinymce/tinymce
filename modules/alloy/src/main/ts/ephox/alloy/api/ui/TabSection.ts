@@ -25,8 +25,8 @@ const factory: CompositeSketchFactory<TabSectionDetail, TabSectionSpec> = (detai
         const panel = tabData.view();
 
         // Update the tabview to refer to the current tab.
-        Attribute.getOpt(button.element(), 'id').each((id) => {
-          Attribute.set(tabview.element(), 'aria-labelledby', id);
+        Attribute.getOpt(button.element, 'id').each((id) => {
+          Attribute.set(tabview.element, 'aria-labelledby', id);
         });
         Replacing.set(tabview, panel);
         detail.onChangeTab(tabview, button, panel);
@@ -57,11 +57,11 @@ const factory: CompositeSketchFactory<TabSectionDetail, TabSectionSpec> = (detai
 
         [
           AlloyEvents.run<SystemEvents.AlloyChangeTabEvent>(SystemEvents.changeTab(), (section, simulatedEvent) => {
-            const button = simulatedEvent.event().button();
+            const button = simulatedEvent.event.button;
             changeTab(button);
           }),
           AlloyEvents.run<SystemEvents.AlloyDismissTabEvent>(SystemEvents.dismissTab(), (section, simulatedEvent) => {
-            const button = simulatedEvent.event().button();
+            const button = simulatedEvent.event.button;
             detail.onDismissTab(section, button);
           })
         ]

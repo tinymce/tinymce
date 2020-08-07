@@ -1,6 +1,9 @@
-import { Fun, Num, Optional } from '@ephox/katamari';
+import { Num, Optional } from '@ephox/katamari';
 
-export type WrapArrNavigationOutcome = { row: () => number; column: () => number};
+export type WrapArrNavigationOutcome = {
+  readonly row: number;
+  readonly column: number;
+};
 export type ArrNavigationFunc<A> = (values: A[], index: number, numRows: number, numCols: number) => Optional<A>;
 
 const withGrid = <A>(values: A[], index: number, numCols: number, f: (oldRow: number, oldColumn: number) => Optional<WrapArrNavigationOutcome>): Optional<A> => {
@@ -8,7 +11,7 @@ const withGrid = <A>(values: A[], index: number, numCols: number, f: (oldRow: nu
   const oldColumn = index % numCols;
 
   return f(oldRow, oldColumn).bind((address) => {
-    const newIndex = address.row() * numCols + address.column();
+    const newIndex = address.row * numCols + address.column;
     return newIndex >= 0 && newIndex < values.length ? Optional.some(values[newIndex]) : Optional.none();
   });
 };
@@ -18,8 +21,8 @@ const cycleHorizontal = <A>(values: A[], index: number, numRows: number, numCols
   const colsInRow = onLastRow ? values.length - (oldRow * numCols) : numCols;
   const newColumn = Num.cycleBy(oldColumn, delta, 0, colsInRow - 1);
   return Optional.some({
-    row: Fun.constant(oldRow),
-    column: Fun.constant(newColumn)
+    row: oldRow,
+    column: newColumn
   });
 });
 
@@ -29,8 +32,8 @@ const cycleVertical = <A>(values: A[], index: number, numRows: number, numCols: 
   const colsInRow = onLastRow ? values.length - (newRow * numCols) : numCols;
   const newCol = Num.clamp(oldColumn, 0, colsInRow - 1);
   return Optional.some({
-    row: Fun.constant(newRow),
-    column: Fun.constant(newCol)
+    row: newRow,
+    column: newCol
   });
 });
 

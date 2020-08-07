@@ -5,12 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Obj } from '@ephox/katamari';
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
 import Schema from '../api/html/Schema';
-import Tools from '../api/util/Tools';
 import * as Settings from '../api/Settings';
-import { Obj } from '@ephox/katamari';
+import Tools from '../api/util/Tools';
 
 /**
  * Internal class for generating previews styles for formats.

@@ -1,8 +1,14 @@
-import { Arr, Fun, Optional } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import { DomParent } from '@ephox/robin';
 import { TablePositions } from '@ephox/snooker';
 import { Compare, SelectorFilter, SelectorFind, Selectors, SugarElement } from '@ephox/sugar';
 import { Identified, IdentifiedExt } from './Identified';
+
+interface Edges {
+  readonly first: SugarElement;
+  readonly last: SugarElement;
+  readonly table: SugarElement<HTMLTableElement>;
+}
 
 const lookupTable = function (container: SugarElement) {
   return SelectorFind.ancestor(container, 'table');
@@ -48,7 +54,7 @@ const identify = function (start: SugarElement, finish: SugarElement, isRoot?: (
             finish: startCell
           });
         } else { // Selecting from a nested table to a different nested table.
-          return DomParent.ancestors(start, finish).shared().bind(function (lca) {
+          return DomParent.ancestors(start, finish).shared.bind(function (lca) {
             return SelectorFind.closest(lca, 'table', isRoot).bind(function (lcaTable) {
               const finishAncestorCells = SelectorFilter.ancestors(finish, 'td,th', getIsRoot(lcaTable));
               const finishCell = finishAncestorCells.length > 0 ? finishAncestorCells[finishAncestorCells.length - 1] : finish;
@@ -78,14 +84,14 @@ const getLast = function (boxes: SugarElement[], lastSelectedSelector: string) {
   });
 };
 
-const getEdges = function (container: SugarElement, firstSelectedSelector: string, lastSelectedSelector: string) {
+const getEdges = function (container: SugarElement, firstSelectedSelector: string, lastSelectedSelector: string): Optional<Edges> {
   return SelectorFind.descendant(container, firstSelectedSelector).bind(function (first) {
     return SelectorFind.descendant(container, lastSelectedSelector).bind(function (last) {
-      return DomParent.sharedOne(lookupTable, [ first, last ]).map(function (tbl) {
+      return DomParent.sharedOne(lookupTable, [ first, last ]).map(function (table) {
         return {
-          first: Fun.constant(first),
-          last: Fun.constant(last),
-          table: Fun.constant(tbl)
+          first,
+          last,
+          table
         };
       });
     });

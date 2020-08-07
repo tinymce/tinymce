@@ -6,10 +6,9 @@
  */
 
 import { AlloyComponent, TieredData } from '@ephox/alloy';
-import { Menu } from '@ephox/bridge';
 import { Arr, Fun, Optional } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
-import { TranslateIfNeeded } from 'tinymce/core/api/util/I18n';
+import { Menu } from 'tinymce/core/api/ui/Ui';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 import { renderCommonDropdown } from '../../dropdown/CommonDropdown';
 import ItemResponse from '../../menus/item/ItemResponse';
@@ -25,7 +24,7 @@ export interface PreviewSpec {
 
 export interface FormatterFormatItem {
   type: 'formatter';
-  title?: TranslateIfNeeded;
+  title?: string;
   format: string;
   icon?: string;
   isSelected: (value: Optional<any>) => boolean;
@@ -34,13 +33,13 @@ export interface FormatterFormatItem {
 
 export interface SubMenuFormatItem {
   type: 'submenu';
-  title: TranslateIfNeeded;
+  title: string;
   getStyleItems: () => FormatItem[];
 }
 
 export interface SeparatorFormatItem {
   type: 'separator';
-  title?: TranslateIfNeeded;
+  title?: string;
 }
 
 export type FormatItem = FormatterFormatItem | SubMenuFormatItem | SeparatorFormatItem;
@@ -85,7 +84,7 @@ const generateSelectItems = (_editor: Editor, backstage: UiFactoryBackstage, spe
   const generateItem = (rawItem: FormatItem, response: IrrelevantStyleItemResponse, disabled: boolean, value: Optional<any>): Optional<Menu.NestedMenuItemContents> => {
     const translatedText = backstage.shared.providers.translate(rawItem.title);
     if (rawItem.type === 'separator') {
-      return Optional.some<Menu.SeparatorMenuItemApi>({
+      return Optional.some<Menu.SeparatorMenuItemSpec>({
         type: 'separator',
         text: translatedText
       });
@@ -94,7 +93,7 @@ const generateSelectItems = (_editor: Editor, backstage: UiFactoryBackstage, spe
       if (response === IrrelevantStyleItemResponse.Hide && items.length <= 0) {
         return Optional.none();
       } else {
-        return Optional.some<Menu.NestedMenuItemApi>({
+        return Optional.some<Menu.NestedMenuItemSpec>({
           type: 'nestedmenuitem',
           text: translatedText,
           disabled: items.length <= 0,
@@ -102,7 +101,7 @@ const generateSelectItems = (_editor: Editor, backstage: UiFactoryBackstage, spe
         });
       }
     } else {
-      return Optional.some<Menu.ToggleMenuItemApi>({
+      return Optional.some<Menu.ToggleMenuItemSpec>({
         // ONLY TOGGLEMENUITEMS HANDLE STYLE META.
         // See ToggleMenuItem and ItemStructure for how it's handled.
         // If this type ever changes, we'll need to change that too

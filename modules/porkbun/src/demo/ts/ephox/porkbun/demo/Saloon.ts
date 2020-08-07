@@ -1,7 +1,7 @@
 import * as Binder from 'ephox/porkbun/Binder';
+import { Bindable, Event } from 'ephox/porkbun/Event';
 import * as Events from 'ephox/porkbun/Events';
-import { Event, Bindable } from 'ephox/porkbun/Event';
-import { Outlaw, ShootingEvent, Saloon } from './Types';
+import { Outlaw, Saloon, ShootingEvent } from './Types';
 
 interface SaloonEvents {
   registry: {
@@ -52,7 +52,7 @@ const create = function (): Saloon {
     seat(patron);
 
     binder.bind(patron.events.shoot, function (event) {
-      events.trigger.shooting(patron, event.target());
+      events.trigger.shooting(patron, event.target);
     });
 
     binder.bind(patron.events.die, function (_event) {

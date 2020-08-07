@@ -30,7 +30,7 @@ const getRowsFromSelection = (start: SugarElement<Node>, selector: string): Suga
     .map((table) => TableLookup.rows(table));
   return Optionals.lift2(cellOpt, rowsOpt, (cell, rows) =>
     Arr.filter(rows, (row) =>
-      Arr.exists(SugarElements.fromDom(row.dom().cells), (rowCell) =>
+      Arr.exists(SugarElements.fromDom(row.dom.cells), (rowCell) =>
         Attribute.get(rowCell, selector) === '1' || Compare.eq(rowCell, cell)
       )
     )

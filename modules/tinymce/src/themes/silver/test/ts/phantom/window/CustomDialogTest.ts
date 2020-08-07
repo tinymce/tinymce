@@ -21,7 +21,7 @@ UnitTest.asynctest('WindowManager:custom-dialog Test', (success, failure) => {
     Chain.asStep(doc, [
       FocusTools.cGetFocused,
       Chain.op((checkbox) => {
-        Assertions.assertEq('Checking checked status', expected, checkbox.dom().checked);
+        Assertions.assertEq('Checking checked status', expected, checkbox.dom.checked);
       })
     ])
   );

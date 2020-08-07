@@ -1,4 +1,4 @@
-import { Adt, Arr, Fun, Optional } from '@ephox/katamari';
+import { Adt, Arr, Optional } from '@ephox/katamari';
 
 import { KeyModifiers, MixedKeyModifiers, newModifiers } from '../keyboard/FakeKeys';
 import * as SeleniumAction from '../server/SeleniumAction';
@@ -25,26 +25,26 @@ const adt: {
 ]);
 
 interface Modifiers {
-  ctrlKey: () => Optional<boolean>;
-  metaKey: () => Optional<boolean>;
-  shiftKey: () => Optional<boolean>;
-  altKey: () => Optional<boolean>;
+  readonly ctrlKey: Optional<boolean>;
+  readonly metaKey: Optional<boolean>;
+  readonly shiftKey: Optional<boolean>;
+  readonly altKey: Optional<boolean>;
 }
 
 const modifierList = (obj: KeyModifiers): Modifiers => ({
-  ctrlKey: Fun.constant(Optional.from(obj.ctrlKey)),
-  metaKey: Fun.constant(Optional.from(obj.metaKey)),
-  shiftKey: Fun.constant(Optional.from(obj.shiftKey)),
-  altKey: Fun.constant(Optional.from(obj.altKey))
+  ctrlKey: Optional.from(obj.ctrlKey),
+  metaKey: Optional.from(obj.metaKey),
+  shiftKey: Optional.from(obj.shiftKey),
+  altKey: Optional.from(obj.altKey)
 });
 
 const toSimpleFormat = (keys: KeyPressAdt[]) =>
   Arr.map(keys, (key: KeyPressAdt) => key.fold<any>((modifiers: Modifiers, letter: string) => ({
     combo: {
-      ctrlKey: modifiers.ctrlKey().getOr(false),
-      shiftKey: modifiers.shiftKey().getOr(false),
-      metaKey: modifiers.metaKey().getOr(false),
-      altKey: modifiers.altKey().getOr(false),
+      ctrlKey: modifiers.ctrlKey.getOr(false),
+      shiftKey: modifiers.shiftKey.getOr(false),
+      metaKey: modifiers.metaKey.getOr(false),
+      altKey: modifiers.altKey.getOr(false),
       key: letter
     }
   }), (s: string) => ({ text: s }), () => ({ text: '\u0008' })));

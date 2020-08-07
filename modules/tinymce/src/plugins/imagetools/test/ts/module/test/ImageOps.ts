@@ -76,7 +76,7 @@ export default function (editor) {
 
   const cWaitForUi = function (label, selector) {
     return Chain.control(
-      UiFinder.cWaitForState(label, selector, Fun.constant(true)),
+      UiFinder.cWaitForState(label, selector, Fun.always),
       Guard.addLogging('Wait for UI')
     );
   };

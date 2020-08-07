@@ -29,7 +29,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.HelpersTest', (success, failur
         Chain.asStep(SugarElement.fromDom(editor.getBody()), [
           UiFinder.cFindIn('td.foo'),
           Chain.op((td) => {
-            const cellData = Helpers.extractDataFromCellElement(editor, td.dom(), true);
+            const cellData = Helpers.extractDataFromCellElement(editor, td.dom, true);
             Assertions.assertEq('Extracts class', 'foo', cellData.class);
             Assertions.assertEq('Extracts scope', 'row', cellData.scope);
             Assertions.assertEq('Extracts celltype', 'td', cellData.celltype);
@@ -58,7 +58,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.HelpersTest', (success, failur
         Chain.asStep(SugarElement.fromDom(editor.getBody()), [
           UiFinder.cFindIn('td.foo'),
           Chain.op((td) => {
-            const cellData = Helpers.extractDataFromCellElement(editor, td.dom(), true);
+            const cellData = Helpers.extractDataFromCellElement(editor, td.dom, true);
             Assertions.assertEq('Extracts width from style', '20px', cellData.width);
             Assertions.assertEq('Extracts height from style', '30px', cellData.height);
             Assertions.assertEq('Extracts background-color from rgb', '#333333', cellData.backgroundcolor);
@@ -78,7 +78,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.HelpersTest', (success, failur
         Chain.asStep(SugarElement.fromDom(editor.getBody()), [
           UiFinder.cFindIn('td.foo'),
           Chain.op((td) => {
-            const cellData = Helpers.extractDataFromCellElement(editor, td.dom(), true);
+            const cellData = Helpers.extractDataFromCellElement(editor, td.dom, true);
             Assertions.assertEq('Extracts border-color from shorthand', '#008000', cellData.bordercolor);
             Assertions.assertEq('Extracts border-style from shorthand', 'dashed', cellData.borderstyle);
           })
@@ -95,7 +95,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.HelpersTest', (success, failur
         Chain.asStep(SugarElement.fromDom(editor.getBody()), [
           UiFinder.cFindIn('tr.foo'),
           Chain.op((tr) => {
-            const rowData = Helpers.extractDataFromRowElement(editor, tr.dom(), true);
+            const rowData = Helpers.extractDataFromRowElement(editor, tr.dom, true);
             Assertions.assertEq('Extracts height', '30px', rowData.height);
             // Assertions.assertEq('Extracts scope', 'row', rowData.scope); // Chrome won't set a scope on a tr?
             Assertions.assertEq('Extracts class', 'foo', rowData.class);
@@ -117,7 +117,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.HelpersTest', (success, failur
         Chain.asStep(SugarElement.fromDom(editor.getBody()), [
           UiFinder.cFindIn('table.foo'),
           Chain.op((table) => {
-            const tableData = Helpers.extractDataFromTableElement(editor, table.dom(), true);
+            const tableData = Helpers.extractDataFromTableElement(editor, table.dom, true);
             Assertions.assertEq('Extracts class', 'foo mce-item-table', tableData.class);
             Assertions.assertEq('Extracts width', '20px', tableData.width);
             Assertions.assertEq('Extracts height', '30px', tableData.height);
@@ -136,7 +136,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.HelpersTest', (success, failur
         Chain.asStep(SugarElement.fromDom(editor.getBody()), [
           UiFinder.cFindIn('table.foo'),
           Chain.op((table) => {
-            const tableData = Helpers.extractDataFromTableElement(editor, table.dom(), true);
+            const tableData = Helpers.extractDataFromTableElement(editor, table.dom, true);
             Assertions.assertEq('Extracts cellpadding from td', '99px', tableData.cellpadding);
             Assertions.assertEq('Extracts align', 'right', tableData.align);
 
@@ -150,7 +150,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.HelpersTest', (success, failur
         Chain.asStep(SugarElement.fromDom(editor.getBody()), [
           UiFinder.cFindIn('table.foo'),
           Chain.op((table) => {
-            const tableData = Helpers.extractDataFromTableElement(editor, table.dom(), true);
+            const tableData = Helpers.extractDataFromTableElement(editor, table.dom, true);
             Assertions.assertEq('Extracts align', 'left', tableData.align);
 
           })
@@ -164,7 +164,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.HelpersTest', (success, failur
         Chain.asStep(SugarElement.fromDom(editor.getBody()), [
           UiFinder.cFindIn('table.foo'),
           Chain.op((table) => {
-            const tableData = Helpers.extractDataFromTableElement(editor, table.dom(), true);
+            const tableData = Helpers.extractDataFromTableElement(editor, table.dom, true);
             Assertions.assertEq('Extracts border-width', '5px', tableData.border);
           })
         ])
@@ -177,7 +177,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.HelpersTest', (success, failur
         Chain.asStep(SugarElement.fromDom(editor.getBody()), [
           UiFinder.cFindIn('table.foo'),
           Chain.op((table) => {
-            const tableData = Helpers.extractDataFromTableElement(editor, table.dom(), true);
+            const tableData = Helpers.extractDataFromTableElement(editor, table.dom, true);
             Assertions.assertEq('Extracts border-width', '5px', tableData.border);
           })
         ])
@@ -190,7 +190,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.HelpersTest', (success, failur
         Chain.asStep(SugarElement.fromDom(editor.getBody()), [
           UiFinder.cFindIn('table.foo'),
           Chain.op((table) => {
-            const tableData = Helpers.extractDataFromTableElement(editor, table.dom(), true);
+            const tableData = Helpers.extractDataFromTableElement(editor, table.dom, true);
             Assertions.assertEq('Extracts border', '5', tableData.border);
           })
         ])
@@ -203,7 +203,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.HelpersTest', (success, failur
         Chain.asStep(SugarElement.fromDom(editor.getBody()), [
           UiFinder.cFindIn('table.foo'),
           Chain.op((table) => {
-            const tableData = Helpers.extractDataFromTableElement(editor, table.dom(), true);
+            const tableData = Helpers.extractDataFromTableElement(editor, table.dom, true);
             Assertions.assertEq('Extracts border-width', '5px', tableData.border);
           })
         ])
@@ -217,7 +217,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.HelpersTest', (success, failur
         Chain.asStep(SugarElement.fromDom(editor.getBody()), [
           UiFinder.cFindIn('table.foo'),
           Chain.op((table) => {
-            const tableData = Helpers.extractDataFromTableElement(editor, table.dom(), true);
+            const tableData = Helpers.extractDataFromTableElement(editor, table.dom, true);
             Assertions.assertEq('Extracts border-width', '5px', tableData.border);
             Assertions.assertEq('Extracts border-style', 'double', tableData.borderstyle);
             Assertions.assertEq('Extracts border-color', 'red', tableData.bordercolor);

@@ -14,13 +14,13 @@ const invalidInput = Id.generate('invalid-input');
 const validatingInput = Id.generate('validating-input');
 
 interface HexInputEvent extends EventFormat {
-  type: () => 'hex';
-  value: () => string;
+  readonly type: 'hex';
+  readonly value: string;
 }
 
 interface ColorInputEvent extends EventFormat {
-  type: () => 'red' | 'green' | 'blue';
-  value: () => string;
+  readonly type: 'red' | 'green' | 'blue';
+  readonly value: string;
 }
 
 type InputEvent = HexInputEvent | ColorInputEvent;
@@ -88,11 +88,11 @@ const rgbFormFactory = (
   ) => {
     const helptext = translate(translatePrefix + 'range');
 
-    const pLabel = FormField.parts().label({
+    const pLabel = FormField.parts.label({
       dom: { tag: 'label', innerHtml: label, attributes: { 'aria-label': description }}
     });
 
-    const pField = FormField.parts().field({
+    const pField = FormField.parts.field({
       data,
       factory: Input,
       inputAttributes: {
@@ -117,7 +117,7 @@ const rgbFormFactory = (
     });
 
     const comps = [ pLabel, pField ];
-    const concats = name !== 'hex' ? [ FormField.parts()['aria-descriptor']({
+    const concats = name !== 'hex' ? [ FormField.parts['aria-descriptor']({
       text: helptext
     }) ] : [];
     const components = comps.concat(concats);
@@ -170,7 +170,7 @@ const rgbFormFactory = (
 
   const updatePreview = (anyInSystem: AlloyComponent, hex: Hex) => {
     memPreview.getOpt(anyInSystem).each((preview: AlloyComponent) => {
-      Css.set(preview.element(), 'background-color', '#' + hex.value);
+      Css.set(preview.element, 'background-color', '#' + hex.value);
     });
   };
 
@@ -211,9 +211,9 @@ const rgbFormFactory = (
     };
 
     const onInvalidInput = (form: AlloyComponent, simulatedEvent: SimulatedEvent<InputEvent>) => {
-      const data = simulatedEvent.event();
-      if (data.type() !== 'hex') {
-        set(data.type(), Optional.none());
+      const data = simulatedEvent.event;
+      if (data.type !== 'hex') {
+        set(data.type, Optional.none());
       } else {
         onInvalidHexx(form);
       }
@@ -244,14 +244,14 @@ const rgbFormFactory = (
       });
     };
 
-    const isHexInputEvent = (data: InputEvent): data is HexInputEvent => data.type() === 'hex';
+    const isHexInputEvent = (data: InputEvent): data is HexInputEvent => data.type === 'hex';
 
     const onValidInput = (form: AlloyComponent, simulatedEvent: SimulatedEvent<InputEvent>) => {
-      const data = simulatedEvent.event();
+      const data = simulatedEvent.event;
       if (isHexInputEvent(data)) {
-        onValidHex(form, data.value());
+        onValidHex(form, data.value);
       } else {
-        onValidRgb(form, data.type(), data.value());
+        onValidRgb(form, data.type, data.value);
       }
     };
 

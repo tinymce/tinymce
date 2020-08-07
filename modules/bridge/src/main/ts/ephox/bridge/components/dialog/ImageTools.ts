@@ -1,13 +1,13 @@
 import { FieldProcessorAdt, FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
-import { FormComponentWithLabel, FormComponentWithLabelApi, formComponentWithLabelFields } from './FormComponent';
+import { FormComponentWithLabel, FormComponentWithLabelSpec, formComponentWithLabelFields } from './FormComponent';
 
 export interface ImageToolsState {
   blob: Blob;
   url: string;
 }
 
-export interface ImageToolsApi extends FormComponentWithLabelApi {
+export interface ImageToolsSpec extends FormComponentWithLabelSpec {
   type: 'imagetools';
   currentState: ImageToolsState;
 }
@@ -28,4 +28,5 @@ export const imageToolsSchema = ValueSchema.objOf(imageToolsFields);
 
 export const imageToolsDataProcessor = ValueSchema.string;
 
-export const createImageTools = (spec: ImageToolsApi): Result<ImageTools, ValueSchema.SchemaError<any>> => ValueSchema.asRaw<ImageTools>('imagetools', imageToolsSchema, spec);
+export const createImageTools = (spec: ImageToolsSpec): Result<ImageTools, ValueSchema.SchemaError<any>> =>
+  ValueSchema.asRaw<ImageTools>('imagetools', imageToolsSchema, spec);

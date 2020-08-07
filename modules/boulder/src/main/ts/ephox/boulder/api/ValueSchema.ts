@@ -1,7 +1,10 @@
 import { Fun, Obj, Result, Type } from '@ephox/katamari';
 import { SimpleResult } from '../alien/SimpleResult';
 import { choose as _choose } from '../core/ChoiceProcessor';
-import { arrOf, arrOfObj as _arrOfObj, oneOf, func, objOf, objOfOnly, Processor, setOf as doSetOf, thunk, value, ValueProcessorAdt, valueThunk, FieldProcessorAdt } from '../core/ValueProcessor';
+import {
+  arrOf, arrOfObj as _arrOfObj, FieldProcessorAdt, func, objOf, objOfOnly, oneOf, Processor, setOf as doSetOf, thunk, value, ValueProcessorAdt,
+  valueThunk
+} from '../core/ValueProcessor';
 import { formatErrors, formatObj } from '../format/PrettyPrinter';
 
 export interface SchemaError<T> {

@@ -134,7 +134,7 @@ const sCloseDialog = function (ui: TinyUi) {
 const cFakeEvent = function (name: string) {
   return Chain.control(
     Chain.op(function (elm: SugarElement) {
-      const element: HTMLElement = elm.dom();
+      const element: HTMLElement = elm.dom;
       // NOTE we can't fake a paste event here.
       let event;
       if (Type.isFunction(Event)) {

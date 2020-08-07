@@ -16,6 +16,7 @@ import { AlloyComponent } from '../component/ComponentApi';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as AlloyEvents from '../events/AlloyEvents';
 import * as AlloyTriggers from '../events/AlloyTriggers';
+import * as SystemEvents from '../events/SystemEvents';
 import * as Sketcher from './Sketcher';
 import { CompositeSketchFactory } from './UiSketcher';
 
@@ -50,8 +51,8 @@ const factory: CompositeSketchFactory<SplitDropdownDetail, SplitDropdownSpec> = 
         const ariaDescriptor = AlloyParts.getPart(component, detail, 'aria-descriptor');
         ariaDescriptor.each((descriptor) => {
           const descriptorId = Id.generate('aria');
-          Attribute.set(descriptor.element(), 'id', descriptorId);
-          Attribute.set(component.element(), 'aria-describedby', descriptorId);
+          Attribute.set(descriptor.element, 'id', descriptorId);
+          Attribute.set(component.element, 'aria-describedby', descriptorId);
         });
       })
     ]),
@@ -74,7 +75,7 @@ const factory: CompositeSketchFactory<SplitDropdownDetail, SplitDropdownSpec> = 
     eventOrder: {
       ...detail.eventOrder,
       // Order, the button state is toggled first, so assumed !selected means close.
-      'alloy.execute': [ 'disabling', 'toggling', 'alloy.base.behaviour' ]
+      [SystemEvents.execute()]: [ 'disabling', 'toggling', 'alloy.base.behaviour' ]
     },
 
     events: buttonEvents,

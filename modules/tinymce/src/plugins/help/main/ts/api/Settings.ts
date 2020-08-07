@@ -5,11 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Types } from '@ephox/bridge';
 import { Optional } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
+import { Dialog } from 'tinymce/core/api/ui/Ui';
 
-export type HelpTabsSetting = (string | Types.Dialog.TabApi)[];
+export type HelpTabsSetting = (string | Dialog.TabSpec)[];
 
 const getHelpTabs = (editor: Editor): Optional<HelpTabsSetting> => Optional.from(editor.getParam('help_tabs'));
 

@@ -42,7 +42,7 @@ UnitTest.asynctest('IFrame editor ContextToolbar Position test', (success, failu
         UiFinder.findIn(SugarBody.body(), '.tox-pop').each((ele) => {
           // The context toolbar is positioned relative to the sink, so the value can change between browsers due to different default styles
           // as such we can't reliably test using the actual top/bottom position, so use the bounding client rect instead.
-          const pos = ele.dom().getBoundingClientRect();
+          const pos = ele.dom.getBoundingClientRect();
           Assertions.assertEq(`Assert toolbar position - ${position} ${pos[position]}px ~= ${value}px`, true, Math.abs(pos[position] - value) <= diff);
         });
       }), 10, 1000);

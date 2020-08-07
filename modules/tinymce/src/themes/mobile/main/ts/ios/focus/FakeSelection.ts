@@ -6,7 +6,7 @@
  */
 
 import { Arr } from '@ephox/katamari';
-import { Class, Classes, Css, DomEvent, Insert, InsertAll, Remove, SugarElement, Traverse } from '@ephox/sugar';
+import { Class, Classes, Css, DomEvent, Insert, InsertAll, RawRect, Remove, SugarElement, Traverse } from '@ephox/sugar';
 
 import * as Styles from '../../style/Styles';
 import * as Rectangles from '../../util/Rectangles';
@@ -38,14 +38,14 @@ export default function (win, frame) {
     clear();
   });
 
-  const make = function (rectangle) {
+  const make = function (rectangle: RawRect) {
     const span = SugarElement.fromTag('span');
     Classes.add(span, [ Styles.resolve('layer-editor'), Styles.resolve('unfocused-selection') ]);
     Css.setAll(span, {
-      left: rectangle.left() + 'px',
-      top: rectangle.top() + 'px',
-      width: rectangle.width() + 'px',
-      height: rectangle.height() + 'px'
+      left: rectangle.left + 'px',
+      top: rectangle.top + 'px',
+      width: rectangle.width + 'px',
+      height: rectangle.height + 'px'
     });
     return span;
   };

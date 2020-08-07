@@ -5,24 +5,25 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Focus, WindowSelection } from '@ephox/sugar';
+import { EventArgs, Focus, WindowSelection } from '@ephox/sugar';
 import Delay from 'tinymce/core/api/util/Delay';
+import { PlatformEditor } from './PlatformEditor';
 
-const setSelectionAtTouch = function (editorApi, touchEvent) {
+const setSelectionAtTouch = function (editorApi: PlatformEditor, touchEvent: EventArgs<TouchEvent>) {
   // shortTextFix, when text is short body height is short too, tapping at the bottom of the editor
   // should set a selection. We don't set body height to 100% because of side effects, so we resort
   // to a mousedown on the iDoc, it is a clean place, and very specific to this issue. On a vanilla
   // CE, with body height 100%, event sequence: touchstart, touchend, mousemove, mousedown, FOCUS,
   // mouseup, click. This is why we fire focus on mousedown, to match the natural sequence.
-  Focus.focus(editorApi.body());
+  Focus.focus(editorApi.body);
 
   // then set the selection to the end, last cursor position
   // Note: the reason why there is a flicker when we touch the bottom, is because of the native scroll
   // cursor into view, in this case it wants to scroll down so the text is centered on the screen,
   // we have to live with this until we control selection
-  const touch = touchEvent.raw().changedTouches[0];
-  WindowSelection.getAtPoint(editorApi.win(), touch.pageX, touch.pageY).each(function (raw) {
-    editorApi.setSelection(raw.start(), raw.soffset(), raw.finish(), raw.foffset());
+  const touch = touchEvent.raw.changedTouches[0];
+  WindowSelection.getAtPoint(editorApi.win, touch.pageX, touch.pageY).each(function (raw) {
+    editorApi.setSelection(raw.start, raw.soffset, raw.finish, raw.foffset);
   });
 };
 

@@ -1,4 +1,4 @@
-import { Saloon, ShootingEvent, Sherif } from './Types';
+import { Saloon, Sherif, ShootingEvent } from './Types';
 
 declare const $: any;
 
@@ -37,7 +37,7 @@ const create = function (): Sherif {
     chaseButton.attr('disabled', false);
     chaseButton.bind('click', function () {
       chaseButton.detach();
-      event.shooter().chase();
+      event.shooter.chase();
     });
   };
 

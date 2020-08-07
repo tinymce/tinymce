@@ -2,8 +2,9 @@ import { Assertions, Cursors, GeneralSteps, Logger, Pipeline, Step, Waiter } fro
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyLoader } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
-import { Hierarchy, Html, SugarElement } from '@ephox/sugar';
+import { Hierarchy, Html, SimRange, SugarElement } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest(
@@ -27,7 +28,7 @@ UnitTest.asynctest(
       document.body.appendChild(div);
     });
 
-    const sWaitForBookmark = function (editor, startPath, startOffset, endPath, endOffset) {
+    const sWaitForBookmark = function (editor: Editor, startPath: number[], startOffset: number, endPath: number[], endOffset: number) {
       return Waiter.sTryUntil('wait for selection', Step.sync(function () {
         assertBookmark(editor, startPath, startOffset, endPath, endOffset);
       }));
@@ -38,40 +39,40 @@ UnitTest.asynctest(
       input.focus();
     };
 
-    const setSelection = function (editor, start, soffset, finish, foffset) {
+    const setSelection = function (editor: Editor, start: number[], soffset: number, finish: number[], foffset: number) {
       const sc = Hierarchy.follow(SugarElement.fromDom(editor.getBody()), start).getOrDie();
       const fc = Hierarchy.follow(SugarElement.fromDom(editor.getBody()), start).getOrDie();
 
       const rng = document.createRange();
-      rng.setStart(sc.dom(), soffset);
-      rng.setEnd(fc.dom(), foffset);
+      rng.setStart(sc.dom, soffset);
+      rng.setEnd(fc.dom, foffset);
 
       editor.selection.setRng(rng);
     };
 
-    const assertPath = function (label, root, expPath, expOffset, actElement, actOffset) {
+    const assertPath = function (label: string, root: SugarElement, expPath: number[], expOffset: number, actElement: Node, actOffset: number) {
       const expected = Cursors.calculateOne(root, expPath);
       const message = function () {
         const actual = SugarElement.fromDom(actElement);
         const actPath = Hierarchy.path(root, actual).getOrDie('could not find path to root');
         return 'Expected path: ' + JSON.stringify(expPath) + '.\nActual path: ' + JSON.stringify(actPath);
       };
-      Assertions.assertEq(() => 'Assert incorrect for ' + label + '.\n' + message(), true, expected.dom() === actElement);
+      Assertions.assertEq(() => 'Assert incorrect for ' + label + '.\n' + message(), true, expected.dom === actElement);
       Assertions.assertEq(() => 'Offset mismatch for ' + label + ' in :\n' + Html.getOuter(expected), expOffset, actOffset);
     };
 
-    const assertSelection = function (editor, startPath, soffset, finishPath, foffset) {
+    const assertSelection = function (editor: Editor, startPath: number[], soffset: number, finishPath: number[], foffset: number) {
       const actual = editor.selection.getRng();
       const root = SugarElement.fromDom(editor.getBody());
       assertPath('start', root, startPath, soffset, actual.startContainer, actual.startOffset);
       assertPath('finish', root, finishPath, foffset, actual.endContainer, actual.endOffset);
     };
 
-    const assertBookmark = function (editor, startPath, soffset, finishPath, foffset) {
-      const actual = editor.bookmark.getOrDie('no bookmark');
+    const assertBookmark = function (editor: Editor, startPath: number[], soffset: number, finishPath: number[], foffset: number) {
+      const actual: SimRange = editor.bookmark.getOrDie('no bookmark');
       const root = SugarElement.fromDom(editor.getBody());
-      assertPath('start', root, startPath, soffset, actual.start().dom(), actual.soffset());
-      assertPath('finish', root, finishPath, foffset, actual.finish().dom(), actual.foffset());
+      assertPath('start', root, startPath, soffset, actual.start.dom, actual.soffset);
+      assertPath('finish', root, finishPath, foffset, actual.finish.dom, actual.foffset);
     };
 
     TinyLoader.setupLight(function (editor, onSuccess, onFailure) {

@@ -9,7 +9,7 @@ import {
   AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Disabling, EventFormat, FormField as AlloyFormField, Keying,
   NativeEvents, Replacing, Representing, SimulatedEvent, SketchSpec, SystemEvents, Tabstopping
 } from '@ephox/alloy';
-import { Types } from '@ephox/bridge';
+import { Dialog } from '@ephox/bridge';
 import { Arr, Fun } from '@ephox/katamari';
 
 import { Attribute, Class, EventArgs, Focus, Html, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
@@ -22,16 +22,15 @@ import { detectSize } from '../alien/FlatgridAutodetect';
 import { formActionEvent, formResizeEvent } from '../general/FormEvents';
 import * as ItemClasses from '../menus/item/ItemClasses';
 import { deriveCollectionMovement } from '../menus/menu/MenuMovement';
-import { Omit } from '../Omit';
 
-type CollectionSpec = Omit<Types.Collection.Collection, 'type'>;
+type CollectionSpec = Omit<Dialog.Collection, 'type'>;
 
 export const renderCollection = (spec: CollectionSpec, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
   // DUPE with TextField.
   const pLabel = spec.label.map((label) => renderLabel(label, providersBackstage));
 
   const runOnItem = <T extends EventFormat>(f: (c: AlloyComponent, se: SimulatedEvent<T>, tgt: SugarElement, itemValue: string) => void) => (comp: AlloyComponent, se: SimulatedEvent<T>) => {
-    SelectorFind.closest(se.event().target(), '[data-collection-item-value]').each((target: SugarElement<HTMLElement>) => {
+    SelectorFind.closest(se.event.target, '[data-collection-item-value]').each((target: SugarElement<HTMLElement>) => {
       f(comp, se, target, Attribute.get(target, 'data-collection-item-value'));
     });
   };
@@ -69,7 +68,7 @@ export const renderCollection = (spec: CollectionSpec, providersBackstage: UiFac
     const chunks = spec.columns > 1 && spec.columns !== 'auto' ? Arr.chunk(htmlLines, spec.columns) : [ htmlLines ];
     const html = Arr.map(chunks, (ch) => `<div class="tox-collection__group">${ch.join('')}</div>`);
 
-    Html.set(comp.element(), html.join(''));
+    Html.set(comp.element, html.join(''));
   };
 
   const onClick = runOnItem((comp, se, tgt, itemValue) => {
@@ -89,13 +88,13 @@ export const renderCollection = (spec: CollectionSpec, providersBackstage: UiFac
     AlloyEvents.run<EventArgs>(NativeEvents.click(), onClick),
     AlloyEvents.run<EventArgs>(SystemEvents.tap(), onClick),
     AlloyEvents.run(NativeEvents.focusin(), runOnItem((comp, se, tgt) => {
-      SelectorFind.descendant(comp.element(), '.' + ItemClasses.activeClass).each((currentActive) => {
+      SelectorFind.descendant(comp.element, '.' + ItemClasses.activeClass).each((currentActive) => {
         Class.remove(currentActive, ItemClasses.activeClass);
       });
       Class.add(tgt, ItemClasses.activeClass);
     })),
     AlloyEvents.run(NativeEvents.focusout(), runOnItem((comp) => {
-      SelectorFind.descendant(comp.element(), '.' + ItemClasses.activeClass).each((currentActive) => {
+      SelectorFind.descendant(comp.element, '.' + ItemClasses.activeClass).each((currentActive) => {
         Class.remove(currentActive, ItemClasses.activeClass);
       });
     })),
@@ -107,9 +106,9 @@ export const renderCollection = (spec: CollectionSpec, providersBackstage: UiFac
     }))
   ];
 
-  const iterCollectionItems = (comp, applyAttributes) => Arr.map(SelectorFilter.descendants(comp.element(), '.tox-collection__item'), applyAttributes);
+  const iterCollectionItems = (comp, applyAttributes) => Arr.map(SelectorFilter.descendants(comp.element, '.tox-collection__item'), applyAttributes);
 
-  const pField = AlloyFormField.parts().field({
+  const pField = AlloyFormField.parts.field({
     dom: {
       tag: 'div',
       // FIX: Read from columns
@@ -158,7 +157,7 @@ export const renderCollection = (spec: CollectionSpec, providersBackstage: UiFac
       AddEventsBehaviour.config('collection-events', collectionEvents)
     ]),
     eventOrder: {
-      'alloy.execute': [ 'disabling', 'alloy.base.behaviour', 'collection-events' ]
+      [SystemEvents.execute()]: [ 'disabling', 'alloy.base.behaviour', 'collection-events' ]
     }
   });
 

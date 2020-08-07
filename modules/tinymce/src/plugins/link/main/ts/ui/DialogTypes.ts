@@ -5,8 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Types } from '@ephox/bridge';
 import { Optional } from '@ephox/katamari';
+import { Dialog } from 'tinymce/core/api/ui/Ui';
 
 export interface ListValue {
   text: string;
@@ -41,7 +41,7 @@ export interface LinkDialogInfo {
     titleEnabled: boolean;
   };
   optNode: Optional<HTMLAnchorElement>;
-  onSubmit?: (api: Types.Dialog.DialogInstanceApi<LinkDialogData>) => void;
+  onSubmit?: (api: Dialog.DialogInstanceApi<LinkDialogData>) => void;
 }
 
 export interface LinkDialogUrlData {

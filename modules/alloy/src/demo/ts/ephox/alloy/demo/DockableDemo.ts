@@ -13,8 +13,8 @@ import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 export default (): void => {
   const gui = Gui.create();
   const body = SugarElement.fromDom(document.body);
-  Class.add(gui.element(), 'gui-root-demo-container');
-  // Css.set(gui.element(), 'direction', 'rtl');
+  Class.add(gui.element, 'gui-root-demo-container');
+  // Css.set(gui.element, 'direction', 'rtl');
 
   Attachment.attachSystem(body, gui);
   // Css.set(body, 'margin-top', '2000px');
@@ -64,7 +64,7 @@ export default (): void => {
                 transitionClass: 'demo-alloy-dock-transition',
                 fadeOutClass: 'demo-alloy-dock-fade-out',
                 fadeInClass: 'demo-alloy-dock-fade-in',
-                lazyContext: (component) => component.getSystem().getByUid('panel-container').toOptional().map((comp) => Boxes.box(comp.element()))
+                lazyContext: (component) => component.getSystem().getByUid('panel-container').toOptional().map((comp) => Boxes.box(comp.element))
               }
             })
           ])

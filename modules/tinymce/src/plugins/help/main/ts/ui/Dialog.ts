@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Types } from '@ephox/bridge';
 import { Arr, Obj, Optional, Optionals } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
+import { Dialog } from 'tinymce/core/api/ui/Ui';
 import * as Settings from '../api/Settings';
 import { CustomTabSpecs, TabSpecs } from '../Plugin';
 import * as KeyboardNavTab from './KeyboardNavTab';
@@ -74,10 +74,10 @@ const parseCustomTabs = (editor: Editor, customTabs: CustomTabSpecs) => {
 const init = (editor: Editor, customTabs: CustomTabSpecs): () => void => () => {
   // const tabSpecs: Record<string, Types.Dialog.TabApi> = customTabs.get();
   const { tabs, names } = parseCustomTabs(editor, customTabs);
-  const foundTabs: Optional<Types.Dialog.TabApi>[] = Arr.map(names, (name) => Obj.get(tabs, name));
-  const dialogTabs: Types.Dialog.TabApi[] = Optionals.cat(foundTabs);
+  const foundTabs: Optional<Dialog.TabSpec>[] = Arr.map(names, (name) => Obj.get(tabs, name));
+  const dialogTabs: Dialog.TabSpec[] = Optionals.cat(foundTabs);
 
-  const body: Types.Dialog.TabPanelApi = {
+  const body: Dialog.TabPanelSpec = {
     type: 'tabpanel',
     tabs: dialogTabs
   };

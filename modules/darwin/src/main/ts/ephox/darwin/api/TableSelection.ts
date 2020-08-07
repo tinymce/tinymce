@@ -13,11 +13,12 @@ const retrieveBox = function (container: SugarElement, firstSelectedSelector: st
     const isRoot = function (ancestor: SugarElement) {
       return Compare.eq(container, ancestor);
     };
-    const firstAncestor = SelectorFind.ancestor(edges.first(), 'thead,tfoot,tbody,table', isRoot);
-    const lastAncestor = SelectorFind.ancestor(edges.last(), 'thead,tfoot,tbody,table', isRoot);
+    const sectionSelector = 'thead,tfoot,tbody,table';
+    const firstAncestor = SelectorFind.ancestor(edges.first, sectionSelector, isRoot);
+    const lastAncestor = SelectorFind.ancestor(edges.last, sectionSelector, isRoot);
     return firstAncestor.bind(function (fA) {
       return lastAncestor.bind(function (lA) {
-        return Compare.eq(fA, lA) ? TablePositions.getBox(edges.table(), edges.first(), edges.last()) : Optional.none<Structs.Bounds>();
+        return Compare.eq(fA, lA) ? TablePositions.getBox(edges.table, edges.first, edges.last) : Optional.none<Structs.Bounds>();
       });
     });
   });

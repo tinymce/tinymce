@@ -54,7 +54,7 @@ UnitTest.asynctest('HotspotPositionTest', (success, failure) => {
     }));
 
     const cAssertLayoutDirection = (direction: 'top' | 'bottom'): Chain<any, any> => Chain.op((data: { popup: AlloyComponent }) => {
-      const popup = data.popup.element();
+      const popup = data.popup.element;
       // Swap the direction name, as the style used is opposite
       const style = direction === 'top' ? 'bottom' : 'top';
       Assertions.assertEq(`Assert layout direction is ${direction}`, true, Css.getRaw(popup, style).isSome());

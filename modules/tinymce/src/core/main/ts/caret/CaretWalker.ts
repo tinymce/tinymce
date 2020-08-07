@@ -193,7 +193,7 @@ const findCaretPosition = (direction: HDirection, startPos: CaretPosition, root:
   }
 
   if ((isForwards(direction) && caretPosition.isAtEnd()) || (isBackwards(direction) && caretPosition.isAtStart())) {
-    node = findNode(node, direction, Fun.constant(true), root, true);
+    node = findNode(node, direction, Fun.always, root, true);
     if (isEditableCaretCandidate(node, root)) {
       return getCaretCandidatePosition(direction, node);
     }

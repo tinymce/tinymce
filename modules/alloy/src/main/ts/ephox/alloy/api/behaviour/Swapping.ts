@@ -1,7 +1,7 @@
-import * as Behaviour from './Behaviour';
 import * as SwapApis from '../../behaviour/swapping/SwapApis';
-import SwapSchema from '../../behaviour/swapping/SwapSchema';
 import { SwappingBehaviour } from '../../behaviour/swapping/SwappingTypes';
+import SwapSchema from '../../behaviour/swapping/SwapSchema';
+import * as Behaviour from './Behaviour';
 
 const Swapping: SwappingBehaviour = Behaviour.create({
   fields: SwapSchema,

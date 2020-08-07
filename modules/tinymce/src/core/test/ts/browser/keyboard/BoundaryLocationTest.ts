@@ -22,14 +22,14 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.BoundaryLocationTest', functio
 
   const createLocation = function (elm, elementPath, offset) {
     const container = Hierarchy.follow(elm, elementPath);
-    const pos = CaretPosition(container.getOrDie().dom(), offset);
-    const location = BoundaryLocation.readLocation(isInlineTarget, elm.dom(), pos);
+    const pos = CaretPosition(container.getOrDie().dom, offset);
+    const location = BoundaryLocation.readLocation(isInlineTarget, elm.dom, pos);
     return location;
   };
 
   const createPosition = function (elm, elementPath, offset) {
     const container = Hierarchy.follow(elm, elementPath);
-    return CaretPosition(container.getOrDie().dom(), offset);
+    return CaretPosition(container.getOrDie().dom, offset);
   };
 
   const locationName = function (location) {
@@ -72,7 +72,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.BoundaryLocationTest', functio
     return Step.sync(function () {
       const elm = createViewElement(html);
       const position = createPosition(elm, elementPath, offset);
-      const location = BoundaryLocation.findLocation(forward, isInlineTarget, elm.dom(), position);
+      const location = BoundaryLocation.findLocation(forward, isInlineTarget, elm.dom, position);
 
       Assertions.assertDomEq('Should be expected element', SelectorFind.descendant(elm, expectedInline).getOrDie(), locationElement(location.getOrDie()));
       Assertions.assertEq('Should be a valid location: ' + html, true, location.isSome());
@@ -84,7 +84,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.BoundaryLocationTest', functio
     return Step.sync(function () {
       const elm = createViewElement(html);
       const position = createPosition(elm, elementPath, offset);
-      const location = BoundaryLocation.findLocation(forward, isInlineTarget, elm.dom(), position);
+      const location = BoundaryLocation.findLocation(forward, isInlineTarget, elm.dom, position);
       Assertions.assertEq('Should not be a valid location: ' + html, true, location.isNone());
     });
   };

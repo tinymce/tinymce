@@ -2,7 +2,7 @@ import { Arr, Fun } from '@ephox/katamari';
 import { Selectors, SugarElement, Traverse } from '@ephox/sugar';
 
 const firstLayer = function (scope: SugarElement, selector: string) {
-  return filterFirstLayer(scope, selector, Fun.constant(true));
+  return filterFirstLayer(scope, selector, Fun.always);
 };
 
 const filterFirstLayer = function (scope: SugarElement, selector: string, predicate: (e: SugarElement) => boolean): SugarElement[] {

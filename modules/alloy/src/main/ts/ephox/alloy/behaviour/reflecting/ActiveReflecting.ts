@@ -28,9 +28,11 @@ const events = <I, S>(reflectingConfig: ReflectingConfig<I, S>, reflectingState:
       // NOTE: Receiving event ignores the whole simulated event part.
       // TODO: Think about the types for this, or find a better way for this to rely on receiving.
       const receivingData = message as unknown as ReceivingInternalEvent;
-      const channel = reflectingConfig.channel;
-      if (Arr.contains(receivingData.channels(), channel)) {
-        update(component, receivingData.data());
+      if (!receivingData.universal) {
+        const channel = reflectingConfig.channel;
+        if (Arr.contains(receivingData.channels, channel)) {
+          update(component, receivingData.data);
+        }
       }
     }),
 

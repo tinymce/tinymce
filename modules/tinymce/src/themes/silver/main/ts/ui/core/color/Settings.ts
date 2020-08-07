@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Menu } from '@ephox/bridge';
 import { Arr } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
+import { Menu } from 'tinymce/core/api/ui/Ui';
 import ColorCache from './ColorCache';
 
 const choiceItem: 'choiceitem' = 'choiceitem';
@@ -43,7 +43,7 @@ const defaultColors = [
 
 const colorCache = ColorCache(10);
 
-const mapColors = function (colorMap: string[]): Menu.ChoiceMenuItemApi[] {
+const mapColors = function (colorMap: string[]): Menu.ChoiceMenuItemSpec[] {
   const colors = [];
 
   const canvas = document.createElement('canvas');
@@ -91,12 +91,12 @@ const hasCustomColors = (editor: Editor): boolean => editor.getParam('custom_col
 
 const getColorMap = (editor: Editor): string[] => editor.getParam('color_map');
 
-const getColors = (editor: Editor): Menu.ChoiceMenuItemApi[] => {
+const getColors = (editor: Editor): Menu.ChoiceMenuItemSpec[] => {
   const unmapped = getColorMap(editor);
   return unmapped !== undefined ? mapColors(unmapped) : defaultColors;
 };
 
-const getCurrentColors = (): Menu.ChoiceMenuItemApi[] => Arr.map(colorCache.state(), (color) => ({
+const getCurrentColors = (): Menu.ChoiceMenuItemSpec[] => Arr.map(colorCache.state(), (color) => ({
   type: choiceItem,
   text: color,
   value: color

@@ -1,4 +1,4 @@
-import { UnitTest, assert } from '@ephox/bedrock-client';
+import { assert, UnitTest } from '@ephox/bedrock-client';
 
 import * as Overflows from 'ephox/alloy/toolbar/Overflows';
 
@@ -7,8 +7,8 @@ UnitTest.test('OverflowTest', () => {
 
   const check = (expectedWithin: string[], expectedExtra: string[], total: number, input: string[], overflower: string) => {
     const actual = Overflows.partition(total, input, len, overflower);
-    assert.eq(expectedWithin, actual.within());
-    assert.eq(expectedExtra, actual.extra());
+    assert.eq(expectedWithin, actual.within);
+    assert.eq(expectedExtra, actual.extra);
   };
 
   check([ 'cat' ], [], 100, [ 'cat' ], 'overflow');

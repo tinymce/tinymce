@@ -5,20 +5,20 @@ import { AlloyComponent } from '../../api/component/ComponentApi';
 import { AriaTogglingConfig } from './TogglingTypes';
 
 const updatePressed = (component: AlloyComponent, ariaInfo: AriaTogglingConfig, status: boolean): void => {
-  Attribute.set(component.element(), 'aria-pressed', status);
+  Attribute.set(component.element, 'aria-pressed', status);
   if (ariaInfo.syncWithExpanded) { updateExpanded(component, ariaInfo, status); }
 };
 
 const updateSelected = (component: AlloyComponent, ariaInfo: AriaTogglingConfig, status: boolean): void => {
-  Attribute.set(component.element(), 'aria-selected', status);
+  Attribute.set(component.element, 'aria-selected', status);
 };
 
 const updateChecked = (component: AlloyComponent, ariaInfo: AriaTogglingConfig, status: boolean): void => {
-  Attribute.set(component.element(), 'aria-checked', status);
+  Attribute.set(component.element, 'aria-checked', status);
 };
 
 const updateExpanded = (component: AlloyComponent, ariaInfo: AriaTogglingConfig, status: boolean): void => {
-  Attribute.set(component.element(), 'aria-expanded', status);
+  Attribute.set(component.element, 'aria-expanded', status);
 };
 
 // INVESTIGATE: What other things can we derive?
@@ -34,14 +34,14 @@ const roleAttributes: Record<string, string[]> = {
 };
 
 const detectFromTag = (component: AlloyComponent): Optional<string[]> => {
-  const elem = component.element();
+  const elem = component.element;
   const rawTag = SugarNode.name(elem);
   const suffix = rawTag === 'input' && Attribute.has(elem, 'type') ? ':' + Attribute.get(elem, 'type') : '';
   return Obj.get(tagAttributes, rawTag + suffix);
 };
 
 const detectFromRole = (component: AlloyComponent): Optional<string[]> => {
-  const elem = component.element();
+  const elem = component.element;
   return Attribute.getOpt(elem, 'role').bind((role) => Obj.get(roleAttributes, role));
 };
 
@@ -49,7 +49,7 @@ const updateAuto = (component: AlloyComponent, _ariaInfo: void, status: boolean)
   // Role has priority
   const attributes = detectFromRole(component).orThunk(() => detectFromTag(component)).getOr([ ]);
   Arr.each(attributes, (attr) => {
-    Attribute.set(component.element(), attr, status);
+    Attribute.set(component.element, attr, status);
   });
 };
 

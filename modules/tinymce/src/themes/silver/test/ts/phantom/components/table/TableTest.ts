@@ -1,7 +1,7 @@
-import { UnitTest } from '@ephox/bedrock-client';
+import { ApproxStructure, Assertions } from '@ephox/agar';
 import { GuiFactory, TestHelpers } from '@ephox/alloy';
+import { UnitTest } from '@ephox/bedrock-client';
 import { renderTable } from 'tinymce/themes/silver/ui/dialog/Table';
-import { Assertions, ApproxStructure } from '@ephox/agar';
 import TestProviders from '../../../module/TestProviders';
 
 UnitTest.asynctest('Table component Test', (success, failure) => {
@@ -41,7 +41,7 @@ UnitTest.asynctest('Table component Test', (success, failure) => {
               '</tbody>' +
             '</table>'
         )),
-        component.element()
+        component.element
       )
     ],
     success,

@@ -1,9 +1,9 @@
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Gene, TestUniverse, TextGene } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
 import * as Extract from 'ephox/phoenix/api/general/Extract';
 import * as Finder from 'ephox/phoenix/test/Finder';
 import * as TestRenders from 'ephox/phoenix/test/TestRenders';
-import { UnitTest, assert } from '@ephox/bedrock-client';
 
 UnitTest.test('api.Extract.(from,all,extract,extractTo)', function () {
   const doc = TestUniverse(
@@ -51,15 +51,15 @@ UnitTest.test('api.Extract.(from,all,extract,extractTo)', function () {
   const checkExtract = function (expected: {id: string; offset: number}, childId: string, offset: number) {
     const child = Finder.get(doc, childId);
     const actual = Extract.extract(doc, child, offset);
-    assert.eq(expected.id, actual.element().id);
-    assert.eq(expected.offset, actual.offset());
+    assert.eq(expected.id, actual.element.id);
+    assert.eq(expected.offset, actual.offset);
   };
 
   const checkExtractTo = function (expected: {id: string; offset: number}, childId: string, offset: number, pred: (e: any) => boolean) {
     const child = Finder.get(doc, childId);
     const actual = Extract.extractTo(doc, child, offset, pred);
-    assert.eq(expected.id, actual.element().id);
-    assert.eq(expected.offset, actual.offset());
+    assert.eq(expected.id, actual.element.id);
+    assert.eq(expected.offset, actual.offset);
   };
 
   checkFrom([

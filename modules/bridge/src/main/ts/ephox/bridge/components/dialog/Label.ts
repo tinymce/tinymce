@@ -1,10 +1,10 @@
-import { BodyComponentApi, BodyComponent } from './BodyComponent';
-import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
+import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
+import { BodyComponent, BodyComponentSpec } from './BodyComponent';
 
-export interface LabelApi {
+export interface LabelSpec {
   type: 'label';
   label: string;
-  items: BodyComponentApi[];
+  items: BodyComponentSpec[];
 }
 
 export interface Label {

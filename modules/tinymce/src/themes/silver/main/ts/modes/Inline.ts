@@ -18,7 +18,7 @@ import { ModeRenderInfo, RenderArgs, RenderUiComponents, RenderUiConfig } from '
 import OuterContainer from '../ui/general/OuterContainer';
 import { InlineHeader } from '../ui/header/InlineHeader';
 import { identifyMenus } from '../ui/menus/menubar/Integration';
-import { inline as loadInlineSkin } from './../ui/skin/Loader';
+import { inline as loadInlineSkin } from '../ui/skin/Loader';
 import { setToolbar } from './Toolbars';
 
 const getTargetPosAndBounds = (targetElm: SugarElement, isToolbarTop: boolean) => {
@@ -120,7 +120,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
   ReadOnly.setupReadonlyModeSwitch(editor, uiComponents);
 
   return {
-    editorContainer: outerContainer.element().dom()
+    editorContainer: outerContainer.element.dom
   };
 };
 

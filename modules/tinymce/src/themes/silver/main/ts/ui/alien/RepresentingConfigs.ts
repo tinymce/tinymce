@@ -53,8 +53,8 @@ const withComp = <D>(optInitialValue: Optional<D>, getter: (c: AlloyComponent) =
 
 const withElement = <D>(initialValue: Optional<D>, getter: (elem: SugarElement) => D, setter: (elem: SugarElement, v: D) => void) => withComp(
   initialValue,
-  (c) => getter(c.element()),
-  (c, v) => setter(c.element(), v)
+  (c) => getter(c.element),
+  (c, v) => setter(c.element, v)
 );
 
 const domValue = (optInitialValue: Optional<string>) => withElement(optInitialValue, Value.get, Value.set);

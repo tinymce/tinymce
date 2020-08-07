@@ -22,9 +22,9 @@ const getTableCaptionDeltaY = function (elm) {
       return SugarNode.name(elm) === 'caption';
     }).bind(function (caption) {
       return firstElement(Traverse.nextSiblings(caption)).map(function (body) {
-        const bodyTop = body.dom().offsetTop;
-        const captionTop = caption.dom().offsetTop;
-        const captionHeight = caption.dom().offsetHeight;
+        const bodyTop = body.dom.offsetTop;
+        const captionTop = caption.dom.offsetTop;
+        const captionHeight = caption.dom.offsetHeight;
         return bodyTop <= captionTop ? -captionHeight : 0;
       });
     }).getOr(0);

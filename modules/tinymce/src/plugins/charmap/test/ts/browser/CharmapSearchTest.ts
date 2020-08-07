@@ -16,7 +16,7 @@ UnitTest.asynctest('browser.tinymce.plugins.charmap.SearchTest', (success, failu
       Chain.op(function (elm: SugarElement) {
         const evt = document.createEvent('HTMLEvents');
         evt.initEvent(name, true, true);
-        elm.dom().dispatchEvent(evt);
+        elm.dom.dispatchEvent(evt);
       }),
       Guard.addLogging('Fake event')
     );

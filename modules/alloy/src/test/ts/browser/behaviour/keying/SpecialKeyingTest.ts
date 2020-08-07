@@ -5,8 +5,8 @@ import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
 import { Keying } from 'ephox/alloy/api/behaviour/Keying';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
+import { Container } from 'ephox/alloy/api/ui/Container';
 
 UnitTest.asynctest('SpecialKeyingTest', (success, failure) => {
 
@@ -39,7 +39,7 @@ UnitTest.asynctest('SpecialKeyingTest', (success, failure) => {
 
     return [
       GuiSetup.mSetupKeyLogger(body),
-      FocusTools.sSetFocus('Start on component', gui.element(), '.special-keying'),
+      FocusTools.sSetFocus('Start on component', gui.element, '.special-keying'),
       press('space', Keys.space(), { }),
       press('enter', Keys.enter(), { }),
       press('shift+enter', Keys.enter(), { shift: true }),

@@ -1,15 +1,10 @@
 import { Arr, Fun, Optional } from '@ephox/katamari';
 import { Attribute, SugarElement } from '@ephox/sugar';
-import { Structs } from '@ephox/snooker';
+import { Structs, RunOperation } from '@ephox/snooker';
 import { Selections } from '../selection/Selections';
 import * as TableSelection from '../api/TableSelection';
 import { Ephemera } from '../api/Ephemera';
 import * as SelectionTypes from '../selection/SelectionTypes';
-
-export interface Mergable {
-  bounds: () => Structs.Bounds;
-  cells: () => SugarElement<Element>[];
-}
 
 // Return an array of the selected elements
 const selection = (selections: Selections): SugarElement[] =>
@@ -28,18 +23,15 @@ const unmergable = (selections: Selections): Optional<SugarElement[]> => {
   return candidates.length > 0 && Arr.forall(candidates, hasSpan) ? Optional.some(candidates) : Optional.none();
 };
 
-const mergable = (table: SugarElement<HTMLTableElement>, selections: Selections, ephemera: Ephemera): Optional<Mergable> =>
-  SelectionTypes.cata<Optional<Mergable>>(selections.get(),
+const mergable = (table: SugarElement<HTMLTableElement>, selections: Selections, ephemera: Ephemera): Optional<RunOperation.ExtractMergable> =>
+  SelectionTypes.cata<Optional<RunOperation.ExtractMergable>>(selections.get(),
     Optional.none,
     (cells: SugarElement<Element>[]) => {
       if (cells.length === 0) {
         return Optional.none();
       }
       return TableSelection.retrieveBox(table, ephemera.firstSelectedSelector, ephemera.lastSelectedSelector).bind((bounds: Structs.Bounds) =>
-        cells.length > 1 ? Optional.some({
-          bounds: Fun.constant(bounds),
-          cells: Fun.constant(cells)
-        }) : Optional.none<Mergable>());
+        cells.length > 1 ? Optional.some({ bounds, cells }) : Optional.none<RunOperation.ExtractMergable>());
     },
     Optional.none
   );

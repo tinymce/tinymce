@@ -28,9 +28,9 @@ const wrapper = function <E, D> (universe: Universe<E, D>, wrapped: E[], nu: () 
 
   return Arr.map(filtered, function (w) {
     const container = nu();
-    universe.insert().before(w, container.element());
+    universe.insert().before(w, container.element);
     container.wrap(w);
-    return container.element();
+    return container.element;
   });
 };
 
@@ -43,7 +43,7 @@ const endPoints = function <E, D> (universe: Universe<E, D>, wrapped: E[]) {
     const last = Navigation.toLower(universe, wrapped[wrapped.length - 1]);
     return Spot.points(
       Spot.point(first, 0),
-      Spot.point(last.element(), last.offset())
+      Spot.point(last.element, last.offset)
     );
   });
 };
@@ -54,7 +54,7 @@ const endPoints = function <E, D> (universe: Universe<E, D>, wrapped: E[]) {
 const leaves = function <E, D> (universe: Universe<E, D>, base: E, baseOffset: number, end: E, endOffset: number, nu: () => Wrapter<E>) {
   const start = Navigation.toLeaf(universe, base, baseOffset);
   const finish = Navigation.toLeaf(universe, end, endOffset);
-  const wrapped = wrapWith(universe, start.element(), start.offset(), finish.element(), finish.offset(), nu);
+  const wrapped = wrapWith(universe, start.element, start.offset, finish.element, finish.offset, nu);
   return endPoints(universe, wrapped);
 };
 
@@ -69,7 +69,7 @@ interface Group<E> {
 const reuse = function <E, D> (universe: Universe<E, D>, base: E, baseOffset: number, end: E, endOffset: number, predicate: (e: E) => boolean, nu: () => Wrapter<E>) {
   const start = Navigation.toLeaf(universe, base, baseOffset);
   const finish = Navigation.toLeaf(universe, end, endOffset);
-  const nodes = Split.range(universe, start.element(), start.offset(), finish.element(), finish.offset());
+  const nodes = Split.range(universe, start.element, start.offset, finish.element, finish.offset);
 
   const groups: Group<E>[] = Contiguous.textnodes(universe, nodes);
 
@@ -85,9 +85,9 @@ const reuse = function <E, D> (universe: Universe<E, D>, base: E, baseOffset: nu
 
   const create = function (group: Group<E>): E {
     const container = nu();
-    universe.insert().before(group.children[0], container.element());
+    universe.insert().before(group.children[0], container.element);
     Arr.each(group.children, container.wrap);
-    return container.element();
+    return container.element;
   };
 
   return Arr.map(groups, function (group) {

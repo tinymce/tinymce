@@ -135,7 +135,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableSectionApiTest', (success
       ApiChains.cSetContent(startContent),
       Chain.op((editor: Editor) => {
         const row = UiFinder.findIn(SugarElement.fromDom(editor.getBody()), selector).getOrDie();
-        editor.selection.select(row.dom());
+        editor.selection.select(row.dom);
         editor.execCommand(command, false, { type });
       }),
       ApiChains.cAssertContent(expectedContent)
@@ -158,7 +158,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableSectionApiTest', (success
       ApiChains.cSetContent(content),
       Chain.op((editor: Editor) => {
         const row = UiFinder.findIn(SugarElement.fromDom(editor.getBody()), selector).getOrDie();
-        editor.selection.select(row.dom());
+        editor.selection.select(row.dom);
         const value = editor.queryCommandValue(command);
         Assert.eq(`Assert query value is ${expected}`, expected, value);
       })

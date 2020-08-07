@@ -65,7 +65,7 @@ const getSerializedContent = (editor: Editor, args: GetSelectionContentArgs): Co
   const sel = editor.selection.getSel();
   const ranges = EventProcessRanges.processRanges(editor, MultiRange.getRanges(sel));
 
-  const fragment = args.contextual ? FragmentReader.read(SugarElement.fromDom(editor.getBody()), ranges).dom() : rng.cloneContents();
+  const fragment = args.contextual ? FragmentReader.read(SugarElement.fromDom(editor.getBody()), ranges).dom : rng.cloneContents();
   if (fragment) {
     tmpElm.appendChild(fragment);
   }

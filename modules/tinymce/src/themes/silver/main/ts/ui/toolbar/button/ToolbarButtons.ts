@@ -10,7 +10,7 @@ import {
   Keying, NativeEvents, Reflecting, Replacing, SketchSpec, SplitDropdown as AlloySplitDropdown, SystemEvents, TieredData, TieredMenuTypes, Toggling,
   Unselecting
 } from '@ephox/alloy';
-import { Toolbar, Types } from '@ephox/bridge';
+import { Toolbar } from '@ephox/bridge';
 import { Arr, Cell, Fun, Future, Id, Merger, Optional } from '@ephox/katamari';
 import { Attribute, SelectorFind } from '@ephox/sugar';
 
@@ -228,7 +228,7 @@ const renderToolbarToggleButtonWith = (spec: Toolbar.ToolbarToggleButton, provid
 interface ChoiceFetcher {
   fetch: (callback: Function) => void;
   columns: 'auto' | number;
-  presets: Types.PresetTypes;
+  presets: Toolbar.PresetTypes;
   onItemAction: (api: Toolbar.ToolbarSplitButtonInstanceApi, value: string) => void;
   select: Optional<(value: string) => boolean>;
 }
@@ -269,24 +269,24 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
     isDisabled: () => Disabling.isDisabled(comp),
     setDisabled: (state: boolean) => Disabling.set(comp, state),
     setIconFill: (id, value) => {
-      SelectorFind.descendant(comp.element(), 'svg path[id="' + id + '"], rect[id="' + id + '"]').each((underlinePath) => {
+      SelectorFind.descendant(comp.element, 'svg path[id="' + id + '"], rect[id="' + id + '"]').each((underlinePath) => {
         Attribute.set(underlinePath, 'fill', value);
       });
     },
     setIconStroke: (id, value) => {
-      SelectorFind.descendant(comp.element(), 'svg path[id="' + id + '"], rect[id="' + id + '"]').each((underlinePath) => {
+      SelectorFind.descendant(comp.element, 'svg path[id="' + id + '"], rect[id="' + id + '"]').each((underlinePath) => {
         Attribute.set(underlinePath, 'stroke', value);
       });
     },
     setActive: (state) => {
       // Toggle the pressed aria state component
-      Attribute.set(comp.element(), 'aria-pressed', state);
+      Attribute.set(comp.element, 'aria-pressed', state);
       // Toggle the inner button state, as that's the toggle component of the split button
-      SelectorFind.descendant(comp.element(), 'span').each((button) => {
+      SelectorFind.descendant(comp.element, 'span').each((button) => {
         comp.getSystem().getByDom(button).each((buttonComp) => Toggling.set(buttonComp, state));
       });
     },
-    isActive: () => SelectorFind.descendant(comp.element(), 'span').exists((button) => comp.getSystem().getByDom(button).exists(Toggling.isOn))
+    isActive: () => SelectorFind.descendant(comp.element, 'span').exists((button) => comp.getSystem().getByDom(button).exists(Toggling.isOn))
   });
 
   const editorOffCell = Cell(Fun.noop);
@@ -332,12 +332,12 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
     },
 
     components: [
-      AlloySplitDropdown.parts().button(
+      AlloySplitDropdown.parts.button(
         renderCommonStructure(spec.icon, spec.text, Optional.none(), Optional.some(displayChannel), Optional.some([
           Toggling.config({ toggleClass: ToolbarButtonClasses.Ticked, toggleOnExecute: false })
         ]), sharedBackstage.providers)
       ),
-      AlloySplitDropdown.parts().arrow({
+      AlloySplitDropdown.parts.arrow({
         dom: {
           tag: 'button',
           classes: [ ToolbarButtonClasses.Button, 'tox-split-button__chevron' ],
@@ -348,7 +348,7 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
           ReadOnly.receivingConfig()
         ])
       }),
-      AlloySplitDropdown.parts()['aria-descriptor']({
+      AlloySplitDropdown.parts['aria-descriptor']({
         text: sharedBackstage.providers.translate('To open the popup, press Shift+Enter')
       })
     ]

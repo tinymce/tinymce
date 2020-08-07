@@ -17,8 +17,8 @@ import { SliderValue, SliderValueX, SliderValueY } from 'ephox/alloy/ui/types/Sl
 export default (): void => {
   const gui = Gui.create();
   const body = SugarElement.fromDom(document.body);
-  Class.add(gui.element(), 'gui-root-demo-container');
-  Insert.append(body, gui.element());
+  Class.add(gui.element, 'gui-root-demo-container');
+  Insert.append(body, gui.element);
 
   const slider1 = HtmlDisplay.section(
     gui,
@@ -31,13 +31,13 @@ export default (): void => {
         mode: 'x',
         minX: 20,
         maxX: 100,
-        getInitialValue: Fun.constant({ x: Fun.constant(80) })
+        getInitialValue: Fun.constant({ x: 80 })
       },
       stepSize: 10,
       snapToGrid: true,
 
       components: [
-        Slider.parts().spectrum({
+        Slider.parts.spectrum({
           dom: {
             tag: 'div',
             styles: {
@@ -47,7 +47,7 @@ export default (): void => {
             }
           }
         }),
-        Slider.parts().thumb({
+        Slider.parts.thumb({
           dom: {
             tag: 'div',
             styles: {
@@ -70,7 +70,7 @@ export default (): void => {
       dom: { tag: 'div', styles: { 'margin-bottom': '40px' }},
       model: {
         mode: 'y',
-        getInitialValue: Fun.constant({ y: Fun.constant(35) })
+        getInitialValue: Fun.constant({ y: 35 })
       },
 
       stepSize: 40,
@@ -82,20 +82,20 @@ export default (): void => {
       onChange(_slider, thumb, value: SliderValue) {
         if (isValueY(value)) {
           Replacing.set(thumb, [
-            GuiFactory.text(value.y().toString())
+            GuiFactory.text(value.y.toString())
           ]);
         }
       },
       onInit(_slider, thumb, _spectrum, value: SliderValue) {
         if (isValueY(value)) {
           Replacing.set(thumb, [
-            GuiFactory.text(value.y().toString())
+            GuiFactory.text(value.y.toString())
           ]);
         }
       },
 
       components: [
-        Slider.parts().spectrum({
+        Slider.parts.spectrum({
           dom: {
             tag: 'div',
             styles: {
@@ -103,7 +103,7 @@ export default (): void => {
             }
           }
         }),
-        Slider.parts().thumb({
+        Slider.parts.thumb({
           dom: {
             tag: 'div',
             styles: {
@@ -136,7 +136,7 @@ export default (): void => {
 
   const setColor = (thumb: AlloyComponent, hue: number) => {
     const color = (hue < 0) ? 'black' : (hue > 360) ? 'white' : 'hsl(' + hue + ', 100%, 50%)';
-    Css.set(thumb.element(), 'background', color);
+    Css.set(thumb.element, 'background', color);
   };
 
   HtmlDisplay.section(
@@ -152,19 +152,19 @@ export default (): void => {
         maxX: 360,
         minY: 0,
         maxY: 360,
-        getInitialValue: Fun.constant({ x: Fun.constant(120), y: Fun.constant(120) })
+        getInitialValue: Fun.constant({ x: 120, y: 120 })
       },
       stepSize: 10,
 
       onChange(_slider, thumb, value: SliderValue) {
         if (isValueX(value)) {
-          setColor(thumb, value.x());
+          setColor(thumb, value.x);
         }
       },
 
       onInit(_slider, thumb, _spectrum, value: SliderValue) {
         if (isValueX(value)) {
-          setColor(thumb, value.x());
+          setColor(thumb, value.x);
         }
       },
 
@@ -179,7 +179,7 @@ export default (): void => {
             }
           },
           components: [
-            Slider.parts()['left-edge']({
+            Slider.parts['left-edge']({
               dom: {
                 tag: 'div',
                 styles: {
@@ -189,7 +189,7 @@ export default (): void => {
                 }
               }
             }),
-            Slider.parts().spectrum({
+            Slider.parts.spectrum({
               dom: {
                 tag: 'div',
                 styles: {
@@ -199,7 +199,7 @@ export default (): void => {
                 }
               }
             }),
-            Slider.parts()['right-edge']({
+            Slider.parts['right-edge']({
               dom: {
                 tag: 'div',
                 styles: {
@@ -211,7 +211,7 @@ export default (): void => {
             })
           ]
         }),
-        Slider.parts().thumb({
+        Slider.parts.thumb({
           dom: {
             tag: 'div',
             classes: [ 'demo-sliding-thumb' ],

@@ -1,12 +1,12 @@
-import { LegacyUnit } from '@ephox/mcagar';
 import { Pipeline } from '@ephox/agar';
-import Env from 'tinymce/core/api/Env';
-import { CaretWalker } from 'tinymce/core/caret/CaretWalker';
-import CaretPosition from 'tinymce/core/caret/CaretPosition';
+import { UnitTest } from '@ephox/bedrock-client';
+import { LegacyUnit } from '@ephox/mcagar';
 import DomQuery from 'tinymce/core/api/dom/DomQuery';
+import Env from 'tinymce/core/api/Env';
+import CaretPosition from 'tinymce/core/caret/CaretPosition';
+import { CaretWalker } from 'tinymce/core/caret/CaretWalker';
 import * as CaretAsserts from '../../module/test/CaretAsserts';
 import ViewBlock from '../../module/test/ViewBlock';
-import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.core.CaretWalkerTest', (success, failure) => {
   const suite = LegacyUnit.createSuite();

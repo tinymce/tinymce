@@ -25,7 +25,7 @@ const schema = [
 ];
 
 const focusIn = (component: AlloyComponent, gridConfig: FlatgridConfig, _gridState: FlatgridState): void => {
-  SelectorFind.descendant(component.element(), gridConfig.selector).each((first: SugarElement) => {
+  SelectorFind.descendant(component.element, gridConfig.selector).each((first: SugarElement) => {
     gridConfig.focusManager.set(component, first);
   });
 };
@@ -48,8 +48,8 @@ const doMove = (
   (element, focused, gridConfig, gridState) =>
     DomPinpoint.locateVisible(element, focused, gridConfig.selector).
       bind((identified) => cycle(
-        identified.candidates(),
-        identified.index(),
+        identified.candidates,
+        identified.index,
         gridState.getNumRows().getOr(gridConfig.initSize.numRows),
         gridState.getNumColumns().getOr(gridConfig.initSize.numColumns)
       ));
@@ -67,20 +67,20 @@ const moveNorth = doMove(WrapArrNavigation.cycleUp);
 const moveSouth = doMove(WrapArrNavigation.cycleDown);
 
 const getKeydownRules: () => Array<KeyRules.KeyRule<FlatgridConfig, FlatgridState>> = Fun.constant([
-  KeyRules.rule(KeyMatch.inSet(Keys.LEFT()), DomMovement.west<FlatgridConfig, FlatgridState>(moveLeft, moveRight)),
-  KeyRules.rule(KeyMatch.inSet(Keys.RIGHT()), DomMovement.east(moveLeft, moveRight)),
-  KeyRules.rule(KeyMatch.inSet(Keys.UP()), DomMovement.north(moveNorth)),
-  KeyRules.rule(KeyMatch.inSet(Keys.DOWN()), DomMovement.south(moveSouth)),
-  KeyRules.rule(KeyMatch.and([ KeyMatch.isShift, KeyMatch.inSet(Keys.TAB()) ]), handleTab),
-  KeyRules.rule(KeyMatch.and([ KeyMatch.isNotShift, KeyMatch.inSet(Keys.TAB()) ]), handleTab),
-  KeyRules.rule(KeyMatch.inSet(Keys.ESCAPE()), doEscape),
+  KeyRules.rule(KeyMatch.inSet(Keys.LEFT), DomMovement.west<FlatgridConfig, FlatgridState>(moveLeft, moveRight)),
+  KeyRules.rule(KeyMatch.inSet(Keys.RIGHT), DomMovement.east(moveLeft, moveRight)),
+  KeyRules.rule(KeyMatch.inSet(Keys.UP), DomMovement.north(moveNorth)),
+  KeyRules.rule(KeyMatch.inSet(Keys.DOWN), DomMovement.south(moveSouth)),
+  KeyRules.rule(KeyMatch.and([ KeyMatch.isShift, KeyMatch.inSet(Keys.TAB) ]), handleTab),
+  KeyRules.rule(KeyMatch.and([ KeyMatch.isNotShift, KeyMatch.inSet(Keys.TAB) ]), handleTab),
+  KeyRules.rule(KeyMatch.inSet(Keys.ESCAPE), doEscape),
 
   // Probably should make whether space is used configurable
-  KeyRules.rule(KeyMatch.inSet(Keys.SPACE().concat(Keys.ENTER())), execute)
+  KeyRules.rule(KeyMatch.inSet(Keys.SPACE.concat(Keys.ENTER)), execute)
 ]);
 
 const getKeyupRules: () => Array<KeyRules.KeyRule<FlatgridConfig, FlatgridState>> = Fun.constant([
-  KeyRules.rule(KeyMatch.inSet(Keys.SPACE()), KeyingTypes.stopEventForFirefox)
+  KeyRules.rule(KeyMatch.inSet(Keys.SPACE), KeyingTypes.stopEventForFirefox)
 ]);
 
 export default KeyingType.typical(

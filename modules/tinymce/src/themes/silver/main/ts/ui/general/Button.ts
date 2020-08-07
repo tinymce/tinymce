@@ -9,7 +9,7 @@ import {
   AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, Button as AlloyButton, FormField as AlloyFormField, Memento,
   SimpleOrSketchSpec, SketchSpec, Tabstopping
 } from '@ephox/alloy';
-import { Types } from '@ephox/bridge';
+import { Dialog } from '@ephox/bridge';
 import { Fun, Merger, Optional } from '@ephox/katamari';
 import { formActionEvent, formCancelEvent, formSubmitEvent } from 'tinymce/themes/silver/ui/general/FormEvents';
 
@@ -22,11 +22,10 @@ import { RepresentingConfigs } from '../alien/RepresentingConfigs';
 import { renderIconFromPack } from '../button/ButtonSlices';
 import { getFetch, renderMenuButton, StoragedMenuButton } from '../button/MenuButton';
 import { componentRenderPipeline } from '../menus/item/build/CommonMenuItem';
-import { Omit } from '../Omit';
 import { ToolbarButtonClasses } from '../toolbar/button/ButtonClasses';
 
-type ButtonSpec = Omit<Types.Button.Button, 'type'>;
-type FooterButtonSpec = Omit<Types.Dialog.DialogNormalButton, 'type'> | Omit<Types.Dialog.DialogMenuButton, 'type'>;
+type ButtonSpec = Omit<Dialog.Button, 'type'>;
+type FooterButtonSpec = Omit<Dialog.DialogFooterNormalButton, 'type'> | Omit<Dialog.DialogFooterMenuButton, 'type'>;
 
 export interface IconButtonWrapper extends Omit<ButtonSpec, 'text'> {
   tooltip: Optional<string>;
@@ -130,9 +129,9 @@ const getAction = (name: string, buttonType: string) => (comp: AlloyComponent) =
   }
 };
 
-const isMenuFooterButtonSpec = (spec: FooterButtonSpec, buttonType: string): spec is Types.Dialog.DialogMenuButton => buttonType === 'menu';
+const isMenuFooterButtonSpec = (spec: FooterButtonSpec, buttonType: string): spec is Dialog.DialogFooterMenuButton => buttonType === 'menu';
 
-const isNormalFooterButtonSpec = (spec: FooterButtonSpec, buttonType: string): spec is Types.Dialog.DialogNormalButton => buttonType === 'custom' || buttonType === 'cancel' || buttonType === 'submit';
+const isNormalFooterButtonSpec = (spec: FooterButtonSpec, buttonType: string): spec is Dialog.DialogFooterNormalButton => buttonType === 'custom' || buttonType === 'cancel' || buttonType === 'submit';
 
 export const renderFooterButton = (spec: FooterButtonSpec, buttonType: string, backstage: UiFactoryBackstage): SimpleOrSketchSpec => {
   if (isMenuFooterButtonSpec(spec, buttonType)) {
@@ -167,7 +166,7 @@ export const renderFooterButton = (spec: FooterButtonSpec, buttonType: string, b
 
 export const renderDialogButton = (spec: ButtonSpec, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
   const action = getAction(spec.name, 'custom');
-  return renderFormField(Optional.none(), AlloyFormField.parts().field({
+  return renderFormField(Optional.none(), AlloyFormField.parts.field({
     factory: AlloyButton,
     ...renderButtonSpec(spec, Optional.some(action), providersBackstage, [
       RepresentingConfigs.memory(''),

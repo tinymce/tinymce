@@ -1,4 +1,11 @@
-import { Menu as BridgeMenu } from '@ephox/bridge';
+/**
+ * Copyright (c) Tiny Technologies, Inc. All rights reserved.
+ * Licensed under the LGPL or a commercial license.
+ * For LGPL see License.txt in the project root for license information.
+ * For commercial licenses see https://www.tiny.cloud/
+ */
 
-export type SingleMenuItemApi = BridgeMenu.MenuItemApi | BridgeMenu.NestedMenuItemApi | BridgeMenu.ToggleMenuItemApi |
-BridgeMenu.SeparatorMenuItemApi | BridgeMenu.ChoiceMenuItemApi | BridgeMenu.FancyMenuItemApi;
+import { Menu } from '@ephox/bridge';
+
+export type SingleMenuItemSpec = Menu.MenuItemSpec | Menu.NestedMenuItemSpec | Menu.ToggleMenuItemSpec | Menu.SeparatorMenuItemSpec |
+Menu.ChoiceMenuItemSpec | Menu.FancyMenuItemSpec;

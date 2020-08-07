@@ -1,8 +1,8 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
+import fc from 'fast-check';
 import * as Arr from 'ephox/katamari/api/Arr';
 import * as Fun from 'ephox/katamari/api/Fun';
 import * as Obj from 'ephox/katamari/api/Obj';
-import fc from 'fast-check';
 
 UnitTest.test('BiFilterTest', () => {
   const even = (x) => x % 2 === 0;
@@ -23,7 +23,7 @@ UnitTest.test('Check that if the filter always returns false, then everything is
   fc.assert(fc.property(
     fc.dictionary(fc.asciiString(), fc.string(1, 40)),
     (obj) => {
-      const output = Obj.bifilter(obj, Fun.constant(false));
+      const output = Obj.bifilter(obj, Fun.never);
       Assert.eq('eq', Obj.keys(obj).length, Obj.keys(output.f).length);
       Assert.eq('eq', 0, Obj.keys(output.t).length);
       return true;
@@ -35,7 +35,7 @@ UnitTest.test('Check that if the filter always returns true, then everything is 
   fc.assert(fc.property(
     fc.dictionary(fc.asciiString(), fc.string(1, 40)),
     (obj) => {
-      const output = Obj.bifilter(obj, Fun.constant(true));
+      const output = Obj.bifilter(obj, Fun.always);
       Assert.eq('eq', 0, Obj.keys(output.f).length);
       Assert.eq('eq', Obj.keys(obj).length, Obj.keys(output.t).length);
       return true;

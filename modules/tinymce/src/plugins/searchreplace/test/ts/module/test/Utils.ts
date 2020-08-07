@@ -6,7 +6,7 @@ const cFakeEvent = (name: string) => Chain.label('Fake event',
   Chain.op((elm: SugarElement) => {
     const evt = document.createEvent('HTMLEvents');
     evt.initEvent(name, true, true);
-    elm.dom().dispatchEvent(evt);
+    elm.dom.dispatchEvent(evt);
   })
 );
 

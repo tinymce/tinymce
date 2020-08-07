@@ -6,15 +6,18 @@ import XHR, { XHRSettings } from 'tinymce/core/api/util/XHR';
 UnitTest.asynctest('browser.tinymce.core.util.XhrTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
 
+  type XHRTest = XMLHttpRequest & { test: number };
+  type XHRSettingsTest = XHRSettings & { test: number };
+
   suite.asyncTest('Successful request', function (_, done) {
-    XHR.on('beforeSend', function (e) {
+    XHR.on('beforeSend', function (e: { xhr: XHRTest; settings: XHRSettingsTest }) {
       e.xhr.test = 123;
       e.settings.test = 456;
     });
 
     XHR.send({
       url: '/custom/json_rpc_ok',
-      success(data, xhr: XMLHttpRequest & { test: number }, input: XHRSettings & { test: number }) {
+      success(data, xhr: XHRTest, input: XHRSettingsTest) {
         LegacyUnit.equal(JSON.parse(data), { result: 'Hello JSON-RPC', error: null, id: 1 });
         LegacyUnit.equal(xhr.status, 200);
         LegacyUnit.equal(input.url, '/custom/json_rpc_ok');

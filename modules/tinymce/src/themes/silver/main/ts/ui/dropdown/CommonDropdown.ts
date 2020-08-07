@@ -5,12 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-/* eslint-disable max-len */
 import {
   AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, CustomEvent, Dropdown as AlloyDropdown, Focusing, GuiFactory, Keying,
   Memento, Replacing, Representing, SimulatedEvent, SketchSpec, TieredData, Unselecting
 } from '@ephox/alloy';
-import { Types } from '@ephox/bridge';
+import { Toolbar } from '@ephox/bridge';
 import { Arr, Cell, Fun, Future, Id, Merger, Optional } from '@ephox/katamari';
 import { EventArgs } from '@ephox/sugar';
 import { toolbarButtonEventOrder } from 'tinymce/themes/silver/ui/toolbar/button/ButtonEvents';
@@ -23,17 +22,16 @@ import { onControlAttached, onControlDetached, OnDestroy } from '../controls/Con
 import * as Icons from '../icons/Icons';
 import { componentRenderPipeline } from '../menus/item/build/CommonMenuItem';
 import * as MenuParts from '../menus/menu/MenuParts';
-/* eslint-enable max-len */
 
 export const updateMenuText = Id.generate('update-menu-text');
 export const updateMenuIcon = Id.generate('update-menu-icon');
 
 export interface UpdateMenuTextEvent extends CustomEvent {
-  text: () => string;
+  readonly text: string;
 }
 
 export interface UpdateMenuIconEvent extends CustomEvent {
-  icon: () => string;
+  readonly icon: string;
 }
 
 export interface CommonDropdownSpec<T> {
@@ -45,8 +43,8 @@ export interface CommonDropdownSpec<T> {
   fetch: (callback: (tdata: Optional<TieredData>) => void) => void;
   onSetup: (itemApi: T) => OnDestroy<T>;
   getApi: (comp: AlloyComponent) => T;
-  columns: Types.ColumnTypes;
-  presets: Types.PresetTypes;
+  columns: Toolbar.ColumnTypes;
+  presets: Toolbar.PresetTypes;
   classes: string[];
   dropdownBehaviours: Array<Behaviour.NamedConfiguredBehaviour<
   Behaviour.BehaviourConfigSpec, Behaviour.BehaviourConfigDetail>>;
@@ -81,7 +79,7 @@ const renderCommonDropdown = <T>(
     // Focus the dropdown. Current workaround required to make flow recognise the current focus
     Focusing.focus(dropdown);
     AlloyTriggers.emitWith(dropdown, 'keydown', {
-      raw: se.event().raw()
+      raw: se.event.raw
     });
 
     // Close the dropdown
@@ -141,13 +139,13 @@ const renderCommonDropdown = <T>(
         AddEventsBehaviour.config('menubutton-update-display-text', [
           AlloyEvents.run<UpdateMenuTextEvent>(updateMenuText, (comp, se) => {
             optMemDisplayText.bind((mem) => mem.getOpt(comp)).each((displayText) => {
-              Replacing.set(displayText, [ GuiFactory.text(sharedBackstage.providers.translate(se.event().text())) ] );
+              Replacing.set(displayText, [ GuiFactory.text(sharedBackstage.providers.translate(se.event.text)) ] );
             });
           }),
           AlloyEvents.run<UpdateMenuIconEvent>(updateMenuIcon, (comp, se) => {
             optMemDisplayIcon.bind((mem) => mem.getOpt(comp)).each((displayIcon) => {
               Replacing.set(displayIcon, [
-                renderReplacableIconFromPack(se.event().icon(), sharedBackstage.providers.icons)
+                renderReplacableIconFromPack(se.event.icon, sharedBackstage.providers.icons)
               ] );
             });
           })

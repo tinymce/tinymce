@@ -12,7 +12,7 @@ export default function () {
   const sWaitForEditorLoaded = Waiter.sTryUntil(
     'Waiting for iframe to load',
     Step.sync(() => {
-      Assertions.assertEq('Check for a content editable body', 'true', frame.dom().contentWindow.document.body.contentEditable);
+      Assertions.assertEq('Check for a content editable body', 'true', frame.dom.contentWindow.document.body.contentEditable);
     }),
     100,
     8000
@@ -33,18 +33,18 @@ export default function () {
   const editor = {
     selection: {
       getStart() {
-        return WindowSelection.getExact(frame.dom().contentWindow).map(function (sel) {
-          return sel.start().dom();
+        return WindowSelection.getExact(frame.dom.contentWindow).map(function (sel) {
+          return sel.start.dom;
         }).getOr(null);
       },
       getContent() {
-        return frame.dom().contentWindow.document.body.innerHTML;
+        return frame.dom.contentWindow.document.body.innerHTML;
       },
       select: Fun.noop
     },
 
     getBody() {
-      return frame.dom().contentWindow.document.body;
+      return frame.dom.contentWindow.document.body;
     },
 
     insertContent: dEditor.insertContent,
@@ -53,9 +53,9 @@ export default function () {
     // Maybe this should be implemented
     focus() {
       Focus.focus(frame);
-      const win = frame.dom().contentWindow;
+      const win = frame.dom.contentWindow;
       WindowSelection.getExact(win).orThunk(function () {
-        const fbody = SugarElement.fromDom(frame.dom().contentWindow.document.body);
+        const fbody = SugarElement.fromDom(frame.dom.contentWindow.document.body);
         const elem = Cursors.calculateOne(fbody, [ 0 ]);
         WindowSelection.setExact(win, elem, 0, elem, 0);
         return Optional.none();

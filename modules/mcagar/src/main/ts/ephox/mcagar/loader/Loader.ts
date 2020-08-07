@@ -67,7 +67,7 @@ const setup = (callbacks: Callbacks, settings: Record<string, any>, elementOpt: 
   } else {
     callbacks.preInit(tinymce, settings);
 
-    const targetSettings = SugarShadowDom.isInShadowRoot(target) ? ({ target: target.dom() }) : ({ selector: '#' + randomId });
+    const targetSettings = SugarShadowDom.isInShadowRoot(target) ? ({ target: target.dom }) : ({ selector: '#' + randomId });
 
     tinymce.init({
       ...settings,

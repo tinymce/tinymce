@@ -14,17 +14,17 @@ if (!/phantom/i.test(navigator.userAgent)) {
     Insert.append(SugarBody.body(), pastebin);
 
     const cutUnbinder = DomEvent.bind(pastebin, 'cut', (evt) => {
-      const dataTransfer = evt.raw().clipboardData;
+      const dataTransfer = evt.raw.clipboardData;
       dataTransfer.setData('text/plain', 'cut-data');
     });
 
     const copyUnbinder = DomEvent.bind(pastebin, 'copy', (evt) => {
-      const dataTransfer = evt.raw().clipboardData;
+      const dataTransfer = evt.raw.clipboardData;
       dataTransfer.setData('text/plain', 'copy-data');
     });
 
     const pasteUnbinder = DomEvent.bind(pastebin, 'paste', (evt) => {
-      const dataTransfer = evt.raw().clipboardData;
+      const dataTransfer = evt.raw.clipboardData;
       pasteState.set(Optional.some(dataTransfer));
     });
 

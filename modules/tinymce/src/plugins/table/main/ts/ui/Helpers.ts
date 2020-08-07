@@ -5,11 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Types } from '@ephox/bridge';
 import { Arr, Fun, Obj, Strings } from '@ephox/katamari';
 import { Css, SugarElement } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
+import { Dialog } from 'tinymce/core/api/ui/Ui';
 import * as Styles from '../actions/Styles';
 import { getDefaultAttributes, getDefaultStyles, shouldStyleWithCss } from '../api/Settings';
 import { getRowType } from '../core/TableSections';
@@ -26,7 +26,7 @@ interface ExternalClassListItem {
   value: string;
 }
 
-type InternalClassListItem = Types.SelectBox.ExternalSelectBoxItem;
+type InternalClassListItem = Dialog.SelectBoxItemSpec;
 
 const buildListItems = (inputList: any, startItems?: InternalClassListItem[]): InternalClassListItem[] => {
   // Used to also take a callback (that in all instances applied an item.textStyles property using Formatter)
@@ -79,7 +79,7 @@ const getSharedValues = <T>(data: Array<T>) => {
 };
 
 const getAdvancedTab = (dialogName: 'table' | 'row' | 'cell') => {
-  const advTabItems: Types.Dialog.BodyComponentApi[] = [
+  const advTabItems: Dialog.BodyComponentSpec[] = [
     {
       name: 'borderstyle',
       type: 'selectbox',
@@ -110,13 +110,13 @@ const getAdvancedTab = (dialogName: 'table' | 'row' | 'cell') => {
     }
   ];
 
-  const borderWidth: Types.Input.InputApi = {
+  const borderWidth: Dialog.InputSpec = {
     name: 'borderwidth',
     type: 'input',
     label: 'Border width'
   };
 
-  const items = dialogName === 'cell' ? ([ borderWidth ] as Types.Dialog.BodyComponentApi[]).concat(advTabItems) : advTabItems;
+  const items = dialogName === 'cell' ? ([ borderWidth ] as Dialog.BodyComponentSpec[]).concat(advTabItems) : advTabItems;
 
   return {
     title: 'Advanced',

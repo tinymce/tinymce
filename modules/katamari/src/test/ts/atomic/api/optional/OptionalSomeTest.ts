@@ -1,10 +1,10 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Testable } from '@ephox/dispute';
+import fc from 'fast-check';
 import * as Fun from 'ephox/katamari/api/Fun';
 import { Optional } from 'ephox/katamari/api/Optional';
 import { tOptional } from 'ephox/katamari/api/OptionalInstances';
 import * as ArbDataTypes from 'ephox/katamari/test/arb/ArbDataTypes';
-import fc from 'fast-check';
 
 const { tNumber, tString } = Testable;
 
@@ -132,11 +132,11 @@ UnitTest.test('Given f :: s -> none, checking some(x).bind(f) === none', () => {
 });
 
 UnitTest.test('Checking some(x).exists(_ -> false) === false', () => {
-  fc.assert(fc.property(arbOptionSome(fc.integer()), (opt) => !opt.exists(Fun.constant(false))));
+  fc.assert(fc.property(arbOptionSome(fc.integer()), (opt) => !opt.exists(Fun.never)));
 });
 
 UnitTest.test('Checking some(x).exists(_ -> true) === true', () => {
-  fc.assert(fc.property(arbOptionSome(fc.integer()), (opt) => opt.exists(Fun.constant(true))));
+  fc.assert(fc.property(arbOptionSome(fc.integer()), (opt) => opt.exists(Fun.always)));
 });
 
 UnitTest.test('Checking some(x).exists(f) iff. f(x)', () => {
@@ -151,11 +151,11 @@ UnitTest.test('Checking some(x).exists(f) iff. f(x)', () => {
 });
 
 UnitTest.test('Checking some(x).forall(_ -> false) === false', () => {
-  fc.assert(fc.property(arbOptionSome(fc.integer()), (opt) => !opt.forall(Fun.constant(false))));
+  fc.assert(fc.property(arbOptionSome(fc.integer()), (opt) => !opt.forall(Fun.never)));
 });
 
 UnitTest.test('Checking some(x).forall(_ -> true) === true', () => {
-  fc.assert(fc.property(arbOptionSome(fc.integer()), (opt) => opt.forall(Fun.constant(true))));
+  fc.assert(fc.property(arbOptionSome(fc.integer()), (opt) => opt.forall(Fun.always)));
 });
 
 UnitTest.test('Checking some(x).forall(f) iff. f(x)', () => {

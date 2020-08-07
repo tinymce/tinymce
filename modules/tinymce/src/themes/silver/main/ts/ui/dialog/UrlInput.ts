@@ -9,7 +9,7 @@ import {
   AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, Composing, CustomEvent, Disabling,
   FormField as AlloyFormField, Invalidating, Memento, NativeEvents, Representing, SketchSpec, SystemEvents, Tabstopping, Typeahead as AlloyTypeahead
 } from '@ephox/alloy';
-import { Types } from '@ephox/bridge';
+import { Dialog } from '@ephox/bridge';
 import { Arr, Fun, Future, FutureResult, Id, Optional, Result } from '@ephox/katamari';
 import { Attribute, Traverse } from '@ephox/sugar';
 
@@ -23,12 +23,11 @@ import * as Icons from '../icons/Icons';
 import ItemResponse from '../menus/item/ItemResponse';
 import * as MenuParts from '../menus/menu/MenuParts';
 import * as NestedMenus from '../menus/menu/NestedMenus';
-import { Omit } from '../Omit';
 import {
   anchorTargetBottom, anchorTargets, anchorTargetTop, filterByQuery, headerTargets, historyTargets, joinMenuLists
 } from '../urlinput/Completions';
 
-type UrlInputSpec = Omit<Types.UrlInput.UrlInput, 'type'>;
+type UrlInputSpec = Omit<Dialog.UrlInput, 'type'>;
 
 const getItems = (fileType: 'image' | 'media' | 'file', input: AlloyComponent, urlBackstage: UiFactoryBackstageForUrlInput) => {
   const urlInputValue = Representing.getValue(input);
@@ -63,7 +62,7 @@ export const renderUrlInput = (spec: UrlInputSpec, backstage: UiFactoryBackstage
   };
 
   // TODO: Make alloy's typeahead only swallow enter and escape if menu is open
-  const pField = AlloyFormField.parts().field({
+  const pField = AlloyFormField.parts.field({
     factory: AlloyTypeahead,
     dismissOnBlur: true,
     inputClasses: [ 'tox-textfield' ],
@@ -90,12 +89,12 @@ export const renderUrlInput = (spec: UrlInputSpec, backstage: UiFactoryBackstage
     typeaheadBehaviours: Behaviour.derive(Arr.flatten([
       urlBackstage.getValidationHandler().map(
         (handler) => Invalidating.config({
-          getRoot: (comp) => Traverse.parent(comp.element()),
+          getRoot: (comp) => Traverse.parent(comp.element),
           invalidClass: 'tox-control-wrap--status-invalid',
           notify: {
             onInvalid: (comp: AlloyComponent, err: string) => {
               memInvalidIcon.getOpt(comp).each((invalidComp) => {
-                Attribute.set(invalidComp.element(), 'title', providersBackstage.translate(err));
+                Attribute.set(invalidComp.element, 'title', providersBackstage.translate(err));
               });
             }
           },

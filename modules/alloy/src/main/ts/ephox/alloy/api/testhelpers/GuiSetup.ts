@@ -80,7 +80,7 @@ const setupInShadowRoot = (
   }
   const sh = SugarElement.fromTag('div');
   Insert.append(SugarBody.body(), sh);
-  const sr = SugarElement.fromDom(sh.dom().attachShadow({ mode: 'open' }));
+  const sr = SugarElement.fromDom(sh.dom.attachShadow({ mode: 'open' }));
   setupIn(sr, createComponent, f, () => {
     Remove.remove(sh);
     success();
@@ -114,7 +114,7 @@ const guiSetup = <A, B> (createComponent: (store: TestStore, doc: SugarElement, 
 
 const mSetupKeyLogger = (body: SugarElement) => Step.stateful((oldState: Record<string, any>, next, _die) => {
   const onKeydown: EventUnbinder = DomEvent.bind(body, 'keydown', (event) => {
-    newState.log.push('keydown.to.body: ' + event.raw().which);
+    newState.log.push('keydown.to.body: ' + event.raw.which);
   });
 
   const log: string[] = [ ];

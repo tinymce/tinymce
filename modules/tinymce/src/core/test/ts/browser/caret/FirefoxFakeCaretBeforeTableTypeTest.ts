@@ -1,11 +1,11 @@
 import { GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import Theme from 'tinymce/themes/silver/Theme';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import Plugin from 'tinymce/plugins/table/Plugin';
-import * as KeyUtils from '../../module/test/KeyUtils';
-import Env from 'tinymce/core/api/Env';
+import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import Editor from 'tinymce/core/api/Editor';
+import Env from 'tinymce/core/api/Env';
+import Plugin from 'tinymce/plugins/table/Plugin';
+import Theme from 'tinymce/themes/silver/Theme';
+import * as KeyUtils from '../../module/test/KeyUtils';
 
 const sAssertUndoManagerDataLength = (editor: Editor, expected: number) =>
   Step.sync(() => Assert.eq('should have correct length', expected, editor.undoManager.data.length));

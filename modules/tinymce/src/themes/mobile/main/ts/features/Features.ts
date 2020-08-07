@@ -104,7 +104,7 @@ const setup = function (realm: MobileRealm, editor: Editor) {
   const styleselect = function () {
     return Buttons.forToolbar('style-formats', function (button) {
       editor.fire('toReading');
-      realm.dropup().appear(styleFormatsMenu, Toggling.on, button);
+      realm.dropup.appear(styleFormatsMenu, Toggling.on, button);
     }, Behaviour.derive([
       Toggling.config({
         toggleClass: Styles.resolve('toolbar-button-selected'),

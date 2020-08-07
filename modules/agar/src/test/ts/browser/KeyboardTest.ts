@@ -35,7 +35,7 @@ UnitTest.asynctest('KeyboardTest', (success, failure) => {
     Step.control(
       Step.raw((value: { container: any }, next, die, logs) => {
         const listener = DomEvent.bind(value.container, type, (event) => {
-          const raw = event.raw();
+          const raw = event.raw;
           listener.unbind();
 
           sAssertEvent(type, code, modifiers, raw).runStep(value, next, die, logs);
@@ -55,8 +55,8 @@ UnitTest.asynctest('KeyboardTest', (success, failure) => {
           keyupListener.unbind();
 
           Pipeline.async({}, [
-            sAssertEvent('keydown', code, modifiers, dEvent.raw()),
-            sAssertEvent('keyup', code, modifiers, uEvent.raw())
+            sAssertEvent('keydown', code, modifiers, dEvent.raw),
+            sAssertEvent('keyup', code, modifiers, uEvent.raw)
           ], (v, newLogs) => {
             next(value, newLogs);
           }, die, initLogs);

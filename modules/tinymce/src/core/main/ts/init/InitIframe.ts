@@ -87,7 +87,7 @@ const createIframe = function (editor: Editor, o) {
     'Rich Text Area. Press ALT-0 for help.'
   );
 
-  const ifr = createIframeElement(editor.id, title, o.height, Settings.getIframeAttrs(editor)).dom();
+  const ifr = createIframeElement(editor.id, title, o.height, Settings.getIframeAttrs(editor)).dom;
 
   ifr.onload = function () {
     ifr.onload = null;

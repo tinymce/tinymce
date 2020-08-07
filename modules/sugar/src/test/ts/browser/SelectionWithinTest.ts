@@ -23,7 +23,7 @@ UnitTest.test('Browser Test: SelectionTest', () => {
       Obj.each(expected, (num, tag) => {
         const actual = WindowSelection.findWithin(
           window,
-          SimSelection.exact(sel.start(), sel.soffset(), sel.finish(), sel.foffset()),
+          SimSelection.exact(sel.start, sel.soffset, sel.finish, sel.foffset),
           tag
         );
         assert.eq(

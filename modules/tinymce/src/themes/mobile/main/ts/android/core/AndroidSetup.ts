@@ -5,8 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Fun, Optional } from '@ephox/katamari';
-import { Attribute, DomEvent, SugarElement } from '@ephox/sugar';
+import { Optional } from '@ephox/katamari';
+import { Attribute, DomEvent, RawRect, SugarElement } from '@ephox/sugar';
 
 import * as Styles from '../../style/Styles';
 import * as DataAttributes from '../../util/DataAttributes';
@@ -27,10 +27,10 @@ const getLastHeight = function (cBody) {
   return DataAttributes.safeParse(cBody, data);
 };
 
-const getBoundsFrom = function (rect) {
+const getBoundsFrom = function (rect: RawRect) {
   return {
-    top: Fun.constant(rect.top()),
-    bottom: Fun.constant(rect.top() + rect.height())
+    top: rect.top,
+    bottom: rect.top + rect.height
   };
 };
 
@@ -47,8 +47,8 @@ const findDelta = function (outerWindow, cBody) {
 
 const calculate = function (cWin, bounds, delta) {
   // The goal here is to shift as little as required.
-  const isOutside = bounds.top() > cWin.innerHeight || bounds.bottom() > cWin.innerHeight;
-  return isOutside ? Math.min(delta, bounds.bottom() - cWin.innerHeight + EXTRA_SPACING) : 0;
+  const isOutside = bounds.top > cWin.innerHeight || bounds.bottom > cWin.innerHeight;
+  return isOutside ? Math.min(delta, bounds.bottom - cWin.innerHeight + EXTRA_SPACING) : 0;
 };
 
 const setup = function (outerWindow, cWin) {

@@ -20,7 +20,7 @@ import { Type } from '@ephox/katamari';
  * var str = tinymce.util.JSON.serialize(obj);
  */
 
-const serialize = (obj: {}) => {
+const serialize = (obj: any) => {
   const data = JSON.stringify(obj);
 
   if (!Type.isString(data)) {
@@ -35,7 +35,7 @@ const serialize = (obj: {}) => {
 };
 
 interface JSONUtils {
-  serialize (obj: {}): string;
+  serialize (obj: any): string;
   parse (text: string): any;
 }
 

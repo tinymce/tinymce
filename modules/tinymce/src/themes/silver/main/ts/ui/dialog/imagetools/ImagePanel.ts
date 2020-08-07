@@ -8,7 +8,7 @@
 import { AddEventsBehaviour, AlloyComponent, AlloyEvents, Behaviour, Container, GuiFactory, Memento, Replacing } from '@ephox/alloy';
 import { Cell, Optional } from '@ephox/katamari';
 import { Attribute, Css, Height, SugarElement, Width } from '@ephox/sugar';
-import Rect from 'tinymce/core/api/geom/Rect';
+import Rect, { GeomRect } from 'tinymce/core/api/geom/Rect';
 import Promise from 'tinymce/core/api/util/Promise';
 import { CropRect } from './CropRect';
 
@@ -57,10 +57,10 @@ const renderImagePanel = (initialUrl: string) => {
     memContainer.getOpt(anyInSystem).each((panel) => {
       const zoom = zoomState.get();
 
-      const panelW = Width.get(panel.element());
-      const panelH = Height.get(panel.element());
-      const width = img.dom().naturalWidth * zoom;
-      const height = img.dom().naturalHeight * zoom;
+      const panelW = Width.get(panel.element);
+      const panelH = Height.get(panel.element);
+      const width = img.dom.naturalWidth * zoom;
+      const height = img.dom.naturalHeight * zoom;
       const left = Math.max(0, panelW / 2 - width / 2);
       const top = Math.max(0, panelH / 2 - height / 2);
 
@@ -74,7 +74,7 @@ const renderImagePanel = (initialUrl: string) => {
 
       Css.setAll(img, css);
       memBg.getOpt(panel).each((bg) => {
-        Css.setAll(bg.element(), css);
+        Css.setAll(bg.element, css);
       });
 
       cropRect.get().each((cRect) => {
@@ -103,10 +103,10 @@ const renderImagePanel = (initialUrl: string) => {
 
   const zoomFit = (anyInSystem: AlloyComponent, img: SugarElement): void => {
     memContainer.getOpt(anyInSystem).each((panel) => {
-      const panelW = Width.get(panel.element());
-      const panelH = Height.get(panel.element());
-      const width = img.dom().naturalWidth;
-      const height = img.dom().naturalHeight;
+      const panelW = Width.get(panel.element);
+      const panelH = Height.get(panel.element);
+      const width = img.dom.naturalWidth;
+      const height = img.dom.naturalHeight;
       const zoom = Math.min((panelW) / width, (panelH) / height);
 
       if (zoom >= 1) {
@@ -120,7 +120,7 @@ const renderImagePanel = (initialUrl: string) => {
   const updateSrc = (anyInSystem: AlloyComponent, url: string): Promise<Optional<SugarElement>> => {
     const img = SugarElement.fromTag('img');
     Attribute.set(img, 'src', url);
-    return loadImage(img.dom()).then(() => memContainer.getOpt(anyInSystem).map((panel) => {
+    return loadImage(img.dom).then(() => memContainer.getOpt(anyInSystem).map((panel) => {
       const aImg = GuiFactory.external({
         element: img
       });
@@ -131,8 +131,8 @@ const renderImagePanel = (initialUrl: string) => {
       const viewRect = {
         x: 0,
         y: 0,
-        w: img.dom().naturalWidth,
-        h: img.dom().naturalHeight
+        w: img.dom.naturalWidth,
+        h: img.dom.naturalHeight
       };
       viewRectState.set(viewRect);
       const rect = Rect.inflate(viewRect, -20, -20);
@@ -153,7 +153,7 @@ const renderImagePanel = (initialUrl: string) => {
     zoomState.set(newZoom);
 
     memContainer.getOpt(anyInSystem).each((panel) => {
-      const img = panel.components()[1].element(); // TODO: Do this better
+      const img = panel.components()[1].element; // TODO: Do this better
       repaintImg(panel, img);
     });
   };
@@ -170,7 +170,7 @@ const renderImagePanel = (initialUrl: string) => {
     });
   };
 
-  const getRect = (): any => rectState.get();
+  const getRect = (): GeomRect => rectState.get();
 
   const container = Container.sketch({
     dom: {
@@ -195,7 +195,7 @@ const renderImagePanel = (initialUrl: string) => {
           AddEventsBehaviour.config('image-panel-crop-events', [
             AlloyEvents.runOnAttached((comp) => {
               memContainer.getOpt(comp).each((container) => {
-                const el = container.element().dom();
+                const el = container.element.dom;
                 const cRect = CropRect.create(
                   { x: 10, y: 10, w: 100, h: 100 },
                   { x: 0, y: 0, w: 200, h: 200 },

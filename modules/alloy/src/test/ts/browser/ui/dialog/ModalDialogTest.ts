@@ -23,7 +23,7 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
       Tabstopping.config({ })
     ]);
 
-    const pDraghandle = ModalDialog.parts().draghandle({
+    const pDraghandle = ModalDialog.parts.draghandle({
       dom: {
         tag: 'div',
         styles: {
@@ -34,7 +34,7 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
       }
     });
 
-    const pTitle = ModalDialog.parts().title({
+    const pTitle = ModalDialog.parts.title({
       dom: {
         tag: 'div',
         innerHtml: 'Title',
@@ -44,7 +44,7 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
       components: [ ]
     });
 
-    const pClose = ModalDialog.parts().close({
+    const pClose = ModalDialog.parts.close({
       dom: {
         tag: 'div',
         innerHtml: 'X'
@@ -52,7 +52,7 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
       components: [ ]
     });
 
-    const pBody = ModalDialog.parts().body({
+    const pBody = ModalDialog.parts.body({
       dom: {
         tag: 'div',
         classes: [ 'test-dialog-body' ]
@@ -73,7 +73,7 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
       ]
     });
 
-    const pFooter = ModalDialog.parts().footer({
+    const pFooter = ModalDialog.parts.footer({
       dom: {
         tag: 'div',
         classes: [ 'test-dialog-footer' ],
@@ -106,7 +106,7 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
 
         dragBlockClass: 'drag-blocker',
         lazySink(comp) {
-          Assertions.assertEq('Checking dialog passed through to lazySink', true, Compare.eq(comp.element(), dialog.element()));
+          Assertions.assertEq('Checking dialog passed through to lazySink', true, Compare.eq(comp.element, dialog.element));
           return Result.value(sink);
         },
 
@@ -148,7 +148,7 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
     const sCheckDialogStructure = (label: string, expected: StructAssert) => Logger.t(
       label,
       Chain.asStep({ }, [
-        Chain.inject(gui.element()),
+        Chain.inject(gui.element),
         UiFinder.cFindIn('.test-dialog'),
         Chain.op((dlg) => {
           Assertions.assertStructure('Checking dialog structure', expected, dlg);
@@ -157,16 +157,16 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
     );
 
     return [
-      Logger.t('No dialog should be in DOM before it appears', UiFinder.sNotExists(gui.element(), '.test-dialog')),
-      Logger.t('No dialog blocker should be in DOM before it appears', UiFinder.sNotExists(gui.element(), '.test-dialog-blocker')),
+      Logger.t('No dialog should be in DOM before it appears', UiFinder.sNotExists(gui.element, '.test-dialog')),
+      Logger.t('No dialog blocker should be in DOM before it appears', UiFinder.sNotExists(gui.element, '.test-dialog-blocker')),
       Step.sync(() => {
         ModalDialog.show(dialog);
       }),
-      Logger.t('After showing, dialog should be in DOM', UiFinder.sExists(gui.element(), '.test-dialog')),
+      Logger.t('After showing, dialog should be in DOM', UiFinder.sExists(gui.element, '.test-dialog')),
       store.sAssertEq('Attached event should have fired', [ 'modal.attached.1', 'modal.attached.2' ]),
       store.sClear,
 
-      Logger.t('After showing, dialog blocker should be in DOM', UiFinder.sExists(gui.element(), '.test-dialog-blocker')),
+      Logger.t('After showing, dialog blocker should be in DOM', UiFinder.sExists(gui.element, '.test-dialog-blocker')),
       sCheckDialogStructure('After showing', ApproxStructure.build((s, str, arr) => s.element('div', {
         attrs: {
           'aria-modal': str.is('true'),
@@ -191,7 +191,7 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
         ]
       }))),
 
-      Logger.t('Dialog should have aria-labelledby with title id', Chain.asStep(gui.element(), [
+      Logger.t('Dialog should have aria-labelledby with title id', Chain.asStep(gui.element, [
         NamedChain.asChain([
           NamedChain.direct(NamedChain.inputName(), UiFinder.cFindIn('.test-dialog-title'), 'title'),
           NamedChain.direct(NamedChain.inputName(), UiFinder.cFindIn('.test-dialog'), 'dialog'),
@@ -206,7 +206,7 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
         ])
       ])),
 
-      Logger.t('Dialog should have aria-describedby with body describe id', Chain.asStep(gui.element(), [
+      Logger.t('Dialog should have aria-describedby with body describe id', Chain.asStep(gui.element, [
         NamedChain.asChain([
           NamedChain.direct(NamedChain.inputName(), UiFinder.cFindIn('.test-dialog-body'), 'body'),
           NamedChain.direct(NamedChain.inputName(), UiFinder.cFindIn('.test-dialog'), 'dialog'),
@@ -253,21 +253,21 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
         const body = ModalDialog.getBody(dialog);
         Assertions.assertStructure('Checking body of dialog', ApproxStructure.build((s, _str, arr) => s.element('div', {
           classes: [ arr.has('test-dialog-body') ]
-        })), body.element());
+        })), body.element);
       }),
 
       Step.sync(() => {
         const footer = ModalDialog.getFooter(dialog);
         Assertions.assertStructure('Checking footer of dialog', ApproxStructure.build((s, _str, arr) => s.element('div', {
           classes: [ arr.has('test-dialog-footer') ]
-        })), footer.element());
+        })), footer.element);
       }),
 
       Step.sync(() => {
         ModalDialog.hide(dialog);
       }),
-      Logger.t('After hiding, dialog should no longer be in DOM', UiFinder.sNotExists(gui.element(), '.test-dialog')),
-      Logger.t('After hiding, dialog blocker should no longer be in DOM', UiFinder.sNotExists(gui.element(), '.test-dialog-blocker')),
+      Logger.t('After hiding, dialog should no longer be in DOM', UiFinder.sNotExists(gui.element, '.test-dialog')),
+      Logger.t('After hiding, dialog blocker should no longer be in DOM', UiFinder.sNotExists(gui.element, '.test-dialog-blocker')),
 
       Step.sync(() => {
         ModalDialog.show(dialog);

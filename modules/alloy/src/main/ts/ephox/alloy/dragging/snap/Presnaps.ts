@@ -11,7 +11,7 @@ const parseAttrToInt = (element: SugarElement, name: string): number => {
 
 // NOTE: Moved from ego with some parameterisation
 const get = <E>(component: AlloyComponent, snapsInfo: SnapsConfig<E>): Optional<SugarPosition> => {
-  const element = component.element();
+  const element = component.element;
   const x = parseAttrToInt(element, snapsInfo.leftAttr);
   const y = parseAttrToInt(element, snapsInfo.topAttr);
   return isNaN(x) || isNaN(y) ? Optional.none() : Optional.some(
@@ -20,13 +20,13 @@ const get = <E>(component: AlloyComponent, snapsInfo: SnapsConfig<E>): Optional<
 };
 
 const set = <E>(component: AlloyComponent, snapsInfo: SnapsConfig<E>, pt: SugarPosition): void => {
-  const element = component.element();
-  Attribute.set(element, snapsInfo.leftAttr, pt.left() + 'px');
-  Attribute.set(element, snapsInfo.topAttr, pt.top() + 'px');
+  const element = component.element;
+  Attribute.set(element, snapsInfo.leftAttr, pt.left + 'px');
+  Attribute.set(element, snapsInfo.topAttr, pt.top + 'px');
 };
 
 const clear = <E>(component: AlloyComponent, snapsInfo: SnapsConfig<E>): void => {
-  const element = component.element();
+  const element = component.element;
   Attribute.remove(element, snapsInfo.leftAttr);
   Attribute.remove(element, snapsInfo.topAttr);
 };

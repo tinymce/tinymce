@@ -17,8 +17,8 @@ const isTarget = (node: SugarElement) => Arr.contains([ 'figcaption' ], SugarNod
 
 const rangeBefore = (target: SugarElement) => {
   const rng = document.createRange();
-  rng.setStartBefore(target.dom());
-  rng.setEndBefore(target.dom());
+  rng.setStartBefore(target.dom);
+  rng.setEndBefore(target.dom);
   return rng;
 };
 
@@ -60,7 +60,7 @@ const getClosestTargetBlock = (pos: CaretPosition, root: SugarElement) => {
   return PredicateFind.closest(SugarElement.fromDom(pos.container()), ElementType.isBlock, isRoot).filter(isTarget);
 };
 
-const isAtFirstOrLastLine = (root: SugarElement, forward: boolean, pos: CaretPosition) => forward ? isAtLastLine(root.dom(), pos) : isAtFirstLine(root.dom(), pos);
+const isAtFirstOrLastLine = (root: SugarElement, forward: boolean, pos: CaretPosition) => forward ? isAtLastLine(root.dom, pos) : isAtFirstLine(root.dom, pos);
 
 const moveCaretToNewEmptyLine = (editor: Editor, forward: boolean) => {
   const root = SugarElement.fromDom(editor.getBody());

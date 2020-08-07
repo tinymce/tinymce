@@ -1,10 +1,10 @@
 import { Assertions, Chain, Guard, Mouse, NamedChain, Pipeline, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Types } from '@ephox/bridge';
 import { Editor as McEditor } from '@ephox/mcagar';
 import { Css, Height, Scroll, SugarBody, SugarElement, Traverse } from '@ephox/sugar';
-import Editor from 'tinymce/core/api/Editor';
 
+import Editor from 'tinymce/core/api/Editor';
+import { Dialog } from 'tinymce/core/api/ui/Ui';
 import Theme from 'tinymce/themes/silver/Theme';
 import * as DialogUtils from '../../module/DialogUtils';
 import { cResizeToPos, cScrollRelativeEditor } from '../../module/UiChainUtils';
@@ -13,7 +13,7 @@ import { setupPageScroll } from '../../module/Utils';
 UnitTest.asynctest('WindowManager:inline-dialog Position Test', (success, failure) => {
   Theme();
 
-  const dialogSpec: Types.Dialog.DialogApi<{}> = {
+  const dialogSpec: Dialog.DialogSpec<{}> = {
     title: 'Silver Test Inline (Toolbar) Dialog',
     body: {
       type: 'panel',
@@ -33,8 +33,8 @@ UnitTest.asynctest('WindowManager:inline-dialog Position Test', (success, failur
     Chain.op((dialog: SugarElement<HTMLElement>) => {
       const diff = 5;
       const position = Css.get(dialog, 'position');
-      const top = dialog.dom().offsetTop;
-      const left = dialog.dom().offsetLeft;
+      const top = dialog.dom.offsetTop;
+      const left = dialog.dom.offsetLeft;
       Assertions.assertEq(`Dialog position (${position}) should be ${pos}`, pos, position);
       Assertions.assertEq(`Dialog top position (${top}px) should be ~${y}px`, true, Math.abs(top - y) < diff);
       Assertions.assertEq(`Dialog left position (${left}px) should be ~${x}px`, true, Math.abs(left - x) < diff);

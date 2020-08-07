@@ -16,10 +16,10 @@ const addToEditor = (editor: Editor) => {
       predicate: (node) => {
         const sugarNode = SugarElement.fromDom(node);
         const textBlockElementsMap = editor.schema.getTextBlockElements();
-        const isRoot = (elem) => elem.dom() === editor.getBody();
+        const isRoot = (elem) => elem.dom === editor.getBody();
         return SelectorFind.closest(sugarNode, 'table', isRoot).fold(
           () => PredicateFind.closest(sugarNode, (elem) =>
-            SugarNode.name(elem) in textBlockElementsMap && editor.dom.isEmpty(elem.dom()), isRoot).isSome(),
+            SugarNode.name(elem) in textBlockElementsMap && editor.dom.isEmpty(elem.dom), isRoot).isSome(),
           () => false
         );
       },

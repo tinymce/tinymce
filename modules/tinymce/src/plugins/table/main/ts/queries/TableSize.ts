@@ -15,7 +15,7 @@ export const get = (editor: Editor, table: SugarElement<HTMLTableElement>) => {
   // Note: We can't enforce none (responsive), as if someone manually resizes a table
   // then it must switch to either pixel (fixed) or percentage (relative) sizing
   if (isPercentagesForced(editor)) {
-    const width = Util.getRawWidth(editor, table.dom())
+    const width = Util.getRawWidth(editor, table.dom)
       .filter(Util.isPercentage)
       .getOrThunk(() => Sizes.getPercentTableWidth(table));
     return TableSize.percentageSize(width, table);

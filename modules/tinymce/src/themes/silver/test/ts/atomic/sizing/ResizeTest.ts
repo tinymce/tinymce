@@ -1,6 +1,8 @@
 import { Assertions, Log, Logger, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
+import { SugarPosition } from '@ephox/sugar';
+import Editor from 'tinymce/core/api/Editor';
 import { getDimensions, ResizeTypes } from 'tinymce/themes/silver/ui/sizing/Resize';
 import * as Utils from 'tinymce/themes/silver/ui/sizing/Utils';
 
@@ -17,7 +19,7 @@ const mockEditor = (containerHeight, contentAreaHeight) => {
     getParam: (param, _fallback, _type) => settings[param],
     getContainer: () => ({ offsetHeight: containerHeight }),
     getContentAreaContainer: () => ({ offsetHeight: contentAreaHeight })
-  };
+  } as Editor;
 };
 
 UnitTest.asynctest('Editor resizing tests', function (success, failure) {
@@ -30,7 +32,7 @@ UnitTest.asynctest('Editor resizing tests', function (success, failure) {
     const containerHeight = 500; // mid way between min and max in mockEditor
     const chromeHeight = 100; // just need something smaller
     const editor = mockEditor(containerHeight, containerHeight - chromeHeight);
-    const deltas = { top: () => topDelta, left: () => leftDelta };
+    const deltas = SugarPosition(leftDelta, topDelta);
     const actual = getDimensions(editor, deltas, resizeType, containerHeight, width);
     Assertions.assertEq('Dimensions should match expected', expected, actual);
   }));

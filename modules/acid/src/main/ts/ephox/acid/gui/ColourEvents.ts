@@ -6,11 +6,11 @@ const sliderUpdate = Id.generate('slider-update');
 const paletteUpdate = Id.generate('palette-update');
 
 export interface SliderUpdateEvent extends CustomEvent {
-  value: () => SliderTypes.SliderValueY;
+  readonly value: SliderTypes.SliderValueY;
 }
 
 export interface PaletteUpdateEvent extends CustomEvent {
-  value: () => SliderTypes.SliderValueXY;
+  readonly value: SliderTypes.SliderValueXY;
 }
 
 export {

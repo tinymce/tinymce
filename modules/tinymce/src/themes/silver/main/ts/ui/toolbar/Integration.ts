@@ -29,7 +29,7 @@ export const handleError = (error) => {
   console.error(ValueSchema.formatError(error));
 };
 
-export type ToolbarButton = Toolbar.ToolbarButtonApi | Toolbar.ToolbarMenuButtonApi | Toolbar.ToolbarToggleButtonApi | Toolbar.ToolbarSplitButtonApi;
+export type ToolbarButton = Toolbar.ToolbarButtonSpec | Toolbar.ToolbarMenuButtonSpec | Toolbar.ToolbarToggleButtonSpec | Toolbar.ToolbarSplitButtonSpec;
 
 interface Extras {
   backstage: UiFactoryBackstage;
@@ -82,7 +82,7 @@ const types = {
     )
   ),
 
-  menubutton: renderFromBridge<Toolbar.ToolbarMenuButtonApi, Toolbar.ToolbarMenuButton>(
+  menubutton: renderFromBridge<Toolbar.ToolbarMenuButtonSpec, Toolbar.ToolbarMenuButton>(
     Toolbar.createMenuButton,
     (s: Toolbar.ToolbarMenuButton, extras) => renderMenuButton(
       s,

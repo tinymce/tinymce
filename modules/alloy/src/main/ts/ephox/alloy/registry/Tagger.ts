@@ -14,14 +14,14 @@ const write = (label: string, elem: SugarElement): string => {
 };
 
 const writeOnly = (elem: SugarElement, uid: string | null) => {
-  Object.defineProperty(elem.dom(), idAttr, {
+  Object.defineProperty(elem.dom, idAttr, {
     value: uid,
     writable: true
   });
 };
 
 const read = (elem: SugarElement): Optional<string> => {
-  const id = SugarNode.isElement(elem) ? (elem.dom() as any)[idAttr] : null;
+  const id = SugarNode.isElement(elem) ? (elem.dom as any)[idAttr] : null;
   return Optional.from(id);
 };
 

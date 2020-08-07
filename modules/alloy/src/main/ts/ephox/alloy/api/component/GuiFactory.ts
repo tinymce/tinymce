@@ -68,16 +68,16 @@ const external = (spec: ExternalElement): PremadeSpec => {
   const me: AlloyComponent = {
     getSystem: systemApi.get,
     config: Optional.none,
-    hasConfigured: Fun.constant(false),
+    hasConfigured: Fun.never,
     connect,
     disconnect,
     getApis: <A>(): A => ({ } as any),
-    element: Fun.constant(extSpec.element),
-    spec: Fun.constant(spec),
+    element: extSpec.element,
+    spec,
     readState: Fun.constant('No state'),
     syncComponents: Fun.noop,
     components: Fun.constant([ ]),
-    events: Fun.constant({ })
+    events: { }
   };
   return GuiTypes.premade(me);
 };

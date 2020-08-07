@@ -92,7 +92,7 @@ const makeEventLogger = (eventName: string, initialTarget: SugarElement): Debugg
       console.log(eventName, {
         event: eventName,
         time: finishTime - startTime,
-        target: initialTarget.dom(),
+        target: initialTarget.dom,
         sequence: Arr.map(sequence, (s) => {
           if (!Arr.contains([ 'cut', 'stopped', 'response' ], s.outcome)) { return s.outcome; } else { return '{' + s.purpose + '} ' + s.outcome + ' at (' + AlloyLogger.element(s.target) + ')'; }
         })
@@ -162,11 +162,11 @@ const inspectorInfo = (comp: AlloyComponent) => {
 
     return {
       '(original.spec)': cSpec,
-      '(dom.ref)': c.element().dom(),
-      '(element)': AlloyLogger.element(c.element()),
+      '(dom.ref)': c.element.dom,
+      '(element)': AlloyLogger.element(c.element),
       '(initComponents)': Arr.map(cSpec.components !== undefined ? cSpec.components : [ ], go),
       '(components)': Arr.map(c.components(), go),
-      '(bound.events)': Obj.mapToArray(c.events(), (_v, k) => [ k ]).join(', '),
+      '(bound.events)': Obj.mapToArray(c.events, (_v, k) => [ k ]).join(', '),
       '(behaviours)': cSpec.behaviours !== undefined ? Obj.map(cSpec.behaviours, (v, k) => v === undefined ? '--revoked--' : {
         'config': v.configAsRaw(),
         'original-config': v.initialConfig,
@@ -199,7 +199,7 @@ const getOrInitConnection = () => {
         const connections: string[] = Obj.keys(systems);
         return Arr.findMap(connections, (conn) => {
           const connGui = systems[conn];
-          return connGui.getByUid(uid).toOptional().map((comp): LookupInfo => Objects.wrap(AlloyLogger.element(comp.element()), inspectorInfo(comp)));
+          return connGui.getByUid(uid).toOptional().map((comp): LookupInfo => Objects.wrap(AlloyLogger.element(comp.element), inspectorInfo(comp)));
         }).orThunk(() => Optional.some<LookupInfo>({
           error: 'Systems (' + connections.join(', ') + ') did not contain uid: ' + uid
         }));

@@ -22,7 +22,7 @@ const skinSheetsTest = (extraSettings: Record<string, any>) => (success, failure
         Assert.eq(
           'There should be a skin stylesheet in the ShadowRoot',
           true,
-          Arr.exists(shadowRoot.dom().styleSheets, isSkin)
+          Arr.exists(shadowRoot.dom.styleSheets, isSkin)
         );
       })
     ], onSuccess, onFailure);
@@ -44,7 +44,7 @@ const multipleStyleSheetTest = (extraSettings: Record<string, any>) => (success,
   Theme();
   const shadowHost = SugarElement.fromTag('div', document);
   Insert.append(SugarBody.body(), shadowHost);
-  const sr = SugarElement.fromDom(shadowHost.dom().attachShadow({ mode: 'open' }));
+  const sr = SugarElement.fromDom(shadowHost.dom.attachShadow({ mode: 'open' }));
   const mkEditor = () => {
     const editorDiv = SugarElement.fromTag('div', document);
     Insert.append(sr, editorDiv);
@@ -58,7 +58,7 @@ const multipleStyleSheetTest = (extraSettings: Record<string, any>) => (success,
       Assert.eq(
         'There should only be 1 skin stylesheet in the ShadowRoot',
         1,
-        Arr.filter(sr.dom().styleSheets, isSkin).length
+        Arr.filter(sr.dom.styleSheets, isSkin).length
       );
     }),
     NamedChain.read('editor1', McEditor.cRemove),

@@ -126,14 +126,14 @@ const takeoverDropup = (dropup: SugarElement<Element>): { restore: () => void } 
 const deriveViewportHeight = (viewport: SugarElement<Element>, toolbarHeight: number, dropupHeight: number) => {
   // Note, Mike thinks this value changes when the URL address bar grows and shrinks. If this value is too high
   // the main problem is that scrolling into the greenzone may not scroll into an area that is viewable. Investigate.
-  const outerWindow = Traverse.owner(viewport).dom().defaultView;
+  const outerWindow = Traverse.owner(viewport).dom.defaultView;
   const winH = outerWindow.innerHeight;
   Attribute.set(viewport, windowSizeData, winH + 'px');
   return winH - toolbarHeight - dropupHeight;
 };
 
 const takeover = (viewport: SugarElement<HTMLElement>, contentBody: SugarElement<Node>, toolbar: SugarElement<HTMLElement>, dropup: SugarElement<HTMLElement>) => {
-  const outerWindow = Traverse.owner(viewport).dom().defaultView;
+  const outerWindow = Traverse.owner(viewport).dom.defaultView;
   const toolbarSetup = takeoverToolbar(toolbar);
   const toolbarHeight = Height.get(toolbar);
   const dropupHeight = Height.get(dropup);

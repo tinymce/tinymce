@@ -1,5 +1,5 @@
 import { assert } from '@ephox/bedrock-client';
-import { Arr, Fun, Optional, Optionals } from '@ephox/katamari';
+import { Arr, Optional, Optionals } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Attribute, Css, Hierarchy, Html, Insert, Remove, SelectorFilter, SugarBody, SugarElement, Traverse } from '@ephox/sugar';
 import { Generators, SimpleGenerators } from 'ephox/snooker/api/Generators';
@@ -33,10 +33,10 @@ const checkOld = (
   Insert.append(SugarBody.body(), table);
   const wire = ResizeWire.only(SugarBody.body());
   const result = operation(wire, table, {
-    element: Fun.constant(Hierarchy.follow(table, [ section, row, column, 0 ]).getOrDie())
+    element: Hierarchy.follow(table, [ section, row, column, 0 ]).getOrDie()
   }, Bridge.generators, direction);
 
-  const actualPath = Hierarchy.path(table, result.getOrDie().cursor().getOrDie()).getOrDie('could not find path');
+  const actualPath = Hierarchy.path(table, result.getOrDie().cursor.getOrDie()).getOrDie('could not find path');
   assert.eq([ expCell.section, expCell.row, expCell.column ], actualPath);
 
   // Presence.assertHas(expected, table, 'checking the operation on table: ' + Html.getOuter(table));
@@ -70,10 +70,10 @@ const checkPaste = (
     wire,
     table,
     {
-      selection: Fun.constant([ Hierarchy.follow(table, [ section, row, column, 0 ]).getOrDie() ]),
-      clipboard: Fun.constant(SelectorFilter.descendants(pasteTable, 'tr')),
+      selection: [ Hierarchy.follow(table, [ section, row, column, 0 ]).getOrDie() ],
+      clipboard: SelectorFilter.descendants(pasteTable, 'tr'),
       // Impossible type! This might work in some restricted circumstances.
-      generators: Fun.constant(Bridge.generators as SimpleGenerators)
+      generators: Bridge.generators as SimpleGenerators
     },
     Bridge.generators,
     direction
@@ -99,10 +99,10 @@ const checkStructure = (
   Insert.append(SugarBody.body(), table);
   const wire = ResizeWire.only(SugarBody.body());
   const result = operation(wire, table, {
-    element: Fun.constant(Hierarchy.follow(table, [ section, row, column, 0 ]).getOrDie())
+    element: Hierarchy.follow(table, [ section, row, column, 0 ]).getOrDie()
   }, Bridge.generators, direction);
 
-  const actualPath = Hierarchy.path(table, result.getOrDie().cursor().getOrDie()).getOrDie('could not find path');
+  const actualPath = Hierarchy.path(table, result.getOrDie().cursor.getOrDie()).getOrDie('could not find path');
   assert.eq([ expCell.section, expCell.row, expCell.column ], actualPath);
 
   // Presence.assertHas(expected, table, 'checking the operation on table: ' + Html.getOuter(table));
@@ -133,14 +133,14 @@ const checkDelete = (
   );
 
   const result = operation(wire, table, {
-    selection: Fun.constant(cellz)
+    selection: cellz
   }, Bridge.generators, direction);
 
   // The operation might delete the whole table
   optExpCell.each((expCell) => {
     const actualPath = Hierarchy.path(
       table,
-      result.getOrDie().cursor().getOrDie('could not find cursor')
+      result.getOrDie().cursor.getOrDie('could not find cursor')
     ).getOrDie('could not find path');
     assert.eq([ expCell.section, expCell.row, expCell.column ], actualPath);
   });
@@ -217,7 +217,7 @@ const checkUnmerge = (
 
   const unmergable = Optional.some(Optionals.cat(unmergables));
 
-  TableOperations.unmergeCells(wire, table, { unmergable: Fun.constant(unmergable) }, Bridge.generators, direction);
+  TableOperations.unmergeCells(wire, table, { unmergable }, Bridge.generators, direction);
   // Presence.assertHas(expected, table, 'checking the operation on table: ' + Html.getOuter(table));
 
   // Let's get rid of size information.

@@ -28,51 +28,51 @@ UnitTest.test('BounderToolbuttonTest', () => {
   const chameleonBubble = (width: number): Bubble => {
     // no it's not a joke, this is a copy of ephox.chameleon.popup.Bubble
     const northeast = (): BubbleInstance => ({
-      offset: () => SugarPosition(-1, 1),
-      classesOn: () => [ ],
-      classesOff: () => [ ]
+      offset: SugarPosition(-1, 1),
+      classesOn: [ ],
+      classesOff: [ ]
     });
 
     const northwest = (): BubbleInstance => ({
-      offset: () => SugarPosition(width - 1, 1),
-      classesOn: () => [ ],
-      classesOff: () => [ ]
+      offset: SugarPosition(width - 1, 1),
+      classesOn: [ ],
+      classesOff: [ ]
     });
 
     const southeast = (): BubbleInstance => ({
-      offset: () => SugarPosition(-1, -2),
-      classesOn: () => [ ],
-      classesOff: () => [ ]
+      offset: SugarPosition(-1, -2),
+      classesOn: [ ],
+      classesOff: [ ]
     });
 
     const southwest = (): BubbleInstance => ({
-      offset: () => SugarPosition(width - 1, -2),
-      classesOn: () => [ ],
-      classesOff: () => [ ]
+      offset: SugarPosition(width - 1, -2),
+      classesOn: [ ],
+      classesOff: [ ]
     });
 
     const south = (): BubbleInstance => ({
-      offset: () => SugarPosition(-1, 1),
-      classesOn: () => [ ],
-      classesOff: () => [ ]
+      offset: SugarPosition(-1, 1),
+      classesOn: [ ],
+      classesOff: [ ]
     });
 
     const north = (): BubbleInstance => ({
-      offset: () => SugarPosition(-1, 1),
-      classesOn: () => [ ],
-      classesOff: () => [ ]
+      offset: SugarPosition(-1, 1),
+      classesOn: [ ],
+      classesOff: [ ]
     });
 
     const east = (): BubbleInstance => ({
-      offset: () => SugarPosition(-1, 1),
-      classesOn: () => [ ],
-      classesOff: () => [ ]
+      offset: SugarPosition(-1, 1),
+      classesOn: [ ],
+      classesOff: [ ]
     });
 
     const west = (): BubbleInstance => ({
-      offset: () => SugarPosition(-1, 1),
-      classesOn: () => [ ],
-      classesOff: () => [ ]
+      offset: SugarPosition(-1, 1),
+      classesOn: [ ],
+      classesOff: [ ]
     });
 
     return {

@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Fun, Obj, Optional } from '@ephox/katamari';
+import { Arr, Fun, Obj, Optional, Strings } from '@ephox/katamari';
 import { Attribute, Insert, Remove, SugarElement, SugarNode } from '@ephox/sugar';
 import DomTreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
@@ -175,7 +175,7 @@ const cleanFormatNode = (editor: Editor, caretContainer: Node, formatNode: Node,
   const dom = editor.dom;
 
   // Find all formats present on the format node
-  const validFormats = Arr.filter(Obj.keys(formatter.get()), (formatName) => formatName !== 'removeformat' && formatName !== name);
+  const validFormats = Arr.filter(Obj.keys(formatter.get()), (formatName) => formatName !== name && !Strings.contains(formatName, 'removeformat'));
   const matchedFormats = MatchFormat.matchAllOnNode(editor, formatNode, validFormats);
   // Filter out any matched formats that are 'visually' equivalent to the 'name' format since they are not unique formats on the node
   const uniqueFormats = Arr.filter(matchedFormats, (fmtName) => !FormatUtils.areSimilarFormats(editor, fmtName, name));
@@ -229,7 +229,7 @@ const applyCaretFormat = function (editor: Editor, name: string, vars: FormatVar
   } else {
     if (!caretContainer || textNode.nodeValue !== ZWSP) {
       // Need to import the node into the document on IE or we get a lovely WrongDocument exception
-      caretContainer = importNode(editor.getDoc(), createCaretContainer(true).dom());
+      caretContainer = importNode(editor.getDoc(), createCaretContainer(true).dom);
       textNode = caretContainer.firstChild;
 
       selectionRng.insertNode(caretContainer);
@@ -300,7 +300,7 @@ const removeCaretFormat = function (editor: Editor, name: string, vars: FormatVa
     selection.moveToBookmark(bookmark);
   } else {
     const caretContainer = getParentCaretContainer(editor.getBody(), formatNode);
-    const newCaretContainer = createCaretContainer(false).dom();
+    const newCaretContainer = createCaretContainer(false).dom;
 
     insertCaretContainerNode(editor, newCaretContainer, caretContainer !== null ? caretContainer : formatNode);
 
@@ -340,7 +340,7 @@ const setup = function (editor: Editor) {
 
 const replaceWithCaretFormat = function (targetNode: Node, formatNodes: Node[]) {
   const caretContainer = createCaretContainer(false);
-  const innerMost = insertFormatNodesIntoCaretContainer(formatNodes, caretContainer.dom());
+  const innerMost = insertFormatNodesIntoCaretContainer(formatNodes, caretContainer.dom);
   Insert.before(SugarElement.fromDom(targetNode), caretContainer);
   Remove.remove(SugarElement.fromDom(targetNode));
 
@@ -349,11 +349,11 @@ const replaceWithCaretFormat = function (targetNode: Node, formatNodes: Node[]) 
 
 const isFormatElement = function (editor: Editor, element: SugarElement) {
   const inlineElements = editor.schema.getTextInlineElements();
-  return inlineElements.hasOwnProperty(SugarNode.name(element)) && !isCaretNode(element.dom()) && !NodeType.isBogus(element.dom());
+  return inlineElements.hasOwnProperty(SugarNode.name(element)) && !isCaretNode(element.dom) && !NodeType.isBogus(element.dom);
 };
 
 const isEmptyCaretFormatElement = function (element: SugarElement) {
-  return isCaretNode(element.dom()) && isCaretContainerEmpty(element.dom());
+  return isCaretNode(element.dom) && isCaretContainerEmpty(element.dom);
 };
 
 export {

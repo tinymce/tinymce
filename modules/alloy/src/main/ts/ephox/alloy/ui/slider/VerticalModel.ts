@@ -1,4 +1,4 @@
-import { Fun, Optional } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { Css, Height } from '@ephox/sugar';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
@@ -17,7 +17,7 @@ const fireSliderChange = (spectrum: AlloyComponent, value: SliderValueY): void =
 };
 
 const sliderValue = (y: number): SliderValueY => ({
-  y: Fun.constant(y)
+  y
 });
 
 // find the value of the y offset of where the mouse was clicked from the model.
@@ -63,7 +63,7 @@ const setToMax = (spectrum: AlloyComponent, detail: VerticalSliderDetail): void 
 // move in a direction by step size. Fire change at the end
 const moveBy = (direction: number, spectrum: AlloyComponent, detail: VerticalSliderDetail): Optional<number> => {
   const f = (direction > 0) ? SliderModel.increaseBy : SliderModel.reduceBy;
-  const yValue = f(currentValue(detail).y(), minY(detail), maxY(detail), step(detail));
+  const yValue = f(currentValue(detail).y, minY(detail), maxY(detail), step(detail));
   fireSliderChange(spectrum, sliderValue(yValue));
   return Optional.some(yValue);
 };
@@ -74,7 +74,7 @@ const handleMovement = (direction: number) => (spectrum: AlloyComponent, detail:
 const getValueFromEvent = (simulatedEvent: NativeSimulatedEvent): Optional<number> => {
   const pos = ModelCommon.getEventSource(simulatedEvent);
   return pos.map(function (p) {
-    return p.top();
+    return p.top;
   });
 };
 
@@ -116,13 +116,13 @@ const setPositionFromValue = (slider: AlloyComponent, thumb: AlloyComponent, det
   const pos = findPositionOfValue(
     slider,
     edges.getSpectrum(slider),
-    value.y(),
+    value.y,
     edges.getTopEdge(slider),
     edges.getBottomEdge(slider),
     detail
   );
-  const thumbRadius = Height.get(thumb.element()) / 2;
-  Css.set(thumb.element(), 'top', (pos - thumbRadius) + 'px');
+  const thumbRadius = Height.get(thumb.element) / 2;
+  Css.set(thumb.element, 'top', (pos - thumbRadius) + 'px');
 };
 
 // Key Events

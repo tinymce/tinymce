@@ -1,6 +1,7 @@
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Fun, Optional, Result } from '@ephox/katamari';
-import { dialogButtonFields, DialogNormalButton, DialogNormalButtonApi } from './Dialog';
+import { dialogButtonFields } from './Dialog';
+import { DialogFooterNormalButton, DialogFooterNormalButtonSpec } from './DialogFooterButton';
 
 export interface UrlDialogInstanceApi {
   block: (msg: string) => void;
@@ -26,21 +27,21 @@ export type UrlDialogCancelHandler = (api: UrlDialogInstanceApi) => void;
 export type UrlDialogMessageHandler = (api: UrlDialogInstanceApi, message: UrlDialogMessage) => void;
 
 // Allow the same button structure as dialogs, but remove the ability to have submit buttons
-export interface UrlDialogButtonApi extends DialogNormalButtonApi {
+export interface UrlDialogFooterButtonSpec extends DialogFooterNormalButtonSpec {
   type: 'cancel' | 'custom';
 }
 
 // Allow the same button structure as dialogs, but remove the ability to have submit buttons
-export interface UrlDialogButton extends DialogNormalButton {
+export interface UrlDialogFooterButton extends DialogFooterNormalButton {
   type: 'cancel' | 'custom';
 }
 
-export interface UrlDialogApi {
+export interface UrlDialogSpec {
   title: string;
   url: string;
   height?: number;
   width?: number;
-  buttons?: UrlDialogButtonApi[];
+  buttons?: UrlDialogFooterButtonSpec[];
 
   // Gets fired when a custom button is clicked
   onAction?: UrlDialogActionHandler;
@@ -60,7 +61,7 @@ export interface UrlDialog {
   url: string;
   height: Optional<number>;
   width: Optional<number>;
-  buttons: Optional<UrlDialogButton[]>;
+  buttons: Optional<UrlDialogFooterButton[]>;
 
   onAction: UrlDialogActionHandler;
   onClose: UrlDialogCloseHandler;
@@ -85,4 +86,5 @@ export const urlDialogSchema = ValueSchema.objOf([
   FieldSchema.defaultedFunction('onMessage', Fun.noop)
 ]);
 
-export const createUrlDialog = (spec: UrlDialogApi): Result<UrlDialog, ValueSchema.SchemaError<any>> => ValueSchema.asRaw('dialog', urlDialogSchema, spec);
+export const createUrlDialog = (spec: UrlDialogSpec): Result<UrlDialog, ValueSchema.SchemaError<any>> =>
+  ValueSchema.asRaw('dialog', urlDialogSchema, spec);

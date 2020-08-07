@@ -27,12 +27,12 @@ const hasOnlyOneChild = (elm: SugarElement) => Traverse.children(elm).length ===
 
 const deleteLastPosition = (forward: boolean, editor: Editor, target: SugarElement, parentInlines: SugarElement[]) => {
   const isFormatElement = Fun.curry(CaretFormat.isFormatElement, editor);
-  const formatNodes = Arr.map(Arr.filter(parentInlines, isFormatElement), (elm) => elm.dom());
+  const formatNodes = Arr.map(Arr.filter(parentInlines, isFormatElement), (elm) => elm.dom);
 
   if (formatNodes.length === 0) {
     DeleteElement.deleteElement(editor, forward, target);
   } else {
-    const pos = CaretFormat.replaceWithCaretFormat(target.dom(), formatNodes);
+    const pos = CaretFormat.replaceWithCaretFormat(target.dom, formatNodes);
     editor.selection.setRng(pos.toRange());
   }
 };
@@ -44,7 +44,7 @@ const deleteCaret = (editor: Editor, forward: boolean) => {
 
   return Arr.last(parentInlines).exists((target) => {
     const fromPos = CaretPosition.fromRangeStart(editor.selection.getRng());
-    if (DeleteUtils.willDeleteLastPositionInElement(forward, fromPos, target.dom()) && !CaretFormat.isEmptyCaretFormatElement(target)) {
+    if (DeleteUtils.willDeleteLastPositionInElement(forward, fromPos, target.dom) && !CaretFormat.isEmptyCaretFormatElement(target)) {
       deleteLastPosition(forward, editor, target, parentInlines);
       return true;
     } else {

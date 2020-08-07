@@ -28,7 +28,7 @@ const insertTextAtPosition = (text: string, pos: CaretPosition): Optional<CaretP
         Insert.before(elm, textNode);
       }
 
-      return CaretPosition(textNode.dom(), text.length);
+      return CaretPosition(textNode.dom, text.length);
     });
   }
 };

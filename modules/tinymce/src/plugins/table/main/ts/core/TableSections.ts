@@ -60,7 +60,7 @@ const switchRowSection = (dom: DOMUtils, rowElm: HTMLElement, newSectionName: st
       if (newSectionName === 'thead') {
         Arr.last(SelectorFilter.children(SugarElement.fromDom(tableElm), 'caption,colgroup')).fold(
           () => tableElm.insertBefore(sectionElm, firstTableChild),
-          (c) => dom.insertAfter(sectionElm, c.dom())
+          (c) => dom.insertAfter(sectionElm, c.dom)
         );
       } else {
         tableElm.appendChild(sectionElm);
@@ -91,7 +91,7 @@ const switchSectionType = (editor: Editor, rowElm: HTMLTableRowElement, newType:
     // default if all else fails is thead > tr > tds aka 'section' mode
     const allTableRows = TableLookup.table(SugarElement.fromDom(rowElm.cells[0]))
       .map((table) => TableLookup.rows(table)).getOr([]);
-    return Arr.findMap<SugarElement<HTMLTableRowElement>, HeaderRowConfiguration>(allTableRows, (row) => detectHeaderRow(editor, row.dom())).map((detectedType) => {
+    return Arr.findMap<SugarElement<HTMLTableRowElement>, HeaderRowConfiguration>(allTableRows, (row) => detectHeaderRow(editor, row.dom)).map((detectedType) => {
       if (detectedType.thead && detectedType.ths) {
         return 'sectionCells';
       } else {

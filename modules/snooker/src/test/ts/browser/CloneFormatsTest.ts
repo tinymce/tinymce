@@ -14,9 +14,9 @@ UnitTest.test('CloneFormatsTest', function () {
   const cellContent = SugarElement.fromHtml('<strong contenteditable="false"><em>stuff</em></strong>');
   Insert.append(cellElement, cellContent);
   const cell: CellSpan = {
-    element: Fun.constant(cellElement),
-    colspan: Fun.constant(1),
-    rowspan: Fun.constant(1)
+    element: cellElement,
+    colspan: 1,
+    rowspan: 1
   };
 
   const clonedCell = cloneTableFill.cell(cell);

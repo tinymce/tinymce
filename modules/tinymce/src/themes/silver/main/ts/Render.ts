@@ -136,7 +136,7 @@ const setup = (editor: Editor): RenderInfo => {
 
   const backstage: Backstage.UiFactoryBackstage = Backstage.init(sink, editor, lazyAnchorBar);
 
-  const partMenubar: AlloySpec = OuterContainer.parts().menubar({
+  const partMenubar: AlloySpec = OuterContainer.parts.menubar({
     dom: {
       tag: 'div',
       classes: [ 'tox-menubar' ]
@@ -149,7 +149,7 @@ const setup = (editor: Editor): RenderInfo => {
 
   const toolbarMode = Settings.getToolbarMode(editor);
 
-  const partToolbar: AlloySpec = OuterContainer.parts().toolbar({
+  const partToolbar: AlloySpec = OuterContainer.parts.toolbar({
     dom: {
       tag: 'div',
       classes: [ 'tox-toolbar' ]
@@ -165,7 +165,7 @@ const setup = (editor: Editor): RenderInfo => {
     ...verticalDirAttributes
   });
 
-  const partMultipleToolbar: AlloySpec = OuterContainer.parts()['multiple-toolbar']({
+  const partMultipleToolbar: AlloySpec = OuterContainer.parts['multiple-toolbar']({
     dom: {
       tag: 'div',
       classes: [ 'tox-toolbar-overlord' ]
@@ -177,21 +177,21 @@ const setup = (editor: Editor): RenderInfo => {
     type: toolbarMode
   });
 
-  const partSocket: AlloySpec = OuterContainer.parts().socket({
+  const partSocket: AlloySpec = OuterContainer.parts.socket({
     dom: {
       tag: 'div',
       classes: [ 'tox-edit-area' ]
     }
   });
 
-  const partSidebar: AlloySpec = OuterContainer.parts().sidebar({
+  const partSidebar: AlloySpec = OuterContainer.parts.sidebar({
     dom: {
       tag: 'div',
       classes: [ 'tox-sidebar' ]
     }
   });
 
-  const partThrobber: AlloySpec = OuterContainer.parts().throbber({
+  const partThrobber: AlloySpec = OuterContainer.parts.throbber({
     dom: {
       tag: 'div',
       classes: [ 'tox-throbber' ]
@@ -230,7 +230,7 @@ const setup = (editor: Editor): RenderInfo => {
     }
   };
 
-  const partHeader = OuterContainer.parts().header({
+  const partHeader = OuterContainer.parts.header({
     dom: {
       tag: 'div',
       classes: [ 'tox-editor-header' ],
@@ -341,14 +341,14 @@ const setup = (editor: Editor): RenderInfo => {
     if (!editor.inline) {
       // Update the width
       if (Css.isValidValue('div', 'width', parsedWidth)) {
-        Css.set(outerContainer.element(), 'width', parsedWidth);
+        Css.set(outerContainer.element, 'width', parsedWidth);
       }
 
       // Update the height
       if (Css.isValidValue('div', 'height', parsedHeight)) {
-        Css.set(outerContainer.element(), 'height', parsedHeight);
+        Css.set(outerContainer.element, 'height', parsedHeight);
       } else {
-        Css.set(outerContainer.element(), 'height', '200px');
+        Css.set(outerContainer.element, 'height', '200px');
       }
     }
 

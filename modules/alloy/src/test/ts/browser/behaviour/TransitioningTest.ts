@@ -44,7 +44,7 @@ UnitTest.asynctest('TransitioningTest', (success, failure) => {
       '[data-transitioning-state="gamma"], div[data-transitioning-state="beta"]:not(.transitioning), div[data-transitioning-destination="beta"] { opacity: 0.2 }'
     ]),
     Step.sync(() => {
-      Css.reflow(component.element());
+      Css.reflow(component.element);
     }),
     Assertions.sAssertStructure(
       'Checking initial state',
@@ -54,7 +54,7 @@ UnitTest.asynctest('TransitioningTest', (success, failure) => {
           'data-transitioning-destination': str.none()
         }
       })),
-      component.element()
+      component.element
     ),
     store.sAssertEq('Checking initial state is empty', [ ]),
     Step.sync(() => {
@@ -71,7 +71,7 @@ UnitTest.asynctest('TransitioningTest', (success, failure) => {
           'data-transitioning-destination': str.none()
         }
       })),
-      component.element()
+      component.element
     ),
     store.sClear,
     Step.wait(0),
@@ -86,7 +86,7 @@ UnitTest.asynctest('TransitioningTest', (success, failure) => {
           'data-transitioning-destination': str.is('beta')
         }
       })),
-      component.element()
+      component.element
     ),
     Waiter.sTryUntil(
       'Waiting until state gets to beta',

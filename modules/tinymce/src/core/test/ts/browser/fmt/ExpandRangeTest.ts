@@ -22,8 +22,8 @@ UnitTest.asynctest('browser.tinymce.core.fmt.ExpandRangeTest', function (success
       const endContainer = Hierarchy.follow(SugarElement.fromDom(editor.getBody()), endPath).getOrDie();
 
       const rng = editor.dom.createRng();
-      rng.setStart(startContainer.dom(), startOffset);
-      rng.setEnd(endContainer.dom(), endOffset);
+      rng.setStart(startContainer.dom, startOffset);
+      rng.setEnd(endContainer.dom, endOffset);
 
       return ExpandRange.expandRng(editor, rng, format, excludeTrailingSpaces);
     });

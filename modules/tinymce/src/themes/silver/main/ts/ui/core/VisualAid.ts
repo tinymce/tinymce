@@ -6,7 +6,7 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
-import { Menu } from '@ephox/bridge';
+import { Menu } from 'tinymce/core/api/ui/Ui';
 
 const toggleVisualAidState = (api: Menu.ToggleMenuItemInstanceApi, editor: Editor) => {
   api.setActive(editor.hasVisual);

@@ -1,4 +1,4 @@
-import { Fun, Obj, Optional } from '@ephox/katamari';
+import { Obj, Optional } from '@ephox/katamari';
 import { SugarElement, TransformFind } from '@ephox/sugar';
 
 import * as Tagger from '../registry/Tagger';
@@ -15,23 +15,23 @@ const eventHandler = (element: SugarElement, descHandler: CurriedHandler): Eleme
 });
 
 export interface CurriedHandler {
-  readonly purpose: () => string;
+  readonly purpose: string;
   readonly cHandler: Function;
 }
 
 export interface UncurriedHandler {
-  readonly purpose: () => string;
+  readonly purpose: string;
   readonly handler: Function;
 }
 
 export interface UidAndHandler {
-  readonly id: () => string;
-  readonly descHandler: () => CurriedHandler;
+  readonly id: string;
+  readonly descHandler: CurriedHandler;
 }
 
 const broadcastHandler = (id: string, handler: CurriedHandler): UidAndHandler => ({
-  id: Fun.constant(id),
-  descHandler: Fun.constant(handler)
+  id,
+  descHandler: handler
 });
 
 export type EventName = string;

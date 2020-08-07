@@ -47,7 +47,7 @@ const accountableKeyboardHeight = (outerWindow: Window): number => {
 };
 
 const getGreenzone = (socket: SugarElement<HTMLElement>, dropup: SugarElement<HTMLElement>): number => {
-  const outerWindow = Traverse.owner(socket).dom().defaultView;
+  const outerWindow = Traverse.owner(socket).dom.defaultView;
   // Include the dropup for this calculation because it represents the total viewable height.
   const viewportHeight = Height.get(socket) + Height.get(dropup);
   const acc = accountableKeyboardHeight(outerWindow);

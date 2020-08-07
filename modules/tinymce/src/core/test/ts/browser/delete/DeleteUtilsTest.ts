@@ -34,7 +34,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.DeleteUtilsTest', function (succ
       const element = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), elementPath).getOrDie();
       const caretNode = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), caretPath).getOrDie();
 
-      return DeleteUtils.willDeleteLastPositionInElement(forward, CaretPosition(caretNode.dom(), caretOffset), element.dom());
+      return DeleteUtils.willDeleteLastPositionInElement(forward, CaretPosition(caretNode.dom, caretOffset), element.dom);
     });
   };
 

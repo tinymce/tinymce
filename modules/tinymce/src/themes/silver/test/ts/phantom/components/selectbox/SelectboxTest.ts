@@ -65,7 +65,7 @@ UnitTest.asynctest('Selectbox component Test', (success, failure) => {
             })
           ]
         })),
-        component.element()
+        component.element
       ),
 
       RepresentingSteps.sSetValue('Choosing three', component, 'three'),

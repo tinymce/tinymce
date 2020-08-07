@@ -39,7 +39,7 @@ interface Hook {
 }
 
 export interface DomQueryConstructor {
-  prototype: DomQuery;
+  readonly prototype: DomQuery;
 
   attrHooks: Record<string, Hook>;
   cssHooks: Record<string, Hook>;
@@ -51,13 +51,13 @@ export interface DomQueryConstructor {
   expr: {
     cacheLength: number;
     createPseudo: Function;
-    match: Function;
+    match: Record<string, RegExp>;
     attrHandle: {};
-    find: {};
+    find: Record<string, Function>;
     relative: Record<string, { dir: string; first?: boolean }>;
-    preFilter: Record<string, any>;
-    filter: Record<string, any>;
-    pseudos: Record<string, any>;
+    preFilter: Record<string, Function>;
+    filter: Record<string, Function>;
+    pseudos: Record<string, Function>;
   };
 
   // Tools

@@ -46,5 +46,7 @@ UnitTest.asynctest('Tutorial: Property Testing with TinyMCE', (success, failure)
       })
     ], loadSuccess, loadFailure);
 
-  }, {}, success, failure);
+  }, {
+    base_url: '/project/tinymce/js/tinymce'
+  }, success, failure);
 });

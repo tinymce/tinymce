@@ -4,7 +4,7 @@ import { Html, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 import { AlloySpec, RawDomSchema, SketchSpec } from './SpecTypes';
 
 const getAttrs = (elem: SugarElement) => {
-  const attributes = elem.dom().attributes !== undefined ? elem.dom().attributes : [ ];
+  const attributes = elem.dom.attributes !== undefined ? elem.dom.attributes : [ ];
   return Arr.foldl(attributes, (b, attr) => {
     // Make class go through the class path. Do not list it as an attribute.
     if (attr.name === 'class') {
@@ -15,7 +15,7 @@ const getAttrs = (elem: SugarElement) => {
   }, {});
 };
 
-const getClasses = (elem: SugarElement) => Array.prototype.slice.call(elem.dom().classList, 0);
+const getClasses = (elem: SugarElement) => Array.prototype.slice.call(elem.dom.classList, 0);
 
 const fromHtml = (html: string): RawDomSchema => {
   const elem = SugarElement.fromHtml(html);

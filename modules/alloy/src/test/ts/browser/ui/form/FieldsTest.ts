@@ -48,12 +48,12 @@ UnitTest.asynctest('FieldsTest', (success, failure) => {
         tag: 'div'
       },
       components: [
-        FormField.parts().field({
+        FormField.parts.field({
           factory: Input,
           data: 'init'
         }),
-        FormField.parts().label(labelSpec),
-        FormField.parts()['aria-descriptor']({
+        FormField.parts.label(labelSpec),
+        FormField.parts['aria-descriptor']({
           text: 'help'
         })
       ]
@@ -66,8 +66,8 @@ UnitTest.asynctest('FieldsTest', (success, failure) => {
       },
       components: [
         // TODO: Do not recalculate
-        FormField.parts().label(labelSpec),
-        FormField.parts().field({
+        FormField.parts.label(labelSpec),
+        FormField.parts.field({
           factory: HtmlSelect,
           options: [
             { value: 'select-b-init', text: 'Select-b-init' }
@@ -82,8 +82,8 @@ UnitTest.asynctest('FieldsTest', (success, failure) => {
         tag: 'div'
       },
       components: [
-        FormChooser.parts().legend({ }),
-        FormChooser.parts().choices({ })
+        FormChooser.parts.legend({ }),
+        FormChooser.parts.choices({ })
       ],
 
       markers: {
@@ -102,8 +102,8 @@ UnitTest.asynctest('FieldsTest', (success, failure) => {
         tag: 'div'
       },
       components: [
-        FormField.parts().label(labelSpec),
-        FormField.parts().field({
+        FormField.parts.label(labelSpec),
+        FormField.parts.field({
           factory: Input
         })
       ]
@@ -115,9 +115,9 @@ UnitTest.asynctest('FieldsTest', (success, failure) => {
         classes: [ 'coupled-group' ]
       },
       components: [
-        FormCoupledInputs.parts().field1(coupledDText),
-        FormCoupledInputs.parts().field2(coupledDText),
-        FormCoupledInputs.parts().lock({
+        FormCoupledInputs.parts.field1(coupledDText),
+        FormCoupledInputs.parts.field2(coupledDText),
+        FormCoupledInputs.parts.lock({
           dom: {
             tag: 'button',
             innerHtml: '+'
@@ -172,8 +172,8 @@ UnitTest.asynctest('FieldsTest', (success, failure) => {
       RepresentPipes.sAssertValue('Checking input-a value', 'init', inputA),
 
       Assertions.sAssertStructure('Check the input-a DOM', ApproxStructure.build((s, str, _arr) => {
-        const input = SelectorFind.descendant(inputA.element(), 'input').getOrDie('input element child was not found');
-        const span = SelectorFind.descendant(inputA.element(), 'span').getOrDie('span element child was not found');
+        const input = SelectorFind.descendant(inputA.element, 'input').getOrDie('input element child was not found');
+        const span = SelectorFind.descendant(inputA.element, 'span').getOrDie('span element child was not found');
 
         const inputID = Attribute.getOpt(input, 'id').getOrDie('Expected value for input.id');
         const spanID = Attribute.getOpt(span, 'id').getOrDie('Expected value for span.id');
@@ -192,14 +192,14 @@ UnitTest.asynctest('FieldsTest', (success, failure) => {
             s.element('span', { })
           ]
         });
-      }), inputA.element()),
+      }), inputA.element),
 
       Assertions.sAssertStructure('Check the select-b dom', ApproxStructure.build((s, _str, _arr) => s.element('div', {
         children: [
           s.element('label', { }),
           s.element('select', { })
         ]
-      })), selectB.element()),
+      })), selectB.element),
 
       Assertions.sAssertStructure('Check the chooser-c dom', ApproxStructure.build((s, str, _arr) => s.element('div', {
         children: [
@@ -208,7 +208,7 @@ UnitTest.asynctest('FieldsTest', (success, failure) => {
           s.element('span', { attrs: { role: str.is('radio') }}),
           s.element('span', { attrs: { role: str.is('radio') }})
         ]
-      })), chooserC.element()),
+      })), chooserC.element),
 
       RepresentPipes.sAssertValue('Checking select-b value', 'select-b-init', selectB),
 
@@ -221,7 +221,7 @@ UnitTest.asynctest('FieldsTest', (success, failure) => {
         Assertions.assertEq('Checking chooser-c value after set', 'choice3', val2);
       }),
 
-      Assertions.sAssertStructure('Checking the data field (E)', ApproxStructure.build((s, _str, _arr) => s.element('span', { children: [ ] })), dataE.element()),
+      Assertions.sAssertStructure('Checking the data field (E)', ApproxStructure.build((s, _str, _arr) => s.element('span', { children: [ ] })), dataE.element),
 
       Step.sync(() => {
         const val = Representing.getValue(dataE);
@@ -242,14 +242,14 @@ UnitTest.asynctest('FieldsTest', (success, failure) => {
         FormField.getField(inputA).fold(() => {
           throw new Error('The input Field could not be found');
         }, (comp) => {
-          const alloyId = Tagger.readOrDie(comp.element());
+          const alloyId = Tagger.readOrDie(comp.element);
           Assertions.assertEq('FormField should have an api that returns the input field', 'input-a-field', alloyId);
         });
 
         FormField.getLabel(inputA).fold(() => {
           throw new Error('The input Label could not be found');
         }, (comp) => {
-          const alloyId = Tagger.readOrDie(comp.element());
+          const alloyId = Tagger.readOrDie(comp.element);
           Assertions.assertEq('FormField should have an api that returns the input Label', 'input-a-label', alloyId);
         });
       }),

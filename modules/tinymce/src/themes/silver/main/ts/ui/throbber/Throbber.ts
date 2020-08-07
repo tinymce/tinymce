@@ -37,7 +37,7 @@ const renderSpinner = (providerBackstage: UiFactoryBackstageProviders): AlloySpe
 });
 
 const toggleThrobber = (comp: AlloyComponent, state: boolean, providerBackstage: UiFactoryBackstageProviders) => {
-  const element = comp.element();
+  const element = comp.element;
   if (state === true) {
     Replacing.set(comp, [ renderSpinner(providerBackstage) ]);
     Css.remove(element, 'display');

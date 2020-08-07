@@ -1,11 +1,11 @@
 import { ApproxStructure, Assertions, Chain, FocusTools, Keyboard, Keys, Logger, Pipeline, UiFinder } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Menu } from '@ephox/bridge';
 import { TinyLoader, TinyUi } from '@ephox/mcagar';
 import { SugarBody, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
+import { Menu } from 'tinymce/core/api/ui/Ui';
 import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('OxideListCollectionMenuTest', (success, failure) => {
@@ -139,7 +139,7 @@ UnitTest.asynctest('OxideListCollectionMenuTest', (success, failure) => {
                 shortcut: 'Ctrl+A',
                 icon: 'fake-icon-name',
                 onAction: store.adder('togglemenuitem.onAction')
-              } as Menu.ToggleMenuItemApi,
+              } as Menu.ToggleMenuItemSpec,
               {
                 type: 'nestedmenuitem',
                 text: 'Beta',
@@ -150,7 +150,7 @@ UnitTest.asynctest('OxideListCollectionMenuTest', (success, failure) => {
                     text: 'Beta-1'
                   }
                 ]
-              } as Menu.NestedMenuItemApi,
+              } as Menu.NestedMenuItemSpec,
               {
                 type: 'separator'
               },
@@ -159,7 +159,7 @@ UnitTest.asynctest('OxideListCollectionMenuTest', (success, failure) => {
                 text: 'Gamma',
                 shortcut: 'Ctrl+C',
                 icon: 'fake-icon-name'
-              } as Menu.MenuItemApi
+              } as Menu.MenuItemSpec
             ]);
           }
         });

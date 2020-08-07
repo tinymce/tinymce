@@ -22,13 +22,13 @@ export interface Delta {
 */
 
 const measure = (startAddress: Structs.Address, gridA: Structs.RowCells[], gridB: Structs.RowCells[]): Result<Delta, string> => {
-  if (startAddress.row() >= gridA.length || startAddress.column() > GridRow.cellLength(gridA[0])) {
+  if (startAddress.row >= gridA.length || startAddress.column > GridRow.cellLength(gridA[0])) {
     return Result.error(
-      'invalid start address out of table bounds, row: ' + startAddress.row() + ', column: ' + startAddress.column()
+      'invalid start address out of table bounds, row: ' + startAddress.row + ', column: ' + startAddress.column
     );
   }
-  const rowRemainder = gridA.slice(startAddress.row());
-  const colRemainder = rowRemainder[0].cells().slice(startAddress.column());
+  const rowRemainder = gridA.slice(startAddress.row);
+  const colRemainder = rowRemainder[0].cells.slice(startAddress.column);
 
   const colRequired = GridRow.cellLength(gridB[0]);
   const rowRequired = gridB.length;
@@ -61,10 +61,10 @@ const measureHeight = (gridA: Structs.RowCells[], gridB: Structs.RowCells[]): De
 const fill = <T> (cells: T[], generator: SimpleGenerators) => Arr.map(cells, () => Structs.elementnew(generator.cell(), true));
 
 const rowFill = (grid: Structs.RowCells[], amount: number, generator: SimpleGenerators): Structs.RowCells[] =>
-  grid.concat(Arr.range(amount, () => GridRow.setCells(grid[grid.length - 1], fill(grid[grid.length - 1].cells(), generator))));
+  grid.concat(Arr.range(amount, () => GridRow.setCells(grid[grid.length - 1], fill(grid[grid.length - 1].cells, generator))));
 
 const colFill = (grid: Structs.RowCells[], amount: number, generator: SimpleGenerators): Structs.RowCells[] =>
-  Arr.map(grid, (row) => GridRow.setCells(row, row.cells().concat(fill(Arr.range(amount, Fun.identity), generator))));
+  Arr.map(grid, (row) => GridRow.setCells(row, row.cells.concat(fill(Arr.range(amount, Fun.identity), generator))));
 
 const tailor = (gridA: Structs.RowCells[], delta: Delta, generator: SimpleGenerators): Structs.RowCells[] => {
   const fillCols = delta.colDelta < 0 ? colFill : Fun.identity;

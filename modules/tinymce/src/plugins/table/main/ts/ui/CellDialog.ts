@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Types } from '@ephox/bridge';
 import { Arr, Fun } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
+import { Dialog } from 'tinymce/core/api/ui/Ui';
 import * as Styles from '../actions/Styles';
 import { hasAdvancedCellTab } from '../api/Settings';
 import * as Util from '../core/Util';
@@ -98,11 +98,11 @@ const open = (editor: Editor, selections: Selections) => {
 
   // Get current data and find shared values between cells
   const cellsData: CellData[] = Arr.map(cells,
-    (cellElm) => Helpers.extractDataFromCellElement(editor, cellElm.dom(), hasAdvancedCellTab(editor))
+    (cellElm) => Helpers.extractDataFromCellElement(editor, cellElm.dom, hasAdvancedCellTab(editor))
   );
   const data = Helpers.getSharedValues<CellData>(cellsData);
 
-  const dialogTabPanel: Types.Dialog.TabPanelApi = {
+  const dialogTabPanel: Dialog.TabPanelSpec = {
     type: 'tabpanel',
     tabs: [
       {
@@ -113,7 +113,7 @@ const open = (editor: Editor, selections: Selections) => {
       Helpers.getAdvancedTab('cell')
     ]
   };
-  const dialogPanel: Types.Dialog.PanelApi = {
+  const dialogPanel: Dialog.PanelSpec = {
     type: 'panel',
     items: [
       {
@@ -141,7 +141,7 @@ const open = (editor: Editor, selections: Selections) => {
       }
     ],
     initialData: data,
-    onSubmit: Fun.curry(onSubmitCellForm, editor, Arr.map(cells, (c) => c.dom()))
+    onSubmit: Fun.curry(onSubmitCellForm, editor, Arr.map(cells, (c) => c.dom))
   });
 };
 

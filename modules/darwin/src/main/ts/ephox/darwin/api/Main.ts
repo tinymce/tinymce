@@ -1,3 +1,4 @@
+import { Response } from '../selection/Response';
 import { Ephemera } from './Ephemera';
 import * as InputHandlers from './InputHandlers';
 import { SelectionAnnotation } from './SelectionAnnotation';
@@ -11,6 +12,7 @@ import * as CellOpSelection from '../queries/CellOpSelection';
 export {
   Ephemera,
   InputHandlers,
+  Response,
   SelectionAnnotation,
   SelectionKeys,
   TableSelection,

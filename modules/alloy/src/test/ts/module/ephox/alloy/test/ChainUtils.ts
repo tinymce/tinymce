@@ -24,7 +24,7 @@ const cFindUids = (gui: Record<string, any>, lookups: Record<string, string>) =>
   );
 };
 
-const cToElement = Chain.mapper((comp: any) => comp.element());
+const cToElement = Chain.mapper((comp: any) => comp.element);
 
 const eToComponent = (other: AlloyComponent): Chain<SugarElement, AlloyComponent> => Chain.binder((elem) => other.getSystem().getByDom(elem));
 

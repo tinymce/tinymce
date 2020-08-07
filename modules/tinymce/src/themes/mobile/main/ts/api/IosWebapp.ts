@@ -9,9 +9,9 @@ import { GuiFactory } from '@ephox/alloy';
 import { ValueSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 import { Css } from '@ephox/sugar';
-import MobileSchema from './MobileSchema';
 import * as IosMode from '../ios/core/IosMode';
 import * as TapToEditMask from '../touch/view/TapToEditMask';
+import MobileSchema from './MobileSchema';
 
 export interface MobileWebApp {
   setReadOnly(): void;

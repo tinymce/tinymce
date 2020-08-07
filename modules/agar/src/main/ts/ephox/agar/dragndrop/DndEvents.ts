@@ -51,12 +51,12 @@ const dispatchDndEvent = (event: DragEvent, target: SugarElement<any>): DragEven
     setProtectedMode(event.dataTransfer);
   }
 
-  target.dom().dispatchEvent(event);
+  target.dom.dispatchEvent(event);
 
   return event;
 };
 
-const getWindowFromElement = (element: SugarElement<any>): Window => element.dom().ownerDocument.defaultView;
+const getWindowFromElement = (element: SugarElement<any>): Window => element.dom.ownerDocument.defaultView;
 
 export {
   createDndEvent,

@@ -18,6 +18,9 @@
     "@typescript-eslint/prefer-regexp-exec": "off",
     "@typescript-eslint/unbound-method": "off",
     "comma-dangle": ["error", "never"],
+    "import/order": ["error", {
+      "groups": ["builtin", "external", "internal", "parent", "sibling", "index"]
+    }],
     "no-empty": "off",
     "no-shadow": "off",
     "no-underscore-dangle": "off",
@@ -25,5 +28,8 @@
     "prefer-rest-params": "off",
     "prefer-spread": "off",
     "max-len": ["warn", 260]
+  },
+  "settings": {
+    "import/internal-regex": "^ephox/.*"
   }
 }

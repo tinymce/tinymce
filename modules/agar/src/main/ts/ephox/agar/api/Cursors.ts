@@ -1,34 +1,34 @@
-import { Fun, Result } from '@ephox/katamari';
+import { Result } from '@ephox/katamari';
 import { Hierarchy, SugarElement } from '@ephox/sugar';
 
 import { Chain } from './Chain';
 
 export interface CursorRange {
-  readonly start: () => SugarElement<any>;
-  readonly soffset: () => number;
-  readonly finish: () => SugarElement<any>;
-  readonly foffset: () => number;
+  readonly start: SugarElement<any>;
+  readonly soffset: number;
+  readonly finish: SugarElement<any>;
+  readonly foffset: number;
 }
 
 export interface CursorPath {
-  startPath: () => number[];
-  soffset: () => number;
-  finishPath: () => number[];
-  foffset: () => number;
+  readonly startPath: number[];
+  readonly soffset: number;
+  readonly finishPath: number[];
+  readonly foffset: number;
 }
 
 const range = (obj: { start: SugarElement<any>; soffset: number; finish: SugarElement<any>; foffset: number }): CursorRange => ({
-  start: Fun.constant(obj.start),
-  soffset: Fun.constant(obj.soffset),
-  finish: Fun.constant(obj.finish),
-  foffset: Fun.constant(obj.foffset)
+  start: obj.start,
+  soffset: obj.soffset,
+  finish: obj.finish,
+  foffset: obj.foffset
 });
 
 const path = (obj: { startPath: number[]; soffset: number; finishPath: number[]; foffset: number }): CursorPath => ({
-  startPath: Fun.constant(obj.startPath),
-  soffset: Fun.constant(obj.soffset),
-  finishPath: Fun.constant(obj.finishPath),
-  foffset: Fun.constant(obj.foffset)
+  startPath: obj.startPath,
+  soffset: obj.soffset,
+  finishPath: obj.finishPath,
+  foffset: obj.foffset
 });
 
 export interface CursorSpec {
@@ -72,13 +72,13 @@ const follow = (container: SugarElement<any>, calcPath: number[]): Result<SugarE
   );
 
 const followPath = (container: SugarElement<any>, calcPath: CursorPath): Result<CursorRange, string> =>
-  follow(container, calcPath.startPath()).bind((start) =>
-    follow(container, calcPath.finishPath()).map((finish) =>
+  follow(container, calcPath.startPath).bind((start) =>
+    follow(container, calcPath.finishPath).map((finish) =>
       range({
         start,
-        soffset: calcPath.soffset(),
+        soffset: calcPath.soffset,
         finish,
-        foffset: calcPath.foffset()
+        foffset: calcPath.foffset
       })));
 
 const cFollowPath = (calcPath: CursorPath): Chain<SugarElement<any>, CursorRange> =>

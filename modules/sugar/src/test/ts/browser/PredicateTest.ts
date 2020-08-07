@@ -33,11 +33,11 @@ UnitTest.test('PredicateTest', () => {
   Checkers.checkList([ TestPage.s3, TestPage.s2 ], PredicateFilter.ancestors(TestPage.t4, Checkers.isName('span')));
   Checkers.checkList([ TestPage.d1, TestPage.container ], PredicateFilter.ancestors(TestPage.p3, Checkers.isName('div')));
   Checkers.checkList([], PredicateFilter.ancestors(TestPage.t4, SugarNode.isText));
-  Checkers.checkList([ TestPage.s1, TestPage.t3 ], PredicateFilter.siblings(TestPage.t1, Fun.constant(true)));
-  Checkers.checkList([], PredicateFilter.siblings(TestPage.t5, Fun.constant(true)));
+  Checkers.checkList([ TestPage.s1, TestPage.t3 ], PredicateFilter.siblings(TestPage.t1, Fun.always));
+  Checkers.checkList([], PredicateFilter.siblings(TestPage.t5, Fun.always));
   Checkers.checkList([ TestPage.t1, TestPage.t3 ], PredicateFilter.children(TestPage.p1, SugarNode.isText));
   Checkers.checkList([ TestPage.s1 ], PredicateFilter.children(TestPage.p1, Checkers.isName('span')));
-  Checkers.checkList([], PredicateFilter.children(TestPage.t2, Fun.constant(true)));
+  Checkers.checkList([], PredicateFilter.children(TestPage.t2, Fun.always));
   Checkers.checkList([ TestPage.s1, TestPage.s2, TestPage.s3, TestPage.s4 ], PredicateFilter.descendants(TestPage.container, Checkers.isName('span')));
   Checkers.checkList([], PredicateFilter.descendants(TestPage.container, Checkers.isName('blockquote')));
 

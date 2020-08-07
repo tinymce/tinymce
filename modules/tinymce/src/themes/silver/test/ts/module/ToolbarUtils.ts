@@ -11,9 +11,9 @@ const sAssertFloatingToolbarPosition = (tinyUi: TinyUi, getTop: () => number, ex
     const top = getTop();
     const diff = 10;
     const pos = SugarLocation.absolute(toolbar);
-    const right = pos.left() + Width.get(toolbar);
-    Assertions.assertEq(`Drawer top position ${pos.top()}px should be ~${top}px`, true, Math.abs(pos.top() - top) < diff);
-    Assertions.assertEq(`Drawer left position ${pos.left()}px should be ~${expectedLeft}px`, true, Math.abs(pos.left() - expectedLeft) < diff);
+    const right = pos.left + Width.get(toolbar);
+    Assertions.assertEq(`Drawer top position ${pos.top}px should be ~${top}px`, true, Math.abs(pos.top - top) < diff);
+    Assertions.assertEq(`Drawer left position ${pos.left}px should be ~${expectedLeft}px`, true, Math.abs(pos.left - expectedLeft) < diff);
     Assertions.assertEq(`Drawer right position ${right}px should be ~${expectedRight}px`, true, Math.abs(right - expectedRight) < diff);
   })
 ]);

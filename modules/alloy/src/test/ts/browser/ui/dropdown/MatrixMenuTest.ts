@@ -38,7 +38,7 @@ UnitTest.asynctest('MatrixMenuTest', (success, failure) => {
       },
 
       components: [
-        Menu.parts().items({
+        Menu.parts.items({
           preprocess: (items: AlloySpec[]) => {
             const chunks = Arr.chunk(items, 2);
             return Arr.map(chunks, (c) => ({
@@ -98,7 +98,7 @@ UnitTest.asynctest('MatrixMenuTest', (success, failure) => {
     return [
       Chain.asStep({}, [
         NamedChain.asChain([
-          NamedChain.writeValue('menu', component.element()),
+          NamedChain.writeValue('menu', component.element),
           NamedChain.direct('menu', UiFinder.cFindIn('li[data-value="alpha"]'), 'alpha'),
           NamedChain.direct('menu', UiFinder.cFindIn('li[data-value="beta"]'), 'beta'),
 

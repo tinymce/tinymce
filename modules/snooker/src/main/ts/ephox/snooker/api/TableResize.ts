@@ -11,11 +11,11 @@ type ColInfo = BarPositions.ColInfo;
 type BarPositions<A> = BarPositions.BarPositions<A>;
 
 export interface BeforeTableResizeEvent {
-  readonly table: () => SugarElement;
+  readonly table: SugarElement;
 }
 
 export interface AfterTableResizeEvent {
-  readonly table: () => SugarElement;
+  readonly table: SugarElement;
 }
 
 type TableResizeEventRegistry = {
@@ -53,11 +53,11 @@ const create = (wire: ResizeWire, vdirection: BarPositions<ColInfo>, resizing: R
   }) as TableResizeEvents;
 
   manager.events.adjustHeight.bind((event) => {
-    const table = event.table();
+    const table = event.table;
     events.trigger.beforeResize(table);
-    const delta = hdirection.delta(event.delta(), table);
+    const delta = hdirection.delta(event.delta, table);
     // TODO: Use the resizing behaviour for heights as well
-    Adjustments.adjustHeight(table, delta, event.row(), hdirection);
+    Adjustments.adjustHeight(table, delta, event.row, hdirection);
     events.trigger.afterResize(table);
   });
 
@@ -66,11 +66,11 @@ const create = (wire: ResizeWire, vdirection: BarPositions<ColInfo>, resizing: R
   });
 
   manager.events.adjustWidth.bind((event) => {
-    const table = event.table();
+    const table = event.table;
     events.trigger.beforeResize(table);
-    const delta = vdirection.delta(event.delta(), table);
+    const delta = vdirection.delta(event.delta, table);
     const tableSize = lazySizing(table);
-    Adjustments.adjustWidth(table, delta, event.column(), vdirection, resizing, tableSize);
+    Adjustments.adjustWidth(table, delta, event.column, vdirection, resizing, tableSize);
     events.trigger.afterResize(table);
   });
 

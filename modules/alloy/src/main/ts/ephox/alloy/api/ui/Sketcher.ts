@@ -1,5 +1,5 @@
 import { FieldProcessorAdt, FieldSchema, ValueSchema } from '@ephox/boulder';
-import { Fun, Obj } from '@ephox/katamari';
+import { Obj } from '@ephox/katamari';
 
 import * as FunctionAnnotator from '../../debugging/FunctionAnnotator';
 import * as AlloyParts from '../../parts/AlloyParts';
@@ -18,9 +18,9 @@ type FunctionRecord<A> = { [K in keyof A]: Function };
 type SketcherApisFuncRecord<A extends FunctionRecord<A>> = { [K in keyof A]: A[K] };
 
 export interface SingleSketch<S extends SingleSketchSpec> {
-  name: () => string;
-  configFields: () => FieldProcessorAdt[];
-  sketch: (spec: S) => SketchSpec;
+  readonly name: string;
+  readonly configFields: FieldProcessorAdt[];
+  readonly sketch: (spec: S) => SketchSpec;
 }
 
 export interface SingleSketcherSpec<S extends SingleSketchSpec, D extends SingleSketchDetail, A extends FunctionRecord<A>, E extends FunctionRecord<E> = {}> {
@@ -46,11 +46,11 @@ export interface CompositeSketchDetail extends BaseSketchDetail<CompositeSketchS
 }
 
 export interface CompositeSketch<S extends CompositeSketchSpec> {
-  name: () => string;
-  configFields: () => FieldProcessorAdt[];
-  partFields: () => PartTypeAdt[];
-  sketch: (spec: S) => SketchSpec;
-  parts: () => AlloyParts.GeneratedParts;
+  readonly name: string;
+  readonly configFields: FieldProcessorAdt[];
+  readonly partFields: PartTypeAdt[];
+  readonly sketch: (spec: S) => SketchSpec;
+  readonly parts: AlloyParts.GeneratedParts;
 }
 
 export interface CompositeSketcherSpec<S extends CompositeSketchSpec, D extends CompositeSketchDetail, A extends FunctionRecord<A>, E extends FunctionRecord<E> = {}> {
@@ -101,8 +101,8 @@ const single = function <S extends SingleSketchSpec, D extends SingleSketchDetai
   const extraApis = Obj.map(config.extraApis, (f, k) => FunctionAnnotator.markAsExtraApi(f, k)) as E;
 
   return {
-    name: Fun.constant(config.name),
-    configFields: Fun.constant(config.configFields),
+    name: config.name,
+    configFields: config.configFields,
     sketch,
     ...apis,
     ...extraApis
@@ -121,11 +121,11 @@ const composite = function <S extends CompositeSketchSpec, D extends CompositeSk
   const extraApis = Obj.map(config.extraApis, (f, k) => FunctionAnnotator.markAsExtraApi(f, k)) as E;
 
   return {
-    name: Fun.constant(config.name),
-    partFields: Fun.constant(config.partFields),
-    configFields: Fun.constant(config.configFields),
+    name: config.name,
+    partFields: config.partFields,
+    configFields: config.configFields,
     sketch,
-    parts: Fun.constant(parts),
+    parts,
     ...apis,
     ...extraApis
   };

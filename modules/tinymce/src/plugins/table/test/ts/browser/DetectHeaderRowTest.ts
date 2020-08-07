@@ -30,7 +30,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DetectHeaderRowTest', (success
           '</table>'
         ),
         sAssertRow('tr', (tr) => {
-          const rowData = getRowType(editor, tr.dom());
+          const rowData = getRowType(editor, tr.dom);
           Assertions.assertEq('Detect as part of the tbody', 'body', rowData);
         })
       ]),
@@ -43,7 +43,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DetectHeaderRowTest', (success
           '</table>'
         ),
         sAssertRow('tr', (tr) => {
-          detectHeaderRow(editor, tr.dom()).fold(
+          detectHeaderRow(editor, tr.dom).fold(
             () => Assertions.assertEq('Row incorrectly detected as not a header row', true, false), // would call failure() but want logs
             (rowData) => {
               Assertions.assertEq('Detect as part of the tbody', false, rowData.thead);
@@ -62,7 +62,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DetectHeaderRowTest', (success
           '</table>'
         ),
         sAssertRow('tr', (tr) => {
-          const rowData = detectHeaderRow(editor, tr.dom()).getOrDie();
+          const rowData = detectHeaderRow(editor, tr.dom).getOrDie();
           Assertions.assertEq('Detect as part of the tbody', false, rowData.thead);
           Assertions.assertEq('Detect as all ths', true, rowData.ths);
         })
@@ -77,7 +77,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DetectHeaderRowTest', (success
           '</table>'
         ),
         sAssertRow('tr', (tr) => {
-          const rowData = getRowType(editor, tr.dom());
+          const rowData = getRowType(editor, tr.dom);
           Assertions.assertEq('Detect as part of the tbody', 'body', rowData);
         })
       ]),
@@ -93,7 +93,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DetectHeaderRowTest', (success
           '</table>'
         ),
         sAssertRow('tr.foo', (tr) => {
-          const rowData = detectHeaderRow(editor, tr.dom()).getOrDie();
+          const rowData = detectHeaderRow(editor, tr.dom).getOrDie();
           Assertions.assertEq('Detect as part of the thead', true, rowData.thead);
           Assertions.assertEq('Detect as td', false, rowData.ths);
         })
@@ -110,7 +110,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DetectHeaderRowTest', (success
           '</table>'
         ),
         sAssertRow('tr.foo', (tr) => {
-          const rowData = detectHeaderRow(editor, tr.dom()).getOrDie();
+          const rowData = detectHeaderRow(editor, tr.dom).getOrDie();
           Assertions.assertEq('Detect as part of the thead', true, rowData.thead);
           Assertions.assertEq('Detect as all th', true, rowData.ths);
         })
@@ -128,7 +128,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DetectHeaderRowTest', (success
           '</table>'
         ),
         sAssertRow('tr.foo', (tr) => {
-          const rowData = detectHeaderRow(editor, tr.dom()).getOrDie();
+          const rowData = detectHeaderRow(editor, tr.dom).getOrDie();
           Assertions.assertEq('Detect as part of the thead', true, rowData.thead);
           Assertions.assertEq('Detect as all th', true, rowData.ths);
         })
@@ -146,7 +146,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DetectHeaderRowTest', (success
           '</table>'
         ),
         sAssertRow('tr.foo', (tr) => {
-          const rowData = detectHeaderRow(editor, tr.dom()).getOrDie();
+          const rowData = detectHeaderRow(editor, tr.dom).getOrDie();
           Assertions.assertEq('Detect as part of the thead', true, rowData.thead);
           Assertions.assertEq('Detect as not all th', false, rowData.ths);
         })

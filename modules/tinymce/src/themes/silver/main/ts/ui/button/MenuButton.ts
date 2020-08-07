@@ -6,7 +6,7 @@
  */
 
 import { AlloyComponent, AlloyTriggers, Disabling, MementoRecord, SketchSpec, Tabstopping } from '@ephox/alloy';
-import { Menu, Toolbar, Types } from '@ephox/bridge';
+import { Dialog, Menu, Toolbar } from '@ephox/bridge';
 import { Arr, Cell, Optional } from '@ephox/katamari';
 import { Attribute, Class, Focus } from '@ephox/sugar';
 import { formActionEvent } from 'tinymce/themes/silver/ui/general/FormEvents';
@@ -14,7 +14,6 @@ import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { renderCommonDropdown } from '../dropdown/CommonDropdown';
 import ItemResponse from '../menus/item/ItemResponse';
 import * as NestedMenus from '../menus/menu/NestedMenus';
-import { Omit } from '../Omit';
 import { ToolbarButtonClasses } from '../toolbar/button/ButtonClasses';
 
 export type MenuButtonSpec = Omit<Toolbar.ToolbarMenuButton, 'type'>;
@@ -25,7 +24,7 @@ const getMenuButtonApi = (component: AlloyComponent): Toolbar.ToolbarMenuButtonI
   setActive: (state: boolean) => {
     // Note: We can't use the toggling behaviour here, as the dropdown for the menu also relies on it.
     // As such, we'll need to do this manually
-    const elm = component.element();
+    const elm = component.element;
     if (state) {
       Class.add(elm, ToolbarButtonClasses.Ticked);
       Attribute.set(elm, 'aria-pressed', true);
@@ -34,7 +33,7 @@ const getMenuButtonApi = (component: AlloyComponent): Toolbar.ToolbarMenuButtonI
       Attribute.remove(elm, 'aria-pressed');
     }
   },
-  isActive: () => Class.has(component.element(), ToolbarButtonClasses.Ticked)
+  isActive: () => Class.has(component.element, ToolbarButtonClasses.Ticked)
 });
 
 const renderMenuButton = (spec: MenuButtonSpec, prefix: string, backstage: UiFactoryBackstage, role: Optional<string>): SketchSpec => renderCommonDropdown({
@@ -62,11 +61,11 @@ const renderMenuButton = (spec: MenuButtonSpec, prefix: string, backstage: UiFac
 prefix,
 backstage.shared);
 
-interface StoragedMenuItem extends Types.Dialog.DialogToggleMenuItem {
+interface StoragedMenuItem extends Dialog.DialogFooterToggleMenuItem {
   storage: Cell<boolean>;
 }
 
-interface StoragedMenuButton extends Omit<Types.Dialog.DialogMenuButton, 'items'> {
+interface StoragedMenuButton extends Omit<Dialog.DialogFooterMenuButton, 'items'> {
   items: StoragedMenuItem[];
 }
 
@@ -80,7 +79,7 @@ const getFetch = (items: StoragedMenuItem[], getButton: () => MementoRecord, bac
     // Fire the form action event
     backstage.shared.getSink().each((sink) => {
       getButton().getOpt(sink).each((orig) => {
-        Focus.focus(orig.element());
+        Focus.focus(orig.element);
         AlloyTriggers.emitWith(orig, formActionEvent, {
           name: item.name,
           value: item.storage.get()

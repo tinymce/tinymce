@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Channels, Disabling, Receiving, Behaviour } from '@ephox/alloy';
+import { Behaviour, Channels, Disabling, Receiving } from '@ephox/alloy';
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import Editor from 'tinymce/core/api/Editor';
 import * as Settings from './api/Settings';
@@ -23,7 +23,7 @@ const ReadOnlyDataSchema = ValueSchema.objOf([
 
 const broadcastReadonly = (uiComponents: RenderUiComponents, readonly: boolean) => {
   const outerContainer = uiComponents.outerContainer;
-  const target = outerContainer.element();
+  const target = outerContainer.element;
 
   if (readonly) {
     uiComponents.mothership.broadcastOn([ Channels.dismissPopups() ], { target });

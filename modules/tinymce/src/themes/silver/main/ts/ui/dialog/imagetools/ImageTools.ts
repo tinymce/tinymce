@@ -6,29 +6,28 @@
  */
 
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, CustomEvent, Disabling, Representing, SimpleSpec, SimulatedEvent
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Disabling, Representing, SimpleSpec, SimulatedEvent
 } from '@ephox/alloy';
-import { Types } from '@ephox/bridge';
+import { Dialog } from '@ephox/bridge';
 import { ImageResult, ResultConversions } from '@ephox/imagetools';
 import { Fun, Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
 import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
 import { ComposingConfigs } from 'tinymce/themes/silver/ui/alien/ComposingConfigs';
-import { Omit } from '../../Omit';
 import * as EditPanel from './EditPanel';
 import * as ImagePanel from './ImagePanel';
 import * as ImageToolsEvents from './ImageToolsEvents';
 import * as SideBar from './SideBar';
 import * as ImageToolsState from './state/ImageToolsState';
 
-type ImageToolsSpec = Omit<Types.ImageTools.ImageTools, 'type'>;
+type ImageToolsSpec = Omit<Dialog.ImageTools, 'type'>;
 
 export const renderImageTools = (detail: ImageToolsSpec, providersBackstage: UiFactoryBackstageProviders): SimpleSpec => {
   const state = ImageToolsState.makeState(detail.currentState);
 
-  const zoom = (anyInSystem: AlloyComponent, simulatedEvent: SimulatedEvent<CustomEvent>): void => {
-    const direction = simulatedEvent.event().direction();
+  const zoom = (anyInSystem: AlloyComponent, simulatedEvent: SimulatedEvent<ImageToolsEvents.ImageToolsZoomEvent>): void => {
+    const direction = simulatedEvent.event.direction;
     imagePanel.zoom(anyInSystem, direction);
   };
 
@@ -43,7 +42,7 @@ export const renderImageTools = (detail: ImageToolsSpec, providersBackstage: UiF
     sideBar.updateButtonUndoStates(anyInSystem, false, false);
   };
 
-  const undo = (anyInSystem: AlloyComponent, _simulatedEvent: SimulatedEvent<CustomEvent>): void => {
+  const undo = (anyInSystem: AlloyComponent, _simulatedEvent: SimulatedEvent<ImageToolsEvents.ImageToolsUndoEvent>): void => {
     const url = state.undo();
     updateSrc(anyInSystem, url).then((_oImg) => {
       unblock(anyInSystem);
@@ -51,7 +50,7 @@ export const renderImageTools = (detail: ImageToolsSpec, providersBackstage: UiF
     });
   };
 
-  const redo = (anyInSystem: AlloyComponent, _simulatedEvent: SimulatedEvent<CustomEvent>): void => {
+  const redo = (anyInSystem: AlloyComponent, _simulatedEvent: SimulatedEvent<ImageToolsEvents.ImageToolsRedoEvent>): void => {
     const url = state.redo();
     updateSrc(anyInSystem, url).then((_oImg) => {
       unblock(anyInSystem);
@@ -118,10 +117,10 @@ export const renderImageTools = (detail: ImageToolsSpec, providersBackstage: UiF
     blobManipulate(anyInSystem, blob, filter, action, swap);
   };
 
-  const apply = (anyInSystem: AlloyComponent, simulatedEvent: SimulatedEvent<CustomEvent>): void => {
+  const apply = (anyInSystem: AlloyComponent, simulatedEvent: SimulatedEvent<ImageToolsEvents.ImageToolsApplyEvent>): void => {
     const postApply = () => {
       destroyTempState(anyInSystem);
-      const swap = simulatedEvent.event().swap();
+      const swap = simulatedEvent.event.swap;
       swap();
     };
     state.applyTempState(postApply);
@@ -141,25 +140,28 @@ export const renderImageTools = (detail: ImageToolsSpec, providersBackstage: UiF
     });
   };
 
-  const back = (anyInSystem: AlloyComponent, simulatedEvent: SimulatedEvent<CustomEvent>): void => {
+  const back = (anyInSystem: AlloyComponent, simulatedEvent: SimulatedEvent<ImageToolsEvents.ImageToolsBackEvent>): void => {
     cancel(anyInSystem);
-    const swap = simulatedEvent.event().swap();
+    const swap = simulatedEvent.event.swap;
     swap();
     imagePanel.hideCrop();
   };
 
-  const transform = (anyInSystem: AlloyComponent, simulatedEvent: SimulatedEvent<CustomEvent>): void => manipulate(anyInSystem, simulatedEvent.event().transform(), Fun.noop);
-  const tempTransform = (anyInSystem: AlloyComponent, simulatedEvent: SimulatedEvent<CustomEvent>): void => tempManipulate(anyInSystem, simulatedEvent.event().transform());
-  const transformApply = (anyInSystem: AlloyComponent, simulatedEvent: SimulatedEvent<CustomEvent>): void => manipulateApply(anyInSystem, simulatedEvent.event().transform(), simulatedEvent.event().swap());
+  const transform = (anyInSystem: AlloyComponent, simulatedEvent: SimulatedEvent<ImageToolsEvents.ImageToolsTransformEvent>): void =>
+    manipulate(anyInSystem, simulatedEvent.event.transform, Fun.noop);
+  const tempTransform = (anyInSystem: AlloyComponent, simulatedEvent: SimulatedEvent<ImageToolsEvents.ImageToolsTransformEvent>): void =>
+    tempManipulate(anyInSystem, simulatedEvent.event.transform);
+  const transformApply = (anyInSystem: AlloyComponent, simulatedEvent: SimulatedEvent<ImageToolsEvents.ImageToolsTransformApplyEvent>): void =>
+    manipulateApply(anyInSystem, simulatedEvent.event.transform, simulatedEvent.event.swap);
 
   const imagePanel = ImagePanel.renderImagePanel(detail.currentState.url);
   const sideBar = SideBar.renderSideBar(providersBackstage);
   const editPanel = EditPanel.renderEditPanel(imagePanel, providersBackstage);
 
-  const swap = (anyInSystem: AlloyComponent, simulatedEvent: SimulatedEvent<CustomEvent>): void => {
+  const swap = (anyInSystem: AlloyComponent, simulatedEvent: SimulatedEvent<ImageToolsEvents.ImageToolsSwapEvent>): void => {
     disableUndoRedo(anyInSystem);
-    const transform = simulatedEvent.event().transform();
-    const swap = simulatedEvent.event().swap();
+    const transform = simulatedEvent.event.transform;
+    const swap = simulatedEvent.event.swap;
     transform.fold(() => {
       swap();
     }, (transform) => {

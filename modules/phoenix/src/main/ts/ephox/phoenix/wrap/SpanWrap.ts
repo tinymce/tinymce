@@ -7,21 +7,21 @@ import * as Wrapper from './Wrapper';
 import { Wraps } from './Wraps';
 
 interface SpanWrapPoint<E> {
-  cursor(): SpotPoint<E>;
-  temporary(): boolean;
-  wrappers(): E[];
+  readonly cursor: SpotPoint<E>;
+  readonly temporary: boolean;
+  readonly wrappers: E[];
 }
 
 const point = function <E, D> (universe: Universe<E, D>, start: E, soffset: number, _finish: E, _foffset: number, exclusions: (e: E) => boolean): Optional<SpanWrapRange<E>> {
   const scanned = scan(universe, start, soffset, exclusions);
-  const cursor = scanned.cursor();
+  const cursor = scanned.cursor;
   const range = Spot.points(
-    Spot.point(cursor.element(), cursor.offset()),
-    Spot.point(cursor.element(), cursor.offset())
+    Spot.point(cursor.element, cursor.offset),
+    Spot.point(cursor.element, cursor.offset)
   );
 
   return Optional.some<SpanWrapRange<E>>({
-    range: Fun.constant(range),
+    range,
     temporary: scanned.temporary,
     wrappers: scanned.wrappers
   });
@@ -40,9 +40,9 @@ const temporary = function <E, D> (universe: Universe<E, D>, start: E, soffset: 
   });
 
   return {
-    cursor: Fun.constant(Spot.point(cursor, 1)),
-    wrappers: Fun.constant([ span ]),
-    temporary: Fun.constant(true)
+    cursor: Spot.point(cursor, 1),
+    wrappers: [ span ],
+    temporary: true
   };
 };
 
@@ -54,9 +54,9 @@ const scan = function <E, D> (universe: Universe<E, D>, start: E, soffset: numbe
     const cursor = Spot.point(start, soffset);
     const canReuse = isSpan(universe, exclusions)(parent) && universe.property().children(parent).length === 1 && isUnicode(universe, start);
     return canReuse ? Optional.some<SpanWrapPoint<E>>({
-      cursor: Fun.constant(cursor),
-      temporary: Fun.constant(false),
-      wrappers: Fun.constant([ parent ])
+      cursor,
+      temporary: false,
+      wrappers: [ parent ]
     }) : Optional.none();
   }).getOrThunk(function () {
     return temporary(universe, start, soffset);
@@ -76,7 +76,7 @@ const wrap = function <E, D> (universe: Universe<E, D>, start: E, soffset: numbe
   };
 
   const wrappers = Wrapper.reuse(universe, start, soffset, finish, foffset, isSpan(universe, exclusions), nuSpan);
-  return Optional.from(wrappers[wrappers.length - 1]).map(function (lastSpan) {
+  return Optional.from(wrappers[wrappers.length - 1]).map(function (lastSpan): SpanWrapRange<E> {
     const lastOffset = universe.property().children(lastSpan).length;
     const range = Spot.points(
       Spot.point(wrappers[0], 0),
@@ -84,9 +84,9 @@ const wrap = function <E, D> (universe: Universe<E, D>, start: E, soffset: numbe
     );
 
     return {
-      wrappers: Fun.constant(wrappers),
-      temporary: Fun.constant<boolean>(false),
-      range: Fun.constant(range)
+      wrappers,
+      temporary: false,
+      range
     };
   });
 };

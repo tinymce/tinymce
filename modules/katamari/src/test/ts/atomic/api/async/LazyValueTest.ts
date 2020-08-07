@@ -1,4 +1,5 @@
 import Promise from '@ephox/wrap-promise-polyfill';
+import fc from 'fast-check';
 import * as Arr from 'ephox/katamari/api/Arr';
 import * as Fun from 'ephox/katamari/api/Fun';
 import { LazyValue } from 'ephox/katamari/api/LazyValue';
@@ -6,7 +7,6 @@ import * as LazyValues from 'ephox/katamari/api/LazyValues';
 import { Optional } from 'ephox/katamari/api/Optional';
 import { tOptional } from 'ephox/katamari/api/OptionalInstances';
 import { eqAsync, promiseTest } from 'ephox/katamari/test/AsyncProps';
-import fc from 'fast-check';
 
 const lazyCounter = () => {
   let counter = 0;

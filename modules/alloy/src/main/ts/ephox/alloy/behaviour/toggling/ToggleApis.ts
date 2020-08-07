@@ -11,9 +11,9 @@ const updateAriaState = (component: AlloyComponent, toggleConfig: TogglingConfig
 const updateClass = (component: AlloyComponent, toggleConfig: TogglingConfig, toggleState: TogglingState) => {
   toggleConfig.toggleClass.each((toggleClass: string) => {
     if (toggleState.get()) {
-      Class.add(component.element(), toggleClass);
+      Class.add(component.element, toggleClass);
     } else {
-      Class.remove(component.element(), toggleClass);
+      Class.remove(component.element, toggleClass);
     }
   });
 };

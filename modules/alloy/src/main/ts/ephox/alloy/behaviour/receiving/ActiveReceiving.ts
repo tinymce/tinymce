@@ -7,7 +7,7 @@ import { ReceivingEvent, ReceivingInternalEvent } from '../../events/SimulatedEv
 import * as AlloyLogger from '../../log/AlloyLogger';
 import { ReceivingConfig } from './ReceivingTypes';
 
-const chooseChannels = (channels: string[], message: ReceivingInternalEvent) => message.universal() ? channels : Arr.filter(channels, (ch) => Arr.contains(message.channels(), ch));
+const chooseChannels = (channels: string[], message: ReceivingInternalEvent) => message.universal ? channels : Arr.filter(channels, (ch) => Arr.contains(message.channels, ch));
 
 const events = (receiveConfig: ReceivingConfig) => AlloyEvents.derive([
   AlloyEvents.run<ReceivingEvent>(SystemEvents.receive(), (component, message) => {
@@ -22,8 +22,8 @@ const events = (receiveConfig: ReceivingConfig) => AlloyEvents.derive([
       const channelInfo = channelMap[ch];
       const channelSchema = channelInfo.schema;
       const data = ValueSchema.asRawOrDie(
-        'channel[' + ch + '] data\nReceiver: ' + AlloyLogger.element(component.element()),
-        channelSchema, receivingData.data()
+        'channel[' + ch + '] data\nReceiver: ' + AlloyLogger.element(component.element),
+        channelSchema, receivingData.data
       );
       channelInfo.onReceive(component, data);
     });

@@ -5,6 +5,6 @@ export interface PRegExp {
 }
 
 export interface PRange {
-  readonly start: () => number;
-  readonly finish: () => number;
+  readonly start: number;
+  readonly finish: number;
 }

@@ -40,7 +40,7 @@ import * as Presnaps from './Presnaps';
 // move the mouse really quickly :)
 const getCoords = <E>(component: AlloyComponent, snapInfo: SnapsConfig<E>, coord: DragCoord.CoordAdt, delta: SugarPosition): DragCoord.CoordAdt => Presnaps.get(component, snapInfo).fold(() => coord, (fixed) =>
 // We have a pre-snap position, so we have to apply the delta ourselves
-  DragCoord.fixed(fixed.left() + delta.left(), fixed.top() + delta.top())
+  DragCoord.fixed(fixed.left + delta.left, fixed.top + delta.top)
 );
 
 const moveOrSnap = <E>(component: AlloyComponent, snapInfo: SnapsConfig<E>, coord: DragCoord.CoordAdt, delta: SugarPosition, scroll: SugarPosition, origin: SugarPosition): SnapPin<E> => {
@@ -53,13 +53,13 @@ const moveOrSnap = <E>(component: AlloyComponent, snapInfo: SnapsConfig<E>, coor
 
   return snap.fold(() =>
     ({
-      coord: DragCoord.fixed(fixedCoord.left(), fixedCoord.top()),
+      coord: DragCoord.fixed(fixedCoord.left, fixedCoord.top),
       extra: Optional.none()
     })
     // No snap.
-    // var newfixed = graph.boundToFixed(theatre, element, loc.left(), loc.top(), fixed.left(), fixed.top(), height);
-    // presnaps.set(element, 'fixed', newfixed.left(), newfixed.top());
-    // return { position: 'fixed', left: newfixed.left() + 'px', top: newfixed.top() + 'px' };
+    // var newfixed = graph.boundToFixed(theatre, element, loc.left, loc.top, fixed.left, fixed.top, height);
+    // presnaps.set(element, 'fixed', newfixed.left, newfixed.top);
+    // return { position: 'fixed', left: newfixed.left + 'px', top: newfixed.top + 'px' };
   , (spanned) => ({
     coord: spanned.output,
     extra: spanned.extra
@@ -72,7 +72,7 @@ const stopDrag = <E>(component: AlloyComponent, snapInfo: SnapsConfig<E>): void 
 
 const findMatchingSnap = <E>(snaps: Array<SnapConfig<E>>, newCoord: DragCoord.CoordAdt, scroll: SugarPosition, origin: SugarPosition): Optional<SnapOutput<E>> => Arr.findMap(snaps, (snap) => {
   const sensor = snap.sensor;
-  const inRange = DragCoord.withinRange(newCoord, sensor, snap.range.left(), snap.range.top(), scroll, origin);
+  const inRange = DragCoord.withinRange(newCoord, sensor, snap.range.left, snap.range.top, scroll, origin);
   return inRange ? Optional.some(
     {
       output: DragCoord.absorb(snap.output, newCoord, scroll, origin),
@@ -94,13 +94,13 @@ const findClosestSnap = <E>(component: AlloyComponent, snapInfo: SnapsConfig<E>,
   return matchSnap.orThunk((): Optional<SnapOutput<E>> => {
     const bestSnap = Arr.foldl(snaps, (acc: SnapCandidate<E>, snap: SnapConfig<E>): SnapCandidate<E> => {
       const sensor = snap.sensor;
-      const deltas = DragCoord.getDeltas(newCoord, sensor, snap.range.left(), snap.range.top(), scroll, origin);
+      const deltas = DragCoord.getDeltas(newCoord, sensor, snap.range.left, snap.range.top, scroll, origin);
       return acc.deltas.fold(() => ({
         deltas: Optional.some(deltas),
         snap: Optional.some(snap)
       }), (bestDeltas) => {
-        const currAvg = (deltas.left() + deltas.top()) / 2;
-        const bestAvg = (bestDeltas.left() + bestDeltas.top()) / 2;
+        const currAvg = (deltas.left + deltas.top) / 2;
+        const bestAvg = (bestDeltas.left + bestDeltas.top) / 2;
         if (currAvg <= bestAvg) {
           return {
             deltas: Optional.some(deltas),

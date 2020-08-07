@@ -33,7 +33,7 @@ UnitTest.asynctest(
         Insert.after(SugarElement.fromDom(target), elm);
 
         return {
-          editorContainer: elm.dom()
+          editorContainer: elm.dom
         };
       },
       base_url: '/project/tinymce/js/tinymce',

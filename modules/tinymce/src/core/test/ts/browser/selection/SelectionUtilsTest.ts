@@ -19,8 +19,8 @@ UnitTest.asynctest('browser.tinymce.core.selection.SelectionUtilsTest', function
       const ec = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), endPath).getOrDie();
       const rng = document.createRange();
 
-      rng.setStart(sc.dom(), startOffset);
-      rng.setEnd(ec.dom(), endOffset);
+      rng.setStart(sc.dom, startOffset);
+      rng.setEnd(ec.dom, endOffset);
 
       return SelectionUtils.hasAllContentsSelected(SugarElement.fromDom(viewBlock.get()), rng);
     });

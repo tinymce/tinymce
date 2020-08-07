@@ -17,7 +17,7 @@ const exhibit = () => DomModification.nu({
 });
 
 const events = (): AlloyEvents.AlloyEventRecord => AlloyEvents.derive([
-  AlloyEvents.abort(NativeEvents.selectstart(), Fun.constant(true))
+  AlloyEvents.abort(NativeEvents.selectstart(), Fun.always)
 ]);
 
 export {

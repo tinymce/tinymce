@@ -75,7 +75,7 @@ const getContext = (dom: DOMUtils, initRange: Range, ch: string, minChars: numbe
   () => findStart(dom, initRange, ch, minChars),
   (elm) => {
     const range = dom.createRng();
-    range.selectNode(elm.dom());
+    range.selectNode(elm.dom);
     const text = getText(range);
     return Optional.some({ range, text: stripTriggerChar(text, ch), triggerChar: ch });
   }

@@ -5,9 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyEvents, Button, Memento, NativeEvents, SketchSpec } from '@ephox/alloy';
+import { AlloyEvents, Button, Memento, NativeEvents, SimulatedEvent, SketchSpec } from '@ephox/alloy';
 import { BlobConversions } from '@ephox/imagetools';
 import { Id, Optional } from '@ephox/katamari';
+import { EventArgs } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 
 import * as Buttons from '../ui/Buttons';
@@ -28,9 +29,9 @@ const addImage = (editor: Editor, blob: Blob) => {
   });
 };
 
-const extractBlob = (simulatedEvent): Optional<Blob> => {
-  const event = simulatedEvent.event();
-  const files = event.raw().target.files || event.raw().dataTransfer.files;
+const extractBlob = (simulatedEvent: SimulatedEvent<EventArgs>): Optional<Blob> => {
+  const event = simulatedEvent.event.raw as any;
+  const files = event.target.files || event.dataTransfer.files;
   return Optional.from(files[0]);
 };
 
@@ -49,7 +50,7 @@ const sketch = (editor): SketchSpec => {
       // Stop the event firing again at the button level
       AlloyEvents.cutter(NativeEvents.click()),
 
-      AlloyEvents.run(NativeEvents.change(), (picker, simulatedEvent) => {
+      AlloyEvents.run<EventArgs>(NativeEvents.change(), (picker, simulatedEvent) => {
         extractBlob(simulatedEvent).each((blob) => {
           addImage(editor, blob);
         });
@@ -65,7 +66,7 @@ const sketch = (editor): SketchSpec => {
     action(button) {
       const picker = memPicker.get(button);
       // Trigger a dom click for the file input
-      picker.element().dom().click();
+      picker.element.dom.click();
     }
   });
 };

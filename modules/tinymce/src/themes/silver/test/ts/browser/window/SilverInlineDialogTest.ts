@@ -1,11 +1,11 @@
 import { ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Logger, Mouse, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Types } from '@ephox/bridge';
 import { Cell, Strings } from '@ephox/katamari';
 import { TinyLoader } from '@ephox/mcagar';
 import { SugarBody, SugarElement } from '@ephox/sugar';
 
+import { Dialog } from 'tinymce/core/api/ui/Ui';
 import Theme from 'tinymce/themes/silver/Theme';
 import * as DialogUtils from '../../module/DialogUtils';
 
@@ -14,9 +14,9 @@ UnitTest.asynctest('WindowManager:inline-dialog Test', (success, failure) => {
 
   TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const store = TestHelpers.TestStore();
-    const currentApi = Cell<Types.Dialog.DialogInstanceApi<any>>({ } as any);
+    const currentApi = Cell<Dialog.DialogInstanceApi<any>>({ } as any);
 
-    const dialogSpec: Types.Dialog.DialogApi<{ fred: string }> = {
+    const dialogSpec: Dialog.DialogSpec<{ fred: string }> = {
       title: 'Silver Test Inline (Toolbar) Dialog',
       body: {
         type: 'panel',

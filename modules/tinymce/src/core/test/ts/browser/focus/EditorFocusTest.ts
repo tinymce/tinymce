@@ -48,8 +48,8 @@ UnitTest.asynctest('browser.tinymce.core.focus.EditorFocusTest', function (succe
       const endContainer = Hierarchy.follow(SugarElement.fromDom(editor.getBody()), endPath).getOrDie();
       const rng = editor.dom.createRng();
 
-      rng.setStart(startContainer.dom(), startOffset);
-      rng.setEnd(endContainer.dom(), endOffset);
+      rng.setStart(startContainer.dom, startOffset);
+      rng.setEnd(endContainer.dom, endOffset);
 
       editor.selection.setRng(rng);
     });

@@ -17,10 +17,11 @@ import * as SystemEvents from '../../api/events/SystemEvents';
 import * as FocusManagers from '../../api/focus/FocusManagers';
 import { Menu } from '../../api/ui/Menu';
 import { SingleSketchFactory } from '../../api/ui/UiSketcher';
-import { CustomEvent, NativeSimulatedEvent } from '../../events/SimulatedEvent';
+import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
 import { LayeredState } from '../../menu/layered/LayeredState';
 import * as ItemEvents from '../../menu/util/ItemEvents';
 import * as MenuEvents from '../../menu/util/MenuEvents';
+import { MenuFocusEvent, MenuItemHoverEvent } from '../types/MenuTypes';
 import { PartialMenuSpec, TieredMenuApis, TieredMenuDetail, TieredMenuSpec } from '../types/TieredMenuTypes';
 
 export type MenuPreparation = MenuPrepared | MenuNotBuilt;
@@ -87,7 +88,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, _ra
   const setActiveMenu = (container: AlloyComponent, menu: AlloyComponent): void => {
     Highlighting.highlight(container, menu);
     Highlighting.getHighlighted(menu).orThunk(() => Highlighting.getFirst(menu)).each((item) => {
-      AlloyTriggers.dispatch(container, item.element(), SystemEvents.focusItem());
+      AlloyTriggers.dispatch(container, item.element, SystemEvents.focusItem());
     });
   };
 
@@ -100,14 +101,14 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, _ra
     Arr.each(others, (o) => {
 
       // May not need to do the active menu thing.
-      Classes.remove(o.element(), [ detail.markers.backgroundMenu ]);
+      Classes.remove(o.element, [ detail.markers.backgroundMenu ]);
       if (!detail.stayInDom) { Replacing.remove(container, o); }
     });
   };
 
   const getSubmenuParents = (container: AlloyComponent): Record<string, AlloyComponent> => submenuParentItems.get().getOrThunk(() => {
     const r: Record<string, AlloyComponent> = { };
-    const items = SelectorFilter.descendants(container.element(), `.${detail.markers.item}`);
+    const items = SelectorFilter.descendants(container.element, `.${detail.markers.item}`);
     const parentItems = Arr.filter(items, (i) => Attribute.get(i, 'aria-haspopup') === 'true');
     Arr.each(parentItems, (i) => {
       container.getSystem().getByDom(i).each((itemComp) => {
@@ -125,7 +126,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, _ra
     Obj.each(parentItems, (v, k) => {
       // Really should turn path into a Set
       const expanded = Arr.contains(path, k);
-      Attribute.set(v.element(), 'aria-expanded', expanded);
+      Attribute.set(v.element, 'aria-expanded', expanded);
     });
   };
 
@@ -137,15 +138,15 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, _ra
         const activeMenu = menuPrep.menu;
         const rest = getMenus(state, path.slice(1));
         Arr.each(rest, (r) => {
-          Class.add(r.element(), detail.markers.backgroundMenu);
+          Class.add(r.element, detail.markers.backgroundMenu);
         });
 
-        if (!SugarBody.inBody(activeMenu.element())) {
+        if (!SugarBody.inBody(activeMenu.element)) {
           Replacing.append(container, GuiFactory.premade(activeMenu));
         }
 
         // Remove the background-menu class from the active menu
-        Classes.remove(activeMenu.element(), [ detail.markers.backgroundMenu ]);
+        Classes.remove(activeMenu.element, [ detail.markers.backgroundMenu ]);
         setActiveMenu(container, activeMenu);
         closeOthers(container, state, path);
         return Optional.some(activeMenu);
@@ -174,7 +175,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, _ra
         const activeMenu = buildIfRequired(container, menuName, activeMenuPrep);
 
         // DUPE with above. Fix later.
-        if (!SugarBody.inBody(activeMenu.element())) {
+        if (!SugarBody.inBody(activeMenu.element)) {
           Replacing.append(container, GuiFactory.premade(activeMenu));
         }
 
@@ -216,11 +217,11 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, _ra
   };
 
   const onRight = (container: AlloyComponent, item: AlloyComponent): Optional<AlloyComponent> =>
-    EditableFields.inside(item.element()) ? Optional.none() : expandRight(container, item, ExpandHighlightDecision.HighlightSubmenu);
+    EditableFields.inside(item.element) ? Optional.none() : expandRight(container, item, ExpandHighlightDecision.HighlightSubmenu);
 
   const onLeft = (container: AlloyComponent, item: AlloyComponent): Optional<AlloyComponent> =>
     // Exclude inputs, textareas etc.
-    EditableFields.inside(item.element()) ? Optional.none() : collapseLeft(container, item);
+    EditableFields.inside(item.element) ? Optional.none() : collapseLeft(container, item);
 
   const onEscape = (container: AlloyComponent, item: AlloyComponent): Optional<AlloyComponent> =>
     collapseLeft(container, item).orThunk(() =>
@@ -237,14 +238,14 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, _ra
 
   const events = AlloyEvents.derive([
     // Set "active-menu" for the menu with focus
-    AlloyEvents.run<CustomEvent>(MenuEvents.focus(), (sandbox, simulatedEvent) => {
+    AlloyEvents.run<MenuFocusEvent>(MenuEvents.focus(), (sandbox, simulatedEvent) => {
       // Ensure the item is actually part of this menu structure, and not part of another menu structure that's bubbling.
-      const item = simulatedEvent.event().item();
+      const item = simulatedEvent.event.item;
       layeredState.lookupItem(getItemValue(item)).each(() => {
-        const menu = simulatedEvent.event().menu();
+        const menu = simulatedEvent.event.menu;
         Highlighting.highlight(sandbox, menu);
 
-        const value = getItemValue(simulatedEvent.event().item());
+        const value = getItemValue(simulatedEvent.event.item);
         layeredState.refresh(value).each((path) => closeOthers(sandbox, layeredState, path));
       });
     }),
@@ -252,7 +253,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, _ra
     AlloyEvents.runOnExecute((component, simulatedEvent) => {
       // Trigger on execute on the targeted element
       // I.e. clicking on menu item
-      const target = simulatedEvent.event().target();
+      const target = simulatedEvent.event.target;
       component.getSystem().getByDom(target).each((item) => {
         const itemValue = getItemValue(item);
 
@@ -283,8 +284,8 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, _ra
   ].concat(detail.navigateOnHover ? [
     // Hide any irrelevant submenus and expand any submenus based
     // on hovered item
-    AlloyEvents.run<CustomEvent>(ItemEvents.hover(), (sandbox, simulatedEvent) => {
-      const item = simulatedEvent.event().item();
+    AlloyEvents.run<MenuItemHoverEvent>(ItemEvents.hover(), (sandbox, simulatedEvent) => {
+      const item = simulatedEvent.event.item;
       updateView(sandbox, item);
       expandRight(sandbox, item, ExpandHighlightDecision.HighlightParent);
       detail.onHover(sandbox, item);
@@ -306,7 +307,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, _ra
   };
 
   const extractMenuFromContainer = (container: AlloyComponent) =>
-    Optional.from(container.components()[0]).filter((comp) => Attribute.get(comp.element(), 'role') === 'menu');
+    Optional.from(container.components()[0]).filter((comp) => Attribute.get(comp.element, 'role') === 'menu');
 
   const repositionMenus = (container: AlloyComponent): void => {
     // Get the primary menu
@@ -354,7 +355,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, _ra
           onEscape: keyOnItem(onEscape),
           focusIn(container, _keyInfo) {
             layeredState.getPrimary().each((primary) => {
-              AlloyTriggers.dispatch(container, primary.element(), SystemEvents.focusItem());
+              AlloyTriggers.dispatch(container, primary.element, SystemEvents.focusItem());
             });
           }
         }),

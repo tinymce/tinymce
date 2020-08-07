@@ -15,7 +15,7 @@ const insertRowAt = function (grid: Structs.RowCells[], index: number, example: 
 
   const between = GridRow.mapCells(grid[example], function (ex, c) {
     const withinSpan = index > 0 && index < grid.length && comparator(GridRow.getCellElement(grid[index - 1], c), GridRow.getCellElement(grid[index], c));
-    const ret = withinSpan ? GridRow.getCell(grid[index], c) : Structs.elementnew(substitution(ex.element(), comparator), true);
+    const ret = withinSpan ? GridRow.getCell(grid[index], c) : Structs.elementnew(substitution(ex.element, comparator), true);
     return ret;
   });
 
@@ -59,7 +59,7 @@ const splitCellIntoRows = function (grid: Structs.RowCells[], exampleRow: number
 
   const between = GridRow.mapCells(grid[exampleRow], function (ex, i) {
     const isTargetCell = (i === exampleCol);
-    return isTargetCell ? Structs.elementnew(substitution(ex.element(), comparator), true) : ex;
+    return isTargetCell ? Structs.elementnew(substitution(ex.element, comparator), true) : ex;
   });
 
   return before.concat([ between ]).concat(after);
@@ -67,12 +67,12 @@ const splitCellIntoRows = function (grid: Structs.RowCells[], exampleRow: number
 
 const deleteColumnsAt = function (grid: Structs.RowCells[], start: number, finish: number) {
   const rows = Arr.map(grid, function (row) {
-    const cells = row.cells().slice(0, start).concat(row.cells().slice(finish + 1));
-    return Structs.rowcells(cells, row.section());
+    const cells = row.cells.slice(0, start).concat(row.cells.slice(finish + 1));
+    return Structs.rowcells(cells, row.section);
   });
   // We should filter out rows that have no columns for easy deletion
   return Arr.filter(rows, function (row) {
-    return row.cells().length > 0;
+    return row.cells.length > 0;
   });
 };
 

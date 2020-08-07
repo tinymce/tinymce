@@ -15,7 +15,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.FontInfoTest', function (success, f
     div.style[fontProp] = expected;
     div.innerHTML = html;
     const elm = Hierarchy.follow(SugarElement.fromDom(div), path).getOrDie('oh no! ' + path.toString() + '  path was bad');
-    const actual = fontGetProp(div, elm.dom());
+    const actual = fontGetProp(div, elm.dom);
     LegacyUnit.equal(
       actual,
       expected,
@@ -31,7 +31,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.FontInfoTest', function (success, f
     document.body.appendChild(div);
     div.innerHTML = html;
     const elm = Hierarchy.follow(SugarElement.fromDom(div), path).getOrDie('oh no! ' + path.toString() + '  path was bad');
-    const actual = fontGetProp(div, elm.dom());
+    const actual = fontGetProp(div, elm.dom);
     LegacyUnit.equal(
       actual,
       expected,

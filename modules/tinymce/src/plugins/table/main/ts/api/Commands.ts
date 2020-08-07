@@ -41,8 +41,8 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
         editor.selection.setCursorLocation();
       } else {
         const rng = editor.dom.createRng();
-        rng.setStart(cursor.dom(), 0);
-        rng.setEnd(cursor.dom(), 0);
+        rng.setStart(cursor.dom, 0);
+        rng.setEnd(cursor.dom, 0);
         editor.selection.setRng(rng);
         editor.nodeChanged();
       }
@@ -182,7 +182,7 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
       const formatName = 'tablecell' + style.toLowerCase().replace('-', '');
       if (editor.formatter.has(formatName) && Type.isString(value)) {
         Arr.each(cells, (cell) => {
-          DomModifier.normal(editor, cell.dom()).setFormat(formatName, value);
+          DomModifier.normal(editor, cell.dom).setFormat(formatName, value);
         });
       }
     });

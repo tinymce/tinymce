@@ -5,7 +5,7 @@ import * as InsertAll from './InsertAll';
 
 const empty = (element: SugarElement<Node>): void => {
   // shortcut "empty node" trick. Requires IE 9.
-  element.dom().textContent = '';
+  element.dom.textContent = '';
 
   // If the contents was a single empty text node, the above doesn't remove it. But, it's still faster in general
   // than removing every child node manually.
@@ -17,7 +17,7 @@ const empty = (element: SugarElement<Node>): void => {
 };
 
 const remove = (element: SugarElement<Node>): void => {
-  const dom = element.dom();
+  const dom = element.dom;
   if (dom.parentNode !== null) {
     dom.parentNode.removeChild(dom);
   }

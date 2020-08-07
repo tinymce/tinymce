@@ -95,19 +95,19 @@ UnitTest.test('ElementAddressTest', () => {
   const checkInParentOfSelector = (expected: TestParentSpec, startPath: number[], selector: string) => {
     const element = Hierarchy.follow(page, startPath).getOrDie('Could not find: ' + startPath);
     const actual = ElementAddress.selectorsInParent(element, selector).getOrDie('None for inParent');
-    Assert.eq('eq', expected.parent, toStr(actual.parent()));
-    Assert.eq('eq', expected.children, Arr.map(actual.children(), toStr));
-    Assert.eq('eq', expected.element, toStr(actual.element()));
-    Assert.eq('eq', expected.index, actual.index());
+    Assert.eq('eq', expected.parent, toStr(actual.parent));
+    Assert.eq('eq', expected.children, Arr.map(actual.children, toStr));
+    Assert.eq('eq', expected.element, toStr(actual.element));
+    Assert.eq('eq', expected.index, actual.index);
   };
 
   const checkInParentOfAny = (expected: TestParentSpec, startPath: number[]) => {
     const element = Hierarchy.follow(page, startPath).getOrDie('Could not find: ' + startPath);
     const actual = ElementAddress.indexInParent(element).getOrDie('None for inParent');
-    Assert.eq('eq', expected.parent, toStr(actual.parent()));
-    Assert.eq('eq', expected.children, Arr.map(actual.children(), toStr));
-    Assert.eq('eq', expected.element, toStr(actual.element()));
-    Assert.eq('eq', expected.index, actual.index());
+    Assert.eq('eq', expected.parent, toStr(actual.parent));
+    Assert.eq('eq', expected.children, Arr.map(actual.children, toStr));
+    Assert.eq('eq', expected.element, toStr(actual.element));
+    Assert.eq('eq', expected.index, actual.index);
   };
 
   const checkNoneInParentOfSelector = (startPath: number[], ancestorSelector: string) => {
@@ -163,10 +163,10 @@ UnitTest.test('ElementAddressTest', () => {
   const checkInAncestorOfSelector = (expected: TestAncestorSpec, startPath: number[], ancestorSelector: string, descendantSelector: string) => {
     const element = Hierarchy.follow(page, startPath).getOrDie('Could not find: ' + startPath);
     const actual = ElementAddress.descendantsInAncestor(element, ancestorSelector, descendantSelector).getOrDie('None for inAncestor');
-    Assert.eq('eq', expected.ancestor, toStr(actual.ancestor()));
-    Assert.eq('eq', expected.descendants, Arr.map(actual.descendants(), toStr));
-    Assert.eq('eq', expected.element, toStr(actual.element()));
-    Assert.eq('eq', expected.index, actual.index());
+    Assert.eq('eq', expected.ancestor, toStr(actual.ancestor));
+    Assert.eq('eq', expected.descendants, Arr.map(actual.descendants, toStr));
+    Assert.eq('eq', expected.element, toStr(actual.element));
+    Assert.eq('eq', expected.index, actual.index);
   };
 
   const checkNoneInAncestorOfSelector = (startPath: number[], ancestorSelector: string, descendantSelector: string) => {

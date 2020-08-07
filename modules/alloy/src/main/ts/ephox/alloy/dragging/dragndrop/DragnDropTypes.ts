@@ -25,9 +25,9 @@ export interface StartingDragndropConfigSpec {
   getImageParent?: (component: AlloyComponent) => SugarElement;
   getImage?: (component: AlloyComponent) => DragnDropImageClone;
   canDrag?: (component: AlloyComponent, target: SugarElement) => boolean;
-  onDragstart?: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;
-  onDragover?: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;
-  onDragend?: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;
+  onDragstart?: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent<DragEvent>) => void;
+  onDragover?: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent<DragEvent>) => void;
+  onDragend?: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent<DragEvent>) => void;
 }
 
 export interface DragStartingConfig {
@@ -36,15 +36,11 @@ export interface DragStartingConfig {
   effectAllowed: string;
   getData: Optional<(component: AlloyComponent) => string>;
   getImageParent: Optional<(component: AlloyComponent) => SugarElement>;
-  getImage: Optional<(component: AlloyComponent) => {
-    element: () => SugarElement;
-    x: () => number;
-    y: () => number;
-  }>;
+  getImage: Optional<(component: AlloyComponent) => DragnDropImageClone>;
   canDrag: (component: AlloyComponent, target: SugarElement) => boolean;
-  onDragstart: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;
-  onDragover: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;
-  onDragend: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;
+  onDragstart: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent<DragEvent>) => void;
+  onDragover: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent<DragEvent>) => void;
+  onDragend: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent<DragEvent>) => void;
   instance: {
     exhibit: (base: DomDefinitionDetail, dragInfo: DragStartingConfig) => DomModification;
     handlers: (dragInfo: DragStartingConfig) => {

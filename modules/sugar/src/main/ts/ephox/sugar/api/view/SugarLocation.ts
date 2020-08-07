@@ -17,12 +17,12 @@ const firstDefinedOrZero = (a?: number, b?: number) => {
 };
 
 const absolute = (element: SugarElement<Element>) => {
-  const doc = element.dom().ownerDocument;
+  const doc = element.dom.ownerDocument;
   const body = doc.body;
   const win = doc.defaultView;
   const html = doc.documentElement;
 
-  if (body === element.dom()) {
+  if (body === element.dom) {
     return SugarPosition(body.offsetLeft, body.offsetTop);
   }
 
@@ -41,14 +41,14 @@ const absolute = (element: SugarElement<Element>) => {
 // We're only 1 <-> 1 with the old value in the single place we use this function
 // (ego.api.Dragging) so the rest can bite me.
 const relative = (element: SugarElement<HTMLElement>) => {
-  const dom = element.dom();
+  const dom = element.dom;
   // jquery-ism: when style="position: fixed", this === boxPosition()
   // but tests reveal it returns the same thing anyway
   return SugarPosition(dom.offsetLeft, dom.offsetTop);
 };
 
 const viewport = (element: SugarElement<Element>) => {
-  const dom = element.dom();
+  const dom = element.dom;
 
   const doc = dom.ownerDocument;
   const body = doc.body;

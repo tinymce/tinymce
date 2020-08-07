@@ -49,7 +49,7 @@ export function renderColorSwatchItem(spec: Menu.FancyMenuItem, backstage: UiFac
     },
     autofocus: true,
     components: [
-      ItemWidget.parts().widget(AlloyMenu.sketch(widgetSpec))
+      ItemWidget.parts.widget(AlloyMenu.sketch(widgetSpec))
     ]
   };
 }

@@ -51,7 +51,7 @@ UnitTest.asynctest('ContextToolbarBoundsTest', (success, failure) => {
 
   const cScrollRelativeEditorContainer = (relativeTop: boolean, delta: number) => Chain.op((editor: Editor) => {
     const editorContainer = SugarElement.fromDom(editor.getContainer());
-    editorContainer.dom().scrollIntoView(relativeTop);
+    editorContainer.dom.scrollIntoView(relativeTop);
     Scroll.to(0, window.pageYOffset + delta);
   });
 

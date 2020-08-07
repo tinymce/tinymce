@@ -24,7 +24,7 @@ const top: Walks = {
     // the parent of a previously traversed item, we have to do this. Very hacky... find a
     // better way.
     const isParent = universe.property().parent(item).exists(function (p) {
-      return universe.eq(p, next.item());
+      return universe.eq(p, next.item);
     });
     return !isParent;
   }
@@ -33,7 +33,7 @@ const top: Walks = {
 const all: Walks = {
   // rules === undefined, so use default.
   rules: undefined,
-  inclusion: <E, D> (universe: Universe<E, D>, next: Traverse<E>, _item: E) => universe.property().isText(next.item())
+  inclusion: <E, D> (universe: Universe<E, D>, next: Traverse<E>, _item: E) => universe.property().isText(next.item)
 };
 
 export const Walks = {

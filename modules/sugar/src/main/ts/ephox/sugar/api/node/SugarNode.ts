@@ -3,15 +3,15 @@ import * as NodeTypes from './NodeTypes';
 import { SugarElement } from './SugarElement';
 
 const name = (element: SugarElement<Node>): string => {
-  const r = element.dom().nodeName;
+  const r = element.dom.nodeName;
   return r.toLowerCase();
 };
 
 const type = (element: SugarElement<Node>): number =>
-  element.dom().nodeType;
+  element.dom.nodeType;
 
 const value = (element: SugarElement<Node>): string | null =>
-  element.dom().nodeValue;
+  element.dom.nodeValue;
 
 const isType = <E extends Node> (t: number) => (element: SugarElement<Node>): element is SugarElement<E> =>
   type(element) === t;
@@ -20,7 +20,7 @@ const isComment = (element: SugarElement<Node>): element is SugarElement<Comment
   type(element) === NodeTypes.COMMENT || name(element) === '#comment';
 
 const isHTMLElement = (element: SugarElement<Node>): element is SugarElement<HTMLElement> =>
-  SandHTMLElement.isPrototypeOf(element.dom());
+  SandHTMLElement.isPrototypeOf(element.dom);
 
 const isElement = isType<Element>(NodeTypes.ELEMENT);
 const isText = isType<Text>(NodeTypes.TEXT);

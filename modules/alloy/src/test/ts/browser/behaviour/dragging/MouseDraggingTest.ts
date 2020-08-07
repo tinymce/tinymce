@@ -43,7 +43,7 @@ UnitTest.asynctest('MouseDraggingTest', (success, failure) => {
           },
           getBounds: () => {
             const scroll = Scroll.get();
-            return Boxes.bounds(scroll.left(), scroll.top(), 500, 500);
+            return Boxes.bounds(scroll.left, scroll.top, 500, 500);
           }
         })
       ])
@@ -64,7 +64,7 @@ UnitTest.asynctest('MouseDraggingTest', (success, failure) => {
     })
   ), (_doc, _body, gui, component, _store) => {
 
-    const cSubject = Chain.injectThunked(() => subject.get(component).element());
+    const cSubject = Chain.injectThunked(() => subject.get(component).element);
 
     const cEnsurePositionChanged = Chain.control(
       Chain.binder((all: any) => all.box_position1.left !== all.box_position2.left &&
@@ -162,7 +162,7 @@ UnitTest.asynctest('MouseDraggingTest', (success, failure) => {
         NamedChain.asChain([
           NamedChain.write('box', cSubject),
           NamedChain.direct('box', Mouse.cMouseDown, '_'),
-          NamedChain.writeValue('container', gui.element()),
+          NamedChain.writeValue('container', gui.element),
           NamedChain.direct('container', UiFinder.cFindIn('.test-blocker'), 'blocker'),
 
           NamedChain.direct('blocker', Mouse.cMouseMoveTo(100, 200), '_'),

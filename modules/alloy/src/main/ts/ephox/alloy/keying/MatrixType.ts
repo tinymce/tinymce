@@ -29,7 +29,7 @@ const schema: FieldProcessorAdt[] = [
 const focusIn = (component: AlloyComponent, matrixConfig: MatrixConfig, _state: Stateless): void => {
   const focused = matrixConfig.previousSelector(component).orThunk(() => {
     const selectors = matrixConfig.selectors;
-    return SelectorFind.descendant(component.element(), selectors.cell);
+    return SelectorFind.descendant(component.element, selectors.cell);
   });
 
   focused.each((cell) => {
@@ -37,7 +37,7 @@ const focusIn = (component: AlloyComponent, matrixConfig: MatrixConfig, _state: 
   });
 };
 
-const execute: KeyRuleHandler<MatrixConfig, Stateless> = (component, simulatedEvent, matrixConfig) => Focus.search(component.element()).bind((focused) => matrixConfig.execute(component, simulatedEvent, focused));
+const execute: KeyRuleHandler<MatrixConfig, Stateless> = (component, simulatedEvent, matrixConfig) => Focus.search(component.element).bind((focused) => matrixConfig.execute(component, simulatedEvent, focused));
 
 const toMatrix = (rows: SugarElement[], matrixConfig: MatrixConfig): SugarElement[][] => Arr.map(rows, (row) => SelectorFilter.descendants(row, matrixConfig.selectors.cell));
 
@@ -64,15 +64,15 @@ const moveNorth = doMove(MatrixNavigation.cycleUp, MatrixNavigation.moveUp);
 const moveSouth = doMove(MatrixNavigation.cycleDown, MatrixNavigation.moveDown);
 
 const getKeydownRules: () => Array<KeyRules.KeyRule<MatrixConfig, Stateless>> = Fun.constant([
-  KeyRules.rule(KeyMatch.inSet(Keys.LEFT()), DomMovement.west(moveLeft, moveRight)),
-  KeyRules.rule(KeyMatch.inSet(Keys.RIGHT()), DomMovement.east(moveLeft, moveRight)),
-  KeyRules.rule(KeyMatch.inSet(Keys.UP()), DomMovement.north(moveNorth)),
-  KeyRules.rule(KeyMatch.inSet(Keys.DOWN()), DomMovement.south(moveSouth)),
-  KeyRules.rule(KeyMatch.inSet(Keys.SPACE().concat(Keys.ENTER())), execute)
+  KeyRules.rule(KeyMatch.inSet(Keys.LEFT), DomMovement.west(moveLeft, moveRight)),
+  KeyRules.rule(KeyMatch.inSet(Keys.RIGHT), DomMovement.east(moveLeft, moveRight)),
+  KeyRules.rule(KeyMatch.inSet(Keys.UP), DomMovement.north(moveNorth)),
+  KeyRules.rule(KeyMatch.inSet(Keys.DOWN), DomMovement.south(moveSouth)),
+  KeyRules.rule(KeyMatch.inSet(Keys.SPACE.concat(Keys.ENTER)), execute)
 ]);
 
 const getKeyupRules: () => Array<KeyRules.KeyRule<MatrixConfig, Stateless>> = Fun.constant([
-  KeyRules.rule(KeyMatch.inSet(Keys.SPACE()), KeyingTypes.stopEventForFirefox)
+  KeyRules.rule(KeyMatch.inSet(Keys.SPACE), KeyingTypes.stopEventForFirefox)
 ]);
 
 export default KeyingType.typical(schema, NoState.init, getKeydownRules, getKeyupRules, () => Optional.some(focusIn));

@@ -6,7 +6,7 @@
  */
 
 import { AlloyComponent, Behaviour, Focusing, FormField, Tabstopping } from '@ephox/alloy';
-import { Types } from '@ephox/bridge';
+import { Dialog } from '@ephox/bridge';
 import { Cell, Optional } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Attribute } from '@ephox/sugar';
@@ -15,7 +15,6 @@ import { renderFormFieldWith, renderLabel } from '../alien/FieldLabeller';
 
 import { RepresentingConfigs } from '../alien/RepresentingConfigs';
 import * as NavigableObject from '../general/NavigableObject';
-import { Omit } from '../Omit';
 
 const platformNeedsSandboxing = !(PlatformDetection.detect().browser.isIE() || PlatformDetection.detect().browser.isEdge());
 
@@ -24,7 +23,7 @@ interface IFrameSourcing {
   setValue: (frame: AlloyComponent, value: string) => void;
 }
 
-type IframeSpec = Omit<Types.Iframe.Iframe, 'type'>;
+type IframeSpec = Omit<Dialog.Iframe, 'type'>;
 
 const getDynamicSource = (isSandbox): IFrameSourcing => {
   const cachedValue = Cell('');
@@ -35,12 +34,12 @@ const getDynamicSource = (isSandbox): IFrameSourcing => {
     setValue: (frameComponent: AlloyComponent, html: string) => {
 
       if (!isSandbox) {
-        Attribute.set(frameComponent.element(), 'src', `javascript:''`);
+        Attribute.set(frameComponent.element, 'src', `javascript:''`);
         // IE 6-11 doesn't support data uris on iframeComponents
         // and Edge only supports upto ~4000 chars in data uris
         // so I guess they will have to be less secure since we can't sandbox on those
         // TODO: Use sandbox if future versions of IE/Edge supports iframeComponents with data: uris.
-        const doc = frameComponent.element().dom().contentWindow.document;
+        const doc = frameComponent.element.dom.contentWindow.document;
 
         doc.open();
         doc.write(html);
@@ -49,7 +48,7 @@ const getDynamicSource = (isSandbox): IFrameSourcing => {
       } else {
         // TINY-3769: We need to use srcdoc here, instead of src with a data URI, otherwise browsers won't retain the Origin.
         // See https://bugs.chromium.org/p/chromium/issues/detail?id=58999#c11
-        Attribute.set(frameComponent.element(), 'srcdoc', html);
+        Attribute.set(frameComponent.element, 'srcdoc', html);
       }
       cachedValue.set(html);
     }
@@ -85,7 +84,7 @@ const renderIFrame = (spec: IframeSpec, providersBackstage: UiFactoryBackstagePr
   );
 
   // Note, it's not going to handle escape at this point.
-  const pField = FormField.parts().field({
+  const pField = FormField.parts.field({
     factory: { sketch: factory }
   });
 

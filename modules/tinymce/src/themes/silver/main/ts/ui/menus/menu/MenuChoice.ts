@@ -1,20 +1,27 @@
-import { Menu as BridgeMenu, Types } from '@ephox/bridge';
+/**
+ * Copyright (c) Tiny Technologies, Inc. All rights reserved.
+ * Licensed under the LGPL or a commercial license.
+ * For LGPL see License.txt in the project root for license information.
+ * For commercial licenses see https://www.tiny.cloud/
+ */
+
+import { Menu as BridgeMenu, Toolbar } from '@ephox/bridge';
 import { Arr, Optional, Optionals } from '@ephox/katamari';
 
 import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
 import { renderChoiceItem } from '../item/build/ChoiceItem';
 import ItemResponse from '../item/ItemResponse';
 import * as MenuUtils from './MenuUtils';
-import { SingleMenuItemApi } from './SingleMenuTypes';
+import { SingleMenuItemSpec } from './SingleMenuTypes';
 
 type PartialMenuSpec = MenuUtils.PartialMenuSpec;
 
 export const createPartialChoiceMenu = (
   value: string,
-  items: SingleMenuItemApi[],
+  items: SingleMenuItemSpec[],
   onItemValueHandler: (itemValue: string) => void,
   columns: 'auto' | number,
-  presets: Types.PresetTypes,
+  presets: Toolbar.PresetTypes,
   itemResponse: ItemResponse,
   select: (value: string) => boolean,
   providersBackstage: UiFactoryBackstageProviders
@@ -26,10 +33,10 @@ export const createPartialChoiceMenu = (
 };
 
 export const createChoiceItems = (
-  items: SingleMenuItemApi[],
+  items: SingleMenuItemSpec[],
   onItemValueHandler: (itemValue: string) => void,
   columns: 'auto' | number,
-  itemPresets: Types.PresetItemTypes,
+  itemPresets: Toolbar.PresetItemTypes,
   itemResponse: ItemResponse,
   select: (value: string) => boolean,
   providersBackstage: UiFactoryBackstageProviders

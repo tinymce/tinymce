@@ -7,7 +7,7 @@ const toOptionEl = (output: Element[]): Optional<SugarElement<Element>> =>
 
 /* Petrie makes extensive use of :visible, :has() and :contains() which are sizzle extensions */
 const descendant = (sugarElement: SugarElement<any>, selector: string): Optional<SugarElement<Element>> => {
-  const siz: Element[] = Sizzle(selector, sugarElement.dom());
+  const siz: Element[] = Sizzle(selector, sugarElement.dom);
   return toOptionEl(siz);
 };
 
@@ -16,10 +16,10 @@ const toArrayEl = (elements: (Node | Window)[]): SugarElement<Node | Window>[] =
 
 /* Petrie makes extensive use of :visible, :has() and :contains() which are sizzle extensions */
 const descendants = (sugarElement: SugarElement<any>, selector: string): SugarElement<any>[] =>
-  toArrayEl(Sizzle(selector, sugarElement.dom()));
+  toArrayEl(Sizzle(selector, sugarElement.dom));
 
 const matches = (sugarElement: SugarElement<any>, selector: string): boolean =>
-  Sizzle.matchesSelector(sugarElement.dom(), selector);
+  Sizzle.matchesSelector(sugarElement.dom, selector);
 
 const child = (sugarElement: SugarElement<any>, selector: string): Optional<SugarElement<any>> => {
   const children = Traverse.children(sugarElement);

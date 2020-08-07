@@ -1,11 +1,11 @@
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Optional, Result } from '@ephox/katamari';
 
-import { SeparatorMenuItem, SeparatorMenuItemApi, separatorMenuItemSchema } from '../menu/SeparatorMenuItem';
-import { ColumnTypes } from '../toolbar/ToolbarSplitButton';
+import { SeparatorMenuItem, separatorMenuItemSchema, SeparatorMenuItemSpec } from '../menu/SeparatorMenuItem';
 
-export type SeparatorItemApi = SeparatorMenuItemApi;
-export interface AutocompleterItemApi {
+export type ColumnTypes = number | 'auto';
+export type SeparatorItemSpec = SeparatorMenuItemSpec;
+export interface AutocompleterItemSpec {
   type?: 'autocompleteitem';
   value: string;
   text?: string;
@@ -13,7 +13,7 @@ export interface AutocompleterItemApi {
   meta?: Record<string, any>;
 }
 
-export type AutocompleterContents = SeparatorItemApi | AutocompleterItemApi;
+export type AutocompleterContents = SeparatorItemSpec | AutocompleterItemSpec;
 
 export type SeparatorItem = SeparatorMenuItem;
 export interface AutocompleterItem {
@@ -26,7 +26,7 @@ export interface AutocompleterItem {
   meta: Record<string, any>;
 }
 
-export interface AutocompleterApi {
+export interface AutocompleterSpec {
   type?: 'autocompleter';
   ch: string;
   minChars?: number;
@@ -55,9 +55,9 @@ export interface Autocompleter {
 
 const autocompleterItemSchema = ValueSchema.objOf([
   // Currently, autocomplete items don't support configuring type, active, disabled, meta
-  FieldSchema.state('type', () => 'autocompleteitem'),
-  FieldSchema.state('active', () => false),
-  FieldSchema.state('disabled', () => false),
+  FieldSchema.defaulted('type', 'autocompleteitem'),
+  FieldSchema.defaulted('active', false),
+  FieldSchema.defaulted('disabled', false),
   FieldSchema.defaulted('meta', {}),
   FieldSchema.strictString('value'),
   FieldSchema.optionString('text'),
@@ -75,8 +75,11 @@ const autocompleterSchema = ValueSchema.objOf([
   FieldSchema.strictFunction('onAction')
 ]);
 
-export const createSeparatorItem = (spec: SeparatorItemApi): Result<SeparatorItem, ValueSchema.SchemaError<any>> => ValueSchema.asRaw('Autocompleter.Separator', separatorMenuItemSchema, spec);
+export const createSeparatorItem = (spec: SeparatorItemSpec): Result<SeparatorItem, ValueSchema.SchemaError<any>> =>
+  ValueSchema.asRaw('Autocompleter.Separator', separatorMenuItemSchema, spec);
 
-export const createAutocompleterItem = (spec: AutocompleterItemApi): Result<AutocompleterItem, ValueSchema.SchemaError<any>> => ValueSchema.asRaw<AutocompleterItem>('Autocompleter.Item', autocompleterItemSchema, spec);
+export const createAutocompleterItem = (spec: AutocompleterItemSpec): Result<AutocompleterItem, ValueSchema.SchemaError<any>> =>
+  ValueSchema.asRaw<AutocompleterItem>('Autocompleter.Item', autocompleterItemSchema, spec);
 
-export const createAutocompleter = (spec: AutocompleterApi): Result<Autocompleter, ValueSchema.SchemaError<any>> => ValueSchema.asRaw<Autocompleter>('Autocompleter', autocompleterSchema, spec);
+export const createAutocompleter = (spec: AutocompleterSpec): Result<Autocompleter, ValueSchema.SchemaError<any>> =>
+  ValueSchema.asRaw<Autocompleter>('Autocompleter', autocompleterSchema, spec);

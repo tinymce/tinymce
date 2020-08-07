@@ -47,7 +47,7 @@ const Keying: KeyingBehaviour<any> = Behaviour.createModes({
       // Otherwise, we just trigger focus on the outer element.
       keyConfig.sendFocusIn(keyConfig).fold(
         () => {
-          component.getSystem().triggerFocus(component.element(), component.element());
+          component.getSystem().triggerFocus(component.element, component.element);
         },
         (sendFocusIn) => {
           sendFocusIn(component, keyConfig, keyState);

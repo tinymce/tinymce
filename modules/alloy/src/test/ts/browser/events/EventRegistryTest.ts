@@ -59,9 +59,9 @@ UnitTest.asynctest('EventRegistryTest', (success, failure) => {
     const filtered = events.filterByType(type);
     const raw = Arr.map(filtered, (f) => ({
       // Invoke the handler
-      handler: f.descHandler().cHandler(),
-      purpose: f.descHandler().purpose(),
-      id: f.id()
+      handler: f.descHandler.cHandler(),
+      purpose: f.descHandler.purpose,
+      id: f.id
     })).sort((f, g) => {
       if (f.id < g.id) { return -1; } else if (f.id > g.id) { return +1; } else { return 0; }
     });
@@ -90,7 +90,7 @@ UnitTest.asynctest('EventRegistryTest', (success, failure) => {
 
   const sAssertFind = (label: string, expected: ExpectedType, type: string, id: string) => {
     const cFindHandler = Chain.binder((target: SugarElement) => events.find(isRoot, type, target).fold(
-      () => Result.error('No event handler for ' + type + ' on ' + target.dom()),
+      () => Result.error('No event handler for ' + type + ' on ' + target.dom),
       Result.value
     ));
 

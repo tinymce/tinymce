@@ -6,13 +6,13 @@
  */
 
 import { AlloyComponent, AlloyTriggers } from '@ephox/alloy';
-import { Arr, Fun, Optional } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
-import { getStyleFormats } from 'tinymce/themes/silver/ui/core/complex/StyleFormat';
 import { UiFactoryBackstage } from '../../../backstage/Backstage';
 import { updateMenuText } from '../../dropdown/CommonDropdown';
 import { createMenuItems, createSelectButton, SelectSpec } from './BespokeSelect';
 import { AdvancedSelectDataset, SelectDataset } from './SelectDatasets';
+import { getStyleFormats } from './StyleFormat';
 import { findNearest, getCurrentSelectionParents } from './utils/FormatDetection';
 import { onActionToggleFormat } from './utils/Utils';
 
@@ -51,7 +51,7 @@ const getSpec = (editor: Editor, dataset: SelectDataset): SelectSpec => {
     tooltip: 'Formats',
     icon: Optional.none(),
     isSelectedFor,
-    getCurrentValue: Fun.constant(Optional.none()),
+    getCurrentValue: Optional.none,
     getPreviewFor,
     onAction: onActionToggleFormat(editor),
     setInitialValue,

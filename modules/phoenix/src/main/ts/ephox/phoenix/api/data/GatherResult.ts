@@ -1,10 +1,9 @@
-import { Struct } from '@ephox/katamari';
-
 export interface GatherResult {
-  result(): any; // TODO narrow types
-  pruned(): boolean;
+  readonly result: any; // TODO narrow types
+  readonly pruned: boolean;
 }
 
-type GatherResultConstructor = (result: any, pruned: boolean) => GatherResult;
-
-export const GatherResult = <GatherResultConstructor> Struct.immutable('result', 'pruned');
+export const GatherResult = (result: any, pruned: boolean): GatherResult => ({
+  result,
+  pruned
+});

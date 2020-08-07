@@ -6,19 +6,19 @@
  */
 
 import { AddEventsBehaviour, AlloyEvents, Behaviour, Memento, Representing, SimpleSpec } from '@ephox/alloy';
-import { Types } from '@ephox/bridge';
+import { Dialog } from '@ephox/bridge';
 import { Cell, Optional } from '@ephox/katamari';
 import Resource from 'tinymce/core/api/Resource';
 
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 
-type CustomEditorSpec = Types.CustomEditor.CustomEditor;
-type CustomEditorInitFn = Types.CustomEditor.CustomEditorInitFn;
+type CustomEditorSpec = Dialog.CustomEditor;
+type CustomEditorInitFn = Dialog.CustomEditorInitFn;
 
-const isOldCustomEditor = (spec: CustomEditorSpec): spec is Types.CustomEditor.CustomEditorOld => Object.prototype.hasOwnProperty.call(spec, 'init');
+const isOldCustomEditor = (spec: CustomEditorSpec): spec is Dialog.CustomEditorOld => Object.prototype.hasOwnProperty.call(spec, 'init');
 
 export const renderCustomEditor = (spec: CustomEditorSpec): SimpleSpec => {
-  const editorApi = Cell(Optional.none<Types.CustomEditor.CustomEditorInit>());
+  const editorApi = Cell(Optional.none<Dialog.CustomEditorInit>());
 
   const memReplaced = Memento.record({
     dom: {
@@ -34,13 +34,13 @@ export const renderCustomEditor = (spec: CustomEditorSpec): SimpleSpec => {
       classes: [ 'tox-custom-editor' ]
     },
     behaviours: Behaviour.derive([
-      AddEventsBehaviour.config('editor-foo-events', [
+      AddEventsBehaviour.config('custom-editor-events', [
         AlloyEvents.runOnAttached((component) => {
           memReplaced.getOpt(component).each((ta) => {
             (isOldCustomEditor(spec)
-              ? spec.init(ta.element().dom())
+              ? spec.init(ta.element.dom)
               : Resource.load(spec.scriptId, spec.scriptUrl).then(
-                (init: CustomEditorInitFn) => init(ta.element().dom(), spec.settings)
+                (init: CustomEditorInitFn) => init(ta.element.dom, spec.settings)
               )
             ).then((ea) => {
               initialValue.get().each((cvalue) => {

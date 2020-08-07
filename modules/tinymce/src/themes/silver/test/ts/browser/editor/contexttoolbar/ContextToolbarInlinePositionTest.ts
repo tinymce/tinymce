@@ -26,7 +26,7 @@ UnitTest.asynctest('Inline editor ContextToolbar Position test', (success, failu
       const sScrollTo = (x: number, y: number) => Step.sync(() => {
         const editorPos = SugarLocation.absolute(SugarElement.fromDom(editor.getContentAreaContainer()));
         // Note: Add 100px for the top para
-        Scroll.to(editorPos.left() + x, editorPos.top() + 100 + y);
+        Scroll.to(editorPos.left + x, editorPos.top + 100 + y);
       });
 
       const sAssertPosition = (position: string, direction: string, value: number, diff = 5) => Waiter.sTryUntil('Wait for toolbar to be positioned', Step.sync(() => {

@@ -14,7 +14,7 @@ UnitTest.asynctest('browser.tinymce.core.selection.RangeInsertNode', (success, f
   });
 
   const fragmentFromHtml = (html: string, scope: Document): DocumentFragment =>
-    SugarFragment.fromElements(SugarElements.fromHtml(html, scope), scope).dom();
+    SugarFragment.fromElements(SugarElements.fromHtml(html, scope), scope).dom;
 
   TinyLoader.setupLight((editor: Editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);

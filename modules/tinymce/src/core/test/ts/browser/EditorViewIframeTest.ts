@@ -17,7 +17,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorViewIframeTest', function (succes
 
   const getIframeClientRect = function (editor) {
     return SelectorFind.descendant(SugarElement.fromDom(editor.getContentAreaContainer()), 'iframe').map(function (elm) {
-      return elm.dom().getBoundingClientRect();
+      return elm.dom.getBoundingClientRect();
     }).getOrDie();
   };
 

@@ -9,9 +9,9 @@ import { HighlightingConfig } from './HighlightingTypes';
 
 // THIS IS NOT API YET
 const dehighlightAllExcept = (component: AlloyComponent, hConfig: HighlightingConfig, hState: Stateless, skip: AlloyComponent[]): void => {
-  const highlighted = SelectorFilter.descendants(component.element(), '.' + hConfig.highlightClass);
+  const highlighted = SelectorFilter.descendants(component.element, '.' + hConfig.highlightClass);
   Arr.each(highlighted, (h) => {
-    if (!Arr.exists(skip, (skipComp) => skipComp.element() === h)) {
+    if (!Arr.exists(skip, (skipComp) => skipComp.element === h)) {
       Class.remove(h, hConfig.highlightClass);
       component.getSystem().getByDom(h).each((target) => {
         hConfig.onDehighlight(component, target);
@@ -26,7 +26,7 @@ const dehighlightAll = (component: AlloyComponent, hConfig: HighlightingConfig, 
 const dehighlight = (component: AlloyComponent, hConfig: HighlightingConfig, hState: Stateless, target: AlloyComponent): void => {
   // Only act if it was highlighted.
   if (isHighlighted(component, hConfig, hState, target)) {
-    Class.remove(target.element(), hConfig.highlightClass);
+    Class.remove(target.element, hConfig.highlightClass);
     hConfig.onDehighlight(component, target);
     AlloyTriggers.emit(target, SystemEvents.dehighlight());
   }
@@ -36,7 +36,7 @@ const highlight = (component: AlloyComponent, hConfig: HighlightingConfig, hStat
   dehighlightAllExcept(component, hConfig, hState, [ target ]);
 
   if (!isHighlighted(component, hConfig, hState, target)) {
-    Class.add(target.element(), hConfig.highlightClass);
+    Class.add(target.element, hConfig.highlightClass);
     hConfig.onHighlight(component, target);
     AlloyTriggers.emit(target, SystemEvents.highlight());
   }
@@ -70,28 +70,28 @@ const highlightBy = (component: AlloyComponent, hConfig: HighlightingConfig, hSt
   });
 };
 
-const isHighlighted = (component: AlloyComponent, hConfig: HighlightingConfig, hState: Stateless, queryTarget: AlloyComponent): boolean => Class.has(queryTarget.element(), hConfig.highlightClass);
+const isHighlighted = (component: AlloyComponent, hConfig: HighlightingConfig, hState: Stateless, queryTarget: AlloyComponent): boolean => Class.has(queryTarget.element, hConfig.highlightClass);
 
 const getHighlighted = (component: AlloyComponent, hConfig: HighlightingConfig, _hState: Stateless): Optional<AlloyComponent> =>
-  SelectorFind.descendant(component.element(), '.' + hConfig.highlightClass).bind((e) => component.getSystem().getByDom(e).toOptional());
+  SelectorFind.descendant(component.element, '.' + hConfig.highlightClass).bind((e) => component.getSystem().getByDom(e).toOptional());
 
 const getByIndex = (component: AlloyComponent, hConfig: HighlightingConfig, hState: Stateless, index: number): Result<AlloyComponent, string> => {
-  const items = SelectorFilter.descendants(component.element(), '.' + hConfig.itemClass);
+  const items = SelectorFilter.descendants(component.element, '.' + hConfig.itemClass);
 
   return Optional.from(items[index]).fold(() => Result.error<AlloyComponent, any>('No element found with index ' + index), component.getSystem().getByDom);
 };
 
 const getFirst = (component: AlloyComponent, hConfig: HighlightingConfig, _hState: Stateless): Optional<AlloyComponent> =>
-  SelectorFind.descendant(component.element(), '.' + hConfig.itemClass).bind((e) => component.getSystem().getByDom(e).toOptional());
+  SelectorFind.descendant(component.element, '.' + hConfig.itemClass).bind((e) => component.getSystem().getByDom(e).toOptional());
 
 const getLast = (component: AlloyComponent, hConfig: HighlightingConfig, _hState: Stateless): Optional<AlloyComponent> => {
-  const items: SugarElement[] = SelectorFilter.descendants(component.element(), '.' + hConfig.itemClass);
+  const items: SugarElement[] = SelectorFilter.descendants(component.element, '.' + hConfig.itemClass);
   const last = items.length > 0 ? Optional.some(items[items.length - 1]) : Optional.none<SugarElement<any>>();
   return last.bind((c) => component.getSystem().getByDom(c).toOptional());
 };
 
 const getDelta = (component: AlloyComponent, hConfig: HighlightingConfig, hState: Stateless, delta: number): Optional<AlloyComponent> => {
-  const items = SelectorFilter.descendants(component.element(), '.' + hConfig.itemClass);
+  const items = SelectorFilter.descendants(component.element, '.' + hConfig.itemClass);
   const current = Arr.findIndex(items, (item) => Class.has(item, hConfig.highlightClass));
 
   return current.bind((selected) => {
@@ -105,7 +105,7 @@ const getPrevious = (component: AlloyComponent, hConfig: HighlightingConfig, hSt
 const getNext = (component: AlloyComponent, hConfig: HighlightingConfig, hState: Stateless): Optional<AlloyComponent> => getDelta(component, hConfig, hState, +1);
 
 const getCandidates = (component: AlloyComponent, hConfig: HighlightingConfig, _hState: Stateless): AlloyComponent[] => {
-  const items = SelectorFilter.descendants(component.element(), '.' + hConfig.itemClass);
+  const items = SelectorFilter.descendants(component.element, '.' + hConfig.itemClass);
   return Optionals.cat(
     Arr.map(items, (i) => component.getSystem().getByDom(i).toOptional())
   );

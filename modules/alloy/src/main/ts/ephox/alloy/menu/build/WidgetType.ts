@@ -27,9 +27,9 @@ const builder = (detail: WidgetItemDetail) => {
     return widget;
   });
 
-  const onHorizontalArrow = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent): Optional<boolean> => EditableFields.inside(simulatedEvent.event().target()) ? Optional.none<boolean>() : (() => {
+  const onHorizontalArrow = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent): Optional<boolean> => EditableFields.inside(simulatedEvent.event.target) ? Optional.none<boolean>() : (() => {
     if (detail.autofocus) {
-      simulatedEvent.setSource(component.element());
+      simulatedEvent.setSource(component.element);
       return Optional.none<boolean>();
     } else {
       return Optional.none<boolean>();
@@ -86,7 +86,7 @@ const builder = (detail: WidgetItemDetail) => {
               Focusing.focus(component);
               return Optional.some<boolean>(true);
             } else if (detail.autofocus) {
-              simulatedEvent.setSource(component.element());
+              simulatedEvent.setSource(component.element);
               return Optional.none<boolean>();
             } else {
               return Optional.none<boolean>();

@@ -16,7 +16,7 @@ UnitTest.asynctest('Inline Editor Floating Toolbar Drawer Position test', (succe
 
   const getUiContainerTop = (editor: Editor) => {
     const uiContainer = SugarElement.fromDom(editor.getContainer());
-    return SugarLocation.absolute(uiContainer).top();
+    return SugarLocation.absolute(uiContainer).top;
   };
 
   const sPressEnterNTimes = (tinyApis: TinyApis, tinyActions: TinyActions, times: number) => GeneralSteps.sequence([

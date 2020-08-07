@@ -11,7 +11,7 @@ Css.setAll(editor, {
 const ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
 
 DomEvent.bind(SugarElement.fromDom(document), 'keydown', function (event) {
-  if (event.raw().keyCode === 13) {
+  if (event.raw.keyCode === 13) {
     Optional.from(window.getSelection()).each((selection) => {
       if (selection.rangeCount > 0) {
         const spans = DomWrapping.reuse(SugarElement.fromDom(selection.anchorNode), selection.anchorOffset, SugarElement.fromDom(selection.focusNode), selection.focusOffset, function (elem) {
@@ -30,4 +30,4 @@ DomEvent.bind(SugarElement.fromDom(document), 'keydown', function (event) {
 
 Insert.append(ephoxUi, editor);
 
-editor.dom().innerHTML = 'Hello <span style="background-color: blue;">world</span> again<br/>, this is Earth.';
+editor.dom.innerHTML = 'Hello <span style="background-color: blue;">world</span> again<br/>, this is Earth.';

@@ -25,7 +25,7 @@ UnitTest.asynctest('MouseDragEventTest', (success, failure) => {
           repositionTarget: false,
           blockerClass: 'test-blocker',
           onDrag: (_comp, _targetElem, delta) => {
-            store.adder({ left: delta.left(), top: delta.top() })();
+            store.adder({ left: delta.left, top: delta.top })();
           }
         })
       ])
@@ -40,9 +40,9 @@ UnitTest.asynctest('MouseDragEventTest', (success, failure) => {
       Chain.asStep({}, [
         NamedChain.asChain([
           store.cClear,
-          NamedChain.writeValue('box', component.element()),
+          NamedChain.writeValue('box', component.element),
           NamedChain.direct('box', Mouse.cMouseDown, '_'),
-          NamedChain.writeValue('container', gui.element()),
+          NamedChain.writeValue('container', gui.element),
           NamedChain.direct('container', UiFinder.cFindIn('.test-blocker'), 'blocker'),
 
           NamedChain.direct('blocker', Mouse.cMouseMoveTo(100, 200), '_'),

@@ -12,10 +12,10 @@ import * as AnchorLayouts from './AnchorLayouts';
 
 const placement = (component: AlloyComponent, anchorInfo: MakeshiftAnchor, origin: Origins.OriginAdt) => {
   const pos = Origins.translate(origin, anchorInfo.x, anchorInfo.y);
-  const anchorBox = bounds(pos.left(), pos.top(), anchorInfo.width, anchorInfo.height);
+  const anchorBox = bounds(pos.left, pos.top, anchorInfo.width, anchorInfo.height);
 
   const layouts = AnchorLayouts.get(
-    component.element(),
+    component.element,
     anchorInfo,
     Layout.all(),
     Layout.allRtl(),

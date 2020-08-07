@@ -29,14 +29,14 @@ UnitTest.asynctest('GuiEventsTest', (success, failure) => {
   const store = TestStore();
 
   const onBodyKeydown = DomEvent.bind(body, 'keydown', (evt) => {
-    if (evt.raw().which === Keys.backspace()) {
-      outerStore.adder('Backspace on ' + SugarNode.name(evt.target()) + ': preventDefault = ' + evt.raw().defaultPrevented)();
+    if (evt.raw.which === Keys.backspace()) {
+      outerStore.adder('Backspace on ' + SugarNode.name(evt.target) + ': preventDefault = ' + evt.raw.defaultPrevented)();
     }
   });
   cleanup.add(onBodyKeydown.unbind);
 
   const triggerEvent = (eventName: string, event: EventArgs) => {
-    const target = event.target();
+    const target = event.target;
     const targetValue = SugarNode.isText(target) ? 'text(' + SugarText.get(target) + ')' : Attribute.get(target, 'class');
     store.adder({ eventName, target: targetValue })();
   };

@@ -22,10 +22,10 @@ UnitTest.test('SplitterTest', function () {
     Arr.each(expected, function (exp, i) {
       const act = actual[i];
       // TODO: Consider removing an expected id from the test case as it isn't really representing anything meaningful
-      assert.eq(exp.id, act.element().id);
-      assert.eq(exp.start, act.start(), 'comparing start for ' + exp.id + ': ' + exp.start + ' vs ' + act.start());
-      assert.eq(exp.finish, act.finish(), 'comparing finish for ' + exp.id + ': ' + exp.finish + ' vs ' + act.finish());
-      assert.eq(exp.text, act.element().text);
+      assert.eq(exp.id, act.element.id);
+      assert.eq(exp.start, act.start, 'comparing start for ' + exp.id + ': ' + exp.start + ' vs ' + act.start);
+      assert.eq(exp.finish, act.finish, 'comparing finish for ' + exp.id + ': ' + exp.finish + ' vs ' + act.finish);
+      assert.eq(exp.text, act.element.text);
     });
 
     assert.eq(toplevel, Arr.map(universe.get().children, TestRenders.text));

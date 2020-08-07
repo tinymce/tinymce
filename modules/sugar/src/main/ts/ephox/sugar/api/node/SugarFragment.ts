@@ -5,7 +5,7 @@ const fromElements = (elements: SugarElement<Node>[], scope?: Document | null): 
   const doc = scope || document;
   const fragment = doc.createDocumentFragment();
   Arr.each(elements, (element) => {
-    fragment.appendChild(element.dom());
+    fragment.appendChild(element.dom);
   });
   return SugarElement.fromDom(fragment);
 };

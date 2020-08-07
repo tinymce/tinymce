@@ -6,7 +6,7 @@
  */
 
 import { AddEventsBehaviour, AlloyEvents, AlloyParts, Receiving } from '@ephox/alloy';
-import { Types } from '@ephox/bridge';
+import { Dialog } from '@ephox/bridge';
 import { Cell, Obj, Optional, Type } from '@ephox/katamari';
 import { DomEvent, EventUnbinder, SelectorFind, SugarElement } from '@ephox/sugar';
 
@@ -28,7 +28,7 @@ const isSupportedMessage = (data: any): boolean => Type.isObject(data) && SUPPOR
 
 const isCustomMessage = (data: any): boolean => !isSupportedMessage(data) && Type.isObject(data) && Obj.has(data, 'mceAction');
 
-const handleMessage = (editor: Editor, api: Types.UrlDialog.UrlDialogInstanceApi, data: any) => {
+const handleMessage = (editor: Editor, api: Dialog.UrlDialogInstanceApi, data: any) => {
   switch (data.mceAction) {
     case 'insertContent':
       editor.insertContent(data.content);
@@ -52,7 +52,7 @@ const handleMessage = (editor: Editor, api: Types.UrlDialog.UrlDialogInstanceApi
   }
 };
 
-const renderUrlDialog = (internalDialog: Types.UrlDialog.UrlDialog, extra: WindowExtra, editor: Editor, backstage: UiFactoryBackstage) => {
+const renderUrlDialog = (internalDialog: Dialog.UrlDialog, extra: WindowExtra, editor: Editor, backstage: UiFactoryBackstage) => {
   const header = getHeader(internalDialog.title, backstage);
   const body = renderIframeBody(internalDialog);
   const footer = internalDialog.buttons.bind((buttons) => {
@@ -87,8 +87,8 @@ const renderUrlDialog = (internalDialog: Types.UrlDialog.UrlDialog, extra: Windo
       AlloyEvents.runOnAttached(() => {
         const unbind = DomEvent.bind<MessageEvent>(SugarElement.fromDom(window), 'message', (e) => {
           // Validate that the request came from the correct domain
-          if (iframeUri.isSameOrigin(new URI(e.raw().origin))) {
-            const data = e.raw().data;
+          if (iframeUri.isSameOrigin(new URI(e.raw.origin))) {
+            const data = e.raw.data;
 
             // Handle the message if it has the 'mceAction' key, otherwise just ignore it
             if (isSupportedMessage(data)) {
@@ -111,8 +111,8 @@ const renderUrlDialog = (internalDialog: Types.UrlDialog.UrlDialog, extra: Windo
         [bodySendMessageChannel]: {
           onReceive: (comp, data) => {
             // Send the message to the iframe via postMessage
-            SelectorFind.descendant<HTMLIFrameElement>(comp.element(), 'iframe').each((iframeEle) => {
-              const iframeWin = iframeEle.dom().contentWindow;
+            SelectorFind.descendant<HTMLIFrameElement>(comp.element, 'iframe').each((iframeEle) => {
+              const iframeWin = iframeEle.dom.contentWindow;
               iframeWin.postMessage(data, iframeDomain);
             });
           }

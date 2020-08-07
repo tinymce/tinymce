@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Types } from '@ephox/bridge';
 import { Arr, Cell, Obj, Optional, Type } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
+import { Dialog } from 'tinymce/core/api/ui/Ui';
 import * as Settings from '../api/Settings';
 import { dataToHtml } from '../core/DataToHtml';
 import * as HtmlToData from '../core/HtmlToData';
@@ -103,7 +103,7 @@ const getEditorData = function (editor: Editor): MediaData {
   };
 };
 
-const addEmbedHtml = function (api: Types.Dialog.DialogInstanceApi<MediaDialogData>, editor: Editor) {
+const addEmbedHtml = function (api: Dialog.DialogInstanceApi<MediaDialogData>, editor: Editor) {
   return function (response: { url: string; html: string }) {
     // Only set values if a URL has been defined
     if (Type.isString(response.url) && response.url.trim().length > 0) {
@@ -162,7 +162,7 @@ const showDialog = function (editor: Editor) {
   const currentData = Cell<MediaData>(editorData);
   const initialData = wrap(editorData);
 
-  const handleSource = (prevData: MediaData, api: Types.Dialog.DialogInstanceApi<MediaDialogData>) => {
+  const handleSource = (prevData: MediaData, api: Dialog.DialogInstanceApi<MediaDialogData>) => {
     const serviceData = unwrap(api.getData(), 'source');
 
     // If a new URL is entered, then clear the embed html and fetch the new data
@@ -175,13 +175,13 @@ const showDialog = function (editor: Editor) {
     }
   };
 
-  const handleEmbed = (api: Types.Dialog.DialogInstanceApi<MediaDialogData>) => {
+  const handleEmbed = (api: Dialog.DialogInstanceApi<MediaDialogData>) => {
     const data = unwrap(api.getData());
     const dataFromEmbed = snippetToData(editor, data.embed);
     api.setData(wrap(dataFromEmbed));
   };
 
-  const handleUpdate = (api: Types.Dialog.DialogInstanceApi<MediaDialogData>, sourceInput: keyof MediaDialogData) => {
+  const handleUpdate = (api: Dialog.DialogInstanceApi<MediaDialogData>, sourceInput: keyof MediaDialogData) => {
     const data = unwrap(api.getData(), sourceInput);
     const embed = dataToHtml(editor, data);
     api.setData(wrap({
@@ -190,13 +190,13 @@ const showDialog = function (editor: Editor) {
     }));
   };
 
-  const mediaInput: Types.Dialog.BodyComponentApi[] = [{
+  const mediaInput: Dialog.UrlInputSpec[] = [{
     name: 'source',
     type: 'urlinput',
     filetype: 'media',
     label: 'Source'
   }];
-  const sizeInput: Types.Dialog.BodyComponentApi[] = !Settings.hasDimensions(editor) ? [] : [{
+  const sizeInput: Dialog.SizeInputSpec[] = !Settings.hasDimensions(editor) ? [] : [{
     type: 'sizeinput',
     name: 'dimensions',
     label: 'Constrain proportions',
@@ -206,10 +206,10 @@ const showDialog = function (editor: Editor) {
   const generalTab = {
     title: 'General',
     name: 'general',
-    items: Arr.flatten([ mediaInput, sizeInput ])
+    items: Arr.flatten<Dialog.BodyComponentSpec>([ mediaInput, sizeInput ])
   };
 
-  const embedTextarea: Types.Dialog.BodyComponentApi = {
+  const embedTextarea: Dialog.TextAreaSpec = {
     type: 'textarea',
     name: 'embed',
     label: 'Paste your embed code below:'
@@ -221,7 +221,7 @@ const showDialog = function (editor: Editor) {
     ]
   };
 
-  const advancedFormItems: Types.Dialog.BodyComponentApi[] = [];
+  const advancedFormItems: Dialog.BodyComponentSpec[] = [];
 
   if (Settings.hasAltSource(editor)) {
     advancedFormItems.push({
@@ -257,7 +257,7 @@ const showDialog = function (editor: Editor) {
     tabs.push(advancedTab);
   }
 
-  const body: Types.Dialog.TabPanelApi = {
+  const body: Dialog.TabPanelSpec = {
     type: 'tabpanel',
     tabs
   };

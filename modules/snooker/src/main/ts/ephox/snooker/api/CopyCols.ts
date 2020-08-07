@@ -18,12 +18,12 @@ const copyCols = (table: SugarElement, target: TargetSelection): Optional<SugarE
   const details = onCells(house, target);
   return details.map((selectedCells) => {
     const lastSelectedCell = selectedCells[selectedCells.length - 1];
-    const minColRange = selectedCells[0].column();
-    const maxColRange = lastSelectedCell.column() + lastSelectedCell.colspan();
+    const minColRange = selectedCells[0].column;
+    const maxColRange = lastSelectedCell.column + lastSelectedCell.colspan;
     return Arr.map(house.all, (row) => {
-      const cellsToCopy = Arr.filter(row.cells(), (cell) => cell.column() >= minColRange && cell.column() < maxColRange);
+      const cellsToCopy = Arr.filter(row.cells, (cell) => cell.column >= minColRange && cell.column < maxColRange);
       const copiedCells = Arr.map(cellsToCopy, (cell) => {
-        const clonedCell = Replication.deep(cell.element());
+        const clonedCell = Replication.deep(cell.element);
         constrainSpan(clonedCell, 'colspan', maxColRange - minColRange);
         return clonedCell;
       });

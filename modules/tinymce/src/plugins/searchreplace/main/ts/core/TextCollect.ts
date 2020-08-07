@@ -140,27 +140,27 @@ const collect = (dom: DOMUtils, rootNode: Node, startNode: Node, endNode?: Node,
 
 const collectRangeSections = (dom: DOMUtils, rng: Range): TextSection[] => {
   const start = toLeaf(rng.startContainer, rng.startOffset);
-  const startNode = start.element().dom();
+  const startNode = start.element.dom;
   const end = toLeaf(rng.endContainer, rng.endOffset);
-  const endNode = end.element().dom();
+  const endNode = end.element.dom;
 
   return collect(dom, rng.commonAncestorContainer, startNode, endNode, {
     text: (node, section) => {
       // Set the start/end offset of the section
       if (node === endNode) {
-        section.fOffset += node.length - end.offset();
+        section.fOffset += node.length - end.offset;
       } else if (node === startNode) {
-        section.sOffset += start.offset();
+        section.sOffset += start.offset;
       }
     },
     cef: (node) => {
       // Collect the sections and then order them appropriately, as nested sections maybe out of order
       // TODO: See if we can improve this to avoid the sort overhead
       const sections = Arr.bind(SelectorFilter.descendants(SugarElement.fromDom(node), '*[contenteditable=true]'), (e) => {
-        const ceTrueNode = e.dom();
+        const ceTrueNode = e.dom;
         return collect(dom, ceTrueNode, ceTrueNode);
       });
-      return Arr.sort(sections, (a, b) => (SandNode.documentPositionPreceding(a.elements[0].dom(), b.elements[0].dom())) ? 1 : -1);
+      return Arr.sort(sections, (a, b) => (SandNode.documentPositionPreceding(a.elements[0].dom, b.elements[0].dom)) ? 1 : -1);
     }
   }, false);
 };

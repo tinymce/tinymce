@@ -11,7 +11,7 @@ const initialAttribute = 'data-initial-z-index';
 // discarding it, we need to reset those z-indices back to what they
 // were. ASSUMPTION: the blocker has been added as a direct child of the root
 const resetZIndex = (blocker: AlloyComponent): void => {
-  Traverse.parent(blocker.element()).filter(SugarNode.isElement).each((root) => {
+  Traverse.parent(blocker.element).filter(SugarNode.isElement).each((root) => {
     Attribute.getOpt(root, initialAttribute).fold(
       () => Css.remove(root, 'z-index'),
       (zIndex) => Css.set(root, 'z-index', zIndex)
@@ -22,14 +22,14 @@ const resetZIndex = (blocker: AlloyComponent): void => {
 };
 
 const changeZIndex = (blocker: AlloyComponent): void => {
-  Traverse.parent(blocker.element()).filter(SugarNode.isElement).each((root) => {
+  Traverse.parent(blocker.element).filter(SugarNode.isElement).each((root) => {
     Css.getRaw(root, 'z-index').each((zindex) => {
       Attribute.set(root, initialAttribute, zindex);
     });
 
     // Used to be a really high number, but it probably just has
     // to match the blocker
-    Css.set(root, 'z-index', Css.get(blocker.element(), 'z-index'));
+    Css.set(root, 'z-index', Css.get(blocker.element, 'z-index'));
   });
 };
 

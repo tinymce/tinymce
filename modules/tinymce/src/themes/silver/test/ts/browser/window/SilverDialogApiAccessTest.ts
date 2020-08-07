@@ -1,12 +1,12 @@
 import { Assertions, Chain, GeneralSteps, Logger, Mouse, Pipeline, Waiter } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Types } from '@ephox/bridge';
 import { Cell } from '@ephox/katamari';
 import { TinyLoader } from '@ephox/mcagar';
 import { SugarBody } from '@ephox/sugar';
-import Delay from 'tinymce/core/api/util/Delay';
 
+import Delay from 'tinymce/core/api/util/Delay';
+import { Dialog } from 'tinymce/core/api/ui/Ui';
 import Theme from 'tinymce/themes/silver/Theme';
 import * as DialogUtils from '../../module/DialogUtils';
 
@@ -14,10 +14,10 @@ UnitTest.asynctest('WindowManager:simple-dialog access Test', (success, failure)
   Theme();
 
   TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const currentApi = Cell<Types.Dialog.DialogInstanceApi<any>>({ } as any);
+    const currentApi = Cell<Dialog.DialogInstanceApi<any>>({ } as any);
     const store = TestHelpers.TestStore();
 
-    const dialogSpec: Types.Dialog.DialogApi<{ fieldA: string }> = {
+    const dialogSpec: Dialog.DialogSpec<{ fieldA: string }> = {
       title: 'Silver Test Access Dialog',
       body: {
         type: 'panel',
@@ -57,7 +57,7 @@ UnitTest.asynctest('WindowManager:simple-dialog access Test', (success, failure)
           api.unblock();
           api.showTab('new tab');
           // Currently, it is only going to validate it if the dialog is still open
-          const redialSpec: Types.Dialog.DialogApi<{ fieldA: string }> = {
+          const redialSpec: Dialog.DialogSpec<{ fieldA: string }> = {
             title: 'temporary redial to check the API',
             body: {
               type: 'panel',

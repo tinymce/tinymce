@@ -54,13 +54,13 @@ UnitTest.test('SearcherTest', function () {
   const checkWords = function (expected: CheckItem[], itemIds: string[], words: string[], input: Gene) {
     const universe = TestUniverse(input);
     const items = Finder.getAll(universe, itemIds);
-    const actual = Searcher.safeWords(universe, items, words, Fun.constant(false) as (e: Gene) => boolean);
+    const actual = Searcher.safeWords(universe, items, words, Fun.never as (e: Gene) => boolean);
 
     const processed = Arr.map(actual, function (match): CheckItem {
       return {
-        items: TestRenders.texts(match.elements()),
-        word: match.word(),
-        exact: match.exact()
+        items: TestRenders.texts(match.elements),
+        word: match.word,
+        exact: match.exact
       };
     });
     assert.eq(expected, processed);

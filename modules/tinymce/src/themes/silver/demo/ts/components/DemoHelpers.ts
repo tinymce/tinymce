@@ -24,7 +24,7 @@ const setupDemo = () => {
   });
 
   const uiMothership = Gui.create();
-  Class.add(uiMothership.element(), 'tox');
+  Class.add(uiMothership.element, 'tox');
 
   const fakeHistory = (fileType: string): string[] => {
     if (fileType === 'image') {
@@ -66,7 +66,7 @@ const setupDemo = () => {
   // This is fake because ColorInputBackstage requires Editor constructor
   const fakecolorinputBackstage = {
     colorPicker: Fun.noop,
-    hasCustomColors: Fun.constant(false),
+    hasCustomColors: Fun.never,
     getColors: () => [
       { type: choiceItem, text: 'Turquoise', value: '#18BC9B' },
       { type: choiceItem, text: 'Green', value: '#2FCC71' },
@@ -215,7 +215,7 @@ const setupDemo = () => {
     //       getCssText: (name) => {
     //         const span = SugarElement.fromTag('span');
     //         Css.setAll(span, formats[name].styles || { });
-    //         console.log('span', span.dom());
+    //         console.log('span', span.dom);
     //         return Attribute.get(span, 'style') || '';
     //       }
     //     };

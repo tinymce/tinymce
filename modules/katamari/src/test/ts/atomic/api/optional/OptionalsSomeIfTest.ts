@@ -1,8 +1,8 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
+import fc from 'fast-check';
 import { Optional } from 'ephox/katamari/api/Optional';
 import { tOptional } from 'ephox/katamari/api/OptionalInstances';
 import * as Optionals from 'ephox/katamari/api/Optionals';
-import fc from 'fast-check';
 
 UnitTest.test('Optionals.someIf: false -> none', () => {
   fc.assert(fc.property(fc.integer(), (n) => {

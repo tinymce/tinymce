@@ -26,7 +26,7 @@ const getEndpointElement = (
     .map(SugarElement.fromDom)
     .map((elm) => !real || !rng.collapsed ? Traverse.child(elm, resolve(elm, offset)).getOr(elm) : elm)
     .bind((elm) => SugarNode.isElement(elm) ? Optional.some(elm) : Traverse.parent(elm).filter(SugarNode.isElement))
-    .map((elm) => elm.dom())
+    .map((elm) => elm.dom)
     .getOr(root);
 };
 

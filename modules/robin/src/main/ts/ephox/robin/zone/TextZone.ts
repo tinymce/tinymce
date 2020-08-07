@@ -43,7 +43,7 @@ const scour = function <E, D> (universe: Universe<E, D>, element: E, envLang: st
   const lastOffset = universe.property().isText(element) ? universe.property().getText(element).length : universe.property().children(element).length;
   const left = Descent.toLeaf(universe, element, 0);
   const right = Descent.toLeaf(universe, element, lastOffset);
-  return fromBounded(universe, left.element(), right.element(), envLang, onlyLang);
+  return fromBounded(universe, left.element, right.element, envLang, onlyLang);
 };
 
 const empty = function <E> () {

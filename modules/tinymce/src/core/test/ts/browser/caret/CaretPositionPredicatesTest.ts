@@ -1,9 +1,9 @@
-import { LegacyUnit } from '@ephox/mcagar';
 import { Pipeline } from '@ephox/agar';
-import CaretPosition from 'tinymce/core/caret/CaretPosition';
-import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/bedrock-client';
+import { LegacyUnit } from '@ephox/mcagar';
+import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import { isAfterContentEditableFalse, isBeforeContentEditableFalse } from 'tinymce/core/caret/CaretPositionPredicates';
+import ViewBlock from '../../module/test/ViewBlock';
 
 UnitTest.asynctest('browser.tinymce.core.CaretPositiionPredicateTest', (success, failure) => {
   const suite = LegacyUnit.createSuite();

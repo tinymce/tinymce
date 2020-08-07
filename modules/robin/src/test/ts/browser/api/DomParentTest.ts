@@ -9,7 +9,7 @@ UnitTest.test(
   function () {
     const check = function (expected: string, p: string, c: string) {
       const container = SugarElement.fromTag('div');
-      container.dom().innerHTML =
+      container.dom.innerHTML =
         '<ol class="one-nine" style="list-style-type: decimal;">' +
         '<li class="one">One</li>' +
         '<li class="two">Two</li>' +
@@ -77,7 +77,7 @@ UnitTest.test(
 
     const checkPath = function (expected: string, input: string, p: number[], c: number[]) {
       const container = SugarElement.fromTag('div');
-      container.dom().innerHTML = input;
+      container.dom.innerHTML = input;
 
       const parent = Hierarchy.follow(container, p).getOrDie();
       const child = Hierarchy.follow(container, c).getOrDie();
@@ -197,7 +197,7 @@ UnitTest.test(
     (function () {
       const check = function (expected: Optional<string[]>, s: string, f: string) {
         const container = SugarElement.fromTag('div');
-        container.dom().innerHTML =
+        container.dom.innerHTML =
           '<ol class="one-nine" style="list-style-type: decimal;">' +
           '<li class="one">One</li>' +
           '<li class="two">Two</li>' +

@@ -13,11 +13,11 @@ const refreshInput = function (input) {
   // lost and then restored. The setTime out is important for consistency, a lower value
   // may not yield a successful reselection when the time out value is 10, 30% success
   // on making the blue selection reappear.
-  const start = input.dom().selectionStart;
-  const end = input.dom().selectionEnd;
-  const dir = input.dom().selectionDirection;
+  const start = input.dom.selectionStart;
+  const end = input.dom.selectionEnd;
+  const dir = input.dom.selectionDirection;
   Delay.setTimeout(function () {
-    input.dom().setSelectionRange(start, end, dir);
+    input.dom.setSelectionRange(start, end, dir);
     Focus.focus(input);
   }, 50);
 };

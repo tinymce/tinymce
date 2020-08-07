@@ -10,7 +10,7 @@ export type ElementMover <C, S> = (elem: SugarElement, focused: SugarElement, co
 // Looks up direction (considering LTR and RTL), finds the focused element,
 // and tries to move. If it succeeds, triggers focus and kills the event.
 const useH = <C extends GeneralKeyingConfig, S>(movement: (elem: SugarElement) => ElementMover<C, S>): KeyRuleHandler<C, S> => (component, simulatedEvent, config, state) => {
-  const move = movement(component.element());
+  const move = movement(component.element);
   return use(move, component, simulatedEvent, config, state);
 };
 
@@ -27,7 +27,7 @@ const east = <C extends GeneralKeyingConfig, S>(moveLeft: ElementMover<C, S>, mo
 const useV = <C extends GeneralKeyingConfig, S>(move: ElementMover<C, S>): KeyRuleHandler<C, S> => (component, simulatedEvent, config, state) => use(move, component, simulatedEvent, config, state);
 
 const use = <C extends GeneralKeyingConfig, S>(move: ElementMover<C, S>, component: AlloyComponent, simulatedEvent: NativeSimulatedEvent, config: C, state: S): Optional<boolean> => {
-  const outcome = config.focusManager.get(component).bind((focused) => move(component.element(), focused, config, state));
+  const outcome = config.focusManager.get(component).bind((focused) => move(component.element, focused, config, state));
 
   return outcome.map((newFocus): boolean => {
     config.focusManager.set(component, newFocus);

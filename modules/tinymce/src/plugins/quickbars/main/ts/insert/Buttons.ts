@@ -5,10 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import Editor from 'tinymce/core/api/Editor';
 import * as Actions from './Actions';
 import * as Conversions from './Conversions';
 import * as Picker from './Picker';
-import Editor from 'tinymce/core/api/Editor';
 
 const setupButtons = function (editor: Editor) {
   editor.ui.registry.addButton('quickimage', {

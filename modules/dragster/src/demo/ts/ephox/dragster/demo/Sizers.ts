@@ -40,11 +40,11 @@ export default function () {
     const loc = SugarLocation.viewport(target);
     const w = Width.get(target);
     const h = Height.get(target);
-    const minx = loc.left();
-    const maxx = loc.left() + w ;
-    const midx = loc.left() + w / 2;
+    const minx = loc.left;
+    const maxx = loc.left + w ;
+    const midx = loc.left + w / 2;
 
-    const y = loc.top();
+    const y = loc.top;
     const maxy = y + h;
 
     northwest.set(minx, y);

@@ -372,7 +372,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', (success, failure) =
       Assert.eq('Should have filtered one item.', 1, filterCount);
     };
 
-    dataImgFilter = Fun.constant(true);
+    dataImgFilter = Fun.always;
     editor.editorUpload.addFilter((img) => {
       filterCount++;
       return !img.hasAttribute('data-skip');

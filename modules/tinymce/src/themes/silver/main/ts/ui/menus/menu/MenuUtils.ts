@@ -1,13 +1,13 @@
 import { ItemTypes, MenuTypes } from '@ephox/alloy';
 import { ValueSchema } from '@ephox/boulder';
-import { InlineContent, Types } from '@ephox/bridge';
+import { InlineContent, Toolbar } from '@ephox/bridge';
 import { Arr, Optional } from '@ephox/katamari';
 import { components as menuComponents, dom as menuDom } from './MenuParts';
 
 import { forCollection, forHorizontalCollection, forSwatch, forToolbar } from './MenuStructures';
-import { SingleMenuItemApi } from './SingleMenuTypes';
+import { SingleMenuItemSpec } from './SingleMenuTypes';
 
-export const menuHasIcons = (xs: Array<SingleMenuItemApi | InlineContent.AutocompleterItemApi>) => Arr.exists(xs, (item) => 'icon' in item && item.icon !== undefined);
+export const menuHasIcons = (xs: Array<SingleMenuItemSpec | InlineContent.AutocompleterItemSpec>) => Arr.exists(xs, (item) => 'icon' in item && item.icon !== undefined);
 
 export interface PartialMenuSpec {
   value: string;
@@ -24,7 +24,7 @@ export const handleError = (error: ValueSchema.SchemaError<any>): Optional<ItemT
   return Optional.none();
 };
 
-export const createHorizontalPartialMenuWithAlloyItems = (value: string, _hasIcons: boolean, items, _columns: Types.ColumnTypes, _presets: Types.PresetTypes): PartialMenuSpec => {
+export const createHorizontalPartialMenuWithAlloyItems = (value: string, _hasIcons: boolean, items, _columns: Toolbar.ColumnTypes, _presets: Toolbar.PresetTypes): PartialMenuSpec => {
   const structure = forHorizontalCollection(items);
   return {
     value,
@@ -35,7 +35,7 @@ export const createHorizontalPartialMenuWithAlloyItems = (value: string, _hasIco
 };
 
 // TODO: Potentially make this private again.
-export const createPartialMenuWithAlloyItems = (value: string, hasIcons: boolean, items, columns: Types.ColumnTypes, presets: Types.PresetTypes): PartialMenuSpec => {
+export const createPartialMenuWithAlloyItems = (value: string, hasIcons: boolean, items, columns: Toolbar.ColumnTypes, presets: Toolbar.PresetTypes): PartialMenuSpec => {
   if (presets === 'color') {
     const structure = forSwatch(columns);
     return {

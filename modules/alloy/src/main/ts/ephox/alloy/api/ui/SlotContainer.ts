@@ -65,12 +65,12 @@ const make = (detail: SlotContainerDetail, components: AlloySpec[]) => {
     Arr.each(keys, (key) => f(container, key));
   };
 
-  const doShowing = (comp: AlloyComponent, _key: string): boolean => Attribute.get(comp.element(), 'aria-hidden') !== 'true';
+  const doShowing = (comp: AlloyComponent, _key: string): boolean => Attribute.get(comp.element, 'aria-hidden') !== 'true';
 
   const doShow = (comp: AlloyComponent, key: string) => {
     // NOTE: May need to restore old values.
     if (!doShowing(comp, key)) {
-      const element = comp.element();
+      const element = comp.element;
       Css.remove(element, 'display');
       Attribute.remove(element, 'aria-hidden');
       AlloyTriggers.emitWith(comp, SystemEvents.slotVisibility(), { name: key, visible: true });
@@ -80,7 +80,7 @@ const make = (detail: SlotContainerDetail, components: AlloySpec[]) => {
   const doHide = (comp: AlloyComponent, key: string) => {
     // NOTE: May need to save old values.
     if (doShowing(comp, key)) {
-      const element = comp.element();
+      const element = comp.element;
       Css.set(element, 'display', 'none');
       Attribute.set(element, 'aria-hidden', 'true');
       AlloyTriggers.emitWith(comp, SystemEvents.slotVisibility(), { name: key, visible: false });

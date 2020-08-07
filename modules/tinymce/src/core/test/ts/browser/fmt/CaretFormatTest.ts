@@ -387,21 +387,21 @@ UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function (success
       ])),
       Logger.t('getParentCaretContainer', Step.sync(function () {
         const body = SugarElement.fromHtml('<div><span id="_mce_caret">a</span></div>');
-        const caret = SugarElement.fromDom(body.dom().firstChild);
+        const caret = SugarElement.fromDom(body.dom.firstChild);
 
-        Assertions.assertDomEq('Should be caret element on child', caret, SugarElement.fromDom(getParentCaretContainer(body.dom(), caret.dom().firstChild)));
-        Assertions.assertDomEq('Should be caret element on self', caret, SugarElement.fromDom(getParentCaretContainer(body.dom(), caret.dom())));
-        Assertions.assertEq('Should not be caret element', null, getParentCaretContainer(body.dom(), SugarElement.fromTag('span').dom()));
-        Assertions.assertEq('Should not be caret element', null, getParentCaretContainer(caret.dom(), caret.dom()));
+        Assertions.assertDomEq('Should be caret element on child', caret, SugarElement.fromDom(getParentCaretContainer(body.dom, caret.dom.firstChild)));
+        Assertions.assertDomEq('Should be caret element on self', caret, SugarElement.fromDom(getParentCaretContainer(body.dom, caret.dom)));
+        Assertions.assertEq('Should not be caret element', null, getParentCaretContainer(body.dom, SugarElement.fromTag('span').dom));
+        Assertions.assertEq('Should not be caret element', null, getParentCaretContainer(caret.dom, caret.dom));
       })),
       Logger.t('replaceWithCaretFormat', Step.sync(function () {
         const body = SugarElement.fromHtml('<div><br /></div>');
         const formats = [
-          SugarElement.fromTag('b').dom(),
-          SugarElement.fromTag('i').dom()
+          SugarElement.fromTag('b').dom,
+          SugarElement.fromTag('i').dom
         ];
 
-        const pos = CaretFormat.replaceWithCaretFormat(body.dom().firstChild, formats);
+        const pos = CaretFormat.replaceWithCaretFormat(body.dom.firstChild, formats);
 
         Assertions.assertEq('Should be at first offset', 0, pos.offset());
         Assertions.assertEq('Should the zwsp text node', Zwsp.ZWSP, (<Text> pos.container()).data);
@@ -534,6 +534,16 @@ UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function (success
   }, {
     plugins: '',
     toolbar: '',
-    base_url: '/project/tinymce/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce',
+    formats: {
+      formatpainter_removeformat: [
+        {
+          selector: 'b,strong,em,i,font,u,strike,sub,sup,dfn,code,samp,kbd,var,cite,mark,q,del,ins',
+          remove: 'all', split: true, expand: false, block_expand: true, deep: true
+        },
+        { selector: 'span', attributes: [ 'style', 'class' ], remove: 'empty', split: true, expand: false, deep: true },
+        { selector: '*:not(tr,td,th,table)', attributes: [ 'style', 'class' ], split: false, expand: false, deep: true }
+      ]
+    }
   }, success, failure);
 });

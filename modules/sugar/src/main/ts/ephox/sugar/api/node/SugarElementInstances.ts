@@ -7,7 +7,7 @@ type Pprint<A> = Pprint.Pprint<A>;
 type Testable<A> = Testable.Testable<A>;
 
 export const eqElement = <T extends Node> (): Eq<SugarElement<T>> =>
-  Eq.contramap(Eq.tripleEq, (e) => e.dom());
+  Eq.contramap(Eq.tripleEq, (e) => e.dom);
 
 export const pprintElement = <T extends Node> (): Pprint<SugarElement<T>> =>
   Pprint.pprint<SugarElement<T>>((e) => Pnode.single(Html.getOuter(e)));

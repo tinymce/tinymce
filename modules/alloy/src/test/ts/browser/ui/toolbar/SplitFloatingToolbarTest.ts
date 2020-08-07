@@ -28,7 +28,7 @@ UnitTest.asynctest('SplitFloatingToolbarTest', (success, failure) => {
   }));
 
   GuiSetup.setup((_store, _doc, _body) => {
-    const pPrimary = SplitFloatingToolbar.parts().primary({
+    const pPrimary = SplitFloatingToolbar.parts.primary({
       dom: {
         tag: 'div',
         classes: [ 'test-toolbar-primary' ]
@@ -89,7 +89,7 @@ UnitTest.asynctest('SplitFloatingToolbarTest', (success, failure) => {
     });
 
     const sResetWidth = (px: string) => Step.sync(() => {
-      Css.set(component.element(), 'width', px);
+      Css.set(component.element, 'width', px);
       SplitFloatingToolbar.refresh(component);
     });
 
@@ -136,7 +136,7 @@ UnitTest.asynctest('SplitFloatingToolbarTest', (success, failure) => {
             })
           ]
         })),
-        component.element()
+        component.element
       ),
       Assertions.sAssertStructure(
         label,
@@ -155,7 +155,7 @@ UnitTest.asynctest('SplitFloatingToolbarTest', (success, failure) => {
             })
           ]
         })),
-        sinkComp.element()
+        sinkComp.element
       )
     ]);
 

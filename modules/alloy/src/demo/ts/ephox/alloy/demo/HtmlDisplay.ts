@@ -43,7 +43,7 @@ const section = (gui: GuiSystem, instructions: string, spec: AlloySpec): AlloyCo
 
   const dumpUid = Id.generate('html-dump');
 
-  const htmlDump = Html.getOuter(component.element());
+  const htmlDump = Html.getOuter(component.element);
   const dump = Container.sketch({
     uid: dumpUid,
     dom: {
@@ -58,7 +58,7 @@ const section = (gui: GuiSystem, instructions: string, spec: AlloySpec): AlloyCo
   const updateHtml = () => {
     gui.getByUid(dumpUid).each((dumpC) => {
       // NOTE: Use SugarBody.body() here for more information.
-      TextContent.set(dumpC.element(), Html.getOuter(component.element()));
+      TextContent.set(dumpC.element, Html.getOuter(component.element));
     });
   };
 
@@ -66,7 +66,7 @@ const section = (gui: GuiSystem, instructions: string, spec: AlloySpec): AlloyCo
     updateHtml();
   });
 
-  observer.observe(component.element().dom(), { attributes: true, childList: true, characterData: true, subtree: true });
+  observer.observe(component.element.dom, { attributes: true, childList: true, characterData: true, subtree: true });
 
   const all = GuiFactory.build(
     Container.sketch({
@@ -83,9 +83,9 @@ const section = (gui: GuiSystem, instructions: string, spec: AlloySpec): AlloyCo
   gui.add(all);
 
   DomEvent.bind(SugarElement.fromDom(document), 'mousedown', (evt) => {
-    if (evt.raw().button === 0) {
+    if (evt.raw.button === 0) {
       gui.broadcastOn([ Channels.dismissPopups() ], {
-        target: evt.target()
+        target: evt.target
       });
     }
   });

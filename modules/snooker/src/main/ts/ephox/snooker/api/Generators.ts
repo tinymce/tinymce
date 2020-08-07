@@ -1,11 +1,11 @@
-import { Arr, Cell, Contracts, Fun, Optional } from '@ephox/katamari';
+import { Arr, Cell, Contracts, Optional } from '@ephox/katamari';
 import { Css, SugarElement } from '@ephox/sugar';
 import { getAttrValue } from '../util/CellUtils';
 
 export interface CellSpan {
-  readonly element: () => SugarElement;
-  readonly colspan: () => number;
-  readonly rowspan: () => number;
+  readonly element: SugarElement;
+  readonly colspan: number;
+  readonly rowspan: number;
 }
 
 export interface Generators {
@@ -54,9 +54,9 @@ const elementToData = function (element: SugarElement): CellSpan {
   const colspan = getAttrValue(element, 'colspan', 1);
   const rowspan = getAttrValue(element, 'rowspan', 1);
   return {
-    element: Fun.constant(element),
-    colspan: Fun.constant(colspan),
-    rowspan: Fun.constant(rowspan)
+    element,
+    colspan,
+    rowspan
   };
 };
 
@@ -150,9 +150,9 @@ const merging = function (generators: Generators) {
     }
     return function () {
       const raw = generators.cell({
-        element: Fun.constant(cell),
-        colspan: Fun.constant(1),
-        rowspan: Fun.constant(1)
+        element: cell,
+        colspan: 1,
+        rowspan: 1
       });
       // Remove any width calculations because they are no longer relevant.
       Css.remove(raw, 'width');

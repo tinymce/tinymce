@@ -62,7 +62,7 @@ UnitTest.asynctest('InlineViewDismissTest', (success, failure) => {
       GeneralSteps.sequence([
         Waiter.sTryUntil(
           'Test inline should not be DOM',
-          UiFinder.sExists(gui.element(), '.test-inline')
+          UiFinder.sExists(gui.element, '.test-inline')
         ),
         Step.sync(() => {
           Assertions.assertEq('Checking isOpen API', true, InlineView.isOpen(inline));
@@ -75,7 +75,7 @@ UnitTest.asynctest('InlineViewDismissTest', (success, failure) => {
       GeneralSteps.sequence([
         Waiter.sTryUntil(
           'Test inline should not be in DOM',
-          UiFinder.sNotExists(gui.element(), '.test-inline')
+          UiFinder.sNotExists(gui.element, '.test-inline')
         ),
         Step.sync(() => {
           Assertions.assertEq('Checking isOpen API', false, InlineView.isOpen(inline));
@@ -84,11 +84,11 @@ UnitTest.asynctest('InlineViewDismissTest', (success, failure) => {
     );
 
     return [
-      UiFinder.sNotExists(gui.element(), '.test-inline'),
+      UiFinder.sNotExists(gui.element, '.test-inline'),
       Step.sync(() => {
         InlineView.showAt(inline, {
           anchor: 'selection',
-          root: gui.element()
+          root: gui.element
         }, Container.sketch({
           dom: {
             innerHtml: 'Inner HTML'
@@ -108,7 +108,7 @@ UnitTest.asynctest('InlineViewDismissTest', (success, failure) => {
         Step.sync(() => {
           InlineView.showAt(inline, {
             anchor: 'selection',
-            root: gui.element()
+            root: gui.element
           }, Container.sketch({
             components: [
               Button.sketch({ uid: 'bold-button', dom: { tag: 'button', innerHtml: 'B', classes: [ 'bold-button' ] }, action: store.adder('bold') })
@@ -132,7 +132,7 @@ UnitTest.asynctest('InlineViewDismissTest', (success, failure) => {
       TestBroadcasts.sDismiss(
         'related element: should not close',
         gui,
-        related.element()
+        related.element
       ),
       sCheckOpen('The inline view should not have fired dismiss event when broadcasting on related'),
       store.sAssertEq('Broadcasting on related element should not fire dismiss event', [ ]),
@@ -140,7 +140,7 @@ UnitTest.asynctest('InlineViewDismissTest', (success, failure) => {
       TestBroadcasts.sDismiss(
         'outer gui element: should close',
         gui,
-        gui.element()
+        gui.element
       ),
 
       sCheckOpen('Dialog should stay open, because we are firing an event instead of dismissing automatically'),

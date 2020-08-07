@@ -19,7 +19,7 @@ interface JSONP {
   send (settings: JSONPSettings): void;
 }
 
-const JSONP = {
+const JSONP: JSONP = {
   callbacks: {},
   count: 0,
 

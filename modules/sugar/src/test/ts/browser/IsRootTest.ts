@@ -39,7 +39,7 @@ UnitTest.test('IsRootTest', () => {
   Checkers.checkOpt(Optional.some(TestPage.d1), PredicateFind.closest(TestPage.d1, Checkers.isName('div'), isRoot));
 
   Checkers.checkList([ TestPage.d1 ], SelectorFilter.ancestors(TestPage.p3, '*', isRoot));
-  Checkers.checkList([ TestPage.d1 ], PredicateFilter.ancestors(TestPage.p3, Fun.constant(true), isRoot));
+  Checkers.checkList([ TestPage.d1 ], PredicateFilter.ancestors(TestPage.p3, Fun.always, isRoot));
 
   assert.eq(false, SelectorExists.closest(TestPage.p3, 'li', isRoot));
   assert.eq(false, SelectorExists.closest(TestPage.p3, 'ol,ul', isRoot));

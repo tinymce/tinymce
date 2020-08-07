@@ -5,8 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Menu } from '@ephox/bridge';
 import Editor from 'tinymce/core/api/Editor';
+import { Menu } from 'tinymce/core/api/ui/Ui';
 import Tools from 'tinymce/core/api/util/Tools';
 import * as Settings from '../api/Settings';
 import * as Actions from '../core/Actions';
@@ -49,7 +49,7 @@ const addSplitButton = function (editor: Editor, id, tooltip, cmd, nodeName, sty
     presets: 'listpreview',
     columns: 3,
     fetch: (callback) => {
-      const items = Tools.map(styles, (styleValue): Menu.ChoiceMenuItemApi => {
+      const items = Tools.map(styles, (styleValue): Menu.ChoiceMenuItemSpec => {
         const iconStyle = nodeName === ListType.OrderedList ? 'num' : 'bull';
         const iconName = styleValue === 'disc' || styleValue === 'decimal' ? 'default' : styleValue;
         const itemValue = styleValue === 'default' ? '' : styleValue;

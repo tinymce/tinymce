@@ -15,8 +15,8 @@ import { Layouts } from 'ephox/alloy/positioning/mode/Anchoring';
 export default (): void => {
   const gui = Gui.create();
   const body = SugarElement.fromDom(document.body);
-  // Css.set(gui.element(), 'direction', 'rtl');
-  Class.add(gui.element(), 'gui-root-demo-container');
+  // Css.set(gui.element, 'direction', 'rtl');
+  Class.add(gui.element, 'gui-root-demo-container');
   Attachment.attachSystem(body, gui);
 
   const sink = DemoSink.make();
@@ -71,8 +71,8 @@ export default (): void => {
           Attachment.attach(sink, popup);
           Positioning.position(sink, {
             anchor: 'node',
-            root: button.getSystem().getByUid(`inner-${id}-editor`).getOrDie().element(),
-            node: Optional.from(button.getSystem().getByUid(`inner-${id}-editor`).getOrDie().element()),
+            root: button.getSystem().getByUid(`inner-${id}-editor`).getOrDie().element,
+            node: Optional.from(button.getSystem().getByUid(`inner-${id}-editor`).getOrDie().element),
             layouts
           }, popup);
         }

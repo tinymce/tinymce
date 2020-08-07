@@ -10,7 +10,7 @@ UnitTest.test('TableMergeContentTest', function () {
     Insert.append(table, row);
     const cells = Arr.map(specs, function (item) {
       const cell = SugarElement.fromTag('td');
-      cell.dom().innerHTML = item.html;
+      cell.dom.innerHTML = item.html;
 
       Insert.append(row, cell);
       return cell;

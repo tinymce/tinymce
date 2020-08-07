@@ -1,6 +1,6 @@
-import * as Fun from 'ephox/katamari/api/Fun';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import fc from 'fast-check';
-import { UnitTest, Assert } from '@ephox/bedrock-client';
+import * as Fun from 'ephox/katamari/api/Fun';
 
 UnitTest.test('Fun: unit tests', () => {
   const add2 = (n) => n + 2;

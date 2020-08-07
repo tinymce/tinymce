@@ -17,21 +17,21 @@ UnitTest.asynctest('Browser Test: ui.FontSizeSliderTest', function (success, fai
 
   const realm = IosRealm(Fun.noop);
   // Make toolbar appear
-  Class.add(realm.system().element(), 'tinymce-mobile-fullscreen-maximized');
+  Class.add(realm.element, 'tinymce-mobile-fullscreen-maximized');
 
   const body = SugarBody.body();
-  Attachment.attachSystem(body, realm.system());
+  Attachment.attachSystem(body, realm.system);
 
   TestStyles.addStyles();
 
   const unload = function () {
     TestStyles.removeStyles();
-    Attachment.detachSystem(realm.system());
+    Attachment.detachSystem(realm.system);
   };
 
   const tEditor = TestFrameEditor();
 
-  realm.system().add(tEditor.component());
+  realm.system.add(tEditor.component());
 
   realm.setToolbarGroups([
     {
@@ -48,7 +48,7 @@ UnitTest.asynctest('Browser Test: ui.FontSizeSliderTest', function (success, fai
     Step.sync(function () {
       tEditor.editor().focus();
     }),
-    Mouse.sClickOn(realm.system().element(), TestSelectors.fontsize()),
+    Mouse.sClickOn(realm.element, TestSelectors.fontsize()),
     tEditor.sAssertEq('on first showing, the font size slider should not have fired execCommand', [ ])
 
     // Think about how to do the slider events

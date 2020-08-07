@@ -1,9 +1,11 @@
-import { Optional, Struct } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 
 export interface TextSplit<E> {
-  before(): Optional<E>;
-  after(): Optional<E>;
+  readonly before: Optional<E>;
+  readonly after: Optional<E>;
 }
-type TextSplitConstructor = <E>(before: Optional<E>, after: Optional<E>) => TextSplit<E>;
 
-export const TextSplit = <TextSplitConstructor> Struct.immutable('before', 'after');
+export const TextSplit = <E>(before: Optional<E>, after: Optional<E>): TextSplit<E> => ({
+  before,
+  after
+});

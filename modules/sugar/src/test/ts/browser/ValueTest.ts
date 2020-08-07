@@ -6,7 +6,7 @@ UnitTest.test('ValueTest', () => {
   const ta = SugarElement.fromHtml<HTMLTextAreaElement>('<textarea>sometexthere</textarea>');
   assert.eq('sometexthere', Value.get(ta));
   Value.set(ta, 'one');
-  assert.eq('one', ta.dom().value);
+  assert.eq('one', ta.dom.value);
   assert.eq('one', Value.get(ta));
 
   let success = false;

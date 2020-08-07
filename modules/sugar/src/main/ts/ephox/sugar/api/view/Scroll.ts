@@ -9,7 +9,7 @@ import { SugarPosition } from './SugarPosition';
 
 // get scroll position (x,y) relative to document _doc (or global if not supplied)
 const get = (_DOC?: SugarElement<Document>) => {
-  const doc = _DOC !== undefined ? _DOC.dom() : document;
+  const doc = _DOC !== undefined ? _DOC.dom : document;
 
   // ASSUMPTION: This is for cross-browser support, body works for Safari & EDGE, and when we have an iframe body scroller
   const x = doc.body.scrollLeft || doc.documentElement.scrollLeft;
@@ -19,7 +19,7 @@ const get = (_DOC?: SugarElement<Document>) => {
 
 // Scroll content to (x,y) relative to document _doc (or global if not supplied)
 const to = (x: number, y: number, _DOC?: SugarElement<Document>) => {
-  const doc = _DOC !== undefined ? _DOC.dom() : document;
+  const doc = _DOC !== undefined ? _DOC.dom : document;
   const win = doc.defaultView;
   if (win) {
     win.scrollTo(x, y);
@@ -28,7 +28,7 @@ const to = (x: number, y: number, _DOC?: SugarElement<Document>) => {
 
 // Scroll content by (x,y) relative to document _doc (or global if not supplied)
 const by = (x: number, y: number, _DOC?: SugarElement<Document>) => {
-  const doc = _DOC !== undefined ? _DOC.dom() : document;
+  const doc = _DOC !== undefined ? _DOC.dom : document;
   const win = doc.defaultView;
   if (win) {
     win.scrollBy(x, y);
@@ -39,7 +39,7 @@ const by = (x: number, y: number, _DOC?: SugarElement<Document>) => {
 const setToElement = (win: Window, element: SugarElement<Element>) => {
   const pos = SugarLocation.absolute(element);
   const doc = SugarElement.fromDom(win.document);
-  to(pos.left(), pos.top(), doc);
+  to(pos.left, pos.top, doc);
 };
 
 // call f() preserving the original scroll position relative to document doc
@@ -47,8 +47,8 @@ const preserve = (doc: SugarElement<Document>, f: () => void) => {
   const before = get(doc);
   f();
   const after = get(doc);
-  if (before.top() !== after.top() || before.left() !== after.left()) {
-    to(before.left(), before.top(), doc);
+  if (before.top !== after.top || before.left !== after.left) {
+    to(before.left, before.top, doc);
   }
 };
 
@@ -63,7 +63,7 @@ const capture = (doc: SugarElement<Document>) => {
   // TODO: this is quite similar to the code in nomad.
   const restore = () => {
     previous.each((p) => {
-      to(p.left(), p.top(), doc);
+      to(p.left, p.top, doc);
     });
   };
 
@@ -78,17 +78,17 @@ const capture = (doc: SugarElement<Document>) => {
 const intoView = (element: SugarElement<Element>, alignToTop: boolean) => {
   const isSafari = PlatformDetection.detect().browser.isSafari();
   // this method isn't in TypeScript
-  if (isSafari && Type.isFunction((element.dom() as any).scrollIntoViewIfNeeded)) {
-    (element.dom() as any).scrollIntoViewIfNeeded(false); // false=align to nearest edge
+  if (isSafari && Type.isFunction((element.dom as any).scrollIntoViewIfNeeded)) {
+    (element.dom as any).scrollIntoViewIfNeeded(false); // false=align to nearest edge
   } else {
-    element.dom().scrollIntoView(alignToTop); // true=to top, false=to bottom
+    element.dom.scrollIntoView(alignToTop); // true=to top, false=to bottom
   }
 };
 
 // If the element is above the container, or below the container, then scroll to the top or bottom
 const intoViewIfNeeded = (element: SugarElement<Element>, container: SugarElement<Element>) => {
-  const containerBox = container.dom().getBoundingClientRect();
-  const elementBox = element.dom().getBoundingClientRect();
+  const containerBox = container.dom.getBoundingClientRect();
+  const elementBox = element.dom.getBoundingClientRect();
   if (elementBox.top < containerBox.top) {
     // element top is above the viewport top, scroll so it's at the top
     intoView(element, true);
@@ -103,7 +103,7 @@ const scrollBarWidth = () => {
   // From https://davidwalsh.name/detect-scrollbar-width
   const scrollDiv = SugarElement.fromHtml<HTMLDivElement>('<div style="width: 100px; height: 100px; overflow: scroll; position: absolute; top: -9999px;"></div>');
   Insert.after(SugarBody.body(), scrollDiv);
-  const w = scrollDiv.dom().offsetWidth - scrollDiv.dom().clientWidth;
+  const w = scrollDiv.dom.offsetWidth - scrollDiv.dom.clientWidth;
   Remove.remove(scrollDiv);
   return w;
 };

@@ -35,7 +35,7 @@ const context = (editor: Editor, elem: SugarElement, wrapName: string, nodeName:
       return ChildContext.Valid;
     } else if (isAnnotation(elem)) {
       return ChildContext.Existing;
-    } else if (isCaretNode(elem.dom())) {
+    } else if (isCaretNode(elem.dom)) {
       return ChildContext.Caret;
     } else if (!FormatUtils.isValid(editor, wrapName, nodeName) || !FormatUtils.isValid(editor, SugarNode.name(parent), wrapName)) {
       return ChildContext.InvalidChild;

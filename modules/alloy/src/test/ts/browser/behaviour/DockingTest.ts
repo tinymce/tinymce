@@ -84,7 +84,7 @@ UnitTest.asynctest('DockingTest', (success, failure) => {
       Assertions.sAssertStructure(
         'Assert initial structure of staticBox. Box should have neither "position: absolute" nor "position: fixed"',
         boxWithNoPosition(),
-        staticBox.element()
+        staticBox.element
       ),
       Assertions.sAssertStructure(
         'Assert initial structure of absoluteBox',
@@ -97,7 +97,7 @@ UnitTest.asynctest('DockingTest', (success, failure) => {
             bottom: str.none()
           }
         })),
-        absoluteBox.element()
+        absoluteBox.element
       )
     ]));
 
@@ -117,7 +117,7 @@ UnitTest.asynctest('DockingTest', (success, failure) => {
         Assertions.sAssertStructure(
           'Now that static box is offscreen normally, it should switch to fixed coordinates',
           boxWithPosition('fixed'),
-          staticBox.element()
+          staticBox.element
         )
       ),
       Waiter.sTryUntil(
@@ -125,7 +125,7 @@ UnitTest.asynctest('DockingTest', (success, failure) => {
         Assertions.sAssertStructure(
           'Now that absolute box is offscreen normally, it should switch to fixed coordinates',
           boxWithPosition('fixed'),
-          absoluteBox.element()
+          absoluteBox.element
         )
       ),
       // For future reference - Docking is always using 'left' and 'top' when docked but this behavior isn't set in stone
@@ -142,7 +142,7 @@ UnitTest.asynctest('DockingTest', (success, failure) => {
               bottom: str.none()
             }
           })),
-          absoluteBox.element()
+          absoluteBox.element
         ),
       ),
       store.sAssertEq('When docked', [ 'static.onDocked', 'absolute.onDocked' ]),
@@ -160,7 +160,7 @@ UnitTest.asynctest('DockingTest', (success, failure) => {
         Assertions.sAssertStructure(
           'Now that static box is back on screen, it should switch to having no position again',
           boxWithNoPosition(),
-          staticBox.element()
+          staticBox.element
         )
       ),
       Waiter.sTryUntil(
@@ -168,7 +168,7 @@ UnitTest.asynctest('DockingTest', (success, failure) => {
         Assertions.sAssertStructure(
           'Now that absolute box is back on screen, it should switch back to absolute',
           boxWithPosition('absolute'),
-          absoluteBox.element()
+          absoluteBox.element
         )
       ),
       store.sAssertEq('After undocked', [ 'static.onUndocked', 'absolute.onUndocked' ]),

@@ -84,7 +84,7 @@ UnitTest.asynctest('Tooltipping Behaviour', (success, failure) => {
   }, (doc, _body, gui, component, _store) => {
 
     const alphaButton = component.getSystem().getByDom(
-      SelectorFind.descendant(component.element(), '.alpha').getOrDie('Could not find alpha button')
+      SelectorFind.descendant(component.element, '.alpha').getOrDie('Could not find alpha button')
     ).toOptional().getOrDie('Could not find alpha button component');
 
     const sAssertSinkContents = (children: ApproxStructure.Builder<StructAssert[]>) => Waiter.sTryUntil(
@@ -94,7 +94,7 @@ UnitTest.asynctest('Tooltipping Behaviour', (success, failure) => {
         ApproxStructure.build((s, str, arr) => s.element('div', {
           children: children(s, str, arr)
         })),
-        memSink.get(component).element()
+        memSink.get(component).element
       )
     );
 
@@ -121,7 +121,7 @@ UnitTest.asynctest('Tooltipping Behaviour', (success, failure) => {
             ApproxStructure.build((s, _str, arr) => s.element('div', {
               classes: [ arr.has('tooltipping-container') ]
             })),
-            component.element()
+            component.element
           )
         ]
       ),
@@ -138,11 +138,11 @@ UnitTest.asynctest('Tooltipping Behaviour', (success, failure) => {
       Logger.ts(
         'Checking tooltips appear and disappear on focus and hover',
         [
-          Mouse.sHoverOn(component.element(), 'button:contains("alpha-html")'),
+          Mouse.sHoverOn(component.element, 'button:contains("alpha-html")'),
           sAssertSinkHtml('alpha-tooltip'),
-          Mouse.sHoverOn(component.element(), 'button:contains("beta-html")'),
+          Mouse.sHoverOn(component.element, 'button:contains("beta-html")'),
           sAssertSinkHtml('beta-tooltip'),
-          FocusTools.sSetFocus('Focusing beta button', component.element(), 'button:contains("beta-html")'),
+          FocusTools.sSetFocus('Focusing beta button', component.element, 'button:contains("beta-html")'),
           sAssertSinkHtml('beta-tooltip'),
           Keyboard.sKeydown(doc, Keys.right(), { }),
           sAssertSinkHtml('gamma-tooltip'),
@@ -155,12 +155,12 @@ UnitTest.asynctest('Tooltipping Behaviour', (success, failure) => {
         'Checking tooltips do not disappear when the tooltip is hovered, but do disappear ' +
         'when something else is hovered',
         [
-          Mouse.sHoverOn(component.element(), 'button:contains("alpha-html")'),
+          Mouse.sHoverOn(component.element, 'button:contains("alpha-html")'),
           Waiter.sTryUntil('alpha-tooltip', sAssertSinkHtml('alpha-tooltip')),
-          Mouse.sHoverOn(component.element(), 'span:contains("alpha-tooltip")'),
+          Mouse.sHoverOn(component.element, 'span:contains("alpha-tooltip")'),
           Logger.t('Hovering the tooltip itself should not dismiss it', Waiter.sTryUntil('tt', sAssertSinkHtml('alpha-tooltip'))),
           Chain.asStep({ }, [
-            Chain.inject(gui.element()),
+            Chain.inject(gui.element),
             UiFinder.cFindIn('span:contains("alpha-tooltip")'),
             Mouse.cMouseOut
           ]),
@@ -171,7 +171,7 @@ UnitTest.asynctest('Tooltipping Behaviour', (success, failure) => {
       Logger.ts(
         'Tooltips should not throw errors when the firing button is removed from the dom',
         [
-          Mouse.sHoverOn(component.element(), 'button:contains("alpha-html")'),
+          Mouse.sHoverOn(component.element, 'button:contains("alpha-html")'),
           Step.sync(() => {
             Replacing.remove(component, alphaButton);
           })

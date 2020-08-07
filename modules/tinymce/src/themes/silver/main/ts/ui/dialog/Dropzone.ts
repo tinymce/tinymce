@@ -9,7 +9,7 @@ import {
   AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Button, Disabling, FormField as AlloyFormField, Memento, NativeEvents,
   Representing, SimpleSpec, SimulatedEvent, SystemEvents, Tabstopping, Toggling
 } from '@ephox/alloy';
-import { Types } from '@ephox/bridge';
+import { Dialog } from '@ephox/bridge';
 import { Arr } from '@ephox/katamari';
 import { EventArgs } from '@ephox/sugar';
 
@@ -20,7 +20,6 @@ import { DisablingConfigs } from '../alien/DisablingConfigs';
 import { renderFormFieldWith, renderLabel } from '../alien/FieldLabeller';
 import { RepresentingConfigs } from '../alien/RepresentingConfigs';
 import { formChangeEvent } from '../general/FormEvents';
-import { Omit } from '../Omit';
 
 const extensionsAccepted = '.jpg,.jpeg,.png,.gif';
 
@@ -29,7 +28,7 @@ const filterByExtension = function (files: FileList) {
   return Arr.filter(Arr.from(files), (file) => re.test(file.name));
 };
 
-type DropZoneSpec = Omit<Types.DropZone.DropZone, 'type'>;
+type DropZoneSpec = Omit<Dialog.DropZone, 'type'>;
 
 export const renderDropZone = (spec: DropZoneSpec, providersBackstage: UiFactoryBackstageProviders): SimpleSpec => {
 
@@ -47,14 +46,14 @@ export const renderDropZone = (spec: DropZoneSpec, providersBackstage: UiFactory
 
   const onDrop: AlloyEvents.EventRunHandler<EventArgs> = (comp, se) => {
     if (!Disabling.isDisabled(comp)) {
-      const transferEvent = se.event().raw() as DragEvent;
+      const transferEvent = se.event.raw as DragEvent;
       handleFiles(comp, transferEvent.dataTransfer.files);
     }
   };
 
-  const onSelect = (component, simulatedEvent) => {
-    const files = simulatedEvent.event().raw().target.files;
-    handleFiles(component, files);
+  const onSelect = (component: AlloyComponent, simulatedEvent: SimulatedEvent<EventArgs>) => {
+    const input = simulatedEvent.event.raw.target as HTMLInputElement;
+    handleFiles(component, input.files);
   };
 
   const handleFiles = (component, files: FileList) => {
@@ -133,7 +132,7 @@ export const renderDropZone = (spec: DropZoneSpec, providersBackstage: UiFactory
             ],
             action: (comp) => {
               const inputComp = memInput.get(comp);
-              inputComp.element().dom().click();
+              inputComp.element.dom.click();
             },
             buttonBehaviours: Behaviour.derive([
               Tabstopping.config({ }),
@@ -147,7 +146,7 @@ export const renderDropZone = (spec: DropZoneSpec, providersBackstage: UiFactory
   });
 
   const pLabel = spec.label.map((label) => renderLabel(label, providersBackstage));
-  const pField = AlloyFormField.parts().field({
+  const pField = AlloyFormField.parts.field({
     factory: { sketch: renderField }
   });
 

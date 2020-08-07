@@ -5,10 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Dialog } from '../ui/Dialog';
 import Editor from 'tinymce/core/api/Editor';
-import { insertOrUpdateImage } from '../core/ImageSelection';
 import { ImageData } from '../core/ImageData';
+import { insertOrUpdateImage } from '../core/ImageSelection';
+import { Dialog } from '../ui/Dialog';
 
 const register = (editor: Editor) => {
   editor.addCommand('mceImage', Dialog(editor).openLater);

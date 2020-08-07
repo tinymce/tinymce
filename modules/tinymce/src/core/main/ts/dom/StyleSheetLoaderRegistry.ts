@@ -10,7 +10,7 @@ import { SugarElement, SugarShadowDom } from '@ephox/sugar';
 import { StyleSheetLoader, StyleSheetLoaderSettings } from '../api/dom/StyleSheetLoader';
 
 export interface StyleSheetLoaderRegistry {
-  readonly forElement: (referenceElement: SugarElement<Node>, settings: Partial<StyleSheetLoaderSettings>) => StyleSheetLoader;
+  readonly forElement: (referenceElement: SugarElement<Node>, settings: StyleSheetLoaderSettings) => StyleSheetLoader;
 }
 
 /**
@@ -20,10 +20,10 @@ export const create = (): StyleSheetLoaderRegistry => {
 
   const map = new WeakMap<Document | ShadowRoot, StyleSheetLoader>();
 
-  const forElement = (referenceElement: SugarElement<Node>, settings: Partial<StyleSheetLoaderSettings>) => {
+  const forElement = (referenceElement: SugarElement<Node>, settings: StyleSheetLoaderSettings) => {
     const root = SugarShadowDom.getRootNode(referenceElement);
 
-    const rootDom = root.dom();
+    const rootDom = root.dom;
     return Optional.from(map.get(rootDom)).getOrThunk(() => {
       const sl = StyleSheetLoader(rootDom, settings);
       map.set(rootDom, sl);
