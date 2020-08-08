@@ -1,4 +1,4 @@
-import { FocusTools, Log, Pipeline, UiFinder, Waiter } from '@ephox/agar';
+import { Assertions, Chain, FocusTools, Log, Pipeline, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyDom, TinyLoader, TinyUi } from '@ephox/mcagar';
@@ -50,6 +50,20 @@ UnitTest.asynctest('browser.tinymce.plugins.link.SelectedImageTest', (success, f
             'p': 1
           })
         )
+      ]),
+      Log.stepsAsStep('TINY-4706', 'Link: images link urls should be able to be removed', [
+        tinyApis.sSetContent('<p><a href="http://www.google.com/"><img src="image.png"></a></p>'),
+        tinyApis.sSelect('a', []),
+        TestLinkUi.sOpenLinkDialog(tinyUi),
+        Chain.asStep(Body.body(), [
+          FocusTools.cSetActiveValue(''),
+          TestLinkUi.cFireEvent('input'),
+          Chain.injectThunked(Body.body),
+          UiFinder.cNotExists('.tox-label:contains("Text to display")'),
+          FocusTools.cGetActiveValue,
+          Assertions.cAssertEq('URL should be empty', '')
+        ]),
+        TestLinkUi.sClickCancel
       ]),
       TestLinkUi.sClearHistory
     ], onSuccess, onFailure);

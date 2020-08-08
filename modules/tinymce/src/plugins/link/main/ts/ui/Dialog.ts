@@ -58,28 +58,28 @@ const collectData = (editor): Promise<LinkDialogInfo> => {
   return DialogInfo.collect(editor, anchorNode);
 };
 
-const getInitialData = (info: LinkDialogInfo, defaultTarget: Option<string>): LinkDialogData => ({
-  url: {
-    value: info.anchor.url.getOr(''),
-    meta: {
-      attach: () => { },
-      text: info.anchor.url.fold(
-        () => '',
-        () => info.anchor.text.getOr('')
-      ),
-      original: {
-        value: info.anchor.url.getOr('')
+const getInitialData = (info: LinkDialogInfo, defaultTarget: Option<string>): LinkDialogData => {
+  const anchor = info.anchor;
+  const url = anchor.url.getOr('');
+
+  return {
+    url: {
+      value: url,
+      meta: {
+        original: {
+          value: url
+        }
       }
-    }
-  },
-  text: info.anchor.text.getOr(''),
-  title: info.anchor.title.getOr(''),
-  anchor: info.anchor.url.getOr(''),
-  link: info.anchor.url.getOr(''),
-  rel: info.anchor.rel.getOr(''),
-  target: info.anchor.target.or(defaultTarget).getOr(''),
-  linkClass: info.anchor.linkClass.getOr('')
-});
+    },
+    text: anchor.text.getOr(''),
+    title: anchor.title.getOr(''),
+    anchor: url,
+    link: url,
+    rel: anchor.rel.getOr(''),
+    target: anchor.target.or(defaultTarget).getOr(''),
+    linkClass: anchor.linkClass.getOr('')
+  };
+};
 
 const makeDialog = (settings: LinkDialogInfo, onSubmit, editor: Editor): Types.Dialog.DialogApi<LinkDialogData> => {
 
