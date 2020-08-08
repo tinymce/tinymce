@@ -111,8 +111,8 @@ const makeDialog = (settings: LinkDialogInfo, onSubmit, editor: Editor): Types.D
   const defaultTarget: Option<string> = Option.from(Settings.getDefaultLinkTarget(editor));
 
   const initialData = getInitialData(settings, defaultTarget);
-  const dialogDelta = DialogChanges.init(initialData, settings);
   const catalogs = settings.catalogs;
+  const dialogDelta = DialogChanges.init(initialData, catalogs);
 
   const body: Types.Dialog.PanelApi = {
     type: 'panel',
