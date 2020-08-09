@@ -5,28 +5,72 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Optional, Optionals } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { Remove, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
+import BookmarkManager from '../api/dom/BookmarkManager';
 import Editor from '../api/Editor';
 import HtmlSerializer from '../api/html/Serializer';
 import { EditorEvent } from '../api/util/EventDispatcher';
+import CaretPosition from '../caret/CaretPosition';
 import { SetContentArgs } from '../content/ContentTypes';
+import * as MergeText from '../delete/MergeText';
 import * as ScrollIntoView from '../dom/ScrollIntoView';
+import { needsToBeNbspLeft, needsToBeNbspRight } from '../keyboard/Nbsps';
 
 export interface SelectionSetContentArgs extends SetContentArgs {
   selection?: boolean;
 }
 
-const prependData = (target: Text, data: string): void => {
-  target.insertData(0, data);
-};
-
-const removeEmpty = (text: SugarElement): Optional<SugarElement> => {
+const removeEmpty = (text: SugarElement<Text>): Optional<SugarElement<Text>> => {
   if (text.dom.length === 0) {
     Remove.remove(text);
     return Optional.none();
+  } else {
+    return Optional.some(text);
   }
-  return Optional.some(text);
+};
+
+const walkPastBookmark = (node: Optional<SugarElement<Node>>, forward: boolean): Optional<SugarElement<Node>> =>
+  node.filter((elm) => BookmarkManager.isBookmarkNode(elm.dom))
+    .bind(forward ? Traverse.prevSibling : Traverse.nextSibling);
+
+const merge = (outer: SugarElement<Text>, inner: SugarElement<Text>, rng: Range, forward: boolean) => {
+  const outerElm = outer.dom;
+  const innerElm = inner.dom;
+  const oldLength = forward ? innerElm.length : outerElm.length;
+  if (forward) {
+    MergeText.mergeTextNodes(innerElm, outerElm, false, forward);
+    rng.setEnd(innerElm, oldLength);
+  } else {
+    MergeText.mergeTextNodes(outerElm, innerElm, false, forward);
+    rng.setStart(innerElm, oldLength);
+  }
+};
+
+const normalizeTextIfRequired = (inner: SugarElement<Text>, forward: boolean) => {
+  Traverse.parent(inner).each((root) => {
+    const text = inner.dom;
+    if (!forward && needsToBeNbspLeft(root, CaretPosition(text, 0))) {
+      MergeText.normalizeWhitespaceAfter(text, 0);
+    } else if (forward && needsToBeNbspRight(root, CaretPosition(text, text.length))) {
+      MergeText.normalizeWhitespaceBefore(text, text.length);
+    }
+  });
+};
+
+const mergeAndNormalizeText = (outerNode: Optional<SugarElement<Text>>, innerNode: Optional<SugarElement<Node>>, rng: Range, forward: boolean) => {
+  outerNode.bind((outer) => {
+    // Normalize the text outside the inserted content
+    const normalizer = forward ? MergeText.normalizeWhitespaceAfter : MergeText.normalizeWhitespaceBefore;
+    normalizer(outer.dom, forward ? 0 : outer.dom.length);
+
+    // Merge the inserted content with other text nodes
+    return innerNode.filter(SugarNode.isText).map((inner) => merge(outer, inner, rng, forward));
+  }).orThunk(() => {
+    // Note: Attempt to leave the inserted/inner content as is and only adjust if absolutely required
+    const innerTextNode = walkPastBookmark(innerNode, forward).or(innerNode).filter(SugarNode.isText);
+    return innerTextNode.map((inner) => normalizeTextIfRequired(inner, forward));
+  });
 };
 
 const rngSetContent = (rng: Range, fragment: DocumentFragment): void => {
@@ -39,19 +83,9 @@ const rngSetContent = (rng: Range, fragment: DocumentFragment): void => {
   const prevText = firstChild.bind(Traverse.prevSibling).filter(SugarNode.isText).bind(removeEmpty);
   const nextText = lastChild.bind(Traverse.nextSibling).filter(SugarNode.isText).bind(removeEmpty);
 
-  // Join start
-  Optionals.lift2(prevText, firstChild.filter(SugarNode.isText), (prev: SugarElement, start: SugarElement) => {
-    prependData(start.dom, prev.dom.data);
-    Remove.remove(prev);
-  });
-
-  // Join end
-  Optionals.lift2(nextText, lastChild.filter(SugarNode.isText), (next: SugarElement, end: SugarElement) => {
-    const oldLength = end.dom.length;
-    end.dom.appendData(next.dom.data);
-    rng.setEnd(end.dom, oldLength);
-    Remove.remove(next);
-  });
+  // Join and normalize text
+  mergeAndNormalizeText(prevText, firstChild, rng, false);
+  mergeAndNormalizeText(nextText, lastChild, rng, true);
 
   rng.collapse(false);
 };
@@ -66,7 +100,12 @@ const setupArgs = (args: Partial<SelectionSetContentArgs>, content: string): Sel
 
 const cleanContent = (editor: Editor, args: SelectionSetContentArgs) => {
   if (args.format !== 'raw') {
-    const node = editor.parser.parse(args.content, { isRootContent: true, forced_root_block: false, ...args });
+    // Find which context to parse the content in
+    const rng = editor.selection.getRng();
+    const contextBlock = editor.dom.getParent(rng.commonAncestorContainer, editor.dom.isBlock);
+    const contextArgs = contextBlock ? { context: contextBlock.nodeName.toLowerCase() } : { };
+
+    const node = editor.parser.parse(args.content, { isRootContent: true, forced_root_block: false, ...contextArgs, ...args });
     return HtmlSerializer({ validate: editor.validate }, editor.schema).serialize(node);
   } else {
     return args.content;

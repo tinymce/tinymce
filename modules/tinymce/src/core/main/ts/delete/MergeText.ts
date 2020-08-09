@@ -6,7 +6,10 @@
  */
 
 import { Arr, Strings, Unicode } from '@ephox/katamari';
-import { Remove, SugarElement } from '@ephox/sugar';
+import { PredicateFind, Remove, SugarElement } from '@ephox/sugar';
+import CaretPosition from '../caret/CaretPosition';
+import * as ElementType from '../dom/ElementType';
+import * as Nbsps from '../keyboard/Nbsps';
 import { isNbsp, isWhiteSpace } from '../text/CharType';
 
 const normalizeContent = (content: string, isStartOfContent: boolean, isEndOfContent: boolean): string => {
@@ -30,13 +33,15 @@ const normalize = (node: Text, offset: number, count: number) => {
   if (count === 0) {
     return;
   }
+  const elm = SugarElement.fromDom(node);
+  const root = PredicateFind.ancestor(elm, ElementType.isBlock).getOr(elm);
 
   // Get the whitespace
   const whitespace = node.data.slice(offset, offset + count);
 
-  // Determine if we're at the end of start of the content
-  const isEndOfContent = offset + count >= node.data.length;
-  const isStartOfContent = offset === 0;
+  // Determine if we're at the end or start of the content
+  const isEndOfContent = offset + count >= node.data.length && Nbsps.needsToBeNbspRight(root, CaretPosition(node, node.data.length));
+  const isStartOfContent = offset === 0 && Nbsps.needsToBeNbspLeft(root, CaretPosition(node, 0));
 
   // Replace the original whitespace with the normalized whitespace content
   node.replaceData(offset, count, normalizeContent(whitespace, isStartOfContent, isEndOfContent));
@@ -56,18 +61,24 @@ const normalizeWhitespaceBefore = (node: Text, offset: number) => {
   return normalize(node, offset - whitespaceCount, whitespaceCount);
 };
 
-const mergeTextNodes = (prevNode: Text, nextNode: Text, normalizeWhitespace?: boolean): Text => {
+const mergeTextNodes = (prevNode: Text, nextNode: Text, normalizeWhitespace?: boolean, mergeToPrev: boolean = true): Text => {
   const whitespaceOffset = Strings.rTrim(prevNode.data).length;
+  const newNode = mergeToPrev ? prevNode : nextNode;
   // Merge the elements
-  prevNode.appendData(nextNode.data);
-  Remove.remove(SugarElement.fromDom(nextNode));
+  if (mergeToPrev) {
+    prevNode.appendData(nextNode.data);
+    Remove.remove(SugarElement.fromDom(nextNode));
+  } else {
+    nextNode.insertData(0, prevNode.data);
+    Remove.remove(SugarElement.fromDom(prevNode));
+  }
 
   // Normalize the whitespace around the merged elements, to ensure it doesn't get lost
   if (normalizeWhitespace) {
-    normalizeWhitespaceAfter(prevNode, whitespaceOffset);
+    normalizeWhitespaceAfter(newNode, whitespaceOffset);
   }
 
-  return prevNode;
+  return newNode;
 };
 
 export {
