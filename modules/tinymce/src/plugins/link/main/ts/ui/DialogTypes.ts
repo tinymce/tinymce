@@ -21,6 +21,14 @@ export interface ListGroup {
 // TODO TINY-2236 re-enable this (support will need to be added to bridge)
 export type ListItem = ListValue/*  | ListGroup */;
 
+export interface LinkDialogCatalog {
+  link: Optional<ListItem[]>;
+  targets: Optional<ListItem[]>;
+  rels: Optional<ListItem[]>;
+  classes: Optional<ListItem[]>;
+  anchor: Optional<ListItem[]>;
+}
+
 export interface LinkDialogInfo {
   anchor: {
     url: Optional<string>;
@@ -30,13 +38,7 @@ export interface LinkDialogInfo {
     linkClass: Optional<string>;
     title: Optional<string>;
   };
-  catalogs: {
-    link: Optional<ListItem[]>;
-    targets: Optional<ListItem[]>;
-    rels: Optional<ListItem[]>;
-    classes: Optional<ListItem[]>;
-    anchor: Optional<ListItem[]>;
-  };
+  catalogs: LinkDialogCatalog;
   flags: {
     titleEnabled: boolean;
   };

@@ -126,6 +126,16 @@ UnitTest.asynctest('browser.tinymce.core.selection.FragmentReaderTest', function
         cReadFragment([ 0, 0, 0 ], 0, [ 0, 0, 0 ], 1),
         cAssertFragmentHtml('<ol><li>a</li></ol>')
       ])),
+      Logger.t('Get fragment from fully selected li contents text in ul with list style', Chain.asStep(viewBlock, [
+        cSetHtml('<ul style="list-style-type: circle;"><li>a</li></ul>'),
+        cReadFragment([ 0, 0, 0 ], 0, [ 0, 0, 0 ], 1),
+        cAssertFragmentHtml('<ul style="list-style-type: circle;"><li>a</li></ul>')
+      ])),
+      Logger.t('Get fragment from fully selected li contents text in ol with list style', Chain.asStep(viewBlock, [
+        cSetHtml('<ol style="list-style-type: upper-roman;"><li>a</li></ol>'),
+        cReadFragment([ 0, 0, 0 ], 0, [ 0, 0, 0 ], 1),
+        cAssertFragmentHtml('<ol style="list-style-type: upper-roman;"><li>a</li></ol>')
+      ])),
       Logger.t('Get fragment from fully selected li contents text in ul in ol', Chain.asStep(viewBlock, [
         cSetHtml('<ol><li><ul><li>a</li></ul></li></ol>'),
         cReadFragment([ 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0 ], 1),

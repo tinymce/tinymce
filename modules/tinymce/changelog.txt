@@ -21,12 +21,17 @@ Version 5.5.0 (TBD)
     Fixed pressing escape not focusing the editor when using multiple toolbars #TINY-6230
     Fixed the `dirty` flag not being correctly set during an `AddUndo` event #TINY-4707
 Version 5.4.2 (TBD)
+    Fixed resizing the window not resizing the editor in fullscreen mode #TINY-3511
     Fixed clicking on notifications causing inline editors to hide #TINY-6058
+    Fixed an issue where link urls couldn't be deleted or edited in the link dialog in some cases #TINY-4706
     Fixed a regression where the `anchor_top` and `anchor_bottom` settings weren't working when set to `false` #TINY-6256
     Fixed an exception thrown when removing inline formats that contained additional styles or classes #TINY-6288
     Fixed an exception thrown when positioning the context toolbar on Internet Explorer 11 in some edge cases #TINY-6271
     Fixed inline formats not removed when more than one `removeformat` format rule existed #TINY-6216
+    Fixed an issue where spaces were sometimes removed when removing formating on nearby text #TINY-6251
     Fixed list toolbar buttons not showing as active when a list is selected #TINY-6286
+    Fixed an issue where the UI would sometimes not be shown or hidden when calling show or hide methods on the editor #TINY-6048
+    Fixed the list type style not retained when copying list items #TINY-6289
 Version 5.4.1 (2020-07-08)
     Fixed the Search and Replace plugin incorrectly including zero-width caret characters in search results #TINY-4599
     Fixed dragging and dropping unsupported files navigating the browser away from the editor #TINY-6027
