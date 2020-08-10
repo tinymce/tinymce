@@ -8,8 +8,10 @@
 import { Attachment } from '@ephox/alloy';
 import { Cell, Throttler } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
+import { Event } from '@ephox/dom-globals';
 import { Css, DomEvent, Element, Position, ShadowDom } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+import { EventUtilsEvent } from 'tinymce/core/api/dom/EventUtils';
 import Editor from 'tinymce/core/api/Editor';
 import * as Events from '../api/Events';
 import * as Settings from '../api/Settings';
@@ -25,23 +27,23 @@ const DOM = DOMUtils.DOM;
 const detection = PlatformDetection.detect();
 const isiOS12 = detection.os.isiOS() && detection.os.version.major <= 12;
 
-const setupEvents = (editor: Editor) => {
+const setupEvents = (editor: Editor, uiComponents: RenderUiComponents) => {
   const contentWindow = editor.getWin();
   const initialDocEle = editor.getDoc().documentElement;
 
   const lastWindowDimensions = Cell(Position(contentWindow.innerWidth, contentWindow.innerHeight));
   const lastDocumentDimensions = Cell(Position(initialDocEle.offsetWidth, initialDocEle.offsetHeight));
 
-  const resizeWindow = (e) => {
+  const resizeWindow = () => {
     // Check if the window dimensions have changed and if so then trigger a content resize event
     const outer = lastWindowDimensions.get();
     if (outer.left() !== contentWindow.innerWidth || outer.top() !== contentWindow.innerHeight) {
       lastWindowDimensions.set(Position(contentWindow.innerWidth, contentWindow.innerHeight));
-      Events.fireResizeContent(editor, e);
+      Events.fireResizeContent(editor);
     }
   };
 
-  const resizeDocument = (e) => {
+  const resizeDocument = () => {
     // Don't use the initial doc ele, as there's a small chance it may have changed
     const docEle = editor.getDoc().documentElement;
 
@@ -49,17 +51,25 @@ const setupEvents = (editor: Editor) => {
     const inner = lastDocumentDimensions.get();
     if (inner.left() !== docEle.offsetWidth || inner.top() !== docEle.offsetHeight) {
       lastDocumentDimensions.set(Position(docEle.offsetWidth, docEle.offsetHeight));
-      Events.fireResizeContent(editor, e);
+      Events.fireResizeContent(editor);
     }
   };
 
-  const scroll = (e) => Events.fireScrollContent(editor, e);
+  const scroll = (e: EventUtilsEvent<Event>) => Events.fireScrollContent(editor, e);
 
   DOM.bind(contentWindow, 'resize', resizeWindow);
   DOM.bind(contentWindow, 'scroll', scroll);
 
   // Bind to async load events and trigger a content resize event if the size has changed
   const elementLoad = DomEvent.capture(Element.fromDom(editor.getBody()), 'load', resizeDocument);
+
+  const mothership = uiComponents.uiMothership.element();
+  editor.on('hide', () => {
+    Css.set(mothership, 'display', 'none');
+  });
+  editor.on('show', () => {
+    Css.remove(mothership, 'display');
+  });
 
   editor.on('NodeChange', resizeDocument);
   editor.on('remove', () => {
@@ -94,12 +104,12 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
       rawUiConfig.sidebar
     );
 
-    setupEvents(editor);
+    setupEvents(editor, uiComponents);
   });
 
   const socket = OuterContainer.getSocket(uiComponents.outerContainer).getOrDie('Could not find expected socket element');
 
-  if (isiOS12 === true) {
+  if (isiOS12) {
     Css.setAll(socket.element(), {
       'overflow': 'scroll',
       '-webkit-overflow-scrolling': 'touch' // required for ios < 13 content scrolling
@@ -114,7 +124,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
 
   ReadOnly.setupReadonlyModeSwitch(editor, uiComponents);
 
-  editor.addCommand('ToggleSidebar', (ui: boolean, value: string) => {
+  editor.addCommand('ToggleSidebar', (_ui: boolean, value: string) => {
     OuterContainer.toggleSidebar(uiComponents.outerContainer, value);
     editor.fire('ToggleSidebar');
   });
