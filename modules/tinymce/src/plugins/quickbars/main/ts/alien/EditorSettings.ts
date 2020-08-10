@@ -5,8 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Editor from 'tinymce/core/api/Editor';
 import { Type } from '@ephox/katamari';
+import Editor from 'tinymce/core/api/Editor';
 
 const validDefaultOrDie = (value: any, predicate: (value: any) => boolean): boolean => {
   if (predicate(value)) {

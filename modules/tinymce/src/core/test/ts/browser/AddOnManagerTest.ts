@@ -1,11 +1,11 @@
 import { Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
+import { Obj } from '@ephox/katamari';
 import { LegacyUnit } from '@ephox/mcagar';
 import AddOnManager from 'tinymce/core/api/AddOnManager';
 import ScriptLoader from 'tinymce/core/api/dom/ScriptLoader';
 import PluginManager from 'tinymce/core/api/PluginManager';
 import I18n from 'tinymce/core/api/util/I18n';
-import { Obj } from '@ephox/katamari';
 
 UnitTest.asynctest('browser.tinymce.core.AddOnManagerTest', (success, failure) => {
   const suite = LegacyUnit.createSuite();

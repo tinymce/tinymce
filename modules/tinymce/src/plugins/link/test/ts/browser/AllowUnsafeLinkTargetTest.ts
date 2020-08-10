@@ -1,4 +1,4 @@
-import { Pipeline, Log } from '@ephox/agar';
+import { Log, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';

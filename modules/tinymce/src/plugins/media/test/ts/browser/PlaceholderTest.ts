@@ -1,4 +1,4 @@
-import { ApproxStructure, GeneralSteps, Pipeline, Waiter, Logger, Log, StructAssert } from '@ephox/agar';
+import { ApproxStructure, GeneralSteps, Log, Logger, Pipeline, StructAssert, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 

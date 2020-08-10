@@ -1,4 +1,4 @@
-import { Step, Assertions, Logger, Chain, GeneralSteps } from '@ephox/agar';
+import { Assertions, Chain, GeneralSteps, Logger, Step } from '@ephox/agar';
 import { AlloyComponent, Composing, Representing } from '@ephox/alloy';
 
 const sAssertComposedValue = (label: string, expected, component: AlloyComponent) => Logger.t(

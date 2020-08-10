@@ -1,8 +1,8 @@
-import { GeneralSteps, Keys, Logger, Pipeline, Assertions, Step } from '@ephox/agar';
-import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
-import Theme from 'tinymce/themes/silver/Theme';
+import { Assertions, GeneralSteps, Keys, Logger, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
+import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
 import Editor from 'tinymce/core/api/Editor';
+import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.core.keyboard.ArrowKeysContentEndpointBrModeTest', (success, failure) => {
   Theme();

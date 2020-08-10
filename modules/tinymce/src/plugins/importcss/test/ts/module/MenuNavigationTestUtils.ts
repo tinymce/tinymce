@@ -1,4 +1,4 @@
-import { Keyboard, Step, Keys, FocusTools } from '@ephox/agar';
+import { FocusTools, Keyboard, Keys, Step } from '@ephox/agar';
 import { Arr } from '@ephox/katamari';
 
 const sAssertFocusOnItem = (doc, text) => FocusTools.sTryOnSelector(

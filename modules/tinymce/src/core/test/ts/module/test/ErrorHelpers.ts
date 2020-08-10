@@ -1,5 +1,5 @@
+import { Assertions, Step, Waiter } from '@ephox/agar';
 import Editor from 'tinymce/core/api/Editor';
-import { Waiter, Step, Assertions } from '@ephox/agar';
 
 export default function () {
 

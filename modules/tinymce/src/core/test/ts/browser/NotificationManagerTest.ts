@@ -3,10 +3,10 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 import { Focus, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
+import { NotificationSpec } from 'tinymce/core/api/NotificationManager';
 import Delay from 'tinymce/core/api/util/Delay';
 import Tools from 'tinymce/core/api/util/Tools';
 import Theme from 'tinymce/themes/silver/Theme';
-import { NotificationSpec } from 'tinymce/core/api/NotificationManager';
 
 UnitTest.asynctest('browser.tinymce.core.NotificationManagerTest', function (success, failure) {
   Theme();

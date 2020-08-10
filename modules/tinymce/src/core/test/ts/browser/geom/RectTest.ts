@@ -1,8 +1,8 @@
-import { LegacyUnit } from '@ephox/mcagar';
 import { Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
+import { LegacyUnit } from '@ephox/mcagar';
 import Rect from 'tinymce/core/api/geom/Rect';
 import Tools from 'tinymce/core/api/util/Tools';
-import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.core.geom.RectTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();

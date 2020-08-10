@@ -1,4 +1,4 @@
-import { Pipeline, Step, Log } from '@ephox/agar';
+import { Log, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 

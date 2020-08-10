@@ -1,9 +1,9 @@
 import { Assertions } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import PluginManager from 'tinymce/core/api/PluginManager';
 import * as DetectProPlugin from 'tinymce/plugins/spellchecker/alien/DetectProPlugin';
-import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.test(
   'browser.tinymce.plugins.spellchecker.alien.DetectProPluginTest',

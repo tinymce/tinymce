@@ -7,7 +7,7 @@
 
 import { Objects } from '@ephox/boulder';
 import { Menu } from '@ephox/bridge';
-import { Arr, Obj, Id, Merger, Type } from '@ephox/katamari';
+import { Arr, Id, Merger, Obj, Type } from '@ephox/katamari';
 
 import { SingleMenuItemSpec } from './SingleMenuTypes';
 

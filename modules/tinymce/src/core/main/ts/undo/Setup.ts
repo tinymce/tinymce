@@ -9,8 +9,8 @@ import { Cell } from '@ephox/katamari';
 import Editor from '../api/Editor';
 import { EditorEvent } from '../api/util/EventDispatcher';
 import * as Levels from './Levels';
-import { UndoManager, Locks, UndoLevel } from './UndoManagerTypes';
 import { endTyping, setTyping } from './TypingState';
+import { Locks, UndoLevel, UndoManager } from './UndoManagerTypes';
 
 export const registerEvents = (editor: Editor, undoManager: UndoManager, locks: Locks) => {
   const isFirstTypedCharacter = Cell(false);

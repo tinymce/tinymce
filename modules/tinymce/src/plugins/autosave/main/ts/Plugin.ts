@@ -7,10 +7,10 @@
 
 import PluginManager from 'tinymce/core/api/PluginManager';
 import * as Api from './api/Api';
-import * as BeforeUnload from './core/BeforeUnload';
-import * as Buttons from './ui/Buttons';
-import * as Storage from './core/Storage';
 import * as Settings from './api/Settings';
+import * as BeforeUnload from './core/BeforeUnload';
+import * as Storage from './core/Storage';
+import * as Buttons from './ui/Buttons';
 
 /**
  * This class contains all core logic for the autosave plugin.

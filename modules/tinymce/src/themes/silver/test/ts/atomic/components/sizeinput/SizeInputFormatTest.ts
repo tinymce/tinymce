@@ -1,4 +1,4 @@
-import { UnitTest, assert } from '@ephox/bedrock-client';
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import { formatSize } from 'tinymce/themes/silver/ui/sizeinput/SizeInputModel';
 
 UnitTest.test('SizeInputFormatTest', function () {

@@ -3,9 +3,7 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { ApiChains, TinyLoader } from '@ephox/mcagar';
 import Plugin from 'tinymce/plugins/image/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
-import {
-  cAssertCleanHtml, cAssertInputValue, cFillActiveDialog, cSubmitDialog, cWaitForDialog, generalTabSelectors
-} from '../module/Helpers';
+import { cAssertCleanHtml, cAssertInputValue, cFillActiveDialog, cSubmitDialog, cWaitForDialog, generalTabSelectors } from '../module/Helpers';
 
 UnitTest.asynctest('browser.tinymce.plugins.image.DialogUpdateTest', (success, failure) => {
   SilverTheme();

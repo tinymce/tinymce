@@ -1,4 +1,4 @@
-import { UnitTest, assert } from '@ephox/bedrock-client';
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import * as UrlPatterns from 'tinymce/plugins/media/core/UrlPatterns';
 
 UnitTest.test('atomic.core.UrlPatternsTest', function () {

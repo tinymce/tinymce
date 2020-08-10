@@ -1,5 +1,5 @@
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import * as Whitespace from 'tinymce/plugins/paste/core/Whitespace';
-import { UnitTest, assert } from '@ephox/bedrock-client';
 
 UnitTest.test('atomic.tinymce.plugins.paste.WhitespaceTest', () => {
   const check = (expected: string, input: string) => assert.eq(expected, Whitespace.normalizeWhitespace(input));

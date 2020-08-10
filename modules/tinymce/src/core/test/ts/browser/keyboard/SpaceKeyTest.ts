@@ -1,7 +1,7 @@
 import { GeneralSteps, Keys, Logger, Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.core.keyboard.SpaceKeyTest', (success, failure) => {
   Theme();

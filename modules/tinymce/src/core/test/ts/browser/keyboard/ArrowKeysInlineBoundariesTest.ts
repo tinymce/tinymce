@@ -1,10 +1,10 @@
 import { Assertions, GeneralSteps, Keys, Logger, Pipeline, Step } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
 import * as WordSelection from 'tinymce/core/selection/WordSelection';
 import * as Zwsp from 'tinymce/core/text/Zwsp';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest(
   'browser.tinymce.core.keyboard.ArrowKeysInlineBoundariesTest',

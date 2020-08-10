@@ -1,7 +1,7 @@
 import { Step } from '@ephox/agar';
+import { TestHelpers } from '@ephox/alloy';
 import { Objects } from '@ephox/boulder';
 import { Cell, Fun } from '@ephox/katamari';
-import { TestHelpers } from '@ephox/alloy';
 
 export default function () {
   const store = TestHelpers.TestStore();

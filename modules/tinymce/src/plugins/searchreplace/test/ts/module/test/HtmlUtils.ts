@@ -1,5 +1,5 @@
-import Writer from 'tinymce/core/api/html/Writer';
 import SaxParser from 'tinymce/core/api/html/SaxParser';
+import Writer from 'tinymce/core/api/html/Writer';
 
 const cleanHtml = function (html) {
   return html.toLowerCase().replace(/[\r\n]+/gi, '')

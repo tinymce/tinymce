@@ -8,9 +8,9 @@
 import DomQuery from './api/dom/DomQuery';
 import Editor from './api/Editor';
 import Env from './api/Env';
+import * as Settings from './api/Settings';
 import Delay from './api/util/Delay';
 import * as RangeCompare from './selection/RangeCompare';
-import * as Settings from './api/Settings';
 import { hasAnyRanges } from './selection/SelectionUtils';
 
 /**
