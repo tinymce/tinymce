@@ -5,10 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Selections } from '@ephox/darwin';
 import { Arr, Fun } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { Dialog } from 'tinymce/core/api/ui/Ui';
-import { Selections } from '@ephox/darwin';
 import * as Styles from '../actions/Styles';
 import { hasAdvancedCellTab } from '../api/Settings';
 import * as Util from '../core/Util';
@@ -145,6 +145,5 @@ const open = (editor: Editor, selections: Selections) => {
   });
 };
 
-export {
-  open
-};
+export { open };
+

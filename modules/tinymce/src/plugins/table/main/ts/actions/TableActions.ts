@@ -5,18 +5,18 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Selections } from '@ephox/darwin';
 import { Arr, Fun, Obj, Optional } from '@ephox/katamari';
 import { DomDescent } from '@ephox/phoenix';
 import { CellMutations, Direction, ResizeWire, RunOperation, TableDirection, TableFill, TableGridSize, TableOperations } from '@ephox/snooker';
 import { SugarElement, SugarNode } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
-import { Selections } from '@ephox/darwin';
 import { fireNewCell, fireNewRow } from '../api/Events';
 import { getCloneElements } from '../api/Settings';
 import { getRowType, switchCellType, switchSectionType } from '../core/TableSections';
 import * as Util from '../core/Util';
 import * as TableSize from '../queries/TableSize';
-import { ephemera } from '../selection/Ephemera';
+import { Ephemera } from '../selection/Ephemera';
 import { getCellsFromSelection, getRowsFromSelection } from '../selection/TableSelection';
 
 type TableAction<T> = (table: SugarElement<HTMLTableElement>, target: T) => Optional<Range>;
@@ -122,14 +122,14 @@ export const TableActions = (editor: Editor, lazyWire: () => ResizeWire, selecti
 
   const setTableRowType = (editor: Editor, args: Record<string, any>) =>
     extractType(args, [ 'header', 'body', 'footer' ]).each((type) => {
-      Arr.map(getRowsFromSelection(Util.getSelectionStart(editor), ephemera.selected), (row) => switchSectionType(editor, row.dom, type));
+      Arr.map(getRowsFromSelection(Util.getSelectionStart(editor), Ephemera.selected), (row) => switchSectionType(editor, row.dom, type));
     });
 
   const makeColumnHeader = execute(TableOperations.makeColumnHeader, Fun.always, Fun.noop, lazyWire);
   const unmakeColumnHeader = execute(TableOperations.unmakeColumnHeader, Fun.always, Fun.noop, lazyWire);
 
   const getTableRowType = (editor: Editor): 'header' | 'body' | 'footer' | '' => {
-    const rows = getRowsFromSelection(Util.getSelectionStart(editor), ephemera.selected);
+    const rows = getRowsFromSelection(Util.getSelectionStart(editor), Ephemera.selected);
     if (rows.length > 0) {
       const rowTypes = Arr.map(rows, (r) => getRowType(editor, r.dom));
       const hasHeader = Arr.contains(rowTypes, 'header');

@@ -17,7 +17,7 @@ import { Clipboard } from '../core/Clipboard';
 import * as Util from '../core/Util';
 import * as TableTargets from '../queries/TableTargets';
 import { CellSelectionApi } from '../selection/CellSelection';
-import { ephemera } from '../selection/Ephemera';
+import { Ephemera } from '../selection/Ephemera';
 import * as TableSelection from '../selection/TableSelection';
 import * as CellDialog from '../ui/CellDialog';
 import { DomModifier } from '../ui/DomModifier';
@@ -70,7 +70,7 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
 
   const actOnSelection = (execute: CombinedTargetsTableAction): void => getSelectionStartCell(editor).each((cell) => {
     getTableFromCell(cell).each((table) => {
-      const targets = TableTargets.forMenu(selections, table, cell, ephemera);
+      const targets = TableTargets.forMenu(selections, table, cell, Ephemera);
       execute(table, targets).each((rng) => {
         editor.selection.setRng(rng);
         editor.focus();
@@ -82,14 +82,14 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
 
   const copyRowSelection = () => getSelectionStartCell(editor).map((cell) =>
     getTableFromCell(cell).bind((table) => {
-      const targets = TableTargets.forMenu(selections, table, cell, ephemera);
+      const targets = TableTargets.forMenu(selections, table, cell, Ephemera);
       const generators = TableFill.cellOperations(Fun.noop, SugarElement.fromDom(editor.getDoc()), Optional.none());
       return CopyRows.copyRows(table, targets, generators);
     }));
 
   const copyColSelection = () => getSelectionStartCell(editor).map((cell) =>
     getTableFromCell(cell).bind((table) => {
-      const targets = TableTargets.forMenu(selections, table, cell, ephemera);
+      const targets = TableTargets.forMenu(selections, table, cell, Ephemera);
       return CopyCols.copyCols(table, targets);
     }));
 

@@ -1,11 +1,11 @@
+import { Selections } from '@ephox/darwin';
 import { Arr, Cell, Optional, Thunk } from '@ephox/katamari';
 import { RunOperation, TableLookup } from '@ephox/snooker';
 import { SugarElement, SugarNode } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
-import { Selections } from '@ephox/darwin';
-import * as TableTargets from '../queries/TableTargets';
 import * as Util from '../core/Util';
-import { ephemera } from './Ephemera';
+import * as TableTargets from '../queries/TableTargets';
+import { Ephemera } from './Ephemera';
 import * as TableSelection from './TableSelection';
 
 export type SelectionTargets = ReturnType<typeof getSelectionTargets>;
@@ -22,7 +22,7 @@ export const getSelectionTargets = (editor: Editor, selections: Selections) => {
         if (isCaption(cellOrCaption)) {
           return TableTargets.noMenu(cellOrCaption);
         } else {
-          return TableTargets.forMenu(selections, table, cellOrCaption, ephemera);
+          return TableTargets.forMenu(selections, table, cellOrCaption, Ephemera);
         }
       });
     });

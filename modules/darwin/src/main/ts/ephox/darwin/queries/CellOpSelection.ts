@@ -1,9 +1,9 @@
 import { Arr, Fun, Optional } from '@ephox/katamari';
+import { RunOperation, Structs } from '@ephox/snooker';
 import { Attribute, SugarElement } from '@ephox/sugar';
-import { Structs, RunOperation } from '@ephox/snooker';
-import { Selections } from '../selection/Selections';
-import * as TableSelection from '../api/TableSelection';
 import { Ephemera } from '../api/Ephemera';
+import * as TableSelection from '../api/TableSelection';
+import { Selections } from '../selection/Selections';
 import * as SelectionTypes from '../selection/SelectionTypes';
 
 // Return an array of the selected elements
@@ -15,23 +15,24 @@ const selection = (selections: Selections): SugarElement[] =>
   );
 
 const unmergable = (selections: Selections): Optional<SugarElement[]> => {
-  const hasSpan = (elem: SugarElement<Element>) => (Attribute.has(elem, 'rowspan') && parseInt(Attribute.get(elem, 'rowspan') as string, 10) > 1) ||
-    (Attribute.has(elem, 'colspan') && parseInt(Attribute.get(elem, 'colspan') as string, 10) > 1);
+  const hasSpan = (elem: SugarElement<Element>, type: 'colspan' | 'rowspan') => Attribute.getOpt(elem, type).exists((span) => parseInt(span, 10) > 1);
+  const hasRowOrColSpan = (elem: SugarElement<Element>) => hasSpan(elem, 'rowspan') || hasSpan(elem, 'colspan');
 
   const candidates = selection(selections);
 
-  return candidates.length > 0 && Arr.forall(candidates, hasSpan) ? Optional.some(candidates) : Optional.none();
+  return candidates.length > 0 && Arr.forall(candidates, hasRowOrColSpan) ? Optional.some(candidates) : Optional.none();
 };
 
 const mergable = (table: SugarElement<HTMLTableElement>, selections: Selections, ephemera: Ephemera): Optional<RunOperation.ExtractMergable> =>
   SelectionTypes.cata<Optional<RunOperation.ExtractMergable>>(selections.get(),
     Optional.none,
     (cells: SugarElement<Element>[]) => {
-      if (cells.length === 0) {
+      if (cells.length <= 1) {
         return Optional.none();
+      } else {
+        return TableSelection.retrieveBox(table, ephemera.firstSelectedSelector, ephemera.lastSelectedSelector)
+          .map((bounds: Structs.Bounds) => ({ bounds, cells }));
       }
-      return TableSelection.retrieveBox(table, ephemera.firstSelectedSelector, ephemera.lastSelectedSelector).bind((bounds: Structs.Bounds) =>
-        cells.length > 1 ? Optional.some({ bounds, cells }) : Optional.none<RunOperation.ExtractMergable>());
     },
     Optional.none
   );

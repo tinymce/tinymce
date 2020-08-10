@@ -12,8 +12,8 @@ import * as Styles from '../actions/Styles';
 import { hasAdvancedRowTab } from '../api/Settings';
 import { switchSectionType } from '../core/TableSections';
 import * as Util from '../core/Util';
+import { Ephemera } from '../selection/Ephemera';
 import * as TableSelection from '../selection/TableSelection';
-import { ephemera } from '../selection/Ephemera';
 import { DomModifier } from './DomModifier';
 import * as Helpers from './Helpers';
 import * as RowDialogGeneralTab from './RowDialogGeneralTab';
@@ -67,7 +67,7 @@ const onSubmitRowForm = (editor: Editor, rows: HTMLTableRowElement[], oldData: R
 };
 
 const open = (editor: Editor) => {
-  const rows = TableSelection.getRowsFromSelection(Util.getSelectionStart(editor), ephemera.selected);
+  const rows = TableSelection.getRowsFromSelection(Util.getSelectionStart(editor), Ephemera.selected);
 
   // Check if there are any rows to operate on
   if (rows.length === 0) {

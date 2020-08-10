@@ -24,7 +24,5 @@ const retrieveBox = function (container: SugarElement, firstSelectedSelector: st
   });
 };
 
-export {
-  retrieve,
-  retrieveBox
-};
+export { retrieve, retrieveBox };
+

@@ -4,12 +4,12 @@ import { SugarElement } from '@ephox/sugar';
 export interface SelectionType {
   fold: <T>(
     none: () => T,
-    multiple: (elements: SugarElement<Element>[]) => T,
+    multiple: (elements: SugarElement<HTMLTableCellElement>[]) => T,
     single: (element: SugarElement<Element>) => T,
   ) => T;
   match: <T> (branches: {
     none: () => T;
-    multiple: (elements: SugarElement<Element>[]) => T;
+    multiple: (elements: SugarElement<HTMLTableCellElement>[]) => T;
     single: (element: SugarElement<Element>) => T;
   }) => T;
   log: (label: string) => void;

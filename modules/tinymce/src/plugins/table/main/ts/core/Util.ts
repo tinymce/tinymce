@@ -5,10 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Compare, SugarElement, Attribute } from '@ephox/sugar';
-import Editor from 'tinymce/core/api/Editor';
 import { Arr, Optional, Strings } from '@ephox/katamari';
 import { TableLookup } from '@ephox/snooker';
+import { Attribute, Compare, SugarElement } from '@ephox/sugar';
+import Editor from 'tinymce/core/api/Editor';
 const getNodeName = (elm: Node) => elm.nodeName.toLowerCase();
 
 const getBody = (editor: Editor) => SugarElement.fromDom(editor.getBody());
@@ -39,17 +39,4 @@ const getSelectionStart = (editor: Editor) => SugarElement.fromDom(editor.select
 
 const getThunkedSelectionStart = (editor: Editor) => () => SugarElement.fromDom(editor.selection.getStart());
 
-export {
-  getNodeName,
-  getBody,
-  getIsRoot,
-  addPxSuffix,
-  removePxSuffix,
-  getPixelWidth,
-  getPixelHeight,
-  getRawWidth,
-  removeDataStyle,
-  isPercentage,
-  getSelectionStart,
-  getThunkedSelectionStart
-};
+export { getNodeName, getBody, getIsRoot, addPxSuffix, removePxSuffix, getPixelWidth, getPixelHeight, getRawWidth, removeDataStyle, isPercentage, getSelectionStart, getThunkedSelectionStart };

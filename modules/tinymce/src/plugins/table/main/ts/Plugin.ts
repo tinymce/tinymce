@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Selections } from '@ephox/darwin';
 import Editor from 'tinymce/core/api/Editor';
 import PluginManager from 'tinymce/core/api/PluginManager';
-import { Selections } from '@ephox/darwin';
 import * as Clipboard from './actions/Clipboard';
 import { getResizeHandler } from './actions/ResizeHandler';
 import { TableActions } from './actions/TableActions';
@@ -17,17 +17,17 @@ import * as QueryCommands from './api/QueryCommands';
 import { hasTabNavigation } from './api/Settings';
 import { Clipboard as FakeClipboard } from './core/Clipboard';
 import * as TableFormats from './core/TableFormats';
+import * as Util from './core/Util';
 import * as TabContext from './queries/TabContext';
 import CellSelection from './selection/CellSelection';
-import { ephemera } from './selection/Ephemera';
+import { Ephemera } from './selection/Ephemera';
 import { getSelectionTargets } from './selection/SelectionTargets';
+import { getSelectionStartCellOrCaption } from './selection/TableSelection';
 import * as Buttons from './ui/Buttons';
 import * as MenuItems from './ui/MenuItems';
-import * as Util from './core/Util';
-import { getSelectionStartCellOrCaption } from './selection/TableSelection';
 
 function Plugin(editor: Editor) {
-  const selections = Selections(() => Util.getBody(editor), () => getSelectionStartCellOrCaption(Util.getSelectionStart(editor)), ephemera.selectedSelector);
+  const selections = Selections(() => Util.getBody(editor), () => getSelectionStartCellOrCaption(Util.getSelectionStart(editor)), Ephemera.selectedSelector);
   const selectionTargets = getSelectionTargets(editor, selections);
   const resizeHandler = getResizeHandler(editor);
   const cellSelection = CellSelection(editor, resizeHandler.lazyResize, selectionTargets);
@@ -43,8 +43,8 @@ function Plugin(editor: Editor) {
   Buttons.addToolbars(editor);
 
   editor.on('PreInit', function () {
-    editor.serializer.addTempAttr(ephemera.firstSelected);
-    editor.serializer.addTempAttr(ephemera.lastSelected);
+    editor.serializer.addTempAttr(Ephemera.firstSelected);
+    editor.serializer.addTempAttr(Ephemera.lastSelected);
     TableFormats.registerFormats(editor);
   });
 

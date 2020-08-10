@@ -1,15 +1,18 @@
 import { Fun } from '@ephox/katamari';
 import { Direction } from '@ephox/sugar';
 
-const ltr = {
-  isRtl: Fun.constant(false)
+type onDirection = { isRtl: () => boolean };
+
+const ltr: onDirection = {
+  isRtl: Fun.never
 };
 
-const rtl = {
-  isRtl: Fun.constant(true)
+const rtl: onDirection = {
+  isRtl: Fun.always
 };
 
 // Get the directionality from the position in the content
-const directionAt = Direction.onDirection(ltr, rtl);
+const directionAt = Direction.onDirection<onDirection>(ltr, rtl);
 
 export { directionAt };
+

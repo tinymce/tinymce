@@ -5,11 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Selections, SelectionTypes } from '@ephox/darwin';
 import { Arr, Fun, Optional } from '@ephox/katamari';
 import { CopySelected, TableFill, TableLookup } from '@ephox/snooker';
 import { Replication, SugarElement, SugarElements, SugarNode } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
-import { SelectionTypes, Selections } from '@ephox/darwin';
 import * as TableTargets from '../queries/TableTargets';
 import * as Ephemera from '../selection/Ephemera';
 import { TableActions } from './TableActions';

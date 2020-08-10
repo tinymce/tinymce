@@ -5,10 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { CellOpSelection, Selections } from '@ephox/darwin';
 import { Arr, Optionals } from '@ephox/katamari';
-import { Attribute, Compare, SugarElement, SugarElements, SelectorFind } from '@ephox/sugar';
 import { TableLookup } from '@ephox/snooker';
-import { Selections, CellOpSelection } from '@ephox/darwin';
+import { Attribute, Compare, SelectorFind, SugarElement, SugarElements } from '@ephox/sugar';
 
 const getSelectionStartFromSelector = <T extends Element>(selector: string) => (start: SugarElement<Node>) =>
   SelectorFind.closest<T>(start, selector);
