@@ -25,6 +25,7 @@ interface WindowVisualViewport {
   readonly scale: number;
   readonly addEventListener: (event: string, handler: EventListenerOrEventListenerObject) => void;
   readonly removeEventListener: (event: string, handler: EventListenerOrEventListenerObject) => void;
+  readonly dispatchEvent: (evt: Event) => boolean;
 }
 
 const get = (_win?: Window): Optional<WindowVisualViewport> => {
@@ -64,7 +65,7 @@ const getBounds = (_win?: Window): Bounds => {
 };
 
 const bind = (name: string, callback: EventHandler, _win?: Window) => get(_win).map((visualViewport) => {
-  const handler = (e: Event) => fromRawEvent(e);
+  const handler = (e: Event) => callback(fromRawEvent(e));
   visualViewport.addEventListener(name, handler);
 
   return {

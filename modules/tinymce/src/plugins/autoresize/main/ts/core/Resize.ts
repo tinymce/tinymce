@@ -58,7 +58,6 @@ const parseCssValueToInt = (dom: DOMUtils, elm: Element, name: string, computed:
  * This method gets executed each time the editor needs to resize.
  */
 const resize = (editor: Editor, oldSize: Cell<number>) => {
-  let deltaSize, resizeHeight, contentHeight;
   const dom = editor.dom;
 
   const doc = editor.getDoc();
@@ -73,12 +72,12 @@ const resize = (editor: Editor, oldSize: Cell<number>) => {
 
   const docEle = doc.documentElement;
   const resizeBottomMargin = Settings.getAutoResizeBottomMargin(editor);
-  resizeHeight = Settings.getAutoResizeMinHeight(editor);
+  let resizeHeight = Settings.getAutoResizeMinHeight(editor);
 
   // Calculate outer height of the doc element using CSS styles
   const marginTop = parseCssValueToInt(dom, docEle, 'margin-top', true);
   const marginBottom = parseCssValueToInt(dom, docEle, 'margin-bottom', true);
-  contentHeight = docEle.offsetHeight + marginTop + marginBottom + resizeBottomMargin;
+  let contentHeight = docEle.offsetHeight + marginTop + marginBottom + resizeBottomMargin;
 
   // Make sure we have a valid height
   // Note: Previously we had to do some fallbacks here for IE/Webkit, as the height calculation above didn't work.
@@ -108,7 +107,7 @@ const resize = (editor: Editor, oldSize: Cell<number>) => {
 
   // Resize content element
   if (resizeHeight !== oldSize.get()) {
-    deltaSize = resizeHeight - oldSize.get();
+    const deltaSize = resizeHeight - oldSize.get();
     dom.setStyle(editor.getContainer(), 'height', resizeHeight + 'px');
     oldSize.set(resizeHeight);
     Events.fireResizeEditor(editor);

@@ -1,4 +1,4 @@
-import { FocusTools, Log, Pipeline, UiFinder, Waiter } from '@ephox/agar';
+import { Chain, FocusTools, Log, Pipeline, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyDom, TinyLoader, TinyUi } from '@ephox/mcagar';
 import { SugarBody } from '@ephox/sugar';
@@ -49,6 +49,21 @@ UnitTest.asynctest('browser.tinymce.plugins.link.SelectedImageTest', (success, f
             'p': 1
           })
         )
+      ]),
+      Log.stepsAsStep('TINY-4706', 'Link: images link urls should be able to be removed', [
+        tinyApis.sSetContent('<p><a href="http://www.google.com/" title="test"><img src="image.png"></a></p>'),
+        tinyApis.sSelect('a', []),
+        TestLinkUi.sOpenLinkDialog(tinyUi),
+        Chain.asStep(SugarBody.body(), [
+          FocusTools.cSetActiveValue(''),
+          TestLinkUi.cFireEvent('input')
+        ]),
+        UiFinder.sNotExists(SugarBody.body(), '.tox-label:contains("Text to display")'),
+        TestLinkUi.sAssertDialogContents({
+          url: '',
+          title: 'test'
+        }),
+        TestLinkUi.sClickCancel
       ]),
       TestLinkUi.sClearHistory
     ], onSuccess, onFailure);

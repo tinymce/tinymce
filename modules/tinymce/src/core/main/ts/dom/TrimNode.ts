@@ -5,9 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Strings } from '@ephox/katamari';
+import { Arr } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import DOMUtils from '../api/dom/DOMUtils';
+import { isWhitespaceText } from '../text/Whitespace';
 import * as ElementType from './ElementType';
 import * as NodeType from './NodeType';
 import * as Empty from './Empty';
@@ -16,7 +17,7 @@ const isSpan = (node: Node): node is HTMLSpanElement =>
   node.nodeName.toLowerCase() === 'span';
 
 const isNonEmptyText = (node: Node) =>
-  NodeType.isText(node) && Strings.trim(node.data).length !== 0;
+  NodeType.isText(node) && !isWhitespaceText(node.data);
 
 const isInlineContent = (node: Node | null) =>
   node && (isNonEmptyText(node) || ElementType.isInline(SugarElement.fromDom(node)));

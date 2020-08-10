@@ -563,7 +563,8 @@ UnitTest.test('DOMUtils.encodeDecode', () => {
 });
 
 UnitTest.test('DOMUtils.split', () => {
-  let point, parent;
+  let point: Element;
+  let parent: Element;
   DOM.add(document.body, 'div', { id: 'test' });
 
   DOM.setHTML('test', '<p><b>text1<span>inner</span>text2</b></p>');
@@ -571,6 +572,12 @@ UnitTest.test('DOMUtils.split', () => {
   point = DOM.select('span', DOM.get('test'))[0];
   DOM.split(parent, point);
   Assert.eq('', '<p><b>text1</b></p><span>inner</span><p><b>text2</b></p>', DOM.get('test').innerHTML.toLowerCase().replace(/\s+/g, ''));
+
+  DOM.setHTML('test', '<p><strong>  &nbsp;  <span></span>cd</strong></p>');
+  parent = DOM.select('strong', DOM.get('test'))[0];
+  point = DOM.select('span', DOM.get('test'))[0];
+  DOM.split(parent, point);
+  Assert.eq('TINY-6251: Do not remove spaces containing nbsp', '<p><strong>  &nbsp;  </strong><span></span><strong>cd</strong></p>', DOM.get('test').innerHTML.toLowerCase());
 
   DOM.setHTML('test', '<ul><li>first line<br><ul><li><span>second</span> <span>line</span></li><li>third line<br></li></ul></li></ul>');
   parent = DOM.select('li:nth-child(1)', DOM.get('test'))[0];

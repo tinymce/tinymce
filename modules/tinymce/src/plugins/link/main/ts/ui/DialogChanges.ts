@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Cell, Fun, Optional } from '@ephox/katamari';
+import { Arr, Fun, Optional, Optionals } from '@ephox/katamari';
 
-import { LinkDialogData, LinkDialogInfo, LinkDialogUrlData, ListItem, ListValue } from './DialogTypes';
+import { LinkDialogCatalog, LinkDialogData, LinkDialogUrlData, ListItem, ListValue } from './DialogTypes';
 
 export interface DialogDelta {
   url: LinkDialogUrlData;
@@ -17,8 +17,9 @@ export interface DialogDelta {
 const findTextByValue = (value: string, catalog: ListItem[]): Optional<ListValue> => Arr.findMap(catalog, (item) =>
 // TODO TINY-2236 re-enable this (support will need to be added to bridge)
 // return 'items' in item ? findTextByValue(value, item.items) :
-  Optional.some(item).filter((i) => i.value === value)
+  Optionals.someIf(item.value === value, item)
 );
+
 const getDelta = (persistentText: string, fieldName: string, catalog: ListItem[], data: Partial<LinkDialogData>): Optional<DialogDelta> => {
   const value = data[fieldName];
   const hasPersistentText = persistentText.length > 0;
@@ -34,47 +35,56 @@ const getDelta = (persistentText: string, fieldName: string, catalog: ListItem[]
   })) : Optional.none();
 };
 
-const findCatalog = (settings: LinkDialogInfo, fieldName: string): Optional<ListItem[]> => {
+const findCatalog = (catalogs: LinkDialogCatalog, fieldName: string): Optional<ListItem[]> => {
   if (fieldName === 'link') {
-    return settings.catalogs.link;
+    return catalogs.link;
   } else if (fieldName === 'anchor') {
-    return settings.catalogs.anchor;
+    return catalogs.anchor;
   } else {
     return Optional.none();
   }
 };
 
-const init = (initialData: LinkDialogData, linkSettings: LinkDialogInfo) => {
-  const persistentText = Cell(initialData.text);
+const init = (initialData: LinkDialogData, linkCatalog: LinkDialogCatalog) => {
+  const persistentData = {
+    text: initialData.text,
+    title: initialData.title
+  };
 
-  const onUrlChange = (data: LinkDialogData) => {
-    // We are going to change the text, because it has not been manually entered by the user.
-    if (persistentText.get().length <= 0) {
-      const urlText = data.url.meta.text !== undefined ? data.url.meta.text : data.url.value;
-      const urlTitle = data.url.meta.title !== undefined ? data.url.meta.title : '';
+  const getTitleFromUrlChange = (url: LinkDialogUrlData): Optional<string> =>
+    Optionals.someIf(persistentData.title.length <= 0, Optional.from(url.meta.title).getOr(''));
+
+  const getTextFromUrlChange = (url: LinkDialogUrlData): Optional<string> =>
+    Optionals.someIf(persistentData.text.length <= 0, Optional.from(url.meta.text).getOr(url.value));
+
+  const onUrlChange = (data: LinkDialogData): Optional<Partial<LinkDialogData>> => {
+    const text = getTextFromUrlChange(data.url);
+    const title = getTitleFromUrlChange(data.url);
+    // We are going to change the text/title because it has not been manually entered by the user.
+    if (text.isSome() || title.isSome()) {
       return Optional.some({
-        text: urlText,
-        title: urlTitle
+        ...text.map((text) => ({ text })).getOr({ }),
+        ...title.map((title) => ({ title })).getOr({ })
       });
     } else {
       return Optional.none();
     }
-
   };
 
   const onCatalogChange = (data: LinkDialogData, change: { name: string }): Optional<Partial<LinkDialogData>> => {
-    const catalog = findCatalog(linkSettings, change.name).getOr([ ]);
-    return getDelta(persistentText.get(), change.name, catalog, data);
+    const catalog = findCatalog(linkCatalog, change.name).getOr([ ]);
+    return getDelta(persistentData.text, change.name, catalog, data);
   };
 
   const onChange = (getData: () => LinkDialogData, change: { name: string }): Optional<Partial<LinkDialogData>> => {
-    if (change.name === 'url') {
+    const name = change.name;
+    if (name === 'url') {
       return onUrlChange(getData());
-    } else if (Arr.contains([ 'anchor', 'link' ], change.name)) {
+    } else if (Arr.contains([ 'anchor', 'link' ], name)) {
       return onCatalogChange(getData(), change);
-    } else if (change.name === 'text') {
-      // Update the persistent text state, as a user has input custom text
-      persistentText.set(getData().text);
+    } else if (name === 'text' || name === 'title') {
+      // Update the persistent text/title state, as a user has input custom text
+      persistentData[name] = getData()[name];
       return Optional.none();
     } else {
       return Optional.none();
