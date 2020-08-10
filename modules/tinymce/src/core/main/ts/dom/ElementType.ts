@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { HTMLBRElement, HTMLElement, HTMLHeadingElement, HTMLTableCellElement, HTMLTableElement } from '@ephox/dom-globals';
 import { Arr, Fun } from '@ephox/katamari';
-import { Node, Element } from '@ephox/sugar';
-import { HTMLHeadingElement, HTMLElement, HTMLTableElement, HTMLBRElement } from '@ephox/dom-globals';
+import { Element, Node } from '@ephox/sugar';
 
 const blocks = [
   'article', 'aside', 'details', 'div', 'dt', 'figcaption', 'footer',
@@ -55,7 +55,7 @@ const isList = lazyLookup(lists);
 const isListItem = lazyLookup(listItems);
 const isVoid = lazyLookup(voids);
 const isTableSection = lazyLookup(tableSections);
-const isTableCell = lazyLookup(tableCells);
+const isTableCell = lazyLookup<HTMLTableCellElement>(tableCells);
 const isWsPreserveElement = lazyLookup(wsElements);
 
 export {
