@@ -7,8 +7,8 @@
 
 import Editor from 'tinymce/core/api/Editor';
 
-const isHtmlInNamedAnchorAllowed = (editor: Editor) => editor.getParam('allow_html_in_named_anchor', false, 'boolean');
+const allowHtmlInNamedAnchor = (editor: Editor) => editor.getParam('allow_html_in_named_anchor', false, 'boolean');
 
 export {
-  isHtmlInNamedAnchorAllowed
+  allowHtmlInNamedAnchor
 };

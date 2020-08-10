@@ -39,14 +39,14 @@ const getId = (editor: Editor) => {
   }
 };
 
-const createAnchor = (editor: Editor, id: string): void => {
-  if (!Settings.isHtmlInNamedAnchorAllowed(editor)) {
-    editor.selection.collapse(true);
-  }
-  if (editor.selection.isCollapsed()) {
-    editor.insertContent(editor.dom.createHTML('a', { id }));
-  } else {
-    editor.undoManager.transact(() => {
+const createAnchor = (editor: Editor, id: string) => {
+  editor.undoManager.transact(() => {
+    if (!Settings.allowHtmlInNamedAnchor(editor)) {
+      editor.selection.collapse(true);
+    }
+    if (editor.selection.isCollapsed()) {
+      editor.insertContent(editor.dom.createHTML('a', { id }));
+    } else {
       // Remove any empty named anchors in the selection as they cannot be removed by the formatter since they are cef
       removeEmptyNamedAnchorsInSelection(editor);
       // Format is set up to truncate any partially selected named anchors so that they are not completely removed
@@ -55,8 +55,8 @@ const createAnchor = (editor: Editor, id: string): void => {
       editor.formatter.apply('namedAnchor', { value: id });
       // Need to add visual classes to anchors if required
       editor.addVisual();
-    });
-  }
+    }
+  });
 };
 
 const updateAnchor = (editor: Editor, id: string, anchorElement: HTMLAnchorElement): void => {
@@ -67,8 +67,8 @@ const updateAnchor = (editor: Editor, id: string, anchorElement: HTMLAnchorEleme
 };
 
 const insert = (editor: Editor, id: string) => {
-  editor.focus();
   const anchor = getNamedAnchor(editor);
+  editor.focus();
   if (anchor) {
     updateAnchor(editor, id, anchor);
   } else {
