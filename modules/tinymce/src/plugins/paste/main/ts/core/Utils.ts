@@ -5,11 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Unicode } from '@ephox/katamari';
 import DomParser from 'tinymce/core/api/html/DomParser';
 import Schema from 'tinymce/core/api/html/Schema';
 import Tools from 'tinymce/core/api/util/Tools';
-import { navigator } from '@ephox/dom-globals';
-import { Unicode } from '@ephox/katamari';
 
 /**
  * This class contails various utility functions for the paste plugin.
@@ -137,14 +136,9 @@ function createIdGenerator(prefix: string) {
   };
 }
 
-const isMsEdge = function () {
-  return navigator.userAgent.indexOf(' Edge/') !== -1;
-};
-
 export {
   filter,
   innerText,
   trimHtml,
-  createIdGenerator,
-  isMsEdge
+  createIdGenerator
 };
