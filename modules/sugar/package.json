@@ -1,6 +1,6 @@
 {
   "name": "@ephox/sugar",
-  "version": "6.1.1",
+  "version": "6.1.2",
   "description": "Basic DOM manipulation",
   "repository": {
     "type": "git",
