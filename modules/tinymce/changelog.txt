@@ -5,6 +5,7 @@ Version 5.4.2 (TBD)
     Fixed an exception thrown when removing inline formats that contained additional styles or classes #TINY-6288
     Fixed an exception thrown when positioning the context toolbar on Internet Explorer 11 in some edge cases #TINY-6271
     Fixed inline formats not removed when more than one `removeformat` format rule existed #TINY-6216
+    Fixed an issue where spaces were sometimes removed when removing formating on nearby text #TINY-6251
     Fixed list toolbar buttons not showing as active when a list is selected #TINY-6286
     Fixed an issue where the UI would sometimes not be shown or hidden when calling show or hide methods on the editor #TINY-6048
     Fixed the list type style not retained when copying list items #TINY-6289

@@ -8,7 +8,7 @@
 import { Element } from '@ephox/sugar';
 import * as ElementType from './ElementType';
 import * as NodeType from './NodeType';
-import Tools from '../api/util/Tools';
+import { isWhitespaceText } from '../text/Whitespace';
 
 const surroundedBySpans = function (node) {
   const previousIsSpan = node.previousSibling && node.previousSibling.nodeName === 'SPAN';
@@ -28,7 +28,7 @@ const isBookmarkNode = function (node) {
 //   <p>text 1<span></span></p><b>CHOP</b><p><span></span>text 2</p>
 // this function will then trim off empty edges and produce:
 //   <p>text 1</p><b>CHOP</b><p>text 2</p>
-const trimNode = function (dom, node) {
+const trimNode = (dom, node) => {
   let i, children = node.childNodes;
 
   if (NodeType.isElement(node) && isBookmarkNode(node)) {
@@ -43,13 +43,15 @@ const trimNode = function (dom, node) {
     // Keep non whitespace text nodes
     if (NodeType.isText(node) && node.nodeValue.length > 0) {
       // Keep if parent element is a block or if there is some useful content
-      const trimmedLength = Tools.trim(node.nodeValue).length;
-      if (dom.isBlock(node.parentNode) || trimmedLength > 0) {
+      const isEmpty = isWhitespaceText(node.nodeValue);
+
+      if (dom.isBlock(node.parentNode) || !isEmpty) {
         return;
       }
+
       // Also keep text nodes with only spaces if surrounded by spans.
       // eg. "<p><span>a</span> <span>b</span></p>" should keep space between a and b
-      if (trimmedLength === 0 && surroundedBySpans(node)) {
+      if (surroundedBySpans(node)) {
         return;
       }
     } else if (NodeType.isElement(node)) {

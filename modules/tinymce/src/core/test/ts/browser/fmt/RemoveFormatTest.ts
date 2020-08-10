@@ -67,6 +67,13 @@ UnitTest.asynctest('browser.tinymce.core.fmt.RemoveFormatTest', (success, failur
           tinyApis.sAssertContent('<p>ab&nbsp; &nbsp;<strong>cd</strong></p>'),
           tinyApis.sAssertSelection([ 0, 0 ], 2, [ 0, 0 ], 2)
         ])),
+        Logger.t('Multiple spaces wrapped in strong and a letter', GeneralSteps.sequence([
+          tinyApis.sSetContent('<p>t<strong>&nbsp; t</strong></p>'),
+          tinyApis.sSetSelection([ 0, 1, 0 ], 2, [ 0, 1, 0 ], 3),
+          sRemoveFormat(editor, removeFormat),
+          tinyApis.sAssertContent('<p>t<strong>&nbsp; </strong>t</p>'),
+          tinyApis.sAssertSelection([ 0, 1 ], 1, [ 0 ], 3)
+        ])),
         Logger.t('Before last of two words, with multiple spaces wrapped in strong', GeneralSteps.sequence([
           tinyApis.sSetContent('<p><strong>ab&nbsp; &nbsp;cd</strong></p>'),
           tinyApis.sSetCursor([ 0, 0, 0 ], 5),

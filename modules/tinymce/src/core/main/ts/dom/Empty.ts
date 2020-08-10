@@ -11,6 +11,7 @@ import { Compare, Element, SelectorExists } from '@ephox/sugar';
 import TreeWalker from '../api/dom/TreeWalker';
 import * as CaretCandidate from '../caret/CaretCandidate';
 import * as NodeType from './NodeType';
+import { isWhitespaceText } from '../text/Whitespace';
 
 const hasWhitespacePreserveParent = function (rootNode: Node, node: Node) {
   const rootElement = Element.fromDom(rootNode);
@@ -19,7 +20,7 @@ const hasWhitespacePreserveParent = function (rootNode: Node, node: Node) {
 };
 
 const isWhitespace = function (rootNode: Node, node: Node) {
-  return NodeType.isText(node) && /^[ \t\r\n]*$/.test(node.data) && hasWhitespacePreserveParent(rootNode, node) === false;
+  return NodeType.isText(node) && isWhitespaceText(node.data) && hasWhitespacePreserveParent(rootNode, node) === false;
 };
 
 const isNamedAnchor = function (node: Node) {
