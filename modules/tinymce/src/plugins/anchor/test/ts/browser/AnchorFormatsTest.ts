@@ -1,8 +1,9 @@
 import { Log, Step, Pipeline } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import Editor from 'tinymce/core/api/Editor';
 import AnchorPlugin from 'tinymce/plugins/anchor/Plugin';
+import Editor from 'tinymce/core/api/Editor';
+import Env from 'tinymce/core/api/Env';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.plugins.anchor.AnchorFormatsTest', (success, failure) => {
@@ -25,7 +26,8 @@ UnitTest.asynctest('browser.tinymce.plugins.anchor.AnchorFormatsTest', (success,
       ]),
       Log.stepsAsStep('TINY-6236', 'Anchor: Check that namedAnchor format matches on non-empty named anchor', [
         tinyApis.sSetContent('<p><a id="abc">abc</a></p>'),
-        tinyApis.sSetSelection([ 0, 0, 0 ], 1, [ 0, 0, 0 ], 1),
+        // Note: Browser check since selection is unstable on IE11 due to TINY-3799
+        Env.browser.isIE ? tinyApis.sSelect('a', []) : tinyApis.sSetSelection([ 0, 0, 0 ], 1, [ 0, 0, 0 ], 1),
         sTestMatchFormat(editor, true)
       ]),
       Log.stepsAsStep('TINY-6236', 'Anchor: Check that namedAnchor format does not match on normal text', [
