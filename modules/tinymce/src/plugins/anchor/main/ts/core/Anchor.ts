@@ -51,7 +51,7 @@ const createAnchor = (editor: Editor, id: string) => {
       removeEmptyNamedAnchorsInSelection(editor);
       // Format is set up to truncate any partially selected named anchors so that they are not completely removed
       editor.formatter.remove('namedAnchor', null, null, true);
-      // Insert new anchor using the formmater - will wrap selected content in anchor
+      // Insert new anchor using the formatter - will wrap selected content in anchor
       editor.formatter.apply('namedAnchor', { value: id });
       // Need to add visual classes to anchors if required
       editor.addVisual();
@@ -68,12 +68,12 @@ const updateAnchor = (editor: Editor, id: string, anchorElement: HTMLAnchorEleme
 
 const insert = (editor: Editor, id: string) => {
   const anchor = getNamedAnchor(editor);
-  editor.focus();
   if (anchor) {
     updateAnchor(editor, id, anchor);
   } else {
     createAnchor(editor, id);
   }
+  editor.focus();
 };
 
 export {

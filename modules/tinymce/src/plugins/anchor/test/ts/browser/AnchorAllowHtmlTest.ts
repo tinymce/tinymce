@@ -59,7 +59,7 @@ UnitTest.asynctest('browser.tinymce.plugins.anchor.AnchorAllowHtmlTest', (succes
         sAssertContentStructure('abc', true, 'abc'),
         // Latest html: <p><a id="abc">abc</a></p>
         // Note: Browser check since selection is unstable on IE11 due to TINY-3799
-        Env.browser.isIE ? tinyApis.sSelect('a', []) : tinyApis.sSetSelection([ 0, 0, 0 ], 1, [ 0, 0, 0 ], 1),
+        Env.browser.isIE() ? tinyApis.sSelect('a', []) : tinyApis.sSetSelection([ 0, 0, 0 ], 1, [ 0, 0, 0 ], 1),
         sAddAnchor(tinyApis, tinyUi, 'def'),
         sAssertContentStructure('def', true, 'abc')
       ]),
