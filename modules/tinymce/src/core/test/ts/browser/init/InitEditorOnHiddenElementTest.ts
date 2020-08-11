@@ -1,7 +1,7 @@
 import { Chain } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { ApiChains, Editor } from '@ephox/mcagar';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.core.init.InitEditorOnHiddenElementTest', function (success, failure) {
 

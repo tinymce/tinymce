@@ -4,7 +4,6 @@ import { TinyApis, TinyLoader } from '@ephox/mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import * as InternalHtml from 'tinymce/plugins/paste/core/InternalHtml';
-import * as Utils from 'tinymce/plugins/paste/core/Utils';
 import PastePlugin from 'tinymce/plugins/paste/Plugin';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
@@ -211,8 +210,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.InternalClipboardTest', (succe
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
 
-    // Disabled tests on Edge 15 due to broken clipboard API
-    Pipeline.async({}, Utils.isMsEdge() ? [ ] : [
+    Pipeline.async({}, [
       sTestCopy(editor, tinyApis),
       sTestCut(editor, tinyApis),
       sTestPaste(editor, tinyApis)

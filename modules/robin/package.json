@@ -1,7 +1,7 @@
 {
   "name": "@ephox/robin",
   "description": "This project is for grouping sibling DOM nodes together by boundary points, for example the list of elements and nodes representing a word.",
-  "version": "7.0.55",
+  "version": "7.0.56",
   "repository": {
     "type": "git",
     "url": "https://github.com/tinymce/tinymce"
@@ -18,9 +18,9 @@
     "LICENSE.txt"
   ],
   "dependencies": {
-    "@ephox/boss": "^3.1.7",
+    "@ephox/boss": "^3.1.8",
     "@ephox/katamari": "^6.1.1",
-    "@ephox/phoenix": "^5.1.8",
+    "@ephox/phoenix": "^5.1.9",
     "@ephox/polaris": "^3.0.52",
     "tslib": "^2.0.0"
   },

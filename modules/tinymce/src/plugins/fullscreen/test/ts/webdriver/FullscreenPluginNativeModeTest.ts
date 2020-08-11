@@ -5,7 +5,7 @@ import { getFullscreenElement } from 'tinymce/plugins/fullscreen/core/NativeFull
 import FullscreenPlugin from 'tinymce/plugins/fullscreen/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.plugins.fullscreen.FullScreenPluginNativeModeTest', (success, failure) => {
+UnitTest.asynctest('webdriver.tinymce.plugins.fullscreen.FullScreenPluginNativeModeTest', (success, failure) => {
   FullscreenPlugin();
   SilverTheme();
 

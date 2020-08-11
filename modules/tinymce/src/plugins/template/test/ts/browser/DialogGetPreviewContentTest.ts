@@ -1,10 +1,10 @@
 import { Log, Pipeline, Step } from '@ephox/agar';
-import { UnitTest, Assert } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import TemplatePlugin from 'tinymce/plugins/template/Plugin';
-import SilverTheme from 'tinymce/themes/silver/Theme';
-import { getPreviewContent } from 'tinymce/plugins/template/ui/Dialog';
 import Env from 'tinymce/core/api/Env';
+import TemplatePlugin from 'tinymce/plugins/template/Plugin';
+import { getPreviewContent } from 'tinymce/plugins/template/ui/Dialog';
+import SilverTheme from 'tinymce/themes/silver/Theme';
 
 const metaKey = Env.mac ? 'e.metaKey' : 'e.ctrlKey && !e.altKey';
 

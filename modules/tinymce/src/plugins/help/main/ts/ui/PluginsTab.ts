@@ -9,8 +9,8 @@ import { Arr, Obj } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { Dialog } from 'tinymce/core/api/ui/Ui';
 import I18n from 'tinymce/core/api/util/I18n';
-import * as PluginUrls from '../data/PluginUrls';
 import * as Settings from '../api/Settings';
+import * as PluginUrls from '../data/PluginUrls';
 
 export interface PluginUrlType {
   key: string;

@@ -17,6 +17,7 @@ import * as CaretContainer from '../caret/CaretContainer';
 import * as NodeType from '../dom/NodeType';
 import { isCaretNode } from '../fmt/FormatContainer';
 import * as NormalizeRange from '../selection/NormalizeRange';
+import { isWhitespaceText } from '../text/Whitespace';
 import * as Zwsp from '../text/Zwsp';
 import * as InsertLi from './InsertLi';
 import * as NewLineUtils from './NewLineUtils';
@@ -343,7 +344,7 @@ const insert = function (editor: Editor, evt?: EditorEvent<KeyboardEvent>) {
             return false;
           }
         }
-      } else if (NodeType.isText(node) && !/^[ \t\r\n]*$/.test(node.nodeValue)) {
+      } else if (NodeType.isText(node) && !isWhitespaceText(node.nodeValue)) {
         return false;
       }
 

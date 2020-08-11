@@ -1,7 +1,7 @@
-import { LegacyUnit } from '@ephox/mcagar';
 import { Pipeline } from '@ephox/agar';
-import * as ClientRect from 'tinymce/core/geom/ClientRect';
 import { UnitTest } from '@ephox/bedrock-client';
+import { LegacyUnit } from '@ephox/mcagar';
+import * as ClientRect from 'tinymce/core/geom/ClientRect';
 
 UnitTest.asynctest('browser.tinymce.core.geom.ClientRectTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();

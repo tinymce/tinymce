@@ -5,8 +5,8 @@ import { Cell } from '@ephox/katamari';
 import { TinyLoader } from '@ephox/mcagar';
 import { SugarBody } from '@ephox/sugar';
 
-import Delay from 'tinymce/core/api/util/Delay';
 import { Dialog } from 'tinymce/core/api/ui/Ui';
+import Delay from 'tinymce/core/api/util/Delay';
 import Theme from 'tinymce/themes/silver/Theme';
 import * as DialogUtils from '../../module/DialogUtils';
 

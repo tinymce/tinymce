@@ -1,7 +1,7 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import * as Settings from 'tinymce/themes/silver/ui/menus/contextmenu/Settings';
 import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
+import * as Settings from 'tinymce/themes/silver/ui/menus/contextmenu/Settings';
 
 UnitTest.test('Editor context menu settings test', () => {
   const userItems = Settings.getContextMenu(new Editor('id', { contextmenu: 'link image' }, EditorManager));

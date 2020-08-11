@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Optional, Type } from '@ephox/katamari';
+import { Adt, Arr, Fun, Optional, Type } from '@ephox/katamari';
 import { Insert, InsertAll, SugarElement, Traverse } from '@ephox/sugar';
 import DOMUtils from '../api/dom/DOMUtils';
 import DomTreeWalker from '../api/dom/TreeWalker';
@@ -24,6 +24,31 @@ import * as CaretFormat from './CaretFormat';
 import * as ExpandRange from './ExpandRange';
 import * as FormatUtils from './FormatUtils';
 import * as MatchFormat from './MatchFormat';
+import { mergeSiblings } from './MergeUtils';
+
+interface RemoveFormatAdt {
+  fold: <T> (
+    keep: () => T,
+    rename: (name: string) => T,
+    removed: () => T
+  ) => T;
+  match: <T>(branches: {
+    keep: () => T;
+    rename: (name: string) => T;
+    removed: () => T;
+  }) => T;
+  log: (label: string) => void;
+}
+
+const removeResult: {
+  keep: () => RemoveFormatAdt;
+  rename: (name: string) => RemoveFormatAdt;
+  removed: () => RemoveFormatAdt;
+} = Adt.generate([
+  { keep: [] },
+  { rename: [ 'name' ] },
+  { removed: [] }
+]);
 
 const MCE_ATTR_RE = /^(src|href|style)$/;
 const each = Tools.each;
@@ -198,24 +223,13 @@ const removeNode = (ed: Editor, node: Node, format: RemoveFormatPartial) => {
   dom.remove(node, true);
 };
 
-/**
- * Removes the specified format for the specified node. It will also remove the node if it doesn't have
- * any attributes if the format specifies it to do so.
- *
- * @private
- * @param {Object} format Format object with items to remove from node.
- * @param {Object} vars Name/value object with variables to apply to format.
- * @param {Node} node Node to remove the format styles on.
- * @param {Node} compareNode Optional compare node, if specified the styles will be compared to that node.
- * @return {Boolean} True/false if the node was removed or not.
- */
-const removeFormat = (ed: Editor, format: RemoveFormatPartial, vars?: FormatVars, node?: Node, compareNode?: Node) => {
+const removeFormatInternal = (ed: Editor, format: RemoveFormatPartial, vars?: FormatVars, node?: Node, compareNode?: Node): RemoveFormatAdt => {
   let stylesModified: boolean;
   const dom = ed.dom;
 
   // Check if node matches format
   if (!matchName(dom, node, format) && !isColorFormatAndAnchor(node, format)) {
-    return false;
+    return removeResult.keep();
   }
 
   // "matchName" will made sure we're dealing with an element, so cast as one
@@ -230,8 +244,7 @@ const removeFormat = (ed: Editor, format: RemoveFormatPartial, vars?: FormatVars
     // Note: If there are no attributes left, the element will be removed as normal at the end of the function
     if (attrsToPreserve.length > 0) {
       // Convert inline element to span if necessary
-      ed.dom.rename(elm, 'span');
-      return true;
+      return removeResult.rename('span');
     }
   }
 
@@ -321,7 +334,7 @@ const removeFormat = (ed: Editor, format: RemoveFormatPartial, vars?: FormatVars
     for (let i = 0; i < attrs.length; i++) {
       const attrName = attrs[i].nodeName;
       if (attrName.indexOf('_') !== 0 && attrName.indexOf('data-') !== 0) {
-        return false;
+        return removeResult.keep();
       }
     }
   }
@@ -329,9 +342,33 @@ const removeFormat = (ed: Editor, format: RemoveFormatPartial, vars?: FormatVars
   // Remove the inline child if it's empty for example <b> or <span>
   if (format.remove !== 'none') {
     removeNode(ed, elm, format);
-    return true;
+    return removeResult.removed();
   }
+
+  return removeResult.keep();
 };
+
+/**
+ * Removes the specified format for the specified node. It will also remove the node if it doesn't have
+ * any attributes if the format specifies it to do so.
+ *
+ * @private
+ * @param {Object} format Format object with items to remove from node.
+ * @param {Object} vars Name/value object with variables to apply to format.
+ * @param {Node} node Node to remove the format styles on.
+ * @param {Node} compareNode Optional compare node, if specified the styles will be compared to that node.
+ * @return {Boolean} True/false if the node was removed or not.
+ */
+const removeFormat = (ed: Editor, format: RemoveFormatPartial, vars?: FormatVars, node?: Node, compareNode?: Node): boolean =>
+  removeFormatInternal(ed, format, vars, node, compareNode).fold(
+    Fun.never,
+    (newName) => {
+      // If renaming we are guaranteed this is a Element, so cast
+      ed.dom.rename(node as Element, newName);
+      return true;
+    },
+    Fun.always
+  );
 
 const findFormatRoot = (editor: Editor, container: Node, name: string, vars: FormatVars, similar: boolean) => {
   let formatRoot: Node;
@@ -351,8 +388,21 @@ const findFormatRoot = (editor: Editor, container: Node, name: string, vars: For
   return formatRoot;
 };
 
+const removeFormatFromClone = (editor: Editor, format: RemoveFormatPartial, vars: FormatVars, clone: Node) =>
+  removeFormatInternal(editor, format, vars, clone, clone).fold(
+    Fun.constant(clone),
+    (newName) => {
+      // To rename a node, it needs to be a child of another node
+      const fragment = editor.dom.createFragment();
+      fragment.appendChild(clone);
+      // If renaming we are guaranteed this is a Element, so cast
+      return editor.dom.rename(clone as Element, newName);
+    },
+    Fun.constant(null)
+  );
+
 const wrapAndSplit = (editor: Editor, formatList: RemoveFormatPartial[], formatRoot: Node, container: Node, target: Node, split: boolean, format: RemoveFormatPartial, vars: FormatVars) => {
-  let clone, lastClone: Node, firstClone: Node;
+  let clone: Node | null, lastClone: Node, firstClone: Node;
   const dom = editor.dom;
 
   // Format root found then clone formats and split it
@@ -363,8 +413,8 @@ const wrapAndSplit = (editor: Editor, formatList: RemoveFormatPartial[], formatR
       clone = dom.clone(parent, false);
 
       for (let i = 0; i < formatList.length; i++) {
-        if (removeFormat(editor, formatList[i], vars, clone, clone)) {
-          clone = 0;
+        clone = removeFormatFromClone(editor, formatList[i], vars, clone);
+        if (clone === null) {
           break;
         }
       }
@@ -392,6 +442,12 @@ const wrapAndSplit = (editor: Editor, formatList: RemoveFormatPartial[], formatR
     if (lastClone) {
       target.parentNode.insertBefore(lastClone, target);
       firstClone.appendChild(target);
+
+      // After splitting the nodes may match with other siblings so we need to attempt to merge them
+      // Note: We can't use MergeFormats, as that'd create a circular dependency
+      if (format.inline) {
+        mergeSiblings(dom, format, vars, lastClone);
+      }
     }
   }
 
