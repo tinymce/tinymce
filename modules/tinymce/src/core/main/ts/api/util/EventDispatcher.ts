@@ -105,7 +105,7 @@ interface Binding<T, K extends string> {
 
 type Bindings<T> = {
   [K in string]?: Binding<T, K>[];
-}
+};
 
 class EventDispatcher<T> {
   /**
