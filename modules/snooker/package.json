@@ -1,7 +1,7 @@
 {
   "name": "@ephox/snooker",
   "description": "This project implements the table model.",
-  "version": "6.0.1",
+  "version": "6.0.2",
   "files": [
     "lib/main",
     "lib/demo",
@@ -18,11 +18,11 @@
     "url": "https://github.com/tinymce/tinymce"
   },
   "dependencies": {
-    "@ephox/dragster": "^4.0.50",
+    "@ephox/dragster": "^4.0.51",
     "@ephox/katamari": "^6.1.1",
     "@ephox/porkbun": "^4.0.37",
-    "@ephox/robin": "^7.0.55",
-    "@ephox/sugar": "^6.1.1",
+    "@ephox/robin": "^7.0.56",
+    "@ephox/sugar": "^6.1.2",
     "tslib": "^2.0.0"
   },
   "author": "Ephox Corporation",

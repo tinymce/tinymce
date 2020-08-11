@@ -1,7 +1,7 @@
 {
   "name": "@ephox/dragster",
   "description": "This project handles dragging.",
-  "version": "4.0.50",
+  "version": "4.0.51",
   "repository": {
     "type": "git",
     "url": "https://github.com/tinymce/tinymce"
@@ -20,7 +20,7 @@
   "dependencies": {
     "@ephox/katamari": "^6.1.1",
     "@ephox/porkbun": "^4.0.37",
-    "@ephox/sugar": "^6.1.1",
+    "@ephox/sugar": "^6.1.2",
     "tslib": "^2.0.0"
   },
   "scripts": {

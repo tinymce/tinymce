@@ -6,14 +6,9 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
-import * as Dialog from '../ui/Dialog';
 
-const register = (editor: Editor) => {
-  editor.addCommand('mceAnchor', () => {
-    Dialog.open(editor);
-  });
-};
+const allowHtmlInNamedAnchor = (editor: Editor) => editor.getParam('allow_html_in_named_anchor', false, 'boolean');
 
 export {
-  register
+  allowHtmlInNamedAnchor
 };

@@ -1,31 +1,13 @@
-import { Log, Pipeline, Step, Waiter } from '@ephox/agar';
+import { Log, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import AnchorPlugin from 'tinymce/plugins/anchor/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
+import { sAddAnchor, sAssertAnchorPresence } from '../module/Helpers';
 
 UnitTest.asynctest('browser.tinymce.plugins.anchor.AnchorSanityTest', (success, failure) => {
   AnchorPlugin();
   SilverTheme();
-
-  const sType = (text: string) =>
-    Log.step('TBA', 'Add anchor id', Step.sync(() => {
-      const elm: any = document.querySelector('div[role="dialog"].tox-dialog  input');
-      elm.value = text;
-    }));
-
-  const sAddAnchor = (tinyApis: TinyApis, tinyUi: TinyUi, id: string, numAnchors = 1) =>
-    Log.stepsAsStep('TBA', 'Add anchor', [
-      tinyUi.sClickOnToolbar('click anchor button', 'button[aria-label="Anchor"]'),
-      tinyUi.sWaitForPopup('wait for window', 'div[role="dialog"].tox-dialog  input'),
-      sType(id),
-      tinyUi.sClickOnUi('click on Save btn', 'div.tox-dialog__footer button.tox-button:not(.tox-button--secondary)'),
-      Waiter.sTryUntil('wait for anchor',
-        tinyApis.sAssertContentPresence(
-          { 'a.mce-item-anchor': numAnchors }
-        )
-      )
-    ]);
 
   TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyUi = TinyUi(editor);
@@ -36,12 +18,14 @@ UnitTest.asynctest('browser.tinymce.plugins.anchor.AnchorSanityTest', (success, 
         tinyApis.sSetContent('abc'),
         tinyApis.sFocus(),
         sAddAnchor(tinyApis, tinyUi, 'abc'),
+        sAssertAnchorPresence(tinyApis, 1),
         tinyApis.sAssertContent('<p><a id="abc"></a>abc</p>')
       ]),
       Log.stepsAsStep('TINY-2788', 'Anchor: Add anchor to empty editor, then check if that anchor is present in the editor', [
         tinyApis.sSetContent(''),
         tinyApis.sFocus(),
         sAddAnchor(tinyApis, tinyUi, 'abc'),
+        sAssertAnchorPresence(tinyApis, 1),
         tinyApis.sAssertContent('<p><a id="abc"></a></p>')
       ]),
       Log.stepsAsStep('TINY-2788', 'Anchor: Add anchor to empty line, then check if that anchor is present in the editor', [
@@ -49,15 +33,27 @@ UnitTest.asynctest('browser.tinymce.plugins.anchor.AnchorSanityTest', (success, 
         tinyApis.sFocus(),
         tinyApis.sSetCursor([ 1 ], 0),
         sAddAnchor(tinyApis, tinyUi, 'abc'),
+        sAssertAnchorPresence(tinyApis, 1),
         tinyApis.sAssertContent('<p>abc</p>\n<p><a id="abc"></a></p>\n<p>def</p>')
       ]),
       Log.stepsAsStep('TINY-2788', 'Anchor: Add two anchors side by side, then check if they are present in the editor', [
         tinyApis.sSetContent(''),
         tinyApis.sFocus(),
         sAddAnchor(tinyApis, tinyUi, 'abc'),
+        sAssertAnchorPresence(tinyApis, 1),
         tinyApis.sAssertContent('<p><a id="abc"></a></p>'),
-        sAddAnchor(tinyApis, tinyUi, 'def', 2),
+        sAddAnchor(tinyApis, tinyUi, 'def'),
+        sAssertAnchorPresence(tinyApis, 2),
         tinyApis.sAssertContent('<p><a id="abc"></a><a id="def"></a></p>')
+      ]),
+      Log.stepsAsStep('TINY-6236', 'Anchor: Check bare anchor can be converted to a named anchor', [
+        tinyApis.sSetContent('<p><a>abc</a></p>'),
+        tinyApis.sFocus(),
+        tinyApis.sSetCursor([ 0, 0, 0 ], 1),
+        sAddAnchor(tinyApis, tinyUi, 'abc'),
+        sAssertAnchorPresence(tinyApis, 1),
+        // Text is shifted outside anchor since 'allow_html_in_named_anchor' setting is false by default
+        tinyApis.sAssertContent('<p><a id="abc"></a>abc</p>')
       ])
     ], onSuccess, onFailure);
   }, {
