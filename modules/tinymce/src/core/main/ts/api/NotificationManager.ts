@@ -7,6 +7,7 @@
 
 import { Element, HTMLElement } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
+import { Element as SugarElement, Focus } from '@ephox/sugar';
 import * as EditorView from '../EditorView';
 import { NotificationManagerImpl } from '../ui/NotificationManagerImpl';
 import Editor from './Editor';
@@ -109,6 +110,12 @@ function NotificationManager(editor: Editor): NotificationManager {
       const notification = getImplementation().open(spec, function () {
         closeNotification(notification);
         reposition();
+        // Move focus back to editor when the last notification is closed,
+        // otherwise focus the top notification
+        getTopNotification().fold(
+          () => editor.focus(),
+          (top) => Focus.focus(SugarElement.fromDom(top.getEl()))
+        );
       });
 
       addNotification(notification);

@@ -10,19 +10,17 @@ import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import Delay from 'tinymce/core/api/util/Delay';
 import * as InternalHtml from './InternalHtml';
-import * as Utils from './Utils';
 
 interface SelectionContentData {
   html: string;
   text: string;
 }
 
-const hasWorkingClipboardApi = (clipboardData: DataTransfer) =>
+const hasWorkingClipboardApi = (clipboardData: DataTransfer | null): clipboardData is DataTransfer =>
   // iOS supports the clipboardData API but it doesn't do anything for cut operations
-  // Edge 15 has a broken HTML Clipboard API see https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/11780845/
-  Env.iOS === false && clipboardData !== undefined && typeof clipboardData.setData === 'function' && Utils.isMsEdge() !== true;
+  Env.iOS === false && typeof clipboardData?.setData === 'function';
 
-const setHtml5Clipboard = (clipboardData: DataTransfer, html: string, text: string) => {
+const setHtml5Clipboard = (clipboardData: DataTransfer | null, html: string, text: string) => {
   if (hasWorkingClipboardApi(clipboardData)) {
     try {
       clipboardData.clearData();

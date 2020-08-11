@@ -27,6 +27,7 @@ import Sizzle from './Sizzle';
 import { StyleSheetLoader } from './StyleSheetLoader';
 import TreeWalker from './TreeWalker';
 import * as StyleSheetLoaderRegistry from '../../dom/StyleSheetLoaderRegistry';
+import { isWhitespaceText } from '../../text/Whitespace';
 
 /**
  * Utility class for various DOM manipulation and retrieval functions.
@@ -45,7 +46,6 @@ const each = Tools.each;
 const grep = Tools.grep;
 const isIE = Env.ie;
 const simpleSelectorRe = /^([a-z0-9],?)+$/i;
-const whiteSpaceRegExp = /^[ \t\r\n]*$/;
 
 interface AttrHooks {
   style: {
@@ -251,7 +251,8 @@ interface DOMUtils {
   isEmpty (node: Node, elements?: Record<string, any>): boolean;
   createRng (): Range;
   nodeIndex (node: Node, normalized?: boolean): number;
-  split (parentElm: Node, splitElm: Node, replacementElm?: Node): Node;
+  split <T extends Node>(parentElm: Node, splitElm: Node, replacementElm: T): T;
+  split <T extends Node>(parentElm: Node, splitElm: T): T;
   bind <K extends keyof HTMLElementEventMap>(target: Target, name: K, func: EventUtilsCallback<HTMLElementEventMap[K]>, scope?: {}): any;
   bind <T = any>(target: Target, name: string, func: EventUtilsCallback<T>, scope?: {}): any;
   unbind <K extends keyof HTMLElementEventMap>(target: Target, name: K, func: EventUtilsCallback<HTMLElementEventMap[K]>): any;
@@ -1034,12 +1035,12 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
         }
 
         // Keep non whitespace text nodes
-        if (type === 3 && !whiteSpaceRegExp.test(node.nodeValue)) {
+        if (type === 3 && !isWhitespaceText(node.nodeValue)) {
           return false;
         }
 
         // Keep whitespace preserve elements
-        if (type === 3 && node.parentNode && whitespace[node.parentNode.nodeName] && whiteSpaceRegExp.test(node.nodeValue)) {
+        if (type === 3 && node.parentNode && whitespace[node.parentNode.nodeName] && isWhitespaceText(node.nodeValue)) {
           return false;
         }
 
@@ -1052,35 +1053,38 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
 
   const createRng = () => doc.createRange();
 
-  const split = (parentElm: Node, splitElm: Node, replacementElm?: Node) => {
-    let r = createRng(), bef, aft, pa;
+  const split = <T extends Node>(parentElm: Node, splitElm: T, replacementElm?: T): T => {
+    let range = createRng();
+    let beforeFragment: DocumentFragment;
+    let afterFragment: DocumentFragment;
+    let parentNode: Node;
 
     if (parentElm && splitElm) {
       // Get before chunk
-      r.setStart(parentElm.parentNode, findNodeIndex(parentElm));
-      r.setEnd(splitElm.parentNode, findNodeIndex(splitElm));
-      bef = r.extractContents();
+      range.setStart(parentElm.parentNode, findNodeIndex(parentElm));
+      range.setEnd(splitElm.parentNode, findNodeIndex(splitElm));
+      beforeFragment = range.extractContents();
 
       // Get after chunk
-      r = createRng();
-      r.setStart(splitElm.parentNode, findNodeIndex(splitElm) + 1);
-      r.setEnd(parentElm.parentNode, findNodeIndex(parentElm) + 1);
-      aft = r.extractContents();
+      range = createRng();
+      range.setStart(splitElm.parentNode, findNodeIndex(splitElm) + 1);
+      range.setEnd(parentElm.parentNode, findNodeIndex(parentElm) + 1);
+      afterFragment = range.extractContents();
 
       // Insert before chunk
-      pa = parentElm.parentNode;
-      pa.insertBefore(TrimNode.trimNode(self, bef), parentElm);
+      parentNode = parentElm.parentNode;
+      parentNode.insertBefore(TrimNode.trimNode(self, beforeFragment), parentElm);
 
       // Insert middle chunk
       if (replacementElm) {
-        pa.insertBefore(replacementElm, parentElm);
+        parentNode.insertBefore(replacementElm, parentElm);
         // pa.replaceChild(replacementElm, splitElm);
       } else {
-        pa.insertBefore(splitElm, parentElm);
+        parentNode.insertBefore(splitElm, parentElm);
       }
 
       // Insert after chunk
-      pa.insertBefore(TrimNode.trimNode(self, aft), parentElm);
+      parentNode.insertBefore(TrimNode.trimNode(self, afterFragment), parentElm);
       remove(parentElm);
 
       return replacementElm || splitElm;

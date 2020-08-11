@@ -7,10 +7,10 @@
 
 import { SchemaMap } from './Schema';
 import { Obj } from '@ephox/katamari';
+import { isWhitespaceText } from '../../text/Whitespace';
 
 export type Attributes = Array<{ name: string; value: string }> & { map: Record<string, string> };
 
-const whiteSpaceRegExp = /^[ \t\r\n]*$/;
 const typeLookup = {
   '#text': 3,
   '#comment': 8,
@@ -51,7 +51,7 @@ const walk = function (node: Node, root: Node | null, prev?: boolean): Node {
 
 const isEmptyTextNode = (node: Node) => {
   // Non whitespace content
-  if (!whiteSpaceRegExp.test(node.value)) {
+  if (!isWhitespaceText(node.value)) {
     return false;
   }
 
@@ -520,7 +520,7 @@ class Node {
         }
 
         // Keep whitespace preserve elements
-        if (node.type === 3 && node.parent && whitespace[node.parent.name] && whiteSpaceRegExp.test(node.value)) {
+        if (node.type === 3 && node.parent && whitespace[node.parent.name] && isWhitespaceText(node.value)) {
           return false;
         }
 
