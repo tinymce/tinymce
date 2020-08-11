@@ -3,6 +3,7 @@ Version 5.4.2 (TBD)
     Fixed clicking on notifications causing inline editors to hide #TINY-6058
     Fixed an issue where link urls couldn't be deleted or edited in the link dialog in some cases #TINY-4706
     Fixed a regression where the `anchor_top` and `anchor_bottom` settings weren't working when set to `false` #TINY-6256
+    Fixed the `anchor` plugin not supporting the `allow_html_in_named_anchor` setting #TINY-6236
     Fixed an exception thrown when removing inline formats that contained additional styles or classes #TINY-6288
     Fixed an exception thrown when positioning the context toolbar on Internet Explorer 11 in some edge cases #TINY-6271
     Fixed inline formats not removed when more than one `removeformat` format rule existed #TINY-6216
