@@ -167,7 +167,7 @@ export interface DOMUtilsSettings {
   referrerPolicy: ReferrerPolicy;
 }
 
-export type Target = Node | Window | Array<Node | Window>;
+export type Target = Node | Window;
 export type RunArguments<T extends Node = Node> = string | T | Array<string | T>;
 export type BoundEvent = [ Target, string, EventUtilsCallback<any>, any ];
 type Callback<K extends string> = EventUtilsCallback<MappedEvent<HTMLElementEventMap, K>>;
@@ -260,8 +260,10 @@ interface DOMUtils {
   nodeIndex (node: Node, normalized?: boolean): number;
   split <T extends Node>(parentElm: Node, splitElm: Node, replacementElm: T): T;
   split <T extends Node>(parentElm: Node, splitElm: T): T;
-  bind <K extends string>(target: Target, name: K, func: Callback<K>, scope?: any): (typeof target) extends [] ? Callback<K>[] : Callback<K>;
-  unbind <K extends string, T extends Target>(target: T, name?: K, func?: EventUtilsCallback<MappedEvent<HTMLElementEventMap, K>>): T extends [] ? EventUtils[] : EventUtils;
+  bind <K extends string>(target: Target, name: K, func: Callback<K>, scope?: any): Callback<K>;
+  bind <K extends string>(target: Target[], name: K, func: Callback<K>, scope?: any): Callback<K>[];
+  unbind <K extends string>(target: Target, name?: K, func?: EventUtilsCallback<MappedEvent<HTMLElementEventMap, K>>): EventUtils;
+  unbind <K extends string>(target: Target[], name?: K, func?: EventUtilsCallback<MappedEvent<HTMLElementEventMap, K>>): EventUtils[];
   fire (target: Node | Window, name: string, evt?: {}): EventUtils;
   getContentEditable (node: Node): string | null;
   getContentEditableParent (node: Node): string | null;
@@ -1093,56 +1095,55 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     }
   };
 
-  const bind = <T extends Target, K extends string>(target: T, name: K, func: Callback<K>, scope?: any): T extends [] ? Callback<K>[] : Callback<K> => {
-    if (Tools.isArray<Node | Window>(target)) {
+  const bind = <K extends string>(target: Target | Target[], name: K, func: Callback<K>, scope?: any): Callback<K> | Callback<K>[] => {
+    if (Tools.isArray<Target>(target)) {
       let i = target.length;
       const rv: Callback<K>[] = [];
 
       while (i--) {
-        rv[i] = bind(target[i], name, func, scope);
+        rv[i] = bind(target[i], name, func, scope) as Callback<K>;
       }
 
-      return rv as T extends [] ? Callback<K>[] : Callback<K>;
+      return rv;
     }
 
     // Collect all window/document events bound by editor instance
-    if (settings.collect && ((target as any) === doc || (target as any) === win)) {
+    if (settings.collect && (target === doc || target === win)) {
       boundEvents.push([ target, name, func, scope ]);
     }
 
     const output: Callback<K> = events.bind(target, name, func, scope || self);
-    return output as T extends [] ? Callback<K>[] : Callback<K>;
+    return output as (typeof target) extends [] ? Callback<K>[] : Callback<K>;
   };
 
-  const unbind = <K extends string, T extends Target>(target: T, name: K, func: EventUtilsCallback<MappedEvent<HTMLElementEventMap, K>>): T extends [] ? EventUtils[] : EventUtils => {
-    if (Tools.isArray<Node | Window>(target)) {
+  const unbind = <K extends string>(target: Target | Target[], name: K, func: EventUtilsCallback<MappedEvent<HTMLElementEventMap, K>>): EventUtils | EventUtils[] => {
+    if (Tools.isArray<Target>(target)) {
       let i = target.length;
       const rv = [] as EventUtils[];
 
       while (i--) {
-        rv[i] = unbind(target[i], name, func);
+        rv[i] = unbind(target[i], name, func) as EventUtils;
       }
 
-      return rv as T extends [] ? EventUtils[] : EventUtils;
-    }
+      return rv;
+    } else {
+      // Remove any bound events matching the input
+      if (boundEvents.length > 0 && (target === doc || target === win)) {
+        let i = boundEvents.length;
 
-    // Remove any bound events matching the input
-    if (boundEvents.length > 0 && ((target as any) === doc || (target as any) === win)) {
-      let i = boundEvents.length;
+        while (i--) {
+          const item = boundEvents[i];
 
-      while (i--) {
-        const item = boundEvents[i];
-
-        if (target === item[0] && (!name || name === item[1]) && (!func || func === item[2])) {
-          events.unbind(item[0], item[1], item[2]);
+          if (target === item[0] && (!name || name === item[1]) && (!func || func === item[2])) {
+            events.unbind(item[0], item[1], item[2]);
+          }
         }
       }
+      return events.unbind(target, name, func);
     }
-
-    return events.unbind(target, name, func) as T extends [] ? EventUtils[] : EventUtils;
   };
 
-  const fire = (target: Node | Window, name: string, evt?) => events.fire(target, name, evt);
+  const fire = (target: Target, name: string, evt?) => events.fire(target, name, evt);
 
   const getContentEditable = (node: Node) => {
     if (node && NodeType.isElement(node)) {
@@ -1859,7 +1860,7 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
      * @param {Object} scope Optional scope to execute the function in.
      * @return {function} Function callback handler the same as the one passed in.
      */
-    bind,
+    bind: bind as DOMUtils['bind'],
 
     /**
      * Removes the specified event handler by name and function from an element or collection of elements.
@@ -1871,7 +1872,7 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
      * @return {bool/Array} Bool state of true if the handler was removed, or an array of states if multiple input elements
      * were passed in.
      */
-    unbind,
+    unbind: unbind as DOMUtils['unbind'],
 
     /**
      * Fires the specified event name with object on target.
