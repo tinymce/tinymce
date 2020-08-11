@@ -1093,7 +1093,7 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     }
   };
 
-  const bind = <T extends Target, K extends string>(target: T, name: string, func: Callback<K>, scope?: any): T extends [] ? Callback<K>[] : Callback<K> => {
+  const bind = <T extends Target, K extends string>(target: T, name: K, func: Callback<K>, scope?: any): T extends [] ? Callback<K>[] : Callback<K> => {
     if (Tools.isArray<Node | Window>(target)) {
       let i = target.length;
       const rv: Callback<K>[] = [];
