@@ -18,7 +18,7 @@ import { ModeRenderInfo, RenderArgs, RenderUiComponents, RenderUiConfig } from '
 import OuterContainer from '../ui/general/OuterContainer';
 import { InlineHeader } from '../ui/header/InlineHeader';
 import { identifyMenus } from '../ui/menus/menubar/Integration';
-import { inline as loadInlineSkin } from './../ui/skin/Loader';
+import { inline as loadInlineSkin } from '../ui/skin/Loader';
 import { setToolbar } from './Toolbars';
 
 const getTargetPosAndBounds = (targetElm: SugarElement, isToolbarTop: boolean) => {
@@ -108,7 +108,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
     editor.nodeChanged();
   };
 
-  editor.on('focus', render);
+  editor.on('focus show', render);
   editor.on('blur hide', ui.hide);
 
   editor.on('init', () => {

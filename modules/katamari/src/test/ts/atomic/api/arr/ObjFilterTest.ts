@@ -1,7 +1,7 @@
-import * as Obj from 'ephox/katamari/api/Obj';
-import * as Fun from 'ephox/katamari/api/Fun';
-import { UnitTest, Assert } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import fc from 'fast-check';
+import * as Fun from 'ephox/katamari/api/Fun';
+import * as Obj from 'ephox/katamari/api/Obj';
 
 UnitTest.test('Obj.filter: filter const true is identity', () => {
   fc.assert(fc.property(fc.dictionary(fc.asciiString(), fc.integer()), (obj) => {

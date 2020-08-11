@@ -1,9 +1,9 @@
-import { Assert, UnitTest } from '@ephox/bedrock-client';
-import Editor from 'tinymce/core/api/Editor';
-import { ApiChains, Editor as McEditor } from '@ephox/mcagar';
 import { Chain, Logger, Pipeline } from '@ephox/agar';
-import Theme from 'tinymce/themes/silver/Theme';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { ApiChains, Editor as McEditor } from '@ephox/mcagar';
+import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/autosave/Plugin';
+import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.plugins.autosave.ShouldRestoreWhenEmptyTest', (success, failure) => {
   Theme();

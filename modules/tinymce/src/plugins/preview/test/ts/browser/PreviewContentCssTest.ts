@@ -1,11 +1,11 @@
 import { Log, Logger, Pipeline, Step } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import Editor from 'tinymce/core/api/Editor';
+import * as IframeContent from 'tinymce/plugins/preview/core/IframeContent';
 
 import PreviewPlugin from 'tinymce/plugins/preview/Plugin';
-import * as IframeContent from 'tinymce/plugins/preview/core/IframeContent';
 import SilverTheme from 'tinymce/themes/silver/Theme';
-import Editor from 'tinymce/core/api/Editor';
 
 UnitTest.asynctest('browser.tinymce.plugins.preview.PreviewContentCssTest', (success, failure) => {
 

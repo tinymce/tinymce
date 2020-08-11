@@ -1,10 +1,10 @@
-import { Log, Step, Logger } from '@ephox/agar';
+import { Log, Logger, Step } from '@ephox/agar';
 import { Behaviour, GuiFactory, Replacing, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
+import { Cell } from '@ephox/katamari';
 
 import { SimpleBehaviours } from 'tinymce/themes/silver/ui/alien/SimpleBehaviours';
 import { onControlAttached, onControlDetached } from 'tinymce/themes/silver/ui/controls/Controls';
-import { Cell } from '@ephox/katamari';
 
 UnitTest.asynctest('ControlOnSetup Test', (success, failure) => {
 

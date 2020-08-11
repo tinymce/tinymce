@@ -7,8 +7,8 @@
 
 import { Arr } from '@ephox/katamari';
 import { Dialog } from 'tinymce/core/api/ui/Ui';
-import * as KeyboardShortcuts from '../data/KeyboardShortcuts';
 import * as ConvertShortcut from '../alien/ConvertShortcut';
+import * as KeyboardShortcuts from '../data/KeyboardShortcuts';
 
 export interface ShortcutActionPairType {
   shortcuts: string[];

@@ -1,11 +1,12 @@
 import { Log, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
+import { Focus, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
+import { NotificationSpec } from 'tinymce/core/api/NotificationManager';
 import Delay from 'tinymce/core/api/util/Delay';
 import Tools from 'tinymce/core/api/util/Tools';
 import Theme from 'tinymce/themes/silver/Theme';
-import { NotificationSpec } from 'tinymce/core/api/NotificationManager';
 
 UnitTest.asynctest('browser.tinymce.core.NotificationManagerTest', function (success, failure) {
   Theme();
@@ -89,6 +90,29 @@ UnitTest.asynctest('browser.tinymce.core.NotificationManagerTest', function (suc
     Delay.setTimeout(() => {
       checkClosed();
     }, 100);
+  });
+
+  suite.test('TestCase-TINY-6058: Should move focus back to the editor when all notifications closed', function (editor) {
+    const testMsg1: NotificationSpec = { type: 'warning', text: 'test message 1' };
+    const testMsg2: NotificationSpec = { type: 'error', text: 'test message 2' };
+    const notifications = editor.notificationManager.getNotifications();
+
+    const n1 = editor.notificationManager.open(testMsg1);
+    const n2 = editor.notificationManager.open(testMsg2);
+    LegacyUnit.equal(notifications.length, 2, 'Should have two messages added.');
+
+    const hasFocus = (node: Node) => Focus.search(SugarElement.fromDom(node)).isSome();
+
+    Focus.focus(SugarElement.fromDom(n2.getEl()));
+    LegacyUnit.equal(true, hasFocus(n2.getEl()), 'Focus should be on notification 2');
+
+    n2.close();
+    LegacyUnit.equal(true, hasFocus(n1.getEl()), 'Focus should be on notification 1');
+
+    n1.close();
+    LegacyUnit.equal(true, editor.hasFocus(), 'Focus should be on the editor');
+
+    teardown(editor);
   });
 
   suite.test('TestCase-TBA: Should not open notification if editor is removed', function (editor) {

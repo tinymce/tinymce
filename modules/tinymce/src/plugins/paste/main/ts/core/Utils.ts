@@ -136,14 +136,9 @@ function createIdGenerator(prefix: string) {
   };
 }
 
-const isMsEdge = function () {
-  return navigator.userAgent.indexOf(' Edge/') !== -1;
-};
-
 export {
   filter,
   innerText,
   trimHtml,
-  createIdGenerator,
-  isMsEdge
+  createIdGenerator
 };

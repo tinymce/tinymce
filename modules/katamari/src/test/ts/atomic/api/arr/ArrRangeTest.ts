@@ -1,8 +1,8 @@
+import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { Testable } from '@ephox/dispute';
+import * as fc from 'fast-check';
 import * as Arr from 'ephox/katamari/api/Arr';
 import * as Fun from 'ephox/katamari/api/Fun';
-import { UnitTest, Assert } from '@ephox/bedrock-client';
-import * as fc from 'fast-check';
-import { Testable } from '@ephox/dispute';
 
 const { tArray, tNumber } = Testable;
 

@@ -1,8 +1,8 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
+import fc from 'fast-check';
 import * as Arr from 'ephox/katamari/api/Arr';
 import * as Fun from 'ephox/katamari/api/Fun';
 import * as Obj from 'ephox/katamari/api/Obj';
-import fc from 'fast-check';
 
 UnitTest.test('BiFilterTest', () => {
   const even = (x) => x % 2 === 0;

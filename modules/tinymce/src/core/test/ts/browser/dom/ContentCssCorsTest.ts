@@ -1,9 +1,9 @@
-import Theme from 'tinymce/themes/silver/Theme';
-import { Assert, UnitTest } from '@ephox/bedrock-client';
-import Editor from 'tinymce/core/api/Editor';
-import { Editor as McEditor } from '@ephox/mcagar';
 import { Chain, Logger, Pipeline } from '@ephox/agar';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { Editor as McEditor } from '@ephox/mcagar';
+import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
+import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.core.dom.ContentCssCorsTest', (success, failure) => {
   Theme();

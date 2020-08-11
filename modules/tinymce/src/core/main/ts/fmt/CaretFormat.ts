@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Fun, Obj, Optional } from '@ephox/katamari';
+import { Arr, Fun, Obj, Optional, Strings } from '@ephox/katamari';
 import { Attribute, Insert, Remove, SugarElement, SugarNode } from '@ephox/sugar';
 import DomTreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
@@ -175,7 +175,7 @@ const cleanFormatNode = (editor: Editor, caretContainer: Node, formatNode: Node,
   const dom = editor.dom;
 
   // Find all formats present on the format node
-  const validFormats = Arr.filter(Obj.keys(formatter.get()), (formatName) => formatName !== 'removeformat' && formatName !== name);
+  const validFormats = Arr.filter(Obj.keys(formatter.get()), (formatName) => formatName !== name && !Strings.contains(formatName, 'removeformat'));
   const matchedFormats = MatchFormat.matchAllOnNode(editor, formatNode, validFormats);
   // Filter out any matched formats that are 'visually' equivalent to the 'name' format since they are not unique formats on the node
   const uniqueFormats = Arr.filter(matchedFormats, (fmtName) => !FormatUtils.areSimilarFormats(editor, fmtName, name));

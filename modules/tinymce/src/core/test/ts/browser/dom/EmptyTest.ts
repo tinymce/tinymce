@@ -28,7 +28,8 @@ UnitTest.asynctest('browser.tinymce.core.dom.EmptyTest', function (success, fail
       sTestEmpty('<p><i><b></b></i><b><i></i></b></p>', true),
       sTestEmpty('<span></span>', true),
       sTestEmpty('<p><i><b></b></i><b><i data-mce-bogus="all"><img src="#"></i></b></p>', true),
-      sTestEmpty('<p><br data-mce-bogus="1"><br></p>', true)
+      sTestEmpty('<p><br data-mce-bogus="1"><br></p>', true),
+      sTestEmpty('<a id="link" href="http://some.url/"></a>', true)
     ])),
     Logger.t('Non empty elements', GeneralSteps.sequence([
       sTestEmpty('<br>', false),
@@ -42,7 +43,8 @@ UnitTest.asynctest('browser.tinymce.core.dom.EmptyTest', function (success, fail
       sTestEmpty('<p><br><br></p>', false),
       sTestEmpty('<p><i><b></b></i><b><i><img src="#"></i></b></p>', false),
       sTestEmpty('<span data-mce-bookmark="x"></span>', false),
-      sTestEmpty('<span contenteditable="false"></span>', false)
+      sTestEmpty('<span contenteditable="false"></span>', false),
+      sTestEmpty('<a id="anchor"></a>', false)
     ]))
   ], function () {
     success();

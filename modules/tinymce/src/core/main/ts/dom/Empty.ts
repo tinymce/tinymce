@@ -9,6 +9,7 @@ import { Fun } from '@ephox/katamari';
 import { Compare, SelectorExists, SugarElement } from '@ephox/sugar';
 import DomTreeWalker from '../api/dom/TreeWalker';
 import * as CaretCandidate from '../caret/CaretCandidate';
+import { isWhitespaceText } from '../text/Whitespace';
 import * as NodeType from './NodeType';
 
 const hasWhitespacePreserveParent = function (rootNode: Node, node: Node) {
@@ -18,11 +19,11 @@ const hasWhitespacePreserveParent = function (rootNode: Node, node: Node) {
 };
 
 const isWhitespace = function (rootNode: Node, node: Node) {
-  return NodeType.isText(node) && /^[ \t\r\n]*$/.test(node.data) && hasWhitespacePreserveParent(rootNode, node) === false;
+  return NodeType.isText(node) && isWhitespaceText(node.data) && hasWhitespacePreserveParent(rootNode, node) === false;
 };
 
 const isNamedAnchor = function (node: Node) {
-  return NodeType.isElement(node) && node.nodeName === 'A' && node.hasAttribute('name');
+  return NodeType.isElement(node) && node.nodeName === 'A' && !node.hasAttribute('href') && (node.hasAttribute('name') || node.hasAttribute('id'));
 };
 
 const isContent = function (rootNode: Node, node: Node) {

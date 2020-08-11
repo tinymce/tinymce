@@ -6,11 +6,11 @@
  */
 
 import PluginManager from 'tinymce/core/api/PluginManager';
+import * as Settings from './api/Settings';
+import { initDatabase } from './core/EmojiDatabase';
 
 import * as Autocompletion from './ui/Autocompletion';
 import * as Buttons from './ui/Buttons';
-import { initDatabase } from './core/EmojiDatabase';
-import * as Settings from './api/Settings';
 
 /**
  * This class contains all core logic for the emoticons plugin.

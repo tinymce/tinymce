@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Tools from '../api/util/Tools';
 import DOMUtils from '../api/dom/DOMUtils';
 import { Formats } from '../api/fmt/Format';
+import Tools from '../api/util/Tools';
 
 const get = function (dom: DOMUtils) {
   const formats: Formats = {

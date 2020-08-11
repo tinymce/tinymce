@@ -1,7 +1,7 @@
 import { Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { LegacyUnit } from '@ephox/mcagar';
 import JSONRequest from 'tinymce/core/api/util/JSONRequest';
-import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.core.util.JsonRequestTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();

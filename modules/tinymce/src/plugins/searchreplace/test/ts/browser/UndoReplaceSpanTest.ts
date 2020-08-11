@@ -1,6 +1,4 @@
-import {
-  Chain, Log, Mouse, Pipeline, Step, UiControls, UiFinder, Logger
-} from '@ephox/agar';
+import { Chain, Log, Logger, Mouse, Pipeline, Step, UiControls, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 

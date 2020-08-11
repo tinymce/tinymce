@@ -472,6 +472,21 @@ UnitTest.asynctest('browser.tinymce.core.FormatterRemoveTest', function (success
     Assert.eq('Inline element on selected text with preserve_attributes flag (bold)', '<p><span style="color: red;" class="abc">1234</span></p>', getContent(editor));
   });
 
+  suite.test('Complex inline element using ranged selection with preserve_attributes flag (bold)', (editor) => {
+    editor.formatter.register('format', { inline: 'b', preserve_attributes: [ 'class', 'style' ], remove: 'all' });
+    editor.getBody().innerHTML = '<p><b style="text-align: left;">If the situation of the pandemic does not improve<span style="color: #172b4d;">, there will be no spectators, no museum, no stores open, and money will continue to be lost.</span></b></p>';
+    LegacyUnit.setSelection(editor, 'b', 24, 'span', 56);
+    editor.formatter.remove('format');
+    Assert.eq(
+      'Inline element on selected text with preserve_attributes flag (bold)',
+      '<p>' +
+        '<b style="text-align: left;">if the situation of the </b>' +
+        '<span style="text-align: left;">pandemic does not improve<span style="color: #172b4d;">, there will be no spectators, no museum, no stores open</span></span>' +
+        '<b style="text-align: left;"><span style="color: #172b4d;">, and money will continue to be lost.</span></b>' +
+      '</p>',
+      getContent(editor));
+  });
+
   suite.test('Inline element on selected text with preserve_attributes flag (italic)', (editor) => {
     editor.formatter.register('format', { inline: 'em', preserve_attributes: [ 'class', 'style' ], remove: 'all' });
     editor.getBody().innerHTML = '<p><em class="abc" style="color: red;" data-test="1">1234</em></p>';
@@ -510,7 +525,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterRemoveTest', function (success
     Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
   }, {
     indent: false,
-    extended_valid_elements: 'b,i,span[style|contenteditable|class]',
+    extended_valid_elements: 'b[style],i,span[style|contenteditable|class]',
     entities: 'raw',
     valid_styles: {
       '*': 'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,float,' +

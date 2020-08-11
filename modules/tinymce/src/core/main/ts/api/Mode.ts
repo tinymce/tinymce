@@ -7,8 +7,8 @@
 
 import { Cell, Fun } from '@ephox/katamari';
 import { registerMode, setMode } from '../mode/Mode';
-import Editor from './Editor';
 import { isReadOnly, registerReadOnlyContentFilters, registerReadOnlySelectionBlockers } from '../mode/Readonly';
+import Editor from './Editor';
 
 /**
  * TinyMCE 5 Mode API.

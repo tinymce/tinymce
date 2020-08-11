@@ -1,9 +1,9 @@
-import { Logger, Pipeline, Chain, ApproxStructure, Keys, GeneralSteps } from '@ephox/agar';
-import { TinyLoader, ApiChains, ActionChains } from '@ephox/mcagar';
+import { ApproxStructure, Chain, GeneralSteps, Keys, Logger, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import Theme from 'tinymce/themes/silver/Theme';
 import { Fun } from '@ephox/katamari';
+import { ActionChains, ApiChains, TinyLoader } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
+import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.core.keyboard.ArrowKeysTableTest', (success, failure) => {
   const browser = PlatformDetection.detect().browser;

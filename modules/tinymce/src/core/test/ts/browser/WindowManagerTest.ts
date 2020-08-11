@@ -1,8 +1,8 @@
 import { Pipeline } from '@ephox/agar';
-import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
-import Theme from 'tinymce/themes/silver/Theme';
-import Editor from 'tinymce/core/api/Editor';
 import { UnitTest } from '@ephox/bedrock-client';
+import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
+import Editor from 'tinymce/core/api/Editor';
+import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.core.WindowManagerTest', function (success, failure) {
   const suite = LegacyUnit.createSuite<Editor>();

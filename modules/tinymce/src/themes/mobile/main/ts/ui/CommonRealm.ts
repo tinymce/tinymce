@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Behaviour, Button, Container, GuiFactory, Replacing, Swapping, AlloyComponent } from '@ephox/alloy';
+import { AlloyComponent, Behaviour, Button, Container, GuiFactory, Replacing, Swapping } from '@ephox/alloy';
 
 import * as UiDomFactory from '../util/UiDomFactory';
 

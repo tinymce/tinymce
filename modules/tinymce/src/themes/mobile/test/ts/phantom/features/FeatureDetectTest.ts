@@ -1,7 +1,7 @@
 import { Assertions } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
 import * as Features from 'tinymce/themes/mobile/features/Features';
-import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.test('features.FeatureDetectTest', () => {
   /*

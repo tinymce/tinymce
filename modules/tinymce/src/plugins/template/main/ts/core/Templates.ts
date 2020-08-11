@@ -5,11 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import XHR from 'tinymce/core/api/util/XHR';
 import * as Settings from '../api/Settings';
 import * as DateTimeHelper from './DateTimeHelper';
-import Editor from 'tinymce/core/api/Editor';
 
 const createTemplateList = function (editor: Editor, callback) {
   return function () {

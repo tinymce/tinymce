@@ -111,6 +111,32 @@ UnitTest.asynctest('ChainTest', (success, failure) => {
     ])
   );
 
+  const testChainExists = StepAssertions.testChain(
+    'Sentence: This',
+    Chain.fromChains([
+      Chain.inject('Sentence: Th'),
+      Chain.exists([
+        acc('i'),
+        acc('Keep the first successful chain only')
+      ]),
+      Chain.exists([
+        Chain.async((_value, _next, die) => die('Ignore fails')),
+        acc('s')
+      ])
+    ])
+  );
+
+  const testChainExistsFail = StepAssertions.testChainFail(
+    'final fail',
+    {},
+    Chain.exists([
+      Chain.async((_value, _next, die) => die('first fail')),
+      Chain.async((_value, _next, die) => die('second fail')),
+      Chain.async((_value, _next, die) => die('third fail')),
+      Chain.async((_value, _next, die) => die('final fail'))
+    ])
+  );
+
   const testChainAsync = StepAssertions.testChain(
     'async works!',
     Chain.async((_value, next) => {
@@ -192,6 +218,15 @@ UnitTest.asynctest('ChainTest', (success, failure) => {
       '[When using fromIsolatedChains, chains do accumulate when passing, but return the original value]\n',
       testIsolatedChainAcc
     ),
+    Logger.t(
+      '[When using exists, ensure that the first successful value is returned]\n',
+      testChainExists
+    ),
+    Logger.t(
+      '[When using exists, if all chains fail, ensure that the last failure is returned]\n',
+      testChainExistsFail
+    ),
+
     Logger.t(
       '[Chain should async]\n',
       testChainAsync

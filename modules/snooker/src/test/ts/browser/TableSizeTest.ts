@@ -1,10 +1,10 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Optional, OptionalInstances } from '@ephox/katamari';
 import { Css, Insert, Remove, SelectorFind, SugarBody, SugarElement, Width } from '@ephox/sugar';
+import * as fc from 'fast-check';
 import { ResizeDirection } from 'ephox/snooker/api/ResizeDirection';
 import { TableSize } from 'ephox/snooker/api/TableSize';
 import { Warehouse } from 'ephox/snooker/model/Warehouse';
-import * as fc from 'fast-check';
 
 const tOptional = OptionalInstances.tOptional;
 

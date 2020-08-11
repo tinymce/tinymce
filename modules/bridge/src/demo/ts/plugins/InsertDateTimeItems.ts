@@ -1,7 +1,7 @@
 import { Arr } from '@ephox/katamari';
 
 import { ToolbarSplitButtonItemTypes } from '../../../main/ts/ephox/bridge/components/toolbar/ToolbarSplitButton';
-import { getDemoRegistry } from './../buttons/DemoRegistry';
+import { getDemoRegistry } from '../buttons/DemoRegistry';
 
 export const registerInsertDateTimeItems = () => {
   // Example, they are all the same.

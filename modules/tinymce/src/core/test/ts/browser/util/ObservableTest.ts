@@ -1,8 +1,8 @@
-import { LegacyUnit } from '@ephox/mcagar';
 import { Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
+import { LegacyUnit } from '@ephox/mcagar';
 import Observable from 'tinymce/core/api/util/Observable';
 import Tools from 'tinymce/core/api/util/Tools';
-import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.core.util.ObservableTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();

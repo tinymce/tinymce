@@ -4,14 +4,14 @@ import ContentEditableFalseDemo from './ContentEditableFalseDemo';
 import CustomThemeDemo from './CustomThemeDemo';
 import FixedToolbarContainerDemo from './FixedToolbarContainerDemo';
 import FullDemo from './FullDemo';
-import InlineDemo from './InlineDemo';
-import SourceDumpDemo from './SourceDumpDemo';
-import TinyMceDemo from './TinyMceDemo';
 import IframeDemo from './IframeDemo';
+import InlineDemo from './InlineDemo';
 import ResponsiveDemo from './ResponsiveDemo';
-import StickyToolbarDemo from './StickyToolbarDemo';
 import ShadowDomDemo from './ShadowDomDemo';
 import ShadowDomInlineDemo from './ShadowDomInlineDemo';
+import SourceDumpDemo from './SourceDumpDemo';
+import StickyToolbarDemo from './StickyToolbarDemo';
+import TinyMceDemo from './TinyMceDemo';
 
 declare const window: any;
 
