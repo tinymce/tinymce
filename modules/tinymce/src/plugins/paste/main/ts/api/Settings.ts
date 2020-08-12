@@ -59,6 +59,8 @@ const getForcedRootBlock = (editor: Editor) => editor.getParam('forced_root_bloc
 
 const getForcedRootBlockAttrs = (editor: Editor) => editor.getParam('forced_root_block_attrs');
 
+const getTabSpaces = (editor: Editor) => editor.getParam('paste_tab_spaces', 4, 'number');
+
 export {
   shouldBlockDrop,
   shouldPasteDataImages,
@@ -80,5 +82,6 @@ export {
   getImagesDataImgFilter,
   getImagesReuseFilename,
   getForcedRootBlock,
-  getForcedRootBlockAttrs
+  getForcedRootBlockAttrs,
+  getTabSpaces
 };

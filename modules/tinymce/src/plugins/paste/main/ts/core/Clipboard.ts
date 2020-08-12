@@ -54,7 +54,7 @@ const pasteHtml = (editor: Editor, html: string, internalFlag: boolean) => {
  */
 const pasteText = (editor: Editor, text: string) => {
   const encodedText = editor.dom.encode(text).replace(/\r\n/g, '\n');
-  const normalizedText = Whitespace.normalizeWhitespace(encodedText);
+  const normalizedText = Whitespace.normalizeWhitespace(editor, encodedText);
   const html = Newlines.convert(normalizedText, Settings.getForcedRootBlock(editor), Settings.getForcedRootBlockAttrs(editor));
   doPaste(editor, html, false, true);
 };
