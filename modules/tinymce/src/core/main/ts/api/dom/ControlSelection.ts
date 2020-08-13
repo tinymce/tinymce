@@ -28,6 +28,23 @@ interface ControlSelection {
   destroy (): void;
 }
 
+interface ResizeHandle {
+  0: number;
+  1: number;
+  2: number;
+  3: number;
+  elm?: Element;
+}
+
+interface SelectedResizeHandle extends ResizeHandle {
+  elm: Element;
+  name: string;
+  startPos: {
+    x: number;
+    y: number;
+  };
+}
+
 /**
  * This class handles control selection of elements. Controls are elements
  * that can be resized and needs to be selected as a whole. It adds custom resize handles
@@ -41,7 +58,7 @@ const isContentEditableFalse = NodeType.isContentEditableFalse;
 
 const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSelection => {
   const dom = editor.dom, each = Tools.each;
-  let selectedElm, selectedElmGhost, resizeHelper, selectedHandle;
+  let selectedElm, selectedElmGhost, resizeHelper, selectedHandle: SelectedResizeHandle;
   let startX, startY, selectedElmX, selectedElmY, startW, startH, ratio, resizeStarted;
   let width,
     height;
@@ -55,7 +72,7 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
 
   // Details about each resize handle how to scale etc
   // TODO: Add a type for the value
-  const resizeHandles: Record<string, any> = {
+  const resizeHandles: Record<string, ResizeHandle> = {
     // Name: x multiplier, y multiplier, delta size x, delta size y
     nw: [ 0, 0, -1, -1 ],
     ne: [ 1, 0, 1, -1 ],
@@ -184,7 +201,7 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
     }
 
     if (!resizeStarted) {
-      Events.fireObjectResizeStart(editor, selectedElm, startW, startH);
+      Events.fireObjectResizeStart(editor, selectedElm, startW, startH, 'corner-' + selectedHandle.name);
       resizeStarted = true;
     }
   };
@@ -225,7 +242,7 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
     showResizeRect(selectedElm);
 
     if (wasResizeStarted) {
-      Events.fireObjectResized(editor, selectedElm, width, height);
+      Events.fireObjectResized(editor, selectedElm, width, height, 'corner-' + selectedHandle.name);
       dom.setAttrib(selectedElm, 'style', dom.getAttrib(selectedElm, 'style'));
     }
     editor.nodeChanged();
@@ -262,9 +279,10 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
           startW = getResizeTarget(selectedElm).clientWidth;
           startH = getResizeTarget(selectedElm).clientHeight;
           ratio = startH / startW;
-          selectedHandle = handle;
+          selectedHandle = handle as SelectedResizeHandle;
 
-          handle.startPos = {
+          selectedHandle.name = name;
+          selectedHandle.startPos = {
             x: targetWidth * handle[0] + selectedElmX,
             y: targetHeight * handle[1] + selectedElmY
           };

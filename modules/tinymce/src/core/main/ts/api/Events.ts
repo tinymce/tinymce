@@ -17,12 +17,12 @@ const fireDetach = (editor: Editor) => editor.fire('detach');
 
 const fireSwitchMode = (editor: Editor, mode: string) => editor.fire('SwitchMode', { mode });
 
-const fireObjectResizeStart = (editor: Editor, target: HTMLElement, width: number, height: number) => {
-  editor.fire('ObjectResizeStart', { target, width, height });
+const fireObjectResizeStart = (editor: Editor, target: HTMLElement, width: number, height: number, origin: string) => {
+  editor.fire('ObjectResizeStart', { target, width, height, origin });
 };
 
-const fireObjectResized = (editor: Editor, target: HTMLElement, width: number, height: number) => {
-  editor.fire('ObjectResized', { target, width, height });
+const fireObjectResized = (editor: Editor, target: HTMLElement, width: number, height: number, origin: string) => {
+  editor.fire('ObjectResized', { target, width, height, origin });
 };
 
 const firePreInit = (editor: Editor) => editor.fire('PreInit');

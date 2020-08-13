@@ -35,6 +35,7 @@ const getRawWidth = (editor: Editor, elm: HTMLElement): Optional<string> => {
 };
 
 const isPercentage = (value: string): boolean => /^(\d+(\.\d+)?)%$/.test(value);
+const isPixel = (value: string): boolean => /^(\d+(\.\d+)?)px$/.test(value);
 
 export {
   getNodeName,
@@ -46,5 +47,6 @@ export {
   getPixelHeight,
   getRawWidth,
   removeDataStyle,
-  isPercentage
+  isPercentage,
+  isPixel
 };

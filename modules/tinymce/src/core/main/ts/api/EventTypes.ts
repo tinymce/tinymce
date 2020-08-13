@@ -21,7 +21,7 @@ export type NewBlockEvent = { newBlock: Element };
 
 export type NodeChangeEvent = { element: Element; parents: Node[]; selectionChange?: boolean; initial?: boolean };
 
-export type ObjectResizedEvent = { target: HTMLElement; width: number; height: number };
+export type ObjectResizeEvent = { target: HTMLElement; width: number; height: number; origin: string };
 
 export type ObjectSelectedEvent = { target: Node; targetClone?: Node };
 
@@ -56,8 +56,8 @@ export interface EditorEventMap extends Omit<NativeEventMap, 'blur' | 'focus'> {
   'init': { };
   'ScrollIntoView': ScrollIntoViewEvent;
   'AfterScrollIntoView': ScrollIntoViewEvent;
-  'ObjectResized': ObjectResizedEvent;
-  'ObjectResizeStart': ObjectResizedEvent;
+  'ObjectResized': ObjectResizeEvent;
+  'ObjectResizeStart': ObjectResizeEvent;
   'SwitchMode': SwitchModeEvent;
   'ScrollWindow': UIEvent;
   'ResizeWindow': UIEvent;
