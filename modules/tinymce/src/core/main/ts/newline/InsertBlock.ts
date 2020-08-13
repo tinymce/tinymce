@@ -11,6 +11,7 @@ import DOMUtils from '../api/dom/DOMUtils';
 import DomTreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
 import * as Settings from '../api/Settings';
+import Schema, { SchemaMap } from '../api/html/Schema';
 import { EditorEvent } from '../api/util/EventDispatcher';
 import * as Bookmarks from '../bookmark/Bookmarks';
 import * as CaretContainer from '../caret/CaretContainer';
@@ -242,6 +243,165 @@ const addBrToBlockIfNeeded = function (dom, block) {
   }
 };
 
+interface CreateNewBlock {
+  container: any;
+  schema: Schema;
+  parentBlockName: any;
+  newBlockName: any;
+  dom: DOMUtils;
+  parentBlock: any;
+  editor: Editor;
+  editableRoot: any;
+}
+
+const _createNewBlock = ({ container, schema, parentBlockName, newBlockName, dom, parentBlock, editor, editableRoot }: CreateNewBlock, name: any | undefined) => {
+  let node = container, block, clonedNode, caretNode;
+  const textInlineElements = schema.getTextInlineElements();
+
+  if (name || parentBlockName === 'TABLE' || parentBlockName === 'HR') {
+    block = dom.create(name || newBlockName);
+  } else {
+    block = parentBlock.cloneNode(false);
+  }
+
+  caretNode = block;
+
+  if (Settings.shouldKeepStyles(editor) === false) {
+    dom.setAttrib(block, 'style', null); // wipe out any styles that came over with the block
+    dom.setAttrib(block, 'class', null);
+  } else {
+    // Clone any parent styles
+    do {
+      if (textInlineElements[node.nodeName]) {
+        // Ignore caret or bookmark nodes when cloning
+        if (isCaretNode(node) || Bookmarks.isBookmarkNode(node)) {
+          continue;
+        }
+
+        clonedNode = node.cloneNode(false);
+        dom.setAttrib(clonedNode, 'id', ''); // Remove ID since it needs to be document unique
+
+        if (block.hasChildNodes()) {
+          clonedNode.appendChild(block.firstChild);
+          block.appendChild(clonedNode);
+        } else {
+          caretNode = clonedNode;
+          block.appendChild(clonedNode);
+        }
+      }
+    } while ((node = node.parentNode) && node !== editableRoot);
+  }
+
+  setForcedBlockAttrs(editor, block);
+
+  emptyBlock(caretNode);
+
+  return block;
+};
+
+interface IsCaretAtStartOrEndOFBlock {
+  offset: any;
+  container: any;
+  isAfterLastNodeInContainer: any;
+  parentBlock: any;
+  nonEmptyElementsMap: SchemaMap;
+}
+
+const _isCaretAtStartOrEndOfBlock = ({ offset, container, isAfterLastNodeInContainer, parentBlock, nonEmptyElementsMap }: IsCaretAtStartOrEndOFBlock, start) => {
+  let node, name;
+
+  const normalizedOffset = normalizeZwspOffset(start, container, offset);
+
+  // Caret is in the middle of a text node like "a|b"
+  if (NodeType.isText(container) && (start ? normalizedOffset > 0 : normalizedOffset < container.nodeValue.length)) {
+    return false;
+  }
+
+  // If after the last element in block node edge case for #5091
+  if (container.parentNode === parentBlock && isAfterLastNodeInContainer && !start) {
+    return true;
+  }
+
+  // If the caret if before the first element in parentBlock
+  if (start && NodeType.isElement(container) && container === parentBlock.firstChild) {
+    return true;
+  }
+
+  // Caret can be before/after a table or a hr
+  if (containerAndSiblingName(container, 'TABLE') || containerAndSiblingName(container, 'HR')) {
+    return (isAfterLastNodeInContainer && !start) || (!isAfterLastNodeInContainer && start);
+  }
+
+  // Walk the DOM and look for text nodes or non empty elements
+  const walker = new DomTreeWalker(container, parentBlock);
+
+  // If caret is in beginning or end of a text block then jump to the next/previous node
+  if (NodeType.isText(container)) {
+    if (start && normalizedOffset === 0) {
+      walker.prev();
+    } else if (!start && normalizedOffset === container.nodeValue.length) {
+      walker.next();
+    }
+  }
+
+  while ((node = walker.current())) {
+    if (NodeType.isElement(node)) {
+      // Ignore bogus elements
+      if (!node.getAttribute('data-mce-bogus')) {
+        // Keep empty elements like <img /> <input /> but not trailing br:s like <p>text|<br></p>
+        name = node.nodeName.toLowerCase();
+        if (nonEmptyElementsMap[name] && name !== 'br') {
+          return false;
+        }
+      }
+    } else if (NodeType.isText(node) && !isWhitespaceText(node.nodeValue)) {
+      return false;
+    }
+
+    if (start) {
+      walker.prev();
+    } else {
+      walker.next();
+    }
+  }
+
+  return true;
+};
+
+interface InsertNewBlockAfter {
+  containerBlockName: any;
+  newBlockName: any;
+  parentBlockName: any;
+  createNewBlock: any;
+  parentBlock: any;
+  containerBlock: any;
+  dom: DOMUtils;
+  editor: Editor;
+}
+
+const _insertNewBlockAfter = ({ containerBlockName, newBlockName, parentBlockName, createNewBlock, parentBlock, containerBlock, dom, editor }: InsertNewBlockAfter) => {
+  let newBlock;
+
+  // If the caret is at the end of a header we produce a P tag after it similar to Word unless we are in a hgroup
+  if (/^(H[1-6]|PRE|FIGURE)$/.test(parentBlockName) && containerBlockName !== 'HGROUP') {
+    newBlock = createNewBlock(newBlockName);
+  } else {
+    newBlock = createNewBlock();
+  }
+
+  // Split the current container block element if enter is pressed inside an empty inner block element
+  if (Settings.shouldEndContainerOnEmptyBlock(editor) && canSplitBlock(dom, containerBlock) && dom.isEmpty(parentBlock)) {
+    // Split container block for example a BLOCKQUOTE at the current blockParent location for example a P
+    newBlock = dom.split(containerBlock, parentBlock);
+  } else {
+    dom.insertAfter(newBlock, parentBlock);
+  }
+
+  NewLineUtils.moveToCaretPosition(editor, newBlock);
+
+  return newBlock;
+};
+
 const insert = function (editor: Editor, evt?: EditorEvent<KeyboardEvent>) {
   let tmpRng, container, offset, parentBlock;
   let newBlock, fragment, containerBlock, parentBlockName, newBlockName, isAfterLastNodeInContainer;
@@ -252,129 +412,16 @@ const insert = function (editor: Editor, evt?: EditorEvent<KeyboardEvent>) {
   // Creates a new block element by cloning the current one or creating a new one if the name is specified
   // This function will also copy any text formatting from the parent block and add it to the new one
   const createNewBlock = function (name?) {
-    let node = container, block, clonedNode, caretNode;
-    const textInlineElements = schema.getTextInlineElements();
-
-    if (name || parentBlockName === 'TABLE' || parentBlockName === 'HR') {
-      block = dom.create(name || newBlockName);
-    } else {
-      block = parentBlock.cloneNode(false);
-    }
-
-    caretNode = block;
-
-    if (Settings.shouldKeepStyles(editor) === false) {
-      dom.setAttrib(block, 'style', null); // wipe out any styles that came over with the block
-      dom.setAttrib(block, 'class', null);
-    } else {
-      // Clone any parent styles
-      do {
-        if (textInlineElements[node.nodeName]) {
-          // Ignore caret or bookmark nodes when cloning
-          if (isCaretNode(node) || Bookmarks.isBookmarkNode(node)) {
-            continue;
-          }
-
-          clonedNode = node.cloneNode(false);
-          dom.setAttrib(clonedNode, 'id', ''); // Remove ID since it needs to be document unique
-
-          if (block.hasChildNodes()) {
-            clonedNode.appendChild(block.firstChild);
-            block.appendChild(clonedNode);
-          } else {
-            caretNode = clonedNode;
-            block.appendChild(clonedNode);
-          }
-        }
-      } while ((node = node.parentNode) && node !== editableRoot);
-    }
-
-    setForcedBlockAttrs(editor, block);
-
-    emptyBlock(caretNode);
-
-    return block;
+    return _createNewBlock({ container, schema, parentBlockName, newBlockName, dom, parentBlock, editor, editableRoot }, name);
   };
 
   // Returns true/false if the caret is at the start/end of the parent block element
   const isCaretAtStartOrEndOfBlock = function (start?) {
-    let node, name;
-
-    const normalizedOffset = normalizeZwspOffset(start, container, offset);
-
-    // Caret is in the middle of a text node like "a|b"
-    if (NodeType.isText(container) && (start ? normalizedOffset > 0 : normalizedOffset < container.nodeValue.length)) {
-      return false;
-    }
-
-    // If after the last element in block node edge case for #5091
-    if (container.parentNode === parentBlock && isAfterLastNodeInContainer && !start) {
-      return true;
-    }
-
-    // If the caret if before the first element in parentBlock
-    if (start && NodeType.isElement(container) && container === parentBlock.firstChild) {
-      return true;
-    }
-
-    // Caret can be before/after a table or a hr
-    if (containerAndSiblingName(container, 'TABLE') || containerAndSiblingName(container, 'HR')) {
-      return (isAfterLastNodeInContainer && !start) || (!isAfterLastNodeInContainer && start);
-    }
-
-    // Walk the DOM and look for text nodes or non empty elements
-    const walker = new DomTreeWalker(container, parentBlock);
-
-    // If caret is in beginning or end of a text block then jump to the next/previous node
-    if (NodeType.isText(container)) {
-      if (start && normalizedOffset === 0) {
-        walker.prev();
-      } else if (!start && normalizedOffset === container.nodeValue.length) {
-        walker.next();
-      }
-    }
-
-    while ((node = walker.current())) {
-      if (NodeType.isElement(node)) {
-        // Ignore bogus elements
-        if (!node.getAttribute('data-mce-bogus')) {
-          // Keep empty elements like <img /> <input /> but not trailing br:s like <p>text|<br></p>
-          name = node.nodeName.toLowerCase();
-          if (nonEmptyElementsMap[name] && name !== 'br') {
-            return false;
-          }
-        }
-      } else if (NodeType.isText(node) && !isWhitespaceText(node.nodeValue)) {
-        return false;
-      }
-
-      if (start) {
-        walker.prev();
-      } else {
-        walker.next();
-      }
-    }
-
-    return true;
+    return _isCaretAtStartOrEndOfBlock({ offset, container, isAfterLastNodeInContainer, parentBlock, nonEmptyElementsMap }, start);
   };
 
   const insertNewBlockAfter = function () {
-    // If the caret is at the end of a header we produce a P tag after it similar to Word unless we are in a hgroup
-    if (/^(H[1-6]|PRE|FIGURE)$/.test(parentBlockName) && containerBlockName !== 'HGROUP') {
-      newBlock = createNewBlock(newBlockName);
-    } else {
-      newBlock = createNewBlock();
-    }
-
-    // Split the current container block element if enter is pressed inside an empty inner block element
-    if (Settings.shouldEndContainerOnEmptyBlock(editor) && canSplitBlock(dom, containerBlock) && dom.isEmpty(parentBlock)) {
-      // Split container block for example a BLOCKQUOTE at the current blockParent location for example a P
-      newBlock = dom.split(containerBlock, parentBlock);
-    } else {
-      dom.insertAfter(newBlock, parentBlock);
-    }
-
-    NewLineUtils.moveToCaretPosition(editor, newBlock);
+    newBlock = _insertNewBlockAfter({ containerBlockName, newBlockName, parentBlockName, createNewBlock, parentBlock, containerBlock, dom, editor });
   };
 
   // Setup range items and newBlockName
