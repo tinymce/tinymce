@@ -99,7 +99,7 @@ const normalizeZwspOffset = function (start, container, offset) {
   }
 };
 
-const includeZwspInRange = function (rng) {
+const includeZwspInRange = (rng: Range): Range => {
   const newRng = rng.cloneRange();
   newRng.setStart(rng.startContainer, normalizeZwspOffset(true, rng.startContainer, rng.startOffset));
   newRng.setEnd(rng.endContainer, normalizeZwspOffset(false, rng.endContainer, rng.endOffset));
@@ -244,27 +244,23 @@ const addBrToBlockIfNeeded = function (dom, block) {
 };
 
 interface CreateNewBlock {
-  container: any;
+  container: Node;
   schema: Schema;
-  parentBlockName: any;
-  newBlockName: any;
+  parentBlockName: string;
+  newBlockName: string;
   dom: DOMUtils;
-  parentBlock: any;
+  parentBlock: Element;
   editor: Editor;
   editableRoot: any;
 }
 
-const _createNewBlock = ({ container, schema, parentBlockName, newBlockName, dom, parentBlock, editor, editableRoot }: CreateNewBlock, name: any | undefined) => {
-  let node = container, block, clonedNode, caretNode;
+const _createNewBlock = ({ container, schema, parentBlockName, newBlockName, dom, parentBlock, editor, editableRoot }: CreateNewBlock, name: string | undefined): Node => {
+  let node = container;
   const textInlineElements = schema.getTextInlineElements();
 
-  if (name || parentBlockName === 'TABLE' || parentBlockName === 'HR') {
-    block = dom.create(name || newBlockName);
-  } else {
-    block = parentBlock.cloneNode(false);
-  }
+  const block = (name || parentBlockName === 'TABLE' || parentBlockName === 'HR') ? dom.create(name || newBlockName) : parentBlock.cloneNode(false);
 
-  caretNode = block;
+  let caretNode = block;
 
   if (Settings.shouldKeepStyles(editor) === false) {
     dom.setAttrib(block, 'style', null); // wipe out any styles that came over with the block
@@ -278,7 +274,7 @@ const _createNewBlock = ({ container, schema, parentBlockName, newBlockName, dom
           continue;
         }
 
-        clonedNode = node.cloneNode(false);
+        const clonedNode = node.cloneNode(false);
         dom.setAttrib(clonedNode, 'id', ''); // Remove ID since it needs to be document unique
 
         if (block.hasChildNodes()) {
@@ -300,16 +296,14 @@ const _createNewBlock = ({ container, schema, parentBlockName, newBlockName, dom
 };
 
 interface IsCaretAtStartOrEndOFBlock {
-  offset: any;
-  container: any;
-  isAfterLastNodeInContainer: any;
-  parentBlock: any;
+  offset: number;
+  container: Node;
+  isAfterLastNodeInContainer: boolean;
+  parentBlock: Element;
   nonEmptyElementsMap: SchemaMap;
 }
 
-const _isCaretAtStartOrEndOfBlock = ({ offset, container, isAfterLastNodeInContainer, parentBlock, nonEmptyElementsMap }: IsCaretAtStartOrEndOFBlock, start) => {
-  let node, name;
-
+const _isCaretAtStartOrEndOfBlock = ({ offset, container, isAfterLastNodeInContainer, parentBlock, nonEmptyElementsMap }: IsCaretAtStartOrEndOFBlock, start: boolean): boolean => {
   const normalizedOffset = normalizeZwspOffset(start, container, offset);
 
   // Caret is in the middle of a text node like "a|b"
@@ -344,12 +338,13 @@ const _isCaretAtStartOrEndOfBlock = ({ offset, container, isAfterLastNodeInConta
     }
   }
 
+  let node: Node;
   while ((node = walker.current())) {
     if (NodeType.isElement(node)) {
       // Ignore bogus elements
       if (!node.getAttribute('data-mce-bogus')) {
         // Keep empty elements like <img /> <input /> but not trailing br:s like <p>text|<br></p>
-        name = node.nodeName.toLowerCase();
+        const name = node.nodeName.toLowerCase();
         if (nonEmptyElementsMap[name] && name !== 'br') {
           return false;
         }
@@ -369,18 +364,18 @@ const _isCaretAtStartOrEndOfBlock = ({ offset, container, isAfterLastNodeInConta
 };
 
 interface InsertNewBlockAfter {
-  containerBlockName: any;
-  newBlockName: any;
-  parentBlockName: any;
-  createNewBlock: any;
-  parentBlock: any;
-  containerBlock: any;
+  containerBlockName: string;
+  newBlockName: string;
+  parentBlockName: string;
+  createNewBlock: (name?: string) => Node;
+  parentBlock: Element;
+  containerBlock: Element;
   dom: DOMUtils;
   editor: Editor;
 }
 
-const _insertNewBlockAfter = ({ containerBlockName, newBlockName, parentBlockName, createNewBlock, parentBlock, containerBlock, dom, editor }: InsertNewBlockAfter) => {
-  let newBlock;
+const _insertNewBlockAfter = ({ containerBlockName, newBlockName, parentBlockName, createNewBlock, parentBlock, containerBlock, dom, editor }: InsertNewBlockAfter): Node => {
+  let newBlock: Node;
 
   // If the caret is at the end of a header we produce a P tag after it similar to Word unless we are in a hgroup
   if (/^(H[1-6]|PRE|FIGURE)$/.test(parentBlockName) && containerBlockName !== 'HGROUP') {
@@ -402,21 +397,20 @@ const _insertNewBlockAfter = ({ containerBlockName, newBlockName, parentBlockNam
   return newBlock;
 };
 
-const insert = function (editor: Editor, evt?: EditorEvent<KeyboardEvent>) {
-  let tmpRng, container, offset, parentBlock;
-  let newBlock, fragment, containerBlock, parentBlockName, newBlockName, isAfterLastNodeInContainer;
+const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>) => {
+  let newBlock: Node, isAfterLastNodeInContainer = false;
   const dom = editor.dom;
   const schema = editor.schema, nonEmptyElementsMap = schema.getNonEmptyElements();
   const rng = editor.selection.getRng();
 
   // Creates a new block element by cloning the current one or creating a new one if the name is specified
   // This function will also copy any text formatting from the parent block and add it to the new one
-  const createNewBlock = function (name?) {
+  const createNewBlock = function (name?: string) {
     return _createNewBlock({ container, schema, parentBlockName, newBlockName, dom, parentBlock, editor, editableRoot }, name);
   };
 
   // Returns true/false if the caret is at the start/end of the parent block element
-  const isCaretAtStartOrEndOfBlock = function (start?) {
+  const isCaretAtStartOrEndOfBlock = function (start?: true) {
     return _isCaretAtStartOrEndOfBlock({ offset, container, isAfterLastNodeInContainer, parentBlock, nonEmptyElementsMap }, start);
   };
 
@@ -430,9 +424,9 @@ const insert = function (editor: Editor, evt?: EditorEvent<KeyboardEvent>) {
     rng.setEnd(normRng.endContainer, normRng.endOffset);
   });
 
-  container = rng.startContainer;
-  offset = rng.startOffset;
-  newBlockName = Settings.getForcedRootBlock(editor);
+  let container = rng.startContainer;
+  let offset = rng.startOffset;
+  let newBlockName = Settings.getForcedRootBlock(editor);
   const shiftKey = !!(evt && evt.shiftKey);
   const ctrlKey = !!(evt && evt.ctrlKey);
 
@@ -464,18 +458,21 @@ const insert = function (editor: Editor, evt?: EditorEvent<KeyboardEvent>) {
   }
 
   // Find parent block and setup empty block paddings
-  parentBlock = dom.getParent(container, dom.isBlock);
-  containerBlock = parentBlock ? dom.getParent(parentBlock.parentNode, dom.isBlock) : null;
+  let parentBlock = dom.getParent(container, dom.isBlock);
+  let containerBlock = parentBlock ? dom.getParent(parentBlock.parentNode, dom.isBlock) : null;
 
   // Setup block names
-  parentBlockName = parentBlock ? parentBlock.nodeName.toUpperCase() : ''; // IE < 9 & HTML5
+  let parentBlockName = parentBlock ? parentBlock.nodeName.toUpperCase() : ''; // IE < 9 & HTML5
   const containerBlockName = containerBlock ? containerBlock.nodeName.toUpperCase() : ''; // IE < 9 & HTML5
 
   // Enter inside block contained within a LI then split or insert before/after LI
   if (containerBlockName === 'LI' && !ctrlKey) {
     parentBlock = containerBlock;
-    containerBlock = containerBlock.parentNode;
-    parentBlockName = containerBlockName;
+    const newContainerBlock = SugarElement.fromDom(containerBlock.parentNode);
+    if (SugarNode.isElement(newContainerBlock)) {
+      containerBlock = newContainerBlock.dom;
+      parentBlockName = containerBlockName;
+    }
   }
 
   // Handle enter in list item
@@ -511,9 +508,9 @@ const insert = function (editor: Editor, evt?: EditorEvent<KeyboardEvent>) {
     NewLineUtils.moveToCaretPosition(editor, containerAndSiblingName(parentBlock, 'HR') ? newBlock : parentBlock);
   } else {
     // Extract after fragment and insert it after the current block
-    tmpRng = includeZwspInRange(rng).cloneRange();
+    const tmpRng = includeZwspInRange(rng);
     tmpRng.setEndAfter(parentBlock);
-    fragment = tmpRng.extractContents();
+    const fragment = tmpRng.extractContents();
     trimZwsp(fragment);
     trimLeadingLineBreaks(fragment);
     newBlock = fragment.firstChild;
