@@ -11,7 +11,7 @@ Version 5.4.2 (TBD)
     Fixed the list toolbar buttons not showing as active when a list is selected #TINY-6286
     Fixed an issue where the UI would sometimes not be shown or hidden when calling the show or hide API methods on the editor #TINY-6048
     Fixed the list type style not retained when copying list items #TINY-6289
-    Fixed the Paste plugin converting tabs in plain text to a single space character with a new `paste_tab_spaces` option for setting the number spaces used to replace a tab character #TINY-6237
+    Fixed the Paste plugin converting tabs in plain text to a single space character. A `paste_tab_spaces` option has been included for setting the number of spaces used to replace a tab character #TINY-6237
 Version 5.4.1 (2020-07-08)
     Fixed the Search and Replace plugin incorrectly including zero-width caret characters in search results #TINY-4599
     Fixed dragging and dropping unsupported files navigating the browser away from the editor #TINY-6027
