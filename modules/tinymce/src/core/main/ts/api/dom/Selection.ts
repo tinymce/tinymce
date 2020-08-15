@@ -5,7 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Compare, SugarElement } from '@ephox/sugar';
+import { Thunk } from '@ephox/katamari';
+import { Compare, SugarElement, SugarShadowDom } from '@ephox/sugar';
 import { Bookmark } from '../../bookmark/BookmarkTypes';
 import CaretPosition from '../../caret/CaretPosition';
 import * as NodeType from '../../dom/NodeType';
@@ -42,7 +43,13 @@ import DomSerializer from './Serializer';
 const isNativeIeSelection = (rng: any): boolean => !!(rng).select;
 
 const isAttachedToDom = function (node: Node): boolean {
-  return !!(node && node.ownerDocument) && Compare.contains(SugarElement.fromDom(node.ownerDocument), SugarElement.fromDom(node));
+  if (node && node.ownerDocument) {
+    const sugarNode = SugarElement.fromDom(node);
+    const dos = SugarShadowDom.getRootNode(sugarNode);
+    return Compare.contains(dos, sugarNode);
+  } else {
+    return false;
+  }
 };
 
 const isValidRange = function (rng: Range) {
@@ -74,7 +81,7 @@ interface EditorSelection {
   isForward: () => boolean;
   setNode: (elm: Element) => Element;
   getNode: () => Element;
-  getSel: () => Selection;
+  getSel: () => Selection | null;
   setRng: (rng: Range, forward?: boolean) => void;
   getRng: () => Range;
   getStart: (real?: boolean) => Element;
@@ -113,6 +120,12 @@ const EditorSelection = function (dom: DOMUtils, win: Window, serializer: DomSer
   let explicitRange: Range | null;
 
   const { selectorChangedWithUnbind } = SelectorChanged(dom, editor);
+
+  // Note: This is a hot code path, so we don't want to look up the shadow root everytime
+  const getShadowRootOrWindow = Thunk.cached(() => {
+    const root = SugarElement.fromDom(editor.getBody());
+    return SugarShadowDom.getShadowRoot(root).getOrThunk(() => SugarElement.fromDom(win)).dom;
+  });
 
   /**
    * Move the selection cursor range to the specified node and offset.
@@ -277,7 +290,14 @@ const EditorSelection = function (dom: DOMUtils, win: Window, serializer: DomSer
    * @method getSel
    * @return {Selection} Internal browser selection object.
    */
-  const getSel = (): Selection => win.getSelection ? win.getSelection() : (<any> win.document).selection;
+  const getSel = (): Selection | null => {
+    // Safari and Firefox don't implement the DocumentOrShadowRoot.getSelection() API so
+    // fallback to the window selection in that case. This will currently return the
+    // correct shadow root selection on Firefox, but there's no way to get it on Safari.
+    // See https://bugs.webkit.org/show_bug.cgi?id=163921
+    const srOrWin = getShadowRootOrWindow();
+    return srOrWin.getSelection ? srOrWin.getSelection() : win.getSelection();
+  };
 
   /**
    * Returns the browsers internal range object.

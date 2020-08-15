@@ -1,6 +1,6 @@
 import { Assertions, Chain, Logger, Pipeline } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { Fun, Optional } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { KAssert } from '@ephox/katamari-assertions';
 import { Hierarchy, Remove, SimRange, SimSelection, SugarElement, Traverse, WindowSelection } from '@ephox/sugar';
 import * as SelectionBookmark from 'tinymce/core/selection/SelectionBookmark';
@@ -31,7 +31,8 @@ UnitTest.asynctest('browser.tinymce.core.selection.SelectionBookmarkTest', funct
   const cGetBookmark = function (rootPath: number[]) {
     return Chain.injectThunked(function () {
       const root = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), rootPath).getOrDie();
-      return SelectionBookmark.getBookmark(root);
+      const selection = Traverse.defaultView(root).dom.getSelection();
+      return SelectionBookmark.getBookmark(selection, root);
     });
   };
 
@@ -198,8 +199,7 @@ UnitTest.asynctest('browser.tinymce.core.selection.SelectionBookmarkTest', funct
     ])),
     Logger.t('readRange with with win without getSelection should return Optional.none', Chain.asStep({}, [
       Chain.injectThunked(function () {
-        const mockWin = { getSelection: Fun.constant(null) } as Window;
-        return SelectionBookmark.readRange(mockWin);
+        return SelectionBookmark.readRange(null);
       }),
       cAssertNone()
     ]))
