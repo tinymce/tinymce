@@ -14,7 +14,9 @@ DomEvent.bind(SugarElement.fromDom(document), 'keydown', function (event) {
   if (event.raw.keyCode === 13) {
     Optional.from(window.getSelection()).each((selection) => {
       if (selection.rangeCount > 0) {
-        const spans = DomWrapping.reuse(SugarElement.fromDom(selection.anchorNode), selection.anchorOffset, SugarElement.fromDom(selection.focusNode), selection.focusOffset, function (elem) {
+        const anchorNode = SugarElement.fromDom(selection.anchorNode as Node);
+        const focusNode = SugarElement.fromDom(selection.focusNode as Node);
+        const spans = DomWrapping.reuse(anchorNode, selection.anchorOffset, focusNode, selection.focusOffset, function (elem) {
           return SugarNode.name(elem) === 'span';
         }, function () {
           return DomWrapping.nu(SugarElement.fromTag('span'));

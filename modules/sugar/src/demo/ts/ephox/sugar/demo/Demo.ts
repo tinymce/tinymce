@@ -4,6 +4,7 @@ import * as DomEvent from 'ephox/sugar/api/events/DomEvent';
 import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
 import * as Css from 'ephox/sugar/api/properties/Css';
 import * as Html from 'ephox/sugar/api/properties/Html';
+import * as SelectorFind from 'ephox/sugar/api/search/SelectorFind';
 
 /* eslint-disable no-console */
 
@@ -37,5 +38,5 @@ Css.setAll(div, {
 
 Insert.append(container, div);
 
-const ephoxUi = SugarElement.fromDom(document.getElementById('ephox-ui'));
+const ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
 Insert.append(ephoxUi, container);
