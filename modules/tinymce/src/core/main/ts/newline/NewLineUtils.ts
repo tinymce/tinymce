@@ -7,6 +7,7 @@
 
 import { Fun, Optional, Unicode } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
+import DOMUtils from '../api/dom/DOMUtils';
 import DomTreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
 import * as ElementType from '../dom/ElementType';
@@ -23,8 +24,8 @@ const firstNonWhiteSpaceNodeSibling = function (node) {
   }
 };
 
-const moveToCaretPosition = function (editor: Editor, root) {
-  let node, lastNode = root;
+const moveToCaretPosition = (editor: Editor, root: Node) => {
+  let lastNode = root;
   const dom = editor.dom;
   const moveCaretBeforeOnEnterElementsMap = editor.schema.getMoveCaretBeforeOnEnterElements();
 
@@ -46,6 +47,7 @@ const moveToCaretPosition = function (editor: Editor, root) {
   if (root.hasChildNodes()) {
     const walker = new DomTreeWalker(root, root);
 
+    let node: Node;
     while ((node = walker.current())) {
       if (NodeType.isText(node)) {
         rng.setStart(node, 0);
@@ -86,12 +88,12 @@ const moveToCaretPosition = function (editor: Editor, root) {
   ScrollIntoView.scrollRangeIntoView(editor, rng);
 };
 
-const getEditableRoot = function (dom, node) {
+const getEditableRoot = (dom: DOMUtils, node: Node): Node | undefined => {
   const root = dom.getRoot();
-  let parent, editableRoot;
+  let editableRoot: Node | undefined;
 
   // Get all parents until we hit a non editable parent or the root
-  parent = node;
+  let parent = node;
   while (parent !== root && dom.getContentEditable(parent) !== 'false') {
     if (dom.getContentEditable(parent) === 'true') {
       editableRoot = parent;

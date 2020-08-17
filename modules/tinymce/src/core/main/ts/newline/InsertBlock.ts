@@ -42,9 +42,7 @@ const emptyBlock = function (elm) {
   elm.innerHTML = '<br data-mce-bogus="1">';
 };
 
-const containerAndSiblingName = function (container, nodeName) {
-  return container.nodeName === nodeName || (container.previousSibling && container.previousSibling.nodeName === nodeName);
-};
+const containerAndSiblingName = (container: Node, nodeName: string) => container.nodeName === nodeName || (container.previousSibling && container.previousSibling.nodeName === nodeName);
 
 // Returns true if the block can be split into two blocks or not
 const canSplitBlock = function (dom, node) {
@@ -117,23 +115,6 @@ const trimLeadingLineBreaks = function (node) {
   } while (node);
 };
 
-const getEditableRoot = function (dom, node) {
-  const root = dom.getRoot();
-  let parent, editableRoot;
-
-  // Get all parents until we hit a non editable parent or the root
-  parent = node;
-  while (parent !== root && dom.getContentEditable(parent) !== 'false') {
-    if (dom.getContentEditable(parent) === 'true') {
-      editableRoot = parent;
-    }
-
-    parent = parent.parentNode;
-  }
-
-  return parent !== root ? editableRoot : root;
-};
-
 const applyAttributes = (editor: Editor, node: Element, forcedRootBlockAttrs: Record<string, string>) => {
   const dom = editor.dom;
 
@@ -174,7 +155,7 @@ const setForcedBlockAttrs = function (editor: Editor, node) {
 const wrapSelfAndSiblingsInDefaultBlock = function (editor: Editor, newBlockName, rng, container, offset) {
   let newBlock, parentBlock, startNode, node, next, rootBlockName;
   const blockName = newBlockName || 'P';
-  const dom = editor.dom, editableRoot = getEditableRoot(dom, container);
+  const dom = editor.dom, editableRoot = NewLineUtils.getEditableRoot(dom, container);
 
   // Not in a block element or in a table cell or caption
   parentBlock = dom.getParent(container, dom.isBlock);
@@ -243,6 +224,22 @@ const addBrToBlockIfNeeded = function (dom, block) {
   }
 };
 
+
+// Check that we aren't accidentally about to extract the entire parentNode.
+const handleEmptyRange = (parentNode: Node, rng: Range) => {
+  const testRange = document.createRange();
+  testRange.selectNode(parentNode);
+  if (testRange.compareBoundaryPoints(Range.START_TO_START, rng) !== 0 || testRange.compareBoundaryPoints(Range.END_TO_END, rng) !== 0) {
+    // We are not about to accidentally extract the entire parentNode, so we don't need to do anything special
+    return;
+  }
+
+  const newBlock = SugarElement.fromHtml('<br data-mce-bogus="1">').dom;
+  parentNode.insertBefore(newBlock, parentNode.firstChild);
+  rng.setStartAfter(newBlock);
+};
+
+// Used as an internal function below. Dragging it up here to make the function state explicit (and read-only).
 interface CreateNewBlock {
   container: Node;
   schema: Schema;
@@ -251,7 +248,7 @@ interface CreateNewBlock {
   dom: DOMUtils;
   parentBlock: Element;
   editor: Editor;
-  editableRoot: any;
+  editableRoot: Node;
 }
 
 const _createNewBlock = ({ container, schema, parentBlockName, newBlockName, dom, parentBlock, editor, editableRoot }: CreateNewBlock, name: string | undefined): Node => {
@@ -295,6 +292,7 @@ const _createNewBlock = ({ container, schema, parentBlockName, newBlockName, dom
   return block;
 };
 
+// Used as an internal function below. Dragging it up here to make the function state explicit (and read-only).
 interface IsCaretAtStartOrEndOFBlock {
   offset: number;
   container: Node;
@@ -363,6 +361,7 @@ const _isCaretAtStartOrEndOfBlock = ({ offset, container, isAfterLastNodeInConta
   return true;
 };
 
+// Used as an internal function below. Dragging it up here to make the function state explicit (and read-only).
 interface InsertNewBlockAfter {
   containerBlockName: string;
   newBlockName: string;
@@ -411,7 +410,8 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>) => {
 
   // Returns true/false if the caret is at the start/end of the parent block element
   const isCaretAtStartOrEndOfBlock = function (start?: true) {
-    return _isCaretAtStartOrEndOfBlock({ offset, container, isAfterLastNodeInContainer, parentBlock, nonEmptyElementsMap }, start);
+    const output = _isCaretAtStartOrEndOfBlock({ offset, container, isAfterLastNodeInContainer, parentBlock, nonEmptyElementsMap }, start);
+    return output;
   };
 
   const insertNewBlockAfter = function () {
@@ -443,7 +443,7 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>) => {
   }
 
   // Get editable root node, normally the body element but sometimes a div or span
-  const editableRoot = getEditableRoot(dom, container);
+  const editableRoot = NewLineUtils.getEditableRoot(dom, container);
 
   // If there is no editable root then enter is done inside a contentEditable false element
   if (!editableRoot) {
@@ -510,6 +510,7 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>) => {
     // Extract after fragment and insert it after the current block
     const tmpRng = includeZwspInRange(rng);
     tmpRng.setEndAfter(parentBlock);
+    handleEmptyRange(parentBlock, tmpRng);
     const fragment = tmpRng.extractContents();
     trimZwsp(fragment);
     trimLeadingLineBreaks(fragment);

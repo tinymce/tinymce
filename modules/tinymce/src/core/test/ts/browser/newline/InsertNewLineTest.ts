@@ -24,6 +24,15 @@ UnitTest.asynctest('browser.tinymce.core.newline.InsertNewLine', (success, failu
     Pipeline.async({}, [
       tinyApis.sFocus(),
       Logger.t('Enter in paragraph', GeneralSteps.sequence([
+        Logger.t('Insert block before (but outside of block element)', GeneralSteps.sequence([
+          tinyApis.sSetContent('<pre>ab</pre>'),
+          // Sets the cursor to be between body and pre, ie <body>|<pre>ab</pre></body>
+          // Hopefully one day the UI won't let people put their cursor there, but for now we need to ensure that it works
+          tinyApis.sSetCursor([ ], 0),
+          sInsertNewline(editor, { }),
+          tinyApis.sAssertContent('<pre>&nbsp;</pre><pre>ab</pre>'),
+          tinyApis.sAssertSelection([], 1, [], 1)
+        ])),
         Logger.t('Insert block before', GeneralSteps.sequence([
           tinyApis.sSetContent('<p>ab</p>'),
           tinyApis.sSetCursor([ 0, 0 ], 0),
