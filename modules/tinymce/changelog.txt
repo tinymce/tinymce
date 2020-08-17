@@ -1,4 +1,4 @@
-Version 5.4.2 (TBD)
+Version 5.4.2 (2020-08-17)
     Fixed the editor not resizing when resizing the browser window in fullscreen mode #TINY-3511
     Fixed clicking on notifications causing inline editors to hide #TINY-6058
     Fixed an issue where link URLs could not be deleted or edited in the link dialog in some cases #TINY-4706
