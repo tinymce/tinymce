@@ -69,7 +69,7 @@
   // Selection of whole table cells
   td[data-mce-selected],
   th[data-mce-selected] {
-    background-color: @table-selection-color !important;
+    position: relative;
 
     &::selection {
       //Prevent selection to be visible
@@ -81,6 +81,19 @@
       -webkit-touch-callout: none;
       user-select: none;
     }
+  }
+
+  // Apply cell selection as a semi-transparent overlay instead of manipulating the cell background itself
+  td[data-mce-selected]::after,
+  th[data-mce-selected]::after {
+    background-color: @table-selection-color;
+    bottom: 0;
+    content: '';
+    left: 0;
+    opacity: .5;
+    position: absolute;
+    right: 0;
+    top: 0;
   }
 
   img::selection {
