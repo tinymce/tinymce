@@ -102,18 +102,22 @@ const readRange = (selection: Selection) => {
 };
 
 const doGetExact = (selection: Selection) => {
-  const anchor = SugarElement.fromDom(selection.anchorNode);
-  const focus = SugarElement.fromDom(selection.focusNode);
+  if (selection.anchorNode === null || selection.focusNode === null) {
+    return readRange(selection);
+  } else {
+    const anchor = SugarElement.fromDom(selection.anchorNode);
+    const focus = SugarElement.fromDom(selection.focusNode);
 
-  // if this returns true anchor is _after_ focus, so we need a custom selection object to maintain the RTL selection
-  return DocumentPosition.after(anchor, selection.anchorOffset, focus, selection.focusOffset) ? Optional.some(
-    SimRange.create(
-      anchor,
-      selection.anchorOffset,
-      focus,
-      selection.focusOffset
-    )
-  ) : readRange(selection);
+    // if this returns true anchor is _after_ focus, so we need a custom selection object to maintain the RTL selection
+    return DocumentPosition.after(anchor, selection.anchorOffset, focus, selection.focusOffset) ? Optional.some(
+      SimRange.create(
+        anchor,
+        selection.anchorOffset,
+        focus,
+        selection.focusOffset
+      )
+    ) : readRange(selection);
+  }
 };
 
 const setToElement = (win: Window, element: SugarElement<Node>) => {

@@ -8,7 +8,7 @@ import * as SugarNode from '../node/SugarNode';
  * The document associated with the current element
  * NOTE: this will throw if the owner is null.
  */
-const owner = (element: SugarElement<Node>) => SugarElement.fromDom(element.dom.ownerDocument);
+const owner = (element: SugarElement<Node>) => SugarElement.fromDom(element.dom.ownerDocument as Document);
 
 /**
  * If the element is a document, return it. Otherwise, return its ownerDocument.
@@ -19,8 +19,11 @@ const documentOrOwner = (dos: SugarElement<Node>): SugarElement<Document> =>
 
 const documentElement = (element: SugarElement<Node>) => SugarElement.fromDom(documentOrOwner(element).dom.documentElement);
 
-// The window element associated with the element
-const defaultView = (element: SugarElement<Node>) => SugarElement.fromDom(documentOrOwner(element).dom.defaultView);
+/**
+ * The window element associated with the element
+ * NOTE: this will throw if the defaultView is null.
+ */
+const defaultView = (element: SugarElement<Node>) => SugarElement.fromDom(documentOrOwner(element).dom.defaultView as Window);
 
 const parent = (element: SugarElement<Node>): Optional<SugarElement<Node & ParentNode>> => Optional.from(element.dom.parentNode).map(SugarElement.fromDom);
 
