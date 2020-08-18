@@ -176,7 +176,7 @@ UnitTest.asynctest('browser.tinymce.util.QuirksWekbitTest', function (success, f
   suite.test('Backspace key from beginning of P into H1', function (editor) {
     editor.getBody().innerHTML = '<h1>a</h1><p>b</p>';
     LegacyUnit.setSelection(editor, 'p', 0);
-    editor.fire('keydown', { keyCode: 8, shiftKey: false, ctrlKey: false, altKey: false, metaKey: false });
+    editor.fire('keydown', { keyCode: 8, shiftKey: false, ctrlKey: false, altKey: false, metaKey: false } as KeyboardEvent);
     LegacyUnit.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), '<h1>ab</h1>');
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'H1');
   });
@@ -184,7 +184,7 @@ UnitTest.asynctest('browser.tinymce.util.QuirksWekbitTest', function (success, f
   suite.test('Delete key from end of H1 into P', function (editor) {
     editor.getBody().innerHTML = '<h1>a</h1><p>b</p>';
     LegacyUnit.setSelection(editor, 'h1', 1);
-    editor.fire('keydown', { keyCode: 46, shiftKey: false, ctrlKey: false, altKey: false, metaKey: false });
+    editor.fire('keydown', { keyCode: 46, shiftKey: false, ctrlKey: false, altKey: false, metaKey: false } as KeyboardEvent);
     LegacyUnit.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), '<h1>ab</h1>');
     LegacyUnit.equal(editor.selection.getStart().nodeName, 'H1');
   });
@@ -305,7 +305,7 @@ UnitTest.asynctest('browser.tinymce.util.QuirksWekbitTest', function (success, f
   suite.test('ForwardDelete all contents', function (editor) {
     editor.getBody().innerHTML = '<p>abc</p>';
     LegacyUnit.setSelection(editor, 'p', 0, 'p', 3);
-    editor.fire('keydown', { keyCode: 46 });
+    editor.fire('keydown', { keyCode: 46 } as KeyboardEvent);
     LegacyUnit.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), '<p><br data-mce-bogus="1"></p>');
     LegacyUnit.equal(editor.selection.getStart(true).nodeName, 'P');
   });
@@ -313,7 +313,7 @@ UnitTest.asynctest('browser.tinymce.util.QuirksWekbitTest', function (success, f
   suite.test('Delete all contents', function (editor) {
     editor.getBody().innerHTML = '<p>abc</p>';
     LegacyUnit.setSelection(editor, 'p', 0, 'p', 3);
-    editor.fire('keydown', { keyCode: 8 });
+    editor.fire('keydown', { keyCode: 8 } as KeyboardEvent);
     LegacyUnit.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), '<p><br data-mce-bogus="1"></p>');
     LegacyUnit.equal(editor.selection.getStart(true).nodeName, 'P');
   });

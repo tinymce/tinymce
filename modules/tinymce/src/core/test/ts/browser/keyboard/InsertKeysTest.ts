@@ -13,7 +13,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.InsertKeysTest', (success, fai
   Theme();
 
   const sFireInsert = (editor: Editor) => Step.sync(() => {
-    editor.fire('input', { isComposing: false });
+    editor.fire('input', { isComposing: false } as InputEvent);
   });
 
   const sFireKeyPress = (editor: Editor) => Step.sync(() => {
