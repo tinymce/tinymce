@@ -24,13 +24,13 @@ UnitTest.asynctest('Redraw Section Order Test', (success, failure) => {
 
     return Arr.map(rendered, (details) => {
       const row = findRow(details.details);
-      return Structs.rowdatanew(row.element, details.details, details.section, row.isNew);
+      return Structs.rowdatanew(row.element, details.details, details.section, row.isNew, false);
     });
   };
 
   const changeTableSections = (table: SugarElement<any>, rowIndex: number, newSection: Structs.Section) => {
     const updatedModelData = Arr.map(getRowData(table), (row, i) =>
-      i === rowIndex ? Structs.rowdatanew(row.element, row.cells, newSection, row.isNew) : row);
+      i === rowIndex ? Structs.rowdatanew(row.element, row.cells, newSection, row.isNew, false) : row);
     Redraw.render(table, updatedModelData);
   };
 

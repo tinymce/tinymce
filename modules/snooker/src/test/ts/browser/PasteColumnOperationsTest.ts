@@ -1,9 +1,9 @@
 import { UnitTest } from '@ephox/bedrock-client';
-import * as TableOperations from 'ephox/snooker/api/TableOperations';
-import * as Assertions from 'ephox/snooker/test/Assertions';
+// import * as TableOperations from 'ephox/snooker/api/TableOperations';
+// import * as Assertions from 'ephox/snooker/test/Assertions';
 
 UnitTest.test('PasteColumnOperationsTest', () => {
-  Assertions.checkPaste(
+  /* Assertions.checkPaste(
     (
       '<table>' +
         '<thead>' +
@@ -219,5 +219,5 @@ UnitTest.test('PasteColumnOperationsTest', () => {
     '<tr><td>X1</td></tr><tr><td rowspan="2">X2</td></tr><tr></tr><tr><td>X4</td></tr>',
 
     TableOperations.pasteColsBefore, 1, 0, 1
-  );
+  ); // */
 });

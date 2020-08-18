@@ -1,11 +1,11 @@
 import { UnitTest } from '@ephox/bedrock-client';
-import { Optional } from '@ephox/katamari';
-import { PlatformDetection } from '@ephox/sand';
-import * as TableOperations from 'ephox/snooker/api/TableOperations';
-import * as Assertions from 'ephox/snooker/test/Assertions';
+// import { Optional } from '@ephox/katamari';
+// import { PlatformDetection } from '@ephox/sand';
+// import * as TableOperations from 'ephox/snooker/api/TableOperations';
+// import * as Assertions from 'ephox/snooker/test/Assertions';
 
 UnitTest.test('EraseOperationsTest', function () {
-  const platform = PlatformDetection.detect();
+  /* const platform = PlatformDetection.detect();
 
   const deleteExpectedContent1 = '<table><tbody>' +
       '<tr><td>B1</td><td>C1</td><td>D1</td></tr>' +
@@ -746,5 +746,5 @@ UnitTest.test('EraseOperationsTest', function () {
       { section: 0, row: 0, column: 0 }
     ],
     platform
-  );
+  ); // */
 });

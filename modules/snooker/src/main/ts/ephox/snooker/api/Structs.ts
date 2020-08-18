@@ -51,6 +51,7 @@ export interface RowData<T> {
   readonly element: SugarElement;
   readonly cells: T[];
   readonly section: Section;
+  readonly isColumnGroup: boolean;
 }
 
 export interface RowDataNew<T> extends RowData<T> {
@@ -120,10 +121,11 @@ const extended = (element: SugarElement, rowspan: number, colspan: number, row: 
   column
 });
 
-const rowdata = <T> (element: SugarElement, cells: T[], section: Section): RowData<T> => ({
+const rowdata = <T> (element: SugarElement, cells: T[], section: Section, isColumnGroup: boolean): RowData<T> => ({
   element,
   cells,
-  section
+  section,
+  isColumnGroup
 });
 
 const elementnew = (element: SugarElement, isNew: boolean): ElementNew => ({
@@ -131,11 +133,12 @@ const elementnew = (element: SugarElement, isNew: boolean): ElementNew => ({
   isNew
 });
 
-const rowdatanew = <T> (element: SugarElement, cells: T[], section: Section, isNew: boolean): RowDataNew<T> => ({
+const rowdatanew = <T> (element: SugarElement, cells: T[], section: Section, isNew: boolean, isColumnGroup: boolean): RowDataNew<T> => ({
   element,
   cells,
   section,
-  isNew
+  isNew,
+  isColumnGroup
 });
 
 const rowcells = (cells: ElementNew[], section: Section): RowCells => ({

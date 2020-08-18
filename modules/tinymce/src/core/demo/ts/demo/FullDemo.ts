@@ -103,17 +103,14 @@ export default function () {
       makeSidebar(ed, 'sidebar1', 'green', 200);
     },
     plugins: [
-      'autosave advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker toc',
-      'searchreplace wordcount visualblocks visualchars code fullscreen fullpage insertdatetime media nonbreaking',
-      'save table directionality emoticons template paste textcolor importcss colorpicker textpattern',
-      'codesample help noneditable print'
+      'code table'
     ],
     // rtl_ui: true,
     add_unload_trigger: false,
     autosave_ask_before_unload: false,
-    toolbar: 'undo redo sidebar1 | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | align fontsizeselect fontselect formatselect styleselect insertfile | styleselect | ' +
-    'bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table codesample code | ltr rtl',
-    contextmenu: 'link linkchecker image imagetools table lists spellchecker configurepermanentpen',
+    toolbar: 'table code',
+    contextmenu: 'table',
+    table_col_group: true,
 
     // Multiple toolbar array
     // toolbar: ['undo redo sidebar1 align fontsizeselect insertfile | fontselect formatselect styleselect insertfile | styleselect | bold italic',

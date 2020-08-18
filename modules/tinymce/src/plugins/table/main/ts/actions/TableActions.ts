@@ -12,7 +12,7 @@ import { SugarElement, SugarNode } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { fireNewCell, fireNewRow } from '../api/Events';
-import { getCloneElements } from '../api/Settings';
+import { getCloneElements, getColumnGroupUsage } from '../api/Settings';
 import { getRowType, switchCellType, switchSectionType } from '../core/TableSections';
 import * as Util from '../core/Util';
 import * as Direction from '../queries/Direction';
@@ -68,7 +68,8 @@ export const TableActions = (editor: Editor, lazyWire: () => ResizeWire): TableA
       const direction = TableDirection(Direction.directionAt);
       const generators = TableFill.cellOperations(mutate, doc, cloneFormats);
       const sizing = TableSize.get(editor, table);
-      return guard(table) ? operation(wire, table, target, generators, direction, sizing).bind((result) => {
+      const useColumnGroups = getColumnGroupUsage(editor);
+      return guard(table) ? operation(wire, table, target, generators, direction, useColumnGroups, sizing).bind((result) => {
         Arr.each(result.newRows, (row) => {
           fireNewRow(editor, row.dom);
         });

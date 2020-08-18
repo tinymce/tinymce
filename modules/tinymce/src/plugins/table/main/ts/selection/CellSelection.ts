@@ -15,7 +15,7 @@ import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import * as Events from '../api/Events';
-import { getCloneElements } from '../api/Settings';
+import { getCloneElements, getColumnGroupUsage } from '../api/Settings';
 import * as Util from '../core/Util';
 import * as Direction from '../queries/Direction';
 import * as Ephemera from './Ephemera';
@@ -34,7 +34,7 @@ export default function (editor: Editor, lazyResize: () => Optional<TableResize>
       tableOpt.each((table) => {
         const cloneFormats = getCloneElements(editor);
         const generators = TableFill.cellOperations(Fun.noop, SugarElement.fromDom(editor.getDoc()), cloneFormats);
-        const otherCells = OtherCells.getOtherCells(table, targets, generators);
+        const otherCells = OtherCells.getOtherCells(table, targets, generators, getColumnGroupUsage(editor));
         Events.fireTableSelectionChange(editor, cells, start, finish, otherCells);
       });
     });

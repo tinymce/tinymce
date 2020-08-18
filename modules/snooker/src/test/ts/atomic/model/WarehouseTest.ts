@@ -11,7 +11,7 @@ UnitTest.test('WarehouseTest', function () {
   };
 
   const s = (fakeEle: any, rowspan: number, colspan: number) => Structs.detail(fakeEle as SugarElement, rowspan, colspan);
-  const f = (fakeEle: any, cells: Structs.Detail[], section: 'tbody' | 'thead' | 'tfoot') => Structs.rowdata(fakeEle as SugarElement, cells, section);
+  const f = (fakeEle: any, cells: Structs.Detail[], section: 'tbody' | 'thead' | 'tfoot') => Structs.rowdata(fakeEle as SugarElement, cells, section, false);
 
   const testTable = [
     f('r1', [ s('a', 1, 2), s('b', 1, 1), s('c', 1, 1), s('d', 1, 1), s('e', 1, 1), s('f', 1, 1) ], 'thead'),

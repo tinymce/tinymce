@@ -16,7 +16,8 @@ type Op<T> = (
   table: SugarElement,
   target: T,
   generators: Generators,
-  direction: BarPositions<ColInfo>
+  direction: BarPositions<ColInfo>,
+  usecolumnGroups: boolean
 ) => Optional<RunOperationOutput>;
 
 const checkOld = (
@@ -27,14 +28,15 @@ const checkOld = (
   section: number,
   row: number,
   column: number,
-  direction: BarPositions<ColInfo> = ResizeDirection.ltr
+  direction: BarPositions<ColInfo> = ResizeDirection.ltr,
+  usecolumnGroups: boolean
 ) => {
   const table = SugarElement.fromHtml<HTMLTableElement>(input);
   Insert.append(SugarBody.body(), table);
   const wire = ResizeWire.only(SugarBody.body());
   const result = operation(wire, table, {
     element: Hierarchy.follow(table, [ section, row, column, 0 ]).getOrDie()
-  }, Bridge.generators, direction);
+  }, Bridge.generators, direction, usecolumnGroups);
 
   const actualPath = Hierarchy.path(table, result.getOrDie().cursor.getOrDie()).getOrDie('could not find path');
   assert.eq([ expCell.section, expCell.row, expCell.column ], actualPath);
@@ -59,7 +61,8 @@ const checkPaste = (
   section: number,
   row: number,
   column: number,
-  direction: BarPositions<ColInfo> = ResizeDirection.ltr
+  direction: BarPositions<ColInfo> = ResizeDirection.ltr,
+  usecolumnGroups: boolean
 ) => {
   const table = SugarElement.fromHtml<HTMLTableElement>(input);
   Insert.append(SugarBody.body(), table);
@@ -76,7 +79,8 @@ const checkPaste = (
       generators: Bridge.generators as SimpleGenerators
     },
     Bridge.generators,
-    direction
+    direction,
+    usecolumnGroups
   );
 
   assert.eq(expectedHtml, Html.getOuter(table));
@@ -93,14 +97,15 @@ const checkStructure = (
   section: number,
   row: number,
   column: number,
-  direction: BarPositions<ColInfo> = ResizeDirection.ltr
+  direction: BarPositions<ColInfo> = ResizeDirection.ltr,
+  usecolumnGroups: boolean
 ) => {
   const table = SugarElement.fromHtml<HTMLTableElement>(input);
   Insert.append(SugarBody.body(), table);
   const wire = ResizeWire.only(SugarBody.body());
   const result = operation(wire, table, {
     element: Hierarchy.follow(table, [ section, row, column, 0 ]).getOrDie()
-  }, Bridge.generators, direction);
+  }, Bridge.generators, direction, usecolumnGroups);
 
   const actualPath = Hierarchy.path(table, result.getOrDie().cursor.getOrDie()).getOrDie('could not find path');
   assert.eq([ expCell.section, expCell.row, expCell.column ], actualPath);
@@ -123,7 +128,8 @@ const checkDelete = (
   operation: Op<TargetSelection>,
   cells: { section: number; row: number; column: number }[],
   platform: ReturnType<typeof PlatformDetection.detect>,
-  direction: BarPositions<ColInfo> = ResizeDirection.ltr
+  direction: BarPositions<ColInfo> = ResizeDirection.ltr,
+  usecolumnGroups: boolean
 ) => {
   const table = SugarElement.fromHtml<HTMLTableElement>(input);
   Insert.append(SugarBody.body(), table);
@@ -134,7 +140,7 @@ const checkDelete = (
 
   const result = operation(wire, table, {
     selection: cellz
-  }, Bridge.generators, direction);
+  }, Bridge.generators, direction, usecolumnGroups);
 
   // The operation might delete the whole table
   optExpCell.each((expCell) => {
@@ -174,7 +180,8 @@ const checkMerge = (
   input: string,
   selection: {section: number; row: number; column: number}[],
   bounds: {startRow: number; startCol: number; finishRow: number; finishCol: number},
-  direction: BarPositions<ColInfo> = ResizeDirection.ltr
+  direction: BarPositions<ColInfo> = ResizeDirection.ltr,
+  usecolumnGroups: boolean
 ) => {
   const table = SugarElement.fromHtml<HTMLTableElement>(input);
   const expectedDom = SugarElement.fromHtml(expected);
@@ -186,7 +193,7 @@ const checkMerge = (
   const target = Bridge.targetStub(selection, bounds, table);
   const generators = Bridge.generators;
 
-  TableOperations.mergeCells(wire, table, target, generators, direction);
+  TableOperations.mergeCells(wire, table, target, generators, direction, usecolumnGroups);
 
   // Let's get rid of size information.
   const all = [ table ].concat(SelectorFilter.descendants(table, 'td,th'));
@@ -206,7 +213,8 @@ const checkUnmerge = (
   expected: string,
   input: string,
   unmergablePaths: { section: number; row: number; column: number }[],
-  direction: BarPositions<ColInfo> = ResizeDirection.ltr
+  direction: BarPositions<ColInfo> = ResizeDirection.ltr,
+  usecolumnGroups: boolean
 ) => {
   const table = SugarElement.fromHtml<HTMLTableElement>(input);
   Insert.append(SugarBody.body(), table);
@@ -217,7 +225,7 @@ const checkUnmerge = (
 
   const unmergable = Optional.some(Optionals.cat(unmergables));
 
-  TableOperations.unmergeCells(wire, table, { unmergable }, Bridge.generators, direction);
+  TableOperations.unmergeCells(wire, table, { unmergable }, Bridge.generators, direction, usecolumnGroups);
   // Presence.assertHas(expected, table, 'checking the operation on table: ' + Html.getOuter(table));
 
   // Let's get rid of size information.

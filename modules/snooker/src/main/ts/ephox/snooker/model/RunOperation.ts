@@ -74,7 +74,7 @@ export interface ExtractPasteRows {
 const fromWarehouse = (warehouse: Warehouse, generators: Generators) =>
   Transitions.toGrid(warehouse, generators, false);
 
-const deriveRows = (rendered: Structs.RowDetails[], generators: Generators) => {
+const deriveRows = (rendered: Structs.RowDetails[], generators: Generators, useColumnGroups: boolean) => {
   // The row is either going to be a new row, or the row of any of the cells.
   const findRow = (details: Structs.DetailNew[]) => {
     const rowOfCells = Arr.findMap(details, (detail) => Traverse.parent(detail.element).map((row) => {
@@ -87,13 +87,13 @@ const deriveRows = (rendered: Structs.RowDetails[], generators: Generators) => {
 
   return Arr.map(rendered, (details) => {
     const row = findRow(details.details);
-    return Structs.rowdatanew(row.element, details.details, details.section, row.isNew);
+    return Structs.rowdatanew(row.element, details.details, details.section, row.isNew, useColumnGroups);
   });
 };
 
-const toDetailList = (grid: Structs.RowCells[], generators: Generators): RowDataNew<DetailNew>[] => {
+const toDetailList = (grid: Structs.RowCells[], generators: Generators, useColumnGroups: boolean): RowDataNew<DetailNew>[] => {
   const rendered = Transitions.toDetails(grid, Compare.eq);
-  return deriveRows(rendered, generators);
+  return deriveRows(rendered, generators, useColumnGroups);
 };
 
 const findInWarehouse = (warehouse: Warehouse, element: SugarElement): Optional<DetailExt> => Arr.findMap(warehouse.all, (r) =>
@@ -107,16 +107,16 @@ type Adjustment = <T extends Structs.DetailNew>(table: SugarElement, grid: Struc
 type PostAction = (e: SugarElement) => void;
 type GenWrap<GW extends GeneratorsWrapper> = (g: Generators) => GW;
 
-export type OperationCallback<T> = (wire: ResizeWire, table: SugarElement<HTMLTableElement>, target: T, generators: Generators, direction: BarPositions<ColInfo>, sizing?: TableSize) => Optional<RunOperationOutput>;
+export type OperationCallback<T> = (wire: ResizeWire, table: SugarElement<HTMLTableElement>, target: T, generators: Generators, direction: BarPositions<ColInfo>, useColumnGroups: boolean, sizing?: TableSize) => Optional<RunOperationOutput>;
 
 const run = <RAW, INFO, GW extends GeneratorsWrapper>
 (operation: Operation<INFO, GW>, extract: Extract<RAW, INFO>, adjustment: Adjustment, postAction: PostAction, genWrappers: GenWrap<GW>): OperationCallback<RAW> =>
-  (wire: ResizeWire, table: SugarElement, target: RAW, generators: Generators, direction: BarPositions<ColInfo>, sizing?: TableSize): Optional<RunOperationOutput> => {
+  (wire: ResizeWire, table: SugarElement, target: RAW, generators: Generators, direction: BarPositions<ColInfo>, useColumnGroups: boolean, sizing?: TableSize): Optional<RunOperationOutput> => {
     const warehouse = Warehouse.fromTable(table);
     const output = extract(warehouse, target).map((info) => {
       const model = fromWarehouse(warehouse, generators);
       const result = operation(model, info, Compare.eq, genWrappers(generators));
-      const grid = toDetailList(result.grid, generators);
+      const grid = toDetailList(result.grid, generators, useColumnGroups || false);
       return {
         grid,
         cursor: result.cursor

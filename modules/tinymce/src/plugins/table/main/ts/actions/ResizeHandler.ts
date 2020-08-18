@@ -91,13 +91,17 @@ export const getResizeHandler = function (editor: Editor): ResizeHandler {
   // If we're updating the table width via the old mechanic, we need to update the constituent cells' widths/heights too.
   editor.on('ObjectResizeStart', function (e) {
     const targetElm = e.target;
+    const options = {
+      useColumnGroups: Settings.getColumnGroupUsage(editor)
+    };
+
     if (isTable(targetElm)) {
       const table = SugarElement.fromDom(targetElm);
 
       if (!Sizes.isPixelSizing(table) && Settings.isPixelsForced(editor)) {
-        enforcePixels(editor, table);
+        enforcePixels(editor, table, options);
       } else if (!Sizes.isPercentSizing(table) && Settings.isPercentagesForced(editor)) {
-        enforcePercentage(editor, table);
+        enforcePercentage(editor, table, options);
       }
 
       startW = e.width;
@@ -105,15 +109,19 @@ export const getResizeHandler = function (editor: Editor): ResizeHandler {
     }
   });
 
-  editor.on('ObjectResized', function (e) {
+  editor.on('ObjectResized', (e) => {
     const targetElm = e.target;
+    const options = {
+      useColumnGroups: Settings.getColumnGroupUsage(editor)
+    };
+
     if (isTable(targetElm)) {
       const table = SugarElement.fromDom(targetElm);
 
       if (startRawW === '' || (!Util.isPercentage(startRawW) && Settings.isResponsiveForced(editor))) {
         // Responsive tables don't have a width so we need to convert it to a relative/percent
         // table instead, as that's closer to responsive sizing than fixed sizing
-        enforcePercentage(editor, table);
+        enforcePercentage(editor, table, options);
       } else if (Util.isPercentage(startRawW)) {
         const percentW = parseFloat(startRawW.replace('%', ''));
         const targetPercentW = e.width * percentW / startW;

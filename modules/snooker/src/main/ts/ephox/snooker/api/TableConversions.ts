@@ -11,15 +11,15 @@ const cleanupLegacyAttributes = (element: SugarElement<HTMLElement>) => {
   Attribute.remove(element, 'width');
 };
 
-const convertToPercentSize = (table: SugarElement<HTMLTableElement>, direction: BarPositions<ColInfo>, tableSize: TableSize) => {
+const convertToPercentSize = (table: SugarElement<HTMLTableElement>, direction: BarPositions<ColInfo>, tableSize: TableSize, useColumnGroups: boolean) => {
   const newWidth = Sizes.getPercentTableWidth(table);
-  redistribute(table, Optional.some(newWidth), Optional.none(), direction, tableSize);
+  redistribute(table, Optional.some(newWidth), Optional.none(), direction, tableSize, useColumnGroups);
   cleanupLegacyAttributes(table);
 };
 
-const convertToPixelSize = (table: SugarElement<HTMLTableElement>, direction: BarPositions<ColInfo>, tableSize: TableSize) => {
+const convertToPixelSize = (table: SugarElement<HTMLTableElement>, direction: BarPositions<ColInfo>, tableSize: TableSize, useColumnGroups: boolean) => {
   const newWidth = Sizes.getPixelTableWidth(table);
-  redistribute(table, Optional.some(newWidth), Optional.none(), direction, tableSize);
+  redistribute(table, Optional.some(newWidth), Optional.none(), direction, tableSize, useColumnGroups);
   cleanupLegacyAttributes(table);
 };
 

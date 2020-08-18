@@ -6,13 +6,13 @@ import { Warehouse } from '../model/Warehouse';
 import * as Redraw from '../operate/Redraw';
 import { Generators } from './Generators';
 
-const copyRows = function (table: SugarElement, target: TargetSelection, generators: Generators): Optional<SugarElement<HTMLTableRowElement>[]> {
+const copyRows = (table: SugarElement, target: TargetSelection, generators: Generators, useColumnGroups: boolean): Optional<SugarElement<HTMLTableRowElement>[]> => {
   const house = Warehouse.fromTable(table);
   const details = onCells(house, target);
-  return details.map(function (selectedCells) {
+  return details.map((selectedCells) => {
     const grid = Transitions.toGrid(house, generators, false);
     const slicedGrid = grid.slice(selectedCells[0].row, selectedCells[selectedCells.length - 1].row + selectedCells[selectedCells.length - 1].rowspan);
-    const slicedDetails = toDetailList(slicedGrid, generators);
+    const slicedDetails = toDetailList(slicedGrid, generators, useColumnGroups);
     return Redraw.copy(slicedDetails);
   });
 };

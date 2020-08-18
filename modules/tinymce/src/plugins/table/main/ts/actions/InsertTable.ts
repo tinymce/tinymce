@@ -10,7 +10,7 @@ import { TableRender } from '@ephox/snooker';
 import { Attribute, Html, SelectorFilter, SelectorFind } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { fireNewCell, fireNewRow } from '../api/Events';
-import { getDefaultAttributes, getDefaultStyles, getTableHeaderType, isPercentagesForced, isPixelsForced, isResponsiveForced } from '../api/Settings';
+import { getDefaultAttributes, getDefaultStyles, getTableHeaderType, isPercentagesForced, isPixelsForced, isResponsiveForced, getColumnGroupUsage } from '../api/Settings';
 import * as Util from '../core/Util';
 import { enforceNone, enforcePercentage, enforcePixels } from './EnforceUnit';
 
@@ -39,7 +39,8 @@ const insert = (editor: Editor, columns: number, rows: number, colHeaders: numbe
   const defaultStyles = getDefaultStyles(editor);
   const options: TableRender.RenderOptions = {
     styles: defaultStyles,
-    attributes: getDefaultAttributes(editor)
+    attributes: getDefaultAttributes(editor),
+    useColumnGroups: getColumnGroupUsage(editor)
   };
 
   const table = TableRender.render(rows, columns, rowHeaders, colHeaders, getTableHeaderType(editor), options);
@@ -50,11 +51,11 @@ const insert = (editor: Editor, columns: number, rows: number, colHeaders: numbe
 
   return SelectorFind.descendant<HTMLTableElement>(Util.getBody(editor), 'table[data-mce-id="__mce"]').map((table) => {
     if (isPixelsForced(editor)) {
-      enforcePixels(editor, table);
+      enforcePixels(editor, table, options);
     } else if (isResponsiveForced(editor)) {
       enforceNone(table);
     } else if (isPercentagesForced(editor) || isPercentage(defaultStyles.width)) {
-      enforcePercentage(editor, table);
+      enforcePercentage(editor, table, options);
     }
     Util.removeDataStyle(table);
     Attribute.remove(table, 'data-mce-id');

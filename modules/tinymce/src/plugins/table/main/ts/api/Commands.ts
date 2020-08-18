@@ -22,7 +22,7 @@ import * as CellDialog from '../ui/CellDialog';
 import { DomModifier } from '../ui/DomModifier';
 import * as RowDialog from '../ui/RowDialog';
 import * as TableDialog from '../ui/TableDialog';
-import { isPercentagesForced, isPixelsForced, isResponsiveForced } from './Settings';
+import { isPercentagesForced, isPixelsForced, isResponsiveForced, getColumnGroupUsage } from './Settings';
 
 const registerCommands = (editor: Editor, actions: TableActions, cellSelection: CellSelectionApi, selections: Selections, clipboard: Clipboard) => {
   const isRoot = Util.getIsRoot(editor);
@@ -48,12 +48,16 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
   const setSizingMode = (sizing: string) => TableSelection.getSelectionStartCellOrCaption(editor).each((cellOrCaption) => {
     // Do nothing if tables are forced to use a specific sizing mode
     const isForcedSizing = isResponsiveForced(editor) || isPixelsForced(editor) || isPercentagesForced(editor);
+    const options = {
+      useColumnGroups: getColumnGroupUsage(editor)
+    };
+
     if (!isForcedSizing) {
       TableLookup.table(cellOrCaption, isRoot).each((table) => {
         if (sizing === 'relative' && !Sizes.isPercentSizing(table)) {
-          enforcePercentage(editor, table);
+          enforcePercentage(editor, table, options);
         } else if (sizing === 'fixed' && !Sizes.isPixelSizing(table)) {
-          enforcePixels(editor, table);
+          enforcePixels(editor, table, options);
         } else if (sizing === 'responsive' && !Sizes.isNoneSizing(table)) {
           enforceNone(table);
         }
@@ -80,7 +84,7 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
     getTableFromCell(cell).bind((table) => {
       const targets = TableTargets.forMenu(selections, table, cell);
       const generators = TableFill.cellOperations(Fun.noop, SugarElement.fromDom(editor.getDoc()), Optional.none());
-      return CopyRows.copyRows(table, targets, generators);
+      return CopyRows.copyRows(table, targets, generators, getColumnGroupUsage(editor));
     }));
 
   const copyColSelection = () => TableSelection.getSelectionStartCell(editor).map((cell) =>

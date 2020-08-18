@@ -6,7 +6,7 @@ import { Warehouse } from 'ephox/snooker/model/Warehouse';
 
 UnitTest.test('BlocksTest', function () {
   const s = (fakeEle: any, rowspan: number, colspan: number) => Structs.detail(fakeEle as SugarElement, rowspan, colspan);
-  const f = (fakeEle: any, cells: Structs.Detail[], section: 'tbody' | 'thead' | 'tfoot') => Structs.rowdata(fakeEle as SugarElement, cells, section);
+  const f = (fakeEle: any, cells: Structs.Detail[], section: 'tbody' | 'thead' | 'tfoot') => Structs.rowdata(fakeEle as SugarElement, cells, section, false);
   const warehouse = Warehouse.generate([
     f('r1', [ s('a', 1, 1), s('b', 1, 2) ], 'thead'),
     f('r2', [ s('c', 2, 1), s('d', 1, 1), s('e', 1, 1) ], 'tbody'),

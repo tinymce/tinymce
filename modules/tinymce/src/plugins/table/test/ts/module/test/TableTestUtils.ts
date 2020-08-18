@@ -382,38 +382,38 @@ const sAssertDialogValues = (data, hasAdvanced, generalSelectors) => {
   return sAssertTabContents(data, generalSelectors);
 };
 
-const sAssertTableStructureWithSizes = (editor: Editor, cols: number, rows: number, unit: string | null, tableWidth: number | null, widths: Array<number | null>[],
-                                        options: { headerRows: number; headerCols: number } = { headerRows: 0, headerCols: 0 }) => GeneralSteps.sequence([
-  sAssertTableStructure(editor, ApproxStructure.build((s, str) => s.element('table', {
-    attrs: { border: str.is('1') },
-    styles: { 'border-collapse': str.is('collapse') },
-    children: [
-      s.element('tbody', {
-        children: Arr.range(rows, (rowIndex) => s.element('tr', {
-          children: Arr.range(cols, (colIndex) => s.element(colIndex < options.headerCols || rowIndex < options.headerRows ? 'th' : 'td', {
-            children: [
-              s.either([
-                s.element('br', { }),
-                s.text(str.contains('Cell'))
-              ])
-            ]
+const sAssertTableStructureWithSizes = (editor: Editor, cols: number, rows: number, unit: string | null, tableWidth: number | null, widths: Array<number | null>[], options: { headerRows: number; headerCols: number } = { headerRows: 0, headerCols: 0 }) =>
+  GeneralSteps.sequence([
+    sAssertTableStructure(editor, ApproxStructure.build((s, str) => s.element('table', {
+      attrs: { border: str.is('1') },
+      styles: { 'border-collapse': str.is('collapse') },
+      children: [
+        s.element('tbody', {
+          children: Arr.range(rows, (rowIndex) => s.element('tr', {
+            children: Arr.range(cols, (colIndex) => s.element(colIndex < options.headerCols || rowIndex < options.headerRows ? 'th' : 'td', {
+              children: [
+                s.either([
+                  s.element('br', { }),
+                  s.text(str.contains('Cell'))
+                ])
+              ]
+            }))
           }))
-        }))
-      })
-    ]
-  }))),
-  Step.sync(() => {
-    const table = editor.dom.select('table')[0];
-    assertWidth(editor, table, tableWidth, unit);
-    Arr.each(widths, (rowWidths, rowIndex) => {
-      const row = editor.dom.select('tr', table)[rowIndex];
-      Arr.each(rowWidths, (cellWidth, cellIndex) => {
-        const cell = editor.dom.select('td,th', row)[cellIndex];
-        assertWidth(editor, cell, cellWidth, unit);
+        })
+      ]
+    }))),
+    Step.sync(() => {
+      const table = editor.dom.select('table')[0];
+      assertWidth(editor, table, tableWidth, unit);
+      Arr.each(widths, (rowWidths, rowIndex) => {
+        const row = editor.dom.select('tr', table)[rowIndex];
+        Arr.each(rowWidths, (cellWidth, cellIndex) => {
+          const cell = editor.dom.select('td,th', row)[cellIndex];
+          assertWidth(editor, cell, cellWidth, unit);
+        });
       });
-    });
-  })
-]);
+    })
+  ]);
 
 export {
   sAssertDialogPresence,

@@ -12,16 +12,20 @@ import Editor from 'tinymce/core/api/Editor';
 import * as Direction from '../queries/Direction';
 import * as TableSize from '../queries/TableSize';
 
-const enforcePercentage = (editor: Editor, table: SugarElement<HTMLTableElement>) => {
+interface TableSetupOptions {
+  useColumnGroups: boolean;
+}
+
+const enforcePercentage = (editor: Editor, table: SugarElement<HTMLTableElement>, options: TableSetupOptions) => {
   const direction = TableDirection(Direction.directionAt);
   const tableSizing = TableSize.get(editor, table);
-  TableConversions.convertToPercentSize(table, direction, tableSizing);
+  TableConversions.convertToPercentSize(table, direction, tableSizing, options.useColumnGroups);
 };
 
-const enforcePixels = (editor: Editor, table: SugarElement<HTMLTableElement>) => {
+const enforcePixels = (editor: Editor, table: SugarElement<HTMLTableElement>, options: TableSetupOptions) => {
   const direction = TableDirection(Direction.directionAt);
   const tableSizing = TableSize.get(editor, table);
-  TableConversions.convertToPixelSize(table, direction, tableSizing);
+  TableConversions.convertToPixelSize(table, direction, tableSizing, options.useColumnGroups);
 };
 
 const enforceNone = TableConversions.convertToNoneSize;

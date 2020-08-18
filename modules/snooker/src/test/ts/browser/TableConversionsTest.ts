@@ -53,7 +53,7 @@ UnitTest.test('TableConversions.convertToPixelSize', () => {
 
   const check = (expectedTableWidth: string, expected: string[][], table: SugarElement<HTMLTableElement>, approx: boolean) => {
     Insert.append(container, table);
-    TableConversions.convertToPixelSize(table, ResizeDirection.ltr, TableSize.getTableSize(table));
+    TableConversions.convertToPixelSize(table, ResizeDirection.ltr, TableSize.getTableSize(table), false);
     if (approx) {
       Assert.eq('Assert table width', true, Math.abs(parseFloat(expectedTableWidth) - Width.get(table)) <= 2);
       assertApproxCellSizes(expected, readWidth(table), 2);
@@ -97,7 +97,7 @@ UnitTest.test('TableConversions.convertToPercentSize', () => {
 
   const check = (expectedTableWidth: string, expected: string[][], table: SugarElement<HTMLTableElement>, approx: boolean) => {
     Insert.append(container, table);
-    TableConversions.convertToPercentSize(table, ResizeDirection.ltr, TableSize.getTableSize(table));
+    TableConversions.convertToPercentSize(table, ResizeDirection.ltr, TableSize.getTableSize(table), false);
     if (approx) {
       const delta = parseFloat(expectedTableWidth) - parseFloat(Css.getRaw(table, 'width').getOrDie());
       Assert.eq('Assert table width', true, Math.abs(delta) <= 2);

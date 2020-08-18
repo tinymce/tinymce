@@ -22,6 +22,8 @@ const defaultStyles = {
   'width': '100%'
 };
 
+const columnGroupDefault = true;
+
 const determineDefaultStyles = (editor: Editor) => {
   if (isPixelsForced(editor)) {
     const editorWidth = editor.getBody().offsetWidth;
@@ -60,6 +62,7 @@ const isPixelsForced = (editor: Editor): boolean => getTableSizingMode(editor) =
 const isResponsiveForced = (editor: Editor): boolean => getTableSizingMode(editor) === 'responsive';
 const getToolbar = (editor: Editor): string => editor.getParam('table_toolbar', defaultTableToolbar);
 
+const getColumnGroupUsage = (editor: Editor): boolean => editor.getParam('table_col_group', columnGroupDefault, 'boolean');
 
 const getTableHeaderType = (editor: Editor): string => {
   const defaultValue = 'section';
@@ -71,7 +74,6 @@ const getTableHeaderType = (editor: Editor): string => {
     return value;
   }
 };
-
 
 const getColumnResizingBehaviour = (editor: Editor): 'preservetable' | 'resizetable' => {
   const validModes: Array<'preservetable' | 'resizetable'> = [ 'preservetable', 'resizetable' ];
@@ -117,5 +119,6 @@ export {
   isResponsiveForced,
   getToolbar,
   getTableHeaderType,
-  getColumnResizingBehaviour
+  getColumnResizingBehaviour,
+  getColumnGroupUsage
 };

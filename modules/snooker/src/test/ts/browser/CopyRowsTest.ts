@@ -17,7 +17,7 @@ UnitTest.test('CopyColumnsTest', () => {
 
     const rows = copyRows(table, {
       selection: [ Hierarchy.follow(table, [ section, row, column, 0 ]).getOrDie() ]
-    }, Bridge.generators).getOrDie();
+    }, Bridge.generators, false).getOrDie();
     const copiedHtml = Arr.map(rows, Html.getOuter).join('');
 
     Assert.eq('Copied HTML should match', expectedHtml, copiedHtml);

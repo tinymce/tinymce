@@ -107,7 +107,7 @@ UnitTest.test('Table Sizes Test (fusebox)', function () {
 
   const checkWidth = function (expected: string[][], table: SugarElement, newWidth: string) {
     Insert.append(SugarBody.body(), table);
-    Sizes.redistribute(table, Optional.some(newWidth), Optional.none(), ResizeDirection.ltr, TableSize.getTableSize(table));
+    Sizes.redistribute(table, Optional.some(newWidth), Optional.none(), ResizeDirection.ltr, TableSize.getTableSize(table), false);
     assert.eq(expected, readWidth(table));
     Remove.remove(table);
   };
@@ -119,7 +119,7 @@ UnitTest.test('Table Sizes Test (fusebox)', function () {
 
   const checkHeight = function (expected: string[][], table: SugarElement, newHeight: string) {
     Insert.append(SugarBody.body(), table);
-    Sizes.redistribute(table, Optional.none(), Optional.some(newHeight), ResizeDirection.ltr, TableSize.getTableSize(table));
+    Sizes.redistribute(table, Optional.none(), Optional.some(newHeight), ResizeDirection.ltr, TableSize.getTableSize(table), false);
     assert.eq(expected, readHeight(table));
     Remove.remove(table);
   };

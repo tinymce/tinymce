@@ -232,7 +232,7 @@ Ready.execute(function () {
     gap
   };
 
-  const runOperation = function (operation: (wire: ResizeWire, table: SugarElement, target: TargetElement & TargetSelection, generators: Generators, direction: BarPositions<ColInfo>, tableSize: TableSize) => Optional<RunOperationOutput>) {
+  const runOperation = function (operation: (wire: ResizeWire, table: SugarElement, target: TargetElement & TargetSelection, generators: Generators, direction: BarPositions<ColInfo>, useColumnGroup: boolean, tableSize: TableSize) => Optional<RunOperationOutput>) {
     return function (_event: EventArgs) {
       detection().each(function (start) {
         const dir = Direction.getDirection(start);
@@ -245,7 +245,7 @@ Ready.execute(function () {
         // wire, table, target, generators, direction
         const table = SelectorFind.ancestor(start, 'table').getOrDie() as SugarElement<HTMLTableElement>;
         const tableSize = TableSize.getTableSize(table);
-        operation(ResizeWire.only(ephoxUi), table, target, generators, direction, tableSize);
+        operation(ResizeWire.only(ephoxUi), table, target, generators, direction, false, tableSize);
       });
     };
   };

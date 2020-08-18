@@ -35,7 +35,7 @@ UnitTest.asynctest('RenderTest', (success, failure) => {
       })), table);
     })),
     Logger.t('Render table with everything disabled', Step.sync(() => {
-      const table = Render.render(1, 2, 0, 0, 'cells', { styles: { width: '50%', height: '100px' }, attributes: {}});
+      const table = Render.render(1, 2, 0, 0, 'cells', { styles: { width: '50%', height: '100px' }, attributes: {}, useColumnGroups: false });
 
       Assertions.assertStructure('Should be a table with styles', ApproxStructure.build((s, str, _arr) => s.element('table', {
         styles: {
@@ -71,7 +71,7 @@ UnitTest.asynctest('RenderTest', (success, failure) => {
       })), table);
     })),
     Logger.t('Render table with attributes', Step.sync(() => {
-      const table = Render.render(1, 2, 0, 0, 'cells', { styles: {}, attributes: { border: '1', class: 'myclass' }});
+      const table = Render.render(1, 2, 0, 0, 'cells', { styles: {}, attributes: { border: '1', class: 'myclass' }, useColumnGroups: false });
 
       Assertions.assertStructure('Should be a table with styles', ApproxStructure.build((s, str, _arr) => s.element('table', {
         styles: {
@@ -111,7 +111,7 @@ UnitTest.asynctest('RenderTest', (success, failure) => {
       })), table);
     })),
     Logger.t('Render table with everything disabled', Step.sync(() => {
-      const table = Render.render(1, 2, 0, 0, 'cells', { styles: {}, attributes: {}});
+      const table = Render.render(1, 2, 0, 0, 'cells', { styles: {}, attributes: {}, useColumnGroups: false });
 
       Assertions.assertStructure('Should be a table with default styles/attributes', ApproxStructure.build((s, str, _arr) => s.element('table', {
         styles: {

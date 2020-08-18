@@ -28,6 +28,8 @@ const cell = (element: SugarElement, isRoot?: (e: SugarElement) => boolean) => l
 
 const cells = (ancestor: SugarElement): SugarElement<HTMLTableCellElement>[] => LayerSelector.firstLayer(ancestor, 'th,td');
 
+const groups = (ancestor: SugarElement): SugarElement<HTMLTableColElement>[] => LayerSelector.firstLayer(ancestor, 'col');
+
 const notCell = (element: SugarElement, isRoot?: (e: SugarElement) => boolean) => lookup<Element>([ 'caption', 'tr', 'tbody', 'tfoot', 'thead' ], element, isRoot);
 
 const neighbours = <T extends Element = Element> (selector: string) => (element: SugarElement): Optional<SugarElement<T>[]> =>
@@ -43,6 +45,8 @@ const table = (element: SugarElement, isRoot?: (e: SugarElement) => boolean) => 
 const row = (element: SugarElement, isRoot?: (e: SugarElement) => boolean) => lookup<HTMLTableRowElement>([ 'tr' ], element, isRoot);
 
 const rows = (ancestor: SugarElement): SugarElement<HTMLTableRowElement>[] => LayerSelector.firstLayer(ancestor, 'tr');
+
+const columnGroups = (ancestor: SugarElement): SugarElement<HTMLElement>[] => LayerSelector.firstLayer(ancestor, 'colGroup');
 
 const attr = (element: SugarElement, property: string) => getAttrValue(element, property);
 
@@ -63,5 +67,7 @@ export {
   notCell,
   neighbourRows,
   attr,
-  grid
+  grid,
+  columnGroups,
+  groups
 };

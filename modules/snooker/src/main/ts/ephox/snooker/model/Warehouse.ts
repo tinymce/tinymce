@@ -7,6 +7,7 @@ export interface Warehouse {
   readonly grid: Structs.Grid;
   readonly access: Record<string, Structs.DetailExt>;
   readonly all: Structs.RowData<Structs.DetailExt>[];
+  readonly groups: SugarElement[];
 }
 
 const key = function (row: number, column: number) {
@@ -37,7 +38,7 @@ const filterItems = function (warehouse: Warehouse, predicate: (x: Structs.Detai
  *  2. a data structure which can efficiently identify which cell is in which row,column position
  *  3. a list of all cells in order left-to-right, top-to-bottom
  */
-const generate = function <T extends Structs.Detail> (list: Structs.RowData<T>[]): Warehouse {
+const generate = <T extends Structs.Detail> (list: Structs.RowData<T>[]): Warehouse => {
   // list is an array of objects, made by cells and elements
   // elements: is the TR
   // cells: is an array of objects representing the cells in the row.
@@ -47,37 +48,42 @@ const generate = function <T extends Structs.Detail> (list: Structs.RowData<T>[]
   //          rowspan (merge cols)
   const access: Record<string, Structs.DetailExt> = {};
   const cells: Structs.RowData<Structs.DetailExt>[] = [];
+  const groups: SugarElement[] = [];
 
   const maxRows = list.length;
   let maxColumns = 0;
 
-  Arr.each(list, function (details, r) {
+  Arr.each(list, (rowData, rowIndex) => {
     const currentRow: Structs.DetailExt[] = [];
-    Arr.each(details.cells, function (detail) {
+    Arr.each(rowData.cells, (detail) => {
       let start = 0;
 
       // If this spot has been taken by a previous rowspan, skip it.
-      while (access[key(r, start)] !== undefined) {
+      while (access[key(rowIndex, start)] !== undefined) {
         start++;
       }
 
-      const current = Structs.extended(detail.element, detail.rowspan, detail.colspan, r, start);
+      const current = Structs.extended(detail.element, detail.rowspan, detail.colspan, rowIndex, start);
 
       // Occupy all the (row, column) positions that this cell spans for.
-      for (let i = 0; i < detail.colspan; i++) {
-        for (let j = 0; j < detail.rowspan; j++) {
-          const cr = r + j;
-          const cc = start + i;
-          const newpos = key(cr, cc);
+      for (let occupiedColumnPosition = 0; occupiedColumnPosition < detail.colspan; occupiedColumnPosition++) {
+        for (let occupiedRowPosition = 0; occupiedRowPosition < detail.rowspan; occupiedRowPosition++) {
+          const rowPosition = rowIndex + occupiedRowPosition;
+          const columnPosition = start + occupiedColumnPosition;
+          const newpos = key(rowPosition, columnPosition);
           access[newpos] = current;
-          maxColumns = Math.max(maxColumns, cc + 1);
+          maxColumns = Math.max(maxColumns, columnPosition + 1);
         }
       }
 
       currentRow.push(current);
     });
 
-    cells.push(Structs.rowdata(details.element, currentRow, details.section));
+    if (rowData.isColumnGroup) {
+      groups.push(rowData.element);
+    } else {
+      cells.push(Structs.rowdata(rowData.element, currentRow, rowData.section, false));
+    }
   });
 
   const grid = Structs.grid(maxRows, maxColumns);
@@ -85,7 +91,8 @@ const generate = function <T extends Structs.Detail> (list: Structs.RowData<T>[]
   return {
     grid,
     access,
-    all: cells
+    all: cells,
+    groups
   };
 };
 
@@ -100,11 +107,18 @@ const justCells = function (warehouse: Warehouse) {
   return Arr.flatten(rows);
 };
 
+const justColGroups = (warehouse: Warehouse) => {
+  const groups = Arr.map(warehouse.groups, (group) => group);
+
+  return groups;
+};
+
 export const Warehouse = {
   fromTable,
   generate,
   getAt,
   findItem,
   filterItems,
-  justCells
+  justCells,
+  justColGroups
 };
