@@ -6,6 +6,7 @@
  */
 
 import DOMUtils from '../api/dom/DOMUtils';
+import * as NodeType from '../dom/NodeType';
 import { Formats } from '../api/fmt/Format';
 import Tools from '../api/util/Tools';
 
@@ -161,12 +162,12 @@ const get = function (dom: DOMUtils) {
 
     link: {
       inline: 'a', selector: 'a', remove: 'all', split: true, deep: true,
-      onmatch() {
-        return true;
+      onmatch(node, _fmt, _itemName) {
+        return NodeType.isElement(node) && node.hasAttribute('href');
       },
 
-      onformat(elm, fmt, vars) {
-        Tools.each(vars, function (value, key) {
+      onformat(elm, _fmt, vars) {
+        Tools.each(vars, (value, key) => {
           dom.setAttrib(elm, key, value);
         });
       }
