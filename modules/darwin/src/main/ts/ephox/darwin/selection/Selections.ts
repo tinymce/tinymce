@@ -8,9 +8,9 @@ export interface Selections {
 }
 
 export const Selections = (lazyRoot: () => SugarElement<Element>, getStart: () => Optional<SugarElement<HTMLTableCellElement | HTMLTableCaptionElement>>, selectedSelector: string): Selections => {
-  const get = () => TableSelection.retrieve(lazyRoot(), selectedSelector).fold(
+  const get = () => TableSelection.retrieve<HTMLTableCellElement>(lazyRoot(), selectedSelector).fold(
     () => getStart().map(SelectionTypes.single).getOrThunk(SelectionTypes.none),
-    (cells: SugarElement<Element>[]) => SelectionTypes.multiple(cells)
+    (cells: SugarElement<HTMLTableCellElement>[]) => SelectionTypes.multiple(cells)
   );
 
   return {

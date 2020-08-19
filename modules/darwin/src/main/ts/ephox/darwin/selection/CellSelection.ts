@@ -73,9 +73,9 @@ const identify = function (start: SugarElement, finish: SugarElement, isRoot?: (
   }
 };
 
-const retrieve = function (container: SugarElement<Node>, selector: string) {
-  const sels = SelectorFilter.descendants(container, selector);
-  return sels.length > 0 ? Optional.some(sels) : Optional.none<SugarElement<Element>[]>();
+const retrieve = function <T extends Element> (container: SugarElement<Node>, selector: string): Optional<SugarElement<T>[]> {
+  const sels = SelectorFilter.descendants<T>(container, selector);
+  return sels.length > 0 ? Optional.some(sels) : Optional.none<SugarElement<T>[]>();
 };
 
 const getLast = function (boxes: SugarElement[], lastSelectedSelector: string) {
