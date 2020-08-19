@@ -103,7 +103,7 @@ const findInWarehouse = (warehouse: Warehouse, element: SugarElement): Optional<
 type EqEle = (e1: SugarElement, e2: SugarElement) => boolean;
 type Operation<INFO, GW extends GeneratorsWrapper> = (model: Structs.RowCells[], info: INFO, eq: EqEle, w: GW) => TableOperationResult;
 type Extract<RAW, INFO> = (warehouse: Warehouse, target: RAW) => Optional<INFO>;
-type Adjustment = <T extends Structs.DetailNew>(table: SugarElement, grid: Structs.RowDataNew<T>[], direction: BarPositions<ColInfo>, tableSize: TableSize) => void;
+type Adjustment = <T extends Structs.DetailNew>(table: SugarElement, grid: Structs.RowDataNew<T>[], tableSize: TableSize) => void;
 type PostAction = (e: SugarElement) => void;
 type GenWrap<GW extends GeneratorsWrapper> = (g: Generators) => GW;
 
@@ -126,7 +126,7 @@ const run = <RAW, INFO, GW extends GeneratorsWrapper>
     return output.fold(() => Optional.none<RunOperationOutput>(), (out) => {
       const newElements = Redraw.render(table, out.grid);
       const tableSizing = Optional.from(sizing).getOrThunk(() => TableSize.getTableSize(table));
-      adjustment(table, out.grid, direction, tableSizing);
+      adjustment(table, out.grid, tableSizing);
       postAction(table);
       Bars.refresh(wire, table, BarPositions.height, direction);
       return Optional.some({

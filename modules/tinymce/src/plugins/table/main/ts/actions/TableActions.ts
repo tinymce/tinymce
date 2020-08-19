@@ -8,7 +8,7 @@
 import { Selections } from '@ephox/darwin';
 import { Arr, Fun, Obj, Optional } from '@ephox/katamari';
 import { DomDescent } from '@ephox/phoenix';
-import { CellMutations, Direction, ResizeWire, RunOperation, TableDirection, TableFill, TableGridSize, TableOperations } from '@ephox/snooker';
+import { CellMutations, ResizeWire, RunOperation, TableDirection, TableFill, TableGridSize, TableOperations } from '@ephox/snooker';
 import { SugarElement, SugarNode } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { fireNewCell, fireNewRow } from '../api/Events';
@@ -65,10 +65,9 @@ export const TableActions = (editor: Editor, lazyWire: () => ResizeWire, selecti
       Util.removeDataStyle(table);
       const wire = lazyWire();
       const doc = SugarElement.fromDom(editor.getDoc());
-      const direction = TableDirection(Direction.directionAt);
       const generators = TableFill.cellOperations(mutate, doc, cloneFormats);
       const sizing = TableSize.get(editor, table);
-      return guard(table) ? operation(wire, table, target, generators, direction, sizing).bind((result) => {
+      return guard(table) ? operation(wire, table, target, generators, TableDirection, sizing).bind((result) => {
         Arr.each(result.newRows, (row) => {
           fireNewRow(editor, row.dom);
         });

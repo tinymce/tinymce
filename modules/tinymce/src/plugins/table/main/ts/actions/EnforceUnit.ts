@@ -6,21 +6,19 @@
  */
 
 import { Arr } from '@ephox/katamari';
-import { TableConversions, TableDirection, TableLookup, Direction } from '@ephox/snooker';
+import { TableConversions, TableLookup } from '@ephox/snooker';
 import { Attribute, Css, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import * as TableSize from '../queries/TableSize';
 
 const enforcePercentage = (editor: Editor, table: SugarElement<HTMLTableElement>) => {
-  const direction = TableDirection(Direction.directionAt);
   const tableSizing = TableSize.get(editor, table);
-  TableConversions.convertToPercentSize(table, direction, tableSizing);
+  TableConversions.convertToPercentSize(table, tableSizing);
 };
 
 const enforcePixels = (editor: Editor, table: SugarElement<HTMLTableElement>) => {
-  const direction = TableDirection(Direction.directionAt);
   const tableSizing = TableSize.get(editor, table);
-  TableConversions.convertToPixelSize(table, direction, tableSizing);
+  TableConversions.convertToPixelSize(table, tableSizing);
 };
 
 const enforceNone = TableConversions.convertToNoneSize;
@@ -34,9 +32,5 @@ const syncPixels = (table: SugarElement<HTMLTableElement>) => {
   });
 };
 
-export {
-  enforcePercentage,
-  enforcePixels,
-  enforceNone,
-  syncPixels
-};
+export { enforcePercentage, enforcePixels, enforceNone, syncPixels };
+

@@ -8,8 +8,8 @@
 import { InputHandlers, Response, SelectionAnnotation, SelectionKeys } from '@ephox/darwin';
 import { Cell, Fun, Optional } from '@ephox/katamari';
 import { DomParent } from '@ephox/robin';
-import { Direction, OtherCells, TableFill, TableLookup, TableResize } from '@ephox/snooker';
-import { Class, Compare, DomEvent, EventArgs, SelectionDirection, SimSelection, SugarElement, SugarNode } from '@ephox/sugar';
+import { OtherCells, TableFill, TableLookup, TableResize } from '@ephox/snooker';
+import { Class, Compare, DomEvent, EventArgs, SelectionDirection, SimSelection, SugarElement, SugarNode, Direction } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
@@ -98,10 +98,9 @@ export default function (editor: Editor, lazyResize: () => Optional<TableResize>
       lazyResize().each((resize) => resize.hideBars());
 
       const rng = editor.selection.getRng();
-      const startContainer = SugarElement.fromDom(editor.selection.getStart());
       const start = SugarElement.fromDom(rng.startContainer);
       const end = SugarElement.fromDom(rng.endContainer);
-      const direction = Direction.directionAt(startContainer).isRtl() ? SelectionKeys.rtl : SelectionKeys.ltr;
+      const direction = Direction.onDirection(SelectionKeys.ltr, SelectionKeys.rtl)(SugarElement.fromDom(editor.selection.getStart()));
       keyHandlers.keydown(wrappedEvent, start, rng.startOffset, end, rng.endOffset, direction).each((response) => {
         handleResponse(wrappedEvent, response);
       });

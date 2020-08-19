@@ -6,7 +6,7 @@
  */
 
 import { Optional } from '@ephox/katamari';
-import { ResizeBehaviour, ResizeWire, Sizes, TableDirection, TableResize, Direction } from '@ephox/snooker';
+import { ResizeBehaviour, ResizeWire, Sizes, TableResize } from '@ephox/snooker';
 import { Css, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import * as Events from '../api/Events';
@@ -52,13 +52,12 @@ export const getResizeHandler = function (editor: Editor): ResizeHandler {
   };
 
   editor.on('init', function () {
-    const direction = TableDirection(Direction.directionAt);
     const rawWire = TableWire.get(editor);
     wire = Optional.some(rawWire);
     if (Settings.hasObjectResizing(editor) && Settings.hasTableResizeBars(editor)) {
       const lazySizing = (table: SugarElement<HTMLTableElement>) => TableSize.get(editor, table);
       const resizing = Settings.getColumnResizingBehaviour(editor) === 'resizetable' ? ResizeBehaviour.resizeTable() : ResizeBehaviour.preserveTable();
-      const sz = TableResize.create(rawWire, direction, resizing, lazySizing);
+      const sz = TableResize.create(rawWire, resizing, lazySizing);
       sz.on();
       sz.events.startDrag.bind(function (_event) {
         selectionRng = Optional.some(editor.selection.getRng());
