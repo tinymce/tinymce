@@ -12,13 +12,13 @@ Open a console and go to the project directory.
 ```
 $ cd tinymce/
 ```
-Install `grunt` command line tool globally.
+Install the `yarn` and `grunt` command line tools globally.
 ```
-$ npm i -g grunt-cli
+$ npm i -g yarn grunt-cli
 ```
 Install all package dependencies.
 ```
-$ npm install
+$ yarn
 ```
 Now, build TinyMCE by using `grunt`.
 ```
