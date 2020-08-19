@@ -1,6 +1,5 @@
 import { Arr, Fun, Optional } from '@ephox/katamari';
-import { Height, SugarElement, SugarLocation, Width, Direction } from '@ephox/sugar';
-import { ResizeDirection } from '../api/ResizeDirection';
+import { Direction, Height, SugarElement, SugarLocation, Width } from '@ephox/sugar';
 
 export interface RowInfo {
   readonly row: number;
@@ -94,17 +93,13 @@ const rtl: BarPositions<ColInfo> = {
   positions: (optElements: Optional<SugarElement>[]) => findPositions(getRightEdge, getLeftEdge, optElements)
 };
 
-const detect = Direction.onDirection(ResizeDirection.ltr, ResizeDirection.rtl);
+const detect = Direction.onDirection(ltr, rtl);
 
-const auto: BarPositions<ColInfo> = {
+const width: BarPositions<ColInfo> = {
   delta: (amount: number, table: SugarElement) => detect(table).delta(amount, table),
   positions: (cols: Optional<SugarElement>[], table: SugarElement) => detect(table).positions(cols, table),
   edge: (cell: SugarElement) => detect(cell).edge(cell)
 };
 
-export {
-  height,
-  rtl,
-  ltr,
-  auto
-};
+export { height, width, rtl, ltr };
+

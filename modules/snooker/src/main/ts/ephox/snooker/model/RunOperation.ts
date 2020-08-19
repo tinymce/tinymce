@@ -7,7 +7,6 @@ import * as TableLookup from '../api/TableLookup';
 import { TableOperationResult } from '../api/TableOperations';
 import { TableSize } from '../api/TableSize';
 import * as Redraw from '../operate/Redraw';
-import * as BarPositions from '../resize/BarPositions';
 import * as Bars from '../resize/Bars';
 import * as Transitions from './Transitions';
 import { Warehouse } from './Warehouse';
@@ -15,8 +14,6 @@ import { Warehouse } from './Warehouse';
 type DetailExt = Structs.DetailExt;
 type DetailNew = Structs.DetailNew;
 type RowDataNew<A> = Structs.RowDataNew<A>;
-type ColInfo = BarPositions.ColInfo;
-type BarPositions<A> = BarPositions.BarPositions<A>;
 
 export interface RunOperationOutput {
   readonly cursor: Optional<SugarElement>;
@@ -107,11 +104,11 @@ type Adjustment = <T extends Structs.DetailNew>(table: SugarElement, grid: Struc
 type PostAction = (e: SugarElement) => void;
 type GenWrap<GW extends GeneratorsWrapper> = (g: Generators) => GW;
 
-export type OperationCallback<T> = (wire: ResizeWire, table: SugarElement<HTMLTableElement>, target: T, generators: Generators, direction: BarPositions<ColInfo>, sizing?: TableSize) => Optional<RunOperationOutput>;
+export type OperationCallback<T> = (wire: ResizeWire, table: SugarElement<HTMLTableElement>, target: T, generators: Generators, sizing?: TableSize) => Optional<RunOperationOutput>;
 
 const run = <RAW, INFO, GW extends GeneratorsWrapper>
 (operation: Operation<INFO, GW>, extract: Extract<RAW, INFO>, adjustment: Adjustment, postAction: PostAction, genWrappers: GenWrap<GW>): OperationCallback<RAW> =>
-  (wire: ResizeWire, table: SugarElement, target: RAW, generators: Generators, direction: BarPositions<ColInfo>, sizing?: TableSize): Optional<RunOperationOutput> => {
+  (wire: ResizeWire, table: SugarElement, target: RAW, generators: Generators, sizing?: TableSize): Optional<RunOperationOutput> => {
     const warehouse = Warehouse.fromTable(table);
     const output = extract(warehouse, target).map((info) => {
       const model = fromWarehouse(warehouse, generators);
@@ -128,7 +125,7 @@ const run = <RAW, INFO, GW extends GeneratorsWrapper>
       const tableSizing = Optional.from(sizing).getOrThunk(() => TableSize.getTableSize(table));
       adjustment(table, out.grid, tableSizing);
       postAction(table);
-      Bars.refresh(wire, table, BarPositions.height, direction);
+      Bars.refresh(wire, table);
       return Optional.some({
         cursor: out.cursor,
         newRows: newElements.newRows,
@@ -172,13 +169,5 @@ const onCells = (warehouse: Warehouse, target: TargetSelection): Optional<Detail
   return cells.length > 0 ? Optional.some(cells) : Optional.none();
 };
 
-export {
-  run,
-  toDetailList,
-  onCell,
-  onCells,
-  onPaste,
-  onPasteByEditor,
-  onMergable,
-  onUnmergable
-};
+export { run, toDetailList, onCell, onCells, onPaste, onPasteByEditor, onMergable, onUnmergable };
+

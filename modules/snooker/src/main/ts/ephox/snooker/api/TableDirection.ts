@@ -1,3 +1,3 @@
-import { auto, BarPositions, ColInfo } from '../resize/BarPositions';
+import { width, height } from '../resize/BarPositions';
 
-export const TableDirection: BarPositions<ColInfo> = auto;
+export { height, width };

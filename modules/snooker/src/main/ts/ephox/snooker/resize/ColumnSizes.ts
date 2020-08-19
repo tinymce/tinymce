@@ -5,7 +5,7 @@ import * as Blocks from '../lookup/Blocks';
 import { Warehouse } from '../model/Warehouse';
 import * as CellUtils from '../util/CellUtils';
 import * as Util from '../util/Util';
-import { auto, BarPositions, RowInfo } from './BarPositions';
+import { width, BarPositions, RowInfo } from './BarPositions';
 import * as Sizes from './Sizes';
 
 const getRaw = function (cell: SugarElement, property: string, getter: (e: SugarElement) => number) {
@@ -28,7 +28,7 @@ const getWidthFrom = function <T> (warehouse: Warehouse, getWidth: (cell: SugarE
   const columns = Blocks.columns(warehouse);
 
   const backups = Arr.map(columns, function (cellOption) {
-    return cellOption.map(auto.edge);
+    return cellOption.map(width.edge);
   });
 
   return Arr.map(columns, function (cellOption, c) {

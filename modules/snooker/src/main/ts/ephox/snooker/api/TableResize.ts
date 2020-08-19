@@ -43,8 +43,8 @@ export interface TableResize {
 
 const create = (wire: ResizeWire, resizing: ResizeBehaviour, lazySizing: (element: SugarElement<HTMLTableElement>) => TableSize): TableResize => {
   const hdirection = BarPositions.height;
-  const vdirection = BarPositions.auto;
-  const manager = BarManager(wire, vdirection, hdirection);
+  const vdirection = BarPositions.width;
+  const manager = BarManager(wire);
 
   const events = Events.create({
     beforeResize: Event([ 'table' ]),
