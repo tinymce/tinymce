@@ -1,7 +1,6 @@
 import { Cell, Fun } from '@ephox/katamari';
 import { SugarElement, Width } from '@ephox/sugar';
 import { Warehouse } from '../model/Warehouse';
-import { BarPositions, ColInfo } from '../resize/BarPositions';
 import * as ColumnSizes from '../resize/ColumnSizes';
 import * as Sizes from '../resize/Sizes';
 import * as CellUtils from '../util/CellUtils';
@@ -9,7 +8,7 @@ import * as CellUtils from '../util/CellUtils';
 export interface TableSize {
   readonly width: () => number;
   readonly pixelWidth: () => number;
-  readonly getWidths: (warehouse: Warehouse, direction: BarPositions<ColInfo>, tableSize: TableSize) => number[];
+  readonly getWidths: (warehouse: Warehouse, tableSize: TableSize) => number[];
   readonly getCellDelta: (delta: number) => number;
   readonly singleColumnWidth: (w: number, delta: number) => number[];
   readonly minCellWidth: () => number;

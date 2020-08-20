@@ -5,18 +5,18 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Selections } from '@ephox/darwin';
 import { Arr, Fun, Obj, Optional } from '@ephox/katamari';
 import { DomDescent } from '@ephox/phoenix';
-import { CellMutations, ResizeWire, RunOperation, TableDirection, TableFill, TableGridSize, TableOperations } from '@ephox/snooker';
+import { CellMutations, ResizeWire, RunOperation, TableFill, TableGridSize, TableOperations } from '@ephox/snooker';
 import { SugarElement, SugarNode } from '@ephox/sugar';
-
 import Editor from 'tinymce/core/api/Editor';
 import { fireNewCell, fireNewRow } from '../api/Events';
 import { getCloneElements } from '../api/Settings';
 import { getRowType, switchCellType, switchSectionType } from '../core/TableSections';
 import * as Util from '../core/Util';
-import * as Direction from '../queries/Direction';
 import * as TableSize from '../queries/TableSize';
+import { ephemera } from '../selection/Ephemera';
 import { getCellsFromSelection, getRowsFromSelection } from '../selection/TableSelection';
 
 type TableAction<T> = (table: SugarElement<HTMLTableElement>, target: T) => Optional<Range>;
@@ -49,7 +49,7 @@ export interface TableActions {
   getTableColType: (table: SugarElement<HTMLTableElement>, target: RunOperation.TargetSelection) => string;
 }
 
-export const TableActions = (editor: Editor, lazyWire: () => ResizeWire): TableActions => {
+export const TableActions = (editor: Editor, lazyWire: () => ResizeWire, selections: Selections): TableActions => {
   const isTableBody = (editor: Editor) => SugarNode.name(Util.getBody(editor)) === 'table';
 
   const lastRowGuard = (table: SugarElement<HTMLTableElement>) => isTableBody(editor) === false || TableGridSize.getGridSize(table).rows > 1;
@@ -65,10 +65,9 @@ export const TableActions = (editor: Editor, lazyWire: () => ResizeWire): TableA
       Util.removeDataStyle(table);
       const wire = lazyWire();
       const doc = SugarElement.fromDom(editor.getDoc());
-      const direction = TableDirection(Direction.directionAt);
       const generators = TableFill.cellOperations(mutate, doc, cloneFormats);
       const sizing = TableSize.get(editor, table);
-      return guard(table) ? operation(wire, table, target, generators, direction, sizing).bind((result) => {
+      return guard(table) ? operation(wire, table, target, generators, sizing).bind((result) => {
         Arr.each(result.newRows, (row) => {
           fireNewRow(editor, row.dom);
         });
@@ -116,21 +115,22 @@ export const TableActions = (editor: Editor, lazyWire: () => ResizeWire): TableA
 
   const setTableCellType = (editor: Editor, args: Record<string, any>) =>
     extractType(args, [ 'td', 'th' ]).each((type) => {
-      switchCellType(editor.dom, getCellsFromSelection(editor), type, null);
+      const cells = Arr.map(getCellsFromSelection(Util.getSelectionStart(editor), selections), (c) => c.dom);
+      switchCellType(editor.dom, cells, type, null);
     });
 
   const setTableRowType = (editor: Editor, args: Record<string, any>) =>
     extractType(args, [ 'header', 'body', 'footer' ]).each((type) => {
-      Arr.map(getRowsFromSelection(editor), (row) => switchSectionType(editor, row, type));
+      Arr.map(getRowsFromSelection(Util.getSelectionStart(editor), ephemera.selected), (row) => switchSectionType(editor, row.dom, type));
     });
 
   const makeColumnHeader = execute(TableOperations.makeColumnHeader, Fun.always, Fun.noop, lazyWire);
   const unmakeColumnHeader = execute(TableOperations.unmakeColumnHeader, Fun.always, Fun.noop, lazyWire);
 
   const getTableRowType = (editor: Editor): 'header' | 'body' | 'footer' | '' => {
-    const rows = getRowsFromSelection(editor);
+    const rows = getRowsFromSelection(Util.getSelectionStart(editor), ephemera.selected);
     if (rows.length > 0) {
-      const rowTypes = Arr.map(rows, (r) => getRowType(editor, r));
+      const rowTypes = Arr.map(rows, (r) => getRowType(editor, r.dom));
       const hasHeader = Arr.contains(rowTypes, 'header');
       const hasFooter = Arr.contains(rowTypes, 'footer');
       if (!hasHeader && !hasFooter) {
@@ -149,7 +149,7 @@ export const TableActions = (editor: Editor, lazyWire: () => ResizeWire): TableA
   };
 
   const getTableCellType = (editor: Editor) =>
-    TableOperations.getCellsType(getCellsFromSelection(editor), (cell) => Util.getNodeName(cell) === 'th').getOr('');
+    TableOperations.getCellsType(getCellsFromSelection(Util.getSelectionStart(editor), selections), (cell) => SugarNode.name(cell) === 'th').getOr('');
 
   const getTableColType = TableOperations.getColumnType;
 

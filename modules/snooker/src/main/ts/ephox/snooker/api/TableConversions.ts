@@ -1,6 +1,5 @@
 import { Arr, Optional } from '@ephox/katamari';
 import { Attribute, Css, SugarElement } from '@ephox/sugar';
-import { BarPositions, ColInfo } from '../resize/BarPositions';
 import * as Sizes from '../resize/Sizes';
 import { redistribute } from './Sizes';
 import * as TableLookup from './TableLookup';
@@ -11,15 +10,15 @@ const cleanupLegacyAttributes = (element: SugarElement<HTMLElement>) => {
   Attribute.remove(element, 'width');
 };
 
-const convertToPercentSize = (table: SugarElement<HTMLTableElement>, direction: BarPositions<ColInfo>, tableSize: TableSize) => {
+const convertToPercentSize = (table: SugarElement<HTMLTableElement>, tableSize: TableSize) => {
   const newWidth = Sizes.getPercentTableWidth(table);
-  redistribute(table, Optional.some(newWidth), Optional.none(), direction, tableSize);
+  redistribute(table, Optional.some(newWidth), Optional.none(), tableSize);
   cleanupLegacyAttributes(table);
 };
 
-const convertToPixelSize = (table: SugarElement<HTMLTableElement>, direction: BarPositions<ColInfo>, tableSize: TableSize) => {
+const convertToPixelSize = (table: SugarElement<HTMLTableElement>, tableSize: TableSize) => {
   const newWidth = Sizes.getPixelTableWidth(table);
-  redistribute(table, Optional.some(newWidth), Optional.none(), direction, tableSize);
+  redistribute(table, Optional.some(newWidth), Optional.none(), tableSize);
   cleanupLegacyAttributes(table);
 };
 
@@ -32,8 +31,5 @@ const convertToNoneSize = (table: SugarElement<HTMLTableElement>) => {
   cleanupLegacyAttributes(table);
 };
 
-export {
-  convertToPixelSize,
-  convertToPercentSize,
-  convertToNoneSize
-};
+export { convertToPixelSize, convertToPercentSize, convertToNoneSize };
+

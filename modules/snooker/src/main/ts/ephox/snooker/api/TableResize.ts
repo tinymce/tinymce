@@ -7,7 +7,6 @@ import { ResizeBehaviour } from './ResizeBehaviour';
 import { ResizeWire } from './ResizeWire';
 import { TableSize } from './TableSize';
 
-type ColInfo = BarPositions.ColInfo;
 type BarPositions<A> = BarPositions.BarPositions<A>;
 
 export interface BeforeTableResizeEvent {
@@ -42,9 +41,10 @@ export interface TableResize {
   readonly events: TableResizeEventRegistry;
 }
 
-const create = (wire: ResizeWire, vdirection: BarPositions<ColInfo>, resizing: ResizeBehaviour, lazySizing: (element: SugarElement<HTMLTableElement>) => TableSize): TableResize => {
+const create = (wire: ResizeWire, resizing: ResizeBehaviour, lazySizing: (element: SugarElement<HTMLTableElement>) => TableSize): TableResize => {
   const hdirection = BarPositions.height;
-  const manager = BarManager(wire, vdirection, hdirection);
+  const vdirection = BarPositions.width;
+  const manager = BarManager(wire);
 
   const events = Events.create({
     beforeResize: Event([ 'table' ]),
@@ -70,7 +70,7 @@ const create = (wire: ResizeWire, vdirection: BarPositions<ColInfo>, resizing: R
     events.trigger.beforeResize(table);
     const delta = vdirection.delta(event.delta, table);
     const tableSize = lazySizing(table);
-    Adjustments.adjustWidth(table, delta, event.column, vdirection, resizing, tableSize);
+    Adjustments.adjustWidth(table, delta, event.column, resizing, tableSize);
     events.trigger.afterResize(table);
   });
 

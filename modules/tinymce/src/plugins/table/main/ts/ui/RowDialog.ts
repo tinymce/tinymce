@@ -12,6 +12,7 @@ import * as Styles from '../actions/Styles';
 import { hasAdvancedRowTab } from '../api/Settings';
 import { switchSectionType } from '../core/TableSections';
 import * as Util from '../core/Util';
+import { ephemera } from '../selection/Ephemera';
 import * as TableSelection from '../selection/TableSelection';
 import { DomModifier } from './DomModifier';
 import * as Helpers from './Helpers';
@@ -66,7 +67,7 @@ const onSubmitRowForm = (editor: Editor, rows: HTMLTableRowElement[], oldData: R
 };
 
 const open = (editor: Editor) => {
-  const rows = TableSelection.getRowsFromSelection(editor);
+  const rows = TableSelection.getRowsFromSelection(Util.getSelectionStart(editor), ephemera.selected);
 
   // Check if there are any rows to operate on
   if (rows.length === 0) {
@@ -74,7 +75,7 @@ const open = (editor: Editor) => {
   }
 
   // Get current data and find shared values between rows
-  const rowsData: RowData[] = Arr.map(rows, (rowElm) => Helpers.extractDataFromRowElement(editor, rowElm, hasAdvancedRowTab(editor)));
+  const rowsData: RowData[] = Arr.map(rows, (rowElm) => Helpers.extractDataFromRowElement(editor, rowElm.dom, hasAdvancedRowTab(editor)));
   const data = Helpers.getSharedValues<RowData>(rowsData);
 
   const dialogTabPanel: Dialog.TabPanelSpec = {
@@ -117,7 +118,7 @@ const open = (editor: Editor) => {
       }
     ],
     initialData: data,
-    onSubmit: Fun.curry(onSubmitRowForm, editor, rows, data)
+    onSubmit: Fun.curry(onSubmitRowForm, editor, Arr.map(rows, (r) => r.dom), data)
   });
 };
 
