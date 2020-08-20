@@ -48,7 +48,7 @@ const getDeduced = function (deduced: Optional<number>) {
   return deduced.map(function (d) { return d + 'px'; }).getOr('');
 };
 
-const getRawWidths = function (warehouse: Warehouse, tableSize: TableSize) { // Warning, changed signature!
+const getRawWidths = function (warehouse: Warehouse, tableSize: TableSize) {
   return getWidthFrom(warehouse, getRawW, getDeduced, tableSize);
 };
 

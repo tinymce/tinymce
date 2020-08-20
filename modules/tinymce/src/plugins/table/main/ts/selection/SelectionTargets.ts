@@ -5,7 +5,6 @@ import { SugarElement, SugarNode } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import * as Util from '../core/Util';
 import * as TableTargets from '../queries/TableTargets';
-import { Ephemera } from './Ephemera';
 import * as TableSelection from './TableSelection';
 
 export type SelectionTargets = ReturnType<typeof getSelectionTargets>;
@@ -22,7 +21,7 @@ export const getSelectionTargets = (editor: Editor, selections: Selections) => {
         if (isCaption(cellOrCaption)) {
           return TableTargets.noMenu(cellOrCaption);
         } else {
-          return TableTargets.forMenu(selections, table, cellOrCaption, Ephemera);
+          return TableTargets.forMenu(selections, table, cellOrCaption);
         }
       });
     });

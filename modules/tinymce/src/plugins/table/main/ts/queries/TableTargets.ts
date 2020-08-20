@@ -5,10 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { CellOpSelection, Ephemera, Selections } from '@ephox/darwin';
+import { CellOpSelection, Selections } from '@ephox/darwin';
 import { Optional } from '@ephox/katamari';
 import { RunOperation, SimpleGenerators } from '@ephox/snooker';
 import { SugarElement } from '@ephox/sugar';
+import { ephemera } from '../selection/Ephemera';
 
 const noMenu = (cell: SugarElement<HTMLTableCellElement | HTMLTableCaptionElement>): RunOperation.CombinedTargets => ({
   element: cell,
@@ -17,7 +18,7 @@ const noMenu = (cell: SugarElement<HTMLTableCellElement | HTMLTableCaptionElemen
   selection: [ cell ]
 });
 
-const forMenu = (selections: Selections, table: SugarElement<HTMLTableElement>, cell: SugarElement<HTMLTableCellElement>, ephemera: Ephemera): RunOperation.CombinedTargets => ({
+const forMenu = (selections: Selections, table: SugarElement<HTMLTableElement>, cell: SugarElement<HTMLTableCellElement>): RunOperation.CombinedTargets => ({
   element: cell,
   mergable: CellOpSelection.mergable(table, selections, ephemera),
   unmergable: CellOpSelection.unmergable(selections),

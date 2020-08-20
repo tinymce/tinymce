@@ -13,7 +13,6 @@ import Editor from 'tinymce/core/api/Editor';
 import { TableActions } from '../actions/TableActions';
 import * as Util from '../core/Util';
 import * as TableTargets from '../queries/TableTargets';
-import { Ephemera } from '../selection/Ephemera';
 import * as TableSelection from '../selection/TableSelection';
 
 const registerQueryCommands = (editor: Editor, actions: TableActions, selections: Selections) => {
@@ -21,11 +20,11 @@ const registerQueryCommands = (editor: Editor, actions: TableActions, selections
   const getTableFromCell = (cell: SugarElement): Optional<SugarElement> => TableLookup.table(cell, isRoot);
 
   Obj.each({
-    mceTableRowType: () => actions.getTableRowType(editor),
+    T: () => actions.getTableRowType(editor),
     mceTableCellType: () => actions.getTableCellType(editor),
     mceTableColType: () => TableSelection.getSelectionStartCell(Util.getSelectionStart(editor)).bind((cell) =>
       getTableFromCell(cell).map((table): string => {
-        const targets = TableTargets.forMenu(selections, table, cell, Ephemera);
+        const targets = TableTargets.forMenu(selections, table, cell);
         return actions.getTableColType(table, targets);
       })
     ).getOr('')

@@ -16,7 +16,7 @@ import { getCloneElements } from '../api/Settings';
 import { getRowType, switchCellType, switchSectionType } from '../core/TableSections';
 import * as Util from '../core/Util';
 import * as TableSize from '../queries/TableSize';
-import { Ephemera } from '../selection/Ephemera';
+import { ephemera } from '../selection/Ephemera';
 import { getCellsFromSelection, getRowsFromSelection } from '../selection/TableSelection';
 
 type TableAction<T> = (table: SugarElement<HTMLTableElement>, target: T) => Optional<Range>;
@@ -121,14 +121,14 @@ export const TableActions = (editor: Editor, lazyWire: () => ResizeWire, selecti
 
   const setTableRowType = (editor: Editor, args: Record<string, any>) =>
     extractType(args, [ 'header', 'body', 'footer' ]).each((type) => {
-      Arr.map(getRowsFromSelection(Util.getSelectionStart(editor), Ephemera.selected), (row) => switchSectionType(editor, row.dom, type));
+      Arr.map(getRowsFromSelection(Util.getSelectionStart(editor), ephemera.selected), (row) => switchSectionType(editor, row.dom, type));
     });
 
   const makeColumnHeader = execute(TableOperations.makeColumnHeader, Fun.always, Fun.noop, lazyWire);
   const unmakeColumnHeader = execute(TableOperations.unmakeColumnHeader, Fun.always, Fun.noop, lazyWire);
 
   const getTableRowType = (editor: Editor): 'header' | 'body' | 'footer' | '' => {
-    const rows = getRowsFromSelection(Util.getSelectionStart(editor), Ephemera.selected);
+    const rows = getRowsFromSelection(Util.getSelectionStart(editor), ephemera.selected);
     if (rows.length > 0) {
       const rowTypes = Arr.map(rows, (r) => getRowType(editor, r.dom));
       const hasHeader = Arr.contains(rowTypes, 'header');

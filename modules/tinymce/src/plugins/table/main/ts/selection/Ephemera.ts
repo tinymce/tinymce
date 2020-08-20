@@ -18,7 +18,7 @@ const strLastSelectedSelector = 'td[' + strLastSelected + '],th[' + strLastSelec
 
 export const attributeSelector = strAttributeSelector;
 
-export const Ephemera: DarwinEphemera = {
+export const ephemera: DarwinEphemera = {
   selected: strSelected,
   selectedSelector: strSelectedSelector,
   firstSelected: strFirstSelected,
