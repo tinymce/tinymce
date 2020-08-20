@@ -82,6 +82,8 @@ export const isNotEmpty = (s: string) => s.length > 0;
 
 export const isEmpty = (s: string) => !isNotEmpty(s);
 
+export const repeat = (s: string, count: number) => count <= 0 ? '' : new Array(count + 1).join(s);
+
 // Extract codepoint a la ES2015 String.fromCodePoint
 // From https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/fromCodePoint
 export const fromCodePoint = (...codePoints: number[]): string => {

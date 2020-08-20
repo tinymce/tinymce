@@ -10,12 +10,13 @@ import { UndoLevel } from '../undo/UndoManagerTypes';
 import Editor from './Editor';
 import { Dialog } from './ui/Ui';
 import { NativeEventMap } from './util/EventDispatcher';
+import { InstanceApi } from './WindowManager';
 
 export type ExecCommandEvent = { command: string; ui?: boolean; value?: any };
 
 // TODO Figure out if these properties should be on the ContentArgs types
-export type GetContentEvent = GetContentArgs & { source_view: boolean; selection: boolean; save: boolean };
-export type SetContentEvent = SetContentArgs & { paste: boolean; selection: boolean };
+export type GetContentEvent = GetContentArgs & { source_view?: boolean; selection?: boolean; save?: boolean };
+export type SetContentEvent = SetContentArgs & { paste?: boolean; selection?: boolean };
 
 export type NewBlockEvent = { newBlock: Element };
 
@@ -36,7 +37,7 @@ export type SwitchModeEvent = { mode: string };
 export type AddUndoEvent = { level: UndoLevel; lastLevel: UndoLevel; originalEvent: Event };
 export type UndoRedoEvent = { level: UndoLevel };
 
-export type WindowEvent<T extends Dialog.DialogData> = { dialog: Dialog.DialogInstanceApi<T> };
+export type WindowEvent<T extends Dialog.DialogData> = { dialog: InstanceApi<T> };
 
 export type ProgressStateEvent = { state: boolean; time?: number };
 

@@ -18,7 +18,7 @@ UnitTest.asynctest('browser.tinymce.core.SelectionOverridesTest', function (succ
 
   suite.test('click on link in cE=false', function (editor) {
     editor.setContent('<p contentEditable="false"><a href="#"><strong>link</strong></a></p>');
-    const evt = editor.fire('click', { target: editor.$('strong')[0] });
+    const evt = editor.fire('click', { target: editor.$('strong')[0] } as MouseEvent);
 
     LegacyUnit.equal(evt.isDefaultPrevented(), true);
   });
@@ -37,10 +37,10 @@ UnitTest.asynctest('browser.tinymce.core.SelectionOverridesTest', function (succ
     const rect = editor.dom.getRect(firstTd);
 
     editor.fire('mousedown', {
-      target: firstTd,
+      target: firstTd as EventTarget,
       clientX: rect.x + rect.w,
       clientY: rect.y + 10
-    });
+    } as MouseEvent);
 
     // Since we can't do a real click we need to check if it gets sucked in towards the cE=false block
     LegacyUnit.equal(editor.selection.getNode().nodeName !== 'P', true);

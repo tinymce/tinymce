@@ -20,7 +20,8 @@ const firePastePlainTextToggle = function (editor: Editor, state: boolean) {
 };
 
 const firePaste = function (editor: Editor, ieFake: boolean) {
-  return editor.fire('paste', { ieFake });
+  // Casting this as it only exists for IE compatibility
+  return editor.fire('paste', { ieFake } as any as ClipboardEvent);
 };
 
 export {

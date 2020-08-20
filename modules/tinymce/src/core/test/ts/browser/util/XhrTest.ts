@@ -6,8 +6,8 @@ import XHR, { XHRSettings } from 'tinymce/core/api/util/XHR';
 UnitTest.asynctest('browser.tinymce.core.util.XhrTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
 
-  type XHRTest = XMLHttpRequest & { test: number };
-  type XHRSettingsTest = XHRSettings & { test: number };
+  type XHRTest = XMLHttpRequest & { test?: number };
+  type XHRSettingsTest = XHRSettings & { test?: number };
 
   suite.asyncTest('Successful request', function (_, done) {
     XHR.on('beforeSend', function (e: { xhr: XHRTest; settings: XHRSettingsTest }) {

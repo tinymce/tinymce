@@ -41,7 +41,7 @@ interface WindowManager {
   close: () => void;
 }
 
-type InstanceApi<T> = Dialog.UrlDialogInstanceApi | Dialog.DialogInstanceApi<T>;
+export type InstanceApi<T> = Dialog.UrlDialogInstanceApi | Dialog.DialogInstanceApi<T>;
 
 export interface WindowManagerImpl {
   open: <T>(config: Dialog.DialogSpec<T>, params, closeWindow: (dialog: Dialog.DialogInstanceApi<T>) => void) => Dialog.DialogInstanceApi<T>;
