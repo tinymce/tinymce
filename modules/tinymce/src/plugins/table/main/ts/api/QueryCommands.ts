@@ -20,7 +20,7 @@ const registerQueryCommands = (editor: Editor, actions: TableActions, selections
   const getTableFromCell = (cell: SugarElement): Optional<SugarElement> => TableLookup.table(cell, isRoot);
 
   Obj.each({
-    T: () => actions.getTableRowType(editor),
+    mceTableRowType: () => actions.getTableRowType(editor),
     mceTableCellType: () => actions.getTableCellType(editor),
     mceTableColType: () => TableSelection.getSelectionStartCell(Util.getSelectionStart(editor)).bind((cell) =>
       getTableFromCell(cell).map((table): string => {
