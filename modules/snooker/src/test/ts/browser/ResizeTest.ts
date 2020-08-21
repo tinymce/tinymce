@@ -2,14 +2,12 @@ import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { Css, Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
 import * as ResizeBehaviour from 'ephox/snooker/api/ResizeBehaviour';
-import { ResizeDirection } from 'ephox/snooker/api/ResizeDirection';
 import { TableSize } from 'ephox/snooker/api/TableSize';
 import * as Deltas from 'ephox/snooker/calc/Deltas';
 import { Warehouse } from 'ephox/snooker/model/Warehouse';
 
 UnitTest.test('ResizeTest', function () {
   const resizing = ResizeBehaviour.preserveTable();
-  const direction = ResizeDirection.ltr;
 
   const boundBox = '<div style="width: 800px; height: 600px; display: block;"></div>';
   const box = SugarElement.fromHtml<HTMLDivElement>(boundBox);
@@ -47,7 +45,7 @@ UnitTest.test('ResizeTest', function () {
     assert.eq(25, step);
 
     const warehouse = Warehouse.fromTable(table);
-    const widths = tableSize.getWidths(warehouse, direction, tableSize);
+    const widths = tableSize.getWidths(warehouse, tableSize);
 
     // [50%, 50%] existing widths.
     assert.eq([ 50, 50 ], widths);
@@ -96,7 +94,7 @@ UnitTest.test('ResizeTest', function () {
     assert.eq(25, step);
 
     const warehouse = Warehouse.fromTable(table);
-    const widths = tableSize.getWidths(warehouse, direction, tableSize);
+    const widths = tableSize.getWidths(warehouse, tableSize);
 
     const expectedWidths = [ 50, 50 ];
 
@@ -154,7 +152,7 @@ UnitTest.test('ResizeTest', function () {
     assert.eq(200, step);
 
     const warehouse = Warehouse.fromTable(table);
-    const widths = tableSize.getWidths(warehouse, direction, tableSize);
+    const widths = tableSize.getWidths(warehouse, tableSize);
 
     // [50%, 50%] existing widths.
     assert.eq([ 400, 400 ], widths);
@@ -199,7 +197,7 @@ UnitTest.test('ResizeTest', function () {
     assert.eq(200, step);
 
     const warehouse = Warehouse.fromTable(table);
-    const widths = tableSize.getWidths(warehouse, direction, tableSize);
+    const widths = tableSize.getWidths(warehouse, tableSize);
 
     // [50%, 50%] existing widths.
     assert.eq([ 400, 400 ], widths);

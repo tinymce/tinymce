@@ -7,7 +7,6 @@ import { ResizeWire } from '../api/ResizeWire';
 import * as Styles from '../style/Styles';
 import * as CellUtils from '../util/CellUtils';
 import { BarMutation } from './BarMutation';
-import { BarPositions, ColInfo, RowInfo } from './BarPositions';
 import * as Bars from './Bars';
 
 export interface DragAdjustHeightEvent {
@@ -37,7 +36,7 @@ export interface DragAdjustEvents {
 
 const resizeBarDragging = Styles.resolve('resizer-bar-dragging');
 
-export const BarManager = function (wire: ResizeWire, direction: BarPositions<ColInfo>, hdirection: BarPositions<RowInfo>) {
+export const BarManager = function (wire: ResizeWire) {
   const mutation = BarMutation();
   const resizing = Dragger.transform(mutation, {});
 
@@ -82,7 +81,7 @@ export const BarManager = function (wire: ResizeWire, direction: BarPositions<Co
           events.trigger.adjustWidth(table, delta, parseInt(column, 10));
         });
 
-        Bars.refresh(wire, table, hdirection, direction);
+        Bars.refresh(wire, table);
       });
     });
 
@@ -129,7 +128,7 @@ export const BarManager = function (wire: ResizeWire, direction: BarPositions<Co
       },
       (table) => {
         hoverTable = Optional.some(table);
-        Bars.refresh(wire, table, hdirection, direction);
+        Bars.refresh(wire, table);
       }
     );
   });
@@ -142,7 +141,7 @@ export const BarManager = function (wire: ResizeWire, direction: BarPositions<Co
   };
 
   const refresh = function (tbl: SugarElement) {
-    Bars.refresh(wire, tbl, hdirection, direction);
+    Bars.refresh(wire, tbl);
   };
 
   const events = Events.create({

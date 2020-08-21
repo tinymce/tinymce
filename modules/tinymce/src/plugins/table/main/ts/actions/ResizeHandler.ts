@@ -6,13 +6,12 @@
  */
 
 import { Arr, Optional, Strings } from '@ephox/katamari';
-import { Adjustments, ResizeBehaviour, ResizeWire, Sizes, TableDirection, TableGridSize, TableResize } from '@ephox/snooker';
+import { Adjustments, ResizeBehaviour, ResizeWire, Sizes, TableGridSize, TableResize } from '@ephox/snooker';
 import { Css, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import * as Events from '../api/Events';
 import * as Settings from '../api/Settings';
 import * as Util from '../core/Util';
-import * as Direction from '../queries/Direction';
 import * as TableSize from '../queries/TableSize';
 import { enforcePercentage, enforcePixels, syncPixels } from './EnforceUnit';
 import * as TableWire from './TableWire';
@@ -64,13 +63,12 @@ export const getResizeHandler = function (editor: Editor): ResizeHandler {
       // Restore the original size and then let snooker resize appropriately
       Css.set(table, 'width', startRawW);
 
-      const direction = TableDirection(Direction.directionAt);
       const resizing = lazyResizingBehaviour();
       const tableSize = lazySizing(table);
 
       // For preserve table we want to always resize the entire table. So pretend the last column is being resized
       const col = Settings.isPreserveTableColumnResizing(editor) || isRightEdgeResize ? getNumColumns(table) - 1 : 0;
-      Adjustments.adjustWidth(table, width - startW, col, direction, resizing, tableSize);
+      Adjustments.adjustWidth(table, width - startW, col, resizing, tableSize);
     }
   };
 
@@ -85,12 +83,11 @@ export const getResizeHandler = function (editor: Editor): ResizeHandler {
   };
 
   editor.on('init', function () {
-    const direction = TableDirection(Direction.directionAt);
     const rawWire = TableWire.get(editor);
     wire = Optional.some(rawWire);
     if (Settings.hasObjectResizing(editor) && Settings.hasTableResizeBars(editor)) {
       const resizing = lazyResizingBehaviour();
-      const sz = TableResize.create(rawWire, direction, resizing, lazySizing);
+      const sz = TableResize.create(rawWire, resizing, lazySizing);
       sz.on();
       sz.events.startDrag.bind(function (_event) {
         selectionRng = Optional.some(editor.selection.getRng());

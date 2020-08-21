@@ -6,17 +6,17 @@ import { TableSize } from '../api/TableSize';
 import * as Deltas from '../calc/Deltas';
 import { Warehouse } from '../model/Warehouse';
 import * as CellUtils from '../util/CellUtils';
-import { BarPositions, ColInfo, RowInfo } from './BarPositions';
 import * as ColumnSizes from './ColumnSizes';
 import * as Recalculations from './Recalculations';
 import * as Sizes from './Sizes';
+import { BarPositions, RowInfo } from './BarPositions';
 
 const sumUp = (newSize: number[]) => Arr.foldr(newSize, (b, a) => b + a, 0);
 
-const adjustWidth = (table: SugarElement, delta: number, index: number, direction: BarPositions<ColInfo>, resizing: ResizeBehaviour, tableSize: TableSize) => {
+const adjustWidth = (table: SugarElement, delta: number, index: number, resizing: ResizeBehaviour, tableSize: TableSize) => {
   const warehouse = Warehouse.fromTable(table);
   const step = tableSize.getCellDelta(delta);
-  const widths = tableSize.getWidths(warehouse, direction, tableSize);
+  const widths = tableSize.getWidths(warehouse, tableSize);
   const isLastColumn = index === warehouse.grid.columns - 1;
   const clampedStep = resizing.clampTableDelta(widths, index, step, tableSize.minCellWidth(), isLastColumn);
 
@@ -55,9 +55,9 @@ const adjustHeight = (table: SugarElement, delta: number, index: number, directi
 };
 
 // Ensure that the width of table cells match the passed in table information.
-const adjustWidthTo = <T extends Detail> (table: SugarElement, list: RowData<T>[], direction: BarPositions<ColInfo>, tableSize: TableSize) => {
+const adjustWidthTo = <T extends Detail> (table: SugarElement, list: RowData<T>[], tableSize: TableSize) => {
   const warehouse = Warehouse.generate(list);
-  const widths = tableSize.getWidths(warehouse, direction, tableSize);
+  const widths = tableSize.getWidths(warehouse, tableSize);
 
   // Set the width of each cell based on the column widths
   const newSizes = Recalculations.recalculateWidth(warehouse, widths);
@@ -66,8 +66,4 @@ const adjustWidthTo = <T extends Detail> (table: SugarElement, list: RowData<T>[
   });
 };
 
-export {
-  adjustWidth,
-  adjustHeight,
-  adjustWidthTo
-};
+export { adjustWidth, adjustHeight, adjustWidthTo };

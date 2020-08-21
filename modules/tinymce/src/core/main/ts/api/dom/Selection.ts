@@ -74,9 +74,9 @@ interface EditorSelection {
   isForward: () => boolean;
   setNode: (elm: Element) => Element;
   getNode: () => Element;
-  getSel: () => Selection;
+  getSel: () => Selection | null;
   setRng: (rng: Range, forward?: boolean) => void;
-  getRng: () => Range;
+  getRng: () => Range | null;
   getStart: (real?: boolean) => Element;
   getEnd: (real?: boolean) => Element;
   getSelectedBlocks: (startElm?: Element, endElm?: Element) => Element[];
@@ -277,7 +277,7 @@ const EditorSelection = function (dom: DOMUtils, win: Window, serializer: DomSer
    * @method getSel
    * @return {Selection} Internal browser selection object.
    */
-  const getSel = (): Selection => win.getSelection ? win.getSelection() : (<any> win.document).selection;
+  const getSel = (): Selection | null => win.getSelection ? win.getSelection() : (<any> win.document).selection;
 
   /**
    * Returns the browsers internal range object.

@@ -175,7 +175,7 @@ const move = (state: Singleton.Value<State>, editor: Editor) => {
     const movement = Math.max(Math.abs(e.screenX - state.screenX), Math.abs(e.screenY - state.screenY));
 
     if (!state.dragging && movement > 10) {
-      const args = editor.fire('dragstart', { target: state.element });
+      const args = editor.fire('dragstart', { target: state.element as EventTarget } as DragEvent);
       if (args.isDefaultPrevented()) {
         return;
       }
@@ -206,17 +206,14 @@ const drop = (state: Singleton.Value<State>, editor: Editor) => (e: EditorEvent<
   state.on((state) => {
     if (state.dragging) {
       if (isValidDropTarget(editor, getRawTarget(editor.selection), state.element)) {
-        let targetClone = cloneElement(state.element);
+        const targetClone = cloneElement(state.element);
 
         const args = editor.fire('drop', {
-          targetClone,
           clientX: e.clientX,
           clientY: e.clientY
-        });
+        } as DragEvent);
 
         if (!args.isDefaultPrevented()) {
-          targetClone = args.targetClone;
-
           editor.undoManager.transact(function () {
             removeElement(state.element);
             editor.insertContent(editor.dom.getOuterHTML(targetClone));

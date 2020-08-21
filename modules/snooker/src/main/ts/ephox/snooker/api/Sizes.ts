@@ -9,7 +9,6 @@ import * as CellUtils from '../util/CellUtils';
 import { DetailExt, RowData } from './Structs';
 import { TableSize } from './TableSize';
 
-type ColInfo = BarPositions.ColInfo;
 type BarPositions<A> = BarPositions.BarPositions<A>;
 
 const redistributeToW = function (newWidths: string[], cells: DetailExt[], unit: string) {
@@ -38,7 +37,7 @@ const getUnit = function (newSize: string) {
 
 // Procedure to resize table dimensions to optWidth x optHeight and redistribute cell and row dimensions.
 // Updates CSS of the table, rows, and cells.
-const redistribute = function (table: SugarElement, optWidth: Optional<string>, optHeight: Optional<string>, direction: BarPositions<ColInfo>, tableSize: TableSize) {
+const redistribute = function (table: SugarElement, optWidth: Optional<string>, optHeight: Optional<string>, tableSize: TableSize) {
   const warehouse = Warehouse.fromTable(table);
   const rows = warehouse.all;
   const cells = Warehouse.justCells(warehouse);
@@ -46,7 +45,7 @@ const redistribute = function (table: SugarElement, optWidth: Optional<string>, 
   optWidth.each(function (newWidth) {
     const wUnit = getUnit(newWidth);
     const totalWidth = Width.get(table);
-    const oldWidths = ColumnSizes.getRawWidths(warehouse, direction, tableSize);
+    const oldWidths = ColumnSizes.getRawWidths(warehouse, tableSize);
     const nuWidths = Redistribution.redistribute(oldWidths, totalWidth, newWidth);
     redistributeToW(nuWidths, cells, wUnit);
     Css.set(table, 'width', newWidth);

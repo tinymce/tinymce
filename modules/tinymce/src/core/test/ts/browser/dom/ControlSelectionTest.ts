@@ -12,11 +12,12 @@ UnitTest.asynctest('browser.tinymce.core.dom.ControlSelectionTest', function (su
 
   const sContextMenuClickInMiddleOf = (editor: Editor, elementPath: number[]) => Step.sync(() => {
     const element = Hierarchy.follow(SugarElement.fromDom(editor.getBody()), elementPath).getOrDie().dom as HTMLElement;
+    const target = element as EventTarget;
     const rect = element.getBoundingClientRect();
     const clientX = (rect.left + rect.width / 2), clientY = (rect.top + rect.height / 2);
-    editor.fire('mousedown', { target: element, clientX, clientY, button: 2 });
-    editor.fire('mouseup', { target: element, clientX, clientY, button: 2 });
-    editor.fire('contextmenu', { target: element, clientX, clientY, button: 2 });
+    editor.fire('mousedown', { target, clientX, clientY, button: 2 } as MouseEvent);
+    editor.fire('mouseup', { target, clientX, clientY, button: 2 } as MouseEvent);
+    editor.fire('contextmenu', { target, clientX, clientY, button: 2 } as PointerEvent);
   });
 
   const sResetEventCounter = Step.sync(() => eventCounter.set({ }));

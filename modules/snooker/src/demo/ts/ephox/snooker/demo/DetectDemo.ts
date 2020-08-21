@@ -1,16 +1,12 @@
 import { Obj, Optional, Optionals } from '@ephox/katamari';
-import {
-  Attribute, Css, Direction, DomEvent, EventArgs, Insert, InsertAll, Ready, Replication, SelectorFind, SugarElement, SugarNode
-} from '@ephox/sugar';
+import { Attribute, Css, DomEvent, EventArgs, Insert, InsertAll, Ready, Replication, SelectorFind, SugarElement, SugarNode } from '@ephox/sugar';
 import { Generators } from 'ephox/snooker/api/Generators';
 import * as ResizeBehaviour from 'ephox/snooker/api/ResizeBehaviour';
-import { ResizeDirection } from 'ephox/snooker/api/ResizeDirection';
 import { ResizeWire } from 'ephox/snooker/api/ResizeWire';
 import * as TableOperations from 'ephox/snooker/api/TableOperations';
 import { TableResize } from 'ephox/snooker/api/TableResize';
 import { TableSize } from 'ephox/snooker/api/TableSize';
 import { RunOperationOutput, TargetElement, TargetSelection } from 'ephox/snooker/model/RunOperation';
-import { BarPositions, ColInfo } from 'ephox/snooker/resize/BarPositions';
 
 Ready.execute(function () {
 
@@ -133,9 +129,9 @@ Ready.execute(function () {
   InsertAll.append(ephoxUi, [ ltrs, rtls ]);
 
   const lazyTableSize = (table: SugarElement<HTMLTableElement>) => TableSize.getTableSize(table);
-  const ltrManager = TableResize.create(ResizeWire.body(tester, ltrs), ResizeDirection.ltr, ResizeBehaviour.preserveTable(), lazyTableSize);
+  const ltrManager = TableResize.create(ResizeWire.body(tester, ltrs), ResizeBehaviour.preserveTable(), lazyTableSize);
   ltrManager.on();
-  const rtlManager = TableResize.create(ResizeWire.body(subject3, rtls), ResizeDirection.rtl, ResizeBehaviour.preserveTable(), lazyTableSize);
+  const rtlManager = TableResize.create(ResizeWire.body(subject3, rtls), ResizeBehaviour.preserveTable(), lazyTableSize);
   rtlManager.on();
 
   // For firefox.
@@ -232,11 +228,9 @@ Ready.execute(function () {
     gap
   };
 
-  const runOperation = function (operation: (wire: ResizeWire, table: SugarElement, target: TargetElement & TargetSelection, generators: Generators, direction: BarPositions<ColInfo>, tableSize: TableSize) => Optional<RunOperationOutput>) {
+  const runOperation = function (operation: (wire: ResizeWire, table: SugarElement, target: TargetElement & TargetSelection, generators: Generators, tableSize: TableSize) => Optional<RunOperationOutput>) {
     return function (_event: EventArgs) {
       detection().each(function (start) {
-        const dir = Direction.getDirection(start);
-        const direction = dir === 'rtl' ? ResizeDirection.rtl : ResizeDirection.ltr;
         const target = {
           element: start,
           selection: [ start ]
@@ -245,7 +239,7 @@ Ready.execute(function () {
         // wire, table, target, generators, direction
         const table = SelectorFind.ancestor(start, 'table').getOrDie() as SugarElement<HTMLTableElement>;
         const tableSize = TableSize.getTableSize(table);
-        operation(ResizeWire.only(ephoxUi), table, target, generators, direction, tableSize);
+        operation(ResizeWire.only(ephoxUi), table, target, generators, tableSize);
       });
     };
   };

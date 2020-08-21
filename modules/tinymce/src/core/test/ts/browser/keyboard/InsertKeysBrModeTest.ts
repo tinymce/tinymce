@@ -8,7 +8,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.InsertKeysBrModeTest', (succes
   Theme();
 
   const sFireInsert = (editor: Editor) => Step.sync(() => {
-    editor.fire('input', { isComposing: false });
+    editor.fire('input', { isComposing: false } as InputEvent);
   });
 
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {

@@ -5,6 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Selections } from '@ephox/darwin';
 import { Arr, Fun } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { Dialog } from 'tinymce/core/api/ui/Ui';
@@ -87,8 +88,8 @@ const onSubmitCellForm = (editor: Editor, cells: HTMLTableCellElement[], api) =>
   });
 };
 
-const open = (editor: Editor) => {
-  const cells = TableSelection.getCellsFromSelection(editor);
+const open = (editor: Editor, selections: Selections) => {
+  const cells = TableSelection.getCellsFromSelection(Util.getSelectionStart(editor), selections);
 
   // Check if there are any cells to operate on
   if (cells.length === 0) {
@@ -97,7 +98,7 @@ const open = (editor: Editor) => {
 
   // Get current data and find shared values between cells
   const cellsData: CellData[] = Arr.map(cells,
-    (cellElm) => Helpers.extractDataFromCellElement(editor, cellElm, hasAdvancedCellTab(editor))
+    (cellElm) => Helpers.extractDataFromCellElement(editor, cellElm.dom, hasAdvancedCellTab(editor))
   );
   const data = Helpers.getSharedValues<CellData>(cellsData);
 
@@ -140,10 +141,9 @@ const open = (editor: Editor) => {
       }
     ],
     initialData: data,
-    onSubmit: Fun.curry(onSubmitCellForm, editor, cells)
+    onSubmit: Fun.curry(onSubmitCellForm, editor, Arr.map(cells, (c) => c.dom))
   });
 };
 
-export {
-  open
-};
+export { open };
+
