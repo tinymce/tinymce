@@ -1324,12 +1324,12 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     // #ifndef jquery
 
     /**
-     * Selects specific elements by a CSS level 3 pattern. For example "div#a1 p.test".
+     * Returns a list of the elements specified by the given CSS selector. For example "div#a1 p.test".
      * This function is optimized for the most common patterns needed in TinyMCE but it also performs well enough
      * on more complex patterns.
      *
      * @method select
-     * @param {String} selector CSS level 3 pattern to select/find elements by.
+     * @param {String} selector Target CSS selector.
      * @param {Object} scope Optional root element/scope element to search in.
      * @return {Array} Array with all matched elements.
      * @example
