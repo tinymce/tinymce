@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Type } from '@ephox/katamari';
+import { Arr, Fun, Obj, Type } from '@ephox/katamari';
 import { SugarElement, WindowVisualViewport } from '@ephox/sugar';
 import * as NodeType from '../../dom/NodeType';
 import * as Position from '../../dom/Position';
@@ -18,8 +18,8 @@ import Entities from '../html/Entities';
 import Schema from '../html/Schema';
 import Styles, { StyleMap } from '../html/Styles';
 import { URLConverter } from '../SettingsTypes';
-import Tools from '../util/Tools';
 import { MappedEvent } from '../util/EventDispatcher';
+import Tools from '../util/Tools';
 import DomQuery, { DomQueryConstructor } from './DomQuery';
 import EventUtils, { EventUtilsCallback } from './EventUtils';
 import Sizzle from './Sizzle';
@@ -815,37 +815,14 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     }
   };
 
-  const loadCSS = (url: string) => {
-
-    // Prevent inline from loading the same CSS file twice
-    if (self !== DOMUtils.DOM && doc === document) {
-      DOMUtils.DOM.loadCSS(url);
-      return;
+  const loadCSS = (urls: string) => {
+    if (!urls) {
+      urls = '';
     }
 
-    if (!url) {
-      url = '';
-    }
-
-    const head = doc.getElementsByTagName('head')[0];
-
-    each(url.split(','), function (url) {
-      url = Tools._addCacheSuffix(url);
-
-      if (files[url]) {
-        return;
-      }
-
+    Arr.each(urls.split(','), (url) => {
       files[url] = true;
-      const link = create('link', {
-        rel: 'stylesheet',
-        type: 'text/css',
-        href: url,
-        ...settings.contentCssCors ? { crossOrigin: 'anonymous' } : { },
-        ...settings.referrerPolicy ? { referrerPolicy: settings.referrerPolicy } : { }
-      });
-
-      head.appendChild(link);
+      styleSheetLoader.load(url, Fun.noop);
     });
   };
 
@@ -1185,6 +1162,12 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
         events.unbind(item[0], item[1], item[2]);
       }
     }
+
+    // Remove CSS files added to the dom
+    Obj.each(files, (_, url) => {
+      styleSheetLoader.unload(url);
+      delete files[url];
+    });
 
     // Restore sizzle document to window.document
     // Since the current document might be removed producing "Permission denied" on IE see #6325
