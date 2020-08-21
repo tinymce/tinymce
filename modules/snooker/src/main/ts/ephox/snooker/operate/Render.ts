@@ -4,6 +4,7 @@ import { Attribute, Css, Insert, InsertAll, SugarElement } from '@ephox/sugar';
 export interface RenderOptions {
   styles: Record<string, string>;
   attributes: Record<string, string>;
+  colGroups: boolean;
 }
 
 const DefaultRenderOptions: RenderOptions = {
@@ -13,12 +14,15 @@ const DefaultRenderOptions: RenderOptions = {
   },
   attributes: {
     border: '1'
-  }
+  },
+  colGroups: false
 };
 
 const tableHeaderCell = () => SugarElement.fromTag('th');
 
 const tableCell = () => SugarElement.fromTag('td');
+
+const tableColumn = () => SugarElement.fromTag('col');
 
 const createRow = (columns: number, rowHeaders: number, columnHeaders: number, rowIndex: number) => {
   const tr = SugarElement.fromTag('tr');
@@ -35,6 +39,16 @@ const createRow = (columns: number, rowHeaders: number, columnHeaders: number, r
   return tr;
 };
 
+const createGroupRow = (columns: number) => {
+  const columnGroup = SugarElement.fromTag('colgroup');
+
+  Arr.range(columns, () =>
+    Insert.append(columnGroup, tableColumn())
+  );
+
+  return columnGroup;
+};
+
 const createRows = (rows: number, columns: number, rowHeaders: number, columnHeaders: number) =>
   Arr.range(rows, (r) => createRow(columns, rowHeaders, columnHeaders, r));
 
@@ -44,6 +58,10 @@ const render = (rows: number, columns: number, rowHeaders: number, columnHeaders
 
   Css.setAll(table, renderOpts.styles);
   Attribute.setAll(table, renderOpts.attributes);
+
+  if (renderOpts.colGroups) {
+    Insert.append(table, createGroupRow(columns));
+  }
 
   const actualRowHeaders = Math.min(rows, rowHeaders);
 

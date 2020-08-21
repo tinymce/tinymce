@@ -5,7 +5,7 @@ import * as ColumnSizes from '../resize/ColumnSizes';
 import * as Redistribution from '../resize/Redistribution';
 import * as Sizes from '../resize/Sizes';
 import * as CellUtils from '../util/CellUtils';
-import { DetailExt, RowData } from './Structs';
+import { DetailExt, RowData, Column } from './Structs';
 import { TableSize } from './TableSize';
 import { Warehouse } from './Warehouse';
 
@@ -16,6 +16,13 @@ const redistributeToW = function (newWidths: string[], cells: DetailExt[], unit:
     const widths = newWidths.slice(cell.column, cell.colspan + cell.column);
     const w = Redistribution.sum(widths, CellUtils.minWidth());
     Css.set(cell.element, 'width', w + unit);
+  });
+};
+
+const redistributeToColumns = (newWidths: string[], columns: Column[], unit: string) => {
+  Arr.each(columns, (column, index: number) => {
+    const width = Redistribution.sum([ newWidths[index] ], CellUtils.minWidth());
+    Css.set(column.element, 'width', width + unit);
   });
 };
 
@@ -37,21 +44,28 @@ const getUnit = function (newSize: string) {
 
 // Procedure to resize table dimensions to optWidth x optHeight and redistribute cell and row dimensions.
 // Updates CSS of the table, rows, and cells.
-const redistribute = function (table: SugarElement, optWidth: Optional<string>, optHeight: Optional<string>, tableSize: TableSize) {
+const redistribute = (table: SugarElement, optWidth: Optional<string>, optHeight: Optional<string>, tableSize: TableSize) => {
   const warehouse = Warehouse.fromTable(table);
   const rows = warehouse.all;
   const cells = Warehouse.justCells(warehouse);
+  const columns = Warehouse.justColumns(warehouse);
 
-  optWidth.each(function (newWidth) {
-    const wUnit = getUnit(newWidth);
+  optWidth.each((newWidth) => {
+    const widthUnit = getUnit(newWidth);
     const totalWidth = Width.get(table);
     const oldWidths = ColumnSizes.getRawWidths(warehouse, tableSize);
     const nuWidths = Redistribution.redistribute(oldWidths, totalWidth, newWidth);
-    redistributeToW(nuWidths, cells, wUnit);
+
+    if (Warehouse.hasColumns(warehouse)) {
+      redistributeToColumns(nuWidths, columns, widthUnit);
+    } else {
+      redistributeToW(nuWidths, cells, widthUnit);
+    }
+
     Css.set(table, 'width', newWidth);
   });
 
-  optHeight.each(function (newHeight) {
+  optHeight.each((newHeight) => {
     const hUnit = getUnit(newHeight);
     const totalHeight = Height.get(table);
     const oldHeights = ColumnSizes.getRawHeights(warehouse, BarPositions.height);
@@ -59,7 +73,6 @@ const redistribute = function (table: SugarElement, optWidth: Optional<string>, 
     redistributeToH(nuHeights, rows, cells, hUnit);
     Css.set(table, 'height', newHeight);
   });
-
 };
 
 const isPercentSizing = Sizes.isPercentSizing;

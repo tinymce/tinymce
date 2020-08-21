@@ -287,17 +287,20 @@ export interface CellData {
   backgroundcolor?: string;
 }
 
-const extractDataFromCellElement = (editor: Editor, elm: HTMLElement, hasAdvancedCellTab: boolean): CellData => {
+const extractDataFromCellElement = (editor: Editor, cell: HTMLTableDataCellElement, hasAdvancedCellTab: boolean, column?: SugarElement<HTMLTableColElement>): CellData => {
   const dom = editor.dom;
+
+  const getStyle = (element: HTMLElement, style: string) => dom.getStyle(element, style) || dom.getAttrib(element, style);
+
   return {
-    width: dom.getStyle(elm, 'width') || dom.getAttrib(elm, 'width'),
-    height: dom.getStyle(elm, 'height') || dom.getAttrib(elm, 'height'),
-    scope: dom.getAttrib(elm, 'scope'),
-    celltype: Util.getNodeName(elm),
-    class: dom.getAttrib(elm, 'class', ''),
-    halign: getHAlignment(editor, elm),
-    valign: getVAlignment(editor, elm),
-    ...(hasAdvancedCellTab ? extractAdvancedStyles(dom, elm) : {})
+    width: column ? getStyle(column.dom, 'width') : getStyle(cell, 'width'),
+    height: getStyle(cell, 'height'),
+    scope: dom.getAttrib(cell, 'scope'),
+    celltype: Util.getNodeName(cell),
+    class: dom.getAttrib(cell, 'class', ''),
+    halign: getHAlignment(editor, cell),
+    valign: getVAlignment(editor, cell),
+    ...(hasAdvancedCellTab ? extractAdvancedStyles(dom, cell) : {})
   };
 };
 

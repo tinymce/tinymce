@@ -123,14 +123,15 @@ UnitTest.asynctest('Redraw Section Order Test', (success, failure) => {
       })), table);
     })),
     Logger.t('Assert that theads go after colgroup elements', Step.sync(() => {
-      const table = SugarElement.fromHtml(`<table><colgroup><col style="width: 50%"><col style="width: 50%"></colgroup><tbody><tr><td>one</td><td>&nbsp;</td><td>&nbsp;</td></tr></tbody></table>`);
+      const table = SugarElement.fromHtml(`<table><colgroup><col style="width: 20%"><col style="width: 40%"><col style="width: 40%"></colgroup><tbody><tr><td>one</td><td>&nbsp;</td><td>&nbsp;</td></tr></tbody></table>`);
 
       Assertions.assertStructure('Should be a basic table with a colgroup', ApproxStructure.build((s, str, _arr) => s.element('table', {
         children: [
           s.element('colgroup', {
             children: [
-              s.element('col', { styles: { width: str.is('50%') }}),
-              s.element('col', { styles: { width: str.is('50%') }})
+              s.element('col', { styles: { width: str.is('20%') }}),
+              s.element('col', { styles: { width: str.is('40%') }}),
+              s.element('col', { styles: { width: str.is('40%') }})
             ]
           }),
           s.element('tbody', {
@@ -147,8 +148,9 @@ UnitTest.asynctest('Redraw Section Order Test', (success, failure) => {
         children: [
           s.element('colgroup', {
             children: [
-              s.element('col', { styles: { width: str.is('50%') }}),
-              s.element('col', { styles: { width: str.is('50%') }})
+              s.element('col', { styles: { width: str.is('20%') }}),
+              s.element('col', { styles: { width: str.is('40%') }}),
+              s.element('col', { styles: { width: str.is('40%') }})
             ]
           }),
           s.element('thead', {

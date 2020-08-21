@@ -1,5 +1,6 @@
 import { Arr } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
+import * as Structs from '../api/Structs';
 import { Warehouse } from '../api/Warehouse';
 
 // Returns the sum of elements of measures in the half-open range [start, end)
@@ -30,7 +31,7 @@ interface CellHeightSpan extends CellHeight {
 
 // Returns an array of all cells in warehouse with updated cell-widths, using
 // the array 'widths' of the representative widths of each column of the table 'warehouse'
-const recalculateWidth = function (warehouse: Warehouse, widths: number[]): CellWidthSpan[] {
+const recalculateWidthForCells = (warehouse: Warehouse, widths: number[]): CellWidthSpan[] => {
   const all = Warehouse.justCells(warehouse);
 
   return Arr.map(all, function (cell) {
@@ -44,9 +45,19 @@ const recalculateWidth = function (warehouse: Warehouse, widths: number[]): Cell
   });
 };
 
-const recalculateHeight = function (warehouse: Warehouse, heights: number[]): CellHeightSpan[] {
+const recalculateWidthForColumns = (warehouse: Warehouse, widths: number[]): CellWidthSpan[] => {
+  const groups = Warehouse.justColumns(warehouse);
+
+  return Arr.map(groups, (column: Structs.Column, index: number) => ({
+    element: column.element,
+    width: widths[index],
+    colspan: column.colspan
+  }));
+};
+
+const recalculateHeightForCells = (warehouse: Warehouse, heights: number[]): CellHeightSpan[] => {
   const all = Warehouse.justCells(warehouse);
-  return Arr.map(all, function (cell) {
+  return Arr.map(all, (cell) => {
     const height = total(cell.row, cell.row + cell.rowspan, heights);
     return {
       element: cell.element,
@@ -66,7 +77,9 @@ const matchRowHeight = function (warehouse: Warehouse, heights: number[]): CellH
 };
 
 export {
-  recalculateWidth,
-  recalculateHeight,
-  matchRowHeight
+  recalculateWidthForCells,
+  recalculateWidthForColumns,
+  recalculateHeightForCells,
+  matchRowHeight,
+  CellWidthSpan
 };

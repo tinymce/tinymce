@@ -1,12 +1,14 @@
-import { Arr, Optional } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
+import { Arr, Obj, Optional } from '@ephox/katamari';
+import { SugarElement, Traverse, SugarNode } from '@ephox/sugar';
 import * as Structs from '../api/Structs';
+import * as CellUtils from '../util/CellUtils';
 import * as DetailsList from '../model/DetailsList';
 
 export interface Warehouse {
   readonly grid: Structs.Grid;
   readonly access: Record<string, Structs.DetailExt>;
   readonly all: Structs.RowData<Structs.DetailExt>[];
+  readonly columns: Record<string, Structs.Column>;
 }
 
 const key = function (row: number, column: number) {
@@ -31,13 +33,36 @@ const filterItems = function (warehouse: Warehouse, predicate: (x: Structs.Detai
   return Arr.filter(all, predicate);
 };
 
+const generateColumns = <T extends Structs.Detail> (rowData: Structs.RowData<T>) => {
+  const columns = Traverse.children(rowData.element);
+  const filteredColumns = Arr.filter(columns, SugarNode.isTag('col'));
+  const columnsGroup: Record<number, Structs.Column> = {};
+
+  let index = 0;
+
+  Arr.each(filteredColumns, (column: SugarElement<HTMLTableColElement>): void => {
+    const colspan = CellUtils.getSpan(column, 'colspan');
+
+    Arr.range(colspan, (columnIndex): void => {
+      columnsGroup[index + columnIndex] = {
+        element: column,
+        colspan
+      };
+    });
+
+    index += colspan;
+  });
+
+  return columnsGroup;
+};
+
 /*
  * From a list of list of Detail, generate three pieces of information:
  *  1. the grid size
  *  2. a data structure which can efficiently identify which cell is in which row,column position
  *  3. a list of all cells in order left-to-right, top-to-bottom
  */
-const generate = function <T extends Structs.Detail> (list: Structs.RowData<T>[]): Warehouse {
+const generate = <T extends Structs.Detail> (list: Structs.RowData<T>[]): Warehouse => {
   // list is an array of objects, made by cells and elements
   // elements: is the TR
   // cells: is an array of objects representing the cells in the row.
@@ -47,37 +72,43 @@ const generate = function <T extends Structs.Detail> (list: Structs.RowData<T>[]
   //          rowspan (merge cols)
   const access: Record<string, Structs.DetailExt> = {};
   const cells: Structs.RowData<Structs.DetailExt>[] = [];
+  let columnsGroup: Record<number, Structs.Column> = {};
 
-  const maxRows = list.length;
+  let maxRows = 0;
   let maxColumns = 0;
 
-  Arr.each(list, function (details, r) {
+  Arr.each(list, (rowData, rowIndex) => {
     const currentRow: Structs.DetailExt[] = [];
-    Arr.each(details.cells, function (detail) {
+    Arr.each(rowData.cells, (rowCell) => {
       let start = 0;
 
       // If this spot has been taken by a previous rowspan, skip it.
-      while (access[key(r, start)] !== undefined) {
+      while (access[key(rowIndex, start)] !== undefined) {
         start++;
       }
 
-      const current = Structs.extended(detail.element, detail.rowspan, detail.colspan, r, start);
+      const current = Structs.extended(rowCell.element, rowCell.rowspan, rowCell.colspan, rowIndex, start);
 
       // Occupy all the (row, column) positions that this cell spans for.
-      for (let i = 0; i < detail.colspan; i++) {
-        for (let j = 0; j < detail.rowspan; j++) {
-          const cr = r + j;
-          const cc = start + i;
-          const newpos = key(cr, cc);
+      for (let occupiedColumnPosition = 0; occupiedColumnPosition < rowCell.colspan; occupiedColumnPosition++) {
+        for (let occupiedRowPosition = 0; occupiedRowPosition < rowCell.rowspan; occupiedRowPosition++) {
+          const rowPosition = rowIndex + occupiedRowPosition;
+          const columnPosition = start + occupiedColumnPosition;
+          const newpos = key(rowPosition, columnPosition);
           access[newpos] = current;
-          maxColumns = Math.max(maxColumns, cc + 1);
+          maxColumns = Math.max(maxColumns, columnPosition + 1);
         }
       }
 
       currentRow.push(current);
     });
 
-    cells.push(Structs.rowdata(details.element, currentRow, details.section));
+    if (rowData.section === 'colgroup') {
+      columnsGroup = generateColumns<T>(rowData);
+    } else {
+      maxRows++;
+      cells.push(Structs.rowdata(rowData.element, currentRow, rowData.section));
+    }
   });
 
   const grid = Structs.grid(maxRows, maxColumns);
@@ -85,7 +116,8 @@ const generate = function <T extends Structs.Detail> (list: Structs.RowData<T>[]
   return {
     grid,
     access,
-    all: cells
+    all: cells,
+    columns: columnsGroup
   };
 };
 
@@ -100,11 +132,25 @@ const justCells = function (warehouse: Warehouse) {
   return Arr.flatten(rows);
 };
 
+const justColumns = (warehouse: Warehouse): Structs.Column[] =>
+  Arr.map(Obj.keys(warehouse.columns), (key: string) =>
+    warehouse.columns[key]
+  );
+
+const hasColumns = (warehouse: Warehouse) =>
+  Obj.keys(warehouse.columns).length > 0;
+
+const getColumnAt = (warehouse: Warehouse, columnIndex: number) =>
+  warehouse.columns[columnIndex];
+
 export const Warehouse = {
   fromTable,
   generate,
   getAt,
   findItem,
   filterItems,
-  justCells
+  justCells,
+  justColumns,
+  hasColumns,
+  getColumnAt
 };

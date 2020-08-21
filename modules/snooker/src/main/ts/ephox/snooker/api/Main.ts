@@ -24,7 +24,7 @@ import * as TablePositions from './TablePositions';
 import * as TableRender from './TableRender';
 import { TableResize } from './TableResize';
 import { TableSize } from './TableSize';
-import * as Warehouse from './Warehouse';
+import { Warehouse } from './Warehouse';
 
 export {
   Adjustments,

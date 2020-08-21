@@ -13,6 +13,23 @@ import { BarPositions, RowInfo } from './BarPositions';
 
 const sumUp = (newSize: number[]) => Arr.foldr(newSize, (b, a) => b + a, 0);
 
+const recalculate = (warehouse: Warehouse, widths: number[]): Recalculations.CellWidthSpan[] => {
+  if (Warehouse.hasColumns(warehouse)) {
+    return Recalculations.recalculateWidthForColumns(warehouse, widths);
+  } else {
+    return Recalculations.recalculateWidthForCells(warehouse, widths);
+  }
+};
+
+const recalculateAndApply = (warehouse: Warehouse, widths: number[], tableSize: TableSize): void => {
+  // Set the width of each cell based on the column widths
+  const newSizes = recalculate(warehouse, widths);
+
+  Arr.each(newSizes, (cell) => {
+    tableSize.setElementWidth(cell.element, cell.width);
+  });
+};
+
 const adjustWidth = (table: SugarElement, delta: number, index: number, resizing: ResizeBehaviour, tableSize: TableSize) => {
   const warehouse = Warehouse.fromTable(table);
   const step = tableSize.getCellDelta(delta);
@@ -24,12 +41,7 @@ const adjustWidth = (table: SugarElement, delta: number, index: number, resizing
   const deltas = Deltas.determine(widths, index, clampedStep, tableSize, resizing);
   const newWidths = Arr.map(deltas, (dx, i) => dx + widths[i]);
 
-  // Set the width of each cell based on the column widths
-  const newSizes = Recalculations.recalculateWidth(warehouse, newWidths);
-  Arr.each(newSizes, (cell) => {
-    tableSize.setElementWidth(cell.element, cell.width);
-  });
-
+  recalculateAndApply(warehouse, newWidths, tableSize);
   resizing.resizeTable(tableSize.adjustTableWidth, clampedStep, isLastColumn);
 };
 
@@ -39,7 +51,7 @@ const adjustHeight = (table: SugarElement, delta: number, index: number, directi
 
   const newHeights = Arr.map(heights, (dy, i) => index === i ? Math.max(delta + dy, CellUtils.minHeight()) : dy);
 
-  const newCellSizes = Recalculations.recalculateHeight(warehouse, newHeights);
+  const newCellSizes = Recalculations.recalculateHeightForCells(warehouse, newHeights);
   const newRowSizes = Recalculations.matchRowHeight(warehouse, newHeights);
 
   Arr.each(newRowSizes, (row) => {
@@ -59,11 +71,7 @@ const adjustWidthTo = <T extends Detail> (table: SugarElement, list: RowData<T>[
   const warehouse = Warehouse.generate(list);
   const widths = tableSize.getWidths(warehouse, tableSize);
 
-  // Set the width of each cell based on the column widths
-  const newSizes = Recalculations.recalculateWidth(warehouse, widths);
-  Arr.each(newSizes, (cell) => {
-    tableSize.setElementWidth(cell.element, cell.width);
-  });
+  recalculateAndApply(warehouse, widths, tableSize);
 };
 
 export { adjustWidth, adjustHeight, adjustWidthTo };

@@ -1,7 +1,7 @@
 import { Arr, Fun, Optional } from '@ephox/katamari';
 import { SelectorFilter, SelectorFind, Selectors, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
-import { getAttrValue } from '../util/CellUtils';
 import * as LayerSelector from '../util/LayerSelector';
+import { getAttrValue } from '../util/CellUtils';
 import * as Structs from './Structs';
 
 // lookup inside this table
@@ -28,6 +28,8 @@ const cell = (element: SugarElement, isRoot?: (e: SugarElement) => boolean) => l
 
 const cells = (ancestor: SugarElement): SugarElement<HTMLTableCellElement>[] => LayerSelector.firstLayer(ancestor, 'th,td');
 
+const columns = (ancestor: SugarElement): SugarElement<HTMLTableColElement>[] => LayerSelector.firstLayer(ancestor, 'col');
+
 const notCell = (element: SugarElement, isRoot?: (e: SugarElement) => boolean) => lookup<Element>([ 'caption', 'tr', 'tbody', 'tfoot', 'thead' ], element, isRoot);
 
 const neighbours = <T extends Element = Element> (selector: string) => (element: SugarElement): Optional<SugarElement<T>[]> =>
@@ -43,6 +45,8 @@ const table = (element: SugarElement, isRoot?: (e: SugarElement) => boolean) => 
 const row = (element: SugarElement, isRoot?: (e: SugarElement) => boolean) => lookup<HTMLTableRowElement>([ 'tr' ], element, isRoot);
 
 const rows = (ancestor: SugarElement): SugarElement<HTMLTableRowElement>[] => LayerSelector.firstLayer(ancestor, 'tr');
+
+const columnGroups = (ancestor: SugarElement): SugarElement<HTMLElement>[] => LayerSelector.firstLayer(ancestor, 'colgroup');
 
 const attr = (element: SugarElement, property: string) => getAttrValue(element, property);
 
@@ -63,5 +67,7 @@ export {
   notCell,
   neighbourRows,
   attr,
-  grid
+  grid,
+  columnGroups,
+  columns
 };

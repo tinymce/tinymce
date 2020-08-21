@@ -1,12 +1,11 @@
 import { Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-
 import Plugin from 'tinymce/plugins/table/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 import { sInsertTableTest } from '../module/test/TableTestUtils';
 
-UnitTest.asynctest('browser.tinymce.plugins.table.InsertTableTest', (success, failure) => {
+UnitTest.asynctest('browser.tinymce.plugins.table.InsertTableWithColGroupTest', (success, failure) => {
   Plugin();
   SilverTheme();
 
@@ -14,17 +13,17 @@ UnitTest.asynctest('browser.tinymce.plugins.table.InsertTableTest', (success, fa
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
-      sInsertTableTest(editor, tinyApis, 'TBA', 2, 2, [
+      sInsertTableTest(editor, tinyApis, 'TINY-6050', 2, 2, [
         [ 50, 50 ],
         [ 50, 50 ]
-      ], false),
-      sInsertTableTest(editor, tinyApis, 'TBA', 1, 2, [
+      ], true),
+      sInsertTableTest(editor, tinyApis, 'TINY-6050', 1, 2, [
         [ 100 ],
         [ 100 ]
-      ], false),
-      sInsertTableTest(editor, tinyApis, 'TBA', 2, 1, [
+      ], true),
+      sInsertTableTest(editor, tinyApis, 'TINY-6050', 2, 1, [
         [ 50, 50 ]
-      ], false)
+      ], true)
     ], onSuccess, onFailure);
   }, {
     plugins: 'table',
@@ -35,6 +34,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.InsertTableTest', (success, fa
     },
     theme: 'silver',
     base_url: '/project/tinymce/js/tinymce',
-    statusbar: false
+    statusbar: false,
+    table_use_colgroups: true
   }, success, failure);
 });

@@ -1,6 +1,6 @@
 import { Arr, Fun, Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
-import { DetailExt } from '../api/Structs';
+import { DetailExt, Column } from '../api/Structs';
 import { Warehouse } from '../api/Warehouse';
 
 /*
@@ -14,16 +14,24 @@ const columns = (warehouse: Warehouse): Optional<SugarElement>[] => {
   const cols = Arr.range(grid.columns, Fun.identity);
   const rowsArr = Arr.range(grid.rows, Fun.identity);
 
-  return Arr.map(cols, (col) => {
-    const getBlock = () => Arr.bind(rowsArr, (r) => Warehouse.getAt(warehouse, r, col)
-      .filter((detail) => detail.column === col)
-      .fold(Fun.constant([] as DetailExt[]), (detail) => [ detail ])
+  if (Warehouse.hasColumns(warehouse)) {
+    return Arr.map(Warehouse.justColumns(warehouse), (column: Column) =>
+      Optional.from(column.element)
     );
+  } else {
+    return Arr.map(cols, (col) => {
+      const getBlock = () =>
+        Arr.bind(rowsArr, (r) =>
+          Warehouse.getAt(warehouse, r, col)
+            .filter((detail) => detail.column === col)
+            .toArray()
+        );
 
-    const isSingle = (detail: DetailExt) => detail.colspan === 1;
-    const getFallback = () => Warehouse.getAt(warehouse, 0, col);
-    return decide(getBlock, isSingle, getFallback);
-  });
+      const isSingle = (detail: DetailExt) => detail.colspan === 1;
+      const getFallback = () => Warehouse.getAt(warehouse, 0, col);
+      return decide(getBlock, isSingle, getFallback);
+    });
+  }
 };
 
 const decide = (getBlock: () => DetailExt[], isSingle: (detail: DetailExt) => boolean, getFallback: () => Optional<DetailExt>): Optional<SugarElement> => {

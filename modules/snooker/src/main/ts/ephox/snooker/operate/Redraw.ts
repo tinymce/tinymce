@@ -1,8 +1,8 @@
-import { Arr, Fun } from '@ephox/katamari';
+import { Arr } from '@ephox/katamari';
 import { Attribute, Insert, InsertAll, Remove, Replication, SelectorFilter, SelectorFind, SugarElement, Traverse } from '@ephox/sugar';
-import { Detail, DetailNew, RowDataNew } from '../api/Structs';
+import { Detail, DetailNew, RowDataNew, Section } from '../api/Structs';
 
-const setIfNot = function (element: SugarElement, property: string, value: number, ignore: number): void {
+const setIfNot = (element: SugarElement, property: string, value: number, ignore: number): void => {
   if (value === ignore) {
     Attribute.remove(element, property);
   } else {
@@ -15,31 +15,41 @@ interface NewRowsAndCells {
   readonly newCells: SugarElement[];
 }
 
-const render = function <T extends DetailNew> (table: SugarElement, grid: RowDataNew<T>[]): NewRowsAndCells {
+const render = <T extends DetailNew> (table: SugarElement, grid: RowDataNew<T>[]): NewRowsAndCells => {
   const newRows: SugarElement[] = [];
   const newCells: SugarElement[] = [];
 
-  const insertThead = Arr.last(SelectorFilter.children(table, 'caption,colgroup')).fold(
-    () => Fun.curry(Insert.prepend, table),
-    (c) => Fun.curry(Insert.after, c)
-  );
+  const insert = (selector: string, element: SugarElement<HTMLTableSectionElement | HTMLTableColElement>) => {
+    const lastChild = Arr.last(SelectorFilter.children(table, selector));
 
-  const renderSection = function (gridSection: RowDataNew<T>[], sectionName: 'thead' | 'tbody' | 'tfoot') {
-    const section = SelectorFind.child(table, sectionName).getOrThunk(function () {
+    lastChild.fold(
+      () => Insert.prepend(table, element),
+      (child) => Insert.after(child, element)
+    );
+  };
+
+  const renderSection = (gridSection: RowDataNew<T>[], sectionName: Section) => {
+    const section = SelectorFind.child(table, sectionName).getOrThunk(() => {
       const tb = SugarElement.fromTag(sectionName, Traverse.owner(table).dom);
-      sectionName === 'thead' ? insertThead(tb) : Insert.append(table, tb); // mutation
+      if (sectionName === 'thead') {
+        insert('caption,colgroup', tb);
+      } else if (sectionName === 'colgroup') {
+        insert('caption', tb);
+      } else {
+        Insert.append(table, tb);
+      }
       return tb;
     });
 
     Remove.empty(section);
 
-    const rows = Arr.map(gridSection, function (row) {
+    const rows = Arr.map(gridSection, (row) => {
       if (row.isNew) {
         newRows.push(row.element);
       }
       const tr = row.element;
       Remove.empty(tr);
-      Arr.each(row.cells, function (cell) {
+      Arr.each(row.cells, (cell) => {
         if (cell.isNew) {
           newCells.push(cell.element);
         }
@@ -50,14 +60,16 @@ const render = function <T extends DetailNew> (table: SugarElement, grid: RowDat
       return tr;
     });
 
-    InsertAll.append(section, rows);
+    if (sectionName !== 'colgroup') {
+      InsertAll.append(section, rows);
+    }
   };
 
-  const removeSection = function (sectionName: 'thead' | 'tbody' | 'tfoot') {
+  const removeSection = (sectionName: Section) => {
     SelectorFind.child(table, sectionName).each(Remove.remove);
   };
 
-  const renderOrRemoveSection = function (gridSection: RowDataNew<T>[], sectionName: 'thead' | 'tbody' | 'tfoot') {
+  const renderOrRemoveSection = (gridSection: RowDataNew<T>[], sectionName: Section) => {
     if (gridSection.length > 0) {
       renderSection(gridSection, sectionName);
     } else {
@@ -68,8 +80,9 @@ const render = function <T extends DetailNew> (table: SugarElement, grid: RowDat
   const headSection: RowDataNew<T>[] = [];
   const bodySection: RowDataNew<T>[] = [];
   const footSection: RowDataNew<T>[] = [];
+  const columnGroupsSection: RowDataNew<T>[] = [];
 
-  Arr.each(grid, function (row) {
+  Arr.each(grid, (row) => {
     switch (row.section) {
       case 'thead':
         headSection.push(row);
@@ -80,8 +93,15 @@ const render = function <T extends DetailNew> (table: SugarElement, grid: RowDat
       case 'tfoot':
         footSection.push(row);
         break;
+      case 'colgroup':
+        columnGroupsSection.push(row);
+        break;
     }
   });
+
+  if (columnGroupsSection.length) {
+    renderOrRemoveSection(columnGroupsSection, 'colgroup');
+  }
 
   renderOrRemoveSection(headSection, 'thead');
   renderOrRemoveSection(bodySection, 'tbody');
