@@ -18,7 +18,7 @@ UnitTest.asynctest('Dialog Focus Test (webdriver)', (success, failure) => {
   };
 
   const tests =
-    isPhantomJs ? [ ] : [
+    isPhantomJs() ? [ ] : [
       TestHelpers.GuiSetup.mAddStyles(doc, [
         '[role="dialog"] { border: 1px solid black; padding: 2em; background-color: rgb(131,193,249); top: 40px; position: absolute; }',
 

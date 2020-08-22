@@ -95,16 +95,11 @@ const register = (parser: DomParser, settings: DomParserSettings): void => {
 
             // Ignore bookmarks
             if (prevName !== 'span' || prev.attr('data-mce-type') !== 'bookmark') {
-              // Found a non BR element
-              if (prevName !== 'br') {
-                break;
-              }
-
               // Found another br it's a <br><br> structure then don't remove anything
               if (prevName === 'br') {
                 node = null;
-                break;
               }
+              break;
             }
 
             prev = prev.prev;

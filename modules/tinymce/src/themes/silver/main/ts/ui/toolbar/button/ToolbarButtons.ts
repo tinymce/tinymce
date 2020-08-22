@@ -31,9 +31,9 @@ import { createPartialChoiceMenu } from '../../menus/menu/MenuChoice';
 import { deriveMenuMovement } from '../../menus/menu/MenuMovement';
 import * as MenuParts from '../../menus/menu/MenuParts';
 import { createTieredDataFrom } from '../../menus/menu/SingleMenu';
-import { ToolbarButtonClasses } from '../button/ButtonClasses';
-import { onToolbarButtonExecute, toolbarButtonEventOrder } from '../button/ButtonEvents';
 import { renderToolbarGroup, ToolbarGroup } from '../CommonToolbar';
+import { ToolbarButtonClasses } from './ButtonClasses';
+import { onToolbarButtonExecute, toolbarButtonEventOrder } from './ButtonEvents';
 
 interface Specialisation<T> {
   toolbarButtonBehaviours: Array<Behaviour.NamedConfiguredBehaviour<Behaviour.BehaviourConfigSpec, Behaviour.BehaviourConfigDetail>>;

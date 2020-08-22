@@ -58,13 +58,7 @@ const applyPattern = (editor: Editor, match: BlockPatternMatch): boolean => {
 // Finds a matching pattern to the specified text
 const findPattern = <P extends Pattern>(patterns: P[], text: string): Optional<P> => {
   const nuText = text.replace(Unicode.nbsp, ' ');
-  return Arr.find(patterns, (pattern) => {
-    if (text.indexOf(pattern.start) !== 0 && nuText.indexOf(pattern.start) !== 0) {
-      return false;
-    }
-
-    return true;
-  });
+  return Arr.find(patterns, (pattern) => text.indexOf(pattern.start) === 0 || nuText.indexOf(pattern.start) === 0);
 };
 
 const findPatterns = (editor: Editor, patterns: BlockPattern[]): BlockPatternMatch[] => {

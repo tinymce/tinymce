@@ -42,7 +42,7 @@ UnitTest.test('browser.tinymce.core.file.BlobCacheTest', function () {
   Assertions.assertEq('Testing removeByUri()', undefined, blobCache.getByUri(blobInfo.blobUri()));
 
   try {
-    blobInfo = blobCache.create({ blob } as BlobInfoData);
+    blobCache.create({ blob } as BlobInfoData);
     Assertions.assertEq('Exception should be thrown if BlobInfo is created without blob or base64 entries', false, true);
   } catch (ex) {
     Assertions.assertEq('Exception should be thrown if BlobInfo is created without blob or base64 entries', true, true);

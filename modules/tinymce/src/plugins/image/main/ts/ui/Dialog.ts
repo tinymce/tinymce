@@ -426,12 +426,12 @@ export const Dialog = (editor: Editor) => {
     parseStyle: parseStyle(editor),
     serializeStyle: serializeStyle(editor)
   };
-  const open = () => collect(editor).then(makeDialog(helpers)).then((spec) => editor.windowManager.open(spec));
-  const openLater = () => {
-    open();
+  const open = () => {
+    collect(editor)
+      .then(makeDialog(helpers))
+      .then((spec) => editor.windowManager.open(spec));
   };
   return {
-    open,
-    openLater
+    open
   };
 };

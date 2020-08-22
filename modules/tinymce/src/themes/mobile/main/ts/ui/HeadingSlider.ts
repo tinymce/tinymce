@@ -9,8 +9,8 @@ import { SketchSpec } from '@ephox/alloy';
 import { Arr } from '@ephox/katamari';
 import { Compare, PredicateFind, SugarElement, SugarNode } from '@ephox/sugar';
 
-import * as Buttons from '../ui/Buttons';
-import { MobileRealm } from '../ui/IosRealm';
+import * as Buttons from './Buttons';
+import { MobileRealm } from './IosRealm';
 import * as SizeSlider from './SizeSlider';
 import * as ToolbarWidgets from './ToolbarWidgets';
 

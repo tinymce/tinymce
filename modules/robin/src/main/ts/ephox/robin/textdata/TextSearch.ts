@@ -1,4 +1,4 @@
-import { Arr, Optional, Unicode } from '@ephox/katamari';
+import { Arr, Optional, Type, Unicode } from '@ephox/katamari';
 
 export interface CharPos {
   readonly ch: string;
@@ -37,13 +37,13 @@ const rfind = (str: string, regex: RegExp): Optional<number> => {
   regex.lastIndex = -1;
   const reversed = Arr.reverse(str).join('');
   const match = reversed.match(regex);
-  return match !== undefined && match !== null && match.index !== undefined && match.index >= 0 ? Optional.some((reversed.length - 1) - match.index) : Optional.none<number>();
+  return Type.isNonNullable(match) && match.index !== undefined && match.index >= 0 ? Optional.some((reversed.length - 1) - match.index) : Optional.none<number>();
 };
 
 const lfind = (str: string, regex: RegExp): Optional<number> => {
   regex.lastIndex = -1;
   const match = str.match(regex);
-  return match !== undefined && match !== null && match.index !== undefined && match.index >= 0 ? Optional.some(match.index) : Optional.none<number>();
+  return Type.isNonNullable(match) && match.index !== undefined && match.index >= 0 ? Optional.some(match.index) : Optional.none<number>();
 };
 
 export {
