@@ -79,16 +79,14 @@ const isCorsWithCredentialsImage = function (editor: Editor, img) {
 };
 
 const defaultFetchImage = (editor: Editor, img: HTMLImageElement) => {
-  let src = img.src, apiKey;
-
   if (isCorsImage(editor, img)) {
     return Proxy.getUrl(img.src, null, isCorsWithCredentialsImage(editor, img));
   }
 
   if (!isLocalImage(editor, img)) {
-    src = Settings.getProxyUrl(editor);
+    let src = Settings.getProxyUrl(editor);
     src += (src.indexOf('?') === -1 ? '?' : '&') + 'url=' + encodeURIComponent(img.src);
-    apiKey = Settings.getApiKey(editor);
+    const apiKey = Settings.getApiKey(editor);
     return Proxy.getUrl(src, apiKey, false);
   }
 

@@ -3,8 +3,6 @@ let LiveReloadPlugin = require('webpack-livereload-plugin');
 let path = require('path');
 let fs = require('fs');
 
-let liveReloadPlugin = new LiveReloadPlugin();
-
 const packageData = require("../../package.json");
 
 let create = (entries, tsConfig, outDir, filename) => {

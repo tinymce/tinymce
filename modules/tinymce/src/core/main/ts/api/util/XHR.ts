@@ -258,40 +258,38 @@ const XHR: XHR = {
 
     xhr = new XMLHttpRequest();
 
-    if (xhr) {
-      if (xhr.overrideMimeType) {
-        xhr.overrideMimeType(settings.content_type);
-      }
-
-      xhr.open(settings.type || (settings.data ? 'POST' : 'GET'), settings.url, settings.async);
-
-      if (settings.crossDomain) {
-        xhr.withCredentials = true;
-      }
-
-      if (settings.content_type) {
-        xhr.setRequestHeader('Content-Type', settings.content_type);
-      }
-
-      if (settings.requestheaders) {
-        Tools.each(settings.requestheaders, function (header) {
-          xhr.setRequestHeader(header.key, header.value);
-        });
-      }
-
-      xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-
-      xhr = XHR.fire('beforeSend', { xhr, settings }).xhr;
-      xhr.send(settings.data);
-
-      // Syncronous request
-      if (!settings.async) {
-        return ready();
-      }
-
-      // Wait for response, onReadyStateChange can not be used since it leaks memory in IE
-      Delay.setTimeout(ready, 10);
+    if (xhr.overrideMimeType) {
+      xhr.overrideMimeType(settings.content_type);
     }
+
+    xhr.open(settings.type || (settings.data ? 'POST' : 'GET'), settings.url, settings.async);
+
+    if (settings.crossDomain) {
+      xhr.withCredentials = true;
+    }
+
+    if (settings.content_type) {
+      xhr.setRequestHeader('Content-Type', settings.content_type);
+    }
+
+    if (settings.requestheaders) {
+      Tools.each(settings.requestheaders, function (header) {
+        xhr.setRequestHeader(header.key, header.value);
+      });
+    }
+
+    xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+
+    xhr = XHR.fire('beforeSend', { xhr, settings }).xhr;
+    xhr.send(settings.data);
+
+    // Syncronous request
+    if (!settings.async) {
+      return ready();
+    }
+
+    // Wait for response, onReadyStateChange can not be used since it leaks memory in IE
+    Delay.setTimeout(ready, 10);
   }
 };
 
