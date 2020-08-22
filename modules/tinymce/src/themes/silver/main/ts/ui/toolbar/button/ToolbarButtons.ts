@@ -12,7 +12,7 @@ import {
 } from '@ephox/alloy';
 import { Toolbar } from '@ephox/bridge';
 import { Arr, Cell, Fun, Future, Id, Merger, Optional } from '@ephox/katamari';
-import { Attribute, SelectorFind } from '@ephox/sugar';
+import { Attribute, EventArgs, SelectorFind } from '@ephox/sugar';
 
 import I18n from 'tinymce/core/api/util/I18n';
 import { ToolbarGroupSetting } from 'tinymce/themes/silver/api/Settings';
@@ -126,8 +126,8 @@ const renderCommonStructure = (
         DisablingConfigs.toolbarButton(providersBackstage.isReadOnly),
         ReadOnly.receivingConfig(),
         AddEventsBehaviour.config('common-button-display-events', [
-          AlloyEvents.run(NativeEvents.mousedown(), (button, se) => {
-            se.event().prevent();
+          AlloyEvents.run<EventArgs<MouseEvent>>(NativeEvents.mousedown(), (button, se) => {
+            se.event.prevent();
             AlloyTriggers.emit(button, focusButtonEvent);
           })
         ])
