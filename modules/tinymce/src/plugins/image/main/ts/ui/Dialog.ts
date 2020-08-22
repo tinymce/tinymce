@@ -429,7 +429,7 @@ export const Dialog = (editor: Editor) => {
   const open = () => {
     collect(editor)
       .then(makeDialog(helpers))
-      .then((spec) => editor.windowManager.open(spec));
+      .then(editor.windowManager.open);
   };
   return {
     open

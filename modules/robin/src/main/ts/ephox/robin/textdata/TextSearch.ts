@@ -13,6 +13,9 @@ const charpos = (ch: string, offset: number): CharPos => ({
 const locate = (text: string, offset: number): CharPos =>
   charpos(text.charAt(offset), offset);
 
+const getMatchIndex = (match: RegExpMatchArray | null): Optional<number> =>
+  Type.isNonNullable(match) && match.index !== undefined && match.index >= 0 ? Optional.some(match.index) : Optional.none();
+
 const previous = (text: string, offsetOption: Optional<number>): Optional<CharPos> => {
   const max = offsetOption.getOr(text.length);
   for (let i = max - 1; i >= 0; i--) {
@@ -36,14 +39,12 @@ const next = (text: string, offsetOption: Optional<number>): Optional<CharPos> =
 const rfind = (str: string, regex: RegExp): Optional<number> => {
   regex.lastIndex = -1;
   const reversed = Arr.reverse(str).join('');
-  const match = reversed.match(regex);
-  return Type.isNonNullable(match) && match.index !== undefined && match.index >= 0 ? Optional.some((reversed.length - 1) - match.index) : Optional.none<number>();
+  return getMatchIndex(reversed.match(regex)).map((index) => (reversed.length - 1) - index);
 };
 
 const lfind = (str: string, regex: RegExp): Optional<number> => {
   regex.lastIndex = -1;
-  const match = str.match(regex);
-  return Type.isNonNullable(match) && match.index !== undefined && match.index >= 0 ? Optional.some(match.index) : Optional.none<number>();
+  return getMatchIndex(str.match(regex));
 };
 
 export {
