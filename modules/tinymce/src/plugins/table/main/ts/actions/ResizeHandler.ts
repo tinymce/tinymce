@@ -48,6 +48,8 @@ export const getResizeHandler = function (editor: Editor): ResizeHandler {
     TableGridSize.getGridSize(table).columns;
 
   const afterCornerResize = (table: SugarElement<HTMLTableElement>, origin: string, width: number) => {
+    // Origin will tell us which handle was clicked, eg corner-se or corner-nw
+    // so check to see if it ends with `e` (eg east edge)
     const isRightEdgeResize = Strings.endsWith(origin, 'e');
 
     if (Util.isPercentage(startRawW)) {
