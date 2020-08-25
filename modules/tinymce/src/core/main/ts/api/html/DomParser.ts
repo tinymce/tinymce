@@ -177,13 +177,13 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
         // If it's an LI try to find a UL/OL for it or wrap it
         if (node.name === 'li') {
           sibling = node.prev;
-          if (sibling && (sibling.name === 'ul' || sibling.name === 'ul')) {
+          if (sibling && (sibling.name === 'ul' || sibling.name === 'ol')) {
             sibling.append(node);
             continue;
           }
 
           sibling = node.next;
-          if (sibling && (sibling.name === 'ul' || sibling.name === 'ul')) {
+          if (sibling && (sibling.name === 'ul' || sibling.name === 'ol')) {
             sibling.insert(node, sibling.firstChild, true);
             continue;
           }

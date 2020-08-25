@@ -7,9 +7,9 @@
 
 import { Fun, Optional, Unicode } from '@ephox/katamari';
 import { Insert, SugarElement } from '@ephox/sugar';
-import { CaretPosition } from '../caret/CaretPosition';
-import { getElementFromPosition } from '../caret/CaretUtils';
 import * as NodeType from '../dom/NodeType';
+import { CaretPosition } from './CaretPosition';
+import { getElementFromPosition } from './CaretUtils';
 
 const insertTextAtPosition = (text: string, pos: CaretPosition): Optional<CaretPosition> => {
   const container = pos.container();

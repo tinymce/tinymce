@@ -1,19 +1,21 @@
-var gulp = require('gulp');
-var connect = require('gulp-connect');
-var clean = require('gulp-clean');
-var less = require('gulp-less');
-var lessAutoprefix = require('less-plugin-autoprefix');
-var gulpStylelint = require('gulp-stylelint');
-var header = require('gulp-header');
-var cleanCSS = require('gulp-clean-css');
-var sourcemaps = require('gulp-sourcemaps');
-var rename = require('gulp-rename');
-var chalk = require('chalk');
-var cp = require('child_process');
+const gulp = require('gulp');
+const connect = require('gulp-connect');
+const clean = require('gulp-clean');
+const less = require('gulp-less');
+const lessAutoprefix = require('less-plugin-autoprefix');
+const gulpStylelint = require('gulp-stylelint');
+const header = require('gulp-header');
+const cleanCSS = require('gulp-clean-css');
+const sourcemaps = require('gulp-sourcemaps');
+const rename = require('gulp-rename');
+const chalk = require('chalk');
 const fs = require('fs');
 const path = require('path');
 
-var autoprefix = new lessAutoprefix({ browsers: ['IE 11', 'last 2 Safari versions', 'iOS 9.0', 'last 2 Chrome versions', 'Firefox ESR'], grid: 'no-autoplace' });
+const autoprefix = new lessAutoprefix({
+  browsers: ['IE 11', 'last 2 Safari versions', 'iOS 9.0', 'last 2 Chrome versions', 'Firefox ESR'],
+  grid: 'no-autoplace'
+});
 
 //
 // Lint less files using stylelint
@@ -50,7 +52,7 @@ gulp.task('copyTinymce', function(done) {
   } else {
     console.log(chalk.red('Local TinyMCE does not exist. Using cloud version instead'));
     console.log(chalk.yellow('Run yarn build in the repository root to build a local version of TinyMCE'));
-    const url = 'https://cdn.tiny.cloud/1/qagffr3pkuv17a8on1afax661irst1hbr4e6tbv888sz91jc/tinymce/5-dev/tinymce.min.js'
+    const url = 'https://cdn.tiny.cloud/1/qagffr3pkuv17a8on1afax661irst1hbr4e6tbv888sz91jc/tinymce/5-dev/tinymce.min.js';
     const html = fs.readFileSync('./build/index.html', 'utf8');
     fs.writeFileSync('./build/index.html', html.replace('/tinymce/tinymce.min.js', url));
     done();

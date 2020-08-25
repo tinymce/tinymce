@@ -21,7 +21,7 @@ module.exports = function (grunt) {
         value.split(/,/).forEach(function (src) {
           appendFile(path.join(dirPath, src, fileName));
           if (extrasPath) {
-            var extrasDir = path.join(dirPath, src, extrasPath)
+            var extrasDir = path.join(dirPath, src, extrasPath);
             var useMinified = fileName.indexOf('.min.') !== -1;
             if (fs.existsSync(extrasDir)) {
               var files = fs.readdirSync(extrasDir);

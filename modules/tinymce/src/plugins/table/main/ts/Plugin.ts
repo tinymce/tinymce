@@ -50,7 +50,7 @@ function Plugin(editor: Editor) {
 
   if (hasTabNavigation(editor)) {
     editor.on('keydown', function (e: KeyboardEvent) {
-      TabContext.handle(e, editor, actions, resizeHandler.lazyWire);
+      TabContext.handle(e, editor, actions);
     });
   }
 
