@@ -34,9 +34,24 @@ const getRawWidth = (editor: Editor, elm: HTMLElement): Optional<string> => {
 };
 
 const isPercentage = (value: string): boolean => /^(\d+(\.\d+)?)%$/.test(value);
+const isPixel = (value: string): boolean => /^(\d+(\.\d+)?)px$/.test(value);
 
 const getSelectionStart = (editor: Editor) => SugarElement.fromDom(editor.selection.getStart());
 
 const getThunkedSelectionStart = (editor: Editor) => () => SugarElement.fromDom(editor.selection.getStart());
 
-export { getNodeName, getBody, getIsRoot, addPxSuffix, removePxSuffix, getPixelWidth, getPixelHeight, getRawWidth, removeDataStyle, isPercentage, getSelectionStart, getThunkedSelectionStart };
+export {
+  getNodeName,
+  getBody,
+  getIsRoot,
+  addPxSuffix,
+  removePxSuffix,
+  getPixelWidth,
+  getPixelHeight,
+  getRawWidth,
+  removeDataStyle,
+  isPercentage,
+  isPixel,
+  getSelectionStart,
+  getThunkedSelectionStart
+};
