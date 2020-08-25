@@ -11,7 +11,7 @@ import DOMUtils from '../api/dom/DOMUtils';
 import DomTreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
 import * as Settings from '../api/Settings';
-import Schema, { SchemaMap } from '../api/html/Schema';
+import { SchemaMap } from '../api/html/Schema';
 import { EditorEvent } from '../api/util/EventDispatcher';
 import * as Bookmarks from '../bookmark/Bookmarks';
 import * as CaretContainer from '../caret/CaretContainer';
@@ -42,7 +42,8 @@ const emptyBlock = function (elm) {
   elm.innerHTML = '<br data-mce-bogus="1">';
 };
 
-const containerAndSiblingName = (container: Node, nodeName: string) => container.nodeName === nodeName || (container.previousSibling && container.previousSibling.nodeName === nodeName);
+const containerAndSiblingName = (container: Node, nodeName: string) =>
+  container.nodeName === nodeName || (container.previousSibling && container.previousSibling.nodeName === nodeName);
 
 // Returns true if the block can be split into two blocks or not
 const canSplitBlock = function (dom, node) {
@@ -242,16 +243,16 @@ const handleEmptyRange = (parentNode: Node, rng: Range) => {
 // Used as an internal function below. Dragging it up here to make the function state explicit (and read-only).
 interface CreateNewBlock {
   container: Node;
-  schema: Schema;
   parentBlockName: string;
   newBlockName: string;
-  dom: DOMUtils;
   parentBlock: Element;
   editor: Editor;
   editableRoot: Node;
 }
 
-const _createNewBlock = ({ container, schema, parentBlockName, newBlockName, dom, parentBlock, editor, editableRoot }: CreateNewBlock, name: string | undefined): Node => {
+const internalCreateNewBlock = (args: CreateNewBlock, name: string | undefined): Node => {
+  const { container, parentBlockName, newBlockName, parentBlock, editor, editableRoot } = args;
+  const dom = editor.dom, schema = editor.schema;
   let node = container;
   const textInlineElements = schema.getTextInlineElements();
 
@@ -301,7 +302,8 @@ interface IsCaretAtStartOrEndOFBlock {
   nonEmptyElementsMap: SchemaMap;
 }
 
-const _isCaretAtStartOrEndOfBlock = ({ offset, container, isAfterLastNodeInContainer, parentBlock, nonEmptyElementsMap }: IsCaretAtStartOrEndOFBlock, start: boolean): boolean => {
+const internalIsCaretAtStartOrEndOfBlock = (args: IsCaretAtStartOrEndOFBlock, start: boolean): boolean => {
+  const { offset, container, isAfterLastNodeInContainer, parentBlock, nonEmptyElementsMap } = args;
   const normalizedOffset = normalizeZwspOffset(start, container, offset);
 
   // Caret is in the middle of a text node like "a|b"
@@ -369,12 +371,13 @@ interface InsertNewBlockAfter {
   createNewBlock: (name?: string) => Node;
   parentBlock: Element;
   containerBlock: Element;
-  dom: DOMUtils;
   editor: Editor;
 }
 
-const _insertNewBlockAfter = ({ containerBlockName, newBlockName, parentBlockName, createNewBlock, parentBlock, containerBlock, dom, editor }: InsertNewBlockAfter): Node => {
+const internalInsertNewBlockAfter = (args: InsertNewBlockAfter): Node => {
+  const { containerBlockName, newBlockName, parentBlockName, createNewBlock, parentBlock, containerBlock, editor } = args;
   let newBlock: Node;
+  const dom = editor.dom;
 
   // If the caret is at the end of a header we produce a P tag after it similar to Word unless we are in a hgroup
   if (/^(H[1-6]|PRE|FIGURE)$/.test(parentBlockName) && containerBlockName !== 'HGROUP') {
@@ -404,18 +407,15 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>) => {
 
   // Creates a new block element by cloning the current one or creating a new one if the name is specified
   // This function will also copy any text formatting from the parent block and add it to the new one
-  const createNewBlock = function (name?: string) {
-    return _createNewBlock({ container, schema, parentBlockName, newBlockName, dom, parentBlock, editor, editableRoot }, name);
-  };
+  const createNewBlock = (name?: string) =>
+    internalCreateNewBlock({ container, parentBlockName, newBlockName, parentBlock, editor, editableRoot }, name);
 
   // Returns true/false if the caret is at the start/end of the parent block element
-  const isCaretAtStartOrEndOfBlock = function (start?: true) {
-    const output = _isCaretAtStartOrEndOfBlock({ offset, container, isAfterLastNodeInContainer, parentBlock, nonEmptyElementsMap }, start);
-    return output;
-  };
+  const isCaretAtStartOrEndOfBlock = (start?: true) =>
+    internalIsCaretAtStartOrEndOfBlock({ offset, container, isAfterLastNodeInContainer, parentBlock, nonEmptyElementsMap }, start);
 
-  const insertNewBlockAfter = function () {
-    newBlock = _insertNewBlockAfter({ containerBlockName, newBlockName, parentBlockName, createNewBlock, parentBlock, containerBlock, dom, editor });
+  const insertNewBlockAfter = () => {
+    newBlock = internalInsertNewBlockAfter({ containerBlockName, newBlockName, parentBlockName, createNewBlock, parentBlock, containerBlock, editor });
   };
 
   // Setup range items and newBlockName
