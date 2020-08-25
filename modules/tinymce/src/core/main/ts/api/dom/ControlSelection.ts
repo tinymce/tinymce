@@ -28,12 +28,13 @@ interface ControlSelection {
   destroy (): void;
 }
 
-interface ResizeHandle {
-  0: number;
-  1: number;
-  2: number;
-  3: number;
-  elm?: Element;
+type ResizeHandle = [ number, number, number, number ] & { elm?: Element };
+
+interface ResizeHandles {
+  ne: ResizeHandle;
+  nw: ResizeHandle;
+  se: ResizeHandle;
+  sw: ResizeHandle;
 }
 
 interface SelectedResizeHandle extends ResizeHandle {
@@ -71,8 +72,7 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
     startScrollHeight;
 
   // Details about each resize handle how to scale etc
-  // TODO: Add a type for the value
-  const resizeHandles: Record<string, ResizeHandle> = {
+  const resizeHandles: ResizeHandles = {
     // Name: x multiplier, y multiplier, delta size x, delta size y
     nw: [ 0, 0, -1, -1 ],
     ne: [ 1, 0, 1, -1 ],
