@@ -1,7 +1,8 @@
 import { Assertions, Chain, Log, Mouse, NamedChain, Pipeline, TestLogs } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Cell } from '@ephox/katamari';
+import { Arr, Cell } from '@ephox/katamari';
 import { ApiChains, Editor as McEditor } from '@ephox/mcagar';
+import { TableGridSize } from '@ephox/snooker';
 import { SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
@@ -11,6 +12,8 @@ import * as TableTestUtils from '../module/test/TableTestUtils';
 UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, failure) => {
   const lastObjectResizeStartEvent = Cell<any>(null);
   const lastObjectResizedEvent = Cell<any>(null);
+  const pixelDiffThreshold = 3;
+  const percentDiffThreshold = 1;
 
   Plugin();
   SilverTheme();
@@ -64,16 +67,23 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
 
   const cResizeWithHandle = TableTestUtils.cDragHandle('se', -100, -20);
 
+  const cGetColWidths = Chain.mapper((input: any) => {
+    const size = TableGridSize.getGridSize(input.element);
+    return Arr.range(size.columns, (col) => TableTestUtils.getCellWidth(input.editor, input.element, 0, col));
+  });
+
   const cInsertResizeMeasure = (cResize: Chain<any, any>, cInsert: Chain<Editor, SugarElement>) => NamedChain.asChain([
     NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
     NamedChain.write('events', cBindResizeEvents),
     NamedChain.direct('editor', cInsert, 'element'),
     NamedChain.write('widthBefore', TableTestUtils.cGetWidth),
+    NamedChain.write('colWidthsBefore', cGetColWidths),
     NamedChain.read('element', Mouse.cTrueClick),
     NamedChain.read('editor', cResize),
     NamedChain.write('widthAfter', TableTestUtils.cGetWidth),
+    NamedChain.write('colWidthsAfter', cGetColWidths),
     NamedChain.write('events', cUnbindResizeEvents),
-    NamedChain.merge([ 'widthBefore', 'widthAfter', 'element' ], 'widths'),
+    NamedChain.merge([ 'widthBefore', 'widthAfter', 'colWidthsBefore', 'colWidthsAfter', 'element' ], 'widths'),
     NamedChain.output('widths')
   ]);
 
@@ -89,8 +99,12 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
     Assertions.assertEq(`table raw width before resizing is ${width}`, width, widths.widthBefore.raw);
   });
 
-  const cAssertWidthAfterResize = (width: number) => Chain.op((widths: any) => {
-    Assertions.assertEq(`table raw width after resizing is ${width}`, width, widths.widthAfter.raw);
+  const cAssertWidthAfterResize = (width: number, approx: boolean = false) => Chain.op((widths: any) => {
+    if (approx) {
+      Assertions.assertEq(`table raw width after resizing is ~${width}`, true, Math.abs(widths.widthAfter.raw - width) < pixelDiffThreshold);
+    } else {
+      Assertions.assertEq(`table raw width after resizing is ${width}`, width, widths.widthAfter.raw);
+    }
   });
 
   const cAssertEventData = (state, expectedEventName) => Chain.op((_) => {
@@ -298,11 +312,14 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
       NamedChain.read('editor', ApiChains.cSetContent('')),
       NamedChain.direct('editor', cInsertResizeMeasure(TableTestUtils.cDragHandle('se', 20, 0), TableTestUtils.cInsertRaw(pixelTable)), 'widths'),
       NamedChain.read('widths', cAssertWidthAfterResize(220)),
-      NamedChain.direct('widths', Chain.mapper((widths: any) => widths.element), 'element'),
-      NamedChain.write('lastColWidth', TableTestUtils.cGetCellWidth(0, 1)),
-      NamedChain.read('lastColWidth', Chain.op((width: any) => {
-        Assertions.assertEq(`Last column raw width ${width.raw + width.unit} should be ~106px`, true, Math.abs(106 - width.raw) < 3);
-        Assertions.assertEq('Last column unit width', 'px', width.unit);
+      NamedChain.read('widths', Chain.op((widths: any) => {
+        const firstColWidth = widths.colWidthsAfter[0];
+        const lastColWidth = widths.colWidthsAfter[1];
+        // Note: Use 96px as the padding + borders are about 14px which adds up to ~110px per cell
+        Assertions.assertEq(`First column raw width ${firstColWidth.raw + firstColWidth.unit} should be ~96px`, true, Math.abs(96 - firstColWidth.raw) < pixelDiffThreshold);
+        Assertions.assertEq('First column unit width', 'px', firstColWidth.unit);
+        Assertions.assertEq(`Last column raw width ${lastColWidth.raw + lastColWidth.unit} should be ~96px`, true, Math.abs(96 - lastColWidth.raw) < pixelDiffThreshold);
+        Assertions.assertEq('Last column unit width', 'px', lastColWidth.unit);
       })),
       cAssertEventData(lastObjectResizeStartEvent, 'objectresizestart'),
       cAssertEventData(lastObjectResizedEvent, 'objectresized'),
@@ -325,11 +342,45 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
       NamedChain.read('editor', ApiChains.cSetContent('')),
       NamedChain.direct('editor', cInsertResizeMeasure(TableTestUtils.cDragHandle('ne', 20, 0), TableTestUtils.cInsertRaw(pixelTable)), 'widths'),
       NamedChain.read('widths', cAssertWidthAfterResize(220)),
-      NamedChain.direct('widths', Chain.mapper((widths: any) => widths.element), 'element'),
-      NamedChain.write('lastColWidth', TableTestUtils.cGetCellWidth(0, 1)),
-      NamedChain.read('lastColWidth', Chain.op((width: any) => {
-        Assertions.assertEq(`Last column raw width ${width.raw + width.unit} should be ~116px`, true, Math.abs(116 - width.raw) < 3);
-        Assertions.assertEq('Last column unit width', 'px', width.unit);
+      NamedChain.read('widths', Chain.op((widths: any) => {
+        const lastColWidth = widths.colWidthsAfter[1];
+        // Note: Use 106px as the padding + borders are about 14px
+        Assertions.assertEq(`Last column raw width ${lastColWidth.raw + lastColWidth.unit} should be ~106px`, true, Math.abs(106 - lastColWidth.raw) < pixelDiffThreshold);
+        Assertions.assertEq('Last column unit width', 'px', lastColWidth.unit);
+        const firstColWidthBefore = widths.colWidthsBefore[0];
+        const firstColWidthAfter = widths.colWidthsAfter[0];
+        // Allow for a 1px variation here due to potential rounding issues
+        Assertions.assertEq(`First column raw width ${firstColWidthBefore.px + firstColWidthBefore.unit} should be unchanged`, true, Math.abs(firstColWidthBefore.px - firstColWidthAfter.px) <= 1);
+        Assertions.assertEq('First column unit width', 'px', firstColWidthAfter.unit);
+      })),
+      cAssertEventData(lastObjectResizeStartEvent, 'objectresizestart'),
+      cAssertEventData(lastObjectResizedEvent, 'objectresized'),
+
+      NamedChain.read('editor', McEditor.cRemove)
+    ]),
+
+    Log.chainsAsStep('TINY-6242', 'Test [table_column_resizing="resizetable"], adjusting the entire table should not resize more than the last column width', [
+      NamedChain.write('editor', McEditor.cFromSettings({
+        plugins: 'table',
+        width: 400,
+        theme: 'silver',
+        base_url: '/project/tinymce/js/tinymce',
+        table_toolbar: '',
+        table_column_resizing: 'resizetable',
+        table_sizing_mode: 'relative'
+      })),
+
+      cClearResizeEventData,
+      NamedChain.read('editor', ApiChains.cSetContent('')),
+      NamedChain.direct('editor', cInsertResizeMeasure(TableTestUtils.cDragHandle('ne', -250, 0), TableTestUtils.cInsertRaw(percentTable)), 'widths'),
+      NamedChain.read('widths', cAssertWidthAfterResize(53, true)),
+      NamedChain.read('widths', Chain.op((widths: any) => {
+        const firstColWidth = widths.colWidthsAfter[0];
+        const lastColWidth = widths.colWidthsAfter[1];
+        Assertions.assertEq(`First column raw width ${firstColWidth.raw + firstColWidth.unit} should be ~95%`, true, Math.abs(95 - firstColWidth.raw) <= percentDiffThreshold);
+        Assertions.assertEq('First column unit width', '%', firstColWidth.unit);
+        Assertions.assertEq(`Last column raw width ${lastColWidth.raw + lastColWidth.unit} should be ~5%`, true, Math.abs(5 - lastColWidth.raw) <= percentDiffThreshold);
+        Assertions.assertEq('Last column unit width', '%', lastColWidth.unit);
       })),
       cAssertEventData(lastObjectResizeStartEvent, 'objectresizestart'),
       cAssertEventData(lastObjectResizedEvent, 'objectresized'),
