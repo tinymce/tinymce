@@ -478,7 +478,8 @@ function Schema(settings?: SchemaSettings): Schema {
     'noshade nowrap readonly selected autoplay loop controls');
   const nonEmptyElementsMap = createLookupTable('non_empty_elements', 'td th iframe video audio object ' +
     'script pre code', shortEndedElementsMap);
-  const moveCaretBeforeOnEnterElementsMap = createLookupTable('move_caret_before_on_enter_elements', 'table', nonEmptyElementsMap);
+  const moveCaretBeforeOnEnterElementsMap = createLookupTable('move_caret_before_on_enter_elements', 'td th igrame video audio object ' +
+    'script code table', shortEndedElementsMap);
   const textBlockElementsMap = createLookupTable('text_block_elements', 'h1 h2 h3 h4 h5 h6 p div address pre form ' +
     'blockquote center dir fieldset header footer article section hgroup aside main nav figure');
   const blockElementsMap = createLookupTable('block_elements', 'hr table tbody thead tfoot ' +
