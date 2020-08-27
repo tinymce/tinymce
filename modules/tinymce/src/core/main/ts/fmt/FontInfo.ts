@@ -20,27 +20,25 @@ const legacyPropNames: Record<FontProp, string> = {
 };
 
 const collect = (dom: DOMUtils, rngOrNode: Range | Node, rootNode: Element, propName: FontProp): string[] => {
-  const collector: string[] = [];
+  const collector: Record<string, boolean> = {};
 
-  const process = (nodes: Node[], limit: Node, getComputed: boolean) => {
+  const process = (nodes: ArrayLike<Node>, root: Node, getComputed: boolean) => {
     Arr.each(nodes, (node) => {
-      const matches = dom.getParents(node, '*[style],font', limit);
+      const matches = dom.getParents(node, '*[style],font', root);
       Arr.findMap(matches, (match) => getSpecifiedFontProp(propName, SugarElement.fromDom(match)))
         .orThunk(() => {
-          // Cannot find computed style on text node so have get parent node if required
+          // Cannot find computed style on text node so have to get parent node if required
           const elm = NodeType.isText(node) ? dom.getParent(node, '*', rootNode) : node as Element;
           return getComputed ? getComputedFontProp(propName, elm) : Optional.none();
         })
+        .filter((value) => !Obj.has(collector, value))
         .each((value) => {
-          // Make sure value is unique
-          if (Arr.forall(collector, (existing) => existing !== value)) {
-            collector.push(value);
-          };
+          collector[value] = true;
         });
 
       // Don't need to worry about potentially getting the computed value for children as if no fonts are found on the child,
       // it will inherit the 'node' font value which may be computed
-      process(Arr.from(node.childNodes), node, false);
+      process(node.childNodes, node, false);
     });
   };
 
@@ -52,7 +50,7 @@ const collect = (dom: DOMUtils, rngOrNode: Range | Node, rootNode: Element, prop
     });
   }
 
-  return collector;
+  return Obj.keys(collector);
 };
 
 const round = (number: number, precision: number) => {
@@ -87,18 +85,12 @@ const getComputedFontProp = (propName: FontProp, elm: Element): Optional<string>
 const getFontInfo = (propName: FontProp, normalize: (str: string) => string) => (rootNode: Element, rngOrNode: Range | Node) => {
   const fontProps = Arr.map(collect(DOMUtils.DOM, rngOrNode, rootNode, propName), normalize);
   // If there is more than one font prop found, cannot declare that there is a single font
-  if (fontProps.length === 0 || fontProps.length > 1) {
-    return '';
-  } else {
-    return fontProps[0];
-  }
+  return fontProps.length === 1 ? fontProps[0] : '';
 };
 
-const getFontSize =
-  getFontInfo('font-size', Fun.identity);
+const getFontSize = getFontInfo('font-size', Fun.identity);
 
-const getFontFamily =
-  getFontInfo('font-family', normalizeFontFamily);
+const getFontFamily = getFontInfo('font-family', normalizeFontFamily);
 
 export {
   getFontSize,

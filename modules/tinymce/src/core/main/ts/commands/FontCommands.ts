@@ -47,16 +47,12 @@ const normalizeFontNames = (font: string) => {
 
 const fontQuery = (editor: Editor, fontProp: FontInfo.FontProp) => {
   const getter = fontProp === 'font-family' ? FontInfo.getFontFamily : FontInfo.getFontSize;
-  const selection = editor.selection.getRng().cloneRange();
-  const isTextSelection = NodeType.isText(selection.startContainer) && selection.startContainer === selection.endContainer;
+  const rng = editor.selection.getRng().cloneRange();
+  const isTextRng = NodeType.isText(rng.startContainer) && rng.startContainer === rng.endContainer;
   // Have to directly use text node instead of selectionRng for text selection as there are cases where
   // RangeWalker used in the getter fn will not return results otherwise
-  const rngOrNode: Range | Node = isTextSelection ? selection.startContainer : selection;
-  if (rngOrNode) {
-    return getter(editor.getBody(), rngOrNode);
-  } else {
-    return '';
-  }
+  const rngOrNode: Range | Node = isTextRng ? rng.startContainer : rng;
+  return getter(editor.getBody(), rngOrNode);
 };
 
 export const fontNameAction = (editor: Editor, value: string) => {
@@ -65,13 +61,11 @@ export const fontNameAction = (editor: Editor, value: string) => {
   editor.nodeChanged();
 };
 
-export const fontNameQuery = (editor: Editor) =>
-  fontQuery(editor, 'font-family');
+export const fontNameQuery = (editor: Editor) => fontQuery(editor, 'font-family');
 
 export const fontSizeAction = (editor: Editor, value: string) => {
   editor.formatter.toggle('fontsize', { value: fromFontSizeNumber(editor, value) });
   editor.nodeChanged();
 };
 
-export const fontSizeQuery = (editor: Editor) =>
-  fontQuery(editor, 'font-size');
+export const fontSizeQuery = (editor: Editor) => fontQuery(editor, 'font-size');
