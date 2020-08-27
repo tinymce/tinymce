@@ -1,5 +1,6 @@
 import * as GridRow from '../model/GridRow';
 import * as RunOperation from '../model/RunOperation';
+import * as Adjustments from '../resize/Adjustments';
 import { CellLocation } from './CellLocation';
 import * as CellMutations from './CellMutations';
 import * as CellNavigation from './CellNavigation';
@@ -9,13 +10,12 @@ import * as CopySelected from './CopySelected';
 import { Generators, SimpleGenerators } from './Generators';
 import * as OtherCells from './OtherCells';
 import * as ResizeBehaviour from './ResizeBehaviour';
-import { ResizeDirection } from './ResizeDirection';
 import { ResizeWire } from './ResizeWire';
 import * as Sizes from './Sizes';
 import * as Structs from './Structs';
 import * as TableContent from './TableContent';
 import * as TableConversions from './TableConversions';
-import { TableDirection } from './TableDirection';
+import * as TableDirection from './TableDirection';
 import * as TableFill from './TableFill';
 import * as TableGridSize from './TableGridSize';
 import * as TableLookup from './TableLookup';
@@ -26,6 +26,7 @@ import { TableResize } from './TableResize';
 import { TableSize } from './TableSize';
 
 export {
+  Adjustments,
   CellLocation,
   CellMutations,
   CellNavigation,
@@ -34,7 +35,6 @@ export {
   CopySelected,
   Generators,
   ResizeBehaviour,
-  ResizeDirection,
   ResizeWire,
   SimpleGenerators,
   Sizes,

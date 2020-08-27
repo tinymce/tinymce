@@ -101,7 +101,7 @@ const appendInline = (node: Node): Node => {
 
 const isBeforeInline = (pos: CaretPosition): boolean => {
   const container = pos.container();
-  if (!pos || !NodeType.isText(container)) {
+  if (!NodeType.isText(container)) {
     return false;
   }
 
@@ -111,7 +111,7 @@ const isBeforeInline = (pos: CaretPosition): boolean => {
 
 const isAfterInline = (pos: CaretPosition): boolean => {
   const container = pos.container();
-  if (!pos || !NodeType.isText(container)) {
+  if (!NodeType.isText(container)) {
     return false;
   }
 

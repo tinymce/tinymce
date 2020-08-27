@@ -15,6 +15,10 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
   Plugin();
   SilverTheme();
 
+  const pixelTable = '<table style="width: 200px;"><tbody><tr><td></td><td></td></tr></tbody></table>';
+  const percentTable = '<table style="width: 100%;"><tbody><tr><td style="width: 50%;"></td><td style="width: 50%;"></td></tr></tbody></table>';
+  const responsiveTable = '<table><tbody><tr><td><br></td><td><br></td></tr></tbody></table>';
+
   const assertWithin = function (value, min, max) {
     Assertions.assertEq('asserting if value falls within a certain range', true, value >= min && value <= max);
   };
@@ -69,7 +73,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
     NamedChain.read('editor', cResize),
     NamedChain.write('widthAfter', TableTestUtils.cGetWidth),
     NamedChain.write('events', cUnbindResizeEvents),
-    NamedChain.merge([ 'widthBefore', 'widthAfter' ], 'widths'),
+    NamedChain.merge([ 'widthBefore', 'widthAfter', 'element' ], 'widths'),
     NamedChain.output('widths')
   ]);
 
@@ -107,14 +111,14 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
 
       cClearResizeEventData,
       NamedChain.read('editor', ApiChains.cSetContent('')),
-      NamedChain.direct('editor', cInsertResizeMeasure(cResizeWithHandle, TableTestUtils.cInsertRaw('<table style="width: 100%;"><tbody><tr><td style="width: 50%;"></td><td style="width: 50%;"></td></tr></tbody></table>')), 'widths'),
+      NamedChain.direct('editor', cInsertResizeMeasure(cResizeWithHandle, TableTestUtils.cInsertRaw(percentTable)), 'widths'),
       NamedChain.read('widths', cAssertUnitAfterResize('%')),
       cAssertEventData(lastObjectResizeStartEvent, 'objectresizestart'),
       cAssertEventData(lastObjectResizedEvent, 'objectresized'),
 
       cClearResizeEventData,
       NamedChain.read('editor', ApiChains.cSetContent('')),
-      NamedChain.direct('editor', cInsertResizeMeasure(cResizeWithHandle, TableTestUtils.cInsertRaw('<table style="width: 200px;"><tbody><tr><td></td><td></td></tr></tbody></table>')), 'widths'),
+      NamedChain.direct('editor', cInsertResizeMeasure(cResizeWithHandle, TableTestUtils.cInsertRaw(pixelTable)), 'widths'),
       NamedChain.read('widths', cAssertUnitAfterResize('px')),
       cAssertEventData(lastObjectResizeStartEvent, 'objectresizestart'),
       cAssertEventData(lastObjectResizedEvent, 'objectresized'),
@@ -148,7 +152,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
       // Force % on unset tables with [table_sizing_mode="relative"]
       cClearResizeEventData,
       NamedChain.read('editor', ApiChains.cSetContent('')),
-      NamedChain.direct('editor', cInsertResizeMeasure(cResizeWithHandle, TableTestUtils.cInsertRaw('<table><tbody><tr><td><br></td><td><br></td></tr></tbody></table>')), 'widths'),
+      NamedChain.direct('editor', cInsertResizeMeasure(cResizeWithHandle, TableTestUtils.cInsertRaw(responsiveTable)), 'widths'),
       NamedChain.read('widths', cAssertUnitAfterResize('%')),
       cAssertEventData(lastObjectResizeStartEvent, 'objectresizestart'),
       cAssertEventData(lastObjectResizedEvent, 'objectresized'),
@@ -156,7 +160,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
       // Force % on tables with that are initially set to px with [table_sizing_mode="relative"]
       cClearResizeEventData,
       NamedChain.read('editor', ApiChains.cSetContent('')),
-      NamedChain.direct('editor', cInsertResizeMeasure(cResizeWithHandle, TableTestUtils.cInsertRaw('<table style="width: 200px;"><tbody><tr><td></td><td></td></tr></tbody></table>')), 'widths'),
+      NamedChain.direct('editor', cInsertResizeMeasure(cResizeWithHandle, TableTestUtils.cInsertRaw(pixelTable)), 'widths'),
       NamedChain.read('widths', cAssertUnitAfterResize('%')),
       cAssertEventData(lastObjectResizeStartEvent, 'objectresizestart'),
       cAssertEventData(lastObjectResizedEvent, 'objectresized'),
@@ -184,7 +188,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
       // Force px on unset tables with [table_sizing_mode="fixed"]
       cClearResizeEventData,
       NamedChain.read('editor', ApiChains.cSetContent('')),
-      NamedChain.direct('editor', cInsertResizeMeasure(cResizeWithHandle, TableTestUtils.cInsertRaw('<table><tbody><tr><td><br></td><td><br></td></tr></tbody></table>')), 'widths'),
+      NamedChain.direct('editor', cInsertResizeMeasure(cResizeWithHandle, TableTestUtils.cInsertRaw(responsiveTable)), 'widths'),
       NamedChain.read('widths', cAssertUnitAfterResize('px')),
       cAssertEventData(lastObjectResizeStartEvent, 'objectresizestart'),
       cAssertEventData(lastObjectResizedEvent, 'objectresized'),
@@ -192,7 +196,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
       // Force px on tables with that are initially set to % with [table_sizing_mode="fixed"]
       cClearResizeEventData,
       NamedChain.read('editor', ApiChains.cSetContent('')),
-      NamedChain.direct('editor', cInsertResizeMeasure(cResizeWithHandle, TableTestUtils.cInsertRaw('<table style="width: 100%;"><tbody><tr><td style="width: 50%;"></td><td style="width: 50%;"></td></tr></tbody></table>')), 'widths'),
+      NamedChain.direct('editor', cInsertResizeMeasure(cResizeWithHandle, TableTestUtils.cInsertRaw(percentTable)), 'widths'),
       NamedChain.read('widths', cAssertUnitAfterResize('px')),
       cAssertEventData(lastObjectResizeStartEvent, 'objectresizestart'),
       cAssertEventData(lastObjectResizedEvent, 'objectresized'),
@@ -221,7 +225,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
       // Force % on unset tables with [table_sizing_mode="responsive"]
       cClearResizeEventData,
       NamedChain.read('editor', ApiChains.cSetContent('')),
-      NamedChain.direct('editor', cInsertResizeMeasure(cResizeWithHandle, TableTestUtils.cInsertRaw('<table><tbody><tr><td><br></td><td><br></td></tr></tbody></table>')), 'widths'),
+      NamedChain.direct('editor', cInsertResizeMeasure(cResizeWithHandle, TableTestUtils.cInsertRaw(responsiveTable)), 'widths'),
       NamedChain.read('widths', cAssertUnitAfterResize('%')),
       cAssertEventData(lastObjectResizeStartEvent, 'objectresizestart'),
       cAssertEventData(lastObjectResizedEvent, 'objectresized'),
@@ -229,7 +233,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
       // Force % on tables with that are initially set to px with [table_sizing_mode="responsive"]
       cClearResizeEventData,
       NamedChain.read('editor', ApiChains.cSetContent('')),
-      NamedChain.direct('editor', cInsertResizeMeasure(cResizeWithHandle, TableTestUtils.cInsertRaw('<table style="width: 200px;"><tbody><tr><td></td><td></td></tr></tbody></table>')), 'widths'),
+      NamedChain.direct('editor', cInsertResizeMeasure(cResizeWithHandle, TableTestUtils.cInsertRaw(pixelTable)), 'widths'),
       NamedChain.read('widths', cAssertUnitAfterResize('%')),
       cAssertEventData(lastObjectResizeStartEvent, 'objectresizestart'),
       cAssertEventData(lastObjectResizedEvent, 'objectresized'),
@@ -250,7 +254,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
 
       cClearResizeEventData,
       NamedChain.read('editor', ApiChains.cSetContent('')),
-      NamedChain.direct('editor', cInsertResizeMeasure(TableTestUtils.cDragResizeBar('column', 0, 20, 0), TableTestUtils.cInsertRaw('<table style="width: 200px;"><tbody><tr><td></td><td></td></tr></tbody></table>')), 'widths'),
+      NamedChain.direct('editor', cInsertResizeMeasure(TableTestUtils.cDragResizeBar('column', 0, 20, 0), TableTestUtils.cInsertRaw(pixelTable)), 'widths'),
       NamedChain.read('widths', cAssertWidthAfterResize(200)),
       cAssertEventData(lastObjectResizeStartEvent, 'objectresizestart'),
       cAssertEventData(lastObjectResizedEvent, 'objectresized'),
@@ -271,8 +275,62 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
 
       cClearResizeEventData,
       NamedChain.read('editor', ApiChains.cSetContent('')),
-      NamedChain.direct('editor', cInsertResizeMeasure(TableTestUtils.cDragResizeBar('column', 0, 20, 0), TableTestUtils.cInsertRaw('<table style="width: 200px;"><tbody><tr><td></td><td></td></tr></tbody></table>')), 'widths'),
+      NamedChain.direct('editor', cInsertResizeMeasure(TableTestUtils.cDragResizeBar('column', 0, 20, 0), TableTestUtils.cInsertRaw(pixelTable)), 'widths'),
       NamedChain.read('widths', cAssertWidthAfterResize(220)),
+      cAssertEventData(lastObjectResizeStartEvent, 'objectresizestart'),
+      cAssertEventData(lastObjectResizedEvent, 'objectresized'),
+
+      NamedChain.read('editor', McEditor.cRemove)
+    ]),
+
+    Log.chainsAsStep('TINY-6242', 'Test [table_column_resizing="preservetable"], adjusting the entire table should resize all columns', [
+      NamedChain.write('editor', McEditor.cFromSettings({
+        plugins: 'table',
+        width: 400,
+        theme: 'silver',
+        base_url: '/project/tinymce/js/tinymce',
+        table_toolbar: '',
+        table_column_resizing: 'preservetable',
+        table_sizing_mode: 'fixed'
+      })),
+
+      cClearResizeEventData,
+      NamedChain.read('editor', ApiChains.cSetContent('')),
+      NamedChain.direct('editor', cInsertResizeMeasure(TableTestUtils.cDragHandle('se', 20, 0), TableTestUtils.cInsertRaw(pixelTable)), 'widths'),
+      NamedChain.read('widths', cAssertWidthAfterResize(220)),
+      NamedChain.direct('widths', Chain.mapper((widths: any) => widths.element), 'element'),
+      NamedChain.write('lastColWidth', TableTestUtils.cGetCellWidth(0, 1)),
+      NamedChain.read('lastColWidth', Chain.op((width: any) => {
+        Assertions.assertEq(`Last column raw width ${width.raw + width.unit} should be ~106px`, true, Math.abs(106 - width.raw) < 3);
+        Assertions.assertEq('Last column unit width', 'px', width.unit);
+      })),
+      cAssertEventData(lastObjectResizeStartEvent, 'objectresizestart'),
+      cAssertEventData(lastObjectResizedEvent, 'objectresized'),
+
+      NamedChain.read('editor', McEditor.cRemove)
+    ]),
+
+    Log.chainsAsStep('TINY-6242', 'Test [table_column_resizing="resizetable"], adjusting the entire table should resize the last column', [
+      NamedChain.write('editor', McEditor.cFromSettings({
+        plugins: 'table',
+        width: 400,
+        theme: 'silver',
+        base_url: '/project/tinymce/js/tinymce',
+        table_toolbar: '',
+        table_column_resizing: 'resizetable',
+        table_sizing_mode: 'fixed'
+      })),
+
+      cClearResizeEventData,
+      NamedChain.read('editor', ApiChains.cSetContent('')),
+      NamedChain.direct('editor', cInsertResizeMeasure(TableTestUtils.cDragHandle('ne', 20, 0), TableTestUtils.cInsertRaw(pixelTable)), 'widths'),
+      NamedChain.read('widths', cAssertWidthAfterResize(220)),
+      NamedChain.direct('widths', Chain.mapper((widths: any) => widths.element), 'element'),
+      NamedChain.write('lastColWidth', TableTestUtils.cGetCellWidth(0, 1)),
+      NamedChain.read('lastColWidth', Chain.op((width: any) => {
+        Assertions.assertEq(`Last column raw width ${width.raw + width.unit} should be ~116px`, true, Math.abs(116 - width.raw) < 3);
+        Assertions.assertEq('Last column unit width', 'px', width.unit);
+      })),
       cAssertEventData(lastObjectResizeStartEvent, 'objectresizestart'),
       cAssertEventData(lastObjectResizedEvent, 'objectresized'),
 

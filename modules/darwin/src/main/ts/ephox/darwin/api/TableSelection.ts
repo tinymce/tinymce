@@ -4,8 +4,8 @@ import { Compare, SelectorFind, SugarElement } from '@ephox/sugar';
 import * as CellSelection from '../selection/CellSelection';
 
 // Explictly calling CellSelection.retrieve so that we can see the API signature.
-const retrieve = function (container: SugarElement, selector: string) {
-  return CellSelection.retrieve(container, selector);
+const retrieve = function <T extends Element> (container: SugarElement, selector: string): Optional<SugarElement<T>[]> {
+  return CellSelection.retrieve<T>(container, selector);
 };
 
 const retrieveBox = function (container: SugarElement, firstSelectedSelector: string, lastSelectedSelector: string) {
@@ -24,7 +24,5 @@ const retrieveBox = function (container: SugarElement, firstSelectedSelector: st
   });
 };
 
-export {
-  retrieve,
-  retrieveBox
-};
+export { retrieve, retrieveBox };
+

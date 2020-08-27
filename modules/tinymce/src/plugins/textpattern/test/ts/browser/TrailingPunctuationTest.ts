@@ -15,7 +15,7 @@ UnitTest.asynctest(
     const sTypeChar = function (editor: Editor, character: string) {
       return Logger.t(`Type ${character}`, Step.sync(function () {
         const charCode = character.charCodeAt(0);
-        editor.fire('keypress', { charCode });
+        editor.fire('keypress', { charCode } as KeyboardEvent);
       }));
     };
 

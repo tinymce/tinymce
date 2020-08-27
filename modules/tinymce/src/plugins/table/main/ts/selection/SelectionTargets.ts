@@ -1,9 +1,10 @@
+import { Selections } from '@ephox/darwin';
 import { Arr, Cell, Optional, Thunk } from '@ephox/katamari';
 import { RunOperation, TableLookup } from '@ephox/snooker';
 import { SugarElement, SugarNode } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
+import * as Util from '../core/Util';
 import * as TableTargets from '../queries/TableTargets';
-import { Selections } from './Selections';
 import * as TableSelection from './TableSelection';
 
 export type SelectionTargets = ReturnType<typeof getSelectionTargets>;
@@ -12,18 +13,18 @@ export const getSelectionTargets = (editor: Editor, selections: Selections) => {
   const targets = Cell<Optional<RunOperation.CombinedTargets>>(Optional.none());
   const changeHandlers = Cell([]);
 
-  const findTargets = (): Optional<RunOperation.CombinedTargets> => TableSelection.getSelectionStartCellOrCaption(editor).bind((cellOrCaption) => {
-    const table = TableLookup.table(cellOrCaption);
-    const isCaption = (elem: SugarElement<HTMLTableCaptionElement | HTMLTableCellElement>): elem is SugarElement<HTMLTableCaptionElement> =>
-      SugarNode.name(elem) === 'caption';
-    return table.map((table) => {
-      if (isCaption(cellOrCaption)) {
-        return TableTargets.noMenu(cellOrCaption);
-      } else {
-        return TableTargets.forMenu(selections, table, cellOrCaption);
-      }
+  const findTargets = (): Optional<RunOperation.CombinedTargets> => TableSelection.getSelectionStartCellOrCaption(Util.getSelectionStart(editor))
+    .bind((cellOrCaption) => {
+      const table = TableLookup.table(cellOrCaption);
+      const isCaption = (elem: SugarElement<HTMLTableCaptionElement | HTMLTableCellElement>): elem is SugarElement<HTMLTableCaptionElement> => SugarNode.name(elem) === 'caption';
+      return table.map((table) => {
+        if (isCaption(cellOrCaption)) {
+          return TableTargets.noMenu(cellOrCaption);
+        } else {
+          return TableTargets.forMenu(selections, table, cellOrCaption);
+        }
+      });
     });
-  });
 
   const resetTargets = () => {
     // Reset the targets

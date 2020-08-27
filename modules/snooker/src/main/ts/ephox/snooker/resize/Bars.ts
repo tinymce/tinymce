@@ -5,7 +5,7 @@ import * as Blocks from '../lookup/Blocks';
 import { Warehouse } from '../model/Warehouse';
 import * as Styles from '../style/Styles';
 import * as Bar from './Bar';
-import { BarPositions, ColInfo, RowInfo } from './BarPositions';
+import * as BarPositions from './BarPositions';
 
 const resizeBar = Styles.resolve('resizer-bar');
 const resizeRowBar = Styles.resolve('resizer-rows');
@@ -28,7 +28,7 @@ const drawBar = function <T> (wire: ResizeWire, positions: Optional<T>[], create
   });
 };
 
-const refreshCol = function (wire: ResizeWire, colPositions: Optional<ColInfo>[], position: SugarPosition, tableHeight: number) {
+const refreshCol = function (wire: ResizeWire, colPositions: Optional<BarPositions.ColInfo>[], position: SugarPosition, tableHeight: number) {
   drawBar(wire, colPositions, function (origin, cp) {
     const colBar = Bar.col(cp.col, cp.x - origin.left, position.top - origin.top, BAR_THICKNESS, tableHeight);
     Class.add(colBar, resizeColBar);
@@ -36,7 +36,7 @@ const refreshCol = function (wire: ResizeWire, colPositions: Optional<ColInfo>[]
   });
 };
 
-const refreshRow = function (wire: ResizeWire, rowPositions: Optional<RowInfo>[], position: SugarPosition, tableWidth: number) {
+const refreshRow = function (wire: ResizeWire, rowPositions: Optional<BarPositions.RowInfo>[], position: SugarPosition, tableWidth: number) {
   drawBar(wire, rowPositions, function (origin, cp) {
     const rowBar = Bar.row(cp.row, position.left - origin.left, cp.y - origin.top, tableWidth, BAR_THICKNESS);
     Class.add(rowBar, resizeRowBar);
@@ -44,23 +44,23 @@ const refreshRow = function (wire: ResizeWire, rowPositions: Optional<RowInfo>[]
   });
 };
 
-const refreshGrid = function (wire: ResizeWire, table: SugarElement, rows: Optional<SugarElement>[], cols: Optional<SugarElement>[], hdirection: BarPositions<RowInfo>, vdirection: BarPositions<ColInfo>) {
+const refreshGrid = function (wire: ResizeWire, table: SugarElement, rows: Optional<SugarElement>[], cols: Optional<SugarElement>[]) {
   const position = SugarLocation.absolute(table);
-  const rowPositions = rows.length > 0 ? hdirection.positions(rows, table) : [];
+  const rowPositions = rows.length > 0 ? BarPositions.height.positions(rows, table) : [];
   refreshRow(wire, rowPositions, position, Width.getOuter(table));
 
-  const colPositions = cols.length > 0 ? vdirection.positions(cols, table) : [];
+  const colPositions = cols.length > 0 ? BarPositions.width.positions(cols, table) : [];
   refreshCol(wire, colPositions, position, Height.getOuter(table));
 };
 
-const refresh = function (wire: ResizeWire, table: SugarElement, hdirection: BarPositions<RowInfo>, vdirection: BarPositions<ColInfo>) {
+const refresh = function (wire: ResizeWire, table: SugarElement) {
   destroy(wire);
 
   const warehouse = Warehouse.fromTable(table);
   const rows = Blocks.rows(warehouse);
   const cols = Blocks.columns(warehouse);
 
-  refreshGrid(wire, table, rows, cols, hdirection, vdirection);
+  refreshGrid(wire, table, rows, cols);
 };
 
 const each = function (wire: ResizeWire, f: (bar: SugarElement, idx: number) => void) {

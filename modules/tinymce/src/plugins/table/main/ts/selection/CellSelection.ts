@@ -9,16 +9,14 @@ import { InputHandlers, Response, SelectionAnnotation, SelectionKeys } from '@ep
 import { Cell, Fun, Optional } from '@ephox/katamari';
 import { DomParent } from '@ephox/robin';
 import { OtherCells, TableFill, TableLookup, TableResize } from '@ephox/snooker';
-import { Class, Compare, DomEvent, EventArgs, SelectionDirection, SimSelection, SugarElement, SugarNode } from '@ephox/sugar';
-
+import { Class, Compare, DomEvent, EventArgs, SelectionDirection, SimSelection, SugarElement, SugarNode, Direction } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import * as Events from '../api/Events';
 import { getCloneElements } from '../api/Settings';
 import * as Util from '../core/Util';
-import * as Direction from '../queries/Direction';
-import * as Ephemera from './Ephemera';
+import { ephemera } from './Ephemera';
 import { SelectionTargets } from './SelectionTargets';
 
 const hasInternalTarget = (e: Event) => Class.has(SugarElement.fromDom(e.target as HTMLElement), 'ephox-snooker-resizer-bar') === false;
@@ -42,7 +40,7 @@ export default function (editor: Editor, lazyResize: () => Optional<TableResize>
 
   const onClear = () => Events.fireTableSelectionClear(editor);
 
-  const annotations = SelectionAnnotation.byAttr(Ephemera, onSelection, onClear);
+  const annotations = SelectionAnnotation.byAttr(ephemera, onSelection, onClear);
 
   editor.on('init', (_e) => {
     const win = editor.getWin();
@@ -100,10 +98,9 @@ export default function (editor: Editor, lazyResize: () => Optional<TableResize>
       lazyResize().each((resize) => resize.hideBars());
 
       const rng = editor.selection.getRng();
-      const startContainer = SugarElement.fromDom(editor.selection.getStart());
       const start = SugarElement.fromDom(rng.startContainer);
       const end = SugarElement.fromDom(rng.endContainer);
-      const direction = Direction.directionAt(startContainer).isRtl() ? SelectionKeys.rtl : SelectionKeys.ltr;
+      const direction = Direction.onDirection(SelectionKeys.ltr, SelectionKeys.rtl)(SugarElement.fromDom(editor.selection.getStart()));
       keyHandlers.keydown(wrappedEvent, start, rng.startOffset, end, rng.endOffset, direction).each((response) => {
         handleResponse(wrappedEvent, response);
       });

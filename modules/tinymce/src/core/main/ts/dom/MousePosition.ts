@@ -18,12 +18,12 @@ import { EditorEvent } from '../api/util/EventDispatcher';
 export interface PagePosition {
   pageX: number;
   pageY: number;
-};
+}
 
 interface Position {
   top: number;
   left: number;
-};
+}
 
 const getAbsolutePosition = (elm: HTMLElement) => {
   const clientRect = elm.getBoundingClientRect();

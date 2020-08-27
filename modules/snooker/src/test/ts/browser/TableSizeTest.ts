@@ -2,7 +2,6 @@ import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Optional, OptionalInstances } from '@ephox/katamari';
 import { Css, Insert, Remove, SelectorFind, SugarBody, SugarElement, Width } from '@ephox/sugar';
 import * as fc from 'fast-check';
-import { ResizeDirection } from 'ephox/snooker/api/ResizeDirection';
 import { TableSize } from 'ephox/snooker/api/TableSize';
 import { Warehouse } from 'ephox/snooker/model/Warehouse';
 
@@ -38,7 +37,7 @@ UnitTest.test('TableSize.pixelSizing', () => {
 
   Assert.eq('Width should be 400px', 400, sizing.width());
   Assert.eq('Pixel width should be 400px', 400, sizing.pixelWidth());
-  Assert.eq('Cell widths should be 200px each', [ 200, 200 ], sizing.getWidths(warehouse, ResizeDirection.ltr, sizing));
+  Assert.eq('Cell widths should be 200px each', [ 200, 200 ], sizing.getWidths(warehouse, sizing));
   Assert.eq('Cell min width should be at least 10px', true, sizing.minCellWidth() >= 10);
 
   fc.assert(fc.property(fc.integer(-390, 390), fc.integer(400, 1000), (delta, colWidth) => {
@@ -69,7 +68,7 @@ UnitTest.test('TableSize.percentageSizing', () => {
 
   Assert.eq('Width should be 80', 80, sizing.width());
   Assert.eq('Pixel width should be 400px', 400, sizing.pixelWidth());
-  Assert.eq('Cell widths should be 50% each', [ 50, 50 ], sizing.getWidths(warehouse, ResizeDirection.ltr, sizing));
+  Assert.eq('Cell widths should be 50% each', [ 50, 50 ], sizing.getWidths(warehouse, sizing));
   Assert.eq('Cell min width should be at least 10px in percentage (2.5%)', true, sizing.minCellWidth() >= 2.5);
 
   fc.assert(fc.property(fc.integer(-390, 390), fc.nat(100), (delta, colWidth) => {
@@ -103,7 +102,7 @@ UnitTest.test('TableSize.noneSizing', () => {
 
   Assert.eq('Width should be the computed size of the table', width, sizing.width());
   Assert.eq('Pixel width should be the computed size of the table', width, sizing.pixelWidth());
-  Assert.eq('Cell widths should be the computed size of the cell', [ cellWidth, cellWidth ], sizing.getWidths(warehouse, ResizeDirection.ltr, sizing));
+  Assert.eq('Cell widths should be the computed size of the cell', [ cellWidth, cellWidth ], sizing.getWidths(warehouse, sizing));
   Assert.eq('Cell min width should be 0px', 0, sizing.minCellWidth());
 
   fc.assert(fc.property(fc.integer(-390, 390), fc.integer(400, 1000), (delta, colWidth) => {

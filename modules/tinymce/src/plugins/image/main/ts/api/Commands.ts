@@ -11,7 +11,7 @@ import { insertOrUpdateImage } from '../core/ImageSelection';
 import { Dialog } from '../ui/Dialog';
 
 const register = (editor: Editor) => {
-  editor.addCommand('mceImage', Dialog(editor).openLater);
+  editor.addCommand('mceImage', Dialog(editor).open);
 
   // TODO: This command is likely to be short lived we only need it until we expose the rtc model though a new api so it shouldn't be documented
   // it's just a command since that is a convenient method for the rtc plugin to override the default dom mutation behaviour

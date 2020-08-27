@@ -19,6 +19,7 @@ import Schema from '../html/Schema';
 import Styles, { StyleMap } from '../html/Styles';
 import { URLConverter } from '../SettingsTypes';
 import Tools from '../util/Tools';
+import { MappedEvent } from '../util/EventDispatcher';
 import DomQuery, { DomQueryConstructor } from './DomQuery';
 import EventUtils, { EventUtilsCallback } from './EventUtils';
 import Sizzle from './Sizzle';
@@ -166,9 +167,10 @@ export interface DOMUtilsSettings {
   referrerPolicy: ReferrerPolicy;
 }
 
-export type Target = Node | Window | Array<Node | Window>;
+export type Target = Node | Window;
 export type RunArguments<T extends Node = Node> = string | T | Array<string | T>;
 export type BoundEvent = [ Target, string, EventUtilsCallback<any>, any ];
+type Callback<K extends string> = EventUtilsCallback<MappedEvent<HTMLElementEventMap, K>>;
 
 interface DOMUtils {
   doc: Document;
@@ -258,10 +260,10 @@ interface DOMUtils {
   nodeIndex (node: Node, normalized?: boolean): number;
   split <T extends Node>(parentElm: Node, splitElm: Node, replacementElm: T): T;
   split <T extends Node>(parentElm: Node, splitElm: T): T;
-  bind <K extends keyof HTMLElementEventMap, T extends Target>(target: T, name: K, func: EventUtilsCallback<HTMLElementEventMap[K]>, scope?: any): T extends [] ? EventUtilsCallback<HTMLElementEventMap[K]>[] : EventUtilsCallback<HTMLElementEventMap[K]>;
-  bind <E = any, T extends Target = Target>(target: T, name: string, func: EventUtilsCallback<E>, scope?: any): T extends [] ? EventUtilsCallback<E>[] : EventUtilsCallback<E>;
-  unbind <K extends keyof HTMLElementEventMap, T extends Target = Target>(target: T, name: K, func: EventUtilsCallback<HTMLElementEventMap[K]>): T extends [] ? EventUtils[] : EventUtils;
-  unbind <E = any, T extends Target = Target>(target: T, name?: string, func?: EventUtilsCallback<E>): T extends [] ? EventUtils[] : EventUtils;
+  bind <K extends string>(target: Target, name: K, func: Callback<K>, scope?: any): Callback<K>;
+  bind <K extends string>(target: Target[], name: K, func: Callback<K>, scope?: any): Callback<K>[];
+  unbind <K extends string>(target: Target, name?: K, func?: EventUtilsCallback<MappedEvent<HTMLElementEventMap, K>>): EventUtils;
+  unbind <K extends string>(target: Target[], name?: K, func?: EventUtilsCallback<MappedEvent<HTMLElementEventMap, K>>): EventUtils[];
   fire (target: Node | Window, name: string, evt?: {}): EventUtils;
   getContentEditable (node: Node): string | null;
   getContentEditableParent (node: Node): string | null;
@@ -1093,57 +1095,55 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     }
   };
 
-  const bind = <T = any>(target: Target, name: string, func: EventUtilsCallback<T>, scope?: any): EventUtilsCallback<T>[] | EventUtilsCallback<T> => {
-    if (Tools.isArray(target)) {
+  const bind = <K extends string>(target: Target | Target[], name: K, func: Callback<K>, scope?: any): Callback<K> | Callback<K>[] => {
+    if (Tools.isArray<Target>(target)) {
       let i = target.length;
-      const rv = [];
+      const rv: Callback<K>[] = [];
 
       while (i--) {
-        rv[i] = bind(target[i], name, func, scope);
+        rv[i] = bind(target[i], name, func, scope) as Callback<K>;
       }
 
       return rv;
     }
 
     // Collect all window/document events bound by editor instance
-    if (settings.collect && (target === doc || (target as any) === win)) {
+    if (settings.collect && (target === doc || target === win)) {
       boundEvents.push([ target, name, func, scope ]);
     }
 
-    return events.bind(target, name, func, scope || self);
+    const output: Callback<K> = events.bind(target, name, func, scope || self);
+    return output as (typeof target) extends [] ? Callback<K>[] : Callback<K>;
   };
 
-  const unbind = <T = any>(target: Target, name?: string, func?: EventUtilsCallback<T>): EventUtils | EventUtils[] => {
-    let i;
-
-    if (Tools.isArray(target)) {
-      i = target.length;
-      const rv = [];
+  const unbind = <K extends string>(target: Target | Target[], name: K, func: EventUtilsCallback<MappedEvent<HTMLElementEventMap, K>>): EventUtils | EventUtils[] => {
+    if (Tools.isArray<Target>(target)) {
+      let i = target.length;
+      const rv = [] as EventUtils[];
 
       while (i--) {
-        rv[i] = unbind(target[i], name, func);
+        rv[i] = unbind(target[i], name, func) as EventUtils;
       }
 
       return rv;
-    }
+    } else {
+      // Remove any bound events matching the input
+      if (boundEvents.length > 0 && (target === doc || target === win)) {
+        let i = boundEvents.length;
 
-    // Remove any bound events matching the input
-    if (boundEvents.length > 0 && (target === doc || (target as any) === win)) {
-      i = boundEvents.length;
+        while (i--) {
+          const item = boundEvents[i];
 
-      while (i--) {
-        const item = boundEvents[i];
-
-        if (target === item[0] && (!name || name === item[1]) && (!func || func === item[2])) {
-          events.unbind(item[0], item[1], item[2]);
+          if (target === item[0] && (!name || name === item[1]) && (!func || func === item[2])) {
+            events.unbind(item[0], item[1], item[2]);
+          }
         }
       }
+      return events.unbind(target, name, func);
     }
-
-    return events.unbind(target, name, func);
   };
 
-  const fire = (target: Node | Window, name: string, evt?) => events.fire(target, name, evt);
+  const fire = (target: Target, name: string, evt?) => events.fire(target, name, evt);
 
   const getContentEditable = (node: Node) => {
     if (node && NodeType.isElement(node)) {
@@ -1326,12 +1326,12 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     // #ifndef jquery
 
     /**
-     * Selects specific elements by a CSS level 3 pattern. For example "div#a1 p.test".
+     * Returns a list of the elements specified by the given CSS selector. For example "div#a1 p.test".
      * This function is optimized for the most common patterns needed in TinyMCE but it also performs well enough
      * on more complex patterns.
      *
      * @method select
-     * @param {String} selector CSS level 3 pattern to select/find elements by.
+     * @param {String} selector Target CSS selector.
      * @param {Object} scope Optional root element/scope element to search in.
      * @return {Array} Array with all matched elements.
      * @example
@@ -1860,7 +1860,7 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
      * @param {Object} scope Optional scope to execute the function in.
      * @return {function} Function callback handler the same as the one passed in.
      */
-    bind,
+    bind: bind as DOMUtils['bind'],
 
     /**
      * Removes the specified event handler by name and function from an element or collection of elements.
@@ -1872,7 +1872,7 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
      * @return {bool/Array} Bool state of true if the handler was removed, or an array of states if multiple input elements
      * were passed in.
      */
-    unbind,
+    unbind: unbind as DOMUtils['unbind'],
 
     /**
      * Fires the specified event name with object on target.

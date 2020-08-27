@@ -19,7 +19,6 @@ dist
 yarn.lock
 package-lock.json
 .DS_Store
-.project
 coverage
 node_modules
 js/**/*

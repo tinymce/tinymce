@@ -380,6 +380,14 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
     LegacyUnit.equal(serializer.serialize(root), '<ul><li>a</li><li>b</li></ul>', 'LI moved to next sibling UL');
 
     parser = DomParser({}, schema);
+    root = parser.parse('<ol><li>a</li></ol><li>b</li>');
+    LegacyUnit.equal(serializer.serialize(root), '<ol><li>a</li><li>b</li></ol>', 'LI moved to previous sibling OL');
+
+    parser = DomParser({}, schema);
+    root = parser.parse('<li>a</li><ol><li>b</li></ol>');
+    LegacyUnit.equal(serializer.serialize(root), '<ol><li>a</li><li>b</li></ol>', 'LI moved to next sibling OL');
+
+    parser = DomParser({}, schema);
     root = parser.parse('<li>a</li>');
     LegacyUnit.equal(serializer.serialize(root), '<ul><li>a</li></ul>', 'LI wrapped in new UL');
   });

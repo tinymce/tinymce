@@ -222,12 +222,8 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
         return;
       }
 
-      switch (e.keyCode) {
-        default:
-          if (isContentEditableFalse(selection.getNode())) {
-            e.preventDefault();
-          }
-          break;
+      if (isContentEditableFalse(selection.getNode())) {
+        e.preventDefault();
       }
     });
 
