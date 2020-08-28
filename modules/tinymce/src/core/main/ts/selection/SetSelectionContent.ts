@@ -30,46 +30,46 @@ const removeEmpty = (text: SugarElement<Text>): Optional<SugarElement<Text>> => 
   }
 };
 
-const walkPastBookmark = (node: Optional<SugarElement<Node>>, forward: boolean): Optional<SugarElement<Node>> =>
+const walkPastBookmark = (node: Optional<SugarElement<Node>>, start: boolean): Optional<SugarElement<Node>> =>
   node.filter((elm) => BookmarkManager.isBookmarkNode(elm.dom))
-    .bind(forward ? Traverse.prevSibling : Traverse.nextSibling);
+    .bind(start ? Traverse.nextSibling : Traverse.prevSibling);
 
-const merge = (outer: SugarElement<Text>, inner: SugarElement<Text>, rng: Range, forward: boolean) => {
+const merge = (outer: SugarElement<Text>, inner: SugarElement<Text>, rng: Range, start: boolean) => {
   const outerElm = outer.dom;
   const innerElm = inner.dom;
-  const oldLength = forward ? innerElm.length : outerElm.length;
-  if (forward) {
-    MergeText.mergeTextNodes(innerElm, outerElm, false, forward);
-    rng.setEnd(innerElm, oldLength);
-  } else {
-    MergeText.mergeTextNodes(outerElm, innerElm, false, forward);
+  const oldLength = start ? outerElm.length : innerElm.length;
+  if (start) {
+    MergeText.mergeTextNodes(outerElm, innerElm, false, !start);
     rng.setStart(innerElm, oldLength);
+  } else {
+    MergeText.mergeTextNodes(innerElm, outerElm, false, !start);
+    rng.setEnd(innerElm, oldLength);
   }
 };
 
-const normalizeTextIfRequired = (inner: SugarElement<Text>, forward: boolean) => {
+const normalizeTextIfRequired = (inner: SugarElement<Text>, start: boolean) => {
   Traverse.parent(inner).each((root) => {
     const text = inner.dom;
-    if (!forward && needsToBeNbspLeft(root, CaretPosition(text, 0))) {
+    if (start && needsToBeNbspLeft(root, CaretPosition(text, 0))) {
       MergeText.normalizeWhitespaceAfter(text, 0);
-    } else if (forward && needsToBeNbspRight(root, CaretPosition(text, text.length))) {
+    } else if (!start && needsToBeNbspRight(root, CaretPosition(text, text.length))) {
       MergeText.normalizeWhitespaceBefore(text, text.length);
     }
   });
 };
 
-const mergeAndNormalizeText = (outerNode: Optional<SugarElement<Text>>, innerNode: Optional<SugarElement<Node>>, rng: Range, forward: boolean) => {
+const mergeAndNormalizeText = (outerNode: Optional<SugarElement<Text>>, innerNode: Optional<SugarElement<Node>>, rng: Range, start: boolean) => {
   outerNode.bind((outer) => {
     // Normalize the text outside the inserted content
-    const normalizer = forward ? MergeText.normalizeWhitespaceAfter : MergeText.normalizeWhitespaceBefore;
-    normalizer(outer.dom, forward ? 0 : outer.dom.length);
+    const normalizer = start ? MergeText.normalizeWhitespaceBefore : MergeText.normalizeWhitespaceAfter;
+    normalizer(outer.dom, start ? outer.dom.length : 0);
 
     // Merge the inserted content with other text nodes
-    return innerNode.filter(SugarNode.isText).map((inner) => merge(outer, inner, rng, forward));
+    return innerNode.filter(SugarNode.isText).map((inner) => merge(outer, inner, rng, start));
   }).orThunk(() => {
     // Note: Attempt to leave the inserted/inner content as is and only adjust if absolutely required
-    const innerTextNode = walkPastBookmark(innerNode, forward).or(innerNode).filter(SugarNode.isText);
-    return innerTextNode.map((inner) => normalizeTextIfRequired(inner, forward));
+    const innerTextNode = walkPastBookmark(innerNode, start).or(innerNode).filter(SugarNode.isText);
+    return innerTextNode.map((inner) => normalizeTextIfRequired(inner, start));
   });
 };
 
@@ -84,8 +84,8 @@ const rngSetContent = (rng: Range, fragment: DocumentFragment): void => {
   const nextText = lastChild.bind(Traverse.nextSibling).filter(SugarNode.isText).bind(removeEmpty);
 
   // Join and normalize text
-  mergeAndNormalizeText(prevText, firstChild, rng, false);
-  mergeAndNormalizeText(nextText, lastChild, rng, true);
+  mergeAndNormalizeText(prevText, firstChild, rng, true);
+  mergeAndNormalizeText(nextText, lastChild, rng, false);
 
   rng.collapse(false);
 };

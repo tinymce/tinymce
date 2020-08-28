@@ -64,14 +64,15 @@ const normalizeWhitespaceBefore = (node: Text, offset: number) => {
 const mergeTextNodes = (prevNode: Text, nextNode: Text, normalizeWhitespace?: boolean, mergeToPrev: boolean = true): Text => {
   const whitespaceOffset = Strings.rTrim(prevNode.data).length;
   const newNode = mergeToPrev ? prevNode : nextNode;
+  const removeNode = mergeToPrev ? nextNode : prevNode;
+
   // Merge the elements
   if (mergeToPrev) {
-    prevNode.appendData(nextNode.data);
-    Remove.remove(SugarElement.fromDom(nextNode));
+    newNode.appendData(removeNode.data);
   } else {
-    nextNode.insertData(0, prevNode.data);
-    Remove.remove(SugarElement.fromDom(prevNode));
+    newNode.insertData(0, removeNode.data);
   }
+  Remove.remove(SugarElement.fromDom(removeNode));
 
   // Normalize the whitespace around the merged elements, to ensure it doesn't get lost
   if (normalizeWhitespace) {
