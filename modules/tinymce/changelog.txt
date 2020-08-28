@@ -6,6 +6,7 @@ Version 5.5.0 (TBD)
     Added `hasPlugin` function to the editor API to determine if a plugin exists or not #TINY-766
     Added the ability to delete and navigate HTML media elements without the media plugin #TINY-4211
     Added `fullscreen_native` setting to the fullscreen plugin to enable use of the entire monitor #TINY-6284
+    Added the `origin` property to the `ObjectResized` and `ObjectResizeStart` events, to specify which handle the resize was preformed on #TINY-6242
     Changed the `target` property on fired events to use the native event target. The original target for an open shadow root can be obtained using `event.getComposedPath()` #TINY-6128
     Changed `imagetools` context menu icon for accessing the `image` settings to use the same icon #TINY-4141
     Changed the `editor.insertContent()` and `editor.selection.setContent()` APIs to retain leading and trailing whitespace #TINY-5966

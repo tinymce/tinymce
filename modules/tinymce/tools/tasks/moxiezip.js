@@ -74,8 +74,8 @@ module.exports = function (grunt) {
       });
     }
 
-    if (target.options.excludes) {
-      addExcludes(grunt.file.expand(target.options.excludes));
+    if (options.excludes) {
+      addExcludes(grunt.file.expand(options.excludes));
     }
 
     this.files.forEach(function (filePair) {

@@ -371,7 +371,7 @@ class EventUtils {
       }
     }
 
-    target = callbackList = 0; // Clean memory for IE
+    target = callbackList = null; // Clean memory for IE
 
     return callback;
   }

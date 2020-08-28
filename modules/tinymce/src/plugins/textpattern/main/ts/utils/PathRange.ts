@@ -42,23 +42,27 @@ const generatePathRange = (root: Node, startNode: Node, startOffset: number, end
 const resolvePath = (root: Node, path: number[]): Optional<{node: Node; offset: number}> => {
   const nodePath = path.slice();
   const offset = nodePath.pop();
-  return Arr.foldl(nodePath, (optNode: Optional<Node>, index: number) => optNode.bind((node) => Optional.from(node.childNodes[index])), Optional.some(root)).bind((node) => {
-    if (Utils.isText(node) && offset >= 0 && offset <= node.data.length) {
-      return Optional.some({ node, offset });
+  const resolvedNode = Arr.foldl(nodePath, (optNode: Optional<Node>, index: number) => optNode.bind((node) => Optional.from(node.childNodes[index])), Optional.some(root));
+  return resolvedNode.bind((node) => {
+    if (Utils.isText(node) && (offset < 0 || offset > node.data.length)) {
+      return Optional.none();
     } else {
       return Optional.some({ node, offset });
     }
   });
 };
 
-const resolvePathRange = (root: Node, range: PathRange): Optional<Range> => resolvePath(root, range.start).bind(({ node: startNode, offset: startOffset }) => resolvePath(root, range.end).map(({ node: endNode, offset: endOffset }) => {
-  const rng = document.createRange();
-  rng.setStart(startNode, startOffset);
-  rng.setEnd(endNode, endOffset);
-  return rng;
-}));
+const resolvePathRange = (root: Node, range: PathRange): Optional<Range> => resolvePath(root, range.start)
+  .bind(({ node: startNode, offset: startOffset }) =>
+    resolvePath(root, range.end).map(({ node: endNode, offset: endOffset }) => {
+      const rng = document.createRange();
+      rng.setStart(startNode, startOffset);
+      rng.setEnd(endNode, endOffset);
+      return rng;
+    }));
 
-const generatePathRangeFromRange = (root: Node, range: Range): PathRange => generatePathRange(root, range.startContainer, range.startOffset, range.endContainer, range.endOffset);
+const generatePathRangeFromRange = (root: Node, range: Range): PathRange =>
+  generatePathRange(root, range.startContainer, range.startOffset, range.endContainer, range.endOffset);
 
 export {
   generatePath,

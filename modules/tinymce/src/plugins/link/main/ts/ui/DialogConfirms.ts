@@ -45,7 +45,7 @@ const tryProtocolTransform = (assumeExternalTargets: AssumeExternalTargets, defa
   const url = data.href;
   const suggestProtocol = (
     assumeExternalTargets === AssumeExternalTargets.WARN && !Utils.hasProtocol(url) ||
-    assumeExternalTargets === AssumeExternalTargets.OFF && /^\s*www[\.|\d\.]/i.test(url)
+    assumeExternalTargets === AssumeExternalTargets.OFF && /^\s*www(\.|\d\.)/i.test(url)
   );
 
   return suggestProtocol ? Optional.some({

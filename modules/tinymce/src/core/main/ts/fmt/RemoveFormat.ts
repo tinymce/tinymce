@@ -251,11 +251,11 @@ const removeFormatInternal = (ed: Editor, format: RemoveFormatPartial, vars?: Fo
   // Should we compare with format attribs and styles
   if (format.remove !== 'all') {
     // Remove styles
-    each(format.styles, (value: FormatAttrOrStyleValue, name: string) => {
-      value = FormatUtils.normalizeStyleValue(dom, FormatUtils.replaceVars(value, vars), name);
+    each(format.styles, (value: FormatAttrOrStyleValue, name: string | number) => {
+      value = FormatUtils.normalizeStyleValue(dom, FormatUtils.replaceVars(value, vars), name + '');
 
       // Indexed array
-      if (typeof name === 'number') {
+      if (Type.isNumber(name)) {
         name = value;
         compareNode = null;
       }
@@ -274,13 +274,13 @@ const removeFormatInternal = (ed: Editor, format: RemoveFormatPartial, vars?: Fo
     }
 
     // Remove attributes
-    each(format.attributes, (value: FormatAttrOrStyleValue, name: string) => {
+    each(format.attributes, (value: FormatAttrOrStyleValue, name: string | number) => {
       let valueOut: string;
 
       value = FormatUtils.replaceVars(value, vars);
 
       // Indexed array
-      if (typeof name === 'number') {
+      if (Type.isNumber(name)) {
         name = value;
         compareNode = null;
       }

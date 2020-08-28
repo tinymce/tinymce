@@ -79,6 +79,9 @@ const getColumnResizingBehaviour = (editor: Editor): 'preservetable' | 'resizeta
   return Arr.find(validModes, (mode) => mode === givenMode).getOr(defaultColumnResizingBehaviour);
 };
 
+const isPreserveTableColumnResizing = (editor: Editor) => getColumnResizingBehaviour(editor) === 'preservetable';
+const isResizeTableColumnResizing = (editor: Editor) => getColumnResizingBehaviour(editor) === 'resizetable';
+
 const getCloneElements = (editor: Editor): Optional<string[]> => {
   const cloneElements = editor.getParam('table_clone_elements');
 
@@ -117,5 +120,7 @@ export {
   isResponsiveForced,
   getToolbar,
   getTableHeaderType,
-  getColumnResizingBehaviour
+  getColumnResizingBehaviour,
+  isPreserveTableColumnResizing,
+  isResizeTableColumnResizing
 };

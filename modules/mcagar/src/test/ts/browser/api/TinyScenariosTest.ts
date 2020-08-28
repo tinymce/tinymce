@@ -35,8 +35,7 @@ UnitTest.asynctest('TinyScenariosTest', (success, failure) => {
     editor.execCommand('bold');
     const boldAfter = body.querySelectorAll('strong').length;
 
-    if (editor.selection.isCollapsed()) {
-    } else {
+    if (!editor.selection.isCollapsed()) {
       Assertions.assertEq('Two bold operations should create a <strong> tag at some point', true, boldInitial + boldBefore + boldAfter > 0);
     }
   });

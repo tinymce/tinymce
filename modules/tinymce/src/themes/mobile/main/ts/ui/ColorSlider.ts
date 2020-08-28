@@ -11,8 +11,8 @@ import Editor from 'tinymce/core/api/Editor';
 
 import * as Receivers from '../channels/Receivers';
 import * as Styles from '../style/Styles';
-import { MobileRealm } from '../ui/IosRealm';
 import * as UiDomFactory from '../util/UiDomFactory';
+import { MobileRealm } from './IosRealm';
 import * as ToolbarWidgets from './ToolbarWidgets';
 
 const BLACK = -1;

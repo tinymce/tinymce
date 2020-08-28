@@ -52,7 +52,7 @@ const getSelectedImage = (editor: Editor): Optional<SugarElement> => {
   }
 };
 
-const extractFilename = function (editor: Editor, url) {
+const extractFilename = function (editor: Editor, url: string) {
   const m = url.match(/\/([^\/\?]+)?\.(?:jpeg|jpg|png|gif)(?:\?|$)/i);
   if (m) {
     return editor.dom.encode(m[1]);
@@ -64,31 +64,29 @@ const createId = function () {
   return 'imagetools' + count++;
 };
 
-const isLocalImage = function (editor: Editor, img) {
+const isLocalImage = function (editor: Editor, img: HTMLImageElement) {
   const url = img.src;
 
   return url.indexOf('data:') === 0 || url.indexOf('blob:') === 0 || new URI(url).host === editor.documentBaseURI.host;
 };
 
-const isCorsImage = function (editor: Editor, img) {
+const isCorsImage = function (editor: Editor, img: HTMLImageElement) {
   return Tools.inArray(Settings.getCorsHosts(editor), new URI(img.src).host) !== -1;
 };
 
-const isCorsWithCredentialsImage = function (editor: Editor, img) {
+const isCorsWithCredentialsImage = function (editor: Editor, img: HTMLImageElement) {
   return Tools.inArray(Settings.getCredentialsHosts(editor), new URI(img.src).host) !== -1;
 };
 
 const defaultFetchImage = (editor: Editor, img: HTMLImageElement) => {
-  let src = img.src, apiKey;
-
   if (isCorsImage(editor, img)) {
     return Proxy.getUrl(img.src, null, isCorsWithCredentialsImage(editor, img));
   }
 
   if (!isLocalImage(editor, img)) {
-    src = Settings.getProxyUrl(editor);
-    src += (src.indexOf('?') === -1 ? '?' : '&') + 'url=' + encodeURIComponent(img.src);
-    apiKey = Settings.getApiKey(editor);
+    const proxyUrl = Settings.getProxyUrl(editor);
+    const src = proxyUrl + (proxyUrl.indexOf('?') === -1 ? '?' : '&') + 'url=' + encodeURIComponent(img.src);
+    const apiKey = Settings.getApiKey(editor);
     return Proxy.getUrl(src, apiKey, false);
   }
 

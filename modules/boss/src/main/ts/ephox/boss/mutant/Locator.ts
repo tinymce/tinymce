@@ -5,7 +5,7 @@ import * as Creator from './Creator';
 
 const byId = function (item: Gene, id: string): Optional<Gene> {
   if (id === undefined) {
-    throw new Error('Id value not specified for byId: ' + id);
+    throw new Error('Id value not specified for byId');
   }
   if (item.id !== undefined && item.id === id) {
     return Optional.some(item);

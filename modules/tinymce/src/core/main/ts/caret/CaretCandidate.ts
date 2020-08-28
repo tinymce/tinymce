@@ -32,11 +32,7 @@ const isCaretCandidate = (node: Node): boolean => {
   }
 
   if (isText(node)) {
-    if (isInvalidTextElement(node.parentNode)) {
-      return false;
-    }
-
-    return true;
+    return !isInvalidTextElement(node.parentNode);
   }
 
   return isAtomicInline(node) || isBr(node) || isTable(node) || isNonUiContentEditableFalse(node);

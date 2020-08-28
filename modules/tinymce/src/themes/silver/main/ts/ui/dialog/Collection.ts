@@ -65,7 +65,7 @@ export const renderCollection = (spec: CollectionSpec, providersBackstage: UiFac
       return `<div class="tox-collection__item${readonlyClass}" tabindex="-1" data-collection-item-value="${escapeAttribute(item.value)}" title="${ariaLabel}" aria-label="${ariaLabel}">${iconContent}${textContent}</div>`;
     });
 
-    const chunks = spec.columns > 1 && spec.columns !== 'auto' ? Arr.chunk(htmlLines, spec.columns) : [ htmlLines ];
+    const chunks = spec.columns !== 'auto' && spec.columns > 1 ? Arr.chunk(htmlLines, spec.columns) : [ htmlLines ];
     const html = Arr.map(chunks, (ch) => `<div class="tox-collection__group">${ch.join('')}</div>`);
 
     Html.set(comp.element, html.join(''));

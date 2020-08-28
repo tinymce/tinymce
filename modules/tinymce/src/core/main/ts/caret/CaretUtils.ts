@@ -40,9 +40,10 @@ const skipCaretContainers = function (walk, shallow?: boolean): Node {
 
 const findNode = (node: Node, direction: number, predicateFn: (node: Node) => boolean, rootNode: Node, shallow?: boolean) => {
   const walker = new DomTreeWalker(node, rootNode);
+  const isCefOrCaretContainer = isContentEditableFalse(node) || isCaretContainerBlock(node);
 
   if (isBackwards(direction)) {
-    if (isContentEditableFalse(node) || isCaretContainerBlock(node)) {
+    if (isCefOrCaretContainer) {
       node = skipCaretContainers(walker.prev, true);
       if (predicateFn(node)) {
         return node;
@@ -57,7 +58,7 @@ const findNode = (node: Node, direction: number, predicateFn: (node: Node) => bo
   }
 
   if (isForwards(direction)) {
-    if (isContentEditableFalse(node) || isCaretContainerBlock(node)) {
+    if (isCefOrCaretContainer) {
       node = skipCaretContainers(walker.next, true);
       if (predicateFn(node)) {
         return node;
