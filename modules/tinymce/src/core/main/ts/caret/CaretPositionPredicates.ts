@@ -7,8 +7,10 @@
 
 import { Fun, Optional } from '@ephox/katamari';
 import { Css, SugarElement } from '@ephox/sugar';
+import BookmarkManager from '../api/dom/BookmarkManager';
 import * as NodeType from '../dom/NodeType';
 import { isWhiteSpace } from '../text/CharType';
+import * as Zwsp from '../text/Zwsp';
 import CaretPosition from './CaretPosition';
 import { getChildNodeAtRelativeOffset } from './CaretUtils';
 
@@ -23,7 +25,7 @@ const isAfterSpace = Fun.curry(isChar, false, isWhiteSpace);
 
 const isEmptyText = (pos: CaretPosition) => {
   const container = pos.container();
-  return NodeType.isText(container) && container.data.length === 0;
+  return NodeType.isText(container) && (container.data.length === 0 || Zwsp.isZwsp(container.data) && BookmarkManager.isBookmarkNode(container.parentNode));
 };
 
 const matchesElementPosition = (before: boolean, predicate: (node: Node) => boolean) => (pos: CaretPosition) =>

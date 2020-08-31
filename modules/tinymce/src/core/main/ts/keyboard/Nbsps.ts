@@ -88,15 +88,14 @@ const leanRight = (pos: CaretPosition): CaretPosition => {
 };
 
 const needsToBeNbspRight = (root: SugarElement, pos: CaretPosition) => {
-  const afterPos = leanRight(pos);
-  if (isInPre(afterPos)) {
+  if (isInPre(pos)) {
     return false;
   } else {
-    return isAtEndOfBlock(root, afterPos) || isAfterBlock(root, afterPos) || isBeforeBr(root, afterPos) || hasSpaceAfter(root, afterPos);
+    return isAtEndOfBlock(root, pos) || isAfterBlock(root, pos) || isBeforeBr(root, pos) || hasSpaceAfter(root, pos);
   }
 };
 
-const needsToBeNbsp = (root: SugarElement, pos: CaretPosition) => needsToBeNbspLeft(root, pos) || needsToBeNbspRight(root, pos);
+const needsToBeNbsp = (root: SugarElement, pos: CaretPosition) => needsToBeNbspLeft(root, pos) || needsToBeNbspRight(root, leanRight(pos));
 
 const isNbspAt = (text: string, offset: number) => isNbsp(text.charAt(offset));
 
@@ -167,6 +166,9 @@ const normalizeNbspsInEditor = (editor: Editor) => {
 };
 
 export {
+  needsToBeNbspLeft,
+  needsToBeNbspRight,
+  needsToBeNbsp,
   needsToHaveNbsp,
   normalizeNbspMiddle,
   normalizeNbspsInEditor

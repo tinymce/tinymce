@@ -11,7 +11,9 @@ Version 5.5.0 (TBD)
     Changed the `target` property on fired events to use the native event target. The original target for an open shadow root can be obtained using `event.getComposedPath()` #TINY-6128
     Changed the editor to cleanup loaded CSS stylesheets when all editors using the stylesheet have been removed #TINY-3926
     Changed `imagetools` context menu icon for accessing the `image` settings to use the same icon #TINY-4141
+    Changed the `editor.insertContent()` and `editor.selection.setContent()` APIs to retain leading and trailing whitespace #TINY-5966
     Deprecated the `Env.experimentalShadowDom` flag #TINY-6128
+    Fixed loss of whitespace when inserting content after a non-breaking space #TINY-5966
     Fixed the `event.getComposedPath()` function on events fired from TinyMCE. This was throwing an exception, but now works as expected. #TINY-6128
     Fixed the `template` plugin previews missing some content styles #TINY-6115
     Fixed the `media` plugin not saving the alternative source url in some situations #TINY-4113
