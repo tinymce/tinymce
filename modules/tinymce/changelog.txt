@@ -6,6 +6,8 @@ Version 5.5.0 (TBD)
     Added `hasPlugin` function to the editor API to determine if a plugin exists or not #TINY-766
     Added the ability to delete and navigate HTML media elements without the media plugin #TINY-4211
     Added `fullscreen_native` setting to the fullscreen plugin to enable use of the entire monitor #TINY-6284
+    Added table related oxide variables to the Style API for more granular control over table cell selection appearance #TINY-6311
+    Changed how CSS manipulates table cells when selecting multiple cells to achieve a semi-transparent selection #TINY-6311
     Added the `origin` property to the `ObjectResized` and `ObjectResizeStart` events, to specify which handle the resize was preformed on #TINY-6242
     Added new StyleSheetLoader `unload` and `unloadAll` APIs to allow loaded stylesheets to be removed #TINY-3926
     Changed the `target` property on fired events to use the native event target. The original target for an open shadow root can be obtained using `event.getComposedPath()` #TINY-6128
