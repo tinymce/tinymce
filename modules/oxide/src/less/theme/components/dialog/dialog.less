@@ -501,7 +501,7 @@ body.tox-dialog__disable-scroll {
   .tox-dialog__footer {
     .tox-dialog__footer-start,
     .tox-dialog__footer-end {
-      > * {
+      > *:not(:first-child) {
         margin-left: @pad-sm;
       }
     }
@@ -537,7 +537,7 @@ body.tox-dialog__disable-scroll {
   .tox-dialog__footer {
     .tox-dialog__footer-start,
     .tox-dialog__footer-end {
-      > * {
+      > *:not(:first-child) {
         margin-right: @pad-sm;
       }
     }

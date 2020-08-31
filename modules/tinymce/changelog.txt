@@ -23,6 +23,7 @@ Version 5.5.0 (TBD)
     Fixed the `DOMUtils.split()` API incorrectly removing some content #TINY-6294
     Fixed pressing escape not focusing the editor when using multiple toolbars #TINY-6230
     Fixed the `dirty` flag not being correctly set during an `AddUndo` event #TINY-4707
+    Fixed unwanted left margin on dialog footer buttons positioned on the left side of the dialog #TINY-6353
 Version 5.4.2 (2020-08-17)
     Fixed the editor not resizing when resizing the browser window in fullscreen mode #TINY-3511
     Fixed clicking on notifications causing inline editors to hide #TINY-6058
