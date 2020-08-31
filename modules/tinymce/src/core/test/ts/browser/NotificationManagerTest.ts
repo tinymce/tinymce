@@ -130,7 +130,7 @@ UnitTest.asynctest('browser.tinymce.core.NotificationManagerTest', function (suc
     teardown(editor);
   });
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupInBodyAndShadowRoot(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, Log.steps('TBA', 'Testing the notifications api', suite.toSteps(editor)), onSuccess, onFailure);
   }, {
     add_unload_trigger: false,
