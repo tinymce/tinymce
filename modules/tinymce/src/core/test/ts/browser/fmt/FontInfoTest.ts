@@ -3,10 +3,12 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { LegacyUnit } from '@ephox/mcagar';
 import { Hierarchy, SugarElement } from '@ephox/sugar';
 import * as FontInfo from 'tinymce/core/fmt/FontInfo';
-import Env from 'tinymce/core/api/Env';
+import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 
 UnitTest.asynctest('browser.tinymce.core.fmt.FontInfoTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
+
+  const dom = DOMUtils.DOM;
 
   const assertComputedFontProp = function (fontProp: string, html: string, path: number[], expected: string) {
     const div = document.createElement('div');
@@ -16,7 +18,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.FontInfoTest', function (success, f
     div.style[fontProp] = expected;
     div.innerHTML = html;
     const elm = Hierarchy.follow(SugarElement.fromDom(div), path).getOrDie('oh no! ' + path.toString() + '  path was bad');
-    const actual = fontGetProp(div, elm.dom as Element);
+    const actual = fontGetProp(dom, div, elm.dom as Element);
     LegacyUnit.equal(
       actual,
       expected,
@@ -32,7 +34,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.FontInfoTest', function (success, f
     document.body.appendChild(div);
     div.innerHTML = html;
     const elm = Hierarchy.follow(SugarElement.fromDom(div), path).getOrDie('oh no! ' + path.toString() + '  path was bad');
-    const actual = fontGetProp(div, elm.dom as Element);
+    const actual = fontGetProp(dom, div, elm.dom as Element);
     LegacyUnit.equal(
       actual,
       expected,
@@ -102,7 +104,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.FontInfoTest', function (success, f
     document.body.appendChild(iframe);
 
     iframe.addEventListener('load', function () {
-      const fontFamily = FontInfo.getFontFamily(iframe.contentDocument.body, iframe.contentDocument.body.firstChild as Element);
+      const fontFamily = FontInfo.getFontFamily(dom, iframe.contentDocument.body, iframe.contentDocument.body.firstChild as Element);
       LegacyUnit.equal(typeof fontFamily, 'string', 'Should always be a string');
       iframe.parentNode.removeChild(iframe);
 
@@ -126,7 +128,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.FontInfoTest', function (success, f
       iframe.parentNode.removeChild(iframe);
 
       try {
-        const fontFamily = FontInfo.getFontFamily(body, firstChildElement as Element);
+        const fontFamily = FontInfo.getFontFamily(dom, body, firstChildElement as Element);
         LegacyUnit.equal(typeof fontFamily, 'string', 'Should return a string');
         done();
       } catch (error) {
@@ -139,20 +141,18 @@ UnitTest.asynctest('browser.tinymce.core.fmt.FontInfoTest', function (success, f
     iframe.contentDocument.close();
   });
 
-  if (!Env.browser.isIE()) {
-    suite.test('comments should always return empty string', function () {
-      assertComputedFontProp('fontFamily', '<!-- comment -->', [ 0 ], '');
-      assertComputedFontProp('fontSize', '<!-- comment -->', [ 0 ], '');
-      assertSpecificFontProp('fontFamily', '<!-- comment -->', [ 0 ], '');
-      assertSpecificFontProp('fontSize', '<!-- comment -->', [ 0 ], '');
-    });
-  }
+  suite.test('comments should always return empty string', function () {
+    assertComputedFontProp('fontFamily', '<!-- comment -->', [ 0 ], '');
+    assertComputedFontProp('fontSize', '<!-- comment -->', [ 0 ], '');
+    assertSpecificFontProp('fontFamily', '<!-- comment -->', [ 0 ], '');
+    assertSpecificFontProp('fontSize', '<!-- comment -->', [ 0 ], '');
+  });
 
   suite.test('should not throw error when passed in element without parent', () => {
     const rootDiv = document.createElement('div');
     const element = document.createElement('p');
 
-    const actual = FontInfo.getFontSize(rootDiv, element);
+    const actual = FontInfo.getFontSize(dom, rootDiv, element);
 
     LegacyUnit.equal('string', typeof actual, 'should return always string');
   });

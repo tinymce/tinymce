@@ -10,6 +10,7 @@ import Editor from '../api/Editor';
 import * as Settings from '../api/Settings';
 import * as NodeType from '../dom/NodeType';
 import * as FontInfo from '../fmt/FontInfo';
+import RangeUtils from '../api/dom/RangeUtils';
 
 const fromFontSizeNumber = (editor: Editor, value: string): string => {
   if (/^[0-9\.]+$/.test(value)) {
@@ -48,11 +49,14 @@ const normalizeFontNames = (font: string) => {
 const fontQuery = (editor: Editor, fontProp: FontInfo.FontProp) => {
   const getter = fontProp === 'font-family' ? FontInfo.getFontFamily : FontInfo.getFontSize;
   const rng = editor.selection.getRng().cloneRange();
-  const isTextRng = NodeType.isText(rng.startContainer) && rng.startContainer === rng.endContainer;
+  const start = RangeUtils.getNode(rng.startContainer, rng.startOffset);
+  const end = RangeUtils.getNode(rng.endContainer, rng.endOffset);
+  const isTextRng = NodeType.isText(start) && start === end;
   // Have to directly use text node instead of selectionRng for text selection as there are cases where
   // RangeWalker used in the getter fn will not return results otherwise
-  const rngOrNode: Range | Node = isTextRng ? rng.startContainer : rng;
-  return getter(editor.getBody(), rngOrNode);
+  // Additionally, cannot simply get the parent as that may cause nodes to be checked that aren't in the selection
+  const rngOrNode: Range | Node = isTextRng ? start : rng;
+  return getter(editor.dom, editor.getBody(), rngOrNode);
 };
 
 export const fontNameAction = (editor: Editor, value: string) => {

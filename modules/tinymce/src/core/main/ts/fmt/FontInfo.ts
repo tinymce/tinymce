@@ -5,10 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Obj, Optional, Fun } from '@ephox/katamari';
-import { Attribute, Css, SugarElement, SugarNode } from '@ephox/sugar';
+import { Arr, Obj, Optional, Fun, Optionals } from '@ephox/katamari';
+import { Attribute, Css, SugarElement, SugarNode, Traverse, TransformFind, Compare, PredicateFilter } from '@ephox/sugar';
 import DOMUtils from '../api/dom/DOMUtils';
-import * as NodeType from '../dom/NodeType';
 import * as RangeWalk from '../selection/RangeWalk';
 import { isNode } from './FormatUtils';
 
@@ -19,34 +18,64 @@ const legacyPropNames: Record<FontProp, string> = {
   'font-family': 'face'
 };
 
+// Problem: Need a solution that handles detecting a style on a node whether that be a specified or computed style
+// One of the challenges is figuring out whether an elment is being styled from a specified style either on the element itself or a parent or whether
+// it is coming from a computed style specified in content_css
+// Strategy: The strategy for below is to get the computed style for the element in question and then attempt to find the closest specified style
+// The specified style may not be in the same format (e.g. px) that the computed style is in.
+// Therefore, can get the computed style on the element for which the specifed style was found to make sure the specified style is represented in the same format as the computed style
+// If the the specified style and the computed style are the same, it can be confirmed with reasonable certainty that the style is coming from specified style
+// and not from a computed style. There are exceptions to this which are noted below
+// Limitations:
+// - If a font size was specified as 1em in content_css there is no way to retrieve it as 1em i.e. the computed style will be in px
+// - It is possible that a specified style has an 'em' value that equals the same in px as the computed px for the element being looked at
+//   As a result, the 'em' value will be retrieved when it should be a px value
+// - These are unavoidable issues though until a better CSS model is available on all browsers - https://developers.google.com/web/updates/2018/03/cssom
+const getFontProp = (dom: DOMUtils, propName: FontProp, isRoot: (elm: SugarElement) => boolean) => (elm: SugarElement): Optional<string> => {
+  const elmOpt = Optional.from(elm)
+    .bind((el) => SugarNode.isText(el) ? Traverse.parent(el) : Optional.some(el))
+    .filter(SugarNode.isElement);
+
+  const computedOpt = elmOpt.bind((el) => getComputedFontProp(dom, propName, el.dom));
+
+  const specifiedOpt = elmOpt.bind((el) => TransformFind.closest(el, (e) => getSpecifiedFontProp(propName, e)
+    .bind((specifiedFont) => getComputedFontProp(dom, propName, e.dom as Element).map((computedSpecifedFont) => ({
+      specifiedFont,
+      computedSpecifedFont
+    }))), isRoot)
+  );
+
+  return Optionals.lift2(computedOpt, specifiedOpt, (computed, specified) =>
+    computed === specified.computedSpecifedFont ? specified.specifiedFont : computed
+  ).or(computedOpt);
+};
+
 const collect = (dom: DOMUtils, rngOrNode: Range | Node, rootNode: Element, propName: FontProp): string[] => {
   const collector: Record<string, boolean> = {};
 
-  const process = (nodes: ArrayLike<Node>, root: Node, getComputed: boolean) => {
-    Arr.each(nodes, (node) => {
-      const matches = dom.getParents(node, '*[style],font', root);
-      Arr.findMap(matches, (match) => getSpecifiedFontProp(propName, SugarElement.fromDom(match)))
-        .orThunk(() => {
-          // Cannot find computed style on text node so have to get parent node if required
-          const elm = NodeType.isText(node) ? dom.getParent(node, '*', rootNode) : node as Element;
-          return getComputed ? getComputedFontProp(propName, elm) : Optional.none();
-        })
-        .filter((value) => !Obj.has(collector, value))
-        .each((value) => {
-          collector[value] = true;
-        });
+  const isRoot = (elm: SugarElement) => Compare.eq(SugarElement.fromDom(rootNode), elm);
+  const getFont = getFontProp(dom, propName, isRoot);
 
-      // Don't need to worry about potentially getting the computed value for children as if no fonts are found on the child,
-      // it will inherit the 'node' font value which may be computed
-      process(node.childNodes, node, false);
+  const process = (nodes: ArrayLike<Node>) => {
+    Arr.each(nodes, (node) => {
+      const sugarNode = SugarElement.fromDom(node);
+      const descendants = PredicateFilter.descendants(sugarNode, Fun.always);
+
+      Arr.each([ sugarNode, ...descendants ], (el) => {
+        getFont(el)
+          .filter((value) => !Obj.has(collector, value))
+          .each((value) => {
+            collector[value] = true;
+          });
+      });
     });
   };
 
   if (isNode(rngOrNode)) {
-    process([ rngOrNode ], rootNode, true);
+    process([ rngOrNode ]);
   } else {
     RangeWalk.walk(dom, rngOrNode, (nodes) => {
-      process(nodes, rootNode, true);
+      process(nodes);
     });
   }
 
@@ -79,11 +108,11 @@ const getSpecifiedFontProp = (propName: FontProp, elm: SugarElement): Optional<s
     }
   });
 
-const getComputedFontProp = (propName: FontProp, elm: Element): Optional<string> =>
-  Optional.from(DOMUtils.DOM.getStyle(elm, propName, true));
+const getComputedFontProp = (dom: DOMUtils, propName: FontProp, elm: Element): Optional<string> =>
+  Optional.from(dom.getStyle(elm, propName, true));
 
-const getFontInfo = (propName: FontProp, normalize: (str: string) => string) => (rootNode: Element, rngOrNode: Range | Node) => {
-  const fontProps = Arr.map(collect(DOMUtils.DOM, rngOrNode, rootNode, propName), normalize);
+const getFontInfo = (propName: FontProp, normalize: (str: string) => string) => (dom: DOMUtils, rootNode: Element, rngOrNode: Range | Node) => {
+  const fontProps = Arr.map(collect(dom, rngOrNode, rootNode, propName), normalize);
   // If there is more than one font prop found, cannot declare that there is a single font
   return fontProps.length === 1 ? fontProps[0] : '';
 };

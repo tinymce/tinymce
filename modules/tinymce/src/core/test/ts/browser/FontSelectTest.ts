@@ -114,19 +114,21 @@ UnitTest.asynctest('browser.tinymce.core.FontSelectTest', function (success, fai
       ]),
 
       Log.stepsAsStep('TINY-6207', 'Font family and font size on paragraph with words of different families and sizes', [
-        tinyApis.sSetContent(`<p>font1 <span style="font-family: 'arial black', sans-serif; font-size: 24pt;">font2 </span> font3</p>`),
+        tinyApis.sSetContent(`<p>font1 <span style="font-size: 24pt; font-family: 'arial black', sans-serif;">font2</span> <span style="font-family: terminal, monaco, monospace;">font3</span></p>`),
         tinyApis.sFocus(),
         // Check first font is detected
         sAssertFontsForSelections('Check font family and font size are found (0)', [ selObj([ 0, 0 ], 1, [ 0, 0 ], 1) ], '12px', 'Arial'),
         // Check second font is detected
         sAssertFontsForSelections('Check font family and fontsize are found (1)', [ selObj([ 0, 1, 0 ], 1, [ 0, 1, 0 ], 1) ], '24pt', 'Arial Black'),
+        // Check space in beween two fonts get correct familay
+        sAssertFontsForSelections('Check font family and fontsize are found for space', [ selObj([ 0, 2 ], 1, [ 0, 2 ], 1) ], '12px', 'Arial'),
         // Check no font is found when multiple fonts are selected
         sAssertFontsForSelections(
           'Check no font family or font size is found for multi font selections',
           [
             selObj([ 0, 0 ], 1, [ 0, 1, 0 ], 1),
-            selObj([ 0, 1, 0 ], 1, [ 0, 2 ], 1),
-            selObj([], 0, [], 0)
+            selObj([ 0, 1, 0 ], 1, [ 0, 3 ], 1),
+            selObj([], 0, [], 1)
           ], '', '')
       ]),
 
@@ -150,7 +152,7 @@ UnitTest.asynctest('browser.tinymce.core.FontSelectTest', function (success, fai
           'Check no font family or font size is found for multi font selections',
           [
             selObj([ 0, 1, 1, 0 ], 0, [ 0, 1, 2 ], 1), // ab|cd|e
-            selObj([], 0, [], 0)
+            selObj([], 0, [], 1)
           ], '', '')
       ]),
 
@@ -163,7 +165,7 @@ UnitTest.asynctest('browser.tinymce.core.FontSelectTest', function (success, fai
           'Check no font family or font size is found for multi font selections',
           [
             selObj([ 0, 0 ], 0, [ 0, 1, 0 ], 0),
-            selObj([], 0, [], 0)
+            selObj([], 0, [], 1)
           ], '', '')
       ]),
 
@@ -183,7 +185,26 @@ UnitTest.asynctest('browser.tinymce.core.FontSelectTest', function (success, fai
         sAssertFontsForSelections(
           'Check no font family or font size is found for multi font selections',
           [
-            selObj([ 1 ], 0, [ 2 ], 0)
+            selObj([ 1 ], 0, [ 2 ], 1)
+          ], '', '')
+      ]),
+
+      // Add test for including strong content_style
+      Log.stepsAsStep('TINY-6207', 'Font family and font size with an inline element that has a content_style', [
+        // tinyApis.sSetContent(`<p>a<strong>b<span style="font-family: impact, sans-serif;">c</span>d</strong>e</p>`),
+        tinyApis.sSetContent(`<p>a<span style="font-family: 'arial black', sans-serif;">b<strong>cd</strong>e</span>f</p>`),
+        tinyApis.sFocus(),
+        // a
+        sAssertFontsForSelections('Check font family and font size are found (0)', [ selObj([ 0, 0 ], 1, [ 0, 0 ], 1) ], '12px', 'Arial'),
+        // b
+        sAssertFontsForSelections('Check font family and font size are found (1)', [ selObj([ 0, 1, 0 ], 1, [ 0, 1, 0 ], 1) ], '12px', 'Arial Black'),
+        // c - font size and fant family should be calculated from content_style for strong tag (the size is auto  converted from px to pt)
+        sAssertFontsForSelections('Check font family and font size are found (2)', [ selObj([ 0, 1, 1, 0 ], 1, [ 0, 1, 1, 0 ], 1) ], '8pt', 'Impact'),
+        sAssertFontsForSelections(
+          'Check no font family or font size is found for multi font selections',
+          [
+            selObj([ 0, 1, 0 ], 0, [ 0, 1, 1, 0 ], 1), // a|bc|def
+            selObj([ ], 0, [ ], 1)
           ], '', '')
       ])
     ], onSuccess, onFailure);
@@ -193,7 +214,8 @@ UnitTest.asynctest('browser.tinymce.core.FontSelectTest', function (success, fai
     content_style: [
       '.mce-content-body { font-family: Helvetica; font-size: 42px; }',
       '.mce-content-body p { font-family: Arial; font-size: 12px; }',
-      '.mce-content-body h1 { font-family: Arial; font-size: 32px; }'
+      '.mce-content-body h1 { font-family: Arial; font-size: 32px; }',
+      '.mce-content-body strong { font-family: Impact; font-size: 10px; }'
     ].join(''),
     fontsize_formats: '8pt=1 12pt 12.75pt 13pt 24pt 32pt'
   }, success, failure);
