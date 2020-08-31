@@ -44,7 +44,7 @@ const calcNewAnchor = (optBox: Optional<Boxes.BoxByPoint>, rootPoint: CssPositio
     Layout.belowOrAbove();
 
   const layoutsRtl = anchorInfo.showAbove ?
-    Layout.belowOrAboveRtl() :
+    Layout.aboveOrBelowRtl() :
     Layout.belowOrAboveRtl();
 
   const layouts = AnchorLayouts.get(

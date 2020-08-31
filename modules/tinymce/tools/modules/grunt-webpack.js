@@ -3,8 +3,6 @@ let LiveReloadPlugin = require('webpack-livereload-plugin');
 let path = require('path');
 let fs = require('fs');
 
-let liveReloadPlugin = new LiveReloadPlugin();
-
 const packageData = require("../../package.json");
 
 let create = (entries, tsConfig, outDir, filename) => {
@@ -86,7 +84,7 @@ let buildDemoEntries = (pluginNames, type, demo) => pluginNames.reduce(
     if (fs.existsSync(tsfile)) { acc[name] = tsfile; }
     return acc;
   }, {}
-)
+);
 
 let buildComponentEntries = (pluginNames, type, demo) => pluginNames.reduce(
   (acc, name) => {
@@ -95,7 +93,7 @@ let buildComponentEntries = (pluginNames, type, demo) => pluginNames.reduce(
     }
     return acc;
   }, {}
-)
+);
 
 let buildDialogEntries = (pluginNames, type, demo) => pluginNames.reduce(
   (acc, name) => {
@@ -104,14 +102,14 @@ let buildDialogEntries = (pluginNames, type, demo) => pluginNames.reduce(
     }
     return acc;
   }, {}
-)
+);
 
 let buildEntries = (pluginNames, type, entry) => pluginNames.reduce(
   (acc, name) => {
     acc[name] = `src/${type}/${name}/main/ts/${entry}`;
     return acc;
   }, {}
-)
+);
 
 let createPlugin = (name) => {
   return create(`src/plugins/${name}/demo/ts/demo/Demo.ts`, 'tsconfig.plugin.json', `scratch/demos/plugins/${name}/`, 'demo.js');
@@ -123,19 +121,19 @@ let createTheme = (name) => {
 
 let allPluginDemos = (plugins) => {
   return create(buildDemoEntries(plugins, 'plugins', 'Demo.ts'), 'tsconfig.plugin.json', 'scratch/demos/plugins', 'demo.js')
-}
+};
 
 let allThemeDemos = (themes) => {
   return create(buildDemoEntries(themes, 'themes', 'Demos.ts'), 'tsconfig.theme.json', 'scratch/demos/themes', 'demo.js')
-}
+};
 
 let allComponentDemos = (themes) => {
   return create(buildComponentEntries(themes, 'themes', 'Components.ts'), 'tsconfig.theme.json', 'scratch/demos/themes', 'components.js')
-}
+};
 
 let allDialogDemos = (themes) => {
   return create(buildDialogEntries(themes, 'themes', 'DialogDemos.ts'), 'tsconfig.theme.json', 'scratch/demos/themes', 'dialogdemos.js')
-}
+};
 
 let all = (plugins, themes) => {
   return [
@@ -149,10 +147,10 @@ let all = (plugins, themes) => {
     create(buildEntries(plugins, 'plugins', 'Main.ts'), 'tsconfig.plugin.json', 'js/tinymce/plugins', 'plugin.js'),
     create(buildEntries(themes, 'themes', 'Main.ts'), 'tsconfig.theme.json', 'js/tinymce/themes', 'theme.js')
   ];
-}
+};
 
 let generateDemoIndex = (grunt, app, plugins, themes) => {
-  let demoList = grunt.file.expand(['src/**/demo/html/*.html', 'src/**/demo/html/**/*.html'])
+  let demoList = grunt.file.expand(['src/**/demo/html/*.html', 'src/**/demo/html/**/*.html']);
   let sortedDemos = demoList.reduce((acc, link) => {
     const type = link.split('/')[1];
 
@@ -160,10 +158,10 @@ let generateDemoIndex = (grunt, app, plugins, themes) => {
       acc[type] = [];
     }
 
-    acc[type].push(link)
+    acc[type].push(link);
 
     return acc;
-  }, {})
+  }, {});
 
   let lists = Object.keys(sortedDemos).map(
     type => `
@@ -187,10 +185,10 @@ let generateDemoIndex = (grunt, app, plugins, themes) => {
     ${lists}
   </body>
   </html>
-  `
+  `;
 
   app.get('/', (req, res) => res.send(html))
-}
+};
 
 module.exports = {
   createPlugin,

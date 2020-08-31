@@ -40,11 +40,7 @@ const isBogusBr = (dom: DOMUtils, node: Node) => {
     return false;
   }
 
-  if (dom.isBlock(node.nextSibling) && !isBr(node.previousSibling)) {
-    return true;
-  }
-
-  return false;
+  return dom.isBlock(node.nextSibling) && !isBr(node.previousSibling);
 };
 
 const isEmpty = (dom: DOMUtils, elm: Node, keepBookmarks?: boolean) => {

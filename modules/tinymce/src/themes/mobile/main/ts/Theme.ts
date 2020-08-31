@@ -37,8 +37,10 @@ const renderMobileTheme = (editor: Editor) => {
     const cssUrls = CssUrls.derive(editor);
 
     if (Settings.isSkinDisabled(editor) === false) {
+      const styleSheetLoader = DOMUtils.DOM.styleSheetLoader;
       editor.contentCSS.push(cssUrls.content);
-      DOMUtils.DOM.styleSheetLoader.load(cssUrls.ui, SkinLoaded.fireSkinLoaded(editor));
+      styleSheetLoader.load(cssUrls.ui, SkinLoaded.fireSkinLoaded(editor));
+      editor.on('remove', () => styleSheetLoader.unload(cssUrls.ui));
     } else {
       SkinLoaded.fireSkinLoaded(editor)();
     }

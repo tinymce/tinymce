@@ -197,13 +197,8 @@ const restoreEndPoint = (dom: DOMUtils, suffix: string, bookmark: IdBookmark): O
         prev.appendData(next.nodeValue);
         dom.remove(next);
 
-        if (suffix === 'start') {
-          container = prev;
-          offset = idx;
-        } else {
-          container = prev;
-          offset = idx;
-        }
+        container = prev;
+        offset = idx;
       }
     }
 

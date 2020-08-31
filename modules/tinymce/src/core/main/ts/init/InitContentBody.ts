@@ -6,7 +6,7 @@
  */
 
 import { Obj, Type } from '@ephox/katamari';
-import { Attribute, Insert, SugarElement } from '@ephox/sugar';
+import { Attribute, Insert, Remove, SugarElement, SugarShadowDom } from '@ephox/sugar';
 import Annotator from '../api/Annotator';
 import DOMUtils from '../api/dom/DOMUtils';
 import EditorSelection from '../api/dom/Selection';
@@ -45,12 +45,18 @@ declare const escape: any;
 
 const DOM = DOMUtils.DOM;
 
-const appendStyle = function (editor: Editor, text: string) {
-  const head = SugarElement.fromDom(editor.getDoc().head);
-  const tag = SugarElement.fromTag('style');
-  Attribute.set(tag, 'type', 'text/css');
-  Insert.append(tag, SugarElement.fromText(text));
-  Insert.append(head, tag);
+const appendStyle = (editor: Editor, text: string) => {
+  const body = SugarElement.fromDom(editor.getBody());
+  const container = SugarShadowDom.getStyleContainer(SugarShadowDom.getRootNode(body));
+
+  const style = SugarElement.fromTag('style');
+  Attribute.set(style, 'type', 'text/css');
+  Insert.append(style, SugarElement.fromText(text));
+  Insert.append(container, style);
+
+  editor.on('remove', () => {
+    Remove.remove(style);
+  });
 };
 
 const getRootName = (editor: Editor): string => editor.inline ? editor.getElement().nodeName.toLowerCase() : undefined;
@@ -262,6 +268,18 @@ const initEditor = function (editor: Editor) {
 const getStyleSheetLoader = (editor: Editor): StyleSheetLoader =>
   editor.inline ? editor.ui.styleSheetLoader : editor.dom.styleSheetLoader;
 
+const loadContentCss = (editor: Editor, css: string[]) => {
+  const styleSheetLoader = getStyleSheetLoader(editor);
+
+  const loaded = () => {
+    editor.on('remove', () => styleSheetLoader.unloadAll(css));
+    initEditor(editor);
+  };
+
+  // Load all stylesheets
+  styleSheetLoader.loadAll(css, loaded, loaded);
+};
+
 const preInit = (editor: Editor, rtcMode: boolean) => {
   const settings = editor.settings, doc = editor.getDoc(), body = editor.getBody();
 
@@ -315,15 +333,7 @@ const preInit = (editor: Editor, rtcMode: boolean) => {
     editor.dom.addStyle(contentCssText);
   }
 
-  getStyleSheetLoader(editor).loadAll(
-    editor.contentCSS,
-    function (_) {
-      initEditor(editor);
-    },
-    function (_urls) {
-      initEditor(editor);
-    }
-  );
+  loadContentCss(editor, editor.contentCSS);
 
   // Append specified content CSS last
   if (settings.content_style) {

@@ -25,7 +25,7 @@ import { renderSizeInput } from '../dialog/SizeInput';
 import { renderTable } from '../dialog/Table';
 import { renderInput, renderTextarea } from '../dialog/TextField';
 import { renderUrlInput } from '../dialog/UrlInput';
-import { renderAlertBanner } from '../general/AlertBanner';
+import { renderAlertBanner } from './AlertBanner';
 import { renderDialogButton } from './Button';
 import { renderCheckbox } from './Checkbox';
 import { renderHtmlPanel } from './HtmlPanel';

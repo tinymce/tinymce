@@ -134,7 +134,7 @@ const item = (itemSpec: DemoItems): ItemSpec => {
   const html = (() => {
     if (spec.data && spec.data.meta && spec.data.meta.html) {
       return spec.data.meta.html;
-    } else if (spec && spec.data.meta && spec.data.meta.text) {
+    } else if (spec.data && spec.data.meta && spec.data.meta.text) {
       return spec.data.meta.text;
     } else {
       return 'No.Text.For.Item';
