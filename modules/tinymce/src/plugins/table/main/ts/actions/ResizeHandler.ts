@@ -52,15 +52,8 @@ export const getResizeHandler = function (editor: Editor): ResizeHandler {
     // so check to see if it ends with `e` (eg east edge)
     const isRightEdgeResize = Strings.endsWith(origin, 'e');
 
-    if (Util.isPercentage(startRawW)) {
-      const percentW = parseFloat(startRawW.replace('%', ''));
-      const targetPercentW = width * percentW / startW;
-      Css.set(table, 'width', targetPercentW + '%');
-    } else if (Util.isPixel(startRawW)) {
-      syncPixels(table);
-    }
-
-    // Adjust the column sizes if the table changed size
+    // Adjust the column sizes and update the table width to use the right sizing, if the table changed size.
+    // This is needed as core will always use pixels when setting the width.
     if (width !== startW && startRawW !== '') {
       // Restore the original size and then let snooker resize appropriately
       Css.set(table, 'width', startRawW);
@@ -71,6 +64,17 @@ export const getResizeHandler = function (editor: Editor): ResizeHandler {
       // For preserve table we want to always resize the entire table. So pretend the last column is being resized
       const col = Settings.isPreserveTableColumnResizing(editor) || isRightEdgeResize ? getNumColumns(table) - 1 : 0;
       Adjustments.adjustWidth(table, width - startW, col, resizing, tableSize);
+    // Handle the edge case where someone might fire this event without resizing.
+    // If so then we need to ensure the table is still using percent
+    } else if (Util.isPercentage(startRawW)) {
+      const percentW = parseFloat(startRawW.replace('%', ''));
+      const targetPercentW = width * percentW / startW;
+      Css.set(table, 'width', targetPercentW + '%');
+    }
+
+    // Sync the cell sizes, as the core resizing logic doesn't update them, but snooker does
+    if (Util.isPixel(startRawW)) {
+      syncPixels(table);
     }
   };
 
