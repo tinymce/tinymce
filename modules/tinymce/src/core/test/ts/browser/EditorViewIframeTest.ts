@@ -1,7 +1,8 @@
-import { Assertions, Chain, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
+import { Assertions, Chain, Log, Pipeline, Step } from '@ephox/agar';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Css, Scroll, SelectorFind, SugarElement } from '@ephox/sugar';
+import Editor from 'tinymce/core/api/Editor';
 import * as EditorView from 'tinymce/core/EditorView';
 import Theme from 'tinymce/themes/silver/Theme';
 
@@ -64,7 +65,12 @@ UnitTest.asynctest('browser.tinymce.core.EditorViewIframeTest', function (succes
     ]));
   };
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  const sAssertIsAttachedToDom = (editor: Editor) => Step.sync(() => {
+    const attached = EditorView.isEditorAttachedToDom(editor);
+    Assert.eq('Editor should be attached to the DOM', true, attached);
+  });
+
+  TinyLoader.setupInBodyAndShadowRoot(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
 
     const sSetContentToBigDiv = Step.label(
@@ -73,17 +79,19 @@ UnitTest.asynctest('browser.tinymce.core.EditorViewIframeTest', function (succes
     );
 
     Pipeline.async({}, isPhantomJs() ? [] : [
-      Logger.t('isXYInContentArea without borders, margin', GeneralSteps.sequence([
+      Log.stepsAsStep('TBA', 'isXYInContentArea without borders, margin', [
         sSetBodyStyles(editor, { border: '0', margin: '0' }),
         sSetContentToBigDiv,
         sTestIsXYInContentArea(editor, 0, 0)
-      ])),
+      ]),
 
-      Logger.t('isXYInContentArea with borders, margin', GeneralSteps.sequence([
+      Log.stepsAsStep('TBA', 'isXYInContentArea with borders, margin', [
         sSetBodyStyles(editor, { border: '5px', margin: '15px' }),
         sSetContentToBigDiv,
         sTestIsXYInContentArea(editor, 0, 0)
-      ]))
+      ]),
+
+      Log.step('TINY-6354', 'isEditorAttachedToDom should return true', sAssertIsAttachedToDom(editor))
     ], onSuccess, onFailure);
   }, {
     base_url: '/project/tinymce/js/tinymce'
