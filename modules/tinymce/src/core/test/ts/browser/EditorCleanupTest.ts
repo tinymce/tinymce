@@ -9,18 +9,18 @@ import { RawEditorSettings } from 'tinymce/core/api/SettingsTypes';
 import VisualBlocksPlugin from 'tinymce/plugins/visualblocks/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.EditorCleanupTest', (success, failure) => {
+UnitTest.promiseTest('browser.tinymce.core.EditorCleanupTest', async () => {
   Theme();
   VisualBlocksPlugin();
 
-  const cAssertPageLinkPresence = (url: string, exists: boolean) => Chain.op(() => {
+  const cAssertPageLinkPresence = (url: string, exists: boolean): void => {
     const links = document.head.querySelectorAll(`link[href="${url}"]`);
     Assert.eq(`Should have link with url="${url}"`, exists, links.length > 0);
-  });
+  };
 
-  const cTestCleanup = (settings: RawEditorSettings, html: string = '<div></div>', additionalChains: Array<Chain<any, any>> = []) => NamedChain.asChain([
+  const cTestCleanup = async (settings: RawEditorSettings, html: string = '<div></div>', additionalChains: Array<Chain<any, any>> = []) => {
     // spin the editor up and down, getting a reference to its target element in between
-    NamedChain.write('editor', McEditor.cFromHtml(html, { base_url: '/project/tinymce/js/tinymce', ...settings })),
+    const editor = await McEditor.cFromHtml(html, { base_url: '/project/tinymce/js/tinymce', ...settings });
     NamedChain.direct('editor', Chain.mapper((editor: Editor) => SugarElement.fromDom(editor.getElement())), 'element'),
     // Run any additional chains
     ...Arr.map(additionalChains, (chain) => NamedChain.read('editor', chain)),
@@ -69,5 +69,5 @@ UnitTest.asynctest('browser.tinymce.core.EditorCleanupTest', (success, failure) 
       // Loaded via DOMUtils as per above
       cAssertPageLinkPresence('/project/tinymce/js/tinymce/skins/ui/dark/skin.css', false)
     ])
-  ], success, failure);
+  ]);
 });
