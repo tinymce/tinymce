@@ -1,0 +1,5 @@
+{
+  "rules": {
+    "@tinymce/no-unimported-promise": "off"
+  }
+}
