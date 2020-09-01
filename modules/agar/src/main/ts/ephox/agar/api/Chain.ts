@@ -213,6 +213,19 @@ const predicate = <T>(p: (value: T) => boolean): Chain<T, T> =>
   on((input, next, die, logs) =>
     p(input) ? next(input, logs) : die('predicate did not succeed', logs));
 
+const toPromise = <A, B>(c: Chain<A, B>) => (a: A): Promise<B> =>
+  new Promise((resolve, reject) => {
+    c.runChain(a,
+      (b, _logs) => {
+        // TODO: What to do with logs? We lose them.
+        resolve(b);
+      }, (err, logs) => {
+        reject({ err, logs });
+      },
+      TestLogs.init()
+    );
+  });
+
 export const Chain = {
   on,
   op,
@@ -240,5 +253,6 @@ export const Chain = {
   label,
 
   pipeline,
-  predicate
+  predicate,
+  toPromise
 };
