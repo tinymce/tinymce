@@ -5,8 +5,8 @@ import 'tinymce';
 import { Editor as EditorType } from '../alien/EditorTypes';
 import { setTinymceBaseUrl } from '../loader/Urls';
 
-const cFromElement = function <T extends EditorType = EditorType> (element: SugarElement, settings: Record<string, any>): Chain<any, T> {
-  return Chain.async<any, T>(function (_, next, die) {
+const pFromElement = <T extends EditorType = EditorType> (element: SugarElement, settings: Record<string, any>): Promise<T> =>
+  new Promise<T>((resolve, reject) => {
     const nuSettings: Record<string, any> = {
       toolbar_mode: 'wrap',
       ...settings
@@ -38,37 +38,61 @@ const cFromElement = function <T extends EditorType = EditorType> (element: Suga
         }
         editor.on('SkinLoaded', function () {
           setTimeout(function () {
-            next(editor);
+            resolve(editor);
           }, 0);
         });
 
         editor.on('SkinLoadError', (e) => {
-          die(e.message);
+          reject(e.message);
         });
       }
     });
   });
-};
 
-const cFromHtml = function <T extends EditorType = EditorType> (html: string | null, settings: Record<string, any>): Chain<any, T> {
+const cFromElement = <T extends EditorType = EditorType>(element: SugarElement, settings: Record<string, any>): Chain<any, T> =>
+  Chain.fromPromise(() => pFromElement(element, settings));
+
+const pFromHtml = <T extends EditorType = EditorType>(html: string | null, settings: Record<string, any>): Promise<T> => {
   const element = html ? SugarElement.fromHtml(html) : SugarElement.fromTag(settings.inline ? 'div' : 'textarea');
-  return cFromElement(element, settings);
+  return pFromElement(element, settings);
 };
 
-const cFromSettings = function <T extends EditorType = EditorType> (settings: Record<string, any>): Chain<any, T> {
-  return cFromHtml(null, settings);
-};
+const cFromHtml = <T extends EditorType = EditorType>(html: string | null, settings: Record<string, any>): Chain<any, T> =>
+  Chain.fromPromise(() => pFromHtml(html, settings));
 
-const cRemove = Chain.op(function (editor: EditorType) {
+const pFromSettings = <T extends EditorType = EditorType>(settings: Record<string, any>): Promise<T> =>
+  pFromHtml(null, settings);
+
+const cFromSettings = <T extends EditorType = EditorType>(settings: Record<string, any>): Chain<any, T> =>
+  cFromHtml(null, settings);
+
+const remove = (editor: EditorType): void => {
   const id = editor.id;
   editor.remove();
   Selectors.one('#' + id).each(Remove.remove);
+};
+
+const cRemove = Chain.op((editor: EditorType) => {
+  remove(editor);
 });
+
+const pCreate = <T extends EditorType = EditorType> (): Promise<T> =>
+  pFromSettings<T>({});
+
+const pCreateInline = <T extends EditorType = EditorType> (): Promise<T> =>
+  pFromSettings({ inline: true });
 
 const cCreate = cFromSettings({});
 const cCreateInline = cFromSettings({ inline: true });
 
 export {
+  pFromHtml,
+  pFromElement,
+  pFromSettings,
+  pCreate,
+  pCreateInline,
+  remove,
+
   cFromHtml,
   cFromElement,
   cFromSettings,

@@ -226,6 +226,10 @@ const toPromise = <A, B>(c: Chain<A, B>) => (a: A): Promise<B> =>
     );
   });
 
+const fromPromise = <A, T>(f: (a: A) => Promise<T>): Chain<A, T> => Chain.async((input, next, die) => {
+  f.apply(input).then(next, die);
+});
+
 export const Chain = {
   on,
   op,
@@ -254,5 +258,6 @@ export const Chain = {
 
   pipeline,
   predicate,
-  toPromise
+  toPromise,
+  fromPromise
 };
