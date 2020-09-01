@@ -51,11 +51,11 @@ UnitTest.promiseTest('browser.tinymce.core.EditorCleanupTest', async () => {
     '<div></div>',
     (editor) => {
       editor.dom.loadCSS('/project/tinymce/js/tinymce/skins/ui/dark/skin.css')
+  });
 
-      // Loaded via StyleSheetLoader
-      assertPageLinkPresence('/project/tinymce/js/tinymce/skins/ui/content/default/content.inline.css', false);
-      assertPageLinkPresence('/project/tinymce/js/tinymce/skins/ui/oxide/skin.css', false);
-      // Loaded via DOMUtils as per above
-      assertPageLinkPresence('/project/tinymce/js/tinymce/skins/ui/dark/skin.css', false);
-    });
+  // Loaded via StyleSheetLoader
+  assertPageLinkPresence('/project/tinymce/js/tinymce/skins/ui/content/default/content.inline.css', false);
+  assertPageLinkPresence('/project/tinymce/js/tinymce/skins/ui/oxide/skin.css', false);
+  // Loaded via DOMUtils as per above
+  assertPageLinkPresence('/project/tinymce/js/tinymce/skins/ui/dark/skin.css', false);
 });
