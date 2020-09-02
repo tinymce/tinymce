@@ -1,8 +1,8 @@
 import { Arr, Optional } from '@ephox/katamari';
 import { Attribute, InsertAll, Replication, SugarElement } from '@ephox/sugar';
 import { onCells, TargetSelection } from '../model/RunOperation';
-import { Warehouse } from '../model/Warehouse';
 import * as CellUtils from '../util/CellUtils';
+import { Warehouse } from './Warehouse';
 
 const constrainSpan = (element: SugarElement, property: 'colspan' | 'rowspan', value: number) => {
   const currentColspan = CellUtils.getSpan(element, property);

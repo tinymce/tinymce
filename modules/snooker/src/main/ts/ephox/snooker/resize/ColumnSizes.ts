@@ -2,7 +2,7 @@ import { Arr, Fun, Optional } from '@ephox/katamari';
 import { Css, SugarElement } from '@ephox/sugar';
 import { TableSize } from '../api/TableSize';
 import * as Blocks from '../lookup/Blocks';
-import { Warehouse } from '../model/Warehouse';
+import { Warehouse } from '../api/Warehouse';
 import * as CellUtils from '../util/CellUtils';
 import * as Util from '../util/Util';
 import { width, BarPositions, RowInfo } from './BarPositions';

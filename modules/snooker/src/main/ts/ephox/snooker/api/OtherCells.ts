@@ -2,7 +2,7 @@ import { Arr } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import { onCells, TargetSelection, toDetailList } from '../model/RunOperation';
 import * as Transitions from '../model/Transitions';
-import { Warehouse } from '../model/Warehouse';
+import { Warehouse } from './Warehouse';
 import { Generators } from './Generators';
 import { DetailExt, RowCells } from './Structs';
 

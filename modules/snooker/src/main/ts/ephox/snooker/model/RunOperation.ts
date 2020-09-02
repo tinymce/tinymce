@@ -8,8 +8,8 @@ import { TableOperationResult } from '../api/TableOperations';
 import { TableSize } from '../api/TableSize';
 import * as Redraw from '../operate/Redraw';
 import * as Bars from '../resize/Bars';
+import { Warehouse } from '../api/Warehouse';
 import * as Transitions from './Transitions';
-import { Warehouse } from './Warehouse';
 
 type DetailExt = Structs.DetailExt;
 type DetailNew = Structs.DetailNew;

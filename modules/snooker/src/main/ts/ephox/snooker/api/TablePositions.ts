@@ -1,9 +1,9 @@
 import { Optional } from '@ephox/katamari';
 import { Compare, SugarElement } from '@ephox/sugar';
-import { Warehouse } from '../model/Warehouse';
 import * as CellFinder from '../selection/CellFinder';
 import * as CellGroup from '../selection/CellGroup';
 import * as TableLookup from './TableLookup';
+import { Warehouse } from './Warehouse';
 
 const moveBy = function (cell: SugarElement, deltaRow: number, deltaColumn: number) {
   return TableLookup.table(cell).bind(function (table) {
