@@ -79,5 +79,6 @@ const isEmptyNode = function (targetNode: Node, skipBogus: boolean) {
 const isEmpty = (elm: SugarElement<Node>, skipBogus: boolean = true) => isEmptyNode(elm.dom, skipBogus);
 
 export {
-  isEmpty
+  isEmpty,
+  isContent
 };
