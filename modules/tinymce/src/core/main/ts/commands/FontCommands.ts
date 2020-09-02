@@ -12,7 +12,7 @@ import * as CaretFinder from '../caret/CaretFinder';
 import * as NodeType from '../dom/NodeType';
 import * as FontInfo from '../fmt/FontInfo';
 
-const findFirstCaretElement = (editor: Editor) => CaretFinder.firstPositionIn(editor.getBody()).map((caret) => {
+const findFirstCaretElement = (editor: Editor): Optional<Node> => CaretFinder.firstPositionIn(editor.getBody()).map((caret) => {
   const container = caret.container();
   return NodeType.isText(container) ? container.parentNode : container;
 });
