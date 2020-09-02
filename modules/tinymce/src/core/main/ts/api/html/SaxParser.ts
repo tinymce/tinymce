@@ -160,7 +160,7 @@ const findCommentEndIndex = (html: string, isBogus: boolean, startIndex: number 
       const endIndex = lcHtml.indexOf('>', startIndex);
       return endIndex !== -1 ? endIndex : lcHtml.length;
     } else {
-      const endCommentRegexp = /--!?>/;
+      const endCommentRegexp = /--!?>/y;
       endCommentRegexp.lastIndex = startIndex;
       const match = endCommentRegexp.exec(html);
       return match ? match.index + match[0].length : lcHtml.length;

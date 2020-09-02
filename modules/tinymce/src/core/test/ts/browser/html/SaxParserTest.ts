@@ -514,6 +514,13 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function (success,
     parser.parse('<! value --!>');
     LegacyUnit.equal(writer.getContent(), '<!-- value --!-->', 'Parse comment with exclamation and missing hyphens.');
     LegacyUnit.deepEqual(counter.counts, { comment: 1 }, 'Parse comment with exclamation and missing hyphens counts.');
+
+    counter = createCounter(writer);
+    parser = SaxParser(counter, schema);
+    writer.reset();
+    parser.parse('<!-- value -->\n<!-- value');
+    LegacyUnit.equal(writer.getContent(), '<!-- value -->\n<!-- value-->', 'Parse comment with mismatching end sequence.');
+    LegacyUnit.deepEqual(counter.counts, { comment: 2, text: 1 }, 'Parse comment with mismatching end sequence counts.');
   });
 
   suite.test('Parse PI', function () {
