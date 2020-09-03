@@ -1,6 +1,6 @@
 import { Fun, Optional } from '@ephox/katamari';
 import { Bounds, DetailExt } from '../api/Structs';
-import { Warehouse } from '../model/Warehouse';
+import { Warehouse } from '../api/Warehouse';
 
 const inSelection = function (bounds: Bounds, detail: DetailExt) {
   const leftEdge = detail.column;

@@ -2,7 +2,7 @@ import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import * as Structs from 'ephox/snooker/api/Structs';
-import { Warehouse } from 'ephox/snooker/model/Warehouse';
+import { Warehouse } from 'ephox/snooker/api/Warehouse';
 import * as CellBounds from 'ephox/snooker/selection/CellBounds';
 
 UnitTest.test('CellBounds.isWithin Test', function () {

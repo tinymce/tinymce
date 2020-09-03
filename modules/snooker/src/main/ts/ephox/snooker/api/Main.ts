@@ -24,6 +24,7 @@ import * as TablePositions from './TablePositions';
 import * as TableRender from './TableRender';
 import { TableResize } from './TableResize';
 import { TableSize } from './TableSize';
+import * as Warehouse from './Warehouse';
 
 export {
   Adjustments,
@@ -52,5 +53,6 @@ export {
   TableSize,
   RunOperation,
   GridRow,
-  OtherCells
+  OtherCells,
+  Warehouse
 };

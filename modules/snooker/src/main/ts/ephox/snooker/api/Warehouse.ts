@@ -1,7 +1,7 @@
 import { Arr, Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import * as Structs from '../api/Structs';
-import * as DetailsList from './DetailsList';
+import * as DetailsList from '../model/DetailsList';
 
 export interface Warehouse {
   readonly grid: Structs.Grid;

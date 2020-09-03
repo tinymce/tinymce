@@ -4,7 +4,7 @@ import { ResizeBehaviour } from '../api/ResizeBehaviour';
 import { Detail, RowData } from '../api/Structs';
 import { TableSize } from '../api/TableSize';
 import * as Deltas from '../calc/Deltas';
-import { Warehouse } from '../model/Warehouse';
+import { Warehouse } from '../api/Warehouse';
 import * as CellUtils from '../util/CellUtils';
 import * as ColumnSizes from './ColumnSizes';
 import * as Recalculations from './Recalculations';
