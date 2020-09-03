@@ -6,7 +6,7 @@
  */
 
 import { Fun, Optional } from '@ephox/katamari';
-import { Compare, Css, PredicateFind, SugarElement, SugarNode } from '@ephox/sugar';
+import { Compare, Css, SugarElement, SugarNode, TransformFind } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import * as CaretFinder from '../caret/CaretFinder';
 import * as NodeType from '../dom/NodeType';
@@ -26,8 +26,7 @@ const getCaretElement = (editor: Editor): Optional<Node> => Optional.from(editor
 const getLineHeight = (elm: SugarElement<Element>, editor: Editor): string => {
   const root = SugarElement.fromDom(editor.getBody());
   const isRoot = Fun.curry(Compare.eq, root);
-  const specifiedStyle = PredicateFind.closest(elm, (elm) => Css.getRaw(elm, 'line-height').isSome(), isRoot)
-    .bind((elm) => Css.getRaw(elm, 'line-height'));
+  const specifiedStyle = TransformFind.closest(elm, (elm) => Css.getRaw(elm, 'line-height'), isRoot);
 
   const computedStyle = () => {
     // Css.get returns computed values (in px), and parseFloat will strip any non-number suffix

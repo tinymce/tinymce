@@ -1,5 +1,5 @@
-import { Assertions, Log, Pipeline, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
+import { Log, Pipeline, Step } from '@ephox/agar';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import Editor from 'tinymce/core/api/Editor';
 
@@ -9,7 +9,7 @@ UnitTest.asyncTest('LineHeightTest', (success, failure) => {
 
     const sAssertHeight = (value: string) => Step.sync(() => {
       const current = editor.queryCommandValue('LineHeight');
-      Assertions.assertEq('LineHeight query command returned wrong value', value, current);
+      Assert.eq('LineHeight query command returned wrong value', value, current);
     });
 
     Pipeline.async({}, [
@@ -17,6 +17,12 @@ UnitTest.asyncTest('LineHeightTest', (success, failure) => {
         api.sSetContent('<p style="line-height: 1.5;">Test</p>'),
         api.sSetCursor([ 0, 0 ], 0),
         sAssertHeight('1.5')
+      ]),
+
+      Log.stepsAsStep('TINY-4843', 'Unspecified line-height can be read from element', [
+        api.sSetContent('<p>Hello</p>'),
+        api.sSetCursor([ 0, 0 ], 0),
+        sAssertHeight('1.4') // default content-css line height
       ]),
 
       Log.stepsAsStep('TINY-4843', 'Specified line-height can be read from element in px', [

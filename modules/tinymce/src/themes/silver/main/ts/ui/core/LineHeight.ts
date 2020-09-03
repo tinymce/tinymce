@@ -5,34 +5,59 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Menu } from '@ephox/bridge';
-import { Arr, Optional, Unique } from '@ephox/katamari';
+import { Arr, Obj, Singleton } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
+import { Menu } from 'tinymce/core/api/ui/Ui';
 
 const defaultLineHeights = '1 1.1 1.2 1.3 1.4 1.5 2';
 
 const getLineHeights = (editor: Editor): Menu.ToggleMenuItemSpec[] => {
-  const raw = editor.queryCommandValue('LineHeight');
-  const current = raw !== '' ? Optional.some(raw) : Optional.none<string>();
-  const alwaysAvailable = editor.getParam('lineheight_formats', defaultLineHeights, 'string').split(' ');
+  const options = editor.getParam('lineheight_formats', defaultLineHeights, 'string').split(' ');
 
-  const allOptions = [ ...alwaysAvailable, ...current.toArray() ];
-  const deduped = Unique.stringArray(allOptions);
-  const sorted = Arr.sort(deduped, (x, y) => parseFloat(x) - parseFloat(y));
+  const apis: Record<string, Menu.ToggleMenuItemInstanceApi> = {};
+  const lastApi = Singleton.destroyable();
+  const callback = () => {
+    const current = editor.queryCommandValue('LineHeight');
+    Obj.get(apis, current).fold(
+      () => lastApi.clear(),
+      (api) => {
+        lastApi.set({
+          destroy: () => {
+            api.setActive(false);
+          }
+        })
+        api.setActive(true);
+      }
+    );
+  };
+
+  editor.on('NodeChange', callback);
 
   return Arr.map(
-    sorted,
-    (value) => ({
+    options,
+    (value, i) => ({
       type: 'togglemenuitem',
-      active: current.is(value),
       text: value,
+      onSetup: (api) => {
+        apis[value] = api;
+
+        if (i + 1 === options.length) {
+          callback();
+        }
+        return () => {
+          if (i === 0) {
+            editor.off('NodeChange', callback);
+            lastApi.clear();
+          }
+        }
+      },
       onAction: () => editor.execCommand('LineHeight', false, value)
     })
   );
 };
 
 const registerMenuItems = (editor: Editor) => {
-  editor.ui.registry.addNestedMenuItem('line-height', {
+  editor.ui.registry.addNestedMenuItem('lineheight', {
     type: 'nestedmenuitem',
     icon: 'line-height',
     text: 'Line height',
@@ -41,7 +66,7 @@ const registerMenuItems = (editor: Editor) => {
 };
 
 const registerButtons = (editor: Editor) => {
-  editor.ui.registry.addMenuButton('line-height', {
+  editor.ui.registry.addMenuButton('lineheight', {
     tooltip: 'Line height',
     icon: 'line-height',
     fetch: (callback) => callback(getLineHeights(editor))
