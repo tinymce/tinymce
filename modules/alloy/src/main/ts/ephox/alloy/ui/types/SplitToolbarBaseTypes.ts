@@ -19,6 +19,7 @@ export interface SplitToolbarBaseApis {
   setGroups: (toolbar: AlloyComponent, groups: SketchSpec[]) => void;
   refresh: (toolbar: AlloyComponent) => void;
   toggle: (toolbar: AlloyComponent) => void;
+  isOn: (toolbar: AlloyComponent) => boolean;
 }
 
 export interface SplitToolbarBaseSpec extends CompositeSketchSpec {

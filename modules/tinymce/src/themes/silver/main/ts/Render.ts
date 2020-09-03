@@ -315,6 +315,13 @@ const setup = (editor: Editor): RenderInfo => {
     OuterContainer.focusToolbar(outerContainer);
   });
 
+  editor.addCommand('ToggleToolbar', () => {
+    OuterContainer.toggleToolbar(outerContainer);
+    // TODO: Consider firing event - TINY-6371
+  });
+
+  editor.addQueryStateHandler('ToggleToolbar', () => OuterContainer.isToolbarToggled(outerContainer));
+
   const mothership = Gui.takeover(
     outerContainer
   );

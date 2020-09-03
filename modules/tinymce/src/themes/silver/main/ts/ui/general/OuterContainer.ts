@@ -64,6 +64,8 @@ interface OuterContainerApis {
   setToolbar: (comp: AlloyComponent, groups) => void;
   setToolbars: (comp: AlloyComponent, toolbars) => void;
   refreshToolbar: (comp: AlloyComponent) => void;
+  toggleToolbar: (comp: AlloyComponent) => void;
+  isToolbarToggled: (comp: AlloyComponent) => boolean;
   getThrobber: (comp: AlloyComponent) => Optional<AlloyComponent>;
   focusToolbar: (comp: AlloyComponent) => void;
   setMenubar: (comp: AlloyComponent, groups) => void;
@@ -73,6 +75,8 @@ interface OuterContainerApis {
 interface ToolbarApis {
   setGroups: (toolbar: AlloyComponent, groups: SketchSpec[]) => void;
   refresh: (toolbar: AlloyComponent) => void;
+  toggle?: (toolbar: AlloyComponent) => void;
+  isOn?: (toolbar: AlloyComponent) => boolean;
 }
 
 const factory: UiSketcher.CompositeSketchFactory<OuterContainerSketchDetail, OuterContainerSketchSpec> = function (detail, components, _spec) {
@@ -114,6 +118,22 @@ const factory: UiSketcher.CompositeSketchFactory<OuterContainerSketchDetail, Out
     refreshToolbar(comp) {
       const toolbar = Composite.parts.getPart(comp, detail, 'toolbar');
       toolbar.each((toolbar) => toolbar.getApis<ToolbarApis>().refresh(toolbar));
+    },
+    toggleToolbar(comp) {
+      // toggle may not be defined on all toolbars e.g. 'scrolling' and 'wrap'
+      Composite.parts.getPart(comp, detail, 'toolbar')
+        .each((toolbar) => {
+          Optional.from(toolbar.getApis<ToolbarApis>().toggle)
+            .each((toggle) => {
+              toggle(toolbar);
+            });
+        });
+    },
+    isToolbarToggled(comp) {
+      // isOn may not be defined on all toolbars e.g. 'scrolling' and 'wrap'
+      return Composite.parts.getPart(comp, detail, 'toolbar')
+        .bind((toolbar) => Optional.from(toolbar.getApis<ToolbarApis>().isOn).map((isOn) => isOn(toolbar)))
+        .getOr(false);
     },
     getThrobber(comp) {
       return Composite.parts.getPart(comp, detail, 'throbber');
@@ -322,6 +342,12 @@ export default Sketcher.composite<OuterContainerSketchSpec, OuterContainerSketch
     },
     refreshToolbar(apis, comp) {
       return apis.refreshToolbar(comp);
+    },
+    toggleToolbar(apis, comp) {
+      apis.toggleToolbar(comp);
+    },
+    isToolbarToggled(apis, comp) {
+      return apis.isToolbarToggled(comp);
     },
     getThrobber(apis, comp) {
       return apis.getThrobber(comp);

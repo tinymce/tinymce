@@ -73,6 +73,14 @@ UnitTest.asynctest('FloatingToolbarButtonTest', (success, failure) => {
       )
     ]);
 
+    const sAssertFloatingToolbarToggleState = (expected: boolean) => Step.sync(() => {
+      Assertions.assertEq('Expected floating toolbar toggle state to be ' + expected, expected, FloatingToolbarButton.isOn(component));
+    });
+
+    const sToggleFloatingToolbar = () => Step.sync(() => {
+      FloatingToolbarButton.toggle(component);
+    });
+
     const sAssertFloatingToolbarOpened = () => GeneralSteps.sequence([
       Assertions.sAssertStructure(
         'Assert floating toolbar structure',
@@ -107,11 +115,13 @@ UnitTest.asynctest('FloatingToolbarButtonTest', (success, failure) => {
           ]
         })),
         sinkComp.element
-      )
+      ),
+      sAssertFloatingToolbarToggleState(true)
     ]);
 
     const sAssertFloatingToolbarClosed = () => Step.sync(() => {
       Assertions.assertEq('Floating toolbar should not exist', false, SelectorExists.descendant(sinkComp.element, 'test-toolbar'));
+      sAssertFloatingToolbarToggleState(false);
     });
 
     return [
@@ -132,6 +142,14 @@ UnitTest.asynctest('FloatingToolbarButtonTest', (success, failure) => {
 
       Log.stepsAsStep('', 'Escape should close floating toolbar', [
         Keyboard.sKeydown(doc, Keys.escape(), { }),
+        sAssertFloatingToolbarClosed()
+      ]),
+
+      Log.stepsAsStep('TINY-6032', 'Using the API to toggle the floating toolbar should work', [
+        sToggleFloatingToolbar(),
+        sAssertButtonStructure(true),
+        sAssertFloatingToolbarOpened(),
+        sToggleFloatingToolbar(),
         sAssertFloatingToolbarClosed()
       ]),
 

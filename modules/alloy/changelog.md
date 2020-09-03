@@ -11,6 +11,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Changed some public APIs (eg Components, Custom Events) to no longer be thunked.
 
+### Added
+- Added new `isOn` API to the `SplitFloatingToolbar` and `SplitSlidingToolbar` components.
+
 # [7.0.2] - 2020-05-25
 
 ### Fixed

@@ -159,6 +159,14 @@ UnitTest.asynctest('SplitFloatingToolbarTest', (success, failure) => {
       )
     ]);
 
+    const sAssertSplitFloatingToolbarToggleState = (expected: boolean) => Step.sync(() => {
+      Assertions.assertEq('Expected split floating toolbar toggle state to be ' + expected, expected, SplitFloatingToolbar.isOn(component));
+    });
+
+    const sToggleSplitFloatingToolbar = () => Step.sync(() => {
+      SplitFloatingToolbar.toggle(component);
+    });
+
     return [
       GuiSetup.mAddStyles(doc, [
         '.test-toolbar-group { display: flex; }',
@@ -169,6 +177,8 @@ UnitTest.asynctest('SplitFloatingToolbarTest', (success, failure) => {
         '.test-split-toolbar button.more-button { width: 50px; }'
       ]),
 
+      sAssertSplitFloatingToolbarToggleState(false),
+
       Step.sync(() => {
         const groups = TestPartialToolbarGroup.createGroups([
           { items: Arr.map([{ text: 'A' }, { text: 'B' }], makeButton) },
@@ -178,6 +188,8 @@ UnitTest.asynctest('SplitFloatingToolbarTest', (success, failure) => {
         SplitFloatingToolbar.setGroups(component, groups);
         SplitFloatingToolbar.toggle(component);
       }),
+
+      sAssertSplitFloatingToolbarToggleState(true),
 
       sAssertGroups('width=400px (1 +)', [ group1, oGroup ], [ group2, group3 ]),
 
@@ -202,6 +214,12 @@ UnitTest.asynctest('SplitFloatingToolbarTest', (success, failure) => {
 
       sResetWidth('400px'),
       sAssertGroups('width=400px (1 +)', [ group1, oGroup ], [ group2, group3 ]),
+
+      sToggleSplitFloatingToolbar(),
+      sAssertSplitFloatingToolbarToggleState(false),
+
+      sToggleSplitFloatingToolbar(),
+      sAssertSplitFloatingToolbarToggleState(true),
 
       GuiSetup.mRemoveStyles
     ];
