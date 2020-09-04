@@ -154,7 +154,7 @@ const get = function (dom: DOMUtils) {
     hilitecolor: { inline: 'span', styles: { backgroundColor: '%value' }, links: true, remove_similar: true, clear_child_styles: true },
     fontname: { inline: 'span', toggle: false, styles: { fontFamily: '%value' }, clear_child_styles: true },
     fontsize: { inline: 'span', toggle: false, styles: { fontSize: '%value' }, clear_child_styles: true },
-    lineheight: { selector: 'h1,h2,h3,h4,h5,h6,p', defaultBlock: 'p', styles: { lineHeight: '%value' }},
+    lineheight: { selector: 'h1,h2,h3,h4,h5,h6,p,li,td,th,div', defaultBlock: 'p', styles: { lineHeight: '%value' }},
     fontsize_class: { inline: 'span', attributes: { class: '%value' }},
     blockquote: { block: 'blockquote', wrapper: true, remove: 'all' },
     subscript: { inline: 'sub' },
