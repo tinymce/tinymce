@@ -55,7 +55,7 @@ UnitTest.asyncTest('LineHeightTest', (success, failure) => {
 
   const settings = {
     base_url: '/project/tinymce/js/tinymce',
-    toolbar: 'line-height'
+    toolbar: 'lineheight'
   };
 
   Chain.pipeline([
@@ -101,7 +101,7 @@ UnitTest.asyncTest('LineHeightTest', (success, failure) => {
           sCloseToolbar(ui)
         ]),
 
-        Log.stepsAsStep('TINY-4843', 'Menu shows currently selected line height', [
+        Log.stepsAsStep('TINY-4843', 'Menu only shows values within settings', [
           api.sSetContent('<p style="line-height: 30px;">Hello</p>'),
           api.sSetCursor([ 0, 0 ], 0),
           sOpenMenu(ui),
@@ -113,19 +113,19 @@ UnitTest.asyncTest('LineHeightTest', (success, failure) => {
           api.sSetContent('<p>Hello</p>'),
           api.sSetCursor([ 0, 0 ], 0),
           sOpenToolbar(ui),
-          sAssertOptions(ui, 'menu', [ '1', '1.1', '1.2', '1.3', '1.4', '1.5', '2'], Optional.some('1.4')),
+          sAssertOptions(ui, 'toolbar', [ '1', '1.1', '1.2', '1.3', '1.4', '1.5', '2' ], Optional.some('1.4')),
           api.sExecCommand('LineHeight', '1.1'),
-          sAssertOptions(ui, 'menu', [ '1', '1.1', '1.2', '1.3', '1.4', '1.5', '2'], Optional.some('1.1')),
+          sAssertOptions(ui, 'toolbar', [ '1', '1.1', '1.2', '1.3', '1.4', '1.5', '2' ], Optional.some('1.1')),
           sCloseToolbar(ui)
         ]),
 
-        Log.stepsAsStep('TINY-4843', 'Toolbar updates if line height changes', [
+        Log.stepsAsStep('TINY-4843', 'Menu updates if line height changes', [
           api.sSetContent('<p>Hello</p>'),
           api.sSetCursor([ 0, 0 ], 0),
           sOpenMenu(ui),
-          sAssertOptions(ui, 'menu', [ '1', '1.1', '1.2', '1.3', '1.4', '1.5', '2'], Optional.some('1.4')),
+          sAssertOptions(ui, 'menu', [ '1', '1.1', '1.2', '1.3', '1.4', '1.5', '2' ], Optional.some('1.4')),
           api.sExecCommand('LineHeight', '1.1'),
-          sAssertOptions(ui, 'menu', [ '1', '1.1', '1.2', '1.3', '1.4', '1.5', '2'], Optional.some('1.1')),
+          sAssertOptions(ui, 'menu', [ '1', '1.1', '1.2', '1.3', '1.4', '1.5', '2' ], Optional.some('1.1')),
           sCloseMenu(ui)
         ])
       ];
@@ -137,15 +137,52 @@ UnitTest.asyncTest('LineHeightTest', (success, failure) => {
       const ui = TinyUi(editor);
 
       return [
-        Log.stepsAsStep('TINY-4843', 'Toolbar lists correct line heights', [
+        Log.stepsAsStep('TINY-4843', 'Toolbar lists specified line heights', [
           sOpenToolbar(ui),
-          sAssertOptions(ui, 'toolbar', [ '1', '1.1', '1.11', '1.111', '1.4' ], Optional.some('1.4')),
+          sAssertOptions(ui, 'toolbar', [ '1', '1.1', '1.11', '1.111' ], Optional.none()),
           sCloseToolbar(ui)
         ]),
 
-        Log.stepsAsStep('TINY-4843', 'Menu lists correct line heights', [
+        Log.stepsAsStep('TINY-4843', 'Menu lists specified line heights', [
           sOpenMenu(ui),
-          sAssertOptions(ui, 'menu', [ '1', '1.1', '1.11', '1.111', '1.4' ], Optional.some('1.4')),
+          sAssertOptions(ui, 'menu', [ '1', '1.1', '1.11', '1.111' ], Optional.none()),
+          sCloseMenu(ui)
+        ])
+      ];
+    }),
+    McEditor.cRemove,
+
+    McEditor.cFromSettings({ ...settings, lineheight_formats: '1.000 20px 22.0px 1.5e2%' }),
+    Chain.runStepsOnValue((editor: Editor) => {
+      const ui = TinyUi(editor);
+      const api = TinyApis(editor);
+
+      return [
+        Log.stepsAsStep('TINY-4843', 'Toolbar preserves original line height formats', [
+          sOpenToolbar(ui),
+          sAssertOptions(ui, 'toolbar', [ '1.000', '20px', '22.0px', '1.5e2%' ], Optional.none()),
+          sCloseToolbar(ui)
+        ]),
+
+        Log.stepsAsStep('TINY-4843', 'Menu preserves original line height formats', [
+          sOpenMenu(ui),
+          sAssertOptions(ui, 'menu', [ '1.000', '20px', '22.0px', '1.5e2%' ], Optional.none()),
+          sCloseMenu(ui)
+        ]),
+
+        Log.stepsAsStep('TINY-4843', 'Toolbar normalises line heights for comparison purposes', [
+          api.sSetContent('<p style="line-height: 150%">Hello</p>'),
+          api.sSetCursor([ 0, 0 ], 0),
+          sOpenToolbar(ui),
+          sAssertOptions(ui, 'toolbar', [ '1.000', '20px', '22.0px', '1.5e2%' ], Optional.some('1.5e2%')),
+          sCloseToolbar(ui)
+        ]),
+
+        Log.stepsAsStep('TINY-4843', 'Menu normalises line heights for comparison purposes', [
+          api.sSetContent('<p style="line-height: 150%">Hello</p>'),
+          api.sSetCursor([ 0, 0 ], 0),
+          sOpenMenu(ui),
+          sAssertOptions(ui, 'menu', [ '1.000', '20px', '22.0px', '1.5e2%' ], Optional.some('1.5e2%')),
           sCloseMenu(ui)
         ])
       ];

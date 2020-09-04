@@ -5,30 +5,32 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Obj, Singleton } from '@ephox/katamari';
+import { Arr, Dimension, Optional, Singleton } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { Menu } from 'tinymce/core/api/ui/Ui';
+import * as Settings from '../../api/Settings';
 
-const defaultLineHeights = '1 1.1 1.2 1.3 1.4 1.5 2';
+const normaliseLineHeight = (input: string) => Dimension.normalise(input, [ 'length', 'percentage', 'empty' ]).getOr(input);
 
 const getLineHeights = (editor: Editor): Menu.ToggleMenuItemSpec[] => {
-  const options = editor.getParam('lineheight_formats', defaultLineHeights, 'string').split(' ');
+  const options = Settings.getLineHeightFormats(editor);
 
-  const apis: Record<string, Menu.ToggleMenuItemInstanceApi> = {};
+  const apis = new Map<string, Menu.ToggleMenuItemInstanceApi>();
   const lastApi = Singleton.destroyable();
   const callback = () => {
-    const current = editor.queryCommandValue('LineHeight');
-    Obj.get(apis, current).fold(
-      () => lastApi.clear(),
-      (api) => {
-        lastApi.set({
-          destroy: () => {
-            api.setActive(false);
-          }
-        })
-        api.setActive(true);
-      }
-    );
+    const current = normaliseLineHeight(editor.queryCommandValue('LineHeight'));
+    Optional.from(apis.get(current))
+      .fold(
+        () => lastApi.clear(),
+        (api) => {
+          lastApi.set({
+            destroy: () => {
+              api.setActive(false);
+            }
+          });
+          api.setActive(true);
+        }
+      );
   };
 
   editor.on('NodeChange', callback);
@@ -39,7 +41,7 @@ const getLineHeights = (editor: Editor): Menu.ToggleMenuItemSpec[] => {
       type: 'togglemenuitem',
       text: value,
       onSetup: (api) => {
-        apis[value] = api;
+        apis.set(normaliseLineHeight(value), api);
 
         if (i + 1 === options.length) {
           callback();
@@ -49,7 +51,7 @@ const getLineHeights = (editor: Editor): Menu.ToggleMenuItemSpec[] => {
             editor.off('NodeChange', callback);
             lastApi.clear();
           }
-        }
+        };
       },
       onAction: () => editor.execCommand('LineHeight', false, value)
     })
