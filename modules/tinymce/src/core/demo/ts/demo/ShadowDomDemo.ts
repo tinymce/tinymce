@@ -11,6 +11,7 @@ export default function (init: ShadowRootInit) {
   shadow.appendChild(node);
 
   tinymce.init({
-    target: node
+    target: node,
+    plugins: ' advlist charmap code codesample emoticons image link lists media paste preview searchreplace table wordcount'
   });
 }

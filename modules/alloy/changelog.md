@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Changed some public APIs (eg Components, Custom Events) to no longer be thunked.
 
+### Fixed
+- Fixed `AriaOwner` not able to find the owner component when rendered within a ShadowRoot.
+- Fixed `AriaFocus` not preserving focus when the component is rendered within a ShadowRoot.
+
 # [7.0.2] - 2020-05-25
 
 ### Fixed
