@@ -30,11 +30,11 @@ const units = {
   length: [ 'px' as 'px', 'pt' as 'pt' ],
   percentage: [ '%' as '%' ],
   empty: [ '' as '' ]
-}
+};
 
 type Units = {
   [K in keyof typeof units]: typeof units[K][number];
-}
+};
 
 
 export interface Dimension<U extends string> {
@@ -79,7 +79,7 @@ export const parse = <T extends keyof Units>(input: string, accepted: T[]): Opti
       return Optional.some({
         value,
         unit: unitRaw
-      })
+      });
     } else {
       return Optional.none();
     }
