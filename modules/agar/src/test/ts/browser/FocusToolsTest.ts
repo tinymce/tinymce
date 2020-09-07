@@ -23,9 +23,8 @@ UnitTest.asynctest('FocusToolsTest', (success, failure) => {
       Chain.asStep(doc, [
         FocusTools.cGetFocused,
         Chain.control(
-          Chain.on((active, next, die, logs) => {
+          Chain.op((active) => {
             Assert.eq('Should be expected value', 'new value', Value.get(active));
-            next(active, logs);
           }),
           Guard.addLogging('Asserting the value of the input field after it has been set.')
         )
