@@ -1,6 +1,6 @@
 import { Arr, Fun } from '@ephox/katamari';
 import { Compare, SugarElement } from '@ephox/sugar';
-import { Warehouse } from '../model/Warehouse';
+import { Warehouse } from '../api/Warehouse';
 import * as CellBounds from './CellBounds';
 import * as CellGroup from './CellGroup';
 

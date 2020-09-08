@@ -2,7 +2,7 @@ import { Arr, Optional } from '@ephox/katamari';
 import { Class, Css, Height, Insert, Remove, SelectorFilter, SugarElement, SugarLocation, SugarPosition, Width } from '@ephox/sugar';
 import { ResizeWire } from '../api/ResizeWire';
 import * as Blocks from '../lookup/Blocks';
-import { Warehouse } from '../model/Warehouse';
+import { Warehouse } from '../api/Warehouse';
 import * as Styles from '../style/Styles';
 import * as Bar from './Bar';
 import * as BarPositions from './BarPositions';

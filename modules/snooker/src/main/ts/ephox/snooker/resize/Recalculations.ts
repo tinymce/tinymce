@@ -1,6 +1,6 @@
 import { Arr } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
-import { Warehouse } from '../model/Warehouse';
+import { Warehouse } from '../api/Warehouse';
 
 // Returns the sum of elements of measures in the half-open range [start, end)
 // Measures is in pixels, treated as an array of integers or integers in string format.

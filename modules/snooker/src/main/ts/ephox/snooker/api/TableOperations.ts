@@ -6,7 +6,6 @@ import {
 } from '../model/RunOperation';
 import * as TableMerge from '../model/TableMerge';
 import * as Transitions from '../model/Transitions';
-import { Warehouse } from '../model/Warehouse';
 import * as MergingOperations from '../operate/MergingOperations';
 import * as ModificationOperations from '../operate/ModificationOperations';
 import * as TransformOperations from '../operate/TransformOperations';
@@ -15,6 +14,7 @@ import { Generators, GeneratorsMerging, GeneratorsModification, GeneratorsTransf
 import * as Structs from './Structs';
 import * as TableContent from './TableContent';
 import * as TableLookup from './TableLookup';
+import { Warehouse } from './Warehouse';
 
 export interface TableOperationResult {
   readonly grid: Structs.RowCells[];

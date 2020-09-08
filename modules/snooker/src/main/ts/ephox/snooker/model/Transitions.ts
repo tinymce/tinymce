@@ -2,8 +2,8 @@ import { Arr } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import { Generators } from '../api/Generators';
 import * as Structs from '../api/Structs';
+import { Warehouse } from '../api/Warehouse';
 import * as TableGrid from './TableGrid';
-import { Warehouse } from './Warehouse';
 
 const toDetails = function (grid: Structs.RowCells[], comparator: (a: SugarElement, b: SugarElement) => boolean) {
   const seen = Arr.map(grid, function (row) {

@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Fun, Optional, Optionals } from '@ephox/katamari';
+import { Arr, Fun, Obj, Optional, Optionals } from '@ephox/katamari';
 import { Compare, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 import DOMUtils from '../api/dom/DOMUtils';
 import EditorSelection from '../api/dom/Selection';
@@ -67,13 +67,14 @@ const hasAllContentsSelected = function (elm, rng) {
   }).getOr(false);
 };
 
-const moveEndPoint = (dom: DOMUtils, rng: Range, node, start: boolean): void => {
+const moveEndPoint = (dom: DOMUtils, rng: Range, node: Node, start: boolean): void => {
   const root = node, walker = new DomTreeWalker(node, root);
-  const nonEmptyElementsMap = dom.schema.getNonEmptyElements();
+  const moveCaretBeforeOnEnterElementsMap = Obj.filter(dom.schema.getMoveCaretBeforeOnEnterElements(), (_, name) =>
+    !Arr.contains([ 'td', 'th', 'table' ], name.toLowerCase())
+  );
 
   do {
-    // Text node
-    if (node.nodeType === 3 && Tools.trim(node.nodeValue).length !== 0) {
+    if (NodeType.isText(node) && Tools.trim(node.nodeValue).length !== 0) {
       if (start) {
         rng.setStart(node, 0);
       } else {
@@ -84,7 +85,7 @@ const moveEndPoint = (dom: DOMUtils, rng: Range, node, start: boolean): void => 
     }
 
     // BR/IMG/INPUT elements but not table cells
-    if (nonEmptyElementsMap[node.nodeName] && !/^(TD|TH)$/.test(node.nodeName)) {
+    if (moveCaretBeforeOnEnterElementsMap[node.nodeName]) {
       if (start) {
         rng.setStartBefore(node);
       } else {

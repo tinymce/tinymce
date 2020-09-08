@@ -2,9 +2,9 @@ import { Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import { onCells, TargetSelection, toDetailList } from '../model/RunOperation';
 import * as Transitions from '../model/Transitions';
-import { Warehouse } from '../model/Warehouse';
 import * as Redraw from '../operate/Redraw';
 import { Generators } from './Generators';
+import { Warehouse } from './Warehouse';
 
 const copyRows = function (table: SugarElement, target: TargetSelection, generators: Generators): Optional<SugarElement<HTMLTableRowElement>[]> {
   const house = Warehouse.fromTable(table);
