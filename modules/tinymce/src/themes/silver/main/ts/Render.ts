@@ -35,6 +35,7 @@ export interface RenderInfo {
   backstage: Backstage.UiFactoryBackstage;
   renderUI: () => ModeRenderInfo;
   getUi: () => ({ channels: UiChannels });
+  inline: Inline.InlineApi;
 }
 
 export interface ModeRenderInfo {
@@ -394,7 +395,9 @@ const setup = (editor: Editor): RenderInfo => {
     return mode.render(editor, uiComponents, rawUiConfig, backstage, args);
   };
 
-  return { mothership, uiMothership, backstage, renderUI, getUi };
+  const inline = Inline.getApi(editor);
+
+  return { mothership, uiMothership, backstage, renderUI, getUi, inline };
 };
 
 export {

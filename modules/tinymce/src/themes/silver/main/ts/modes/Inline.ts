@@ -6,12 +6,12 @@
  */
 
 import { AlloyComponent, Attachment, Boxes } from '@ephox/alloy';
-import { Cell, Singleton } from '@ephox/katamari';
+import { Cell, Singleton, Fun } from '@ephox/katamari';
 import { DomEvent, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
 import * as Events from '../api/Events';
-import { getUiContainer } from '../api/Settings';
+import { getUiContainer, isToolbarPersist } from '../api/Settings';
 import { UiFactoryBackstage } from '../backstage/Backstage';
 import * as ReadOnly from '../ReadOnly';
 import { ModeRenderInfo, RenderArgs, RenderUiComponents, RenderUiConfig } from '../Render';
@@ -20,6 +20,13 @@ import { InlineHeader } from '../ui/header/InlineHeader';
 import { identifyMenus } from '../ui/menus/menubar/Integration';
 import { inline as loadInlineSkin } from '../ui/skin/Loader';
 import { setToolbar } from './Toolbars';
+
+export interface InlineApi {
+  ui: {
+    show: () => void;
+    hide: () => void;
+  };
+}
 
 const getTargetPosAndBounds = (targetElm: SugarElement, isToolbarTop: boolean) => {
   const bounds = Boxes.box(targetElm);
@@ -53,8 +60,9 @@ const setupEvents = (editor: Editor, targetElm: SugarElement, ui: InlineHeader) 
     }
   };
 
-  editor.on('activate', ui.show);
-  editor.on('deactivate', ui.hide);
+  const toolbarPersist = isToolbarPersist(editor);
+  editor.on('activate', toolbarPersist ? Fun.noop : ui.show);
+  editor.on('deactivate', toolbarPersist ? Fun.noop : ui.hide);
 
   editor.on('SkinLoaded ResizeWindow', () => ui.update(true));
 
@@ -108,11 +116,16 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
     editor.nodeChanged();
   };
 
-  editor.on('focus show', render);
-  editor.on('blur hide', ui.hide);
+  const toolbarPersist = isToolbarPersist(editor);
+
+  editor.on('show', render);
+  editor.on('focus', toolbarPersist ? Fun.noop : render);
+
+  editor.on('hide', ui.hide);
+  editor.on('blur', toolbarPersist ? Fun.noop : ui.hide);
 
   editor.on('init', () => {
-    if (editor.hasFocus()) {
+    if (editor.hasFocus() || toolbarPersist) {
       render();
     }
   });
@@ -124,6 +137,18 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
   };
 };
 
+const getApi = (editor): InlineApi => ({
+  ui: {
+    show: () => {
+      editor.fire('show');
+    },
+    hide: () => {
+      editor.fire('hide');
+    }
+  }
+});
+
 export {
-  render
+  render,
+  getApi
 };

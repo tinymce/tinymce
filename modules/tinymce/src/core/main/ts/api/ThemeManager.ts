@@ -13,6 +13,7 @@ import { WindowManagerImpl } from './WindowManager';
 
 export type Theme = {
   ui?: any;
+  inline?: any;
   execCommand? (command: string, ui?: boolean, value?: any): boolean;
   destroy? (): void;
   init? (editor: Editor, url: string, $: DomQueryConstructor);

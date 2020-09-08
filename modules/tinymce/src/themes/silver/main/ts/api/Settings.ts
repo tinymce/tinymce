@@ -99,6 +99,8 @@ const isToolbarLocationBottom = (editor: Editor) => getToolbarLocation(editor) =
 
 const fixedContainerSelector = (editor): string => editor.getParam('fixed_toolbar_container', '', 'string');
 
+const isToolbarPersist = (editor): string => editor.getParam('toolbar_persist', false, 'boolean');
+
 const fixedContainerElement = (editor): Optional<SugarElement> => {
   const selector = fixedContainerSelector(editor);
   // If we have a valid selector and are in inline mode, try to get the fixed_toolbar_container
@@ -176,6 +178,7 @@ export {
   isMenubarEnabled,
   isMultipleToolbars,
   isToolbarEnabled,
+  isToolbarPersist,
   getMultipleToolbarsSetting,
   getUiContainer,
   useFixedContainer,
