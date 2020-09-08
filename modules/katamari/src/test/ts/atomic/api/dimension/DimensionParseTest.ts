@@ -1,10 +1,6 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { KAssert } from '@ephox/katamari-assertions';
 import fc from 'fast-check';
 import * as Dimension from 'ephox/katamari/api/Dimension';
-
-// @ts-ignore
-window.foobar = Dimension.parse;
 
 UnitTest.test('All valid floats are valid', () => {
   fc.assert(fc.property(fc.oneof(
@@ -30,10 +26,10 @@ UnitTest.test('All valid integers are valid', () => {
 });
 
 UnitTest.test('Accepts known units', () => {
-  KAssert.eqSome('Accepts % in percentage', { value: 1, unit: '%' }, Dimension.parse('1%', [ 'percentage' ]));
-  KAssert.eqSome('Accepts px in length', { value: 20, unit: 'px' }, Dimension.parse('20px', [ 'length' ]));
-  KAssert.eqNone('Does not accept % in length', Dimension.parse('1%', [ 'length' ]));
-  KAssert.eqSome('Accepts px in length/percentage', { value: 20, unit: 'px' }, Dimension.parse('20px', [ 'length', 'percentage' ]));
-  KAssert.eqSome('Accepts unitless in unitless', { value: 1.4, unit: '' }, Dimension.parse('1.4', [ 'empty' ]));
-  KAssert.eqNone('Does not accept unitless without unitless', Dimension.parse('1.4', [ 'length', 'unsupportedLength', 'percentage' ]));
+  Assert.succeeds('Accepts % in percentage', () => Dimension.parse('1%', [ 'percentage' ]).is({ value: 1, unit: '%' }));
+  Assert.succeeds('Accepts px in length', () => Dimension.parse('20px', [ 'length' ]).is({ value: 20, unit: 'px' }));
+  Assert.succeeds('Does not accept % in length', () => Dimension.parse('1%', [ 'length' ]).isNone());
+  Assert.succeeds('Accepts px in length/percentage', () => Dimension.parse('20px', [ 'length', 'percentage' ]).is({ value: 20, unit: 'px' }));
+  Assert.succeeds('Accepts unitless in unitless', () => Dimension.parse('1.4', [ 'empty' ]).is({ value: 1.4, unit: '' }));
+  Assert.succeeds('Does not accept unitless without unitless', () => Dimension.parse('1.4', [ 'length', 'unsupportedLength', 'percentage' ]).isNone());
 });
