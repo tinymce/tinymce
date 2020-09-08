@@ -16,15 +16,15 @@ import * as NodeType from './NodeType';
 const isSpan = (node: Node): node is HTMLSpanElement =>
   node.nodeName.toLowerCase() === 'span';
 
-const isInlineContent = (node: Node | null, root: Node) =>
-  node && (isContent(root, node) || ElementType.isInline(SugarElement.fromDom(node)));
+const isInlineContent = (node: Node | null, root: Node): boolean =>
+  Type.isNonNullable(node) && (isContent(node, root) || ElementType.isInline(SugarElement.fromDom(node)));
 
 const surroundedByInlineContent = (node: Node, root: Node) => {
   const prev = new DomTreeWalker(node, root).prev(false);
   const next = new DomTreeWalker(node, root).next(false);
   // Check if the next/previous is either inline content or the start/end (eg is undefined)
-  const prevIsInline = isInlineContent(prev, root) || Type.isUndefined(prev);
-  const nextIsInline = isInlineContent(next, root) || Type.isUndefined(next);
+  const prevIsInline = Type.isUndefined(prev) || isInlineContent(prev, root);
+  const nextIsInline = Type.isUndefined(next) || isInlineContent(next, root);
   return prevIsInline && nextIsInline;
 };
 
@@ -70,7 +70,7 @@ const trimNode = <T extends Node>(dom: DOMUtils, node: T, root?: Node): T => {
   }
 
   // Remove any empty nodes
-  if (!isDocument(node) && !isContent(rootNode, node) && !isKeepElement(node) && !isKeepTextNode(node, rootNode)) {
+  if (!isDocument(node) && !isContent(node, rootNode) && !isKeepElement(node) && !isKeepTextNode(node, rootNode)) {
     dom.remove(node);
   }
 
