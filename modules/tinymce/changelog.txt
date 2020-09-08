@@ -6,10 +6,13 @@ Version 5.5.0 (TBD)
     Added `hasPlugin` function to the editor API to determine if a plugin exists or not #TINY-766
     Added the ability to delete and navigate HTML media elements without the media plugin #TINY-4211
     Added `fullscreen_native` setting to the fullscreen plugin to enable use of the entire monitor #TINY-6284
+    Added table related oxide variables to the Style API for more granular control over table cell selection appearance #TINY-6311
     Added the `origin` property to the `ObjectResized` and `ObjectResizeStart` events, to specify which handle the resize was preformed on #TINY-6242
     Added new StyleSheetLoader `unload` and `unloadAll` APIs to allow loaded stylesheets to be removed #TINY-3926
     Added the `LineHeight` query command and action to the editor #TINY-4843
     Added the `lineheight` toolbar and menu items, and added `lineheight` to the default format menu #TINY-4843
+    Added a new `contextmenu_avoid_overlap` setting to allow contextmenus to avoid overlapping matched nodes #TINY-6036
+    Changed how CSS manipulates table cells when selecting multiple cells to achieve a semi-transparent selection #TINY-6311
     Changed the `target` property on fired events to use the native event target. The original target for an open shadow root can be obtained using `event.getComposedPath()` #TINY-6128
     Changed the editor to cleanup loaded CSS stylesheets when all editors using the stylesheet have been removed #TINY-3926
     Changed `imagetools` context menu icon for accessing the `image` settings to use the same icon #TINY-4141
@@ -17,6 +20,7 @@ Version 5.5.0 (TBD)
     Deprecated the `Env.experimentalShadowDom` flag #TINY-6128
     Fixed loss of whitespace when inserting content after a non-breaking space #TINY-5966
     Fixed the `event.getComposedPath()` function on events fired from TinyMCE. This was throwing an exception, but now works as expected. #TINY-6128
+    Fixed notifications not appearing when the editor is within a ShadowRoot #TINY-6354
     Fixed the `template` plugin previews missing some content styles #TINY-6115
     Fixed the `media` plugin not saving the alternative source url in some situations #TINY-4113
     Fixed an issue where column resizing using the resize bars was inconsistent between fixed and relative table widths #TINY-6001

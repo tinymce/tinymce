@@ -1,7 +1,7 @@
 import { Arr, Fun, Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import { DetailExt } from '../api/Structs';
-import { Warehouse } from '../model/Warehouse';
+import { Warehouse } from '../api/Warehouse';
 
 /*
  * Identify for each column, a cell that has colspan 1. Note, this

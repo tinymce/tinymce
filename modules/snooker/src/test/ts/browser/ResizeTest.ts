@@ -4,7 +4,7 @@ import { Css, Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
 import * as ResizeBehaviour from 'ephox/snooker/api/ResizeBehaviour';
 import { TableSize } from 'ephox/snooker/api/TableSize';
 import * as Deltas from 'ephox/snooker/calc/Deltas';
-import { Warehouse } from 'ephox/snooker/model/Warehouse';
+import { Warehouse } from 'ephox/snooker/api/Warehouse';
 
 UnitTest.test('ResizeTest', function () {
   const resizing = ResizeBehaviour.preserveTable();

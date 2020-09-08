@@ -3,7 +3,7 @@ import { Optional, OptionalInstances } from '@ephox/katamari';
 import { Css, Insert, Remove, SelectorFind, SugarBody, SugarElement, Width } from '@ephox/sugar';
 import * as fc from 'fast-check';
 import { TableSize } from 'ephox/snooker/api/TableSize';
-import { Warehouse } from 'ephox/snooker/model/Warehouse';
+import { Warehouse } from 'ephox/snooker/api/Warehouse';
 
 const tOptional = OptionalInstances.tOptional;
 

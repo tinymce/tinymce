@@ -1,6 +1,6 @@
 import { Compare, SugarElement } from '@ephox/sugar';
 import * as Structs from '../api/Structs';
-import { Warehouse } from '../model/Warehouse';
+import { Warehouse } from '../api/Warehouse';
 import * as CellBounds from './CellBounds';
 
 const getBounds = function (detailA: Structs.DetailExt, detailB: Structs.DetailExt) {

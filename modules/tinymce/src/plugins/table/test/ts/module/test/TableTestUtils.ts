@@ -274,13 +274,17 @@ const cGetWidth = Chain.control(
   Guard.addLogging('Get table width')
 );
 
+const getCellWidth = (editor: Editor, table: SugarElement<HTMLTableElement>, rowNumber: number, columnNumber: number) => {
+  const row = SelectorFilter.descendants<HTMLTableRowElement>(table, 'tr')[rowNumber];
+  const cell = SelectorFilter.descendants<HTMLTableCellElement>(row, 'th,td')[columnNumber];
+  return getWidths(editor, cell.dom);
+};
+
 const cGetCellWidth = (rowNumber: number, columnNumber: number) => Chain.control(
   Chain.mapper((input: any) => {
     const editor = input.editor;
     const elm = input.element;
-    const row = SelectorFilter.descendants<HTMLTableRowElement>(elm, 'tr')[rowNumber];
-    const cell = SelectorFilter.descendants<HTMLTableCellElement>(row, 'th,td')[columnNumber];
-    return getWidths(editor, cell.dom);
+    return getCellWidth(editor, elm, rowNumber, columnNumber);
   }),
   Guard.addLogging('Get cell width')
 );
@@ -416,6 +420,7 @@ const sAssertTableStructureWithSizes = (editor: Editor, cols: number, rows: numb
 ]);
 
 export {
+  getCellWidth,
   sAssertDialogPresence,
   sAssertSelectValue,
   sChooseTab,
