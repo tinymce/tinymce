@@ -4,7 +4,7 @@ import { Arr, Unicode } from '@ephox/katamari';
 import { Compare, SugarElement, Traverse } from '@ephox/sugar';
 import * as Structs from 'ephox/snooker/api/Structs';
 import * as Transitions from 'ephox/snooker/model/Transitions';
-import { Warehouse } from 'ephox/snooker/model/Warehouse';
+import { Warehouse } from 'ephox/snooker/api/Warehouse';
 import * as Redraw from 'ephox/snooker/operate/Redraw';
 import * as Bridge from 'ephox/snooker/test/Bridge';
 

@@ -10,7 +10,9 @@
 //
 
 @document-selection-color: initial;
-@table-selection-color: #b4d7ff;
+@table-selection-color: fade(#b4d7ff, 35%);
+@table-selection-border-color: @table-selection-color;
+@table-selection-blend-mode: multiply;
 @object-block-selected-color: #b4d7ff;
 @object-block-selected-outline-width: 3px;
 
@@ -69,7 +71,7 @@
   // Selection of whole table cells
   td[data-mce-selected],
   th[data-mce-selected] {
-    background-color: @table-selection-color !important;
+    position: relative;
 
     &::selection {
       //Prevent selection to be visible
@@ -77,9 +79,29 @@
     }
 
     * {
-      //Prevent selection to be visible
+      //Prevent selection of text to be visible inside cells
+      outline: none;
       -webkit-touch-callout: none;
       user-select: none;
+    }
+  }
+
+  // Apply cell selection as a semi-transparent overlay instead of manipulating the cell background itself
+  td[data-mce-selected]::after,
+  th[data-mce-selected]::after {
+    background-color: @table-selection-color;
+    border: 1px solid @table-selection-border-color;
+    bottom: -1px;
+    content: '';
+    left: -1px;
+    mix-blend-mode: @table-selection-blend-mode;
+    position: absolute;
+    right: -1px;
+    top: -1px;
+
+    @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+      // Provide a darker border color for IE11
+      border-color: darken(@table-selection-color, 50%);
     }
   }
 

@@ -22,7 +22,9 @@ const loadSkin = (isInline: boolean, editor: Editor) => {
   // In Modern Inline, this is explicitly called in editor.on('focus', ...) as well as in render().
   // Seems to work without, but adding a note in case things break later
   if (isSkinDisabled(editor) === false && skinUiCss) {
-    editor.ui.styleSheetLoader.load(skinUiCss, SkinLoaded.fireSkinLoaded(editor), SkinLoaded.fireSkinLoadError(editor, 'Skin could not be loaded'));
+    const styleSheetLoader = editor.ui.styleSheetLoader;
+    styleSheetLoader.load(skinUiCss, SkinLoaded.fireSkinLoaded(editor), SkinLoaded.fireSkinLoadError(editor, 'Skin could not be loaded'));
+    editor.on('remove', () => styleSheetLoader.unload(skinUiCss));
   } else {
     SkinLoaded.fireSkinLoaded(editor)();
   }

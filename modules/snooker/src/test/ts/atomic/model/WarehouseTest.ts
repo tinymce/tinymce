@@ -2,7 +2,7 @@ import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Obj } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import * as Structs from 'ephox/snooker/api/Structs';
-import { Warehouse } from 'ephox/snooker/model/Warehouse';
+import { Warehouse } from 'ephox/snooker/api/Warehouse';
 
 UnitTest.test('WarehouseTest', function () {
   const check = function (expected: Record<string, string>, input: Structs.RowData<Structs.Detail>[]) {

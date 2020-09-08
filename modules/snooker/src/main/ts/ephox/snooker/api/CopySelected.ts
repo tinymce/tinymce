@@ -1,9 +1,9 @@
 import { Arr, Obj } from '@ephox/katamari';
 import { Attribute, Css, Insert, Remove, Selectors, SugarElement } from '@ephox/sugar';
 import * as DetailsList from '../model/DetailsList';
-import { Warehouse } from '../model/Warehouse';
 import * as LayerSelector from '../util/LayerSelector';
 import { DetailExt, RowData } from './Structs';
+import { Warehouse } from './Warehouse';
 
 interface StatsStruct {
   readonly minRow: number;

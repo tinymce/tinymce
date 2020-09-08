@@ -1,5 +1,5 @@
 import { SugarElement } from '@ephox/sugar';
-import { Warehouse } from '../model/Warehouse';
+import { Warehouse } from './Warehouse';
 
 const getGridSize = function (table: SugarElement) {
   const warehouse = Warehouse.fromTable(table);

@@ -24,7 +24,7 @@ import * as PaddingBr from '../dom/PaddingBr';
 import * as RangeNormalizer from '../selection/RangeNormalizer';
 import * as SelectionUtils from '../selection/SelectionUtils';
 import * as InsertList from './InsertList';
-import { isAfterNbsp, trimNbspAfterDeleteAndPadValue, trimOrPadLeftRight } from './NbspTrim';
+import { trimOrPadLeftRight } from './NbspTrim';
 
 const isTableCell = NodeType.isTableCell;
 
@@ -35,23 +35,6 @@ const isTableCellContentSelected = (dom: DOMUtils, rng: Range, cell: Node | null
   } else {
     return false;
   }
-};
-
-const selectionSetContent = (editor: Editor, content: string) => {
-  const selection = editor.selection;
-  const rng = selection.getRng();
-  const container = rng.startContainer;
-  const offset = rng.startOffset;
-
-  if (rng.collapsed && isAfterNbsp(container, offset) && NodeType.isText(container)) {
-    container.insertData(offset - 1, ' ');
-    container.deleteData(offset, 1);
-    rng.setStart(container, offset);
-    rng.setEnd(container, offset);
-    selection.setRng(rng);
-  }
-
-  selection.setContent(content);
 };
 
 const validInsertion = function (editor: Editor, value: string, parentNode: Element) {
@@ -66,7 +49,7 @@ const validInsertion = function (editor: Editor, value: string, parentNode: Elem
     if (!node || (node === node2 && node.nodeName === 'BR')) {
       editor.dom.setHTML(parentNode, value);
     } else {
-      selectionSetContent(editor, value);
+      editor.selection.setContent(value);
     }
   }
 };
@@ -223,7 +206,7 @@ export const insertHtmlAtCaret = function (editor: Editor, value: string, detail
 
   // Check for whitespace before/after value
   if (/^ | $/.test(value)) {
-    value = trimOrPadLeftRight(selection.getRng(), value);
+    value = trimOrPadLeftRight(dom, selection.getRng(), value);
   }
 
   // Setup parser and serializer
@@ -233,7 +216,7 @@ export const insertHtmlAtCaret = function (editor: Editor, value: string, detail
   const serializer = HtmlSerializer({
     validate: Settings.shouldValidate(editor)
   }, editor.schema);
-  const bookmarkHtml = '<span id="mce_marker" data-mce-type="bookmark">&#xFEFF;&#x200B;</span>';
+  const bookmarkHtml = '<span id="mce_marker" data-mce-type="bookmark">&#xFEFF;</span>';
 
   // Run beforeSetContent handlers on the HTML to be inserted
   args = { content: value, format: 'html', selection: true, paste: details.paste };
@@ -269,7 +252,6 @@ export const insertHtmlAtCaret = function (editor: Editor, value: string, detail
   // Insert node maker where we will insert the new HTML and get it's parent
   if (!selection.isCollapsed()) {
     deleteSelectedContent(editor);
-    value = trimNbspAfterDeleteAndPadValue(selection.getRng(), value);
   }
 
   parentNode = selection.getNode();
@@ -314,7 +296,7 @@ export const insertHtmlAtCaret = function (editor: Editor, value: string, detail
     // to parse and process the parent it's inserted into
 
     // Insert bookmark node and get the parent
-    selectionSetContent(editor, bookmarkHtml);
+    editor.selection.setContent(bookmarkHtml);
     parentNode = selection.getNode();
     rootNode = editor.getBody();
 
