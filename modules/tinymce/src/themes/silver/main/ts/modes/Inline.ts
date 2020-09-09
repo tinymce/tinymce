@@ -6,7 +6,7 @@
  */
 
 import { AlloyComponent, Attachment, Boxes } from '@ephox/alloy';
-import { Cell, Singleton, Fun } from '@ephox/katamari';
+import { Cell, Singleton } from '@ephox/katamari';
 import { DomEvent, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
@@ -60,9 +60,10 @@ const setupEvents = (editor: Editor, targetElm: SugarElement, ui: InlineHeader) 
     }
   };
 
-  const toolbarPersist = isToolbarPersist(editor);
-  editor.on('activate', toolbarPersist ? Fun.noop : ui.show);
-  editor.on('deactivate', toolbarPersist ? Fun.noop : ui.hide);
+  if (!isToolbarPersist(editor)) {
+    editor.on('activate', ui.show);
+    editor.on('deactivate', ui.hide);
+  }
 
   editor.on('SkinLoaded ResizeWindow', () => ui.update(true));
 
@@ -116,16 +117,16 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
     editor.nodeChanged();
   };
 
-  const toolbarPersist = isToolbarPersist(editor);
-
   editor.on('show', render);
-  editor.on('focus', toolbarPersist ? Fun.noop : render);
-
   editor.on('hide', ui.hide);
-  editor.on('blur', toolbarPersist ? Fun.noop : ui.hide);
+
+  if (!isToolbarPersist(editor)) {
+    editor.on('focus', render);
+    editor.on('blur', ui.hide);
+  }
 
   editor.on('init', () => {
-    if (editor.hasFocus() || toolbarPersist) {
+    if (editor.hasFocus() || isToolbarPersist(editor)) {
       render();
     }
   });
