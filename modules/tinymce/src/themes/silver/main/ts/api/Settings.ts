@@ -99,7 +99,7 @@ const isToolbarLocationBottom = (editor: Editor) => getToolbarLocation(editor) =
 
 const fixedContainerSelector = (editor): string => editor.getParam('fixed_toolbar_container', '', 'string');
 
-const isToolbarPersist = (editor): string => editor.getParam('toolbar_persist', false, 'boolean');
+const isToolbarPersist = (editor): boolean => editor.getParam('toolbar_persist', false, 'boolean');
 
 const fixedContainerElement = (editor): Optional<SugarElement> => {
   const selector = fixedContainerSelector(editor);
