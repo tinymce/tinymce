@@ -6,6 +6,7 @@
  */
 
 import { Optional } from '@ephox/katamari';
+import { SugarElement } from '@ephox/sugar';
 import DOMUtils from '../api/dom/DOMUtils';
 import TextSeeker from '../api/dom/TextSeeker';
 import Editor from '../api/Editor';
@@ -13,6 +14,8 @@ import * as Bookmarks from '../bookmark/Bookmarks';
 import * as NodeType from '../dom/NodeType';
 import * as RangeNodes from '../selection/RangeNodes';
 import { isContent, isNbsp, isWhiteSpace } from '../text/CharType';
+import { isEmpty } from '../dom/Empty';
+import { Format } from '../api/fmt/Format';
 import * as FormatUtils from './FormatUtils';
 
 type Sibling = 'previousSibling' | 'nextSibling';
@@ -22,12 +25,10 @@ const getParents = FormatUtils.getParents;
 const isWhiteSpaceNode = FormatUtils.isWhiteSpaceNode;
 const isTextBlock = FormatUtils.isTextBlock;
 
-const isBogusBr = function (node: Element) {
-  return node.nodeName === 'BR' && node.getAttribute('data-mce-bogus') && !node.nextSibling;
-};
+const isBogusBr = (node: Element) => node.nodeName === 'BR' && node.getAttribute('data-mce-bogus') && !node.nextSibling;
 
 // Expands the node to the closes contentEditable false element if it exists
-const findParentContentEditable = function (dom: DOMUtils, node: Node) {
+const findParentContentEditable = (dom: DOMUtils, node: Node) => {
   let parent = node;
 
   while (parent) {
@@ -117,7 +118,7 @@ const findSelectorEndPoint = (dom: DOMUtils, format, rng: Range, container: Node
   return container;
 };
 
-const findBlockEndPoint = (editor: Editor, format, container: Node, siblingName: Sibling) => {
+const findBlockEndPoint = (editor: Editor, format: Format[] | Record<string, Format[]>, container: Node, siblingName: Sibling) => {
   let node: Node;
   const dom = editor.dom;
   const root = dom.getRoot();
@@ -162,24 +163,16 @@ const findBlockEndPoint = (editor: Editor, format, container: Node, siblingName:
 };
 
 // This function walks up the tree if there is no siblings before/after the node
-const findParentContainer = (
-  dom: DOMUtils,
-  format,
-  startContainer: Node,
-  startOffset: number,
-  endContainer: Node,
-  endOffset: number,
-  start: boolean
-) => {
-  let container, parent, sibling;
+const findParentContainer = (dom: DOMUtils, format: Format[] | Record<string, Format[]>, container: Node, offset: number, start: boolean) => {
+  let parent = container;
+  let sibling: Element;
 
-  container = parent = start ? startContainer : endContainer;
   const siblingName = start ? 'previousSibling' : 'nextSibling';
   const root = dom.getRoot();
 
   // If it's a text node and the offset is inside the text
   if (NodeType.isText(container) && !isWhiteSpaceNode(container)) {
-    if (start ? startOffset > 0 : endOffset < container.nodeValue.length) {
+    if (start ? offset > 0 : offset < container.nodeValue.length) {
       return container;
     }
   }
@@ -190,10 +183,12 @@ const findParentContainer = (
     if (!format[0].block_expand && dom.isBlock(parent)) {
       return parent;
     }
-
     // Walk left/right
-    for (sibling = parent[siblingName]; sibling; sibling = sibling[siblingName]) {
-      if (!isBookmarkNode(sibling) && !isWhiteSpaceNode(sibling) && !isBogusBr(sibling)) {
+    for (sibling = parent[siblingName] as Element; sibling; sibling = sibling[siblingName] as Element) {
+      const siblingIsNotSpace = !(sibling as any).data || (sibling as any).data !== ' ';
+      const isNotEmptyWithOnlySpaces = !(isEmpty(SugarElement.fromDom(sibling)) && siblingIsNotSpace);
+
+      if (!isBookmarkNode(sibling) && isNotEmptyWithOnlySpaces && !isBogusBr(sibling)) {
         return parent;
       }
     }
@@ -210,12 +205,7 @@ const findParentContainer = (
   return container;
 };
 
-const expandRng = (
-  editor: Editor,
-  rng: Range,
-  format,
-  includeTrailingSpace: boolean = false
-) => {
+const expandRng = (editor: Editor, rng: Range, format: any, includeTrailingSpace: boolean = false) => {
   let startContainer = rng.startContainer,
     startOffset = rng.startOffset,
     endContainer = rng.endContainer,
@@ -298,11 +288,11 @@ const expandRng = (
   // Move start point up the tree
   if (format[0].inline || format[0].block_expand) {
     if (!format[0].inline || (!NodeType.isText(startContainer) || startOffset === 0)) {
-      startContainer = findParentContainer(dom, format, startContainer, startOffset, endContainer, endOffset, true);
+      startContainer = findParentContainer(dom, format, startContainer, startOffset, true);
     }
 
     if (!format[0].inline || (!NodeType.isText(endContainer) || endOffset === endContainer.nodeValue.length)) {
-      endContainer = findParentContainer(dom, format, startContainer, startOffset, endContainer, endOffset, false);
+      endContainer = findParentContainer(dom, format, endContainer, endOffset, false);
     }
   }
 
@@ -322,11 +312,11 @@ const expandRng = (
     // Non block element then try to expand up the leaf
     if (format[0].block) {
       if (!dom.isBlock(startContainer)) {
-        startContainer = findParentContainer(dom, format, startContainer, startOffset, endContainer, endOffset, true);
+        startContainer = findParentContainer(dom, format, startContainer, startOffset, true);
       }
 
       if (!dom.isBlock(endContainer)) {
-        endContainer = findParentContainer(dom, format, startContainer, startOffset, endContainer, endOffset, false);
+        endContainer = findParentContainer(dom, format, endContainer, endOffset, false);
       }
     }
   }

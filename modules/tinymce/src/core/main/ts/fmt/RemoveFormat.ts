@@ -531,7 +531,7 @@ const remove = (ed: Editor, name: string, vars?: FormatVars, node?: Node | Range
   const removeRngStyle = (rng: Range) => {
     let startContainer: Node, endContainer: Node;
 
-    let expandedRng = ExpandRange.expandRng(ed, rng, formatList, true);
+    let expandedRng = ExpandRange.expandRng(ed, rng, formatList, rng.collapsed);
 
     if (format.split) {
       // Split text nodes

@@ -26,6 +26,7 @@ Version 5.5.0 (TBD)
     Fixed up and down keyboard navigation not working for inline `contenteditable="false"` elements #TINY-6226
     Fixed the `unlink` toolbar button not working when selecting multiple links #TINY-4867
     Fixed the `link` dialog not showing the "Text to display" field in some valid cases #TINY-5205
+    Fixed loss on formating of a space adjacent to selection when removing formating #TINY-6268
     Fixed the `DOMUtils.split()` API incorrectly removing some content #TINY-6294
     Fixed pressing escape not focusing the editor when using multiple toolbars #TINY-6230
     Fixed the `dirty` flag not being correctly set during an `AddUndo` event #TINY-4707
