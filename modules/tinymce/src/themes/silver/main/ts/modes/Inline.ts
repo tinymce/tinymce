@@ -8,7 +8,7 @@
 import { AlloyComponent, Attachment, Boxes } from '@ephox/alloy';
 import { Cell, Singleton } from '@ephox/katamari';
 import { DomEvent, SugarElement } from '@ephox/sugar';
-import Editor from 'tinymce/core/api/Editor';
+import Editor, { EditorUiApi } from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
 import * as Events from '../api/Events';
 import { getUiContainer, isToolbarPersist } from '../api/Settings';
@@ -20,13 +20,6 @@ import { InlineHeader } from '../ui/header/InlineHeader';
 import { identifyMenus } from '../ui/menus/menubar/Integration';
 import { inline as loadInlineSkin } from '../ui/skin/Loader';
 import { setToolbar } from './Toolbars';
-
-export interface InlineApi {
-  ui: {
-    show: () => void;
-    hide: () => void;
-  };
-}
 
 const getTargetPosAndBounds = (targetElm: SugarElement, isToolbarTop: boolean) => {
   const bounds = Boxes.box(targetElm);
@@ -133,23 +126,21 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
 
   ReadOnly.setupReadonlyModeSwitch(editor, uiComponents);
 
+  const api: EditorUiApi = {
+    show: () => {
+      ui.show();
+    },
+    hide: () => {
+      ui.hide();
+    }
+  };
+
   return {
-    editorContainer: outerContainer.element.dom
+    editorContainer: outerContainer.element.dom,
+    api
   };
 };
 
-const getApi = (editor): InlineApi => ({
-  ui: {
-    show: () => {
-      editor.fire('show');
-    },
-    hide: () => {
-      editor.fire('hide');
-    }
-  }
-});
-
 export {
-  render,
-  getApi
+  render
 };

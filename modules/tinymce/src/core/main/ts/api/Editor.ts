@@ -6,7 +6,7 @@
  */
 
 import { Registry } from '@ephox/bridge';
-import { Arr } from '@ephox/katamari';
+import { Arr, Fun } from '@ephox/katamari';
 import * as EditorContent from '../content/EditorContent';
 import * as NodeType from '../dom/NodeType';
 import * as EditorRemove from '../EditorRemove';
@@ -69,7 +69,12 @@ import WindowManager from './WindowManager';
  * ed.render();
  */
 
-export interface EditorUi {
+export interface EditorUiApi {
+  show: () => void;
+  hide: () => void;
+}
+
+export interface EditorUi extends EditorUiApi {
   registry: Registry.Registry;
   /** StyleSheetLoader for styles in the editor UI. For content styles, use editor.dom.styleSheetLoader. */
   styleSheetLoader: StyleSheetLoader;
@@ -334,7 +339,9 @@ class Editor implements EditorObservable {
 
     this.ui = {
       registry: registry(),
-      styleSheetLoader: undefined
+      styleSheetLoader: undefined,
+      show: Fun.noop,
+      hide: Fun.noop
     };
 
     const self = this;

@@ -9,7 +9,7 @@ import { AlloyComponent, AlloySpec, Behaviour, Gui, GuiFactory, Keying, Memento,
 import { Arr, Obj, Optional, Result } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Css } from '@ephox/sugar';
-import Editor from 'tinymce/core/api/Editor';
+import Editor, { EditorUiApi } from 'tinymce/core/api/Editor';
 import I18n from 'tinymce/core/api/util/I18n';
 import * as Settings from './api/Settings';
 import * as Backstage from './backstage/Backstage';
@@ -35,12 +35,12 @@ export interface RenderInfo {
   backstage: Backstage.UiFactoryBackstage;
   renderUI: () => ModeRenderInfo;
   getUi: () => ({ channels: UiChannels });
-  inline: Inline.InlineApi;
 }
 
 export interface ModeRenderInfo {
   iframeContainer?: HTMLIFrameElement;
   editorContainer: HTMLElement;
+  api?: EditorUiApi;
 }
 
 export interface UiChannels {
@@ -395,9 +395,7 @@ const setup = (editor: Editor): RenderInfo => {
     return mode.render(editor, uiComponents, rawUiConfig, backstage, args);
   };
 
-  const inline = Inline.getApi(editor);
-
-  return { mothership, uiMothership, backstage, renderUI, getUi, inline };
+  return { mothership, uiMothership, backstage, renderUI, getUi };
 };
 
 export {

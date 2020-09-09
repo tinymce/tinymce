@@ -22,12 +22,12 @@ UnitTest.asynctest('Toolbar persist test', (success, failure) => {
   }));
 
   const cShowEditor = Chain.fromChains([
-    Chain.op((editor: Editor) => editor.theme.inline.ui.show()),
+    Chain.op((editor: Editor) => editor.ui.show()),
     cWaitForEditorVisibility('Wait for editor to be shown', true)
   ]);
 
   const cHideEditor = Chain.fromChains([
-    Chain.op((editor: Editor) => editor.theme.inline.ui.hide()),
+    Chain.op((editor: Editor) => editor.ui.hide()),
     cWaitForEditorVisibility('Wait for editor to be hidden', false)
   ]);
 

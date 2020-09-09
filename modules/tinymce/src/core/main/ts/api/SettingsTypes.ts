@@ -6,7 +6,7 @@
  */
 
 import { UploadHandler } from '../file/Uploader';
-import Editor from './Editor';
+import Editor, { EditorUiApi } from './Editor';
 import { Formats } from './fmt/Format';
 import { AllowedFormat } from './fmt/StyleFormat';
 import { SchemaType } from './html/Schema';
@@ -18,6 +18,7 @@ export type ThemeInitFunc = (editor: Editor, elm: HTMLElement) => {
   iframeContainer: HTMLElement;
   height?: number;
   iframeHeight?: number;
+  api?: EditorUiApi;
 };
 
 export type SetupCallback = (editor: Editor) => void;
