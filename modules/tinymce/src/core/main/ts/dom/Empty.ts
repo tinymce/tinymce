@@ -12,22 +12,22 @@ import * as CaretCandidate from '../caret/CaretCandidate';
 import { isWhitespaceText } from '../text/Whitespace';
 import * as NodeType from './NodeType';
 
-const hasWhitespacePreserveParent = function (rootNode: Node, node: Node) {
+const hasWhitespacePreserveParent = function (node: Node, rootNode: Node) {
   const rootElement = SugarElement.fromDom(rootNode);
   const startNode = SugarElement.fromDom(node);
   return SelectorExists.ancestor(startNode, 'pre,code', Fun.curry(Compare.eq, rootElement));
 };
 
-const isWhitespace = function (rootNode: Node, node: Node) {
-  return NodeType.isText(node) && isWhitespaceText(node.data) && hasWhitespacePreserveParent(rootNode, node) === false;
+const isWhitespace = function (node: Node, rootNode: Node) {
+  return NodeType.isText(node) && isWhitespaceText(node.data) && hasWhitespacePreserveParent(node, rootNode) === false;
 };
 
 const isNamedAnchor = function (node: Node) {
   return NodeType.isElement(node) && node.nodeName === 'A' && !node.hasAttribute('href') && (node.hasAttribute('name') || node.hasAttribute('id'));
 };
 
-const isContent = function (rootNode: Node, node: Node) {
-  return (CaretCandidate.isCaretCandidate(node) && isWhitespace(rootNode, node) === false) || isNamedAnchor(node) || isBookmark(node);
+const isContent = function (node: Node, rootNode: Node) {
+  return (CaretCandidate.isCaretCandidate(node) && isWhitespace(node, rootNode) === false) || isNamedAnchor(node) || isBookmark(node);
 };
 
 const isBookmark = NodeType.hasAttribute('data-mce-bookmark');
@@ -65,7 +65,7 @@ const isEmptyNode = function (targetNode: Node, skipBogus: boolean) {
         continue;
       }
 
-      if (isContent(targetNode, node)) {
+      if (isContent(node, targetNode)) {
         return false;
       }
 
@@ -79,5 +79,6 @@ const isEmptyNode = function (targetNode: Node, skipBogus: boolean) {
 const isEmpty = (elm: SugarElement<Node>, skipBogus: boolean = true) => isEmptyNode(elm.dom, skipBogus);
 
 export {
-  isEmpty
+  isEmpty,
+  isContent
 };
