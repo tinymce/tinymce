@@ -29,6 +29,11 @@ const runSerializerFiltersOnFragment = (editor: Editor, fragment: AstNode) => {
   FilterNode.filter(editor.serializer.getNodeFilters(), editor.serializer.getAttributeFilters(), fragment);
 };
 
+const getInsertContext = (editor: Editor) => {
+  const startElm = editor.selection.getStart(true);
+  return Type.isNullable(startElm) ? 'body' : startElm.nodeName.toLowerCase();
+};
+
 /** API implemented by the RTC plugin */
 interface RtcRuntimeApi {
   undo: () => void;
@@ -191,7 +196,8 @@ const makeRtcAdaptor = (tinymceEditor: Editor, rtcEditor: RtcRuntimeApi): RtcAda
         return content;
       },
       insertContent: (value, _details) => {
-        const fragment = isTreeNode(value) ? value : tinymceEditor.parser.parse(value, { insert: true });
+        const context = getInsertContext(tinymceEditor);
+        const fragment = isTreeNode(value) ? value : tinymceEditor.parser.parse(value, { context, insert: true });
         rtcEditor.insertContent(fragment);
       }
     },
