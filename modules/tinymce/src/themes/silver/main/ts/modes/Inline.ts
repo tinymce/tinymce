@@ -29,7 +29,7 @@ const getTargetPosAndBounds = (targetElm: SugarElement, isToolbarTop: boolean) =
   };
 };
 
-const setupEvents = (editor: Editor, targetElm: SugarElement, ui: InlineHeader) => {
+const setupEvents = (editor: Editor, targetElm: SugarElement, ui: InlineHeader, toolbarPersist: boolean) => {
   const prevPosAndBounds = Cell(getTargetPosAndBounds(targetElm, ui.isPositionedAtTop()));
 
   const resizeContent = (e) => {
@@ -53,7 +53,7 @@ const setupEvents = (editor: Editor, targetElm: SugarElement, ui: InlineHeader) 
     }
   };
 
-  if (!isToolbarPersist(editor)) {
+  if (!toolbarPersist) {
     editor.on('activate', ui.show);
     editor.on('deactivate', ui.hide);
   }
@@ -80,6 +80,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
   const floatContainer = Cell<AlloyComponent>(null);
   const targetElm = SugarElement.fromDom(args.targetNode);
   const ui = InlineHeader(editor, targetElm, uiComponents, backstage, floatContainer);
+  const toolbarPersist = isToolbarPersist(editor);
 
   loadInlineSkin(editor);
 
@@ -105,7 +106,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
     // Initialise the toolbar - set initial positioning then show
     ui.show();
 
-    setupEvents(editor, targetElm, ui);
+    setupEvents(editor, targetElm, ui, toolbarPersist);
 
     editor.nodeChanged();
   };
@@ -113,13 +114,13 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
   editor.on('show', render);
   editor.on('hide', ui.hide);
 
-  if (!isToolbarPersist(editor)) {
+  if (!toolbarPersist) {
     editor.on('focus', render);
     editor.on('blur', ui.hide);
   }
 
   editor.on('init', () => {
-    if (editor.hasFocus() || isToolbarPersist(editor)) {
+    if (editor.hasFocus() || toolbarPersist) {
       render();
     }
   });
