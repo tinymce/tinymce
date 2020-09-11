@@ -40,21 +40,25 @@ def runPhantomTests() {
 
 standardProperties()
 
+def gitMerge(String primaryBranch) {
+  if (BRANCH_NAME != primaryBranch) {
+    echo "Merging ${primaryBranch} into this branch to run tests"
+    exec("git merge --no-commit --no-ff origin/${primaryBranch}")
+  }
+}
+
 node("primary") {
   timestamps {
-    def primaryBranch = "develop"
+    checkout scm
 
-    def gitMerge = {
-      if (BRANCH_NAME != primaryBranch) {
-        echo "Merging ${primaryBranch} into this branch to run tests"
-        exec("git merge --no-commit --no-ff origin/${primaryBranch}")
-      }
-    }
+    def props = readProperties file: 'build.properties'
 
-    stage ("Checkout SCM") {
-      checkout scm
+    def primaryBranch = props.primaryBranch
+    assert primaryBranch != null && primaryBranch != ""
+
+    stage ("Merge") {
       // cancel build if master doesn't merge cleanly, otherwise tests wil fail
-      gitMerge()
+      gitMerge(primaryBranch)
     }
 
     def browserPermutations = [
@@ -97,7 +101,7 @@ node("primary") {
               exec("git config user.email \"local@build.node\"")
               exec("git config user.name \"irrelevant\"")
 
-              gitMerge()
+              gitMerge(primaryBranch)
 
               cleanAndInstall()
               exec("yarn ci")
