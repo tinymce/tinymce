@@ -156,9 +156,9 @@ export default (): void => {
 
         headers: makeMenu('Headers', [
           makeBack('< Back'),
-          makeItem('h1', 'Header 1'),
-          makeItem('h2', 'Header 2'),
-          makeItem('h3', 'Header 3')
+          makeItem('h1', 'Heading 1'),
+          makeItem('h2', 'Heading 2'),
+          makeItem('h3', 'Heading 3')
         ]),
 
         inline: makeMenu('Inline', [

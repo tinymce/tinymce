@@ -28,7 +28,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.RangePointsTest', (success, failure
         sAssertXYWithinRange(15, 5)
       ])),
       Logger.t('point in table selection', GeneralSteps.sequence([
-        tinyApis.sSetContent('<p><table><tbody><tr><th>Header 1</th><th>Header 2</th></tr><tr><td>Cell 1</td><td>Cell 2</td></tr></tbody></table></p>'),
+        tinyApis.sSetContent('<p><table><tbody><tr><th>Heading 1</th><th>Heading 2</th></tr><tr><td>Cell 1</td><td>Cell 2</td></tr></tbody></table></p>'),
         tinyApis.sSetSelection([ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 1, 0 ], 8),
         sAssertXYWithinRange(25, 20),
         sAssertXYWithinRange(150, 20)
