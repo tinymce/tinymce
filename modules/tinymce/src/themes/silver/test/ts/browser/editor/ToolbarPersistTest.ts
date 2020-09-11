@@ -1,83 +1,57 @@
-import { Chain, Log, NamedChain, Pipeline, Assertions, ApproxStructure, Waiter } from '@ephox/agar';
+import { Chain, Log, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Editor as McEditor } from '@ephox/mcagar';
-import { SugarElement, SugarBody, Insert, Focus, Remove } from '@ephox/sugar';
+import { Editor as McEditor, UiChains } from '@ephox/mcagar';
+import { SugarElement, SugarBody, Insert, Focus, Remove, Visibility } from '@ephox/sugar';
+import { Fun } from '@ephox/katamari';
 import Theme from 'tinymce/themes/silver/Theme';
 import Editor from 'tinymce/core/api/Editor';
 
 UnitTest.asynctest('Toolbar persist test', (success, failure) => {
   Theme();
 
-  const cWaitForEditorVisibility = (message: string, visible: boolean) => Waiter.cTryUntil(message, Chain.op((editor: Editor) => {
-    Assertions.assertStructure(
-      message,
-      ApproxStructure.build((s, str, arr) => s.element('div', {
-        classes: [ arr.has('tox-tinymce-inline') ],
-        attrs: {
-          style: str.contains('display: ' + (visible ? 'flex' : 'none'))
-        }
-      })),
-      SugarElement.fromDom(editor.getContainer())
-    );
-  }));
+  const cWaitForVisible = UiChains.cWaitForState(Visibility.isVisible);
+  const cWaitForHidden = UiChains.cWaitForState(Fun.not(Visibility.isVisible));
 
-  const cShowEditor = Chain.fromChains([
-    Chain.op((editor: Editor) => editor.ui.show()),
-    cWaitForEditorVisibility('Wait for editor to be shown', true)
-  ]);
+  const cShowEditorUi = Chain.op((editor: Editor) => editor.ui.show());
+  const cHideEditorUi = Chain.op((editor: Editor) => editor.ui.hide());
 
-  const cHideEditor = Chain.fromChains([
-    Chain.op((editor: Editor) => editor.ui.hide()),
-    cWaitForEditorVisibility('Wait for editor to be hidden', false)
-  ]);
+  const cFocusEditor = Chain.op((editor: Editor) => {
+    editor.focus();
+    editor.nodeChanged();
+  });
 
-  const cFocusEditor = Chain.fromChains([
-    Chain.op((editor: Editor) => editor.focus()),
-    cWaitForEditorVisibility('Wait for editor to be shown', true)
-  ]);
-
-  const cUnfocusEditors = Chain.op((_) => {
+  const cUnfocusEditor = Chain.op((_) => {
     const div = SugarElement.fromTag('input');
     Insert.append(SugarBody.body(), div);
     Focus.focus(div);
     Remove.remove(div);
   });
 
-  const settings = {
-    theme: 'silver',
-    inline: true,
-    base_url: '/project/tinymce/js/tinymce'
-  };
-
   Pipeline.async({}, [
-    Log.chainsAsStep('TINY-4847', 'Test toolbar_persist', [
-      NamedChain.asChain([
-        NamedChain.write('editor1', McEditor.cFromSettings({ ...settings, toolbar_persist: true })),
-        NamedChain.write('editor2', McEditor.cFromSettings({ ...settings, toolbar_persist: false })),
+    Log.chainsAsStep('TINY-4847', 'Test toolbar_persist. Focus & unfocus should not affect toolbar visibility', [
+      McEditor.cFromSettings({
+        theme: 'silver',
+        inline: true,
+        base_url: '/project/tinymce/js/tinymce',
+        toolbar_persist: true
+      }),
 
-        NamedChain.read('editor2', cFocusEditor),
+      cWaitForVisible('Wait for editor to be visible', '.tox-tinymce-inline'),
+      cUnfocusEditor,
+      Chain.wait(200), // Need to wait since nothing should happen.
+      cWaitForVisible('Wait for editor to be visible', '.tox-tinymce-inline'),
 
-        NamedChain.read('editor1', cWaitForEditorVisibility('Inline editor 1 should be shown', true)),
-        NamedChain.read('editor2', cWaitForEditorVisibility('Inline editor 2 should be shown', true)),
+      cHideEditorUi,
 
-        cUnfocusEditors,
+      cWaitForHidden('Wait for editor to be hidden', '.tox-tinymce-inline'),
+      cFocusEditor,
+      Chain.wait(200), // Need to wait since nothing should happen.
+      cWaitForHidden('Wait for editor to be hidden', '.tox-tinymce-inline'),
 
-        NamedChain.read('editor1', cWaitForEditorVisibility('Inline editor 1 should be shown', true)),
-        NamedChain.read('editor2', cWaitForEditorVisibility('Inline editor 2 should be hidden', false)),
+      cShowEditorUi,
+      cWaitForVisible('Wait for editor to be visible', '.tox-tinymce-inline'),
 
-        NamedChain.read('editor1', cHideEditor),
-
-        NamedChain.read('editor1', cWaitForEditorVisibility('Inline editor 1 should be hidden', false)),
-        NamedChain.read('editor2', cWaitForEditorVisibility('Inline editor 2 should be hidden', false)),
-
-        NamedChain.read('editor1', cShowEditor),
-
-        NamedChain.read('editor1', cWaitForEditorVisibility('Inline editor 1 should be shown', true)),
-        NamedChain.read('editor2', cWaitForEditorVisibility('Inline editor 2 should be hidden', false)),
-
-        NamedChain.read('editor1', McEditor.cRemove),
-        NamedChain.read('editor2', McEditor.cRemove)
-      ])
+      McEditor.cRemove
     ])
   ], success, failure);
 });
