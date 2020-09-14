@@ -57,7 +57,7 @@ node("primary") {
     assert primaryBranch != null && primaryBranch != ""
 
     stage ("Merge") {
-      // cancel build if master doesn't merge cleanly, otherwise tests wil fail
+      // cancel build if primary branch doesn't merge cleanly
       gitMerge(primaryBranch)
     }
 
