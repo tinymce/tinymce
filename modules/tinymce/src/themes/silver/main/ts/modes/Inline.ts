@@ -8,8 +8,9 @@
 import { AlloyComponent, Attachment, Boxes } from '@ephox/alloy';
 import { Cell, Singleton } from '@ephox/katamari';
 import { DomEvent, SugarElement } from '@ephox/sugar';
-import Editor, { EditorUiApi } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
+import { EditorUiApi } from 'tinymce/core/api/ui/Ui';
 import * as Events from '../api/Events';
 import { getUiContainer, isToolbarPersist } from '../api/Settings';
 import { UiFactoryBackstage } from '../backstage/Backstage';

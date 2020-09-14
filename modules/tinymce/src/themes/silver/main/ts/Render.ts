@@ -9,8 +9,9 @@ import { AlloyComponent, AlloySpec, Behaviour, Gui, GuiFactory, Keying, Memento,
 import { Arr, Obj, Optional, Result } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Css } from '@ephox/sugar';
-import Editor, { EditorUiApi } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import I18n from 'tinymce/core/api/util/I18n';
+import { EditorUiApi } from 'tinymce/core/api/ui/Ui';
 import * as Settings from './api/Settings';
 import * as Backstage from './backstage/Backstage';
 import * as ContextToolbar from './ContextToolbar';

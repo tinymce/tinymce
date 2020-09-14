@@ -6,10 +6,11 @@
  */
 
 import { UploadHandler } from '../file/Uploader';
-import Editor, { EditorUiApi } from './Editor';
+import Editor from './Editor';
 import { Formats } from './fmt/Format';
 import { AllowedFormat } from './fmt/StyleFormat';
 import { SchemaType } from './html/Schema';
+import { EditorUiApi } from './ui/Ui';
 
 export type EntityEncoding = 'named' | 'numeric' | 'raw';
 

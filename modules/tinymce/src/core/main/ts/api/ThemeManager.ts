@@ -7,9 +7,10 @@
 
 import AddOnManager from './AddOnManager';
 import { DomQueryConstructor } from './dom/DomQuery';
-import Editor, { EditorUiApi } from './Editor';
+import Editor from './Editor';
 import { NotificationManagerImpl } from './NotificationManager';
 import { WindowManagerImpl } from './WindowManager';
+import { EditorUiApi } from './ui/Ui';
 
 export type Theme = {
   ui?: any;
