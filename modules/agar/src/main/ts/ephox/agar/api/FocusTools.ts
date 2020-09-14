@@ -1,5 +1,5 @@
 import { Result } from '@ephox/katamari';
-import { Compare, Focus, SugarElement, Traverse, Truncate } from '@ephox/sugar';
+import { Compare, Focus, SugarElement, SugarShadowDom, Truncate } from '@ephox/sugar';
 
 import * as SizzleFind from '../alien/SizzleFind';
 import { Chain } from './Chain';
@@ -20,12 +20,12 @@ const cGetFocused: Chain<SugarElement<any>, SugarElement<any>> =
 const cSetFocused: Chain<SugarElement<any>, SugarElement<any>> =
   Chain.op(Focus.focus);
 
-const cGetOwnerDoc: Chain<SugarElement<Node>, SugarElement<Document>> =
-  Chain.mapper(Traverse.owner);
+const cGetRootNode: Chain<SugarElement<Node>, SugarElement<Document | ShadowRoot>> =
+  Chain.mapper(SugarShadowDom.getRootNode);
 
 const sIsOn = <T>(label: string, element: SugarElement<any>): Step<T, T> =>
   Chain.asStep<T, SugarElement>(element, [
-    cGetOwnerDoc,
+    cGetRootNode,
     cGetFocused,
     Chain.binder((active: SugarElement<any>): Result<SugarElement, string> =>
       Compare.eq(element, active) ? Result.value(active) : Result.error(
@@ -68,7 +68,7 @@ const cSetFocus = (label: string, selector: string): Chain<SugarElement, SugarEl
 const cSetActiveValue = (newValue: string): Chain<SugarElement, SugarElement> =>
   // Input: container
   Chain.fromChains([
-    cGetOwnerDoc,
+    cGetRootNode,
     cGetFocused,
     UiControls.cSetValue(newValue)
   ]);
@@ -76,7 +76,7 @@ const cSetActiveValue = (newValue: string): Chain<SugarElement, SugarElement> =>
 // Input: container
 const cGetActiveValue: Chain<SugarElement, string> =
   Chain.fromChains([
-    cGetOwnerDoc,
+    cGetRootNode,
     cGetFocused,
     UiControls.cGetValue
   ]);
