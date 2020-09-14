@@ -12,7 +12,7 @@
  */
 
 /**
- * Editor UI show method.
+ * Editor UI show method. Only works in inline mode.
  * <br>
  * <em>Added in TinyMCE 5.5</em>
  *
@@ -20,7 +20,7 @@
  */
 
 /**
- * Editor UI hide method.
+ * Editor UI hide method. Only works in inline mode.
  * <br>
  * <em>Added in TinyMCE 5.5</em>
  *
