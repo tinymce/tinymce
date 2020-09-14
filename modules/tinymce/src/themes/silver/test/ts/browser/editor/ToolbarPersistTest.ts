@@ -6,10 +6,9 @@ import { Fun } from '@ephox/katamari';
 import Theme from 'tinymce/themes/silver/Theme';
 import Editor from 'tinymce/core/api/Editor';
 
-UnitTest.asynctest('Toolbar persist test', (success, failure) => {
+UnitTest.asynctest('browser.tinymce.themes.silver.editor.ToolbarPersistTest', (success, failure) => {
   Theme();
 
-  const cWaitForVisible = UiChains.cWaitForState(Visibility.isVisible);
   const cWaitForHidden = UiChains.cWaitForState(Fun.not(Visibility.isVisible));
 
   const cShowEditorUi = Chain.op((editor: Editor) => editor.ui.show());
@@ -36,10 +35,10 @@ UnitTest.asynctest('Toolbar persist test', (success, failure) => {
         toolbar_persist: true
       }),
 
-      cWaitForVisible('Wait for editor to be visible', '.tox-tinymce-inline'),
+      UiChains.cWaitForPopup('Wait for editor to be visible', '.tox-tinymce-inline'),
       cUnfocusEditor,
       Chain.wait(200), // Need to wait since nothing should happen.
-      cWaitForVisible('Wait for editor to be visible', '.tox-tinymce-inline'),
+      UiChains.cWaitForPopup('Wait for editor to be visible', '.tox-tinymce-inline'),
 
       cHideEditorUi,
 
@@ -49,7 +48,7 @@ UnitTest.asynctest('Toolbar persist test', (success, failure) => {
       cWaitForHidden('Wait for editor to be hidden', '.tox-tinymce-inline'),
 
       cShowEditorUi,
-      cWaitForVisible('Wait for editor to be visible', '.tox-tinymce-inline'),
+      UiChains.cWaitForPopup('Wait for editor to be visible', '.tox-tinymce-inline'),
 
       McEditor.cRemove
     ])
