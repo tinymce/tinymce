@@ -3,7 +3,7 @@ import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import Editor from 'tinymce/core/api/Editor';
 
-UnitTest.asyncTest('LineHeightTest', (success, failure) => {
+UnitTest.asyncTest('browser.tinymce.core.commands.LineHeightTest', (success, failure) => {
   TinyLoader.setupLight((editor: Editor, success, failure) => {
     const api = TinyApis(editor);
 

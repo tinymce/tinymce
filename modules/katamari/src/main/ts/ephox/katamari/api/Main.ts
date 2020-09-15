@@ -2,7 +2,6 @@ import { Adt } from './Adt';
 import * as Arr from './Arr';
 import { Cell } from './Cell';
 import * as Contracts from './Contracts';
-import * as Dimension from './Dimension';
 import * as Fun from './Fun';
 import { Future } from './Future';
 import { FutureResult } from './FutureResult';
@@ -38,7 +37,6 @@ export {
   Arr,
   Cell,
   Contracts,
-  Dimension,
   Num,
   Fun,
   Future,

@@ -1,5 +1,4 @@
-import * as Arr from './Arr';
-import { Optional } from './Optional';
+import { Arr, Optional } from '@ephox/katamari';
 
 const units = {
   // we don't really support all of these different ways to express a length
@@ -27,15 +26,14 @@ const units = {
     'px' as 'px'
   ],
   // these are the length values we do support
-  length: [ 'px' as 'px', 'pt' as 'pt' ],
-  percentage: [ '%' as '%' ],
+  fixed: [ 'px' as 'px', 'pt' as 'pt' ],
+  relative: [ '%' as '%' ],
   empty: [ '' as '' ]
 };
 
 type Units = {
   [K in keyof typeof units]: typeof units[K][number];
 };
-
 
 export interface Dimension<U extends string> {
   value: number;
@@ -66,7 +64,7 @@ const pattern: RegExp = (() => {
 
 const isUnit = <T extends keyof Units>(unit: string, accepted: T[]): unit is Units[T] =>
   Arr.exists(accepted, (acc: T) =>
-    Arr.exists(units[acc], <T2 extends T>(check: Units[T2]) => unit === check)
+    Arr.exists(units[acc], (check) => unit === check)
   );
 
 export const parse = <T extends keyof Units>(input: string, accepted: T[]): Optional<Dimension<Units[T]>> => {

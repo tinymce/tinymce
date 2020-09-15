@@ -7,8 +7,8 @@
 
 import { Fun } from '@ephox/katamari';
 import { Compare, Css, SugarElement, TransformFind } from '@ephox/sugar';
-import Editor from 'tinymce/core/api/Editor';
-import { mapRange } from './RangeUtils';
+import Editor from '../api/Editor';
+import { mapRange } from '../selection/RangeMap';
 
 export const lineHeightQuery = (editor: Editor) => mapRange(editor, (elm) => {
   const root = SugarElement.fromDom(editor.getBody());
@@ -25,6 +25,8 @@ export const lineHeightQuery = (editor: Editor) => mapRange(editor, (elm) => {
 }).getOr('');
 
 export const lineHeightAction = (editor: Editor, lineHeight: number) => {
-  editor.formatter.toggle('lineheight', { value: String(lineHeight) });
-  editor.nodeChanged();
+  editor.undoManager.transact(() => {
+    editor.formatter.toggle('lineheight', { value: String(lineHeight) });
+    editor.nodeChanged();
+  });
 };

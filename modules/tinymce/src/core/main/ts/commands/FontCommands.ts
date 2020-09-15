@@ -10,7 +10,7 @@ import { SugarElement } from '@ephox/sugar';
 import Editor from '../api/Editor';
 import * as Settings from '../api/Settings';
 import * as FontInfo from '../fmt/FontInfo';
-import { mapRange } from './RangeUtils';
+import { mapRange } from '../selection/RangeMap';
 
 const fromFontSizeNumber = (editor: Editor, value: string): string => {
   if (/^[0-9.]+$/.test(value)) {

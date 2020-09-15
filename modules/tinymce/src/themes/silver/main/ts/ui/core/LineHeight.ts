@@ -5,19 +5,25 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Dimension, Optional, Singleton } from '@ephox/katamari';
+import { Arr, Optional, Singleton } from '@ephox/katamari';
+import { Dimension } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { Menu } from 'tinymce/core/api/ui/Ui';
 import * as Settings from '../../api/Settings';
 
-const normaliseLineHeight = (input: string) => Dimension.normalise(input, [ 'length', 'percentage', 'empty' ]).getOr(input);
+const normaliseLineHeight = (input: string) => Dimension.normalise(input, [ 'fixed', 'relative', 'empty' ]).getOr(input);
 
 const getLineHeights = (editor: Editor): Menu.ToggleMenuItemSpec[] => {
   const options = Settings.getLineHeightFormats(editor);
 
+  // All of the API objects (one for each format)
   const apis = new Map<string, Menu.ToggleMenuItemInstanceApi>();
+  // The currently active API object (in a destroyable so that it automatically cleans itself up)
   const lastApi = Singleton.destroyable();
+
   const callback = () => {
+    // eslint-disable-next-line no-console
+    console.log(apis.size);
     const current = normaliseLineHeight(editor.queryCommandValue('LineHeight'));
     Optional.from(apis.get(current))
       .fold(
@@ -33,7 +39,7 @@ const getLineHeights = (editor: Editor): Menu.ToggleMenuItemSpec[] => {
       );
   };
 
-  editor.on('NodeChange', callback);
+  const callbackBinding = editor.formatter.formatChanged('lineheight', callback);
 
   return Arr.map(
     options,
@@ -42,13 +48,19 @@ const getLineHeights = (editor: Editor): Menu.ToggleMenuItemSpec[] => {
       text: value,
       onSetup: (api) => {
         apis.set(normaliseLineHeight(value), api);
+        const key = normaliseLineHeight(value);
+        for (let i = 0; i < 1e6; ++i) {
+          apis.set(key + '?' + i, api);
+        }
 
         if (i + 1 === options.length) {
+          // run the callback once on startup (on the last option so that we know the apis map has been set up)
           callback();
         }
         return () => {
+          // only clean up global things once
           if (i === 0) {
-            editor.off('NodeChange', callback);
+            callbackBinding.unbind();
             lastApi.clear();
           }
         };
