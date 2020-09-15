@@ -1,6 +1,6 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import fc from 'fast-check';
-import * as Dimension from 'src/main/ts/ephox/sugar/api/view/Dimension';
+import * as Dimension from 'ephox/sugar/api/view/Dimension';
 
 UnitTest.test('All valid floats are valid', () => {
   fc.assert(fc.property(fc.oneof(

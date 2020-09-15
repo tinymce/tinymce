@@ -22,8 +22,6 @@ const getLineHeights = (editor: Editor): Menu.ToggleMenuItemSpec[] => {
   const lastApi = Singleton.destroyable();
 
   const callback = () => {
-    // eslint-disable-next-line no-console
-    console.log(apis.size);
     const current = normaliseLineHeight(editor.queryCommandValue('LineHeight'));
     Optional.from(apis.get(current))
       .fold(
@@ -39,7 +37,7 @@ const getLineHeights = (editor: Editor): Menu.ToggleMenuItemSpec[] => {
       );
   };
 
-  const callbackBinding = editor.formatter.formatChanged('lineheight', callback);
+  const callbackBinding = editor.formatter.formatChanged('lineheight', callback, true);
 
   return Arr.map(
     options,
@@ -48,10 +46,6 @@ const getLineHeights = (editor: Editor): Menu.ToggleMenuItemSpec[] => {
       text: value,
       onSetup: (api) => {
         apis.set(normaliseLineHeight(value), api);
-        const key = normaliseLineHeight(value);
-        for (let i = 0; i < 1e6; ++i) {
-          apis.set(key + '?' + i, api);
-        }
 
         if (i + 1 === options.length) {
           // run the callback once on startup (on the last option so that we know the apis map has been set up)
