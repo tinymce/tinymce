@@ -6,7 +6,7 @@
  */
 
 import { Optional } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
+import { SugarElement, SugarNode } from '@ephox/sugar';
 import DOMUtils from '../api/dom/DOMUtils';
 import TextSeeker from '../api/dom/TextSeeker';
 import Editor from '../api/Editor';
@@ -20,12 +20,20 @@ import * as FormatUtils from './FormatUtils';
 
 type Sibling = 'previousSibling' | 'nextSibling';
 
+interface DataNode {
+  data: string;
+}
+
+const isDataNode = (node: Node | DataNode): node is DataNode => node.hasOwnProperty('data');
+
+const isElement = (node: Node | Element): node is Element => SugarNode.isElement(SugarElement.fromDom(node));
+
 const isBookmarkNode = Bookmarks.isBookmarkNode;
 const getParents = FormatUtils.getParents;
 const isWhiteSpaceNode = FormatUtils.isWhiteSpaceNode;
 const isTextBlock = FormatUtils.isTextBlock;
 
-const isBogusBr = (node: Element) => node.nodeName === 'BR' && node.getAttribute('data-mce-bogus') && !node.nextSibling;
+const isBogusBr = (node: Node | Element) => isElement(node) && node.nodeName === 'BR' && !!node.getAttribute('data-mce-bogus') && !node.nextSibling;
 
 // Expands the node to the closes contentEditable false element if it exists
 const findParentContentEditable = (dom: DOMUtils, node: Node) => {
@@ -165,7 +173,7 @@ const findBlockEndPoint = (editor: Editor, format: Format[] | Record<string, For
 // This function walks up the tree if there is no siblings before/after the node
 const findParentContainer = (dom: DOMUtils, format: Format[] | Record<string, Format[]>, container: Node, offset: number, start: boolean) => {
   let parent = container;
-  let sibling: Element;
+  let sibling: Node;
 
   const siblingName = start ? 'previousSibling' : 'nextSibling';
   const root = dom.getRoot();
@@ -184,8 +192,8 @@ const findParentContainer = (dom: DOMUtils, format: Format[] | Record<string, Fo
       return parent;
     }
     // Walk left/right
-    for (sibling = parent[siblingName] as Element; sibling; sibling = sibling[siblingName] as Element) {
-      const siblingIsNotSpace = !(sibling as any).data || (sibling as any).data !== ' ';
+    for (sibling = parent[siblingName]; sibling; sibling = sibling[siblingName]) {
+      const siblingIsNotSpace = isDataNode(sibling) && (!sibling.data || sibling.data !== ' ');
       const isNotEmptyWithOnlySpaces = !(isEmpty(SugarElement.fromDom(sibling)) && siblingIsNotSpace);
 
       if (!isBookmarkNode(sibling) && isNotEmptyWithOnlySpaces && !isBogusBr(sibling)) {
