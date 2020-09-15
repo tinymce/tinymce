@@ -597,6 +597,18 @@ UnitTest.test('DOMUtils.split', () => {
   DOM.split(parent, point);
   Assert.eq('', '<p><b><a id="anchor"></a></b></p><span>inner</span><p><b>text2</b></p>', HtmlUtils.cleanHtml(DOM.get('test').innerHTML));
 
+  DOM.setHTML('test', '<p>text<span style="text-decoration: underline;"> <span>t</span></span>ext</p>');
+  parent = DOM.select('span', DOM.get('test'))[0];
+  point = DOM.select('span', DOM.get('test'))[1];
+  DOM.split(parent, point);
+  Assert.eq('TINY-6268: Do not remove spaces at start of split', '<p>text<span style="text-decoration: underline;"> </span><span>t</span>ext</p>', DOM.get('test').innerHTML);
+
+  DOM.setHTML('test', '<p>tex<span style="text-decoration: underline;"><span>t</span> </span>text</p>');
+  parent = DOM.select('span', DOM.get('test'))[0];
+  point = DOM.select('span', DOM.get('test'))[1];
+  DOM.split(parent, point);
+  Assert.eq('TINY-6268: Do not remove spaces at end of split', '<p>tex<span>t</span><span style="text-decoration: underline;"> </span>text</p>', DOM.get('test').innerHTML);
+
   DOM.remove('test');
 });
 

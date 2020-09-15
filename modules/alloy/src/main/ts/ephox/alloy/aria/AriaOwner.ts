@@ -1,5 +1,5 @@
 import { Id, Optional } from '@ephox/katamari';
-import { Attribute, PredicateFind, SelectorFind, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
+import { Attribute, PredicateFind, SelectorFind, SugarElement, SugarNode, SugarShadowDom } from '@ephox/sugar';
 
 const find = (queryElem: SugarElement): Optional<SugarElement> => {
   const dependent: Optional<SugarElement> = PredicateFind.closest(queryElem, (elem) => {
@@ -12,9 +12,9 @@ const find = (queryElem: SugarElement): Optional<SugarElement> => {
 
   return dependent.bind((dep) => {
     const id = Attribute.get(dep, 'id');
-    const doc = Traverse.owner(dep);
+    const dos = SugarShadowDom.getRootNode(dep);
 
-    return SelectorFind.descendant(doc, '[aria-owns="' + id + '"]');
+    return SelectorFind.descendant(dos, '[aria-owns="' + id + '"]');
   });
 };
 
