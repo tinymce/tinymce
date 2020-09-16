@@ -20,12 +20,6 @@ import * as FormatUtils from './FormatUtils';
 
 type Sibling = 'previousSibling' | 'nextSibling';
 
-interface DataNode {
-  data: string;
-}
-
-const isDataNode = (node: Node | DataNode): node is DataNode => node.hasOwnProperty('data');
-
 const isElement = (node: Node | Element): node is Element => SugarNode.isElement(SugarElement.fromDom(node));
 
 const isBookmarkNode = Bookmarks.isBookmarkNode;
@@ -193,7 +187,7 @@ const findParentContainer = (dom: DOMUtils, format: Format[] | Record<string, Fo
     }
     // Walk left/right
     for (sibling = parent[siblingName]; sibling; sibling = sibling[siblingName]) {
-      const siblingIsNotSpace = isDataNode(sibling) && (!sibling.data || sibling.data !== ' ');
+      const siblingIsNotSpace = NodeType.isText(sibling) && (!sibling.data || sibling.data !== ' ');
       const isNotEmptyWithOnlySpaces = !(isEmpty(SugarElement.fromDom(sibling)) && siblingIsNotSpace);
 
       if (!isBookmarkNode(sibling) && isNotEmptyWithOnlySpaces && !isBogusBr(sibling)) {
@@ -213,7 +207,7 @@ const findParentContainer = (dom: DOMUtils, format: Format[] | Record<string, Fo
   return container;
 };
 
-const expandRng = (editor: Editor, rng: Range, format: any, includeTrailingSpace: boolean = false) => {
+const expandRng = (editor: Editor, rng: Range, format: any[], includeTrailingSpace: boolean = false) => {
   let startContainer = rng.startContainer,
     startOffset = rng.startOffset,
     endContainer = rng.endContainer,
