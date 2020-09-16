@@ -12,7 +12,11 @@
  */
 
 /**
- * Editor UI show method. Only works in inline mode.
+ * Reveals the editor user interface for inline editors. This method affects all user
+ * interface elements, including: menu bar, toolbar, notifications, and dialogs.
+ * <br>
+ * If the `toolbar_persist` option is set to `true` and this method is used,
+ * the user interface will remain visible, regardless of focus.
  * <br>
  * <em>Added in TinyMCE 5.5</em>
  *
@@ -20,7 +24,11 @@
  */
 
 /**
- * Editor UI hide method. Only works in inline mode.
+ * Hides the editor user interface for inline editors. This method affects all user
+ * interface elements, including: menu bar, toolbar, notifications, and dialogs.
+ * <br>
+ * If the `toolbar_persist` option is set to `true` and this method is used,
+ * the user interface will remain hidden, regardless of focus.
  * <br>
  * <em>Added in TinyMCE 5.5</em>
  *
