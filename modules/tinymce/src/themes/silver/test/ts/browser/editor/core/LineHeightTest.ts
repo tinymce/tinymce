@@ -66,12 +66,16 @@ UnitTest.asyncTest('browser.tinymce.LineHeightTest', (success, failure) => {
 
       return [
         Log.stepsAsStep('TINY-4843', 'Toolbar lists correct line heights', [
+          api.sSetContent('<p style="line-height: 1.4;">Hello</p>'),
+          api.sSetCursor([ 0, 0 ], 0),
           sOpenToolbar(ui),
           sAssertOptions(ui, 'toolbar', [ '1', '1.1', '1.2', '1.3', '1.4', '1.5', '2' ], Optional.some('1.4')),
           sCloseToolbar(ui)
         ]),
 
         Log.stepsAsStep('TINY-4843', 'Menu lists correct line heights', [
+          api.sSetContent('<p style="line-height: 1.4;">Hello</p>'),
+          api.sSetCursor([ 0, 0 ], 0),
           sOpenMenu(ui),
           sAssertOptions(ui, 'menu', [ '1', '1.1', '1.2', '1.3', '1.4', '1.5', '2' ], Optional.some('1.4')),
           sCloseMenu(ui)
@@ -110,7 +114,7 @@ UnitTest.asyncTest('browser.tinymce.LineHeightTest', (success, failure) => {
         ]),
 
         Log.stepsAsStep('TINY-4843', 'Toolbar updates if line height changes', [
-          api.sSetContent('<p>Hello</p>'),
+          api.sSetContent('<p style="line-height: 1.4;">Hello</p>'),
           api.sSetCursor([ 0, 0 ], 0),
           sOpenToolbar(ui),
           sAssertOptions(ui, 'toolbar', [ '1', '1.1', '1.2', '1.3', '1.4', '1.5', '2' ], Optional.some('1.4')),
@@ -120,7 +124,7 @@ UnitTest.asyncTest('browser.tinymce.LineHeightTest', (success, failure) => {
         ]),
 
         Log.stepsAsStep('TINY-4843', 'Menu updates if line height changes', [
-          api.sSetContent('<p>Hello</p>'),
+          api.sSetContent('<p style="line-height: 1.4;">Hello</p>'),
           api.sSetCursor([ 0, 0 ], 0),
           sOpenMenu(ui),
           sAssertOptions(ui, 'menu', [ '1', '1.1', '1.2', '1.3', '1.4', '1.5', '2' ], Optional.some('1.4')),

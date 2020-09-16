@@ -37,7 +37,7 @@ const getLineHeights = (editor: Editor): Menu.ToggleMenuItemSpec[] => {
       );
   };
 
-  const callbackBinding = editor.formatter.formatChanged('lineheight', callback, true);
+  editor.on('nodeChange', callback);
 
   return Arr.map(
     options,
@@ -54,7 +54,7 @@ const getLineHeights = (editor: Editor): Menu.ToggleMenuItemSpec[] => {
         return () => {
           // only clean up global things once
           if (i === 0) {
-            callbackBinding.unbind();
+            editor.off('nodeChange', callback);
             lastApi.clear();
           }
         };
