@@ -23,7 +23,7 @@ export default {
               },
               {
                 name: 'celltype',
-                type: 'selectbox',
+                type: 'listbox',
                 label: 'Cell type',
                 items: [
                   {
@@ -38,7 +38,7 @@ export default {
               },
               {
                 name: 'scope',
-                type: 'selectbox',
+                type: 'listbox',
                 label: 'Scope',
                 items: [
                   {
@@ -49,7 +49,7 @@ export default {
               },
               {
                 name: 'halign',
-                type: 'selectbox',
+                type: 'listbox',
                 label: 'H Align',
                 items: [
                   {
@@ -64,7 +64,7 @@ export default {
               },
               {
                 name: 'valign',
-                type: 'selectbox',
+                type: 'listbox',
                 label: 'V Align',
                 items: [
                   {
@@ -87,7 +87,7 @@ export default {
         items: [
           {
             name: 'borderstyle',
-            type: 'selectbox',
+            type: 'listbox',
             label: 'Border style',
             items: [
               {

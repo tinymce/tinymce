@@ -20,25 +20,45 @@ import * as Util from '../core/Util';
  * @private
  */
 
-interface ExternalClassListItem {
+interface ClassListValue {
   title?: string;
   text?: string;
   value: string;
 }
 
-type InternalClassListItem = Dialog.SelectBoxItemSpec;
+interface ClassListGroup {
+  title?: string;
+  text?: string;
+  menu: ClassListItem[];
+}
 
-const buildListItems = (inputList: any, startItems?: InternalClassListItem[]): InternalClassListItem[] => {
+type ClassListItem = ClassListValue | ClassListGroup;
+
+type InternalClassListItem = Dialog.ListBoxItemSpec;
+
+const isListGroup = (item: ClassListItem): item is ClassListGroup => Obj.hasNonNullableKey(item as Record<string, any>, 'menu');
+
+const buildListItems = (inputList: ClassListItem[], startItems?: InternalClassListItem[]): InternalClassListItem[] => {
   // Used to also take a callback (that in all instances applied an item.textStyles property using Formatter)
   // to each item but seems to have been an undocumented TinyMCE 4 or even 3 feature and doesn't work with
   // TinyMCE 5 selectboxes so deleted
-  const appendItems = (values: ExternalClassListItem[], acc: InternalClassListItem[]) =>
-    // TODO TINY-2236 - add item.menu if nested list - hence set up for recursion
+  const appendItems = (values: ClassListItem[], acc: InternalClassListItem[]) =>
     // item.text is not documented - maybe deprecated option we can delete??
-    acc.concat(Arr.map(values, (item) => ({
-      text: item.text || item.title,
-      value: item.value
-    })));
+    acc.concat(Arr.map(values, (item) => {
+      const text = item.text || item.title;
+
+      if (isListGroup(item)) {
+        return {
+          text,
+          items: buildListItems(item.menu)
+        };
+      } else {
+        return {
+          text,
+          value: item.value
+        };
+      }
+    }));
 
   return appendItems(inputList, startItems || []);
 };
@@ -82,7 +102,7 @@ const getAdvancedTab = (dialogName: 'table' | 'row' | 'cell') => {
   const advTabItems: Dialog.BodyComponentSpec[] = [
     {
       name: 'borderstyle',
-      type: 'selectbox',
+      type: 'listbox',
       label: 'Border style',
       items: [
         { text: 'Select...', value: '' },

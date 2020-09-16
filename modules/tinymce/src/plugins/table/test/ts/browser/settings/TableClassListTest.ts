@@ -38,7 +38,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableClassListTest', (success,
         tinyApis.sSetSelection([ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 1),
         // FIX: Dupe with TableCellClassListTest.
         tinyApis.sExecCommand('mceTableProps'),
-        TableTestUtils.sAssertSelectValue('Select class', 'Class', 'test'),
+        TableTestUtils.sAssertListBoxValue('Select class', 'Class', 'test'),
         TableTestUtils.sClickDialogButton('Trigger test class', true),
         tinyApis.sAssertContentPresence({ 'table.test': 1 })
       ])

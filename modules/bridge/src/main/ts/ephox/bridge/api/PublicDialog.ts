@@ -18,6 +18,7 @@ import { IframeSpec } from '../components/dialog/Iframe';
 import { ImageToolsSpec } from '../components/dialog/ImageTools';
 import { InputSpec } from '../components/dialog/Input';
 import { LabelSpec } from '../components/dialog/Label';
+import { ListBoxItemSpec, ListBoxSpec, ListBoxSingleItemSpec, ListBoxNestedItemSpec } from '../components/dialog/ListBox';
 import { PanelSpec } from '../components/dialog/Panel';
 import { SelectBoxItemSpec, SelectBoxSpec } from '../components/dialog/SelectBox';
 import { SizeInputSpec } from '../components/dialog/SizeInput';
@@ -74,6 +75,11 @@ export {
   InputSpec,
 
   LabelSpec,
+
+  ListBoxSpec,
+  ListBoxItemSpec,
+  ListBoxNestedItemSpec,
+  ListBoxSingleItemSpec,
 
   PanelSpec,
 

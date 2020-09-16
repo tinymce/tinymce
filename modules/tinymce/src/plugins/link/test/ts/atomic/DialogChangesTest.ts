@@ -9,15 +9,14 @@ import { LinkDialogCatalog, LinkDialogData, ListItem } from 'tinymce/plugins/lin
 const tOptional = OptionalInstances.tOptional;
 
 UnitTest.test('DialogChanges.getDelta', () => {
-  // TODO TINY-2236 re-enable this (support will need to be added to bridge)
   const anchorList: ListItem[] = [
-    { value: 'alpha', text: 'Alpha' }
-    /* {
+    { value: 'alpha', text: 'Alpha' },
+    {
       text: 'GroupB',
       items: [
         { value: 'gamma', text: 'Gamma' }
       ]
-    } */
+    }
   ];
 
   const assertNone = (label: string, previousText: string, catalog: ListItem[], data: Partial<LinkDialogData>) => {
@@ -53,8 +52,7 @@ UnitTest.test('DialogChanges.getDelta', () => {
     text: ''
   });
 
-  // TODO TINY-2236 re-enable this (support will need to be added to bridge)
-  /* assertSome('Current text empty + Has mapping in nested list', {
+  assertSome('Current text empty + Has mapping in nested list', {
     url: {
       value: 'gamma',
       meta: {
@@ -66,7 +64,7 @@ UnitTest.test('DialogChanges.getDelta', () => {
   }, '', anchorList, {
     anchor: 'gamma',
     text: ''
-  }); */
+  });
 });
 
 UnitTest.test('DialogChanges.init - no initial data', () => {

@@ -8,18 +8,9 @@
 import { Optional } from '@ephox/katamari';
 import { Dialog } from 'tinymce/core/api/ui/Ui';
 
-export interface ListValue {
-  text: string;
-  value: string;
-}
-
-export interface ListGroup {
-  text: string;
-  items: ListItem[];
-}
-
-// TODO TINY-2236 re-enable this (support will need to be added to bridge)
-export type ListItem = ListValue/*  | ListGroup */;
+export type ListValue = Dialog.ListBoxSingleItemSpec;
+export type ListGroup = Dialog.ListBoxNestedItemSpec;
+export type ListItem = Dialog.ListBoxItemSpec;
 
 export interface LinkDialogCatalog {
   link: Optional<ListItem[]>;

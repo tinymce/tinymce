@@ -52,7 +52,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogKeyboardNavTest', (
       sPressTabKey,
       sAssertFocusOnItem('Caption', 'input[type="checkbox"]'),
       sPressTabKey,
-      sAssertFocusOnItem('Alignment', 'label:contains("Alignment") + .tox-selectfield select'),
+      sAssertFocusOnItem('Alignment', 'label:contains("Alignment") + .tox-listboxfield > .tox-listbox'),
       sPressTabKey,
       sAssertFocusOnItem('Cancel', '.tox-button:contains("Cancel")'),
       sPressTabKey,
@@ -66,7 +66,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogKeyboardNavTest', (
       // Keyboard nav within the Advanced tab
       sAssertFocusOnItem('Advanced Tab', '.tox-dialog__body-nav-item:contains("Advanced")'),
       sPressTabKey,
-      sAssertFocusOnItem('Border style', 'label:contains("Border style") + .tox-selectfield select'),
+      sAssertFocusOnItem('Border style', 'label:contains("Border style") + .tox-listboxfield > .tox-listbox'),
       sPressTabKey,
       sAssertFocusOnItem('Border color', '.tox-form div:nth-child(2) input'),
       sPressTabKey,

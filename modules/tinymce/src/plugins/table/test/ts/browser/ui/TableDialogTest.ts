@@ -16,9 +16,9 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogGeneralTest', (succ
     cellspacing: 'label.tox-label:contains(Cell spacing) + input.tox-textfield',
     cellpadding: 'label.tox-label:contains(Cell padding) + input.tox-textfield',
     border: 'label.tox-label:contains(Border width) + input.tox-textfield',
-    caption: 'label.tox-label:contains(Caption) + label.tox-checkbox>input',
-    align: 'label.tox-label:contains(Alignment) + div.tox-selectfield>select',
-    class: 'label.tox-label:contains(Class) + div.tox-selectfield>select'
+    caption: 'label.tox-label:contains(Caption) + label.tox-checkbox > input',
+    align: 'label.tox-label:contains(Alignment) + div.tox-listboxfield > .tox-listbox',
+    class: 'label.tox-label:contains(Class) + div.tox-listboxfield > .tox-listbox'
   };
 
   TinyLoader.setup((editor, onSuccess, onFailure) => {

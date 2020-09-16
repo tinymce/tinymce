@@ -11,17 +11,9 @@ import { Dialog } from 'tinymce/core/api/ui/Ui';
 import { ImageData } from '../core/ImageData';
 import { UploadHandler } from '../core/Uploader';
 
-export interface ListValue {
-  text: string;
-  value: string;
-}
-
-export interface ListGroup {
-  text: string;
-  items: ListItem[];
-}
-
-export type ListItem = ListValue | ListGroup;
+export type ListValue = Dialog.ListBoxSingleItemSpec;
+export type ListGroup = Dialog.ListBoxNestedItemSpec;
+export type ListItem = Dialog.ListBoxItemSpec;
 
 export interface ImageDialogInfo {
   image: ImageData;

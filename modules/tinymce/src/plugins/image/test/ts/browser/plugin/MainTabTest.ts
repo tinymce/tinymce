@@ -30,7 +30,7 @@ UnitTest.asynctest('All image dialog ui options on empty editor' + (Env.ceFalse 
       cFillActiveDialog({
         src: { value: 'src' },
         alt: 'alt',
-        classIndex: 1,
+        class: 'class1',
         dimensions: {
           width: '100',
           height: '200'

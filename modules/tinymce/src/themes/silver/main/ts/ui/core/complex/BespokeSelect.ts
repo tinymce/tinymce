@@ -133,7 +133,7 @@ const generateSelectItems = (_editor: Editor, backstage: UiFactoryBackstage, spe
     return Arr.bind(preItems, (item) => validate(item, response, value));
   };
 
-  const getFetch = (backstage: UiFactoryBackstage, getStyleItems: () => FormatItem[]) => (callback: (menu: Optional<TieredData>) => null) => {
+  const getFetch = (backstage: UiFactoryBackstage, getStyleItems: () => FormatItem[]) => (comp: AlloyComponent, callback: (menu: Optional<TieredData>) => null) => {
     const preItems = getStyleItems();
     const items = validateItems(preItems);
     const menu = NestedMenus.build(items, ItemResponse.CLOSE_ON_EXECUTE, backstage, false);

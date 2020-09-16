@@ -17,7 +17,7 @@ const makeItems = (info: ImageDialogInfo) => {
   };
   const imageList = info.imageList.map((items) => ({
     name: 'images',
-    type: 'selectbox',
+    type: 'listbox',
     label: 'Image list',
     items
   }));
@@ -55,7 +55,7 @@ const makeItems = (info: ImageDialogInfo) => {
   // TODO: the original listbox supported styled items but bridge does not seem to support this
   const classList = info.classList.map((items): DialogItems => ({
     name: 'classes',
-    type: 'selectbox',
+    type: 'listbox',
     label: 'Class',
     items
   }));

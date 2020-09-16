@@ -85,8 +85,6 @@ UnitTest.asynctest('browser.tinymce.plugins.link.ListOptionsTest', (success, fai
                 'Checking link_list',
                 [
                   { text: 'None', value: '' },
-                  // TODO TINY-2236 re-enable this (support will need to be added to bridge)
-                  /*
                   {
                     text: 'Alpha',
                     items: [
@@ -94,7 +92,6 @@ UnitTest.asynctest('browser.tinymce.plugins.link.ListOptionsTest', (success, fai
                       { value: 'alpha-a', text: 'Alpha-A' }
                     ]
                   },
-                  */
                   {
                     text: 'Beta',
                     value: 'beta'
