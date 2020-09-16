@@ -23,7 +23,6 @@ import * as Util from '../core/Util';
 interface ClassListValue {
   title?: string;
   text?: string;
-  menu?: any;
   value: string;
 }
 
