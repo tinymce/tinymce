@@ -25,6 +25,7 @@ export interface FloatingToolbarButtonApis {
   reposition: (floatingToolbarButton: AlloyComponent) => void;
   toggle: (floatingToolbarButton: AlloyComponent) => void;
   getToolbar: (floatingToolbarButton: AlloyComponent) => Optional<AlloyComponent>;
+  isOpen: (floatingToolbarButton: AlloyComponent) => boolean;
 }
 
 export interface FloatingToolbarButtonSpec extends CompositeSketchSpec, HasLayoutAnchorSpec {

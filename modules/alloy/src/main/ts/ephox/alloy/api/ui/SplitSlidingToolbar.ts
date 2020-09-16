@@ -22,11 +22,17 @@ import { Toolbar } from './Toolbar';
 import { ToolbarGroup } from './ToolbarGroup';
 import { CompositeSketchFactory } from './UiSketcher';
 
+const isOpen = (toolbar: AlloyComponent, detail: SplitSlidingToolbarDetail) =>
+  AlloyParts.getPart(toolbar, detail, 'overflow').map(Sliding.hasGrown).getOr(false);
+
 const toggleToolbar = (toolbar: AlloyComponent, detail: SplitSlidingToolbarDetail) => {
-  AlloyParts.getPart(toolbar, detail, 'overflow').each((overf) => {
-    refresh(toolbar, detail);
-    Sliding.toggleGrow(overf);
-  });
+  // Make sure that the toolbar needs to toggled by checking for overflow button presence
+  AlloyParts.getPart(toolbar, detail, 'overflow-button')
+    .bind(() => AlloyParts.getPart(toolbar, detail, 'overflow'))
+    .each((overf) => {
+      refresh(toolbar, detail);
+      Sliding.toggleGrow(overf);
+    });
 };
 
 const refresh = (toolbar: AlloyComponent, detail: SplitSlidingToolbarDetail) => {
@@ -80,10 +86,7 @@ const factory: CompositeSketchFactory<SplitSlidingToolbarDetail, SplitSlidingToo
         }),
         AddEventsBehaviour.config('toolbar-toggle-events', [
           AlloyEvents.run(toolbarToggleEvent, (toolbar) => {
-            AlloyParts.getPart(toolbar, detail, 'overflow').each((overf) => {
-              refresh(toolbar, detail);
-              Sliding.toggleGrow(overf);
-            });
+            toggleToolbar(toolbar, detail);
           })
         ])
       ]
@@ -94,7 +97,8 @@ const factory: CompositeSketchFactory<SplitSlidingToolbarDetail, SplitSlidingToo
         refresh(toolbar, detail);
       },
       refresh: (toolbar: AlloyComponent) => refresh(toolbar, detail),
-      toggle: (toolbar: AlloyComponent) => toggleToolbar(toolbar, detail)
+      toggle: (toolbar: AlloyComponent) => toggleToolbar(toolbar, detail),
+      isOpen: (toolbar: AlloyComponent) => isOpen(toolbar, detail)
     },
     domModification: {
       attributes: { role: 'group' }
@@ -116,7 +120,8 @@ const SplitSlidingToolbar: SplitSlidingToolbarSketcher = Sketcher.composite<Spli
     },
     toggle: (apis, toolbar) => {
       apis.toggle(toolbar);
-    }
+    },
+    isOpen: (apis, toolbar) => apis.isOpen(toolbar)
   }
 });
 
