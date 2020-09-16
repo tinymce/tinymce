@@ -8,7 +8,7 @@
 import { AlloyComponent, AlloyEvents, AlloyTriggers, CustomEvent, Keying, NativeEvents, Reflecting, Representing } from '@ephox/alloy';
 import { Dialog, DialogManager } from '@ephox/bridge';
 import { Result } from '@ephox/katamari';
-import { Attribute, Compare, Focus, SugarElement } from '@ephox/sugar';
+import { Attribute, Compare, Focus, SugarElement, SugarShadowDom } from '@ephox/sugar';
 
 import {
   formActionEvent, FormActionEvent, formBlockEvent, FormBlockEvent, formCancelEvent, FormCancelEvent, FormChangeEvent, formChangeEvent,
@@ -91,11 +91,12 @@ const initDialog = <T>(getInstanceApi: () => Dialog.DialogInstanceApi<T>, extras
     fireApiEvent<FormActionEvent>(formActionEvent, (api, spec, event, component) => {
       const focusIn = () => Keying.focusIn(component);
       const isDisabled = (focused: SugarElement<HTMLElement>) => Attribute.has(focused, 'disabled') || Attribute.getOpt(focused, 'aria-disabled').exists((val) => val === 'true');
-      const current = Focus.active();
+      const rootNode = SugarShadowDom.getRootNode(component.element);
+      const current = Focus.active(rootNode);
 
       spec.onAction(api, { name: event.name, value: event.value });
 
-      Focus.active().fold(focusIn, (focused) => {
+      Focus.active(rootNode).fold(focusIn, (focused) => {
         // We need to check if the focused element is disabled because apparently firefox likes to leave focus on disabled elements.
         if (isDisabled(focused)) {
           focusIn();

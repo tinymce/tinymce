@@ -14,6 +14,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - Added new `isOn` API to the `SplitFloatingToolbar` and `SplitSlidingToolbar` components.
 
+### Fixed
+- Fixed `AriaOwner` not able to find the owner component when rendered within a ShadowRoot.
+- Fixed `AriaFocus` not preserving focus when the component is rendered within a ShadowRoot.
+
 # [7.0.2] - 2020-05-25
 
 ### Fixed

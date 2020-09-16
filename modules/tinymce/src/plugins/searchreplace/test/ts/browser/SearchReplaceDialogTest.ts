@@ -13,7 +13,7 @@ UnitTest.asynctest('browser.tinymce.plugins.searchreplace.SearchReplaceDialogTes
   SearchreplacePlugin();
   const browser = PlatformDetection.detect().browser;
 
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
+  TinyLoader.setupInBodyAndShadowRoot((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
     const tinyUi = TinyUi(editor);
 
@@ -92,6 +92,7 @@ UnitTest.asynctest('browser.tinymce.plugins.searchreplace.SearchReplaceDialogTes
     ], onSuccess, onFailure);
   }, {
     plugins: 'searchreplace',
+    menubar: false,
     toolbar: 'searchreplace',
     base_url: '/project/tinymce/js/tinymce',
     theme: 'silver'

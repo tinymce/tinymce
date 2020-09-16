@@ -8,11 +8,9 @@ import * as NestedMenus from '../../menu/NestedMenus';
 import { SingleMenuItemSpec } from '../../menu/SingleMenuTypes';
 import { getNodeAnchor, getPointAnchor } from '../Coords';
 
-const getAnchorSpec = (editor: Editor, e: EditorEvent<PointerEvent>, isTriggeredByKeyboardEvent: boolean) => isTriggeredByKeyboardEvent ? getNodeAnchor(editor) : getPointAnchor(editor, e);
-
-export const initAndShow = (editor: Editor, e: EditorEvent<PointerEvent>, buildMenu: () => string | Array<string | SingleMenuItemSpec>, backstage: UiFactoryBackstage, contextmenu: AlloyComponent, isTriggeredByKeyboardEvent: boolean) => {
+export const initAndShow = (editor: Editor, e: EditorEvent<PointerEvent>, buildMenu: () => string | Array<string | SingleMenuItemSpec>, backstage: UiFactoryBackstage, contextmenu: AlloyComponent, useNodeAnchor: boolean) => {
   const items = buildMenu();
-  const anchorSpec = getAnchorSpec(editor, e, isTriggeredByKeyboardEvent);
+  const anchorSpec = useNodeAnchor ? getNodeAnchor(editor) : getPointAnchor(editor, e);
 
   NestedMenus.build(items, ItemResponse.CLOSE_ON_EXECUTE, backstage, false).map((menuData) => {
     e.preventDefault();

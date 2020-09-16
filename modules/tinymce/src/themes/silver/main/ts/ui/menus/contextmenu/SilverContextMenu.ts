@@ -9,6 +9,7 @@ import { AddEventsBehaviour, AlloyComponent, AlloyEvents, Behaviour, GuiFactory,
 import { Menu } from '@ephox/bridge';
 import { Arr, Fun, Obj, Result, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
+import { SelectorExists, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 import * as DesktopContextMenu from './platform/DesktopContextMenu';
@@ -110,6 +111,21 @@ export const isTriggeredByKeyboard = (editor: Editor, e: PointerEvent) =>
   // Safari: N/A (Mac's don't expose a contextmenu keyboard shortcut)
   e.type !== 'longpress' && (e.button !== 2 || e.target === editor.getBody() && e.pointerType === '');
 
+const getSelectedElement = (editor: Editor, e: PointerEvent) =>
+  isTriggeredByKeyboard(editor, e) ? editor.selection.getStart(true) : e.target as Element;
+
+const shouldUseNodeAnchor = (editor: Editor, e: PointerEvent) => {
+  const selector = Settings.getAvoidOverlapSelector(editor);
+  if (isTriggeredByKeyboard(editor, e)) {
+    return true;
+  } else if (selector) {
+    const target = getSelectedElement(editor, e);
+    return SelectorExists.closest(SugarElement.fromDom(target), selector);
+  } else {
+    return false;
+  }
+};
+
 export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Error>, backstage: UiFactoryBackstage) => {
   const detection = PlatformDetection.detect();
   const isTouch = detection.deviceType.isTouch;
@@ -147,11 +163,11 @@ export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Err
       return;
     }
 
-    const isTriggeredByKeyboardEvent = isTriggeredByKeyboard(editor, e);
+    const useNodeAnchor = shouldUseNodeAnchor(editor, e);
 
     const buildMenu = () => {
       // Use the event target element for touch events, otherwise fallback to the current selection
-      const selectedElement = isTriggeredByKeyboardEvent ? editor.selection.getStart(true) : e.target as Element;
+      const selectedElement = getSelectedElement(editor, e);
 
       const registry = editor.ui.registry.getAll();
       const menuConfig = Settings.getContextMenu(editor);
@@ -159,7 +175,7 @@ export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Err
     };
 
     const initAndShow = isTouch() ? MobileContextMenu.initAndShow : DesktopContextMenu.initAndShow;
-    initAndShow(editor, e, buildMenu, backstage, contextmenu, isTriggeredByKeyboardEvent);
+    initAndShow(editor, e, buildMenu, backstage, contextmenu, useNodeAnchor);
   };
 
   editor.on('init', () => {

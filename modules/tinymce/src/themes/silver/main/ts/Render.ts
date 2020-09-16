@@ -11,6 +11,7 @@ import { PlatformDetection } from '@ephox/sand';
 import { Css } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import I18n from 'tinymce/core/api/util/I18n';
+import { EditorUiApi } from 'tinymce/core/api/ui/Ui';
 import * as Settings from './api/Settings';
 import * as Backstage from './backstage/Backstage';
 import * as ContextToolbar from './ContextToolbar';
@@ -40,6 +41,7 @@ export interface RenderInfo {
 export interface ModeRenderInfo {
   iframeContainer?: HTMLIFrameElement;
   editorContainer: HTMLElement;
+  api?: EditorUiApi;
 }
 
 export interface UiChannels {

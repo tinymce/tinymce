@@ -1,6 +1,6 @@
 import { AlloyComponent, Bubble, HotspotAnchorSpec, Layout, LayoutInside, MaxHeight, NodeAnchorSpec, SelectionAnchorSpec } from '@ephox/alloy';
 import { Optional } from '@ephox/katamari';
-import { SimSelection, SugarBody, SugarElement, Traverse } from '@ephox/sugar';
+import { SimSelection, SugarElement, SugarShadowDom } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { useFixedContainer } from '../api/Settings';
 
@@ -23,7 +23,7 @@ const getInlineDialogAnchor = (contentAreaElement: () => SugarElement, lazyAncho
 
   const editableAreaAnchor = (): NodeAnchorSpec => ({
     anchor: 'node',
-    root: SugarBody.getBody(Traverse.owner(contentAreaElement())),
+    root: SugarShadowDom.getContentContainer(contentAreaElement()),
     node: Optional.from(contentAreaElement()),
     bubble,
     layouts: {
@@ -50,7 +50,7 @@ const getInlineDialogAnchor = (contentAreaElement: () => SugarElement, lazyAncho
 const getBannerAnchor = (contentAreaElement: () => SugarElement, lazyAnchorbar: () => AlloyComponent, lazyUseEditableAreaAnchor: () => boolean): () => HotspotAnchorSpec | NodeAnchorSpec => {
   const editableAreaAnchor = (): NodeAnchorSpec => ({
     anchor: 'node',
-    root: SugarBody.getBody(Traverse.owner(contentAreaElement())),
+    root: SugarShadowDom.getContentContainer(contentAreaElement()),
     node: Optional.from(contentAreaElement()),
     layouts: {
       onRtl: () => [ LayoutInside.north ],

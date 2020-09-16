@@ -8,9 +8,12 @@ Version 5.5.0 (TBD)
     Added the ability to delete and navigate HTML media elements without the media plugin #TINY-4211
     Added `fullscreen_native` setting to the fullscreen plugin to enable use of the entire monitor #TINY-6284
     Added table related oxide variables to the Style API for more granular control over table cell selection appearance #TINY-6311
-    Changed how CSS manipulates table cells when selecting multiple cells to achieve a semi-transparent selection #TINY-6311
+    Added new `toolbar_persist` setting to control the visibility of the inline toolbar. #TINY-4847
+    Added new APIs to allow for programmatic control of the inline toolbar visibility. #TINY-4847
     Added the `origin` property to the `ObjectResized` and `ObjectResizeStart` events, to specify which handle the resize was preformed on #TINY-6242
     Added new StyleSheetLoader `unload` and `unloadAll` APIs to allow loaded stylesheets to be removed #TINY-3926
+    Added a new `contextmenu_avoid_overlap` setting to allow contextmenus to avoid overlapping matched nodes #TINY-6036
+    Changed how CSS manipulates table cells when selecting multiple cells to achieve a semi-transparent selection #TINY-6311
     Changed the `target` property on fired events to use the native event target. The original target for an open shadow root can be obtained using `event.getComposedPath()` #TINY-6128
     Changed the editor to cleanup loaded CSS stylesheets when all editors using the stylesheet have been removed #TINY-3926
     Changed `imagetools` context menu icon for accessing the `image` settings to use the same icon #TINY-4141
@@ -19,6 +22,7 @@ Version 5.5.0 (TBD)
     Fixed loss of whitespace when inserting content after a non-breaking space #TINY-5966
     Fixed the `event.getComposedPath()` function on events fired from TinyMCE. This was throwing an exception, but now works as expected. #TINY-6128
     Fixed notifications not appearing when the editor is within a ShadowRoot #TINY-6354
+    Fixed focus issues with inline dialogs when the editor is within a ShadowRoot #TINY-6360
     Fixed the `template` plugin previews missing some content styles #TINY-6115
     Fixed the `media` plugin not saving the alternative source url in some situations #TINY-4113
     Fixed an issue where column resizing using the resize bars was inconsistent between fixed and relative table widths #TINY-6001
@@ -29,6 +33,8 @@ Version 5.5.0 (TBD)
     Fixed the `DOMUtils.split()` API incorrectly removing some content #TINY-6294
     Fixed pressing escape not focusing the editor when using multiple toolbars #TINY-6230
     Fixed the `dirty` flag not being correctly set during an `AddUndo` event #TINY-4707
+    Fixed `editor.selection.setCursorLocation` incorrectly placing the cursor outside `pre` elements in some circumstances #TINY-4058
+    Fixed an exception being thrown when pressing enter inside pre elements while `br_in_pre` setting is false #TINY-4058
 Version 5.4.2 (2020-08-17)
     Fixed the editor not resizing when resizing the browser window in fullscreen mode #TINY-3511
     Fixed clicking on notifications causing inline editors to hide #TINY-6058
