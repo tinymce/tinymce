@@ -156,7 +156,7 @@ const factory: CompositeSketchFactory<FloatingToolbarButtonDetail, FloatingToolb
     getToolbar(button: AlloyComponent) {
       return Sandboxing.getState(Coupling.getCoupled(button, 'toolbarSandbox'));
     },
-    isOn(button: AlloyComponent) {
+    isOpen(button: AlloyComponent) {
       return Sandboxing.isOpen(Coupling.getCoupled(button, 'toolbarSandbox'));
     }
   }
@@ -178,7 +178,7 @@ const FloatingToolbarButton: FloatingToolbarButtonSketcher = Sketcher.composite<
       apis.toggle(button);
     },
     getToolbar: (apis, button) => apis.getToolbar(button),
-    isOn: (apis, button) => apis.isOn(button)
+    isOpen: (apis, button) => apis.isOpen(button)
   }
 });
 

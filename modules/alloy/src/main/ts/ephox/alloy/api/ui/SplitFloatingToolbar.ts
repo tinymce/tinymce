@@ -86,17 +86,15 @@ const factory: CompositeSketchFactory<SplitFloatingToolbarDetail, SplitFloatingT
           FloatingToolbarButton.toggle(floatingToolbarButton);
         });
       },
-      isOn: (toolbar: AlloyComponent) =>
-        memFloatingToolbarButton.getOpt(toolbar).map((floatingToolbarButton) => FloatingToolbarButton.isOn(floatingToolbarButton)).getOr(false),
+      isOpen: (toolbar: AlloyComponent) =>
+        memFloatingToolbarButton.getOpt(toolbar).map(FloatingToolbarButton.isOpen).getOr(false),
       reposition: (toolbar: AlloyComponent) => {
         memFloatingToolbarButton.getOpt(toolbar).each((floatingToolbarButton) => {
           FloatingToolbarButton.reposition(floatingToolbarButton);
         });
       },
       getOverflow: (toolbar: AlloyComponent) =>
-        memFloatingToolbarButton.getOpt(toolbar).bind(
-          (floatingToolbarButton) => FloatingToolbarButton.getToolbar(floatingToolbarButton)
-        )
+        memFloatingToolbarButton.getOpt(toolbar).bind(FloatingToolbarButton.getToolbar)
     },
 
     domModification: {
@@ -123,7 +121,7 @@ const SplitFloatingToolbar: SplitFloatingToolbarSketcher = Sketcher.composite<Sp
     toggle: (apis, toolbar) => {
       apis.toggle(toolbar);
     },
-    isOn: (apis, toolbar) => apis.isOn(toolbar),
+    isOpen: (apis, toolbar) => apis.isOpen(toolbar),
     getOverflow: (apis, toolbar) => apis.getOverflow(toolbar)
   }
 });

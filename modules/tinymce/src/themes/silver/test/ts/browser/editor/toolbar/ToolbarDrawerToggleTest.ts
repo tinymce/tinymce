@@ -5,15 +5,15 @@ import Editor from 'tinymce/core/api/Editor';
 import { RawEditorSettings } from 'tinymce/core/api/SettingsTypes';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.themes.silver.editor.toolbar.ToolbarToggleTest', (success, failure) => {
+UnitTest.asynctest('browser.tinymce.themes.silver.editor.toolbar.ToolbarDrawerToggleTest', (success, failure) => {
   SilverTheme();
 
   const sAssertToolbarToggleState = (editor: Editor, expected: boolean) => Step.sync(() => {
-    Assertions.assertEq('Expected toolbar toggle state to be ' + expected, expected, editor.queryCommandState('ToggleToolbar'));
+    Assertions.assertEq('Expected toolbar toggle state to be ' + expected, expected, editor.queryCommandState('ToggleToolbarDrawer'));
   });
 
   const sToggleToolbar = (editor: Editor) => Step.sync(() => {
-    editor.execCommand('ToggleToolbar');
+    editor.execCommand('ToggleToolbarDrawer');
   });
 
   const cTestToggle = (label: string, settings: RawEditorSettings, shouldToggle: boolean) => Chain.label(label, Chain.fromChains([
@@ -49,7 +49,7 @@ UnitTest.asynctest('browser.tinymce.themes.silver.editor.toolbar.ToolbarToggleTe
     ]);
 
   Pipeline.async({}, [
-    Log.chainsAsStep('TINY-6032', `Using the 'ToggleToolbar' command should toggle the toolbar if applicable`, [
+    Log.chainsAsStep('TINY-6032', `Using the 'ToggleToolbarDrawer' command should toggle the toolbar if applicable`, [
       cTestToolbarMode('floating', true),
       cTestToolbarMode('sliding', true),
       cTestToolbarMode('wrap', false),

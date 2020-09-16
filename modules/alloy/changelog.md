@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Changed some public APIs (eg Components, Custom Events) to no longer be thunked.
 
 ### Added
-- Added new `isOn` API to the `SplitFloatingToolbar` and `SplitSlidingToolbar` components.
+- Added new `isOpen` API to the `SplitFloatingToolbar` and `SplitSlidingToolbar` components.
 
 ### Fixed
 - Fixed `AriaOwner` not able to find the owner component when rendered within a ShadowRoot.

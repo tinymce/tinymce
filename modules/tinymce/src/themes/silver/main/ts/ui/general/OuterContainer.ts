@@ -9,7 +9,7 @@ import {
   AlloyComponent, AlloySpec, Behaviour, Composite, CustomList, Keying, RawDomSchema, Sketcher, SketchSpec, Toolbar, UiSketcher
 } from '@ephox/alloy';
 import { FieldSchema } from '@ephox/boulder';
-import { Arr, Id, Optional, Result } from '@ephox/katamari';
+import { Arr, Id, Optional, Optionals, Result } from '@ephox/katamari';
 import { ToolbarMode } from '../../api/Settings';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 
@@ -64,8 +64,8 @@ interface OuterContainerApis {
   setToolbar: (comp: AlloyComponent, groups) => void;
   setToolbars: (comp: AlloyComponent, toolbars) => void;
   refreshToolbar: (comp: AlloyComponent) => void;
-  toggleToolbar: (comp: AlloyComponent) => void;
-  isToolbarToggled: (comp: AlloyComponent) => boolean;
+  toggleToolbarDrawer: (comp: AlloyComponent) => void;
+  isToolbarDrawerToggled: (comp: AlloyComponent) => boolean;
   getThrobber: (comp: AlloyComponent) => Optional<AlloyComponent>;
   focusToolbar: (comp: AlloyComponent) => void;
   setMenubar: (comp: AlloyComponent, groups) => void;
@@ -76,7 +76,7 @@ interface ToolbarApis {
   setGroups: (toolbar: AlloyComponent, groups: SketchSpec[]) => void;
   refresh: (toolbar: AlloyComponent) => void;
   toggle?: (toolbar: AlloyComponent) => void;
-  isOn?: (toolbar: AlloyComponent) => boolean;
+  isOpen?: (toolbar: AlloyComponent) => boolean;
 }
 
 const factory: UiSketcher.CompositeSketchFactory<OuterContainerSketchDetail, OuterContainerSketchSpec> = function (detail, components, _spec) {
@@ -119,20 +119,15 @@ const factory: UiSketcher.CompositeSketchFactory<OuterContainerSketchDetail, Out
       const toolbar = Composite.parts.getPart(comp, detail, 'toolbar');
       toolbar.each((toolbar) => toolbar.getApis<ToolbarApis>().refresh(toolbar));
     },
-    toggleToolbar(comp) {
-      // toggle may not be defined on all toolbars e.g. 'scrolling' and 'wrap'
-      Composite.parts.getPart(comp, detail, 'toolbar')
-        .each((toolbar) => {
-          Optional.from(toolbar.getApis<ToolbarApis>().toggle)
-            .each((toggle) => {
-              toggle(toolbar);
-            });
-        });
+    toggleToolbarDrawer(comp) {
+      Composite.parts.getPart(comp, detail, 'toolbar').each((toolbar) => {
+        Optionals.mapFrom(toolbar.getApis<ToolbarApis>().toggle, (toggle) => toggle(toolbar));
+      });
     },
-    isToolbarToggled(comp) {
-      // isOn may not be defined on all toolbars e.g. 'scrolling' and 'wrap'
+    isToolbarDrawerToggled(comp) {
+      // isOpen may not be defined on all toolbars e.g. 'scrolling' and 'wrap'
       return Composite.parts.getPart(comp, detail, 'toolbar')
-        .bind((toolbar) => Optional.from(toolbar.getApis<ToolbarApis>().isOn).map((isOn) => isOn(toolbar)))
+        .bind((toolbar) => Optional.from(toolbar.getApis<ToolbarApis>().isOpen).map((isOpen) => isOpen(toolbar)))
         .getOr(false);
     },
     getThrobber(comp) {
@@ -343,11 +338,11 @@ export default Sketcher.composite<OuterContainerSketchSpec, OuterContainerSketch
     refreshToolbar(apis, comp) {
       return apis.refreshToolbar(comp);
     },
-    toggleToolbar(apis, comp) {
-      apis.toggleToolbar(comp);
+    toggleToolbarDrawer(apis, comp) {
+      apis.toggleToolbarDrawer(comp);
     },
-    isToolbarToggled(apis, comp) {
-      return apis.isToolbarToggled(comp);
+    isToolbarDrawerToggled(apis, comp) {
+      return apis.isToolbarDrawerToggled(comp);
     },
     getThrobber(apis, comp) {
       return apis.getThrobber(comp);

@@ -136,7 +136,7 @@ UnitTest.asynctest('SplitSlidingToolbarTest', (success, failure) => {
 
     const sAssertSplitSlidingToolbarToggleState = (expected: boolean) =>
       Waiter.sTryUntil(`Wait for toolbar to be completely ${expected ? 'opened' : 'closed'}`, Step.sync(() => {
-        Assertions.assertEq('Expected split floating toolbar toggle state to be ' + expected, expected, SplitSlidingToolbar.isOn(component));
+        Assertions.assertEq('Expected split floating toolbar toggle state to be ' + expected, expected, SplitSlidingToolbar.isOpen(component));
       }));
 
     const sToggleSplitSlidingToolbar = () => Step.sync(() => {

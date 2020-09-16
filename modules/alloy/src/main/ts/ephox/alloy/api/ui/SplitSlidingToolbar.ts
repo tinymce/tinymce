@@ -22,8 +22,8 @@ import { Toolbar } from './Toolbar';
 import { ToolbarGroup } from './ToolbarGroup';
 import { CompositeSketchFactory } from './UiSketcher';
 
-const isOn = (toolbar: AlloyComponent, detail: SplitSlidingToolbarDetail) =>
-  AlloyParts.getPart(toolbar, detail, 'overflow').map((overflow) => Sliding.hasGrown(overflow)).getOr(false);
+const isOpen = (toolbar: AlloyComponent, detail: SplitSlidingToolbarDetail) =>
+  AlloyParts.getPart(toolbar, detail, 'overflow').map(Sliding.hasGrown).getOr(false);
 
 const toggleToolbar = (toolbar: AlloyComponent, detail: SplitSlidingToolbarDetail) => {
   // Make sure that the toolbar needs to toggled by checking for overflow button presence
@@ -98,7 +98,7 @@ const factory: CompositeSketchFactory<SplitSlidingToolbarDetail, SplitSlidingToo
       },
       refresh: (toolbar: AlloyComponent) => refresh(toolbar, detail),
       toggle: (toolbar: AlloyComponent) => toggleToolbar(toolbar, detail),
-      isOn: (toolbar: AlloyComponent) => isOn(toolbar, detail)
+      isOpen: (toolbar: AlloyComponent) => isOpen(toolbar, detail)
     },
     domModification: {
       attributes: { role: 'group' }
@@ -121,7 +121,7 @@ const SplitSlidingToolbar: SplitSlidingToolbarSketcher = Sketcher.composite<Spli
     toggle: (apis, toolbar) => {
       apis.toggle(toolbar);
     },
-    isOn: (apis, toolbar) => apis.isOn(toolbar)
+    isOpen: (apis, toolbar) => apis.isOpen(toolbar)
   }
 });
 

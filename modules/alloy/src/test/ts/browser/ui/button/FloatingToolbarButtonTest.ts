@@ -74,7 +74,7 @@ UnitTest.asynctest('FloatingToolbarButtonTest', (success, failure) => {
     ]);
 
     const sAssertFloatingToolbarToggleState = (expected: boolean) => Step.sync(() => {
-      Assertions.assertEq('Expected floating toolbar toggle state to be ' + expected, expected, FloatingToolbarButton.isOn(component));
+      Assertions.assertEq('Expected floating toolbar toggle state to be ' + expected, expected, FloatingToolbarButton.isOpen(component));
     });
 
     const sToggleFloatingToolbar = () => Step.sync(() => {
