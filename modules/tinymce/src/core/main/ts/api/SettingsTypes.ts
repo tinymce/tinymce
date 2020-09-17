@@ -128,6 +128,7 @@ interface BaseEditorSettings {
   language?: string;
   language_load?: boolean;
   language_url?: string;
+  lineheight_formats?: string;
   max_height?: number;
   max_width?: number;
   menu?: Record<string, { title: string; items: string }>;

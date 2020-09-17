@@ -7,6 +7,7 @@
 
 import { Bookmark } from '../bookmark/BookmarkTypes';
 import * as FontCommands from '../commands/FontCommands';
+import * as LineHeightCommands from '../commands/LineHeight';
 import * as IndentOutdent from '../commands/IndentOutdent';
 import * as InsertContent from '../content/InsertContent';
 import * as NodeType from '../dom/NodeType';
@@ -393,6 +394,10 @@ class EditorCommands {
         FontCommands.fontSizeAction(editor, value);
       },
 
+      'LineHeight'(command, ui, value) {
+        LineHeightCommands.lineHeightAction(editor, value);
+      },
+
       'RemoveFormat'(command) {
         editor.formatter.remove(command);
       },
@@ -567,6 +572,7 @@ class EditorCommands {
 
     self.addQueryValueHandler('FontName', () => FontCommands.fontNameQuery(editor), this);
     self.addQueryValueHandler('FontSize', () => FontCommands.fontSizeQuery(editor), this);
+    self.addQueryValueHandler('LineHeight', () => LineHeightCommands.lineHeightQuery(editor), this);
   }
 }
 
