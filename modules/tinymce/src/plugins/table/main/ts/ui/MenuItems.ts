@@ -140,8 +140,7 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets, clipbo
   const column: Menu.NestedMenuItemSpec = {
     type: 'nestedmenuitem',
     text: 'Column',
-    // TODO: Add the column cut/copy/paste menu items in TinyMCE 5.5 or whenever we are able to get them translated
-    getSubmenuItems: () => 'tableinsertcolumnbefore tableinsertcolumnafter tabledeletecolumn' // | tablecutcolumn tablecopycolumn tablepastecolumnbefore tablepastecolumnafter'
+    getSubmenuItems: () => 'tableinsertcolumnbefore tableinsertcolumnafter tabledeletecolumn | tablecutcolumn tablecopycolumn tablepastecolumnbefore tablepastecolumnafter'
   };
 
   editor.ui.registry.addMenuItem('tablecellprops', {
