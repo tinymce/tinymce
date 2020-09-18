@@ -22,6 +22,7 @@ Version 5.5.0 (TBD)
     Changed the editor to cleanup loaded CSS stylesheets when all editors using the stylesheet have been removed #TINY-3926
     Changed `imagetools` context menu icon for accessing the `image` settings to use the same icon #TINY-4141
     Changed the `editor.insertContent()` and `editor.selection.setContent()` APIs to retain leading and trailing whitespace #TINY-5966
+    Changed the `table` plugin `Column` menu to include the cut, copy and paste column menu items #TINY-6374
     Deprecated the `Env.experimentalShadowDom` flag #TINY-6128
     Fixed loss of whitespace when inserting content after a non-breaking space #TINY-5966
     Fixed the `event.getComposedPath()` function on events fired from TinyMCE. This was throwing an exception, but now works as expected. #TINY-6128
