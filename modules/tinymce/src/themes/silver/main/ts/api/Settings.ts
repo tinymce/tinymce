@@ -46,6 +46,8 @@ const getMaxHeightSetting = (editor: Editor): Optional<number> => Optional.from(
 
 const getUserStyleFormats = (editor: Editor): Optional<AllowedFormat[]> => Optional.from(editor.getParam('style_formats')).filter(Type.isArray);
 const isMergeStyleFormats = (editor: Editor): boolean => editor.getParam('style_formats_merge', false, 'boolean');
+const getLineHeightFormats = (editor: Editor): string[] =>
+  editor.getParam('lineheight_formats', '1 1.1 1.2 1.3 1.4 1.5 2', 'string').split(' ');
 
 const getRemovedMenuItems = (editor: Editor): string => editor.getParam('removed_menuitems', '');
 const isMenubarEnabled = (editor: Editor): boolean => editor.getParam('menubar', true, 'boolean') !== false;
@@ -98,6 +100,8 @@ const getToolbarLocation = (editor: Editor) => editor.getParam('toolbar_location
 const isToolbarLocationBottom = (editor: Editor) => getToolbarLocation(editor) === ToolbarLocation.bottom;
 
 const fixedContainerSelector = (editor): string => editor.getParam('fixed_toolbar_container', '', 'string');
+
+const isToolbarPersist = (editor): boolean => editor.getParam('toolbar_persist', false, 'boolean');
 
 const fixedContainerElement = (editor): Optional<SugarElement> => {
   const selector = fixedContainerSelector(editor);
@@ -172,10 +176,12 @@ export {
   getMaxHeightSetting,
   getUserStyleFormats,
   isMergeStyleFormats,
+  getLineHeightFormats,
   getRemovedMenuItems,
   isMenubarEnabled,
   isMultipleToolbars,
   isToolbarEnabled,
+  isToolbarPersist,
   getMultipleToolbarsSetting,
   getUiContainer,
   useFixedContainer,

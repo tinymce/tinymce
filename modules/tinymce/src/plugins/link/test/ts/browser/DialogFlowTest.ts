@@ -40,7 +40,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.DialogFlowTest', (success, fail
     const testChangingAnchorValue = Log.stepsAsStep('TBA', 'Link: Switching anchor changes the href and text', [
       tinyApis.sSetContent('<p><a name="anchor1"></a>Our Anchor1</p><p><a name="anchor2"></a>Our Anchor2</p>'),
       TestLinkUi.sOpenLinkDialog(tinyUi),
-      TestLinkUi.sSetHtmlSelectValue('Anchor', '#anchor2'),
+      TestLinkUi.sSetListBoxItem('Anchor', 'anchor2'),
       TestLinkUi.sAssertDialogContents({
         href: '#anchor2',
         text: 'anchor2',
@@ -48,7 +48,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.DialogFlowTest', (success, fail
         anchor: '#anchor2',
         target: ''
       }),
-      TestLinkUi.sSetHtmlSelectValue('Anchor', '#anchor1'),
+      TestLinkUi.sSetListBoxItem('Anchor', 'anchor1'),
       TestLinkUi.sAssertDialogContents({
         href: '#anchor1',
         text: 'anchor1',
@@ -59,7 +59,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.DialogFlowTest', (success, fail
 
       // Change the text ...so text won't change, but href will still
       TestLinkUi.sSetInputFieldValue('Text to display', 'Other text'),
-      TestLinkUi.sSetHtmlSelectValue('Anchor', '#anchor2'),
+      TestLinkUi.sSetListBoxItem('Anchor', 'anchor2'),
       TestLinkUi.sAssertDialogContents({
         href: '#anchor2',
         text: 'Other text',

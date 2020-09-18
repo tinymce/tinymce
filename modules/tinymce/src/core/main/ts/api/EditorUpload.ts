@@ -14,6 +14,7 @@ import * as Rtc from '../Rtc';
 import Editor from './Editor';
 import { BlobCache, BlobInfo } from './file/BlobCache';
 import * as Settings from './Settings';
+import Env from './Env';
 
 /**
  * Handles image uploads, updates undo stack and patches over various internal functions.
@@ -74,19 +75,22 @@ const EditorUpload = function (editor: Editor): EditorUpload {
     return content;
   };
 
-  const replaceImageUrl = function (content: string, targetUrl: string, replacementUrl: string): string {
-    content = replaceString(content, 'src="' + targetUrl + '"', 'src="' + replacementUrl + '"');
+  const replaceImageUrl = (content: string, targetUrl: string, replacementUrl: string): string => {
+    const replacementString = `src="${replacementUrl}"${replacementUrl === Env.transparentSrc ? ' data-mce-placeholder="1"' : ''}`;
+
+    content = replaceString(content, `src="${targetUrl}"`, replacementString);
+
     content = replaceString(content, 'data-mce-src="' + targetUrl + '"', 'data-mce-src="' + replacementUrl + '"');
 
     return content;
   };
 
-  const replaceUrlInUndoStack = function (targetUrl: string, replacementUrl: string) {
-    Arr.each(editor.undoManager.data, function (level) {
+  const replaceUrlInUndoStack = (targetUrl: string, replacementUrl: string) => {
+    Arr.each(editor.undoManager.data, (level) => {
       if (level.type === 'fragmented') {
-        level.fragments = Arr.map(level.fragments, function (fragment) {
-          return replaceImageUrl(fragment, targetUrl, replacementUrl);
-        });
+        level.fragments = Arr.map(level.fragments, (fragment) =>
+          replaceImageUrl(fragment, targetUrl, replacementUrl)
+        );
       } else {
         level.content = replaceImageUrl(level.content, targetUrl, replacementUrl);
       }
@@ -138,6 +142,7 @@ const EditorUpload = function (editor: Editor): EditorUpload {
             replaceImageUriInView(image, uploadInfo.url);
           } else if (uploadInfo.error) {
             if (uploadInfo.error.options.remove) {
+              replaceUrlInUndoStack(image.getAttribute('src'), Env.transparentSrc);
               imagesToRemove.push(image);
             }
 

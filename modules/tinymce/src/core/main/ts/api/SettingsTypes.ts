@@ -10,6 +10,7 @@ import Editor from './Editor';
 import { Formats } from './fmt/Format';
 import { AllowedFormat } from './fmt/StyleFormat';
 import { SchemaType } from './html/Schema';
+import { EditorUiApi } from './ui/Ui';
 
 export type EntityEncoding = 'named' | 'numeric' | 'raw';
 
@@ -18,6 +19,7 @@ export type ThemeInitFunc = (editor: Editor, elm: HTMLElement) => {
   iframeContainer: HTMLElement;
   height?: number;
   iframeHeight?: number;
+  api?: EditorUiApi;
 };
 
 export type SetupCallback = (editor: Editor) => void;
@@ -126,6 +128,7 @@ interface BaseEditorSettings {
   language?: string;
   language_load?: boolean;
   language_url?: string;
+  lineheight_formats?: string;
   max_height?: number;
   max_width?: number;
   menu?: Record<string, { title: string; items: string }>;

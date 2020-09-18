@@ -12,10 +12,10 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellDialogTest', (success
   const generalSelectors = {
     width: 'label.tox-label:contains(Width) + input.tox-textfield',
     height: 'label.tox-label:contains(Height) + input.tox-textfield',
-    celltype: 'label.tox-label:contains(Cell type) + div.tox-selectfield>select',
-    scope: 'label.tox-label:contains(Scope) + div.tox-selectfield>select',
-    halign: 'label.tox-label:contains(H Align) + div.tox-selectfield>select',
-    valign: 'label.tox-label:contains(V Align) + div.tox-selectfield>select'
+    celltype: 'label.tox-label:contains(Cell type) + div.tox-listboxfield > .tox-listbox',
+    scope: 'label.tox-label:contains(Scope) + div.tox-listboxfield > .tox-listbox',
+    halign: 'label.tox-label:contains(H Align) + div.tox-listboxfield > .tox-listbox',
+    valign: 'label.tox-label:contains(V Align) + div.tox-listboxfield > .tox-listbox'
   };
 
   TinyLoader.setupLight((editor, onSuccess, onFailure) => {

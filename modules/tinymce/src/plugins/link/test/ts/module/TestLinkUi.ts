@@ -1,7 +1,7 @@
 import { Assertions, Chain, FocusTools, GeneralSteps, Guard, Logger, Mouse, Step, UiControls, UiFinder, Waiter } from '@ephox/agar';
-import { Obj, Type } from '@ephox/katamari';
+import { Obj, Result, Type } from '@ephox/katamari';
 import { TinyApis, TinyDom, TinyUi } from '@ephox/mcagar';
-import { SugarBody, SugarElement, Value } from '@ephox/sugar';
+import { Attribute, Class, SugarBody, SugarElement, Traverse, Value } from '@ephox/sugar';
 
 const doc = TinyDom.fromDom(document);
 
@@ -9,8 +9,8 @@ const selectors = {
   href: 'label.tox-label:contains(URL) + div>div>input.tox-textfield',
   text: 'label.tox-label:contains(Text to display) + input.tox-textfield',
   title: 'label.tox-label:contains(Title) + input.tox-textfield',
-  target: 'label.tox-label:contains(Open link in...) + div.tox-selectfield>select',
-  linklist: 'label.tox-label:contains(Link list) + div.tox-selectfield>select'
+  target: 'label.tox-label:contains(Open link in...) + div.tox-listboxfield > .tox-listbox',
+  linklist: 'label.tox-label:contains(Link list) + div.tox-listboxfield > .tox-listbox'
 };
 
 const sOpenLinkDialog = (ui: TinyUi) => Logger.t('Open link dialog', GeneralSteps.sequence([
@@ -68,9 +68,11 @@ const sAssertInputValue = (label, selector, expected) => Logger.t(label,
     Chain.op((element) => {
       if (element.dom.type === 'checkbox') {
         Assertions.assertEq(`The input value for ${label} should be: `, expected, element.dom.checked);
-        return;
+      } else if (Class.has(element, 'tox-listbox')) {
+        Assertions.assertEq(`The input value for ${label} should be: `, expected, Attribute.get(element, 'data-value'));
+      } else {
+        Assertions.assertEq(`The input value for ${label} should be: `, expected, Value.get(element));
       }
-      Assertions.assertEq(`The input value for ${label} should be: `, expected, Value.get(element));
     })
   ]),
 );
@@ -168,13 +170,17 @@ const sClearHistory = Step.sync(() => {
   localStorage.removeItem('tinymce-url-history');
 });
 
-const sSetHtmlSelectValue = (group: string, newValue) => Logger.t('Set html select value', Chain.asStep({ }, [
-  cFindInDialog('label:contains("' + group + '") + .tox-selectfield select'),
-  UiControls.cSetValue(newValue),
-  cFireEvent('change')
+const sSetListBoxItem = (group: string, itemText: string) => Step.label('Set listbox item', Chain.asStep({ }, [
+  cFindInDialog('label:contains("' + group + '") + .tox-listboxfield .tox-listbox'),
+  Mouse.cClick,
+  Chain.inject(SugarBody.body()),
+  UiFinder.cWaitForVisible('Wait for list to open', '.tox-menu.tox-collection--list'),
+  UiFinder.cFindIn('.tox-collection__item-label:contains(' + itemText + ')'),
+  Chain.binder((elm) => Result.fromOption(Traverse.parent(elm), 'Failed to find parent')),
+  Mouse.cClick
 ]));
 
-const sSetInputFieldValue = (group: string, newValue: string) => Logger.t('Set input field value', Chain.asStep({ }, [
+const sSetInputFieldValue = (group: string, newValue: string) => Step.label('Set input field value', Chain.asStep({ }, [
   cFindInDialog('label:contains("' + group + '") + input'),
   UiControls.cSetValue(newValue),
   cFireEvent('input')
@@ -197,6 +203,6 @@ export const TestLinkUi = {
   sInsertLink,
   fireEvent,
   sClearHistory,
-  sSetHtmlSelectValue,
+  sSetListBoxItem,
   sSetInputFieldValue
 };

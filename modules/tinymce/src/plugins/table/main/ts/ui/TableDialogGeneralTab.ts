@@ -9,7 +9,7 @@ import Editor from 'tinymce/core/api/Editor';
 import { Dialog } from 'tinymce/core/api/ui/Ui';
 import { hasAppearanceOptions } from '../api/Settings';
 
-const getItems = (editor: Editor, classes: Dialog.SelectBoxItemSpec[], insertNewTable: boolean) => {
+const getItems = (editor: Editor, classes: Dialog.ListBoxItemSpec[], insertNewTable: boolean) => {
   const rowColCountItems: Dialog.BodyComponentSpec[] = !insertNewTable ? [] : [
     {
       type: 'input',
@@ -69,9 +69,9 @@ const getItems = (editor: Editor, classes: Dialog.SelectBoxItemSpec[], insertNew
     }
   ] : [];
 
-  const alignmentItem: Dialog.SelectBoxSpec[] = [
+  const alignmentItem: Dialog.ListBoxSpec[] = [
     {
-      type: 'selectbox',
+      type: 'listbox',
       name: 'align',
       label: 'Alignment',
       items: [
@@ -83,9 +83,9 @@ const getItems = (editor: Editor, classes: Dialog.SelectBoxItemSpec[], insertNew
     }
   ];
 
-  const classListItem: Dialog.SelectBoxSpec[] = classes.length > 0 ? [
+  const classListItem: Dialog.ListBoxSpec[] = classes.length > 0 ? [
     {
-      type: 'selectbox',
+      type: 'listbox',
       name: 'class',
       label: 'Class',
       items: classes

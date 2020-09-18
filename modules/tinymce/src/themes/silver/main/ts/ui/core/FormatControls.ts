@@ -14,6 +14,7 @@ import * as IndentOutdent from './IndentOutdent';
 import * as SimpleControls from './SimpleControls';
 import * as UndoRedo from './UndoRedo';
 import * as VisualAid from './VisualAid';
+import * as LineHeight from './LineHeight';
 
 const setup = (editor: Editor, backstage: UiFactoryBackstage) => {
   AlignmentButtons.register(editor);
@@ -23,6 +24,7 @@ const setup = (editor: Editor, backstage: UiFactoryBackstage) => {
   ColorSwatch.register(editor);
   VisualAid.register(editor);
   IndentOutdent.register(editor);
+  LineHeight.register(editor);
 };
 
 export {

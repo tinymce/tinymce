@@ -277,7 +277,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', (success, failure) =
     ]).then(done, die);
   }));
 
-  const sUploadConcurrentImagesFailWithRemove = (editor: Editor) => Log.step('TBA', 'uploadConcurrentImages fails, with remove', Step.async((done, die) => {
+  const sUploadConcurrentImagesFailWithRemove = (editor: Editor) => Log.step('TINY-6011', 'uploadConcurrentImages fails, with remove', Step.async((done, die) => {
     let uploadCount = 0;
     let callCount = 0;
 
@@ -292,6 +292,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', (success, failure) =
       Assert.eq('No element in the editor', undefined, editor.$('img')[0]);
       Assert.eq('Status is false', result[0].status, false);
       Assert.eq('Uri is empty', result[0].uploadUri, '');
+      Assert.eq('content is correct', '<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-mce-placeholder="1"></p>', editor.undoManager.data[0].content);
       Assert.eq('Suitable number of stacks added', 2, editor.undoManager.data.length);
     };
 

@@ -10,8 +10,9 @@ import { Cell, Singleton } from '@ephox/katamari';
 import { DomEvent, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
+import { EditorUiApi } from 'tinymce/core/api/ui/Ui';
 import * as Events from '../api/Events';
-import { getUiContainer } from '../api/Settings';
+import { getUiContainer, isToolbarPersist } from '../api/Settings';
 import { UiFactoryBackstage } from '../backstage/Backstage';
 import * as ReadOnly from '../ReadOnly';
 import { ModeRenderInfo, RenderArgs, RenderUiComponents, RenderUiConfig } from '../Render';
@@ -29,7 +30,7 @@ const getTargetPosAndBounds = (targetElm: SugarElement, isToolbarTop: boolean) =
   };
 };
 
-const setupEvents = (editor: Editor, targetElm: SugarElement, ui: InlineHeader) => {
+const setupEvents = (editor: Editor, targetElm: SugarElement, ui: InlineHeader, toolbarPersist: boolean) => {
   const prevPosAndBounds = Cell(getTargetPosAndBounds(targetElm, ui.isPositionedAtTop()));
 
   const resizeContent = (e) => {
@@ -53,8 +54,10 @@ const setupEvents = (editor: Editor, targetElm: SugarElement, ui: InlineHeader) 
     }
   };
 
-  editor.on('activate', ui.show);
-  editor.on('deactivate', ui.hide);
+  if (!toolbarPersist) {
+    editor.on('activate', ui.show);
+    editor.on('deactivate', ui.hide);
+  }
 
   editor.on('SkinLoaded ResizeWindow', () => ui.update(true));
 
@@ -78,6 +81,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
   const floatContainer = Cell<AlloyComponent>(null);
   const targetElm = SugarElement.fromDom(args.targetNode);
   const ui = InlineHeader(editor, targetElm, uiComponents, backstage, floatContainer);
+  const toolbarPersist = isToolbarPersist(editor);
 
   loadInlineSkin(editor);
 
@@ -103,24 +107,39 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
     // Initialise the toolbar - set initial positioning then show
     ui.show();
 
-    setupEvents(editor, targetElm, ui);
+    setupEvents(editor, targetElm, ui, toolbarPersist);
 
     editor.nodeChanged();
   };
 
-  editor.on('focus show', render);
-  editor.on('blur hide', ui.hide);
+  editor.on('show', render);
+  editor.on('hide', ui.hide);
+
+  if (!toolbarPersist) {
+    editor.on('focus', render);
+    editor.on('blur', ui.hide);
+  }
 
   editor.on('init', () => {
-    if (editor.hasFocus()) {
+    if (editor.hasFocus() || toolbarPersist) {
       render();
     }
   });
 
   ReadOnly.setupReadonlyModeSwitch(editor, uiComponents);
 
+  const api: EditorUiApi = {
+    show: () => {
+      ui.show();
+    },
+    hide: () => {
+      ui.hide();
+    }
+  };
+
   return {
-    editorContainer: outerContainer.element.dom
+    editorContainer: outerContainer.element.dom,
+    api
   };
 };
 

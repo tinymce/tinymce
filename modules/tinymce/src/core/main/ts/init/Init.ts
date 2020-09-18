@@ -124,7 +124,8 @@ const renderFromThemeFunc = function (editor: Editor) {
 const createThemeFalseResult = function (element: HTMLElement) {
   return {
     editorContainer: element,
-    iframeContainer: element
+    iframeContainer: element,
+    api: {}
   };
 };
 
@@ -161,7 +162,12 @@ const init = function (editor: Editor) {
   initIcons(editor);
   initTheme(editor);
   initPlugins(editor);
-  const boxInfo = renderThemeUi(editor);
+  const renderInfo = renderThemeUi(editor);
+  editor.ui = { ...editor.ui, ...renderInfo.api };
+  const boxInfo = {
+    editorContainer: renderInfo.editorContainer,
+    iframeContainer: renderInfo.iframeContainer
+  };
   editor.editorContainer = boxInfo.editorContainer ? boxInfo.editorContainer : null;
   appendContentCssFromSettings(editor);
 

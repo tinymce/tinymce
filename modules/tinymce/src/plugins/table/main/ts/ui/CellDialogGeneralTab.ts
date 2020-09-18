@@ -11,12 +11,12 @@ import { Dialog } from 'tinymce/core/api/ui/Ui';
 import { getCellClassList } from '../api/Settings';
 import * as Helpers from './Helpers';
 
-const getClassList = (editor: Editor): Optional<Dialog.SelectBoxSpec> => {
+const getClassList = (editor: Editor): Optional<Dialog.ListBoxSpec> => {
   const classes = Helpers.buildListItems(getCellClassList(editor));
   if (classes.length > 0) {
     return Optional.some({
       name: 'class',
-      type: 'selectbox',
+      type: 'listbox',
       label: 'Class',
       items: classes
     });
@@ -37,7 +37,7 @@ const children: Dialog.BodyComponentSpec[] = [
   },
   {
     name: 'celltype',
-    type: 'selectbox',
+    type: 'listbox',
     label: 'Cell type',
     items: [
       { text: 'Cell', value: 'td' },
@@ -46,7 +46,7 @@ const children: Dialog.BodyComponentSpec[] = [
   },
   {
     name: 'scope',
-    type: 'selectbox',
+    type: 'listbox',
     label: 'Scope',
     items: [
       { text: 'None', value: '' },
@@ -58,7 +58,7 @@ const children: Dialog.BodyComponentSpec[] = [
   },
   {
     name: 'halign',
-    type: 'selectbox',
+    type: 'listbox',
     label: 'H Align',
     items: [
       { text: 'None', value: '' },
@@ -69,7 +69,7 @@ const children: Dialog.BodyComponentSpec[] = [
   },
   {
     name: 'valign',
-    type: 'selectbox',
+    type: 'listbox',
     label: 'V Align',
     items: [
       { text: 'None', value: '' },

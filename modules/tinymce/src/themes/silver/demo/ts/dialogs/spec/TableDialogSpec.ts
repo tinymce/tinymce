@@ -46,7 +46,7 @@ export default {
               },
               {
                 name: 'align',
-                type: 'selectbox',
+                type: 'listbox',
                 label: 'Alignment',
                 items: [
                   {
@@ -69,7 +69,7 @@ export default {
         items: [
           {
             name: 'borderstyle',
-            type: 'selectbox',
+            type: 'listbox',
             label: 'Border style',
             items: [
               {

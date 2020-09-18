@@ -40,7 +40,8 @@ const getLinks = (editor): Promise<Optional<ListItem[]>> => {
     }
   }).then((optItems) => optItems.bind(ListOptions.sanitizeWith(extractor)).map((items) => {
     if (items.length > 0) {
-      return [{ text: 'None', value: '' }].concat(items);
+      const noneItem: ListItem[] = [{ text: 'None', value: '' }];
+      return noneItem.concat(items);
     } else {
       return items;
     }

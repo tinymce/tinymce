@@ -5,8 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Registry } from '@ephox/bridge';
-import { Arr } from '@ephox/katamari';
+import { Arr, Fun } from '@ephox/katamari';
 import * as EditorContent from '../content/EditorContent';
 import * as NodeType from '../dom/NodeType';
 import * as EditorRemove from '../EditorRemove';
@@ -25,7 +24,6 @@ import DOMUtils from './dom/DOMUtils';
 import ScriptLoader from './dom/ScriptLoader';
 import EditorSelection from './dom/Selection';
 import DomSerializer from './dom/Serializer';
-import { StyleSheetLoader } from './dom/StyleSheetLoader';
 import EditorCommands, { EditorCommandCallback } from './EditorCommands';
 import EditorManager from './EditorManager';
 import EditorObservable from './EditorObservable';
@@ -48,6 +46,7 @@ import I18n, { TranslatedString, Untranslated } from './util/I18n';
 import Tools from './util/Tools';
 import URI from './util/URI';
 import WindowManager from './WindowManager';
+import { EditorUi } from './ui/Ui';
 
 /**
  * This class contains the core logic for a TinyMCE editor.
@@ -68,12 +67,6 @@ import WindowManager from './WindowManager';
  *
  * ed.render();
  */
-
-export interface EditorUi {
-  registry: Registry.Registry;
-  /** StyleSheetLoader for styles in the editor UI. For content styles, use editor.dom.styleSheetLoader. */
-  styleSheetLoader: StyleSheetLoader;
-}
 
 export interface EditorConstructor {
   readonly prototype: Editor;
@@ -334,7 +327,9 @@ class Editor implements EditorObservable {
 
     this.ui = {
       registry: registry(),
-      styleSheetLoader: undefined
+      styleSheetLoader: undefined,
+      show: Fun.noop,
+      hide: Fun.noop
     };
 
     const self = this;

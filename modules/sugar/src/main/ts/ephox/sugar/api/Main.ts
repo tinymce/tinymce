@@ -67,6 +67,7 @@ import { Situ } from './selection/Situ';
 import * as WindowSelection from './selection/WindowSelection';
 import * as OptionTag from './tag/OptionTag';
 import * as SelectTag from './tag/SelectTag';
+import * as Dimension from './view/Dimension';
 import * as Height from './view/Height';
 import * as Platform from './view/Platform';
 import * as Scroll from './view/Scroll';
@@ -147,6 +148,7 @@ export {
   OptionTag,
   SelectTag,
   Truncate,
+  Dimension,
   Height,
   SugarLocation,
   Platform,

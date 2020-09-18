@@ -19,6 +19,7 @@ import { renderGrid } from '../dialog/Grid';
 import { renderIFrame } from '../dialog/IFrame';
 import { renderImageTools } from '../dialog/imagetools/ImageTools';
 import { renderLabel } from '../dialog/Label';
+import { renderListBox } from '../dialog/ListBox';
 import { renderPanel } from '../dialog/Panel';
 import { renderSelectBox } from '../dialog/SelectBox';
 import { renderSizeInput } from '../dialog/SizeInput';
@@ -63,6 +64,7 @@ const factories: Record<string, FormPartRenderer> = {
   colorpicker: make(renderColorPicker), // Not sure if this needs name.
   dropzone: make((spec, backstage) => renderDropZone(spec, backstage.shared.providers)),
   grid: make((spec, backstage) => renderGrid(spec, backstage.shared)),
+  listbox: make((spec, backstage) => renderListBox(spec, backstage)),
   selectbox: make((spec, backstage) => renderSelectBox(spec, backstage.shared.providers)),
   sizeinput: make((spec, backstage) => renderSizeInput(spec, backstage.shared.providers)),
   urlinput: make((spec, backstage) => renderUrlInput(spec, backstage, backstage.urlinput)),

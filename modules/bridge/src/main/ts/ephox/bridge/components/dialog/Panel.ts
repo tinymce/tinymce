@@ -16,6 +16,7 @@ import { iframeSchema } from './Iframe';
 import { imageToolsSchema } from './ImageTools';
 import { inputSchema } from './Input';
 import { createLabelFields } from './Label';
+import { listBoxSchema } from './ListBox';
 import { selectBoxSchema } from './SelectBox';
 import { sizeInputSchema } from './SizeInput';
 import { tableSchema } from './Table';
@@ -57,6 +58,7 @@ export const itemSchema = ValueSchema.valueThunkOf(
     grid: ValueSchema.objOf(createGridFields(createItemsField('grid'))),
     iframe: iframeSchema,
     input: inputSchema,
+    listbox: listBoxSchema,
     selectbox: selectBoxSchema,
     sizeinput: sizeInputSchema,
     textarea: textAreaSchema,
