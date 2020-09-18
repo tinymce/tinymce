@@ -18,6 +18,7 @@ import { isEmpty } from '../dom/Empty';
 import { Format } from '../api/fmt/Format';
 import * as FormatUtils from './FormatUtils';
 
+const onlyWhitespaces = / +/;
 type Sibling = 'previousSibling' | 'nextSibling';
 
 const isElement = (node: Node | Element): node is Element => SugarNode.isElement(SugarElement.fromDom(node));
@@ -187,7 +188,7 @@ const findParentContainer = (dom: DOMUtils, format: Format[] | Record<string, Fo
     }
     // Walk left/right
     for (sibling = parent[siblingName]; sibling; sibling = sibling[siblingName]) {
-      const siblingIsNotSpace = NodeType.isText(sibling) && (!sibling.data || sibling.data !== ' ');
+      const siblingIsNotSpace = NodeType.isText(sibling) && !onlyWhitespaces.test(sibling.data);
       const isNotEmptyWithOnlySpaces = !(isEmpty(SugarElement.fromDom(sibling)) && siblingIsNotSpace);
 
       if (!isBookmarkNode(sibling) && isNotEmptyWithOnlySpaces && !isBogusBr(sibling)) {
@@ -207,7 +208,7 @@ const findParentContainer = (dom: DOMUtils, format: Format[] | Record<string, Fo
   return container;
 };
 
-const expandRng = (editor: Editor, rng: Range, format: any[], includeTrailingSpace: boolean = false) => {
+const expandRng = (editor: Editor, rng: Range, format: any, includeTrailingSpace: boolean = false) => {
   let startContainer = rng.startContainer,
     startOffset = rng.startOffset,
     endContainer = rng.endContainer,
