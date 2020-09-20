@@ -40,6 +40,7 @@ Version 5.5.0 (TBD)
     Fixed the `dirty` flag not being correctly set during an `AddUndo` event #TINY-4707
     Fixed `editor.selection.setCursorLocation` incorrectly placing the cursor outside `pre` elements in some circumstances #TINY-4058
     Fixed an exception being thrown when pressing enter inside pre elements while `br_in_pre` setting is false #TINY-4058
+    Fixed images not rendering as selected when selecting all content #TINY-5947
 Version 5.4.2 (2020-08-17)
     Fixed the editor not resizing when resizing the browser window in fullscreen mode #TINY-3511
     Fixed clicking on notifications causing inline editors to hide #TINY-6058
