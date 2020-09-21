@@ -29,13 +29,45 @@ UnitTest.asynctest('browser.tinymce.plugins.table.HelpersTest', (success, failur
         Chain.asStep(SugarElement.fromDom(editor.getBody()), [
           UiFinder.cFindIn('td.foo'),
           Chain.op((td) => {
-            const cellData = Helpers.extractDataFromCellElement(editor, td.dom, true);
+            const cellData = Helpers.extractDataFromCellElement(editor, td.dom, true, undefined);
             Assertions.assertEq('Extracts class', 'foo', cellData.class);
             Assertions.assertEq('Extracts scope', 'row', cellData.scope);
             Assertions.assertEq('Extracts celltype', 'td', cellData.celltype);
             Assertions.assertEq('Extracts halign', 'left', cellData.halign);
             Assertions.assertEq('Extracts valign', 'middle', cellData.valign);
             Assertions.assertEq('Extracts width', '20', cellData.width);
+            Assertions.assertEq('Extracts height', '30', cellData.height);
+
+            Assertions.assertEq('Extracts background-color', '#333333', cellData.backgroundcolor);
+            Assertions.assertEq('Extracts border-color', '#d91111', cellData.bordercolor);
+            Assertions.assertEq('Extracts border-style', 'dashed', cellData.borderstyle);
+
+          })
+        ])
+      ]),
+      Log.stepsAsStep('TBA', 'Table: extractDataFromCellElement 1 with colgroup', [
+        tinyApis.sSetContent(
+          '<table style="border-collapse: collapse;" border="1">' +
+          '<colgroup>' +
+          '<col width="20" class="foo">' +
+          '</colgroup>' +
+          '<tbody>' +
+          '<tr>' +
+          '<td height="30" scope="row" class="foo" style="background-color: #333333; text-align:left; vertical-align:middle; border-style: dashed; border-color: #d91111">a</td>' +
+          '</tr>' +
+          '</tbody>' +
+          '</table>'
+        ),
+        Chain.asStep(SugarElement.fromDom(editor.getBody()), [
+          UiFinder.cFindAllIn('.foo'),
+          Chain.op((elements: SugarElement[]) => {
+            const cellData = Helpers.extractDataFromCellElement(editor, elements[1].dom, true, elements[0]);
+            Assertions.assertEq('Extracts class', 'foo', cellData.class);
+            Assertions.assertEq('Extracts scope', 'row', cellData.scope);
+            Assertions.assertEq('Extracts celltype', 'td', cellData.celltype);
+            Assertions.assertEq('Extracts halign', 'left', cellData.halign);
+            Assertions.assertEq('Extracts valign', 'middle', cellData.valign);
+            Assertions.assertEq('Does Not Extracts width', '20', cellData.width);
             Assertions.assertEq('Extracts height', '30', cellData.height);
 
             Assertions.assertEq('Extracts background-color', '#333333', cellData.backgroundcolor);
@@ -58,7 +90,31 @@ UnitTest.asynctest('browser.tinymce.plugins.table.HelpersTest', (success, failur
         Chain.asStep(SugarElement.fromDom(editor.getBody()), [
           UiFinder.cFindIn('td.foo'),
           Chain.op((td) => {
-            const cellData = Helpers.extractDataFromCellElement(editor, td.dom, true);
+            const cellData = Helpers.extractDataFromCellElement(editor, td.dom, true, undefined);
+            Assertions.assertEq('Extracts width from style', '20px', cellData.width);
+            Assertions.assertEq('Extracts height from style', '30px', cellData.height);
+            Assertions.assertEq('Extracts background-color from rgb', '#333333', cellData.backgroundcolor);
+            Assertions.assertEq('Extracts border-color from rgb', '#d91111', cellData.bordercolor);
+          })
+        ])
+      ]),
+      Log.stepsAsStep('TBA', 'Table: extractDataFromCellElement 2 with colgroup', [
+        tinyApis.sSetContent(
+          '<table style="border-collapse: collapse;" border="1">' +
+          '<colgroup>' +
+          '<col style="width: 20px;" class="foo">' +
+          '</colgroup>' +
+          '<tbody>' +
+          '<tr>' +
+          '<td class="foo" style="height: 30px; background-color: rgb(51,51,51); border-color: rgb(217, 17, 17);" data-mce-selected="1">a</td>' +
+          '</tr>' +
+          '</tbody>' +
+          '</table>'
+        ),
+        Chain.asStep(SugarElement.fromDom(editor.getBody()), [
+          UiFinder.cFindAllIn('.foo'),
+          Chain.op((elements: SugarElement[]) => {
+            const cellData = Helpers.extractDataFromCellElement(editor, elements[1].dom, true, elements[0]);
             Assertions.assertEq('Extracts width from style', '20px', cellData.width);
             Assertions.assertEq('Extracts height from style', '30px', cellData.height);
             Assertions.assertEq('Extracts background-color from rgb', '#333333', cellData.backgroundcolor);
@@ -78,7 +134,29 @@ UnitTest.asynctest('browser.tinymce.plugins.table.HelpersTest', (success, failur
         Chain.asStep(SugarElement.fromDom(editor.getBody()), [
           UiFinder.cFindIn('td.foo'),
           Chain.op((td) => {
-            const cellData = Helpers.extractDataFromCellElement(editor, td.dom, true);
+            const cellData = Helpers.extractDataFromCellElement(editor, td.dom, true, undefined);
+            Assertions.assertEq('Extracts border-color from shorthand', '#008000', cellData.bordercolor);
+            Assertions.assertEq('Extracts border-style from shorthand', 'dashed', cellData.borderstyle);
+          })
+        ])
+      ]),
+      Log.stepsAsStep('TBA', 'Table: extractDataFromCellElement 2 with colgroup', [
+        tinyApis.sSetContent(
+          '<table style="border-collapse: collapse;" border="1">' +
+          '<colgroup>' +
+          '<col style="width: 20px;" class="foo">' +
+          '</colgroup>' +
+          '<tbody>' +
+          '<tr>' +
+          '<td class="foo" style="height: 30px; border: medium dashed #008000;" data-mce-selected="1">a</td>' +
+          '</tr>' +
+          '</tbody>' +
+          '</table>'
+        ),
+        Chain.asStep(SugarElement.fromDom(editor.getBody()), [
+          UiFinder.cFindAllIn('.foo'),
+          Chain.op((elements: SugarElement[]) => {
+            const cellData = Helpers.extractDataFromCellElement(editor, elements[1].dom, true, elements[0]);
             Assertions.assertEq('Extracts border-color from shorthand', '#008000', cellData.bordercolor);
             Assertions.assertEq('Extracts border-style from shorthand', 'dashed', cellData.borderstyle);
           })

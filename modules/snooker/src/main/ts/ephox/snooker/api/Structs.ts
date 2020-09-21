@@ -1,3 +1,4 @@
+import { Arr } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
 export interface Dimension {
@@ -40,7 +41,8 @@ export interface DetailExt extends Detail {
   readonly column: number;
 }
 
-export type Section = 'tfoot' | 'thead' | 'tbody';
+export type Section = 'tfoot' | 'thead' | 'tbody' | 'colgroup';
+const validSectionList: Section[] = [ 'tfoot', 'thead', 'tbody', 'colgroup' ];
 
 export interface RowCells {
   readonly cells: ElementNew[];
@@ -67,12 +69,20 @@ export interface RowDetails {
   readonly section: Section;
 }
 
+export interface Column {
+  readonly element: SugarElement<HTMLTableColElement>;
+  readonly colspan: number;
+}
+
 export interface Bounds {
   readonly startRow: number;
   readonly startCol: number;
   readonly finishRow: number;
   readonly finishCol: number;
 }
+
+const isValidSection = (parentName: string): parentName is Section =>
+  Arr.contains(validSectionList, parentName);
 
 const dimension = (width: number, height: number): Dimension => ({
   width,
@@ -169,5 +179,6 @@ export {
   rowdatanew,
   rowcells,
   rowdetails,
-  bounds
+  bounds,
+  isValidSection
 };

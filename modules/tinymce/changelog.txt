@@ -4,6 +4,8 @@ Version 5.5.0 (TBD)
     Added the ability to remove images on a failed upload using the `images_upload_handler` failure callback #TINY-6011
     Added `hasPlugin` function to the editor API to determine if a plugin exists or not #TINY-766
     Added new `ToggleToolbarDrawer` command and query state handler to allow the toolbar drawer to be programmatically toggled and the toggle state to be checked #TINY-6032
+    Added the ability to use `colgroup` elements in tables #TINY-6050
+    Added a new setting `table_use_colgroups` for toggling whether colgroups are used in new tables #TINY-6050
     Added the ability to delete and navigate HTML media elements without the media plugin #TINY-4211
     Added `fullscreen_native` setting to the fullscreen plugin to enable use of the entire monitor #TINY-6284
     Added table related oxide variables to the Style API for more granular control over table cell selection appearance #TINY-6311

@@ -29,10 +29,11 @@ const getDownOrRightCells = (grid: RowCells[], selectedCells: DetailExt[], gener
 };
 
 const getOtherCells = (table: SugarElement<HTMLTableElement>, target: TargetSelection, generators: Generators) => {
-  const house = Warehouse.fromTable(table);
-  const details = onCells(house, target);
-  return details.map(function (selectedCells) {
-    const grid = Transitions.toGrid(house, generators, false);
+  const warehouse = Warehouse.fromTable(table);
+  const details = onCells(warehouse, target);
+
+  return details.map((selectedCells) => {
+    const grid = Transitions.toGrid(warehouse, generators, false);
     const upOrLeftCells = getUpOrLeftCells(grid, selectedCells, generators);
     const downOrRightCells = getDownOrRightCells(grid, selectedCells, generators);
     return {

@@ -1,11 +1,16 @@
 import {
-  ApproxStructure, Assertions, Chain, Cursors, GeneralSteps, Guard, Logger, Mouse, NamedChain, Step, StructAssert, UiControls, UiFinder, Waiter
+  ApproxStructure, Assertions, Chain, Cursors, GeneralSteps, Guard, Log, Logger, Mouse, NamedChain, Step, StructAssert, UiControls, UiFinder, Waiter
 } from '@ephox/agar';
 import { Assert } from '@ephox/bedrock-client';
 import { Arr, Obj } from '@ephox/katamari';
-import { TinyDom, TinyUi } from '@ephox/mcagar';
+import { TinyApis, TinyDom, TinyUi } from '@ephox/mcagar';
 import { Attribute, Checked, Class, Html, SelectorFilter, SelectorFind, SugarBody, SugarElement, Value } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
+
+interface Options {
+  headerRows: number;
+  headerCols: number;
+}
 
 const getRawWidth = (editor: Editor, elm: HTMLElement) => {
   const style = editor.dom.getStyle(elm, 'width');
@@ -397,27 +402,32 @@ const sAssertDialogValues = (data, hasAdvanced, generalSelectors) => {
   return sAssertTabContents(data, generalSelectors);
 };
 
-const sAssertTableStructureWithSizes = (editor: Editor, cols: number, rows: number, unit: string | null, tableWidth: number | null, widths: Array<number | null>[],
-                                        options: { headerRows: number; headerCols: number } = { headerRows: 0, headerCols: 0 }) => GeneralSteps.sequence([
-  sAssertTableStructure(editor, ApproxStructure.build((s, str) => s.element('table', {
-    attrs: { border: str.is('1') },
-    styles: { 'border-collapse': str.is('collapse') },
-    children: [
-      s.element('tbody', {
-        children: Arr.range(rows, (rowIndex) => s.element('tr', {
-          children: Arr.range(cols, (colIndex) => s.element(colIndex < options.headerCols || rowIndex < options.headerRows ? 'th' : 'td', {
-            children: [
-              s.either([
-                s.element('br', { }),
-                s.text(str.contains('Cell'))
-              ])
-            ]
-          }))
-        }))
-      })
-    ]
-  }))),
-  Step.sync(() => {
+const sInsertTable = (editor: Editor, args) =>
+  Logger.t('Insert table ', Step.sync(() =>
+    editor.execCommand('mceInsertTable', false, args)));
+
+const sAssertTableStructureWithSizes = (
+  editor: Editor,
+  cols: number,
+  rows: number,
+  unit: string | null,
+  tableWidth: number | null,
+  widths: Array<number | null>[],
+  useColGroups: boolean,
+  options: Options = { headerRows: 0, headerCols: 0 }
+): Step<any, any> => {
+
+  const tableWithColGroup = Step.sync(() => {
+    const table = editor.dom.select('table')[0];
+    assertWidth(editor, table, tableWidth, unit);
+    const row = editor.dom.select('colgroup', table)[0];
+    Arr.each(widths[0], (columnWidth, columnIndex) => {
+      const column = editor.dom.select('col', row)[columnIndex];
+      assertWidth(editor, column, columnWidth, unit);
+    });
+  });
+
+  const tableWithoutColGroup = Step.sync(() => {
     const table = editor.dom.select('table')[0];
     assertWidth(editor, table, tableWidth, unit);
     Arr.each(widths, (rowWidths, rowIndex) => {
@@ -427,8 +437,114 @@ const sAssertTableStructureWithSizes = (editor: Editor, cols: number, rows: numb
         assertWidth(editor, cell, cellWidth, unit);
       });
     });
-  })
-]);
+  });
+
+  const asserTableStructure = sAssertTableStructure(editor, ApproxStructure.build((s, str) => {
+    const tbody = s.element('tbody', {
+      children: Arr.range(rows, (rowIndex) =>
+        s.element('tr', {
+          children: Arr.range(cols, (colIndex) =>
+            s.element(colIndex < options.headerCols || rowIndex < options.headerRows ? 'th' : 'td', {
+              children: [
+                s.either([
+                  s.element('br', { }),
+                  s.text(str.contains('Cell'))
+                ])
+              ]
+            })
+          )
+        })
+      )
+    });
+
+    const colGroup = s.element('colgroup', {
+      children: Arr.range(cols, () =>
+        s.element('col', {})
+      )
+    });
+
+    return s.element('table', {
+      attrs: { border: str.is('1') },
+      styles: { 'border-collapse': str.is('collapse') },
+      children: useColGroups ? [ colGroup, tbody ] : [ tbody ]
+    });
+  }));
+
+  return GeneralSteps.sequence(useColGroups ? [ asserTableStructure, tableWithColGroup ] : [ asserTableStructure, tableWithoutColGroup ]);
+};
+
+const sMakeInsertTable = (editor: Editor, cols: number, rows: number) =>
+  Logger.t('Insert table ' + cols + 'x' + rows, Step.sync(() => {
+    editor.plugins.table.insertTable(cols, rows);
+  }));
+
+const sInsertTableTest = (editor, tinyApis: TinyApis, id: string, tableColumns: number, tableRows: number, widths: number[][], withColGroups: boolean) =>
+  Log.stepsAsStep(id, `Table: Insert table ${tableColumns}x${tableRows}`, [
+    tinyApis.sSetContent(''),
+    sMakeInsertTable(editor, tableColumns, tableRows),
+    sAssertTableStructureWithSizes(editor, tableColumns, tableRows, '%', 100, widths, withColGroups),
+    tinyApis.sAssertSelection([ 0, withColGroups ? 1 : 0, 0, 0 ], 0, [ 0, withColGroups ? 1 : 0, 0, 0 ], 0)
+  ]);
+
+const createTableChildren = (s: ApproxStructure.StructApi, str: ApproxStructure.StringApi, withColGroups: boolean) => {
+  const style = {
+    width: str.contains('%')
+  };
+
+  const styleNone = {
+    width: str.none()
+  };
+
+  const columns = s.element('colgroup', {
+    children: [
+      s.element('col', {
+        styles: style
+      }),
+      s.element('col', {
+        styles: style
+      })
+    ]
+  });
+
+  const tbody = s.element('tbody', {
+    children: [
+      s.element('tr', {
+        children: [
+          s.element('td', {
+            styles: withColGroups ? styleNone : style,
+            children: [
+              s.element('br', {})
+            ]
+          }),
+          s.element('td', {
+            styles: withColGroups ? styleNone : style,
+            children: [
+              s.element('br', {})
+            ]
+          })
+        ]
+      }),
+      s.element('tr', {
+        children: [
+          s.element('td', {
+            styles: withColGroups ? styleNone : style,
+            children: [
+              s.element('br', {})
+            ]
+          }),
+          s.element('td', {
+            styles: withColGroups ? styleNone : style,
+            children: [
+              s.element('br', {})
+            ]
+          })
+        ]
+      })
+    ]
+  });
+
+  return withColGroups ? [ columns, tbody ] : [ tbody ];
+};
 
 export {
   getCellWidth,
@@ -439,6 +555,8 @@ export {
   sOpenToolbarOn,
   sAssertTableStructure,
   sAssertTableStructureWithSizes,
+  createTableChildren,
+  sInsertTableTest,
   sOpenTableDialog,
   sGotoGeneralTab,
   sGotoAdvancedTab,
@@ -466,5 +584,6 @@ export {
   cDeleteColumn,
   cInsertRowBefore,
   cInsertRowAfter,
-  cDeleteRow
+  cDeleteRow,
+  sInsertTable
 };
