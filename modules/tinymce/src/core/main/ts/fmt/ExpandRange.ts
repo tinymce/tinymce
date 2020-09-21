@@ -16,9 +16,9 @@ import * as RangeNodes from '../selection/RangeNodes';
 import { isContent, isNbsp, isWhiteSpace } from '../text/CharType';
 import { isEmpty } from '../dom/Empty';
 import { Format } from '../api/fmt/Format';
+import * as Whitespace from '../text/Whitespace';
 import * as FormatUtils from './FormatUtils';
 
-const onlyWhitespaces = / +/;
 type Sibling = 'previousSibling' | 'nextSibling';
 
 const isElement = (node: Node | Element): node is Element => SugarNode.isElement(SugarElement.fromDom(node));
@@ -188,10 +188,10 @@ const findParentContainer = (dom: DOMUtils, format: Format[] | Record<string, Fo
     }
     // Walk left/right
     for (sibling = parent[siblingName]; sibling; sibling = sibling[siblingName]) {
-      const siblingIsNotSpace = NodeType.isText(sibling) && !onlyWhitespaces.test(sibling.data);
-      const isNotEmptyWithOnlySpaces = !(isEmpty(SugarElement.fromDom(sibling)) && siblingIsNotSpace);
+      const siblingIsSpace = !(NodeType.isText(sibling) && !Whitespace.isWhitespaceText(sibling.data));
+      const isEmptyWithOnlySpaces = isEmpty(SugarElement.fromDom(sibling)) && !siblingIsSpace;
 
-      if (!isBookmarkNode(sibling) && isNotEmptyWithOnlySpaces && !isBogusBr(sibling)) {
+      if (!isBookmarkNode(sibling) && !isEmptyWithOnlySpaces && !isBogusBr(sibling)) {
         return parent;
       }
     }
