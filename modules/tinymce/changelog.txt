@@ -1,7 +1,6 @@
 Version 5.5.0 (TBD)
     Added a TypeScript declaration file to the bundle output for TinyMCE core #TINY-3785
     Added new `table_column_resizing` setting to control how table columns are resized when using the resize bars #TINY-6001
-    Added the ability to load TinyMCE in inline mode within a ShadowRoot #TINY-6128
     Added the ability to remove images on a failed upload using the `images_upload_handler` failure callback #TINY-6011
     Added `hasPlugin` function to the editor API to determine if a plugin exists or not #TINY-766
     Added new `ToggleToolbarDrawer` command and query state handler to allow the toolbar drawer to be programmatically toggled and the toggle state to be checked #TINY-6032
