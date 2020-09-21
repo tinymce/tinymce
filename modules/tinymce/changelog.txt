@@ -1,6 +1,6 @@
 Version 5.5.0 (TBD)
     Added a TypeScript declaration file to the bundle output for TinyMCE core #TINY-3785
-    Added new `table_column_resizing` setting to control how columns are resized when resizing tables using the resize bars #TINY-6001
+    Added new `table_column_resizing` setting to control how table columns are resized when using the resize bars #TINY-6001
     Added the ability to load TinyMCE in inline mode within a ShadowRoot #TINY-6128
     Added the ability to remove images on a failed upload using the `images_upload_handler` failure callback #TINY-6011
     Added `hasPlugin` function to the editor API to determine if a plugin exists or not #TINY-766
@@ -20,7 +20,7 @@ Version 5.5.0 (TBD)
     Changed how CSS manipulates table cells when selecting multiple cells to achieve a semi-transparent selection #TINY-6311
     Changed the `target` property on fired events to use the native event target. The original target for an open shadow root can be obtained using `event.getComposedPath()` #TINY-6128
     Changed the editor to cleanup loaded CSS stylesheets when all editors using the stylesheet have been removed #TINY-3926
-    Changed `imagetools` context menu icon for accessing the `image` settings to use the `image` icon #TINY-4141
+    Changed `imagetools` context menu icon for accessing the image dialog to use the `image` icon #TINY-4141
     Changed the `editor.insertContent()` and `editor.selection.setContent()` APIs to retain leading and trailing whitespace #TINY-5966
     Changed the `table` plugin `Column` menu to include the cut, copy and paste column menu items #TINY-6374
     Deprecated the `Env.experimentalShadowDom` flag #TINY-6128
