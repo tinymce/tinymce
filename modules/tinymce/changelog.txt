@@ -15,7 +15,7 @@ Version 5.5.0 (TBD)
     Added the `LineHeight` query command and action to the editor #TINY-4843
     Added the `lineheight` toolbar and menu items, and added `lineheight` to the default format menu #TINY-4843
     Added a new `contextmenu_avoid_overlap` setting to allow contextmenus to avoid overlapping matched nodes #TINY-6036
-    Added new `listbox` dialog UI component for rendering a `selectbox` list that accepts nested items #TINY-2236
+    Added new listbox dialog UI component for rendering a dropdown that allows nested options #TINY-2236
     Added back the ability to use nested items in the `image_class_list`, `link_class_list`, `link_list`, `table_class_list`, `table_cell_class_list`, and `table_row_class_list` settings #TINY-2236
     Changed how CSS manipulates table cells when selecting multiple cells to achieve a semi-transparent selection #TINY-6311
     Changed the `target` property on fired events to use the native event target. The original target for an open shadow root can be obtained using `event.getComposedPath()` #TINY-6128
