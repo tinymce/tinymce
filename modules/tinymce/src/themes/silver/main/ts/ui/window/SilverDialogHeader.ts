@@ -12,6 +12,7 @@ import { SelectorFind } from '@ephox/sugar';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { formCancelEvent } from '../general/FormEvents';
+import { get as getIcon } from '../icons/Icons';
 import { titleChannel } from './DialogChannels';
 
 /* eslint-enable max-len */
@@ -36,11 +37,7 @@ const renderClose = (providersBackstage: UiFactoryBackstageProviders) => Button.
       dom: {
         tag: 'div',
         classes: [ 'tox-icon' ],
-        innerHtml: '<svg width="24" height="24" xmlns="http://www.w3.org/2000/svg">' +
-                   '<path d="M17.953 7.453L13.422 12l4.531 4.547-1.406 1.406L12 ' +
-                   '13.422l-4.547 4.531-1.406-1.406L10.578 12 6.047 ' +
-                   '7.453l1.406-1.406L12 10.578l4.547-4.531z" ' +
-                   'fill-rule="evenodd"></path></svg>'
+        innerHtml: getIcon('close', providersBackstage.icons)
       }
     }
   ],
