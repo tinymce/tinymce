@@ -1,8 +1,8 @@
 import { Arr, Obj, Optional } from '@ephox/katamari';
-import { SugarElement, Traverse, SugarNode } from '@ephox/sugar';
+import { SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 import * as Structs from '../api/Structs';
-import * as CellUtils from '../util/CellUtils';
 import * as DetailsList from '../model/DetailsList';
+import * as CellUtils from '../util/CellUtils';
 
 export interface Warehouse {
   readonly grid: Structs.Grid;
@@ -41,7 +41,7 @@ const generateColumns = <T extends Structs.Detail> (rowData: Structs.RowData<T>)
   let index = 0;
 
   Arr.each(filteredColumns, (column: SugarElement<HTMLTableColElement>): void => {
-    const colspan = CellUtils.getSpan(column, 'colspan');
+    const colspan = CellUtils.getAttrValue(column, 'span', 1);
 
     Arr.range(colspan, (columnIndex): void => {
       columnsGroup[index + columnIndex] = {

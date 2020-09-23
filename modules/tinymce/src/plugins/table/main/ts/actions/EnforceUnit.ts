@@ -6,7 +6,7 @@
  */
 
 import { Arr } from '@ephox/katamari';
-import { TableConversions, TableLookup } from '@ephox/snooker';
+import { TableConversions, TableLookup, Warehouse } from '@ephox/snooker';
 import { Attribute, Css, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import * as TableSize from '../queries/TableSize';
@@ -24,12 +24,15 @@ const enforcePixels = (editor: Editor, table: SugarElement<HTMLTableElement>) =>
 const enforceNone = TableConversions.convertToNoneSize;
 
 const syncPixels = (table: SugarElement<HTMLTableElement>) => {
-  // Ensure the specified width matches the actual cell width
-  Arr.each(TableLookup.cells(table), (cell) => {
-    const computedWidth = Css.get(cell, 'width');
-    Css.set(cell, 'width', computedWidth);
-    Attribute.remove(cell, 'width');
-  });
+  const warehouse = Warehouse.fromTable(table);
+  if (!Warehouse.hasColumns(warehouse)) {
+    // Ensure the specified width matches the actual cell width
+    Arr.each(TableLookup.cells(table), (cell) => {
+      const computedWidth = Css.get(cell, 'width');
+      Css.set(cell, 'width', computedWidth);
+      Attribute.remove(cell, 'width');
+    });
+  }
 };
 
 export { enforcePercentage, enforcePixels, enforceNone, syncPixels };

@@ -109,20 +109,20 @@ const coords = (x: number, y: number): Coords => ({
   y
 });
 
-const detail = (element: SugarElement, rowspan: number, colspan: number): Detail => ({
+const detail = (element: SugarElement<HTMLTableCellElement>, rowspan: number, colspan: number): Detail => ({
   element,
   rowspan,
   colspan
 });
 
-const detailnew = (element: SugarElement, rowspan: number, colspan: number, isNew: boolean): DetailNew => ({
+const detailnew = (element: SugarElement<HTMLTableCellElement>, rowspan: number, colspan: number, isNew: boolean): DetailNew => ({
   element,
   rowspan,
   colspan,
   isNew
 });
 
-const extended = (element: SugarElement, rowspan: number, colspan: number, row: number, column: number): DetailExt => ({
+const extended = (element: SugarElement<HTMLTableCellElement>, rowspan: number, colspan: number, row: number, column: number): DetailExt => ({
   element,
   rowspan,
   colspan,
@@ -130,7 +130,7 @@ const extended = (element: SugarElement, rowspan: number, colspan: number, row: 
   column
 });
 
-const rowdata = <T> (element: SugarElement, cells: T[], section: Section): RowData<T> => ({
+const rowdata = <T> (element: SugarElement<HTMLTableRowElement>, cells: T[], section: Section): RowData<T> => ({
   element,
   cells,
   section
