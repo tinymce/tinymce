@@ -242,6 +242,48 @@ UnitTest.asynctest('browser.tinymce.selection.SetSelectionContentTest', function
           })),
           root
         )
+      ]),
+
+      Log.stepsAsStep('TINY-5966', 'Set text content into empty pre block with leading/trailing spaces', [
+        tinyApis.sSetContent('<pre></pre>'),
+        tinyApis.sSetSelection([ 0, 0 ], 0, [ 0, 0 ], 0),
+        sSetContent(editor, '   a <br>  b  ', {}),
+        Assertions.sAssertStructure('Checking initial structure',
+          ApproxStructure.build((s, str, _arr) => s.element('body', {
+            children: [
+              s.element('pre', {
+                children: [
+                  s.text(str.is('   a ')),
+                  s.element('br', {}),
+                  s.text(str.is('  b  ')),
+                  s.zeroOrMore(s.element('br', {}))
+                ]
+              })
+            ]
+          })),
+          root
+        )
+      ]),
+
+      Log.stepsAsStep('TINY-5966', 'Set text content into pre block using a range selection', [
+        tinyApis.sSetContent('<pre>a b c</pre>'),
+        tinyApis.sSetSelection([ 0, 0 ], 2, [ 0, 0 ], 5),
+        sSetContent(editor, ' b <br> c ', {}),
+        Assertions.sAssertStructure('Checking initial structure',
+          ApproxStructure.build((s, str, _arr) => s.element('body', {
+            children: [
+              s.element('pre', {
+                children: [
+                  s.text(str.is('a  b '), true),
+                  s.element('br', {}),
+                  s.text(str.is(' c '), true),
+                  s.zeroOrMore(s.element('br', {}))
+                ]
+              })
+            ]
+          })),
+          root
+        )
       ])
     ], onSuccess, onFailure);
   }, {
