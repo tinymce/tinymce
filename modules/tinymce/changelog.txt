@@ -24,7 +24,9 @@ Version 5.5.0 (TBD)
     Changed `imagetools` context menu icon for accessing the image dialog to use the `image` icon #TINY-4141
     Changed the `editor.insertContent()` and `editor.selection.setContent()` APIs to retain leading and trailing whitespace #TINY-5966
     Changed the `table` plugin `Column` menu to include the cut, copy and paste column menu items #TINY-6374
+    Changed the default table styles to better support the styling options available in the tables dialog #TINY-6179
     Deprecated the `Env.experimentalShadowDom` flag #TINY-6128
+    Fixed tables with no borders getting the default styles in the preview dialog #TINY-6179
     Fixed loss of whitespace when inserting content after a non-breaking space #TINY-5966
     Fixed the `event.getComposedPath()` function throwing an exception for events fired from the editor #TINY-6128
     Fixed notifications not appearing when the editor is within a ShadowRoot #TINY-6354
@@ -82,8 +84,6 @@ Version 5.4.0 (2020-06-30)
     Changed stylesheet loading, so that UI skin stylesheets can load in a ShadowRoot if required #TINY-6089
     Changed the DOM location of menus so that they display correctly when the editor is in a ShadowRoot #TINY-6093
     Changed the table plugin to correctly detect all valid header row structures #TINY-6007
-    Changed the default table styles to better support the styling options available in the tables dialog #TINY-6179
-    Fixed tables with no borders getting the default styles in the preview dialog #TINY-6179
     Fixed tables with no defined width being converted to a `fixed` width table when modifying the table #TINY-6051
     Fixed the `autosave` `isEmpty` API incorrectly detecting non-empty content as empty #TINY-5953
     Fixed table `Paste row after` and `Paste row before` menu items not disabled when nothing was available to paste #TINY-6006
