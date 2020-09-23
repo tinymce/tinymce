@@ -67,7 +67,6 @@ const getLineHeights = (editor: Editor): Menu.ToggleMenuItemSpec[] => {
 const registerMenuItems = (editor: Editor) => {
   editor.ui.registry.addNestedMenuItem('lineheight', {
     type: 'nestedmenuitem',
-    icon: 'line-height',
     text: 'Line height',
     getSubmenuItems: () => getLineHeights(editor)
   });
