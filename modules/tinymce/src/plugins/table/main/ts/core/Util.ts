@@ -25,7 +25,11 @@ const addPxSuffix = (size: string): string => /^\d+(\.\d+)?$/.test(size) ? size 
 
 const removeDataStyle = (table: SugarElement<HTMLElement>): void => {
   Attribute.remove(table, 'data-mce-style');
-  Arr.each(TableLookup.cells(table), (cell) => Attribute.remove(cell, 'data-mce-style'));
+
+  const removeStyleAttribute = (element: SugarElement<HTMLElement>) => Attribute.remove(element, 'data-mce-style');
+
+  Arr.each(TableLookup.cells(table), removeStyleAttribute);
+  Arr.each(TableLookup.columns(table), removeStyleAttribute);
 };
 
 const getRawWidth = (editor: Editor, elm: HTMLElement): Optional<string> => {
