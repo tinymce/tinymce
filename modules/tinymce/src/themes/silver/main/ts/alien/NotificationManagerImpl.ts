@@ -6,9 +6,8 @@
  */
 
 import { Gui, GuiFactory, InlineView, Layout, LayoutInside, NodeAnchorSpec } from '@ephox/alloy';
-import { Element as DomElement } from '@ephox/dom-globals';
-import { Arr, Option } from '@ephox/katamari';
-import { Body, Element } from '@ephox/sugar';
+import { Arr, Optional } from '@ephox/katamari';
+import { SugarBody, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { NotificationApi, NotificationManagerImpl, NotificationSpec } from 'tinymce/core/api/NotificationManager';
 import Delay from 'tinymce/core/api/util/Delay';
@@ -67,7 +66,7 @@ export default function (editor: Editor, extras, uiMothership: Gui.GuiSystem): N
         text: settings.text,
         level: Arr.contains([ 'success', 'error', 'warning', 'warn', 'info' ], settings.type) ? settings.type : undefined,
         progress: settings.progressBar === true,
-        icon: Option.from(settings.icon),
+        icon: Optional.from(settings.icon),
         closeButton: !hideCloseButton,
         onAction: close,
         iconProvider: backstage.shared.providers.icons,
@@ -104,13 +103,13 @@ export default function (editor: Editor, extras, uiMothership: Gui.GuiSystem): N
           y
         }, GuiFactory.premade(notification));
       },
-      moveRel: (element: DomElement, rel: 'tc-tc' | 'bc-bc' | 'bc-tc' | 'tc-bc' | 'banner') => {
+      moveRel: (element: Element, rel: 'tc-tc' | 'bc-bc' | 'bc-tc' | 'tc-bc' | 'banner') => {
         if (rel !== 'banner') {
           const layoutDirection = getLayoutDirection(rel);
           const nodeAnchor: NodeAnchorSpec = {
             anchor: 'node',
-            root: Body.body(),
-            node: Option.some(Element.fromDom(element)),
+            root: SugarBody.body(),
+            node: Optional.some(SugarElement.fromDom(element)),
             layouts: {
               onRtl: () => [ layoutDirection ],
               onLtr: () => [ layoutDirection ]
@@ -126,7 +125,7 @@ export default function (editor: Editor, extras, uiMothership: Gui.GuiSystem): N
         Notification.updateText(notification, nuText);
       },
       settings,
-      getEl: () => notification.element().dom(),
+      getEl: () => notification.element.dom,
       progressBar: {
         value: (percent: number) => {
           Notification.updateProgress(notification, percent);

@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, Chain, Log, Pipeline, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Editor } from '@ephox/mcagar';
-import { Body } from '@ephox/sugar';
+import { SugarBody } from '@ephox/sugar';
 import AdvListPlugin from 'tinymce/plugins/advlist/Plugin';
 import ListsPlugin from 'tinymce/plugins/lists/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
@@ -22,7 +22,7 @@ UnitTest.asynctest('browser.tinymce.plugins.advlist.ToolbarButtonStructureTest',
         statusbar: false,
         base_url: '/project/tinymce/js/tinymce'
       }),
-      Chain.fromIsolatedChainsWith(Body.body(), [
+      Chain.fromIsolatedChainsWith(SugarBody.body(), [
         UiFinder.cFindIn('.tox-editor-header .tox-toolbar .tox-toolbar__group'),
         Waiter.cTryUntil('', Assertions.cAssertStructure(
           'Check lists toolbar button structure',
@@ -50,7 +50,7 @@ UnitTest.asynctest('browser.tinymce.plugins.advlist.ToolbarButtonStructureTest',
         statusbar: false,
         base_url: '/project/tinymce/js/tinymce'
       }),
-      Chain.fromIsolatedChainsWith(Body.body(), [
+      Chain.fromIsolatedChainsWith(SugarBody.body(), [
         UiFinder.cFindIn('.tox-editor-header .tox-toolbar .tox-toolbar__group'),
         Waiter.cTryUntil('', Assertions.cAssertStructure(
           'Check lists toolbar button structure',

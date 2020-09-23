@@ -5,20 +5,42 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element } from '@ephox/sugar';
+import { Type } from '@ephox/katamari';
+import { SugarElement } from '@ephox/sugar';
+import DOMUtils from '../api/dom/DOMUtils';
+import DomTreeWalker from '../api/dom/TreeWalker';
 import * as ElementType from './ElementType';
+import { isContent } from './Empty';
 import * as NodeType from './NodeType';
-import Tools from '../api/util/Tools';
 
-const surroundedBySpans = function (node) {
-  const previousIsSpan = node.previousSibling && node.previousSibling.nodeName === 'SPAN';
-  const nextIsSpan = node.nextSibling && node.nextSibling.nodeName === 'SPAN';
-  return previousIsSpan && nextIsSpan;
+const isSpan = (node: Node): node is HTMLSpanElement =>
+  node.nodeName.toLowerCase() === 'span';
+
+const isInlineContent = (node: Node | null, root: Node): boolean =>
+  Type.isNonNullable(node) && (isContent(node, root) || ElementType.isInline(SugarElement.fromDom(node)));
+
+const surroundedByInlineContent = (node: Node, root: Node) => {
+  const prev = new DomTreeWalker(node, root).prev(false);
+  const next = new DomTreeWalker(node, root).next(false);
+  // Check if the next/previous is either inline content or the start/end (eg is undefined)
+  const prevIsInline = Type.isUndefined(prev) || isInlineContent(prev, root);
+  const nextIsInline = Type.isUndefined(next) || isInlineContent(next, root);
+  return prevIsInline && nextIsInline;
 };
 
-const isBookmarkNode = function (node) {
-  return node && node.tagName === 'SPAN' && node.getAttribute('data-mce-type') === 'bookmark';
-};
+const isBookmarkNode = (node: Node) =>
+  isSpan(node) && node.getAttribute('data-mce-type') === 'bookmark';
+
+// Keep text nodes with only spaces if surrounded by spans.
+// eg. "<p><span>a</span> <span>b</span></p>" should keep space between a and b
+const isKeepTextNode = (node: Node, root: Node) =>
+  NodeType.isText(node) && node.data.length > 0 && surroundedByInlineContent(node, root);
+
+// Keep elements as long as they have any children
+const isKeepElement = (node: Node) =>
+  NodeType.isElement(node) ? node.childNodes.length > 0 : false;
+
+const isDocument = (node: Node) => NodeType.isDocumentFragment(node) || NodeType.isDocument(node);
 
 // W3C valid browsers tend to leave empty nodes to the left/right side of the contents - this makes sense
 // but we don't want that in our code since it serves no purpose for the end user
@@ -28,46 +50,30 @@ const isBookmarkNode = function (node) {
 //   <p>text 1<span></span></p><b>CHOP</b><p><span></span>text 2</p>
 // this function will then trim off empty edges and produce:
 //   <p>text 1</p><b>CHOP</b><p>text 2</p>
-const trimNode = function (dom, node) {
-  let i, children = node.childNodes;
-
+const trimNode = <T extends Node>(dom: DOMUtils, node: T, root?: Node): T => {
+  const rootNode = root || node;
   if (NodeType.isElement(node) && isBookmarkNode(node)) {
-    return;
+    return node;
   }
 
-  for (i = children.length - 1; i >= 0; i--) {
-    trimNode(dom, children[i]);
+  const children = node.childNodes;
+  for (let i = children.length - 1; i >= 0; i--) {
+    trimNode(dom, children[i], rootNode);
   }
 
-  if (NodeType.isDocument(node) === false) {
-    // Keep non whitespace text nodes
-    if (NodeType.isText(node) && node.nodeValue.length > 0) {
-      // Keep if parent element is a block or if there is some useful content
-      const trimmedLength = Tools.trim(node.nodeValue).length;
-      if (dom.isBlock(node.parentNode) || trimmedLength > 0) {
-        return;
-      }
-      // Also keep text nodes with only spaces if surrounded by spans.
-      // eg. "<p><span>a</span> <span>b</span></p>" should keep space between a and b
-      if (trimmedLength === 0 && surroundedBySpans(node)) {
-        return;
-      }
-    } else if (NodeType.isElement(node)) {
-      // If the only child is a bookmark then move it up
-      children = node.childNodes;
-
-      if (children.length === 1 && isBookmarkNode(children[0])) {
-        node.parentNode.insertBefore(children[0], node);
-      }
-
-      // Keep non empty elements and void elements
-      if (children.length || ElementType.isVoid(Element.fromDom(node))) {
-        return;
-      }
+  // If the only child is a bookmark then move it up
+  if (NodeType.isElement(node)) {
+    const currentChildren = node.childNodes;
+    if (currentChildren.length === 1 && isBookmarkNode(currentChildren[0])) {
+      node.parentNode.insertBefore(currentChildren[0], node);
     }
+  }
 
+  // Remove any empty nodes
+  if (!isDocument(node) && !isContent(node, rootNode) && !isKeepElement(node) && !isKeepTextNode(node, rootNode)) {
     dom.remove(node);
   }
+
   return node;
 };
 

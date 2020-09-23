@@ -1,6 +1,5 @@
-import { console, document } from '@ephox/dom-globals';
-import { Arr, Future, Obj, Option, Result } from '@ephox/katamari';
-import { Class, Element } from '@ephox/sugar';
+import { Arr, Future, Obj, Optional, Result } from '@ephox/katamari';
+import { Class, SugarElement } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Keying } from 'ephox/alloy/api/behaviour/Keying';
@@ -20,7 +19,7 @@ import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 
 import * as DemoRenders from './forms/DemoRenders';
 
-// tslint:disable:no-console
+/* eslint-disable no-console */
 
 const makeItem = (v: string, t: string, c?: string): DemoRenders.DemoItem => ({
   type: 'item',
@@ -35,9 +34,9 @@ const makeItem = (v: string, t: string, c?: string): DemoRenders.DemoItem => ({
 
 export default (): void => {
   const gui = Gui.create();
-  const body = Element.fromDom(document.body);
-  Class.add(gui.element(), 'gui-root-demo-container');
-  // Css.set(gui.element(), 'direction', 'rtl');
+  const body = SugarElement.fromDom(document.body);
+  Class.add(gui.element, 'gui-root-demo-container');
+  // Css.set(gui.element, 'direction', 'rtl');
 
   Attachment.attachSystem(body, gui);
 
@@ -82,20 +81,20 @@ export default (): void => {
         tag: 'div'
       },
       components: [
-        SplitDropdown.parts().button({
+        SplitDropdown.parts.button({
           dom: {
             tag: 'button',
             innerHtml: 'Run'
           },
           uid: 'supplied'
         }),
-        SplitDropdown.parts().arrow({
+        SplitDropdown.parts.arrow({
           dom: {
             tag: 'button',
             innerHtml: 'v'
           }
         }),
-        SplitDropdown.parts().sink({ })
+        SplitDropdown.parts.sink({ })
       ],
       fetch() {
         const wMenu = DemoRenders.menu({
@@ -104,7 +103,7 @@ export default (): void => {
         });
 
         return Future.pure(
-          Option.some(TieredMenu.singleData('name', wMenu))
+          Optional.some(TieredMenu.singleData('name', wMenu))
         );
       },
       lazySink,
@@ -153,7 +152,7 @@ export default (): void => {
           items: [ wDoubleInput ]
         });
 
-        return Future.pure(menu).map(() => Option.some(TieredMenu.singleData('demo.2.menu', menu)));
+        return Future.pure(menu).map(() => Optional.some(TieredMenu.singleData('demo.2.menu', menu)));
       }
     })
   );
@@ -204,7 +203,7 @@ export default (): void => {
               items: [ wDoubleInput ]
             });
 
-            return Future.pure(menu).map(() => Option.some(TieredMenu.singleData('demo.2.menu', menu)));
+            return Future.pure(menu).map(() => Optional.some(TieredMenu.singleData('demo.2.menu', menu)));
           }
         })
       ]
@@ -250,7 +249,7 @@ export default (): void => {
             columns: 2,
             rows: 2
           });
-          return Option.some(TieredMenu.singleData('grid-list', menu));
+          return Optional.some(TieredMenu.singleData('grid-list', menu));
         });
       },
 
@@ -267,7 +266,7 @@ export default (): void => {
         innerHtml: 'Click me to expand'
       },
       components: [
-        Dropdown.parts().sink({ })
+        Dropdown.parts.sink({ })
       ],
 
       toggleClass: 'demo-selected',
@@ -299,7 +298,7 @@ export default (): void => {
             value: 'demo.4.menu',
             items
           });
-          return Option.some(TieredMenu.singleData('basic-list', menu));
+          return Optional.some(TieredMenu.singleData('basic-list', menu));
         });
       },
       onExecute(sandbox, item) {
@@ -442,7 +441,7 @@ export default (): void => {
           }
         });
 
-        return future.map((f) => Option.from(TieredMenu.tieredData(f.primary, f.menus, f.expansions)));
+        return future.map((f) => Optional.from(TieredMenu.tieredData(f.primary, f.menus, f.expansions)));
       }
     })
   );

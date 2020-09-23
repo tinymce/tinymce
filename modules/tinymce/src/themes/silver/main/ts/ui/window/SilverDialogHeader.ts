@@ -6,10 +6,8 @@
  */
 
 /* eslint-disable max-len */
-import {
-  AlloySpec, AlloyTriggers, Behaviour, Button, Container, DomFactory, Dragging, GuiFactory, ModalDialog, Reflecting
-} from '@ephox/alloy';
-import { Option } from '@ephox/katamari';
+import { AlloySpec, AlloyTriggers, Behaviour, Button, Container, DomFactory, Dragging, GuiFactory, ModalDialog, Reflecting } from '@ephox/alloy';
+import { Optional } from '@ephox/katamari';
 import { SelectorFind } from '@ephox/sugar';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
@@ -53,7 +51,7 @@ const renderClose = (providersBackstage: UiFactoryBackstageProviders) => Button.
 
 const renderTitle = (
   spec: WindowHeaderSpec,
-  id: Option<string>,
+  id: Optional<string>,
   providersBackstage: UiFactoryBackstageProviders
 ): AlloySpec => {
   const renderComponents = (data: WindowHeaderSpec) => [ GuiFactory.text(providersBackstage.translate(data.title)) ];
@@ -87,7 +85,7 @@ const renderInlineHeader = (
 ): AlloySpec => Container.sketch({
   dom: DomFactory.fromHtml('<div class="tox-dialog__header"></div>'),
   components: [
-    renderTitle(spec, Option.some(titleId), providersBackstage),
+    renderTitle(spec, Optional.some(titleId), providersBackstage),
     renderDragHandle(),
     renderClose(providersBackstage)
   ],
@@ -108,15 +106,15 @@ const renderInlineHeader = (
 });
 
 const renderModalHeader = (spec: WindowHeaderSpec, providersBackstage: UiFactoryBackstageProviders): AlloySpec => {
-  const pTitle = ModalDialog.parts().title(
-    renderTitle(spec, Option.none(), providersBackstage)
+  const pTitle = ModalDialog.parts.title(
+    renderTitle(spec, Optional.none(), providersBackstage)
   );
 
-  const pHandle = ModalDialog.parts().draghandle(
+  const pHandle = ModalDialog.parts.draghandle(
     renderDragHandle()
   );
 
-  const pClose = ModalDialog.parts().close(
+  const pClose = ModalDialog.parts.close(
     renderClose(providersBackstage)
   );
 

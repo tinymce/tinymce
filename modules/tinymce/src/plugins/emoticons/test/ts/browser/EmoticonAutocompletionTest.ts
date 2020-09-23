@@ -1,7 +1,7 @@
 import { Keyboard, Keys, Log, Pipeline, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Body, Element } from '@ephox/sugar';
+import { SugarBody, SugarElement } from '@ephox/sugar';
 import EmoticonsPlugin from 'tinymce/plugins/emoticons/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 
@@ -12,7 +12,7 @@ UnitTest.asynctest('browser.tinymce.plugins.emoticons.AutocompletionTest', (succ
 
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
-    const eDoc = Element.fromDom(editor.getDoc());
+    const eDoc = SugarElement.fromDom(editor.getDoc());
 
     // NOTE: This is almost identical to charmap
     Pipeline.async({},
@@ -21,7 +21,7 @@ UnitTest.asynctest('browser.tinymce.plugins.emoticons.AutocompletionTest', (succ
         tinyApis.sSetContent('<p>:ha</p>'),
         tinyApis.sSetCursor([ 0, 0 ], 3),
         Keyboard.sKeypress(eDoc, 'a'.charCodeAt(0), { }),
-        UiFinder.sWaitForVisible('Waiting for autocomplete menu', Body.body(), '.tox-autocompleter .tox-collection__item'),
+        UiFinder.sWaitForVisible('Waiting for autocomplete menu', SugarBody.body(), '.tox-autocompleter .tox-collection__item'),
         Keyboard.sKeydown(eDoc, Keys.right(), { }),
         Keyboard.sKeydown(eDoc, Keys.right(), { }),
         Keyboard.sKeydown(eDoc, Keys.enter(), { }),

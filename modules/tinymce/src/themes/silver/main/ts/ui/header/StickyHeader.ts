@@ -6,9 +6,8 @@
  */
 
 import { AlloyComponent, Boxes, Channels, Docking, Focusing, Receiving } from '@ephox/alloy';
-import { HTMLElement } from '@ephox/dom-globals';
-import { Arr, Cell, Option, Result } from '@ephox/katamari';
-import { Class, Classes, Compare, Css, Element, Focus, Height, Location, Scroll, Traverse, Visibility, Width } from '@ephox/sugar';
+import { Arr, Cell, Optional, Result } from '@ephox/katamari';
+import { Class, Classes, Compare, Css, Focus, Height, Scroll, SugarElement, SugarLocation, Traverse, Visibility, Width } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { ScrollIntoViewEvent } from 'tinymce/core/api/EventTypes';
@@ -24,47 +23,47 @@ const visibility = {
 const editorStickyOnClass = 'tox-tinymce--toolbar-sticky-on';
 const editorStickyOffClass = 'tox-tinymce--toolbar-sticky-off';
 
-const scrollFromBehindHeader = (e: ScrollIntoViewEvent, containerHeader: Element) => {
+const scrollFromBehindHeader = (e: ScrollIntoViewEvent, containerHeader: SugarElement) => {
   const doc = Traverse.owner(containerHeader);
-  const viewHeight = doc.dom().defaultView.innerHeight;
+  const viewHeight = doc.dom.defaultView.innerHeight;
   const scrollPos = Scroll.get(doc);
 
-  const markerElement = Element.fromDom(e.elm);
+  const markerElement = SugarElement.fromDom(e.elm);
   const markerPos = Boxes.absolute(markerElement);
   const markerHeight = Height.get(markerElement);
   const markerTop = markerPos.y;
   const markerBottom = markerTop + markerHeight;
 
-  const editorHeaderPos = Location.absolute(containerHeader);
+  const editorHeaderPos = SugarLocation.absolute(containerHeader);
   const editorHeaderHeight = Height.get(containerHeader);
-  const editorHeaderTop = editorHeaderPos.top();
+  const editorHeaderTop = editorHeaderPos.top;
   const editorHeaderBottom = editorHeaderTop + editorHeaderHeight;
 
   // Check to see if the header is docked to the top/bottom of the page (eg is floating)
-  const editorHeaderDockedAtTop = Math.abs(editorHeaderTop - scrollPos.top()) < 2;
-  const editorHeaderDockedAtBottom = Math.abs(editorHeaderBottom - (scrollPos.top() + viewHeight)) < 2;
+  const editorHeaderDockedAtTop = Math.abs(editorHeaderTop - scrollPos.top) < 2;
+  const editorHeaderDockedAtBottom = Math.abs(editorHeaderBottom - (scrollPos.top + viewHeight)) < 2;
 
   // If the element is behind the header at the top of the page, then
   // scroll the element down by the header height
   if (editorHeaderDockedAtTop && markerTop < editorHeaderBottom) {
-    Scroll.to(scrollPos.left(), markerTop - editorHeaderHeight, doc);
+    Scroll.to(scrollPos.left, markerTop - editorHeaderHeight, doc);
     // If the element is behind the header at the bottom of the page, then
     // scroll the element up by the header height
   } else if (editorHeaderDockedAtBottom && markerBottom > editorHeaderTop) {
     const y = (markerTop - viewHeight) + markerHeight + editorHeaderHeight;
-    Scroll.to(scrollPos.left(), y, doc);
+    Scroll.to(scrollPos.left, y, doc);
   }
 };
 
 const isDockedMode = (header: AlloyComponent, mode: 'top' | 'bottom') => Arr.contains(Docking.getModes(header), mode);
 
 const updateIframeContentFlow = (header: AlloyComponent): void => {
-  const getOccupiedHeight = (elm: Element<HTMLElement>) => Height.getOuter(elm) +
+  const getOccupiedHeight = (elm: SugarElement<HTMLElement>) => Height.getOuter(elm) +
       (parseInt(Css.get(elm, 'margin-top'), 10) || 0) +
       (parseInt(Css.get(elm, 'margin-bottom'), 10) || 0) ;
 
-  const elm = header.element();
-  Traverse.parent(elm).each((parentElem: Element<HTMLElement>) => {
+  const elm = header.element;
+  Traverse.parent(elm).each((parentElem: SugarElement<HTMLElement>) => {
     const padding = 'padding-' + Docking.getModes(header)[0];
 
     if (Docking.isDocked(header)) {
@@ -78,7 +77,7 @@ const updateIframeContentFlow = (header: AlloyComponent): void => {
   });
 };
 
-const updateSinkVisibility = (sinkElem: Element<HTMLElement>, visible: boolean): void => {
+const updateSinkVisibility = (sinkElem: SugarElement<HTMLElement>, visible: boolean): void => {
   if (visible) {
     Class.remove(sinkElem, visibility.fadeOutClass);
     Classes.add(sinkElem, [ visibility.transitionClass, visibility.fadeInClass ]);
@@ -89,7 +88,7 @@ const updateSinkVisibility = (sinkElem: Element<HTMLElement>, visible: boolean):
 };
 
 const updateEditorClasses = (editor: Editor, docked: boolean) => {
-  const editorContainer = Element.fromDom(editor.getContainer());
+  const editorContainer = SugarElement.fromDom(editor.getContainer());
   if (docked) {
     Class.add(editorContainer, editorStickyOnClass);
     Class.remove(editorContainer, editorStickyOffClass);
@@ -99,7 +98,7 @@ const updateEditorClasses = (editor: Editor, docked: boolean) => {
   }
 };
 
-const restoreFocus = (headerElem: Element, focusedElem: Element) => {
+const restoreFocus = (headerElem: SugarElement, focusedElem: SugarElement) => {
   // When the header is hidden, then the element that was focused will be lost
   // so we need to restore it if nothing else has already been focused (eg anything other than the body)
   const ownerDoc = Traverse.owner(focusedElem);
@@ -108,16 +107,16 @@ const restoreFocus = (headerElem: Element, focusedElem: Element) => {
     !Compare.eq(focusedElem, activeElm)
   ).filter((activeElm) =>
     // Only attempt to refocus if the current focus is the body or is in the header element
-    Compare.eq(activeElm, Element.fromDom(ownerDoc.dom().body)) || Compare.contains(headerElem, activeElm)
+    Compare.eq(activeElm, SugarElement.fromDom(ownerDoc.dom.body)) || Compare.contains(headerElem, activeElm)
   ).each(() => Focus.focus(focusedElem));
 };
 
-const findFocusedElem = (rootElm: Element, lazySink: () => Result<AlloyComponent, Error>): Option<Element> =>
+const findFocusedElem = (rootElm: SugarElement, lazySink: () => Result<AlloyComponent, Error>): Optional<SugarElement> =>
   // Check to see if an element is focused inside the header or inside the sink
   // and if so store the element so we can restore it later
-  Focus.search(rootElm).orThunk(() => lazySink().toOption().bind((sink) => Focus.search(sink.element())));
+  Focus.search(rootElm).orThunk(() => lazySink().toOptional().bind((sink) => Focus.search(sink.element)));
 
-const setup = (editor: Editor, sharedBackstage: UiFactoryBackstageShared, lazyHeader: () => Option<AlloyComponent>): void => {
+const setup = (editor: Editor, sharedBackstage: UiFactoryBackstageShared, lazyHeader: () => Optional<AlloyComponent>): void => {
   if (!editor.inline) {
     // If using bottom toolbar then when the editor resizes we need to reset docking
     // otherwise it won't know the original toolbar position has moved
@@ -157,7 +156,7 @@ const setup = (editor: Editor, sharedBackstage: UiFactoryBackstageShared, lazyHe
       Docking.refresh(header);
 
       // If the header element is still visible, then adjust the scroll position if required
-      const headerElem = header.element();
+      const headerElem = header.element;
       if (Visibility.isVisible(headerElem)) {
         scrollFromBehindHeader(e, headerElem);
       }
@@ -170,7 +169,7 @@ const setup = (editor: Editor, sharedBackstage: UiFactoryBackstageShared, lazyHe
   });
 };
 
-const isDocked = (lazyHeader: () => Option<AlloyComponent>): boolean => lazyHeader().map(Docking.isDocked).getOr(false);
+const isDocked = (lazyHeader: () => Optional<AlloyComponent>): boolean => lazyHeader().map(Docking.isDocked).getOr(false);
 
 const getIframeBehaviours = () => [
   Receiving.config({
@@ -183,11 +182,11 @@ const getIframeBehaviours = () => [
 ];
 
 const getBehaviours = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => {
-  const focusedElm = Cell<Option<Element>>(Option.none());
+  const focusedElm = Cell<Optional<SugarElement>>(Optional.none());
   const lazySink = sharedBackstage.getSink;
 
-  const runOnSinkElement = (f: (sink: Element) => void) => {
-    lazySink().each((sink) => f(sink.element()));
+  const runOnSinkElement = (f: (sink: SugarElement) => void) => {
+    lazySink().each((sink) => f(sink.element));
   };
 
   const onDockingSwitch = (comp: AlloyComponent) => {
@@ -206,13 +205,13 @@ const getBehaviours = (editor: Editor, sharedBackstage: UiFactoryBackstageShared
     Docking.config({
       contextual: {
         lazyContext(comp) {
-          const headerHeight = Height.getOuter(comp.element());
+          const headerHeight = Height.getOuter(comp.element);
           const container = editor.inline ? editor.getContentAreaContainer() : editor.getContainer();
-          const box = Boxes.box(Element.fromDom(container));
+          const box = Boxes.box(SugarElement.fromDom(container));
           // Force the header to hide before it overflows outside the container
           const boxHeight = box.height - headerHeight;
           const topBound = box.y + (isDockedMode(comp, 'top') ? 0 : headerHeight);
-          return Option.some(Boxes.bounds(box.x, topBound, box.width, boxHeight));
+          return Optional.some(Boxes.bounds(box.x, topBound, box.width, boxHeight));
         },
         onShow: () => {
           runOnSinkElement((elem) => updateSinkVisibility(elem, true));
@@ -221,12 +220,12 @@ const getBehaviours = (editor: Editor, sharedBackstage: UiFactoryBackstageShared
           runOnSinkElement((elem) => Classes.remove(elem, [ visibility.transitionClass, visibility.fadeInClass ]));
           // Restore focus and reset the stored focused element
           focusedElm.get().each((elem) => {
-            restoreFocus(comp.element(), elem);
-            focusedElm.set(Option.none());
+            restoreFocus(comp.element, elem);
+            focusedElm.set(Optional.none());
           });
         },
         onHide: (comp) => {
-          focusedElm.set(findFocusedElem(comp.element(), lazySink));
+          focusedElm.set(findFocusedElem(comp.element, lazySink));
           runOnSinkElement((elem) => updateSinkVisibility(elem, false));
         },
         onHidden: () => {

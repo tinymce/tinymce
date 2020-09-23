@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Fun, Option, Unicode } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
-import TreeWalker from '../api/dom/TreeWalker';
+import { Fun, Optional, Unicode } from '@ephox/katamari';
+import { SugarElement } from '@ephox/sugar';
+import DomTreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
 import * as ElementType from '../dom/ElementType';
 import * as NodeType from '../dom/NodeType';
@@ -44,7 +44,7 @@ const moveToCaretPosition = function (editor: Editor, root) {
   root.normalize();
 
   if (root.hasChildNodes()) {
-    const walker = new TreeWalker(root, root);
+    const walker = new DomTreeWalker(root, root);
 
     while ((node = walker.current())) {
       if (NodeType.isText(node)) {
@@ -104,7 +104,7 @@ const getEditableRoot = function (dom, node) {
 };
 
 const getParentBlock = function (editor: Editor) {
-  return Option.from(editor.dom.getParent(editor.selection.getStart(true), editor.dom.isBlock));
+  return Optional.from(editor.dom.getParent(editor.selection.getStart(true), editor.dom.isBlock));
 };
 
 const getParentBlockName = function (editor: Editor) {
@@ -118,7 +118,7 @@ const getParentBlockName = function (editor: Editor) {
 
 const isListItemParentBlock = function (editor: Editor) {
   return getParentBlock(editor).filter(function (elm) {
-    return ElementType.isListItem(Element.fromDom(elm));
+    return ElementType.isListItem(SugarElement.fromDom(elm));
   }).isSome();
 };
 

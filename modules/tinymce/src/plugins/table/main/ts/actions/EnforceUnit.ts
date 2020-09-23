@@ -5,40 +5,32 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLTableElement } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
-import { TableConversions, TableDirection, TableLookup } from '@ephox/snooker';
-import { Attr, Css, Element } from '@ephox/sugar';
+import { TableConversions, TableLookup } from '@ephox/snooker';
+import { Attribute, Css, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
-import * as Direction from '../queries/Direction';
 import * as TableSize from '../queries/TableSize';
 
-const enforcePercentage = (editor: Editor, table: Element<HTMLTableElement>) => {
-  const direction = TableDirection(Direction.directionAt);
+const enforcePercentage = (editor: Editor, table: SugarElement<HTMLTableElement>) => {
   const tableSizing = TableSize.get(editor, table);
-  TableConversions.convertToPercentSize(table, direction, tableSizing);
+  TableConversions.convertToPercentSize(table, tableSizing);
 };
 
-const enforcePixels = (editor: Editor, table: Element<HTMLTableElement>) => {
-  const direction = TableDirection(Direction.directionAt);
+const enforcePixels = (editor: Editor, table: SugarElement<HTMLTableElement>) => {
   const tableSizing = TableSize.get(editor, table);
-  TableConversions.convertToPixelSize(table, direction, tableSizing);
+  TableConversions.convertToPixelSize(table, tableSizing);
 };
 
 const enforceNone = TableConversions.convertToNoneSize;
 
-const syncPixels = (table: Element<HTMLTableElement>) => {
+const syncPixels = (table: SugarElement<HTMLTableElement>) => {
   // Ensure the specified width matches the actual cell width
   Arr.each(TableLookup.cells(table), (cell) => {
     const computedWidth = Css.get(cell, 'width');
     Css.set(cell, 'width', computedWidth);
-    Attr.remove(cell, 'width');
+    Attribute.remove(cell, 'width');
   });
 };
 
-export {
-  enforcePercentage,
-  enforcePixels,
-  enforceNone,
-  syncPixels
-};
+export { enforcePercentage, enforcePixels, enforceNone, syncPixels };
+

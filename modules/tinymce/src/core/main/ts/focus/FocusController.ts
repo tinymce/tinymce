@@ -5,15 +5,15 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { document, Element, FocusEvent, HTMLElement } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
+import { Focus, SugarElement, SugarShadowDom } from '@ephox/sugar';
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
 import EditorManager from '../api/EditorManager';
 import FocusManager from '../api/FocusManager';
+import * as Settings from '../api/Settings';
 import Delay from '../api/util/Delay';
 import * as SelectionRestore from '../selection/SelectionRestore';
-import * as Settings from '../api/Settings';
 
 let documentFocusInHandler;
 const DOM = DOMUtils.DOM;
@@ -34,7 +34,7 @@ const isEditorContentAreaElement = function (elm: Element) {
   }
 };
 
-const isUIElement = function (editor: Editor, elm: Element) {
+const isUIElement = function (editor: Editor, elm: Node) {
   const customSelector = Settings.getCustomUiSelector(editor);
   const parent = DOM.getParent(elm, function (elm) {
     return (
@@ -45,9 +45,13 @@ const isUIElement = function (editor: Editor, elm: Element) {
   return parent !== null;
 };
 
-const getActiveElement = function (): Element {
+const getActiveElement = function (editor: Editor): Element {
   try {
-    return document.activeElement;
+    const root = SugarShadowDom.getRootNode(SugarElement.fromDom(editor.getElement()));
+    return Focus.active(root).fold(
+      () => document.body,
+      (x) => x.dom
+    );
   } catch (ex) {
     // IE sometimes fails to get the activeElement when resizing table
     // TODO: Investigate this
@@ -82,7 +86,7 @@ const registerEvents = function (editorManager: EditorManager, e: { editor: Edit
       const focusedEditor = editorManager.focusedEditor;
 
       // Still the same editor the blur was outside any editor UI
-      if (!isUIElement(self, getActiveElement()) && focusedEditor === self) {
+      if (!isUIElement(self, getActiveElement(self)) && focusedEditor === self) {
         self.fire('blur', { focusedEditor: null });
         editorManager.focusedEditor = null;
       }
@@ -95,14 +99,16 @@ const registerEvents = function (editorManager: EditorManager, e: { editor: Edit
     documentFocusInHandler = function (e: FocusEvent) {
       const activeEditor = editorManager.activeEditor;
 
-      const target = e.target as HTMLElement;
-
-      if (activeEditor && target.ownerDocument === document) {
-        // Fire a blur event if the element isn't a UI element
-        if (target !== document.body && !isUIElement(activeEditor, target) && editorManager.focusedEditor === activeEditor) {
-          activeEditor.fire('blur', { focusedEditor: null });
-          editorManager.focusedEditor = null;
-        }
+      if (activeEditor) {
+        SugarShadowDom.getOriginalEventTarget(e).each((target: Element) => {
+          if (target.ownerDocument === document) {
+            // Fire a blur event if the element isn't a UI element
+            if (target !== document.body && !isUIElement(activeEditor, target) && editorManager.focusedEditor === activeEditor) {
+              activeEditor.fire('blur', { focusedEditor: null });
+              editorManager.focusedEditor = null;
+            }
+          }
+        });
       }
     };
 

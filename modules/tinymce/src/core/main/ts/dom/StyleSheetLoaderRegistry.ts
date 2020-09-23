@@ -5,13 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Document as DomDocument, Node as DomNode, ShadowRoot } from '@ephox/dom-globals';
-import { StyleSheetLoader, StyleSheetLoaderSettings } from 'tinymce/core/api/dom/StyleSheetLoader';
-import { Element, ShadowDom } from '@ephox/sugar';
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
+import { SugarElement, SugarShadowDom } from '@ephox/sugar';
+import { StyleSheetLoader, StyleSheetLoaderSettings } from '../api/dom/StyleSheetLoader';
 
 export interface StyleSheetLoaderRegistry {
-  readonly forElement: (referenceElement: Element<DomNode>, settings: Partial<StyleSheetLoaderSettings>) => StyleSheetLoader;
+  readonly forElement: (referenceElement: SugarElement<Node>, settings: StyleSheetLoaderSettings) => StyleSheetLoader;
 }
 
 /**
@@ -19,13 +18,13 @@ export interface StyleSheetLoaderRegistry {
  */
 export const create = (): StyleSheetLoaderRegistry => {
 
-  const map = new WeakMap<DomDocument | ShadowRoot, StyleSheetLoader>();
+  const map = new WeakMap<Document | ShadowRoot, StyleSheetLoader>();
 
-  const forElement = (referenceElement: Element<DomNode>, settings: Partial<StyleSheetLoaderSettings>) => {
-    const root = ShadowDom.getRootNode(referenceElement);
+  const forElement = (referenceElement: SugarElement<Node>, settings: StyleSheetLoaderSettings) => {
+    const root = SugarShadowDom.getRootNode(referenceElement);
 
-    const rootDom = root.dom();
-    return Option.from(map.get(rootDom)).getOrThunk(() => {
+    const rootDom = root.dom;
+    return Optional.from(map.get(rootDom)).getOrThunk(() => {
       const sl = StyleSheetLoader(rootDom, settings);
       map.set(rootDom, sl);
       return sl;

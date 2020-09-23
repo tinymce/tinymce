@@ -1,6 +1,5 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Testable } from '@ephox/dispute';
-import { document, Element, HTMLIFrameElement, HTMLLinkElement, HTMLMetaElement, window } from '@ephox/dom-globals';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Env from 'tinymce/core/api/Env';
 import Schema from 'tinymce/core/api/html/Schema';
@@ -213,6 +212,11 @@ UnitTest.test('DOMUtils.is', () => {
   Assert.eq('', false, DOM.is(DOM.get('textX'), 'div#textX2'));
   Assert.eq('', false, DOM.is(null, 'div#textX2'));
 
+  DOM.get('test').innerHTML = '<div><span class="test">ab<span><a id="test2" href="">abc</a>c</span></span></div>';
+
+  Assert.eq('', true, DOM.is(DOM.select('span', 'test'), 'span'));
+  Assert.eq('', true, DOM.is(DOM.select('#test2', 'test'), '#test2'));
+
   DOM.remove('test');
 });
 
@@ -356,16 +360,6 @@ UnitTest.test('DOMUtils.getParents', () => {
   Assert.eq('', 2, DOM.getParents('test2', 'span').length);
   Assert.eq('', 1, DOM.getParents('test2', 'span.test').length);
   Assert.eq('', 0, DOM.getParents('test2', 'body', DOM.get('test')).length);
-
-  DOM.remove('test');
-});
-
-UnitTest.test('DOMUtils.is', () => {
-  DOM.add(document.body, 'div', { id: 'test' });
-  DOM.get('test').innerHTML = '<div><span class="test">ab<span><a id="test2" href="">abc</a>c</span></span></div>';
-
-  Assert.eq('', true, DOM.is(DOM.select('span', 'test'), 'span'));
-  Assert.eq('', true, DOM.is(DOM.select('#test2', 'test'), '#test2'));
 
   DOM.remove('test');
 });
@@ -516,7 +510,7 @@ UnitTest.test('DOMUtils.remove', () => {
   Assert.eq('', '<span>test</span><span>test2</span>', DOM.get('test').innerHTML.toLowerCase());
 
   DOM.setHTML('test', '<span id="test2"><span>test</span><span>test2</span></span>');
-  Assert.eq('', 'SPAN', DOM.remove('test2').nodeName);
+  Assert.eq('', 'SPAN', (DOM.remove('test2') as Node).nodeName);
 
   DOM.remove('test');
 });
@@ -569,7 +563,8 @@ UnitTest.test('DOMUtils.encodeDecode', () => {
 });
 
 UnitTest.test('DOMUtils.split', () => {
-  let point, parent;
+  let point: Element;
+  let parent: Element;
   DOM.add(document.body, 'div', { id: 'test' });
 
   DOM.setHTML('test', '<p><b>text1<span>inner</span>text2</b></p>');
@@ -578,11 +573,41 @@ UnitTest.test('DOMUtils.split', () => {
   DOM.split(parent, point);
   Assert.eq('', '<p><b>text1</b></p><span>inner</span><p><b>text2</b></p>', DOM.get('test').innerHTML.toLowerCase().replace(/\s+/g, ''));
 
+  DOM.setHTML('test', '<p><strong>  &nbsp;  <span></span>cd</strong></p>');
+  parent = DOM.select('strong', DOM.get('test'))[0];
+  point = DOM.select('span', DOM.get('test'))[0];
+  DOM.split(parent, point);
+  Assert.eq('TINY-6251: Do not remove spaces containing nbsp', '<p><strong>  &nbsp;  </strong><span></span><strong>cd</strong></p>', DOM.get('test').innerHTML.toLowerCase());
+
   DOM.setHTML('test', '<ul><li>first line<br><ul><li><span>second</span> <span>line</span></li><li>third line<br></li></ul></li></ul>');
   parent = DOM.select('li:nth-child(1)', DOM.get('test'))[0];
   point = DOM.select('ul li:nth-child(2)', DOM.get('test'))[0];
   DOM.split(parent, point);
   Assert.eq('', '<ul><li>first line<br><ul><li><span>second</span> <span>line</span></li></ul></li><li>third line<br></li></ul>', HtmlUtils.cleanHtml(DOM.get('test').innerHTML));
+
+  DOM.setHTML('test', '<p><b>&nbsp; <span>inner</span>text2</b></p>');
+  parent = DOM.select('p', DOM.get('test'))[0];
+  point = DOM.select('span', DOM.get('test'))[0];
+  DOM.split(parent, point);
+  Assert.eq('', '<p><b>&nbsp; </b></p><span>inner</span><p><b>text2</b></p>', HtmlUtils.cleanHtml(DOM.get('test').innerHTML));
+
+  DOM.setHTML('test', '<p><b><a id="anchor"></a><span>inner</span>text2</b></p>');
+  parent = DOM.select('p', DOM.get('test'))[0];
+  point = DOM.select('span', DOM.get('test'))[0];
+  DOM.split(parent, point);
+  Assert.eq('', '<p><b><a id="anchor"></a></b></p><span>inner</span><p><b>text2</b></p>', HtmlUtils.cleanHtml(DOM.get('test').innerHTML));
+
+  DOM.setHTML('test', '<p>text<span style="text-decoration: underline;"> <span>t</span></span>ext</p>');
+  parent = DOM.select('span', DOM.get('test'))[0];
+  point = DOM.select('span', DOM.get('test'))[1];
+  DOM.split(parent, point);
+  Assert.eq('TINY-6268: Do not remove spaces at start of split', '<p>text<span style="text-decoration: underline;"> </span><span>t</span>ext</p>', DOM.get('test').innerHTML);
+
+  DOM.setHTML('test', '<p>tex<span style="text-decoration: underline;"><span>t</span> </span>text</p>');
+  parent = DOM.select('span', DOM.get('test'))[0];
+  point = DOM.select('span', DOM.get('test'))[1];
+  DOM.split(parent, point);
+  Assert.eq('TINY-6268: Do not remove spaces at end of split', '<p>tex<span>t</span><span style="text-decoration: underline;"> </span>text</p>', DOM.get('test').innerHTML);
 
   DOM.remove('test');
 });

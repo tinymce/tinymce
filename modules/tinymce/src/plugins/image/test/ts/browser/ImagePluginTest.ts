@@ -1,7 +1,7 @@
 import { Chain, GeneralSteps, Log, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
-import { Body } from '@ephox/sugar';
+import { SugarBody } from '@ephox/sugar';
 import Plugin from 'tinymce/plugins/image/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 
@@ -39,7 +39,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
     const createTestUpdatedStyle = (name: string, style: string, assertion: Step<any, any>) => Log.stepsAsStep('TBA', 'Image: ' + name, [
       sInitAndOpenDialog('', { elementPath: [ 0 ], offset: 0 }),
       ui.sClickOnUi('Switch to Advanced tab', '.tox-tab:contains("Advanced")'),
-      Chain.asStep(Body.body(), [
+      Chain.asStep(SugarBody.body(), [
         cSetInputValue(advancedTabSelectors.style, style)
       ]),
       assertion,

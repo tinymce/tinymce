@@ -1,6 +1,5 @@
-import { KeyboardEvent, Window } from '@ephox/dom-globals';
-import { Arr, Fun, Option } from '@ephox/katamari';
-import { Element, EventArgs, Situ } from '@ephox/sugar';
+import { Arr, Fun, Optional } from '@ephox/katamari';
+import { EventArgs, Situ, SugarElement } from '@ephox/sugar';
 import * as KeySelection from '../keyboard/KeySelection';
 import * as VerticalMovement from '../keyboard/VerticalMovement';
 import MouseSelection from '../mouse/MouseSelection';
@@ -18,28 +17,29 @@ interface RC {
 
 const rc = (rows: number, cols: number): RC => ({ rows, cols });
 
-const mouse = function (win: Window, container: Element, isRoot: (e: Element) => boolean, annotations: SelectionAnnotation) {
+const mouse = function (win: Window, container: SugarElement, isRoot: (e: SugarElement) => boolean, annotations: SelectionAnnotation) {
   const bridge = WindowBridge(win);
 
   const handlers = MouseSelection(bridge, container, isRoot, annotations);
 
   return {
+    clearstate: handlers.clearstate,
     mousedown: handlers.mousedown,
     mouseover: handlers.mouseover,
     mouseup: handlers.mouseup
   };
 };
 
-const keyboard = function (win: Window, container: Element, isRoot: (e: Element) => boolean, annotations: SelectionAnnotation) {
+const keyboard = function (win: Window, container: SugarElement, isRoot: (e: SugarElement) => boolean, annotations: SelectionAnnotation) {
   const bridge = WindowBridge(win);
 
   const clearToNavigate = function () {
     annotations.clear(container);
-    return Option.none<Response>();
+    return Optional.none<Response>();
   };
 
-  const keydown = function (event: EventArgs, start: Element, soffset: number, finish: Element, foffset: number, direction: typeof SelectionKeys.ltr) {
-    const realEvent = event.raw() as KeyboardEvent;
+  const keydown = function (event: EventArgs<KeyboardEvent>, start: SugarElement, soffset: number, finish: SugarElement, foffset: number, direction: typeof SelectionKeys.ltr) {
+    const realEvent = event.raw;
     const keycode = realEvent.which;
     const shiftKey = realEvent.shiftKey === true;
 
@@ -54,7 +54,7 @@ const keyboard = function (win: Window, container: Element, isRoot: (e: Element)
       } else if (SelectionKeys.isUp(keycode)) { // Up should predict the movement and set the cursor
         return Fun.curry(VerticalMovement.navigate, bridge, isRoot, KeyDirection.up, finish, start, VerticalMovement.firstUpCheck);
       } else {
-        return Option.none;
+        return Optional.none;
       }
     }, function (selected) {
 
@@ -70,12 +70,12 @@ const keyboard = function (win: Window, container: Element, isRoot: (e: Element)
             // the table
             return CellSelection.getEdges(container, annotations.firstSelectedSelector, annotations.lastSelectedSelector).map(function (edges) {
               const relative = SelectionKeys.isDown(keycode) || direction.isForward(keycode) ? Situ.after : Situ.before;
-              bridge.setRelativeSelection(Situ.on(edges.first(), 0), relative(edges.table()));
+              bridge.setRelativeSelection(Situ.on(edges.first, 0), relative(edges.table));
               annotations.clear(container);
-              return Response.create(Option.none(), true);
+              return Response.create(Optional.none(), true);
             });
           }, function (_) {
-            return Option.some(Response.create(Option.none(), true));
+            return Optional.some(Response.create(Optional.none(), true));
           });
         };
       };
@@ -91,27 +91,27 @@ const keyboard = function (win: Window, container: Element, isRoot: (e: Element)
       } else if (SelectionKeys.isNavigation(keycode) && shiftKey === false) { // Clear the selection on normal arrow keys.
         return clearToNavigate;
       } else {
-        return Option.none;
+        return Optional.none;
       }
     });
 
     return handler();
   };
 
-  const keyup = function (event: EventArgs, start: Element, soffset: number, finish: Element, foffset: number) {
-    return CellSelection.retrieve(container, annotations.selectedSelector).fold<Option<Response>>(function () {
-      const realEvent = event.raw() as KeyboardEvent;
+  const keyup = function (event: EventArgs<KeyboardEvent>, start: SugarElement, soffset: number, finish: SugarElement, foffset: number) {
+    return CellSelection.retrieve(container, annotations.selectedSelector).fold<Optional<Response>>(function () {
+      const realEvent = event.raw;
       const keycode = realEvent.which;
       const shiftKey = realEvent.shiftKey === true;
       if (shiftKey === false) {
-        return Option.none<Response>();
+        return Optional.none<Response>();
       }
       if (SelectionKeys.isNavigation(keycode)) {
         return KeySelection.sync(container, isRoot, start, soffset, finish, foffset, annotations.selectRange);
       } else {
-        return Option.none<Response>();
+        return Optional.none<Response>();
       }
-    }, Option.none);
+    }, Optional.none);
   };
 
   return {
@@ -120,10 +120,10 @@ const keyboard = function (win: Window, container: Element, isRoot: (e: Element)
   };
 };
 
-const external = (win: Window, container: Element, isRoot: (e: Element) => boolean, annotations: SelectionAnnotation) => {
+const external = (win: Window, container: SugarElement, isRoot: (e: SugarElement) => boolean, annotations: SelectionAnnotation) => {
   const bridge = WindowBridge(win);
 
-  return (start: Element, finish: Element) => {
+  return (start: SugarElement, finish: SugarElement) => {
     annotations.clearBeforeUpdate(container);
     CellSelection.identify(start, finish, isRoot).each(function (cellSel) {
       const boxes = cellSel.boxes.getOr([]);

@@ -1,10 +1,10 @@
-import { Assertions, GeneralSteps, Logger, Pipeline, Step, Chain } from '@ephox/agar';
+import { Assertions, Chain, Log, Pipeline, Step } from '@ephox/agar';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Element, Css, SelectorFind, Scroll } from '@ephox/sugar';
+import { Css, Scroll, SelectorFind, SugarElement } from '@ephox/sugar';
+import Editor from 'tinymce/core/api/Editor';
 import * as EditorView from 'tinymce/core/EditorView';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock-client';
-import { window } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.core.EditorViewIframeTest', function (success, failure) {
 
@@ -17,8 +17,8 @@ UnitTest.asynctest('browser.tinymce.core.EditorViewIframeTest', function (succes
   };
 
   const getIframeClientRect = function (editor) {
-    return SelectorFind.descendant(Element.fromDom(editor.getContentAreaContainer()), 'iframe').map(function (elm) {
-      return elm.dom().getBoundingClientRect();
+    return SelectorFind.descendant(SugarElement.fromDom(editor.getContentAreaContainer()), 'iframe').map(function (elm) {
+      return elm.dom.getBoundingClientRect();
     }).getOrDie();
   };
 
@@ -26,16 +26,16 @@ UnitTest.asynctest('browser.tinymce.core.EditorViewIframeTest', function (succes
     return Step.label(
       'sSetBodyStyles ' + JSON.stringify(css),
       Step.sync(function () {
-        Css.setAll(Element.fromDom(editor.getBody()), css);
+        Css.setAll(SugarElement.fromDom(editor.getBody()), css);
       })
     );
   };
 
   const sTestIsXYInContentArea = function (editor, deltaX, deltaY) {
-    const dx1 = - 25 - deltaX;
+    const dx1 = -25 - deltaX;
     const dy1 = -25 - deltaY;
-    const dx2 = - 5 - deltaX;
-    const dy2 = - 5 - deltaY;
+    const dx2 = -5 - deltaX;
+    const dy2 = -5 - deltaY;
     return Step.label('Check points relative to deltaX=' + deltaX + ' deltaY=' + deltaY, Chain.asStep({}, [
       Chain.fromParent(
         Chain.label(
@@ -65,7 +65,12 @@ UnitTest.asynctest('browser.tinymce.core.EditorViewIframeTest', function (succes
     ]));
   };
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  const sAssertIsAttachedToDom = (editor: Editor) => Step.sync(() => {
+    const attached = EditorView.isEditorAttachedToDom(editor);
+    Assert.eq('Editor should be attached to the DOM', true, attached);
+  });
+
+  TinyLoader.setupInBodyAndShadowRoot(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
 
     const sSetContentToBigDiv = Step.label(
@@ -74,17 +79,19 @@ UnitTest.asynctest('browser.tinymce.core.EditorViewIframeTest', function (succes
     );
 
     Pipeline.async({}, isPhantomJs() ? [] : [
-      Logger.t('isXYInContentArea without borders, margin', GeneralSteps.sequence([
+      Log.stepsAsStep('TBA', 'isXYInContentArea without borders, margin', [
         sSetBodyStyles(editor, { border: '0', margin: '0' }),
         sSetContentToBigDiv,
         sTestIsXYInContentArea(editor, 0, 0)
-      ])),
+      ]),
 
-      Logger.t('isXYInContentArea with borders, margin', GeneralSteps.sequence([
+      Log.stepsAsStep('TBA', 'isXYInContentArea with borders, margin', [
         sSetBodyStyles(editor, { border: '5px', margin: '15px' }),
         sSetContentToBigDiv,
         sTestIsXYInContentArea(editor, 0, 0)
-      ]))
+      ]),
+
+      Log.step('TINY-6354', 'isEditorAttachedToDom should return true', sAssertIsAttachedToDom(editor))
     ], onSuccess, onFailure);
   }, {
     base_url: '/project/tinymce/js/tinymce'

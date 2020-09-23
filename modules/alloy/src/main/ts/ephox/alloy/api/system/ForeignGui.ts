@@ -1,21 +1,21 @@
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
-import { Arr, Fun, Obj, Option } from '@ephox/katamari';
-import { DomEvent, Element, EventArgs, Insert } from '@ephox/sugar';
+import { Arr, Obj, Optional } from '@ephox/katamari';
+import { DomEvent, EventArgs, Insert, SugarElement } from '@ephox/sugar';
 
-import { AlloyComponent } from '../../api/component/ComponentApi';
 import { UncurriedHandler } from '../../events/EventRegistry';
 import * as SimulatedEvent from '../../events/SimulatedEvent';
 import ForeignCache from '../../foreign/ForeignCache';
 import * as Tagger from '../../registry/Tagger';
 import { AlloyBehaviourRecord } from '../behaviour/Behaviour';
+import { AlloyComponent } from '../component/ComponentApi';
 import * as GuiFactory from '../component/GuiFactory';
 import { AlloyEventRecord } from '../events/AlloyEvents';
 import * as Gui from './Gui';
 
 export interface ForeignGuiSpec {
-  readonly root: Element;
+  readonly root: SugarElement;
   readonly dispatchers: Dispatcher[];
-  readonly insertion?: (root: Element, system: Gui.GuiSystem) => void;
+  readonly insertion?: (root: SugarElement, system: Gui.GuiSystem) => void;
 }
 
 export interface DispatchedAlloyConfig {
@@ -25,14 +25,14 @@ export interface DispatchedAlloyConfig {
 }
 
 export interface Dispatcher {
-  readonly getTarget: (elem: Element) => Option<Element>;
+  readonly getTarget: (elem: SugarElement) => Optional<SugarElement>;
   readonly alloyConfig: DispatchedAlloyConfig;
 }
 
 export interface ForeignGuiDetail {
-  readonly root: Element;
+  readonly root: SugarElement;
   readonly dispatchers: Dispatcher[];
-  readonly insertion: (root: Element, system: Gui.GuiSystem) => void;
+  readonly insertion: (root: SugarElement, system: Gui.GuiSystem) => void;
 }
 
 const schema = ValueSchema.objOfOnly([
@@ -43,8 +43,8 @@ const schema = ValueSchema.objOfOnly([
     // The configuration for the behaviours
     FieldSchema.strict('alloyConfig')
   ]),
-  FieldSchema.defaulted('insertion', (root: Element, system: AlloyComponent) => {
-    Insert.append(root, system.element());
+  FieldSchema.defaulted('insertion', (root: SugarElement, system: AlloyComponent) => {
+    Insert.append(root, system.element);
   })
 ]);
 
@@ -87,18 +87,18 @@ const supportedEvents = [
 ];
 
 interface DispatcherMission {
-  target: Element;
+  target: SugarElement;
   dispatcher: Dispatcher;
 }
 
 // Find the dispatcher information for the target if available. Note, the
 // dispatcher may also change the target.
-const findDispatcher = (dispatchers: Dispatcher[], target: Element): Option<DispatcherMission> => Arr.findMap(dispatchers, (dispatcher: Dispatcher) => dispatcher.getTarget(target).map((newTarget) => ({
+const findDispatcher = (dispatchers: Dispatcher[], target: SugarElement): Optional<DispatcherMission> => Arr.findMap(dispatchers, (dispatcher: Dispatcher) => dispatcher.getTarget(target).map((newTarget) => ({
   target: newTarget,
   dispatcher
 })));
 
-const getProxy = <T extends SimulatedEvent.EventFormat>(event: T, target: Element) => {
+const getProxy = <T extends SimulatedEvent.EventFormat>(event: T, target: SugarElement) => {
   // Setup the component wrapping for the target element
   const component = GuiFactory.build(
     GuiFactory.external({ element: target })
@@ -107,8 +107,8 @@ const getProxy = <T extends SimulatedEvent.EventFormat>(event: T, target: Elemen
   const simulatedEvent = SimulatedEvent.fromTarget(event, target);
 
   return {
-    component: Fun.constant(component),
-    simulatedEvent: Fun.constant(simulatedEvent)
+    component,
+    simulatedEvent
   };
 };
 
@@ -126,14 +126,14 @@ const engage = (spec: ForeignGuiSpec) => {
     dispatchTo(type, event);
   }));
 
-  const proxyFor = <T extends SimulatedEvent.EventFormat>(event: T, target: Element, descHandler: UncurriedHandler) => {
+  const proxyFor = <T extends SimulatedEvent.EventFormat>(event: T, target: SugarElement, descHandler: UncurriedHandler) => {
     // create a simple alloy wrapping around the element, and add it to the world
     const proxy = getProxy(event, target);
-    const component = proxy.component();
+    const component = proxy.component;
     gui.addToWorld(component);
     // fire the event
     const handler = descHandler.handler;
-    handler(component, proxy.simulatedEvent());
+    handler(component, proxy.simulatedEvent);
 
     // now remove from the world and revoke any alloy ids
     unproxy(component);
@@ -153,10 +153,10 @@ const engage = (spec: ForeignGuiSpec) => {
      * c) execute the event handler
      * d) remove it from the internal system and clear any DOM markers (alloy-ids etc)
      */
-    if (gui.element().dom().contains(event.target().dom())) { return; }
+    if (gui.element.dom.contains(event.target.dom)) { return; }
 
     // Find if the target has an assigned dispatcher
-    findDispatcher(detail.dispatchers, event.target()).each((mission) => {
+    findDispatcher(detail.dispatchers, event.target).each((mission) => {
 
       // get any info for this current element, creating it if necessary
       const data = cache.getEvents(mission.target, mission.dispatcher.alloyConfig);
@@ -170,7 +170,7 @@ const engage = (spec: ForeignGuiSpec) => {
   // Remove any traces of the foreign component from the internal alloy system.
   const unproxy = (component: AlloyComponent): void => {
     gui.removeFromWorld(component);
-    Tagger.revoke(component.element());
+    Tagger.revoke(component.element);
   };
 
   // Disconnect the foreign GUI

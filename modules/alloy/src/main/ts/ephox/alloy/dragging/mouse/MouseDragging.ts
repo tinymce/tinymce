@@ -1,6 +1,5 @@
 import { FieldProcessorAdt } from '@ephox/boulder';
-import { MouseEvent } from '@ephox/dom-globals';
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { EventArgs } from '@ephox/sugar';
 
 import DelayedFunction from '../../alien/DelayedFunction';
@@ -19,11 +18,11 @@ import { MouseDraggingConfig } from './MouseDraggingTypes';
 
 const events = <E>(dragConfig: MouseDraggingConfig<E>, dragState: DraggingState, updateStartState: (comp: AlloyComponent) => void) => [
   AlloyEvents.run<EventArgs<MouseEvent>>(NativeEvents.mousedown(), (component, simulatedEvent) => {
-    const raw = simulatedEvent.event().raw();
+    const raw = simulatedEvent.event.raw;
     if (raw.button !== 0) { return; }
     simulatedEvent.stop();
 
-    const stop = () => DragUtils.stop(component, Option.some(blocker), dragConfig, dragState);
+    const stop = () => DragUtils.stop(component, Optional.some(blocker), dragConfig, dragState);
 
     // If the user has moved something outside the area, and has not come back within
     // 200 ms, then drop

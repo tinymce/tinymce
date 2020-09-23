@@ -6,8 +6,8 @@
  */
 
 import { AlloySpec, RawDomSchema } from '@ephox/alloy';
-import { Types } from '@ephox/bridge';
-import { Arr, Fun, Obj, Option } from '@ephox/katamari';
+import { Toolbar } from '@ephox/bridge';
+import { Arr, Fun, Obj, Optional } from '@ephox/katamari';
 import I18n from 'tinymce/core/api/util/I18n';
 import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
 import * as Icons from '../../../icons/Icons';
@@ -16,33 +16,33 @@ import { renderHtml, renderIcon, renderShortcut, renderStyledText, renderText } 
 
 export interface ItemStructure {
   dom: RawDomSchema;
-  optComponents: Array<Option<AlloySpec>>;
+  optComponents: Array<Optional<AlloySpec>>;
 }
 
 export interface ItemStructureSpec {
-  presets: Types.PresetItemTypes;
-  iconContent: Option<string>;
-  textContent: Option<string>;
-  htmlContent: Option<string>;
-  ariaLabel: Option<string>;
-  shortcutContent: Option<string>;
-  checkMark: Option<AlloySpec>;
-  caret: Option<AlloySpec>;
+  presets: Toolbar.PresetItemTypes;
+  iconContent: Optional<string>;
+  textContent: Optional<string>;
+  htmlContent: Optional<string>;
+  ariaLabel: Optional<string>;
+  shortcutContent: Optional<string>;
+  checkMark: Optional<AlloySpec>;
+  caret: Optional<AlloySpec>;
   value?: string;
   meta?: Record<string, any>;
 }
 
 interface NormalItemSpec {
-  iconContent: Option<string>;
-  textContent: Option<string>;
-  htmlContent: Option<string>;
-  shortcutContent: Option<string>;
-  checkMark: Option<AlloySpec>;
-  caret: Option<AlloySpec>;
-  ariaLabel: Option<string>;
+  iconContent: Optional<string>;
+  textContent: Optional<string>;
+  htmlContent: Optional<string>;
+  shortcutContent: Optional<string>;
+  checkMark: Optional<AlloySpec>;
+  caret: Optional<AlloySpec>;
+  ariaLabel: Optional<string>;
 }
 
-const renderColorStructure = (itemText: Option<string>, itemValue: string, iconSvg: Option<string>, providerBackstage: UiFactoryBackstageProviders): ItemStructure => {
+const renderColorStructure = (itemText: Optional<string>, itemValue: string, iconSvg: Optional<string>, providerBackstage: UiFactoryBackstageProviders): ItemStructure => {
   const colorPickerCommand = 'custom';
   const removeColorCommand = 'remove';
 
@@ -91,9 +91,9 @@ const renderColorStructure = (itemText: Option<string>, itemValue: string, iconS
 };
 
 // TODO: Maybe need aria-label
-const renderNormalItemStructure = (info: NormalItemSpec, icon: Option<string>, renderIcons: boolean, textRender: (text: string) => AlloySpec, rtlClass: boolean): ItemStructure => {
+const renderNormalItemStructure = (info: NormalItemSpec, icon: Optional<string>, renderIcons: boolean, textRender: (text: string) => AlloySpec, rtlClass: boolean): ItemStructure => {
   // Note: renderIcons indicates if any icons are present in the menu - if false then the icon column will not be present for the whole menu
-  const leftIcon: Option<AlloySpec> = renderIcons ? icon.or(Option.some('')).map(renderIcon) : Option.none();
+  const leftIcon: Optional<AlloySpec> = renderIcons ? icon.or(Optional.some('')).map(renderIcon) : Optional.none();
   // TINY-3345: Dedicated columns for icon and checkmark if applicable
   const checkmark = info.checkMark;
   const domTitle = info.ariaLabel.map((label): {attributes?: {title: string}} => ({
@@ -111,7 +111,7 @@ const renderNormalItemStructure = (info: NormalItemSpec, icon: Option<string>, r
   };
 
   const content = info.htmlContent.fold(() => info.textContent.map(textRender),
-    (html) => Option.some(renderHtml(html))
+    (html) => Optional.some(renderHtml(html))
   );
 
   const menuItem = {
@@ -146,10 +146,10 @@ const rtlTransform = [
 ];
 
 // TODO: Maybe need aria-label
-const renderItemStructure = <T>(info: ItemStructureSpec, providersBackstage: UiFactoryBackstageProviders, renderIcons: boolean, fallbackIcon: Option<string> = Option.none()): { dom: RawDomSchema; optComponents: Array<Option<AlloySpec>> } => {
+const renderItemStructure = <T>(info: ItemStructureSpec, providersBackstage: UiFactoryBackstageProviders, renderIcons: boolean, fallbackIcon: Optional<string> = Optional.none()): { dom: RawDomSchema; optComponents: Array<Optional<AlloySpec>> } => {
   // If RTL and icon is in whitelist, add RTL icon class for icons that don't have a `-rtl` icon available.
   // Use `-rtl` icon suffix for icons that do.
-  const getIconName = (iconName: Option<string>): Option<string> => iconName.map((name) => I18n.isRtl() && Arr.contains(rtlIcon, name) ? name + '-rtl' : name);
+  const getIconName = (iconName: Optional<string>): Optional<string> => iconName.map((name) => I18n.isRtl() && Arr.contains(rtlIcon, name) ? name + '-rtl' : name);
 
   const needRtlClass = I18n.isRtl() && info.iconContent.exists((name) => Arr.contains(rtlTransform, name));
 
@@ -158,7 +158,7 @@ const renderItemStructure = <T>(info: ItemStructureSpec, providersBackstage: UiF
 
   // Style items and autocompleter both have meta. Need to branch on style
   // This could probably be more stable...
-  const textRender: (text: string) => AlloySpec = Option.from(info.meta).fold(
+  const textRender: (text: string) => AlloySpec = Optional.from(info.meta).fold(
     () => renderText,
     (meta) => Obj.has(meta, 'style') ? Fun.curry(renderStyledText, meta.style) : renderText
   );

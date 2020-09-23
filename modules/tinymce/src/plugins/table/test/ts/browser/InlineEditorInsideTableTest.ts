@@ -1,12 +1,12 @@
 import { Chain, Guard, Log, Mouse, NamedChain, Pipeline, Step, TestLogs, UiFinder } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Editor } from '@ephox/mcagar';
-import { Attr, Body, Element, Html, Insert, Remove } from '@ephox/sugar';
+import { Attribute, Html, Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
+import EditorManager from 'tinymce/core/api/EditorManager';
+import Delay from 'tinymce/core/api/util/Delay';
 
 import Plugin from 'tinymce/plugins/table/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
-import EditorManager from 'tinymce/core/api/EditorManager';
-import Delay from 'tinymce/core/api/util/Delay';
 
 UnitTest.asynctest('browser.tinymce.plugins.table.InlineEditorInsideTableTest', (success, failure) => {
   Plugin();
@@ -47,7 +47,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.InlineEditorInsideTableTest', 
     );
   };
 
-  const cNotExists = (container: Element, selector: string) => Chain.control(
+  const cNotExists = (container: SugarElement, selector: string) => Chain.control(
     Chain.op(() => {
       UiFinder.findIn(container, selector).fold(
         () => Assert.eq('should not find anything', true, true),
@@ -60,17 +60,17 @@ UnitTest.asynctest('browser.tinymce.plugins.table.InlineEditorInsideTableTest', 
   const step = Step.raw((_, next, die, initLogs) => {
     NamedChain.pipeline([
       NamedChain.write('container', Chain.async((_input, n, _die) => {
-        const container = Element.fromTag('div');
-        Attr.set(container, 'id', 'test-container-div');
+        const container = SugarElement.fromTag('div');
+        Attribute.set(container, 'id', 'test-container-div');
         Html.set(container, containerHtml);
-        Insert.append(Body.body(), container);
+        Insert.append(SugarBody.body(), container);
         n(container);
       })),
       NamedChain.write('editor', cOnSelector('div.tinymce')),
       NamedChain.direct('container', Chain.fromChains([
         UiFinder.cFindIn('div.tinymce'),
         Mouse.cMouseOver,
-        cNotExists(Body.body(), 'div[data-row="0"]')
+        cNotExists(SugarBody.body(), 'div[data-row="0"]')
       ]), '_'),
       NamedChain.read('editor', Editor.cRemove),
       NamedChain.read('container', Chain.op((div) => Remove.remove(div)))

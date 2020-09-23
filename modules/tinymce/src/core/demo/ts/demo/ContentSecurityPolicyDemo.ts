@@ -1,7 +1,6 @@
-/* tslint:disable:no-console */
-import { console } from '@ephox/dom-globals';
+/* eslint-disable no-console */
 import { Merger } from '@ephox/katamari';
-import { Css, Element } from '@ephox/sugar';
+import { Css, SugarElement } from '@ephox/sugar';
 
 declare let tinymce: any;
 
@@ -11,14 +10,14 @@ const makeSidebar = (ed, name: string, background: string, width: number) => {
     tooltip: 'Tooltip for ' + name,
     onSetup: (api) => {
       console.log('onSetup ' + name);
-      const box = Element.fromTag('div');
+      const box = SugarElement.fromTag('div');
       Css.setAll(box, {
         width: width + 'px',
         background
       });
-      api.element().appendChild(box.dom());
+      api.element().appendChild(box.dom);
       return () => {
-        api.element().removeChild(box.dom());
+        api.element().removeChild(box.dom);
       };
     },
     onShow: (_api) => {

@@ -1,20 +1,20 @@
-import Theme from 'tinymce/themes/silver/Theme';
+import { Assertions, Chain, Guard, Logger, Pipeline, Step, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Editor as McEditor, ApiChains } from '@ephox/mcagar';
-import { Pipeline, Logger, Chain, Step, UiFinder, Assertions, Guard } from '@ephox/agar';
 import { Cell, Fun } from '@ephox/katamari';
-import { Element, Body, Insert, Remove, Focus } from '@ephox/sugar';
+import { ApiChains, Editor as McEditor } from '@ephox/mcagar';
+import { Focus, Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
+import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('Remove context menu on focusout', (success, failure) => {
   Theme();
 
-  const inputElmCell = Cell<Element>(null);
+  const inputElmCell = Cell<SugarElement>(null);
   const sAddInput = Step.sync(() => {
-    const input = Element.fromTag('input');
+    const input = SugarElement.fromTag('input');
     inputElmCell.set(input);
 
-    Insert.append(Body.body(), input);
+    Insert.append(SugarBody.body(), input);
   });
 
   const sRemoveInput = Step.sync(() => {
@@ -27,7 +27,7 @@ UnitTest.asynctest('Remove context menu on focusout', (success, failure) => {
 
   const cWaitForContextmenuState = (state: boolean) => Chain.control(
     Chain.op(() => {
-      const contextToolbar = UiFinder.findIn(Body.body(), '.tox-pop');
+      const contextToolbar = UiFinder.findIn(SugarBody.body(), '.tox-pop');
 
       Assertions.assertEq('no context toolbar', state, contextToolbar.isValue());
     }),

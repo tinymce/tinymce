@@ -18,13 +18,13 @@ export interface RawString {
   raw: string;
 }
 
-export type TokenisedString = string[];
+type Primitive = string | number | boolean | Record<string | number, any> | Function;
 
-export type Untranslated = any;
+export type TokenisedString = [ string, ...Primitive[] ];
+
+export type Untranslated = Primitive | TokenisedString | RawString;
 
 export type TranslatedString = string;
-
-export type TranslateIfNeeded = Untranslated | TranslatedString;
 
 const isRaw = (str: any): str is RawString => Type.isObject(str) && Obj.has(str, 'raw');
 
@@ -118,29 +118,25 @@ const translate = (text: Untranslated): TranslatedString => {
 
   const removeContext = (str: string) => str.replace(/{context:\w+}$/, '');
 
-  const translated = (text: Untranslated): TranslatedString =>
-    // TODO: When we figure out how to return a type Translated that fails if you give a String, we implement here
-    text;
-
   // empty strings
   if (isEmpty(text)) {
-    return translated('');
+    return '';
   }
 
   // Raw, already translated
   if (isRaw(text)) {
-    return translated(toString(text.raw));
+    return toString(text.raw);
   }
 
   // Tokenised {translations}
   if (isTokenised(text)) {
     const values = text.slice(1);
     const substitued = getLangData(text[0]).replace(/\{([0-9]+)\}/g, ($1, $2) => Obj.has(values, $2) ? toString(values[$2]) : $1);
-    return translated(removeContext(substitued));
+    return removeContext(substitued);
   }
 
   // straight forward translation mapping
-  return translated(removeContext(getLangData(text)));
+  return removeContext(getLangData(text));
 };
 
 /**

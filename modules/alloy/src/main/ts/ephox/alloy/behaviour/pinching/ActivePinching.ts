@@ -1,24 +1,23 @@
-import { TouchEvent } from '@ephox/dom-globals';
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { EventArgs } from '@ephox/sugar';
 
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
-import { PinchDragData, PinchingConfig, PinchingState } from '../../behaviour/pinching/PinchingTypes';
 import { DragModeDeltas } from '../../dragging/common/DraggingTypes';
+import { PinchDragData, PinchingConfig, PinchingState } from './PinchingTypes';
 
 const mode: DragModeDeltas<TouchEvent, PinchDragData> = {
   getData(e: EventArgs<TouchEvent>) {
-    const raw = e.raw();
+    const raw = e.raw;
     const touches = raw.touches;
-    if (touches.length < 2) { return Option.none(); }
+    if (touches.length < 2) { return Optional.none(); }
 
     const deltaX = Math.abs(touches[0].clientX - touches[1].clientX);
     const deltaY = Math.abs(touches[0].clientY - touches[1].clientY);
 
     const deltaDistance = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
 
-    return Option.some({
+    return Optional.some({
       deltaX,
       deltaY,
       deltaDistance
@@ -46,14 +45,14 @@ const events = (pinchConfig: PinchingConfig, pinchState: PinchingState): AlloyEv
   AlloyEvents.run<EventArgs<TouchEvent>>(NativeEvents.touchmove(), (component, simulatedEvent) => {
     simulatedEvent.stop();
 
-    const delta = pinchState.update(mode, simulatedEvent.event());
+    const delta = pinchState.update(mode, simulatedEvent.event);
     delta.each((dlt) => {
       const multiplier = dlt.deltaDistance > 0 ? 1 : -1;
       const changeX = multiplier * Math.abs(dlt.deltaX);
       const changeY = multiplier * Math.abs(dlt.deltaY);
 
       const f = multiplier === 1 ? pinchConfig.onPunch : pinchConfig.onPinch;
-      f(component.element(), changeX, changeY);
+      f(component.element, changeX, changeY);
     });
   }),
 

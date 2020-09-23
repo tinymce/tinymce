@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element, Node } from '@ephox/dom-globals';
 import { Cell } from '@ephox/katamari';
 import { Pattern as PolarisPattern } from '@ephox/polaris';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
@@ -125,7 +124,7 @@ const removeNode = function (dom: DOMUtils, node: Node) {
 };
 
 const escapeSearchText = (text: string, wholeWord: boolean) => {
-  const escapedText = text.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&').replace(/\s/g, '[^\\S\\r\\n]');
+  const escapedText = text.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&').replace(/\s/g, '[^\\S\\r\\n\\uFEFF]');
   const wordRegex = '(' + escapedText + ')';
   return wholeWord ? `(?:^|\\s|${PolarisPattern.punctuation()})` + wordRegex + `(?=$|\\s|${PolarisPattern.punctuation()})` : wordRegex;
 };

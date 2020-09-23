@@ -5,9 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node } from '@ephox/dom-globals';
-import { Arr, Option } from '@ephox/katamari';
-import { HTMLElement } from '@ephox/sand';
+import { Arr, Optional } from '@ephox/katamari';
+import { SandHTMLElement } from '@ephox/sand';
 import DomQuery from 'tinymce/core/api/dom/DomQuery';
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
@@ -68,7 +67,7 @@ const getClosestListRootElm = function (editor, elm) {
   return root;
 };
 
-const findLastParentListNode = (editor: Editor, elm: Node): Option<Node> => {
+const findLastParentListNode = (editor: Editor, elm: Node): Optional<Node> => {
   const parentLists = editor.dom.getParents(elm, 'ol,ul', getClosestListRootElm(editor, elm));
   return Arr.last(parentLists);
 };
@@ -92,7 +91,7 @@ const getUniqueListRoots = (editor: Editor, lists: Node[]): Node[] => {
 
 const isList = (editor: Editor): boolean => {
   const list = getParentList(editor);
-  return HTMLElement.isPrototypeOf(list);
+  return SandHTMLElement.isPrototypeOf(list);
 };
 
 export {

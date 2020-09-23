@@ -1,6 +1,6 @@
 import { Assertions, FocusTools, Keyboard, Keys, Mouse, Step, Touch, UiControls, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Arr, Future, Option, Result, Strings } from '@ephox/katamari';
+import { Arr, Future, Optional, Result, Strings } from '@ephox/katamari';
 import { Focus, Value } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
@@ -49,7 +49,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadTest', (success, failur
             },
 
             fetch(input) {
-              const text = Value.get(input.element()).toLowerCase();
+              const text = Value.get(input.element).toLowerCase();
               const future = Future.pure([
                 { type: 'item', data: { value: text + '1', meta: { text: Strings.capitalize(text) + '1' }}},
                 { type: 'item', data: { value: text + '2', meta: { text: Strings.capitalize(text) + '2' }}}
@@ -65,7 +65,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadTest', (success, failur
                   value: 'blah',
                   items: Arr.map(items, TestDropdownMenu.renderItem)
                 });
-                return Option.some(TieredMenu.singleData('blah.overall', menu));
+                return Optional.some(TieredMenu.singleData('blah.overall', menu));
               });
             },
 
@@ -98,14 +98,14 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadTest', (success, failur
     const steps = TestTypeaheadSteps(doc, gui, typeahead);
 
     return [
-      FocusTools.sSetFocus('Focusing typeahead', gui.element(), 'input'),
+      FocusTools.sSetFocus('Focusing typeahead', gui.element, 'input'),
 
       GuiSetup.mAddStyles(doc, [
         '.selected-item { background-color: #cadbee; }'
       ]),
 
       steps.sAssertValue('Initial value of typeahead', 'initial-value'),
-      UiControls.sSetValue(typeahead.element(), 'peo'),
+      UiControls.sSetValue(typeahead.element, 'peo'),
 
       // check that the typeahead is not open.
       steps.sWaitForNoMenu('Should be no menu initially'),
@@ -118,7 +118,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadTest', (success, failur
       // the same size as the input field
       DropdownAssertions.sSameWidth('Typeahead', gui, typeahead, '.menu'),
 
-      NavigationUtils.highlights(gui.element(), Keys.down(), {}, [
+      NavigationUtils.highlights(gui.element, Keys.down(), {}, [
         item('peo2'),
         item('peo1'),
         item('peo2')
@@ -140,12 +140,12 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadTest', (success, failur
 
       steps.sWaitForNoMenu('No menu after <enter>'),
 
-      UiControls.sSetValue(typeahead.element(), 'new-value'),
+      UiControls.sSetValue(typeahead.element, 'new-value'),
       Keyboard.sKeydown(doc, Keys.down(), {}),
 
       steps.sAssertFocusOnTypeahead('After pressing Down after Enter'),
       steps.sWaitForMenu('After pressing Down after Enter'),
-      NavigationUtils.highlights(gui.element(), Keys.down(), {}, [
+      NavigationUtils.highlights(gui.element, Keys.down(), {}, [
         item('new-value2'),
         item('new-value1')
       ]),
@@ -159,19 +159,19 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadTest', (success, failur
       steps.sAssertFocusOnTypeahead('ESC > Down'),
       steps.sWaitForMenu('ESC > Down'),
 
-      NavigationUtils.highlights(gui.element(), Keys.down(), {}, [
+      NavigationUtils.highlights(gui.element, Keys.down(), {}, [
         item('new-value12'),
         item('new-value11')
       ]),
 
-      Mouse.sClickOn(gui.element(), '.item[data-value="new-value12"]'),
+      Mouse.sClickOn(gui.element, '.item[data-value="new-value12"]'),
       steps.sWaitForNoMenu('After clicking on item'),
       steps.sAssertValue('After clicking on item', 'New-value12'),
 
       Keyboard.sKeydown(doc, Keys.down(), {}),
       steps.sWaitForMenu('Pressing down to check for tapping popups'),
 
-      Touch.sTapOn(gui.element(), '.item[data-value="new-value122"]'),
+      Touch.sTapOn(gui.element, '.item[data-value="new-value122"]'),
       steps.sWaitForNoMenu('After tapping on item'),
       steps.sAssertValue('After tapping on item', 'New-value122'),
 
@@ -196,32 +196,32 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadTest', (success, failur
       TestBroadcasts.sDismiss(
         'outer gui element: should close',
         gui,
-        gui.element()
+        gui.element
       ),
       steps.sWaitForNoMenu('Broadcasting dismiss on outer gui context should close popup'),
 
       // Trigger menu again
-      UiControls.sSetValue(typeahead.element(), 'Neo'),
+      UiControls.sSetValue(typeahead.element, 'Neo'),
       Keyboard.sKeydown(doc, Keys.down(), { }),
       steps.sWaitForMenu('Waiting for menu to appear for "neo"'),
-      NavigationUtils.highlights(gui.element(), Keys.down(), {}, [
+      NavigationUtils.highlights(gui.element, Keys.down(), {}, [
         item('neo2')
       ]),
 
       TestDropdownMenu.mStoreMenuUid(component),
-      UiControls.sSetValue(typeahead.element(), 'Neo'),
+      UiControls.sSetValue(typeahead.element, 'Neo'),
       Step.sync(() => {
         AlloyTriggers.emit(typeahead, NativeEvents.input());
       }),
       TestDropdownMenu.mWaitForNewMenu(component),
       Waiter.sTryUntil(
         'Selection should stay on neo2 if possible',
-        UiFinder.sExists(gui.element(), item('neo2').selector)
+        UiFinder.sExists(gui.element, item('neo2').selector)
       ),
 
       // Focus something else.
       Step.sync(() => {
-        Focus.focus(component.element());
+        Focus.focus(component.element);
       }),
       steps.sWaitForNoMenu('Blurring should dismiss popup'),
 

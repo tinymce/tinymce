@@ -7,15 +7,15 @@
 
 import { Replacing } from '@ephox/alloy';
 import { Fun, Singleton } from '@ephox/katamari';
+import { MobileWebApp } from 'tinymce/themes/mobile/api/IosWebapp';
+import { MobileRealm } from 'tinymce/themes/mobile/ui/IosRealm';
 
 import * as AndroidWebapp from '../api/AndroidWebapp';
 import * as Styles from '../style/Styles';
-import ScrollingToolbar from '../toolbar/ScrollingToolbar';
+import { ScrollingToolbar } from '../toolbar/ScrollingToolbar';
 import * as CommonRealm from './CommonRealm';
 import * as Dropup from './Dropup';
 import OuterContainer from './OuterContainer';
-import { MobileRealm } from 'tinymce/themes/mobile/ui/IosRealm';
-import { MobileWebApp } from 'tinymce/themes/mobile/api/IosWebapp';
 
 export default (scrollIntoView: () => void): MobileRealm => {
   const alloy = OuterContainer({
@@ -32,9 +32,9 @@ export default (scrollIntoView: () => void): MobileRealm => {
 
   const dropup = Dropup.build(Fun.noop, scrollIntoView);
 
-  alloy.add(toolbar.wrapper());
+  alloy.add(toolbar.wrapper);
   alloy.add(socket);
-  alloy.add(dropup.component());
+  alloy.add(dropup.component);
 
   const setToolbarGroups = (rawGroups) => {
     const groups = toolbar.createGroups(rawGroups);
@@ -69,11 +69,11 @@ export default (scrollIntoView: () => void): MobileRealm => {
   };
 
   const updateMode = (readOnly) => {
-    CommonRealm.updateMode(socket, switchToEdit, readOnly, alloy.root());
+    CommonRealm.updateMode(socket, switchToEdit, readOnly, alloy.root);
   };
 
   return {
-    system: Fun.constant(alloy),
+    system: alloy,
     element: alloy.element,
     init,
     exit,
@@ -82,7 +82,7 @@ export default (scrollIntoView: () => void): MobileRealm => {
     focusToolbar,
     restoreToolbar,
     updateMode,
-    socket: Fun.constant(socket),
-    dropup: Fun.constant(dropup)
+    socket,
+    dropup
   };
 };

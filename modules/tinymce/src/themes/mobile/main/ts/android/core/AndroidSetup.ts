@@ -5,8 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Fun, Option } from '@ephox/katamari';
-import { Attr, DomEvent, Element } from '@ephox/sugar';
+import { Optional } from '@ephox/katamari';
+import { Attribute, DomEvent, RawRect, SugarElement } from '@ephox/sugar';
 
 import * as Styles from '../../style/Styles';
 import * as DataAttributes from '../../util/DataAttributes';
@@ -20,39 +20,39 @@ const EXTRA_SPACING = 50;
 const data = 'data-' + Styles.resolve('last-outer-height');
 
 const setLastHeight = function (cBody, value) {
-  Attr.set(cBody, data, value);
+  Attribute.set(cBody, data, value);
 };
 
 const getLastHeight = function (cBody) {
   return DataAttributes.safeParse(cBody, data);
 };
 
-const getBoundsFrom = function (rect) {
+const getBoundsFrom = function (rect: RawRect) {
   return {
-    top: Fun.constant(rect.top()),
-    bottom: Fun.constant(rect.top() + rect.height())
+    top: rect.top,
+    bottom: rect.top + rect.height
   };
 };
 
 const getBounds = function (cWin) {
   const rects = Rectangles.getRectangles(cWin);
-  return rects.length > 0 ? Option.some(rects[0]).map(getBoundsFrom) : Option.none();
+  return rects.length > 0 ? Optional.some(rects[0]).map(getBoundsFrom) : Optional.none();
 };
 
 const findDelta = function (outerWindow, cBody) {
   const last = getLastHeight(cBody);
   const current = outerWindow.innerHeight;
-  return last > current ? Option.some(last - current) : Option.none();
+  return last > current ? Optional.some(last - current) : Optional.none();
 };
 
 const calculate = function (cWin, bounds, delta) {
   // The goal here is to shift as little as required.
-  const isOutside = bounds.top() > cWin.innerHeight || bounds.bottom() > cWin.innerHeight;
-  return isOutside ? Math.min(delta, bounds.bottom() - cWin.innerHeight + EXTRA_SPACING) : 0;
+  const isOutside = bounds.top > cWin.innerHeight || bounds.bottom > cWin.innerHeight;
+  return isOutside ? Math.min(delta, bounds.bottom - cWin.innerHeight + EXTRA_SPACING) : 0;
 };
 
 const setup = function (outerWindow, cWin) {
-  const cBody = Element.fromDom(cWin.document.body);
+  const cBody = SugarElement.fromDom(cWin.document.body);
 
   const toEditing = function () {
     // TBIO-3816 throttling the resume was causing keyboard hide/show issues with undo/redo
@@ -61,7 +61,7 @@ const setup = function (outerWindow, cWin) {
     ResumeEditing.resume(cWin);
   };
 
-  const onResize = DomEvent.bind(Element.fromDom(outerWindow), 'resize', function () {
+  const onResize = DomEvent.bind(SugarElement.fromDom(outerWindow), 'resize', function () {
 
     findDelta(outerWindow, cBody).each(function (delta) {
       getBounds(cWin).each(function (bounds) {

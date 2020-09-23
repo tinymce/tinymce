@@ -1,15 +1,15 @@
 import { ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Log, Pipeline, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { document } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { TinyApis, TinyDom, TinyLoader, TinyUi, UiChains } from '@ephox/mcagar';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 
 import ImagePlugin from 'tinymce/plugins/image/Plugin';
 import ImageToolsPlugin from 'tinymce/plugins/imagetools/Plugin';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
+import { sOpenContextMenu } from '../../../module/ContextMenuUtils';
 
 UnitTest.asynctest('SilverContextMenuTest', (success, failure) => {
   SilverTheme();
@@ -22,13 +22,8 @@ UnitTest.asynctest('SilverContextMenuTest', (success, failure) => {
     const tinyApis = TinyApis(editor);
     const tinyUi = TinyUi(editor);
 
-    const doc = Element.fromDom(document);
-    const editorBody = Element.fromDom(editor.getBody());
-
-    const sOpenContextMenu = (target) => Chain.asStep(editor, [
-      tinyUi.cTriggerContextMenu('trigger context menu', target, '.tox-silver-sink .tox-collection [role="menuitem"]'),
-      Chain.wait(0)
-    ]);
+    const doc = SugarElement.fromDom(document);
+    const editorBody = SugarElement.fromDom(editor.getBody());
 
     // Assert focus is on the expected menu item
     const sAssertFocusOnItem = (label, selector) => FocusTools.sTryOnSelector(`Focus should be on: ${label}`, doc, selector);
@@ -93,7 +88,7 @@ UnitTest.asynctest('SilverContextMenuTest', (success, failure) => {
     Pipeline.async({}, [
       tinyApis.sFocus(),
       Log.stepsAsStep('TBA', 'Test context menus on empty editor', [
-        sOpenContextMenu('p'),
+        sOpenContextMenu(tinyUi, editor, 'p'),
         sAssertFocusOnItem('Link', '.tox-collection__item:contains("Link...")'),
         sPressEnterKey,
         sWaitForAndCloseDialog
@@ -101,7 +96,7 @@ UnitTest.asynctest('SilverContextMenuTest', (success, failure) => {
       Log.stepsAsStep('TBA', 'Test context menus on a link', [
         tinyApis.sSetContent('<p><a href="http://tiny.cloud/">Tiny</a></p>'),
         tinyApis.sSetSelection([ 0, 0, 0 ], 'Ti'.length, [ 0, 0, 0 ], 'Ti'.length),
-        sOpenContextMenu('a'),
+        sOpenContextMenu(tinyUi, editor, 'a'),
         sAssertFocusOnItem('Link', '.tox-collection__item:contains("Link...")'),
         sPressDownArrowKey,
         sAssertFocusOnItem('Remove Link', '.tox-collection__item:contains("Remove link")'),
@@ -111,14 +106,14 @@ UnitTest.asynctest('SilverContextMenuTest', (success, failure) => {
         sAssertFocusOnItem('Link', '.tox-collection__item:contains("Link...")'),
         sPressEnterKey,
         sWaitForAndCloseDialog,
-        sOpenContextMenu('a'),
+        sOpenContextMenu(tinyUi, editor, 'a'),
         sPressDownArrowKey,
         sPressEnterKey,
         sAssertRemoveLinkHtmlStructure
       ]),
       Log.stepsAsStep('TBA', 'Test context menus on a table', [
         tinyApis.sSetContent(tableHtml),
-        sOpenContextMenu('td'),
+        sOpenContextMenu(tinyUi, editor, 'td'),
         sAssertFocusOnItem('Link', '.tox-collection__item:contains("Link...")'),
         sPressDownArrowKey,
         sAssertFocusOnItem('Cell', '.tox-collection__item:contains("Cell")'),
@@ -136,7 +131,7 @@ UnitTest.asynctest('SilverContextMenuTest', (success, failure) => {
       ]),
       Log.stepsAsStep('TBA', 'Test context menus on image inside a table', [
         tinyApis.sSetContent(imageInTableHtml),
-        sOpenContextMenu('img'),
+        sOpenContextMenu(tinyUi, editor, 'img'),
         sAssertFocusOnItem('Link', '.tox-collection__item:contains("Link...")'),
         sPressDownArrowKey,
         sAssertFocusOnItem('Image', '.tox-collection__item:contains("Image")'),
@@ -156,7 +151,7 @@ UnitTest.asynctest('SilverContextMenuTest', (success, failure) => {
         sRepeatDownArrowKey(2),
         sPressEnterKey,
         sWaitForAndCloseDialog,
-        sOpenContextMenu('img'),
+        sOpenContextMenu(tinyUi, editor, 'img'),
         // Navigate to the "Image tools" menu item
         sRepeatDownArrowKey(2),
         sPressEnterKey,
@@ -164,7 +159,7 @@ UnitTest.asynctest('SilverContextMenuTest', (success, failure) => {
       ]),
       Log.stepsAsStep('TBA', 'Test context menus on link inside a table', [
         tinyApis.sSetContent(linkInTableHtml),
-        sOpenContextMenu('a'),
+        sOpenContextMenu(tinyUi, editor, 'a'),
         sAssertFocusOnItem('Link', '.tox-collection__item:contains("Link...")'),
         sPressDownArrowKey,
         sAssertFocusOnItem('Remove Link', '.tox-collection__item:contains("Remove link")'),
@@ -185,7 +180,7 @@ UnitTest.asynctest('SilverContextMenuTest', (success, failure) => {
         // Placeholder images shouldn't show the image/image tools options
         tinyApis.sSetContent(placeholderImageInTableHtml),
         tinyApis.sSelect('img', []),
-        sOpenContextMenu('img'),
+        sOpenContextMenu(tinyUi, editor, 'img'),
         sAssertFocusOnItem('Link', '.tox-collection__item:contains("Link...")'),
         sPressDownArrowKey,
         sAssertFocusOnItem('Cell', '.tox-collection__item:contains("Cell")'),

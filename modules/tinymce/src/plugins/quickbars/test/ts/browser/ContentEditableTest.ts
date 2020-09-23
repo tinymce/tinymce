@@ -1,7 +1,7 @@
 import { Log, Pipeline, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
-import { Body } from '@ephox/sugar';
+import { SugarBody } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 
 import QuickbarsPlugin from 'tinymce/plugins/quickbars/Plugin';
@@ -17,7 +17,7 @@ UnitTest.asynctest('browser.tinymce.plugins.quickbars.ContentEditableTest', (suc
     const tinyUi = TinyUi(editor);
 
     const sAssertToolbarVisible = tinyUi.sWaitForUi('wait for toolbar to show', '.tox-toolbar');
-    const sAssertToolbarNotVisible = Waiter.sTryUntil('toolbar should not exist', UiFinder.sNotExists(Body.body(), '.tox-toolbar'));
+    const sAssertToolbarNotVisible = Waiter.sTryUntil('toolbar should not exist', UiFinder.sNotExists(SugarBody.body(), '.tox-toolbar'));
 
     Pipeline.async({}, [
       tinyApis.sFocus(),

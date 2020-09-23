@@ -7,9 +7,10 @@
 
 import { Cell } from '@ephox/katamari';
 import Editor from '../api/Editor';
+import { EditorEvent } from '../api/util/EventDispatcher';
 import * as Levels from './Levels';
-import { UndoManager, Locks, UndoLevel } from './UndoManagerTypes';
 import { endTyping, setTyping } from './TypingState';
+import { Locks, UndoLevel, UndoManager } from './UndoManagerTypes';
 
 export const registerEvents = (editor: Editor, undoManager: UndoManager, locks: Locks) => {
   const isFirstTypedCharacter = Cell(false);
@@ -116,13 +117,14 @@ export const registerEvents = (editor: Editor, undoManager: UndoManager, locks: 
   });
 
   // Special inputType, currently only Chrome implements this: https://www.w3.org/TR/input-events-2/#x5.1.2-attributes
-  const isInsertReplacementText = (event) => event.inputType === 'insertReplacementText';
+  const isInsertReplacementText = (event: EditorEvent<InputEvent>) => event.inputType === 'insertReplacementText';
   // Safari just shows inputType `insertText` but with data set to null so we can use that
-  const isInsertTextDataNull = (event) => event.inputType === 'insertText' && event.data === null;
+  const isInsertTextDataNull = (event: EditorEvent<InputEvent>) => event.inputType === 'insertText' && event.data === null;
+  const isInsertFromPasteOrDrop = (event: EditorEvent<InputEvent>) => event.inputType === 'insertFromPaste' || event.inputType === 'insertFromDrop';
 
-  // For detecting when user has replaced text using the browser built-in spell checker
+  // For detecting when user has replaced text using the browser built-in spell checker or paste/drop events
   editor.on('input', (e) => {
-    if (e.inputType && (isInsertReplacementText(e) || isInsertTextDataNull(e))) {
+    if (e.inputType && (isInsertReplacementText(e) || isInsertTextDataNull(e) || isInsertFromPasteOrDrop(e))) {
       addNonTypingUndoLevel(e);
     }
   });

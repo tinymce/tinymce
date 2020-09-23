@@ -1,10 +1,10 @@
 import { ApproxStructure, Assertions, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
+
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { AlloySpec } from 'ephox/alloy/api/component/SpecTypes';
-
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { CustomList } from 'ephox/alloy/api/ui/CustomList';
 import { Toolbar } from 'ephox/alloy/api/ui/Toolbar';
@@ -51,7 +51,7 @@ UnitTest.asynctest('MultipleToolbarTest', (success, failure) => {
         },
 
         components: [
-          ToolbarGroup.parts().items({ })
+          ToolbarGroup.parts.items({ })
         ],
 
         items: spec.items,
@@ -99,7 +99,7 @@ UnitTest.asynctest('MultipleToolbarTest', (success, failure) => {
           toolbar
         ]
       })),
-      component.element()
+      component.element
     );
 
     const toolbarList = component.getSystem().getByUid('multiple-toolbar').getOrDie();

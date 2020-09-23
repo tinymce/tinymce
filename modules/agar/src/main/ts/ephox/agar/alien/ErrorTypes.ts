@@ -1,5 +1,5 @@
-import { Type } from '@ephox/katamari';
 import { TestLabel } from '@ephox/bedrock-client';
+import { Type } from '@ephox/katamari';
 
 // TODO: tighten param and return type
 const enrichWith = (label: TestLabel, err: any): any => {

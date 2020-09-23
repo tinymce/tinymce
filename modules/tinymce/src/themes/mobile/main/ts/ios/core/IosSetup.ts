@@ -5,8 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Fun, Option, Throttler } from '@ephox/katamari';
-import { Body, Css, DomEvent, Element, Focus } from '@ephox/sugar';
+import { Fun, Optional, Throttler } from '@ephox/katamari';
+import { Css, DomEvent, Focus, SugarBody, SugarElement } from '@ephox/sugar';
 
 import * as Orientation from '../../touch/view/Orientation';
 import * as CaptureBin from '../../util/CaptureBin';
@@ -15,10 +15,9 @@ import FakeSelection from '../focus/FakeSelection';
 import * as IosScrolling from '../scroll/IosScrolling';
 import BackgroundActivity from '../smooth/BackgroundActivity';
 import * as Greenzone from '../view/Greenzone';
+import { IosKeyboardConstructor } from '../view/IosKeyboard';
 import * as IosUpdates from '../view/IosUpdates';
 import * as IosViewport from '../view/IosViewport';
-import { IosKeyboardConstructor } from '../view/IosKeyboard';
-import { HTMLElement, HTMLIFrameElement, Node as DomNode, Window } from '@ephox/dom-globals';
 
 const VIEW_MARGIN = 5;
 
@@ -32,13 +31,13 @@ const register = function (toolstrip, socket, container, outerWindow, structure,
   // back to show the current selection rectangle.
   const scrollBounds = function () {
     const rects = Rectangles.getRectangles(cWin);
-    return Option.from(rects[0]).bind(function (rect) {
-      const viewTop = rect.top() - socket.dom().scrollTop;
+    return Optional.from(rects[0]).bind(function (rect) {
+      const viewTop = rect.top - socket.dom.scrollTop;
       const outside = viewTop > outerWindow.innerHeight + VIEW_MARGIN || viewTop < -VIEW_MARGIN;
-      return outside ? Option.some({
-        top: Fun.constant(viewTop),
-        bottom: Fun.constant(viewTop + rect.height())
-      }) : Option.none<{top: () => number; bottom: () => number}>();
+      return outside ? Optional.some({
+        top: viewTop,
+        bottom: viewTop + rect.height
+      }) : Optional.none<{top: number; bottom: number}>();
     });
   };
 
@@ -51,7 +50,7 @@ const register = function (toolstrip, socket, container, outerWindow, structure,
         const extraScroll = scrollBounds();
         extraScroll.each(function (extra) {
           // TODO: Smoothly animate this in a way that doesn't conflict with anything else.
-          socket.dom().scrollTop = socket.dom().scrollTop + extra.top();
+          socket.dom.scrollTop = socket.dom.scrollTop + extra.top;
         });
         scroller.start(0);
         structure.refresh();
@@ -59,7 +58,7 @@ const register = function (toolstrip, socket, container, outerWindow, structure,
     });
   }, 1000);
 
-  const onScroll = DomEvent.bind(Element.fromDom(outerWindow), 'scroll', function () {
+  const onScroll = DomEvent.bind(SugarElement.fromDom(outerWindow), 'scroll', function () {
     if (outerWindow.pageYOffset < 0) {
       return;
     }
@@ -113,14 +112,14 @@ export interface IosApi {
 
 interface IosSetupOptions {
   readonly cWin: Window;
-  readonly ceBody: Element<DomNode>;
-  readonly socket: Element<HTMLElement>;
-  readonly toolstrip: Element<HTMLElement>;
-  readonly contentElement: Element<HTMLIFrameElement>;
+  readonly ceBody: SugarElement<Node>;
+  readonly socket: SugarElement<HTMLElement>;
+  readonly toolstrip: SugarElement<HTMLElement>;
+  readonly contentElement: SugarElement<HTMLIFrameElement>;
   readonly keyboardType: IosKeyboardConstructor;
   readonly outerWindow: Window;
-  readonly dropup: Element<HTMLElement>;
-  readonly outerBody: Element<DomNode>;
+  readonly dropup: SugarElement<HTMLElement>;
+  readonly outerBody: SugarElement<Node>;
 }
 
 const setup = function (bag: IosSetupOptions) {
@@ -135,7 +134,7 @@ const setup = function (bag: IosSetupOptions) {
   const outerBody = bag.outerBody;
 
   const structure = IosViewport.takeover(socket, ceBody, toolstrip, dropup);
-  const keyboardModel = keyboardType(outerBody, cWin, Body.body(), contentElement);
+  const keyboardModel = keyboardType(outerBody, cWin, SugarBody.body(), contentElement);
 
   const toEditing = function () {
     // Consider inlining, though it will make it harder to follow the API
@@ -163,7 +162,7 @@ const setup = function (bag: IosSetupOptions) {
     structure.refresh();
   });
 
-  const onResize = DomEvent.bind(Element.fromDom(outerWindow), 'resize', function () {
+  const onResize = DomEvent.bind(SugarElement.fromDom(outerWindow), 'resize', function () {
     if (structure.isExpanding()) {
       structure.refresh();
     }
@@ -192,7 +191,7 @@ const setup = function (bag: IosSetupOptions) {
   };
 
   const syncHeight = function () {
-    Css.set(contentElement, 'height', contentElement.dom().contentWindow.document.body.scrollHeight + 'px');
+    Css.set(contentElement, 'height', contentElement.dom.contentWindow.document.body.scrollHeight + 'px');
   };
 
   const setViewportOffset = function (newYOffset) {
@@ -210,7 +209,7 @@ const setup = function (bag: IosSetupOptions) {
     unfocusedSelection.destroy();
 
     // Try and dismiss the keyboard on close, as they have no input focus.
-    CaptureBin.input(Body.body(), Focus.blur);
+    CaptureBin.input(SugarBody.body(), Focus.blur);
   };
 
   return {

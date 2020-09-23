@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element, Node } from '@ephox/dom-globals';
 import { Arr, Cell, Obj } from '@ephox/katamari';
 import Editor from '../api/Editor';
 import Tools from '../api/util/Tools';

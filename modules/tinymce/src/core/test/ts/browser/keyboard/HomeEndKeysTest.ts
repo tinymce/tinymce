@@ -1,8 +1,8 @@
 import { GeneralSteps, Logger, Pipeline } from '@ephox/agar';
-import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
-import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock-client';
+import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
 import VK from 'tinymce/core/api/util/VK';
+import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.core.keyboard.HomeEndKeysTest', (success, failure) => {
   Theme();

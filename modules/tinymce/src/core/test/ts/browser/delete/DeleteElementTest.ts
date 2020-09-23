@@ -1,9 +1,9 @@
 import { Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Hierarchy, Element } from '@ephox/sugar';
+import { Hierarchy, SugarElement } from '@ephox/sugar';
 import * as DeleteElement from 'tinymce/core/delete/DeleteElement';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.core.delete.DeleteElementTest', function (success, failure) {
 
@@ -11,7 +11,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.DeleteElementTest', function (su
 
   const sDeleteElementPath = function (editor, forward, path) {
     return Step.sync(function () {
-      const element = Hierarchy.follow(Element.fromDom(editor.getBody()), path).getOrDie();
+      const element = Hierarchy.follow(SugarElement.fromDom(editor.getBody()), path).getOrDie();
       DeleteElement.deleteElement(editor, forward, element);
     });
   };

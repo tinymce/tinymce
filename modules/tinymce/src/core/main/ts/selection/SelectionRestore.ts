@@ -5,12 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { document } from '@ephox/dom-globals';
 import { Throttler } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import DOMUtils from '../api/dom/DOMUtils';
-import * as SelectionBookmark from './SelectionBookmark';
 import Editor from '../api/Editor';
+import * as SelectionBookmark from './SelectionBookmark';
 
 const isManualNodeChange = function (e) {
   return e.type === 'nodechange' && e.selectionChange;

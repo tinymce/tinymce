@@ -5,9 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import Editor from 'tinymce/core/api/Editor';
 import * as Dialog from '../ui/Dialog';
 
-const register = (editor) => {
+const register = (editor: Editor) => {
   editor.addCommand('mceAnchor', () => {
     Dialog.open(editor);
   });

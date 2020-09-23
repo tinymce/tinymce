@@ -1,9 +1,8 @@
 import { ApproxStructure, Assertions, Chain, Keyboard, Keys, Logger, Mouse, Step, UiControls, UiFinder, Waiter } from '@ephox/agar';
 import { AlloyTriggers, Focusing, GuiFactory, NativeEvents, Representing, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
-import { document } from '@ephox/dom-globals';
-import { Future, Option } from '@ephox/katamari';
-import { Element, SelectorFind, Value } from '@ephox/sugar';
+import { Future, Optional } from '@ephox/katamari';
+import { SelectorFind, SugarElement, Value } from '@ephox/sugar';
 import { ApiUrlData } from 'tinymce/themes/silver/backstage/UrlInputBackstage';
 import { LinkTargetType } from 'tinymce/themes/silver/ui/core/LinkTargets';
 import { renderUrlInput } from 'tinymce/themes/silver/ui/dialog/UrlInput';
@@ -12,19 +11,19 @@ import TestExtras from '../../../module/TestExtras';
 
 UnitTest.asynctest('UrlInput component Test', (success, failure) => {
   const helpers = TestExtras();
-  const sink = Element.fromDom(document.querySelector('.mce-silver-sink'));
+  const sink = SugarElement.fromDom(document.querySelector('.mce-silver-sink'));
 
   TestHelpers.GuiSetup.setup(
     (store, _doc, _body) => GuiFactory.build(
       renderUrlInput({
-        label: Option.some('UrlInput label'),
+        label: Optional.some('UrlInput label'),
         name: 'col1',
         filetype: 'file',
         disabled: false
       }, helpers.backstage, {
         getHistory: (_fileType) => [],
         addToHistory: (_url, _filetype) => store.adder('addToHistory')(),
-        getLinkInformation: () => Option.some({
+        getLinkInformation: () => Optional.some({
           targets: [
             {
               type: 'header' as LinkTargetType,
@@ -44,8 +43,8 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
           anchorTop: '#anchor-top',
           anchorBottom: undefined
         }),
-        getValidationHandler: () => Option.none(),
-        getUrlPicker: (_filetype) => Option.some((entry: ApiUrlData) => {
+        getValidationHandler: () => Optional.none(),
+        getUrlPicker: (_filetype) => Optional.some((entry: ApiUrlData) => {
           store.adder('urlpicker')();
           return Future.pure({ value: 'http://tiny.cloud', meta: { before: entry.value }, fieldname: 'test' });
         })
@@ -54,7 +53,7 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
     (doc, _body, _gui, component, store) => {
 
       const input = component.getSystem().getByDom(
-        SelectorFind.descendant(component.element(), 'input').getOrDie(
+        SelectorFind.descendant(component.element, 'input').getOrDie(
           'Could not find input'
         )
       ).getOrDie();
@@ -124,7 +123,7 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
           )
         ]),
 
-        UiControls.sSetValue(input.element(), 'He'),
+        UiControls.sSetValue(input.element, 'He'),
         Step.sync(() => {
           AlloyTriggers.emit(input, NativeEvents.input());
         }),
@@ -171,7 +170,7 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
         store.sAssertEq('nothing in store ... before selecting item', []),
         Keyboard.sKeydown(doc, Keys.enter(), { }),
         Step.sync(() => {
-          Assertions.assertEq('Checking Value.get', '#header', Value.get(input.element()));
+          Assertions.assertEq('Checking Value.get', '#header', Value.get(input.element));
           const repValue = Representing.getValue(input);
           Assertions.assertEq('Checking Rep.getValue',
             {
@@ -197,14 +196,14 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
         ),
         store.sAssertEq('Attach should be in store ... after firing attach', [ 'addToHistory', 'header1.attach' ]),
 
-        Mouse.sClickOn(component.element(), 'button'),
+        Mouse.sClickOn(component.element, 'button'),
 
         store.sAssertEq(
           'URL picker should have been opened ... after clicking button',
           [ 'addToHistory', 'header1.attach', 'urlpicker' ]
         ),
 
-        Waiter.sTryUntilPredicate('Checking Value.get', () => 'http://tiny.cloud' === Value.get(input.element())),
+        Waiter.sTryUntilPredicate('Checking Value.get', () => 'http://tiny.cloud' === Value.get(input.element)),
 
         Step.sync(() => {
           const repValue = Representing.getValue(input);

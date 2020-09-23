@@ -1,6 +1,5 @@
 import { Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Text } from '@ephox/dom-globals';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
@@ -438,6 +437,35 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', function (success, failur
     KeyUtils.type(editor, { keyCode: 65, charCode: 66, ctrlKey: true, altKey: true });
     LegacyUnit.equal(editor.getContent(), '<p>aB</p>');
     ok(editor.isDirty(), 'Dirty state should be true');
+  });
+
+  suite.asyncTest('Dirty state on second AddUndo', (editor, done, die) => {
+    editor.setContent('<p>a</p>');
+    LegacyUnit.setSelection(editor, 'p', 1);
+
+    let first = true;
+    const test = function () {
+      if (first) {
+        first = false;
+        if (editor.isDirty()) {
+          die('Dirty flag should not be set on first AddUndo.');
+        }
+      } else {
+        if (editor.isDirty()) {
+          done();
+        } else {
+          die('Dirty flag should be set after second AddUndo.');
+        }
+      }
+    };
+
+    editor.undoManager.clear();
+    editor.setDirty(false);
+    editor.on('AddUndo', test);
+    KeyUtils.type(editor, '\n');
+    KeyUtils.type(editor, '\n');
+
+    editor.off('AddUndo', test);
   });
 
   suite.test('ExecCommand while typing should produce undo level', function (editor) {

@@ -5,9 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Range } from '@ephox/dom-globals';
-import { Arr, Fun, Option } from '@ephox/katamari';
-import { Compare, Element, Node, Remove, Traverse } from '@ephox/sugar';
+import { Arr, Fun, Optional } from '@ephox/katamari';
+import { Compare, Remove, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 import Editor from '../api/Editor';
 import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
@@ -20,25 +19,25 @@ import * as TableCellSelection from '../selection/TableCellSelection';
 import * as DeleteElement from './DeleteElement';
 import * as TableDeleteAction from './TableDeleteAction';
 
-const freefallRtl = (root: Element): Option<Element> => {
-  const child = Node.isComment(root) ? Traverse.prevSibling(root) : Traverse.lastChild(root);
-  return child.bind(freefallRtl).orThunk(() => Option.some(root));
+const freefallRtl = (root: SugarElement<Node>): Optional<SugarElement<Node>> => {
+  const child = SugarNode.isComment(root) ? Traverse.prevSibling(root) : Traverse.lastChild(root);
+  return child.bind(freefallRtl).orThunk(() => Optional.some(root));
 };
 
-const emptyCells = (editor: Editor, cells) => {
+const emptyCells = (editor: Editor, cells: SugarElement<HTMLTableCellElement>[]) => {
   Arr.each(cells, PaddingBr.fillWithPaddingBr);
-  editor.selection.setCursorLocation(cells[0].dom(), 0);
+  editor.selection.setCursorLocation(cells[0].dom, 0);
   return true;
 };
 
-const deleteCellContents = (editor: Editor, rng: Range, cell: Element) => {
+const deleteCellContents = (editor: Editor, rng: Range, cell: SugarElement<HTMLTableCellElement>) => {
   rng.deleteContents();
   // Pad the last block node
   const lastNode = freefallRtl(cell).getOr(cell);
-  const lastBlock = Element.fromDom(editor.dom.getParent(lastNode.dom(), editor.dom.isBlock));
+  const lastBlock = SugarElement.fromDom(editor.dom.getParent(lastNode.dom, editor.dom.isBlock));
   if (Empty.isEmpty(lastBlock)) {
     PaddingBr.fillWithPaddingBr(lastBlock);
-    editor.selection.setCursorLocation(lastBlock.dom(), 0);
+    editor.selection.setCursorLocation(lastBlock.dom, 0);
   }
   // Clean up any additional leftover nodes. If the last block wasn't a direct child, then we also need to clean up siblings
   if (!Compare.eq(cell, lastBlock)) {
@@ -52,12 +51,12 @@ const deleteCellContents = (editor: Editor, rng: Range, cell: Element) => {
   return true;
 };
 
-const deleteTableElement = (editor: Editor, table) => {
+const deleteTableElement = (editor: Editor, table: SugarElement<HTMLTableElement>) => {
   DeleteElement.deleteElement(editor, false, table);
   return true;
 };
 
-const deleteCellRange = (editor: Editor, rootElm, rng: Range) =>
+const deleteCellRange = (editor: Editor, rootElm: SugarElement<Node>, rng: Range) =>
   TableDeleteAction.getActionFromRange(rootElm, rng).
     map((action) => action.fold(
       Fun.curry(deleteTableElement, editor),
@@ -65,16 +64,16 @@ const deleteCellRange = (editor: Editor, rootElm, rng: Range) =>
       Fun.curry(deleteCellContents, editor)
     ));
 
-const deleteCaptionRange = (editor: Editor, caption) => emptyElement(editor, caption);
+const deleteCaptionRange = (editor: Editor, caption: SugarElement<HTMLTableCaptionElement>) => emptyElement(editor, caption);
 
-const deleteTableRange = (editor: Editor, rootElm, rng: Range, startElm) =>
+const deleteTableRange = (editor: Editor, rootElm: SugarElement<Node>, rng: Range, startElm: SugarElement<Node>) =>
   getParentCaption(rootElm, startElm).fold(
     () => deleteCellRange(editor, rootElm, rng),
     (caption) => deleteCaptionRange(editor, caption)
   ).getOr(false);
 
-const deleteRange = (editor: Editor, startElm) => {
-  const rootNode = Element.fromDom(editor.getBody());
+const deleteRange = (editor: Editor, startElm: SugarElement<Node>) => {
+  const rootNode = SugarElement.fromDom(editor.getBody());
   const rng = editor.selection.getRng();
   const selectedCells = TableCellSelection.getCellsFromEditor(editor);
   return selectedCells.length !== 0 ?
@@ -82,47 +81,47 @@ const deleteRange = (editor: Editor, startElm) => {
     deleteTableRange(editor, rootNode, rng, startElm);
 };
 
-const getParentCell = (rootElm, elm) =>
+const getParentCell = (rootElm: SugarElement<Node>, elm: SugarElement<Node>): Optional<SugarElement<HTMLTableCellElement>> =>
   Arr.find(Parents.parentsAndSelf(elm, rootElm), ElementType.isTableCell);
 
-const getParentCaption = (rootElm, elm) =>
-  Arr.find(Parents.parentsAndSelf(elm, rootElm), (elm) => Node.name(elm) === 'caption');
+const getParentCaption = (rootElm: SugarElement<Node>, elm: SugarElement<Node>): Optional<SugarElement<HTMLTableCaptionElement>> =>
+  Arr.find(Parents.parentsAndSelf(elm, rootElm), (elm) => SugarNode.name(elm) === 'caption');
 
-const deleteBetweenCells = (editor: Editor, rootElm, forward: boolean, fromCell, from: CaretPosition) =>
+const deleteBetweenCells = (editor: Editor, rootElm: SugarElement<Node>, forward: boolean, fromCell: SugarElement<HTMLTableCellElement>, from: CaretPosition) =>
   CaretFinder.navigate(forward, editor.getBody(), from).
     bind(
-      (to) => getParentCell(rootElm, Element.fromDom(to.getNode())).
+      (to) => getParentCell(rootElm, SugarElement.fromDom(to.getNode())).
         map((toCell) => Compare.eq(toCell, fromCell) === false)
     );
 
-const emptyElement = (editor: Editor, elm) => {
+const emptyElement = (editor: Editor, elm: SugarElement<Node>) => {
   PaddingBr.fillWithPaddingBr(elm);
-  editor.selection.setCursorLocation(elm.dom(), 0);
-  return Option.some(true);
+  editor.selection.setCursorLocation(elm.dom, 0);
+  return Optional.some(true);
 };
 
-const isDeleteOfLastCharPos = (fromCaption, forward: boolean, from: CaretPosition, to: CaretPosition) =>
-  CaretFinder.firstPositionIn(fromCaption.dom()).bind(
-    (first) => CaretFinder.lastPositionIn(fromCaption.dom()).map(
+const isDeleteOfLastCharPos = (fromCaption: SugarElement<HTMLTableCaptionElement>, forward: boolean, from: CaretPosition, to: CaretPosition) =>
+  CaretFinder.firstPositionIn(fromCaption.dom).bind(
+    (first) => CaretFinder.lastPositionIn(fromCaption.dom).map(
       (last) => forward ?
         from.isEqual(first) && to.isEqual(last) :
         from.isEqual(last) && to.isEqual(first))
   ).getOr(true);
 
-const emptyCaretCaption = (editor: Editor, elm) => emptyElement(editor, elm);
+const emptyCaretCaption = (editor: Editor, elm: SugarElement<Node>) => emptyElement(editor, elm);
 
-const validateCaretCaption = (rootElm, fromCaption, to: CaretPosition) =>
-  getParentCaption(rootElm, Element.fromDom(to.getNode())).
+const validateCaretCaption = (rootElm: SugarElement<Node>, fromCaption: SugarElement<HTMLTableCaptionElement>, to: CaretPosition) =>
+  getParentCaption(rootElm, SugarElement.fromDom(to.getNode())).
     map((toCaption) => Compare.eq(toCaption, fromCaption) === false);
 
-const deleteCaretInsideCaption = (editor: Editor, rootElm, forward: boolean, fromCaption, from: CaretPosition) =>
+const deleteCaretInsideCaption = (editor: Editor, rootElm: SugarElement<Node>, forward: boolean, fromCaption: SugarElement<HTMLTableCaptionElement>, from: CaretPosition) =>
   CaretFinder.navigate(forward, editor.getBody(), from).bind(
     (to) => isDeleteOfLastCharPos(fromCaption, forward, from, to) ?
       emptyCaretCaption(editor, fromCaption) :
       validateCaretCaption(rootElm, fromCaption, to)
-  ).or(Option.some(true));
+  ).or(Optional.some(true));
 
-const deleteCaretCells = (editor: Editor, forward: boolean, rootElm, startElm) => {
+const deleteCaretCells = (editor: Editor, forward: boolean, rootElm: SugarElement<Node>, startElm: SugarElement<Node>) => {
   const from = CaretPosition.fromRangeStart(editor.selection.getRng());
   return getParentCell(rootElm, startElm).bind(
     (fromCell) => Empty.isEmpty(fromCell) ?
@@ -131,7 +130,7 @@ const deleteCaretCells = (editor: Editor, forward: boolean, rootElm, startElm) =
   ).getOr(false);
 };
 
-const deleteCaretCaption = (editor: Editor, forward: boolean, rootElm, fromCaption) => {
+const deleteCaretCaption = (editor: Editor, forward: boolean, rootElm: SugarElement<Node>, fromCaption: SugarElement<HTMLTableCaptionElement>) => {
   const from = CaretPosition.fromRangeStart(editor.selection.getRng());
   return Empty.isEmpty(fromCaption) ?
     emptyElement(editor, fromCaption) :
@@ -145,13 +144,12 @@ const isBeforeOrAfterTable = (editor: Editor, forward: boolean) => {
   const fromPos = CaretPosition.fromRangeStart(editor.selection.getRng());
 
   return isNearTable(forward, fromPos) ||
-    CaretFinder.fromPosition(forward, editor.getBody(), fromPos).
-      map((pos) => isNearTable(forward, pos)).
-      getOr(false);
+    CaretFinder.fromPosition(forward, editor.getBody(), fromPos)
+      .exists((pos) => isNearTable(forward, pos));
 };
 
-const deleteCaret = (editor: Editor, forward: boolean, startElm: Element) => {
-  const rootElm = Element.fromDom(editor.getBody());
+const deleteCaret = (editor: Editor, forward: boolean, startElm: SugarElement<Node>) => {
+  const rootElm = SugarElement.fromDom(editor.getBody());
 
   return getParentCaption(rootElm, startElm).fold(
     () => deleteCaretCells(editor, forward, rootElm, startElm) || isBeforeOrAfterTable(editor, forward),
@@ -160,7 +158,7 @@ const deleteCaret = (editor: Editor, forward: boolean, startElm: Element) => {
 };
 
 const backspaceDelete = (editor: Editor, forward?: boolean) => {
-  const startElm = Element.fromDom(editor.selection.getStart(true));
+  const startElm = SugarElement.fromDom(editor.selection.getStart(true));
   const cells = TableCellSelection.getCellsFromEditor(editor);
 
   return editor.selection.isCollapsed() && cells.length === 0 ?

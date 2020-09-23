@@ -1,9 +1,9 @@
+import { Assert, UnitTest } from '@ephox/bedrock-client';
+import fc from 'fast-check';
 import * as Fun from 'ephox/katamari/api/Fun';
 import { Result } from 'ephox/katamari/api/Result';
-import { arbResultError, arbResultValue } from 'ephox/katamari/test/arb/ArbDataTypes';
-import fc from 'fast-check';
-import { UnitTest, Assert } from '@ephox/bedrock-client';
 import { tResult } from 'ephox/katamari/api/ResultInstances';
+import { arbResultError, arbResultValue } from 'ephox/katamari/test/arb/ArbDataTypes';
 
 UnitTest.test('Result.value: unit tests', () => {
   const s = Result.value(5);
@@ -27,7 +27,7 @@ UnitTest.test('Result.value: unit tests', () => {
   Assert.eq('eq', true, s.exists(Fun.always));
   Assert.eq('eq', false, s.forall(Fun.never));
 
-  Assert.eq('eq', true, Result.value(5).toOption().isSome());
+  Assert.eq('eq', true, Result.value(5).toOptional().isSome());
 });
 
 UnitTest.test('Checking value.is(value.getOrDie()) === true', () => {
@@ -123,8 +123,8 @@ UnitTest.test('Checking value.exists is true iff. f(value.getOrDie() === true)',
   }));
 });
 
-UnitTest.test('Checking value.toOption is always Option.some(value.getOrDie())', () => {
+UnitTest.test('Checking value.toOptional is always Optional.some(value.getOrDie())', () => {
   fc.assert(fc.property(arbResultValue(fc.integer()), (res) => {
-    Assert.eq('eq', res.getOrDie(), res.toOption().getOrDie());
+    Assert.eq('eq', res.getOrDie(), res.toOptional().getOrDie());
   }));
 });

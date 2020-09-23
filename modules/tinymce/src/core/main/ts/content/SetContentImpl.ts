@@ -5,12 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLElement } from '@ephox/dom-globals';
-import { Fun, Option } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { Fun, Optional } from '@ephox/katamari';
+import { SugarElement } from '@ephox/sugar';
 import Editor from '../api/Editor';
-import Node from '../api/html/Node';
-import Serializer from '../api/html/Serializer';
+import AstNode from '../api/html/Node';
+import HtmlSerializer from '../api/html/Serializer';
 import * as Settings from '../api/Settings';
 import Tools from '../api/util/Tools';
 import * as CaretFinder from '../caret/CaretFinder';
@@ -22,7 +21,7 @@ import { Content, SetContentArgs } from './ContentTypes';
 
 const defaultFormat = 'html';
 
-const isTreeNode = (content: any): content is Node => content instanceof Node;
+const isTreeNode = (content: any): content is AstNode => content instanceof AstNode;
 
 const moveSelection = (editor: Editor) => {
   if (EditorFocus.hasFocus(editor)) {
@@ -71,14 +70,14 @@ const setContentString = (editor: Editor, body: HTMLElement, content: string, ar
     editor.fire('SetContent', args);
   } else {
     if (args.format !== 'raw') {
-      content = Serializer({
+      content = HtmlSerializer({
         validate: editor.validate
       }, editor.schema).serialize(
         editor.parser.parse(content, { isRootContent: true, insert: true })
       );
     }
 
-    args.content = isWsPreserveElement(Element.fromDom(body)) ? content : Tools.trim(content);
+    args.content = isWsPreserveElement(SugarElement.fromDom(body)) ? content : Tools.trim(content);
     setEditorHtml(editor, args.content);
 
     if (!args.no_events) {
@@ -89,12 +88,12 @@ const setContentString = (editor: Editor, body: HTMLElement, content: string, ar
   return args.content;
 };
 
-const setContentTree = (editor: Editor, body: HTMLElement, content: Node, args: SetContentArgs): Node => {
+const setContentTree = (editor: Editor, body: HTMLElement, content: AstNode, args: SetContentArgs): AstNode => {
   FilterNode.filter(editor.parser.getNodeFilters(), editor.parser.getAttributeFilters(), content);
 
-  const html = Serializer({ validate: editor.validate }, editor.schema).serialize(content);
+  const html = HtmlSerializer({ validate: editor.validate }, editor.schema).serialize(content);
 
-  args.content = isWsPreserveElement(Element.fromDom(body)) ? html : Tools.trim(html);
+  args.content = isWsPreserveElement(SugarElement.fromDom(body)) ? html : Tools.trim(html);
   setEditorHtml(editor, args.content);
 
   if (!args.no_events) {
@@ -114,7 +113,7 @@ export const setContentInternal = (editor: Editor, content: Content, args: SetCo
     content = args.content;
   }
 
-  return Option.from(editor.getBody()).fold(
+  return Optional.from(editor.getBody()).fold(
     Fun.constant(content),
     (body) => isTreeNode(content) ? setContentTree(editor, body, content, args) : setContentString(editor, body, content, args)
   );

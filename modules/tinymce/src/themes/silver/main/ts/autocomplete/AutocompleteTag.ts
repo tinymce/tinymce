@@ -5,34 +5,33 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Range } from '@ephox/dom-globals';
-import { Option } from '@ephox/katamari';
-import { Awareness, CursorPosition, Element, Insert, SelectorFind, Traverse } from '@ephox/sugar';
+import { Optional } from '@ephox/katamari';
+import { Awareness, CursorPosition, Insert, SelectorFind, SugarElement, Traverse } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 
 const autocompleteSelector = '[data-mce-autocompleter]';
 
-const create = (editor: Editor, range: Range): Element =>
+const create = (editor: Editor, range: Range): SugarElement =>
   // Check if an existing wrapper exists (eg from undoing), otherwise
   // wrap the content in a span, so we know where to search between
-  detect(Element.fromDom(editor.selection.getNode())).getOrThunk(() => {
+  detect(SugarElement.fromDom(editor.selection.getNode())).getOrThunk(() => {
     // Create a wrapper
-    const wrapper = Element.fromHtml('<span data-mce-autocompleter="1" data-mce-bogus="1"></span>', editor.getDoc());
+    const wrapper = SugarElement.fromHtml('<span data-mce-autocompleter="1" data-mce-bogus="1"></span>', editor.getDoc());
 
     // Wrap the content
-    Insert.append(wrapper, Element.fromDom(range.extractContents()));
-    range.insertNode(wrapper.dom());
-    Traverse.parent(wrapper).each((elm) => elm.dom().normalize());
+    Insert.append(wrapper, SugarElement.fromDom(range.extractContents()));
+    range.insertNode(wrapper.dom);
+    Traverse.parent(wrapper).each((elm) => elm.dom.normalize());
 
     // Update the cursor position
     CursorPosition.last(wrapper).map((last) => {
-      editor.selection.setCursorLocation(last.dom(), Awareness.getEnd(last));
+      editor.selection.setCursorLocation(last.dom, Awareness.getEnd(last));
     });
 
     return wrapper;
   });
 
-const detect = (elm: Element): Option<Element> => SelectorFind.closest(elm, autocompleteSelector);
+const detect = (elm: SugarElement): Optional<SugarElement> => SelectorFind.closest(elm, autocompleteSelector);
 
 export {
   create,

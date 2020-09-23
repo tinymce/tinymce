@@ -1,14 +1,14 @@
-import { Option, Fun } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { Situs } from './Situs';
 
 export interface Response {
-  selection: () => Option<Situs>;
-  kill: () => boolean;
+  readonly selection: Optional<Situs>;
+  readonly kill: boolean;
 }
 
-const create = (selection: Option<Situs>, kill: boolean): Response => ({
-  selection: Fun.constant(selection),
-  kill: Fun.constant(kill)
+const create = (selection: Optional<Situs>, kill: boolean): Response => ({
+  selection,
+  kill
 });
 
 export const Response = {

@@ -5,17 +5,17 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Node from './Node';
+import AstNode from './Node';
 import Schema from './Schema';
 import Writer, { WriterSettings } from './Writer';
 
-export interface SerializerSettings extends WriterSettings {
+export interface HtmlSerializerSettings extends WriterSettings {
   inner?: boolean;
   validate?: boolean;
 }
 
-interface Serializer {
-  serialize (node: Node): string;
+interface HtmlSerializer {
+  serialize (node: AstNode): string;
 }
 
 /**
@@ -28,7 +28,7 @@ interface Serializer {
  * @version 3.4
  */
 
-const Serializer = function (settings?: SerializerSettings, schema = Schema()) {
+const HtmlSerializer = function (settings?: HtmlSerializerSettings, schema = Schema()): HtmlSerializer {
   const writer = Writer(settings);
 
   settings = settings || {};
@@ -43,7 +43,7 @@ const Serializer = function (settings?: SerializerSettings, schema = Schema()) {
    * @param {tinymce.html.Node} node Node instance to serialize.
    * @return {String} String with HTML based on DOM tree.
    */
-  const serialize = (node: Node): string => {
+  const serialize = (node: AstNode): string => {
     const validate = settings.validate;
 
     const handlers = {
@@ -84,7 +84,7 @@ const Serializer = function (settings?: SerializerSettings, schema = Schema()) {
 
     writer.reset();
 
-    const walk = function (node: Node) {
+    const walk = function (node: AstNode) {
       const handler = handlers[node.type];
       let name, isEmpty, attrs, attrName, attrValue, sortedAttrs, i, l, elementRule;
 
@@ -155,4 +155,4 @@ const Serializer = function (settings?: SerializerSettings, schema = Schema()) {
   };
 };
 
-export default Serializer;
+export default HtmlSerializer;

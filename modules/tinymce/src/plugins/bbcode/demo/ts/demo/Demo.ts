@@ -1,5 +1,3 @@
-import { document, HTMLTextAreaElement } from '@ephox/dom-globals';
-
 declare let tinymce: any;
 
 const elm = document.querySelector('.tinymce') as HTMLTextAreaElement;

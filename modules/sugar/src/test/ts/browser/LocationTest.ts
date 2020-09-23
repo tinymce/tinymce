@@ -1,33 +1,32 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
-import { console, Document, HTMLElement, HTMLIFrameElement, Window } from '@ephox/dom-globals';
-import { Arr, Fun, Option } from '@ephox/katamari';
+import { Arr, Fun, Optional } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import * as Insert from 'ephox/sugar/api/dom/Insert';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
 import * as DomEvent from 'ephox/sugar/api/events/DomEvent';
 import { Traverse } from 'ephox/sugar/api/Main';
-import * as Body from 'ephox/sugar/api/node/Body';
-import Element from 'ephox/sugar/api/node/Element';
-import * as Attr from 'ephox/sugar/api/properties/Attr';
+import * as SugarBody from 'ephox/sugar/api/node/SugarBody';
+import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
+import * as Attribute from 'ephox/sugar/api/properties/Attribute';
 import * as Css from 'ephox/sugar/api/properties/Css';
-import * as Location from 'ephox/sugar/api/view/Location';
 import * as Scroll from 'ephox/sugar/api/view/Scroll';
+import * as SugarLocation from 'ephox/sugar/api/view/SugarLocation';
 
 interface TestDocSpec {
-  iframe: Element<HTMLIFrameElement>;
+  iframe: SugarElement<HTMLIFrameElement>;
   rawWin: Window;
-  rawDoc: Element<Document>;
-  body: Element<HTMLElement>;
+  rawDoc: SugarElement<Document>;
+  body: SugarElement<HTMLElement>;
   rtl: boolean;
   dir: string;
-  byId: (str: string) => Element<HTMLElement>;
+  byId: (str: string) => SugarElement<HTMLElement>;
 }
 
 type AttrMap = Record<string, string | boolean | number>;
 interface TestAttrMap {
   iframe: AttrMap;
-  html: Option<AttrMap>;
-  body: Option<AttrMap>;
+  html: Optional<AttrMap>;
+  body: Optional<AttrMap>;
 }
 
 interface CheckSpec {
@@ -44,7 +43,7 @@ UnitTest.asynctest('LocationTest', (success, failure) => {
   const leftScrollBarWidth = (doc: TestDocSpec) =>
     // Tries to detect the width of the left scrollbar by checking the offsetLeft of the documentElement
     // Chrome adds the scrollbar to the left in rtl mode as of Chrome 70+
-    Location.relative(Traverse.documentElement(doc.body)).left();
+    SugarLocation.relative(Traverse.documentElement(doc.body)).left;
 
   const asserteq = <T>(expected: T, actual: T, message: string) => {
     // I wish assert.eq printed expected and actual on failure
@@ -53,29 +52,29 @@ UnitTest.asynctest('LocationTest', (success, failure) => {
   };
 
   const testOne = (i: string, attrMap: TestAttrMap, next: () => void) => {
-    const iframe = Element.fromHtml<HTMLIFrameElement>(i);
-    Attr.setAll(iframe, attrMap.iframe);
+    const iframe = SugarElement.fromHtml<HTMLIFrameElement>(i);
+    Attribute.setAll(iframe, attrMap.iframe);
 
     const run = DomEvent.bind(iframe, 'load', () => {
       run.unbind();
       try {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        const iframeWin = iframe.dom().contentWindow!;
+        const iframeWin = iframe.dom.contentWindow!;
         const iframeDoc = iframeWin.document;
-        const html = Element.fromDom(iframeDoc.documentElement);
-        const body = Element.fromDom(iframeDoc.body);
-        attrMap.html.each(Fun.curry(Attr.setAll, html));
-        attrMap.body.each(Fun.curry(Attr.setAll, body));
+        const html = SugarElement.fromDom(iframeDoc.documentElement);
+        const body = SugarElement.fromDom(iframeDoc.body);
+        attrMap.html.each(Fun.curry(Attribute.setAll, html));
+        attrMap.body.each(Fun.curry(Attribute.setAll, body));
         const doc: TestDocSpec = {
           iframe,
           rawWin: iframeWin,
-          rawDoc: Element.fromDom(iframeDoc),
+          rawDoc: SugarElement.fromDom(iframeDoc),
           body,
           rtl: iframeDoc.body.dir === 'rtl',
-          dir: Attr.get(body, 'dir') || 'ltr',
+          dir: Attribute.get(body, 'dir') || 'ltr',
           byId(str) {
-            return Option.from(iframeDoc.getElementById(str))
-              .map(Element.fromDom)
+            return Optional.from(iframeDoc.getElementById(str))
+              .map(SugarElement.fromDom)
               .getOrDie('cannot find element with id ' + str);
           }
         };
@@ -89,21 +88,21 @@ UnitTest.asynctest('LocationTest', (success, failure) => {
       }
     });
 
-    Insert.append(Body.body(), iframe);
+    Insert.append(SugarBody.body(), iframe);
   };
 
   const ifr = '<iframe src="/project/@ephox/sugar/src/test/data/locationTest.html"></iframe>';
 
   testOne(ifr, { // vanilla iframe
     iframe: { id: 'vanilla', style: 'height:200px; width:500px; border: 1px dashed chartreuse;' },
-    html: Option.none(),
-    body: Option.some<AttrMap>({ contenteditable: 'true', style: 'margin: 0; padding: 5px;' })
+    html: Optional.none(),
+    body: Optional.some<AttrMap>({ contenteditable: 'true', style: 'margin: 0; padding: 5px;' })
   },
   () => {
     testOne(ifr, { // rtl iframe
       iframe: { id: 'ifrRtl', style: 'height:200px; width:500px; border: 1px dashed turquoise;' },
-      html: Option.none(),
-      body: Option.some<AttrMap>({ dir: 'rtl', contenteditable: 'true', style: 'margin: 0; padding: 5px;' })
+      html: Optional.none(),
+      body: Optional.some<AttrMap>({ dir: 'rtl', contenteditable: 'true', style: 'margin: 0; padding: 5px;' })
     },
     success);
   });
@@ -126,30 +125,30 @@ UnitTest.asynctest('LocationTest', (success, failure) => {
 
   const baseChecks = () => {
     // these checks actually depend on the tunic stylesheet. They might not actually be useful.
-    const body = Body.body();
-    let pos = Location.absolute(body);
-    assert.eq(0, pos.top());
-    assert.eq(0, pos.left());
-    pos = Location.relative(body);
-    assert.eq(0, pos.top()); // JQuery doesn't return 0, but this makes more sense
-    assert.eq(0, pos.left());
-    pos = Location.viewport(body);
-    assert.eq(0, pos.top());
-    assert.eq(0, pos.left());
+    const body = SugarBody.body();
+    let pos = SugarLocation.absolute(body);
+    assert.eq(0, pos.top);
+    assert.eq(0, pos.left);
+    pos = SugarLocation.relative(body);
+    assert.eq(0, pos.top); // JQuery doesn't return 0, but this makes more sense
+    assert.eq(0, pos.left);
+    pos = SugarLocation.viewport(body);
+    assert.eq(0, pos.top);
+    assert.eq(0, pos.left);
     assert.eq(true, scrollBarWidth > 5 && scrollBarWidth < 50 || (platform.os.isOSX() && scrollBarWidth === 0), 'scroll bar width, got=' + scrollBarWidth);
   };
 
   const disconnectedChecks = () => {
-    const div = Element.fromTag('div');
-    let pos = Location.absolute(div);
-    assert.eq(0, pos.top());
-    assert.eq(0, pos.left());
-    pos = Location.relative(div);
-    assert.eq(0, pos.top());
-    assert.eq(0, pos.left());
-    pos = Location.viewport(div);
-    assert.eq(0, pos.top());
-    assert.eq(0, pos.left());
+    const div = SugarElement.fromTag('div');
+    let pos = SugarLocation.absolute(div);
+    assert.eq(0, pos.top);
+    assert.eq(0, pos.left);
+    pos = SugarLocation.relative(div);
+    assert.eq(0, pos.top);
+    assert.eq(0, pos.left);
+    pos = SugarLocation.viewport(div);
+    assert.eq(0, pos.top);
+    assert.eq(0, pos.left);
   };
 
   const absoluteChecks = (doc: TestDocSpec) => {
@@ -329,7 +328,7 @@ UnitTest.asynctest('LocationTest', (success, failure) => {
       const chromeDifference = -2;
       Arr.each(tests, (t) => {
         if (t.id !== 'table-1') {
-          // tslint:disable-next-line:no-console
+          // eslint-disable-next-line no-console
           console.log('> Note - fix for Chrome bug - subtracting from relative top and left: ', chromeDifference);
           t.relative.top += chromeDifference;
           t.relative.left.ltr += chromeDifference;
@@ -403,8 +402,8 @@ UnitTest.asynctest('LocationTest', (success, failure) => {
     runChecks(doc, noScroll);
 
     const scr = Scroll.get(doc.rawDoc);
-    assert.eq(0, scr.left(), 'expected 0, left is=' + scr.left());
-    assert.eq(0, scr.top(), 'expected 0, top is ' + scr.top());
+    assert.eq(0, scr.left, 'expected 0, left is=' + scr.left);
+    assert.eq(0, scr.top, 'expected 0, top is ' + scr.top);
 
     Scroll.by(leftScroll, topScroll, doc.rawDoc);
     runChecks(doc, withScroll);
@@ -415,15 +414,15 @@ UnitTest.asynctest('LocationTest', (success, failure) => {
 
   const bodyChecks = (doc: TestDocSpec) => {
     Scroll.to(1000, 1000, doc.rawDoc);
-    let pos = Location.absolute(doc.body);
-    assert.eq(0, pos.top());
-    assert.eq(0, pos.left());
-    pos = Location.relative(doc.body);
-    assert.eq(0, pos.top());
-    assert.eq(0, pos.left());
-    pos = Location.viewport(doc.body);
-    assert.eq(0, pos.top());
-    assert.eq(0, pos.left());
+    let pos = SugarLocation.absolute(doc.body);
+    assert.eq(0, pos.top);
+    assert.eq(0, pos.left);
+    pos = SugarLocation.relative(doc.body);
+    assert.eq(0, pos.top);
+    assert.eq(0, pos.left);
+    pos = SugarLocation.viewport(doc.body);
+    assert.eq(0, pos.top);
+    assert.eq(0, pos.left);
   };
 
   /* Simple verification logic */
@@ -431,15 +430,15 @@ UnitTest.asynctest('LocationTest', (success, failure) => {
     Arr.each(tests, (t) => {
       const div = doc.byId(t.id);
 
-      let pos = Location.absolute(div);
-      asserteq(t.absolute.top, pos.top(), '.absolute().top  ' + t.id);
-      asserteq(t.absolute.left[doc.dir], pos.left(), '.absolute().left.' + doc.dir + ' ' + t.id);
-      pos = Location.relative(div);
-      asserteq(t.relative.top, pos.top(), '.relative().top  ' + t.id);
-      asserteq(t.relative.left[doc.dir], pos.left(), '.relative().left.' + doc.dir + ' ' + t.id);
-      pos = Location.viewport(div);
-      asserteq(t.viewport.top, pos.top(), '.viewport().top  ' + t.id);
-      asserteq(t.viewport.left[doc.dir], pos.left(), '.viewport().left.' + doc.dir + ' ' + t.id);
+      let pos = SugarLocation.absolute(div);
+      asserteq(t.absolute.top, pos.top, '.absolute().top  ' + t.id);
+      asserteq(t.absolute.left[doc.dir], pos.left, '.absolute().left.' + doc.dir + ' ' + t.id);
+      pos = SugarLocation.relative(div);
+      asserteq(t.relative.top, pos.top, '.relative().top  ' + t.id);
+      asserteq(t.relative.left[doc.dir], pos.left, '.relative().left.' + doc.dir + ' ' + t.id);
+      pos = SugarLocation.viewport(div);
+      asserteq(t.viewport.top, pos.top, '.viewport().top  ' + t.id);
+      asserteq(t.viewport.left[doc.dir], pos.left, '.viewport().left.' + doc.dir + ' ' + t.id);
     });
   };
 });

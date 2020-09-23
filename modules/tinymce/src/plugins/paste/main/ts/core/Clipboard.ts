@@ -5,18 +5,15 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import {
-  ClipboardEvent, DataTransfer, DragEvent, Event, File, HTMLImageElement, Image, KeyboardEvent, navigator, Range
-} from '@ephox/dom-globals';
 import { Arr, Cell, Singleton } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import Delay from 'tinymce/core/api/util/Delay';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import Promise from 'tinymce/core/api/util/Promise';
-import Tools from 'tinymce/core/api/util/Tools';
 import VK from 'tinymce/core/api/util/VK';
 import * as Events from '../api/Events';
+import * as Settings from '../api/Settings';
 import * as InternalHtml from './InternalHtml';
 import * as Newlines from './Newlines';
 import { PasteBin } from './PasteBin';
@@ -24,7 +21,6 @@ import * as ProcessFilters from './ProcessFilters';
 import * as SmartPaste from './SmartPaste';
 import * as Utils from './Utils';
 import * as Whitespace from './Whitespace';
-import * as Settings from '../api/Settings';
 
 declare let window: any;
 
@@ -57,7 +53,7 @@ const pasteHtml = (editor: Editor, html: string, internalFlag: boolean) => {
  */
 const pasteText = (editor: Editor, text: string) => {
   const encodedText = editor.dom.encode(text).replace(/\r\n/g, '\n');
-  const normalizedText = Whitespace.normalizeWhitespace(encodedText);
+  const normalizedText = Whitespace.normalizeWhitespace(editor, encodedText);
   const html = Newlines.convert(normalizedText, Settings.getForcedRootBlock(editor), Settings.getForcedRootBlockAttrs(editor));
   doPaste(editor, html, false, true);
 };
@@ -109,12 +105,8 @@ const getDataTransferItems = (dataTransfer: DataTransfer): ClipboardContents => 
  * @param {ClipboardEvent} clipboardEvent Event fired on paste.
  * @return {Object} Object with mime types and data for those mime types.
  */
-const getClipboardContent = (editor: Editor, clipboardEvent: ClipboardEvent) => {
-  const content = getDataTransferItems(clipboardEvent.clipboardData || (editor.getDoc() as any).dataTransfer);
-
-  // Edge 15 has a broken HTML Clipboard API see https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/11877517/
-  return Utils.isMsEdge() ? Tools.extend(content, { 'text/html': '' }) : content;
-};
+const getClipboardContent = (editor: Editor, clipboardEvent: ClipboardEvent) =>
+  getDataTransferItems(clipboardEvent.clipboardData || (editor.getDoc() as any).dataTransfer);
 
 const hasContentType = (clipboardContent: ClipboardContents, mimeType: string) => mimeType in clipboardContent && clipboardContent[mimeType].length > 0;
 

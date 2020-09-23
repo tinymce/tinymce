@@ -1,9 +1,8 @@
 import { ApproxStructure, Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { HTMLElement, console, document, window } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { LegacyUnit } from '@ephox/mcagar';
-import { Attr, Element, SelectorFilter } from '@ephox/sugar';
+import { Attribute, SelectorFilter, SugarElement } from '@ephox/sugar';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import Env from 'tinymce/core/api/Env';
 import Tools from 'tinymce/core/api/util/Tools';
@@ -161,8 +160,8 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
   });
 
   const getSkinCssFilenames = function () {
-    return Arr.bind(SelectorFilter.descendants(Element.fromDom(document), 'link'), function (link) {
-      const href = Attr.get(link, 'href');
+    return Arr.bind(SelectorFilter.descendants(SugarElement.fromDom(document), 'link'), function (link) {
+      const href = Attribute.get(link, 'href');
       const fileName = href.split('/').slice(-1).join('');
       const isSkin = href.indexOf('oxide/') > -1;
       return isSkin ? [ fileName ] : [ ];
@@ -184,7 +183,7 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
   const mAssertEditors = Step.label('mAssertEditors', Step.stateful(function (editors: any[], next, _die) {
     Assertions.assertHtml('Editor contents should be the first div content', '<p>a</p>', editors[0].getContent());
     Assertions.assertHtml('Editor contents should be the second div content', '<p>b</p>', editors[1].getContent());
-    // tslint:disable-next-line:no-console
+    // eslint-disable-next-line no-console
     console.log('Editor container 0:', editors[0].editorContainer);
     const containerApproxStructure = ApproxStructure.build((s, str, arr) => s.element('div', {
       classes: [ arr.has('tox'), arr.has('tox-tinymce'), arr.has('tox-tinymce-inline') ],
@@ -219,8 +218,8 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
         })
       ]
     }));
-    Assertions.assertStructure('Editor container should match expected structure', containerApproxStructure, Element.fromDom(editors[0].editorContainer));
-    Assertions.assertStructure('Editor container should match expected structure', containerApproxStructure, Element.fromDom(editors[1].editorContainer));
+    Assertions.assertStructure('Editor container should match expected structure', containerApproxStructure, SugarElement.fromDom(editors[0].editorContainer));
+    Assertions.assertStructure('Editor container should match expected structure', containerApproxStructure, SugarElement.fromDom(editors[1].editorContainer));
 
     Assertions.assertEq(
       'Should only be two skin files the skin and the content for inline mode',

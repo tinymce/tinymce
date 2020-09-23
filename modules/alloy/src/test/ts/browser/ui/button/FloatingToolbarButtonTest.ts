@@ -69,9 +69,17 @@ UnitTest.asynctest('FloatingToolbarButtonTest', (success, failure) => {
             s.text(str.is('+'))
           ]
         })),
-        component.element()
+        component.element
       )
     ]);
+
+    const sAssertFloatingToolbarToggleState = (expected: boolean) => Step.sync(() => {
+      Assertions.assertEq('Expected floating toolbar toggle state to be ' + expected, expected, FloatingToolbarButton.isOpen(component));
+    });
+
+    const sToggleFloatingToolbar = () => Step.sync(() => {
+      FloatingToolbarButton.toggle(component);
+    });
 
     const sAssertFloatingToolbarOpened = () => GeneralSteps.sequence([
       Assertions.sAssertStructure(
@@ -106,12 +114,14 @@ UnitTest.asynctest('FloatingToolbarButtonTest', (success, failure) => {
             })
           ]
         })),
-        sinkComp.element()
-      )
+        sinkComp.element
+      ),
+      sAssertFloatingToolbarToggleState(true)
     ]);
 
     const sAssertFloatingToolbarClosed = () => Step.sync(() => {
-      Assertions.assertEq('Floating toolbar should not exist', false, SelectorExists.descendant(sinkComp.element(), 'test-toolbar'));
+      Assertions.assertEq('Floating toolbar should not exist', false, SelectorExists.descendant(sinkComp.element, 'test-toolbar'));
+      sAssertFloatingToolbarToggleState(false);
     });
 
     return [
@@ -125,13 +135,21 @@ UnitTest.asynctest('FloatingToolbarButtonTest', (success, failure) => {
       ]),
 
       Log.stepsAsStep('', 'Clicking on button should open floating toolbar', [
-        Mouse.sClickOn(gui.element(), 'button'),
+        Mouse.sClickOn(gui.element, 'button'),
         sAssertButtonStructure(true),
         sAssertFloatingToolbarOpened()
       ]),
 
       Log.stepsAsStep('', 'Escape should close floating toolbar', [
         Keyboard.sKeydown(doc, Keys.escape(), { }),
+        sAssertFloatingToolbarClosed()
+      ]),
+
+      Log.stepsAsStep('TINY-6032', 'Using the API to toggle the floating toolbar should work', [
+        sToggleFloatingToolbar(),
+        sAssertButtonStructure(true),
+        sAssertFloatingToolbarOpened(),
+        sToggleFloatingToolbar(),
         sAssertFloatingToolbarClosed()
       ]),
 

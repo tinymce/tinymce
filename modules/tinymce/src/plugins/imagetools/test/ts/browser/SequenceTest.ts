@@ -1,6 +1,5 @@
 import { Log, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { console } from '@ephox/dom-globals';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 
 import ImagetoolsPlugin from 'tinymce/plugins/imagetools/Plugin';
@@ -12,7 +11,7 @@ import * as ImageUtils from '../module/test/ImageUtils';
 UnitTest.asynctest('browser.tinymce.plugins.imagetools.SequenceTest', (success, failure) => {
 
   // TODO TINY-3693 investigate why this test is so flaky. It's likely caused by race conditions.
-  // tslint:disable-next-line:no-console
+  // eslint-disable-next-line no-console
   console.log('Disabled due to being too flaky and causing fairly consistent failures');
   return success();
 

@@ -5,9 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLElement } from '@ephox/dom-globals';
-import { Option } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { Optional } from '@ephox/katamari';
+import { SugarElement } from '@ephox/sugar';
 import Editor from '../api/Editor';
 import Env from '../api/Env';
 import { Content, ContentFormat, GetContentArgs } from '../content/ContentTypes';
@@ -32,7 +31,7 @@ const getInnerText = (bin: HTMLElement) => {
   return Env.browser.isIE() ? trimLeadingCollapsibleText(text) : text;
 };
 
-const getTextContent = (editor: Editor): string => Option.from(editor.selection.getRng()).map((rng) => {
+const getTextContent = (editor: Editor): string => Optional.from(editor.selection.getRng()).map((rng) => {
   const bin = editor.dom.add(editor.getBody(), 'div', {
     'data-mce-bogus': 'all',
     'style': 'overflow: hidden; opacity: 0;'
@@ -66,7 +65,7 @@ const getSerializedContent = (editor: Editor, args: GetSelectionContentArgs): Co
   const sel = editor.selection.getSel();
   const ranges = EventProcessRanges.processRanges(editor, MultiRange.getRanges(sel));
 
-  const fragment = args.contextual ? FragmentReader.read(Element.fromDom(editor.getBody()), ranges).dom() : rng.cloneContents();
+  const fragment = args.contextual ? FragmentReader.read(SugarElement.fromDom(editor.getBody()), ranges).dom : rng.cloneContents();
   if (fragment) {
     tmpElm.appendChild(fragment);
   }

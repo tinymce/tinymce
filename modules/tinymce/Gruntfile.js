@@ -81,6 +81,31 @@ module.exports = function (grunt) {
               dest: 'js/tinymce/tinymce.js'
             }
           ]
+        },
+        'core-types': {
+          options: {
+            treeshake: true,
+            format: 'es',
+            onwarn: (warning) => {
+              // Ignore circular deps in types
+              if (warning.code !== 'CIRCULAR_DEPENDENCY') {
+                swag.onwarn(warning)
+              }
+            },
+            plugins: [
+              swag.dts({
+                respectExternal: true,
+                keepVariables: [ 'tinymce' ],
+                keepComments: false
+              })
+            ]
+          },
+          files: [
+            {
+              src: 'lib/core/main/ts/api/PublicApi.d.ts',
+              dest: 'js/tinymce/tinymce.d.ts'
+            }
+          ]
         }
       },
       gruntUtils.generate(plugins, 'plugin', (name) => {
@@ -352,6 +377,7 @@ module.exports = function (grunt) {
           'js/tinymce/skins/**/*.woff',
           'js/tinymce/icons',
           'js/tinymce/themes',
+          'js/tinymce/tinymce.d.ts',
           'js/tinymce/tinymce.min.js',
           'js/tinymce/jquery.tinymce.min.js',
           'js/tinymce/license.txt',
@@ -455,6 +481,7 @@ module.exports = function (grunt) {
           concat: [
             {
               src: [
+                'js/tinymce/tinymce.d.ts',
                 'js/tinymce/tinymce.min.js',
                 'js/tinymce/themes/*/theme.min.js',
                 'js/tinymce/plugins/*/plugin.min.js',
@@ -531,6 +558,7 @@ module.exports = function (grunt) {
               'description': 'Web based JavaScript HTML WYSIWYG editor control.',
               'author': 'Ephox Corporation',
               'main': 'tinymce.js',
+              'types': 'tinymce.d.ts',
               'license': 'LGPL-2.1',
               'keywords': ['editor', 'wysiwyg', 'tinymce', 'richtext', 'javascript', 'html'],
               'bugs': { 'url': 'https://github.com/tinymce/tinymce/issues' }
@@ -602,6 +630,7 @@ module.exports = function (grunt) {
           'js/tinymce/plugins',
           'js/tinymce/themes',
           'js/tinymce/tinymce.js',
+          'js/tinymce/tinymce.d.ts',
           'js/tinymce/tinymce.min.js',
           'js/tinymce/jquery.tinymce.min.js',
           'js/tinymce/license.txt',
@@ -652,6 +681,7 @@ module.exports = function (grunt) {
           { src: 'js/tinymce/skins', dest: '/content/scripts/tinymce/skins' },
           { src: 'js/tinymce/icons', dest: '/content/scripts/tinymce/icons' },
           { src: 'js/tinymce/tinymce.js', dest: '/content/scripts/tinymce/tinymce.js' },
+          { src: 'js/tinymce/tinymce.d.ts', dest: '/content/scripts/tinymce/tinymce.d.ts' },
           { src: 'js/tinymce/tinymce.min.js', dest: '/content/scripts/tinymce/tinymce.min.js' },
           { src: 'js/tinymce/jquery.tinymce.min.js', dest: '/content/scripts/tinymce/jquery.tinymce.min.js' },
           { src: 'js/tinymce/license.txt', dest: '/content/scripts/tinymce/license.txt' }
@@ -696,6 +726,7 @@ module.exports = function (grunt) {
           { src: 'js/tinymce/skins', dest: '/content/scripts/tinymce/skins' },
           { src: 'js/tinymce/icons', dest: '/content/scripts/tinymce/icons' },
           { src: 'js/tinymce/tinymce.js', dest: '/content/scripts/tinymce/tinymce.js' },
+          { src: 'js/tinymce/tinymce.d.ts', dest: '/content/scripts/tinymce/tinymce.d.ts' },
           { src: 'js/tinymce/tinymce.min.js', dest: '/content/scripts/tinymce/tinymce.min.js' },
           { src: 'js/tinymce/jquery.tinymce.min.js', dest: '/content/scripts/tinymce/jquery.tinymce.min.js' },
           { src: 'js/tinymce/license.txt', dest: '/content/scripts/tinymce/license.txt' }

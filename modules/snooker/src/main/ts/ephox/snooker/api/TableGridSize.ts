@@ -1,7 +1,7 @@
-import { Element } from '@ephox/sugar';
-import { Warehouse } from '../model/Warehouse';
+import { SugarElement } from '@ephox/sugar';
+import { Warehouse } from './Warehouse';
 
-const getGridSize = function (table: Element) {
+const getGridSize = function (table: SugarElement) {
   const warehouse = Warehouse.fromTable(table);
   return warehouse.grid;
 };

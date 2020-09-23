@@ -1,7 +1,7 @@
 import { Chain, Guard, NamedChain } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Option, Result } from '@ephox/katamari';
-import { Css, Position, Scroll } from '@ephox/sugar';
+import { Optional, Result } from '@ephox/katamari';
+import { Css, Scroll, SugarPosition } from '@ephox/sugar';
 
 import * as Boxes from 'ephox/alloy/alien/Boxes';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
@@ -16,8 +16,8 @@ UnitTest.asynctest('SnapToTest', (success, failure) => {
 
   const snap = Dragging.snap({
     sensor: DragCoord.fixed(300, 10),
-    range: Position(10, 10),
-    output: DragCoord.fixed(Option.some(300), Option.some(10))
+    range: SugarPosition(10, 10),
+    output: DragCoord.fixed(Optional.some(300), Optional.some(10))
   });
 
   const subject = Memento.record(
@@ -47,7 +47,7 @@ UnitTest.asynctest('SnapToTest', (success, failure) => {
           },
           getBounds: () => {
             const scroll = Scroll.get();
-            return Boxes.bounds(scroll.left(), scroll.top(), 500, 500);
+            return Boxes.bounds(scroll.left, scroll.top, 500, 500);
           }
         })
       ])
@@ -68,7 +68,7 @@ UnitTest.asynctest('SnapToTest', (success, failure) => {
     })
   ), (_doc, _body, _gui, component, _store) => {
 
-    const cSubject = Chain.injectThunked(() => subject.get(component).element());
+    const cSubject = Chain.injectThunked(() => subject.get(component).element);
 
     const cRecordPosition = Chain.fromChains([
       Chain.control(
@@ -82,7 +82,7 @@ UnitTest.asynctest('SnapToTest', (success, failure) => {
 
     const cEnsurePositionChanged = Chain.control(
       Chain.binder((all: any) => all.box_position1.left !== all.box_position2.left ? Result.value({}) :
-        Result.error('Positions did not change.\nPosition data: ' + JSON.stringify({
+        Result.error('Positions did not change.\nSugarPosition data: ' + JSON.stringify({
           1: all.box_position1,
           2: all.box_position2
         }, null, 2))),

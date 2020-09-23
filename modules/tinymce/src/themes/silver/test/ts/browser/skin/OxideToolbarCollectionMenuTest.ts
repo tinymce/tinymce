@@ -1,13 +1,12 @@
 import { ApproxStructure, Assertions, Chain, FocusTools, Keyboard, Keys, Logger, Mouse, Pipeline, UiFinder } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Menu } from '@ephox/bridge';
-import { document } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { TinyLoader } from '@ephox/mcagar';
-import { Body, Element } from '@ephox/sugar';
-import Editor from 'tinymce/core/api/Editor';
+import { SugarBody, SugarElement } from '@ephox/sugar';
 
+import Editor from 'tinymce/core/api/Editor';
+import { Menu } from 'tinymce/core/api/ui/Ui';
 import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('OxideToolbarCollectionMenuTest', (success, failure) => {
@@ -17,14 +16,14 @@ UnitTest.asynctest('OxideToolbarCollectionMenuTest', (success, failure) => {
 
   TinyLoader.setup(
     (editor, onSuccess, onFailure) => {
-      const doc = Element.fromDom(document);
+      const doc = SugarElement.fromDom(document);
 
       Pipeline.async({ }, Logger.ts(
         'Check structure of toolbar collection',
         [
-          Mouse.sClickOn(Body.body(), '.tox-split-button__chevron'),
-          UiFinder.sWaitForVisible('Waiting for menu', Body.body(), '[role="menu"]'),
-          Chain.asStep(Body.body(), [
+          Mouse.sClickOn(SugarBody.body(), '.tox-split-button__chevron'),
+          UiFinder.sWaitForVisible('Waiting for menu', SugarBody.body(), '[role="menu"]'),
+          Chain.asStep(SugarBody.body(), [
             UiFinder.cFindIn('[role="menu"]'),
             Assertions.cAssertStructure(
               'Checking menu structure',
@@ -160,7 +159,7 @@ UnitTest.asynctest('OxideToolbarCollectionMenuTest', (success, failure) => {
                 icon: 'fake-icon-name',
                 text: `${letter}-button`,
                 onAction: store.adder(`${letter}-onAction`)
-              } as Menu.ChoiceMenuItemApi))
+              } as Menu.ChoiceMenuItemSpec))
             );
           },
           onAction: store.adder('onAction'),

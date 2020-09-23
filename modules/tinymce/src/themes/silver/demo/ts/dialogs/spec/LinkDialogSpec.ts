@@ -1,6 +1,4 @@
-/* tslint:disable:no-console */
-import { console } from '@ephox/dom-globals';
-
+/* eslint-disable no-console */
 export default {
   title: 'Insert link',
   body: {
@@ -24,7 +22,7 @@ export default {
       },
       {
         name: 'target',
-        type: 'selectbox',
+        type: 'listbox',
         label: 'Target',
         items: [
           {

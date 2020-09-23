@@ -5,44 +5,39 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Fun } from '@ephox/katamari';
-import { Awareness, Element, RawRect, Selection, StructRect, Traverse, WindowSelection } from '@ephox/sugar';
-import { Range, Window } from '@ephox/dom-globals';
+import { Arr } from '@ephox/katamari';
+import { Awareness, RawRect, SimSelection, SugarElement, Traverse, WindowSelection } from '@ephox/sugar';
 
 const COLLAPSED_WIDTH = 2;
 
-const collapsedRect = (rect: StructRect): StructRect => ({
-  left: rect.left,
-  top: rect.top,
-  right: rect.right,
-  bottom: rect.bottom,
-  width: Fun.constant(COLLAPSED_WIDTH),
-  height: rect.height
+const collapsedRect = (rect: RawRect): RawRect => ({
+  ...rect,
+  width: COLLAPSED_WIDTH
 });
 
-const toRect = (rawRect: RawRect): StructRect => ({
-  left: Fun.constant(rawRect.left),
-  top: Fun.constant(rawRect.top),
-  right: Fun.constant(rawRect.right),
-  bottom: Fun.constant(rawRect.bottom),
-  width: Fun.constant(rawRect.width),
-  height: Fun.constant(rawRect.height)
+const toRect = (rawRect: ClientRect): RawRect => ({
+  left: rawRect.left,
+  top: rawRect.top,
+  right: rawRect.right,
+  bottom: rawRect.bottom,
+  width: rawRect.width,
+  height: rawRect.height
 });
 
-const getRectsFromRange = (range: Range): StructRect[] => {
-  if (! range.collapsed) {
+const getRectsFromRange = (range: Range): RawRect[] => {
+  if (!range.collapsed) {
     return Arr.map(range.getClientRects(), toRect);
   } else {
-    const start = Element.fromDom(range.startContainer);
+    const start = SugarElement.fromDom(range.startContainer);
     return Traverse.parent(start).bind((parent) => {
-      const selection = Selection.exact(start, range.startOffset, parent, Awareness.getEnd(parent));
+      const selection = SimSelection.exact(start, range.startOffset, parent, Awareness.getEnd(parent));
       const optRect = WindowSelection.getFirstRect(range.startContainer.ownerDocument.defaultView, selection);
       return optRect.map(collapsedRect).map(Arr.pure);
     }).getOr([ ]);
   }
 };
 
-const getRectangles = (cWin: Window): StructRect[] => {
+const getRectangles = (cWin: Window): RawRect[] => {
   const sel = cWin.getSelection();
   // In the Android WebView for some reason cWin.getSelection returns undefined.
   // The undefined check it is to avoid throwing of a JS error.

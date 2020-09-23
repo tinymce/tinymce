@@ -1,5 +1,5 @@
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Cleaner } from 'ephox/agar/api/Cleaner';
-import { UnitTest, assert } from '@ephox/bedrock-client';
 
 UnitTest.test('Cleaner', () => {
   const cleaner = Cleaner();

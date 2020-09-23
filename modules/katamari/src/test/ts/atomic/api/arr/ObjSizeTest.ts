@@ -1,7 +1,6 @@
-import * as Obj from 'ephox/katamari/api/Obj';
-import { UnitTest, Assert } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import fc from 'fast-check';
-import { navigator } from '@ephox/dom-globals';
+import * as Obj from 'ephox/katamari/api/Obj';
 
 UnitTest.test('Obj.size: unit tests', function () {
   const check = function (expected, input) {

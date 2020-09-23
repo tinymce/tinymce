@@ -70,7 +70,7 @@
     "src/themes/*/demo/ts",
     "src/themes/*/test/ts",
     "src/core/dist/globals/tinymce/core/",
-    "src/core/dist/globals/**/*.ts",
+    "src/core/dist/globals/**/*.ts"
   ],
   "references": [
     { "path": "../acid" },
@@ -87,6 +87,6 @@
     { "path": "../robin" },
     { "path": "../sand" },
     { "path": "../snooker" },
-    { "path": "../sugar" },
+    { "path": "../sugar" }
   ]
 }

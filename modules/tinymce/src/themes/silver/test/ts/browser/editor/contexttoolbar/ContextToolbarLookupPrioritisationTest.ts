@@ -1,14 +1,14 @@
 import { Log, Pipeline, Step } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { Toolbar } from '@ephox/bridge';
-import { Arr, Option } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { InlineContent } from '@ephox/bridge';
+import { Arr, Optional } from '@ephox/katamari';
+import { SugarElement } from '@ephox/sugar';
 import { ContextTypes } from 'tinymce/themes/silver/ContextToolbar';
 import { matchStartNode } from 'tinymce/themes/silver/ui/context/ContextToolbarLookup';
 
 UnitTest.asynctest('Context toolbar prioritisation on lookup test', (success, failure) => {
 
-  const createToolbar = (items): Toolbar.ContextToolbar => ({
+  const createToolbar = (items): InlineContent.ContextToolbar => ({
     type: 'contexttoolbar',
     items,
     predicate: () => true,
@@ -16,20 +16,20 @@ UnitTest.asynctest('Context toolbar prioritisation on lookup test', (success, fa
     scope: 'node'
   });
 
-  const createForm = (): Toolbar.ContextForm =>({
+  const createForm = (): InlineContent.ContextForm =>({
     type: 'contextform',
     initValue: () => 'test',
-    label: Option.none(),
-    launch: Option.none(),
+    label: Optional.none(),
+    launch: Optional.none(),
     commands: [{
       onAction: () => {},
       original: {
         onAction: () => {}
       },
       disabled: false,
-      tooltip: Option.none(),
-      icon: Option.none(),
-      text: Option.none(),
+      tooltip: Optional.none(),
+      icon: Optional.none(),
+      text: Optional.none(),
       onSetup: () => () => {}
     }],
     predicate: () => true,
@@ -38,7 +38,7 @@ UnitTest.asynctest('Context toolbar prioritisation on lookup test', (success, fa
   });
 
   const assertMatch = (nodeCandidates: ContextTypes[], editorCandidates: ContextTypes[], expectedCandidates: ContextTypes[]) => {
-    const elem = Element.fromHtml('<span>test</span>');
+    const elem = SugarElement.fromHtml('<span>test</span>');
     matchStartNode(elem, nodeCandidates, editorCandidates).each((result) => {
       Arr.map(result.toolbars, (t, i) => Assert.eq('Assert toolbars are equal', t, expectedCandidates[i]));
     });

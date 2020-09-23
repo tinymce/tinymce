@@ -1,9 +1,8 @@
 import { Assertions, Log, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Text } from '@ephox/dom-globals';
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import TextpatternPlugin from 'tinymce/plugins/textpattern/Plugin';
@@ -36,7 +35,7 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextSearchTest', (succes
     );
   };
 
-  const assertSpot = (label: string, spotOpt: Option<SpotPoint<Text>>, elementText: String, offset: number) => {
+  const assertSpot = (label: string, spotOpt: Optional<SpotPoint<Text>>, elementText: String, offset: number) => {
     const spot = spotOpt.getOrDie(`${label} - Spot not found`);
 
     Assertions.assertEq(label, elementText, spot.container.textContent);
@@ -109,9 +108,9 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextSearchTest', (succes
           const asteriskNode = editorBody.childNodes[1].firstChild;
           const anchorNode = asteriskNode.nextSibling.firstChild;
           const asterisk = repeatLeftUntil(editor, '*');
-          Assertions.assertDomEq('Repeat left until asterisk found', Element.fromDom(asteriskNode), Element.fromDom(asterisk));
+          Assertions.assertDomEq('Repeat left until asterisk found', SugarElement.fromDom(asteriskNode), SugarElement.fromDom(asterisk));
           const anchor = repeatLeftUntil(editor, 'a');
-          Assertions.assertDomEq('Repeat left until anchor found', Element.fromDom(anchorNode), Element.fromDom(anchor));
+          Assertions.assertDomEq('Repeat left until anchor found', SugarElement.fromDom(anchorNode), SugarElement.fromDom(anchor));
           const boundary = repeatLeftUntil(editor, 'def');
           Assertions.assertEq('Repeat left until block boundary found', null, boundary);
         })
@@ -123,9 +122,9 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextSearchTest', (succes
           const contentNode = editorBody.childNodes[0].lastChild;
           const anchorNode = contentNode.previousSibling.firstChild;
           const asterisk = repeatRightUntil(editor, 'bc');
-          Assertions.assertDomEq('Repeat right until bc found', Element.fromDom(contentNode), Element.fromDom(asterisk));
+          Assertions.assertDomEq('Repeat right until bc found', SugarElement.fromDom(contentNode), SugarElement.fromDom(asterisk));
           const anchor = repeatRightUntil(editor, 'a');
-          Assertions.assertDomEq('Repeat right until anchor found', Element.fromDom(anchorNode), Element.fromDom(anchor));
+          Assertions.assertDomEq('Repeat right until anchor found', SugarElement.fromDom(anchorNode), SugarElement.fromDom(anchor));
           const boundary = repeatRightUntil(editor, 'def');
           Assertions.assertEq('Repeat right until block boundary found', null, boundary);
         })

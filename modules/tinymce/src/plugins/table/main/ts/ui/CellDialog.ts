@@ -5,10 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Types } from '@ephox/bridge';
-import { HTMLTableCellElement } from '@ephox/dom-globals';
+import { Selections } from '@ephox/darwin';
 import { Arr, Fun } from '@ephox/katamari';
+import { TableLookup, Warehouse } from '@ephox/snooker';
+import { Compare, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
+import { Dialog } from 'tinymce/core/api/ui/Ui';
 import * as Styles from '../actions/Styles';
 import { hasAdvancedCellTab } from '../api/Settings';
 import * as Util from '../core/Util';
@@ -19,11 +21,34 @@ import * as Helpers from './Helpers';
 
 type CellData = Helpers.CellData;
 
-const updateSimpleProps = (modifier: DomModifier, data: CellData) => {
+const getSelectedCells = (cells: SugarElement<HTMLTableCellElement>[]) =>
+  TableLookup.table(cells[0]).map((table) => {
+    const warehouse = Warehouse.fromTable(table);
+
+    const allCells = Warehouse.justCells(warehouse);
+
+    const filtered = Arr.filter(allCells, (cellA) =>
+      Arr.exists(cells, (cellB) =>
+        Compare.eq(cellA.element, cellB)
+      )
+    );
+
+    return Arr.map(filtered, (cell) => ({
+      element: cell.element,
+      column: Warehouse.getColumnAt(warehouse, cell.column)
+    }));
+  });
+
+const updateSimpleProps = (editor: Editor, modifier: DomModifier, isSingleCell: boolean, data: CellData, column?: SugarElement<HTMLElement>) => {
   modifier.setAttrib('scope', data.scope);
   modifier.setAttrib('class', data.class);
-  modifier.setStyle('width', Util.addPxSuffix(data.width));
   modifier.setStyle('height', Util.addPxSuffix(data.height));
+  if (column) {
+    const columnModifier = isSingleCell ? DomModifier.normal(editor, column.dom) : DomModifier.ifTruthy(editor, column.dom);
+    columnModifier.setStyle('width', Util.addPxSuffix(data.width));
+  } else {
+    modifier.setStyle('width', Util.addPxSuffix(data.width));
+  }
 };
 
 const updateAdvancedProps = (modifier: DomModifier, data: CellData) => {
@@ -45,40 +70,46 @@ const updateAdvancedProps = (modifier: DomModifier, data: CellData) => {
 // how as part of this, it doesn't remove any original alignment before
 // applying any specified alignment.
 
-const applyCellData = (editor: Editor, cells: HTMLTableCellElement[], data: CellData) => {
+const applyCellData = (editor: Editor, cells: SugarElement<HTMLTableCellElement>[], data: CellData) => {
   const dom = editor.dom;
   const isSingleCell = cells.length === 1;
 
-  Arr.each(cells, (cell) => {
-    // Switch cell type if applicable
-    const cellElm = data.celltype && Util.getNodeName(cell) !== data.celltype ? (dom.rename(cell, data.celltype) as HTMLTableCellElement) : cell;
-    const modifier = isSingleCell ? DomModifier.normal(editor, cellElm) : DomModifier.ifTruthy(editor, cellElm);
+  if (cells.length >= 1) {
+    const selectedCellsOpt = getSelectedCells(cells);
 
-    updateSimpleProps(modifier, data);
+    selectedCellsOpt.each((selectedCells) =>
+      Arr.each(selectedCells, (item) => {
+        // Switch cell type if applicable
+        const cellElement = item.element.dom;
+        const cellElm = data.celltype && Util.getNodeName(cellElement) !== data.celltype ? (dom.rename(cellElement, data.celltype) as HTMLTableCellElement) : cellElement;
+        const modifier = isSingleCell ? DomModifier.normal(editor, cellElm) : DomModifier.ifTruthy(editor, cellElm);
 
-    if (hasAdvancedCellTab(editor)) {
-      updateAdvancedProps(modifier, data);
-    }
+        updateSimpleProps(editor, modifier, isSingleCell, data, item.column?.element);
 
-    // Remove alignment
-    if (isSingleCell) {
-      Styles.unApplyAlign(editor, cellElm);
-      Styles.unApplyVAlign(editor, cellElm);
-    }
+        if (hasAdvancedCellTab(editor)) {
+          updateAdvancedProps(modifier, data);
+        }
 
-    // Apply alignment
-    if (data.halign) {
-      Styles.applyAlign(editor, cellElm, data.halign);
-    }
+        // Remove alignment
+        if (isSingleCell) {
+          Styles.unApplyAlign(editor, cellElm);
+          Styles.unApplyVAlign(editor, cellElm);
+        }
 
-    // Apply vertical alignment
-    if (data.valign) {
-      Styles.applyVAlign(editor, cellElm, data.valign);
-    }
-  });
+        // Apply alignment
+        if (data.halign) {
+          Styles.applyAlign(editor, cellElm, data.halign);
+        }
+
+        // Apply vertical alignment
+        if (data.valign) {
+          Styles.applyVAlign(editor, cellElm, data.valign);
+        }
+      }));
+  }
 };
 
-const onSubmitCellForm = (editor: Editor, cells: HTMLTableCellElement[], api) => {
+const onSubmitCellForm = (editor: Editor, cells: SugarElement<HTMLTableCellElement>[], api) => {
   const data: CellData = api.getData();
   api.close();
 
@@ -88,21 +119,29 @@ const onSubmitCellForm = (editor: Editor, cells: HTMLTableCellElement[], api) =>
   });
 };
 
-const open = (editor: Editor) => {
-  const cells = TableSelection.getCellsFromSelection(editor);
+const getData = (editor: Editor, cells: SugarElement<HTMLTableCellElement>[]) => {
+  const selectedCellsOpt = getSelectedCells(cells);
+
+  const cellsData = selectedCellsOpt.map((selectedCells) =>
+    Arr.map(selectedCells, (item) =>
+      Helpers.extractDataFromCellElement(editor, item.element.dom, hasAdvancedCellTab(editor), item.column?.element)
+    )
+  );
+
+  return Helpers.getSharedValues<CellData>(cellsData.getOrDie());
+};
+
+const open = (editor: Editor, selections: Selections) => {
+  const cells = TableSelection.getCellsFromSelection(Util.getSelectionStart(editor), selections);
 
   // Check if there are any cells to operate on
   if (cells.length === 0) {
     return;
   }
 
-  // Get current data and find shared values between cells
-  const cellsData: CellData[] = Arr.map(cells,
-    (cellElm) => Helpers.extractDataFromCellElement(editor, cellElm, hasAdvancedCellTab(editor))
-  );
-  const data = Helpers.getSharedValues<CellData>(cellsData);
+  const data = getData(editor, cells);
 
-  const dialogTabPanel: Types.Dialog.TabPanelApi = {
+  const dialogTabPanel: Dialog.TabPanelSpec = {
     type: 'tabpanel',
     tabs: [
       {
@@ -113,7 +152,7 @@ const open = (editor: Editor) => {
       Helpers.getAdvancedTab('cell')
     ]
   };
-  const dialogPanel: Types.Dialog.PanelApi = {
+  const dialogPanel: Dialog.PanelSpec = {
     type: 'panel',
     items: [
       {
@@ -145,6 +184,5 @@ const open = (editor: Editor) => {
   });
 };
 
-export {
-  open
-};
+export { open };
+

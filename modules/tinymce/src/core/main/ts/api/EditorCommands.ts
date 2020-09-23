@@ -5,12 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLElement } from '@ephox/dom-globals';
 import { Bookmark } from '../bookmark/BookmarkTypes';
 import * as FontCommands from '../commands/FontCommands';
+import * as LineHeightCommands from '../commands/LineHeight';
 import * as IndentOutdent from '../commands/IndentOutdent';
 import * as InsertContent from '../content/InsertContent';
-import * as DeleteCommands from '../delete/DeleteCommands';
 import * as NodeType from '../dom/NodeType';
 import * as InsertBr from '../newline/InsertBr';
 import * as InsertNewLine from '../newline/InsertNewLine';
@@ -33,6 +32,12 @@ const map = Tools.map, inArray = Tools.inArray;
 export type EditorCommandCallback = (ui: boolean, value: any, args: any) => void;
 export type EditorCommandsCallback = (command: string, ui: boolean, value: any, args: any) => void;
 
+interface Commands {
+  state: Record<string, (command: string) => boolean>;
+  exec: Record<string, EditorCommandsCallback>;
+  value: Record<string, (command: string) => string>;
+}
+
 export interface EditorCommandsConstructor {
   readonly prototype: EditorCommands;
 
@@ -42,7 +47,7 @@ export interface EditorCommandsConstructor {
 class EditorCommands {
   private readonly editor: Editor;
   private selectionBookmark: Bookmark;
-  private commands = { state: {}, exec: {}, value: {}};
+  private commands: Commands = { state: {}, exec: {}, value: {}};
 
   public constructor(editor: Editor) {
     this.editor = editor;
@@ -121,11 +126,11 @@ class EditorCommands {
   }
 
   /**
-   * Queries the current state for a command for example if the current selection is "bold".
+   * Queries the current state for a command. For example: If the current selection is "bold".
    *
    * @method queryCommandState
    * @param {String} command Command to check the state of.
-   * @return {Boolean/Number} true/false if the selected contents is bold or not, -1 if it's not found.
+   * @return {Boolean} true/false - For example: If the selected contents is bold or not.
    */
   public queryCommandState(command: string): boolean {
     let func;
@@ -150,11 +155,11 @@ class EditorCommands {
   }
 
   /**
-   * Queries the command value for example the current fontsize.
+   * Queries the command value. For example: The current fontsize.
    *
    * @method queryCommandValue
    * @param {String} command Command to check the value of.
-   * @return {Object} Command value of false if it's not found.
+   * @return {String} Command value or an empty string (`""`) if the query command is not found.
    */
   public queryCommandValue(command: string): string {
     let func;
@@ -183,9 +188,10 @@ class EditorCommands {
    * @param {Object} commandList Name/value collection with commands to add, the names can also be comma separated.
    * @param {String} type Optional type to add, defaults to exec. Can be value or state as well.
    */
-  public addCommands(commandList: Record<string, EditorCommandsCallback>, type?: 'exec' | 'state' | 'value') {
+  public addCommands<K extends keyof Commands>(commandList: Commands[K], type: K): void;
+  public addCommands(commandList: Record<string, EditorCommandsCallback>): void;
+  public addCommands(commandList: Commands[keyof Commands], type: 'exec' | 'state' | 'query' = 'exec') {
     const self = this;
-    type = type || 'exec';
 
     each(commandList, function (callback, command) {
       each(command.toLowerCase().split(','), function (command) {
@@ -194,7 +200,7 @@ class EditorCommands {
     });
   }
 
-  public addCommand(command: string, callback: EditorCommandCallback, scope?: {}) {
+  public addCommand(command: string, callback: EditorCommandCallback, scope?: any) {
     command = command.toLowerCase();
     this.commands.exec[command] = (command, ui, value, args) => callback.call(scope || this.editor, ui, value, args);
   }
@@ -223,12 +229,12 @@ class EditorCommands {
     return false;
   }
 
-  public addQueryStateHandler(command: string, callback: () => void, scope?: {}) {
+  public addQueryStateHandler(command: string, callback: () => boolean, scope?: any) {
     command = command.toLowerCase();
     this.commands.state[command] = () => callback.call(scope || this.editor);
   }
 
-  public addQueryValueHandler(command: string, callback: () => string, scope?: {}) {
+  public addQueryValueHandler(command: string, callback: () => string, scope?: any) {
     command = command.toLowerCase();
     this.commands.value[command] = () => callback.call(scope || this.editor);
   }
@@ -388,6 +394,10 @@ class EditorCommands {
         FontCommands.fontSizeAction(editor, value);
       },
 
+      'LineHeight'(command, ui, value) {
+        LineHeightCommands.lineHeightAction(editor, value);
+      },
+
       'RemoveFormat'(command) {
         editor.formatter.remove(command);
       },
@@ -505,14 +515,6 @@ class EditorCommands {
         }
       },
 
-      'delete'() {
-        DeleteCommands.deleteCommand(editor);
-      },
-
-      'forwardDelete'() {
-        DeleteCommands.forwardDeleteCommand(editor);
-      },
-
       'mceNewDocument'() {
         editor.setContent('');
       },
@@ -524,7 +526,8 @@ class EditorCommands {
     });
 
     const alignStates = (name: string) => () => {
-      const nodes = editor.selection.isCollapsed() ? [ editor.dom.getParent(editor.selection.getNode(), editor.dom.isBlock) ] : editor.selection.getSelectedBlocks();
+      const selection = editor.selection;
+      const nodes = selection.isCollapsed() ? [ editor.dom.getParent(selection.getNode(), editor.dom.isBlock) ] : selection.getSelectedBlocks();
       const matches = map(nodes, function (node) {
         return !!editor.formatter.matchNode(node, name);
       });
@@ -569,6 +572,7 @@ class EditorCommands {
 
     self.addQueryValueHandler('FontName', () => FontCommands.fontNameQuery(editor), this);
     self.addQueryValueHandler('FontSize', () => FontCommands.fontSizeQuery(editor), this);
+    self.addQueryValueHandler('LineHeight', () => LineHeightCommands.lineHeightQuery(editor), this);
   }
 }
 

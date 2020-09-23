@@ -106,10 +106,10 @@ UnitTest.asynctest('CustomComponentTest', (success, failure) => {
           'data-alloy-id': str.none()
         }
       })),
-      component.element()
+      component.element
     ),
     Step.sync(() => {
-      Assertions.assertEq('Tagger should read custom-uid', 'custom-uid', Tagger.readOrDie(component.element()));
+      Assertions.assertEq('Tagger should read custom-uid', 'custom-uid', Tagger.readOrDie(component.element));
     }),
 
     store.sAssertEq('Nothing in store yet', [ ]),
@@ -125,9 +125,7 @@ UnitTest.asynctest('CustomComponentTest', (success, failure) => {
       'behaviour.b.event'
     ]),
 
-    Step.sync(() => {
-        bA.get()?.behaveA(component);
-    }),
+    Step.sync(() => bA.get()?.behaveA(component)),
 
     store.sAssertEq('Should now have an Api log', [
       'behaviour.a.event',

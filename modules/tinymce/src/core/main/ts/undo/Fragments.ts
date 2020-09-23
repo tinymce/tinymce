@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { document, DocumentFragment, Element, Node } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import Entities from '../api/html/Entities';
 import * as NodeType from '../dom/NodeType';

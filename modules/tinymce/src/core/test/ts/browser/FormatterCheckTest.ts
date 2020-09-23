@@ -211,6 +211,39 @@ UnitTest.asynctest('browser.tinymce.core.FormatterCheckTest', function (success,
     LegacyUnit.equal(editor.formatter.match('bold'), true, 'Selected style element text');
   });
 
+  suite.test('Match on link format', (editor) => {
+    editor.getBody().innerHTML =
+      '<p><a href="http://www.test.com">http://www.test.com</a></p>' +
+      '<p>Normal text</p>' +
+      '<p><a>Bare Anchor</a></p>' +
+      '<p><a id="abc"></a></p>';
+    const rng = editor.dom.createRng();
+
+    // Check link format matches on link
+    rng.setStart(editor.dom.select('a')[0].firstChild, 1);
+    rng.setEnd(editor.dom.select('a')[0].firstChild, 1);
+    editor.selection.setRng(rng);
+    LegacyUnit.equal(editor.formatter.match('link'), true, 'Match on link format');
+
+    // Check link format does not match on normal text
+    rng.setStart(editor.dom.select('p')[1].firstChild, 0);
+    rng.setEnd(editor.dom.select('p')[1].firstChild, 4);
+    editor.selection.setRng(rng);
+    LegacyUnit.equal(editor.formatter.match('link'), false, 'No match on normal text');
+
+    // Check link format does not match on bare anchor
+    rng.setStart(editor.dom.select('a')[1].firstChild, 2);
+    rng.setStart(editor.dom.select('a')[1].firstChild, 2);
+    editor.selection.setRng(rng);
+    LegacyUnit.equal(editor.formatter.match('link'), false, 'No match on bare anchor');
+
+    // Check link format does not match on named anchor
+    rng.setStart(editor.dom.select('a')[2], 0);
+    rng.setEnd(editor.dom.select('a')[2], 0);
+    editor.selection.setRng(rng);
+    LegacyUnit.equal(editor.formatter.match('link'), false, 'No match on named anchor');
+  });
+
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
   }, {

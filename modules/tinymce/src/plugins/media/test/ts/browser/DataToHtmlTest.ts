@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, Log, Logger, Pipeline, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyLoader } from '@ephox/mcagar';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 
 import * as DataToHtml from 'tinymce/plugins/media/core/DataToHtml';
 import Plugin from 'tinymce/plugins/media/Plugin';
@@ -12,7 +12,7 @@ UnitTest.asynctest('browser.core.DataToHtmlTest', function (success, failure) {
   Theme();
 
   const sTestDataToHtml = function (editor, data, expected) {
-    const actual = Element.fromHtml(DataToHtml.dataToHtml(editor, data));
+    const actual = SugarElement.fromHtml(DataToHtml.dataToHtml(editor, data));
 
     return Logger.t(`Test html data ${expected}`, Waiter.sTryUntil('Wait for structure check',
       Assertions.sAssertStructure('Assert equal', expected, actual),

@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { document, window } from '@ephox/dom-globals';
 import DomQuery from 'tinymce/core/api/dom/DomQuery';
 
 /**
@@ -26,7 +25,15 @@ import DomQuery from 'tinymce/core/api/dom/DomQuery';
  * @class tinymce.ui.DragHelper
  */
 
-function getDocumentSize(doc) {
+interface DragHelperSettings {
+  document?: Document;
+  handle?: string;
+  start: (e: MouseEvent | TouchEvent) => void;
+  drag: (e: (MouseEvent | TouchEvent) & { deltaX: number; deltaY: number }) => void;
+  stop?: (e: MouseEvent | TouchEvent) => void;
+}
+
+function getDocumentSize(doc: Document) {
   const max = Math.max;
 
   const documentElement = doc.documentElement;
@@ -57,13 +64,11 @@ function updateWithTouchData(e) {
   }
 }
 
-export default function (id, settings) {
+export default function (id: string, settings: DragHelperSettings) {
   let $eventOverlay;
   const doc = settings.document || document;
   let downButton;
   let startX, startY;
-
-  settings = settings || {};
 
   const handleElement = doc.getElementById(settings.handle || id);
 
@@ -83,7 +88,8 @@ export default function (id, settings) {
     if (window.getComputedStyle) {
       cursor = window.getComputedStyle(handleElm, null).getPropertyValue('cursor');
     } else {
-      cursor = handleElm.runtimeStyle.cursor;
+      // Old IE styles
+      cursor = (handleElm as any).runtimeStyle.cursor;
     }
 
     $eventOverlay = DomQuery('<div></div>').css({

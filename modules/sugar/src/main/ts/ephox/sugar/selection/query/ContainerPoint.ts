@@ -1,7 +1,6 @@
-import { Document, Node as DomNode, Range } from '@ephox/dom-globals';
-import { Arr, Option } from '@ephox/katamari';
-import Element from '../../api/node/Element';
-import * as Node from '../../api/node/Node';
+import { Arr, Optional } from '@ephox/katamari';
+import { SugarElement } from '../../api/node/SugarElement';
+import * as SugarNode from '../../api/node/SugarNode';
 import * as Traverse from '../../api/search/Traverse';
 import * as Geometry from '../alien/Geometry';
 import * as TextPoint from './TextPoint';
@@ -17,24 +16,24 @@ import * as TextPoint from './TextPoint';
  * (repartee does something similar).
  */
 
-const searchInChildren = (doc: Element<Document>, node: Element<DomNode>, x: number, y: number): Option<Range> => {
-  const r = doc.dom().createRange();
+const searchInChildren = (doc: SugarElement<Document>, node: SugarElement<Node>, x: number, y: number): Optional<Range> => {
+  const r = doc.dom.createRange();
   const nodes = Traverse.children(node);
   return Arr.findMap(nodes, (n) => {
     // slight mutation because we assume creating ranges is expensive
-    r.selectNode(n.dom());
+    r.selectNode(n.dom);
     return Geometry.inRect(r.getBoundingClientRect(), x, y) ?
       locateNode(doc, n, x, y) :
-      Option.none<Range>();
+      Optional.none<Range>();
   });
 };
 
-const locateNode = (doc: Element<Document>, node: Element<DomNode>, x: number, y: number) =>
-  Node.isText(node) ? TextPoint.locate(doc, node, x, y) : searchInChildren(doc, node, x, y);
+const locateNode = (doc: SugarElement<Document>, node: SugarElement<Node>, x: number, y: number) =>
+  SugarNode.isText(node) ? TextPoint.locate(doc, node, x, y) : searchInChildren(doc, node, x, y);
 
-const locate = (doc: Element<Document>, node: Element<DomNode>, x: number, y: number) => {
-  const r = doc.dom().createRange();
-  r.selectNode(node.dom());
+const locate = (doc: SugarElement<Document>, node: SugarElement<Node>, x: number, y: number) => {
+  const r = doc.dom.createRange();
+  r.selectNode(node.dom);
   const rect = r.getBoundingClientRect();
   // Clamp x,y at the bounds of the node so that the locate function has SOME chance
   const boundedX = Math.max(rect.left, Math.min(rect.right, x));

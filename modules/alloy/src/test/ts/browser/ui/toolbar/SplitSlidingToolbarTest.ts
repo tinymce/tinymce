@@ -16,7 +16,7 @@ UnitTest.asynctest('SplitSlidingToolbarTest', (success, failure) => {
   if (PhantomSkipper.skip()) { return success(); }
 
   GuiSetup.setup((store, _doc, _body) => {
-    const pPrimary = SplitSlidingToolbar.parts().primary({
+    const pPrimary = SplitSlidingToolbar.parts.primary({
       dom: {
         tag: 'div',
         classes: [ 'test-toolbar-primary' ]
@@ -24,7 +24,7 @@ UnitTest.asynctest('SplitSlidingToolbarTest', (success, failure) => {
       shell: true
     });
 
-    const pOverflow = SplitSlidingToolbar.parts().overflow({
+    const pOverflow = SplitSlidingToolbar.parts.overflow({
       dom: {
         tag: 'div',
         classes: [ 'test-toolbar-overflow' ]
@@ -81,7 +81,7 @@ UnitTest.asynctest('SplitSlidingToolbarTest', (success, failure) => {
     });
 
     const sResetWidth = (px: string) => Step.sync(() => {
-      Css.set(component.element(), 'width', px);
+      Css.set(component.element, 'width', px);
       SplitSlidingToolbar.refresh(component);
     });
 
@@ -131,8 +131,17 @@ UnitTest.asynctest('SplitSlidingToolbarTest', (success, failure) => {
           })
         ]
       })),
-      component.element()
+      component.element
     );
+
+    const sAssertSplitSlidingToolbarToggleState = (expected: boolean) =>
+      Waiter.sTryUntil(`Wait for toolbar to be completely ${expected ? 'opened' : 'closed'}`, Step.sync(() => {
+        Assertions.assertEq('Expected split floating toolbar toggle state to be ' + expected, expected, SplitSlidingToolbar.isOpen(component));
+      }));
+
+    const sToggleSplitSlidingToolbar = () => Step.sync(() => {
+      SplitSlidingToolbar.toggle(component);
+    });
 
     return [
       GuiSetup.mAddStyles(doc, [
@@ -149,6 +158,7 @@ UnitTest.asynctest('SplitSlidingToolbarTest', (success, failure) => {
       ]),
 
       store.sAssertEq('Assert initial store state', [ ]),
+      sAssertSplitSlidingToolbarToggleState(false),
 
       Step.sync(() => {
         const groups = TestPartialToolbarGroup.createGroups([
@@ -161,6 +171,7 @@ UnitTest.asynctest('SplitSlidingToolbarTest', (success, failure) => {
       }),
 
       Waiter.sTryUntil('Wait for toolbar to be completely open', store.sAssertEq('Assert store contains opened state', [ 'onOpened' ])),
+      sAssertSplitSlidingToolbarToggleState(true),
       store.sClear,
 
       sAssertGroups('width=400px (1 +)', [ group1, oGroup ], [ group2, group3 ]),
@@ -187,10 +198,9 @@ UnitTest.asynctest('SplitSlidingToolbarTest', (success, failure) => {
       sResetWidth('400px'),
       sAssertGroups('width=400px (1 +)', [ group1, oGroup ], [ group2, group3 ]),
 
-      Step.sync(() => {
-        SplitSlidingToolbar.toggle(component);
-      }),
+      sToggleSplitSlidingToolbar(),
       Waiter.sTryUntil('Wait for toolbar to be completely closed', store.sAssertEq('Assert store contains closed state', [ 'onClosed' ])),
+      sAssertSplitSlidingToolbarToggleState(false),
 
       // TODO: Add testing for sliding?
       GuiSetup.mRemoveStyles

@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, Chain, Keyboard, Keys, NamedChain, StructAssert, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 
 import * as AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviour';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
@@ -38,7 +38,7 @@ UnitTest.asynctest('MatrixMenuTest', (success, failure) => {
       },
 
       components: [
-        Menu.parts().items({
+        Menu.parts.items({
           preprocess: (items: AlloySpec[]) => {
             const chunks = Arr.chunk(items, 2);
             return Arr.map(chunks, (c) => ({
@@ -65,11 +65,11 @@ UnitTest.asynctest('MatrixMenuTest', (success, failure) => {
     })
   ), (_doc, _body, _gui, component, store) => {
     // TODO: Flesh out test.
-    const cAssertStructure = (label: string, expected: StructAssert) => Chain.op((element: Element) => {
+    const cAssertStructure = (label: string, expected: StructAssert) => Chain.op((element: SugarElement) => {
       Assertions.assertStructure(label, expected, element);
     });
 
-    const cTriggerFocusItem = Chain.op((target: Element) => {
+    const cTriggerFocusItem = Chain.op((target: SugarElement) => {
       AlloyTriggers.dispatch(component, target, SystemEvents.focusItem());
     });
 
@@ -98,7 +98,7 @@ UnitTest.asynctest('MatrixMenuTest', (success, failure) => {
     return [
       Chain.asStep({}, [
         NamedChain.asChain([
-          NamedChain.writeValue('menu', component.element()),
+          NamedChain.writeValue('menu', component.element),
           NamedChain.direct('menu', UiFinder.cFindIn('li[data-value="alpha"]'), 'alpha'),
           NamedChain.direct('menu', UiFinder.cFindIn('li[data-value="beta"]'), 'beta'),
 

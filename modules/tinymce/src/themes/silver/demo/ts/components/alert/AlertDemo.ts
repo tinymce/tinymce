@@ -1,6 +1,6 @@
-import { setupDemo } from '../DemoHelpers';
 import { GuiFactory } from '@ephox/alloy';
 import { renderAlertBanner } from 'tinymce/themes/silver/ui/general/AlertBanner';
+import { setupDemo } from '../DemoHelpers';
 
 export default () => {
   const helpers = setupDemo();

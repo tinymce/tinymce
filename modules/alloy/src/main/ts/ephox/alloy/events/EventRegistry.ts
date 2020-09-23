@@ -1,37 +1,37 @@
-import { Fun, Obj, Option } from '@ephox/katamari';
-import { Element, TransformFind } from '@ephox/sugar';
+import { Obj, Optional } from '@ephox/katamari';
+import { SugarElement, TransformFind } from '@ephox/sugar';
 
 import * as Tagger from '../registry/Tagger';
 import * as DescribedHandler from './DescribedHandler';
 
 export interface ElementAndHandler {
-  readonly element: Element;
+  readonly element: SugarElement;
   readonly descHandler: CurriedHandler;
 }
 
-const eventHandler = (element: Element, descHandler: CurriedHandler): ElementAndHandler => ({
+const eventHandler = (element: SugarElement, descHandler: CurriedHandler): ElementAndHandler => ({
   element,
   descHandler
 });
 
 export interface CurriedHandler {
-  readonly purpose: () => string;
+  readonly purpose: string;
   readonly cHandler: Function;
 }
 
 export interface UncurriedHandler {
-  readonly purpose: () => string;
+  readonly purpose: string;
   readonly handler: Function;
 }
 
 export interface UidAndHandler {
-  readonly id: () => string;
-  readonly descHandler: () => CurriedHandler;
+  readonly id: string;
+  readonly descHandler: CurriedHandler;
 }
 
 const broadcastHandler = (id: string, handler: CurriedHandler): UidAndHandler => ({
-  id: Fun.constant(id),
-  descHandler: Fun.constant(handler)
+  id,
+  descHandler: handler
 });
 
 export type EventName = string;
@@ -48,9 +48,9 @@ export default () => {
     });
   };
 
-  const findHandler = (handlers: Option<Record<Uid, CurriedHandler>>, elem: Element): Option<ElementAndHandler> =>
+  const findHandler = (handlers: Optional<Record<Uid, CurriedHandler>>, elem: SugarElement): Optional<ElementAndHandler> =>
     Tagger.read(elem).fold(
-      () => Option.none(),
+      () => Optional.none(),
       (id) => handlers.bind((h) => Obj.get(h, id)).
         map((descHandler: CurriedHandler) => eventHandler(elem, descHandler))
     );
@@ -62,9 +62,9 @@ export default () => {
       getOr([ ]);
 
   // Given event type, and element, find the handler.
-  const find = (isAboveRoot: (elem: Element) => boolean, type: string, target: Element): Option<ElementAndHandler> => {
+  const find = (isAboveRoot: (elem: SugarElement) => boolean, type: string, target: SugarElement): Optional<ElementAndHandler> => {
     const handlers = Obj.get(registry, type);
-    return TransformFind.closest(target, (elem: Element) => findHandler(handlers, elem), isAboveRoot);
+    return TransformFind.closest(target, (elem: SugarElement) => findHandler(handlers, elem), isAboveRoot);
   };
 
   const unregisterId = (id: string): void => {

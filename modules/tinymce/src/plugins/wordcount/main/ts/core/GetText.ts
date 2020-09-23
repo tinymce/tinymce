@@ -5,9 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node, Text } from '@ephox/dom-globals';
 import { Unicode } from '@ephox/katamari';
-import TreeWalker from 'tinymce/core/api/dom/TreeWalker';
+import DomTreeWalker from 'tinymce/core/api/dom/TreeWalker';
 import Schema, { SchemaMap } from 'tinymce/core/api/html/Schema';
 
 const getText = (node: Node, schema: Schema): string[] => {
@@ -18,7 +17,7 @@ const getText = (node: Node, schema: Schema): string[] => {
 
   const textBlocks: string[] = [];
   let txt = '';
-  const treeWalker = new TreeWalker(node, node);
+  const treeWalker = new DomTreeWalker(node, node);
 
   while ((node = treeWalker.next())) {
     if (node.nodeType === 3) {

@@ -1,6 +1,5 @@
 import { Assertions, Chain, Cursors, FocusTools, Step, StructAssert, UiFinder, Waiter } from '@ephox/agar';
-import { document, Node as DomNode, Range } from '@ephox/dom-globals';
-import { Element, Hierarchy, Html } from '@ephox/sugar';
+import { Hierarchy, Html, SugarElement } from '@ephox/sugar';
 import { Editor } from '../alien/EditorTypes';
 import * as TinySelections from '../selection/TinySelections';
 
@@ -47,8 +46,8 @@ export const TinyApis = function (editor: Editor): TinyApis {
     });
   };
 
-  const lazyBody = function (): Element {
-    return Element.fromDom(editor.getBody());
+  const lazyBody = function (): SugarElement {
+    return SugarElement.fromDom(editor.getBody());
   };
 
   // Has to be thunked, so it can remain polymorphic
@@ -60,13 +59,13 @@ export const TinyApis = function (editor: Editor): TinyApis {
     editor.selection.setRng(range);
   });
 
-  const cSelectElement: Chain<Element, Element> = Chain.op(function (target: Element) {
-    editor.selection.select(target.dom());
+  const cSelectElement: Chain<SugarElement, SugarElement> = Chain.op(function (target: SugarElement) {
+    editor.selection.select(target.dom);
   });
 
   const sSetSelectionFrom = function <T> (spec: Cursors.CursorSpec | Cursors.RangeSpec) {
     const path = Cursors.pathFrom(spec);
-    return sSetSelection<T>(path.startPath(), path.soffset(), path.finishPath(), path.foffset());
+    return sSetSelection<T>(path.startPath, path.soffset, path.finishPath, path.foffset);
   };
 
   const sSetCursor = function <T> (elementPath: number[], offset: number) {
@@ -74,7 +73,7 @@ export const TinyApis = function (editor: Editor): TinyApis {
   };
 
   const sSetSelection = function <T> (startPath: number[], soffset: number, finishPath: number[], foffset: number): Step<T, T> {
-    return Chain.asStep<T, Element>(lazyBody(), [
+    return Chain.asStep<T, SugarElement>(lazyBody(), [
       TinySelections.cCreateDomSelection(startPath, soffset, finishPath, foffset),
       cSetDomSelection,
       cNodeChanged()
@@ -94,7 +93,7 @@ export const TinyApis = function (editor: Editor): TinyApis {
   };
 
   const sSelect = function <T> (selector: string, path: number[]) {
-    return Chain.asStep<T, Element>(lazyBody(), [
+    return Chain.asStep<T, SugarElement>(lazyBody(), [
       UiFinder.cFindIn(selector),
       Cursors.cFollow(path),
       cSelectElement
@@ -136,14 +135,14 @@ export const TinyApis = function (editor: Editor): TinyApis {
   // TODO
   // };
 
-  const assertPath = function (label: string, root: Element, expPath: number[], expOffset: number, actElement: DomNode, actOffset: number) {
+  const assertPath = function (label: string, root: SugarElement, expPath: number[], expOffset: number, actElement: Node, actOffset: number) {
     const expected = Cursors.calculateOne(root, expPath);
     const message = function () {
-      const actual = Element.fromDom(actElement);
+      const actual = SugarElement.fromDom(actElement);
       const actPath = Hierarchy.path(root, actual).getOrDie('could not find path to root');
       return 'Expected path: ' + JSON.stringify(expPath) + '.\nActual path: ' + JSON.stringify(actPath);
     };
-    Assertions.assertEq(() => 'Assert incorrect for ' + label + '.\n' + message(), true, expected.dom() === actElement);
+    Assertions.assertEq(() => 'Assert incorrect for ' + label + '.\n' + message(), true, expected.dom === actElement);
     Assertions.assertEq(() => 'Offset mismatch for ' + label + ' in :\n' + Html.getOuter(expected), expOffset, actOffset);
   };
 
@@ -167,7 +166,7 @@ export const TinyApis = function (editor: Editor): TinyApis {
     'Waiting for focus on tinymce editor',
     FocusTools.sIsOnSelector(
       'iframe focus',
-      Element.fromDom(document),
+      SugarElement.fromDom(document),
       'iframe'
     ),
     100,

@@ -5,14 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node, Range } from '@ephox/dom-globals';
-import TreeWalker from '../api/dom/TreeWalker';
-import Selection from '../api/dom/Selection';
+import { Arr, Obj, Type } from '@ephox/katamari';
 import DOMUtils from '../api/dom/DOMUtils';
+import EditorSelection from '../api/dom/Selection';
+import DomTreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
+import { Format, FormatAttrOrStyleValue, FormatVars } from '../api/fmt/Format';
 import * as NodeType from '../dom/NodeType';
-import { FormatAttrOrStyleValue, FormatVars, Format } from '../api/fmt/Format';
-import { Obj, Arr, Type } from '@ephox/katamari';
 
 const isNode = (node: any): node is Node => !!(node).nodeType;
 
@@ -20,7 +19,7 @@ const isInlineBlock = function (node: Node): boolean {
   return node && /^(IMG)$/.test(node.nodeName);
 };
 
-const moveStart = function (dom: DOMUtils, selection: Selection, rng: Range) {
+const moveStart = function (dom: DOMUtils, selection: EditorSelection, rng: Range) {
   const offset = rng.startOffset;
   let container = rng.startContainer, walker, node, nodes;
 
@@ -35,10 +34,10 @@ const moveStart = function (dom: DOMUtils, selection: Selection, rng: Range) {
     nodes = container.childNodes;
     if (offset < nodes.length) {
       container = nodes[offset];
-      walker = new TreeWalker(container, dom.getParent(container, dom.isBlock));
+      walker = new DomTreeWalker(container, dom.getParent(container, dom.isBlock));
     } else {
       container = nodes[nodes.length - 1];
-      walker = new TreeWalker(container, dom.getParent(container, dom.isBlock));
+      walker = new DomTreeWalker(container, dom.getParent(container, dom.isBlock));
       walker.next(true);
     }
 

@@ -6,7 +6,7 @@
  */
 
 import { AlloyEvents, Focusing, GuiFactory, Memento, ModalDialog } from '@ephox/alloy';
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { renderFooterButton } from '../general/Button';
 import { formCancelEvent, FormCancelEvent, formSubmitEvent, FormSubmitEvent } from '../general/FormEvents';
@@ -32,7 +32,7 @@ export const setup = (extras: ConfirmDialogSetup) => {
         primary: true,
         align: 'end',
         disabled: false,
-        icon: Option.none()
+        icon: Optional.none()
       }, 'submit', extras.backstage)
     );
 
@@ -42,7 +42,7 @@ export const setup = (extras: ConfirmDialogSetup) => {
       primary: false,
       align: 'end',
       disabled: false,
-      icon: Option.none()
+      icon: Optional.none()
     }, 'cancel', extras.backstage);
 
     const titleSpec = Dialogs.pUntitled();
@@ -53,7 +53,7 @@ export const setup = (extras: ConfirmDialogSetup) => {
         lazySink: () => sharedBackstage.getSink(),
         header: Dialogs.hiddenHeader(titleSpec, closeSpec),
         body: Dialogs.pBodyMessage(message, sharedBackstage.providers),
-        footer: Option.some(Dialogs.pFooter(Dialogs.pFooterGroup([], [
+        footer: Optional.some(Dialogs.pFooter(Dialogs.pFooterGroup([], [
           footerNo,
           memFooterYes.asSpec()
         ]))),

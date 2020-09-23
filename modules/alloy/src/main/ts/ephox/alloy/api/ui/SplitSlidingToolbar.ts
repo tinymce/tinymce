@@ -1,30 +1,38 @@
 import { Arr } from '@ephox/katamari';
 
-import * as AddEventsBehaviour from '../../api/behaviour/AddEventsBehaviour';
-import { Coupling } from '../../api/behaviour/Coupling';
-import * as SketchBehaviours from '../../api/component/SketchBehaviours';
-import { AlloySpec } from '../../api/component/SpecTypes';
-import * as AlloyEvents from '../../api/events/AlloyEvents';
-import * as AlloyTriggers from '../../api/events/AlloyTriggers';
-import { Button } from '../../api/ui/Button';
-import { ToolbarGroup } from '../../api/ui/ToolbarGroup';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as SplitToolbarUtils from '../../toolbar/SplitToolbarUtils';
 import * as SplitSlidingToolbarSchema from '../../ui/schema/SplitSlidingToolbarSchema';
-import { SplitSlidingToolbarApis, SplitSlidingToolbarDetail, SplitSlidingToolbarSketcher, SplitSlidingToolbarSpec } from '../../ui/types/SplitSlidingToolbarTypes';
+import {
+  SplitSlidingToolbarApis, SplitSlidingToolbarDetail, SplitSlidingToolbarSketcher, SplitSlidingToolbarSpec
+} from '../../ui/types/SplitSlidingToolbarTypes';
+import * as AddEventsBehaviour from '../behaviour/AddEventsBehaviour';
+import { Coupling } from '../behaviour/Coupling';
 import { Sliding } from '../behaviour/Sliding';
 import { Toggling } from '../behaviour/Toggling';
 import { AlloyComponent } from '../component/ComponentApi';
 import * as GuiFactory from '../component/GuiFactory';
+import * as SketchBehaviours from '../component/SketchBehaviours';
+import { AlloySpec } from '../component/SpecTypes';
+import * as AlloyEvents from '../events/AlloyEvents';
+import * as AlloyTriggers from '../events/AlloyTriggers';
+import { Button } from './Button';
 import * as Sketcher from './Sketcher';
 import { Toolbar } from './Toolbar';
+import { ToolbarGroup } from './ToolbarGroup';
 import { CompositeSketchFactory } from './UiSketcher';
 
+const isOpen = (toolbar: AlloyComponent, detail: SplitSlidingToolbarDetail) =>
+  AlloyParts.getPart(toolbar, detail, 'overflow').map(Sliding.hasGrown).getOr(false);
+
 const toggleToolbar = (toolbar: AlloyComponent, detail: SplitSlidingToolbarDetail) => {
-  AlloyParts.getPart(toolbar, detail, 'overflow').each((overf) => {
-    refresh(toolbar, detail);
-    Sliding.toggleGrow(overf);
-  });
+  // Make sure that the toolbar needs to toggled by checking for overflow button presence
+  AlloyParts.getPart(toolbar, detail, 'overflow-button')
+    .bind(() => AlloyParts.getPart(toolbar, detail, 'overflow'))
+    .each((overf) => {
+      refresh(toolbar, detail);
+      Sliding.toggleGrow(overf);
+    });
 };
 
 const refresh = (toolbar: AlloyComponent, detail: SplitSlidingToolbarDetail) => {
@@ -78,10 +86,7 @@ const factory: CompositeSketchFactory<SplitSlidingToolbarDetail, SplitSlidingToo
         }),
         AddEventsBehaviour.config('toolbar-toggle-events', [
           AlloyEvents.run(toolbarToggleEvent, (toolbar) => {
-            AlloyParts.getPart(toolbar, detail, 'overflow').each((overf) => {
-              refresh(toolbar, detail);
-              Sliding.toggleGrow(overf);
-            });
+            toggleToolbar(toolbar, detail);
           })
         ])
       ]
@@ -92,7 +97,8 @@ const factory: CompositeSketchFactory<SplitSlidingToolbarDetail, SplitSlidingToo
         refresh(toolbar, detail);
       },
       refresh: (toolbar: AlloyComponent) => refresh(toolbar, detail),
-      toggle: (toolbar: AlloyComponent) => toggleToolbar(toolbar, detail)
+      toggle: (toolbar: AlloyComponent) => toggleToolbar(toolbar, detail),
+      isOpen: (toolbar: AlloyComponent) => isOpen(toolbar, detail)
     },
     domModification: {
       attributes: { role: 'group' }
@@ -114,7 +120,8 @@ const SplitSlidingToolbar: SplitSlidingToolbarSketcher = Sketcher.composite<Spli
     },
     toggle: (apis, toolbar) => {
       apis.toggle(toolbar);
-    }
+    },
+    isOpen: (apis, toolbar) => apis.isOpen(toolbar)
   }
 });
 

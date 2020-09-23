@@ -1,5 +1,4 @@
-/* tslint:disable:no-console */
-import { console } from '@ephox/dom-globals';
+/* eslint-disable no-console */
 import Editor from 'tinymce/core/api/Editor';
 
 export default {
@@ -31,7 +30,7 @@ export default {
     //         // TODO: Not going through bridge yet
     //         type: 'input',
     //         name: 'panel-label-1',
-    //         label: Option.none(),
+    //         label: Optional.none(),
 
     //       }
     //     ]

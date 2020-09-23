@@ -1,5 +1,5 @@
 import { Universe } from '@ephox/boss';
-import { Adt, Fun, Option } from '@ephox/katamari';
+import { Adt, Fun, Optional } from '@ephox/katamari';
 
 type Handler<E, D, U> = (item: E, universe: Universe<E, D>) => U;
 
@@ -21,7 +21,7 @@ interface TypedItemAdt<E, D> {
 
 export interface TypedItem<E, D> extends TypedItemAdt<E, D> {
   isBoundary(): boolean;
-  toText(): Option<E>;
+  toText(): Optional<E>;
   is(other: E): boolean;
   len(): number;
 }
@@ -48,7 +48,7 @@ const one = Fun.constant(1);
 const ext = <E, D>(ti: TypedItemAdt<E, D>): TypedItem<E, D> => ({
   ...ti,
   isBoundary: () => ti.fold(yes, no, no, no),
-  toText: () => ti.fold<Option<E>>(Option.none, Option.none, (i) => Option.some(i), Option.none),
+  toText: () => ti.fold<Optional<E>>(Optional.none, Optional.none, (i) => Optional.some(i), Optional.none),
   is: (other) => ti.fold(no, no, (i, u) => u.eq(i, other), no),
   len: () => ti.fold(zero, one, (i, u) => u.property().getText(i).length, one)
 });

@@ -7,8 +7,8 @@ import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
 import { Keying } from 'ephox/alloy/api/behaviour/Keying';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
-import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
+import { Container } from 'ephox/alloy/api/ui/Container';
 import * as NavigationUtils from 'ephox/alloy/test/NavigationUtils';
 
 UnitTest.asynctest('Flow Keying Skip Element Test', (success, failure) => {
@@ -72,7 +72,7 @@ UnitTest.asynctest('Flow Keying Skip Element Test', (success, failure) => {
 
     return [
       GuiSetup.mSetupKeyLogger(body),
-      FocusTools.sSetFocus('Initial focus', gui.element(), '.one'),
+      FocusTools.sSetFocus('Initial focus', gui.element, '.one'),
       NavigationUtils.sequence(
         doc,
         Keys.right(),

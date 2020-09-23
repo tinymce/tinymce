@@ -1,9 +1,8 @@
 import { Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
-import { document } from '@ephox/dom-globals';
 import { Arr, Cell } from '@ephox/katamari';
-import { Body, Element } from '@ephox/sugar';
+import { SugarBody, SugarElement } from '@ephox/sugar';
 import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 import TestExtras from '../../module/TestExtras';
 
@@ -13,7 +12,7 @@ UnitTest.asynctest('WindowManager:custom-dialog Test', (success, failure) => {
   const helpers = TestExtras();
   const windowManager = WindowManager.setup(helpers.extras);
 
-  const doc = Element.fromDom(document);
+  const doc = SugarElement.fromDom(document);
 
   const testLog = Cell([ ]);
 
@@ -22,7 +21,7 @@ UnitTest.asynctest('WindowManager:custom-dialog Test', (success, failure) => {
     Chain.asStep(doc, [
       FocusTools.cGetFocused,
       Chain.op((checkbox) => {
-        Assertions.assertEq('Checking checked status', expected, checkbox.dom().checked);
+        Assertions.assertEq('Checking checked status', expected, checkbox.dom.checked);
       })
     ])
   );
@@ -283,10 +282,10 @@ UnitTest.asynctest('WindowManager:custom-dialog Test', (success, failure) => {
     ),
 
     GeneralSteps.sequence([
-      Mouse.sClickOn(Body.body(), '.tox-button--icon[aria-label="Close"]'),
+      Mouse.sClickOn(SugarBody.body(), '.tox-button--icon[aria-label="Close"]'),
       Waiter.sTryUntil(
         'Wait for the dialog to disappear',
-        UiFinder.sNotExists(Body.body(), '.tox-button--icon[aria-label="Close"]')
+        UiFinder.sNotExists(SugarBody.body(), '.tox-button--icon[aria-label="Close"]')
       )
     ])
   ], () => {

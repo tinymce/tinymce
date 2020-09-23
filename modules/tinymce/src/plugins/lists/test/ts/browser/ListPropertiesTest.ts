@@ -1,8 +1,7 @@
 import { Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Log, Pipeline, UiControls, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
-import { Body, Element, Value } from '@ephox/sugar';
+import { SugarBody, SugarElement, Value } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/lists/Plugin';
@@ -21,7 +20,7 @@ UnitTest.asynctest('tinymce.lists.browser.ListPropertiesTest', (success, failure
   ]);
 
   const sOpenDialog = (editor: Editor, tinyUi: TinyUi, contextMenuSelector: string) => {
-    const doc = Element.fromDom(document);
+    const doc = SugarElement.fromDom(document);
     return GeneralSteps.sequence([
       sOpenContextMenu(editor, tinyUi, contextMenuSelector),
       FocusTools.sTryOnSelector('Wait for the context menu to be focused', doc, contentMenuSelector),
@@ -31,7 +30,7 @@ UnitTest.asynctest('tinymce.lists.browser.ListPropertiesTest', (success, failure
   };
 
   const sUpdateStart = (currentValue: string, newValue: string) => {
-    const doc = Element.fromDom(document);
+    const doc = SugarElement.fromDom(document);
     return GeneralSteps.sequence([
       FocusTools.sIsOnSelector('Check focus is on the input field', doc, inputSelector),
       Chain.asStep(doc, [
@@ -50,9 +49,9 @@ UnitTest.asynctest('tinymce.lists.browser.ListPropertiesTest', (success, failure
     tinyUi.sSubmitDialog('[role=dialog]')
   ]);
 
-  const sAssertListPropMenuNotVisible = UiFinder.sNotExists(Body.body(), contentMenuSelector);
+  const sAssertListPropMenuNotVisible = UiFinder.sNotExists(SugarBody.body(), contentMenuSelector);
 
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
+  TinyLoader.setup((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
     const tinyUi = TinyUi(editor);
 
@@ -107,11 +106,30 @@ UnitTest.asynctest('tinymce.lists.browser.ListPropertiesTest', (success, failure
         sUpdateStart('1', '10'),
         tinyUi.sSubmitDialog('[role=dialog]'),
         tinyApis.sAssertContent('<ol start="10"><li>Root Item<ol><li>Item 1</li><li>Item 2</li></ol></li></ol>')
+      ]),
+      Log.stepsAsStep('TINY-6286', 'List properties menu item disabled for UL', [
+        tinyApis.sSetContent('<ul><li>Item 1</li><li>Item 2</li></ul>'),
+        tinyApis.sSetCursor([ 0, 0, 0 ], 0),
+        tinyUi.sClickOnMenu('Open custom menu', '.tox-mbtn:contains("Custom")'),
+        tinyUi.sWaitForUi('Check menu item is disabled', '.tox-collection__item--state-disabled:contains("List properties")'),
+        tinyUi.sClickOnMenu('Close custom menu', '.tox-mbtn:contains("Custom")')
+      ]),
+      Log.stepsAsStep('TINY-6286', 'List properties menu item enabled for OL', [
+        tinyApis.sSetContent('<ol><li>Item 1</li><li>Item 2</li></ol>'),
+        tinyApis.sSetCursor([ 0, 0, 0 ], 0),
+        tinyUi.sClickOnMenu('Open custom menu', '.tox-mbtn:contains("Custom")'),
+        tinyUi.sWaitForUi('Check menu item is enabled', '.tox-collection__item:contains("List properties"):not(.tox-collection__item--state-disabled)'),
+        tinyUi.sClickOnMenu('Close custom menu', '.tox-mbtn:contains("Custom")')
       ])
     ], onSuccess, onFailure);
   }, {
     plugins: 'lists',
     contextmenu: 'lists bold',
+    menu: {
+      custom: { title: 'Custom', items: 'listprops' }
+    },
+    menubar: 'custom',
+    toolbar: false,
     indent: false,
     theme: 'silver',
     base_url: '/project/tinymce/js/tinymce'

@@ -7,8 +7,8 @@
 
 import { AlloyComponent, AlloySpec, FormTypes, HotspotAnchorSpec, NodeAnchorSpec, SelectionAnchorSpec } from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
-import { Cell, Option, Result } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { Cell, Optional, Result } from '@ephox/katamari';
+import { SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import I18n, { TranslatedString } from 'tinymce/core/api/util/I18n';
 import * as UiFactory from 'tinymce/themes/silver/ui/general/UiFactory';
@@ -26,7 +26,7 @@ export type BridgedType = any;
 
 export interface UiFactoryBackstageProviders {
   icons: IconProvider;
-  menuItems: () => Record<string, Menu.MenuItemApi | Menu.NestedMenuItemApi | Menu.ToggleMenuItemApi>;
+  menuItems: () => Record<string, Menu.MenuItemSpec | Menu.NestedMenuItemSpec | Menu.ToggleMenuItemSpec>;
   translate: (any) => TranslatedString;
   isReadOnly: () => boolean;
 }
@@ -40,7 +40,7 @@ export interface UiFactoryBackstageShared {
     inlineDialog: () => HotspotAnchorSpec | NodeAnchorSpec;
     banner: () => HotspotAnchorSpec | NodeAnchorSpec;
     cursor: () => SelectionAnchorSpec;
-    node: (elem: Option<Element>) => NodeAnchorSpec;
+    node: (elem: Optional<SugarElement>) => NodeAnchorSpec;
   };
   header?: UiFactoryBackstageForHeader;
   formInterpreter?: (parts: FormTypes.FormParts, spec: BridgedType, backstage: UiFactoryBackstage) => AlloySpec;

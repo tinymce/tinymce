@@ -5,28 +5,28 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Types } from '@ephox/bridge';
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
+import { Dialog } from 'tinymce/core/api/ui/Ui';
 import { getRowClassList } from '../api/Settings';
 import * as Helpers from './Helpers';
 
-const getClassList = (editor: Editor) => {
+const getClassList = (editor: Editor): Optional<Dialog.ListBoxSpec> => {
   const classes = Helpers.buildListItems(getRowClassList(editor));
   if (classes.length > 0) {
-    return Option.some<Types.Dialog.BodyComponentApi>({
+    return Optional.some({
       name: 'class',
-      type: 'selectbox',
+      type: 'listbox',
       label: 'Class',
       items: classes
     });
   }
-  return Option.none<Types.Dialog.BodyComponentApi>();
+  return Optional.none();
 };
 
-const formChildren: Types.Dialog.BodyComponentApi[] = [
+const formChildren: Dialog.BodyComponentSpec[] = [
   {
-    type: 'selectbox',
+    type: 'listbox',
     name: 'type',
     label: 'Row type',
     items: [
@@ -36,7 +36,7 @@ const formChildren: Types.Dialog.BodyComponentApi[] = [
     ]
   },
   {
-    type: 'selectbox',
+    type: 'listbox',
     name: 'align',
     label: 'Alignment',
     items: [
@@ -53,10 +53,7 @@ const formChildren: Types.Dialog.BodyComponentApi[] = [
   }
 ];
 
-const getItems = (editor: Editor) => getClassList(editor).fold(
-  () => formChildren,
-  (classes) => formChildren.concat(classes)
-);
+const getItems = (editor: Editor) => formChildren.concat(getClassList(editor).toArray());
 
 export {
   getItems

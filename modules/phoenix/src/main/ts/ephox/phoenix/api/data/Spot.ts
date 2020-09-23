@@ -1,30 +1,29 @@
-import { Fun } from '@ephox/katamari';
 import { SpotDelta, SpotPoint, SpotPoints, SpotRange, SpotText } from './Types';
 
 const point = <E> (element: E, offset: number): SpotPoint<E> => ({
-  element: Fun.constant(element),
-  offset: Fun.constant(offset)
+  element,
+  offset
 });
 
 const delta = <E> (element: E, deltaOffset: number): SpotDelta<E> => ({
-  element: Fun.constant(element),
-  deltaOffset: Fun.constant(deltaOffset)
+  element,
+  deltaOffset
 });
 
 const range = <E> (element: E, start: number, finish: number): SpotRange<E> => ({
-  element: Fun.constant(element),
-  start: Fun.constant(start),
-  finish: Fun.constant(finish)
+  element,
+  start,
+  finish
 });
 
 const points = <E> (begin: SpotPoint<E>, end: SpotPoint<E>): SpotPoints<E> => ({
-  begin: Fun.constant(begin),
-  end: Fun.constant(end)
+  begin,
+  end
 });
 
-const text = <E> (element: E, text: any): SpotText<E> => ({
-  element: Fun.constant(element),
-  text: Fun.constant(text)
+const text = <E> (element: E, text: string): SpotText<E> => ({
+  element,
+  text
 });
 
 export {

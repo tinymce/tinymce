@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLElement, HTMLImageElement } from '@ephox/dom-globals';
 import { Arr, Fun } from '@ephox/katamari';
 import Env from '../api/Env';
 import { BlobCache, BlobInfo } from '../api/file/BlobCache';
@@ -98,7 +97,7 @@ export function ImageScanner(uploadStatus, blobCache: BlobCache): ImageScanner {
 
   const findAll = function (elm: HTMLElement, predicate?: (img: HTMLImageElement) => boolean) {
     if (!predicate) {
-      predicate = Fun.constant(true);
+      predicate = Fun.always;
     }
 
     const images = Arr.filter(getAllImages(elm), function (img) {

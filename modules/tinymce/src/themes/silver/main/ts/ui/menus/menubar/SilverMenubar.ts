@@ -11,14 +11,14 @@ import {
 } from '@ephox/alloy';
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Toolbar } from '@ephox/bridge';
-import { Arr, Fun, Option } from '@ephox/katamari';
-import { Compare, SelectorFind } from '@ephox/sugar';
+import { Arr, Fun, Optional } from '@ephox/katamari';
+import { Compare, EventArgs, SelectorFind } from '@ephox/sugar';
+import { Menu } from 'tinymce/core/api/ui/Ui';
 import { TranslatedString } from 'tinymce/core/api/util/I18n';
 
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 import { renderMenuButton } from '../../button/MenuButton';
 import { MenuButtonClasses } from '../../toolbar/button/ButtonClasses';
-import { SingleMenuItemApi } from '../menu/SingleMenuTypes';
 
 export interface SilverMenubarSpec extends Sketcher.SingleSketchSpec {
   dom: RawDomSchema;
@@ -44,13 +44,13 @@ export interface SilverMenubarSketch extends Sketcher.SingleSketch<SilverMenubar
 
 export interface MenubarItemSpec {
   text: TranslatedString;
-  getItems: () => SingleMenuItemApi[];
+  getItems: () => Menu.NestedMenuItemContents[];
 }
 
 const factory: UiSketcher.SingleSketchFactory<SilverMenubarDetail, SilverMenubarSpec> = function (detail, spec) {
   const setMenus = (comp: AlloyComponent, menus: MenubarItemSpec[]) => {
     const newMenus = Arr.map(menus, (m) => {
-      const buttonSpec = {
+      const buttonSpec: Toolbar.ToolbarMenuButtonSpec = {
         type: 'menubutton',
         text: m.text,
         fetch: (callback) => {
@@ -65,7 +65,7 @@ const factory: UiSketcher.SingleSketchFactory<SilverMenubarDetail, SilverMenubar
         MenuButtonClasses.Button,
         spec.backstage,
         // https://www.w3.org/TR/wai-aria-practices/examples/menubar/menubar-2/menubar-2.html
-        Option.some('menuitem')
+        Optional.some('menuitem')
       );
     });
 
@@ -89,11 +89,11 @@ const factory: UiSketcher.SingleSketchFactory<SilverMenubarDetail, SilverMenubar
           detail.onSetup(component);
         }),
 
-        AlloyEvents.run(NativeEvents.mouseover(), (comp, se) => {
+        AlloyEvents.run<EventArgs<MouseEvent>>(NativeEvents.mouseover(), (comp, se) => {
           // TODO: Use constants
-          SelectorFind.descendant(comp.element(), '.' + MenuButtonClasses.Active).each((activeButton) => {
-            SelectorFind.closest(se.event().target(), '.' + MenuButtonClasses.Button).each((hoveredButton) => {
-              if (! Compare.eq(activeButton, hoveredButton)) {
+          SelectorFind.descendant(comp.element, '.' + MenuButtonClasses.Active).each((activeButton) => {
+            SelectorFind.closest(se.event.target, '.' + MenuButtonClasses.Button).each((hoveredButton) => {
+              if (!Compare.eq(activeButton, hoveredButton)) {
                 // Now, find the components, and expand the hovered one, and close the active one
                 comp.getSystem().getByDom(activeButton).each((activeComp) => {
                   comp.getSystem().getByDom(hoveredButton).each((hoveredComp) => {
@@ -108,8 +108,8 @@ const factory: UiSketcher.SingleSketchFactory<SilverMenubarDetail, SilverMenubar
         }),
 
         AlloyEvents.run<SystemEvents.AlloyFocusShiftedEvent>(SystemEvents.focusShifted(), (comp, se) => {
-          se.event().prevFocus().bind((prev) => comp.getSystem().getByDom(prev).toOption()).each((prev) => {
-            se.event().newFocus().bind((nu) => comp.getSystem().getByDom(nu).toOption()).each((nu) => {
+          se.event.prevFocus.bind((prev) => comp.getSystem().getByDom(prev).toOptional()).each((prev) => {
+            se.event.newFocus.bind((nu) => comp.getSystem().getByDom(nu).toOptional()).each((nu) => {
               if (Dropdown.isOpen(prev)) {
                 Dropdown.expand(nu);
                 Dropdown.close(prev);
@@ -123,7 +123,7 @@ const factory: UiSketcher.SingleSketchFactory<SilverMenubarDetail, SilverMenubar
         selector: '.' + MenuButtonClasses.Button,
         onEscape: (comp) => {
           detail.onEscape(comp);
-          return Option.some(true);
+          return Optional.some(true);
         }
       }),
       Tabstopping.config({ })

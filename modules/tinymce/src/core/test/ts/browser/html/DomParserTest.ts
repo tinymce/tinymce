@@ -6,13 +6,13 @@ import Env from 'tinymce/core/api/Env';
 import { BlobCache } from 'tinymce/core/api/file/BlobCache';
 import DomParser from 'tinymce/core/api/html/DomParser';
 import Schema from 'tinymce/core/api/html/Schema';
-import Serializer from 'tinymce/core/api/html/Serializer';
+import HtmlSerializer from 'tinymce/core/api/html/Serializer';
 
 UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
 
   const schema = Schema({ valid_elements: '*[class|title]' });
-  const serializer = Serializer({}, schema);
+  const serializer = HtmlSerializer({}, schema);
   let parser, root;
 
   const countNodes = function (node, counter?) {
@@ -380,6 +380,14 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
     LegacyUnit.equal(serializer.serialize(root), '<ul><li>a</li><li>b</li></ul>', 'LI moved to next sibling UL');
 
     parser = DomParser({}, schema);
+    root = parser.parse('<ol><li>a</li></ol><li>b</li>');
+    LegacyUnit.equal(serializer.serialize(root), '<ol><li>a</li><li>b</li></ol>', 'LI moved to previous sibling OL');
+
+    parser = DomParser({}, schema);
+    root = parser.parse('<li>a</li><ol><li>b</li></ol>');
+    LegacyUnit.equal(serializer.serialize(root), '<ol><li>a</li><li>b</li></ol>', 'LI moved to next sibling OL');
+
+    parser = DomParser({}, schema);
     root = parser.parse('<li>a</li>');
     LegacyUnit.equal(serializer.serialize(root), '<ul><li>a</li></ul>', 'LI wrapped in new UL');
   });
@@ -625,7 +633,7 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
   suite.test('Pad empty with br', function () {
     const schema = Schema();
     const parser = DomParser({ padd_empty_with_br: true }, schema);
-    const serializer = Serializer({ }, schema);
+    const serializer = HtmlSerializer({ }, schema);
     const root = parser.parse('<p>a</p><p></p>');
     LegacyUnit.equal(serializer.serialize(root), '<p>a</p><p><br /></p>');
   });
@@ -647,7 +655,7 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
   });
 
   suite.test('Bug #7543 removes whitespace between bogus elements before a block', function () {
-    const serializer = Serializer();
+    const serializer = HtmlSerializer();
 
     LegacyUnit.equal(
       serializer.serialize(DomParser().parse(
@@ -658,7 +666,7 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
   });
 
   suite.test('Bug #7582 removes whitespace between bogus elements before a block', function () {
-    const serializer = Serializer();
+    const serializer = HtmlSerializer();
 
     LegacyUnit.equal(
       serializer.serialize(DomParser().parse(
@@ -669,13 +677,24 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
   });
 
   suite.test('do not replace starting linebreak with space', function () {
-    const serializer = Serializer();
+    const serializer = HtmlSerializer();
 
     LegacyUnit.equal(
       serializer.serialize(DomParser().parse(
         '<p>a<br />\nb</p>')
       ),
       '<p>a<br />b</p>'
+    );
+  });
+
+  suite.test('parse iframe XSS', function () {
+    const serializer = HtmlSerializer();
+
+    LegacyUnit.equal(
+      serializer.serialize(DomParser().parse(
+        '<iframe><textarea></iframe><img src="a" onerror="alert(document.domain)" />')
+      ),
+      '<iframe><textarea></iframe><img src="a" />'
     );
   });
 

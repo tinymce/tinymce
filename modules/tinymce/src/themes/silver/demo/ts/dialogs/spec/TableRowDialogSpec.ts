@@ -1,5 +1,3 @@
-import { console } from '@ephox/dom-globals';
-
 export default {
   title: 'Row properties',
   body: {
@@ -11,7 +9,7 @@ export default {
         items: [
           {
             name: 'rowtype',
-            type: 'selectbox',
+            type: 'listbox',
             label: 'Row type',
             items: [
               {
@@ -30,7 +28,7 @@ export default {
           },
           {
             name: 'align',
-            type: 'selectbox',
+            type: 'listbox',
             label: 'Alignment',
             items: [
               {
@@ -64,7 +62,7 @@ export default {
         items: [
           {
             name: 'borderstyle',
-            type: 'selectbox',
+            type: 'listbox',
             label: 'Border style',
             items: [
               {
@@ -111,7 +109,7 @@ export default {
   onSubmit: (api) => {
     const data = api.getData();
 
-    // tslint:disable-next-line:no-console
+    // eslint-disable-next-line no-console
     console.log({
       type: data.rowtype,
       align: data.align,

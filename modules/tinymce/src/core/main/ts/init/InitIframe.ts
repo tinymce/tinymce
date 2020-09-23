@@ -5,8 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { document, window } from '@ephox/dom-globals';
-import { Attr, Class, Element } from '@ephox/sugar';
+import { Attribute, Class, SugarElement } from '@ephox/sugar';
 
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
@@ -42,11 +41,11 @@ const relaxDomain = function (editor: Editor, ifr) {
 };
 
 const createIframeElement = function (id: string, title: TranslatedString, height: number, customAttrs: {}) {
-  const iframe = Element.fromTag('iframe');
+  const iframe = SugarElement.fromTag('iframe');
 
-  Attr.setAll(iframe, customAttrs);
+  Attribute.setAll(iframe, customAttrs);
 
-  Attr.setAll(iframe, {
+  Attribute.setAll(iframe, {
     id: id + '_ifr',
     frameBorder: '0',
     allowTransparency: 'true',
@@ -88,7 +87,7 @@ const createIframe = function (editor: Editor, o) {
     'Rich Text Area. Press ALT-0 for help.'
   );
 
-  const ifr = createIframeElement(editor.id, title, o.height, Settings.getIframeAttrs(editor)).dom();
+  const ifr = createIframeElement(editor.id, title, o.height, Settings.getIframeAttrs(editor)).dom;
 
   ifr.onload = function () {
     ifr.onload = null;

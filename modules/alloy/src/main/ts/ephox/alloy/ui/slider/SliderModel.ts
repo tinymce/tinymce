@@ -1,34 +1,34 @@
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 
 export interface ValueOfArgs {
-  min: number;
-  max: number;
-  range: number;
-  value: number;
-  step: number;
-  snap: boolean;
-  snapStart: Option<number>;
-  rounded: boolean;
-  hasMinEdge: boolean;
-  hasMaxEdge: boolean;
-  minBound: number;
-  maxBound: number;
-  screenRange: number;
+  readonly min: number;
+  readonly max: number;
+  readonly range: number;
+  readonly value: number;
+  readonly step: number;
+  readonly snap: boolean;
+  readonly snapStart: Optional<number>;
+  readonly rounded: boolean;
+  readonly hasMinEdge: boolean;
+  readonly hasMaxEdge: boolean;
+  readonly minBound: number;
+  readonly maxBound: number;
+  readonly screenRange: number;
 }
 
 export interface OffsetOfArgs {
-  min: number;
-  max: number;
-  range: number;
-  value: number;
-  hasMinEdge: boolean;
-  hasMaxEdge: boolean;
-  minBound: number;
-  minOffset: number;
-  maxBound: number;
-  maxOffset: number;
-  centerMinEdge: number;
-  centerMaxEdge: number;
+  readonly min: number;
+  readonly max: number;
+  readonly range: number;
+  readonly value: number;
+  readonly hasMinEdge: boolean;
+  readonly hasMaxEdge: boolean;
+  readonly minBound: number;
+  readonly minOffset: number;
+  readonly maxBound: number;
+  readonly maxOffset: number;
+  readonly centerMinEdge: number;
+  readonly centerMaxEdge: number;
 }
 
 const reduceBy = (value: number, min: number, max: number, step: number): number => {
@@ -60,7 +60,7 @@ const capValue = (value: number, min: number, max: number): number => Math.max(
   Math.min(max, value)
 );
 
-const snapValueOf = (value: number, min: number, max: number, step: number, snapStart: Option<number>): number =>
+const snapValueOf = (value: number, min: number, max: number, step: number, snapStart: Optional<number>): number =>
   // We are snapping by the step size. Therefore, find the nearest multiple of
   // the step
   snapStart.fold(() => {

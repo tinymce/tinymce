@@ -1,4 +1,68 @@
-Version 5.4.0 (TBD)
+Version 5.5.0 (TBD)
+    Added a TypeScript declaration file to the bundle output for TinyMCE core #TINY-3785
+    Added new `table_column_resizing` setting to control how table columns are resized when using the resize bars #TINY-6001
+    Added the ability to remove images on a failed upload using the `images_upload_handler` failure callback #TINY-6011
+    Added `hasPlugin` function to the editor API to determine if a plugin exists or not #TINY-766
+    Added new `ToggleToolbarDrawer` command and query state handler to allow the toolbar drawer to be programmatically toggled and the toggle state to be checked #TINY-6032
+    Added the ability to use `colgroup` elements in tables #TINY-6050
+    Added a new setting `table_use_colgroups` for toggling whether colgroups are used in new tables #TINY-6050
+    Added the ability to delete and navigate HTML media elements without the media plugin #TINY-4211
+    Added `fullscreen_native` setting to the fullscreen plugin to enable use of the entire monitor #TINY-6284
+    Added table related oxide variables to the Style API for more granular control over table cell selection appearance #TINY-6311
+    Added new `toolbar_persist` setting to control the visibility of the inline toolbar #TINY-4847
+    Added new APIs to allow for programmatic control of the inline toolbar visibility #TINY-4847
+    Added the `origin` property to the `ObjectResized` and `ObjectResizeStart` events, to specify which handle the resize was preformed on #TINY-6242
+    Added new StyleSheetLoader `unload` and `unloadAll` APIs to allow loaded stylesheets to be removed #TINY-3926
+    Added the `LineHeight` query command and action to the editor #TINY-4843
+    Added the `lineheight` toolbar and menu items, and added `lineheight` to the default format menu #TINY-4843
+    Added a new `contextmenu_avoid_overlap` setting to allow contextmenus to avoid overlapping matched nodes #TINY-6036
+    Added new listbox dialog UI component for rendering a dropdown that allows nested options #TINY-2236
+    Added back the ability to use nested items in the `image_class_list`, `link_class_list`, `link_list`, `table_class_list`, `table_cell_class_list`, and `table_row_class_list` settings #TINY-2236
+    Changed how CSS manipulates table cells when selecting multiple cells to achieve a semi-transparent selection #TINY-6311
+    Changed the `target` property on fired events to use the native event target. The original target for an open shadow root can be obtained using `event.getComposedPath()` #TINY-6128
+    Changed the editor to cleanup loaded CSS stylesheets when all editors using the stylesheet have been removed #TINY-3926
+    Changed `imagetools` context menu icon for accessing the image dialog to use the `image` icon #TINY-4141
+    Changed the `editor.insertContent()` and `editor.selection.setContent()` APIs to retain leading and trailing whitespace #TINY-5966
+    Changed the `table` plugin `Column` menu to include the cut, copy and paste column menu items #TINY-6374
+    Deprecated the `Env.experimentalShadowDom` flag #TINY-6128
+    Fixed loss of whitespace when inserting content after a non-breaking space #TINY-5966
+    Fixed the `event.getComposedPath()` function throwing an exception for events fired from the editor #TINY-6128
+    Fixed notifications not appearing when the editor is within a ShadowRoot #TINY-6354
+    Fixed focus issues with inline dialogs when the editor is within a ShadowRoot #TINY-6360
+    Fixed the `template` plugin previews missing some content styles #TINY-6115
+    Fixed the `media` plugin not saving the alternative source url in some situations #TINY-4113
+    Fixed an issue where column resizing using the resize bars was inconsistent between fixed and relative table widths #TINY-6001
+    Fixed an issue where dragging and dropping within a table would select table cells #TINY-5950
+    Fixed up and down keyboard navigation not working for inline `contenteditable="false"` elements #TINY-6226
+    Fixed the `unlink` toolbar button not working when selecting multiple links #TINY-4867
+    Fixed the `link` dialog not showing the "Text to display" field in some valid cases #TINY-5205
+    Fixed the `DOMUtils.split()` API incorrectly removing some content #TINY-6294
+    Fixed pressing escape not focusing the editor when using multiple toolbars #TINY-6230
+    Fixed the `dirty` flag not being correctly set during an `AddUndo` event #TINY-4707
+    Fixed `editor.selection.setCursorLocation` incorrectly placing the cursor outside `pre` elements in some circumstances #TINY-4058
+    Fixed an exception being thrown when pressing enter inside pre elements while `br_in_pre` setting is false #TINY-4058
+Version 5.4.2 (2020-08-17)
+    Fixed the editor not resizing when resizing the browser window in fullscreen mode #TINY-3511
+    Fixed clicking on notifications causing inline editors to hide #TINY-6058
+    Fixed an issue where link URLs could not be deleted or edited in the link dialog in some cases #TINY-4706
+    Fixed a regression where setting the `anchor_top` or `anchor_bottom` options to `false` was not working #TINY-6256
+    Fixed the `anchor` plugin not supporting the `allow_html_in_named_anchor` option #TINY-6236
+    Fixed an exception thrown when removing inline formats that contained additional styles or classes #TINY-6288
+    Fixed an exception thrown when positioning the context toolbar on Internet Explorer 11 in some edge cases #TINY-6271
+    Fixed inline formats not removed when more than one `removeformat` format rule existed #TINY-6216
+    Fixed an issue where spaces were sometimes removed when removing formating on nearby text #TINY-6251
+    Fixed the list toolbar buttons not showing as active when a list is selected #TINY-6286
+    Fixed an issue where the UI would sometimes not be shown or hidden when calling the show or hide API methods on the editor #TINY-6048
+    Fixed the list type style not retained when copying list items #TINY-6289
+    Fixed the Paste plugin converting tabs in plain text to a single space character. A `paste_tab_spaces` option has been included for setting the number of spaces used to replace a tab character #TINY-6237
+Version 5.4.1 (2020-07-08)
+    Fixed the Search and Replace plugin incorrectly including zero-width caret characters in search results #TINY-4599
+    Fixed dragging and dropping unsupported files navigating the browser away from the editor #TINY-6027
+    Fixed undo levels not created on browser handled drop or paste events #TINY-6027
+    Fixed content in an iframe element parsing as DOM elements instead of text content #TINY-5943
+    Fixed Oxide checklist styles not showing when printing #TINY-5139
+    Fixed bug with `scope` attribute not being added to the cells of header rows #TINY-6206
+Version 5.4.0 (2020-06-30)
     Added keyboard navigation support to menus and toolbars when the editor is in a ShadowRoot #TINY-6152
     Added the ability for menus to be clicked when the editor is in an open shadow root #TINY-6091
     Added the `Editor.ui.styleSheetLoader` API for loading stylesheets within the Document or ShadowRoot containing the editor UI #TINY-6089

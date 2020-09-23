@@ -5,18 +5,18 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyEvents, AlloyTriggers, CustomEvent } from '@ephox/alloy';
-import { GetApiType, runWithApi } from '../../controls/Controls';
+import { AlloyEvents, AlloyTriggers, CustomEvent, SystemEvents } from '@ephox/alloy';
 import { Id } from '@ephox/katamari';
+import { GetApiType, runWithApi } from '../../controls/Controls';
 
 export interface OnMenuItemExecuteType<T> extends GetApiType<T> {
-  onAction: (itemApi: T) => void;
+  readonly onAction: (itemApi: T) => void;
 }
 
 export const internalToolbarButtonExecute = Id.generate('toolbar.button.execute');
 
 export interface InternalToolbarButtonExecuteEvent<T> extends CustomEvent {
-  buttonApi: () => T;
+  readonly buttonApi: T;
 }
 
 // Perform `action` when an item is clicked on, close menus, and stop event
@@ -32,7 +32,7 @@ const onToolbarButtonExecute = <T>(info: OnMenuItemExecuteType<T>) => AlloyEvent
 
 const toolbarButtonEventOrder = {
   // TODO: use the constants provided by behaviours.
-  'alloy.execute': [ 'disabling', 'alloy.base.behaviour', 'toggling', 'toolbar-button-events' ]
+  [SystemEvents.execute()]: [ 'disabling', 'alloy.base.behaviour', 'toggling', 'toolbar-button-events' ]
 };
 
 export { onToolbarButtonExecute, toolbarButtonEventOrder, runWithApi };

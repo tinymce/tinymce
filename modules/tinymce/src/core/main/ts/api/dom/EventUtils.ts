@@ -5,21 +5,33 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { document, HTMLElementEventMap, window } from '@ephox/dom-globals';
 import { Obj } from '@ephox/katamari';
-import Env from '../Env';
 
 export type EventUtilsCallback<T> = (event: EventUtilsEvent<T>) => void;
+
+interface PartialEvent {
+  type: string;
+  target?: any;
+  isDefaultPrevented?: () => boolean;
+  preventDefault?: () => void;
+  isPropagationStopped?: () => boolean;
+  stopPropagation?: () => void;
+  isImmediatePropagationStopped?: () => boolean;
+  stopImmediatePropagation?: () => void;
+  returnValue?: boolean;
+  cancelBubble?: boolean;
+  composedPath?: () => EventTarget[];
+}
 
 export type EventUtilsEvent<T> = T & {
   type: string;
   target: any;
-  isDefaultPrevented (): boolean;
-  preventDefault (): void;
-  isPropagationStopped (): boolean;
-  stopPropagation (): void;
-  isImmediatePropagationStopped (): boolean;
-  stopImmediatePropagation (): void;
+  isDefaultPrevented: () => boolean;
+  preventDefault: () => void;
+  isPropagationStopped: () => boolean;
+  stopPropagation: () => void;
+  isImmediatePropagationStopped: () => boolean;
+  stopImmediatePropagation: () => void;
 };
 
 /**
@@ -72,28 +84,15 @@ const removeEvent = function (target, name, callback, capture?) {
   }
 };
 
-/**
- * Gets the event target based on shadow dom properties like path and composedPath.
- */
-const getTargetFromShadowDom = function (event, defaultTarget) {
-  // When target element is inside Shadow DOM we need to take first element from composedPath
-  // otherwise we'll get Shadow Root parent, not actual target element
-  if (event.composedPath) {
-    const composedPath = event.composedPath();
-    if (composedPath && composedPath.length > 0) {
-      return composedPath[0];
-    }
-  }
 
-  return defaultTarget;
-};
+const isMouseEvent = (event: any): event is MouseEvent => mouseEventRe.test(event.type);
 
 /**
  * Normalizes a native event object or just adds the event specific methods on a custom event.
  */
-const fix = function <T extends any> (originalEvent: T, data?): EventUtilsEvent<T> {
-  let name;
-  const event = data || {};
+const fix = function <T extends PartialEvent> (originalEvent: T, data?): EventUtilsEvent<T> {
+  let name: string;
+  const event = data || {} as EventUtilsEvent<T>;
 
   // Copy all properties from the original event
   for (name in originalEvent) {
@@ -108,13 +107,12 @@ const fix = function <T extends any> (originalEvent: T, data?): EventUtilsEvent<
     event.target = event.srcElement || document;
   }
 
-  // Experimental shadow dom support
-  if (Env.experimentalShadowDom) {
-    event.target = getTargetFromShadowDom(originalEvent, event.target);
+  if (event.composedPath) {
+    event.composedPath = () => originalEvent.composedPath();
   }
 
   // Calculate pageX/Y if missing and clientX/Y available
-  if (originalEvent && mouseEventRe.test(originalEvent.type) && originalEvent.pageX === undefined && originalEvent.clientX !== undefined) {
+  if (originalEvent && isMouseEvent(originalEvent) && originalEvent.pageX === undefined && originalEvent.clientX !== undefined) {
     const eventDoc = event.target.ownerDocument || document;
     const doc = eventDoc.documentElement;
     const body = eventDoc.body;
@@ -217,9 +215,9 @@ const bindOnReady = function (win, callback, eventUtils) {
 export interface EventUtilsConstructor {
   readonly prototype: EventUtils;
 
-  Event: EventUtils;
-
   new (): EventUtils;
+
+  Event: EventUtils;
 }
 
 /**
@@ -255,9 +253,9 @@ class EventUtils {
    * @param {Object} scope Scope to call the callback function on, defaults to target.
    * @return {function} Callback function that got bound.
    */
-  public bind <K extends keyof HTMLElementEventMap>(target: any, name: K, callback: EventUtilsCallback<HTMLElementEventMap[K]>, scope?: {}): EventUtilsCallback<HTMLElementEventMap[K]>;
-  public bind <T = any>(target: any, names: string, callback: EventUtilsCallback<T>, scope?: {}): EventUtilsCallback<T>;
-  public bind(target: any, names: string, callback: EventUtilsCallback<any>, scope?: {}): EventUtilsCallback<any> {
+  public bind <K extends keyof HTMLElementEventMap>(target: any, name: K, callback: EventUtilsCallback<HTMLElementEventMap[K]>, scope?: any): EventUtilsCallback<HTMLElementEventMap[K]>;
+  public bind <T = any>(target: any, names: string, callback: EventUtilsCallback<T>, scope?: any): EventUtilsCallback<T>;
+  public bind(target: any, names: string, callback: EventUtilsCallback<any>, scope?: any): EventUtilsCallback<any> {
     const self = this;
     let id, callbackList, i, name, fakeName, nativeHandler, capture;
     const win = window;
@@ -365,7 +363,7 @@ class EventUtils {
         }
       } else {
         if (name === 'ready' && self.domLoaded) {
-          callback(fix({ type: name }) as EventUtilsEvent<any>);
+          callback(fix({ type: name }));
         } else {
           // If it already has an native handler then just push the callback
           callbackList.push({ func: callback, scope });
@@ -373,7 +371,7 @@ class EventUtils {
       }
     }
 
-    target = callbackList = 0; // Clean memory for IE
+    target = callbackList = null; // Clean memory for IE
 
     return callback;
   }

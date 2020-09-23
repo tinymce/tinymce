@@ -5,8 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Tools from 'tinymce/core/api/util/Tools';
 import Entities from 'tinymce/core/api/html/Entities';
+import Tools from 'tinymce/core/api/util/Tools';
 
 export interface RootAttrs {[key: string]: string }
 

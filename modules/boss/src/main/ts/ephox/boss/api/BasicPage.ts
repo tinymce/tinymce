@@ -1,8 +1,8 @@
-import { Attr, Element, Insert, InsertAll } from '@ephox/sugar';
+import { Attribute, Insert, InsertAll, SugarElement } from '@ephox/sugar';
 
 const nu = function (tag: string, id: string) {
-  const r = Element.fromTag(tag);
-  Attr.set(r, 'id', id);
+  const r = SugarElement.fromTag(tag);
+  Attribute.set(r, 'id', id);
   return r;
 };
 
@@ -12,34 +12,34 @@ export default function () {
 
   const d100 = nu('div', 'd100');
   const p100 = nu('p', 'p100');
-  const t100 = Element.fromText('Text in paragraph');
+  const t100 = SugarElement.fromText('Text in paragraph');
   const p200 = nu('p', 'p200');
-  const t200 = Element.fromText('Text before span ');
-  const t220 = Element.fromText('and this --- ');
-  const t250 = Element.fromText('cat');
-  const t260 = Element.fromText('er');
-  const t270 = Element.fromText('pillar');
-  const t280 = Element.fromText(' and ');
+  const t200 = SugarElement.fromText('Text before span ');
+  const t220 = SugarElement.fromText('and this --- ');
+  const t250 = SugarElement.fromText('cat');
+  const t260 = SugarElement.fromText('er');
+  const t270 = SugarElement.fromText('pillar');
+  const t280 = SugarElement.fromText(' and ');
 
   const s100 = nu('span', 's100');
-  const t300 = Element.fromText('here');
+  const t300 = SugarElement.fromText('here');
 
   const s200 = nu('span', 's200');
-  const t400 = Element.fromText(' is ');
+  const t400 = SugarElement.fromText(' is ');
 
   const s300 = nu('span', 's300');
-  const t500 = Element.fromText('something');
+  const t500 = SugarElement.fromText('something');
   const p300 = nu('p', 'p300');
-  const t600 = Element.fromText('More data');
+  const t600 = SugarElement.fromText('More data');
 
   const d200 = nu('div', 'd200');
-  const t700 = Element.fromText('Next ');
+  const t700 = SugarElement.fromText('Next ');
   const p400 = nu('p', 'p400');
-  const t800 = Element.fromText('Section ');
+  const t800 = SugarElement.fromText('Section ');
 
   const s400 = nu('span', 's400');
-  const t900 = Element.fromText('no');
-  const t1000 = Element.fromText('w');
+  const t900 = SugarElement.fromText('no');
+  const t1000 = SugarElement.fromText('w');
 
   InsertAll.append(container, [ d100, d200 ]);
   InsertAll.append(d100, [ p100, p200, p300 ]);
@@ -53,7 +53,7 @@ export default function () {
   InsertAll.append(p400, [ t800, s400 ]);
   InsertAll.append(s400, [ t900, t1000 ]);
 
-  const connect = function (element: Element) {
+  const connect = function (element: SugarElement) {
     Insert.append(element, container);
   };
 

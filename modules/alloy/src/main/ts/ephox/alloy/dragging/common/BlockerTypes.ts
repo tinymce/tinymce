@@ -1,4 +1,3 @@
-import { Event } from '@ephox/dom-globals';
 import { EventArgs } from '@ephox/sugar';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';

@@ -1,6 +1,5 @@
-import { console, document, setTimeout } from '@ephox/dom-globals';
-import { Arr, Fun, Option, Result } from '@ephox/katamari';
-import { Class, Element, EventArgs, Value } from '@ephox/sugar';
+import { Arr, Fun, Optional, Result } from '@ephox/katamari';
+import { Class, EventArgs, SugarElement, Value } from '@ephox/sugar';
 
 import * as AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviour';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
@@ -24,12 +23,12 @@ import { AnchorSpec, SelectionAnchorSpec, SubmenuAnchorSpec } from 'ephox/alloy/
 
 import * as DemoRenders from './forms/DemoRenders';
 
-// tslint:disable:no-console
+/* eslint-disable no-console */
 
 export default (): void => {
   const gui = Gui.create();
-  const body = Element.fromDom(document.body);
-  Class.add(gui.element(), 'gui-root-demo-container');
+  const body = SugarElement.fromDom(document.body);
+  Class.add(gui.element, 'gui-root-demo-container');
   Attachment.attachSystem(body, gui);
 
   const sink = DemoSink.make();
@@ -101,12 +100,12 @@ export default (): void => {
 
     onEscape() {
       console.log('inline.menu.escape');
-      return Option.some<boolean>(true);
+      return Optional.some<boolean>(true);
     },
 
     onExecute() {
       console.log('inline.menu.execute');
-      return Option.some<boolean>(true);
+      return Optional.some<boolean>(true);
     },
 
     onOpenMenu(_sandbox, _menu) {
@@ -166,11 +165,11 @@ export default (): void => {
       },
       events: AlloyEvents.derive([
         AlloyEvents.run<EventArgs>(NativeEvents.contextmenu(), (component, simulatedEvent) => {
-          simulatedEvent.event().kill();
+          simulatedEvent.event.kill();
           InlineView.showAt(inlineComp, {
             anchor: 'makeshift',
-            x: simulatedEvent.event().x(),
-            y: simulatedEvent.event().y()
+            x: simulatedEvent.event.x,
+            y: simulatedEvent.event.y
           }, inlineMenu);
         })
       ])
@@ -206,10 +205,10 @@ export default (): void => {
 
                 const nonEmptyAnchor: SelectionAnchorSpec = {
                   anchor: 'selection',
-                  root: gui.element()
+                  root: gui.element
                 };
 
-                const anchor: AnchorSpec = Value.get(input.element()).length > 0 ? nonEmptyAnchor : emptyAnchor;
+                const anchor: AnchorSpec = Value.get(input.element).length > 0 ? nonEmptyAnchor : emptyAnchor;
                 InlineView.showAt(inlineComp, anchor, Container.sketch({
                   containerBehaviours: Behaviour.derive([
                     Keying.config({

@@ -42,7 +42,7 @@ UnitTest.asynctest('Ui Label component Test', (success, failure) => {
             })
           ]
         })),
-        component.element()
+        component.element
       )
     ],
     success,

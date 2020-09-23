@@ -1,4 +1,4 @@
-import { getDemoRegistry } from './../buttons/DemoRegistry';
+import { getDemoRegistry } from '../buttons/DemoRegistry';
 
 export const registerNonbreakingItems = () => {
   getDemoRegistry().addButton('nonbreaking', {

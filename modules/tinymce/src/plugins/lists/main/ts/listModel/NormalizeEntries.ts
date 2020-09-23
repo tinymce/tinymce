@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Obj, Option } from '@ephox/katamari';
+import { Arr, Obj, Optional } from '@ephox/katamari';
 import { Entry } from './Entry';
 
 const cloneListProperties = (target: Entry, source: Entry): void => {
@@ -19,7 +19,7 @@ const cleanListProperties = (entry: Entry): void => {
 };
 
 // Closest entry above/below in the same list
-const closestSiblingEntry = (entries: Entry[], start: number): Option<Entry> => {
+const closestSiblingEntry = (entries: Entry[], start: number): Optional<Entry> => {
   const depth = entries[start].depth;
   // Ignore dirty items as they've been moved and won't have the right list data yet
   const matches = (entry: Entry) => entry.depth === depth && !entry.dirty;

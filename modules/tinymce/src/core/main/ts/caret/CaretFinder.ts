@@ -5,8 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element, Node, Text } from '@ephox/dom-globals';
-import { Fun, Option } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 import * as NodeType from '../dom/NodeType';
 import * as CaretCandidate from './CaretCandidate';
 import CaretPosition from './CaretPosition';
@@ -55,16 +54,16 @@ const shouldSkipPosition = (forward: boolean, from: CaretPosition, to: CaretPosi
 // Finds: <p>a|<b>b</b></p> -> <p>a<b>|b</b></p>
 const fromPosition = (forward: boolean, root: Node, pos: CaretPosition) => {
   const walker = CaretWalker(root);
-  return Option.from(forward ? walker.next(pos) : walker.prev(pos));
+  return Optional.from(forward ? walker.next(pos) : walker.prev(pos));
 };
 
 // Finds: <p>a|<b>b</b></p> -> <p>a<b>b|</b></p>
-const navigate = (forward: boolean, root: Element, from: CaretPosition) =>
+const navigate = (forward: boolean, root: Node, from: CaretPosition) =>
   fromPosition(forward, root, from).bind((to) => {
     if (CaretUtils.isInSameBlock(from, to, root) && shouldSkipPosition(forward, from, to)) {
       return fromPosition(forward, root, to);
     } else {
-      return Option.some(to);
+      return Optional.some(to);
     }
   });
 
@@ -74,28 +73,28 @@ const navigateIgnore = (
   from: CaretPosition,
   ignoreFilter: (pos: CaretPosition) => boolean
 ) => navigate(forward, root, from).
-  bind((pos) => ignoreFilter(pos) ? navigateIgnore(forward, root, pos, ignoreFilter) : Option.some(pos));
+  bind((pos) => ignoreFilter(pos) ? navigateIgnore(forward, root, pos, ignoreFilter) : Optional.some(pos));
 
-const positionIn = (forward: boolean, element: Node): Option<CaretPosition> => {
+const positionIn = (forward: boolean, element: Node): Optional<CaretPosition> => {
   const startNode = forward ? element.firstChild : element.lastChild;
   if (NodeType.isText(startNode)) {
-    return Option.some(CaretPosition(startNode, forward ? 0 : startNode.data.length));
+    return Optional.some(CaretPosition(startNode, forward ? 0 : startNode.data.length));
   } else if (startNode) {
     if (CaretCandidate.isCaretCandidate(startNode)) {
-      return Option.some(forward ? CaretPosition.before(startNode) : afterElement(startNode));
+      return Optional.some(forward ? CaretPosition.before(startNode) : afterElement(startNode));
     } else {
       return walkToPositionIn(forward, element, startNode);
     }
   } else {
-    return Option.none();
+    return Optional.none();
   }
 };
 
-const nextPosition = Fun.curry(fromPosition, true) as (root: Node, pos: CaretPosition) => Option<CaretPosition>;
-const prevPosition = Fun.curry(fromPosition, false) as (root: Node, pos: CaretPosition) => Option<CaretPosition>;
+const nextPosition = Fun.curry(fromPosition, true) as (root: Node, pos: CaretPosition) => Optional<CaretPosition>;
+const prevPosition = Fun.curry(fromPosition, false) as (root: Node, pos: CaretPosition) => Optional<CaretPosition>;
 
-const firstPositionIn = Fun.curry(positionIn, true) as (element: Node) => Option<CaretPosition>;
-const lastPositionIn = Fun.curry(positionIn, false) as (element: Node) => Option<CaretPosition>;
+const firstPositionIn = Fun.curry(positionIn, true) as (element: Node) => Optional<CaretPosition>;
+const lastPositionIn = Fun.curry(positionIn, false) as (element: Node) => Optional<CaretPosition>;
 
 export {
   fromPosition,

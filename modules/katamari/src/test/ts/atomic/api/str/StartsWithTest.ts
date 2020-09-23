@@ -1,6 +1,6 @@
-import * as Strings from 'ephox/katamari/api/Strings';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import * as fc from 'fast-check';
+import * as Strings from 'ephox/katamari/api/Strings';
 
 UnitTest.test('startsWith: unit tests', () => {
   const check = (expected, str, prefix) => {

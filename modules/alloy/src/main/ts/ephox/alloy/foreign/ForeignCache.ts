@@ -1,5 +1,5 @@
 import { Obj } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 
 import * as DomState from '../alien/DomState';
 import { Dragging } from '../api/behaviour/Dragging';
@@ -12,7 +12,7 @@ import * as ComponentEvents from '../construct/ComponentEvents';
 import { UncurriedHandler } from '../events/EventRegistry';
 
 export default () => {
-  const getEvents = (elem: Element, spec: DispatchedAlloyConfig): { readonly elem: Element; readonly evts: Record<string, UncurriedHandler> } => {
+  const getEvents = (elem: SugarElement, spec: DispatchedAlloyConfig): { readonly elem: SugarElement; readonly evts: Record<string, UncurriedHandler> } => {
     const evts = DomState.getOrCreate(elem, () => {
       // If we haven't already setup this particular element, then generate any state and config
       // required by its behaviours and put it in the cache.

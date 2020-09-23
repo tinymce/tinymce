@@ -5,16 +5,18 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { KeyboardEvent } from '@ephox/dom-globals';
+import Editor from '../api/Editor';
+import VK from '../api/util/VK';
 import * as CefNavigation from './CefNavigation';
 import * as MatchKeys from './MatchKeys';
-import VK from '../api/util/VK';
-import Editor from '../api/Editor';
+import * as MediaNavigation from './MediaNavigation';
 
 const executeKeydownOverride = (editor: Editor, evt: KeyboardEvent) => {
   MatchKeys.execute([
-    { keyCode: VK.END, action: CefNavigation.moveToLineEndPoint(editor, true) },
-    { keyCode: VK.HOME, action: CefNavigation.moveToLineEndPoint(editor, false) }
+    { keyCode: VK.END, action: MatchKeys.action(CefNavigation.moveToLineEndPoint, editor, true) },
+    { keyCode: VK.HOME, action: MatchKeys.action(CefNavigation.moveToLineEndPoint, editor, false) },
+    { keyCode: VK.END, action: MatchKeys.action(MediaNavigation.moveToLineEndPoint, editor, true) },
+    { keyCode: VK.HOME, action: MatchKeys.action(MediaNavigation.moveToLineEndPoint, editor, false) }
   ], evt).each((_) => {
     evt.preventDefault();
   });

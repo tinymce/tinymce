@@ -1,6 +1,5 @@
-import { Event } from '@ephox/dom-globals';
-import { Option } from '@ephox/katamari';
-import { EventArgs, Height, Position, Width } from '@ephox/sugar';
+import { Optional } from '@ephox/katamari';
+import { EventArgs, Height, SugarPosition, Width } from '@ephox/sugar';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
@@ -15,11 +14,11 @@ type EventsFunc<C extends DraggingConfig<E>, A extends EventFormat, E> = (dragCo
 
 const calcStartData = <E>(dragConfig: DraggingConfig<E>, comp: AlloyComponent): DragStartData => ({
   bounds: dragConfig.getBounds(),
-  height: Height.getOuter(comp.element()),
-  width: Width.getOuter(comp.element())
+  height: Height.getOuter(comp.element),
+  width: Width.getOuter(comp.element)
 });
 
-const move = <E, ET extends Event>(component: AlloyComponent, dragConfig: DraggingConfig<E>, dragState: DraggingState, dragMode: DragModeDeltas<ET, Position>, event: EventArgs<ET>) => {
+const move = <E, ET extends Event>(component: AlloyComponent, dragConfig: DraggingConfig<E>, dragState: DraggingState, dragMode: DragModeDeltas<ET, SugarPosition>, event: EventArgs<ET>) => {
   const delta = dragState.update(dragMode, event);
   const dragStartData = dragState.getStartData().getOrThunk(() => calcStartData(dragConfig, component));
   delta.each((dlt) => {
@@ -27,12 +26,12 @@ const move = <E, ET extends Event>(component: AlloyComponent, dragConfig: Draggi
   });
 };
 
-const stop = <E>(component: AlloyComponent, blocker: Option<AlloyComponent>, dragConfig: DraggingConfig<E>, dragState: DraggingState) => {
+const stop = <E>(component: AlloyComponent, blocker: Optional<AlloyComponent>, dragConfig: DraggingConfig<E>, dragState: DraggingState) => {
   blocker.each(BlockerUtils.discard);
   dragConfig.snaps.each((snapInfo) => {
     Snappables.stopDrag(component, snapInfo);
   });
-  const target = dragConfig.getTarget(component.element());
+  const target = dragConfig.getTarget(component.element);
   dragState.reset();
   dragConfig.onDrop(component, target);
 };

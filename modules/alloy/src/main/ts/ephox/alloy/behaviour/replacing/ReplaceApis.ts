@@ -1,12 +1,12 @@
-import { Arr, Option } from '@ephox/katamari';
-import { Compare, Insert, Element } from '@ephox/sugar';
+import { Arr, Optional } from '@ephox/katamari';
+import { Compare, Insert, SugarElement } from '@ephox/sugar';
 
-import * as AriaFocus from '../../aria/AriaFocus';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { AlloySpec } from '../../api/component/SpecTypes';
 import * as Attachment from '../../api/system/Attachment';
-import { Stateless } from '../../behaviour/common/BehaviourState';
+import * as AriaFocus from '../../aria/AriaFocus';
 import * as InternalAttachment from '../../system/InternalAttachment';
+import { Stateless } from '../common/BehaviourState';
 import { ReplacingConfig } from './ReplacingTypes';
 
 const set = (component: AlloyComponent, replaceConfig: ReplacingConfig, replaceState: Stateless, data: AlloySpec[]): void => {
@@ -16,10 +16,10 @@ const set = (component: AlloyComponent, replaceConfig: ReplacingConfig, replaceS
   AriaFocus.preserve(() => {
     const newChildren = Arr.map(data, component.getSystem().build);
     InternalAttachment.replaceChildren(component, newChildren);
-  }, component.element());
+  }, component.element);
 };
 
-const insert = (component: AlloyComponent, replaceConfig: ReplacingConfig, insertion: (p: Element, c: Element) => void, childSpec: AlloySpec): void => {
+const insert = (component: AlloyComponent, replaceConfig: ReplacingConfig, insertion: (p: SugarElement, c: SugarElement) => void, childSpec: AlloySpec): void => {
   const child = component.getSystem().build(childSpec);
   Attachment.attachWith(component, child, insertion);
 };
@@ -35,7 +35,7 @@ const prepend = (component: AlloyComponent, replaceConfig: ReplacingConfig, repl
 // NOTE: Removee is going to be a component, not a spec.
 const remove = (component: AlloyComponent, replaceConfig: ReplacingConfig, replaceState: Stateless, removee: AlloyComponent): void => {
   const children = contents(component, replaceConfig);
-  const foundChild = Arr.find(children, (child) => Compare.eq(removee.element(), child.element()));
+  const foundChild = Arr.find(children, (child) => Compare.eq(removee.element, child.element));
 
   foundChild.each(Attachment.detach);
 };
@@ -43,14 +43,14 @@ const remove = (component: AlloyComponent, replaceConfig: ReplacingConfig, repla
 // TODO: Rename
 const contents = (component: AlloyComponent, _replaceConfig: ReplacingConfig): AlloyComponent[] => component.components();
 
-const replaceAt = (component: AlloyComponent, replaceConfig: ReplacingConfig, replaceState: Stateless, replaceeIndex: number, replacer: Option<AlloySpec>): Option<AlloyComponent> => {
+const replaceAt = (component: AlloyComponent, replaceConfig: ReplacingConfig, replaceState: Stateless, replaceeIndex: number, replacer: Optional<AlloySpec>): Optional<AlloyComponent> => {
   const children = contents(component, replaceConfig);
-  return Option.from(children[replaceeIndex]).map((replacee) => {
+  return Optional.from(children[replaceeIndex]).map((replacee) => {
     // remove it.
     remove(component, replaceConfig, replaceState, replacee);
 
     replacer.each((r) => {
-      insert(component, replaceConfig, (p: Element, c: Element) => {
+      insert(component, replaceConfig, (p: SugarElement, c: SugarElement) => {
         Insert.appendAt(p, c, replaceeIndex);
       }, r);
     });
@@ -58,7 +58,7 @@ const replaceAt = (component: AlloyComponent, replaceConfig: ReplacingConfig, re
   });
 };
 
-const replaceBy = (component: AlloyComponent, replaceConfig: ReplacingConfig, replaceState: Stateless, replaceePred: (comp: AlloyComponent) => boolean, replacer: Option<AlloySpec>): Option<AlloyComponent> => {
+const replaceBy = (component: AlloyComponent, replaceConfig: ReplacingConfig, replaceState: Stateless, replaceePred: (comp: AlloyComponent) => boolean, replacer: Optional<AlloySpec>): Optional<AlloyComponent> => {
   const children = contents(component, replaceConfig);
   return Arr.findIndex(children, replaceePred).bind((replaceeIndex) => replaceAt(component, replaceConfig, replaceState, replaceeIndex, replacer));
 };

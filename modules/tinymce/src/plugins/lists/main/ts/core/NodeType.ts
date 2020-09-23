@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element, HTMLBRElement, HTMLDListElement, HTMLElement, HTMLLIElement, HTMLOListElement, HTMLTableCellElement, HTMLTableHeaderCellElement, HTMLUListElement, Node, Text } from '@ephox/dom-globals';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 
@@ -41,11 +40,7 @@ const isBogusBr = (dom: DOMUtils, node: Node) => {
     return false;
   }
 
-  if (dom.isBlock(node.nextSibling) && !isBr(node.previousSibling)) {
-    return true;
-  }
-
-  return false;
+  return dom.isBlock(node.nextSibling) && !isBr(node.previousSibling);
 };
 
 const isEmpty = (dom: DOMUtils, elm: Node, keepBookmarks?: boolean) => {

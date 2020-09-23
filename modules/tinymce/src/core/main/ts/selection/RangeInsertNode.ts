@@ -5,10 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Range, Node, DocumentFragment } from '@ephox/dom-globals';
+import { Optional } from '@ephox/katamari';
 import DOMUtils from '../api/dom/DOMUtils';
 import * as NodeType from '../dom/NodeType';
-import { Option } from '@ephox/katamari';
 
 const trimEmptyTextNode = (dom: DOMUtils, node: Node) => {
   if (NodeType.isText(node) && node.data.length === 0) {
@@ -23,8 +22,8 @@ const insertNode = (dom: DOMUtils, rng: Range, node: Node) => {
 };
 
 const insertFragment = (dom: DOMUtils, rng: Range, frag: DocumentFragment) => {
-  const firstChild = Option.from(frag.firstChild);
-  const lastChild = Option.from(frag.lastChild);
+  const firstChild = Optional.from(frag.firstChild);
+  const lastChild = Optional.from(frag.lastChild);
 
   rng.insertNode(frag);
 

@@ -5,18 +5,18 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Node from '../api/html/Node';
-import { ParserFilter, ParserFilterCallback } from '../api/html/DomParser';
 import { Arr } from '@ephox/katamari';
+import { ParserFilter, ParserFilterCallback } from '../api/html/DomParser';
+import AstNode from '../api/html/Node';
 
 interface FilterMatch {
   filter: ParserFilter;
-  nodes: Node[];
+  nodes: AstNode[];
 }
 
 interface FilterMatchMap { [key: string]: FilterMatch }
 
-const traverse = (node: Node, fn: (node: Node) => void): void => {
+const traverse = (node: AstNode, fn: (node: AstNode) => void): void => {
   fn(node);
 
   if (node.firstChild) {
@@ -28,7 +28,7 @@ const traverse = (node: Node, fn: (node: Node) => void): void => {
   }
 };
 
-const findMatchingNodes = (nodeFilters: ParserFilter[], attributeFilters: ParserFilter[], node: Node): FilterMatch[] => {
+const findMatchingNodes = (nodeFilters: ParserFilter[], attributeFilters: ParserFilter[], node: AstNode): FilterMatch[] => {
   const nodeMatches: FilterMatchMap = {};
   const attrMatches: FilterMatchMap = {};
   const matches: FilterMatch[] = [];
@@ -72,7 +72,7 @@ const findMatchingNodes = (nodeFilters: ParserFilter[], attributeFilters: Parser
   return matches;
 };
 
-const filter = (nodeFilters: ParserFilter[], attributeFilters: ParserFilter[], node: Node): void => {
+const filter = (nodeFilters: ParserFilter[], attributeFilters: ParserFilter[], node: AstNode): void => {
   const matches = findMatchingNodes(nodeFilters, attributeFilters, node);
 
   Arr.each(matches, (match: FilterMatch) => {

@@ -1,8 +1,7 @@
 import { ApproxStructure, Assertions, Chain, Guard, Mouse, NamedChain, Pipeline, UiFinder } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { HTMLElement } from '@ephox/dom-globals';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Editor as McEditor } from '@ephox/mcagar';
-import { Body, Element, Traverse } from '@ephox/sugar';
+import { Focus, SugarBody, SugarElement, Traverse } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { NotificationApi } from 'tinymce/core/api/NotificationManager';
@@ -12,7 +11,8 @@ import { cResizeToPos } from '../../module/UiChainUtils';
 UnitTest.asynctest('NotificationManagerImpl test', (success, failure) => {
   Theme();
 
-  const cOpenNotification = (editor: Editor, type: 'info' | 'warning' | 'error' | 'success', text: string, progressBar = false) => Chain.injectThunked(() => editor.notificationManager.open({ type, text, progressBar }));
+  const cOpenNotification = (editor: Editor, type: 'info' | 'warning' | 'error' | 'success', text: string, progressBar = false) =>
+    Chain.injectThunked(() => editor.notificationManager.open({ type, text, progressBar }));
 
   const cCloseNotification = Chain.op((notification: NotificationApi) => {
     notification.close();
@@ -26,10 +26,17 @@ UnitTest.asynctest('NotificationManagerImpl test', (success, failure) => {
     notification.progressBar.value(progress);
   });
 
+  const cAssertFocusable = Chain.op((notification: NotificationApi) => {
+    const elm = SugarElement.fromDom(notification.getEl());
+    Focus.focus(elm);
+    const notificationFocused = Focus.search(elm).isSome();
+    Assert.eq('Notification should be focused', true, notificationFocused);
+  });
+
   const cAssertPosition = (prefix: string, x: number, y: number, diff: number = 5) => Chain.op((notification: NotificationApi) => {
-    const elem = Traverse.parent(Element.fromDom(notification.getEl())).getOrDie() as Element<HTMLElement>;
-    const top = elem.dom().offsetTop;
-    const left = elem.dom().offsetLeft;
+    const elem = Traverse.parent(SugarElement.fromDom(notification.getEl())).getOrDie() as SugarElement<HTMLElement>;
+    const top = elem.dom.offsetTop;
+    const left = elem.dom.offsetLeft;
     Assertions.assertEq(`${prefix} top position should be ${y}px~=${top}px`, true, Math.abs(y - top) < diff);
     Assertions.assertEq(`${prefix} left position should be ${x}px~=${left}px`, true, Math.abs(x - left) < diff);
   });
@@ -104,7 +111,7 @@ UnitTest.asynctest('NotificationManagerImpl test', (success, failure) => {
               ]
             })
           ]
-        })), Element.fromDom(notification.getEl()));
+        })), SugarElement.fromDom(notification.getEl()));
       });
 
       Chain.pipeline([
@@ -187,7 +194,7 @@ UnitTest.asynctest('NotificationManagerImpl test', (success, failure) => {
       Chain.pipeline([
         Chain.control(
           NamedChain.asChain([
-            NamedChain.writeValue('body', Body.body()),
+            NamedChain.writeValue('body', SugarBody.body()),
             NamedChain.write('nError', cOpenNotification(editor, 'error', 'Message 1')),
             NamedChain.write('nWarn', cOpenNotification(editor, 'warning', 'Message 2')),
 
@@ -203,6 +210,10 @@ UnitTest.asynctest('NotificationManagerImpl test', (success, failure) => {
             // Check items are positioned so that they are stacked
             NamedChain.direct('nError', cAssertPosition('Error notification', 220, -299), '_'),
             NamedChain.direct('nWarn', cAssertPosition('Warning notification', 220, -251), '_'),
+
+            // Check the notification can be focused
+            NamedChain.read('nError', cAssertFocusable),
+            NamedChain.read('nWarn', cAssertFocusable),
 
             NamedChain.direct('nError', cCloseNotification, '_'),
             NamedChain.direct('nWarn', cCloseNotification, '_')

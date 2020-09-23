@@ -1,5 +1,5 @@
 import { Arr } from '@ephox/katamari';
-import { EventHandler, Bindable } from './Event';
+import { Bindable, EventHandler } from './Event';
 
 const create = function () {
   const registrations: Bindable<any>[] = [];

@@ -5,11 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyParts, AlloySpec, Behaviour, Button, Container, DomFactory, Focusing, Keying,
-  ModalDialog, NativeEvents, SystemEvents, Tabstopping
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyParts, AlloySpec, Behaviour, Button, Container, DomFactory, Focusing, Keying, ModalDialog,
+  NativeEvents, SystemEvents, Tabstopping
 } from '@ephox/alloy';
-import { Option, Result } from '@ephox/katamari';
-import { Body, Class } from '@ephox/sugar';
+import { Optional, Result } from '@ephox/katamari';
+import { Class, SugarBody } from '@ephox/sugar';
 import Env from 'tinymce/core/api/Env';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
@@ -40,7 +40,7 @@ const defaultHeader = (title: AlloyParts.ConfiguredPart, close: AlloyParts.Confi
   ]
 });
 
-const pClose = (onClose: () => void, providersBackstage: UiFactoryBackstageProviders) => ModalDialog.parts().close(
+const pClose = (onClose: () => void, providersBackstage: UiFactoryBackstageProviders) => ModalDialog.parts.close(
   // Need to find a way to make it clear in the docs whether parts can be sketches
   Button.sketch({
     dom: {
@@ -58,7 +58,7 @@ const pClose = (onClose: () => void, providersBackstage: UiFactoryBackstageProvi
   })
 );
 
-const pUntitled = () => ModalDialog.parts().title({
+const pUntitled = () => ModalDialog.parts.title({
   dom: {
     tag: 'div',
     classes: [ 'tox-dialog__title' ],
@@ -69,7 +69,7 @@ const pUntitled = () => ModalDialog.parts().title({
   }
 });
 
-const pBodyMessage = (message: string, providersBackstage: UiFactoryBackstageProviders) => ModalDialog.parts().body({
+const pBodyMessage = (message: string, providersBackstage: UiFactoryBackstageProviders) => ModalDialog.parts.body({
   dom: {
     tag: 'div',
     classes: [ 'tox-dialog__body' ]
@@ -89,7 +89,7 @@ const pBodyMessage = (message: string, providersBackstage: UiFactoryBackstagePro
   ]
 });
 
-const pFooter = (buttons: AlloySpec[]) => ModalDialog.parts().footer({
+const pFooter = (buttons: AlloySpec[]) => ModalDialog.parts.footer({
   dom: {
     tag: 'div',
     classes: [ 'tox-dialog__footer' ]
@@ -118,7 +118,7 @@ export interface DialogSpec {
   lazySink: () => Result<AlloyComponent, any>;
   header: AlloySpec;
   body: AlloyParts.ConfiguredPart;
-  footer: Option<AlloyParts.ConfiguredPart>;
+  footer: Optional<AlloyParts.ConfiguredPart>;
   onEscape: (comp: AlloyComponent) => void;
   extraClasses: string[];
   extraBehaviours: Behaviour.NamedConfiguredBehaviour<any, any>[];
@@ -139,7 +139,7 @@ const renderDialog = (spec: DialogSpec) => {
       onEscape: (comp) => {
         spec.onEscape(comp);
         // TODO: Make a strong type for Handled KeyEvent
-        return Option.some(true);
+        return Optional.some(true);
       },
       useTabstopAt: (elem) => !NavigableObject.isPseudoStop(elem),
       dom: {
@@ -181,10 +181,10 @@ const renderDialog = (spec: DialogSpec) => {
         ])),
         AddEventsBehaviour.config('scroll-lock', [
           AlloyEvents.runOnAttached(() => {
-            Class.add(Body.body(), scrollLockClass);
+            Class.add(SugarBody.body(), scrollLockClass);
           }),
           AlloyEvents.runOnDetached(() => {
-            Class.remove(Body.body(), scrollLockClass);
+            Class.remove(SugarBody.body(), scrollLockClass);
           })
         ]),
         ...spec.extraBehaviours

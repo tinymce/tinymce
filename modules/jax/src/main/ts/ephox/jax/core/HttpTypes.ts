@@ -1,5 +1,5 @@
 import { FutureResult } from '@ephox/katamari';
-import { ResponseBodyDataTypes, RequestBody, ResponseBody } from './HttpData';
+import { RequestBody, ResponseBody, ResponseBodyDataTypes } from './HttpData';
 import { HttpError } from './HttpError';
 
 export const enum HttpMethod {

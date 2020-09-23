@@ -1,16 +1,17 @@
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Arr, Fun, Obj, Type } from '@ephox/katamari';
+
 import { AlloyEventHandler, EventRunHandler } from '../api/events/AlloyEvents';
 import { EventFormat, SimulatedEvent } from '../events/SimulatedEvent';
 
 const nu = <T extends EventFormat>(parts: Partial<AlloyEventHandler<T>>): AlloyEventHandler<T> => {
-  if (! Obj.hasNonNullableKey(parts, 'can') && !Obj.hasNonNullableKey(parts, 'abort') && !Obj.hasNonNullableKey(parts, 'run')) { throw new Error(
+  if (!Obj.hasNonNullableKey(parts, 'can') && !Obj.hasNonNullableKey(parts, 'abort') && !Obj.hasNonNullableKey(parts, 'run')) { throw new Error(
     'EventHandler defined by: ' + JSON.stringify(parts, null, 2) + ' does not have can, abort, or run!'
   );
   }
   return ValueSchema.asRawOrDie('Extracting event.handler', ValueSchema.objOfOnly([
-    FieldSchema.defaulted('can', Fun.constant(true)),
-    FieldSchema.defaulted('abort', Fun.constant(false)),
+    FieldSchema.defaulted('can', Fun.always),
+    FieldSchema.defaulted('abort', Fun.never),
     FieldSchema.defaulted('run', Fun.noop)
   ]), parts);
 };

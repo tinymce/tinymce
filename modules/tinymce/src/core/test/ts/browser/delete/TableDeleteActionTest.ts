@@ -1,32 +1,31 @@
 import { Assertions, Chain, Logger, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { document } from '@ephox/dom-globals';
-import { Arr, Fun, Option, Result } from '@ephox/katamari';
-import { Element, Hierarchy, Html } from '@ephox/sugar';
+import { Arr, Fun, Optional, Result } from '@ephox/katamari';
+import { Hierarchy, Html, SugarElement } from '@ephox/sugar';
 import * as TableDeleteAction from 'tinymce/core/delete/TableDeleteAction';
 
 UnitTest.asynctest('browser.tinymce.core.delete.TableDeleteActionTest', function (success, failure) {
 
   const cFromHtml = (html, startPath, startOffset, endPath, endOffset) =>
     Chain.injectThunked(() => {
-      const elm = Element.fromHtml(html);
+      const elm = SugarElement.fromHtml(html);
       const sc = Hierarchy.follow(elm, startPath).getOrDie();
       const ec = Hierarchy.follow(elm, endPath).getOrDie();
       const rng = document.createRange();
 
-      rng.setStart(sc.dom(), startOffset);
-      rng.setEnd(ec.dom(), endOffset);
+      rng.setStart(sc.dom, startOffset);
+      rng.setEnd(ec.dom, endOffset);
 
       return TableDeleteAction.getActionFromRange(elm, rng);
     });
 
   const fail = (message: string) => Fun.constant(Result.error(message));
 
-  const cAssertNone = Chain.op(function (x: Option<any>) {
+  const cAssertNone = Chain.op(function (x: Optional<any>) {
     Assertions.assertEq('Is none', true, x.isNone());
   });
 
-  const cExtractActionCells = Chain.binder(function (actionOpt: Option<any>) {
+  const cExtractActionCells = Chain.binder(function (actionOpt: Optional<any>) {
     return actionOpt
       .fold(
         fail('unexpected nothing'),
@@ -44,7 +43,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.TableDeleteActionTest', function
       );
   });
 
-  const cExtractDeleteSelectionCell = Chain.binder(function (actionOpt: Option<any>) {
+  const cExtractDeleteSelectionCell = Chain.binder(function (actionOpt: Optional<any>) {
     return actionOpt
       .fold(
         fail('unexpected nothing'),
@@ -56,7 +55,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.TableDeleteActionTest', function
       );
   });
 
-  const cExtractTableFromDeleteAction = Chain.binder(function (actionOpt: Option<any>) {
+  const cExtractTableFromDeleteAction = Chain.binder(function (actionOpt: Optional<any>) {
     return actionOpt
       .fold(
         fail('unexpected nothing'),

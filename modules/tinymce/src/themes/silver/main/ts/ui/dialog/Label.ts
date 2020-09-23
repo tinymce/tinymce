@@ -6,15 +6,14 @@
  */
 
 import { AlloySpec, Behaviour, Keying, Replacing, SimpleSpec } from '@ephox/alloy';
-import { Types } from '@ephox/bridge';
-import { Arr, Option } from '@ephox/katamari';
+import { Dialog } from '@ephox/bridge';
+import { Arr, Optional } from '@ephox/katamari';
 import { UiFactoryBackstageShared } from '../../backstage/Backstage';
 
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 import { RepresentingConfigs } from '../alien/RepresentingConfigs';
-import { Omit } from '../Omit';
 
-type LabelSpec = Omit<Types.Label.Label, 'type'>;
+type LabelSpec = Omit<Dialog.Label, 'type'>;
 
 export const renderLabel = (spec: LabelSpec, backstageShared: UiFactoryBackstageShared): SimpleSpec => {
   const label = {
@@ -36,7 +35,7 @@ export const renderLabel = (spec: LabelSpec, backstageShared: UiFactoryBackstage
     behaviours: Behaviour.derive([
       ComposingConfigs.self(),
       Replacing.config({}),
-      RepresentingConfigs.domHtml(Option.none()),
+      RepresentingConfigs.domHtml(Optional.none()),
       Keying.config({
         mode: 'acyclic'
       })

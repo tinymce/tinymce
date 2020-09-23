@@ -5,20 +5,20 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { document, window } from '@ephox/dom-globals';
 import { Obj, Type } from '@ephox/katamari';
-import { Attr, Element, Insert } from '@ephox/sugar';
+import { Attribute, Insert, Remove, SugarElement, SugarShadowDom } from '@ephox/sugar';
 import Annotator from '../api/Annotator';
 import DOMUtils from '../api/dom/DOMUtils';
-import Selection from '../api/dom/Selection';
-import DomSerializer, { SerializerSettings } from '../api/dom/Serializer';
+import EditorSelection from '../api/dom/Selection';
+import DomSerializer, { DomSerializerSettings } from '../api/dom/Serializer';
+import { StyleSheetLoader } from '../api/dom/StyleSheetLoader';
 import Editor from '../api/Editor';
 import EditorUpload from '../api/EditorUpload';
 import Env from '../api/Env';
 import * as Events from '../api/Events';
 import Formatter from '../api/Formatter';
 import DomParser, { DomParserSettings } from '../api/html/DomParser';
-import Node from '../api/html/Node';
+import AstNode from '../api/html/Node';
 import Schema from '../api/html/Schema';
 import * as Settings from '../api/Settings';
 import UndoManager from '../api/UndoManager';
@@ -27,6 +27,7 @@ import Tools from '../api/util/Tools';
 import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import * as Placeholder from '../content/Placeholder';
+import * as DeleteCommands from '../delete/DeleteCommands';
 import * as NodeType from '../dom/NodeType';
 import * as TouchEvents from '../events/TouchEvents';
 import * as ForceBlocks from '../ForceBlocks';
@@ -44,12 +45,18 @@ declare const escape: any;
 
 const DOM = DOMUtils.DOM;
 
-const appendStyle = function (editor: Editor, text: string) {
-  const head = Element.fromDom(editor.getDoc().head);
-  const tag = Element.fromTag('style');
-  Attr.set(tag, 'type', 'text/css');
-  Insert.append(tag, Element.fromText(text));
-  Insert.append(head, tag);
+const appendStyle = (editor: Editor, text: string) => {
+  const body = SugarElement.fromDom(editor.getBody());
+  const container = SugarShadowDom.getStyleContainer(SugarShadowDom.getRootNode(body));
+
+  const style = SugarElement.fromTag('style');
+  Attribute.set(style, 'type', 'text/css');
+  Insert.append(style, SugarElement.fromText(text));
+  Insert.append(container, style);
+
+  editor.on('remove', () => {
+    Remove.remove(style);
+  });
 };
 
 const getRootName = (editor: Editor): string => editor.inline ? editor.getElement().nodeName.toLowerCase() : undefined;
@@ -84,12 +91,12 @@ const mkParserSettings = (editor: Editor): DomParserSettings => {
   });
 };
 
-const mkSerializerSettings = (editor: Editor): SerializerSettings => {
+const mkSerializerSettings = (editor: Editor): DomSerializerSettings => {
   const settings = editor.settings;
 
   return {
     ...mkParserSettings(editor),
-    ...removeUndefined<SerializerSettings>({
+    ...removeUndefined<DomSerializerSettings>({
       // SerializerSettings
       url_converter: settings.url_converter,
       url_converter_scope: settings.url_converter_scope,
@@ -132,7 +139,7 @@ const createParser = function (editor: Editor): DomParser {
 
   // Convert src and href into data-mce-src, data-mce-href and data-mce-style
   parser.addAttributeFilter('src,href,style,tabindex', function (nodes, name) {
-    let i = nodes.length, node: Node, value: string;
+    let i = nodes.length, node: AstNode, value: string;
     const dom = editor.dom;
     const internalName = 'data-mce-' + name;
 
@@ -167,7 +174,7 @@ const createParser = function (editor: Editor): DomParser {
   });
 
   // Keep scripts from executing
-  parser.addNodeFilter('script', function (nodes: Node[]) {
+  parser.addNodeFilter('script', function (nodes: AstNode[]) {
     let i = nodes.length;
 
     while (i--) {
@@ -180,7 +187,7 @@ const createParser = function (editor: Editor): DomParser {
   });
 
   if (editor.settings.preserve_cdata) {
-    parser.addNodeFilter('#cdata', function (nodes: Node[]) {
+    parser.addNodeFilter('#cdata', function (nodes: AstNode[]) {
       let i = nodes.length;
 
       while (i--) {
@@ -192,7 +199,7 @@ const createParser = function (editor: Editor): DomParser {
     });
   }
 
-  parser.addNodeFilter('p,h1,h2,h3,h4,h5,h6,div', function (nodes: Node[]) {
+  parser.addNodeFilter('p,h1,h2,h3,h4,h5,h6,div', function (nodes: AstNode[]) {
     let i = nodes.length;
     const nonEmptyElements = editor.schema.getNonEmptyElements();
 
@@ -200,7 +207,7 @@ const createParser = function (editor: Editor): DomParser {
       const node = nodes[i];
 
       if (node.isEmpty(nonEmptyElements) && node.getAll('br').length === 0) {
-        node.append(new Node('br', 1)).shortEnded = true;
+        node.append(new AstNode('br', 1)).shortEnded = true;
       }
     }
   });
@@ -258,8 +265,19 @@ const initEditor = function (editor: Editor) {
   autoFocus(editor);
 };
 
-const getStyleSheetLoader = function (editor: Editor) {
-  return editor.inline ? DOM.styleSheetLoader : editor.dom.styleSheetLoader;
+const getStyleSheetLoader = (editor: Editor): StyleSheetLoader =>
+  editor.inline ? editor.ui.styleSheetLoader : editor.dom.styleSheetLoader;
+
+const loadContentCss = (editor: Editor, css: string[]) => {
+  const styleSheetLoader = getStyleSheetLoader(editor);
+
+  const loaded = () => {
+    editor.on('remove', () => styleSheetLoader.unloadAll(css));
+    initEditor(editor);
+  };
+
+  // Load all stylesheets
+  styleSheetLoader.loadAll(css, loaded, loaded);
 };
 
 const preInit = (editor: Editor, rtcMode: boolean) => {
@@ -315,15 +333,7 @@ const preInit = (editor: Editor, rtcMode: boolean) => {
     editor.dom.addStyle(contentCssText);
   }
 
-  getStyleSheetLoader(editor).loadAll(
-    editor.contentCSS,
-    function (_) {
-      initEditor(editor);
-    },
-    function (_urls) {
-      initEditor(editor);
-    }
-  );
+  loadContentCss(editor, editor.contentCSS);
 
   // Append specified content CSS last
   if (settings.content_style) {
@@ -393,7 +403,7 @@ const initContentBody = function (editor: Editor, skipWrite?: boolean) {
 
   editor.parser = createParser(editor);
   editor.serializer = DomSerializer(mkSerializerSettings(editor), editor);
-  editor.selection = Selection(editor.dom, editor.getWin(), editor.serializer, editor);
+  editor.selection = EditorSelection(editor.dom, editor.getWin(), editor.serializer, editor);
   editor.annotator = Annotator(editor);
   editor.formatter = Formatter(editor);
   editor.undoManager = UndoManager(editor);
@@ -407,7 +417,8 @@ const initContentBody = function (editor: Editor, skipWrite?: boolean) {
     MultiClickSelection.setup(editor);
   }
 
-  KeyboardOverrides.setup(editor);
+  const caret = KeyboardOverrides.setup(editor);
+  DeleteCommands.setup(editor, caret);
   ForceBlocks.setup(editor);
   Placeholder.setup(editor);
 

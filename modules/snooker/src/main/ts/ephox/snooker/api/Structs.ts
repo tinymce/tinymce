@@ -1,212 +1,168 @@
-import { Fun } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { Arr } from '@ephox/katamari';
+import { SugarElement } from '@ephox/sugar';
 
 export interface Dimension {
-  readonly width: () => number;
-  readonly height: () => number;
+  readonly width: number;
+  readonly height: number;
 }
 
 export interface Dimensions {
-  readonly width: () => number[];
-  readonly height: () => number[];
+  readonly width: number[];
+  readonly height: number[];
 }
 
 export interface Grid {
-  readonly rows: () => number;
-  readonly columns: () => number;
+  readonly rows: number;
+  readonly columns: number;
 }
 
 export interface Address {
-  readonly row: () => number;
-  readonly column: () => number;
+  readonly row: number;
+  readonly column: number;
 }
 
 export interface Coords {
-  readonly x: () => number;
-  readonly y: () => number;
+  readonly x: number;
+  readonly y: number;
 }
 
 export interface Detail {
-  readonly element: () => Element;
-  readonly rowspan: () => number;
-  readonly colspan: () => number;
+  readonly element: SugarElement;
+  readonly rowspan: number;
+  readonly colspan: number;
 }
 
 export interface DetailNew extends Detail {
-  readonly isNew: () => boolean;
+  readonly isNew: boolean;
 }
 
 export interface DetailExt extends Detail {
-  readonly row: () => number;
-  readonly column: () => number;
+  readonly row: number;
+  readonly column: number;
 }
 
-export type Section = 'tfoot' | 'thead' | 'tbody';
+export type Section = 'tfoot' | 'thead' | 'tbody' | 'colgroup';
+const validSectionList: Section[] = [ 'tfoot', 'thead', 'tbody', 'colgroup' ];
 
 export interface RowCells {
-  readonly cells: () => ElementNew[];
-  readonly section: () => Section;
+  readonly cells: ElementNew[];
+  readonly section: Section;
 }
 
 export interface RowData<T> {
-  readonly element: () => Element;
-  readonly cells: () => T[];
-  readonly section: () => Section;
+  readonly element: SugarElement;
+  readonly cells: T[];
+  readonly section: Section;
 }
 
 export interface RowDataNew<T> extends RowData<T> {
-  readonly isNew: () => boolean;
+  readonly isNew: boolean;
 }
 
 export interface ElementNew {
-  readonly element: () => Element;
-  readonly isNew: () => boolean;
+  readonly element: SugarElement;
+  readonly isNew: boolean;
 }
 
 export interface RowDetails {
-  readonly details: () => DetailNew[];
-  readonly section: () => Section;
+  readonly details: DetailNew[];
+  readonly section: Section;
+}
+
+export interface Column {
+  readonly element: SugarElement<HTMLTableColElement>;
+  readonly colspan: number;
 }
 
 export interface Bounds {
-  readonly startRow: () => number;
-  readonly startCol: () => number;
-  readonly finishRow: () => number;
-  readonly finishCol: () => number;
+  readonly startRow: number;
+  readonly startCol: number;
+  readonly finishRow: number;
+  readonly finishCol: number;
 }
 
-const dimension = (
-  width: number,
-  height: number
-): Dimension => ({
-  width: Fun.constant(width),
-  height: Fun.constant(height)
+const isValidSection = (parentName: string): parentName is Section =>
+  Arr.contains(validSectionList, parentName);
+
+const dimension = (width: number, height: number): Dimension => ({
+  width,
+  height
 });
 
-const dimensions = (
-  width: number[],
-  height: number[]
-): Dimensions => ({
-  width: Fun.constant(width),
-  height: Fun.constant(height)
+const dimensions = (width: number[], height: number[]): Dimensions => ({
+  width,
+  height
 });
 
-const grid = (
-  rows: number,
-  columns: number
-): Grid => ({
-  rows: Fun.constant(rows),
-  columns: Fun.constant(columns)
+const grid = (rows: number, columns: number): Grid => ({
+  rows,
+  columns
 });
 
-const address = (
-  row: number,
-  column: number
-): Address => ({
-  row: Fun.constant(row),
-  column: Fun.constant(column)
+const address = (row: number, column: number): Address => ({
+  row,
+  column
 });
 
-const coords = (
-  x: number,
-  y: number
-): Coords => ({
-  x: Fun.constant(x),
-  y: Fun.constant(y)
+const coords = (x: number, y: number): Coords => ({
+  x,
+  y
 });
 
-const detail = (
-  element: Element,
-  rowspan: number,
-  colspan: number
-): Detail => ({
-  element: Fun.constant(element),
-  rowspan: Fun.constant(rowspan),
-  colspan: Fun.constant(colspan)
+const detail = (element: SugarElement, rowspan: number, colspan: number): Detail => ({
+  element,
+  rowspan,
+  colspan
 });
 
-const detailnew = (
-  element: Element,
-  rowspan: number,
-  colspan: number,
-  isNew: boolean
-): DetailNew => ({
-  element: Fun.constant(element),
-  rowspan: Fun.constant(rowspan),
-  colspan: Fun.constant(colspan),
-  isNew: Fun.constant(isNew)
+const detailnew = (element: SugarElement, rowspan: number, colspan: number, isNew: boolean): DetailNew => ({
+  element,
+  rowspan,
+  colspan,
+  isNew
 });
 
-const extended = (
-  element: Element,
-  rowspan: number,
-  colspan: number,
-  row: number,
-  column: number
-): DetailExt => ({
-  element: Fun.constant(element),
-  rowspan: Fun.constant(rowspan),
-  colspan: Fun.constant(colspan),
-  row: Fun.constant(row),
-  column: Fun.constant(column)
+const extended = (element: SugarElement, rowspan: number, colspan: number, row: number, column: number): DetailExt => ({
+  element,
+  rowspan,
+  colspan,
+  row,
+  column
 });
 
-const rowdata = <T> (
-  element: Element,
-  cells: T[],
-  section: Section
-): RowData<T> => ({
-  element: Fun.constant(element),
-  cells: Fun.constant(cells),
-  section: Fun.constant(section)
+const rowdata = <T> (element: SugarElement, cells: T[], section: Section): RowData<T> => ({
+  element,
+  cells,
+  section
 });
 
-const elementnew = (
-  element: Element,
-  isNew: boolean
-): ElementNew => ({
-  element: Fun.constant(element),
-  isNew: Fun.constant(isNew)
+const elementnew = (element: SugarElement, isNew: boolean): ElementNew => ({
+  element,
+  isNew
 });
 
-const rowdatanew = <T> (
-  element: Element,
-  cells: T[],
-  section: Section,
-  isNew: boolean
-): RowDataNew<T> => ({
-  element: Fun.constant(element),
-  cells: Fun.constant(cells),
-  section: Fun.constant(section),
-  isNew: Fun.constant(isNew)
+const rowdatanew = <T> (element: SugarElement, cells: T[], section: Section, isNew: boolean): RowDataNew<T> => ({
+  element,
+  cells,
+  section,
+  isNew
 });
 
-const rowcells = (
-  cells: ElementNew[],
-  section: Section
-): RowCells => ({
-  cells: Fun.constant(cells),
-  section: Fun.constant(section)
+const rowcells = (cells: ElementNew[], section: Section): RowCells => ({
+  cells,
+  section
 });
 
-const rowdetails = (
-  details: DetailNew[],
-  section: Section
-): RowDetails => ({
-  details: Fun.constant(details),
-  section: Fun.constant(section)
+const rowdetails = (details: DetailNew[], section: Section): RowDetails => ({
+  details,
+  section
 });
 
-const bounds = (
-  startRow: number,
-  startCol: number,
-  finishRow: number,
-  finishCol: number
-): Bounds => ({
-  startRow:  Fun.constant(startRow),
-  startCol: Fun.constant(startCol),
-  finishRow: Fun.constant(finishRow),
-  finishCol: Fun.constant(finishCol)
+const bounds = (startRow: number, startCol: number, finishRow: number, finishCol: number): Bounds => ({
+  startRow,
+  startCol,
+  finishRow,
+  finishCol
 });
 
 export {
@@ -223,5 +179,6 @@ export {
   rowdatanew,
   rowcells,
   rowdetails,
-  bounds
+  bounds,
+  isValidSection
 };

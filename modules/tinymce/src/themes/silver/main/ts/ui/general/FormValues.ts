@@ -6,15 +6,15 @@
  */
 
 import { Form, Invalidating, Representing } from '@ephox/alloy';
-import { Arr, Future, Futures, Merger, Obj, Option, Result, Results } from '@ephox/katamari';
+import { Arr, Future, Futures, Merger, Obj, Optional, Result, Results } from '@ephox/katamari';
 
 export interface FormValidator { 'value': string | number; 'text': string }
 
-const toValidValues = function <T> (values: { [key: string]: Option<T[keyof T]> }) {
+const toValidValues = function <T> (values: { [key: string]: Optional<T[keyof T]> }) {
   const errors: string[] = [];
   const result: { [key: string]: T[keyof T] } = {};
 
-  Obj.each(values, function (value: Option<T[keyof T]>, name: string) {
+  Obj.each(values, function (value: Optional<T[keyof T]>, name: string) {
     value.fold(function () {
       errors.push(name);
     }, function (v) {
@@ -46,7 +46,7 @@ const isValueHolder = (v: any): v is ValueHolder => Obj.hasNonNullableKey(v, 'va
 const extract = <T>(form) => {
   // FIX: May hit race conditions here is the validation is ongoing and I fire
   // another one.
-  const rawValues: { [key: string]: Option<T[keyof T]> } = Representing.getValue(form);
+  const rawValues: { [key: string]: Optional<T[keyof T]> } = Representing.getValue(form);
   const values = toValidValues(rawValues);
 
   // TODO: Consider how to work "required" into this

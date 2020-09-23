@@ -86,13 +86,13 @@ UnitTest.asynctest('browser.tinymce.core.LineWalkerTest', function (success, fai
   });
 
   suite.test('isAboveLine', function () {
-    LegacyUnit.equal(LineWalker.isAboveLine(5)({ line: 10 } as LineWalker.ClientRectLine), true);
-    LegacyUnit.equal(LineWalker.isAboveLine(5)({ line: 2 } as LineWalker.ClientRectLine), false);
+    LegacyUnit.equal(LineWalker.isAboveLine(5)({ line: 10 } as LineWalker.LinePosClientRect), true);
+    LegacyUnit.equal(LineWalker.isAboveLine(5)({ line: 2 } as LineWalker.LinePosClientRect), false);
   });
 
   suite.test('isLine', function () {
-    LegacyUnit.equal(LineWalker.isLine(3)({ line: 3 } as LineWalker.ClientRectLine), true);
-    LegacyUnit.equal(LineWalker.isLine(3)({ line: 4 } as LineWalker.ClientRectLine), false);
+    LegacyUnit.equal(LineWalker.isLine(3)({ line: 3 } as LineWalker.LinePosClientRect), true);
+    LegacyUnit.equal(LineWalker.isLine(3)({ line: 4 } as LineWalker.LinePosClientRect), false);
   });
 
   viewBlock.attach();

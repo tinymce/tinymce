@@ -1,31 +1,32 @@
-import { BodyComponentApi, BodyComponent } from './BodyComponent';
+import { FieldPresence, FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
-import { ValueSchema, FieldSchema, FieldPresence } from '@ephox/boulder';
 import { alertBannerSchema } from './AlertBanner';
 import { createBarFields } from './Bar';
+import { BodyComponent, BodyComponentSpec } from './BodyComponent';
 import { buttonSchema } from './Button';
 import { checkboxSchema } from './Checkbox';
+import { collectionSchema } from './Collection';
 import { colorInputSchema } from './ColorInput';
 import { colorPickerSchema } from './ColorPicker';
+import { customEditorSchema } from './CustomEditor';
 import { dropZoneSchema } from './Dropzone';
 import { createGridFields } from './Grid';
+import { htmlPanelSchema } from './HtmlPanel';
 import { iframeSchema } from './Iframe';
+import { imageToolsSchema } from './ImageTools';
 import { inputSchema } from './Input';
+import { createLabelFields } from './Label';
+import { listBoxSchema } from './ListBox';
 import { selectBoxSchema } from './SelectBox';
 import { sizeInputSchema } from './SizeInput';
+import { tableSchema } from './Table';
 import { textAreaSchema } from './Textarea';
 import { urlInputSchema } from './UrlInput';
-import { customEditorSchema } from './CustomEditor';
-import { htmlPanelSchema } from './HtmlPanel';
-import { imageToolsSchema } from './ImageTools';
-import { collectionSchema } from './Collection';
-import { createLabelFields } from './Label';
-import { tableSchema } from './Table';
 
-export interface PanelApi {
+export interface PanelSpec {
   type: 'panel';
   classes?: string[];
-  items: BodyComponentApi[];
+  items: BodyComponentSpec[];
 }
 
 export interface Panel {
@@ -57,6 +58,7 @@ export const itemSchema = ValueSchema.valueThunkOf(
     grid: ValueSchema.objOf(createGridFields(createItemsField('grid'))),
     iframe: iframeSchema,
     input: inputSchema,
+    listbox: listBoxSchema,
     selectbox: selectBoxSchema,
     sizeinput: sizeInputSchema,
     textarea: textAreaSchema,
@@ -79,4 +81,5 @@ const panelFields = [
 
 export const panelSchema = ValueSchema.objOf(panelFields);
 
-export const createPanel = (spec: PanelApi): Result<Panel, ValueSchema.SchemaError<any>> => ValueSchema.asRaw<Panel>('panel', panelSchema, spec);
+export const createPanel = (spec: PanelSpec): Result<Panel, ValueSchema.SchemaError<any>> =>
+  ValueSchema.asRaw<Panel>('panel', panelSchema, spec);

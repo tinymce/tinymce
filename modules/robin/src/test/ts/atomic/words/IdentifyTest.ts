@@ -1,25 +1,25 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import { WordScope } from 'ephox/robin/data/WordScope';
 import * as Identify from 'ephox/robin/words/Identify';
 
 UnitTest.test('words :: Identify', function () {
-  const none = Option.none<string>();
-  const some = Option.some;
+  const none = Optional.none<string>();
+  const some = Optional.some;
 
   const check = function (expected: WordScope[], input: string) {
     const actual = Identify.words(input);
     assert.eq(expected.length, actual.length);
     Arr.map(expected, function (x, i) {
-      assert.eq(expected[i].word(), actual[i].word());
-      assert.eq(true, expected[i].left().equals(actual[i].left()));
-      assert.eq(true, expected[i].right().equals(actual[i].right()));
+      assert.eq(expected[i].word, actual[i].word);
+      assert.eq(true, expected[i].left.equals(actual[i].left));
+      assert.eq(true, expected[i].right.equals(actual[i].right));
     });
   };
 
   const checkWords = function (expected: string[], input: string) {
     const actual = Identify.words(input);
-    assert.eq(expected, Arr.map(actual, function (a) { return a.word(); }));
+    assert.eq(expected, Arr.map(actual, function (a) { return a.word; }));
   };
 
   check([], '');

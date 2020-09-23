@@ -1,5 +1,5 @@
 import { FieldProcessorAdt, FieldSchema, Objects } from '@ephox/boulder';
-import { Fun, Option } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { Composing } from '../../api/behaviour/Composing';
@@ -61,7 +61,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
         domModification: {
           classes: [ detail.markers.choiceClass ]
         },
-        events: ButtonBase.events(Option.none())
+        events: ButtonBase.events(Optional.none())
       };
     }
   })

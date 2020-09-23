@@ -1,4 +1,4 @@
-import { Step, Logger } from '@ephox/agar';
+import { Logger, Step } from '@ephox/agar';
 import * as MockDataTransfer from './MockDataTransfer';
 
 const sPaste = function (editor, data) {

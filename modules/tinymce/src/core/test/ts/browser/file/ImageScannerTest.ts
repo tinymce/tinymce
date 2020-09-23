@@ -1,4 +1,5 @@
 import { Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { LegacyUnit } from '@ephox/mcagar';
 import Env from 'tinymce/core/api/Env';
 import { BlobCache } from 'tinymce/core/api/file/BlobCache';
@@ -6,8 +7,6 @@ import * as Conversions from 'tinymce/core/file/Conversions';
 import { ImageScanner } from 'tinymce/core/file/ImageScanner';
 import UploadStatus from 'tinymce/core/file/UploadStatus';
 import ViewBlock from '../../module/test/ViewBlock';
-import { UnitTest } from '@ephox/bedrock-client';
-import { URL } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.core.file.ImageScannerTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();

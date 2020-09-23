@@ -1,10 +1,11 @@
-import { Struct } from '@ephox/katamari';
-
 export interface Focus<E> {
-  left(): any; // TODO narrow types
-  element(): E;
-  right(): any;
+  readonly left: any; // TODO narrow types
+  readonly element: E;
+  readonly right: any;
 }
-type FocusConstructor = <E>(left: any, element: E, right: any) => Focus<E>;
 
-export const Focus = <FocusConstructor> Struct.immutable('left', 'element', 'right');
+export const Focus = <E>(left: any, element: E, right: any): Focus<E> => ({
+  left,
+  element,
+  right
+});

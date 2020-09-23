@@ -1,13 +1,15 @@
-import { Element as DomElement, Node as DomNode } from '@ephox/dom-globals';
-import Element from '../node/Element';
+import { SugarElement } from '../node/SugarElement';
 import * as Css from './Css';
 
 export default (property: string, value: string) => {
-  const is = (element: Element<DomElement>) => Css.get(element, property) === value;
+  const is = (element: SugarElement<Element>): boolean =>
+    Css.get(element, property) === value;
 
-  const remove = (element: Element<DomNode>) => Css.remove(element, property);
+  const remove = (element: SugarElement<Node>): void =>
+    Css.remove(element, property);
 
-  const set = (element: Element<DomNode>) => Css.set(element, property, value);
+  const set = (element: SugarElement<Node>): void =>
+    Css.set(element, property, value);
 
   return {
     is,

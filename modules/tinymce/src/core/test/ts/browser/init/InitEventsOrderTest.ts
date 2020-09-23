@@ -1,10 +1,10 @@
 import { Pipeline, Step } from '@ephox/agar';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { TinyLoader } from '@ephox/mcagar';
-import { UnitTest, Assert } from '@ephox/bedrock-client';
+import EditorManager from 'tinymce/core/api/EditorManager';
+import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
 import Theme from 'tinymce/themes/silver/Theme';
-import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
-import EditorManager from 'tinymce/core/api/EditorManager';
 
 UnitTest.asynctest('Init events order test', (success, failure) => {
   const events: string[] = [];

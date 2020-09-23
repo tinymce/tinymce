@@ -1,12 +1,13 @@
 import { Assertions, Chain, Mouse, NamedChain, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Result } from '@ephox/katamari';
-import { Css, Element } from '@ephox/sugar';
+import { Css, SugarElement } from '@ephox/sugar';
+
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Dragging } from 'ephox/alloy/api/behaviour/Dragging';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
+import { Container } from 'ephox/alloy/api/ui/Container';
 
 UnitTest.asynctest('MouseDragEventTest', (success, failure) => {
   GuiSetup.setup((store, _doc, _body) => GuiFactory.build(
@@ -24,13 +25,13 @@ UnitTest.asynctest('MouseDragEventTest', (success, failure) => {
           repositionTarget: false,
           blockerClass: 'test-blocker',
           onDrag: (_comp, _targetElem, delta) => {
-            store.adder({ left: delta.left(), top: delta.top() })();
+            store.adder({ left: delta.left, top: delta.top })();
           }
         })
       ])
     })
   ), (_doc, _body, gui, component, store) => {
-    const cAssertNoPositionInfo = Chain.op((box: Element) => {
+    const cAssertNoPositionInfo = Chain.op((box: SugarElement) => {
       Assertions.assertEq('Should be no "left"', true, Css.getRaw(box, 'left').isNone());
       Assertions.assertEq('Should be no "top"', true, Css.getRaw(box, 'top').isNone());
     });
@@ -39,9 +40,9 @@ UnitTest.asynctest('MouseDragEventTest', (success, failure) => {
       Chain.asStep({}, [
         NamedChain.asChain([
           store.cClear,
-          NamedChain.writeValue('box', component.element()),
+          NamedChain.writeValue('box', component.element),
           NamedChain.direct('box', Mouse.cMouseDown, '_'),
-          NamedChain.writeValue('container', gui.element()),
+          NamedChain.writeValue('container', gui.element),
           NamedChain.direct('container', UiFinder.cFindIn('.test-blocker'), 'blocker'),
 
           NamedChain.direct('blocker', Mouse.cMouseMoveTo(100, 200), '_'),

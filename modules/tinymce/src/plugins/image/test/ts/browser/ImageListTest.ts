@@ -4,7 +4,7 @@ import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import ImagePlugin from 'tinymce/plugins/image/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 
-import { cAssertInputValue, cSetInputValue, cSetSelectValue, generalTabSelectors } from '../module/Helpers';
+import { cAssertInputValue, cSetInputValue, cSetListBoxItem, generalTabSelectors } from '../module/Helpers';
 
 UnitTest.asynctest('browser.tinymce.plugins.image.ImageListTest', (success, failure) => {
 
@@ -24,7 +24,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImageListTest', (success, fail
         tinyUi.sClickOnToolbar('click image button', 'button[aria-label="Insert/edit image"]'),
         tinyUi.sWaitForPopup('wait for dialog', 'div[role="dialog"]'),
         Chain.asStep({}, [
-          cSetSelectValue(generalTabSelectors.images, 'mydog.jpg')
+          cSetListBoxItem(generalTabSelectors.images, 'Dog')
         ]),
         Chain.asStep({}, [
           cAssertInputValue(generalTabSelectors.src, 'mydog.jpg'),

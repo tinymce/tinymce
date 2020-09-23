@@ -1,8 +1,7 @@
 import { Assertions, Chain, Guard, Mouse, UiControls, UiFinder } from '@ephox/agar';
-import { document } from '@ephox/dom-globals';
 import { Arr, Obj, Result } from '@ephox/katamari';
 import { TinyUi } from '@ephox/mcagar';
-import { Body, Checked, Element, Focus, Node, SelectTag, Value } from '@ephox/sugar';
+import { Attribute, Checked, Class, Focus, SugarBody, SugarElement, Traverse, Value } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 
 export type ImageDialogData = {
@@ -17,7 +16,7 @@ export type ImageDialogData = {
     height: string;
   };
   caption: boolean;
-  classIndex: number; // because the DOM api is setSelectedIndex
+  class: string;
   border: string;
   hspace: string;
   style: string;
@@ -32,8 +31,8 @@ export const generalTabSelectors = {
   width: 'div.tox-form__controls-h-stack div label:contains("Width") + input.tox-textfield',
   height: 'div.tox-form__controls-h-stack div label:contains("Height") + input.tox-textfield',
   caption: 'label.tox-label:contains("Caption") + label input.tox-checkbox__input',
-  classIndex: 'label.tox-label:contains("Class") + div.tox-selectfield select',
-  images: 'label.tox-label:contains("Image list") + div.tox-selectfield select',
+  class: 'label.tox-label:contains("Class") + div.tox-listboxfield > .tox-listbox',
+  images: 'label.tox-label:contains("Image list") + div.tox-listboxfield > .tox-listbox',
   decorative: 'label.tox-label:contains("Accessibility") + label.tox-checkbox>input'
 };
 
@@ -42,32 +41,32 @@ export const advancedTabSelectors = {
   style: 'label.tox-label:contains("Style") + input.tox-textfield',
   hspace: 'label.tox-label:contains("Horizontal space") + input.tox-textfield',
   vspace: 'label.tox-label:contains("Vertical space") + input.tox-textfield',
-  borderstyle: 'label.tox-label:contains("Border style") + div.tox-selectfield select'
+  borderstyle: 'label.tox-label:contains("Border style") + div.tox-listboxfield > .tox-listbox'
 };
 
 const cGetTopmostDialog = Chain.control(
   Chain.fromChains([
-    Chain.inject(Body.body()),
+    Chain.inject(SugarBody.body()),
     UiFinder.cFindIn('[role=dialog]')
   ]),
   Guard.addLogging('Get top most dialog')
 );
 
 const cGotoAdvancedTab = Chain.fromChains([
-  Chain.inject(Body.body()),
+  Chain.inject(SugarBody.body()),
   UiFinder.cFindIn('div.tox-tab:contains(Advanced)'),
   Mouse.cClick
 ]);
 
 const cSetFieldValue = (selector, value) => Chain.fromChains([
-  Chain.inject(Body.body()),
+  Chain.inject(SugarBody.body()),
   UiFinder.cFindIn(selector),
   Chain.op(Focus.focus),
   Chain.op((element) => {
-    if (element.dom().type === 'checkbox') {
+    if (element.dom.type === 'checkbox') {
       Checked.set(element, value);
-    } else if (Node.name(element) === 'select' && typeof value === 'number') {
-      SelectTag.setSelected(element, value);
+    } else if (Class.has(element, 'tox-listbox')) {
+      Attribute.set(element, 'data-value', value);
     } else {
       Value.set(element, value);
     }
@@ -108,10 +107,10 @@ const cFillActiveDialog = (data: Partial<ImageDialogData>, hasAdvanced = false) 
 };
 
 const cFakeEvent = (name: string) => Chain.control(
-  Chain.op(function (elm: Element) {
+  Chain.op(function (elm: SugarElement) {
     const evt = document.createEvent('HTMLEvents');
     evt.initEvent(name, true, true);
-    elm.dom().dispatchEvent(evt);
+    elm.dom.dispatchEvent(evt);
   }),
   Guard.addLogging('Fake event')
 );
@@ -152,7 +151,7 @@ const cWaitForDialog = () => Chain.control(
 );
 
 const cSubmitDialog = () => Chain.control(
-  Chain.fromIsolatedChainsWith(Body.body(), [
+  Chain.fromIsolatedChainsWith(SugarBody.body(), [
     Mouse.cClickOn('.tox-button:contains("Save")')
   ]),
   Guard.addLogging('Submit dialog')
@@ -168,16 +167,26 @@ const cAssertCleanHtml = (label: string, expected: string) => Chain.control(
   Guard.addLogging('Assert clean html')
 );
 
-const cAssertInputValue = (selector: string, value: string) => Chain.fromChainsWith(Body.body(), [
+const cAssertInputValue = (selector: string, value: string) => Chain.fromChainsWith(SugarBody.body(), [
   UiFinder.cFindIn(selector),
   UiControls.cGetValue,
   Assertions.cAssertEq(`input value should be ${value}`, value)
 ]);
 
-const cAssertInputCheckbox = (selector: string, expectedState: boolean) => Chain.fromChainsWith(Body.body(), [
+const cAssertInputCheckbox = (selector: string, expectedState: boolean) => Chain.fromChainsWith(SugarBody.body(), [
   UiFinder.cFindIn(selector),
-  Chain.mapper((elm: Element<HTMLInputElement>) => elm.dom().checked),
+  Chain.mapper((elm: SugarElement<HTMLInputElement>) => elm.dom.checked),
   Assertions.cAssertEq(`input value should be ${expectedState}`, expectedState)
+]);
+
+const cSetListBoxItem = (selector: string, itemText: string) => Chain.fromChainsWith(SugarBody.body(), [
+  UiFinder.cFindIn(selector),
+  Mouse.cClick,
+  Chain.inject(SugarBody.body()),
+  UiFinder.cWaitForVisible('Wait for list to open', '.tox-menu.tox-collection--list'),
+  UiFinder.cFindIn('.tox-collection__item-label:contains(' + itemText + ')'),
+  Chain.binder((elm) => Result.fromOption(Traverse.parent(elm), 'Failed to find parent')),
+  Mouse.cClick
 ]);
 
 const cOpFromChains = (chains: Chain<any, any>[]) => Chain.control(
@@ -207,5 +216,6 @@ export {
   cAssertCleanHtml,
   cAssertInputValue,
   cAssertInputCheckbox,
-  cOpFromChains
+  cOpFromChains,
+  cSetListBoxItem
 };

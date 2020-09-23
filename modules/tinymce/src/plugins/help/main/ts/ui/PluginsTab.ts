@@ -5,19 +5,20 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Types } from '@ephox/bridge';
 import { Arr, Obj } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
+import { Dialog } from 'tinymce/core/api/ui/Ui';
 import I18n from 'tinymce/core/api/util/I18n';
-import * as PluginUrls from '../data/PluginUrls';
 import * as Settings from '../api/Settings';
+import * as PluginUrls from '../data/PluginUrls';
 
 export interface PluginUrlType {
   key: string;
   name: string;
+  slug?: string;
 }
 
-const tab = (editor: Editor): Types.Dialog.TabApi => {
+const tab = (editor: Editor): Dialog.TabSpec => {
   const availablePlugins = () => {
     const premiumPlugins = [
       // TODO: Add other premium plugins such as permanent pen when they are included in the website
@@ -60,7 +61,8 @@ const tab = (editor: Editor): Types.Dialog.TabApi => {
     const getMetadata = editor.plugins[key].getMetadata;
     return typeof getMetadata === 'function' ? makeLink(getMetadata()) : key;
   }, function (x) {
-    return makeLink({ name: x.name, url: 'https://www.tiny.cloud/docs/plugins/' + x.key });
+    const urlSlug = x.slug || x.key;
+    return makeLink({ name: x.name, url: 'https://www.tiny.cloud/docs/plugins/' + urlSlug });
   });
 
   const getPluginKeys = (editor: Editor) => {
@@ -95,7 +97,7 @@ const tab = (editor: Editor): Types.Dialog.TabApi => {
       '</div>';
   };
 
-  const htmlPanel: Types.Dialog.BodyComponentApi = {
+  const htmlPanel: Dialog.HtmlPanelSpec = {
     type: 'htmlpanel',
     presets: 'document',
     html: [

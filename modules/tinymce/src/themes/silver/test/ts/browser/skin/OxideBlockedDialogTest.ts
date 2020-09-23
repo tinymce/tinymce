@@ -2,7 +2,7 @@ import { ApproxStructure, Assertions, Chain, Logger, Mouse, Pipeline, Step, UiFi
 import { UnitTest } from '@ephox/bedrock-client';
 import { Cell } from '@ephox/katamari';
 import { TinyLoader, TinyUi } from '@ephox/mcagar';
-import { Body } from '@ephox/sugar';
+import { SugarBody } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
@@ -20,11 +20,11 @@ UnitTest.asynctest('OxideBlockedDialogTest', (success, failure) => {
         'Check structure of font format',
         [
           tinyUi.sClickOnToolbar('Click on toolbar button', 'button'),
-          UiFinder.sWaitForVisible('Waiting for dialog', Body.body(), '[role="dialog"]'),
-          Mouse.sClickOn(Body.body(), 'button:contains("Make Busy")'),
+          UiFinder.sWaitForVisible('Waiting for dialog', SugarBody.body(), '[role="dialog"]'),
+          Mouse.sClickOn(SugarBody.body(), 'button:contains("Make Busy")'),
           Waiter.sTryUntil(
             'Waiting for busy structure to match expected',
-            Chain.asStep(Body.body(), [
+            Chain.asStep(SugarBody.body(), [
               UiFinder.cFindIn('[role="dialog"]'),
               Assertions.cAssertStructure(
                 'Checking dialog structure to see where "busy" is',
@@ -64,7 +64,7 @@ UnitTest.asynctest('OxideBlockedDialogTest', (success, failure) => {
           }),
           Waiter.sTryUntil(
             'Waiting for busy structure to go away',
-            Chain.asStep(Body.body(), [
+            Chain.asStep(SugarBody.body(), [
               UiFinder.cFindIn('[role="dialog"]'),
               Assertions.cAssertStructure(
                 'Checking dialog structure to see where "busy" is',

@@ -1,8 +1,8 @@
 import { Pipeline, Step } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { LegacyUnit } from '@ephox/mcagar';
 import * as FakeStorage from 'tinymce/core/api/util/FakeStorage';
-import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.core.util.LocalStorageTest', (success, failure) => {
   const suite = LegacyUnit.createSuite();

@@ -1,6 +1,5 @@
 import { Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { window } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { LegacyUnit } from '@ephox/mcagar';
 import EventUtils from 'tinymce/core/api/dom/EventUtils';
@@ -431,7 +430,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.EventUtilsTest', function (success,
     eventUtils.bind(window, 'ready', function (e) {
       evt = e;
     });
-    LegacyUnit.equal(true, typeof (evt) !== 'undefined');
+    LegacyUnit.equal(true, typeof evt !== 'undefined');
 
     eventUtils.domLoaded = false;
     document.readyState = 'complete';

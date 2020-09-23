@@ -1,11 +1,10 @@
 import { ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Mouse, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Types } from '@ephox/bridge';
-
-import { document } from '@ephox/dom-globals';
 import { Cell } from '@ephox/katamari';
-import { Body, Element } from '@ephox/sugar';
+import { SugarBody, SugarElement } from '@ephox/sugar';
+
+import { Dialog } from 'tinymce/core/api/ui/Ui';
 import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 import TestExtras from '../../module/TestExtras';
 
@@ -13,7 +12,7 @@ UnitTest.asynctest('WindowManager:simple-dialog Test', (success, failure) => {
   const helpers = TestExtras();
   const windowManager = WindowManager.setup(helpers.extras);
 
-  const currentApi = Cell<Types.Dialog.DialogInstanceApi<any>>({ } as any);
+  const currentApi = Cell<Dialog.DialogInstanceApi<any>>({ } as any);
 
   const store = TestHelpers.TestStore();
 
@@ -58,22 +57,22 @@ UnitTest.asynctest('WindowManager:simple-dialog Test', (success, failure) => {
   ]);
 
   const sTestClose = GeneralSteps.sequence([
-    Mouse.sClickOn(Body.body(), '[aria-label="Close"]'),
-    UiFinder.sNotExists(Body.body(), '[role="dialog"]')
+    Mouse.sClickOn(SugarBody.body(), '[aria-label="Close"]'),
+    UiFinder.sNotExists(SugarBody.body(), '[role="dialog"]')
   ]);
 
   Pipeline.async({}, [
     sTestOpen,
     FocusTools.sTryOnSelector(
       'Focus should start on the input',
-      Element.fromDom(document),
+      SugarElement.fromDom(document),
       'input'
     ),
     Assertions.sAssertStructure('"tox-dialog__scroll-disable" should exist on the body',
       ApproxStructure.build((s, str, arr) => s.element('body', {
         classes: [ arr.has('tox-dialog__disable-scroll') ]
       })),
-      Body.body()
+      SugarBody.body()
     ),
     Step.sync(() => {
       currentApi.get().disable('barny');
@@ -90,7 +89,7 @@ UnitTest.asynctest('WindowManager:simple-dialog Test', (success, failure) => {
       ApproxStructure.build((s, str, arr) => s.element('body', {
         classes: [ arr.not('tox-dialog__disable-scroll') ]
       })),
-      Body.body()
+      SugarBody.body()
     )
   ], () => {
     helpers.destroy();

@@ -1,8 +1,5 @@
 import { Arr, Future } from '@ephox/katamari';
 
-import * as SketchBehaviours from '../../api/component/SketchBehaviours';
-import { ToolbarGroup } from '../../api/ui/ToolbarGroup';
-import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
 import * as Layout from '../../positioning/layout/Layout';
 import * as SplitToolbarUtils from '../../toolbar/SplitToolbarUtils';
 import * as SplitFloatingToolbarSchema from '../../ui/schema/SplitFloatingToolbarSchema';
@@ -13,9 +10,12 @@ import { Coupling } from '../behaviour/Coupling';
 import { AlloyComponent } from '../component/ComponentApi';
 import * as GuiFactory from '../component/GuiFactory';
 import * as Memento from '../component/Memento';
+import * as SketchBehaviours from '../component/SketchBehaviours';
 import { AlloySpec } from '../component/SpecTypes';
 import { FloatingToolbarButton } from './FloatingToolbarButton';
 import * as Sketcher from './Sketcher';
+import { ToolbarGroup } from './ToolbarGroup';
+import { CompositeSketchFactory } from './UiSketcher';
 
 const buildGroups = (comps: AlloyComponent[]): AlloySpec[] => Arr.map(comps, (g) => GuiFactory.premade(g));
 
@@ -86,15 +86,15 @@ const factory: CompositeSketchFactory<SplitFloatingToolbarDetail, SplitFloatingT
           FloatingToolbarButton.toggle(floatingToolbarButton);
         });
       },
+      isOpen: (toolbar: AlloyComponent) =>
+        memFloatingToolbarButton.getOpt(toolbar).map(FloatingToolbarButton.isOpen).getOr(false),
       reposition: (toolbar: AlloyComponent) => {
         memFloatingToolbarButton.getOpt(toolbar).each((floatingToolbarButton) => {
           FloatingToolbarButton.reposition(floatingToolbarButton);
         });
       },
       getOverflow: (toolbar: AlloyComponent) =>
-        memFloatingToolbarButton.getOpt(toolbar).bind(
-          (floatingToolbarButton) => FloatingToolbarButton.getToolbar(floatingToolbarButton)
-        )
+        memFloatingToolbarButton.getOpt(toolbar).bind(FloatingToolbarButton.getToolbar)
     },
 
     domModification: {
@@ -121,6 +121,7 @@ const SplitFloatingToolbar: SplitFloatingToolbarSketcher = Sketcher.composite<Sp
     toggle: (apis, toolbar) => {
       apis.toggle(toolbar);
     },
+    isOpen: (apis, toolbar) => apis.isOpen(toolbar),
     getOverflow: (apis, toolbar) => apis.getOverflow(toolbar)
   }
 });

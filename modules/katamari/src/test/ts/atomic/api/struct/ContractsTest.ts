@@ -1,6 +1,6 @@
-import * as Fun from 'ephox/katamari/api/Fun';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import * as Contracts from 'ephox/katamari/api/Contracts';
-import { UnitTest, Assert } from '@ephox/bedrock-client';
+import * as Fun from 'ephox/katamari/api/Fun';
 
 UnitTest.test('ContractsTest', () => {
   const a = Fun.constant('element');

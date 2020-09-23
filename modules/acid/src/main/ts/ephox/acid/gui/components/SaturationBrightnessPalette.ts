@@ -1,6 +1,5 @@
 import { AlloyComponent, AlloyTriggers, Behaviour, Composing, Focusing, Sketcher, SketchSpec, Slider, SliderTypes, UiSketcher } from '@ephox/alloy';
-import { HTMLCanvasElement } from '@ephox/dom-globals';
-import { Fun, Option } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 import { Rgba } from '../../api/colour/ColourTypes';
 import * as RgbaColour from '../../api/colour/RgbaColour';
 import * as ColourEvents from '../ColourEvents';
@@ -18,7 +17,7 @@ export interface SaturationBrightnessPaletteSketcher extends Sketcher.SingleSket
 }
 
 const paletteFactory = (_translate: (key: string) => string, getClass: (key: string) => string): SaturationBrightnessPaletteSketcher => {
-  const spectrumPart = Slider.parts().spectrum({
+  const spectrumPart = Slider.parts.spectrum({
     dom: {
       tag: 'canvas',
       attributes: {
@@ -28,7 +27,7 @@ const paletteFactory = (_translate: (key: string) => string, getClass: (key: str
     }
   });
 
-  const thumbPart = Slider.parts().thumb({
+  const thumbPart = Slider.parts.thumb({
     dom: {
       tag: 'div',
       attributes: {
@@ -64,14 +63,14 @@ const paletteFactory = (_translate: (key: string) => string, getClass: (key: str
 
   const setSliderColour = (slider: AlloyComponent, rgba: Rgba): void => {
     // Very open to a better way of doing this.
-    const canvas = slider.components()[0].element().dom();
+    const canvas = slider.components()[0].element.dom;
     setColour(canvas, RgbaColour.toString(rgba));
   };
 
   const factory: UiSketcher.SingleSketchFactory<SaturationBrightnessPaletteDetail, SaturationBrightnessPaletteSpec> = (_detail): SketchSpec => {
     const getInitialValue = Fun.constant({
-      x: Fun.constant(0),
-      y: Fun.constant(0)
+      x: 0,
+      y: 0
     });
 
     const onChange = (slider: AlloyComponent, _thumb: AlloyComponent, value: number | SliderTypes.SliderValue) => {
@@ -82,12 +81,12 @@ const paletteFactory = (_translate: (key: string) => string, getClass: (key: str
 
     const onInit = (_slider: AlloyComponent, _thumb: AlloyComponent, spectrum: AlloyComponent, _value: number | SliderTypes.SliderValue) => {
       // Maybe make this initial value configurable?
-      setColour(spectrum.element().dom(), RgbaColour.toString(RgbaColour.red));
+      setColour(spectrum.element.dom, RgbaColour.toString(RgbaColour.red));
     };
 
     const sliderBehaviours = Behaviour.derive([
       Composing.config({
-        find: Option.some
+        find: Optional.some
       }),
       Focusing.config({})
     ]);

@@ -7,24 +7,24 @@
 
 import { AddEventsBehaviour, AlloyComponent, AlloyEvents, Behaviour, GuiFactory, InlineView, Sandboxing, SystemEvents } from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
-import { Element as DomElement, PointerEvent } from '@ephox/dom-globals';
 import { Arr, Fun, Obj, Result, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
+import { SelectorExists, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 import * as DesktopContextMenu from './platform/DesktopContextMenu';
 import * as MobileContextMenu from './platform/MobileContextMenu';
 import * as Settings from './Settings';
 
-type MenuItem = string | Menu.MenuItemApi | Menu.NestedMenuItemApi | Menu.SeparatorMenuItemApi;
+type MenuItem = string | Menu.MenuItemSpec | Menu.NestedMenuItemSpec | Menu.SeparatorMenuItemSpec;
 
 const isSeparator = (item: MenuItem): boolean => Type.isString(item) ? item === '|' : item.type === 'separator';
 
-const separator: Menu.SeparatorMenuItemApi = {
+const separator: Menu.SeparatorMenuItemSpec = {
   type: 'separator'
 };
 
-const makeContextItem = (item: string | Menu.ContextMenuItem | Menu.SeparatorMenuItemApi | Menu.ContextSubMenu): MenuItem => {
+const makeContextItem = (item: string | Menu.ContextMenuItem | Menu.SeparatorMenuItemSpec | Menu.ContextSubMenu): MenuItem => {
   if (Type.isString(item)) {
     return item;
   } else {
@@ -73,7 +73,7 @@ const addContextMenuGroup = (xs: Array<MenuItem>, groupItems: Array<MenuItem>) =
   return xs.concat(before).concat(groupItems).concat([ separator ]);
 };
 
-const generateContextMenu = (contextMenus: Record<string, Menu.ContextMenuApi>, menuConfig: string[], selectedElement: DomElement) => {
+const generateContextMenu = (contextMenus: Record<string, Menu.ContextMenuApi>, menuConfig: string[], selectedElement: Element) => {
   const sections = Arr.foldl(menuConfig, (acc, name) => {
     // Either read and convert the list of items out of the plugin, or assume it's a standard menu item reference
     if (Obj.has(contextMenus, name)) {
@@ -110,6 +110,21 @@ export const isTriggeredByKeyboard = (editor: Editor, e: PointerEvent) =>
   // IE/Edge: button = 2, pointerType = "" & target = body
   // Safari: N/A (Mac's don't expose a contextmenu keyboard shortcut)
   e.type !== 'longpress' && (e.button !== 2 || e.target === editor.getBody() && e.pointerType === '');
+
+const getSelectedElement = (editor: Editor, e: PointerEvent) =>
+  isTriggeredByKeyboard(editor, e) ? editor.selection.getStart(true) : e.target as Element;
+
+const shouldUseNodeAnchor = (editor: Editor, e: PointerEvent) => {
+  const selector = Settings.getAvoidOverlapSelector(editor);
+  if (isTriggeredByKeyboard(editor, e)) {
+    return true;
+  } else if (selector) {
+    const target = getSelectedElement(editor, e);
+    return SelectorExists.closest(SugarElement.fromDom(target), selector);
+  } else {
+    return false;
+  }
+};
 
 export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Error>, backstage: UiFactoryBackstage) => {
   const detection = PlatformDetection.detect();
@@ -148,11 +163,11 @@ export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Err
       return;
     }
 
-    const isTriggeredByKeyboardEvent = isTriggeredByKeyboard(editor, e);
+    const useNodeAnchor = shouldUseNodeAnchor(editor, e);
 
     const buildMenu = () => {
       // Use the event target element for touch events, otherwise fallback to the current selection
-      const selectedElement = isTriggeredByKeyboardEvent ? editor.selection.getStart(true) : e.target as DomElement;
+      const selectedElement = getSelectedElement(editor, e);
 
       const registry = editor.ui.registry.getAll();
       const menuConfig = Settings.getContextMenu(editor);
@@ -160,7 +175,7 @@ export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Err
     };
 
     const initAndShow = isTouch() ? MobileContextMenu.initAndShow : DesktopContextMenu.initAndShow;
-    initAndShow(editor, e, buildMenu, backstage, contextmenu, isTriggeredByKeyboardEvent);
+    initAndShow(editor, e, buildMenu, backstage, contextmenu, useNodeAnchor);
   };
 
   editor.on('init', () => {

@@ -1,10 +1,10 @@
-import { GeneralSteps, Logger, Pipeline, Waiter, UiFinder } from '@ephox/agar';
+import { GeneralSteps, Logger, Pipeline, UiFinder, Waiter } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
+import { SugarElement, SugarShadowDom } from '@ephox/sugar';
 import AdvlistPlugin from 'tinymce/plugins/advlist/Plugin';
 import ListsPlugin from 'tinymce/plugins/lists/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock-client';
-import { Element, ShadowDom } from '@ephox/sugar';
 
 UnitTest.asynctest('browser.tinymce.plugins.advlist.ChangeListStyleTest', function (success, failure) {
   Theme();
@@ -14,7 +14,7 @@ UnitTest.asynctest('browser.tinymce.plugins.advlist.ChangeListStyleTest', functi
   TinyLoader.setupInBodyAndShadowRoot((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
     const tinyUi = TinyUi(editor);
-    const contentContainer = ShadowDom.getContentContainer(ShadowDom.getRootNode(Element.fromDom(editor.getElement())));
+    const contentContainer = SugarShadowDom.getContentContainer(SugarShadowDom.getRootNode(SugarElement.fromDom(editor.getElement())));
     const sWaitForMenu = () => Waiter.sTryUntil(
       'Waiting for menu to appear',
       UiFinder.sExists(contentContainer, '.tox-menu.tox-selected-menu')

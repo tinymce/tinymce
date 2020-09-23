@@ -1,6 +1,5 @@
-import { console, document, setTimeout } from '@ephox/dom-globals';
 import { Obj, Result } from '@ephox/katamari';
-import { Class, Element } from '@ephox/sugar';
+import { Class, SugarElement } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Keying } from 'ephox/alloy/api/behaviour/Keying';
@@ -21,12 +20,12 @@ import { FormParts } from 'ephox/alloy/ui/types/FormTypes';
 
 import * as DemoFields from './forms/DemoFields';
 
-// tslint:disable:no-console
+/* eslint-disable no-console */
 
 export default (): void => {
   const gui = Gui.create();
-  const body = Element.fromDom(document.body);
-  Class.add(gui.element(), 'gui-root-demo-container');
+  const body = SugarElement.fromDom(document.body);
+  Class.add(gui.element, 'gui-root-demo-container');
   Attachment.attachSystem(body, gui);
 
   const sink = DemoSink.make();
@@ -86,14 +85,14 @@ export default (): void => {
             tag: 'span'
           },
           components: [
-            FormField.parts().label({
+            FormField.parts.label({
               dom: {
                 tag: 'label',
                 innerHtml: 'aria test'
               }
             }),
-            FormField.parts().field({ factory: Input }),
-            FormField.parts()['aria-descriptor']({
+            FormField.parts.field({ factory: Input }),
+            FormField.parts['aria-descriptor']({
               text: 'aria descriptor'
             })
           ]
@@ -165,7 +164,7 @@ export default (): void => {
       },
 
       components: [
-        ExpandableForm.parts().minimal(
+        ExpandableForm.parts.minimal(
           Form.sketch((parts: FormParts) => ({
             dom: {
               tag: 'div',
@@ -180,7 +179,7 @@ export default (): void => {
           }))
         ),
 
-        ExpandableForm.parts().extra(
+        ExpandableForm.parts.extra(
           Form.sketch((parts: FormParts) => ({
             dom: {
               tag: 'div',
@@ -204,7 +203,7 @@ export default (): void => {
             ]
           }))
         ),
-        ExpandableForm.parts().expander({
+        ExpandableForm.parts.expander({
           dom: {
             tag: 'button',
             innerHtml: 'v'
@@ -213,7 +212,7 @@ export default (): void => {
             Tabstopping.config({ })
           ])
         }),
-        ExpandableForm.parts().controls({
+        ExpandableForm.parts.controls({
           dom: {
             tag: 'div'
           },

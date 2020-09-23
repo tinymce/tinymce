@@ -1,6 +1,5 @@
 import { Log, Logger, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { atob, Blob, ClipboardEvent, DragEvent } from '@ephox/dom-globals';
 import { Arr, Cell } from '@ephox/katamari';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 

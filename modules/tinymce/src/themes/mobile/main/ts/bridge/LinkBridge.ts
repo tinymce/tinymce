@@ -5,8 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Fun, Option } from '@ephox/katamari';
-import { Attr, Element, SelectorFind, TextContent } from '@ephox/sugar';
+import { Fun, Optional } from '@ephox/katamari';
+import { Attribute, SelectorFind, SugarElement, TextContent } from '@ephox/sugar';
 
 const isNotEmpty = function (val) {
   return val.length > 0;
@@ -23,21 +23,21 @@ const noLink = function (editor) {
     text,
     title: '',
     target: '',
-    link: Option.none()
+    link: Optional.none()
   };
 };
 
 const fromLink = function (link) {
   const text = TextContent.get(link);
-  const url = Attr.get(link, 'href');
-  const title = Attr.get(link, 'title');
-  const target = Attr.get(link, 'target');
+  const url = Attribute.get(link, 'href');
+  const title = Attribute.get(link, 'title');
+  const target = Attribute.get(link, 'target');
   return {
     url: defaultToEmpty(url),
     text: text !== url ? defaultToEmpty(text) : '',
     title: defaultToEmpty(title),
     target: defaultToEmpty(target),
-    link: Option.some(link)
+    link: Optional.some(link)
   };
 };
 
@@ -54,15 +54,15 @@ const getInfo = function (editor) {
 };
 
 const wasSimple = function (link) {
-  const prevHref = Attr.get(link, 'href');
+  const prevHref = Attribute.get(link, 'href');
   const prevText = TextContent.get(link);
   return prevHref === prevText;
 };
 
 const getTextToApply = function (link, url, info) {
-  return info.text.toOption().filter(isNotEmpty).fold(function () {
-    return wasSimple(link) ? Option.some(url) : Option.none();
-  }, Option.some);
+  return info.text.toOptional().filter(isNotEmpty).fold(function () {
+    return wasSimple(link) ? Optional.some(url) : Optional.none();
+  }, Optional.some);
 };
 
 const unlinkIfRequired = function (editor, info) {
@@ -76,17 +76,17 @@ const getAttrs = function (url, info) {
   const attrs: any = { };
   attrs.href = url;
 
-  info.title.toOption().filter(isNotEmpty).each(function (title) {
+  info.title.toOptional().filter(isNotEmpty).each(function (title) {
     attrs.title = title;
   });
-  info.target.toOption().filter(isNotEmpty).each(function (target) {
+  info.target.toOptional().filter(isNotEmpty).each(function (target) {
     attrs.target = target;
   });
   return attrs;
 };
 
 const applyInfo = function (editor, info) {
-  info.url.toOption().filter(isNotEmpty).fold(function () {
+  info.url.toOptional().filter(isNotEmpty).fold(function () {
     // Unlink if there is something to unlink
     unlinkIfRequired(editor, info);
   }, function (url) {
@@ -95,11 +95,11 @@ const applyInfo = function (editor, info) {
 
     const activeLink = info.link.bind(Fun.identity);
     activeLink.fold(function () {
-      const text = info.text.toOption().filter(isNotEmpty).getOr(url);
+      const text = info.text.toOptional().filter(isNotEmpty).getOr(url);
       editor.insertContent(editor.dom.createHTML('a', attrs, editor.dom.encode(text)));
     }, function (link) {
       const text = getTextToApply(link, url, info);
-      Attr.setAll(link, attrs);
+      Attribute.setAll(link, attrs);
       text.each(function (newText) {
         TextContent.set(link, newText);
       });
@@ -108,7 +108,7 @@ const applyInfo = function (editor, info) {
 };
 
 const query = function (editor) {
-  const start = Element.fromDom(editor.selection.getStart());
+  const start = SugarElement.fromDom(editor.selection.getStart());
   return SelectorFind.closest(start, 'a');
 };
 

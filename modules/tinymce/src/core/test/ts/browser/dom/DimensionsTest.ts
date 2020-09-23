@@ -1,9 +1,9 @@
-import { LegacyUnit } from '@ephox/mcagar';
 import { Pipeline } from '@ephox/agar';
-import * as Dimensions from 'tinymce/core/dom/Dimensions';
-import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
+import { LegacyUnit } from '@ephox/mcagar';
+import * as Dimensions from 'tinymce/core/dom/Dimensions';
+import ViewBlock from '../../module/test/ViewBlock';
 
 UnitTest.asynctest('browser.tinymce.core.dom.DimensionsTest', (success, failure) => {
   const suite = LegacyUnit.createSuite();

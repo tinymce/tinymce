@@ -1,5 +1,3 @@
-import { console } from '@ephox/dom-globals';
-
 export default {
   title: 'Special character',
   body: {
@@ -43,7 +41,7 @@ export default {
   onAction: (api, details) => {
     if (details.name === 'char') {
       // Would log '@' if the At sign is clicked these values doesn't have to be part of the state model
-      // tslint:disable-next-line:no-console
+      // eslint-disable-next-line no-console
       console.log({
         char: details.value
       });

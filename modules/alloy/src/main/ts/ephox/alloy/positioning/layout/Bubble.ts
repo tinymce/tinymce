@@ -1,10 +1,10 @@
 import { Arr, Obj } from '@ephox/katamari';
-import { Position } from '@ephox/sugar';
+import { SugarPosition } from '@ephox/sugar';
 
 export interface BubbleInstance {
-  offset: () => Position;
-  classesOn: () => string[];
-  classesOff: () => string[];
+  readonly offset: SugarPosition;
+  readonly classesOn: string[];
+  readonly classesOff: string[];
 }
 
 export interface Bubble {
@@ -65,9 +65,9 @@ const nu = (width: number, yoffset: number, classes: BubbleAlignments): Bubble =
   const make = (xDelta: number, yDelta: number, alignmentsOn: Array<(keyof BubbleAlignments)>) => {
     const alignmentsOff = Arr.difference(allAlignments, alignmentsOn);
     return {
-      offset: () => Position(xDelta, yDelta),
-      classesOn: () => Arr.bind(alignmentsOn, getClasses),
-      classesOff: () => Arr.bind(alignmentsOff, getClasses)
+      offset: SugarPosition(xDelta, yDelta),
+      classesOn: Arr.bind(alignmentsOn, getClasses),
+      classesOff: Arr.bind(alignmentsOff, getClasses)
     };
   };
 

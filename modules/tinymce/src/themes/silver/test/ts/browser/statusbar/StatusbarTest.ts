@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, Chain, Log, Mouse, NamedChain, Pipeline, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Editor } from '@ephox/mcagar';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import Wordcount from 'tinymce/plugins/wordcount/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
@@ -92,7 +92,7 @@ UnitTest.asynctest('Statusbar Structure Test', (success, failure) => {
     })
   ];
 
-  const cGetContainer = Chain.mapper((editor: any) => Element.fromDom(editor.editorContainer));
+  const cGetContainer = Chain.mapper((editor: any) => SugarElement.fromDom(editor.editorContainer));
 
   const cSetContent = (content: string) => Chain.mapper(function (editor: any) {
     return editor.editorCommands.execCommand('mceSetContent', false, content);

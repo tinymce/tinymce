@@ -1,9 +1,9 @@
 import { GeneralSteps, Logger, Step, UiFinder } from '@ephox/agar';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 
 import { GuiSystem } from 'ephox/alloy/api/system/Gui';
 
-const dismiss = (gui: GuiSystem, element: Element) => {
+const dismiss = (gui: GuiSystem, element: SugarElement) => {
   gui.broadcastOn([
     'dismiss.popups'
   ], {
@@ -17,7 +17,7 @@ const reposition = (gui: GuiSystem) => {
   ], { });
 };
 
-const sDismiss = (label: string, gui: GuiSystem, element: Element) => Logger.t(
+const sDismiss = (label: string, gui: GuiSystem, element: SugarElement) => Logger.t(
   'Broadcast dismiss: ' + label,
   GeneralSteps.sequence([
     Step.sync(() => {
@@ -30,7 +30,7 @@ const sDismissOn = (label: string, gui: GuiSystem, selector: string) => Logger.t
   'Broadcast dismiss: ' + label,
   GeneralSteps.sequence([
     Step.sync(() => {
-      const item = UiFinder.findIn(gui.element(), selector).getOrDie();
+      const item = UiFinder.findIn(gui.element, selector).getOrDie();
 
       dismiss(gui, item);
     })

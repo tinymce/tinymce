@@ -1,6 +1,5 @@
 import { FocusTools, GeneralSteps, Log, Pipeline, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyDom, TinyLoader, TinyUi } from '@ephox/mcagar';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
@@ -71,7 +70,8 @@ UnitTest.asynctest('browser.tinymce.plugins.link.UrlProtocolTest', (success, fai
         testNoProtocolConfirm('https://testhttp.com')
       ]),
       Log.stepsAsStep('TBA', 'Test regex for non relative link with no protocol', [
-        testProtocolConfirm('www.http.com', 'http://')
+        testProtocolConfirm('www.http.com', 'http://'),
+        testProtocolConfirm('www3.http.com', 'http://')
       ]),
       Log.stepsAsStep('TBA', 'Test regex for relative link', [
         testNoProtocolConfirm('test.jpg')
@@ -84,6 +84,9 @@ UnitTest.asynctest('browser.tinymce.plugins.link.UrlProtocolTest', (success, fai
       ]),
       Log.stepsAsStep('TBA', 'Test regex for email link', [
         testProtocolConfirm('no-reply@example.com', 'mailto:')
+      ]),
+      Log.stepsAsStep('TBA', 'Test regex for path with www', [
+        testNoProtocolConfirm('www-example.jpg')
       ]),
       Log.stepsAsStep('TINY-5941', 'Test regex for path with @', [
         testNoProtocolConfirm('imgs/test@2xdpi.jpg')

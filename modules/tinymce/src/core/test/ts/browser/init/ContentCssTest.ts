@@ -1,6 +1,6 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import EditorManager from 'tinymce/core/api/EditorManager';
 import Editor from 'tinymce/core/api/Editor';
+import EditorManager from 'tinymce/core/api/EditorManager';
 import { appendContentCssFromSettings } from 'tinymce/core/init/ContentCss';
 
 UnitTest.test('browser.tinymce.core.init.ContentCssTest', () => {

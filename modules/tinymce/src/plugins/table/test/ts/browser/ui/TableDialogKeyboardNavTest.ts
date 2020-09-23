@@ -1,8 +1,7 @@
 import { FocusTools, Keyboard, Keys, Log, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 
@@ -13,7 +12,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogKeyboardNavTest', (
 
   TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
-    const doc = Element.fromDom(document);
+    const doc = SugarElement.fromDom(document);
 
     // Table html structure
     const htmlEmptyTable = '<table><tr><td>X</td></tr></table>';
@@ -53,7 +52,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogKeyboardNavTest', (
       sPressTabKey,
       sAssertFocusOnItem('Caption', 'input[type="checkbox"]'),
       sPressTabKey,
-      sAssertFocusOnItem('Alignment', 'label:contains("Alignment") + .tox-selectfield select'),
+      sAssertFocusOnItem('Alignment', 'label:contains("Alignment") + .tox-listboxfield > .tox-listbox'),
       sPressTabKey,
       sAssertFocusOnItem('Cancel', '.tox-button:contains("Cancel")'),
       sPressTabKey,
@@ -67,7 +66,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogKeyboardNavTest', (
       // Keyboard nav within the Advanced tab
       sAssertFocusOnItem('Advanced Tab', '.tox-dialog__body-nav-item:contains("Advanced")'),
       sPressTabKey,
-      sAssertFocusOnItem('Border style', 'label:contains("Border style") + .tox-selectfield select'),
+      sAssertFocusOnItem('Border style', 'label:contains("Border style") + .tox-listboxfield > .tox-listbox'),
       sPressTabKey,
       sAssertFocusOnItem('Border color', '.tox-form div:nth-child(2) input'),
       sPressTabKey,

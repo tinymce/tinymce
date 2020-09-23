@@ -1,7 +1,7 @@
 import * as Insert from 'ephox/sugar/api/dom/Insert';
 import * as InsertAll from 'ephox/sugar/api/dom/InsertAll';
-import * as Body from 'ephox/sugar/api/node/Body';
-import Element from 'ephox/sugar/api/node/Element';
+import * as SugarBody from 'ephox/sugar/api/node/SugarBody';
+import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
 
 /*
       <div>
@@ -31,28 +31,28 @@ import Element from 'ephox/sugar/api/node/Element';
         </p2>
       </div>
 */
-const container = Element.fromTag('div');
-const d1 = Element.fromTag('div');
+const container = SugarElement.fromTag('div');
+const d1 = SugarElement.fromTag('div');
 
-const p1 = Element.fromTag('p');
-const p2 = Element.fromTag('p');
-const p3 = Element.fromTag('p');
+const p1 = SugarElement.fromTag('p');
+const p2 = SugarElement.fromTag('p');
+const p3 = SugarElement.fromTag('p');
 
-const s1 = Element.fromTag('span');
-const s2 = Element.fromTag('span');
-const s3 = Element.fromTag('span');
-const s4 = Element.fromTag('span');
+const s1 = SugarElement.fromTag('span');
+const s2 = SugarElement.fromTag('span');
+const s3 = SugarElement.fromTag('span');
+const s4 = SugarElement.fromTag('span');
 
-const t1 = Element.fromText('This is a test page. A test page contains ');
-const t2 = Element.fromText('many');
-const t3 = Element.fromText(' things. Like:');
-const t4 = Element.fromText('More data');
-const t5 = Element.fromText('And more data.');
-const t6 = Element.fromText('Nested inside div');
-const t7 = Element.fromText('Text in a node ancestor of another node with text (t6)');
+const t1 = SugarElement.fromText('This is a test page. A test page contains ');
+const t2 = SugarElement.fromText('many');
+const t3 = SugarElement.fromText(' things. Like:');
+const t4 = SugarElement.fromText('More data');
+const t5 = SugarElement.fromText('And more data.');
+const t6 = SugarElement.fromText('Nested inside div');
+const t7 = SugarElement.fromText('Text in a node ancestor of another node with text (t6)');
 
-const ul = Element.fromTag('ul');
-const li = Element.fromTag('li');
+const ul = SugarElement.fromTag('ul');
+const li = SugarElement.fromTag('li');
 Insert.append(ul, li);
 InsertAll.append(li, [ t7, d1 ]);
 
@@ -67,7 +67,7 @@ InsertAll.append(d1, [ p3 ]);
 InsertAll.append(p3, [ t6 ]);
 
 const connect = function () {
-  const body = Body.body();
+  const body = SugarBody.body();
   Insert.append(body, container);
 };
 

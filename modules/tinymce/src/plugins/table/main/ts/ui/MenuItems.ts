@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Menu } from '@ephox/bridge';
-import { Node } from '@ephox/sugar';
+import { SugarNode } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
+import { Menu } from 'tinymce/core/api/ui/Ui';
 import * as InsertTable from '../actions/InsertTable';
 import { hasTableGrid } from '../api/Settings';
 import { Clipboard } from '../core/Clipboard';
@@ -87,7 +87,7 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets, clipbo
     onSetup: selectionTargets.onSetupPasteable(clipboard.getRows)
   });
 
-  const row: Menu.NestedMenuItemApi = {
+  const row: Menu.NestedMenuItemSpec = {
     type: 'nestedmenuitem',
     text: 'Row',
     getSubmenuItems: () => 'tableinsertrowbefore tableinsertrowafter tabledeleterow tablerowprops | tablecutrow tablecopyrow tablepasterowbefore tablepasterowafter'
@@ -137,11 +137,10 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets, clipbo
     onSetup: selectionTargets.onSetupPasteable(clipboard.getColumns)
   });
 
-  const column: Menu.NestedMenuItemApi = {
+  const column: Menu.NestedMenuItemSpec = {
     type: 'nestedmenuitem',
     text: 'Column',
-    // TODO: Add the column cut/copy/paste menu items in TinyMCE 5.5 or whenever we are able to get them translated
-    getSubmenuItems: () => 'tableinsertcolumnbefore tableinsertcolumnafter tabledeletecolumn' // | tablecutcolumn tablecopycolumn tablepastecolumnbefore tablepastecolumnafter'
+    getSubmenuItems: () => 'tableinsertcolumnbefore tableinsertcolumnafter tabledeletecolumn | tablecutcolumn tablecopycolumn tablepastecolumnbefore tablepastecolumnafter'
   };
 
   editor.ui.registry.addMenuItem('tablecellprops', {
@@ -163,7 +162,7 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets, clipbo
     onSetup: selectionTargets.onSetupUnmergeable
   });
 
-  const cell: Menu.NestedMenuItemApi = {
+  const cell: Menu.NestedMenuItemSpec = {
     type: 'nestedmenuitem',
     text: 'Cell',
     getSubmenuItems: () => 'tablecellprops tablemergecells tablesplitcells'
@@ -205,7 +204,7 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets, clipbo
       // ignoring element since it's monitored elsewhere
       return selectionTargets.targets().fold(() => '', (targets) => {
         // If clicking in a caption, then we shouldn't show the cell/row/column options
-        if (Node.name(targets.element()) === 'caption') {
+        if (SugarNode.name(targets.element) === 'caption') {
           return 'tableprops deletetable';
         } else {
           return 'cell row column | advtablesort | tableprops deletetable';

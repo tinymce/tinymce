@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Obj, Option, Type } from '@ephox/katamari';
+import { Arr, Obj, Optional, Type } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 
 export interface StringMap {
@@ -37,6 +37,8 @@ const defaultAttributes = {
   border: '1'
 };
 
+const defaultColumnResizingBehaviour = 'preservetable';
+
 const getTableSizingMode = (editor: Editor): TableSizingMode => editor.getParam('table_sizing_mode', 'auto');
 const getTableResponseWidth = (editor: Editor): boolean | undefined => editor.getParam('table_responsive_width');
 
@@ -58,6 +60,7 @@ const isPixelsForced = (editor: Editor): boolean => getTableSizingMode(editor) =
 const isResponsiveForced = (editor: Editor): boolean => getTableSizingMode(editor) === 'responsive';
 const getToolbar = (editor: Editor): string => editor.getParam('table_toolbar', defaultTableToolbar);
 
+const useColumnGroup = (editor: Editor): boolean => editor.getParam('table_use_colgroups', false, 'boolean');
 
 const getTableHeaderType = (editor: Editor): string => {
   const defaultValue = 'section';
@@ -70,15 +73,24 @@ const getTableHeaderType = (editor: Editor): string => {
   }
 };
 
-const getCloneElements = (editor: Editor): Option<string[]> => {
+const getColumnResizingBehaviour = (editor: Editor): 'preservetable' | 'resizetable' => {
+  const validModes: Array<'preservetable' | 'resizetable'> = [ 'preservetable', 'resizetable' ];
+  const givenMode = editor.getParam('table_column_resizing', defaultColumnResizingBehaviour, 'string');
+  return Arr.find(validModes, (mode) => mode === givenMode).getOr(defaultColumnResizingBehaviour);
+};
+
+const isPreserveTableColumnResizing = (editor: Editor) => getColumnResizingBehaviour(editor) === 'preservetable';
+const isResizeTableColumnResizing = (editor: Editor) => getColumnResizingBehaviour(editor) === 'resizetable';
+
+const getCloneElements = (editor: Editor): Optional<string[]> => {
   const cloneElements = editor.getParam('table_clone_elements');
 
   if (Type.isString(cloneElements)) {
-    return Option.some(cloneElements.split(/[ ,]/));
+    return Optional.some(cloneElements.split(/[ ,]/));
   } else if (Array.isArray(cloneElements)) {
-    return Option.some(cloneElements);
+    return Optional.some(cloneElements);
   } else {
-    return Option.none();
+    return Optional.none();
   }
 };
 
@@ -107,5 +119,9 @@ export {
   isPixelsForced,
   isResponsiveForced,
   getToolbar,
-  getTableHeaderType
+  getTableHeaderType,
+  getColumnResizingBehaviour,
+  isPreserveTableColumnResizing,
+  isResizeTableColumnResizing,
+  useColumnGroup
 };

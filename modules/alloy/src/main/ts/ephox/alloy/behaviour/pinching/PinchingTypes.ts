@@ -1,4 +1,4 @@
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { BaseDraggingState } from '../../dragging/common/DraggingTypes';
@@ -14,13 +14,13 @@ export interface PinchingBehaviour extends Behaviour.AlloyBehaviour<PinchingConf
 }
 
 export interface PinchingConfig extends Behaviour.BehaviourConfigDetail {
-  readonly onPinch: (element: Element, changeX: number, changeY: number) => void;
-  readonly onPunch: (element: Element, changeX: number, changeY: number) => void;
+  readonly onPinch: (element: SugarElement, changeX: number, changeY: number) => void;
+  readonly onPunch: (element: SugarElement, changeX: number, changeY: number) => void;
 }
 
 export interface PinchingConfigSpec extends Behaviour.BehaviourConfigSpec {
-  readonly onPinch: (element: Element, changeX: number, changeY: number) => void;
-  readonly onPunch: (element: Element, changeX: number, changeY: number) => void;
+  readonly onPinch: (element: SugarElement, changeX: number, changeY: number) => void;
+  readonly onPunch: (element: SugarElement, changeX: number, changeY: number) => void;
 }
 
 export interface PinchingState extends BaseDraggingState<PinchDragData> { }

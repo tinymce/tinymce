@@ -1,10 +1,9 @@
 import { Assertions, Chain, GeneralSteps, Logger, NamedChain, Pipeline } from '@ephox/agar';
 import { Bounds, Boxes } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
-import { window } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
 import { Editor as McEditor } from '@ephox/mcagar';
-import { Body, Css, Element, Scroll, SelectorFind } from '@ephox/sugar';
+import { Css, Scroll, SelectorFind, SugarBody, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 import { getContextToolbarBounds } from 'tinymce/themes/silver/ui/context/ContextToolbarBounds';
@@ -22,9 +21,9 @@ UnitTest.asynctest('ContextToolbarBoundsTest', (success, failure) => {
   }
 
   const getBounds = (editor: Editor): TestBounds => {
-    const container = Element.fromDom(editor.getContainer());
-    const contentAreaContainer = Element.fromDom(editor.getContentAreaContainer());
-    const header = SelectorFind.descendant(Body.body(), '.tox-editor-header').getOrDie();
+    const container = SugarElement.fromDom(editor.getContainer());
+    const contentAreaContainer = SugarElement.fromDom(editor.getContentAreaContainer());
+    const header = SelectorFind.descendant(SugarBody.body(), '.tox-editor-header').getOrDie();
 
     return {
       viewport: Boxes.win(),
@@ -35,7 +34,7 @@ UnitTest.asynctest('ContextToolbarBoundsTest', (success, failure) => {
   };
 
   const setupPageScroll = () => {
-    const body = Body.body();
+    const body = SugarBody.body();
 
     Css.set(body, 'margin-left', '10px');
     Css.set(body, 'margin-right', '10px');
@@ -51,8 +50,8 @@ UnitTest.asynctest('ContextToolbarBoundsTest', (success, failure) => {
   };
 
   const cScrollRelativeEditorContainer = (relativeTop: boolean, delta: number) => Chain.op((editor: Editor) => {
-    const editorContainer = Element.fromDom(editor.getContainer());
-    editorContainer.dom().scrollIntoView(relativeTop);
+    const editorContainer = SugarElement.fromDom(editor.getContainer());
+    editorContainer.dom.scrollIntoView(relativeTop);
     Scroll.to(0, window.pageYOffset + delta);
   });
 

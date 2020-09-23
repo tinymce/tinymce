@@ -1,4 +1,3 @@
-import { console } from '@ephox/dom-globals';
 import { openDemoDialog } from './DemoDialogHelpers';
 
 export const createCodeDialog = () => {
@@ -34,7 +33,7 @@ export const createCodeDialog = () => {
       onSubmit: (api) => {
         const data = api.getData();
 
-        // tslint:disable-next-line:no-console
+        // eslint-disable-next-line no-console
         console.log({
           code: data.code
         });

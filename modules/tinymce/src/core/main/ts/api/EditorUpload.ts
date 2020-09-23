@@ -5,15 +5,16 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Blob, HTMLImageElement } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import * as ErrorReporter from '../ErrorReporter';
 import { BlobInfoImagePair, ImageScanner } from '../file/ImageScanner';
 import { Uploader } from '../file/Uploader';
 import UploadStatus from '../file/UploadStatus';
+import * as Rtc from '../Rtc';
 import Editor from './Editor';
 import { BlobCache, BlobInfo } from './file/BlobCache';
 import * as Settings from './Settings';
+import Env from './Env';
 
 /**
  * Handles image uploads, updates undo stack and patches over various internal functions.
@@ -74,19 +75,22 @@ const EditorUpload = function (editor: Editor): EditorUpload {
     return content;
   };
 
-  const replaceImageUrl = function (content: string, targetUrl: string, replacementUrl: string): string {
-    content = replaceString(content, 'src="' + targetUrl + '"', 'src="' + replacementUrl + '"');
+  const replaceImageUrl = (content: string, targetUrl: string, replacementUrl: string): string => {
+    const replacementString = `src="${replacementUrl}"${replacementUrl === Env.transparentSrc ? ' data-mce-placeholder="1"' : ''}`;
+
+    content = replaceString(content, `src="${targetUrl}"`, replacementString);
+
     content = replaceString(content, 'data-mce-src="' + targetUrl + '"', 'data-mce-src="' + replacementUrl + '"');
 
     return content;
   };
 
-  const replaceUrlInUndoStack = function (targetUrl: string, replacementUrl: string) {
-    Arr.each(editor.undoManager.data, function (level) {
+  const replaceUrlInUndoStack = (targetUrl: string, replacementUrl: string) => {
+    Arr.each(editor.undoManager.data, (level) => {
       if (level.type === 'fragmented') {
-        level.fragments = Arr.map(level.fragments, function (fragment) {
-          return replaceImageUrl(fragment, targetUrl, replacementUrl);
-        });
+        level.fragments = Arr.map(level.fragments, (fragment) =>
+          replaceImageUrl(fragment, targetUrl, replacementUrl)
+        );
       } else {
         level.content = replaceImageUrl(level.content, targetUrl, replacementUrl);
       }
@@ -127,6 +131,8 @@ const EditorUpload = function (editor: Editor): EditorUpload {
       const blobInfos = Arr.map(imageInfos, (imageInfo) => imageInfo.blobInfo);
 
       return uploader.upload(blobInfos, openNotification).then(aliveGuard((result) => {
+        const imagesToRemove: HTMLImageElement[] = [];
+
         const filteredResult: UploadResult[] = Arr.map(result, (uploadInfo, index) => {
           const blobInfo = imageInfos[index].blobInfo;
           const image = imageInfos[index].image;
@@ -135,7 +141,12 @@ const EditorUpload = function (editor: Editor): EditorUpload {
             blobCache.removeByUri(image.src);
             replaceImageUriInView(image, uploadInfo.url);
           } else if (uploadInfo.error) {
-            ErrorReporter.uploadError(editor, uploadInfo.error);
+            if (uploadInfo.error.options.remove) {
+              replaceUrlInUndoStack(image.getAttribute('src'), Env.transparentSrc);
+              imagesToRemove.push(image);
+            }
+
+            ErrorReporter.uploadError(editor, uploadInfo.error.message);
           }
 
           return {
@@ -145,6 +156,20 @@ const EditorUpload = function (editor: Editor): EditorUpload {
             blobInfo
           };
         });
+
+        if (imagesToRemove.length > 0) {
+          if (Rtc.isRtc(editor)) {
+            // To be replaced by RTC API to mirror DOM changes when such is implemented.
+            console.error('Removing images on failed uploads is currently unsupported for RTC'); // eslint-disable-line no-console
+          } else {
+            editor.undoManager.transact(() => {
+              Arr.each(imagesToRemove, (element) => {
+                editor.dom.remove(element);
+                blobCache.removeByUri(element.src);
+              });
+            });
+          }
+        }
 
         if (callback) {
           callback(filteredResult);

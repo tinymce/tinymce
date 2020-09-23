@@ -6,22 +6,22 @@
  */
 
 import { Arr } from '@ephox/katamari';
-import * as KeyboardShortcuts from '../data/KeyboardShortcuts';
+import { Dialog } from 'tinymce/core/api/ui/Ui';
 import * as ConvertShortcut from '../alien/ConvertShortcut';
-import { Types } from '@ephox/bridge';
+import * as KeyboardShortcuts from '../data/KeyboardShortcuts';
 
 export interface ShortcutActionPairType {
   shortcuts: string[];
   action: string;
 }
 
-const tab = (): Types.Dialog.TabApi => {
+const tab = (): Dialog.TabSpec => {
   const shortcutList = Arr.map(KeyboardShortcuts.shortcuts, (shortcut: ShortcutActionPairType) => {
     const shortcutText = Arr.map(shortcut.shortcuts, ConvertShortcut.convertText).join(' or ');
     return [ shortcut.action, shortcutText ];
   });
 
-  const tablePanel: Types.Dialog.BodyComponentApi = {
+  const tablePanel: Dialog.TableSpec = {
     type: 'table',
     // TODO: Fix table styles #TINY-2909
     header: [ 'Action', 'Shortcut' ],

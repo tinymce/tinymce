@@ -1,14 +1,14 @@
-import { Arr, Obj, Option, Result } from '@ephox/katamari';
+import { Arr, Obj, Optional, Result } from '@ephox/katamari';
 
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { AlloySpec, SimpleOrSketchSpec, SketchSpec } from '../../api/component/SpecTypes';
 import * as AlloyLogger from '../../log/AlloyLogger';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as PartType from '../../parts/PartType';
 import { FormApis, FormDetail, FormSketcher, FormSpecBuilder } from '../../ui/types/FormTypes';
 import { Composing } from '../behaviour/Composing';
 import { Representing } from '../behaviour/Representing';
+import { AlloyComponent } from '../component/ComponentApi';
 import * as SketchBehaviours from '../component/SketchBehaviours';
+import { AlloySpec, SimpleOrSketchSpec, SketchSpec } from '../component/SpecTypes';
 import * as GuiTypes from './GuiTypes';
 import * as UiSketcher from './UiSketcher';
 
@@ -45,7 +45,7 @@ const sketch = (fSpec: FormSpecBuilder): SketchSpec => {
   return UiSketcher.composite(owner, schema, fieldParts, make, spec);
 };
 
-const toResult = <T, E>(o: Option<T>, e: E) => o.fold(() => Result.error(e), Result.value);
+const toResult = <T, E>(o: Optional<T>, e: E) => o.fold(() => Result.error(e), Result.value);
 
 const make = (detail: FormDetail, components: AlloySpec[]) => ({
   uid: detail.uid,
@@ -64,7 +64,7 @@ const make = (detail: FormDetail, components: AlloySpec[]) => ({
             return Obj.map(resPs, (resPThunk, pName) => resPThunk().bind((v) => {
               const opt = Composing.getCurrent(v);
               return toResult(opt, new Error(
-                `Cannot find a current component to extract the value from for form part '${pName}': ` + AlloyLogger.element(v.element())
+                `Cannot find a current component to extract the value from for form part '${pName}': ` + AlloyLogger.element(v.element)
               ));
             }).map(Representing.getValue));
           },
@@ -84,7 +84,7 @@ const make = (detail: FormDetail, components: AlloySpec[]) => ({
 
   apis: {
     getField(form: AlloyComponent, key: string) {
-      // Returns an Option (not a result);
+      // Returns an Optional (not a result);
       return AlloyParts.getPart(form, detail, key).bind(Composing.getCurrent);
     }
   }

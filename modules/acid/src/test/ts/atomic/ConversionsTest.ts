@@ -1,6 +1,6 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
-import * as HexColour from '../../../main/ts/ephox/acid/api/colour/HexColour';
-import * as RgbaColour from '../../../main/ts/ephox/acid/api/colour/RgbaColour';
+import * as HexColour from 'ephox/acid/api/colour/HexColour';
+import * as RgbaColour from 'ephox/acid/api/colour/RgbaColour';
 
 UnitTest.test('ConversionsTest', () => {
   const rgbaBlack = RgbaColour.rgbaColour(0, 0, 0, 1);

@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Range, Document, Node } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
 import * as CaretRangeFromPoint from '../../selection/CaretRangeFromPoint';
 import * as NormalizeRange from '../../selection/NormalizeRange';
@@ -58,7 +57,7 @@ function RangeUtils(dom: DOMUtils): RangeUtils {
    */
   const normalize = function (rng: Range): boolean {
     return NormalizeRange.normalize(dom, rng).fold(
-      Fun.constant(false),
+      Fun.never,
       function (normalizedRng) {
         rng.setStart(normalizedRng.startContainer, normalizedRng.startOffset);
         rng.setEnd(normalizedRng.endContainer, normalizedRng.endOffset);

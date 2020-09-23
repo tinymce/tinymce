@@ -6,11 +6,11 @@
  */
 
 import { AlloyComponent, AlloyTriggers } from '@ephox/alloy';
-import { Arr, Fun, Obj, Option } from '@ephox/katamari';
+import { Arr, Fun, Obj, Optional } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { UiFactoryBackstage } from '../../../backstage/Backstage';
 import { updateMenuText } from '../../dropdown/CommonDropdown';
-import { createMenuItems, createSelectButton, FormatterFormatItem, SelectSpec } from './BespokeSelect';
+import { createMenuItems, createSelectButton, FormatterFormatItem, PreviewSpec, SelectSpec } from './BespokeSelect';
 import { buildBasicSettingsDataset, Delimiter } from './SelectDatasets';
 import * as FormatRegister from './utils/FormatRegister';
 
@@ -44,7 +44,7 @@ const toLegacy = (fontSize: string): string => Obj.get(legacyFontSizes, fontSize
 
 const getSpec = (editor: Editor): SelectSpec => {
   const getMatchingValue = () => {
-    let matchOpt = Option.none<{ title: string; format: string }>();
+    let matchOpt = Optional.none<{ title: string; format: string }>();
     const items = dataset.data;
 
     const fontSize = editor.queryCommandValue('FontSize');
@@ -60,14 +60,14 @@ const getSpec = (editor: Editor): SelectSpec => {
     return { matchOpt, size: fontSize };
   };
 
-  const isSelectedFor = (item: string) => (valueOpt: Option<{ format: string; title: string }>) => valueOpt.exists((value) => value.format === item);
+  const isSelectedFor = (item: string) => (valueOpt: Optional<{ format: string; title: string }>) => valueOpt.exists((value) => value.format === item);
 
   const getCurrentValue = () => {
     const { matchOpt } = getMatchingValue();
     return matchOpt;
   };
 
-  const getPreviewFor: FormatRegister.GetPreviewForType = Fun.constant(Fun.constant(Option.none()));
+  const getPreviewFor: FormatRegister.GetPreviewForType = Fun.constant(Optional.none as () => Optional<PreviewSpec>);
 
   const onAction = (rawItem: FormatterFormatItem) => () => {
     editor.undoManager.transact(() => {
@@ -85,15 +85,15 @@ const getSpec = (editor: Editor): SelectSpec => {
     });
   };
 
-  const nodeChangeHandler = Option.some((comp: AlloyComponent) => () => updateSelectMenuText(comp));
+  const nodeChangeHandler = Optional.some((comp: AlloyComponent) => () => updateSelectMenuText(comp));
 
-  const setInitialValue = Option.some((comp: AlloyComponent) => updateSelectMenuText(comp));
+  const setInitialValue = Optional.some((comp: AlloyComponent) => updateSelectMenuText(comp));
 
   const dataset = buildBasicSettingsDataset(editor, 'fontsize_formats', defaultFontsizeFormats, Delimiter.Space);
 
   return {
     tooltip: 'Font sizes',
-    icon: Option.none(),
+    icon: Optional.none(),
     isSelectedFor,
     getPreviewFor,
     getCurrentValue,

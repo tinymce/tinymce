@@ -1,7 +1,7 @@
 import { Chain, FocusTools, Keyboard, Keys, Logger, NamedChain, Step, UiFinder, Waiter } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Fun, Result } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 
 import { Keying } from 'ephox/alloy/api/behaviour/Keying';
 import { Representing } from 'ephox/alloy/api/behaviour/Representing';
@@ -29,28 +29,28 @@ UnitTest.asynctest('Browser Test: ui.slider.HorizontalSliderTest', (success, fai
       model: {
         mode: 'x',
         minX: 50,
-        getInitialValue: Fun.constant({ x: Fun.constant(200) }),
+        getInitialValue: Fun.constant({ x: 200 }),
         maxX: 200
       },
       stepSize: 10,
       snapToGrid: true,
 
       components: [
-        Slider.parts()['left-edge']({ dom: { tag: 'div', classes: [ 'horizontal-slider-test-left-edge' ], styles: {
+        Slider.parts['left-edge']({ dom: { tag: 'div', classes: [ 'horizontal-slider-test-left-edge' ], styles: {
           width: '40px',
           height: '20px',
           background: 'black'
         }}}),
-        Slider.parts().spectrum({ dom: { tag: 'div', classes: [ 'horizontal-slider-test-spectrum' ], styles: {
+        Slider.parts.spectrum({ dom: { tag: 'div', classes: [ 'horizontal-slider-test-spectrum' ], styles: {
           height: '150px',
           background: 'green'
         }}}),
-        Slider.parts()['right-edge']({ dom: { tag: 'div', classes: [ 'horizontal-slider-test-right-edge' ], styles: {
+        Slider.parts['right-edge']({ dom: { tag: 'div', classes: [ 'horizontal-slider-test-right-edge' ], styles: {
           width: '40px',
           height: '20px',
           background: 'white'
         }}}),
-        Slider.parts().thumb({ dom: { tag: 'div', classes: [ 'horizontal-slider-test-thumb' ], styles: {
+        Slider.parts.thumb({ dom: { tag: 'div', classes: [ 'horizontal-slider-test-thumb' ], styles: {
           width: '20px',
           height: '20px',
           background: 'gray'
@@ -59,12 +59,12 @@ UnitTest.asynctest('Browser Test: ui.slider.HorizontalSliderTest', (success, fai
     })
   ), (doc, _body, _gui, component, _store) => {
 
-    const cGetBounds = Chain.mapper((elem: Element) => elem.dom().getBoundingClientRect());
+    const cGetBounds = Chain.mapper((elem: SugarElement) => elem.dom.getBoundingClientRect());
 
-    const cGetComponent = Chain.binder((elem: Element) => component.getSystem().getByDom(elem));
+    const cGetComponent = Chain.binder((elem: SugarElement) => component.getSystem().getByDom(elem));
 
     const cGetParts = NamedChain.asChain([
-      NamedChain.writeValue('slider', component.element()),
+      NamedChain.writeValue('slider', component.element),
       NamedChain.direct('slider', UiFinder.cFindIn('.horizontal-slider-test-thumb'), 'thumb'),
       NamedChain.direct('slider', UiFinder.cFindIn('.horizontal-slider-test-left-edge'), 'ledge'),
       NamedChain.direct('slider', UiFinder.cFindIn('.horizontal-slider-test-right-edge'), 'redge'),

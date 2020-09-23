@@ -5,12 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLImageElement } from '@ephox/dom-globals';
 import { Arr, Fun, Strings, Type } from '@ephox/katamari';
 import { UploadHandler } from '../file/Uploader';
 import DOMUtils from './dom/DOMUtils';
 import Editor from './Editor';
-import { ReferrerPolicy } from './SettingsTypes';
+import Env from './Env';
 import I18n from './util/I18n';
 import Tools from './util/Tools';
 
@@ -73,7 +72,7 @@ const getFontStyleValues = (editor: Editor): string[] => Tools.explode(editor.ge
 
 const getFontSizeClasses = (editor: Editor): string[] => Tools.explode(editor.getParam('font_size_classes', ''));
 
-const getImagesDataImgFilter = (editor: Editor): (imgElm: HTMLImageElement) => boolean => editor.getParam('images_dataimg_filter', Fun.constant(true), 'function');
+const getImagesDataImgFilter = (editor: Editor): (imgElm: HTMLImageElement) => boolean => editor.getParam('images_dataimg_filter', Fun.always, 'function');
 
 const isAutomaticUploadsEnabled = (editor: Editor): boolean => editor.getParam('automatic_uploads', true, 'boolean');
 
@@ -123,7 +122,14 @@ const getDirectionality = (editor: Editor): string | undefined => editor.getPara
 
 const getInlineBoundarySelector = (editor: Editor): string => editor.getParam('inline_boundaries_selector', 'a[href],code,.mce-annotation', 'string');
 
-const getObjectResizing = (editor: Editor) => editor.getParam('object_resizing');
+const getObjectResizing = (editor: Editor): string | false => {
+  const selector = editor.getParam('object_resizing');
+  if (selector === false || Env.iOS) {
+    return false;
+  } else {
+    return Type.isString(selector) ? selector : 'table,img,figure.image,div';
+  }
+};
 
 const getResizeImgProportional = (editor: Editor): boolean => editor.getParam('resize_img_proportional', true, 'boolean');
 
@@ -179,9 +185,11 @@ const isReadOnly = (editor: Editor): boolean => editor.getParam('readonly');
 
 const hasContentCssCors = (editor: Editor): boolean => editor.getParam('content_css_cors');
 
-const getPlugins = (editor: Editor) => editor.getParam('plugins');
+const getPlugins = (editor: Editor): string => editor.getParam('plugins', '', 'string');
 
 const getExternalPlugins = (editor: Editor) => editor.getParam('external_plugins');
+
+const shouldBlockUnsupportedDrop = (editor: Editor) => editor.getParam('block_unsupported_drop', true, 'boolean');
 
 export {
   getIframeAttrs,
@@ -242,5 +250,6 @@ export {
   isReadOnly,
   hasContentCssCors,
   getPlugins,
-  getExternalPlugins
+  getExternalPlugins,
+  shouldBlockUnsupportedDrop
 };

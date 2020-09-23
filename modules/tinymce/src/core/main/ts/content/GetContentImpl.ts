@@ -5,11 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLElement } from '@ephox/dom-globals';
-import { Fun, Option } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { Fun, Optional } from '@ephox/katamari';
+import { SugarElement } from '@ephox/sugar';
 import Editor from '../api/Editor';
-import Node from '../api/html/Node';
+import AstNode from '../api/html/Node';
 import * as Settings from '../api/Settings';
 import Tools from '../api/util/Tools';
 import { isWsPreserveElement } from '../dom/ElementType';
@@ -44,7 +43,7 @@ const getContentFromBody = (editor: Editor, args: GetContentArgs, format: Conten
     content = trimEmptyContents(editor, editor.serializer.serialize(body, args));
   }
 
-  if (args.format !== 'text' && !isWsPreserveElement(Element.fromDom(body))) {
+  if (args.format !== 'text' && !isWsPreserveElement(SugarElement.fromDom(body))) {
     args.content = Tools.trim(content);
   } else {
     args.content = content;
@@ -57,8 +56,8 @@ const getContentFromBody = (editor: Editor, args: GetContentArgs, format: Conten
   return args.content;
 };
 
-export const getContentInternal = (editor: Editor, args: GetContentArgs, format): Content => Option.from(editor.getBody())
+export const getContentInternal = (editor: Editor, args: GetContentArgs, format): Content => Optional.from(editor.getBody())
   .fold(
-    Fun.constant(args.format === 'tree' ? new Node('body', 11) : ''),
+    Fun.constant(args.format === 'tree' ? new AstNode('body', 11) : ''),
     (body) => getContentFromBody(editor, args, format, body)
   );

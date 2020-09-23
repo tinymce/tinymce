@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { window, Storage } from '@ephox/dom-globals';
 import * as FakeStorage from './FakeStorage';
 
 /**

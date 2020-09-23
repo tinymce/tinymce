@@ -5,10 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node, Range } from '@ephox/dom-globals';
-import { Fun, Option } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
-import TreeWalker from '../api/dom/TreeWalker';
+import { Fun, Optional } from '@ephox/katamari';
+import { SugarElement } from '@ephox/sugar';
+import DomTreeWalker from '../api/dom/TreeWalker';
 import * as NodeType from '../dom/NodeType';
 import * as CaretCandidate from './CaretCandidate';
 import * as CaretContainer from './CaretContainer';
@@ -18,6 +17,7 @@ import { isFakeCaretTarget } from './FakeCaret';
 
 const isContentEditableTrue = NodeType.isContentEditableTrue;
 const isContentEditableFalse = NodeType.isContentEditableFalse;
+const isMedia = NodeType.isMedia;
 const isBlockLike = NodeType.matchStyleValues('display', 'block table table-cell table-caption list-item');
 const isCaretContainer = CaretContainer.isCaretContainer;
 const isCaretContainerBlock = CaretContainer.isCaretContainerBlock;
@@ -39,10 +39,11 @@ const skipCaretContainers = function (walk, shallow?: boolean): Node {
 };
 
 const findNode = (node: Node, direction: number, predicateFn: (node: Node) => boolean, rootNode: Node, shallow?: boolean) => {
-  const walker = new TreeWalker(node, rootNode);
+  const walker = new DomTreeWalker(node, rootNode);
+  const isCefOrCaretContainer = isContentEditableFalse(node) || isCaretContainerBlock(node);
 
   if (isBackwards(direction)) {
-    if (isContentEditableFalse(node) || isCaretContainerBlock(node)) {
+    if (isCefOrCaretContainer) {
       node = skipCaretContainers(walker.prev, true);
       if (predicateFn(node)) {
         return node;
@@ -57,7 +58,7 @@ const findNode = (node: Node, direction: number, predicateFn: (node: Node) => bo
   }
 
   if (isForwards(direction)) {
-    if (isContentEditableFalse(node) || isCaretContainerBlock(node)) {
+    if (isCefOrCaretContainer) {
       node = skipCaretContainers(walker.next, true);
       if (predicateFn(node)) {
         return node;
@@ -147,7 +148,7 @@ const lean = (left: boolean, root: Node, node: Node): Node => {
       sibling = sibling[siblingName];
     }
 
-    if (isContentEditableFalse(sibling)) {
+    if (isContentEditableFalse(sibling) || isMedia(sibling)) {
       if (isNodesInSameBlock(root, sibling, node)) {
         return sibling;
       }
@@ -275,7 +276,8 @@ const normalizeRange = (direction: number, root: Node, range: Range): Range => {
   return range;
 };
 
-const getRelativeCefElm = (forward: boolean, caretPosition: CaretPosition) => Option.from(getChildNodeAtRelativeOffset(forward ? 0 : -1, caretPosition)).filter(isContentEditableFalse);
+const getRelativeCefElm = (forward: boolean, caretPosition: CaretPosition): Optional<HTMLElement> =>
+  Optional.from(getChildNodeAtRelativeOffset(forward ? 0 : -1, caretPosition)).filter(isContentEditableFalse);
 
 const getNormalizedRangeEndPoint = (direction: number, root: Node, range: Range): CaretPosition => {
   const normalizedRange = normalizeRange(direction, root, range);
@@ -287,8 +289,8 @@ const getNormalizedRangeEndPoint = (direction: number, root: Node, range: Range)
   return CaretPosition.fromRangeEnd(normalizedRange);
 };
 
-const getElementFromPosition = (pos: CaretPosition): Option<Element> => Option.from(pos.getNode()).map(Element.fromDom);
-const getElementFromPrevPosition = (pos: CaretPosition): Option<Element> => Option.from(pos.getNode(true)).map(Element.fromDom);
+const getElementFromPosition = (pos: CaretPosition): Optional<SugarElement> => Optional.from(pos.getNode()).map(SugarElement.fromDom);
+const getElementFromPrevPosition = (pos: CaretPosition): Optional<SugarElement> => Optional.from(pos.getNode(true)).map(SugarElement.fromDom);
 
 const getVisualCaretPosition = (walkFn, caretPosition: CaretPosition): CaretPosition => {
   while ((caretPosition = walkFn(caretPosition))) {

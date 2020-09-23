@@ -1,7 +1,7 @@
 import { Assertions, GeneralSteps, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
 import { Cell } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Body } from '@ephox/sugar';
+import { SugarBody } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { ToolbarLocation, ToolbarMode } from 'tinymce/themes/silver/api/Settings';
@@ -94,10 +94,10 @@ const sTestStickyHeader = (toolbarMode: ToolbarMode, toolbarLocation: ToolbarLoc
         Step.label('Toggle fullscreen mode and ensure header moves from docked -> undocked -> docked', GeneralSteps.sequence([
           StickyUtils.sScrollAndAssertStructure(isToolbarTop, 200, StickyUtils.expectedHalfView),
           tinyApis.sExecCommand('mceFullscreen'),
-          UiFinder.sWaitForVisible('Wait for fullscreen to be activated', Body.body(), '.tox-fullscreen'),
+          UiFinder.sWaitForVisible('Wait for fullscreen to be activated', SugarBody.body(), '.tox-fullscreen'),
           StickyUtils.sAssertEditorContainer(isToolbarTop, StickyUtils.expectedInFullView),
           tinyApis.sExecCommand('mceFullscreen'),
-          Waiter.sTryUntil('Wait for fullscreen to be deactivated', UiFinder.sNotExists(Body.body(), '.tox-fullscreen')),
+          Waiter.sTryUntil('Wait for fullscreen to be deactivated', UiFinder.sNotExists(SugarBody.body(), '.tox-fullscreen')),
           // TODO: Figure out why Chrome 78 needs this wait on MacOS. I suspect it might be because fullscreen sets overflow hidden
           // we're setting the scroll position before the window has updated
           Step.wait(100),

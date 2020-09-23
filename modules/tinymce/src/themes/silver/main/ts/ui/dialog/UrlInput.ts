@@ -7,12 +7,11 @@
 
 import {
   AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, Composing, CustomEvent, Disabling,
-  FormField as AlloyFormField, Invalidating, Memento, NativeEvents, Representing, SketchSpec, SystemEvents, Tabstopping,
-  Typeahead as AlloyTypeahead
+  FormField as AlloyFormField, Invalidating, Memento, NativeEvents, Representing, SketchSpec, SystemEvents, Tabstopping, Typeahead as AlloyTypeahead
 } from '@ephox/alloy';
-import { Types } from '@ephox/bridge';
-import { Arr, Fun, Future, FutureResult, Id, Option, Result } from '@ephox/katamari';
-import { Attr, Traverse } from '@ephox/sugar';
+import { Dialog } from '@ephox/bridge';
+import { Arr, Fun, Future, FutureResult, Id, Optional, Result } from '@ephox/katamari';
+import { Attribute, Traverse } from '@ephox/sugar';
 
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { UiFactoryBackstageForUrlInput } from '../../backstage/UrlInputBackstage';
@@ -24,12 +23,11 @@ import * as Icons from '../icons/Icons';
 import ItemResponse from '../menus/item/ItemResponse';
 import * as MenuParts from '../menus/menu/MenuParts';
 import * as NestedMenus from '../menus/menu/NestedMenus';
-import { Omit } from '../Omit';
 import {
   anchorTargetBottom, anchorTargets, anchorTargetTop, filterByQuery, headerTargets, historyTargets, joinMenuLists
 } from '../urlinput/Completions';
 
-type UrlInputSpec = Omit<Types.UrlInput.UrlInput, 'type'>;
+type UrlInputSpec = Omit<Dialog.UrlInput, 'type'>;
 
 const getItems = (fileType: 'image' | 'media' | 'file', input: AlloyComponent, urlBackstage: UiFactoryBackstageForUrlInput) => {
   const urlInputValue = Representing.getValue(input);
@@ -64,7 +62,7 @@ export const renderUrlInput = (spec: UrlInputSpec, backstage: UiFactoryBackstage
   };
 
   // TODO: Make alloy's typeahead only swallow enter and escape if menu is open
-  const pField = AlloyFormField.parts().field({
+  const pField = AlloyFormField.parts.field({
     factory: AlloyTypeahead,
     dismissOnBlur: true,
     inputClasses: [ 'tox-textfield' ],
@@ -91,12 +89,12 @@ export const renderUrlInput = (spec: UrlInputSpec, backstage: UiFactoryBackstage
     typeaheadBehaviours: Behaviour.derive(Arr.flatten([
       urlBackstage.getValidationHandler().map(
         (handler) => Invalidating.config({
-          getRoot: (comp) => Traverse.parent(comp.element()),
+          getRoot: (comp) => Traverse.parent(comp.element),
           invalidClass: 'tox-control-wrap--status-invalid',
           notify: {
             onInvalid: (comp: AlloyComponent, err: string) => {
               memInvalidIcon.getOpt(comp).each((invalidComp) => {
-                Attr.set(invalidComp.element(), 'title', providersBackstage.translate(err));
+                Attribute.set(invalidComp.element, 'title', providersBackstage.translate(err));
               });
             }
           },
@@ -176,7 +174,7 @@ export const renderUrlInput = (spec: UrlInputSpec, backstage: UiFactoryBackstage
   const pLabel = spec.label.map((label) => renderLabel(label, providersBackstage));
 
   // TODO: Consider a way of merging with Checkbox.
-  const makeIcon = (name, errId: Option<string>, icon = name, label = name) => ({
+  const makeIcon = (name, errId: Optional<string>, icon = name, label = name) => ({
     dom: {
       tag: 'div',
       classes: [ 'tox-icon', 'tox-control-wrap__status-icon-' + name ],
@@ -190,7 +188,7 @@ export const renderUrlInput = (spec: UrlInputSpec, backstage: UiFactoryBackstage
   });
 
   const memInvalidIcon = Memento.record(
-    makeIcon('invalid', Option.some(errorId), 'warning')
+    makeIcon('invalid', Optional.some(errorId), 'warning')
   );
 
   const memStatus = Memento.record({
@@ -225,7 +223,7 @@ export const renderUrlInput = (spec: UrlInputSpec, backstage: UiFactoryBackstage
 
   const memUrlPickerButton = Memento.record(renderButton({
     name: spec.name,
-    icon: Option.some('browse'),
+    icon: Optional.some('browse'),
     text: spec.label.getOr(''),
     disabled: spec.disabled,
     primary: false,

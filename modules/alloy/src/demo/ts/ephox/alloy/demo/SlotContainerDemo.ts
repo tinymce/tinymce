@@ -1,11 +1,10 @@
-import { console, setTimeout } from '@ephox/dom-globals';
 import { SelectorFind } from '@ephox/sugar';
 
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
-import { SlotContainer } from 'ephox/alloy/api/ui/SlotContainer';
 import { Button } from 'ephox/alloy/api/ui/Button';
+import { SlotContainer } from 'ephox/alloy/api/ui/SlotContainer';
 
 export default (): void => {
   const ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
@@ -34,7 +33,7 @@ export default (): void => {
               innerHtml: 'Inconsistent Button'
             },
             action: (_btn) => {
-              // tslint:disable-next-line:no-console
+              // eslint-disable-next-line no-console
               console.log('clicking on action');
             }
           })

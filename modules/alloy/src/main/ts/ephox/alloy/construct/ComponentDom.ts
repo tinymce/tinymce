@@ -1,4 +1,4 @@
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 
 import * as ObjIndex from '../alien/ObjIndex';
 import { AlloyBehaviour } from '../api/behaviour/Behaviour';
@@ -17,7 +17,7 @@ type DomModificationAspectRecord = { [K in keyof DomModification]: Array<Modific
 // Based on all the behaviour exhibits, and the original dom modification, identify
 // the overall combined dom modification that needs to occur
 const combine = (
-  info: Record<string, () => Option<BehaviourConfigAndState<any, BehaviourState>>>,
+  info: Record<string, () => Optional<BehaviourConfigAndState<any, BehaviourState>>>,
   baseMod: Record<string, DomModification>,
   behaviours: Array<AlloyBehaviour<any, any>>,
   base: DomDefinitionDetail

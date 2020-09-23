@@ -5,8 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { console } from '@ephox/dom-globals';
-import { Cell, Merger, Obj, Option } from '@ephox/katamari';
+import { Cell, Merger, Obj, Optional } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import Resource from 'tinymce/core/api/Resource';
 import Delay from 'tinymce/core/api/util/Delay';
@@ -57,8 +56,8 @@ const getUserDefinedEmoticons = (editor: Editor) => {
 
 // TODO: Consider how to share this loading across different editors
 const initDatabase = (editor: Editor, databaseUrl: string, databaseId: string): EmojiDatabase => {
-  const categories = Cell<Option<Record<string, EmojiEntry[]>>>(Option.none());
-  const all = Cell<Option<EmojiEntry[]>>(Option.none());
+  const categories = Cell<Optional<Record<string, EmojiEntry[]>>>(Optional.none());
+  const all = Cell<Optional<EmojiEntry[]>>(Optional.none());
 
   const processEmojis = (emojis: Record<string, RawEmojiEntry>) => {
     const cats = {};
@@ -77,8 +76,8 @@ const initDatabase = (editor: Editor, databaseUrl: string, databaseId: string): 
       everything.push(entry);
     });
 
-    categories.set(Option.some(cats));
-    all.set(Option.some(everything));
+    categories.set(Optional.some(cats));
+    all.set(Optional.some(everything));
   };
 
   editor.on('init', () => {
@@ -86,16 +85,16 @@ const initDatabase = (editor: Editor, databaseUrl: string, databaseId: string): 
       const userEmojis = getUserDefinedEmoticons(editor);
       processEmojis(Merger.merge(emojis, userEmojis));
     }, (err) => {
-      // tslint:disable-next-line:no-console
+      // eslint-disable-next-line no-console
       console.log(`Failed to load emoticons: ${err}`);
-      categories.set(Option.some({}));
-      all.set(Option.some([]));
+      categories.set(Optional.some({}));
+      all.set(Optional.some([]));
     });
   });
 
   const listCategory = (category: string): EmojiEntry[] => {
     if (category === ALL_CATEGORY) { return listAll(); }
-    return categories.get().bind((cats) => Option.from(cats[category])).getOr([]);
+    return categories.get().bind((cats) => Optional.from(cats[category])).getOr([]);
   };
 
   const listAll = (): EmojiEntry[] => all.get().getOr([]);
@@ -117,7 +116,7 @@ const initDatabase = (editor: Editor, databaseUrl: string, databaseId: string): 
           } else {
             numRetries--;
             if (numRetries < 0) {
-              // tslint:disable-next-line:no-console
+              // eslint-disable-next-line no-console
               console.log('Could not load emojis from url: ' + databaseUrl);
               Delay.clearInterval(interval);
               reject(false);

@@ -6,22 +6,26 @@
  */
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import Env from 'tinymce/core/api/Env';
 import Tools from 'tinymce/core/api/util/Tools';
 import * as Settings from '../api/Settings';
-import Editor from 'tinymce/core/api/Editor';
 import { generate } from './SelectorModel';
 
 interface Group {
   title: string;
-  original: Group;
+  original: Group | UserDefinedGroup;
   selectors: {};
   filter: (value: string) => boolean;
   item: {
     text: string;
     menu: [];
   };
+}
+
+interface UserDefinedGroup extends Partial<Group> {
+  title: string;
 }
 
 const removeCacheSuffix = function (url: string) {
@@ -47,7 +51,7 @@ const isSkinContentCss = (editor: Editor, href: string) => {
   return false;
 };
 
-const compileFilter = function (filter: string | RegExp | Function) {
+const compileFilter = function (filter: string | RegExp | ((value: string) => boolean)) {
   if (typeof filter === 'string') {
     return function (value) {
       return value.indexOf(filter) !== -1;
@@ -170,7 +174,7 @@ const getGroupsBySelector = function (groups: Group[], selector: string): Group[
   });
 };
 
-const compileUserDefinedGroups = function (groups): Group[] {
+const compileUserDefinedGroups = function (groups: UserDefinedGroup[]): Group[] {
   return Tools.map(groups, function (group) {
     return Tools.extend({}, group, {
       original: group,

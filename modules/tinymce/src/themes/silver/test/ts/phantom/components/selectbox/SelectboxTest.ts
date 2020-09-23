@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions } from '@ephox/agar';
 import { GuiFactory, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 
 import { renderSelectBox } from 'tinymce/themes/silver/ui/dialog/SelectBox';
 import { DisablingSteps } from '../../../module/DisablingSteps';
@@ -23,7 +23,7 @@ UnitTest.asynctest('Selectbox component Test', (success, failure) => {
       renderSelectBox({
         name: 'selector',
         size: 1,
-        label: Option.some('selector'),
+        label: Optional.some('selector'),
         disabled: false,
         items: [
           { value: 'one', text: 'One' },
@@ -65,7 +65,7 @@ UnitTest.asynctest('Selectbox component Test', (success, failure) => {
             })
           ]
         })),
-        component.element()
+        component.element
       ),
 
       RepresentingSteps.sSetValue('Choosing three', component, 'three'),

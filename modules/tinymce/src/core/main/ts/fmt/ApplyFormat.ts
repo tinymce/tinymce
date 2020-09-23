@@ -5,9 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node } from '@ephox/dom-globals';
 import DOMUtils from '../api/dom/DOMUtils';
-import Selection from '../api/dom/Selection';
+import EditorSelection from '../api/dom/Selection';
 import Editor from '../api/Editor';
 import { FormatVars } from '../api/fmt/Format';
 import Tools from '../api/util/Tools';
@@ -38,7 +37,7 @@ const applyFormat = function (ed: Editor, name: string, vars?: FormatVars, node?
   const format = formatList[0];
   let rng;
   const isCollapsed = !node && ed.selection.isCollapsed();
-  const dom = ed.dom, selection: Selection = ed.selection;
+  const dom = ed.dom, selection: EditorSelection = ed.selection;
 
   const setElementFormat = function (elm: Node, fmt?) {
     fmt = fmt || format;
@@ -101,7 +100,7 @@ const applyFormat = function (ed: Editor, name: string, vars?: FormatVars, node?
   };
 
   const applyRngStyle = function (dom: DOMUtils, rng: RangeLikeObject, bookmark: IdBookmark | IndexBookmark, nodeSpecific?: boolean) {
-    const newWrappers: Node[] = [];
+    const newWrappers: Element[] = [];
     let contentEditable = true;
 
     // Setup wrapper element
@@ -150,9 +149,9 @@ const applyFormat = function (ed: Editor, name: string, vars?: FormatVars, node?
         // TODO: Break this if up, too complex
         if (contentEditable && !hasContentEditableState && format.block &&
           !format.wrapper && FormatUtils.isTextBlock(ed, nodeName) && FormatUtils.isValid(ed, parentName, wrapName)) {
-          node = dom.rename(node, wrapName);
-          setElementFormat(node);
-          newWrappers.push(node);
+          const elm = dom.rename(node as Element, wrapName);
+          setElementFormat(elm);
+          newWrappers.push(elm);
           currentWrapElm = 0;
           return;
         }
@@ -244,7 +243,7 @@ const applyFormat = function (ed: Editor, name: string, vars?: FormatVars, node?
         return child;
       };
 
-      const mergeStyles = function (node: Node) {
+      const mergeStyles = function (node: Element) {
         let clone;
 
         const child = getChildElementNode(node);
@@ -254,6 +253,7 @@ const applyFormat = function (ed: Editor, name: string, vars?: FormatVars, node?
           clone = dom.clone(child, false);
           setElementFormat(clone);
 
+          // "matchName" will made sure we're dealing with an element, so cast as one
           dom.replace(clone, node, true);
           dom.remove(child, true);
         }

@@ -1,19 +1,19 @@
+import { Class, Html, InsertAll, SugarElement } from '@ephox/sugar';
 import * as ApproxStructure from 'ephox/agar/api/ApproxStructure';
 import * as Assertions from 'ephox/agar/api/Assertions';
 import { Pipeline } from 'ephox/agar/api/Pipeline';
 import * as DemoContainer from 'ephox/agar/demo/DemoContainer';
-import { Class, Element, Html, InsertAll } from '@ephox/sugar';
 
 export const demo = (): void => {
   DemoContainer.init(
     'Approx Structure',
     (success, failure) => {
 
-      const div = Element.fromTag('div');
+      const div = SugarElement.fromTag('div');
 
-      const p = Element.fromTag('p');
+      const p = SugarElement.fromTag('p');
 
-      const span = Element.fromTag('span');
+      const span = SugarElement.fromTag('span');
 
       InsertAll.append(div, [ p ]);
       InsertAll.append(p, [ span ]);

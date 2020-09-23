@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { document, navigator, URL, window } from '@ephox/dom-globals';
 import { PlatformDetection } from '@ephox/sand';
 
 /**
@@ -248,6 +247,12 @@ const Env: Env = {
 
   cacheSuffix: null,
   container: null,
+
+  /**
+   * <em>Deprecated in TinyMCE 5.5</em> - if you need the original target of an event, please use `event.composedPath()`
+   *
+   * @deprecated
+   */
   experimentalShadowDom: false,
 
   /**

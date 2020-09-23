@@ -1,13 +1,13 @@
 import { Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
-import { Element, Html } from '@ephox/sugar';
-import * as PaddingBr from 'tinymce/core/dom/PaddingBr';
 import { UnitTest } from '@ephox/bedrock-client';
+import { Html, SugarElement } from '@ephox/sugar';
+import * as PaddingBr from 'tinymce/core/dom/PaddingBr';
 
 UnitTest.asynctest('browser.tinymce.core.dom.PaddingBrTest', function (success, failure) {
 
   const sTestRemoveTrailingBr = function (label, inputHtml, expectedHtml) {
     return Step.sync(function () {
-      const elm = Element.fromHtml(inputHtml);
+      const elm = SugarElement.fromHtml(inputHtml);
       PaddingBr.removeTrailingBr(elm);
       Assertions.assertHtml(label, expectedHtml, Html.getOuter(elm));
     });
@@ -15,7 +15,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.PaddingBrTest', function (success, 
 
   const sTestTrimBlockTrailingBr = function (label, inputHtml, expectedHtml) {
     return Step.sync(function () {
-      const elm = Element.fromHtml(inputHtml);
+      const elm = SugarElement.fromHtml(inputHtml);
       PaddingBr.trimBlockTrailingBr(elm);
       Assertions.assertHtml(label, expectedHtml, Html.getOuter(elm));
     });
@@ -35,18 +35,18 @@ UnitTest.asynctest('browser.tinymce.core.dom.PaddingBrTest', function (success, 
     ])),
     Logger.t('fillWithPaddingBr', GeneralSteps.sequence([
       Step.sync(function () {
-        const elm = Element.fromHtml('<p>a</p>');
+        const elm = SugarElement.fromHtml('<p>a</p>');
         PaddingBr.fillWithPaddingBr(elm);
         Assertions.assertHtml('Should be padded with bogus br', '<p><br data-mce-bogus="1"></p>', Html.getOuter(elm));
       })
     ])),
     Logger.t('isPaddedElement', Step.sync(function () {
-      Assertions.assertEq('Should not be padded', false, PaddingBr.isPaddedElement(Element.fromHtml('<p>a</p>')));
-      Assertions.assertEq('Should not be padded', false, PaddingBr.isPaddedElement(Element.fromHtml('<p>\u00a0\u00a0</p>')));
-      Assertions.assertEq('Should not be padded', false, PaddingBr.isPaddedElement(Element.fromHtml('<p><br><br></p>')));
-      Assertions.assertEq('Should not be padded', false, PaddingBr.isPaddedElement(Element.fromHtml('<p></p>')));
-      Assertions.assertEq('Should be padded nbsp', true, PaddingBr.isPaddedElement(Element.fromHtml('<p>\u00a0</p>')));
-      Assertions.assertEq('Should be padded br', true, PaddingBr.isPaddedElement(Element.fromHtml('<p><br></p>')));
+      Assertions.assertEq('Should not be padded', false, PaddingBr.isPaddedElement(SugarElement.fromHtml('<p>a</p>')));
+      Assertions.assertEq('Should not be padded', false, PaddingBr.isPaddedElement(SugarElement.fromHtml('<p>\u00a0\u00a0</p>')));
+      Assertions.assertEq('Should not be padded', false, PaddingBr.isPaddedElement(SugarElement.fromHtml('<p><br><br></p>')));
+      Assertions.assertEq('Should not be padded', false, PaddingBr.isPaddedElement(SugarElement.fromHtml('<p></p>')));
+      Assertions.assertEq('Should be padded nbsp', true, PaddingBr.isPaddedElement(SugarElement.fromHtml('<p>\u00a0</p>')));
+      Assertions.assertEq('Should be padded br', true, PaddingBr.isPaddedElement(SugarElement.fromHtml('<p><br></p>')));
     })),
     Logger.t('trimPaddingBrs', GeneralSteps.sequence([
       sTestTrimBlockTrailingBr('Should be untouched since it has no brs', '<div></div>', '<div></div>'),

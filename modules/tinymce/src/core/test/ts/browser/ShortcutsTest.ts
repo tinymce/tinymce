@@ -84,12 +84,12 @@ UnitTest.asynctest('browser.tinymce.core.ShortcutsTest', function (success, fail
         called = true;
       });
 
-      editor.fire('keydown', eventArgs());
+      editor.fire('keydown', eventArgs() as KeyboardEvent);
       LegacyUnit.equal(called, true, `Shortcut wasn't called when it should have been.`);
 
       called = false;
       editor.shortcuts.remove(pattern);
-      editor.fire('keydown', eventArgs());
+      editor.fire('keydown', eventArgs() as KeyboardEvent);
       LegacyUnit.equal(called, false, `Shortcut was called when it shouldn't.`);
     };
 

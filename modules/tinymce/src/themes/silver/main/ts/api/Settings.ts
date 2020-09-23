@@ -5,8 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Option, Obj, Type } from '@ephox/katamari';
-import { Body, Element, SelectorFind } from '@ephox/sugar';
+import { Arr, Obj, Optional, Type } from '@ephox/katamari';
+import { SelectorFind, SugarBody, SugarElement, SugarShadowDom } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
@@ -39,13 +39,15 @@ const isSkinDisabled = (editor: Editor) => editor.getParam('skin') === false;
 
 const getHeightSetting = (editor: Editor): string | number => editor.getParam('height', Math.max(editor.getElement().offsetHeight, 200));
 const getWidthSetting = (editor: Editor): string | number => editor.getParam('width', DOMUtils.DOM.getStyle(editor.getElement(), 'width'));
-const getMinWidthSetting = (editor: Editor): Option<number> => Option.from(editor.getParam('min_width')).filter(Type.isNumber);
-const getMinHeightSetting = (editor: Editor): Option<number> => Option.from(editor.getParam('min_height')).filter(Type.isNumber);
-const getMaxWidthSetting = (editor: Editor): Option<number> => Option.from(editor.getParam('max_width')).filter(Type.isNumber);
-const getMaxHeightSetting = (editor: Editor): Option<number> => Option.from(editor.getParam('max_height')).filter(Type.isNumber);
+const getMinWidthSetting = (editor: Editor): Optional<number> => Optional.from(editor.getParam('min_width')).filter(Type.isNumber);
+const getMinHeightSetting = (editor: Editor): Optional<number> => Optional.from(editor.getParam('min_height')).filter(Type.isNumber);
+const getMaxWidthSetting = (editor: Editor): Optional<number> => Optional.from(editor.getParam('max_width')).filter(Type.isNumber);
+const getMaxHeightSetting = (editor: Editor): Optional<number> => Optional.from(editor.getParam('max_height')).filter(Type.isNumber);
 
-const getUserStyleFormats = (editor: Editor): Option<AllowedFormat[]> => Option.from(editor.getParam('style_formats')).filter(Type.isArray);
+const getUserStyleFormats = (editor: Editor): Optional<AllowedFormat[]> => Optional.from(editor.getParam('style_formats')).filter(Type.isArray);
 const isMergeStyleFormats = (editor: Editor): boolean => editor.getParam('style_formats_merge', false, 'boolean');
+const getLineHeightFormats = (editor: Editor): string[] =>
+  editor.getParam('lineheight_formats', '1 1.1 1.2 1.3 1.4 1.5 2', 'string').split(' ');
 
 const getRemovedMenuItems = (editor: Editor): string => editor.getParam('removed_menuitems', '');
 const isMenubarEnabled = (editor: Editor): boolean => editor.getParam('menubar', true, 'boolean') !== false;
@@ -60,10 +62,10 @@ const isToolbarEnabled = (editor: Editor): boolean => {
 };
 
 // Convert toolbar<n> into toolbars array
-const getMultipleToolbarsSetting = (editor: Editor): Option<string[]> => {
+const getMultipleToolbarsSetting = (editor: Editor): Optional<string[]> => {
   const toolbars = Arr.range(9, (num) => editor.getParam('toolbar' + (num + 1), false, 'string'));
   const toolbarArray = Arr.filter(toolbars, (toolbar) => typeof toolbar === 'string');
-  return toolbarArray.length > 0 ? Option.some(toolbarArray) : Option.none();
+  return toolbarArray.length > 0 ? Optional.some(toolbarArray) : Optional.none();
 };
 
 // Check if multiple toolbars is enabled
@@ -91,24 +93,29 @@ export enum ToolbarLocation {
   bottom = 'bottom'
 }
 
-const getToolbarGroups = (editor: Editor) => editor.getParam('toolbar_groups', {}, 'object');
+const getToolbarGroups = (editor: Editor) =>
+  editor.getParam('toolbar_groups', {}, 'object');
 
 const getToolbarLocation = (editor: Editor) => editor.getParam('toolbar_location', ToolbarLocation.auto, 'string') as ToolbarLocation;
 const isToolbarLocationBottom = (editor: Editor) => getToolbarLocation(editor) === ToolbarLocation.bottom;
 
 const fixedContainerSelector = (editor): string => editor.getParam('fixed_toolbar_container', '', 'string');
 
-const fixedContainerElement = (editor): Option<Element> => {
+const isToolbarPersist = (editor): boolean => editor.getParam('toolbar_persist', false, 'boolean');
+
+const fixedContainerElement = (editor): Optional<SugarElement> => {
   const selector = fixedContainerSelector(editor);
   // If we have a valid selector and are in inline mode, try to get the fixed_toolbar_container
-  return selector.length > 0 && editor.inline ? SelectorFind.descendant(Body.body(), selector) : Option.none();
+  return selector.length > 0 && editor.inline ? SelectorFind.descendant(SugarBody.body(), selector) : Optional.none();
 };
 
 const useFixedContainer = (editor): boolean => editor.inline && fixedContainerElement(editor).isSome();
 
-const getUiContainer = (editor): Element => {
+const getUiContainer = (editor: Editor): SugarElement => {
   const fixedContainer = fixedContainerElement(editor);
-  return fixedContainer.getOr(Body.body());
+  return fixedContainer.getOrThunk(() =>
+    SugarShadowDom.getContentContainer(SugarShadowDom.getRootNode(SugarElement.fromDom(editor.getElement())))
+  );
 };
 
 const isDistractionFree = (editor: Editor) => editor.inline && !isMenubarEnabled(editor) && !isToolbarEnabled(editor) && !isMultipleToolbars(editor);
@@ -118,7 +125,8 @@ const isStickyToolbar = (editor: Editor) => {
   return (isStickyToolbar || editor.inline) && !useFixedContainer(editor) && !isDistractionFree(editor);
 };
 
-const isDraggableModal = (editor: Editor): boolean => editor.getParam('draggable_modal', false, 'boolean');
+const isDraggableModal = (editor: Editor): boolean =>
+  editor.getParam('draggable_modal', false, 'boolean');
 
 const getMenus = (editor: Editor) => {
   const menu = editor.getParam('menu');
@@ -142,9 +150,9 @@ const getFileBrowserCallbackTypes = (editor: Editor) => editor.getParam('file_br
 
 const noTypeaheadUrls = (editor: Editor) => editor.getParam('typeahead_urls') === false;
 
-const getAnchorTop = (editor: Editor): string => editor.getParam('anchor_top', '#top', 'string');
+const getAnchorTop = (editor: Editor): string | false => editor.getParam('anchor_top', '#top');
 
-const getAnchorBottom = (editor: Editor): string => editor.getParam('anchor_bottom', '#bottom', 'string');
+const getAnchorBottom = (editor: Editor): string | false => editor.getParam('anchor_bottom', '#bottom');
 
 const getFilePickerValidatorHandler = (editor: Editor) => {
   const handler = editor.getParam('file_picker_validator_handler', undefined, 'function');
@@ -168,10 +176,12 @@ export {
   getMaxHeightSetting,
   getUserStyleFormats,
   isMergeStyleFormats,
+  getLineHeightFormats,
   getRemovedMenuItems,
   isMenubarEnabled,
   isMultipleToolbars,
   isToolbarEnabled,
+  isToolbarPersist,
   getMultipleToolbarsSetting,
   getUiContainer,
   useFixedContainer,

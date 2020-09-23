@@ -1,14 +1,14 @@
-import { Logger, Pipeline, Step, GeneralSteps } from '@ephox/agar';
-import { TinyLoader, TinyApis } from '@ephox/mcagar';
-import Theme from 'tinymce/themes/silver/Theme';
+import { GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
+import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import Editor from 'tinymce/core/api/Editor';
+import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.core.selection.MultiClickSelectionTest', (success, failure) => {
   Theme();
 
   const sFakeMultiClick = (editor: Editor, clickCount) => Step.sync(() => {
-    editor.fire('click', { detail: clickCount });
+    editor.fire('click', { detail: clickCount } as MouseEvent);
   });
 
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {

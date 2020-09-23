@@ -5,104 +5,16 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element, Node } from '@ephox/dom-globals';
-import * as Bookmarks from '../bookmark/Bookmarks';
-import ElementUtils from '../api/dom/ElementUtils';
-import * as NodeType from '../dom/NodeType';
+import DOMUtils from '../api/dom/DOMUtils';
+import Editor from '../api/Editor';
+import { FormatVars } from '../api/fmt/Format';
+import Tools from '../api/util/Tools';
 import * as FormatUtils from './FormatUtils';
 import * as MatchFormat from './MatchFormat';
+import { applyStyle, clearChildStyles, hasStyle, isElementNode, mergeSiblings, processChildElements } from './MergeUtils';
 import * as RemoveFormat from './RemoveFormat';
-import Tools from '../api/util/Tools';
-import { isCaretNode } from '../fmt/FormatContainer';
-import Editor from '../api/Editor';
-import DOMUtils from '../api/dom/DOMUtils';
-import { FormatVars } from '../api/fmt/Format';
 
 const each = Tools.each;
-
-const isElementNode = function (node: Node) {
-  return NodeType.isElement(node) && !Bookmarks.isBookmarkNode(node) && !isCaretNode(node) && !NodeType.isBogus(node);
-};
-
-const findElementSibling = function (node: Node, siblingName: 'nextSibling' | 'previousSibling') {
-  let sibling;
-
-  for (sibling = node; sibling; sibling = sibling[siblingName]) {
-    if (NodeType.isText(sibling) && sibling.nodeValue.length !== 0) {
-      return node;
-    }
-
-    if (NodeType.isElement(sibling) && !Bookmarks.isBookmarkNode(sibling)) {
-      return sibling;
-    }
-  }
-
-  return node;
-};
-
-const mergeSiblingsNodes = function (dom: DOMUtils, prev: Node, next: Node) {
-  let sibling, tmpSibling;
-  const elementUtils = new ElementUtils(dom);
-
-  // Check if next/prev exists and that they are elements
-  if (prev && next) {
-    // If previous sibling is empty then jump over it
-    prev = findElementSibling(prev, 'previousSibling');
-    next = findElementSibling(next, 'nextSibling');
-
-    // Compare next and previous nodes
-    if (elementUtils.compare(prev, next)) {
-      // Append nodes between
-      for (sibling = prev.nextSibling; sibling && sibling !== next;) {
-        tmpSibling = sibling;
-        sibling = sibling.nextSibling;
-        prev.appendChild(tmpSibling);
-      }
-
-      dom.remove(next);
-
-      Tools.each(Tools.grep(next.childNodes), function (node) {
-        prev.appendChild(node);
-      });
-
-      return prev;
-    }
-  }
-
-  return next;
-};
-
-const processChildElements = function (node: Node, filter: (node: Node) => boolean, process: (node: Node) => void) {
-  each(node.childNodes, function (node) {
-    if (isElementNode(node)) {
-      if (filter(node)) {
-        process(node);
-      }
-      if (node.hasChildNodes()) {
-        processChildElements(node, filter, process);
-      }
-    }
-  });
-};
-
-const hasStyle = (dom: DOMUtils, name: string) => (node: Node): boolean =>
-  !!(node && FormatUtils.getStyle(dom, node, name));
-
-const applyStyle = (dom: DOMUtils, name: string, value: string) => (node: Element): void => {
-  dom.setStyle(node, name, value);
-
-  if (node.getAttribute('style') === '') {
-    node.removeAttribute('style');
-  }
-
-  unwrapEmptySpan(dom, node);
-};
-
-const unwrapEmptySpan = function (dom: DOMUtils, node: Node) {
-  if (node.nodeName === 'SPAN' && dom.getAttribs(node).length === 0) {
-    dom.remove(node, true);
-  }
-};
 
 const mergeTextDecorationsAndColor = function (dom: DOMUtils, format, vars: FormatVars, node: Node) {
   const processTextDecorationsAndColor = function (n: Node) {
@@ -134,7 +46,7 @@ const mergeBackgroundColorAndFontSize = function (dom: DOMUtils, format, vars: F
 };
 
 const mergeSubSup = function (dom: DOMUtils, format, vars: FormatVars, node: Node) {
-  // Remove font size on all chilren of a sub/sup and remove the inverse element
+  // Remove font size on all children of a sub/sup and remove the inverse element
   if (format.inline === 'sub' || format.inline === 'sup') {
     processChildElements(node,
       hasStyle(dom, 'fontSize'),
@@ -142,27 +54,6 @@ const mergeSubSup = function (dom: DOMUtils, format, vars: FormatVars, node: Nod
     );
 
     dom.remove(dom.select(format.inline === 'sup' ? 'sub' : 'sup', node), true);
-  }
-};
-
-const mergeSiblings = function (dom: DOMUtils, format, vars: FormatVars, node: Node) {
-  // Merge next and previous siblings if they are similar <b>text</b><b>text</b> becomes <b>texttext</b>
-  if (node && format.merge_siblings !== false) {
-    node = mergeSiblingsNodes(dom, FormatUtils.getNonWhiteSpaceSibling(node), node);
-    node = mergeSiblingsNodes(dom, node, FormatUtils.getNonWhiteSpaceSibling(node, true));
-  }
-};
-
-const clearChildStyles = function (dom: DOMUtils, format, node: Node) {
-  if (format.clear_child_styles) {
-    const selector = format.links ? '*:not(a)' : '*';
-    each(dom.select(selector, node), function (node) {
-      if (isElementNode(node)) {
-        each(format.styles, function (value, name) {
-          dom.setStyle(node, name, '');
-        });
-      }
-    });
   }
 };
 

@@ -1,6 +1,6 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Gene, TestUniverse, TextGene } from '@ephox/boss';
-import { Arr, Fun, Option } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import { PositionArray, PRange } from '@ephox/polaris';
 import * as Spot from 'ephox/phoenix/api/data/Spot';
 import * as MatchSplitter from 'ephox/phoenix/search/MatchSplitter';
@@ -24,21 +24,21 @@ UnitTest.test('MatchSplitterTest', function () {
     word: string;
   }
 
-  const check = function (all: string[], expected: CheckExpect[], ids: string[], matches: (PRange & { word: () => string })[], input: Gene) {
+  const check = function (all: string[], expected: CheckExpect[], ids: string[], matches: (PRange & { word: string })[], input: Gene) {
     const universe = TestUniverse(input);
     const items = Finder.getAll(universe, ids);
     const list = PositionArray.generate(items, function (item, start) {
       const finish = start + universe.property().getText(item).length;
-      return Option.some(Spot.range(item, start, finish));
+      return Optional.some(Spot.range(item, start, finish));
     });
 
     const actual = MatchSplitter.separate(universe, list, matches);
     assert.eq(expected.length, actual.length, 'Wrong sizes for MatchSplitter');
     assert.eq(expected, Arr.map(actual, function (a) {
       return {
-        text: TestRenders.texts(a.elements()),
-        exact: a.exact(),
-        word: a.word()
+        text: TestRenders.texts(a.elements),
+        exact: a.exact,
+        word: a.word
       };
     }));
 
@@ -46,11 +46,11 @@ UnitTest.test('MatchSplitterTest', function () {
 
   };
 
-  const match = function (start: number, finish: number, word: string): PRange & { word: () => string } {
+  const match = function (start: number, finish: number, word: string): PRange & { word: string } {
     return {
-      start: Fun.constant(start),
-      finish: Fun.constant(finish),
-      word: Fun.constant(word)
+      start,
+      finish,
+      word
     };
   };
 

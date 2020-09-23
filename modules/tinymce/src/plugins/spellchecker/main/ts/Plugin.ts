@@ -11,9 +11,9 @@ import * as DetectProPlugin from './alien/DetectProPlugin';
 import * as Api from './api/Api';
 import * as Commands from './api/Commands';
 import * as Settings from './api/Settings';
+import { LastSuggestion } from './core/Actions';
 import * as Buttons from './ui/Buttons';
 import * as SuggestionsMenu from './ui/SuggestionsMenu';
-import { LastSuggestion } from './core/Actions';
 
 export default function () {
   PluginManager.add('spellchecker', function (editor, pluginUrl) {

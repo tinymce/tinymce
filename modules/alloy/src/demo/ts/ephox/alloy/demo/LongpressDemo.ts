@@ -1,6 +1,5 @@
-import { console, document } from '@ephox/dom-globals';
-import { Arr, Future, Option, Result } from '@ephox/katamari';
-import { Class, Element } from '@ephox/sugar';
+import { Arr, Future, Optional, Result } from '@ephox/katamari';
+import { Class, SugarElement } from '@ephox/sugar';
 
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
@@ -13,14 +12,14 @@ import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 
 import * as DemoRenders from './forms/DemoRenders';
 
-// tslint:disable:no-console
+/* eslint-disable no-console */
 
 export default (): void => {
   const gui = Gui.create();
   Debugging.registerInspector('gui', gui);
 
-  const body = Element.fromDom(document.body);
-  Class.add(gui.element(), 'gui-root-demo-container');
+  const body = SugarElement.fromDom(document.body);
+  Class.add(gui.element, 'gui-root-demo-container');
   Attachment.attachSystem(body, gui);
 
   const sink = DemoSink.make();
@@ -45,7 +44,7 @@ export default (): void => {
             return Result.value(sink);
           },
           fetch() {
-            return Future.pure(Option.from(Arr.map([
+            return Future.pure(Optional.from(Arr.map([
               { type: 'item', data: { value: 'alpha', meta: { text: 'Alpha' }}},
               { type: 'item', data: { value: 'beta', meta: { text: 'Beta' }}}
             ], DemoRenders.orb)));
@@ -70,7 +69,7 @@ export default (): void => {
                 tag: 'div'
               },
               components: [
-                Menu.parts().items({ })
+                Menu.parts.items({ })
               ],
               items: [],
               value: 'touchmenu',

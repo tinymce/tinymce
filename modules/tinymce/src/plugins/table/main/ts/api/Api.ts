@@ -5,22 +5,21 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLElement } from '@ephox/dom-globals';
-import { Arr, Option } from '@ephox/katamari';
-import { Element, Elements } from '@ephox/sugar';
+import { Arr, Optional } from '@ephox/katamari';
+import { SugarElement, SugarElements } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { insertTableWithDataValidation } from '../actions/InsertTable';
 import { ResizeHandler } from '../actions/ResizeHandler';
 import { Clipboard } from '../core/Clipboard';
 import { SelectionTargets } from '../selection/SelectionTargets';
 
-const getClipboardElements = (getClipboard: () => Option<Element[]>) => (): HTMLElement[] => getClipboard().fold(
+const getClipboardElements = (getClipboard: () => Optional<SugarElement[]>) => (): HTMLElement[] => getClipboard().fold(
   () => [],
-  (elems) => Arr.map(elems, (e) => e.dom())
+  (elems) => Arr.map(elems, (e) => e.dom)
 );
 
-const setClipboardElements = (setClipboard: (elems: Option<Element[]>) => void) => (elems: HTMLElement[]): void => {
-  const elmsOpt = elems.length > 0 ? Option.some(Elements.fromDom(elems)) : Option.none<Element[]>();
+const setClipboardElements = (setClipboard: (elems: Optional<SugarElement[]>) => void) => (elems: HTMLElement[]): void => {
+  const elmsOpt = elems.length > 0 ? Optional.some(SugarElements.fromDom(elems)) : Optional.none<SugarElement[]>();
   setClipboard(elmsOpt);
 };
 

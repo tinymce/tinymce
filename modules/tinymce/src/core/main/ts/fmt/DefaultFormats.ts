@@ -5,9 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Tools from '../api/util/Tools';
 import DOMUtils from '../api/dom/DOMUtils';
+import * as NodeType from '../dom/NodeType';
 import { Formats } from '../api/fmt/Format';
+import Tools from '../api/util/Tools';
 
 const get = function (dom: DOMUtils) {
   const formats: Formats = {
@@ -153,6 +154,7 @@ const get = function (dom: DOMUtils) {
     hilitecolor: { inline: 'span', styles: { backgroundColor: '%value' }, links: true, remove_similar: true, clear_child_styles: true },
     fontname: { inline: 'span', toggle: false, styles: { fontFamily: '%value' }, clear_child_styles: true },
     fontsize: { inline: 'span', toggle: false, styles: { fontSize: '%value' }, clear_child_styles: true },
+    lineheight: { selector: 'h1,h2,h3,h4,h5,h6,p,li,td,th,div', defaultBlock: 'p', styles: { lineHeight: '%value' }},
     fontsize_class: { inline: 'span', attributes: { class: '%value' }},
     blockquote: { block: 'blockquote', wrapper: true, remove: 'all' },
     subscript: { inline: 'sub' },
@@ -161,12 +163,12 @@ const get = function (dom: DOMUtils) {
 
     link: {
       inline: 'a', selector: 'a', remove: 'all', split: true, deep: true,
-      onmatch() {
-        return true;
+      onmatch(node, _fmt, _itemName) {
+        return NodeType.isElement(node) && node.hasAttribute('href');
       },
 
-      onformat(elm, fmt, vars) {
-        Tools.each(vars, function (value, key) {
+      onformat(elm, _fmt, vars) {
+        Tools.each(vars, (value, key) => {
           dom.setAttrib(elm, key, value);
         });
       }

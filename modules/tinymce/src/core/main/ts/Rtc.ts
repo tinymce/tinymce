@@ -5,12 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Event, Node as DomNode, Range } from '@ephox/dom-globals';
-import { Fun, Obj, Option, Type } from '@ephox/katamari';
+import { Fun, Obj, Optional, Type } from '@ephox/katamari';
 import Editor from './api/Editor';
 import Formatter from './api/Formatter';
-import Node from './api/html/Node';
-import Serializer from './api/html/Serializer';
+import AstNode from './api/html/Node';
+import HtmlSerializer from './api/html/Serializer';
 import { Content, ContentFormat, GetContentArgs, SetContentArgs } from './content/ContentTypes';
 import { getContentInternal } from './content/GetContentImpl';
 import { insertHtmlAtCaret } from './content/InsertContentImpl';
@@ -24,11 +23,13 @@ import { RangeLikeObject } from './selection/RangeTypes';
 import * as Operations from './undo/Operations';
 import { Index, Locks, UndoBookmark, UndoLevel, UndoLevelType, UndoManager } from './undo/UndoManagerTypes';
 
-const isTreeNode = (content: any): content is Node => content instanceof Node;
+const isTreeNode = (content: any): content is AstNode => content instanceof AstNode;
 
-const runSerializerFiltersOnFragment = (editor: Editor, fragment: Node) => {
+const runSerializerFiltersOnFragment = (editor: Editor, fragment: AstNode) => {
   FilterNode.filter(editor.serializer.getNodeFilters(), editor.serializer.getAttributeFilters(), fragment);
 };
+
+const getInsertContext = (editor: Editor) => Optional.from(editor.selection.getStart(true)).map((elm) => elm.nodeName.toLowerCase());
 
 /** API implemented by the RTC plugin */
 interface RtcRuntimeApi {
@@ -40,10 +41,10 @@ interface RtcRuntimeApi {
   applyFormat: (format: string, vars: Record<string, string>) => void;
   removeFormat: (format: string, vars: Record<string, string>) => void;
   toggleFormat: (format: string, vars: Record<string, string>) => void;
-  getContent: () => Node | null;
-  setContent: (node: Node) => void;
-  insertContent: (node: Node) => void;
-  getSelectedContent: () => Node | null;
+  getContent: () => AstNode | null;
+  setContent: (node: AstNode) => void;
+  insertContent: (node: AstNode) => void;
+  getSelectedContent: () => AstNode | null;
   getRawModel: () => any;
   isRemote: boolean;
 }
@@ -84,7 +85,7 @@ interface RtcAdaptor {
     getContent: (format: ContentFormat, args: GetSelectionContentArgs) => Content;
   };
   raw: {
-    getModel: () => Option<any>;
+    getModel: () => Optional<any>;
   };
 }
 
@@ -135,7 +136,7 @@ const makePlainAdaptor = (editor: Editor): RtcAdaptor => ({
     getContent: (format, args) => getSelectedContentInternal(editor, format, args)
   },
   raw: {
-    getModel: () => Option.none()
+    getModel: () => Optional.none()
   }
 });
 
@@ -175,7 +176,7 @@ const makeRtcAdaptor = (tinymceEditor: Editor, rtcEditor: RtcRuntimeApi): RtcAda
       getContent: (args, format) => {
         if (format === 'html' || format === 'tree') {
           const fragment = rtcEditor.getContent();
-          const serializer = Serializer({ inner: true });
+          const serializer = HtmlSerializer({ inner: true });
 
           runSerializerFiltersOnFragment(tinymceEditor, fragment);
 
@@ -192,7 +193,11 @@ const makeRtcAdaptor = (tinymceEditor: Editor, rtcEditor: RtcRuntimeApi): RtcAda
         return content;
       },
       insertContent: (value, _details) => {
-        const fragment = isTreeNode(value) ? value : tinymceEditor.parser.parse(value, { insert: true });
+        const contextArgs = getInsertContext(tinymceEditor).fold(
+          () => ({ }),
+          (context) => ({ context })
+        );
+        const fragment = isTreeNode(value) ? value : tinymceEditor.parser.parse(value, { ...contextArgs, insert: true });
         rtcEditor.insertContent(fragment);
       }
     },
@@ -200,7 +205,7 @@ const makeRtcAdaptor = (tinymceEditor: Editor, rtcEditor: RtcRuntimeApi): RtcAda
       getContent: (format, args) => {
         if (format === 'html' || format === 'tree') {
           const fragment = rtcEditor.getSelectedContent();
-          const serializer = Serializer({});
+          const serializer = HtmlSerializer({});
 
           runSerializerFiltersOnFragment(tinymceEditor, fragment);
 
@@ -211,21 +216,21 @@ const makeRtcAdaptor = (tinymceEditor: Editor, rtcEditor: RtcRuntimeApi): RtcAda
       }
     },
     raw: {
-      getModel: () => Option.some(rtcEditor.getRawModel())
+      getModel: () => Optional.some(rtcEditor.getRawModel())
     }
   };
 };
 
 export const isRtc = (editor: Editor) => Obj.has(editor.plugins, 'rtc');
 
-export const setup = (editor: Editor): Option<Promise<boolean>> => {
+export const setup = (editor: Editor): Optional<Promise<boolean>> => {
   const editorCast = editor as RtcEditor;
-  return (Obj.get(editor.plugins, 'rtc') as Option<RtcPluginApi>).fold(
+  return (Obj.get(editor.plugins, 'rtc') as Optional<RtcPluginApi>).fold(
     () => {
       editorCast.rtcInstance = makePlainAdaptor(editor);
-      return Option.none();
+      return Optional.none();
     },
-    (rtc) => Option.some(
+    (rtc) => Optional.some(
       rtc.setup().then((rtcEditor) => {
         editorCast.rtcInstance = makeRtcAdaptor(editor, rtcEditor);
         return rtcEditor.isRemote;
@@ -304,16 +309,16 @@ export const applyFormat = (
   editor: Editor,
   name: string,
   vars?: Record<string, string>,
-  node?: DomNode | RangeLikeObject
+  node?: Node | RangeLikeObject
 ): void => {
   getRtcInstanceWithError(editor).formatter.apply(name, vars, node);
 };
 
-export const removeFormat = (editor: Editor, name: string, vars?: Record<string, string>, node?: DomNode | Range, similar?: boolean) => {
+export const removeFormat = (editor: Editor, name: string, vars?: Record<string, string>, node?: Node | Range, similar?: boolean) => {
   getRtcInstanceWithError(editor).formatter.remove(name, vars, node, similar);
 };
 
-export const toggleFormat = (editor: Editor, name: string, vars: Record<string, string>, node: DomNode): void => {
+export const toggleFormat = (editor: Editor, name: string, vars: Record<string, string>, node: Node): void => {
   getRtcInstanceWithError(editor).formatter.toggle(name, vars, node);
 };
 

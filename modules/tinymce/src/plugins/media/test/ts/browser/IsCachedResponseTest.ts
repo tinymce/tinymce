@@ -1,12 +1,11 @@
 import { Assertions, Chain, Log, Mouse, Pipeline, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { TinyApis, TinyLoader, TinyUi, TinyDom } from '@ephox/mcagar';
+import { TinyApis, TinyDom, TinyLoader, TinyUi } from '@ephox/mcagar';
+import { Html } from '@ephox/sugar';
 import MediaPlugin from 'tinymce/plugins/media/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
 import * as Utils from '../module/test/Utils';
-import { document } from '@ephox/dom-globals';
-import { Html } from '@ephox/sugar';
 
 UnitTest.asynctest('browser.tinymce.plugins.media.IsCachedResponseTest', function (success, failure) {
 

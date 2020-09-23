@@ -1,5 +1,4 @@
 import { Arr } from '@ephox/katamari';
-import { File, FileList } from '@ephox/dom-globals';
 
 const createFileList = (inputFiles: File[]): FileList => {
   const files = {

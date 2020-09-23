@@ -28,7 +28,7 @@ const registry = () => {
      *
      * @method addAutocompleter
      * @param {String} name Unique name identifying this autocomplete configuration.
-     * @param {InlineContent.AutocompleterApi} obj The autocomplete configuration object.
+     * @param {InlineContent.AutocompleterSpec} obj The autocomplete configuration object.
      * @return {void} void
      */
     addAutocompleter: bridge.addAutocompleter,
@@ -43,7 +43,7 @@ const registry = () => {
      *
      * @method addButton
      * @param {String} name Unique name identifying the button, this button name will be used in the toolbar configuration to reference the button.
-     * @param {Toolbar.ToolbarButtonApi} obj the button configuration object.
+     * @param {Toolbar.ToolbarButtonSpec} obj the button configuration object.
      * @return {void} void
      */
     addButton: bridge.addButton,
@@ -62,7 +62,7 @@ const registry = () => {
      *
      * @method addContextForm
      * @param {String} name Unique name identifying the new contextual form item.
-     * @param {Toolbar.ContextFormApi} obj the context form configuration object.
+     * @param {Toolbar.ContextFormSpec} obj the context form configuration object.
      * @return {void} void
      */
     addContextForm: bridge.addContextForm,
@@ -77,7 +77,7 @@ const registry = () => {
      *
      * @method addContextMenu
      * @param {String} name Unique name identifying the new context menu.
-     * @param {Menu.ContextMenuApi} obj The context menu configuration object.
+     * @param {Menu.ContextMenuSpec} obj The context menu configuration object.
      * @return {void} void
      */
     addContextMenu: bridge.addContextMenu,
@@ -92,7 +92,7 @@ const registry = () => {
      *
      * @method addContextToolbar
      * @param {String} name Unique name identifying the new context toolbar.
-     * @param {Toolbar.ContextToolbarApi} obj The context menu configuration object.
+     * @param {Toolbar.ContextToolbarSpec} obj The context menu configuration object.
      * @return {void} void
      */
     addContextToolbar: bridge.addContextToolbar,
@@ -106,6 +106,9 @@ const registry = () => {
      * @param {String} name Unique name identifying the new icon.
      * @param {svgData} string The SVG data string the browser will use to render the SVG icon.
      * @return {void} void
+     * @example
+     * //To add a simple triangle icon:
+     * editor.ui.registry.addIcon('triangleUp', '<svg height="24" width="24"><path d="M12 0 L24 24 L0 24 Z" /></svg>' );
      */
     addIcon: bridge.addIcon,
 
@@ -120,7 +123,7 @@ const registry = () => {
      *
      * @method addMenuButton
      * @param {String} name Unique name identifying the new menu button.
-     * @param {Toolbar.ToolbarMenuButtonApi} obj The menu button configuration object.
+     * @param {Toolbar.ToolbarMenuButtonSpec} obj The menu button configuration object.
      * @return {void} void
      */
     addMenuButton: bridge.addMenuButton,
@@ -135,7 +138,7 @@ const registry = () => {
      *
      * @method addMenuItem
      * @param {String} name Unique name identifying the new menu item.
-     * @param {Menu.MenuItemApi} obj The menu item configuration object.
+     * @param {Menu.MenuItemSpec} obj The menu item configuration object.
      * @return {void} void
      */
     addMenuItem: bridge.addMenuItem,
@@ -151,7 +154,7 @@ const registry = () => {
      *
      * @method addNestedMenuItem
      * @param {String} name Unique name identifying the new nested menu item.
-     * @param {Menu.NestedMenuItemApi} obj The nested menu item configuration object.
+     * @param {Menu.NestedMenuItemSpec} obj The nested menu item configuration object.
      * @return {void} void
      */
     addNestedMenuItem: bridge.addNestedMenuItem,
@@ -171,7 +174,7 @@ const registry = () => {
      *
      * @method addSidebar
      * @param {String} name Unique name identifying the new sidebar.
-     * @param {Sidebar.SidebarApi} obj The sidebar configuration object.
+     * @param {Sidebar.SidebarSpec} obj The sidebar configuration object.
      * @return {void} void
      */
     addSidebar: bridge.addSidebar,
@@ -186,7 +189,7 @@ const registry = () => {
      *
      * @method addSplitButton
      * @param {String} name Unique name identifying the new split button.
-     * @param {Toolbar.ToolbarSplitButtonApi} obj The split button configuration object.
+     * @param {Toolbar.ToolbarSplitButtonSpec} obj The split button configuration object.
      * @return {void} void
      */
     addSplitButton: bridge.addSplitButton,
@@ -201,7 +204,7 @@ const registry = () => {
      *
      * @method addToggleButton
      * @param {String} name Unique name identifying the new split button.
-     * @param {Toolbar.ToolbarToggleButtonApi} obj The toggle button configuration object.
+     * @param {Toolbar.ToolbarToggleButtonSpec} obj The toggle button configuration object.
      * @return {void} void
      */
     addToggleButton: bridge.addToggleButton,
@@ -220,7 +223,7 @@ const registry = () => {
      *
      * @method addGroupToolbarButton
      * @param {String} name Unique name identifying the new group toolbar button.
-     * @param {Toolbar.GroupToolbarButtonApi} obj The group toolbar button configuration object.
+     * @param {Toolbar.GroupToolbarButtonSpec} obj The group toolbar button configuration object.
      * @return {void} void
      */
     addGroupToolbarButton: bridge.addGroupToolbarButton,
@@ -235,7 +238,7 @@ const registry = () => {
      *
      * @method addToggleMenuItem
      * @param {String} name Unique name identifying the new menu item.
-     * @param {Menu.ToggleMenuItemApi} obj The menu item configuration object.
+     * @param {Menu.ToggleMenuItemSpec} obj The menu item configuration object.
      * @return {void} void
      */
     addToggleMenuItem: bridge.addToggleMenuItem,

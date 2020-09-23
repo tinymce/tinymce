@@ -1,133 +1,24 @@
-import { Keyboard, Pipeline } from '@ephox/agar';
+import { Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { document } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
-import { LegacyUnit, TinyDom, TinyLoader } from '@ephox/mcagar';
+import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 import Editor from 'tinymce/core/api/Editor';
-import Env from 'tinymce/core/api/Env';
-import VK from 'tinymce/core/api/util/VK';
-import * as CaretContainer from 'tinymce/core/caret/CaretContainer';
 import * as Zwsp from 'tinymce/core/text/Zwsp';
 import Theme from 'tinymce/themes/silver/Theme';
-import * as KeyUtils from '../module/test/KeyUtils';
 
 UnitTest.asynctest('browser.tinymce.core.SelectionOverridesTest', function (success, failure) {
   const suite = LegacyUnit.createSuite<Editor>();
+  const isPhantomJs = /PhantomJS/.test(window.navigator.userAgent);
 
   Theme();
-
-  const pressKey = function (key: number) {
-    return function (editor: Editor) {
-      Keyboard.keystroke(key, {}, TinyDom.fromDom(editor.getBody()));
-    };
-  };
-
-  const exitPreTest = function (arrow, offset: number, expectedContent: string) {
-    return function (editor) {
-      editor.setContent('<pre>abc</pre>');
-
-      LegacyUnit.setSelection(editor, 'pre', 1);
-      arrow(editor);
-      LegacyUnit.equal(editor.getContent(), '<pre>abc</pre>');
-      LegacyUnit.equal(editor.selection.getNode().nodeName, 'PRE');
-
-      LegacyUnit.setSelection(editor, 'pre', offset);
-      arrow(editor);
-      LegacyUnit.equal(editor.getContent(), expectedContent);
-      LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
-    };
-  };
 
   const ok = function (a: boolean, label: string) {
     LegacyUnit.equal(a, true, label);
   };
 
-  const leftArrow = pressKey(VK.LEFT);
-  const rightArrow = pressKey(VK.RIGHT);
-  const upArrow = pressKey(VK.UP);
-  const downArrow = pressKey(VK.DOWN);
-
-  suite.test('left/right over cE=false inline', function (editor) {
-    editor.focus();
-    editor.setContent('<span contenteditable="false">1</span>');
-    editor.selection.select(editor.$('span')[0]);
-
-    leftArrow(editor);
-    LegacyUnit.equal(editor.getContent(), '<p><span contenteditable="false">1</span></p>');
-    LegacyUnit.equal(CaretContainer.isCaretContainerInline(editor.selection.getRng().startContainer), true);
-    LegacyUnit.equalDom(editor.selection.getRng().startContainer, editor.$('p')[0].firstChild);
-
-    rightArrow(editor);
-    LegacyUnit.equal(editor.getContent(), '<p><span contenteditable="false">1</span></p>');
-    LegacyUnit.equalDom(editor.selection.getNode(), editor.$('span')[0]);
-
-    rightArrow(editor);
-    LegacyUnit.equal(editor.getContent(), '<p><span contenteditable="false">1</span></p>');
-    LegacyUnit.equal(CaretContainer.isCaretContainerInline(editor.selection.getRng().startContainer), true);
-    LegacyUnit.equalDom(editor.selection.getRng().startContainer, editor.$('p')[0].lastChild);
-  });
-
-  suite.test('left/right over cE=false block', function (editor) {
-    editor.setContent('<p contenteditable="false">1</p>');
-    editor.selection.select(editor.$('p[contenteditable=false]')[0]);
-
-    leftArrow(editor);
-    LegacyUnit.equal(editor.getContent(), '<p contenteditable="false">1</p>');
-    LegacyUnit.equal(CaretContainer.isCaretContainerBlock(editor.selection.getRng().startContainer), true);
-
-    rightArrow(editor);
-    LegacyUnit.equal(editor.getContent(), '<p contenteditable="false">1</p>');
-    LegacyUnit.equalDom(editor.selection.getNode(), editor.$('p[contenteditable=false]')[0]);
-
-    rightArrow(editor);
-    LegacyUnit.equal(editor.getContent(), '<p contenteditable="false">1</p>');
-    LegacyUnit.equal(CaretContainer.isCaretContainerBlock(editor.selection.getRng().startContainer), true);
-  });
-
-  suite.test('left before cE=false block and type', function (editor) {
-    editor.setContent('<p contenteditable="false">1</p>');
-    editor.selection.select(editor.$('p')[0]);
-
-    leftArrow(editor);
-    KeyUtils.type(editor, 'a');
-    LegacyUnit.equal(editor.getContent(), '<p>a</p><p contenteditable="false">1</p>');
-    LegacyUnit.equal(CaretContainer.isCaretContainerBlock(editor.selection.getRng().startContainer.parentNode), false);
-  });
-
-  suite.test('right after cE=false block and type', function (editor) {
-    editor.setContent('<p contenteditable="false">1</p>');
-    editor.selection.select(editor.$('p[contenteditable=false]')[0]);
-
-    rightArrow(editor);
-    KeyUtils.type(editor, 'a');
-    LegacyUnit.equal(editor.getContent(), '<p contenteditable="false">1</p><p>a</p>');
-    LegacyUnit.equal(CaretContainer.isCaretContainerBlock(editor.selection.getRng().startContainer.parentNode), false);
-  });
-
-  suite.test('up from P to inline cE=false', function (editor) {
-    editor.setContent('<p>a<span contentEditable="false">1</span></p><p>abc</p>');
-    LegacyUnit.setSelection(editor, 'p:last', 3);
-
-    upArrow(editor);
-    LegacyUnit.equal(CaretContainer.isCaretContainerInline(editor.$('p:first')[0].lastChild), true);
-  });
-
-  suite.test('down from P to inline cE=false', function (editor) {
-    editor.setContent('<p>abc</p><p>a<span contentEditable="false">1</span></p>');
-    LegacyUnit.setSelection(editor, 'p:first', 3);
-
-    downArrow(editor);
-    LegacyUnit.equal(CaretContainer.isCaretContainerInline(editor.$('p:last')[0].lastChild), true);
-  });
-
-  suite.test('exit pre block (up)', exitPreTest(upArrow, 0, '<p>\u00a0</p><pre>abc</pre>'));
-  suite.test('exit pre block (left)', exitPreTest(leftArrow, 0, '<p>\u00a0</p><pre>abc</pre>'));
-  suite.test('exit pre block (down)', exitPreTest(downArrow, 3, '<pre>abc</pre><p>\u00a0</p>'));
-  suite.test('exit pre block (right)', exitPreTest(rightArrow, 3, '<pre>abc</pre><p>\u00a0</p>'));
-
   suite.test('click on link in cE=false', function (editor) {
     editor.setContent('<p contentEditable="false"><a href="#"><strong>link</strong></a></p>');
-    const evt = editor.fire('click', { target: editor.$('strong')[0] });
+    const evt = editor.fire('click', { target: editor.$('strong')[0] } as MouseEvent);
 
     LegacyUnit.equal(evt.isDefaultPrevented(), true);
   });
@@ -146,17 +37,17 @@ UnitTest.asynctest('browser.tinymce.core.SelectionOverridesTest', function (succ
     const rect = editor.dom.getRect(firstTd);
 
     editor.fire('mousedown', {
-      target: firstTd,
+      target: firstTd as EventTarget,
       clientX: rect.x + rect.w,
       clientY: rect.y + 10
-    });
+    } as MouseEvent);
 
     // Since we can't do a real click we need to check if it gets sucked in towards the cE=false block
     LegacyUnit.equal(editor.selection.getNode().nodeName !== 'P', true);
   });
 
   suite.test('offscreen copy of cE=false block remains offscreen', function (editor) {
-    if (Env.ie || Env.gecko) {
+    if (!isPhantomJs) {
       editor.setContent(
         '<table contenteditable="false" style="width: 100%; table-layout: fixed">' +
         '<tbody><tr><td>1</td><td>2</td></tr></tbody>' +
@@ -177,7 +68,7 @@ UnitTest.asynctest('browser.tinymce.core.SelectionOverridesTest', function (succ
       // Chrome and Safari behave correctly, and PhantomJS also declares itself as WebKit but does not
       // put the off-screen selection off-screen, so fails the above tests. However, it has no visible UI,
       // so everything is off-screen anyway :-)
-      ok(true, 'Not a tested browser - Chrome & Safari work, PhantomJS does not put the selection off screen');
+      ok(true, 'Not a tested browser - PhantomJS does not put the selection off screen');
     }
   });
 

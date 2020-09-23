@@ -1,13 +1,12 @@
 import { ApproxStructure, Assertions, Chain, FocusTools, Guard, Keyboard, Keys, Logger, Mouse, Pipeline, UiFinder } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Menu } from '@ephox/bridge';
-import { document } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { TinyLoader } from '@ephox/mcagar';
-import { Body, Element } from '@ephox/sugar';
-import Editor from 'tinymce/core/api/Editor';
+import { SugarBody, SugarElement } from '@ephox/sugar';
 
+import Editor from 'tinymce/core/api/Editor';
+import { Menu } from 'tinymce/core/api/ui/Ui';
 import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('OxideColorSwatchMenuTest', (success, failure) => {
@@ -17,7 +16,7 @@ UnitTest.asynctest('OxideColorSwatchMenuTest', (success, failure) => {
 
   TinyLoader.setup(
     (editor, onSuccess, onFailure) => {
-      const doc = Element.fromDom(document);
+      const doc = SugarElement.fromDom(document);
 
       const structColors = (values: string[]) => (s, str, arr) => Arr.map(values, (v) => structColor(v)(s, str, arr));
 
@@ -41,8 +40,8 @@ UnitTest.asynctest('OxideColorSwatchMenuTest', (success, failure) => {
             ':focus { transform: scale(0.8) }'
           ]),
 
-          Mouse.sClickOn(Body.body(), '.tox-split-button__chevron'),
-          Chain.asStep(Body.body(), [
+          Mouse.sClickOn(SugarBody.body(), '.tox-split-button__chevron'),
+          Chain.asStep(SugarBody.body(), [
             Chain.control(
               UiFinder.cFindIn('[role="menu"]'),
               Guard.tryUntil('Waiting for menu')
@@ -119,7 +118,7 @@ UnitTest.asynctest('OxideColorSwatchMenuTest', (success, failure) => {
               'blue',
               'black',
               'white'
-            ], (c) => ({ type: 'choiceitem', text: c, value: c } as Menu.ChoiceMenuItemApi));
+            ], (c) => ({ type: 'choiceitem', text: c, value: c } as Menu.ChoiceMenuItemSpec));
             callback(items.concat([
               {
                 type: 'choiceitem',

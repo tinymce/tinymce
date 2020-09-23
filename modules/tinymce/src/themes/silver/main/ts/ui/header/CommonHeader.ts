@@ -9,8 +9,8 @@ import { AlloySpec, Behaviour, SimpleSpec } from '@ephox/alloy';
 
 import Editor from 'tinymce/core/api/Editor';
 import { UiFactoryBackstageShared } from '../../backstage/Backstage';
-import * as StickyHeader from './StickyHeader';
 import * as StaticHeader from './StaticHeader';
+import * as StickyHeader from './StickyHeader';
 
 export interface HeaderSpec extends SimpleSpec {
   sticky: boolean;

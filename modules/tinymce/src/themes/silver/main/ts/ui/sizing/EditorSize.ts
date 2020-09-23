@@ -5,9 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
-import { getHeightSetting, getMaxHeightSetting, getMaxWidthSetting, getMinHeightSetting, getMinWidthSetting, getWidthSetting } from '../../api/Settings';
+import {
+  getHeightSetting, getMaxHeightSetting, getMaxWidthSetting, getMinHeightSetting, getMinWidthSetting, getWidthSetting
+} from '../../api/Settings';
 import * as Utils from './Utils';
 
 export const getHeight = (editor: Editor) => {
@@ -19,7 +21,7 @@ export const getHeight = (editor: Editor) => {
 };
 
 export const getHeightWithFallback = (editor: Editor) => {
-  const height: Option<string | number> = getHeight(editor);
+  const height: Optional<string | number> = getHeight(editor);
   return height.getOr(getHeightSetting(editor));
 };
 
@@ -32,6 +34,6 @@ export const getWidth = (editor: Editor) => {
 };
 
 export const getWidthWithFallback = (editor: Editor) => {
-  const width: Option<string | number> = getWidth(editor);
+  const width: Optional<string | number> = getWidth(editor);
   return width.getOr(getWidthSetting(editor));
 };

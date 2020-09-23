@@ -1,12 +1,11 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
-import { Blob, console } from '@ephox/dom-globals';
 import { Arr, FutureResult, Result } from '@ephox/katamari';
 import { readBlobAsText } from 'ephox/jax/core/BlobReader';
 import { DataType } from 'ephox/jax/core/DataType';
 import * as Http from 'ephox/jax/core/Http';
 import { HttpError } from 'ephox/jax/core/HttpError';
 
-/* tslint:disable:no-console */
+/* eslint-disable no-console */
 
 const expectError = (label: string, response: FutureResult<any, HttpError>) => FutureResult.nu((callback) => {
   response.get((res) => {

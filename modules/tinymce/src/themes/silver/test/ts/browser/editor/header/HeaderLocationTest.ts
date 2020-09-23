@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, Logger, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyLoader } from '@ephox/mcagar';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('Menu and toolbar location test', (success, failure) => {
@@ -45,7 +45,7 @@ UnitTest.asynctest('Menu and toolbar location test', (success, failure) => {
               })
             ]
           }));
-          Assertions.assertStructure('Editor container should match expected structure', containerApproxStructure, Element.fromDom(editor.editorContainer));
+          Assertions.assertStructure('Editor container should match expected structure', containerApproxStructure, SugarElement.fromDom(editor.editorContainer));
         })
       )
     ], onSuccess, onFailure);

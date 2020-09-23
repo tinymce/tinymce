@@ -1,13 +1,13 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
+import { SugarElement } from '@ephox/sugar';
 import { Generators } from 'ephox/snooker/api/Generators';
 import * as Structs from 'ephox/snooker/api/Structs';
 import * as TransformOperations from 'ephox/snooker/operate/TransformOperations';
 import TestGenerator from 'ephox/snooker/test/TestGenerator';
-import { Element } from '@ephox/sugar';
 
 UnitTest.test('TransformOperationsTest', function () {
-  const en = (fakeElement: any, isNew: boolean) => Structs.elementnew(fakeElement as Element, isNew);
+  const en = (fakeElement: any, isNew: boolean) => Structs.elementnew(fakeElement as SugarElement, isNew);
 
   const mapToStructGrid = function (grid: Structs.ElementNew[][]) {
     return Arr.map(grid, function (row) {
@@ -18,11 +18,11 @@ UnitTest.test('TransformOperationsTest', function () {
   const assertGrids = function (expected: Structs.RowCells[], actual: Structs.RowCells[]) {
     assert.eq(expected.length, actual.length);
     Arr.each(expected, function (row, i) {
-      Arr.each(row.cells(), function (cell, j) {
-        assert.eq(cell.element(), actual[i].cells()[j].element());
-        assert.eq(cell.isNew(), actual[i].cells()[j].isNew());
+      Arr.each(row.cells, function (cell, j) {
+        assert.eq(cell.element, actual[i].cells[j].element);
+        assert.eq(cell.isNew, actual[i].cells[j].isNew);
       });
-      assert.eq(row.section(), actual[i].section());
+      assert.eq(row.section, actual[i].section);
     });
   };
 

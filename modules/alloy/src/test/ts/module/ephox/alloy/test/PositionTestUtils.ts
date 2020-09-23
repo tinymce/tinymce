@@ -1,7 +1,6 @@
 import { Chain, Guard, NamedChain } from '@ephox/agar';
-import { window } from '@ephox/dom-globals';
-import { Result, Option } from '@ephox/katamari';
-import { Css, Element, Scroll, Traverse } from '@ephox/sugar';
+import { Optional, Result } from '@ephox/katamari';
+import { Css, Scroll, SugarElement, Traverse } from '@ephox/sugar';
 
 import { Bounds } from 'ephox/alloy/alien/Boxes';
 import { Positioning } from 'ephox/alloy/api/behaviour/Positioning';
@@ -22,16 +21,16 @@ const cAddPopupToSink = (sinkName: string) => NamedChain.bundle((data: any) => {
   return cAddPopupToSinkCommon(data, sink, positioner);
 });
 
-const cAddPopupToSinkWithin = (sinkName: string, elem: Element) => NamedChain.bundle((data: any) => {
+const cAddPopupToSinkWithin = (sinkName: string, elem: SugarElement) => NamedChain.bundle((data: any) => {
   const sink = data[sinkName];
-  const boxElement = Option.some(elem);
+  const boxElement = Optional.some(elem);
   const positioner = () => Positioning.positionWithin(sink, data.anchor, data.popup, boxElement);
   return cAddPopupToSinkCommon(data, sink, positioner);
 });
 
 const cAddPopupToSinkWithinBounds = (sinkName: string, bounds: Bounds) => NamedChain.bundle((data: any) => {
   const sink = data[sinkName];
-  const optBounds = Option.some(bounds);
+  const optBounds = Optional.some(bounds);
   const positioner = () => Positioning.positionWithinBounds(sink, data.anchor, data.popup, optBounds);
   return cAddPopupToSinkCommon(data, sink, positioner);
 });
@@ -49,7 +48,7 @@ const cTestPopupInSink = (label: string, sinkName: string) => Chain.control(
 
 const cTestPopupInViewport = (sinkName: string) => Chain.control(
   NamedChain.bundle((data: any) => {
-    const bounds = data.popup.element().dom().getBoundingClientRect();
+    const bounds = data.popup.element.dom.getBoundingClientRect();
     const inside = bounds.top >= 0 && bounds.left >= 0 && bounds.top <= window.innerHeight && bounds.left <= window.innerWidth;
     return inside ? Result.value(data) : Result.error(
       new Error('The popup does not appear within window viewport for the ' + sinkName + ' sink')
@@ -59,14 +58,14 @@ const cTestPopupInViewport = (sinkName: string) => Chain.control(
 );
 
 const cScrollTo = Chain.mapper((component: AlloyComponent) => {
-  component.element().dom().scrollIntoView();
-  const doc = Traverse.owner(component.element());
+  component.element.dom.scrollIntoView();
+  const doc = Traverse.owner(component.element);
   return Scroll.get(doc);
 });
 
 const cAddTopBottomMargin = (amount: string) => Chain.mapper((component: AlloyComponent) => {
-  Css.set(component.element(), 'margin-top', amount);
-  Css.set(component.element(), 'margin-bottom', amount);
+  Css.set(component.element, 'margin-top', amount);
+  Css.set(component.element, 'margin-bottom', amount);
   return component;
 });
 
@@ -83,7 +82,7 @@ const cTestSink = (label: string, sinkName: string) => ChainUtils.cLogging(
   ]
 );
 
-const cTestSinkWithin = (label: string, sinkName: string, elem: Element) => ChainUtils.cLogging(
+const cTestSinkWithin = (label: string, sinkName: string, elem: SugarElement) => ChainUtils.cLogging(
   label,
   [
     cAddPopupToSinkWithin(sinkName, elem),

@@ -5,8 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node, Text } from '@ephox/dom-globals';
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import TextSeeker from 'tinymce/core/api/dom/TextSeeker';
 import * as Spot from '../utils/Spot';
@@ -23,61 +22,61 @@ const alwaysNext = (startNode: Node) => (node: Node) => startNode === node ? -1 
 const isBoundary = (dom: DOMUtils) => (node: Node) => dom.isBlock(node) || Arr.contains([ 'BR', 'IMG', 'HR', 'INPUT' ], node.nodeName) || dom.getContentEditable(node) === 'false';
 
 // Finds the text node before the specified node, or just returns the node if it's already on a text node
-const textBefore = (node: Node, offset: number, rootNode: Node): Option<Spot.SpotPoint<Text>> => {
+const textBefore = (node: Node, offset: number, rootNode: Node): Optional<Spot.SpotPoint<Text>> => {
   if (isText(node) && offset >= 0) {
-    return Option.some(Spot.point(node, offset));
+    return Optional.some(Spot.point(node, offset));
   } else {
     const textSeeker = TextSeeker(DOM);
-    return Option.from(textSeeker.backwards(node, offset, alwaysNext(node), rootNode)).map((prev) => Spot.point(prev.container, prev.container.data.length));
+    return Optional.from(textSeeker.backwards(node, offset, alwaysNext(node), rootNode)).map((prev) => Spot.point(prev.container, prev.container.data.length));
   }
 };
 
-const textAfter = (node: Node, offset: number, rootNode: Node): Option<Spot.SpotPoint<Text>> => {
+const textAfter = (node: Node, offset: number, rootNode: Node): Optional<Spot.SpotPoint<Text>> => {
   if (isText(node) && offset >= node.length) {
-    return Option.some(Spot.point(node, offset));
+    return Optional.some(Spot.point(node, offset));
   } else {
     const textSeeker = TextSeeker(DOM);
-    return Option.from(textSeeker.forwards(node, offset, alwaysNext(node), rootNode)).map((prev) => Spot.point(prev.container, 0));
+    return Optional.from(textSeeker.forwards(node, offset, alwaysNext(node), rootNode)).map((prev) => Spot.point(prev.container, 0));
   }
 };
 
-const scanLeft = (node: Text, offset: number, rootNode: Node): Option<Spot.SpotPoint<Text>> => {
+const scanLeft = (node: Text, offset: number, rootNode: Node): Optional<Spot.SpotPoint<Text>> => {
   if (!isText(node)) {
-    return Option.none();
+    return Optional.none();
   }
   const text = node.textContent;
   if (offset >= 0 && offset <= text.length) {
-    return Option.some(Spot.point(node, offset));
+    return Optional.some(Spot.point(node, offset));
   } else {
     const textSeeker = TextSeeker(DOM);
-    return Option.from(textSeeker.backwards(node, offset, alwaysNext(node), rootNode)).bind((prev) => {
+    return Optional.from(textSeeker.backwards(node, offset, alwaysNext(node), rootNode)).bind((prev) => {
       const prevText = prev.container.data;
       return scanLeft(prev.container, offset + prevText.length, rootNode);
     });
   }
 };
 
-const scanRight = (node: Text, offset: number, rootNode: Node): Option<Spot.SpotPoint<Text>> => {
+const scanRight = (node: Text, offset: number, rootNode: Node): Optional<Spot.SpotPoint<Text>> => {
   if (!isText(node)) {
-    return Option.none();
+    return Optional.none();
   }
   const text = node.textContent;
   if (offset <= text.length) {
-    return Option.some(Spot.point(node, offset));
+    return Optional.some(Spot.point(node, offset));
   } else {
     const textSeeker = TextSeeker(DOM);
-    return Option.from(textSeeker.forwards(node, offset, alwaysNext(node), rootNode)).bind((next) => scanRight(next.container, offset - text.length, rootNode));
+    return Optional.from(textSeeker.forwards(node, offset, alwaysNext(node), rootNode)).bind((next) => scanRight(next.container, offset - text.length, rootNode));
   }
 };
 
-const repeatLeft = (dom: DOMUtils, node: Node, offset: number, process: ProcessCallback, rootNode: Node): Option<Spot.SpotPoint<Text>> => {
+const repeatLeft = (dom: DOMUtils, node: Node, offset: number, process: ProcessCallback, rootNode: Node): Optional<Spot.SpotPoint<Text>> => {
   const search = TextSeeker(dom, isBoundary(dom));
-  return Option.from(search.backwards(node, offset, process, rootNode));
+  return Optional.from(search.backwards(node, offset, process, rootNode));
 };
 
-const repeatRight = (dom: DOMUtils, node: Node, offset: number, process: ProcessCallback, rootNode: Node): Option<Spot.SpotPoint<Text>> => {
+const repeatRight = (dom: DOMUtils, node: Node, offset: number, process: ProcessCallback, rootNode: Node): Optional<Spot.SpotPoint<Text>> => {
   const search = TextSeeker(dom, isBoundary(dom));
-  return Option.from(search.forwards(node, offset, process, rootNode));
+  return Optional.from(search.forwards(node, offset, process, rootNode));
 };
 
 export {

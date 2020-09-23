@@ -7,7 +7,7 @@
 
 import { AlloyComponent, Disabling, ItemTypes } from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
 import ItemResponse from '../ItemResponse';
 import { renderItemStructure } from '../structure/ItemStructure';
@@ -24,10 +24,10 @@ const renderNormalItem = (spec: Menu.MenuItem, itemResponse: ItemResponse, provi
     presets: 'normal',
     iconContent: spec.icon,
     textContent: spec.text,
-    htmlContent: Option.none(),
+    htmlContent: Optional.none(),
     ariaLabel: spec.text,
-    caret: Option.none(),
-    checkMark: Option.none(),
+    caret: Optional.none(),
+    checkMark: Optional.none(),
     shortcutContent: spec.shortcut
   }, providersBackstage, renderIcons);
 

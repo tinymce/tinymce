@@ -1,40 +1,39 @@
 import { Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Cell } from '@ephox/katamari';
-import { Hierarchy, Element, Selectors } from '@ephox/sugar';
+import { Hierarchy, Selectors, SugarElement } from '@ephox/sugar';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import * as BoundaryCaret from 'tinymce/core/keyboard/BoundaryCaret';
 import * as BoundaryLocation from 'tinymce/core/keyboard/BoundaryLocation';
 import * as Zwsp from 'tinymce/core/text/Zwsp';
-import { UnitTest } from '@ephox/bedrock-client';
-import { HTMLDivElement } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.core.keyboard.BoundaryCaretTest', function (success, failure) {
   const ZWSP = Zwsp.ZWSP;
 
   const isInlineTarget = function (elm) {
-    return Selectors.is(Element.fromDom(elm), 'a[href],code');
+    return Selectors.is(SugarElement.fromDom(elm), 'a[href],code');
   };
 
   const createLocation = function (elm, elementPath, offset) {
     const container = Hierarchy.follow(elm, elementPath);
-    const pos = CaretPosition(container.getOrDie().dom(), offset);
-    const location = BoundaryLocation.readLocation(isInlineTarget, elm.dom(), pos);
+    const pos = CaretPosition(container.getOrDie().dom, offset);
+    const location = BoundaryLocation.readLocation(isInlineTarget, elm.dom, pos);
     return location;
   };
 
   const sTestRenderCaret = function (html, elementPath, offset, expectedHtml, expectedPath, _expectedOffset) {
     return Step.sync(function () {
-      const elm = Element.fromHtml<HTMLDivElement>('<div>' + html + '</div>');
+      const elm = SugarElement.fromHtml<HTMLDivElement>('<div>' + html + '</div>');
       const location = createLocation(elm, elementPath, offset);
       const caret = Cell(null);
 
       Assertions.assertEq('Should be a valid location: ' + html, true, location.isSome());
 
       const pos = BoundaryCaret.renderCaret(caret, location.getOrDie()).getOrDie();
-      Assertions.assertHtml('Should be equal html', expectedHtml, elm.dom().innerHTML);
+      Assertions.assertHtml('Should be equal html', expectedHtml, elm.dom.innerHTML);
 
       const container = Hierarchy.follow(elm, expectedPath);
-      Assertions.assertDomEq('Should be equal nodes', container.getOrDie(), Element.fromDom(pos.container()));
+      Assertions.assertDomEq('Should be equal nodes', container.getOrDie(), SugarElement.fromDom(pos.container()));
     });
   };
 

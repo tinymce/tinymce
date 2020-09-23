@@ -1,17 +1,16 @@
-import { console, CSSStyleDeclaration, Element as DomElement, HTMLElement, Node as DomNode, window } from '@ephox/dom-globals';
-import { Arr, Obj, Option, Strings, Type } from '@ephox/katamari';
+import { Arr, Obj, Optional, Strings, Type } from '@ephox/katamari';
 import * as Style from '../../impl/Style';
-import * as Body from '../node/Body';
-import Element from '../node/Element';
-import * as Node from '../node/Node';
-import * as Attr from './Attr';
+import * as SugarBody from '../node/SugarBody';
+import { SugarElement } from '../node/SugarElement';
+import * as SugarNode from '../node/SugarNode';
+import * as Attribute from './Attribute';
 
-const internalSet = (dom: DomNode, property: string, value: string) => {
+const internalSet = (dom: Node, property: string, value: string): void => {
   // This is going to hurt. Apologies.
   // JQuery coerces numbers to pixels for certain property names, and other times lets numbers through.
   // we're going to be explicit; strings only.
   if (!Type.isString(value)) {
-    // tslint:disable-next-line:no-console
+    // eslint-disable-next-line no-console
     console.error('Invalid call to CSS.set. Property ', property, ':: Value ', value, ':: Element ', dom);
     throw new Error('CSS value must be a string: ' + value);
   }
@@ -22,7 +21,7 @@ const internalSet = (dom: DomNode, property: string, value: string) => {
   }
 };
 
-const internalRemove = (dom: DomNode, property: string) => {
+const internalRemove = (dom: Node, property: string): void => {
   /*
    * IE9 and above - MDN doesn't have details, but here's a couple of random internet claims
    *
@@ -34,21 +33,21 @@ const internalRemove = (dom: DomNode, property: string) => {
   }
 };
 
-const set = (element: Element<DomNode>, property: string, value: string): void => {
-  const dom = element.dom();
+const set = (element: SugarElement<Node>, property: string, value: string): void => {
+  const dom = element.dom;
   internalSet(dom, property, value);
 };
 
-const setAll = (element: Element<DomNode>, css: Record<string, string>): void => {
-  const dom = element.dom();
+const setAll = (element: SugarElement<Node>, css: Record<string, string>): void => {
+  const dom = element.dom;
 
   Obj.each(css, (v, k) => {
     internalSet(dom, k, v);
   });
 };
 
-const setOptions = (element: Element<DomNode>, css: Record<string, Option<string>>): void => {
-  const dom = element.dom();
+const setOptions = (element: SugarElement<Node>, css: Record<string, Optional<string>>): void => {
+  const dom = element.dom;
 
   Obj.each(css, (v, k) => {
     v.fold(() => {
@@ -65,8 +64,8 @@ const setOptions = (element: Element<DomNode>, css: Record<string, Option<string
  *
  * https://developer.mozilla.org/en-US/docs/Web/CSS/used_value
  */
-const get = (element: Element<DomElement>, property: string): string => {
-  const dom = element.dom();
+const get = (element: SugarElement<Element>, property: string): string => {
+  const dom = element.dom;
   /*
    * IE9 and above per
    * https://developer.mozilla.org/en/docs/Web/API/window.getComputedStyle
@@ -81,12 +80,13 @@ const get = (element: Element<DomElement>, property: string): string => {
 
   // jquery-ism: If r is an empty string, check that the element is not in a document. If it isn't, return the raw value.
   // Turns out we do this a lot.
-  return (r === '' && !Body.inBody(element)) ? getUnsafeProperty(dom, property) : r;
+  return (r === '' && !SugarBody.inBody(element)) ? getUnsafeProperty(dom, property) : r;
 };
 
 // removed: support for dom().style[property] where prop is camel case instead of normal property name
 // empty string is what the browsers (IE11 and Chrome) return when the propertyValue doesn't exists.
-const getUnsafeProperty = (dom: DomNode, property: string) => Style.isSupported(dom) ? dom.style.getPropertyValue(property) : '';
+const getUnsafeProperty = (dom: Node, property: string): string =>
+  Style.isSupported(dom) ? dom.style.getPropertyValue(property) : '';
 
 /*
  * Gets the raw value from the style attribute. Useful for retrieving "used values" from the DOM:
@@ -94,70 +94,71 @@ const getUnsafeProperty = (dom: DomNode, property: string) => Style.isSupported(
  *
  * Returns NONE if the property isn't set, or the value is an empty string.
  */
-const getRaw = (element: Element<DomNode>, property: string) => {
-  const dom = element.dom();
+const getRaw = (element: SugarElement<Node>, property: string): Optional<string> => {
+  const dom = element.dom;
   const raw = getUnsafeProperty(dom, property);
 
-  return Option.from(raw).filter((r) => r.length > 0);
+  return Optional.from(raw).filter((r) => r.length > 0);
 };
 
-const getAllRaw = (element: Element<DomNode>) => {
+const getAllRaw = (element: SugarElement<Node>): Record<string, string> => {
   const css: Record<string, string> = {};
-  const dom = element.dom();
+  const dom = element.dom;
 
   if (Style.isSupported(dom)) {
     for (let i = 0; i < dom.style.length; i++) {
       const ruleName = dom.style.item(i) as keyof CSSStyleDeclaration;
-      css[ruleName] = dom.style[ruleName];
+      css[ruleName] = dom.style[ruleName] as string;
     }
   }
   return css;
 };
 
-const isValidValue = (tag: string, property: string, value: string) => {
-  const element = Element.fromTag(tag);
+const isValidValue = (tag: string, property: string, value: string): boolean => {
+  const element = SugarElement.fromTag(tag);
   set(element, property, value);
   const style = getRaw(element, property);
   return style.isSome();
 };
 
-const remove = (element: Element<DomNode>, property: string) => {
-  const dom = element.dom();
+const remove = (element: SugarElement<Node>, property: string): void => {
+  const dom = element.dom;
 
   internalRemove(dom, property);
 
-  if (Attr.getOpt(element as Element<DomElement>, 'style').map(Strings.trim).is('')) {
+  if (Attribute.getOpt(element as SugarElement<Element>, 'style').map(Strings.trim).is('')) {
     // No more styles left, remove the style attribute as well
-    Attr.remove(element as Element<DomElement>, 'style');
+    Attribute.remove(element as SugarElement<Element>, 'style');
   }
 };
 
-const preserve = <E extends DomElement, T> (element: Element<E>, f: (e: Element<E>) => T) => {
-  const oldStyles = Attr.get(element, 'style');
+const preserve = <E extends Element, T> (element: SugarElement<E>, f: (e: SugarElement<E>) => T): T => {
+  const oldStyles = Attribute.get(element, 'style');
   const result = f(element);
   if (oldStyles === undefined) {
-    Attr.remove(element, 'style');
+    Attribute.remove(element, 'style');
   } else {
-    Attr.set(element, 'style', oldStyles);
+    Attribute.set(element, 'style', oldStyles);
   }
   return result;
 };
 
-const copy = (source: Element<DomNode>, target: Element<HTMLElement>) => {
-  const sourceDom = source.dom();
-  const targetDom = target.dom();
+const copy = (source: SugarElement<Node>, target: SugarElement<HTMLElement>): void => {
+  const sourceDom = source.dom;
+  const targetDom = target.dom;
   if (Style.isSupported(sourceDom) && Style.isSupported(targetDom)) {
     targetDom.style.cssText = sourceDom.style.cssText;
   }
 };
 
-/* NOTE:
- * do not rely on this return value.
- * It's here so the closure compiler doesn't optimise the property access away.
+/* NOTE: This function is here for the side effect it triggers.
+The value itself is not used.
+Be sure to not use the return value, and that it is not removed by a minifier.
  */
-const reflow = (e: Element<HTMLElement>) => e.dom().offsetWidth;
+const reflow = (e: SugarElement<HTMLElement>): void =>
+  e.dom.offsetWidth as unknown as void;
 
-const transferOne = (source: Element<DomNode>, destination: Element<DomNode>, style: string) => {
+const transferOne = (source: SugarElement<Node>, destination: SugarElement<Node>, style: string): void => {
   getRaw(source, style).each((value) => {
     // NOTE: We don't want to clobber any existing inline styles.
     if (getRaw(destination, style).isNone()) {
@@ -166,8 +167,8 @@ const transferOne = (source: Element<DomNode>, destination: Element<DomNode>, st
   });
 };
 
-const transfer = (source: Element<DomNode>, destination: Element<DomNode>, styles: string[]) => {
-  if (!Node.isElement(source) || !Node.isElement(destination)) {
+const transfer = (source: SugarElement<Node>, destination: SugarElement<Node>, styles: string[]): void => {
+  if (!SugarNode.isElement(source) || !SugarNode.isElement(destination)) {
     return;
   }
   Arr.each(styles, (style) => {

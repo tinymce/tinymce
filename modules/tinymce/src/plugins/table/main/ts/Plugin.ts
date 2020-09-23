@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { KeyboardEvent } from '@ephox/dom-globals';
+import { Selections } from '@ephox/darwin';
 import Editor from 'tinymce/core/api/Editor';
 import PluginManager from 'tinymce/core/api/PluginManager';
 import * as Clipboard from './actions/Clipboard';
@@ -16,21 +16,22 @@ import * as Commands from './api/Commands';
 import * as QueryCommands from './api/QueryCommands';
 import { hasTabNavigation } from './api/Settings';
 import { Clipboard as FakeClipboard } from './core/Clipboard';
+import * as TableFormats from './core/TableFormats';
+import * as Util from './core/Util';
 import * as TabContext from './queries/TabContext';
 import CellSelection from './selection/CellSelection';
-import * as Ephemera from './selection/Ephemera';
-import { Selections } from './selection/Selections';
+import { ephemera } from './selection/Ephemera';
 import { getSelectionTargets } from './selection/SelectionTargets';
+import { getSelectionStartCellOrCaption } from './selection/TableSelection';
 import * as Buttons from './ui/Buttons';
 import * as MenuItems from './ui/MenuItems';
-import * as TableFormats from './core/TableFormats';
 
 function Plugin(editor: Editor) {
-  const selections = Selections(editor);
+  const selections = Selections(() => Util.getBody(editor), () => getSelectionStartCellOrCaption(Util.getSelectionStart(editor)), ephemera.selectedSelector);
   const selectionTargets = getSelectionTargets(editor, selections);
   const resizeHandler = getResizeHandler(editor);
   const cellSelection = CellSelection(editor, resizeHandler.lazyResize, selectionTargets);
-  const actions = TableActions(editor, resizeHandler.lazyWire);
+  const actions = TableActions(editor, resizeHandler.lazyWire, selections);
   const clipboard = FakeClipboard();
 
   Commands.registerCommands(editor, actions, cellSelection, selections, clipboard);
@@ -42,14 +43,14 @@ function Plugin(editor: Editor) {
   Buttons.addToolbars(editor);
 
   editor.on('PreInit', function () {
-    editor.serializer.addTempAttr(Ephemera.firstSelected);
-    editor.serializer.addTempAttr(Ephemera.lastSelected);
+    editor.serializer.addTempAttr(ephemera.firstSelected);
+    editor.serializer.addTempAttr(ephemera.lastSelected);
     TableFormats.registerFormats(editor);
   });
 
   if (hasTabNavigation(editor)) {
     editor.on('keydown', function (e: KeyboardEvent) {
-      TabContext.handle(e, editor, actions, resizeHandler.lazyWire);
+      TabContext.handle(e, editor, actions);
     });
   }
 

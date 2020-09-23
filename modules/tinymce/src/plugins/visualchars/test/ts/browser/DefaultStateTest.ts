@@ -1,7 +1,7 @@
 import { Keyboard, Keys, Pipeline, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 
 import Plugin from 'tinymce/plugins/visualchars/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
@@ -19,7 +19,7 @@ UnitTest.asynctest('browser.tinymce.plugins.visualchars.DefaultStateTest', (succ
     Pipeline.async({}, [
       tinyApis.sSetContent('<p>a&nbsp;&nbsp;b</p>'),
       // Need to trigger a keydown event to get the visual chars to show after calling set content
-      Keyboard.sKeydown(Element.fromDom(editor.getDoc()), Keys.space(), { }),
+      Keyboard.sKeydown(SugarElement.fromDom(editor.getDoc()), Keys.space(), { }),
       Waiter.sTryUntil('Wait for visual chars to show', tinyApis.sAssertContentStructure(sAssertSpanStruct)),
       tinyUi.sClickOnToolbar('click on visualchars button', 'button'),
       tinyApis.sAssertContentStructure(sAssertNbspStruct),

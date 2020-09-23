@@ -1,4 +1,4 @@
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
@@ -13,7 +13,7 @@ export interface HtmlSelectDetail extends SingleSketchDetail {
   selectAttributes: Record<string, any>;
   selectClasses: string[];
   options: [{ value: string; text: string }];
-  data: Option<string>;
+  data: Optional<string>;
 }
 
 export interface HtmlSelectSpec extends SingleSketchSpec {

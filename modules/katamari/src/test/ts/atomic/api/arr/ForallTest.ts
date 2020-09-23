@@ -1,7 +1,7 @@
+import { Assert, UnitTest } from '@ephox/bedrock-client';
+import fc from 'fast-check';
 import * as Arr from 'ephox/katamari/api/Arr';
 import * as Fun from 'ephox/katamari/api/Fun';
-import { UnitTest, Assert } from '@ephox/bedrock-client';
-import fc from 'fast-check';
 
 UnitTest.test('Arr.forall: unit tests', () => {
   const isone = (i) => i === 1;
@@ -27,7 +27,7 @@ UnitTest.test('forall of a non-empty array with a predicate that always returns 
   fc.assert(fc.property(
     fc.array(fc.integer(), 1, 30),
     (xs) => {
-      const output = Arr.forall(xs, Fun.constant(false));
+      const output = Arr.forall(xs, Fun.never);
       Assert.eq('eq', false, output);
     }
   ));
@@ -37,7 +37,7 @@ UnitTest.test('forall of a non-empty array with a predicate that always returns 
   fc.assert(fc.property(
     fc.array(fc.integer(), 1, 30),
     (xs) => {
-      const output = Arr.forall(xs, Fun.constant(true));
+      const output = Arr.forall(xs, Fun.always);
       Assert.eq('eq', true, output);
     }
   ));

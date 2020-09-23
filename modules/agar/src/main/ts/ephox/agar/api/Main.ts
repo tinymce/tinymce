@@ -3,8 +3,12 @@ import * as ApproxStructure from './ApproxStructure';
 import * as Arbitraries from './Arbitraries';
 import * as Assertions from './Assertions';
 import { Chain } from './Chain';
+import * as ChainSequence from './ChainSequence';
 import { Cleaner } from './Cleaner';
 import * as Cursors from './Cursors';
+import * as DragnDrop from './DragnDrop';
+import * as FileInput from './FileInput';
+import * as Files from './Files';
 import * as FocusTools from './FocusTools';
 import * as GeneralSteps from './GeneralSteps';
 import * as Generators from './Generators';
@@ -24,15 +28,11 @@ import { RealKeys } from './RealKeys';
 import * as RealMouse from './RealMouse';
 import { Step } from './Step';
 import * as StepSequence from './StepSequence';
-import * as ChainSequence from './ChainSequence';
 import { TestLogs } from './TestLogs';
 import * as Touch from './Touch';
 import * as UiControls from './UiControls';
 import * as UiFinder from './UiFinder';
 import * as Waiter from './Waiter';
-import * as DragnDrop from './DragnDrop';
-import * as Files from './Files';
-import * as FileInput from './FileInput';
 
 export {
   ApproxStructure,

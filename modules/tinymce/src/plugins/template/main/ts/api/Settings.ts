@@ -15,6 +15,10 @@ const getSelectedContentClasses = (editor: Editor) => editor.getParam('template_
 
 const getPreviewReplaceValues = (editor: Editor) => editor.getParam('template_preview_replace_values');
 
+const getContentStyle = (editor: Editor): string => editor.getParam('content_style', '', 'string');
+
+const shouldUseContentCssCors = (editor: Editor): boolean => editor.getParam('content_css_cors', false, 'boolean');
+
 const getTemplateReplaceValues = (editor: Editor) => editor.getParam('template_replace_values');
 
 const getTemplates = (editor: Editor) => editor.getParam('templates');
@@ -47,5 +51,7 @@ export {
   getTemplates,
   getCdateFormat,
   getMdateFormat,
-  getBodyClass
+  getBodyClass,
+  getContentStyle,
+  shouldUseContentCssCors
 };

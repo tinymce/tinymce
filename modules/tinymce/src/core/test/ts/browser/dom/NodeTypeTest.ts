@@ -1,9 +1,8 @@
-import { LegacyUnit } from '@ephox/mcagar';
 import { Pipeline } from '@ephox/agar';
-import * as NodeType from 'tinymce/core/dom/NodeType';
-import $ from 'tinymce/core/api/dom/DomQuery';
 import { UnitTest } from '@ephox/bedrock-client';
-import { document } from '@ephox/dom-globals';
+import { LegacyUnit } from '@ephox/mcagar';
+import $ from 'tinymce/core/api/dom/DomQuery';
+import * as NodeType from 'tinymce/core/dom/NodeType';
 
 UnitTest.asynctest('browser.tinymce.core.dom.NodeTypeTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();

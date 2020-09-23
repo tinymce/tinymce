@@ -5,11 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Types } from '@ephox/bridge';
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import * as SelectionBookmark from '../selection/SelectionBookmark';
 import WindowManagerImpl from '../ui/WindowManagerImpl';
 import Editor from './Editor';
+import { Dialog } from './ui/Ui';
 
 /**
  * This class handles the creation of native windows and dialogs. This class can be extended to provide for example inline dialogs.
@@ -33,22 +33,22 @@ import Editor from './Editor';
  * });
  */
 
-type InstanceApi<T> = Types.UrlDialog.UrlDialogInstanceApi | Types.Dialog.DialogInstanceApi<T>;
-
-export interface WindowManagerImpl {
-  open: <T>(config: Types.Dialog.DialogApi<T>, params, closeWindow: (dialog: Types.Dialog.DialogInstanceApi<T>) => void) => Types.Dialog.DialogInstanceApi<T>;
-  openUrl: <T>(config: Types.UrlDialog.UrlDialogApi, closeWindow: (dialog: Types.UrlDialog.UrlDialogInstanceApi) => void) => Types.UrlDialog.UrlDialogInstanceApi;
-  alert: (message: string, callback: () => void) => void;
-  confirm: (message: string, callback: (state: boolean) => void) => void;
-  close: (dialog: InstanceApi<any>) => void;
-}
-
 interface WindowManager {
-  open: <T>(config: Types.Dialog.DialogApi<T>, params?) => Types.Dialog.DialogInstanceApi<T>;
-  openUrl: <T>(config: Types.UrlDialog.UrlDialogApi) => Types.UrlDialog.UrlDialogInstanceApi;
+  open: <T>(config: Dialog.DialogSpec<T>, params?) => Dialog.DialogInstanceApi<T>;
+  openUrl: (config: Dialog.UrlDialogSpec) => Dialog.UrlDialogInstanceApi;
   alert: (message: string, callback?: () => void, scope?) => void;
   confirm: (message: string, callback?: (state: boolean) => void, scope?) => void;
   close: () => void;
+}
+
+export type InstanceApi<T> = Dialog.UrlDialogInstanceApi | Dialog.DialogInstanceApi<T>;
+
+export interface WindowManagerImpl {
+  open: <T>(config: Dialog.DialogSpec<T>, params, closeWindow: (dialog: Dialog.DialogInstanceApi<T>) => void) => Dialog.DialogInstanceApi<T>;
+  openUrl: (config: Dialog.UrlDialogSpec, closeWindow: (dialog: Dialog.UrlDialogInstanceApi) => void) => Dialog.UrlDialogInstanceApi;
+  alert: (message: string, callback: () => void) => void;
+  confirm: (message: string, callback: (state: boolean) => void) => void;
+  close: (dialog: InstanceApi<any>) => void;
 }
 
 const WindowManager = function (editor: Editor): WindowManager {
@@ -94,7 +94,7 @@ const WindowManager = function (editor: Editor): WindowManager {
   };
 
   const getTopDialog = function () {
-    return Option.from(dialogs[dialogs.length - 1]);
+    return Optional.from(dialogs[dialogs.length - 1]);
   };
 
   const storeSelectionAndOpenDialog = <T extends InstanceApi<any>>(openDialog: () => T) => {
@@ -106,11 +106,11 @@ const WindowManager = function (editor: Editor): WindowManager {
     return dialog;
   };
 
-  const open = function <T> (args, params?): Types.Dialog.DialogInstanceApi<T> {
+  const open = function <T> (args, params?): Dialog.DialogInstanceApi<T> {
     return storeSelectionAndOpenDialog(() => getImplementation().open<T>(args, params, closeDialog));
   };
 
-  const openUrl = function (args): Types.UrlDialog.UrlDialogInstanceApi {
+  const openUrl = function (args): Dialog.UrlDialogInstanceApi {
     return storeSelectionAndOpenDialog(() => getImplementation().openUrl(args, closeDialog));
   };
 

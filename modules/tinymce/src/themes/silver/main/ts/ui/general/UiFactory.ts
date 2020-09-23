@@ -6,7 +6,6 @@
  */
 
 import { AlloySpec, FormTypes, SimpleOrSketchSpec } from '@ephox/alloy';
-import { console } from '@ephox/dom-globals';
 import { Merger, Obj } from '@ephox/katamari';
 
 import { BridgedType, UiFactoryBackstage } from '../../backstage/Backstage';
@@ -20,18 +19,19 @@ import { renderGrid } from '../dialog/Grid';
 import { renderIFrame } from '../dialog/IFrame';
 import { renderImageTools } from '../dialog/imagetools/ImageTools';
 import { renderLabel } from '../dialog/Label';
+import { renderListBox } from '../dialog/ListBox';
 import { renderPanel } from '../dialog/Panel';
 import { renderSelectBox } from '../dialog/SelectBox';
 import { renderSizeInput } from '../dialog/SizeInput';
 import { renderTable } from '../dialog/Table';
 import { renderInput, renderTextarea } from '../dialog/TextField';
 import { renderUrlInput } from '../dialog/UrlInput';
-import { renderAlertBanner } from '../general/AlertBanner';
+import { renderAlertBanner } from './AlertBanner';
 import { renderDialogButton } from './Button';
 import { renderCheckbox } from './Checkbox';
 import { renderHtmlPanel } from './HtmlPanel';
 
-// tslint:disable:no-console
+/* eslint-disable no-console */
 
 export type FormPartRenderer = (parts: FormTypes.FormParts, spec: BridgedType, backstage: UiFactoryBackstage) => AlloySpec;
 export type NoFormRenderer = (spec: BridgedType, backstage: UiFactoryBackstage) => AlloySpec;
@@ -64,6 +64,7 @@ const factories: Record<string, FormPartRenderer> = {
   colorpicker: make(renderColorPicker), // Not sure if this needs name.
   dropzone: make((spec, backstage) => renderDropZone(spec, backstage.shared.providers)),
   grid: make((spec, backstage) => renderGrid(spec, backstage.shared)),
+  listbox: make((spec, backstage) => renderListBox(spec, backstage)),
   selectbox: make((spec, backstage) => renderSelectBox(spec, backstage.shared.providers)),
   sizeinput: make((spec, backstage) => renderSizeInput(spec, backstage.shared.providers)),
   urlinput: make((spec, backstage) => renderUrlInput(spec, backstage, backstage.urlinput)),

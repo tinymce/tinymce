@@ -1,4 +1,4 @@
-import { Global, Arr } from '@ephox/katamari';
+import { Arr, Global } from '@ephox/katamari';
 import { Editor } from '../alien/EditorTypes';
 
 const isSilver = () => {

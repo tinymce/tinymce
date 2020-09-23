@@ -1,9 +1,9 @@
 import { ApproxStructure, Assertions, Mouse } from '@ephox/agar';
 import { GuiFactory, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
+import { Optional } from '@ephox/katamari';
 
 import { renderButton } from 'tinymce/themes/silver/ui/general/Button';
-import { Option } from '@ephox/katamari';
 import TestProviders from '../../../module/TestProviders';
 
 UnitTest.asynctest('DialogButton component Test', (success, failure) => {
@@ -15,7 +15,7 @@ UnitTest.asynctest('DialogButton component Test', (success, failure) => {
         text: 'ButtonText',
         disabled: false,
         primary: true,
-        icon: Option.none(),
+        icon: Optional.none(),
         borderless: false
       }, store.adder('button.action'), TestProviders)
     ),
@@ -28,11 +28,11 @@ UnitTest.asynctest('DialogButton component Test', (success, failure) => {
             s.text( str.is('ButtonText') )
           ]
         })),
-        component.element()
+        component.element
       ),
 
       store.sAssertEq('No button action should have fired yet', [ ]),
-      Mouse.sClickOn(gui.element(), '.tox-button'),
+      Mouse.sClickOn(gui.element, '.tox-button'),
       store.sAssertEq('Button action should have fired', [ 'button.action' ])
     ],
     success,

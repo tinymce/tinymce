@@ -5,24 +5,24 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Types } from '@ephox/bridge';
-import { Element, Event, FocusEvent, HTMLElement, Node, Range, TouchEvent, UIEvent } from '@ephox/dom-globals';
 import { GetContentArgs, SetContentArgs } from '../content/ContentTypes';
 import { UndoLevel } from '../undo/UndoManagerTypes';
 import Editor from './Editor';
+import { Dialog } from './ui/Ui';
 import { NativeEventMap } from './util/EventDispatcher';
+import { InstanceApi } from './WindowManager';
 
 export type ExecCommandEvent = { command: string; ui?: boolean; value?: any };
 
 // TODO Figure out if these properties should be on the ContentArgs types
-export type GetContentEvent = GetContentArgs & { source_view: boolean; selection: boolean; save: boolean };
-export type SetContentEvent = SetContentArgs & { paste: boolean; selection: boolean };
+export type GetContentEvent = GetContentArgs & { source_view?: boolean; selection?: boolean; save?: boolean };
+export type SetContentEvent = SetContentArgs & { paste?: boolean; selection?: boolean };
 
 export type NewBlockEvent = { newBlock: Element };
 
 export type NodeChangeEvent = { element: Element; parents: Node[]; selectionChange?: boolean; initial?: boolean };
 
-export type ObjectResizedEvent = { target: HTMLElement; width: number; height: number };
+export type ObjectResizeEvent = { target: HTMLElement; width: number; height: number; origin: string };
 
 export type ObjectSelectedEvent = { target: Node; targetClone?: Node };
 
@@ -37,7 +37,7 @@ export type SwitchModeEvent = { mode: string };
 export type AddUndoEvent = { level: UndoLevel; lastLevel: UndoLevel; originalEvent: Event };
 export type UndoRedoEvent = { level: UndoLevel };
 
-export type WindowEvent<T extends Types.Dialog.DialogData> = { dialog: Types.Dialog.DialogInstanceApi<T> };
+export type WindowEvent<T extends Dialog.DialogData> = { dialog: InstanceApi<T> };
 
 export type ProgressStateEvent = { state: boolean; time?: number };
 
@@ -45,11 +45,11 @@ export type PlaceholderToggleEvent = { state: boolean };
 
 export type LoadErrorEvent = { message: string };
 
-export interface EditorEventMap extends NativeEventMap {
+export interface EditorEventMap extends Omit<NativeEventMap, 'blur' | 'focus'> {
   'activate': { relatedTarget: Editor };
   'deactivate': { relatedTarget: Editor };
-  'focus': FocusEvent & { blurredEditor?: Editor };
-  'blur': FocusEvent & { focusedEditor?: Editor };
+  'focus': { blurredEditor: Editor };
+  'blur': { focusedEditor: Editor };
   'resize': UIEvent;
   'scroll': UIEvent;
   'detach': { };
@@ -57,8 +57,8 @@ export interface EditorEventMap extends NativeEventMap {
   'init': { };
   'ScrollIntoView': ScrollIntoViewEvent;
   'AfterScrollIntoView': ScrollIntoViewEvent;
-  'ObjectResized': ObjectResizedEvent;
-  'ObjectResizeStart': ObjectResizedEvent;
+  'ObjectResized': ObjectResizeEvent;
+  'ObjectResizeStart': ObjectResizeEvent;
   'SwitchMode': SwitchModeEvent;
   'ScrollWindow': UIEvent;
   'ResizeWindow': UIEvent;
@@ -103,7 +103,7 @@ export interface EditorEventMap extends NativeEventMap {
   'longpresscancel': { };
 }
 
-export interface EditorManagerEventMap extends NativeEventMap {
+export interface EditorManagerEventMap {
   'AddEditor': { editor: Editor };
   'RemoveEditor': { editor: Editor };
   'BeforeUnload': { returnValue: any };

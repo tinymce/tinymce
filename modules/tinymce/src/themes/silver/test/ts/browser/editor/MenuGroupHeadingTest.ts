@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, Chain, Log, Logger, Pipeline, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyLoader, TinyUi } from '@ephox/mcagar';
-import { Body } from '@ephox/sugar';
+import { SugarBody } from '@ephox/sugar';
 import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('Menu group heading test', (success, failure) => {
@@ -17,7 +17,7 @@ UnitTest.asynctest('Menu group heading test', (success, failure) => {
           Log.stepsAsStep('TINY-2226', 'Menu should contain a group heading with the correct classes and text', [
             tinyUi.sClickOnToolbar('Click on styleselect toolbar button', 'button'),
             tinyUi.sWaitForUi('Wait for styleselect menu', '.tox-menu.tox-collection'),
-            Chain.asStep(Body.body(), [
+            Chain.asStep(SugarBody.body(), [
               UiFinder.cFindIn('.tox-menu.tox-collection'),
               Assertions.cAssertStructure(
                 'Container structure',

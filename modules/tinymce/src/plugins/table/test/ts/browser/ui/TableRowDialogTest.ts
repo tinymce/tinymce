@@ -1,8 +1,7 @@
 import { Log, Pipeline, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 import * as TableTestUtils from '../../module/test/TableTestUtils';
@@ -12,8 +11,8 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
   SilverTheme();
 
   const generalSelectors = {
-    type: 'label.tox-label:contains(Row type) + div.tox-selectfield>select',
-    align: 'label.tox-label:contains(Alignment) + div.tox-selectfield>select',
+    type: 'label.tox-label:contains(Row type) + div.tox-listboxfield > .tox-listbox',
+    align: 'label.tox-label:contains(Alignment) + div.tox-listboxfield > .tox-listbox',
     height: 'label.tox-label:contains(Height) + input.tox-textfield'
   };
 
@@ -44,7 +43,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
 
     const baseGetTest = () => Log.stepsAsStep('TBA', 'Table: Table row properties dialog (get data from plain cell)', [
       tinyApis.sSetSetting('table_row_advtab', false),
-      UiFinder.sWaitForVisible('waiting for editor', Element.fromDom(document.body), 'div.tox-tinymce'),
+      UiFinder.sWaitForVisible('waiting for editor', SugarElement.fromDom(document.body), 'div.tox-tinymce'),
       tinyApis.sSetContent(baseHtml),
       tinyApis.sSelect('td', [ 0 ]),
       TableTestUtils.sOpenTableDialog(tinyUi),
@@ -53,7 +52,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
     ]);
 
     const baseGetSetTest = () => Log.stepsAsStep('TBA', 'Table: Table row properties dialog (update all)', [
-      UiFinder.sWaitForVisible('waiting for editor', Element.fromDom(document.body), 'div.tox-tinymce'),
+      UiFinder.sWaitForVisible('waiting for editor', SugarElement.fromDom(document.body), 'div.tox-tinymce'),
       tinyApis.sSetContent(baseHtml),
       tinyApis.sSelect('td', [ 0 ]),
       TableTestUtils.sOpenTableDialog(tinyUi),
@@ -63,7 +62,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
         type: 'header'
       }, false, generalSelectors),
       TableTestUtils.sClickDialogButton('clicking save', true),
-      tinyApis.sAssertContent('<table style="border: 1px solid black; border-collapse: collapse;" border="1"><thead><tr style="height: 10px; text-align: right;"><td>X</td></tr></thead></table>')
+      tinyApis.sAssertContent('<table style="border: 1px solid black; border-collapse: collapse;" border="1"><thead><tr style="height: 10px; text-align: right;"><td scope="col">X</td></tr></thead></table>')
     ]);
 
     const captionTest = () => Log.stepsAsStep('TBA', 'Table: Caption should always stay the firstChild of the table (see TINY-1167)', [
@@ -77,7 +76,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
         type: 'header'
       }, false, generalSelectors),
       TableTestUtils.sClickDialogButton('clicking save', true),
-      tinyApis.sAssertContent('<table><caption>CAPTION</caption><thead><tr><td>X</td></tr></thead><tbody><tr><td>Y</td></tr></tbody></table>')
+      tinyApis.sAssertContent('<table><caption>CAPTION</caption><thead><tr><td scope="col">X</td></tr></thead><tbody><tr><td>Y</td></tr></tbody></table>')
     ]);
 
     const advGetTest = () => Log.stepsAsStep('TBA', 'Table: Table row properties dialog (get data from complex row)', [
@@ -90,7 +89,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
     ]);
 
     const advGetSetTest = () => Log.stepsAsStep('TBA', 'Table: Update advanced styles from row properties dialog', [
-      UiFinder.sWaitForVisible('waiting for editor', Element.fromDom(document.body), 'div.tox-tinymce'),
+      UiFinder.sWaitForVisible('waiting for editor', SugarElement.fromDom(document.body), 'div.tox-tinymce'),
       tinyApis.sSetContent(
         '<table style="border: 1px solid black; border-collapse: collapse;" border="1">' +
           '<tbody>' +

@@ -6,14 +6,14 @@
  */
 
 import { AlloySpec, AlloyTriggers, Behaviour, Input, Keying, Memento } from '@ephox/alloy';
-import { Toolbar } from '@ephox/bridge';
-import { Id, Option } from '@ephox/katamari';
+import { InlineContent } from '@ephox/bridge';
+import { Id, Optional } from '@ephox/katamari';
 import { ToolbarMode } from '../../api/Settings';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { renderToolbar, ToolbarGroup } from '../toolbar/CommonToolbar';
 import { generate } from './ContextFormButtons';
 
-const buildInitGroups = (ctx: Toolbar.ContextForm, providers: UiFactoryBackstageProviders): ToolbarGroup[] => {
+const buildInitGroups = (ctx: InlineContent.ContextForm, providers: UiFactoryBackstageProviders): ToolbarGroup[] => {
   // Cannot use the FormField.sketch, because the DOM structure doesn't have a wrapping group
   const inputAttributes = ctx.label.fold(
     () => ({ }),
@@ -38,11 +38,11 @@ const buildInitGroups = (ctx: Toolbar.ContextForm, providers: UiFactoryBackstage
           // Maybe this should go in an alloy sketch for Input?
           onLeft: (comp, se) => {
             se.cut();
-            return Option.none();
+            return Optional.none();
           },
           onRight: (comp, se) => {
             se.cut();
-            return Option.none();
+            return Optional.none();
           }
         })
       ])
@@ -53,22 +53,22 @@ const buildInitGroups = (ctx: Toolbar.ContextForm, providers: UiFactoryBackstage
 
   return [
     {
-      title: Option.none(),
+      title: Optional.none(),
       items: [ memInput.asSpec() ]
     },
     {
-      title: Option.none(),
+      title: Optional.none(),
       items: commands.asSpecs() as AlloySpec[]
     }
   ];
 };
 
 
-const renderContextForm = (toolbarType: ToolbarMode, ctx: Toolbar.ContextForm, providers: UiFactoryBackstageProviders) => renderToolbar({
+const renderContextForm = (toolbarType: ToolbarMode, ctx: InlineContent.ContextForm, providers: UiFactoryBackstageProviders) => renderToolbar({
   type: toolbarType,
   uid: Id.generate('context-toolbar'),
   initGroups: buildInitGroups(ctx, providers),
-  onEscape: Option.none,
+  onEscape: Optional.none,
   cyclicKeying: true,
   providers
 });

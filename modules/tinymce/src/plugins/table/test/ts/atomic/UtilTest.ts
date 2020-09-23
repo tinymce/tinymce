@@ -1,6 +1,6 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import * as fc from 'fast-check';
-import { addPxSuffix, isPercentage, removePxSuffix } from 'tinymce/plugins/table/core/Util';
+import { addPxSuffix, isPercentage, isPixel, removePxSuffix } from 'tinymce/plugins/table/core/Util';
 
 UnitTest.test('atomic.tinymce.plugins.table.core.UtilTest - isPercentage', () => {
   Assert.eq('Empty string is false', false, isPercentage(''));
@@ -13,6 +13,20 @@ UnitTest.test('atomic.tinymce.plugins.table.core.UtilTest - isPercentage', () =>
     Assert.eq('Number string is false', false, isPercentage(n + ''));
     Assert.eq('Pixel string is false', false, isPercentage(n + 'px'));
     Assert.eq('String containing % string is false', false, isPercentage(n + '%' + n));
+  }));
+});
+
+UnitTest.test('atomic.tinymce.plugins.table.core.UtilTest - isPixel', () => {
+  Assert.eq('Empty string is false', false, isPixel(''));
+  Assert.eq('Single px string is false', false, isPixel('px'));
+  Assert.eq('Pixel string is true', true, isPixel('10px'));
+  Assert.eq('Pixel with decimal string is true', true, isPixel('10.125px'));
+
+  fc.assert(fc.property(fc.float(1, 100), (n) => {
+    Assert.eq('Arbitrary float with px string is true', true, isPixel(n + 'px'));
+    Assert.eq('Number string is false', false, isPixel(n + ''));
+    Assert.eq('Percent string is false', false, isPixel(n + '%'));
+    Assert.eq('String containing px string is false', false, isPixel(n + 'px' + n));
   }));
 });
 

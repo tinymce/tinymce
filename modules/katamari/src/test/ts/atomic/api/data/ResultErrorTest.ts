@@ -1,12 +1,12 @@
-import * as Fun from 'ephox/katamari/api/Fun';
-import { Result } from 'ephox/katamari/api/Result';
-import { Option } from 'ephox/katamari/api/Option';
-import { arbResultValue, arbResultError } from 'ephox/katamari/test/arb/ArbDataTypes';
-import fc from 'fast-check';
-import { UnitTest, Assert } from '@ephox/bedrock-client';
-import { tResult } from 'ephox/katamari/api/ResultInstances';
-import { tOption } from 'ephox/katamari/api/OptionInstances';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Testable } from '@ephox/dispute';
+import fc from 'fast-check';
+import * as Fun from 'ephox/katamari/api/Fun';
+import { Optional } from 'ephox/katamari/api/Optional';
+import { tOptional } from 'ephox/katamari/api/OptionalInstances';
+import { Result } from 'ephox/katamari/api/Result';
+import { tResult } from 'ephox/katamari/api/ResultInstances';
+import { arbResultError, arbResultValue } from 'ephox/katamari/test/arb/ArbDataTypes';
 
 const { tNumber } = Testable;
 
@@ -38,7 +38,7 @@ UnitTest.test('Result.error: unit tests', () => {
   Assert.eq('eq', false, s.exists(Fun.always));
   Assert.eq('eq', true, s.forall(Fun.never));
 
-  Assert.eq('eq', Option.none(), Result.error(4).toOption(), tOption(tNumber));
+  Assert.eq('eq', Optional.none(), Result.error(4).toOptional(), tOptional(tNumber));
 });
 
 const getErrorOrDie = (res) => res.fold((err) => err, Fun.die('Was not an error!'));
@@ -140,8 +140,8 @@ UnitTest.test('Result.error: error.exists === false', () => {
   }));
 });
 
-UnitTest.test('Result.error: error.toOption is always none', () => {
+UnitTest.test('Result.error: error.toOptional is always none', () => {
   fc.assert(fc.property(arbResultError(fc.integer()), (res) => {
-    Assert.eq('eq', Option.none(), res.toOption(), tOption());
+    Assert.eq('eq', Optional.none(), res.toOptional(), tOptional());
   }));
 });

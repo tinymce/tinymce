@@ -1,5 +1,4 @@
-import { Element } from '@ephox/dom-globals';
-import { SeparatorMenuItemApi } from '../../api/Menu';
+import { SeparatorMenuItemSpec } from '../../api/Menu';
 
 export interface ContextMenuItem {
   text: string;
@@ -15,7 +14,7 @@ export interface ContextSubMenu {
   getSubmenuItems: () => string | Array<ContextMenuContents>;
 }
 
-export type ContextMenuContents = string | ContextMenuItem | SeparatorMenuItemApi | ContextSubMenu;
+export type ContextMenuContents = string | ContextMenuItem | SeparatorMenuItemSpec | ContextSubMenu;
 
 export interface ContextMenuApi {
   update: (element: Element) => string | Array<ContextMenuContents>;

@@ -5,14 +5,14 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element, Selectors } from '@ephox/sugar';
+import { Selectors, SugarElement } from '@ephox/sugar';
+import Editor from '../api/Editor';
 import * as Settings from '../api/Settings';
 import * as NewLineUtils from './NewLineUtils';
-import Editor from '../api/Editor';
 
 const matchesSelector = function (editor: Editor, selector: string) {
   return NewLineUtils.getParentBlock(editor).filter(function (parentBlock) {
-    return selector.length > 0 && Selectors.is(Element.fromDom(parentBlock), selector);
+    return selector.length > 0 && Selectors.is(SugarElement.fromDom(parentBlock), selector);
   }).isSome();
 };
 

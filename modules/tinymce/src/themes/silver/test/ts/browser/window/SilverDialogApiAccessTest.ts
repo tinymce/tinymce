@@ -1,12 +1,12 @@
 import { Assertions, Chain, GeneralSteps, Logger, Mouse, Pipeline, Waiter } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Types } from '@ephox/bridge';
 import { Cell } from '@ephox/katamari';
 import { TinyLoader } from '@ephox/mcagar';
-import { Body } from '@ephox/sugar';
-import Delay from 'tinymce/core/api/util/Delay';
+import { SugarBody } from '@ephox/sugar';
 
+import { Dialog } from 'tinymce/core/api/ui/Ui';
+import Delay from 'tinymce/core/api/util/Delay';
 import Theme from 'tinymce/themes/silver/Theme';
 import * as DialogUtils from '../../module/DialogUtils';
 
@@ -14,10 +14,10 @@ UnitTest.asynctest('WindowManager:simple-dialog access Test', (success, failure)
   Theme();
 
   TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const currentApi = Cell<Types.Dialog.DialogInstanceApi<any>>({ } as any);
+    const currentApi = Cell<Dialog.DialogInstanceApi<any>>({ } as any);
     const store = TestHelpers.TestStore();
 
-    const dialogSpec: Types.Dialog.DialogApi<{ fieldA: string }> = {
+    const dialogSpec: Dialog.DialogSpec<{ fieldA: string }> = {
       title: 'Silver Test Access Dialog',
       body: {
         type: 'panel',
@@ -57,7 +57,7 @@ UnitTest.asynctest('WindowManager:simple-dialog access Test', (success, failure)
           api.unblock();
           api.showTab('new tab');
           // Currently, it is only going to validate it if the dialog is still open
-          const redialSpec: Types.Dialog.DialogApi<{ fieldA: string }> = {
+          const redialSpec: Dialog.DialogSpec<{ fieldA: string }> = {
             title: 'temporary redial to check the API',
             body: {
               type: 'panel',
@@ -95,7 +95,7 @@ UnitTest.asynctest('WindowManager:simple-dialog access Test', (success, failure)
 
         Logger.t(
           'Trigger the async functions by clicking on the button',
-          Mouse.sClickOn(Body.body(), 'button:contains("Call")')
+          Mouse.sClickOn(SugarBody.body(), 'button:contains("Call")')
         ),
 
         Logger.t(

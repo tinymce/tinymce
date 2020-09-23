@@ -1,11 +1,10 @@
-import { Assertions, GeneralSteps, Logger, Pipeline, Step, Waiter, Cursors } from '@ephox/agar';
+import { Assertions, Cursors, GeneralSteps, Logger, Pipeline, Step, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { window } from '@ephox/dom-globals';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Element, Location, Scroll } from '@ephox/sugar';
+import { Scroll, SugarElement, SugarLocation } from '@ephox/sugar';
+import Editor from 'tinymce/core/api/Editor';
 import * as ScrollIntoView from 'tinymce/core/dom/ScrollIntoView';
 import Theme from 'tinymce/themes/silver/Theme';
-import Editor from 'tinymce/core/api/Editor';
 
 UnitTest.asynctest('browser.tinymce.themes.silver.editor.header.StickyHeaderScrollIntoViewTest', (success, failure) => {
   Theme();
@@ -26,18 +25,18 @@ UnitTest.asynctest('browser.tinymce.themes.silver.editor.header.StickyHeaderScro
   });
 
   const sScrollRangeIntoView = (editor: Editor, path: number[], offset: number, alignToTop?: boolean) => Step.sync(() => {
-    const x = Cursors.calculateOne(Element.fromDom(editor.getBody()), path);
+    const x = Cursors.calculateOne(SugarElement.fromDom(editor.getBody()), path);
     const rng = editor.dom.createRng();
-    rng.setStart(x.dom(), offset);
-    rng.setEnd(x.dom(), offset);
+    rng.setStart(x.dom, offset);
+    rng.setEnd(x.dom, offset);
 
     ScrollIntoView.scrollRangeIntoView(editor, rng, alignToTop);
   });
 
   const sAssertApproxScrollPosition = (editor: Editor, x: number, y: number) => Step.sync(() => {
-    const scrollPos = Scroll.get(Element.fromDom(editor.getDoc()));
-    const actualX = scrollPos.left();
-    const actualY = scrollPos.top();
+    const scrollPos = Scroll.get(SugarElement.fromDom(editor.getDoc()));
+    const actualX = scrollPos.left;
+    const actualY = scrollPos.top;
     Assertions.assertEq(`Scroll position X should be expected value: ${x} got ${actualX}`, true, Math.abs(x - actualX) < 5);
     Assertions.assertEq(`Scroll position Y should be expected value: ${y} got ${actualY}`, true, Math.abs(y - actualY) < 5);
   });
@@ -46,13 +45,13 @@ UnitTest.asynctest('browser.tinymce.themes.silver.editor.header.StickyHeaderScro
 
   TinyLoader.setup((editor: Editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
-    const container = Element.fromDom(editor.getContentAreaContainer());
+    const container = SugarElement.fromDom(editor.getContentAreaContainer());
     const viewHeight = window.innerHeight;
-    const initialContainerPos = Location.absolute(container);
+    const initialContainerPos = SugarLocation.absolute(container);
     const headerHeight = 79;
 
-    const expectedSecondParaScrollBottomPos = 2000 - viewHeight + initialContainerPos.top();
-    const expectedSecondParaScrollTopPos = 2000 + initialContainerPos.top() - headerHeight;
+    const expectedSecondParaScrollBottomPos = 2000 - viewHeight + initialContainerPos.top;
+    const expectedSecondParaScrollTopPos = 2000 + initialContainerPos.top - headerHeight;
 
     const steps = [
       tinyApis.sFocus(),
@@ -77,11 +76,11 @@ UnitTest.asynctest('browser.tinymce.themes.silver.editor.header.StickyHeaderScro
           Step.label('Scroll to second paragraph', sScrollRangeIntoView(editor, [ 1, 0 ], 0)),
           sAssertApproxScrollPosition(editor, 0, expectedSecondParaScrollBottomPos + 17), // expected pos + para line height
           Step.label('Scroll back to first paragraph', sScrollRangeIntoView(editor, [ 0, 0 ], 0)),
-          sAssertApproxScrollPosition(editor, 0, initialContainerPos.top() - headerHeight),
+          sAssertApproxScrollPosition(editor, 0, initialContainerPos.top - headerHeight),
           Step.label('Scroll to last paragraph', sScrollRangeIntoView(editor, [ 2, 0 ], 0)),
           sAssertApproxScrollPosition(editor, 0, expectedSecondParaScrollBottomPos + 50 + 17), // expected pos + second para height + para line height,
           Step.label('Scroll back to first paragraph', sScrollRangeIntoView(editor, [ 0, 0 ], 0)),
-          sAssertApproxScrollPosition(editor, 0, initialContainerPos.top() - headerHeight),
+          sAssertApproxScrollPosition(editor, 0, initialContainerPos.top - headerHeight),
           Step.label('Scroll to second paragraph to the top', sScrollRangeIntoView(editor, [ 1, 0 ], 0, true)),
           sAssertApproxScrollPosition(editor, 0, expectedSecondParaScrollTopPos)
         ]))

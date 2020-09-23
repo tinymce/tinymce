@@ -5,10 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { navigator, Document as DomDocument, Node as DomNode, ShadowRoot } from '@ephox/dom-globals';
-import { Arr, Fun, Future, Futures, Result, Results } from '@ephox/katamari';
-import { Attr, Element, Insert, ShadowDom, Traverse } from '@ephox/sugar';
-import { ReferrerPolicy } from '../SettingsTypes';
+import { Arr, Fun, Future, Futures, Obj, Result, Results } from '@ephox/katamari';
+import { Attribute, Insert, Remove, SelectorFind, SugarElement, SugarShadowDom, Traverse } from '@ephox/sugar';
 import Delay from '../util/Delay';
 import Tools from '../util/Tools';
 
@@ -19,22 +17,32 @@ import Tools from '../util/Tools';
  */
 
 export interface StyleSheetLoader {
-  load: (url: string, loadedCallback: Function, errorCallback?: Function) => void;
-  loadAll: (urls: string[], success: Function, failure: Function) => void;
+  load: (url: string, success: () => void, failure?: () => void) => void;
+  loadAll: (urls: string[], success: (urls: string[]) => void, failure: (urls: string[]) => void) => void;
+  unload: (url: string) => void;
+  unloadAll: (urls: string[]) => void;
   _setReferrerPolicy: (referrerPolicy: ReferrerPolicy) => void;
 }
 
 export interface StyleSheetLoaderSettings {
-  maxLoadTime: number;
-  contentCssCors: boolean;
-  referrerPolicy: ReferrerPolicy;
+  maxLoadTime?: number;
+  contentCssCors?: boolean;
+  referrerPolicy?: ReferrerPolicy;
 }
 
-export function StyleSheetLoader(documentOrShadowRoot: DomDocument | ShadowRoot, settings: Partial<StyleSheetLoaderSettings> = {}): StyleSheetLoader {
-  let idCount = 0;
-  const loadedStates = {};
+interface StyleState {
+  id: string;
+  status?: number;
+  passed: Array<() => void>;
+  failed: Array<() => void>;
+  count: number;
+}
 
-  const edos = Element.fromDom(documentOrShadowRoot);
+export function StyleSheetLoader(documentOrShadowRoot: Document | ShadowRoot, settings: StyleSheetLoaderSettings = {}): StyleSheetLoader {
+  let idCount = 0;
+  const loadedStates: Record<string, StyleState> = {};
+
+  const edos = SugarElement.fromDom(documentOrShadowRoot);
   const doc = Traverse.documentOrOwner(edos);
 
   const maxLoadTime = settings.maxLoadTime || 5000;
@@ -43,22 +51,46 @@ export function StyleSheetLoader(documentOrShadowRoot: DomDocument | ShadowRoot,
     settings.referrerPolicy = referrerPolicy;
   };
 
-  const addStyle = (element: Element<DomNode>) => {
-    Insert.append(ShadowDom.getStyleContainer(edos), element);
+  const addStyle = (element: SugarElement<HTMLStyleElement>) => {
+    Insert.append(SugarShadowDom.getStyleContainer(edos), element);
   };
+
+  const removeStyle = (id: string) => {
+    const styleContainer = SugarShadowDom.getStyleContainer(edos);
+    SelectorFind.descendant(styleContainer, '#' + id).each(Remove.remove);
+  };
+
+  const getOrCreateState = (url: string) =>
+    Obj.get(loadedStates, url).getOrThunk((): StyleState => ({
+      id: 'mce-u' + (idCount++),
+      passed: [],
+      failed: [],
+      count: 0
+    }));
 
   /**
    * Loads the specified CSS file and calls the `loadedCallback` once it's finished loading.
    *
    * @method load
    * @param {String} url Url to be loaded.
-   * @param {Function} loadedCallback Callback to be executed when loaded.
-   * @param {Function} errorCallback Callback to be executed when failed loading.
+   * @param {Function} success Callback to be executed when loaded.
+   * @param {Function} failure Callback to be executed when failed loading.
    */
-  const load = function (url: string, loadedCallback: Function, errorCallback?: Function) {
-    let link, style, state;
+  const load = (url: string, success: () => void, failure?: () => void) => {
+    let link: HTMLLinkElement;
 
-    const resolve = (status: number) => {
+    const urlWithSuffix = Tools._addCacheSuffix(url);
+
+    const state = getOrCreateState(urlWithSuffix);
+    loadedStates[urlWithSuffix] = state;
+    state.count++;
+
+    const resolve = (callbacks: Array<() => void>, status: number) => {
+      let i = callbacks.length;
+      while (i--) {
+        callbacks[i]();
+      }
+
       state.status = status;
       state.passed = [];
       state.failed = [];
@@ -70,39 +102,14 @@ export function StyleSheetLoader(documentOrShadowRoot: DomDocument | ShadowRoot,
       }
     };
 
-    const passed = function () {
-      const callbacks = state.passed;
-      let i = callbacks.length;
-
-      while (i--) {
-        callbacks[i]();
-      }
-
-      resolve(2);
-    };
-
-    const failed = function () {
-      const callbacks = state.failed;
-      let i = callbacks.length;
-
-      while (i--) {
-        callbacks[i]();
-      }
-
-      resolve(3);
-    };
-
-    // Sniffs for older WebKit versions that have the link.onload but a broken one
-    const isOldWebKit = function () {
-      const webKitChunks = navigator.userAgent.match(/WebKit\/(\d*)/);
-      return !!(webKitChunks && parseInt(webKitChunks[1], 10) < 536);
-    };
+    const passed = () => resolve(state.passed, 2);
+    const failed = () => resolve(state.failed, 3);
 
     // Calls the waitCallback until the test returns true or the timeout occurs
-    const wait = function (testCallback, waitCallback) {
+    const wait = (testCallback: () => boolean, waitCallback: () => void) => {
       if (!testCallback()) {
         // Wait for timeout
-        if ((new Date().getTime()) - startTime < maxLoadTime) {
+        if ((Date.now()) - startTime < maxLoadTime) {
           Delay.setTimeout(waitCallback);
         } else {
           failed();
@@ -112,55 +119,30 @@ export function StyleSheetLoader(documentOrShadowRoot: DomDocument | ShadowRoot,
 
     // Workaround for WebKit that doesn't properly support the onload event for link elements
     // Or WebKit that fires the onload event before the StyleSheet is added to the document
-    const waitForWebKitLinkLoaded = function () {
-      wait(function () {
+    const waitForWebKitLinkLoaded = () => {
+      wait(() => {
         const styleSheets = documentOrShadowRoot.styleSheets;
-        let styleSheet, i = styleSheets.length, owner;
+        let i = styleSheets.length;
 
         while (i--) {
-          styleSheet = styleSheets[i];
-          owner = styleSheet.ownerNode ? styleSheet.ownerNode : styleSheet.owningElement;
-          if (owner && owner.id === link.id) {
+          const styleSheet = styleSheets[i];
+          const owner = styleSheet.ownerNode;
+          if (owner && (owner as Element).id === link.id) {
             passed();
             return true;
           }
         }
+
+        return false;
       }, waitForWebKitLinkLoaded);
     };
 
-    // Workaround for older Geckos that doesn't have any onload event for StyleSheets
-    const waitForGeckoLinkLoaded = function () {
-      wait(function () {
-        try {
-          // Accessing the cssRules will throw an exception until the CSS file is loaded
-          const cssRules = style.sheet.cssRules;
-          passed();
-          return !!cssRules;
-        } catch (ex) {
-          // Ignore
-        }
-      }, waitForGeckoLinkLoaded);
-    };
-
-    url = Tools._addCacheSuffix(url);
-
-    if (!loadedStates[url]) {
-      state = {
-        passed: [],
-        failed: []
-      };
-
-      loadedStates[url] = state;
-    } else {
-      state = loadedStates[url];
+    if (success) {
+      state.passed.push(success);
     }
 
-    if (loadedCallback) {
-      state.passed.push(loadedCallback);
-    }
-
-    if (errorCallback) {
-      state.failed.push(errorCallback);
+    if (failure) {
+      state.failed.push(failure);
     }
 
     // Is loading wait for it to pass
@@ -182,71 +164,51 @@ export function StyleSheetLoader(documentOrShadowRoot: DomDocument | ShadowRoot,
 
     // Start loading
     state.status = 1;
-    // TODO: Use Sugar to create this element
-    link = doc.dom().createElement('link');
-    link.rel = 'stylesheet';
-    link.type = 'text/css';
-    link.id = 'u' + (idCount++);
-    link.async = false;
-    link.defer = false;
-    const startTime = new Date().getTime();
+    const linkElem = SugarElement.fromTag('link', doc.dom);
+    Attribute.setAll(linkElem, {
+      rel: 'stylesheet',
+      type: 'text/css',
+      id: state.id
+    });
+    const startTime = Date.now();
 
     if (settings.contentCssCors) {
-      link.crossOrigin = 'anonymous';
+      Attribute.set(linkElem, 'crossOrigin', 'anonymous');
     }
 
     if (settings.referrerPolicy) {
       // Note: Don't use link.referrerPolicy = ... here as it doesn't work on Safari
-      Attr.set(Element.fromDom(link), 'referrerpolicy', settings.referrerPolicy);
+      Attribute.set(linkElem, 'referrerpolicy', settings.referrerPolicy);
     }
 
-    // Feature detect onload on link element and sniff older webkits since it has an broken onload event
-    if ('onload' in link && !isOldWebKit()) {
-      link.onload = waitForWebKitLinkLoaded;
-      link.onerror = failed;
-    } else {
-      // Sniff for old Firefox that doesn't support the onload event on link elements
-      // TODO: Remove this in the future when everyone uses modern browsers
-      if (navigator.userAgent.indexOf('Firefox') > 0) {
-        // TODO: Use Sugar to create this element
-        style = doc.dom().createElement('style');
-        style.textContent = '@import "' + url + '"';
-        waitForGeckoLinkLoaded();
-        addStyle(Element.fromDom(style));
-        return;
-      }
+    link = linkElem.dom;
+    link.onload = waitForWebKitLinkLoaded;
+    link.onerror = failed;
 
-      // Use the id owner on older webkits
-      waitForWebKitLinkLoaded();
-    }
-
-    addStyle(Element.fromDom(link));
-    link.href = url;
+    addStyle(linkElem);
+    Attribute.set(linkElem, 'href', urlWithSuffix);
   };
 
-  const loadF = function (url) {
-    return Future.nu(function (resolve) {
+  const loadF = (url: string): Future<Result<string, string>> =>
+    Future.nu((resolve) => {
       load(
         url,
         Fun.compose(resolve, Fun.constant(Result.value(url))),
         Fun.compose(resolve, Fun.constant(Result.error(url)))
       );
     });
-  };
 
   /**
    * Loads the specified CSS files and calls the `success` callback once it's finished loading.
    *
    * @method loadAll
-   * @param {Array} urls Urls to be loaded.
+   * @param {Array} urls URLs to be loaded.
    * @param {Function} success Callback to be executed when the style sheets have been successfully loaded.
    * @param {Function} failure Callback to be executed when the style sheets fail to load.
    */
-  const loadAll = function (urls: string[], success: Function, failure: Function) {
-    Futures.par(Arr.map(urls, loadF)).get(function (result) {
-      const parts = Arr.partition(result, function (r) {
-        return r.isValue();
-      });
+  const loadAll = (urls: string[], success: (urls: string[]) => void, failure: (urls: string[]) => void) => {
+    Futures.par(Arr.map(urls, loadF)).get((result) => {
+      const parts = Arr.partition(result, (r) => r.isValue());
 
       if (parts.fail.length > 0) {
         failure(parts.fail.map(Results.unite));
@@ -256,9 +218,40 @@ export function StyleSheetLoader(documentOrShadowRoot: DomDocument | ShadowRoot,
     });
   };
 
+  /**
+   * Unloads the specified CSS file if no resources currently depend on it.
+   *
+   * @method unload
+   * @param {String} url URL to unload or remove.
+   */
+  const unload = (url: string) => {
+    const urlWithSuffix = Tools._addCacheSuffix(url);
+    Obj.get(loadedStates, urlWithSuffix).each((state) => {
+      const count = --state.count;
+      if (count === 0) {
+        delete loadedStates[urlWithSuffix];
+        removeStyle(state.id);
+      }
+    });
+  };
+
+  /**
+   * Unloads each specified CSS file if no resources currently depend on it.
+   *
+   * @method unloadAll
+   * @param {Array} urls URLs to unload or remove.
+   */
+  const unloadAll = (urls: string[]) => {
+    Arr.each(urls, (url) => {
+      unload(url);
+    });
+  };
+
   return {
     load,
     loadAll,
+    unload,
+    unloadAll,
     _setReferrerPolicy
   };
 }

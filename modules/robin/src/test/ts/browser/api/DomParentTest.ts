@@ -1,15 +1,15 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { Arr, Fun, Option } from '@ephox/katamari';
-import { Attr, Compare, Element, Hierarchy, Html, SelectorFind } from '@ephox/sugar';
-import * as DomParent from 'ephox/robin/api/dom/DomParent';
+import { Arr, Fun, Optional } from '@ephox/katamari';
 import { KAssert } from '@ephox/katamari-assertions';
+import { Attribute, Compare, Hierarchy, Html, SelectorFind, SugarElement } from '@ephox/sugar';
+import * as DomParent from 'ephox/robin/api/dom/DomParent';
 
 UnitTest.test(
   'DomParentTest',
   function () {
     const check = function (expected: string, p: string, c: string) {
-      const container = Element.fromTag('div');
-      container.dom().innerHTML =
+      const container = SugarElement.fromTag('div');
+      container.dom.innerHTML =
         '<ol class="one-nine" style="list-style-type: decimal;">' +
         '<li class="one">One</li>' +
         '<li class="two">Two</li>' +
@@ -76,8 +76,8 @@ UnitTest.test(
       '</ol>', 'one-nine', 'six');
 
     const checkPath = function (expected: string, input: string, p: number[], c: number[]) {
-      const container = Element.fromTag('div');
-      container.dom().innerHTML = input;
+      const container = SugarElement.fromTag('div');
+      container.dom.innerHTML = input;
 
       const parent = Hierarchy.follow(container, p).getOrDie();
       const child = Hierarchy.follow(container, c).getOrDie();
@@ -195,9 +195,9 @@ UnitTest.test(
       [ 0, 0 ], [ 0, 0, 1, 0 ]);
 
     (function () {
-      const check = function (expected: Option<string[]>, s: string, f: string) {
-        const container = Element.fromTag('div');
-        container.dom().innerHTML =
+      const check = function (expected: Optional<string[]>, s: string, f: string) {
+        const container = SugarElement.fromTag('div');
+        container.dom.innerHTML =
           '<ol class="one-nine" style="list-style-type: decimal;">' +
           '<li class="one">One</li>' +
           '<li class="two">Two</li>' +
@@ -220,16 +220,16 @@ UnitTest.test(
         const child = SelectorFind.descendant(container, '.' + f).getOrDie();
         const subset = DomParent.subset(parent, child);
 
-        const actual = subset.map((ss) => Arr.map(ss, (x) => Attr.get(x, 'class')));
+        const actual = subset.map((ss) => Arr.map(ss, (x) => Attribute.get(x, 'class')));
         const expected_ = expected.map((ss) => Arr.map<string | undefined>((ss), (x) => x));
 
-        KAssert.eqOption('eq', expected_, actual);
+        KAssert.eqOptional('eq', expected_, actual);
       };
 
-      check(Option.some([ 'three-five' ]), 'three-five', 'five');
-      check(Option.some([ 'three-five' ]), 'five', 'three-five');
-      check(Option.some([ 'two', 'three-five' ]), 'two', 'five');
-      check(Option.some([ 'two', 'three-five', 'six', 'seven-nine' ]), 'two', 'eight');
+      check(Optional.some([ 'three-five' ]), 'three-five', 'five');
+      check(Optional.some([ 'three-five' ]), 'five', 'three-five');
+      check(Optional.some([ 'two', 'three-five' ]), 'two', 'five');
+      check(Optional.some([ 'two', 'three-five', 'six', 'seven-nine' ]), 'two', 'eight');
     })();
   }
 );

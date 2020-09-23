@@ -8,15 +8,15 @@
 import {
   AlloyComponent, AlloySpec, Behaviour, Dropdown as AlloyDropdown, Layouts, RawDomSchema, SketchSpec, Tabstopping, Unselecting
 } from '@ephox/alloy';
-import { Types } from '@ephox/bridge';
-import { Future, Id, Merger, Option } from '@ephox/katamari';
+import { Toolbar } from '@ephox/bridge';
+import { Future, Id, Merger, Optional } from '@ephox/katamari';
+
 import { UiFactoryBackstageShared } from '../../backstage/Backstage';
 import * as ReadOnly from '../../ReadOnly';
 import { DisablingConfigs } from '../alien/DisablingConfigs';
 import ItemResponse from '../menus/item/ItemResponse';
 import { createPartialChoiceMenu } from '../menus/menu/MenuChoice';
 import { deriveMenuMovement } from '../menus/menu/MenuMovement';
-
 import * as MenuParts from '../menus/menu/MenuParts';
 import { createTieredDataFrom } from '../menus/menu/SingleMenu';
 
@@ -25,8 +25,8 @@ export interface SwatchPanelButtonSpec {
   components: AlloySpec[];
   fetch: (callback: Function) => void;
   columns: number;
-  presets: Types.PresetTypes;
-  getHotspot?: (comp: AlloyComponent) => Option<AlloyComponent>;
+  presets: Toolbar.PresetTypes;
+  getHotspot?: (comp: AlloyComponent) => Optional<AlloyComponent>;
   onItemAction: (comp: AlloyComponent, value) => void;
   layouts?: Layouts;
 }
@@ -47,7 +47,7 @@ export const renderPanelButton = (spec: SwatchPanelButtonSpec, sharedBackstage: 
   sandboxClasses: [ 'tox-dialog__popups' ],
 
   lazySink: sharedBackstage.getSink,
-  fetch: (comp) => Future.nu((callback) => spec.fetch(callback)).map((items) => Option.from(createTieredDataFrom(
+  fetch: (comp) => Future.nu((callback) => spec.fetch(callback)).map((items) => Optional.from(createTieredDataFrom(
     Merger.deepMerge(
       createPartialChoiceMenu(
         Id.generate('menu-value'),

@@ -5,8 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import * as Settings from './Settings';
 import * as Actions from '../core/Actions';
+import * as Settings from './Settings';
 
 const register = function (editor) {
   editor.addCommand('mceInsertDate', function () {

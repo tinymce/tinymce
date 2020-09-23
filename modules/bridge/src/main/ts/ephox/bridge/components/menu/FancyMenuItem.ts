@@ -1,7 +1,7 @@
 import { Result, Fun } from '@ephox/katamari';
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
 
-export interface FancyMenuItemApi {
+export interface FancyMenuItemSpec {
   type: 'fancymenuitem';
   fancytype: string;
   onAction: (data: any) => void;
@@ -26,4 +26,5 @@ export const fancyMenuItemSchema = ValueSchema.objOf([
   FieldSchema.defaultedFunction('onAction', Fun.noop)
 ]);
 
-export const createFancyMenuItem = (spec: FancyMenuItemApi): Result<FancyMenuItem, ValueSchema.SchemaError<any>> => ValueSchema.asRaw('fancymenuitem', fancyMenuItemSchema, spec);
+export const createFancyMenuItem = (spec: FancyMenuItemSpec): Result<FancyMenuItem, ValueSchema.SchemaError<any>> =>
+  ValueSchema.asRaw('fancymenuitem', fancyMenuItemSchema, spec);

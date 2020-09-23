@@ -1,5 +1,5 @@
-import { Option } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { Optional } from '@ephox/katamari';
+import { SugarElement } from '@ephox/sugar';
 
 import * as EditableFields from '../alien/EditableFields';
 import * as Keys from '../alien/Keys';
@@ -13,21 +13,21 @@ import { GeneralKeyingConfig, KeyRuleHandler } from './KeyingModeTypes';
 const doDefaultExecute = (
   component: AlloyComponent,
   _simulatedEvent: NativeSimulatedEvent,
-  focused: Element
-): Option<boolean> => {
+  focused: SugarElement
+): Optional<boolean> => {
   // Note, we use to pass through simulatedEvent here and make target: component. This simplification
   // may be a problem
   AlloyTriggers.dispatch(component, focused, SystemEvents.execute());
-  return Option.some<boolean>(true);
+  return Optional.some<boolean>(true);
 };
 
 const defaultExecute = (
   component: AlloyComponent,
   simulatedEvent: NativeSimulatedEvent,
-  focused: Element
-): Option<boolean> => {
-  const isComplex = EditableFields.inside(focused) && KeyMatch.inSet(Keys.SPACE())(simulatedEvent.event());
-  return isComplex ? Option.none() : doDefaultExecute(component, simulatedEvent, focused);
+  focused: SugarElement
+): Optional<boolean> => {
+  const isComplex = EditableFields.inside(focused) && KeyMatch.inSet(Keys.SPACE)(simulatedEvent.event);
+  return isComplex ? Optional.none() : doDefaultExecute(component, simulatedEvent, focused);
 };
 
 // On Firefox, pressing space fires a click event if the element maintains focus and fires a keyup. This
@@ -37,7 +37,7 @@ const defaultExecute = (
 const stopEventForFirefox: KeyRuleHandler<GeneralKeyingConfig, any> = (
   _component: AlloyComponent,
   _simulatedEvent: NativeSimulatedEvent
-) => Option.some<boolean>(true);
+) => Optional.some<boolean>(true);
 
 export {
   defaultExecute,

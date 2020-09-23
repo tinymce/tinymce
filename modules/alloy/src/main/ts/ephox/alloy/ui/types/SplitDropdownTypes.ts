@@ -1,4 +1,4 @@
-import { Future, Result, Option } from '@ephox/katamari';
+import { Future, Optional, Result } from '@ephox/katamari';
 
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
@@ -7,7 +7,7 @@ import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { CompositeSketch, CompositeSketchSpec } from '../../api/ui/Sketcher';
 import { AnchorOverrides, AnchorSpec, HasLayoutAnchorSpec } from '../../positioning/mode/Anchoring';
 import { CommonDropdownDetail } from './DropdownTypes';
-import { TieredMenuSpec, TieredData } from './TieredMenuTypes';
+import { TieredData, TieredMenuSpec } from './TieredMenuTypes';
 
 export interface SplitDropdownDetail extends CommonDropdownDetail<TieredData> {
   splitDropdownBehaviours: SketchBehaviours;
@@ -30,7 +30,7 @@ export interface SplitDropdownSpec extends CompositeSketchSpec, HasLayoutAnchorS
   eventOrder?: Record<string, string[]>;
   sandboxClasses?: string[];
   sandboxBehaviours?: AlloyBehaviourRecord;
-  getHotspot?: (comp: AlloyComponent) => Option<AlloyComponent>;
+  getHotspot?: (comp: AlloyComponent) => Optional<AlloyComponent>;
   getAnchorOverrides?: () => AnchorOverrides;
 
   onExecute: (comp: AlloyComponent, button: AlloyComponent) => void;
@@ -39,7 +39,7 @@ export interface SplitDropdownSpec extends CompositeSketchSpec, HasLayoutAnchorS
   onOpen?: (anchor: AnchorSpec, comp: AlloyComponent, menu: AlloyComponent) => void;
 
   lazySink?: (comp: AlloyComponent) => Result<AlloyComponent, Error>;
-  fetch: (comp: AlloyComponent) => Future<Option<TieredData>>;
+  fetch: (comp: AlloyComponent) => Future<Optional<TieredData>>;
   toggleClass: string;
   matchWidth?: boolean;
   useMinWidth?: boolean;

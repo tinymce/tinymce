@@ -1,4 +1,6 @@
-import { AddEventsBehaviour, AlloyComponent, AlloyEvents, Behaviour, Composing, Keying, Memento, RawDomSchema, SimulatedEvent, Sketcher } from '@ephox/alloy';
+import {
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, Behaviour, Composing, Keying, Memento, RawDomSchema, SimulatedEvent, Sketcher
+} from '@ephox/alloy';
 import { FieldSchema } from '@ephox/boulder';
 import { Arr, Cell, Fun } from '@ephox/katamari';
 import { Hex } from '../api/colour/ColourTypes';
@@ -68,10 +70,10 @@ const makeFactory = (
     const paletteUpdates = () => {
       const updates = [ updateFields ];
       return (form: AlloyComponent, simulatedEvent: SimulatedEvent<ColourEvents.PaletteUpdateEvent>) => {
-        const value = simulatedEvent.event().value();
+        const value = simulatedEvent.event.value;
         const oldRgb = state.paletteRgba.get();
         const hsvColour = HsvColour.fromRgb(oldRgb);
-        const newHsvColour = HsvColour.hsvColour(hsvColour.hue, value.x(), (100 - value.y()));
+        const newHsvColour = HsvColour.hsvColour(hsvColour.hue, value.x, (100 - value.y));
         const rgb = RgbaColour.fromHsv(newHsvColour);
         const nuHex = HexColour.fromRgba(rgb);
         runUpdates(form, nuHex, updates);
@@ -81,8 +83,8 @@ const makeFactory = (
     const sliderUpdates = () => {
       const updates = [ updatePalette, updateFields ];
       return (form: AlloyComponent, simulatedEvent: SimulatedEvent<ColourEvents.SliderUpdateEvent>) => {
-        const value = simulatedEvent.event().value();
-        const hex = calcHex(value.y());
+        const value = simulatedEvent.event.value;
+        const hex = calcHex(value.y);
         runUpdates(form, hex, updates);
       };
     };

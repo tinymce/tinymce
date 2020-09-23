@@ -1,10 +1,10 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
+import { KAssert } from '@ephox/katamari-assertions';
 import { Gene } from 'ephox/boss/api/Gene';
 import * as Locator from 'ephox/boss/mutant/Locator';
 import * as Tracks from 'ephox/boss/mutant/Tracks';
 import * as Up from 'ephox/boss/mutant/Up';
-import { KAssert } from '@ephox/katamari-assertions';
 
 UnitTest.test('UpTest', () => {
   const family = Tracks.track(
@@ -16,14 +16,14 @@ UnitTest.test('UpTest', () => {
         ]),
         Gene('F', '_F_')
       ])
-    ]), Option.none());
+    ]), Optional.none());
 
   const getId = (x: Gene) => x.id;
 
-  const selectorId = (item: Gene, query: string): Option<string> =>
+  const selectorId = (item: Gene, query: string): Optional<string> =>
     Up.selector(item, query).map(getId);
 
-  const closestId = (item: Gene, query: string): Option<string> =>
+  const closestId = (item: Gene, query: string): Optional<string> =>
     Up.closest(item, query).map(getId);
 
   const d = Locator.byId(family, 'D').getOrDie();

@@ -1,10 +1,9 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
-import { document } from '@ephox/dom-globals';
-import { Body, Compare, Element, Hierarchy, Insert, InsertAll, Remove } from '@ephox/sugar';
+import { Compare, Hierarchy, Insert, InsertAll, Remove, SugarBody, SugarElement } from '@ephox/sugar';
 import * as DomSmartSelect from 'ephox/robin/api/dom/DomSmartSelect';
 
 UnitTest.test('SmartSelectTest', function () {
-  const editor = Element.fromTag('div');
+  const editor = SugarElement.fromTag('div');
 
   /*
    * We_
@@ -25,25 +24,25 @@ UnitTest.test('SmartSelectTest', function () {
    * </p>
    */
   const populate = function () {
-    const we = Element.fromText('We ');
-    const p1 = Element.fromTag('p');
-    const are = Element.fromText('are ');
-    const s1 = Element.fromTag('span');
-    const g = Element.fromText('g');
-    const oi = Element.fromText('oi');
-    const b1 = Element.fromTag('b');
-    const ng = Element.fromText('ng');
-    const p2 = Element.fromTag('p');
-    const toSay = Element.fromText('to say');
-    const space = Element.fromText(' ');
-    const yes = Element.fromText('"yes"');
+    const we = SugarElement.fromText('We ');
+    const p1 = SugarElement.fromTag('p');
+    const are = SugarElement.fromText('are ');
+    const s1 = SugarElement.fromTag('span');
+    const g = SugarElement.fromText('g');
+    const oi = SugarElement.fromText('oi');
+    const b1 = SugarElement.fromTag('b');
+    const ng = SugarElement.fromText('ng');
+    const p2 = SugarElement.fromTag('p');
+    const toSay = SugarElement.fromText('to say');
+    const space = SugarElement.fromText(' ');
+    const yes = SugarElement.fromText('"yes"');
 
     InsertAll.append(p1, [ are, s1, oi, b1 ]);
     InsertAll.append(p2, [ toSay, space, yes ]);
     InsertAll.append(s1, [ g ]);
     InsertAll.append(b1, [ ng ]);
     InsertAll.append(editor, [ we, p1, p2 ]);
-    Insert.append(Body.body(), editor);
+    Insert.append(SugarBody.body(), editor);
   };
 
   const cleanup = function () {
@@ -69,14 +68,14 @@ UnitTest.test('SmartSelectTest', function () {
     }, function (act) {
       const expStart = Hierarchy.follow(editor, expected.start.element).getOrDie('Could not find expected start');
       const expFinish = Hierarchy.follow(editor, expected.finish.element).getOrDie('Could not find expected finish');
-      assert.eq(true, Compare.eq(expStart, act.startContainer()));
-      assert.eq(expected.start.offset, act.startOffset());
-      assert.eq(true, Compare.eq(expFinish, act.endContainer()));
-      assert.eq(expected.finish.offset, act.endOffset());
+      assert.eq(true, Compare.eq(expStart, act.startContainer));
+      assert.eq(expected.start.offset, act.startOffset);
+      assert.eq(true, Compare.eq(expFinish, act.endContainer));
+      assert.eq(expected.finish.offset, act.endOffset);
 
       const range = document.createRange();
-      range.setStart(act.startContainer().dom(), act.startOffset());
-      range.setEnd(act.endContainer().dom(), act.endOffset());
+      range.setStart(act.startContainer.dom, act.startOffset);
+      range.setEnd(act.endContainer.dom, act.endOffset);
       assert.eq(expected.word, range.toString());
     });
   };

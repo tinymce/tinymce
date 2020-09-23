@@ -3,20 +3,20 @@ import { Menu } from '@ephox/bridge';
 import * as MenuConversion from 'tinymce/themes/silver/ui/menus/menu/MenuConversion';
 
 UnitTest.test('themes.silver.ui.menus.MenuConversion', () => {
-  const buildMenuItem = (name: string): Menu.MenuItemApi => ({
+  const buildMenuItem = (name: string): Menu.MenuItemSpec => ({
     type: 'menuitem',
     text: name,
     value: `${name}-value`
   });
 
-  const buildNestedMenuItem = (name: string, submenus: string | Array<Menu.NestedMenuItemContents>): Menu.NestedMenuItemApi => ({
+  const buildNestedMenuItem = (name: string, submenus: string | Array<Menu.NestedMenuItemContents>): Menu.NestedMenuItemSpec => ({
     type: 'nestedmenuitem',
     text: name,
     value: `${name}-value`,
     getSubmenuItems: () => submenus
   });
 
-  const separator: Menu.SeparatorMenuItemApi = {
+  const separator: Menu.SeparatorMenuItemSpec = {
     type: 'separator'
   };
 

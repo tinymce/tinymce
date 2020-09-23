@@ -1,5 +1,5 @@
 import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
-import { Cell, Fun, Option } from '@ephox/katamari';
+import { Cell, Fun, Optional } from '@ephox/katamari';
 
 import { Coupling } from '../../api/behaviour/Coupling';
 import { Focusing } from '../../api/behaviour/Focusing';
@@ -27,9 +27,9 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.defaulted('responseTime', 1000),
   Fields.onHandler('onOpen'),
   // TODO: Remove dupe with Dropdown
-  FieldSchema.defaulted('getHotspot', Option.some),
+  FieldSchema.defaulted('getHotspot', Optional.some),
   FieldSchema.defaulted('getAnchorOverrides', Fun.constant({ })),
-  FieldSchema.defaulted('layouts', Option.none()),
+  FieldSchema.defaulted('layouts', Optional.none()),
   FieldSchema.defaulted('eventOrder', { }),
   FieldSchema.defaultedObjOf('model', { }, [
     FieldSchema.defaulted('getDisplayText', (itemData: TypeaheadData) => itemData.meta !== undefined && itemData.meta.text !== undefined ? itemData.meta.text : itemData.value),
@@ -70,7 +70,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
       return {
         fakeFocus: true,
         onHighlight(menu: AlloyComponent, item: AlloyComponent): void {
-          if (! detail.previewing.get()) {
+          if (!detail.previewing.get()) {
             menu.getSystem().getByUid(detail.uid).each((input) => {
 
               if (detail.model.populateFromBrowse) {
@@ -99,9 +99,9 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
         // firing so that the typeahead doesn't lose focus. This is the handler
         // for clicking on an item. We need to close the sandbox, update the typeahead
         // to show the item clicked on, and fire an execute.
-        onExecute(menu: AlloyComponent, item: AlloyComponent): Option<boolean> {
+        onExecute(menu: AlloyComponent, item: AlloyComponent): Optional<boolean> {
           // Note: This will only work when the typeahead and menu are in the same system.
-          return menu.getSystem().getByUid(detail.uid).toOption().map((typeahead): boolean => {
+          return menu.getSystem().getByUid(detail.uid).toOptional().map((typeahead): boolean => {
             AlloyTriggers.emitWith(typeahead, TypeaheadEvents.itemExecute(), { item });
             return true;
           });

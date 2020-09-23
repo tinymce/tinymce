@@ -1,5 +1,5 @@
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import * as Obj from 'ephox/katamari/api/Obj';
-import { UnitTest, Assert } from '@ephox/bedrock-client';
 
 UnitTest.test('HasTest', () => {
   const withoutObjProto = Object.create(null);

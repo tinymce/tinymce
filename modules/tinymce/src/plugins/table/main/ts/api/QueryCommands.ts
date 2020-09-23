@@ -5,24 +5,24 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Obj, Option } from '@ephox/katamari';
+import { Selections } from '@ephox/darwin';
+import { Obj, Optional } from '@ephox/katamari';
 import { TableLookup } from '@ephox/snooker';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { TableActions } from '../actions/TableActions';
 import * as Util from '../core/Util';
 import * as TableTargets from '../queries/TableTargets';
-import { Selections } from '../selection/Selections';
 import * as TableSelection from '../selection/TableSelection';
 
 const registerQueryCommands = (editor: Editor, actions: TableActions, selections: Selections) => {
   const isRoot = Util.getIsRoot(editor);
-  const getTableFromCell = (cell: Element): Option<Element> => TableLookup.table(cell, isRoot);
+  const getTableFromCell = (cell: SugarElement): Optional<SugarElement> => TableLookup.table(cell, isRoot);
 
   Obj.each({
     mceTableRowType: () => actions.getTableRowType(editor),
     mceTableCellType: () => actions.getTableCellType(editor),
-    mceTableColType: () => TableSelection.getSelectionStartCell(editor).bind((cell) =>
+    mceTableColType: () => TableSelection.getSelectionStartCell(Util.getSelectionStart(editor)).bind((cell) =>
       getTableFromCell(cell).map((table): string => {
         const targets = TableTargets.forMenu(selections, table, cell);
         return actions.getTableColType(table, targets);

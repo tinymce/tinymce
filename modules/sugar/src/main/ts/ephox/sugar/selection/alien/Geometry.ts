@@ -1,5 +1,3 @@
-import { ClientRect, DOMRect } from '@ephox/dom-globals';
-
 const searchForPoint = (rectForOffset: (number: number) => (ClientRect | DOMRect), x: number, y: number, maxX: number, length: number) => {
   // easy cases
   if (length === 0) {

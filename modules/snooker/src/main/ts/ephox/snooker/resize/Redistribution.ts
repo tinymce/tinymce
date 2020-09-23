@@ -30,18 +30,17 @@ const redistributeToPx = function (widths: string[], totalWidth: number, newTota
   });
 };
 
-const redistributeEmpty = function (newWidthType: Size, columns: number) {
+const redistributeEmpty = (newWidthType: Size, columns: number) => {
   const f = newWidthType.fold(
-    function () {
-      return Fun.constant('');
-    },
-    function (px) {
-      const num = px / columns;
+    () =>
+      Fun.constant(''),
+    (pixels) => { // Pixels
+      const num = pixels / columns;
       return Fun.constant(num + 'px');
     },
-    function (pc) {
-      const num = pc / columns;
-      return Fun.constant(num + 'px');
+    () => { // Percentages.
+      const num = 100 / columns;
+      return Fun.constant(num + '%');
     }
   );
   return Arr.range(columns, f);

@@ -1,7 +1,7 @@
 import { Logger } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Gene, TestUniverse, TextGene } from '@ephox/boss';
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import Jsc from '@ephox/wrap-jsverify';
 import { ArbTextIds, arbTextIds } from 'ephox/robin/test/Arbitraries';
 import * as Clustering from 'ephox/robin/words/Clustering';
@@ -16,7 +16,7 @@ UnitTest.test('ClusteringTest', function () {
     });
   };
 
-  const check = function (label: string, universe: TestUniverse, expLeft: string[], expMiddle: string[], expRight: string[], expLang: Option<string>, id: string) {
+  const check = function (label: string, universe: TestUniverse, expLeft: string[], expMiddle: string[], expRight: string[], expLang: Optional<string>, id: string) {
     Logger.sync(
       id + ' => check: ' + label,
       function () {
@@ -70,7 +70,7 @@ UnitTest.test('ClusteringTest', function () {
       [],
       [ 'z1a' ],
       [ 'z1b' ],
-      Option.none(),
+      Optional.none(),
       'p1.text1.id'
     );
 
@@ -80,7 +80,7 @@ UnitTest.test('ClusteringTest', function () {
       [ 'z1a' ],
       [ 'z1b' ],
       [],
-      Option.none(),
+      Optional.none(),
       'p1.text2.id'
     );
 
@@ -90,7 +90,7 @@ UnitTest.test('ClusteringTest', function () {
       [],
       [ 'z2a' ],
       [],
-      Option.none(),
+      Optional.none(),
       'p1.text3.id'
     );
 
@@ -100,7 +100,7 @@ UnitTest.test('ClusteringTest', function () {
       [],
       [ 'z3a' ],
       [ 'z3b', 'z3c' ],
-      Option.some('DE'),
+      Optional.some('DE'),
       'p2.text1.id'
     );
 
@@ -110,7 +110,7 @@ UnitTest.test('ClusteringTest', function () {
       [ 'z3a' ],
       [ 'z3b' ],
       [ 'z3c' ],
-      Option.some('DE'),
+      Optional.some('DE'),
       'p2.text2.id'
     );
 
@@ -120,7 +120,7 @@ UnitTest.test('ClusteringTest', function () {
       [ 'z3b', 'z3a' ], // intentionally ordered that way for "left" call, but not "all"
       [ 'z3c' ],
       [],
-      Option.some('DE'),
+      Optional.some('DE'),
       'p2.span1.text1.id'
     );
 
@@ -130,7 +130,7 @@ UnitTest.test('ClusteringTest', function () {
       [],
       [ 'z4a' ],
       [],
-      Option.some('FR'),
+      Optional.some('FR'),
       'p2.span2.text1.id'
     );
 
@@ -140,7 +140,7 @@ UnitTest.test('ClusteringTest', function () {
       [],
       [ ' ' ],
       [ 'do', 'g' ],
-      Option.none(),
+      Optional.none(),
       'p3.text1.id'
     );
 
@@ -150,7 +150,7 @@ UnitTest.test('ClusteringTest', function () {
       [],
       [ 'do' ],
       [ 'g' ],
-      Option.none(),
+      Optional.none(),
       'p3.text2.id'
     );
 
@@ -160,7 +160,7 @@ UnitTest.test('ClusteringTest', function () {
       [ 'do' ],
       [ 'g and' ],
       [],
-      Option.none(),
+      Optional.none(),
       'p3.text3.id'
     );
 
@@ -170,7 +170,7 @@ UnitTest.test('ClusteringTest', function () {
       [ 'and' ],
       [ ' bone' ],
       [],
-      Option.none(),
+      Optional.none(),
       'p3.text4.id'
     );
 
@@ -181,7 +181,7 @@ UnitTest.test('ClusteringTest', function () {
     readonly left: WordDecisionItem<Gene>[];
     readonly middle: WordDecisionItem<Gene>[];
     readonly right: WordDecisionItem<Gene>[];
-    readonly lang: Option<string>;
+    readonly lang: Optional<string>;
   }
 
   const checkProps = function (universe: TestUniverse, textIds: string[], start: Gene, actual: ClusteringLangs) {

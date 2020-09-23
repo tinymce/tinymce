@@ -1,7 +1,6 @@
-import { console } from '@ephox/dom-globals';
 import { getDemoRegistry } from './DemoRegistry';
 
-// tslint:disable:no-console
+/* eslint-disable no-console */
 export const registerDemoButtons = () => {
   getDemoRegistry().addButton('code', {
     icon: 'code',

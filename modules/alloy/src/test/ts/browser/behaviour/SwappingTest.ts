@@ -5,8 +5,8 @@ import { Arr, Fun } from '@ephox/katamari';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Swapping } from 'ephox/alloy/api/behaviour/Swapping';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
+import { Container } from 'ephox/alloy/api/ui/Container';
 
 UnitTest.asynctest('SwappingTest', (success, failure) => {
 
@@ -44,7 +44,7 @@ UnitTest.asynctest('SwappingTest', (success, failure) => {
             'test-uid': str.is('wat-uid')
           }
         })),
-        component.element()
+        component.element
       );
     };
 

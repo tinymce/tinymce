@@ -7,17 +7,17 @@
 
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
-import Node from 'tinymce/core/api/html/Node';
+import AstNode from 'tinymce/core/api/html/Node';
 import * as Settings from '../api/Settings';
 import * as Sanitize from './Sanitize';
 import * as VideoScript from './VideoScript';
 
 declare let escape: any;
 
-const createPlaceholderNode = function (editor: Editor, node: Node) {
+const createPlaceholderNode = function (editor: Editor, node: AstNode) {
   const name = node.name;
 
-  const placeHolder = new Node('img', 1);
+  const placeHolder = new AstNode('img', 1);
   placeHolder.shortEnded = true;
 
   retainAttributesAndInnerHtml(editor, node, placeHolder);
@@ -34,10 +34,10 @@ const createPlaceholderNode = function (editor: Editor, node: Node) {
   return placeHolder;
 };
 
-const createPreviewIframeNode = function (editor: Editor, node: Node) {
+const createPreviewIframeNode = function (editor: Editor, node: AstNode) {
   const name = node.name;
 
-  const previewWrapper = new Node('span', 1);
+  const previewWrapper = new AstNode('span', 1);
   previewWrapper.attr({
     'contentEditable': 'false',
     'style': node.attr('style'),
@@ -47,7 +47,7 @@ const createPreviewIframeNode = function (editor: Editor, node: Node) {
 
   retainAttributesAndInnerHtml(editor, node, previewWrapper);
 
-  const previewNode = new Node(name, 1);
+  const previewNode = new AstNode(name, 1);
   previewNode.attr({
     src: node.attr('src'),
     allowfullscreen: node.attr('allowfullscreen'),
@@ -58,7 +58,7 @@ const createPreviewIframeNode = function (editor: Editor, node: Node) {
     frameborder: '0'
   });
 
-  const shimNode = new Node('span', 1);
+  const shimNode = new AstNode('span', 1);
   shimNode.attr('class', 'mce-shim');
 
   previewWrapper.append(previewNode);
@@ -67,7 +67,7 @@ const createPreviewIframeNode = function (editor: Editor, node: Node) {
   return previewWrapper;
 };
 
-const retainAttributesAndInnerHtml = function (editor: Editor, sourceNode: Node, targetNode: Node) {
+const retainAttributesAndInnerHtml = function (editor: Editor, sourceNode: AstNode, targetNode: AstNode) {
   let attrName;
   let attrValue;
   let ai;
@@ -98,12 +98,12 @@ const retainAttributesAndInnerHtml = function (editor: Editor, sourceNode: Node,
   }
 };
 
-const isPageEmbedWrapper = (node: Node) => {
+const isPageEmbedWrapper = (node: AstNode) => {
   const nodeClass = node.attr('class');
   return nodeClass && /\btiny-pageembed\b/.test(nodeClass);
 };
 
-const isWithinEmbedWrapper = function (node: Node) {
+const isWithinEmbedWrapper = function (node: AstNode) {
   while ((node = node.parent)) {
     if (node.attr('data-ephox-embed-iri') || isPageEmbedWrapper(node)) {
       return true;

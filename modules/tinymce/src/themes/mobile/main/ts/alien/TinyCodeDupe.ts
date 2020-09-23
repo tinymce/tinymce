@@ -5,8 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { document, window } from '@ephox/dom-globals';
-
 // TODO this code is from the tinymce link plugin, deduplicate when we decide how to share it
 const openLink = function (target) {
   const link = document.createElement('a');

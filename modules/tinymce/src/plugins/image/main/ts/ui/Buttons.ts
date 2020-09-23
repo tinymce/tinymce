@@ -6,22 +6,22 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
-import { Dialog } from './Dialog';
 import { isFigure, isImage } from '../core/ImageData';
 import * as Utils from '../core/Utils';
+import { Dialog } from './Dialog';
 
 const register = (editor: Editor) => {
   editor.ui.registry.addToggleButton('image', {
     icon: 'image',
     tooltip: 'Insert/edit image',
-    onAction: Dialog(editor).openLater,
+    onAction: Dialog(editor).open,
     onSetup: (buttonApi) => editor.selection.selectorChangedWithUnbind('img:not([data-mce-object],[data-mce-placeholder]),figure.image', buttonApi.setActive).unbind
   });
 
   editor.ui.registry.addMenuItem('image', {
     icon: 'image',
     text: 'Image...',
-    onAction: Dialog(editor).openLater
+    onAction: Dialog(editor).open
   });
 
   editor.ui.registry.addContextMenu('image', {

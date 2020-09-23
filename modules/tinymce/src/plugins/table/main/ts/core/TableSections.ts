@@ -5,10 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLElement, HTMLTableCellElement, HTMLTableRowElement } from '@ephox/dom-globals';
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import { TableLookup } from '@ephox/snooker';
-import { Element, SelectorFilter } from '@ephox/sugar';
+import { SelectorFilter, SugarElement } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import { getTableHeaderType } from '../api/Settings';
@@ -32,12 +31,12 @@ const mapSectionNameToType = (section: string): 'header' | 'footer' | 'body' => 
   }
 };
 
-const detectHeaderRow = (editor: Editor, elm: HTMLTableRowElement): Option<HeaderRowConfiguration> => {
+const detectHeaderRow = (editor: Editor, elm: HTMLTableRowElement): Optional<HeaderRowConfiguration> => {
   // Header rows can use a combination of theads and ths - want to detect the 3 combinations
   const isThead = getSection(elm) === 'thead';
   const areAllCellsThs = !Arr.exists(elm.cells, (c) => Util.getNodeName(c) !== 'th');
 
-  return isThead || areAllCellsThs ? Option.some({ thead: isThead, ths: areAllCellsThs }) : Option.none();
+  return isThead || areAllCellsThs ? Optional.some({ thead: isThead, ths: areAllCellsThs }) : Optional.none();
 };
 
 const getRowType = (editor: Editor, elm: HTMLTableRowElement) => mapSectionNameToType(detectHeaderRow(editor, elm).fold(
@@ -59,9 +58,9 @@ const switchRowSection = (dom: DOMUtils, rowElm: HTMLElement, newSectionName: st
       const firstTableChild = tableElm.firstChild;
 
       if (newSectionName === 'thead') {
-        Arr.last(SelectorFilter.children(Element.fromDom(tableElm), 'caption,colgroup')).fold(
+        Arr.last(SelectorFilter.children(SugarElement.fromDom(tableElm), 'caption,colgroup')).fold(
           () => tableElm.insertBefore(sectionElm, firstTableChild),
-          (c) => dom.insertAfter(sectionElm, c.dom())
+          (c) => dom.insertAfter(sectionElm, c.dom)
         );
       } else {
         tableElm.appendChild(sectionElm);
@@ -81,16 +80,18 @@ const switchRowSection = (dom: DOMUtils, rowElm: HTMLElement, newSectionName: st
   }
 };
 
-const switchCellType = (dom: DOMUtils, cells: ArrayLike<HTMLTableCellElement>, newCellType: string) => {
-  Arr.each(cells, (c) => Util.getNodeName(c) !== newCellType ? dom.rename(c, newCellType): c);
-};
+const switchCellType = (dom: DOMUtils, cells: ArrayLike<HTMLTableCellElement>, newCellType: string, scope: 'col' | null) =>
+  Arr.each(cells, (c) => {
+    const newCell = Util.getNodeName(c) !== newCellType ? dom.rename(c, newCellType) : c;
+    dom.setAttrib(newCell, 'scope', scope); // mutates
+  });
 
 const switchSectionType = (editor: Editor, rowElm: HTMLTableRowElement, newType: string) => {
   const determineHeaderRowType = (): 'section' | 'cells' | 'sectionCells' => {
     // default if all else fails is thead > tr > tds aka 'section' mode
-    const allTableRows = TableLookup.table(Element.fromDom(rowElm.cells[0]))
+    const allTableRows = TableLookup.table(SugarElement.fromDom(rowElm.cells[0]))
       .map((table) => TableLookup.rows(table)).getOr([]);
-    return Arr.findMap<Element<HTMLTableRowElement>, HeaderRowConfiguration>(allTableRows, (row) => detectHeaderRow(editor, row.dom())).map((detectedType) => {
+    return Arr.findMap<SugarElement<HTMLTableRowElement>, HeaderRowConfiguration>(allTableRows, (row) => detectHeaderRow(editor, row.dom)).map((detectedType) => {
       if (detectedType.thead && detectedType.ths) {
         return 'sectionCells';
       } else {
@@ -107,10 +108,10 @@ const switchSectionType = (editor: Editor, rowElm: HTMLTableRowElement, newType:
 
     // We're going to always enforce the right td/th and thead/tbody/tfoot type.
     // switchRowSection will short circuit if not necessary to save computation
-    switchCellType(dom, rowElm.cells, headerRowType === 'section' ? 'td' : 'th');
+    switchCellType(dom, rowElm.cells, headerRowType === 'section' ? 'td' : 'th', 'col');
     switchRowSection(dom, rowElm, headerRowType === 'cells' ? 'tbody' : 'thead');
   } else {
-    switchCellType(dom, rowElm.cells, 'td'); // if switching from header to other, may need to switch th to td
+    switchCellType(dom, rowElm.cells, 'td', null); // if switching from header to other, may need to switch th to td
     switchRowSection(dom, rowElm, newType === 'footer' ? 'tfoot' : 'tbody');
   }
 };

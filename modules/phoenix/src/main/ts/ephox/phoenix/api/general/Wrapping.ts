@@ -1,5 +1,5 @@
 import { Universe } from '@ephox/boss';
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import * as SpanWrap from '../../wrap/SpanWrap';
 import * as Wrapper from '../../wrap/Wrapper';
 import { Wraps } from '../../wrap/Wraps';
@@ -14,7 +14,7 @@ const wrapWith: WrapWithApi = Wrapper.wrapWith;
 type WrapperApi = <E, D>(universe: Universe<E, D>, wrapped: E[], nu: () => Wrapter<E>) => E[];
 const wrapper: WrapperApi = Wrapper.wrapper;
 
-type LeavesApi = <E, D>(universe: Universe<E, D>, base: E, baseOffset: number, end: E, endOffset: number, nu: () => Wrapter<E>) => Option<SpotPoints<E>>;
+type LeavesApi = <E, D>(universe: Universe<E, D>, base: E, baseOffset: number, end: E, endOffset: number, nu: () => Wrapter<E>) => Optional<SpotPoints<E>>;
 const leaves: LeavesApi = Wrapper.leaves;
 
 type ReuseApi = <E, D>(universe: Universe<E, D>, base: E, baseOffset: number, end: E, endOffset: number, predicate: (e: E) => boolean, nu: () => Wrapter<E>) => E[];

@@ -1,7 +1,6 @@
 import { Cleaner, Step, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Event, window } from '@ephox/dom-globals';
-import { DomEvent, Element, EventArgs } from '@ephox/sugar';
+import { DomEvent, EventArgs, SugarElement } from '@ephox/sugar';
 
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
@@ -29,21 +28,21 @@ UnitTest.asynctest('Browser Test: events.BroadcastingEventsTest', (success, fail
       },
       events: AlloyEvents.derive([
         AlloyEvents.run<EventArgs>(SystemEvents.windowScroll(), (_component, simulatedEvent) => {
-          store.adder(simulatedEvent.event().raw().type)();
+          store.adder(simulatedEvent.event.raw.type)();
         }),
         AlloyEvents.run<EventArgs>(SystemEvents.windowResize(), (_component, simulatedEvent) => {
-          store.adder(simulatedEvent.event().raw().type)();
+          store.adder(simulatedEvent.event.raw.type)();
         })
       ])
     })
   ), (doc, _body, gui, _component, store) => {
     cleanup.add(
-      DomEvent.bind(Element.fromDom(window), 'scroll', (evt) => {
+      DomEvent.bind(SugarElement.fromDom(window), 'scroll', (evt) => {
         gui.broadcastEvent(SystemEvents.windowScroll(), evt);
       }).unbind
     );
     cleanup.add(
-      DomEvent.bind(Element.fromDom(window), 'resize', (evt) => {
+      DomEvent.bind(SugarElement.fromDom(window), 'resize', (evt) => {
         gui.broadcastEvent(SystemEvents.windowResize(), evt);
       }).unbind
     );
@@ -68,12 +67,12 @@ UnitTest.asynctest('Browser Test: events.BroadcastingEventsTest', (success, fail
       store.sClear,
       Step.sync(() => {
         // Fake a window resize, by manually triggering a resize event
-        if (typeof(Event) === 'function') {
+        if (typeof Event === 'function') {
           // modern browsers
           window.dispatchEvent(new Event('resize'));
         } else {
           // for IE and other old browsers
-          const evt = window.document.createEvent('UIEvents');
+          const evt = window.document.createEvent('UIEvents') as any;
           evt.initUIEvent('resize', true, false, window, 0);
           window.dispatchEvent(evt);
         }

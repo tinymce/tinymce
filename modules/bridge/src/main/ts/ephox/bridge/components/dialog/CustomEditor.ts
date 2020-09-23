@@ -1,7 +1,6 @@
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
-import { Element } from '@ephox/dom-globals';
 import { Result } from '@ephox/katamari';
-import { FormComponent, FormComponentApi, formComponentFields } from './FormComponent';
+import { FormComponent, FormComponentSpec, formComponentFields } from './FormComponent';
 
 export interface CustomEditorInit {
   setValue: (value: string) => void;
@@ -11,13 +10,13 @@ export interface CustomEditorInit {
 
 export type CustomEditorInitFn = (elm: Element, settings: any) => Promise<CustomEditorInit>;
 
-interface CustomEditorOldApi extends FormComponentApi {
+interface CustomEditorOldSpec extends FormComponentSpec {
   type: 'customeditor';
   tag?: string;
   init: (e: Element) => Promise<CustomEditorInit>;
 }
 
-interface CustomEditorNewApi extends FormComponentApi {
+interface CustomEditorNewSpec extends FormComponentSpec {
   type: 'customeditor';
   tag?: string;
   scriptId: string;
@@ -25,7 +24,7 @@ interface CustomEditorNewApi extends FormComponentApi {
   settings?: any;
 }
 
-export type CustomEditorApi = CustomEditorOldApi | CustomEditorNewApi;
+export type CustomEditorSpec = CustomEditorOldSpec | CustomEditorNewSpec;
 
 export interface CustomEditorOld extends FormComponent {
   type: 'customeditor';
@@ -63,4 +62,5 @@ export const customEditorSchema = ValueSchema.valueOf(
 
 export const customEditorDataProcessor = ValueSchema.string;
 
-export const createCustomEditor = (spec: CustomEditorApi): Result<CustomEditor, ValueSchema.SchemaError<any>> => ValueSchema.asRaw<CustomEditor>('CustomEditor', customEditorSchema, spec);
+export const createCustomEditor = (spec: CustomEditorSpec): Result<CustomEditor, ValueSchema.SchemaError<any>> =>
+  ValueSchema.asRaw<CustomEditor>('CustomEditor', customEditorSchema, spec);

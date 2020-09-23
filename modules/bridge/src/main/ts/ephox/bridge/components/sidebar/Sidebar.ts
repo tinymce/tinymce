@@ -1,12 +1,11 @@
-import { HTMLElement } from '@ephox/dom-globals';
-import { Fun, Option, Result } from '@ephox/katamari';
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { Fun, Optional, Result } from '@ephox/katamari';
 
 export interface SidebarInstanceApi {
   element: () => HTMLElement;
 }
 
-export interface SidebarApi {
+export interface SidebarSpec {
   icon?: string;
   tooltip?: string;
   onShow?: (api: SidebarInstanceApi) => void;
@@ -15,8 +14,8 @@ export interface SidebarApi {
 }
 
 export interface Sidebar {
-  icon: Option<string>;
-  tooltip: Option<string>;
+  icon: Optional<string>;
+  tooltip: Optional<string>;
   onShow: (api: SidebarInstanceApi) => void;
   onSetup: (api: SidebarInstanceApi) => (api: SidebarInstanceApi) => void;
   onHide: (api: SidebarInstanceApi) => void;
@@ -30,4 +29,4 @@ export const sidebarSchema = ValueSchema.objOf([
   FieldSchema.defaultedFunction('onSetup', () => Fun.noop)
 ]);
 
-export const createSidebar = <T>(spec: SidebarApi): Result<Sidebar, ValueSchema.SchemaError<any>> => ValueSchema.asRaw('sidebar', sidebarSchema, spec);
+export const createSidebar = (spec: SidebarSpec): Result<Sidebar, ValueSchema.SchemaError<any>> => ValueSchema.asRaw('sidebar', sidebarSchema, spec);

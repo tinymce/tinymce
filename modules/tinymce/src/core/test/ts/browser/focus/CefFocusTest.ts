@@ -1,7 +1,7 @@
 import { Assertions, Chain, GeneralSteps, Logger, Pipeline, Step, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Editor as McEditor } from '@ephox/mcagar';
-import { Element, Hierarchy } from '@ephox/sugar';
+import { Hierarchy, SugarElement } from '@ephox/sugar';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import Theme from 'tinymce/themes/silver/Theme';
 
@@ -20,13 +20,13 @@ UnitTest.asynctest('browser.tinymce.core.focus.CefFocusTest', function (success,
   const sAssertSelection = function (editorIndex, startPath, startOffset, endPath, endOffset) {
     return Step.sync(function () {
       const editor = EditorManager.get(editorIndex);
-      const startContainer = Hierarchy.follow(Element.fromDom(editor.getBody()), startPath).getOrDie();
-      const endContainer = Hierarchy.follow(Element.fromDom(editor.getBody()), endPath).getOrDie();
+      const startContainer = Hierarchy.follow(SugarElement.fromDom(editor.getBody()), startPath).getOrDie();
+      const endContainer = Hierarchy.follow(SugarElement.fromDom(editor.getBody()), endPath).getOrDie();
       const rng = editor.selection.getRng();
 
-      Assertions.assertDomEq('Should be expected from start container', startContainer, Element.fromDom(rng.startContainer));
+      Assertions.assertDomEq('Should be expected from start container', startContainer, SugarElement.fromDom(rng.startContainer));
       Assertions.assertEq('Should be expected from start offset', startOffset, rng.startOffset);
-      Assertions.assertDomEq('Should be expected end container', endContainer, Element.fromDom(rng.endContainer));
+      Assertions.assertDomEq('Should be expected end container', endContainer, SugarElement.fromDom(rng.endContainer));
       Assertions.assertEq('Should be expected end offset', endOffset, rng.endOffset);
     });
   };

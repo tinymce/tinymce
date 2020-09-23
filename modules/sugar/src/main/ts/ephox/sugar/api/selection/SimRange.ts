@@ -1,19 +1,17 @@
-import { Node as DomNode } from '@ephox/dom-globals';
-import { Fun } from '@ephox/katamari';
-import Element from '../node/Element';
+import { SugarElement } from '../node/SugarElement';
 
 export interface SimRange {
-  start: () => Element<DomNode>;
-  soffset: () => number;
-  finish: () => Element<DomNode>;
-  foffset: () => number;
+  readonly start: SugarElement<Node>;
+  readonly soffset: number;
+  readonly finish: SugarElement<Node>;
+  readonly foffset: number;
 }
 
-const create = (start: Element<DomNode>, soffset: number, finish: Element<DomNode>, foffset: number): SimRange => ({
-  start: Fun.constant(start),
-  soffset: Fun.constant(soffset),
-  finish: Fun.constant(finish),
-  foffset: Fun.constant(foffset)
+const create = (start: SugarElement<Node>, soffset: number, finish: SugarElement<Node>, foffset: number): SimRange => ({
+  start,
+  soffset,
+  finish,
+  foffset
 });
 
 // tslint:disable-next-line:variable-name

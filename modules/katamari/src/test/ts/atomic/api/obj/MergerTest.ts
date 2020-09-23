@@ -1,8 +1,8 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
+import fc from 'fast-check';
 import * as Arr from 'ephox/katamari/api/Arr';
 import * as Merger from 'ephox/katamari/api/Merger';
 import * as Obj from 'ephox/katamari/api/Obj';
-import fc from 'fast-check';
 
 UnitTest.test('Merger', function () {
   Assert.eq('eq', {}, Merger.merge({}, {}));

@@ -1,4 +1,4 @@
-import { Arr, Fun, Option } from '@ephox/katamari';
+import { Arr, Fun, Optional } from '@ephox/katamari';
 import { Arrays } from '@ephox/polaris';
 import * as Spot from '../api/data/Spot';
 import { TypedItem } from '../api/data/TypedItem';
@@ -21,12 +21,12 @@ const dropUntil = function <E, D> (parray: TypedItem<E, D>[], target: E) {
  *
  * The generation function for making a PositionArray out of a list of TypedItems.
  */
-const gen = function <E, D> (unit: TypedItem<E, D>, start: number): Option<SpotRange<E>> {
-  return unit.fold(() => Option.none(), function (e) {
-    return Option.some(Spot.range(e, start, start + 1));
+const gen = function <E, D> (unit: TypedItem<E, D>, start: number): Optional<SpotRange<E>> {
+  return unit.fold(() => Optional.none(), function (e) {
+    return Optional.some(Spot.range(e, start, start + 1));
   }, function (t) {
-    return Option.some(Spot.range(t, start, start + unit.len()));
-  }, Option.none);
+    return Optional.some(Spot.range(t, start, start + unit.len()));
+  }, Optional.none);
 };
 
 const empty = Fun.constant([]);

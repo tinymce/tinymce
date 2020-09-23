@@ -1,17 +1,17 @@
 import { Pipeline, Step } from '@ephox/agar';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { Arr, Cell, Obj, Optional, Strings } from '@ephox/katamari';
 import { TinyLoader } from '@ephox/mcagar';
-import { UnitTest, Assert } from '@ephox/bedrock-client';
-
-import Theme from 'tinymce/themes/silver/Theme';
-import { Cell, Option, Obj, Arr, Strings } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 
+import Theme from 'tinymce/themes/silver/Theme';
+
 UnitTest.asynctest('Register formats before setContent test', (success, failure) => {
-  const customFormatNames = Cell<Option<string[]>>(Option.none());
+  const customFormatNames = Cell<Optional<string[]>>(Optional.none());
 
   const storeFormats = (editor: Editor) => {
     const names = Arr.filter(Obj.keys(editor.formatter.get()), (key) => Strings.startsWith(key, 'custom-'));
-    customFormatNames.set(Option.some(names));
+    customFormatNames.set(Optional.some(names));
   };
 
   Theme();

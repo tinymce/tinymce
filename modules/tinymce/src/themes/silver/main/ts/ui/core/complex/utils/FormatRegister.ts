@@ -5,14 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Id, Merger, Obj, Option } from '@ephox/katamari';
+import { Arr, Id, Merger, Obj, Optional } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { StyleFormat } from 'tinymce/core/api/fmt/StyleFormat';
-import { TranslateIfNeeded } from 'tinymce/core/api/util/I18n';
 import { FormatItem, FormatterFormatItem, PreviewSpec, SubMenuFormatItem } from '../BespokeSelect';
 
-export type IsSelectedForType = (format: string) => (currentValue: Option<any>) => boolean;
-export type GetPreviewForType = (format: string) => () => Option<PreviewSpec>;
+export type IsSelectedForType = (format: string) => (currentValue: Optional<any>) => boolean;
+export type GetPreviewForType = (format: string) => () => Optional<PreviewSpec>;
 
 const processBasic = (item: { format: string; title: string }, isSelectedFor, getPreviewFor): FormatterFormatItem => {
   const formatterSpec: Omit<FormatterFormatItem, 'format'> = {
@@ -28,7 +27,7 @@ const register = (editor: Editor, formats, isSelectedFor: IsSelectedForType, get
   const enrichSupported = (item: { format: string; title: string }): FormatterFormatItem => processBasic(item, isSelectedFor, getPreviewFor);
 
   // Item that triggers a submenu
-  const enrichMenu = (item: { title: TranslateIfNeeded; getStyleItems: () => FormatItem[] }): SubMenuFormatItem => {
+  const enrichMenu = (item: { title: string; getStyleItems: () => FormatItem[] }): SubMenuFormatItem => {
     const submenuSpec = {
       type: 'submenu' as 'submenu'
     };

@@ -1,35 +1,35 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
-import { Class, Element, Html, Insert, InsertAll, Remove, SelectorFind, Traverse } from '@ephox/sugar';
+import { Class, Html, Insert, InsertAll, Remove, SelectorFind, SugarElement, Traverse } from '@ephox/sugar';
 import * as DomWrapping from 'ephox/phoenix/api/dom/DomWrapping';
 
 UnitTest.test('DomWrappingTest', function () {
-  const root = Element.fromTag('div');
+  const root = SugarElement.fromTag('div');
   const body = SelectorFind.first('body').getOrDie();
 
   Insert.append(body, root);
 
-  const t = Element.fromText;
-  const s = function (tag: string, xs: Element[]) {
-    const element = Element.fromTag(tag);
+  const t = SugarElement.fromText;
+  const s = function (tag: string, xs: SugarElement[]) {
+    const element = SugarElement.fromTag(tag);
     InsertAll.append(element, xs);
     return element;
   };
 
-  const check = function (input: Element[], f: (e: Element) => void) {
-    const container = Element.fromTag('div');
+  const check = function (input: SugarElement[], f: (e: SugarElement) => void) {
+    const container = SugarElement.fromTag('div');
     Insert.append(root, container);
     InsertAll.append(container, input);
     f(container);
     Remove.remove(container);
   };
 
-  const checker = function (expected: string, p1: number[], offset1: number, p2: number[], offset2: number, input: Element[], initial: string) {
-    check(input, function (container: Element) {
+  const checker = function (expected: string, p1: number[], offset1: number, p2: number[], offset2: number, input: SugarElement[], initial: string) {
+    check(input, function (container: SugarElement) {
       assert.eq(initial, Html.get(container));
       const first = c(container, p1);
       const second = c(container, p2);
       DomWrapping.wrapWith(first, offset1, second, offset2, function () {
-        const basic = Element.fromTag('span');
+        const basic = SugarElement.fromTag('span');
         Class.add(basic, 'me');
         return DomWrapping.nu(basic);
       });
@@ -38,7 +38,7 @@ UnitTest.test('DomWrappingTest', function () {
     });
   };
 
-  const c = function (element: Element, paths: number[]): Element {
+  const c = function (element: SugarElement, paths: number[]): SugarElement {
     const children = Traverse.children(element);
     return paths.length === 0 ? element : c(children[paths[0]], paths.slice(1));
   };
@@ -64,7 +64,7 @@ UnitTest.test('DomWrappingTest', function () {
     [ 0, 2, 0 ], 4,
     [ s('span', [
       t('this is'),
-      Element.fromTag('br'),
+      SugarElement.fromTag('br'),
       s('span', [
         t(' athens!')
       ])
@@ -80,7 +80,7 @@ UnitTest.test('DomWrappingTest', function () {
       s('p', [
         s('span', [
           t('this is'),
-          Element.fromTag('br'),
+          SugarElement.fromTag('br'),
           s('span', [
             t(' athens!')
           ])

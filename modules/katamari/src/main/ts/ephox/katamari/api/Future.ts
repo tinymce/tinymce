@@ -1,4 +1,3 @@
-import { setTimeout } from '@ephox/dom-globals';
 import Promise from '@ephox/wrap-promise-polyfill';
 import { LazyValue } from './LazyValue';
 

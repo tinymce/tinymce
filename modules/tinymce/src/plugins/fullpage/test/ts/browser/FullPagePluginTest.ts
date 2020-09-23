@@ -1,4 +1,4 @@
-import { Assertions, GeneralSteps, Pipeline, Step, Waiter, Logger, Log } from '@ephox/agar';
+import { Assertions, GeneralSteps, Log, Logger, Pipeline, Step, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 

@@ -1,7 +1,6 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { HTMLTableElement } from '@ephox/dom-globals';
-import { Arr, Fun } from '@ephox/katamari';
-import { Body, Element, Hierarchy, Html, Insert, Remove } from '@ephox/sugar';
+import { Arr } from '@ephox/katamari';
+import { Hierarchy, Html, Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
 import { copyCols } from 'ephox/snooker/api/CopyCols';
 
 UnitTest.test('CopyColumnsTest', () => {
@@ -12,11 +11,11 @@ UnitTest.test('CopyColumnsTest', () => {
     row: number,
     column: number
   ) => {
-    const table = Element.fromHtml<HTMLTableElement>(inputHtml);
-    Insert.append(Body.body(), table);
+    const table = SugarElement.fromHtml<HTMLTableElement>(inputHtml);
+    Insert.append(SugarBody.body(), table);
 
     const rows = copyCols(table, {
-      selection: Fun.constant([ Hierarchy.follow(table, [ section, row, column, 0 ]).getOrDie() ])
+      selection: [ Hierarchy.follow(table, [ section, row, column, 0 ]).getOrDie() ]
     }).getOrDie();
     const copiedHtml = Arr.map(rows, Html.getOuter).join('');
 

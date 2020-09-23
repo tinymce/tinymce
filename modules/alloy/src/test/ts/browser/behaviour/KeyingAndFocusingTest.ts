@@ -63,7 +63,7 @@ UnitTest.asynctest('Browser Test: behaviour.KeyingAndFocusingTest', (success, fa
         ':focus { outline: 10px solid green; }'
       ]),
       Step.sync(() => {
-        AlloyTriggers.dispatchFocus(component, component.element());
+        AlloyTriggers.dispatchFocus(component, component.element);
       }),
       FocusTools.sTryOnSelector('Focus should be on child span', doc, 'span.child'),
       GuiSetup.mRemoveStyles

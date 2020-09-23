@@ -1,6 +1,6 @@
 import { FieldSchema } from '@ephox/boulder';
 import { Cell, Fun } from '@ephox/katamari';
-import { EventArgs, Position } from '@ephox/sugar';
+import { EventArgs, SugarPosition } from '@ephox/sugar';
 
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { Focusing } from '../../api/behaviour/Focusing';
@@ -97,7 +97,7 @@ const spectrumPart = PartType.required({
     const modelDetail = detail.model;
     const model = modelDetail.manager;
 
-    const setValueFrom = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => model.getValueFromEvent(simulatedEvent).map((value: number | Position) => model.setValueFrom(component, detail, value));
+    const setValueFrom = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => model.getValueFromEvent(simulatedEvent).map((value: number | SugarPosition) => model.setValueFrom(component, detail, value));
 
     return {
       behaviours: Behaviour.derive([

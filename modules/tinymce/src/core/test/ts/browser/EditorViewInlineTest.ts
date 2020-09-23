@@ -1,9 +1,9 @@
-import { Assertions, GeneralSteps, Logger, Pipeline, Step, Chain } from '@ephox/agar';
+import { Assertions, Chain, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Element, Css, Scroll } from '@ephox/sugar';
+import { Css, Scroll, SugarElement } from '@ephox/sugar';
 import * as EditorView from 'tinymce/core/EditorView';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.core.EditorViewInlineTest', function (success, failure) {
 
@@ -15,16 +15,16 @@ UnitTest.asynctest('browser.tinymce.core.EditorViewInlineTest', function (succes
     return Step.label(
       'sSetBodyStyles ' + JSON.stringify(css),
       Step.sync(function () {
-        Css.setAll(Element.fromDom(editor.getBody()), css);
+        Css.setAll(SugarElement.fromDom(editor.getBody()), css);
       })
     );
   };
 
   const sTestIsXYInContentArea = function (editor, deltaX, deltaY) {
-    const dx1 = - 25 - deltaX;
+    const dx1 = -25 - deltaX;
     const dy1 = -25 - deltaY;
-    const dx2 = - 5 - deltaX;
-    const dy2 = - 5 - deltaY;
+    const dx2 = -5 - deltaX;
+    const dy2 = -5 - deltaY;
     return Step.label('Check points relative to deltaX=' + deltaX + ' deltaY=' + deltaY, Chain.asStep({}, [
       Chain.fromParent(
         Chain.label(

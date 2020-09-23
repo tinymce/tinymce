@@ -1,8 +1,7 @@
 import { Assertions, FocusTools, GeneralSteps, Log, Logger, Mouse, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { HTMLInputElement } from '@ephox/dom-globals';
 import { TinyLoader } from '@ephox/mcagar';
-import { Element, SelectorFilter, ShadowDom } from '@ephox/sugar';
+import { SelectorFilter, SugarElement, SugarShadowDom } from '@ephox/sugar';
 
 import SilverTheme from 'tinymce/themes/silver/Theme';
 import * as ColorSwatch from 'tinymce/themes/silver/ui/core/color/ColorSwatch';
@@ -22,7 +21,7 @@ UnitTest.asynctest('ColorPickerSanityTest', (success, failure) => {
 
     const dialogSelector = 'div[role="dialog"]';
 
-    const docBody = ShadowDom.getContentContainer(ShadowDom.getRootNode(Element.fromDom(editor.getElement())));
+    const docBody = SugarShadowDom.getContentContainer(SugarShadowDom.getRootNode(SugarElement.fromDom(editor.getElement())));
 
     const sAssertColor = function (expected) {
       return Logger.t('Asserting color', Step.sync(function () {
@@ -33,7 +32,7 @@ UnitTest.asynctest('ColorPickerSanityTest', (success, failure) => {
     const sSetHex = (hex) => Logger.t('Changing textarea content to ' + hex, Step.sync(() => {
       const inputs = SelectorFilter.descendants<HTMLInputElement>(docBody, 'div[role="dialog"] input');
       const hexInput = inputs[inputs.length - 1];
-      hexInput.dom().value = hex;
+      hexInput.dom.value = hex;
     }));
 
     const sOpenDialog = (editor, docBody) => GeneralSteps.sequence(Logger.ts('Open dialog and wait for it to be visible', [

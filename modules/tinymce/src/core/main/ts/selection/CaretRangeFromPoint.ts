@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Document, Range } from '@ephox/dom-globals';
 import Tools from '../api/util/Tools';
 import * as NodeType from '../dom/NodeType';
 

@@ -1,23 +1,22 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
-import { HTMLDivElement, HTMLTableElement } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
-import { Body, Css, Element, Insert, Remove } from '@ephox/sugar';
-import { ResizeDirection } from 'ephox/snooker/api/ResizeDirection';
+import { Css, Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
+import * as ResizeBehaviour from 'ephox/snooker/api/ResizeBehaviour';
 import { TableSize } from 'ephox/snooker/api/TableSize';
 import * as Deltas from 'ephox/snooker/calc/Deltas';
-import { Warehouse } from 'ephox/snooker/model/Warehouse';
+import { Warehouse } from 'ephox/snooker/api/Warehouse';
 
 UnitTest.test('ResizeTest', function () {
-  const direction = ResizeDirection.ltr;
+  const resizing = ResizeBehaviour.preserveTable();
 
   const boundBox = '<div style="width: 800px; height: 600px; display: block;"></div>';
-  const box = Element.fromHtml<HTMLDivElement>(boundBox);
-  Insert.append(Body.body(), box);
+  const box = SugarElement.fromHtml<HTMLDivElement>(boundBox);
+  Insert.append(SugarBody.body(), box);
 
   const percentTablePercentCellsTest = function () {
     const delta = 200;
 
-    const table = Element.fromHtml<HTMLTableElement>(`<table style="border-collapse: collapse; width: 100%;">
+    const table = SugarElement.fromHtml<HTMLTableElement>(`<table style="border-collapse: collapse; width: 100%;">
     <tbody>
     <tr>
     <td style="width: 50%;">A</td>
@@ -46,12 +45,12 @@ UnitTest.test('ResizeTest', function () {
     assert.eq(25, step);
 
     const warehouse = Warehouse.fromTable(table);
-    const widths = tableSize.getWidths(warehouse, direction, tableSize);
+    const widths = tableSize.getWidths(warehouse, tableSize);
 
     // [50%, 50%] existing widths.
     assert.eq([ 50, 50 ], widths);
 
-    const deltas = Deltas.determine(widths, 0, step, tableSize);
+    const deltas = Deltas.determine(widths, 0, step, tableSize, resizing);
 
     // [25%, -25%] deltas.
     assert.eq([ 25, -25 ], deltas);
@@ -66,7 +65,7 @@ UnitTest.test('ResizeTest', function () {
   const percentTablePixelCellsTest = function () {
     const delta = 200;
 
-    const table = Element.fromHtml<HTMLTableElement>(`<table style="border-collapse: collapse; width: 100%;">
+    const table = SugarElement.fromHtml<HTMLTableElement>(`<table style="border-collapse: collapse; width: 100%;">
     <tbody>
     <tr>
     <td style="width: 400px;">A</td>
@@ -95,7 +94,7 @@ UnitTest.test('ResizeTest', function () {
     assert.eq(25, step);
 
     const warehouse = Warehouse.fromTable(table);
-    const widths = tableSize.getWidths(warehouse, direction, tableSize);
+    const widths = tableSize.getWidths(warehouse, tableSize);
 
     const expectedWidths = [ 50, 50 ];
 
@@ -109,7 +108,7 @@ UnitTest.test('ResizeTest', function () {
       assert.eq(true, x < 1 && x > -1);
     });
 
-    const deltas = Deltas.determine(widths, 0, step, tableSize);
+    const deltas = Deltas.determine(widths, 0, step, tableSize, resizing);
 
     // [25%, -25%] deltas.
     assert.eq([ 25, -25 ], deltas);
@@ -124,7 +123,7 @@ UnitTest.test('ResizeTest', function () {
   const pixelTablePixelCellsTest = function () {
     const delta = 200;
 
-    const table = Element.fromHtml<HTMLTableElement>(`<table style="border-collapse: collapse; width: 800px;">
+    const table = SugarElement.fromHtml<HTMLTableElement>(`<table style="border-collapse: collapse; width: 800px;">
     <tbody>
     <tr>
     <td style="width: 400px;">A</td>
@@ -153,12 +152,12 @@ UnitTest.test('ResizeTest', function () {
     assert.eq(200, step);
 
     const warehouse = Warehouse.fromTable(table);
-    const widths = tableSize.getWidths(warehouse, direction, tableSize);
+    const widths = tableSize.getWidths(warehouse, tableSize);
 
     // [50%, 50%] existing widths.
     assert.eq([ 400, 400 ], widths);
 
-    const deltas = Deltas.determine(widths, 0, step, tableSize);
+    const deltas = Deltas.determine(widths, 0, step, tableSize, resizing);
 
     // [25%, -25%] deltas.
     assert.eq([ 200, -200 ], deltas);
@@ -169,7 +168,7 @@ UnitTest.test('ResizeTest', function () {
   const pixelTablePercentCellsTest = function () {
     const delta = 200;
 
-    const table = Element.fromHtml<HTMLTableElement>(`<table style="border-collapse: collapse; width: 800px;">
+    const table = SugarElement.fromHtml<HTMLTableElement>(`<table style="border-collapse: collapse; width: 800px;">
     <tbody>
     <tr>
     <td style="width: 50%;">A</td>
@@ -198,12 +197,12 @@ UnitTest.test('ResizeTest', function () {
     assert.eq(200, step);
 
     const warehouse = Warehouse.fromTable(table);
-    const widths = tableSize.getWidths(warehouse, direction, tableSize);
+    const widths = tableSize.getWidths(warehouse, tableSize);
 
     // [50%, 50%] existing widths.
     assert.eq([ 400, 400 ], widths);
 
-    const deltas = Deltas.determine(widths, 0, step, tableSize);
+    const deltas = Deltas.determine(widths, 0, step, tableSize, resizing);
 
     // [25%, -25%] deltas.
     assert.eq([ 200, -200 ], deltas);

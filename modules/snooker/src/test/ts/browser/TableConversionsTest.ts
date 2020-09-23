@@ -1,13 +1,11 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { HTMLDivElement, HTMLTableElement } from '@ephox/dom-globals';
-import { Option, OptionInstances } from '@ephox/katamari';
-import { Body, Css, Element, Insert, Remove, Width } from '@ephox/sugar';
-import { ResizeDirection } from 'ephox/snooker/api/ResizeDirection';
+import { Optional, OptionalInstances } from '@ephox/katamari';
+import { Css, Insert, Remove, SugarBody, SugarElement, Width } from '@ephox/sugar';
 import * as TableConversions from 'ephox/snooker/api/TableConversions';
 import { TableSize } from 'ephox/snooker/api/TableSize';
 import { addStyles, assertApproxCellSizes, readWidth } from 'ephox/snooker/test/SizeUtils';
 
-const tOption = OptionInstances.tOption;
+const tOptional = OptionalInstances.tOptional;
 
 const percentTable =
   '<table style="width: 100%;">' +
@@ -49,12 +47,12 @@ const noneTable =
 
 
 UnitTest.test('TableConversions.convertToPixelSize', () => {
-  const container = Element.fromHtml<HTMLDivElement>('<div style="width: 500px; position: relative;"></div>');
-  Insert.append(Body.body(), container);
+  const container = SugarElement.fromHtml<HTMLDivElement>('<div style="width: 500px; position: relative;"></div>');
+  Insert.append(SugarBody.body(), container);
 
-  const check = (expectedTableWidth: string, expected: string[][], table: Element<HTMLTableElement>, approx: boolean) => {
+  const check = (expectedTableWidth: string, expected: string[][], table: SugarElement<HTMLTableElement>, approx: boolean) => {
     Insert.append(container, table);
-    TableConversions.convertToPixelSize(table, ResizeDirection.ltr, TableSize.getTableSize(table));
+    TableConversions.convertToPixelSize(table, TableSize.getTableSize(table));
     if (approx) {
       Assert.eq('Assert table width', true, Math.abs(parseFloat(expectedTableWidth) - Width.get(table)) <= 2);
       assertApproxCellSizes(expected, readWidth(table), 2);
@@ -72,39 +70,39 @@ UnitTest.test('TableConversions.convertToPixelSize', () => {
     [ '300px', '125px', '75px' ],
     [ '200px', '300px' ],
     [ '500px' ]
-  ], Element.fromHtml(pixelTable), false);
+  ], SugarElement.fromHtml(pixelTable), false);
 
   check('500px', [
     [ '50px', '150px', '100px', '125px', '75px' ],
     [ '300px', '125px', '75px' ],
     [ '200px', '300px' ],
     [ '500px' ]
-  ], Element.fromHtml(percentTable), false);
+  ], SugarElement.fromHtml(percentTable), false);
 
   check('141px', [
     [ '25px', '25px', '25px', '25px', '25px' ],
     [ '75px', '25px', '25px' ],
     [ '50px', '75px' ],
     [ '125px' ]
-  ], Element.fromHtml(noneTable), true);
+  ], SugarElement.fromHtml(noneTable), true);
 
   styles.remove();
   Remove.remove(container);
 });
 
 UnitTest.test('TableConversions.convertToPercentSize', () => {
-  const container = Element.fromHtml<HTMLDivElement>('<div style="width: 500px; position: relative;"></div>');
-  Insert.append(Body.body(), container);
+  const container = SugarElement.fromHtml<HTMLDivElement>('<div style="width: 500px; position: relative;"></div>');
+  Insert.append(SugarBody.body(), container);
 
-  const check = (expectedTableWidth: string, expected: string[][], table: Element<HTMLTableElement>, approx: boolean) => {
+  const check = (expectedTableWidth: string, expected: string[][], table: SugarElement<HTMLTableElement>, approx: boolean) => {
     Insert.append(container, table);
-    TableConversions.convertToPercentSize(table, ResizeDirection.ltr, TableSize.getTableSize(table));
+    TableConversions.convertToPercentSize(table, TableSize.getTableSize(table));
     if (approx) {
       const delta = parseFloat(expectedTableWidth) - parseFloat(Css.getRaw(table, 'width').getOrDie());
       Assert.eq('Assert table width', true, Math.abs(delta) <= 2);
       assertApproxCellSizes(expected, readWidth(table), 2);
     } else {
-      Assert.eq('Assert table width', Option.some(expectedTableWidth), Css.getRaw(table, 'width'), tOption());
+      Assert.eq('Assert table width', Optional.some(expectedTableWidth), Css.getRaw(table, 'width'), tOptional());
       Assert.eq('Assert cell widths', expected, readWidth(table));
     }
     Remove.remove(table);
@@ -117,34 +115,34 @@ UnitTest.test('TableConversions.convertToPercentSize', () => {
     [ '60%', '25%', '15%' ],
     [ '40%', '60%' ],
     [ '100%' ]
-  ], Element.fromHtml(percentTable), false);
+  ], SugarElement.fromHtml(percentTable), false);
 
   check('100%', [
     [ '10%', '30%', '20%', '25%', '15%' ],
     [ '60%', '25%', '15%' ],
     [ '40%', '60%' ],
     [ '100%' ]
-  ], Element.fromHtml(pixelTable), false);
+  ], SugarElement.fromHtml(pixelTable), false);
 
   check('28%', [
     [ '18%', '18%', '18%', '18%', '18%' ],
     [ '54%', '18%', '18%' ],
     [ '36%', '54%' ],
     [ '90%' ]
-  ], Element.fromHtml(noneTable), true);
+  ], SugarElement.fromHtml(noneTable), true);
 
   styles.remove();
   Remove.remove(container);
 });
 
 UnitTest.test('TableConversions.convertToNoneSize', () => {
-  const container = Element.fromHtml<HTMLDivElement>('<div style="width: 500px; position: relative;"></div>');
-  Insert.append(Body.body(), container);
+  const container = SugarElement.fromHtml<HTMLDivElement>('<div style="width: 500px; position: relative;"></div>');
+  Insert.append(SugarBody.body(), container);
 
-  const check = (expected: (string | null)[][], table: Element<HTMLTableElement>) => {
+  const check = (expected: (string | null)[][], table: SugarElement<HTMLTableElement>) => {
     Insert.append(container, table);
     TableConversions.convertToNoneSize(table);
-    Assert.eq('Assert no table width', Option.none<string>(), Css.getRaw(table, 'width'), tOption());
+    Assert.eq('Assert no table width', Optional.none<string>(), Css.getRaw(table, 'width'), tOptional());
     Assert.eq('Assert no cell widths', expected, readWidth(table));
     Remove.remove(table);
   };
@@ -156,21 +154,21 @@ UnitTest.test('TableConversions.convertToNoneSize', () => {
     [ null, null, null ],
     [ null, null ],
     [ null ]
-  ], Element.fromHtml(noneTable));
+  ], SugarElement.fromHtml(noneTable));
 
   check([
     [ null, null, null, null, null ],
     [ null, null, null ],
     [ null, null ],
     [ null ]
-  ], Element.fromHtml(percentTable));
+  ], SugarElement.fromHtml(percentTable));
 
   check([
     [ null, null, null, null, null ],
     [ null, null, null ],
     [ null, null ],
     [ null ]
-  ], Element.fromHtml(pixelTable));
+  ], SugarElement.fromHtml(pixelTable));
 
   styles.remove();
   Remove.remove(container);

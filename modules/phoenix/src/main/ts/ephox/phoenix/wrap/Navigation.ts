@@ -1,5 +1,5 @@
 import { Universe } from '@ephox/boss';
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import * as Spot from '../api/data/Spot';
 import { SpotPoint } from '../api/data/Types';
 
@@ -37,17 +37,17 @@ const toLeaf = function <E, D> (universe: Universe<E, D>, element: E, offset: nu
   }
 };
 
-const scan = function <E, D> (universe: Universe<E, D>, element: E, direction: (e: E) => Option<E>): Option<E> {
+const scan = function <E, D> (universe: Universe<E, D>, element: E, direction: (e: E) => Optional<E>): Optional<E> {
   // if a comment or zero-length text, scan the siblings
   if ((universe.property().isText(element) && universe.property().getText(element).trim().length === 0)
     || universe.property().isComment(element)) {
     return direction(element).bind(function (elem) {
       return scan(universe, elem, direction).orThunk(function () {
-        return Option.some(elem);
+        return Optional.some(elem);
       });
     });
   } else {
-    return Option.none();
+    return Optional.none();
   }
 };
 

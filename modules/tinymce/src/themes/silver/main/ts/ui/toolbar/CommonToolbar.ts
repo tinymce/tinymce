@@ -7,11 +7,10 @@
 
 // eslint-disable-next-line max-len
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, Behaviour, Boxes, Focusing, Keying,
-  SplitFloatingToolbar as AlloySplitFloatingToolbar, SplitSlidingToolbar as AlloySplitSlidingToolbar, Tabstopping, Toolbar as AlloyToolbar,
-  ToolbarGroup as AlloyToolbarGroup
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, Behaviour, Boxes, Focusing, Keying, SplitFloatingToolbar as AlloySplitFloatingToolbar,
+  SplitSlidingToolbar as AlloySplitSlidingToolbar, Tabstopping, Toolbar as AlloyToolbar, ToolbarGroup as AlloyToolbarGroup
 } from '@ephox/alloy';
-import { Arr, Option, Result } from '@ephox/katamari';
+import { Arr, Optional, Result } from '@ephox/katamari';
 import { Traverse } from '@ephox/sugar';
 import { ToolbarMode } from '../../api/Settings';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
@@ -30,7 +29,7 @@ export interface ToolbarSpec {
   type: ToolbarMode;
   uid: string;
   cyclicKeying: boolean;
-  onEscape: (comp: AlloyComponent) => Option<boolean>;
+  onEscape: (comp: AlloyComponent) => Optional<boolean>;
   initGroups: ToolbarGroup[];
   attributes?: Record<string, string>;
   providers: UiFactoryBackstageProviders;
@@ -41,7 +40,7 @@ export interface MoreDrawerToolbarSpec extends ToolbarSpec {
 }
 
 export interface ToolbarGroup {
-  title: Option<string>;
+  title: Optional<string>;
   items: AlloySpec[];
 }
 
@@ -56,7 +55,7 @@ const renderToolbarGroupCommon = (toolbarGroup: ToolbarGroup) => {
     },
 
     components: [
-      AlloyToolbarGroup.parts().items({})
+      AlloyToolbarGroup.parts.items({})
     ],
 
     items: toolbarGroup.items,
@@ -107,17 +106,17 @@ const renderMoreToolbarCommon = (toolbarSpec: MoreDrawerToolbarSpec) => {
     parts: {
       // This already knows it is a toolbar group
       'overflow-group': renderToolbarGroupCommon({
-        title: Option.none(),
+        title: Optional.none(),
         items: []
       }),
       'overflow-button': renderIconButtonSpec({
         name: 'more',
-        icon: Option.some('more-drawer'),
+        icon: Optional.some('more-drawer'),
         disabled: false,
-        tooltip: Option.some('More...'),
+        tooltip: Optional.some('More...'),
         primary: false,
         borderless: false
-      }, Option.none(), toolbarSpec.providers)
+      }, Optional.none(), toolbarSpec.providers)
     },
     splitToolbarBehaviours: getToolbarbehaviours(toolbarSpec, modeName)
   };
@@ -127,7 +126,7 @@ const renderFloatingMoreToolbar = (toolbarSpec: MoreDrawerToolbarSpec) => {
   const baseSpec = renderMoreToolbarCommon(toolbarSpec);
   const overflowXOffset = 4;
 
-  const primary = AlloySplitFloatingToolbar.parts().primary({
+  const primary = AlloySplitFloatingToolbar.parts.primary({
     dom: {
       tag: 'div',
       classes: [ 'tox-toolbar__primary' ]
@@ -139,11 +138,11 @@ const renderFloatingMoreToolbar = (toolbarSpec: MoreDrawerToolbarSpec) => {
     lazySink: toolbarSpec.getSink,
     getOverflowBounds: () => {
       // Restrict the left/right bounds to the editor header width, but don't restrict the top/bottom
-      const headerElem = toolbarSpec.moreDrawerData.lazyHeader().element();
+      const headerElem = toolbarSpec.moreDrawerData.lazyHeader().element;
       const headerBounds = Boxes.absolute(headerElem);
       const docElem = Traverse.documentElement(headerElem);
       const docBounds = Boxes.absolute(docElem);
-      const height = Math.max(docElem.dom().scrollHeight, docBounds.height);
+      const height = Math.max(docElem.dom.scrollHeight, docBounds.height);
       return Boxes.bounds(
         headerBounds.x + overflowXOffset,
         docBounds.y,
@@ -169,14 +168,14 @@ const renderFloatingMoreToolbar = (toolbarSpec: MoreDrawerToolbarSpec) => {
 };
 
 const renderSlidingMoreToolbar = (toolbarSpec: MoreDrawerToolbarSpec) => {
-  const primary = AlloySplitSlidingToolbar.parts().primary({
+  const primary = AlloySplitSlidingToolbar.parts.primary({
     dom: {
       tag: 'div',
       classes: [ 'tox-toolbar__primary' ]
     }
   });
 
-  const overflow = AlloySplitSlidingToolbar.parts().overflow({
+  const overflow = AlloySplitSlidingToolbar.parts.overflow({
     dom: {
       tag: 'div',
       classes: [ 'tox-toolbar__overflow' ]
@@ -216,7 +215,7 @@ const renderToolbar = (toolbarSpec: ToolbarSpec) => {
       )
     },
     components: [
-      AlloyToolbar.parts().groups({})
+      AlloyToolbar.parts.groups({})
     ],
 
     toolbarBehaviours: getToolbarbehaviours(toolbarSpec, modeName)

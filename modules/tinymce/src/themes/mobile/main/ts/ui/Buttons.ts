@@ -5,13 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Behaviour, Button, Toggling, Unselecting, SketchSpec, RawDomSchema, AlloyComponent } from '@ephox/alloy';
-import { Merger, Option } from '@ephox/katamari';
+import { AlloyComponent, Behaviour, Button, RawDomSchema, SketchSpec, Toggling, Unselecting } from '@ephox/alloy';
+import { Merger, Optional } from '@ephox/katamari';
+import Editor from 'tinymce/core/api/Editor';
 
 import * as Receivers from '../channels/Receivers';
 import * as Styles from '../style/Styles';
 import * as UiDomFactory from '../util/UiDomFactory';
-import Editor from 'tinymce/core/api/Editor';
 
 const forToolbarCommand = (editor, command): SketchSpec => forToolbar(command, () => {
   editor.execCommand(command);
@@ -47,7 +47,7 @@ const forToolbarStateAction = (editor, clazz: string, command, action): SketchSp
 
 const getToolbarIconButton = (clazz: string, editor: Editor): RawDomSchema => {
   const icons = editor.ui.registry.getAll().icons;
-  const optOxideIcon = Option.from(icons[clazz]);
+  const optOxideIcon = Optional.from(icons[clazz]);
 
   return optOxideIcon.fold(
     () => UiDomFactory.dom('<span class="${prefix}-toolbar-button ${prefix}-toolbar-group-item ${prefix}-icon-' + clazz + ' ${prefix}-icon"></span>'),

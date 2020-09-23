@@ -5,20 +5,19 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Optional } from '@ephox/katamari';
 import Editor from '../api/Editor';
-import * as Levels from './Levels';
-import Tools from '../api/util/Tools';
-import { Event } from '@ephox/dom-globals';
-import { Option } from '@ephox/katamari';
-import { UndoManager, Locks, Index, UndoLevel, UndoBookmark } from './UndoManagerTypes';
-import * as GetBookmark from '../bookmark/GetBookmark';
 import * as Settings from '../api/Settings';
-import { setTyping, endTyping } from './TypingState';
+import Tools from '../api/util/Tools';
+import * as GetBookmark from '../bookmark/GetBookmark';
+import * as Levels from './Levels';
 import { isUnlocked } from './Locks';
+import { endTyping, setTyping } from './TypingState';
+import { Index, Locks, UndoBookmark, UndoLevel, UndoManager } from './UndoManagerTypes';
 
 export const beforeChange = (editor: Editor, locks: Locks, beforeBookmark: UndoBookmark) => {
   if (isUnlocked(locks)) {
-    beforeBookmark.set(Option.some(GetBookmark.getUndoBookmark(editor.selection)));
+    beforeBookmark.set(Optional.some(GetBookmark.getUndoBookmark(editor.selection)));
   }
 };
 
@@ -76,11 +75,12 @@ export const addUndoLevel = (editor: Editor, undoManager: UndoManager, index: In
 
   const args = { level, lastLevel, originalEvent: event };
 
-  editor.fire('AddUndo', args);
-
   if (index.get() > 0) {
     editor.setDirty(true);
+    editor.fire('AddUndo', args);
     editor.fire('change', args);
+  } else {
+    editor.fire('AddUndo', args);
   }
 
   return level;

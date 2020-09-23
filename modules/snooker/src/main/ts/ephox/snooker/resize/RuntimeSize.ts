@@ -1,6 +1,5 @@
-import { HTMLElement } from '@ephox/dom-globals';
 import { PlatformDetection } from '@ephox/sand';
-import { Css, Element, Height, Width } from '@ephox/sugar';
+import { Css, Height, SugarElement, Width } from '@ephox/sugar';
 
 const needManualCalc = () => {
   const browser = PlatformDetection.detect().browser;
@@ -12,10 +11,10 @@ const toNumber = (px: string, fallback: number) => {
   return isNaN(num) ? fallback : num;
 };
 
-const getProp = (elm: Element, name: string, fallback: number) => toNumber(Css.get(elm, name), fallback);
+const getProp = (elm: SugarElement, name: string, fallback: number) => toNumber(Css.get(elm, name), fallback);
 
-const getCalculatedHeight = (cell: Element<HTMLElement>) => {
-  const height = cell.dom().getBoundingClientRect().height;
+const getCalculatedHeight = (cell: SugarElement<HTMLElement>) => {
+  const height = cell.dom.getBoundingClientRect().height;
   const boxSizing = Css.get(cell, 'box-sizing');
   if (boxSizing === 'border-box') {
     return height;
@@ -30,8 +29,8 @@ const getCalculatedHeight = (cell: Element<HTMLElement>) => {
   }
 };
 
-const getCalculatedWidth = (cell: Element<HTMLElement>) => {
-  const width = cell.dom().getBoundingClientRect().width;
+const getCalculatedWidth = (cell: SugarElement<HTMLElement>) => {
+  const width = cell.dom.getBoundingClientRect().width;
   const boxSizing = Css.get(cell, 'box-sizing');
   if (boxSizing === 'border-box') {
     return width;
@@ -46,9 +45,9 @@ const getCalculatedWidth = (cell: Element<HTMLElement>) => {
   }
 };
 
-const getHeight = (cell: Element<HTMLElement>) => needManualCalc() ? getCalculatedHeight(cell) : getProp(cell, 'height', Height.get(cell));
+const getHeight = (cell: SugarElement<HTMLElement>) => needManualCalc() ? getCalculatedHeight(cell) : getProp(cell, 'height', Height.get(cell));
 
-const getWidth = (cell: Element<HTMLElement>) => needManualCalc() ? getCalculatedWidth(cell) : getProp(cell, 'width', Width.get(cell));
+const getWidth = (cell: SugarElement<HTMLElement>) => needManualCalc() ? getCalculatedWidth(cell) : getProp(cell, 'width', Width.get(cell));
 
 export {
   getHeight,

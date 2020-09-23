@@ -5,26 +5,26 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Optional } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
+import { Dialog } from 'tinymce/core/api/ui/Ui';
 import { getCellClassList } from '../api/Settings';
 import * as Helpers from './Helpers';
-import { Option } from '@ephox/katamari';
-import { Types } from '@ephox/bridge';
 
-const getClassList = (editor: Editor) => {
+const getClassList = (editor: Editor): Optional<Dialog.ListBoxSpec> => {
   const classes = Helpers.buildListItems(getCellClassList(editor));
   if (classes.length > 0) {
-    return Option.some<Types.Dialog.BodyComponentApi>({
+    return Optional.some({
       name: 'class',
-      type: 'selectbox',
+      type: 'listbox',
       label: 'Class',
       items: classes
     });
   }
-  return Option.none<Types.Dialog.BodyComponentApi>();
+  return Optional.none();
 };
 
-const children: Types.Dialog.BodyComponentApi[] = [
+const children: Dialog.BodyComponentSpec[] = [
   {
     name: 'width',
     type: 'input',
@@ -37,7 +37,7 @@ const children: Types.Dialog.BodyComponentApi[] = [
   },
   {
     name: 'celltype',
-    type: 'selectbox',
+    type: 'listbox',
     label: 'Cell type',
     items: [
       { text: 'Cell', value: 'td' },
@@ -46,7 +46,7 @@ const children: Types.Dialog.BodyComponentApi[] = [
   },
   {
     name: 'scope',
-    type: 'selectbox',
+    type: 'listbox',
     label: 'Scope',
     items: [
       { text: 'None', value: '' },
@@ -58,7 +58,7 @@ const children: Types.Dialog.BodyComponentApi[] = [
   },
   {
     name: 'halign',
-    type: 'selectbox',
+    type: 'listbox',
     label: 'H Align',
     items: [
       { text: 'None', value: '' },
@@ -69,7 +69,7 @@ const children: Types.Dialog.BodyComponentApi[] = [
   },
   {
     name: 'valign',
-    type: 'selectbox',
+    type: 'listbox',
     label: 'V Align',
     items: [
       { text: 'None', value: '' },
@@ -80,10 +80,7 @@ const children: Types.Dialog.BodyComponentApi[] = [
   }
 ];
 
-const getItems = (editor: Editor): Types.Dialog.BodyComponentApi[] => getClassList(editor).fold(
-  () => children,
-  (classlist) => children.concat(classlist)
-);
+const getItems = (editor: Editor): Dialog.BodyComponentSpec[] => children.concat(getClassList(editor).toArray());
 
 export {
   getItems

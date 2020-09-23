@@ -1,10 +1,12 @@
 import { Arr } from '@ephox/katamari';
 
 import { buildDemoDialog } from './DemoDialogBuilder';
+import AlertBannerDialogSpec from './spec/AlertBannerDialogSpec';
 import AnchorDialogSpec from './spec/AnchorDialogSpec';
 import CharmapDialogSpec from './spec/CharmapDialogSpec';
 import CodeSampleDialogSpec from './spec/CodeSampleDialogSpec';
 import ColorPickerDialogSpec from './spec/ColorPickerDialogSpec';
+import CustomRediallingSpec from './spec/CustomRediallingSpec';
 import DocumentPropsDialogSpec from './spec/DocumentPropsDialogSpec';
 import FindReplaceDialogSpec from './spec/FindReplaceDialogSpec';
 import ImageDialogSpec from './spec/ImageDialogSpec';
@@ -15,8 +17,6 @@ import TableCellDialogSpec from './spec/TableCellDialogSpec';
 import TableDialogSpec from './spec/TableDialogSpec';
 import TableRowDialogSpec from './spec/TableRowDialogSpec';
 import TemplateDialogSpec from './spec/TemplateDialogSpec';
-import AlertBannerDialogSpec from './spec/AlertBannerDialogSpec';
-import CustomRediallingSpec from './spec/CustomRediallingSpec';
 import UrlDialogDemo from './UrlDialogDemo';
 
 declare let window: any;

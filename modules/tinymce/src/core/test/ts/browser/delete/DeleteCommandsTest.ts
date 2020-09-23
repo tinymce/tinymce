@@ -1,26 +1,24 @@
 import { GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
+import { Cell } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import * as DeleteCommands from 'tinymce/core/delete/DeleteCommands';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock-client';
 
-UnitTest.asynctest('browser.tinymce.core.delete.DeleteCommandsTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.delete.DeleteCommandsTest', (success, failure) => {
 
   Theme();
+  const caret = Cell<Text>(null);
 
-  const sDelete = function (editor) {
-    return Step.sync(function () {
-      DeleteCommands.deleteCommand(editor);
-    });
-  };
+  const sDelete = (editor) => Step.sync(() => {
+    DeleteCommands.deleteCommand(editor, caret);
+  });
 
-  const sForwardDelete = function (editor) {
-    return Step.sync(function () {
-      DeleteCommands.forwardDeleteCommand(editor);
-    });
-  };
+  const sForwardDelete = (editor) => Step.sync(() => {
+    DeleteCommands.forwardDeleteCommand(editor, caret);
+  });
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [

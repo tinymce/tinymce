@@ -1,7 +1,7 @@
 import { Chain, Log, Pipeline, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { ApiChains, Editor as McEditor } from '@ephox/mcagar';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import * as TableSections from 'tinymce/plugins/table/core/TableSections';
 import Plugin from 'tinymce/plugins/table/Plugin';
@@ -12,8 +12,8 @@ UnitTest.asynctest('browser.tinymce.plugins.table.SwitchTableSectionTest', (succ
   SilverTheme();
 
   const cSwitchSection = (rowSelector: string, newSectionType: string) => Chain.op((editor: Editor) => {
-    const row = UiFinder.findIn(Element.fromDom(editor.getBody()), rowSelector).getOrDie();
-    TableSections.switchSectionType(editor, row.dom(), newSectionType);
+    const row = UiFinder.findIn(SugarElement.fromDom(editor.getBody()), rowSelector).getOrDie();
+    TableSections.switchSectionType(editor, row.dom, newSectionType);
   });
 
   const basicContent = `<table>
@@ -30,7 +30,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.SwitchTableSectionTest', (succ
   const theadExpected = `<table>
 <thead>
 <tr id="one">
-<td>text</td>
+<td scope="col">text</td>
 </tr>
 </thead>
 <tbody>
@@ -43,7 +43,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.SwitchTableSectionTest', (succ
   const thsExpected = `<table>
 <tbody>
 <tr id="one">
-<th>text</th>
+<th scope="col">text</th>
 </tr>
 <tr id="two">
 <td>text</td>
@@ -57,7 +57,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.SwitchTableSectionTest', (succ
 <td>text</td>
 </tr>
 <tr id="one">
-<th>text</th>
+<th scope="col">text</th>
 </tr>
 </tbody>
 </table>`;
@@ -65,7 +65,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.SwitchTableSectionTest', (succ
   const bothExpected = `<table>
 <thead>
 <tr id="one">
-<th>text</th>
+<th scope="col">text</th>
 </tr>
 </thead>
 <tbody>
@@ -94,10 +94,10 @@ UnitTest.asynctest('browser.tinymce.plugins.table.SwitchTableSectionTest', (succ
   const existingTheadExpected = `<table>
 <thead>
 <tr id="one">
-<td>text</td>
+<td scope="col">text</td>
 </tr>
 <tr id="two">
-<td>text</td>
+<td scope="col">text</td>
 </tr>
 </thead>
 </table>`;
@@ -105,10 +105,10 @@ UnitTest.asynctest('browser.tinymce.plugins.table.SwitchTableSectionTest', (succ
   const existingThsExpected = `<table>
 <tbody>
 <tr id="one">
-<th>text</th>
+<th scope="col">text</th>
 </tr>
 <tr id="two">
-<th>text</th>
+<th scope="col">text</th>
 </tr>
 </tbody>
 </table>`;
@@ -116,10 +116,10 @@ UnitTest.asynctest('browser.tinymce.plugins.table.SwitchTableSectionTest', (succ
   const existingBothExpected = `<table>
 <thead>
 <tr id="one">
-<th>text</th>
+<th scope="col">text</th>
 </tr>
 <tr id="two">
-<th>text</th>
+<th scope="col">text</th>
 </tr>
 </thead>
 </table>`;
@@ -127,12 +127,12 @@ UnitTest.asynctest('browser.tinymce.plugins.table.SwitchTableSectionTest', (succ
   const thsAndTheadExpected = `<table>
 <thead>
 <tr id="two">
-<td>text</td>
+<td scope="col">text</td>
 </tr>
 </thead>
 <tbody>
 <tr id="one">
-<th>text</th>
+<th scope="col">text</th>
 </tr>
 </tbody>
 </table>`;
@@ -140,12 +140,12 @@ UnitTest.asynctest('browser.tinymce.plugins.table.SwitchTableSectionTest', (succ
   const theadAndThsExpected = `<table>
 <thead>
 <tr id="one">
-<td>text</td>
+<td scope="col">text</td>
 </tr>
 </thead>
 <tbody>
 <tr id="two">
-<th>text</th>
+<th scope="col">text</th>
 </tr>
 </tbody>
 </table>`;
@@ -153,12 +153,12 @@ UnitTest.asynctest('browser.tinymce.plugins.table.SwitchTableSectionTest', (succ
   const thsAndBothExpected = `<table>
 <thead>
 <tr id="two">
-<th>text</th>
+<th scope="col">text</th>
 </tr>
 </thead>
 <tbody>
 <tr id="one">
-<th>text</th>
+<th scope="col">text</th>
 </tr>
 </tbody>
 </table>`;
@@ -166,10 +166,10 @@ UnitTest.asynctest('browser.tinymce.plugins.table.SwitchTableSectionTest', (succ
   const theadAndBothExpected = `<table>
 <thead>
 <tr id="one">
-<td>text</td>
+<td scope="col">text</td>
 </tr>
 <tr id="two">
-<th>text</th>
+<th scope="col">text</th>
 </tr>
 </thead>
 </table>`;

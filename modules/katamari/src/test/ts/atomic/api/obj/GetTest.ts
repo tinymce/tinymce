@@ -1,40 +1,40 @@
-import * as Obj from 'ephox/katamari/api/Obj';
-import { Option } from 'ephox/katamari/api/Option';
-import { tOption } from 'ephox/katamari/api/OptionInstances';
-import { UnitTest, Assert } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Testable } from '@ephox/dispute';
+import * as Obj from 'ephox/katamari/api/Obj';
+import { Optional } from 'ephox/katamari/api/Optional';
+import { tOptional } from 'ephox/katamari/api/OptionalInstances';
 
 const { tArray, tNumber } = Testable;
 
 UnitTest.test('GetTest', function () {
   Assert.eq(
     'Key exists',
-    Option.some(3),
+    Optional.some(3),
     Obj.get({ a: 3 }, 'a'),
-    tOption(tNumber)
+    tOptional(tNumber)
   );
   Assert.eq(
     'Key with null value does not exist',
-    Option.none(),
+    Optional.none(),
     Obj.get({ a: null }, 'a'),
-    tOption()
+    tOptional()
   );
   Assert.eq(
     'Key with undefined value does not exist',
-    Option.none(),
+    Optional.none(),
     Obj.get({ a: undefined }, 'a'),
-    tOption()
+    tOptional()
   );
   Assert.eq(
     'Unknown key does not exist',
-    Option.none(),
+    Optional.none(),
     Obj.get(<any> { a: 1 }, 'b'),
-    tOption()
+    tOptional()
   );
   Assert.eq(
     'array option array number',
-    [ Option.none<Array<number>>(), Option.some([ 1, 8, 3, 9 ]), Option.some([ 8, 9 ]) ],
-    [ Option.none<Array<number>>(), Option.some([ 1, 8, 3, 9 ]), Option.some([ 8, 9 ]) ],
-    tArray(tOption(tArray(tNumber)))
+    [ Optional.none<Array<number>>(), Optional.some([ 1, 8, 3, 9 ]), Optional.some([ 8, 9 ]) ],
+    [ Optional.none<Array<number>>(), Optional.some([ 1, 8, 3, 9 ]), Optional.some([ 8, 9 ]) ],
+    tArray(tOptional(tArray(tNumber)))
   );
 });

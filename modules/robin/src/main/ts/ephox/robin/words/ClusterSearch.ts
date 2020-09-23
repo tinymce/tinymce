@@ -21,8 +21,8 @@ import { WordWalking } from './WordWalking';
 const doWords = function <E, D> (universe: Universe<E, D>, item: E, mode: Transition, direction: WordWalking, isCustomBoundary: (universe: Universe<E, D>, item: E) => boolean): WordDecisionItem<E>[] {
   const destination = Gather.walk(universe, item, mode, direction);
   const result = destination.map(function (dest) {
-    const decision = WordDecision.decide(universe, dest.item(), direction.slicer, isCustomBoundary);
-    const recursive: WordDecisionItem<E>[] = decision.abort ? [] : doWords(universe, dest.item(), dest.mode(), direction, isCustomBoundary);
+    const decision = WordDecision.decide(universe, dest.item, direction.slicer, isCustomBoundary);
+    const recursive: WordDecisionItem<E>[] = decision.abort ? [] : doWords(universe, dest.item, dest.mode, direction, isCustomBoundary);
     return decision.items.concat(recursive);
   }).getOr([]);
 

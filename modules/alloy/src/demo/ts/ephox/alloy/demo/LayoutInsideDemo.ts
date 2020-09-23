@@ -1,6 +1,5 @@
-import { document } from '@ephox/dom-globals';
-import { Option } from '@ephox/katamari';
-import { Class, Element } from '@ephox/sugar';
+import { Optional } from '@ephox/katamari';
+import { Class, SugarElement } from '@ephox/sugar';
 
 import { Positioning } from 'ephox/alloy/api/behaviour/Positioning';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
@@ -15,9 +14,9 @@ import { Layouts } from 'ephox/alloy/positioning/mode/Anchoring';
 
 export default (): void => {
   const gui = Gui.create();
-  const body = Element.fromDom(document.body);
-  // Css.set(gui.element(), 'direction', 'rtl');
-  Class.add(gui.element(), 'gui-root-demo-container');
+  const body = SugarElement.fromDom(document.body);
+  // Css.set(gui.element, 'direction', 'rtl');
+  Class.add(gui.element, 'gui-root-demo-container');
   Attachment.attachSystem(body, gui);
 
   const sink = DemoSink.make();
@@ -43,7 +42,7 @@ export default (): void => {
     })
   );
 
-  const makeExample = (id: string, ltrDescription: string, rtlDescription: string, layouts: Layouts) => HtmlDisplay.section(gui, 'Position anchoring to text selection', Container.sketch({
+  const makeExample = (id: string, ltrDescription: string, rtlDescription: string, layouts: Layouts) => HtmlDisplay.section(gui, 'SugarPosition anchoring to text selection', Container.sketch({
     dom: {
       tag: 'div'
     },
@@ -72,8 +71,8 @@ export default (): void => {
           Attachment.attach(sink, popup);
           Positioning.position(sink, {
             anchor: 'node',
-            root: button.getSystem().getByUid(`inner-${id}-editor`).getOrDie().element(),
-            node: Option.from(button.getSystem().getByUid(`inner-${id}-editor`).getOrDie().element()),
+            root: button.getSystem().getByUid(`inner-${id}-editor`).getOrDie().element,
+            node: Optional.from(button.getSystem().getByUid(`inner-${id}-editor`).getOrDie().element),
             layouts
           }, popup);
         }

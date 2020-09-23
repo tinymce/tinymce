@@ -1,7 +1,7 @@
-import { LegacyUnit } from '@ephox/mcagar';
 import { Pipeline } from '@ephox/agar';
-import * as Diff from 'tinymce/core/undo/Diff';
 import { UnitTest } from '@ephox/bedrock-client';
+import { LegacyUnit } from '@ephox/mcagar';
+import * as Diff from 'tinymce/core/undo/Diff';
 
 UnitTest.asynctest('browser.tinymce.core.undo.DiffTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();

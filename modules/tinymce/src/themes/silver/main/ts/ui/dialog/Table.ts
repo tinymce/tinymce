@@ -5,13 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Types } from '@ephox/bridge';
-import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
-import { SimpleSpec, Behaviour, Tabstopping, Focusing } from '@ephox/alloy';
+import { Behaviour, Focusing, SimpleSpec, Tabstopping } from '@ephox/alloy';
+import { Dialog } from '@ephox/bridge';
 import { Arr } from '@ephox/katamari';
-import { Omit } from '../Omit';
+import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 
-type TableSpec = Omit<Types.Table.Table, 'type'>;
+type TableSpec = Omit<Dialog.Table, 'type'>;
 
 export const renderTable = (spec: TableSpec, providersBackstage: UiFactoryBackstageProviders): SimpleSpec => {
   const renderTh = (text: string) => ({
