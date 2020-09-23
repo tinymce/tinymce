@@ -217,7 +217,7 @@ const opPasteCells = function (grid: Structs.RowCells[], pasteDetails: ExtractPa
   });
 };
 
-const gridifyRows = function (rows: SugarElement[], generators: Generators) {
+const gridifyRows = function (rows: SugarElement<HTMLTableRowElement | HTMLTableColElement>[], generators: Generators) {
   const pasteDetails = DetailsList.fromPastedRows(rows);
   const wh = Warehouse.generate(pasteDetails);
   return Transitions.toGrid(wh, generators, true);

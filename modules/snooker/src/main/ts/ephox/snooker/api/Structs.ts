@@ -130,7 +130,7 @@ const extended = (element: SugarElement<HTMLTableCellElement>, rowspan: number, 
   column
 });
 
-const rowdata = <T> (element: SugarElement<HTMLTableRowElement>, cells: T[], section: Section): RowData<T> => ({
+const rowdata = <T> (element: SugarElement<HTMLTableRowElement | HTMLTableColElement>, cells: T[], section: Section): RowData<T> => ({
   element,
   cells,
   section

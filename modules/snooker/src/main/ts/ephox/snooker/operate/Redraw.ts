@@ -28,22 +28,8 @@ const render = <T extends DetailNew> (table: SugarElement, grid: RowDataNew<T>[]
     );
   };
 
-  const renderSection = (gridSection: RowDataNew<T>[], sectionName: Section) => {
-    const section = SelectorFind.child(table, sectionName).getOrThunk(() => {
-      const tb = SugarElement.fromTag(sectionName, Traverse.owner(table).dom);
-      if (sectionName === 'thead') {
-        insert('caption,colgroup', tb);
-      } else if (sectionName === 'colgroup') {
-        insert('caption', tb);
-      } else {
-        Insert.append(table, tb);
-      }
-      return tb;
-    });
-
-    Remove.empty(section);
-
-    const rows = Arr.map(gridSection, (row) => {
+  const syncRows = (gridSection: RowDataNew<T>[]) =>
+    Arr.map(gridSection, (row) => {
       if (row.isNew) {
         newRows.push(row.element);
       }
@@ -60,9 +46,33 @@ const render = <T extends DetailNew> (table: SugarElement, grid: RowDataNew<T>[]
       return tr;
     });
 
-    if (sectionName !== 'colgroup') {
-      InsertAll.append(section, rows);
-    }
+  const syncColGroup = (gridSection: RowDataNew<T>[]) =>
+    // Assumption we should only ever have 1 colgroup in the section
+    Arr.bind(gridSection, (colGroup) =>
+      Arr.map(colGroup.cells, (col) => {
+        setIfNot(col.element, 'span', col.colspan, 1);
+        return col.element;
+      })
+    );
+
+  const renderSection = (gridSection: RowDataNew<T>[], sectionName: Section) => {
+    const section = SelectorFind.child(table, sectionName).getOrThunk(() => {
+      const tb = SugarElement.fromTag(sectionName, Traverse.owner(table).dom);
+      if (sectionName === 'thead') {
+        insert('caption,colgroup', tb);
+      } else if (sectionName === 'colgroup') {
+        insert('caption', tb);
+      } else {
+        Insert.append(table, tb);
+      }
+      return tb;
+    });
+
+    Remove.empty(section);
+
+    const sync = sectionName === 'colgroup' ? syncColGroup : syncRows;
+    const rows = sync(gridSection);
+    InsertAll.append(section, rows);
   };
 
   const removeSection = (sectionName: Section) => {
