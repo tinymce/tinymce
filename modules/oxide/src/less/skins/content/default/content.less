@@ -19,7 +19,7 @@ table {
   border-collapse: collapse;
 }
 
-/* Apply a default padding if legacy cellpading attribute is missing */
+/* Apply a default padding if legacy cellpadding attribute is missing */
 table:not([cellpadding]) th,
 table:not([cellpadding]) td {
   padding: .4rem;
@@ -44,37 +44,6 @@ table[border]:not([border="0"]):not([style*="border-style"]) td {
 table[border]:not([border="0"]):not([style*="border-color"]) th,
 table[border]:not([border="0"]):not([style*="border-color"]) td {
   border-color: #ccc;
-}
-
-/* Cascade down the table border styles to table cells */
-table[border][style*="solid"]:not([border="0"]) th,
-table[border][style*="solid"]:not([border="0"]) td {
-  border-style: solid;
-}
-
-table[border][style*="dashed"]:not([border="0"]) th,
-table[border][style*="dashed"]:not([border="0"]) td {
-  border-style: dashed;
-}
-
-table[border][style*="dotted"]:not([border="0"]) th,
-table[border][style*="dotted"]:not([border="0"]) td {
-  border-style: dotted;
-}
-
-table[border][style*="double"]:not([border="0"]) th,
-table[border][style*="double"]:not([border="0"]) td {
-  border-style: double;
-}
-
-table[border][style*="groove"]:not([border="0"]) th,
-table[border][style*="groove"]:not([border="0"]) td {
-  border-style: groove;
-}
-
-table[border][style*="ridge"]:not([border="0"]) th,
-table[border][style*="ridge"]:not([border="0"]) td {
-  border-style: ridge;
 }
 
 figure {
