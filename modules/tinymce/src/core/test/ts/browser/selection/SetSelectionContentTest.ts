@@ -37,13 +37,13 @@ UnitTest.asynctest('browser.tinymce.selection.SetSelectionContentTest', function
     Pipeline.async({}, [
       Log.stepsAsStep('TBA', 'Should insert a before b', [
         tinyApis.sSetContent('<p>b</p>'),
-        tinyApis.sSetSelection([ 0, 0 ], 0, [ 0, 0 ], 0),
+        tinyApis.sSetCursor([ 0, 0 ], 0),
         sSetContent(editor, 'a', {}),
         tinyApis.sAssertContent('<p>ab</p>')
       ]),
       Log.stepsAsStep('TBA', 'Should fill the body with x h1 instead of a before b in a paragraph', [
         tinyApis.sSetContent('<p>b</p>'),
-        tinyApis.sSetSelection([ 0, 0 ], 0, [ 0, 0 ], 0),
+        tinyApis.sSetCursor([ 0, 0 ], 0),
         sSetContentOverride(editor, 'a', '<h1>x</h1>', {}),
         tinyApis.sAssertContent('<h1>x</h1>')
       ]),
@@ -69,7 +69,7 @@ UnitTest.asynctest('browser.tinymce.selection.SetSelectionContentTest', function
 
       Log.stepsAsStep('TBA', 'Insert content in middle of word, collapsed selection', [
         tinyApis.sSetContent('<p>ab</p>'),
-        tinyApis.sSetSelection([ 0, 0 ], 1, [ 0, 0 ], 1),
+        tinyApis.sSetCursor([ 0, 0 ], 1),
         sSetContent(editor, 'X', {}),
         Assertions.sAssertStructure('Checking initial structure',
           ApproxStructure.build((s, str, _arr) => s.element('body', {
@@ -88,7 +88,7 @@ UnitTest.asynctest('browser.tinymce.selection.SetSelectionContentTest', function
 
       Log.stepsAsStep('TBA', 'Insert content at start of word, collapsed selection', [
         tinyApis.sSetContent('<p>a</p>'),
-        tinyApis.sSetSelection([ 0, 0 ], 0, [ 0, 0 ], 0),
+        tinyApis.sSetCursor([ 0, 0 ], 0),
         sSetContent(editor, 'X', {}),
         Assertions.sAssertStructure('Checking initial structure',
           ApproxStructure.build((s, str, _arr) => s.element('body', {
@@ -107,7 +107,7 @@ UnitTest.asynctest('browser.tinymce.selection.SetSelectionContentTest', function
 
       Log.stepsAsStep('TBA', 'Insert content at end of word, collapsed selection', [
         tinyApis.sSetContent('<p>a</p>'),
-        tinyApis.sSetSelection([ 0, 0 ], 1, [ 0, 0 ], 1),
+        tinyApis.sSetCursor([ 0, 0 ], 1),
         sSetContent(editor, 'X', {}),
         Assertions.sAssertStructure('Checking initial structure',
           ApproxStructure.build((s, str, _arr) => s.element('body', {
@@ -125,7 +125,7 @@ UnitTest.asynctest('browser.tinymce.selection.SetSelectionContentTest', function
 
       Log.stepsAsStep('TBA', 'Insert content at end of word with partial text', [
         tinyApis.sSetContent('<p>a</p>'),
-        tinyApis.sSetSelection([ 0, 0 ], 1, [ 0, 0 ], 1),
+        tinyApis.sSetCursor([ 0, 0 ], 1),
         sSetContent(editor, 'b<em>c</em>', {}),
         Assertions.sAssertStructure('Checking initial structure',
           ApproxStructure.build((s, str, _arr) => s.element('body', {
@@ -148,7 +148,7 @@ UnitTest.asynctest('browser.tinymce.selection.SetSelectionContentTest', function
 
       Log.stepsAsStep('TBA', 'Insert content at end of word with partial text', [
         tinyApis.sSetContent('<p>a</p>'),
-        tinyApis.sSetSelection([ 0, 0 ], 1, [ 0, 0 ], 1),
+        tinyApis.sSetCursor([ 0, 0 ], 1),
         sSetContent(editor, '<em>b</em>c', {}),
         Assertions.sAssertStructure('Checking initial structure',
           ApproxStructure.build((s, str, _arr) => s.element('body', {
@@ -172,7 +172,7 @@ UnitTest.asynctest('browser.tinymce.selection.SetSelectionContentTest', function
 
       Log.stepsAsStep('TINY-5966', 'Set text content at end of word with a space', [
         tinyApis.sSetContent('<p>a&nbsp;</p>'),
-        tinyApis.sSetSelection([ 0, 0 ], 2, [ 0, 0 ], 2),
+        tinyApis.sSetCursor([ 0, 0 ], 2),
         sSetContent(editor, 'b', {}),
         Assertions.sAssertStructure('Checking initial structure',
           ApproxStructure.build((s, str, _arr) => s.element('body', {
@@ -208,7 +208,7 @@ UnitTest.asynctest('browser.tinymce.selection.SetSelectionContentTest', function
 
       Log.stepsAsStep('TINY-5966', 'Set text content in between 2 nbsps', [
         tinyApis.sSetContent('<p>&nbsp;&nbsp;</p>'),
-        tinyApis.sSetSelection([ 0, 0 ], 1, [ 0, 0 ], 1),
+        tinyApis.sSetCursor([ 0, 0 ], 1),
         sSetContent(editor, ' a b ', {}),
         Assertions.sAssertStructure('Checking initial structure',
           ApproxStructure.build((s, str, _arr) => s.element('body', {
@@ -227,7 +227,7 @@ UnitTest.asynctest('browser.tinymce.selection.SetSelectionContentTest', function
 
       Log.stepsAsStep('TINY-5966', 'Set text content into empty block with leading/trailing spaces', [
         tinyApis.sSetContent('<p></p>'),
-        tinyApis.sSetSelection([ 0, 0 ], 0, [ 0, 0 ], 0),
+        tinyApis.sSetCursor([ 0, 0 ], 0),
         sSetContent(editor, ' a b ', {}),
         Assertions.sAssertStructure('Checking initial structure',
           ApproxStructure.build((s, str, _arr) => s.element('body', {
@@ -246,7 +246,7 @@ UnitTest.asynctest('browser.tinymce.selection.SetSelectionContentTest', function
 
       Log.stepsAsStep('TINY-5966', 'Set text content into empty pre block with leading/trailing spaces', [
         tinyApis.sSetContent('<pre></pre>'),
-        tinyApis.sSetSelection([ 0, 0 ], 0, [ 0, 0 ], 0),
+        tinyApis.sSetCursor([ 0, 0 ], 0),
         sSetContent(editor, '   a <br>  b  ', {}),
         Assertions.sAssertStructure('Checking initial structure',
           ApproxStructure.build((s, str, _arr) => s.element('body', {
