@@ -6,27 +6,27 @@ Version 5.5.0 (TBD)
     Added new `ToggleToolbarDrawer` command and query state handler to allow the toolbar drawer to be programmatically toggled and the toggle state to be checked #TINY-6032
     Added the ability to use `colgroup` elements in tables #TINY-6050
     Added a new setting `table_use_colgroups` for toggling whether colgroups are used in new tables #TINY-6050
-    Added the ability to delete and navigate HTML media elements without the media plugin #TINY-4211
-    Added `fullscreen_native` setting to the fullscreen plugin to enable use of the entire monitor #TINY-6284
+    Added the ability to delete and navigate HTML media elements without the `media` plugin #TINY-4211
+    Added `fullscreen_native` setting to the `fullscreen` plugin to enable use of the entire monitor #TINY-6284
     Added table related oxide variables to the Style API for more granular control over table cell selection appearance #TINY-6311
     Added new `toolbar_persist` setting to control the visibility of the inline toolbar #TINY-4847
     Added new APIs to allow for programmatic control of the inline toolbar visibility #TINY-4847
-    Added the `origin` property to the `ObjectResized` and `ObjectResizeStart` events, to specify which handle the resize was preformed on #TINY-6242
+    Added the `origin` property to the `ObjectResized` and `ObjectResizeStart` events, to specify which handle the resize was performed on #TINY-6242
     Added new StyleSheetLoader `unload` and `unloadAll` APIs to allow loaded stylesheets to be removed #TINY-3926
     Added the `LineHeight` query command and action to the editor #TINY-4843
     Added the `lineheight` toolbar and menu items, and added `lineheight` to the default format menu #TINY-4843
-    Added a new `contextmenu_avoid_overlap` setting to allow contextmenus to avoid overlapping matched nodes #TINY-6036
+    Added a new `contextmenu_avoid_overlap` setting to allow context menus to avoid overlapping matched nodes #TINY-6036
     Added new listbox dialog UI component for rendering a dropdown that allows nested options #TINY-2236
     Added back the ability to use nested items in the `image_class_list`, `link_class_list`, `link_list`, `table_class_list`, `table_cell_class_list`, and `table_row_class_list` settings #TINY-2236
     Changed how CSS manipulates table cells when selecting multiple cells to achieve a semi-transparent selection #TINY-6311
     Changed the `target` property on fired events to use the native event target. The original target for an open shadow root can be obtained using `event.getComposedPath()` #TINY-6128
-    Changed the editor to cleanup loaded CSS stylesheets when all editors using the stylesheet have been removed #TINY-3926
-    Changed `imagetools` context menu icon for accessing the image dialog to use the `image` icon #TINY-4141
+    Changed the editor to clean-up loaded CSS stylesheets when all editors using the stylesheet have been removed #TINY-3926
+    Changed `imagetools` context menu icon for accessing the `image` dialog to use the `image` icon #TINY-4141
     Changed the `editor.insertContent()` and `editor.selection.setContent()` APIs to retain leading and trailing whitespace #TINY-5966
     Changed the `table` plugin `Column` menu to include the cut, copy and paste column menu items #TINY-6374
-    Changed the default table styles in the content CSS files to better support the styling options available in the tables dialog #TINY-6179
+    Changed the default table styles in the content CSS files to better support the styling options available in the `table` dialog #TINY-6179
     Deprecated the `Env.experimentalShadowDom` flag #TINY-6128
-    Fixed tables with no borders displaying with the default border styles in the preview dialog #TINY-6179
+    Fixed tables with no borders displaying with the default border styles in the `preview` dialog #TINY-6179
     Fixed loss of whitespace when inserting content after a non-breaking space #TINY-5966
     Fixed the `event.getComposedPath()` function throwing an exception for events fired from the editor #TINY-6128
     Fixed notifications not appearing when the editor is within a ShadowRoot #TINY-6354
@@ -40,10 +40,10 @@ Version 5.5.0 (TBD)
     Fixed the `unlink` toolbar button not working when selecting multiple links #TINY-4867
     Fixed the `link` dialog not showing the "Text to display" field in some valid cases #TINY-5205
     Fixed the `DOMUtils.split()` API incorrectly removing some content #TINY-6294
-    Fixed pressing escape not focusing the editor when using multiple toolbars #TINY-6230
+    Fixed pressing the escape key not focusing the editor when using multiple toolbars #TINY-6230
     Fixed the `dirty` flag not being correctly set during an `AddUndo` event #TINY-4707
     Fixed `editor.selection.setCursorLocation` incorrectly placing the cursor outside `pre` elements in some circumstances #TINY-4058
-    Fixed an exception being thrown when pressing enter inside pre elements while `br_in_pre` setting is false #TINY-4058
+    Fixed an exception being thrown when pressing the enter key inside pre elements while `br_in_pre` setting is false #TINY-4058
 Version 5.4.2 (2020-08-17)
     Fixed the editor not resizing when resizing the browser window in fullscreen mode #TINY-3511
     Fixed clicking on notifications causing inline editors to hide #TINY-6058
