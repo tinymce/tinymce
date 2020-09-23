@@ -165,6 +165,11 @@ const bounds = (startRow: number, startCol: number, finishRow: number, finishCol
   finishCol
 });
 
+const column = (element: SugarElement<HTMLTableColElement>, colspan: number): Column => ({
+  element,
+  colspan
+});
+
 export {
   dimension,
   dimensions,
@@ -180,5 +185,6 @@ export {
   rowcells,
   rowdetails,
   bounds,
-  isValidSection
+  isValidSection,
+  column
 };

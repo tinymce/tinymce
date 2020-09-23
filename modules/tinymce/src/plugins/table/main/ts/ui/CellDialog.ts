@@ -6,7 +6,7 @@
  */
 
 import { Selections } from '@ephox/darwin';
-import { Arr, Fun } from '@ephox/katamari';
+import { Arr, Fun, Optional } from '@ephox/katamari';
 import { TableLookup, Warehouse } from '@ephox/snooker';
 import { Compare, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
@@ -20,8 +20,12 @@ import { DomModifier } from './DomModifier';
 import * as Helpers from './Helpers';
 
 type CellData = Helpers.CellData;
+interface SelectedCell {
+  element: HTMLTableCellElement;
+  column: Optional<HTMLTableColElement>;
+}
 
-const getSelectedCells = (cells: SugarElement<HTMLTableCellElement>[]) =>
+const getSelectedCells = (cells: SugarElement<HTMLTableCellElement>[]): Optional<SelectedCell[]> =>
   TableLookup.table(cells[0]).map((table) => {
     const warehouse = Warehouse.fromTable(table);
 
@@ -34,21 +38,16 @@ const getSelectedCells = (cells: SugarElement<HTMLTableCellElement>[]) =>
     );
 
     return Arr.map(filtered, (cell) => ({
-      element: cell.element,
-      column: Warehouse.getColumnAt(warehouse, cell.column)
+      element: cell.element.dom,
+      column: Warehouse.getColumnAt(warehouse, cell.column).map((col): HTMLTableColElement => col.element.dom)
     }));
   });
 
-const updateSimpleProps = (editor: Editor, modifier: DomModifier, isSingleCell: boolean, data: CellData, column?: SugarElement<HTMLElement>) => {
+const updateSimpleProps = (editor: Editor, modifier: DomModifier, colModifier: DomModifier, data: CellData) => {
   modifier.setAttrib('scope', data.scope);
   modifier.setAttrib('class', data.class);
   modifier.setStyle('height', Util.addPxSuffix(data.height));
-  if (column) {
-    const columnModifier = isSingleCell ? DomModifier.normal(editor, column.dom) : DomModifier.ifTruthy(editor, column.dom);
-    columnModifier.setStyle('width', Util.addPxSuffix(data.width));
-  } else {
-    modifier.setStyle('width', Util.addPxSuffix(data.width));
-  }
+  colModifier.setStyle('width', Util.addPxSuffix(data.width));
 };
 
 const updateAdvancedProps = (modifier: DomModifier, data: CellData) => {
@@ -75,16 +74,17 @@ const applyCellData = (editor: Editor, cells: SugarElement<HTMLTableCellElement>
   const isSingleCell = cells.length === 1;
 
   if (cells.length >= 1) {
-    const selectedCellsOpt = getSelectedCells(cells);
-
-    selectedCellsOpt.each((selectedCells) =>
+    getSelectedCells(cells).each((selectedCells) =>
       Arr.each(selectedCells, (item) => {
         // Switch cell type if applicable
-        const cellElement = item.element.dom;
+        const cellElement = item.element;
         const cellElm = data.celltype && Util.getNodeName(cellElement) !== data.celltype ? (dom.rename(cellElement, data.celltype) as HTMLTableCellElement) : cellElement;
         const modifier = isSingleCell ? DomModifier.normal(editor, cellElm) : DomModifier.ifTruthy(editor, cellElm);
+        const colModifier = item.column.map((col) =>
+          isSingleCell ? DomModifier.normal(editor, col) : DomModifier.ifTruthy(editor, col)
+        ).getOr(modifier);
 
-        updateSimpleProps(editor, modifier, isSingleCell, data, item.column?.element);
+        updateSimpleProps(editor, modifier, colModifier, data);
 
         if (hasAdvancedCellTab(editor)) {
           updateAdvancedProps(modifier, data);
@@ -120,11 +120,9 @@ const onSubmitCellForm = (editor: Editor, cells: SugarElement<HTMLTableCellEleme
 };
 
 const getData = (editor: Editor, cells: SugarElement<HTMLTableCellElement>[]) => {
-  const selectedCellsOpt = getSelectedCells(cells);
-
-  const cellsData = selectedCellsOpt.map((selectedCells) =>
+  const cellsData = getSelectedCells(cells).map((selectedCells) =>
     Arr.map(selectedCells, (item) =>
-      Helpers.extractDataFromCellElement(editor, item.element.dom, hasAdvancedCellTab(editor), item.column?.element)
+      Helpers.extractDataFromCellElement(editor, item.element, hasAdvancedCellTab(editor), item.column)
     )
   );
 

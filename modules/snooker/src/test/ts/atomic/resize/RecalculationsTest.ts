@@ -1,6 +1,6 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { SugarElement, NodeTypes } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import * as Structs from 'ephox/snooker/api/Structs';
 import { Warehouse } from 'ephox/snooker/api/Warehouse';
 import * as Recalculations from 'ephox/snooker/resize/Recalculations';
@@ -55,7 +55,7 @@ UnitTest.test('RecalculationsTest', () => {
 
   const makeDetail = (fakeEle: any, rowspan: number, colspan: number) => Structs.detail(fakeEle as SugarElement, rowspan, colspan);
   const makeRow = (fakeEle: any, cells: Structs.Detail[]) => Structs.rowdata(fakeEle as SugarElement, cells, 'tbody');
-  const makeColumnGroup = (cells: Structs.Detail[]) => Structs.rowdata(SugarElement.fromTag('colgroup') as any, cells, 'colgroup');
+  const makeColumnGroup = (fakeEle: any, cols: Structs.Detail[]) => Structs.rowdata(fakeEle as SugarElement, cols, 'colgroup');
 
   check(
     [
@@ -80,7 +80,9 @@ UnitTest.test('RecalculationsTest', () => {
   check(
     [
       expectedParts(
-        [],
+        [
+          { element: 'c', width: 10 }
+        ],
         [
           { element: 'a', width: 10 }
         ],
@@ -90,16 +92,11 @@ UnitTest.test('RecalculationsTest', () => {
       )
     ],
     [
+      makeColumnGroup('c1', [
+        makeDetail('c', 1, 1)
+      ]),
       makeRow('r1', [
         makeDetail('a', 1, 1)
-      ]),
-      makeColumnGroup([
-        makeDetail({
-          dom: {
-            nodeType:NodeTypes.ELEMENT,
-            nodeName: 'col'
-          }
-        }, 0, 1)
       ])
     ],
     dimensions([ 10 ], [ 10 ])
@@ -125,28 +122,15 @@ UnitTest.test('RecalculationsTest', () => {
   check(
     [
       expectedParts(
-        [],
+        [{ element: 'c00', width: 20 }, { element: 'c01', width: 20 }],
         [{ element: 'a00', width: 20 }, { element: 'a01', width: 20 }, { element: 'a10', width: 20 }, { element: 'a11', width: 20 }],
         [{ element: 'a00', height: 15 }, { element: 'a01', height: 15 }, { element: 'a10', height: 9 }, { element: 'a11', height: 9 }]
       )
     ],
     [
+      makeColumnGroup('c1', [ makeDetail('c00', 1, 1), makeDetail('c01', 1, 1) ]),
       makeRow('r0', [ makeDetail('a00', 1, 1), makeDetail('a01', 1, 1) ]),
-      makeRow('r1', [ makeDetail('a10', 1, 1), makeDetail('a11', 1, 1) ]),
-      makeColumnGroup([
-        makeDetail({
-          dom: {
-            nodeType:NodeTypes.ELEMENT,
-            nodeName: 'col'
-          }
-        }, 0, 1),
-        makeDetail({
-          dom: {
-            nodeType:NodeTypes.ELEMENT,
-            nodeName: 'col'
-          }
-        }, 0, 1)
-      ])
+      makeRow('r1', [ makeDetail('a10', 1, 1), makeDetail('a11', 1, 1) ])
     ],
     dimensions([ 20, 20 ], [ 15, 9 ])
   );

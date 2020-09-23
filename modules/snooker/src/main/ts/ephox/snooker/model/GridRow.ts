@@ -36,6 +36,14 @@ const cellLength = function (gridRow: Structs.RowCells) {
   return gridRow.cells.length;
 };
 
+const extractGridDetails = (grid: Structs.RowCells[]) => {
+  const result = Arr.partition(grid, (row) => row.section === 'colgroup');
+  return {
+    rows: result.fail,
+    cols: result.pass
+  };
+};
+
 export {
   addCell,
   setCells,
@@ -43,5 +51,6 @@ export {
   getCell,
   getCellElement,
   mapCells,
-  cellLength
+  cellLength,
+  extractGridDetails
 };

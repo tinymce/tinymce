@@ -1,8 +1,7 @@
 import { Arr, Obj, Optional } from '@ephox/katamari';
-import { SugarElement, SugarNode, Traverse } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import * as Structs from '../api/Structs';
 import * as DetailsList from '../model/DetailsList';
-import * as CellUtils from '../util/CellUtils';
 
 export interface Warehouse {
   readonly grid: Structs.Grid;
@@ -34,20 +33,14 @@ const filterItems = function (warehouse: Warehouse, predicate: (x: Structs.Detai
 };
 
 const generateColumns = <T extends Structs.Detail> (rowData: Structs.RowData<T>) => {
-  const columns = Traverse.children(rowData.element);
-  const filteredColumns = Arr.filter(columns, SugarNode.isTag('col'));
   const columnsGroup: Record<number, Structs.Column> = {};
-
   let index = 0;
 
-  Arr.each(filteredColumns, (column: SugarElement<HTMLTableColElement>): void => {
-    const colspan = CellUtils.getAttrValue(column, 'span', 1);
+  Arr.each(rowData.cells, (column: T) => {
+    const colspan = column.colspan;
 
-    Arr.range(colspan, (columnIndex): void => {
-      columnsGroup[index + columnIndex] = {
-        element: column,
-        colspan
-      };
+    Arr.range(colspan, (columnIndex) => {
+      columnsGroup[index + columnIndex] = Structs.column(column.element, colspan);
     });
 
     index += colspan;
@@ -128,22 +121,17 @@ const fromTable = (table: SugarElement<HTMLTableElement>) => {
   return generate(list);
 };
 
-const justCells = function (warehouse: Warehouse) {
-  const rows = Arr.map(warehouse.all, (w) => w.cells);
-
-  return Arr.flatten(rows);
-};
+const justCells = (warehouse: Warehouse): Structs.DetailExt[] =>
+  Arr.bind(warehouse.all, (w) => w.cells);
 
 const justColumns = (warehouse: Warehouse): Structs.Column[] =>
-  Arr.map(Obj.keys(warehouse.columns), (key: string) =>
-    warehouse.columns[key]
-  );
+  Obj.values(warehouse.columns);
 
 const hasColumns = (warehouse: Warehouse) =>
   Obj.keys(warehouse.columns).length > 0;
 
-const getColumnAt = (warehouse: Warehouse, columnIndex: number) =>
-  warehouse.columns[columnIndex];
+const getColumnAt = (warehouse: Warehouse, columnIndex: number): Optional<Structs.Column> =>
+  Optional.from(warehouse.columns[columnIndex]);
 
 export const Warehouse = {
   fromTable,

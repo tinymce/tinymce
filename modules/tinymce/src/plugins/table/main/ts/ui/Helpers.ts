@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Fun, Obj, Strings } from '@ephox/katamari';
+import { Arr, Fun, Obj, Optional, Strings } from '@ephox/katamari';
 import { Css, SugarElement } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
@@ -287,13 +287,14 @@ export interface CellData {
   backgroundcolor?: string;
 }
 
-const extractDataFromCellElement = (editor: Editor, cell: HTMLTableDataCellElement, hasAdvancedCellTab: boolean, column?: SugarElement<HTMLTableColElement>): CellData => {
+const extractDataFromCellElement = (editor: Editor, cell: HTMLTableDataCellElement, hasAdvancedCellTab: boolean, column: Optional<HTMLTableColElement>): CellData => {
   const dom = editor.dom;
+  const colElm = column.getOr(cell);
 
   const getStyle = (element: HTMLElement, style: string) => dom.getStyle(element, style) || dom.getAttrib(element, style);
 
   return {
-    width: column ? getStyle(column.dom, 'width') : getStyle(cell, 'width'),
+    width: getStyle(colElm, 'width'),
     height: getStyle(cell, 'height'),
     scope: dom.getAttrib(cell, 'scope'),
     celltype: Util.getNodeName(cell),

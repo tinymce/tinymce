@@ -10,16 +10,17 @@ type Subst = (element: SugarElement, comparator: CompElm) => SugarElement;
 // example is the location of the cursor (the row index)
 // index is the insert position (at - or after - example) (the row index)
 const insertRowAt = function (grid: Structs.RowCells[], index: number, example: number, comparator: CompElm, substitution: Subst) {
-  const before = grid.slice(0, index);
-  const after = grid.slice(index);
+  const { rows, cols } = GridRow.extractGridDetails(grid);
+  const before = rows.slice(0, index);
+  const after = rows.slice(index);
 
-  const between = GridRow.mapCells(grid[example], function (ex, c) {
-    const withinSpan = index > 0 && index < grid.length && comparator(GridRow.getCellElement(grid[index - 1], c), GridRow.getCellElement(grid[index], c));
-    const ret = withinSpan ? GridRow.getCell(grid[index], c) : Structs.elementnew(substitution(ex.element, comparator), true);
+  const between = GridRow.mapCells(rows[example], function (ex, c) {
+    const withinSpan = index > 0 && index < rows.length && comparator(GridRow.getCellElement(rows[index - 1], c), GridRow.getCellElement(rows[index], c));
+    const ret = withinSpan ? GridRow.getCell(rows[index], c) : Structs.elementnew(substitution(ex.element, comparator), true);
     return ret;
   });
 
-  return before.concat([ between ]).concat(after);
+  return cols.concat(before).concat([ between ]).concat(after);
 };
 
 const getElementFor = (row: Structs.RowCells, column: number, section: string, withinSpan: boolean, example: number, comparator: CompElm, substitution: Subst): Structs.ElementNew => {
@@ -61,16 +62,17 @@ const splitCellIntoColumns = function (grid: Structs.RowCells[], exampleRow: num
 //   new cell below, and is empty), and
 // - the other cells in that row set to span the split cell.
 const splitCellIntoRows = function (grid: Structs.RowCells[], exampleRow: number, exampleCol: number, comparator: CompElm, substitution: Subst) {
+  const { rows, cols } = GridRow.extractGridDetails(grid);
   const index = exampleRow + 1; // insert after
-  const before = grid.slice(0, index);
-  const after = grid.slice(index);
+  const before = rows.slice(0, index);
+  const after = rows.slice(index);
 
-  const between = GridRow.mapCells(grid[exampleRow], function (ex, i) {
+  const between = GridRow.mapCells(rows[exampleRow], function (ex, i) {
     const isTargetCell = (i === exampleCol);
     return isTargetCell ? Structs.elementnew(substitution(ex.element, comparator), true) : ex;
   });
 
-  return before.concat([ between ]).concat(after);
+  return cols.concat(before).concat([ between ]).concat(after);
 };
 
 const deleteColumnsAt = function (grid: Structs.RowCells[], start: number, finish: number) {
@@ -85,7 +87,8 @@ const deleteColumnsAt = function (grid: Structs.RowCells[], start: number, finis
 };
 
 const deleteRowsAt = function (grid: Structs.RowCells[], start: number, finish: number) {
-  return grid.slice(0, start).concat(grid.slice(finish + 1));
+  const { rows, cols } = GridRow.extractGridDetails(grid);
+  return cols.concat(rows.slice(0, start)).concat(rows.slice(finish + 1));
 };
 
 export {

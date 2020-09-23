@@ -2,6 +2,11 @@ import { Arr } from '@ephox/katamari';
 import { Attribute, Insert, InsertAll, Remove, Replication, SelectorFilter, SelectorFind, SugarElement, Traverse } from '@ephox/sugar';
 import { Detail, DetailNew, RowDataNew, Section } from '../api/Structs';
 
+interface NewRowsAndCells {
+  readonly newRows: SugarElement[];
+  readonly newCells: SugarElement[];
+}
+
 const setIfNot = (element: SugarElement, property: string, value: number, ignore: number): void => {
   if (value === ignore) {
     Attribute.remove(element, property);
@@ -10,23 +15,34 @@ const setIfNot = (element: SugarElement, property: string, value: number, ignore
   }
 };
 
-interface NewRowsAndCells {
-  readonly newRows: SugarElement[];
-  readonly newCells: SugarElement[];
-}
+const insert = (table: SugarElement<HTMLTableElement>, selector: string, element: SugarElement<HTMLTableSectionElement | HTMLTableColElement>) => {
+  Arr.last(SelectorFilter.children(table, selector)).fold(
+    () => Insert.prepend(table, element),
+    (child) => Insert.after(child, element)
+  );
+};
+
+const generateSection = (table: SugarElement<HTMLTableElement>, sectionName: Section) => {
+  const section = SelectorFind.child(table, sectionName).getOrThunk(() => {
+    const newSection = SugarElement.fromTag(sectionName, Traverse.owner(table).dom);
+    if (sectionName === 'thead') {
+      insert(table, 'caption,colgroup', newSection);
+    } else if (sectionName === 'colgroup') {
+      insert(table, 'caption', newSection);
+    } else {
+      Insert.append(table, newSection);
+    }
+    return newSection;
+  });
+
+  Remove.empty(section);
+
+  return section;
+};
 
 const render = <T extends DetailNew> (table: SugarElement, grid: RowDataNew<T>[]): NewRowsAndCells => {
   const newRows: SugarElement[] = [];
   const newCells: SugarElement[] = [];
-
-  const insert = (selector: string, element: SugarElement<HTMLTableSectionElement | HTMLTableColElement>) => {
-    const lastChild = Arr.last(SelectorFilter.children(table, selector));
-
-    lastChild.fold(
-      () => Insert.prepend(table, element),
-      (child) => Insert.after(child, element)
-    );
-  };
 
   const syncRows = (gridSection: RowDataNew<T>[]) =>
     Arr.map(gridSection, (row) => {
@@ -46,8 +62,8 @@ const render = <T extends DetailNew> (table: SugarElement, grid: RowDataNew<T>[]
       return tr;
     });
 
+  // Assumption we should only ever have 1 colgroup. The spec allows for multiple, however it's currently unsupported
   const syncColGroup = (gridSection: RowDataNew<T>[]) =>
-    // Assumption we should only ever have 1 colgroup in the section
     Arr.bind(gridSection, (colGroup) =>
       Arr.map(colGroup.cells, (col) => {
         setIfNot(col.element, 'span', col.colspan, 1);
@@ -56,23 +72,10 @@ const render = <T extends DetailNew> (table: SugarElement, grid: RowDataNew<T>[]
     );
 
   const renderSection = (gridSection: RowDataNew<T>[], sectionName: Section) => {
-    const section = SelectorFind.child(table, sectionName).getOrThunk(() => {
-      const tb = SugarElement.fromTag(sectionName, Traverse.owner(table).dom);
-      if (sectionName === 'thead') {
-        insert('caption,colgroup', tb);
-      } else if (sectionName === 'colgroup') {
-        insert('caption', tb);
-      } else {
-        Insert.append(table, tb);
-      }
-      return tb;
-    });
-
-    Remove.empty(section);
-
+    const section = generateSection(table, sectionName);
     const sync = sectionName === 'colgroup' ? syncColGroup : syncRows;
-    const rows = sync(gridSection);
-    InsertAll.append(section, rows);
+    const sectionElems = sync(gridSection);
+    InsertAll.append(section, sectionElems);
   };
 
   const removeSection = (sectionName: Section) => {
@@ -109,10 +112,7 @@ const render = <T extends DetailNew> (table: SugarElement, grid: RowDataNew<T>[]
     }
   });
 
-  if (columnGroupsSection.length) {
-    renderOrRemoveSection(columnGroupsSection, 'colgroup');
-  }
-
+  renderOrRemoveSection(columnGroupsSection, 'colgroup');
   renderOrRemoveSection(headSection, 'thead');
   renderOrRemoveSection(bodySection, 'tbody');
   renderOrRemoveSection(footSection, 'tfoot');

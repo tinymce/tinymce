@@ -3,8 +3,8 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { Arr, Unicode } from '@ephox/katamari';
 import { Compare, SugarElement, Traverse } from '@ephox/sugar';
 import * as Structs from 'ephox/snooker/api/Structs';
-import * as Transitions from 'ephox/snooker/model/Transitions';
 import { Warehouse } from 'ephox/snooker/api/Warehouse';
+import * as Transitions from 'ephox/snooker/model/Transitions';
 import * as Redraw from 'ephox/snooker/operate/Redraw';
 import * as Bridge from 'ephox/snooker/test/Bridge';
 
@@ -142,7 +142,7 @@ UnitTest.asynctest('Redraw Section Order Test', (success, failure) => {
         ]
       })), table);
 
-      changeTableSections(table, 0, 'thead');
+      changeTableSections(table, 1, 'thead');
 
       Assertions.assertStructure('Should be a table with a colgroup and a thead', ApproxStructure.build((s, str, _arr) => s.element('table', {
         children: [
