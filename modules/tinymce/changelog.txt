@@ -36,7 +36,7 @@ Version 5.5.0 (TBD)
     Fixed an issue where column resizing using the resize bars was inconsistent between fixed and relative table widths #TINY-6001
     Fixed an issue where dragging and dropping within a table would select table cells #TINY-5950
     Fixed up and down keyboard navigation not working for inline `contenteditable="false"` elements #TINY-6226
-    Fixed dialog not retrieving `close` icon from oxide icon pack #TINY-6445
+    Fixed dialog not retrieving `close` icon from icon pack #TINY-6445
     Fixed the `unlink` toolbar button not working when selecting multiple links #TINY-4867
     Fixed the `link` dialog not showing the "Text to display" field in some valid cases #TINY-5205
     Fixed the `DOMUtils.split()` API incorrectly removing some content #TINY-6294
