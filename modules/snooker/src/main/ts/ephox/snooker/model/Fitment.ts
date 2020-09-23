@@ -58,28 +58,29 @@ const measureHeight = (gridA: Structs.RowCells[], gridB: Structs.RowCells[]): De
   };
 };
 
-const fillCells = <T> (cells: T[], generator: SimpleGenerators) => Arr.map(cells, () => Structs.elementnew(generator.cell(), true));
-const fillCols = <T> (cols: T[], generator: SimpleGenerators) => Arr.map(cols, () => Structs.elementnew(generator.col(), true));
+const generateElements = <T> (cells: T[], row: Structs.RowCells, generators: SimpleGenerators) => {
+  const getGenerator = row.section === 'colgroup' ? generators.col : generators.cell;
+  return Arr.map(cells, () => Structs.elementnew(getGenerator(), true));
+};
 
-const rowFill = (grid: Structs.RowCells[], amount: number, generator: SimpleGenerators): Structs.RowCells[] =>
+const rowFill = (grid: Structs.RowCells[], amount: number, generators: SimpleGenerators): Structs.RowCells[] =>
   grid.concat(Arr.range(amount, () => {
     const row = grid[grid.length - 1];
-    const fill = row.section === 'colgroup' ? fillCols : fillCells;
-    return GridRow.setCells(row, fill(row.cells, generator));
+    return GridRow.setCells(row, generateElements(row.cells, row, generators));
   }));
 
-const colFill = (grid: Structs.RowCells[], amount: number, generator: SimpleGenerators): Structs.RowCells[] =>
+const colFill = (grid: Structs.RowCells[], amount: number, generators: SimpleGenerators): Structs.RowCells[] =>
   Arr.map(grid, (row) => {
-    const fill = row.section === 'colgroup' ? fillCols : fillCells;
-    return GridRow.setCells(row, row.cells.concat(fill(Arr.range(amount, Fun.identity), generator)));
+    const newChildren = generateElements(Arr.range(amount, Fun.identity), row, generators);
+    return GridRow.setCells(row, row.cells.concat(newChildren));
   });
 
-const tailor = (gridA: Structs.RowCells[], delta: Delta, generator: SimpleGenerators): Structs.RowCells[] => {
+const tailor = (gridA: Structs.RowCells[], delta: Delta, generators: SimpleGenerators): Structs.RowCells[] => {
   const fillCols = delta.colDelta < 0 ? colFill : Fun.identity;
   const fillRows = delta.rowDelta < 0 ? rowFill : Fun.identity;
 
-  const modifiedCols = fillCols(gridA, Math.abs(delta.colDelta), generator);
-  return fillRows(modifiedCols, Math.abs(delta.rowDelta), generator);
+  const modifiedCols = fillCols(gridA, Math.abs(delta.colDelta), generators);
+  return fillRows(modifiedCols, Math.abs(delta.rowDelta), generators);
 };
 
 export { measure, measureWidth, measureHeight, tailor };

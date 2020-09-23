@@ -4,13 +4,7 @@ import * as Structs from '../api/Structs';
 import * as TableLookup from '../api/TableLookup';
 import { getAttrValue } from '../util/CellUtils';
 
-const getParentSection = (group: SugarElement<HTMLElement>, fallback: Structs.Section) =>
-  Traverse.parent(group).map((parent) => {
-    const parentName = SugarNode.name(parent);
-    return Structs.isValidSection(parentName) ? parentName : fallback;
-  }).getOr(fallback);
-
-const fromRowsOrColGroups = (elems: SugarElement<HTMLTableRowElement | HTMLTableColElement>[]) =>
+const fromRowsOrColGroups = (elems: SugarElement<HTMLTableRowElement | HTMLTableColElement>[], getSection: (group: SugarElement<HTMLElement>) => Structs.Section) =>
   Arr.map(elems, (row) => {
     if (SugarNode.name(row) === 'colgroup') {
       const cells = Arr.map(TableLookup.columns(row), (column) => {
@@ -25,10 +19,15 @@ const fromRowsOrColGroups = (elems: SugarElement<HTMLTableRowElement | HTMLTable
         return Structs.detail(cell, rowspan, colspan);
       });
 
-      const parentSection = getParentSection(row, 'tbody');
-      return Structs.rowdata(row, cells, parentSection);
+      return Structs.rowdata(row, cells, getSection(row));
     }
   });
+
+const getParentSection = (group: SugarElement<HTMLElement>) =>
+  Traverse.parent(group).map((parent) => {
+    const parentName = SugarNode.name(parent);
+    return Structs.isValidSection(parentName) ? parentName : 'tbody';
+  }).getOr('tbody');
 
 /*
  * Takes a DOM table and returns a list of list of:
@@ -40,10 +39,10 @@ const fromTable = (table: SugarElement<HTMLTableElement>) => {
   const columnGroups = TableLookup.columnGroups(table);
 
   const elems: SugarElement<HTMLTableRowElement | HTMLTableColElement>[] = [ ...columnGroups, ...rows ];
-  return fromRowsOrColGroups(elems);
+  return fromRowsOrColGroups(elems, getParentSection);
 };
 
-const fromPastedRows = fromRowsOrColGroups;
+const fromPastedRows = (elems: SugarElement<HTMLTableRowElement | HTMLTableColElement>[], section: Structs.Section) => fromRowsOrColGroups(elems, () => section);
 
 export {
   fromTable,
