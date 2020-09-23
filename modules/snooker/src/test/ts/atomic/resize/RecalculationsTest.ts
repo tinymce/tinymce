@@ -55,11 +55,7 @@ UnitTest.test('RecalculationsTest', () => {
 
   const makeDetail = (fakeEle: any, rowspan: number, colspan: number) => Structs.detail(fakeEle as SugarElement, rowspan, colspan);
   const makeRow = (fakeEle: any, cells: Structs.Detail[]) => Structs.rowdata(fakeEle as SugarElement, cells, 'tbody');
-  const makeColumnGroup = (cells: Structs.Detail[]) => Structs.rowdata({
-    dom: {
-      childNodes: Arr.map(cells, (cell) => cell.element)
-    }
-  }, cells, 'colgroup');
+  const makeColumnGroup = (cells: Structs.Detail[]) => Structs.rowdata(SugarElement.fromTag('colgroup') as any, cells, 'colgroup');
 
   check(
     [

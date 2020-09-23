@@ -109,7 +109,7 @@ const coords = (x: number, y: number): Coords => ({
   y
 });
 
-const detail = (element: SugarElement<HTMLTableCellElement>, rowspan: number, colspan: number): Detail => ({
+const detail = (element: SugarElement<HTMLTableCellElement | HTMLTableColElement>, rowspan: number, colspan: number): Detail => ({
   element,
   rowspan,
   colspan

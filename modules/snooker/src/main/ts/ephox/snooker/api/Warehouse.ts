@@ -76,38 +76,40 @@ const generate = <T extends Structs.Detail> (list: Structs.RowData<T>[]): Wareho
 
   let maxRows = 0;
   let maxColumns = 0;
+  let rowCount = 0;
 
-  Arr.each(list, (rowData, rowIndex) => {
-    const currentRow: Structs.DetailExt[] = [];
-    Arr.each(rowData.cells, (rowCell) => {
-      let start = 0;
-
-      // If this spot has been taken by a previous rowspan, skip it.
-      while (access[key(rowIndex, start)] !== undefined) {
-        start++;
-      }
-
-      const current = Structs.extended(rowCell.element, rowCell.rowspan, rowCell.colspan, rowIndex, start);
-
-      // Occupy all the (row, column) positions that this cell spans for.
-      for (let occupiedColumnPosition = 0; occupiedColumnPosition < rowCell.colspan; occupiedColumnPosition++) {
-        for (let occupiedRowPosition = 0; occupiedRowPosition < rowCell.rowspan; occupiedRowPosition++) {
-          const rowPosition = rowIndex + occupiedRowPosition;
-          const columnPosition = start + occupiedColumnPosition;
-          const newpos = key(rowPosition, columnPosition);
-          access[newpos] = current;
-          maxColumns = Math.max(maxColumns, columnPosition + 1);
-        }
-      }
-
-      currentRow.push(current);
-    });
-
+  Arr.each(list, (rowData) => {
     if (rowData.section === 'colgroup') {
       columnsGroup = generateColumns<T>(rowData);
     } else {
+      const currentRow: Structs.DetailExt[] = [];
+      Arr.each(rowData.cells, (rowCell) => {
+        let start = 0;
+
+        // If this spot has been taken by a previous rowspan, skip it.
+        while (access[key(rowCount, start)] !== undefined) {
+          start++;
+        }
+
+        const current = Structs.extended(rowCell.element, rowCell.rowspan, rowCell.colspan, rowCount, start);
+
+        // Occupy all the (row, column) positions that this cell spans for.
+        for (let occupiedColumnPosition = 0; occupiedColumnPosition < rowCell.colspan; occupiedColumnPosition++) {
+          for (let occupiedRowPosition = 0; occupiedRowPosition < rowCell.rowspan; occupiedRowPosition++) {
+            const rowPosition = rowCount + occupiedRowPosition;
+            const columnPosition = start + occupiedColumnPosition;
+            const newpos = key(rowPosition, columnPosition);
+            access[newpos] = current;
+            maxColumns = Math.max(maxColumns, columnPosition + 1);
+          }
+        }
+
+        currentRow.push(current);
+      });
+
       maxRows++;
       cells.push(Structs.rowdata(rowData.element, currentRow, rowData.section));
+      rowCount++;
     }
   });
 

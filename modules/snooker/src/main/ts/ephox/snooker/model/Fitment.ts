@@ -58,13 +58,21 @@ const measureHeight = (gridA: Structs.RowCells[], gridB: Structs.RowCells[]): De
   };
 };
 
-const fill = <T> (cells: T[], generator: SimpleGenerators) => Arr.map(cells, () => Structs.elementnew(generator.cell(), true));
+const fillCells = <T> (cells: T[], generator: SimpleGenerators) => Arr.map(cells, () => Structs.elementnew(generator.cell(), true));
+const fillCols = <T> (cols: T[], generator: SimpleGenerators) => Arr.map(cols, () => Structs.elementnew(generator.col(), true));
 
 const rowFill = (grid: Structs.RowCells[], amount: number, generator: SimpleGenerators): Structs.RowCells[] =>
-  grid.concat(Arr.range(amount, () => GridRow.setCells(grid[grid.length - 1], fill(grid[grid.length - 1].cells, generator))));
+  grid.concat(Arr.range(amount, () => {
+    const row = grid[grid.length - 1];
+    const fill = row.section === 'colgroup' ? fillCols : fillCells;
+    return GridRow.setCells(row, fill(row.cells, generator));
+  }));
 
 const colFill = (grid: Structs.RowCells[], amount: number, generator: SimpleGenerators): Structs.RowCells[] =>
-  Arr.map(grid, (row) => GridRow.setCells(row, row.cells.concat(fill(Arr.range(amount, Fun.identity), generator))));
+  Arr.map(grid, (row) => {
+    const fill = row.section === 'colgroup' ? fillCols : fillCells;
+    return GridRow.setCells(row, row.cells.concat(fill(Arr.range(amount, Fun.identity), generator)));
+  });
 
 const tailor = (gridA: Structs.RowCells[], delta: Delta, generator: SimpleGenerators): Structs.RowCells[] => {
   const fillCols = delta.colDelta < 0 ? colFill : Fun.identity;

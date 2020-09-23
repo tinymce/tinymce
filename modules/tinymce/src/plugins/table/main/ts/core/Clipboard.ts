@@ -13,14 +13,14 @@ export interface Clipboard {
   setRows: (rows: Optional<SugarElement<HTMLTableRowElement>[]>) => void;
   clearRows: () => void;
 
-  getColumns: () => Optional<SugarElement<HTMLTableRowElement>[]>;
-  setColumns: (columns: Optional<SugarElement<HTMLTableRowElement>[]>) => void;
+  getColumns: () => Optional<SugarElement<HTMLTableRowElement | HTMLTableColElement>[]>;
+  setColumns: (columns: Optional<SugarElement<HTMLTableRowElement | HTMLTableColElement>[]>) => void;
   clearColumns: () => void;
 }
 
 export const Clipboard = (): Clipboard => {
   const rows = Cell(Optional.none<SugarElement<HTMLTableRowElement>[]>());
-  const cols = Cell(Optional.none<SugarElement<HTMLTableRowElement>[]>());
+  const cols = Cell(Optional.none<SugarElement<HTMLTableRowElement | HTMLTableColElement>[]>());
 
   const clearClipboard = (clipboard: Cell<Optional<SugarElement<any>[]>>) => {
     clipboard.set(Optional.none());
@@ -34,7 +34,7 @@ export const Clipboard = (): Clipboard => {
     },
     clearRows: () => clearClipboard(rows),
     getColumns: cols.get,
-    setColumns: (c: Optional<SugarElement<HTMLTableRowElement>[]>) => {
+    setColumns: (c: Optional<SugarElement<HTMLTableRowElement | HTMLTableColElement>[]>) => {
       cols.set(c);
       clearClipboard(rows);
     },

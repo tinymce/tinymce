@@ -1,4 +1,4 @@
-import { Arr, Optional } from '@ephox/katamari';
+import { Arr, Optional, Obj } from '@ephox/katamari';
 import { Attribute, InsertAll, Replication, SugarElement } from '@ephox/sugar';
 import { onCells, TargetSelection } from '../model/RunOperation';
 import * as CellUtils from '../util/CellUtils';
@@ -13,14 +13,18 @@ const constrainSpan = (element: SugarElement, property: 'colspan' | 'rowspan', v
   }
 };
 
-const copyCols = (table: SugarElement, target: TargetSelection): Optional<SugarElement<HTMLTableRowElement>[]> => {
+const copyCols = (table: SugarElement, target: TargetSelection): Optional<SugarElement<HTMLTableRowElement | HTMLTableColElement>[]> => {
   const house = Warehouse.fromTable(table);
   const details = onCells(house, target);
-  return details.map((selectedCells) => {
+  return details.map((selectedCells): SugarElement<HTMLTableRowElement | HTMLTableColElement>[] => {
     const lastSelectedCell = selectedCells[selectedCells.length - 1];
     const minColRange = selectedCells[0].column;
     const maxColRange = lastSelectedCell.column + lastSelectedCell.colspan;
-    return Arr.map(house.all, (row) => {
+    const cols = Arr.filter(Obj.values(house.columns), (_col, i) => i >= minColRange && i < maxColRange);
+    const fakeColgroup = SugarElement.fromTag('colgroup');
+    InsertAll.append(fakeColgroup, Arr.map(cols, (c) => Replication.deep(c.element)));
+
+    const fakeRows = Arr.map(house.all, (row) => {
       const cellsToCopy = Arr.filter(row.cells, (cell) => cell.column >= minColRange && cell.column < maxColRange);
       const copiedCells = Arr.map(cellsToCopy, (cell) => {
         const clonedCell = Replication.deep(cell.element);
@@ -31,6 +35,8 @@ const copyCols = (table: SugarElement, target: TargetSelection): Optional<SugarE
       InsertAll.append(fakeTR, copiedCells);
       return fakeTR;
     });
+
+    return [ fakeColgroup, ...fakeRows ];
   });
 };
 

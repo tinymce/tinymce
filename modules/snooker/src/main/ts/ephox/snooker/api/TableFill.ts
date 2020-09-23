@@ -9,6 +9,10 @@ const createCell = function () {
   return td;
 };
 
+const createCol = () => SugarElement.fromTag('col');
+
+const createColgroup = () => SugarElement.fromTag('colgroup');
+
 const replace = function <K extends keyof HTMLElementTagNameMap> (cell: SugarElement, tag: K, attrs: Record<string, string | number | boolean | null>) {
   const replica = Replication.copy(cell, tag);
   // TODO: Snooker passes null to indicate 'remove attribute'
@@ -74,6 +78,8 @@ const cellOperations = function (mutate: (e1: SugarElement, e2: SugarElement) =>
   };
 
   return {
+    col: createCol,
+    colgroup: createColgroup,
     row: newRow(doc),
     cell: newCell,
     replace,
@@ -83,6 +89,8 @@ const cellOperations = function (mutate: (e1: SugarElement, e2: SugarElement) =>
 
 const paste = function (doc: SugarElement): SimpleGenerators {
   return {
+    col: createCol,
+    colgroup: createColgroup,
     row: newRow(doc),
     cell: createCell,
     replace: pasteReplace,

@@ -31,7 +31,7 @@ const paste = (element: SugarElement<Element>, clipboard: SugarElement<HTMLTable
   generators
 });
 
-const pasteRows = (selections: Selections, cell: SugarElement<HTMLTableCellElement>, clipboard: SugarElement<HTMLTableRowElement>[], generators: SimpleGenerators): RunOperation.TargetPasteRows => ({
+const pasteRows = (selections: Selections, cell: SugarElement<HTMLTableCellElement>, clipboard: SugarElement<HTMLTableRowElement | HTMLTableColElement>[], generators: SimpleGenerators): RunOperation.TargetPasteRows => ({
   selection: CellOpSelection.selection(selections),
   clipboard,
   generators

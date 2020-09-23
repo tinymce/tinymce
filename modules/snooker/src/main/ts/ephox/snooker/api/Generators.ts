@@ -13,6 +13,8 @@ export interface Generators {
   readonly row: () => SugarElement;
   readonly replace: <K extends keyof HTMLElementTagNameMap>(cell: SugarElement, tag: K, attrs: Record<string, string | number | boolean | null>) => SugarElement;
   readonly gap: () => SugarElement;
+  readonly col: () => SugarElement;
+  readonly colgroup: () => SugarElement;
 }
 
 export interface SimpleGenerators extends Generators {
@@ -20,6 +22,8 @@ export interface SimpleGenerators extends Generators {
   readonly row: () => SugarElement;
   readonly replace: (cell: SugarElement) => SugarElement;
   readonly gap: () => SugarElement;
+  readonly col: () => SugarElement;
+  readonly colgroup: () => SugarElement;
 }
 
 export interface GeneratorsWrapper {
@@ -48,7 +52,7 @@ interface Item {
   readonly sub: SugarElement;
 }
 
-const verifyGenerators: (gen: Generators) => Generators = Contracts.exactly([ 'cell', 'row', 'replace', 'gap' ]);
+const verifyGenerators: (gen: Generators) => Generators = Contracts.exactly([ 'cell', 'row', 'replace', 'gap', 'col', 'colgroup' ]);
 
 const elementToData = function (element: SugarElement): CellSpan {
   const colspan = getAttrValue(element, 'colspan', 1);
@@ -95,7 +99,7 @@ const modification = function (generators: Generators, toData = elementToData): 
   return {
     getOrInit,
     cursor: position.get
-  } ;
+  };
 };
 
 const transform = function <K extends keyof HTMLElementTagNameMap> (scope: string | null, tag: K) {

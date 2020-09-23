@@ -48,7 +48,9 @@ const generators: Generators = {
     const tag = SugarElement.fromTag('td');
     Insert.append(tag, SugarElement.fromText('?'));
     return tag;
-  }
+  },
+  col() { return SugarElement.fromTag('col'); },
+  colgroup() { return SugarElement.fromTag('colgroup'); }
 };
 
 export {
