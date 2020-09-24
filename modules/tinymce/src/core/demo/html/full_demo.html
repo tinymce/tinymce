@@ -8,11 +8,35 @@
 
 <body>
   <main>
-    <h1>Tinymce full featured Page</h1>
-    <div id="ephox-ui">
-      <textarea></textarea>
-    </div>
-    <div class="tinymce">Inline demo</div>
+
+    <table style="border-collapse: collapse; width: 100%;" border="1">
+      <tbody>
+        <tr>
+          <td style="width: 50%; padding: 10px;">
+            <h2>iframe mode</h2>
+            <textarea id="tiny1"></textarea>
+          </td>
+          <td style="width: 50%; padding: 10px;">
+              <div id="tiny2_attach_here"></div>
+              <h2>iframe mode + fixed_toolbar_container</h2>
+              <textarea id="tiny2"></textarea>
+          </td>
+        </tr>
+        <tr>
+          <td style="width: 50%; padding: 10px;">
+            <h2>inline mode</h2>
+            <div id="tiny3">inline</div>
+          </td>
+          <td style="width: 50%; padding: 10px;">
+            <div id="tiny4_attach_here"></div>
+            <h2>inline mode + fixed_toolbar_container</h2>
+            <div id="tiny4">inline</div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div style="height: 200px;"></div>
     <script src="../../../../js/tinymce/tinymce.js"></script>
     <script src="../../../../scratch/demos/core/demo.js"></script>
     <script>demos.FullDemo();</script>

@@ -26,10 +26,11 @@ const broadcastReadonly = (uiComponents: RenderUiComponents, readonly: boolean) 
   const target = outerContainer.element;
 
   if (readonly) {
-    uiComponents.mothership.broadcastOn([ Channels.dismissPopups() ], { target });
+    // uiComponents.headerMothership.broadcastOn([ Channels.dismissPopups() ], { target });
     uiComponents.uiMothership.broadcastOn([ Channels.dismissPopups() ], { target });
   }
 
+  // uiComponents.headerMothership.broadcastOn([ ReadOnlyChannel ], { readonly });
   uiComponents.mothership.broadcastOn([ ReadOnlyChannel ], { readonly });
   uiComponents.uiMothership.broadcastOn([ ReadOnlyChannel ], { readonly });
 };

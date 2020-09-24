@@ -80,6 +80,7 @@ const setupEvents = (editor: Editor, uiComponents: RenderUiComponents) => {
 
 const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: RenderUiConfig, backstage: UiFactoryBackstage, args: RenderArgs): ModeRenderInfo => {
   const lastToolbarWidth = Cell(0);
+  const containerWithHeader = uiComponents.headerOuterContainer.getOr(uiComponents.outerContainer);
   const outerContainer = uiComponents.outerContainer;
 
   loadIframeSkin(editor);
@@ -88,6 +89,9 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
   const uiRoot = SugarShadowDom.getContentContainer(SugarShadowDom.getRootNode(eTargetNode));
 
   Attachment.attachSystemAfter(eTargetNode, uiComponents.mothership);
+  Settings.fixedContainerElement(editor).each((fixedContainerElement) => {
+    Attachment.attachSystemAfter(fixedContainerElement, uiComponents.headerMothership.getOr(uiComponents.mothership));
+  });
   Attachment.attachSystem(uiRoot, uiComponents.uiMothership);
 
   editor.on('PostRender', () => {
@@ -95,7 +99,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
     lastToolbarWidth.set(editor.getWin().innerWidth);
 
     OuterContainer.setMenubar(
-      outerContainer,
+      containerWithHeader,
       identifyMenus(editor, rawUiConfig)
     );
 
@@ -107,7 +111,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
     setupEvents(editor, uiComponents);
   });
 
-  const socket = OuterContainer.getSocket(outerContainer).getOrDie('Could not find expected socket element');
+  const socket = OuterContainer.getSocket(uiComponents.outerContainer).getOrDie('Could not find expected socket element');
 
   if (isiOS12) {
     Css.setAll(socket.element, {
@@ -134,7 +138,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
   const toolbarMode = Settings.getToolbarMode(editor);
 
   const refreshDrawer = () => {
-    OuterContainer.refreshToolbar(uiComponents.outerContainer);
+    OuterContainer.refreshToolbar(containerWithHeader);
   };
 
   if (toolbarMode === Settings.ToolbarMode.sliding || toolbarMode === Settings.ToolbarMode.floating) {
@@ -150,7 +154,8 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
 
   return {
     iframeContainer: socket.element.dom,
-    editorContainer: outerContainer.element.dom
+    // editorContainer: headerOuterContainer.element.dom // What to do here
+    editorContainer: outerContainer.element.dom // What to do here
   };
 };
 

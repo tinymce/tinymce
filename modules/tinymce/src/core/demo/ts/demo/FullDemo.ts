@@ -31,7 +31,6 @@ export default function () {
     skin_url: '../../../../js/tinymce/skins/ui/oxide',
     content_css: '../../../../js/tinymce/skins/content/default/content.css',
     images_upload_url: 'd',
-    selector: 'textarea',
     // rtl_ui: true,
     link_list: [
       { title: 'My page 1', value: 'http://www.tinymce.com' },
@@ -154,6 +153,8 @@ export default function () {
     resize_img_proportional: true
   };
 
-  tinymce.init(settings);
-  tinymce.init(Merger.deepMerge(settings, { inline: true, selector: 'div.tinymce' }));
+  tinymce.init(Merger.deepMerge(settings, { selector: '#tiny1' }));
+  tinymce.init(Merger.deepMerge(settings, { selector: '#tiny2', fixed_toolbar_container: '#tiny2_attach_here' }));
+  tinymce.init(Merger.deepMerge(settings, { inline: true, selector: '#tiny3' }));
+  tinymce.init(Merger.deepMerge(settings, { inline: true, selector: '#tiny4', fixed_toolbar_container: '#tiny4_attach_here' }));
 }

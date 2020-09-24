@@ -52,8 +52,10 @@ export interface UiChannels {
 
 export interface RenderUiComponents {
   mothership: Gui.GuiSystem;
+  headerMothership: Optional<Gui.GuiSystem>;
   uiMothership: Gui.GuiSystem;
   outerContainer: AlloyComponent;
+  headerOuterContainer: Optional<AlloyComponent>;
 }
 
 export type ToolbarConfig = Array<string | Settings.ToolbarGroupSetting> | string | boolean;
@@ -80,7 +82,7 @@ const setup = (editor: Editor): RenderInfo => {
   const isInline = editor.inline;
   const mode = isInline ? Inline : Iframe;
   const header = Settings.isStickyToolbar(editor) ? StickyHeader : StaticHeader;
-  let lazyOuterContainer: Optional<AlloyComponent> = Optional.none();
+  let lazyHeaderOuterContainer: Optional<AlloyComponent> = Optional.none();
 
   const platform = PlatformDetection.detect();
   const isIE = platform.browser.isIE();
@@ -89,6 +91,7 @@ const setup = (editor: Editor): RenderInfo => {
   const touchPlatformClass = 'tox-platform-touch';
   const deviceClasses = isTouch ? [ touchPlatformClass ] : [];
   const isToolbarBottom = Settings.isToolbarLocationBottom(editor);
+  const useDecoupledUi = Settings.useDecoupledUi(editor);
 
   const dirAttributes = I18n.isRtl() ? {
     attributes: {
@@ -104,7 +107,7 @@ const setup = (editor: Editor): RenderInfo => {
     }
   };
 
-  const lazyHeader = () => lazyOuterContainer.bind(OuterContainer.getHeader);
+  const lazyHeader = () => lazyHeaderOuterContainer.bind(OuterContainer.getHeader);
 
   const isHeaderDocked = () => header.isDocked(lazyHeader);
 
@@ -130,11 +133,11 @@ const setup = (editor: Editor): RenderInfo => {
     }
   });
 
-  const lazyAnchorBar = () => lazyOuterContainer.bind((container) => memAnchorBar.getOpt(container)).getOrDie('Could not find a anchor bar element');
+  const lazyAnchorBar = () => lazyHeaderOuterContainer.bind((container) => memAnchorBar.getOpt(container)).getOrDie('Could not find a anchor bar element');
 
-  const lazyToolbar = () => lazyOuterContainer.bind((container) => OuterContainer.getToolbar(container)).getOrDie('Could not find more toolbar element');
+  const lazyToolbar = () => lazyHeaderOuterContainer.bind((container) => OuterContainer.getToolbar(container)).getOrDie('Could not find more toolbar element');
 
-  const lazyThrobber = () => lazyOuterContainer.bind((container) => OuterContainer.getThrobber(container)).getOrDie('Could not find throbber element');
+  const lazyThrobber = () => lazyHeaderOuterContainer.bind((container) => OuterContainer.getThrobber(container)).getOrDie('Could not find throbber element');
 
   const backstage: Backstage.UiFactoryBackstage = Backstage.init(sink, editor, lazyAnchorBar);
 
@@ -251,10 +254,10 @@ const setup = (editor: Editor): RenderInfo => {
 
   // We need the statusbar to be separate to everything else so resizing works properly
   const editorComponents = Arr.flatten<AlloySpec>([
-    isToolbarBottom ? [ ] : [ partHeader ],
+    isToolbarBottom || useDecoupledUi ? [ ] : [ partHeader ],
     // Inline mode does not have a socket/sidebar
     isInline ? [ ] : [ socketSidebarContainer ],
-    isToolbarBottom ? [ partHeader ] : [ ]
+    isToolbarBottom && !useDecoupledUi ? [ partHeader ] : [ ]
   ]);
 
   const editorContainer = {
@@ -308,29 +311,53 @@ const setup = (editor: Editor): RenderInfo => {
     } as OuterContainerSketchSpec)
   );
 
-  lazyOuterContainer = Optional.some(outerContainer);
+  const headerOuterContainer = useDecoupledUi ? Optional.some(GuiFactory.build(
+    OuterContainer.sketch({ // OuterContainer must be split as well
+      dom: {
+        tag: 'div',
+        classes: [ 'tox', 'tox-tinymce' ]
+          .concat(deviceClasses)
+          .concat(platformClasses),
+        styles: {
+          // This is overridden by the skin, it helps avoid FOUC
+          visibility: 'hidden',
+          // Hide the container if needed, but don't use "display: none" so that it still has a position
+          ...isHidden ? { opacity: '0', border: '0' } : {}
+        },
+        attributes
+      },
+      components: [ partHeader ],
+      behaviours: Behaviour.derive([
+        Keying.config({
+          mode: 'cyclic',
+          selector: '.tox-menubar, .tox-toolbar, .tox-toolbar__primary, .tox-toolbar__overflow--open, .tox-sidebar__overflow--open, .tox-statusbar__path, .tox-statusbar__wordcount, .tox-statusbar__branding a'
+        })
+      ])
+    } as OuterContainerSketchSpec)
+  )) : Optional.none<AlloyComponent>();
+
+  const containerWithHeader = headerOuterContainer.getOr(outerContainer);
+
+  lazyHeaderOuterContainer = Optional.some(containerWithHeader);
 
   editor.shortcuts.add('alt+F9', 'focus menubar', function () {
-    OuterContainer.focusMenubar(outerContainer);
+    OuterContainer.focusMenubar(containerWithHeader);
   });
   editor.shortcuts.add('alt+F10', 'focus toolbar', function () {
-    OuterContainer.focusToolbar(outerContainer);
+    OuterContainer.focusToolbar(containerWithHeader);
   });
-
   editor.addCommand('ToggleToolbarDrawer', () => {
-    OuterContainer.toggleToolbarDrawer(outerContainer);
+    OuterContainer.toggleToolbarDrawer(containerWithHeader);
     // TODO: Consider firing event - TINY-6371
   });
 
-  editor.addQueryStateHandler('ToggleToolbarDrawer', () => OuterContainer.isToolbarDrawerToggled(outerContainer));
+  editor.addQueryStateHandler('ToggleToolbarDrawer', () => OuterContainer.isToolbarDrawerToggled(containerWithHeader));
 
-  const mothership = Gui.takeover(
-    outerContainer
-  );
-
+  const mothership = Gui.takeover(outerContainer);
+  const headerMothership = headerOuterContainer.map(Gui.takeover);
   const uiMothership = Gui.takeover(sink);
 
-  Events.setup(editor, mothership, uiMothership);
+  Events.setup(editor, mothership, headerMothership, uiMothership);
 
   const getUi = () => {
     const channels = {
@@ -398,7 +425,7 @@ const setup = (editor: Editor): RenderInfo => {
     const elm = editor.getElement();
     const height = setEditorSize();
 
-    const uiComponents: RenderUiComponents = { mothership, uiMothership, outerContainer };
+    const uiComponents: RenderUiComponents = { mothership, headerMothership, uiMothership, outerContainer, headerOuterContainer };
     const args: RenderArgs = { targetNode: elm, height };
     return mode.render(editor, uiComponents, rawUiConfig, backstage, args);
   };

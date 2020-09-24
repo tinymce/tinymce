@@ -6,19 +6,19 @@
  */
 
 import { Attachment, Channels, Gui, SystemEvents } from '@ephox/alloy';
-import { Arr } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import { DomEvent, EventArgs, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 
-const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMothership: Gui.GuiSystem) => {
+const setup = (editor: Editor, mothership: Gui.GuiSystem, headerMothership: Optional<Gui.GuiSystem>, uiMothership: Gui.GuiSystem) => {
   const broadcastEvent = (name: string, evt: EventArgs) => {
-    Arr.each([ mothership, uiMothership ], (ship) => {
+    Arr.each([ mothership, uiMothership ].concat(headerMothership.toArray()), (ship) => {
       ship.broadcastEvent(name, evt);
     });
   };
 
   const broadcastOn = (channel: string, message: Record<string, any>) => {
-    Arr.each([ mothership, uiMothership ], (ship) => {
+    Arr.each([ mothership, uiMothership ].concat(headerMothership.toArray()), (ship) => {
       ship.broadcastOn([ channel ], message);
     });
   };
@@ -83,8 +83,10 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMothership: Gui.GuiS
 
   editor.on('detach', () => {
     Attachment.detachSystem(mothership);
+    headerMothership.each(Attachment.detachSystem);
     Attachment.detachSystem(uiMothership);
     mothership.destroy();
+    headerMothership.each((guiSystem) => guiSystem.destroy());
     uiMothership.destroy();
   });
 };

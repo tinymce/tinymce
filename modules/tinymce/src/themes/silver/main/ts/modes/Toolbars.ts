@@ -14,7 +14,7 @@ import { identifyButtons } from '../ui/toolbar/Integration';
 
 // Set toolbar(s) depending on if multiple toolbars is configured or not
 const setToolbar = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: RenderUiConfig, backstage: UiFactoryBackstage) => {
-  const comp = uiComponents.outerContainer;
+  const comp = uiComponents.headerOuterContainer.getOr(uiComponents.outerContainer);
   const toolbarConfig = rawUiConfig.toolbar;
   const toolbarButtonsConfig = rawUiConfig.buttons;
 

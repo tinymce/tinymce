@@ -106,10 +106,12 @@ const isToolbarPersist = (editor): boolean => editor.getParam('toolbar_persist',
 const fixedContainerElement = (editor): Optional<SugarElement> => {
   const selector = fixedContainerSelector(editor);
   // If we have a valid selector and are in inline mode, try to get the fixed_toolbar_container
-  return selector.length > 0 && editor.inline ? SelectorFind.descendant(SugarBody.body(), selector) : Optional.none();
+  return selector.length > 0 ? SelectorFind.descendant(SugarBody.body(), selector) : Optional.none();
 };
 
-const useFixedContainer = (editor): boolean => editor.inline && fixedContainerElement(editor).isSome();
+const useFixedContainer = (editor): boolean => fixedContainerElement(editor).isSome();
+
+const useDecoupledUi = (editor): boolean => useFixedContainer(editor) && !editor.inline;
 
 const getUiContainer = (editor: Editor): SugarElement => {
   const fixedContainer = fixedContainerElement(editor);
@@ -184,7 +186,9 @@ export {
   isToolbarPersist,
   getMultipleToolbarsSetting,
   getUiContainer,
+  fixedContainerElement,
   useFixedContainer,
+  useDecoupledUi,
   getToolbarMode,
   isDraggableModal,
   isDistractionFree,
