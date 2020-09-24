@@ -1,7 +1,7 @@
 import { Arr, Fun, Optional } from '@ephox/katamari';
-import { GridRow } from '@ephox/snooker';
 import { Remove, SugarElement, SugarNode } from '@ephox/sugar';
 import * as DetailsList from '../model/DetailsList';
+import * as GridRow from '../model/GridRow';
 import {
   ExtractMergable, ExtractPaste, ExtractPasteRows, onCell, onCells, onMergable, onPaste, onPasteByEditor, onUnmergable, run, TargetSelection
 } from '../model/RunOperation';
@@ -37,8 +37,9 @@ const outcome = (grid: Structs.RowCells[], cursor: Optional<SugarElement>): Tabl
 });
 
 const elementFromGrid = function (grid: Structs.RowCells[], row: number, column: number) {
-  return findIn(grid, row, column).orThunk(function () {
-    return findIn(grid, 0, 0);
+  const rows = GridRow.extractGridDetails(grid).rows;
+  return findIn(rows, row, column).orThunk(function () {
+    return findIn(rows, 0, 0);
   });
 };
 
@@ -51,7 +52,8 @@ const findIn = function (grid: Structs.RowCells[], row: number, column: number) 
 };
 
 const bundle = function (grid: Structs.RowCells[], row: number, column: number) {
-  return outcome(grid, findIn(grid, row, column));
+  const rows = GridRow.extractGridDetails(grid).rows;
+  return outcome(grid, findIn(rows, row, column));
 };
 
 const uniqueRows = function (details: Structs.DetailExt[]) {
