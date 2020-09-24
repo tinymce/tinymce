@@ -41,7 +41,7 @@
     "@tinymce/eslint-plugin": "^1.4.0",
     "awesome-typescript-loader": "^5.2.0",
     "chalk": "^4.1.0",
-    "fast-check": "^2.3.0",
+    "fast-check": "^1.18.1",
     "grunt": "^1.0.2",
     "grunt-contrib-clean": "^2.0.0",
     "grunt-contrib-concat": "^1.0.1",
