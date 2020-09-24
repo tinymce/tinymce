@@ -74,6 +74,10 @@ export interface Column {
   readonly colspan: number;
 }
 
+export interface ColumnExt extends Column {
+  readonly column: number;
+}
+
 export interface Bounds {
   readonly startRow: number;
   readonly startCol: number;
@@ -165,9 +169,10 @@ const bounds = (startRow: number, startCol: number, finishRow: number, finishCol
   finishCol
 });
 
-const column = (element: SugarElement<HTMLTableColElement>, colspan: number): Column => ({
+const columnext = (element: SugarElement<HTMLTableColElement>, colspan: number, column: number): ColumnExt => ({
   element,
-  colspan
+  colspan,
+  column
 });
 
 export {
@@ -186,5 +191,5 @@ export {
   rowdetails,
   bounds,
   isValidSection,
-  column
+  columnext
 };

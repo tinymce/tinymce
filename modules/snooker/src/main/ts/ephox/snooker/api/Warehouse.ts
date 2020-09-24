@@ -7,7 +7,7 @@ export interface Warehouse {
   readonly grid: Structs.Grid;
   readonly access: Record<string, Structs.DetailExt>;
   readonly all: Structs.RowData<Structs.DetailExt>[];
-  readonly columns: Record<string, Structs.Column>;
+  readonly columns: Record<string, Structs.ColumnExt>;
 }
 
 const key = function (row: number, column: number) {
@@ -33,14 +33,15 @@ const filterItems = function (warehouse: Warehouse, predicate: (x: Structs.Detai
 };
 
 const generateColumns = <T extends Structs.Detail> (rowData: Structs.RowData<T>) => {
-  const columnsGroup: Record<number, Structs.Column> = {};
+  const columnsGroup: Record<number, Structs.ColumnExt> = {};
   let index = 0;
 
   Arr.each(rowData.cells, (column: T) => {
     const colspan = column.colspan;
 
     Arr.range(colspan, (columnIndex) => {
-      columnsGroup[index + columnIndex] = Structs.column(column.element, colspan);
+      const colIndex = index + columnIndex;
+      columnsGroup[colIndex] = Structs.columnext(column.element, colspan, colIndex);
     });
 
     index += colspan;
@@ -65,7 +66,7 @@ const generate = <T extends Structs.Detail> (list: Structs.RowData<T>[]): Wareho
   //          rowspan (merge cols)
   const access: Record<string, Structs.DetailExt> = {};
   const cells: Structs.RowData<Structs.DetailExt>[] = [];
-  let columnsGroup: Record<number, Structs.Column> = {};
+  let columns: Record<number, Structs.ColumnExt> = {};
 
   let maxRows = 0;
   let maxColumns = 0;
@@ -73,7 +74,7 @@ const generate = <T extends Structs.Detail> (list: Structs.RowData<T>[]): Wareho
 
   Arr.each(list, (rowData) => {
     if (rowData.section === 'colgroup') {
-      columnsGroup = generateColumns<T>(rowData);
+      columns = generateColumns<T>(rowData);
     } else {
       const currentRow: Structs.DetailExt[] = [];
       Arr.each(rowData.cells, (rowCell) => {
@@ -112,7 +113,7 @@ const generate = <T extends Structs.Detail> (list: Structs.RowData<T>[]): Wareho
     grid,
     access,
     all: cells,
-    columns: columnsGroup
+    columns
   };
 };
 
@@ -124,13 +125,13 @@ const fromTable = (table: SugarElement<HTMLTableElement>) => {
 const justCells = (warehouse: Warehouse): Structs.DetailExt[] =>
   Arr.bind(warehouse.all, (w) => w.cells);
 
-const justColumns = (warehouse: Warehouse): Structs.Column[] =>
+const justColumns = (warehouse: Warehouse): Structs.ColumnExt[] =>
   Obj.values(warehouse.columns);
 
 const hasColumns = (warehouse: Warehouse) =>
   Obj.keys(warehouse.columns).length > 0;
 
-const getColumnAt = (warehouse: Warehouse, columnIndex: number): Optional<Structs.Column> =>
+const getColumnAt = (warehouse: Warehouse, columnIndex: number): Optional<Structs.ColumnExt> =>
   Optional.from(warehouse.columns[columnIndex]);
 
 export const Warehouse = {
