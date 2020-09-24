@@ -1,5 +1,5 @@
 import { Arr, Cell, Contracts, Optional } from '@ephox/katamari';
-import { Css, SugarElement } from '@ephox/sugar';
+import { Css, SugarElement, SugarNode } from '@ephox/sugar';
 import { getAttrValue } from '../util/CellUtils';
 
 export interface CellSpan {
@@ -13,7 +13,7 @@ export interface Generators {
   readonly row: () => SugarElement;
   readonly replace: <K extends keyof HTMLElementTagNameMap>(cell: SugarElement, tag: K, attrs: Record<string, string | number | boolean | null>) => SugarElement;
   readonly gap: () => SugarElement;
-  readonly col: () => SugarElement;
+  readonly col: (prev: CellSpan) => SugarElement;
   readonly colgroup: () => SugarElement;
 }
 
@@ -70,7 +70,12 @@ const modification = function (generators: Generators, toData = elementToData): 
   const position = Cell(Optional.none<SugarElement>());
 
   const nu = function (data: CellSpan) {
-    return generators.cell(data);
+    switch (SugarNode.name(data.element)) {
+      case 'col':
+        return generators.col(data);
+      default:
+        return generators.cell(data);
+    }
   };
 
   const nuFrom = function (element: SugarElement) {

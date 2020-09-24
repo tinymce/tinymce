@@ -1,16 +1,10 @@
 import { Fun, Optional, Strings } from '@ephox/katamari';
-import { Attribute, Css, Height, SugarBody, SugarElement, SugarNode, Traverse, Width } from '@ephox/sugar';
+import { Attribute, Css, Dimension, Height, SugarBody, SugarElement, SugarNode, Traverse, Width } from '@ephox/sugar';
 import * as TableLookup from '../api/TableLookup';
 import { TableSize } from '../api/TableSize';
 import { getSpan } from '../util/CellUtils';
 import * as RuntimeSize from './RuntimeSize';
 
-export interface GenericWidth {
-  readonly width: number;
-  readonly unit: string;
-}
-
-const rGenericSizeRegex = /(\d+(\.\d+)?)(\w|%)*/;
 const rPercentageBasedSizeRegex = /(\d+(\.\d+)?)%/;
 const rPixelBasedSizeRegex = /(\d+(\.\d+)?)px|em/;
 
@@ -130,19 +124,9 @@ export const getHeight = function (cell: SugarElement) {
   return get(cell, 'rowspan', getTotalHeight);
 };
 
-export const getGenericWidth = function (cell: SugarElement): Optional<GenericWidth> {
+export const getGenericWidth = function (cell: SugarElement): Optional<Dimension.Dimension<'fixed' | 'relative' | 'empty'>> {
   const width = getRawWidth(cell);
-  return width.bind(function (w) {
-    const match = rGenericSizeRegex.exec(w);
-    if (match !== null) {
-      return Optional.some({
-        width: parseFloat(match[1]),
-        unit: match[3]
-      });
-    } else {
-      return Optional.none<GenericWidth>();
-    }
-  });
+  return width.bind((w) => Dimension.parse(w, [ 'fixed', 'relative', 'empty' ]));
 };
 
 export const setGenericWidth = function (cell: SugarElement, amount: number, unit: string) {

@@ -35,9 +35,9 @@ type Units = {
   [K in keyof typeof units]: typeof units[K][number];
 };
 
-export interface Dimension<U extends string> {
-  value: number;
-  unit: U;
+export interface Dimension<U extends keyof Units> {
+  readonly value: number;
+  readonly unit: Units[U];
 }
 
 // Built from https://tc39.es/ecma262/#prod-StrDecimalLiteral
@@ -67,7 +67,7 @@ const isUnit = <T extends keyof Units>(unit: string, accepted: T[]): unit is Uni
     Arr.exists(units[acc], (check) => unit === check)
   );
 
-export const parse = <T extends keyof Units>(input: string, accepted: T[]): Optional<Dimension<Units[T]>> => {
+export const parse = <T extends keyof Units>(input: string, accepted: T[]): Optional<Dimension<T>> => {
   const match = Optional.from(pattern.exec(input));
   return match.bind((array) => {
     const value = Number(array[1]);

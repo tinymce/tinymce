@@ -77,8 +77,21 @@ const cellOperations = function (mutate: (e1: SugarElement, e2: SugarElement) =>
     return td;
   };
 
+  const newCol = (prev: CellSpan) => {
+    const doc = Traverse.owner(prev.element);
+    const col = SugarElement.fromTag(SugarNode.name(prev.element), doc.dom);
+    // inherit the style and width, dont inherit the row height
+    Css.copy(prev.element, col);
+    // dont inherit the width of spanning columns
+    if (prev.colspan !== 1) {
+      Css.remove(prev.element, 'width');
+    }
+    mutate(prev.element, col);
+    return col;
+  };
+
   return {
-    col: createCol,
+    col: newCol,
     colgroup: createColgroup,
     row: newRow(doc),
     cell: newCell,
