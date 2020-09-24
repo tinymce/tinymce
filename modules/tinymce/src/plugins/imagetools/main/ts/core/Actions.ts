@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { BlobConversions, ImageTransformations, ResultConversions } from '@ephox/imagetools';
+import { BlobConversions, ImageTransformations, Proxy, ResultConversions } from '@ephox/imagetools';
 import { Optional } from '@ephox/katamari';
 import { SelectorFind, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
@@ -17,7 +17,6 @@ import URI from 'tinymce/core/api/util/URI';
 
 import * as Settings from '../api/Settings';
 import * as ImageSize from './ImageSize';
-import * as Proxy from './Proxy';
 
 let count = 0;
 
