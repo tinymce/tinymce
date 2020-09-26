@@ -9,6 +9,7 @@ const friendlyHttpErrors = [
 ];
 
 const friendlyServiceErrors = [
+  { type: 'not_found', message: 'Failed to load image.' },
   { type: 'key_missing', message: 'The request did not include an api key.' },
   { type: 'key_not_found', message: 'The provided api key could not be found.' },
   { type: 'domain_not_trusted', message: 'The api key is not valid for the request origins.' }
@@ -19,8 +20,8 @@ const traverseJson = (json: any, path: string[]): Optional<any> => {
   return Optional.from(value);
 };
 
-const isServiceErrorCode = (code: number) =>
-  code === 400 || code === 403 || code === 500;
+const isServiceErrorCode = (code: number, blob: Blob | null): blob is Blob =>
+  blob?.type === 'application/json' && (code === 400 || code === 403 || code === 404 || code === 500);
 
 const getHttpErrorMsg = (status: number) => {
   const message = Arr.find(friendlyHttpErrors, (error) => status === error.code).fold(
@@ -58,8 +59,8 @@ const handleServiceError = (blob: Blob) =>
     return Promise.reject(serviceError);
   });
 
-const handleServiceErrorResponse = (status: number, blob: Blob) =>
-  isServiceErrorCode(status) ? handleServiceError(blob) : handleHttpError(status);
+const handleServiceErrorResponse = (status: number, blob: Blob | null) =>
+  isServiceErrorCode(status, blob) ? handleServiceError(blob) : handleHttpError(status);
 
 export {
   handleServiceErrorResponse,
