@@ -43,10 +43,11 @@ const replaceColumn = function (grid: Structs.RowCells[], index: number, compara
 
 // substitution :: (item, comparator) -> item
 const replaceRow = function (grid: Structs.RowCells[], index: number, comparator: CompElm, substitution: Subst) {
-  const targetRow = grid[index];
+  const rows = GridRow.extractGridDetails(grid).rows;
+  const targetRow = rows[index];
   const targets = Arr.bind(targetRow.cells, function (item, i) {
     // Check that we haven't already added this one.
-    const alreadyAdded = notStartRow(grid, index, i, comparator) || notStartColumn(targetRow, i, comparator);
+    const alreadyAdded = notStartRow(rows, index, i, comparator) || notStartColumn(targetRow, i, comparator);
     return alreadyAdded ? [] : [ item ];
   });
 

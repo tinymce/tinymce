@@ -74,6 +74,10 @@ export interface Column {
   readonly colspan: number;
 }
 
+export interface ColumnExt extends Column {
+  readonly column: number;
+}
+
 export interface Bounds {
   readonly startRow: number;
   readonly startCol: number;
@@ -109,20 +113,20 @@ const coords = (x: number, y: number): Coords => ({
   y
 });
 
-const detail = (element: SugarElement, rowspan: number, colspan: number): Detail => ({
+const detail = (element: SugarElement<HTMLTableCellElement | HTMLTableColElement>, rowspan: number, colspan: number): Detail => ({
   element,
   rowspan,
   colspan
 });
 
-const detailnew = (element: SugarElement, rowspan: number, colspan: number, isNew: boolean): DetailNew => ({
+const detailnew = (element: SugarElement<HTMLTableCellElement>, rowspan: number, colspan: number, isNew: boolean): DetailNew => ({
   element,
   rowspan,
   colspan,
   isNew
 });
 
-const extended = (element: SugarElement, rowspan: number, colspan: number, row: number, column: number): DetailExt => ({
+const extended = (element: SugarElement<HTMLTableCellElement>, rowspan: number, colspan: number, row: number, column: number): DetailExt => ({
   element,
   rowspan,
   colspan,
@@ -130,7 +134,7 @@ const extended = (element: SugarElement, rowspan: number, colspan: number, row: 
   column
 });
 
-const rowdata = <T> (element: SugarElement, cells: T[], section: Section): RowData<T> => ({
+const rowdata = <T> (element: SugarElement<HTMLTableRowElement | HTMLTableColElement>, cells: T[], section: Section): RowData<T> => ({
   element,
   cells,
   section
@@ -165,6 +169,12 @@ const bounds = (startRow: number, startCol: number, finishRow: number, finishCol
   finishCol
 });
 
+const columnext = (element: SugarElement<HTMLTableColElement>, colspan: number, column: number): ColumnExt => ({
+  element,
+  colspan,
+  column
+});
+
 export {
   dimension,
   dimensions,
@@ -180,5 +190,6 @@ export {
   rowcells,
   rowdetails,
   bounds,
-  isValidSection
+  isValidSection,
+  columnext
 };

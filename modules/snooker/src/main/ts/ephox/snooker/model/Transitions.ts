@@ -36,6 +36,14 @@ const toDetails = (grid: Structs.RowCells[], comparator: (a: SugarElement, b: Su
 const toGrid = (warehouse: Warehouse, generators: Generators, isNew: boolean) => {
   const grid: Structs.RowCells[] = [];
 
+  if (Warehouse.hasColumns(warehouse)) {
+    const groupElementNew = Arr.map(Warehouse.justColumns(warehouse), (column: Structs.Column): Structs.ElementNew =>
+      Structs.elementnew(column.element, isNew)
+    );
+
+    grid.push(Structs.rowcells(groupElementNew, 'colgroup'));
+  }
+
   for (let rowIndex = 0; rowIndex < warehouse.grid.rows; rowIndex++) {
     const rowCells: Structs.ElementNew[] = [];
     for (let columnIndex = 0; columnIndex < warehouse.grid.columns; columnIndex++) {
@@ -49,14 +57,6 @@ const toGrid = (warehouse: Warehouse, generators: Generators, isNew: boolean) =>
     }
     const row = Structs.rowcells(rowCells, warehouse.all[rowIndex].section);
     grid.push(row);
-  }
-
-  if (Warehouse.hasColumns(warehouse)) {
-    const groupElementNew = Arr.map(Warehouse.justColumns(warehouse), (column: Structs.Column): Structs.ElementNew =>
-      Structs.elementnew(column.element, isNew)
-    );
-
-    grid.push(Structs.rowcells(groupElementNew, 'colgroup'));
   }
 
   return grid;

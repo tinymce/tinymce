@@ -1,11 +1,11 @@
 import { Arr, Fun, Optional } from '@ephox/katamari';
 import { Css, SugarElement } from '@ephox/sugar';
 import { TableSize } from '../api/TableSize';
-import * as Blocks from '../lookup/Blocks';
 import { Warehouse } from '../api/Warehouse';
+import * as Blocks from '../lookup/Blocks';
 import * as CellUtils from '../util/CellUtils';
 import * as Util from '../util/Util';
-import { width, BarPositions, RowInfo } from './BarPositions';
+import { BarPositions, RowInfo, width } from './BarPositions';
 import * as Sizes from './Sizes';
 
 const getRaw = function (cell: SugarElement, property: string, getter: (e: SugarElement) => number) {
@@ -24,8 +24,11 @@ const getRawH = function (cell: SugarElement) {
   return getRaw(cell, 'height', Sizes.getHeight);
 };
 
+const justCols = (warehouse: Warehouse): Optional<SugarElement<HTMLTableColElement>>[] =>
+  Arr.map(Warehouse.justColumns(warehouse), (column) => Optional.from(column.element));
+
 const getWidthFrom = function <T> (warehouse: Warehouse, getWidth: (cell: SugarElement, tableSize: TableSize) => T, fallback: (deduced: Optional<number>) => T, tableSize: TableSize) {
-  const columns = Blocks.columns(warehouse);
+  const columns: Optional<SugarElement>[] = Warehouse.hasColumns(warehouse) ? justCols(warehouse) : Blocks.columns(warehouse);
 
   const backups = Arr.map(columns, function (cellOption) {
     return cellOption.map(width.edge);

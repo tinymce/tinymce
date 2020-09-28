@@ -221,11 +221,16 @@ Ready.execute(function () {
     return replica;
   };
 
+  const col: Generators['col'] = () => SugarElement.fromTag('col');
+  const colgroup: Generators['colgroup'] = () => SugarElement.fromTag('colgroup');
+
   const generators: Generators = {
     row: newRow,
     cell: newCell,
     replace,
-    gap
+    gap,
+    col,
+    colgroup
   };
 
   const runOperation = function (operation: (wire: ResizeWire, table: SugarElement, target: TargetElement & TargetSelection, generators: Generators, tableSize: TableSize) => Optional<RunOperationOutput>) {

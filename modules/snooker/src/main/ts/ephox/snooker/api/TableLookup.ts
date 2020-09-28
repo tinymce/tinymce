@@ -1,7 +1,7 @@
 import { Arr, Fun, Optional } from '@ephox/katamari';
 import { SelectorFilter, SelectorFind, Selectors, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
-import * as LayerSelector from '../util/LayerSelector';
 import { getAttrValue } from '../util/CellUtils';
+import * as LayerSelector from '../util/LayerSelector';
 import * as Structs from './Structs';
 
 // lookup inside this table
@@ -46,7 +46,7 @@ const row = (element: SugarElement, isRoot?: (e: SugarElement) => boolean) => lo
 
 const rows = (ancestor: SugarElement): SugarElement<HTMLTableRowElement>[] => LayerSelector.firstLayer(ancestor, 'tr');
 
-const columnGroups = (ancestor: SugarElement): SugarElement<HTMLElement>[] => LayerSelector.firstLayer(ancestor, 'colgroup');
+const columnGroups = (ancestor: SugarElement): SugarElement<HTMLTableColElement>[] => LayerSelector.firstLayer(ancestor, 'colgroup');
 
 const attr = (element: SugarElement, property: string) => getAttrValue(element, property);
 

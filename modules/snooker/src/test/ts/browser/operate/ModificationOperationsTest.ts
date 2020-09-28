@@ -1,14 +1,18 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
+import { Html, SugarElement, SugarNode } from '@ephox/sugar';
 import { Generators } from 'ephox/snooker/api/Generators';
 import * as Structs from 'ephox/snooker/api/Structs';
 import * as ModificationOperations from 'ephox/snooker/operate/ModificationOperations';
-import TestGenerator from 'ephox/snooker/test/TestGenerator';
+import BrowserTestGenerator from 'ephox/snooker/test/BrowserTestGenerator';
 
 UnitTest.test('ModificationOperationsTest', function () {
   const r = Structs.rowcells;
-  const en = (fakeElement: any, isNew: boolean) => Structs.elementnew(fakeElement as SugarElement, isNew);
+  const en = (content: string, isNew: boolean) => {
+    const elem = SugarElement.fromTag('td');
+    Html.set(elem, content);
+    return Structs.elementnew(elem, isNew);
+  };
   const mapToStructGrid = function (grid: Structs.ElementNew[][]) {
     return Arr.map(grid, function (row) {
       return Structs.rowcells(row, 'tbody');
@@ -26,12 +30,15 @@ UnitTest.test('ModificationOperationsTest', function () {
     });
   };
 
+  const compare = (a: SugarElement, b: SugarElement) => SugarNode.name(a) === SugarNode.name(b) && Html.get(a) === Html.get(b);
+
   // Test basic insert column
   (function () {
     const check = function (expected: Structs.RowCells[], grid: Structs.RowCells[], example: number, index: number) {
-      const actual = ModificationOperations.insertColumnAt(grid, index, example, Fun.tripleEquals, Generators.modification(TestGenerator(), Fun.identity as any).getOrInit);
+      const actual = ModificationOperations.insertColumnAt(grid, index, example, compare, Generators.modification(BrowserTestGenerator()).getOrInit);
       assertGrids(expected, actual);
     };
+
     const checkBody = function (expected: Structs.ElementNew[][], grid: Structs.ElementNew[][], example: number, index: number) {
       const structExpected = mapToStructGrid(expected);
       const structGrid = mapToStructGrid(grid);
@@ -122,7 +129,7 @@ UnitTest.test('ModificationOperationsTest', function () {
   // Test basic insert row
   (function () {
     const check = function (expected: Structs.RowCells[], grid: Structs.RowCells[], example: number, index: number) {
-      const actual = ModificationOperations.insertRowAt(grid, index, example, Fun.tripleEquals, Generators.modification(TestGenerator(), Fun.identity as any).getOrInit);
+      const actual = ModificationOperations.insertRowAt(grid, index, example, compare, Generators.modification(BrowserTestGenerator()).getOrInit);
       assertGrids(expected, actual);
     };
 
@@ -246,7 +253,7 @@ UnitTest.test('ModificationOperationsTest', function () {
 
   (function () {
     const check = function (expected: Structs.RowCells[], grid: Structs.RowCells[], exRow: number, exCol: number) {
-      const actual = ModificationOperations.splitCellIntoColumns(grid, exRow, exCol, Fun.tripleEquals, Generators.modification(TestGenerator(), Fun.identity as any).getOrInit);
+      const actual = ModificationOperations.splitCellIntoColumns(grid, exRow, exCol, Fun.tripleEquals, Generators.modification(BrowserTestGenerator()).getOrInit);
       assertGrids(expected, actual);
     };
 
@@ -443,7 +450,7 @@ UnitTest.test('ModificationOperationsTest', function () {
 
   (function () {
     const check = function (expected: Structs.RowCells[], grid: Structs.RowCells[], exRow: number, exCol: number) {
-      const actual = ModificationOperations.splitCellIntoRows(grid, exRow, exCol, Fun.tripleEquals, Generators.modification(TestGenerator(), Fun.identity as any).getOrInit);
+      const actual = ModificationOperations.splitCellIntoRows(grid, exRow, exCol, Fun.tripleEquals, Generators.modification(BrowserTestGenerator()).getOrInit);
       assertGrids(expected, actual);
     };
 

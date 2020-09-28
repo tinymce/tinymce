@@ -92,10 +92,10 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
       return CopyCols.copyCols(table, targets);
     }));
 
-  const pasteOnSelection = (execute: AdvancedPasteTableAction, getRows: () => Optional<SugarElement<HTMLTableRowElement>[]>) =>
+  const pasteOnSelection = (execute: AdvancedPasteTableAction, getRows: () => Optional<SugarElement<HTMLTableRowElement | HTMLTableColElement>[]>) =>
     // If we have clipboard rows to paste
     getRows().each((rows) => {
-      const clonedRows = Arr.map(rows, (row) => Replication.deep(row));
+      const clonedRows = Arr.map(rows, (row) => Replication.deep<HTMLTableColElement | HTMLTableRowElement>(row));
       getSelectionStartCell(editor).each((cell) =>
         getTableFromCell(cell).each((table) => {
           const generators = TableFill.paste(SugarElement.fromDom(editor.getDoc()));

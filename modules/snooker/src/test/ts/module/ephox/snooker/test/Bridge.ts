@@ -24,7 +24,7 @@ const generators: Generators = {
     return SugarElement.fromTag('tr');
   },
   cell(prev) {
-    const tag = SugarElement.fromTag(SugarNode.name(prev.element));
+    const tag = SugarElement.fromTag(SugarNode.name(prev.element) as 'td' | 'th');
     Insert.append(tag, SugarElement.fromText('?'));
     // We aren't halving widths here, so table widths will not be preserved.p
     Css.getRaw(prev.element, 'width').each(function (w) {
@@ -48,7 +48,9 @@ const generators: Generators = {
     const tag = SugarElement.fromTag('td');
     Insert.append(tag, SugarElement.fromText('?'));
     return tag;
-  }
+  },
+  col() { return SugarElement.fromTag('col'); },
+  colgroup() { return SugarElement.fromTag('colgroup'); }
 };
 
 export {

@@ -1,25 +1,29 @@
 import { Arr, Cell, Contracts, Optional } from '@ephox/katamari';
-import { Css, SugarElement } from '@ephox/sugar';
+import { Css, SugarElement, SugarNode } from '@ephox/sugar';
 import { getAttrValue } from '../util/CellUtils';
 
 export interface CellSpan {
-  readonly element: SugarElement;
+  readonly element: SugarElement<HTMLTableCellElement | HTMLTableColElement>;
   readonly colspan: number;
   readonly rowspan: number;
 }
 
 export interface Generators {
-  readonly cell: (cellSpan: CellSpan) => SugarElement;
-  readonly row: () => SugarElement;
-  readonly replace: <K extends keyof HTMLElementTagNameMap>(cell: SugarElement, tag: K, attrs: Record<string, string | number | boolean | null>) => SugarElement;
-  readonly gap: () => SugarElement;
+  readonly cell: (cellSpan: CellSpan) => SugarElement<HTMLTableCellElement>;
+  readonly row: () => SugarElement<HTMLTableRowElement>;
+  readonly replace: <K extends keyof HTMLElementTagNameMap>(cell: SugarElement<HTMLTableCellElement>, tag: K, attrs: Record<string, string | number | boolean | null>) => SugarElement<HTMLElementTagNameMap[K]>;
+  readonly gap: () => SugarElement<HTMLTableCellElement>;
+  readonly col: (prev: CellSpan) => SugarElement<HTMLTableColElement>;
+  readonly colgroup: () => SugarElement<HTMLTableColElement>;
 }
 
 export interface SimpleGenerators extends Generators {
-  readonly cell: () => SugarElement;
-  readonly row: () => SugarElement;
-  readonly replace: (cell: SugarElement) => SugarElement;
-  readonly gap: () => SugarElement;
+  readonly cell: () => SugarElement<HTMLTableCellElement>;
+  readonly row: () => SugarElement<HTMLTableRowElement>;
+  readonly replace: <T extends HTMLElement>(cell: SugarElement<HTMLTableCellElement>) => SugarElement<T>;
+  readonly gap: () => SugarElement<HTMLTableCellElement>;
+  readonly col: () => SugarElement<HTMLTableColElement>;
+  readonly colgroup: () => SugarElement<HTMLTableColElement>;
 }
 
 export interface GeneratorsWrapper {
@@ -48,7 +52,7 @@ interface Item {
   readonly sub: SugarElement;
 }
 
-const verifyGenerators: (gen: Generators) => Generators = Contracts.exactly([ 'cell', 'row', 'replace', 'gap' ]);
+const verifyGenerators: (gen: Generators) => Generators = Contracts.exactly([ 'cell', 'row', 'replace', 'gap', 'col', 'colgroup' ]);
 
 const elementToData = function (element: SugarElement): CellSpan {
   const colspan = getAttrValue(element, 'colspan', 1);
@@ -66,7 +70,12 @@ const modification = function (generators: Generators, toData = elementToData): 
   const position = Cell(Optional.none<SugarElement>());
 
   const nu = function (data: CellSpan) {
-    return generators.cell(data);
+    switch (SugarNode.name(data.element)) {
+      case 'col':
+        return generators.col(data);
+      default:
+        return generators.cell(data);
+    }
   };
 
   const nuFrom = function (element: SugarElement) {
@@ -95,7 +104,7 @@ const modification = function (generators: Generators, toData = elementToData): 
   return {
     getOrInit,
     cursor: position.get
-  } ;
+  };
 };
 
 const transform = function <K extends keyof HTMLElementTagNameMap> (scope: string | null, tag: K) {

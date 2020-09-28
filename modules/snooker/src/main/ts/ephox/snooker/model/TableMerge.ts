@@ -80,8 +80,9 @@ const insertRows = (index: number, gridA: Structs.RowCells[], gridB: Structs.Row
 
   const secondDelta = Fitment.measureWidth(gridA, fittedNewGrid);
   const fittedOldGrid = Fitment.tailor(gridA, secondDelta, generator);
+  const { cols: oldCols, rows: oldRows } = GridRow.extractGridDetails(fittedOldGrid);
 
-  return fittedOldGrid.slice(0, index).concat(fittedNewGrid).concat(fittedOldGrid.slice(index, fittedOldGrid.length));
+  return oldCols.concat(oldRows.slice(0, index)).concat(fittedNewGrid).concat(oldRows.slice(index, oldRows.length));
 };
 
 export {

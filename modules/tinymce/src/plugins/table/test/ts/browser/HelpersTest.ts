@@ -1,5 +1,6 @@
 import { Assertions, Chain, Log, Pipeline, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
+import { Optional } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
@@ -29,7 +30,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.HelpersTest', (success, failur
         Chain.asStep(SugarElement.fromDom(editor.getBody()), [
           UiFinder.cFindIn('td.foo'),
           Chain.op((td) => {
-            const cellData = Helpers.extractDataFromCellElement(editor, td.dom, true, undefined);
+            const cellData = Helpers.extractDataFromCellElement(editor, td.dom, true, Optional.none());
             Assertions.assertEq('Extracts class', 'foo', cellData.class);
             Assertions.assertEq('Extracts scope', 'row', cellData.scope);
             Assertions.assertEq('Extracts celltype', 'td', cellData.celltype);
@@ -61,7 +62,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.HelpersTest', (success, failur
         Chain.asStep(SugarElement.fromDom(editor.getBody()), [
           UiFinder.cFindAllIn('.foo'),
           Chain.op((elements: SugarElement[]) => {
-            const cellData = Helpers.extractDataFromCellElement(editor, elements[1].dom, true, elements[0]);
+            const cellData = Helpers.extractDataFromCellElement(editor, elements[1].dom, true, Optional.some(elements[0].dom));
             Assertions.assertEq('Extracts class', 'foo', cellData.class);
             Assertions.assertEq('Extracts scope', 'row', cellData.scope);
             Assertions.assertEq('Extracts celltype', 'td', cellData.celltype);
@@ -90,7 +91,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.HelpersTest', (success, failur
         Chain.asStep(SugarElement.fromDom(editor.getBody()), [
           UiFinder.cFindIn('td.foo'),
           Chain.op((td) => {
-            const cellData = Helpers.extractDataFromCellElement(editor, td.dom, true, undefined);
+            const cellData = Helpers.extractDataFromCellElement(editor, td.dom, true, Optional.none());
             Assertions.assertEq('Extracts width from style', '20px', cellData.width);
             Assertions.assertEq('Extracts height from style', '30px', cellData.height);
             Assertions.assertEq('Extracts background-color from rgb', '#333333', cellData.backgroundcolor);
@@ -114,7 +115,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.HelpersTest', (success, failur
         Chain.asStep(SugarElement.fromDom(editor.getBody()), [
           UiFinder.cFindAllIn('.foo'),
           Chain.op((elements: SugarElement[]) => {
-            const cellData = Helpers.extractDataFromCellElement(editor, elements[1].dom, true, elements[0]);
+            const cellData = Helpers.extractDataFromCellElement(editor, elements[1].dom, true, Optional.some(elements[0].dom));
             Assertions.assertEq('Extracts width from style', '20px', cellData.width);
             Assertions.assertEq('Extracts height from style', '30px', cellData.height);
             Assertions.assertEq('Extracts background-color from rgb', '#333333', cellData.backgroundcolor);
@@ -134,7 +135,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.HelpersTest', (success, failur
         Chain.asStep(SugarElement.fromDom(editor.getBody()), [
           UiFinder.cFindIn('td.foo'),
           Chain.op((td) => {
-            const cellData = Helpers.extractDataFromCellElement(editor, td.dom, true, undefined);
+            const cellData = Helpers.extractDataFromCellElement(editor, td.dom, true, Optional.none());
             Assertions.assertEq('Extracts border-color from shorthand', '#008000', cellData.bordercolor);
             Assertions.assertEq('Extracts border-style from shorthand', 'dashed', cellData.borderstyle);
           })
@@ -156,7 +157,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.HelpersTest', (success, failur
         Chain.asStep(SugarElement.fromDom(editor.getBody()), [
           UiFinder.cFindAllIn('.foo'),
           Chain.op((elements: SugarElement[]) => {
-            const cellData = Helpers.extractDataFromCellElement(editor, elements[1].dom, true, elements[0]);
+            const cellData = Helpers.extractDataFromCellElement(editor, elements[1].dom, true, Optional.some(elements[0].dom));
             Assertions.assertEq('Extracts border-color from shorthand', '#008000', cellData.bordercolor);
             Assertions.assertEq('Extracts border-style from shorthand', 'dashed', cellData.borderstyle);
           })
