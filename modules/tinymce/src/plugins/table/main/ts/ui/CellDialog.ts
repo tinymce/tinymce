@@ -39,11 +39,11 @@ const getSelectedCells = (cells: SugarElement<HTMLTableCellElement>[]): Optional
 
     return Arr.map(filtered, (cell) => ({
       element: cell.element.dom,
-      column: Warehouse.getColumnAt(warehouse, cell.column).map((col): HTMLTableColElement => col.element.dom)
+      column: Warehouse.getColumnAt(warehouse, cell.column).map((col) => col.element.dom)
     }));
   });
 
-const updateSimpleProps = (editor: Editor, modifier: DomModifier, colModifier: DomModifier, data: CellData) => {
+const updateSimpleProps = (modifier: DomModifier, colModifier: DomModifier, data: CellData) => {
   modifier.setAttrib('scope', data.scope);
   modifier.setAttrib('class', data.class);
   modifier.setStyle('height', Util.addPxSuffix(data.height));
@@ -84,7 +84,7 @@ const applyCellData = (editor: Editor, cells: SugarElement<HTMLTableCellElement>
           isSingleCell ? DomModifier.normal(editor, col) : DomModifier.ifTruthy(editor, col)
         ).getOr(modifier);
 
-        updateSimpleProps(editor, modifier, colModifier, data);
+        updateSimpleProps(modifier, colModifier, data);
 
         if (hasAdvancedCellTab(editor)) {
           updateAdvancedProps(modifier, data);
@@ -183,4 +183,3 @@ const open = (editor: Editor, selections: Selections) => {
 };
 
 export { open };
-
