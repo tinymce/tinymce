@@ -5,6 +5,7 @@ import * as JPEGMeta from '../meta/JPEGMeta';
 import { ImageResult } from '../util/ImageResult';
 import * as BlobConversions from './BlobConversions';
 import * as ImageTransformations from './ImageTransformations';
+import * as Proxy from './Proxy';
 import * as ResultConversions from './ResultConversions';
 
 export {
@@ -15,5 +16,6 @@ export {
   ImageResult,
   ImageAsset,
   ImageExtract,
-  ImageAssetTypes
+  ImageAssetTypes,
+  Proxy
 };
