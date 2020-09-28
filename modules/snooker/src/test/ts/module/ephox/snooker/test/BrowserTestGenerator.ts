@@ -6,7 +6,10 @@ export default function (): SimpleGenerators {
   let colCounter = 0;
   let replaceCounter = 0;
 
-  const makeElem = (tag: string, content: string) => {
+  const makeElem: {
+    <K extends keyof HTMLElementTagNameMap>(tag: K, content: string): SugarElement<HTMLElementTagNameMap[K]>;
+    <T extends HTMLElement>(tag: string, content: string): SugarElement<T>;
+  } = (tag: string, content: string) => {
     const elem = SugarElement.fromTag(tag);
     Html.set(elem, content);
     return elem;
@@ -24,7 +27,7 @@ export default function (): SimpleGenerators {
     return makeElem('col', r);
   };
 
-  const replace = function (cell: SugarElement) {
+  const replace = function <T extends HTMLElement> (cell: SugarElement<HTMLTableCellElement>): SugarElement<T> {
     const tag = SugarNode.name(cell);
     const r = 'h(' + tag + ')_' + replaceCounter;
     replaceCounter++;

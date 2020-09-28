@@ -56,36 +56,35 @@ const cloneFormats = function (oldCell: SugarElement, newCell: SugarElement, for
 };
 
 const cellOperations = function (mutate: (e1: SugarElement, e2: SugarElement) => void, doc: SugarElement, formatsToClone: Optional<string[]>): Generators {
+  const cloneCss = <T extends HTMLElement> (prev: CellSpan, clone: SugarElement<T>) => {
+    // inherit the style and width, dont inherit the row height
+    Css.copy(prev.element, clone);
+    Css.remove(clone, 'height');
+    // dont inherit the width of spanning columns
+    if (prev.colspan !== 1) {
+      Css.remove(prev.element, 'width');
+    }
+  };
+
   const newCell = function (prev: CellSpan) {
     const docu = Traverse.owner(prev.element);
-    const td = SugarElement.fromTag(SugarNode.name(prev.element), docu.dom);
+    const td = SugarElement.fromTag(SugarNode.name(prev.element) as 'td' | 'th', docu.dom);
 
     const formats = formatsToClone.getOr([ 'strong', 'em', 'b', 'i', 'span', 'font', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'div' ]);
 
     // If we aren't cloning the child formatting, we can just give back the new td immediately.
     const lastNode = formats.length > 0 ? cloneFormats(prev.element, td, formats) : td;
-
     Insert.append(lastNode, SugarElement.fromTag('br'));
-    // inherit the style and width, dont inherit the row height
-    Css.copy(prev.element, td);
-    Css.remove(td, 'height');
-    // dont inherit the width of spanning columns
-    if (prev.colspan !== 1) {
-      Css.remove(prev.element, 'width');
-    }
+
+    cloneCss(prev, td);
     mutate(prev.element, td);
     return td;
   };
 
   const newCol = (prev: CellSpan) => {
     const doc = Traverse.owner(prev.element);
-    const col = SugarElement.fromTag(SugarNode.name(prev.element), doc.dom);
-    // inherit the style and width, dont inherit the row height
-    Css.copy(prev.element, col);
-    // dont inherit the width of spanning columns
-    if (prev.colspan !== 1) {
-      Css.remove(prev.element, 'width');
-    }
+    const col = SugarElement.fromTag(SugarNode.name(prev.element) as 'col', doc.dom);
+    cloneCss(prev, col);
     mutate(prev.element, col);
     return col;
   };

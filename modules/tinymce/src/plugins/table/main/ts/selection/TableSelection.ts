@@ -9,10 +9,12 @@ import { CellOpSelection, Selections, TableSelection } from '@ephox/darwin';
 import { Arr, Optionals } from '@ephox/katamari';
 import { TableLookup } from '@ephox/snooker';
 import { Attribute, Compare, SelectorFind, SugarElement, SugarElements, SugarNode } from '@ephox/sugar';
-import { ephemera } from 'tinymce/plugins/table/selection/Ephemera';
+import { ephemera } from './Ephemera';
 
 const getSelectionStartCellFallback = (start: SugarElement<Node>) =>
-  TableLookup.table(start).bind((table) => TableSelection.retrieve(table, ephemera.firstSelectedSelector)).fold(() => start, (cells) => cells[0]);
+  TableLookup.table(start).bind((table) =>
+    TableSelection.retrieve(table, ephemera.firstSelectedSelector)
+  ).fold(() => start, (cells) => cells[0]);
 
 const getSelectionStartFromSelector = <T extends Element>(selector: string) => (start: SugarElement<Node>) => {
   const startCellName = SugarNode.name(start);

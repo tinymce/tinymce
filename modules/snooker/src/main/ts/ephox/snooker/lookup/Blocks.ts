@@ -1,6 +1,6 @@
 import { Arr, Fun, Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
-import { Column, DetailExt } from '../api/Structs';
+import { DetailExt } from '../api/Structs';
 import { Warehouse } from '../api/Warehouse';
 
 /*
@@ -9,7 +9,7 @@ import { Warehouse } from '../api/Warehouse';
  * sizes that are only available through the difference of two
  * spanning columns.
  */
-const columns = (warehouse: Warehouse): Optional<SugarElement>[] => {
+const columns = (warehouse: Warehouse): Optional<SugarElement<HTMLTableCellElement>>[] => {
   const grid = warehouse.grid;
   const cols = Arr.range(grid.columns, Fun.identity);
   const rowsArr = Arr.range(grid.rows, Fun.identity);
@@ -35,7 +35,7 @@ const decide = (getBlock: () => DetailExt[], isSingle: (detail: DetailExt) => bo
   return detailOption.map((detail) => detail.element);
 };
 
-const rows = (warehouse: Warehouse): Optional<SugarElement>[] => {
+const rows = (warehouse: Warehouse): Optional<SugarElement<HTMLTableCellElement>>[] => {
   const grid = warehouse.grid;
   const rowsArr = Arr.range(grid.rows, Fun.identity);
   const cols = Arr.range(grid.columns, Fun.identity);
@@ -53,7 +53,4 @@ const rows = (warehouse: Warehouse): Optional<SugarElement>[] => {
 
 };
 
-const cols = (warehouse: Warehouse) =>
-  Arr.map(Warehouse.justColumns(warehouse), (column: Column) => Optional.from(column.element));
-
-export { cols, columns, rows };
+export { columns, rows };
