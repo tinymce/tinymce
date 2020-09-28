@@ -47,6 +47,21 @@
   {
     "request": {
       "method": "get",
+      "path": "/custom/404data"
+    },
+    "response": {
+      "status": 404,
+      "json": {
+        "error": {
+          "type": "not_found"
+        }
+      }
+    }
+  },
+
+  {
+    "request": {
+      "method": "get",
       "path": "/custom/403"
     },
     "response": {
