@@ -1,6 +1,6 @@
 {
   "name": "@ephox/sugar",
-  "version": "6.1.3",
+  "version": "7.0.0",
   "description": "Basic DOM manipulation",
   "repository": {
     "type": "git",
@@ -21,11 +21,11 @@
   "author": "Ephox Corporation",
   "license": "Apache-2.0",
   "dependencies": {
-    "@ephox/katamari": "^6.1.2",
-    "@ephox/sand": "^3.1.11"
+    "@ephox/katamari": "^7.0.0",
+    "@ephox/sand": "^4.0.0"
   },
   "devDependencies": {
-    "@ephox/katamari-assertions": "^1.0.9"
+    "@ephox/katamari-assertions": "^2.0.0"
   },
   "files": [
     "lib/main",

@@ -1,4 +1,4 @@
-Version 5.5.0 (TBD)
+Version 5.5.0 (2020-09-29)
     Added a TypeScript declaration file to the bundle output for TinyMCE core #TINY-3785
     Added new `table_column_resizing` setting to control how table columns are resized when using the resize bars #TINY-6001
     Added the ability to remove images on a failed upload using the `images_upload_handler` failure callback #TINY-6011
