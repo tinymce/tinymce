@@ -14,12 +14,19 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.ArrowKeysCefTest', (success, f
     const tinyApis = TinyApis(editor);
     const tinyActions = TinyActions(editor);
     let scrollIntoViewCount = 0;
+    let keydownCount = 0;
     editor.on('ScrollIntoView', () => scrollIntoViewCount++);
+    editor.on('keydown', () => keydownCount++);
 
     const sScrollTo = (x: number, y: number) => Step.sync(() => editor.getWin().scrollTo(x, y));
     const sResetScrollCount = Step.sync(() => scrollIntoViewCount = 0);
     const sAssertScrollCount = (expected: number) => Step.sync(() => {
       Assert.eq('ScrollIntoView count', expected, scrollIntoViewCount);
+    });
+
+    const sResetKeydownCount = Step.sync(() => keydownCount = 0);
+    const sAssertKeydownCount = (expected: number) => Step.sync(() => {
+      Assert.eq('Keydown count', expected, keydownCount);
     });
 
     const sAssertStartContainer = (f: (node: Node) => boolean) => Step.sync(() => {
@@ -146,6 +153,15 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.ArrowKeysCefTest', (success, f
         tinyActions.sContentKeystroke(Keys.down()),
         sAssertScrollCount(2),
         tinyApis.sAssertSelection([ 2, 0 ], 0, [ 2, 0 ], 0)
+      ]),
+      Log.stepsAsStep('TINY-6471', 'Should not throw exception when line below when bogus cef is below', [
+        tinyApis.sSetRawContent('<p><br data-mce-bogus="1"></p><div contenteditable="false" data-mce-bogus="1"  style="user-select: none;"><div contenteditable="false" data-mce-bogus="1"></div></div>'),
+        tinyApis.sSetCursor([ 0, 0 ], 0),
+        sResetKeydownCount,
+        tinyActions.sContentKeystroke(Keys.down()),
+        tinyActions.sContentKeystroke(Keys.down()),
+        // Checking 2 events fired verifies the event handlers finished running, so an exception shouldn't have been raised
+        sAssertKeydownCount(2)
       ])
     ], onSuccess, onFailure);
   }, {

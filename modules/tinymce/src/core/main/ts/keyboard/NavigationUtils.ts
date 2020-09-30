@@ -80,7 +80,7 @@ const moveVertically = (editor: Editor, direction: LineWalker.VDirection, range:
   const forwards = direction === LineWalker.VDirection.Down;
 
   if (!caretClientRect) {
-    return null;
+    return Optional.none();
   }
 
   const walkerFn = forwards ? LineWalker.downUntil : LineWalker.upUntil;
