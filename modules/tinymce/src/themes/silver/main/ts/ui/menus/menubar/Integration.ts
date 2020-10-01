@@ -19,7 +19,7 @@ export interface MenuRegistry {
 const defaultMenubar = 'file edit view insert format tools table help';
 
 const defaultMenus = {
-  file: { title: 'File', items: 'newdocument restoredraft | preview | print | deleteallconversations' },
+  file: { title: 'File', items: 'newdocument restoredraft | preview | export print | deleteallconversations' },
   edit: { title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall | searchreplace' },
   view: { title: 'View', items: 'code | visualaid visualchars visualblocks | spellchecker | preview fullscreen | showcomments' },
   insert: { title: 'Insert', items: 'image link media addcomment pageembed template codesample inserttable | charmap emoticons hr | pagebreak nonbreaking anchor toc | insertdatetime' },
