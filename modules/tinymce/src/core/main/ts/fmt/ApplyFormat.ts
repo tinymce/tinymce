@@ -48,7 +48,7 @@ const applyFormat = function (ed: Editor, name: string, vars?: FormatVars, node?
         fmt.onformat(elm, fmt as any, vars, node);
       }
 
-      each(fmt.styles as Record<string, any>, function (value, name) {
+      each(fmt.styles, function (value, name) {
         dom.setStyle(elm, name, FormatUtils.replaceVars(value, vars));
       });
 
