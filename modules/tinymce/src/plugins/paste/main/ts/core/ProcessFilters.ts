@@ -18,7 +18,9 @@ const preProcess = (editor: Editor, html: string) => {
 
   // Strip meta elements
   parser.addNodeFilter('meta', (nodes) => {
-    Tools.each(nodes, (node) => node.remove());
+    Tools.each(nodes, (node) => {
+      node.remove();
+    });
   });
 
   const fragment = parser.parse(html, { forced_root_block: false, isRootContent: true });

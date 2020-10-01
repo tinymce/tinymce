@@ -6,9 +6,9 @@
  */
 
 import DOMUtils from '../api/dom/DOMUtils';
-import * as NodeType from '../dom/NodeType';
-import { Formats } from '../api/fmt/Format';
+import { Formats, FormatVars } from '../api/fmt/Format';
 import Tools from '../api/util/Tools';
+import * as NodeType from '../dom/NodeType';
 
 const get = function (dom: DOMUtils) {
   const formats: Formats = {
@@ -167,7 +167,7 @@ const get = function (dom: DOMUtils) {
         return NodeType.isElement(node) && node.hasAttribute('href');
       },
 
-      onformat(elm, _fmt, vars) {
+      onformat(elm, _fmt, vars?: FormatVars) {
         Tools.each(vars, (value, key) => {
           dom.setAttrib(elm, key, value);
         });

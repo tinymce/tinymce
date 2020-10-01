@@ -251,7 +251,7 @@ const removeFormatInternal = (ed: Editor, format: RemoveFormatPartial, vars?: Fo
   // Should we compare with format attribs and styles
   if (format.remove !== 'all') {
     // Remove styles
-    each(format.styles, (value: FormatAttrOrStyleValue, name: string | number) => {
+    each(format.styles as any, (value: FormatAttrOrStyleValue, name: string | number) => {
       value = FormatUtils.normalizeStyleValue(dom, FormatUtils.replaceVars(value, vars), name + '');
 
       // Indexed array
@@ -274,7 +274,7 @@ const removeFormatInternal = (ed: Editor, format: RemoveFormatPartial, vars?: Fo
     }
 
     // Remove attributes
-    each(format.attributes, (value: FormatAttrOrStyleValue, name: string | number) => {
+    each(format.attributes as any, (value: FormatAttrOrStyleValue, name: string | number) => {
       let valueOut: string;
 
       value = FormatUtils.replaceVars(value, vars);

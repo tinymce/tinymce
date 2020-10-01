@@ -226,7 +226,7 @@ function convertFakeListsToProperLists(node) {
   }
 }
 
-function filterStyles(editor, validStyles, node, styleValue) {
+function filterStyles(editor: Editor, validStyles, node, styleValue) {
   let outputStyles = {}, matches;
   const styles = editor.dom.parseStyle(styleValue);
 

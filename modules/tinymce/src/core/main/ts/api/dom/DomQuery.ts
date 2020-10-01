@@ -82,7 +82,7 @@ export interface DomQueryConstructor {
   filter (expr: string, elems: Node[], not?: boolean);
 }
 
-interface DomQuery<T extends Node = Node> extends Iterable<T> {
+interface DomQuery<T extends Node = Node> extends ArrayLike<T> {
   init: (selector?: DomQueryInitSelector<T>, context?: Node) => void;
 
   context: T;
@@ -98,10 +98,10 @@ interface DomQuery<T extends Node = Node> extends Iterable<T> {
   attr (attrs: Record<string, string | boolean | number | null>): this;
   attr (name: string): string;
   before (content: DomQuerySelector<T>): this;
-  children (selector?: string): this;
+  children (selector?: string): DomQuery<ChildNode>;
   clone (): this;
   closest (selector: DomQuerySelector<T>): this;
-  contents (selector?: string): this;
+  contents (selector?: string): DomQuery<ChildNode>;
   css (name: string, value: string | number | null): this;
   css (styles: Record<string, string | number | null>): this;
   css (name: string): string;
@@ -117,26 +117,26 @@ interface DomQuery<T extends Node = Node> extends Iterable<T> {
   html (): string;
   is (selector: string | ((i: number, item) => boolean)): boolean;
   last (): this;
-  next (selector?: string): this;
-  nextUntil (selector: DomQuerySelector<T>, until?: string): this;
+  next (selector?: string): DomQuery<ChildNode>;
+  nextUntil (selector: DomQuerySelector<T>, until?: string): DomQuery<ChildNode>;
   off <K extends keyof HTMLElementEventMap>(name: K, callback?: EventUtilsCallback<HTMLElementEventMap[K]>): this;
   off <U>(name?: string, callback?: EventUtilsCallback<U>): this;
   offset (offset?: {}): {} | this;
   on <K extends keyof HTMLElementEventMap>(name: K, callback: EventUtilsCallback<HTMLElementEventMap[K]>): this;
   on <U>(name: string, callback: EventUtilsCallback<U>): this;
-  parent (selector?: string): this;
-  parents (selector?: string): this;
-  parentsUntil (selector: DomQuerySelector<T>, filter?: string): this;
+  parent (selector?: string): DomQuery<Node>;
+  parents (selector?: string): DomQuery<Node>;
+  parentsUntil (selector: DomQuerySelector<T>, filter?: string): DomQuery<Node>;
   prepend (content: DomQuerySelector<T>): this;
   prependTo (val: DomQuerySelector<T>): this;
-  prev (selector?: string): this;
-  prevUntil (selector: DomQuerySelector<T>, filter?: string): this;
+  prev (selector?: string): DomQuery<ChildNode>;
+  prevUntil (selector: DomQuerySelector<T>, filter?: string): DomQuery<ChildNode>;
   prop (name: string, value: string): this;
   prop (props: Record<string, string | number>): this;
   prop (name: string): string;
   push (...items: T[]): number;
   remove (): this;
-  removeAttr (name: string): DomQuery | string;
+  removeAttr (name: string): this;
   removeClass (className: string): this;
   replaceWith (content: DomQuerySelector<T>): this;
   show (): this;

@@ -15,9 +15,14 @@ import { DomTextMatcher } from '../core/DomTextMatcher';
 
 type LastSuggestion = Actions.LastSuggestion;
 
+interface LanguageValue {
+  name: string;
+  value: string;
+}
+
 const spellcheckerEvents = 'SpellcheckStart SpellcheckEnd';
 
-const buildMenuItems = function (listName: string, languageValues) {
+const buildMenuItems = function (listName: string, languageValues: LanguageValue[]) {
   const items = [];
 
   Tools.each(languageValues, function (languageValue) {
@@ -31,13 +36,13 @@ const buildMenuItems = function (listName: string, languageValues) {
   return items;
 };
 
-const getItems = function (editor) {
+const getItems = function (editor: Editor): LanguageValue[] {
   return Tools.map(Settings.getLanguages(editor).split(','), function (langPair) {
-    langPair = langPair.split('=');
+    const langPairs = langPair.split('=');
 
     return {
-      name: langPair[0],
-      value: langPair[1]
+      name: langPairs[0],
+      value: langPairs[1]
     };
   });
 };

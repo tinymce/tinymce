@@ -65,11 +65,14 @@ const compileFilter = function (filter: string | RegExp | ((value: string) => bo
   return filter;
 };
 
+const isCssImportRule = (rule: CSSRule): rule is CSSImportRule => (rule as any).styleSheet;
+const isCssPageRule = (rule: CSSRule): rule is CSSPageRule => (rule as any).selectorText;
+
 const getSelectors = function (editor: Editor, doc, fileFilter) {
   const selectors = [], contentCSSUrls = {};
 
   function append(styleSheet, imported?) {
-    let href = styleSheet.href, rules;
+    let href = styleSheet.href, rules: CSSRule[];
 
     href = removeCacheSuffix(href);
 
@@ -89,9 +92,9 @@ const getSelectors = function (editor: Editor, doc, fileFilter) {
     }
 
     Tools.each(rules, function (cssRule) {
-      if (cssRule.styleSheet) {
+      if (isCssImportRule(cssRule)) {
         append(cssRule.styleSheet, true);
-      } else if (cssRule.selectorText) {
+      } else if (isCssPageRule(cssRule)) {
         Tools.each(cssRule.selectorText.split(','), function (selector) {
           selectors.push(Tools.trim(selector));
         });

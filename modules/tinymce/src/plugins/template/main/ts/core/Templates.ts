@@ -63,7 +63,7 @@ const hasClass = function (n, c) {
   return new RegExp('\\b' + c + '\\b', 'g').test(n.className);
 };
 
-const insertTemplate = function (editor, ui, html) {
+const insertTemplate = function (editor: Editor, _ui: boolean, html: string) {
   // Note: ui is unused here but is required since this can be called by execCommand
   let el;
   const dom = editor.dom;

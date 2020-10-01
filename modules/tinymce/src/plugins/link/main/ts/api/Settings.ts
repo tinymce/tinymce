@@ -7,7 +7,7 @@
 
 import { Type } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
-import { ListItem } from '../ui/DialogTypes';
+import { UserListItem } from '../ui/DialogTypes';
 import { AssumeExternalTargets } from './Types';
 
 const assumeExternalTargets = (editor: Editor): AssumeExternalTargets => {
@@ -24,15 +24,15 @@ const assumeExternalTargets = (editor: Editor): AssumeExternalTargets => {
 
 const hasContextToolbar = (editor: Editor) => editor.getParam('link_context_toolbar', false, 'boolean');
 
-const getLinkList = (editor: Editor): string | ListItem[] | ((success: (val: any) => void) => void) => editor.getParam('link_list');
+const getLinkList = (editor: Editor): string | UserListItem[] | ((success: (val: any) => void) => void) => editor.getParam('link_list');
 
 const getDefaultLinkTarget = (editor: Editor) => editor.getParam('default_link_target');
 
-const getTargetList = (editor: Editor): boolean | ListItem[] => editor.getParam('target_list', true);
+const getTargetList = (editor: Editor): boolean | UserListItem[] => editor.getParam('target_list', true);
 
-const getRelList = (editor: Editor): ListItem[] => editor.getParam('rel_list', [], 'array');
+const getRelList = (editor: Editor): UserListItem[] => editor.getParam('rel_list', [], 'array');
 
-const getLinkClassList = (editor: Editor): ListItem[] => editor.getParam('link_class_list', [], 'array');
+const getLinkClassList = (editor: Editor): UserListItem[] => editor.getParam('link_class_list', [], 'array');
 
 const shouldShowLinkTitle = (editor: Editor) => editor.getParam('link_title', true, 'boolean');
 

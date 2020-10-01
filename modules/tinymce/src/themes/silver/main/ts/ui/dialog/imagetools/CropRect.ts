@@ -26,7 +26,7 @@ export interface CropRect extends Observable<any> {
 }
 
 const create = (currentRect, viewPortRect, clampRect, containerElm, action): CropRect => {
-  let dragHelpers;
+  let dragHelpers: any[];
   const prefix = 'tox-';
   const id = prefix + 'crid-' + count++;
 

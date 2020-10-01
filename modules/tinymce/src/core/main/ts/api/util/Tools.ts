@@ -8,22 +8,23 @@
 import * as ArrUtils from '../../util/ArrUtils';
 import Env from '../Env';
 
-type ArrayCallback<T, R> = (x: T, i: number, xs: ReadonlyArray<T>) => R;
-type ObjCallback<T, R> = (value: T[keyof T], key: string, obj: T) => R;
+type ArrayCallback<T, R> = ArrUtils.ArrayCallback<T, R>;
+type ObjCallback<T, R> = ArrUtils.ObjCallback<T, R>;
 
 interface Tools {
   is (obj: any, type: string): boolean;
   isArray <T>(arr: any): arr is Array<T>;
   inArray <T>(arr: ArrayLike<T>, value: T): number;
-  grep <T>(arr: ArrayLike<T>, pred?: ArrayCallback<T, boolean>);
+  grep <T>(arr: ArrayLike<T> | null | undefined, pred?: ArrayCallback<T, boolean>): T[];
+  grep <T>(arr: Record<string, T> | null | undefined, pred?: ObjCallback<T, boolean>): T[];
   trim (str: string): string;
   toArray <T>(obj: ArrayLike<T>): T[];
   hasOwn (obj: any, name: string): boolean;
   makeMap <T>(items: ArrayLike<T> | string, delim?: string | RegExp, map?: Record<string, T | string>): Record<string, T | string>;
-  each <T>(arr: ArrayLike<T>, cb: ArrayCallback<T, any>, scope?: any): void;
-  each <T>(obj: T, cb: ObjCallback<T, any>, scope?: any): void;
-  map <T, U>(arr: ArrayLike<T>, cb: ArrayCallback<T, U>, scope?: any): Array<U>;
-  map <T, U>(obj: T, cb: ObjCallback<T, U>, scope?: any): Array<U>;
+  each <T>(arr: ArrayLike<T> | null | undefined, cb: ArrayCallback<T, void | boolean>, scope?: any): boolean;
+  each <T>(obj: Record<string, T> | null | undefined, cb: ObjCallback<T, void | boolean>, scope?: any): boolean;
+  map <T, R>(arr: ArrayLike<T> | null | undefined, cb: ArrayCallback<T, R>): R[];
+  map <T, R>(obj: Record<string, T> | null | undefined, cb: ObjCallback<T, R>): R[];
   extend (obj: Object, ext: Object, ...objs: Object[]): any;
   create (name: string, p: Object, root?: Object);
   walk <T = any>(obj: T, f: Function, n?: keyof T, scope?: any): void;

@@ -83,7 +83,7 @@ const clearChildStyles = (dom: DOMUtils, format, node: Node) => {
     const selector = format.links ? '*:not(a)' : '*';
     each(dom.select(selector, node), (node) => {
       if (isElementNode(node)) {
-        each(format.styles, (value, name) => {
+        each(format.styles, (value, name: string) => {
           dom.setStyle(node, name, '');
         });
       }

@@ -8,7 +8,7 @@
 import DOMUtils from '../api/dom/DOMUtils';
 import EditorSelection from '../api/dom/Selection';
 import Editor from '../api/Editor';
-import { FormatVars } from '../api/fmt/Format';
+import { ApplyFormat, FormatVars } from '../api/fmt/Format';
 import Tools from '../api/util/Tools';
 import * as Bookmarks from '../bookmark/Bookmarks';
 import { IdBookmark, IndexBookmark } from '../bookmark/BookmarkTypes';
@@ -39,12 +39,13 @@ const applyFormat = function (ed: Editor, name: string, vars?: FormatVars, node?
   const isCollapsed = !node && ed.selection.isCollapsed();
   const dom = ed.dom, selection: EditorSelection = ed.selection;
 
-  const setElementFormat = function (elm: Node, fmt?) {
+  // TODO: Add actual type for fmt below
+  const setElementFormat = function (elm: Node, fmt?: ApplyFormat) {
     fmt = fmt || format;
 
     if (elm) {
       if (fmt.onformat) {
-        fmt.onformat(elm, fmt, vars, node);
+        fmt.onformat(elm, fmt as any, vars, node);
       }
 
       each(fmt.styles, function (value, name) {
@@ -83,7 +84,7 @@ const applyFormat = function (ed: Editor, name: string, vars?: FormatVars, node?
     }
 
     // Look for matching formats
-    each(formatList, function (format) {
+    each(formatList, function (format: any) {
       // Check collapsed state if it exists
       if ('collapsed' in format && format.collapsed !== isCollapsed) {
         return;

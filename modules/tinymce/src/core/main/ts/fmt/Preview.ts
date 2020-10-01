@@ -185,7 +185,7 @@ const parseSelector = function (selector: string) {
   }).reverse();
 };
 
-const getCssText = function (editor: Editor, format) {
+const getCssText = function (editor: Editor, format: any) {
   let name, previewFrag;
   let previewCss = '', parentFontSize;
 
@@ -197,7 +197,7 @@ const getCssText = function (editor: Editor, format) {
   }
 
   // Removes any variables since these can't be previewed
-  const removeVars = function (val) {
+  const removeVars = function (val): string {
     return val.replace(/%(\w+)/g, '');
   };
 
@@ -238,29 +238,29 @@ const getCssText = function (editor: Editor, format) {
   const previewElm = dom.select(name, previewFrag)[0] || previewFrag.firstChild;
 
   // Add format styles to preview element
-  each(format.styles, function (value, name) {
-    value = removeVars(value);
+  each(format.styles, function (value, name: string) {
+    const newValue = removeVars(value);
 
-    if (value) {
-      dom.setStyle(previewElm, name, value);
+    if (newValue) {
+      dom.setStyle(previewElm, name, newValue);
     }
   });
 
   // Add attributes to preview element
-  each(format.attributes, function (value, name) {
-    value = removeVars(value);
+  each(format.attributes, function (value, name: string) {
+    const newValue = removeVars(value);
 
-    if (value) {
-      dom.setAttrib(previewElm, name, value);
+    if (newValue) {
+      dom.setAttrib(previewElm, name, newValue);
     }
   });
 
   // Add classes to preview element
   each(format.classes, function (value) {
-    value = removeVars(value);
+    const newValue = removeVars(value);
 
-    if (!dom.hasClass(previewElm, value)) {
-      dom.addClass(previewElm, value);
+    if (!dom.hasClass(previewElm, newValue)) {
+      dom.addClass(previewElm, newValue);
     }
   });
 

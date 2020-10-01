@@ -14,7 +14,7 @@ import * as Dialog from '../ui/Dialog';
 import * as OpenUrl from './OpenUrl';
 import * as Utils from './Utils';
 
-const getLink = (editor: Editor, elm) => editor.dom.getParent(elm, 'a[href]');
+const getLink = (editor: Editor, elm: Node) => editor.dom.getParent<HTMLAnchorElement>(elm, 'a[href]');
 
 const getSelectedLink = (editor: Editor) => getLink(editor, editor.selection.getStart());
 
@@ -22,11 +22,11 @@ const hasOnlyAltModifier = function (e) {
   return e.altKey === true && e.shiftKey === false && e.ctrlKey === false && e.metaKey === false;
 };
 
-const gotoLink = (editor: Editor, a) => {
+const gotoLink = (editor: Editor, a: HTMLAnchorElement | null) => {
   if (a) {
     const href = Utils.getHref(a);
     if (/^#/.test(href)) {
-      const targetEl = editor.$(href);
+      const targetEl = editor.$<Element>(href);
       if (targetEl.length) {
         editor.selection.scrollIntoView(targetEl[0], true);
       }

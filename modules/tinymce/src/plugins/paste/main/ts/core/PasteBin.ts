@@ -103,9 +103,9 @@ const getHtml = (editor: Editor): string => {
   };
 
   // find only top level elements (there might be more nested inside them as well, see TINY-1162)
-  const pasteBinClones = Tools.grep(getPasteBinParent(editor).childNodes, function (elm: Element) {
-    return elm.id === 'mcepastebin';
-  });
+  const pasteBinClones = Tools.grep(getPasteBinParent(editor).childNodes, function (elm: ChildNode) {
+    return (elm as HTMLElement).id === 'mcepastebin';
+  }) as HTMLElement[];
   const pasteBinElm = pasteBinClones.shift();
 
   // if clones were found, move their content into the first bin
