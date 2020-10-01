@@ -154,8 +154,8 @@ const getElmIndex = function (elm: HTMLElement) {
   return value;
 };
 
-const findSpansByIndex = function (editor: Editor, index: string) {
-  const spans = [];
+const findSpansByIndex = function (editor: Editor, index: string): HTMLSpanElement[] {
+  const spans: HTMLSpanElement[] = [];
 
   const nodes = Tools.toArray(editor.getBody().getElementsByTagName('span'));
   if (nodes.length) {

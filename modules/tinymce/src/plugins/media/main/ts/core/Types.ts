@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-export interface MediaData {
+export type MediaData = {
   allowFullscreen?: boolean;
   source: string;
   sourcemime?: string;
@@ -16,7 +16,7 @@ export interface MediaData {
   altsource: string;
   altsourcemime?: string;
   type?: 'ephox-embed-iri' | 'script' | 'object' | 'iframe' | 'embed' | 'video' | 'audio';
-}
+};
 
 export interface DialogSubData {
   value: string;

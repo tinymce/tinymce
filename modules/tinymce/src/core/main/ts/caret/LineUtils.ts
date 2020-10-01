@@ -22,8 +22,8 @@ export interface CaretInfo {
 
 const isContentEditableFalse = NodeType.isContentEditableFalse;
 const findNode = CaretUtils.findNode;
-const distanceToRectLeft = (clientRect: NodeClientRect, clientX: number) => Math.abs(clientRect.left - clientX);
-const distanceToRectRight = (clientRect: NodeClientRect, clientX: number) => Math.abs(clientRect.right - clientX);
+const distanceToRectLeft = (clientRect: ClientRect, clientX: number) => Math.abs(clientRect.left - clientX);
+const distanceToRectRight = (clientRect: ClientRect, clientX: number) => Math.abs(clientRect.right - clientX);
 const isInsideX = (clientX: number, clientRect: ClientRect): boolean => clientX >= clientRect.left && clientX <= clientRect.right;
 const isInsideY = (clientY: number, clientRect: ClientRect): boolean => clientY >= clientRect.top && clientY <= clientRect.bottom;
 
@@ -40,7 +40,8 @@ const findClosestClientRect = <T extends ClientRect>(clientRects: T[], clientX: 
   }
 
   // cE=false has higher priority
-  if (newDistance === oldDistance && isContentEditableFalse(clientRect.node)) {
+  // TODO check the types or add a guard as node may not exist
+  if (newDistance === oldDistance && isContentEditableFalse((clientRect as any).node)) {
     return clientRect;
   }
 

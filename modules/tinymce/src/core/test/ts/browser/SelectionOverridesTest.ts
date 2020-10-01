@@ -16,9 +16,9 @@ UnitTest.asynctest('browser.tinymce.core.SelectionOverridesTest', function (succ
     LegacyUnit.equal(a, true, label);
   };
 
-  suite.test('click on link in cE=false', function (editor) {
+  suite.test('click on link in cE=false', function (editor: Editor) {
     editor.setContent('<p contentEditable="false"><a href="#"><strong>link</strong></a></p>');
-    const evt = editor.fire('click', { target: editor.$('strong')[0] } as MouseEvent);
+    const evt = editor.fire('click', { target: editor.$('strong')[0] } as any);
 
     LegacyUnit.equal(evt.isDefaultPrevented(), true);
   });

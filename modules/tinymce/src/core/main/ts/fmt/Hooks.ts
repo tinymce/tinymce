@@ -17,7 +17,7 @@ import * as ArrUtils from '../util/ArrUtils';
  * @class tinymce.fmt.Hooks
  */
 
-const postProcessHooks = {}, filter = ArrUtils.filter, each = ArrUtils.each;
+const postProcessHooks: Record<string, Array<(editor: Editor) => void>> = {}, filter = ArrUtils.filter, each = ArrUtils.each;
 
 const addPostProcessHook = function (name, hook) {
   const hooks = postProcessHooks[name];

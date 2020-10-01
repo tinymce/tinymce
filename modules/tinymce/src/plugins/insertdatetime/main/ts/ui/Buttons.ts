@@ -21,7 +21,9 @@ const register = function (editor: Editor) {
     tooltip: 'Insert date/time',
     select: (value) => value === defaultFormat.get(),
     fetch: (done) => {
-      done(Tools.map(formats, (format): Menu.ChoiceMenuItemSpec => ({ type: 'choiceitem', text: Actions.getDateTime(editor, format), value: format })));
+      done(Tools.map(formats, (format): Menu.ChoiceMenuItemSpec =>
+        ({ type: 'choiceitem', text: Actions.getDateTime(editor, format), value: format })
+      ));
     },
     onAction: (_api) => {
       Actions.insertDateTime(editor, defaultFormat.get());

@@ -151,7 +151,7 @@ const EditorObservable: EditorObservable = {
    * @private
    */
   bindPendingEventDelegates() {
-    const self = this;
+    const self = (this as Editor);
 
     Tools.each(self._pendingNativeEvents, function (name) {
       bindEventDelegate(self, name);

@@ -75,7 +75,7 @@ const normalizedTextOffset = (node: Node, offset: number): number => {
 const equal = (a) => (b) => a === b;
 
 const normalizedNodeIndex = (node: Node): number => {
-  let nodes, index;
+  let nodes: Node[], index: number;
 
   nodes = getChildNodes(normalizedParent(node));
   index = ArrUtils.findIndex(nodes, equal(node), node);
@@ -203,16 +203,16 @@ const resolve = (root: Node, path: string): CaretPosition => {
   offset = parts.length > 1 ? parts[1] : 'before';
 
   const container = ArrUtils.reduce(paths, function (result, value) {
-    value = /([\w\-\(\)]+)\[([0-9]+)\]/.exec(value);
-    if (!value) {
+    const match = /([\w\-\(\)]+)\[([0-9]+)\]/.exec(value);
+    if (!match) {
       return null;
     }
 
-    if (value[1] === 'text()') {
-      value[1] = '#text';
+    if (match[1] === 'text()') {
+      match[1] = '#text';
     }
 
-    return resolvePathItem(result, value[1], parseInt(value[2], 10));
+    return resolvePathItem(result, match[1], parseInt(match[2], 10));
   }, root);
 
   if (!container) {

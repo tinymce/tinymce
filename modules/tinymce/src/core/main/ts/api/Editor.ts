@@ -766,7 +766,7 @@ class Editor implements EditorObservable {
    */
   public save(args?: any): string {
     const self = this;
-    let elm = self.getElement(), html, form;
+    let elm = self.getElement(), html, form: HTMLFormElement;
 
     if (!elm || !self.initialized || self.removed) {
       return;
@@ -797,8 +797,8 @@ class Editor implements EditorObservable {
       // Update hidden form element
       if ((form = DOM.getParent(self.id, 'form'))) {
         each(form.elements, function (elm) {
-          if (elm.name === self.id) {
-            elm.value = html;
+          if ((elm as any).name === self.id) {
+            (elm as any).value = html;
             return false;
           }
         });

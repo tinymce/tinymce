@@ -15,6 +15,12 @@ export type ListValue = Dialog.ListBoxSingleItemSpec;
 export type ListGroup = Dialog.ListBoxNestedItemSpec;
 export type ListItem = Dialog.ListBoxItemSpec;
 
+export interface UserListItem {
+  text?: string;
+  title?: string;
+  menu?: UserListItem[];
+}
+
 export interface ImageDialogInfo {
   image: ImageData;
   imageList: Optional<ListItem[]>;

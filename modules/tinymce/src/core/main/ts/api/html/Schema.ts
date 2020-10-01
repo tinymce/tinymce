@@ -118,7 +118,7 @@ interface Schema {
 const mapCache: any = {}, dummyObj = {};
 const makeMap = Tools.makeMap, each = Tools.each, extend = Tools.extend, explode = Tools.explode, inArray = Tools.inArray;
 
-const split = function (items, delim?) {
+const split = (items: string, delim?: string): string[] => {
   items = Tools.trim(items);
   return items ? items.split(delim || ' ') : [];
 };
@@ -130,8 +130,9 @@ const split = function (items, delim?) {
  * @param {String} type html4, html5 or html5-strict schema type.
  * @return {Object} Schema lookup table.
  */
-const compileSchema = function (type: SchemaType) {
-  const schema: any = {};
+// TODO: Improve return type
+const compileSchema = function (type: SchemaType): Record<string, any> {
+  const schema: Record<string, any> = {};
   let globalAttributes, blockContent;
   let phrasingContent, flowContent, html4BlockContent, html4PhrasingContent;
 
@@ -156,8 +157,8 @@ const compileSchema = function (type: SchemaType) {
       children = split(children);
     }
 
-    name = split(name);
-    ni = name.length;
+    const names = split(name);
+    ni = names.length;
     while (ni--) {
       attributesOrder = split([ globalAttributes, attributes ].join(' '));
 
@@ -167,21 +168,21 @@ const compileSchema = function (type: SchemaType) {
         children: arrayToMap(children, dummyObj)
       };
 
-      schema[name[ni]] = element;
+      schema[names[ni]] = element;
     }
   };
 
   const addAttrs = function (name: string, attributes?: string) {
     let ni, schemaItem, i, l;
 
-    name = split(name);
-    ni = name.length;
-    attributes = split(attributes);
+    const names = split(name);
+    ni = names.length;
+    const attrs = split(attributes);
     while (ni--) {
-      schemaItem = schema[name[ni]];
-      for (i = 0, l = attributes.length; i < l; i++) {
-        schemaItem.attributes[attributes[i]] = {};
-        schemaItem.attributesOrder.push(attributes[i]);
+      schemaItem = schema[names[ni]];
+      for (i = 0, l = attrs.length; i < l; i++) {
+        schemaItem.attributes[attrs[i]] = {};
+        schemaItem.attributesOrder.push(attrs[i]);
       }
     }
   };
@@ -507,7 +508,7 @@ function Schema(settings?: SchemaSettings): Schema {
 
     if (validElements) {
       // Split valid elements into an array with rules
-      validElements = split(validElements, ',');
+      const validElementsArr = split(validElements, ',');
 
       if (elements['@']) {
         globalAttributes = elements['@'].attributes;
@@ -515,9 +516,9 @@ function Schema(settings?: SchemaSettings): Schema {
       }
 
       // Loop all rules
-      for (ei = 0, el = validElements.length; ei < el; ei++) {
+      for (ei = 0, el = validElementsArr.length; ei < el; ei++) {
         // Parse element rule
-        matches = elementRuleRegExp.exec(validElements[ei]);
+        matches = elementRuleRegExp.exec(validElementsArr[ei]);
         if (matches) {
           // Setup local names for matches
           prefix = matches[1];
@@ -773,8 +774,8 @@ function Schema(settings?: SchemaSettings): Schema {
     // Switch these on HTML4
     if (settings.schema !== 'html5') {
       each(split('strong/b em/i'), function (item) {
-        item = split(item, '/');
-        elements[item[1]].outputName = item[0];
+        const items = split(item, '/');
+        elements[items[1]].outputName = items[0];
       });
     }
 

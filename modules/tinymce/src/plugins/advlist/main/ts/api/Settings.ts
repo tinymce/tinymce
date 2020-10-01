@@ -7,12 +7,12 @@
 
 import Editor from 'tinymce/core/api/Editor';
 
-const getNumberStyles = (editor: Editor) => {
+const getNumberStyles = (editor: Editor): string[] => {
   const styles = editor.getParam('advlist_number_styles', 'default,lower-alpha,lower-greek,lower-roman,upper-alpha,upper-roman');
   return styles ? styles.split(/[ ,]/) : [];
 };
 
-const getBulletStyles = (editor: Editor) => {
+const getBulletStyles = (editor: Editor): string[] => {
   const styles = editor.getParam('advlist_bullet_styles', 'default,circle,square');
   return styles ? styles.split(/[ ,]/) : [];
 };

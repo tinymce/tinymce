@@ -12,6 +12,23 @@ import HtmlSerializer from 'tinymce/core/api/html/Serializer';
 import Tools from 'tinymce/core/api/util/Tools';
 import * as Settings from '../api/Settings';
 
+interface Data {
+  fontface?: string;
+  fontsize?: string;
+  xml_pi?: boolean;
+  docencoding?: string;
+  doctype?: string;
+  title?: string;
+  langcode?: string;
+  stylesheets?: string[];
+  dir?: string;
+  langdir?: string;
+  style?: string;
+  visited_color?: string;
+  link_color?: string;
+  active_color?: string;
+}
+
 const parseHeader = function (head: string) {
   // Parse the contents with a DOM parser
   return DomParser({
@@ -23,7 +40,7 @@ const parseHeader = function (head: string) {
 
 const htmlToData = function (editor: Editor, head: string) {
   const headerFragment = parseHeader(head);
-  const data: any = {};
+  const data: Data = {};
   let elm, matches;
 
   function getAttr(elm, name) {
@@ -103,7 +120,7 @@ const htmlToData = function (editor: Editor, head: string) {
   return data;
 };
 
-const dataToHtml = function (editor: Editor, data, head) {
+const dataToHtml = function (editor: Editor, data: Data, head) {
   let headElement, elm, value;
   const dom = editor.dom;
 

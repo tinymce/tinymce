@@ -214,7 +214,7 @@ interface DOMUtils {
   create (name: string, attrs?: Record<string, string | boolean | number>, html?: string | Node): HTMLElement;
   createHTML (name: string, attrs?: Record<string, string>, html?: string): string;
   createFragment (html?: string): DocumentFragment;
-  remove <T extends Node>(node: string | T | T[] | DomQuery, keepChildren?: boolean): T | T[];
+  remove <T extends Node>(node: string | T | T[] | DomQuery<T>, keepChildren?: boolean): T | T[];
   setStyle (elm: string | Node, name: string, value: string | number | null): void;
   setStyle (elm: string | Node, styles: StyleMap): void;
   getStyle (elm: string | Node, name: string, computed?: boolean): string;
@@ -464,7 +464,8 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
       name = Env.browser.isIE() ? 'styleFloat' : 'cssFloat';
     }
 
-    return $elm[0] && $elm[0].style ? $elm[0].style[name] : undefined;
+    // TODO Add a type guard here instead of casting as any
+    return $elm[0] && ($elm[0] as any).style ? ($elm[0] as any).style[name] : undefined;
   };
 
   const getSize = (elm: HTMLElement | string): {w: number; h: number} => {
@@ -746,8 +747,8 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     return frag;
   };
 
-  const remove = <T extends Node>(node: string | T | T[] | DomQuery, keepChildren?: boolean): T | T[] => {
-    const $node = $$(node);
+  const remove = <T extends Node>(node: string | T | T[] | DomQuery<T>, keepChildren?: boolean): T | T[] => {
+    const $node = $$(node) as DomQuery<T>;
 
     if (keepChildren) {
       $node.each(function () {

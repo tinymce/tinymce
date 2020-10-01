@@ -5,6 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { RangeLikeObject } from '../../selection/RangeTypes';
+
 export type ApplyFormat = BlockFormat | InlineFormat | SelectorFormat;
 export type RemoveFormat = RemoveBlockFormat | RemoveInlineFormat | RemoveSelectorFormat;
 export type Format = ApplyFormat | RemoveFormat;
@@ -25,7 +27,7 @@ export interface CommonFormat<T> {
   expand?: boolean;
   links?: boolean;
   onmatch?: (node: Node, fmt: T, itemName: string) => boolean;
-  onformat?: (node: Node, fmt: T, vars?: FormatVars) => void;
+  onformat?: (elm: Node, fmt: T, vars?: FormatVars, node?: Node | RangeLikeObject) => void;
   remove_similar?: boolean;
 }
 

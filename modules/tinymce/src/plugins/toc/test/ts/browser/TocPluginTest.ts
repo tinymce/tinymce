@@ -45,7 +45,7 @@ UnitTest.asynctest('browser.tinymce.plugins.toc.TocPluginTest', (success, failur
     LegacyUnit.setSelection(editor, 'h1', 0);
     editor.execCommand('mceInsertToc');
 
-    const $toc = editor.$('.tst-toc');
+    const $toc = editor.$<Element>('.tst-toc');
 
     LegacyUnit.equal($toc.length, 2, 'ToC inserted');
     LegacyUnit.equal($toc.attr('contentEditable'), 'false', 'cE=false');
@@ -87,7 +87,7 @@ UnitTest.asynctest('browser.tinymce.plugins.toc.TocPluginTest', (success, failur
     LegacyUnit.setSelection(editor, 'h1', 0);
     editor.execCommand('mceInsertToc');
 
-    const $toc = editor.$('.tst-toc');
+    const $toc = editor.$<Element>('.tst-toc');
 
     stripAttribs($toc, [ 'data-mce-href', 'data-mce-selected' ]);
 
@@ -152,7 +152,7 @@ UnitTest.asynctest('browser.tinymce.plugins.toc.TocPluginTest', (success, failur
 
     editor.setContent(contents);
 
-    const $toc = editor.$('.tst-toc');
+    const $toc = editor.$<Element>('.tst-toc');
     LegacyUnit.deepEqual($toc.attr('contentEditable'), 'false', 'cE added back after setContent()');
     LegacyUnit.deepEqual($toc.find(':first-child').attr('contentEditable'), 'true',
       'cE added back to title after setContent()');

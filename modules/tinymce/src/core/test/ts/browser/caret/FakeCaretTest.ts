@@ -76,7 +76,7 @@ UnitTest.asynctest('browser.tinymce.core.caret.FakeCaretTest', function (success
     const $fakeCaretText = $(getRoot()).contents();
 
     LegacyUnit.equal($fakeCaretText[0].nodeName, '#text');
-    LegacyUnit.equal($fakeCaretText[0].data, Zwsp.ZWSP);
+    LegacyUnit.equal(($fakeCaretText[0] as Text).data, Zwsp.ZWSP);
     CaretAsserts.assertRange(rng, CaretAsserts.createRange($fakeCaretText[0], 1));
 
     fakeCaret.hide();
@@ -90,7 +90,7 @@ UnitTest.asynctest('browser.tinymce.core.caret.FakeCaretTest', function (success
     const $fakeCaretText = $(getRoot()).contents();
 
     LegacyUnit.equal($fakeCaretText[1].nodeName, '#text');
-    LegacyUnit.equal($fakeCaretText[1].data, Zwsp.ZWSP);
+    LegacyUnit.equal(($fakeCaretText[1] as Text).data, Zwsp.ZWSP);
     CaretAsserts.assertRange(rng, CaretAsserts.createRange($fakeCaretText[1], 1));
 
     fakeCaret.hide();

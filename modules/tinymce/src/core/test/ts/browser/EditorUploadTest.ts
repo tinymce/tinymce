@@ -205,7 +205,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', (success, failure) =
       assertResultReusesFilename(editor, uploadedBlobInfo, result);
 
       editor.uploadImages((_result) => {
-        const img = editor.$('img')[0];
+        const img = editor.$<HTMLImageElement>('img')[0];
         Assert.eq('uploadImages reuse filename', false, hasBlobAsSource(img));
         Assert.eq('Check the cache invalidation string was added', true, img.src.indexOf('custom.png?size=small&') !== -1);
         Assert.eq('uploadImages reuse filename', '<p><img src="custom.png?size=small" /></p>', editor.getContent());

@@ -15,7 +15,8 @@ type LastSuggestion = Actions.LastSuggestion;
 
 const ignoreAll = true;
 
-const getSuggestions = (editor: Editor, pluginUrl: string, lastSuggestionsState, startedState, textMatcherState, currentLanguageState, word, spans) => {
+const getSuggestions = (editor: Editor, pluginUrl: string, lastSuggestionsState: Cell<LastSuggestion>, startedState: Cell<boolean>,
+                        textMatcherState: Cell<DomTextMatcher>, currentLanguageState: Cell<string>, word: string, spans: HTMLSpanElement[]) => {
   const items = [];
   const suggestions = lastSuggestionsState.get().suggestions[word];
 
@@ -62,8 +63,8 @@ const getSuggestions = (editor: Editor, pluginUrl: string, lastSuggestionsState,
   return items;
 };
 
-const setup = function (editor: Editor, pluginUrl: string, lastSuggestionsState: Cell<LastSuggestion>, startedState: Cell<boolean>, textMatcherState: Cell<DomTextMatcher>, currentLanguageState: Cell<string>) {
-
+const setup = function (editor: Editor, pluginUrl: string, lastSuggestionsState: Cell<LastSuggestion>, startedState: Cell<boolean>,
+                        textMatcherState: Cell<DomTextMatcher>, currentLanguageState: Cell<string>) {
   const update = (element: HTMLElement) => {
     const target = element;
     if (target.className === 'mce-spellchecker-word') {
