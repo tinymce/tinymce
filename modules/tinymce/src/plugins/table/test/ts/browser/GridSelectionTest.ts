@@ -2,6 +2,7 @@ import { Assertions, Log, Logger, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { LegacyUnit, TinyApis, TinyLoader } from '@ephox/mcagar';
 
+import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
@@ -11,14 +12,14 @@ UnitTest.asynctest('browser.tinymce.plugins.table.GridSelectionTest', (success, 
   SilverTheme();
   Plugin();
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor: Editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
 
     const sAssertTableSelection = function (tableHtml: string, selectCells: string[], cellContents: string[]) {
       const selectRangeXY = (table, startTd, endTd) => {
-        editor.fire('mousedown', { target: startTd, button: 0 });
-        editor.fire('mouseover', { target: endTd, button: 0 });
-        editor.fire('mouseup', { target: endTd, button: 0 });
+        editor.fire('mousedown', { target: startTd, button: 0 } as MouseEvent);
+        editor.fire('mouseover', { target: endTd, button: 0 } as MouseEvent);
+        editor.fire('mouseup', { target: endTd, button: 0 } as MouseEvent);
       };
 
       const getCells = (table): HTMLTableCellElement[] => editor.$(table).find('td').toArray();

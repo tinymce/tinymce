@@ -36,6 +36,8 @@ export interface UploadFailureOptions {
 
 export type UploadHandler = (blobInfo: BlobInfo, success: (url: string) => void, failure: (err: string, options?: UploadFailureOptions) => void, progress?: (percent: number) => void) => void;
 
+type ResolveFn<T> = (result?: T | Promise<T>) => void;
+
 export interface UploadResult {
   url: string;
   blobInfo: BlobInfo;
@@ -51,7 +53,7 @@ export interface Uploader {
 }
 
 export function Uploader(uploadStatus, settings): Uploader {
-  const pendingPromises = {};
+  const pendingPromises: Record<string, ResolveFn<UploadResult>[]> = {};
 
   const pathJoin = (path1, path2) => {
     if (path1) {
@@ -117,7 +119,7 @@ export function Uploader(uploadStatus, settings): Uploader {
     }
   });
 
-  const resolvePending = (blobUri, result) => {
+  const resolvePending = (blobUri: string, result) => {
     Tools.each(pendingPromises[blobUri], (resolve) => {
       resolve(result);
     });

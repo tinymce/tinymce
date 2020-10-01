@@ -13,7 +13,7 @@ const getTimeFormat = function (editor) {
   return editor.getParam('insertdatetime_timeformat', editor.translate('%H:%M:%S'));
 };
 
-const getFormats = function (editor) {
+const getFormats = function (editor): string[] {
   return editor.getParam('insertdatetime_formats', [ '%H:%M:%S', '%Y-%m-%d', '%I:%M:%S %p', '%D' ]);
 };
 

@@ -30,12 +30,12 @@ interface ControlSelection {
 
 type ResizeHandle = [ number, number, number, number ] & { elm?: Element };
 
-interface ResizeHandles {
+type ResizeHandles = {
   ne: ResizeHandle;
   nw: ResizeHandle;
   se: ResizeHandle;
   sw: ResizeHandle;
-}
+};
 
 interface SelectedResizeHandle extends ResizeHandle {
   elm: Element;

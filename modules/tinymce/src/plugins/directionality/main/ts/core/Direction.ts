@@ -5,9 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 
-const setDir = function (editor, dir) {
+const setDir = function (editor: Editor, dir: string) {
   const dom = editor.dom;
   let curDir;
   const blocks = editor.selection.getSelectedBlocks();

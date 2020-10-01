@@ -266,13 +266,13 @@ UnitTest.test('DOMUtils.setGetAttrib on null', () => {
 });
 
 UnitTest.test('DOMUtils.getAttribs', () => {
-  const check = (obj, val) => {
+  const check = (obj: NamedNodeMap | Attr[], val: string) => {
     let count = 0;
 
-    val = val.split(',');
+    const values = val.split(',');
 
     Tools.each(obj, (o) => {
-      if (Tools.inArray(val, o.nodeName.toLowerCase()) !== -1 && o.specified) {
+      if (Tools.inArray(values, o.nodeName.toLowerCase()) !== -1 && o.specified) {
         count++;
       }
     });

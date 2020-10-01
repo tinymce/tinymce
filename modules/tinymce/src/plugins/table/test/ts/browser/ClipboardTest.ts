@@ -373,7 +373,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ClipboardTest', (success, fail
   });
 
   suite.test('TestCase-TBA: Table: row clipboard api', (editor) => {
-    const createRow = (cellContents) => {
+    const createRow = (cellContents: string[]) => {
       const tr = editor.dom.create('tr');
 
       Tools.each(cellContents, (html) => {

@@ -24,14 +24,14 @@ const tabCancel = function (e) {
 
 const setup = function (editor: Editor) {
   function tabHandler(e) {
-    let x, el, i;
+    let x: number, i: number;
 
     if (e.keyCode !== VK.TAB || e.ctrlKey || e.altKey || e.metaKey || e.isDefaultPrevented()) {
       return;
     }
 
     function find(direction) {
-      el = DOM.select(':input:enabled,*[tabindex]:not(iframe)');
+      const el = DOM.select(':input:enabled,*[tabindex]:not(iframe)');
 
       function canSelectRecursive(e) {
         return e.nodeName === 'BODY' || (e.type !== 'hidden' &&
@@ -74,6 +74,7 @@ const setup = function (editor: Editor) {
     }
 
     // Find element to focus
+    let el: HTMLElement;
     if (e.shiftKey) {
       if (v[0] === ':prev') {
         el = find(-1);
@@ -89,7 +90,7 @@ const setup = function (editor: Editor) {
     }
 
     if (el) {
-      const focusEditor = EditorManager.get(el.id || el.name);
+      const focusEditor = EditorManager.get(el.id || (el as any).name);
 
       if (el.id && focusEditor) {
         focusEditor.focus();
