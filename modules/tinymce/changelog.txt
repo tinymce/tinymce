@@ -1,4 +1,4 @@
-Version 5.5.1 (TBD)
+Version 5.5.1 (2020-10-01)
     Fixed pressing the down key near the end of a document incorrectly raising an exception #TINY-6471
     Fixed incorrect Typescript types for the `Tools` API #TINY-6475
 Version 5.5.0 (2020-09-29)
