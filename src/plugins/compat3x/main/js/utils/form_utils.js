@@ -17,8 +17,37 @@ function getColorPickerHTML(id, target_form_element) {
     label.id = label.id || dom.uniqueId();
   }
 
-  h += '<a role="button" aria-labelledby="' + id + '_label" id="' + id + '_link" href="javascript:;" onclick="tinyMCEPopup.pickColor(event,\'' + target_form_element + '\');" onmousedown="return false;" class="pickcolor">';
-  h += '<span id="' + id + '" title="' + tinyMCEPopup.getLang('browse') + '">&nbsp;<span id="' + id + '_label" class="mceVoiceLabel mceIconOnly" style="display:none;">' + tinyMCEPopup.getLang('browse') + '</span></span></a>';
+  h += '<a role="button" aria-labelledby="' + id + '_label" id="' + id + '_link" href="about:blank" data-target-form-element="' + target_form_element + '" class="pickcolor">';
+  h += '<span id="' + id + '" title="' + tinyMCEPopup.getLang('browse') + '" class="pickcolor-span">&nbsp;<span id="' + id + '_label" class="mceVoiceLabel mceIconOnly" style="display:none;">' + tinyMCEPopup.getLang('browse') + '</span></span></a>';
+
+  document.addEventListener('click', function (event) {
+    switch(event.target.className) {
+      case 'pickcolor':
+        tinyMCEPopup.pickColor(e, event.target.dataset.targetFormElement);
+        event.preventDefault();
+        break;
+      case 'pickcolor-span':
+        tinyMCEPopup.pickColor(e, event.target.parentElement.dataset.targetFormElement);
+        event.stopImmediatePropagation();
+        event.preventDefault();
+        break;
+      default:
+        break;
+    }
+  });
+
+  document.addEventListener('mousedown', function (event) {
+    switch(event.target.className) {
+      case 'pickcolor':
+        event.preventDefault();
+        break;
+      case 'pickcolor-span':
+        event.preventDefault();
+        break;
+      default:
+        break;
+    }
+  });
 
   return h;
 }
@@ -56,8 +85,37 @@ function getBrowserHTML(id, target_form_element, type, prefix) {
   }
 
   html = "";
-  html += '<a id="' + id + '_link" href="javascript:openBrowser(\'' + id + '\',\'' + target_form_element + '\', \'' + type + '\',\'' + option + '\');" onmousedown="return false;" class="browse">';
-  html += '<span id="' + id + '" title="' + tinyMCEPopup.getLang('browse') + '">&nbsp;</span></a>';
+  html += '<a id="' + id + '_link" href="about:blank" data-id="' + id + '" data-target-form-element="' + target_form_element + '" data-type="' + type + '" data-option="' + option + '" class="browse">';
+  html += '<span id="' + id + '" title="' + tinyMCEPopup.getLang('browse') + '" class="browse-span">&nbsp;</span></a>';
+
+  document.addEventListener('click', function (event) {
+    switch(event.target.className) {
+      case 'browse':
+        openBrowser(event.target.dataset.id, event.target.dataset.targetFormElement, event.target.dataset.type, event.target.dataset.option);
+        event.preventDefault();
+        break;
+      case 'browse-span':
+        openBrowser(event.target.parentElement.dataset.id, event.target.parentElement.dataset.targetFormElement, event.target.parentElement.dataset.type, event.target.parentElement.dataset.option);
+        event.stopImmediatePropagation();
+        event.preventDefault();
+        break;
+      default:
+        break;
+    }
+  });
+
+  document.addEventListener('mousedown', function (event) {
+    switch(event.target.className) {
+      case 'browse':
+        event.preventDefault();
+        break;
+      case 'browse-span':
+        event.preventDefault();
+        break;
+      default:
+        break;
+    }
+  });
 
   return html;
 }
