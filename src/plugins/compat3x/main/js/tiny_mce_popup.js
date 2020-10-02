@@ -90,6 +90,50 @@ var tinyMCEPopup = {
 
     self.isWindow = !self.getWindowArg('mce_inline');
     self.id = self.getWindowArg('mce_window_id');
+
+    document.addEventListener('click', function (event) {
+      switch(event.target.className) {
+        case 'pickcolor':
+          tinyMCEPopup.pickColor(e, event.target.dataset.targetFormElement);
+          event.preventDefault();
+          break;
+        case 'pickcolor-span':
+          tinyMCEPopup.pickColor(e, event.target.parentElement.dataset.targetFormElement);
+          event.stopImmediatePropagation();
+          event.preventDefault();
+          break;
+        case 'browse':
+          openBrowser(event.target.dataset.id, event.target.dataset.targetFormElement, event.target.dataset.type, event.target.dataset.option);
+          event.preventDefault();
+          break;
+        case 'browse-span':
+          openBrowser(event.target.parentElement.dataset.id, event.target.parentElement.dataset.targetFormElement, event.target.parentElement.dataset.type, event.target.parentElement.dataset.option);
+          event.stopImmediatePropagation();
+          event.preventDefault();
+          break;
+        default:
+          break;
+      }
+    });
+
+    document.addEventListener('mousedown', function (event) {
+      switch(event.target.className) {
+        case 'pickcolor':
+          event.preventDefault();
+          break;
+        case 'pickcolor-span':
+          event.preventDefault();
+          break;
+        case 'browse':
+          event.preventDefault();
+          break;
+        case 'browse-span':
+          event.preventDefault();
+          break;
+        default:
+          break;
+      }
+    });
   },
 
   /**
