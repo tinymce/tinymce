@@ -7,10 +7,10 @@
 
 import { Obj, Type } from '@ephox/katamari';
 import Editor from '../api/Editor';
-import { Format, Formats } from '../api/fmt/Format';
 import * as Settings from '../api/Settings';
 import Tools from '../api/util/Tools';
 import * as DefaultFormats from './DefaultFormats';
+import { Format, Formats } from './FormatTypes';
 
 export interface FormatRegistry {
   get (name?: string): Format[] | Record<string, Format[]>;

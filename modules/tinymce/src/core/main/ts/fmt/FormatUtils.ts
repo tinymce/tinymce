@@ -10,8 +10,8 @@ import DOMUtils from '../api/dom/DOMUtils';
 import EditorSelection from '../api/dom/Selection';
 import DomTreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
-import { Format, FormatAttrOrStyleValue, FormatVars } from '../api/fmt/Format';
 import * as NodeType from '../dom/NodeType';
+import { Format, FormatAttrOrStyleValue, FormatVars } from './FormatTypes';
 
 const isNode = (node: any): node is Node => !!(node).nodeType;
 

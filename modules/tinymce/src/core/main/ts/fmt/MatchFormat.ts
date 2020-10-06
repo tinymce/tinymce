@@ -8,7 +8,7 @@
 import { Arr } from '@ephox/katamari';
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
-import { Format, FormatVars, SelectorFormat } from '../api/fmt/Format';
+import { Format, FormatVars, SelectorFormat } from './FormatTypes';
 import * as FormatUtils from './FormatUtils';
 
 const isEq = FormatUtils.isEq;

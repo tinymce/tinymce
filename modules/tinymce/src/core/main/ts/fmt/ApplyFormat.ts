@@ -8,7 +8,6 @@
 import DOMUtils from '../api/dom/DOMUtils';
 import EditorSelection from '../api/dom/Selection';
 import Editor from '../api/Editor';
-import { ApplyFormat, FormatVars } from '../api/fmt/Format';
 import Tools from '../api/util/Tools';
 import * as Bookmarks from '../bookmark/Bookmarks';
 import { IdBookmark, IndexBookmark } from '../bookmark/BookmarkTypes';
@@ -21,6 +20,7 @@ import * as TableCellSelection from '../selection/TableCellSelection';
 import * as CaretFormat from './CaretFormat';
 import * as ExpandRange from './ExpandRange';
 import { isCaretNode } from './FormatContainer';
+import { ApplyFormat, FormatVars } from './FormatTypes';
 import * as FormatUtils from './FormatUtils';
 import * as Hooks from './Hooks';
 import * as MatchFormat from './MatchFormat';

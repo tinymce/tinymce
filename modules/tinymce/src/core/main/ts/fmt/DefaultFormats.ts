@@ -6,9 +6,9 @@
  */
 
 import DOMUtils from '../api/dom/DOMUtils';
-import { Formats, FormatVars } from '../api/fmt/Format';
 import Tools from '../api/util/Tools';
 import * as NodeType from '../dom/NodeType';
+import { Formats, FormatVars } from './FormatTypes';
 
 const get = function (dom: DOMUtils) {
   const formats: Formats = {

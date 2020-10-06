@@ -215,13 +215,13 @@ interface DOMUtils {
   createHTML (name: string, attrs?: Record<string, string>, html?: string): string;
   createFragment (html?: string): DocumentFragment;
   remove <T extends Node>(node: string | T | T[] | DomQuery<T>, keepChildren?: boolean): T | T[];
-  setStyle (elm: string | Node, name: string, value: string | number | null): void;
-  setStyle (elm: string | Node, styles: StyleMap): void;
+  setStyle (elm: string | Node | Node[], name: string, value: string | number | null): void;
+  setStyle (elm: string | Node | Node[], styles: StyleMap): void;
   getStyle (elm: string | Node, name: string, computed?: boolean): string;
-  setStyles (elm: string | Node, stylesArg: StyleMap): void;
+  setStyles (elm: string | Node | Node[], stylesArg: StyleMap): void;
   removeAllAttribs (e: RunArguments<Element>): void;
-  setAttrib (elm: string | Node, name: string, value: string | boolean | number | null): void;
-  setAttribs (elm: string | Node, attrs: Record<string, string | boolean | number | null>): void;
+  setAttrib (elm: string | Node | Node[], name: string, value: string | boolean | number | null): void;
+  setAttribs (elm: string | Node | Node[], attrs: Record<string, string | boolean | number | null>): void;
   getAttrib (elm: string | Node, name: string, defaultVal?: string): string;
   getPos (elm: string | Node, rootElm?: Node): {
     x: number;
@@ -235,13 +235,13 @@ interface DOMUtils {
   removeClass (elm: string | Node | Node[], cls: string): void;
   hasClass (elm: string | Node, cls: string): boolean;
   toggleClass (elm: string | Node | Node[], cls: string, state?: boolean): void;
-  show (elm: string | Node): void;
-  hide (elm: string | Node): void;
+  show (elm: string | Node | Node[]): void;
+  hide (elm: string | Node | Node[]): void;
   isHidden (elm: string | Node): boolean;
   uniqueId (prefix?: string): string;
-  setHTML (elm: string | Node, html: string): void;
-  getOuterHTML (elm: string | Node): string;
-  setOuterHTML (elm: string | Node, html: string): void;
+  setHTML (elm: string | Node | Node[], html: string): void;
+  getOuterHTML (elm: string | Node | Node[]): string;
+  setOuterHTML (elm: string | Node | Node[], html: string): void;
   decode (text: string): string;
   encode (text: string): string;
   insertAfter <T extends Node>(node: T | T[], reference: string | Node): T;
@@ -371,7 +371,7 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     return node.attributes;
   };
 
-  const setAttrib = (elm: string | Node, name: string, value: string | boolean | number) => {
+  const setAttrib = (elm: string | Node | Node[], name: string, value: string | boolean | number) => {
     if (value === '') {
       value = null;
     }
@@ -432,7 +432,7 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
 
   const getPos = (elm: string | Node, rootElm?: Node) => Position.getPos(doc.body, get(elm), rootElm);
 
-  const setStyle = (elm: string | Node, name: string | StyleMap, value?: string | number) => {
+  const setStyle = (elm: string | Node | Node[], name: string | StyleMap, value?: string | number) => {
     const $elm = Type.isString(name) ? $$(elm).css(name, value) : $$(elm).css(name);
 
     if (settings.update_styles) {
@@ -440,7 +440,7 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     }
   };
 
-  const setStyles = (elm: string | Node, stylesArg: StyleMap) => {
+  const setStyles = (elm: string | Node | Node[], stylesArg: StyleMap) => {
     const $elm = $$(elm).css(stylesArg);
 
     if (settings.update_styles) {
@@ -644,7 +644,7 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     return func.call(context, node);
   };
 
-  const setAttribs = (elm: string | Node, attrs: Record<string, string | boolean | number>) => {
+  const setAttribs = (elm: string | Node | Node[], attrs: Record<string, string | boolean | number>) => {
     $$(elm).each(function (i, node) {
       each(attrs, function (value, name) {
         setAttrib(node, name, value);
@@ -652,7 +652,7 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     });
   };
 
-  const setHTML = (elm: string | Node, html: string) => {
+  const setHTML = (elm: string | Node | Node[], html: string) => {
     const $elm = $$(elm);
 
     if (isIE) {
@@ -845,11 +845,11 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
 
   const hasClass = (elm: string | Node, cls: string) => $$(elm).hasClass(cls);
 
-  const show = (elm: string | Node) => {
+  const show = (elm: string | Node | Node[]) => {
     $$(elm).show();
   };
 
-  const hide = (elm: string | Node) => {
+  const hide = (elm: string | Node | Node[]) => {
     $$(elm).hide();
   };
 
@@ -863,7 +863,7 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     return NodeType.isElement(node) ? node.outerHTML : DomQuery('<div></div>').append(DomQuery(node).clone()).html();
   };
 
-  const setOuterHTML = (elm: string | Node, html: string) => {
+  const setOuterHTML = (elm: string | Node | Node[], html: string) => {
     $$(elm).each(function () {
       try {
         // Older FF doesn't have outerHTML 3.6 is still used by some organizations

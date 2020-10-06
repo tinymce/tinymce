@@ -19,8 +19,8 @@ interface Delay {
   setEditorTimeout (editor: Editor, callback: () => void, time?: number): number;
   setInterval (callback: () => void, time?: number): number;
   setTimeout (callback: () => void, time?: number): number;
-  clearInterval (id: number): void;
-  clearTimeout (id: number): void;
+  clearInterval (id?: number): void;
+  clearTimeout (id?: number): void;
   debounce <T extends (...args: any[]) => any>(callback: T, time?: number): DebounceFunc<T>;
   throttle <T extends (...args: any[]) => any>(callback: T, time?: number): DebounceFunc<T>;
 }
@@ -68,11 +68,11 @@ const wrappedSetInterval = function (callback: Function, time?: number): number 
   return setInterval(callback, time);
 };
 
-const wrappedClearTimeout = function (id: number) {
+const wrappedClearTimeout = function (id?: number) {
   return clearTimeout(id);
 };
 
-const wrappedClearInterval = function (id: number) {
+const wrappedClearInterval = function (id?: number) {
   return clearInterval(id);
 };
 

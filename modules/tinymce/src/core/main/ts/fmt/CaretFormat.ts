@@ -9,7 +9,6 @@ import { Arr, Fun, Obj, Optional, Strings } from '@ephox/katamari';
 import { Attribute, Insert, Remove, SugarElement, SugarNode } from '@ephox/sugar';
 import DomTreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
-import { FormatVars } from '../api/fmt/Format';
 import CaretPosition from '../caret/CaretPosition';
 import * as DeleteElement from '../delete/DeleteElement';
 import * as NodeType from '../dom/NodeType';
@@ -18,6 +17,7 @@ import * as SplitRange from '../selection/SplitRange';
 import * as Zwsp from '../text/Zwsp';
 import * as ExpandRange from './ExpandRange';
 import { getParentCaretContainer, isCaretNode } from './FormatContainer';
+import { FormatVars } from './FormatTypes';
 import * as FormatUtils from './FormatUtils';
 import * as MatchFormat from './MatchFormat';
 
