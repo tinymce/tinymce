@@ -8,6 +8,7 @@
 import { AlloyComponent, AlloyTriggers } from '@ephox/alloy';
 import { Optional } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
+import { BlockFormat, InlineFormat } from 'tinymce/core/api/fmt/Format';
 import { UiFactoryBackstage } from '../../../backstage/Backstage';
 import { updateMenuText } from '../../dropdown/CommonDropdown';
 import { createMenuItems, createSelectButton, SelectSpec } from './BespokeSelect';
@@ -34,7 +35,7 @@ const getSpec = (editor: Editor): SelectSpec => {
   const getPreviewFor = (format: string) => () => {
     const fmt = editor.formatter.get(format);
     return Optional.some({
-      tag: fmt.length > 0 ? fmt[0].inline || fmt[0].block || 'div' : 'div',
+      tag: fmt.length > 0 ? (fmt[0] as InlineFormat).inline || (fmt[0] as BlockFormat).block || 'div' : 'div',
       styles: editor.dom.parseStyle(editor.formatter.getCssText(format))
     });
   };

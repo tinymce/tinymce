@@ -53,6 +53,7 @@ export interface InlineFormat extends CommonApplyFormat<InlineFormat> {
 
 export interface SelectorFormat extends CommonApplyFormat<SelectorFormat> {
   selector: string;
+  inline?: string;  // Used for mixed formats
   defaultBlock?: string;
   inherit?: boolean;
 }

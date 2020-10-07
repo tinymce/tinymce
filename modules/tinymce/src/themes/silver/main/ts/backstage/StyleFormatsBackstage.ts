@@ -7,6 +7,7 @@
 
 import { Arr, Cell, Optional } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
+import { BlockFormat, InlineFormat } from 'tinymce/core/api/fmt/Format';
 import { getStyleFormats } from 'tinymce/themes/silver/ui/core/complex/StyleFormat';
 import { FormatItem } from '../ui/core/complex/BespokeSelect';
 import * as FormatRegister from '../ui/core/complex/utils/FormatRegister';
@@ -17,7 +18,7 @@ export const init = (editor: Editor) => {
   const getPreviewFor: FormatRegister.GetPreviewForType = (format) => () => {
     const fmt = editor.formatter.get(format);
     return fmt !== undefined ? Optional.some({
-      tag: fmt.length > 0 ? fmt[0].inline || fmt[0].block || 'div' : 'div',
+      tag: fmt.length > 0 ? (fmt[0] as InlineFormat).inline || (fmt[0] as BlockFormat).block || 'div' : 'div',
       styles: editor.dom.parseStyle(editor.formatter.getCssText(format))
     }) : Optional.none();
   };

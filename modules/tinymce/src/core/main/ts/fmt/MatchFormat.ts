@@ -14,7 +14,8 @@ import * as FormatUtils from './FormatUtils';
 const isEq = FormatUtils.isEq;
 
 const matchesUnInheritedFormatSelector = function (ed: Editor, node: Node, name: string) {
-  const formatList = ed.formatter.get(name);
+  // TODO: Is this safe? it doesn't look like it is this could be a block or inline format
+  const formatList = ed.formatter.get(name) as SelectorFormat[];
 
   if (formatList) {
     for (let i = 0; i < formatList.length; i++) {
