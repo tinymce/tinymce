@@ -8,7 +8,7 @@ import Theme from 'tinymce/themes/silver/Theme';
 
 import * as Paste from '../module/test/Paste';
 
-UnitTest.asynctest('tinymce.plugins.paste.browser.PasteFormatToggleTest', (success, failure) => {
+UnitTest.asynctest('browser.tinymce.plugins.paste.PasteFormatToggleTest', (success, failure) => {
   Theme();
   PastePlugin();
 

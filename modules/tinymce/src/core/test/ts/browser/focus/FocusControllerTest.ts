@@ -7,7 +7,7 @@ import FocusManager from 'tinymce/core/api/FocusManager';
 import * as FocusController from 'tinymce/core/focus/FocusController';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.focus.FocusControllerTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.focus.FocusControllerTest', function (success, failure) {
   const suite = LegacyUnit.createSuite<Editor>();
 
   Theme();

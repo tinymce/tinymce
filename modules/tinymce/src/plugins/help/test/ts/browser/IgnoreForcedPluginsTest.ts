@@ -9,7 +9,7 @@ import * as PluginAssert from '../module/PluginAssert';
 
 import { selectors } from '../module/Selectors';
 
-UnitTest.asynctest('browser.plugin.IgnoreForcedPluginsTest', (success, failure) => {
+UnitTest.asynctest('browser.tinymce.plugins.help.IgnoreForcedPluginsTest', (success, failure) => {
   HelpPlugin();
   LinkPlugin();
   SilverTheme();

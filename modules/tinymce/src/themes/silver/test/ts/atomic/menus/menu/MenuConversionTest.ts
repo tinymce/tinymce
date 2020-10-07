@@ -2,7 +2,7 @@ import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Menu } from '@ephox/bridge';
 import * as MenuConversion from 'tinymce/themes/silver/ui/menus/menu/MenuConversion';
 
-UnitTest.test('themes.silver.ui.menus.MenuConversion', () => {
+UnitTest.test('atomic.themes.silver.ui.menus.MenuConversion', () => {
   const buildMenuItem = (name: string): Menu.MenuItemSpec => ({
     type: 'menuitem',
     text: name,

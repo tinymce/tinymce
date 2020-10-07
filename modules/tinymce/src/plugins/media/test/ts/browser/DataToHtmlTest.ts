@@ -7,7 +7,7 @@ import * as DataToHtml from 'tinymce/plugins/media/core/DataToHtml';
 import Plugin from 'tinymce/plugins/media/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.core.DataToHtmlTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.plugins.media.core.DataToHtmlTest', function (success, failure) {
   Plugin();
   Theme();
 

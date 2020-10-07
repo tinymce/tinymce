@@ -11,7 +11,7 @@ interface EventLog {
   index: number;
 }
 
-UnitTest.asynctest('tinymce.themes.silver.test.browser.sidebar.SidebarTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.themes.silver.sidebar.SidebarTest', function (success, failure) {
   const store = TestHelpers.TestStore();
   Theme();
 

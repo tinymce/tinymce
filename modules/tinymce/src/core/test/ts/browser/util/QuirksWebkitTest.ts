@@ -6,7 +6,7 @@ import Env from 'tinymce/core/api/Env';
 import Theme from 'tinymce/themes/silver/Theme';
 import * as HtmlUtils from '../../module/test/HtmlUtils';
 
-UnitTest.asynctest('browser.tinymce.util.QuirksWekbitTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.util.QuirksWebkitTest', function (success, failure) {
   const suite = LegacyUnit.createSuite<Editor>();
 
   Theme();

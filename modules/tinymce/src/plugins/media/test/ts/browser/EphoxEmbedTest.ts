@@ -9,7 +9,7 @@ import Theme from 'tinymce/themes/silver/Theme';
 
 import * as Utils from '../module/test/Utils';
 
-UnitTest.asynctest('browser.core.EphoxEmbedTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.plugins.media.core.EphoxEmbedTest', function (success, failure) {
   Plugin();
   Theme();
 
