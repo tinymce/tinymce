@@ -5,6 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Obj } from '@ephox/katamari';
 import DOMUtils from '../api/dom/DOMUtils';
 import EditorSelection from '../api/dom/Selection';
 import Editor from '../api/Editor';
@@ -20,13 +21,18 @@ import * as TableCellSelection from '../selection/TableCellSelection';
 import * as CaretFormat from './CaretFormat';
 import * as ExpandRange from './ExpandRange';
 import { isCaretNode } from './FormatContainer';
-import { ApplyFormat, BlockFormat, FormatVars, InlineFormat } from './FormatTypes';
+import { ApplyFormat, BlockFormat, FormatVars, InlineFormat, SelectorFormat } from './FormatTypes';
 import * as FormatUtils from './FormatUtils';
 import * as Hooks from './Hooks';
 import * as MatchFormat from './MatchFormat';
 import * as MergeFormats from './MergeFormats';
 
 const each = Tools.each;
+
+type ApplyFormatProp = keyof InlineFormat | keyof BlockFormat | keyof SelectorFormat;
+
+const hasFormatProperty = <K extends ApplyFormatProp>(format: ApplyFormat, prop: ApplyFormatProp): boolean =>
+  Obj.hasNonNullableKey(format as any, prop);
 
 const isElementNode = function (node: Node) {
   return node && node.nodeType === 1 && !Bookmarks.isBookmarkNode(node) && !isCaretNode(node) && !NodeType.isBogus(node);
@@ -175,7 +181,7 @@ const applyFormat = function (ed: Editor, name: string, vars?: FormatVars, node?
             node.nodeValue.length === 1 &&
             node.nodeValue.charCodeAt(0) === 65279) &&
           !isCaretNode(node) &&
-          (!FormatUtils.isInlineFormat(format) || !dom.isBlock(node))) {
+          (!hasFormatProperty(format, 'inline') || !dom.isBlock(node))) {
           // Start wrapping
           if (!currentWrapElm) {
             // Wrap the node

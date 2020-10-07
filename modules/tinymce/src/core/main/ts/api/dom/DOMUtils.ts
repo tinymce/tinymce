@@ -240,7 +240,7 @@ interface DOMUtils {
   isHidden (elm: string | Node): boolean;
   uniqueId (prefix?: string): string;
   setHTML (elm: string | Node | Node[], html: string): void;
-  getOuterHTML (elm: string | Node | Node[]): string;
+  getOuterHTML (elm: string | Node): string;
   setOuterHTML (elm: string | Node | Node[], html: string): void;
   decode (text: string): string;
   encode (text: string): string;

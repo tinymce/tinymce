@@ -11,7 +11,7 @@ import EditorSelection from '../api/dom/Selection';
 import DomTreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
 import * as NodeType from '../dom/NodeType';
-import { BlockFormat, Format, FormatAttrOrStyleValue, FormatVars, InlineFormat, SelectorFormat } from './FormatTypes';
+import { ApplyFormat, BlockFormat, Format, FormatAttrOrStyleValue, FormatVars, InlineFormat, SelectorFormat } from './FormatTypes';
 
 const isNode = (node: any): node is Node => !!(node).nodeType;
 
@@ -198,14 +198,14 @@ const areSimilarFormats = (editor: Editor, formatName: string, otherFormatName: 
   });
 };
 
-const isSelectorFormat = (format: Format): format is SelectorFormat =>
+const isSelectorFormat = (format: ApplyFormat): format is SelectorFormat =>
   Obj.hasNonNullableKey(format as any, 'selector');
 
-const isBlockFormat = (format: Format): format is BlockFormat =>
+const isBlockFormat = (format: ApplyFormat): format is BlockFormat =>
   Obj.hasNonNullableKey(format as any, 'block');
 
-const isInlineFormat = (format: Format): format is InlineFormat =>
-  Obj.hasNonNullableKey(format as any, 'block');
+const isInlineFormat = (format: ApplyFormat): format is InlineFormat =>
+  Obj.hasNonNullableKey(format as any, 'inline');
 
 export {
   isNode,
