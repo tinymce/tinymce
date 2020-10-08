@@ -178,7 +178,7 @@ const isVariableFormatName = (editor: Editor, formatName: string): boolean => {
         return Arr.exists(fieldValues, isVariableValue);
       }));
   };
-  return Arr.exists(editor.formatter.get(formatName) as Format[], hasVariableValues);
+  return Arr.exists(editor.formatter.get(formatName), hasVariableValues);
 };
 
 /**
@@ -189,21 +189,23 @@ const areSimilarFormats = (editor: Editor, formatName: string, otherFormatName: 
   // Therefore, these are ideal to check if two formats are similar
   const validKeys = [ 'inline', 'block', 'selector', 'attributes', 'styles', 'classes' ];
   const filterObj = (format: Record<string, any>) => Obj.filter(format, (_, key) => Arr.exists(validKeys, (validKey) => validKey === key));
-  return Arr.exists(editor.formatter.get(formatName) as Format[], (fmt1) => {
+  return Arr.exists(editor.formatter.get(formatName), (fmt1) => {
     const filteredFmt1 = filterObj(fmt1);
-    return Arr.exists(editor.formatter.get(otherFormatName) as Format[], (fmt2) => {
+    return Arr.exists(editor.formatter.get(otherFormatName), (fmt2) => {
       const filteredFmt2 = filterObj(fmt2);
       return Obj.equal(filteredFmt1, filteredFmt2);
     });
   });
 };
 
-const isSelectorFormat = (format: ApplyFormat): format is SelectorFormat =>
-  Obj.hasNonNullableKey(format as any, 'selector');
-
 const isBlockFormat = (format: ApplyFormat): format is BlockFormat =>
   Obj.hasNonNullableKey(format as any, 'block');
 
+// TODO: is this correct? As a "mixed" format has both `selector` and `inline` properties
+const isSelectorFormat = (format: ApplyFormat): format is SelectorFormat =>
+  Obj.hasNonNullableKey(format as any, 'selector');
+
+// TODO: is this correct? As a "mixed" format has both `selector` and `inline` properties
 const isInlineFormat = (format: ApplyFormat): format is InlineFormat =>
   Obj.hasNonNullableKey(format as any, 'inline');
 

@@ -168,7 +168,7 @@ const applyFormat = function (ed: Editor, name: string, vars?: FormatVars, node?
           const found = applyNodeStyle(formatList, node);
 
           // Continue processing if a selector match wasn't found and a inline element is defined
-          if (!format.inline || found) {
+          if (!hasFormatProperty(format, 'inline') || found) {
             currentWrapElm = 0;
             return;
           }
