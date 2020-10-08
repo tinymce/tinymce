@@ -1,6 +1,6 @@
 import { Universe } from '@ephox/boss';
 import { Adt, Optional } from '@ephox/katamari';
-import { Gather, Transition } from '@ephox/phoenix';
+import { Gather, Transition, Traverse } from '@ephox/phoenix';
 import { ZonePosition } from '../api/general/ZonePosition';
 import { ZoneViewports } from '../api/general/ZoneViewports';
 import { WordDecisionItem } from '../words/WordDecision';
@@ -61,16 +61,6 @@ const analyse = <E, D> (
   }
 };
 
-const takeStep = <E, D> (
-  universe: Universe<E, D>,
-  item: E,
-  mode: Transition,
-  stopOn: (item: E, mode: Transition) => boolean
-): Optional<ZoneWalkerState<E>> =>
-  Gather.walk(universe, item, mode, Gather.walkers().right()).bind(
-    (n) => analyse(universe, n.item, n.mode, stopOn)
-  );
-
 const process = <E, D> (
   universe: Universe<E, D>,
   outcome: ZoneWalkerState<E>,
@@ -78,23 +68,23 @@ const process = <E, D> (
   stack: LanguageZones<E>,
   transform: (universe: Universe<E, D>, item: E) => WordDecisionItem<E>,
   viewport: ZoneViewports<E>
-): Optional<ZoneWalkerState<E>> => outcome.fold(
+): Optional<Traverse<E>> => outcome.fold(
   (aItem, aMode, aLang) => {
     // inline(aItem, aMode, aLang)
     const opening = aMode === Gather.advance;
     (opening ? stack.openInline : stack.closeInline)(aLang, aItem);
-    return takeStep(universe, aItem, aMode, stopOn);
+    return Optional.some({ item: aItem, mode: aMode });
   },
   (aItem, aMode) => {
     const detail = transform(universe, aItem);
     // text (aItem, aMode)
     stack.addDetail(detail);
-    return takeStep(universe, aItem, aMode, stopOn);
+    return Optional.some({ item: aItem, mode: aMode });
   },
   (aItem, aMode) => {
     // empty (aItem, aMode)
     stack.addEmpty(aItem);
-    return takeStep(universe, aItem, aMode, stopOn);
+    return Optional.some({ item: aItem, mode: aMode });
   },
   (aItem, aMode, aLang) => {
     // Use boundary positions to assess whether we have moved out of the viewport.
@@ -104,7 +94,7 @@ const process = <E, D> (
         // We are before the viewport, so skip
         // Only sidestep if we hadn't already tried it. Otherwise, we'll loop forever.
         if (aMode !== Gather.backtrack) {
-          return takeStep(universe, aItem, Gather.sidestep, stopOn);
+          return Optional.some({ item: aItem, mode: Gather.sidestep });
         } else {
           return Optional.none();
         }
@@ -113,7 +103,7 @@ const process = <E, D> (
         // We are in the viewport, so process normally
         const opening = aMode === Gather.advance;
         (opening ? stack.openBoundary : stack.closeBoundary)(aLang, aItem);
-        return takeStep(universe, aItem, aMode, stopOn);
+        return Optional.some({ item: aItem, mode: aMode });
       },
       (_belowBlock) => Optional.none() // We've gone past the end of the viewport, so stop completely
     );
@@ -141,7 +131,10 @@ const walk = <E, D> (
   let state = analyse(universe, start, mode, stopOn);
 
   while (state.isSome()) {
-    state = state.bind((state) => process(universe, state, stopOn, stack, transform, viewport));
+    state = state
+      .bind((state) => process(universe, state, stopOn, stack, transform, viewport))
+      .bind((traverse) => Gather.walk(universe, traverse.item, traverse.mode, Gather.walkers().right()))
+      .bind((traverse) => analyse(universe, traverse.item, traverse.mode, stopOn));
   }
 
   if (universe.property().isText(finish)) {
