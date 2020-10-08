@@ -1,5 +1,5 @@
 Version 5.6.0 (TBD)
-
+    Fixed keyword font sizes such as `medium` not displaying correctly in font select menus
 Version 5.5.1 (TBD)
     Fixed pressing the down key near the end of a document incorrectly raising an exception #TINY-6471
     Fixed incorrect Typescript types for the `Tools` API #TINY-6475

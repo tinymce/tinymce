@@ -27,6 +27,17 @@ const legacyFontSizes: Record<string, string> = {
   '36pt': '7'
 };
 
+// Note: 'xx-small', 'x-small' and 'large' are rounded to fit our default size list
+const keywordFontSizes: Record<string, string> = {
+  'xx-small': '8pt',
+  'x-small': '8pt',
+  'small': '10pt',
+  'medium': '12pt',
+  'large': '14pt',
+  'x-large': '18pt',
+  'xx-large': '24pt'
+};
+
 const round = (number: number, precision: number) => {
   const factor = Math.pow(10, precision);
   return Math.round(number * factor) / factor;
@@ -36,8 +47,9 @@ const toPt = (fontSize: string, precision?: number): string => {
   if (/[0-9.]+px$/.test(fontSize)) {
     // Round to the nearest 0.5
     return round(parseInt(fontSize, 10) * 72 / 96, precision || 0) + 'pt';
+  } else {
+    return Obj.get(keywordFontSizes, fontSize).getOr(fontSize);
   }
-  return fontSize;
 };
 
 const toLegacy = (fontSize: string): string => Obj.get(legacyFontSizes, fontSize).getOr('');

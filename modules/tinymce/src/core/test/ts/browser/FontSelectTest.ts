@@ -80,6 +80,32 @@ UnitTest.asynctest('browser.tinymce.core.FontSelectTest', function (success, fai
         sAssertSelectBoxDisplayValue(editor, 'Fonts', 'Times')
       ])),
 
+      // https://websemantics.uk/articles/font-size-conversion/
+      Logger.t('TINY-6291: Font size on paragraph with keyword font size is translated to default size', GeneralSteps.sequence([
+        tinyApis.sSetRawContent('<p style="font-family: Times; font-size: medium;">a</p>'),
+        tinyApis.sFocus(),
+        tinyApis.sSetCursor([ 0, 0 ], 0),
+        tinyApis.sNodeChanged(),
+        sAssertSelectBoxDisplayValue(editor, 'Font sizes', '12pt'),
+        sAssertSelectBoxDisplayValue(editor, 'Fonts', 'Times')
+      ])),
+
+      Logger.t('TINY-6291: xx-small and x-small font keywords are both mapped to 8pt', GeneralSteps.sequence([
+        tinyApis.sSetRawContent('<p style="font-family: Times; font-size: xx-small;">a</p>'),
+        tinyApis.sFocus(),
+        tinyApis.sSetCursor([ 0, 0 ], 0),
+        tinyApis.sNodeChanged(),
+        sAssertSelectBoxDisplayValue(editor, 'Font sizes', '8pt'),
+        sAssertSelectBoxDisplayValue(editor, 'Fonts', 'Times'),
+
+        tinyApis.sSetRawContent('<p style="font-family: Times; font-size: x-small;">a</p>'),
+        tinyApis.sFocus(),
+        tinyApis.sSetCursor([ 0, 0 ], 0),
+        tinyApis.sNodeChanged(),
+        sAssertSelectBoxDisplayValue(editor, 'Font sizes', '8pt'),
+        sAssertSelectBoxDisplayValue(editor, 'Fonts', 'Times')
+      ])),
+
       Logger.t('System font stack variants on a paragraph show "System Font" as the font name', GeneralSteps.sequence([
         tinyApis.sSetContent(Arr.foldl(systemFontStackVariants, (acc, font) => acc + '<p style="font-family: ' + font.replace(/"/g, `'`) + '"></p>', '')),
         tinyApis.sFocus(),
