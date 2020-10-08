@@ -6,25 +6,18 @@ import { ZoneViewports } from '../api/general/ZoneViewports';
 import { WordDecisionItem } from '../words/WordDecision';
 import { LanguageZones, ZoneDetails } from './LanguageZones';
 
-const process = <E, D> (
+// Figure out which direction to take the next step in. Returns None if the traversal should stop.
+const getNextStep = <E, D> (
   universe: Universe<E, D>,
-  stack: LanguageZones<E>,
-  transform: (universe: Universe<E, D>, item: E) => WordDecisionItem<E>,
   viewport: ZoneViewports<E>,
   traverse: Traverse<E>
 ): Optional<Traverse<E>> => {
-  // Find if the current item has a lang property on it.
-  const currentLang = universe.property().isElement(traverse.item) ?
-    Optional.from(universe.attrs().get(traverse.item, 'lang')) :
-    Optional.none<string>();
-
-  if (universe.property().isText(traverse.item)) {
-    stack.addDetail(transform(universe, traverse.item));
+  if (!universe.property().isBoundary(traverse.item)) {
     return Optional.some(traverse);
-  } else if (universe.property().isBoundary(traverse.item)) {
-    const position = viewport.assess(traverse.item);
-    return ZonePosition.cata(position,
-      (_aboveBlock) => {
+  } else {
+    // We are in a boundary, take the time to check where we are relative to the viewport
+    return ZonePosition.cata(viewport.assess(traverse.item),
+      () => {
         // We are above the viewport, so skip
         // Only sidestep if we haven't already tried it. Otherwise, we'll loop forever.
         if (traverse.mode !== Gather.backtrack) {
@@ -33,21 +26,50 @@ const process = <E, D> (
           return Optional.none();
         }
       },
-      (_inBlock) => {
+      () => Optional.some(traverse), // We are inside the viewport, continue walking normally
+      () => Optional.none() // We've gone past the end of the viewport, so stop completely
+    );
+  }
+};
+
+// Visit a position, and make a corresponding entry on the stack.
+const visit = <E, D> (
+  universe: Universe<E, D>,
+  stack: LanguageZones<E>,
+  transform: (universe: Universe<E, D>, item: E) => WordDecisionItem<E>,
+  viewport: ZoneViewports<E>,
+  traverse: Traverse<E>
+): void => {
+  // Find if the current item has a lang property on it.
+  const currentLang = universe.property().isElement(traverse.item) ?
+    Optional.from(universe.attrs().get(traverse.item, 'lang')) :
+    Optional.none<string>();
+
+  if (universe.property().isText(traverse.item)) {
+    stack.addDetail(transform(universe, traverse.item));
+  } else if (universe.property().isBoundary(traverse.item)) {
+    // Only visit this item if we are inside the viewport
+    ZonePosition.cata(viewport.assess(traverse.item),
+      Fun.noop, // Do nothing when above the viewport
+      () => {
         // We are in the viewport, so process normally
-        const opening = traverse.mode === Gather.advance;
-        (opening ? stack.openBoundary : stack.closeBoundary)(currentLang, traverse.item);
+        if (traverse.mode === Gather.advance) {
+          stack.openBoundary(currentLang, traverse.item);
+        } else {
+          stack.closeBoundary(currentLang, traverse.item);
+        }
         return Optional.some(traverse);
       },
-      (_belowBlock) => Optional.none() // We've gone past the end of the viewport, so stop completely
+      Fun.noop // Do nothing when below the viewport
     );
   } else if (universe.property().isEmptyTag(traverse.item)) {
     stack.addEmpty(traverse.item);
-    return Optional.some(traverse);
   } else {
-    const opening = traverse.mode === Gather.advance;
-    (opening ? stack.openInline : stack.closeInline)(currentLang, traverse.item);
-    return Optional.some(traverse);
+    if (traverse.mode === Gather.advance) {
+      stack.openInline(currentLang, traverse.item);
+    } else {
+      stack.closeInline(currentLang, traverse.item);
+    }
   }
 };
 
@@ -77,8 +99,9 @@ const walk = <E, D> (
     .filter(shouldContinue);
 
   while (state.isSome()) {
+    state.each(Fun.curry(visit, universe, stack, transform, viewport));
     state = state
-      .bind(Fun.curry(process, universe, stack, transform, viewport))
+      .bind(Fun.curry(getNextStep, universe, viewport))
       .bind((traverse) => Gather.walk(universe, traverse.item, traverse.mode, Gather.walkers().right()))
       .filter(shouldContinue);
   }
