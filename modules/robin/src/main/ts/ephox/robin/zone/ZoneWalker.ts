@@ -1,5 +1,5 @@
 import { Universe } from '@ephox/boss';
-import { Adt, Optional } from '@ephox/katamari';
+import { Adt, Fun, Optional } from '@ephox/katamari';
 import { Gather, Transition, Traverse } from '@ephox/phoenix';
 import { ZonePosition } from '../api/general/ZonePosition';
 import { ZoneViewports } from '../api/general/ZoneViewports';
@@ -39,32 +39,27 @@ const adt: {
 
 const analyse = <E, D> (
   universe: Universe<E, D>,
-  item: E,
-  mode: Transition,
-  stopOn: (item: E, mode: Transition) => boolean
-): Optional<ZoneWalkerState<E>> => {
+  traverse: Traverse<E>
+): ZoneWalkerState<E> => {
   // Find if the current item has a lang property on it.
-  const currentLang = universe.property().isElement(item) ?
-    Optional.from(universe.attrs().get(item, 'lang')) :
+  const currentLang = universe.property().isElement(traverse.item) ?
+    Optional.from(universe.attrs().get(traverse.item, 'lang')) :
     Optional.none<string>();
 
-  if (stopOn(item, mode)) {
-    return Optional.none();
-  } else if (universe.property().isText(item)) {
-    return Optional.some(adt.text(item, mode));
-  } else if (universe.property().isBoundary(item)) {
-    return Optional.some(adt.boundary(item, mode, currentLang));
-  } else if (universe.property().isEmptyTag(item)) {
-    return Optional.some(adt.empty(item, mode));
+  if (universe.property().isText(traverse.item)) {
+    return adt.text(traverse.item, traverse.mode);
+  } else if (universe.property().isBoundary(traverse.item)) {
+    return adt.boundary(traverse.item, traverse.mode, currentLang);
+  } else if (universe.property().isEmptyTag(traverse.item)) {
+    return adt.empty(traverse.item, traverse.mode);
   } else {
-    return Optional.some(adt.inline(item, mode, currentLang));
+    return adt.inline(traverse.item, traverse.mode, currentLang);
   }
 };
 
 const process = <E, D> (
   universe: Universe<E, D>,
   outcome: ZoneWalkerState<E>,
-  stopOn: (item: E, mode: Transition) => boolean,
   stack: LanguageZones<E>,
   transform: (universe: Universe<E, D>, item: E) => WordDecisionItem<E>,
   viewport: ZoneViewports<E>
@@ -118,23 +113,30 @@ const walk = <E, D> (
   transform: (universe: Universe<E, D>, item: E) => WordDecisionItem<E>,
   viewport: ZoneViewports<E>
 ): ZoneDetails<E>[] => {
-  const stopOn = (sItem: E, sMode: Transition) =>
-    universe.eq(sItem, finish) && (
-      sMode !== Gather.advance ||
-      universe.property().isText(sItem) ||
-      universe.property().children(sItem).length === 0
+  const shouldContinue = (traverse: Traverse<E>) => {
+    if (!universe.eq(traverse.item, finish)) {
+      return true;
+    }
+
+    return (
+      traverse.mode === Gather.advance &&
+      !universe.property().isText(traverse.item) &&
+      universe.property().children(traverse.item).length !== 0
     );
+  };
 
   // INVESTIGATE: Make the language zone stack immutable *and* performant
   const stack = LanguageZones.nu<E>(defaultLang);
-  const mode = Gather.advance;
-  let state = analyse(universe, start, mode, stopOn);
+  let state = Optional.some({ item: start, mode: Gather.advance })
+    .filter(shouldContinue)
+    .map(Fun.curry(analyse, universe));
 
   while (state.isSome()) {
     state = state
-      .bind((state) => process(universe, state, stopOn, stack, transform, viewport))
+      .bind((state) => process(universe, state, stack, transform, viewport))
       .bind((traverse) => Gather.walk(universe, traverse.item, traverse.mode, Gather.walkers().right()))
-      .bind((traverse) => analyse(universe, traverse.item, traverse.mode, stopOn));
+      .filter(shouldContinue)
+      .map(Fun.curry(analyse, universe));
   }
 
   if (universe.property().isText(finish)) {
