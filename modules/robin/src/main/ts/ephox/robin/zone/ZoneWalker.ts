@@ -3,7 +3,6 @@ import { Adt, Optional } from '@ephox/katamari';
 import { Gather, Transition } from '@ephox/phoenix';
 import { ZonePosition } from '../api/general/ZonePosition';
 import { ZoneViewports } from '../api/general/ZoneViewports';
-import { Trampoline, TrampolineFn } from '../util/Trampoline';
 import { WordDecisionItem } from '../words/WordDecision';
 import { LanguageZones, ZoneDetails } from './LanguageZones';
 
@@ -85,23 +84,23 @@ const process = <E, D> (
   stack: LanguageZones<E>,
   transform: (universe: Universe<E, D>, item: E) => WordDecisionItem<E>,
   viewport: ZoneViewports<E>
-): TrampolineFn => () => outcome.fold(
+): Optional<ZoneWalkerState<E>> => outcome.fold(
   (aItem, aMode, aLang) => {
     // inline(aItem, aMode, aLang)
     const opening = aMode === Gather.advance;
     (opening ? stack.openInline : stack.closeInline)(aLang, aItem);
-    return doWalk(universe, aItem, aMode, stopOn, stack, transform, viewport);
+    return Optional.some(takeStep(universe, aItem, aMode, stopOn));
   },
   (aItem, aMode) => {
     const detail = transform(universe, aItem);
     // text (aItem, aMode)
     stack.addDetail(detail);
-    return doWalk(universe, aItem, aMode, stopOn, stack, transform, viewport);
+    return Optional.some(takeStep(universe, aItem, aMode, stopOn));
   },
   (aItem, aMode) => {
     // empty (aItem, aMode)
     stack.addEmpty(aItem);
-    return doWalk(universe, aItem, aMode, stopOn, stack, transform, viewport);
+    return Optional.some(takeStep(universe, aItem, aMode, stopOn));
   },
   (aItem, aMode, aLang) => {
     // Use boundary positions to assess whether we have moved out of the viewport.
@@ -111,39 +110,22 @@ const process = <E, D> (
         // We are before the viewport, so skip
         // Only sidestep if we hadn't already tried it. Otherwise, we'll loop forever.
         if (aMode !== Gather.backtrack) {
-          return doWalk(universe, aItem, Gather.sidestep, stopOn, stack, transform, viewport);
+          return Optional.some(takeStep(universe, aItem, Gather.sidestep, stopOn));
         } else {
-          return Trampoline.stop();
+          return Optional.none();
         }
       },
       (_inBlock) => {
         // We are in the viewport, so process normally
         const opening = aMode === Gather.advance;
         (opening ? stack.openBoundary : stack.closeBoundary)(aLang, aItem);
-        return doWalk(universe, aItem, aMode, stopOn, stack, transform, viewport);
+        return Optional.some(takeStep(universe, aItem, aMode, stopOn));
       },
-      (_belowBlock) => Trampoline.stop() // We've gone past the end of the viewport, so stop completely
+      (_belowBlock) => Optional.none() // We've gone past the end of the viewport, so stop completely
     );
   },
-  (_aItem, _aMode) => Trampoline.stop() // concluded(aItem, aMode) DO NOTHING
+  (_aItem, _aMode) => Optional.none() // concluded(aItem, aMode) DO NOTHING
 );
-
-// I'm going to trampoline this:
-// http://stackoverflow.com/questions/25228871/how-to-understand-trampoline-in-javascript
-// The reason is because we often hit stack problems with this code, so this is an attempt to resolve them.
-// The key thing is that you need to keep returning a function.
-const doWalk = <E, D> (
-  universe: Universe<E, D>,
-  current: E,
-  mode: Transition,
-  stopOn: (item: E, mode: Transition) => boolean,
-  stack: LanguageZones<E>,
-  transform: (universe: Universe<E, D>, item: E) => WordDecisionItem<E>,
-  viewport: ZoneViewports<E>
-): TrampolineFn => {
-  const outcome = takeStep(universe, current, mode, stopOn);
-  return process(universe, outcome, stopOn, stack, transform, viewport);
-};
 
 const walk = <E, D> (
   universe: Universe<E, D>,
@@ -163,9 +145,11 @@ const walk = <E, D> (
   // INVESTIGATE: Make the language zone stack immutable *and* performant
   const stack = LanguageZones.nu<E>(defaultLang);
   const mode = Gather.advance;
-  const initial = analyse(universe, start, mode, stopOn);
+  let state = Optional.some(analyse(universe, start, mode, stopOn));
 
-  Trampoline.run(process(universe, initial, stopOn, stack, transform, viewport));
+  while (state.isSome()) {
+    state = state.bind((state) => process(universe, state, stopOn, stack, transform, viewport));
+  }
 
   if (universe.property().isText(finish)) {
     stack.addDetail(transform(universe, finish));
