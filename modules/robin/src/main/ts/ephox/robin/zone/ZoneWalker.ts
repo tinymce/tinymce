@@ -54,10 +54,10 @@ const analyse = <E, D> (
     Optional.from(universe.attrs().get(item, 'lang')) :
     Optional.none<string>();
 
-  if (universe.property().isText(item)) {
-    return adt.text(item, mode);
-  } else if (stopOn(item, mode)) {
+  if (stopOn(item, mode)) {
     return adt.concluded(item, mode);
+  } else if (universe.property().isText(item)) {
+    return adt.text(item, mode);
   } else if (universe.property().isBoundary(item)) {
     return adt.boundary(item, mode, currentLang);
   } else if (universe.property().isEmptyTag(item)) {
@@ -96,9 +96,7 @@ const process = <E, D> (
     const detail = transform(universe, aItem);
     // text (aItem, aMode)
     stack.addDetail(detail);
-    return (!stopOn(aItem, aMode)) ?
-      doWalk(universe, aItem, aMode, stopOn, stack, transform, viewport) :
-      Trampoline.stop();
+    return doWalk(universe, aItem, aMode, stopOn, stack, transform, viewport);
   },
   (aItem, aMode) => {
     // empty (aItem, aMode)
@@ -168,6 +166,10 @@ const walk = <E, D> (
   const initial = analyse(universe, start, mode, stopOn);
 
   Trampoline.run(process(universe, initial, stopOn, stack, transform, viewport));
+
+  if (universe.property().isText(finish)) {
+    stack.addDetail(transform(universe, finish));
+  }
 
   return stack.done();
 };
