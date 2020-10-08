@@ -27,9 +27,9 @@ const legacyFontSizes: Record<string, string> = {
   '36pt': '7'
 };
 
-// Note: 'xx-small', 'x-small' and 'large' are rounded to fit our default size list
+// Note: 'xx-small', 'x-small' and 'large' are rounded up to nearest whole pt
 const keywordFontSizes: Record<string, string> = {
-  'xx-small': '8pt',
+  'xx-small': '7pt',
   'x-small': '8pt',
   'small': '10pt',
   'medium': '12pt',
