@@ -102,6 +102,7 @@ const walk = <E, D> (
     state.each(Fun.curry(visit, universe, stack, transform, viewport));
     state = state
       .bind(Fun.curry(getNextStep, universe, viewport))
+      .filter(shouldContinue)
       .bind((traverse) => Gather.walk(universe, traverse.item, traverse.mode, Gather.walkers().right()))
       .filter(shouldContinue);
   }

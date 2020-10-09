@@ -1,7 +1,8 @@
 import { Logger } from '@ephox/agar';
 import { Assert } from '@ephox/bedrock-client';
 import { Gene, TestUniverse } from '@ephox/boss';
-import { Arr } from '@ephox/katamari';
+import { Arr, Fun } from '@ephox/katamari';
+import { ZoneViewports } from '@ephox/robin';
 import { LanguageZones } from 'ephox/robin/zone/LanguageZones';
 import { Zone } from 'ephox/robin/zone/Zones';
 
@@ -34,7 +35,12 @@ const assertZones = function (label: string, universe: TestUniverse, expected: R
   Assert.eq(label + '\nChecking zones: ', expected, rawActual);
 };
 
-const assertProps = function (label: string, universe: TestUniverse, zones: Zone<Gene>[]) {
+const assertProps = (
+  label: string,
+  universe: TestUniverse,
+  zones: Zone<Gene>[],
+  viewport: ZoneViewports<Gene> = ZoneViewports.anything()
+) => {
   Arr.each(zones, function (zone) {
     const elements = zone.elements;
     if (elements.length === 0) {
@@ -56,6 +62,11 @@ const assertProps = function (label: string, universe: TestUniverse, zones: Zone
             'Check that everything in the ' + label + ' is a text node',
             true,
             universe.property().isText(x)
+          );
+          Assert.eq(
+            'Check that everything in ' + label + ' is within the viewport',
+            true,
+            viewport.assess(x).fold(Fun.never, Fun.always, Fun.never)
           );
         });
 
