@@ -6,7 +6,7 @@ import ListsPlugin from 'tinymce/plugins/lists/Plugin';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('tinymce.plugins.table.IndentListsInTableTest', (success, failure) => {
+UnitTest.asynctest('browser.tinymce.plugins.table.IndentListsInTableTest', (success, failure) => {
   SilverTheme();
   TablePlugin();
   ListsPlugin();

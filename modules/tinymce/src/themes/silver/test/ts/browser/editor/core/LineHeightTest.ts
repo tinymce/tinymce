@@ -50,7 +50,7 @@ const sAssertOptions = (ui: TinyUi, mode: 'menu' | 'toolbar', ideal: string[], c
   })
 ]);
 
-UnitTest.asyncTest('browser.tinymce.LineHeightTest', (success, failure) => {
+UnitTest.asyncTest('browser.tinymce.themes.silver.editor.core.LineHeightTest', (success, failure) => {
   Theme();
 
   const settings = {

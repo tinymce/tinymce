@@ -4,7 +4,7 @@ import { Obj, Optional } from '@ephox/katamari';
 import { KAssert } from '@ephox/katamari-assertions';
 import { Base64Extract, extractBase64DataUris, parseDataUri, restoreDataUris, UriMap } from 'tinymce/core/html/Base64Uris';
 
-UnitTest.test('Base64Uris Test', () => {
+UnitTest.test('atomic.tinymce.core.html.Base64UrisTest', () => {
   const replacePrefix = (value: string, prefix: string) => value.replace(/\$prefix/g, prefix);
   const replaceUrisPrefix = (uris: UriMap, prefix: string): UriMap => Obj.tupleMap(uris, (value, key) => ({ k: replacePrefix(key, prefix), v: value }));
 

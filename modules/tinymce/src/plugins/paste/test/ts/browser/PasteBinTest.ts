@@ -7,7 +7,7 @@ import { getPasteBinParent, PasteBin } from 'tinymce/plugins/paste/core/PasteBin
 import PastePlugin from 'tinymce/plugins/paste/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('tinymce.plugins.paste.browser.PasteBin', (success, failure) => {
+UnitTest.asynctest('browser.tinymce.plugins.paste.PasteBin', (success, failure) => {
 
   Theme();
   PastePlugin();

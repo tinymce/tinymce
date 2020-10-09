@@ -18,7 +18,7 @@ import Theme from 'tinymce/themes/silver/Theme';
 // |Paste as text turned off  | paste image URL -> image | paste image URL -> text |
 // |Paste as text turned on   | paste image URL -> text  | paste image URL -> text |
 
-UnitTest.asynctest('tinymce.plugins.paste.browser.SmartPasteTest', (success, failure) => {
+UnitTest.asynctest('browser.tinymce.plugins.paste.SmartPasteTest', (success, failure) => {
   const suite = LegacyUnit.createSuite<Editor>();
 
   Plugin();

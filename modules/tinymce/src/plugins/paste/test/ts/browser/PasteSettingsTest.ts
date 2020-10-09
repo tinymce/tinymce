@@ -5,7 +5,7 @@ import { Editor as McEditor } from '@ephox/mcagar';
 import Plugin from 'tinymce/plugins/paste/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('tinymce.plugins.paste.browser.PasteSettingsTest', (success, failure) => {
+UnitTest.asynctest('browser.tinymce.plugins.paste.PasteSettingsTest', (success, failure) => {
   Theme();
   Plugin();
 

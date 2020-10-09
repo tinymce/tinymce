@@ -6,7 +6,7 @@ import { PlatformDetection } from '@ephox/sand';
 import PastePlugin from 'tinymce/plugins/paste/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('tinymce.plugins.paste.webdriver.CutTest', (success, failure) => {
+UnitTest.asynctest('webdriver.tinymce.plugins.paste.CutTest', (success, failure) => {
 
   Theme();
   PastePlugin();

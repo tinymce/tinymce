@@ -7,7 +7,7 @@ import Env from 'tinymce/core/api/Env';
 import Plugin from 'tinymce/plugins/lists/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('tinymce.lists.browser.ApplyTest', (success, failure) => {
+UnitTest.asynctest('browser.tinymce.plugins.lists.ApplyTest', (success, failure) => {
   const suite = LegacyUnit.createSuite<Editor>();
 
   Plugin();

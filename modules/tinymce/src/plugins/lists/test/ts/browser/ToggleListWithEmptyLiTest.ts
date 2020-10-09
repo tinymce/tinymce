@@ -5,7 +5,7 @@ import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import ListsPlugin from 'tinymce/plugins/lists/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('tinymce.lists.browser.ToggleListWithEmptyLiTest', (success, failure) => {
+UnitTest.asynctest('browser.tinymce.plugins.lists.ToggleListWithEmptyLiTest', (success, failure) => {
   ListsPlugin();
   SilverTheme();
 

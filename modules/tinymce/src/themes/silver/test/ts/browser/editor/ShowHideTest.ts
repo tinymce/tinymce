@@ -5,7 +5,7 @@ import { SugarBody, Visibility } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce/themes.silver.ShowHideTest', (success, failure) => {
+UnitTest.asynctest('browser.tinymce.themes.silver.ShowHideTest', (success, failure) => {
   Theme();
 
   const base_url = '/project/tinymce/js/tinymce';

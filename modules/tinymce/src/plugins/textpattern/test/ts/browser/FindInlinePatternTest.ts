@@ -10,7 +10,7 @@ import { InlinePattern, InlinePatternMatch } from 'tinymce/plugins/textpattern/c
 import { PathRange } from 'tinymce/plugins/textpattern/utils/PathRange';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('textpattern.browser.FindInlinePatternTest', (success, failure) => {
+UnitTest.asynctest('browser.tinymce.plugins.textpattern.FindInlinePatternTest', (success, failure) => {
   Theme();
 
   const mockEditor = {

@@ -1,7 +1,7 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import * as UrlPatterns from 'tinymce/plugins/media/core/UrlPatterns';
 
-UnitTest.test('atomic.core.UrlPatternsTest', function () {
+UnitTest.test('atomic.tinymce.plugins.media.core.UrlPatternsTest', function () {
   const check = (url, expected) => {
     const pattern = UrlPatterns.matchPattern(url);
     assert.eq(expected, pattern.url);

@@ -9,7 +9,7 @@ import { normalizeEntries } from 'tinymce/plugins/lists/listModel/NormalizeEntri
 import { parseLists } from 'tinymce/plugins/lists/listModel/ParseLists';
 import { ListType } from 'tinymce/plugins/lists/listModel/Util';
 
-UnitTest.test('tinymce.lists.browser.ListModelTest', () => {
+UnitTest.test('browser.tinymce.plugins.lists.ListModelTest', () => {
   const arbitratyContent = Jsc.bless({
     generator: Arbitraries.content('inline').generator.map((el) => [ el ])
   });

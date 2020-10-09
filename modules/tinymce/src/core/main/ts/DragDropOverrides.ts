@@ -170,6 +170,7 @@ const move = (state: Singleton.Value<State>, editor: Editor) => {
     editor._selectionOverrides.hideFakeCaret();
     editor.selection.placeCaretAt(clientX, clientY);
   }, 0);
+  editor.on('remove', throttledPlaceCaretAt.stop);
 
   return (e: EditorEvent<MouseEvent>) => state.on((state) => {
     const movement = Math.max(Math.abs(e.screenX - state.screenX), Math.abs(e.screenY - state.screenY));

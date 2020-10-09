@@ -7,7 +7,7 @@ import * as ProcessFilters from 'tinymce/plugins/paste/core/ProcessFilters';
 import PastePlugin from 'tinymce/plugins/paste/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('tinymce.plugins.paste.browser.ProcessFiltersTest', (success, failure) => {
+UnitTest.asynctest('browser.tinymce.plugins.paste.ProcessFiltersTest', (success, failure) => {
 
   Theme();
   PastePlugin();
