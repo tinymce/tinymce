@@ -1,7 +1,7 @@
 {
   "name": "@ephox/robin",
   "description": "This project is for grouping sibling DOM nodes together by boundary points, for example the list of elements and nodes representing a word.",
-  "version": "8.0.2",
+  "version": "8.0.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/tinymce/tinymce"
