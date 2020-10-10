@@ -7,7 +7,7 @@ import Theme from 'tinymce/themes/silver/Theme';
 
 import * as Utils from '../module/test/Utils';
 
-UnitTest.asynctest('browser.core.MediaEmbedTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.plugins.media.core.MediaEmbedTest', function (success, failure) {
 
   Plugin();
   Theme();

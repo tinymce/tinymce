@@ -10,7 +10,7 @@ import { Clipboard } from 'tinymce/plugins/paste/api/Clipboard';
 import Plugin from 'tinymce/plugins/paste/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', (success, failure) => {
+UnitTest.asynctest('browser.tinymce.plugins.paste.ImagePasteTest', (success, failure) => {
   const suite = LegacyUnit.createSuite<Editor>();
 
   Plugin();

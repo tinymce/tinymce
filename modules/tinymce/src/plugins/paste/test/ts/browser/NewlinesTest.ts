@@ -6,7 +6,7 @@ import * as Newlines from 'tinymce/plugins/paste/core/Newlines';
 import PastePlugin from 'tinymce/plugins/paste/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.test('tinymce.plugins.paste.browser.NewlinesTest', function () {
+UnitTest.test('browser.tinymce.plugins.paste.NewlinesTest', function () {
   Theme();
   PastePlugin();
 

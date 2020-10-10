@@ -7,7 +7,7 @@ import Delay from 'tinymce/core/api/util/Delay';
 import Plugin from 'tinymce/plugins/media/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.core.IframeNodeTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.plugins.media.core.IframeNodeTest', function (success, failure) {
   Plugin();
   Theme();
 

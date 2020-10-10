@@ -8,7 +8,7 @@ import Theme from 'tinymce/themes/silver/Theme';
 
 import * as Utils from '../module/test/Utils';
 
-UnitTest.asynctest('browser.core.PlaceholderTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.plugins.media.core.PlaceholderTest', function (success, failure) {
   Plugin();
   Theme();
 

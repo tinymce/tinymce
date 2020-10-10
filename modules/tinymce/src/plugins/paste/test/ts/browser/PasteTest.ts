@@ -11,7 +11,7 @@ import Theme from 'tinymce/themes/silver/Theme';
 
 import * as Strings from '../module/test/Strings';
 
-UnitTest.asynctest('tinymce.plugins.paste.browser.PasteTest', (success, failure) => {
+UnitTest.asynctest('browser.tinymce.plugins.paste.PasteTest', (success, failure) => {
   const suite = LegacyUnit.createSuite<Editor>();
 
   Plugin();

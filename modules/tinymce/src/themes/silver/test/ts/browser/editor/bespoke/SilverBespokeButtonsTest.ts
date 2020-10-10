@@ -9,7 +9,7 @@ import { SugarBody, SugarElement } from '@ephox/sugar';
 import Theme from 'tinymce/themes/silver/Theme';
 import * as MenuUtils from '../../../module/MenuUtils';
 
-UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
+UnitTest.asynctest('Editor (Silver) bespoke toolbar buttons test', (success, failure) => {
   Theme();
   TinyLoader.setup(
     (editor, onSuccess, onFailure) => {

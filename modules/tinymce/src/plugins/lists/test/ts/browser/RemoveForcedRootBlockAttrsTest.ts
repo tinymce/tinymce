@@ -6,7 +6,7 @@ import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/lists/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('tinymce.lists.browser.RemoveForcedRootBlockAttrsTest', (success, failure) => {
+UnitTest.asynctest('browser.tinymce.plugins.lists.RemoveForcedRootBlockAttrsTest', (success, failure) => {
   const suite = LegacyUnit.createSuite<Editor>();
 
   Plugin();

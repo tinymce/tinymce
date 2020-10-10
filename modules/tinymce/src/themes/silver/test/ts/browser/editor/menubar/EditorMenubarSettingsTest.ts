@@ -7,7 +7,7 @@ import { SugarBody } from '@ephox/sugar';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 import { cCountNumber, cExtractOnlyOne } from '../../../module/UiChainUtils';
 
-UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
+UnitTest.asynctest('Editor (Silver) menubar settings test', (success, failure) => {
   SilverTheme();
 
   const cCreateEditorWithMenubar = (menubar) => McagarEditor.cFromSettings({

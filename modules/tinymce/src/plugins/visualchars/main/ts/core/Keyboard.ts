@@ -22,6 +22,8 @@ const setup = (editor: Editor, toggleState) => {
       }
     });
   }
+
+  editor.on('remove', debouncedToggle.stop);
 };
 
 export {

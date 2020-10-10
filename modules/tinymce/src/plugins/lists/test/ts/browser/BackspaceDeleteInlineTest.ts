@@ -7,7 +7,7 @@ import EditorManager from 'tinymce/core/api/EditorManager';
 import Plugin from 'tinymce/plugins/lists/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('tinymce.lists.browser.BackspaceDeleteInlineTest', (success, failure) => {
+UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteInlineTest', (success, failure) => {
   const suite = LegacyUnit.createSuite<Editor>();
 
   Plugin();
