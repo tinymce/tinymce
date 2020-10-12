@@ -6,8 +6,8 @@
  */
 
 import { Obj } from '@ephox/katamari';
+import { SugarElement } from '@ephox/sugar';
 import DOMUtils from '../api/dom/DOMUtils';
-import EditorSelection from '../api/dom/Selection';
 import Editor from '../api/Editor';
 import Tools from '../api/util/Tools';
 import * as Bookmarks from '../bookmark/Bookmarks';
@@ -18,6 +18,8 @@ import { RangeLikeObject } from '../selection/RangeTypes';
 import * as RangeWalk from '../selection/RangeWalk';
 import * as SelectionUtils from '../selection/SelectionUtils';
 import * as TableCellSelection from '../selection/TableCellSelection';
+import * as Settings from '../api/Settings';
+import * as Empty from '../dom/Empty';
 import * as CaretFormat from './CaretFormat';
 import * as ExpandRange from './ExpandRange';
 import { isCaretNode } from './FormatContainer';
@@ -38,12 +40,34 @@ const isElementNode = function (node: Node) {
   return node && node.nodeType === 1 && !Bookmarks.isBookmarkNode(node) && !isCaretNode(node) && !NodeType.isBogus(node);
 };
 
+const canFormatBR = (editor: Editor, format: ApplyFormat, node: Node, parentName: string) => {
+  // TINY-6483: Can format 'br' if it is contained in a valid empty block and an inline format is being applied
+  if (Settings.canFormatEmptyLines(editor) && FormatUtils.isInlineFormat(format)) {
+    // A curated list using the texblockelements schema map and parts of the the blockelements schema map
+    const validBRParentElements: Record<string, {}> = {
+      ...editor.schema.getTextBlockElements(),
+      td: {},
+      th: {},
+      li: {},
+      dt: {},
+      dd: {},
+      figcaption: {},
+      caption: {},
+      details: {},
+      summary: {}
+    };
+    return Obj.hasNonNullableKey(validBRParentElements, parentName) && Empty.isEmpty(SugarElement.fromDom(node.parentNode), false);
+  } else {
+    return false;
+  }
+};
+
 const applyFormat = function (ed: Editor, name: string, vars?: FormatVars, node?: Node | RangeLikeObject) {
   const formatList = ed.formatter.get(name) as ApplyFormat[];
   const format = formatList[0];
-  let rng;
   const isCollapsed = !node && ed.selection.isCollapsed();
-  const dom = ed.dom, selection: EditorSelection = ed.selection;
+  const dom = ed.dom;
+  const selection = ed.selection;
 
   // TODO: Add actual type for fmt below
   const setElementFormat = function (elm: Node, fmt?: ApplyFormat) {
@@ -116,7 +140,7 @@ const applyFormat = function (ed: Editor, name: string, vars?: FormatVars, node?
     setElementFormat(wrapElm);
 
     RangeWalk.walk(dom, rng, function (nodes) {
-      let currentWrapElm;
+      let currentWrapElm: Element | null;
 
       /**
        * Process a list of nodes wrap them.
@@ -134,21 +158,19 @@ const applyFormat = function (ed: Editor, name: string, vars?: FormatVars, node?
           hasContentEditableState = true; // We don't want to wrap the container only it's children
         }
 
-        // Stop wrapping on br elements
-        if (FormatUtils.isEq(nodeName, 'br')) {
-          currentWrapElm = 0;
-
+        // Stop wrapping on br elements except when valid
+        if (FormatUtils.isEq(nodeName, 'br') && !canFormatBR(ed, format, node, parentName)) {
+          currentWrapElm = null;
           // Remove any br elements when we wrap things
           if (FormatUtils.isBlockFormat(format)) {
             dom.remove(node);
           }
-
           return;
         }
 
         // If node is wrapper type
         if (format.wrapper && MatchFormat.matchNode(ed, node, name, vars)) {
-          currentWrapElm = 0;
+          currentWrapElm = null;
           return;
         }
 
@@ -159,7 +181,7 @@ const applyFormat = function (ed: Editor, name: string, vars?: FormatVars, node?
           const elm = dom.rename(node as Element, wrapName);
           setElementFormat(elm);
           newWrappers.push(elm);
-          currentWrapElm = 0;
+          currentWrapElm = null;
           return;
         }
 
@@ -169,7 +191,7 @@ const applyFormat = function (ed: Editor, name: string, vars?: FormatVars, node?
 
           // Continue processing if a selector match wasn't found and a inline element is defined
           if (!hasFormatProperty(format, 'inline') || found) {
-            currentWrapElm = 0;
+            currentWrapElm = null;
             return;
           }
         }
@@ -185,7 +207,7 @@ const applyFormat = function (ed: Editor, name: string, vars?: FormatVars, node?
           // Start wrapping
           if (!currentWrapElm) {
             // Wrap the node
-            currentWrapElm = dom.clone(wrapElm, false);
+            currentWrapElm = dom.clone(wrapElm, false) as Element;
             node.parentNode.insertBefore(currentWrapElm, node);
             newWrappers.push(currentWrapElm);
           }
@@ -193,7 +215,7 @@ const applyFormat = function (ed: Editor, name: string, vars?: FormatVars, node?
           currentWrapElm.appendChild(node);
         } else {
           // Start a new wrapper for possible children
-          currentWrapElm = 0;
+          currentWrapElm = null;
 
           each(Tools.grep(node.childNodes), process);
 
@@ -202,7 +224,7 @@ const applyFormat = function (ed: Editor, name: string, vars?: FormatVars, node?
           }
 
           // End the last wrapper
-          currentWrapElm = 0;
+          currentWrapElm = null;
         }
       };
 
@@ -213,7 +235,7 @@ const applyFormat = function (ed: Editor, name: string, vars?: FormatVars, node?
     // Apply formats to links as well to get the color of the underline to change as well
     if (format.links === true) {
       each(newWrappers, function (node) {
-        const process = function (node) {
+        const process = function (node: Element) {
           if (node.nodeName === 'A') {
             setElementFormat(node, format);
           }
@@ -311,7 +333,7 @@ const applyFormat = function (ed: Editor, name: string, vars?: FormatVars, node?
     if (node) {
       if (FormatUtils.isNode(node)) {
         if (!applyNodeStyle(formatList, node)) {
-          rng = dom.createRng();
+          const rng = dom.createRng();
           rng.setStartBefore(node);
           rng.setEndAfter(node);
           applyRngStyle(dom, ExpandRange.expandRng(ed, rng, formatList), null, true);
