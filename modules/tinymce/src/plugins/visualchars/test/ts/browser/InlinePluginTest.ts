@@ -3,9 +3,11 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 
 import Plugin from 'tinymce/plugins/visualchars/Plugin';
+import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.plugins.visualchars.InlinePluginTest', (success, failure) => {
   Plugin();
+  Theme();
 
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
