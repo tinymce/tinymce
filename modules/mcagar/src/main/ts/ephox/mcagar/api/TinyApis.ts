@@ -11,6 +11,7 @@ export interface TinyApis {
   sSetContent: <T> (html: string) => Step<T, T>;
   sSetRawContent: <T> (html: string) => Step<T, T>;
   sFocus: <T> () => Step<T, T>;
+  sHasFocus: <T> (expected: boolean) => Step<T, T>;
   sNodeChanged: <T> () => Step<T, T>;
   sAssertContent: <T> (expected: string) => Step<T, T>;
   sAssertContentPresence: <T> (expected: Presence) => Step<T, T>;
@@ -158,10 +159,16 @@ export const TinyApis = function (editor: Editor): TinyApis {
     editor.focus();
   });
 
+  const sHasFocus = <T> (expected: boolean) => Step.sync<T>(function () {
+    Assertions.assertEq(() => 'Assert whether editor hasFocus', expected, editor.hasFocus());
+  });
+
   const sNodeChanged = <T> () => Step.sync<T>(function () {
     editor.nodeChanged();
   });
 
+
+  /** @deprecated - use sHasFocus **/
   const sTryAssertFocus = <T> () => Waiter.sTryUntil<T, T>(
     'Waiting for focus on tinymce editor',
     FocusTools.sIsOnSelector(
@@ -193,6 +200,7 @@ export const TinyApis = function (editor: Editor): TinyApis {
     sAssertSelection,
     sTryAssertFocus,
     sFocus,
+    sHasFocus,
     sNodeChanged
   };
 };
