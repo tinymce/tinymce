@@ -7,12 +7,10 @@
 
 import { Cell } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
-import * as Settings from '../api/Settings';
 import * as Actions from './Actions';
 
 const setup = (editor: Editor, toggleState: Cell<boolean>) => {
   editor.on('init', () => {
-    toggleState.set(Settings.isEnabledByDefault(editor));
     Actions.applyVisualChars(editor, toggleState);
   });
 };
