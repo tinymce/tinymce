@@ -11,7 +11,7 @@ import Editor from 'tinymce/core/api/Editor';
 import * as Events from '../api/Events';
 import * as VisualChars from './VisualChars';
 
-const applyVisualChars = function (editor: Editor, toggleState: Cell<boolean>) {
+const applyVisualChars = (editor: Editor, toggleState: Cell<boolean>) => {
   Events.fireVisualChars(editor, toggleState.get());
 
   const body = editor.getBody();
@@ -23,7 +23,7 @@ const applyVisualChars = function (editor: Editor, toggleState: Cell<boolean>) {
 };
 
 // Toggle state and save selection bookmark before applying visualChars
-const toggleVisualChars = function (editor: Editor, toggleState: Cell<boolean>) {
+const toggleVisualChars = (editor: Editor, toggleState: Cell<boolean>) => {
   toggleState.set(!toggleState.get());
 
   const bookmark = editor.selection.getBookmark();

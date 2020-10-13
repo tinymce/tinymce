@@ -9,7 +9,7 @@ UnitTest.asynctest('browser.tinymce.plugins.visualchars.InlinePluginTest', (succ
   Plugin();
   Theme();
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
