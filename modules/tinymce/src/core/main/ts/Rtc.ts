@@ -14,6 +14,7 @@ import { Content, ContentFormat, GetContentArgs, SetContentArgs } from './conten
 import { getContentInternal } from './content/GetContentImpl';
 import { insertHtmlAtCaret } from './content/InsertContentImpl';
 import { setContentInternal } from './content/SetContentImpl';
+import { addVisualInternal } from './view/VisualAidsImpl';
 import * as ApplyFormat from './fmt/ApplyFormat';
 import { FormatChangeCallback, UnbindFormatChanged, RegisteredFormats, formatChangedInternal } from './fmt/FormatChanged';
 import * as RemoveFormat from './fmt/RemoveFormat';
@@ -83,6 +84,7 @@ interface RtcAdaptor {
     getContent: (args: GetContentArgs, format: ContentFormat) => Content;
     setContent: (content: Content, args: SetContentArgs) => Content;
     insertContent: (value: string, details) => void;
+    addVisual: (elm?: HTMLElement) => void;
   };
   selection: {
     getContent: (format: ContentFormat, args: GetSelectionContentArgs) => Content;
@@ -134,7 +136,8 @@ const makePlainAdaptor = (editor: Editor): RtcAdaptor => ({
   editor: {
     getContent: (args, format) => getContentInternal(editor, args, format),
     setContent: (content, args) => setContentInternal(editor, content, args),
-    insertContent: (value, details) => insertHtmlAtCaret(editor, value, details)
+    insertContent: (value, details) => insertHtmlAtCaret(editor, value, details),
+    addVisual: (elm) => addVisualInternal(editor, elm)
   },
   selection: {
     getContent: (format, args) => getSelectedContentInternal(editor, format, args)
@@ -204,7 +207,8 @@ const makeRtcAdaptor = (tinymceEditor: Editor, rtcEditor: RtcRuntimeApi): RtcAda
         );
         const fragment = isTreeNode(value) ? value : tinymceEditor.parser.parse(value, { ...contextArgs, insert: true });
         rtcEditor.insertContent(fragment);
-      }
+      },
+      addVisual: (_elm) => {}
     },
     selection: {
       getContent: (format, args) => {
@@ -341,3 +345,6 @@ export const insertContent = (editor: Editor, value: string, details): void =>
 
 export const getSelectedContent = (editor: Editor, format: ContentFormat, args: GetSelectionContentArgs): Content =>
   getRtcInstanceWithError(editor).selection.getContent(format, args);
+
+export const addVisual = (editor: Editor, elm: HTMLElement): void =>
+  getRtcInstanceWithError(editor).editor.addVisual(elm);
