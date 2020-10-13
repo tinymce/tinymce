@@ -175,7 +175,7 @@ const Formatter = function (editor: Editor): Formatter {
      * @param {function} callback Callback with state and args when the format is changed/toggled on/off.
      * @param {Boolean} similar True/false state if the match should handle similar or exact formats.
      */
-    formatChanged: Fun.curry(FormatChanged.formatChanged, editor, formatChangeState),
+    formatChanged: (formats: string, callback: FormatChanged.FormatChangeCallback, similar?: boolean) => Rtc.formatChanged(editor, formatChangeState, formats, callback, similar),
 
     /**
      * Returns a preview css text for the specified format.

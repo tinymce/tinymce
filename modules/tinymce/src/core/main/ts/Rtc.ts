@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Fun, Obj, Optional, Type } from '@ephox/katamari';
+import { Cell, Fun, Obj, Optional, Type } from '@ephox/katamari';
 import Editor from './api/Editor';
 import Formatter from './api/Formatter';
 import AstNode from './api/html/Node';
@@ -15,6 +15,7 @@ import { getContentInternal } from './content/GetContentImpl';
 import { insertHtmlAtCaret } from './content/InsertContentImpl';
 import { setContentInternal } from './content/SetContentImpl';
 import * as ApplyFormat from './fmt/ApplyFormat';
+import { FormatChangeCallback, UnbindFormatChanged, RegisteredFormats, formatChangedInternal } from './fmt/FormatChanged';
 import * as RemoveFormat from './fmt/RemoveFormat';
 import * as ToggleFormat from './fmt/ToggleFormat';
 import * as FilterNode from './html/FilterNode';
@@ -41,6 +42,7 @@ interface RtcRuntimeApi {
   applyFormat: (format: string, vars: Record<string, string>) => void;
   removeFormat: (format: string, vars: Record<string, string>) => void;
   toggleFormat: (format: string, vars: Record<string, string>) => void;
+  formatChanged: (formats: string, callback: FormatChangeCallback, similar?: boolean) => UnbindFormatChanged;
   getContent: () => AstNode | null;
   setContent: (node: AstNode) => void;
   insertContent: (node: AstNode) => void;
@@ -75,6 +77,7 @@ interface RtcAdaptor {
     apply: Formatter['apply'];
     remove: Formatter['remove'];
     toggle: Formatter['toggle'];
+    formatChanged: (registeredFormatListeners: Cell<RegisteredFormats>, formats: string, callback: FormatChangeCallback, similar?: boolean) => UnbindFormatChanged;
   };
   editor: {
     getContent: (args: GetContentArgs, format: ContentFormat) => Content;
@@ -125,7 +128,8 @@ const makePlainAdaptor = (editor: Editor): RtcAdaptor => ({
   formatter: {
     apply: (name, vars?, node?) => ApplyFormat.applyFormat(editor, name, vars, node),
     remove: (name, vars, node, similar?) => RemoveFormat.remove(editor, name, vars, node, similar),
-    toggle: (name, vars, node) => ToggleFormat.toggle(editor, name, vars, node)
+    toggle: (name, vars, node) => ToggleFormat.toggle(editor, name, vars, node),
+    formatChanged: (registeredFormatListeners, formats, callback, similar) => formatChangedInternal(editor, registeredFormatListeners, formats, callback, similar)
   },
   editor: {
     getContent: (args, format) => getContentInternal(editor, args, format),
@@ -170,7 +174,8 @@ const makeRtcAdaptor = (tinymceEditor: Editor, rtcEditor: RtcRuntimeApi): RtcAda
     formatter: {
       apply: (name, vars, _node) => rtcEditor.applyFormat(name, defaultVars(vars)),
       remove: (name, vars, _node, _similar?) => rtcEditor.removeFormat(name, defaultVars(vars)),
-      toggle: (name, vars, _node) => rtcEditor.toggleFormat(name, defaultVars(vars))
+      toggle: (name, vars, _node) => rtcEditor.toggleFormat(name, defaultVars(vars)),
+      formatChanged: (_rfl, formats, callback, similar) => rtcEditor.formatChanged(formats, callback, similar)
     },
     editor: {
       getContent: (args, format) => {
@@ -321,6 +326,9 @@ export const removeFormat = (editor: Editor, name: string, vars?: Record<string,
 export const toggleFormat = (editor: Editor, name: string, vars: Record<string, string>, node: Node): void => {
   getRtcInstanceWithError(editor).formatter.toggle(name, vars, node);
 };
+
+export const formatChanged = (editor: Editor, registeredFormatListeners: Cell<RegisteredFormats>, formats: string, callback: FormatChangeCallback, similar?: boolean): UnbindFormatChanged =>
+  getRtcInstanceWithError(editor).formatter.formatChanged(registeredFormatListeners, formats, callback, similar);
 
 export const getContent = (editor: Editor, args: GetContentArgs, format: ContentFormat): Content =>
   getRtcInstanceWithFallback(editor).editor.getContent(args, format);
