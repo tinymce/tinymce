@@ -1,7 +1,7 @@
 {
   "name": "@ephox/snooker",
   "description": "This project implements the table model.",
-  "version": "7.0.1",
+  "version": "7.0.2",
   "files": [
     "lib/main",
     "lib/demo",
@@ -21,7 +21,7 @@
     "@ephox/dragster": "^5.0.1",
     "@ephox/katamari": "^7.0.1",
     "@ephox/porkbun": "^5.0.1",
-    "@ephox/robin": "^8.0.1",
+    "@ephox/robin": "^8.0.2",
     "@ephox/sugar": "^7.0.1",
     "tslib": "^2.0.0"
   },
