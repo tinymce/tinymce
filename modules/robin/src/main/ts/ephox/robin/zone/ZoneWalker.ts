@@ -112,7 +112,7 @@ const process = <E, D> (
       (_aboveBlock) => {
         // We are before the viewport, so skip
         // Only sidestep if we hadn't already tried it. Otherwise, we'll loop forever.
-        if (aMode !== Gather.backtrack) {
+        if (aMode !== Gather.backtrack && !stopOn(aItem, Gather.sidestep)) {
           return doWalk(universe, aItem, Gather.sidestep, stopOn, stack, transform, viewport);
         } else {
           return Trampoline.stop();
