@@ -59,5 +59,6 @@ const getContentFromBody = (editor: Editor, args: GetContentArgs, format: Conten
 export const getContentInternal = (editor: Editor, args: GetContentArgs, format): Content => Optional.from(editor.getBody())
   .fold(
     Fun.constant(args.format === 'tree' ? new AstNode('body', 11) : ''),
-    (body) => getContentFromBody(editor, args, format, body)
+    // short circuit to empty string when editor is empty to avoid bogus elements being returned in content
+    (body) => editor.dom.isEmpty(body) ? '' : getContentFromBody(editor, args, format, body)
   );

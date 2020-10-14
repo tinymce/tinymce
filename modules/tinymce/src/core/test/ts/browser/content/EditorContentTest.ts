@@ -38,11 +38,39 @@ UnitTest.asynctest('browser.tinymce.core.content.EditorContentTest', (success, f
           Assertions.assertHtml('Should be expected html', '<p>html</p>', html);
         })
       ])),
+      Logger.t('getContent html with empty editor', GeneralSteps.sequence([
+        tinyApis.sSetContent(''),
+        Step.sync(() => {
+          const html = <string> EditorContent.getContent(editor);
+          Assertions.assertHtml('Should be expected html', '', html);
+        })
+      ])),
+      Logger.t('getContent text', GeneralSteps.sequence([
+        tinyApis.sSetContent('<p>Text to be retrieved</p>'),
+        Step.sync(() => {
+          const text = <string> EditorContent.getContent(editor, { format: 'text' });
+          Assertions.assertHtml('Should be expected text', 'Text to be retrieved', text);
+        })
+      ])),
+      Logger.t('getContent text with empty editor', GeneralSteps.sequence([
+        tinyApis.sSetContent(''),
+        Step.sync(() => {
+          const text = <string> EditorContent.getContent(editor, { format: 'text' });
+          Assertions.assertHtml('Should be expected text', '', text);
+        })
+      ])),
       Logger.t('getContent tree', GeneralSteps.sequence([
         tinyApis.sSetContent('<p>tree</p>'),
         Step.sync(() => {
           const tree = EditorContent.getContent(editor, { format: 'tree' }) as AstNode;
           Assertions.assertHtml('Should be expected tree html', '<p>tree</p>', toHtml(tree));
+        })
+      ])),
+      Logger.t('getContent tree with empty editor', GeneralSteps.sequence([
+        tinyApis.sSetContent(''),
+        Step.sync(() => {
+          const tree = EditorContent.getContent(editor, { format: 'tree' }) as AstNode;
+          Assertions.assertHtml('Should be expected tree html', '', toHtml(tree));
         })
       ])),
       Logger.t('getContent tree filtered', GeneralSteps.sequence([
