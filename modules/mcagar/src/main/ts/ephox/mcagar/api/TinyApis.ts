@@ -1,5 +1,6 @@
 import { Assertions, Chain, Cursors, FocusTools, Step, StructAssert, UiFinder, Waiter } from '@ephox/agar';
-import { Hierarchy, Html, SugarElement } from '@ephox/sugar';
+import { Optional } from '@ephox/katamari';
+import { Hierarchy, Html, SugarElement, SugarShadowDom } from '@ephox/sugar';
 import { Editor } from '../alien/EditorTypes';
 import * as TinySelections from '../selection/TinySelections';
 
@@ -30,6 +31,8 @@ export interface TinyApis {
 }
 
 export const TinyApis = function (editor: Editor): TinyApis {
+  const dos = SugarShadowDom.getRootNode(SugarElement.fromDom(editor.getElement()));
+
   const setContent = function (html: string): void {
     editor.setContent(html);
   };
@@ -148,7 +151,7 @@ export const TinyApis = function (editor: Editor): TinyApis {
 
   const sAssertSelection = function <T> (startPath: number[], soffset: number, finishPath: number[], foffset: number) {
     return Step.sync<T>(function () {
-      const actual = editor.selection.getRng();
+      const actual = Optional.from(editor.selection.getRng()).getOrDie('Failed to get range');
       assertPath('start', lazyBody(), startPath, soffset, actual.startContainer, actual.startOffset);
       assertPath('finish', lazyBody(), finishPath, foffset, actual.endContainer, actual.endOffset);
     });
@@ -166,7 +169,7 @@ export const TinyApis = function (editor: Editor): TinyApis {
     'Waiting for focus on tinymce editor',
     FocusTools.sIsOnSelector(
       'iframe focus',
-      SugarElement.fromDom(document),
+      dos,
       'iframe'
     ),
     100,
