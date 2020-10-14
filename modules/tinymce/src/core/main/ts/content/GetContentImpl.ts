@@ -36,7 +36,8 @@ const getContentFromBody = (editor: Editor, args: GetContentArgs, format: Conten
   if (args.format === 'raw') {
     content = Tools.trim(TrimHtml.trimExternal(editor.serializer, body.innerHTML));
   } else if (args.format === 'text') {
-    content = Zwsp.trim(body.innerText || body.textContent);
+    // return empty string for text format when editor is empty to avoid bogus elements being returned in content
+    content = editor.dom.isEmpty(body) ? '' : Zwsp.trim(body.innerText || body.textContent);
   } else if (args.format === 'tree') {
     return editor.serializer.serialize(body, args);
   } else {
@@ -59,6 +60,5 @@ const getContentFromBody = (editor: Editor, args: GetContentArgs, format: Conten
 export const getContentInternal = (editor: Editor, args: GetContentArgs, format): Content => Optional.from(editor.getBody())
   .fold(
     Fun.constant(args.format === 'tree' ? new AstNode('body', 11) : ''),
-    // short circuit to empty string when editor is empty to avoid bogus elements being returned in content
-    (body) => editor.dom.isEmpty(body) ? '' : getContentFromBody(editor, args, format, body)
+    (body) => getContentFromBody(editor, args, format, body)
   );
