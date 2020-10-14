@@ -1,4 +1,4 @@
-import { Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
+import { Assertions, Log, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import AstNode from 'tinymce/core/api/html/Node';
@@ -31,70 +31,70 @@ UnitTest.asynctest('browser.tinymce.core.content.EditorContentTest', (success, f
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
-      Logger.t('getContent html', GeneralSteps.sequence([
+      Log.stepsAsStep('TBA', 'getContent html', [
         tinyApis.sSetContent('<p>html</p>'),
         Step.sync(() => {
           const html = <string> EditorContent.getContent(editor);
           Assertions.assertHtml('Should be expected html', '<p>html</p>', html);
         })
-      ])),
-      Logger.t('getContent html with empty editor', GeneralSteps.sequence([
+      ]),
+      Log.stepsAsStep('TINY-6281', 'getContent html with empty editor', [
         tinyApis.sSetContent(''),
         Step.sync(() => {
           const html = <string> EditorContent.getContent(editor);
           Assertions.assertHtml('Should be expected html', '', html);
         })
-      ])),
-      Logger.t('getContent text', GeneralSteps.sequence([
+      ]),
+      Log.stepsAsStep('TINY-6281', 'getContent text', [
         tinyApis.sSetContent('<p>Text to be retrieved</p>'),
         Step.sync(() => {
           const text = <string> EditorContent.getContent(editor, { format: 'text' });
           Assertions.assertHtml('Should be expected text', 'Text to be retrieved', text);
         })
-      ])),
-      Logger.t('getContent text with empty editor', GeneralSteps.sequence([
+      ]),
+      Log.stepsAsStep('TINY-6281', 'getContent text with empty editor', [
         tinyApis.sSetContent(''),
         Step.sync(() => {
           const text = <string> EditorContent.getContent(editor, { format: 'text' });
           Assertions.assertHtml('Should be expected text', '', text);
         })
-      ])),
-      Logger.t('getContent tree', GeneralSteps.sequence([
+      ]),
+      Log.stepsAsStep('TBA', 'getContent tree', [
         tinyApis.sSetContent('<p>tree</p>'),
         Step.sync(() => {
           const tree = EditorContent.getContent(editor, { format: 'tree' }) as AstNode;
           Assertions.assertHtml('Should be expected tree html', '<p>tree</p>', toHtml(tree));
         })
-      ])),
-      Logger.t('getContent tree with empty editor', GeneralSteps.sequence([
+      ]),
+      Log.stepsAsStep('TINY-6281', 'getContent tree with empty editor', [
         tinyApis.sSetContent(''),
         Step.sync(() => {
           const tree = EditorContent.getContent(editor, { format: 'tree' }) as AstNode;
           Assertions.assertHtml('Should be expected tree html', '', toHtml(tree));
         })
-      ])),
-      Logger.t('getContent tree filtered', GeneralSteps.sequence([
+      ]),
+      Log.stepsAsStep('TBA', 'getContent tree filtered', [
         Step.sync(() => {
           EditorContent.setContent(editor, '<p><font size="7">x</font></p>', { format: 'raw' });
           const tree = EditorContent.getContent(editor, { format: 'tree' }) as AstNode;
           Assertions.assertHtml('Should be expected tree filtered html', '<p><span style="font-size: 300%;">x</span></p>', toHtml(tree));
         })
-      ])),
-      Logger.t('getContent tree using public api', GeneralSteps.sequence([
+      ]),
+      Log.stepsAsStep('TBA', 'getContent tree using public api', [
         tinyApis.sSetContent('<p>html</p>'),
         Step.sync(() => {
           const tree = editor.getContent({ format: 'tree' }) as AstNode;
           Assertions.assertHtml('Should be expected filtered html', '<p>html</p>', toHtml(tree));
         })
-      ])),
-      Logger.t('setContent html', GeneralSteps.sequence([
+      ]),
+      Log.stepsAsStep('TBA', 'setContent html', [
         tinyApis.sSetContent('<p>html</p>'),
         Step.sync(function () {
           EditorContent.setContent(editor, '<p>new html</p>');
         }),
         tinyApis.sAssertContent('<p>new html</p>')
-      ])),
-      Logger.t('setContent tree', GeneralSteps.sequence([
+      ]),
+      Log.stepsAsStep('TBA', 'setContent tree', [
         tinyApis.sSetContent('<p>tree</p>'),
         Step.sync(() => {
           const tree = EditorContent.getContent(editor, { format: 'tree' }) as AstNode;
@@ -106,21 +106,21 @@ UnitTest.asynctest('browser.tinymce.core.content.EditorContentTest', (success, f
           EditorContent.setContent(editor, tree);
           Assertions.assertHtml('Should be expected tree html', '<p>tree</p>', <string> EditorContent.getContent(editor));
         })
-      ])),
-      Logger.t('setContent tree filtered', GeneralSteps.sequence([
+      ]),
+      Log.stepsAsStep('TBA', 'setContent tree filtered', [
         tinyApis.sSetContent('<p>tree</p>'),
         Step.sync(() => {
           EditorContent.setContent(editor, getFontTree());
           Assertions.assertHtml('Should be expected filtered html', '<span style="font-size: 300%;">x</span>', <string> EditorContent.getContent(editor));
         })
-      ])),
-      Logger.t('setContent tree using public api', GeneralSteps.sequence([
+      ]),
+      Log.stepsAsStep('TBA', 'setContent tree using public api', [
         tinyApis.sSetContent('<p>tree</p>'),
         Step.sync(() => {
           editor.setContent(getFontTree());
           Assertions.assertHtml('Should be expected filtered html', '<span style="font-size: 300%;">x</span>', <string> EditorContent.getContent(editor));
         })
-      ]))
+      ])
     ], onSuccess, onFailure);
   }, {
     base_url: '/project/tinymce/js/tinymce',
