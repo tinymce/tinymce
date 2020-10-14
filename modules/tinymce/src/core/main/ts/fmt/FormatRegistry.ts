@@ -7,13 +7,14 @@
 
 import { Obj, Type } from '@ephox/katamari';
 import Editor from '../api/Editor';
-import { Format, Formats } from '../api/fmt/Format';
 import * as Settings from '../api/Settings';
 import Tools from '../api/util/Tools';
 import * as DefaultFormats from './DefaultFormats';
+import { Format, Formats } from './FormatTypes';
 
 export interface FormatRegistry {
-  get (name?: string): Format[] | Record<string, Format[]>;
+  get (name: string): Format[];
+  get (): Record<string, Format[]>;
   has (name: string): boolean;
   register (name: string | Formats, format?: Format[] | Format): void;
   unregister (name: string): Formats;
@@ -22,7 +23,8 @@ export interface FormatRegistry {
 export function FormatRegistry(editor: Editor): FormatRegistry {
   const formats: Record<string, Format[]> = {};
 
-  const get = (name?: string) => name ? formats[name] : formats;
+  const get = (name?: string): Format[] | Record<string, Format[]> =>
+    name ? formats[name] : formats;
 
   const has = (name: string): boolean => Obj.has(formats, name);
 
@@ -84,7 +86,7 @@ export function FormatRegistry(editor: Editor): FormatRegistry {
   register(Settings.getFormats(editor));
 
   return {
-    get,
+    get: get as FormatRegistry['get'],
     has,
     register,
     unregister
