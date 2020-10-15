@@ -160,7 +160,7 @@ export const TinyApis = function (editor: Editor): TinyApis {
   });
 
   const sHasFocus = <T> (expected: boolean) => Step.sync<T>(() => {
-    Assertions.assertEq(() => 'Assert whether editor hasFocus', expected, editor.hasFocus());
+    Assertions.assertEq('Assert whether editor hasFocus', expected, editor.hasFocus());
   });
 
   const sNodeChanged = <T> () => Step.sync<T>(function () {
