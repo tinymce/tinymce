@@ -43,7 +43,7 @@ interface RtcRuntimeApi {
   applyFormat: (format: string, vars: Record<string, string>) => void;
   removeFormat: (format: string, vars: Record<string, string>) => void;
   toggleFormat: (format: string, vars: Record<string, string>) => void;
-  formatChanged: (formats: string, callback: FormatChangeCallback, similar?: boolean) => UnbindFormatChanged;
+  formatChanged: (formats: string, callback: FormatChangeCallback, similar: boolean) => UnbindFormatChanged;
   getContent: () => AstNode | null;
   setContent: (node: AstNode) => void;
   insertContent: (node: AstNode) => void;
@@ -331,7 +331,7 @@ export const toggleFormat = (editor: Editor, name: string, vars: Record<string, 
   getRtcInstanceWithError(editor).formatter.toggle(name, vars, node);
 };
 
-export const formatChanged = (editor: Editor, registeredFormatListeners: Cell<RegisteredFormats>, formats: string, callback: FormatChangeCallback, similar?: boolean): UnbindFormatChanged =>
+export const formatChanged = (editor: Editor, registeredFormatListeners: Cell<RegisteredFormats>, formats: string, callback: FormatChangeCallback, similar: boolean = false): UnbindFormatChanged =>
   getRtcInstanceWithError(editor).formatter.formatChanged(registeredFormatListeners, formats, callback, similar);
 
 export const getContent = (editor: Editor, args: GetContentArgs, format: ContentFormat): Content =>
