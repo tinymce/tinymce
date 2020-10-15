@@ -3,9 +3,7 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import AstNode from 'tinymce/core/api/html/Node';
 import HtmlSerializer from 'tinymce/core/api/html/Serializer';
-import * as EditorContent from 'tinymce/core/content/EditorContent';
-import EditorManager from 'tinymce/core/api/EditorManager';
-import { EditorEvent } from 'tinymce/core/api/PublicApi';
+import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
 import Theme from 'tinymce/themes/silver/Theme';
 
@@ -34,7 +32,6 @@ UnitTest.asynctest('browser.tinymce.core.content.EditorContentTest', (success, f
   const logEvent = (event: EditorEvent<{}>) => {
     events.push(event.type);
   };
-  EditorManager.on('beforegetcontent getcontent beforesetcontent setcontent', logEvent);
 
   const sAssertEventsFiredInOrder = (expectedEvents?: string[]) => Step.sync(() => {
     Assertions.assertEq('Get content events should have been fired', expectedEvents || [
@@ -45,16 +42,16 @@ UnitTest.asynctest('browser.tinymce.core.content.EditorContentTest', (success, f
     ], events);
   });
   const sClearEvents = () => Step.sync(() => events = []);
-  const teardown = () => EditorManager.off('beforegetcontent getcontent beforesetcontent setcontent', logEvent);
 
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
+
     Pipeline.async({}, [
       Log.stepsAsStep('TBA', 'getContent html', [
         sClearEvents(),
         tinyApis.sSetContent('<p>html</p>'),
         Step.sync(() => {
-          const html = <string> EditorContent.getContent(editor);
+          const html = editor.getContent();
           Assertions.assertHtml('Should be expected html', '<p>html</p>', html);
         }),
         sAssertEventsFiredInOrder()
@@ -64,7 +61,7 @@ UnitTest.asynctest('browser.tinymce.core.content.EditorContentTest', (success, f
         sClearEvents(),
         tinyApis.sSetContent(''),
         Step.sync(() => {
-          const html = <string> EditorContent.getContent(editor);
+          const html = editor.getContent();
           Assertions.assertHtml('Should be expected html', '', html);
         }),
         sAssertEventsFiredInOrder()
@@ -74,7 +71,7 @@ UnitTest.asynctest('browser.tinymce.core.content.EditorContentTest', (success, f
         sClearEvents(),
         tinyApis.sSetContent('<p>Text to be retrieved</p>'),
         Step.sync(() => {
-          const text = <string> EditorContent.getContent(editor, { format: 'text' });
+          const text = <string> editor.getContent({ format: 'text' });
           Assertions.assertHtml('Should be expected text', 'Text to be retrieved', text);
         }),
         sAssertEventsFiredInOrder()
@@ -84,7 +81,7 @@ UnitTest.asynctest('browser.tinymce.core.content.EditorContentTest', (success, f
         sClearEvents(),
         tinyApis.sSetContent(''),
         Step.sync(() => {
-          const text = <string> EditorContent.getContent(editor, { format: 'text' });
+          const text = editor.getContent({ format: 'text' });
           Assertions.assertHtml('Should be expected text', '', text);
         }),
         sAssertEventsFiredInOrder()
@@ -94,7 +91,7 @@ UnitTest.asynctest('browser.tinymce.core.content.EditorContentTest', (success, f
         sClearEvents(),
         tinyApis.sSetContent('<p>tree</p>'),
         Step.sync(() => {
-          const tree = EditorContent.getContent(editor, { format: 'tree' }) as AstNode;
+          const tree = editor.getContent({ format: 'tree' }) as AstNode;
           Assertions.assertHtml('Should be expected tree html', '<p>tree</p>', toHtml(tree));
         }),
         sAssertEventsFiredInOrder()
@@ -104,7 +101,7 @@ UnitTest.asynctest('browser.tinymce.core.content.EditorContentTest', (success, f
         sClearEvents(),
         tinyApis.sSetContent(''),
         Step.sync(() => {
-          const tree = EditorContent.getContent(editor, { format: 'tree' }) as AstNode;
+          const tree = editor.getContent({ format: 'tree' }) as AstNode;
           // bogus br that sits in an empty editor is replaced with a &nbsp; by the html parser, hence the space
           Assertions.assertHtml('Should be expected tree html', '<p> </p>', toHtml(tree));
         }),
@@ -114,8 +111,8 @@ UnitTest.asynctest('browser.tinymce.core.content.EditorContentTest', (success, f
       Log.stepsAsStep('TBA', 'getContent tree filtered', [
         sClearEvents(),
         Step.sync(() => {
-          EditorContent.setContent(editor, '<p><font size="7">x</font></p>', { format: 'raw' });
-          const tree = EditorContent.getContent(editor, { format: 'tree' }) as AstNode;
+          editor.setContent('<p><font size="7">x</font></p>', { format: 'raw' });
+          const tree = editor.getContent({ format: 'tree' }) as AstNode;
           Assertions.assertHtml('Should be expected tree filtered html', '<p><span style="font-size: 300%;">x</span></p>', toHtml(tree));
         }),
         sAssertEventsFiredInOrder()
@@ -135,7 +132,7 @@ UnitTest.asynctest('browser.tinymce.core.content.EditorContentTest', (success, f
         sClearEvents(),
         tinyApis.sSetContent('<p>html</p>'),
         Step.sync(function () {
-          EditorContent.setContent(editor, '<p>new html</p>');
+          editor.setContent('<p>new html</p>');
         }),
         tinyApis.sAssertContent('<p>new html</p>'),
         sAssertEventsFiredInOrder([
@@ -152,14 +149,14 @@ UnitTest.asynctest('browser.tinymce.core.content.EditorContentTest', (success, f
         sClearEvents(),
         tinyApis.sSetContent('<p>tree</p>'),
         Step.sync(() => {
-          const tree = EditorContent.getContent(editor, { format: 'tree' }) as AstNode;
+          const tree = editor.getContent({ format: 'tree' }) as AstNode;
           Assertions.assertHtml('Should be expected tree html', '<p>tree</p>', toHtml(tree));
 
-          EditorContent.setContent(editor, '<p>new html</p>');
-          Assertions.assertHtml('Should be expected html', '<p>new html</p>', <string> EditorContent.getContent(editor));
+          editor.setContent('<p>new html</p>');
+          Assertions.assertHtml('Should be expected html', '<p>new html</p>', editor.getContent());
 
-          EditorContent.setContent(editor, tree);
-          Assertions.assertHtml('Should be expected tree html', '<p>tree</p>', <string> EditorContent.getContent(editor));
+          editor.setContent(tree);
+          Assertions.assertHtml('Should be expected tree html', '<p>tree</p>', editor.getContent());
         }),
         sAssertEventsFiredInOrder([
           'beforesetcontent',
@@ -181,8 +178,8 @@ UnitTest.asynctest('browser.tinymce.core.content.EditorContentTest', (success, f
         sClearEvents(),
         tinyApis.sSetContent('<p>tree</p>'),
         Step.sync(() => {
-          EditorContent.setContent(editor, getFontTree());
-          Assertions.assertHtml('Should be expected filtered html', '<span style="font-size: 300%;">x</span>', <string> EditorContent.getContent(editor));
+          editor.setContent(getFontTree());
+          Assertions.assertHtml('Should be expected filtered html', '<span style="font-size: 300%;">x</span>', editor.getContent());
         }),
         sAssertEventsFiredInOrder([
           'beforesetcontent',
@@ -199,7 +196,7 @@ UnitTest.asynctest('browser.tinymce.core.content.EditorContentTest', (success, f
         tinyApis.sSetContent('<p>tree</p>'),
         Step.sync(() => {
           editor.setContent(getFontTree());
-          Assertions.assertHtml('Should be expected filtered html', '<span style="font-size: 300%;">x</span>', <string> EditorContent.getContent(editor));
+          Assertions.assertHtml('Should be expected filtered html', '<span style="font-size: 300%;">x</span>', editor.getContent());
         }),
         sAssertEventsFiredInOrder([
           'beforesetcontent',
@@ -211,7 +208,6 @@ UnitTest.asynctest('browser.tinymce.core.content.EditorContentTest', (success, f
         ])
       ])
     ], onSuccess, onFailure);
-    teardown();
   }, {
     base_url: '/project/tinymce/js/tinymce',
     inline: true,
