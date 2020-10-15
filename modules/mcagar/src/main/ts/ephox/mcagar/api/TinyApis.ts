@@ -170,6 +170,7 @@ export const TinyApis = function (editor: Editor): TinyApis {
   const sTryAssertFocus = <T> (waitTime?: number) => Waiter.sTryUntil<T, T>(
     'Waiting for focus',
     sHasFocus(true),
+    50,
     waitTime,
   );
 
