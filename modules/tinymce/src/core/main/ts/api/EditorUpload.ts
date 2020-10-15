@@ -273,7 +273,8 @@ const EditorUpload = function (editor: Editor): EditorUpload {
   });
 
   editor.on('GetContent', function (e) {
-    if (e.source_view || e.format === 'raw') {
+    // if the content is not a string, we can't process it
+    if (e.source_view || e.format === 'raw' || e.format === 'tree') {
       return;
     }
 

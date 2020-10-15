@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Fun, Optional } from '@ephox/katamari';
+import { Arr, Fun, Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import Editor from '../api/Editor';
 import AstNode from '../api/html/Node';
@@ -39,12 +39,12 @@ const getContentFromBody = (editor: Editor, args: GetContentArgs, format: Conten
     // return empty string for text format when editor is empty to avoid bogus elements being returned in content
     content = editor.dom.isEmpty(body) ? '' : Zwsp.trim(body.innerText || body.textContent);
   } else if (args.format === 'tree') {
-    return editor.serializer.serialize(body, args);
+    content = editor.serializer.serialize(body, args);
   } else {
     content = trimEmptyContents(editor, editor.serializer.serialize(body, args));
   }
 
-  if (args.format !== 'text' && !isWsPreserveElement(SugarElement.fromDom(body))) {
+  if (!Arr.contains([ 'text', 'tree' ], args.format) && !isWsPreserveElement(SugarElement.fromDom(body))) {
     args.content = Tools.trim(content);
   } else {
     args.content = content;
