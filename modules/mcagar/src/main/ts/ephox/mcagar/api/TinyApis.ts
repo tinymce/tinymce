@@ -1,4 +1,4 @@
-import { Assertions, Chain, Cursors, FocusTools, Step, StructAssert, UiFinder, Waiter } from '@ephox/agar';
+import { Assertions, Chain, Cursors, Step, StructAssert, UiFinder, Waiter } from '@ephox/agar';
 import { Hierarchy, Html, SugarElement } from '@ephox/sugar';
 import { Editor } from '../alien/EditorTypes';
 import * as TinySelections from '../selection/TinySelections';
@@ -167,16 +167,10 @@ export const TinyApis = function (editor: Editor): TinyApis {
     editor.nodeChanged();
   });
 
-  /** @deprecated - use sHasFocus **/
-  const sTryAssertFocus = <T> () => Waiter.sTryUntil<T, T>(
-    'Waiting for focus on tinymce editor',
-    FocusTools.sIsOnSelector(
-      'iframe focus',
-      SugarElement.fromDom(document),
-      'iframe'
-    ),
-    100,
-    1000
+  const sTryAssertFocus = <T> (waitTime?: number) => Waiter.sTryUntil<T, T>(
+    'Waiting for focus',
+    sHasFocus(true),
+    waitTime,
   );
 
   return {

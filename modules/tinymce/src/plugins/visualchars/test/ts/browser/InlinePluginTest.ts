@@ -14,8 +14,9 @@ UnitTest.asynctest('browser.tinymce.plugins.visualchars.InlinePluginTest', (succ
 
     Pipeline.async({}, [
       Log.stepsAsStep('TINY-6282', 'Editor should not steal focus when loaded inline with visualchars', [
-        tinyApis.sHasFocus(false),
-        // simple test that the plugin exists, otherwise test will pass if plugin isn't loaded or initialized properly
+        tinyApis.sHasFocus(false), // NOTE: This is all we need to test.
+
+        // The following is to assert the visualchars plugin exists and is initialised. This ensures we are testing the correct case.
         tinyApis.sSetContent('<p>a&nbsp;&nbsp;b</p>'),
         tinyApis.sAssertContentPresence({
           p: 1,
