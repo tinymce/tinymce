@@ -7,22 +7,16 @@
 
 import { Arr, Optional } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
+import { BasicSelectItem } from '../SelectDatasets';
 
-const findNearest = (editor: Editor, getStyles, parents: Element[]) => {
+export const findNearest = (editor: Editor, getStyles: () => BasicSelectItem[]) => {
   const styles = getStyles();
+  const formats = Arr.map(styles, (style) => style.format);
 
-  return Arr.findMap(parents, (parent) => Arr.find(styles, (fmt) => editor.formatter.matchNode(parent, fmt.format))).orThunk(() => {
+  return Optional.from(editor.formatter.closest(formats)).bind((fmt) =>
+    Arr.find(styles, (data) => data.format === fmt)
+  ).orThunk(() => {
     if (editor.formatter.match('p')) { return Optional.some({ title: 'Paragraph', format: 'p' }); }
     return Optional.none();
   });
-};
-
-const getCurrentSelectionParents = (editor: Editor): Element[] => {
-  const currentNode = editor.selection.getStart(true) || editor.getBody();
-  return editor.dom.getParents(currentNode, () => true, editor.getBody());
-};
-
-export {
-  findNearest,
-  getCurrentSelectionParents
 };

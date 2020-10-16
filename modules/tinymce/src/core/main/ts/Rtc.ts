@@ -6,6 +6,7 @@
  */
 
 import { Cell, Fun, Obj, Optional, Type } from '@ephox/katamari';
+import * as MatchFormat from './fmt/MatchFormat';
 import Editor from './api/Editor';
 import Formatter from './api/Formatter';
 import AstNode from './api/html/Node';
@@ -40,6 +41,8 @@ interface RtcRuntimeApi {
   hasUndo: () => boolean;
   hasRedo: () => boolean;
   transact: (fn: () => void) => void;
+  matchFormat: (format: string, vars: Record<string, string>) => boolean;
+  closestFormat: (formats: string) => string;
   applyFormat: (format: string, vars: Record<string, string>) => void;
   removeFormat: (format: string, vars: Record<string, string>) => void;
   toggleFormat: (format: string, vars: Record<string, string>) => void;
@@ -75,6 +78,8 @@ interface RtcAdaptor {
     extra: (undoManager: UndoManager, index: Index, callback1: () => void, callback2: () => void) => void;
   };
   formatter: {
+    match: Formatter['match'];
+    closest: Formatter['closest'];
     apply: Formatter['apply'];
     remove: Formatter['remove'];
     toggle: Formatter['toggle'];
@@ -128,6 +133,8 @@ const makePlainAdaptor = (editor: Editor): RtcAdaptor => ({
       Operations.extra(editor, undoManager, index, callback1, callback2)
   },
   formatter: {
+    match: (name, vars?, node?) => MatchFormat.match(editor, name, vars, node),
+    closest: (names) => MatchFormat.closest(editor, names),
     apply: (name, vars?, node?) => ApplyFormat.applyFormat(editor, name, vars, node),
     remove: (name, vars, node, similar?) => RemoveFormat.remove(editor, name, vars, node, similar),
     toggle: (name, vars, node) => ToggleFormat.toggle(editor, name, vars, node),
@@ -175,6 +182,8 @@ const makeRtcAdaptor = (tinymceEditor: Editor, rtcEditor: RtcRuntimeApi): RtcAda
       extra: unsupported
     },
     formatter: {
+      match: (name, vars?, _node?) => rtcEditor.matchFormat(name, defaultVars(vars)),
+      closest: (names) => rtcEditor.closestFormat(names),
       apply: (name, vars, _node) => rtcEditor.applyFormat(name, defaultVars(vars)),
       remove: (name, vars, _node, _similar?) => rtcEditor.removeFormat(name, defaultVars(vars)),
       toggle: (name, vars, _node) => rtcEditor.toggleFormat(name, defaultVars(vars)),
@@ -313,6 +322,16 @@ export const extra = (
 ): void => {
   getRtcInstanceWithError(editor).undoManager.extra(undoManager, index, callback1, callback2);
 };
+
+export const matchFormat = (
+  editor: Editor,
+  name: string,
+  vars?: Record<string, string>,
+  node?: Node): boolean => getRtcInstanceWithError(editor).formatter.match(name, vars, node);
+
+export const closestFormat = (
+  editor: Editor,
+  names: string): string => getRtcInstanceWithError(editor).formatter.closest(names);
 
 export const applyFormat = (
   editor: Editor,

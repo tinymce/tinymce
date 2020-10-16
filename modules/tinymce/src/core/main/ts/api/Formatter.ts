@@ -37,6 +37,7 @@ interface Formatter extends FormatRegistry {
   remove (name: string, vars?: FormatVars, node?: Node | Range, similar?: boolean): void;
   toggle (name: string, vars?: FormatVars, node?: Node): void;
   match (name: string, vars?: FormatVars, node?: Node): boolean;
+  closest (names): string | null;
   matchAll (names: string[], vars?: FormatVars): string[];
   matchNode (node: Node, name: string, vars?: FormatVars, similar?: boolean): boolean;
   canApply (name: string): boolean;
@@ -133,7 +134,16 @@ const Formatter = function (editor: Editor): Formatter {
      * @param {Node} node Optional node to check.
      * @return {boolean} true/false if the specified selection/node matches the format.
      */
-    match: Fun.curry(MatchFormat.match, editor),
+    match: (name, vars?, node?) => Rtc.matchFormat(editor, name, vars, node),
+
+    /**
+     * Finds the closest matching format from a set of formats at the current selection.
+     *
+     * @method closest
+     * @param {Array} names Format names to check for.
+     * @return {String} The closest matching format name or null.
+     */
+    closest: (names) => Rtc.closestFormat(editor, names),
 
     /**
      * Matches the current selection against the array of formats and returns a new array with matching formats.
