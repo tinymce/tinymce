@@ -43,7 +43,7 @@ const isElementNode = function (node: Node) {
 const canFormatBR = (editor: Editor, format: ApplyFormat, node: Node, parentName: string) => {
   // TINY-6483: Can format 'br' if it is contained in a valid empty block and an inline format is being applied
   if (Settings.canFormatEmptyLines(editor) && FormatUtils.isInlineFormat(format)) {
-    // A curated list using the texblockelements schema map and parts of the the blockelements schema map
+    // A curated list using the textBlockElements map and parts of the blockElements map from the schema
     const validBRParentElements: Record<string, {}> = {
       ...editor.schema.getTextBlockElements(),
       td: {},
