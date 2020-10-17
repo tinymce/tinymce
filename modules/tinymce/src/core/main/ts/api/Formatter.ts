@@ -10,7 +10,6 @@ import * as CaretFormat from '../fmt/CaretFormat';
 import * as FormatChanged from '../fmt/FormatChanged';
 import { FormatRegistry } from '../fmt/FormatRegistry';
 import { Format, FormatVars } from '../fmt/FormatTypes';
-import * as MatchFormat from '../fmt/MatchFormat';
 import * as Preview from '../fmt/Preview';
 import * as FormatShortcuts from '../keyboard/FormatShortcuts';
 import * as Rtc from '../Rtc';
@@ -153,7 +152,7 @@ const Formatter = function (editor: Editor): Formatter {
      * @param {Object} vars Optional list of variables to replace before checking it.
      * @return {Array} Array with matched formats.
      */
-    matchAll: Fun.curry(MatchFormat.matchAll, editor),
+    matchAll: (names, vars?) => Rtc.matchAllFormats(editor, names, vars),
 
     /**
      * Return true/false if the specified node has the specified format.
@@ -165,7 +164,7 @@ const Formatter = function (editor: Editor): Formatter {
      * @param {Boolean} similar Match format that has similar properties.
      * @return {Object} Returns the format object it matches or undefined if it doesn't match.
      */
-    matchNode: Fun.curry(MatchFormat.matchNode, editor),
+    matchNode: (node, names, vars?, similar?) => Rtc.matchNodeFormat(editor, node, names, vars, similar),
 
     /**
      * Returns true/false if the specified format can be applied to the current selection or not. It
@@ -175,7 +174,7 @@ const Formatter = function (editor: Editor): Formatter {
      * @param {String} name Name of format to check.
      * @return {boolean} true/false if the specified format can be applied to the current selection/node.
      */
-    canApply: Fun.curry(MatchFormat.canApply, editor),
+    canApply: (name) => Rtc.canApplyFormat(editor, name),
 
     /**
      * Executes the specified callback when the current selection matches the formats or not.
