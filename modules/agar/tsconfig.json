@@ -22,7 +22,7 @@
     { "path": "../jax" },
     { "path": "../katamari" },
     { "path": "../katamari-assertions" },
-    { "path": "../sugar" },
-    { "path": "../sand" }
+    { "path": "../sand" },
+    { "path": "../sugar" }
   ]
 }

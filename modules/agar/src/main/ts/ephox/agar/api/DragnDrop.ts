@@ -1,4 +1,3 @@
-import { Chain, NamedChain, UiFinder } from '@ephox/agar';
 import { Arr } from '@ephox/katamari';
 import { Attribute, SugarBody, SugarElement, SugarNode } from '@ephox/sugar';
 import { createDataTransfer, getDragImage } from '../datatransfer/DataTransfer';
@@ -6,7 +5,10 @@ import {
   createDragendEvent, createDragenterEvent, createDragEvent, createDragoverEvent, createDragstartEvent, createDropEvent, dispatchDndEvent,
   getWindowFromElement, isDefaultPrevented
 } from '../dragndrop/DndEvents';
+import { Chain } from './Chain';
+import { NamedChain } from './NamedChain';
 import { Step } from './Step';
+import * as UiFinder from './UiFinder';
 
 interface Item {
   data: string;
