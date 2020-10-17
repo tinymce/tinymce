@@ -7,6 +7,7 @@ import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
 const isSkin = (ss: StyleSheet) => ss.href !== null && Strings.contains(ss.href, 'skin.min.css');
+const isShadowDomSkin = (ss: StyleSheet) => ss.href !== null && Strings.contains(ss.href, 'skin.shadowdom.min.css');
 
 const skinSheetsTest = (extraSettings: Record<string, any>) => (success, failure) => {
   if (!SugarShadowDom.isSupported()) {
@@ -18,11 +19,15 @@ const skinSheetsTest = (extraSettings: Record<string, any>) => (success, failure
   TinyLoader.setupInShadowRoot((editor: Editor, shadowRoot: SugarElement<ShadowRoot>, onSuccess, onFailure) => {
     Pipeline.async({}, [
       Step.sync(() => {
-        // TODO TINY-6144: Test that there are no skin stylesheets in the head. We will need to clean up existing stylesheets first, which may require a StyleSheetLoader.removeAll() function
         Assert.eq(
           'There should be a skin stylesheet in the ShadowRoot',
           true,
           Arr.exists(shadowRoot.dom.styleSheets, isSkin)
+        );
+        Assert.eq(
+          'There should only be a shadowdom specific skin stylesheet in the document',
+          true,
+          Arr.exists(document.styleSheets, isShadowDomSkin)
         );
       })
     ], onSuccess, onFailure);
