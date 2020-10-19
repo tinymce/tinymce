@@ -99,9 +99,10 @@ const walk = <E, D> (
     .filter(shouldContinue);
 
   while (state.isSome()) {
-    state.each(Fun.curry(visit, universe, stack, transform, viewport));
+    state.each((state) => visit(universe, stack, transform, viewport, state));
+
     state = state
-      .bind(Fun.curry(getNextStep, universe, viewport))
+      .bind((state) => getNextStep(universe, viewport, state))
       .bind((traverse) => Gather.walk(universe, traverse.item, traverse.mode, Gather.walkers().right()))
       .filter(shouldContinue);
   }
