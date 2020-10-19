@@ -33,22 +33,23 @@ UnitTest.asynctest('browser.tinymce.core.content.EditorContentTest', (success, f
     events.push(event.type);
   };
 
-  const sAssertEventsFiredInOrder = (expectedEvents?: string[]) => Step.sync(() => {
-    Assertions.assertEq('Get content events should have been fired', expectedEvents || [
-      'beforesetcontent',
-      'setcontent',
-      'beforegetcontent',
-      'getcontent'
-    ], events);
+  const defaultExpectedEvents = [
+    'beforesetcontent',
+    'setcontent',
+    'beforegetcontent',
+    'getcontent'
+  ];
+  const sAssertEventsFiredInOrder = (expectedEvents: string[] = defaultExpectedEvents) => Step.sync(() => {
+    Assertions.assertEq('Get content events should have been fired', expectedEvents, events);
   });
-  const sClearEvents = () => Step.sync(() => events = []);
+  const sClearEvents = Step.sync(() => events = []);
 
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
       Log.stepsAsStep('TBA', 'getContent html', [
-        sClearEvents(),
+        sClearEvents,
         tinyApis.sSetContent('<p>html</p>'),
         Step.sync(() => {
           const html = editor.getContent();
@@ -58,7 +59,7 @@ UnitTest.asynctest('browser.tinymce.core.content.EditorContentTest', (success, f
       ]),
 
       Log.stepsAsStep('TINY-6281', 'getContent html with empty editor', [
-        sClearEvents(),
+        sClearEvents,
         tinyApis.sSetContent(''),
         Step.sync(() => {
           const html = editor.getContent();
@@ -68,17 +69,17 @@ UnitTest.asynctest('browser.tinymce.core.content.EditorContentTest', (success, f
       ]),
 
       Log.stepsAsStep('TINY-6281', 'getContent text', [
-        sClearEvents(),
+        sClearEvents,
         tinyApis.sSetContent('<p>Text to be retrieved</p>'),
         Step.sync(() => {
-          const text = <string> editor.getContent({ format: 'text' });
+          const text = editor.getContent({ format: 'text' });
           Assertions.assertHtml('Should be expected text', 'Text to be retrieved', text);
         }),
         sAssertEventsFiredInOrder()
       ]),
 
       Log.stepsAsStep('TINY-6281', 'getContent text with empty editor', [
-        sClearEvents(),
+        sClearEvents,
         tinyApis.sSetContent(''),
         Step.sync(() => {
           const text = editor.getContent({ format: 'text' });
@@ -88,7 +89,7 @@ UnitTest.asynctest('browser.tinymce.core.content.EditorContentTest', (success, f
       ]),
 
       Log.stepsAsStep('TBA', 'getContent tree', [
-        sClearEvents(),
+        sClearEvents,
         tinyApis.sSetContent('<p>tree</p>'),
         Step.sync(() => {
           const tree = editor.getContent({ format: 'tree' }) as AstNode;
@@ -98,7 +99,7 @@ UnitTest.asynctest('browser.tinymce.core.content.EditorContentTest', (success, f
       ]),
 
       Log.stepsAsStep('TINY-6281', 'getContent tree with empty editor', [
-        sClearEvents(),
+        sClearEvents,
         tinyApis.sSetContent(''),
         Step.sync(() => {
           const tree = editor.getContent({ format: 'tree' }) as AstNode;
@@ -109,7 +110,7 @@ UnitTest.asynctest('browser.tinymce.core.content.EditorContentTest', (success, f
       ]),
 
       Log.stepsAsStep('TBA', 'getContent tree filtered', [
-        sClearEvents(),
+        sClearEvents,
         Step.sync(() => {
           editor.setContent('<p><font size="7">x</font></p>', { format: 'raw' });
           const tree = editor.getContent({ format: 'tree' }) as AstNode;
@@ -118,18 +119,8 @@ UnitTest.asynctest('browser.tinymce.core.content.EditorContentTest', (success, f
         sAssertEventsFiredInOrder()
       ]),
 
-      Log.stepsAsStep('TBA', 'getContent tree using public api', [
-        sClearEvents(),
-        tinyApis.sSetContent('<p>html</p>'),
-        Step.sync(() => {
-          const tree = editor.getContent({ format: 'tree' }) as AstNode;
-          Assertions.assertHtml('Should be expected filtered html', '<p>html</p>', toHtml(tree));
-        }),
-        sAssertEventsFiredInOrder()
-      ]),
-
       Log.stepsAsStep('TBA', 'setContent html', [
-        sClearEvents(),
+        sClearEvents,
         tinyApis.sSetContent('<p>html</p>'),
         Step.sync(function () {
           editor.setContent('<p>new html</p>');
@@ -146,7 +137,7 @@ UnitTest.asynctest('browser.tinymce.core.content.EditorContentTest', (success, f
       ]),
 
       Log.stepsAsStep('TBA', 'setContent tree', [
-        sClearEvents(),
+        sClearEvents,
         tinyApis.sSetContent('<p>tree</p>'),
         Step.sync(() => {
           const tree = editor.getContent({ format: 'tree' }) as AstNode;
@@ -175,7 +166,7 @@ UnitTest.asynctest('browser.tinymce.core.content.EditorContentTest', (success, f
       ]),
 
       Log.stepsAsStep('TBA', 'setContent tree filtered', [
-        sClearEvents(),
+        sClearEvents,
         tinyApis.sSetContent('<p>tree</p>'),
         Step.sync(() => {
           editor.setContent(getFontTree());
@@ -192,7 +183,7 @@ UnitTest.asynctest('browser.tinymce.core.content.EditorContentTest', (success, f
       ]),
 
       Log.stepsAsStep('TBA', 'setContent tree using public api', [
-        sClearEvents(),
+        sClearEvents,
         tinyApis.sSetContent('<p>tree</p>'),
         Step.sync(() => {
           editor.setContent(getFontTree());
