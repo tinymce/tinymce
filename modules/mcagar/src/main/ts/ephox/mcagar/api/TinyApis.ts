@@ -1,6 +1,6 @@
-import { Assertions, Chain, Cursors, FocusTools, Step, StructAssert, UiFinder, Waiter } from '@ephox/agar';
+import { Assertions, Chain, Cursors, Step, StructAssert, UiFinder, Waiter } from '@ephox/agar';
 import { Optional } from '@ephox/katamari';
-import { Hierarchy, Html, SugarElement, SugarShadowDom } from '@ephox/sugar';
+import { Hierarchy, Html, SugarElement } from '@ephox/sugar';
 import { Editor } from '../alien/EditorTypes';
 import * as TinySelections from '../selection/TinySelections';
 
@@ -12,6 +12,7 @@ export interface TinyApis {
   sSetContent: <T> (html: string) => Step<T, T>;
   sSetRawContent: <T> (html: string) => Step<T, T>;
   sFocus: <T> () => Step<T, T>;
+  sHasFocus: <T> (expected: boolean) => Step<T, T>;
   sNodeChanged: <T> () => Step<T, T>;
   sAssertContent: <T> (expected: string) => Step<T, T>;
   sAssertContentPresence: <T> (expected: Presence) => Step<T, T>;
@@ -31,8 +32,6 @@ export interface TinyApis {
 }
 
 export const TinyApis = function (editor: Editor): TinyApis {
-  const dos = SugarShadowDom.getRootNode(SugarElement.fromDom(editor.getElement()));
-
   const setContent = function (html: string): void {
     editor.setContent(html);
   };
@@ -161,19 +160,19 @@ export const TinyApis = function (editor: Editor): TinyApis {
     editor.focus();
   });
 
+  const sHasFocus = <T> (expected: boolean) => Step.sync<T>(() => {
+    Assertions.assertEq('Assert whether editor hasFocus', expected, editor.hasFocus());
+  });
+
   const sNodeChanged = <T> () => Step.sync<T>(function () {
     editor.nodeChanged();
   });
 
-  const sTryAssertFocus = <T> () => Waiter.sTryUntil<T, T>(
-    'Waiting for focus on tinymce editor',
-    FocusTools.sIsOnSelector(
-      'iframe focus',
-      dos,
-      'iframe'
-    ),
-    100,
-    1000
+  const sTryAssertFocus = <T> (waitTime?: number) => Waiter.sTryUntil<T, T>(
+    'Waiting for focus',
+    sHasFocus(true),
+    50,
+    waitTime,
   );
 
   return {
@@ -196,6 +195,7 @@ export const TinyApis = function (editor: Editor): TinyApis {
     sAssertSelection,
     sTryAssertFocus,
     sFocus,
+    sHasFocus,
     sNodeChanged
   };
 };
