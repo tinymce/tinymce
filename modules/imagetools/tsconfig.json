@@ -19,6 +19,7 @@
   ],
   "references": [
     { "path": "../katamari" },
-    { "path": "../sand" }
+    { "path": "../sand" },
+    { "path": "../sugar" }
   ]
 }

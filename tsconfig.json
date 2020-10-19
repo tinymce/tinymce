@@ -126,10 +126,10 @@
       "ephox/katamari/demo/*": ["modules/katamari/src/demo/ts/ephox/katamari/demo/*"],
       "ephox/katamari/*": ["modules/katamari/src/main/ts/ephox/katamari/*"],
       "@ephox/katamari": ["modules/katamari/src/main/ts/ephox/katamari/api/Main.ts"],
-      "ephox/katamari-assertions/test/*": ["modules/katamari-test/src/test/ts/module/ephox/katamari-assertions/test/*"],
-      "ephox/katamari-assertions/demo/*": ["modules/katamari-test/src/demo/ts/ephox/katamari-assertions/demo/*"],
-      "ephox/katamari-assertions/*": ["modules/katamari-test/src/main/ts/ephox/katamari-assertions/*"],
-      "@ephox/katamari-assertions": ["modules/katamari-test/src/main/ts/ephox/katamari-assertions/api/Main.ts"],
+      "ephox/katamari-assertions/test/*": ["modules/katamari-assertions/src/test/ts/module/ephox/katamari-assertions/test/*"],
+      "ephox/katamari-assertions/demo/*": ["modules/katamari-assertions/src/demo/ts/ephox/katamari-assertions/demo/*"],
+      "ephox/katamari-assertions/*": ["modules/katamari-assertions/src/main/ts/ephox/katamari-assertions/*"],
+      "@ephox/katamari-assertions": ["modules/katamari-assertions/src/main/ts/ephox/katamari-assertions/api/Main.ts"],
       "ephox/mcagar/test/*": ["modules/mcagar/src/test/ts/module/ephox/mcagar/test/*"],
       "ephox/mcagar/demo/*": ["modules/mcagar/src/demo/ts/ephox/mcagar/demo/*"],
       "ephox/mcagar/*": ["modules/mcagar/src/main/ts/ephox/mcagar/*"],
@@ -165,7 +165,7 @@
       "ephox/tinymce/test/*": ["modules/tinymce/src/test/ts/module/ephox/tinymce/test/*"],
       "ephox/tinymce/demo/*": ["modules/tinymce/src/demo/ts/ephox/tinymce/demo/*"],
       "ephox/tinymce/*": ["modules/tinymce/src/main/ts/ephox/tinymce/*"],
-      "@ephox/tinymce": ["modules/tinymce/src/main/ts/ephox/tinymce/api/Main.ts"],
+      "@ephox/tinymce": ["modules/tinymce/src/main/ts/ephox/tinymce/api/Main.ts"]
     }
   }
 }
