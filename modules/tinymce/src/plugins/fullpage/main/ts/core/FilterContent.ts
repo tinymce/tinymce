@@ -6,6 +6,7 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
+import { GetContentEvent } from 'tinymce/core/api/EventTypes';
 import Tools from 'tinymce/core/api/util/Tools';
 import * as Settings from '../api/Settings';
 import * as Parser from './Parser';
@@ -156,8 +157,8 @@ const getDefaultHeader = function (editor) {
   return header;
 };
 
-const handleGetContent = function (editor: Editor, head, foot, evt) {
-  if (!evt.selection && (!evt.source_view || !Settings.shouldHideInSourceView(editor))) {
+const handleGetContent = function (editor: Editor, head, foot, evt: GetContentEvent) {
+  if (evt.format === 'html' && !evt.selection && (!evt.source_view || !Settings.shouldHideInSourceView(editor))) {
     evt.content = Protect.unprotectHtml(Tools.trim(head) + '\n' + Tools.trim(evt.content) + '\n' + Tools.trim(foot));
   }
 };
