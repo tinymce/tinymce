@@ -5,20 +5,21 @@ import { Checkbox, CheckboxSpec } from './Checkbox';
 import { Collection, CollectionSpec } from './Collection';
 import { ColorInput, ColorInputSpec } from './ColorInput';
 import { ColorPicker, ColorPickerSpec } from './ColorPicker';
+import { CustomEditor, CustomEditorSpec } from './CustomEditor';
 import { DropZone, DropZoneSpec } from './Dropzone';
 import { Grid, GridSpec } from './Grid';
+import { HtmlPanel, HtmlPanelSpec } from './HtmlPanel';
 import { Iframe, IframeSpec } from './Iframe';
 import { ImageTools, ImageToolsSpec } from './ImageTools';
 import { Input, InputSpec } from './Input';
 import { Label, LabelSpec } from './Label';
 import { ListBox, ListBoxSpec } from './ListBox';
+import { Panel, PanelSpec } from './Panel';
 import { SelectBox, SelectBoxSpec } from './SelectBox';
 import { SizeInput, SizeInputSpec } from './SizeInput';
 import { Table, TableSpec } from './Table';
 import { TextArea, TextAreaSpec } from './Textarea';
 import { UrlInput, UrlInputSpec } from './UrlInput';
-import { HtmlPanel, HtmlPanelSpec } from './HtmlPanel';
-import { Panel, PanelSpec } from './Panel';
 
 export type BodyComponentSpec
   = BarSpec
@@ -41,7 +42,8 @@ export type BodyComponentSpec
   | CollectionSpec
   | LabelSpec
   | TableSpec
-  | PanelSpec;
+  | PanelSpec
+  | CustomEditorSpec;
 
 export type BodyComponent
   = Bar
@@ -64,4 +66,5 @@ export type BodyComponent
   | Collection
   | Label
   | Table
-  | Panel;
+  | Panel
+  | CustomEditor;

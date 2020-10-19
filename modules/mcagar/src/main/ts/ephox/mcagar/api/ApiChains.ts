@@ -1,4 +1,5 @@
 import { Assertions, Chain, Cursors, StructAssert, UiFinder } from '@ephox/agar';
+import { Optional } from '@ephox/katamari';
 import { Hierarchy, Html, SugarElement } from '@ephox/sugar';
 import { Editor } from '../alien/EditorTypes';
 import * as TinySelections from '../selection/TinySelections';
@@ -129,7 +130,7 @@ const assertPath = function (label: string, root: SugarElement, expPath: number[
 
 const cAssertSelection = function <T extends Editor> (startPath: number[], soffset: number, finishPath: number[], foffset: number) {
   return Chain.op(function (editor: T) {
-    const actual = editor.selection.getRng();
+    const actual = Optional.from(editor.selection.getRng()).getOrDie('Failed to get range');
     assertPath('start', lazyBody(editor), startPath, soffset, actual.startContainer, actual.startOffset);
     assertPath('finish', lazyBody(editor), finishPath, foffset, actual.endContainer, actual.endOffset);
   });

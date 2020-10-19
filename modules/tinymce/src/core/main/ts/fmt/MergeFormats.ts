@@ -7,8 +7,8 @@
 
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
-import { FormatVars } from '../api/fmt/Format';
 import Tools from '../api/util/Tools';
+import { FormatVars } from './FormatTypes';
 import * as FormatUtils from './FormatUtils';
 import * as MatchFormat from './MatchFormat';
 import { applyStyle, clearChildStyles, hasStyle, isElementNode, mergeSiblings, processChildElements } from './MergeUtils';

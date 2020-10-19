@@ -1,5 +1,5 @@
 import { Keyboard, Step } from '@ephox/agar';
-import { SugarElement } from '@ephox/sugar';
+import { SugarElement, SugarShadowDom } from '@ephox/sugar';
 import { Editor } from '../alien/EditorTypes';
 
 export interface TinyActions {
@@ -12,7 +12,7 @@ export interface TinyActions {
 
 export const TinyActions = function (editor: Editor): TinyActions {
   const iDoc = SugarElement.fromDom(editor.getDoc());
-  const uiDoc = SugarElement.fromDom(document);
+  const uiDoc = SugarShadowDom.getRootNode(SugarElement.fromDom(editor.getElement()));
 
   const sContentKeydown = function <T> (code: number, modifiers = {}) {
     return Keyboard.sKeydown<T>(iDoc, code, modifiers);

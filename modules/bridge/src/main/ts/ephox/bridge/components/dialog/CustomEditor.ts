@@ -1,6 +1,6 @@
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
-import { FormComponent, FormComponentSpec, formComponentFields } from './FormComponent';
+import { FormComponent, formComponentFields, FormComponentSpec } from './FormComponent';
 
 export interface CustomEditorInit {
   setValue: (value: string) => void;
@@ -8,12 +8,12 @@ export interface CustomEditorInit {
   destroy: () => void;
 }
 
-export type CustomEditorInitFn = (elm: Element, settings: any) => Promise<CustomEditorInit>;
+export type CustomEditorInitFn = (elm: HTMLElement, settings: any) => Promise<CustomEditorInit>;
 
 interface CustomEditorOldSpec extends FormComponentSpec {
   type: 'customeditor';
   tag?: string;
-  init: (e: Element) => Promise<CustomEditorInit>;
+  init: (e: HTMLElement) => Promise<CustomEditorInit>;
 }
 
 interface CustomEditorNewSpec extends FormComponentSpec {
@@ -29,7 +29,7 @@ export type CustomEditorSpec = CustomEditorOldSpec | CustomEditorNewSpec;
 export interface CustomEditorOld extends FormComponent {
   type: 'customeditor';
   tag: string;
-  init: (e: Element) => Promise<CustomEditorInit>;
+  init: (e: HTMLElement) => Promise<CustomEditorInit>;
 }
 
 export interface CustomEditorNew extends FormComponent {
