@@ -36,6 +36,24 @@
  */
 
 /**
+ * Enables the editor user interface. This method affects all user interface
+ * elements, including: menu bar, toolbar, notifications, and dialogs. Can
+ * not be used when in readonly mode.
+ * <br>
+ * <em>Added in TinyMCE 5.6</em>
+ *
+ * @method tinymce.editor.ui.enable
+ */
+
+/**
+ * Disables the editor user interface. This method affects all user interface
+ * elements, including: menu bar, toolbar, notifications, and dialogs.
+ * <em>Added in TinyMCE 5.6</em>
+ *
+ * @method tinymce.editor.ui.disable
+ */
+
+/**
  * Editor UI stylesheet loader instance. StyleSheetLoader for styles in the editor UI. For content styles, use editor.dom.styleSheetLoader.
  * <br>
  * <em>Added in TinyMCE 5.4</em>

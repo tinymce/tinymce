@@ -2,6 +2,7 @@ Version 5.6.0 (TBD)
     Fixed `fullpage` plugin altering text content in `editor.getContent()` #TINY-6541
     Fixed font size keywords such as `medium` not displaying correctly in font size menus #TINY-6291
     Fixed some incorrect types in the new TypeScript declaration file #TINY-6413
+    Added new user interface `enable` and `disable` methods #TINY-6397
 Version 5.5.1 (TBD)
     Fixed pressing the down key near the end of a document incorrectly raising an exception #TINY-6471
     Fixed incorrect Typescript types for the `Tools` API #TINY-6475

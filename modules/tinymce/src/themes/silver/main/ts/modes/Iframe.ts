@@ -12,6 +12,7 @@ import { Css, DomEvent, SugarElement, SugarPosition, SugarShadowDom } from '@eph
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import { EventUtilsEvent } from 'tinymce/core/api/dom/EventUtils';
 import Editor from 'tinymce/core/api/Editor';
+import { EditorUiApi } from 'tinymce/core/api/ui/Ui';
 import * as Events from '../api/Events';
 import * as Settings from '../api/Settings';
 import { UiFactoryBackstage } from '../backstage/Backstage';
@@ -148,9 +149,21 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
     });
   }
 
+  const api: Partial<EditorUiApi> = {
+    enable: () => {
+      if (!editor.mode.isReadOnly()) {
+        ReadOnly.broadcastReadonly(uiComponents, false);
+      }
+    },
+    disable: () => {
+      ReadOnly.broadcastReadonly(uiComponents, true);
+    }
+  };
+
   return {
     iframeContainer: socket.element.dom,
-    editorContainer: outerContainer.element.dom
+    editorContainer: outerContainer.element.dom,
+    api
   };
 };
 
