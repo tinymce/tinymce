@@ -1,4 +1,5 @@
 import { Assertions, Chain, Cursors, Step, StructAssert, UiFinder, Waiter } from '@ephox/agar';
+import { Optional } from '@ephox/katamari';
 import { Hierarchy, Html, SugarElement } from '@ephox/sugar';
 import { Editor } from '../alien/EditorTypes';
 import * as TinySelections from '../selection/TinySelections';
@@ -149,7 +150,7 @@ export const TinyApis = function (editor: Editor): TinyApis {
 
   const sAssertSelection = function <T> (startPath: number[], soffset: number, finishPath: number[], foffset: number) {
     return Step.sync<T>(function () {
-      const actual = editor.selection.getRng();
+      const actual = Optional.from(editor.selection.getRng()).getOrDie('Failed to get range');
       assertPath('start', lazyBody(), startPath, soffset, actual.startContainer, actual.startOffset);
       assertPath('finish', lazyBody(), finishPath, foffset, actual.endContainer, actual.endOffset);
     });
