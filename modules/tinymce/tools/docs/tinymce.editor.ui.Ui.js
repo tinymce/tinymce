@@ -48,6 +48,7 @@
 /**
  * Disables the editor user interface. This method affects all user interface
  * elements, including: menu bar, toolbar, notifications, and dialogs.
+ * <br>
  * <em>Added in TinyMCE 5.6</em>
  *
  * @method tinymce.editor.ui.disable
