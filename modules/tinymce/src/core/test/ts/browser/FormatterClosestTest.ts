@@ -52,9 +52,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterClosestTest', (success, failur
         tinyApis.sSetCursor([ 0, 0, 0 ], 0),
         sAssertClosest([ 'aligncenter', 'p' ], 'aligncenter')
       ])
-    ], () => {
-      onSuccess();
-    }, onFailure);
+    ], onSuccess, onFailure);
   }, {
     selector: 'textarea',
     base_url: '/project/tinymce/js/tinymce'

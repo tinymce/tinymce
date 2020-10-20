@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Optional } from '@ephox/katamari';
+import { Arr, Optional, Optionals } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { BasicSelectItem } from '../SelectDatasets';
 
@@ -15,8 +15,5 @@ export const findNearest = (editor: Editor, getStyles: () => BasicSelectItem[]) 
 
   return Optional.from(editor.formatter.closest(formats)).bind((fmt) =>
     Arr.find(styles, (data) => data.format === fmt)
-  ).orThunk(() => {
-    if (editor.formatter.match('p')) { return Optional.some({ title: 'Paragraph', format: 'p' }); }
-    return Optional.none();
-  });
+  ).orThunk(() => Optionals.someIf(editor.formatter.match('p'), { title: 'Paragraph', format: 'p' }));
 };

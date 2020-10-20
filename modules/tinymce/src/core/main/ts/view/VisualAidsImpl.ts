@@ -5,41 +5,41 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr } from '@ephox/katamari';
+import { Arr, Type } from '@ephox/katamari';
 import Editor from '../api/Editor';
 import * as Settings from '../api/Settings';
 
 export const addVisualInternal = (editor: Editor, elm?: HTMLElement) => {
   const dom = editor.dom;
-  elm = elm || editor.getBody();
+  const scope = Type.isNonNullable(elm) ? elm : editor.getBody();
 
-  if (editor.hasVisual === undefined) {
+  if (Type.isUndefined(editor.hasVisual)) {
     editor.hasVisual = Settings.isVisualAidsEnabled(editor);
   }
 
-  Arr.each(dom.select('table,a', elm), (elm) => {
-    switch (elm.nodeName) {
+  Arr.each(dom.select('table,a', scope), (matchedElm) => {
+    switch (matchedElm.nodeName) {
       case 'TABLE':
         const cls = Settings.getVisualAidsTableClass(editor);
-        const value = dom.getAttrib(elm, 'border');
+        const value = dom.getAttrib(matchedElm, 'border');
 
         if ((!value || value === '0') && editor.hasVisual) {
-          dom.addClass(elm, cls);
+          dom.addClass(matchedElm, cls);
         } else {
-          dom.removeClass(elm, cls);
+          dom.removeClass(matchedElm, cls);
         }
 
         break;
 
       case 'A':
-        if (!dom.getAttrib(elm, 'href')) {
-          const value = dom.getAttrib(elm, 'name') || elm.id;
+        if (!dom.getAttrib(matchedElm, 'href')) {
+          const value = dom.getAttrib(matchedElm, 'name') || matchedElm.id;
           const cls = Settings.getVisualAidsAnchorClass(editor);
 
           if (value && editor.hasVisual) {
-            dom.addClass(elm, cls);
+            dom.addClass(matchedElm, cls);
           } else {
-            dom.removeClass(elm, cls);
+            dom.removeClass(matchedElm, cls);
           }
         }
 
