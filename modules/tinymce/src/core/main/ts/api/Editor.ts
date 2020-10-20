@@ -447,7 +447,7 @@ class Editor implements EditorObservable {
   /**
    * Checks that the plugin is in the editor configuration and can optionally check if the plugin has been loaded.
    * <br>
-   * <em>Added in TinyMCE 5.4</em>
+   * <em>Added in TinyMCE 5.5</em>
    *
    * @method hasPlugin
    * @param {String} name The name of the plugin, as specified for the TinyMCE `plugins` option.
