@@ -220,6 +220,8 @@ export function StyleSheetLoader(documentOrShadowRoot: Document | ShadowRoot, se
 
   /**
    * Unloads the specified CSS file if no resources currently depend on it.
+   * <br>
+   * <em>Added in TinyMCE 5.5</em>
    *
    * @method unload
    * @param {String} url URL to unload or remove.
@@ -237,6 +239,8 @@ export function StyleSheetLoader(documentOrShadowRoot: Document | ShadowRoot, se
 
   /**
    * Unloads each specified CSS file if no resources currently depend on it.
+   * <br>
+   * <em>Added in TinyMCE 5.5</em>
    *
    * @method unloadAll
    * @param {Array} urls URLs to unload or remove.

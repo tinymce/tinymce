@@ -5,16 +5,24 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Cell } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
-import * as Settings from '../api/Settings';
 import * as Actions from './Actions';
 
-const setup = (editor: Editor, toggleState) => {
+const setup = (editor: Editor, toggleState: Cell<boolean>) => {
+  /*
+    Note: applyVisualChars does not place a bookmark before modifying the DOM on init.
+    This will cause a loss of selection if the following conditions are met:
+      - Autofocus enabled, or editor is manually focused on init
+      - The first piece of text in the editor must be a nbsp
+      - Integrator has manually set the selection before init
+
+    Another improvement would be to ensure DOM elements aren't destroyed/recreated,
+    but rather wrapped/unwrapped when applying styling for visualchars so that selection
+    is not lost.
+  */
   editor.on('init', () => {
-    // should be false when enabled, so toggling will change it to true
-    const valueForToggling = !Settings.isEnabledByDefault(editor);
-    toggleState.set(valueForToggling);
-    Actions.toggleVisualChars(editor, toggleState);
+    Actions.applyVisualChars(editor, toggleState);
   });
 };
 
