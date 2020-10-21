@@ -12,10 +12,17 @@ import * as FormatUtils from './FormatUtils';
 import * as MatchFormat from './MatchFormat';
 
 export type FormatChangeCallback = (state: boolean, data: { node: Node; format: string; parents: any }) => void;
+
 export type FormatCallbacks = Record<string, FormatChangeCallback[]>;
-export type FormatData = { similar?: boolean; callbacks: FormatChangeCallback[] };
+
+export interface FormatData {
+  similar?: boolean;
+  callbacks: FormatChangeCallback[];
+};
+
 export type RegisteredFormats = Record<string, FormatData>;
-export type UnbindFormatChanged = {
+
+export interface UnbindFormatChanged {
   unbind: () => void;
 };
 

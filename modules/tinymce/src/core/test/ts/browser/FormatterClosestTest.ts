@@ -47,6 +47,16 @@ UnitTest.asynctest('browser.tinymce.core.FormatterClosestTest', (success, failur
         tinyApis.sSetCursor([ 0, 0, 0 ], 0),
         sAssertClosest([ 'p' ], 'p')
       ]),
+      Log.stepsAsStep('TBA', 'Should return aligncenter since that format is before the also matching p format', [
+        tinyApis.sSetContent('<p style="text-align: center">a</p>'),
+        tinyApis.sSetCursor([ 0, 0 ], 0),
+        sAssertClosest([ 'aligncenter', 'p' ], 'aligncenter')
+      ]),
+      Log.stepsAsStep('TBA', 'Should return p since that format is before the also matching aligncenter format', [
+        tinyApis.sSetContent('<p style="text-align: center">a</p>'),
+        tinyApis.sSetCursor([ 0, 0 ], 0),
+        sAssertClosest([ 'p', 'aligncenter' ], 'p')
+      ]),
       Log.stepsAsStep('TBA', 'Should return aligncenter selector format since caret is inside a em inside a p element that is center aligned', [
         tinyApis.sSetContent('<p style="text-align: center"><em>a<em></p>'),
         tinyApis.sSetCursor([ 0, 0, 0 ], 0),
