@@ -5,7 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Fun, Obj, Optional, Type } from '@ephox/katamari';
+import { Cell, Fun, Obj, Optional, Type } from '@ephox/katamari';
+import * as MatchFormat from './fmt/MatchFormat';
 import Editor from './api/Editor';
 import Formatter from './api/Formatter';
 import AstNode from './api/html/Node';
@@ -14,7 +15,9 @@ import { Content, ContentFormat, GetContentArgs, SetContentArgs } from './conten
 import { getContentInternal } from './content/GetContentImpl';
 import { insertHtmlAtCaret } from './content/InsertContentImpl';
 import { setContentInternal } from './content/SetContentImpl';
+import { addVisualInternal } from './view/VisualAidsImpl';
 import * as ApplyFormat from './fmt/ApplyFormat';
+import { FormatChangeCallback, UnbindFormatChanged, RegisteredFormats, formatChangedInternal } from './fmt/FormatChanged';
 import * as RemoveFormat from './fmt/RemoveFormat';
 import * as ToggleFormat from './fmt/ToggleFormat';
 import * as FilterNode from './html/FilterNode';
@@ -38,9 +41,13 @@ interface RtcRuntimeApi {
   hasUndo: () => boolean;
   hasRedo: () => boolean;
   transact: (fn: () => void) => void;
+  canApplyFormat: (format: string) => boolean;
+  matchFormat: (format: string, vars: Record<string, string>) => boolean;
+  closestFormat: (formats: string) => string;
   applyFormat: (format: string, vars: Record<string, string>) => void;
   removeFormat: (format: string, vars: Record<string, string>) => void;
   toggleFormat: (format: string, vars: Record<string, string>) => void;
+  formatChanged: (formats: string, callback: FormatChangeCallback, similar: boolean) => UnbindFormatChanged;
   getContent: () => AstNode | null;
   setContent: (node: AstNode) => void;
   insertContent: (node: AstNode) => void;
@@ -72,14 +79,21 @@ interface RtcAdaptor {
     extra: (undoManager: UndoManager, index: Index, callback1: () => void, callback2: () => void) => void;
   };
   formatter: {
+    match: Formatter['match'];
+    matchAll: Formatter['matchAll'];
+    matchNode: Formatter['matchNode'];
+    canApply: Formatter['canApply'];
+    closest: Formatter['closest'];
     apply: Formatter['apply'];
     remove: Formatter['remove'];
     toggle: Formatter['toggle'];
+    formatChanged: (registeredFormatListeners: Cell<RegisteredFormats>, formats: string, callback: FormatChangeCallback, similar?: boolean) => UnbindFormatChanged;
   };
   editor: {
     getContent: (args: GetContentArgs, format: ContentFormat) => Content;
     setContent: (content: Content, args: SetContentArgs) => Content;
     insertContent: (value: string, details) => void;
+    addVisual: (elm?: HTMLElement) => void;
   };
   selection: {
     getContent: (format: ContentFormat, args: GetSelectionContentArgs) => Content;
@@ -123,14 +137,21 @@ const makePlainAdaptor = (editor: Editor): RtcAdaptor => ({
       Operations.extra(editor, undoManager, index, callback1, callback2)
   },
   formatter: {
+    match: (name, vars?, node?) => MatchFormat.match(editor, name, vars, node),
+    matchAll: (names, vars) => MatchFormat.matchAll(editor, names, vars),
+    matchNode: (node, name, vars, similar) => MatchFormat.matchNode(editor, node, name, vars, similar),
+    canApply: (name) => MatchFormat.canApply(editor, name),
+    closest: (names) => MatchFormat.closest(editor, names),
     apply: (name, vars?, node?) => ApplyFormat.applyFormat(editor, name, vars, node),
     remove: (name, vars, node, similar?) => RemoveFormat.remove(editor, name, vars, node, similar),
-    toggle: (name, vars, node) => ToggleFormat.toggle(editor, name, vars, node)
+    toggle: (name, vars, node) => ToggleFormat.toggle(editor, name, vars, node),
+    formatChanged: (registeredFormatListeners, formats, callback, similar) => formatChangedInternal(editor, registeredFormatListeners, formats, callback, similar)
   },
   editor: {
     getContent: (args, format) => getContentInternal(editor, args, format),
     setContent: (content, args) => setContentInternal(editor, content, args),
-    insertContent: (value, details) => insertHtmlAtCaret(editor, value, details)
+    insertContent: (value, details) => insertHtmlAtCaret(editor, value, details),
+    addVisual: (elm) => addVisualInternal(editor, elm)
   },
   selection: {
     getContent: (format, args) => getSelectedContentInternal(editor, format, args)
@@ -168,9 +189,15 @@ const makeRtcAdaptor = (tinymceEditor: Editor, rtcEditor: RtcRuntimeApi): RtcAda
       extra: unsupported
     },
     formatter: {
+      match: (name, vars?, _node?) => rtcEditor.matchFormat(name, defaultVars(vars)),
+      matchAll: unsupported,
+      matchNode: unsupported,
+      canApply: (name) => rtcEditor.canApplyFormat(name),
+      closest: (names) => rtcEditor.closestFormat(names),
       apply: (name, vars, _node) => rtcEditor.applyFormat(name, defaultVars(vars)),
       remove: (name, vars, _node, _similar?) => rtcEditor.removeFormat(name, defaultVars(vars)),
-      toggle: (name, vars, _node) => rtcEditor.toggleFormat(name, defaultVars(vars))
+      toggle: (name, vars, _node) => rtcEditor.toggleFormat(name, defaultVars(vars)),
+      formatChanged: (_rfl, formats, callback, similar) => rtcEditor.formatChanged(formats, callback, similar)
     },
     editor: {
       getContent: (args, format) => {
@@ -199,7 +226,8 @@ const makeRtcAdaptor = (tinymceEditor: Editor, rtcEditor: RtcRuntimeApi): RtcAda
         );
         const fragment = isTreeNode(value) ? value : tinymceEditor.parser.parse(value, { ...contextArgs, insert: true });
         rtcEditor.insertContent(fragment);
-      }
+      },
+      addVisual: (_elm) => {}
     },
     selection: {
       getContent: (format, args) => {
@@ -305,6 +333,32 @@ export const extra = (
   getRtcInstanceWithError(editor).undoManager.extra(undoManager, index, callback1, callback2);
 };
 
+export const matchFormat = (
+  editor: Editor,
+  name: string,
+  vars?: Record<string, string>,
+  node?: Node): boolean => getRtcInstanceWithError(editor).formatter.match(name, vars, node);
+
+export const matchAllFormats = (
+  editor: Editor,
+  names: string[],
+  vars?: Record<string, string>): string[] => getRtcInstanceWithError(editor).formatter.matchAll(names, vars);
+
+export const matchNodeFormat = (
+  editor: Editor,
+  node: Node,
+  name: string,
+  vars?: Record<string, string>,
+  similar?: boolean): boolean => getRtcInstanceWithError(editor).formatter.matchNode(node, name, vars, similar);
+
+export const canApplyFormat = (
+  editor: Editor,
+  name: string): boolean => getRtcInstanceWithError(editor).formatter.canApply(name);
+
+export const closestFormat = (
+  editor: Editor,
+  names: string): string => getRtcInstanceWithError(editor).formatter.closest(names);
+
 export const applyFormat = (
   editor: Editor,
   name: string,
@@ -322,6 +376,9 @@ export const toggleFormat = (editor: Editor, name: string, vars: Record<string, 
   getRtcInstanceWithError(editor).formatter.toggle(name, vars, node);
 };
 
+export const formatChanged = (editor: Editor, registeredFormatListeners: Cell<RegisteredFormats>, formats: string, callback: FormatChangeCallback, similar: boolean = false): UnbindFormatChanged =>
+  getRtcInstanceWithError(editor).formatter.formatChanged(registeredFormatListeners, formats, callback, similar);
+
 export const getContent = (editor: Editor, args: GetContentArgs, format: ContentFormat): Content =>
   getRtcInstanceWithFallback(editor).editor.getContent(args, format);
 
@@ -333,3 +390,6 @@ export const insertContent = (editor: Editor, value: string, details): void =>
 
 export const getSelectedContent = (editor: Editor, format: ContentFormat, args: GetSelectionContentArgs): Content =>
   getRtcInstanceWithError(editor).selection.getContent(format, args);
+
+export const addVisual = (editor: Editor, elm: HTMLElement): void =>
+  getRtcInstanceWithError(editor).editor.addVisual(elm);
