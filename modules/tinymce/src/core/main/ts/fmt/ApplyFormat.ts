@@ -6,7 +6,7 @@
  */
 
 import { Obj } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
+import { PredicateExists, SugarElement } from '@ephox/sugar';
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
 import Tools from '../api/util/Tools';
@@ -33,7 +33,7 @@ const each = Tools.each;
 
 type ApplyFormatProp = keyof InlineFormat | keyof BlockFormat | keyof SelectorFormat;
 
-const hasFormatProperty = <K extends ApplyFormatProp>(format: ApplyFormat, prop: ApplyFormatProp): boolean =>
+const hasFormatProperty = (format: ApplyFormat, prop: ApplyFormatProp): boolean =>
   Obj.hasNonNullableKey(format as any, prop);
 
 const isElementNode = function (node: Node) {
@@ -56,7 +56,9 @@ const canFormatBR = (editor: Editor, format: ApplyFormat, node: Node, parentName
       details: {},
       summary: {}
     };
-    return Obj.hasNonNullableKey(validBRParentElements, parentName) && Empty.isEmpty(SugarElement.fromDom(node.parentNode), false);
+    // If a caret node is present, the format should apply to that, not the br (applicable to collapsed selections)
+    const hasCaretNodeSibling = PredicateExists.sibling(SugarElement.fromDom(node), (sibling) => isCaretNode(sibling.dom));
+    return Obj.hasNonNullableKey(validBRParentElements, parentName) && Empty.isEmpty(SugarElement.fromDom(node.parentNode), false) && !hasCaretNodeSibling;
   } else {
     return false;
   }
