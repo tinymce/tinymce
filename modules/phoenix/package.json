@@ -21,6 +21,7 @@
     "@ephox/boss": "^4.0.1",
     "@ephox/katamari": "^7.0.1",
     "@ephox/polaris": "^4.0.1",
+    "@ephox/sugar": "^7.0.1",
     "tslib": "^2.0.0"
   },
   "devDependencies": {

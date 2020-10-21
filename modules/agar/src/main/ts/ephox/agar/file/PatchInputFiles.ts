@@ -1,5 +1,7 @@
-import { Chain, GeneralSteps, Step } from '@ephox/agar';
 import { Cell, Optional } from '@ephox/katamari';
+import { Chain } from '../api/Chain';
+import * as GeneralSteps from '../api/GeneralSteps';
+import { Step } from '../api/Step';
 import { createFileList } from './FileList';
 
 interface Props {

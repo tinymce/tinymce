@@ -3,8 +3,7 @@
   "version": "5.0.1",
   "description": "Basic javascript object validation",
   "dependencies": {
-    "@ephox/katamari": "^7.0.1",
-    "@ephox/sand": "^4.0.1"
+    "@ephox/katamari": "^7.0.1"
   },
   "devDependencies": {
     "@ephox/katamari-assertions": "^2.0.1"

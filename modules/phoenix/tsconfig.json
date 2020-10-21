@@ -22,5 +22,6 @@
     { "path": "../katamari" },
     { "path": "../katamari-assertions" },
     { "path": "../polaris" },
+    { "path": "../sugar" }
   ]
 }

@@ -15,7 +15,7 @@
   "include": [
     "src/demo/ts",
     "src/main/ts",
-    "src/test/ts",
+    "src/test/ts"
   ],
   "references": [
     { "path": "../katamari" },
@@ -23,6 +23,6 @@
     { "path": "../robin" },
     { "path": "../sand" },
     { "path": "../snooker" },
-    { "path": "../sand" },
+    { "path": "../sugar" }
   ]
 }

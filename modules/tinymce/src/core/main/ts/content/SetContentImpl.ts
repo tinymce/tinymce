@@ -108,8 +108,11 @@ export const setContentInternal = (editor: Editor, content: Content, args: SetCo
   args.set = true;
   args.content = isTreeNode(content) ? '' : content;
 
-  if (!isTreeNode(content) && !args.no_events) {
+  if (!args.no_events) {
     editor.fire('BeforeSetContent', args);
+  }
+
+  if (!isTreeNode(content)) {
     content = args.content;
   }
 
