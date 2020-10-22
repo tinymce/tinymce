@@ -25,7 +25,7 @@ const skinSheetsTest = (extraSettings: Record<string, any>) => (success, failure
           Arr.exists(shadowRoot.dom.styleSheets, isSkin)
         );
         Assert.eq(
-          'There should only be a shadowdom specific skin stylesheet in the document',
+          'There should be a shadowdom specific skin stylesheet in the document',
           true,
           Arr.exists(document.styleSheets, isShadowDomSkin)
         );
