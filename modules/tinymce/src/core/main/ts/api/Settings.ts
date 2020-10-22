@@ -191,6 +191,12 @@ const getExternalPlugins = (editor: Editor) => editor.getParam('external_plugins
 
 const shouldBlockUnsupportedDrop = (editor: Editor) => editor.getParam('block_unsupported_drop', true, 'boolean');
 
+const isVisualAidsEnabled = (editor: Editor) => editor.getParam('visual', true, 'boolean');
+
+const getVisualAidsTableClass = (editor: Editor) => editor.getParam('visual_table_class', 'mce-item-table', 'string');
+
+const getVisualAidsAnchorClass = (editor: Editor) => editor.getParam('visual_anchor_class', 'mce-item-anchor', 'string');
+
 export {
   getIframeAttrs,
   getDocType,
@@ -251,5 +257,8 @@ export {
   hasContentCssCors,
   getPlugins,
   getExternalPlugins,
-  shouldBlockUnsupportedDrop
+  shouldBlockUnsupportedDrop,
+  isVisualAidsEnabled,
+  getVisualAidsTableClass,
+  getVisualAidsAnchorClass
 };

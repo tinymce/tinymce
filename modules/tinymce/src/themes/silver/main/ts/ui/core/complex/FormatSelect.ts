@@ -13,7 +13,7 @@ import { UiFactoryBackstage } from '../../../backstage/Backstage';
 import { updateMenuText } from '../../dropdown/CommonDropdown';
 import { createMenuItems, createSelectButton, SelectSpec } from './BespokeSelect';
 import { buildBasicSettingsDataset, Delimiter } from './SelectDatasets';
-import { findNearest, getCurrentSelectionParents } from './utils/FormatDetection';
+import { findNearest } from './utils/FormatDetection';
 import { onActionToggleFormat } from './utils/Utils';
 
 const defaultBlocks = (
@@ -28,8 +28,6 @@ const defaultBlocks = (
 );
 
 const getSpec = (editor: Editor): SelectSpec => {
-  const getMatchingValue = (nodeChangeEvent) => findNearest(editor, () => dataset.data, nodeChangeEvent);
-
   const isSelectedFor = (format: string) => () => editor.formatter.match(format);
 
   const getPreviewFor = (format: string) => () => {
@@ -40,20 +38,17 @@ const getSpec = (editor: Editor): SelectSpec => {
     });
   };
 
-  const updateSelectMenuText = (parents: Element[], comp: AlloyComponent) => {
-    const detectedFormat = getMatchingValue(parents);
+  const updateSelectMenuText = (comp: AlloyComponent) => {
+    const detectedFormat = findNearest(editor, () => dataset.data);
     const text = detectedFormat.fold(() => 'Paragraph', (fmt) => fmt.title);
     AlloyTriggers.emitWith(comp, updateMenuText, {
       text
     });
   };
 
-  const nodeChangeHandler = Optional.some((comp: AlloyComponent) => (e) => updateSelectMenuText(e.parents, comp));
+  const nodeChangeHandler = Optional.some((comp: AlloyComponent) => () => updateSelectMenuText(comp));
 
-  const setInitialValue = Optional.some((comp: AlloyComponent) => {
-    const parents = getCurrentSelectionParents(editor);
-    updateSelectMenuText(parents, comp);
-  });
+  const setInitialValue = Optional.some((comp: AlloyComponent) => updateSelectMenuText(comp));
 
   const dataset = buildBasicSettingsDataset(editor, 'block_formats', defaultBlocks, Delimiter.SemiColon);
 
