@@ -63,5 +63,6 @@ const receivingConfig = (): Behaviour.NamedConfiguredBehaviour<any, any> => Rece
 export {
   ReadOnlyDataSchema,
   setupReadonlyModeSwitch,
-  receivingConfig
+  receivingConfig,
+  broadcastReadonly
 };

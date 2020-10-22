@@ -41,7 +41,7 @@ export interface RenderInfo {
 export interface ModeRenderInfo {
   iframeContainer?: HTMLIFrameElement;
   editorContainer: HTMLElement;
-  api?: EditorUiApi;
+  api?: Partial<EditorUiApi>;
 }
 
 export interface UiChannels {

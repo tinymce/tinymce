@@ -128,12 +128,18 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
 
   ReadOnly.setupReadonlyModeSwitch(editor, uiComponents);
 
-  const api: EditorUiApi = {
+  const api: Partial<EditorUiApi> = {
     show: () => {
       ui.show();
     },
     hide: () => {
       ui.hide();
+    },
+    enable: () => {
+      ReadOnly.broadcastReadonly(uiComponents, false);
+    },
+    disable: () => {
+      ReadOnly.broadcastReadonly(uiComponents, true);
     }
   };
 

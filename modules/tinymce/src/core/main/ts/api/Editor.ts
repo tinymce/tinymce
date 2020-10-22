@@ -330,7 +330,9 @@ class Editor implements EditorObservable {
       registry: registry(),
       styleSheetLoader: undefined,
       show: Fun.noop,
-      hide: Fun.noop
+      hide: Fun.noop,
+      enable: Fun.noop,
+      disable: Fun.noop
     };
 
     const self = this;
