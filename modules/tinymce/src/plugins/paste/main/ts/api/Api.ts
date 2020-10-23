@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Clipboard } from '../api/Clipboard';
+import { Clipboard } from './Clipboard';
 
 const get = function (clipboard: Clipboard, quirks) {
   return {
@@ -14,6 +14,6 @@ const get = function (clipboard: Clipboard, quirks) {
   };
 };
 
-export default {
+export {
   get
 };

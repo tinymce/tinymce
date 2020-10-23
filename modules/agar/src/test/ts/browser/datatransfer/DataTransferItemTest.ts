@@ -1,20 +1,15 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { Logger, Pipeline, Step } from 'ephox/agar/api/Main';
-import { createFile } from 'ephox/agar/api/Files';
-import { Blob } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
-import {
-  createDataTransferItemFromFile,
-  createDataTransferItemFromString,
-  getData
-} from 'ephox/agar/datatransfer/DataTransferItem';
-import { createDataTransfer } from 'ephox/agar/datatransfer/DataTransfer';
 import { KAssert } from '@ephox/katamari-assertions';
+import { createFile } from 'ephox/agar/api/Files';
+import { Logger, Pipeline, Step } from 'ephox/agar/api/Main';
+import { createDataTransfer } from 'ephox/agar/datatransfer/DataTransfer';
+import { createDataTransferItemFromFile, createDataTransferItemFromString, getData } from 'ephox/agar/datatransfer/DataTransferItem';
 
 UnitTest.asynctest('DataTransferItemTest', (success, failure) => {
   Pipeline.async({}, [
     Logger.t('Create transfer item from file', Step.sync(() => {
-      const fileItem = createDataTransferItemFromFile(createDataTransfer(), createFile('a.txt', 1234, new Blob(['123'], { type: 'text/plain' })));
+      const fileItem = createDataTransferItemFromFile(createDataTransfer(), createFile('a.txt', 1234, new Blob([ '123' ], { type: 'text/plain' })));
 
       Assert.eq('Should be the expected kind', 'file', fileItem.kind);
       Assert.eq('Should be a noop', Fun.noop, fileItem.getAsString);

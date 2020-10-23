@@ -5,10 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Types } from '@ephox/bridge';
 import { Arr, Cell, Singleton } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
+import { Dialog } from 'tinymce/core/api/ui/Ui';
 import Tools from 'tinymce/core/api/util/Tools';
 
 import * as Actions from '../core/Actions';
@@ -18,39 +18,41 @@ export interface DialogData {
   replacetext: string;
   matchcase: boolean;
   wholewords: boolean;
+  inselection: boolean;
 }
 
 const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchState>) {
-  const dialogApi = Singleton.value<Types.Dialog.DialogInstanceApi<DialogData>>();
+  const dialogApi = Singleton.value<Dialog.DialogInstanceApi<DialogData>>();
   editor.undoManager.add();
 
   const selectedText = Tools.trim(editor.selection.getContent({ format: 'text' }));
 
-  function updateButtonStates(api: Types.Dialog.DialogInstanceApi<DialogData>) {
+  function updateButtonStates(api: Dialog.DialogInstanceApi<DialogData>) {
     const updateNext = Actions.hasNext(editor, currentSearchState) ? api.enable : api.disable;
     updateNext('next');
     const updatePrev = Actions.hasPrev(editor, currentSearchState) ? api.enable : api.disable;
     updatePrev('prev');
   }
 
-  const updateSearchState = (api: Types.Dialog.DialogInstanceApi<DialogData>) => {
+  const updateSearchState = (api: Dialog.DialogInstanceApi<DialogData>) => {
     const data = api.getData();
     const current = currentSearchState.get();
 
     currentSearchState.set({
       ...current,
       matchCase: data.matchcase,
-      wholeWord: data.wholewords
+      wholeWord: data.wholewords,
+      inSelection: data.inselection
     });
   };
 
-  const disableAll = function (api: Types.Dialog.DialogInstanceApi<DialogData>, disable: boolean) {
+  const disableAll = function (api: Dialog.DialogInstanceApi<DialogData>, disable: boolean) {
     const buttons = [ 'replace', 'replaceall', 'prev', 'next' ];
     const toggle = disable ? api.disable : api.enable;
     Arr.each(buttons, toggle);
   };
 
-  function notFoundAlert(api: Types.Dialog.DialogInstanceApi<DialogData>) {
+  function notFoundAlert(api: Dialog.DialogInstanceApi<DialogData>) {
     editor.windowManager.alert('Could not find the specified string.', function () {
       api.focus('findtext');
     });
@@ -58,13 +60,13 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
 
   // Temporarily workaround for iOS/iPadOS dialog placement to hide the keyboard
   // TODO: Remove in 5.2 once iOS fixed positioning is fixed. See TINY-4441
-  const focusButtonIfRequired = (api: Types.Dialog.DialogInstanceApi<DialogData>, name: string) => {
+  const focusButtonIfRequired = (api: Dialog.DialogInstanceApi<DialogData>, name: string) => {
     if (Env.browser.isSafari() && Env.deviceType.isTouch() && (name === 'find' || name === 'replace' || name === 'replaceall')) {
       api.focus(name);
     }
   };
 
-  const reset = (api: Types.Dialog.DialogInstanceApi<DialogData>) => {
+  const reset = (api: Dialog.DialogInstanceApi<DialogData>) => {
     // Clean up the markers if required
     Actions.done(editor, currentSearchState, false);
 
@@ -73,7 +75,7 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
     updateButtonStates(api);
   };
 
-  const doFind = (api: Types.Dialog.DialogInstanceApi<DialogData>) => {
+  const doFind = (api: Dialog.DialogInstanceApi<DialogData>) => {
     const data = api.getData();
     const last = currentSearchState.get();
 
@@ -87,7 +89,7 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
       Actions.next(editor, currentSearchState);
     } else {
       // Find new matches
-      const count = Actions.find(editor, currentSearchState, data.findtext, data.matchcase, data.wholewords);
+      const count = Actions.find(editor, currentSearchState, data.findtext, data.matchcase, data.wholewords, data.inselection);
       if (count <= 0) {
         notFoundAlert(api);
       }
@@ -103,10 +105,11 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
     findtext: selectedText,
     replacetext: '',
     wholewords: initialState.wholeWord,
-    matchcase: initialState.matchCase
+    matchcase: initialState.matchCase,
+    inselection: initialState.inSelection
   };
 
-  const spec: Types.Dialog.DialogApi<DialogData> = {
+  const spec: Dialog.DialogSpec<DialogData> = {
     title: 'Find and Replace',
     size: 'normal',
     body: {
@@ -145,7 +148,7 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
           name: 'replacetext',
           placeholder: 'Replace with',
           inputMode: 'search'
-        },
+        }
       ]
     },
     buttons: [
@@ -164,6 +167,11 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
             type: 'togglemenuitem',
             name: 'wholewords',
             text: 'Find whole words only'
+          },
+          {
+            type: 'togglemenuitem',
+            name: 'inselection',
+            text: 'Find in selection'
           }
         ]
       },
@@ -177,13 +185,13 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
         type: 'custom',
         name: 'replace',
         text: 'Replace',
-        disabled: true,
+        disabled: true
       },
       {
         type: 'custom',
         name: 'replaceall',
         text: 'Replace All',
-        disabled: true,
+        disabled: true
       }
     ],
     initialData,
@@ -219,6 +227,7 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
           break;
         case 'matchcase':
         case 'wholewords':
+        case 'inselection':
           updateSearchState(api);
           reset(api);
           break;
@@ -239,9 +248,9 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
     }
   };
 
-  dialogApi.set(editor.windowManager.open(spec, {inline: 'toolbar'}));
+  dialogApi.set(editor.windowManager.open(spec, { inline: 'toolbar' }));
 };
 
-export default {
+export {
   open
 };

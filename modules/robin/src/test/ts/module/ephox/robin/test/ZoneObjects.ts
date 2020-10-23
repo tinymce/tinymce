@@ -1,9 +1,9 @@
 import { Logger } from '@ephox/agar';
+import { Assert } from '@ephox/bedrock-client';
 import { Gene, TestUniverse } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
 import { LanguageZones } from 'ephox/robin/zone/LanguageZones';
 import { Zone } from 'ephox/robin/zone/Zones';
-import { Assert } from '@ephox/bedrock-client';
 
 export interface RawZone {
   lang: string;
@@ -13,12 +13,12 @@ export interface RawZone {
 
 const rawOne = function (universe: TestUniverse, zone: Zone<Gene>): RawZone {
   return {
-    lang: zone.lang(),
-    elements: Arr.map(zone.elements(), function (elem) {
+    lang: zone.lang,
+    elements: Arr.map(zone.elements, function (elem) {
       return elem.id;
     }),
-    words: Arr.map(zone.words(), function (w) {
-      return w.word();
+    words: Arr.map(zone.words, function (w) {
+      return w.word;
     })
   };
 };
@@ -36,7 +36,7 @@ const assertZones = function (label: string, universe: TestUniverse, expected: R
 
 const assertProps = function (label: string, universe: TestUniverse, zones: Zone<Gene>[]) {
   Arr.each(zones, function (zone) {
-    const elements = zone.elements();
+    const elements = zone.elements;
     if (elements.length === 0) {
       return;
     }
@@ -47,10 +47,10 @@ const assertProps = function (label: string, universe: TestUniverse, zones: Zone
       '\nProperty test for zone: ' + JSON.stringify(rawOne(universe, zone), null, 2),
       function () {
         // Check languages all match the zone language
-        Arr.each(elements, function (x, i) {
+        Arr.each(elements, function (x) {
           Assert.eq(
             'Checking everything in ' + label + ' has same language. Item: ' + x.id,
-            LanguageZones.calculate(universe, x).getOr('none'), zone.lang()
+            LanguageZones.calculate(universe, x).getOr('none'), zone.lang
           );
           Assert.eq(
             'Check that everything in the ' + label + ' is a text node',
@@ -61,7 +61,7 @@ const assertProps = function (label: string, universe: TestUniverse, zones: Zone
 
         // Check block tags match across zones
         const blockParent = universe.up().predicate(first, universe.property().isBoundary).getOrDie('No block parent tag found');
-        Arr.each(elements, function (x, i) {
+        Arr.each(elements, function (x) {
           Assert.eq(
             'All block ancestor tags should be the same as the original',
             blockParent,

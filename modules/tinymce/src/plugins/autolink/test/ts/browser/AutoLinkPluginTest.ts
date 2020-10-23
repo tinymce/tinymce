@@ -1,11 +1,12 @@
-import { Pipeline, Log } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
+import { Log, Pipeline } from '@ephox/agar';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
+import fc from 'fast-check';
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import Plugin from 'tinymce/plugins/autolink/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
-import KeyUtils from '../module/test/KeyUtils';
+import * as KeyUtils from '../module/test/KeyUtils';
 
 UnitTest.asynctest('browser.tinymce.plugins.autolink.AutoLinkPluginTest', (success, failure) => {
   const suite = LegacyUnit.createSuite<Editor>();
@@ -13,90 +14,101 @@ UnitTest.asynctest('browser.tinymce.plugins.autolink.AutoLinkPluginTest', (succe
   Theme();
   Plugin();
 
-  const typeUrl = function (editor: Editor, url: string) {
+  const typeUrl = (editor: Editor, url: string): string => {
     editor.setContent('<p>' + url + '</p>');
     LegacyUnit.setSelection(editor, 'p', url.length);
     KeyUtils.type(editor, ' ');
     return editor.getContent();
   };
 
-  const typeAnEclipsedURL = function (editor, url) {
-    url = '(' + url;
-    editor.setContent('<p>' + url + '</p>');
-    LegacyUnit.setSelection(editor, 'p', url.length);
+  const typeAnEclipsedURL = (editor: Editor, url: string, expectedUrl?: string, withDotAtTheEnd?: boolean): void => {
+    const dot = withDotAtTheEnd ? '.' : '';
+    const modifiedurl = '(' + url + dot;
+    editor.setContent('<p>' + modifiedurl + '</p>');
+    LegacyUnit.setSelection(editor, 'p', modifiedurl.length);
     KeyUtils.type(editor, ')');
-    return editor.getContent();
+    Assert.eq('Create a link of an eclipsed url', `<p>(<a href="${expectedUrl || url}">${url + dot}</a>)</p>`, editor.getContent());
   };
 
-  const typeNewlineURL = function (editor, url) {
-    editor.setContent('<p>' + url + '</p>');
+  const typeNewlineURL = (editor: Editor, url: string, expectedUrl?: string, withDotAtTheEnd?: boolean): void => {
+    const dot = withDotAtTheEnd ? '.' : '';
+    editor.setContent('<p>' + url + dot + '</p>');
     LegacyUnit.setSelection(editor, 'p', url.length);
     KeyUtils.type(editor, '\n');
-    return editor.getContent();
+    Assert.eq('Create link with newline', `<p><a href="${expectedUrl || url}">${url}</a></p><p>${withDotAtTheEnd ? '.' : '&nbsp;'}</p>`, editor.getContent());
   };
 
-  suite.test('TestCase-TBA: AutoLink: Urls ended with space', function (editor) {
-    editor.focus();
-    LegacyUnit.equal(typeUrl(editor, 'http://www.domain.com'), '<p><a href="http://www.domain.com">http://www.domain.com</a>&nbsp;</p>');
-    LegacyUnit.equal(typeUrl(editor, 'https://www.domain.com'), '<p><a href="https://www.domain.com">https://www.domain.com</a>&nbsp;</p>');
-    LegacyUnit.equal(typeUrl(editor, 'ssh://www.domain.com'), '<p><a href="ssh://www.domain.com">ssh://www.domain.com</a>&nbsp;</p>');
-    LegacyUnit.equal(typeUrl(editor, 'ftp://www.domain.com'), '<p><a href="ftp://www.domain.com">ftp://www.domain.com</a>&nbsp;</p>');
-    LegacyUnit.equal(typeUrl(editor, 'www.domain.com'), '<p><a href="http://www.domain.com">www.domain.com</a>&nbsp;</p>');
-    LegacyUnit.equal(typeUrl(editor, 'www.domain.com.'), '<p><a href="http://www.domain.com">www.domain.com</a>.&nbsp;</p>');
-    LegacyUnit.equal(typeUrl(editor, 'user@domain.com'), '<p><a href="mailto:user@domain.com">user@domain.com</a>&nbsp;</p>');
-    LegacyUnit.equal(typeUrl(editor, 'mailto:user@domain.com'), '<p><a href="mailto:user@domain.com">mailto:user@domain.com</a>&nbsp;</p>');
-    LegacyUnit.equal(typeUrl(editor, 'first-last@domain.com'), '<p><a href="mailto:first-last@domain.com">first-last@domain.com</a>&nbsp;</p>');
+  const assertNoLink = (editor: Editor, input: string, text?: string): void => {
+    Assert.eq('Should not convert to link', `<p>${text || input}&nbsp;</p>`, typeUrl(editor, input));
+  };
+
+  const assertIsLink = (editor: Editor, input: string, link: string, withDotAtTheEnd?: boolean, text?: string): void => {
+    const dot = withDotAtTheEnd ? '.' : '';
+    Assert.eq('Should be convert to link', `<p><a href="${link}">${text || input}</a>${dot}&nbsp;</p>`, typeUrl(editor, (input + dot)));
+  };
+
+  const test = (label: string, runTest: (editor: Editor) => void): void => {
+    suite.test(label, (editor) => {
+      editor.focus();
+      runTest(editor);
+    });
+  };
+
+  test('TestCase-TBA: AutoLink: Correct urls ended with space', (editor) => {
+    assertIsLink(editor, 'http://www.domain.com', 'http://www.domain.com');
+    assertIsLink(editor, 'https://www.domain.com', 'https://www.domain.com');
+    assertIsLink(editor, 'ssh://www.domain.com', 'ssh://www.domain.com');
+    assertIsLink(editor, 'ftp://www.domain.com', 'ftp://www.domain.com');
+    assertIsLink(editor, 'www.domain.com', 'http://www.domain.com');
+    assertIsLink(editor, 'www.domain.com', 'http://www.domain.com', true);
+    assertIsLink(editor, 'user@domain.com', 'mailto:user@domain.com');
+    assertIsLink(editor, 'mailto:user@domain.com', 'mailto:user@domain.com');
+    assertIsLink(editor, 'first-last@domain.com', 'mailto:first-last@domain.com');
   });
 
-  suite.test('TestCase-TBA: AutoLink: Urls ended with )', function (editor) {
-    LegacyUnit.equal(
-      typeAnEclipsedURL(editor, 'http://www.domain.com'),
-      '<p>(<a href="http://www.domain.com">http://www.domain.com</a>)</p>'
-    );
-    LegacyUnit.equal(
-      typeAnEclipsedURL(editor, 'https://www.domain.com'),
-      '<p>(<a href="https://www.domain.com">https://www.domain.com</a>)</p>'
-    );
-    LegacyUnit.equal(
-      typeAnEclipsedURL(editor, 'ssh://www.domain.com'),
-      '<p>(<a href="ssh://www.domain.com">ssh://www.domain.com</a>)</p>'
-    );
-    LegacyUnit.equal(
-      typeAnEclipsedURL(editor, 'ftp://www.domain.com'),
-      '<p>(<a href="ftp://www.domain.com">ftp://www.domain.com</a>)</p>'
-    );
-    LegacyUnit.equal(typeAnEclipsedURL(editor, 'www.domain.com'), '<p>(<a href="http://www.domain.com">www.domain.com</a>)</p>');
-    LegacyUnit.equal(typeAnEclipsedURL(editor, 'www.domain.com.'), '<p>(<a href="http://www.domain.com">www.domain.com</a>.)</p>');
+  test('TINY-4773: AutoLink: Unexpected urls ended with space', (editor) => {
+    assertIsLink(editor, 'first-last@domain', 'mailto:first-last@domain'); // No .com or similar needed.
+    assertIsLink(editor, 'first-last@()', 'mailto:first-last@()'); // Anything goes after the @.
+    assertIsLink(editor, 'first-last@¶¶KJ', 'mailto:first-last@&para;&para;KJ', false, 'first-last@&para;&para;KJ'); // Anything goes after the @
   });
 
-  suite.test('TestCase-TBA: AutoLink: Urls ended with new line', function (editor) {
-    LegacyUnit.equal(
-      typeNewlineURL(editor, 'http://www.domain.com'),
-      '<p><a href="http://www.domain.com">http://www.domain.com</a></p><p>&nbsp;</p>'
-    );
-    LegacyUnit.equal(
-      typeNewlineURL(editor, 'https://www.domain.com'),
-      '<p><a href="https://www.domain.com">https://www.domain.com</a></p><p>&nbsp;</p>'
-    );
-    LegacyUnit.equal(
-      typeNewlineURL(editor, 'ssh://www.domain.com'),
-      '<p><a href="ssh://www.domain.com">ssh://www.domain.com</a></p><p>&nbsp;</p>'
-    );
-    LegacyUnit.equal(
-      typeNewlineURL(editor, 'ftp://www.domain.com'),
-      '<p><a href="ftp://www.domain.com">ftp://www.domain.com</a></p><p>&nbsp;</p>'
-    );
-    LegacyUnit.equal(
-      typeNewlineURL(editor, 'www.domain.com'),
-      '<p><a href="http://www.domain.com">www.domain.com</a></p><p>&nbsp;</p>'
-    );
-    LegacyUnit.equal(
-      typeNewlineURL(editor, 'www.domain.com.'),
-      '<p><a href="http://www.domain.com">www.domain.com</a>.</p><p>&nbsp;</p>'
-    );
+  test('TINY-4773: AutoLink: text which should not work', (editor) => {
+    assertNoLink(editor, 'first-last@@domain@.@com'); // We only accept one @
+    assertNoLink(editor, 'first-last@¶¶KJ@', 'first-last@&para;&para;KJ@'); // Anything goes after the @
+    assertNoLink(editor, 'first-last@'); // We only accept one @
   });
 
-  suite.test('TestCase-TBA: AutoLink: Url inside blank formatting wrapper', function (editor) {
+  test('TINY-4773: AutoLink: multiple @ characters', (editor) => {
+    fc.assert(fc.property(fc.hexaString(0, 30), fc.hexaString(0, 30), fc.hexaString(0, 30), (s1, s2, s3) => {
+      assertNoLink(editor, `${s1}@@${s2}@.@${s3}`, `${s1}@@${s2}@.@${s3}`);
+    }));
+  });
+
+  test('TINY-4773: AutoLink: ending in @ character', (editor) => {
+    fc.assert(fc.property(fc.hexaString(0, 100), (s1) => {
+      assertNoLink(editor, `${s1}@`, `${s1}@`);
+    }));
+  });
+
+  test('TestCase-TBA: AutoLink: Urls ended with )', (editor) => {
+    typeAnEclipsedURL(editor, 'http://www.domain.com');
+    typeAnEclipsedURL(editor, 'https://www.domain.com');
+    typeAnEclipsedURL(editor, 'ssh://www.domain.com');
+    typeAnEclipsedURL(editor, 'ftp://www.domain.com');
+    typeAnEclipsedURL(editor, 'www.domain.com', 'http://www.domain.com');
+    typeAnEclipsedURL(editor, 'www.domain.com', 'http://www.domain.com');
+  });
+
+  test('TestCase-TBA: AutoLink: Urls ended with new line', (editor) => {
+    typeNewlineURL(editor, 'http://www.domain.com');
+    typeNewlineURL(editor, 'https://www.domain.com');
+    typeNewlineURL(editor, 'ssh://www.domain.com');
+    typeNewlineURL(editor, 'ftp://www.domain.com');
+    typeNewlineURL(editor, 'www.domain.com', 'http://www.domain.com');
+    typeNewlineURL(editor, 'www.domain.com', 'http://www.domain.com', true);
+  });
+
+  test('TestCase-TBA: AutoLink: Url inside blank formatting wrapper', (editor) => {
     editor.focus();
     editor.setContent('<p><br></p>');
     editor.selection.setCursorLocation(editor.getBody().firstChild, 0);
@@ -109,7 +121,7 @@ UnitTest.asynctest('browser.tinymce.plugins.autolink.AutoLinkPluginTest', (succe
     );
   });
 
-  suite.test('TestCase-TBA: AutoLink: default_link_target=\'_self\'', function (editor) {
+  suite.test(`TestCase-TBA: AutoLink: default_link_target='_self'`, (editor) => {
     editor.settings.default_link_target = '_self';
     LegacyUnit.equal(
       typeUrl(editor, 'http://www.domain.com'),
@@ -118,30 +130,28 @@ UnitTest.asynctest('browser.tinymce.plugins.autolink.AutoLinkPluginTest', (succe
     delete editor.settings.default_link_target;
   });
 
-  suite.test('TestCase-TBA: AutoLink: link_default_protocol=https', function (editor) {
+  test('TestCase-TBA: AutoLink: link_default_protocol=https', (editor) => {
     editor.settings.link_default_protocol = 'https';
-    editor.focus();
-    LegacyUnit.equal(typeUrl(editor, 'http://www.domain.com'), '<p><a href="http://www.domain.com">http://www.domain.com</a>&nbsp;</p>');
-    LegacyUnit.equal(typeUrl(editor, 'https://www.domain.com'), '<p><a href="https://www.domain.com">https://www.domain.com</a>&nbsp;</p>');
-    LegacyUnit.equal(typeUrl(editor, 'ssh://www.domain.com'), '<p><a href="ssh://www.domain.com">ssh://www.domain.com</a>&nbsp;</p>');
-    LegacyUnit.equal(typeUrl(editor, 'ftp://www.domain.com'), '<p><a href="ftp://www.domain.com">ftp://www.domain.com</a>&nbsp;</p>');
-    LegacyUnit.equal(typeUrl(editor, 'www.domain.com'), '<p><a href="https://www.domain.com">www.domain.com</a>&nbsp;</p>');
-    LegacyUnit.equal(typeUrl(editor, 'www.domain.com.'), '<p><a href="https://www.domain.com">www.domain.com</a>.&nbsp;</p>');
-    LegacyUnit.equal(typeUrl(editor, 'user@domain.com'), '<p><a href="mailto:user@domain.com">user@domain.com</a>&nbsp;</p>');
-    LegacyUnit.equal(typeUrl(editor, 'mailto:user@domain.com'), '<p><a href="mailto:user@domain.com">mailto:user@domain.com</a>&nbsp;</p>');
-    LegacyUnit.equal(typeUrl(editor, 'first-last@domain.com'), '<p><a href="mailto:first-last@domain.com">first-last@domain.com</a>&nbsp;</p>');
+    assertIsLink(editor, 'http://www.domain.com', 'http://www.domain.com');
+    assertIsLink(editor, 'https://www.domain.com', 'https://www.domain.com');
+    assertIsLink(editor, 'ssh://www.domain.com', 'ssh://www.domain.com');
+    assertIsLink(editor, 'ftp://www.domain.com', 'ftp://www.domain.com');
+    assertIsLink(editor, 'www.domain.com', 'https://www.domain.com');
+    assertIsLink(editor, 'www.domain.com', 'https://www.domain.com', true);
+    assertIsLink(editor, 'user@domain.com', 'mailto:user@domain.com');
+    assertIsLink(editor, 'mailto:user@domain.com', 'mailto:user@domain.com');
+    assertIsLink(editor, 'first-last@domain.com', 'mailto:first-last@domain.com');
     delete editor.settings.link_default_protocol;
   });
 
-  suite.test('TestCase-TBA: AutoLink: link_default_protocol=http', function (editor) {
+  test('TestCase-TBA: AutoLink: link_default_protocol=http', (editor) => {
     editor.settings.link_default_protocol = 'http';
-    editor.focus();
-    LegacyUnit.equal(typeUrl(editor, 'www.domain.com'), '<p><a href="http://www.domain.com">www.domain.com</a>&nbsp;</p>');
-    LegacyUnit.equal(typeUrl(editor, 'www.domain.com.'), '<p><a href="http://www.domain.com">www.domain.com</a>.&nbsp;</p>');
+    assertIsLink(editor, 'www.domain.com', 'http://www.domain.com');
+    assertIsLink(editor, 'www.domain.com', 'http://www.domain.com', true);
     delete editor.settings.link_default_protocol;
   });
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const steps = Env.browser.isIE() || Env.browser.isEdge() ? [] : suite.toSteps(editor);
     Pipeline.async({}, Log.steps('TBA', 'AutoLink: Test autolink url inputs', steps), onSuccess, onFailure);
   }, {

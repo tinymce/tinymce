@@ -5,26 +5,27 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLElement } from '@ephox/dom-globals';
-import { UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
-import { Behaviour, GuiFactory, ItemTypes, Tooltipping, MaxHeight } from '@ephox/alloy';
-import { Obj, Option } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
-import { InlineContent, Types } from '@ephox/bridge';
-import ItemResponse from 'tinymce/themes/silver/ui/menus/item/ItemResponse';
-import { renderItemStructure } from 'tinymce/themes/silver/ui/menus/item/structure/ItemStructure';
-import { buildData, renderCommonItem } from 'tinymce/themes/silver/ui/menus/item/build/CommonMenuItem';
+import { Behaviour, GuiFactory, ItemTypes, MaxHeight, Tooltipping } from '@ephox/alloy';
+import { InlineContent, Toolbar } from '@ephox/bridge';
+import { Obj, Optional } from '@ephox/katamari';
+import { SugarElement } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import I18n from 'tinymce/core/api/util/I18n';
+import { UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
+import { buildData, renderCommonItem } from 'tinymce/themes/silver/ui/menus/item/build/CommonMenuItem';
+import ItemResponse from 'tinymce/themes/silver/ui/menus/item/ItemResponse';
+import { renderItemStructure } from 'tinymce/themes/silver/ui/menus/item/structure/ItemStructure';
 
 type ItemValueHandler = (itemValue: string, itemMeta: Record<string, any>) => void;
 type TooltipWorker = (success: (elem: HTMLElement) => void) => void;
 
 // Use meta to pass through special information about the tooltip
 // (yes this is horrible but it is not yet public API)
-const tooltipBehaviour = (meta: Record<string, any>, sharedBackstage: UiFactoryBackstageShared): Behaviour.NamedConfiguredBehaviour<Behaviour.BehaviourConfigSpec, Behaviour.BehaviourConfigDetail>[] => {
-  return Obj.get(meta, 'tooltipWorker').map((tooltipWorker: TooltipWorker) => {
-    return [
+const tooltipBehaviour = (
+  meta: Record<string, any>, sharedBackstage: UiFactoryBackstageShared
+): Behaviour.NamedConfiguredBehaviour<Behaviour.BehaviourConfigSpec, Behaviour.BehaviourConfigDetail>[] =>
+  Obj.get(meta, 'tooltipWorker').
+    map((tooltipWorker: TooltipWorker) => [
       Tooltipping.config({
         lazySink: sharedBackstage.getSink,
         tooltipDom: {
@@ -45,14 +46,13 @@ const tooltipBehaviour = (meta: Record<string, any>, sharedBackstage: UiFactoryB
         onShow: (component, _tooltip) => {
           tooltipWorker((elm) => {
             Tooltipping.setComponents(component, [
-              GuiFactory.external({element: Element.fromDom(elm) })
+              GuiFactory.external({ element: SugarElement.fromDom(elm) })
             ]);
           });
         }
       })
-    ];
-  }).getOr([]);
-};
+    ]).
+    getOr([]);
 
 const escapeRegExp = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 const encodeText = (text: string) => DOMUtils.DOM.encode(text);
@@ -67,16 +67,25 @@ const replaceText = (text: string, matchText: string): string => {
   }
 };
 
-const renderAutocompleteItem = (spec: InlineContent.AutocompleterItem, matchText: string, useText: boolean, presets: Types.PresetItemTypes, onItemValueHandler: ItemValueHandler, itemResponse: ItemResponse, sharedBackstage: UiFactoryBackstageShared, renderIcons: boolean = true): ItemTypes.ItemSpec => {
+const renderAutocompleteItem = (
+  spec: InlineContent.AutocompleterItem,
+  matchText: string,
+  useText: boolean,
+  presets: Toolbar.PresetItemTypes,
+  onItemValueHandler: ItemValueHandler,
+  itemResponse: ItemResponse,
+  sharedBackstage: UiFactoryBackstageShared,
+  renderIcons: boolean = true
+): ItemTypes.ItemSpec => {
   const structure = renderItemStructure({
     presets,
-    textContent: Option.none(),
-    htmlContent: useText ? spec.text.map((text) => replaceText(text, matchText)) : Option.none(),
+    textContent: Optional.none(),
+    htmlContent: useText ? spec.text.map((text) => replaceText(text, matchText)) : Optional.none(),
     ariaLabel: spec.text,
     iconContent: spec.icon,
-    shortcutContent: Option.none(),
-    checkMark: Option.none(),
-    caret: Option.none(),
+    shortcutContent: Optional.none(),
+    checkMark: Optional.none(),
+    caret: Optional.none(),
     value: spec.value
   }, sharedBackstage.providers, renderIcons, spec.icon);
 
@@ -87,8 +96,8 @@ const renderAutocompleteItem = (spec: InlineContent.AutocompleterItem, matchText
     onAction: (_api) => onItemValueHandler(spec.value, spec.meta),
     onSetup: () => () => { },
     triggersSubmenu: false,
-    itemBehaviours: tooltipBehaviour(spec.meta, sharedBackstage),
-  }, structure, itemResponse);
+    itemBehaviours: tooltipBehaviour(spec.meta, sharedBackstage)
+  }, structure, itemResponse, sharedBackstage.providers);
 };
 
 export { renderAutocompleteItem };

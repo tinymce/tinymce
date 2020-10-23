@@ -1,4 +1,4 @@
-import { Pipeline, Log } from '@ephox/agar';
+import { Log, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 
@@ -13,15 +13,13 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ClipboardTest', (success, fail
   SilverTheme();
   Plugin();
 
-  const cleanTableHtml = (html: string) => {
-    return html.replace(/<p>(&nbsp;|<br[^>]+>)<\/p>$/, '');
-  };
+  const cleanTableHtml = (html: string) => html.replace(/<p>(&nbsp;|<br[^>]+>)<\/p>$/, '');
 
   const selectOne = (editor: Editor, start) => {
     start = editor.$(start)[0];
 
-    editor.fire('mousedown', { target: start, button: 0 });
-    editor.fire('mouseup', { target: start, button: 0 });
+    editor.fire('mousedown', { target: start, button: 0 } as MouseEvent);
+    editor.fire('mouseup', { target: start, button: 0 } as MouseEvent);
 
     LegacyUnit.setSelection(editor, start, 0);
   };
@@ -375,9 +373,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ClipboardTest', (success, fail
   });
 
   suite.test('TestCase-TBA: Table: row clipboard api', (editor) => {
-    let clipboardRows;
-
-    const createRow = (cellContents) => {
+    const createRow = (cellContents: string[]) => {
       const tr = editor.dom.create('tr');
 
       Tools.each(cellContents, (html) => {
@@ -397,14 +393,14 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ClipboardTest', (success, fail
     LegacyUnit.setSelection(editor, 'tr:nth-child(1) td', 0);
     editor.execCommand('mceTableCopyRow');
 
-    clipboardRows = editor.plugins.table.getClipboardRows();
+    const clipboardRows = editor.plugins.table.getClipboardRows();
 
     LegacyUnit.equal(clipboardRows.length, 1);
     LegacyUnit.equal(clipboardRows[0].tagName, 'TR');
 
     editor.plugins.table.setClipboardRows(clipboardRows.concat([
-      createRow(['a', 'b']),
-      createRow(['c', 'd'])
+      createRow([ 'a', 'b' ]),
+      createRow([ 'c', 'd' ])
     ]));
 
     LegacyUnit.setSelection(editor, 'tr:nth-child(2) td', 0);
@@ -434,6 +430,6 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ClipboardTest', (success, fail
       '*': 'width,height,vertical-align,text-align,float,border-color,background-color,border,padding,border-spacing,border-collapse'
     },
     theme: 'silver',
-    base_url: '/project/tinymce/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

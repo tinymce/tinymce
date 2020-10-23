@@ -11,6 +11,6 @@ const register = (editor: Editor, dialogOpener: () => void) => {
   editor.addCommand('mceHelp', dialogOpener);
 };
 
-export default {
+export {
   register
 };

@@ -1,7 +1,7 @@
 import { Assertions, Log, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
-import { Class, Element, SelectorFilter } from '@ephox/sugar';
+import { Class, SelectorFilter, SugarElement } from '@ephox/sugar';
 
 import SearchreplacePlugin from 'tinymce/plugins/searchreplace/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
@@ -27,7 +27,7 @@ UnitTest.asynctest('browser.tinymce.plugins.searchreplace.SearchReplaceDialogCyc
     const sSelectPreference = (name: string) => Utils.sSelectPreference(tinyUi, name);
 
     const sAssertMatchFound = (index: number) => Step.sync(() => {
-      const matches = SelectorFilter.descendants(Element.fromDom(editor.getBody()), '.mce-match-marker');
+      const matches = SelectorFilter.descendants(SugarElement.fromDom(editor.getBody()), '.mce-match-marker');
       const elem = matches[index];
       Assertions.assertEq(`Check match ${index} is marked as selected`, true, Class.has(elem, 'mce-match-marker-selected'));
     });
@@ -35,7 +35,7 @@ UnitTest.asynctest('browser.tinymce.plugins.searchreplace.SearchReplaceDialogCyc
     const sTestCycling = (sCycle: Step<any, any>, dir: Direction) => [
       Log.stepsAsStep('TINY-4506', 'SearchReplace: Test cycling through results without any preferences', [
         tinyApis.sSetContent('<p>fish fish fish</p>'),
-        tinyApis.sSetSelection([0, 0], 0, [0, 0], 4),
+        tinyApis.sSetSelection([ 0, 0 ], 0, [ 0, 0 ], 4),
         Utils.sOpenDialog(tinyUi),
         Utils.sAssertFieldValue(tinyUi, 'input.tox-textfield[placeholder="Find"]', 'fish'),
         sFind,
@@ -50,7 +50,7 @@ UnitTest.asynctest('browser.tinymce.plugins.searchreplace.SearchReplaceDialogCyc
       ]),
       Log.stepsAsStep('TINY-4506', 'SearchReplace: Test cycling through results with matchcase enabled', [
         tinyApis.sSetContent('<p>fish Fish fish Fish</p>'),
-        tinyApis.sSetSelection([0, 0], 5, [0, 0], 9),
+        tinyApis.sSetSelection([ 0, 0 ], 5, [ 0, 0 ], 9),
         Utils.sOpenDialog(tinyUi),
         Utils.sAssertFieldValue(tinyUi, 'input.tox-textfield[placeholder="Find"]', 'Fish'),
         sSelectPreference('Match case'),
@@ -65,7 +65,7 @@ UnitTest.asynctest('browser.tinymce.plugins.searchreplace.SearchReplaceDialogCyc
       ]),
       Log.stepsAsStep('TINY-4506', 'SearchReplace: Test cycling through results with wholewords enabled', [
         tinyApis.sSetContent('<p>ttt TTT ttt ttttt</p>'),
-        tinyApis.sSetSelection([0, 0], 0, [0, 0], 3),
+        tinyApis.sSetSelection([ 0, 0 ], 0, [ 0, 0 ], 3),
         Utils.sOpenDialog(tinyUi),
         Utils.sAssertFieldValue(tinyUi, 'input.tox-textfield[placeholder="Find"]', 'ttt'),
         sSelectPreference('Find whole words only'),
@@ -82,7 +82,7 @@ UnitTest.asynctest('browser.tinymce.plugins.searchreplace.SearchReplaceDialogCyc
       ]),
       Log.stepsAsStep('TINY-4506', 'SearchReplace: Test cycling through results with special characters', [
         tinyApis.sSetContent('<p>^^ ^^ ^^ fish</p>'),
-        tinyApis.sSetSelection([0, 0], 0, [0, 0], 2),
+        tinyApis.sSetSelection([ 0, 0 ], 0, [ 0, 0 ], 2),
         Utils.sOpenDialog(tinyUi),
         Utils.sAssertFieldValue(tinyUi, 'input.tox-textfield[placeholder="Find"]', '^^'),
         sFind,

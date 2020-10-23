@@ -15,7 +15,7 @@ UnitTest.asynctest('Browser Test: behaviour.KeyingAndFocusingTest', (success, fa
   // keying and focusing, that the keying behaviour's focusIn fires
   // after the focusing
   GuiSetup.setup(
-    (store, doc, body) => {
+    (_store, _doc, _body) => {
       const memChild = Memento.record({
         uid: 'child',
         dom: {
@@ -50,7 +50,7 @@ UnitTest.asynctest('Browser Test: behaviour.KeyingAndFocusingTest', (success, fa
           Focusing.config({ }),
           Keying.config({
             mode: 'special',
-            focusIn (comp) {
+            focusIn(comp) {
               const child = memChild.get(comp);
               Focusing.focus(child);
             }
@@ -58,18 +58,16 @@ UnitTest.asynctest('Browser Test: behaviour.KeyingAndFocusingTest', (success, fa
         ])
       });
     },
-    (doc, body, gui, component, store) => {
-      return [
-        GuiSetup.mAddStyles(doc, [
-          ':focus { outline: 10px solid green; }'
-        ]),
-        Step.sync(() => {
-          AlloyTriggers.dispatchFocus(component, component.element());
-        }),
-        FocusTools.sTryOnSelector('Focus should be on child span', doc, 'span.child'),
-        GuiSetup.mRemoveStyles
-      ];
-    },
+    (doc, _body, _gui, component, _store) => [
+      GuiSetup.mAddStyles(doc, [
+        ':focus { outline: 10px solid green; }'
+      ]),
+      Step.sync(() => {
+        AlloyTriggers.dispatchFocus(component, component.element);
+      }),
+      FocusTools.sTryOnSelector('Focus should be on child span', doc, 'span.child'),
+      GuiSetup.mRemoveStyles
+    ],
     success, failure
   );
 });

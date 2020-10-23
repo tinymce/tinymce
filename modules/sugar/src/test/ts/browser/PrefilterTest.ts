@@ -1,11 +1,12 @@
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import * as Hierarchy from 'ephox/sugar/api/dom/Hierarchy';
-import Element from 'ephox/sugar/api/node/Element';
+import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
 import * as Html from 'ephox/sugar/api/properties/Html';
+import { Situ } from 'ephox/sugar/api/selection/Situ';
 import * as Prefilter from 'ephox/sugar/selection/quirks/Prefilter';
-import { UnitTest, assert } from '@ephox/bedrock-client';
 
-UnitTest.test('Browser Test: PrefilterTest', function () {
-  const root = Element.fromHtml(
+UnitTest.test('Browser Test: PrefilterTest', () => {
+  const root = SugarElement.fromHtml(
     '<div>' +
       '<span>dog</span>' +
       '<br>' +
@@ -14,17 +15,13 @@ UnitTest.test('Browser Test: PrefilterTest', function () {
     '</div>'
   );
 
-  const toString = function (situ) {
-    return situ.fold(function (b) {
-      return 'before(' + Html.getOuter(b) + ')';
-    }, function (e, o) {
-      return 'on(' + Html.getOuter(e) + ', ' + o + ')';
-    }, function (a) {
-      return 'after(' + Html.getOuter(a) + ')';
-    });
-  };
+  const toString = (situ: Situ) => situ.fold(
+    (b) => 'before(' + Html.getOuter(b) + ')',
+    (e, o) => 'on(' + Html.getOuter(e) + ', ' + o + ')',
+    (a) => 'after(' + Html.getOuter(a) + ')'
+  );
 
-  const check = function (label, expected, elementPath, offset) {
+  const check = (label: string, expected: string, elementPath: number[], offset: number) => {
     const element = Hierarchy.follow(root, elementPath).getOrDie('Test: ' + label + '. Could not find the element path within root: ' + elementPath);
     const actual = Prefilter.beforeSpecial(element, offset);
 

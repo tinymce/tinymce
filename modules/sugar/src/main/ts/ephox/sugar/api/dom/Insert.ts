@@ -1,48 +1,47 @@
+import { SugarElement } from '../node/SugarElement';
 import * as Traverse from '../search/Traverse';
-import Element from '../node/Element';
-import { Node as DomNode } from '@ephox/dom-globals';
 
-const before = function (marker: Element<DomNode>, element: Element<DomNode>) {
+const before = (marker: SugarElement<Node>, element: SugarElement<Node>): void => {
   const parent = Traverse.parent(marker);
-  parent.each(function (v) {
-    v.dom().insertBefore(element.dom(), marker.dom());
+  parent.each((v) => {
+    v.dom.insertBefore(element.dom, marker.dom);
   });
 };
 
-const after = function (marker: Element<DomNode>, element: Element<DomNode>) {
+const after = (marker: SugarElement<Node>, element: SugarElement<Node>): void => {
   const sibling = Traverse.nextSibling(marker);
-  sibling.fold(function () {
+  sibling.fold(() => {
     const parent = Traverse.parent(marker);
-    parent.each(function (v) {
+    parent.each((v) => {
       append(v, element);
     });
-  }, function (v) {
+  }, (v) => {
     before(v, element);
   });
 };
 
-const prepend = function (parent: Element<DomNode>, element: Element<DomNode>) {
+const prepend = (parent: SugarElement<Node>, element: SugarElement<Node>): void => {
   const firstChild = Traverse.firstChild(parent);
-  firstChild.fold(function () {
+  firstChild.fold(() => {
     append(parent, element);
-  }, function (v) {
-    parent.dom().insertBefore(element.dom(), v.dom());
+  }, (v) => {
+    parent.dom.insertBefore(element.dom, v.dom);
   });
 };
 
-const append = function (parent: Element<DomNode>, element: Element<DomNode>) {
-  parent.dom().appendChild(element.dom());
+const append = (parent: SugarElement<Node>, element: SugarElement<Node>): void => {
+  parent.dom.appendChild(element.dom);
 };
 
-const appendAt = function (parent: Element<DomNode>, element: Element<DomNode>, index: number) {
-  Traverse.child(parent, index).fold(function () {
+const appendAt = (parent: SugarElement<Node>, element: SugarElement<Node>, index: number): void => {
+  Traverse.child(parent, index).fold(() => {
     append(parent, element);
-  }, function (v) {
+  }, (v) => {
     before(v, element);
   });
 };
 
-const wrap = function (element: Element<DomNode>, wrapper: Element<DomNode>) {
+const wrap = (element: SugarElement<Node>, wrapper: SugarElement<Node>): void => {
   before(element, wrapper);
   append(wrapper, element);
 };
@@ -53,5 +52,5 @@ export {
   prepend,
   append,
   appendAt,
-  wrap,
+  wrap
 };

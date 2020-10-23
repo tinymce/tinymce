@@ -1,9 +1,9 @@
 import { UnitTest } from '@ephox/bedrock-client';
-import { Element, InsertAll } from '@ephox/sugar';
+import { InsertAll, SugarElement } from '@ephox/sugar';
 import * as ApproxStructure from 'ephox/agar/api/ApproxStructure';
 import * as Assertions from 'ephox/agar/api/Assertions';
 
-UnitTest.asynctest('ApproxStructureTest', (success, failure) => {
+UnitTest.asynctest('ApproxStructureTest', (success, _failure) => {
 
   const html = '<div data-key="test-1" selected="double" class="test1 root" style="display: block;">' +
     '<div selected="true">' +
@@ -14,7 +14,7 @@ UnitTest.asynctest('ApproxStructureTest', (success, failure) => {
     '</div>';
 
   const check = (expected, input) => {
-    const target = Element.fromHtml(input);
+    const target = SugarElement.fromHtml(input);
     Assertions.assertStructure('Test', expected, target);
   };
 
@@ -60,13 +60,13 @@ UnitTest.asynctest('ApproxStructureTest', (success, failure) => {
 
   check(ApproxStructure.fromHtml(html), html);
 
-  check(ApproxStructure.build((s, str, arr) =>
+  check(ApproxStructure.build((s, str, _arr) =>
     s.element('div', {
       children: [
         s.element('div', {
           attrs: {
             selected: str.is('true')
-          },
+          }
         }),
         s.theRest()
       ]
@@ -112,21 +112,21 @@ UnitTest.asynctest('ApproxStructureTest', (success, failure) => {
   check(struct2, '<div><span class="hello"></span><div></div><span class="bye"></span></div>');
   check(struct2, '<div><span class="hello"></span><span class="hello"></span><span class="hello"></span><span class="hello"></span><div></div><span class="bye"></span></div>');
 
-  const container = Element.fromTag('div');
+  const container = SugarElement.fromTag('div');
   InsertAll.append(container, [
-    Element.fromText('hello'),
-    Element.fromText(' '),
-    Element.fromText('world')
+    SugarElement.fromText('hello'),
+    SugarElement.fromText(' '),
+    SugarElement.fromText('world')
   ]);
 
-  Assertions.assertStructure('Test', ApproxStructure.build((s, str, arr) =>
+  Assertions.assertStructure('Test', ApproxStructure.build((s, str, _arr) =>
     s.element('div', {
       children: [
         s.text(str.is('hello world'), true)
       ]
     })), container);
 
-  Assertions.assertStructure('Test', ApproxStructure.build((s, str, arr) =>
+  Assertions.assertStructure('Test', ApproxStructure.build((s, str, _arr) =>
     s.element('div', {
       children: [
         s.text(str.is('hello'), false),

@@ -5,9 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { InlineContent, Types } from '@ephox/bridge';
-import { Node, Range } from '@ephox/dom-globals';
-import { Arr, Option } from '@ephox/katamari';
+import { InlineContent } from '@ephox/bridge';
+import { Arr, Optional } from '@ephox/katamari';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import Promise from 'tinymce/core/api/util/Promise';
@@ -22,7 +21,7 @@ import { isWhitespace } from './AutocompleteUtils';
 export interface AutocompleteLookupData {
   matchText: string;
   items: InlineContent.AutocompleterContents[];
-  columns: Types.ColumnTypes;
+  columns: InlineContent.ColumnTypes;
   onAction: (autoApi: InlineContent.AutocompleterInstanceApi, rng: Range, value: string, meta: Record<string, any>) => void;
 }
 
@@ -31,45 +30,36 @@ export interface AutocompleteLookupInfo {
   lookupData: Promise<AutocompleteLookupData[]>;
 }
 
-const isPreviousCharContent = (dom: DOMUtils, leaf: Spot.SpotPoint<Node>) => {
+const isPreviousCharContent = (dom: DOMUtils, leaf: Spot.SpotPoint<Node>) =>
   // If at the start of the range, then we need to look backwards one more place. Otherwise we just need to look at the current text
-  return repeatLeft(dom, leaf.container, leaf.offset, (element, offset) => offset === 0 ? -1 : offset, dom.getRoot()).filter((spot) => {
+  repeatLeft(dom, leaf.container, leaf.offset, (element, offset) => offset === 0 ? -1 : offset, dom.getRoot()).filter((spot) => {
     const char = spot.container.data.charAt(spot.offset - 1);
     return !isWhitespace(char);
   }).isSome();
+
+const isStartOfWord = (dom: DOMUtils) => (rng: Range) => {
+  const leaf = toLeaf(rng.startContainer, rng.startOffset);
+  return !isPreviousCharContent(dom, leaf);
 };
 
-const isStartOfWord = (dom: DOMUtils) => {
-  return (rng: Range) => {
-    const leaf = toLeaf(rng.startContainer, rng.startOffset);
-    return !isPreviousCharContent(dom, leaf);
-  };
-};
+const getTriggerContext = (dom: DOMUtils, initRange: Range, database: AutocompleterDatabase): Optional<AutocompleteContext> => Arr.findMap(database.triggerChars, (ch) => getContext(dom, initRange, ch));
 
-const getTriggerContext = (dom: DOMUtils, initRange: Range, database: AutocompleterDatabase): Option<AutocompleteContext> => {
-  return Arr.findMap(database.triggerChars, (ch) => {
-    return getContext(dom, initRange, ch);
-  });
-};
-
-const lookup = (editor: Editor, getDatabase: () => AutocompleterDatabase): Option<AutocompleteLookupInfo> => {
+const lookup = (editor: Editor, getDatabase: () => AutocompleterDatabase): Optional<AutocompleteLookupInfo> => {
   const database = getDatabase();
   const rng = editor.selection.getRng();
 
   return getTriggerContext(editor.dom, rng, database).bind((context) => lookupWithContext(editor, getDatabase, context));
 };
 
-const lookupWithContext = (editor: Editor, getDatabase: () => AutocompleterDatabase, context: AutocompleteContext, fetchOptions: Record<string, any> = {}): Option<AutocompleteLookupInfo> => {
+const lookupWithContext = (editor: Editor, getDatabase: () => AutocompleterDatabase, context: AutocompleteContext, fetchOptions: Record<string, any> = {}): Optional<AutocompleteLookupInfo> => {
   const database = getDatabase();
   const rng = editor.selection.getRng();
   const startText = rng.startContainer.nodeValue;
 
-  const autocompleters = Arr.filter(database.lookupByChar(context.triggerChar), (autocompleter) => {
-    return context.text.length >= autocompleter.minChars && autocompleter.matches.getOrThunk(() => isStartOfWord(editor.dom))(context.range, startText, context.text);
-  });
+  const autocompleters = Arr.filter(database.lookupByChar(context.triggerChar), (autocompleter) => context.text.length >= autocompleter.minChars && autocompleter.matches.getOrThunk(() => isStartOfWord(editor.dom))(context.range, startText, context.text));
 
   if (autocompleters.length === 0) {
-    return Option.none();
+    return Optional.none();
   }
 
   const lookupData = Promise.all(Arr.map(autocompleters, (ac) => {
@@ -83,7 +73,7 @@ const lookupWithContext = (editor: Editor, getDatabase: () => AutocompleterDatab
     }));
   }));
 
-  return Option.some({
+  return Optional.some({
     lookupData,
     context
   });

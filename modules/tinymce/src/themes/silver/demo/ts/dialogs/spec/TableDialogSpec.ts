@@ -1,5 +1,3 @@
-import { console } from '@ephox/dom-globals';
-
 export default {
   title: 'Table properties',
   body: {
@@ -48,7 +46,7 @@ export default {
               },
               {
                 name: 'align',
-                type: 'selectbox',
+                type: 'listbox',
                 label: 'Alignment',
                 items: [
                   {
@@ -60,7 +58,7 @@ export default {
                     value: 'left'
                   }
                 ]
-              },
+              }
             ]
           }
         ]
@@ -71,7 +69,7 @@ export default {
         items: [
           {
             name: 'borderstyle',
-            type: 'selectbox',
+            type: 'listbox',
             label: 'Border style',
             items: [
               {
@@ -91,7 +89,7 @@ export default {
             label: 'Background color'
           }
         ]
-      },
+      }
     ]
   },
   buttons: [
@@ -122,7 +120,7 @@ export default {
   onSubmit: (api) => {
     const data = api.getData();
 
-    // tslint:disable-next-line:no-console
+    // eslint-disable-next-line no-console
     console.log({
       width: data.width,
       height: data.height,

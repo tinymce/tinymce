@@ -1,13 +1,12 @@
 import { FocusTools, Keyboard, Keys, Log, Pipeline, Step } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { TinyLoader } from '@ephox/mcagar';
+import { SugarElement } from '@ephox/sugar';
+import Tools from 'tinymce/core/api/util/Tools';
 
-import Settings from 'tinymce/plugins/spellchecker/api/Settings';
+import * as Settings from 'tinymce/plugins/spellchecker/api/Settings';
 import SpellcheckerPlugin from 'tinymce/plugins/spellchecker/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
-import { document } from '@ephox/dom-globals';
-import { Element } from '@ephox/sugar';
-import Tools from 'tinymce/core/api/util/Tools';
 
 UnitTest.asynctest('browser.tinymce.plugins.spellchecker.SpellcheckerTest', function (success, failure) {
 
@@ -21,7 +20,7 @@ UnitTest.asynctest('browser.tinymce.plugins.spellchecker.SpellcheckerTest', func
   };
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    const doc = Element.fromDom(document);
+    const doc = SugarElement.fromDom(document);
 
     const sPressTab = Keyboard.sKeydown(doc, Keys.tab(), {});
     const sPressEsc = Keyboard.sKeydown(doc, Keys.escape(), {});
@@ -34,13 +33,11 @@ UnitTest.asynctest('browser.tinymce.plugins.spellchecker.SpellcheckerTest', func
         altKey: false,
         shiftKey: false,
         metaKey: false
-      }, {altKey: true, keyCode: 120});
+      }, { altKey: true, keyCode: 120 });
       editor.fire('keydown', args);
     });
 
-    const sAssertFocused = (name, selector) => {
-      return FocusTools.sTryOnSelector(name, doc, selector);
-    };
+    const sAssertFocused = (name, selector) => FocusTools.sTryOnSelector(name, doc, selector);
 
     Pipeline.async({}, Log.steps('TBA', 'Spellchecker: Reaching the spellchecker via the keyboard', [
       sTestDefaultLanguage(editor),
@@ -60,7 +57,7 @@ UnitTest.asynctest('browser.tinymce.plugins.spellchecker.SpellcheckerTest', func
       sPressTab,
       sAssertFocused('Spellchecker button', '.tox-split-button'), // Button can be reached by keyboard
       sPressDown,
-      sAssertFocused('First language', '.tox-collection__item:contains("English")'), // Languages can be reached by keyboard
+      sAssertFocused('First language', '.tox-collection__item:contains("English")') // Languages can be reached by keyboard
     ]), onSuccess, onFailure);
   }, {
     theme: 'silver',
@@ -68,13 +65,13 @@ UnitTest.asynctest('browser.tinymce.plugins.spellchecker.SpellcheckerTest', func
     toolbar: 'spellchecker',
     base_url: '/project/tinymce/js/tinymce',
     statusbar: false,
-    spellchecker_callback (method, text, success, failure) {
+    spellchecker_callback(method, _text, success, _failure) {
       if (method === 'spellcheck') {
-        success({words: {
-          helo: ['hello'],
-          worl: ['world']
+        success({ words: {
+          helo: [ 'hello' ],
+          worl: [ 'world' ]
         }});
       }
-    },
+    }
   }, success, failure);
 });

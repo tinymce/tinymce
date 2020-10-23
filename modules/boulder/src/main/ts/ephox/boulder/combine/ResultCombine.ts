@@ -1,16 +1,14 @@
 import { Arr, Fun, Merger } from '@ephox/katamari';
 import { SimpleResult } from '../alien/SimpleResult';
 
-const mergeValues = (values: Array<Record<string, any>>, base: Record<string, any>): SimpleResult<any, Record<string, any>> => {
-  return values.length > 0 ? SimpleResult.svalue(
-    Merger.deepMerge(
-      base,
-      Merger.merge.apply(undefined, values)
-    )
-  ) : SimpleResult.svalue(base);
-};
+const mergeValues = (values: Array<Record<string, any>>, base: Record<string, any>): SimpleResult<any, Record<string, any>> => values.length > 0 ? SimpleResult.svalue(
+  Merger.deepMerge(
+    base,
+    Merger.merge.apply(undefined, values)
+  )
+) : SimpleResult.svalue(base);
 
-const mergeErrors = function <E>(errors: E[][]): SimpleResult<E[], any> {
+const mergeErrors = function <E> (errors: E[][]): SimpleResult<E[], any> {
   return Fun.compose<any, any, any>(SimpleResult.serror, Arr.flatten)(errors);
 };
 

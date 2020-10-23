@@ -1,13 +1,13 @@
-import { Pipeline, Log} from '@ephox/agar';
+import { Log, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyLoader, TinyUi } from '@ephox/mcagar';
 
 import HelpPlugin from 'tinymce/plugins/help/Plugin';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
-import PluginAssert from '../module/PluginAssert';
+import * as PluginAssert from '../module/PluginAssert';
 
-import Selectors from '../module/Selectors';
+import { selectors } from '../module/Selectors';
 
 UnitTest.asynctest('browser.plugin.IgnoreForcedPluginsTest', (success, failure) => {
   HelpPlugin();
@@ -19,23 +19,23 @@ UnitTest.asynctest('browser.plugin.IgnoreForcedPluginsTest', (success, failure) 
 
     Pipeline.async({},
       Log.steps('TBA', 'Help: Hide forced plugins from Help plugin list', [
-        ui.sClickOnToolbar('Click help button', Selectors.toolbarHelpButton),
+        ui.sClickOnToolbar('Click help button', selectors.toolbarHelpButton),
         PluginAssert.sAssert(
           'Could not ignore forced plugin: link',
           {
             'li a:contains("Help")': 1,
             'li a:contains("Link")': 0
           },
-          Selectors.dialog,
-          Selectors.pluginsTab
+          selectors.dialog,
+          selectors.pluginsTab
         )
       ])
-    , onSuccess, onFailure);
+      , onSuccess, onFailure);
   }, {
     plugins: 'help',
     toolbar: 'help',
     theme: 'silver',
-    forced_plugins: ['link'],
-    base_url: '/project/tinymce/js/tinymce',
+    forced_plugins: [ 'link' ],
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

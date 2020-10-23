@@ -1,15 +1,15 @@
-import { Fun, Id, Option } from '@ephox/katamari';
-import { Attr, Element } from '@ephox/sugar';
+import { Fun, Id, Optional } from '@ephox/katamari';
+import { Attribute, SugarElement } from '@ephox/sugar';
 
-const describedBy = (describedElement: Element, describeElement: Element) => {
-  const describeId = Option.from(Attr.get(describedElement, 'id'))
+const describedBy = (describedElement: SugarElement, describeElement: SugarElement) => {
+  const describeId = Optional.from(Attribute.get(describedElement, 'id'))
     .fold(() => {
       const id = Id.generate('dialog-describe');
-      Attr.set(describeElement, 'id', id);
+      Attribute.set(describeElement, 'id', id);
       return id;
     }, Fun.identity);
 
-  Attr.set(describedElement, 'aria-describedby', describeId);
+  Attribute.set(describedElement, 'aria-describedby', describeId);
 };
 
 export {

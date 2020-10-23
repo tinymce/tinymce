@@ -5,19 +5,19 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import Editor from '../api/Editor';
-import * as IndentOutdent from '../commands/IndentOutdent';
 import * as BlockBoundary from '../caret/BlockBoundary';
 import CaretPosition from '../caret/CaretPosition';
+import * as IndentOutdent from '../commands/IndentOutdent';
 
-const backspaceDelete = function (editor: Editor, _caret, _forward?: boolean) {
+const backspaceDelete = (editor: Editor, _forward?: boolean) => {
   if (editor.selection.isCollapsed() && IndentOutdent.canOutdent(editor)) {
     const dom = editor.dom;
     const rng = editor.selection.getRng();
     const pos = CaretPosition.fromRangeStart(rng);
     const block = dom.getParent(rng.startContainer, dom.isBlock);
-    if (block !== null && BlockBoundary.isAtStartOfBlock(Element.fromDom(block), pos)) {
+    if (block !== null && BlockBoundary.isAtStartOfBlock(SugarElement.fromDom(block), pos)) {
       IndentOutdent.handle(editor, 'outdent');
       return true;
     }
@@ -26,6 +26,6 @@ const backspaceDelete = function (editor: Editor, _caret, _forward?: boolean) {
   return false;
 };
 
-export default {
+export {
   backspaceDelete
 };

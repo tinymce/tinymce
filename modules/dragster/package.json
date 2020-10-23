@@ -1,7 +1,7 @@
 {
   "name": "@ephox/dragster",
   "description": "This project handles dragging.",
-  "version": "4.0.46",
+  "version": "5.0.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/tinymce/tinymce"
@@ -18,14 +18,15 @@
     "LICENSE.txt"
   ],
   "dependencies": {
-    "@ephox/dom-globals": "^1.1.2",
-    "@ephox/katamari": "^5.0.2",
-    "@ephox/porkbun": "^4.0.33",
-    "@ephox/sugar": "^5.1.3"
+    "@ephox/katamari": "^7.0.1",
+    "@ephox/porkbun": "^5.0.1",
+    "@ephox/sugar": "^7.0.1",
+    "tslib": "^2.0.0"
   },
   "scripts": {
     "test": "bedrock-auto -b phantomjs -d src/test",
     "test-manual": "bedrock -d src/test",
+    "lint": "eslint --config ../../.eslintrc.json src/**/*.ts",
     "prepublishOnly": "tsc -b"
   },
   "author": "Ephox Corporation",

@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { FormData, XMLHttpRequest } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
 import { BlobInfo } from 'tinymce/core/api/file/BlobCache';
 import Promise from 'tinymce/core/api/util/Promise';
@@ -40,9 +39,7 @@ const pathJoin = (path1: string | undefined, path2: string) => {
 
 export default (settings: UploaderSettings) => {
   const defaultHandler = (blobInfo: BlobInfo, success: SuccessCallback, failure: FailureCallback, progress: ProgressCallback) => {
-    let xhr, formData;
-
-    xhr = new XMLHttpRequest();
+    const xhr = new XMLHttpRequest();
     xhr.open('POST', settings.url);
     xhr.withCredentials = settings.credentials;
 
@@ -55,14 +52,12 @@ export default (settings: UploaderSettings) => {
     };
 
     xhr.onload = () => {
-      let json;
-
       if (xhr.status < 200 || xhr.status >= 300) {
         failure('HTTP Error: ' + xhr.status);
         return;
       }
 
-      json = JSON.parse(xhr.responseText);
+      const json = JSON.parse(xhr.responseText);
 
       if (!json || typeof json.location !== 'string') {
         failure('Invalid JSON: ' + xhr.responseText);
@@ -72,29 +67,23 @@ export default (settings: UploaderSettings) => {
       success(pathJoin(settings.basePath, json.location));
     };
 
-    formData = new FormData();
+    const formData = new FormData();
     formData.append('file', blobInfo.blob(), blobInfo.filename());
 
     xhr.send(formData);
   };
 
-  const uploadBlob = (blobInfo: BlobInfo, handler: UploadHandler) => {
-    return new Promise<string>((resolve, reject) => {
-      try {
-        handler(blobInfo, resolve, reject, Fun.noop);
-      } catch (ex) {
-        reject(ex.message);
-      }
-    });
-  };
+  const uploadBlob = (blobInfo: BlobInfo, handler: UploadHandler) => new Promise<string>((resolve, reject) => {
+    try {
+      handler(blobInfo, resolve, reject, Fun.noop);
+    } catch (ex) {
+      reject(ex.message);
+    }
+  });
 
-  const isDefaultHandler = (handler: Function) => {
-    return handler === defaultHandler;
-  };
+  const isDefaultHandler = (handler: Function) => handler === defaultHandler;
 
-  const upload = (blobInfo: BlobInfo): Promise<string> => {
-    return (!settings.url && isDefaultHandler(settings.handler)) ? Promise.reject('Upload url missing from the settings.') : uploadBlob(blobInfo, settings.handler);
-  };
+  const upload = (blobInfo: BlobInfo): Promise<string> => (!settings.url && isDefaultHandler(settings.handler)) ? Promise.reject('Upload url missing from the settings.') : uploadBlob(blobInfo, settings.handler);
 
   settings = Tools.extend({
     credentials: false,

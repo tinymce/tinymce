@@ -2,10 +2,10 @@ import { Chain, GeneralSteps, Keys, Log, Pipeline, Step, UiFinder, Waiter } from
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Cell } from '@ephox/katamari';
 import { Editor as McEditor, TinyActions, TinyApis, TinyUi } from '@ephox/mcagar';
-import { Body, Css, Element, Location } from '@ephox/sugar';
+import { Css, SugarBody, SugarElement, SugarLocation } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
-import { EditorSettings } from 'tinymce/core/api/SettingsTypes';
+import { RawEditorSettings } from 'tinymce/core/api/SettingsTypes';
 import Theme from 'tinymce/themes/silver/Theme';
 import { sAssertFloatingToolbarPosition, sOpenFloatingToolbarAndAssertPosition } from '../../../module/ToolbarUtils';
 
@@ -15,8 +15,8 @@ UnitTest.asynctest('Inline Editor Floating Toolbar Drawer Position test', (succe
   const lineHeight = 30;
 
   const getUiContainerTop = (editor: Editor) => {
-    const uiContainer = Element.fromDom(editor.getContainer());
-    return Location.absolute(uiContainer).top();
+    const uiContainer = SugarElement.fromDom(editor.getContainer());
+    return SugarLocation.absolute(uiContainer).top;
   };
 
   const sPressEnterNTimes = (tinyApis: TinyApis, tinyActions: TinyActions, times: number) => GeneralSteps.sequence([
@@ -24,36 +24,34 @@ UnitTest.asynctest('Inline Editor Floating Toolbar Drawer Position test', (succe
     ...GeneralSteps.repeat(times, tinyActions.sContentKeydown(Keys.enter()))
   ]);
 
-  const sWithEditor = (settings: EditorSettings, getSteps: (editor: Editor, tinyApis: TinyApis) => Array<Step<any, any>>) => {
-    return Chain.asStep({}, [
-      McEditor.cFromSettings({
-        theme: 'silver',
-        inline: true,
-        menubar: false,
-        width: 400,
-        base_url: '/project/tinymce/js/tinymce',
-        toolbar: 'undo redo | styleselect | bold italic underline | strikethrough superscript subscript | alignleft aligncenter alignright aligncenter | outdent indent | cut copy paste | selectall remove',
-        toolbar_mode: 'floating',
-        ...settings
-      }),
-      Chain.async((editor, onSuccess, onFailure) => {
-        const tinyApis = TinyApis(editor);
-        const uiContainer = Element.fromDom(editor.getContainer());
+  const sWithEditor = (settings: RawEditorSettings, getSteps: (editor: Editor, tinyApis: TinyApis) => Array<Step<any, any>>) => Chain.asStep({}, [
+    McEditor.cFromSettings({
+      theme: 'silver',
+      inline: true,
+      menubar: false,
+      width: 400,
+      base_url: '/project/tinymce/js/tinymce',
+      toolbar: 'undo redo | styleselect | bold italic underline | strikethrough superscript subscript | alignleft aligncenter alignright aligncenter | outdent indent | cut copy paste | selectall remove',
+      toolbar_mode: 'floating',
+      ...settings
+    }),
+    Chain.async((editor, onSuccess, onFailure) => {
+      const tinyApis = TinyApis(editor);
+      const uiContainer = SugarElement.fromDom(editor.getContainer());
 
-        Pipeline.async({ }, [
-          Step.sync(() => {
-            Css.set(uiContainer, 'margin-left', '100px');
-          }),
-          tinyApis.sSetContent('<p>Line 1</p><p>Line 2</p><p>Line 3</p>'),
-          tinyApis.sFocus(),
-          tinyApis.sSetCursor([2, 0], 'Line 3'.length),
-          UiFinder.sWaitForVisible('Wait for editor to be visible', Body.body(), '.tox-editor-header button[title="More..."]'),
-          ...getSteps(editor, tinyApis)
-        ], () => onSuccess(editor), onFailure);
-      }),
-      McEditor.cRemove
-    ]);
-  };
+      Pipeline.async({ }, [
+        Step.sync(() => {
+          Css.set(uiContainer, 'margin-left', '100px');
+        }),
+        tinyApis.sSetContent('<p>Line 1</p><p>Line 2</p><p>Line 3</p>'),
+        tinyApis.sFocus(),
+        tinyApis.sSetCursor([ 2, 0 ], 'Line 3'.length),
+        UiFinder.sWaitForVisible('Wait for editor to be visible', SugarBody.body(), '.tox-editor-header button[title="More..."]'),
+        ...getSteps(editor, tinyApis)
+      ], () => onSuccess(editor), onFailure);
+    }),
+    McEditor.cRemove
+  ]);
 
   const sTestToolbarTop = Step.label('Test toolbar top positioning', sWithEditor({ }, (editor, tinyApis) => {
     const tinyActions = TinyActions(editor);
@@ -70,7 +68,7 @@ UnitTest.asynctest('Inline Editor Floating Toolbar Drawer Position test', (succe
       sOpenFloatingToolbarAndAssertPosition(tinyUi, getExpectedToolbarPos, [
         // Press enter a few times to change the height of the editor
         sPressEnterNTimes(tinyApis, tinyActions, 3),
-        sAssertFloatingToolbarPosition(tinyUi, getExpectedToolbarPos, 105, 465),
+        sAssertFloatingToolbarPosition(tinyUi, getExpectedToolbarPos, 105, 465)
       ])
     ];
   }));
@@ -96,7 +94,7 @@ UnitTest.asynctest('Inline Editor Floating Toolbar Drawer Position test', (succe
         Step.sync(() => {
           initialContainerTop.set(getUiContainerTop(editor)); // reset the toolbar position
         }),
-        sAssertFloatingToolbarPosition(tinyUi, getExpectedToolbarPos, 105, 465), // top of ui container - two toolbar heights
+        sAssertFloatingToolbarPosition(tinyUi, getExpectedToolbarPos, 105, 465) // top of ui container - two toolbar heights
       ])
     ];
   }));
@@ -105,6 +103,6 @@ UnitTest.asynctest('Inline Editor Floating Toolbar Drawer Position test', (succe
     Log.stepsAsStep('TINY-4725', 'Inline Editor Floating Toolbar Drawer Position test', [
       sTestToolbarTop,
       sTestToolbarBottom
-    ]),
+    ])
   ], () => success(), failure);
 });

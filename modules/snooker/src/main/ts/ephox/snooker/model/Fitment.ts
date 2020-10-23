@@ -1,12 +1,11 @@
 import { Arr, Fun, Result } from '@ephox/katamari';
-import * as Structs from '../api/Structs';
-import * as Util from '../util/Util';
-import GridRow from './GridRow';
 import { SimpleGenerators } from '../api/Generators';
+import * as Structs from '../api/Structs';
+import * as GridRow from './GridRow';
 
 export interface Delta {
-  colDelta: () => number;
-  rowDelta: () => number;
+  readonly colDelta: number;
+  readonly rowDelta: number;
 }
 
 /*
@@ -22,62 +21,66 @@ export interface Delta {
     - assumptions: All grids used by this module should be rectangular
 */
 
-const measure = function (startAddress: Structs.Address, gridA: Structs.RowCells[], gridB: Structs.RowCells[]): Result<Delta, string> {
-  if (startAddress.row() >= gridA.length || startAddress.column() > GridRow.cellLength(gridA[0])) {
+const measure = (startAddress: Structs.Address, gridA: Structs.RowCells[], gridB: Structs.RowCells[]): Result<Delta, string> => {
+  if (startAddress.row >= gridA.length || startAddress.column > GridRow.cellLength(gridA[0])) {
     return Result.error(
-      'invalid start address out of table bounds, row: ' + startAddress.row() + ', column: ' + startAddress.column()
+      'invalid start address out of table bounds, row: ' + startAddress.row + ', column: ' + startAddress.column
     );
   }
-  const rowRemainder = gridA.slice(startAddress.row());
-  const colRemainder = rowRemainder[0].cells().slice(startAddress.column());
+  const rowRemainder = gridA.slice(startAddress.row);
+  const colRemainder = rowRemainder[0].cells.slice(startAddress.column);
 
   const colRequired = GridRow.cellLength(gridB[0]);
   const rowRequired = gridB.length;
   return Result.value({
-    rowDelta: Fun.constant(rowRemainder.length - rowRequired),
-    colDelta: Fun.constant(colRemainder.length - colRequired)
+    rowDelta: rowRemainder.length - rowRequired,
+    colDelta: colRemainder.length - colRequired
   });
 };
 
-const measureWidth = function (gridA: Structs.RowCells[], gridB: Structs.RowCells[]): Delta {
+const measureWidth = (gridA: Structs.RowCells[], gridB: Structs.RowCells[]): Delta => {
   const colLengthA = GridRow.cellLength(gridA[0]);
   const colLengthB = GridRow.cellLength(gridB[0]);
 
   return {
-    rowDelta: Fun.constant(0),
-    colDelta: Fun.constant(colLengthA - colLengthB)
+    rowDelta: 0,
+    colDelta: colLengthA - colLengthB
   };
 };
 
-const fill = function <T> (cells: T[], generator: SimpleGenerators) {
-  return Arr.map(cells, function () {
-    return Structs.elementnew(generator.cell(), true);
-  });
+const measureHeight = (gridA: Structs.RowCells[], gridB: Structs.RowCells[]): Delta => {
+  const rowLengthA = gridA.length;
+  const rowLengthB = gridB.length;
+
+  return {
+    rowDelta: rowLengthA - rowLengthB,
+    colDelta: 0
+  };
 };
 
-const rowFill = function (grid: Structs.RowCells[], amount: number, generator: SimpleGenerators): Structs.RowCells[] {
-  return grid.concat(Util.repeat(amount, function (_row) {
-    return GridRow.setCells(grid[grid.length - 1], fill(grid[grid.length - 1].cells(), generator));
+const generateElements = <T> (cells: T[], row: Structs.RowCells, generators: SimpleGenerators) => {
+  const getGenerator = row.section === 'colgroup' ? generators.col : generators.cell;
+  return Arr.map(cells, () => Structs.elementnew(getGenerator(), true));
+};
+
+const rowFill = (grid: Structs.RowCells[], amount: number, generators: SimpleGenerators): Structs.RowCells[] =>
+  grid.concat(Arr.range(amount, () => {
+    const row = grid[grid.length - 1];
+    return GridRow.setCells(row, generateElements(row.cells, row, generators));
   }));
-};
 
-const colFill = function (grid: Structs.RowCells[], amount: number, generator: SimpleGenerators): Structs.RowCells[] {
-  return Arr.map(grid, function (row) {
-    return GridRow.setCells(row, row.cells().concat(fill(Util.range(0, amount), generator)));
+const colFill = (grid: Structs.RowCells[], amount: number, generators: SimpleGenerators): Structs.RowCells[] =>
+  Arr.map(grid, (row) => {
+    const newChildren = generateElements(Arr.range(amount, Fun.identity), row, generators);
+    return GridRow.setCells(row, row.cells.concat(newChildren));
   });
+
+const tailor = (gridA: Structs.RowCells[], delta: Delta, generators: SimpleGenerators): Structs.RowCells[] => {
+  const fillCols = delta.colDelta < 0 ? colFill : Fun.identity;
+  const fillRows = delta.rowDelta < 0 ? rowFill : Fun.identity;
+
+  const modifiedCols = fillCols(gridA, Math.abs(delta.colDelta), generators);
+  return fillRows(modifiedCols, Math.abs(delta.rowDelta), generators);
 };
 
-const tailor = function (gridA: Structs.RowCells[], delta: Delta, generator: SimpleGenerators): Structs.RowCells[] {
-  const fillCols = delta.colDelta() < 0 ? colFill : Fun.identity;
-  const fillRows = delta.rowDelta() < 0 ? rowFill : Fun.identity;
-
-  const modifiedCols = fillCols(gridA, Math.abs(delta.colDelta()), generator);
-  const tailoredGrid = fillRows(modifiedCols, Math.abs(delta.rowDelta()), generator);
-  return tailoredGrid;
-};
-
-export default {
-  measure,
-  measureWidth,
-  tailor
-};
+export { measure, measureWidth, measureHeight, tailor };

@@ -1,21 +1,20 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { DomUniverse } from '@ephox/boss';
-import { Document } from '@ephox/dom-globals';
 import { Arr, Fun } from '@ephox/katamari';
-import { Element, Text } from '@ephox/sugar';
+import { SugarElement, SugarText } from '@ephox/sugar';
 import * as Family from 'ephox/phoenix/api/general/Family';
 import { TypedItem } from 'ephox/phoenix/api/Main';
 
 UnitTest.test('FamilyGroupTest', function () {
   const universe = DomUniverse();
-  const toStr = function (subject: TypedItem<Element, Document>) {
+  const toStr = function (subject: TypedItem<SugarElement, Document>) {
     return subject.fold(function () {
       return '|';
     }, function () {
       return '/';
     }, function (text) {
-      return '"' + Text.get(text) + '"';
-    }, function (text) {
+      return '"' + SugarText.get(text) + '"';
+    }, function (_text) {
       return '\\';
     });
   };
@@ -23,8 +22,8 @@ UnitTest.test('FamilyGroupTest', function () {
   // Family.group is used to break a list of elements in a list of list of elements, where each sublist
   // is a section that is bounded by blocks.
 
-  const check = function (expected: string[][], input: Element[]) {
-    const rawActual = Family.group(universe, input, Fun.constant(false) as (e: Element) => boolean);
+  const check = function (expected: string[][], input: SugarElement[]) {
+    const rawActual = Family.group(universe, input, Fun.never as (e: SugarElement) => boolean);
     const actual = Arr.map(rawActual, function (a) {
       return Arr.map(a, toStr);
     });
@@ -32,61 +31,61 @@ UnitTest.test('FamilyGroupTest', function () {
   };
 
   check([
-    ['"text"']
+    [ '"text"' ]
   ], [
-      Element.fromHtml('text')
-    ]);
+    SugarElement.fromHtml('text')
+  ]);
 
   check([
-    ['"Dogs and cats"'],
-    ['"Living together "', '"Mass hysteria"', '"."'],
-    ['"-- Ghostbusters"']
+    [ '"Dogs and cats"' ],
+    [ '"Living together "', '"Mass hysteria"', '"."' ],
+    [ '"-- Ghostbusters"' ]
   ], [
-      Element.fromHtml('<p>Dogs and cats</p>'),
-      Element.fromHtml('<p>Living together <span>Mass hysteria</span>.</p>'),
-      Element.fromText('-- Ghostbusters')
-    ]);
+    SugarElement.fromHtml('<p>Dogs and cats</p>'),
+    SugarElement.fromHtml('<p>Living together <span>Mass hysteria</span>.</p>'),
+    SugarElement.fromText('-- Ghostbusters')
+  ]);
 
   check([
-    ['"Dogs and cats"'],
-    ['"Living tog"'],
-    ['/'],
-    ['"ether "', '"Mass hyste"'],
-    ['/'],
-    ['"ria"', '"."'],
-    ['/'],
-    ['"-- Ghostbusters"']
+    [ '"Dogs and cats"' ],
+    [ '"Living tog"' ],
+    [ '/' ],
+    [ '"ether "', '"Mass hyste"' ],
+    [ '/' ],
+    [ '"ria"', '"."' ],
+    [ '/' ],
+    [ '"-- Ghostbusters"' ]
   ], [
-      Element.fromHtml('<p>Dogs and cats</p>'),
-      Element.fromHtml('<p>Living tog<img />ether <span>Mass hyste<br />ria</span>.</p>'),
-      Element.fromHtml('<hr />'),
-      Element.fromText('-- Ghostbusters')
-    ]);
+    SugarElement.fromHtml('<p>Dogs and cats</p>'),
+    SugarElement.fromHtml('<p>Living tog<img />ether <span>Mass hyste<br />ria</span>.</p>'),
+    SugarElement.fromHtml('<hr />'),
+    SugarElement.fromText('-- Ghostbusters')
+  ]);
 
   check([
-    ['"Dogs and cats"'],
-    ['"Living tog"'],
-    ['/'],
-    ['"ether "', '"Mass hyste"'],
-    ['/'],
-    ['"ria"', '"."'],
-    ['"-- Ghostbusters"'],
-    ['"One"'],
-    ['"Two"'],
-    ['"Three"']
+    [ '"Dogs and cats"' ],
+    [ '"Living tog"' ],
+    [ '/' ],
+    [ '"ether "', '"Mass hyste"' ],
+    [ '/' ],
+    [ '"ria"', '"."' ],
+    [ '"-- Ghostbusters"' ],
+    [ '"One"' ],
+    [ '"Two"' ],
+    [ '"Three"' ]
   ], [
-      Element.fromHtml('<p>Dogs and cats</p>'),
-      Element.fromHtml('<p>Living tog<img />ether <span>Mass hyste<br />ria</span>.</p>'),
-      Element.fromText('-- Ghostbusters'),
-      Element.fromHtml('<div><p>One</p><p>Two</p><p>Three</p></div>')
-    ]);
+    SugarElement.fromHtml('<p>Dogs and cats</p>'),
+    SugarElement.fromHtml('<p>Living tog<img />ether <span>Mass hyste<br />ria</span>.</p>'),
+    SugarElement.fromText('-- Ghostbusters'),
+    SugarElement.fromHtml('<div><p>One</p><p>Two</p><p>Three</p></div>')
+  ]);
 
   check([
-      ['"Dogs and cats"'],
-      ['"Living together "']
-    ], [
-      Element.fromHtml('<p>Dogs and cats</p>'),
-      Element.fromHtml('<p>Living together <span contenteditable="false">Mass hysteria</span></p>')
-    ]
+    [ '"Dogs and cats"' ],
+    [ '"Living together "' ]
+  ], [
+    SugarElement.fromHtml('<p>Dogs and cats</p>'),
+    SugarElement.fromHtml('<p>Living together <span contenteditable="false">Mass hysteria</span></p>')
+  ]
   );
 });

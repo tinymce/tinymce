@@ -1,20 +1,20 @@
+import { Arr, Fun } from '@ephox/katamari';
 import { Classes, Css } from '@ephox/sugar';
 
 import * as Boxes from '../../alien/Boxes';
 import { AlloyComponent } from '../../api/component/ComponentApi';
-import * as Dockables from './Dockables';
-import { DockingConfig, DockingState } from './DockingTypes';
 import { applyPositionCss, PositionCss } from '../../positioning/view/PositionCss';
-import { Arr, Fun } from '@ephox/katamari';
+import * as Dockables from './Dockables';
+import { DockingConfig, DockingMode, DockingState } from './DockingTypes';
 
 const morphToStatic = (component: AlloyComponent, config: DockingConfig): void => {
-  Arr.each([ 'left', 'right', 'top', 'bottom', 'position' ], (prop) => Css.remove(component.element(), prop));
+  Arr.each([ 'left', 'right', 'top', 'bottom', 'position' ], (prop) => Css.remove(component.element, prop));
   config.onUndocked(component);
 };
 
 const morphToCoord = (component: AlloyComponent, config: DockingConfig, position: PositionCss): void => {
-  applyPositionCss(component.element(), position);
-  const method = position.position() === 'fixed' ? config.onDocked : config.onUndocked;
+  applyPositionCss(component.element, position);
+  const method = position.position === 'fixed' ? config.onDocked : config.onUndocked;
   method(component);
 };
 
@@ -30,7 +30,7 @@ const updateVisibility = (component: AlloyComponent, config: DockingConfig, stat
         // the fadeout class and don't worry about transitioning, as the context
         // would never have been in view while docked
         if (morphToDocked && !isVisible) {
-          Classes.add(component.element(), [ contextInfo.fadeOutClass ]);
+          Classes.add(component.element, [ contextInfo.fadeOutClass ]);
           contextInfo.onHide(component);
         } else {
           const method = isVisible ? Dockables.appear : Dockables.disappear;
@@ -50,7 +50,7 @@ const refreshInternal = (component: AlloyComponent, config: DockingConfig, state
     updateVisibility(component, config, state, viewport);
   }
 
-  Dockables.getMorph(component, config, viewport, state).each((morph) => {
+  Dockables.getMorph(component, viewport, state).each((morph) => {
     // Toggle the docked state
     state.setDocked(!isDocked);
     // Apply the morph result
@@ -67,7 +67,7 @@ const refreshInternal = (component: AlloyComponent, config: DockingConfig, state
 
 const resetInternal = (component: AlloyComponent, config: DockingConfig, state: DockingState) => {
   // Morph back to the original position
-  const elem = component.element();
+  const elem = component.element;
   state.setDocked(false);
   Dockables.getMorphToOriginal(component, state).each((morph) => {
     morph.fold(
@@ -104,8 +104,10 @@ const reset = (component: AlloyComponent, config: DockingConfig, state: DockingS
   }
 };
 
-const isDocked = (component: AlloyComponent, config: DockingConfig, state: DockingState) => {
-  return state.isDocked();
-};
+const isDocked = (component: AlloyComponent, config: DockingConfig, state: DockingState) => state.isDocked();
 
-export { refresh, reset, isDocked };
+const setModes = (component: AlloyComponent, config: DockingConfig, state: DockingState, modes: DockingMode[]) => state.setModes(modes);
+
+const getModes = (component: AlloyComponent, config: DockingConfig, state: DockingState) => state.getModes();
+
+export { refresh, reset, isDocked, getModes, setModes };

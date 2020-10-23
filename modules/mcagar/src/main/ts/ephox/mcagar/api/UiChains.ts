@@ -1,9 +1,8 @@
 import { Chain, Mouse, NamedChain, UiFinder } from '@ephox/agar';
 import { Fun } from '@ephox/katamari';
-import { Element, Visibility, Body } from '@ephox/sugar';
-import { getThemeSelectors } from './ThemeSelectors';
+import { SugarBody, SugarElement, Visibility } from '@ephox/sugar';
 import { Editor } from '../alien/EditorTypes';
-import { HTMLElement } from '@ephox/dom-globals';
+import { getThemeSelectors } from './ThemeSelectors';
 
 export interface UiChains {
   cClickOnToolbar: <T extends Editor> (label: string, selector: string) => Chain<T, T>;
@@ -12,7 +11,7 @@ export interface UiChains {
 
   cWaitForPopup: <T> (label: string, selector: string) => Chain<T, T>;
   cWaitForUi: <T> (label: string, selector: string) => Chain<T, T>;
-  cWaitForState: <T> (hasState: (element: Element) => boolean) => (label: string, selector: string) => Chain<T, T>;
+  cWaitForState: <T> (hasState: (element: SugarElement) => boolean) => (label: string, selector: string) => Chain<T, T>;
 
   cCloseDialog: <T> (selector: string) => Chain<T, T>;
   cSubmitDialog: <T> (selector?: string) => Chain<T, T>;
@@ -21,40 +20,36 @@ export interface UiChains {
 }
 
 const cToolstripRoot = Chain.mapper(function (editor: Editor) {
-  return Element.fromDom(editor.getContainer());
+  return SugarElement.fromDom(editor.getContainer());
 });
 
 const cEditorRoot = Chain.mapper(function (editor: Editor) {
-  return Element.fromDom(editor.getBody());
+  return SugarElement.fromDom(editor.getBody());
 });
 
-const cDialogRoot = Chain.injectThunked(Body.body);
+const cDialogRoot = Chain.injectThunked(SugarBody.body);
 
-const cGetToolbarRoot: Chain<Editor, Element> = NamedChain.asChain([
+const cGetToolbarRoot: Chain<Editor, SugarElement> = NamedChain.asChain([
   NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
   NamedChain.direct('editor', cToolstripRoot, 'container'),
   NamedChain.merge([ 'editor', 'container' ], 'data'),
-  NamedChain.direct('data', Chain.binder((data: { editor: Editor, container: Element<HTMLElement> }) => {
-    return UiFinder.findIn(data.container, getThemeSelectors().toolBarSelector(data.editor));
-  }), 'toolbar'),
+  NamedChain.direct('data', Chain.binder((data: { editor: Editor; container: SugarElement<HTMLElement> }) => UiFinder.findIn(data.container, getThemeSelectors().toolBarSelector(data.editor))), 'toolbar'),
   NamedChain.output('toolbar')
 ]);
 
-const cGetMenuRoot = Chain.fromChains<Editor, Element>([
+const cGetMenuRoot = Chain.fromChains<Editor, SugarElement>([
   cToolstripRoot,
-  Chain.binder((container: Element) => {
-    return UiFinder.findIn(container, getThemeSelectors().menuBarSelector);
-  })
+  Chain.binder((container: SugarElement) => UiFinder.findIn(container, getThemeSelectors().menuBarSelector))
 ]);
 
-const cClickOnWithin = function <T>(label: string, selector: string, cContext: Chain<T, Element>): Chain<T, T> {
-    return NamedChain.asChain([
-      NamedChain.direct(NamedChain.inputName(), cContext, 'context'),
-      NamedChain.direct('context', UiFinder.cFindIn(selector), 'ui'),
-      NamedChain.direct('ui', Mouse.cClick, '_'),
-      NamedChain.outputInput
-    ]);
-  };
+const cClickOnWithin = function <T> (label: string, selector: string, cContext: Chain<T, SugarElement>): Chain<T, T> {
+  return NamedChain.asChain([
+    NamedChain.direct(NamedChain.inputName(), cContext, 'context'),
+    NamedChain.direct('context', UiFinder.cFindIn(selector), 'ui'),
+    NamedChain.direct('ui', Mouse.cClick, '_'),
+    NamedChain.outputInput
+  ]);
+};
 
 const cClickOnUi = function <T> (label: string, selector: string) {
   return cClickOnWithin<T>(label, selector, cDialogRoot);
@@ -68,7 +63,7 @@ const cClickOnMenu = function <T extends Editor> (label: string, selector: strin
   return cClickOnWithin<T>(label, selector, cGetMenuRoot);
 };
 
-const cWaitForState = function <T>(hasState: (element: Element) => boolean) {
+const cWaitForState = function <T> (hasState: (element: SugarElement) => boolean) {
   return function (label: string, selector: string): Chain<T, T> {
     return NamedChain.asChain([
       NamedChain.write('element', Chain.fromChains([
@@ -92,7 +87,7 @@ const cWaitForPopup = function <T> (label: string, selector: string) {
 };
 
 const cWaitForUi = function <T> (label: string, selector: string) {
-  return cWaitForState<T>(Fun.constant(true))(label, selector);
+  return cWaitForState<T>(Fun.always)(label, selector);
 };
 
 const cTriggerContextMenu = function (label: string, target: string, menu: string) {
@@ -117,13 +112,9 @@ const cClickPopupButton = function (btnType: 'dialogCloseSelector' | 'dialogSubm
   ]);
 };
 
-const cCloseDialog = (selector: string) => {
-  return cClickPopupButton('dialogCloseSelector', selector);
-};
+const cCloseDialog = (selector: string) => cClickPopupButton('dialogCloseSelector', selector);
 
-const cSubmitDialog = (selector?: string) => {
-  return cClickPopupButton('dialogSubmitSelector', selector);
-};
+const cSubmitDialog = (selector?: string) => cClickPopupButton('dialogSubmitSelector', selector);
 
 export const UiChains: UiChains = {
   cClickOnToolbar,

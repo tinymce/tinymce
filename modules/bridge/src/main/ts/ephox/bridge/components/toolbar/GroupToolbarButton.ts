@@ -1,6 +1,6 @@
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
-import { BaseToolbarButton, BaseToolbarButtonApi, baseToolbarButtonFields, BaseToolbarButtonInstanceApi } from './ToolbarButton';
+import { BaseToolbarButton, BaseToolbarButtonSpec, baseToolbarButtonFields, BaseToolbarButtonInstanceApi } from './ToolbarButton';
 
 interface ToolbarGroupSetting {
   name: string;
@@ -14,12 +14,12 @@ export interface GroupToolbarButtonInstanceApi extends BaseToolbarButtonInstance
 
 }
 
-export interface GroupToolbarButtonApi extends BaseToolbarButtonApi<GroupToolbarButtonInstanceApi> {
+export interface GroupToolbarButtonSpec extends BaseToolbarButtonSpec<GroupToolbarButtonInstanceApi> {
   type?: 'grouptoolbarbutton';
   items?: ToolbarConfig;
 }
 
-export interface GroupToolbarButton extends BaseToolbarButton<GroupToolbarButtonInstanceApi>  {
+export interface GroupToolbarButton extends BaseToolbarButton<GroupToolbarButtonInstanceApi> {
   type: 'grouptoolbarbutton';
   items: ToolbarConfig;
 }
@@ -32,9 +32,8 @@ export const groupToolbarButtonSchema = ValueSchema.objOf([
       FieldSchema.strictArrayOf('items', ValueSchema.string)
     ]),
     ValueSchema.string
-  ])),
+  ]))
 ].concat(baseToolbarButtonFields));
 
-export const createGroupToolbarButton = (spec: any): Result<GroupToolbarButton, ValueSchema.SchemaError<any>> => {
-  return ValueSchema.asRaw<GroupToolbarButton>('GroupToolbarButton', groupToolbarButtonSchema, spec);
-};
+export const createGroupToolbarButton = (spec: GroupToolbarButtonSpec): Result<GroupToolbarButton, ValueSchema.SchemaError<any>> =>
+  ValueSchema.asRaw<GroupToolbarButton>('GroupToolbarButton', groupToolbarButtonSchema, spec);

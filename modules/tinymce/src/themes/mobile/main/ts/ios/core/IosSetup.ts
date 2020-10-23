@@ -5,18 +5,19 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Fun, Option, Throttler } from '@ephox/katamari';
-import { Body, Css, DomEvent, Element, Focus } from '@ephox/sugar';
+import { Fun, Optional, Throttler } from '@ephox/katamari';
+import { Css, DomEvent, Focus, SugarBody, SugarElement } from '@ephox/sugar';
 
-import Orientation from '../../touch/view/Orientation';
-import CaptureBin from '../../util/CaptureBin';
-import Rectangles from '../../util/Rectangles';
+import * as Orientation from '../../touch/view/Orientation';
+import * as CaptureBin from '../../util/CaptureBin';
+import * as Rectangles from '../../util/Rectangles';
 import FakeSelection from '../focus/FakeSelection';
-import IosScrolling from '../scroll/IosScrolling';
+import * as IosScrolling from '../scroll/IosScrolling';
 import BackgroundActivity from '../smooth/BackgroundActivity';
-import Greenzone from '../view/Greenzone';
-import IosUpdates from '../view/IosUpdates';
-import IosViewport from '../view/IosViewport';
+import * as Greenzone from '../view/Greenzone';
+import { IosKeyboardConstructor } from '../view/IosKeyboard';
+import * as IosUpdates from '../view/IosUpdates';
+import * as IosViewport from '../view/IosViewport';
 
 const VIEW_MARGIN = 5;
 
@@ -30,13 +31,13 @@ const register = function (toolstrip, socket, container, outerWindow, structure,
   // back to show the current selection rectangle.
   const scrollBounds = function () {
     const rects = Rectangles.getRectangles(cWin);
-    return Option.from(rects[0]).bind(function (rect) {
-      const viewTop = rect.top() - socket.dom().scrollTop;
+    return Optional.from(rects[0]).bind(function (rect) {
+      const viewTop = rect.top - socket.dom.scrollTop;
       const outside = viewTop > outerWindow.innerHeight + VIEW_MARGIN || viewTop < -VIEW_MARGIN;
-      return outside ? Option.some({
-        top: Fun.constant(viewTop),
-        bottom: Fun.constant(viewTop + rect.height())
-      }) : Option.none<{top: () => number, bottom: () => number}>();
+      return outside ? Optional.some({
+        top: viewTop,
+        bottom: viewTop + rect.height
+      }) : Optional.none<{top: number; bottom: number}>();
     });
   };
 
@@ -49,7 +50,7 @@ const register = function (toolstrip, socket, container, outerWindow, structure,
         const extraScroll = scrollBounds();
         extraScroll.each(function (extra) {
           // TODO: Smoothly animate this in a way that doesn't conflict with anything else.
-          socket.dom().scrollTop = socket.dom().scrollTop + extra.top();
+          socket.dom.scrollTop = socket.dom.scrollTop + extra.top;
         });
         scroller.start(0);
         structure.refresh();
@@ -57,7 +58,7 @@ const register = function (toolstrip, socket, container, outerWindow, structure,
     });
   }, 1000);
 
-  const onScroll = DomEvent.bind(Element.fromDom(outerWindow), 'scroll', function () {
+  const onScroll = DomEvent.bind(SugarElement.fromDom(outerWindow), 'scroll', function () {
     if (outerWindow.pageYOffset < 0) {
       return;
     }
@@ -109,19 +110,31 @@ export interface IosApi {
   destroy: () => void;
 }
 
-const setup = function (bag) {
-  const cWin = bag.cWin();
-  const ceBody = bag.ceBody();
-  const socket = bag.socket();
-  const toolstrip = bag.toolstrip();
-  const toolbar = bag.toolbar();
-  const contentElement = bag.contentElement();
-  const keyboardType = bag.keyboardType();
-  const outerWindow = bag.outerWindow();
-  const dropup = bag.dropup();
+interface IosSetupOptions {
+  readonly cWin: Window;
+  readonly ceBody: SugarElement<Node>;
+  readonly socket: SugarElement<HTMLElement>;
+  readonly toolstrip: SugarElement<HTMLElement>;
+  readonly contentElement: SugarElement<HTMLIFrameElement>;
+  readonly keyboardType: IosKeyboardConstructor;
+  readonly outerWindow: Window;
+  readonly dropup: SugarElement<HTMLElement>;
+  readonly outerBody: SugarElement<Node>;
+}
+
+const setup = function (bag: IosSetupOptions) {
+  const cWin = bag.cWin;
+  const ceBody = bag.ceBody;
+  const socket = bag.socket;
+  const toolstrip = bag.toolstrip;
+  const contentElement = bag.contentElement;
+  const keyboardType = bag.keyboardType;
+  const outerWindow = bag.outerWindow;
+  const dropup = bag.dropup;
+  const outerBody = bag.outerBody;
 
   const structure = IosViewport.takeover(socket, ceBody, toolstrip, dropup);
-  const keyboardModel = keyboardType(bag.outerBody(), cWin, Body.body(), contentElement, toolstrip, toolbar);
+  const keyboardModel = keyboardType(outerBody, cWin, SugarBody.body(), contentElement);
 
   const toEditing = function () {
     // Consider inlining, though it will make it harder to follow the API
@@ -133,8 +146,8 @@ const setup = function (bag) {
     keyboardModel.toReading();
   };
 
-  const onToolbarTouch = function (event) {
-    keyboardModel.onToolbarTouch(event);
+  const onToolbarTouch = function (_event) {
+    keyboardModel.onToolbarTouch();
   };
 
   const onOrientation = Orientation.onChange(outerWindow, {
@@ -149,13 +162,13 @@ const setup = function (bag) {
     structure.refresh();
   });
 
-  const onResize = DomEvent.bind(Element.fromDom(outerWindow), 'resize', function () {
+  const onResize = DomEvent.bind(SugarElement.fromDom(outerWindow), 'resize', function () {
     if (structure.isExpanding()) {
       structure.refresh();
     }
   });
 
-  const onScroll = register(toolstrip, socket, bag.outerBody(), outerWindow, structure, cWin);
+  const onScroll = register(toolstrip, socket, outerBody, outerWindow, structure, cWin);
 
   const unfocusedSelection = FakeSelection(cWin, contentElement);
 
@@ -178,7 +191,7 @@ const setup = function (bag) {
   };
 
   const syncHeight = function () {
-    Css.set(contentElement, 'height', contentElement.dom().contentWindow.document.body.scrollHeight + 'px');
+    Css.set(contentElement, 'height', contentElement.dom.contentWindow.document.body.scrollHeight + 'px');
   };
 
   const setViewportOffset = function (newYOffset) {
@@ -196,7 +209,7 @@ const setup = function (bag) {
     unfocusedSelection.destroy();
 
     // Try and dismiss the keyboard on close, as they have no input focus.
-    CaptureBin.input(Body.body(), Focus.blur);
+    CaptureBin.input(SugarBody.body(), Focus.blur);
   };
 
   return {
@@ -215,6 +228,6 @@ const setup = function (bag) {
   };
 };
 
-export default {
+export {
   setup
 };

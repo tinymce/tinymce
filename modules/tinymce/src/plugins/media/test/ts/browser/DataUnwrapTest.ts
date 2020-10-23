@@ -4,7 +4,7 @@ import { TinyLoader } from '@ephox/mcagar';
 import Plugin from 'tinymce/plugins/media/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 import { MediaData, MediaDialogData } from '../../../main/ts/core/Types';
-import Dialog from '../../../main/ts/ui/Dialog';
+import * as Dialog from '../../../main/ts/ui/Dialog';
 
 UnitTest.asynctest('browser.core.DataToHtmlTest', function (success, failure) {
   Plugin();
@@ -16,15 +16,15 @@ UnitTest.asynctest('browser.core.DataToHtmlTest', function (success, failure) {
         value: 'www.test.com',
         meta: {
           altsource: 'www.newaltsource.com',
-          poster: 'www.newposter.com/image.jpg',
+          poster: 'www.newposter.com/image.jpg'
         }
       },
       altsource: {
         value: 'www.altsource.com',
         meta: {}
       },
-      poster: { value: '', meta: {} },
-      embed: '',
+      poster: { value: '', meta: {}},
+      embed: ''
     };
 
     const outputData: MediaData = {
@@ -45,17 +45,17 @@ UnitTest.asynctest('browser.core.DataToHtmlTest', function (success, failure) {
     const outputDataWithDimensions: MediaData = {
       ...outputData,
       width: '100px',
-      height: '200px',
+      height: '200px'
     };
 
     Pipeline.async({}, Log.steps('TINY-4163', 'Test Dialog.unwrap() ', [
       Assertions.sAssertEq('Test unwrap without dimensions', outputData, Dialog.unwrap(inputData, 'source')),
-      Assertions.sAssertEq('Test unwrap with dimensions', outputDataWithDimensions, Dialog.unwrap(inputDataWithDimensions, 'source')),
+      Assertions.sAssertEq('Test unwrap with dimensions', outputDataWithDimensions, Dialog.unwrap(inputDataWithDimensions, 'source'))
     ]), onSuccess, onFailure);
   }, {
-    plugins: ['media'],
+    plugins: [ 'media' ],
     toolbar: 'media',
     theme: 'silver',
-    base_url: '/project/tinymce/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

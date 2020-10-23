@@ -1,4 +1,4 @@
-/* tslint:disable:no-unimported-promise */
+/* eslint-disable @tinymce/no-unimported-promise */
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Testable } from '@ephox/dispute';
 

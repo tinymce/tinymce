@@ -1,9 +1,8 @@
-import { Pipeline, Log } from '@ephox/agar';
+import { Log, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { document } from '@ephox/dom-globals';
 import { LegacyUnit } from '@ephox/mcagar';
-import Editor from 'tinymce/core/api/Editor';
 import DomQuery from 'tinymce/core/api/dom/DomQuery';
+import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import Plugin from 'tinymce/plugins/lists/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
@@ -55,7 +54,7 @@ UnitTest.asynctest('tinymce.lists.browser.BackspaceDeleteInlineTest', (success, 
       skin: false,
       plugins: 'lists',
       disable_nodechange: true,
-      init_instance_callback (editor) {
+      init_instance_callback(editor) {
         Pipeline.async({}, Log.steps('TBA', 'Lists: Backspace delete inline tests', suite.toSteps(editor)), function () {
           teardown(editor, div);
           success();

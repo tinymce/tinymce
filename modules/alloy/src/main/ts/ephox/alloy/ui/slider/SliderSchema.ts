@@ -5,7 +5,6 @@ import { Keying } from '../../api/behaviour/Keying';
 import { Representing } from '../../api/behaviour/Representing';
 import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as Fields from '../../data/Fields';
-
 import * as HorizontalModel from './HorizontalModel';
 import * as TwoDModel from './TwoDModel';
 import * as VerticalModel from './VerticalModel';
@@ -50,8 +49,8 @@ const SliderSchema: FieldProcessorAdt[] = [
         FieldSchema.defaulted('minY', 0),
         FieldSchema.defaulted('maxY', 100),
         FieldSchema.state('value', (spec: SliderModelSpec) => Cell({
-          x: Fun.constant(spec.mode.minX),
-          y: Fun.constant(spec.mode.minY)
+          x: spec.mode.minX,
+          y: spec.mode.minY
         })),
         FieldSchema.strict('getInitialValue'),
         Fields.output('manager', TwoDModel)
@@ -59,7 +58,7 @@ const SliderSchema: FieldProcessorAdt[] = [
     }
   )),
 
-  SketchBehaviours.field('sliderBehaviours', [Keying, Representing]),
+  SketchBehaviours.field('sliderBehaviours', [ Keying, Representing ]),
   FieldSchema.state('mouseIsDown', () => Cell(false))
 ];
 

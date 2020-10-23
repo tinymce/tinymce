@@ -1,33 +1,33 @@
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import { Gene } from '../api/Gene';
-import Comparator from './Comparator';
-import Creator from './Creator';
+import * as Comparator from './Comparator';
+import * as Creator from './Creator';
 
-const byId = function (item: Gene, id: string): Option<Gene> {
+const byId = function (item: Gene, id: string): Optional<Gene> {
   if (id === undefined) {
-    throw new Error('Id value not specified for byId: ' + id);
+    throw new Error('Id value not specified for byId');
   }
   if (item.id !== undefined && item.id === id) {
-    return Option.some(item);
+    return Optional.some(item);
   } else {
     return Arr.foldl(item.children || [], function (b, a) {
       return byId(a, id).or(b);
-    }, Option.none<Gene>());
+    }, Optional.none<Gene>());
   }
 };
 
-const byItem = function (item: Gene, target: Gene): Option<Gene> {
+const byItem = function (item: Gene, target: Gene): Optional<Gene> {
   const itemNu = Creator.isNu(item);
   const targetNu = Creator.isNu(target);
   const sameId = item.id !== undefined && item.id === target.id;
   if (sameId && !itemNu && !targetNu) {
-    return Option.some(item);
+    return Optional.some(item);
   } else if (sameId && itemNu && targetNu && item.random === target.random) {
-    return Option.some(item);
+    return Optional.some(item);
   } else {
     return Arr.foldl(item.children || [], function (b, a) {
       return byItem(a, target).or(b);
-    }, Option.none());
+    }, Optional.none());
   }
 };
 
@@ -37,7 +37,7 @@ const indexIn = function (parent: Gene, item: Gene) {
   });
 };
 
-export default {
+export {
   byId,
   byItem,
   indexIn

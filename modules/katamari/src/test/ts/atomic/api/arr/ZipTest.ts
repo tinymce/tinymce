@@ -1,13 +1,13 @@
+import { Assert, UnitTest } from '@ephox/bedrock-client';
+import fc from 'fast-check';
 import * as Arr from 'ephox/katamari/api/Arr';
 import * as Obj from 'ephox/katamari/api/Obj';
+import { Optional } from 'ephox/katamari/api/Optional';
 import * as Unique from 'ephox/katamari/api/Unique';
 import * as Zip from 'ephox/katamari/api/Zip';
-import { Option } from 'ephox/katamari/api/Option';
-import { UnitTest, Assert } from '@ephox/bedrock-client';
-import fc from 'fast-check';
 
 UnitTest.test('Zip: unit tests', () => {
-  const check1 = (expectedZipToObject: Option<Record<string, string>>, expectedZipToTuples: Option<Array<{ k: string, v: string }>>, keys: string[], values: string[]) => {
+  const check1 = (expectedZipToObject: Optional<Record<string, string>>, expectedZipToTuples: Optional<Array<{ k: string; v: string }>>, keys: string[], values: string[]) => {
     const sort = <T>(a: T[], ord: (a: T, b: T) => -1 | 0 | 1) => {
       const c = a.slice();
       c.sort(ord);
@@ -18,12 +18,12 @@ UnitTest.test('Zip: unit tests', () => {
     const lt = -1;
     const gt = 1;
 
-    const sortTuples = (a: Array<{ k: string, v: string }>) => sort(a, (a: { k: string, v: string }, b: { k: string, v: string }) => (
+    const sortTuples = (a: Array<{ k: string; v: string }>) => sort(a, (a: { k: string; v: string }, b: { k: string; v: string }) => (
       a.k === b.k ? a.v === b.v ? eq
         : a.v > b.v ? gt
           : lt
         : a.k > b.k ? gt
-        : lt
+          : lt
     ));
 
     expectedZipToObject.fold(() => {
@@ -39,45 +39,45 @@ UnitTest.test('Zip: unit tests', () => {
   };
 
   check1(
-    Option.some({ q: 'a', r: 'x' }),
-    Option.some([ { k: 'q', v: 'a' }, { k: 'r', v: 'x' } ]),
+    Optional.some({ q: 'a', r: 'x' }),
+    Optional.some([{ k: 'q', v: 'a' }, { k: 'r', v: 'x' }]),
     [ 'q', 'r' ],
     [ 'a', 'x' ]
   );
 
   check1(
-    Option.some({}),
-    Option.some([]),
+    Optional.some({}),
+    Optional.some([]),
     [],
     []
   );
   check1(
-    Option.none(),
-    Option.none(),
+    Optional.none(),
+    Optional.none(),
     [],
     [ 'x' ]
   );
   check1(
-    Option.none(),
-    Option.none(),
+    Optional.none(),
+    Optional.none(),
     [],
     [ 'x', 'y' ]
   );
   check1(
-    Option.none(),
-    Option.none(),
+    Optional.none(),
+    Optional.none(),
     [ 'q' ],
     []
   );
   check1(
-    Option.none(),
-    Option.none(),
+    Optional.none(),
+    Optional.none(),
     [ 'q', 'r' ],
     []
   );
   check1(
-    Option.none(),
-    Option.none(),
+    Optional.none(),
+    Optional.none(),
     [ 'q', 'r' ],
     [ 'a' ]
   );

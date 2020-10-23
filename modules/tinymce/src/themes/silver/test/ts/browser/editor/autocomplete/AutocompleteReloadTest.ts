@@ -1,10 +1,10 @@
 import { GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { InlineContent } from '@ephox/bridge';
 import { Arr, Obj } from '@ephox/katamari';
 import { TinyActions, TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
+import { InlineContent } from 'tinymce/core/api/ui/Ui';
 import Promise from 'tinymce/core/api/util/Promise';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 
@@ -54,15 +54,13 @@ UnitTest.asynctest('Editor Autocompleter Reload test', (success, failure) => {
     const tinyUi = TinyUi(editor);
     const tinyApis = TinyApis(editor);
 
-    const sSetContentAndTrigger = (content: string, triggerCharCode: number) => {
-      return GeneralSteps.sequence([
-        tinyApis.sSetContent(`<p>${content}</p>`),
-        tinyApis.sSetCursor([ 0, 0 ], content.length),
-        tinyApis.sNodeChanged(),
-        tinyActions.sContentKeypress(triggerCharCode, { }),
-        sWaitForAutocompleteToOpen
-      ]);
-    };
+    const sSetContentAndTrigger = (content: string, triggerCharCode: number) => GeneralSteps.sequence([
+      tinyApis.sSetContent(`<p>${content}</p>`),
+      tinyApis.sSetCursor([ 0, 0 ], content.length),
+      tinyApis.sNodeChanged(),
+      tinyActions.sContentKeypress(triggerCharCode, { }),
+      sWaitForAutocompleteToOpen
+    ]);
 
     const sTestAutocompleter = (scenario: Scenario) => GeneralSteps.sequence([
       sSetContentAndTrigger(':aa', ':'.charCodeAt(0)),

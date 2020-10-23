@@ -5,10 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import NodeType from '../dom/NodeType';
-import * as CaretContainer from './CaretContainer';
-import { Node, HTMLElement } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
+import * as NodeType from '../dom/NodeType';
+import * as CaretContainer from './CaretContainer';
 
 /**
  * This module contains logic for handling caret candidates. A caret candidate is
@@ -22,9 +21,9 @@ const isContentEditableTrue = NodeType.isContentEditableTrue;
 const isContentEditableFalse = NodeType.isContentEditableFalse;
 const isBr = NodeType.isBr;
 const isText = NodeType.isText;
-const isInvalidTextElement = NodeType.matchNodeNames(['script', 'style', 'textarea']);
-const isAtomicInline = NodeType.matchNodeNames(['img', 'input', 'textarea', 'hr', 'iframe', 'video', 'audio', 'object']);
-const isTable = NodeType.matchNodeNames(['table']);
+const isInvalidTextElement = NodeType.matchNodeNames([ 'script', 'style', 'textarea' ]);
+const isAtomicInline = NodeType.matchNodeNames([ 'img', 'input', 'textarea', 'hr', 'iframe', 'video', 'audio', 'object', 'embed' ]);
+const isTable = NodeType.matchNodeNames([ 'table' ]);
 const isCaretContainer = CaretContainer.isCaretContainer;
 
 const isCaretCandidate = (node: Node): boolean => {
@@ -33,11 +32,7 @@ const isCaretCandidate = (node: Node): boolean => {
   }
 
   if (isText(node)) {
-    if (isInvalidTextElement(node.parentNode)) {
-      return false;
-    }
-
-    return true;
+    return !isInvalidTextElement(node.parentNode);
   }
 
   return isAtomicInline(node) || isBr(node) || isTable(node) || isNonUiContentEditableFalse(node);

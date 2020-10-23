@@ -1,9 +1,8 @@
 import { Attachment, Gui, GuiFactory } from '@ephox/alloy';
-import { console } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
 import { SelectorFind } from '@ephox/sugar';
 
-import StylesMenu from 'tinymce/themes/mobile/ui/StylesMenu';
+import * as StylesMenu from 'tinymce/themes/mobile/ui/StylesMenu';
 import * as UiDomFactory from 'tinymce/themes/mobile/util/UiDomFactory';
 
 export default function () {
@@ -13,22 +12,22 @@ export default function () {
     formats: {
       menus: {
         Beta: [
-          { title: 'Beta-1', isSelected: Fun.constant(false), getPreview: Fun.constant('') },
-          { title: 'Beta-2', isSelected: Fun.constant(false), getPreview: Fun.constant('') },
-          { title: 'Beta-3', isSelected: Fun.constant(false), getPreview: Fun.constant('') }
+          { title: 'Beta-1', isSelected: Fun.never, getPreview: Fun.constant('') },
+          { title: 'Beta-2', isSelected: Fun.never, getPreview: Fun.constant('') },
+          { title: 'Beta-3', isSelected: Fun.never, getPreview: Fun.constant('') }
         ]
       },
       expansions: {
         Beta: 'Beta'
       },
       items: [
-        { title: 'Alpha', isSelected: Fun.constant(false), getPreview: Fun.constant('') },
-        { title: 'Beta', isSelected: Fun.constant(false), getPreview: Fun.constant('') },
-        { title: 'Gamma', isSelected: Fun.constant(true), getPreview: Fun.constant('') }
+        { title: 'Alpha', isSelected: Fun.never, getPreview: Fun.constant('') },
+        { title: 'Beta', isSelected: Fun.never, getPreview: Fun.constant('') },
+        { title: 'Gamma', isSelected: Fun.never, getPreview: Fun.constant('') }
       ]
     },
-    handle (format) {
-      // tslint:disable-next-line:no-console
+    handle(format) {
+      // eslint-disable-next-line no-console
       console.log('firing', format);
     }
   });

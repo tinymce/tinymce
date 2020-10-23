@@ -6,17 +6,26 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
+import DefaultStyleFormats from '../features/DefaultStyleFormats';
 
-const isSkinDisabled = function (editor: Editor): boolean {
-  return editor.settings.skin === false;
-};
+const defaults = [ 'undo', 'bold', 'italic', 'link', 'image', 'bullist', 'styleselect' ];
 
-const readOnlyOnInit = function (editor) {
-  // Intentional short circuit, TODO: implement editor.settings.mobile
-  return false;
-};
+const isSkinDisabled = (editor: Editor): boolean => editor.getParam('skin') === false;
+
+const readOnlyOnInit = (_editor: Editor) =>
+  // Intentional short circuit because stub. Was meant to reference a setting for readonly on init in mobile theme
+  false;
+
+const getToolbar = (editor: Editor): string[] => editor.getParam('toolbar', defaults, 'array');
+
+const getStyleFormats = (editor: Editor): any[] => editor.getParam('style_formats', DefaultStyleFormats, 'array');
+
+const getSkinUrl = (editor: Editor) => editor.getParam('skin_url');
 
 export {
   isSkinDisabled,
-  readOnlyOnInit
+  readOnlyOnInit,
+  getToolbar,
+  getStyleFormats,
+  getSkinUrl
 };

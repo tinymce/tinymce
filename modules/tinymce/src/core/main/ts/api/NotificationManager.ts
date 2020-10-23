@@ -5,11 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element } from '@ephox/dom-globals';
-import { Arr, Option } from '@ephox/katamari';
-import EditorView from '../EditorView';
+import { Arr, Optional } from '@ephox/katamari';
+import { Focus, SugarElement } from '@ephox/sugar';
+import * as EditorView from '../EditorView';
 import { NotificationManagerImpl } from '../ui/NotificationManagerImpl';
 import Editor from './Editor';
+import * as Settings from './Settings';
 import Delay from './util/Delay';
 
 export interface NotificationManagerImpl {
@@ -36,7 +37,7 @@ export interface NotificationApi {
   text: (text: string) => void;
   moveTo: (x: number, y: number) => void;
   moveRel: (element: Element, rel: 'tc-tc' | 'bc-bc' | 'bc-tc' | 'tc-bc' | 'banner') => void;
-  getEl: () => Element;
+  getEl: () => HTMLElement;
   settings: NotificationSpec;
 }
 
@@ -66,8 +67,8 @@ function NotificationManager(editor: Editor): NotificationManager {
     return theme && theme.getNotificationManagerImpl ? theme.getNotificationManagerImpl() : NotificationManagerImpl();
   };
 
-  const getTopNotification = function (): Option<NotificationApi> {
-    return Option.from(notifications[0]);
+  const getTopNotification = function (): Optional<NotificationApi> {
+    return Optional.from(notifications[0]);
   };
 
   const isEqual = function (a: NotificationSpec, b: NotificationSpec) {
@@ -108,6 +109,12 @@ function NotificationManager(editor: Editor): NotificationManager {
       const notification = getImplementation().open(spec, function () {
         closeNotification(notification);
         reposition();
+        // Move focus back to editor when the last notification is closed,
+        // otherwise focus the top notification
+        getTopNotification().fold(
+          () => editor.focus(),
+          (top) => Focus.focus(SugarElement.fromDom(top.getEl()))
+        );
       });
 
       addNotification(notification);
@@ -130,13 +137,13 @@ function NotificationManager(editor: Editor): NotificationManager {
 
   const registerEvents = function (editor: Editor) {
     editor.on('SkinLoaded', function () {
-      const serviceMessage = editor.settings.service_message;
+      const serviceMessage = Settings.getServiceMessage(editor);
 
       if (serviceMessage) {
         open({
           text: serviceMessage,
           type: 'warning',
-          timeout: 0,
+          timeout: 0
         });
       }
     });

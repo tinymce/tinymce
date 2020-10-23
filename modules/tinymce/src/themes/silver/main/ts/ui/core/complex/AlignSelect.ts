@@ -6,32 +6,27 @@
  */
 
 import { AlloyComponent, AlloyTriggers } from '@ephox/alloy';
-import { Arr, Option, Fun } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 import { updateMenuIcon } from '../../dropdown/CommonDropdown';
-import { onActionToggleFormat } from './utils/Utils';
-import { createMenuItems, createSelectButton, FormatItem, PreviewSpec, SelectSpec } from './BespokeSelect';
+import { createMenuItems, createSelectButton, FormatItem, FormatterFormatItem, PreviewSpec, SelectSpec } from './BespokeSelect';
 import { buildBasicStaticDataset } from './SelectDatasets';
 import { IsSelectedForType } from './utils/FormatRegister';
 
 const alignMenuItems = [
-  { title: 'Left', icon: 'align-left', format: 'alignleft'},
-  { title: 'Center', icon: 'align-center', format: 'aligncenter' },
-  { title: 'Right', icon: 'align-right', format: 'alignright' },
-  { title: 'Justify', icon: 'align-justify', format: 'alignjustify' }
+  { title: 'Left', icon: 'align-left', format: 'alignleft', command: 'JustifyLeft' },
+  { title: 'Center', icon: 'align-center', format: 'aligncenter', command: 'JustifyCenter' },
+  { title: 'Right', icon: 'align-right', format: 'alignright', command: 'JustifyRight' },
+  { title: 'Justify', icon: 'align-justify', format: 'alignjustify', command: 'JustifyFull' }
 ];
 
 const getSpec = (editor: Editor): SelectSpec => {
-  const getMatchingValue = (): Option<Partial<FormatItem>> => {
-    return  Arr.find(alignMenuItems, (item) => editor.formatter.match(item.format));
-  };
+  const getMatchingValue = (): Optional<Partial<FormatItem>> => Arr.find(alignMenuItems, (item) => editor.formatter.match(item.format));
 
   const isSelectedFor: IsSelectedForType = (format: string) => () => editor.formatter.match(format);
 
-  const getPreviewFor = (_format: string) => () => {
-    return Option.none<PreviewSpec>();
-  };
+  const getPreviewFor = (_format: string) => () => Optional.none<PreviewSpec>();
 
   const updateSelectMenuIcon = (comp: AlloyComponent) => {
     const match = getMatchingValue();
@@ -41,19 +36,23 @@ const getSpec = (editor: Editor): SelectSpec => {
     });
   };
 
-  const nodeChangeHandler = Option.some((comp: AlloyComponent) => () => updateSelectMenuIcon(comp));
+  const nodeChangeHandler = Optional.some((comp: AlloyComponent) => () => updateSelectMenuIcon(comp));
 
-  const setInitialValue = Option.some((comp: AlloyComponent) => updateSelectMenuIcon(comp));
+  const setInitialValue = Optional.some((comp: AlloyComponent) => updateSelectMenuIcon(comp));
 
   const dataset = buildBasicStaticDataset(alignMenuItems);
 
+  const onAction = (rawItem: FormatterFormatItem) => () =>
+    Arr.find(alignMenuItems, (item) => item.format === rawItem.format)
+      .each((item) => editor.execCommand(item.command));
+
   return {
     tooltip: 'Align',
-    icon: Option.some('align-left'),
+    icon: Optional.some('align-left'),
     isSelectedFor,
-    getCurrentValue: Fun.constant(Option.none()),
+    getCurrentValue: Optional.none,
     getPreviewFor,
-    onAction: onActionToggleFormat(editor),
+    onAction,
     setInitialValue,
     nodeChangeHandler,
     dataset,
@@ -62,9 +61,7 @@ const getSpec = (editor: Editor): SelectSpec => {
   };
 };
 
-const createAlignSelect = (editor, backstage: UiFactoryBackstage) => {
-  return createSelectButton(editor, backstage, getSpec(editor));
-};
+const createAlignSelect = (editor, backstage: UiFactoryBackstage) => createSelectButton(editor, backstage, getSpec(editor));
 
 const alignSelectMenu = (editor: Editor, backstage: UiFactoryBackstage) => {
   const menuItems = createMenuItems(editor, backstage, getSpec(editor));

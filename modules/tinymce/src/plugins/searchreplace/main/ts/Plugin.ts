@@ -7,10 +7,10 @@
 
 import { Cell } from '@ephox/katamari';
 import PluginManager from 'tinymce/core/api/PluginManager';
-import Api from './api/Api';
-import Commands from './api/Commands';
-import Buttons from './ui/Buttons';
+import * as Api from './api/Api';
+import * as Commands from './api/Commands';
 import { SearchState } from './core/Actions';
+import * as Buttons from './ui/Buttons';
 
 export default function () {
   PluginManager.add('searchreplace', function (editor) {
@@ -19,7 +19,8 @@ export default function () {
       count: 0,
       text: '',
       matchCase: false,
-      wholeWord: false
+      wholeWord: false,
+      inSelection: false
     });
 
     Commands.register(editor, currentSearchState);

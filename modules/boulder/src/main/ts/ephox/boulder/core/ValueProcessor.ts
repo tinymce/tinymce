@@ -1,4 +1,4 @@
-import { Adt, Arr, Fun, Merger, Obj, Option, Thunk, Type } from '@ephox/katamari';
+import { Adt, Arr, Fun, Merger, Obj, Optional, Thunk, Type } from '@ephox/katamari';
 import { SimpleResult, SimpleResultType } from '../alien/SimpleResult';
 
 import * as FieldPresence from '../api/FieldPresence';
@@ -25,8 +25,8 @@ export interface ValueProcessorAdt {
     state: StateValueProcessor<T>
   ) => T;
   match: <T>(branches: {
-    field: FieldValueProcessor<T>,
-    state: StateValueProcessor<T>
+    field: FieldValueProcessor<T>;
+    state: StateValueProcessor<T>;
   }) => T;
   log: (label: string) => void;
 }
@@ -81,19 +81,17 @@ const cExtractOne = function (path, obj, field, strength) {
     function (key, okey, presence, prop) {
       const bundle = function (av) {
         const result = prop.extract(path.concat([ key ]), strength, av);
-        return SimpleResult.map(result, (res) => {
-          return ObjWriter.wrap(okey, strength(res));
-        });
+        return SimpleResult.map(result, (res) => ObjWriter.wrap(okey, strength(res)));
       };
 
       const bundleAsOption = function (optValue) {
         return optValue.fold(function () {
-          const outcome = ObjWriter.wrap(okey, strength(Option.none()));
+          const outcome = ObjWriter.wrap(okey, strength(Optional.none()));
           return SimpleResult.svalue(outcome);
         }, function (ov) {
           const result: SimpleResult<any, any> = prop.extract(path.concat([ key ]), strength, ov);
           return SimpleResult.map(result, function (res) {
-            return ObjWriter.wrap(okey, strength(Option.some(res)));
+            return ObjWriter.wrap(okey, strength(Optional.some(res)));
           });
         });
       };
@@ -124,9 +122,7 @@ const cExtractOne = function (path, obj, field, strength) {
           const base = baseThunk(obj);
           const result = SimpleResult.map(
             fallbackAccess(obj, key, Fun.constant({})),
-            (v) => {
-              return Merger.deepMerge(base, v);
-            }
+            (v) => Merger.deepMerge(base, v)
           );
           return SimpleResult.bind(result, bundle);
         });
@@ -184,12 +180,7 @@ const value = function (validator: ValueValidator): Processor {
 };
 
 // This is because Obj.keys can return things where the key is set to undefined.
-const getSetKeys = function (obj) {
-  const keys = Obj.keys(obj);
-  return Arr.filter(keys, function (k) {
-    return Obj.hasNonNullableKey(obj, k);
-  });
-};
+const getSetKeys = (obj) => Obj.keys(Obj.filter(obj, (value) => value !== undefined && value !== null));
 
 const objOfOnly = function (fields: ValueProcessorAdt[]): Processor {
   const delegate = objOf(fields);
@@ -206,7 +197,7 @@ const objOfOnly = function (fields: ValueProcessorAdt[]): Processor {
       return !Obj.hasNonNullableKey(fieldNames, k);
     });
 
-    return extra.length === 0  ? delegate.extract(path, strength, o) :
+    return extra.length === 0 ? delegate.extract(path, strength, o) :
       SchemaError.unsupportedFields(path, extra);
   };
 
@@ -225,7 +216,7 @@ const objOf = function (fields: ValueProcessorAdt[]): Processor {
     const fieldStrings = Arr.map(fields, function (field) {
       return field.fold(function (key, okey, presence, prop) {
         return key + ' -> ' + prop.toString();
-      }, function (okey, instantiator) {
+      }, function (okey, _instantiator) {
         return 'state(' + okey + ')';
       });
     });
@@ -241,7 +232,7 @@ const objOf = function (fields: ValueProcessorAdt[]): Processor {
 const arrOf = function (prop: Processor): Processor {
   const extract = function (path, strength, array) {
     const results = Arr.map(array, function (a, i) {
-      return prop.extract(path.concat(['[' + i + ']' ]), strength, a);
+      return prop.extract(path.concat([ '[' + i + ']' ]), strength, a);
     });
     return ResultCombine.consolidateArr(results);
   };
@@ -323,7 +314,7 @@ const func = function (args: string[], schema: Processor, retriever): Processor 
 
   return {
     extract: delegate.extract,
-    toString () {
+    toString() {
       return 'function';
     }
   };

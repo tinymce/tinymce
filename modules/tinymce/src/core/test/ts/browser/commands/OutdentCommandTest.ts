@@ -1,8 +1,8 @@
-import { GeneralSteps, Logger, Pipeline, Step, Assertions } from '@ephox/agar';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import Theme from 'tinymce/themes/silver/Theme';
+import { Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
+import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import Editor from 'tinymce/core/api/Editor';
+import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.core.commands.OutdentCommandTest', (success, failure) => {
   Theme();
@@ -29,7 +29,7 @@ UnitTest.asynctest('browser.tinymce.core.commands.OutdentCommandTest', (success,
       Logger.t('Outdent on mutiple paragraphs without margin/padding', GeneralSteps.sequence([
         tinyApis.sFocus(),
         tinyApis.sSetContent('<p>a</p><p>b</p>'),
-        tinyApis.sSetSelection([0, 0], 0, [1, 0], 1),
+        tinyApis.sSetSelection([ 0, 0 ], 0, [ 1, 0 ], 1),
         sAssertOutdentCommandState(editor, true),
         tinyApis.sExecCommand('outdent'),
         tinyApis.sAssertContent('<p>a</p><p>b</p>')
@@ -70,7 +70,7 @@ UnitTest.asynctest('browser.tinymce.core.commands.OutdentCommandTest', (success,
         tinyApis.sFocus(),
         tinyApis.sSetSetting('indent_use_margin', true),
         tinyApis.sSetContent('<p style="margin-left: 80px;">a</p><p style="margin-left: 40px;">b</p>'),
-        tinyApis.sSetSelection([0, 0], 0, [1, 0], 1),
+        tinyApis.sSetSelection([ 0, 0 ], 0, [ 1, 0 ], 1),
         sAssertOutdentCommandState(editor, true),
         tinyApis.sExecCommand('outdent'),
         tinyApis.sAssertContent('<p style="margin-left: 40px;">a</p><p>b</p>')
@@ -79,7 +79,7 @@ UnitTest.asynctest('browser.tinymce.core.commands.OutdentCommandTest', (success,
         tinyApis.sFocus(),
         tinyApis.sSetSetting('indent_use_margin', false),
         tinyApis.sSetContent('<p style="padding-left: 80px;">a</p><p style="padding-left: 40px;">b</p>'),
-        tinyApis.sSetSelection([0, 0], 0, [1, 0], 1),
+        tinyApis.sSetSelection([ 0, 0 ], 0, [ 1, 0 ], 1),
         sAssertOutdentCommandState(editor, true),
         tinyApis.sExecCommand('outdent'),
         tinyApis.sAssertContent('<p style="padding-left: 40px;">a</p><p>b</p>')
@@ -130,7 +130,7 @@ UnitTest.asynctest('browser.tinymce.core.commands.OutdentCommandTest', (success,
         tinyApis.sFocus(),
         tinyApis.sSetSetting('indent_use_margin', true),
         tinyApis.sSetContent('<p style="margin-left: 80px;" contenteditable="false"><span contenteditable="true">a</span></p>'),
-        tinyApis.sSetCursor([1, 0, 0], 0),
+        tinyApis.sSetCursor([ 1, 0, 0 ], 0),
         tinyApis.sExecCommand('outdent'),
         tinyApis.sAssertContent('<p style="margin-left: 80px;" contenteditable="false"><span contenteditable="true">a</span></p>')
       ]))

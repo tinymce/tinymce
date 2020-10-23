@@ -13,7 +13,7 @@ const strings: Record<string, string> = {
   'colorcustom.rgb.blue.description': 'Blue component',
   'colorcustom.rgb.hex.label': '#',
   'colorcustom.rgb.hex.description': 'Hex colour code',
-  'colorcustom.rgb.range': 'Range 0 to 255',
+  'colorcustom.rgb.range': 'Range 0 to 255'
 };
 
 export {

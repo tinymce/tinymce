@@ -1,4 +1,4 @@
-import { Pipeline, Log } from '@ephox/agar';
+import { Log, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 
@@ -7,7 +7,7 @@ import Tools from 'tinymce/core/api/util/Tools';
 import Plugin from 'tinymce/plugins/toc/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-import HtmlUtils from '../module/test/HtmlUtils';
+import * as HtmlUtils from '../module/test/HtmlUtils';
 
 UnitTest.asynctest('browser.tinymce.plugins.toc.TocPluginTest', (success, failure) => {
   const suite = LegacyUnit.createSuite<Editor>();
@@ -40,20 +40,19 @@ UnitTest.asynctest('browser.tinymce.plugins.toc.TocPluginTest', (success, failur
       '<h1 id="h3">H1</h1>' +
       '<p>This is some text.</p>' +
       '<h3 id="h4">H3</h3>' +
-      '<p>This is some text.</p>'
-      ;
+      '<p>This is some text.</p>';
 
     LegacyUnit.setSelection(editor, 'h1', 0);
     editor.execCommand('mceInsertToc');
 
-    const $toc = editor.$('.tst-toc');
+    const $toc = editor.$<Element>('.tst-toc');
 
     LegacyUnit.equal($toc.length, 2, 'ToC inserted');
     LegacyUnit.equal($toc.attr('contentEditable'), 'false', 'cE=false');
 
     LegacyUnit.equal($toc.find('ul ul ul').length, 0, 'no levels beyond 2 are included');
 
-    stripAttribs($toc, ['data-mce-href', 'data-mce-selected']);
+    stripAttribs($toc, [ 'data-mce-href', 'data-mce-selected' ]);
 
     LegacyUnit.equal(trimBr(HtmlUtils.normalizeHtml($toc[0].outerHTML)),
       '<div class="tst-toc" contenteditable="false">' +
@@ -83,15 +82,14 @@ UnitTest.asynctest('browser.tinymce.plugins.toc.TocPluginTest', (success, failur
       '<h1 id="h3">H1</h1>' +
       '<p>This is some text.</p>' +
       '<h2 id="h4">H2</h2>' +
-      '<p>This is some text.</p>'
-      ;
+      '<p>This is some text.</p>';
 
     LegacyUnit.setSelection(editor, 'h1', 0);
     editor.execCommand('mceInsertToc');
 
-    const $toc = editor.$('.tst-toc');
+    const $toc = editor.$<Element>('.tst-toc');
 
-    stripAttribs($toc, ['data-mce-href', 'data-mce-selected']);
+    stripAttribs($toc, [ 'data-mce-href', 'data-mce-selected' ]);
 
     LegacyUnit.equal(trimBr(HtmlUtils.normalizeHtml($toc[0].innerHTML)),
       '<h3 contenteditable="true">Table of Contents</h3>' +
@@ -122,8 +120,7 @@ UnitTest.asynctest('browser.tinymce.plugins.toc.TocPluginTest', (success, failur
       '<h1 id="h3">H1</h1>' +
       '<p>This is some text.</p>' +
       '<h3 id="h4">H3</h3>' +
-      '<p>This is some text.</p>'
-      ;
+      '<p>This is some text.</p>';
 
     LegacyUnit.setSelection(editor, 'h1', 0);
     editor.execCommand('mceInsertToc');
@@ -139,31 +136,28 @@ UnitTest.asynctest('browser.tinymce.plugins.toc.TocPluginTest', (success, failur
   });
 
   suite.test('TestCase-TBA: TableOfContents: Misc.', function (editor) {
-    let contents, $toc;
-
     editor.getBody().innerHTML =
       '<h2 id="h1">H2</h2>' +
       '<p>This is some text.</p><br />' +
       '<h2 id="h2">H2</h2>' +
       '<p>This is some text.</p>' +
       '<h3 id="h4">H3</h3>' +
-      '<p>This is some text.</p>'
-      ;
+      '<p>This is some text.</p>';
 
     LegacyUnit.setSelection(editor, 'h2', 0);
     editor.execCommand('mceInsertToc');
 
-    contents = editor.getContent();
+    const contents = editor.getContent();
     LegacyUnit.equal(/contenteditable/i.test(contents), false, 'cE stripped for getContent()');
 
     editor.setContent(contents);
 
-    $toc = editor.$('.tst-toc');
+    const $toc = editor.$<Element>('.tst-toc');
     LegacyUnit.deepEqual($toc.attr('contentEditable'), 'false', 'cE added back after setContent()');
     LegacyUnit.deepEqual($toc.find(':first-child').attr('contentEditable'), 'true',
       'cE added back to title after setContent()');
 
-    stripAttribs($toc, ['data-mce-href', 'data-mce-selected']);
+    stripAttribs($toc, [ 'data-mce-href', 'data-mce-selected' ]);
 
     LegacyUnit.equal(trimBr(HtmlUtils.normalizeHtml($toc[0].innerHTML)),
       '<h3 contenteditable="true">Table of Contents</h3>' +

@@ -28,9 +28,9 @@ const adt: {
   end: <E> (element: E) => SplitPosition<E>;
 } = Adt.generate([
   { none: [] },
-  { start: ['element'] },
-  { middle: ['before', 'after'] },
-  { end: ['element'] }
+  { start: [ 'element' ] },
+  { middle: [ 'before', 'after' ] },
+  { end: [ 'element' ] }
 ]);
 
 export const SplitPosition = {

@@ -1,37 +1,28 @@
-import {
-  AlloyEvents,
-  DomFactory,
-  GuiFactory,
-  Input as AlloyInput,
-  Memento,
-  Representing,
-  SimpleSpec,
-} from '@ephox/alloy';
-import { Types } from '@ephox/bridge';
+import { AlloyEvents, DomFactory, GuiFactory, Input as AlloyInput, Memento, Representing, SimpleSpec } from '@ephox/alloy';
 import { ValueSchema } from '@ephox/boulder';
-import { console } from '@ephox/dom-globals';
-import { Option } from '@ephox/katamari';
-
-import { renderAlertBanner } from 'tinymce/themes/silver/ui/general/AlertBanner';
+import { Dialog } from '@ephox/bridge';
+import { Optional } from '@ephox/katamari';
+import { UiFactoryBackstage, UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
 import { renderBodyPanel } from 'tinymce/themes/silver/ui/dialog/BodyPanel';
+import { renderCollection } from 'tinymce/themes/silver/ui/dialog/Collection';
 import { renderColorInput } from 'tinymce/themes/silver/ui/dialog/ColorInput';
 import { renderColorPicker } from 'tinymce/themes/silver/ui/dialog/ColorPicker';
 import { renderCustomEditor } from 'tinymce/themes/silver/ui/dialog/CustomEditor';
 import { renderDropZone } from 'tinymce/themes/silver/ui/dialog/Dropzone';
 import { renderGrid } from 'tinymce/themes/silver/ui/dialog/Grid';
 import { renderIFrame } from 'tinymce/themes/silver/ui/dialog/IFrame';
+import { renderLabel } from 'tinymce/themes/silver/ui/dialog/Label';
 import { renderSelectBox } from 'tinymce/themes/silver/ui/dialog/SelectBox';
 import { renderSizeInput } from 'tinymce/themes/silver/ui/dialog/SizeInput';
 import { renderInput, renderTextarea } from 'tinymce/themes/silver/ui/dialog/TextField';
 import { renderUrlInput } from 'tinymce/themes/silver/ui/dialog/UrlInput';
+
+import { renderAlertBanner } from 'tinymce/themes/silver/ui/general/AlertBanner';
 import { renderButton } from 'tinymce/themes/silver/ui/general/Button';
-import { UiFactoryBackstageShared, UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
-import { renderLabel } from 'tinymce/themes/silver/ui/dialog/Label';
-import { renderCollection } from 'tinymce/themes/silver/ui/dialog/Collection';
 import { renderCheckbox } from 'tinymce/themes/silver/ui/general/Checkbox';
 import { setupDemo } from './DemoHelpers';
 
-// tslint:disable:no-console
+/* eslint-disable no-console */
 
 export default () => {
   const helpers = setupDemo();
@@ -45,23 +36,23 @@ export default () => {
 
   const iframeSpec = renderIFrame({
     name: 'iframe',
-    label: Option.some('Iframe'),
+    label: Optional.some('Iframe'),
     sandboxed: true
   }, sharedBackstage.providers);
 
   const inputSpec = renderInput({
     name: 'input',
-    label: Option.some('Beta'),
-    inputMode: Option.none(),
-    placeholder: Option.none(),
+    label: Optional.some('Beta'),
+    inputMode: Optional.none(),
+    placeholder: Optional.none(),
     maximized: false,
     disabled: false
   }, sharedBackstage.providers);
 
   const textareaSpec = renderTextarea({
     name: 'textarea',
-    label: Option.some('Gamma'),
-    placeholder: Option.none(),
+    label: Optional.some('Gamma'),
+    placeholder: Optional.none(),
     maximized: false,
     disabled: false
   }, sharedBackstage.providers);
@@ -80,9 +71,9 @@ export default () => {
         disabled: false
       }, sharedBackstage.providers) as any,
       renderInput({
-        label: Option.some('Sample input'),
-        inputMode: Option.none(),
-        placeholder: Option.none(),
+        label: Optional.some('Sample input'),
+        inputMode: Optional.none(),
+        placeholder: Optional.none(),
         name: 'exampleinputfieldname',
         maximized: false,
         disabled: false
@@ -101,7 +92,7 @@ export default () => {
             text: 'Click Me!',
             primary: false,
             disabled: false,
-            icon: Option.none(),
+            icon: Optional.none(),
             borderless: false
           }, () => {
             console.log('clicked on the button in the grid wrapped by a label');
@@ -117,9 +108,9 @@ export default () => {
             disabled: false
           }, sharedBackstage.providers) as any,
           renderInput({
-            label: Option.some('Sample input'),
-            inputMode: Option.none(),
-            placeholder: Option.none(),
+            label: Optional.some('Sample input'),
+            inputMode: Optional.none(),
+            placeholder: Optional.none(),
             name: 'exampleinputfieldname',
             maximized: false,
             disabled: false
@@ -132,13 +123,13 @@ export default () => {
   const gridSpec = renderGrid({
     columns: 5,
     items: [
-      AlloyInput.sketch({ inputAttributes: { placeholder: 'Text goes here...' } }) as any,
+      AlloyInput.sketch({ inputAttributes: { placeholder: 'Text goes here...' }}) as any,
       renderButton({
         name: 'gridspecbutton',
         text: 'Click Me!',
         primary: false,
         disabled: false,
-        icon: Option.none(),
+        icon: Optional.none(),
         borderless: false
       }, () => {
         console.log('clicked on the button in the grid');
@@ -151,7 +142,7 @@ export default () => {
     text: 'Text',
     primary: false,
     disabled: false,
-    icon: Option.none(),
+    icon: Optional.none(),
     borderless: false
   }, () => {
     console.log('clicked on the button');
@@ -175,7 +166,7 @@ export default () => {
         tag: 'div'
       },
       components: [
-        memBodyPanel.asSpec(),
+        memBodyPanel.asSpec()
       ],
       events: AlloyEvents.derive([
         AlloyEvents.runOnAttached((component) => {
@@ -191,23 +182,23 @@ export default () => {
 
   const colorInputSpec = renderColorInput({
     name: 'colorinput-demo',
-    label: Option.some('Color input label')
+    label: Optional.some('Color input label')
   }, sharedBackstage, backstage.colorinput);
 
   const colorPickerSpec = renderColorPicker({
     name: 'colorpicker-demo',
-    label: Option.some('Color picker label')
+    label: Optional.some('Color picker label')
   });
 
   const dropzoneSpec = renderDropZone({
     name: 'dropzone-demo',
-    label: Option.some('Dropzone label')
+    label: Optional.some('Dropzone label')
   }, sharedBackstage.providers);
 
   const selectBoxSpec = renderSelectBox({
     name: 'selectbox-demo',
     size: 1,
-    label: Option.some('Select one from'),
+    label: Optional.some('Select one from'),
     disabled: false,
     items: [
       { value: 'one', text: 'One' },
@@ -218,7 +209,7 @@ export default () => {
   const selectBoxSizeSpec = renderSelectBox({
     name: 'selectbox-demo',
     size: 6,
-    label: Option.some('Select one from'),
+    label: Optional.some('Select one from'),
     disabled: false,
     items: [
       { value: 'one', text: 'One' },
@@ -233,13 +224,13 @@ export default () => {
   const sizeInputSpec = renderSizeInput({
     constrain: true,
     name: 'sizeinput-demo',
-    label: Option.some('kustom fixed ratio'),
+    label: Optional.some('kustom fixed ratio'),
     disabled: false
   }, sharedBackstage.providers);
 
   const urlInputSpec = renderUrlInput({
     name: 'blah',
-    label: Option.some('Url'),
+    label: Optional.some('Url'),
     filetype: 'image', // 'image' || 'media'
     disabled: false
   }, backstage, backstage.urlinput);
@@ -279,25 +270,23 @@ export default () => {
     url: ''
   }, sharedBackstage.providers);
 
-  const display = (label: string, spec: SimpleSpec) => {
-    return {
-      dom: {
-        tag: 'div',
-        styles: { border: '1px solid #aaa', margin: '1em', padding: '1em' }
-      },
-      components: [
-        { dom: DomFactory.fromHtml('<h3>' + label + '</h3>') },
-        { dom: { tag: 'hr' } },
-        spec
-      ]
-    };
-  };
+  const display = (label: string, spec: SimpleSpec) => ({
+    dom: {
+      tag: 'div',
+      styles: { border: '1px solid #aaa', margin: '1em', padding: '1em' }
+    },
+    components: [
+      { dom: DomFactory.fromHtml('<h3>' + label + '</h3>') },
+      { dom: { tag: 'hr' }},
+      spec
+    ]
+  });
 
   const memCollection = Memento.record(
     renderCollection({
       columns: 1,
       name: 'collection',
-      label: Option.some('Collection: '),
+      label: Optional.some('Collection: ')
     }, sharedBackstage.providers)
   );
 
@@ -330,7 +319,7 @@ export default () => {
   helpers.uiMothership.add(everything);
   memCollection.getOpt(everything).each((collection) => {
     Representing.setValue(collection,
-      ValueSchema.asRawOrDie('dialogComponentsDemo.collection', Types.Collection.collectionDataProcessor, [
+      ValueSchema.asRawOrDie('dialogComponentsDemo.collection', Dialog.collectionDataProcessor, [
         {
           value: 'a',
           text: 'A',

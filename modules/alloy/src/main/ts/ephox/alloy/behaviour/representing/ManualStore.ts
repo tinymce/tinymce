@@ -10,16 +10,14 @@ interface ManualRepresentingConfig extends RepresentingConfig {
   store: ManualStoreConfig;
 }
 
-const getValue = (component: AlloyComponent, repConfig: ManualRepresentingConfig, repState: ManualRepresentingState) => {
-  return repConfig.store.getValue(component);
-};
+const getValue = (component: AlloyComponent, repConfig: ManualRepresentingConfig, _repState: ManualRepresentingState) => repConfig.store.getValue(component);
 
-const setValue = (component: AlloyComponent, repConfig: ManualRepresentingConfig, repState: ManualRepresentingState, data: any) => {
+const setValue = (component: AlloyComponent, repConfig: ManualRepresentingConfig, _repState: ManualRepresentingState, data: any) => {
   repConfig.store.setValue(component, data);
   repConfig.onSetValue(component, data);
 };
 
-const onLoad = (component: AlloyComponent, repConfig: ManualRepresentingConfig, repState: ManualRepresentingState) => {
+const onLoad = (component: AlloyComponent, repConfig: ManualRepresentingConfig, _repState: ManualRepresentingState) => {
   repConfig.store.initialValue.each((data) => {
     repConfig.store.setValue(component, data);
   });

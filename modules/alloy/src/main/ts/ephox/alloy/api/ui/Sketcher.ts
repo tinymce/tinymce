@@ -1,12 +1,12 @@
 import { FieldProcessorAdt, FieldSchema, ValueSchema } from '@ephox/boulder';
-import { Fun, Obj } from '@ephox/katamari';
+import { Obj } from '@ephox/katamari';
 
-import { AlloySpec, SketchSpec } from '../../api/component/SpecTypes';
 import * as FunctionAnnotator from '../../debugging/FunctionAnnotator';
 import * as AlloyParts from '../../parts/AlloyParts';
 import { PartTypeAdt } from '../../parts/PartType';
 import { BaseSketchDetail, BaseSketchSpec } from '../../spec/SpecSchema';
 import { AlloyComponent } from '../component/ComponentApi';
+import { AlloySpec, SketchSpec } from '../component/SpecTypes';
 import * as GuiTypes from './GuiTypes';
 import * as UiSketcher from './UiSketcher';
 
@@ -18,9 +18,9 @@ type FunctionRecord<A> = { [K in keyof A]: Function };
 type SketcherApisFuncRecord<A extends FunctionRecord<A>> = { [K in keyof A]: A[K] };
 
 export interface SingleSketch<S extends SingleSketchSpec> {
-  name: () => string;
-  configFields: () => FieldProcessorAdt[];
-  sketch: (spec: S) => SketchSpec;
+  readonly name: string;
+  readonly configFields: FieldProcessorAdt[];
+  readonly sketch: (spec: S) => SketchSpec;
 }
 
 export interface SingleSketcherSpec<S extends SingleSketchSpec, D extends SingleSketchDetail, A extends FunctionRecord<A>, E extends FunctionRecord<E> = {}> {
@@ -45,12 +45,12 @@ export interface CompositeSketchDetail extends BaseSketchDetail<CompositeSketchS
   partUids: Record<string, string>;
 }
 
-export interface CompositeSketch<S extends CompositeSketchSpec>  {
-  name: () => string;
-  configFields: () => FieldProcessorAdt[];
-  partFields: () => PartTypeAdt[];
-  sketch: (spec: S) => SketchSpec;
-  parts: () => AlloyParts.GeneratedParts;
+export interface CompositeSketch<S extends CompositeSketchSpec> {
+  readonly name: string;
+  readonly configFields: FieldProcessorAdt[];
+  readonly partFields: PartTypeAdt[];
+  readonly sketch: (spec: S) => SketchSpec;
+  readonly parts: AlloyParts.GeneratedParts;
 }
 
 export interface CompositeSketcherSpec<S extends CompositeSketchSpec, D extends CompositeSketchDetail, A extends FunctionRecord<A>, E extends FunctionRecord<E> = {}> {
@@ -92,51 +92,43 @@ const compositeSchema = ValueSchema.objOfOnly([
   FieldSchema.defaulted('extraApis', { })
 ]);
 
-const single = function <S extends SingleSketchSpec, D extends SingleSketchDetail, A extends FunctionRecord<A>, E extends FunctionRecord<E> = {}>(rawConfig: SingleSketcherSpec<S, D, A, E>): SingleSketch<S> & A & E {
+const single = function <S extends SingleSketchSpec, D extends SingleSketchDetail, A extends FunctionRecord<A>, E extends FunctionRecord<E> = {}> (rawConfig: SingleSketcherSpec<S, D, A, E>): SingleSketch<S> & A & E {
   const config: SingleSketcherRawDetail<S, D, A> = ValueSchema.asRawOrDie('Sketcher for ' + rawConfig.name, singleSchema, rawConfig);
 
-  const sketch = (spec: S) => {
-    return UiSketcher.single(config.name, config.configFields, config.factory, spec);
-  };
+  const sketch = (spec: S) => UiSketcher.single(config.name, config.configFields, config.factory, spec);
 
   const apis = Obj.map(config.apis, GuiTypes.makeApi) as any as SketcherApisFuncRecord<A>;
-  const extraApis = Obj.map(config.extraApis, (f, k) => {
-    return FunctionAnnotator.markAsExtraApi(f, k);
-  }) as E;
+  const extraApis = Obj.map(config.extraApis, (f, k) => FunctionAnnotator.markAsExtraApi(f, k)) as E;
 
   return {
-    name: Fun.constant(config.name),
-    configFields: Fun.constant(config.configFields),
+    name: config.name,
+    configFields: config.configFields,
     sketch,
     ...apis,
     ...extraApis
-   };
+  };
 };
 
-const composite = function <S extends CompositeSketchSpec, D extends CompositeSketchDetail, A extends FunctionRecord<A>, E extends FunctionRecord<E> = {}>(rawConfig: CompositeSketcherSpec<S, D, A, E>): CompositeSketch<S> & A & E {
+const composite = function <S extends CompositeSketchSpec, D extends CompositeSketchDetail, A extends FunctionRecord<A>, E extends FunctionRecord<E> = {}> (rawConfig: CompositeSketcherSpec<S, D, A, E>): CompositeSketch<S> & A & E {
   const config: CompositeSketcherRawDetail<S, D, A> = ValueSchema.asRawOrDie('Sketcher for ' + rawConfig.name, compositeSchema, rawConfig);
 
-  const sketch = (spec: S) => {
-    return UiSketcher.composite(config.name, config.configFields, config.partFields, config.factory, spec);
-  };
+  const sketch = (spec: S) => UiSketcher.composite(config.name, config.configFields, config.partFields, config.factory, spec);
 
   // These are constructors that will store their configuration.
   const parts: AlloyParts.GeneratedParts = AlloyParts.generate(config.name, config.partFields);
 
   const apis = Obj.map(config.apis, GuiTypes.makeApi) as any as SketcherApisFuncRecord<A>;
-  const extraApis = Obj.map(config.extraApis, (f, k) => {
-    return FunctionAnnotator.markAsExtraApi(f, k);
-  }) as E;
+  const extraApis = Obj.map(config.extraApis, (f, k) => FunctionAnnotator.markAsExtraApi(f, k)) as E;
 
   return {
-    name: Fun.constant(config.name),
-    partFields: Fun.constant(config.partFields),
-    configFields: Fun.constant(config.configFields),
+    name: config.name,
+    partFields: config.partFields,
+    configFields: config.configFields,
     sketch,
-    parts: Fun.constant(parts),
+    parts,
     ...apis,
     ...extraApis
-   };
+  };
 };
 
 export {

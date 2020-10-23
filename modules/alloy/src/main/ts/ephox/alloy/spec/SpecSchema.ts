@@ -1,6 +1,6 @@
 import { FieldProcessorAdt, FieldSchema, ValueSchema } from '@ephox/boulder';
 
-import { AlloySpec, RawDomSchema } from '../api/component/SpecTypes';
+import { AlloySpec, OptionalDomSchema } from '../api/component/SpecTypes';
 import * as Fields from '../data/Fields';
 
 export interface BaseSketchSpec {
@@ -10,7 +10,7 @@ export interface BaseSketchSpec {
 export interface BaseSketchDetail<T extends BaseSketchSpec> {
   uid: string;
   components: AlloySpec[];
-  dom: RawDomSchema;
+  dom: OptionalDomSchema;
   originalSpec: T;
   'debug.sketcher': { };
 }
@@ -34,7 +34,7 @@ const asRawOrDie = <D extends BaseSketchDetail<any>, S extends BaseSketchSpec>(l
   return ValueSchema.asRawOrDie(label + ' [SpecSchema]', ValueSchema.objOfOnly(baseS.concat(schema)), spec);
 };
 
-const asStructOrDie = function <D extends BaseSketchDetail<any>, S extends BaseSketchSpec>(label: string, schema: FieldProcessorAdt[], spec: S, partSchemas: any[], partUidsSchemas: any[]): D {
+const asStructOrDie = function <D extends BaseSketchDetail<any>, S extends BaseSketchSpec> (label: string, schema: FieldProcessorAdt[], spec: S, partSchemas: any[], partUidsSchemas: any[]): D {
   const baseS = base(partSchemas, partUidsSchemas);
   return ValueSchema.asStructOrDie(label + ' [SpecSchema]', ValueSchema.objOfOnly(baseS.concat(schema)), spec);
 };

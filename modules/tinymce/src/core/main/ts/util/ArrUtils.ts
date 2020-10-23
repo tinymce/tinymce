@@ -5,6 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Type } from '@ephox/katamari';
+
 /**
  * Array utility class.
  *
@@ -12,26 +14,31 @@
  * @class tinymce.util.Arr
  */
 
+export type ArrayCallback<T, R> = (x: T, i: number, xs: ReadonlyArray<T>) => R;
+export type ObjCallback<T, R> = (value: T, key: string, obj: Record<string, T>) => R;
+
 const isArray = Array.isArray;
 
-const toArray = function (obj) {
-  let array = obj, i, l;
-
+const toArray = <T>(obj: ArrayLike<T>): T[] => {
   if (!isArray(obj)) {
-    array = [];
-    for (i = 0, l = obj.length; i < l; i++) {
+    const array: T[] = [];
+    for (let i = 0, l = obj.length; i < l; i++) {
       array[i] = obj[i];
     }
+    return array;
+  } else {
+    return obj;
   }
-
-  return array;
 };
 
-const each = function (o, cb, s?) {
+const each: {
+  <T>(arr: ArrayLike<T> | null | undefined, cb: ArrayCallback<T, void | boolean>, scope?: any): boolean;
+  <T>(obj: Record<string, T> | null | undefined, cb: ObjCallback<T, void | boolean>, scope?: any): boolean;
+} = (o, cb, s?): boolean => {
   let n, l;
 
   if (!o) {
-    return 0;
+    return false;
   }
 
   s = s || o;
@@ -40,7 +47,7 @@ const each = function (o, cb, s?) {
     // Indexed arrays, needed for Safari
     for (n = 0, l = o.length; n < l; n++) {
       if (cb.call(s, o[n], n, o) === false) {
-        return 0;
+        return false;
       }
     }
   } else {
@@ -48,29 +55,35 @@ const each = function (o, cb, s?) {
     for (n in o) {
       if (o.hasOwnProperty(n)) {
         if (cb.call(s, o[n], n, o) === false) {
-          return 0;
+          return false;
         }
       }
     }
   }
 
-  return 1;
+  return true;
 };
 
-const map = function (array, callback) {
-  const out = [];
+const map: {
+  <T, R>(arr: ArrayLike<T> | null | undefined, cb: ArrayCallback<T, R>): R[];
+  <T, R>(obj: Record<string | null | undefined, T>, cb: ObjCallback<T, R>): R[];
+} = <T, R>(array, callback): R[] => {
+  const out: R[] = [];
 
-  each(array, function (item, index) {
+  each<T>(array, function (item, index) {
     out.push(callback(item, index, array));
   });
 
   return out;
 };
 
-const filter = function (a, f?) {
-  const o = [];
+const filter: {
+  <T>(arr: ArrayLike<T> | null | undefined, f?: ArrayCallback<T, boolean>): T[];
+  <T>(obj: Record<string, T> | null | undefined, f?: ObjCallback<T, boolean>): T[];
+} = <T>(a, f?): T[] => {
+  const o: T[] = [];
 
-  each(a, function (v, index) {
+  each<T>(a, function (v, index) {
     if (!f || f(v, index, a)) {
       o.push(v);
     }
@@ -79,11 +92,9 @@ const filter = function (a, f?) {
   return o;
 };
 
-const indexOf = function (a, v) {
-  let i, l;
-
+const indexOf = <T>(a: ArrayLike<T>, v: T): number => {
   if (a) {
-    for (i = 0, l = a.length; i < l; i++) {
+    for (let i = 0, l = a.length; i < l; i++) {
       if (a[i] === v) {
         return i;
       }
@@ -93,21 +104,20 @@ const indexOf = function (a, v) {
   return -1;
 };
 
-const reduce = function (collection, iteratee, accumulator?, thisArg?) {
-  let i = 0;
+const reduce: {
+  <T, R>(collection: ArrayLike<T>, iteratee: (acc: R, item: T, index: number) => R, accumulator: R, thisArg?: any): R;
+  <T>(collection: ArrayLike<T>, iteratee: (acc: T, item: T, index: number) => T, accumulator?: undefined, thisArg?: any): T;
+} = <T, R>(collection, iteratee, accumulator?, thisArg?): R => {
+  let acc: R = Type.isUndefined(accumulator) ? collection[0] : accumulator;
 
-  if (arguments.length < 3) {
-    accumulator = collection[0];
+  for (let i = 0; i < collection.length; i++) {
+    acc = iteratee.call(thisArg, acc, collection[i], i);
   }
 
-  for (; i < collection.length; i++) {
-    accumulator = iteratee.call(thisArg, accumulator, collection[i], i);
-  }
-
-  return accumulator;
+  return acc;
 };
 
-const findIndex = function (array, predicate, thisArg?) {
+const findIndex = <T>(array: ArrayLike<T>, predicate: ArrayCallback<T, boolean>, thisArg?: any): number => {
   let i, l;
 
   for (i = 0, l = array.length; i < l; i++) {
@@ -119,7 +129,7 @@ const findIndex = function (array, predicate, thisArg?) {
   return -1;
 };
 
-const find = function (array, predicate, thisArg?) {
+const find = <T>(array: ArrayLike<T>, predicate: ArrayCallback<T, boolean>, thisArg?: any): T | undefined => {
   const idx = findIndex(array, predicate, thisArg);
 
   if (idx !== -1) {
@@ -129,11 +139,10 @@ const find = function (array, predicate, thisArg?) {
   return undefined;
 };
 
-const last = function (collection) {
-  return collection[collection.length - 1];
-};
+const last = <T>(collection: ArrayLike<T>): T | undefined =>
+  collection[collection.length - 1];
 
-export default {
+export {
   isArray,
   toArray,
   each,

@@ -5,10 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLElement } from '@ephox/dom-globals';
 import Editor from 'tinymce/core/api/Editor';
-import Utils from '../util/Utils';
-import Prism from './Prism';
+import * as Utils from '../util/Utils';
+import * as Prism from './Prism';
 
 const setup = function (editor: Editor) {
   const $ = editor.$;
@@ -51,6 +50,6 @@ const setup = function (editor: Editor) {
   });
 };
 
-export default {
+export {
   setup
 };

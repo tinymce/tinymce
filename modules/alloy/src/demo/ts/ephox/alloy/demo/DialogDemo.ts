@@ -1,6 +1,5 @@
-import { console, document, setTimeout } from '@ephox/dom-globals';
-import { Option, Result } from '@ephox/katamari';
-import { Class, Element } from '@ephox/sugar';
+import { Optional, Result } from '@ephox/katamari';
+import { Class, SugarElement } from '@ephox/sugar';
 
 import * as DomFactory from 'ephox/alloy/api/component/DomFactory';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
@@ -12,38 +11,36 @@ import { ModalDialog } from 'ephox/alloy/api/ui/ModalDialog';
 import * as DemoSink from 'ephox/alloy/demo/DemoSink';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 
-// tslint:disable:no-console
+/* eslint-disable no-console */
 
 export default (): void => {
   const gui = Gui.create();
-  const body = Element.fromDom(document.body);
-  Class.add(gui.element(), 'gui-root-demo-container');
+  const body = SugarElement.fromDom(document.body);
+  Class.add(gui.element, 'gui-root-demo-container');
   Attachment.attachSystem(body, gui);
 
   const sink = DemoSink.make();
 
   gui.add(sink);
 
-  const lazySink = () => {
-    return Result.value(sink);
-  };
+  const lazySink = () => Result.value(sink);
 
-  const pTitle = ModalDialog.parts().title({
+  const pTitle = ModalDialog.parts.title({
     dom: DomFactory.fromHtml('<div class="mce-title">Insert Link</div>')
   });
 
-  const pDraghandle = ModalDialog.parts().draghandle({
+  const pDraghandle = ModalDialog.parts.draghandle({
     dom: DomFactory.fromHtml('<div class="mce-dragh"></div>')
   });
 
-  const pClose = ModalDialog.parts().close({
+  const pClose = ModalDialog.parts.close({
     dom: DomFactory.fromHtml('<button type="button" aria-hidden="true" class="mce-close"></button>'),
     components: [
-      Container.sketch({ dom: { tag: 'i', classes: [ 'mce-ico', 'mce-i-remove' ] } })
+      Container.sketch({ dom: { tag: 'i', classes: [ 'mce-ico', 'mce-i-remove' ] }})
     ]
   });
 
-  const pBody = ModalDialog.parts().body({
+  const pBody = ModalDialog.parts.body({
     dom: DomFactory.fromHtml('<div></div>'),
     components: [
       Container.sketch({
@@ -54,7 +51,7 @@ export default (): void => {
           tag: 'button',
           innerHtml: 'Wait for 5 seconds'
         },
-        action: (comp) => {
+        action: (_comp) => {
           ModalDialog.setBusy(dialog, (dlg, busyBehaviours) => ({
             dom: {
               tag: 'div',
@@ -96,7 +93,7 @@ export default (): void => {
     ]
   });
 
-  const pFooter = ModalDialog.parts().footer({
+  const pFooter = ModalDialog.parts.footer({
     dom: {
       tag: 'div'
     }
@@ -134,9 +131,9 @@ export default (): void => {
       ],
 
       lazySink,
-      onEscape () {
+      onEscape() {
         console.log('escaping');
-        return Option.some<boolean>(true);
+        return Optional.some<boolean>(true);
       },
       dragBlockClass: 'blocker-class',
 

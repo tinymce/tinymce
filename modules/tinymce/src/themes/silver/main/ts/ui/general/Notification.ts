@@ -5,9 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyComponent, AlloySpec, Behaviour, Button, GuiFactory, Memento, Replacing, Sketcher, UiSketcher } from '@ephox/alloy';
+import {
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, Behaviour, Button, Focusing, GuiFactory, Memento, NativeEvents, Replacing, Sketcher,
+  UiSketcher
+} from '@ephox/alloy';
 import { FieldSchema } from '@ephox/boulder';
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import { TranslatedString, Untranslated } from 'tinymce/core/api/util/I18n';
 import { get as getIcon, getFirst, IconProvider } from '../icons/Icons';
 
@@ -20,7 +23,7 @@ export interface NotificationSketchApis {
 export interface NotificationSketchSpec extends Sketcher.SingleSketchSpec {
   text: string;
   level: 'info' | 'warn' | 'warning' | 'error' | 'success';
-  icon: Option<string>;
+  icon: Optional<string>;
   closeButton?: boolean;
   progress: boolean;
   onAction: Function;
@@ -31,8 +34,8 @@ export interface NotificationSketchSpec extends Sketcher.SingleSketchSpec {
 // tslint:disable-next-line:no-empty-interface
 export interface NotificationSketchDetail extends Sketcher.SingleSketchDetail {
   text: string;
-  level: Option<'info' | 'warn' | 'warning' | 'error' | 'success'>;
-  icon: Option<string>;
+  level: Optional<'info' | 'warn' | 'warning' | 'error' | 'success'>;
+  icon: Optional<string>;
   closeButton: boolean;
   onAction: Function;
   progress: boolean;
@@ -141,8 +144,50 @@ const factory: UiSketcher.SingleSketchFactory<NotificationSketchDetail, Notifica
   const iconChoices = Arr.flatten([
     detail.icon.toArray(),
     detail.level.toArray(),
-    detail.level.bind((level) => Option.from(notificationIconMap[level])).toArray()
+    detail.level.bind((level) => Optional.from(notificationIconMap[level])).toArray()
   ]);
+
+  const memButton = Memento.record(Button.sketch({
+    dom: {
+      tag: 'button',
+      classes: [ 'tox-notification__dismiss', 'tox-button', 'tox-button--naked', 'tox-button--icon' ]
+    },
+    components: [{
+      dom: {
+        tag: 'div',
+        classes: [ 'tox-icon' ],
+        innerHtml: getIcon('close', detail.iconProvider),
+        attributes: {
+          'aria-label': detail.translationProvider('Close')
+        }
+      }
+    }],
+    action: (comp) => {
+      detail.onAction(comp);
+    }
+  }));
+
+  const components: AlloySpec[] = [
+    {
+      dom: {
+        tag: 'div',
+        classes: [ 'tox-notification__icon' ],
+        innerHtml: getFirst(iconChoices, detail.iconProvider)
+      }
+    },
+    {
+      dom: {
+        tag: 'div',
+        classes: [ 'tox-notification__body' ]
+      },
+      components: [
+        memBannerText.asSpec()
+      ],
+      behaviours: Behaviour.derive([
+        Replacing.config({ })
+      ])
+    }
+  ];
 
   return {
     uid: detail.uid,
@@ -155,47 +200,17 @@ const factory: UiSketcher.SingleSketchFactory<NotificationSketchDetail, Notifica
         [ 'tox-notification', 'tox-notification--in' ]
       )
     },
-    components: [{
-        dom: {
-          tag: 'div',
-          classes: [ 'tox-notification__icon' ],
-          innerHtml: getFirst(iconChoices, detail.iconProvider)
-        }
-      } as AlloySpec,
-      {
-        dom: {
-          tag: 'div',
-          classes: [ 'tox-notification__body'],
-        },
-        components: [
-          memBannerText.asSpec()
-        ],
-        behaviours: Behaviour.derive([
-          Replacing.config({ })
-        ])
-      } as AlloySpec
-    ]
-    .concat(detail.progress ? [memBannerProgress.asSpec()] : [])
-    .concat(!detail.closeButton ? [] : [Button.sketch({
-        dom: {
-          tag: 'button',
-          classes: [ 'tox-notification__dismiss', 'tox-button', 'tox-button--naked', 'tox-button--icon' ]
-        },
-        components: [{
-          dom: {
-            tag: 'div',
-            classes: ['tox-icon'],
-            innerHtml: getIcon('close', detail.iconProvider),
-            attributes: {
-              'aria-label': detail.translationProvider('Close')
-            }
-          }
-        }],
-        action: (comp) => {
-          detail.onAction(comp);
-        }
-      })]
-    ),
+    behaviours: Behaviour.derive([
+      Focusing.config({ }),
+      AddEventsBehaviour.config('notification-events', [
+        AlloyEvents.run(NativeEvents.focusin(), (comp) => {
+          memButton.getOpt(comp).each(Focusing.focus);
+        })
+      ])
+    ]),
+    components: components
+      .concat(detail.progress ? [ memBannerProgress.asSpec() ] : [])
+      .concat(!detail.closeButton ? [] : [ memButton.asSpec() ]),
     apis
   };
 };

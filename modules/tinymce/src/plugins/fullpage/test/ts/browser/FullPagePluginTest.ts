@@ -1,4 +1,4 @@
-import { Assertions, GeneralSteps, Pipeline, Step, Waiter, Logger, Log } from '@ephox/agar';
+import { Assertions, GeneralSteps, Log, Logger, Pipeline, Step, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 
@@ -134,7 +134,7 @@ UnitTest.asynctest('browser.tinymce.plugins.fullpage.FullPagePluginTest', functi
           Assertions.assertEq('Styles added to iframe document', 'uppercase', editor.dom.getStyle(editor.getBody().firstChild, 'text-transform', true));
           Assertions.assertEq('Styles not added to actual element', '', editor.dom.getStyle(editor.getBody().firstChild, 'text-transform', false));
         }
-      ), 10, 3000)
+        ), 10, 3000)
     ]));
   };
 

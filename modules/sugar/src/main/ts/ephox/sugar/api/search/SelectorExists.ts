@@ -1,30 +1,23 @@
+import { SugarElement } from '../node/SugarElement';
 import * as SelectorFind from './SelectorFind';
-import Element from '../node/Element';
-import { Node as DomNode } from '@ephox/dom-globals';
 
-const any = function (selector: string) {
-  return SelectorFind.first(selector).isSome();
-};
+const any = (selector: string): boolean =>
+  SelectorFind.first(selector).isSome();
 
-const ancestor = function (scope: Element<DomNode>, selector: string, isRoot?: (e: Element<DomNode>) => boolean) {
-  return SelectorFind.ancestor(scope, selector, isRoot).isSome();
-};
+const ancestor = (scope: SugarElement<Node>, selector: string, isRoot?: (e: SugarElement<Node>) => boolean): boolean =>
+  SelectorFind.ancestor(scope, selector, isRoot).isSome();
 
-const sibling = function (scope: Element<DomNode>, selector: string) {
-  return SelectorFind.sibling(scope, selector).isSome();
-};
+const sibling = (scope: SugarElement<Node>, selector: string): boolean =>
+  SelectorFind.sibling(scope, selector).isSome();
 
-const child = function (scope: Element<DomNode>, selector: string) {
-  return SelectorFind.child(scope, selector).isSome();
-};
+const child = (scope: SugarElement<Node>, selector: string): boolean =>
+  SelectorFind.child(scope, selector).isSome();
 
-const descendant = function (scope: Element<DomNode>, selector: string) {
-  return SelectorFind.descendant(scope, selector).isSome();
-};
+const descendant = (scope: SugarElement<Node>, selector: string): boolean =>
+  SelectorFind.descendant(scope, selector).isSome();
 
-const closest = function (scope: Element<DomNode>, selector: string, isRoot?: (e: Element<DomNode>) => boolean) {
-  return SelectorFind.closest(scope, selector, isRoot).isSome();
-};
+const closest = (scope: SugarElement<Node>, selector: string, isRoot?: (e: SugarElement<Node>) => boolean): boolean =>
+  SelectorFind.closest(scope, selector, isRoot).isSome();
 
 export {
   any,
@@ -32,5 +25,5 @@ export {
   sibling,
   child,
   descendant,
-  closest,
+  closest
 };

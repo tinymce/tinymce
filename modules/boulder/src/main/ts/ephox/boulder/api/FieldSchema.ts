@@ -1,14 +1,12 @@
-import { Result, Arr } from '@ephox/katamari';
-import { value, objOf, arrOf, arrOfObj, anyValue, objOfOnly, Processor, field, state as valueState, FieldProcessorAdt } from '../core/ValueProcessor';
+import { Arr, Result } from '@ephox/katamari';
+import { SimpleResult } from '../alien/SimpleResult';
+import { anyValue, arrOf, arrOfObj, field, FieldProcessorAdt, objOf, objOfOnly, Processor, state as valueState, value } from '../core/ValueProcessor';
 import * as FieldPresence from './FieldPresence';
 import * as ValueSchema from './ValueSchema';
-import { SimpleResult } from '../alien/SimpleResult';
 
-const validateEnum = (values) => ValueSchema.valueOf((value) => {
-  return Arr.contains(values, value) ?
-    Result.value(value) :
-    Result.error(`Unsupported value: "${value}", choose one of "${values.join(', ')}".`);
-});
+const validateEnum = (values) => ValueSchema.valueOf((value) => Arr.contains(values, value) ?
+  Result.value(value) :
+  Result.error(`Unsupported value: "${value}", choose one of "${values.join(', ')}".`));
 
 const strict = function (key: string): FieldProcessorAdt {
   return field(key, key, FieldPresence.strict(), anyValue());
@@ -47,13 +45,13 @@ const forbid = function (key: string, message: string): FieldProcessorAdt {
     key,
     key,
     FieldPresence.asOption(),
-    value(function (v) {
+    value(function (_v) {
       return SimpleResult.serror('The field: ' + key + ' is forbidden. ' + message);
     })
   );
 };
 
-const strictObjOf = function (key: string, objSchema: FieldProcessorAdt[]): FieldProcessorAdt  {
+const strictObjOf = function (key: string, objSchema: FieldProcessorAdt[]): FieldProcessorAdt {
   return field(key, key, FieldPresence.strict(), objOf(objSchema));
 };
 
@@ -80,7 +78,7 @@ const option = function (key: string): FieldProcessorAdt {
 };
 
 const optionOf = function (key: string, schema: Processor): FieldProcessorAdt {
-   return field(key, key, FieldPresence.asOption(), schema);
+  return field(key, key, FieldPresence.asOption(), schema);
 };
 
 const optionNumber = function (key: string): FieldProcessorAdt {

@@ -1,13 +1,13 @@
 import { ApproxStructure, Assertions, GeneralSteps, Keys, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
+import { Unicode } from '@ephox/katamari';
 import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
 
 import TextpatternPlugin from 'tinymce/plugins/textpattern/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-import Utils from '../module/test/Utils';
-import { Unicode } from '@ephox/katamari';
+import * as Utils from '../module/test/Utils';
 
 UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextPatternPluginTest', (success, failure) => {
   const detection = PlatformDetection.detect();
@@ -35,20 +35,20 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextPatternPluginTest', 
       Step.label('Italic format on single word using space 1', GeneralSteps.sequence([
         Utils.sSetContentAndPressSpace(tinyApis, tinyActions, '*a&nbsp; *', 5),
         Step.label('Check italic format was applied around the "a" and trailing whitespace',
-        tinyApis.sAssertContentStructure(ApproxStructure.build(function (s, str) {
-          return Utils.bodyStruct([
-            s.element('p', {
-              children: [
-                s.element('em', {
-                  children: [
-                    s.text(str.is('a\u00A0 '), true)
-                  ]
-                }),
-                s.text(str.is(Unicode.nbsp), true),
-              ]
-            })
-          ]);
-        })))
+          tinyApis.sAssertContentStructure(ApproxStructure.build(function (s, str) {
+            return Utils.bodyStruct([
+              s.element('p', {
+                children: [
+                  s.element('em', {
+                    children: [
+                      s.text(str.is('a\u00A0 '), true)
+                    ]
+                  }),
+                  s.text(str.is(Unicode.nbsp), true)
+                ]
+              })
+            ]);
+          })))
       ])),
       Step.label('Italic format on single word using space 2', GeneralSteps.sequence([
         Utils.sSetContentAndPressSpace(tinyApis, tinyActions, '*a*'),
@@ -56,7 +56,7 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextPatternPluginTest', 
       ])),
       Step.label('Bold format on single word using space', GeneralSteps.sequence([
         Utils.sSetContentAndPressSpace(tinyApis, tinyActions, '**a**'),
-        Step.label('Check bold format was applied', tinyApis.sAssertContentStructure(Utils.inlineStructHelper('strong', 'a'))),
+        Step.label('Check bold format was applied', tinyApis.sAssertContentStructure(Utils.inlineStructHelper('strong', 'a')))
       ])),
       Step.label('Bold/italic format on single word using space', GeneralSteps.sequence([
         Utils.sSetContentAndPressSpace(tinyApis, tinyActions, '***a***'),
@@ -97,7 +97,7 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextPatternPluginTest', 
                   children: [
                     s.element('strong', {
                       children: [
-                        s.text(str.is('a'), true),
+                        s.text(str.is('a'), true)
                       ]
                     })
                   ]
@@ -144,54 +144,42 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextPatternPluginTest', 
       Step.label('enter with uncollapsed range does not insert list', GeneralSteps.sequence([
         tinyApis.sSetContent('<p>* ab</p>'),
         tinyApis.sFocus(),
-        tinyApis.sSetSelection([0, 0], 3, [0, 0], 4),
+        tinyApis.sSetSelection([ 0, 0 ], 3, [ 0, 0 ], 4),
         tinyActions.sContentKeystroke(Keys.enter(), {}),
         tinyApis.sAssertContentPresence({ ul: 0 })
       ])),
       Step.label('enter with only pattern does not insert list', GeneralSteps.sequence([
         tinyApis.sSetContent('<p>*</p>'),
         tinyApis.sFocus(),
-        tinyApis.sSetCursor([0, 0], 1),
+        tinyApis.sSetCursor([ 0, 0 ], 1),
         tinyActions.sContentKeystroke(Keys.enter(), {}),
         tinyApis.sAssertContentPresence({ ul: 0 })
       ])),
       Step.label('inline format with fragmented start sequence', GeneralSteps.sequence([
-        Utils.sSetContentAndPressEnter(tinyApis, tinyActions, '<span data-mce-spellcheck="invalid">*</span>*a**', 4, [0, 1]),
+        Utils.sSetContentAndPressEnter(tinyApis, tinyActions, '<span data-mce-spellcheck="invalid">*</span>*a**', 4, [ 0, 1 ]),
         Step.label('Check bold format was applied', tinyApis.sAssertContentStructure(Utils.inlineBlockStructHelper('strong', 'a')))
       ])),
       Step.label('inline format with fragmented end sequence', GeneralSteps.sequence([
-        Utils.sSetContentAndPressEnter(tinyApis, tinyActions, '**a*<span data-mce-spellcheck="invalid">*</span>', 1, [0, 1]),
+        Utils.sSetContentAndPressEnter(tinyApis, tinyActions, '**a*<span data-mce-spellcheck="invalid">*</span>', 1, [ 0, 1 ]),
         Step.label('Check bold format was applied', tinyApis.sAssertContentStructure(Utils.inlineBlockStructHelper('strong', 'a')))
       ])),
       Step.label('block format with fragmented start sequence', GeneralSteps.sequence([
-        Utils.sSetContentAndPressEnter(tinyApis, tinyActions, '<span data-mce-spellcheck="invalid">1</span>. a', 3, [0, 1]),
+        Utils.sSetContentAndPressEnter(tinyApis, tinyActions, '<span data-mce-spellcheck="invalid">1</span>. a', 3, [ 0, 1 ]),
         tinyApis.sAssertContentPresence({ ol: 1, li: 2 })
-      ])),
-      Step.label('inline format with forced_root_block: false', GeneralSteps.sequence([
-        tinyApis.sSetSetting('forced_root_block', false),
-        Utils.sSetContentAndPressEnter(tinyApis, tinyActions, '**a**', 5, [0], false),
-        Step.label('Check bold format was applied', tinyApis.sAssertContentStructure(Utils.forcedRootBlockInlineStructHelper('strong', 'a'))),
-        tinyApis.sDeleteSetting('forced_root_block')
-      ])),
-      Step.label('block format with forced_root_block: false', GeneralSteps.sequence([
-        tinyApis.sSetSetting('forced_root_block', false),
-        Utils.sSetContentAndPressEnter(tinyApis, tinyActions, '# heading 1', 11, [0], false),
-        Step.label('Check heading format was applied', tinyApis.sAssertContentStructure(Utils.forcedRootBlockStructHelper('h1', ' heading 1'))),
-        tinyApis.sDeleteSetting('forced_root_block')
       ])),
       Step.label('getPatterns/setPatterns', Step.sync(function () {
         // Store the original patterns
         const origPatterns = editor.plugins.textpattern.getPatterns();
 
         editor.plugins.textpattern.setPatterns([
-            { start: '#', format: 'h1' },
-            { start: '##', format: 'h2' },
-            { start: '###', format: 'h3' }
+          { start: '#', format: 'h1' },
+          { start: '##', format: 'h2' },
+          { start: '###', format: 'h3' }
         ]);
 
         Assertions.assertEq(
-            'should be the same',
-            editor.plugins.textpattern.getPatterns(),
+          'should be the same',
+          editor.plugins.textpattern.getPatterns(),
           [
             {
               format: 'h3',

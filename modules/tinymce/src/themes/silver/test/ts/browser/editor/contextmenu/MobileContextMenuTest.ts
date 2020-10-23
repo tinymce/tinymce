@@ -1,10 +1,9 @@
 import { ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Log, Pipeline, Touch, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { document } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { TinyApis, TinyDom, TinyLoader, TinyUi } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
-import { Body, Element } from '@ephox/sugar';
+import { SugarBody, SugarElement } from '@ephox/sugar';
 import ImagePlugin from 'tinymce/plugins/image/Plugin';
 import ImageToolsPlugin from 'tinymce/plugins/imagetools/Plugin';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
@@ -37,9 +36,9 @@ UnitTest.asynctest('MobileContextMenuTest', (success, failure) => {
     const tinyApis = TinyApis(editor);
     const tinyUi = TinyUi(editor);
 
-    const doc = Element.fromDom(document);
-    const dialogRoot = Body.body();
-    const editorBody = Element.fromDom(editor.getBody());
+    const doc = SugarElement.fromDom(document);
+    const dialogRoot = SugarBody.body();
+    const editorBody = SugarElement.fromDom(editor.getBody());
 
     const sOpenContextMenu = (target: string) => Chain.asStep(target, [
       Chain.inject(editorBody),
@@ -69,9 +68,7 @@ UnitTest.asynctest('MobileContextMenuTest', (success, failure) => {
     const sPressEnterKey = Keyboard.sKeydown(doc, Keys.enter(), { });
     const sPressEscKey = Keyboard.sKeydown(doc, Keys.escape(), {});
 
-    const sRepeatDownArrowKey = (index) => {
-      return GeneralSteps.sequence(Arr.range(index, () => sPressDownArrowKey));
-    };
+    const sRepeatDownArrowKey = (index) => GeneralSteps.sequence(Arr.range(index, () => sPressDownArrowKey));
 
     const tableHtml = '<table style="width: 100%;">' +
     '<tbody>' +
@@ -88,15 +85,13 @@ UnitTest.asynctest('MobileContextMenuTest', (success, failure) => {
 
     const imgSrc = '../img/dogleft.jpg';
 
-    const contentInTableHtml = (content: string) => {
-      return '<table style="width: 100%;">' +
+    const contentInTableHtml = (content: string) => '<table style="width: 100%;">' +
        '<tbody>' +
           '<tr>' +
             `<td>${content}</td>` +
           '</tr>' +
         '</tbody>' +
       '</table>';
-    };
 
     const imageInTableHtml = contentInTableHtml('<img src="' + imgSrc + '" width="160" height="100"/>');
     const placeholderImageInTableHtml = contentInTableHtml('<img src="' + imgSrc + '" width="160" height="100" data-mce-placeholder="1"/>');
@@ -104,24 +99,20 @@ UnitTest.asynctest('MobileContextMenuTest', (success, failure) => {
 
     // In Firefox we add a a bogus br element after the link that fixes a gecko link bug when,
     // a link is placed at the end of block elements there is no way to move the caret behind the link.
-    const sAssertRemoveLinkHtmlStructure = Assertions.sAssertStructure('Assert remove link', ApproxStructure.build((s, str) => {
-      return s.element('body', {
-        children: [
-          s.element('p', {
-            children: [
-              s.text(str.is('Tiny')),
-              s.zeroOrOne(s.element('br', {}))
-            ]
-          })
-        ]
-      });
-    }), editorBody);
+    const sAssertRemoveLinkHtmlStructure = Assertions.sAssertStructure('Assert remove link', ApproxStructure.build((s, str) => s.element('body', {
+      children: [
+        s.element('p', {
+          children: [
+            s.text(str.is('Tiny')),
+            s.zeroOrOne(s.element('br', {}))
+          ]
+        })
+      ]
+    })), editorBody);
 
-    const sAssertMenuItems = (items: string[]) => {
-      return Chain.asStep(Body.body(), [
-        Chain.fromParent(UiFinder.cFindIn(mobileContextMenuSelector), Arr.map(items, UiFinder.cExists))
-      ]);
-    };
+    const sAssertMenuItems = (items: string[]) => Chain.asStep(SugarBody.body(), [
+      Chain.fromParent(UiFinder.cFindIn(mobileContextMenuSelector), Arr.map(items, UiFinder.cExists))
+    ]);
 
     const mobileContextMenuSelector = 'div.tox-collection--horizontal';
     const selectors = {
@@ -141,7 +132,7 @@ UnitTest.asynctest('MobileContextMenuTest', (success, failure) => {
       tinyApis.sFocus(),
       Log.stepsAsStep('TBA', 'Test context menus on empty editor', [
         sOpenContextMenu('p'),
-        sAssertMenuItems([selectors.link]),
+        sAssertMenuItems([ selectors.link ]),
         sPressEscKey
       ]),
       Log.stepsAsStep('TBA', 'Test context menus on a link', [
@@ -155,7 +146,7 @@ UnitTest.asynctest('MobileContextMenuTest', (success, failure) => {
         ]),
         sPressEscKey,
         sOpenContextMenu('a'),
-        FocusTools.sSetFocus('focus the first menu item', Body.body(), selectors.link),
+        FocusTools.sSetFocus('focus the first menu item', SugarBody.body(), selectors.link),
         sPressDownArrowKey,
         sPressEnterKey,
         sAssertRemoveLinkHtmlStructure
@@ -171,7 +162,7 @@ UnitTest.asynctest('MobileContextMenuTest', (success, failure) => {
           selectors.tableprops,
           selectors.deletetable
         ]),
-        FocusTools.sSetFocus('focus the table props item', Body.body(), selectors.tableprops),
+        FocusTools.sSetFocus('focus the table props item', SugarBody.body(), selectors.tableprops),
         sPressEnterKey,
         sWaitForAndCloseDialog
       ]),
@@ -188,12 +179,12 @@ UnitTest.asynctest('MobileContextMenuTest', (success, failure) => {
           selectors.tableprops,
           selectors.deletetable
         ]),
-        FocusTools.sSetFocus('focus the image item', Body.body(), selectors.image),
+        FocusTools.sSetFocus('focus the image item', SugarBody.body(), selectors.image),
         sPressEnterKey,
         sWaitForAndCloseDialog,
         sOpenContextMenu('img'),
         // Navigate to the "Image tools" menu item
-        FocusTools.sSetFocus('focus the first menu item', Body.body(), selectors.link),
+        FocusTools.sSetFocus('focus the first menu item', SugarBody.body(), selectors.link),
         sRepeatDownArrowKey(2),
         sPressEnterKey,
         sWaitForAndCloseDialog
@@ -210,7 +201,7 @@ UnitTest.asynctest('MobileContextMenuTest', (success, failure) => {
           selectors.column,
           selectors.tableprops,
           selectors.deletetable
-        ]),
+        ])
       ]),
       Log.stepsAsStep('TBA', 'Test context menus on placeholder image inside a table', [
         // Placeholder images shouldn't show the image/image tools options
@@ -224,7 +215,7 @@ UnitTest.asynctest('MobileContextMenuTest', (success, failure) => {
           selectors.column,
           selectors.tableprops,
           selectors.deletetable
-        ]),
+        ])
       ])
     ];
 
@@ -235,7 +226,7 @@ UnitTest.asynctest('MobileContextMenuTest', (success, failure) => {
     toolbar: 'image editimage link table',
     indent: false,
     base_url: '/project/tinymce/js/tinymce',
-    image_caption: true,
+    image_caption: true
   }, () => {
     PlatformDetection.override(detection);
     success();

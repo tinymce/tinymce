@@ -1,9 +1,9 @@
-import { ApproxStructure, GeneralSteps, Keys, Logger, Pipeline, StructAssert, Waiter, Mouse, Step } from '@ephox/agar';
+import { ApproxStructure, GeneralSteps, Keys, Logger, Mouse, Pipeline, Step, StructAssert, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { TinyActions, TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Promise from 'tinymce/core/api/util/Promise';
@@ -23,25 +23,21 @@ UnitTest.asynctest('Editor Autocompleter Cancel test', (success, failure) => {
     assertion: (s, str, arr) => StructAssert[];
   }
 
-  const expectedSimplePara = (content: string) => (s, str): StructAssert => {
-    return s.element('p', {
-      children: [ s.text(str.is(content), true) ]
-    });
-  };
+  const expectedSimplePara = (content: string) => (s, str): StructAssert => s.element('p', {
+    children: [ s.text(str.is(content), true) ]
+  });
 
-  const expectedAutocompletePara = (content: string) => (s, str): StructAssert => {
-    return s.element('p', {
-      children: [
-        s.element('span', {
-          attrs: {
-            'data-mce-autocompleter': str.is('1'),
-            'data-mce-bogus': str.is('1')
-          },
-          children: [ s.text(str.is(content), true) ]
-        })
-      ]
-    });
-  };
+  const expectedAutocompletePara = (content: string) => (s, str): StructAssert => s.element('p', {
+    children: [
+      s.element('span', {
+        attrs: {
+          'data-mce-autocompleter': str.is('1'),
+          'data-mce-bogus': str.is('1')
+        },
+        children: [ s.text(str.is(content), true) ]
+      })
+    ]
+  });
 
   TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyActions = TinyActions(editor);
@@ -59,35 +55,25 @@ UnitTest.asynctest('Editor Autocompleter Cancel test', (success, failure) => {
       ]);
     };
 
-    const sInsertContentAndTrigger = (content: string) => {
-      return GeneralSteps.sequence([
-        tinyApis.sExecCommand('mceInsertContent', content),
-        tinyActions.sContentKeypress(content.charCodeAt(content.length - 1), { })
-      ]);
-    };
+    const sInsertContentAndTrigger = (content: string) => GeneralSteps.sequence([
+      tinyApis.sExecCommand('mceInsertContent', content),
+      tinyActions.sContentKeypress(content.charCodeAt(content.length - 1), { })
+    ]);
 
     const sSetCursor = (elementPath: number[], offset: number) => GeneralSteps.sequence([
       tinyApis.sSetCursor(elementPath, offset),
       tinyApis.sNodeChanged()
     ]);
 
-    const sAssertContent = (label: string, expected: (s, str, arr) => StructAssert[]) => {
-      return Waiter.sTryUntil(label, tinyApis.sAssertContentStructure(ApproxStructure.build((s, str, arr) => {
-        return s.element('body', {
-          children: expected(s, str, arr)
-        });
-      })));
-    };
+    const sAssertContent = (label: string, expected: (s, str, arr) => StructAssert[]) => Waiter.sTryUntil(label, tinyApis.sAssertContentStructure(ApproxStructure.build((s, str, arr) => s.element('body', {
+      children: expected(s, str, arr)
+    }))));
 
-    const sTriggerAndAssertInitialContent = (template?: string, elementPath?: number[], expected?: (s, str, arr) => StructAssert[]) => {
-      return GeneralSteps.sequence([
-        sSetContentAndTrigger(':a', ':'.charCodeAt(0), template, elementPath),
-        sWaitForMenuToOpen,
-        sAssertContent('Check initial content with autocompleter active', (s, str, arr) => {
-          return expected ? expected(s, str, arr) : [ expectedAutocompletePara(':a')(s, str) ];
-        })
-      ]);
-    };
+    const sTriggerAndAssertInitialContent = (template?: string, elementPath?: number[], expected?: (s, str, arr) => StructAssert[]) => GeneralSteps.sequence([
+      sSetContentAndTrigger(':a', ':'.charCodeAt(0), template, elementPath),
+      sWaitForMenuToOpen,
+      sAssertContent('Check initial content with autocompleter active', (s, str, arr) => expected ? expected(s, str, arr) : [ expectedAutocompletePara(':a')(s, str) ])
+    ]);
 
     const sTestAutocompleter = (scenario: Scenario) => GeneralSteps.sequence([
       scenario.setup ? scenario.setup : sTriggerAndAssertInitialContent(),
@@ -130,7 +116,7 @@ UnitTest.asynctest('Editor Autocompleter Cancel test', (success, failure) => {
       setup: sTriggerAndAssertInitialContent('<p></p></p><p>CONTENT</p><p></p>', [ 1, 0 ], (s, str) => [
         s.element('p', {}),
         expectedAutocompletePara(':a')(s, str),
-        s.element('p', {}),
+        s.element('p', {})
       ]),
       action: sInsertContentAndTrigger('aa'),
       postAction: tinyActions.sContentKeystroke(key, {}),
@@ -149,32 +135,32 @@ UnitTest.asynctest('Editor Autocompleter Cancel test', (success, failure) => {
     const sTestNodeChange = GeneralSteps.sequence([
       sTriggerAndAssertInitialContent('<p>CONTENT</p><p>new node</p>', [ 0, 0 ], (s, str) => [
         expectedAutocompletePara(':a')(s, str),
-        s.element('p', {}),
+        s.element('p', {})
       ]),
       sInsertContentAndTrigger('aa'),
-      sSetCursor([0, 0, 0], 2),
+      sSetCursor([ 0, 0, 0 ], 2),
       sWaitForAutocompleteToClose,
       sAssertContent('Check autocompleter was not cancelled', (s, str) => [
         expectedAutocompletePara(':aaa')(s, str),
-        s.element('p', { }),
+        s.element('p', { })
       ]),
-      sSetCursor([1, 0], 0),
+      sSetCursor([ 1, 0 ], 0),
       sAssertContent('Check autocompleter was cancelled', (s, str) => [
         expectedSimplePara(':aaa')(s, str),
         s.element('p', { })
-      ]),
+      ])
     ]);
 
     const sTestClickOutsideMenu = sTestAutocompleter({
       setup: sTriggerAndAssertInitialContent('<p>CONTENT</p><p>new node</p>', [ 0, 0 ], (s, str) => [
         expectedAutocompletePara(':a')(s, str),
-        s.element('p', {}),
+        s.element('p', {})
       ]),
-      action: Mouse.sTrueClickOn(Element.fromDom(editor.getBody()), 'p:contains(new node)'),
+      action: Mouse.sTrueClickOn(SugarElement.fromDom(editor.getBody()), 'p:contains(new node)'),
       assertion: (s, str) => [
         expectedSimplePara(':a')(s, str),
         s.element('p', { })
-      ],
+      ]
     });
 
     Pipeline.async({ }, Logger.ts(
@@ -202,7 +188,7 @@ UnitTest.asynctest('Editor Autocompleter Cancel test', (success, failure) => {
         ch: ':',
         minChars: 1,
         columns: 'auto',
-        fetch: (pattern, maxResults) => {
+        fetch: (pattern, _maxResults) => {
           const filteredItems = Arr.filter([ 'a', 'b', 'c', 'd' ], (item) => item.indexOf(pattern) !== -1);
           return new Promise((resolve) => {
             resolve(
@@ -214,7 +200,7 @@ UnitTest.asynctest('Editor Autocompleter Cancel test', (success, failure) => {
             );
           });
         },
-        onAction: (autocompleteApi, rng, value) => {
+        onAction: (autocompleteApi, _rng, _value) => {
           autocompleteApi.hide();
         }
       });

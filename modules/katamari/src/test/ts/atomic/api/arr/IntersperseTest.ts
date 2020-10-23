@@ -1,7 +1,7 @@
+import { Assert, UnitTest } from '@ephox/bedrock-client';
+import fc from 'fast-check';
 import * as Arr from 'ephox/katamari/api/Arr';
 import * as Jam from 'ephox/katamari/api/Jam';
-import { UnitTest, Assert } from '@ephox/bedrock-client';
-import fc from 'fast-check';
 import { arbNegativeInteger } from 'ephox/katamari/test/arb/ArbDataTypes';
 
 UnitTest.test('Intersperse', () => {
@@ -23,7 +23,7 @@ UnitTest.test('Intersperse', () => {
   check([ 1 ], [ 1 ], 2);
   check([ 1, 2, 1, 2, 1 ], [ 1, 1, 1 ], 2);
   check([ 'a', 3, 'a', 3, 'a' ], [ 'a', 'a', 'a' ], 3);
-  check([ [ 1 ], [ 4 ], [ 1 ] ], [ [ 1 ], [ 1 ] ], [ 4 ]);
+  check([[ 1 ], [ 4 ], [ 1 ]], [[ 1 ], [ 1 ]], [ 4 ]);
   checkErr('Cannot intersperse undefined', undefined, 2);
 });
 

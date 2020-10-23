@@ -1,8 +1,8 @@
 import { AlloyComponent, Bubble, HotspotAnchorSpec, Layout, LayoutInside, MaxHeight, NodeAnchorSpec, SelectionAnchorSpec } from '@ephox/alloy';
-import { Option } from '@ephox/katamari';
-import { Body, Element, Selection, Traverse } from '@ephox/sugar';
+import { Optional } from '@ephox/katamari';
+import { SimSelection, SugarElement, SugarShadowDom } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
-import { isToolbarLocationTop, useFixedContainer } from '../api/Settings';
+import { useFixedContainer } from '../api/Settings';
 
 const bubbleAlignments = {
   valignCentre: [],
@@ -15,7 +15,7 @@ const bubbleAlignments = {
   top: []
 };
 
-const getInlineDialogAnchor = (contentAreaElement: () => Element, lazyAnchorbar: () => AlloyComponent, useEditableAreaAnchor: boolean): () => HotspotAnchorSpec | NodeAnchorSpec => {
+const getInlineDialogAnchor = (contentAreaElement: () => SugarElement, lazyAnchorbar: () => AlloyComponent, lazyUseEditableAreaAnchor: () => boolean): () => HotspotAnchorSpec | NodeAnchorSpec => {
   const bubble = Bubble.nu(-12, 12, bubbleAlignments);
   const overrides = {
     maxHeightFunction: MaxHeight.expandable()
@@ -23,8 +23,8 @@ const getInlineDialogAnchor = (contentAreaElement: () => Element, lazyAnchorbar:
 
   const editableAreaAnchor = (): NodeAnchorSpec => ({
     anchor: 'node',
-    root: Body.getBody(Traverse.owner(contentAreaElement())),
-    node: Option.from(contentAreaElement()),
+    root: SugarShadowDom.getContentContainer(contentAreaElement()),
+    node: Optional.from(contentAreaElement()),
     bubble,
     layouts: {
       onRtl: () => [ LayoutInside.northwest ],
@@ -44,14 +44,14 @@ const getInlineDialogAnchor = (contentAreaElement: () => Element, lazyAnchorbar:
     overrides
   });
 
-  return useEditableAreaAnchor ? editableAreaAnchor : standardAnchor;
+  return () => lazyUseEditableAreaAnchor() ? editableAreaAnchor() : standardAnchor();
 };
 
-const getBannerAnchor = (contentAreaElement: () => Element, lazyAnchorbar: () => AlloyComponent, useEditableAreaAnchor: boolean): () => HotspotAnchorSpec | NodeAnchorSpec => {
+const getBannerAnchor = (contentAreaElement: () => SugarElement, lazyAnchorbar: () => AlloyComponent, lazyUseEditableAreaAnchor: () => boolean): () => HotspotAnchorSpec | NodeAnchorSpec => {
   const editableAreaAnchor = (): NodeAnchorSpec => ({
     anchor: 'node',
-    root: Body.getBody(Traverse.owner(contentAreaElement())),
-    node: Option.from(contentAreaElement()),
+    root: SugarShadowDom.getContentContainer(contentAreaElement()),
+    node: Optional.from(contentAreaElement()),
     layouts: {
       onRtl: () => [ LayoutInside.north ],
       onLtr: () => [ LayoutInside.north ]
@@ -67,47 +67,43 @@ const getBannerAnchor = (contentAreaElement: () => Element, lazyAnchorbar: () =>
     }
   });
 
-  return useEditableAreaAnchor ? editableAreaAnchor : standardAnchor;
+  return () => lazyUseEditableAreaAnchor() ? editableAreaAnchor() : standardAnchor();
 };
 
-const getCursorAnchor = (editor: Editor, bodyElement: () => Element) => (): SelectionAnchorSpec => {
-  return {
-    anchor: 'selection',
-    root: bodyElement(),
-    getSelection: () => {
-      const rng = editor.selection.getRng();
-      return Option.some(
-        Selection.range(Element.fromDom(rng.startContainer), rng.startOffset, Element.fromDom(rng.endContainer), rng.endOffset)
-      );
-    }
-  };
-};
+const getCursorAnchor = (editor: Editor, bodyElement: () => SugarElement) => (): SelectionAnchorSpec => ({
+  anchor: 'selection',
+  root: bodyElement(),
+  getSelection: () => {
+    const rng = editor.selection.getRng();
+    return Optional.some(
+      SimSelection.range(SugarElement.fromDom(rng.startContainer), rng.startOffset, SugarElement.fromDom(rng.endContainer), rng.endOffset)
+    );
+  }
+});
 
-const getNodeAnchor = (bodyElement) => (element: Option<Element>): NodeAnchorSpec => {
-  return {
-    anchor: 'node',
-    root: bodyElement(),
-    node: element
-  };
-};
+const getNodeAnchor = (bodyElement) => (element: Optional<SugarElement>): NodeAnchorSpec => ({
+  anchor: 'node',
+  root: bodyElement(),
+  node: element
+});
 
-const getAnchors = (editor: Editor, lazyAnchorbar: () => AlloyComponent) => {
+const getAnchors = (editor: Editor, lazyAnchorbar: () => AlloyComponent, isToolbarTop: () => boolean) => {
   const useFixedToolbarContainer: boolean = useFixedContainer(editor);
-  const bodyElement = (): Element => Element.fromDom(editor.getBody());
-  const contentAreaElement = (): Element => Element.fromDom(editor.getContentAreaContainer());
+  const bodyElement = (): SugarElement => SugarElement.fromDom(editor.getBody());
+  const contentAreaElement = (): SugarElement => SugarElement.fromDom(editor.getContentAreaContainer());
 
   // If using fixed_toolbar_container or if the toolbar is positioned at the bottom
   // of the editor, some things should anchor to the top of the editable area.
-  const useEditableAreaAnchor = useFixedToolbarContainer || !isToolbarLocationTop(editor);
+  const lazyUseEditableAreaAnchor = () => useFixedToolbarContainer || !isToolbarTop();
 
   return {
-    inlineDialog: getInlineDialogAnchor(contentAreaElement, lazyAnchorbar, useEditableAreaAnchor),
-    banner: getBannerAnchor(contentAreaElement, lazyAnchorbar, useEditableAreaAnchor),
+    inlineDialog: getInlineDialogAnchor(contentAreaElement, lazyAnchorbar, lazyUseEditableAreaAnchor),
+    banner: getBannerAnchor(contentAreaElement, lazyAnchorbar, lazyUseEditableAreaAnchor),
     cursor: getCursorAnchor(editor, bodyElement),
     node: getNodeAnchor(bodyElement)
   };
 };
 
-export default {
+export {
   getAnchors
 };

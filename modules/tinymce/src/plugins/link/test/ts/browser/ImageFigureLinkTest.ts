@@ -1,7 +1,7 @@
-import { Assertions, Logger, Log, Pipeline, Step, Waiter } from '@ephox/agar';
+import { Assertions, Log, Logger, Pipeline, Step, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyDom, TinyLoader, TinyUi } from '@ephox/mcagar';
-import LinkPluginUtils from 'tinymce/plugins/link/core/Utils';
+import * as LinkPluginUtils from 'tinymce/plugins/link/core/Utils';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 import { TestLinkUi } from '../module/TestLinkUi';
@@ -40,20 +40,20 @@ UnitTest.asynctest('browser.tinymce.plugins.link.ImageFigureLinkTest', (success,
             '<figcaption>TinyMCE</figcaption>' +
           '</figure>'
         ),
-        api.sSetSelection([0], 0, [0], 0),
+        api.sSetSelection([ 0 ], 0, [ 0 ], 0),
         sLinkTheSelection(),
         sAssertPresence({ 'figure.image > a[href="http://google.com"] > img': 1 }),
 
-        api.sSetSelection([0], 0, [0], 0),
+        api.sSetSelection([ 0 ], 0, [ 0 ], 0),
         sUnlinkSelection(),
         sAssertPresence({ 'figure.image > img': 1 }),
         TestLinkUi.sClearHistory
       ])
-    , onSuccess, onFailure);
+      , onSuccess, onFailure);
   }, {
     plugins: 'link',
     toolbar: 'link',
     theme: 'silver',
-    base_url: '/project/tinymce/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

@@ -1,10 +1,10 @@
 import { Assert, assert, UnitTest } from '@ephox/bedrock-client';
 import { Gene, TestUniverse, TextGene } from '@ephox/boss';
-import { Fun, Option } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 import Jsc from '@ephox/wrap-jsverify';
-import TextZone from 'ephox/robin/api/general/TextZone';
+import * as TextZone from 'ephox/robin/api/general/TextZone';
 import { ArbIds, arbIds, ArbRangeIds, arbRangeIds } from 'ephox/robin/test/Arbitraries';
-import PropertyAssertions from 'ephox/robin/test/PropertyAssertions';
+import * as PropertyAssertions from 'ephox/robin/test/PropertyAssertions';
 import { assertProps, rawOne, RawZone } from 'ephox/robin/test/ZoneObjects';
 import { Zone } from 'ephox/robin/zone/Zones';
 
@@ -49,7 +49,7 @@ UnitTest.test('TextZoneTest', function () {
     ], {}, { lang: 'fr' })
   ]));
 
-  const checkZone = function (label: string, expected: Option<RawZone>, actual: Option<Zone<Gene>>) {
+  const checkZone = function (label: string, expected: Optional<RawZone>, actual: Optional<Zone<Gene>>) {
     expected.fold(function () {
       actual.fold(function () {
         // Good
@@ -67,13 +67,13 @@ UnitTest.test('TextZoneTest', function () {
     });
   };
 
-  const checkSingle = function (label: string, expected: Option<RawZone>, startId: string, onlyLang: string) {
+  const checkSingle = function (label: string, expected: Optional<RawZone>, startId: string, onlyLang: string) {
     const item = doc1.find(doc1.get(), startId).getOrDie();
     const actual = TextZone.single(doc1, item, 'en', onlyLang);
     checkZone(label + ' ' + startId, expected, actual);
   };
 
-  const checkRange = function (label: string, expected: Option<RawZone>, startId: string, finishId: string, onlyLang: string) {
+  const checkRange = function (label: string, expected: Optional<RawZone>, startId: string, finishId: string, onlyLang: string) {
     const item1 = doc1.find(doc1.get(), startId).getOrDie();
     const item2 = doc1.find(doc1.get(), finishId).getOrDie();
     const actual = TextZone.range(doc1, item1, 0, item2, 0, 'en', onlyLang);
@@ -82,10 +82,10 @@ UnitTest.test('TextZoneTest', function () {
 
   checkSingle(
     'Basic zone for one text field',
-    Option.some({
+    Optional.some({
       lang: 'en',
-      words: ['one'],
-      elements: ['en-a']
+      words: [ 'one' ],
+      elements: [ 'en-a' ]
     }),
     'en-a',
     'en'
@@ -93,17 +93,17 @@ UnitTest.test('TextZoneTest', function () {
 
   checkSingle(
     'Basic zone for isolated span should be none because no text nodes inside',
-    Option.none(),
+    Optional.none(),
     'span-isolated',
     'en'
   );
 
   checkSingle(
     'Basic zone for semi isolated span should have the partial words outside it',
-    Option.some({
+    Optional.some({
       lang: 'en',
-      words: ['on'],
-      elements: ['en-j', 'en-k']
+      words: [ 'on' ],
+      elements: [ 'en-j', 'en-k' ]
     }),
     'span-semi-isolated',
     'en'
@@ -111,10 +111,10 @@ UnitTest.test('TextZoneTest', function () {
 
   checkRange(
     'Basic ranged zone for two adjacent english text nodes should create zone with them',
-    Option.some({
+    Optional.some({
       lang: 'en',
-      words: ['two'],
-      elements: ['en-b', 'en-c']
+      words: [ 'two' ],
+      elements: [ 'en-b', 'en-c' ]
     }),
     'en-b', 'en-c',
     'en'
@@ -122,10 +122,10 @@ UnitTest.test('TextZoneTest', function () {
 
   checkRange(
     'Basic ranged zone for an english text node next to another one (but not part of the range) should create zone with them',
-    Option.some({
+    Optional.some({
       lang: 'en',
-      words: ['two'],
-      elements: ['en-b', 'en-c']
+      words: [ 'two' ],
+      elements: [ 'en-b', 'en-c' ]
     }),
     'en-b', 'en-b',
     'en'
@@ -133,7 +133,7 @@ UnitTest.test('TextZoneTest', function () {
 
   checkRange(
     'Basic ranged zone for an english text node to a german text node should create no zone',
-    Option.none(),
+    Optional.none(),
     'en-b', 'de-a',
     'en'
   );
@@ -142,7 +142,7 @@ UnitTest.test('TextZoneTest', function () {
     const item = doc1.find(doc1.get(), info.startId).getOrDie();
     const actual = TextZone.single(doc1, item, 'en', 'en');
     return actual.forall(function (zone) {
-      assertProps('Testing zone for single(' + info.startId + ')', doc1, [zone]);
+      assertProps('Testing zone for single(' + info.startId + ')', doc1, [ zone ]);
       return true;
     });
   };
@@ -152,7 +152,7 @@ UnitTest.test('TextZoneTest', function () {
     const item2 = doc1.find(doc1.get(), info.finishId).getOrDie();
     const actual = TextZone.range(doc1, item1, 0, item2, 0, 'en', 'en');
     return actual.forall(function (zone) {
-      assertProps('Testing zone for range(' + info.startId + '->' + info.finishId + ')', doc1, [zone]);
+      assertProps('Testing zone for range(' + info.startId + '->' + info.finishId + ')', doc1, [ zone ]);
       return true;
     });
   };
@@ -229,7 +229,7 @@ UnitTest.test('TextZoneTest', function () {
   PropertyAssertions.check(
     'Check any tag range',
     [
-      arbRangeIds(doc1, Fun.constant(true))
+      arbRangeIds(doc1, Fun.always)
     ],
     checkRangeProp
   );

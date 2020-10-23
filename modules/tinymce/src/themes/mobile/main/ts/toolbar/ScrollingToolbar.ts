@@ -6,26 +6,28 @@
  */
 
 import {
-  AddEventsBehaviour,
-  AlloyEvents,
-  Behaviour,
-  Container,
-  GuiFactory,
-  Keying,
-  Toggling,
-  Toolbar,
-  ToolbarGroup,
-  AlloyComponent
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, Behaviour, Container, GuiFactory, Keying, Toggling, Toolbar, ToolbarGroup
 } from '@ephox/alloy';
 import { Arr, Cell, Fun } from '@ephox/katamari';
 import { Css } from '@ephox/sugar';
 
-import Scrollables from '../ios/scroll/Scrollables';
-import Styles from '../style/Styles';
-import Scrollable from '../touch/scroll/Scrollable';
+import * as Scrollables from '../ios/scroll/Scrollables';
+import * as Styles from '../style/Styles';
+import * as Scrollable from '../touch/scroll/Scrollable';
 import * as UiDomFactory from '../util/UiDomFactory';
 
-export default function () {
+export interface ScrollingToolbar {
+  readonly wrapper: AlloyComponent;
+  readonly toolbar: AlloyComponent;
+  readonly createGroups: (gs) => void;
+  readonly setGroups: (gs) => void;
+  readonly setContextToolbar: (gs) => void;
+  readonly restoreToolbar: () => void;
+  readonly refresh: () => void;
+  readonly focus: () => void;
+}
+
+export const ScrollingToolbar = function (): ScrollingToolbar {
   const makeGroup = function (gSpec) {
     const scrollClass = gSpec.scrollable === true ? '${prefix}-toolbar-scrollable-group' : '';
     return {
@@ -33,10 +35,10 @@ export default function () {
 
       tgroupBehaviours: Behaviour.derive([
         AddEventsBehaviour.config('adhoc-scrollable-toolbar', gSpec.scrollable === true ? [
-          AlloyEvents.runOnInit(function (component, simulatedEvent) {
-            Css.set(component.element(), 'overflow-x', 'auto');
-            Scrollables.markAsHorizontal(component.element());
-            Scrollable.register(component.element());
+          AlloyEvents.runOnInit(function (component, _simulatedEvent) {
+            Css.set(component.element, 'overflow-x', 'auto');
+            Scrollables.markAsHorizontal(component.element);
+            Scrollable.register(component.element);
           })
         ] : [ ])
       ]),
@@ -44,7 +46,7 @@ export default function () {
       components: [
         Container.sketch({
           components: [
-            ToolbarGroup.parts().items({ })
+            ToolbarGroup.parts.items({ })
           ]
         })
       ],
@@ -66,7 +68,7 @@ export default function () {
       {
         dom: UiDomFactory.dom('<div class="${prefix}-toolbar"></div>'),
         components: [
-          Toolbar.parts().groups({ })
+          Toolbar.parts.groups({ })
         ],
         toolbarBehaviours: Behaviour.derive([
           Toggling.config({
@@ -83,7 +85,7 @@ export default function () {
         shell: true
       }
     )
-  ) as AlloyComponent;
+  );
 
   const wrapper = GuiFactory.build(
     Container.sketch({
@@ -100,7 +102,7 @@ export default function () {
         })
       ])
     })
-  ) as AlloyComponent;
+  );
 
   const resetGroups = function () {
     Toolbar.setGroups(toolbar, initGroups.get());
@@ -139,8 +141,8 @@ export default function () {
   };
 
   return {
-    wrapper: Fun.constant(wrapper),
-    toolbar: Fun.constant(toolbar),
+    wrapper,
+    toolbar,
     createGroups,
     setGroups,
     setContextToolbar,
@@ -148,4 +150,4 @@ export default function () {
     refresh,
     focus
   };
-}
+};

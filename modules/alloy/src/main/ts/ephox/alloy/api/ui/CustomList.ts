@@ -1,24 +1,23 @@
-import { console } from '@ephox/dom-globals';
-import { Arr, Option } from '@ephox/katamari';
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { AlloySpec } from '../../api/component/SpecTypes';
+import { Arr, Optional } from '@ephox/katamari';
 
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as CustomListSchema from '../../ui/schema/CustomListSchema';
 import { CustomListApis, CustomListDetail, CustomListSketcher, CustomListSpec } from '../../ui/types/CustomListTypes';
 import { NamedConfiguredBehaviour } from '../behaviour/Behaviour';
 import { Replacing } from '../behaviour/Replacing';
+import { AlloyComponent } from '../component/ComponentApi';
 import * as SketchBehaviours from '../component/SketchBehaviours';
+import { AlloySpec } from '../component/SpecTypes';
 import * as Sketcher from './Sketcher';
 import { CompositeSketchFactory } from './UiSketcher';
 
-const factory: CompositeSketchFactory<CustomListDetail, CustomListSpec> = (detail, components, spec, external) => {
+const factory: CompositeSketchFactory<CustomListDetail, CustomListSpec> = (detail, components, _spec, _external) => {
 
   const setItems = (list: AlloyComponent, items: AlloySpec[]) => {
     getListContainer(list).fold(() => {
       // check that the group container existed. It may not have if the components
       // did not list anything, and shell was false.
-      // tslint:disable-next-line:no-console
+      // eslint-disable-next-line no-console
       console.error('Custom List was defined to not be a shell, but no item container was specified in components');
       throw new Error('Custom List was defined to not be a shell, but no item container was specified in components');
     }, (container) => {
@@ -31,9 +30,7 @@ const factory: CompositeSketchFactory<CustomListDetail, CustomListSpec> = (detai
 
       const numListsToAdd = numListsRequired - itemComps.length;
       const itemsToAdd = numListsToAdd > 0 ?
-        Arr.range(numListsToAdd, () => {
-          return detail.makeItem();
-        }) : [ ];
+        Arr.range(numListsToAdd, () => detail.makeItem()) : [ ];
 
       const itemsToRemove = itemComps.slice(numListsRequired);
 
@@ -50,13 +47,11 @@ const factory: CompositeSketchFactory<CustomListDetail, CustomListSpec> = (detai
 
   // In shell mode, the group overrides need to be added to the main container, and there can be no children
   const extra: {
-    behaviours: Array<NamedConfiguredBehaviour<any, any>>,
+    behaviours: Array<NamedConfiguredBehaviour<any, any>>;
     components: AlloySpec[];
   } = detail.shell ? { behaviours: [ Replacing.config({ }) ], components: [ ] } : { behaviours: [ ], components };
 
-  const getListContainer = (component: AlloyComponent) => {
-    return detail.shell ? Option.some(component) : AlloyParts.getPart(component, detail, 'items');
-  };
+  const getListContainer = (component: AlloyComponent) => detail.shell ? Optional.some(component) : AlloyParts.getPart(component, detail, 'items');
 
   return {
     uid: detail.uid,

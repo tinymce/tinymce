@@ -2,7 +2,7 @@ import { Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 import Editor from 'tinymce/core/api/Editor';
-import InsertContent from 'tinymce/core/content/InsertContent';
+import * as InsertContent from 'tinymce/core/content/InsertContent';
 import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.core.content.InsertContentForcedRootBlockFalseTest', (success, failure) => {

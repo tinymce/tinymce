@@ -1,8 +1,8 @@
+import { Assert, UnitTest } from '@ephox/bedrock-client';
+import fc from 'fast-check';
 import * as Arr from 'ephox/katamari/api/Arr';
 import * as Fun from 'ephox/katamari/api/Fun';
 import * as Obj from 'ephox/katamari/api/Obj';
-import { Assert, UnitTest } from '@ephox/bedrock-client';
-import fc from 'fast-check';
 
 UnitTest.test('Obj.map: unit test', () => {
   const dbl = (x) => x * 2;
@@ -37,8 +37,8 @@ UnitTest.test('Obj.map: unit test', () => {
   };
 
   checkMapToArray([], {}, stringify);
-  checkMapToArray(['a :: a'], { a: 'a' }, stringify);
-  checkMapToArray(['a :: a', 'b :: b', 'c :: c'], { a: 'a', b: 'b', c: 'c' }, stringify);
+  checkMapToArray([ 'a :: a' ], { a: 'a' }, stringify);
+  checkMapToArray([ 'a :: a', 'b :: b', 'c :: c' ], { a: 'a', b: 'b', c: 'c' }, stringify);
 });
 
 UnitTest.test('Obj.map: map id obj = obj', () => {

@@ -1,10 +1,10 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
-import { Arr, Option } from '@ephox/katamari';
-import Insertion from 'ephox/boss/mutant/Insertion';
-import Locator from 'ephox/boss/mutant/Locator';
-import Logger from 'ephox/boss/mutant/Logger';
-import Tracks from 'ephox/boss/mutant/Tracks';
+import { Arr, Optional } from '@ephox/katamari';
 import { Gene } from 'ephox/boss/api/Gene';
+import * as Insertion from 'ephox/boss/mutant/Insertion';
+import * as Locator from 'ephox/boss/mutant/Locator';
+import * as Logger from 'ephox/boss/mutant/Logger';
+import * as Tracks from 'ephox/boss/mutant/Tracks';
 
 UnitTest.test('InsertionTest', function () {
   const data = function (): Gene {
@@ -20,7 +20,7 @@ UnitTest.test('InsertionTest', function () {
   };
 
   const check = function (expected: string, method: (a: Gene, b: Gene) => void, input: Gene, anchorId: string, itemId: string) {
-    const family = Tracks.track(input, Option.none());
+    const family = Tracks.track(input, Optional.none());
     const anchor = Locator.byId(family, anchorId).getOrDie();
     const item = Locator.byId(family, itemId).getOrDie();
     method(anchor, item);
@@ -36,7 +36,7 @@ UnitTest.test('InsertionTest', function () {
   };
 
   const checkWrap = function (expected: string, input: Gene, anchorId: string, wrapper: Gene) {
-    const family = Tracks.track(input, Option.none());
+    const family = Tracks.track(input, Optional.none());
     const anchor = Locator.byId(family, anchorId).getOrDie();
     Insertion.wrap(anchor, wrapper);
     assert.eq(expected, Logger.basic(family));
@@ -54,7 +54,7 @@ UnitTest.test('InsertionTest', function () {
   checkWrap('A(WRAPPER(B),C(D(E),F))', data(), 'B', Gene('WRAPPER', '.'));
 
   const checkAfterAll = function (expected: string, input: Gene, anchorId: string, itemIds: string[]) {
-    const family = Tracks.track(input, Option.none());
+    const family = Tracks.track(input, Optional.none());
     const anchor = Locator.byId(family, anchorId).getOrDie('Did not find anchor: ' + anchorId);
     const items = Arr.map(itemIds, function (itemId) {
       return Locator.byId(family, itemId).getOrDie('Did not find item: ' + itemId);
@@ -63,5 +63,5 @@ UnitTest.test('InsertionTest', function () {
     assert.eq(expected, Logger.basic(family));
   };
 
-  checkAfterAll('A(B,C(D,E,F))', data(), 'D', ['E', 'F']);
+  checkAfterAll('A(B,C(D,E,F))', data(), 'D', [ 'E', 'F' ]);
 });

@@ -1,6 +1,6 @@
 {
   "name": "@ephox/jax",
-  "version": "4.1.31",
+  "version": "5.0.1",
   "description": "AJAX library",
   "repository": {
     "type": "git",
@@ -8,7 +8,7 @@
   },
   "scripts": {
     "prepublishOnly": "yarn run lint && yarn run build",
-    "lint": "tslint --config ../../tslint.json src/**/*.ts",
+    "lint": "eslint --config ../../.eslintrc.json src/**/*.ts",
     "build": "tsc -b",
     "test": "bedrock-auto -b phantomjs --customRoutes src/test/json/routes.json -d src/test/ts/",
     "test-manual": "bedrock --customRoutes src/test/json/routes.json -d src/test/ts/",
@@ -21,9 +21,8 @@
   "author": "Ephox Corporation",
   "license": "Apache-2.0",
   "dependencies": {
-    "@ephox/dom-globals": "^1.1.2",
-    "@ephox/katamari": "^5.0.2",
-    "tslib": "^1.9.3"
+    "@ephox/katamari": "^7.0.1",
+    "tslib": "^2.0.0"
   },
   "files": [
     "lib/main",

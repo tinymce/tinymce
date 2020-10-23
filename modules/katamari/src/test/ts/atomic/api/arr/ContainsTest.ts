@@ -1,6 +1,6 @@
-import * as Arr from 'ephox/katamari/api/Arr';
-import { UnitTest, Assert } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import fc from 'fast-check';
+import * as Arr from 'ephox/katamari/api/Arr';
 
 UnitTest.test('Arr.contains: unit test', () => {
   const check = (expected, input: any[], value) => {
@@ -23,7 +23,7 @@ UnitTest.test('Arr.contains: empty', () => {
 
 UnitTest.test('Arr.contains: array contains element', () => {
   fc.assert(fc.property(fc.array(fc.integer()), fc.integer(), fc.array(fc.integer()), (prefix, element, suffix) => {
-    const arr2 = Arr.flatten([prefix, [element], suffix]);
+    const arr2 = Arr.flatten([ prefix, [ element ], suffix ]);
     Assert.eq('in array', true, Arr.contains(arr2, element));
   }));
 });

@@ -25,10 +25,31 @@ table {
   border-collapse: collapse;
 }
 
-table th,
-table td {
-  border: 1px solid #6d737b;
+/* Apply a default padding if legacy cellpadding attribute is missing */
+table:not([cellpadding]) th,
+table:not([cellpadding]) td {
   padding: .4rem;
+}
+
+/* Set default table styles if a table has a positive border attribute
+   and no inline css */
+table[border]:not([border="0"]):not([style*="border-width"]) th,
+table[border]:not([border="0"]):not([style*="border-width"]) td {
+  border-width: 1px;
+}
+
+/* Set default table styles if a table has a positive border attribute
+   and no inline css */
+table[border]:not([border="0"]):not([style*="border-style"]) th,
+table[border]:not([border="0"]):not([style*="border-style"]) td {
+  border-style: solid;
+}
+
+/* Set default table styles if a table has a positive border attribute
+   and no inline css */
+table[border]:not([border="0"]):not([style*="border-color"]) th,
+table[border]:not([border="0"]):not([style*="border-color"]) td {
+  border-color: #6d737b;
 }
 
 figure {
@@ -53,12 +74,6 @@ code {
   background-color: #6d737b;
   border-radius: 3px;
   padding: .1rem .2rem;
-}
-
-/* Make text in selected cells in tables dark and readable */
-td[data-mce-selected],
-th[data-mce-selected] {
-  color: #333;
 }
 
 .mce-content-body:not([dir=rtl]) {

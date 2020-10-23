@@ -1,15 +1,13 @@
 import { UnitTest } from '@ephox/bedrock-client';
-import { document } from '@ephox/dom-globals';
-import { DomEvent, Element, Focus } from '@ephox/sugar';
+import { DomEvent, Focus, SugarElement } from '@ephox/sugar';
 import * as Assertions from 'ephox/agar/api/Assertions';
 import * as Guard from 'ephox/agar/api/Guard';
 import * as Keyboard from 'ephox/agar/api/Keyboard';
 import { Keys } from 'ephox/agar/api/Keys';
 import { Pipeline } from 'ephox/agar/api/Pipeline';
 import { Step } from 'ephox/agar/api/Step';
-import * as DomContainers from 'ephox/agar/test/DomContainers';
 import { TestLogs } from 'ephox/agar/api/TestLogs';
-import { MixedKeyModifiers } from 'ephox/agar/keyboard/FakeKeys';
+import * as DomContainers from 'ephox/agar/test/DomContainers';
 
 UnitTest.asynctest('KeyboardTest', (success, failure) => {
 
@@ -35,21 +33,21 @@ UnitTest.asynctest('KeyboardTest', (success, failure) => {
 
   const listenOn = (type, f, code, modifiers) =>
     Step.control(
-      Step.raw((value: { container: any; }, next, die, logs) => {
+      Step.raw((value: { container: any }, next, die, logs) => {
         const listener = DomEvent.bind(value.container, type, (event) => {
-          const raw = event.raw();
+          const raw = event.raw;
           listener.unbind();
 
           sAssertEvent(type, code, modifiers, raw).runStep(value, next, die, logs);
         });
 
-        f(Element.fromDom(document), code, modifiers).runStep(value, () => {}, die);
+        f(SugarElement.fromDom(document), code, modifiers).runStep(value, () => {}, die);
       }),
       Guard.timeout('Key event did not fire in time: ' + type, 1000)
     );
 
   const listenOnKeystroke = (code, modifiers) => Step.control(
-    Step.raw((value: { container: any; }, next, die, initLogs) => {
+    Step.raw((value: { container: any }, next, die, initLogs) => {
       const keydownListener = DomEvent.bind(value.container, 'keydown', (dEvent) => {
         keydownListener.unbind();
 
@@ -57,22 +55,22 @@ UnitTest.asynctest('KeyboardTest', (success, failure) => {
           keyupListener.unbind();
 
           Pipeline.async({}, [
-            sAssertEvent('keydown', code, modifiers, dEvent.raw()),
-            sAssertEvent('keyup', code, modifiers, uEvent.raw())
+            sAssertEvent('keydown', code, modifiers, dEvent.raw),
+            sAssertEvent('keyup', code, modifiers, uEvent.raw)
           ], (v, newLogs) => {
             next(value, newLogs);
           }, die, initLogs);
         });
       });
 
-      Keyboard.sKeystroke(Element.fromDom(document), code, modifiers).runStep(value, () => {}, die, TestLogs.init());
+      Keyboard.sKeystroke(SugarElement.fromDom(document), code, modifiers).runStep(value, () => {}, die, TestLogs.init());
     }),
     Guard.timeout('keystroke (keydown + keyup) did not fire', 1000)
   );
 
   Pipeline.async({}, [
     DomContainers.mSetup,
-    Step.stateful((state, next, die) => {
+    Step.stateful((state, next, _die) => {
       Focus.focus(state.container);
       next(state);
     }),

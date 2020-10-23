@@ -5,19 +5,17 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Direction, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
-import { Element, Direction } from '@ephox/sugar';
 
-const getNodeChangeHandler = (editor: Editor, dir: 'ltr' | 'rtl') => {
-  return (api) => {
-    const nodeChangeHandler = (e) => {
-      const element = Element.fromDom(e.element);
-      api.setActive(Direction.getDirection(element) === dir);
-    };
-    editor.on('NodeChange', nodeChangeHandler);
-
-    return () => editor.off('NodeChange', nodeChangeHandler);
+const getNodeChangeHandler = (editor: Editor, dir: 'ltr' | 'rtl') => (api) => {
+  const nodeChangeHandler = (e) => {
+    const element = SugarElement.fromDom(e.element);
+    api.setActive(Direction.getDirection(element) === dir);
   };
+  editor.on('NodeChange', nodeChangeHandler);
+
+  return () => editor.off('NodeChange', nodeChangeHandler);
 };
 
 const register = function (editor: Editor) {
@@ -36,6 +34,6 @@ const register = function (editor: Editor) {
   });
 };
 
-export default {
+export {
   register
 };

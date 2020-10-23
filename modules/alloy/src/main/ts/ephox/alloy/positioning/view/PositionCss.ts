@@ -1,31 +1,37 @@
-import { Option, Struct } from '@ephox/katamari';
-import { Element, Css } from '@ephox/sugar';
+import { Optional } from '@ephox/katamari';
+import { Css, SugarElement } from '@ephox/sugar';
 
 export interface PositionCss {
-  position: () => string;
-  left: () => Option<number>;
-  top: () => Option<number>;
-  right: () => Option<number>;
-  bottom: () => Option<number>;
+  readonly position: string;
+  readonly left: Optional<number>;
+  readonly top: Optional<number>;
+  readonly right: Optional<number>;
+  readonly bottom: Optional<number>;
 }
 
-const NuPositionCss: (
+const NuPositionCss = (
   position: string,
-  left: Option<number>,
-  top: Option<number>,
-  right: Option<number>,
-  bottom: Option<number>
-) => PositionCss = Struct.immutable('position', 'left', 'top', 'right', 'bottom');
+  left: Optional<number>,
+  top: Optional<number>,
+  right: Optional<number>,
+  bottom: Optional<number>
+): PositionCss => ({
+  position,
+  left,
+  top,
+  right,
+  bottom
+});
 
-const applyPositionCss = (element: Element, position: PositionCss) => {
+const applyPositionCss = (element: SugarElement, position: PositionCss) => {
   const addPx = (num: number) => num + 'px';
 
   Css.setOptions(element, {
-    position: Option.some(position.position()),
-    left: position.left().map(addPx),
-    top: position.top().map(addPx),
-    right: position.right().map(addPx),
-    bottom: position.bottom().map(addPx)
+    position: Optional.some(position.position),
+    left: position.left.map(addPx),
+    top: position.top.map(addPx),
+    right: position.right.map(addPx),
+    bottom: position.bottom.map(addPx)
   });
 };
 

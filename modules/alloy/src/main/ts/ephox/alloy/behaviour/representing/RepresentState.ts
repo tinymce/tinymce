@@ -1,4 +1,4 @@
-import { Arr, Cell, Obj, Option } from '@ephox/katamari';
+import { Arr, Cell, Obj, Optional } from '@ephox/katamari';
 
 import { ItemDataTuple } from '../../ui/types/ItemTypes';
 import { nuState } from '../common/BehaviourState';
@@ -7,16 +7,12 @@ import { DatasetRepresentingState, ManualRepresentingState, MemoryRepresentingSt
 const memory = (): MemoryRepresentingState => {
   const data = Cell<any>(null);
 
-  const readState = () => {
-    return {
-      mode: 'memory',
-      value: data.get()
-    };
-  };
+  const readState = () => ({
+    mode: 'memory',
+    value: data.get()
+  });
 
-  const isNotSet = () => {
-    return data.get() === null;
-  };
+  const isNotSet = () => data.get() === null;
 
   const clear = () => {
     data.set(null);
@@ -45,13 +41,11 @@ const dataset = (): DatasetRepresentingState => {
   const dataByValue = Cell({ });
   const dataByText = Cell({ });
 
-  const readState = () => {
-    return {
-      mode: 'dataset',
-      dataByValue: dataByValue.get(),
-      dataByText: dataByText.get()
-    };
-  };
+  const readState = () => ({
+    mode: 'dataset',
+    dataByValue: dataByValue.get(),
+    dataByText: dataByText.get()
+  });
 
   const clear = (): void => {
     dataByValue.set({ });
@@ -60,11 +54,7 @@ const dataset = (): DatasetRepresentingState => {
 
   // itemString can be matching value or text.
   // TODO: type problem - impossible to correctly return value when type parameter only exists in return type
-  const lookup = <T extends ItemDataTuple>(itemString: string): Option<T> => {
-    return Obj.get<any, string>(dataByValue.get(), itemString).orThunk(() => {
-      return Obj.get<any, string>(dataByText.get(), itemString);
-    });
-  };
+  const lookup = <T extends ItemDataTuple>(itemString: string): Optional<T> => Obj.get<any, string>(dataByValue.get(), itemString).orThunk(() => Obj.get<any, string>(dataByText.get(), itemString));
 
   const update = <T extends ItemDataTuple>(items: T[]): void => {
     const currentDataByValue = dataByValue.get();
@@ -98,9 +88,7 @@ const dataset = (): DatasetRepresentingState => {
   });
 };
 
-const init = (spec: RepresentingConfig) => {
-  return spec.store.manager.state(spec);
-};
+const init = (spec: RepresentingConfig) => spec.store.manager.state(spec);
 
 export {
   memory,

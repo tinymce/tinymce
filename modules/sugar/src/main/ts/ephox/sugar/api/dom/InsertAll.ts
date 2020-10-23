@@ -1,29 +1,28 @@
 import { Arr } from '@ephox/katamari';
+import { SugarElement } from '../node/SugarElement';
 import * as Insert from './Insert';
-import Element from '../node/Element';
-import { Node as DomNode } from '@ephox/dom-globals';
 
-const before = function (marker: Element<DomNode>, elements: Element<DomNode>[]) {
-  Arr.each(elements, function (x) {
+const before = (marker: SugarElement<Node>, elements: SugarElement<Node>[]): void => {
+  Arr.each(elements, (x) => {
     Insert.before(marker, x);
   });
 };
 
-const after = function (marker: Element<DomNode>, elements: Element<DomNode>[]) {
-  Arr.each(elements, function (x, i) {
+const after = (marker: SugarElement<Node>, elements: SugarElement<Node>[]): void => {
+  Arr.each(elements, (x, i) => {
     const e = i === 0 ? marker : elements[i - 1];
     Insert.after(e, x);
   });
 };
 
-const prepend = function (parent: Element<DomNode>, elements: Element<DomNode>[]) {
-  Arr.each(elements.slice().reverse(), function (x) {
+const prepend = (parent: SugarElement<Node>, elements: SugarElement<Node>[]): void => {
+  Arr.each(elements.slice().reverse(), (x) => {
     Insert.prepend(parent, x);
   });
 };
 
-const append = function (parent: Element<DomNode>, elements: Element<DomNode>[]) {
-  Arr.each(elements, function (x) {
+const append = (parent: SugarElement<Node>, elements: SugarElement<Node>[]): void => {
+  Arr.each(elements, (x) => {
     Insert.append(parent, x);
   });
 };
@@ -32,5 +31,5 @@ export {
   before,
   after,
   prepend,
-  append,
+  append
 };

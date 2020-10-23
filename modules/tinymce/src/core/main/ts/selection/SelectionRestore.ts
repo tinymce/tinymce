@@ -5,12 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { document } from '@ephox/dom-globals';
 import { Throttler } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import DOMUtils from '../api/dom/DOMUtils';
-import SelectionBookmark from './SelectionBookmark';
 import Editor from '../api/Editor';
+import * as SelectionBookmark from './SelectionBookmark';
 
 const isManualNodeChange = function (e) {
   return e.type === 'nodechange' && e.selectionChange;
@@ -35,7 +34,7 @@ const registerFocusOut = function (editor: Editor) {
 };
 
 const registerMouseUp = function (editor: Editor, throttledStore) {
-  editor.on('mouseup touchend', function (e) {
+  editor.on('mouseup touchend', function (_e) {
     throttledStore.throttle();
   });
 };
@@ -74,6 +73,6 @@ const register = function (editor: Editor) {
   });
 };
 
-export default {
+export {
   register
 };

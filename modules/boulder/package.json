@@ -1,17 +1,18 @@
 {
   "name": "@ephox/boulder",
-  "version": "4.0.3",
+  "version": "5.0.1",
   "description": "Basic javascript object validation",
   "dependencies": {
-    "@ephox/katamari": "^5.0.2",
-    "@ephox/sand": "^3.1.6"
+    "@ephox/katamari": "^7.0.1",
+    "@ephox/sand": "^4.0.1"
   },
   "devDependencies": {
-    "@ephox/katamari-assertions": "^1.0.4"
+    "@ephox/katamari-assertions": "^2.0.1"
   },
   "scripts": {
     "test": "bedrock-auto -b phantomjs -d src/test/ts",
     "test-manual": "bedrock -d src/test/ts",
+    "lint": "eslint --config ../../.eslintrc.json src/**/*.ts",
     "prepublishOnly": "tsc -b"
   },
   "repository": {

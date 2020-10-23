@@ -8,7 +8,7 @@
 import { Cell } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
-import Parser from '../core/Parser';
+import * as Parser from '../core/Parser';
 
 const open = function (editor: Editor, headState: Cell<string>) {
   const data = Parser.htmlToData(editor, headState.get());
@@ -59,7 +59,7 @@ const open = function (editor: Editor, headState: Cell<string>) {
           name: 'docencoding',
           type: 'input',
           label: 'Encoding'
-        },
+        }
       ]
     },
     buttons: [
@@ -88,6 +88,6 @@ const open = function (editor: Editor, headState: Cell<string>) {
   });
 };
 
-export default {
+export {
   open
 };

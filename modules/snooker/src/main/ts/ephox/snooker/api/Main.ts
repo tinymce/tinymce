@@ -1,40 +1,47 @@
+import * as GridRow from '../model/GridRow';
+import * as RunOperation from '../model/RunOperation';
+import * as Adjustments from '../resize/Adjustments';
 import { CellLocation } from './CellLocation';
-import CellMutations from './CellMutations';
-import CellNavigation from './CellNavigation';
-import CellProperties from './CellProperties';
-import CopyRows from './CopyRows';
-import CopySelected from './CopySelected';
-import { Generators } from './Generators';
-import { ResizeDirection } from './ResizeDirection';
+import * as CellMutations from './CellMutations';
+import * as CellNavigation from './CellNavigation';
+import * as CopyCols from './CopyCols';
+import * as CopyRows from './CopyRows';
+import * as CopySelected from './CopySelected';
+import { Generators, SimpleGenerators } from './Generators';
+import * as OtherCells from './OtherCells';
+import * as ResizeBehaviour from './ResizeBehaviour';
 import { ResizeWire } from './ResizeWire';
-import Sizes from './Sizes';
+import * as Sizes from './Sizes';
 import * as Structs from './Structs';
-import TableContent from './TableContent';
-import TableDirection from './TableDirection';
-import TableFill from './TableFill';
-import TableGridSize from './TableGridSize';
-import TableLookup from './TableLookup';
-import TableOperations from './TableOperations';
-import TablePositions from './TablePositions';
+import * as TableContent from './TableContent';
+import * as TableConversions from './TableConversions';
+import * as TableDirection from './TableDirection';
+import * as TableFill from './TableFill';
+import * as TableGridSize from './TableGridSize';
+import * as TableLookup from './TableLookup';
+import * as TableOperations from './TableOperations';
+import * as TablePositions from './TablePositions';
 import * as TableRender from './TableRender';
 import { TableResize } from './TableResize';
-import * as RunOperation from '../model/RunOperation';
-import GridRow from '../model/GridRow';
-import OtherCells from './OtherCells';
+import { TableSize } from './TableSize';
+import { Warehouse } from './Warehouse';
 
 export {
+  Adjustments,
   CellLocation,
   CellMutations,
   CellNavigation,
-  CellProperties,
+  CopyCols,
   CopyRows,
   CopySelected,
   Generators,
-  ResizeDirection,
+  ResizeBehaviour,
   ResizeWire,
+  SimpleGenerators,
   Sizes,
   Structs,
   TableContent,
+  TableConversions,
   TableDirection,
   TableFill,
   TableGridSize,
@@ -43,7 +50,9 @@ export {
   TablePositions,
   TableRender,
   TableResize,
+  TableSize,
   RunOperation,
   GridRow,
-  OtherCells
+  OtherCells,
+  Warehouse
 };

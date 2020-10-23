@@ -5,13 +5,14 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node, Event } from '@ephox/dom-globals';
-import Observable from './util/Observable';
+import { Obj } from '@ephox/katamari';
+import { isReadOnly, preventReadOnlyEvents } from '../mode/Readonly';
 import DOMUtils from './dom/DOMUtils';
-import Tools from './util/Tools';
 import Editor from './Editor';
 import { EditorEventMap } from './EventTypes';
-import { isReadOnly, preventReadOnlyEvents } from '../mode/Readonly';
+import * as Settings from './Settings';
+import Observable from './util/Observable';
+import Tools from './util/Tools';
 
 /**
  * This mixin contains the event logic for the tinymce.Editor class.
@@ -45,9 +46,11 @@ const getEventTarget = function (editor: Editor, eventName: string): Node {
   }
 
   // Bind to event root instead of body if it's defined
-  if (editor.settings.event_root) {
+  const eventRoot = Settings.getEventRoot(editor);
+
+  if (eventRoot) {
     if (!editor.eventRoot) {
-      editor.eventRoot = DOM.select(editor.settings.event_root)[0];
+      editor.eventRoot = DOM.select(eventRoot)[0];
     }
 
     return editor.eventRoot;
@@ -75,7 +78,7 @@ const fireEvent = (editor: Editor, eventName: string, e: Event) => {
  * @param {String} eventName Name of the event for example "click".
  */
 const bindEventDelegate = function (editor: Editor, eventName: string) {
-  let eventRootElm, delegate;
+  let delegate;
 
   if (!editor.delegates) {
     editor.delegates = {};
@@ -85,19 +88,17 @@ const bindEventDelegate = function (editor: Editor, eventName: string) {
     return;
   }
 
-  eventRootElm = getEventTarget(editor, eventName);
+  const eventRootElm = getEventTarget(editor, eventName);
 
-  if (editor.settings.event_root) {
+  if (Settings.getEventRoot(editor)) {
     if (!customEventRootDelegates) {
       customEventRootDelegates = {};
       editor.editorManager.on('removeEditor', function () {
-        let name;
-
         if (!editor.editorManager.activeEditor) {
           if (customEventRootDelegates) {
-            for (name in customEventRootDelegates) {
+            Obj.each(customEventRootDelegates, (_value, name) => {
               editor.dom.unbind(getEventTarget(editor, name));
-            }
+            });
 
             customEventRootDelegates = null;
           }
@@ -149,8 +150,8 @@ const EditorObservable: EditorObservable = {
    *
    * @private
    */
-  bindPendingEventDelegates () {
-    const self = this;
+  bindPendingEventDelegates() {
+    const self = (this as Editor);
 
     Tools.each(self._pendingNativeEvents, function (name) {
       bindEventDelegate(self, name);
@@ -163,7 +164,7 @@ const EditorObservable: EditorObservable = {
    *
    * @private
    */
-  toggleNativeEvent (name, state) {
+  toggleNativeEvent(name, state) {
     const self = this;
 
     // Never bind focus/blur since the FocusManager fakes those
@@ -176,7 +177,7 @@ const EditorObservable: EditorObservable = {
         bindEventDelegate(self, name);
       } else {
         if (!self._pendingNativeEvents) {
-          self._pendingNativeEvents = [name];
+          self._pendingNativeEvents = [ name ];
         } else {
           self._pendingNativeEvents.push(name);
         }
@@ -192,16 +193,15 @@ const EditorObservable: EditorObservable = {
    *
    * @private
    */
-  unbindAllNativeEvents () {
+  unbindAllNativeEvents() {
     const self = this;
     const body = self.getBody();
     const dom: DOMUtils = self.dom;
-    let name;
 
     if (self.delegates) {
-      for (name in self.delegates) {
-        self.dom.unbind(getEventTarget(self, name), name, self.delegates[name]);
-      }
+      Obj.each(self.delegates, (value, name) => {
+        self.dom.unbind(getEventTarget(self, name), name, value);
+      });
 
       delete self.delegates;
     }

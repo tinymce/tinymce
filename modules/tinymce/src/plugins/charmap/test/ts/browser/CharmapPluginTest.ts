@@ -1,4 +1,4 @@
-import { Pipeline, Log } from '@ephox/agar';
+import { Log, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 import Editor from 'tinymce/core/api/Editor';
@@ -13,16 +13,16 @@ UnitTest.asynctest('browser.tinymce.plugins.charmap.CharMapPluginTest', (success
 
   suite.test('TestCase-TBA: Charmap: Replace characters by array', function (editor) {
     editor.settings.charmap = [
-      [65, 'Latin A'],
-      [66, 'Latin B']
+      [ 65, 'Latin A' ],
+      [ 66, 'Latin B' ]
     ];
 
     LegacyUnit.deepEqual(editor.plugins.charmap.getCharMap(), [
       {
         name: 'User Defined',
         characters: [
-          [65, 'Latin A'],
-          [66, 'Latin B']
+          [ 65, 'Latin A' ],
+          [ 66, 'Latin B' ]
         ]
       }
     ]);
@@ -31,8 +31,8 @@ UnitTest.asynctest('browser.tinymce.plugins.charmap.CharMapPluginTest', (success
   suite.test('TestCase-TBA: Charmap: Replace characters by function', function (editor) {
     editor.settings.charmap = function () {
       return [
-        [65, 'Latin A fun'],
-        [66, 'Latin B fun']
+        [ 65, 'Latin A fun' ],
+        [ 66, 'Latin B fun' ]
       ];
     };
 
@@ -40,8 +40,8 @@ UnitTest.asynctest('browser.tinymce.plugins.charmap.CharMapPluginTest', (success
       {
         name: 'User Defined',
         characters: [
-          [65, 'Latin A fun'],
-          [66, 'Latin B fun']
+          [ 65, 'Latin A fun' ],
+          [ 66, 'Latin B fun' ]
         ]
       }
     ]);
@@ -49,21 +49,21 @@ UnitTest.asynctest('browser.tinymce.plugins.charmap.CharMapPluginTest', (success
 
   suite.test('TestCase-TBA: Charmap: Append characters by array', function (editor) {
     editor.settings.charmap = [
-      [67, 'Latin C']
+      [ 67, 'Latin C' ]
     ];
 
     editor.settings.charmap_append = [
-      [65, 'Latin A'],
-      [66, 'Latin B']
+      [ 65, 'Latin A' ],
+      [ 66, 'Latin B' ]
     ];
 
     LegacyUnit.deepEqual(editor.plugins.charmap.getCharMap(), [
       {
         name: 'User Defined',
         characters: [
-          [67, 'Latin C'],
-          [65, 'Latin A'],
-          [66, 'Latin B']
+          [ 67, 'Latin C' ],
+          [ 65, 'Latin A' ],
+          [ 66, 'Latin B' ]
         ]
       }
     ]);
@@ -71,13 +71,13 @@ UnitTest.asynctest('browser.tinymce.plugins.charmap.CharMapPluginTest', (success
 
   suite.test('TestCase-TBA: Charmap: Append characters by function', function (editor) {
     editor.settings.charmap = [
-      [67, 'Latin C']
+      [ 67, 'Latin C' ]
     ];
 
     editor.settings.charmap_append = function () {
       return [
-        [65, 'Latin A fun'],
-        [66, 'Latin B fun']
+        [ 65, 'Latin A fun' ],
+        [ 66, 'Latin B fun' ]
       ];
     };
 
@@ -85,9 +85,9 @@ UnitTest.asynctest('browser.tinymce.plugins.charmap.CharMapPluginTest', (success
       {
         name: 'User Defined',
         characters: [
-          [67, 'Latin C'],
-          [65, 'Latin A fun'],
-          [66, 'Latin B fun']]
+          [ 67, 'Latin C' ],
+          [ 65, 'Latin A fun' ],
+          [ 66, 'Latin B fun' ]]
       }
     ]);
   });
@@ -109,6 +109,6 @@ UnitTest.asynctest('browser.tinymce.plugins.charmap.CharMapPluginTest', (success
     theme: 'silver',
     plugins: 'charmap',
     indent: false,
-    base_url: '/project/tinymce/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

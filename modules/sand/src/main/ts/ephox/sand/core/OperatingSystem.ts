@@ -3,16 +3,16 @@ import { UaString } from '../detect/UaString';
 import { Version } from '../detect/Version';
 
 export interface OperatingSystem {
-  current: string | undefined;
-  version: Version;
-  isWindows: () => boolean;
-  isiOS: () => boolean;
-  isAndroid: () => boolean;
-  isOSX: () => boolean;
-  isLinux: () => boolean;
-  isSolaris: () => boolean;
-  isFreeBSD: () => boolean;
-  isChromeOS: () => boolean;
+  readonly current: string | undefined;
+  readonly version: Version;
+  readonly isWindows: () => boolean;
+  readonly isiOS: () => boolean;
+  readonly isAndroid: () => boolean;
+  readonly isOSX: () => boolean;
+  readonly isLinux: () => boolean;
+  readonly isSolaris: () => boolean;
+  readonly isFreeBSD: () => boolean;
+  readonly isChromeOS: () => boolean;
 }
 
 const windows = 'Windows';
@@ -26,11 +26,6 @@ const chromeos = 'ChromeOS';
 
 // Though there is a bit of dupe with this and Browser, trying to
 // reuse code makes it much harder to follow and change.
-const isOS = function (name: string, current: string) {
-  return function () {
-    return current === name;
-  };
-};
 
 const unknown = function (): OperatingSystem {
   return nu({
@@ -43,19 +38,21 @@ const nu = function (info: UaString): OperatingSystem {
   const current = info.current;
   const version = info.version;
 
+  const isOS = (name: string) => (): boolean => current === name;
+
   return {
     current,
     version,
 
-    isWindows: isOS(windows, current),
+    isWindows: isOS(windows),
     // TODO: Fix capitalisation
-    isiOS: isOS(ios, current),
-    isAndroid: isOS(android, current),
-    isOSX: isOS(osx, current),
-    isLinux: isOS(linux, current),
-    isSolaris: isOS(solaris, current),
-    isFreeBSD: isOS(freebsd, current),
-    isChromeOS: isOS(chromeos, current)
+    isiOS: isOS(ios),
+    isAndroid: isOS(android),
+    isOSX: isOS(osx),
+    isLinux: isOS(linux),
+    isSolaris: isOS(solaris),
+    isFreeBSD: isOS(freebsd),
+    isChromeOS: isOS(chromeos)
   };
 };
 

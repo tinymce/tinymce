@@ -1,8 +1,7 @@
-import { console, Blob } from '@ephox/dom-globals';
-import { Http, DataType, HttpData, HttpJwt } from 'ephox/jax/api/Main';
 import { FutureResult } from '@ephox/katamari';
+import { DataType, Http, HttpData, HttpJwt } from 'ephox/jax/api/Main';
 
-/* tslint:disable:no-console */
+/* eslint-disable no-console */
 
 Http.get({
   url: 'https://httpbin.org/get',
@@ -18,7 +17,7 @@ Http.get({
 
 Http.post({
   url: 'https://httpbin.org/post',
-  body: HttpData.jsonData({cool: 'data'}),
+  body: HttpData.jsonData({ cool: 'data' }),
   responseType: DataType.JSON
 }).get((result) => {
   result.fold(
@@ -99,7 +98,7 @@ Http.post({
   body: HttpData.multipartFormData({
     param1: 'abc',
     param2: 'abc',
-    blob1: new Blob(['text'])
+    blob1: new Blob([ 'text' ])
   }),
   responseType: DataType.JSON
 }).get((result) => {
@@ -125,7 +124,7 @@ Http.download({
   );
 });
 
-const jwtFactory = (flesh: boolean) => FutureResult.pure('123');
+const jwtFactory = (_foo: boolean) => FutureResult.pure('123');
 
 HttpJwt.put({
   url: 'https://httpbin.org/put',

@@ -1,12 +1,11 @@
-import { Attr, Classes, Css, Element, Html, InsertAll, Value } from '@ephox/sugar';
+import { Attribute, Classes, Css, Html, InsertAll, SugarElement, Value } from '@ephox/sugar';
 
 import * as Tagger from '../registry/Tagger';
 import * as DomDefinition from './DomDefinition';
-import { HTMLTextAreaElement, HTMLInputElement } from '@ephox/dom-globals';
 
-const renderToDom = (definition: DomDefinition.GeneralDefinitionDetail<Element>) => {
-  const subject = Element.fromTag(definition.tag);
-  Attr.setAll(subject, definition.attributes);
+const renderToDom = (definition: DomDefinition.GeneralDefinitionDetail<SugarElement>) => {
+  const subject = SugarElement.fromTag(definition.tag);
+  Attribute.setAll(subject, definition.attributes);
   Classes.add(subject, definition.classes);
   Css.setAll(subject, definition.styles);
   // Remember: Order of innerHtml vs children is important.
@@ -17,11 +16,11 @@ const renderToDom = (definition: DomDefinition.GeneralDefinitionDetail<Element>)
   InsertAll.append(subject, children);
 
   definition.value.each((value) => {
-    Value.set(subject as Element<HTMLInputElement | HTMLTextAreaElement>, value);
+    Value.set(subject as SugarElement<HTMLInputElement | HTMLTextAreaElement>, value);
   });
 
   if (!definition.uid) {
-    // tslint:disable-next-line:no-debugger
+    // eslint-disable-next-line no-debugger
     debugger;
   }
   Tagger.writeOnly(subject, definition.uid);

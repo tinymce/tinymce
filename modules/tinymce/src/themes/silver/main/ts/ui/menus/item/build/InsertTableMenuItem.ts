@@ -5,21 +5,26 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, CustomEvent, Focusing, GuiFactory, ItemTypes, ItemWidget, Keying, Memento, NativeEvents, NativeSimulatedEvent, Replacing, SystemEvents, Toggling } from '@ephox/alloy';
+/* eslint-disable max-len */
+import {
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, CustomEvent, Focusing, GuiFactory, ItemTypes, ItemWidget,
+  Keying, Memento, NativeEvents, NativeSimulatedEvent, Replacing, SystemEvents, Toggling
+} from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
 import { Arr, Id } from '@ephox/katamari';
+/* eslint-enable max-len */
 
 const cellOverEvent = Id.generate('cell-over');
 const cellExecuteEvent = Id.generate('cell-execute');
 
 interface CellEvent extends CustomEvent {
-  col: () => number;
-  row: () => number;
+  readonly col: number;
+  readonly row: number;
 }
 
 const makeCell = (row, col, labelId) => {
-  const emitCellOver = (c: AlloyComponent) => AlloyTriggers.emitWith(c, cellOverEvent, {row, col} );
-  const emitExecute = (c: AlloyComponent) => AlloyTriggers.emitWith(c, cellExecuteEvent, {row, col} );
+  const emitCellOver = (c: AlloyComponent) => AlloyTriggers.emitWith(c, cellOverEvent, { row, col } );
+  const emitExecute = (c: AlloyComponent) => AlloyTriggers.emitWith(c, cellExecuteEvent, { row, col } );
 
   const onClick = (c: AlloyComponent, se: NativeSimulatedEvent) => {
     se.stop();
@@ -45,12 +50,12 @@ const makeCell = (row, col, labelId) => {
         toggleClass: 'tox-insert-table-picker__selected',
         toggleOnExecute: false
       }),
-      Focusing.config({onFocus: emitCellOver})
+      Focusing.config({ onFocus: emitCellOver })
     ])
   });
 };
 
-const makeCells =  (labelId, numRows, numCols) => {
+const makeCells = (labelId, numRows, numCols) => {
   const cells = [];
   for (let i = 0; i < numRows; i++) {
     const row = [];
@@ -75,7 +80,7 @@ const makeComponents = (cells: Array<Array<AlloyComponent>>): Array<AlloySpec> =
 
 const makeLabelText = (row, col) => GuiFactory.text(`${col + 1}x${row + 1}`);
 
-export function renderInsertTableMenuItem(spec: Menu.FancyMenuItem): ItemTypes.WidgetItemSpec {
+export const renderInsertTableMenuItem = (spec: Menu.FancyMenuItem): ItemTypes.WidgetItemSpec => {
   const numRows = 10;
   const numColumns = 10;
   const sizeLabelId = Id.generate('size-label');
@@ -84,12 +89,12 @@ export function renderInsertTableMenuItem(spec: Menu.FancyMenuItem): ItemTypes.W
   const memLabel = Memento.record({
     dom: {
       tag: 'span',
-      classes: ['tox-insert-table-picker__label'],
+      classes: [ 'tox-insert-table-picker__label' ],
       attributes: {
         id: sizeLabelId
       }
     },
-    components: [GuiFactory.text('0x0')],
+    components: [ GuiFactory.text('0x0') ],
     behaviours: Behaviour.derive([
       Replacing.config({})
     ])
@@ -97,28 +102,28 @@ export function renderInsertTableMenuItem(spec: Menu.FancyMenuItem): ItemTypes.W
 
   return {
     type: 'widget',
-    data: { value: Id.generate('widget-id')},
+    data: { value: Id.generate('widget-id') },
     dom: {
       tag: 'div',
-      classes: ['tox-fancymenuitem'],
+      classes: [ 'tox-fancymenuitem' ]
     },
     autofocus: true,
-    components: [ItemWidget.parts().widget({
+    components: [ ItemWidget.parts.widget({
       dom: {
         tag: 'div',
-        classes: ['tox-insert-table-picker']
+        classes: [ 'tox-insert-table-picker' ]
       },
       components: makeComponents(cells).concat(memLabel.asSpec()),
       behaviours: Behaviour.derive([
         AddEventsBehaviour.config('insert-table-picker', [
           AlloyEvents.runWithTarget<CellEvent>(cellOverEvent, (c, t, e) => {
-            const row = e.event().row();
-            const col = e.event().col();
+            const row = e.event.row;
+            const col = e.event.col;
             selectCells(cells, row, col, numRows, numColumns);
-            Replacing.set(memLabel.get(c), [makeLabelText(row, col)]);
+            Replacing.set(memLabel.get(c), [ makeLabelText(row, col) ]);
           }),
           AlloyEvents.runWithTarget<CellEvent>(cellExecuteEvent, (c, _, e) => {
-            spec.onAction({numRows: e.event().row() + 1, numColumns: e.event().col() + 1});
+            spec.onAction({ numRows: e.event.row + 1, numColumns: e.event.col + 1 });
             AlloyTriggers.emit(c, SystemEvents.sandboxClose());
           })
         ]),
@@ -131,6 +136,6 @@ export function renderInsertTableMenuItem(spec: Menu.FancyMenuItem): ItemTypes.W
           selector: '[role="button"]'
         })
       ])
-    })]
+    }) ]
   };
-}
+};

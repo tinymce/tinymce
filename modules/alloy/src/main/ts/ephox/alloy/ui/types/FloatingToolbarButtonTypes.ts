@@ -1,18 +1,18 @@
-import { LazySink } from '../../api/component/CommonTypes';
-import { SimpleOrSketchSpec, AlloySpec } from '../../api/component/SpecTypes';
-import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
-import { ToolbarSpec } from './ToolbarTypes';
-import { HasLayoutAnchor, HasLayoutAnchorSpec } from '../../positioning/mode/Anchoring';
-import { Future, Option } from '@ephox/katamari';
-import { AlloyComponent } from '../../api/component/ComponentApi';
+import { Future, Optional } from '@ephox/katamari';
 import { Bounds } from '../../alien/Boxes';
+import { LazySink } from '../../api/component/CommonTypes';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { AlloySpec, SimpleOrSketchSpec } from '../../api/component/SpecTypes';
+import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
+import { HasLayoutAnchor, HasLayoutAnchorSpec } from '../../positioning/mode/Anchoring';
+import { ToolbarSpec } from './ToolbarTypes';
 
 export interface FloatingToolbarButtonDetail extends CompositeSketchDetail, HasLayoutAnchor {
   lazySink: LazySink;
   fetch: () => Future<AlloySpec[]>;
-  getBounds: Option<() => Bounds>;
-  fireDismissalEventInstead: Option<{
-    event: string
+  getBounds: Optional<() => Bounds>;
+  fireDismissalEventInstead: Optional<{
+    event: string;
   }>;
 
   markers: {
@@ -21,10 +21,11 @@ export interface FloatingToolbarButtonDetail extends CompositeSketchDetail, HasL
 }
 
 export interface FloatingToolbarButtonApis {
-  setGroups: (floatingToolbarButton: AlloyComponent, groups: AlloySpec[]) => Option<AlloyComponent>;
+  setGroups: (floatingToolbarButton: AlloyComponent, groups: AlloySpec[]) => Optional<AlloyComponent>;
   reposition: (floatingToolbarButton: AlloyComponent) => void;
   toggle: (floatingToolbarButton: AlloyComponent) => void;
-  getToolbar: (floatingToolbarButton: AlloyComponent) => Option<AlloyComponent>;
+  getToolbar: (floatingToolbarButton: AlloyComponent) => Optional<AlloyComponent>;
+  isOpen: (floatingToolbarButton: AlloyComponent) => boolean;
 }
 
 export interface FloatingToolbarButtonSpec extends CompositeSketchSpec, HasLayoutAnchorSpec {
@@ -32,7 +33,7 @@ export interface FloatingToolbarButtonSpec extends CompositeSketchSpec, HasLayou
   fetch: () => Future<AlloySpec[]>;
   getBounds?: () => Bounds;
   fireDismissalEventInstead?: {
-    event?: string
+    event?: string;
   };
 
   markers: {
@@ -40,8 +41,8 @@ export interface FloatingToolbarButtonSpec extends CompositeSketchSpec, HasLayou
   };
 
   parts: {
-    'button': Partial<SimpleOrSketchSpec>
-    'toolbar': Partial<ToolbarSpec>
+    'button': Partial<SimpleOrSketchSpec>;
+    'toolbar': Partial<ToolbarSpec>;
   };
 }
 

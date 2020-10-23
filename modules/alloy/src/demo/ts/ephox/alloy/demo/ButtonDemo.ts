@@ -1,5 +1,4 @@
-import { document, console } from '@ephox/dom-globals';
-import { Class, Element } from '@ephox/sugar';
+import { Class, SugarElement } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Toggling } from 'ephox/alloy/api/behaviour/Toggling';
@@ -9,19 +8,19 @@ import { Button } from 'ephox/alloy/api/ui/Button';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 import * as DomModification from 'ephox/alloy/dom/DomModification';
 
-// tslint:disable:no-console
+/* eslint-disable no-console */
 
 export default (): void => {
   const gui = Gui.create();
-  const body = Element.fromDom(document.body);
-  Class.add(gui.element(), 'gui-root-demo-container');
+  const body = SugarElement.fromDom(document.body);
+  Class.add(gui.element, 'gui-root-demo-container');
   Attachment.attachSystem(body, gui);
 
   const redBehaviour = Behaviour.create({
     fields: [ ],
     name: 'red.behaviour',
     active: {
-      exhibit () {
+      exhibit() {
         return DomModification.nu({
           classes: [ 'cat' ],
           attributes: {
@@ -39,7 +38,7 @@ export default (): void => {
     fields: [ ],
     name: 'cat.behaviour',
     active: {
-      exhibit () {
+      exhibit() {
         return DomModification.nu({
           classes: [ 'cat' ],
           attributes: {
@@ -66,7 +65,7 @@ export default (): void => {
           'height': '20px'
         }
       },
-      action () {
+      action() {
         console.log('*** Image ButtonDemo click ***');
       }
     })
@@ -84,7 +83,7 @@ export default (): void => {
           display: 'inline-block'
         }
       },
-      action () {
+      action() {
         console.log('*** Font ButtonDemo click ***');
       },
       buttonBehaviours: Behaviour.derive([
@@ -109,7 +108,7 @@ export default (): void => {
         tag: 'span',
         innerHtml: 'Button.with.Text'
       },
-      action () {
+      action() {
         console.log('*** ButtonDemo click ***');
       },
 

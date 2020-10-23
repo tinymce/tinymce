@@ -1,10 +1,10 @@
 import { UnitTest } from '@ephox/bedrock-client';
 import { Gene, TestUniverse } from '@ephox/boss';
+import { KAssert } from '@ephox/katamari-assertions';
 import { Direction, Transition } from 'ephox/phoenix/api/data/Types';
 import * as Walker from 'ephox/phoenix/gather/Walker';
 import { Walkers } from 'ephox/phoenix/gather/Walkers';
 import * as Finder from 'ephox/phoenix/test/Finder';
-import { KAssert } from '@ephox/katamari-assertions';
 
 UnitTest.test('WalkerTest', function () {
   const universe = TestUniverse(
@@ -24,7 +24,7 @@ UnitTest.test('WalkerTest', function () {
 
   const check = function (expected: string, id: string, traverse: Transition, direction: Direction) {
     const item = Finder.get(universe, id);
-    const actual = traverse(universe, item, direction).map((x) => x.item().id);
+    const actual = traverse(universe, item, direction).map((x) => x.item.id);
     KAssert.eqSome('eq', expected, actual);
   };
 

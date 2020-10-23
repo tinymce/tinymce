@@ -1,7 +1,7 @@
-import { ApproxStructure, Assertions, Pipeline, Waiter, Logger, Log } from '@ephox/agar';
+import { ApproxStructure, Assertions, Log, Logger, Pipeline, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyLoader } from '@ephox/mcagar';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 
 import * as DataToHtml from 'tinymce/plugins/media/core/DataToHtml';
 import Plugin from 'tinymce/plugins/media/Plugin';
@@ -12,7 +12,7 @@ UnitTest.asynctest('browser.core.DataToHtmlTest', function (success, failure) {
   Theme();
 
   const sTestDataToHtml = function (editor, data, expected) {
-    const actual = Element.fromHtml(DataToHtml.dataToHtml(editor, data));
+    const actual = SugarElement.fromHtml(DataToHtml.dataToHtml(editor, data));
 
     return Logger.t(`Test html data ${expected}`, Waiter.sTryUntil('Wait for structure check',
       Assertions.sAssertStructure('Assert equal', expected, actual),
@@ -22,7 +22,7 @@ UnitTest.asynctest('browser.core.DataToHtmlTest', function (success, failure) {
 
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
 
-    const videoStruct = ApproxStructure.build(function (s, str/*, arr*/) {
+    const videoStruct = ApproxStructure.build(function (s, str/* , arr*/) {
       return s.element('video', {
         children: [
           s.text(str.is('\n')),
@@ -40,7 +40,7 @@ UnitTest.asynctest('browser.core.DataToHtmlTest', function (success, failure) {
       });
     });
 
-    const iframeStruct = ApproxStructure.build(function (s, str/*, arr*/) {
+    const iframeStruct = ApproxStructure.build(function (s, str/* , arr*/) {
       return s.element('iframe', {
         attrs: {
           height: str.is('150'),
@@ -70,11 +70,11 @@ UnitTest.asynctest('browser.core.DataToHtmlTest', function (success, failure) {
           },
           iframeStruct)
       ])
-    , onSuccess, onFailure);
+      , onSuccess, onFailure);
   }, {
-    plugins: ['media'],
+    plugins: [ 'media' ],
     toolbar: 'media',
     theme: 'silver',
-    base_url: '/project/tinymce/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

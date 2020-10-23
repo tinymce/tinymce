@@ -1,30 +1,23 @@
+import { SugarElement } from '../node/SugarElement';
 import * as PredicateFind from './PredicateFind';
-import Element from '../node/Element';
-import { Node as DomNode } from '@ephox/dom-globals';
 
-const any = function (predicate: (e: Element<DomNode>) => boolean) {
-  return PredicateFind.first(predicate).isSome();
-};
+const any = (predicate: (e: SugarElement<Node>) => boolean): boolean =>
+  PredicateFind.first(predicate).isSome();
 
-const ancestor = function (scope: Element<DomNode>, predicate: (e: Element<DomNode>) => boolean, isRoot?: (e: Element<DomNode>) => boolean) {
-  return PredicateFind.ancestor(scope, predicate, isRoot).isSome();
-};
+const ancestor = (scope: SugarElement<Node>, predicate: (e: SugarElement<Node>) => boolean, isRoot?: (e: SugarElement<Node>) => boolean): boolean =>
+  PredicateFind.ancestor(scope, predicate, isRoot).isSome();
 
-const closest = function (scope: Element<DomNode>, predicate: (e: Element<DomNode>) => boolean, isRoot?: (e: Element<DomNode>) => boolean) {
-  return PredicateFind.closest(scope, predicate, isRoot).isSome();
-};
+const closest = (scope: SugarElement<Node>, predicate: (e: SugarElement<Node>) => boolean, isRoot?: (e: SugarElement<Node>) => boolean): boolean =>
+  PredicateFind.closest(scope, predicate, isRoot).isSome();
 
-const sibling = function (scope: Element<DomNode>, predicate: (e: Element<DomNode>) => boolean) {
-  return PredicateFind.sibling(scope, predicate).isSome();
-};
+const sibling = (scope: SugarElement<Node>, predicate: (e: SugarElement<Node>) => boolean): boolean =>
+  PredicateFind.sibling(scope, predicate).isSome();
 
-const child = function (scope: Element<DomNode>, predicate: (e: Element<DomNode>) => boolean) {
-  return PredicateFind.child(scope, predicate).isSome();
-};
+const child = (scope: SugarElement<Node>, predicate: (e: SugarElement<Node>) => boolean): boolean =>
+  PredicateFind.child(scope, predicate).isSome();
 
-const descendant = function (scope: Element<DomNode>, predicate: (e: Element<DomNode>) => boolean) {
-  return PredicateFind.descendant(scope, predicate).isSome();
-};
+const descendant = (scope: SugarElement<Node>, predicate: (e: SugarElement<Node>) => boolean): boolean =>
+  PredicateFind.descendant(scope, predicate).isSome();
 
 export {
   any,
@@ -32,5 +25,5 @@ export {
   closest,
   sibling,
   child,
-  descendant,
+  descendant
 };

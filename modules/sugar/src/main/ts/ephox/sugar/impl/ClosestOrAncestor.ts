@@ -1,15 +1,13 @@
-import { Option, Type } from '@ephox/katamari';
-import Element from '../api/node/Element';
-import { Node as DomNode } from '@ephox/dom-globals';
+import { Optional, Type } from '@ephox/katamari';
+import { SugarElement } from '../api/node/SugarElement';
 
-type TestFn = (e: Element<DomNode>) => boolean;
-type ScopeTestFn<T> = (scope: Element<DomNode>, a: T) => boolean;
-type AncestorFn<T> = (scope: Element<DomNode>, predicate: T, isRoot?: TestFn) => Option<Element<DomNode>>;
+type TestFn = (e: SugarElement<Node>) => boolean;
+type ScopeTestFn<T, R extends Node> = (scope: SugarElement<Node>, a: T) => scope is SugarElement<R>;
+type AncestorFn<T, R extends Node> = (scope: SugarElement<Node>, predicate: T, isRoot?: TestFn) => Optional<SugarElement<R>>;
 
-export default function <T>(is: ScopeTestFn<T>, ancestor: AncestorFn<T>, scope: Element<DomNode>, a: T, isRoot: TestFn): Option<Element<DomNode>> {
-  return is(scope, a) ?
-          Option.some(scope) :
-          Type.isFunction(isRoot) && isRoot(scope) ?
-              Option.none<Element<DomNode>>() :
-              ancestor(scope, a, isRoot);
-}
+export default <T, R extends Node = Node> (is: ScopeTestFn<T, R>, ancestor: AncestorFn<T, R>, scope: SugarElement<Node>, a: T, isRoot?: TestFn): Optional<SugarElement<R>> =>
+  is(scope, a) ?
+    Optional.some(scope) :
+    Type.isFunction(isRoot) && isRoot(scope) ?
+      Optional.none<SugarElement<R>>() :
+      ancestor(scope, a, isRoot);

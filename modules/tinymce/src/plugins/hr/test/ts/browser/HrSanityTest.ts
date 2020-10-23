@@ -1,4 +1,4 @@
-import { ApproxStructure, Pipeline, Log } from '@ephox/agar';
+import { ApproxStructure, Log, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 
@@ -16,7 +16,7 @@ UnitTest.asynctest('browser.tinymce.plugins.fullscreen.HrSanitytest', (success, 
 
     Pipeline.async({}, Log.steps('TBA', 'HorizontalRule: Click on the horizontal rule toolbar button and assert hr is added to the editor', [
       tinyUi.sClickOnToolbar('click on hr button', 'button[aria-label="Horizontal line"]'),
-      tinyApis.sAssertContentStructure(ApproxStructure.build(function (s, str) {
+      tinyApis.sAssertContentStructure(ApproxStructure.build(function (s, _str) {
         return s.element('body', {
           children: [
             s.element('hr', {}),

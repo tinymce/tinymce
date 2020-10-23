@@ -1,160 +1,179 @@
-import { Struct } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { Arr } from '@ephox/katamari';
+import { SugarElement } from '@ephox/sugar';
 
 export interface Dimension {
-  width: () => number;
-  height: () => number;
+  readonly width: number;
+  readonly height: number;
 }
 
 export interface Dimensions {
-  width: () => number[];
-  height: () => number[];
+  readonly width: number[];
+  readonly height: number[];
 }
 
 export interface Grid {
-  rows: () => number;
-  columns: () => number;
+  readonly rows: number;
+  readonly columns: number;
 }
 
 export interface Address {
-  row: () => number;
-  column: () => number;
+  readonly row: number;
+  readonly column: number;
 }
 
 export interface Coords {
-  x: () => number;
-  y: () => number;
+  readonly x: number;
+  readonly y: number;
 }
 
 export interface Detail {
-  element: () => Element;
-  rowspan: () => number;
-  colspan: () => number;
+  readonly element: SugarElement;
+  readonly rowspan: number;
+  readonly colspan: number;
 }
 
 export interface DetailNew extends Detail {
-  isNew: () => boolean;
+  readonly isNew: boolean;
 }
 
 export interface DetailExt extends Detail {
-  row: () => number;
-  column: () => number;
+  readonly row: number;
+  readonly column: number;
 }
 
-type Section = 'tfoot' | 'thead' | 'tbody';
+export type Section = 'tfoot' | 'thead' | 'tbody' | 'colgroup';
+const validSectionList: Section[] = [ 'tfoot', 'thead', 'tbody', 'colgroup' ];
 
 export interface RowCells {
-  cells: () => ElementNew[];
-  section: () => Section;
+  readonly cells: ElementNew[];
+  readonly section: Section;
 }
 
 export interface RowData<T> {
-  element: () => Element;
-  cells: () => T[];
-  section: () => Section;
+  readonly element: SugarElement;
+  readonly cells: T[];
+  readonly section: Section;
 }
 
 export interface RowDataNew<T> extends RowData<T> {
-  isNew: () => boolean;
+  readonly isNew: boolean;
 }
 
 export interface ElementNew {
-  element: () => Element;
-  isNew: () => boolean;
+  readonly element: SugarElement;
+  readonly isNew: boolean;
 }
 
 export interface RowDetails {
-  details: () => DetailNew[];
-  section: () => Section;
+  readonly details: DetailNew[];
+  readonly section: Section;
+}
+
+export interface Column {
+  readonly element: SugarElement<HTMLTableColElement>;
+  readonly colspan: number;
+}
+
+export interface ColumnExt extends Column {
+  readonly column: number;
 }
 
 export interface Bounds {
-  startRow: () => number;
-  startCol: () => number;
-  finishRow: () => number;
-  finishCol: () => number;
+  readonly startRow: number;
+  readonly startCol: number;
+  readonly finishRow: number;
+  readonly finishCol: number;
 }
 
-const dimension: (
-  width: ReturnType<Dimension['width']>,
-  height: ReturnType<Dimension['height']>
-) => Dimension = Struct.immutable('width', 'height');
+const isValidSection = (parentName: string): parentName is Section =>
+  Arr.contains(validSectionList, parentName);
 
-const dimensions: (
-  width: ReturnType<Dimensions['width']>,
-  height: ReturnType<Dimensions['height']>
-) => Dimensions = Struct.immutable('width', 'height');
+const dimension = (width: number, height: number): Dimension => ({
+  width,
+  height
+});
 
-const grid: (
-  rows: ReturnType<Grid['rows']>,
-  columns: ReturnType<Grid['columns']>
-) => Grid = Struct.immutable('rows', 'columns');
+const dimensions = (width: number[], height: number[]): Dimensions => ({
+  width,
+  height
+});
 
-const address: (
-  row: ReturnType<Address['row']>,
-  column: ReturnType<Address['column']>
-) => Address = Struct.immutable('row', 'column');
+const grid = (rows: number, columns: number): Grid => ({
+  rows,
+  columns
+});
 
-const coords: (
-  x: ReturnType<Coords['x']>,
-  y: ReturnType<Coords['y']>
-) => Coords = Struct.immutable('x', 'y');
+const address = (row: number, column: number): Address => ({
+  row,
+  column
+});
 
-const detail: (
-  element: ReturnType<Detail['element']>,
-  rowspan: ReturnType<Detail['rowspan']>,
-  colspan: ReturnType<Detail['colspan']>
-) => Detail = Struct.immutable('element', 'rowspan', 'colspan');
+const coords = (x: number, y: number): Coords => ({
+  x,
+  y
+});
 
-const detailnew: (
-  element: ReturnType<DetailNew['element']>,
-  rowspan: ReturnType<DetailNew['rowspan']>,
-  colspan: ReturnType<DetailNew['colspan']>,
-  isNew: ReturnType<DetailNew['isNew']>
-) => DetailNew = Struct.immutable('element', 'rowspan', 'colspan', 'isNew');
+const detail = (element: SugarElement<HTMLTableCellElement | HTMLTableColElement>, rowspan: number, colspan: number): Detail => ({
+  element,
+  rowspan,
+  colspan
+});
 
-const extended: (
-  element: ReturnType<DetailExt['element']>,
-  rowspan: ReturnType<DetailExt['rowspan']>,
-  colspan: ReturnType<DetailExt['colspan']>,
-  row: ReturnType<DetailExt['row']>,
-  column: ReturnType<DetailExt['column']>
-) => DetailExt = Struct.immutable('element', 'rowspan', 'colspan', 'row', 'column');
+const detailnew = (element: SugarElement<HTMLTableCellElement>, rowspan: number, colspan: number, isNew: boolean): DetailNew => ({
+  element,
+  rowspan,
+  colspan,
+  isNew
+});
 
-const rowdata: <T> (
-  element: ReturnType<RowData<T>['element']>,
-  cells: ReturnType<RowData<T>['cells']>,
-  section: ReturnType<RowData<T>['section']>
-) => RowData<T> = Struct.immutable('element', 'cells', 'section');
+const extended = (element: SugarElement<HTMLTableCellElement>, rowspan: number, colspan: number, row: number, column: number): DetailExt => ({
+  element,
+  rowspan,
+  colspan,
+  row,
+  column
+});
 
-const elementnew: (
-  element: ReturnType<ElementNew['element']>,
-  isNew: ReturnType<ElementNew['isNew']>
-) => ElementNew = Struct.immutable('element', 'isNew');
+const rowdata = <T> (element: SugarElement<HTMLTableRowElement | HTMLTableColElement>, cells: T[], section: Section): RowData<T> => ({
+  element,
+  cells,
+  section
+});
 
-const rowdatanew: <T> (
-  element: ReturnType<RowDataNew<T>['element']>,
-  cells: ReturnType<RowDataNew<T>['cells']>,
-  section: ReturnType<RowDataNew<T>['section']>,
-  isNew: ReturnType<RowDataNew<T>['isNew']>
-) => RowDataNew<T> = Struct.immutable('element', 'cells', 'section', 'isNew');
+const elementnew = (element: SugarElement, isNew: boolean): ElementNew => ({
+  element,
+  isNew
+});
 
-const rowcells: (
-  cells: ReturnType<RowCells['cells']>,
-  section: ReturnType<RowCells['section']>
-) => RowCells = Struct.immutable('cells', 'section');
+const rowdatanew = <T> (element: SugarElement, cells: T[], section: Section, isNew: boolean): RowDataNew<T> => ({
+  element,
+  cells,
+  section,
+  isNew
+});
 
-const rowdetails: (
-  details: ReturnType<RowDetails['details']>,
-  section: ReturnType<RowDetails['section']>
-) => RowDetails =  Struct.immutable('details', 'section');
+const rowcells = (cells: ElementNew[], section: Section): RowCells => ({
+  cells,
+  section
+});
 
-const bounds: (
-  startRow: ReturnType<Bounds['startRow']>,
-  startCol: ReturnType<Bounds['startCol']>,
-  finishRow: ReturnType<Bounds['finishRow']>,
-  finishCol: ReturnType<Bounds['finishCol']>
-) => Bounds = Struct.immutable( 'startRow', 'startCol', 'finishRow', 'finishCol');
+const rowdetails = (details: DetailNew[], section: Section): RowDetails => ({
+  details,
+  section
+});
+
+const bounds = (startRow: number, startCol: number, finishRow: number, finishCol: number): Bounds => ({
+  startRow,
+  startCol,
+  finishRow,
+  finishCol
+});
+
+const columnext = (element: SugarElement<HTMLTableColElement>, colspan: number, column: number): ColumnExt => ({
+  element,
+  colspan,
+  column
+});
 
 export {
   dimension,
@@ -170,5 +189,7 @@ export {
   rowdatanew,
   rowcells,
   rowdetails,
-  bounds
+  bounds,
+  isValidSection,
+  columnext
 };

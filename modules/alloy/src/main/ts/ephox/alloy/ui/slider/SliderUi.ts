@@ -1,5 +1,4 @@
-import { DragEvent } from '@ephox/dom-globals';
-import { Fun, Option } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 
 import { Keying } from '../../api/behaviour/Keying';
 import { Receiving } from '../../api/behaviour/Receiving';
@@ -11,18 +10,18 @@ import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
 import * as Channels from '../../api/messages/Channels';
 import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
-import { CustomEvent, EventFormat, NativeSimulatedEvent } from '../../events/SimulatedEvent';
+import { EventFormat, NativeSimulatedEvent } from '../../events/SimulatedEvent';
 import * as AlloyParts from '../../parts/AlloyParts';
-import { SliderDetail, SliderSpec, SliderValue } from '../types/SliderTypes';
+import { SliderDetail, SliderSpec, SliderUpdateEvent, SliderValue } from '../types/SliderTypes';
 import * as ModelCommon from './ModelCommon';
 
 const sketch: CompositeSketchFactory<SliderDetail, SliderSpec> = (detail: SliderDetail, components: AlloySpec[], _spec: SliderSpec, _externals) => {
   const getThumb = (component: AlloyComponent): AlloyComponent => AlloyParts.getPartOrDie(component, detail, 'thumb');
   const getSpectrum = (component: AlloyComponent): AlloyComponent => AlloyParts.getPartOrDie(component, detail, 'spectrum');
-  const getLeftEdge = (component: AlloyComponent): Option<AlloyComponent> => AlloyParts.getPart(component, detail, 'left-edge');
-  const getRightEdge = (component: AlloyComponent): Option<AlloyComponent> => AlloyParts.getPart(component, detail, 'right-edge');
-  const getTopEdge = (component: AlloyComponent): Option<AlloyComponent> => AlloyParts.getPart(component, detail, 'top-edge');
-  const getBottomEdge = (component: AlloyComponent): Option<AlloyComponent> => AlloyParts.getPart(component, detail, 'bottom-edge');
+  const getLeftEdge = (component: AlloyComponent): Optional<AlloyComponent> => AlloyParts.getPart(component, detail, 'left-edge');
+  const getRightEdge = (component: AlloyComponent): Optional<AlloyComponent> => AlloyParts.getPart(component, detail, 'right-edge');
+  const getTopEdge = (component: AlloyComponent): Optional<AlloyComponent> => AlloyParts.getPart(component, detail, 'top-edge');
+  const getBottomEdge = (component: AlloyComponent): Optional<AlloyComponent> => AlloyParts.getPart(component, detail, 'bottom-edge');
 
   const modelDetail = detail.model;
   const model = modelDetail.manager;
@@ -37,13 +36,13 @@ const sketch: CompositeSketchFactory<SliderDetail, SliderSpec> = (detail: Slider
     });
   };
 
-  const changeValue = (slider: AlloyComponent, newValue: SliderValue): Option<boolean> => {
+  const changeValue = (slider: AlloyComponent, newValue: SliderValue): Optional<boolean> => {
     modelDetail.value.set(newValue);
 
     const thumb = getThumb(slider);
     refresh(slider, thumb);
     detail.onChange(slider, thumb, newValue);
-    return Option.some<boolean>(true);
+    return Optional.some<boolean>(true);
   };
 
   const resetToMin = (slider: AlloyComponent) => {
@@ -93,14 +92,14 @@ const sketch: CompositeSketchFactory<SliderDetail, SliderSpec> = (detail: Slider
       [
         Keying.config({
           mode: 'special',
-          focusIn (slider) {
-            return AlloyParts.getPart(slider, detail, 'spectrum').map(Keying.focusIn).map(Fun.constant(true));
+          focusIn(slider) {
+            return AlloyParts.getPart(slider, detail, 'spectrum').map(Keying.focusIn).map(Fun.always);
           }
         }),
         Representing.config({
           store: {
             mode: 'manual',
-            getValue (_) {
+            getValue(_) {
               return modelDetail.value.get();
             }
           }
@@ -117,10 +116,10 @@ const sketch: CompositeSketchFactory<SliderDetail, SliderSpec> = (detail: Slider
     ),
 
     events: AlloyEvents.derive([
-      AlloyEvents.run<CustomEvent>(ModelCommon.sliderChangeEvent(), (slider, simulatedEvent) => {
-        changeValue(slider, simulatedEvent.event().value());
+      AlloyEvents.run<SliderUpdateEvent>(ModelCommon.sliderChangeEvent(), (slider, simulatedEvent) => {
+        changeValue(slider, simulatedEvent.event.value);
       }) as AlloyEvents.AlloyEventKeyAndHandler<EventFormat>,
-      AlloyEvents.runOnAttached((slider, simulatedEvent) => {
+      AlloyEvents.runOnAttached((slider, _simulatedEvent) => {
         // Set the initial value
         const getInitial = modelDetail.getInitialValue();
         modelDetail.value.set(getInitial);

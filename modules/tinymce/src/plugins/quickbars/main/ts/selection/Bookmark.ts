@@ -116,7 +116,7 @@ const resolve = function (dom, bookmark) {
   return rng;
 };
 
-export default {
+export {
   create,
   resolve
 };

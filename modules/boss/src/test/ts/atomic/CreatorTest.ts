@@ -1,7 +1,7 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Gene } from 'ephox/boss/api/Gene';
-import Creator from 'ephox/boss/mutant/Creator';
+import * as Creator from 'ephox/boss/mutant/Creator';
 
 UnitTest.test('CreatorTest', function () {
-  assert.eq(Gene('clone**<c>', 'cat', []), Creator.clone(Gene('c', 'cat', [Gene('kitten', 'kitten')])));
+  assert.eq(Gene('clone**<c>', 'cat', []), Creator.clone(Gene('c', 'cat', [ Gene('kitten', 'kitten') ])));
 });

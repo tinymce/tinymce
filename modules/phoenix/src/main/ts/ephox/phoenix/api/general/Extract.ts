@@ -1,5 +1,5 @@
 import { Universe } from '@ephox/boss';
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import * as Extract from '../../extract/Extract';
 import * as ExtractText from '../../extract/ExtractText';
 import * as Find from '../../extract/Find';
@@ -18,7 +18,7 @@ const extract: ExtractApi = Extract.extract;
 type ExtractToApi = <E, D>(universe: Universe<E, D>, child: E, offset: number, pred: (e: E) => boolean, optimise?: (e: E) => boolean) => SpotPoint<E>;
 const extractTo: ExtractToApi = Extract.extractTo;
 
-type FindApi = <E, D>(universe: Universe<E, D>, parent: E, offset: number, optimise?: (e: E) => boolean) => Option<SpotPoint<E>>;
+type FindApi = <E, D>(universe: Universe<E, D>, parent: E, offset: number, optimise?: (e: E) => boolean) => Optional<SpotPoint<E>>;
 const find: FindApi = Find.find;
 
 type ToTextApi = <E, D>(universe: Universe<E, D>, item: E, optimise?: (e: E) => boolean) => string;
@@ -30,5 +30,5 @@ export {
   all,
   from,
   find,
-  toText,
+  toText
 };

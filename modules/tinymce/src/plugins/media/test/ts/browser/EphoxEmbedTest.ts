@@ -1,19 +1,19 @@
-import { ApproxStructure, Assertions, Pipeline, Step, Waiter, Logger, Log, StructAssert } from '@ephox/agar';
+import { ApproxStructure, Assertions, Log, Logger, Pipeline, Step, StructAssert, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/media/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-import Utils from '../module/test/Utils';
+import * as Utils from '../module/test/Utils';
 
 UnitTest.asynctest('browser.core.EphoxEmbedTest', function (success, failure) {
   Plugin();
   Theme();
 
-  const ephoxEmbedStructure = ApproxStructure.build(function (s, str/*, arr*/) {
+  const ephoxEmbedStructure = ApproxStructure.build(function (s, str/* , arr*/) {
     return s.element('p', {
       children: [
         s.element('div', {
@@ -36,7 +36,7 @@ UnitTest.asynctest('browser.core.EphoxEmbedTest', function (success, failure) {
   const sAssertDivStructure = function (editor: Editor, expected: StructAssert) {
     return Logger.t(`Assert div structure ${expected}`, Step.sync(function () {
       const div = editor.dom.select('div')[0];
-      const actual = div ? Element.fromHtml(div.outerHTML) : Element.fromHtml('');
+      const actual = div ? SugarElement.fromHtml(div.outerHTML) : SugarElement.fromHtml('');
       return Assertions.sAssertStructure('Should be the same structure', expected, actual);
     }));
   };
@@ -59,12 +59,12 @@ UnitTest.asynctest('browser.core.EphoxEmbedTest', function (success, failure) {
         Utils.sSubmitDialog(ui),
         Waiter.sTryUntil('wait for div struture', sAssertDivStructure(editor, ephoxEmbedStructure))
       ])
-    , onSuccess, onFailure);
+      , onSuccess, onFailure);
   }, {
     plugins: 'media',
     toolbar: 'media',
     theme: 'silver',
-    media_url_resolver (data, resolve) {
+    media_url_resolver(data, resolve) {
       resolve({
         html: '<video width="300" height="150" ' +
           'controls="controls">\n<source src="' + data.url + '" />\n</video>'

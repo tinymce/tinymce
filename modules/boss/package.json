@@ -1,7 +1,7 @@
 {
   "name": "@ephox/boss",
   "description": "Generic wrapper to document models - DomUniverse vs TestUniverse",
-  "version": "3.1.3",
+  "version": "4.0.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/tinymce/tinymce"
@@ -18,18 +18,18 @@
     "LICENSE.txt"
   ],
   "dependencies": {
-    "@ephox/dom-globals": "^1.1.2",
-    "@ephox/katamari": "^5.0.2",
-    "@ephox/sugar": "^5.1.3",
-    "tslib": "^1.9.3"
+    "@ephox/katamari": "^7.0.1",
+    "@ephox/sugar": "^7.0.1",
+    "tslib": "^2.0.0"
   },
   "devDependencies": {
-    "@ephox/katamari-assertions": "^1.0.4"
+    "@ephox/katamari-assertions": "^2.0.1"
   },
   "scripts": {
     "prepublishOnly": "tsc -b",
     "test": "bedrock-auto -b phantomjs -d src/test/ts",
-    "test-manual": "bedrock -d src/test/ts"
+    "test-manual": "bedrock -d src/test/ts",
+    "lint": "eslint --config ../../.eslintrc.json src/**/*.ts"
   },
   "author": "Ephox Corporation",
   "license": "Apache-2.0",

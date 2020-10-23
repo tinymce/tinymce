@@ -5,15 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Fun, Strings, Option } from '@ephox/katamari';
+import { Arr, Fun, Optional, Strings } from '@ephox/katamari';
 
 import { EmojiEntry } from './EmojiDatabase';
 
-const emojiMatches = (emoji: EmojiEntry, lowerCasePattern: string): boolean => {
-  return Strings.contains(emoji.title.toLowerCase(), lowerCasePattern) || Arr.exists(emoji.keywords, (k) => Strings.contains(k.toLowerCase(), lowerCasePattern));
-};
+const emojiMatches = (emoji: EmojiEntry, lowerCasePattern: string): boolean => Strings.contains(emoji.title.toLowerCase(), lowerCasePattern) || Arr.exists(emoji.keywords, (k) => Strings.contains(k.toLowerCase(), lowerCasePattern));
 
-const emojisFrom = (list: EmojiEntry[], pattern: string, maxResults: Option<number>): Array<{value: string, icon: string, text: string }> => {
+const emojisFrom = (list: EmojiEntry[], pattern: string, maxResults: Optional<number>): Array<{value: string; icon: string; text: string }> => {
   const matches = [];
   const lowerCasePattern = pattern.toLowerCase();
   const reachedLimit = maxResults.fold(() => Fun.never, (max) => (size) => size >= max);

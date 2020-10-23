@@ -5,9 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element } from '@ephox/dom-globals';
 import Editor from 'tinymce/core/api/Editor';
-import Settings from '../api/Settings';
+import * as Settings from '../api/Settings';
 
 const addToEditor = (editor: Editor) => {
   const isEditable = (node: Element) => editor.dom.getContentEditableParent(node) !== 'false';
@@ -25,9 +24,7 @@ const addToEditor = (editor: Editor) => {
   const textToolbarItems = Settings.getTextSelectionToolbarItems(editor);
   if (textToolbarItems.trim().length > 0) {
     editor.ui.registry.addContextToolbar('textselection', {
-      predicate: (node) => {
-        return !isImage(node) && !editor.selection.isCollapsed() && isEditable(node);
-      },
+      predicate: (node) => !isImage(node) && !editor.selection.isCollapsed() && isEditable(node),
       items: textToolbarItems,
       position: 'selection',
       scope: 'editor'
@@ -35,6 +32,6 @@ const addToEditor = (editor: Editor) => {
   }
 };
 
-export default {
+export {
   addToEditor
 };

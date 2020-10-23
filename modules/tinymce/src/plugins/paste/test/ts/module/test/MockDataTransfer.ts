@@ -9,14 +9,14 @@ const createDataTransferItem = function (mime, content) {
     kind: 'string',
     type: mime,
     getAsFile: notImplemented,
-    getAsString () {
+    getAsString() {
       return content;
     }
   };
 };
 
 const create = function (inputData) {
-  let data = {}, result;
+  let data = {};
 
   const clearData = function () {
     data = {};
@@ -36,7 +36,7 @@ const create = function (inputData) {
     });
   };
 
-  result = {
+  const result = {
     dropEffect: '',
     effectAllowed: 'all',
     files: [],
@@ -56,6 +56,6 @@ const create = function (inputData) {
   return result;
 };
 
-export default {
+export {
   create
 };

@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import * as Settings from '../api/Settings';
-import Actions from '../core/Actions';
 import Editor from 'tinymce/core/api/Editor';
+import * as Settings from '../api/Settings';
+import * as Actions from '../core/Actions';
 
 const register = function (editor: Editor) {
   editor.ui.registry.addContextToolbar('imagetools', {
@@ -18,6 +18,6 @@ const register = function (editor: Editor) {
   });
 };
 
-export default {
+export {
   register
 };

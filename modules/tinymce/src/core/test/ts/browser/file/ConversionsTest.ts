@@ -1,8 +1,8 @@
-import { LegacyUnit } from '@ephox/mcagar';
 import { Pipeline } from '@ephox/agar';
-import Conversions from 'tinymce/core/file/Conversions';
-import Env from 'tinymce/core/api/Env';
 import { UnitTest } from '@ephox/bedrock-client';
+import { LegacyUnit } from '@ephox/mcagar';
+import Env from 'tinymce/core/api/Env';
+import * as Conversions from 'tinymce/core/file/Conversions';
 
 UnitTest.asynctest('browser.tinymce.core.file.ConversionsTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();

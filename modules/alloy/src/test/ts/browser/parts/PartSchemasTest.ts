@@ -6,11 +6,11 @@ import Jsc from '@ephox/wrap-jsverify';
 import * as AlloyParts from 'ephox/alloy/parts/AlloyParts';
 import * as PartType from 'ephox/alloy/parts/PartType';
 
-type TestSpec = { defaultValue: number; overriddenValue: number; };
+type TestSpec = { defaultValue: number; overriddenValue: number };
 
 UnitTest.test('Atomic Test: parts.SchemasTest', () => {
   const internal = PartType.required<any, TestSpec>({
-    factory: { sketch (x) { return 'sketch.' + x; } },
+    factory: { sketch(x) { return 'sketch.' + x; } },
     schema: [ ],
     name: 'internal',
     pname: '<part.internal>',
@@ -19,7 +19,7 @@ UnitTest.test('Atomic Test: parts.SchemasTest', () => {
   });
 
   const external = PartType.external<any, TestSpec>({
-    factory: { sketch (x) { return x + '.external'; } },
+    factory: { sketch(x) { return x + '.external'; } },
     schema: [ ],
     name: 'external',
     defaults: Fun.constant({ defaultValue: 10 }),
@@ -27,7 +27,7 @@ UnitTest.test('Atomic Test: parts.SchemasTest', () => {
   });
 
   const optional = PartType.optional<any, TestSpec>({
-    factory: { sketch (x) { return x + '.optional'; } },
+    factory: { sketch(x) { return x + '.optional'; } },
     schema: [ ],
     name: 'optional',
     pname: '<part.optional>',
@@ -36,7 +36,7 @@ UnitTest.test('Atomic Test: parts.SchemasTest', () => {
   });
 
   const group = PartType.group<any, TestSpec>({
-    factory: { sketch (x) { return x + '.group'; } },
+    factory: { sketch(x) { return x + '.group'; } },
     schema: [ ],
     name: 'group',
     unit: 'member',
@@ -70,7 +70,7 @@ UnitTest.test('Atomic Test: parts.SchemasTest', () => {
 
   checkSuccess(
     'sanity: just external',
-    { external: { entirety: 'external.schema' } },
+    { external: { entirety: 'external.schema' }},
     [ external ],
     { external: 'external.schema' }
   );
@@ -79,7 +79,7 @@ UnitTest.test('Atomic Test: parts.SchemasTest', () => {
     'sanity: group',
     { },
     [ group ],
-    {  }
+    { }
   );
 
   checkSuccess(
@@ -89,32 +89,26 @@ UnitTest.test('Atomic Test: parts.SchemasTest', () => {
     { }
   );
 
-  Jsc.syncProperty('Just internal', [ Jsc.string ], () => {
-    return checkSuccess(
-      'just internal',
-      { },
-      [ internal ],
-      { }
-    );
-  });
+  Jsc.syncProperty('Just internal', [ Jsc.string ], () => checkSuccess(
+    'just internal',
+    { },
+    [ internal ],
+    { }
+  ));
 
-  Jsc.syncProperty('Just external', [ Jsc.string ], (s: string) => {
-    return checkSuccess(
-      'just external',
-      {
-        external: { entirety: s }
-      },
-      [ external ],
-      { external: s }
-    );
-  });
+  Jsc.syncProperty('Just external', [ Jsc.string ], (s: string) => checkSuccess(
+    'just external',
+    {
+      external: { entirety: s }
+    },
+    [ external ],
+    { external: s }
+  ));
 
-  Jsc.syncProperty('Just group', [ Jsc.string ], () => {
-    return checkSuccess(
-      'just group',
-      { },
-      [ group ],
-      { }
-    );
-  });
+  Jsc.syncProperty('Just group', [ Jsc.string ], () => checkSuccess(
+    'just group',
+    { },
+    [ group ],
+    { }
+  ));
 });

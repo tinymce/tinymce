@@ -1,6 +1,6 @@
-import { StringMatch } from 'ephox/katamari/api/StringMatch';
-import { UnitTest, Assert } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import fc from 'fast-check';
+import { StringMatch } from 'ephox/katamari/api/StringMatch';
 
 UnitTest.test('StringMatch: unit tests', () => {
   const check = (testcase) => {
@@ -10,8 +10,6 @@ UnitTest.test('StringMatch: unit tests', () => {
       testcase.input
     ));
   };
-
-  const toString = (subject) => StringMatch.cata(subject, (s) => 'starts with: ' + s, (p) => 'pattern: ' + p, (s) => 'contains: ' + s, (s) => 'exact: ' + s, () => 'all', (n) => 'not: ' + toString(n));
 
   const testcases = [
     { expected: false, input: 'bee', match: StringMatch.starts('a', StringMatch.caseInsensitive) },
@@ -53,8 +51,8 @@ UnitTest.test('StringMatch: unit tests', () => {
     { expected: true, input: '', match: StringMatch.all() }
   ];
 
-  for (const tc in testcases) {
-    check(testcases[tc]);
+  for (let i = 0; i < testcases.length; i++) {
+    check(testcases[i]);
   }
 });
 

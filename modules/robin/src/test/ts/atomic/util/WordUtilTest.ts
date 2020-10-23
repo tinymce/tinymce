@@ -1,15 +1,15 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { Option, Unicode } from '@ephox/katamari';
-import WordUtil from 'ephox/robin/util/WordUtil';
+import { Optional, Unicode } from '@ephox/katamari';
 import { KAssert } from '@ephox/katamari-assertions';
+import * as WordUtil from 'ephox/robin/util/WordUtil';
 
 UnitTest.test('Word Util', function () {
-  const checkNone = function (text: string, word: (w: string) => Option<string>) {
+  const checkNone = function (text: string, word: (w: string) => Optional<string>) {
     const actual = word(text);
     KAssert.eqNone('eq', actual);
   };
 
-  const check = function (expected: string, text: string, word: (w: string) => Option<string>) {
+  const check = function (expected: string, text: string, word: (w: string) => Optional<string>) {
     const actual = word(text);
     KAssert.eqSome('eq', expected, actual);
   };
@@ -19,9 +19,9 @@ UnitTest.test('Word Util', function () {
     Assert.eq('eq', expected, actual);
   };
 
-  const checkBreakPosition = function (expected: Option<number>, text: string, direction: (w: string) => Option<number>) {
+  const checkBreakPosition = function (expected: Optional<number>, text: string, direction: (w: string) => Optional<number>) {
     const actual = direction(text);
-    KAssert.eqOption('eq', expected, actual);
+    KAssert.eqOptional('eq', expected, actual);
   };
 
   checkNone('ballast', WordUtil.firstWord);
@@ -42,13 +42,13 @@ UnitTest.test('Word Util', function () {
   checkBreak(false, '');
   checkBreak(false, 'applesandoranges');
 
-  checkBreakPosition(Option.none(), '', WordUtil.leftBreak);
-  checkBreakPosition(Option.none(), 'word', WordUtil.leftBreak);
-  checkBreakPosition(Option.some(0), ' ', WordUtil.leftBreak);
-  checkBreakPosition(Option.some(0), ' word', WordUtil.leftBreak);
-  checkBreakPosition(Option.some(4), 'word ', WordUtil.leftBreak);
-  checkBreakPosition(Option.some(4), 'word ' + Unicode.zeroWidth + '', WordUtil.leftBreak);
-  checkBreakPosition(Option.some(0), ' ' + Unicode.zeroWidth + 'word', WordUtil.leftBreak);
-  checkBreakPosition(Option.some(0), ' ' + Unicode.zeroWidth + '' + Unicode.zeroWidth + 'word', WordUtil.leftBreak);
-  checkBreakPosition(Option.some(0), ' ' + Unicode.zeroWidth + 'wo' + Unicode.zeroWidth + 'rd', WordUtil.leftBreak);
+  checkBreakPosition(Optional.none(), '', WordUtil.leftBreak);
+  checkBreakPosition(Optional.none(), 'word', WordUtil.leftBreak);
+  checkBreakPosition(Optional.some(0), ' ', WordUtil.leftBreak);
+  checkBreakPosition(Optional.some(0), ' word', WordUtil.leftBreak);
+  checkBreakPosition(Optional.some(4), 'word ', WordUtil.leftBreak);
+  checkBreakPosition(Optional.some(4), 'word ' + Unicode.zeroWidth + '', WordUtil.leftBreak);
+  checkBreakPosition(Optional.some(0), ' ' + Unicode.zeroWidth + 'word', WordUtil.leftBreak);
+  checkBreakPosition(Optional.some(0), ' ' + Unicode.zeroWidth + '' + Unicode.zeroWidth + 'word', WordUtil.leftBreak);
+  checkBreakPosition(Optional.some(0), ' ' + Unicode.zeroWidth + 'wo' + Unicode.zeroWidth + 'rd', WordUtil.leftBreak);
 });

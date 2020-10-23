@@ -1,6 +1,6 @@
 import { FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, Touch, UiControls, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Arr, Future, Option, Result, Strings } from '@ephox/katamari';
+import { Arr, Future, Optional, Result, Strings } from '@ephox/katamari';
 import { Value } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
@@ -17,7 +17,7 @@ import * as Sinks from 'ephox/alloy/test/Sinks';
 
 UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoReopeningTest', (success, failure) => {
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((store, _doc, _body) => {
     const sink = Sinks.relativeSink();
 
     return GuiFactory.build(
@@ -42,28 +42,28 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoReopeningTest', (succ
               }
             },
 
-            fetch (input) {
-              const text = Value.get(input.element()).toLowerCase();
+            fetch(input) {
+              const text = Value.get(input.element).toLowerCase();
               const future = Future.pure([
-                { type: 'item', data: { value: text + '1', meta: { text: Strings.capitalize(text) + '1' } } },
-                { type: 'item', data: { value: text + '2', meta: { text: Strings.capitalize(text) + '2' } } }
+                { type: 'item', data: { value: text + '1', meta: { text: Strings.capitalize(text) + '1' }}},
+                { type: 'item', data: { value: text + '2', meta: { text: Strings.capitalize(text) + '2' }}}
               ]);
 
               return future.map((f) => {
                 // TODO: Test this.
                 const items = text === 'no-data' ? [
-                  { type: 'separator', data: { value: '', meta: { text: 'No data'} } }
+                  { type: 'separator', data: { value: '', meta: { text: 'No data' }}}
                 ] : f;
 
                 const menu = TestDropdownMenu.renderMenu({
                   value: 'blah',
                   items: Arr.map(items, TestDropdownMenu.renderItem)
                 });
-                return Option.some(TieredMenu.singleData('blah.overall', menu));
+                return Optional.some(TieredMenu.singleData('blah.overall', menu));
               });
             },
 
-            lazySink (c) {
+            lazySink(c) {
               TestDropdownMenu.assertLazySinkArgs('input', 'test-typeahead', c);
               return Result.value(sink);
             },
@@ -80,60 +80,58 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoReopeningTest', (succ
       })
     );
 
-  }, (doc, body, gui, component, store) => {
+  }, (doc, _body, gui, component, _store) => {
 
     const typeahead = gui.getByUid('test-type').getOrDie();
 
-    const testWithChooser = (label: string, sChooser: Step<any, any>): Step<any, any> => {
-      return Logger.t(
-        label,
-        GeneralSteps.sequence([
-          Logger.t(
-            'Set some content in the typeahead',
-            UiControls.sSetValue(typeahead.element(), 'Neo'),
-          ),
+    const testWithChooser = (label: string, sChooser: Step<any, any>): Step<any, any> => Logger.t(
+      label,
+      GeneralSteps.sequence([
+        Logger.t(
+          'Set some content in the typeahead',
+          UiControls.sSetValue(typeahead.element, 'Neo'),
+        ),
 
-          Logger.t(
-            'Trigger an "input" event and wait for the menu',
-            GeneralSteps.sequence([
-              Step.sync(() => {
-                AlloyTriggers.emit(typeahead, NativeEvents.input());
-              }),
-              UiFinder.sWaitFor('Waiting for menu to appear', component.element(), '[role="menu"]')
-            ])
-          ),
+        Logger.t(
+          'Trigger an "input" event and wait for the menu',
+          GeneralSteps.sequence([
+            Step.sync(() => {
+              AlloyTriggers.emit(typeahead, NativeEvents.input());
+            }),
+            UiFinder.sWaitFor('Waiting for menu to appear', component.element, '[role="menu"]')
+          ])
+        ),
 
-          Logger.t(
-            'Trigger another input and wait for a little bit (less than 1000s - delay)',
-            GeneralSteps.sequence([
-              Step.sync(() => {
-                AlloyTriggers.emit(typeahead, NativeEvents.input());
-              }),
-              Step.wait(100)
-            ])
-          ),
+        Logger.t(
+          'Trigger another input and wait for a little bit (less than 1000s - delay)',
+          GeneralSteps.sequence([
+            Step.sync(() => {
+              AlloyTriggers.emit(typeahead, NativeEvents.input());
+            }),
+            Step.wait(100)
+          ])
+        ),
 
-          Logger.t(
-            'While the other menu is loading, try and select an option and ensure menu goes away',
-            GeneralSteps.sequence([
-              sChooser,
-              UiFinder.sNotExists(component.element(), '[role="menu"]')
-            ])
-          ),
+        Logger.t(
+          'While the other menu is loading, try and select an option and ensure menu goes away',
+          GeneralSteps.sequence([
+            sChooser,
+            UiFinder.sNotExists(component.element, '[role="menu"]')
+          ])
+        ),
 
-          Logger.t(
-            'Wait and ensure menu does not reappear when second input triggers',
-            GeneralSteps.sequence([
-              Step.wait(500),
-              UiFinder.sNotExists(component.element(), '[role="menu"]')
-            ])
-          ),
-        ])
-      );
-    };
+        Logger.t(
+          'Wait and ensure menu does not reappear when second input triggers',
+          GeneralSteps.sequence([
+            Step.wait(500),
+            UiFinder.sNotExists(component.element, '[role="menu"]')
+          ])
+        )
+      ])
+    );
 
     return [
-      FocusTools.sSetFocus('Focusing typeahead', gui.element(), 'input'),
+      FocusTools.sSetFocus('Focusing typeahead', gui.element, 'input'),
 
       GuiSetup.mAddStyles(doc, [
         '.selected-item { background-color: #cadbee; }'
@@ -159,14 +157,14 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoReopeningTest', (succ
       testWithChooser(
         'Using mouse to choose item',
         GeneralSteps.sequence([
-          Mouse.sClickOn(component.element(), '[role="menuitem"]')
+          Mouse.sClickOn(component.element, '[role="menuitem"]')
         ])
       ),
 
       testWithChooser(
         'Using tap to choose item',
         GeneralSteps.sequence([
-          Touch.sTapOn(component.element(), '[role="menuitem"]')
+          Touch.sTapOn(component.element, '[role="menuitem"]')
         ])
       ),
 

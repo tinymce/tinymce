@@ -14,6 +14,6 @@ const create = function (prefix) {
   };
 };
 
-export default {
+export {
   create
 };

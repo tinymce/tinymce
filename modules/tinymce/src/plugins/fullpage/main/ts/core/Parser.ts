@@ -5,13 +5,29 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLLinkElement } from '@ephox/dom-globals';
 import Editor from 'tinymce/core/api/Editor';
 import DomParser from 'tinymce/core/api/html/DomParser';
-import Node from 'tinymce/core/api/html/Node';
-import Serializer from 'tinymce/core/api/html/Serializer';
+import AstNode from 'tinymce/core/api/html/Node';
+import HtmlSerializer from 'tinymce/core/api/html/Serializer';
 import Tools from 'tinymce/core/api/util/Tools';
-import Settings from '../api/Settings';
+import * as Settings from '../api/Settings';
+
+interface Data {
+  fontface?: string;
+  fontsize?: string;
+  xml_pi?: boolean;
+  docencoding?: string;
+  doctype?: string;
+  title?: string;
+  langcode?: string;
+  stylesheets?: string[];
+  dir?: string;
+  langdir?: string;
+  style?: string;
+  visited_color?: string;
+  link_color?: string;
+  active_color?: string;
+}
 
 const parseHeader = function (head: string) {
   // Parse the contents with a DOM parser
@@ -24,7 +40,7 @@ const parseHeader = function (head: string) {
 
 const htmlToData = function (editor: Editor, head: string) {
   const headerFragment = parseHeader(head);
-  const data: any = {};
+  const data: Data = {};
   let elm, matches;
 
   function getAttr(elm, name) {
@@ -61,7 +77,7 @@ const htmlToData = function (editor: Editor, head: string) {
   }
 
   // Parse meta elements
-  Tools.each<Node>(headerFragment.getAll('meta'), function (meta) {
+  Tools.each<AstNode>(headerFragment.getAll('meta'), function (meta) {
     const name = meta.attr('name');
     const httpEquiv = meta.attr('http-equiv');
     let matches;
@@ -104,8 +120,8 @@ const htmlToData = function (editor: Editor, head: string) {
   return data;
 };
 
-const dataToHtml = function (editor, data, head) {
-  let headerFragment, headElement, html, elm, value;
+const dataToHtml = function (editor: Editor, data: Data, head) {
+  let headElement, elm, value;
   const dom = editor.dom;
 
   function setAttr(elm, name, value) {
@@ -120,11 +136,11 @@ const dataToHtml = function (editor, data, head) {
     }
   }
 
-  headerFragment = parseHeader(head);
+  const headerFragment = parseHeader(head);
   headElement = headerFragment.getAll('head')[0];
   if (!headElement) {
     elm = headerFragment.getAll('html')[0];
-    headElement = new Node('head', 1);
+    headElement = new AstNode('head', 1);
 
     if (elm.firstChild) {
       elm.insert(headElement, elm.firstChild, true);
@@ -143,7 +159,7 @@ const dataToHtml = function (editor, data, head) {
     }
 
     if (elm.type !== 7) {
-      elm = new Node('xml', 7);
+      elm = new AstNode('xml', 7);
       headerFragment.insert(elm, headerFragment.firstChild, true);
     }
 
@@ -156,7 +172,7 @@ const dataToHtml = function (editor, data, head) {
   elm = headerFragment.getAll('#doctype')[0];
   if (data.doctype) {
     if (!elm) {
-      elm = new Node('#doctype', 10);
+      elm = new AstNode('#doctype', 10);
 
       if (data.xml_pi) {
         headerFragment.insert(elm, headerFragment.firstChild);
@@ -180,7 +196,7 @@ const dataToHtml = function (editor, data, head) {
 
   if (data.docencoding) {
     if (!elm) {
-      elm = new Node('meta', 1);
+      elm = new AstNode('meta', 1);
       elm.attr('http-equiv', 'Content-Type');
       elm.shortEnded = true;
       addHeadNode(elm);
@@ -195,13 +211,13 @@ const dataToHtml = function (editor, data, head) {
   elm = headerFragment.getAll('title')[0];
   if (data.title) {
     if (!elm) {
-      elm = new Node('title', 1);
+      elm = new AstNode('title', 1);
       addHeadNode(elm);
     } else {
       elm.empty();
     }
 
-    elm.append(new Node('#text', 3)).value = data.title;
+    elm.append(new AstNode('#text', 3)).value = data.title;
   } else if (elm) {
     elm.remove();
   }
@@ -227,7 +243,7 @@ const dataToHtml = function (editor, data, head) {
     }
 
     if (value) {
-      elm = new Node('meta', 1);
+      elm = new AstNode('meta', 1);
       elm.attr('name', name);
       elm.attr('content', value);
       elm.shortEnded = true;
@@ -236,7 +252,7 @@ const dataToHtml = function (editor, data, head) {
     }
   });
 
-  const currentStyleSheetsMap: Record<string, HTMLLinkElement> = {};
+  const currentStyleSheetsMap: Record<string, AstNode> = {};
   Tools.each(headerFragment.getAll('link'), function (stylesheet) {
     if (stylesheet.attr('rel') === 'stylesheet') {
       currentStyleSheetsMap[stylesheet.attr('href')] = stylesheet;
@@ -246,7 +262,7 @@ const dataToHtml = function (editor, data, head) {
   // Add new
   Tools.each(data.stylesheets, function (stylesheet) {
     if (!currentStyleSheetsMap[stylesheet]) {
-      elm = new Node('link', 1);
+      elm = new AstNode('link', 1);
       elm.attr({
         rel: 'stylesheet',
         text: 'text/css',
@@ -296,7 +312,7 @@ const dataToHtml = function (editor, data, head) {
   }
 
   // Serialize header fragment and crop away body part
-  html = Serializer({
+  const html = HtmlSerializer({
     validate: false,
     indent: true,
     indent_before: 'head,html,body,meta,title,script,link,style',
@@ -306,7 +322,7 @@ const dataToHtml = function (editor, data, head) {
   return html.substring(0, html.indexOf('</body>'));
 };
 
-export default {
+export {
   parseHeader,
   htmlToData,
   dataToHtml

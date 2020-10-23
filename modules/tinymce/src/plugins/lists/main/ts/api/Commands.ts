@@ -5,8 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import ToggleList from '../actions/ToggleList';
-import { indentListSelection, outdentListSelection, flattenListSelection } from '../actions/Indendation';
+import { flattenListSelection, indentListSelection, outdentListSelection } from '../actions/Indendation';
+import * as ToggleList from '../actions/ToggleList';
+import * as Dialog from '../ui/Dialog';
 
 const queryListCommandState = function (editor, listName) {
   return function () {
@@ -42,11 +43,15 @@ const register = function (editor) {
     flattenListSelection(editor);
   });
 
+  editor.addCommand('mceListProps', () => {
+    Dialog.open(editor);
+  });
+
   editor.addQueryStateHandler('InsertUnorderedList', queryListCommandState(editor, 'UL'));
   editor.addQueryStateHandler('InsertOrderedList', queryListCommandState(editor, 'OL'));
   editor.addQueryStateHandler('InsertDefinitionList', queryListCommandState(editor, 'DL'));
 };
 
-export default {
+export {
   register
 };

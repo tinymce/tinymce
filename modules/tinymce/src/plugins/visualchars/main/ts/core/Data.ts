@@ -5,40 +5,36 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-const charMap = {
+import { Obj } from '@ephox/katamari';
+
+export const charMap = {
   '\u00a0': 'nbsp',
   '\u00ad': 'shy'
 };
 
-const charMapToRegExp = function (charMap, global?) {
-  let key, regExp = '';
+export const charMapToRegExp = function (charMap, global?) {
+  let regExp = '';
 
-  for (key in charMap) {
+  Obj.each(charMap, (_value, key) => {
     regExp += key;
-  }
+  });
 
   return new RegExp('[' + regExp + ']', global ? 'g' : '');
 };
 
-const charMapToSelector = function (charMap) {
-  let key, selector = '';
-
-  for (key in charMap) {
+export const charMapToSelector = function (charMap) {
+  let selector = '';
+  Obj.each(charMap, (value) => {
     if (selector) {
       selector += ',';
     }
-    selector += 'span.mce-' + charMap[key];
-  }
+    selector += 'span.mce-' + value;
+  });
 
   return selector;
 };
 
-export default {
-  charMap,
-  regExp: charMapToRegExp(charMap),
-  regExpGlobal: charMapToRegExp(charMap, true),
-  selector: charMapToSelector(charMap),
-  nbspClass: 'mce-nbsp',
-  charMapToRegExp,
-  charMapToSelector
-};
+export const regExp = charMapToRegExp(charMap);
+export const regExpGlobal = charMapToRegExp(charMap, true);
+export const selector = charMapToSelector(charMap);
+export const nbspClass = 'mce-nbsp';

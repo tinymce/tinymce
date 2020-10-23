@@ -1,4 +1,3 @@
-import { console } from '@ephox/dom-globals';
 import { openDemoDialog } from './DemoDialogHelpers';
 
 export const createMediaDialog = () => {
@@ -73,7 +72,7 @@ export const createMediaDialog = () => {
       onSubmit: (api) => {
         const data = api.getData();
 
-        // tslint:disable-next-line:no-console
+        // eslint-disable-next-line no-console
         console.log({
           source: data.source,
           width: data.size.width,

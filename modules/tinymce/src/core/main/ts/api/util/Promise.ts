@@ -13,9 +13,8 @@
 
 // tslint:disable: no-unimported-promise
 
-import { setImmediate, setTimeout } from '@ephox/dom-globals';
-
 declare const window: any;
+declare const setImmediate: (f: Function, timeout?: number) => number;
 
 const promise = function () {
   // Polyfill for Function.prototype.bind

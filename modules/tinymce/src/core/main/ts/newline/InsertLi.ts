@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import NodeType from '../dom/NodeType';
-import NewLineUtils from './NewLineUtils';
 import Editor from '../api/Editor';
+import * as NodeType from '../dom/NodeType';
+import * as NewLineUtils from './NewLineUtils';
 
 const hasFirstChild = function (elm, name) {
   return elm.firstChild && elm.firstChild.nodeName === name;
@@ -108,6 +108,6 @@ const insert = function (editor: Editor, createNewBlock, containerBlock, parentB
   NewLineUtils.moveToCaretPosition(editor, newBlock);
 };
 
-export default {
+export {
   insert
 };

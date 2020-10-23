@@ -5,10 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import Tools from '../util/Tools';
 
-export interface EntitiesMap { [name: string]: string; }
+export interface EntitiesMap { [name: string]: string }
 
 interface Entities {
   encodeRaw (text: string, attr?: boolean): string;
@@ -29,21 +29,20 @@ interface Entities {
 
 const makeMap = Tools.makeMap;
 
-let namedEntities, baseEntities, reverseEntities;
 const attrsCharsRegExp = /[&<>\"\u0060\u007E-\uD7FF\uE000-\uFFEF]|[\uD800-\uDBFF][\uDC00-\uDFFF]/g;
 const textCharsRegExp = /[<>&\u007E-\uD7FF\uE000-\uFFEF]|[\uD800-\uDBFF][\uDC00-\uDFFF]/g;
 const rawCharsRegExp = /[<>&\"\']/g;
 const entityRegExp = /&#([a-z0-9]+);?|&([a-z0-9]+);/gi;
 const asciiMap = {
-    128: '\u20AC', 130: '\u201A', 131: '\u0192', 132: '\u201E', 133: '\u2026', 134: '\u2020',
-    135: '\u2021', 136: '\u02C6', 137: '\u2030', 138: '\u0160', 139: '\u2039', 140: '\u0152',
-    142: '\u017D', 145: '\u2018', 146: '\u2019', 147: '\u201C', 148: '\u201D', 149: '\u2022',
-    150: '\u2013', 151: '\u2014', 152: '\u02DC', 153: '\u2122', 154: '\u0161', 155: '\u203A',
-    156: '\u0153', 158: '\u017E', 159: '\u0178'
-  };
+  128: '\u20AC', 130: '\u201A', 131: '\u0192', 132: '\u201E', 133: '\u2026', 134: '\u2020',
+  135: '\u2021', 136: '\u02C6', 137: '\u2030', 138: '\u0160', 139: '\u2039', 140: '\u0152',
+  142: '\u017D', 145: '\u2018', 146: '\u2019', 147: '\u201C', 148: '\u201D', 149: '\u2022',
+  150: '\u2013', 151: '\u2014', 152: '\u02DC', 153: '\u2122', 154: '\u0161', 155: '\u203A',
+  156: '\u0153', 158: '\u017E', 159: '\u0178'
+};
 
 // Raw entities
-baseEntities = {
+const baseEntities = {
   '\"': '&quot;', // Needs to be escaped since the YUI compressor would otherwise break the code
   '\'': '&#39;',
   '<': '&lt;',
@@ -53,19 +52,17 @@ baseEntities = {
 };
 
 // Reverse lookup table for raw entities
-reverseEntities = {
+const reverseEntities = {
   '&lt;': '<',
   '&gt;': '>',
   '&amp;': '&',
   '&quot;': '"',
-  '&apos;': '\''
+  '&apos;': `'`
 };
 
 // Decodes text by using the browser
 const nativeDecode = (text: string): string => {
-  let elm;
-
-  elm = Element.fromTag('div').dom();
+  const elm = SugarElement.fromTag('div').dom;
   elm.innerHTML = text;
 
   return elm.textContent || elm.innerText || text;
@@ -97,7 +94,7 @@ const buildEntitiesLookup = (items, radix?: number) => {
 };
 
 // Unpack entities lookup where the numbers are in radix 32 to reduce the size
-namedEntities = buildEntitiesLookup(
+const namedEntities = buildEntitiesLookup(
   '50,nbsp,51,iexcl,52,cent,53,pound,54,curren,55,yen,56,brvbar,57,sect,58,uml,59,copy,' +
   '5a,ordf,5b,laquo,5c,not,5d,shy,5e,reg,5f,macr,5g,deg,5h,plusmn,5i,sup2,5j,sup3,5k,acute,' +
   '5l,micro,5m,para,5n,middot,5o,cedil,5p,sup1,5q,ordm,5r,raquo,5s,frac14,5t,frac12,5u,frac34,' +
@@ -132,11 +129,9 @@ namedEntities = buildEntitiesLookup(
  * @param {Boolean} attr Optional flag to specify if the text is attribute contents.
  * @return {String} Entity encoded text.
  */
-const encodeRaw = (text: string, attr?: boolean): string => {
-  return text.replace(attr ? attrsCharsRegExp : textCharsRegExp, function (chr) {
-    return baseEntities[chr] || chr;
-  });
-};
+const encodeRaw = (text: string, attr?: boolean): string => text.replace(attr ? attrsCharsRegExp : textCharsRegExp, function (chr) {
+  return baseEntities[chr] || chr;
+});
 
 /**
  * Encoded the specified text with both the attributes and text entities. This function will produce larger text contents
@@ -147,11 +142,9 @@ const encodeRaw = (text: string, attr?: boolean): string => {
  * @param {String} text Text to encode.
  * @return {String} Entity encoded text.
  */
-const encodeAllRaw = (text: string): string => {
-  return ('' + text).replace(rawCharsRegExp, function (chr) {
-    return baseEntities[chr] || chr;
-  });
-};
+const encodeAllRaw = (text: string): string => ('' + text).replace(rawCharsRegExp, function (chr) {
+  return baseEntities[chr] || chr;
+});
 
 /**
  * Encodes the specified string using numeric entities. The core entities will be
@@ -162,16 +155,14 @@ const encodeAllRaw = (text: string): string => {
  * @param {Boolean} attr Optional flag to specify if the text is attribute contents.
  * @return {String} Entity encoded text.
  */
-const encodeNumeric = (text: string, attr?: boolean): string => {
-  return text.replace(attr ? attrsCharsRegExp : textCharsRegExp, function (chr) {
-    // Multi byte sequence convert it to a single entity
-    if (chr.length > 1) {
-      return '&#' + (((chr.charCodeAt(0) - 0xD800) * 0x400) + (chr.charCodeAt(1) - 0xDC00) + 0x10000) + ';';
-    }
+const encodeNumeric = (text: string, attr?: boolean): string => text.replace(attr ? attrsCharsRegExp : textCharsRegExp, function (chr) {
+  // Multi byte sequence convert it to a single entity
+  if (chr.length > 1) {
+    return '&#' + (((chr.charCodeAt(0) - 0xD800) * 0x400) + (chr.charCodeAt(1) - 0xDC00) + 0x10000) + ';';
+  }
 
-    return baseEntities[chr] || '&#' + chr.charCodeAt(0) + ';';
-  });
-};
+  return baseEntities[chr] || '&#' + chr.charCodeAt(0) + ';';
+});
 
 /**
  * Encodes the specified string using named entities. The core entities will be encoded
@@ -202,24 +193,22 @@ const encodeNamed = (text: string, attr?: boolean, entities?: EntitiesMap): stri
 const getEncodeFunc = (name: string, entities?: EntitiesMap | string) => {
   const entitiesMap = buildEntitiesLookup(entities) || namedEntities;
 
-  const encodeNamedAndNumeric = (text: string, attr?: boolean): string => {
-    return text.replace(attr ? attrsCharsRegExp : textCharsRegExp, function (chr) {
-      if (baseEntities[chr] !== undefined) {
-        return baseEntities[chr];
-      }
+  const encodeNamedAndNumeric = (text: string, attr?: boolean): string => text.replace(attr ? attrsCharsRegExp : textCharsRegExp, function (chr) {
+    if (baseEntities[chr] !== undefined) {
+      return baseEntities[chr];
+    }
 
-      if (entitiesMap[chr] !== undefined) {
-        return entitiesMap[chr];
-      }
+    if (entitiesMap[chr] !== undefined) {
+      return entitiesMap[chr];
+    }
 
-      // Convert multi-byte sequences to a single entity.
-      if (chr.length > 1) {
-        return '&#' + (((chr.charCodeAt(0) - 0xD800) * 0x400) + (chr.charCodeAt(1) - 0xDC00) + 0x10000) + ';';
-      }
+    // Convert multi-byte sequences to a single entity.
+    if (chr.length > 1) {
+      return '&#' + (((chr.charCodeAt(0) - 0xD800) * 0x400) + (chr.charCodeAt(1) - 0xDC00) + 0x10000) + ';';
+    }
 
-      return '&#' + chr.charCodeAt(0) + ';';
-    });
-  };
+    return '&#' + chr.charCodeAt(0) + ';';
+  });
 
   const encodeCustomNamed = function (text: string, attr) {
     return encodeNamed(text, attr, entitiesMap);
@@ -259,28 +248,27 @@ const getEncodeFunc = (name: string, entities?: EntitiesMap | string) => {
  * @param {String} text Text to entity decode.
  * @return {String} Entity decoded string.
  */
-const decode = (text: string): string => {
-  return text.replace(entityRegExp, function (all, numeric) {
-    if (numeric) {
-      if (numeric.charAt(0).toLowerCase() === 'x') {
-        numeric = parseInt(numeric.substr(1), 16);
-      } else {
-        numeric = parseInt(numeric, 10);
-      }
-
-      // Support upper UTF
-      if (numeric > 0xFFFF) {
-        numeric -= 0x10000;
-
-        return String.fromCharCode(0xD800 + (numeric >> 10), 0xDC00 + (numeric & 0x3FF));
-      }
-
-      return asciiMap[numeric] || String.fromCharCode(numeric);
+const decode = (text: string): string => text.replace(entityRegExp, function (all, numeric) {
+  if (numeric) {
+    if (numeric.charAt(0).toLowerCase() === 'x') {
+      numeric = parseInt(numeric.substr(1), 16);
+    } else {
+      numeric = parseInt(numeric, 10);
     }
 
-    return reverseEntities[all] || namedEntities[all] || nativeDecode(all);
-  });
-};
+    // Support upper UTF
+    if (numeric > 0xFFFF) {
+      numeric -= 0x10000;
+
+      // eslint-disable-next-line no-bitwise
+      return String.fromCharCode(0xD800 + (numeric >> 10), 0xDC00 + (numeric & 0x3FF));
+    }
+
+    return asciiMap[numeric] || String.fromCharCode(numeric);
+  }
+
+  return reverseEntities[all] || namedEntities[all] || nativeDecode(all);
+});
 
 const Entities: Entities = {
   encodeRaw,

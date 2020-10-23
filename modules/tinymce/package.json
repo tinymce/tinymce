@@ -1,6 +1,6 @@
 {
   "name": "tinymce",
-  "version": "5.2.1",
+  "version": "5.5.1",
   "private": true,
   "repository": {
     "type": "git",
@@ -18,11 +18,11 @@
   "main": "tinymce.js",
   "scripts": {
     "test": "grunt test",
-    "lint": "tslint --config ../../tslint.json src/**/*.ts",
+    "lint": "grunt eslint",
     "silver-test": "grunt bedrock-auto:silver",
     "silver-test-manual": "grunt bedrock-manual:silver"
   },
   "dependencies": {
-    "tslib": "^1.9.3"
+    "tslib": "^2.0.0"
   }
 }

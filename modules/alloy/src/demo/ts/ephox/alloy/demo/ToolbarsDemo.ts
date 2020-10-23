@@ -1,102 +1,97 @@
-import { document, console, window, setTimeout } from '@ephox/dom-globals';
 import { Arr, Result } from '@ephox/katamari';
-import { Class, Element } from '@ephox/sugar';
+import { Class, SugarElement } from '@ephox/sugar';
 
+import { LazySink } from 'ephox/alloy/api/component/CommonTypes';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
 import { Container } from 'ephox/alloy/api/ui/Container';
+import { CustomList } from 'ephox/alloy/api/ui/CustomList';
 import { SplitFloatingToolbar } from 'ephox/alloy/api/ui/SplitFloatingToolbar';
 import { SplitSlidingToolbar } from 'ephox/alloy/api/ui/SplitSlidingToolbar';
 import { Toolbar } from 'ephox/alloy/api/ui/Toolbar';
 import { ToolbarGroup } from 'ephox/alloy/api/ui/ToolbarGroup';
-import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 import * as DemoSink from 'ephox/alloy/demo/DemoSink';
-import { LazySink } from 'ephox/alloy/api/component/CommonTypes';
-import { CustomList } from 'ephox/alloy/api/ui/CustomList';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 
 import * as DemoRenders from './forms/DemoRenders';
 
-// tslint:disable:no-console
+/* eslint-disable no-console */
 
 export default (): void => {
   const gui = Gui.create();
-  const body = Element.fromDom(document.body);
-  Class.add(gui.element(), 'gui-root-demo-container');
+  const body = SugarElement.fromDom(document.body);
+  Class.add(gui.element, 'gui-root-demo-container');
   Attachment.attachSystem(body, gui);
 
   const sink = DemoSink.make();
   gui.add(sink);
 
-  const lazySink: LazySink = (_) => {
-    return Result.value(sink);
-  };
+  const lazySink: LazySink = (_) => Result.value(sink);
 
-  const groups = () => {
-    return Arr.map([
-      {
-        label: 'group-1',
-        items: Arr.map([
-          { text: '1a', action () { } },
-          { text: '1b', action () { } },
-          { text: '1c', action () { } }
+  const groups = () => Arr.map([
+    {
+      label: 'group-1',
+      items: Arr.map([
+        { text: '1a', action() { } },
+        { text: '1b', action() { } },
+        { text: '1c', action() { } }
 
-        ], DemoRenders.toolbarItem)
-      },
-      {
-        label: 'group-2',
-        items: Arr.map([
-          { text: '2a', action () { } },
-          { text: '2b', action () { } },
-          { text: '2c', action () { } }
+      ], DemoRenders.toolbarItem)
+    },
+    {
+      label: 'group-2',
+      items: Arr.map([
+        { text: '2a', action() { } },
+        { text: '2b', action() { } },
+        { text: '2c', action() { } }
 
-        ], DemoRenders.toolbarItem)
-      },
-      {
-        label: 'group-3',
-        items: Arr.map([
-          { text: '3a', action () { } },
-          { text: '3b', action () { } },
-          { text: '3c', action () { } }
+      ], DemoRenders.toolbarItem)
+    },
+    {
+      label: 'group-3',
+      items: Arr.map([
+        { text: '3a', action() { } },
+        { text: '3b', action() { } },
+        { text: '3c', action() { } }
 
-        ], DemoRenders.toolbarItem)
-      },
-      {
-        label: 'group-4',
-        items: Arr.map([
-          { text: '4a', action () { } },
-          { text: '4b', action () { } },
-          { text: '4c', action () { } }
+      ], DemoRenders.toolbarItem)
+    },
+    {
+      label: 'group-4',
+      items: Arr.map([
+        { text: '4a', action() { } },
+        { text: '4b', action() { } },
+        { text: '4c', action() { } }
 
-        ], DemoRenders.toolbarItem)
-      },
-      {
-        label: 'group-5',
-        items: Arr.map([
-          { text: '5a', action () { } },
-          { text: '5b', action () { } },
-          { text: '5c', action () { } }
+      ], DemoRenders.toolbarItem)
+    },
+    {
+      label: 'group-5',
+      items: Arr.map([
+        { text: '5a', action() { } },
+        { text: '5b', action() { } },
+        { text: '5c', action() { } }
 
-        ], DemoRenders.toolbarItem)
-      },
-      {
-        label: 'group-6',
-        items: Arr.map([
-          { text: '6a', action () { } },
-          { text: '6b', action () { } }
+      ], DemoRenders.toolbarItem)
+    },
+    {
+      label: 'group-6',
+      items: Arr.map([
+        { text: '6a', action() { } },
+        { text: '6b', action() { } }
 
-        ], DemoRenders.toolbarItem)
-      },
-      {
-        label: 'group-7',
-        items: Arr.map([
-          { text: '7a', action () { } },
-          { text: '7b', action () { } }
+      ], DemoRenders.toolbarItem)
+    },
+    {
+      label: 'group-7',
+      items: Arr.map([
+        { text: '7a', action() { } },
+        { text: '7b', action() { } }
 
-        ], DemoRenders.toolbarItem)
-      }
-    ], DemoRenders.toolbarGroup);
-  };
+      ], DemoRenders.toolbarItem)
+    }
+  ], DemoRenders.toolbarGroup);
 
   const subject = HtmlDisplay.section(
     gui,
@@ -116,7 +111,7 @@ export default (): void => {
             }
           },
           components: [
-            Toolbar.parts().groups({ })
+            Toolbar.parts.groups({ })
           ]
         })
       ]
@@ -148,7 +143,7 @@ export default (): void => {
         }
       },
       components: [
-        SplitSlidingToolbar.parts().primary({
+        SplitSlidingToolbar.parts.primary({
           dom: {
             tag: 'div',
             styles: {
@@ -156,10 +151,10 @@ export default (): void => {
             }
           }
         }),
-        SplitSlidingToolbar.parts().overflow({
+        SplitSlidingToolbar.parts.overflow({
           dom: {
             tag: 'div',
-              styles: {
+            styles: {
               'display': 'flex',
               'flex-wrap': 'wrap'
             }
@@ -212,7 +207,7 @@ export default (): void => {
         }
       },
       components: [
-        SplitFloatingToolbar.parts().primary({
+        SplitFloatingToolbar.parts.primary({
           dom: {
             tag: 'div',
             styles: {
@@ -252,21 +247,19 @@ export default (): void => {
         // })
       ],
       shell: true,
-      makeItem: () => {
-        return Toolbar.sketch(
-          {
-            dom: {
-              tag: 'div',
-              classes: [ 'single-toolbar' ],
-              styles: {
-                display: 'flex'
-              }
-            },
-            components: [ ]
-          }
-        );
-      },
-      setupItem: (mToolbar: AlloyComponent, tc: AlloyComponent, data: any, index: number) => {
+      makeItem: () => Toolbar.sketch(
+        {
+          dom: {
+            tag: 'div',
+            classes: [ 'single-toolbar' ],
+            styles: {
+              display: 'flex'
+            }
+          },
+          components: [ ]
+        }
+      ),
+      setupItem: (mToolbar: AlloyComponent, tc: AlloyComponent, data: any, _index: number) => {
         Toolbar.setGroups(tc, data);
       }
     })
@@ -294,14 +287,14 @@ export default (): void => {
         CustomList.setItems(subject4, [
           Arr.map(groups(), ToolbarGroup.sketch),
           Arr.map(groups(), ToolbarGroup.sketch),
-          Arr.map(groups(), ToolbarGroup.sketch),
+          Arr.map(groups(), ToolbarGroup.sketch)
         ]);
 
         setTimeout(() => {
           CustomList.setItems(subject4, [
             Arr.map(groups().slice(0, 1), ToolbarGroup.sketch),
             Arr.map(groups(), ToolbarGroup.sketch),
-            Arr.map(groups(), ToolbarGroup.sketch),
+            Arr.map(groups(), ToolbarGroup.sketch)
           ]);
         }, 2000);
       }, 2000);

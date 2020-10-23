@@ -1,19 +1,19 @@
-import { Chain, Mouse, NamedChain, Pipeline, UiFinder, Assertions, Log } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { Editor as McEditor } from '@ephox/mcagar';
-import { Body } from '@ephox/sugar';
-import { EditorSettings } from 'tinymce/core/api/SettingsTypes';
-import Theme from 'tinymce/themes/silver/Theme';
+import { Assertions, Chain, Log, Mouse, NamedChain, Pipeline, UiFinder } from '@ephox/agar';
 import { Boxes } from '@ephox/alloy';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
+import { Editor as McEditor } from '@ephox/mcagar';
+import { SugarBody } from '@ephox/sugar';
+import { RawEditorSettings } from 'tinymce/core/api/SettingsTypes';
+import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('ToolbarBottomTest - assert direction that menus open in when toolbar_location: "bottom"', (success, failure) => {
   Theme();
 
   interface Scenario {
     message: string;
-    settings: EditorSettings;
-    initial: Array<{ clickOn: string, waitFor: string }>;
+    settings: RawEditorSettings;
+    initial: Array<{ clickOn: string; waitFor: string }>;
     assertAbove: string;
     assertBelow: string;
   }
@@ -29,24 +29,22 @@ UnitTest.asynctest('ToolbarBottomTest - assert direction that menus open in when
     return Log.chainsAsStep('', scenario.message, [
       NamedChain.asChain([
         NamedChain.write('editor', McEditor.cFromSettings(nuSettings)),
-        NamedChain.writeValue('body', Body.body()),
-        ...Arr.flatten(Arr.map(scenario.initial, (p) => {
-          return [
-            NamedChain.read('body', Mouse.cClickOn(p.clickOn)),
-            NamedChain.read('body', UiFinder.cWaitForVisible(`Wait for "${p.waitFor}" to be visible`, p.waitFor)),
-          ];
-        })),
+        NamedChain.writeValue('body', SugarBody.body()),
+        ...Arr.flatten(Arr.map(scenario.initial, (p) => [
+          NamedChain.read('body', Mouse.cClickOn(p.clickOn)),
+          NamedChain.read('body', UiFinder.cWaitForVisible(`Wait for "${p.waitFor}" to be visible`, p.waitFor))
+        ])),
         NamedChain.direct('body', Chain.fromChains([ UiFinder.cFindIn(scenario.assertAbove), Chain.mapper(Boxes.box) ]), 'upperBoxBounds'),
         NamedChain.direct('body', Chain.fromChains([ UiFinder.cFindIn(scenario.assertBelow), Chain.mapper(Boxes.box) ]), 'lowerBoxBounds'),
         Chain.op((input) => {
           Assertions.assertEq(
             `"${scenario.assertAbove}" should be placed above "${scenario.assertBelow}"`,
             true,
-            input.upperBoxBounds.bottom() - input.lowerBoxBounds.y() < 5
+            input.upperBoxBounds.bottom - input.lowerBoxBounds.y < 5
           );
         }),
         NamedChain.read('editor', McEditor.cRemove)
-      ]),
+      ])
     ]);
   };
 
@@ -89,7 +87,7 @@ UnitTest.asynctest('ToolbarBottomTest - assert direction that menus open in when
         waitFor: 'div[role="menu"]'
       }],
       assertAbove: 'div[role="menu"]',
-      assertBelow: '.tox-split-button__chevron',
+      assertBelow: '.tox-split-button__chevron'
     }),
 
     sScenarioAsStep({
@@ -104,7 +102,7 @@ UnitTest.asynctest('ToolbarBottomTest - assert direction that menus open in when
         waitFor: '.tox-toolbar__overflow'
       }],
       assertAbove: '.tox-toolbar__overflow',
-      assertBelow: 'button[title="More..."]',
+      assertBelow: 'button[title="More..."]'
     }),
 
     sScenarioAsStep({
@@ -122,7 +120,7 @@ UnitTest.asynctest('ToolbarBottomTest - assert direction that menus open in when
         waitFor: 'div[role="menu"]'
       }],
       assertAbove: 'div[role="menu"]',
-      assertBelow: 'button[title="Align"]',
+      assertBelow: 'button[title="Align"]'
     }),
 
     sScenarioAsStep({
@@ -137,7 +135,7 @@ UnitTest.asynctest('ToolbarBottomTest - assert direction that menus open in when
         waitFor: 'div[role="menu"]'
       }],
       assertAbove: 'div[role="menu"]',
-      assertBelow: 'button:contains("File")',
+      assertBelow: 'button:contains("File")'
     }),
 
     sScenarioAsStep({
@@ -172,7 +170,7 @@ UnitTest.asynctest('ToolbarBottomTest - assert direction that menus open in when
         waitFor: 'div[role="menu"]'
       }],
       assertAbove: 'div[role="dialog"] .tox-tbtn--select',
-      assertBelow: 'div[role="menu"]',
-    }),
+      assertBelow: 'div[role="menu"]'
+    })
   ], success, failure);
 });

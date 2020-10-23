@@ -11,6 +11,6 @@ const setup = function (editor) {
   });
 };
 
-export default {
+export {
   setup
 };

@@ -9,11 +9,11 @@ import { GuiFactory } from '@ephox/alloy';
 import { ValueSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 import { Css, Insert } from '@ephox/sugar';
-
-import AndroidMode from '../android/core/AndroidMode';
-import TapToEditMask from '../touch/view/TapToEditMask';
-import MobileSchema from './MobileSchema';
 import { MobileWebApp } from 'tinymce/themes/mobile/api/IosWebapp';
+
+import * as AndroidMode from '../android/core/AndroidMode';
+import * as TapToEditMask from '../touch/view/TapToEditMask';
+import MobileSchema from './MobileSchema';
 
 // TODO: Remove dupe with IosWebapp
 const produce = function (raw: {any}): MobileWebApp {
@@ -38,15 +38,15 @@ const produce = function (raw: {any}): MobileWebApp {
 
   mobile.alloy.add(mask);
   const maskApi = {
-    show () {
+    show() {
       mobile.alloy.add(mask);
     },
-    hide () {
+    hide() {
       mobile.alloy.remove(mask);
     }
   };
 
-  Insert.append(mobile.container, mask.element());
+  Insert.append(mobile.container, mask.element);
 
   const mode = AndroidMode.create(mobile, maskApi);
 
@@ -60,6 +60,6 @@ const produce = function (raw: {any}): MobileWebApp {
   };
 };
 
-export default {
+export {
   produce
 };

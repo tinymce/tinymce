@@ -15,8 +15,8 @@ UnitTest.asynctest('SplitSlidingToolbarTest', (success, failure) => {
   // viewed as an invalid value.
   if (PhantomSkipper.skip()) { return success(); }
 
-  GuiSetup.setup((store, doc, body) => {
-    const pPrimary = SplitSlidingToolbar.parts().primary({
+  GuiSetup.setup((store, _doc, _body) => {
+    const pPrimary = SplitSlidingToolbar.parts.primary({
       dom: {
         tag: 'div',
         classes: [ 'test-toolbar-primary' ]
@@ -24,7 +24,7 @@ UnitTest.asynctest('SplitSlidingToolbarTest', (success, failure) => {
       shell: true
     });
 
-    const pOverflow = SplitSlidingToolbar.parts().overflow({
+    const pOverflow = SplitSlidingToolbar.parts.overflow({
       dom: {
         tag: 'div',
         classes: [ 'test-toolbar-overflow' ]
@@ -71,84 +71,77 @@ UnitTest.asynctest('SplitSlidingToolbarTest', (success, failure) => {
         }
       })
     );
-  }, (doc, body, gui, component, store) => {
+  }, (doc, _body, _gui, component, store) => {
 
-    const makeButton = (itemSpec: { text: string }) => {
-      return Button.sketch({
-        dom: {
-          tag: 'button',
-          innerHtml: itemSpec.text
-        }
-      });
-    };
-
-    const sResetWidth = (px: string) => {
-      return Step.sync(() => {
-        Css.set(component.element(), 'width', px);
-        SplitSlidingToolbar.refresh(component);
-      });
-    };
-
-    const group1 = ApproxStructure.build((s, str, arr) => {
-      return s.element('div', {
-        classes: [ arr.has('test-toolbar-group') ],
-        children: [
-          s.element('button', { html: str.is('A') }),
-          s.element('button', { html: str.is('B') })
-        ]
-      });
+    const makeButton = (itemSpec: { text: string }) => Button.sketch({
+      dom: {
+        tag: 'button',
+        innerHtml: itemSpec.text
+      }
     });
 
-    const group2 = ApproxStructure.build((s, str, arr) => {
-      return s.element('div', {
-        classes: [ arr.has('test-toolbar-group') ],
-        children: [
-          s.element('button', { html: str.is('C') }),
-          s.element('button', { html: str.is('D') })
-        ]
-      });
+    const sResetWidth = (px: string) => Step.sync(() => {
+      Css.set(component.element, 'width', px);
+      SplitSlidingToolbar.refresh(component);
     });
 
-    const group3 = ApproxStructure.build((s, str, arr) => {
-      return s.element('div', {
-        classes: [ arr.has('test-toolbar-group') ],
-        children: [
-          s.element('button', { html: str.is('E') }),
-          s.element('button', { html: str.is('F') }),
-          s.element('button', { html: str.is('G') })
-        ]
-      });
-    });
+    const group1 = ApproxStructure.build((s, str, arr) => s.element('div', {
+      classes: [ arr.has('test-toolbar-group') ],
+      children: [
+        s.element('button', { html: str.is('A') }),
+        s.element('button', { html: str.is('B') })
+      ]
+    }));
 
-    const oGroup = ApproxStructure.build((s, str, arr) => {
-      return s.element('div', {
-        classes: [ arr.has('test-toolbar-group') ],
-        children: [
-          s.element('button', { html: str.is('+') })
-        ]
-      });
-    });
+    const group2 = ApproxStructure.build((s, str, arr) => s.element('div', {
+      classes: [ arr.has('test-toolbar-group') ],
+      children: [
+        s.element('button', { html: str.is('C') }),
+        s.element('button', { html: str.is('D') })
+      ]
+    }));
 
-    const sAssertGroups = (label: string, pGroups: StructAssert[], oGroups: StructAssert[]) => {
-      return Assertions.sAssertStructure(
-        label,
-        ApproxStructure.build((s, str, arr) => {
-          return s.element('div', {
-            children: [
-              s.element('div', {
-                classes: [ arr.has('test-toolbar-primary') ],
-                children: pGroups
-              }),
-              s.element('div', {
-                classes: [ arr.has('test-toolbar-overflow') ],
-                children: oGroups
-              })
-            ]
-          });
-        }),
-        component.element()
-      );
-    };
+    const group3 = ApproxStructure.build((s, str, arr) => s.element('div', {
+      classes: [ arr.has('test-toolbar-group') ],
+      children: [
+        s.element('button', { html: str.is('E') }),
+        s.element('button', { html: str.is('F') }),
+        s.element('button', { html: str.is('G') })
+      ]
+    }));
+
+    const oGroup = ApproxStructure.build((s, str, arr) => s.element('div', {
+      classes: [ arr.has('test-toolbar-group') ],
+      children: [
+        s.element('button', { html: str.is('+') })
+      ]
+    }));
+
+    const sAssertGroups = (label: string, pGroups: StructAssert[], oGroups: StructAssert[]) => Assertions.sAssertStructure(
+      label,
+      ApproxStructure.build((s, _str, arr) => s.element('div', {
+        children: [
+          s.element('div', {
+            classes: [ arr.has('test-toolbar-primary') ],
+            children: pGroups
+          }),
+          s.element('div', {
+            classes: [ arr.has('test-toolbar-overflow') ],
+            children: oGroups
+          })
+        ]
+      })),
+      component.element
+    );
+
+    const sAssertSplitSlidingToolbarToggleState = (expected: boolean) =>
+      Waiter.sTryUntil(`Wait for toolbar to be completely ${expected ? 'opened' : 'closed'}`, Step.sync(() => {
+        Assertions.assertEq('Expected split floating toolbar toggle state to be ' + expected, expected, SplitSlidingToolbar.isOpen(component));
+      }));
+
+    const sToggleSplitSlidingToolbar = () => Step.sync(() => {
+      SplitSlidingToolbar.toggle(component);
+    });
 
     return [
       GuiSetup.mAddStyles(doc, [
@@ -165,18 +158,20 @@ UnitTest.asynctest('SplitSlidingToolbarTest', (success, failure) => {
       ]),
 
       store.sAssertEq('Assert initial store state', [ ]),
+      sAssertSplitSlidingToolbarToggleState(false),
 
       Step.sync(() => {
         const groups = TestPartialToolbarGroup.createGroups([
-          { items: Arr.map([ { text: 'A' }, { text: 'B' } ], makeButton) },
-          { items: Arr.map([ { text: 'C' }, { text: 'D' } ], makeButton) },
-          { items: Arr.map([ { text: 'E' }, { text: 'F' }, { text: 'G' } ], makeButton) }
+          { items: Arr.map([{ text: 'A' }, { text: 'B' }], makeButton) },
+          { items: Arr.map([{ text: 'C' }, { text: 'D' }], makeButton) },
+          { items: Arr.map([{ text: 'E' }, { text: 'F' }, { text: 'G' }], makeButton) }
         ]);
         SplitSlidingToolbar.setGroups(component, groups);
         SplitSlidingToolbar.toggle(component);
       }),
 
       Waiter.sTryUntil('Wait for toolbar to be completely open', store.sAssertEq('Assert store contains opened state', [ 'onOpened' ])),
+      sAssertSplitSlidingToolbarToggleState(true),
       store.sClear,
 
       sAssertGroups('width=400px (1 +)', [ group1, oGroup ], [ group2, group3 ]),
@@ -203,10 +198,9 @@ UnitTest.asynctest('SplitSlidingToolbarTest', (success, failure) => {
       sResetWidth('400px'),
       sAssertGroups('width=400px (1 +)', [ group1, oGroup ], [ group2, group3 ]),
 
-      Step.sync(() => {
-        SplitSlidingToolbar.toggle(component);
-      }),
+      sToggleSplitSlidingToolbar(),
       Waiter.sTryUntil('Wait for toolbar to be completely closed', store.sAssertEq('Assert store contains closed state', [ 'onClosed' ])),
+      sAssertSplitSlidingToolbarToggleState(false),
 
       // TODO: Add testing for sliding?
       GuiSetup.mRemoveStyles

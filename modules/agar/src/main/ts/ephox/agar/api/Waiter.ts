@@ -1,6 +1,6 @@
+import { Chain } from './Chain';
 import * as Guard from './Guard';
 import { Step } from './Step';
-import { Chain } from './Chain';
 
 const defaultAmount = 3000;
 const defaultInterval = 10;

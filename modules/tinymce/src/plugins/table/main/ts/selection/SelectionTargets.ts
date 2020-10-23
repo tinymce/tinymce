@@ -1,36 +1,30 @@
-import { Arr, Cell, Option, Thunk } from '@ephox/katamari';
-import { TableLookup } from '@ephox/snooker';
-import { Element, Node } from '@ephox/sugar';
+import { Selections } from '@ephox/darwin';
+import { Arr, Cell, Optional, Thunk } from '@ephox/katamari';
+import { RunOperation, TableLookup } from '@ephox/snooker';
+import { SugarElement, SugarNode } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
-import TableTargets from '../queries/TableTargets';
-import { Selections } from './Selections';
+import * as Util from '../core/Util';
+import * as TableTargets from '../queries/TableTargets';
 import * as TableSelection from './TableSelection';
-
-export interface Targets {
-  element: () => Element;
-  mergable: () => Option<any>;
-  unmergable: () => Option<any>;
-  selection: () => Element[];
-}
 
 export type SelectionTargets = ReturnType<typeof getSelectionTargets>;
 
 export const getSelectionTargets = (editor: Editor, selections: Selections) => {
-  const targets = Cell<Option<Targets>>(Option.none());
+  const targets = Cell<Optional<RunOperation.CombinedTargets>>(Optional.none());
   const changeHandlers = Cell([]);
 
-  const findTargets = (): Option<Targets> => {
-    return TableSelection.getSelectionStartCellOrCaption(editor).bind((cellOrCaption) => {
+  const findTargets = (): Optional<RunOperation.CombinedTargets> => TableSelection.getSelectionStartCellOrCaption(Util.getSelectionStart(editor))
+    .bind((cellOrCaption) => {
       const table = TableLookup.table(cellOrCaption);
+      const isCaption = (elem: SugarElement<HTMLTableCaptionElement | HTMLTableCellElement>): elem is SugarElement<HTMLTableCaptionElement> => SugarNode.name(elem) === 'caption';
       return table.map((table) => {
-        if (Node.name(cellOrCaption) === 'caption') {
-          return TableTargets.notCell(cellOrCaption);
+        if (isCaption(cellOrCaption)) {
+          return TableTargets.noMenu(cellOrCaption);
         } else {
           return TableTargets.forMenu(selections, table, cellOrCaption);
         }
       });
     });
-  };
 
   const resetTargets = () => {
     // Reset the targets
@@ -40,7 +34,7 @@ export const getSelectionTargets = (editor: Editor, selections: Selections) => {
     Arr.each(changeHandlers.get(), (handler) => handler());
   };
 
-  const onSetup = (api, isDisabled: (targets: Targets) => boolean) => {
+  const onSetup = (api, isDisabled: (targets: RunOperation.CombinedTargets) => boolean) => {
     const handler = () => targets.get().fold(() => {
       api.setDisabled(true);
     }, (targets) => {
@@ -51,7 +45,7 @@ export const getSelectionTargets = (editor: Editor, selections: Selections) => {
     handler();
 
     // Register the handler so we can update the state when resetting targets
-    changeHandlers.set(changeHandlers.get().concat([handler]));
+    changeHandlers.set(changeHandlers.get().concat([ handler ]));
 
     return () => {
       changeHandlers.set(Arr.filter(changeHandlers.get(), (h) => h !== handler));
@@ -59,15 +53,19 @@ export const getSelectionTargets = (editor: Editor, selections: Selections) => {
   };
 
   const onSetupTable = (api) => onSetup(api, (_) => false);
-  const onSetupCellOrRow = (api) => onSetup(api, (targets) => Node.name(targets.element()) === 'caption');
-  const onSetupMergeable = (api) => onSetup(api, (targets) => targets.mergable().isNone());
-  const onSetupUnmergeable = (api) => onSetup(api, (targets) => targets.unmergable().isNone());
+  const onSetupCellOrRow = (api) => onSetup(api, (targets) => SugarNode.name(targets.element) === 'caption');
+  const onSetupPasteable = (getClipboardData: () => Optional<SugarElement[]>) => (api) => onSetup(api, (targets) =>
+    SugarNode.name(targets.element) === 'caption' || getClipboardData().isNone()
+  );
+  const onSetupMergeable = (api) => onSetup(api, (targets) => targets.mergable.isNone());
+  const onSetupUnmergeable = (api) => onSetup(api, (targets) => targets.unmergable.isNone());
 
-  editor.on('NodeChange TableSelectorChange', resetTargets);
+  editor.on('NodeChange ExecCommand TableSelectorChange', resetTargets);
 
   return {
     onSetupTable,
     onSetupCellOrRow,
+    onSetupPasteable,
     onSetupMergeable,
     onSetupUnmergeable,
     resetTargets,

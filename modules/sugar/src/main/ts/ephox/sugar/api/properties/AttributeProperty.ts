@@ -1,23 +1,19 @@
-import * as Attr from './Attr';
-import Element from '../node/Element';
-import { Element as DomElement } from '@ephox/dom-globals';
+import { SugarElement } from '../node/SugarElement';
+import * as Attribute from './Attribute';
 
-export default function (attribute: string, value: string) {
-  const is = function (element: Element<DomElement>) {
-    return Attr.get(element, attribute) === value;
-  };
+export default (attribute: string, value: string) => {
+  const is = (element: SugarElement<Element>): boolean =>
+    Attribute.get(element, attribute) === value;
 
-  const remove = function (element: Element<DomElement>) {
-    Attr.remove(element, attribute);
-  };
+  const remove = (element: SugarElement<Element>): void =>
+    Attribute.remove(element, attribute);
 
-  const set = function (element: Element<DomElement>) {
-    Attr.set(element, attribute, value);
-  };
+  const set = (element: SugarElement<Element>): void =>
+    Attribute.set(element, attribute, value);
 
   return {
     is,
     remove,
-    set,
+    set
   };
-}
+};

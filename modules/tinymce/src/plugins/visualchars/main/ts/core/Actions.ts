@@ -5,18 +5,17 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Events from '../api/Events';
-import VisualChars from './VisualChars';
+import * as Events from '../api/Events';
+import * as VisualChars from './VisualChars';
 
 const toggleVisualChars = function (editor, toggleState) {
   const body = editor.getBody();
   const selection = editor.selection;
-  let bookmark;
 
   toggleState.set(!toggleState.get());
   Events.fireVisualChars(editor, toggleState.get());
 
-  bookmark = selection.getBookmark();
+  const bookmark = selection.getBookmark();
 
   if (toggleState.get() === true) {
     VisualChars.show(editor, body);
@@ -27,6 +26,6 @@ const toggleVisualChars = function (editor, toggleState) {
   selection.moveToBookmark(bookmark);
 };
 
-export default {
+export {
   toggleVisualChars
 };

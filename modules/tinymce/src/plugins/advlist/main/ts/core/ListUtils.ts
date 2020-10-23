@@ -5,14 +5,14 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 
 const isChildOfBody = function (editor, elm) {
- return editor.$.contains(editor.getBody(), elm);
+  return editor.$.contains(editor.getBody(), elm);
 };
 
 const isTableCellNode = function (node) {
- return node && /^(TH|TD)$/.test(node.nodeName);
+  return node && /^(TH|TD)$/.test(node.nodeName);
 };
 
 const isListNode = function (editor) {
@@ -21,14 +21,14 @@ const isListNode = function (editor) {
   };
 };
 
-const getSelectedStyleType = function (editor): Option<string> {
- const listElm = editor.dom.getParent(editor.selection.getNode(), 'ol,ul');
- const style = editor.dom.getStyle(listElm, 'listStyleType');
- return Option.from(style);
+const getSelectedStyleType = function (editor): Optional<string> {
+  const listElm = editor.dom.getParent(editor.selection.getNode(), 'ol,ul');
+  const style = editor.dom.getStyle(listElm, 'listStyleType');
+  return Optional.from(style);
 };
 
-export default {
- isTableCellNode,
- isListNode,
- getSelectedStyleType
+export {
+  isTableCellNode,
+  isListNode,
+  getSelectedStyleType
 };

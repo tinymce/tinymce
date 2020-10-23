@@ -11,9 +11,9 @@ const updateAriaState = (component: AlloyComponent, toggleConfig: TogglingConfig
 const updateClass = (component: AlloyComponent, toggleConfig: TogglingConfig, toggleState: TogglingState) => {
   toggleConfig.toggleClass.each((toggleClass: string) => {
     if (toggleState.get()) {
-      Class.add(component.element(), toggleClass);
+      Class.add(component.element, toggleClass);
     } else {
-      Class.remove(component.element(), toggleClass);
+      Class.remove(component.element, toggleClass);
     }
   });
 };
@@ -39,9 +39,7 @@ const set = (component: AlloyComponent, toggleConfig: TogglingConfig, toggleStat
   action(component, toggleConfig, toggleState);
 };
 
-const isOn = (component: AlloyComponent, toggleConfig: TogglingConfig, toggleState: TogglingState) => {
-  return toggleState.get();
-};
+const isOn = (component: AlloyComponent, toggleConfig: TogglingConfig, toggleState: TogglingState) => toggleState.get();
 
 const onLoad = (component: AlloyComponent, toggleConfig: TogglingConfig, toggleState: TogglingState) => {
   // There used to be a bit of code in here that would only overwrite

@@ -5,12 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node } from '@ephox/dom-globals';
 import DOMUtils from '../api/dom/DOMUtils';
-import Tools from '../api/util/Tools';
 import { RangeLikeObject } from './RangeTypes';
-
-const each = Tools.each;
 
 const clampToExistingChildren = (container: Node, index: number) => {
   const childNodes = container.childNodes;
@@ -26,22 +22,11 @@ const clampToExistingChildren = (container: Node, index: number) => {
 
 const getEndChild = (container: Node, index: number) => clampToExistingChildren(container, index - 1);
 
-const walk = function (dom: DOMUtils, rng: RangeLikeObject, callback: (nodes: Node[]) => void) {
+const walk = (dom: DOMUtils, rng: RangeLikeObject, callback: (nodes: Node[]) => void) => {
   let startContainer = rng.startContainer;
   const startOffset = rng.startOffset;
   let endContainer = rng.endContainer;
   const endOffset = rng.endOffset;
-
-  // Handle table cell selection the table plugin enables
-  // you to fake select table cells and perform formatting actions on them
-  const nodes = dom.select('td[data-mce-selected],th[data-mce-selected]');
-  if (nodes.length > 0) {
-    each(nodes, function (node) {
-      callback([node]);
-    });
-
-    return;
-  }
 
   /**
    * Excludes start/end text node if they are out side the range
@@ -117,7 +102,7 @@ const walk = function (dom: DOMUtils, rng: RangeLikeObject, callback: (nodes: No
 
   // Same container
   if (startContainer === endContainer) {
-    return callback(exclude([startContainer]));
+    return callback(exclude([ startContainer ]));
   }
 
   // Find common ancestor and end points
@@ -167,6 +152,6 @@ const walk = function (dom: DOMUtils, rng: RangeLikeObject, callback: (nodes: No
   walkBoundary(endContainer, endPoint);
 };
 
-export default {
+export {
   walk
 };

@@ -1,6 +1,6 @@
+import { Arr, Merger, Result, Results } from '@ephox/katamari';
 import * as ObjChanger from '../core/ObjChanger';
 import * as ObjWriter from '../core/ObjWriter';
-import { Result, Results, Merger, Fun, Arr } from '@ephox/katamari';
 
 // Perhaps this level of indirection is unnecessary.
 const narrow = function (obj: {}, fields: any[]): {} {

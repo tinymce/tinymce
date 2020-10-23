@@ -5,13 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element, Node } from '@ephox/dom-globals';
 import { Cell } from '@ephox/katamari';
-import { Pattern } from '@ephox/polaris';
+import { Pattern as PolarisPattern } from '@ephox/polaris';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
-import FindReplaceText from './FindReplaceText';
+import * as FindMark from './FindMark';
+import { Pattern } from './Types';
 
 export interface SearchState {
   index: number;
@@ -19,6 +19,7 @@ export interface SearchState {
   text: string;
   matchCase: boolean;
   wholeWord: boolean;
+  inSelection: boolean;
 }
 
 const getElmIndex = function (elm: Element) {
@@ -31,19 +32,21 @@ const getElmIndex = function (elm: Element) {
   return value;
 };
 
-const markAllMatches = function (editor: Editor, currentSearchState: Cell<SearchState>, regex: RegExp) {
-  let node, marker;
-
-  marker = editor.dom.create('span', {
+const markAllMatches = function (editor: Editor, currentSearchState: Cell<SearchState>, pattern: Pattern, inSelection: boolean) {
+  const marker = editor.dom.create('span', {
     'data-mce-bogus': 1
   });
 
   marker.className = 'mce-match-marker'; // IE 7 adds class="mce-match-marker" and class=mce-match-marker
-  node = editor.getBody();
+  const node = editor.getBody();
 
   done(editor, currentSearchState, false);
 
-  return FindReplaceText.findAndReplaceDOMText(regex, node, marker, 1, editor.schema);
+  if (inSelection) {
+    return FindMark.findAndMarkInSelection(editor.dom, pattern, editor.selection, marker);
+  } else {
+    return FindMark.findAndMark(editor.dom, pattern, node, marker);
+  }
 };
 
 const unwrap = function (node: Node) {
@@ -57,10 +60,9 @@ const unwrap = function (node: Node) {
 };
 
 const findSpansByIndex = function (editor: Editor, index: number) {
-  let nodes;
   const spans = [];
 
-  nodes = Tools.toArray(editor.getBody().getElementsByTagName('span'));
+  const nodes = Tools.toArray(editor.getBody().getElementsByTagName('span'));
   if (nodes.length) {
     for (let i = 0; i < nodes.length; i++) {
       const nodeIndex = getElmIndex(nodes[i]);
@@ -122,15 +124,19 @@ const removeNode = function (dom: DOMUtils, node: Node) {
 };
 
 const escapeSearchText = (text: string, wholeWord: boolean) => {
-  const escapedText = text.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&').replace(/\s/g, '[^\\S\\r\\n]');
+  const escapedText = text.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&').replace(/\s/g, '[^\\S\\r\\n\\uFEFF]');
   const wordRegex = '(' + escapedText + ')';
-  return wholeWord ? `(?:^|\\s|${Pattern.punctuation()})` + wordRegex + `(?=$|\\s|${Pattern.punctuation()})` : wordRegex;
+  return wholeWord ? `(?:^|\\s|${PolarisPattern.punctuation()})` + wordRegex + `(?=$|\\s|${PolarisPattern.punctuation()})` : wordRegex;
 };
 
-const find = function (editor: Editor, currentSearchState: Cell<SearchState>, text: string, matchCase: boolean, wholeWord: boolean) {
+const find = function (editor: Editor, currentSearchState: Cell<SearchState>, text: string, matchCase: boolean, wholeWord: boolean, inSelection: boolean) {
   const escapedText = escapeSearchText(text, wholeWord);
 
-  const count = markAllMatches(editor, currentSearchState, new RegExp(escapedText, matchCase ? 'g' : 'gi'));
+  const pattern = {
+    regex: new RegExp(escapedText, matchCase ? 'g' : 'gi'),
+    matchIndex: 1
+  };
+  const count = markAllMatches(editor, currentSearchState, pattern, inSelection);
 
   if (count) {
     const newIndex = moveSelection(editor, currentSearchState, true);
@@ -139,7 +145,8 @@ const find = function (editor: Editor, currentSearchState: Cell<SearchState>, te
       count,
       text,
       matchCase,
-      wholeWord
+      wholeWord,
+      inSelection
     });
   }
 
@@ -165,16 +172,16 @@ const isMatchSpan = function (node: Element) {
 const replace = function (editor: Editor, currentSearchState: Cell<SearchState>, text: string, forward?: boolean, all?: boolean) {
   const searchState = currentSearchState.get();
   const currentIndex = searchState.index;
-  let i, nodes, node, matchIndex, currentMatchIndex, nextIndex = currentIndex;
+  let currentMatchIndex, nextIndex = currentIndex;
 
   forward = forward !== false;
 
-  node = editor.getBody();
-  nodes = Tools.grep(Tools.toArray(node.getElementsByTagName('span')), isMatchSpan);
-  for (i = 0; i < nodes.length; i++) {
+  const node = editor.getBody();
+  const nodes = Tools.grep(Tools.toArray(node.getElementsByTagName('span')), isMatchSpan);
+  for (let i = 0; i < nodes.length; i++) {
     const nodeIndex = getElmIndex(nodes[i]);
 
-    matchIndex = currentMatchIndex = parseInt(nodeIndex, 10);
+    let matchIndex = currentMatchIndex = parseInt(nodeIndex, 10);
     if (all || matchIndex === searchState.index) {
       if (text.length) {
         nodes[i].firstChild.nodeValue = text;
@@ -218,10 +225,10 @@ const replace = function (editor: Editor, currentSearchState: Cell<SearchState>,
 };
 
 const done = function (editor: Editor, currentSearchState: Cell<SearchState>, keepEditorSelection?: boolean) {
-  let i, nodes, startContainer, endContainer;
+  let i, startContainer, endContainer;
   const searchState = currentSearchState.get();
 
-  nodes = Tools.toArray(editor.getBody().getElementsByTagName('span'));
+  const nodes = Tools.toArray(editor.getBody().getElementsByTagName('span'));
   for (i = 0; i < nodes.length; i++) {
     const nodeIndex = getElmIndex(nodes[i]);
 

@@ -7,42 +7,34 @@
 
 import { Toggling } from '@ephox/alloy';
 import { Arr, Fun, Id, Merger, Obj } from '@ephox/katamari';
+import Editor from 'tinymce/core/api/Editor';
+import * as Settings from '../api/Settings';
 
-import DefaultStyleFormats from '../features/DefaultStyleFormats';
-import StylesMenu from '../ui/StylesMenu';
-import StyleConversions from './StyleConversions';
+import * as StylesMenu from '../ui/StylesMenu';
+import * as StyleConversions from './StyleConversions';
 
-const register = function (editor, settings) {
+const register = (editor: Editor) => {
 
-  const isSelectedFor = function (format) {
-    return function () {
-      return editor.formatter.match(format);
-    };
-  };
+  const isSelectedFor = (format) => (): boolean =>
+    editor.formatter.match(format);
 
-  const getPreview = function (format) {
-    return function () {
-      const styles = editor.formatter.getCssText(format);
-      return styles;
-    };
-  };
+  const getPreview = (format) => (): string =>
+    editor.formatter.getCssText(format);
 
-  const enrichSupported = function (item) {
-    return Merger.deepMerge(item, {
+  const enrichSupported = (item) =>
+    Merger.deepMerge(item, {
       isSelected: isSelectedFor(item.format),
       getPreview: getPreview(item.format)
     });
-  };
 
   // Item that triggers a submenu
-  const enrichMenu = function (item) {
-    return Merger.deepMerge(item, {
-      isSelected: Fun.constant(false),
+  const enrichMenu = (item) =>
+    Merger.deepMerge(item, {
+      isSelected: Fun.never,
       getPreview: Fun.constant('')
     });
-  };
 
-  const enrichCustom = function (item) {
+  const enrichCustom = (item) => {
     const formatName = Id.generate(item.title);
     const newItem = Merger.deepMerge(item, {
       format: formatName,
@@ -53,54 +45,48 @@ const register = function (editor, settings) {
     return newItem;
   };
 
-  const formats = Obj.get(settings, 'style_formats').getOr(DefaultStyleFormats);
+  const doEnrich = (items) => Arr.map(items, (item) => {
+    if (Obj.hasNonNullableKey(item, 'items')) {
+      const newItems = doEnrich(item.items);
+      return Merger.deepMerge(
+        enrichMenu(item),
+        {
+          items: newItems
+        }
+      );
+    } else if (Obj.hasNonNullableKey(item, 'format')) {
+      return enrichSupported(item);
+    } else {
+      return enrichCustom(item);
+    }
+  });
 
-  const doEnrich = function (items) {
-    return Arr.map(items, function (item) {
-      if (Obj.hasNonNullableKey(item, 'items')) {
-        const newItems = doEnrich(item.items);
-        return Merger.deepMerge(
-          enrichMenu(item),
-          {
-            items: newItems
-          }
-        );
-      } else if (Obj.hasNonNullableKey(item, 'format')) {
-        return enrichSupported(item);
-      } else {
-        return enrichCustom(item);
-      }
-    });
-  };
-
-  return doEnrich(formats);
+  return doEnrich(Settings.getStyleFormats(editor));
 };
 
-const prune = function (editor, formats) {
+const prune = (editor: Editor, formats) => {
 
-  const doPrune = function (items) {
-    return Arr.bind(items, function (item) {
-      if (item.items !== undefined) {
-        const newItems = doPrune(item.items);
-        return newItems.length > 0 ? [ item ] : [ ];
-      } else {
-        const keep = Obj.hasNonNullableKey(item, 'format') ? editor.formatter.canApply(item.format) : true;
-        return keep ? [ item ] : [ ];
-      }
-    });
-  };
+  const doPrune = (items) => Arr.bind(items, (item) => {
+    if (item.items !== undefined) {
+      const newItems = doPrune(item.items);
+      return newItems.length > 0 ? [ item ] : [];
+    } else {
+      const keep = Obj.hasNonNullableKey(item, 'format') ? editor.formatter.canApply(item.format) : true;
+      return keep ? [ item ] : [];
+    }
+  });
 
   const prunedItems = doPrune(formats);
   return StyleConversions.expand(prunedItems);
 };
 
-const ui = function (editor, formats, onDone) {
+const ui = (editor, formats, onDone) => {
   const pruned = prune(editor, formats);
 
   return StylesMenu.sketch({
     formats: pruned,
-    handle (item, value) {
-      editor.undoManager.transact(function () {
+    handle(item, value) {
+      editor.undoManager.transact(() => {
         if (Toggling.isOn(item)) {
           editor.formatter.remove(value);
         } else {
@@ -112,7 +98,7 @@ const ui = function (editor, formats, onDone) {
   });
 };
 
-export default {
+export {
   register,
   ui
 };

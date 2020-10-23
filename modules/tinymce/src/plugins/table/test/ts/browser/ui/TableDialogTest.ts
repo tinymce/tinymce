@@ -1,9 +1,9 @@
-import { Log, Pipeline, ApproxStructure } from '@ephox/agar';
+import { ApproxStructure, Log, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
-import TableTestUtils from '../../module/test/TableTestUtils';
+import * as TableTestUtils from '../../module/test/TableTestUtils';
 
 UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogGeneralTest', (success, failure) => {
 
@@ -16,9 +16,9 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogGeneralTest', (succ
     cellspacing: 'label.tox-label:contains(Cell spacing) + input.tox-textfield',
     cellpadding: 'label.tox-label:contains(Cell padding) + input.tox-textfield',
     border: 'label.tox-label:contains(Border width) + input.tox-textfield',
-    caption: 'label.tox-label:contains(Caption) + label.tox-checkbox>input',
-    align: 'label.tox-label:contains(Alignment) + div.tox-selectfield>select',
-    class: 'label.tox-label:contains(Class) + div.tox-selectfield>select',
+    caption: 'label.tox-label:contains(Caption) + label.tox-checkbox > input',
+    align: 'label.tox-label:contains(Alignment) + div.tox-listboxfield > .tox-listbox',
+    class: 'label.tox-label:contains(Class) + div.tox-listboxfield > .tox-listbox'
   };
 
   TinyLoader.setup((editor, onSuccess, onFailure) => {
@@ -28,7 +28,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogGeneralTest', (succ
     const htmlEmptyTable = '<table><tr><td>X</td></tr></table>';
 
     const sSetTable = tinyApis.sSetContent(htmlEmptyTable);
-    const sSetCursor = tinyApis.sSetCursor([0, 0, 0], 0);
+    const sSetCursor = tinyApis.sSetCursor([ 0, 0, 0 ], 0);
 
     const emptyStandardData = {
       width: '',
@@ -40,22 +40,20 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogGeneralTest', (succ
       align: ''
     };
 
-    const standardOkTest = () => {
-      return Log.stepsAsStep('TBA', 'Table: Table properties dialog standard ok', [
-        sSetTable,
-        sSetCursor,
-        TableTestUtils.sOpenTableDialog(tinyUi),
-        TableTestUtils.sAssertDialogValues(emptyStandardData, false, generalSelectors),
-        TableTestUtils.sClickDialogButton('empty dialog with empty details', true),
-        TableTestUtils.sAssertElementStructure(editor, 'table', htmlEmptyTable),
-        TableTestUtils.sOpenTableDialog(tinyUi),
-        TableTestUtils.sAssertDialogValues(emptyStandardData, false, generalSelectors),
-        TableTestUtils.sClickDialogButton('cancelling dialog', false)
-      ]);
-    };
+    const standardOkTest = () => Log.stepsAsStep('TBA', 'Table: Table properties dialog standard ok', [
+      sSetTable,
+      sSetCursor,
+      TableTestUtils.sOpenTableDialog(tinyUi),
+      TableTestUtils.sAssertDialogValues(emptyStandardData, false, generalSelectors),
+      TableTestUtils.sClickDialogButton('empty dialog with empty details', true),
+      TableTestUtils.sAssertElementStructure(editor, 'table', htmlEmptyTable),
+      TableTestUtils.sOpenTableDialog(tinyUi),
+      TableTestUtils.sAssertDialogValues(emptyStandardData, false, generalSelectors),
+      TableTestUtils.sClickDialogButton('cancelling dialog', false)
+    ]);
 
     const standardFillOkTest = () => {
-      const htmlFilledEmptyTable = ApproxStructure.build(function (s, str/*, arr*/) {
+      const htmlFilledEmptyTable = ApproxStructure.build(function (s, str/* , arr*/) {
         return s.element('table', {
           attrs: {
             border: str.is('1'),
@@ -77,11 +75,11 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogGeneralTest', (succ
                       children: [
                         s.text(str.is('X'))
                       ]
-                    }),
+                    })
                   ]
                 })
               ]
-            }),
+            })
           ]
         });
       });
@@ -142,7 +140,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogGeneralTest', (succ
     };
 
     const allOnOkTest = () => {
-      const htmlFilledAllOnTable = ApproxStructure.build(function (s, str/*, arr*/) {
+      const htmlFilledAllOnTable = ApproxStructure.build(function (s, str/* , arr*/) {
         return s.element('table', {
           styles: {
             'height': str.is('500px'),
@@ -202,9 +200,9 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogGeneralTest', (succ
 
       return Log.stepsAsStep('TBA', 'Table: Table properties dialog all ui on fill ok', [
         tinyApis.sSetSetting('table_class_list', [
-          {title: 'None', value: ''},
-          {title: 'Dog', value: 'dog'},
-          {title: 'Cat', value: 'cat'}
+          { title: 'None', value: '' },
+          { title: 'Dog', value: 'dog' },
+          { title: 'Cat', value: 'cat' }
         ]),
         tinyApis.sSetSetting('table_advtab', true),
         tinyApis.sSetSetting('table_style_by_css', true),
@@ -225,7 +223,13 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogGeneralTest', (succ
     };
 
     const execCommandTest = () => {
-      const baseHtml = '<table style="height: 500px; width: 500px; border-width: 1px; border-spacing: 5px; background-color: rgb(0, 0, 255); border-color: rgb(255, 0, 0); border-style: dotted; float: left;"><caption><br></caption><tbody><tr><td>X</td></tr></tbody></table>';
+      const baseHtml =
+      '<table style="height: 500px; width: 500px; border-width: 1px; ' +
+      'border-spacing: 5px; background-color: rgb(0, 0, 255); ' +
+      'border-color: rgb(255, 0, 0); border-style: dotted; float: left;">' +
+      '<caption><br></caption>' +
+      '<tbody><tr><td>X</td></tr></tbody>' +
+      '</table>';
 
       const baseData = {
         width: '500px',
@@ -246,7 +250,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogGeneralTest', (succ
         sSetCursor,
         tinyApis.sExecCommand('mceTableProps'),
         TableTestUtils.sAssertDialogValues(baseData, true, generalSelectors),
-        TableTestUtils.sClickDialogButton('submit dialog', false),
+        TableTestUtils.sClickDialogButton('submit dialog', false)
       ]);
     };
 
@@ -268,7 +272,15 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogGeneralTest', (succ
         backgroundcolor: ''
       };
 
-      const newHtml = '<table class="dog" style="width: 500px; height: 500px; float: left; background-color: #0000ff; border: 1px dotted #ff0000; border-spacing: 5px; border-collapse: collapse;" border="1"><caption>&nbsp;</caption><tbody><tr><td style="border-color: #ff0000; border-width: 1px; padding: 5px;">X</td></tr></tbody></table>';
+      const newHtml =
+      '<table class="dog" style="width: 500px; height: 500px; float: left; ' +
+      'background-color: #0000ff; border: 1px dotted #ff0000; ' +
+      'border-spacing: 5px; border-collapse: collapse;" border="1">' +
+      '<caption>&nbsp;</caption>' +
+      '<tbody>' +
+      '<tr><td style="border-color: #ff0000; border-width: 1px; padding: 5px;">X</td></tr>' +
+      '</tbody>' +
+      '</table>';
 
       const newData = {
         width: '500px',
@@ -286,9 +298,9 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogGeneralTest', (succ
 
       return Log.stepsAsStep('TBA', 'Table: Test cancel changes nothing and save does', [
         tinyApis.sSetSetting('table_class_list', [
-          {title: 'None', value: ''},
-          {title: 'Dog', value: 'dog'},
-          {title: 'Cat', value: 'cat'}
+          { title: 'None', value: '' },
+          { title: 'Dog', value: 'dog' },
+          { title: 'Cat', value: 'cat' }
         ]),
         tinyApis.sSetSetting('table_advtab', true),
         tinyApis.sSetSetting('table_style_by_css', true),
@@ -304,7 +316,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogGeneralTest', (succ
         TableTestUtils.sClickDialogButton('submit dialog', true),
         tinyApis.sAssertContent(newHtml),
         TableTestUtils.sOpenTableDialog(tinyUi),
-        TableTestUtils.sAssertDialogValues(newData, true, generalSelectors),
+        TableTestUtils.sAssertDialogValues(newData, true, generalSelectors)
       ]);
     };
 
@@ -318,15 +330,15 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogGeneralTest', (succ
       execCommandTest()
     ], onSuccess, onFailure);
   }, {
-      plugins: 'table',
-      toolbar: 'tableprops',
-      theme: 'silver',
-      base_url: '/project/tinymce/js/tinymce',
-      indent: false,
-      valid_styles: {
-        '*': 'width,height,vertical-align,text-align,float,border-color,border-width,background-color,border,padding,border-spacing,border-collapse,border-style'
-      },
-      table_advtab: false,
-      statusbar: false
-    }, success, failure);
+    plugins: 'table',
+    toolbar: 'tableprops',
+    theme: 'silver',
+    base_url: '/project/tinymce/js/tinymce',
+    indent: false,
+    valid_styles: {
+      '*': 'width,height,vertical-align,text-align,float,border-color,border-width,background-color,border,padding,border-spacing,border-collapse,border-style'
+    },
+    table_advtab: false,
+    statusbar: false
+  }, success, failure);
 });

@@ -6,9 +6,9 @@
  */
 
 import VK from 'tinymce/core/api/util/VK';
-import Settings from '../api/Settings';
-import Delete from './Delete';
-import { outdentListSelection, indentListSelection } from '../actions/Indendation';
+import { indentListSelection, outdentListSelection } from '../actions/Indendation';
+import * as Settings from '../api/Settings';
+import * as Delete from './Delete';
 
 const setupTabKey = function (editor) {
   editor.on('keydown', function (e) {
@@ -33,6 +33,6 @@ const setup = function (editor) {
   Delete.setup(editor);
 };
 
-export default {
+export {
   setup
 };

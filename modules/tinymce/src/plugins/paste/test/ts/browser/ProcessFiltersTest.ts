@@ -3,7 +3,7 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
 import { TinyLoader } from '@ephox/mcagar';
 
-import ProcessFilters from 'tinymce/plugins/paste/core/ProcessFilters';
+import * as ProcessFilters from 'tinymce/plugins/paste/core/ProcessFilters';
 import PastePlugin from 'tinymce/plugins/paste/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
@@ -77,7 +77,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ProcessFiltersTest', (success,
       ])),
 
       Chain.asStep(editor, Log.chains('TBA', 'Paste: Paste pre/post process passthough unsafe content', [
-        cProcessPrePost('<img src="non-existent.png" onerror="alert(\'!\')">', true, Fun.noop, Fun.noop),
+        cProcessPrePost(`<img src="non-existent.png" onerror="alert('!')">`, true, Fun.noop, Fun.noop),
         Assertions.cAssertEq('Should be changed if dangerous content', { content: '<img src="non-existent.png">', cancelled: false })
       ])),
 

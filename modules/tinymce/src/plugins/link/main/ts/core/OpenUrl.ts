@@ -5,8 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { document, window } from '@ephox/dom-globals';
-
 const appendClickRemove = function (link, evt) {
   document.body.appendChild(link);
   link.dispatchEvent(evt);
@@ -28,6 +26,6 @@ const open = function (url) {
   appendClickRemove(link, evt);
 };
 
-export default {
+export {
   open
 };

@@ -1,4 +1,3 @@
-import { console } from '@ephox/dom-globals';
 import { Arr, Fun, Result } from '@ephox/katamari';
 
 import * as AsyncActions from '../pipe/AsyncActions';
@@ -57,7 +56,7 @@ const op = <T>(fx: (value: T) => void): Chain<T, T> =>
   });
 
 const async = <T, U>(fx: (input: T, next: (v: U) => void, die: (err) => void) => void) =>
-  on<T, U>((v, n, d, logs) => fx(v, (v) => n(v, logs) , (err) => d(err, logs)));
+  on<T, U>((v, n, d, logs) => fx(v, (v) => n(v, logs), (err) => d(err, logs)));
 
 const inject = <T, U>(value: U): Chain<T, U> =>
   on((_input: T, next: NextFn<U>, die: DieFn, logs: TestLogs) => {
@@ -83,12 +82,48 @@ const fromChains = <T = any, U = any>(chains: Chain<any, any>[]): Chain<T, U> =>
 
 const fromChainsWith = <T, U = any, V = any>(initial: T, chains: Chain<any, any>[]): Chain<U, V> =>
   fromChains<U, V>(
-    [inject(initial)].concat(chains)
+    [ inject(initial) ].concat(chains)
   );
+
+const fromIsolatedChains = <T = any>(chains: Chain<any, any>[]): Chain<T, T> => {
+  const cs = Arr.map(chains, extract);
+
+  return on<T, T>((value, next, die, initLogs) => {
+    Pipeline.async(value, cs, (_v, newLogs) => {
+      // Ignore the output value and use the original value instead
+      next(value, newLogs);
+    }, die, initLogs);
+  });
+};
+
+const fromIsolatedChainsWith = <T, U = any>(initial: T, chains: Chain<any, any>[]): Chain<U, U> =>
+  fromIsolatedChains<U>(
+    [ inject(initial) ].concat(chains)
+  );
+
+// Find the first chain which doesn't fail, and use its value. Fails if no chain passes.
+const exists = <T, U>(chains: Chain<T, U>[]): Chain<T, U> => {
+  const cs = Arr.map(chains, extract);
+  let index = 0;
+
+  const attempt = (value: T, next: NextFn<U>, die: DieFn, initLogs: TestLogs): void => {
+    let replacementDie = die;
+    if (index + 1 < cs.length) {
+      replacementDie = () => {
+        index += 1;
+        attempt(value, next, die, initLogs);
+      };
+    }
+
+    Pipeline.runStep(value, cs[index], next, replacementDie, initLogs);
+  };
+
+  return on(attempt);
+};
 
 const fromParent = <T, U, V>(parent: Chain<T, U>, chains: Chain<U, V>[]): Chain<T, U> =>
   on((cvalue: T, cnext: NextFn<U>, cdie: DieFn, clogs: TestLogs) => {
-    Pipeline.async(cvalue, [extract(parent)], (value: U, parentLogs: TestLogs) => {
+    Pipeline.async(cvalue, [ extract(parent) ], (value: U, parentLogs: TestLogs) => {
       const cs = Arr.map(chains, (c) =>
         Step.raw((_, next, die, logs) => {
           // Replace _ with value
@@ -149,7 +184,7 @@ const debugging = op(GeneralActions.debug);
 
 const log = <T>(message: string): Chain<T, T> =>
   on((input: T, next: NextFn<T>, die: DieFn, logs: TestLogs) => {
-    // tslint:disable-next-line:no-console
+    // eslint-disable-next-line no-console
     console.log(message);
     next(input, addLogEntry(logs, message));
   });
@@ -193,6 +228,9 @@ export const Chain = {
   injectThunked,
   fromChains,
   fromChainsWith,
+  fromIsolatedChains,
+  fromIsolatedChainsWith,
+  exists,
   fromParent,
   asStep,
   isolate,

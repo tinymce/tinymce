@@ -29,12 +29,10 @@ const CreateIconManager = (): IconManager => {
       return lookup[id];
     }
 
-    return { icons: {} };
+    return { icons: {}};
   };
 
-  const has = (id: string) => {
-    return Obj.has(lookup, id);
-  };
+  const has = (id: string) => Obj.has(lookup, id);
 
   return {
     add,

@@ -5,12 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLElement, HTMLImageElement } from '@ephox/dom-globals';
-import { Fun, Arr } from '@ephox/katamari';
-import Promise from '../api/util/Promise';
-import Conversions from './Conversions';
+import { Arr, Fun } from '@ephox/katamari';
 import Env from '../api/Env';
 import { BlobCache, BlobInfo } from '../api/file/BlobCache';
+import Promise from '../api/util/Promise';
+import * as Conversions from './Conversions';
 
 export interface BlobInfoImagePair {
   image: HTMLImageElement;
@@ -30,7 +29,7 @@ export interface ImageScanner {
 
 let count = 0;
 
-const uniqueId = function (prefix?: string): string {
+export const uniqueId = function (prefix?: string): string {
   return (prefix || 'blobid') + (count++);
 };
 
@@ -65,10 +64,9 @@ const imageToBlobInfo = function (blobCache: BlobCache, img: HTMLImageElement, r
     return;
   }
 
-  base64 = Conversions.parseDataUri(img.src).data;
-  blobInfo = blobCache.findFirst(function (cachedBlobInfo) {
-    return cachedBlobInfo.base64() === base64;
-  });
+  const { data, type } = Conversions.parseDataUri(img.src);
+  base64 = data;
+  blobInfo = blobCache.getByData(base64, type);
 
   if (blobInfo) {
     resolve({
@@ -98,13 +96,11 @@ export function ImageScanner(uploadStatus, blobCache: BlobCache): ImageScanner {
   const cachedPromises: Record<string, Promise<BlobInfoImagePair>> = {};
 
   const findAll = function (elm: HTMLElement, predicate?: (img: HTMLImageElement) => boolean) {
-    let images;
-
     if (!predicate) {
-      predicate = Fun.constant(true);
+      predicate = Fun.always;
     }
 
-    images = Arr.filter(getAllImages(elm), function (img) {
+    const images = Arr.filter(getAllImages(elm), function (img) {
       const src = img.src;
 
       if (!Env.fileApi) {
@@ -135,7 +131,7 @@ export function ImageScanner(uploadStatus, blobCache: BlobCache): ImageScanner {
     });
 
     const promises = Arr.map(images, function (img): Promise<BlobInfoImagePair> {
-      if (cachedPromises[img.src]) {
+      if (cachedPromises[img.src] !== undefined) {
         // Since the cached promise will return the cached image
         // We need to wrap it and resolve with the actual image
         return new Promise(function (resolve) {

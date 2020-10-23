@@ -5,50 +5,48 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { document, File, HTMLInputElement } from '@ephox/dom-globals';
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import Delay from 'tinymce/core/api/util/Delay';
 import Promise from 'tinymce/core/api/util/Promise';
 
-const pickFile = (editor: Editor) => {
-  return new Promise((resolve: (files: File[]) => void) => {
-    const fileInput: HTMLInputElement = document.createElement('input');
-    fileInput.type = 'file';
-    fileInput.style.position = 'fixed';
-    fileInput.style.left = '0';
-    fileInput.style.top = '0';
-    fileInput.style.opacity = '0.001';
-    document.body.appendChild(fileInput);
+const pickFile = (editor: Editor) => new Promise((resolve: (files: File[]) => void) => {
+  const fileInput: HTMLInputElement = document.createElement('input');
+  fileInput.type = 'file';
+  fileInput.accept = 'image/*';
+  fileInput.style.position = 'fixed';
+  fileInput.style.left = '0';
+  fileInput.style.top = '0';
+  fileInput.style.opacity = '0.001';
+  document.body.appendChild(fileInput);
 
-    const changeHandler = (e) => {
-      resolve(Array.prototype.slice.call((e.target as any).files));
+  const changeHandler = (e) => {
+    resolve(Array.prototype.slice.call((e.target).files));
+  };
+
+  fileInput.addEventListener('change', changeHandler);
+
+  const cancelHandler = (e) => {
+    const cleanup = () => {
+      resolve([]);
+      fileInput.parentNode.removeChild(fileInput);
     };
 
-    fileInput.addEventListener('change', changeHandler);
+    // Android will fire focusin before the input change event
+    // so we need to do a slight delay to get outside the event loop
+    if (Env.os.isAndroid() && e.type !== 'remove') {
+      Delay.setEditorTimeout(editor, cleanup, 0);
+    } else {
+      cleanup();
+    }
+    editor.off('focusin remove', cancelHandler);
+  };
 
-    const cancelHandler = (e) => {
-      const cleanup = () => {
-        resolve([]);
-        fileInput.parentNode.removeChild(fileInput);
-      };
+  editor.on('focusin remove', cancelHandler);
 
-      // Android will fire focusin before the input change event
-      // so we need to do a slight delay to get outside the event loop
-      if (Env.os.isAndroid() && e.type !== 'remove') {
-        Delay.setEditorTimeout(editor, cleanup, 0);
-      } else {
-        cleanup();
-      }
-      editor.off('focusin remove', cancelHandler);
-    };
+  fileInput.click();
+});
 
-    editor.on('focusin remove', cancelHandler);
-
-    fileInput.click();
-  });
-};
-
-export default {
+export {
   pickFile
 };

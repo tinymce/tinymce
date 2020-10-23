@@ -1,11 +1,10 @@
-import { Option } from '@ephox/katamari';
-import * as Css from './Css';
+import { Optional } from '@ephox/katamari';
 import * as Style from '../../impl/Style';
-import { Node as DomNode, Element as DomElement } from '@ephox/dom-globals';
-import Element from '../node/Element';
+import { SugarElement } from '../node/SugarElement';
+import * as Css from './Css';
 
-const isCentered = function (element: Element<DomNode>) {
-  const dom = element.dom();
+const isCentered = (element: SugarElement<Node>): boolean => {
+  const dom = element.dom;
   if (Style.isSupported(dom)) {
     const marginLeft = dom.style.marginRight;
     const marginRight = dom.style.marginLeft;
@@ -15,22 +14,19 @@ const isCentered = function (element: Element<DomNode>) {
   }
 };
 
-const divine = function (element: Element<DomElement>) {
+const divine = (element: SugarElement<Element>): Optional<string> => {
   if (isCentered(element)) {
-    return Option.some('center');
+    return Optional.some('center');
   } else {
-    const val = Css.getRaw(element, 'float').getOrThunk(function () {
-      return Css.get(element, 'float');
-    });
-    return val !== undefined && val !== null && val.length > 0 ? Option.some(val) : Option.none<string>();
+    const val = Css.getRaw(element, 'float').getOrThunk(() => Css.get(element, 'float'));
+    return val !== undefined && val !== null && val.length > 0 ? Optional.some(val) : Optional.none<string>();
   }
 };
 
-const getRaw = function (element: Element<DomNode>) {
-  return Css.getRaw(element, 'float').getOrNull();
-};
+const getRaw = (element: SugarElement<Node>): string | null =>
+  Css.getRaw(element, 'float').getOrNull();
 
-const setCentered = function (element: Element<DomNode>) {
+const setCentered = (element: SugarElement<Node>): void => {
   Css.setAll(element, {
     'margin-left': 'auto',
     'margin-right': 'auto'
@@ -41,5 +37,5 @@ export {
   isCentered,
   divine,
   getRaw,
-  setCentered,
+  setCentered
 };

@@ -1,4 +1,4 @@
-import { Keys, Pipeline, Log } from '@ephox/agar';
+import { Keys, Log, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyActions, TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 
@@ -19,11 +19,11 @@ UnitTest.asynctest('browser.tinymce.plugins.save.SaveSanityTest', (success, fail
       Log.steps('TBA', 'Save: Assert Save button is disabled when editor is opened. Add content and assert Save button is enabled', [
         tinyUi.sWaitForUi('check button', 'button.tox-tbtn--disabled[aria-label="Save"]'),
         tinyApis.sSetContent('<p>a</p>'),
-        tinyApis.sSetCursor([0, 0], 1),
+        tinyApis.sSetCursor([ 0, 0 ], 1),
         tinyActions.sContentKeystroke(Keys.enter(), {}),
         tinyUi.sWaitForUi('check button', 'button[aria-label="Save"]:not(.tox-tbtn--disabled)')
       ])
-    , onSuccess, onFailure);
+      , onSuccess, onFailure);
   }, {
     plugins: 'save',
     toolbar: 'save',

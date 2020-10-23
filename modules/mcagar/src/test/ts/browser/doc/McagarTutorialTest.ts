@@ -40,7 +40,7 @@ UnitTest.asynctest('McagarTutorialTest', (success, failure) => {
       ui.sClickOnToolbar('Clicking on button to change to alternate', 'button:contains("tutorial")'),
       apis.sAssertContent('<p>alternate content</p>'),
       Step.wait(400),
-      apis.sAssertSelection([0], 1, [0], 1),
+      apis.sAssertSelection([ 0 ], 1, [ 0 ], 1),
       ui.sClickOnToolbar('Clicking on button to change to tutorial again', 'button:contains("tutorial")'),
       apis.sAssertContent('<p>tutorial content</p>'),
       Step.wait(400),
@@ -48,9 +48,9 @@ UnitTest.asynctest('McagarTutorialTest', (success, failure) => {
     ], loadSuccess, loadFailure);
 
   }, {
-      setup: silverSetup,
-      menubar: false,
-      toolbar: 'tutorial-button',
-      base_url: '/project/tinymce/js/tinymce',
-    }, success, failure);
+    setup: silverSetup,
+    menubar: false,
+    toolbar: 'tutorial-button',
+    base_url: '/project/tinymce/js/tinymce'
+  }, success, failure);
 });

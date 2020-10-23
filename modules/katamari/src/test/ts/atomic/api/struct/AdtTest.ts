@@ -1,9 +1,8 @@
+import { Assert, UnitTest } from '@ephox/bedrock-client';
+import fc from 'fast-check';
 import { Adt } from 'ephox/katamari/api/Adt';
 import * as Arr from 'ephox/katamari/api/Arr';
 import * as Fun from 'ephox/katamari/api/Fun';
-import fc from 'fast-check';
-import { UnitTest, Assert } from '@ephox/bedrock-client';
-import { console } from '@ephox/dom-globals';
 
 UnitTest.test('ADT Test', () => {
   const checkInvalid = (message, f) => {
@@ -12,7 +11,7 @@ UnitTest.test('ADT Test', () => {
       f();
     } catch (e) {
       if (e === 'ADTWHOOPS') {
-        // tslint:disable-next-line:no-console
+        // eslint-disable-next-line no-console
         console.log('die function incorrectly called');
       } else {
         error = true;
@@ -25,7 +24,7 @@ UnitTest.test('ADT Test', () => {
   };
 
   const checkInvalidGenerate = (cases, message) => {
-    checkInvalid('generate() did not throw an error. Input: "' + message + '\'', () => {
+    checkInvalid('generate() did not throw an error. Input: "' + message + '"', () => {
       Adt.generate(cases);
     });
   };
@@ -33,10 +32,10 @@ UnitTest.test('ADT Test', () => {
   checkInvalidGenerate({}, 'object instead of array');
   checkInvalidGenerate([], 'empty cases array');
   checkInvalidGenerate([ 'f' ], 'array contains strings');
-  checkInvalidGenerate([ {} ], 'empty case');
-  checkInvalidGenerate([ { t: {} } ], 'object case arguments');
-  checkInvalidGenerate([ { cata: [] } ], 'case named cata');
-  checkInvalidGenerate([ { a: [] }, { a: [] } ], 'duplicate names');
+  checkInvalidGenerate([{}], 'empty case');
+  checkInvalidGenerate([{ t: {}}], 'object case arguments');
+  checkInvalidGenerate([{ cata: [] }], 'case named cata');
+  checkInvalidGenerate([{ a: [] }, { a: [] }], 'duplicate names');
   checkInvalidGenerate([
     {
       one: [],

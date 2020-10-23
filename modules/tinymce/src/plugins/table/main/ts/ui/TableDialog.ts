@@ -5,19 +5,20 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Types } from '@ephox/bridge';
-import { Element } from '@ephox/dom-globals';
 import { Fun, Type, Unicode } from '@ephox/katamari';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import { StyleMap } from 'tinymce/core/api/html/Styles';
-import InsertTable from '../actions/InsertTable';
-import Styles from '../actions/Styles';
-import * as Util from '../alien/Util';
+import { Dialog } from 'tinymce/core/api/ui/Ui';
+import * as InsertTable from '../actions/InsertTable';
+import * as Styles from '../actions/Styles';
 import { getDefaultAttributes, getDefaultStyles, getTableClassList, hasAdvancedTableTab, shouldStyleWithCss } from '../api/Settings';
-import Helpers, { TableData } from './Helpers';
-import TableDialogGeneralTab from './TableDialogGeneralTab';
+import * as Util from '../core/Util';
+import * as Helpers from './Helpers';
+import * as TableDialogGeneralTab from './TableDialogGeneralTab';
+
+type TableData = Helpers.TableData;
 
 // Explore the layers of the table till we find the first layer of tds or ths
 const styleTDTH = (dom: DOMUtils, elm: Element, name: string | StyleMap, value?: string | number) => {
@@ -43,17 +44,17 @@ const applyDataToElement = (editor: Editor, tableElm, data: TableData) => {
 
   attrs.class = data.class;
 
-  styles.height = Util.addSizeSuffix(data.height);
+  styles.height = Util.addPxSuffix(data.height);
 
   if (dom.getAttrib(tableElm, 'width') && !shouldStyleWithCss(editor)) {
     attrs.width = Util.removePxSuffix(data.width);
   } else {
-    styles.width = Util.addSizeSuffix(data.width);
+    styles.width = Util.addPxSuffix(data.width);
   }
 
   if (shouldStyleWithCss(editor)) {
-    styles['border-width'] = Util.addSizeSuffix(data.border);
-    styles['border-spacing'] = Util.addSizeSuffix(data.cellspacing);
+    styles['border-width'] = Util.addPxSuffix(data.border);
+    styles['border-spacing'] = Util.addPxSuffix(data.cellspacing);
   } else {
     attrs.border = data.border;
     attrs.cellpadding = data.cellpadding;
@@ -65,12 +66,12 @@ const applyDataToElement = (editor: Editor, tableElm, data: TableData) => {
   if (shouldStyleWithCss(editor) && tableElm.children) {
     for (let i = 0; i < tableElm.children.length; i++) {
       styleTDTH(dom, tableElm.children[i], {
-        'border-width': Util.addSizeSuffix(data.border),
-        'padding': Util.addSizeSuffix(data.cellpadding),
+        'border-width': Util.addPxSuffix(data.border),
+        'padding': Util.addPxSuffix(data.cellpadding)
       });
       if (hasAdvancedTableTab(editor)) {
         styleTDTH(dom, tableElm.children[i], {
-          'border-color': data.bordercolor,
+          'border-color': data.bordercolor
         });
       }
     }
@@ -86,7 +87,7 @@ const applyDataToElement = (editor: Editor, tableElm, data: TableData) => {
   dom.setAttribs(tableElm, { ...getDefaultAttributes(editor), ...attrs });
 };
 
-const onSubmitTableForm = (editor: Editor, tableElm: Element, api: Types.Dialog.DialogInstanceApi<TableData>) => {
+const onSubmitTableForm = (editor: Editor, tableElm: Element, api: Dialog.DialogInstanceApi<TableData>) => {
   const dom = editor.dom;
   let captionElm;
   const data = api.getData();
@@ -102,7 +103,7 @@ const onSubmitTableForm = (editor: Editor, tableElm: Element, api: Types.Dialog.
       const cols = parseInt(data.cols, 10) || 1;
       const rows = parseInt(data.rows, 10) || 1;
       // Cases 1 & 3 - inserting a table
-      tableElm = InsertTable.insert(editor, cols, rows);
+      tableElm = InsertTable.insert(editor, cols, rows, 0, 0);
     }
 
     applyDataToElement(editor, tableElm, data);
@@ -166,40 +167,36 @@ const open = (editor: Editor, insertNewTable: boolean) => {
     }
   }
 
-  const hasClasses = getTableClassList(editor).length > 0;
+  const classes = Helpers.buildListItems(getTableClassList(editor));
 
-  if (hasClasses) {
+  if (classes.length > 0) {
     if (data.class) {
       data.class = data.class.replace(/\s*mce\-item\-table\s*/g, '');
     }
   }
 
-  const generalPanel: Types.Dialog.BodyComponentApi = {
+  const generalPanel: Dialog.GridSpec = {
     type: 'grid',
     columns: 2,
-    items: TableDialogGeneralTab.getItems(editor, hasClasses, insertNewTable)
+    items: TableDialogGeneralTab.getItems(editor, classes, insertNewTable)
   };
 
-  const nonAdvancedForm = (): Types.Dialog.PanelApi => {
-    return {
-      type: 'panel',
-      items: [ generalPanel ]
-    };
-  };
+  const nonAdvancedForm = (): Dialog.PanelSpec => ({
+    type: 'panel',
+    items: [ generalPanel ]
+  });
 
-  const advancedForm = (): Types.Dialog.TabPanelApi => {
-    return {
-      type: 'tabpanel',
-      tabs: [
-        {
-          title: 'General',
-          name: 'general',
-          items: [ generalPanel ]
-        },
-        Helpers.getAdvancedTab('table')
-      ]
-    };
-  };
+  const advancedForm = (): Dialog.TabPanelSpec => ({
+    type: 'tabpanel',
+    tabs: [
+      {
+        title: 'General',
+        name: 'general',
+        items: [ generalPanel ]
+      },
+      Helpers.getAdvancedTab('table')
+    ]
+  });
 
   const dialogBody = hasAdvancedTableTab(editor) ? advancedForm() : nonAdvancedForm();
 
@@ -212,7 +209,7 @@ const open = (editor: Editor, insertNewTable: boolean) => {
       {
         type: 'cancel',
         name: 'cancel',
-        text: 'Cancel',
+        text: 'Cancel'
       },
       {
         type: 'submit',
@@ -225,6 +222,6 @@ const open = (editor: Editor, insertNewTable: boolean) => {
   });
 };
 
-export default {
+export {
   open
 };

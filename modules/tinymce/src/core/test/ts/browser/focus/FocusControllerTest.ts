@@ -1,10 +1,10 @@
 import { Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
+import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import FocusManager from 'tinymce/core/api/FocusManager';
-import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
-import FocusController from 'tinymce/core/focus/FocusController';
+import * as FocusController from 'tinymce/core/focus/FocusController';
 import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.focus.FocusControllerTest', function (success, failure) {

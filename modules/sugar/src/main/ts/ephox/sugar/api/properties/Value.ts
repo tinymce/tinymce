@@ -1,18 +1,18 @@
-import Element from '../node/Element';
-import { HTMLInputElement, HTMLTextAreaElement, HTMLSelectElement, HTMLButtonElement, HTMLOptionElement } from '@ephox/dom-globals';
+import { SugarElement } from '../node/SugarElement';
 
-const get = function (element: Element<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | HTMLOptionElement | HTMLButtonElement>) {
-  return element.dom().value;
-};
+type TogglableElement = HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | HTMLOptionElement | HTMLButtonElement;
 
-const set = function (element: Element<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | HTMLOptionElement | HTMLButtonElement>, value: string) {
+const get = (element: SugarElement<TogglableElement>): string =>
+  element.dom.value;
+
+const set = (element: SugarElement<TogglableElement>, value: string): void => {
   if (value === undefined) {
     throw new Error('Value.set was undefined');
   }
-  element.dom().value = value;
+  element.dom.value = value;
 };
 
 export {
   set,
-  get,
+  get
 };

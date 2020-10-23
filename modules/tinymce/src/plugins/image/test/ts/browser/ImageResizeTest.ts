@@ -1,6 +1,5 @@
 import { Chain, Guard, Log, Mouse, Pipeline, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { console } from '@ephox/dom-globals';
 import { TinyLoader, TinyUi } from '@ephox/mcagar';
 import ImagePlugin from 'tinymce/plugins/image/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
@@ -32,7 +31,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImageResizeTest', (success, fa
               Chain.control(
                 cAssertInputValue(generalTabSelectors.width, '5'),
                 Guard.tryUntil('did not find width input with value 5')
-              ),
+              )
             ]
           ),
           tinyUi.cSubmitDialog(),
@@ -43,14 +42,14 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImageResizeTest', (success, fa
 
     ], onSuccess, onFailure);
   }, {
-      theme: 'silver',
-      plugins: 'image',
-      toolbar: 'image',
-      base_url: '/project/tinymce/js/tinymce',
-      file_picker_callback(callback) {
-        // tslint:disable-next-line:no-console
-        console.log('file picker pressed');
-        callback('data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7');
-      }
-    }, success, failure);
+    theme: 'silver',
+    plugins: 'image',
+    toolbar: 'image',
+    base_url: '/project/tinymce/js/tinymce',
+    file_picker_callback(callback) {
+      // eslint-disable-next-line no-console
+      console.log('file picker pressed');
+      callback('data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7');
+    }
+  }, success, failure);
 });

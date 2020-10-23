@@ -5,32 +5,30 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Tools from 'tinymce/core/api/util/Tools';
-import Node from 'tinymce/core/api/html/Node';
 import Editor from 'tinymce/core/api/Editor';
+import AstNode from 'tinymce/core/api/html/Node';
+import Tools from 'tinymce/core/api/util/Tools';
 
-const hasImageClass = (node: Node) => {
+const hasImageClass = (node: AstNode) => {
   const className = node.attr('class');
   return className && /\bimage\b/.test(className);
 };
 
-const toggleContentEditableState = (state: boolean) => {
-  return (nodes: Node[]) => {
-    let i = nodes.length;
+const toggleContentEditableState = (state: boolean) => (nodes: AstNode[]) => {
+  let i = nodes.length;
 
-    const toggleContentEditable = (node: Node) => {
-      node.attr('contenteditable', state ? 'true' : null);
-    };
-
-    while (i--) {
-      const node = nodes[i];
-
-      if (hasImageClass(node)) {
-        node.attr('contenteditable', state ? 'false' : null);
-        Tools.each(node.getAll('figcaption'), toggleContentEditable);
-      }
-    }
+  const toggleContentEditable = (node: AstNode) => {
+    node.attr('contenteditable', state ? 'true' : null);
   };
+
+  while (i--) {
+    const node = nodes[i];
+
+    if (hasImageClass(node)) {
+      node.attr('contenteditable', state ? 'false' : null);
+      Tools.each(node.getAll('figcaption'), toggleContentEditable);
+    }
+  }
 };
 
 const setup = (editor: Editor) => {
@@ -40,6 +38,6 @@ const setup = (editor: Editor) => {
   });
 };
 
-export default {
+export {
   setup
 };

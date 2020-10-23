@@ -6,12 +6,12 @@
  */
 
 import { Fun, Future } from '@ephox/katamari';
-import { Attr, Css, Traverse } from '@ephox/sugar';
+import { Attribute, Css, Traverse } from '@ephox/sugar';
 
-import Styles from '../../style/Styles';
-import DataAttributes from '../../util/DataAttributes';
-import SmoothAnimation from '../smooth/SmoothAnimation';
-import IosViewport from '../view/IosViewport';
+import * as Styles from '../../style/Styles';
+import * as DataAttributes from '../../util/DataAttributes';
+import * as SmoothAnimation from '../smooth/SmoothAnimation';
+import * as IosViewport from '../view/IosViewport';
 
 const animator = SmoothAnimation.create();
 
@@ -27,7 +27,7 @@ const getTop = function (element) {
 };
 
 const getScrollTop = function (element) {
-  return parseInt(element.dom().scrollTop, 10);
+  return parseInt(element.dom.scrollTop, 10);
 };
 
 const moveScrollAndTop = function (element, destination, finalTop) {
@@ -35,12 +35,12 @@ const moveScrollAndTop = function (element, destination, finalTop) {
     const getCurrent = Fun.curry(getScrollTop, element);
 
     const update = function (newScroll) {
-      element.dom().scrollTop = newScroll;
+      element.dom.scrollTop = newScroll;
       Css.set(element, 'top', (getTop(element) + ANIMATION_STEP) + 'px');
     };
 
     const finish = function (/* dest */) {
-      element.dom().scrollTop = destination;
+      element.dom.scrollTop = destination;
       Css.set(element, 'top', finalTop + 'px');
       callback(destination);
     };
@@ -52,23 +52,23 @@ const moveScrollAndTop = function (element, destination, finalTop) {
 const moveOnlyScroll = function (element, destination) {
   return Future.nu(function (callback) {
     const getCurrent = Fun.curry(getScrollTop, element);
-    Attr.set(element, lastScroll, getCurrent());
+    Attribute.set(element, lastScroll, getCurrent());
 
     const update = function (newScroll, abort) {
       const previous = DataAttributes.safeParse(element, lastScroll);
       // As soon as we detect a scroll value that we didn't set, assume the user
       // is scrolling, and abort the scrolling.
-      if (previous !== element.dom().scrollTop) {
-        abort(element.dom().scrollTop);
+      if (previous !== element.dom.scrollTop) {
+        abort(element.dom.scrollTop);
       } else {
-        element.dom().scrollTop = newScroll;
-        Attr.set(element, lastScroll, newScroll);
+        element.dom.scrollTop = newScroll;
+        Attribute.set(element, lastScroll, newScroll);
       }
     };
 
     const finish = function (/* dest */) {
-      element.dom().scrollTop = destination;
-      Attr.set(element, lastScroll, destination);
+      element.dom.scrollTop = destination;
+      Attribute.set(element, lastScroll, destination);
       callback(destination);
     };
 
@@ -108,7 +108,7 @@ const updateTop = function (element, amount) {
 // was changing. Therefore, until tests prove otherwise, we are just going to jump to the
 // destination in one go.
 const moveWindowScroll = function (toolbar, viewport, destY) {
-  const outerWindow = Traverse.owner(toolbar).dom().defaultView;
+  const outerWindow = Traverse.owner(toolbar).dom.defaultView;
   return Future.nu(function (callback) {
     updateTop(toolbar, destY);
     updateTop(viewport, destY);
@@ -117,7 +117,7 @@ const moveWindowScroll = function (toolbar, viewport, destY) {
   });
 };
 
-export default {
+export {
   moveScrollAndTop,
   moveOnlyScroll,
   moveOnlyTop,

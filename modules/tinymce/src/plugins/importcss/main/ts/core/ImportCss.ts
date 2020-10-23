@@ -6,22 +6,26 @@
  */
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import Env from 'tinymce/core/api/Env';
 import Tools from 'tinymce/core/api/util/Tools';
-import Settings from '../api/Settings';
-import Editor from 'tinymce/core/api/Editor';
+import * as Settings from '../api/Settings';
 import { generate } from './SelectorModel';
 
 interface Group {
   title: string;
-  original: Group;
+  original: Group | UserDefinedGroup;
   selectors: {};
   filter: (value: string) => boolean;
   item: {
-    text: string,
-    menu: []
+    text: string;
+    menu: [];
   };
+}
+
+interface UserDefinedGroup extends Partial<Group> {
+  title: string;
 }
 
 const removeCacheSuffix = function (url: string) {
@@ -34,11 +38,12 @@ const removeCacheSuffix = function (url: string) {
   return url;
 };
 
-const isSkinContentCss = function (editor: Editor, href: string) {
-  const settings = editor.settings, skin = settings.skin !== false ? settings.skin || 'oxide' : false;
+const isSkinContentCss = (editor: Editor, href: string) => {
+  const skin = Settings.getSkin(editor);
 
   if (skin) {
-    const skinUrl = settings.skin_url ? editor.documentBaseURI.toAbsolute(settings.skin_url) : EditorManager.baseURL + '/skins/ui/' + skin;
+    const skinUrlBase = Settings.getSkinUrl(editor);
+    const skinUrl = skinUrlBase ? editor.documentBaseURI.toAbsolute(skinUrlBase) : EditorManager.baseURL + '/skins/ui/' + skin;
     const contentSkinUrlPart = EditorManager.baseURL + '/skins/content/';
     return href === skinUrl + '/content' + (editor.inline ? '.inline' : '') + '.min.css' || href.indexOf(contentSkinUrlPart) !== -1;
   }
@@ -46,7 +51,7 @@ const isSkinContentCss = function (editor: Editor, href: string) {
   return false;
 };
 
-const compileFilter = function (filter: string | RegExp | Function) {
+const compileFilter = function (filter: string | RegExp | ((value: string) => boolean)) {
   if (typeof filter === 'string') {
     return function (value) {
       return value.indexOf(filter) !== -1;
@@ -60,11 +65,14 @@ const compileFilter = function (filter: string | RegExp | Function) {
   return filter;
 };
 
+const isCssImportRule = (rule: CSSRule): rule is CSSImportRule => (rule as any).styleSheet;
+const isCssPageRule = (rule: CSSRule): rule is CSSPageRule => (rule as any).selectorText;
+
 const getSelectors = function (editor: Editor, doc, fileFilter) {
   const selectors = [], contentCSSUrls = {};
 
   function append(styleSheet, imported?) {
-    let href = styleSheet.href, rules;
+    let href = styleSheet.href, rules: CSSRule[];
 
     href = removeCacheSuffix(href);
 
@@ -84,9 +92,9 @@ const getSelectors = function (editor: Editor, doc, fileFilter) {
     }
 
     Tools.each(rules, function (cssRule) {
-      if (cssRule.styleSheet) {
+      if (isCssImportRule(cssRule)) {
         append(cssRule.styleSheet, true);
-      } else if (cssRule.selectorText) {
+      } else if (isCssPageRule(cssRule)) {
         Tools.each(cssRule.selectorText.split(','), function (selector) {
           selectors.push(Tools.trim(selector));
         });
@@ -169,7 +177,7 @@ const getGroupsBySelector = function (groups: Group[], selector: string): Group[
   });
 };
 
-const compileUserDefinedGroups = function (groups): Group[] {
+const compileUserDefinedGroups = function (groups: UserDefinedGroup[]): Group[] {
   return Tools.map(groups, function (group) {
     return Tools.extend({}, group, {
       original: group,
@@ -223,7 +231,7 @@ const convertSelectorToFormat = function (editor, plugin, selector, group) {
 };
 
 const setup = function (editor: Editor) {
-  editor.on('init', function (e) {
+  editor.on('init', function (_e) {
     const model = generate();
 
     const globallyUniqueSelectors = {};
@@ -281,7 +289,7 @@ const setup = function (editor: Editor) {
   });
 };
 
-export default {
+export {
   defaultConvertSelectorToFormat,
   setup
 };

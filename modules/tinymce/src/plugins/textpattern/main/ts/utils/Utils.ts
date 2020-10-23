@@ -5,8 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLElement, Node, Range, Text } from '@ephox/dom-globals';
-import { Arr, Obj, Option, Type } from '@ephox/katamari';
+import { Arr, Obj, Optional, Type } from '@ephox/katamari';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import Formatter from 'tinymce/core/api/Formatter';
@@ -50,14 +49,12 @@ const isBlockFormatName = (name: string, formatter: Formatter): boolean => {
   return Type.isArray(formatSet) && Arr.head(formatSet).exists((format) => Obj.has(format as any, 'block'));
 };
 
-const isReplacementPattern = (pattern: InlinePattern) => {
-  return pattern.start.length === 0;
-};
+const isReplacementPattern = (pattern: InlinePattern) => pattern.start.length === 0;
 
 const getParentBlock = (editor: Editor, rng: Range) => {
-  const parentBlockOpt = Option.from(editor.dom.getParent(rng.startContainer, editor.dom.isBlock));
+  const parentBlockOpt = Optional.from(editor.dom.getParent(rng.startContainer, editor.dom.isBlock));
   if (Settings.getForcedRootBlock(editor) === '') {
-    return parentBlockOpt.orThunk(() => Option.some(editor.getBody()));
+    return parentBlockOpt.orThunk(() => Optional.some(editor.getBody()));
   } else {
     return parentBlockOpt;
   }

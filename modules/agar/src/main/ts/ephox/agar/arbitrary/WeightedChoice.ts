@@ -1,4 +1,4 @@
-import { Arr, Obj, Option, Struct } from '@ephox/katamari';
+import { Arr, Obj, Optional } from '@ephox/katamari';
 import Jsc from '@ephox/wrap-jsverify';
 
 interface WeightedItem {
@@ -10,11 +10,14 @@ interface AccWeightItem {
 }
 
 interface WeightedList<T extends WeightedItem> {
-  list: () => (T & AccWeightItem)[];
-  total: () => number;
+  readonly list: (T & AccWeightItem)[];
+  readonly total: number;
 }
 
-const weighted: <T extends WeightedItem> (list: (T & AccWeightItem)[], total: number) => WeightedList<T> = Struct.immutable('list', 'total');
+const weighted = <T extends WeightedItem> (list: (T & AccWeightItem)[], total: number): WeightedList<T> => ({
+  list,
+  total
+});
 
 const choose = <T extends WeightedItem>(candidates: T[]) => {
   const result = Arr.foldl(candidates, (rest, d) => {
@@ -25,20 +28,20 @@ const choose = <T extends WeightedItem>(candidates: T[]) => {
     };
     return {
       total: newTotal,
-      list: rest.list.concat([merged])
+      list: rest.list.concat([ merged ])
     };
-  }, {list: <(T & AccWeightItem)[]> [], total: 0});
+  }, { list: <(T & AccWeightItem)[]> [], total: 0 });
 
   return weighted(result.list, result.total);
 };
 
-const gChoose = <T extends WeightedItem>(weighted: WeightedList<T>) => Jsc.number(0, weighted.total()).generator.map((w) => {
-  const raw = Arr.find(weighted.list(), (d) =>
+const gChoose = <T extends WeightedItem>(weighted: WeightedList<T>) => Jsc.number(0, weighted.total).generator.map((w) => {
+  const raw = Arr.find(weighted.list, (d) =>
     w <= d.accWeight
   );
 
-  const keys = raw.map(Obj.keys).getOr([]) as string[];
-  return keys.length === ['weight', 'accWeight'].length ? Option.none() : raw;
+  const keys = raw.map(Obj.keys).getOr([]);
+  return keys.length === [ 'weight', 'accWeight' ].length ? Optional.none() : raw;
 });
 
 const generator = <T extends WeightedItem>(candidates: T[]) => {

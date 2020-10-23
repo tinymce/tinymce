@@ -1,8 +1,8 @@
 import { UnitTest } from '@ephox/bedrock-client';
 import { Gene, TestUniverse, Universe } from '@ephox/boss';
-import { Arr, Option } from '@ephox/katamari';
-import { oneAll } from 'ephox/robin/parent/Shared';
+import { Arr, Optional } from '@ephox/katamari';
 import { KAssert } from '@ephox/katamari-assertions';
+import { oneAll } from 'ephox/robin/parent/Shared';
 
 UnitTest.test('SharedTest', function () {
   const data = TestUniverse(Gene('root', 'root', [
@@ -33,13 +33,13 @@ UnitTest.test('SharedTest', function () {
     ])
   ]));
 
-  const checker = function (target: string, ids: string[], f: (look: (universe: Universe<Gene, undefined>, item: Gene) => Option<Gene>, items: Gene[]) => void) {
+  const checker = function (target: string, ids: string[], f: (look: (universe: Universe<Gene, undefined>, item: Gene) => Optional<Gene>, items: Gene[]) => void) {
     const items = Arr.map(ids, function (id) {
       return data.find(data.get(), id).getOrDie();
     });
 
     const look = function (universe: Universe<Gene, undefined>, item: Gene) {
-      return item.name === target ? Option.some(item) : data.up().selector(item, target);
+      return item.name === target ? Optional.some(item) : data.up().selector(item, target);
     };
 
     f(look, items);
@@ -59,7 +59,7 @@ UnitTest.test('SharedTest', function () {
     });
   };
 
-  checkNone('li', ['1.3.1']);
-  checkNone('p', ['1.1.1', '1.3.1']);
-  check('1.2', 'ol', ['1.2.2.1', '1.2.1.2']);
+  checkNone('li', [ '1.3.1' ]);
+  checkNone('p', [ '1.1.1', '1.3.1' ]);
+  check('1.2', 'ol', [ '1.2.2.1', '1.2.1.2' ]);
 });

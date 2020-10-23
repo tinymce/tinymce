@@ -6,7 +6,7 @@ import URI from 'tinymce/core/api/util/URI';
 import ImagetoolsPlugin from 'tinymce/plugins/imagetools/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 
-import ImageUtils from '../module/test/ImageUtils';
+import * as ImageUtils from '../module/test/ImageUtils';
 
 UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsPluginTest', (success, failure) => {
   const uploadHandlerState = ImageUtils.createStateContainer();
@@ -66,7 +66,7 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsPluginTest', (s
         sAssertUri(srcUrl)
       ]),
       Log.stepsAsStep('TBA', 'ImageTools: test rotate image', [
-        ImageUtils.sLoadImage(editor, srcUrl, {width: 200, height: 100}),
+        ImageUtils.sLoadImage(editor, srcUrl, { width: 200, height: 100 }),
         tinyApis.sSelect('img', []),
         ImageUtils.sExecCommand(editor, 'mceImageRotateRight'),
         ImageUtils.sWaitForBlobImage(editor),
@@ -80,6 +80,6 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsPluginTest', (s
     plugins: 'imagetools',
     automatic_uploads: false,
     images_upload_handler: uploadHandlerState.handler(srcUrl),
-    base_url: '/project/tinymce/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

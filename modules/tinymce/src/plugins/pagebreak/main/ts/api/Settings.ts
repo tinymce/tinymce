@@ -5,15 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-const getSeparatorHtml = function (editor) {
-  return editor.getParam('pagebreak_separator', '<!-- pagebreak -->');
-};
+import Editor from 'tinymce/core/api/Editor';
 
-const shouldSplitBlock = function (editor) {
-  return editor.getParam('pagebreak_split_block', false);
-};
+const getSeparatorHtml = (editor: Editor): string => editor.getParam('pagebreak_separator', '<!-- pagebreak -->');
 
-export default {
+const shouldSplitBlock = (editor: Editor): boolean => editor.getParam('pagebreak_split_block', false);
+
+export {
   getSeparatorHtml,
   shouldSplitBlock
 };

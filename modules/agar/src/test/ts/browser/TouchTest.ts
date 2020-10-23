@@ -1,33 +1,30 @@
 import { UnitTest } from '@ephox/bedrock-client';
-import { document } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { DomEvent, Element, Insert, Remove } from '@ephox/sugar';
+import { DomEvent, Insert, Remove, SugarElement } from '@ephox/sugar';
 import * as Assertions from 'ephox/agar/api/Assertions';
 import { Chain } from 'ephox/agar/api/Chain';
 import * as GeneralSteps from 'ephox/agar/api/GeneralSteps';
-import * as Touch from 'ephox/agar/api/Touch';
 import { Pipeline } from 'ephox/agar/api/Pipeline';
 import { Step } from 'ephox/agar/api/Step';
+import * as Touch from 'ephox/agar/api/Touch';
 import * as UiFinder from 'ephox/agar/api/UiFinder';
 
 UnitTest.asynctest('TouchTest', (success, failure) => {
-  const input = Element.fromTag('input');
-  const container = Element.fromTag('container');
+  const input = SugarElement.fromTag('input');
+  const container = SugarElement.fromTag('container');
 
   const platform = PlatformDetection.detect();
 
   // Add to the DOM so focus calls happen
-  Insert.append(Element.fromDom(document.body), container);
+  Insert.append(SugarElement.fromDom(document.body), container);
 
   let repository = [];
 
-  const handlers = Arr.bind(['touchstart', 'touchend', 'touchmove', 'focus'], (evt) => {
-    return [
-      DomEvent.bind(container, evt, () => repository.push('container.' + evt)),
-      DomEvent.bind(input, evt, () => repository.push('input.' + evt))
-    ];
-  });
+  const handlers = Arr.bind([ 'touchstart', 'touchend', 'touchmove', 'focus' ], (evt) => [
+    DomEvent.bind(container, evt, () => repository.push('container.' + evt)),
+    DomEvent.bind(input, evt, () => repository.push('input.' + evt))
+  ]);
 
   const clearRepository = Step.sync(() => repository = []);
   const assertRepository = (label, expected) => Step.sync(() => Assertions.assertEq(label, expected, repository));
@@ -38,10 +35,9 @@ UnitTest.asynctest('TouchTest', (success, failure) => {
     assertRepository(label, expected)
   ]);
 
-  const isUnfocusedFirefox = () => {
+  const isUnfocusedFirefox = () =>
     // Focus events are not fired until the window has focus: https://bugzilla.mozilla.org/show_bug.cgi?id=566671
-    return platform.browser.isFirefox() && !document.hasFocus();
-  };
+    platform.browser.isFirefox() && !document.hasFocus();
 
   Insert.append(container, input);
 
@@ -83,7 +79,7 @@ UnitTest.asynctest('TouchTest', (success, failure) => {
 
     runStep(
       'cTouchStart input',
-      ['input.touchstart', 'container.touchstart'],
+      [ 'input.touchstart', 'container.touchstart' ],
       Chain.asStep(container, [
         UiFinder.cFindIn('input'),
         Touch.cTouchStart
@@ -92,7 +88,7 @@ UnitTest.asynctest('TouchTest', (success, failure) => {
 
     runStep(
       'cTouchEnd input',
-      ['input.touchend', 'container.touchend'],
+      [ 'input.touchend', 'container.touchend' ],
       Chain.asStep(container, [
         UiFinder.cFindIn('input'),
         Touch.cTouchEnd
@@ -101,12 +97,12 @@ UnitTest.asynctest('TouchTest', (success, failure) => {
 
     runStep(
       'cTouchMove input',
-      ['input.touchmove', 'container.touchmove'],
+      [ 'input.touchmove', 'container.touchmove' ],
       Chain.asStep(container, [
         UiFinder.cFindIn('input'),
         Touch.cTouchMove
       ])
-    ),
+    )
 
   ], () => {
     Arr.each(handlers, (h) => { h.unbind(); });

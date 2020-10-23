@@ -1,7 +1,7 @@
+import { Unicode } from '@ephox/katamari';
 import Jsc from '@ephox/wrap-jsverify';
 
 import * as ArbNodes from './ArbNodes';
-import { Unicode } from '@ephox/katamari';
 
 const formatting = {
   type: 'composite',
@@ -22,14 +22,14 @@ const inline = {
   recursionDepth: 3,
   // Underline, strikethrough
   tags: {
-    'span-strikethrough': { weight: 1, styles: { 'text-decoration': 'line-through'} },
+    'span-strikethrough': { weight: 1, styles: { 'text-decoration': 'line-through' }},
     'span': { weight: 1 },
     'font': { weight: 0 },
     'em': { weight: 1 },
     'strong': { weight: 1 },
     'b': { weight: 1 },
     'i': { weight: 1 },
-    'span-underline': { weight: 1, styles: { 'text-decoration': 'underline' } }
+    'span-underline': { weight: 1, styles: { 'text-decoration': 'underline' }}
   },
   components: {
     anytext: { weight: 0.5 },

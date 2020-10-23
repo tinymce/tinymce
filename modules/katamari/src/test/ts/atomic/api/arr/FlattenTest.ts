@@ -1,6 +1,6 @@
-import * as Arr from 'ephox/katamari/api/Arr';
-import { UnitTest, assert, Assert } from '@ephox/bedrock-client';
+import { assert, Assert, UnitTest } from '@ephox/bedrock-client';
 import fc from 'fast-check';
+import * as Arr from 'ephox/katamari/api/Arr';
 
 UnitTest.test('Arr.flatten: unit tests', () => {
   const check = (expected: number[], input: number[][]) => {
@@ -8,9 +8,9 @@ UnitTest.test('Arr.flatten: unit tests', () => {
   };
 
   check([], []);
-  check([ 1 ], [ [ 1 ] ]);
-  check([ 1, 2 ], [ [ 1 ], [ 2 ] ]);
-  check([ 1, 2, 3, 4, 5 ], [ [ 1, 2 ], [], [ 3 ], [ 4, 5 ], [] ]);
+  check([ 1 ], [[ 1 ]]);
+  check([ 1, 2 ], [[ 1 ], [ 2 ]]);
+  check([ 1, 2, 3, 4, 5 ], [[ 1, 2 ], [], [ 3 ], [ 4, 5 ], []]);
 });
 
 UnitTest.test('Arr.flatten: consistent with chunking', () => {

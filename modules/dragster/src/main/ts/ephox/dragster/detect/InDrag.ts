@@ -1,37 +1,37 @@
-import { Option } from '@ephox/katamari';
-import { Event, Events, Bindable } from '@ephox/porkbun';
+import { Optional } from '@ephox/katamari';
+import { Bindable, Event, Events } from '@ephox/porkbun';
+import { EventArgs, SugarPosition } from '@ephox/sugar';
 import { DragMode } from '../api/DragApis';
-import { Position, EventArgs } from '@ephox/sugar';
 
 export interface InDragEvent {
-  info: () => Position;
+  readonly info: SugarPosition;
 }
 
 interface InDragEvents {
   registry: {
-    move: Bindable<InDragEvent>
+    move: Bindable<InDragEvent>;
   };
   trigger: {
-    move: (info: Position) => void;
+    move: (info: SugarPosition) => void;
   };
 }
 
 export default function () {
 
-  let previous = Option.none<Position>();
+  let previous = Optional.none<SugarPosition>();
 
   const reset = function () {
-    previous = Option.none();
+    previous = Optional.none();
   };
 
   // Return position delta between previous position and nu position,
   // or None if this is the first. Set the previous position to nu.
-  const update = function (mode: DragMode, nu: Position) {
+  const update = function (mode: DragMode, nu: SugarPosition) {
     const result = previous.map(function (old) {
       return mode.compare(old, nu);
     });
 
-    previous = Option.some(nu);
+    previous = Optional.some(nu);
     return result;
   };
 

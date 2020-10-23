@@ -52,6 +52,12 @@
     outline: 1px dashed black;
     position: absolute;
     z-index: 10000;
+
+    // Hide table borders when using table_column_resizing: 'resizetable'
+    &.mce-resizetable-columns th,
+    &.mce-resizetable-columns td {
+      border: 0;
+    }
   }
 
   .mce-resize-helper {

@@ -76,7 +76,7 @@ const bedrockBrowser = (tests, browserName, osName, bucket, buckets, auto) => {
     return {
       browser: {
         ...bedrockDefaults,
-        overallTimeout: 900000,
+        overallTimeout: 1200000,
         name: `${browserName}-${osName}`,
         browser: browserName,
         testfiles: testFolders(tests, auto),

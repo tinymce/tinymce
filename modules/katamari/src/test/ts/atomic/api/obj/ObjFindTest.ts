@@ -1,8 +1,8 @@
+import { Assert, UnitTest } from '@ephox/bedrock-client';
+import fc from 'fast-check';
 import * as Arr from 'ephox/katamari/api/Arr';
 import * as Fun from 'ephox/katamari/api/Fun';
 import * as Obj from 'ephox/katamari/api/Obj';
-import fc from 'fast-check';
-import { UnitTest, Assert } from '@ephox/bedrock-client';
 
 UnitTest.test('ObjFindTest', function () {
   const checkNone = function (input, pred) {
@@ -15,11 +15,11 @@ UnitTest.test('ObjFindTest', function () {
     Assert.eq('eq', expected, actual);
   };
 
-  checkNone({}, function (v, k) { return v > 0; });
-  checkObj(3, { test: 3 }, function (v, k) { return k === 'test'; });
-  checkNone({ test: 0 }, function (v, k) { return v > 0; });
-  checkObj(4, { blah: 4, test: 3 }, function (v, k) { return v > 0; });
-  checkNone({ blah: 4, test: 3 }, function (v, k) { return v === 12; });
+  checkNone({}, function (v, _k) { return v > 0; });
+  checkObj(3, { test: 3 }, function (_v, k) { return k === 'test'; });
+  checkNone({ test: 0 }, function (v, _k) { return v > 0; });
+  checkObj(4, { blah: 4, test: 3 }, function (v, _k) { return v > 0; });
+  checkNone({ blah: 4, test: 3 }, function (v, _k) { return v === 12; });
 
   const obj = { blah: 4, test: 3 };
   checkObj(4, obj, function (v, k, o) { return o === obj; });
@@ -51,7 +51,7 @@ UnitTest.test('If predicate is always false, then find is always none', () => {
   fc.assert(fc.property(
     fc.dictionary(fc.asciiString(), fc.json()),
     function (obj) {
-      const value = Obj.find(obj, Fun.constant(false));
+      const value = Obj.find(obj, Fun.never);
       return value.isNone();
     }
   ));
@@ -71,7 +71,7 @@ UnitTest.test('If predicate is always true, then value is always the some(first)
   fc.assert(fc.property(
     fc.dictionary(fc.asciiString(), fc.json()),
     function (obj) {
-      const value = Obj.find(obj, Fun.constant(true));
+      const value = Obj.find(obj, Fun.always);
       // No order is specified, so we cannot know what "first" is
       return Obj.keys(obj).length === 0 ? value.isNone() : true;
     }

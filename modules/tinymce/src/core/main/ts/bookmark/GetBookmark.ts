@@ -5,19 +5,18 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Text, Range, Node, Element } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
-import * as CaretBookmark from './CaretBookmark';
+import DOMUtils from '../api/dom/DOMUtils';
+import EditorSelection from '../api/dom/Selection';
+import Tools from '../api/util/Tools';
 import * as CaretContainer from '../caret/CaretContainer';
 import CaretPosition from '../caret/CaretPosition';
-import NodeType from '../dom/NodeType';
-import * as RangeNodes from '../selection/RangeNodes';
-import Zwsp from '../text/Zwsp';
-import Tools from '../api/util/Tools';
-import Selection from '../api/dom/Selection';
-import DOMUtils from '../api/dom/DOMUtils';
-import { PathBookmark, IndexBookmark, StringPathBookmark, RangeBookmark, IdBookmark, Bookmark } from './BookmarkTypes';
+import * as NodeType from '../dom/NodeType';
 import { rangeInsertNode } from '../selection/RangeInsertNode';
+import * as RangeNodes from '../selection/RangeNodes';
+import * as Zwsp from '../text/Zwsp';
+import { Bookmark, IdBookmark, IndexBookmark, PathBookmark, RangeBookmark, StringPathBookmark } from './BookmarkTypes';
+import * as CaretBookmark from './CaretBookmark';
 
 type TrimFn = (s: string) => string;
 
@@ -38,7 +37,7 @@ const getPoint = function (dom: DOMUtils, trim: TrimFn, normalized: boolean, rng
   let container = rng[start ? 'startContainer' : 'endContainer'];
   let offset = rng[start ? 'startOffset' : 'endOffset'];
   const point = [];
-  let  childNodes, after = 0;
+  let childNodes, after = 0;
   const root = dom.getRoot();
 
   if (NodeType.isText(container)) {
@@ -61,7 +60,7 @@ const getPoint = function (dom: DOMUtils, trim: TrimFn, normalized: boolean, rng
   return point;
 };
 
-const getLocation = function (trim: TrimFn, selection: Selection, normalized: boolean, rng: Range): PathBookmark {
+const getLocation = function (trim: TrimFn, selection: EditorSelection, normalized: boolean, rng: Range): PathBookmark {
   const dom = selection.dom, bookmark: any = {};
 
   bookmark.start = getPoint(dom, trim, normalized, rng, true);
@@ -146,7 +145,7 @@ const findAdjacentContentEditableFalseElm = function (rng: Range) {
   return findSibling(rng.startContainer, rng.startOffset) || findSibling(rng.endContainer, rng.endOffset);
 };
 
-const getOffsetBookmark = function (trim: TrimFn, normalized: boolean, selection: Selection): IndexBookmark | PathBookmark {
+const getOffsetBookmark = function (trim: TrimFn, normalized: boolean, selection: EditorSelection): IndexBookmark | PathBookmark {
   const element = selection.getNode();
   let name = element ? element.nodeName : null;
   const rng = selection.getRng();
@@ -164,7 +163,7 @@ const getOffsetBookmark = function (trim: TrimFn, normalized: boolean, selection
   return getLocation(trim, selection, normalized, rng);
 };
 
-const getCaretBookmark = function (selection: Selection): StringPathBookmark {
+const getCaretBookmark = function (selection: EditorSelection): StringPathBookmark {
   const rng = selection.getRng();
 
   return {
@@ -173,16 +172,16 @@ const getCaretBookmark = function (selection: Selection): StringPathBookmark {
   };
 };
 
-const getRangeBookmark = function (selection: Selection): RangeBookmark {
+const getRangeBookmark = function (selection: EditorSelection): RangeBookmark {
   return { rng: selection.getRng() };
 };
 
 const createBookmarkSpan = (dom: DOMUtils, id: string, filled: boolean) => {
-  const args = { 'data-mce-type': 'bookmark', 'id': id, 'style': 'overflow:hidden;line-height:0px' };
+  const args = { 'data-mce-type': 'bookmark', id, 'style': 'overflow:hidden;line-height:0px' };
   return filled ? dom.create('span', args, '&#xFEFF;') : dom.create('span', args);
 };
 
-const getPersistentBookmark = function (selection: Selection, filled: boolean): IdBookmark | IndexBookmark {
+const getPersistentBookmark = function (selection: EditorSelection, filled: boolean): IdBookmark | IndexBookmark {
   const dom = selection.dom;
   let rng = selection.getRng();
   const id = dom.uniqueId();
@@ -209,12 +208,12 @@ const getPersistentBookmark = function (selection: Selection, filled: boolean): 
   const startBookmarkNode = createBookmarkSpan(dom, id + '_start', filled);
   rangeInsertNode(dom, rng, startBookmarkNode);
 
-  selection.moveToBookmark({ id, keep: 1 });
+  selection.moveToBookmark({ id, keep: true });
 
   return { id };
 };
 
-const getBookmark = function (selection: Selection, type: number, normalized: boolean): Bookmark {
+const getBookmark = function (selection: EditorSelection, type: number, normalized: boolean): Bookmark {
   if (type === 2) {
     return getOffsetBookmark(Zwsp.trim, normalized, selection);
   } else if (type === 3) {
@@ -226,8 +225,10 @@ const getBookmark = function (selection: Selection, type: number, normalized: bo
   }
 };
 
-export default {
+const getUndoBookmark = Fun.curry(getOffsetBookmark, Fun.identity, true) as (selection: EditorSelection) => IndexBookmark | PathBookmark;
+
+export {
   getBookmark,
-  getUndoBookmark: Fun.curry(getOffsetBookmark, Fun.identity, true) as (selection: Selection) => IndexBookmark | PathBookmark,
+  getUndoBookmark,
   getPersistentBookmark
 };

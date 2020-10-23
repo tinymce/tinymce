@@ -1,1 +1,5 @@
-* @spocke @jhaines @TheSpyder @metricjs @lnewson @SimonFc @ltrouton @wonderbugtiny
+* @spocke @metricjs @lnewson @ltrouton @HAFRMO @ashfordneil @SimonFc
+
+# Oxide changes should include the design team as well
+/modules/oxide/ @lostkeys @spocke @metricjs @lnewson @ltrouton @HAFRMO @ashfordneil @SimonFc
+/modules/oxide-icons-default/ @lostkeys @spocke @metricjs @lnewson @ltrouton @HAFRMO @ashfordneil @SimonFc

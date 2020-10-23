@@ -5,35 +5,38 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { document, window } from '@ephox/dom-globals';
-import { Attr, Element, Insert } from '@ephox/sugar';
+import { Obj, Type } from '@ephox/katamari';
+import { Attribute, Insert, Remove, SugarElement, SugarShadowDom } from '@ephox/sugar';
 import Annotator from '../api/Annotator';
 import DOMUtils from '../api/dom/DOMUtils';
-import Selection from '../api/dom/Selection';
-import DomSerializer from '../api/dom/Serializer';
+import EditorSelection from '../api/dom/Selection';
+import DomSerializer, { DomSerializerSettings } from '../api/dom/Serializer';
+import { StyleSheetLoader } from '../api/dom/StyleSheetLoader';
 import Editor from '../api/Editor';
 import EditorUpload from '../api/EditorUpload';
 import Env from '../api/Env';
 import * as Events from '../api/Events';
 import Formatter from '../api/Formatter';
-import DomParser from '../api/html/DomParser';
-import Node from '../api/html/Node';
+import DomParser, { DomParserSettings } from '../api/html/DomParser';
+import AstNode from '../api/html/Node';
 import Schema from '../api/html/Schema';
-import Settings from '../api/Settings';
+import * as Settings from '../api/Settings';
 import UndoManager from '../api/UndoManager';
 import Delay from '../api/util/Delay';
 import Tools from '../api/util/Tools';
-import CaretFinder from '../caret/CaretFinder';
+import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import * as Placeholder from '../content/Placeholder';
-import NodeType from '../dom/NodeType';
-import TouchEvents from '../events/TouchEvents';
-import ForceBlocks from '../ForceBlocks';
-import KeyboardOverrides from '../keyboard/KeyboardOverrides';
+import * as DeleteCommands from '../delete/DeleteCommands';
+import * as NodeType from '../dom/NodeType';
+import * as TouchEvents from '../events/TouchEvents';
+import * as ForceBlocks from '../ForceBlocks';
+import * as KeyboardOverrides from '../keyboard/KeyboardOverrides';
 import { NodeChange } from '../NodeChange';
+import * as Rtc from '../Rtc';
 import * as DetailsElement from '../selection/DetailsElement';
 import * as MultiClickSelection from '../selection/MultiClickSelection';
-import SelectionBookmark from '../selection/SelectionBookmark';
+import * as SelectionBookmark from '../selection/SelectionBookmark';
 import { hasAnyRanges } from '../selection/SelectionUtils';
 import SelectionOverrides from '../SelectionOverrides';
 import Quirks from '../util/Quirks';
@@ -42,20 +45,101 @@ declare const escape: any;
 
 const DOM = DOMUtils.DOM;
 
-const appendStyle = function (editor: Editor, text: string) {
-  const head = Element.fromDom(editor.getDoc().head);
-  const tag = Element.fromTag('style');
-  Attr.set(tag, 'type', 'text/css');
-  Insert.append(tag, Element.fromText(text));
-  Insert.append(head, tag);
+const appendStyle = (editor: Editor, text: string) => {
+  const body = SugarElement.fromDom(editor.getBody());
+  const container = SugarShadowDom.getStyleContainer(SugarShadowDom.getRootNode(body));
+
+  const style = SugarElement.fromTag('style');
+  Attribute.set(style, 'type', 'text/css');
+  Insert.append(style, SugarElement.fromText(text));
+  Insert.append(container, style);
+
+  editor.on('remove', () => {
+    Remove.remove(style);
+  });
+};
+
+const getRootName = (editor: Editor): string => editor.inline ? editor.getElement().nodeName.toLowerCase() : undefined;
+
+const removeUndefined = <T>(obj: T): T => Obj.filter(obj as Record<string, unknown>, (v) => Type.isUndefined(v) === false) as T;
+
+const mkParserSettings = (editor: Editor): DomParserSettings => {
+  const settings = editor.settings;
+  const blobCache = editor.editorUpload.blobCache;
+
+  return removeUndefined<DomParserSettings>({
+    allow_conditional_comments: settings.allow_conditional_comments,
+    allow_html_data_urls: settings.allow_html_data_urls,
+    allow_html_in_named_anchor: settings.allow_html_in_named_anchor,
+    allow_script_urls: settings.allow_script_urls,
+    allow_unsafe_link_target: settings.allow_unsafe_link_target,
+    convert_fonts_to_spans: settings.convert_fonts_to_spans,
+    fix_list_elements: settings.fix_list_elements,
+    font_size_legacy_values: settings.font_size_legacy_values,
+    forced_root_block: settings.forced_root_block,
+    forced_root_block_attrs: settings.forced_root_block_attrs,
+    padd_empty_with_br: settings.padd_empty_with_br,
+    preserve_cdata: settings.preserve_cdata,
+    remove_trailing_brs: settings.remove_trailing_brs,
+    inline_styles: settings.inline_styles,
+    root_name: getRootName(editor),
+    validate: true,
+    blob_cache: blobCache,
+
+    // Deprecated
+    images_dataimg_filter: settings.images_dataimg_filter
+  });
+};
+
+const mkSerializerSettings = (editor: Editor): DomSerializerSettings => {
+  const settings = editor.settings;
+
+  return {
+    ...mkParserSettings(editor),
+    ...removeUndefined<DomSerializerSettings>({
+      // SerializerSettings
+      url_converter: settings.url_converter,
+      url_converter_scope: settings.url_converter_scope,
+
+      // Writer settings
+      element_format: settings.element_format,
+      entities: settings.entities,
+      entity_encoding: settings.entity_encoding,
+      indent: settings.indent,
+      indent_after: settings.indent_after,
+      indent_before: settings.indent_before,
+
+      // Schema settings
+      block_elements: settings.block_elements,
+      boolean_attributes: settings.boolean_attributes,
+      custom_elements: settings.custom_elements,
+      extended_valid_elements: settings.extended_valid_elements,
+      invalid_elements: settings.invalid_elements,
+      invalid_styles: settings.invalid_styles,
+      move_caret_before_on_enter_elements: settings.move_caret_before_on_enter_elements,
+      non_empty_elements: settings.non_empty_elements,
+      schema: settings.schema,
+      self_closing_elements: settings.self_closing_elements,
+      short_ended_elements: settings.short_ended_elements,
+      special: settings.special,
+      text_block_elements: settings.text_block_elements,
+      text_inline_elements: settings.text_inline_elements,
+      valid_children: settings.valid_children,
+      valid_classes: settings.valid_classes,
+      valid_elements: settings.valid_elements,
+      valid_styles: settings.valid_styles,
+      verify_html: settings.verify_html,
+      whitespace_elements: settings.whitespace_elements
+    })
+  };
 };
 
 const createParser = function (editor: Editor): DomParser {
-  const parser = DomParser(editor.settings, editor.schema);
+  const parser = DomParser(mkParserSettings(editor), editor.schema);
 
   // Convert src and href into data-mce-src, data-mce-href and data-mce-style
   parser.addAttributeFilter('src,href,style,tabindex', function (nodes, name) {
-    let i = nodes.length, node: Node, value: string;
+    let i = nodes.length, node: AstNode, value: string;
     const dom = editor.dom;
     const internalName = 'data-mce-' + name;
 
@@ -90,12 +174,12 @@ const createParser = function (editor: Editor): DomParser {
   });
 
   // Keep scripts from executing
-  parser.addNodeFilter('script', function (nodes: Node[]) {
-    let i = nodes.length, node, type;
+  parser.addNodeFilter('script', function (nodes: AstNode[]) {
+    let i = nodes.length;
 
     while (i--) {
-      node = nodes[i];
-      type = node.attr('type') || 'no/type';
+      const node = nodes[i];
+      const type = node.attr('type') || 'no/type';
       if (type.indexOf('mce-') !== 0) {
         node.attr('type', 'mce-' + type);
       }
@@ -103,11 +187,11 @@ const createParser = function (editor: Editor): DomParser {
   });
 
   if (editor.settings.preserve_cdata) {
-    parser.addNodeFilter('#cdata', function (nodes: Node[]) {
-      let i = nodes.length, node;
+    parser.addNodeFilter('#cdata', function (nodes: AstNode[]) {
+      let i = nodes.length;
 
       while (i--) {
-        node = nodes[i];
+        const node = nodes[i];
         node.type = 8;
         node.name = '#comment';
         node.value = '[CDATA[' + editor.dom.encode(node.value) + ']]';
@@ -115,15 +199,15 @@ const createParser = function (editor: Editor): DomParser {
     });
   }
 
-  parser.addNodeFilter('p,h1,h2,h3,h4,h5,h6,div', function (nodes: Node[]) {
-    let i = nodes.length, node;
+  parser.addNodeFilter('p,h1,h2,h3,h4,h5,h6,div', function (nodes: AstNode[]) {
+    let i = nodes.length;
     const nonEmptyElements = editor.schema.getNonEmptyElements();
 
     while (i--) {
-      node = nodes[i];
+      const node = nodes[i];
 
       if (node.isEmpty(nonEmptyElements) && node.getAll('br').length === 0) {
-        node.append(new Node('br', 1)).shortEnded = true;
+        node.append(new AstNode('br', 1)).shortEnded = true;
       }
     }
   });
@@ -181,96 +265,23 @@ const initEditor = function (editor: Editor) {
   autoFocus(editor);
 };
 
-const getStyleSheetLoader = function (editor: Editor) {
-  return editor.inline ? DOM.styleSheetLoader : editor.dom.styleSheetLoader;
+const getStyleSheetLoader = (editor: Editor): StyleSheetLoader =>
+  editor.inline ? editor.ui.styleSheetLoader : editor.dom.styleSheetLoader;
+
+const loadContentCss = (editor: Editor, css: string[]) => {
+  const styleSheetLoader = getStyleSheetLoader(editor);
+
+  const loaded = () => {
+    editor.on('remove', () => styleSheetLoader.unloadAll(css));
+    initEditor(editor);
+  };
+
+  // Load all stylesheets
+  styleSheetLoader.loadAll(css, loaded, loaded);
 };
 
-const initContentBody = function (editor: Editor, skipWrite?: boolean) {
-  const settings = editor.settings;
-  const targetElm = editor.getElement();
-  let doc = editor.getDoc(), body, contentCssText;
-
-  // Restore visibility on target element
-  if (!settings.inline) {
-    editor.getElement().style.visibility = editor.orgVisibility;
-  }
-
-  // Setup iframe body
-  if (!skipWrite && !editor.inline) {
-    doc.open();
-    doc.write(editor.iframeHTML);
-    doc.close();
-  }
-
-  if (editor.inline) {
-    editor.on('remove', function () {
-      const bodyEl = this.getBody();
-
-      DOM.removeClass(bodyEl, 'mce-content-body');
-      DOM.removeClass(bodyEl, 'mce-edit-focus');
-      DOM.setAttrib(bodyEl, 'contentEditable', null);
-    });
-
-    DOM.addClass(targetElm, 'mce-content-body');
-    editor.contentDocument = doc = document;
-    editor.contentWindow = window;
-    editor.bodyElement = targetElm;
-    editor.contentAreaContainer = targetElm;
-
-    // TODO: Fix this
-    settings.root_name = targetElm.nodeName.toLowerCase();
-  }
-
-  // It will not steal focus while setting contentEditable
-  body = editor.getBody();
-  body.disabled = true;
-  editor.readonly = !!settings.readonly;
-
-  if (!editor.readonly) {
-    if (editor.inline && DOM.getStyle(body, 'position', true) === 'static') {
-      body.style.position = 'relative';
-    }
-
-    body.contentEditable = editor.getParam('content_editable_state', true);
-  }
-
-  body.disabled = false;
-
-  editor.editorUpload = EditorUpload(editor);
-  editor.schema = Schema(settings);
-  editor.dom = DOMUtils(doc, {
-    keep_values: true,
-    url_converter: editor.convertURL,
-    url_converter_scope: editor,
-    hex_colors: settings.force_hex_style_colors,
-    update_styles: true,
-    root_element: editor.inline ? editor.getBody() : null,
-    collect: () => editor.inline,
-    schema: editor.schema,
-    contentCssCors: Settings.shouldUseContentCssCors(editor),
-    referrerPolicy: Settings.getReferrerPolicy(editor),
-    onSetAttrib (e) {
-      editor.fire('SetAttrib', e);
-    }
-  });
-
-  editor.parser = createParser(editor);
-  editor.serializer = DomSerializer(settings, editor);
-  editor.selection = Selection(editor.dom, editor.getWin(), editor.serializer, editor);
-  editor.annotator = Annotator(editor);
-  editor.formatter = Formatter(editor);
-  editor.undoManager = UndoManager(editor);
-  editor._nodeChangeDispatcher = new NodeChange(editor);
-  editor._selectionOverrides = SelectionOverrides(editor);
-
-  TouchEvents.setup(editor);
-  DetailsElement.setup(editor);
-  MultiClickSelection.setup(editor);
-  KeyboardOverrides.setup(editor);
-  ForceBlocks.setup(editor);
-  Placeholder.setup(editor);
-
-  Events.firePreInit(editor);
+const preInit = (editor: Editor, rtcMode: boolean) => {
+  const settings = editor.settings, doc = editor.getDoc(), body = editor.getBody();
 
   if (!settings.browser_spellcheck && !settings.gecko_spellcheck) {
     doc.body.spellcheck = false; // Gecko
@@ -300,8 +311,12 @@ const initContentBody = function (editor: Editor, skipWrite?: boolean) {
     editor.addVisual(editor.getBody());
   });
 
-  editor.load({ initial: true, format: 'html' });
-  editor.startContent = editor.getContent({ format: 'raw' }) as string;
+  // When connected to a server the value on the server should get priority
+  if (rtcMode === false) {
+    editor.load({ initial: true, format: 'html' });
+  }
+
+  editor.startContent = editor.getContent({ format: 'raw' });
 
   editor.on('compositionstart compositionend', function (e) {
     editor.composing = e.type === 'compositionstart';
@@ -309,7 +324,7 @@ const initContentBody = function (editor: Editor, skipWrite?: boolean) {
 
   // Add editor specific CSS styles
   if (editor.contentStyles.length > 0) {
-    contentCssText = '';
+    let contentCssText = '';
 
     Tools.each(editor.contentStyles, function (style) {
       contentCssText += style + '\r\n';
@@ -318,15 +333,7 @@ const initContentBody = function (editor: Editor, skipWrite?: boolean) {
     editor.dom.addStyle(contentCssText);
   }
 
-  getStyleSheetLoader(editor).loadAll(
-    editor.contentCSS,
-    function (_) {
-      initEditor(editor);
-    },
-    function (urls) {
-      initEditor(editor);
-    }
-  );
+  loadContentCss(editor, editor.contentCSS);
 
   // Append specified content CSS last
   if (settings.content_style) {
@@ -334,6 +341,100 @@ const initContentBody = function (editor: Editor, skipWrite?: boolean) {
   }
 };
 
-export default {
+const initContentBody = function (editor: Editor, skipWrite?: boolean) {
+  const settings = editor.settings;
+  const targetElm = editor.getElement();
+  let doc = editor.getDoc();
+
+  // Restore visibility on target element
+  if (!settings.inline) {
+    editor.getElement().style.visibility = editor.orgVisibility;
+  }
+
+  // Setup iframe body
+  if (!skipWrite && !editor.inline) {
+    doc.open();
+    doc.write(editor.iframeHTML);
+    doc.close();
+  }
+
+  if (editor.inline) {
+    DOM.addClass(targetElm, 'mce-content-body');
+    editor.contentDocument = doc = document;
+    editor.contentWindow = window;
+    editor.bodyElement = targetElm;
+    editor.contentAreaContainer = targetElm;
+  }
+
+  // It will not steal focus while setting contentEditable
+  const body = editor.getBody();
+  // disabled isn't valid on all body elements, so need to cast here
+  // TODO: See if we actually need to disable/re-enable here
+  (body as any).disabled = true;
+  editor.readonly = !!settings.readonly;
+
+  if (!editor.readonly) {
+    if (editor.inline && DOM.getStyle(body, 'position', true) === 'static') {
+      body.style.position = 'relative';
+    }
+
+    body.contentEditable = editor.getParam('content_editable_state', true);
+  }
+
+  (body as any).disabled = false;
+
+  editor.editorUpload = EditorUpload(editor);
+  editor.schema = Schema(settings);
+  editor.dom = DOMUtils(doc, {
+    keep_values: true,
+    url_converter: editor.convertURL,
+    url_converter_scope: editor,
+    hex_colors: settings.force_hex_style_colors,
+    update_styles: true,
+    root_element: editor.inline ? editor.getBody() : null,
+    collect: () => editor.inline,
+    schema: editor.schema,
+    contentCssCors: Settings.shouldUseContentCssCors(editor),
+    referrerPolicy: Settings.getReferrerPolicy(editor),
+    onSetAttrib(e) {
+      editor.fire('SetAttrib', e);
+    }
+  });
+
+  editor.parser = createParser(editor);
+  editor.serializer = DomSerializer(mkSerializerSettings(editor), editor);
+  editor.selection = EditorSelection(editor.dom, editor.getWin(), editor.serializer, editor);
+  editor.annotator = Annotator(editor);
+  editor.formatter = Formatter(editor);
+  editor.undoManager = UndoManager(editor);
+  editor._nodeChangeDispatcher = new NodeChange(editor);
+  editor._selectionOverrides = SelectionOverrides(editor);
+
+  TouchEvents.setup(editor);
+  DetailsElement.setup(editor);
+
+  if (!Rtc.isRtc(editor)) {
+    MultiClickSelection.setup(editor);
+  }
+
+  const caret = KeyboardOverrides.setup(editor);
+  DeleteCommands.setup(editor, caret);
+  ForceBlocks.setup(editor);
+  Placeholder.setup(editor);
+
+  Events.firePreInit(editor);
+
+  Rtc.setup(editor).fold(() => {
+    preInit(editor, false);
+  }, (loadingRtc) => {
+    editor.setProgressState(true);
+    loadingRtc.then((rtcMode) => {
+      editor.setProgressState(false);
+      preInit(editor, rtcMode);
+    });
+  });
+};
+
+export {
   initContentBody
 };

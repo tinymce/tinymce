@@ -1,12 +1,12 @@
 import { Logger } from '@ephox/agar';
 import { Assert, assert, UnitTest } from '@ephox/bedrock-client';
 import { Fun, Result } from '@ephox/katamari';
+import { KAssert } from '@ephox/katamari-assertions';
 import * as FieldPresence from 'ephox/boulder/api/FieldPresence';
 import * as FieldSchema from 'ephox/boulder/api/FieldSchema';
+import { Processor } from 'ephox/boulder/api/Main';
 import * as Objects from 'ephox/boulder/api/Objects';
 import * as ValueSchema from 'ephox/boulder/api/ValueSchema';
-import { Processor } from 'ephox/boulder/api/Main';
-import { KAssert } from '@ephox/katamari-assertions';
 
 UnitTest.test('ValueSchemaRawTest', function () {
   const checkErr = function (label: string, expectedPart: string, input: any, processor: Processor) {
@@ -118,14 +118,14 @@ UnitTest.test('ValueSchemaRawTest', function () {
 
   check('strictArrayOf test',
     { values: [ 'a', 'b' ] },
-    ValueSchema.objOf([FieldSchema.strictArrayOf('values', ValueSchema.string)])
+    ValueSchema.objOf([ FieldSchema.strictArrayOf('values', ValueSchema.string) ])
   );
 
   checkErr(
     'strictArrayOf should fail since types are not the same',
     'string but got: number',
     { values: [ 'a', 3 ] },
-    ValueSchema.objOf([FieldSchema.strictArrayOf('values', ValueSchema.string)])
+    ValueSchema.objOf([ FieldSchema.strictArrayOf('values', ValueSchema.string) ])
   );
 
   checkErr('test.6 should fail because fields do not both start with f',
@@ -227,7 +227,7 @@ UnitTest.test('ValueSchemaRawTest', function () {
   Logger.sync('defaulted option(fallback), value not supplied', function () {
     const v = ValueSchema.asRawOrDie('test.option', ValueSchema.objOf([
       FieldSchema.field('alpha', 'alpha', FieldPresence.asDefaultedOption('fallback'), ValueSchema.anyValue())
-    ]), {  });
+    ]), { });
     KAssert.eqNone('fallback.opt: no alpha should be none', v.alpha);
   });
 
@@ -394,16 +394,16 @@ UnitTest.test('ValueSchemaRawTest', function () {
 
   Logger.sync('Checking basic types', function () {
     checkIs('Checking valid number', 42, 42, ValueSchema.number);
-    checkErr('Checking invalid number', `Expected type: number but got: string`, 'a', ValueSchema.number);
+    checkErr('Checking invalid number', 'Expected type: number but got: string', 'a', ValueSchema.number);
 
     checkIs('Checking valid string', 'a', 'a', ValueSchema.string);
-    checkErr('Checking invalid string', `Expected type: string but got: number`, 42, ValueSchema.string);
+    checkErr('Checking invalid string', 'Expected type: string but got: number', 42, ValueSchema.string);
 
     checkIs('Checking valid boolean', true, true, ValueSchema.boolean);
-    checkErr('Checking invalid boolean', `Expected type: boolean but got: string`, 'a', ValueSchema.boolean);
+    checkErr('Checking invalid boolean', 'Expected type: boolean but got: string', 'a', ValueSchema.boolean);
 
     checkIs('Checking valid function', Fun.noop, Fun.noop, ValueSchema.func);
-    checkErr('Checking invalid function', `Expected type: function but got: string`, 'a', ValueSchema.func);
+    checkErr('Checking invalid function', 'Expected type: function but got: string', 'a', ValueSchema.func);
   });
 
   Logger.sync('asRaw with type', function () {

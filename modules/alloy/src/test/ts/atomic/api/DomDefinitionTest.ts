@@ -1,8 +1,9 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { Element } from '@ephox/sugar';
-import * as DomModification from 'ephox/alloy/dom/DomModification';
-import { Arr, Obj, Option } from '@ephox/katamari';
+import { Arr, Obj, Optional } from '@ephox/katamari';
+import { SugarElement } from '@ephox/sugar';
 import Jsc from '@ephox/wrap-jsverify';
+
+import * as DomModification from 'ephox/alloy/dom/DomModification';
 
 interface ModifiationType {
   classes: string[];
@@ -16,13 +17,12 @@ interface DefinitionType {
   classes: string[];
   attributes: Record<string, string>;
   styles: Record<string, string>;
-  value: Option<string>;
-  innerHtml: Option<string>;
-  domChildren: Element[];
+  value: Optional<string>;
+  innerHtml: Optional<string>;
+  domChildren: SugarElement[];
 }
 
 UnitTest.test('DomDefinitionTest', () => {
-  /* global assert */
   // TODO: Add property based tests.
 
   // Since making DomDefinition just the value after defaulting, this
@@ -30,16 +30,12 @@ UnitTest.test('DomDefinitionTest', () => {
   // properties
 
   const arbOptionOf = <T>(arb: any) => Jsc.tuple([ Jsc.bool, arb ]).smap(
-    (arr: [boolean, string]) => {
-      return arr[0] ? Option.some(arr[1]) : Option.none();
-    },
-    (opt: Option<string>) => {
-      return opt.fold(
-        () => [ false, '' ],
-        (v) => [ true, v ]
-      );
-    },
-    (opt: Option<string>) => opt.fold(
+    (arr: [boolean, string]) => arr[0] ? Optional.some(arr[1]) : Optional.none(),
+    (opt: Optional<string>) => opt.fold(
+      () => [ false, '' ],
+      (v) => [ true, v ]
+    ),
+    (opt: Optional<string>) => opt.fold(
       () => 'None',
       (v) => 'Some(' + v + ')'
     )
@@ -54,26 +50,20 @@ UnitTest.test('DomDefinitionTest', () => {
     arbOptionOf(Jsc.string),
     arbOptionOf(Jsc.string)
   ]).smap(
-    (arr: [string, string, string[], Record<string, string>, Record<string, string>, Option<string>, Option<string>]) => {
-      return {
-        uid: arr[0],
-        tag: arr[1],
-        classes: arr[2],
-        attributes: arr[3],
-        styles: arr[4],
-        value: arr[5],
-        innerHtml: arr[6],
-        domChildren: [ ] as Element[]
-      };
-    },
-    (defn: DefinitionType) => {
-      return [ defn.uid, defn.tag, defn.classes, defn.attributes, defn.styles, defn.value, defn.innerHtml, defn.domChildren ];
-    },
-    (defn: DefinitionType) => {
-      return JSON.stringify({
-        'Definition arbitrary': defn
-      }, null, 2);
-    }
+    (arr: [string, string, string[], Record<string, string>, Record<string, string>, Optional<string>, Optional<string>]) => ({
+      uid: arr[0],
+      tag: arr[1],
+      classes: arr[2],
+      attributes: arr[3],
+      styles: arr[4],
+      value: arr[5],
+      innerHtml: arr[6],
+      domChildren: [ ] as SugarElement[]
+    }),
+    (defn: DefinitionType) => [ defn.uid, defn.tag, defn.classes, defn.attributes, defn.styles, defn.value, defn.innerHtml, defn.domChildren ],
+    (defn: DefinitionType) => JSON.stringify({
+      'Definition arbitrary': defn
+    }, null, 2)
   );
 
   const arbModification = Jsc.tuple([
@@ -81,21 +71,15 @@ UnitTest.test('DomDefinitionTest', () => {
     Jsc.dict(Jsc.nestring),
     Jsc.dict(Jsc.nestring)
   ]).smap(
-    (arr: [ string[], Record<string, string>, Record<string, string>]) => {
-      return {
-        classes: arr[0],
-        attributes: arr[1],
-        styles: arr[2],
-      };
-    },
-    (mod: ModifiationType) => {
-      return [ mod.classes, mod.attributes, mod.styles ];
-    },
-    (mod: ModifiationType) => {
-      return JSON.stringify({
-        'Modification arbitrary': mod
-      }, null, 2);
-    }
+    (arr: [ string[], Record<string, string>, Record<string, string>]) => ({
+      classes: arr[0],
+      attributes: arr[1],
+      styles: arr[2]
+    }),
+    (mod: ModifiationType) => [ mod.classes, mod.attributes, mod.styles ],
+    (mod: ModifiationType) => JSON.stringify({
+      'Modification arbitrary': mod
+    }, null, 2)
   );
 
   Jsc.syncProperty(

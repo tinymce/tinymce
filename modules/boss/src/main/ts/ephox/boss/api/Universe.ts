@@ -1,10 +1,10 @@
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 
 export interface Universe<E, D> {
   up: () => {
-    selector: (scope: E, selector: string, isRoot?: (e: E) => boolean) => Option<E>;
-    closest: (scope: E, selector: string, isRoot?: (e: E) => boolean) => Option<E>;
-    predicate: (scope: E, predicate: (e: E) => boolean, isRoot?: (e: E) => boolean) => Option<E>;
+    selector: (scope: E, selector: string, isRoot?: (e: E) => boolean) => Optional<E>;
+    closest: (scope: E, selector: string, isRoot?: (e: E) => boolean) => Optional<E>;
+    predicate: (scope: E, predicate: (e: E) => boolean, isRoot?: (e: E) => boolean) => Optional<E>;
     all: (element: E, isRoot?: (e: E) => boolean) => E[];
   };
   down: () => {
@@ -12,13 +12,13 @@ export interface Universe<E, D> {
     predicate: (scope: E, predicate: (e: E) => boolean) => E[];
   };
   styles: () => {
-    get: (element: E, property: string) => string;
-    getRaw: (element: E, property: string) => Option<string>;
+    get: (element: E, property: string) => string | undefined;
+    getRaw: (element: E, property: string) => Optional<string>;
     set: (element: E, property: string, value: string) => void;
     remove: (element: E, property: string) => void;
   };
   attrs: () => {
-    get: (element: E, key: string) => string;
+    get: (element: E, key: string) => string | undefined;
     set: (element: E, key: string, value: string | number | boolean) => void;
     remove: (element: E, key: string) => void;
     copyTo: (source: E, destination: E) => void;
@@ -43,13 +43,13 @@ export interface Universe<E, D> {
   };
   query: () => {
     comparePosition: (element: E, other: E) => number;
-    prevSibling: (element: E) => Option<E>;
-    nextSibling: (element: E) => Option<E>;
+    prevSibling: (element: E) => Optional<E>;
+    nextSibling: (element: E) => Optional<E>;
   };
   property: () => {
     children: (element: E) => E[];
     name: (element: E) => string;
-    parent: (element: E) => Option<E>;
+    parent: (element: E) => Optional<E>;
     document: (element: E) => D;
     isText: (element: E) => boolean;
     isComment: (element: E) => boolean;

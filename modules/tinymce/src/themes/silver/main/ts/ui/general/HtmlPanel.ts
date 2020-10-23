@@ -5,11 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Container as AlloyContainer, SketchSpec, Behaviour, Tabstopping, Focusing } from '@ephox/alloy';
-import { Types } from '@ephox/bridge';
-import { Omit } from '../Omit';
+import { Behaviour, Container as AlloyContainer, Focusing, SketchSpec, Tabstopping } from '@ephox/alloy';
+import { Dialog } from '@ephox/bridge';
 
-type HtmlPanelSpec = Omit<Types.HtmlPanel.HtmlPanel, 'type'>;
+type HtmlPanelSpec = Omit<Dialog.HtmlPanel, 'type'>;
 
 export const renderHtmlPanel = (spec: HtmlPanelSpec): SketchSpec => {
   if (spec.presets === 'presentation') {

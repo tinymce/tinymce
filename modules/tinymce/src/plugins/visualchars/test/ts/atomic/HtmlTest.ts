@@ -1,6 +1,6 @@
-import Html from 'tinymce/plugins/visualchars/core/Html';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Unicode } from '@ephox/katamari';
+import * as Html from 'tinymce/plugins/visualchars/core/Html';
 
 UnitTest.test('atomic.tinymce.plugins.visualchars.HtmlTest', function () {
   Assert.eq(

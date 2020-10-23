@@ -1,6 +1,6 @@
-import * as Arr from 'ephox/katamari/api/Arr';
-import { UnitTest, Assert } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import fc from 'fast-check';
+import * as Arr from 'ephox/katamari/api/Arr';
 
 UnitTest.test('Arr.groupBy: unit tests', () => {
   const check = (input: unknown[], expected) => {
@@ -10,8 +10,8 @@ UnitTest.test('Arr.groupBy: unit tests', () => {
   };
 
   check([], []);
-  check([ true ], [ [ true ] ]);
-  check([ false ], [ [ false ] ]);
+  check([ true ], [[ true ]]);
+  check([ false ], [[ false ]]);
   check(
     [ true, false, false, true ],
     [
@@ -25,9 +25,9 @@ UnitTest.test('Arr.groupBy: unit tests', () => {
     ]
   );
   check(
-    [ {}, 1, 2, undefined, undefined, undefined, 1, 2 ],
+    [{}, 1, 2, undefined, undefined, undefined, 1, 2 ],
     [
-      [ {} ], [ 1 ], [ 2 ], [ undefined, undefined, undefined ], [ 1 ], [ 2 ]
+      [{}], [ 1 ], [ 2 ], [ undefined, undefined, undefined ], [ 1 ], [ 2 ]
     ]
   );
 

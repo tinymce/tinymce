@@ -1,5 +1,5 @@
-import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
-import { Fun, Option } from '@ephox/katamari';
+import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
+import { Fun, Optional } from '@ephox/katamari';
 
 import { Coupling } from '../../api/behaviour/Coupling';
 import { Focusing } from '../../api/behaviour/Focusing';
@@ -18,7 +18,7 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.strict('fetch'),
   Fields.onHandler('onOpen'),
   Fields.onKeyboardHandler('onExecute'),
-  FieldSchema.defaulted('getHotspot', Option.some),
+  FieldSchema.defaulted('getHotspot', Optional.some),
   FieldSchema.defaulted('getAnchorOverrides', Fun.constant({ })),
   AnchorLayouts.schema(),
   SketchBehaviours.field('dropdownBehaviours', [ Toggling, Coupling, Keying, Focusing ]),
@@ -38,7 +38,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
       Fields.tieredMenuMarkers()
     ],
     name: 'menu',
-    defaults (detail) {
+    defaults(detail) {
       return {
         onExecute: detail.onExecute
       };

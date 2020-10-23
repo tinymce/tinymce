@@ -1,12 +1,12 @@
-import { LegacyUnit } from '@ephox/mcagar';
 import { Pipeline } from '@ephox/agar';
-import Env from 'tinymce/core/api/Env';
-import { CaretWalker } from 'tinymce/core/caret/CaretWalker';
-import CaretPosition from 'tinymce/core/caret/CaretPosition';
-import DomQuery from 'tinymce/core/api/dom/DomQuery';
-import CaretAsserts from '../../module/test/CaretAsserts';
-import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/bedrock-client';
+import { LegacyUnit } from '@ephox/mcagar';
+import DomQuery from 'tinymce/core/api/dom/DomQuery';
+import Env from 'tinymce/core/api/Env';
+import CaretPosition from 'tinymce/core/caret/CaretPosition';
+import { CaretWalker } from 'tinymce/core/caret/CaretWalker';
+import * as CaretAsserts from '../../module/test/CaretAsserts';
+import ViewBlock from '../../module/test/ViewBlock';
 
 UnitTest.asynctest('browser.tinymce.core.CaretWalkerTest', (success, failure) => {
   const suite = LegacyUnit.createSuite();
@@ -20,9 +20,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretWalkerTest', (success, failure) =>
     return viewBlock.get();
   };
 
-  const getChildNode = (childIndex: number) => {
-    return getRoot().childNodes[childIndex];
-  };
+  const getChildNode = (childIndex: number) => getRoot().childNodes[childIndex];
 
   const setupHtml = function (html) {
     viewBlock.update(html);

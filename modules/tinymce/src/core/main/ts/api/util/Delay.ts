@@ -5,11 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { clearInterval, clearTimeout, document, HTMLElement, setInterval, setTimeout, window } from '@ephox/dom-globals';
 import Editor from '../Editor';
 import Promise from './Promise';
 
-type DebounceFunc = (...args: any[]) => { stop: () => void; };
+type DebounceFunc<T extends (...args: any[]) => void> = {
+  (...args: Parameters<T>): void;
+  stop: () => void;
+};
 
 interface Delay {
   requestAnimationFrame (callback: () => void, element?: HTMLElement): void;
@@ -19,8 +21,8 @@ interface Delay {
   setTimeout (callback: () => void, time?: number): number;
   clearInterval (id: number): void;
   clearTimeout (id: number): void;
-  debounce (callback: (...args: any[]) => void, time?: number): DebounceFunc;
-  throttle (callback: (...args: any[]) => void, time?: number): DebounceFunc;
+  debounce <T extends (...args: any[]) => any>(callback: T, time?: number): DebounceFunc<T>;
+  throttle <T extends (...args: any[]) => any>(callback: T, time?: number): DebounceFunc<T>;
 }
 
 /**
@@ -33,7 +35,7 @@ let requestAnimationFramePromise;
 
 const requestAnimationFrame = function (callback, element?) {
   let i, requestAnimationFrameFunc: any = window.requestAnimationFrame;
-  const vendors = ['ms', 'moz', 'webkit'];
+  const vendors = [ 'ms', 'moz', 'webkit' ];
 
   const featurefill = function (callback) {
     window.setTimeout(callback, 0);
@@ -74,10 +76,10 @@ const wrappedClearInterval = function (id: number) {
   return clearInterval(id);
 };
 
-const debounce = function (callback: (...args: any[]) => void, time?: number): DebounceFunc {
-  let timer, func;
+const debounce = function <T extends (...args: any[]) => any>(callback: T, time?: number): DebounceFunc<T> {
+  let timer;
 
-  func = function (...args) {
+  const func = function (...args: Parameters<T>): void {
     clearTimeout(timer);
 
     timer = wrappedSetTimeout(function () {
@@ -100,7 +102,7 @@ const Delay: Delay = {
    * @param {function} callback Callback to execute when a new frame is available.
    * @param {DOMElement} element Optional element to scope it to.
    */
-  requestAnimationFrame (callback, element?) {
+  requestAnimationFrame(callback, element?) {
     if (requestAnimationFramePromise) {
       requestAnimationFramePromise.then(callback);
       return;
@@ -145,7 +147,7 @@ const Delay: Delay = {
    * @param {Number} time Optional time to wait before the callback is executed, defaults to 0.
    * @return {Number} Timeout id number.
    */
-  setEditorTimeout (editor, callback, time?) {
+  setEditorTimeout(editor, callback, time?) {
     return wrappedSetTimeout(function () {
       if (!editor.removed) {
         callback();
@@ -162,10 +164,8 @@ const Delay: Delay = {
    * @param {Number} time Optional time to wait before the callback is executed, defaults to 0.
    * @return {Number} Timeout id number.
    */
-  setEditorInterval (editor, callback, time?) {
-    let timer;
-
-    timer = wrappedSetInterval(function () {
+  setEditorInterval(editor, callback, time?) {
+    const timer = wrappedSetInterval(function () {
       if (!editor.removed) {
         callback();
       } else {

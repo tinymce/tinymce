@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Text, Comment, Document, Element, Node, HTMLElement, DocumentFragment, HTMLTextAreaElement, HTMLInputElement, HTMLBRElement } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 
 const isNodeType = function (type) {
@@ -59,7 +58,7 @@ const hasPropValue = function (propName: string, propValue: any) {
   };
 };
 
-const hasAttribute = function (attrName: string, attrValue?: string) {
+const hasAttribute = function (attrName: string) {
   return function (node: Node) {
     return isElement(node) && node.hasAttribute(attrName);
   };
@@ -91,25 +90,32 @@ const hasContentEditableState = function (value: string) {
   };
 };
 
-const isTextareaOrInput = matchNodeNames<HTMLTextAreaElement | HTMLInputElement>(['textarea', 'input']);
+const isTextareaOrInput = matchNodeNames<HTMLTextAreaElement | HTMLInputElement>([ 'textarea', 'input' ]);
 
 const isText = isNodeType(3) as (node: Node) => node is Text;
 const isComment = isNodeType(8) as (node: Node) => node is Comment;
 const isDocument = isNodeType(9) as (node: Node) => node is Document;
 const isDocumentFragment = isNodeType(11) as (node: Node) => node is DocumentFragment;
-const isBr = matchNodeNames<HTMLBRElement>(['br']);
+const isBr = matchNodeNames<HTMLBRElement>([ 'br' ]);
+const isImg = matchNodeNames<HTMLImageElement>([ 'img' ]);
 const isContentEditableTrue = hasContentEditableState('true') as (node: Node) => node is HTMLElement;
 const isContentEditableFalse = hasContentEditableState('false') as (node: Node) => node is HTMLElement;
 
-export default {
+const isTableCell = matchNodeNames<HTMLTableCellElement>([ 'td', 'th' ]);
+const isMedia = matchNodeNames<HTMLElement>([ 'video', 'audio', 'object', 'embed' ]);
+
+export {
   isText,
   isElement,
   isComment,
   isDocument,
   isDocumentFragment,
   isBr,
+  isImg,
   isContentEditableTrue,
   isContentEditableFalse,
+  isMedia,
+  isTableCell,
   isRestrictedNode,
   matchNodeNames,
   hasPropValue,

@@ -5,16 +5,16 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Actions from './Actions';
-import Conversions from './Conversions';
-import Picker from './Picker';
 import Editor from 'tinymce/core/api/Editor';
+import * as Actions from './Actions';
+import * as Conversions from './Conversions';
+import * as Picker from './Picker';
 
 const setupButtons = function (editor: Editor) {
   editor.ui.registry.addButton('quickimage', {
     icon: 'image',
     tooltip: 'Insert image',
-    onAction () {
+    onAction() {
       Picker.pickFile(editor).then(function (files) {
         if (files.length > 0) {
           const blob = files[0];
@@ -30,13 +30,13 @@ const setupButtons = function (editor: Editor) {
   editor.ui.registry.addButton('quicktable', {
     icon: 'table',
     tooltip: 'Insert table',
-    onAction () {
+    onAction() {
       // panel.hide();
       Actions.insertTable(editor, 2, 2);
     }
   });
 };
 
-export default {
+export {
   setupButtons
 };

@@ -1,8 +1,8 @@
 import { UnitTest } from '@ephox/bedrock-client';
-import { Rect, StructRect } from 'ephox/sugar/api/selection/Rect.ts';
 import Jsc from '@ephox/wrap-jsverify';
+import { Rect } from 'ephox/sugar/api/selection/Rect.ts';
 
-UnitTest.test('Rect', function () {
+UnitTest.test('Rect', () => {
   Jsc.property(
     'Rect',
     Jsc.number,

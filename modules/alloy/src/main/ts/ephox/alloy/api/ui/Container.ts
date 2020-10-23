@@ -1,7 +1,8 @@
 import { FieldSchema } from '@ephox/boulder';
-import { SketchSpec } from '../../api/component/SpecTypes';
+
 import { ContainerDetail, ContainerSketcher, ContainerSpec } from '../../ui/types/ContainerTypes';
 import * as SketchBehaviours from '../component/SketchBehaviours';
+import { SketchSpec } from '../component/SpecTypes';
 import * as Sketcher from './Sketcher';
 import { SingleSketchFactory } from './UiSketcher';
 

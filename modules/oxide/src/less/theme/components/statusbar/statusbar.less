@@ -67,8 +67,8 @@
     color: @statusbar-text-color;
     text-decoration: none;
 
-    &:hover,
-    &:focus {
+    &:hover:not(:disabled):not([aria-disabled=true]),
+    &:focus:not(:disabled):not([aria-disabled=true]) {
       cursor: pointer;
       text-decoration: underline;
     }

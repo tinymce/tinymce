@@ -1,26 +1,16 @@
 import { Fun } from '@ephox/katamari';
-import { Attr, Css, Element } from '@ephox/sugar';
+import { Attribute, Css, SugarElement } from '@ephox/sugar';
 
-const getSpan = function (cell: Element, type: 'colspan' | 'rowspan') {
-  return Attr.has(cell, type) && parseInt(Attr.get(cell, type), 10) > 1;
-};
+export const getAttrValue = (cell: SugarElement, name: string, fallback: number = 0) =>
+  Attribute.getOpt(cell, name).map((value) => parseInt(value, 10)).getOr(fallback);
 
-const hasColspan = function (cell: Element) {
-  return getSpan(cell, 'colspan');
-};
+export const getSpan = (cell: SugarElement, type: 'colspan' | 'rowspan') => getAttrValue(cell, type, 1);
 
-const hasRowspan = function (cell: Element) {
-  return getSpan(cell, 'rowspan');
-};
+export const hasColspan = (cell: SugarElement) => getSpan(cell, 'colspan') > 1;
 
-const getInt = function (element: Element, property: string) {
-  return parseInt(Css.get(element, property), 10);
-};
+export const hasRowspan = (cell: SugarElement) => getSpan(cell, 'rowspan') > 1;
 
-export default {
-  hasColspan,
-  hasRowspan,
-  minWidth: Fun.constant(10),
-  minHeight: Fun.constant(10),
-  getInt
-};
+export const getCssValue = (element: SugarElement, property: string) => parseInt(Css.get(element, property), 10);
+
+export const minWidth = Fun.constant(10);
+export const minHeight = Fun.constant(10);

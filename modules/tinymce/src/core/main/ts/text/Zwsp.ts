@@ -20,10 +20,10 @@ import { Unicode } from '@ephox/katamari';
 
 // This is technically not a ZWSP but a ZWNBSP or a BYTE ORDER MARK it used to be a ZWSP
 const ZWSP = Unicode.zeroWidth;
-const isZwsp = (chr: string) => chr === ZWSP;
-const trim = (text: string) => text.replace(new RegExp(ZWSP, 'g'), '');
+const isZwsp = Unicode.isZwsp;
+const trim = Unicode.removeZwsp;
 
-export default {
+export {
   isZwsp,
   ZWSP,
   trim

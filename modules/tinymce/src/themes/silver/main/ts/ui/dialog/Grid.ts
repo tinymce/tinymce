@@ -6,19 +6,16 @@
  */
 
 import { SimpleSpec } from '@ephox/alloy';
-import { Types } from '@ephox/bridge';
+import { Dialog } from '@ephox/bridge';
 import { Arr } from '@ephox/katamari';
 import { UiFactoryBackstageShared } from '../../backstage/Backstage';
-import { Omit } from '../Omit';
 
-type GridSpec = Omit<Types.Grid.Grid, 'type'>;
+type GridSpec = Omit<Dialog.Grid, 'type'>;
 
-export const renderGrid = (spec: GridSpec, backstage: UiFactoryBackstageShared): SimpleSpec => {
-  return {
-    dom: {
-      tag: 'div',
-      classes: ['tox-form__grid', `tox-form__grid--${spec.columns}col`]
-    },
-    components: Arr.map(spec.items, backstage.interpreter)
-  };
-};
+export const renderGrid = (spec: GridSpec, backstage: UiFactoryBackstageShared): SimpleSpec => ({
+  dom: {
+    tag: 'div',
+    classes: [ 'tox-form__grid', `tox-form__grid--${spec.columns}col` ]
+  },
+  components: Arr.map(spec.items, backstage.interpreter)
+});

@@ -1,8 +1,8 @@
+import * as BagUtils from '../util/BagUtils';
 import * as Arr from './Arr';
 import * as Fun from './Fun';
 import * as Obj from './Obj';
 import * as Type from './Type';
-import * as BagUtils from '../util/BagUtils';
 
 export interface ContractCondition {
   label: string;
@@ -37,7 +37,7 @@ const baseWith = function (handleUnsupported: HandleFn, required: string[], pred
       return Arr.contains(keys, req);
     });
 
-    if (! allReqd) {
+    if (!allReqd) {
       BagUtils.reqMessage(required, keys);
     }
 

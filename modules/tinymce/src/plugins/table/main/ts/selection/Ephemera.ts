@@ -5,23 +5,24 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Fun } from '@ephox/katamari';
+import { Ephemera as DarwinEphemera } from '@ephox/darwin';
 
-const selected = 'data-mce-selected';
-const selectedSelector = 'td[' + selected + '],th[' + selected + ']';
+const strSelected = 'data-mce-selected';
+const strSelectedSelector = 'td[' + strSelected + '],th[' + strSelected + ']';
 // used with not selectors
-const attributeSelector = '[' + selected + ']';
-const firstSelected = 'data-mce-first-selected';
-const firstSelectedSelector = 'td[' + firstSelected + '],th[' + firstSelected + ']';
-const lastSelected = 'data-mce-last-selected';
-const lastSelectedSelector = 'td[' + lastSelected + '],th[' + lastSelected + ']';
+const strAttributeSelector = '[' + strSelected + ']';
+const strFirstSelected = 'data-mce-first-selected';
+const strFirstSelectedSelector = 'td[' + strFirstSelected + '],th[' + strFirstSelected + ']';
+const strLastSelected = 'data-mce-last-selected';
+const strLastSelectedSelector = 'td[' + strLastSelected + '],th[' + strLastSelected + ']';
 
-export default {
-  selected: Fun.constant(selected),
-  selectedSelector: Fun.constant(selectedSelector),
-  attributeSelector: Fun.constant(attributeSelector),
-  firstSelected: Fun.constant(firstSelected),
-  firstSelectedSelector: Fun.constant(firstSelectedSelector),
-  lastSelected: Fun.constant(lastSelected),
-  lastSelectedSelector: Fun.constant(lastSelectedSelector)
+export const attributeSelector = strAttributeSelector;
+
+export const ephemera: DarwinEphemera = {
+  selected: strSelected,
+  selectedSelector: strSelectedSelector,
+  firstSelected: strFirstSelected,
+  firstSelectedSelector: strFirstSelectedSelector,
+  lastSelected: strLastSelected,
+  lastSelectedSelector: strLastSelectedSelector
 };

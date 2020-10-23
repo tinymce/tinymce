@@ -1,9 +1,9 @@
 import { Log, Logger, Pipeline, Step } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import * as IframeContent from 'tinymce/plugins/preview/core/IframeContent';
 
 import PreviewPlugin from 'tinymce/plugins/preview/Plugin';
-import IframeContent from 'tinymce/plugins/preview/core/IframeContent';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.plugins.preview.PreviewContentStyleTest', (success, failure) => {
@@ -36,11 +36,11 @@ UnitTest.asynctest('browser.tinymce.plugins.preview.PreviewContentStyleTest', (s
         sAssertIframeHtmlContains(editor, '<style type="text/css">p {color: blue;}</style>'),
         tinyApis.sDeleteSetting('content_style'),
         sAssertIframeHtmlNotContains(editor, '<style type="text/css">p {color: blue;}</style>')
-    ])
-    , onSuccess, onFailure);
+      ])
+      , onSuccess, onFailure);
   }, {
     theme: 'silver',
     plugins: 'preview',
-    base_url: '/project/tinymce/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

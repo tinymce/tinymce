@@ -7,7 +7,7 @@
 
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
-import Settings from '../api/Settings';
+import * as Settings from '../api/Settings';
 
 const pasteHtml = (editor: Editor, html: string) => {
   editor.insertContent(html, {
@@ -74,14 +74,14 @@ const smartInsertContent = function (editor: Editor, html: string) {
 };
 
 const insertContent = function (editor: Editor, html: string, pasteAsText: boolean) {
- if (pasteAsText || Settings.isSmartPasteEnabled(editor) === false) {
+  if (pasteAsText || Settings.isSmartPasteEnabled(editor) === false) {
     pasteHtml(editor, html);
   } else {
     smartInsertContent(editor, html);
   }
 };
 
-export default {
+export {
   isImageUrl,
   isAbsoluteUrl,
   insertContent

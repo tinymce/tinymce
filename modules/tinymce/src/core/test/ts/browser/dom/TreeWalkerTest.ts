@@ -1,8 +1,8 @@
 import { Pipeline } from '@ephox/agar';
-import { LegacyUnit } from '@ephox/mcagar';
-import TreeWalker from 'tinymce/core/api/dom/TreeWalker';
-import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/bedrock-client';
+import { LegacyUnit } from '@ephox/mcagar';
+import DomTreeWalker from 'tinymce/core/api/dom/TreeWalker';
+import ViewBlock from '../../module/test/ViewBlock';
 
 UnitTest.asynctest('browser.tinymce.core.dom.TreeWalkerTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
@@ -11,7 +11,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.TreeWalkerTest', function (success,
 
   const setup = function () {
     const all = function (node) {
-      let list = [node];
+      let list = [ node ];
 
       if (node.hasChildNodes()) {
         for (let i = 0; i < node.childNodes.length; i++) {
@@ -61,10 +61,9 @@ UnitTest.asynctest('browser.tinymce.core.dom.TreeWalkerTest', function (success,
   };
 
   suite.test('next', function () {
-    const walker = new TreeWalker(nodes[0], viewBlock.get());
-    let actualNodes;
+    const walker = new DomTreeWalker(nodes[0], viewBlock.get());
 
-    actualNodes = [walker.current()];
+    const actualNodes = [ walker.current() ];
     while ((walker.next())) {
       actualNodes.push(walker.current());
     }
@@ -73,10 +72,10 @@ UnitTest.asynctest('browser.tinymce.core.dom.TreeWalkerTest', function (success,
   });
 
   suite.test('prev2', function () {
-    const walker = new TreeWalker(nodes[nodes.length - 1], viewBlock.get());
+    const walker = new DomTreeWalker(nodes[nodes.length - 1], viewBlock.get());
     let actualNodes;
 
-    actualNodes = [walker.current()];
+    actualNodes = [ walker.current() ];
     while ((walker.prev2())) {
       actualNodes.push(walker.current());
     }
@@ -86,10 +85,10 @@ UnitTest.asynctest('browser.tinymce.core.dom.TreeWalkerTest', function (success,
   });
 
   suite.test('prev2(shallow:true)', function () {
-    const walker = new TreeWalker(nodes[nodes.length - 1], viewBlock.get());
+    const walker = new DomTreeWalker(nodes[nodes.length - 1], viewBlock.get());
     let actualNodes;
 
-    actualNodes = [walker.current()];
+    actualNodes = [ walker.current() ];
     while ((walker.prev2(true))) {
       actualNodes.push(walker.current());
     }

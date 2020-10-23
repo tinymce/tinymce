@@ -49,24 +49,24 @@ const urls = [
   { key: 'visualchars', name: 'Visual Characters' },
   { key: 'wordcount', name: 'Word Count' },
   // TODO: Add other premium plugins when they are included in the website
-  { key: 'advcode', name: 'Advanced Code Editor*'},
-  { key: 'formatpainter', name: 'Format Painter*'},
-  { key: 'powerpaste', name: 'PowerPaste*'},
-  { key: 'tinydrive', name: 'Tiny Drive*'},
-  { key: 'tinymcespellchecker', name: 'Spell Checker Pro*'},
-  { key: 'a11ychecker', name: 'Accessibility Checker*'},
-  { key: 'linkchecker', name: 'Link Checker*'},
-  { key: 'mentions', name: 'Mentions*'},
-  { key: 'mediaembed', name: 'Enhanced Media Embed*'},
-  { key: 'checklist', name: 'Checklist*'},
-  { key: 'casechange', name: 'Case Change*'},
-  { key: 'permanentpen', name: 'Permanent Pen*'},
-  { key: 'pageembed', name: 'Page Embed*'},
-  { key: 'tinycomments', name: 'Tiny Comments*'},
-  { key: 'advtable', name: 'Advanced Tables*'},
-  { key: 'autocorrect', name: 'Autocorrect*'}
+  { key: 'advcode', name: 'Advanced Code Editor*' },
+  { key: 'formatpainter', name: 'Format Painter*' },
+  { key: 'powerpaste', name: 'PowerPaste*' },
+  { key: 'tinydrive', name: 'Tiny Drive*', slug: 'drive' },
+  { key: 'tinymcespellchecker', name: 'Spell Checker Pro*' },
+  { key: 'a11ychecker', name: 'Accessibility Checker*' },
+  { key: 'linkchecker', name: 'Link Checker*' },
+  { key: 'mentions', name: 'Mentions*' },
+  { key: 'mediaembed', name: 'Enhanced Media Embed*' },
+  { key: 'checklist', name: 'Checklist*' },
+  { key: 'casechange', name: 'Case Change*' },
+  { key: 'permanentpen', name: 'Permanent Pen*' },
+  { key: 'pageembed', name: 'Page Embed*' },
+  { key: 'tinycomments', name: 'Tiny Comments*', slug: 'comments' },
+  { key: 'advtable', name: 'Advanced Tables*' },
+  { key: 'autocorrect', name: 'Autocorrect*' }
 ];
 
-export default {
+export {
   urls
 };

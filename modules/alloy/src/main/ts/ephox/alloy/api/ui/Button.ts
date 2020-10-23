@@ -1,12 +1,12 @@
 import { FieldSchema } from '@ephox/boulder';
 import { Obj } from '@ephox/katamari';
 
-import { SketchSpec } from '../../api/component/SpecTypes';
 import * as ButtonBase from '../../ui/common/ButtonBase';
 import { ButtonDetail, ButtonSketcher, ButtonSpec } from '../../ui/types/ButtonTypes';
 import { Focusing } from '../behaviour/Focusing';
 import { Keying } from '../behaviour/Keying';
 import { SketchBehaviours } from '../component/SketchBehaviours';
+import { SketchSpec } from '../component/SpecTypes';
 import * as Sketcher from './Sketcher';
 import { SingleSketchFactory } from './UiSketcher';
 
@@ -15,11 +15,7 @@ const factory: SingleSketchFactory<ButtonDetail, ButtonSpec> = (detail): SketchS
 
   const tag = detail.dom.tag;
 
-  const lookupAttr = (attr: string) => {
-    return Obj.get(detail.dom, 'attributes').bind((attrs) => {
-      return Obj.get(attrs, attr);
-    });
-  };
+  const lookupAttr = (attr: string) => Obj.get(detail.dom, 'attributes').bind((attrs) => Obj.get(attrs, attr));
 
   // Button tags should not have a default role of button, and only buttons should
   // get a type of button.

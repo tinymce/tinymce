@@ -5,8 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { ClientRect } from '@ephox/dom-globals';
-
 /**
  * Contains various tools for rect/position calculation.
  *
@@ -14,16 +12,16 @@ import { ClientRect } from '@ephox/dom-globals';
  */
 
 export interface GeomRect {
-  x: number;
-  y: number;
-  w: number;
-  h: number;
+  readonly x: number;
+  readonly y: number;
+  readonly w: number;
+  readonly h: number;
 }
 
 interface Rect {
   inflate (rect: GeomRect, w: number, h: number): GeomRect;
   relativePosition (rect: GeomRect, targetRect: GeomRect, rel: string): GeomRect;
-  findBestRelativePosition (rect, targetRect, constrainRect, rels): GeomRect | null;
+  findBestRelativePosition (rect: GeomRect, targetRect: GeomRect, constrainRect: GeomRect, rels: string[]): string | null;
   intersect (rect: GeomRect, cropRect: GeomRect): GeomRect | null;
   clamp (rect: GeomRect, clampRect: GeomRect, fixedSize?: boolean): GeomRect;
   create (x: number, y: number, w: number, h: number): GeomRect;
@@ -41,47 +39,45 @@ const min = Math.min, max = Math.max, round = Math.round;
  * @param {Rect} targetRect Rect to move relative to based on the rel option.
  * @param {String} rel Relative position. For example: tr-bl.
  */
-const relativePosition = function (rect, targetRect, rel) {
-  let x, y, w, h, targetW, targetH;
+const relativePosition = function (rect: GeomRect, targetRect: GeomRect, rel: string) {
+  let x = targetRect.x;
+  let y = targetRect.y;
+  const w = rect.w;
+  const h = rect.h;
+  const targetW = targetRect.w;
+  const targetH = targetRect.h;
 
-  x = targetRect.x;
-  y = targetRect.y;
-  w = rect.w;
-  h = rect.h;
-  targetW = targetRect.w;
-  targetH = targetRect.h;
+  const relChars = (rel || '').split('');
 
-  rel = (rel || '').split('');
-
-  if (rel[0] === 'b') {
+  if (relChars[0] === 'b') {
     y += targetH;
   }
 
-  if (rel[1] === 'r') {
+  if (relChars[1] === 'r') {
     x += targetW;
   }
 
-  if (rel[0] === 'c') {
+  if (relChars[0] === 'c') {
     y += round(targetH / 2);
   }
 
-  if (rel[1] === 'c') {
+  if (relChars[1] === 'c') {
     x += round(targetW / 2);
   }
 
-  if (rel[3] === 'b') {
+  if (relChars[3] === 'b') {
     y -= h;
   }
 
-  if (rel[4] === 'r') {
+  if (relChars[4] === 'r') {
     x -= w;
   }
 
-  if (rel[3] === 'c') {
+  if (relChars[3] === 'c') {
     y -= round(h / 2);
   }
 
-  if (rel[4] === 'c') {
+  if (relChars[4] === 'c') {
     x -= round(w / 2);
   }
 
@@ -97,7 +93,7 @@ const relativePosition = function (rect, targetRect, rel) {
  * @param {Rect} constrainRect Rect to constrain within.
  * @param {Array} rels Array of relative positions to test against.
  */
-const findBestRelativePosition = function (rect, targetRect, constrainRect, rels) {
+const findBestRelativePosition = function (rect: GeomRect, targetRect: GeomRect, constrainRect: GeomRect, rels: string[]) {
   let pos, i;
 
   for (i = 0; i < rels.length; i++) {
@@ -121,7 +117,7 @@ const findBestRelativePosition = function (rect, targetRect, constrainRect, rels
  * @param {Number} h Relative height to expand by.
  * @return {Rect} New expanded rect.
  */
-const inflate = function (rect, w, h) {
+const inflate = function (rect: GeomRect, w: number, h: number) {
   return create(rect.x - w, rect.y - h, rect.w + w * 2, rect.h + h * 2);
 };
 
@@ -133,13 +129,11 @@ const inflate = function (rect, w, h) {
  * @param {Rect} cropRect The second rectangle to compare.
  * @return {Rect} The intersection of the two rectangles or null if they don't intersect.
  */
-const intersect = function (rect, cropRect) {
-  let x1, y1, x2, y2;
-
-  x1 = max(rect.x, cropRect.x);
-  y1 = max(rect.y, cropRect.y);
-  x2 = min(rect.x + rect.w, cropRect.x + cropRect.w);
-  y2 = min(rect.y + rect.h, cropRect.y + cropRect.h);
+const intersect = function (rect: GeomRect, cropRect: GeomRect) {
+  const x1 = max(rect.x, cropRect.x);
+  const y1 = max(rect.y, cropRect.y);
+  const x2 = min(rect.x + rect.w, cropRect.x + cropRect.w);
+  const y2 = min(rect.y + rect.h, cropRect.y + cropRect.h);
 
   if (x2 - x1 < 0 || y2 - y1 < 0) {
     return null;
@@ -158,21 +152,18 @@ const intersect = function (rect, cropRect) {
  * @param {Boolean} fixedSize True/false if size should be fixed.
  * @return {Rect} Clamped rect.
  */
-const clamp = function (rect, clampRect, fixedSize?) {
-  let underflowX1, underflowY1, overflowX2, overflowY2,
-    x1, y1, x2, y2, cx2, cy2;
+const clamp = function (rect: GeomRect, clampRect: GeomRect, fixedSize?: boolean) {
+  let x1 = rect.x;
+  let y1 = rect.y;
+  let x2 = rect.x + rect.w;
+  let y2 = rect.y + rect.h;
+  const cx2 = clampRect.x + clampRect.w;
+  const cy2 = clampRect.y + clampRect.h;
 
-  x1 = rect.x;
-  y1 = rect.y;
-  x2 = rect.x + rect.w;
-  y2 = rect.y + rect.h;
-  cx2 = clampRect.x + clampRect.w;
-  cy2 = clampRect.y + clampRect.h;
-
-  underflowX1 = max(0, clampRect.x - x1);
-  underflowY1 = max(0, clampRect.y - y1);
-  overflowX2 = max(0, x2 - cx2);
-  overflowY2 = max(0, y2 - cy2);
+  const underflowX1 = max(0, clampRect.x - x1);
+  const underflowY1 = max(0, clampRect.y - y1);
+  const overflowX2 = max(0, x2 - cx2);
+  const overflowY2 = max(0, y2 - cy2);
 
   x1 += underflowX1;
   y1 += underflowY1;
@@ -200,7 +191,7 @@ const clamp = function (rect, clampRect, fixedSize?) {
  * @param {Number} h Rectangle height.
  * @return {Rect} New rectangle object.
  */
-const create = function (x, y, w, h) {
+const create = function (x: number, y: number, w: number, h: number) {
   return { x, y, w, h };
 };
 
@@ -211,7 +202,7 @@ const create = function (x, y, w, h) {
  * @param {ClientRect} clientRect DOM ClientRect object.
  * @return {Rect} New rectangle object.
  */
-const fromClientRect = function (clientRect) {
+const fromClientRect = function (clientRect: ClientRect) {
   return create(clientRect.left, clientRect.top, clientRect.width, clientRect.height);
 };
 

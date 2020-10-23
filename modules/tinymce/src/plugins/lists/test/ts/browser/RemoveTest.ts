@@ -1,6 +1,5 @@
-import { Pipeline, Log } from '@ephox/agar';
+import { Log, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Text } from '@ephox/dom-globals';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -307,50 +306,6 @@ UnitTest.asynctest('tinymce.lists.browser.RemoveTest', (success, failure) => {
     LegacyUnit.equal(editor.selection.getStart().nodeName, 'P');
   });
 
-  suite.test('TestCase-TBA: Lists: Remove UL with single LI in BR mode', function (editor) {
-    editor.settings.forced_root_block = false;
-
-    editor.getBody().innerHTML = LegacyUnit.trimBrs(
-      '<ul>' +
-      '<li>a</li>' +
-      '</ul>'
-    );
-
-    editor.focus();
-    LegacyUnit.setSelection(editor, 'li', 1);
-    LegacyUnit.execCommand(editor, 'InsertUnorderedList');
-
-    LegacyUnit.equal(editor.getContent(),
-      'a'
-    );
-    LegacyUnit.equal(editor.selection.getStart().nodeName, 'BODY');
-
-    editor.settings.forced_root_block = 'p';
-  });
-
-  suite.test('TestCase-TBA: Lists: Remove UL with multiple LI in BR mode', function (editor) {
-    editor.settings.forced_root_block = false;
-
-    editor.getBody().innerHTML = LegacyUnit.trimBrs(
-      '<ul>' +
-      '<li>a</li>' +
-      '<li>b</li>' +
-      '</ul>'
-    );
-
-    editor.focus();
-    LegacyUnit.setSelection(editor, 'li:first', 1, 'li:last', 1);
-    LegacyUnit.execCommand(editor, 'InsertUnorderedList');
-
-    LegacyUnit.equal(editor.getContent(),
-      'a<br />' +
-      'b'
-    );
-    LegacyUnit.equal(editor.selection.getStart().nodeName, 'BODY');
-
-    editor.settings.forced_root_block = 'p';
-  });
-
   suite.test('TestCase-TBA: Lists: Remove empty UL between two textblocks', function (editor) {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<div>a</div>' +
@@ -453,56 +408,6 @@ UnitTest.asynctest('tinymce.lists.browser.RemoveTest', (success, failure) => {
         '<li>c</li>' +
       '</ul>'
     );
-  });
-
-  suite.test('TestCase-TBA: Lists: Remove empty UL between two textblocks in BR mode', function (editor) {
-    editor.settings.forced_root_block = false;
-
-    editor.getBody().innerHTML = LegacyUnit.trimBrs(
-      '<div>a</div>' +
-      '<ul>' +
-      '<li></li>' +
-      '</ul>' +
-      '<div>b</div>'
-    );
-
-    editor.focus();
-    LegacyUnit.setSelection(editor, 'li:first', 0);
-    LegacyUnit.execCommand(editor, 'InsertUnorderedList');
-
-    LegacyUnit.equal(editor.getContent(),
-      '<div>a</div>' +
-      '<br />' +
-      '<div>b</div>'
-    );
-    LegacyUnit.equal(editor.selection.getStart().nodeName, 'BR');
-
-    editor.settings.forced_root_block = 'p';
-  });
-
-  suite.test('TestCase-TBA: Lists: Remove UL with forced_root_block_attrs', function (editor) {
-    editor.settings.forced_root_block = 'p';
-    editor.settings.forced_root_block_attrs = {
-      'data-editor': '1'
-    };
-
-    editor.getBody().innerHTML = LegacyUnit.trimBrs(
-      '<ul>' +
-      '<li data-editor="1">a</li>' +
-      '</ul>'
-    );
-
-    editor.focus();
-    LegacyUnit.setSelection(editor, 'li', 0);
-    LegacyUnit.execCommand(editor, 'InsertUnorderedList');
-
-    LegacyUnit.equal(editor.getContent(),
-      '<p data-editor="1">a</p>'
-    );
-    LegacyUnit.equal(editor.selection.getStart().nodeName, 'P');
-
-    editor.settings.forced_root_block = 'p';
-    delete editor.settings.forced_root_block_attrs;
   });
 
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {

@@ -1,4 +1,4 @@
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 
 import * as ObjIndex from '../alien/ObjIndex';
 import { AlloyBehaviour } from '../api/behaviour/Behaviour';
@@ -17,7 +17,7 @@ type DomModificationAspectRecord = { [K in keyof DomModification]: Array<Modific
 // Based on all the behaviour exhibits, and the original dom modification, identify
 // the overall combined dom modification that needs to occur
 const combine = (
-  info: Record<string, () => Option<BehaviourConfigAndState<any, BehaviourState>>>,
+  info: Record<string, () => Optional<BehaviourConfigAndState<any, BehaviourState>>>,
   baseMod: Record<string, DomModification>,
   behaviours: Array<AlloyBehaviour<any, any>>,
   base: DomDefinitionDetail
@@ -36,13 +36,9 @@ const combine = (
   // byAspect format: { classes: [ { name: Toggling, modification: [ 'selected' ] } ] }
   const byAspect = ObjIndex.byInnerKey(modsByBehaviour, (name, modification) => ({ name, modification })) as DomModificationAspectRecord;
 
-  const combineObjects = <T extends Record<string, any>>(objects: Array<Modification<T>>): T => Arr.foldr(objects, (b, a) => {
-    return { ...a.modification, ...b };
-  }, { } as T);
+  const combineObjects = <T extends Record<string, any>>(objects: Array<Modification<T>>): T => Arr.foldr(objects, (b, a) => ({ ...a.modification, ...b }), { } as T);
 
-  const combinedClasses = Arr.foldr(byAspect.classes, (b: string[], a) => {
-    return a.modification.concat(b);
-  }, [ ]);
+  const combinedClasses = Arr.foldr(byAspect.classes, (b: string[], a) => a.modification.concat(b), [ ]);
   const combinedAttributes = combineObjects(byAspect.attributes);
   const combinedStyles = combineObjects(byAspect.styles);
 

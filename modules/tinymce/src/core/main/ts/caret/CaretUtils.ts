@@ -5,19 +5,19 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node, Range } from '@ephox/dom-globals';
-import { Option, Fun } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
-import TreeWalker from '../api/dom/TreeWalker';
-import NodeType from '../dom/NodeType';
-import * as CaretContainer from './CaretContainer';
+import { Fun, Optional } from '@ephox/katamari';
+import { SugarElement } from '@ephox/sugar';
+import DomTreeWalker from '../api/dom/TreeWalker';
+import * as NodeType from '../dom/NodeType';
 import * as CaretCandidate from './CaretCandidate';
+import * as CaretContainer from './CaretContainer';
 import { CaretPosition } from './CaretPosition';
 import { HDirection } from './CaretWalker';
 import { isFakeCaretTarget } from './FakeCaret';
 
 const isContentEditableTrue = NodeType.isContentEditableTrue;
 const isContentEditableFalse = NodeType.isContentEditableFalse;
+const isMedia = NodeType.isMedia;
 const isBlockLike = NodeType.matchStyleValues('display', 'block table table-cell table-caption list-item');
 const isCaretContainer = CaretContainer.isCaretContainer;
 const isCaretContainerBlock = CaretContainer.isCaretContainerBlock;
@@ -39,10 +39,11 @@ const skipCaretContainers = function (walk, shallow?: boolean): Node {
 };
 
 const findNode = (node: Node, direction: number, predicateFn: (node: Node) => boolean, rootNode: Node, shallow?: boolean) => {
-  const walker = new TreeWalker(node, rootNode);
+  const walker = new DomTreeWalker(node, rootNode);
+  const isCefOrCaretContainer = isContentEditableFalse(node) || isCaretContainerBlock(node);
 
   if (isBackwards(direction)) {
-    if (isContentEditableFalse(node) || isCaretContainerBlock(node)) {
+    if (isCefOrCaretContainer) {
       node = skipCaretContainers(walker.prev, true);
       if (predicateFn(node)) {
         return node;
@@ -57,7 +58,7 @@ const findNode = (node: Node, direction: number, predicateFn: (node: Node) => bo
   }
 
   if (isForwards(direction)) {
-    if (isContentEditableFalse(node) || isCaretContainerBlock(node)) {
+    if (isCefOrCaretContainer) {
       node = skipCaretContainers(walker.next, true);
       if (predicateFn(node)) {
         return node;
@@ -96,23 +97,17 @@ const getParentBlock = (node: Node, rootNode?: Node) => {
   return null;
 };
 
-const isInSameBlock = (caretPosition1: CaretPosition, caretPosition2: CaretPosition, rootNode?: Node): boolean => {
-  return getParentBlock(caretPosition1.container(), rootNode) === getParentBlock(caretPosition2.container(), rootNode);
-};
+const isInSameBlock = (caretPosition1: CaretPosition, caretPosition2: CaretPosition, rootNode?: Node): boolean => getParentBlock(caretPosition1.container(), rootNode) === getParentBlock(caretPosition2.container(), rootNode);
 
-const isInSameEditingHost = (caretPosition1: CaretPosition, caretPosition2: CaretPosition, rootNode?: Node): boolean => {
-  return getEditingHost(caretPosition1.container(), rootNode) === getEditingHost(caretPosition2.container(), rootNode);
-};
+const isInSameEditingHost = (caretPosition1: CaretPosition, caretPosition2: CaretPosition, rootNode?: Node): boolean => getEditingHost(caretPosition1.container(), rootNode) === getEditingHost(caretPosition2.container(), rootNode);
 
 const getChildNodeAtRelativeOffset = (relativeOffset: number, caretPosition: CaretPosition): Node => {
-  let container, offset;
-
   if (!caretPosition) {
     return null;
   }
 
-  container = caretPosition.container();
-  offset = caretPosition.offset();
+  const container = caretPosition.container();
+  const offset = caretPosition.offset();
 
   if (!isElement(container)) {
     return null;
@@ -135,9 +130,7 @@ const beforeAfter = (before: boolean, node: Node): Range => {
   return range;
 };
 
-const isNodesInSameBlock = (root: Node, node1: Node, node2: Node): boolean => {
-  return getParentBlock(node1, root) === getParentBlock(node2, root);
-};
+const isNodesInSameBlock = (root: Node, node1: Node, node2: Node): boolean => getParentBlock(node1, root) === getParentBlock(node2, root);
 
 const lean = (left: boolean, root: Node, node: Node): Node => {
   let sibling, siblingName;
@@ -155,7 +148,7 @@ const lean = (left: boolean, root: Node, node: Node): Node => {
       sibling = sibling[siblingName];
     }
 
-    if (isContentEditableFalse(sibling)) {
+    if (isContentEditableFalse(sibling) || isMedia(sibling)) {
       if (isNodesInSameBlock(root, sibling, node)) {
         return sibling;
       }
@@ -177,12 +170,12 @@ const before = Fun.curry(beforeAfter, true) as (node: Node) => Range;
 const after = Fun.curry(beforeAfter, false) as (node: Node) => Range;
 
 const normalizeRange = (direction: number, root: Node, range: Range): Range => {
-  let node, container, offset, location;
+  let node, container, location;
   const leanLeft = Fun.curry(lean, true, root);
   const leanRight = Fun.curry(lean, false, root);
 
   container = range.startContainer;
-  offset = range.startOffset;
+  const offset = range.startOffset;
 
   if (CaretContainer.isCaretContainerBlock(container)) {
     if (!isElement(container)) {
@@ -283,9 +276,8 @@ const normalizeRange = (direction: number, root: Node, range: Range): Range => {
   return range;
 };
 
-const getRelativeCefElm = (forward: boolean, caretPosition: CaretPosition) => {
-  return Option.from(getChildNodeAtRelativeOffset(forward ? 0 : -1, caretPosition)).filter(isContentEditableFalse);
-};
+const getRelativeCefElm = (forward: boolean, caretPosition: CaretPosition): Optional<HTMLElement> =>
+  Optional.from(getChildNodeAtRelativeOffset(forward ? 0 : -1, caretPosition)).filter(isContentEditableFalse);
 
 const getNormalizedRangeEndPoint = (direction: number, root: Node, range: Range): CaretPosition => {
   const normalizedRange = normalizeRange(direction, root, range);
@@ -297,8 +289,8 @@ const getNormalizedRangeEndPoint = (direction: number, root: Node, range: Range)
   return CaretPosition.fromRangeEnd(normalizedRange);
 };
 
-const getElementFromPosition = (pos: CaretPosition): Option<Element> => Option.from(pos.getNode()).map(Element.fromDom);
-const getElementFromPrevPosition = (pos: CaretPosition): Option<Element> => Option.from(pos.getNode(true)).map(Element.fromDom);
+const getElementFromPosition = (pos: CaretPosition): Optional<SugarElement> => Optional.from(pos.getNode()).map(SugarElement.fromDom);
+const getElementFromPrevPosition = (pos: CaretPosition): Optional<SugarElement> => Optional.from(pos.getNode(true)).map(SugarElement.fromDom);
 
 const getVisualCaretPosition = (walkFn, caretPosition: CaretPosition): CaretPosition => {
   while ((caretPosition = walkFn(caretPosition))) {

@@ -1,19 +1,18 @@
-import * as Body from 'ephox/sugar/api/node/Body';
-import * as Css from 'ephox/sugar/api/properties/Css';
-import * as DomEvent from 'ephox/sugar/api/events/DomEvent';
-import Element from 'ephox/sugar/api/node/Element';
-import * as Html from 'ephox/sugar/api/properties/Html';
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import * as Insert from 'ephox/sugar/api/dom/Insert';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
+import * as DomEvent from 'ephox/sugar/api/events/DomEvent';
+import * as SugarBody from 'ephox/sugar/api/node/SugarBody';
+import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
+import * as Css from 'ephox/sugar/api/properties/Css';
+import * as Html from 'ephox/sugar/api/properties/Html';
 import * as Traverse from 'ephox/sugar/api/search/Traverse';
-import { UnitTest, assert } from '@ephox/bedrock-client';
-import { HTMLIFrameElement, HTMLSpanElement } from '@ephox/dom-globals';
 
-UnitTest.asynctest('CssReflowTest', function (success, failure) {
+UnitTest.asynctest('CssReflowTest', (success, failure) => {
 
-  const iframe = Element.fromHtml<HTMLIFrameElement>('<iframe style="height:100px; width:500px;" src="/project/@ephox/sugar/src/test/data/cssReflowTest.html"></iframe>');
-  Insert.append(Body.body(), iframe);
-  const run = DomEvent.bind(iframe, 'load', function () {
+  const iframe = SugarElement.fromHtml<HTMLIFrameElement>('<iframe style="height:100px; width:500px;" src="/project/@ephox/sugar/src/test/data/cssReflowTest.html"></iframe>');
+  Insert.append(SugarBody.body(), iframe);
+  const run = DomEvent.bind(iframe, 'load', () => {
     run.unbind();
     try {
       checks();
@@ -25,18 +24,19 @@ UnitTest.asynctest('CssReflowTest', function (success, failure) {
     }
   });
 
-  const checks = function () {
-    const iframeWin = iframe.dom().contentWindow;
+  const checks = () => {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const iframeWin = iframe.dom.contentWindow!;
     const iframeDoc = iframeWin.document;
 
-    const styles = Element.fromTag('style', iframeDoc);
+    const styles = SugarElement.fromTag('style', iframeDoc);
     Html.set(styles, 'span.style {border-left-style: solid; }');
-    Insert.append(Element.fromDom(iframeDoc.head), styles);
+    Insert.append(SugarElement.fromDom(iframeDoc.head), styles);
 
-    const reflowTest = Element.fromTag('div', iframeDoc);
-    Insert.append(Element.fromDom(iframeDoc.body), reflowTest);
+    const reflowTest = SugarElement.fromTag('div', iframeDoc);
+    Insert.append(SugarElement.fromDom(iframeDoc.body), reflowTest);
     Html.set(reflowTest, '<span class="style">text</span>');
-    const newspan = Traverse.firstChild(reflowTest).getOrDie('test broke') as Element<HTMLSpanElement>;
+    const newspan = Traverse.firstChild(reflowTest).getOrDie('test broke') as SugarElement<HTMLSpanElement>;
     Css.reflow(newspan);
     // TODO: I can't actually make this fail without a reflow, we need a more stressful test. But you get the idea.
     assert.eq('solid', Css.get(newspan, 'border-left-style'));

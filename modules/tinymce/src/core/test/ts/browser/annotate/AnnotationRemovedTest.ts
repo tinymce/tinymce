@@ -1,10 +1,10 @@
-import { GeneralSteps, Pipeline, Step, Waiter, Logger } from '@ephox/agar';
+import { GeneralSteps, Logger, Pipeline, Step, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
-import { sAnnotate, sAssertHtmlContent, sAssertGetAll } from '../../module/test/AnnotationAsserts';
+import { sAnnotate, sAssertGetAll, sAssertHtmlContent } from '../../module/test/AnnotationAsserts';
 
 UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationRemovedTest', (success, failure) => {
   Theme();
@@ -25,11 +25,11 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationRemovedTest', (succe
       sAnnotate(editor, 'beta', 'id-three', { something: 'comment-three' }),
 
       sAssertHtmlContent(tinyApis, [
-        `<p>This <span data-mce-annotation="alpha" data-test-anything="comment-1" data-mce-annotation-uid="id-one" class="mce-annotation">was</span> the first paragraph</p>`,
+        '<p>This <span data-mce-annotation="alpha" data-test-anything="comment-1" data-mce-annotation-uid="id-one" class="mce-annotation">was</span> the first paragraph</p>',
 
-        `<p>T<span data-mce-annotation="alpha" data-test-anything="comment-two" data-mce-annotation-uid="id-two" class="mce-annotation">his is</span> the second.</p>`,
+        '<p>T<span data-mce-annotation="alpha" data-test-anything="comment-two" data-mce-annotation-uid="id-two" class="mce-annotation">his is</span> the second.</p>',
 
-        `<p>This is the th<span data-mce-annotation="beta" data-test-something="comment-three" data-mce-annotation-uid="id-three" class="mce-annotation">ir</span>d.</p>`
+        '<p>This is the th<span data-mce-annotation="beta" data-test-something="comment-three" data-mce-annotation-uid="id-three" class="mce-annotation">ir</span>d.</p>'
       ])
     ]);
 
@@ -137,7 +137,7 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationRemovedTest', (succe
       Logger.t(
         'There should be no beta annotations',
         sAssertGetAll(editor, { }, 'beta')
-      ),
+      )
     ]);
 
     Pipeline.async({}, [
@@ -150,25 +150,21 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationRemovedTest', (succe
     setup: (ed: Editor) => {
       ed.on('init', () => {
         ed.annotator.register('alpha', {
-          decorate: (uid, data) => {
-            return {
-              attributes: {
-                'data-test-anything': data.anything
-              },
-              classes: [ ]
-            };
-          }
+          decorate: (uid, data) => ({
+            attributes: {
+              'data-test-anything': data.anything
+            },
+            classes: [ ]
+          })
         });
 
         ed.annotator.register('beta', {
-          decorate: (uid, data) => {
-            return {
-              attributes: {
-                'data-test-something': data.something
-              },
-              classes: [ ]
-            };
-          }
+          decorate: (uid, data) => ({
+            attributes: {
+              'data-test-something': data.something
+            },
+            classes: [ ]
+          })
         });
       });
     }

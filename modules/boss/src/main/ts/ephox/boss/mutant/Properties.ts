@@ -1,6 +1,6 @@
-import TagBoundaries from '../common/TagBoundaries';
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import { Gene } from '../api/Gene';
+import TagBoundaries from '../common/TagBoundaries';
 
 const children = function (item: Gene) {
   return item.children;
@@ -10,11 +10,11 @@ const name = function (item: Gene) {
   return item.name;
 };
 
-const parent = function (item: Gene): Option<Gene> {
+const parent = function (item: Gene): Optional<Gene> {
   return item.parent;
 };
 
-const document = function (item: Gene) {
+const document = function (_item: Gene) {
   return undefined; // currently the test universe does not have documents
 };
 
@@ -31,7 +31,7 @@ const isElement = function (item: Gene) {
 };
 
 const getText = function (item: Gene) {
-  return Option.from(item.text).getOrDie('Text not available on this node');
+  return Optional.from(item.text).getOrDie('Text not available on this node');
 };
 
 const setText = function (item: Gene, value: string | undefined) {
@@ -50,7 +50,7 @@ const isNonEditable = function (item: Gene) {
   return isElement(item) && item.attrs.contenteditable === 'false';
 };
 
-export default {
+export {
   children,
   name,
   parent,

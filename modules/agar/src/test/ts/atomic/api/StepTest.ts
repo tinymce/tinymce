@@ -51,7 +51,7 @@ UnitTest.asynctest('Step.predicate false Test', (success, failure) => {
     Logger.t(
       '[ Predicate false ]',
       Step.predicate((s) => s === 'egg')
-    ),
+    )
   ], () => {
     failure('The last test should have failed, so the pipeline should have failed.\n' +
       'Expected: Fake failure: last test'

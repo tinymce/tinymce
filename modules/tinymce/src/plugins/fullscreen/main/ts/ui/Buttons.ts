@@ -18,6 +18,7 @@ const makeSetupHandler = (editor: Editor, fullscreenState: Cell<object>) => (api
 const register = (editor: Editor, fullscreenState: Cell<object>) => {
   editor.ui.registry.addToggleMenuItem('fullscreen', {
     text: 'Fullscreen',
+    icon: 'fullscreen',
     shortcut: 'Meta+Shift+F',
     onAction: () => editor.execCommand('mceFullScreen'),
     onSetup: makeSetupHandler(editor, fullscreenState)
@@ -31,6 +32,6 @@ const register = (editor: Editor, fullscreenState: Cell<object>) => {
   });
 };
 
-export default {
+export {
   register
 };

@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Events from '../api/Events';
-import Editor from 'tinymce/core/api/Editor';
 import { Cell } from '@ephox/katamari';
+import Editor from 'tinymce/core/api/Editor';
+import * as Events from '../api/Events';
 
 const toggleVisualBlocks = function (editor: Editor, pluginUrl: string, enabledState: Cell<boolean>) {
   const dom = editor.dom;
@@ -18,6 +18,6 @@ const toggleVisualBlocks = function (editor: Editor, pluginUrl: string, enabledS
   Events.fireVisualBlocks(editor, enabledState.get());
 };
 
-export default {
+export {
   toggleVisualBlocks
 };

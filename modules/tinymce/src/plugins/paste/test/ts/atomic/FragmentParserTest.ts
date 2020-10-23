@@ -1,5 +1,5 @@
-import FragmentParser from 'tinymce/plugins/paste/core/FragmentParser';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
+import * as FragmentParser from 'tinymce/plugins/paste/core/FragmentParser';
 
 UnitTest.test('atomic.tinymce.plugins.paste.FragmentParserTest', function () {
   const testGetFragmentInfo = function () {

@@ -1,4 +1,6 @@
-import { ApproxStructure, Assertions, Chain, Cursors, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, Touch, UiFinder } from '@ephox/agar';
+import {
+  ApproxStructure, Assertions, Chain, Cursors, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, Touch, UiFinder
+} from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
@@ -9,42 +11,38 @@ import * as Tagger from 'ephox/alloy/registry/Tagger';
 
 UnitTest.asynctest('ButtonSpecTest', (success, failure) => {
 
-  GuiSetup.setup((store, doc, body) => {
-    return GuiFactory.build(
-      Button.sketch({
-        dom: {
-          tag: 'button',
-          innerHtml: 'ButtonSpecTest.button',
-          classes: [ 'test-button' ]
-        },
-        action: store.adder('button.action'),
-        uid: 'test-button-id'
-      })
-    );
-  }, (doc, body, gui, component, store) => {
+  GuiSetup.setup((store, _doc, _body) => GuiFactory.build(
+    Button.sketch({
+      dom: {
+        tag: 'button',
+        innerHtml: 'ButtonSpecTest.button',
+        classes: [ 'test-button' ]
+      },
+      action: store.adder('button.action'),
+      uid: 'test-button-id'
+    })
+  ), (doc, _body, gui, component, store) => {
     // TODO: Use s prefix for all of these. Or find out why they aren't.
 
     const testStructure = Step.sync(() => {
       Assertions.assertStructure(
         'Checking initial structure of button',
-        ApproxStructure.build((s, str, arr) => {
-          return s.element('button', {
-            classes: [
-              arr.has('test-button')
-            ],
-            attrs: {
-              'type': str.is('button'),
-              'data-alloy-id': str.none()
-            },
-            html: str.is('ButtonSpecTest.button')
-          });
-        }),
-        component.element()
+        ApproxStructure.build((s, str, arr) => s.element('button', {
+          classes: [
+            arr.has('test-button')
+          ],
+          attrs: {
+            'type': str.is('button'),
+            'data-alloy-id': str.none()
+          },
+          html: str.is('ButtonSpecTest.button')
+        })),
+        component.element
       );
     });
 
     const testAlloyUid = Step.sync(() => {
-      const actual = Tagger.readOrDie(component.element());
+      const actual = Tagger.readOrDie(component.element);
       Assertions.assertEq('Checking alloy uid', 'test-button-id', actual);
     });
 
@@ -52,10 +50,10 @@ UnitTest.asynctest('ButtonSpecTest', (success, failure) => {
       'testing button click',
       GeneralSteps.sequence([
         store.sAssertEq('step 1: no clicks', [ ]),
-        Mouse.sClickOn(gui.element(), 'button'),
+        Mouse.sClickOn(gui.element, 'button'),
         store.sAssertEq('step 2: post click', [ 'button.action' ]),
         store.sClear,
-        Chain.asStep(gui.element(), [
+        Chain.asStep(gui.element, [
           UiFinder.cFindIn('button'),
           Cursors.cFollow([ 0 ]),
           Mouse.cClick
@@ -69,10 +67,10 @@ UnitTest.asynctest('ButtonSpecTest', (success, failure) => {
       'testing button tap',
       GeneralSteps.sequence([
         store.sAssertEq('step 1: no taps', [ ]),
-        Touch.sTapOn(gui.element(), 'button'),
+        Touch.sTapOn(gui.element, 'button'),
         store.sAssertEq('step 2: post tap', [ 'button.action' ]),
         store.sClear,
-        Chain.asStep(gui.element(), [
+        Chain.asStep(gui.element, [
           UiFinder.cFindIn('button'),
           Cursors.cFollow([ 0 ]),
           Touch.cTap
@@ -98,7 +96,7 @@ UnitTest.asynctest('ButtonSpecTest', (success, failure) => {
     const testFocusing = Logger.t(
       'test focusing',
       GeneralSteps.sequence([
-        FocusTools.sSetFocus('Setting focus on button', gui.element(), '.test-button'),
+        FocusTools.sSetFocus('Setting focus on button', gui.element, '.test-button'),
         FocusTools.sTryOnSelector('Checking focus on button', doc, '.test-button')
       ])
     );

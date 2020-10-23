@@ -1,7 +1,7 @@
 import { Chain, Guard, NamedChain } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Option, Result } from '@ephox/katamari';
-import { Css, Position, Scroll } from '@ephox/sugar';
+import { Optional, Result } from '@ephox/katamari';
+import { Css, Scroll, SugarPosition } from '@ephox/sugar';
 
 import * as Boxes from 'ephox/alloy/alien/Boxes';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
@@ -16,8 +16,8 @@ UnitTest.asynctest('SnapToTest', (success, failure) => {
 
   const snap = Dragging.snap({
     sensor: DragCoord.fixed(300, 10),
-    range: Position(10, 10),
-    output: DragCoord.fixed(Option.some(300), Option.some(10))
+    range: SugarPosition(10, 10),
+    output: DragCoord.fixed(Optional.some(300), Optional.some(10))
   });
 
   const subject = Memento.record(
@@ -37,7 +37,7 @@ UnitTest.asynctest('SnapToTest', (success, failure) => {
           mode: 'mouse',
           blockerClass: 'test-blocker',
           snaps: {
-            getSnapPoints () {
+            getSnapPoints() {
               return [
                 snap
               ];
@@ -47,59 +47,45 @@ UnitTest.asynctest('SnapToTest', (success, failure) => {
           },
           getBounds: () => {
             const scroll = Scroll.get();
-            return Boxes.bounds(scroll.left(), scroll.top(), 500, 500);
+            return Boxes.bounds(scroll.left, scroll.top, 500, 500);
           }
         })
       ])
     })
   );
 
-  GuiSetup.setup((store, doc, body) => {
-    return GuiFactory.build(
-      Container.sketch({
-        dom: {
-          tag: 'div',
-          styles: {
-            'margin-bottom': '2000px'
-          }
-        },
-        components: [
-          subject.asSpec()
-        ]
-      })
-    );
-  }, (doc, body, gui, component, store) => {
+  GuiSetup.setup((_store, _doc, _body) => GuiFactory.build(
+    Container.sketch({
+      dom: {
+        tag: 'div',
+        styles: {
+          'margin-bottom': '2000px'
+        }
+      },
+      components: [
+        subject.asSpec()
+      ]
+    })
+  ), (_doc, _body, _gui, component, _store) => {
 
-    const cSubject = Chain.injectThunked(() => {
-      return subject.get(component).element();
-    });
+    const cSubject = Chain.injectThunked(() => subject.get(component).element);
 
     const cRecordPosition = Chain.fromChains([
       Chain.control(
-        Chain.binder((box) => {
-          return Css.getRaw(box, 'left').bind((left) => {
-            return Css.getRaw(box, 'top').map((top) => {
-              return Result.value({
-                left,
-                top
-              });
-            });
-          }).getOrThunk(() => {
-            return Result.error('No left,top information yet');
-          });
-        }),
+        Chain.binder((box) => Css.getRaw(box, 'left').bind((left) => Css.getRaw(box, 'top').map((top) => Result.value({
+          left,
+          top
+        }))).getOrThunk(() => Result.error('No left,top information yet'))),
         Guard.tryUntil('Waiting for position data to record')
       )
     ]);
 
     const cEnsurePositionChanged = Chain.control(
-      Chain.binder((all: any) => {
-        return all.box_position1.left !== all.box_position2.left ? Result.value({}) :
-          Result.error('Positions did not change.\nPosition data: ' + JSON.stringify({
-            1: all.box_position1,
-            2: all.box_position2
-          }, null, 2));
-      }),
+      Chain.binder((all: any) => all.box_position1.left !== all.box_position2.left ? Result.value({}) :
+        Result.error('Positions did not change.\nSugarPosition data: ' + JSON.stringify({
+          1: all.box_position1,
+          2: all.box_position2
+        }, null, 2))),
       Guard.addLogging('Ensuring that the position information read from the different stages was different')
     );
 
@@ -115,9 +101,7 @@ UnitTest.asynctest('SnapToTest', (success, failure) => {
           NamedChain.direct('box', cSnapTo, '_'),
           NamedChain.direct('box', cRecordPosition, 'box_position2'),
           NamedChain.write('_', cEnsurePositionChanged),
-          NamedChain.bundle((output) => {
-            return Result.value(output);
-          })
+          NamedChain.bundle((output) => Result.value(output))
         ])
       ])
     ];

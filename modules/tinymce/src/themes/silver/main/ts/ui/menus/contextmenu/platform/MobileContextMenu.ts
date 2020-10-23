@@ -1,8 +1,7 @@
 import { AlloyComponent, Bubble, InlineView, Layout, LayoutInside, MaxHeight, MaxWidth } from '@ephox/alloy';
-import { MouseEvent, TouchEvent } from '@ephox/dom-globals';
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Selection, WindowSelection } from '@ephox/sugar';
+import { SimSelection, WindowSelection } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
@@ -12,28 +11,28 @@ import { getContextToolbarBounds } from '../../../context/ContextToolbarBounds';
 import ItemResponse from '../../item/ItemResponse';
 import * as MenuParts from '../../menu/MenuParts';
 import * as NestedMenus from '../../menu/NestedMenus';
-import { SingleMenuItemApi } from '../../menu/SingleMenuTypes';
+import { SingleMenuItemSpec } from '../../menu/SingleMenuTypes';
 import { getNodeAnchor, getPointAnchor } from '../Coords';
 
-type MenuItems = string | Array<string | SingleMenuItemApi>;
+type MenuItems = string | Array<string | SingleMenuItemSpec>;
 
 const layouts = {
-  onLtr: () => [Layout.south, Layout.southeast, Layout.southwest, Layout.northeast, Layout.northwest, Layout.north,
-    LayoutInside.north, LayoutInside.south, LayoutInside.northeast, LayoutInside.southeast, LayoutInside.northwest, LayoutInside.southwest],
-  onRtl: () => [Layout.south, Layout.southwest, Layout.southeast, Layout.northwest, Layout.northeast, Layout.north,
-    LayoutInside.north, LayoutInside.south, LayoutInside.northwest, LayoutInside.southwest, LayoutInside.northeast, LayoutInside.southeast]
+  onLtr: () => [ Layout.south, Layout.southeast, Layout.southwest, Layout.northeast, Layout.northwest, Layout.north,
+    LayoutInside.north, LayoutInside.south, LayoutInside.northeast, LayoutInside.southeast, LayoutInside.northwest, LayoutInside.southwest ],
+  onRtl: () => [ Layout.south, Layout.southwest, Layout.southeast, Layout.northwest, Layout.northeast, Layout.north,
+    LayoutInside.north, LayoutInside.south, LayoutInside.northwest, LayoutInside.southwest, LayoutInside.northeast, LayoutInside.southeast ]
 };
 
 const bubbleSize = 12;
 const bubbleAlignments = {
   valignCentre: [],
   alignCentre: [],
-  alignLeft: ['tox-pop--align-left'],
-  alignRight: ['tox-pop--align-right'],
-  right: ['tox-pop--right'],
-  left: ['tox-pop--left'],
-  bottom: ['tox-pop--bottom'],
-  top: ['tox-pop--top']
+  alignLeft: [ 'tox-pop--align-left' ],
+  alignRight: [ 'tox-pop--align-right' ],
+  right: [ 'tox-pop--right' ],
+  left: [ 'tox-pop--left' ],
+  bottom: [ 'tox-pop--bottom' ],
+  top: [ 'tox-pop--top' ]
 };
 
 const isTouchWithinSelection = (editor: Editor, e: EditorEvent<TouchEvent>) => {
@@ -43,27 +42,24 @@ const isTouchWithinSelection = (editor: Editor, e: EditorEvent<TouchEvent>) => {
   } else {
     const touch = e.touches[0];
     const rng = selection.getRng();
-    const rngRectOpt = WindowSelection.getFirstRect(editor.getWin(), Selection.domRange(rng));
-    return rngRectOpt.exists((rngRect) => rngRect.left() <= touch.clientX &&
-      rngRect.right() >= touch.clientX &&
-      rngRect.top() <= touch.clientY &&
-      rngRect.bottom() >= touch.clientY
+    const rngRectOpt = WindowSelection.getFirstRect(editor.getWin(), SimSelection.domRange(rng));
+    return rngRectOpt.exists((rngRect) => rngRect.left <= touch.clientX &&
+      rngRect.right >= touch.clientX &&
+      rngRect.top <= touch.clientY &&
+      rngRect.bottom >= touch.clientY
     );
   }
 };
 
-const getAnchorSpec = (editor: Editor, isTriggeredByKeyboardEvent: boolean, e: EditorEvent<TouchEvent>) => {
-  const anchorSpec = isTriggeredByKeyboardEvent ? getNodeAnchor(editor) : getPointAnchor(editor, e);
-  return {
-    bubble: Bubble.nu(0, bubbleSize, bubbleAlignments),
-    layouts,
-    overrides: {
-      maxWidthFunction: MaxWidth.expandable(),
-      maxHeightFunction: MaxHeight.expandable()
-    },
-    ...anchorSpec
-  };
-};
+const getPointAnchorSpec = (editor: Editor, e: EditorEvent<TouchEvent>) => ({
+  bubble: Bubble.nu(0, bubbleSize, bubbleAlignments),
+  layouts,
+  overrides: {
+    maxWidthFunction: MaxWidth.expandable(),
+    maxHeightFunction: MaxHeight.expandable()
+  },
+  ...getPointAnchor(editor, e)
+});
 
 const setupiOSOverrides = (editor: Editor) => {
   // iOS will change the selection due to longpress also being a range selection gesture. As such we
@@ -96,8 +92,8 @@ const setupiOSOverrides = (editor: Editor) => {
   };
 };
 
-const show = (editor: Editor, e: EditorEvent<TouchEvent>, items: MenuItems, backstage: UiFactoryBackstage, contextmenu: AlloyComponent, isTriggeredByKeyboardEvent: boolean, highlightImmediately: boolean) => {
-  const anchorSpec = getAnchorSpec(editor, isTriggeredByKeyboardEvent, e);
+const show = (editor: Editor, e: EditorEvent<TouchEvent>, items: MenuItems, backstage: UiFactoryBackstage, contextmenu: AlloyComponent, useNodeAnchor: boolean, highlightImmediately: boolean) => {
+  const anchorSpec = useNodeAnchor ? getNodeAnchor(editor) : getPointAnchorSpec(editor, e);
 
   NestedMenus.build(items, ItemResponse.CLOSE_ON_EXECUTE, backstage, true).map((menuData) => {
     e.preventDefault();
@@ -110,14 +106,14 @@ const show = (editor: Editor, e: EditorEvent<TouchEvent>, items: MenuItems, back
       },
       data: menuData,
       type: 'horizontal'
-    }, () => Option.some(getContextToolbarBounds(editor)));
+    }, () => Optional.some(getContextToolbarBounds(editor, backstage.shared)));
 
     // Ensure the context toolbar is hidden
     editor.fire(hideContextToolbarEvent);
   });
 };
 
-export const initAndShow = (editor: Editor, e: EditorEvent<TouchEvent>, buildMenu: () => MenuItems, backstage: UiFactoryBackstage, contextmenu: AlloyComponent, isTriggeredByKeyboardEvent: boolean): void => {
+export const initAndShow = (editor: Editor, e: EditorEvent<TouchEvent>, buildMenu: () => MenuItems, backstage: UiFactoryBackstage, contextmenu: AlloyComponent, useNodeAnchor: boolean): void => {
   const detection = PlatformDetection.detect();
   const isiOS = detection.os.isiOS();
   const isOSX = detection.os.isOSX();
@@ -128,13 +124,13 @@ export const initAndShow = (editor: Editor, e: EditorEvent<TouchEvent>, buildMen
 
   const open = () => {
     const items = buildMenu();
-    show(editor, e, items, backstage, contextmenu, isTriggeredByKeyboardEvent, shouldHighlightImmediately());
+    show(editor, e, items, backstage, contextmenu, useNodeAnchor, shouldHighlightImmediately());
   };
 
   // On iOS/iPadOS if we've long pressed on a ranged selection then we've already selected the content
   // and just need to open the menu. Otherwise we need to wait for a selection change to occur as long
   // press triggers a ranged selection on iOS.
-  if ((isOSX || isiOS) && !isTriggeredByKeyboardEvent) {
+  if ((isOSX || isiOS) && !useNodeAnchor) {
     const openiOS = () => {
       setupiOSOverrides(editor);
       open();
@@ -149,7 +145,7 @@ export const initAndShow = (editor: Editor, e: EditorEvent<TouchEvent>, buildMen
   } else {
     // On Android editor.selection hasn't updated yet at this point, so need to do it manually
     // Without this longpress causes drag-n-drop duplication of code on Android
-    if (isAndroid && !isTriggeredByKeyboardEvent) {
+    if (isAndroid && !useNodeAnchor) {
       editor.selection.setCursorLocation(e.target, 0);
     }
 

@@ -19,6 +19,7 @@ export interface SplitToolbarBaseApis {
   setGroups: (toolbar: AlloyComponent, groups: SketchSpec[]) => void;
   refresh: (toolbar: AlloyComponent) => void;
   toggle: (toolbar: AlloyComponent) => void;
+  isOpen: (toolbar: AlloyComponent) => boolean;
 }
 
 export interface SplitToolbarBaseSpec extends CompositeSketchSpec {
@@ -28,8 +29,8 @@ export interface SplitToolbarBaseSpec extends CompositeSketchSpec {
   splitToolbarBehaviours?: AlloyBehaviourRecord;
 
   parts: {
-    'overflow-group': Partial<ToolbarGroupSpec>,
-    'overflow-button': Partial<SimpleOrSketchSpec>
+    'overflow-group': Partial<ToolbarGroupSpec>;
+    'overflow-button': Partial<SimpleOrSketchSpec>;
   };
 }
 

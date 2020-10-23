@@ -1,7 +1,6 @@
 import { Objects } from '@ephox/boulder';
-import { console, document } from '@ephox/dom-globals';
-import { Option } from '@ephox/katamari';
-import { Class, Element, SelectorFind, Width } from '@ephox/sugar';
+import { Optional } from '@ephox/katamari';
+import { Class, SelectorFind, SugarElement, Width } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Transitioning } from 'ephox/alloy/api/behaviour/Transitioning';
@@ -13,90 +12,82 @@ import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 import { ItemSpec } from 'ephox/alloy/ui/types/ItemTypes';
 
-// tslint:disable:no-console
+/* eslint-disable no-console */
 
 export default (): void => {
   const gui = Gui.create();
-  const body = Element.fromDom(document.body);
-  Class.add(gui.element(), 'gui-root-demo-container');
+  const body = SugarElement.fromDom(document.body);
+  Class.add(gui.element, 'gui-root-demo-container');
   Attachment.attachSystem(body, gui);
 
-  const makeBack = (text: string): ItemSpec => {
-    return {
-      data: TieredMenu.collapseItem(text),
-      type: 'item',
-      dom: {
-        tag: 'div',
-        innerHtml: text
-      },
-      components: [ ]
-    };
-  };
+  const makeBack = (text: string): ItemSpec => ({
+    data: TieredMenu.collapseItem(text),
+    type: 'item',
+    dom: {
+      tag: 'div',
+      innerHtml: text
+    },
+    components: [ ]
+  });
 
-  const makeItem = (value: string, text: string): ItemSpec => {
-    return {
-      data: {
-        value
-      },
-      type: 'item',
-      dom: {
-        tag: 'div',
-        innerHtml: text
-      },
-      components: [ ]
-    };
-  };
+  const makeItem = (value: string, text: string): ItemSpec => ({
+    data: {
+      value
+    },
+    type: 'item',
+    dom: {
+      tag: 'div',
+      innerHtml: text
+    },
+    components: [ ]
+  });
 
-  const makeSeparator = (text: string) => {
-    return {
-      type: 'separator',
-      dom: {
-        tag: 'div',
-        classes: [ 'separator' ]
-      },
-      components: [
-        {
-          dom: {
-            tag: 'strong',
-            innerHtml: text
+  const makeSeparator = (text: string) => ({
+    type: 'separator',
+    dom: {
+      tag: 'div',
+      classes: [ 'separator' ]
+    },
+    components: [
+      {
+        dom: {
+          tag: 'strong',
+          innerHtml: text
+        }
+      }
+    ]
+  });
+
+  const makeMenu = (value: string, items: ItemSpec[]) => ({
+    value,
+    dom: {
+      tag: 'div'
+    },
+    components: [
+      Objects.exclude(makeSeparator(value), [ 'type' ]),
+      {
+        dom: {
+          tag: 'div',
+          classes: [ 'menu-items-container' ]
+        },
+        components: [
+          Menu.parts.items({ })
+        ]
+      }
+    ],
+    items,
+    menuBehaviours: Behaviour.derive([
+      Transitioning.config({
+        initialState: 'after',
+        routes: Transitioning.createTristate('before', 'current', 'after', {
+          transition: {
+            property: 'transform',
+            transitionClass: 'transitioning'
           }
-        }
-      ]
-    };
-  };
-
-  const makeMenu = (value: string, items: ItemSpec[]) => {
-    return {
-      value,
-      dom: {
-        tag: 'div'
-      },
-      components: [
-        Objects.exclude(makeSeparator(value), [ 'type' ]),
-        {
-          dom: {
-            tag: 'div',
-            classes: [ 'menu-items-container' ]
-          },
-          components: [
-            Menu.parts().items({ })
-          ]
-        }
-      ],
-      items,
-      menuBehaviours: Behaviour.derive([
-        Transitioning.config({
-          initialState: 'after',
-          routes: Transitioning.createTristate('before', 'current', 'after', {
-            transition: {
-              property: 'transform',
-              transitionClass: 'transitioning'
-            }
-          })
         })
-      ])
-    };
-  };
+      })
+    ])
+  });
 
   // https://jsfiddle.net/xuto3by2/1/
   const tieredMenu = TieredMenu.sketch({
@@ -113,26 +104,26 @@ export default (): void => {
     // For animations, need things to stay around in the DOM (at least until animation is done)
     stayInDom: true,
 
-    onExecute () {
+    onExecute() {
       console.log('Executing');
-      return Option.some<boolean>(true);
+      return Optional.some<boolean>(true);
     },
-    onEscape () {
+    onEscape() {
       console.log('Escaping');
-      return Option.some<boolean>(true);
+      return Optional.some<boolean>(true);
     },
-    onOpenMenu (container: AlloyComponent, menu: AlloyComponent) {
-      const w = Width.get(container.element());
-      Width.set(menu.element(), w);
+    onOpenMenu(container: AlloyComponent, menu: AlloyComponent) {
+      const w = Width.get(container.element);
+      Width.set(menu.element, w);
       if (Transitioning.jumpTo) {
         Transitioning.jumpTo(menu, 'current');
       }
     },
-    onOpenSubmenu (container, item, submenu) {
-      const w = Width.get(container.element());
-      const menu = SelectorFind.ancestor(item.element(), '[role="menu"]').getOrDie('hacky');
+    onOpenSubmenu(container, item, submenu) {
+      const w = Width.get(container.element);
+      const menu = SelectorFind.ancestor(item.element, '[role="menu"]').getOrDie('hacky');
       const menuComp = container.getSystem().getByDom(menu).getOrDie();
-      Width.set(submenu.element(), w);
+      Width.set(submenu.element, w);
 
       if (Transitioning.progressTo && Transitioning.jumpTo) {
         Transitioning.progressTo(menuComp, 'before');
@@ -141,8 +132,8 @@ export default (): void => {
       }
     },
 
-    onCollapseMenu (container, item, menu) {
-      const submenu = SelectorFind.ancestor(item.element(), '[role="menu"]').getOrDie('hacky');
+    onCollapseMenu(container, item, menu) {
+      const submenu = SelectorFind.ancestor(item.element, '[role="menu"]').getOrDie('hacky');
       const submenuComp = container.getSystem().getByDom(submenu).getOrDie();
       if (Transitioning.progressTo) {
         Transitioning.progressTo(submenuComp, 'after');
@@ -165,9 +156,9 @@ export default (): void => {
 
         headers: makeMenu('Headers', [
           makeBack('< Back'),
-          makeItem('h1', 'Header 1'),
-          makeItem('h2', 'Header 2'),
-          makeItem('h3', 'Header 3')
+          makeItem('h1', 'Heading 1'),
+          makeItem('h2', 'Heading 2'),
+          makeItem('h3', 'Heading 3')
         ]),
 
         inline: makeMenu('Inline', [

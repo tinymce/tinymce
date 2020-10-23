@@ -5,10 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element } from '@ephox/dom-globals';
 import Editor from 'tinymce/core/api/Editor';
 
-import Unlink from './Unlink';
+import * as Unlink from './Unlink';
 
 const collapseSelectionToEnd = function (editor: Editor) {
   editor.selection.collapse(false);
@@ -40,7 +39,7 @@ const createLink = function (editor: Editor, url: string) {
   url.trim().length === 0 ? unlink(editor) : updateOrInsertLink(editor, url);
 };
 
-export default {
+export {
   createLink,
   unlink
 };

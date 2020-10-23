@@ -1,5 +1,5 @@
 import { FieldProcessorAdt, FieldSchema, Objects } from '@ephox/boulder';
-import { Fun, Option } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { Composing } from '../../api/behaviour/Composing';
@@ -23,7 +23,7 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
 const parts: () => PartType.PartTypeAdt[] = Fun.constant([
   PartType.required<FormChooserDetail>({
     name: 'legend',
-    defaults () {
+    defaults() {
       return {
         dom: {
           tag: 'legend'
@@ -34,13 +34,13 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
 
   PartType.group<FormChooserDetail, SimpleOrSketchSpec & { value: string }>({
     factory: {
-      sketch (spec) {
+      sketch(spec) {
         return Objects.exclude(spec, [ 'value' ]);
       }
     },
     name: 'choices',
     unit: 'choice',
-    overrides (detail, choiceSpec) {
+    overrides(detail, choiceSpec) {
       return {
         dom: {
           // Consider making a domModification, although we probably do not want it overwritten.
@@ -61,7 +61,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
         domModification: {
           classes: [ detail.markers.choiceClass ]
         },
-        events: ButtonBase.events(Option.none())
+        events: ButtonBase.events(Optional.none())
       };
     }
   })

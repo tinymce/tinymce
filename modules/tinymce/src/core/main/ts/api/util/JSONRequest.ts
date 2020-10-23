@@ -6,8 +6,8 @@
  */
 
 import JSON from './JSON';
-import XHR, { XHRSettings } from './XHR';
 import Tools from './Tools';
+import XHR, { XHRSettings } from './XHR';
 
 /**
  * This class enables you to use JSON-RPC to call backend methods.
@@ -41,20 +41,19 @@ const extend = Tools.extend;
 
 export interface JSONRequestSettings {
   crossDomain?: boolean;
-  requestheaders?: Record<string, { key: string, value: string}>;
+  requestheaders?: Record<string, { key: string; value: string}>;
   type?: string;
   url?: string;
-  error_scope?: {};
-  success_scope?: {};
+  error_scope?: any;
+  success_scope?: any;
   success? (data: any): void;
-  error? (error: any): void;
+  error? (error: any, xhr: XMLHttpRequest): void;
 }
 
 export interface JSONRequestArgs extends JSONRequestSettings {
   id?: string;
   method?: string;
   params?: string;
-  url: string;
 }
 
 export interface JSONRequestConstructor {
@@ -74,14 +73,14 @@ class JSONRequest {
    * @static
    * @param {Object} o Call object where there are three field id, method and params this object should also contain callbacks etc.
    */
-  public static sendRPC (o: JSONRequestArgs) {
+  public static sendRPC(o: JSONRequestArgs) {
     return new JSONRequest().send(o);
   }
 
   public settings: JSONRequestSettings;
   public count: number;
 
-  constructor (settings?: JSONRequestSettings) {
+  public constructor(settings?: JSONRequestSettings) {
     this.settings = extend({}, settings);
     this.count = 0;
   }
@@ -92,10 +91,10 @@ class JSONRequest {
    * @method send
    * @param {Object} args Call object where there are three field id, method and params this object should also contain callbacks etc.
    */
-  public send (args: JSONRequestArgs) {
+  public send(args: JSONRequestArgs) {
     const ecb = args.error, scb = args.success;
 
-    const xhrArgs: XHRSettings = extend(this.settings, args);
+    const xhrArgs = extend(this.settings, args) as XHRSettings;
 
     xhrArgs.success = function (c: any, x) {
       c = JSON.parse(c);

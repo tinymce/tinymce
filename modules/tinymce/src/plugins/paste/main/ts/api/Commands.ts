@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Actions from '../core/Actions';
 import Editor from 'tinymce/core/api/Editor';
-import { Clipboard } from '../api/Clipboard';
+import * as Actions from '../core/Actions';
+import { Clipboard } from './Clipboard';
 
 const register = function (editor: Editor, clipboard: Clipboard) {
   editor.addCommand('mceTogglePlainTextPaste', function () {
@@ -25,6 +25,6 @@ const register = function (editor: Editor, clipboard: Clipboard) {
   });
 };
 
-export default {
+export {
   register
 };

@@ -4,7 +4,7 @@ Welcome to the TinyMCE monorepo. For TinyMCE itself look to the [modules/tinymce
 
 ## Some background
 
-As TinyMCE transitioned to a modern codebase through 2017 and 2018 many external dependencies were added from previously closed-source projects. This became unweildy to develop, so in June 2019 the decision was made to bring those projects together in a monorepo.
+As TinyMCE transitioned to a modern codebase through 2017 and 2018 many external dependencies were added from previously closed-source projects. This became unwieldy to develop, so in June 2019 the decision was made to bring those projects together in a monorepo.
 
 This repo is built with Yarn workspaces and uses publish tooling support from Lerna. NPM is not supported and attempts to use it will fail.
 
@@ -68,8 +68,8 @@ runs `tsc -b -w` for those times when you don't need to iterate in the browser.
 `yarn tsc`
 an alias to `tsc -b` just in case you forget
 
-`yarn tslint`
-runs `tslint` in _all_ projects, with a rule set that is far more strict than most projects were previously subject to. This is a good source of things to improve when bored.
+`yarn eslint`
+runs `eslint` in _all_ projects, with a rule set that is far more strict than most projects were previously subject to. This is a good source of things to improve when bored.
 
 `yarn tinymce-grunt`
 easy access to the TinyMCE grunt commands from the root folder.
@@ -167,3 +167,21 @@ Lerna's publish process is configured to not `git push` in case of failure, so a
 git push
 git push --tags
 ```
+
+## Adding globals
+
+TinyMCE puts a `tinymce` object in the global namespace, and has a tree of objects down from there.
+If you wish to add to this, you need to do the following:
+
+1. Ensure your module is located under `modules/tinymce/src/core/main/ts/api`
+2. Expose any types under `interface TinyMCE` in `modules/tinymce/src/core/main/ts/api/Tinymce.ts`
+3. Expose any objects/functions as part of `const publicApi` in `modules/tinymce/src/core/main/ts/api/Tinymce.ts`
+4. Ensure your values are exposed in `modules/tinymce/src/core/main/json/globals.json`
+
+Ensure the paths all match. e.g. if you're exposing `modules/tinymce/src/core/main/ts/api/dom/StyleSheetLoader.ts`
+
+1. The module is under `.../api/dom/StyleSheetLoader.ts`
+2. The type is `TinyMCE.dom.StyleSheetLoader`
+3. The constructor function is `publicApi.dom.StyleSheetLoader`
+4. globals.json contains `"tinymce.core.api.dom.StyleSheetLoader"`
+

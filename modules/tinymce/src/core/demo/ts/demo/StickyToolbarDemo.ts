@@ -1,4 +1,4 @@
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 
 declare let tinymce: any;
 
@@ -9,18 +9,18 @@ export default function () {
       icon: 'comment',
       tooltip: 'Tooltip for ' + name,
       onSetup: (api) => {
-        const box = Element.fromHtml('<div style="width: ' + width + 'px; background: ' + background + ';"></div>');
-        api.element().appendChild(box.dom());
+        const box = SugarElement.fromHtml('<div style="width: ' + width + 'px; background: ' + background + ';"></div>');
+        api.element().appendChild(box.dom);
         return () => {
-          api.element().removeChild(box.dom());
+          api.element().removeChild(box.dom);
         };
       },
-      onShow: (api) => {
+      onShow: (_api) => {
 
       },
-      onHide: (api) => {
+      onHide: (_api) => {
 
-      },
+      }
     });
   };
 
@@ -44,7 +44,7 @@ export default function () {
     ],
     importcss_append: true,
     height: 400,
-    file_picker_callback (callback, value, meta) {
+    file_picker_callback(callback, _value, meta) {
       // Provide file and text for the link dialog
       if (meta.filetype === 'file') {
         callback('https://www.google.com/logos/google.jpg', { text: 'My text' });
@@ -60,14 +60,14 @@ export default function () {
         callback('movie.mp4', { source2: 'alt.ogg', poster: 'https://www.google.com/logos/google.jpg' });
       }
     },
-    spellchecker_callback (method, text, success, failure) {
+    spellchecker_callback(method, text, success, _failure) {
       const words = text.match(this.getWordCharPattern());
 
       if (method === 'spellcheck') {
         const suggestions = {};
 
         for (let i = 0; i < words.length; i++) {
-          suggestions[words[i]] = ['First', 'Second'];
+          suggestions[words[i]] = [ 'First', 'Second' ];
         }
 
         success(suggestions);
@@ -90,7 +90,7 @@ export default function () {
         'autosave lists'
       ]
     },
-    setup (ed) {
+    setup(ed) {
       makeSidebar(ed, 'sidebar1', 'green', 200);
     },
     plugins: [

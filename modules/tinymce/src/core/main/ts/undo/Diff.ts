@@ -36,15 +36,15 @@ const diff = function (left, right) {
       let j = start2;
       while (i < end1 || j < end2) {
         if (i < end1 && j < end2 && left[i] === right[j]) {
-          script.push([KEEP, left[i]]);
+          script.push([ KEEP, left[i] ]);
           ++i;
           ++j;
         } else {
           if (end1 - start1 > end2 - start2) {
-            script.push([DELETE, left[i]]);
+            script.push([ DELETE, left[i] ]);
             ++i;
           } else {
-            script.push([INSERT, right[j]]);
+            script.push([ INSERT, right[j] ]);
             ++j;
           }
         }
@@ -52,7 +52,7 @@ const diff = function (left, right) {
     } else {
       buildScript(start1, middle.start, start2, middle.start - middle.diag, script);
       for (let i2 = middle.start; i2 < middle.end; ++i2) {
-        script.push([KEEP, left[i2]]);
+        script.push([ KEEP, left[i2] ]);
       }
       buildScript(middle.end, end1, middle.end - middle.diag, end2, script);
     }
@@ -140,7 +140,7 @@ const diff = function (left, right) {
   return script;
 };
 
-export default {
+export {
   KEEP,
   DELETE,
   INSERT,

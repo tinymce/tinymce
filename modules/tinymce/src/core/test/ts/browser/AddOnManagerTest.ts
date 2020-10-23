@@ -1,5 +1,6 @@
 import { Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
+import { Obj } from '@ephox/katamari';
 import { LegacyUnit } from '@ephox/mcagar';
 import AddOnManager from 'tinymce/core/api/AddOnManager';
 import ScriptLoader from 'tinymce/core/api/dom/ScriptLoader';
@@ -42,9 +43,9 @@ UnitTest.asynctest('browser.tinymce.core.AddOnManagerTest', (success, failure) =
       proto[name] = originalFuncs[name];
       delete originalFuncs[name];
     } else {
-      for (const key in originalFuncs) {
-        proto[key] = originalFuncs[key];
-      }
+      Obj.each(originalFuncs, (value, key) => {
+        proto[key] = value;
+      });
 
       delete proto.__originalFuncs;
     }

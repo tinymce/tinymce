@@ -1,5 +1,5 @@
 import { FieldProcessorAdt } from '@ephox/boulder';
-import { Fun, Option } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { Focusing } from '../../api/behaviour/Focusing';
@@ -35,7 +35,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
     factory: Toolbar,
     schema: ToolbarSchema.schema(),
     name: 'overflow',
-    overrides (detail) {
+    overrides(detail) {
       return {
         toolbarBehaviours: Behaviour.derive([
           Sliding.config({
@@ -65,7 +65,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
             mode: 'acyclic',
             onEscape: (comp) => {
               AlloyParts.getPart(comp, detail, 'overflow-button').each(Focusing.focus);
-              return Option.some<boolean>(true);
+              return Optional.some<boolean>(true);
             }
           })
         ])
@@ -75,19 +75,17 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
 
   PartType.external<SplitSlidingToolbarDetail, ButtonSpec>({
     name: 'overflow-button',
-    overrides: (detail) => {
-      return {
-        buttonBehaviours: Behaviour.derive([
-          Toggling.config({
-            toggleClass: detail.markers.overflowToggledClass,
-            aria: {
-              mode: 'pressed'
-            },
-            toggleOnExecute: false
-          }),
-        ])
-      };
-    }
+    overrides: (detail) => ({
+      buttonBehaviours: Behaviour.derive([
+        Toggling.config({
+          toggleClass: detail.markers.overflowToggledClass,
+          aria: {
+            mode: 'pressed'
+          },
+          toggleOnExecute: false
+        })
+      ])
+    })
   }),
 
   PartType.external<SplitSlidingToolbarDetail>({

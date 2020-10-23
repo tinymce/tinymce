@@ -8,8 +8,8 @@ import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
 import { Keying } from 'ephox/alloy/api/behaviour/Keying';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
-import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
+import { Container } from 'ephox/alloy/api/ui/Container';
 import * as NavigationUtils from 'ephox/alloy/test/NavigationUtils';
 
 UnitTest.asynctest('Flat Grid Keying Test', (success, failure) => {
@@ -21,36 +21,34 @@ UnitTest.asynctest('Flat Grid Keying Test', (success, failure) => {
     's19', 's20', 's21'
   ];
 
-  GuiSetup.setup((store, doc, body) => {
-    const item = (classes: string[]) => {
-      return Container.sketch({
-        dom: {
-          tag: 'span',
-          styles: {
-            display: 'inline-block',
-            width: '20px',
-            height: '20px',
-            margin: '1px',
-            border: '1px solid black'
-          },
-          classes: [ 'square' ].concat(classes)
+  GuiSetup.setup((store, _doc, _body) => {
+    const item = (classes: string[]) => Container.sketch({
+      dom: {
+        tag: 'span',
+        styles: {
+          display: 'inline-block',
+          width: '20px',
+          height: '20px',
+          margin: '1px',
+          border: '1px solid black'
         },
-        events: AlloyEvents.derive([
-          AlloyEvents.runOnExecute(
-            store.adder('item.execute: ' + classes.join(','))
-          )
-        ]),
-        containerBehaviours: Behaviour.derive([
-          Focusing.config({ })
-        ])
-      });
-    };
+        classes: [ 'square' ].concat(classes)
+      },
+      events: AlloyEvents.derive([
+        AlloyEvents.runOnExecute(
+          store.adder('item.execute: ' + classes.join(','))
+        )
+      ]),
+      containerBehaviours: Behaviour.derive([
+        Focusing.config({ })
+      ])
+    });
 
     return GuiFactory.build(
       Container.sketch({
         dom: {
           tag: 'div',
-          classes: [ 'flat-grid-keying-test'],
+          classes: [ 'flat-grid-keying-test' ],
           styles: {
             background: 'white',
             width: '150px',
@@ -69,29 +67,25 @@ UnitTest.asynctest('Flat Grid Keying Test', (success, failure) => {
           })
         ]),
         // 4 x 6 grid size
-        components: Arr.map(squares, (num) => {
-          return item([ num ]);
-        })
+        components: Arr.map(squares, (num) => item([ num ]))
       })
     );
 
   }, (doc, body, gui, component, store) => {
 
     const targets: any = Objects.wrapAll(
-      Arr.map(squares, (sq) => {
-        return {
-          key: sq,
-          value: {
-            label: sq,
-            selector: '.' + sq
-          }
-        };
-      })
+      Arr.map(squares, (sq) => ({
+        key: sq,
+        value: {
+          label: sq,
+          selector: '.' + sq
+        }
+      }))
     );
 
     return [
       GuiSetup.mSetupKeyLogger(body),
-      FocusTools.sSetFocus('Initial focus', gui.element(), '.s11'),
+      FocusTools.sSetFocus('Initial focus', gui.element, '.s11'),
       Step.sync(() => {
         Keying.setGridSize(component, 4, 6);
       }),

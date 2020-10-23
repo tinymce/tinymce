@@ -8,13 +8,12 @@
 import { AlloySpec, SketchSpec, VerticalDir } from '@ephox/alloy';
 import { ValueSchema } from '@ephox/boulder';
 import { Toolbar } from '@ephox/bridge';
-import { console } from '@ephox/dom-globals';
-import { Arr, Obj, Option, Result, Type } from '@ephox/katamari';
+import { Arr, Obj, Optional, Result, Type } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
-import { getToolbarMode, isToolbarLocationTop, ToolbarMode } from '../../api/Settings';
+import { getToolbarMode, ToolbarGroupSetting, ToolbarMode } from '../../api/Settings';
 
 import { UiFactoryBackstage } from '../../backstage/Backstage';
-import { RenderToolbarConfig, ToolbarGroupSetting } from '../../Render';
+import { RenderToolbarConfig } from '../../Render';
 import { renderMenuButton } from '../button/MenuButton';
 import { createAlignSelect } from '../core/complex/AlignSelect';
 import { createFontSelect } from '../core/complex/FontSelect';
@@ -26,11 +25,11 @@ import { renderFloatingToolbarButton, renderSplitButton, renderToolbarButton, re
 import { ToolbarGroup } from './CommonToolbar';
 
 export const handleError = (error) => {
-  // tslint:disable-next-line:no-console
+  // eslint-disable-next-line no-console
   console.error(ValueSchema.formatError(error));
 };
 
-export type ToolbarButton = Toolbar.ToolbarButtonApi | Toolbar.ToolbarMenuButtonApi | Toolbar.ToolbarToggleButtonApi | Toolbar.ToolbarSplitButtonApi;
+export type ToolbarButton = Toolbar.ToolbarButtonSpec | Toolbar.ToolbarMenuButtonSpec | Toolbar.ToolbarToggleButtonSpec | Toolbar.ToolbarSplitButtonSpec;
 
 interface Extras {
   backstage: UiFactoryBackstage;
@@ -44,7 +43,7 @@ const defaultToolbar = [
     name: 'styles', items: [ 'styleselect' ]
   },
   {
-    name: 'formatting', items: [ 'bold', 'italic']
+    name: 'formatting', items: [ 'bold', 'italic' ]
   },
   {
     name: 'alignment', items: [ 'alignleft', 'aligncenter', 'alignright', 'alignjustify' ]
@@ -60,55 +59,45 @@ const defaultToolbar = [
   }
 ];
 
-const renderFromBridge = <BI, ToolbarButton>(bridgeBuilder: (i: BI) => Result<ToolbarButton, ValueSchema.SchemaError<any>>, render: (o: ToolbarButton, extras: Extras, editor: Editor) => AlloySpec) => {
-  return (spec, extras, editor) => {
-    const internal = bridgeBuilder(spec).mapError((errInfo) => ValueSchema.formatError(errInfo)).getOrDie();
+const renderFromBridge = <BI, ToolbarButton>(bridgeBuilder: (i: BI) => Result<ToolbarButton, ValueSchema.SchemaError<any>>, render: (o: ToolbarButton, extras: Extras, editor: Editor) => AlloySpec) => (spec, extras, editor) => {
+  const internal = bridgeBuilder(spec).mapError((errInfo) => ValueSchema.formatError(errInfo)).getOrDie();
 
-    return render(internal, extras, editor);
-  };
+  return render(internal, extras, editor);
 };
 
 const types = {
   button: renderFromBridge(
     Toolbar.createToolbarButton,
-    (s: Toolbar.ToolbarButton, extras) => {
-      return renderToolbarButton(
-        s,
-        extras.backstage.shared.providers,
-      );
-    }
+    (s: Toolbar.ToolbarButton, extras) => renderToolbarButton(
+      s,
+      extras.backstage.shared.providers,
+    )
   ),
 
   togglebutton: renderFromBridge(
     Toolbar.createToggleButton,
-    (s: Toolbar.ToolbarToggleButton, extras) => {
-      return renderToolbarToggleButton(
-        s,
-        extras.backstage.shared.providers,
-      );
-    }
+    (s: Toolbar.ToolbarToggleButton, extras) => renderToolbarToggleButton(
+      s,
+      extras.backstage.shared.providers,
+    )
   ),
 
-  menubutton: renderFromBridge<Toolbar.ToolbarMenuButtonApi, Toolbar.ToolbarMenuButton>(
+  menubutton: renderFromBridge<Toolbar.ToolbarMenuButtonSpec, Toolbar.ToolbarMenuButton>(
     Toolbar.createMenuButton,
-    (s: Toolbar.ToolbarMenuButton, extras) => {
-      return renderMenuButton(
-        s,
-        ToolbarButtonClasses.Button,
-        extras.backstage,
-        Option.none()
-      );
-    }
+    (s: Toolbar.ToolbarMenuButton, extras) => renderMenuButton(
+      s,
+      ToolbarButtonClasses.Button,
+      extras.backstage,
+      Optional.none()
+    )
   ),
 
   splitbutton: renderFromBridge(
     Toolbar.createSplitButton,
-    (s: Toolbar.ToolbarSplitButton, extras) => {
-      return renderSplitButton(
-        s,
-        extras.backstage.shared
-      );
-    }
+    (s: Toolbar.ToolbarSplitButton, extras) => renderSplitButton(
+      s,
+      extras.backstage.shared
+    )
   ),
 
   grouptoolbarbutton: renderFromBridge(
@@ -116,9 +105,9 @@ const types = {
     (s: Toolbar.GroupToolbarButton, extras, editor: Editor) => {
       const buttons = editor.ui.registry.getAll().buttons;
       const identify = (toolbar: string | ToolbarGroupSetting[]) =>
-        identifyButtons(editor, { buttons, toolbar, allowToolbarGroups: false }, extras, Option.none());
+        identifyButtons(editor, { buttons, toolbar, allowToolbarGroups: false }, extras, Optional.none());
       const attributes = {
-        [VerticalDir.Attribute]: isToolbarLocationTop(editor) ? VerticalDir.AttributeValue.TopToBottom : VerticalDir.AttributeValue.BottomToTop
+        [VerticalDir.Attribute]: extras.backstage.shared.header.isPositionedAtTop() ? VerticalDir.AttributeValue.TopToBottom : VerticalDir.AttributeValue.BottomToTop
       };
 
       switch (getToolbarMode(editor)) {
@@ -138,20 +127,16 @@ const types = {
   alignMenuButton: (editor: Editor, extras: Extras) => createAlignSelect(editor, extras.backstage)
 };
 
-const extractFrom = (spec: ToolbarButton, extras: Extras, editor: Editor): Option<AlloySpec> => {
-  return Obj.get(types, spec.type).fold(
-    () => {
-      // tslint:disable-next-line:no-console
-      console.error('skipping button defined by', spec);
-      return Option.none();
-    },
-    (render) => {
-      return Option.some(
-        render(spec, extras, editor)
-      );
-    }
-  );
-};
+const extractFrom = (spec: ToolbarButton, extras: Extras, editor: Editor): Optional<AlloySpec> => Obj.get(types, spec.type).fold(
+  () => {
+    // eslint-disable-next-line no-console
+    console.error('skipping button defined by', spec);
+    return Optional.none();
+  },
+  (render) => Optional.some(
+    render(spec, extras, editor)
+  )
+);
 
 const bespokeButtons: Record<string, (editor: Editor, extras: Extras) => SketchSpec> = {
   styleselect: types.styleSelectButton,
@@ -163,9 +148,7 @@ const bespokeButtons: Record<string, (editor: Editor, extras: Extras) => SketchS
 
 const removeUnusedDefaults = (buttons) => {
   const filteredItemGroups = Arr.map(defaultToolbar, (group) => {
-    const items = Arr.filter(group.items, (subItem) => {
-      return Obj.has(buttons, subItem) || Obj.has(bespokeButtons as any, subItem);
-    });
+    const items = Arr.filter(group.items, (subItem) => Obj.has(buttons, subItem) || Obj.has(bespokeButtons as any, subItem));
     return {
       name: group.name,
       items
@@ -176,11 +159,9 @@ const removeUnusedDefaults = (buttons) => {
 
 const convertStringToolbar = (strToolbar) => {
   const groupsStrings = strToolbar.split('|');
-  return Arr.map(groupsStrings, (g) => {
-    return {
-      items: g.trim().split(' ')
-    };
-  });
+  return Arr.map(groupsStrings, (g) => ({
+    items: g.trim().split(' ')
+  }));
 };
 
 const isToolbarGroupSettingArray = (toolbar): toolbar is ToolbarGroupSetting[] => Type.isArrayOf(toolbar, (t): t is ToolbarGroupSetting => Obj.has(t, 'name') && Obj.has(t, 'items'));
@@ -203,57 +184,42 @@ const createToolbar = (toolbarConfig: RenderToolbarConfig): ToolbarGroupSetting[
   } else if (isToolbarGroupSettingArray(toolbar)) {
     return toolbar;
   } else {
-    // tslint:disable-next-line:no-console
+    // eslint-disable-next-line no-console
     console.error('Toolbar type should be string, string[], boolean or ToolbarGroup[]');
     return [];
   }
 };
 
-const lookupButton = (editor: Editor, buttons: Record<string, any>, toolbarItem: string, allowToolbarGroups: boolean, extras: Extras, prefixes: Option<string[]>): Option<AlloySpec> => {
-  return Obj.get(buttons, toolbarItem.toLowerCase()).orThunk(() => {
-    return prefixes.bind((ps) => {
-      return Arr.findMap(ps, (prefix) => {
-        return Obj.get(buttons, prefix + toolbarItem.toLowerCase());
-      });
-    });
-  }).fold(
-    () => {
-      return Obj.get(bespokeButtons, toolbarItem.toLowerCase()).map((r) => {
-        return r(editor, extras);
-      }).orThunk(() => {
-        // TODO: Add back after TINY-3232 is implemented
-        // console.error('No representation for toolbarItem: ' + toolbarItem);
-        return Option.none();
-      });
-    },
+const lookupButton = (editor: Editor, buttons: Record<string, any>, toolbarItem: string, allowToolbarGroups: boolean, extras: Extras, prefixes: Optional<string[]>): Optional<AlloySpec> =>
+  Obj.get(buttons, toolbarItem.toLowerCase()).orThunk(() => prefixes.bind((ps) => Arr.findMap(ps, (prefix) => Obj.get(buttons, prefix + toolbarItem.toLowerCase())))).fold(
+    () => Obj.get(bespokeButtons, toolbarItem.toLowerCase()).map((r) => r(editor, extras)).orThunk(() =>
+    // TODO: Add back after TINY-3232 is implemented
+    // console.error('No representation for toolbarItem: ' + toolbarItem);
+      Optional.none()
+    ),
     (spec) => {
       if (spec.type === 'grouptoolbarbutton' && !allowToolbarGroups) {
         // TODO change this message when sliding is available
-        // tslint:disable-next-line:no-console
+        // eslint-disable-next-line no-console
         console.warn(`Ignoring the '${toolbarItem}' toolbar button. Group toolbar buttons are only supported when using floating toolbar mode and cannot be nested.`);
-        return Option.none();
+        return Optional.none();
       } else {
         return extractFrom(spec, extras, editor);
       }
     }
   );
-};
 
-const identifyButtons = (editor: Editor, toolbarConfig: RenderToolbarConfig, extras: Extras, prefixes: Option<string[]>): ToolbarGroup[] => {
+const identifyButtons = (editor: Editor, toolbarConfig: RenderToolbarConfig, extras: Extras, prefixes: Optional<string[]>): ToolbarGroup[] => {
   const toolbarGroups = createToolbar(toolbarConfig);
   const groups = Arr.map(toolbarGroups, (group) => {
-    const items = Arr.bind(group.items, (toolbarItem) => {
-      return toolbarItem.trim().length === 0 ? [] : lookupButton(editor, toolbarConfig.buttons, toolbarItem, toolbarConfig.allowToolbarGroups, extras, prefixes).toArray();
-    });
+    const items = Arr.bind(group.items, (toolbarItem) => toolbarItem.trim().length === 0 ? [] : lookupButton(editor, toolbarConfig.buttons, toolbarItem, toolbarConfig.allowToolbarGroups, extras, prefixes).toArray());
     return {
-      title: Option.from(editor.translate(group.name)),
+      title: Optional.from(editor.translate(group.name)),
       items
     };
   });
 
-  return Arr.filter(groups, (group) => {
-    return group.items.length > 0;
-  });
+  return Arr.filter(groups, (group) => group.items.length > 0);
 };
 
 export { identifyButtons };

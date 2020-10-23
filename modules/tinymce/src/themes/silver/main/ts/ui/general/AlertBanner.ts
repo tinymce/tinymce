@@ -5,22 +5,21 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { AlloyTriggers, Button, Container, SketchSpec } from '@ephox/alloy';
+import { Dialog } from '@ephox/bridge';
 import { formActionEvent } from 'tinymce/themes/silver/ui/general/FormEvents';
+import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as Icons from '../icons/Icons';
-import { Types } from '@ephox/bridge';
-import { Omit } from '../Omit';
 
-type AlertBannerSpec = Omit<Types.AlertBanner.AlertBanner, 'type'>;
+type AlertBannerSpec = Omit<Dialog.AlertBanner, 'type'>;
 
 export interface AlertBannerWrapper extends AlertBannerSpec {
   iconTooltip: string;
 }
 
-export const renderAlertBanner = (spec: AlertBannerWrapper, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
+export const renderAlertBanner = (spec: AlertBannerWrapper, providersBackstage: UiFactoryBackstageProviders): SketchSpec =>
   // For using the alert banner inside a dialog
-  return Container.sketch({
+  Container.sketch({
     dom: {
       tag: 'div',
       attributes: {
@@ -54,11 +53,10 @@ export const renderAlertBanner = (spec: AlertBannerWrapper, providersBackstage: 
       {
         dom: {
           tag: 'div',
-          classes: [ 'tox-notification__body'],
+          classes: [ 'tox-notification__body' ],
           // TODO: AP-247: Escape this text so that it can't contain script tags
           innerHtml: providersBackstage.translate(spec.text)
         }
       }
     ]
   });
-};

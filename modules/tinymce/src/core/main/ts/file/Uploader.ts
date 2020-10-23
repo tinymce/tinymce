@@ -5,11 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { FormData, XMLHttpRequest } from '@ephox/dom-globals';
 import { Type } from '@ephox/katamari';
+import { BlobInfo } from '../api/file/BlobCache';
 import Promise from '../api/util/Promise';
 import Tools from '../api/util/Tools';
-import { BlobInfo } from '../api/file/BlobCache';
 
 /**
  * Upload blobs or blob infos to the specified URL or handler.
@@ -31,13 +30,22 @@ import { BlobInfo } from '../api/file/BlobCache';
  * });
  */
 
-export type UploadHandler = (blobInfo: BlobInfo, success: (url: string) => void, failure: (err: string) => void, progress?: (percent: number) => void) => void;
+export interface UploadFailureOptions {
+  remove?: boolean;
+}
+
+export type UploadHandler = (blobInfo: BlobInfo, success: (url: string) => void, failure: (err: string, options?: UploadFailureOptions) => void, progress?: (percent: number) => void) => void;
+
+type ResolveFn<T> = (result?: T | Promise<T>) => void;
 
 export interface UploadResult {
   url: string;
   blobInfo: BlobInfo;
   status: boolean;
-  error?: string;
+  error?: {
+    options: UploadFailureOptions;
+    message: string;
+  };
 }
 
 export interface Uploader {
@@ -45,9 +53,9 @@ export interface Uploader {
 }
 
 export function Uploader(uploadStatus, settings): Uploader {
-  const pendingPromises = {};
+  const pendingPromises: Record<string, ResolveFn<UploadResult>[]> = {};
 
-  const pathJoin = function (path1, path2) {
+  const pathJoin = (path1, path2) => {
     if (path1) {
       return path1.replace(/\/$/, '') + '/' + path2.replace(/^\//, '');
     }
@@ -55,30 +63,26 @@ export function Uploader(uploadStatus, settings): Uploader {
     return path2;
   };
 
-  const defaultHandler: UploadHandler = function (blobInfo, success, failure, progress) {
-    let xhr, formData;
-
-    xhr = new XMLHttpRequest();
+  const defaultHandler: UploadHandler = (blobInfo, success, failure, progress) => {
+    const xhr = new XMLHttpRequest();
     xhr.open('POST', settings.url);
     xhr.withCredentials = settings.credentials;
 
-    xhr.upload.onprogress = function (e) {
+    xhr.upload.onprogress = (e) => {
       progress(e.loaded / e.total * 100);
     };
 
-    xhr.onerror = function () {
+    xhr.onerror = () => {
       failure('Image upload failed due to a XHR Transport error. Code: ' + xhr.status);
     };
 
-    xhr.onload = function () {
-      let json;
-
+    xhr.onload = () => {
       if (xhr.status < 200 || xhr.status >= 300) {
         failure('HTTP Error: ' + xhr.status);
         return;
       }
 
-      json = JSON.parse(xhr.responseText);
+      const json = JSON.parse(xhr.responseText);
 
       if (!json || typeof json.location !== 'string') {
         failure('Invalid JSON: ' + xhr.responseText);
@@ -88,75 +92,75 @@ export function Uploader(uploadStatus, settings): Uploader {
       success(pathJoin(settings.basePath, json.location));
     };
 
-    formData = new FormData(); // TODO: Stick this in sand
+    const formData = new FormData();
     formData.append('file', blobInfo.blob(), blobInfo.filename());
 
     xhr.send(formData);
   };
 
-  const noUpload = function (): Promise<UploadResult[]> {
-    return new Promise(function (resolve) {
+  const noUpload = (): Promise<UploadResult[]> =>
+    new Promise((resolve) => {
       resolve([]);
     });
-  };
 
-  const handlerSuccess = function (blobInfo: BlobInfo, url: string): UploadResult {
-    return {
-      url,
-      blobInfo,
-      status: true
-    };
-  };
+  const handlerSuccess = (blobInfo: BlobInfo, url: string): UploadResult => ({
+    url,
+    blobInfo,
+    status: true
+  });
 
-  const handlerFailure = function (blobInfo: BlobInfo, error): UploadResult {
-    return {
-      url: '',
-      blobInfo,
-      status: false,
-      error
-    };
-  };
+  const handlerFailure = (blobInfo: BlobInfo, message: string, options: UploadFailureOptions): UploadResult => ({
+    url: '',
+    blobInfo,
+    status: false,
+    error: {
+      message,
+      options
+    }
+  });
 
-  const resolvePending = function (blobUri, result) {
-    Tools.each(pendingPromises[blobUri], function (resolve) {
+  const resolvePending = (blobUri: string, result) => {
+    Tools.each(pendingPromises[blobUri], (resolve) => {
       resolve(result);
     });
 
     delete pendingPromises[blobUri];
   };
 
-  const uploadBlobInfo = function (blobInfo: BlobInfo, handler, openNotification): Promise<UploadResult> {
+  const uploadBlobInfo = (blobInfo: BlobInfo, handler: UploadHandler, openNotification): Promise<UploadResult> => {
     uploadStatus.markPending(blobInfo.blobUri());
 
-    return new Promise(function (resolve) {
+    return new Promise((resolve) => {
       let notification, progress;
 
-      const noop = function () {
+      const noop = () => {
       };
 
       try {
-        const closeNotification = function () {
+        const closeNotification = () => {
           if (notification) {
             notification.close();
             progress = noop; // Once it's closed it's closed
           }
         };
 
-        const success = function (url) {
+        const success = (url) => {
           closeNotification();
           uploadStatus.markUploaded(blobInfo.blobUri(), url);
           resolvePending(blobInfo.blobUri(), handlerSuccess(blobInfo, url));
           resolve(handlerSuccess(blobInfo, url));
         };
 
-        const failure = function (error) {
+        const failure = (error: string, options?: UploadFailureOptions): void => {
+          const failureOptions = options ? options : {};
+
           closeNotification();
           uploadStatus.removeFailed(blobInfo.blobUri());
-          resolvePending(blobInfo.blobUri(), handlerFailure(blobInfo, error));
-          resolve(handlerFailure(blobInfo, error));
+          resolvePending(blobInfo.blobUri(), handlerFailure(blobInfo, error, failureOptions));
+          resolve(handlerFailure(blobInfo, error, failureOptions));
         };
 
-        progress = function (percent) {
+        progress = (percent) => {
           if (percent < 0 || percent > 100) {
             return;
           }
@@ -170,38 +174,36 @@ export function Uploader(uploadStatus, settings): Uploader {
 
         handler(blobInfo, success, failure, progress);
       } catch (ex) {
-        resolve(handlerFailure(blobInfo, ex.message));
+        resolve(handlerFailure(blobInfo, ex.message, {}));
       }
     });
   };
 
-  const isDefaultHandler = function (handler) {
-    return handler === defaultHandler;
-  };
+  const isDefaultHandler = (handler) =>
+    handler === defaultHandler;
 
-  const pendingUploadBlobInfo = function (blobInfo: BlobInfo): Promise<UploadResult> {
+  const pendingUploadBlobInfo = (blobInfo: BlobInfo): Promise<UploadResult> => {
     const blobUri = blobInfo.blobUri();
 
-    return new Promise(function (resolve) {
+    return new Promise((resolve) => {
       pendingPromises[blobUri] = pendingPromises[blobUri] || [];
       pendingPromises[blobUri].push(resolve);
     });
   };
 
-  const uploadBlobs = function (blobInfos: BlobInfo[], openNotification): Promise<UploadResult[]> {
-    blobInfos = Tools.grep(blobInfos, function (blobInfo) {
-      return !uploadStatus.isUploaded(blobInfo.blobUri());
-    });
+  const uploadBlobs = (blobInfos: BlobInfo[], openNotification): Promise<UploadResult[]> => {
+    blobInfos = Tools.grep(blobInfos, (blobInfo) =>
+      !uploadStatus.isUploaded(blobInfo.blobUri())
+    );
 
-    return Promise.all(Tools.map(blobInfos, function (blobInfo: BlobInfo) {
-      return uploadStatus.isPending(blobInfo.blobUri()) ?
-        pendingUploadBlobInfo(blobInfo) : uploadBlobInfo(blobInfo, settings.handler, openNotification);
-    }));
+    return Promise.all(Tools.map(blobInfos, (blobInfo: BlobInfo) =>
+      uploadStatus.isPending(blobInfo.blobUri()) ?
+        pendingUploadBlobInfo(blobInfo) : uploadBlobInfo(blobInfo, settings.handler, openNotification)
+    ));
   };
 
-  const upload = function (blobInfos, openNotification) {
-    return (!settings.url && isDefaultHandler(settings.handler)) ? noUpload() : uploadBlobs(blobInfos, openNotification);
-  };
+  const upload = (blobInfos, openNotification) =>
+    (!settings.url && isDefaultHandler(settings.handler)) ? noUpload() : uploadBlobs(blobInfos, openNotification);
 
   if (Type.isFunction(settings.handler) === false) {
     settings.handler = defaultHandler;

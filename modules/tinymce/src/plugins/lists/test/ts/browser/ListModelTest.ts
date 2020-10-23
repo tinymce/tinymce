@@ -1,8 +1,7 @@
 import { Arbitraries } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { document } from '@ephox/dom-globals';
-import { Arr, Option } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { Arr, Optional } from '@ephox/katamari';
+import { SugarElement } from '@ephox/sugar';
 import Jsc from '@ephox/wrap-jsverify';
 import { composeList } from 'tinymce/plugins/lists/listModel/ComposeList';
 import { Entry } from 'tinymce/plugins/lists/listModel/Entry';
@@ -12,7 +11,7 @@ import { ListType } from 'tinymce/plugins/lists/listModel/Util';
 
 UnitTest.test('tinymce.lists.browser.ListModelTest', () => {
   const arbitratyContent = Jsc.bless({
-    generator: Arbitraries.content('inline').generator.map((el) => [el])
+    generator: Arbitraries.content('inline').generator.map((el) => [ el ])
   });
 
   const arbitraryEntry = Jsc.record({
@@ -20,8 +19,8 @@ UnitTest.test('tinymce.lists.browser.ListModelTest', () => {
     depth: Jsc.integer(1, 10),
     content: Jsc.small(arbitratyContent),
     listType: Jsc.oneof(Jsc.constant(ListType.OL), Jsc.constant(ListType.UL)),
-    listAttributes: Jsc.oneof(Jsc.constant({}), Jsc.constant({style: 'list-style-type: lower-alpha;'})),
-    itemAttributes: Jsc.oneof(Jsc.constant({}), Jsc.constant({style: 'color: red;'})),
+    listAttributes: Jsc.oneof(Jsc.constant({}), Jsc.constant({ style: 'list-style-type: lower-alpha;' })),
+    itemAttributes: Jsc.oneof(Jsc.constant({}), Jsc.constant({ style: 'color: red;' }))
   });
 
   const arbitraryEntries = Jsc.array(arbitraryEntry);
@@ -32,30 +31,21 @@ UnitTest.test('tinymce.lists.browser.ListModelTest', () => {
     return isEqualEntries(inputEntries, outputEntries) || errorMessage(inputEntries, outputEntries);
   });
 
-  const composeParse = (entries: Entry[]): Entry[] => {
-    return composeList(document, entries)
-      .map((list) => parseLists([list], Option.none()))
-      .bind(Arr.head)
-      .map((entrySet) => entrySet.entries)
-      .getOr([]);
-  };
+  const composeParse = (entries: Entry[]): Entry[] => composeList(document, entries)
+    .map((list) => parseLists([ list ], Optional.none()))
+    .bind(Arr.head)
+    .map((entrySet) => entrySet.entries)
+    .getOr([]);
 
-  const isEqualEntries = (a: Entry[], b: Entry[]): boolean => {
-    return stringifyEntries(a) === stringifyEntries(b);
-  };
+  const isEqualEntries = (a: Entry[], b: Entry[]): boolean => stringifyEntries(a) === stringifyEntries(b);
 
-  const errorMessage = (inputEntries: Entry[], outputEntries: Entry[]): string => {
-    return `\nPretty print counterexample:\n` +
+  const errorMessage = (inputEntries: Entry[], outputEntries: Entry[]): string => '\nPretty print counterexample:\n' +
     `input: [${stringifyEntries(inputEntries)}\n]\n` +
     `output: [${stringifyEntries(outputEntries)}\n]`;
-  };
 
-  const stringifyEntries = (entries: Entry[]): string => {
-    return Arr.map(entries, stringifyEntry).join(',');
-  };
+  const stringifyEntries = (entries: Entry[]): string => Arr.map(entries, stringifyEntry).join(',');
 
-  const stringifyEntry = (entry: Entry): string => {
-    return `\n  {
+  const stringifyEntry = (entry: Entry): string => `\n  {
       depth: ${entry.depth}
       content: ${entry.content.length > 0 ? serializeElements(entry.content) : '[Empty]'}
       listType: ${entry.listType}
@@ -63,11 +53,8 @@ UnitTest.test('tinymce.lists.browser.ListModelTest', () => {
       listAttributes: ${JSON.stringify(entry.listAttributes)}
       itemAttributes: ${JSON.stringify(entry.itemAttributes)}
     }`;
-  };
 
-  const serializeElements = (elms: Element[]): string => {
-    return Arr.map(elms, (el) => el.dom().outerHTML).join('');
-  };
+  const serializeElements = (elms: SugarElement[]): string => Arr.map(elms, (el) => el.dom.outerHTML).join('');
 
   Jsc.assert(composeParseProperty, {
     size: 500,
@@ -79,7 +66,7 @@ UnitTest.test('tinymce.lists.browser.ListModelTest', () => {
   /* const inputEntries: Entry[] = [
     {
       depth: 2,
-      content: [Element.fromHtml('<i>stuff</i>')],
+      content: [SugarElement.fromHtml('<i>stuff</i>')],
       listType: ListType.OL,
       isSelected: false,
       listAttributes: {style: 'list-style-type: lower-alpha;'},

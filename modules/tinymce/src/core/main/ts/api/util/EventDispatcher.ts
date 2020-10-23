@@ -5,18 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { ClipboardEvent, DataTransfer, DragEvent, Event, FocusEvent, KeyboardEvent, MouseEvent, PointerEvent, TouchEvent, WheelEvent } from '@ephox/dom-globals';
+import { Fun, Obj } from '@ephox/katamari';
 import Tools from './Tools';
-import { Fun } from '@ephox/katamari';
 
-// InputEvent is experimental so we don't have an actual type
-// See https://developer.mozilla.org/en-US/docs/Web/API/InputEvent
-export interface InputEvent extends Event {
-  readonly data: string;
-  readonly dataTransfer: DataTransfer;
-  readonly inputType: string;
-  readonly isComposing: boolean;
-}
+export type MappedEvent<T, K extends string> = K extends keyof T ? T[K] : any;
 
 export interface NativeEventMap {
   'beforepaste': Event;
@@ -73,7 +65,7 @@ export type EditorEvent<T> = T & {
 };
 
 export interface EventDispatcherSettings {
-  scope?: {};
+  scope?: any;
   toggleEvent?: (name: string, state: boolean) => void | boolean;
   beforeFire?: <T>(args: EditorEvent<T>) => void;
 }
@@ -106,7 +98,16 @@ const nativeEvents = Tools.makeMap(
   ' '
 );
 
-class EventDispatcher<T extends NativeEventMap> {
+interface Binding<T, K extends string> {
+  func: (event: EditorEvent<MappedEvent<T, K>>) => void;
+  once?: true;
+}
+
+type Bindings<T> = {
+  [K in string]?: Binding<T, K>[];
+};
+
+class EventDispatcher<T> {
   /**
    * Returns true/false if the specified event name is a native browser event or not.
    *
@@ -115,16 +116,16 @@ class EventDispatcher<T extends NativeEventMap> {
    * @return {Boolean} true/false if the event is native or not.
    * @static
    */
-  public static isNative (name: string): boolean {
+  public static isNative(name: string): boolean {
     return !!nativeEvents[name.toLowerCase()];
   }
 
   private readonly settings: Record<string, any>;
   private readonly scope: {};
   private readonly toggleEvent: (name: string, toggle: boolean) => void;
-  private bindings = {};
+  private bindings: Bindings<T> = {};
 
-  constructor (settings?: Record<string, any>) {
+  public constructor(settings?: Record<string, any>) {
     this.settings = settings || {};
     this.scope = this.settings.scope || this;
     this.toggleEvent = this.settings.toggleEvent || Fun.never;
@@ -140,13 +141,9 @@ class EventDispatcher<T extends NativeEventMap> {
    * @example
    * instance.fire('event', {...});
    */
-  public fire <K extends keyof T>(name: K, args?: T[K]): EditorEvent<T[K]>;
-  public fire <U = any>(name: string, args?: U): EditorEvent<U>;
-  public fire (name: string, args?: any): EditorEvent<any> {
-    let handlers, i, l, callback;
-
-    name = name.toLowerCase();
-    args = args || {};
+  public fire <K extends string, U extends MappedEvent<T, K>>(nameIn: K, argsIn?: U): EditorEvent<U> {
+    const name = nameIn.toLowerCase();
+    const args = argsIn || {} as any;
     args.type = name;
 
     // Setup target is there isn't one
@@ -181,10 +178,10 @@ class EventDispatcher<T extends NativeEventMap> {
       this.settings.beforeFire(args);
     }
 
-    handlers = this.bindings[name];
+    const handlers = this.bindings[name];
     if (handlers) {
-      for (i = 0, l = handlers.length; i < l; i++) {
-        callback = handlers[i];
+      for (let i = 0, l = handlers.length; i < l; i++) {
+        const callback = handlers[i];
 
         // Unbind handlers marked with "once"
         if (callback.once) {
@@ -221,12 +218,7 @@ class EventDispatcher<T extends NativeEventMap> {
    *     // Callback logic
    * });
    */
-  public on <K extends keyof T>(name: K, callback: (event: EditorEvent<T[K]>) => void, prepend?: boolean, extra?: {}): this;
-  public on <U = any>(name: string, callback: (event: EditorEvent<U>) => void, prepend?: boolean, extra?: {}): this;
-  public on (name: string, callback: false, prepend?: boolean, extra?: {}): this;
-  public on (name: string, callback: false | ((event: EditorEvent<any>) => void), prepend?: boolean, extra?: {}): this {
-    let handlers, names, i;
-
+  public on <K extends string>(name: K, callback: false | ((event: EditorEvent<MappedEvent<T, K>>) => void), prepend?: boolean, extra?: {}): this {
     if (callback === false) {
       callback = Fun.never;
     }
@@ -240,14 +232,14 @@ class EventDispatcher<T extends NativeEventMap> {
         Tools.extend(wrappedCallback, extra);
       }
 
-      names = name.toLowerCase().split(' ');
-      i = names.length;
+      const names = name.toLowerCase().split(' ');
+      let i = names.length;
       while (i--) {
-        name = names[i];
-        handlers = this.bindings[name];
+        const currentName = names[i];
+        let handlers = this.bindings[currentName];
         if (!handlers) {
-          handlers = this.bindings[name] = [];
-          this.toggleEvent(name, true);
+          handlers = this.bindings[currentName] = [];
+          this.toggleEvent(currentName, true);
         }
 
         if (prepend) {
@@ -278,25 +270,20 @@ class EventDispatcher<T extends NativeEventMap> {
    * // Unbind all events
    * instance.off();
    */
-  public off <K extends keyof T>(name: K, callback: (event: EditorEvent<T[K]>) => void): this;
-  public off <U = any>(name: string, callback: (event: EditorEvent<U>) => void): this;
-  public off (name?: string): this;
-  public off (name?: string, callback?: (event: EditorEvent<any>) => void): this {
-    let i, handlers, bindingName, names, hi;
-
+  public off <K extends string>(name?: K, callback?: (event: EditorEvent<MappedEvent<T, K>>) => void): this {
     if (name) {
-      names = name.toLowerCase().split(' ');
-      i = names.length;
+      const names = name.toLowerCase().split(' ');
+      let i = names.length;
       while (i--) {
-        name = names[i];
-        handlers = this.bindings[name];
+        const currentName = names[i];
+        let handlers = this.bindings[currentName];
 
         // Unbind all handlers
-        if (!name) {
-          for (bindingName in this.bindings) {
+        if (!currentName) {
+          Obj.each(this.bindings, (_value, bindingName) => {
             this.toggleEvent(bindingName, false);
             delete this.bindings[bindingName];
-          }
+          });
 
           return this;
         }
@@ -307,25 +294,25 @@ class EventDispatcher<T extends NativeEventMap> {
             handlers.length = 0;
           } else {
             // Unbind specific ones
-            hi = handlers.length;
+            let hi = handlers.length;
             while (hi--) {
               if (handlers[hi].func === callback) {
                 handlers = handlers.slice(0, hi).concat(handlers.slice(hi + 1));
-                this.bindings[name] = handlers;
+                this.bindings[currentName] = handlers;
               }
             }
           }
 
           if (!handlers.length) {
             this.toggleEvent(name, false);
-            delete this.bindings[name];
+            delete this.bindings[currentName];
           }
         }
       }
     } else {
-      for (name in this.bindings) {
+      Obj.each(this.bindings, (_value, name) => {
         this.toggleEvent(name, false);
-      }
+      });
 
       this.bindings = {};
     }
@@ -347,9 +334,7 @@ class EventDispatcher<T extends NativeEventMap> {
    *     // Callback logic
    * });
    */
-  public once <K extends keyof T>(name: K, callback: (event: EditorEvent<T[K]>) => void, prepend?: boolean): this;
-  public once <U = any>(name: string, callback: (event: EditorEvent<U>) => void, prepend?: boolean): this;
-  public once (name: string, callback: (event: EditorEvent<any>) => void, prepend?: boolean): this {
+  public once <K extends string>(name: K, callback: (event: EditorEvent<MappedEvent<T, K>>) => void, prepend?: boolean): this {
     return this.on(name, callback, prepend, { once: true });
   }
 
@@ -360,7 +345,7 @@ class EventDispatcher<T extends NativeEventMap> {
    * @param {String} name Name of the event to check for.
    * @return {Boolean} true/false if the event exists or not.
    */
-  public has (name: string): boolean {
+  public has(name: string): boolean {
     name = name.toLowerCase();
     return !(!this.bindings[name] || this.bindings[name].length === 0);
   }

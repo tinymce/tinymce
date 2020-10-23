@@ -1,13 +1,12 @@
 import { ApproxStructure, Assertions, Chain, FocusTools, Keyboard, Keys, Logger, Pipeline, UiFinder } from '@ephox/agar';
+import { TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
-import { document } from '@ephox/dom-globals';
 import { TinyLoader, TinyUi } from '@ephox/mcagar';
-import { Body, Element } from '@ephox/sugar';
+import { SugarBody, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
+import { Menu } from 'tinymce/core/api/ui/Ui';
 import Theme from 'tinymce/themes/silver/Theme';
-import { Menu } from '@ephox/bridge';
-import { TestHelpers } from '@ephox/alloy';
 
 UnitTest.asynctest('OxideListCollectionMenuTest', (success, failure) => {
   Theme();
@@ -17,7 +16,7 @@ UnitTest.asynctest('OxideListCollectionMenuTest', (success, failure) => {
   TinyLoader.setup(
     (editor, onSuccess, onFailure) => {
       const tinyUi = TinyUi(editor);
-      const doc = Element.fromDom(document);
+      const doc = SugarElement.fromDom(document);
 
       Pipeline.async({ }, Logger.ts(
         'Check structure of list collection',
@@ -26,88 +25,92 @@ UnitTest.asynctest('OxideListCollectionMenuTest', (success, failure) => {
             ':focus { background-color: rgb(222, 224, 226); }'
           ]),
           tinyUi.sClickOnToolbar('Click on toolbar button', 'button'),
-          UiFinder.sWaitForVisible('Waiting for menu', Body.body(), '[role="menu"]'),
-          Chain.asStep(Body.body(), [
+          UiFinder.sWaitForVisible('Waiting for menu', SugarBody.body(), '[role="menu"]'),
+          Chain.asStep(SugarBody.body(), [
             UiFinder.cFindIn('[role="menu"]'),
             Assertions.cAssertStructure(
               'Checking structure',
-              ApproxStructure.build((s, str, arr) => {
-                return s.element('div', {
-                  classes: [ arr.has('tox-menu'), arr.has('tox-collection'), arr.has('tox-collection--list') ],
-                  children: [
-                    s.element('div', {
-                      classes: [ arr.has('tox-collection__group') ],
-                      children: [
-                        s.element('div', {
-                          classes: [ arr.has('tox-collection__item') ],
-                          attrs: {
-                            title: str.is('Alpha')
-                          },
-                          children: [
-                            s.element('div', {
-                              classes: [ arr.has('tox-collection__item-icon'), arr.has('tox-collection__item-checkmark') ],
-                              children: [
-                                s.element('svg', {})
-                              ]
-                            }),
-                            s.element('div', {
-                              classes: [ arr.has('tox-collection__item-label') ]
-                            }),
-                            s.element('div', {
-                              classes: [ arr.has('tox-collection__item-accessory') ]
-                            })
-                          ]
-                        }),
-                        s.element('div', {
-                          classes: [ arr.has('tox-collection__item') ],
-                          attrs: {
-                            title: str.is('Beta')
-                          },
-                          children: [
-                            s.element('div', {
-                              classes: [ arr.has('tox-collection__item-icon') ],
-                              children: [
-                                s.element('svg', {})
-                              ]
-                            }),
-                            s.element('div', {
-                              classes: [ arr.has('tox-collection__item-label') ]
-                            }),
-                            s.element('div', {
-                              classes: [ arr.has('tox-collection__item-caret') ]
-                            })
-                          ]
-                        })
-                      ]
-                    }),
-                    s.element('div', {
-                      classes: [ arr.has('tox-collection__group') ],
-                      children: [
-                        s.element('div', {
-                          classes: [ arr.has('tox-collection__item') ],
-                          attrs: {
-                            title: str.is('Gamma')
-                          },
-                          children: [
-                            s.element('div', {
-                              classes: [ arr.has('tox-collection__item-icon') ],
-                              children: [
-                                s.element('svg', {})
-                              ]
-                            }),
-                            s.element('div', {
-                              classes: [ arr.has('tox-collection__item-label') ]
-                            }),
-                            s.element('div', {
-                              classes: [ arr.has('tox-collection__item-accessory') ]
-                            })
-                          ]
-                        })
-                      ]
-                    })
-                  ]
-                });
-              })
+              ApproxStructure.build((s, str, arr) => s.element('div', {
+                classes: [ arr.has('tox-menu'), arr.has('tox-collection'), arr.has('tox-collection--list') ],
+                children: [
+                  s.element('div', {
+                    classes: [ arr.has('tox-collection__group') ],
+                    children: [
+                      s.element('div', {
+                        classes: [ arr.has('tox-collection__item') ],
+                        attrs: {
+                          title: str.is('Alpha')
+                        },
+                        children: [
+                          s.element('div', {
+                            classes: [ arr.has('tox-collection__item-icon') ],
+                            children: [
+                              s.element('svg', {})
+                            ]
+                          }),
+                          s.element('div', {
+                            classes: [ arr.has('tox-collection__item-label') ]
+                          }),
+                          s.element('div', {
+                            classes: [ arr.has('tox-collection__item-accessory') ]
+                          }),
+                          s.element('div', {
+                            classes: [ arr.has('tox-collection__item-checkmark') ],
+                            children: [
+                              s.element('svg', {})
+                            ]
+                          })
+                        ]
+                      }),
+                      s.element('div', {
+                        classes: [ arr.has('tox-collection__item') ],
+                        attrs: {
+                          title: str.is('Beta')
+                        },
+                        children: [
+                          s.element('div', {
+                            classes: [ arr.has('tox-collection__item-icon') ],
+                            children: [
+                              s.element('svg', {})
+                            ]
+                          }),
+                          s.element('div', {
+                            classes: [ arr.has('tox-collection__item-label') ]
+                          }),
+                          s.element('div', {
+                            classes: [ arr.has('tox-collection__item-caret') ]
+                          })
+                        ]
+                      })
+                    ]
+                  }),
+                  s.element('div', {
+                    classes: [ arr.has('tox-collection__group') ],
+                    children: [
+                      s.element('div', {
+                        classes: [ arr.has('tox-collection__item') ],
+                        attrs: {
+                          title: str.is('Gamma')
+                        },
+                        children: [
+                          s.element('div', {
+                            classes: [ arr.has('tox-collection__item-icon') ],
+                            children: [
+                              s.element('svg', {})
+                            ]
+                          }),
+                          s.element('div', {
+                            classes: [ arr.has('tox-collection__item-label') ]
+                          }),
+                          s.element('div', {
+                            classes: [ arr.has('tox-collection__item-accessory') ]
+                          })
+                        ]
+                      })
+                    ]
+                  })
+                ]
+              }))
             )
           ]),
           FocusTools.sTryOnSelector('Focus should be on Alpha', doc, '.tox-collection__item:contains(Alpha)'),
@@ -136,20 +139,18 @@ UnitTest.asynctest('OxideListCollectionMenuTest', (success, failure) => {
                 shortcut: 'Ctrl+A',
                 icon: 'fake-icon-name',
                 onAction: store.adder('togglemenuitem.onAction')
-              } as Menu.ToggleMenuItemApi,
+              } as Menu.ToggleMenuItemSpec,
               {
                 type: 'nestedmenuitem',
                 text: 'Beta',
                 icon: 'fake-icon-name',
-                getSubmenuItems: () => {
-                  return [
-                    {
-                      type: 'menuitem',
-                      text: 'Beta-1'
-                    }
-                  ];
-                }
-              } as Menu.NestedMenuItemApi,
+                getSubmenuItems: () => [
+                  {
+                    type: 'menuitem',
+                    text: 'Beta-1'
+                  }
+                ]
+              } as Menu.NestedMenuItemSpec,
               {
                 type: 'separator'
               },
@@ -158,7 +159,7 @@ UnitTest.asynctest('OxideListCollectionMenuTest', (success, failure) => {
                 text: 'Gamma',
                 shortcut: 'Ctrl+C',
                 icon: 'fake-icon-name'
-              } as Menu.MenuItemApi,
+              } as Menu.MenuItemSpec
             ]);
           }
         });

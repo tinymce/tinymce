@@ -1,22 +1,21 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
-import { document, HTMLElement } from '@ephox/dom-globals';
-import { Element, Insert, InsertAll, Remove, SelectorFilter, SelectorFind } from '@ephox/sugar';
-import TablePositions from 'ephox/snooker/api/TablePositions';
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
+import { Insert, InsertAll, Remove, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
+import * as TablePositions from 'ephox/snooker/api/TablePositions';
 
 UnitTest.test('RectangularTest', function () {
   const body = SelectorFind.first('body').getOrDie();
-  const div = Element.fromTag('div');
+  const div = SugarElement.fromTag('div');
   Insert.append(body, div);
 
-  const table = Element.fromHtml(
-     '<table id="tableA" border=1>' +
+  const table = SugarElement.fromHtml(
+    '<table id="tableA" border=1>' +
        '<tbody>' +
          '<tr>' +
            '<td id="A1" rowspan=3 style="min-width: 100px;">A1</td>' +
            '<td id="B1" style="min-width: 100px; background: #bcabee;">B1 START SELECTION<br /></td>' +
            '<td id="C1" style="min-width: 100px;" colspan=2>C1<br /><br /><br /></td>' +
-           // '<td style="min-width: 100px;">D1</td>' +
+    // '<td style="min-width: 100px;">D1</td>' +
          '</tr>' +
          '<tr>' +
            // '<td style="min-width: 100px;">A2</td>' +
@@ -38,9 +37,9 @@ UnitTest.test('RectangularTest', function () {
          '</tr>' +
        '</tbody>' +
      '</table>'
-   );
+  );
 
-  const table2 = Element.fromHtml('<table id="tableB" border="1" cellspacing="0" cellpadding="0" style="border-collapse:collapse;border:none;">' +
+  const table2 = SugarElement.fromHtml('<table id="tableB" border="1" cellspacing="0" cellpadding="0" style="border-collapse:collapse;border:none;">' +
    '<tbody><tr>' +
       '<td id="TBA0" style="min-width: 100px; height: 40px" rowspan="3">A0</td>' +
       '<td id="TBA1" style="min-width: 100px; height: 40px">A1 </td>' +
@@ -67,18 +66,18 @@ UnitTest.test('RectangularTest', function () {
       '<td id="TBD2" style="min-width: 100px; height: 40px">D2 </td>' +
       '<td id="TBD3" style="min-width: 100px; height: 40px">D3 </td>' +
       '<td id="TBD4" style="min-width: 100px; height: 40px">D4 </td>' +
-      // '<td id="TBD5" style="min-width: 100px; height: 40px">D5 </td>'+
-      // '<td id="TBD6" style="min-width: 100px; height: 40px">D6 </td>'+
+  // '<td id="TBD5" style="min-width: 100px; height: 40px">D5 </td>'+
+  // '<td id="TBD6" style="min-width: 100px; height: 40px">D6 </td>'+
     '</tr> </tbody></table>');
 
   InsertAll.append(div, [ table, table2 ] );
 
-  const check = function (tableTarget: Element, from: string, to: string, expected: boolean) {
-    [].forEach.call(tableTarget.dom().querySelectorAll('td'), function (td: HTMLElement) {
+  const check = function (tableTarget: SugarElement, from: string, to: string, expected: boolean) {
+    [].forEach.call(tableTarget.dom.querySelectorAll('td'), function (td: HTMLElement) {
       td.style.background = '';
     });
-    Option.from(document.querySelector(from) as HTMLElement).getOrDie('Missing element for "from" selector').style.background = '#cadbee';
-    Option.from(document.querySelector(to) as HTMLElement).getOrDie('Missing element for "to" selector').style.background = '#5adb33';
+    Optional.from(document.querySelector(from) as HTMLElement).getOrDie('Missing element for "from" selector').style.background = '#cadbee';
+    Optional.from(document.querySelector(to) as HTMLElement).getOrDie('Missing element for "to" selector').style.background = '#5adb33';
     const start = SelectorFilter.descendants(tableTarget, from)[0];
     const finish = SelectorFilter.descendants(tableTarget, to)[0];
     const c = TablePositions.getBox(tableTarget, start, finish);

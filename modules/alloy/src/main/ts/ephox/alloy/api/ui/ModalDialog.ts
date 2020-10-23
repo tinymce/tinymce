@@ -1,24 +1,25 @@
-import { Cell, Id, Option } from '@ephox/katamari';
-import { Attr, Traverse } from '@ephox/sugar';
+import { Cell, Id, Optional } from '@ephox/katamari';
+import { Attribute, Traverse } from '@ephox/sugar';
 
-import * as AddEventsBehaviour from '../../api/behaviour/AddEventsBehaviour';
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { AlloySpec } from '../../api/component/SpecTypes';
-import * as AlloyEvents from '../../api/events/AlloyEvents';
-import * as AlloyTriggers from '../../api/events/AlloyTriggers';
-import * as NativeEvents from '../../api/events/NativeEvents';
 import * as AriaDescribe from '../../aria/AriaDescribe';
-import AriaLabel from '../../aria/AriaLabel';
+import * as AriaLabel from '../../aria/AriaLabel';
 import { CustomEvent } from '../../events/SimulatedEvent';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as ModalDialogSchema from '../../ui/schema/ModalDialogSchema';
 import { GetBusySpec, ModalDialogApis, ModalDialogDetail, ModalDialogSketcher, ModalDialogSpec } from '../../ui/types/ModalDialogTypes';
+import * as AddEventsBehaviour from '../behaviour/AddEventsBehaviour';
 import * as Behaviour from '../behaviour/Behaviour';
 import { Focusing } from '../behaviour/Focusing';
 import { Keying } from '../behaviour/Keying';
 import { Replacing } from '../behaviour/Replacing';
+import { AlloyComponent } from '../component/ComponentApi';
 import * as GuiFactory from '../component/GuiFactory';
 import * as SketchBehaviours from '../component/SketchBehaviours';
+import { AlloySpec } from '../component/SpecTypes';
+import * as AlloyEvents from '../events/AlloyEvents';
+import * as AlloyTriggers from '../events/AlloyTriggers';
+import * as NativeEvents from '../events/NativeEvents';
+import * as SystemEvents from '../events/SystemEvents';
 import * as Attachment from '../system/Attachment';
 import * as Sketcher from './Sketcher';
 import { CompositeSketchFactory } from './UiSketcher';
@@ -29,15 +30,15 @@ const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (det
   const dialogIdleEvent = Id.generate('alloy.dialog.idle');
 
   interface DialogBusyEvent extends CustomEvent {
-    getBusySpec: () => GetBusySpec;
+    getBusySpec: GetBusySpec;
   }
 
   const busyBehaviours = Behaviour.derive([
     // Trap the "Tab" key and don't let it escape.
     Keying.config({
       mode: 'special',
-      onTab: () => Option.some<boolean>(true),
-      onShiftTab: () => Option.some<boolean>(true)
+      onTab: () => Optional.some<boolean>(true),
+      onShiftTab: () => Optional.some<boolean>(true)
     }),
     Focusing.config({ })
   ]);
@@ -46,7 +47,7 @@ const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (det
   const showDialog = (dialog: AlloyComponent) => {
     const sink = detail.lazySink(dialog).getOrDie();
 
-    const busyComp = Cell(Option.none<AlloyComponent>());
+    const busyComp = Cell(Optional.none<AlloyComponent>());
 
     const externalBlocker = externals.blocker();
 
@@ -63,28 +64,28 @@ const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (det
             Keying.focusIn(dialog);
           }),
 
-          AlloyEvents.run(dialogIdleEvent, (blocker, se) => {
-            if (Attr.has(dialog.element(), 'aria-busy')) {
-              Attr.remove(dialog.element(), 'aria-busy');
+          AlloyEvents.run(dialogIdleEvent, (_blocker, _se) => {
+            if (Attribute.has(dialog.element, 'aria-busy')) {
+              Attribute.remove(dialog.element, 'aria-busy');
               busyComp.get().each((bc) => Replacing.remove(dialog, bc));
             }
           }),
 
           AlloyEvents.run<DialogBusyEvent>(dialogBusyEvent, (blocker, se) => {
-            Attr.set(dialog.element(), 'aria-busy', 'true');
-            const getBusySpec = se.event().getBusySpec();
+            Attribute.set(dialog.element, 'aria-busy', 'true');
+            const getBusySpec = se.event.getBusySpec;
 
             busyComp.get().each((bc) => {
               Replacing.remove(dialog, bc);
             });
             const busySpec = getBusySpec(dialog, busyBehaviours);
             const busy = blocker.getSystem().build(busySpec);
-            busyComp.set(Option.some(busy));
+            busyComp.set(Optional.some(busy));
             Replacing.append(dialog, GuiFactory.premade(busy));
             if (busy.hasConfigured(Keying)) {
               Keying.focusIn(busy);
             }
-          }),
+          })
         ])
       ])
     });
@@ -94,20 +95,16 @@ const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (det
   };
 
   const hideDialog = (dialog: AlloyComponent) => {
-    Traverse.parent(dialog.element()).each((blockerDom) => {
+    Traverse.parent(dialog.element).each((blockerDom) => {
       dialog.getSystem().getByDom(blockerDom).each((blocker) => {
         Attachment.detach(blocker);
       });
     });
   };
 
-  const getDialogBody = (dialog: AlloyComponent) => {
-    return AlloyParts.getPartOrDie(dialog, detail, 'body');
-  };
+  const getDialogBody = (dialog: AlloyComponent) => AlloyParts.getPartOrDie(dialog, detail, 'body');
 
-  const getDialogFooter = (dialog: AlloyComponent) => {
-    return AlloyParts.getPartOrDie(dialog, detail, 'footer');
-  };
+  const getDialogFooter = (dialog: AlloyComponent) => AlloyParts.getPartOrDie(dialog, detail, 'footer');
 
   const setBusy = (dialog: AlloyComponent, getBusySpec: AlloySpec) => {
     AlloyTriggers.emitWith(dialog, dialogBusyEvent, {
@@ -122,7 +119,7 @@ const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (det
   const modalEventsId = Id.generate('modal-events');
   const eventOrder = {
     ...detail.eventOrder,
-    'alloy.system.attached': [modalEventsId].concat(detail.eventOrder['alloy.system.attached'] || [])
+    [SystemEvents.attachedToDom()]: [ modalEventsId ].concat(detail.eventOrder['alloy.system.attached'] || [])
   };
 
   return {
@@ -156,8 +153,8 @@ const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (det
         }),
         AddEventsBehaviour.config(modalEventsId, [
           AlloyEvents.runOnAttached((c) => {
-            AriaLabel.labelledBy(c.element(), AlloyParts.getPartOrDie(c, detail, 'title').element());
-            AriaDescribe.describedBy(c.element(), AlloyParts.getPartOrDie(c, detail, 'body').element());
+            AriaLabel.labelledBy(c.element, AlloyParts.getPartOrDie(c, detail, 'title').element);
+            AriaDescribe.describedBy(c.element, AlloyParts.getPartOrDie(c, detail, 'body').element);
           })
         ])
       ]
@@ -177,12 +174,8 @@ const ModalDialog: ModalDialogSketcher = Sketcher.composite<ModalDialogSpec, Mod
     hide: (apis, dialog) => {
       apis.hide(dialog);
     },
-    getBody: (apis, dialog) => {
-      return apis.getBody(dialog);
-    },
-    getFooter: (apis, dialog) => {
-      return apis.getFooter(dialog);
-    },
+    getBody: (apis, dialog) => apis.getBody(dialog),
+    getFooter: (apis, dialog) => apis.getFooter(dialog),
     setBusy: (apis, dialog, getBusySpec) => {
       apis.setBusy(dialog, getBusySpec);
     },

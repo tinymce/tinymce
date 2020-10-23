@@ -5,18 +5,20 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Behaviour, Slider, Toggling, SketchSpec } from '@ephox/alloy';
+import { Behaviour, SketchSpec, Slider, Toggling } from '@ephox/alloy';
 import { Css } from '@ephox/sugar';
+import Editor from 'tinymce/core/api/Editor';
 
-import Receivers from '../channels/Receivers';
-import Styles from '../style/Styles';
+import * as Receivers from '../channels/Receivers';
+import * as Styles from '../style/Styles';
 import * as UiDomFactory from '../util/UiDomFactory';
+import { MobileRealm } from './IosRealm';
 import * as ToolbarWidgets from './ToolbarWidgets';
 
 const BLACK = -1;
 
-const makeSlider = function (spec) {
-  const getColor = function (hue) {
+const makeSlider = (spec): SketchSpec => {
+  const getColor = (hue: number): string => {
     // Handle edges.
     if (hue < 0) {
       return 'black';
@@ -28,22 +30,22 @@ const makeSlider = function (spec) {
   };
 
   // Does not fire change intentionally.
-  const onInit = function (slider, thumb, spectrum, value) {
+  const onInit = (slider, thumb, spectrum, value): void => {
     const color = getColor(value.x());
-    Css.set(thumb.element(), 'background-color', color);
+    Css.set(thumb.element, 'background-color', color);
   };
 
-  const onChange = function (slider, thumb, value) {
+  const onChange = (slider, thumb, value): void => {
     const color = getColor(value.x());
-    Css.set(thumb.element(), 'background-color', color);
+    Css.set(thumb.element, 'background-color', color);
     spec.onChange(slider, thumb, color);
   };
 
   return Slider.sketch({
     dom: UiDomFactory.dom('<div class="${prefix}-slider ${prefix}-hue-slider-container"></div>'),
     components: [
-      Slider.parts()['left-edge'](UiDomFactory.spec('<div class="${prefix}-hue-slider-black"></div>')),
-      Slider.parts().spectrum({
+      Slider.parts['left-edge'](UiDomFactory.spec('<div class="${prefix}-hue-slider-black"></div>')),
+      Slider.parts.spectrum({
         dom: UiDomFactory.dom('<div class="${prefix}-slider-gradient-container"></div>'),
         components: [
           UiDomFactory.spec('<div class="${prefix}-slider-gradient"></div>')
@@ -54,8 +56,8 @@ const makeSlider = function (spec) {
           })
         ])
       }),
-      Slider.parts()['right-edge'](UiDomFactory.spec('<div class="${prefix}-hue-slider-white"></div>')),
-      Slider.parts().thumb({
+      Slider.parts['right-edge'](UiDomFactory.spec('<div class="${prefix}-hue-slider-white"></div>')),
+      Slider.parts.thumb({
         dom: UiDomFactory.dom('<div class="${prefix}-slider-thumb"></div>'),
         behaviours: Behaviour.derive([
           Toggling.config({
@@ -66,10 +68,10 @@ const makeSlider = function (spec) {
     ],
 
     onChange,
-    onDragStart (slider, thumb) {
+    onDragStart(slider, thumb) {
       Toggling.on(thumb);
     },
-    onDragEnd (slider, thumb) {
+    onDragEnd(slider, thumb) {
       Toggling.off(thumb);
     },
     onInit,
@@ -78,11 +80,9 @@ const makeSlider = function (spec) {
       mode: 'x',
       minX: 0,
       maxX: 360,
-      getInitialValue: () => {
-        return {
-          x: () => spec.getInitialValue()
-        };
-      }
+      getInitialValue: () => ({
+        x: spec.getInitialValue()
+      })
     },
 
     sliderBehaviours: Behaviour.derive([
@@ -91,32 +91,28 @@ const makeSlider = function (spec) {
   });
 };
 
-const makeItems = function (spec): SketchSpec[] {
-  return [
-    makeSlider(spec)
-  ];
-};
+const makeItems = (spec): SketchSpec[] => [
+  makeSlider(spec)
+];
 
-const sketch = function (realm, editor) {
+const sketch = (realm: MobileRealm, editor: Editor) => {
   const spec = {
-    onChange (slider, thumb, color) {
-      editor.undoManager.transact(function () {
+    onChange(slider, thumb, color) {
+      editor.undoManager.transact(() => {
         editor.formatter.apply('forecolor', { value: color });
         editor.nodeChanged();
       });
     },
-    getInitialValue (/* slider */) {
+    getInitialValue(/* slider */) {
       // Return black
       return BLACK;
     }
   };
 
-  return ToolbarWidgets.button(realm, 'color-levels', function () {
-    return makeItems(spec);
-  }, editor);
+  return ToolbarWidgets.button(realm, 'color-levels', () => makeItems(spec), editor);
 };
 
-export default {
+export {
   makeItems,
   sketch
 };

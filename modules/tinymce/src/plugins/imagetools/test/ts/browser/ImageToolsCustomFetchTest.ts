@@ -1,19 +1,18 @@
 import { Log, Pipeline, Step, UiFinder } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { document } from '@ephox/dom-globals';
 import { BlobConversions } from '@ephox/imagetools';
+import { Cell, Optional } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Cell, Option } from '@ephox/katamari';
-import { Body } from '@ephox/sugar';
-import ImagetoolsPlugin from 'tinymce/plugins/imagetools/Plugin';
-import ImageUtils from '../module/test/ImageUtils';
-import SilverTheme from 'tinymce/themes/silver/Theme';
+import { SugarBody } from '@ephox/sugar';
 import Promise from 'tinymce/core/api/util/Promise';
+import ImagetoolsPlugin from 'tinymce/plugins/imagetools/Plugin';
+import SilverTheme from 'tinymce/themes/silver/Theme';
+import * as ImageUtils from '../module/test/ImageUtils';
 
 UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsCustomFetchTest', (success, failure) => {
   const uploadHandlerState = ImageUtils.createStateContainer();
   const srcUrl = '/project/tinymce/src/plugins/imagetools/demo/img/dogleft.jpg';
-  const fetchState = Cell(Option.none());
+  const fetchState = Cell(Optional.none());
 
   ImagetoolsPlugin();
   SilverTheme();
@@ -24,7 +23,7 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsCustomFetchTest
     Pipeline.async({}, [
       Log.stepsAsStep('TBA', 'ImageTools: flip image with custom fetch image', [
         tinyApis.sSetSetting('imagetools_fetch_image', (img) => {
-          fetchState.set(Option.some(img.src));
+          fetchState.set(Optional.some(img.src));
           return BlobConversions.imageToBlob(img);
         }),
         ImageUtils.sLoadImage(editor, srcUrl),
@@ -40,13 +39,11 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsCustomFetchTest
       ]),
 
       Log.stepsAsStep('TBA', 'ImageTools: flip image with custom fetch image that returns an error', [
-        tinyApis.sSetSetting('imagetools_fetch_image', () => {
-          return Promise.reject('Custom fail');
-        }),
+        tinyApis.sSetSetting('imagetools_fetch_image', () => Promise.reject('Custom fail')),
         ImageUtils.sLoadImage(editor, srcUrl),
         tinyApis.sSelect('img', []),
         ImageUtils.sExecCommand(editor, 'mceImageFlipHorizontal'),
-        UiFinder.sWaitFor('Waited for notification', Body.body(), '.tox-notification__body:contains("Custom fail")'),
+        UiFinder.sWaitFor('Waited for notification', SugarBody.body(), '.tox-notification__body:contains("Custom fail")')
       ])
     ], onSuccess, onFailure);
   }, {
@@ -54,7 +51,7 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsCustomFetchTest
     plugins: 'imagetools',
     automatic_uploads: false,
     images_upload_handler: uploadHandlerState.handler(srcUrl),
-    imagetools_cors_hosts: ['localhost'],
-    base_url: '/project/tinymce/js/tinymce',
+    imagetools_cors_hosts: [ 'localhost' ],
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

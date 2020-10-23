@@ -1,8 +1,7 @@
 import { Arbitraries, Assertions, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { console, navigator } from '@ephox/dom-globals';
 import { PlatformDetection } from '@ephox/sand';
-import { Node } from '@ephox/sugar';
+import { SugarNode } from '@ephox/sugar';
 import { Editor } from 'ephox/mcagar/alien/EditorTypes';
 import { TinyApis } from 'ephox/mcagar/api/TinyApis';
 import * as TinyLoader from 'ephox/mcagar/api/TinyLoader';
@@ -14,13 +13,13 @@ UnitTest.asynctest('TinyScenariosTest', (success, failure) => {
 
   const platform = PlatformDetection.detect();
   if (isPhantom) {
-    // tslint:disable-next-line:no-console
+    // eslint-disable-next-line no-console
     console.log('Skipping TinyScenariosTest as PhantomJS has dodgy selection/style implementation and returns false positives.');
     success();
     return;
   }
   if (platform.browser.isFirefox()) {
-    // tslint:disable-next-line:no-console
+    // eslint-disable-next-line no-console
     console.log('Skipping TinyScenariosTest as it triggers a tinymce bug in Firefox');
     success();
     return;
@@ -36,8 +35,7 @@ UnitTest.asynctest('TinyScenariosTest', (success, failure) => {
     editor.execCommand('bold');
     const boldAfter = body.querySelectorAll('strong').length;
 
-    if (editor.selection.isCollapsed()) {
-    } else {
+    if (!editor.selection.isCollapsed()) {
       Assertions.assertEq('Two bold operations should create a <strong> tag at some point', true, boldInitial + boldBefore + boldAfter > 0);
     }
   });
@@ -56,15 +54,13 @@ UnitTest.asynctest('TinyScenariosTest', (success, failure) => {
         },
         scenario: {
           exclusions: {
-            containers: (elem) => {
-              return !Node.isText(elem);
-            }
+            containers: (elem) => !SugarNode.isText(elem)
           }
         }
-      }),
+      })
     ], loadSuccess, loadFailure);
 
   }, {
-    base_url: '/project/tinymce/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

@@ -5,20 +5,15 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element } from '@ephox/dom-globals';
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 
 const findNearest = (editor: Editor, getStyles, parents: Element[]) => {
   const styles = getStyles();
 
-  return Arr.findMap(parents, (parent) => {
-    return Arr.find(styles, (fmt) => {
-      return editor.formatter.matchNode(parent, fmt.format);
-    });
-  }).orThunk(() => {
-    if (editor.formatter.match('p')) { return Option.some({title: 'Paragraph', format: 'p' }); }
-    return Option.none();
+  return Arr.findMap(parents, (parent) => Arr.find(styles, (fmt) => editor.formatter.matchNode(parent, fmt.format))).orThunk(() => {
+    if (editor.formatter.match('p')) { return Optional.some({ title: 'Paragraph', format: 'p' }); }
+    return Optional.none();
   });
 };
 

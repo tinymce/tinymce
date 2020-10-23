@@ -25,42 +25,9 @@ UnitTest.asynctest('ChainTest', (success, failure) => {
       }
     });
 
-  const acc = (ch) => Chain.async((input, next, die) => {
+  const acc = (ch) => Chain.async((input, next, _die) => {
     next(input + ch);
   });
-  const testInputValueFails = StepAssertions.testStepsFail(
-    'Output value is not a chain: dog',
-    [
-      Chain.asStep({}, [
-        Chain.on((cInput, cNext, cDie, cLogs) => {
-          cNext(<any> 'dog', cLogs);
-        })
-      ])
-    ]
-  );
-
-  const testInputValuePasses = StepAssertions.testStepsPass(
-    {},
-    [
-      Chain.asStep({}, [
-        Chain.on(function (cInput, cNext, cDie, cLogs) {
-          cNext('doge', cLogs);
-        })
-      ])
-    ]
-  );
-
-  const testInputValueOfUndefinedPasses = StepAssertions.testStepsPass(
-    {},
-    [
-      Chain.asStep({}, [
-        Chain.on(function (cInput, cNext, cDie, cLogs) {
-          cNext(undefined, cLogs);
-        })
-      ])
-    ]
-  );
-
   const testChainingFails = StepAssertions.testStepsFail(
     'Cat is not a dog',
     [
@@ -130,6 +97,46 @@ UnitTest.asynctest('ChainTest', (success, failure) => {
     ])
   );
 
+  const testIsolatedChainAcc = StepAssertions.testChain(
+    'Sentence: ',
+    Chain.fromChains([
+      Chain.inject('Sentence: '),
+      Chain.fromIsolatedChains([
+        acc('T'),
+        acc('h'),
+        acc('i'),
+        acc('s'),
+        cIsEqual('Sentence: This')
+      ])
+    ])
+  );
+
+  const testChainExists = StepAssertions.testChain(
+    'Sentence: This',
+    Chain.fromChains([
+      Chain.inject('Sentence: Th'),
+      Chain.exists([
+        acc('i'),
+        acc('Keep the first successful chain only')
+      ]),
+      Chain.exists([
+        Chain.async((_value, _next, die) => die('Ignore fails')),
+        acc('s')
+      ])
+    ])
+  );
+
+  const testChainExistsFail = StepAssertions.testChainFail(
+    'final fail',
+    {},
+    Chain.exists([
+      Chain.async((_value, _next, die) => die('first fail')),
+      Chain.async((_value, _next, die) => die('second fail')),
+      Chain.async((_value, _next, die) => die('third fail')),
+      Chain.async((_value, _next, die) => die('final fail'))
+    ])
+  );
+
   const testChainAsync = StepAssertions.testChain(
     'async works!',
     Chain.async((_value, next) => {
@@ -161,10 +168,10 @@ UnitTest.asynctest('ChainTest', (success, failure) => {
       Chain.inject('runSteps'),
       Chain.runStepsOnValue(
         (s: string) => [
-          Step.stateful((initial, next, die) => {
+          Step.stateful((initial, next, _die) => {
             next(initial + '*' + s + 'OnValue');
           }),
-          Step.stateful((v, next, die) => {
+          Step.stateful((v, next, _die) => {
             next(v + '=succ!');
           })
         ]
@@ -207,6 +214,19 @@ UnitTest.asynctest('ChainTest', (success, failure) => {
       '[When using fromChains, chains do accumulate when passing]\n',
       testChainAcc
     ),
+    Logger.t(
+      '[When using fromIsolatedChains, chains do accumulate when passing, but return the original value]\n',
+      testIsolatedChainAcc
+    ),
+    Logger.t(
+      '[When using exists, ensure that the first successful value is returned]\n',
+      testChainExists
+    ),
+    Logger.t(
+      '[When using exists, if all chains fail, ensure that the last failure is returned]\n',
+      testChainExistsFail
+    ),
+
     Logger.t(
       '[Chain should async]\n',
       testChainAsync
@@ -261,9 +281,7 @@ UnitTest.asynctest('Chain.predicate true', (success, failure) => {
   Pipeline.async('stepstate', [
     StepAssertions.testStepsPass(
       'stepstate',
-      [Chain.asStep('chicken', [Chain.predicate((x) => {
-        return x === 'chicken';
-      })])]
+      [ Chain.asStep('chicken', [ Chain.predicate((x) => x === 'chicken') ]) ]
     )
   ], () => success(), failure);
 });
@@ -272,7 +290,7 @@ UnitTest.asynctest('Chain.predicate false', (success, failure) => {
   Pipeline.async('stepstate', [
     StepAssertions.testStepsFail(
       'predicate did not succeed',
-      [Chain.asStep('chicken', [Chain.predicate((x) => x === 'frog')])]
+      [ Chain.asStep('chicken', [ Chain.predicate((x) => x === 'frog') ]) ]
     )
   ], () => success(), failure);
 });

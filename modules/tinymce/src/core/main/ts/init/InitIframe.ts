@@ -5,16 +5,15 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { document, window } from '@ephox/dom-globals';
-import { Attr, Class, Element } from '@ephox/sugar';
+import { Attribute, Class, SugarElement } from '@ephox/sugar';
 
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
 import Env from '../api/Env';
-import Settings from '../api/Settings';
+import * as Settings from '../api/Settings';
 import { TranslatedString } from '../api/util/I18n';
-import Uuid from '../util/Uuid';
-import InitContentBody from './InitContentBody';
+import * as Uuid from '../util/Uuid';
+import * as InitContentBody from './InitContentBody';
 
 const DOM = DOMUtils.DOM;
 
@@ -28,7 +27,7 @@ const relaxDomain = function (editor: Editor, ifr) {
       InitContentBody.initContentBody(editor);
     };
 
-    /*eslint no-script-url:0 */
+    /* eslint no-script-url:0 */
     const domainRelaxUrl = 'javascript:(function(){' +
       'document.open();document.domain="' + document.domain + '";' +
       'var ed = window.parent.tinymce.get("' + editor.id + '");document.write(ed.iframeHTML);' +
@@ -42,11 +41,11 @@ const relaxDomain = function (editor: Editor, ifr) {
 };
 
 const createIframeElement = function (id: string, title: TranslatedString, height: number, customAttrs: {}) {
-  const iframe = Element.fromTag('iframe');
+  const iframe = SugarElement.fromTag('iframe');
 
-  Attr.setAll(iframe, customAttrs);
+  Attribute.setAll(iframe, customAttrs);
 
-  Attr.setAll(iframe, {
+  Attribute.setAll(iframe, {
     id: id + '_ifr',
     frameBorder: '0',
     allowTransparency: 'true',
@@ -59,9 +58,7 @@ const createIframeElement = function (id: string, title: TranslatedString, heigh
 };
 
 const getIframeHtml = function (editor: Editor) {
-  let bodyId, bodyClass, iframeHTML;
-
-  iframeHTML = Settings.getDocType(editor) + '<html><head>';
+  let iframeHTML = Settings.getDocType(editor) + '<html><head>';
 
   // We only need to override paths if we have to
   // IE has a bug where it remove site absolute urls to relative ones if this is specified
@@ -71,8 +68,8 @@ const getIframeHtml = function (editor: Editor) {
 
   iframeHTML += '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />';
 
-  bodyId = Settings.getBodyId(editor);
-  bodyClass = Settings.getBodyClass(editor);
+  const bodyId = Settings.getBodyId(editor);
+  const bodyClass = Settings.getBodyClass(editor);
 
   if (Settings.getContentSecurityPolicy(editor)) {
     iframeHTML += '<meta http-equiv="Content-Security-Policy" content="' + Settings.getContentSecurityPolicy(editor) + '" />';
@@ -90,7 +87,7 @@ const createIframe = function (editor: Editor, o) {
     'Rich Text Area. Press ALT-0 for help.'
   );
 
-  const ifr = createIframeElement(editor.id, title, o.height, Settings.getIframeAttrs(editor)).dom();
+  const ifr = createIframeElement(editor.id, title, o.height, Settings.getIframeAttrs(editor)).dom;
 
   ifr.onload = function () {
     ifr.onload = null;
@@ -123,6 +120,6 @@ const init = function (editor: Editor, boxInfo) {
   }
 };
 
-export default {
+export {
   init
 };

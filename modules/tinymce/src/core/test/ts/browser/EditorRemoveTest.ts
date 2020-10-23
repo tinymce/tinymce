@@ -26,7 +26,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorRemoveTest', (success, failure) =
   Pipeline.async({}, [
     Logger.t('remove editor without initializing it', Chain.asStep({}, [
       cCreateEditor,
-      cRemoveEditor,
+      cRemoveEditor
     ])),
 
     Logger.t('remove editor where the body has been removed', Chain.asStep({}, [
@@ -44,7 +44,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorRemoveTest', (success, failure) =
       cAssertTextareaDisplayStyle('none'),
       cRemoveEditor,
       cAssertTextareaDisplayStyle(''),
-      Chain.op((editor) => EditorManager.init({ selector: '#tinymce' })),
+      Chain.op((_editor) => { EditorManager.init({ selector: '#tinymce' }); }),
       cAssertTextareaDisplayStyle(''),
       McEditor.cRemove
     ])),
@@ -54,7 +54,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorRemoveTest', (success, failure) =
       cAssertTextareaDisplayStyle('none'),
       cRemoveEditor,
       cAssertTextareaDisplayStyle('none'),
-      Chain.op((editor) => EditorManager.init({ selector: '#tinymce' })),
+      Chain.op((_editor) => { EditorManager.init({ selector: '#tinymce' }); }),
       cAssertTextareaDisplayStyle('none'),
       McEditor.cRemove
     ])),
@@ -64,7 +64,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorRemoveTest', (success, failure) =
       cAssertTextareaDisplayStyle('none'),
       cRemoveEditor,
       cAssertTextareaDisplayStyle('block'),
-      Chain.op((editor) => EditorManager.init({ selector: '#tinymce' })),
+      Chain.op((_editor) => { EditorManager.init({ selector: '#tinymce' }); }),
       cAssertTextareaDisplayStyle('block'),
       McEditor.cRemove
     ]))

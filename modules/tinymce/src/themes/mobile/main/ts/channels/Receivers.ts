@@ -7,14 +7,14 @@
 
 import { Receiving } from '@ephox/alloy';
 import { Objects } from '@ephox/boulder';
-import TinyChannels from './TinyChannels';
+import * as TinyChannels from './TinyChannels';
 
 const format = function (command, update) {
   return Receiving.config({
     channels: Objects.wrap(
-      TinyChannels.formatChanged(),
+      TinyChannels.formatChanged,
       {
-        onReceive (button, data) {
+        onReceive(button, data) {
           if (data.command === command) {
             update(button, data.state);
           }
@@ -27,7 +27,7 @@ const format = function (command, update) {
 const orientation = function (onReceive) {
   return Receiving.config({
     channels: Objects.wrap(
-      TinyChannels.orientationChanged(),
+      TinyChannels.orientationChanged,
       {
         onReceive
       }
@@ -35,7 +35,7 @@ const orientation = function (onReceive) {
   });
 };
 
-const receive = function (channel, onReceive) {
+const receive = function (channel: string, onReceive) {
   return {
     key: channel,
     value: {
@@ -44,7 +44,7 @@ const receive = function (channel, onReceive) {
   };
 };
 
-export default {
+export {
   format,
   orientation,
   receive

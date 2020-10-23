@@ -1,4 +1,4 @@
-import { Assertions, Chain, Guard, Mouse, NamedChain, Pipeline, UiFinder, Log } from '@ephox/agar';
+import { Assertions, Chain, Guard, Log, Mouse, NamedChain, Pipeline, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { ApiChains, Editor as McEditor, TinyDom, UiChains } from '@ephox/mcagar';
 
@@ -20,17 +20,17 @@ UnitTest.asynctest('browser.tinymce.plugins.image.FigureResizeTest', (success, f
 
   const cGetElementSize = Chain.control(
     Chain.mapper(function (elm: any) {
-      const elmStyle = elm.dom().style;
+      const elmStyle = elm.dom.style;
       return { w: elmStyle.width, h: elmStyle.height };
     }),
     Guard.addLogging('Get element size')
-);
+  );
 
   const cDragHandleRight = function (px) {
     return Chain.control(
       Chain.op(function (input: any) {
         const dom = input.editor.dom;
-        const target = input.resizeSE.dom();
+        const target = input.resizeSE.dom;
         const pos = dom.getPos(target);
 
         dom.fire(target, 'mousedown', { screenX: pos.x, screenY: pos.y });
@@ -61,7 +61,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.FigureResizeTest', (success, f
           },
           dimensions: {
             width: '100px',
-            height: '100px',
+            height: '100px'
           },
           caption: true
         }),

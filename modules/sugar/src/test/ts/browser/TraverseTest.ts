@@ -1,22 +1,20 @@
-import { Arr } from '@ephox/katamari';
-import * as Attr from 'ephox/sugar/api/properties/Attr';
-import Element from 'ephox/sugar/api/node/Element';
-import * as InsertAll from 'ephox/sugar/api/dom/InsertAll';
-import * as Traverse from 'ephox/sugar/api/search/Traverse';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { document, Element as DomElement, window } from '@ephox/dom-globals';
+import { Arr } from '@ephox/katamari';
 import { KAssert } from '@ephox/katamari-assertions';
+import * as InsertAll from 'ephox/sugar/api/dom/InsertAll';
+import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
+import * as SugarNode from 'ephox/sugar/api/node/SugarNode';
+import * as Attribute from 'ephox/sugar/api/properties/Attribute';
+import * as Traverse from 'ephox/sugar/api/search/Traverse';
 
-UnitTest.test('TraverseTest', function () {
-  const node = function (name) {
-    const div = Element.fromTag('div');
-    Attr.set(div, 'name', name);
+UnitTest.test('TraverseTest', () => {
+  const node = (name: string) => {
+    const div = SugarElement.fromTag('div');
+    Attribute.set(div, 'name', name);
     return div;
   };
 
-  const textNode = function (text) {
-    return Element.fromText(text);
-  };
+  const textNode = (text: string) => SugarElement.fromText(text);
 
   const grandparent = node('grandparent');
   const uncle = node('uncle');
@@ -29,11 +27,11 @@ UnitTest.test('TraverseTest', function () {
   InsertAll.append(grandparent, [ uncle, mother ]);
   InsertAll.append(mother, [ youngest, middle, oldest ]);
 
-  const checkNone = function (subject) {
-    KAssert.eqNone(() => 'Expected "' + Attr.get(subject, 'name') + '" not to have a parent.', Traverse.findIndex(subject));
+  const checkNone = (subject: SugarElement<Element>) => {
+    KAssert.eqNone(() => 'Expected "' + Attribute.get(subject, 'name') + '" not to have a parent.', Traverse.findIndex(subject));
   };
 
-  const checkIndex = function (expected: number, subject: Element<DomElement>) {
+  const checkIndex = (expected: number, subject: SugarElement<Element>) => {
     const actual = Traverse.findIndex(subject);
     KAssert.eqSome('eq', expected, actual);
   };
@@ -45,10 +43,10 @@ UnitTest.test('TraverseTest', function () {
   checkIndex(1, middle);
   checkIndex(2, oldest);
 
-  const checkSiblings = function (expected, subject, direction) {
+  const checkSiblings = (expected: SugarElement<Element>[], subject: SugarElement<Element>, direction: (element: SugarElement<Element>) => SugarElement<Node>[]) => {
     const actual = direction(subject);
 
-    const getName = function (e) { return Attr.get(e, 'name'); };
+    const getName = (e: SugarElement<Node>) => SugarNode.isElement(e) ? Attribute.get(e, 'name') : '';
 
     Assert.eq('eq',
       Arr.map(expected, getName),
@@ -65,15 +63,15 @@ UnitTest.test('TraverseTest', function () {
   const c6 = node('c6');
   InsertAll.append(aunt, [ c1, c2, c3, c4, c5, c6 ]);
 
-  checkSiblings([ c1, c2 ],     c3, Traverse.prevSiblings);
+  checkSiblings([ c1, c2 ], c3, Traverse.prevSiblings);
   checkSiblings([ c4, c5, c6 ], c3, Traverse.nextSiblings);
 
-  checkSiblings([ c1 ],         c2, Traverse.prevSiblings);
-  checkSiblings([ c6 ],         c5, Traverse.nextSiblings);
+  checkSiblings([ c1 ], c2, Traverse.prevSiblings);
+  checkSiblings([ c6 ], c5, Traverse.nextSiblings);
 
-  const el = Element.fromTag('div');
-  Assert.eq('eq', true, Traverse.owner(el).dom() === document);
-  Assert.eq('eq', true, Traverse.defaultView(el).dom() === window);
+  const el = SugarElement.fromTag('div');
+  Assert.eq('eq', true, Traverse.owner(el).dom === document);
+  Assert.eq('eq', true, Traverse.defaultView(el).dom === window);
 
   const n = node('n');
   c1 = node('c1');

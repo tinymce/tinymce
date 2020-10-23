@@ -1,7 +1,7 @@
-import * as GenSelection from '../arbitrary/GenSelection';
-import * as TagDecorator from '../arbitrary/TagDecorator';
 import { Hierarchy, Html, Truncate } from '@ephox/sugar';
 import Jsc from '@ephox/wrap-jsverify';
+import * as GenSelection from '../arbitrary/GenSelection';
+import * as TagDecorator from '../arbitrary/TagDecorator';
 
 const selection = (container, exclusions) => GenSelection.selection(container, exclusions);
 
@@ -33,7 +33,7 @@ const hexColor = Jsc.tuple([
   hexDigit,
   hexDigit,
   hexDigit
-]).generator.map((digits) => ['#'].concat(digits).join(''));
+]).generator.map((digits) => [ '#' ].concat(digits).join(''));
 
 export {
   selection,

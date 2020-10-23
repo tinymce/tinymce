@@ -1,5 +1,5 @@
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import * as Obj from 'ephox/katamari/api/Obj';
-import { UnitTest, Assert } from '@ephox/bedrock-client';
 
 UnitTest.test('Obj.values', () => {
   const check = (expValues, input) => {
@@ -11,6 +11,6 @@ UnitTest.test('Obj.values', () => {
   };
 
   check([], {});
-  check(['A'], { a: 'A' });
-  check(['A', 'B', 'C'], { a: 'A', c: 'C', b: 'B' });
+  check([ 'A' ], { a: 'A' });
+  check([ 'A', 'B', 'C' ], { a: 'A', c: 'C', b: 'B' });
 });

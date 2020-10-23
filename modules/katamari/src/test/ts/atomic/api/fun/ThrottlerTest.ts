@@ -1,6 +1,5 @@
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import * as Throttler from 'ephox/katamari/api/Throttler';
-import { UnitTest, Assert } from '@ephox/bedrock-client';
-import { setTimeout } from '@ephox/dom-globals';
 
 UnitTest.asynctest('Throttler.adaptable', (success) => {
   const data: string[] = [];

@@ -4,14 +4,14 @@ import { TinyLoader } from '@ephox/mcagar';
 
 import LocalStorage from 'tinymce/core/api/util/LocalStorage';
 import SilverTheme from 'tinymce/themes/silver/Theme';
-import ColorSwatch from 'tinymce/themes/silver/ui/core/color/ColorSwatch';
-import Settings from 'tinymce/themes/silver/ui/core/color/Settings';
+import * as ColorSwatch from 'tinymce/themes/silver/ui/core/color/ColorSwatch';
+import * as Settings from 'tinymce/themes/silver/ui/core/color/Settings';
 
 UnitTest.asynctest('ColorSettingsTest', (success, failure) => {
   SilverTheme();
 
   const sResetLocalStorage = function () {
-    return Logger.t(`Reset local storage`, Step.sync(function () {
+    return Logger.t('Reset local storage', Step.sync(function () {
       LocalStorage.removeItem('tinymce-custom-colors');
     }));
   };
@@ -19,7 +19,7 @@ UnitTest.asynctest('ColorSettingsTest', (success, failure) => {
   const sAssertColors = function (input, expected) {
     const extractColor = (color: string) => {
       const m = /^#([0-9A-F]{2})([0-9A-F]{2})([0-9A-F]{2})$/.exec(color);
-      return [parseInt(m[1], 16), parseInt(m[2], 16), parseInt(m[3], 16)];
+      return [ parseInt(m[1], 16), parseInt(m[2], 16), parseInt(m[3], 16) ];
     };
     const assertColor = (expectedColor: string, actualColor: string, delta: number = 0) => {
       const expectedRgb = extractColor(expectedColor);
@@ -118,12 +118,12 @@ UnitTest.asynctest('ColorSettingsTest', (success, failure) => {
         sAssertCalcCols(editor, 37, 7),
         sResetLocalStorage()
       ])
-    , onSuccess, onFailure);
+      , onSuccess, onFailure);
   }, {
-      plugins: '',
-      toolbar: 'forecolor backcolor',
-      base_url: '/project/tinymce/js/tinymce',
-      color_map: colorSettings
-    }, success, failure);
+    plugins: '',
+    toolbar: 'forecolor backcolor',
+    base_url: '/project/tinymce/js/tinymce',
+    color_map: colorSettings
+  }, success, failure);
 }
 );

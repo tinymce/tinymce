@@ -1,7 +1,7 @@
 import { Arr, Obj } from '@ephox/katamari';
-import { AlloyBehaviour, AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 
 import * as BehaviourBlob from '../../behaviour/common/BehaviourBlob';
+import { AlloyBehaviour, AlloyBehaviourRecord } from '../behaviour/Behaviour';
 
 type BehaviourName = string;
 
@@ -13,14 +13,10 @@ const getBehaviours = (spec: { behaviours?: AlloyBehaviourRecord }): Array<Alloy
     Obj.keys(behaviours),
     (k: BehaviourName) => behaviours[k] !== undefined
   );
-  return Arr.map(keys, (k) => {
-    return behaviours[k].me;
-  });
+  return Arr.map(keys, (k) => behaviours[k].me);
 };
 
-const generateFrom = (spec: { behaviours?: AlloyBehaviourRecord }, all: Array<AlloyBehaviour<any, any, any>>): BehaviourBlob.BehaviourData<any, any, any> => {
-  return BehaviourBlob.generateFrom(spec, all);
-};
+const generateFrom = (spec: { behaviours?: AlloyBehaviourRecord }, all: Array<AlloyBehaviour<any, any, any>>): BehaviourBlob.BehaviourData<any, any, any> => BehaviourBlob.generateFrom(spec, all);
 
 const generate = (spec: { behaviours?: AlloyBehaviourRecord }): BehaviourBlob.BehaviourData<any, any, any> => {
   const all = getBehaviours(spec);

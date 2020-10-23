@@ -5,21 +5,21 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node, Range } from '@ephox/dom-globals';
-import TreeWalker from '../api/dom/TreeWalker';
-import Selection from '../api/dom/Selection';
+import { Arr, Obj, Type } from '@ephox/katamari';
 import DOMUtils from '../api/dom/DOMUtils';
+import EditorSelection from '../api/dom/Selection';
+import DomTreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
-import NodeType from '../dom/NodeType';
-import { FormatAttrOrStyleValue, FormatVars } from '../api/fmt/Format';
+import { Format, FormatAttrOrStyleValue, FormatVars } from '../api/fmt/Format';
+import * as NodeType from '../dom/NodeType';
 
-const isNode = (node: any): node is Node => !!(node as any).nodeType;
+const isNode = (node: any): node is Node => !!(node).nodeType;
 
 const isInlineBlock = function (node: Node): boolean {
   return node && /^(IMG)$/.test(node.nodeName);
 };
 
-const moveStart = function (dom: DOMUtils, selection: Selection, rng: Range) {
+const moveStart = function (dom: DOMUtils, selection: EditorSelection, rng: Range) {
   const offset = rng.startOffset;
   let container = rng.startContainer, walker, node, nodes;
 
@@ -34,10 +34,10 @@ const moveStart = function (dom: DOMUtils, selection: Selection, rng: Range) {
     nodes = container.childNodes;
     if (offset < nodes.length) {
       container = nodes[offset];
-      walker = new TreeWalker(container, dom.getParent(container, dom.isBlock));
+      walker = new DomTreeWalker(container, dom.getParent(container, dom.isBlock));
     } else {
       container = nodes[nodes.length - 1];
-      walker = new TreeWalker(container, dom.getParent(container, dom.isBlock));
+      walker = new DomTreeWalker(container, dom.getParent(container, dom.isBlock));
       walker.next(true);
     }
 
@@ -169,6 +169,35 @@ const getParents = function (dom: DOMUtils, node: Node, selector?: string) {
   return dom.getParents(node, selector, dom.getRoot());
 };
 
+const isVariableFormatName = (editor: Editor, formatName: string): boolean => {
+  const hasVariableValues = (format: Format) => {
+    const isVariableValue = (val: string): boolean => val.length > 1 && val.charAt(0) === '%';
+    return Arr.exists([ 'styles', 'attributes' ], (key: 'styles' | 'attributes') =>
+      Obj.get(format, key).exists((field) => {
+        const fieldValues = Type.isArray(field) ? field : Obj.values(field);
+        return Arr.exists(fieldValues, isVariableValue);
+      }));
+  };
+  return Arr.exists(editor.formatter.get(formatName) as Format[], hasVariableValues);
+};
+
+/**
+ * Checks if the two formats are similar based on the format type, attributes, styles and classes
+ */
+const areSimilarFormats = (editor: Editor, formatName: string, otherFormatName: string) => {
+  // Note: MatchFormat.matchNode() uses these parameters to check if a format matches a node
+  // Therefore, these are ideal to check if two formats are similar
+  const validKeys = [ 'inline', 'block', 'selector', 'attributes', 'styles', 'classes' ];
+  const filterObj = (format: Record<string, any>) => Obj.filter(format, (_, key) => Arr.exists(validKeys, (validKey) => validKey === key));
+  return Arr.exists(editor.formatter.get(formatName) as Format[], (fmt1) => {
+    const filteredFmt1 = filterObj(fmt1);
+    return Arr.exists(editor.formatter.get(otherFormatName) as Format[], (fmt2) => {
+      const filteredFmt2 = filterObj(fmt2);
+      return Obj.equal(filteredFmt1, filteredFmt2);
+    });
+  });
+};
+
 export {
   isNode,
   isInlineBlock,
@@ -183,5 +212,7 @@ export {
   normalizeStyleValue,
   getStyle,
   getTextDecoration,
-  getParents
+  getParents,
+  isVariableFormatName,
+  areSimilarFormats
 };

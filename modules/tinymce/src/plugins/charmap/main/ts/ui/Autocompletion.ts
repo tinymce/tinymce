@@ -7,19 +7,19 @@
 
 import Editor from 'tinymce/core/api/Editor';
 import Promise from 'tinymce/core/api/util/Promise';
-import Scan from '../core/Scan';
-import { CharMap } from '../core/CharMap';
+import * as CharMap from '../core/CharMap';
+import * as Scan from '../core/Scan';
+
+type CharMap = CharMap.CharMap;
 
 const init = (editor: Editor, all: CharMap) => {
   editor.ui.registry.addAutocompleter('charmap', {
     ch: ':',
     columns: 'auto',
     minChars: 2,
-    fetch: (pattern, maxResults) => {
-      return new Promise((resolve, reject) => {
-        resolve(Scan.scan(all, pattern));
-      });
-    },
+    fetch: (pattern, _maxResults) => new Promise((resolve, _reject) => {
+      resolve(Scan.scan(all, pattern));
+    }),
     onAction: (autocompleteApi, rng, value) => {
       editor.selection.setRng(rng);
       editor.insertContent(value);

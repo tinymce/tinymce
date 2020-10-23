@@ -30,9 +30,9 @@ tinymce.init({
       title: 'Extra',
       items: [{
         type: 'htmlpanel',
-        html: '<p>This is an extra tab</p>',
+        html: '<p>This is an extra tab</p>'
       }]
-    },
+    }
   ]
 });
 
@@ -49,7 +49,7 @@ tinymce.init({
         title: 'Extra1',
         items: [{
           type: 'htmlpanel',
-          html: '<p>This is an extra tab</p>',
+          html: '<p>This is an extra tab</p>'
         }]
       });
     });
@@ -62,7 +62,7 @@ tinymce.init({
           title: 'Extra2',
           items: [{
             type: 'htmlpanel',
-            html: '<p>This is another extra tab</p>',
+            html: '<p>This is another extra tab</p>'
           }]
         });
       }
@@ -87,7 +87,7 @@ tinymce.init({
       items: [
         {
           type: 'htmlpanel',
-          html: '<p>This is an extra tab</p>',
+          html: '<p>This is an extra tab</p>'
         }
       ]
     },
@@ -97,7 +97,7 @@ tinymce.init({
       items: [
         {
           type: 'htmlpanel',
-          html: '<p>This is another extra tab</p>',
+          html: '<p>This is another extra tab</p>'
         }
       ]
     }
@@ -110,9 +110,9 @@ tinymce.init({
         items: [
           {
             type: 'htmlpanel',
-            html: '<p>This is yet another extra tab</p>',
+            html: '<p>This is yet another extra tab</p>'
           }
-        ]}
+        ] }
       );
       editor.plugins.help.addTab({
         name: 'extra5',
@@ -120,7 +120,7 @@ tinymce.init({
         items: [
           {
             type: 'htmlpanel',
-            html: '<p>This is another extra tab but it should not be displayed because it is not in help_tabs.</p>',
+            html: '<p>This is another extra tab but it should not be displayed because it is not in help_tabs.</p>'
           }
         ]
       });
@@ -135,7 +135,7 @@ tinymce.init({
           items: [
             {
               type: 'htmlpanel',
-              html: '<p>This is yet another another extra tab</p>',
+              html: '<p>This is yet another another extra tab</p>'
             }
           ]
         });

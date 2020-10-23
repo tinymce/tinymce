@@ -1,15 +1,15 @@
-import { Assertions, Pipeline, Step, Log } from '@ephox/agar';
+import { Assertions, Log, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
-import SilverTheme from 'tinymce/themes/silver/Theme';
 
 import { AnchorListOptions } from 'tinymce/plugins/link/ui/sections/AnchorListOptions';
 import { ClassListOptions } from 'tinymce/plugins/link/ui/sections/ClassListOptions';
 import { LinkListOptions } from 'tinymce/plugins/link/ui/sections/LinkListOptions';
 import { RelOptions } from 'tinymce/plugins/link/ui/sections/RelOptions';
 import { TargetOptions } from 'tinymce/plugins/link/ui/sections/TargetOptions';
+import SilverTheme from 'tinymce/themes/silver/Theme';
 import { TestLinkUi } from '../module/TestLinkUi';
 
 UnitTest.asynctest('browser.tinymce.plugins.link.ListOptionsTest', (success, failure) => {
@@ -79,14 +79,12 @@ UnitTest.asynctest('browser.tinymce.plugins.link.ListOptionsTest', (success, fai
           ]);
         }),
         Step.async((next, die) => {
-          LinkListOptions.getLinks(editor).get((links) => {
+          LinkListOptions.getLinks(editor).then((links) => {
             try {
               Assertions.assertEq(
                 'Checking link_list',
                 [
                   { text: 'None', value: '' },
-                  // TODO TINY-2236 re-enable this (support will need to be added to bridge)
-                  /*
                   {
                     text: 'Alpha',
                     items: [
@@ -94,7 +92,6 @@ UnitTest.asynctest('browser.tinymce.plugins.link.ListOptionsTest', (success, fai
                       { value: 'alpha-a', text: 'Alpha-A' }
                     ]
                   },
-                  */
                   {
                     text: 'Beta',
                     value: 'beta'
@@ -118,7 +115,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.ListOptionsTest', (success, fai
           { value: 'just one', text: 'Just One' }
         ]),
         Step.sync(() => {
-          const rels = RelOptions.getRels(editor, Option.some('initial-target'));
+          const rels = RelOptions.getRels(editor, Optional.some('initial-target'));
           Assertions.assertEq(
             'Checking rel_list output',
             [

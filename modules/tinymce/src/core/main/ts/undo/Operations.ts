@@ -5,24 +5,23 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Optional } from '@ephox/katamari';
 import Editor from '../api/Editor';
-import Levels from './Levels';
+import * as Settings from '../api/Settings';
 import Tools from '../api/util/Tools';
-import { Event } from '@ephox/dom-globals';
-import { Option } from '@ephox/katamari';
-import { UndoManager, Locks, Index, UndoLevel, UndoBookmark } from './UndoManagerTypes';
-import GetBookmark from '../bookmark/GetBookmark';
-import { setTyping, endTyping } from './TypingState';
+import * as GetBookmark from '../bookmark/GetBookmark';
+import * as Levels from './Levels';
 import { isUnlocked } from './Locks';
+import { endTyping, setTyping } from './TypingState';
+import { Index, Locks, UndoBookmark, UndoLevel, UndoManager } from './UndoManagerTypes';
 
 export const beforeChange = (editor: Editor, locks: Locks, beforeBookmark: UndoBookmark) => {
   if (isUnlocked(locks)) {
-    beforeBookmark.set(Option.some(GetBookmark.getUndoBookmark(editor.selection)));
+    beforeBookmark.set(Optional.some(GetBookmark.getUndoBookmark(editor.selection)));
   }
 };
 
 export const addUndoLevel = (editor: Editor, undoManager: UndoManager, index: Index, locks: Locks, beforeBookmark: UndoBookmark, level?: UndoLevel, event?: Event) => {
-  const settings = editor.settings;
   const currentLevel = Levels.createFromEditor(editor);
 
   level = level || {} as UndoLevel;
@@ -50,8 +49,10 @@ export const addUndoLevel = (editor: Editor, undoManager: UndoManager, index: In
   }
 
   // Time to compress
-  if (settings.custom_undo_redo_levels) {
-    if (undoManager.data.length > settings.custom_undo_redo_levels) {
+  const customUndoRedoLevels = Settings.getCustomUndoRedoLevels(editor);
+
+  if (customUndoRedoLevels) {
+    if (undoManager.data.length > customUndoRedoLevels) {
       for (let i = 0; i < undoManager.data.length - 1; i++) {
         undoManager.data[i] = undoManager.data[i + 1];
       }
@@ -74,11 +75,12 @@ export const addUndoLevel = (editor: Editor, undoManager: UndoManager, index: In
 
   const args = { level, lastLevel, originalEvent: event };
 
-  editor.fire('AddUndo', args);
-
   if (index.get() > 0) {
     editor.setDirty(true);
+    editor.fire('AddUndo', args);
     editor.fire('change', args);
+  } else {
+    editor.fire('AddUndo', args);
   }
 
   return level;
@@ -142,14 +144,11 @@ export const reset = (undoManager: UndoManager) => {
   undoManager.add();
 };
 
-export const hasUndo = (editor: Editor, undoManager: UndoManager, index: Index) => {
+export const hasUndo = (editor: Editor, undoManager: UndoManager, index: Index) =>
   // Has undo levels or typing and content isn't the same as the initial level
-  return index.get() > 0 || (undoManager.typing && undoManager.data[0] && !Levels.isEq(Levels.createFromEditor(editor), undoManager.data[0]));
-};
+  index.get() > 0 || (undoManager.typing && undoManager.data[0] && !Levels.isEq(Levels.createFromEditor(editor), undoManager.data[0]));
 
-export const hasRedo = (undoManager: UndoManager, index: Index) => {
-  return index.get() < undoManager.data.length - 1 && !undoManager.typing;
-};
+export const hasRedo = (undoManager: UndoManager, index: Index) => index.get() < undoManager.data.length - 1 && !undoManager.typing;
 
 export const transact = (undoManager: UndoManager, locks: Locks, callback: () => void) => {
   endTyping(undoManager, locks);

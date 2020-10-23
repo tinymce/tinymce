@@ -6,13 +6,13 @@ import { Editor as McEditor } from '@ephox/mcagar';
 import PastePlugin from 'tinymce/plugins/paste/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-import MockDataTransfer from '../module/test/MockDataTransfer';
+import * as MockDataTransfer from '../module/test/MockDataTransfer';
 
 UnitTest.asynctest('tinymce.plugins.paste.browser.PlainTextPaste', (success, failure) => {
   Theme();
   PastePlugin();
 
-  const cCreateEditorFromSettings = function (settings, html?) {
+  const cCreateEditorFromSettings = function (settings, _html?) {
     return Chain.control(
       McEditor.cFromSettings({
         ...settings,
@@ -32,7 +32,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.PlainTextPaste', (success, fai
 
   const cClearEditor = function () {
     return Chain.control(
-      Chain.async(function (editor: any, next, die) {
+      Chain.async(function (editor: any, next, _die) {
         editor.setContent('');
         next(editor);
       }),
@@ -42,7 +42,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.PlainTextPaste', (success, fai
 
   const cFireFakePasteEvent = function (data) {
     return Chain.control(
-      Chain.async(function (editor: any, next, die) {
+      Chain.async(function (editor: any, next, _die) {
         editor.fire('paste', { clipboardData: MockDataTransfer.create(data) });
         next(editor);
       }),
@@ -52,7 +52,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.PlainTextPaste', (success, fai
 
   const cAssertEditorContent = function (label, expected) {
     return Chain.control(
-      Chain.async(function (editor: any, next, die) {
+      Chain.async(function (editor: any, next, _die) {
         Assertions.assertHtml(label || 'Asserting editors content', expected, editor.getContent());
         next(editor);
       }),

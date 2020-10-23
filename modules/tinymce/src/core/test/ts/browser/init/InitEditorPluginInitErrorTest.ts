@@ -1,9 +1,9 @@
 import { Assertions, Log, Pipeline, Step } from '@ephox/agar';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { UnitTest } from '@ephox/bedrock-client';
+import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import PluginManager from 'tinymce/core/api/PluginManager';
 
 import Theme from 'tinymce/themes/silver/Theme';
-import PluginManager from 'tinymce/core/api/PluginManager';
 import ErrorHelper from '../../module/test/ErrorHelpers';
 
 UnitTest.asynctest('browser.tinymce.core.init.InitEditorPluginInitErrorTest', (success, failure) => {
@@ -21,10 +21,10 @@ UnitTest.asynctest('browser.tinymce.core.init.InitEditorPluginInitErrorTest', (s
     Pipeline.async({}, [
       Log.stepsAsStep('TBA', 'Editor is responsive after using a plugin that throws an error during init', [
         tinyApis.sSetContent('<p>a</p>'),
-        tinyApis.sAssertContent('<p>a</p>'),
+        tinyApis.sAssertContent('<p>a</p>')
       ]),
-      Log.step('TBA', 'Failed plugin shouldn\'t be registered', Step.sync(() => {
-        Assertions.assertEq('Plugin shouldn\'t be registered', undefined, editor.plugins.errorplugin);
+      Log.step('TBA', `Failed plugin shouldn't be registered`, Step.sync(() => {
+        Assertions.assertEq(`Plugin shouldn't be registered`, undefined, editor.plugins.errorplugin);
       })),
       Log.step('TBA', 'Notification opened detailing plugin failed to init', Step.sync(() => {
         const notifications = editor.notificationManager.getNotifications();

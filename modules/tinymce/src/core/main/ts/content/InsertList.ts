@@ -5,12 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element, Range } from '@ephox/dom-globals';
+import { Unicode } from '@ephox/katamari';
+import Tools from '../api/util/Tools';
 import CaretPosition from '../caret/CaretPosition';
 import { CaretWalker } from '../caret/CaretWalker';
-import NodeType from '../dom/NodeType';
-import Tools from '../api/util/Tools';
-import { Unicode } from '@ephox/katamari';
+import * as NodeType from '../dom/NodeType';
 
 /**
  * Handles inserts of lists into the editor instance.
@@ -199,7 +198,7 @@ const insertAtCaret = function (serializer, dom, rng, fragment): Range {
   return insertMiddle(liTarget, liElms, rootNode, rng);
 };
 
-export default {
+export {
   isListFragment,
   insertAtCaret,
   isParentBlockLi,

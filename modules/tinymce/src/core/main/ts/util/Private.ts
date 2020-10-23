@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Uuid from './Uuid';
+import * as Uuid from './Uuid';
 
 /**
  * This module lets you create private properties on objects.
@@ -46,6 +46,6 @@ const create = function () {
   };
 };
 
-export default {
+export {
   create
 };

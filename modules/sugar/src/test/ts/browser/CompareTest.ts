@@ -1,13 +1,13 @@
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import * as Compare from 'ephox/sugar/api/dom/Compare';
-import Element from 'ephox/sugar/api/node/Element';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
-import TestPage from 'ephox/sugar/test/TestPage';
-import { UnitTest, assert } from '@ephox/bedrock-client';
+import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
+import * as TestPage from 'ephox/sugar/test/TestPage';
 
-UnitTest.test('CompareTest', function () {
+UnitTest.test('CompareTest', () => {
   TestPage.connect(); // description of structure is in TestPage
 
-  const check = function (expected, e1, e2) {
+  const check = (expected: boolean, e1: SugarElement<unknown>, e2: SugarElement<unknown>) => {
     assert.eq(expected, Compare.eq(e1, e2));
   };
 
@@ -17,16 +17,16 @@ UnitTest.test('CompareTest', function () {
   check(false, TestPage.s1, TestPage.s2);
 
   assert.eq(false, Compare.member(TestPage.p1, []));
-  assert.eq(true, Compare.member(TestPage.p1, [TestPage.p1]));
-  assert.eq(true, Compare.member(TestPage.p1, [TestPage.t2, TestPage.p1]));
-  assert.eq(false, Compare.member(TestPage.p1, [TestPage.t2]));
+  assert.eq(true, Compare.member(TestPage.p1, [ TestPage.p1 ]));
+  assert.eq(true, Compare.member(TestPage.p1, [ TestPage.t2, TestPage.p1 ]));
+  assert.eq(false, Compare.member(TestPage.p1, [ TestPage.t2 ]));
 
-  const checkIsEqualNode = function (expected, e1, e2) {
+  const checkIsEqualNode = (expected: boolean, e1: SugarElement<Node>, e2: SugarElement<Node>) => {
     assert.eq(expected, Compare.isEqualNode(e1, e2));
   };
 
-  checkIsEqualNode(true, Element.fromTag('p'), Element.fromTag('p'));
-  checkIsEqualNode(false, Element.fromTag('p'), Element.fromTag('span'));
+  checkIsEqualNode(true, SugarElement.fromTag('p'), SugarElement.fromTag('p'));
+  checkIsEqualNode(false, SugarElement.fromTag('p'), SugarElement.fromTag('span'));
   // Tests for compareDocumentPosition() that returns the raw bitmask were added and checked working 31/8/16
   // They are commented out since if we expose this method in future it would return some sort of 'case type'
   // not the raw bitmask.
@@ -73,9 +73,9 @@ UnitTest.test('CompareTest', function () {
   //   TestPage.s2, TestPage.p1);
 
   // Text Node vs Element
-  assert.eq(true,  Compare.contains(TestPage.container, TestPage.t6));
+  assert.eq(true, Compare.contains(TestPage.container, TestPage.t6));
   assert.eq(false, Compare.contains(TestPage.t6, TestPage.container));
-  assert.eq(true,  Compare.contains(TestPage.p3, TestPage.t6));
+  assert.eq(true, Compare.contains(TestPage.p3, TestPage.t6));
   assert.eq(false, Compare.contains(TestPage.t6, TestPage.p3));
   assert.eq(false, Compare.contains(TestPage.t1, TestPage.s2));
   assert.eq(false, Compare.contains(TestPage.s2, TestPage.t1));
@@ -84,7 +84,7 @@ UnitTest.test('CompareTest', function () {
   assert.eq(false, Compare.contains(TestPage.t6, TestPage.t7));
   assert.eq(false, Compare.contains(TestPage.t6, TestPage.t6)); // does not contain itself
   // Element vs Element
-  assert.eq(true,  Compare.contains(TestPage.container, TestPage.d1));
+  assert.eq(true, Compare.contains(TestPage.container, TestPage.d1));
   assert.eq(false, Compare.contains(TestPage.d1, TestPage.container));
   assert.eq(false, Compare.contains(TestPage.p1, TestPage.s2));
   assert.eq(false, Compare.contains(TestPage.s2, TestPage.p1));

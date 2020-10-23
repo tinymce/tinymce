@@ -1,16 +1,13 @@
-import Element from '../node/Element';
-import { Node as DomNode } from '@ephox/dom-globals';
+import { SugarElement } from '../node/SugarElement';
 
-// REQUIRES IE9
-const get = function (element: Element<DomNode>) {
-  return element.dom().textContent;
-};
+const get = (element: SugarElement<Node>): string | null =>
+  element.dom.textContent;
 
-const set = function (element: Element<DomNode>, value: string) {
-  element.dom().textContent = value;
+const set = (element: SugarElement<Node>, value: string): void => {
+  element.dom.textContent = value;
 };
 
 export {
   get,
-  set,
+  set
 };

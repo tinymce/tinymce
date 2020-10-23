@@ -5,19 +5,20 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
-import Settings from '../api/Settings';
-import DateTimeHelper from './DateTimeHelper';
-import Templates from './Templates';
+import * as Settings from '../api/Settings';
+import * as DateTimeHelper from './DateTimeHelper';
+import * as Templates from './Templates';
 
-const setup = function (editor) {
-  editor.on('PreProcess', function (o) {
+const setup = (editor: Editor) => {
+  editor.on('PreProcess', (o) => {
     const dom = editor.dom, dateFormat = Settings.getMdateFormat(editor);
 
-    Tools.each(dom.select('div', o.node), function (e) {
+    Tools.each(dom.select('div', o.node), (e) => {
       if (dom.hasClass(e, 'mceTmpl')) {
-        Tools.each(dom.select('*', e), function (e) {
-          if (dom.hasClass(e, editor.getParam('template_mdate_classes', 'mdate').replace(/\s+/g, '|'))) {
+        Tools.each(dom.select('*', e), (e) => {
+          if (dom.hasClass(e, Settings.getModificationDateClasses(editor).replace(/\s+/g, '|'))) {
             e.innerHTML = DateTimeHelper.getDateTime(editor, dateFormat);
           }
         });
@@ -28,6 +29,6 @@ const setup = function (editor) {
   });
 };
 
-export default {
+export {
   setup
 };

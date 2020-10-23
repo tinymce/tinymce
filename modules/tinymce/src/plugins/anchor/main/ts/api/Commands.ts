@@ -5,14 +5,15 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Dialog from '../ui/Dialog';
+import Editor from 'tinymce/core/api/Editor';
+import * as Dialog from '../ui/Dialog';
 
-const register = function (editor) {
-  editor.addCommand('mceAnchor', function () {
+const register = (editor: Editor) => {
+  editor.addCommand('mceAnchor', () => {
     Dialog.open(editor);
   });
 };
 
-export default {
+export {
   register
 };

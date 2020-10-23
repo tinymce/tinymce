@@ -5,15 +5,16 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import AlignmentButtons from './AlignmentButtons';
-import SimpleControls from './SimpleControls';
-import UndoRedo from './UndoRedo';
-import VisualAid from './VisualAid';
-import ColorSwatch from './color/ColorSwatch';
 import Editor from 'tinymce/core/api/Editor';
-import IndentOutdent from './IndentOutdent';
-import ComplexControls from './ComplexControls';
 import { UiFactoryBackstage } from '../../backstage/Backstage';
+import * as AlignmentButtons from './AlignmentButtons';
+import * as ColorSwatch from './color/ColorSwatch';
+import * as ComplexControls from './ComplexControls';
+import * as IndentOutdent from './IndentOutdent';
+import * as SimpleControls from './SimpleControls';
+import * as UndoRedo from './UndoRedo';
+import * as VisualAid from './VisualAid';
+import * as LineHeight from './LineHeight';
 
 const setup = (editor: Editor, backstage: UiFactoryBackstage) => {
   AlignmentButtons.register(editor);
@@ -23,8 +24,9 @@ const setup = (editor: Editor, backstage: UiFactoryBackstage) => {
   ColorSwatch.register(editor);
   VisualAid.register(editor);
   IndentOutdent.register(editor);
+  LineHeight.register(editor);
 };
 
-export default {
+export {
   setup
 };

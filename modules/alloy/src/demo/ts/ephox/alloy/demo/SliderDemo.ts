@@ -1,26 +1,24 @@
-import { document } from '@ephox/dom-globals';
 import { Fun, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
+import { Class, Css, DomEvent, Insert, SugarElement } from '@ephox/sugar';
 
-import { Class, Css, DomEvent, Element, Insert } from '@ephox/sugar';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Keying } from 'ephox/alloy/api/behaviour/Keying';
 import { Replacing } from 'ephox/alloy/api/behaviour/Replacing';
 import { Toggling } from 'ephox/alloy/api/behaviour/Toggling';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as Gui from 'ephox/alloy/api/system/Gui';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { Slider } from 'ephox/alloy/api/ui/Slider';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 import { SliderValue, SliderValueX, SliderValueY } from 'ephox/alloy/ui/types/SliderTypes';
-import { ConfiguredPart } from 'ephox/alloy/parts/AlloyParts';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 export default (): void => {
   const gui = Gui.create();
-  const body = Element.fromDom(document.body);
-  Class.add(gui.element(), 'gui-root-demo-container');
-  Insert.append(body, gui.element());
+  const body = SugarElement.fromDom(document.body);
+  Class.add(gui.element, 'gui-root-demo-container');
+  Insert.append(body, gui.element);
 
   const slider1 = HtmlDisplay.section(
     gui,
@@ -33,13 +31,13 @@ export default (): void => {
         mode: 'x',
         minX: 20,
         maxX: 100,
-        getInitialValue: Fun.constant({x: Fun.constant(80)})
+        getInitialValue: Fun.constant({ x: 80 })
       },
       stepSize: 10,
       snapToGrid: true,
 
       components: [
-        Slider.parts().spectrum({
+        Slider.parts.spectrum({
           dom: {
             tag: 'div',
             styles: {
@@ -48,8 +46,8 @@ export default (): void => {
               outline: '4px solid green'
             }
           }
-        }) as ConfiguredPart,
-        Slider.parts().thumb({
+        }),
+        Slider.parts.thumb({
           dom: {
             tag: 'div',
             styles: {
@@ -69,10 +67,10 @@ export default (): void => {
     gui,
     'This is a basic slider with two snapping regions [35] and [75]. The minimum value is 0',
     Slider.sketch({
-      dom: { tag: 'div', styles: { 'margin-bottom': '40px' } },
+      dom: { tag: 'div', styles: { 'margin-bottom': '40px' }},
       model: {
         mode: 'y',
-        getInitialValue: Fun.constant({y: Fun.constant(35)})
+        getInitialValue: Fun.constant({ y: 35 })
       },
 
       stepSize: 40,
@@ -84,20 +82,20 @@ export default (): void => {
       onChange(_slider, thumb, value: SliderValue) {
         if (isValueY(value)) {
           Replacing.set(thumb, [
-            GuiFactory.text(value.y().toString())
+            GuiFactory.text(value.y.toString())
           ]);
         }
       },
       onInit(_slider, thumb, _spectrum, value: SliderValue) {
         if (isValueY(value)) {
           Replacing.set(thumb, [
-            GuiFactory.text(value.y().toString())
+            GuiFactory.text(value.y.toString())
           ]);
         }
       },
 
       components: [
-        Slider.parts().spectrum({
+        Slider.parts.spectrum({
           dom: {
             tag: 'div',
             styles: {
@@ -105,7 +103,7 @@ export default (): void => {
             }
           }
         }),
-        Slider.parts().thumb({
+        Slider.parts.thumb({
           dom: {
             tag: 'div',
             styles: {
@@ -138,7 +136,7 @@ export default (): void => {
 
   const setColor = (thumb: AlloyComponent, hue: number) => {
     const color = (hue < 0) ? 'black' : (hue > 360) ? 'white' : 'hsl(' + hue + ', 100%, 50%)';
-    Css.set(thumb.element(), 'background', color);
+    Css.set(thumb.element, 'background', color);
   };
 
   HtmlDisplay.section(
@@ -154,19 +152,19 @@ export default (): void => {
         maxX: 360,
         minY: 0,
         maxY: 360,
-        getInitialValue: Fun.constant({x: Fun.constant(120), y: Fun.constant(120)})
+        getInitialValue: Fun.constant({ x: 120, y: 120 })
       },
       stepSize: 10,
 
       onChange(_slider, thumb, value: SliderValue) {
         if (isValueX(value)) {
-          setColor(thumb, value.x());
+          setColor(thumb, value.x);
         }
       },
 
       onInit(_slider, thumb, _spectrum, value: SliderValue) {
         if (isValueX(value)) {
-          setColor(thumb, value.x());
+          setColor(thumb, value.x);
         }
       },
 
@@ -181,7 +179,7 @@ export default (): void => {
             }
           },
           components: [
-            Slider.parts()['left-edge']({
+            Slider.parts['left-edge']({
               dom: {
                 tag: 'div',
                 styles: {
@@ -191,7 +189,7 @@ export default (): void => {
                 }
               }
             }),
-            Slider.parts().spectrum({
+            Slider.parts.spectrum({
               dom: {
                 tag: 'div',
                 styles: {
@@ -201,7 +199,7 @@ export default (): void => {
                 }
               }
             }),
-            Slider.parts()['right-edge']({
+            Slider.parts['right-edge']({
               dom: {
                 tag: 'div',
                 styles: {
@@ -213,10 +211,10 @@ export default (): void => {
             })
           ]
         }),
-        Slider.parts().thumb({
+        Slider.parts.thumb({
           dom: {
             tag: 'div',
-            classes: ['demo-sliding-thumb'],
+            classes: [ 'demo-sliding-thumb' ],
             styles: {
               'height': '30px',
               'width': '10px',

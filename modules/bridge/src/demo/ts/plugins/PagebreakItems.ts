@@ -1,10 +1,10 @@
-import { getDemoRegistry } from './../buttons/DemoRegistry';
+import { getDemoRegistry } from '../buttons/DemoRegistry';
 
 export const registerPageBreakItems = () => {
   getDemoRegistry().addButton('pagebreak', {
     type: 'button',
     disabled: false,
-    onAction: (buttonApi) => {
+    onAction: (_buttonApi) => {
       // inserts page break
     }
   });

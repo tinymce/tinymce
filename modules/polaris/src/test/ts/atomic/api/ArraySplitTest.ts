@@ -10,9 +10,9 @@ UnitTest.test('api.Arrays.splitby', function () {
   };
 
   check([], [], Fun.always);
-  check([[1]], [1], Fun.never);
-  check([[1, 2, 3]], [1, 2, 3], Fun.never);
-  check([[1], [2, 3], [4, 5, 6], [7], [8]], [1, '|', 2, 3, '|', 4, 5, 6, '|', 7, '|', '|', 8], function (x) {
+  check([[ 1 ]], [ 1 ], Fun.never);
+  check([[ 1, 2, 3 ]], [ 1, 2, 3 ], Fun.never);
+  check([[ 1 ], [ 2, 3 ], [ 4, 5, 6 ], [ 7 ], [ 8 ]], [ 1, '|', 2, 3, '|', 4, 5, 6, '|', 7, '|', '|', 8 ], function (x) {
     return x === '|';
   });
 

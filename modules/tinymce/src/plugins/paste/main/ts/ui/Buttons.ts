@@ -26,11 +26,12 @@ const register = function (editor: Editor, clipboard: Clipboard) {
 
   editor.ui.registry.addToggleMenuItem('pastetext', {
     text: 'Paste as text',
+    icon: 'paste-text',
     onAction: () => editor.execCommand('mceTogglePlainTextPaste'),
     onSetup: makeSetupHandler(editor, clipboard)
   });
 };
 
-export default {
+export {
   register
 };

@@ -5,12 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node } from '@ephox/dom-globals';
 import Editor from 'tinymce/core/api/Editor';
 import { getToolbar } from '../api/Settings';
+import { Clipboard } from '../core/Clipboard';
 import { SelectionTargets } from '../selection/SelectionTargets';
 
-const addButtons = (editor: Editor, selectionTargets: SelectionTargets) => {
+const addButtons = (editor: Editor, selectionTargets: SelectionTargets, clipboard: Clipboard) => {
   editor.ui.registry.addMenuButton('table', {
     tooltip: 'Table',
     icon: 'table',
@@ -103,33 +103,60 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets) => {
     onSetup: selectionTargets.onSetupCellOrRow
   });
 
-  // TODO: Need icons!!
   editor.ui.registry.addButton('tablecutrow', {
     tooltip: 'Cut row',
+    icon: 'cut-row',
     onAction: cmd('mceTableCutRow'),
-    icon: 'temporary-placeholder',
     onSetup: selectionTargets.onSetupCellOrRow
   });
 
   editor.ui.registry.addButton('tablecopyrow', {
     tooltip: 'Copy row',
+    icon: 'duplicate-row',
     onAction: cmd('mceTableCopyRow'),
-    icon: 'temporary-placeholder',
     onSetup: selectionTargets.onSetupCellOrRow
   });
 
   editor.ui.registry.addButton('tablepasterowbefore', {
     tooltip: 'Paste row before',
+    icon: 'paste-row-before',
     onAction: cmd('mceTablePasteRowBefore'),
-    icon: 'temporary-placeholder',
-    onSetup: selectionTargets.onSetupCellOrRow
+    onSetup: selectionTargets.onSetupPasteable(clipboard.getRows)
   });
 
   editor.ui.registry.addButton('tablepasterowafter', {
     tooltip: 'Paste row after',
+    icon: 'paste-row-after',
     onAction: cmd('mceTablePasteRowAfter'),
-    icon: 'temporary-placeholder',
+    onSetup: selectionTargets.onSetupPasteable(clipboard.getRows)
+  });
+
+  editor.ui.registry.addButton('tablecutcol', {
+    tooltip: 'Cut column',
+    icon: 'cut-column',
+    onAction: cmd('mceTableCutCol'),
     onSetup: selectionTargets.onSetupCellOrRow
+  });
+
+  editor.ui.registry.addButton('tablecopycol', {
+    tooltip: 'Copy column',
+    icon: 'duplicate-column',
+    onAction: cmd('mceTableCopyCol'),
+    onSetup: selectionTargets.onSetupCellOrRow
+  });
+
+  editor.ui.registry.addButton('tablepastecolbefore', {
+    tooltip: 'Paste column before',
+    icon: 'paste-column-before',
+    onAction: cmd('mceTablePasteColBefore'),
+    onSetup: selectionTargets.onSetupPasteable(clipboard.getColumns)
+  });
+
+  editor.ui.registry.addButton('tablepastecolafter', {
+    tooltip: 'Paste column after',
+    icon: 'paste-column-after',
+    onAction: cmd('mceTablePasteColAfter'),
+    onSetup: selectionTargets.onSetupPasteable(clipboard.getColumns)
   });
 
   editor.ui.registry.addButton('tableinsertdialog', {
@@ -141,9 +168,7 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets) => {
 };
 
 const addToolbars = (editor: Editor) => {
-  const isTable = (table: Node) => {
-    return editor.dom.is(table, 'table') && editor.getBody().contains(table);
-  };
+  const isTable = (table: Node) => editor.dom.is(table, 'table') && editor.getBody().contains(table);
 
   const toolbar = getToolbar(editor);
   if (toolbar.length > 0) {
@@ -156,7 +181,7 @@ const addToolbars = (editor: Editor) => {
   }
 };
 
-export default {
+export {
   addButtons,
   addToolbars
 };

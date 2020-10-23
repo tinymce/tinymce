@@ -5,15 +5,14 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 import { Arr } from '@ephox/katamari';
-import { Attr, Css, SelectorFilter } from '@ephox/sugar';
+import { Attribute, Css, SelectorFilter, SugarElement } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Env from 'tinymce/core/api/Env';
-import { SugarElement } from 'tinymce/themes/mobile/alien/TypeDefinitions';
 
 const attr = 'data-ephox-mobile-fullscreen-style';
 const siblingStyles = 'display:none!important;';
 const ancestorPosition = 'position:absolute!important;';
-/// TINY-3407 ancestors need 'height:100%!important;overflow:visible!important;' to prevent collapsed ancestors hiding the editor
+// TINY-3407 ancestors need 'height:100%!important;overflow:visible!important;' to prevent collapsed ancestors hiding the editor
 const ancestorStyles = 'top:0!important;left:0!important;margin:0!important;padding:0!important;width:100%!important;height:100%!important;overflow:visible!important;';
 const bgFallback = 'background-color:rgb(255,255,255)!important;';
 
@@ -28,25 +27,25 @@ const matchColor = function (editorBody: SugarElement) {
 
 // We clobber all tags, direct ancestors to the editorBody get ancestorStyles, everything else gets siblingStyles
 const clobberStyles = function (dom: DOMUtils, container: SugarElement, editorBody: SugarElement) {
-  const gatherSibilings = function (element) {
+  const gatherSiblings = function (element) {
     return SelectorFilter.siblings(element, '*:not(.tox-silver-sink)');
   };
 
   const clobber = function (clobberStyle: string) {
     return function (element) {
-      const styles = Attr.get(element, 'style');
+      const styles = Attribute.get(element, 'style');
       const backup = styles === undefined ? 'no-styles' : styles.trim();
       if (backup === clobberStyle) {
         return;
       } else {
-        Attr.set(element, attr, backup);
+        Attribute.set(element, attr, backup);
         Css.setAll(element, dom.parseStyle(clobberStyle));
       }
     };
   };
 
   const ancestors = SelectorFilter.ancestors(container, '*');
-  const siblings = Arr.bind(ancestors, gatherSibilings);
+  const siblings = Arr.bind(ancestors, gatherSiblings);
   const bgColor = matchColor(editorBody);
 
   /* NOTE: This assumes that container has no siblings itself */
@@ -60,17 +59,17 @@ const clobberStyles = function (dom: DOMUtils, container: SugarElement, editorBo
 const restoreStyles = function (dom: DOMUtils) {
   const clobberedEls = SelectorFilter.all('[' + attr + ']');
   Arr.each(clobberedEls, function (element) {
-    const restore = Attr.get(element, attr);
+    const restore = Attribute.get(element, attr);
     if (restore !== 'no-styles') {
       Css.setAll(element, dom.parseStyle(restore));
     } else {
-      Attr.remove(element, 'style');
+      Attribute.remove(element, 'style');
     }
-    Attr.remove(element, attr);
+    Attribute.remove(element, attr);
   });
 };
 
-export default {
+export {
   clobberStyles,
   restoreStyles
 };

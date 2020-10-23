@@ -1,11 +1,10 @@
-import { Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { Range } from '@ephox/dom-globals';
-import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
+import { Assertions, Pipeline } from '@ephox/agar';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { LegacyUnit, TinyDom, TinyLoader } from '@ephox/mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import Theme from 'tinymce/themes/silver/Theme';
-import HtmlUtils from '../module/test/HtmlUtils';
+import * as HtmlUtils from '../module/test/HtmlUtils';
 
 UnitTest.asynctest('browser.tinymce.core.MiscCommandsTest', function (success, failure) {
   const suite = LegacyUnit.createSuite<Editor>();
@@ -33,7 +32,7 @@ UnitTest.asynctest('browser.tinymce.core.MiscCommandsTest', function (success, f
   };
 
   const ok = function (value: boolean, label?: string) {
-    return LegacyUnit.equal(value, true, label);
+    return Assert.eq(label, true, value);
   };
 
   suite.test('InsertHorizontalRule', function (editor) {
@@ -45,14 +44,14 @@ UnitTest.asynctest('browser.tinymce.core.MiscCommandsTest', function (success, f
     rng.setEnd(editor.dom.select('p')[0].firstChild, 2);
     editor.selection.setRng(rng);
     editor.execCommand('InsertHorizontalRule');
-    LegacyUnit.equal(editor.getContent(), '<p>1</p><hr /><p>3</p>');
+    Assert.eq('', '<p>1</p><hr /><p>3</p>', editor.getContent());
     rng = normalizeRng(editor.selection.getRng());
     ok(rng.collapsed);
-    LegacyUnit.equalDom(rng.startContainer, editor.getBody().lastChild);
-    LegacyUnit.equal(rng.startContainer.nodeName, 'P');
-    LegacyUnit.equal(rng.startOffset, 0);
-    LegacyUnit.equal(rng.endContainer.nodeName, 'P');
-    LegacyUnit.equal(rng.endOffset, 0);
+    Assertions.assertDomEq('Nodes are not equal', TinyDom.fromDom(editor.getBody().lastChild), TinyDom.fromDom(rng.startContainer));
+    Assert.eq('', 'P', rng.startContainer.nodeName);
+    Assert.eq('', 0, rng.startOffset);
+    Assert.eq('', 'P', rng.endContainer.nodeName);
+    Assert.eq('', 0, rng.endOffset);
   });
 
   if (Env.ceFalse) {
@@ -60,9 +59,9 @@ UnitTest.asynctest('browser.tinymce.core.MiscCommandsTest', function (success, f
       editor.setContent('<p>a</p><div contenteditable="false"><div contenteditable="true">b</div><p>c</p>');
       LegacyUnit.setSelection(editor, 'div div', 0);
       editor.execCommand('SelectAll');
-      LegacyUnit.equal(editor.selection.getStart().nodeName, 'DIV');
-      LegacyUnit.equal(editor.selection.getEnd().nodeName, 'DIV');
-      LegacyUnit.equal(editor.selection.isCollapsed(), false);
+      Assert.eq('', 'DIV', editor.selection.getStart().nodeName);
+      Assert.eq('', 'DIV', editor.selection.getEnd().nodeName);
+      Assert.eq('', false, editor.selection.isCollapsed());
     });
   }
 
@@ -70,17 +69,17 @@ UnitTest.asynctest('browser.tinymce.core.MiscCommandsTest', function (success, f
     editor.setContent('<p>123</p>');
     LegacyUnit.setSelection(editor, 'p', 2);
     editor.execCommand('InsertLineBreak');
-    LegacyUnit.equal(editor.getContent(), '<p>12<br />3</p>');
+    Assert.eq('', '<p>12<br />3</p>', editor.getContent());
 
     editor.setContent('<p>123</p>');
     LegacyUnit.setSelection(editor, 'p', 0);
     editor.execCommand('InsertLineBreak');
-    LegacyUnit.equal(editor.getContent(), '<p><br />123</p>');
+    Assert.eq('', '<p><br />123</p>', editor.getContent());
 
     editor.setContent('<p>123</p>');
     LegacyUnit.setSelection(editor, 'p', 3);
     editor.execCommand('InsertLineBreak');
-    LegacyUnit.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), '<p>123<br><br></p>');
+    Assert.eq('', '<p>123<br><br></p>', HtmlUtils.cleanHtml(editor.getBody().innerHTML));
   });
 
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {

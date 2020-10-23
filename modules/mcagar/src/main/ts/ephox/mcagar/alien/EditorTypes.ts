@@ -1,5 +1,3 @@
-import { Document, HTMLElement, Node, Range, Window } from '@ephox/dom-globals';
-
 type EventCallback = false | ((event: any) => void);
 
 export interface Selection {
@@ -21,7 +19,7 @@ export interface Editor {
   selection: Selection;
   windowManager: any;
   ui: {
-    registry: any
+    registry: any;
   };
 
   getBody: () => HTMLElement;
@@ -40,6 +38,7 @@ export interface Editor {
   focus: () => void;
   hasFocus: () => boolean;
   remove: () => void;
+  getParam: <T>(key: string, defaultValue?: T, type?: string) => T;
 
   setProgressState: (state: boolean, time?: number) => void;
 

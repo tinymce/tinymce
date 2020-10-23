@@ -26,9 +26,9 @@ export default function () {
     plugins: [
       'autosave advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker toc',
       'searchreplace wordcount visualblocks visualchars code fullscreen fullpage insertdatetime media nonbreaking',
-      'save table directionality emoticons template paste importcss textpattern',
+      'save table directionality emoticons template paste textpattern',
       'codesample help noneditable print'
-    ],
+    ]
   };
 
   tinymce.init(settings);

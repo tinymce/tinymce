@@ -8,8 +8,8 @@
 import { AlloySpec, GuiFactory } from '@ephox/alloy';
 import I18n from 'tinymce/core/api/util/I18n';
 import { get as getIcon, IconProvider } from '../../../icons/Icons';
+import * as ConvertShortcut from '../alien/ConvertShortcut';
 import * as ItemClasses from '../ItemClasses';
-import ConvertShortcut from '../alien/ConvertShortcut';
 
 const renderIcon = (iconHtml: string): AlloySpec => ({
   dom: {
@@ -43,7 +43,7 @@ interface StyleProps {
 const renderStyledText = (style: StyleProps, text: string): AlloySpec => ({
   dom: {
     tag: 'div',
-    classes: [ ItemClasses.textClass ],
+    classes: [ ItemClasses.textClass ]
   },
   components: [
     {
@@ -67,7 +67,7 @@ const renderShortcut = (shortcut: string): AlloySpec => ({
 const renderCheckmark = (icons: IconProvider): AlloySpec => ({
   dom: {
     tag: 'div',
-    classes: [ ItemClasses.iconClass, ItemClasses.checkmarkClass ],
+    classes: [ ItemClasses.checkmarkClass ],
     innerHtml: getIcon('checkmark', icons)
   }
 });

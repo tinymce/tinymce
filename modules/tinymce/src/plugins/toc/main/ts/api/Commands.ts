@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Toc from '../core/Toc';
+import * as Toc from '../core/Toc';
 
 const register = function (editor) {
   editor.addCommand('mceInsertToc', function () {
@@ -17,6 +17,6 @@ const register = function (editor) {
   });
 };
 
-export default {
+export {
   register
 };

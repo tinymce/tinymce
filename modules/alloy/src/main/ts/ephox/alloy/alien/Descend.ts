@@ -1,20 +1,21 @@
-import { Struct } from '@ephox/katamari';
-import { Node, Text, Traverse, Element } from '@ephox/sugar';
+import { SugarElement, SugarNode, SugarText, Traverse } from '@ephox/sugar';
 
-export interface ElementAndOffset {
-  element: () => Element;
-  offset: () => number;
+export interface ElementAndOffset<T> {
+  readonly element: SugarElement;
+  readonly offset: number;
 }
 
-const point: (element: Element, offset: number) => ElementAndOffset =
-  Struct.immutable('element', 'offset');
+const point = <T> (element: SugarElement<T>, offset: number): ElementAndOffset<T> => ({
+  element,
+  offset
+});
 
 // NOTE: This only descends once.
-const descendOnce = (element: Element, offset: number): ElementAndOffset => {
-  const children: Element[] = Traverse.children(element);
+const descendOnce = <T> (element: SugarElement, offset: number): ElementAndOffset<T> => {
+  const children: SugarElement[] = Traverse.children(element);
   if (children.length === 0) { return point(element, offset); } else if (offset < children.length) { return point(children[offset], 0); } else {
     const last = children[children.length - 1];
-    const len = Node.isText(last) ? Text.get(last).length : Traverse.children(last).length;
+    const len = SugarNode.isText(last) ? SugarText.get(last).length : Traverse.children(last).length;
     return point(last, len);
   }
 };

@@ -1,44 +1,46 @@
-import { createMenuItem, MenuItem, MenuItemApi, MenuItemInstanceApi } from '../components/menu/MenuItem';
-import { createNestedMenuItem, NestedMenuItemContents, NestedMenuItem, NestedMenuItemApi, NestedMenuItemInstanceApi } from '../components/menu/NestedMenuItem';
-import { createToggleMenuItem, ToggleMenuItem, ToggleMenuItemApi, ToggleMenuItemInstanceApi } from '../components/menu/ToggleMenuItem';
-import { createChoiceMenuItem, ChoiceMenuItem, ChoiceMenuItemApi, ChoiceMenuItemInstanceApi } from '../components/menu/ChoiceMenuItem';
-import { createSeparatorMenuItem, SeparatorMenuItem, SeparatorMenuItemApi } from '../components/menu/SeparatorMenuItem';
-import { createFancyMenuItem, FancyMenuItem, FancyMenuItemApi, FancyActionArgsMap } from '../components/menu/FancyMenuItem';
-import { ContextMenuContents, ContextMenuApi, ContextMenuItem, ContextSubMenu } from '../components/menu/ContextMenu';
+import { ChoiceMenuItem, ChoiceMenuItemInstanceApi, ChoiceMenuItemSpec, createChoiceMenuItem } from '../components/menu/ChoiceMenuItem';
+import { ContextMenuApi, ContextMenuContents, ContextMenuItem, ContextSubMenu } from '../components/menu/ContextMenu';
+import { createFancyMenuItem, FancyActionArgsMap, FancyMenuItem, FancyMenuItemSpec } from '../components/menu/FancyMenuItem';
+import { createMenuItem, MenuItem, MenuItemInstanceApi, MenuItemSpec } from '../components/menu/MenuItem';
+import {
+  createNestedMenuItem, NestedMenuItem, NestedMenuItemContents, NestedMenuItemInstanceApi, NestedMenuItemSpec
+} from '../components/menu/NestedMenuItem';
+import { createSeparatorMenuItem, SeparatorMenuItem, SeparatorMenuItemSpec } from '../components/menu/SeparatorMenuItem';
+import { createToggleMenuItem, ToggleMenuItem, ToggleMenuItemInstanceApi, ToggleMenuItemSpec } from '../components/menu/ToggleMenuItem';
 
 export {
   createMenuItem,
   MenuItem,
-  MenuItemApi,
+  MenuItemSpec,
   MenuItemInstanceApi,
 
   createNestedMenuItem,
   NestedMenuItemContents,
   NestedMenuItem,
-  NestedMenuItemApi,
+  NestedMenuItemSpec,
   NestedMenuItemInstanceApi,
 
   createFancyMenuItem,
   FancyMenuItem,
-  FancyMenuItemApi,
+  FancyMenuItemSpec,
   FancyActionArgsMap,
 
   createToggleMenuItem,
   ToggleMenuItem,
-  ToggleMenuItemApi,
+  ToggleMenuItemSpec,
   ToggleMenuItemInstanceApi,
 
   createChoiceMenuItem,
   ChoiceMenuItem,
-  ChoiceMenuItemApi,
+  ChoiceMenuItemSpec,
   ChoiceMenuItemInstanceApi,
 
   createSeparatorMenuItem,
   SeparatorMenuItem,
-  SeparatorMenuItemApi,
+  SeparatorMenuItemSpec,
 
   ContextMenuApi,
   ContextMenuContents,
   ContextMenuItem,
-  ContextSubMenu,
+  ContextSubMenu
 };

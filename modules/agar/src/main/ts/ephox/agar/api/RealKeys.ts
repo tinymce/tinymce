@@ -1,6 +1,6 @@
-import { Adt, Arr, Option, Struct } from '@ephox/katamari';
+import { Adt, Arr, Optional } from '@ephox/katamari';
 
-import { MixedKeyModifiers, newModifiers } from '../keyboard/FakeKeys';
+import { KeyModifiers, MixedKeyModifiers, newModifiers } from '../keyboard/FakeKeys';
 import * as SeleniumAction from '../server/SeleniumAction';
 import { Step } from './Step';
 
@@ -19,35 +19,35 @@ const adt: {
   text: (s: string) => KeyPressAdt;
   backspace: () => KeyPressAdt;
 } = Adt.generate([
-  {combo: ['modifiers', 'letter']},
-  {text: ['s']},
-  {backspace: []}
+  { combo: [ 'modifiers', 'letter' ] },
+  { text: [ 's' ] },
+  { backspace: [] }
 ]);
 
 interface Modifiers {
-  ctrlKey: () => Option<boolean>;
-  metaKey: () => Option<boolean>;
-  shiftKey: () => Option<boolean>;
-  altKey: () => Option<boolean>;
+  readonly ctrlKey: Optional<boolean>;
+  readonly metaKey: Optional<boolean>;
+  readonly shiftKey: Optional<boolean>;
+  readonly altKey: Optional<boolean>;
 }
 
-const modifierList = Struct.immutableBag<Modifiers>([], [
-  'ctrlKey',
-  'metaKey',
-  'shiftKey',
-  'altKey'
-]);
+const modifierList = (obj: KeyModifiers): Modifiers => ({
+  ctrlKey: Optional.from(obj.ctrlKey),
+  metaKey: Optional.from(obj.metaKey),
+  shiftKey: Optional.from(obj.shiftKey),
+  altKey: Optional.from(obj.altKey)
+});
 
 const toSimpleFormat = (keys: KeyPressAdt[]) =>
   Arr.map(keys, (key: KeyPressAdt) => key.fold<any>((modifiers: Modifiers, letter: string) => ({
     combo: {
-      ctrlKey: modifiers.ctrlKey().getOr(false),
-      shiftKey: modifiers.shiftKey().getOr(false),
-      metaKey: modifiers.metaKey().getOr(false),
-      altKey: modifiers.altKey().getOr(false),
+      ctrlKey: modifiers.ctrlKey.getOr(false),
+      shiftKey: modifiers.shiftKey.getOr(false),
+      metaKey: modifiers.metaKey.getOr(false),
+      altKey: modifiers.altKey.getOr(false),
       key: letter
     }
-  }), (s: string) => ({text: s}), () => ({text: '\u0008'})));
+  }), (s: string) => ({ text: s }), () => ({ text: '\u0008' })));
 
 const sSendKeysOn = <T>(selector: string, keys: KeyPressAdt[]): Step<T, T> =>
   SeleniumAction.sPerform<T>('/keys', {

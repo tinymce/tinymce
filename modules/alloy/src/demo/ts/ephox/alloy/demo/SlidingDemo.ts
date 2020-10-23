@@ -1,5 +1,4 @@
-import { document, console } from '@ephox/dom-globals';
-import { Class, Element } from '@ephox/sugar';
+import { Class, SugarElement } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Sliding } from 'ephox/alloy/api/behaviour/Sliding';
@@ -9,12 +8,12 @@ import { Button } from 'ephox/alloy/api/ui/Button';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 
-// tslint:disable:no-console
+/* eslint-disable no-console */
 
-export default (): void  => {
+export default (): void => {
   const gui = Gui.create();
-  const body = Element.fromDom(document.body);
-  Class.add(gui.element(), 'gui-root-demo-container');
+  const body = SugarElement.fromDom(document.body);
+  Class.add(gui.element, 'gui-root-demo-container');
   Attachment.attachSystem(body, gui);
 
   HtmlDisplay.section(
@@ -34,10 +33,10 @@ export default (): void  => {
               openClass: 'demo-sliding-open',
               shrinkingClass: 'demo-sliding-height-shrinking',
               growingClass: 'demo-sliding-height-growing',
-              onShrunk () {
+              onShrunk() {
                 console.log('height.slider.shrunk');
               },
-              onGrown () {
+              onGrown() {
                 console.log('height.slider.grown');
               }
             })
@@ -56,7 +55,7 @@ export default (): void  => {
             tag: 'button',
             innerHtml: 'Toggle'
           },
-          action () {
+          action() {
             const slider = gui.getByUid('height-slider').getOrDie();
             if (Sliding.hasGrown(slider)) { Sliding.shrink(slider); } else { Sliding.grow(slider); }
           }
@@ -82,10 +81,10 @@ export default (): void  => {
               openClass: 'demo-sliding-open',
               shrinkingClass: 'demo-sliding-width-shrinking',
               growingClass: 'demo-sliding-width-growing',
-              onShrunk () {
+              onShrunk() {
                 console.log('width.slider.shrunk');
               },
-              onGrown () {
+              onGrown() {
                 console.log('width.slider.grown');
               }
             })
@@ -105,7 +104,7 @@ export default (): void  => {
             tag: 'button',
             innerHtml: 'Toggle'
           },
-          action () {
+          action() {
             const slider = gui.getByUid('width-slider').getOrDie();
             if (Sliding.hasGrown(slider)) { Sliding.shrink(slider); } else { Sliding.grow(slider); }
           }

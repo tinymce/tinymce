@@ -5,12 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Menu } from '@ephox/bridge';
 import Editor from 'tinymce/core/api/Editor';
+import { Menu } from 'tinymce/core/api/ui/Ui';
 import Tools from 'tinymce/core/api/util/Tools';
-import Settings from '../api/Settings';
-import Actions from '../core/Actions';
-import ListUtils from '../core/ListUtils';
+import * as Settings from '../api/Settings';
+import * as Actions from '../core/Actions';
+import * as ListUtils from '../core/ListUtils';
 
 const enum ListType {
   OrderedList = 'OL',
@@ -42,14 +42,14 @@ const isWithinList = (editor: Editor, e, nodeName) => {
   return lists.length > 0 && lists[0].nodeName === nodeName;
 };
 
-const addSplitButton = function (editor: Editor, id, tooltip, cmd, nodeName, styles) {
+const addSplitButton = function (editor: Editor, id: string, tooltip: string, cmd: string, nodeName: ListType, styles: string[]) {
   editor.ui.registry.addSplitButton(id, {
     tooltip,
     icon: nodeName === ListType.OrderedList ? 'ordered-list' : 'unordered-list',
     presets: 'listpreview',
     columns: 3,
     fetch: (callback) => {
-      const items = Tools.map(styles, (styleValue): Menu.ChoiceMenuItemApi => {
+      const items = Tools.map(styles, (styleValue): Menu.ChoiceMenuItemSpec => {
         const iconStyle = nodeName === ListType.OrderedList ? 'num' : 'bull';
         const iconName = styleValue === 'disc' || styleValue === 'decimal' ? 'default' : styleValue;
         const itemValue = styleValue === 'default' ? '' : styleValue;
@@ -57,21 +57,19 @@ const addSplitButton = function (editor: Editor, id, tooltip, cmd, nodeName, sty
         return {
           type: 'choiceitem',
           value: itemValue,
-          icon: 'list-' +  iconStyle + '-' + iconName,
+          icon: 'list-' + iconStyle + '-' + iconName,
           text: displayText
         };
       });
       callback(items);
     },
     onAction: () => editor.execCommand(cmd),
-    onItemAction: (splitButtonApi, value) => {
+    onItemAction: (_splitButtonApi, value) => {
       Actions.applyListFormat(editor, nodeName, value);
     },
     select: (value) => {
       const listStyleType = ListUtils.getSelectedStyleType(editor);
-      return listStyleType.map((listStyle) => {
-        return value === listStyle;
-      }).getOr(false);
+      return listStyleType.map((listStyle) => value === listStyle).getOr(false);
     },
     onSetup: (api) => {
       const nodeChangeHandler = (e) => {
@@ -84,7 +82,7 @@ const addSplitButton = function (editor: Editor, id, tooltip, cmd, nodeName, sty
   });
 };
 
-const addButton = function (editor: Editor, id, tooltip, cmd, nodeName, styles) {
+const addButton = function (editor: Editor, id, tooltip, cmd, nodeName, _styles) {
   editor.ui.registry.addToggleButton(id, {
     active: false,
     tooltip,
@@ -101,8 +99,8 @@ const addButton = function (editor: Editor, id, tooltip, cmd, nodeName, styles) 
   });
 };
 
-const addControl = function (editor, id, tooltip, cmd, nodeName, styles) {
-  if (styles.length > 0) {
+const addControl = function (editor: Editor, id: string, tooltip: string, cmd: string, nodeName: ListType, styles: string[]) {
+  if (styles.length > 1) {
     addSplitButton(editor, id, tooltip, cmd, nodeName, styles);
   } else {
     addButton(editor, id, tooltip, cmd, nodeName, styles);
@@ -114,6 +112,6 @@ const register = function (editor) {
   addControl(editor, 'bullist', 'Bullet list', 'InsertUnorderedList', ListType.UnorderedList, Settings.getBulletStyles(editor));
 };
 
-export default {
+export {
   register
 };

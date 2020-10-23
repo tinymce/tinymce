@@ -5,9 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element, HTMLElement, Node } from '@ephox/dom-globals';
-import { Fun, Obj, Option } from '@ephox/katamari';
-import { Attr, Compare, Css, Element as SugarElement, Node as SugarNode, TransformFind } from '@ephox/sugar';
+import { Fun, Obj, Optional } from '@ephox/katamari';
+import { Attribute, Compare, Css, SugarElement, SugarNode, TransformFind } from '@ephox/sugar';
 import DOMUtils from '../api/dom/DOMUtils';
 
 const legacyPropNames: Record<string, string> = {
@@ -15,16 +14,14 @@ const legacyPropNames: Record<string, string> = {
   'font-family': 'face'
 };
 
-const getSpecifiedFontProp = (propName: string, rootElm: Element, elm: HTMLElement): Option<string> => {
-  const getProperty = (elm: SugarElement) => {
-    return Css.getRaw(elm, propName).orThunk(() => {
-      if (SugarNode.name(elm) === 'font') {
-        return Obj.get(legacyPropNames, propName).bind((legacyPropName) => Attr.getOpt(elm, legacyPropName));
-      } else {
-        return Option.none();
-      }
-    });
-  };
+const getSpecifiedFontProp = (propName: string, rootElm: Element, elm: HTMLElement): Optional<string> => {
+  const getProperty = (elm: SugarElement) => Css.getRaw(elm, propName).orThunk(() => {
+    if (SugarNode.name(elm) === 'font') {
+      return Obj.get(legacyPropNames, propName).bind((legacyPropName) => Attribute.getOpt(elm, legacyPropName));
+    } else {
+      return Optional.none();
+    }
+  });
   const isRoot = (elm: SugarElement) => Compare.eq(SugarElement.fromDom(rootElm), elm);
 
   return TransformFind.closest(SugarElement.fromDom(elm), (elm) => getProperty(elm), isRoot);
@@ -43,30 +40,25 @@ const toPt = (fontSize: string, precision?: number) => {
   return fontSize;
 };
 
-const normalizeFontFamily = (fontFamily: string) => {
+const normalizeFontFamily = (fontFamily: string) =>
   // 'Font name', Font -> Font name,Font
-  return fontFamily.replace(/[\'\"\\]/g, '').replace(/,\s+/g, ',');
-};
+  fontFamily.replace(/[\'\"\\]/g, '').replace(/,\s+/g, ',');
 
-const getComputedFontProp = (propName: string, elm: HTMLElement): Option<string> => {
-  return Option.from(DOMUtils.DOM.getStyle(elm, propName, true));
-};
+const getComputedFontProp = (propName: string, elm: HTMLElement): Optional<string> => Optional.from(DOMUtils.DOM.getStyle(elm, propName, true));
 
-const getFontProp = (propName: string) => {
-  return (rootElm: Element, elm: Node): string => {
-    return Option.from(elm)
-      .map(SugarElement.fromDom)
-      .filter(SugarNode.isElement)
-      .bind((element: any) => {
-        return getSpecifiedFontProp(propName, rootElm, element.dom())
-          .or(getComputedFontProp(propName, element.dom()));
-      })
-      .getOr('');
-  };
-};
+const getFontProp = (propName: string) => (rootElm: Element, elm: Node): string => Optional.from(elm)
+  .map(SugarElement.fromDom)
+  .filter(SugarNode.isElement)
+  .bind((element: any) => getSpecifiedFontProp(propName, rootElm, element.dom)
+    .or(getComputedFontProp(propName, element.dom)))
+  .getOr('');
 
-export default {
-  getFontSize: getFontProp('font-size'),
-  getFontFamily: Fun.compose(normalizeFontFamily, getFontProp('font-family')) as (rootElm: Element, elm: Node) => string,
+const getFontSize = getFontProp('font-size');
+
+const getFontFamily = Fun.compose(normalizeFontFamily, getFontProp('font-family')) as (rootElm: Element, elm: Node) => string;
+
+export {
+  getFontSize,
+  getFontFamily,
   toPt
 };

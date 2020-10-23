@@ -1,7 +1,6 @@
-import * as Generators from './Generators';
-import * as ArbContent from '../arbitrary/ArbContent';
-import { Fun } from '@ephox/katamari';
 import Jsc from '@ephox/wrap-jsverify';
+import * as ArbContent from '../arbitrary/ArbContent';
+import * as Generators from './Generators';
 
 const scenario = (component, overrides, exclusions) => {
   // Note, in some environments, scenarios will not work, if setting
@@ -9,8 +8,8 @@ const scenario = (component, overrides, exclusions) => {
   const arbitrary = content(component, overrides);
   const generator = arbitrary.generator.flatMap((root) =>
     Generators.selection(root, exclusions).map((selection) => ({
-      root: Fun.constant(root),
-      selection: Fun.constant(selection)
+      root,
+      selection
     })));
 
   return Jsc.bless({

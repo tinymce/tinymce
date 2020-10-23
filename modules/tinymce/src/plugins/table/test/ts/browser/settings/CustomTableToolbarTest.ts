@@ -6,7 +6,7 @@ import { SelectorFilter } from '@ephox/sugar';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-import TableTestUtils from '../../module/test/TableTestUtils';
+import * as TableTestUtils from '../../module/test/TableTestUtils';
 
 /*
  *
@@ -29,7 +29,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.CustomTableToolbarTest', funct
       Logger.t('test custom count of toolbar buttons', GeneralSteps.sequence([
         tinyApis.sFocus(),
         tinyApis.sSetContent(tableHtml),
-        TableTestUtils.sOpenToolbarOn(editor, 'table td', [0]),
+        TableTestUtils.sOpenToolbarOn(editor, 'table td', [ 0 ]),
         Chain.asStep({}, [
           tinyUi.cWaitForUi('no context found', 'div.tox-pop div.tox-toolbar'),
           Chain.mapper(function (x) {

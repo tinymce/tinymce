@@ -1,10 +1,10 @@
-import { Pipeline, Log, GeneralSteps } from '@ephox/agar';
+import { GeneralSteps, Log, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { TinyLoader, TinyUi, TinyApis } from '@ephox/mcagar';
+import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 
 import Plugin from 'tinymce/plugins/media/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
-import Utils from '../module/test/Utils';
+import * as Utils from '../module/test/Utils';
 
 UnitTest.asynctest('browser.plugins.media.UpdateMediaPosterAttributeTest', (success, failure) => {
   Plugin();
@@ -18,12 +18,10 @@ UnitTest.asynctest('browser.plugins.media.UpdateMediaPosterAttributeTest', (succ
     const poster1 = 'https://www.google.com/logos/google.jpg';
     const poster2 = 'https://upload.wikimedia.org/wikipedia/commons/8/82/Facebook_icon.jpg';
 
-    const sOpenAdvTab = () => {
-      return GeneralSteps.sequence([
-        ui.sWaitForPopup('Wait for dialog', 'div[role="dialog"]'),
-        ui.sClickOnUi('Switch to Advanced Tab', 'div.tox-tab:contains(Advanced)')
-      ]);
-    };
+    const sOpenAdvTab = () => GeneralSteps.sequence([
+      ui.sWaitForPopup('Wait for dialog', 'div[role="dialog"]'),
+      ui.sClickOnUi('Switch to Advanced Tab', 'div.tox-tab:contains(Advanced)')
+    ]);
 
     const sCloseDialog = ui.sClickOnUi('Click Save', 'button:contains("Save")');
 
@@ -53,11 +51,11 @@ UnitTest.asynctest('browser.plugins.media.UpdateMediaPosterAttributeTest', (succ
         sCloseDialog,
         api.sSetContent('')
       ])
-    , onSuccess, onFailure);
+      , onSuccess, onFailure);
   }, {
-    plugins: ['media'],
+    plugins: [ 'media' ],
     toolbar: 'media',
     theme: 'silver',
-    base_url: '/project/tinymce/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

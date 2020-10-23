@@ -1,6 +1,6 @@
-import * as Fun from 'ephox/katamari/api/Fun';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import fc from 'fast-check';
-import { UnitTest, Assert } from '@ephox/bedrock-client';
+import * as Fun from 'ephox/katamari/api/Fun';
 
 UnitTest.test('Fun: unit tests', () => {
   const add2 = (n) => n + 2;
@@ -37,8 +37,8 @@ UnitTest.test('Fun: unit tests', () => {
   Assert.eq('eq', [ 'a', 'b', 'c' ], Fun.curry(c)('a', 'b', 'c'));
   Assert.eq('eq', [ 'a', 'b', 'c' ], Fun.curry(c, 'a', 'b')('c'));
 
-  Assert.eq('eq', false, Fun.not(() => true)());
-  Assert.eq('eq', true, Fun.not(() => false)());
+  Assert.eq('eq', false, Fun.not((_x: number) => true)(3));
+  Assert.eq('eq', true, Fun.not((_x: string) => false)('cat'));
 
   Assert.throws('should die', Fun.die('Died!'));
 
@@ -56,6 +56,13 @@ UnitTest.test('Fun: unit tests', () => {
 UnitTest.test('Check compose :: compose(f, g)(x) = f(g(x))', () => {
   fc.assert(fc.property(fc.string(), fc.func(fc.string()), fc.func(fc.string()), (x, f, g) => {
     const h = Fun.compose(f, g);
+    Assert.eq('eq', f(g(x)), h(x));
+  }));
+});
+
+UnitTest.test('Check compose1 :: compose1(f, g)(x) = f(g(x))', () => {
+  fc.assert(fc.property(fc.string(), fc.func(fc.string()), fc.func(fc.string()), (x, f, g) => {
+    const h = Fun.compose1(f, g);
     Assert.eq('eq', f(g(x)), h(x));
   }));
 });

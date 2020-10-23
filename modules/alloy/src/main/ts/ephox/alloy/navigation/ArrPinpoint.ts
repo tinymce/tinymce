@@ -1,15 +1,11 @@
-import { Arr, Option, Fun } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 
 export interface IndexInfo<A> {
-  index: () => number;
-  candidates: () => A[];
+  readonly index: number;
+  readonly candidates: A[];
 }
 
-export const locate = <A> (candidates: A[], predicate: (a: A) => boolean): Option<IndexInfo<A>> => {
-  return Arr.findIndex(candidates, predicate).map((index) => {
-    return ({
-      index: Fun.constant(index),
-      candidates: Fun.constant(candidates)
-    });
-  });
-};
+export const locate = <A> (candidates: A[], predicate: (a: A) => boolean): Optional<IndexInfo<A>> => Arr.findIndex(candidates, predicate).map((index) => ({
+  index,
+  candidates
+}));

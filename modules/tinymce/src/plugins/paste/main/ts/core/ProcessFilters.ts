@@ -7,21 +7,24 @@
 
 import Editor from 'tinymce/core/api/Editor';
 import DomParser from 'tinymce/core/api/html/DomParser';
-import Serializer from 'tinymce/core/api/html/Serializer';
+import HtmlSerializer from 'tinymce/core/api/html/Serializer';
 import Tools from 'tinymce/core/api/util/Tools';
-import Events from '../api/Events';
-import WordFilter from './WordFilter';
+import * as Events from '../api/Events';
+import * as Settings from '../api/Settings';
+import * as WordFilter from './WordFilter';
 
 const preProcess = (editor: Editor, html: string) => {
   const parser = DomParser({ }, editor.schema);
 
   // Strip meta elements
   parser.addNodeFilter('meta', (nodes) => {
-    Tools.each(nodes, (node) => node.remove());
+    Tools.each(nodes, (node) => {
+      node.remove();
+    });
   });
 
   const fragment = parser.parse(html, { forced_root_block: false, isRootContent: true });
-  return Serializer({ validate: editor.settings.validate }, editor.schema).serialize(fragment);
+  return HtmlSerializer({ validate: Settings.getValidate(editor) }, editor.schema).serialize(fragment);
 };
 
 const processResult = function (content: string, cancelled: boolean) {
@@ -54,6 +57,6 @@ const process = function (editor: Editor, html: string, internal: boolean) {
   return filterContent(editor, content, internal, isWordHtml);
 };
 
-export default {
+export {
   process
 };

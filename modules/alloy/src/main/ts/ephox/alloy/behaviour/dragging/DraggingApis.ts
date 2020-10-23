@@ -6,10 +6,10 @@ import * as DragCoord from '../../api/data/DragCoord';
 import { DraggingConfig, DraggingState, SnapConfig } from '../../dragging/common/DraggingTypes';
 import * as Snappables from '../../dragging/snap/Snappables';
 
-const snapTo = function (component: AlloyComponent, dragConfig: DraggingConfig, _state: DraggingState, snap: SnapConfig): void {
-  const target = dragConfig.getTarget(component.element());
+const snapTo = <E>(component: AlloyComponent, dragConfig: DraggingConfig<E>, _state: DraggingState, snap: SnapConfig<E>): void => {
+  const target = dragConfig.getTarget(component.element);
   if (dragConfig.repositionTarget) {
-    const doc = Traverse.owner(component.element());
+    const doc = Traverse.owner(component.element);
     const scroll = Scroll.get(doc);
 
     const origin = OffsetOrigin.getOrigin(target);

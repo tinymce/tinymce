@@ -27,21 +27,21 @@ UnitTest.asynctest('tinymce.plugins.table.IndentListsInTableTest', (success, fai
 
       Log.stepsAsStep('TBA', 'Table: ul > li in table', [
         tinyApis.sSetContent('<table><tbody><tr><td><ul><li>a</li><li>b</li></ul></td></tr></tbody></table>'),
-        tinyApis.sSetCursor([0, 0, 0, 0, 0, 1], 1),
+        tinyApis.sSetCursor([ 0, 0, 0, 0, 0, 1 ], 1),
         tinyActions.sContentKeystroke(Keys.tab(), {}),
         sAssertTableInnerHTML(editor, '<tbody><tr><td><ul><li>a<ul><li>b</li></ul></li></ul></td></tr></tbody>')
       ]),
 
       Log.stepsAsStep('TBA', 'Table: ol > li in table', [
         tinyApis.sSetContent('<table><tbody><tr><td><ol><li>a</li><li>b</li></ol></td></tr></tbody></table>'),
-        tinyApis.sSetCursor([0, 0, 0, 0, 0, 1], 1),
+        tinyApis.sSetCursor([ 0, 0, 0, 0, 0, 1 ], 1),
         tinyActions.sContentKeystroke(Keys.tab(), {}),
         sAssertTableInnerHTML(editor, '<tbody><tr><td><ol><li>a<ol><li>b</li></ol></li></ol></td></tr></tbody>')
       ]),
 
       Log.stepsAsStep('TBA', 'Table: dl > dt in table', [
         tinyApis.sSetContent('<table><tbody><tr><td><dl><dt>a</dt><dt>b</dt></dl></td></tr></tbody></table>'),
-        tinyApis.sSetCursor([0, 0, 0, 0, 0, 1], 1),
+        tinyApis.sSetCursor([ 0, 0, 0, 0, 0, 1 ], 1),
         tinyActions.sContentKeystroke(Keys.tab(), {}),
         sAssertTableInnerHTML(editor, '<tbody><tr><td><dl><dt>a</dt><dd>b</dd></dl></td></tr></tbody>')
       ])
@@ -52,6 +52,6 @@ UnitTest.asynctest('tinymce.plugins.table.IndentListsInTableTest', (success, fai
     toolbar: 'table numlist',
     indent: false,
     theme: 'silver',
-    base_url: '/project/tinymce/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

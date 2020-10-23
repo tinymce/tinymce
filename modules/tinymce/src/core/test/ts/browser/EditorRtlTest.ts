@@ -1,9 +1,9 @@
 import { Pipeline, Step } from '@ephox/agar';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { TinyLoader } from '@ephox/mcagar';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import I18n from 'tinymce/core/api/util/I18n';
 import Theme from 'tinymce/themes/silver/Theme';
-import { Assert, UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.core.EditorRtlTest', (success, failure) => {
   Theme();

@@ -6,12 +6,12 @@
  */
 
 import { Fun } from '@ephox/katamari';
-import Templates from '../core/Templates';
+import * as Templates from '../core/Templates';
 
 const register = function (editor) {
   editor.addCommand('mceInsertTemplate', Fun.curry(Templates.insertTemplate, editor));
 };
 
-export default {
+export {
   register
 };

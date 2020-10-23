@@ -1,22 +1,20 @@
 import { Assertions, Chain, NamedChain } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { window } from '@ephox/dom-globals';
-
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Button } from 'ephox/alloy/api/ui/Button';
 import { Container } from 'ephox/alloy/api/ui/Container';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
+import * as ChainUtils from 'ephox/alloy/test/ChainUtils';
 import * as PositionTestUtils from 'ephox/alloy/test/PositionTestUtils';
 import * as Sinks from 'ephox/alloy/test/Sinks';
-import * as ChainUtils from 'ephox/alloy/test/ChainUtils';
 
 UnitTest.asynctest('MakeshiftPositionTest', (success, failure) => {
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((_store, _doc, _body) => {
     const button = GuiFactory.build(
       Button.sketch({
-        action () { },
+        action() { },
         dom: {
           styles: {
             position: 'absolute',
@@ -41,17 +39,15 @@ UnitTest.asynctest('MakeshiftPositionTest', (success, failure) => {
       })
     );
 
-  }, (doc, body, gui, component, store) => {
-    const cSetupAnchor = (x: number, y: number) => Chain.injectThunked(() => {
-      return {
-        anchor: 'makeshift',
-        x,
-        y
-      };
-    });
+  }, (_doc, _body, gui, _component, _store) => {
+    const cSetupAnchor = (x: number, y: number) => Chain.injectThunked(() => ({
+      anchor: 'makeshift',
+      x,
+      y
+    }));
 
     const cAssertPopupNotInNoFitPosition = Chain.op((popup: AlloyComponent) => {
-      const box = popup.element().dom().getBoundingClientRect();
+      const box = popup.element.dom.getBoundingClientRect();
       Assertions.assertEq('Assert not attached to the bottom of the viewport (eg nofit)', true, box.bottom !== window.innerHeight);
     });
 

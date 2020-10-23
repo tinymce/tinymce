@@ -1,4 +1,4 @@
-import { ApproxStructure, Pipeline, Log } from '@ephox/agar';
+import { ApproxStructure, Log, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 
@@ -18,7 +18,7 @@ UnitTest.asynctest(
       Pipeline.async({},
         Log.steps('TBA', 'Directionality: Set and select content, click on the Right to left toolbar button and assert direction is right to left. Now, click on the Left to right button and assert direction is left to right', [
           tinyApis.sSetContent('a'),
-          tinyApis.sSetSelection([0, 0], 0, [0, 0], 1),
+          tinyApis.sSetSelection([ 0, 0 ], 0, [ 0, 0 ], 1),
           tinyUi.sClickOnToolbar('click on ltr btn', 'button[title="Right to left"]'),
           tinyApis.sAssertContentStructure(ApproxStructure.build(function (s, str) {
             return s.element('body', {
@@ -44,7 +44,7 @@ UnitTest.asynctest(
             });
           }))
         ])
-      , onSuccess, onFailure);
+        , onSuccess, onFailure);
     }, {
       plugins: 'directionality',
       toolbar: 'ltr rtl',

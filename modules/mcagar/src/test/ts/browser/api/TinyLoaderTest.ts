@@ -1,5 +1,6 @@
-import { Assertions, Logger, Pipeline, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
+import { Assertions, Logger, Pipeline, Step, TestLogs } from '@ephox/agar';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { SugarShadowDom } from '@ephox/sugar';
 import { Editor } from 'ephox/mcagar/alien/EditorTypes';
 import * as TinyLoader from 'ephox/mcagar/api/TinyLoader';
 import { TinyUi } from 'ephox/mcagar/api/TinyUi';
@@ -7,11 +8,9 @@ import { TinyUi } from 'ephox/mcagar/api/TinyUi';
 UnitTest.asynctest('TinyLoaderTest', (success, failure) => {
   let clickedOn = false;
 
-  const sAssertState = (expected: boolean, label: string) => {
-    return Step.sync(() => {
-      Assertions.assertEq(label, expected, clickedOn);
-    });
-  };
+  const sAssertState = (expected: boolean, label: string) => Step.sync(() => {
+    Assertions.assertEq(label, expected, clickedOn);
+  });
 
   const silverSetup = (ed: Editor) => {
     ed.ui.registry.addButton('test-button', {
@@ -34,8 +33,30 @@ UnitTest.asynctest('TinyLoaderTest', (success, failure) => {
     ], loadSuccess, loadFailure);
 
   }, {
-      setup: silverSetup,
-      toolbar: 'test-button',
-      base_url: '/project/tinymce/js/tinymce',
-    }, success, failure);
+    setup: silverSetup,
+    toolbar: 'test-button',
+    base_url: '/project/tinymce/js/tinymce'
+  }, success, failure);
+});
+
+UnitTest.asynctest('TinyLoader.setupInBodyAndShadowRoot passes logs through', (success, failure) => {
+  let calls = 0;
+  TinyLoader.setupInBodyAndShadowRoot((_editor, onSuccess, _onFailure) => {
+    calls++;
+    onSuccess('call' + calls, TestLogs.single('log' + calls));
+  }, {}, (v, logs) => {
+    try {
+      if (SugarShadowDom.isSupported()) {
+        Assert.eq('Value should come from second call', 'call2', v);
+        Assert.eq('Logs should be concatenated', TestLogs.addLogEntry(TestLogs.single('log1'), 'log2'), logs);
+      } else {
+        // if the browser isn't supported, the "shadow dom" test won't be run, so we only get logs from the "body" test
+        Assert.eq('Value should come from first call', 'call1', v);
+        Assert.eq('Logs should just be from the first call', TestLogs.single('log1'), logs);
+      }
+      success();
+    } catch (e) {
+      failure(e);
+    }
+  }, failure);
 });

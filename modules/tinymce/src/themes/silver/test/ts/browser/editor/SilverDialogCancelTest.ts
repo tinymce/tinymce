@@ -11,12 +11,12 @@ UnitTest.asynctest('Editor (Silver) Configuration Cancel test', (success, failur
       const tinyUi = TinyUi(editor);
 
       Pipeline.async({ }, Logger.ts(
-          'Dialog closes without error using cancel button',
-          [
-            tinyUi.sWaitForPopup('wait for window', 'div[role="dialog"].tox-dialog'),
-            tinyUi.sClickOnUi('click on Close button', 'div[role="dialog"] .tox-button--secondary')
-          ]
-        ), onSuccess, onFailure);
+        'Dialog closes without error using cancel button',
+        [
+          tinyUi.sWaitForPopup('wait for window', 'div[role="dialog"].tox-dialog'),
+          tinyUi.sClickOnUi('click on Close button', 'div[role="dialog"] .tox-button--secondary')
+        ]
+      ), onSuccess, onFailure);
     },
     {
       theme: 'silver',
@@ -35,7 +35,7 @@ UnitTest.asynctest('Editor (Silver) Configuration Cancel test', (success, failur
                 name: 'close',
                 text: 'Close'
               }
-            ],
+            ]
           });
         });
       }

@@ -1,4 +1,3 @@
-import { Blob, URL } from '@ephox/dom-globals';
 import { Future, Futures, Id } from '@ephox/katamari';
 import * as BlobConversions from '../api/BlobConversions';
 import * as ResultConversions from '../api/ResultConversions';
@@ -13,16 +12,14 @@ const single = (img: Blob) => {
   return singleWithUrl(img, objurl);
 };
 
-const singleWithUrl = (img: Blob, objurl: string) => {
-  return Future.nu((callback: (data: ImageAssetAdt) => void) => {
-    BlobConversions.blobToDataUri(img).then((datauri) => {
-      const ir = ResultConversions.fromBlobAndUrlSync(img, datauri);
-      const id = Id.generate('image');
-      const asset = ImageAsset.blob(id, ir, objurl);
-      callback(asset);
-    });
+const singleWithUrl = (img: Blob, objurl: string) => Future.nu((callback: (data: ImageAssetAdt) => void) => {
+  BlobConversions.blobToDataUri(img).then((datauri) => {
+    const ir = ResultConversions.fromBlobAndUrlSync(img, datauri);
+    const id = Id.generate('image');
+    const asset = ImageAsset.blob(id, ir, objurl);
+    callback(asset);
   });
-};
+});
 
 /**
  * Converts a list of files into a list of ImageAssets. This is
@@ -31,9 +28,8 @@ const singleWithUrl = (img: Blob, objurl: string) => {
  * @param callback the callback function for the {BlobImageAsset[]}
  */
 
-const multiple = (imgs: Blob[]): Future<ImageAssetAdt[]> => {
+const multiple = (imgs: Blob[]): Future<ImageAssetAdt[]> =>
   // edge case: where a drop of a non-file takes place
-  return Futures.traverse(imgs, single);
-};
+  Futures.traverse(imgs, single);
 
 export { multiple, single, singleWithUrl };

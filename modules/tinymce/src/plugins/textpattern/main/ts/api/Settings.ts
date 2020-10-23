@@ -5,8 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Console } from '@ephox/dom-globals';
-import { Obj, Type, Results, Arr, Global } from '@ephox/katamari';
+import { Arr, Global, Results, Type } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { PatternSet } from '../core/PatternTypes';
 import { createPatternSet, normalizePattern } from './Pattern';
@@ -36,13 +35,13 @@ const defaultPatterns = [
   { start: '- ', cmd: 'InsertUnorderedList' }
 ];
 
-const getPatternSet = (editorSettings): PatternSet => {
-  const patterns = Obj.get(editorSettings, 'textpattern_patterns').getOr(defaultPatterns);
+const getPatternSet = (editor: Editor): PatternSet => {
+  const patterns = editor.getParam('textpattern_patterns', defaultPatterns, 'array');
   if (!Type.isArray(patterns)) {
     error('The setting textpattern_patterns should be an array');
     return {
       inlinePatterns: [],
-      blockPatterns: [],
+      blockPatterns: []
     };
   }
   const normalized = Results.partition(Arr.map(patterns, normalizePattern));

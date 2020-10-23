@@ -77,7 +77,7 @@ import I18n from './util/I18n';
  * });
  */
 
-export interface UrlObject { prefix: string; resource: string; suffix: string; }
+export interface UrlObject { prefix: string; resource: string; suffix: string }
 
 type WaitState = 'added' | 'loaded';
 
@@ -90,7 +90,7 @@ interface AddOnManager<T> {
   items: AddOnConstructor<T>[];
   urls: Record<string, string>;
   lookup: Record<string, { instance: AddOnConstructor<T>; dependencies?: string[] }>;
-  _listeners: { name: string, state: WaitState, callback: () => void }[];
+  _listeners: { name: string; state: WaitState; callback: () => void }[];
   get (name: string): AddOnConstructor<T>;
   dependencies (name: string): string[];
   requireLangPack (name: string, languages: string): void;
@@ -98,7 +98,7 @@ interface AddOnManager<T> {
   remove (name: string): void;
   createUrl (baseUrl: UrlObject, dep: string | UrlObject): UrlObject;
   addComponents (pluginName: string, scripts: string[]): void;
-  load (name: string, addOnUrl: string | UrlObject, success?: () => void, scope?: {}, failure?: () => void): void;
+  load (name: string, addOnUrl: string | UrlObject, success?: () => void, scope?: any, failure?: () => void): void;
   waitFor (name: string, callback: () => void, state?: WaitState): void;
 }
 
@@ -197,7 +197,7 @@ function AddOnManager<T>(): AddOnManager<T> {
     }
   };
 
-  const load = (name: string, addOnUrl: string | UrlObject, success?: () => void, scope?: {}, failure?: () => void) => {
+  const load = (name: string, addOnUrl: string | UrlObject, success?: () => void, scope?: any, failure?: () => void) => {
     if (urls[name]) {
       return;
     }
@@ -327,9 +327,9 @@ function AddOnManager<T>(): AddOnManager<T> {
 }
 
 namespace AddOnManager {
-  export let language;
-  export let languageLoad;
-  export let baseURL;
+  export let language: string;
+  export let languageLoad: boolean;
+  export let baseURL: string;
   export const PluginManager: AddOnManager<any> = AddOnManager();
   export const ThemeManager: AddOnManager<any> = AddOnManager();
 }

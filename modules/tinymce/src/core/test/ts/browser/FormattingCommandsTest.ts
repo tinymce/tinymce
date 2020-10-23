@@ -53,7 +53,7 @@ UnitTest.asynctest('browser.tinymce.core.FormattingCommandsTest', function (succ
     editor.setContent('test 123');
     editor.execCommand('SelectAll');
     editor.execCommand('FontName', false, 'Bauhaus 93');
-    LegacyUnit.equal(editor.getContent(), '<p><span style="font-family: \'Bauhaus 93\';">test 123</span></p>');
+    LegacyUnit.equal(editor.getContent(), `<p><span style="font-family: 'Bauhaus 93';">test 123</span></p>`);
 
     editor.setContent('test 123');
     editor.execCommand('SelectAll');
@@ -254,11 +254,9 @@ UnitTest.asynctest('browser.tinymce.core.FormattingCommandsTest', function (succ
   });
 
   suite.test('mceInsertLink (link adjacent text)', function (editor) {
-    let rng;
-
     editor.setContent('<p><a href="#">a</a>b</p>');
 
-    rng = editor.dom.createRng();
+    const rng = editor.dom.createRng();
     rng.setStart(editor.getBody().firstChild.lastChild, 0);
     rng.setEnd(editor.getBody().firstChild.lastChild, 1);
     editor.selection.setRng(rng);

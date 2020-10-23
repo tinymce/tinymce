@@ -6,7 +6,7 @@
  */
 
 import PluginManager from 'tinymce/core/api/PluginManager';
-import Convert from './core/Convert';
+import * as Convert from './core/Convert';
 
 export default function () {
   PluginManager.add('bbcode', function (editor) {

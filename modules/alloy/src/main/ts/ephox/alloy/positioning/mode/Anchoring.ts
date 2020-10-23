@@ -1,5 +1,5 @@
-import { Option } from '@ephox/katamari';
-import { Element, SimRange } from '@ephox/sugar';
+import { Optional } from '@ephox/katamari';
+import { SimRange, SugarElement } from '@ephox/sugar';
 
 import { Bounds } from '../../alien/Boxes';
 import { AlloyComponent } from '../../api/component/ComponentApi';
@@ -9,7 +9,7 @@ import { OriginAdt } from '../layout/Origins';
 
 // doPlace(component, origin, anchoring, posConfig, placee);
 export type AnchorPlacement =
-  (comp: AlloyComponent, origin: OriginAdt, anchoring: Anchoring, getBounds: Option<() => Bounds>, placee: AlloyComponent) => void;
+  (comp: AlloyComponent, origin: OriginAdt, anchoring: Anchoring, getBounds: Optional<() => Bounds>, placee: AlloyComponent) => void;
 
 export interface CommonAnchorSpec {
   anchor: string;
@@ -18,32 +18,32 @@ export interface CommonAnchorSpec {
 export type AnchorSpec = SelectionAnchorSpec | HotspotAnchorSpec | SubmenuAnchorSpec | MakeshiftAnchorSpec | NodeAnchorSpec;
 
 export interface AnchorDetail<D> {
-  placement: (comp: AlloyComponent, anchor: D, origin: OriginAdt) => Option<Anchoring>;
+  placement: (comp: AlloyComponent, anchor: D, origin: OriginAdt) => Optional<Anchoring>;
 }
 
-export type MaxHeightFunction =  (elem: Element, available: number) => void;
-export type MaxWidthFunction =  (elem: Element, available: number) => void;
+export type MaxHeightFunction = (elem: SugarElement, available: number) => void;
+export type MaxWidthFunction = (elem: SugarElement, available: number) => void;
 export interface AnchorOverrides {
   maxHeightFunction?: MaxHeightFunction;
   maxWidthFunction?: MaxWidthFunction;
 }
 
 export interface LayoutsDetail {
-  onLtr: (elem: Element) => AnchorLayout[];
-  onRtl: (elem: Element) => AnchorLayout[];
-  onBottomLtr: Option<(elem: Element) => AnchorLayout[]>;
-  onBottomRtl: Option<(elem: Element) => AnchorLayout[]>;
+  onLtr: (elem: SugarElement) => AnchorLayout[];
+  onRtl: (elem: SugarElement) => AnchorLayout[];
+  onBottomLtr: Optional<(elem: SugarElement) => AnchorLayout[]>;
+  onBottomRtl: Optional<(elem: SugarElement) => AnchorLayout[]>;
 }
 
 export interface HasLayoutAnchor {
-  layouts: Option<LayoutsDetail>;
+  layouts: Optional<LayoutsDetail>;
 }
 
 export interface Layouts {
-  onLtr: (elem: Element) => AnchorLayout[];
-  onRtl: (elem: Element) => AnchorLayout[];
-  onBottomLtr?: (elem: Element) => AnchorLayout[];
-  onBottomRtl?: (elem: Element) => AnchorLayout[];
+  onLtr: (elem: SugarElement) => AnchorLayout[];
+  onRtl: (elem: SugarElement) => AnchorLayout[];
+  onBottomLtr?: (elem: SugarElement) => AnchorLayout[];
+  onBottomRtl?: (elem: SugarElement) => AnchorLayout[];
 }
 
 export interface HasLayoutAnchorSpec {
@@ -52,34 +52,34 @@ export interface HasLayoutAnchorSpec {
 
 export interface SelectionAnchorSpec extends CommonAnchorSpec, HasLayoutAnchorSpec {
   anchor: 'selection';
-  getSelection?: () => Option<SimRange>;
-  root: Element;
+  getSelection?: () => Optional<SimRange>;
+  root: SugarElement;
   bubble?: Bubble;
   overrides?: AnchorOverrides;
   showAbove?: boolean;
 }
 
 export interface SelectionAnchor extends AnchorDetail<SelectionAnchor>, HasLayoutAnchor {
-  getSelection: Option<() => Option<SimRange>>;
-  root: Element;
-  bubble: Option<Bubble>;
+  getSelection: Optional<() => Optional<SimRange>>;
+  root: SugarElement;
+  bubble: Optional<Bubble>;
   overrides: AnchorOverrides;
   showAbove: boolean;
 }
 
 export interface NodeAnchorSpec extends CommonAnchorSpec, HasLayoutAnchorSpec {
   anchor: 'node';
-  node: Option<Element>;
-  root: Element;
+  node: Optional<SugarElement>;
+  root: SugarElement;
   bubble?: Bubble;
   overrides?: AnchorOverrides;
   showAbove?: boolean;
 }
 
 export interface NodeAnchor extends AnchorDetail<NodeAnchor>, HasLayoutAnchor {
-  node: Option<Element>;
-  root: Element;
-  bubble: Option<Bubble>;
+  node: Optional<SugarElement>;
+  root: SugarElement;
+  bubble: Optional<Bubble>;
   overrides: AnchorOverrides;
   showAbove: boolean;
 }
@@ -93,7 +93,7 @@ export interface HotspotAnchorSpec extends CommonAnchorSpec, HasLayoutAnchorSpec
 
 export interface HotspotAnchor extends AnchorDetail<HotspotAnchor>, HasLayoutAnchor {
   hotspot: AlloyComponent;
-  bubble: Option<Bubble>;
+  bubble: Optional<Bubble>;
   overrides: AnchorOverrides;
 }
 
@@ -132,7 +132,7 @@ export interface Anchoring {
   bubble: Bubble;
   overrides: AnchorOverrides;
   layouts: AnchorLayout[];
-  placer: Option<AnchorPlacement>;
+  placer: Optional<AnchorPlacement>;
 }
 
 const nu: (spec: Anchoring) => Anchoring = (x) => x;

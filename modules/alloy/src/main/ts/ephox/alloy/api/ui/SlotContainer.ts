@@ -1,12 +1,12 @@
 import { Arr, Obj } from '@ephox/katamari';
-import { Attr, Css } from '@ephox/sugar';
+import { Attribute, Css } from '@ephox/sugar';
 
-import { AlloySpec, SketchSpec } from '../../api/component/SpecTypes';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as PartType from '../../parts/PartType';
 import { SlotContainerApis, SlotContainerDetail, SlotContainerSketcher, SlotContainerSpecBuilder } from '../../ui/types/SlotContainerTypes';
 import { AlloyComponent } from '../component/ComponentApi';
 import * as SketchBehaviours from '../component/SketchBehaviours';
+import { AlloySpec, SketchSpec } from '../component/SpecTypes';
 import * as AlloyTriggers from '../events/AlloyTriggers';
 import * as SystemEvents from '../events/SystemEvents';
 import * as GuiTypes from './GuiTypes';
@@ -18,9 +18,7 @@ const schema = [
   SketchBehaviours.field('slotBehaviours', [])
 ];
 
-const getPartName = (name: string) => {
-  return '<alloy.field.' + name + '>';
-};
+const getPartName = (name: string) => '<alloy.field.' + name + '>';
 
 const sketch = (sSpec: SlotContainerSpecBuilder): SketchSpec => {
   // As parts.slot is called, record all of the parts that are registered
@@ -46,9 +44,7 @@ const sketch = (sSpec: SlotContainerSpecBuilder): SketchSpec => {
   // Like a Form, a SlotContainer does not know its parts in advance. So the
   // record lists the names of the parts to put in the schema.
   // TODO: Find a nice way to remove dupe with Form
-  const fieldParts = Arr.map(partNames, (n) => {
-    return PartType.required({ name: n, pname: getPartName(n) });
-  });
+  const fieldParts = Arr.map(partNames, (n) => PartType.required({ name: n, pname: getPartName(n) }));
 
   return UiSketcher.composite(owner, schema, fieldParts, make, spec);
 };
@@ -63,24 +59,20 @@ const make = (detail: SlotContainerDetail, components: AlloySpec[]) => {
   const onSlot: {
     <T>(f: (comp: AlloyComponent, key: string) => T, def: T): (container: AlloyComponent, key: string) => T;
     (f: (comp: AlloyComponent, key: string) => void): (container: AlloyComponent, key: string) => void;
-  } = <T>(f: (comp: AlloyComponent, key: string) => T, def?: T) => (container: AlloyComponent, key: string) => {
-    return AlloyParts.getPart(container, detail, key).map((slot) => f(slot, key)).getOr(def as T);
-  };
+  } = <T>(f: (comp: AlloyComponent, key: string) => T, def?: T) => (container: AlloyComponent, key: string) => AlloyParts.getPart(container, detail, key).map((slot) => f(slot, key)).getOr(def as T);
 
   const onSlots = (f: (container: AlloyComponent, key: string) => void) => (container: AlloyComponent, keys: string[]) => {
     Arr.each(keys, (key) => f(container, key));
   };
 
-  const doShowing = (comp: AlloyComponent, key: string): boolean => {
-    return Attr.get(comp.element(), 'aria-hidden') !== 'true';
-  };
+  const doShowing = (comp: AlloyComponent, _key: string): boolean => Attribute.get(comp.element, 'aria-hidden') !== 'true';
 
   const doShow = (comp: AlloyComponent, key: string) => {
     // NOTE: May need to restore old values.
     if (!doShowing(comp, key)) {
-      const element = comp.element();
+      const element = comp.element;
       Css.remove(element, 'display');
-      Attr.remove(element, 'aria-hidden');
+      Attribute.remove(element, 'aria-hidden');
       AlloyTriggers.emitWith(comp, SystemEvents.slotVisibility(), { name: key, visible: true });
     }
   };
@@ -88,9 +80,9 @@ const make = (detail: SlotContainerDetail, components: AlloySpec[]) => {
   const doHide = (comp: AlloyComponent, key: string) => {
     // NOTE: May need to save old values.
     if (doShowing(comp, key)) {
-      const element = comp.element();
+      const element = comp.element;
       Css.set(element, 'display', 'none');
-      Attr.set(element, 'aria-hidden', 'true');
+      Attribute.set(element, 'aria-hidden', 'true');
       AlloyTriggers.emitWith(comp, SystemEvents.slotVisibility(), { name: key, visible: false });
     }
   };
@@ -111,7 +103,7 @@ const make = (detail: SlotContainerDetail, components: AlloySpec[]) => {
     isShowing,
     hideSlot,
     hideAllSlots,
-    showSlot,
+    showSlot
   };
 
   return {
@@ -131,7 +123,7 @@ const slotApis: SlotContainerApis = Obj.map({
   isShowing: (apis: SlotContainerApis, c: AlloyComponent, key: string) => apis.isShowing(c, key),
   hideSlot: (apis: SlotContainerApis, c: AlloyComponent, key: string) => apis.hideSlot(c, key),
   hideAllSlots: (apis: SlotContainerApis, c: AlloyComponent) => apis.hideAllSlots(c),
-  showSlot: (apis: SlotContainerApis, c: AlloyComponent, key: string) => apis.showSlot(c, key),
+  showSlot: (apis: SlotContainerApis, c: AlloyComponent, key: string) => apis.showSlot(c, key)
 }, (value) => GuiTypes.makeApi<SlotContainerApis, any>(value));
 
 const SlotContainer: SlotContainerSketcher = {

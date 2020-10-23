@@ -1,7 +1,7 @@
-import * as Arr from 'ephox/katamari/api/Arr';
-import { UnitTest, Assert } from '@ephox/bedrock-client';
-import fc from 'fast-check';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Testable } from '@ephox/dispute';
+import fc from 'fast-check';
+import * as Arr from 'ephox/katamari/api/Arr';
 
 const { tArray, tNumber } = Testable;
 
@@ -11,11 +11,11 @@ UnitTest.test('chunk: unit tests', () => {
     Assert.eq('chunk frozen', expected, Arr.chunk(Object.freeze(initial.slice()), size));
   };
 
-  check([ [ 1, 2, 3 ], [ 4, 5, 6 ] ], [ 1, 2, 3, 4, 5, 6 ], 3);
-  check([ [ 1, 2, 3, 4, 5, 6 ] ], [ 1, 2, 3, 4, 5, 6 ], 6);
-  check([ [ 1, 2, 3, 4, 5, 6 ] ], [ 1, 2, 3, 4, 5, 6 ], 12);
-  check([ [ 1 ], [ 2 ], [ 3 ], [ 4 ], [ 5 ], [ 6 ] ], [ 1, 2, 3, 4, 5, 6 ], 1);
-  check([ [ 1, 2, 3, 4 ], [ 5, 6, 7, 8 ], [ 9, 10 ] ], [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ], 4);
+  check([[ 1, 2, 3 ], [ 4, 5, 6 ]], [ 1, 2, 3, 4, 5, 6 ], 3);
+  check([[ 1, 2, 3, 4, 5, 6 ]], [ 1, 2, 3, 4, 5, 6 ], 6);
+  check([[ 1, 2, 3, 4, 5, 6 ]], [ 1, 2, 3, 4, 5, 6 ], 12);
+  check([[ 1 ], [ 2 ], [ 3 ], [ 4 ], [ 5 ], [ 6 ]], [ 1, 2, 3, 4, 5, 6 ], 1);
+  check([[ 1, 2, 3, 4 ], [ 5, 6, 7, 8 ], [ 9, 10 ]], [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ], 4);
   check([], [], 2);
 });
 

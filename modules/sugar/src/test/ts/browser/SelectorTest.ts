@@ -1,27 +1,27 @@
-import { Option } from '@ephox/katamari';
-import * as Class from 'ephox/sugar/api/properties/Class';
-import Element from 'ephox/sugar/api/node/Element';
+import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Optional } from '@ephox/katamari';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
+import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
+import * as Class from 'ephox/sugar/api/properties/Class';
 import * as SelectorExists from 'ephox/sugar/api/search/SelectorExists';
 import * as SelectorFilter from 'ephox/sugar/api/search/SelectorFilter';
 import * as SelectorFind from 'ephox/sugar/api/search/SelectorFind';
 import * as Selectors from 'ephox/sugar/api/search/Selectors';
-import Checkers from 'ephox/sugar/test/Checkers';
+import * as Checkers from 'ephox/sugar/test/Checkers';
 import Div from 'ephox/sugar/test/Div';
-import TestPage from 'ephox/sugar/test/TestPage';
-import { UnitTest, assert } from '@ephox/bedrock-client';
+import * as TestPage from 'ephox/sugar/test/TestPage';
 
-UnitTest.test('SelectorTest', function () {
+UnitTest.test('SelectorTest', () => {
   // Querying non-element nodes does not throw an error
 
-  const textnode = Element.fromText('');
-  const commentnode = Element.fromHtml('<!--a-->');
+  const textnode = SugarElement.fromText('');
+  const commentnode = SugarElement.fromHtml('<!--a-->');
   assert.eq(false, Selectors.is(textnode, 'anything'));
   assert.eq(false, Selectors.is(commentnode, 'anything'));
   assert.eq([], Selectors.all('anything', textnode));
   assert.eq([], Selectors.all('anything', commentnode));
-  Checkers.checkOpt(Option.none(), Selectors.one('anything', textnode));
-  Checkers.checkOpt(Option.none(), Selectors.one('anything', commentnode));
+  Checkers.checkOpt(Optional.none<SugarElement<Element>>(), Selectors.one('anything', textnode));
+  Checkers.checkOpt(Optional.none<SugarElement<Element>>(), Selectors.one('anything', commentnode));
   assert.eq([], SelectorFilter.ancestors(textnode, 'anything'));
   assert.eq([], SelectorFilter.siblings(textnode, 'anything'));
   assert.eq([], SelectorFilter.children(textnode, 'anything'));
@@ -37,33 +37,33 @@ UnitTest.test('SelectorTest', function () {
 
   TestPage.connect(); // description of structure is in TestPage
 
-  Checkers.checkOpt(Option.none(), Selectors.one('asdf'));
+  Checkers.checkOpt(Optional.none<SugarElement<Element>>(), Selectors.one('asdf'));
 
-  Checkers.checkOpt(Option.some(TestPage.p1), SelectorFind.first('p'));
-  Checkers.checkOpt(Option.some(TestPage.p1), Selectors.one('p'));
-  Checkers.checkOpt(Option.none(), SelectorFind.sibling(TestPage.s1, 'p'));
-  Checkers.checkOpt(Option.some(TestPage.s3), SelectorFind.sibling(TestPage.s4, 'span'));
-  Checkers.checkOpt(Option.none(), SelectorFind.ancestor(TestPage.s1, 'li'));
-  Checkers.checkOpt(Option.some(TestPage.container), SelectorFind.ancestor(TestPage.s4, 'div'));
-  Checkers.checkOpt(Option.some(TestPage.s2), SelectorFind.descendant(TestPage.p2, 'span'));
-  Checkers.checkOpt(Option.some(TestPage.s3), SelectorFind.descendant(TestPage.p2, 'span span'));
-  Checkers.checkOpt(Option.none(), SelectorFind.child(TestPage.p2, 'li'));
-  Checkers.checkOpt(Option.some(TestPage.s1), SelectorFind.child(TestPage.p1, 'span'));
-  Checkers.checkOpt(Option.none(), SelectorFind.closest(TestPage.p1, 'span'));
-  Checkers.checkOpt(Option.some(TestPage.p1), SelectorFind.closest(TestPage.p1, 'p'));
-  Checkers.checkOpt(Option.some(TestPage.p1), SelectorFind.closest(TestPage.s1, 'p'));
-  Checkers.checkOpt(Option.some(TestPage.p1), SelectorFind.closest(TestPage.t1, 'p'));
+  Checkers.checkOpt(Optional.some(TestPage.p1), SelectorFind.first('p'));
+  Checkers.checkOpt(Optional.some(TestPage.p1), Selectors.one('p'));
+  Checkers.checkOpt(Optional.none<SugarElement<Element>>(), SelectorFind.sibling(TestPage.s1, 'p'));
+  Checkers.checkOpt(Optional.some(TestPage.s3), SelectorFind.sibling(TestPage.s4, 'span'));
+  Checkers.checkOpt(Optional.none<SugarElement<Element>>(), SelectorFind.ancestor(TestPage.s1, 'li'));
+  Checkers.checkOpt(Optional.some(TestPage.container), SelectorFind.ancestor(TestPage.s4, 'div'));
+  Checkers.checkOpt(Optional.some(TestPage.s2), SelectorFind.descendant(TestPage.p2, 'span'));
+  Checkers.checkOpt(Optional.some(TestPage.s3), SelectorFind.descendant(TestPage.p2, 'span span'));
+  Checkers.checkOpt(Optional.none(), SelectorFind.child(TestPage.p2, 'li'));
+  Checkers.checkOpt(Optional.some(TestPage.s1), SelectorFind.child(TestPage.p1, 'span'));
+  Checkers.checkOpt(Optional.none<SugarElement<Element>>(), SelectorFind.closest(TestPage.p1, 'span'));
+  Checkers.checkOpt(Optional.some(TestPage.p1), SelectorFind.closest(TestPage.p1, 'p'));
+  Checkers.checkOpt(Optional.some(TestPage.p1), SelectorFind.closest(TestPage.s1, 'p'));
+  Checkers.checkOpt(Optional.some(TestPage.p1), SelectorFind.closest(TestPage.t1, 'p'));
 
-  Checkers.checkList([TestPage.p1, TestPage.p3, TestPage.p2], SelectorFilter.all('p'));
-  Checkers.checkList([TestPage.p1, TestPage.p3, TestPage.p2], Selectors.all('p'));
-  Checkers.checkList([TestPage.s3, TestPage.s2], SelectorFilter.ancestors(TestPage.t4, 'span'));
-  Checkers.checkList([TestPage.d1, TestPage.container], SelectorFilter.ancestors(TestPage.p3, 'div'));
+  Checkers.checkList([ TestPage.p1, TestPage.p3, TestPage.p2 ], SelectorFilter.all('p'));
+  Checkers.checkList([ TestPage.p1, TestPage.p3, TestPage.p2 ], Selectors.all('p'));
+  Checkers.checkList([ TestPage.s3, TestPage.s2 ], SelectorFilter.ancestors(TestPage.t4, 'span'));
+  Checkers.checkList([ TestPage.d1, TestPage.container ], SelectorFilter.ancestors(TestPage.p3, 'div'));
   Checkers.checkList([], SelectorFilter.ancestors(TestPage.t4, 'table'));
-  Checkers.checkList([TestPage.s1], SelectorFilter.siblings(TestPage.t1, '*'));
+  Checkers.checkList([ TestPage.s1 ], SelectorFilter.siblings(TestPage.t1, '*'));
   Checkers.checkList([], SelectorFilter.siblings(TestPage.t5, '*'));
-  Checkers.checkList([TestPage.s1], SelectorFilter.children(TestPage.p1, 'span'));
+  Checkers.checkList([ TestPage.s1 ], SelectorFilter.children(TestPage.p1, 'span'));
   Checkers.checkList([], SelectorFilter.children(TestPage.p1, 'li'));
-  Checkers.checkList([TestPage.s1, TestPage.s2, TestPage.s3, TestPage.s4], SelectorFilter.descendants(TestPage.container, 'span'));
+  Checkers.checkList([ TestPage.s1, TestPage.s2, TestPage.s3, TestPage.s4 ], SelectorFilter.descendants(TestPage.container, 'span'));
   Checkers.checkList([], SelectorFilter.descendants(TestPage.container, 'blockquote'));
 
   assert.eq(true, SelectorExists.any('p'));

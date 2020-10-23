@@ -1,12 +1,11 @@
-import { LegacyUnit } from '@ephox/mcagar';
 import { Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
+import { LegacyUnit } from '@ephox/mcagar';
+import $ from 'tinymce/core/api/dom/DomQuery';
 import Env from 'tinymce/core/api/Env';
 import * as CaretCandidate from 'tinymce/core/caret/CaretCandidate';
-import $ from 'tinymce/core/api/dom/DomQuery';
-import Zwsp from 'tinymce/core/text/Zwsp';
+import * as Zwsp from 'tinymce/core/text/Zwsp';
 import ViewBlock from '../../module/test/ViewBlock';
-import { UnitTest } from '@ephox/bedrock-client';
-import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.core.CaretCandidateTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
@@ -50,7 +49,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretCandidateTest', function (success,
   });
 
   suite.test('isAtomic', function () {
-    $.each(['img', 'input', 'textarea', 'hr'], function (index, name) {
+    $.each([ 'img', 'input', 'textarea', 'hr' ], function (index, name) {
       LegacyUnit.equal(CaretCandidate.isAtomic(document.createElement(name)), true);
     });
 

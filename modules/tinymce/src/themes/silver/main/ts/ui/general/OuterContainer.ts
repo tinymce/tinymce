@@ -5,17 +5,21 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyComponent, AlloySpec, Behaviour, Composite, CustomList, Keying, RawDomSchema, Sketcher, SketchSpec, Toolbar, UiSketcher } from '@ephox/alloy';
+import {
+  AlloyComponent, AlloySpec, Behaviour, Composite, CustomList, Keying, RawDomSchema, Sketcher, SketchSpec, Toolbar, UiSketcher
+} from '@ephox/alloy';
 import { FieldSchema } from '@ephox/boulder';
-import { Arr, Id, Option, Result } from '@ephox/katamari';
+import { Arr, Id, Optional, Optionals, Result } from '@ephox/katamari';
 import { ToolbarMode } from '../../api/Settings';
-import { UiFactoryBackstage } from '../../backstage/Backstage';
+import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 
 import { HeaderSpec, renderHeader } from '../header/CommonHeader';
 import SilverMenubar, { SilverMenubarSpec } from '../menus/menubar/SilverMenubar';
 import * as Sidebar from '../sidebar/Sidebar';
 import * as Throbber from '../throbber/Throbber';
-import { MoreDrawerData, MoreDrawerToolbarSpec, renderFloatingMoreToolbar, renderSlidingMoreToolbar, renderToolbar, renderToolbarGroup } from '../toolbar/CommonToolbar';
+import {
+  MoreDrawerData, MoreDrawerToolbarSpec, renderFloatingMoreToolbar, renderSlidingMoreToolbar, renderToolbar, renderToolbarGroup
+} from '../toolbar/CommonToolbar';
 
 export interface OuterContainerSketchSpec extends Sketcher.CompositeSketchSpec {
   dom: RawDomSchema;
@@ -36,6 +40,7 @@ interface MultipleToolbarSketchSpec {
   dom: RawDomSchema;
   onEscape: () => { };
   type: ToolbarMode;
+  providers: UiFactoryBackstageProviders;
 }
 
 interface ToolbarSketchSpec extends MoreDrawerData {
@@ -45,21 +50,23 @@ interface ToolbarSketchSpec extends MoreDrawerData {
   onEscape: () => { };
   type: ToolbarMode;
   getSink: () => Result<AlloyComponent, string>;
-  backstage: UiFactoryBackstage;
+  providers: UiFactoryBackstageProviders;
 }
 
 interface OuterContainerApis {
-  getHeader: (comp: AlloyComponent) => Option<AlloyComponent>;
-  getSocket: (comp: AlloyComponent) => Option<AlloyComponent>;
+  getHeader: (comp: AlloyComponent) => Optional<AlloyComponent>;
+  getSocket: (comp: AlloyComponent) => Optional<AlloyComponent>;
   setSidebar: (comp: AlloyComponent, panelConfigs: Sidebar.SidebarConfig) => void;
   toggleSidebar: (comp: AlloyComponent, name: string) => void;
   whichSidebar: (comp: AlloyComponent) => string | null;
   // Maybe just change to ToolbarAnchor.
-  getToolbar: (comp: AlloyComponent) => Option<AlloyComponent>;
+  getToolbar: (comp: AlloyComponent) => Optional<AlloyComponent>;
   setToolbar: (comp: AlloyComponent, groups) => void;
   setToolbars: (comp: AlloyComponent, toolbars) => void;
   refreshToolbar: (comp: AlloyComponent) => void;
-  getThrobber: (comp: AlloyComponent) => Option<AlloyComponent>;
+  toggleToolbarDrawer: (comp: AlloyComponent) => void;
+  isToolbarDrawerToggled: (comp: AlloyComponent) => boolean;
+  getThrobber: (comp: AlloyComponent) => Optional<AlloyComponent>;
   focusToolbar: (comp: AlloyComponent) => void;
   setMenubar: (comp: AlloyComponent, groups) => void;
   focusMenubar: (comp: AlloyComponent) => void;
@@ -68,9 +75,11 @@ interface OuterContainerApis {
 interface ToolbarApis {
   setGroups: (toolbar: AlloyComponent, groups: SketchSpec[]) => void;
   refresh: (toolbar: AlloyComponent) => void;
+  toggle?: (toolbar: AlloyComponent) => void;
+  isOpen?: (toolbar: AlloyComponent) => boolean;
 }
 
-const factory: UiSketcher.CompositeSketchFactory<OuterContainerSketchDetail, OuterContainerSketchSpec> = function (detail, components, spec) {
+const factory: UiSketcher.CompositeSketchFactory<OuterContainerSketchDetail, OuterContainerSketchSpec> = function (detail, components, _spec) {
   const apis: OuterContainerApis = {
     getSocket(comp) {
       return Composite.parts.getPart(comp, detail, 'socket');
@@ -108,17 +117,24 @@ const factory: UiSketcher.CompositeSketchFactory<OuterContainerSketchDetail, Out
     },
     refreshToolbar(comp) {
       const toolbar = Composite.parts.getPart(comp, detail, 'toolbar');
-      toolbar.each((toolbar) => {
-        return toolbar.getApis<ToolbarApis>().refresh(toolbar);
+      toolbar.each((toolbar) => toolbar.getApis<ToolbarApis>().refresh(toolbar));
+    },
+    toggleToolbarDrawer(comp) {
+      Composite.parts.getPart(comp, detail, 'toolbar').each((toolbar) => {
+        Optionals.mapFrom(toolbar.getApis<ToolbarApis>().toggle, (toggle) => toggle(toolbar));
       });
+    },
+    isToolbarDrawerToggled(comp) {
+      // isOpen may not be defined on all toolbars e.g. 'scrolling' and 'wrap'
+      return Composite.parts.getPart(comp, detail, 'toolbar')
+        .bind((toolbar) => Optional.from(toolbar.getApis<ToolbarApis>().isOpen).map((isOpen) => isOpen(toolbar)))
+        .getOr(false);
     },
     getThrobber(comp) {
       return Composite.parts.getPart(comp, detail, 'throbber');
     },
     focusToolbar(comp) {
-      const optToolbar = Composite.parts.getPart(comp, detail, 'toolbar').orThunk(() => {
-        return Composite.parts.getPart(comp, detail, 'multiple-toolbar');
-      });
+      const optToolbar = Composite.parts.getPart(comp, detail, 'toolbar').orThunk(() => Composite.parts.getPart(comp, detail, 'multiple-toolbar'));
 
       optToolbar.each(function (toolbar) {
         Keying.focusIn(toolbar);
@@ -165,33 +181,33 @@ const toolbarFactory = (spec: ToolbarSketchSpec) => {
 
 const partMultipleToolbar = Composite.partType.optional<OuterContainerSketchDetail, MultipleToolbarSketchSpec>({
   factory: {
-    sketch: (spec) => {
-      return CustomList.sketch({
-        uid: spec.uid,
-        dom: spec.dom,
+    sketch: (spec) => CustomList.sketch({
+      uid: spec.uid,
+      dom: spec.dom,
 
-        listBehaviours: Behaviour.derive([
-          Keying.config({
-            mode: 'acyclic',
-            selector: '.tox-toolbar'
-          })
-        ]),
+      listBehaviours: Behaviour.derive([
+        Keying.config({
+          mode: 'acyclic',
+          selector: '.tox-toolbar'
+        })
+      ]),
 
-        makeItem: () => {
-          return renderToolbar({
-            type: spec.type,
-            uid: Id.generate('multiple-toolbar-item'),
-            cyclicKeying: false,
-            initGroups: [ ],
-            onEscape: () => Option.none()
-          });
-        },
-        setupItem: (mToolbar, tc, data, index) => {
-          Toolbar.setGroups(tc, data);
-        },
-        shell: true
-      });
-    }
+      makeItem: () => renderToolbar({
+        type: spec.type,
+        uid: Id.generate('multiple-toolbar-item'),
+        cyclicKeying: false,
+        initGroups: [ ],
+        providers: spec.providers,
+        onEscape: () => {
+          spec.onEscape();
+          return Optional.some(true);
+        }
+      }),
+      setupItem: (_mToolbar, tc, data, _index) => {
+        Toolbar.setGroups(tc, data);
+      },
+      shell: true
+    })
   },
   name: 'multiple-toolbar',
   schema: [
@@ -209,12 +225,12 @@ const partToolbar = Composite.partType.optional<OuterContainerSketchDetail, Tool
         uid: spec.uid,
         onEscape: () => {
           spec.onEscape();
-          return Option.some(true);
+          return Optional.some(true);
         },
         cyclicKeying: false,
         initGroups: [],
         getSink: spec.getSink,
-        backstage: spec.backstage,
+        providers: spec.providers,
         moreDrawerData: {
           lazyToolbar: spec.lazyToolbar,
           lazyMoreButton: spec.lazyMoreButton,
@@ -315,14 +331,18 @@ export default Sketcher.composite<OuterContainerSketchSpec, OuterContainerSketch
       apis.setToolbar(comp, groups);
     },
     setToolbars(apis, comp, ts) {
-      const renderedToolbars = Arr.map(ts, (g) => {
-        return Arr.map(g, renderToolbarGroup);
-      });
+      const renderedToolbars = Arr.map(ts, (g) => Arr.map(g, renderToolbarGroup));
 
       apis.setToolbars(comp, renderedToolbars);
     },
     refreshToolbar(apis, comp) {
       return apis.refreshToolbar(comp);
+    },
+    toggleToolbarDrawer(apis, comp) {
+      apis.toggleToolbarDrawer(comp);
+    },
+    isToolbarDrawerToggled(apis, comp) {
+      return apis.isToolbarDrawerToggled(comp);
     },
     getThrobber(apis, comp) {
       return apis.getThrobber(comp);

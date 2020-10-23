@@ -1,48 +1,48 @@
-import { Option } from '@ephox/katamari';
-import { Event, Events, Bindable } from '@ephox/porkbun';
-import { Mutation, DragDistanceEvent } from './Mutation';
-import { Element } from '@ephox/sugar';
+import { Optional } from '@ephox/katamari';
+import { Bindable, Event, Events } from '@ephox/porkbun';
+import { SugarElement } from '@ephox/sugar';
+import { DragDistanceEvent, Mutation } from './Mutation';
 
 export interface DragEvent extends DragDistanceEvent {
-  target: () => Element;
+  readonly target: SugarElement;
 }
 
 interface DragDistanceEvents {
   registry: {
-    drag: Bindable<DragEvent>
+    drag: Bindable<DragEvent>;
   };
   trigger: {
-      drag: (xDelta: number, yDelta: number, target: Element) => void;
+    drag: (xDelta: number, yDelta: number, target: SugarElement) => void;
   };
 }
 
 export interface BarMutation {
-  assign: (t: Element) => void;
-  get: () => Option<Element>;
+  assign: (t: SugarElement) => void;
+  get: () => Optional<SugarElement>;
   mutate: (x: number, y: number) => void;
   events: {
-      drag: Bindable<DragEvent>;
+    drag: Bindable<DragEvent>;
   };
 }
 
 export const BarMutation = function (): BarMutation {
   const events = Events.create({
-    drag: Event(['xDelta', 'yDelta', 'target'])
+    drag: Event([ 'xDelta', 'yDelta', 'target' ])
   }) as DragDistanceEvents;
 
-  let target = Option.none<Element>();
+  let target = Optional.none<SugarElement>();
 
   const delegate = Mutation();
 
   delegate.events.drag.bind(function (event) {
     target.each(function (t) {
       // There is always going to be this padding / border collapse / margin problem with widths. I'll have to resolve that.
-      events.trigger.drag(event.xDelta(), event.yDelta(), t);
+      events.trigger.drag(event.xDelta, event.yDelta, t);
     });
   });
 
-  const assign = function (t: Element) {
-    target = Option.some(t);
+  const assign = function (t: SugarElement) {
+    target = Optional.some(t);
   };
 
   const get = function () {

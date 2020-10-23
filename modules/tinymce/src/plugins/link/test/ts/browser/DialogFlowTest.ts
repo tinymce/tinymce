@@ -1,24 +1,9 @@
 import {
-  ApproxStructure,
-  Assertions,
-  Chain,
-  Keyboard,
-  Keys,
-  Logger,
-  Mouse,
-  NamedChain,
-  Pipeline,
-  Step,
-  UiControls,
-  UiFinder,
-  FocusTools,
-  Log,
-  GeneralSteps,
+  ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Log, Logger, Mouse, NamedChain, Pipeline, Step, UiControls, UiFinder
 } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyDom, TinyLoader, TinyUi } from '@ephox/mcagar';
-import { Attr } from '@ephox/sugar';
+import { Attribute } from '@ephox/sugar';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 
@@ -55,7 +40,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.DialogFlowTest', (success, fail
     const testChangingAnchorValue = Log.stepsAsStep('TBA', 'Link: Switching anchor changes the href and text', [
       tinyApis.sSetContent('<p><a name="anchor1"></a>Our Anchor1</p><p><a name="anchor2"></a>Our Anchor2</p>'),
       TestLinkUi.sOpenLinkDialog(tinyUi),
-      TestLinkUi.sSetHtmlSelectValue('Anchor', '#anchor2'),
+      TestLinkUi.sSetListBoxItem('Anchor', 'anchor2'),
       TestLinkUi.sAssertDialogContents({
         href: '#anchor2',
         text: 'anchor2',
@@ -63,7 +48,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.DialogFlowTest', (success, fail
         anchor: '#anchor2',
         target: ''
       }),
-      TestLinkUi.sSetHtmlSelectValue('Anchor', '#anchor1'),
+      TestLinkUi.sSetListBoxItem('Anchor', 'anchor1'),
       TestLinkUi.sAssertDialogContents({
         href: '#anchor1',
         text: 'anchor1',
@@ -74,7 +59,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.DialogFlowTest', (success, fail
 
       // Change the text ...so text won't change, but href will still
       TestLinkUi.sSetInputFieldValue('Text to display', 'Other text'),
-      TestLinkUi.sSetHtmlSelectValue('Anchor', '#anchor2'),
+      TestLinkUi.sSetListBoxItem('Anchor', 'anchor2'),
       TestLinkUi.sAssertDialogContents({
         href: '#anchor2',
         text: 'Other text',
@@ -96,11 +81,9 @@ UnitTest.asynctest('browser.tinymce.plugins.link.DialogFlowTest', (success, fail
       Keyboard.sKeydown(doc, Keys.down(), { }),
       UiFinder.sWaitForVisible('Waiting for dropdown', TinyDom.fromDom(document.body), '.tox-menu'),
       sChooseItem,
-      sAssertUrlStructure((s, str, _arr) => {
-        return s.element('input', {
-          value: str.startsWith('#h_')
-        });
-      }),
+      sAssertUrlStructure((s, str, _arr) => s.element('input', {
+        value: str.startsWith('#h_')
+      })),
       sAssertInputValue('Header One', 'Text to display'),
       TestLinkUi.sAssertContentPresence(tinyApis, {
         'h1[id]': 0,
@@ -115,10 +98,8 @@ UnitTest.asynctest('browser.tinymce.plugins.link.DialogFlowTest', (success, fail
       Chain.asStep(TinyDom.fromDom(editor.getBody()), [
         NamedChain.asChain([
           NamedChain.direct(NamedChain.inputName(), UiFinder.cFindIn('h1'), 'h1'),
-          NamedChain.direct('h1', Chain.mapper((h1) => Attr.get(h1, 'id')), 'h1-id'),
-          NamedChain.bundle((obj) => {
-            return UiFinder.findIn(obj[NamedChain.inputName()], `a[href="#${obj['h1-id']}"]:contains("Header One")`);
-          })
+          NamedChain.direct('h1', Chain.mapper((h1) => Attribute.get(h1, 'id')), 'h1-id'),
+          NamedChain.bundle((obj) => UiFinder.findIn(obj[NamedChain.inputName()], `a[href="#${obj['h1-id']}"]:contains("Header One")`))
         ])
       ])
     ]);
@@ -135,22 +116,22 @@ UnitTest.asynctest('browser.tinymce.plugins.link.DialogFlowTest', (success, fail
     );
 
     const testChangingUrlValueManually = Log.stepsAsStep('TBA', 'Link: Change urlinput value manually', [
-        tinyApis.sSetContent('<h1>Something</h2>'),
-        tinyApis.sSetSelection([ 0, 0 ], ''.length, [ 0, 0 ], 'Something'.length),
-        TestLinkUi.sOpenLinkDialog(tinyUi),
+      tinyApis.sSetContent('<h1>Something</h2>'),
+      tinyApis.sSetSelection([ 0, 0 ], ''.length, [ 0, 0 ], 'Something'.length),
+      TestLinkUi.sOpenLinkDialog(tinyUi),
 
-        FocusTools.sSetActiveValue(doc, 'http://www.tiny.cloud'),
-        TestLinkUi.sAssertDialogContents({
-          href: 'http://www.tiny.cloud',
-          text: 'Something',
-          title: '',
-          target: ''
-        }),
-        TestLinkUi.sClickSave,
-        TestLinkUi.sAssertContentPresence(tinyApis, {
-          a: 1
-        })
-      ]
+      FocusTools.sSetActiveValue(doc, 'http://www.tiny.cloud'),
+      TestLinkUi.sAssertDialogContents({
+        href: 'http://www.tiny.cloud',
+        text: 'Something',
+        title: '',
+        target: ''
+      }),
+      TestLinkUi.sClickSave,
+      TestLinkUi.sAssertContentPresence(tinyApis, {
+        a: 1
+      })
+    ]
     );
 
     Pipeline.async({}, [

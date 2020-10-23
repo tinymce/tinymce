@@ -1,28 +1,28 @@
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import * as Compare from 'ephox/sugar/api/dom/Compare';
 import * as DomFuture from 'ephox/sugar/api/dom/DomFuture';
-import Element from 'ephox/sugar/api/node/Element';
-import { UnitTest, assert } from '@ephox/bedrock-client';
+import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
 
-UnitTest.asynctest('Browser Test: .DomFutureTest', function (success, failure) {
+UnitTest.asynctest('Browser Test: .DomFutureTest', (success) => {
 
-  const testElement = Element.fromTag('button');
+  const testElement = SugarElement.fromTag('button');
 
-  DomFuture.waitFor(testElement, 'click', 1000).get(function (res) {
+  DomFuture.waitFor(testElement, 'click', 1000).get((res) => {
     assert.eq(true, res.isError(), 'Result should be error as click has not yet occurred.');
 
-    DomFuture.waitFor(testElement, 'click', 1000).get(function (r) {
+    DomFuture.waitFor(testElement, 'click', 1000).get((r) => {
       r.fold(
-        function (err) {
+        (err) => {
           assert.fail('Future should have returned value(event). Instead returned error(' + err + ')');
         },
-        function (val) {
-          assert.eq(true, Compare.eq(testElement, val.target()), 'Checking that the target of the event is correct');
+        (val) => {
+          assert.eq(true, Compare.eq(testElement, val.target), 'Checking that the target of the event is correct');
           success();
         }
       );
     });
 
     // TODO: test timeout on click
-    testElement.dom().click();
+    testElement.dom.click();
   });
 });

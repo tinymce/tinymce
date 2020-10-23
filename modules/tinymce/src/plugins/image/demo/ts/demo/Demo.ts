@@ -1,4 +1,3 @@
-import { console } from '@ephox/dom-globals';
 import Delay from 'tinymce/core/api/util/Delay';
 
 declare let tinymce: any;
@@ -19,11 +18,11 @@ tinymce.init({
     { title: 'Class2', value: 'class2' }
   ],
   images_upload_url: 'postAcceptor.php',
-  file_picker_callback(callback, value, meta) {
+  file_picker_callback(callback, _value, _meta) {
     callback('https://www.google.com/logos/google.jpg', { alt: 'My alt text', caption: true });
   },
-  images_upload_handler: (blobInfo, success, failure, progress) => {
-    // tslint:disable-next-line:no-console
+  images_upload_handler: (blobInfo, success, _failure, _progress) => {
+    // eslint-disable-next-line no-console
     console.log(blobInfo);
     Delay.setTimeout(function () {
       success('https://www.google.com/logos/google.jpg');

@@ -1,14 +1,14 @@
 import { Throttler } from '@ephox/katamari';
-import { Event, Events, Bindable } from '@ephox/porkbun';
-import { DragMode, DragApi, DragMutation } from '../api/DragApis';
-import Movement from '../detect/Movement';
+import { Bindable, Event, Events } from '@ephox/porkbun';
+import { EventArgs, SugarElement } from '@ephox/sugar';
+import { DragApi, DragMode, DragMutation } from '../api/DragApis';
 import { BlockerOptions } from '../detect/Blocker';
-import { Element, EventArgs } from '@ephox/sugar';
+import Movement from '../detect/Movement';
 
 interface DragActionEvents {
   registry: {
-    start: Bindable<{}>,
-    stop: Bindable<{}>
+    start: Bindable<{}>;
+    stop: Bindable<{}>;
   };
   trigger: {
     start: () => void;
@@ -36,7 +36,7 @@ const setup = function (mutation: DragMutation, mode: DragMode, settings: Partia
 
   const throttledDrop = Throttler.last(drop, 200);
 
-  const go = function (parent: Element) {
+  const go = function (parent: SugarElement) {
     sink.start(parent);
     movement.on();
     events.trigger.start();
@@ -48,7 +48,7 @@ const setup = function (mutation: DragMutation, mode: DragMode, settings: Partia
   };
 
   movement.events.move.bind(function (event) {
-    mode.mutate(mutation, event.info());
+    mode.mutate(mutation, event.info);
   });
 
   const on = function () {
@@ -91,6 +91,6 @@ const setup = function (mutation: DragMutation, mode: DragMode, settings: Partia
   };
 };
 
-export default {
+export {
   setup
 };

@@ -8,10 +8,13 @@
 import AddOnManager from './AddOnManager';
 
 export interface Plugin {
-  getMetadata? (): { name: string, url: string };
+  getMetadata? (): { name: string; url: string };
 
   // Allow custom apis
   [key: string]: any;
 }
 
-export default AddOnManager.PluginManager as AddOnManager<Plugin>;
+type PluginManager = AddOnManager<Plugin>;
+const PluginManager: PluginManager = AddOnManager.PluginManager;
+
+export default PluginManager;

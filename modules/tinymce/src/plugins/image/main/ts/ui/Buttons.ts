@@ -6,9 +6,9 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
-import { Dialog } from './Dialog';
 import { isFigure, isImage } from '../core/ImageData';
-import Utils from '../core/Utils';
+import * as Utils from '../core/Utils';
+import { Dialog } from './Dialog';
 
 const register = (editor: Editor) => {
   editor.ui.registry.addToggleButton('image', {
@@ -25,13 +25,11 @@ const register = (editor: Editor) => {
   });
 
   editor.ui.registry.addContextMenu('image', {
-    update: (element): string[] => {
-      return isFigure(element) || (isImage(element) && !Utils.isPlaceholderImage(element)) ? ['image'] : [];
-    }
+    update: (element): string[] => isFigure(element) || (isImage(element) && !Utils.isPlaceholderImage(element)) ? [ 'image' ] : []
   });
 
 };
 
-export default {
+export {
   register
 };

@@ -1,5 +1,4 @@
-import { atob, Blob, HTMLCanvasElement, HTMLImageElement, Image, FileReader, URL, XMLHttpRequest } from '@ephox/dom-globals';
-import { Option } from '@ephox/katamari';
+import { Optional, Type } from '@ephox/katamari';
 import * as Canvas from './Canvas';
 import * as ImageSize from './ImageSize';
 import { Promise } from './Promise';
@@ -81,11 +80,11 @@ function anyUriToBlob(url: string): Promise<Blob> {
   });
 }
 
-function dataUriToBlobSync(uri: string): Option<Blob> {
+function dataUriToBlobSync(uri: string): Optional<Blob> {
   const data = uri.split(',');
 
   const matches = /data:([^;]+)/.exec(data[0]);
-  if (!matches) { return Option.none(); }
+  if (!matches) { return Optional.none(); }
 
   const mimetype = matches[1];
   const base64 = data[1];
@@ -108,7 +107,7 @@ function dataUriToBlobSync(uri: string): Option<Blob> {
     }
     byteArrays[sliceIndex] = new Uint8Array(bytes);
   }
-  return Option.some(new Blob(byteArrays, { type: mimetype }));
+  return Optional.some(new Blob(byteArrays, { type: mimetype }));
 }
 
 function dataUriToBlob(uri: string): Promise<Blob> {
@@ -135,7 +134,7 @@ function uriToBlob(url: string): Promise<Blob> | null {
 function canvasToBlob(canvas: HTMLCanvasElement, type?: string, quality?: number): Promise<Blob> {
   type = type || 'image/png';
 
-  if (HTMLCanvasElement.prototype.toBlob) {
+  if (Type.isFunction(HTMLCanvasElement.prototype.toBlob)) {
     return new Promise<Blob>(function (resolve, reject) {
       canvas.toBlob(function (blob) {
         if (blob) {
@@ -173,7 +172,7 @@ function blobToDataUri(blob: Blob): Promise<string> {
     const reader = new FileReader();
 
     reader.onloadend = function () {
-      resolve(reader.result);
+      resolve(reader.result as string);
     };
 
     reader.readAsDataURL(blob);
@@ -185,7 +184,7 @@ function blobToArrayBuffer(blob: Blob): Promise<ArrayBuffer> {
     const reader = new FileReader();
 
     reader.onloadend = function () {
-      resolve(reader.result);
+      resolve(reader.result as ArrayBuffer);
     };
 
     reader.readAsArrayBuffer(blob);

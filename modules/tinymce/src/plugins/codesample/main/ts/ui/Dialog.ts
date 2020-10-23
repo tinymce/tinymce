@@ -5,10 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Editor from 'tinymce/core/api/Editor';
-import CodeSample from '../core/CodeSample';
-import Languages, { LanguageSpec } from '../core/Languages';
 import { Arr } from '@ephox/katamari';
+import Editor from 'tinymce/core/api/Editor';
+import * as CodeSample from '../core/CodeSample';
+import * as Languages from '../core/Languages';
+
+type LanguageSpec = Languages.LanguageSpec;
 
 const open = (editor: Editor) => {
   const languages: LanguageSpec[] = Languages.getLanguages(editor);
@@ -31,7 +33,7 @@ const open = (editor: Editor) => {
         {
           type: 'textarea',
           name: 'code',
-          label: 'Code view',
+          label: 'Code view'
         }
       ]
     },
@@ -39,7 +41,7 @@ const open = (editor: Editor) => {
       {
         type: 'cancel',
         name: 'cancel',
-        text: 'Cancel',
+        text: 'Cancel'
       },
       {
         type: 'submit',
@@ -60,6 +62,6 @@ const open = (editor: Editor) => {
   });
 };
 
-export default {
+export {
   open
 };

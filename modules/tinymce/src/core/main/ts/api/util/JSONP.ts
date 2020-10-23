@@ -19,11 +19,11 @@ interface JSONP {
   send (settings: JSONPSettings): void;
 }
 
-const JSONP = {
+const JSONP: JSONP = {
   callbacks: {},
   count: 0,
 
-  send (settings: JSONPSettings) {
+  send(settings: JSONPSettings) {
     const self = this, dom = DOMUtils.DOM, count = settings.count !== undefined ? settings.count : self.count;
     const id = 'tinymce_jsonp_' + count;
 

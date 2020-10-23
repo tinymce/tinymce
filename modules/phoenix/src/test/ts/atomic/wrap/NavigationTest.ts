@@ -33,20 +33,20 @@ UnitTest.test('NavigationTest', function () {
 
   const checkLast = function (expected: CheckItem, id: string) {
     const actual = Navigation.toLast(doc, Finder.get(doc, id));
-    assert.eq(expected.element, actual.element().id);
-    assert.eq(expected.offset, actual.offset());
+    assert.eq(expected.element, actual.element.id);
+    assert.eq(expected.offset, actual.offset);
   };
 
   const checkLower = function (expected: CheckItem, id: string) {
     const actual = Navigation.toLower(doc, Finder.get(doc, id));
-    assert.eq(expected.element, actual.element().id);
-    assert.eq(expected.offset, actual.offset());
+    assert.eq(expected.element, actual.element.id);
+    assert.eq(expected.offset, actual.offset);
   };
 
   const checkLeaf = function (expected: CheckItem, id: string, offset: number) {
     const actual = Navigation.toLeaf(doc, Finder.get(doc, id), offset);
-    assert.eq(expected.element, actual.element().id);
-    assert.eq(expected.offset, actual.offset());
+    assert.eq(expected.element, actual.element.id);
+    assert.eq(expected.offset, actual.offset);
   };
 
   checkLower({ element: '1', offset: 2 }, '1');
@@ -64,16 +64,16 @@ UnitTest.test('NavigationTest', function () {
     const element = Finder.get(doc, elementId);
     const actual = Navigation.freefallLtr(universe, element);
     assert.eq(element.id, elementId);
-    assert.eq(expected.element, actual.element().id);
-    assert.eq(expected.offset, actual.offset());
+    assert.eq(expected.element, actual.element.id);
+    assert.eq(expected.offset, actual.offset);
   };
 
   const checkFreeFallRtl = function (expected: CheckItem, universe: TestUniverse, elementId: string) {
     const element = Finder.get(doc, elementId);
     const actual = Navigation.freefallRtl(universe, element);
     assert.eq(element.id, elementId);
-    assert.eq(expected.element, actual.element().id);
-    assert.eq(expected.offset, actual.offset());
+    assert.eq(expected.element, actual.element.id);
+    assert.eq(expected.offset, actual.offset);
   };
 
   // Freefall without comment nodes

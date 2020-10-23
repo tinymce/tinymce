@@ -5,14 +5,15 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import XHR from 'tinymce/core/api/util/XHR';
-import Settings from '../api/Settings';
-import DateTimeHelper from './DateTimeHelper';
+import * as Settings from '../api/Settings';
+import * as DateTimeHelper from './DateTimeHelper';
 
-const createTemplateList = function (editorSettings, callback) {
+const createTemplateList = function (editor: Editor, callback) {
   return function () {
-    const templateList = Settings.getTemplates(editorSettings);
+    const templateList = Settings.getTemplates(editor);
 
     if (typeof templateList === 'function') {
       templateList(callback);
@@ -22,7 +23,7 @@ const createTemplateList = function (editorSettings, callback) {
     if (typeof templateList === 'string') {
       XHR.send({
         url: templateList,
-        success (text) {
+        success(text) {
           callback(JSON.parse(text));
         }
       });
@@ -62,10 +63,9 @@ const hasClass = function (n, c) {
   return new RegExp('\\b' + c + '\\b', 'g').test(n.className);
 };
 
-const insertTemplate = function (editor, ui, html) {
+const insertTemplate = function (editor: Editor, _ui: boolean, html: string) {
   // Note: ui is unused here but is required since this can be called by execCommand
   let el;
-  let n;
   const dom = editor.dom;
   const sel = editor.selection.getContent();
 
@@ -73,7 +73,7 @@ const insertTemplate = function (editor, ui, html) {
   el = dom.create('div', null, html);
 
   // Find template element within div
-  n = dom.select('.mceTmpl', el);
+  const n = dom.select('.mceTmpl', el);
   if (n && n.length > 0) {
     el = dom.create('div', null);
     el.appendChild(n[0].cloneNode(true));
@@ -102,7 +102,7 @@ const insertTemplate = function (editor, ui, html) {
   editor.addVisual();
 };
 
-export default {
+export {
   createTemplateList,
   replaceTemplateValues,
   replaceVals,

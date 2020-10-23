@@ -5,40 +5,31 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import {
-  AlloyComponent,
-  AlloyEvents,
-  AlloyTriggers,
-  Disabling,
-  Memento,
-  MementoRecord,
-  Representing,
-  SystemEvents,
-} from '@ephox/alloy';
+import { AlloyComponent, AlloyEvents, AlloyTriggers, Disabling, Memento, MementoRecord, Representing, SystemEvents } from '@ephox/alloy';
 import { ValueSchema } from '@ephox/boulder';
-import { Toolbar } from '@ephox/bridge';
-import { Arr, Fun, Option } from '@ephox/katamari';
+import { InlineContent, Toolbar } from '@ephox/bridge';
+import { Arr, Fun, Optional } from '@ephox/katamari';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { internalToolbarButtonExecute, InternalToolbarButtonExecuteEvent } from '../toolbar/button/ButtonEvents';
 import { renderToolbarButtonWith, renderToolbarToggleButtonWith } from '../toolbar/button/ToolbarButtons';
 
+type ContextFormButton = InlineContent.ContextFormToggleButton | InlineContent.ContextFormButton;
+
 // Can probably generalise.
 
-const getFormApi = (input): Toolbar.ContextFormInstanceApi => {
-  return {
-    hide: () => AlloyTriggers.emit(input, SystemEvents.sandboxClose()),
-    getValue: () => Representing.getValue(input)
-  };
-};
+const getFormApi = (input): InlineContent.ContextFormInstanceApi => ({
+  hide: () => AlloyTriggers.emit(input, SystemEvents.sandboxClose()),
+  getValue: () => Representing.getValue(input)
+});
 
 const runOnExecute = <T>(memInput: MementoRecord, original: { onAction: (formApi, buttonApi: T) => void }) => AlloyEvents.run<InternalToolbarButtonExecuteEvent<T>>(internalToolbarButtonExecute, (comp, se) => {
   const input = memInput.get(comp);
   const formApi = getFormApi(input);
-  original.onAction(formApi, se.event().buttonApi());
+  original.onAction(formApi, se.event.buttonApi);
 });
 
-const renderContextButton = (memInput: MementoRecord, button: Toolbar.ContextButton, extras) => {
+const renderContextButton = (memInput: MementoRecord, button: InlineContent.ContextFormButton, extras) => {
   const { primary, ...rest } = button.original;
   const bridged = ValueSchema.getOrDie(
     Toolbar.createToolbarButton({
@@ -53,7 +44,7 @@ const renderContextButton = (memInput: MementoRecord, button: Toolbar.ContextBut
   ]);
 };
 
-const renderContextToggleButton = (memInput: MementoRecord, button: Toolbar.ContextToggleButton, extras) => {
+const renderContextToggleButton = (memInput: MementoRecord, button: InlineContent.ContextFormToggleButton, extras) => {
   const { primary, ...rest } = button.original;
   const bridged = ValueSchema.getOrDie(
     Toolbar.createToggleButton({
@@ -68,7 +59,7 @@ const renderContextToggleButton = (memInput: MementoRecord, button: Toolbar.Cont
   ]);
 };
 
-const generateOne = (memInput: MementoRecord, button: Toolbar.ContextToggleButton | Toolbar.ContextButton, providersBackstage: UiFactoryBackstageProviders) => {
+const generateOne = (memInput: MementoRecord, button: ContextFormButton, providersBackstage: UiFactoryBackstageProviders) => {
   const extras = {
     backstage: {
       shared: {
@@ -84,25 +75,21 @@ const generateOne = (memInput: MementoRecord, button: Toolbar.ContextToggleButto
   }
 };
 
-const generate = (memInput: MementoRecord, buttons: Array<Toolbar.ContextToggleButton | Toolbar.ContextButton>, providersBackstage: UiFactoryBackstageProviders) => {
+const generate = (memInput: MementoRecord, buttons: ContextFormButton[], providersBackstage: UiFactoryBackstageProviders) => {
 
-  const mementos = Arr.map(buttons, (button) => {
-    return Memento.record(
-      generateOne(memInput, button, providersBackstage)
-    );
-  });
+  const mementos = Arr.map(buttons, (button) => Memento.record(
+    generateOne(memInput, button, providersBackstage)
+  ));
 
   const asSpecs = () => Arr.map(mementos, (mem) => mem.asSpec());
 
-  const findPrimary = (compInSystem: AlloyComponent): Option<AlloyComponent> => {
-    return Arr.findMap(buttons, (button, i) => {
-      if (button.primary) {
-        return Option.from(mementos[i]).bind((mem) => mem.getOpt(compInSystem)).filter(Fun.not(Disabling.isDisabled));
-      } else {
-        return Option.none();
-      }
-    });
-  };
+  const findPrimary = (compInSystem: AlloyComponent): Optional<AlloyComponent> => Arr.findMap(buttons, (button, i) => {
+    if (button.primary) {
+      return Optional.from(mementos[i]).bind((mem) => mem.getOpt(compInSystem)).filter(Fun.not(Disabling.isDisabled));
+    } else {
+      return Optional.none();
+    }
+  });
 
   return {
     asSpecs,

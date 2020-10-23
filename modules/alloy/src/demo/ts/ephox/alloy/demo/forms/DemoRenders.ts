@@ -17,7 +17,7 @@ export interface DemoItem {
       text: string;
 
       [key: string]: string;
-    }
+    };
   };
 
   [key: string]: any;
@@ -31,7 +31,7 @@ export interface DemoSeparatorItem {
     meta?: {
       text: string;
       [key: string]: string;
-    }
+    };
   };
 }
 
@@ -89,7 +89,7 @@ const demoGridMenu = ValueSchema.objOf([
 
 const demoChoice = ValueSchema.objOf([ ]);
 
-const choice = (choiceSpec: { value: string; text: string; }) => {
+const choice = (choiceSpec: { value: string; text: string }) => {
   const spec = ValueSchema.asRawOrDie('DemoRenders.choice', demoChoice, choiceSpec);
   return {
     dom: DomFactory.fromHtml(
@@ -134,7 +134,7 @@ const item = (itemSpec: DemoItems): ItemSpec => {
   const html = (() => {
     if (spec.data && spec.data.meta && spec.data.meta.html) {
       return spec.data.meta.html;
-    } else if (spec && spec.data.meta && spec.data.meta.text) {
+    } else if (spec.data && spec.data.meta && spec.data.meta.text) {
       return spec.data.meta.text;
     } else {
       return 'No.Text.For.Item';
@@ -188,7 +188,7 @@ const widgetItem = (itemSpec: DemoWidgetItem): WidgetItemSpec => {
       classes: [ 'demo-alloy-item' ]
     },
     components: [
-      ItemWidget.parts().widget(spec.widget)
+      ItemWidget.parts.widget(spec.widget)
     ]
   };
 };
@@ -211,7 +211,7 @@ const gridMenu = (menuSpec: DemoMenu & { columns: number; rows: number }) => {
       }
     },
     components: [
-      Menu.parts().items({ })
+      Menu.parts.items({ })
     ],
     items: spec.items
   } as PartialMenuSpec;
@@ -229,7 +229,7 @@ const menu = (menuSpec: DemoMenu) => {
     },
     items: spec.items,
     components: [
-      Menu.parts().items({ })
+      Menu.parts.items({ })
     ]
   };
 };
@@ -259,15 +259,13 @@ const orb = (spec: DemoItem): ItemSpec => {
   };
 };
 
-const toolbarItem = (spec: { text: string; action: () => void; }) => {
-  return {
-    dom: {
-      tag: 'span',
-      classes: [ 'demo-alloy-toolbar-item' ],
-      innerHtml: spec.text
-    }
-  };
-};
+const toolbarItem = (spec: { text: string; action: () => void }) => ({
+  dom: {
+    tag: 'span',
+    classes: [ 'demo-alloy-toolbar-item' ],
+    innerHtml: spec.text
+  }
+});
 
 const toolbarGroup = (group: { label?: string; items: AlloySpec[] }) => {
   const spec = group;
@@ -278,7 +276,7 @@ const toolbarGroup = (group: { label?: string; items: AlloySpec[] }) => {
     },
 
     components: [
-      ToolbarGroup.parts().items({ })
+      ToolbarGroup.parts.items({ })
     ],
 
     items: spec.items,

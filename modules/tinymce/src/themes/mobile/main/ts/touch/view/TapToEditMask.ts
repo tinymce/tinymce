@@ -5,13 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Behaviour, Button, Container, Memento, Toggling, SketchSpec } from '@ephox/alloy';
+import { Behaviour, Button, Container, Memento, SketchSpec, Toggling } from '@ephox/alloy';
 import { Throttler } from '@ephox/katamari';
 
-import Styles from '../../style/Styles';
+import * as Styles from '../../style/Styles';
 import * as UiDomFactory from '../../util/UiDomFactory';
 
-const sketch = function (onView, translate): SketchSpec {
+const sketch = function (onView, _translate): SketchSpec {
 
   const memIcon = Memento.record(
     Container.sketch({
@@ -38,7 +38,7 @@ const sketch = function (onView, translate): SketchSpec {
             components: [
               memIcon.asSpec()
             ],
-            action (button) {
+            action(_button) {
               onViewThrottle.throttle();
             },
 
@@ -54,6 +54,6 @@ const sketch = function (onView, translate): SketchSpec {
   });
 };
 
-export default {
+export {
   sketch
 };

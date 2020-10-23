@@ -1,7 +1,7 @@
-import { getDemoRegistry } from './../buttons/DemoRegistry';
+import { getDemoRegistry } from '../buttons/DemoRegistry';
 
 const editor = {
-  on: (s, f) => { },
+  on: (_s, _f) => { },
   isDirty: () => true
 };
 
@@ -22,14 +22,13 @@ export const registerSpellcheckerItems = () => {
       callback(languages);
       // Set the active state of a particular language (if it matches selected language).. handled by `select`
     },
-    select: (itemValue) => {
+    select: (itemValue) =>
       // return true if current language = item value
-      return itemValue === 'en';
-    },
-    onAction: (buttonApi) => {
+      itemValue === 'en',
+    onAction: (_buttonApi) => {
       // trigger search replace dialog
     },
-    onItemAction: (buttonApi, itemValue) => {
+    onItemAction: (_buttonApi, _itemValue) => {
       // Seth te current language
     }
   });

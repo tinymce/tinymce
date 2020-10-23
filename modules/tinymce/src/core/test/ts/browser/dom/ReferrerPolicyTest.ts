@@ -2,11 +2,10 @@ import { Chain, Logger, Pipeline, Step } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Editor as McEditor } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
-import Editor from 'tinymce/core/api/Editor';
-import { ReferrerPolicy } from 'tinymce/core/api/SettingsTypes';
-import Theme from 'tinymce/themes/silver/Theme';
-import ScriptLoader from 'tinymce/core/api/dom/ScriptLoader';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+import ScriptLoader from 'tinymce/core/api/dom/ScriptLoader';
+import Editor from 'tinymce/core/api/Editor';
+import Theme from 'tinymce/themes/silver/Theme';
 
 // TODO Find a way to test the referrerpolicy with ScriptLoader, as it removes the dom reference as soon as it's finished loading so we can't check
 // via dom elements. For now we're just loading a script to make sure it doesn't completely die when loading.

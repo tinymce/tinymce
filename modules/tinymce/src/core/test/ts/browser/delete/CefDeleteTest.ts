@@ -1,7 +1,7 @@
 import { ApproxStructure, GeneralSteps, Keyboard, Keys, Logger, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
@@ -10,7 +10,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteTest', function (succes
   Theme();
 
   const sKeyUp = function (editor, key) {
-    const iDoc = Element.fromDom(editor.getDoc());
+    const iDoc = SugarElement.fromDom(editor.getDoc());
     return Keyboard.sKeyup(iDoc, key, {});
   };
 
@@ -28,10 +28,10 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteTest', function (succes
       tinyApis.sFocus(),
       Logger.t('Should padd empty ce=true inside ce=false when everything is deleted', GeneralSteps.sequence([
         tinyApis.sSetContent('<div contenteditable="false">a<p contenteditable="true">a</p>b</div>'),
-        tinyApis.sSetSelection([1, 1, 0], 0, [1, 1, 0], 1),
+        tinyApis.sSetSelection([ 1, 1, 0 ], 0, [ 1, 1, 0 ], 1),
         sFakeBackspaceKeyOnRange(editor),
         tinyApis.sAssertContentStructure(
-          ApproxStructure.build(function (s, str, arr) {
+          ApproxStructure.build(function (s, str, _arr) {
             return s.element('body', {
               children: [
                 s.element('div', {
@@ -57,10 +57,10 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteTest', function (succes
 
       Logger.t('Should not padd an non empty ce=true inside ce=false', GeneralSteps.sequence([
         tinyApis.sSetContent('<div contenteditable="false">a<p contenteditable="true">ab</p>b</div>'),
-        tinyApis.sSetSelection([1, 1, 0], 0, [1, 1, 0], 1),
+        tinyApis.sSetSelection([ 1, 1, 0 ], 0, [ 1, 1, 0 ], 1),
         sFakeBackspaceKeyOnRange(editor),
         tinyApis.sAssertContentStructure(
-          ApproxStructure.build(function (s, str, arr) {
+          ApproxStructure.build(function (s, str, _arr) {
             return s.element('body', {
               children: [
                 s.element('div', {
@@ -84,9 +84,9 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteTest', function (succes
         tinyApis.sSetContent('<div contenteditable="false">a</div>'),
         tinyApis.sSetSelection([], 1, [], 2),
         tinyActions.sContentKeystroke(Keys.backspace(), {}),
-        tinyApis.sAssertSelection([0], 0, [0], 0),
+        tinyApis.sAssertSelection([ 0 ], 0, [ 0 ], 0),
         tinyApis.sAssertContentStructure(
-          ApproxStructure.build(function (s, str, arr) {
+          ApproxStructure.build(function (s, str, _arr) {
             return s.element('body', {
               children: [
                 s.element('p', {
@@ -108,9 +108,9 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteTest', function (succes
         tinyApis.sSetContent('<div contenteditable="false">a</div>'),
         tinyApis.sSetSelection([], 2, [], 2),
         tinyActions.sContentKeystroke(Keys.backspace(), {}),
-        tinyApis.sAssertSelection([0], 0, [0], 0),
+        tinyApis.sAssertSelection([ 0 ], 0, [ 0 ], 0),
         tinyApis.sAssertContentStructure(
-          ApproxStructure.build(function (s, str, arr) {
+          ApproxStructure.build(function (s, str, _arr) {
             return s.element('body', {
               children: [
                 s.element('p', {
@@ -132,9 +132,9 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteTest', function (succes
         tinyApis.sSetContent('<div contenteditable="false">a</div><p>b</p>'),
         tinyApis.sSetSelection([], 2, [], 2),
         tinyActions.sContentKeystroke(Keys.backspace(), {}),
-        tinyApis.sAssertSelection([0, 0], 0, [0, 0], 0),
+        tinyApis.sAssertSelection([ 0, 0 ], 0, [ 0, 0 ], 0),
         tinyApis.sAssertContentStructure(
-          ApproxStructure.build(function (s, str, arr) {
+          ApproxStructure.build(function (s, str, _arr) {
             return s.element('body', {
               children: [
                 s.element('p', {

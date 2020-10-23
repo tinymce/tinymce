@@ -42,7 +42,7 @@ UnitTest.asynctest('webdriver.tinymce.core.content.PlaceholderTest', (success, f
     const browserSpecificTests = PlatformDetection.detect().browser.isIE() ? [ ] : [
       Log.stepsAsStep('TINY-3917', 'Check placeholder restores when deleting content via command', [
         sSetContent('<p>a</p>'),
-        tinyApi.sSetCursor([0, 0], 1),
+        tinyApi.sSetCursor([ 0, 0 ], 1),
         sAssertPlaceholderNotExists,
         tinyApi.sExecCommand('Delete'),
         sAssertPlaceholderExists,
@@ -102,6 +102,17 @@ UnitTest.asynctest('webdriver.tinymce.core.content.PlaceholderTest', (success, f
         sSetContent('<p></p>'),
         sAssertPlaceholderExists,
         tinyApi.sExecCommand('InsertOrderedList'),
+        sAssertPlaceholderNotExists,
+        sAssertCount(1)
+      ]),
+      Log.stepsAsStep('TINY-4828', 'Check placeholder hides when pasting content into the editor', [
+        sSetContent('<p></p>'),
+        sAssertPlaceholderExists,
+        // Note: This fakes a paste event
+        Step.sync(() => {
+          editor.fire('paste');
+          editor.getBody().innerHTML = '<p>Pasted content</p>';
+        }),
         sAssertPlaceholderNotExists,
         sAssertCount(1)
       ])

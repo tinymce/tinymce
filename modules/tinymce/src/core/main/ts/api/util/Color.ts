@@ -37,6 +37,8 @@ interface Color {
   parse (value: string | RGB | HSV): Color;
 }
 
+export type ColorConstructor = new (value?: string | RGB | HSV) => Color;
+
 /**
  * Constructs a new color instance.
  *
@@ -44,12 +46,12 @@ interface Color {
  * @method Color
  * @param {String} value Optional initial value to parse.
  */
-const Color = function (value?): Color {
+const Color = function (value?: string | RGB | HSV): Color {
   const self: any = {};
   let r = 0, g = 0, b = 0;
 
   const rgb2hsv = function (r, g, b) {
-    let h, s, v, d, minRGB, maxRGB;
+    let h, s, v;
 
     h = 0;
     s = 0;
@@ -58,8 +60,8 @@ const Color = function (value?): Color {
     g = g / 255;
     b = b / 255;
 
-    minRGB = min(r, min(g, b));
-    maxRGB = max(r, max(g, b));
+    const minRGB = min(r, min(g, b));
+    const maxRGB = max(r, max(g, b));
 
     if (minRGB === maxRGB) {
       v = minRGB;
@@ -71,8 +73,8 @@ const Color = function (value?): Color {
       };
     }
 
-    /*eslint no-nested-ternary:0 */
-    d = (r === minRGB) ? g - b : ((b === minRGB) ? r - g : b - r);
+    /* eslint no-nested-ternary:0 */
+    const d = (r === minRGB) ? g - b : ((b === minRGB) ? r - g : b - r);
     h = (r === minRGB) ? 3 : ((b === minRGB) ? 1 : 5);
     h = 60 * (h - d / (maxRGB - minRGB));
     s = (maxRGB - minRGB) / maxRGB;
@@ -86,8 +88,6 @@ const Color = function (value?): Color {
   };
 
   const hsvToRgb = function (hue, saturation, brightness) {
-    let side, chroma, x, match;
-
     hue = (parseInt(hue, 10) || 0) % 360;
     saturation = parseInt(saturation, 10) / 100;
     brightness = parseInt(brightness, 10) / 100;
@@ -99,10 +99,10 @@ const Color = function (value?): Color {
       return;
     }
 
-    side = hue / 60;
-    chroma = brightness * saturation;
-    x = chroma * (1 - Math.abs(side % 2 - 1));
-    match = brightness - chroma;
+    const side = hue / 60;
+    const chroma = brightness * saturation;
+    const x = chroma * (1 - Math.abs(side % 2 - 1));
+    const match = brightness - chroma;
 
     switch (Math.floor(side)) {
       case 0:

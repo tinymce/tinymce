@@ -1,5 +1,5 @@
 import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
-import { Fun, Option } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { Focusing } from '../../api/behaviour/Focusing';
@@ -30,31 +30,29 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
 const parts: () => PartType.PartTypeAdt[] = Fun.constant([
   PartType.external<FloatingToolbarButtonDetail, ButtonSpec>({
     name: 'button',
-    overrides: (detail) => {
-      return {
-        dom: {
-          attributes: {
-            'aria-haspopup': 'true'
-          }
-        },
-        buttonBehaviours: Behaviour.derive([
-          Toggling.config({
-            toggleClass: detail.markers.toggledClass,
-            aria: {
-              mode: 'expanded'
-            },
-            toggleOnExecute: false
-          })
-        ])
-      };
-    }
+    overrides: (detail) => ({
+      dom: {
+        attributes: {
+          'aria-haspopup': 'true'
+        }
+      },
+      buttonBehaviours: Behaviour.derive([
+        Toggling.config({
+          toggleClass: detail.markers.toggledClass,
+          aria: {
+            mode: 'expanded'
+          },
+          toggleOnExecute: false
+        })
+      ])
+    })
   }),
 
   PartType.external<FloatingToolbarButtonDetail, ToolbarSpec>({
     factory: Toolbar,
     schema: ToolbarSchema.schema(),
     name: 'toolbar',
-    overrides (detail) {
+    overrides(detail) {
       return {
         toolbarBehaviours: Behaviour.derive([
           Keying.config({
@@ -62,7 +60,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
             onEscape: (comp) => {
               AlloyParts.getPart(comp, detail, 'button').each(Focusing.focus);
               // Don't return true here, as we need to allow the sandbox to handle the escape to close the overflow
-              return Option.none();
+              return Optional.none();
             }
           })
         ])

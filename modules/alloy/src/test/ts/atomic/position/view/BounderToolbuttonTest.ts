@@ -1,5 +1,5 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { Position } from '@ephox/sugar';
+import { SugarPosition } from '@ephox/sugar';
 
 import { Bounds, bounds } from 'ephox/alloy/alien/Boxes';
 import { Bubble, BubbleInstance } from 'ephox/alloy/positioning/layout/Bubble';
@@ -15,82 +15,65 @@ interface TestDecisionSpec {
 }
 
 UnitTest.test('BounderToolbuttonTest', () => {
-  /* global assert */
   const check = (expected: TestDecisionSpec, preference: AnchorLayout[], anchor: AnchorBox, panel: AnchorElement, bubbles: Bubble, bounds: Bounds) => {
     const actual = Bounder.attempts(preference, anchor, panel, bubbles, bounds);
-    Assert.eq('label', expected.label, actual.label());
-    Assert.eq('X', expected.x, actual.x());
-    Assert.eq('Y', expected.y, actual.y());
-    if (expected.candidateYforTest !== undefined) { Assert.eq('Candidate Y', expected.candidateYforTest, actual.candidateYforTest()); }
+    Assert.eq('label', expected.label, actual.label);
+    Assert.eq('X', expected.x, actual.x);
+    Assert.eq('Y', expected.y, actual.y);
+    if (expected.candidateYforTest !== undefined) { Assert.eq('Candidate Y', expected.candidateYforTest, actual.candidateYforTest); }
   };
 
   // Layout is for boxes with a bubble pointing to a cursor position (vertically aligned to nearest side)
   // We use it for toolbar buttons, like naughty hobbitses, so this test will change (TBIO-2326) because right now it's insane.
   const chameleonBubble = (width: number): Bubble => {
     // no it's not a joke, this is a copy of ephox.chameleon.popup.Bubble
-    const northeast = (): BubbleInstance => {
-      return {
-        offset: () => Position(-1, 1),
-        classesOn: () => [ ],
-        classesOff: () => [ ]
-      };
-    };
+    const northeast = (): BubbleInstance => ({
+      offset: SugarPosition(-1, 1),
+      classesOn: [ ],
+      classesOff: [ ]
+    });
 
-    const northwest = (): BubbleInstance => {
-      return {
-        offset: () => Position(width - 1, 1),
-        classesOn: () => [ ],
-        classesOff: () => [ ]
-      };
-    };
+    const northwest = (): BubbleInstance => ({
+      offset: SugarPosition(width - 1, 1),
+      classesOn: [ ],
+      classesOff: [ ]
+    });
 
-    const southeast = (): BubbleInstance => {
-      return {
-        offset: () => Position(-1, -2),
-        classesOn: () => [ ],
-        classesOff: () => [ ]
-      };
-    };
+    const southeast = (): BubbleInstance => ({
+      offset: SugarPosition(-1, -2),
+      classesOn: [ ],
+      classesOff: [ ]
+    });
 
-    const southwest = (): BubbleInstance => {
-      return {
-        offset: () => Position(width - 1, -2),
-        classesOn: () => [ ],
-        classesOff: () => [ ]
-      };
-    };
+    const southwest = (): BubbleInstance => ({
+      offset: SugarPosition(width - 1, -2),
+      classesOn: [ ],
+      classesOff: [ ]
+    });
 
-    const south = (): BubbleInstance => {
-      return {
-        offset: () => Position(-1, 1),
-        classesOn: () => [ ],
-        classesOff: () => [ ]
-      };
-    };
+    const south = (): BubbleInstance => ({
+      offset: SugarPosition(-1, 1),
+      classesOn: [ ],
+      classesOff: [ ]
+    });
 
-    const north = (): BubbleInstance => {
-      return {
-        offset: () => Position(-1, 1),
-        classesOn: () => [ ],
-        classesOff: () => [ ]
-      };
-    };
+    const north = (): BubbleInstance => ({
+      offset: SugarPosition(-1, 1),
+      classesOn: [ ],
+      classesOff: [ ]
+    });
 
-    const east = (): BubbleInstance => {
-      return {
-        offset: () => Position(-1, 1),
-        classesOn: () => [ ],
-        classesOff: () => [ ]
-      };
-    };
+    const east = (): BubbleInstance => ({
+      offset: SugarPosition(-1, 1),
+      classesOn: [ ],
+      classesOff: [ ]
+    });
 
-    const west = (): BubbleInstance => {
-      return {
-        offset: () => Position(-1, 1),
-        classesOn: () => [ ],
-        classesOff: () => [ ]
-      };
-    };
+    const west = (): BubbleInstance => ({
+      offset: SugarPosition(-1, 1),
+      classesOn: [ ],
+      classesOff: [ ]
+    });
 
     return {
       northwest,

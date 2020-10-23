@@ -7,16 +7,17 @@
 
 import { AlloyComponent, AlloySpec, FormTypes, HotspotAnchorSpec, NodeAnchorSpec, SelectionAnchorSpec } from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
-import { Cell, Option, Result } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { Cell, Optional, Result } from '@ephox/katamari';
+import { SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import I18n, { TranslatedString } from 'tinymce/core/api/util/I18n';
 import * as UiFactory from 'tinymce/themes/silver/ui/general/UiFactory';
 import { SelectData } from '../ui/core/complex/BespokeSelect';
 import { IconProvider } from '../ui/icons/Icons';
-import Anchors from './Anchors';
+import * as Anchors from './Anchors';
 import { ColorInputBackstage, UiFactoryBackstageForColorInput } from './ColorInputBackstage';
 import { DialogBackstage, UiFactoryBackstageForDialog } from './DialogBackstage';
+import { HeaderBackstage, UiFactoryBackstageForHeader } from './HeaderBackstage';
 import { init as initStyleFormatBackstage } from './StyleFormatsBackstage';
 import { UiFactoryBackstageForUrlInput, UrlInputBackstage } from './UrlInputBackstage';
 
@@ -25,8 +26,9 @@ export type BridgedType = any;
 
 export interface UiFactoryBackstageProviders {
   icons: IconProvider;
-  menuItems: () => Record<string, Menu.MenuItemApi | Menu.NestedMenuItemApi | Menu.ToggleMenuItemApi>;
+  menuItems: () => Record<string, Menu.MenuItemSpec | Menu.NestedMenuItemSpec | Menu.ToggleMenuItemSpec>;
   translate: (any) => TranslatedString;
+  isReadOnly: () => boolean;
 }
 
 type UiFactoryBackstageForStyleButton = SelectData;
@@ -35,11 +37,12 @@ export interface UiFactoryBackstageShared {
   providers?: UiFactoryBackstageProviders;
   interpreter?: (spec: BridgedType) => AlloySpec;
   anchors?: {
-    inlineDialog: () => HotspotAnchorSpec | NodeAnchorSpec,
-    banner: () => HotspotAnchorSpec | NodeAnchorSpec,
-    cursor: () => SelectionAnchorSpec,
-    node: (elem: Option<Element>) => NodeAnchorSpec
+    inlineDialog: () => HotspotAnchorSpec | NodeAnchorSpec;
+    banner: () => HotspotAnchorSpec | NodeAnchorSpec;
+    cursor: () => SelectionAnchorSpec;
+    node: (elem: Optional<SugarElement>) => NodeAnchorSpec;
   };
+  header?: UiFactoryBackstageForHeader;
   formInterpreter?: (parts: FormTypes.FormParts, spec: BridgedType, backstage: UiFactoryBackstage) => AlloySpec;
   getSink?: () => Result<AlloyComponent, any>;
 }
@@ -56,17 +59,18 @@ export interface UiFactoryBackstage {
 
 const init = (sink: AlloyComponent, editor: Editor, lazyAnchorbar: () => AlloyComponent): UiFactoryBackstage => {
   const contextMenuState = Cell(false);
+  const toolbar = HeaderBackstage(editor);
   const backstage: UiFactoryBackstage = {
     shared: {
       providers: {
         icons: () => editor.ui.registry.getAll().icons,
         menuItems: () => editor.ui.registry.getAll().menuItems,
-        translate: I18n.translate
+        translate: I18n.translate,
+        isReadOnly: () => editor.mode.isReadOnly()
       },
-      interpreter: (s) => {
-        return UiFactory.interpretWithoutForm(s, backstage);
-      },
-      anchors: Anchors.getAnchors(editor, lazyAnchorbar),
+      interpreter: (s) => UiFactory.interpretWithoutForm(s, backstage),
+      anchors: Anchors.getAnchors(editor, lazyAnchorbar, toolbar.isPositionedAtTop),
+      header: toolbar,
       getSink: () => Result.value(sink)
     },
     urlinput: UrlInputBackstage(editor),

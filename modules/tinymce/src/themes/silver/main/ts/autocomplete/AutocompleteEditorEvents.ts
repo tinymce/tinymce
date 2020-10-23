@@ -5,17 +5,16 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyComponent, Highlighting, AlloyTriggers, NativeEvents } from '@ephox/alloy';
-import { Event, KeyboardEvent } from '@ephox/dom-globals';
-import { Option } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { AlloyComponent, AlloyTriggers, Highlighting, NativeEvents } from '@ephox/alloy';
+import { Optional } from '@ephox/katamari';
+import { SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import * as AutocompleteTag from './AutocompleteTag';
 
 export interface AutocompleterUiApi {
-  onKeypress: { cancel: () => void, throttle: (evt: Event) => void };
-  getView: () => Option<AlloyComponent>;
+  onKeypress: { cancel: () => void; throttle: (evt: Event) => void };
+  getView: () => Optional<AlloyComponent>;
   isMenuOpen: () => boolean;
   isActive: () => boolean;
   isProcessingAction: () => boolean;
@@ -33,9 +32,7 @@ const setup = (api: AutocompleterUiApi, editor: Editor) => {
   };
 
   editor.on('keydown', (e) => {
-    const getItem = (): Option<AlloyComponent> => {
-      return api.getView().bind(Highlighting.getHighlighted);
-    };
+    const getItem = (): Optional<AlloyComponent> => api.getView().bind(Highlighting.getHighlighted);
 
     // Pressing <backspace> updates the autocompleter
     if (e.which === 8) {
@@ -89,7 +86,7 @@ const setup = (api: AutocompleterUiApi, editor: Editor) => {
 
   editor.on('NodeChange', (e) => {
     // Close if active, not in the middle of an onAction callback and we're no longer inside the autocompleter span
-    if (api.isActive() && !api.isProcessingAction() && AutocompleteTag.detect(Element.fromDom(e.element)).isNone()) {
+    if (api.isActive() && !api.isProcessingAction() && AutocompleteTag.detect(SugarElement.fromDom(e.element)).isNone()) {
       api.cancelIfNecessary();
     }
   });

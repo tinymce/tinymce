@@ -1,25 +1,25 @@
 import { Assert } from '@ephox/bedrock-client';
-import { Option } from '@ephox/katamari';
-import { tElement } from './ElementInstances';
-import * as Node from 'ephox/sugar/api/node/Node';
-import { Element } from '@ephox/sugar';
 import { Testable } from '@ephox/dispute';
+import { Optional } from '@ephox/katamari';
 import { KAssert } from '@ephox/katamari-assertions';
+import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
+import { tElement } from 'ephox/sugar/api/node/SugarElementInstances';
+import * as SugarNode from 'ephox/sugar/api/node/SugarNode';
 
 const { tArray } = Testable;
 
-const checkOpt = (expected: Option<Element<unknown>>, actual: Option<Element<unknown>>) => {
-  KAssert.eqOption('eq', expected, actual, tElement);
+const checkOpt = <T extends Node>(expected: Optional<SugarElement<T>>, actual: Optional<SugarElement<T>>) => {
+  KAssert.eqOptional('eq', expected, actual, tElement());
 };
 
-const checkList = (expected: ArrayLike<Element<unknown>>, actual: ArrayLike<Element<unknown>>) => {
-  Assert.eq('eq', expected, actual, tArray(tElement));
+const checkList = <T extends Node>(expected: ArrayLike<SugarElement<T>>, actual: ArrayLike<SugarElement<T>>) => {
+  Assert.eq('eq', expected, actual, tArray(tElement()));
 };
 
-const isName = (name) => (x) => Node.name(x) === name;
+const isName = <K extends keyof HTMLElementTagNameMap>(name: K) => (x: SugarElement<Node>): x is SugarElement<HTMLElementTagNameMap[K]> => SugarNode.name(x) === name;
 
-export default {
+export {
   checkOpt,
   checkList,
-  isName,
+  isName
 };

@@ -1,10 +1,10 @@
-import { Assertions, Chain, Pipeline, Log } from '@ephox/agar';
+import { Assertions, Chain, Log, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
 
 import SilverTheme from 'tinymce/themes/silver/Theme';
-import TableTestUtils from '../../module/test/TableTestUtils';
+import * as TableTestUtils from '../../module/test/TableTestUtils';
 
 UnitTest.asynctest('browser.tinymce.plugins.table.TableAppearanceTest', (success, failure) => {
   TablePlugin();
@@ -20,7 +20,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableAppearanceTest', (success
         tinyApis.sFocus(),
         tinyApis.sSetContent(tableHtml),
         // This used to be opening the context toolbar.
-        tinyApis.sSelect('table td', [0]),
+        tinyApis.sSelect('table td', [ 0 ]),
         tinyApis.sExecCommand('mceTableProps'),
         Chain.asStep({}, [
           TableTestUtils.cWaitForDialog,
@@ -44,7 +44,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableAppearanceTest', (success
         tinyApis.sFocus(),
         tinyApis.sSetContent(tableHtml),
         // This used to be opening the context toolbar.
-        tinyApis.sSelect('table td', [0]),
+        tinyApis.sSelect('table td', [ 0 ]),
         tinyApis.sExecCommand('mceTableProps'),
         Chain.asStep({}, [
           TableTestUtils.cWaitForDialog,
@@ -68,6 +68,6 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableAppearanceTest', (success
     toolbar: 'table',
     table_appearance_options: false,
     theme: 'silver',
-    base_url: '/project/tinymce/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

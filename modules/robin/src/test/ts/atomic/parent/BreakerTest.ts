@@ -46,9 +46,9 @@ UnitTest.test('BreakerTest', function () {
     return item.name === 'ol';
   }, breakToRight);
 
-  assert.eq('ol1', result.first().id);
-  assert.eq('clone**<ol1>', result.second().getOrDie().id);
-  assert.eq(['li2->clone**<li2>', 'ol1->clone**<ol1>'], Arr.map(result.splits(), function (spl) {
-    return spl.first().id + '->' + spl.second().id;
+  assert.eq('ol1', result.first.id);
+  assert.eq('clone**<ol1>', result.second.getOrDie().id);
+  assert.eq([ 'li2->clone**<li2>', 'ol1->clone**<ol1>' ], Arr.map(result.splits, function (spl) {
+    return spl.first.id + '->' + spl.second.id;
   }));
 });

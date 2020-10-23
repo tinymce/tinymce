@@ -16,14 +16,15 @@ export const enum Indentation {
 export const indentEntry = (indentation: Indentation, entry: Entry): void => {
   switch (indentation) {
     case Indentation.Indent:
-      entry.depth ++;
+      entry.depth++;
       break;
 
     case Indentation.Outdent:
-      entry.depth --;
+      entry.depth--;
       break;
 
     case Indentation.Flatten:
       entry.depth = 0;
   }
+  entry.dirty = true;
 };

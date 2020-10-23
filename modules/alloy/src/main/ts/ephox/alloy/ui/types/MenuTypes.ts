@@ -31,7 +31,7 @@ export type MenuMovementSpec = MenuGridMovementSpec | MenuMatrixMovementSpec | M
 // config: (detail: MenuDetail,  movementInfo: MenuMovement) => KeyingConfigSpec
 export interface MenuGridMovement {
   mode: 'grid';
-  config: (detail: MenuDetail,  movementInfo: MenuMovement) => FlatgridConfigSpec;
+  config: (detail: MenuDetail, movementInfo: MenuMovement) => FlatgridConfigSpec;
   initSize: {
     numColumns: number;
     numRows: number;
@@ -40,7 +40,7 @@ export interface MenuGridMovement {
 
 export interface MenuMatrixMovement {
   mode: 'matrix';
-  config: (detail: MenuDetail,  movementInfo: MenuMovement) => MatrixConfigSpec;
+  config: (detail: MenuDetail, movementInfo: MenuMovement) => MatrixConfigSpec;
   rowSelector: string;
 }
 
@@ -97,5 +97,10 @@ export interface MenuSpec extends CompositeSketchSpec {
 export interface MenuSketcher extends CompositeSketch<MenuSpec> { }
 
 export interface MenuItemHoverEvent extends CustomEvent {
-  item: () => AlloyComponent;
+  readonly item: AlloyComponent;
+}
+
+export interface MenuFocusEvent extends CustomEvent {
+  readonly menu: AlloyComponent;
+  readonly item: AlloyComponent;
 }

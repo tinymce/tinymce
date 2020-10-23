@@ -3,7 +3,7 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import SmartPaste from 'tinymce/plugins/paste/core/SmartPaste';
+import * as SmartPaste from 'tinymce/plugins/paste/core/SmartPaste';
 import Plugin from 'tinymce/plugins/paste/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 

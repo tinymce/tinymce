@@ -1,36 +1,36 @@
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import * as Compare from 'ephox/sugar/api/dom/Compare';
 import * as InsertAll from 'ephox/sugar/api/dom/InsertAll';
-import Element from 'ephox/sugar/api/node/Element';
+import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
 import * as Html from 'ephox/sugar/api/properties/Html';
 import * as Awareness from 'ephox/sugar/api/selection/Awareness';
 import * as CursorPosition from 'ephox/sugar/api/selection/CursorPosition';
 import * as Edge from 'ephox/sugar/api/selection/Edge';
-import { UnitTest, assert } from '@ephox/bedrock-client';
 
-UnitTest.test('Browser Test: CursorPositionTest', function () {
-  const container = Element.fromTag('div');
-  const child1 = Element.fromText('');
-  const child2 = Element.fromText(' ');
-  const child3 = Element.fromTag('span');
+UnitTest.test('Browser Test: CursorPositionTest', () => {
+  const container = SugarElement.fromTag('div');
+  const child1 = SugarElement.fromText('');
+  const child2 = SugarElement.fromText(' ');
+  const child3 = SugarElement.fromTag('span');
 
-  const child3a = Element.fromText('3a');
-  const child3b = Element.fromText('3b');
-  const child3c = Element.fromText('');
-  const child3d = Element.fromTag('br');
-  const child3e = Element.fromText('');
+  const child3a = SugarElement.fromText('3a');
+  const child3b = SugarElement.fromText('3b');
+  const child3c = SugarElement.fromText('');
+  const child3d = SugarElement.fromTag('br');
+  const child3e = SugarElement.fromText('');
   InsertAll.append(child3, [ child3a, child3b, child3c, child3d, child3e ]);
 
-  const child4 = Element.fromTag('br');
-  const child5 = Element.fromText('');
+  const child4 = SugarElement.fromTag('br');
+  const child5 = SugarElement.fromText('');
 
   InsertAll.append(container, [ child1, child2, child3, child4, child5 ]);
 
-  const checkFirst = function (label, expected, root) {
+  const checkFirst = (label: string, expected: SugarElement<Node>, root: SugarElement<Node>) => {
     const actual = CursorPosition.first(root).getOrDie('No cursor position found for: ' + label);
     assert.eq(true, Compare.eq(expected, actual), () => 'Incorrect element. \nExpected: ' + Html.getOuter(expected) + '\nWas: ' + Html.getOuter(actual));
   };
 
-  const checkLast = function (label, expected, root) {
+  const checkLast = (label: string, expected: SugarElement<Node>, root: SugarElement<Node>) => {
     const actual = CursorPosition.last(root).getOrDie('No cursor position found for: ' + label);
     assert.eq(true, Compare.eq(expected, actual), () => 'Incorrect element. \nExpected: ' + Html.getOuter(expected) + '\nWas: ' + Html.getOuter(actual));
   };
@@ -42,7 +42,7 @@ UnitTest.test('Browser Test: CursorPositionTest', function () {
 
   assert.eq(5, Awareness.getEnd(container));
   assert.eq(2, Awareness.getEnd(child3a));
-  assert.eq(1, Awareness.getEnd(Element.fromTag('img')));
+  assert.eq(1, Awareness.getEnd(SugarElement.fromTag('img')));
 
   assert.eq(true, Awareness.isEnd(container, 5));
   assert.eq(false, Awareness.isEnd(container, 4));

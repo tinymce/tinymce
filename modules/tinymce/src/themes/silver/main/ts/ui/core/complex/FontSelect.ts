@@ -5,8 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyTriggers, AlloyComponent } from '@ephox/alloy';
-import { Arr, Option } from '@ephox/katamari';
+import { AlloyComponent, AlloyTriggers } from '@ephox/alloy';
+import { Arr, Optional } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 import { updateMenuText } from '../../dropdown/CommonDropdown';
@@ -56,9 +56,7 @@ const isSystemFontStack = (fontFamily: string): boolean => {
 
 const getSpec = (editor: Editor): SelectSpec => {
   const getMatchingValue = () => {
-    const getFirstFont = (fontFamily) => {
-      return fontFamily ? splitFonts(fontFamily)[0] : '';
-    };
+    const getFirstFont = (fontFamily) => fontFamily ? splitFonts(fontFamily)[0] : '';
 
     const fontFamily = editor.queryCommandValue('FontName');
     const items = dataset.data;
@@ -69,35 +67,29 @@ const getSpec = (editor: Editor): SelectSpec => {
       return (format.toLowerCase() === font) || (getFirstFont(format).toLowerCase() === getFirstFont(font).toLowerCase());
     }).orThunk(() => {
       if (isSystemFontStack(font)) {
-        return Option.from({
+        return Optional.from({
           title: 'System Font',
           format: font
         });
       } else {
-        return Option.none();
+        return Optional.none();
       }
     });
 
     return { matchOpt, font: fontFamily };
   };
 
-  const isSelectedFor = (item) => {
-    return (valueOpt: Option<{ format: string; title: string }>) => {
-      return valueOpt.exists((value) => value.format === item);
-    };
-  };
+  const isSelectedFor = (item) => (valueOpt: Optional<{ format: string; title: string }>) => valueOpt.exists((value) => value.format === item);
 
   const getCurrentValue = () => {
     const { matchOpt } = getMatchingValue();
     return matchOpt;
   };
 
-  const getPreviewFor = (item) => () => {
-    return Option.some({
-      tag: 'div',
-      styles: item.indexOf('dings') === -1 ? { 'font-family': item } :  { }
-    });
-  };
+  const getPreviewFor = (item) => () => Optional.some({
+    tag: 'div',
+    styles: item.indexOf('dings') === -1 ? { 'font-family': item } : { }
+  });
 
   const onAction = (rawItem) => () => {
     editor.undoManager.transact(() => {
@@ -114,15 +106,15 @@ const getSpec = (editor: Editor): SelectSpec => {
     });
   };
 
-  const nodeChangeHandler = Option.some((comp) => () => updateSelectMenuText(comp));
+  const nodeChangeHandler = Optional.some((comp) => () => updateSelectMenuText(comp));
 
-  const setInitialValue = Option.some((comp) => updateSelectMenuText(comp));
+  const setInitialValue = Optional.some((comp) => updateSelectMenuText(comp));
 
   const dataset = buildBasicSettingsDataset(editor, 'font_formats', defaultFontsFormats, Delimiter.SemiColon);
 
   return {
     tooltip: 'Fonts',
-    icon: Option.none(),
+    icon: Optional.none(),
     isSelectedFor,
     getCurrentValue,
     getPreviewFor,
@@ -135,9 +127,7 @@ const getSpec = (editor: Editor): SelectSpec => {
   };
 };
 
-const createFontSelect = (editor: Editor, backstage: UiFactoryBackstage) => {
-  return createSelectButton(editor, backstage, getSpec(editor));
-};
+const createFontSelect = (editor: Editor, backstage: UiFactoryBackstage) => createSelectButton(editor, backstage, getSpec(editor));
 
 // TODO: Test this!
 const fontSelectMenu = (editor: Editor, backstage: UiFactoryBackstage) => {

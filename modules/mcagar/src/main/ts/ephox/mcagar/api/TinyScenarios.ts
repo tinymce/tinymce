@@ -1,12 +1,12 @@
 import { Generators, PropertySteps, Step } from '@ephox/agar';
-import { Element, Html, SimRange } from '@ephox/sugar';
+import { Html, SimRange, SugarElement } from '@ephox/sugar';
 import Jsc from '@ephox/wrap-jsverify';
 import { Editor } from '../alien/EditorTypes';
 
 type ContentGenerator = any;
-type SelectionExclusions = { containers: (container: Element) => boolean; };
+type SelectionExclusions = { containers: (container: SugarElement) => boolean };
 type ArbScenarioOptions = { exclusions: SelectionExclusions };
-type AsyncPropertyOptions = { scenario: ArbScenarioOptions, property: Record<string, any> };
+type AsyncPropertyOptions = { scenario: ArbScenarioOptions; property: Record<string, any> };
 
 interface Scenario {
   input: string;
@@ -25,14 +25,14 @@ export const TinyScenarios = function (editor: Editor): TinyScenarios {
   // We can't just generate a scenario because normalisation is going to cause issues
   // with getting a selection.
   const genScenario = function (genContent: ContentGenerator, selectionExclusions: SelectionExclusions) {
-    return genContent.flatMap(function (structure: Element) {
+    return genContent.flatMap(function (structure: SugarElement) {
       const html = Html.getOuter(structure);
       editor.setContent(html);
-      return Generators.selection(Element.fromDom(editor.getBody()), selectionExclusions).map(function (selection: SimRange) {
+      return Generators.selection(SugarElement.fromDom(editor.getBody()), selectionExclusions).map(function (selection: SimRange) {
         const win = editor.selection.win;
         const rng = win.document.createRange();
-        rng.setStart(selection.start().dom(), selection.soffset());
-        rng.setEnd(selection.finish().dom(), selection.foffset());
+        rng.setStart(selection.start.dom, selection.soffset);
+        rng.setEnd(selection.finish.dom, selection.foffset);
         editor.selection.setRng(rng);
         return {
           input: html,
@@ -45,8 +45,8 @@ export const TinyScenarios = function (editor: Editor): TinyScenarios {
   const arbScenario = function (genContent: ContentGenerator, options: ArbScenarioOptions) {
     return Jsc.bless({
       generator: genScenario(genContent, options.exclusions),
-      show (scenario: Scenario) {
-        const root = Element.fromDom(editor.getBody());
+      show(scenario: Scenario) {
+        const root = SugarElement.fromDom(editor.getBody());
         return JSON.stringify({
           input: scenario.input,
           selection: Generators.describeSelection(root, scenario.selection)
@@ -55,7 +55,7 @@ export const TinyScenarios = function (editor: Editor): TinyScenarios {
     });
   };
 
-  const sAsyncProperty = function <T, X, Y>(label: string, generator: ContentGenerator, step: Step<X, Y>, options: AsyncPropertyOptions) {
+  const sAsyncProperty = function <T, X, Y> (label: string, generator: ContentGenerator, step: Step<X, Y>, options: AsyncPropertyOptions) {
     return PropertySteps.sAsyncProperty<T, X, Y>(
       label,
       [
@@ -63,7 +63,7 @@ export const TinyScenarios = function (editor: Editor): TinyScenarios {
       ],
       step,
       options.property
-     );
+    );
   };
 
   return {

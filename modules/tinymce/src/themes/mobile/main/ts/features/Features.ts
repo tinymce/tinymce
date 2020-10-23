@@ -7,41 +7,40 @@
 
 import { Behaviour, Receiving, Toggling } from '@ephox/alloy';
 import { Objects } from '@ephox/boulder';
-import { Arr, Obj, Option, Type } from '@ephox/katamari';
+import { Arr, Obj, Optional, Type } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
+import * as Settings from '../api/Settings';
 
-import Receivers from '../channels/Receivers';
-import TinyChannels from '../channels/TinyChannels';
-import Styles from '../style/Styles';
-import Buttons from '../ui/Buttons';
-import ColorSlider from '../ui/ColorSlider';
+import * as Receivers from '../channels/Receivers';
+import * as TinyChannels from '../channels/TinyChannels';
+import * as Styles from '../style/Styles';
+import * as Buttons from '../ui/Buttons';
+import * as ColorSlider from '../ui/ColorSlider';
 import * as FontSizeSlider from '../ui/FontSizeSlider';
 import * as ImagePicker from '../ui/ImagePicker';
+import { MobileRealm } from '../ui/IosRealm';
 import * as LinkButton from '../ui/LinkButton';
-import StyleFormats from '../util/StyleFormats';
+import * as StyleFormats from '../util/StyleFormats';
 
-const defaults = [ 'undo', 'bold', 'italic', 'link', 'image', 'bullist', 'styleselect' ];
-
-const extract = function (rawToolbar) {
+const extract = (rawToolbar: string): string[] => {
   // Ignoring groups
   const toolbar = rawToolbar.replace(/\|/g, ' ').trim();
   return toolbar.length > 0 ? toolbar.split(/\s+/) : [ ];
 };
 
-const identifyFromArray = function (toolbar) {
-  return Arr.bind(toolbar, function (item) {
-    return Type.isArray(item) ? identifyFromArray(item) : extract(item);
-  });
-};
+const identifyFromArray = (toolbar: string[]): string[] =>
+  Arr.bind(toolbar, (item: string | string[]) =>
+    Type.isArray(item) ? identifyFromArray(item) : extract(item)
+  );
 
-const identify = function (settings) {
+const identify = (editor: Editor): string[] => {
   // Firstly, flatten the toolbar
-  const toolbar = settings.toolbar !== undefined ? settings.toolbar : defaults;
+  const toolbar = Settings.getToolbar(editor);
   return Type.isArray(toolbar) ? identifyFromArray(toolbar) : extract(toolbar);
 };
 
-const setup = function (realm, editor: Editor) {
+const setup = function (realm: MobileRealm, editor: Editor) {
   const commandSketch = function (name) {
     return function () {
       return Buttons.forToolbarCommand(editor, name);
@@ -94,7 +93,7 @@ const setup = function (realm, editor: Editor) {
     return ColorSlider.sketch(realm, editor);
   };
 
-  const styleFormats = StyleFormats.register(editor, editor.settings);
+  const styleFormats = StyleFormats.register(editor);
 
   const styleFormatsMenu = function () {
     return StyleFormats.ui(editor, styleFormats, function () {
@@ -105,7 +104,7 @@ const setup = function (realm, editor: Editor) {
   const styleselect = function () {
     return Buttons.forToolbar('style-formats', function (button) {
       editor.fire('toReading');
-      realm.dropup().appear(styleFormatsMenu, Toggling.on, button);
+      realm.dropup.appear(styleFormatsMenu, Toggling.on, button);
     }, Behaviour.derive([
       Toggling.config({
         toggleClass: Styles.resolve('toolbar-button-selected'),
@@ -116,8 +115,8 @@ const setup = function (realm, editor: Editor) {
       }),
       Receiving.config({
         channels: Objects.wrapAll([
-          Receivers.receive(TinyChannels.orientationChanged(), Toggling.off),
-          Receivers.receive(TinyChannels.dropupDismissed(), Toggling.off)
+          Receivers.receive(TinyChannels.orientationChanged, Toggling.off),
+          Receivers.receive(TinyChannels.dropupDismissed, Toggling.off)
         ])
       })
     ]), editor);
@@ -125,7 +124,7 @@ const setup = function (realm, editor: Editor) {
 
   const feature = function (prereq, sketch) {
     return {
-      isSupported () {
+      isSupported() {
         // NOTE: forall is true for none
         const buttons = editor.ui.registry.getAll().buttons;
         return prereq.forall(function (p) {
@@ -137,31 +136,31 @@ const setup = function (realm, editor: Editor) {
   };
 
   return {
-    undo: feature(Option.none(), undo),
-    redo: feature(Option.none(), redo),
-    bold: feature(Option.none(), bold),
-    italic: feature(Option.none(), italic),
-    underline: feature(Option.none(), underline),
-    removeformat: feature(Option.none(), removeformat),
-    link: feature(Option.none(), link),
-    unlink: feature(Option.none(), unlink),
-    image: feature(Option.none(), image),
+    undo: feature(Optional.none(), undo),
+    redo: feature(Optional.none(), redo),
+    bold: feature(Optional.none(), bold),
+    italic: feature(Optional.none(), italic),
+    underline: feature(Optional.none(), underline),
+    removeformat: feature(Optional.none(), removeformat),
+    link: feature(Optional.none(), link),
+    unlink: feature(Optional.none(), unlink),
+    image: feature(Optional.none(), image),
     // NOTE: Requires "lists" plugin.
-    bullist: feature(Option.some('bullist'), bullist),
-    numlist: feature(Option.some('numlist'), numlist),
-    fontsizeselect: feature(Option.none(), fontsizeselect),
-    forecolor: feature(Option.none(), forecolor),
-    styleselect: feature(Option.none(), styleselect)
+    bullist: feature(Optional.some('bullist'), bullist),
+    numlist: feature(Optional.some('numlist'), numlist),
+    fontsizeselect: feature(Optional.none(), fontsizeselect),
+    forecolor: feature(Optional.none(), forecolor),
+    styleselect: feature(Optional.none(), styleselect)
   };
 };
 
-const detect = function (settings, features) {
+const detect = (editor: Editor, features) => {
   // Firstly, work out which items are in the toolbar
-  const itemNames = identify(settings);
+  const itemNames = identify(editor);
 
   // Now, build the list only including supported features and no duplicates.
   const present = { };
-  return Arr.bind(itemNames, function (iName) {
+  return Arr.bind(itemNames, (iName) => {
     const r = !Obj.hasNonNullableKey<any, string>(present, iName) && Obj.hasNonNullableKey(features, iName) && features[iName].isSupported() ? [ features[iName].sketch() ] : [];
     // NOTE: Could use fold to avoid mutation, but it might be overkill and not performant
     present[iName] = true;
@@ -169,7 +168,7 @@ const detect = function (settings, features) {
   });
 };
 
-export default {
+export {
   identify,
   setup,
   detect

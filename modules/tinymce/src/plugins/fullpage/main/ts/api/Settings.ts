@@ -5,39 +5,27 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-const shouldHideInSourceView = function (editor) {
-  return editor.getParam('fullpage_hide_in_source_view');
-};
+import Editor from 'tinymce/core/api/Editor';
 
-const getDefaultXmlPi = function (editor) {
-  return editor.getParam('fullpage_default_xml_pi');
-};
+const shouldHideInSourceView = (editor: Editor) => editor.getParam('fullpage_hide_in_source_view');
 
-const getDefaultEncoding = function (editor) {
-  return editor.getParam('fullpage_default_encoding');
-};
+const getDefaultXmlPi = (editor: Editor) => editor.getParam('fullpage_default_xml_pi');
 
-const getDefaultFontFamily = function (editor) {
-  return editor.getParam('fullpage_default_font_family');
-};
+const getDefaultEncoding = (editor: Editor) => editor.getParam('fullpage_default_encoding');
 
-const getDefaultFontSize = function (editor) {
-  return editor.getParam('fullpage_default_font_size');
-};
+const getDefaultFontFamily = (editor: Editor) => editor.getParam('fullpage_default_font_family');
 
-const getDefaultTextColor = function (editor) {
-  return editor.getParam('fullpage_default_text_color');
-};
+const getDefaultFontSize = (editor: Editor) => editor.getParam('fullpage_default_font_size');
 
-const getDefaultTitle = function (editor) {
-  return editor.getParam('fullpage_default_title');
-};
+const getDefaultTextColor = (editor: Editor) => editor.getParam('fullpage_default_text_color');
 
-const getDefaultDocType = function (editor) {
-  return editor.getParam('fullpage_default_doctype', '<!DOCTYPE html>');
-};
+const getDefaultTitle = (editor: Editor) => editor.getParam('fullpage_default_title');
 
-export default {
+const getDefaultDocType = (editor: Editor) => editor.getParam('fullpage_default_doctype', '<!DOCTYPE html>');
+
+const getProtect = (editor: Editor) => editor.getParam('protect');
+
+export {
   shouldHideInSourceView,
   getDefaultXmlPi,
   getDefaultEncoding,
@@ -45,5 +33,6 @@ export default {
   getDefaultFontSize,
   getDefaultTextColor,
   getDefaultTitle,
-  getDefaultDocType
+  getDefaultDocType,
+  getProtect
 };

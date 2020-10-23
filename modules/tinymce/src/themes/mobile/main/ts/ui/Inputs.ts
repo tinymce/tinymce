@@ -6,28 +6,14 @@
  */
 
 import {
-  AddEventsBehaviour,
-  AlloyEvents,
-  AlloyTriggers,
-  Behaviour,
-  Button,
-  Composing,
-  Container,
-  DataField,
-  Input,
-  Keying,
-  Memento,
-  NativeEvents,
-  Representing,
-  Tabstopping,
-  Toggling,
-  SketchSpec,
+  AddEventsBehaviour, AlloyEvents, AlloyTriggers, Behaviour, Button, Composing, Container, DataField, Input, Keying, Memento, NativeEvents,
+  Representing, Tabstopping, Toggling
 } from '@ephox/alloy';
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 
 import I18n from 'tinymce/core/api/util/I18n';
 
-import Styles from '../style/Styles';
+import * as Styles from '../style/Styles';
 import * as UiDomFactory from '../util/UiDomFactory';
 
 const clearInputBehaviour = 'input-clearing';
@@ -35,13 +21,13 @@ const clearInputBehaviour = 'input-clearing';
 const field = function (name, placeholder) {
   const inputSpec = Memento.record(Input.sketch({
     inputAttributes: { placeholder: I18n.translate(placeholder) },
-    onSetValue (input, data) {
+    onSetValue(input, _data) {
       // If the value changes, inform the container so that it can update whether the "x" is visible
       AlloyTriggers.emit(input, NativeEvents.input());
     },
     inputBehaviours: Behaviour.derive([
       Composing.config({
-        find: Option.some
+        find: Optional.some
       }),
       Tabstopping.config({ }),
       Keying.config({
@@ -54,7 +40,7 @@ const field = function (name, placeholder) {
   const buttonSpec = Memento.record(
     Button.sketch({
       dom: UiDomFactory.dom('<button class="${prefix}-input-container-x ${prefix}-icon-cancel-circle ${prefix}-icon"></button>'),
-      action (button) {
+      action(button) {
         const input = inputSpec.get(button);
         Representing.setValue(input, '');
       }
@@ -74,8 +60,8 @@ const field = function (name, placeholder) {
           toggleClass: Styles.resolve('input-container-empty')
         }),
         Composing.config({
-          find (comp) {
-            return Option.some(inputSpec.get(comp));
+          find(comp) {
+            return Optional.some(inputSpec.get(comp));
           }
         }),
         AddEventsBehaviour.config(clearInputBehaviour, [
@@ -93,22 +79,20 @@ const field = function (name, placeholder) {
   };
 };
 
-const hidden = function (name) {
-  return {
-    name,
-    spec: DataField.sketch({
-      dom: {
-        tag: 'span',
-        styles: {
-          display: 'none'
-        }
-      },
-      getInitialValue () {
-        return Option.none();
+const hidden = (name) => ({
+  name,
+  spec: DataField.sketch({
+    dom: {
+      tag: 'span',
+      styles: {
+        display: 'none'
       }
-    }) as SketchSpec
-  };
-};
+    },
+    getInitialValue() {
+      return Optional.none();
+    }
+  })
+});
 
 export {
   field,

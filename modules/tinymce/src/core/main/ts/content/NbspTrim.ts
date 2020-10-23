@@ -5,69 +5,31 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node, Range } from '@ephox/dom-globals';
-import NodeType from '../dom/NodeType';
-import { Unicode } from '@ephox/katamari';
+import { SugarElement } from '@ephox/sugar';
+import DOMUtils from '../api/dom/DOMUtils';
+import CaretPosition from '../caret/CaretPosition';
+import { needsToBeNbspLeft, needsToBeNbspRight } from '../keyboard/Nbsps';
 
-const isAfterNbsp = (container: Node, offset: number) => {
-  return NodeType.isText(container) && container.nodeValue[offset - 1] === Unicode.nbsp;
-};
+const trimOrPadLeftRight = (dom: DOMUtils, rng: Range, html: string): string => {
+  const root = SugarElement.fromDom(dom.getRoot());
 
-const trimOrPadLeftRight = (rng: Range, html: string): string => {
-  let container, offset;
+  // Adjust the start if it needs to be an nbsp
+  if (needsToBeNbspLeft(root, CaretPosition.fromRangeStart(rng))) {
+    html = html.replace(/^ /, '&nbsp;');
+  } else {
+    html = html.replace(/^&nbsp;/, ' ');
+  }
 
-  container = rng.startContainer;
-  offset = rng.startOffset;
-
-  const hasSiblingText = function (siblingName) {
-    return container[siblingName] && container[siblingName].nodeType === 3;
-  };
-
-  if (container.nodeType === 3) {
-    if (offset > 0) {
-      html = html.replace(/^&nbsp;/, ' ');
-    } else if (!hasSiblingText('previousSibling')) {
-      html = html.replace(/^ /, '&nbsp;');
-    }
-
-    if (offset < container.length) {
-      html = html.replace(/&nbsp;(<br>|)$/, ' ');
-    } else if (!hasSiblingText('nextSibling')) {
-      html = html.replace(/(&nbsp;| )(<br>|)$/, '&nbsp;');
-    }
+  // Adjust the end if it needs to be an nbsp
+  if (needsToBeNbspRight(root, CaretPosition.fromRangeEnd(rng))) {
+    html = html.replace(/(&nbsp;| )(<br( \/)>)?$/, '&nbsp;');
+  } else {
+    html = html.replace(/&nbsp;(<br( \/)?>)?$/, ' ');
   }
 
   return html;
 };
 
-// Removes &nbsp; from a [b] c -> a &nbsp;c -> a c
-const trimNbspAfterDeleteAndPadValue = (rng: Range, value: string): string => {
-  let container, offset;
-
-  container = rng.startContainer;
-  offset = rng.startOffset;
-
-  if (container.nodeType === 3 && rng.collapsed) {
-    if (container.data[offset] === Unicode.nbsp) {
-      container.deleteData(offset, 1);
-
-      if (!/[\u00a0| ]$/.test(value)) {
-        value += ' ';
-      }
-    } else if (container.data[offset - 1] === Unicode.nbsp) {
-      container.deleteData(offset - 1, 1);
-
-      if (!/[\u00a0| ]$/.test(value)) {
-        value = ' ' + value;
-      }
-    }
-  }
-
-  return value;
-};
-
 export {
-  isAfterNbsp,
-  trimNbspAfterDeleteAndPadValue,
   trimOrPadLeftRight
 };

@@ -25,11 +25,12 @@ const register = (editor: Editor, enabledState: Cell<boolean>) => {
 
   editor.ui.registry.addToggleMenuItem('visualblocks', {
     text: 'Show blocks',
+    icon: 'visualblocks',
     onAction: () => editor.execCommand('mceVisualBlocks'),
     onSetup: toggleActiveState(editor, enabledState)
   });
 };
 
-export default {
+export {
   register
 };

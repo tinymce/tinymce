@@ -1,4 +1,4 @@
-import { createFile, createFileFromString } from '../file/File';
+import { createFile, createFileFromString } from '../file/Files';
 
 export {
   createFile,

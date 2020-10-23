@@ -4,13 +4,13 @@ import { UnitTest } from '@ephox/bedrock-client';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Tabstopping } from 'ephox/alloy/api/behaviour/Tabstopping';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { Tabbar } from 'ephox/alloy/api/ui/Tabbar';
 import { TabSection } from 'ephox/alloy/api/ui/TabSection';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 
 UnitTest.asynctest('TabSectionSelectFirst Test', (success, failure) => {
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((_store, _doc, _body) => {
     let counterA = 0;
     let counterB = 0;
 
@@ -21,12 +21,12 @@ UnitTest.asynctest('TabSectionSelectFirst Test', (success, failure) => {
         },
         selectFirst: false,
         components: [
-          TabSection.parts().tabbar({
+          TabSection.parts.tabbar({
             dom: {
               tag: 'div'
             },
             components: [
-              Tabbar.parts().tabs({ })
+              Tabbar.parts.tabs({ })
             ],
             markers: {
               tabClass: 'test-tab-button',
@@ -36,7 +36,7 @@ UnitTest.asynctest('TabSectionSelectFirst Test', (success, failure) => {
               Tabstopping.config({ })
             ])
           }),
-          TabSection.parts().tabview({
+          TabSection.parts.tabview({
             dom: {
               tag: 'div',
               classes: [ 'test-tabview' ]
@@ -49,7 +49,7 @@ UnitTest.asynctest('TabSectionSelectFirst Test', (success, failure) => {
             uid: 'alpha-tab',
             value: 'alpha',
             dom: { tag: 'button', innerHtml: 'A' },
-            view () {
+            view() {
               counterA++;
               return [
                 Container.sketch({
@@ -65,7 +65,7 @@ UnitTest.asynctest('TabSectionSelectFirst Test', (success, failure) => {
             uid: 'beta-tab',
             value: 'beta',
             dom: { tag: 'button', innerHtml: 'B' },
-            view () {
+            view() {
               counterB++;
               return [
                 Container.sketch({
@@ -81,51 +81,47 @@ UnitTest.asynctest('TabSectionSelectFirst Test', (success, failure) => {
       })
     );
 
-  }, (doc, body, gui, component, store) => {
-    return [
-      GuiSetup.mAddStyles(doc, [
-        '.selected-test-tab-button { background: #cadbee; }'
-      ]),
-      Assertions.sAssertStructure('Checking initial tab section', ApproxStructure.build((s, str, arr) => {
-        return s.element('div', {
+  }, (doc, _body, _gui, component, _store) => [
+    GuiSetup.mAddStyles(doc, [
+      '.selected-test-tab-button { background: #cadbee; }'
+    ]),
+    Assertions.sAssertStructure('Checking initial tab section', ApproxStructure.build((s, str, arr) => s.element('div', {
+      children: [
+        s.element('div', {
+          attrs: {
+            'data-alloy-tabstop': str.is('true'),
+            'role': str.is('tablist')
+          },
           children: [
-            s.element('div', {
+            s.element('button', {
+              html: str.is('A'),
               attrs: {
-                'data-alloy-tabstop': str.is('true'),
-                'role': str.is('tablist')
+                'data-alloy-id': str.none(),
+                'aria-selected': str.is('false')
               },
-              children: [
-                s.element('button', {
-                  html: str.is('A'),
-                  attrs: {
-                    'data-alloy-id': str.none(),
-                    'aria-selected': str.is('false')
-                  },
-                  classes: [
-                    arr.has('test-tab-button')
-                  ]
-                }),
-
-                s.element('button', {
-                  html: str.is('B'),
-                  attrs: {
-                    'data-alloy-id': str.none(),
-                    'aria-selected': str.is('false')
-                  },
-                  classes: [
-                    arr.has('test-tab-button')
-                  ]
-                })
+              classes: [
+                arr.has('test-tab-button')
               ]
             }),
-            s.element('div', {
-              classes: [ arr.has('test-tabview') ]
+
+            s.element('button', {
+              html: str.is('B'),
+              attrs: {
+                'data-alloy-id': str.none(),
+                'aria-selected': str.is('false')
+              },
+              classes: [
+                arr.has('test-tab-button')
+              ]
             })
           ]
-        });
-      }), component.element()),
+        }),
+        s.element('div', {
+          classes: [ arr.has('test-tabview') ]
+        })
+      ]
+    })), component.element),
 
-      GuiSetup.mRemoveStyles
-    ];
-  }, () => { success(); }, failure);
+    GuiSetup.mRemoveStyles
+  ], () => { success(); }, failure);
 });

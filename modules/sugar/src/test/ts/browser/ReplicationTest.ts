@@ -1,27 +1,33 @@
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import * as Replication from 'ephox/sugar/api/dom/Replication';
-import Element from 'ephox/sugar/api/node/Element';
+import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
 import * as Traverse from 'ephox/sugar/api/search/Traverse';
-import { UnitTest, assert } from '@ephox/bedrock-client';
-import { HTMLElement } from '@ephox/dom-globals';
 
-UnitTest.test('ReplicationTest', function () {
-  const checkValues = function (expected, actual) {
+interface TestSpec {
+  name: string;
+  attrs: Record<string, string | boolean | number>;
+  styles: Record<string, string>;
+  innerHtml: string;
+}
+
+UnitTest.test('ReplicationTest', () => {
+  const checkValues = (expected: TestSpec, actual: SugarElement<HTMLElement>) => {
     assert.eq(expected.name, 'span');
-    assert.eq(expected.attrs.href, actual.dom().getAttribute('href'));
-    assert.eq(expected.attrs['data-color'], actual.dom().getAttribute('data-color'));
+    assert.eq(expected.attrs.href, actual.dom.getAttribute('href'));
+    assert.eq(expected.attrs['data-color'], actual.dom.getAttribute('data-color'));
 
-    assert.eq(expected.styles.margin, actual.dom().style.getPropertyValue('margin'));
-    assert.eq(expected.styles.padding, actual.dom().style.getPropertyValue('padding'));
+    assert.eq(expected.styles.margin, actual.dom.style.getPropertyValue('margin'));
+    assert.eq(expected.styles.padding, actual.dom.style.getPropertyValue('padding'));
   };
 
-  const checkCopy = function (expected, input) {
-    const initial = Element.fromHtml<HTMLElement>(input);
+  const checkCopy = (expected: TestSpec, input: string) => {
+    const initial = SugarElement.fromHtml<HTMLElement>(input);
     const actual = Replication.copy(initial, 'span');
     checkValues(expected, actual);
   };
 
-  const checkMutate = function (expected, input) {
-    const initial = Element.fromHtml<HTMLElement>(input);
+  const checkMutate = (expected: TestSpec, input: string) => {
+    const initial = SugarElement.fromHtml<HTMLElement>(input);
 
     const actual = Replication.mutate(initial, 'span');
 
@@ -31,7 +37,7 @@ UnitTest.test('ReplicationTest', function () {
     checkValues(expected, actual);
   };
 
-  const check = function (expected, input) {
+  const check = (expected: TestSpec, input: string) => {
     checkCopy(expected, input);
     checkMutate(expected, input);
   };

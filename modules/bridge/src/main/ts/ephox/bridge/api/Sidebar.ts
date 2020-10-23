@@ -1,13 +1,8 @@
-import {
-  createSidebar,
-  Sidebar,
-  SidebarApi,
-  SidebarInstanceApi
-} from '../components/sidebar/Sidebar';
+import { createSidebar, Sidebar, SidebarInstanceApi, SidebarSpec } from '../components/sidebar/Sidebar';
 
 export {
   createSidebar,
   Sidebar,
-  SidebarApi,
+  SidebarSpec,
   SidebarInstanceApi
 };

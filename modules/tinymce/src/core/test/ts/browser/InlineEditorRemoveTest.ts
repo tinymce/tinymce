@@ -1,10 +1,10 @@
-import { Pipeline, Logger, Chain, UiFinder } from '@ephox/agar';
-import Theme from 'tinymce/themes/silver/Theme';
+import { Chain, Logger, Pipeline, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Editor as McEditor, ApiChains } from '@ephox/mcagar';
-import { Body } from '@ephox/sugar';
+import { ApiChains, Editor as McEditor } from '@ephox/mcagar';
+import { SugarBody } from '@ephox/sugar';
+import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.InlineEditorRemoveTest', (success, failure) =>  {
+UnitTest.asynctest('browser.tinymce.core.InlineEditorRemoveTest', (success, failure) => {
   Theme();
 
   const settings = {
@@ -13,7 +13,7 @@ UnitTest.asynctest('browser.tinymce.core.InlineEditorRemoveTest', (success, fail
   };
 
   const cAssertBogusNotExist = Chain.async((val, next, die) => {
-    UiFinder.findIn(Body.body(), '[data-mce-bogus]').fold(
+    UiFinder.findIn(SugarBody.body(), '[data-mce-bogus]').fold(
       () => {
         next(val);
       },
@@ -27,12 +27,12 @@ UnitTest.asynctest('browser.tinymce.core.InlineEditorRemoveTest', (success, fail
 
   Pipeline.async({}, [
     Logger.t('Removing inline editor should remove all data-mce-bogus tags', Chain.asStep({}, [
-        McEditor.cFromHtml('<div></div>', settings),
-        ApiChains.cSetRawContent('<p data-mce-bogus="all">b</p><p data-mce-bogus="1">b</p>'),
-        cRemoveEditor,
-        cAssertBogusNotExist,
-        McEditor.cRemove,
-      ]),
+      McEditor.cFromHtml('<div></div>', settings),
+      ApiChains.cSetRawContent('<p data-mce-bogus="all">b</p><p data-mce-bogus="1">b</p>'),
+      cRemoveEditor,
+      cAssertBogusNotExist,
+      McEditor.cRemove
+    ]),
     )
   ], function () {
     success();

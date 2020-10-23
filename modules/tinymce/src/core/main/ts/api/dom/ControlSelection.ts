@@ -5,25 +5,45 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { document, Element, Event, Node } from '@ephox/dom-globals';
-import { Element as SugarElement, Selectors } from '@ephox/sugar';
-import NodeType from '../../dom/NodeType';
-import RangePoint from '../../dom/RangePoint';
+import { Obj } from '@ephox/katamari';
+import { Selectors, SugarElement } from '@ephox/sugar';
+import * as CefUtils from '../../dom/CefUtils';
+import * as NodeType from '../../dom/NodeType';
+import * as RangePoint from '../../dom/RangePoint';
 import Editor from '../Editor';
 import Env from '../Env';
 import * as Events from '../Events';
-import Settings from '../Settings';
+import * as Settings from '../Settings';
 import Delay from '../util/Delay';
+import { EditorEvent } from '../util/EventDispatcher';
 import Tools from '../util/Tools';
 import VK from '../util/VK';
-import Selection from './Selection';
+import EditorSelection from './Selection';
 
 interface ControlSelection {
   isResizable (elm: Element): boolean;
   showResizeRect (elm: Element): void;
   hideResizeRect (): void;
-  updateResizeRect (evt: Event): void;
+  updateResizeRect (evt: EditorEvent<any>): void;
   destroy (): void;
+}
+
+type ResizeHandle = [ number, number, number, number ] & { elm?: Element };
+
+type ResizeHandles = {
+  ne: ResizeHandle;
+  nw: ResizeHandle;
+  se: ResizeHandle;
+  sw: ResizeHandle;
+};
+
+interface SelectedResizeHandle extends ResizeHandle {
+  elm: Element;
+  name: string;
+  startPos: {
+    x: number;
+    y: number;
+  };
 }
 
 /**
@@ -31,27 +51,15 @@ interface ControlSelection {
  * that can be resized and needs to be selected as a whole. It adds custom resize handles
  * to all browser engines that support properly disabling the built in resize logic.
  *
+ * @private
  * @class tinymce.dom.ControlSelection
  */
 
 const isContentEditableFalse = NodeType.isContentEditableFalse;
-const isContentEditableTrue = NodeType.isContentEditableTrue;
 
-const getContentEditableRoot = function (root: Node, node: Node) {
-  while (node && node !== root) {
-    if (isContentEditableTrue(node) || isContentEditableFalse(node)) {
-      return node;
-    }
-
-    node = node.parentNode;
-  }
-
-  return null;
-};
-
-const ControlSelection = (selection: Selection, editor: Editor): ControlSelection => {
+const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSelection => {
   const dom = editor.dom, each = Tools.each;
-  let selectedElm, selectedElmGhost, resizeHelper, resizeHandles, selectedHandle;
+  let selectedElm, selectedElmGhost, resizeHelper, selectedHandle: SelectedResizeHandle;
   let startX, startY, selectedElmX, selectedElmY, startW, startH, ratio, resizeStarted;
   let width,
     height;
@@ -64,12 +72,12 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
     startScrollHeight;
 
   // Details about each resize handle how to scale etc
-  resizeHandles = {
+  const resizeHandles: ResizeHandles = {
     // Name: x multiplier, y multiplier, delta size x, delta size y
-    nw: [0, 0, -1, -1],
-    ne: [1, 0, 1, -1],
-    se: [1, 1, 1, 1],
-    sw: [0, 1, -1, 1]
+    nw: [ 0, 0, -1, -1 ],
+    ne: [ 1, 0, 1, -1 ],
+    se: [ 1, 1, 1, 1 ],
+    sw: [ 0, 1, -1, 1 ]
   };
 
   const isImage = function (elm) {
@@ -93,19 +101,13 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
     }
   };
 
-  const getResizeTarget = function (elm) {
-    return editor.dom.is(elm, 'figure.image') ? elm.querySelector('img') : elm;
-  };
+  const getResizeTarget = (elm: Element) => editor.dom.is(elm, 'figure.image') ? elm.querySelector('img') : elm;
 
-  const isResizable = function (elm) {
-    let selector = Settings.getObjectResizing(editor);
+  const isResizable = (elm: Element) => {
+    const selector = Settings.getObjectResizing(editor);
 
-    if (selector === false || Env.iOS) {
+    if (!selector) {
       return false;
-    }
-
-    if (typeof selector !== 'string') {
-      selector = 'table,img,figure.image,div';
     }
 
     if (elm.getAttribute('data-mce-resize') === 'false') {
@@ -119,7 +121,14 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
     return Selectors.is(SugarElement.fromDom(elm), selector);
   };
 
-  const resizeGhostElement = function (e) {
+  const setGhostElmSize = (ghostElm: Element, width: number, height: number) => {
+    dom.setStyles(getResizeTarget(ghostElm), {
+      width,
+      height
+    });
+  };
+
+  const resizeGhostElement = (e: MouseEvent) => {
     let deltaX, deltaY, proportional;
     let resizeHelperX, resizeHelperY;
 
@@ -153,10 +162,7 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
     }
 
     // Update ghost size
-    dom.setStyles(getResizeTarget(selectedElmGhost), {
-      width,
-      height
-    });
+    setGhostElmSize(selectedElmGhost, width, height);
 
     // Update resize helper position
     resizeHelperX = selectedHandle.startPos.x + deltaX;
@@ -195,28 +201,31 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
     }
 
     if (!resizeStarted) {
-      Events.fireObjectResizeStart(editor, selectedElm, startW, startH);
+      Events.fireObjectResizeStart(editor, selectedElm, startW, startH, 'corner-' + selectedHandle.name);
       resizeStarted = true;
     }
   };
 
-  const endGhostResize = function () {
+  const endGhostResize = () => {
+    const wasResizeStarted = resizeStarted;
     resizeStarted = false;
 
-    const setSizeProp = function (name, value) {
+    const setSizeProp = (name: string, value: number) => {
       if (value) {
         // Resize by using style or attribute
         if (selectedElm.style[name] || !editor.schema.isValid(selectedElm.nodeName.toLowerCase(), name)) {
           dom.setStyle(getResizeTarget(selectedElm), name, value);
         } else {
-          dom.setAttrib(getResizeTarget(selectedElm), name, value);
+          dom.setAttrib(getResizeTarget(selectedElm), name, '' + value);
         }
       }
     };
 
     // Set width/height properties
-    setSizeProp('width', width);
-    setSizeProp('height', height);
+    if (wasResizeStarted) {
+      setSizeProp('width', width);
+      setSizeProp('height', height);
+    }
 
     dom.unbind(editableDoc, 'mousemove', resizeGhostElement);
     dom.unbind(editableDoc, 'mouseup', endGhostResize);
@@ -232,24 +241,24 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
 
     showResizeRect(selectedElm);
 
-    Events.fireObjectResized(editor, selectedElm, width, height);
-    dom.setAttrib(selectedElm, 'style', dom.getAttrib(selectedElm, 'style'));
+    if (wasResizeStarted) {
+      Events.fireObjectResized(editor, selectedElm, width, height, 'corner-' + selectedHandle.name);
+      dom.setAttrib(selectedElm, 'style', dom.getAttrib(selectedElm, 'style'));
+    }
     editor.nodeChanged();
   };
 
-  const showResizeRect = function (targetElm) {
-    let position, targetWidth, targetHeight, e, rect;
-
+  const showResizeRect = (targetElm: Element) => {
     hideResizeRect();
     unbindResizeHandleEvents();
 
     // Get position and size of target
-    position = dom.getPos(targetElm, rootElement);
-    selectedElmX = position.x;
-    selectedElmY = position.y;
-    rect = targetElm.getBoundingClientRect(); // Fix for Gecko offsetHeight for table with caption
-    targetWidth = rect.width || (rect.right - rect.left);
-    targetHeight = rect.height || (rect.bottom - rect.top);
+    const position = dom.getPos(targetElm, rootElement);
+    const selectedElmX = position.x;
+    const selectedElmY = position.y;
+    const rect = targetElm.getBoundingClientRect(); // Fix for Gecko offsetHeight for table with caption
+    const targetWidth = rect.width || (rect.right - rect.left);
+    const targetHeight = rect.height || (rect.bottom - rect.top);
 
     // Reset width/height if user selects a new image/table
     if (selectedElm !== targetElm) {
@@ -258,21 +267,22 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
     }
 
     // Makes it possible to disable resizing
-    e = editor.fire('ObjectSelected', { target: targetElm });
+    const e = editor.fire('ObjectSelected', { target: targetElm });
 
     if (isResizable(targetElm) && !e.isDefaultPrevented()) {
-      each(resizeHandles, function (handle, name) {
+      each(resizeHandles, (handle, name) => {
         let handleElm;
 
-        const startDrag = function (e) {
+        const startDrag = (e: MouseEvent) => {
           startX = e.screenX;
           startY = e.screenY;
           startW = getResizeTarget(selectedElm).clientWidth;
           startH = getResizeTarget(selectedElm).clientHeight;
           ratio = startH / startW;
-          selectedHandle = handle;
+          selectedHandle = handle as SelectedResizeHandle;
 
-          handle.startPos = {
+          selectedHandle.name = name;
+          selectedHandle.startPos = {
             x: targetWidth * handle[0] + selectedElmX,
             y: targetHeight * handle[1] + selectedElmY
           };
@@ -290,6 +300,9 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
             top: selectedElmY,
             margin: 0
           });
+
+          // Set initial ghost size
+          setGhostElmSize(selectedElmGhost, targetWidth, targetHeight);
 
           selectedElmGhost.removeAttribute('data-mce-selected');
           rootElement.appendChild(selectedElmGhost);
@@ -329,7 +342,7 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
           handleElm.contentEditable = false;
         }
 
-        dom.bind(handleElm, 'mousedown', function (e) {
+        dom.bind(handleElm, 'mousedown', (e) => {
           e.stopImmediatePropagation();
           e.preventDefault();
           startDrag(e);
@@ -350,22 +363,20 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
     selectedElm.setAttribute('data-mce-selected', '1');
   };
 
-  const hideResizeRect = function () {
-    let name, handleElm;
-
+  const hideResizeRect = () => {
     unbindResizeHandleEvents();
 
     if (selectedElm) {
       selectedElm.removeAttribute('data-mce-selected');
     }
 
-    for (name in resizeHandles) {
-      handleElm = dom.get('mceResizeHandle' + name);
+    Obj.each(resizeHandles, (value, name) => {
+      const handleElm = dom.get('mceResizeHandle' + name);
       if (handleElm) {
         dom.unbind(handleElm);
         dom.remove(handleElm);
       }
-    }
+    });
   };
 
   const updateResizeRect = function (e) {
@@ -408,24 +419,22 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
   };
 
   const isWithinContentEditableFalse = function (elm) {
-    return isContentEditableFalse(getContentEditableRoot(editor.getBody(), elm));
+    return isContentEditableFalse(CefUtils.getContentEditableRoot(editor.getBody(), elm));
   };
 
   const unbindResizeHandleEvents = function () {
-    for (const name in resizeHandles) {
-      const handle = resizeHandles[name];
-
+    Obj.each(resizeHandles, (handle) => {
       if (handle.elm) {
         dom.unbind(handle.elm);
         delete handle.elm;
       }
-    }
+    });
   };
 
   const disableGeckoResize = function () {
     try {
       // Disable object resizing on Gecko
-      editor.getDoc().execCommand('enableObjectResizing', false, false);
+      editor.getDoc().execCommand('enableObjectResizing', false, 'false');
     } catch (ex) {
       // Ignore
     }
@@ -458,7 +467,7 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
           Delay.setEditorTimeout(editor, () => editor.selection.select(node));
         };
 
-        if (isWithinContentEditableFalse(e.target)) {
+        if (isWithinContentEditableFalse(e.target) || NodeType.isMedia(e.target)) {
           e.preventDefault();
           delayedSelect(e.target);
           return;
@@ -485,7 +494,7 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
       }
     });
 
-    editor.on('nodechange ResizeEditor ResizeWindow drop FullscreenStateChanged', throttledUpdateResizeRect);
+    editor.on('nodechange ResizeEditor ResizeWindow ResizeContent drop FullscreenStateChanged', throttledUpdateResizeRect);
 
     // Update resize rect while typing in a table
     editor.on('keyup compositionend', function (e) {

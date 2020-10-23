@@ -1,8 +1,8 @@
+import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { Testable } from '@ephox/dispute';
+import * as fc from 'fast-check';
 import * as Arr from 'ephox/katamari/api/Arr';
 import * as Fun from 'ephox/katamari/api/Fun';
-import { Assert, UnitTest } from '@ephox/bedrock-client';
-import * as fc from 'fast-check';
-import { Testable } from '@ephox/dispute';
 
 const { tArray, tNumber } = Testable;
 
@@ -18,8 +18,8 @@ UnitTest.test('Arr.map: unit tests', () => {
   };
 
   checkA([], [], dbl);
-  checkA([2], [1], dbl);
-  checkA([4, 6, 10], [2, 3, 5], dbl);
+  checkA([ 2 ], [ 1 ], dbl);
+  checkA([ 4, 6, 10 ], [ 2, 3, 5 ], dbl);
 });
 
 UnitTest.test('Arr.map: functor laws', () => {

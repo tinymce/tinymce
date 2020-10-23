@@ -5,12 +5,15 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node } from '@ephox/dom-globals';
+import { RangeLikeObject } from '../../selection/RangeTypes';
 
 export type ApplyFormat = BlockFormat | InlineFormat | SelectorFormat;
 export type RemoveFormat = RemoveBlockFormat | RemoveInlineFormat | RemoveSelectorFormat;
 export type Format = ApplyFormat | RemoveFormat;
 export type Formats = Record<string, Format | Format[]>;
+
+export type ApplyFormatPartial = Partial<BlockFormat> & Partial<InlineFormat> & Partial<SelectorFormat>;
+export type RemoveFormatPartial = Partial<RemoveBlockFormat> & Partial<RemoveInlineFormat> & Partial<RemoveSelectorFormat>;
 
 export type FormatAttrOrStyleValue = string | ((vars?: FormatVars) => string);
 export type FormatVars = Record<string, string>;
@@ -24,7 +27,7 @@ export interface CommonFormat<T> {
   expand?: boolean;
   links?: boolean;
   onmatch?: (node: Node, fmt: T, itemName: string) => boolean;
-  onformat?: (node: Node, fmt: T, vars?: FormatVars) => void;
+  onformat?: (elm: Node, fmt: T, vars?: FormatVars, node?: Node | RangeLikeObject) => void;
   remove_similar?: boolean;
 }
 
@@ -60,14 +63,17 @@ export interface CommonRemoveFormat<T> extends CommonFormat<T> {
   styles?: string[] | Record<string, FormatAttrOrStyleValue>;
   split?: boolean;
   deep?: boolean;
+  mixed?: boolean; // Legacy
 }
 
 export interface RemoveBlockFormat extends CommonRemoveFormat<RemoveBlockFormat> {
   block: string;
+  list_block?: string; // Legacy
 }
 
 export interface RemoveInlineFormat extends CommonRemoveFormat<RemoveInlineFormat> {
   inline: string;
+  preserve_attributes?: string[];
 }
 
 export interface RemoveSelectorFormat extends CommonRemoveFormat<RemoveSelectorFormat> {

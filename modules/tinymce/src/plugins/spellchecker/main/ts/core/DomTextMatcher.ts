@@ -5,8 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLElement, Range } from '@ephox/dom-globals';
-
 function isContentEditableFalse(node) {
   return node && node.nodeType === 1 && node.contentEditable === 'false';
 }
@@ -31,13 +29,12 @@ export interface DomTextMatcher {
 }
 
 export const DomTextMatcher = function (node, editor): DomTextMatcher {
-  let m, matches = [], text;
+  let m, matches = [];
   const dom = editor.dom;
-  let blockElementsMap, hiddenTextElementsMap, shortEndedElementsMap;
 
-  blockElementsMap = editor.schema.getBlockElements(); // H1-H6, P, TD etc
-  hiddenTextElementsMap = editor.schema.getWhiteSpaceElements(); // TEXTAREA, PRE, STYLE, SCRIPT
-  shortEndedElementsMap = editor.schema.getShortEndedElements(); // BR, IMG, INPUT
+  const blockElementsMap = editor.schema.getBlockElements(); // H1-H6, P, TD etc
+  const hiddenTextElementsMap = editor.schema.getWhiteSpaceElements(); // TEXTAREA, PRE, STYLE, SCRIPT
+  const shortEndedElementsMap = editor.schema.getShortEndedElements(); // BR, IMG, INPUT
 
   function createMatch(m, data) {
     if (!m[0]) {
@@ -316,7 +313,7 @@ export const DomTextMatcher = function (node, editor): DomTextMatcher {
 
     matches = filteredMatches;
 
-    /*jshint validthis:true*/
+    /* jshint validthis:true*/
     return this;
   }
 
@@ -333,7 +330,7 @@ export const DomTextMatcher = function (node, editor): DomTextMatcher {
       }
     }
 
-    /*jshint validthis:true*/
+    /* jshint validthis:true*/
     return this;
   }
 
@@ -349,7 +346,7 @@ export const DomTextMatcher = function (node, editor): DomTextMatcher {
       stepThroughMatches(node, matches, genReplacer(callback));
     }
 
-    /*jshint validthis:true*/
+    /* jshint validthis:true*/
     return this;
   }
 
@@ -475,7 +472,7 @@ export const DomTextMatcher = function (node, editor): DomTextMatcher {
     return this;
   }
 
-  text = getText(node);
+  const text = getText(node);
 
   return {
     text,

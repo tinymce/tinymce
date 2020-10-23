@@ -5,17 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import EventDispatcher, { EditorEvent, NativeEventMap } from './EventDispatcher';
+import EventDispatcher, { EditorEvent, MappedEvent } from './EventDispatcher';
 
-interface Observable<T extends NativeEventMap> {
-  fire <K extends keyof T>(name: K, args?: T[K], bubble?: boolean): EditorEvent<T[K]>;
-  fire <U = any>(name: string, args?: U, bubble?: boolean): EditorEvent<U>;
-  on <K extends keyof T>(name: K, callback: (event: EditorEvent<T[K]>) => void, prepend?: boolean): EventDispatcher<T>;
-  on <U = any>(name: string, callback: (event: EditorEvent<U>) => void, prepend?: boolean): EventDispatcher<T>;
-  off <K extends keyof T>(name?: K, callback?: (event: EditorEvent<T[K]>) => void): EventDispatcher<T>;
-  off <U = any>(name?: string, callback?: (event: EditorEvent<U>) => void): EventDispatcher<T>;
-  once <K extends keyof T>(name: K,  callback: (event: EditorEvent<T[K]>) => void): EventDispatcher<T>;
-  once <U = any>(name: string, callback: (event: EditorEvent<U>) => void): EventDispatcher<T>;
+interface Observable<T> {
+  fire <K extends string, U extends MappedEvent<T, K>>(name: K, args?: U, bubble?: boolean): EditorEvent<U>;
+  on <K extends string>(name: K, callback: (event: EditorEvent<MappedEvent<T, K>>) => void, prepend?: boolean): EventDispatcher<T>;
+  off <K extends string>(name?: K, callback?: (event: EditorEvent<MappedEvent<T, K>>) => void): EventDispatcher<T>;
+  once <K extends string>(name: K, callback: (event: EditorEvent<MappedEvent<T, K>>) => void): EventDispatcher<T>;
   hasEventListeners (name: string): boolean;
 }
 
@@ -29,7 +25,7 @@ const getEventDispatcher = function (obj): EventDispatcher<any> {
   if (!obj._eventDispatcher) {
     obj._eventDispatcher = new EventDispatcher({
       scope: obj,
-      toggleEvent (name, state) {
+      toggleEvent(name, state) {
         if (EventDispatcher.isNative(name) && obj.toggleNativeEvent) {
           obj.toggleNativeEvent(name, state);
         }
@@ -53,13 +49,13 @@ const Observable: Observable<any> = {
    * @example
    * instance.fire('event', {...});
    */
-  fire (name, args?, bubble?) {
+  fire(name, args?, bubble?) {
     const self = this;
 
     // Prevent all events except the remove/detach event after the instance has been removed
     if (self.removed && name !== 'remove' && name !== 'detach') {
       // TODO should we be patching the EventArgs here like EventDispatcher?
-      return args as any;
+      return args;
     }
 
     const dispatcherArgs = getEventDispatcher(self).fire(name, args);
@@ -90,7 +86,7 @@ const Observable: Observable<any> = {
    *     // Callback logic
    * });
    */
-  on (name, callback, prepend?) {
+  on(name, callback, prepend?) {
     return getEventDispatcher(this).on(name, callback, prepend);
   },
 
@@ -112,7 +108,7 @@ const Observable: Observable<any> = {
    * // Unbind all events
    * instance.off();
    */
-  off (name?, callback?) {
+  off(name?, callback?) {
     return getEventDispatcher(this).off(name, callback);
   },
 
@@ -125,7 +121,7 @@ const Observable: Observable<any> = {
    * @param {callback} callback Callback to bind only once.
    * @return {Object} Current class instance.
    */
-  once (name, callback) {
+  once(name, callback) {
     return getEventDispatcher(this).once(name, callback);
   },
 
@@ -136,7 +132,7 @@ const Observable: Observable<any> = {
    * @param {String} name Name of the event to check for.
    * @return {Boolean} true/false if the event exists or not.
    */
-  hasEventListeners (name) {
+  hasEventListeners(name) {
     return getEventDispatcher(this).has(name);
   }
 };

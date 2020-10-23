@@ -8,7 +8,6 @@
 # Usage
 `CellLocation`: The CellLocation ADT is used to represent a cell when navigating.
 `CellMutations`: A collection of cell mutations to perform on cells when an operation has occured.
-`CellProperties`: Used to set attributes and styles of a cell.
 `CopyRows`: Used to duplicate DOM rows of selected cells.
 `Generators`: Provides methods for generating new rows and cells for table operations.
 `Picker`: Used to a table picker UI.

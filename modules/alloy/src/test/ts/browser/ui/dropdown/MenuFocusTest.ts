@@ -15,7 +15,7 @@ import { NormalItemSpec, WidgetItemSpec } from 'ephox/alloy/ui/types/ItemTypes';
 
 UnitTest.asynctest('MenuFocusTest', (success, failure) => {
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((store, _doc, _body) => {
     const markers = {
       item: TestDropdownMenu.markers().item,
       selectedItem: TestDropdownMenu.markers().selectedItem
@@ -24,13 +24,13 @@ UnitTest.asynctest('MenuFocusTest', (success, failure) => {
     const items = (suffix: string) => [
       {
         type: 'widget',
-        data: { value: 'alpha', meta: { text: 'Alpha' } },
+        data: { value: 'alpha', meta: { text: 'Alpha' }},
         dom: {
           tag: 'span',
           classes: [ `alpha-widget-${suffix}` ]
         },
         components: [
-          ItemWidget.parts().widget({
+          ItemWidget.parts.widget({
             dom: {
               tag: 'div',
               classes: [ 'internal-widget' ],
@@ -47,7 +47,7 @@ UnitTest.asynctest('MenuFocusTest', (success, failure) => {
 
       {
         type: 'item',
-        data: { value: 'beta', meta: { text: 'Beta' } },
+        data: { value: 'beta', meta: { text: 'Beta' }},
         dom: {
           tag: 'span',
           classes: [ `beta-item-${suffix}` ],
@@ -70,7 +70,7 @@ UnitTest.asynctest('MenuFocusTest', (success, failure) => {
         classes: [ 'test-menu' ]
       },
       components: [
-        Menu.parts().items({ })
+        Menu.parts.items({ })
       ],
 
       markers
@@ -84,7 +84,7 @@ UnitTest.asynctest('MenuFocusTest', (success, failure) => {
         classes: [ 'test-menu' ]
       },
       components: [
-        Menu.parts().items({ })
+        Menu.parts.items({ })
       ],
       fakeFocus: true,
       focusManager: FocusManagers.highlights(),
@@ -109,23 +109,21 @@ UnitTest.asynctest('MenuFocusTest', (success, failure) => {
         ]
       }
     );
-  }, (doc, body, gui, component, store) => {
+  }, (doc, _body, _gui, component, store) => {
 
-    const sAssertFocusShift = (label: string, expected: string, focusTarget: string) => {
-      return Logger.t(
-        label,
-        GeneralSteps.sequence([
-          FocusTools.sSetFocus('Focus input field', component.element(), 'input'),
-          Chain.asStep(component.element(), [
-            UiFinder.cFindIn(focusTarget),
-            Chain.op((alphaWidget) => {
-              Focusing.focus(component.getSystem().getByDom(alphaWidget).toOption().getOrDie('Could not find selector: ' + focusTarget));
-            })
-          ]),
-          FocusTools.sTryOnSelector('Focus hould be on', doc, expected)
-        ])
-      );
-    };
+    const sAssertFocusShift = (label: string, expected: string, focusTarget: string) => Logger.t(
+      label,
+      GeneralSteps.sequence([
+        FocusTools.sSetFocus('Focus input field', component.element, 'input'),
+        Chain.asStep(component.element, [
+          UiFinder.cFindIn(focusTarget),
+          Chain.op((alphaWidget) => {
+            Focusing.focus(component.getSystem().getByDom(alphaWidget).toOptional().getOrDie('Could not find selector: ' + focusTarget));
+          })
+        ]),
+        FocusTools.sTryOnSelector('Focus hould be on', doc, expected)
+      ])
+    );
 
     return [
       store.sAssertEq('Checking behaviours were added', [

@@ -5,50 +5,38 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Optional } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
+import { Dialog } from 'tinymce/core/api/ui/Ui';
 import { getRowClassList } from '../api/Settings';
-import Helpers from './Helpers';
-import { Option } from '@ephox/katamari';
-import { Types } from '@ephox/bridge';
+import * as Helpers from './Helpers';
 
-const getClassList = (editor: Editor) => {
-  const rowClassList = getRowClassList(editor);
-
-  const classes: Types.SelectBox.ExternalSelectBoxItem[] = Helpers.buildListItems(
-    rowClassList,
-    (item) => {
-      if (item.value) {
-        item.textStyle = () => {
-          return editor.formatter.getCssText({ block: 'tr', classes: [item.value] });
-        };
-      }
-    }
-  );
-
-  if (rowClassList.length > 0) {
-    return Option.some<Types.Dialog.BodyComponentApi>({
+const getClassList = (editor: Editor): Optional<Dialog.ListBoxSpec> => {
+  const classes = Helpers.buildListItems(getRowClassList(editor));
+  if (classes.length > 0) {
+    return Optional.some({
       name: 'class',
-      type: 'selectbox',
+      type: 'listbox',
       label: 'Class',
       items: classes
     });
   }
-  return Option.none<Types.Dialog.BodyComponentApi>();
+  return Optional.none();
 };
 
-const formChildren: Types.Dialog.BodyComponentApi[] = [
+const formChildren: Dialog.BodyComponentSpec[] = [
   {
-    type: 'selectbox',
+    type: 'listbox',
     name: 'type',
     label: 'Row type',
     items: [
-      { text: 'Header', value: 'thead' },
-      { text: 'Body', value: 'tbody' },
-      { text: 'Footer', value: 'tfoot' }
+      { text: 'Header', value: 'header' },
+      { text: 'Body', value: 'body' },
+      { text: 'Footer', value: 'footer' }
     ]
   },
   {
-    type: 'selectbox',
+    type: 'listbox',
     name: 'align',
     label: 'Alignment',
     items: [
@@ -62,16 +50,11 @@ const formChildren: Types.Dialog.BodyComponentApi[] = [
     label: 'Height',
     name: 'height',
     type: 'input'
-  },
+  }
 ];
 
-const getItems = (editor: Editor) => {
-  return getClassList(editor).fold(
-    () => formChildren,
-    (classes) => formChildren.concat(classes)
-  );
-};
+const getItems = (editor: Editor) => formChildren.concat(getClassList(editor).toArray());
 
-export default {
+export {
   getItems
 };

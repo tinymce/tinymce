@@ -19,11 +19,11 @@ UnitTest.asynctest('Basic Form', (success, failure) => {
       tag: 'div'
     },
     components: [
-      FormField.parts().field({
+      FormField.parts.field({
         factory: Input,
         data: 'Init'
       }),
-      FormField.parts().label({
+      FormField.parts.label({
         dom: { tag: 'label', innerHtml: 'a' },
         components: [ ]
       })
@@ -36,61 +36,52 @@ UnitTest.asynctest('Basic Form', (success, failure) => {
       tag: 'div'
     },
     components: [
-      FormField.parts().field({
+      FormField.parts.field({
         factory: HtmlSelect,
         options: [
           { value: 'select-b-init', text: 'Select-b-init' },
           { value: 'select-b-other', text: 'Select-b-other' }
         ]
       }),
-      FormField.parts().label({ dom: { tag: 'label', innerHtml: 'a' }, components: [ ] })
+      FormField.parts.label({ dom: { tag: 'label', innerHtml: 'a' }, components: [ ] })
     ]
   };
 
-  GuiSetup.setup((store, doc, body) => {
-    return GuiFactory.build(
-      Form.sketch((parts: FormParts) => {
-        return {
-          dom: {
-            tag: 'div'
-          },
-          components: [
-            parts.field('form.ant', FormField.sketch(formAntSpec)),
-            parts.field('form.bull', FormField.sketch(formBullSpec))
-          ]
-        };
-      })
-    );
-
-  }, (doc, body, gui, component, store) => {
+  GuiSetup.setup((_store, _doc, _body) => GuiFactory.build(
+    Form.sketch((parts: FormParts) => ({
+      dom: {
+        tag: 'div'
+      },
+      components: [
+        parts.field('form.ant', FormField.sketch(formAntSpec)),
+        parts.field('form.bull', FormField.sketch(formBullSpec))
+      ]
+    }))
+  ), (_doc, _body, _gui, component, _store) => {
     const helper = TestForm.helper(component);
 
-    const sAssertDisplay = (inputText: string, selectValue: string) => {
-      return Step.sync(() => {
-        Assertions.assertStructure(
-          'Checking that HTML select and text input have right contents',
-          ApproxStructure.build((s, str, arr) => {
-            return s.element('div', {
+    const sAssertDisplay = (inputText: string, selectValue: string) => Step.sync(() => {
+      Assertions.assertStructure(
+        'Checking that HTML select and text input have right contents',
+        ApproxStructure.build((s, str, _arr) => s.element('div', {
+          children: [
+            s.element('div', {
               children: [
-                s.element('div', {
-                  children: [
-                    s.element('input', { value: str.is(inputText) }),
-                    s.element('label', {})
-                  ]
-                }),
-                s.element('div', {
-                  children: [
-                    s.element('select', { value: str.is(selectValue) }),
-                    s.element('label', { })
-                  ]
-                })
+                s.element('input', { value: str.is(inputText) }),
+                s.element('label', {})
               ]
-            });
-          }),
-          component.element()
-        );
-      });
-    };
+            }),
+            s.element('div', {
+              children: [
+                s.element('select', { value: str.is(selectValue) }),
+                s.element('label', { })
+              ]
+            })
+          ]
+        })),
+        component.element
+      );
+    });
 
     return [
       Logger.t(
@@ -159,7 +150,7 @@ UnitTest.asynctest('Basic Form', (success, failure) => {
         GeneralSteps.sequence([
           Step.sync(() => {
             const field = Form.getField(component, 'form.bull').getOrDie('Could not find field');
-            Assertions.assertEq('Checking value', 'select-b-other', Value.get(field.element()));
+            Assertions.assertEq('Checking value', 'select-b-other', Value.get(field.element));
           })
         ])
       )

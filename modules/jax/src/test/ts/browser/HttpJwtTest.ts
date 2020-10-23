@@ -1,47 +1,42 @@
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr, FutureResult, Result } from '@ephox/katamari';
-import { UnitTest, assert } from '@ephox/bedrock-client';
-import { console } from '@ephox/dom-globals';
-import * as HttpJwt from 'ephox/jax/core/HttpJwt';
-import { JwtTokenFactory } from 'ephox/jax/core/HttpTypes';
 import { DataType } from 'ephox/jax/core/DataType';
 import { HttpError } from 'ephox/jax/core/HttpError';
+import * as HttpJwt from 'ephox/jax/core/HttpJwt';
+import { JwtTokenFactory } from 'ephox/jax/core/HttpTypes';
 
-/* tslint:disable:no-console */
+/* eslint-disable no-console */
 
-const expectError = (label: string, response: FutureResult<any, HttpError>, expectedCalls: string[], actualCalls: string[]) => {
-  return FutureResult.nu((callback) => {
-    response.get((res) => {
-      res.fold((err) => {
-        console.log(label, 'successfully failed');
+const expectError = (label: string, response: FutureResult<any, HttpError>, expectedCalls: string[], actualCalls: string[]) => FutureResult.nu((callback) => {
+  response.get((res) => {
+    res.fold((_err) => {
+      console.log(label, 'successfully failed');
+      assert.eq(expectedCalls, actualCalls);
+      actualCalls = [];
+      callback(Result.value({ }));
+    }, (_val) => {
+      callback(Result.error('Unexpected value in test: ' + label));
+    });
+  });
+});
+
+const expectValue = (label: string, value: any, response: FutureResult<any, HttpError>, expectedCalls: string[], actualCalls: string[]) => FutureResult.nu((callback) => {
+  response.get((res) => {
+    res.fold((err) => {
+      callback(Result.error(new Error(err.message)));
+    }, (val) => {
+      try {
+        assert.eq(value, val);
+        console.log(label, 'passed with ', val);
         assert.eq(expectedCalls, actualCalls);
         actualCalls = [];
-        callback(Result.value({ }));
-      }, (val) => {
-        callback(Result.error('Unexpected value in test: ' + label));
-      });
+        callback(Result.value({}));
+      } catch (err) {
+        callback(Result.error(err));
+      }
     });
   });
-};
-
-const expectValue = (label: string, value: any, response: FutureResult<any, HttpError>, expectedCalls: string[], actualCalls: string[]) => {
-  return FutureResult.nu((callback) => {
-    response.get((res) => {
-      res.fold((err) => {
-        callback(Result.error(new Error(err.message)));
-      }, (val) => {
-        try {
-          assert.eq(value, val);
-          console.log(label, 'passed with ', val);
-          assert.eq(expectedCalls, actualCalls);
-          actualCalls = [];
-          callback(Result.value({}));
-        } catch (err) {
-          callback(Result.error(err));
-        }
-      });
-    });
-  });
-};
+});
 
 UnitTest.asynctest('HttpTest', (success, failure) => {
   const invalidCalls: string[] = [];
@@ -60,17 +55,17 @@ UnitTest.asynctest('HttpTest', (success, failure) => {
     expectError('GET on invalid url', HttpJwt.get(
       {
         url: '/custom/jax/sample/token/invalid',
-        responseType: DataType.JSON,
+        responseType: DataType.JSON
       },
       fakeFactory(invalidCalls)
-    ), [ 'cached', 'fresh'], invalidCalls),
+    ), [ 'cached', 'fresh' ], invalidCalls),
     expectValue('GET on valid url', {}, HttpJwt.get(
       {
         url: '/custom/jax/sample/token/valid',
-        responseType: DataType.JSON,
+        responseType: DataType.JSON
       },
       fakeFactory(validCalls)
-    ), [ 'cached'], validCalls)
+    ), [ 'cached' ], validCalls)
   ];
 
   Arr.foldr(responses, function (res, rest) {

@@ -1,201 +1,173 @@
-import { Arr, Fun, Option, Options } from '@ephox/katamari';
-import { Compare, Traverse, Element } from '@ephox/sugar';
-import * as Structs from '../api/Structs';
-import TableLookup from '../api/TableLookup';
-import Redraw from '../operate/Redraw';
-import { BarPositions, ColInfo } from '../resize/BarPositions';
-import Bars from '../resize/Bars';
-import DetailsList from './DetailsList';
-import Transitions from './Transitions';
-import { Warehouse } from './Warehouse';
+import { Arr, Optional, Optionals } from '@ephox/katamari';
+import { Compare, SugarElement, Traverse } from '@ephox/sugar';
 import { Generators, GeneratorsWrapper, SimpleGenerators } from '../api/Generators';
 import { ResizeWire } from '../api/ResizeWire';
+import * as Structs from '../api/Structs';
+import * as TableLookup from '../api/TableLookup';
 import { TableOperationResult } from '../api/TableOperations';
+import { TableSize } from '../api/TableSize';
+import * as Redraw from '../operate/Redraw';
+import * as Bars from '../resize/Bars';
+import { Warehouse } from '../api/Warehouse';
+import * as Transitions from './Transitions';
+
+type DetailExt = Structs.DetailExt;
+type DetailNew = Structs.DetailNew;
+type RowDataNew<A> = Structs.RowDataNew<A>;
 
 export interface RunOperationOutput {
-  cursor: () => Option<Element>;
-  newRows: () => Element[];
-  newCells: () => Element[];
+  readonly cursor: Optional<SugarElement>;
+  readonly newRows: SugarElement[];
+  readonly newCells: SugarElement[];
 }
 
 export interface TargetElement {
-  element: () => Element;
+  readonly element: SugarElement;
 }
 
 export interface TargetSelection {
-  selection: () => Element[];
+  readonly selection: SugarElement[];
 }
 
 export interface TargetMergable {
-  mergable: () => Option<ExtractMergable>;
+  readonly mergable: Optional<ExtractMergable>;
 }
 
 export interface TargetUnmergable {
-  unmergable: () => Option<Element[]>;
+  readonly unmergable: Optional<SugarElement[]>;
 }
 
+// combines the above 4 interfaces because this is what data we actually get from TinyMCE
+export interface CombinedTargets extends TargetElement, TargetSelection, TargetMergable, TargetUnmergable { }
+
 export interface TargetPaste {
-  element: () => Element;
-  generators: () => SimpleGenerators;
-  clipboard: () => Element;
+  readonly element: SugarElement;
+  readonly generators: SimpleGenerators;
+  readonly clipboard: SugarElement;
 }
 
 export interface TargetPasteRows {
-  selection: () => Element[];
-  generators: () => SimpleGenerators;
-  clipboard: () => Element[];
+  readonly selection: SugarElement[];
+  readonly generators: SimpleGenerators;
+  readonly clipboard: SugarElement[];
 }
 
 export interface ExtractMergable {
-  cells: () => Element[];
-  bounds: () => Structs.Bounds;
+  readonly cells: SugarElement[];
+  readonly bounds: Structs.Bounds;
 }
 
 export interface ExtractPaste extends Structs.DetailExt {
-  generators: () => SimpleGenerators;
-  clipboard: () => Element;
+  readonly generators: SimpleGenerators;
+  readonly clipboard: SugarElement;
 }
 
 export interface ExtractPasteRows {
-  cells: Structs.DetailExt[];
-  generators: () => SimpleGenerators;
-  clipboard: () => Element[];
+  readonly cells: Structs.DetailExt[];
+  readonly generators: SimpleGenerators;
+  readonly clipboard: SugarElement[];
 }
 
-const fromWarehouse = function (warehouse: Warehouse, generators: Generators) {
-  return Transitions.toGrid(warehouse, generators, false);
-};
+const fromWarehouse = (warehouse: Warehouse, generators: Generators) =>
+  Transitions.toGrid(warehouse, generators, false);
 
-const deriveRows = function (rendered: Structs.RowDetails[], generators: Generators) {
+const deriveRows = (rendered: Structs.RowDetails[], generators: Generators) => {
   // The row is either going to be a new row, or the row of any of the cells.
-  const findRow = function (details: Structs.DetailNew[]) {
-    const rowOfCells = Arr.findMap(details, function (detail) {
-      return Traverse.parent(detail.element()).map(function (row) {
-        // If the row has a parent, it's within the existing table, otherwise it's a copied row
-        const isNew = Traverse.parent(row).isNone();
-        return Structs.elementnew(row, isNew);
-      });
-    });
-    return rowOfCells.getOrThunk(function () {
-      return Structs.elementnew(generators.row(), true);
-    });
+  const findRow = (details: Structs.DetailNew[]) => {
+    const rowOfCells = Arr.findMap(details, (detail) => Traverse.parent(detail.element).map((row) => {
+      // If the row has a parent, it's within the existing table, otherwise it's a copied row
+      const isNew = Traverse.parent(row).isNone();
+      return Structs.elementnew(row, isNew);
+    }));
+    return rowOfCells.getOrThunk(() => Structs.elementnew(generators.row(), true));
   };
 
-  return Arr.map(rendered, function (details) {
-    const row = findRow(details.details());
-    return Structs.rowdatanew(row.element(), details.details(), details.section(), row.isNew());
+  return Arr.map(rendered, (details) => {
+    const row = findRow(details.details);
+    return Structs.rowdatanew(row.element, details.details, details.section, row.isNew);
   });
 };
 
-const toDetailList = function (grid: Structs.RowCells[], generators: Generators) {
+const toDetailList = (grid: Structs.RowCells[], generators: Generators): RowDataNew<DetailNew>[] => {
   const rendered = Transitions.toDetails(grid, Compare.eq);
   return deriveRows(rendered, generators);
 };
 
-const findInWarehouse = function (warehouse: Warehouse, element: Element) {
-  const all = Arr.flatten(Arr.map(warehouse.all(), function (r) { return r.cells(); }));
-  return Arr.find(all, function (e) {
-    return Compare.eq(element, e.element());
-  });
-};
+const findInWarehouse = (warehouse: Warehouse, element: SugarElement): Optional<DetailExt> => Arr.findMap(warehouse.all, (r) =>
+  Arr.find(r.cells, (e) => Compare.eq(element, e.element))
+);
 
-type EqEle = (e1: Element, e2: Element) => boolean;
+type EqEle = (e1: SugarElement, e2: SugarElement) => boolean;
 type Operation<INFO, GW extends GeneratorsWrapper> = (model: Structs.RowCells[], info: INFO, eq: EqEle, w: GW) => TableOperationResult;
-type Extract<RAW, INFO> = (warehouse: Warehouse, target: RAW) => Option<INFO>;
-type Adjustment = <T extends Structs.DetailNew>(table: Element, grid: Structs.RowDataNew<T>[], direction: BarPositions<ColInfo>) => void;
-type PostAction = (e: Element) => void;
+type Extract<RAW, INFO> = (warehouse: Warehouse, target: RAW) => Optional<INFO>;
+type Adjustment = <T extends Structs.DetailNew>(table: SugarElement, grid: Structs.RowDataNew<T>[], tableSize: TableSize) => void;
+type PostAction = (e: SugarElement) => void;
 type GenWrap<GW extends GeneratorsWrapper> = (g: Generators) => GW;
 
-const run = function <RAW, INFO, GW extends GeneratorsWrapper> (operation: Operation<INFO, GW>, extract: Extract<RAW, INFO>, adjustment: Adjustment, postAction: PostAction, genWrappers: GenWrap<GW>) {
-  return function (wire: ResizeWire, table: Element, target: RAW, generators: Generators, direction: BarPositions<ColInfo>): Option<RunOperationOutput> {
-    const input = DetailsList.fromTable(table);
-    const warehouse = Warehouse.generate(input);
-    const output = extract(warehouse, target).map(function (info) {
+export type OperationCallback<T> = (wire: ResizeWire, table: SugarElement<HTMLTableElement>, target: T, generators: Generators, sizing?: TableSize) => Optional<RunOperationOutput>;
+
+const run = <RAW, INFO, GW extends GeneratorsWrapper>
+(operation: Operation<INFO, GW>, extract: Extract<RAW, INFO>, adjustment: Adjustment, postAction: PostAction, genWrappers: GenWrap<GW>): OperationCallback<RAW> =>
+  (wire: ResizeWire, table: SugarElement, target: RAW, generators: Generators, sizing?: TableSize): Optional<RunOperationOutput> => {
+    const warehouse = Warehouse.fromTable(table);
+    const output = extract(warehouse, target).map((info) => {
       const model = fromWarehouse(warehouse, generators);
       const result = operation(model, info, Compare.eq, genWrappers(generators));
-      const grid = toDetailList(result.grid(), generators);
+      const grid = toDetailList(result.grid, generators);
       return {
-        grid: Fun.constant(grid),
+        grid,
         cursor: result.cursor
       };
     });
 
-    return output.fold(function () {
-      return Option.none<RunOperationOutput>();
-    }, function (out) {
-      const newElements = Redraw.render(table, out.grid());
-      adjustment(table, out.grid(), direction);
+    return output.fold(() => Optional.none<RunOperationOutput>(), (out) => {
+      const newElements = Redraw.render(table, out.grid);
+      const tableSizing = Optional.from(sizing).getOrThunk(() => TableSize.getTableSize(table));
+      adjustment(table, out.grid, tableSizing);
       postAction(table);
-      Bars.refresh(wire, table, BarPositions.height, direction);
-      return Option.some({
+      Bars.refresh(wire, table);
+      return Optional.some({
         cursor: out.cursor,
         newRows: newElements.newRows,
         newCells: newElements.newCells
       });
     });
   };
-};
 
-const onCell = function (warehouse: Warehouse, target: TargetElement) {
-  return TableLookup.cell(target.element()).bind(function (cell) {
-    return findInWarehouse(warehouse, cell);
-  });
-};
+const onCell = (warehouse: Warehouse, target: TargetElement): Optional<DetailExt> => TableLookup.cell(target.element).bind((cell) => findInWarehouse(warehouse, cell));
 
-const onPaste = function (warehouse: Warehouse, target: TargetPaste): Option<ExtractPaste> {
-  return TableLookup.cell(target.element()).bind(function (cell) {
-    return findInWarehouse(warehouse, cell).map(function (details) {
-      const value: ExtractPaste = {
-        ...details,
-        generators: target.generators,
-        clipboard: target.clipboard
-      };
-      return value;
-    });
-  });
-};
+const onPaste = (warehouse: Warehouse, target: TargetPaste): Optional<ExtractPaste> => TableLookup.cell(target.element).bind((cell) => findInWarehouse(warehouse, cell).map((details) => {
+  const value: ExtractPaste = {
+    ...details,
+    generators: target.generators,
+    clipboard: target.clipboard
+  };
+  return value;
+}));
 
-const onPasteRows = function (warehouse: Warehouse, target: TargetPasteRows): Option<ExtractPasteRows> {
-  const details = Arr.map(target.selection(), function (cell) {
-    return TableLookup.cell(cell).bind(function (lc) {
-      return findInWarehouse(warehouse, lc);
-    });
-  });
-  const cells = Options.cat(details);
-  return cells.length > 0 ? Option.some(
+const onPasteByEditor = (warehouse: Warehouse, target: TargetPasteRows): Optional<ExtractPasteRows> => {
+  const details = Arr.map(target.selection, (cell) => TableLookup.cell(cell).bind((lc) => findInWarehouse(warehouse, lc)));
+  const cells = Optionals.cat(details);
+  return cells.length > 0 ? Optional.some(
     {
       cells,
       generators: target.generators,
       clipboard: target.clipboard
     }
-  ) : Option.none();
+  ) : Optional.none();
 };
 
-const onMergable = function (_warehouse: Warehouse, target: TargetMergable) {
-  return target.mergable();
+const onMergable = (_warehouse: Warehouse, target: TargetMergable): Optional<ExtractMergable> =>
+  target.mergable;
+
+const onUnmergable = (_warehouse: Warehouse, target: TargetUnmergable): Optional<SugarElement[]> =>
+  target.unmergable;
+
+const onCells = (warehouse: Warehouse, target: TargetSelection): Optional<DetailExt[]> => {
+  const details = Arr.map(target.selection, (cell) => TableLookup.cell(cell).bind((lc) => findInWarehouse(warehouse, lc)));
+  const cells = Optionals.cat(details);
+  return cells.length > 0 ? Optional.some(cells) : Optional.none();
 };
 
-const onUnmergable = function (_warehouse: Warehouse, target: TargetUnmergable) {
-  return target.unmergable();
-};
+export { run, toDetailList, onCell, onCells, onPaste, onPasteByEditor, onMergable, onUnmergable };
 
-const onCells = function (warehouse: Warehouse, target: TargetSelection) {
-  const details = Arr.map(target.selection(), function (cell) {
-    return TableLookup.cell(cell).bind(function (lc) {
-      return findInWarehouse(warehouse, lc);
-    });
-  });
-  const cells = Options.cat(details);
-  return cells.length > 0 ? Option.some(cells) : Option.none<Structs.DetailExt[]>();
-};
-
-export {
-  run,
-  toDetailList,
-  onCell,
-  onCells,
-  onPaste,
-  onPasteRows,
-  onMergable,
-  onUnmergable
-};

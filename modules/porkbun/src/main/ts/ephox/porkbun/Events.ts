@@ -1,5 +1,5 @@
 import { Obj } from '@ephox/katamari';
-import { Event, Bindable } from './Event';
+import { Bindable, Event } from './Event';
 
 /** :: {name : Event} -> Events */
 const create = function (typeDefs: Record<string, Event>) {
@@ -20,6 +20,6 @@ const create = function (typeDefs: Record<string, Event>) {
   };
 };
 
-export default {
+export {
   create
 };

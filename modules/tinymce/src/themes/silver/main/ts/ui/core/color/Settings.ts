@@ -5,11 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Menu } from '@ephox/bridge';
-import Editor from 'tinymce/core/api/Editor';
-import ColorCache from './ColorCache';
 import { Arr } from '@ephox/katamari';
-import { document } from '@ephox/dom-globals';
+import Editor from 'tinymce/core/api/Editor';
+import { Menu } from 'tinymce/core/api/ui/Ui';
+import ColorCache from './ColorCache';
 
 const choiceItem: 'choiceitem' = 'choiceitem';
 
@@ -44,7 +43,7 @@ const defaultColors = [
 
 const colorCache = ColorCache(10);
 
-const mapColors = function (colorMap: string[]): Menu.ChoiceMenuItemApi[] {
+const mapColors = function (colorMap: string[]): Menu.ChoiceMenuItemSpec[] {
   const colors = [];
 
   const canvas = document.createElement('canvas');
@@ -66,7 +65,8 @@ const mapColors = function (colorMap: string[]): Menu.ChoiceMenuItemApi[] {
     }
     // all valid colors after this point
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = '#FFFFFF'; // invalid colors will be shown as white
+    // invalid colors will be shown as white - the first assignment will pass and the second may be ignored
+    ctx.fillStyle = '#FFFFFF'; // lgtm[js/useless-assignment-to-property]
     ctx.fillStyle = color;
     ctx.fillRect(0, 0, 1, 1);
     const rgba = ctx.getImageData(0, 0, 1, 1).data;
@@ -85,38 +85,28 @@ const mapColors = function (colorMap: string[]): Menu.ChoiceMenuItemApi[] {
   return colors;
 };
 
-const getColorCols = (editor: Editor, defaultCols: number): number => {
-  return editor.getParam('color_cols', defaultCols, 'number');
-};
+const getColorCols = (editor: Editor, defaultCols: number): number => editor.getParam('color_cols', defaultCols, 'number');
 
-const hasCustomColors = (editor: Editor): boolean => {
-  return editor.getParam('custom_colors') !== false;
-};
+const hasCustomColors = (editor: Editor): boolean => editor.getParam('custom_colors') !== false;
 
-const getColorMap = (editor: Editor): string[] => {
-  return editor.getParam('color_map');
-};
+const getColorMap = (editor: Editor): string[] => editor.getParam('color_map');
 
-const getColors = (editor: Editor): Menu.ChoiceMenuItemApi[] => {
+const getColors = (editor: Editor): Menu.ChoiceMenuItemSpec[] => {
   const unmapped = getColorMap(editor);
   return unmapped !== undefined ? mapColors(unmapped) : defaultColors;
 };
 
-const getCurrentColors = (): Menu.ChoiceMenuItemApi[] => {
-  return Arr.map(colorCache.state(), (color) => {
-    return {
-      type: choiceItem,
-      text: color,
-      value: color
-    };
-  });
-};
+const getCurrentColors = (): Menu.ChoiceMenuItemSpec[] => Arr.map(colorCache.state(), (color) => ({
+  type: choiceItem,
+  text: color,
+  value: color
+}));
 
 const addColor = (color: string) => {
   colorCache.add(color);
 };
 
-export default {
+export {
   mapColors,
   getColorCols,
   hasCustomColors,

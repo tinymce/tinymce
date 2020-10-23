@@ -5,19 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import {
-  Behaviour,
-  Container,
-  DomFactory,
-  Memento,
-  MementoRecord,
-  ModalDialog,
-  Reflecting,
-  SketchSpec,
-  AlloyComponent,
-} from '@ephox/alloy';
-import { Types } from '@ephox/bridge';
-import { Arr, Option } from '@ephox/katamari';
+import { AlloyComponent, Behaviour, Container, DomFactory, Memento, MementoRecord, ModalDialog, Reflecting, SketchSpec } from '@ephox/alloy';
+import { Dialog } from '@ephox/bridge';
+import { Arr, Optional } from '@ephox/katamari';
 
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { renderFooterButton } from '../general/Button';
@@ -25,26 +15,18 @@ import { footerChannel } from './DialogChannels';
 
 // FIX spelling and import location
 export interface DialogMemButton {
-  name: Types.Dialog.DialogButton['name'];
-  align: Types.Dialog.DialogButton['align'];
+  name: Dialog.DialogFooterButton['name'];
+  align: Dialog.DialogFooterButton['align'];
   memento: MementoRecord;
 }
 
 export interface WindowFooterSpec {
-  buttons: Types.Dialog.DialogButton[];
+  buttons: Dialog.DialogFooterButton[];
 }
 
-const makeButton = (button: Types.Dialog.DialogButton, backstage: UiFactoryBackstage) => {
-  return renderFooterButton(button, button.type, backstage);
-};
+const makeButton = (button: Dialog.DialogFooterButton, backstage: UiFactoryBackstage) => renderFooterButton(button, button.type, backstage);
 
-const lookup = (compInSystem: AlloyComponent, footerButtons: DialogMemButton[], buttonName: string) => {
-  return Arr.find(footerButtons, (button) => {
-    return button.name === buttonName;
-  }).bind((memButton) => {
-    return memButton.memento.getOpt(compInSystem);
-  });
-};
+const lookup = (compInSystem: AlloyComponent, footerButtons: DialogMemButton[], buttonName: string) => Arr.find(footerButtons, (button) => button.name === buttonName).bind((memButton) => memButton.memento.getOpt(compInSystem));
 
 const renderComponents = (_data, state) => {
   // default group is 'end'
@@ -80,14 +62,14 @@ const renderFooter = (initSpec: WindowFooterSpec, backstage: UiFactoryBackstage)
       buttonName: string
     ) => lookup(compInSystem, footerButtons, buttonName);
 
-    return Option.some({
+    return Optional.some({
       lookupByName,
       footerButtons
     });
   };
 
   return {
-    dom: DomFactory.fromHtml(`<div class="tox-dialog__footer"></div>`),
+    dom: DomFactory.fromHtml('<div class="tox-dialog__footer"></div>'),
     components: [ ],
     behaviours: Behaviour.derive([
       Reflecting.config({
@@ -100,15 +82,11 @@ const renderFooter = (initSpec: WindowFooterSpec, backstage: UiFactoryBackstage)
   };
 };
 
-const renderInlineFooter = (initSpec: WindowFooterSpec, backstage: UiFactoryBackstage) => {
-  return renderFooter(initSpec, backstage);
-};
+const renderInlineFooter = (initSpec: WindowFooterSpec, backstage: UiFactoryBackstage) => renderFooter(initSpec, backstage);
 
-const renderModalFooter = (initSpec: WindowFooterSpec, backstage: UiFactoryBackstage) => {
-  return ModalDialog.parts().footer(
-    renderFooter(initSpec, backstage)
-  );
-};
+const renderModalFooter = (initSpec: WindowFooterSpec, backstage: UiFactoryBackstage) => ModalDialog.parts.footer(
+  renderFooter(initSpec, backstage)
+);
 
 export {
   renderInlineFooter,

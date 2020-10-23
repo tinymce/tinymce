@@ -44,13 +44,13 @@ UnitTest.test('RangeTest', function () {
     assert.eq(expected, Arr.map(actual, function (x) { return x.id; }));
   };
 
-  check(['a'], 'a', 'a', 0, 0); // This doesn't check that it is a text node. Is that a problem?
-  check(['aaa', 'aabab', 'aba', 'abb'], 'aaa', 'abca', 0, 0);
-  check(['aaa'], 'aaa', 'aaa', 1, 1);
-  check(['aabab', 'aba', 'abb', 'abcb', 'abcc', 'abcda'], 'aabab', 'aca', 0, 0);
-  check(['aabab', 'aba', 'abb', 'abcb', 'abcc', 'abcda', 'aca'], 'aabab', 'aca', 0, 1);
-  check(['aba', 'abb', 'abcb', 'abcc', 'abcda', 'aca'], 'aabab', 'aca', 1, 1);
+  check([ 'a' ], 'a', 'a', 0, 0); // This doesn't check that it is a text node. Is that a problem?
+  check([ 'aaa', 'aabab', 'aba', 'abb' ], 'aaa', 'abca', 0, 0);
+  check([ 'aaa' ], 'aaa', 'aaa', 1, 1);
+  check([ 'aabab', 'aba', 'abb', 'abcb', 'abcc', 'abcda' ], 'aabab', 'aca', 0, 0);
+  check([ 'aabab', 'aba', 'abb', 'abcb', 'abcc', 'abcda', 'aca' ], 'aabab', 'aca', 0, 1);
+  check([ 'aba', 'abb', 'abcb', 'abcc', 'abcda', 'aca' ], 'aabab', 'aca', 1, 1);
 
-  check(['abcb', 'abcc'], 'abc', 'abcda', 0, 0);
-  check(['aaa', 'aabab', 'aba', 'abb', 'abcb', 'abcc', 'abcda'], 'aa', 'ac', 0, 1);
+  check([ 'abcb', 'abcc' ], 'abc', 'abcda', 0, 0);
+  check([ 'aaa', 'aabab', 'aba', 'abb', 'abcb', 'abcc', 'abcda' ], 'aa', 'ac', 0, 1);
 });

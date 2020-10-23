@@ -1,58 +1,41 @@
-import { Cell, Fun, Option } from '@ephox/katamari';
-
-import { nuState } from '../common/BehaviourState';
+import { Cell, Optional } from '@ephox/katamari';
 import { FlatgridState, GeneralKeyingConfig } from '../../keying/KeyingModeTypes';
 
+import { nuState } from '../common/BehaviourState';
+
 interface RowsCols {
-  numRows: () => number;
-  numColumns: () => number;
+  readonly numRows: number;
+  readonly numColumns: number;
 }
 
 const flatgrid = (): FlatgridState => {
-  const dimensions = Cell(Option.none<RowsCols>());
+  const dimensions = Cell(Optional.none<RowsCols>());
 
   const setGridSize = (numRows: number, numColumns: number) => {
     dimensions.set(
-      Option.some({
-        numRows: Fun.constant(numRows),
-        numColumns: Fun.constant(numColumns)
-      })
+      Optional.some({ numRows, numColumns })
     );
   };
 
-  const getNumRows = () => {
-    return dimensions.get().map((d) => {
-      return d.numRows();
-    });
-  };
+  const getNumRows = () => dimensions.get().map((d) => d.numRows);
 
-  const getNumColumns = () => {
-    return dimensions.get().map((d) => {
-      return d.numColumns();
-    });
-  };
+  const getNumColumns = () => dimensions.get().map((d) => d.numColumns);
 
   return nuState({
-    readState: () => {
-      return dimensions.get().map((d) => {
-        return {
-          numRows: String(d.numRows()),
-          numColumns: String(d.numColumns())
-        };
-      }).getOr({
-        numRows: '?',
-        numColumns: '?'
-      });
-    },
+    readState: () => dimensions.get().map((d) => ({
+      numRows: String(d.numRows),
+      numColumns: String(d.numColumns)
+    })).getOr({
+      numRows: '?',
+      numColumns: '?'
+    }),
     setGridSize,
     getNumRows,
     getNumColumns
   });
 };
 
-const init = (spec: GeneralKeyingConfig) => {
-  return spec.state(spec);
-};
+const init = (spec: GeneralKeyingConfig) => spec.state(spec);
 
 export {
   flatgrid,

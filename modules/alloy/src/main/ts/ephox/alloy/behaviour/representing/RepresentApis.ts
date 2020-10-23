@@ -13,13 +13,9 @@ const setValue = (component: AlloyComponent, repConfig: RepresentingConfig, repS
   repConfig.store.manager.setValue(component, repConfig, repState, data);
 };
 
-const getValue = (component: AlloyComponent, repConfig: RepresentingConfig, repState: RepresentingState) => {
-  return repConfig.store.manager.getValue(component, repConfig, repState);
-};
+const getValue = (component: AlloyComponent, repConfig: RepresentingConfig, repState: RepresentingState) => repConfig.store.manager.getValue(component, repConfig, repState);
 
-const getState = (component: AlloyComponent, repConfig: RepresentingConfig, repState: RepresentingState): RepresentingState => {
-  return repState;
-};
+const getState = (component: AlloyComponent, repConfig: RepresentingConfig, repState: RepresentingState): RepresentingState => repState;
 
 export {
   onLoad,

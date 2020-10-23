@@ -6,10 +6,19 @@
  */
 
 import { Arr, Fun } from '@ephox/katamari';
-import { DomEvent, Focus, Node } from '@ephox/sugar';
+import { DomEvent, Focus, SugarElement, SugarNode } from '@ephox/sugar';
 
-import CaptureBin from '../../util/CaptureBin';
-import ResumeEditing from '../focus/ResumeEditing';
+import * as CaptureBin from '../../util/CaptureBin';
+import * as ResumeEditing from '../focus/ResumeEditing';
+
+export interface IosKeyboard {
+  readonly toReading: () => void;
+  readonly toEditing: () => void;
+  readonly destroy: () => void;
+  readonly onToolbarTouch: () => void;
+}
+
+export type IosKeyboardConstructor = (outerBody: SugarElement<Node>, cWin: Window, page: SugarElement<Node>, frame: SugarElement<HTMLElement>) => IosKeyboard;
 
 /*
  * Stubborn IOS Keyboard mode:
@@ -40,7 +49,7 @@ import ResumeEditing from '../focus/ResumeEditing';
  * the stubborn keyboard in webapp mode, we will need to find some way to let repartee know the MaxHeight
  * needs to exclude the keyboard. This isn't a problem with timid, because the keyboard is dismissed.
  */
-const stubborn = function (outerBody, cWin, page, frame/*, toolstrip, toolbar*/) {
+const stubborn: IosKeyboardConstructor = (outerBody: SugarElement<Node>, cWin: Window, page: SugarElement<Node>, frame: SugarElement<HTMLElement>): IosKeyboard => {
   const toEditing = function () {
     ResumeEditing.resume(cWin, frame);
   };
@@ -51,7 +60,7 @@ const stubborn = function (outerBody, cWin, page, frame/*, toolstrip, toolbar*/)
 
   const captureInput = DomEvent.bind(page, 'keydown', function (evt) {
     // Think about killing the event.
-    if (! Arr.contains([ 'input', 'textarea' ], Node.name(evt.target()))) {
+    if (!Arr.contains([ 'input', 'textarea' ], SugarNode.name(evt.target))) {
 
       // FIX: Close the menus
       // closeMenus()
@@ -94,7 +103,7 @@ const stubborn = function (outerBody, cWin, page, frame/*, toolstrip, toolbar*/)
  * However, the timid keyboard mode will seamlessly integrate with dropdowns max-height, because
  * dropdowns dismiss the keyboard, so they have all the height they require.
  */
-const timid = function (outerBody, cWin, page, frame/*, toolstrip, toolbar*/) {
+const timid: IosKeyboardConstructor = (outerBody: SugarElement<Node>, cWin: Window, page: SugarElement<Node>, frame: SugarElement<HTMLElement>): IosKeyboard => {
   const dismissKeyboard = function () {
     Focus.blur(frame);
   };
@@ -119,7 +128,7 @@ const timid = function (outerBody, cWin, page, frame/*, toolstrip, toolbar*/) {
   };
 };
 
-export default {
+export {
   stubborn,
   timid
 };

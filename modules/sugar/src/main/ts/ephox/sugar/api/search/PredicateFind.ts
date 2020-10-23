@@ -1,81 +1,75 @@
-import { Node as DomNode, ChildNode } from '@ephox/dom-globals';
-import { Arr, Fun, Option, Type } from '@ephox/katamari';
+import { Arr, Fun, Optional, Type } from '@ephox/katamari';
 import ClosestOrAncestor from '../../impl/ClosestOrAncestor';
 import * as Compare from '../dom/Compare';
-import * as Body from '../node/Body';
-import Element from '../node/Element';
+import * as SugarBody from '../node/SugarBody';
+import { SugarElement } from '../node/SugarElement';
 
 const first: {
-  <T extends DomNode = DomNode> (predicate: (e: Element<DomNode>) => e is Element<T>): Option<Element<T>>;
-  (predicate: (e: Element<DomNode>) => boolean): Option<Element<DomNode>>;
-} = function <T extends DomNode = DomNode> (predicate: (e: Element<DomNode>) => e is Element<T>) {
-  return descendant<T>(Body.body(), predicate);
-};
+  <T extends Node = Node> (predicate: (e: SugarElement<Node>) => e is SugarElement<T>): Optional<SugarElement<T & ChildNode>>;
+  (predicate: (e: SugarElement<Node>) => boolean): Optional<SugarElement<Node & ChildNode>>;
+} = (predicate: (e: SugarElement<Node>) => boolean) =>
+  descendant(SugarBody.body(), predicate);
 
 const ancestor: {
-  <T extends DomNode = DomNode> (scope: Element<DomNode>, predicate: (e: Element<DomNode>) => e is Element<T>, isRoot?: (e: Element<DomNode>) => boolean): Option<Element<T>>;
-  (scope: Element<DomNode>, predicate: (e: Element<DomNode>) => boolean, isRoot?: (e: Element<DomNode>) => boolean): Option<Element<DomNode>>;
-} = function <T extends DomNode = DomNode> (scope: Element<DomNode>, predicate: (e: Element<DomNode>) => e is Element<T>, isRoot?: (e: Element<DomNode>) => boolean) {
-  let element = scope.dom();
-  const stop = Type.isFunction(isRoot) ? isRoot : Fun.constant(false);
+  <T extends Node = Node> (scope: SugarElement<Node>, predicate: (e: SugarElement<Node>) => e is SugarElement<T>, isRoot?: (e: SugarElement<Node>) => boolean): Optional<SugarElement<T>>;
+  (scope: SugarElement<Node>, predicate: (e: SugarElement<Node>) => boolean, isRoot?: (e: SugarElement<Node>) => boolean): Optional<SugarElement<Node>>;
+} = (scope: SugarElement<Node>, predicate: (e: SugarElement<Node>) => boolean, isRoot?: (e: SugarElement<Node>) => boolean) => {
+  let element = scope.dom;
+  const stop = Type.isFunction(isRoot) ? isRoot : Fun.never;
 
   while (element.parentNode) {
     element = element.parentNode;
-    const el = Element.fromDom(element);
+    const el = SugarElement.fromDom(element);
 
     if (predicate(el)) {
-      return Option.some(el);
+      return Optional.some(el);
     } else if (stop(el)) {
       break;
     }
   }
-  return Option.none<Element<T>>();
+  return Optional.none<SugarElement<Node>>();
 };
 
 const closest: {
-  <T extends DomNode = DomNode> (scope: Element<DomNode>, predicate: (e: Element<DomNode>) => e is Element<T>, isRoot?: (e: Element<DomNode>) => boolean): Option<Element<T>>;
-  (scope: Element<DomNode>, predicate: (e: Element<DomNode>) => boolean, isRoot?: (e: Element<DomNode>) => boolean): Option<Element<DomNode>>;
-} = function <T extends DomNode = DomNode> (scope: Element<DomNode>, predicate: (e: Element<DomNode>) => e is Element<T>, isRoot?: (e: Element<DomNode>) => boolean) {
+  <T extends Node = Node> (scope: SugarElement<Node>, predicate: (e: SugarElement<Node>) => e is SugarElement<T>, isRoot?: (e: SugarElement<Node>) => boolean): Optional<SugarElement<T>>;
+  (scope: SugarElement<Node>, predicate: (e: SugarElement<Node>) => boolean, isRoot?: (e: SugarElement<Node>) => boolean): Optional<SugarElement<Node>>;
+} = (scope: SugarElement<Node>, predicate: (e: SugarElement<Node>) => boolean, isRoot?: (e: SugarElement<Node>) => boolean) => {
   // This is required to avoid ClosestOrAncestor passing the predicate to itself
-  const is = function (s: Element<DomNode>, test: (e: Element<DomNode>) => e is Element<T>): s is Element<T> {
-    return test(s);
-  };
-  return ClosestOrAncestor(is, ancestor, scope, predicate, isRoot) as Option<Element<T>>;
+  const is = (s: SugarElement<Node>, test: (e: SugarElement<Node>) => boolean): s is SugarElement<Node> => test(s);
+  return ClosestOrAncestor(is, ancestor, scope, predicate, isRoot);
 };
 
 const sibling: {
-  <T extends DomNode = DomNode> (scope: Element<DomNode>, predicate: (e: Element<DomNode>) => e is Element<T>): Option<Element<T>>;
-  (scope: Element<DomNode>, predicate: (e: Element<DomNode>) => boolean): Option<Element<DomNode>>;
-} = function <T extends DomNode = DomNode> (scope: Element<DomNode>, predicate: (e: Element<DomNode>) => e is Element<T>) {
-  const element = scope.dom();
+  <T extends Node = Node> (scope: SugarElement<Node>, predicate: (e: SugarElement<Node>) => e is SugarElement<T>): Optional<SugarElement<T & ChildNode>>;
+  (scope: SugarElement<Node>, predicate: (e: SugarElement<Node>) => boolean): Optional<SugarElement<Node & ChildNode>>;
+} = (scope: SugarElement<Node>, predicate: (e: SugarElement<Node>) => boolean): Optional<SugarElement<Node & ChildNode>> => {
+  const element = scope.dom;
   if (!element.parentNode) {
-    return Option.none<Element<T>>();
+    return Optional.none<SugarElement<Node & ChildNode>>();
   }
 
-  return child(Element.fromDom(element.parentNode), function (x): x is Element<T> {
-    return !Compare.eq(scope, x) && predicate(x);
-  });
+  return child(SugarElement.fromDom(element.parentNode), (x) => !Compare.eq(scope, x) && predicate(x));
 };
 
 const child: {
-  <T extends DomNode = DomNode> (scope: Element<DomNode>, predicate: (e: Element<DomNode>) => e is Element<T>): Option<Element<T>>;
-  (scope: Element<DomNode>, predicate: (e: Element<DomNode>) => boolean): Option<Element<DomNode>>;
-} = function <T extends DomNode = DomNode> (scope: Element<DomNode>, predicate: (e: Element<DomNode>) => e is Element<T>) {
-  const pred = (node: DomNode): node is T => predicate(Element.fromDom(node));
-  const result = Arr.find(scope.dom().childNodes, pred) as Option<T>;
-  return result.map(Element.fromDom);
+  <T extends Node = Node> (scope: SugarElement<Node>, predicate: (e: SugarElement<Node>) => e is SugarElement<T>): Optional<SugarElement<T & ChildNode>>;
+  (scope: SugarElement<Node>, predicate: (e: SugarElement<Node>) => boolean): Optional<SugarElement<Node & ChildNode>>;
+} = (scope: SugarElement<Node>, predicate: (e: SugarElement<Node>) => boolean) => {
+  const pred = (node: Node) => predicate(SugarElement.fromDom(node));
+  const result = Arr.find(scope.dom.childNodes, pred);
+  return result.map(SugarElement.fromDom);
 };
 
 const descendant: {
-  <T extends DomNode = DomNode> (scope: Element<DomNode>, predicate: (e: Element<DomNode>) => e is Element<T>): Option<Element<T>>;
-  (scope: Element<DomNode>, predicate: (e: Element<DomNode>) => boolean): Option<Element<DomNode>>;
-} = function <T extends DomNode = DomNode> (scope: Element<DomNode>, predicate: (e: Element<DomNode>) => e is Element<T>): Option<Element<T>> {
-  const descend = function (node: DomNode): Option<Element<T>> {
+  <T extends Node = Node> (scope: SugarElement<Node>, predicate: (e: SugarElement<Node>) => e is SugarElement<T>): Optional<SugarElement<T & ChildNode>>;
+  (scope: SugarElement<Node>, predicate: (e: SugarElement<Node>) => boolean): Optional<SugarElement<Node & ChildNode>>;
+} = (scope: SugarElement<Node>, predicate: (e: SugarElement<Node>) => boolean) => {
+  const descend = (node: Node): Optional<SugarElement<Node & ChildNode>> => {
     // tslint:disable-next-line:prefer-for-of
     for (let i = 0; i < node.childNodes.length; i++) {
-      const child = Element.fromDom(node.childNodes[i]);
+      const child = SugarElement.fromDom(node.childNodes[i]);
       if (predicate(child)) {
-        return Option.some(child);
+        return Optional.some(child);
       }
 
       const res = descend(node.childNodes[i]);
@@ -84,10 +78,10 @@ const descendant: {
       }
     }
 
-    return Option.none<Element<T>>();
+    return Optional.none<SugarElement<Node & ChildNode>>();
   };
 
-  return descend(scope.dom());
+  return descend(scope.dom);
 };
 
-export { first, ancestor, closest, sibling, child, descendant, };
+export { first, ancestor, closest, sibling, child, descendant };

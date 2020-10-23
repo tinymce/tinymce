@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Dialog from '../ui/Dialog';
-import Utils from '../util/Utils';
 import Editor from 'tinymce/core/api/Editor';
+import * as Dialog from '../ui/Dialog';
+import * as Utils from '../util/Utils';
 
 const register = function (editor: Editor) {
   editor.addCommand('codesample', function () {
@@ -20,6 +20,6 @@ const register = function (editor: Editor) {
   });
 };
 
-export default {
+export {
   register
 };

@@ -1,7 +1,7 @@
-import { ApproxStructure, Assertions, Chain, FocusTools, Keyboard, Keys, Logger, Mouse, NamedChain, Step, StructAssert, UiFinder, } from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, FocusTools, Keyboard, Keys, Logger, Mouse, NamedChain, Step, StructAssert, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Result } from '@ephox/katamari';
-import { Attr, Class, Compare } from '@ephox/sugar';
+import { Attribute, Class, Compare } from '@ephox/sugar';
 
 import * as AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviour';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
@@ -17,16 +17,13 @@ import { ModalDialog } from 'ephox/alloy/api/ui/ModalDialog';
 import * as Sinks from 'ephox/alloy/test/Sinks';
 
 UnitTest.asynctest('ModalDialogTest', (success, failure) => {
-  GuiSetup.setup((store, doc, body) => {
-    return Sinks.relativeSink();
-
-  }, (doc, body, gui, sink, store) => {
+  GuiSetup.setup((_store, _doc, _body) => Sinks.relativeSink(), (doc, _body, gui, sink, store) => {
     const focusAndTab = Behaviour.derive([
       Focusing.config({ }),
       Tabstopping.config({ })
     ]);
 
-    const pDraghandle = ModalDialog.parts().draghandle({
+    const pDraghandle = ModalDialog.parts.draghandle({
       dom: {
         tag: 'div',
         styles: {
@@ -37,7 +34,7 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
       }
     });
 
-    const pTitle = ModalDialog.parts().title({
+    const pTitle = ModalDialog.parts.title({
       dom: {
         tag: 'div',
         innerHtml: 'Title',
@@ -47,7 +44,7 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
       components: [ ]
     });
 
-    const pClose = ModalDialog.parts().close({
+    const pClose = ModalDialog.parts.close({
       dom: {
         tag: 'div',
         innerHtml: 'X'
@@ -55,7 +52,7 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
       components: [ ]
     });
 
-    const pBody = ModalDialog.parts().body({
+    const pBody = ModalDialog.parts.body({
       dom: {
         tag: 'div',
         classes: [ 'test-dialog-body' ]
@@ -76,7 +73,7 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
       ]
     });
 
-    const pFooter = ModalDialog.parts().footer({
+    const pFooter = ModalDialog.parts.footer({
       dom: {
         tag: 'div',
         classes: [ 'test-dialog-footer' ],
@@ -108,12 +105,12 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
         ],
 
         dragBlockClass: 'drag-blocker',
-        lazySink (comp) {
-          Assertions.assertEq('Checking dialog passed through to lazySink', true, Compare.eq(comp.element(), dialog.element()));
+        lazySink(comp) {
+          Assertions.assertEq('Checking dialog passed through to lazySink', true, Compare.eq(comp.element, dialog.element));
           return Result.value(sink);
         },
 
-        useTabstopAt (elem) {
+        useTabstopAt(elem) {
           return !Class.has(elem, 'untabbable');
         },
 
@@ -127,7 +124,7 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
         ]),
 
         eventOrder: {
-          [SystemEvents.attachedToDom()]: ['modal-events-1', 'modal-events-2']
+          [SystemEvents.attachedToDom()]: [ 'modal-events-1', 'modal-events-2' ]
         },
 
         onEscape: store.adderH('dialog.escape'),
@@ -148,80 +145,76 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
       })
     );
 
-    const sCheckDialogStructure = (label: string, expected: StructAssert) => {
-      return Logger.t(
-        label,
-        Chain.asStep({ }, [
-          Chain.inject(gui.element()),
-          UiFinder.cFindIn('.test-dialog'),
-          Chain.op((dlg) => {
-            Assertions.assertStructure('Checking dialog structure', expected, dlg);
-          })
-        ])
-      );
-    };
+    const sCheckDialogStructure = (label: string, expected: StructAssert) => Logger.t(
+      label,
+      Chain.asStep({ }, [
+        Chain.inject(gui.element),
+        UiFinder.cFindIn('.test-dialog'),
+        Chain.op((dlg) => {
+          Assertions.assertStructure('Checking dialog structure', expected, dlg);
+        })
+      ])
+    );
 
     return [
-      Logger.t('No dialog should be in DOM before it appears', UiFinder.sNotExists(gui.element(), '.test-dialog')),
-      Logger.t('No dialog blocker should be in DOM before it appears', UiFinder.sNotExists(gui.element(), '.test-dialog-blocker')),
+      Logger.t('No dialog should be in DOM before it appears', UiFinder.sNotExists(gui.element, '.test-dialog')),
+      Logger.t('No dialog blocker should be in DOM before it appears', UiFinder.sNotExists(gui.element, '.test-dialog-blocker')),
       Step.sync(() => {
         ModalDialog.show(dialog);
       }),
-      Logger.t('After showing, dialog should be in DOM', UiFinder.sExists(gui.element(), '.test-dialog')),
+      Logger.t('After showing, dialog should be in DOM', UiFinder.sExists(gui.element, '.test-dialog')),
       store.sAssertEq('Attached event should have fired', [ 'modal.attached.1', 'modal.attached.2' ]),
       store.sClear,
 
-      Logger.t('After showing, dialog blocker should be in DOM', UiFinder.sExists(gui.element(), '.test-dialog-blocker')),
-      sCheckDialogStructure('After showing', ApproxStructure.build((s, str, arr) => {
-        return s.element('div', {
-          attrs: {
-            'aria-modal': str.is('true'),
-            'role': str.is('dialog')
-          },
-          classes: [ arr.has('test-dialog') ],
-          children: [
-            s.element('div', { }),
-            s.element('div', { html: str.is('Title'), classes: [ arr.has('test-dialog-title') ] }),
-            s.element('div', { html: str.is('X') }),
-            s.element('div', {
-              classes: [ arr.has('test-dialog-body') ],
-              children: [
-                s.element('div', {
-                  children: [
-                    s.element('p', { html: str.is('This is something else') })
-                  ]
-                })
-              ]
-            }),
-            s.element('div', { classes: [ arr.has('test-dialog-footer') ] })
-          ]
-        });
-      })),
+      Logger.t('After showing, dialog blocker should be in DOM', UiFinder.sExists(gui.element, '.test-dialog-blocker')),
+      sCheckDialogStructure('After showing', ApproxStructure.build((s, str, arr) => s.element('div', {
+        attrs: {
+          'aria-modal': str.is('true'),
+          'role': str.is('dialog')
+        },
+        classes: [ arr.has('test-dialog') ],
+        children: [
+          s.element('div', { }),
+          s.element('div', { html: str.is('Title'), classes: [ arr.has('test-dialog-title') ] }),
+          s.element('div', { html: str.is('X') }),
+          s.element('div', {
+            classes: [ arr.has('test-dialog-body') ],
+            children: [
+              s.element('div', {
+                children: [
+                  s.element('p', { html: str.is('This is something else') })
+                ]
+              })
+            ]
+          }),
+          s.element('div', { classes: [ arr.has('test-dialog-footer') ] })
+        ]
+      }))),
 
-      Logger.t('Dialog should have aria-labelledby with title id', Chain.asStep(gui.element(), [
+      Logger.t('Dialog should have aria-labelledby with title id', Chain.asStep(gui.element, [
         NamedChain.asChain([
           NamedChain.direct(NamedChain.inputName(), UiFinder.cFindIn('.test-dialog-title'), 'title'),
           NamedChain.direct(NamedChain.inputName(), UiFinder.cFindIn('.test-dialog'), 'dialog'),
           NamedChain.bundle((f) => {
-            const titleId = Attr.get(f.title, 'id');
-            Assertions.assertEq('titleId should be set', true, Attr.has(f.title, 'id'));
+            const titleId = Attribute.get(f.title, 'id') || '';
+            Assertions.assertEq('titleId should be set', true, Attribute.has(f.title, 'id'));
             Assertions.assertEq('titleId should not be empty', true, titleId.length > 0);
-            const dialogLabelledBy = Attr.get(f.dialog, 'aria-labelledby');
+            const dialogLabelledBy = Attribute.get(f.dialog, 'aria-labelledby');
             Assertions.assertEq('Labelledby blah better error message', titleId, dialogLabelledBy);
             return Result.value(f);
           })
         ])
       ])),
 
-      Logger.t('Dialog should have aria-describedby with body describe id', Chain.asStep(gui.element(), [
+      Logger.t('Dialog should have aria-describedby with body describe id', Chain.asStep(gui.element, [
         NamedChain.asChain([
           NamedChain.direct(NamedChain.inputName(), UiFinder.cFindIn('.test-dialog-body'), 'body'),
           NamedChain.direct(NamedChain.inputName(), UiFinder.cFindIn('.test-dialog'), 'dialog'),
           NamedChain.bundle((f) => {
-            const describeId = Attr.get(f.body, 'id');
-            Assertions.assertEq('describeId should be set', true, Attr.has(f.body, 'id'));
+            const describeId = Attribute.get(f.body, 'id') || '';
+            Assertions.assertEq('describeId should be set', true, Attribute.has(f.body, 'id'));
             Assertions.assertEq('describeId should not be empty', true, describeId.length > 0);
-            const dialogDescribedBy = Attr.get(f.dialog, 'aria-describedby');
+            const dialogDescribedBy = Attribute.get(f.dialog, 'aria-describedby');
             Assertions.assertEq('aria-describedby should be set to describeId', describeId, dialogDescribedBy);
             return Result.value(f);
           })
@@ -258,27 +251,23 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
 
       Step.sync(() => {
         const body = ModalDialog.getBody(dialog);
-        Assertions.assertStructure('Checking body of dialog', ApproxStructure.build((s, str, arr) => {
-          return s.element('div', {
-            classes: [ arr.has('test-dialog-body') ]
-          });
-        }), body.element());
+        Assertions.assertStructure('Checking body of dialog', ApproxStructure.build((s, _str, arr) => s.element('div', {
+          classes: [ arr.has('test-dialog-body') ]
+        })), body.element);
       }),
 
       Step.sync(() => {
         const footer = ModalDialog.getFooter(dialog);
-        Assertions.assertStructure('Checking footer of dialog', ApproxStructure.build((s, str, arr) => {
-          return s.element('div', {
-            classes: [ arr.has('test-dialog-footer') ]
-          });
-        }), footer.element());
+        Assertions.assertStructure('Checking footer of dialog', ApproxStructure.build((s, _str, arr) => s.element('div', {
+          classes: [ arr.has('test-dialog-footer') ]
+        })), footer.element);
       }),
 
       Step.sync(() => {
         ModalDialog.hide(dialog);
       }),
-      Logger.t('After hiding, dialog should no longer be in DOM', UiFinder.sNotExists(gui.element(), '.test-dialog')),
-      Logger.t('After hiding, dialog blocker should no longer be in DOM', UiFinder.sNotExists(gui.element(), '.test-dialog-blocker')),
+      Logger.t('After hiding, dialog should no longer be in DOM', UiFinder.sNotExists(gui.element, '.test-dialog')),
+      Logger.t('After hiding, dialog blocker should no longer be in DOM', UiFinder.sNotExists(gui.element, '.test-dialog-blocker')),
 
       Step.sync(() => {
         ModalDialog.show(dialog);
@@ -286,60 +275,54 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
 
       sCheckDialogStructure(
         'Checking initial structure after showing (not busy)',
-        ApproxStructure.build((s, str, arr) => {
-          return s.element('div', {
-            classes: [ arr.has('test-dialog') ],
-            attrs: {
-              'aria-busy': str.none()
-            },
-            children: [
-              s.anything(), // Draghandle
-              s.anything(), // Title
-              s.anything(), // X
-              s.element('div', { classes: [ arr.has('test-dialog-body') ] }),
-              s.element('div', { classes: [ arr.has('test-dialog-footer') ] })
-            ]
-          });
-        })
+        ApproxStructure.build((s, str, arr) => s.element('div', {
+          classes: [ arr.has('test-dialog') ],
+          attrs: {
+            'aria-busy': str.none()
+          },
+          children: [
+            s.anything(), // Draghandle
+            s.anything(), // Title
+            s.anything(), // X
+            s.element('div', { classes: [ arr.has('test-dialog-body') ] }),
+            s.element('div', { classes: [ arr.has('test-dialog-footer') ] })
+          ]
+        }))
       ),
 
       Logger.t(
         'Set the Dialog to "Busy"',
         Step.sync(() => {
-          ModalDialog.setBusy(dialog, (d, bs) => {
-            return {
-              dom: {
-                tag: 'div',
-                classes: [ 'test-busy-class' ],
-                innerHtml: 'Loading'
-              },
-              behaviours: bs
-            };
-          });
+          ModalDialog.setBusy(dialog, (_d, bs) => ({
+            dom: {
+              tag: 'div',
+              classes: [ 'test-busy-class' ],
+              innerHtml: 'Loading'
+            },
+            behaviours: bs
+          }));
         })
       ),
 
       sCheckDialogStructure(
         'Checking setBusy structure',
-        ApproxStructure.build((s, str, arr) => {
-          return s.element('div', {
-            classes: [ arr.has('test-dialog') ],
-            attrs: {
-              'aria-busy': str.is('true')
-            },
-            children: [
-              s.anything(), // Draghandle
-              s.anything(), // Title
-              s.anything(), // X
-              s.element('div', { classes: [ arr.has('test-dialog-body') ] }),
-              s.element('div', { classes: [ arr.has('test-dialog-footer') ] }),
-              s.element('div', {
-                classes: [ arr.has('test-busy-class') ],
-                html: str.is('Loading')
-              })
-            ]
-          });
-        })
+        ApproxStructure.build((s, str, arr) => s.element('div', {
+          classes: [ arr.has('test-dialog') ],
+          attrs: {
+            'aria-busy': str.is('true')
+          },
+          children: [
+            s.anything(), // Draghandle
+            s.anything(), // Title
+            s.anything(), // X
+            s.element('div', { classes: [ arr.has('test-dialog-body') ] }),
+            s.element('div', { classes: [ arr.has('test-dialog-footer') ] }),
+            s.element('div', {
+              classes: [ arr.has('test-busy-class') ],
+              html: str.is('Loading')
+            })
+          ]
+        }))
       ),
 
       FocusTools.sTryOnSelector('Focus should be on loading message', doc, '.test-busy-class'),
@@ -350,39 +333,35 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
       Logger.t(
         'Set the dialog to busy again without setting it to idle first',
         Step.sync(() => {
-          ModalDialog.setBusy(dialog, (d, bs) => {
-            return {
-              dom: {
-                tag: 'div',
-                classes: [ 'test-busy-second-class' ],
-                innerHtml: 'Still loading'
-              }
-            };
-          });
+          ModalDialog.setBusy(dialog, (_d, _bs) => ({
+            dom: {
+              tag: 'div',
+              classes: [ 'test-busy-second-class' ],
+              innerHtml: 'Still loading'
+            }
+          }));
         })
       ),
 
       sCheckDialogStructure(
         'Checking second setBusy structure',
-        ApproxStructure.build((s, str, arr) => {
-          return s.element('div', {
-            classes: [ arr.has('test-dialog') ],
-            attrs: {
-              'aria-busy': str.is('true')
-            },
-            children: [
-              s.anything(), // Draghandle
-              s.anything(), // Title
-              s.anything(), // X
-              s.element('div', { classes: [ arr.has('test-dialog-body') ] }),
-              s.element('div', { classes: [ arr.has('test-dialog-footer') ] }),
-              s.element('div', {
-                classes: [ arr.has('test-busy-second-class') ],
-                html: str.is('Still loading')
-              })
-            ]
-          });
-        })
+        ApproxStructure.build((s, str, arr) => s.element('div', {
+          classes: [ arr.has('test-dialog') ],
+          attrs: {
+            'aria-busy': str.is('true')
+          },
+          children: [
+            s.anything(), // Draghandle
+            s.anything(), // Title
+            s.anything(), // X
+            s.element('div', { classes: [ arr.has('test-dialog-body') ] }),
+            s.element('div', { classes: [ arr.has('test-dialog-footer') ] }),
+            s.element('div', {
+              classes: [ arr.has('test-busy-second-class') ],
+              html: str.is('Still loading')
+            })
+          ]
+        }))
       ),
 
       Logger.t(
@@ -394,21 +373,19 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
 
       sCheckDialogStructure(
         'Checking setIdle structure',
-        ApproxStructure.build((s, str, arr) => {
-          return s.element('div', {
-            classes: [ arr.has('test-dialog') ],
-            attrs: {
-              'aria-busy': str.none()
-            },
-            children: [
-              s.anything(), // Draghandle
-              s.anything(), // Title
-              s.anything(), // X
-              s.element('div', { classes: [ arr.has('test-dialog-body') ] }),
-              s.element('div', { classes: [ arr.has('test-dialog-footer') ] })
-            ]
-          });
-        })
+        ApproxStructure.build((s, str, arr) => s.element('div', {
+          classes: [ arr.has('test-dialog') ],
+          attrs: {
+            'aria-busy': str.none()
+          },
+          children: [
+            s.anything(), // Draghandle
+            s.anything(), // Title
+            s.anything(), // X
+            s.element('div', { classes: [ arr.has('test-dialog-body') ] }),
+            s.element('div', { classes: [ arr.has('test-dialog-footer') ] })
+          ]
+        }))
       )
     ];
   }, () => { success(); }, failure);

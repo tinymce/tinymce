@@ -1,35 +1,48 @@
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr, FutureResult, Result } from '@ephox/katamari';
-import { UnitTest, assert } from '@ephox/bedrock-client';
-import { console, Blob } from '@ephox/dom-globals';
+import { readBlobAsText } from 'ephox/jax/core/BlobReader';
 import { DataType } from 'ephox/jax/core/DataType';
 import * as Http from 'ephox/jax/core/Http';
 import { HttpError } from 'ephox/jax/core/HttpError';
-import { readBlobAsText } from 'ephox/jax/core/BlobReader';
 
-/* tslint:disable:no-console */
+/* eslint-disable no-console */
 
-const expectError = (label: string, response: FutureResult<any, HttpError>) => {
-  return FutureResult.nu((callback) => {
-    response.get((res) => {
-      res.fold((err) => {
-        console.log(label, 'successfully failed');
-        callback(Result.value({ }));
-      }, (val) => {
-        callback(Result.error('Unexpected value in test: ' + label));
-      });
+const expectError = (label: string, response: FutureResult<any, HttpError>) => FutureResult.nu((callback) => {
+  response.get((res) => {
+    res.fold((_err) => {
+      console.log(label, 'successfully failed');
+      callback(Result.value({ }));
+    }, (_val) => {
+      callback(Result.error('Unexpected value in test: ' + label));
     });
   });
-};
+});
 
-const expectValue = (label: string, value: any, response: FutureResult<any, HttpError>) => {
-  return FutureResult.nu((callback) => {
-    response.get((res) => {
-      res.fold((err) => {
-        callback(Result.error(new Error(err.message)));
-      }, (val) => {
+const expectValue = (label: string, value: any, response: FutureResult<any, HttpError>) => FutureResult.nu((callback) => {
+  response.get((res) => {
+    res.fold((err) => {
+      callback(Result.error(new Error(err.message)));
+    }, (val) => {
+      try {
+        assert.eq(value, val);
+        console.log(label, 'passed with ', val);
+        callback(Result.value({}));
+      } catch (err) {
+        callback(Result.error(new Error(err)));
+      }
+    });
+  });
+});
+
+const expectBlobJson = (label: string, value: any, response: FutureResult<Blob, HttpError>) => FutureResult.nu((callback) => {
+  response.get((res) => {
+    res.fold((err) => {
+      callback(Result.error(new Error(err.message)));
+    }, (blob) => {
+      readBlobAsText(blob).get((text) => {
         try {
-          assert.eq(value, val);
-          console.log(label, 'passed with ', val);
+          assert.eq(JSON.stringify(value, null, '  '), text);
+          console.log(label, 'passed with ', text);
           callback(Result.value({}));
         } catch (err) {
           callback(Result.error(new Error(err)));
@@ -37,34 +50,14 @@ const expectValue = (label: string, value: any, response: FutureResult<any, Http
       });
     });
   });
-};
-
-const expectBlobJson = (label: string, value: any, response: FutureResult<Blob, HttpError>) => {
-  return FutureResult.nu((callback) => {
-    response.get((res) => {
-      res.fold((err) => {
-        callback(Result.error(new Error(err.message)));
-      }, (blob) => {
-        readBlobAsText(blob).get((text) => {
-          try {
-            assert.eq(JSON.stringify(value, null, '  '), text);
-            console.log(label, 'passed with ', text);
-            callback(Result.value({}));
-          } catch (err) {
-            callback(Result.error(new Error(err)));
-          }
-        });
-      });
-    });
-  });
-};
+});
 
 UnitTest.asynctest('HttpTest', (success, failure) => {
   const responses = [
     expectError('GET Query parameters incorrect', Http.get(
       {
         url: '/custom/jax/sample/get/1?word=beta',
-        responseType: DataType.JSON,
+        responseType: DataType.JSON
       }
     )),
 
@@ -73,7 +66,7 @@ UnitTest.asynctest('HttpTest', (success, failure) => {
     }, Http.get(
       {
         url: '/custom/jax/sample/get/1?word=alpha',
-        responseType: DataType.JSON,
+        responseType: DataType.JSON
       }
     )),
 
@@ -121,14 +114,14 @@ UnitTest.asynctest('HttpTest', (success, failure) => {
       results: {
         bad: 'custom-header'
       }
-     }, Http.get(
-       {
-         url: '/custom/jax/sample/get/1?word=beta',
-         responseType: DataType.JSON,
-         headers: {
-            'X-custom-header': 'X-custom-header-value'
-          }
-       }
+    }, Http.get(
+      {
+        url: '/custom/jax/sample/get/1?word=beta',
+        responseType: DataType.JSON,
+        headers: {
+          'X-custom-header': 'X-custom-header-value'
+        }
+      }
     )),
 
     expectError('POST with wrong data: ', Http.post(
@@ -217,7 +210,7 @@ UnitTest.asynctest('HttpTest', (success, failure) => {
       results: {
         'del-bad': 'custom-header'
       }
-     }, Http.del(
+    }, Http.del(
       {
         url: '/custom/jax/sample/del/1?word=beta',
         responseType: DataType.JSON,
@@ -227,7 +220,7 @@ UnitTest.asynctest('HttpTest', (success, failure) => {
       }
     )),
 
-    expectBlobJson('Download with correct blob data', { results: { data: '123' } }, Http.download(
+    expectBlobJson('Download with correct blob data', { results: { data: '123' }}, Http.download(
       {
         url: '/custom/jax/blob',
         headers: {
@@ -237,11 +230,7 @@ UnitTest.asynctest('HttpTest', (success, failure) => {
     ))
   ];
 
-  Arr.foldr(responses, (res, rest) => {
-    return rest.bindFuture(() => {
-      return res;
-    });
-  }, FutureResult.pure({})).get((v) => {
+  Arr.foldr(responses, (res, rest) => rest.bindFuture(() => res), FutureResult.pure({})).get((v) => {
     v.fold((err) => {
       failure(err);
     }, (_) => {

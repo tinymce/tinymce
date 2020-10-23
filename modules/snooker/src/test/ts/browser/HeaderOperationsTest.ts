@@ -1,6 +1,6 @@
-import TableOperations from 'ephox/snooker/api/TableOperations';
-import Assertions from 'ephox/snooker/test/Assertions';
 import { UnitTest } from '@ephox/bedrock-client';
+import * as TableOperations from 'ephox/snooker/api/TableOperations';
+import * as Assertions from 'ephox/snooker/test/Assertions';
 
 UnitTest.test('HeaderOperationsTest', function () {
   // TODO: Make it keep the column.

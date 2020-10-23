@@ -1,5 +1,5 @@
-import { Arr, Fun, Id, Strings } from '@ephox/katamari';
 import { Assert, TestLabel } from '@ephox/bedrock-client';
+import { Arr, Fun, Id, Strings } from '@ephox/katamari';
 import { ArrayAssert, StringAssert } from './ApproxStructures';
 
 const missingValuePlaceholder: string = Id.generate('missing');
@@ -22,7 +22,7 @@ const is = (target: string): CombinedAssert => {
 
   const strAssert = (label: TestLabel, actual: string) => {
     const c = compare(actual);
-    assertOnBool(c, TestLabel.concat(label, '\nExpected value: ' + target), actual);
+    assertOnBool(c, TestLabel.concat(label, '\nExpected value: ' + JSON.stringify(target)), actual);
   };
 
   return {

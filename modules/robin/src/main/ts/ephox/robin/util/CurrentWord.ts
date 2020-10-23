@@ -1,6 +1,6 @@
-import { Option, Options } from '@ephox/katamari';
+import { Optional, Optionals } from '@ephox/katamari';
 import { BeforeAfter } from '../data/BeforeAfter';
-import WordUtil from './WordUtil';
+import * as WordUtil from './WordUtil';
 
 /*
  * Returns an optional before and optional after representing the index positions of the nearest
@@ -21,14 +21,14 @@ const around = function (text: string, position: number) {
 
   const fallback = BeforeAfter(before, after);
 
-  const current = BeforeAfter(Option.some(position), Option.some(position));
+  const current = BeforeAfter(Optional.some(position), Optional.some(position));
 
-  const endOfWord = after.bind((a) => Options.someIf(position === a, current));
+  const endOfWord = after.bind((a) => Optionals.someIf(position === a, current));
 
   return endOfWord.getOrThunk(() =>
-    before.bind((b) => Options.someIf(position === b, current)).getOr(fallback));
+    before.bind((b) => Optionals.someIf(position === b, current)).getOr(fallback));
 };
 
-export default {
+export {
   around
 };

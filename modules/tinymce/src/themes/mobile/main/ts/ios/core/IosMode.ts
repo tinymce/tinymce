@@ -5,19 +5,20 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Fun, Singleton, Struct } from '@ephox/katamari';
-import { Class, Css, Element, Focus } from '@ephox/sugar';
+import { Singleton } from '@ephox/katamari';
+import { Class, Css, Focus, SugarElement } from '@ephox/sugar';
 
-import Styles from '../../style/Styles';
-import Scrollable from '../../touch/scroll/Scrollable';
-import MetaViewport from '../../touch/view/MetaViewport';
-import Thor from '../../util/Thor';
-import Scrollables from '../scroll/Scrollables';
-import IosKeyboard from '../view/IosKeyboard';
-import IosEvents from './IosEvents';
-import IosSetup, { IosApi } from './IosSetup';
-import PlatformEditor from './PlatformEditor';
-import { document } from '@ephox/dom-globals';
+import * as Styles from '../../style/Styles';
+import * as Scrollable from '../../touch/scroll/Scrollable';
+import * as MetaViewport from '../../touch/view/MetaViewport';
+import * as Thor from '../../util/Thor';
+import * as Scrollables from '../scroll/Scrollables';
+import * as IosKeyboard from '../view/IosKeyboard';
+import * as IosEvents from './IosEvents';
+import * as IosSetup from './IosSetup';
+import * as PlatformEditor from './PlatformEditor';
+
+type IosApi = IosSetup.IosApi;
 
 const create = function (platform, mask) {
   const meta = MetaViewport.tag();
@@ -30,25 +31,25 @@ const create = function (platform, mask) {
 
   const enter = function () {
     mask.hide();
-    const doc = Element.fromDom(document);
+    const doc = SugarElement.fromDom(document);
     PlatformEditor.getActiveApi(platform.editor).each(function (editorApi) {
       // TODO: Orientation changes.
       // orientation = Orientation.onChange();
 
       priorState.set({
         socketHeight: Css.getRaw(platform.socket, 'height'),
-        iframeHeight: Css.getRaw(editorApi.frame(), 'height'),
+        iframeHeight: Css.getRaw(editorApi.frame, 'height'),
         outerScroll: document.body.scrollTop
       });
 
       scrollEvents.set({
         // Allow only things that have scrollable class to be scrollable. Without this,
         // the toolbar scrolling gets prevented
-        exclusives: Scrollables.exclusive(doc, '.' + Scrollable.scrollable())
+        exclusives: Scrollables.exclusive(doc, '.' + Scrollable.scrollable)
       });
 
       Class.add(platform.container, Styles.resolve('fullscreen-maximized'));
-      Thor.clobberStyles(platform.container, editorApi.body());
+      Thor.clobberStyles(platform.container, editorApi.body);
       meta.maximize();
 
       /* NOTE: Making the toolbar scrollable is now done when the middle group is created */
@@ -56,44 +57,20 @@ const create = function (platform, mask) {
       Css.set(platform.socket, 'overflow', 'scroll');
       Css.set(platform.socket, '-webkit-overflow-scrolling', 'touch');
 
-      Focus.focus(editorApi.body());
-
-      const setupBag = Struct.immutableBag([
-        'cWin',
-        'ceBody',
-        'socket',
-        'toolstrip',
-        'toolbar',
-        'dropup',
-        'contentElement',
-        'cursor',
-        'keyboardType',
-        'isScrolling',
-        'outerWindow',
-        'outerBody'
-      ], []);
+      Focus.focus(editorApi.body);
 
       iosApi.set(
-        IosSetup.setup(setupBag({
-          cWin: editorApi.win(),
-          ceBody: editorApi.body(),
+        IosSetup.setup({
+          cWin: editorApi.win,
+          ceBody: editorApi.body,
           socket: platform.socket,
           toolstrip: platform.toolstrip,
-          toolbar: platform.toolbar,
-          dropup: platform.dropup.element(),
-          contentElement: editorApi.frame(),
-          cursor: Fun.noop,
+          dropup: platform.dropup.element,
+          contentElement: editorApi.frame,
           outerBody: platform.body,
           outerWindow: platform.win,
-          keyboardType: IosKeyboard.stubborn,
-          isScrolling () {
-            // TODO: There is no get in singleton investigate this
-            const scrollValue = scrollEvents as any;
-            return scrollValue.get().exists(function (s) {
-              return s.socket.isScrolling();
-            });
-          }
-        }))
+          keyboardType: IosKeyboard.stubborn
+        })
       );
 
       iosApi.run(function (api) {
@@ -133,8 +110,8 @@ const create = function (platform, mask) {
     Thor.restoreStyles();
     Scrollable.deregister(platform.toolbar);
 
-    Css.remove(platform.socket, 'overflow'/*, 'scroll'*/);
-    Css.remove(platform.socket, '-webkit-overflow-scrolling'/*, 'touch'*/);
+    Css.remove(platform.socket, 'overflow'/* , 'scroll'*/);
+    Css.remove(platform.socket, '-webkit-overflow-scrolling'/* , 'touch'*/);
 
     // Hide the keyboard and remove the selection so there isn't a blue cursor in the content
     // still even once exited.
@@ -159,6 +136,6 @@ const create = function (platform, mask) {
   };
 };
 
-export default {
+export {
   create
 };

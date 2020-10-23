@@ -26,9 +26,7 @@ export interface CropRect extends Observable<any> {
 }
 
 const create = (currentRect, viewPortRect, clampRect, containerElm, action): CropRect => {
-  let instance;
-  let dragHelpers;
-  let blockers;
+  let dragHelpers: any[];
   const prefix = 'tox-';
   const id = prefix + 'crid-' + count++;
 
@@ -40,7 +38,7 @@ const create = (currentRect, viewPortRect, clampRect, containerElm, action): Cro
     { name: 'se', xMul: 1, yMul: 1, deltaX: 0, deltaY: 0, deltaW: 1, deltaH: 1, label: 'Bottom Right Crop Handle' }
   ];
 
-  blockers = ['top', 'right', 'bottom', 'left'];
+  const blockers = [ 'top', 'right', 'bottom', 'left' ];
 
   const getAbsoluteRect = (outerRect, relativeRect) => ({
     x: relativeRect.x + outerRect.x,
@@ -93,11 +91,11 @@ const create = (currentRect, viewPortRect, clampRect, containerElm, action): Cro
         document: containerElm.ownerDocument,
         handle: id + '-' + handle.name,
 
-        start () {
+        start() {
           startRect = currentRect;
         },
 
-        drag (e) {
+        drag(e) {
           moveRect(handle, startRect, e.deltaX, e.deltaY);
         }
       });
@@ -175,9 +173,7 @@ const create = (currentRect, viewPortRect, clampRect, containerElm, action): Cro
   }
 
   function toggleVisibility(state: boolean) {
-    let selectors;
-
-    selectors = Tools.map(handles, function (handle) {
+    const selectors = Tools.map(handles, function (handle) {
       return '#' + id + '-' + handle.name;
     }).concat(Tools.map(blockers, function (blocker) {
       return '#' + id + '-' + blocker;
@@ -256,7 +252,7 @@ const create = (currentRect, viewPortRect, clampRect, containerElm, action): Cro
 
   render();
 
-  instance = Tools.extend({
+  const instance = Tools.extend({
     toggleVisibility,
     setClampRect,
     setRect,

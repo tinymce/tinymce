@@ -5,10 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { KeyboardEvent } from '@ephox/dom-globals';
-import Tools from './util/Tools';
-import Env from './Env';
 import Editor from './Editor';
+import Env from './Env';
+import Tools from './util/Tools';
 
 /**
  * Contains logic for handling keyboard shortcuts.
@@ -16,9 +15,21 @@ import Editor from './Editor';
  * @class tinymce.Shortcuts
  * @example
  * editor.shortcuts.add('ctrl+a', "description of the shortcut", function() {});
- * editor.shortcuts.add('meta+a', "description of the shortcut", function() {}); // "meta" maps to Command on Mac and Ctrl on PC
  * editor.shortcuts.add('ctrl+alt+a', "description of the shortcut", function() {});
- * editor.shortcuts.add('access+a', "description of the shortcut", function() {}); // "access" maps to ctrl+alt on Mac and shift+alt on PC
+ * // "meta" maps to Command on Mac and Ctrl on PC
+ * editor.shortcuts.add('meta+a', "description of the shortcut", function() {});
+ * // "access" maps to Control+Option on Mac and shift+alt on PC
+ * editor.shortcuts.add('access+a', "description of the shortcut", function() {});
+ *
+ * editor.shortcuts.add(
+ *  'meta+access+c', 'Opens the code editor dialog.', function () {
+ *    editor.execCommand('mceCodeEditor');
+ * });
+ *
+ * editor.shortcuts.add(
+ *  'meta+shift+32', 'Inserts "Hello, World!" for meta+shift+space', function () {
+ *    editor.execCommand('mceInsertContent', false, 'Hello, World!');
+ * });
  */
 
 const each = Tools.each, explode = Tools.explode;
@@ -41,14 +52,18 @@ const keyCodeLookup = {
 const modifierNames = Tools.makeMap('alt,ctrl,shift,meta,access');
 
 interface Shortcut {
+  id: string;
+  access: boolean;
   ctrl: boolean;
   shift: boolean;
   meta: boolean;
   alt: boolean;
   keyCode: number;
   charCode: number;
-  subpatterns?: Shortcut[];
-  desc?: string;
+  subpatterns: Shortcut[];
+  desc: string;
+  cmdFunc: () => void;
+  scope: any;
 }
 
 export interface ShortcutsConstructor {
@@ -57,12 +72,14 @@ export interface ShortcutsConstructor {
   new (editor: Editor): Shortcuts;
 }
 
+type CommandFunc = string | [string, boolean, any] | (() => void);
+
 class Shortcuts {
   private readonly editor: Editor;
   private readonly shortcuts: Record<string, Shortcut> = {};
   private pendingPatterns = [];
 
-  constructor(editor: Editor) {
+  public constructor(editor: Editor) {
     this.editor = editor;
     const self = this;
 
@@ -103,24 +120,12 @@ class Shortcuts {
    * @param {Object} scope Optional scope to execute the function in.
    * @return {Boolean} true/false state if the shortcut was added or not.
    */
-  public add (pattern: string, desc: string, cmdFunc: string | any[] | Function, scope?: {}): boolean {
+  public add(pattern: string, desc: string, cmdFunc: CommandFunc, scope?: any): boolean {
     const self = this;
-    let cmd;
-
-    cmd = cmdFunc;
-
-    if (typeof cmdFunc === 'string') {
-      cmdFunc = function () {
-        self.editor.execCommand(cmd, false, null);
-      };
-    } else if (Tools.isArray(cmd)) {
-      cmdFunc = function () {
-        self.editor.execCommand(cmd[0], cmd[1], cmd[2]);
-      };
-    }
+    const func = self.normalizeCommandFunc(cmdFunc);
 
     each(explode(Tools.trim(pattern)), function (pattern) {
-      const shortcut = self.createShortcut(pattern, desc, cmdFunc, scope);
+      const shortcut = self.createShortcut(pattern, desc, func, scope);
       self.shortcuts[shortcut.id] = shortcut;
     });
 
@@ -134,7 +139,7 @@ class Shortcuts {
    * @param {String} pattern Shortcut pattern. Like for example: ctrl+alt+o.
    * @return {Boolean} true/false state if the shortcut was removed or not.
    */
-  public remove (pattern: string): boolean {
+  public remove(pattern: string): boolean {
     const shortcut = this.createShortcut(pattern);
 
     if (this.shortcuts[shortcut.id]) {
@@ -145,8 +150,25 @@ class Shortcuts {
     return false;
   }
 
-  private parseShortcut (pattern: string): Shortcut {
-    let id, key;
+  private normalizeCommandFunc(cmdFunc: CommandFunc): () => void {
+    const self = this;
+    const cmd = cmdFunc;
+
+    if (typeof cmd === 'string') {
+      return function () {
+        self.editor.execCommand(cmd, false, null);
+      };
+    } else if (Tools.isArray(cmd)) {
+      return function () {
+        self.editor.execCommand(cmd[0], cmd[1], cmd[2]);
+      };
+    } else {
+      return cmd;
+    }
+  }
+
+  private parseShortcut(pattern: string): Shortcut {
+    let key;
     const shortcut: any = {};
 
     // Parse modifiers and keys ctrl+alt+b for example
@@ -165,7 +187,7 @@ class Shortcuts {
     });
 
     // Generate unique id for modifier combination and set default state for unused modifiers
-    id = [shortcut.keyCode];
+    const id = [ shortcut.keyCode ];
     for (key in modifierNames) {
       if (shortcut[key]) {
         id.push(key);
@@ -199,10 +221,8 @@ class Shortcuts {
     return shortcut;
   }
 
-  private createShortcut (pattern: string, desc?: string, cmdFunc?, scope?) {
-    let shortcuts;
-
-    shortcuts = Tools.map(explode(pattern, '>'), this.parseShortcut);
+  private createShortcut(pattern: string, desc?: string, cmdFunc?: () => void, scope?): Shortcut {
+    const shortcuts = Tools.map(explode(pattern, '>'), this.parseShortcut);
     shortcuts[shortcuts.length - 1] = Tools.extend(shortcuts[shortcuts.length - 1], {
       func: cmdFunc,
       scope: scope || this.editor
@@ -214,15 +234,15 @@ class Shortcuts {
     });
   }
 
-  private hasModifier (e: KeyboardEvent): boolean {
+  private hasModifier(e: KeyboardEvent): boolean {
     return e.altKey || e.ctrlKey || e.metaKey;
   }
 
-  private isFunctionKey (e: KeyboardEvent): boolean {
+  private isFunctionKey(e: KeyboardEvent): boolean {
     return e.type === 'keydown' && e.keyCode >= 112 && e.keyCode <= 123;
   }
 
-  private matchShortcut (e: KeyboardEvent, shortcut: Shortcut) {
+  private matchShortcut(e: KeyboardEvent, shortcut: Shortcut) {
     if (!shortcut) {
       return false;
     }
@@ -243,7 +263,7 @@ class Shortcuts {
     return false;
   }
 
-  private executeShortcutAction (shortcut) {
+  private executeShortcutAction(shortcut) {
     return shortcut.func ? shortcut.func.call(shortcut.scope) : null;
   }
 }

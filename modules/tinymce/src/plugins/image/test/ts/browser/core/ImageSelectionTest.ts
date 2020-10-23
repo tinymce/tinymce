@@ -1,42 +1,37 @@
 import { ApproxStructure, GeneralSteps, Logger, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { ImageData } from 'tinymce/plugins/image/core/ImageData';
 import { insertOrUpdateImage } from 'tinymce/plugins/image/core/ImageSelection';
 import Plugin from 'tinymce/plugins/image/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
-import { ImageDialogInfo } from 'tinymce/plugins/image/ui/DialogTypes';
 
-UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageSelectionTest',  (success, failure) => {
+UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageSelectionTest', (success, failure) => {
   Plugin();
   Theme();
 
-  const sUpdateImageOrFigure = (editor: Editor, data: Partial<ImageData>) => {
-    return Step.sync(() => {
-      insertOrUpdateImage(editor, {
-        src: 'image.png',
-        alt: '',
-        title: '',
-        width: '200',
-        height: '',
-        class: '',
-        style: '',
-        caption: false,
-        hspace: '',
-        vspace: '',
-        border: '',
-        borderStyle: '',
-        isDecorative: false,
-        ...data
-      }, { hasAccessibilityOptions: false } as ImageDialogInfo);
+  const sUpdateImageOrFigure = (editor: Editor, data: Partial<ImageData>) => Step.sync(() => {
+    insertOrUpdateImage(editor, {
+      src: 'image.png',
+      alt: '',
+      title: '',
+      width: '200',
+      height: '',
+      class: '',
+      style: '',
+      caption: false,
+      hspace: '',
+      vspace: '',
+      border: '',
+      borderStyle: '',
+      isDecorative: false,
+      ...data
     });
-  };
+  });
 
-  const sWaitForDragHandles = (editor: any): Step<any, any> => {
-    return Waiter.sTryUntil('wait for draghandles', UiFinder.sExists(Element.fromDom(editor.getBody()), '#mceResizeHandlenw'), 10, 5000);
-  };
+  const sWaitForDragHandles = (editor: any): Step<any, any> => Waiter.sTryUntil('wait for draghandles', UiFinder.sExists(SugarElement.fromDom(editor.getBody()), '#mceResizeHandlenw'), 10, 5000);
 
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
@@ -44,7 +39,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageSelectionTest',  (su
     Pipeline.async({}, [
       Logger.t('Insert image, size 100x100', GeneralSteps.sequence([
         tinyApis.sSetContent('<p></p>'),
-        tinyApis.sSetCursor([0], 0),
+        tinyApis.sSetCursor([ 0 ], 0),
         sUpdateImageOrFigure(editor, {
           src: 'image.png',
           height: '100',
@@ -67,17 +62,17 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageSelectionTest',  (su
                   s.element('br', {})
                 ]
               }),
-              s.element('div', { attrs: { id: str.is('mceResizeHandlenw') } }),
-              s.element('div', { attrs: { id: str.is('mceResizeHandlene') } }),
-              s.element('div', { attrs: { id: str.is('mceResizeHandlese') } }),
-              s.element('div', { attrs: { id: str.is('mceResizeHandlesw') } })
+              s.element('div', { attrs: { id: str.is('mceResizeHandlenw') }}),
+              s.element('div', { attrs: { id: str.is('mceResizeHandlene') }}),
+              s.element('div', { attrs: { id: str.is('mceResizeHandlese') }}),
+              s.element('div', { attrs: { id: str.is('mceResizeHandlesw') }})
             ]
           });
         }))
       ])),
       Logger.t('Insert figure, size 100x100', GeneralSteps.sequence([
         tinyApis.sSetContent('<p></p>'),
-        tinyApis.sSetCursor([0], 0),
+        tinyApis.sSetCursor([ 0 ], 0),
         sUpdateImageOrFigure(editor, {
           src: 'image.png',
           caption: true,
@@ -114,10 +109,10 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageSelectionTest',  (su
               }),
               s.element('p', {}),
               s.anything(),
-              s.element('div', { attrs: { id: str.is('mceResizeHandlenw') } }),
-              s.element('div', { attrs: { id: str.is('mceResizeHandlene') } }),
-              s.element('div', { attrs: { id: str.is('mceResizeHandlese') } }),
-              s.element('div', { attrs: { id: str.is('mceResizeHandlesw') } })
+              s.element('div', { attrs: { id: str.is('mceResizeHandlenw') }}),
+              s.element('div', { attrs: { id: str.is('mceResizeHandlene') }}),
+              s.element('div', { attrs: { id: str.is('mceResizeHandlese') }}),
+              s.element('div', { attrs: { id: str.is('mceResizeHandlesw') }})
             ]
           });
         }))
@@ -164,10 +159,10 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageSelectionTest',  (su
                 ]
               }),
               s.anything(),
-              s.element('div', { attrs: { id: str.is('mceResizeHandlenw') } }),
-              s.element('div', { attrs: { id: str.is('mceResizeHandlene') } }),
-              s.element('div', { attrs: { id: str.is('mceResizeHandlese') } }),
-              s.element('div', { attrs: { id: str.is('mceResizeHandlesw') } })
+              s.element('div', { attrs: { id: str.is('mceResizeHandlenw') }}),
+              s.element('div', { attrs: { id: str.is('mceResizeHandlene') }}),
+              s.element('div', { attrs: { id: str.is('mceResizeHandlese') }}),
+              s.element('div', { attrs: { id: str.is('mceResizeHandlesw') }})
             ]
           });
         }))
@@ -199,10 +194,10 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageSelectionTest',  (su
                   })
                 ]
               }),
-              s.element('div', { attrs: { id: str.is('mceResizeHandlenw') } }),
-              s.element('div', { attrs: { id: str.is('mceResizeHandlene') } }),
-              s.element('div', { attrs: { id: str.is('mceResizeHandlese') } }),
-              s.element('div', { attrs: { id: str.is('mceResizeHandlesw') } })
+              s.element('div', { attrs: { id: str.is('mceResizeHandlenw') }}),
+              s.element('div', { attrs: { id: str.is('mceResizeHandlene') }}),
+              s.element('div', { attrs: { id: str.is('mceResizeHandlese') }}),
+              s.element('div', { attrs: { id: str.is('mceResizeHandlesw') }})
             ]
           });
         }))

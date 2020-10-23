@@ -1,4 +1,4 @@
-import { Pipeline, Log } from '@ephox/agar';
+import { Log, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 
@@ -18,19 +18,19 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TabKeyNavigationTest', (succes
     editor.setContent('<table><tbody><tr><td>A1</td><td>A2</td></tr><tr><td>B1</td><td>B2</td></tr></tbody></table><p>x</p>');
 
     LegacyUnit.setSelection(editor, 'td', 0);
-    editor.fire('keydown', { keyCode: 9 });
+    editor.fire('keydown', { keyCode: 9 } as KeyboardEvent);
     LegacyUnit.equal(editor.selection.getStart().innerHTML, 'A2');
 
     LegacyUnit.setSelection(editor, 'td', 0);
-    editor.fire('keydown', { keyCode: 9, shiftKey: true });
+    editor.fire('keydown', { keyCode: 9, shiftKey: true } as KeyboardEvent);
     LegacyUnit.equal(editor.selection.getStart().innerHTML, 'A1');
 
     LegacyUnit.setSelection(editor, 'td:nth-child(2)', 0);
-    editor.fire('keydown', { keyCode: 9, shiftKey: true });
+    editor.fire('keydown', { keyCode: 9, shiftKey: true } as KeyboardEvent);
     LegacyUnit.equal(editor.selection.getStart().innerHTML, 'A1');
 
     LegacyUnit.setSelection(editor, 'tr:nth-child(2) td:nth-child(2)', 0);
-    editor.fire('keydown', { keyCode: 9 });
+    editor.fire('keydown', { keyCode: 9 } as KeyboardEvent);
     LegacyUnit.equal(editor.selection.getStart(true).nodeName, 'TD');
     LegacyUnit.equal(
       editor.getContent(),
@@ -48,6 +48,6 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TabKeyNavigationTest', (succes
       '*': 'width,height,vertical-align,text-align,float,border-color,background-color,border,padding,border-spacing,border-collapse'
     },
     theme: 'silver',
-    base_url: '/project/tinymce/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

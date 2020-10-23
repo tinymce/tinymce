@@ -1,14 +1,14 @@
 {
   "name": "@ephox/alloy",
-  "version": "6.0.5",
+  "version": "8.0.1",
   "description": "Ui Framework",
   "dependencies": {
-    "@ephox/agar": "^4.15.3",
-    "@ephox/boulder": "^4.0.3",
-    "@ephox/dom-globals": "^1.1.2",
-    "@ephox/katamari": "^5.0.2",
-    "@ephox/sand": "^3.1.6",
-    "@ephox/sugar": "^5.1.3"
+    "@ephox/agar": "^5.0.1",
+    "@ephox/boulder": "^5.0.1",
+    "@ephox/katamari": "^7.0.1",
+    "@ephox/sand": "^4.0.1",
+    "@ephox/sugar": "^7.0.1",
+    "tslib": "^2.0.0"
   },
   "files": [
     "lib/main",
@@ -24,6 +24,7 @@
   "scripts": {
     "test": "bedrock-auto -b phantomjs --testdirs src/test/ts/atomic src/test/ts/browser src/test/ts/jsdom src/test/ts/webdriver",
     "test-manual": "bedrock --testdirs src/test/ts/atomic src/test/ts/browser src/test/ts/jsdom src/test/ts/webdriver",
+    "lint": "eslint --config ../../.eslintrc.json src/**/*.ts",
     "prepublishOnly": "tsc -b"
   },
   "repository": {

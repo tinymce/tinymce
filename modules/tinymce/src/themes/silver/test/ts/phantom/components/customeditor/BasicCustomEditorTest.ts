@@ -1,15 +1,14 @@
 // TODO: Expose properly through alloy.
-import { ApproxStructure, Assertions, Logger, Step, Waiter, Cleaner } from '@ephox/agar';
+import { ApproxStructure, Assertions, Cleaner, Logger, Step, Waiter } from '@ephox/agar';
 import { GuiFactory, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Global, Cell } from '@ephox/katamari';
-import { renderCustomEditor } from 'tinymce/themes/silver/ui/dialog/CustomEditor';
-import { RepresentingSteps } from '../../../module/ReperesentingSteps';
+import { Cell, Global } from '@ephox/katamari';
+import { Class, SugarElement } from '@ephox/sugar';
 import Resource from 'tinymce/core/api/Resource';
 import Delay from 'tinymce/core/api/util/Delay';
 import Promise from 'tinymce/core/api/util/Promise';
-import { Element, Class } from '@ephox/sugar';
-import { HTMLElement } from '@ephox/dom-globals';
+import { renderCustomEditor } from 'tinymce/themes/silver/ui/dialog/CustomEditor';
+import { RepresentingSteps } from '../../../module/ReperesentingSteps';
 
 declare const tinymce: { Resource: Resource };
 
@@ -34,7 +33,7 @@ UnitTest.asynctest('CustomEditor component Test', (success, failure) => {
     const intervalId = Delay.setInterval(() => {
       if (resolveInit.get()) {
         Delay.clearInterval(intervalId);
-        Class.add(Element.fromDom(e), 'my-custom-editor');
+        Class.add(SugarElement.fromDom(e), 'my-custom-editor');
         resolve({
           setValue(s: string) { customEditorValue.set(s); },
           getValue() { return customEditorValue.get(); },
@@ -45,72 +44,63 @@ UnitTest.asynctest('CustomEditor component Test', (success, failure) => {
   }));
 
   TestHelpers.GuiSetup.setup(
-    (store, doc, body) => {
-      return GuiFactory.build(
-        renderCustomEditor({
-          type: 'customeditor',
-          name: 'customeditor',
-          tag: 'textarea',
-          scriptId: 'BasicCustomEditorTest',
-          scriptUrl: '/custom/404', // using the cache
-          settings: undefined
-         })
-      );
-    },
-    (doc, body, gui, component, store) => {
+    (_store, _doc, _body) => GuiFactory.build(
+      renderCustomEditor({
+        type: 'customeditor',
+        name: 'customeditor',
+        tag: 'textarea',
+        scriptId: 'BasicCustomEditorTest',
+        scriptUrl: '/custom/404', // using the cache
+        settings: undefined
+      })
+    ),
+    (_doc, _body, _gui, component, _store) => [
+      Assertions.sAssertStructure(
+        'Checking initial structure',
+        ApproxStructure.build((s, _str, arr) => s.element('div', {
+          children: [
+            s.element('textarea', {
+              classes: [ arr.not('my-custom-editor') ]
+            })
+          ]
+        })),
+        component.element
+      ),
 
-      return [
+      RepresentingSteps.sAssertRoundtrip(
+        'Roundtripping before initialised',
+        component,
+        'foo'
+      ),
+
+      Logger.t(
+        'Set to initialised',
+        Step.sync(() => {
+          resolveInit.set(true);
+        })
+      ),
+
+      Waiter.sTryUntil(
+        'Waiting for CustomEditor init',
         Assertions.sAssertStructure(
-          'Checking initial structure',
-          ApproxStructure.build((s, str, arr) => {
-            return s.element('div', {
-              children: [
-                s.element('textarea', {
-                  classes: [arr.not('my-custom-editor')]
-                })
-              ]
-            });
-          }),
-          component.element()
-        ),
-
-        RepresentingSteps.sAssertRoundtrip(
-          'Roundtripping before initialised',
-          component,
-          'foo'
-        ),
-
-        Logger.t(
-          'Set to initialised',
-          Step.sync(() => {
-            resolveInit.set(true);
-          })
-        ),
-
-        Waiter.sTryUntil(
-          'Waiting for CustomEditor init',
-          Assertions.sAssertStructure(
-            'Checking structure after init',
-            ApproxStructure.build((s, str, arr) => {
-              return s.element('div', {
-                children: [
-                  s.element('textarea', {
-                    classes: [arr.has('my-custom-editor')]
-                  })
-                ]
-              });
-            }),
-            component.element()
-          )
-        ),
-
-        RepresentingSteps.sAssertRoundtrip(
-          'Roundtripping after initialised',
-          component,
-          'bar'
+          'Checking structure after init',
+          ApproxStructure.build((s, _str, arr) => s.element('div', {
+            children: [
+              s.element('textarea', {
+                classes: [ arr.has('my-custom-editor') ]
+              })
+            ]
+          })),
+          component.element
         )
-      ];
-    },
+      ),
+
+      RepresentingSteps.sAssertRoundtrip(
+        'Roundtripping after initialised',
+        component,
+        'bar'
+      )
+    ],
     cleanup.wrap(success), cleanup.wrap(failure)
   );
 });

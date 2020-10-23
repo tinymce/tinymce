@@ -7,7 +7,7 @@
 
 import Editor from 'tinymce/core/api/Editor';
 
-const getLanguages = function (editor: Editor) {
+const getLanguages = function (editor: Editor): string {
   const defaultLanguages = 'English=en,Danish=da,Dutch=nl,Finnish=fi,French=fr_FR,German=de,Italian=it,Polish=pl,Portuguese=pt_BR,Spanish=es,Swedish=sv';
   return editor.getParam('spellchecker_languages', defaultLanguages);
 };
@@ -34,7 +34,7 @@ const getSpellcheckerWordcharPattern = function (editor: Editor) {
   return editor.getParam('spellchecker_wordchar_pattern', defaultPattern);
 };
 
-export default {
+export {
   getLanguages,
   getLanguage,
   getRpcUrl,

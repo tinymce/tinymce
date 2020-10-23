@@ -1,37 +1,35 @@
-import { Assertions, Chain, Guard, NamedChain, Mouse, Pipeline, UiFinder } from '@ephox/agar';
+import { Assertions, Chain, Guard, Mouse, NamedChain, Pipeline, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyLoader } from '@ephox/mcagar';
-import { Body, Element } from '@ephox/sugar';
+import { SugarBody, SugarElement } from '@ephox/sugar';
+import Editor from 'tinymce/core/api/Editor';
 
 import Theme from 'tinymce/themes/silver/Theme';
-import Editor from 'tinymce/core/api/Editor';
 import { cResizeToPos } from '../../../module/UiChainUtils';
 
 UnitTest.asynctest('Editor resize test', (success, failure) => {
   Theme();
 
   TinyLoader.setup((editor: Editor, onSuccess, onFailure) => {
-    const cAssertEditorSize = (expectedWidth: number, expectedHeight: number) => {
-      return Chain.control(
-        Chain.op((container: Element) => {
-          Assertions.assertEq(`Editor should be ${expectedHeight}px high`, expectedHeight, container.dom().offsetHeight);
-          Assertions.assertEq(`Editor should be ${expectedWidth}px wide`, expectedWidth, container.dom().offsetWidth);
-        }),
-        Guard.addLogging('Ensure that the editor has resized')
-      );
-    };
+    const cAssertEditorSize = (expectedWidth: number, expectedHeight: number) => Chain.control(
+      Chain.op((container: SugarElement) => {
+        Assertions.assertEq(`Editor should be ${expectedHeight}px high`, expectedHeight, container.dom.offsetHeight);
+        Assertions.assertEq(`Editor should be ${expectedWidth}px wide`, expectedWidth, container.dom.offsetWidth);
+      }),
+      Guard.addLogging('Ensure that the editor has resized')
+    );
 
     Pipeline.async({ }, [
-      Chain.asStep(Body.body(), [
+      Chain.asStep(SugarBody.body(), [
         Chain.op(() => {
           // Add a border to ensure we're using the correct height/width (ie border-box sizing)
           editor.dom.setStyles(editor.getContainer(), {
             border: '2px solid #ccc'
           });
         }),
-        Chain.label(`Test resize with max/min sizing`, NamedChain.asChain([
+        Chain.label('Test resize with max/min sizing', NamedChain.asChain([
           NamedChain.direct(NamedChain.inputName(), Chain.identity, 'body'),
-          NamedChain.writeValue('container', Element.fromDom(editor.getContainer())),
+          NamedChain.writeValue('container', SugarElement.fromDom(editor.getContainer())),
           NamedChain.direct('body', UiFinder.cFindIn('.tox-statusbar__resize-handle'), 'resizeHandle'),
 
           // Shrink to 300px
@@ -62,7 +60,7 @@ UnitTest.asynctest('Editor resize test', (success, failure) => {
           // Try to enlarge to above max width
           NamedChain.direct('resizeHandle', Mouse.cMouseDown, '_'),
           NamedChain.direct('body', cResizeToPos(300, 500, 550, 500), '_'),
-          NamedChain.direct('container', cAssertEditorSize(500, 500), '_'),
+          NamedChain.direct('container', cAssertEditorSize(500, 500), '_')
         ]))
       ])
     ], onSuccess, onFailure);

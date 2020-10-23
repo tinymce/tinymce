@@ -1,16 +1,16 @@
 import { GeneralSteps, Pipeline } from '@ephox/agar';
 import { Attachment, Memento, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Body, Class, Traverse } from '@ephox/sugar';
+import { Fun } from '@ephox/katamari';
+import { Class, SugarBody, Traverse } from '@ephox/sugar';
 
-import TinyChannels from 'tinymce/themes/mobile/channels/TinyChannels';
-import Buttons from 'tinymce/themes/mobile/ui/Buttons';
+import * as TinyChannels from 'tinymce/themes/mobile/channels/TinyChannels';
+import * as Buttons from 'tinymce/themes/mobile/ui/Buttons';
 import IosRealm from 'tinymce/themes/mobile/ui/IosRealm';
 
 import TestEditor from '../../module/test/ui/TestEditor';
-import TestStyles from '../../module/test/ui/TestStyles';
-import TestUi from '../../module/test/ui/TestUi';
-import { Fun } from '@ephox/katamari';
+import * as TestStyles from '../../module/test/ui/TestStyles';
+import * as TestUi from '../../module/test/ui/TestUi';
 
 UnitTest.asynctest('Browser Test: ui.ButtonsTest', function (success, failure) {
 
@@ -23,11 +23,11 @@ UnitTest.asynctest('Browser Test: ui.ButtonsTest', function (success, failure) {
 
   const realm = IosRealm(Fun.noop);
 
-  const body = Body.body();
-  Attachment.attachSystem(body, realm.system());
+  const body = SugarBody.body();
+  Attachment.attachSystem(body, realm.system);
 
   // Make toolbar appear
-  Class.add(realm.system().element(), 'tinymce-mobile-fullscreen-maximized');
+  Class.add(realm.element, 'tinymce-mobile-fullscreen-maximized');
 
   const doc = Traverse.owner(body);
 
@@ -35,7 +35,7 @@ UnitTest.asynctest('Browser Test: ui.ButtonsTest', function (success, failure) {
 
   const unload = function () {
     TestStyles.removeStyles();
-    Attachment.detachSystem(realm.system());
+    Attachment.detachSystem(realm.system);
   };
 
   /* The test editor puts execCommand and insertContent calls into the store */
@@ -113,7 +113,7 @@ UnitTest.asynctest('Browser Test: ui.ButtonsTest', function (success, failure) {
     tEditor.sClear,
     sCheckComponent('Initially, beta should be unselected', false)(memBeta),
     // Fire a format change
-    TestUi.sBroadcastState(realm, [ TinyChannels.formatChanged() ], 'beta', true),
+    TestUi.sBroadcastState(realm, [ TinyChannels.formatChanged ], 'beta', true),
     sCheckComponent('After broadcast, beta should be selected', true)(memBeta),
     tEditor.sClear
   ]);
@@ -130,7 +130,7 @@ UnitTest.asynctest('Browser Test: ui.ButtonsTest', function (success, failure) {
     tEditor.sClear,
     sCheckComponent('Initially, gamma should be unselected', false)(memGamma),
     // Fire a format change
-    TestUi.sBroadcastState(realm, [ TinyChannels.formatChanged() ], 'gamma-query', true),
+    TestUi.sBroadcastState(realm, [ TinyChannels.formatChanged ], 'gamma-query', true),
     sCheckComponent('After broadcast, gamma should be selected', true)(memGamma)
   ]);
 

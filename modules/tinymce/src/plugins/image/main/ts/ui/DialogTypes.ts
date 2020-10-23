@@ -5,29 +5,26 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Types } from '@ephox/bridge';
-import { File } from '@ephox/dom-globals';
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
+import { Dialog } from 'tinymce/core/api/ui/Ui';
 
 import { ImageData } from '../core/ImageData';
 import { UploadHandler } from '../core/Uploader';
 
-export interface ListValue {
-  text: string;
-  value: string;
-}
+export type ListValue = Dialog.ListBoxSingleItemSpec;
+export type ListGroup = Dialog.ListBoxNestedItemSpec;
+export type ListItem = Dialog.ListBoxItemSpec;
 
-export interface ListGroup {
-  text: string;
-  items: ListItem[];
+export interface UserListItem {
+  text?: string;
+  title?: string;
+  menu?: UserListItem[];
 }
-
-export type ListItem = ListValue | ListGroup;
 
 export interface ImageDialogInfo {
   image: ImageData;
-  imageList: Option<ListItem[]>;
-  classList: Option<ListItem[]>;
+  imageList: Optional<ListItem[]>;
+  classList: Optional<ListItem[]>;
   hasAdvTab: boolean;
   hasUploadTab: boolean;
   hasUploadUrl: boolean;
@@ -42,7 +39,7 @@ export interface ImageDialogInfo {
   credentials: boolean;
   handler: UploadHandler;
   automaticUploads: boolean;
-  prependURL: Option<string>;
+  prependURL: Optional<string>;
 }
 
 export interface ImageDialogData {
@@ -62,7 +59,7 @@ export interface ImageDialogData {
       hspace?: string;
       borderstyle?: string;
       isDecorative?: boolean;
-    }
+    };
   };
   images: string;
   alt: string;
@@ -82,4 +79,4 @@ export interface ImageDialogData {
   isDecorative: boolean;
 }
 
-export type API = Types.Dialog.DialogInstanceApi<ImageDialogData>;
+export type API = Dialog.DialogInstanceApi<ImageDialogData>;

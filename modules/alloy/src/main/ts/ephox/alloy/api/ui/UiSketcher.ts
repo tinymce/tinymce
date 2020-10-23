@@ -1,28 +1,23 @@
 import { FieldProcessorAdt } from '@ephox/boulder';
 import { Obj } from '@ephox/katamari';
 
-import { AlloySpec, SketchSpec } from '../../api/component/SpecTypes';
 import * as AlloyParts from '../../parts/AlloyParts';
 import { PartTypeAdt } from '../../parts/PartType';
 import * as Tagger from '../../registry/Tagger';
 import * as SpecSchema from '../../spec/SpecSchema';
-import {
-  CompositeSketchDetail,
-  CompositeSketchSpec,
-  SingleSketchDetail,
-  SingleSketchSpec,
-} from './Sketcher';
+import { AlloySpec, SketchSpec } from '../component/SpecTypes';
+import { CompositeSketchDetail, CompositeSketchSpec, SingleSketchDetail, SingleSketchSpec } from './Sketcher';
 
 export type SingleSketchFactory<D extends SingleSketchDetail, S extends SingleSketchSpec> = (detail: D, specWithUid: S) => SketchSpec;
 export type CompositeSketchFactory<D extends CompositeSketchDetail, S extends CompositeSketchSpec> = (detail: D, components: AlloySpec[], spec: S, externals: any) => SketchSpec;
 
-const single = function <D extends SingleSketchDetail, S extends SingleSketchSpec>(owner: string, schema: FieldProcessorAdt[], factory: SingleSketchFactory<D, S>, spec: S): SketchSpec {
+const single = function <D extends SingleSketchDetail, S extends SingleSketchSpec> (owner: string, schema: FieldProcessorAdt[], factory: SingleSketchFactory<D, S>, spec: S): SketchSpec {
   const specWithUid = supplyUid<S>(spec);
   const detail = SpecSchema.asRawOrDie<D, S>(owner, schema, specWithUid, [ ], [ ]);
   return factory(detail, specWithUid);
 };
 
-const composite = function <D extends CompositeSketchDetail, S extends CompositeSketchSpec>(owner: string, schema: FieldProcessorAdt[], partTypes: PartTypeAdt[], factory: CompositeSketchFactory<D, S>, spec: S): SketchSpec {
+const composite = function <D extends CompositeSketchDetail, S extends CompositeSketchSpec> (owner: string, schema: FieldProcessorAdt[], partTypes: PartTypeAdt[], factory: CompositeSketchFactory<D, S>, spec: S): SketchSpec {
   const specWithUid = supplyUid(spec);
 
   // Identify any information required for external parts
@@ -44,7 +39,7 @@ const composite = function <D extends CompositeSketchDetail, S extends Composite
 
 const hasUid = <S>(spec: S): spec is S & {uid: string} => Obj.has(spec as any, 'uid');
 
-const supplyUid = function <S>(spec: S): S & { uid: string } {
+const supplyUid = function <S> (spec: S): S & { uid: string } {
   return hasUid(spec) ? spec : {
     ...spec,
     uid: Tagger.generate('uid')

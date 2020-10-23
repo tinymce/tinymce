@@ -1,10 +1,10 @@
-import { Pipeline, Log } from '@ephox/agar';
+import { Log, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
 
 import SilverTheme from 'tinymce/themes/silver/Theme';
-import TableTestUtils from '../../module/test/TableTestUtils';
+import * as TableTestUtils from '../../module/test/TableTestUtils';
 
 UnitTest.asynctest('browser.tinymce.plugins.table.TableRowClassListTest', (success, failure) => {
   TablePlugin();
@@ -19,7 +19,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowClassListTest', (succe
       Log.stepsAsStep('TBA', 'Table: no class input without setting', [
         tinyApis.sFocus(),
         tinyApis.sSetContent(tableHtml),
-        tinyApis.sSetSelection([0, 0, 0, 0, 0], 0, [0, 0, 0, 0, 0], 1),
+        tinyApis.sSetSelection([ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 1),
         tinyApis.sExecCommand('mceTableRowProps'),
         TableTestUtils.sAssertDialogPresence(
           'Checking that class label is not present',
@@ -35,9 +35,9 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowClassListTest', (succe
         tinyApis.sFocus(),
         tinyApis.sSetSetting('table_row_class_list', [{ title: 'test', value: 'test' }]),
         tinyApis.sSetContent(tableHtml),
-        tinyApis.sSetSelection([0, 0, 0, 0, 0], 0, [0, 0, 0, 0, 0], 1),
+        tinyApis.sSetSelection([ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 1),
         tinyApis.sExecCommand('mceTableRowProps'),
-        TableTestUtils.sAssertSelectValue('Select class', 'Class', 'test'),
+        TableTestUtils.sAssertListBoxValue('Select class', 'Class', 'test'),
         TableTestUtils.sClickDialogButton('Trigger test class', true),
         tinyApis.sAssertContentPresence({ 'tr.test': 1 })
       ])
@@ -45,6 +45,6 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowClassListTest', (succe
   }, {
     plugins: 'table',
     theme: 'silver',
-    base_url: '/project/tinymce/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

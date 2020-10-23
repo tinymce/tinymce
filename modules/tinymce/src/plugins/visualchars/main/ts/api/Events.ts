@@ -9,6 +9,6 @@ const fireVisualChars = function (editor, state) {
   return editor.fire('VisualChars', { state });
 };
 
-export default {
+export {
   fireVisualChars
 };

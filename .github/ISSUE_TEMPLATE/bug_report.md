@@ -6,7 +6,7 @@ about: Create a bug report to help us improve
 
 **What is the current behavior? Describe the bug**
 
-**Please provide the steps to reproduce and if possible a minimal demo of the problem via [fiddle.tinymce.com](http://fiddle.tinymce.com/) or similar.**
+**Please provide the steps to reproduce and if possible a minimal demo of the problem via [fiddle.tiny.cloud](https://fiddle.tiny.cloud/) or similar.**
 
 **What is the expected behavior?**
 

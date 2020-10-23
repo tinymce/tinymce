@@ -6,16 +6,15 @@
  */
 
 import {
-    AddEventsBehaviour, AlloyEvents, Behaviour, Button, GuiFactory, Memento, Menu, Representing,
-    TieredMenu, Toggling, Transitioning
+  AddEventsBehaviour, AlloyEvents, Behaviour, Button, GuiFactory, Memento, Menu, Representing, TieredMenu, Toggling, Transitioning
 } from '@ephox/alloy';
 import { Objects } from '@ephox/boulder';
-import { Arr, Merger, Obj, Option } from '@ephox/katamari';
+import { Arr, Merger, Obj, Optional } from '@ephox/katamari';
 import { Css, SelectorFind, Width } from '@ephox/sugar';
 
-import Receivers from '../channels/Receivers';
-import Styles from '../style/Styles';
-import Scrollable from '../touch/scroll/Scrollable';
+import * as Receivers from '../channels/Receivers';
+import * as Styles from '../style/Styles';
+import * as Scrollable from '../touch/scroll/Scrollable';
 
 const getValue = function (item): string {
   return Obj.get(item, 'format').getOr(item.title);
@@ -108,7 +107,7 @@ const makeMenu = function (value, items, memMenuThunk, collapsable) {
           },
           GuiFactory.text(value)
         ] : [ GuiFactory.text(value) ],
-        action (item) {
+        action(item) {
           if (collapsable) {
             const comp = memMenuThunk().get(item);
             TieredMenu.collapseMenu(comp);
@@ -121,21 +120,21 @@ const makeMenu = function (value, items, memMenuThunk, collapsable) {
           classes: [ Styles.resolve('styles-menu-items-container') ]
         },
         components: [
-          Menu.parts().items({ })
+          Menu.parts.items({ })
         ],
 
         behaviours: Behaviour.derive([
           AddEventsBehaviour.config('adhoc-scrollable-menu', [
-            AlloyEvents.runOnAttached(function (component, simulatedEvent) {
-              Css.set(component.element(), 'overflow-y', 'auto');
-              Css.set(component.element(), '-webkit-overflow-scrolling', 'touch');
-              Scrollable.register(component.element());
+            AlloyEvents.runOnAttached(function (component, _simulatedEvent) {
+              Css.set(component.element, 'overflow-y', 'auto');
+              Css.set(component.element, '-webkit-overflow-scrolling', 'touch');
+              Scrollable.register(component.element);
             }),
 
             AlloyEvents.runOnDetached(function (component) {
-              Css.remove(component.element(), 'overflow-y');
-              Css.remove(component.element(), '-webkit-overflow-scrolling');
-              Scrollable.deregister(component.element());
+              Css.remove(component.element, 'overflow-y');
+              Css.remove(component.element, '-webkit-overflow-scrolling');
+              Scrollable.deregister(component.element);
             })
           ])
         ])
@@ -174,33 +173,33 @@ const sketch = function (settings) {
     // For animations, need things to stay around in the DOM (at least until animation is done)
     stayInDom: true,
 
-    onExecute (tmenu, item) {
+    onExecute(_tmenu, item) {
       const v = Representing.getValue(item);
       settings.handle(item, v.value);
-      return Option.none();
+      return Optional.none();
     },
-    onEscape () {
-      return Option.none();
+    onEscape() {
+      return Optional.none();
     },
-    onOpenMenu (container, menu) {
-      const w = Width.get(container.element());
-      Width.set(menu.element(), w);
+    onOpenMenu(container, menu) {
+      const w = Width.get(container.element);
+      Width.set(menu.element, w);
       Transitioning.jumpTo(menu, 'current');
     },
-    onOpenSubmenu (container, item, submenu) {
-      const w = Width.get(container.element());
-      const menu = SelectorFind.ancestor(item.element(), '[role="menu"]').getOrDie('hacky');
+    onOpenSubmenu(container, item, submenu) {
+      const w = Width.get(container.element);
+      const menu = SelectorFind.ancestor(item.element, '[role="menu"]').getOrDie('hacky');
       const menuComp = container.getSystem().getByDom(menu).getOrDie();
 
-      Width.set(submenu.element(), w);
+      Width.set(submenu.element, w);
 
       Transitioning.progressTo(menuComp, 'before');
       Transitioning.jumpTo(submenu, 'after');
       Transitioning.progressTo(submenu, 'current');
     },
 
-    onCollapseMenu (container, item, menu) {
-      const submenu = SelectorFind.ancestor(item.element(), '[role="menu"]').getOrDie('hacky');
+    onCollapseMenu(container, item, menu) {
+      const submenu = SelectorFind.ancestor(item.element, '[role="menu"]').getOrDie('hacky');
       const submenuComp = container.getSystem().getByDom(submenu).getOrDie();
       Transitioning.progressTo(submenuComp, 'after');
       Transitioning.progressTo(menu, 'current');
@@ -223,6 +222,6 @@ const sketch = function (settings) {
   return memMenu.asSpec();
 };
 
-export default {
+export {
   sketch
 };

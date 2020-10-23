@@ -9,7 +9,7 @@ const formatErrors = function (errors) {
   const es = errors.length > 10 ? errors.slice(0, 10).concat([
     {
       path: [ ],
-      getErrorInfo () {
+      getErrorInfo() {
         return '... (only showing first ten failures)';
       }
     }
@@ -17,7 +17,7 @@ const formatErrors = function (errors) {
 
   // TODO: Work out a better split between PrettyPrinter and SchemaError
   return Arr.map(es, function (e) {
-    return 'Failed path: ('  + e.path.join(' > ') + ')\n' + e.getErrorInfo();
+    return 'Failed path: (' + e.path.join(' > ') + ')\n' + e.getErrorInfo();
   });
 };
 

@@ -1,9 +1,9 @@
+import { Assert, UnitTest } from '@ephox/bedrock-client';
+import fc from 'fast-check';
 import * as Fun from 'ephox/katamari/api/Fun';
 import { Result } from 'ephox/katamari/api/Result';
-import { arbResultError, arbResultValue } from 'ephox/katamari/test/arb/ArbDataTypes';
-import fc from 'fast-check';
-import { UnitTest, Assert } from '@ephox/bedrock-client';
 import { tResult } from 'ephox/katamari/api/ResultInstances';
+import { arbResultError, arbResultValue } from 'ephox/katamari/test/arb/ArbDataTypes';
 
 UnitTest.test('Result.value: unit tests', () => {
   const s = Result.value(5);
@@ -16,7 +16,7 @@ UnitTest.test('Result.value: unit tests', () => {
   Assert.eq('eq', 5, s.or(Result.value(6)).getOrDie());
   Assert.eq('eq', 5, s.orThunk(() => Result.error('Should not get here.')).getOrDie());
 
-  Assert.eq('eq', 11, s.fold((e) => {
+  Assert.eq('eq', 11, s.fold((_e) => {
     throw new Error('Should not get here!');
   }, (v) => v + 6));
 
@@ -27,7 +27,7 @@ UnitTest.test('Result.value: unit tests', () => {
   Assert.eq('eq', true, s.exists(Fun.always));
   Assert.eq('eq', false, s.forall(Fun.never));
 
-  Assert.eq('eq', true, Result.value(5).toOption().isSome());
+  Assert.eq('eq', true, Result.value(5).toOptional().isSome());
 });
 
 UnitTest.test('Checking value.is(value.getOrDie()) === true', () => {
@@ -62,7 +62,13 @@ UnitTest.test('Checking value.getOrDie() does not throw', () => {
 
 UnitTest.test('Checking value.or(oValue) === value', () => {
   fc.assert(fc.property(fc.integer(), fc.integer(), (a, b) => {
-    Assert.eq('eq', Result.value(a), Result.value(a).or(Result.value(a)), tResult());
+    Assert.eq('eq value', Result.value(a), Result.value(a).or(Result.value(b)), tResult());
+  }));
+});
+
+UnitTest.test('Checking error.or(value) === value', () => {
+  fc.assert(fc.property(fc.integer(), fc.integer(), (a, b) => {
+    Assert.eq('eq or', Result.value(b), Result.error(a).or(Result.value(b)), tResult());
   }));
 });
 
@@ -73,7 +79,7 @@ UnitTest.test('Checking value.orThunk(die) does not throw', () => {
 });
 
 UnitTest.test('Checking value.fold(die, id) === value.getOrDie()', () => {
-  fc.assert(fc.property(arbResultValue(fc.integer()), fc.json(), (res, json) => {
+  fc.assert(fc.property(arbResultValue(fc.integer()), (res) => {
     const actual = res.getOrDie();
     Assert.eq('eq', actual, res.fold(Fun.die('should not get here'), Fun.identity));
   }));
@@ -117,8 +123,8 @@ UnitTest.test('Checking value.exists is true iff. f(value.getOrDie() === true)',
   }));
 });
 
-UnitTest.test('Checking value.toOption is always Option.some(value.getOrDie())', () => {
+UnitTest.test('Checking value.toOptional is always Optional.some(value.getOrDie())', () => {
   fc.assert(fc.property(arbResultValue(fc.integer()), (res) => {
-    Assert.eq('eq', res.getOrDie(), res.toOption().getOrDie());
+    Assert.eq('eq', res.getOrDie(), res.toOptional().getOrDie());
   }));
 });

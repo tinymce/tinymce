@@ -6,8 +6,7 @@
  */
 
 import { AlloyComponent, AlloyTriggers } from '@ephox/alloy';
-import { Element } from '@ephox/dom-globals';
-import { Fun, Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { UiFactoryBackstage } from '../../../backstage/Backstage';
 import { updateMenuText } from '../../dropdown/CommonDropdown';
@@ -28,19 +27,13 @@ const defaultBlocks = (
 );
 
 const getSpec = (editor: Editor): SelectSpec => {
-  const getMatchingValue = (nodeChangeEvent) => {
-    return findNearest(editor, () => dataset.data, nodeChangeEvent);
-  };
+  const getMatchingValue = (nodeChangeEvent) => findNearest(editor, () => dataset.data, nodeChangeEvent);
 
-  const isSelectedFor = (format: string) => {
-    return () => {
-      return editor.formatter.match(format);
-    };
-  };
+  const isSelectedFor = (format: string) => () => editor.formatter.match(format);
 
   const getPreviewFor = (format: string) => () => {
     const fmt = editor.formatter.get(format);
-    return Option.some({
+    return Optional.some({
       tag: fmt.length > 0 ? fmt[0].inline || fmt[0].block || 'div' : 'div',
       styles: editor.dom.parseStyle(editor.formatter.getCssText(format))
     });
@@ -54,11 +47,9 @@ const getSpec = (editor: Editor): SelectSpec => {
     });
   };
 
-  const nodeChangeHandler = Option.some((comp: AlloyComponent) => {
-    return (e) => updateSelectMenuText(e.parents, comp);
-  });
+  const nodeChangeHandler = Optional.some((comp: AlloyComponent) => (e) => updateSelectMenuText(e.parents, comp));
 
-  const setInitialValue = Option.some((comp: AlloyComponent) => {
+  const setInitialValue = Optional.some((comp: AlloyComponent) => {
     const parents = getCurrentSelectionParents(editor);
     updateSelectMenuText(parents, comp);
   });
@@ -67,9 +58,9 @@ const getSpec = (editor: Editor): SelectSpec => {
 
   return {
     tooltip: 'Blocks',
-    icon: Option.none(),
+    icon: Optional.none(),
     isSelectedFor,
-    getCurrentValue: Fun.constant(Option.none()),
+    getCurrentValue: Optional.none,
     getPreviewFor,
     onAction: onActionToggleFormat(editor),
     setInitialValue,
@@ -80,9 +71,7 @@ const getSpec = (editor: Editor): SelectSpec => {
   };
 };
 
-const createFormatSelect = (editor: Editor, backstage: UiFactoryBackstage) => {
-  return createSelectButton(editor, backstage, getSpec(editor));
-};
+const createFormatSelect = (editor: Editor, backstage: UiFactoryBackstage) => createSelectButton(editor, backstage, getSpec(editor));
 
 // FIX: Test this!
 const formatSelectMenu = (editor: Editor, backstage: UiFactoryBackstage) => {

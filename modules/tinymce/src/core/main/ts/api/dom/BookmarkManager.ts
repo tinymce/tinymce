@@ -5,11 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
-import Bookmarks from '../../bookmark/Bookmarks';
+import * as Bookmarks from '../../bookmark/Bookmarks';
 import { Bookmark } from '../../bookmark/BookmarkTypes';
-import Selection from './Selection';
+import EditorSelection from './Selection';
 
 /**
  * This class handles selection bookmarks.
@@ -29,7 +28,7 @@ interface BookmarkManager {
  * @method BookmarkManager
  * @param {tinymce.dom.Selection} selection Selection instance to handle bookmarks for.
  */
-function BookmarkManager(selection: Selection): BookmarkManager {
+function BookmarkManager(selection: EditorSelection): BookmarkManager {
   return {
     /**
      * Returns a bookmark location for the current selection. This bookmark object
@@ -65,7 +64,7 @@ function BookmarkManager(selection: Selection): BookmarkManager {
      * // Restore the selection bookmark
      * tinymce.activeEditor.selection.moveToBookmark(bm);
      */
-    moveToBookmark: Fun.curry(Bookmarks.moveToBookmark, selection) as (bookmark: Bookmark) => boolean,
+    moveToBookmark: Fun.curry(Bookmarks.moveToBookmark, selection) as (bookmark: Bookmark) => boolean
   };
 }
 

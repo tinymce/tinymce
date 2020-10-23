@@ -1,14 +1,14 @@
-import { Arr, Fun, Option } from '@ephox/katamari';
-import { Css, Element } from '@ephox/sugar';
-import Blocks from '../lookup/Blocks';
-import CellUtils from '../util/CellUtils';
+import { Arr, Fun, Optional } from '@ephox/katamari';
+import { Css, SugarElement } from '@ephox/sugar';
+import { TableSize } from '../api/TableSize';
+import { Warehouse } from '../api/Warehouse';
+import * as Blocks from '../lookup/Blocks';
+import * as CellUtils from '../util/CellUtils';
 import * as Util from '../util/Util';
-import Sizes from './Sizes';
-import { Warehouse } from '../model/Warehouse';
-import { TableSize } from './Types';
-import { BarPositions, RowInfo, ColInfo } from './BarPositions';
+import { BarPositions, RowInfo, width } from './BarPositions';
+import * as Sizes from './Sizes';
 
-const getRaw = function (cell: Element, property: string, getter: (e: Element) => number) {
+const getRaw = function (cell: SugarElement, property: string, getter: (e: SugarElement) => number) {
   return Css.getRaw(cell, property).fold(function () {
     return getter(cell) + 'px';
   }, function (raw) {
@@ -16,19 +16,22 @@ const getRaw = function (cell: Element, property: string, getter: (e: Element) =
   });
 };
 
-const getRawW = function (cell: Element, tableSize: TableSize) {
-  return getRaw(cell, 'width', (e: Element) => Sizes.getPixelWidth(e, tableSize));
+const getRawW = function (cell: SugarElement, tableSize: TableSize) {
+  return getRaw(cell, 'width', (e: SugarElement) => Sizes.getPixelWidth(e, tableSize));
 };
 
-const getRawH = function (cell: Element) {
+const getRawH = function (cell: SugarElement) {
   return getRaw(cell, 'height', Sizes.getHeight);
 };
 
-const getWidthFrom = function <T>(warehouse: Warehouse, direction: BarPositions<ColInfo>, getWidth: (cell: Element, tableSize: TableSize) => T, fallback: (deduced: Option<number>) => T, tableSize: TableSize) {
-  const columns = Blocks.columns(warehouse);
+const justCols = (warehouse: Warehouse): Optional<SugarElement<HTMLTableColElement>>[] =>
+  Arr.map(Warehouse.justColumns(warehouse), (column) => Optional.from(column.element));
+
+const getWidthFrom = function <T> (warehouse: Warehouse, getWidth: (cell: SugarElement, tableSize: TableSize) => T, fallback: (deduced: Optional<number>) => T, tableSize: TableSize) {
+  const columns: Optional<SugarElement>[] = Warehouse.hasColumns(warehouse) ? justCols(warehouse) : Blocks.columns(warehouse);
 
   const backups = Arr.map(columns, function (cellOption) {
-    return cellOption.map(direction.edge);
+    return cellOption.map(width.edge);
   });
 
   return Arr.map(columns, function (cellOption, c) {
@@ -44,16 +47,16 @@ const getWidthFrom = function <T>(warehouse: Warehouse, direction: BarPositions<
   });
 };
 
-const getDeduced = function (deduced: Option<number>) {
+const getDeduced = function (deduced: Optional<number>) {
   return deduced.map(function (d) { return d + 'px'; }).getOr('');
 };
 
-const getRawWidths = function (warehouse: Warehouse, direction: BarPositions<ColInfo>, tableSize: TableSize) { // Warning, changed signature!
-  return getWidthFrom(warehouse, direction, getRawW, getDeduced, tableSize);
+const getRawWidths = function (warehouse: Warehouse, tableSize: TableSize) {
+  return getWidthFrom(warehouse, getRawW, getDeduced, tableSize);
 };
 
-const getPercentageWidths = function (warehouse: Warehouse, direction: BarPositions<ColInfo>, tableSize: TableSize) {
-  return getWidthFrom(warehouse, direction, Sizes.getPercentageWidth, function (deduced) {
+const getPercentageWidths = function (warehouse: Warehouse, tableSize: TableSize) {
+  return getWidthFrom(warehouse, Sizes.getPercentageWidth, function (deduced) {
     return deduced.fold(function () {
       return tableSize.minCellWidth();
     }, function (cellWidth) {
@@ -62,14 +65,14 @@ const getPercentageWidths = function (warehouse: Warehouse, direction: BarPositi
   }, tableSize);
 };
 
-const getPixelWidths = function (warehouse: Warehouse, direction: BarPositions<ColInfo>, tableSize: TableSize) {
-  return getWidthFrom(warehouse, direction, Sizes.getPixelWidth, function (deduced) {
+const getPixelWidths = function (warehouse: Warehouse, tableSize: TableSize) {
+  return getWidthFrom(warehouse, Sizes.getPixelWidth, function (deduced) {
     // Minimum cell width when all else fails.
     return deduced.getOrThunk(tableSize.minCellWidth);
   }, tableSize);
 };
 
-const getHeightFrom = function <T> (warehouse: Warehouse, direction: BarPositions<RowInfo>, getHeight: (cell: Element) => T, fallback: (deduced: Option<number>) => T) {
+const getHeightFrom = function <T> (warehouse: Warehouse, direction: BarPositions<RowInfo>, getHeight: (cell: SugarElement) => T, fallback: (deduced: Optional<number>) => T) {
   const rows = Blocks.rows(warehouse);
 
   const backups = Arr.map(rows, function (cellOption) {
@@ -89,7 +92,7 @@ const getHeightFrom = function <T> (warehouse: Warehouse, direction: BarPosition
 };
 
 const getPixelHeights = function (warehouse: Warehouse, direction: BarPositions<RowInfo>) {
-  return getHeightFrom(warehouse, direction, Sizes.getHeight, function (deduced: Option<number>) {
+  return getHeightFrom(warehouse, direction, Sizes.getHeight, function (deduced: Optional<number>) {
     return deduced.getOrThunk(CellUtils.minHeight);
   });
 };
@@ -98,10 +101,5 @@ const getRawHeights = function (warehouse: Warehouse, direction: BarPositions<Ro
   return getHeightFrom(warehouse, direction, getRawH, getDeduced);
 };
 
-export default {
-  getRawWidths,
-  getPixelWidths,
-  getPercentageWidths,
-  getPixelHeights,
-  getRawHeights
-};
+export { getRawWidths, getPixelWidths, getPercentageWidths, getPixelHeights, getRawHeights };
+

@@ -1,45 +1,45 @@
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 
 export interface ValueOfArgs {
-  min: number;
-  max: number;
-  range: number;
-  value: number;
-  step: number;
-  snap: boolean;
-  snapStart: Option<number>;
-  rounded: boolean;
-  hasMinEdge: boolean;
-  hasMaxEdge: boolean;
-  minBound: number;
-  maxBound: number;
-  screenRange: number;
+  readonly min: number;
+  readonly max: number;
+  readonly range: number;
+  readonly value: number;
+  readonly step: number;
+  readonly snap: boolean;
+  readonly snapStart: Optional<number>;
+  readonly rounded: boolean;
+  readonly hasMinEdge: boolean;
+  readonly hasMaxEdge: boolean;
+  readonly minBound: number;
+  readonly maxBound: number;
+  readonly screenRange: number;
 }
 
 export interface OffsetOfArgs {
-  min: number;
-  max: number;
-  range: number;
-  value: number;
-  hasMinEdge: boolean;
-  hasMaxEdge: boolean;
-  minBound: number;
-  minOffset: number;
-  maxBound: number;
-  maxOffset: number;
-  centerMinEdge: number;
-  centerMaxEdge: number;
+  readonly min: number;
+  readonly max: number;
+  readonly range: number;
+  readonly value: number;
+  readonly hasMinEdge: boolean;
+  readonly hasMaxEdge: boolean;
+  readonly minBound: number;
+  readonly minOffset: number;
+  readonly maxBound: number;
+  readonly maxOffset: number;
+  readonly centerMinEdge: number;
+  readonly centerMaxEdge: number;
 }
 
 const reduceBy = (value: number, min: number, max: number, step: number): number => {
   if (value < min) {
     return value;
   } else if (value > max) {
-      return max;
+    return max;
   } else if (value === min) {
-      return min - 1;
+    return min - 1;
   } else {
-      return Math.max(min, value - step);
+    return Math.max(min, value - step);
   }
 };
 
@@ -47,25 +47,23 @@ const increaseBy = (value: number, min: number, max: number, step: number): numb
   if (value > max) {
     return value;
   } else if (value < min) {
-      return min;
+    return min;
   } else if (value === max) {
-      return max + 1;
+    return max + 1;
   } else {
-      return Math.min(max, value + step);
+    return Math.min(max, value + step);
   }
 };
 
-const capValue = (value: number, min: number, max: number): number => {
-  return Math.max(
-    min,
-    Math.min(max, value)
-  );
-};
+const capValue = (value: number, min: number, max: number): number => Math.max(
+  min,
+  Math.min(max, value)
+);
 
-const snapValueOf = (value: number, min: number, max: number, step: number, snapStart: Option<number>): number => {
+const snapValueOf = (value: number, min: number, max: number, step: number, snapStart: Optional<number>): number =>
   // We are snapping by the step size. Therefore, find the nearest multiple of
   // the step
-  return snapStart.fold(() => {
+  snapStart.fold(() => {
     // There is no initial snapping start, so just go from the minimum
     const initValue = value - min;
     const extraValue = Math.round(initValue / step) * step;
@@ -83,11 +81,8 @@ const snapValueOf = (value: number, min: number, max: number, step: number, snap
     const r = start + (numSteps * step);
     return Math.max(start, r);
   });
-};
 
-const findOffsetOf = (value: number, min: number, max: number): number => {
-  return Math.min(max, Math.max(value, min)) - min;
-};
+const findOffsetOf = (value: number, min: number, max: number): number => Math.min(max, Math.max(value, min)) - min;
 
 const findValueOf = (args: ValueOfArgs): number => {
   const { min, max, range, value, step, snap, snapStart, rounded, hasMinEdge, hasMaxEdge, minBound, maxBound, screenRange } = args;

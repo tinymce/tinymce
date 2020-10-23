@@ -2,15 +2,17 @@ import { Assertions, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { LegacyUnit } from '@ephox/mcagar';
+import Env from 'tinymce/core/api/Env';
+import { BlobCache } from 'tinymce/core/api/file/BlobCache';
 import DomParser from 'tinymce/core/api/html/DomParser';
 import Schema from 'tinymce/core/api/html/Schema';
-import Serializer from 'tinymce/core/api/html/Serializer';
+import HtmlSerializer from 'tinymce/core/api/html/Serializer';
 
 UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
 
   const schema = Schema({ valid_elements: '*[class|title]' });
-  const serializer = Serializer({}, schema);
+  const serializer = HtmlSerializer({}, schema);
   let parser, root;
 
   const countNodes = function (node, counter?) {
@@ -45,7 +47,7 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
     LegacyUnit.equal(root.firstChild.name, 'b', 'Element name');
     LegacyUnit.deepEqual(
       root.firstChild.attributes, [{ name: 'title', value: 'title' },
-      { name: 'class', value: 'class' }],
+        { name: 'class', value: 'class' }],
       'Element attributes'
     );
     LegacyUnit.deepEqual(countNodes(root), { 'body': 1, 'b': 1, '#text': 1 }, 'Element attributes (count)');
@@ -271,9 +273,9 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
   });
 
   suite.test('addNodeFilter', function () {
-    let parser, result;
+    let result;
 
-    parser = DomParser({}, schema);
+    const parser = DomParser({}, schema);
     parser.addNodeFilter('#comment', function (nodes, name, args) {
       result = { nodes, name, args };
     });
@@ -289,10 +291,9 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
   });
 
   suite.test('addNodeFilter multiple names', function () {
-    let parser;
     const results = {};
 
-    parser = DomParser({}, schema);
+    const parser = DomParser({}, schema);
     parser.addNodeFilter('#comment,#text', function (nodes, name, args) {
       results[name] = { nodes, name, args };
     });
@@ -315,9 +316,9 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
   });
 
   suite.test('addNodeFilter with parser args', function () {
-    let parser, result;
+    let result;
 
-    parser = DomParser({}, schema);
+    const parser = DomParser({}, schema);
     parser.addNodeFilter('#comment', function (nodes, name, args) {
       result = { nodes, name, args };
     });
@@ -327,9 +328,9 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
   });
 
   suite.test('addAttributeFilter', function () {
-    let parser, result;
+    let result;
 
-    parser = DomParser({});
+    const parser = DomParser({});
     parser.addAttributeFilter('src', function (nodes, name, args) {
       result = { nodes, name, args };
     });
@@ -345,10 +346,9 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
   });
 
   suite.test('addAttributeFilter multiple', function () {
-    let parser;
     const results: any = {};
 
-    parser = DomParser({});
+    const parser = DomParser({});
     parser.addAttributeFilter('src,href', function (nodes, name, args) {
       results[name] = { nodes, name, args };
     });
@@ -371,15 +371,21 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
   });
 
   suite.test('Fix orphan LI elements', function () {
-    let parser;
-
-    parser = DomParser({}, schema);
+    let parser = DomParser({}, schema);
     root = parser.parse('<ul><li>a</li></ul><li>b</li>');
     LegacyUnit.equal(serializer.serialize(root), '<ul><li>a</li><li>b</li></ul>', 'LI moved to previous sibling UL');
 
     parser = DomParser({}, schema);
     root = parser.parse('<li>a</li><ul><li>b</li></ul>');
     LegacyUnit.equal(serializer.serialize(root), '<ul><li>a</li><li>b</li></ul>', 'LI moved to next sibling UL');
+
+    parser = DomParser({}, schema);
+    root = parser.parse('<ol><li>a</li></ol><li>b</li>');
+    LegacyUnit.equal(serializer.serialize(root), '<ol><li>a</li><li>b</li></ol>', 'LI moved to previous sibling OL');
+
+    parser = DomParser({}, schema);
+    root = parser.parse('<li>a</li><ol><li>b</li></ol>');
+    LegacyUnit.equal(serializer.serialize(root), '<ol><li>a</li><li>b</li></ol>', 'LI moved to next sibling OL');
 
     parser = DomParser({}, schema);
     root = parser.parse('<li>a</li>');
@@ -408,11 +414,10 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
   });
 
   suite.test('Self closing list elements', function () {
-    let parser, root;
     const schema = Schema();
 
-    parser = DomParser({}, schema);
-    root = parser.parse('<ul><li>1<li><b>2</b><li><em><b>3</b></em></ul>');
+    const parser = DomParser({}, schema);
+    const root = parser.parse('<ul><li>1<li><b>2</b><li><em><b>3</b></em></ul>');
     LegacyUnit.equal(
       serializer.serialize(root),
       '<ul><li>1</li><li><strong>2</strong></li><li><em><strong>3</strong></em></li></ul>',
@@ -421,11 +426,10 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
   });
 
   suite.test('Remove redundant br elements', function () {
-    let parser, root;
     const schema = Schema();
 
-    parser = DomParser({ remove_trailing_brs: true }, schema);
-    root = parser.parse(
+    const parser = DomParser({ remove_trailing_brs: true }, schema);
+    const root = parser.parse(
       '<p>a<br></p>' +
       '<p>a<br>b<br></p>' +
       '<p>a<br><br></p><p>a<br><span data-mce-type="bookmark"></span><br></p>' +
@@ -439,56 +443,50 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
   });
 
   suite.test('Replace br with nbsp when wrapped in two inline elements and one block', function () {
-    let parser, root;
     const schema = Schema();
 
-    parser = DomParser({ remove_trailing_brs: true }, schema);
-    root = parser.parse('<p><strong><em><br /></em></strong></p>');
+    const parser = DomParser({ remove_trailing_brs: true }, schema);
+    const root = parser.parse('<p><strong><em><br /></em></strong></p>');
     LegacyUnit.equal(serializer.serialize(root), '<p><strong><em>\u00a0</em></strong></p>');
   });
 
   suite.test('Replace br with nbsp when wrapped in an inline element and placed in the root', function () {
-    let parser, root;
     const schema = Schema();
 
-    parser = DomParser({ remove_trailing_brs: true }, schema);
-    root = parser.parse('<strong><br /></strong>');
+    const parser = DomParser({ remove_trailing_brs: true }, schema);
+    const root = parser.parse('<strong><br /></strong>');
     LegacyUnit.equal(serializer.serialize(root), '<strong>\u00a0</strong>');
   });
 
-  suite.test('Don\'t replace br inside root element when there is multiple brs', function () {
-    let parser, root;
+  suite.test(`Don't replace br inside root element when there is multiple brs`, function () {
     const schema = Schema();
 
-    parser = DomParser({ remove_trailing_brs: true }, schema);
-    root = parser.parse('<strong><br /><br /></strong>');
+    const parser = DomParser({ remove_trailing_brs: true }, schema);
+    const root = parser.parse('<strong><br /><br /></strong>');
     LegacyUnit.equal(serializer.serialize(root), '<strong><br /><br /></strong>');
   });
 
-  suite.test('Don\'t replace br inside root element when there is siblings', function () {
-    let parser, root;
+  suite.test(`Don't replace br inside root element when there is siblings`, function () {
     const schema = Schema();
 
-    parser = DomParser({ remove_trailing_brs: true }, schema);
-    root = parser.parse('<strong><br /></strong><em>x</em>');
+    const parser = DomParser({ remove_trailing_brs: true }, schema);
+    const root = parser.parse('<strong><br /></strong><em>x</em>');
     LegacyUnit.equal(serializer.serialize(root), '<strong><br /></strong><em>x</em>');
   });
 
   suite.test('Remove br in invalid parent bug', function () {
-    let parser, root;
     const schema = Schema({ valid_elements: 'br' });
 
-    parser = DomParser({ remove_trailing_brs: true }, schema);
-    root = parser.parse('<br>');
+    const parser = DomParser({ remove_trailing_brs: true }, schema);
+    const root = parser.parse('<br>');
     LegacyUnit.equal(serializer.serialize(root), '', 'Remove traling br elements.');
   });
 
   suite.test('Forced root blocks', function () {
-    let parser, root;
     const schema = Schema();
 
-    parser = DomParser({ forced_root_block: 'p' }, schema);
-    root = parser.parse(
+    const parser = DomParser({ forced_root_block: 'p' }, schema);
+    const root = parser.parse(
       '<!-- a -->' +
       'b' +
       '<b>c</b>' +
@@ -506,11 +504,10 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
   });
 
   suite.test('Forced root blocks attrs', function () {
-    let parser, root;
     const schema = Schema();
 
-    parser = DomParser({ forced_root_block: 'p', forced_root_block_attrs: { class: 'class1' } }, schema);
-    root = parser.parse(
+    const parser = DomParser({ forced_root_block: 'p', forced_root_block_attrs: { class: 'class1' }}, schema);
+    const root = parser.parse(
       '<!-- a -->' +
       'b' +
       '<b>c</b>' +
@@ -525,15 +522,14 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
       '<p>d</p>' +
       '<p>e</p>' +
       '<p class="class1">f<strong>g</strong>h</p>',
-      'Mixed text nodes, inline elements and blocks.');
+    'Mixed text nodes, inline elements and blocks.');
   });
 
   suite.test('Parse html4 lists into html5 lists', function () {
-    let parser, root;
     const schema = Schema();
 
-    parser = DomParser({ fix_list_elements: true }, schema);
-    root = parser.parse('<ul><ul><li>a</li></ul></ul><ul><li>a</li><ul><li>b</li></ul></ul>');
+    const parser = DomParser({ fix_list_elements: true }, schema);
+    const root = parser.parse('<ul><ul><li>a</li></ul></ul><ul><li>a</li><ul><li>b</li></ul></ul>');
     LegacyUnit.equal(
       serializer.serialize(root),
       '<ul><li style="list-style-type: none"><ul><li>a</li></ul></li></ul><ul><li>a<ul><li>b</li></ul></li></ul>'
@@ -541,47 +537,42 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
   });
 
   suite.test('Parse contents with html4 anchors and allow_html_in_named_anchor: false', function () {
-    let parser, root;
     const schema = Schema();
 
-    parser = DomParser({ allow_html_in_named_anchor: false }, schema);
-    root = parser.parse('<a name="x">a</a><a href="x">x</a>');
+    const parser = DomParser({ allow_html_in_named_anchor: false }, schema);
+    const root = parser.parse('<a name="x">a</a><a href="x">x</a>');
     LegacyUnit.equal(serializer.serialize(root), '<a name="x"></a>a<a href="x">x</a>');
   });
 
   suite.test('Parse contents with html5 anchors and allow_html_in_named_anchor: false', function () {
-    let parser, root;
     const schema = Schema({ schema: 'html5' });
 
-    parser = DomParser({ allow_html_in_named_anchor: false }, schema);
-    root = parser.parse('<a id="x">a</a><a href="x">x</a>');
+    const parser = DomParser({ allow_html_in_named_anchor: false }, schema);
+    const root = parser.parse('<a id="x">a</a><a href="x">x</a>');
     LegacyUnit.equal(serializer.serialize(root), '<a id="x"></a>a<a href="x">x</a>');
   });
 
   suite.test('Parse contents with html4 anchors and allow_html_in_named_anchor: true', function () {
-    let parser, root;
     const schema = Schema();
 
-    parser = DomParser({ allow_html_in_named_anchor: true }, schema);
-    root = parser.parse('<a name="x">a</a><a href="x">x</a>');
+    const parser = DomParser({ allow_html_in_named_anchor: true }, schema);
+    const root = parser.parse('<a name="x">a</a><a href="x">x</a>');
     LegacyUnit.equal(serializer.serialize(root), '<a name="x">a</a><a href="x">x</a>');
   });
 
   suite.test('Parse contents with html5 anchors and allow_html_in_named_anchor: true', function () {
-    let parser, root;
     const schema = Schema({ schema: 'html5' });
 
-    parser = DomParser({ allow_html_in_named_anchor: true }, schema);
-    root = parser.parse('<a id="x">a</a><a href="x">x</a>');
+    const parser = DomParser({ allow_html_in_named_anchor: true }, schema);
+    const root = parser.parse('<a id="x">a</a><a href="x">x</a>');
     LegacyUnit.equal(serializer.serialize(root), '<a id="x">a</a><a href="x">x</a>');
   });
 
   suite.test('Parse contents with html5 self closing datalist options', function () {
-    let parser, root;
     const schema = Schema({ schema: 'html5' });
 
-    parser = DomParser({}, schema);
-    root = parser.parse(
+    const parser = DomParser({}, schema);
+    const root = parser.parse(
       '<datalist><option label="a1" value="b1"><option label="a2" value="b2"><option label="a3" value="b3"></datalist>'
     );
     LegacyUnit.equal(
@@ -592,87 +583,79 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
   });
 
   suite.test('Parse inline contents before block bug #5424', function () {
-    let parser, root;
     const schema = Schema({ schema: 'html5' });
 
-    parser = DomParser({}, schema);
-    root = parser.parse('<b>1</b> 2<p>3</p>');
+    const parser = DomParser({}, schema);
+    const root = parser.parse('<b>1</b> 2<p>3</p>');
     LegacyUnit.equal(serializer.serialize(root), '<b>1</b> 2<p>3</p>');
   });
 
   suite.test('Invalid text blocks within a li', function () {
-    let parser, root;
     const schema = Schema({ schema: 'html5', valid_children: '-li[p]' });
 
-    parser = DomParser({}, schema);
-    root = parser.parse('<ul><li>1<p>2</p></li><li>a<p>b</p><p>c</p></li></ul>');
+    const parser = DomParser({}, schema);
+    const root = parser.parse('<ul><li>1<p>2</p></li><li>a<p>b</p><p>c</p></li></ul>');
     LegacyUnit.equal(serializer.serialize(root), '<ul><li>12</li><li>ab</li><li>c</li></ul>');
   });
 
   suite.test('Invalid inline element with space before', function () {
-    let parser, root;
     const schema = Schema();
 
-    parser = DomParser({}, schema);
-    root = parser.parse('<p><span>1</span> <strong>2</strong></p>');
+    const parser = DomParser({}, schema);
+    const root = parser.parse('<p><span>1</span> <strong>2</strong></p>');
     LegacyUnit.equal(serializer.serialize(root), '<p>1 <strong>2</strong></p>');
   });
 
   suite.test('Valid classes', function () {
-    let parser, root;
     const schema = Schema({ valid_classes: 'classA classB' });
 
-    parser = DomParser({}, schema);
-    root = parser.parse('<p class="classA classB classC">a</p>');
+    const parser = DomParser({}, schema);
+    const root = parser.parse('<p class="classA classB classC">a</p>');
     LegacyUnit.equal(serializer.serialize(root), '<p class="classA classB">a</p>');
   });
 
   suite.test('Valid classes multiple elements', function () {
-    let parser, root;
-    const schema = Schema({ valid_classes: { '*': 'classA classB', 'strong': 'classC' } });
+    const schema = Schema({ valid_classes: { '*': 'classA classB', 'strong': 'classC' }});
 
-    parser = DomParser({}, schema);
-    root = parser.parse('<p class="classA classB classC"><strong class="classA classB classC classD">a</strong></p>');
+    const parser = DomParser({}, schema);
+    const root = parser.parse('<p class="classA classB classC"><strong class="classA classB classC classD">a</strong></p>');
     LegacyUnit.equal(serializer.serialize(root), '<p class="classA classB"><strong class="classA classB classC">a</strong></p>');
   });
 
   suite.test('Pad empty list blocks', function () {
-    let parser, root;
     const schema = Schema();
 
-    parser = DomParser({}, schema);
-    root = parser.parse('<ul><li></li></ul><ul><li> </li></ul>');
+    const parser = DomParser({}, schema);
+    const root = parser.parse('<ul><li></li></ul><ul><li> </li></ul>');
     LegacyUnit.equal(serializer.serialize(root), '<ul><li>\u00a0</li></ul><ul><li>\u00a0</li></ul>');
   });
 
   suite.test('Pad empty with br', function () {
     const schema = Schema();
     const parser = DomParser({ padd_empty_with_br: true }, schema);
-    const serializer = Serializer({ }, schema);
+    const serializer = HtmlSerializer({ }, schema);
     const root = parser.parse('<p>a</p><p></p>');
     LegacyUnit.equal(serializer.serialize(root), '<p>a</p><p><br /></p>');
   });
 
   suite.test('Pad empty and preffer br on insert', function () {
-    let parser, root;
     const schema = Schema();
 
-    parser = DomParser({}, schema);
-    root = parser.parse('<ul><li></li><li> </li><li><br /></li><li>\u00a0</li><li>a</li></ul>', { insert: true });
+    const parser = DomParser({}, schema);
+    const root = parser.parse('<ul><li></li><li> </li><li><br /></li><li>\u00a0</li><li>a</li></ul>', { insert: true });
     LegacyUnit.equal(serializer.serialize(root), '<ul><li><br /></li><li><br /></li><li><br /></li><li><br /></li><li>a</li></ul>');
   });
 
   suite.test('Preserve space in inline span', function () {
-    let parser, root;
     const schema = Schema();
 
-    parser = DomParser({}, schema);
-    root = parser.parse('a<span> </span>b');
+    const parser = DomParser({}, schema);
+    const root = parser.parse('a<span> </span>b');
     LegacyUnit.equal(serializer.serialize(root), 'a b');
   });
 
   suite.test('Bug #7543 removes whitespace between bogus elements before a block', function () {
-    const serializer = Serializer();
+    const serializer = HtmlSerializer();
 
     LegacyUnit.equal(
       serializer.serialize(DomParser().parse(
@@ -683,7 +666,7 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
   });
 
   suite.test('Bug #7582 removes whitespace between bogus elements before a block', function () {
-    const serializer = Serializer();
+    const serializer = HtmlSerializer();
 
     LegacyUnit.equal(
       serializer.serialize(DomParser().parse(
@@ -694,7 +677,7 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
   });
 
   suite.test('do not replace starting linebreak with space', function () {
-    const serializer = Serializer();
+    const serializer = HtmlSerializer();
 
     LegacyUnit.equal(
       serializer.serialize(DomParser().parse(
@@ -704,10 +687,21 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
     );
   });
 
+  suite.test('parse iframe XSS', function () {
+    const serializer = HtmlSerializer();
+
+    LegacyUnit.equal(
+      serializer.serialize(DomParser().parse(
+        '<iframe><textarea></iframe><img src="a" onerror="alert(document.domain)" />')
+      ),
+      '<iframe><textarea></iframe><img src="a" />'
+    );
+  });
+
   suite.test('getAttributeFilters/getNodeFilters', function () {
     const parser = DomParser();
-    const cb1 = (nodes, name, args) => {};
-    const cb2 = (nodes, name, args) => {};
+    const cb1 = (_nodes, _name, _args) => {};
+    const cb2 = (_nodes, _name, _args) => {};
 
     parser.addAttributeFilter('attr', cb1);
     parser.addNodeFilter('node', cb2);
@@ -715,8 +709,80 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
     const attrFilters = parser.getAttributeFilters();
     const nodeFilters = parser.getNodeFilters();
 
-    Assertions.assertEq('Should be expected filter', {name: 'attr', callbacks: [cb1] }, attrFilters[attrFilters.length - 1]);
-    Assertions.assertEq('Should be extected filter', {name: 'node', callbacks: [cb2] }, nodeFilters[nodeFilters.length - 1]);
+    Assertions.assertEq('Should be expected filter', { name: 'attr', callbacks: [ cb1 ] }, attrFilters[attrFilters.length - 1]);
+    Assertions.assertEq('Should be extected filter', { name: 'node', callbacks: [ cb2 ] }, nodeFilters[nodeFilters.length - 1]);
+  });
+
+  suite.test('extract base64 uris to blobcache if blob cache is provided', () => {
+    const blobCache = BlobCache();
+    const parser = DomParser({ blob_cache: blobCache });
+    const base64 = 'R0lGODdhDAAMAIABAMzMzP///ywAAAAADAAMAAACFoQfqYeabNyDMkBQb81Uat85nxguUAEAOw==';
+    const base64Uri = `data:image/gif;base64,${base64}`;
+    const serializedHtml = serializer.serialize(parser.parse(`<p><img src="${base64Uri}" /></p>`));
+    const blobInfo = blobCache.findFirst((bi) => bi.base64() === base64);
+    const blobUri = blobInfo.blobUri();
+
+    Assertions.assertEq(
+      'Should be html with blob uri',
+      `<p><img src="${blobUri}" /></p>`,
+      serializedHtml
+    );
+
+    blobCache.destroy();
+  });
+
+  suite.test('duplicate base64 uris added only once to blobcache if blob cache is provided', () => {
+    const blobCache = BlobCache();
+    const parser = DomParser({ blob_cache: blobCache });
+    const base64 = 'R0lGODdhDAAMAIABAMzMzP///ywAAAAADAAMAAACFoQfqYeabNyDMkBQb81Uat85nxguUAEAOw==';
+    const gifBase64Uri = `data:image/gif;base64,${base64}`;
+    const pngBase64Uri = `data:image/png;base64,${base64}`;
+    const images = `<img src="${gifBase64Uri}" /><img src="${pngBase64Uri}" />`;
+    const serializedHtml = serializer.serialize(parser.parse(`<p>${images}</p><p>${images}</p>`));
+    let count = 0;
+    blobCache.findFirst((bi) => {
+      if (bi.base64() === base64) {
+        count++;
+      }
+      return false;
+    });
+
+    Assertions.assertEq('Only one image per mime type should be in the blob cache', 2, count);
+    Assertions.assertEq('HTML shouldn\'t include a base64 data URI', true, serializedHtml.indexOf(base64) === -1);
+    blobCache.destroy();
+  });
+
+  suite.test('do not extract base64 uris for transparent or placeholder images used by for example the page break plugin', () => {
+    const blobCache = BlobCache();
+    const placeholderImg = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mNk+P//PwMRgHFUIX0VAgAE3B3t0SaZ0AAAAABJRU5ErkJggg==';
+    const parser = DomParser({ blob_cache: blobCache });
+    const html = `<p><img src="${Env.transparentSrc}" /><img src="${placeholderImg}" data-mce-placeholder="1"></p>`;
+    const root = parser.parse(html);
+
+    Assertions.assertEq(
+      'Should be the unchanged transparent image source',
+      Env.transparentSrc,
+      root.getAll('img')[0].attr('src')
+    );
+    Assertions.assertEq(
+      'Should be the unchanged placeholder image source',
+      placeholderImg,
+      root.getAll('img')[1].attr('src')
+    );
+
+    blobCache.destroy();
+  });
+
+  suite.test('do not extract base64 uris if blob cache is not provided', () => {
+    const parser = DomParser();
+    const html = '<p><img src="data:image/gif;base64,R0lGODdhDAAMAIABAMzMzP///ywAAAAADAAMAAACFoQfqYeabNyDMkBQb81Uat85nxguUAEAOw==" /></p>';
+    const serializedHtml = serializer.serialize(parser.parse(html));
+
+    Assertions.assertEq(
+      'Should be html with base64 uri retained',
+      html,
+      serializedHtml
+    );
   });
 
   Pipeline.async({}, suite.toSteps({}), function () {

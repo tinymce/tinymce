@@ -1,28 +1,27 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { Chain, GeneralSteps, Logger, Pipeline, Step } from 'ephox/agar/api/Main';
-import { createFile } from 'ephox/agar/api/Files';
-import { Blob, FileList, HTMLInputElement, navigator } from '@ephox/dom-globals';
+import { Cell, Optional } from '@ephox/katamari';
+import { Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
 import { cRunOnPatchedFileInput, sRunOnPatchedFileInput } from 'ephox/agar/api/FileInput';
-import { Body, Element, Insert, Remove } from '@ephox/sugar';
-import { Cell, Option } from '@ephox/katamari';
+import { createFile } from 'ephox/agar/api/Files';
+import { Chain, GeneralSteps, Logger, Pipeline, Step } from 'ephox/agar/api/Main';
 
 UnitTest.asynctest('PatchFileInputTest', (success, failure) => {
-  const files = [ createFile('a.txt', 0, new Blob(['x'])) ];
-  const filesState = Cell(Option.none<FileList>());
+  const files = [ createFile('a.txt', 0, new Blob([ 'x' ])) ];
+  const filesState = Cell(Optional.none<FileList>());
 
-  const pickFiles = (body: Element<any>, next: (files: FileList) => void) => {
-    const elm = Element.fromHtml<HTMLInputElement>('<input type="file">');
-    elm.dom().onchange = () => {
+  const pickFiles = (body: SugarElement<any>, next: (files: FileList) => void) => {
+    const elm = SugarElement.fromHtml<HTMLInputElement>('<input type="file">');
+    elm.dom.onchange = () => {
       Remove.remove(elm);
-      next(elm.dom().files);
+      next(elm.dom.files);
     };
     Insert.append(body, elm);
-    elm.dom().click();
+    elm.dom.click();
   };
 
-  const cPickFiles = Chain.async<Element, FileList>((input, next, die) => pickFiles(input, next));
-  const sPickFiles = Step.async((next, die) => pickFiles(Body.body(), (files) => {
-    filesState.set(Option.some(files));
+  const cPickFiles = Chain.async<SugarElement, FileList>((input, next, _die) => pickFiles(input, next));
+  const sPickFiles = Step.async((next, _die) => pickFiles(SugarBody.body(), (files) => {
+    filesState.set(Optional.some(files));
     next();
   }));
 
@@ -38,11 +37,11 @@ UnitTest.asynctest('PatchFileInputTest', (success, failure) => {
       Step.sync(() => {
         const files = filesState.get().getOrDie('Failed to get files state');
         assetFiles(files);
-        filesState.set(Option.none());
+        filesState.set(Optional.none());
       })
     ])),
 
-    Logger.t('Patch file input chain', Chain.asStep(Body.body(), [
+    Logger.t('Patch file input chain', Chain.asStep(SugarBody.body(), [
       cRunOnPatchedFileInput(files, cPickFiles),
       Chain.op(assetFiles)
     ]))

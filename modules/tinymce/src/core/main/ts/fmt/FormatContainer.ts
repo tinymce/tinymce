@@ -5,8 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element, Node } from '@ephox/dom-globals';
-import NodeType from '../dom/NodeType';
+import * as NodeType from '../dom/NodeType';
 
 const CARET_ID = '_mce_caret';
 const isCaretNode = (node: Node) => NodeType.isElement(node) && node.id === CARET_ID;

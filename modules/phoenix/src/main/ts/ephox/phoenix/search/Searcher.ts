@@ -1,5 +1,5 @@
 import { Universe } from '@ephox/boss';
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import { Pattern, PositionArray, Search } from '@ephox/polaris';
 import { NamedPattern } from '../api/data/NamedPattern';
 import * as Spot from '../api/data/Spot';
@@ -8,10 +8,10 @@ import * as Family from '../api/general/Family';
 import * as TypedList from '../extract/TypedList';
 import * as MatchSplitter from './MatchSplitter';
 
-const gen = function <E, D>(universe: Universe<E, D>, input: E[]) {
+const gen = function <E, D> (universe: Universe<E, D>, input: E[]) {
   return PositionArray.generate(input, function (unit, offset) {
     const finish = offset + universe.property().getText(unit).length;
-    return Option.from(Spot.range(unit, offset, finish));
+    return Optional.from(Spot.range(unit, offset, finish));
   });
 };
 
@@ -22,7 +22,7 @@ const gen = function <E, D>(universe: Universe<E, D>, input: E[]) {
  *
  * Returns a list of matches.
  */
-const run = function <E, D>(universe: Universe<E, D>, elements: E[], patterns: NamedPattern[], optimise?: (e: E) => boolean) {
+const run = function <E, D> (universe: Universe<E, D>, elements: E[], patterns: NamedPattern[], optimise?: (e: E) => boolean) {
   const sections = Family.group(universe, elements, optimise);
   const result = Arr.bind(sections, function (x: TypedItem<E, D>[]) {
     const input = TypedList.justText(x);
@@ -40,7 +40,7 @@ const run = function <E, D>(universe: Universe<E, D>, elements: E[], patterns: N
 /**
  * Runs a search for one or more words
  */
-const safeWords = function <E, D>(universe: Universe<E, D>, elements: E[], words: string[], optimise?: (e: E) => boolean) {
+const safeWords = function <E, D> (universe: Universe<E, D>, elements: E[], words: string[], optimise?: (e: E) => boolean) {
   const patterns = Arr.map(words, function (word) {
     const pattern = Pattern.safeword(word);
     return NamedPattern(word, pattern);
@@ -51,9 +51,9 @@ const safeWords = function <E, D>(universe: Universe<E, D>, elements: E[], words
 /**
  * Runs a search for a single token
  */
-const safeToken = function <E, D>(universe: Universe<E, D>, elements: E[], token: string, optimise?: (e: E) => boolean) {
+const safeToken = function <E, D> (universe: Universe<E, D>, elements: E[], token: string, optimise?: (e: E) => boolean) {
   const pattern = NamedPattern(token, Pattern.safetoken(token));
-  return run(universe, elements, [pattern], optimise);
+  return run(universe, elements, [ pattern ], optimise);
 };
 
 export {

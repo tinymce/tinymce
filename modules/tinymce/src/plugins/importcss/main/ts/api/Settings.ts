@@ -5,40 +5,37 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-const shouldMergeClasses = function (editor) {
-  return editor.getParam('importcss_merge_classes');
+import Editor from 'tinymce/core/api/Editor';
+
+const shouldMergeClasses = (editor: Editor) => editor.getParam('importcss_merge_classes');
+
+const shouldImportExclusive = (editor: Editor) => editor.getParam('importcss_exclusive');
+
+const getSelectorConverter = (editor: Editor) => editor.getParam('importcss_selector_converter');
+
+const getSelectorFilter = (editor: Editor) => editor.getParam('importcss_selector_filter');
+
+const getCssGroups = (editor: Editor) => editor.getParam('importcss_groups');
+
+const shouldAppend = (editor: Editor) => editor.getParam('importcss_append');
+
+const getFileFilter = (editor: Editor) => editor.getParam('importcss_file_filter');
+
+const getSkin = (editor: Editor) => {
+  const skin = editor.getParam('skin');
+  return skin !== false ? skin || 'oxide' : false;
 };
 
-const shouldImportExclusive = function (editor) {
-  return editor.getParam('importcss_exclusive');
-};
+const getSkinUrl = (editor: Editor) => editor.getParam('skin_url');
 
-const getSelectorConverter = function (editor) {
-  return editor.getParam('importcss_selector_converter');
-};
-
-const getSelectorFilter = function (editor) {
-  return editor.getParam('importcss_selector_filter');
-};
-
-const getCssGroups = function (editor) {
-  return editor.getParam('importcss_groups');
-};
-
-const shouldAppend = function (editor) {
-  return editor.getParam('importcss_append');
-};
-
-const getFileFilter = function (editor) {
-  return editor.getParam('importcss_file_filter');
-};
-
-export default {
+export {
   shouldMergeClasses,
   shouldImportExclusive,
   getSelectorConverter,
   getSelectorFilter,
   getCssGroups,
   shouldAppend,
-  getFileFilter
+  getFileFilter,
+  getSkin,
+  getSkinUrl
 };

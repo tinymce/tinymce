@@ -5,12 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import DOMUtils from '../api/dom/DOMUtils';
 import DomParser from '../api/html/DomParser';
 import Entities from '../api/html/Entities';
-import Zwsp from '../text/Zwsp';
-import { DomSerializerSettings } from './DomSerializer';
+import * as Zwsp from '../text/Zwsp';
+import { DomSerializerSettings } from './DomSerializerImpl';
 
 declare const unescape: any;
 
@@ -80,7 +80,7 @@ const register = (htmlParser: DomParser, settings: DomSerializerSettings, dom: D
 
       if (node.attr('data-mce-type') === 'bookmark' && !args.cleanup) {
         // We maybe dealing with a "filled" bookmark. If so just remove the node, otherwise unwrap it
-        const hasChildren = Option.from(node.firstChild).exists((firstChild) => !Zwsp.isZwsp(firstChild.value));
+        const hasChildren = Optional.from(node.firstChild).exists((firstChild) => !Zwsp.isZwsp(firstChild.value));
         if (hasChildren) {
           node.unwrap();
         } else {
@@ -107,8 +107,8 @@ const register = (htmlParser: DomParser, settings: DomSerializerSettings, dom: D
     let i = nodes.length, node, value, type;
 
     const trim = function (value) {
-      /*jshint maxlen:255 */
-      /*eslint max-len:0 */
+      /* jshint maxlen:255 */
+      /* eslint max-len:0 */
       return value.replace(/(<!--\[CDATA\[|\]\]-->)/g, '\n')
         .replace(/^[\r\n]*|[\r\n]*$/g, '')
         .replace(/^\s*((<!--)?(\s*\/\/)?\s*<!\[CDATA\[|(<!--\s*)?\/\*\s*<!\[CDATA\[\s*\*\/|(\/\/)?\s*<!--|\/\*\s*<!--\s*\*\/)\s*[\r\n]*/gi, '')
@@ -211,15 +211,13 @@ const register = (htmlParser: DomParser, settings: DomSerializerSettings, dom: D
  * Example of what happens: <body>text</body> becomes <body>text<br><br></body>
  */
 const trimTrailingBr = function (rootNode) {
-  let brNode1, brNode2;
-
   const isBr = function (node) {
     return node && node.name === 'br';
   };
 
-  brNode1 = rootNode.lastChild;
+  const brNode1 = rootNode.lastChild;
   if (isBr(brNode1)) {
-    brNode2 = brNode1.prev;
+    const brNode2 = brNode1.prev;
 
     if (isBr(brNode2)) {
       brNode1.remove();
@@ -228,7 +226,7 @@ const trimTrailingBr = function (rootNode) {
   }
 };
 
-export default {
+export {
   register,
   trimTrailingBr
 };

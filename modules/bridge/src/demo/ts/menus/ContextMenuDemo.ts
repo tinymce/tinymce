@@ -1,28 +1,27 @@
-import { console } from '@ephox/dom-globals';
 import { getDemoRegistry } from '../buttons/DemoRegistry';
 
-/* tslint:disable:no-console */
+/* eslint-disable no-console */
 
 export const registerDemoContextMenus = () => {
   getDemoRegistry().addContextMenu('regular', {
-    update: () => ['bold', 'italic', '|', 'table']
+    update: () => [ 'bold', 'italic', '|', 'table' ]
   });
 
   getDemoRegistry().addContextMenu('custom', {
     update: () => [{
       icon: 'code',
       text: 'Code',
-      onAction: (api) => {
+      onAction: (_api) => {
         console.log('open source code dialog');
       }
     }]
   });
 
   getDemoRegistry().addContextMenu('mixed', {
-    update: () => ['bold', 'italic', {
+    update: () => [ 'bold', 'italic', {
       icon: 'code',
       text: 'Code',
-      onAction: (api) => {
+      onAction: (_api) => {
         console.log('open source code dialog');
       }
     }]
@@ -52,7 +51,7 @@ export const registerDemoContextMenus = () => {
           {
             text: 'word4',
             onAction: () => console.log('word4')
-          },
+          }
         ]
       }
     ]

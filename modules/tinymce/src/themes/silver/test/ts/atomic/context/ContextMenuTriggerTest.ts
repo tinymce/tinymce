@@ -1,5 +1,4 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
-import { PointerEvent } from '@ephox/dom-globals';
 import Editor from 'tinymce/core/api/Editor';
 import { isTriggeredByKeyboard } from 'tinymce/themes/silver/ui/menus/contextmenu/SilverContextMenu';
 
@@ -11,14 +10,12 @@ UnitTest.test('SilverContextMenu - isTriggeredByKeyboard', () => {
     getBody: () => body
   } as unknown as Editor;
 
-  const createFakeEvent = (type: string, button: number, target: any, pointerType?: string) => {
-    return {
-      type,
-      pointerType,
-      target,
-      button
-    } as PointerEvent;
-  };
+  const createFakeEvent = (type: string, button: number, target: any, pointerType?: string) => ({
+    type,
+    pointerType,
+    target,
+    button
+  } as PointerEvent);
 
   assert.eq(false, isTriggeredByKeyboard(fakeEditor, createFakeEvent('contextmenu', 2, node))); // Chrome mouse
   assert.eq(false, isTriggeredByKeyboard(fakeEditor, createFakeEvent('contextmenu', 2, body))); // Chrome mouse

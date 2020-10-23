@@ -1,26 +1,24 @@
-import { Log, Step, Logger } from '@ephox/agar';
+import { Log, Logger, Step } from '@ephox/agar';
 import { Behaviour, GuiFactory, Replacing, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
+import { Cell } from '@ephox/katamari';
 
 import { SimpleBehaviours } from 'tinymce/themes/silver/ui/alien/SimpleBehaviours';
 import { onControlAttached, onControlDetached } from 'tinymce/themes/silver/ui/controls/Controls';
-import { Cell } from '@ephox/katamari';
 
 UnitTest.asynctest('ControlOnSetup Test', (success, failure) => {
 
   TestHelpers.GuiSetup.setup(
-    (store, doc, body) => {
-      return GuiFactory.build({
-        dom: {
-          tag: 'div',
-          classes: [ 'test-container' ]
-        },
-        behaviours: Behaviour.derive([
-          Replacing.config({ })
-        ])
-      });
-    },
-    (doc, body, gui, component, store) => {
+    (_store, _doc, _body) => GuiFactory.build({
+      dom: {
+        tag: 'div',
+        classes: [ 'test-container' ]
+      },
+      behaviours: Behaviour.derive([
+        Replacing.config({ })
+      ])
+    }),
+    (_doc, _body, _gui, component, store) => {
       const cellWithDestroy = Cell(store.adder('fallbackWithDestroy'));
 
       const onDestroy1 = store.adder('onDestroy.1');

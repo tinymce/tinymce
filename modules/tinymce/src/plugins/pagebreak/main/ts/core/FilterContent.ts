@@ -6,7 +6,7 @@
  */
 
 import Env from 'tinymce/core/api/Env';
-import Settings from '../api/Settings';
+import * as Settings from '../api/Settings';
 
 const getPageBreakClass = function () {
   return 'mce-pagebreak';
@@ -54,7 +54,7 @@ const setup = function (editor) {
   });
 };
 
-export default {
+export {
   setup,
   getPlaceholderHtml,
   getPageBreakClass

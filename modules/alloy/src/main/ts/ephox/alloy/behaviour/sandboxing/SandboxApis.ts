@@ -1,5 +1,5 @@
-import { Attr, Css, Element } from '@ephox/sugar';
 import { Arr } from '@ephox/katamari';
+import { Attribute, Css, SugarElement } from '@ephox/sugar';
 
 import { Positioning } from '../../api/behaviour/Positioning';
 import { AlloyComponent } from '../../api/component/ComponentApi';
@@ -10,7 +10,7 @@ import { SandboxingConfig, SandboxingState } from './SandboxingTypes';
 // NOTE: A sandbox should not start as part of the world. It is expected to be
 // added to the sink on rebuild.
 const rebuild = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: SandboxingState, data: AlloySpec) => {
-  sState.get().each((data) => {
+  sState.get().each((_data) => {
     // If currently has data, so it hasn't been removed yet. It is
     // being "re-opened"
     Attachment.detachChildren(sandbox);
@@ -33,9 +33,8 @@ const open = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: Sandbo
   return newState;
 };
 
-const setContent = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: SandboxingState, data: AlloySpec) => {
-  return sState.get().map(() => rebuild(sandbox, sConfig, sState, data));
-};
+const setContent = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: SandboxingState, data: AlloySpec) =>
+  sState.get().map(() => rebuild(sandbox, sConfig, sState, data));
 
 // TODO AP-191 write a test for openWhileCloaked
 const openWhileCloaked = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: SandboxingState, data: AlloySpec, transaction: () => void) => {
@@ -54,53 +53,50 @@ const close = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: Sandb
   });
 };
 
-const isOpen = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: SandboxingState) => {
-  return sState.isOpen();
-};
+const isOpen = (_sandbox: AlloyComponent, _sConfig: SandboxingConfig, sState: SandboxingState) => sState.isOpen();
 
-const isPartOf = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: SandboxingState, queryElem: Element) => {
-  return isOpen(sandbox, sConfig, sState) && sState.get().exists((data) => {
-    return sConfig.isPartOf(sandbox, data, queryElem);
-  });
-};
+const isPartOf = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: SandboxingState, queryElem: SugarElement) =>
+  isOpen(sandbox, sConfig, sState) && sState.get().exists(
+    (data) => sConfig.isPartOf(sandbox, data, queryElem)
+  );
 
-const getState = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: SandboxingState) => {
-  return sState.get();
-};
+const getState = (_sandbox: AlloyComponent, _sConfig: SandboxingConfig, sState: SandboxingState) =>
+  sState.get();
 
 const store = (sandbox: AlloyComponent, cssKey: string, attr: string, newValue: string) => {
-  Css.getRaw(sandbox.element(), cssKey).fold(() => {
-    Attr.remove(sandbox.element(), attr);
+  Css.getRaw(sandbox.element, cssKey).fold(() => {
+    Attribute.remove(sandbox.element, attr);
   }, (v) => {
-    Attr.set(sandbox.element(), attr, v);
+    Attribute.set(sandbox.element, attr, v);
   });
-  Css.set(sandbox.element(), cssKey, newValue);
+  Css.set(sandbox.element, cssKey, newValue);
 };
 
 const restore = (sandbox: AlloyComponent, cssKey: string, attr: string) => {
-  if (Attr.has(sandbox.element(), attr)) {
-    const oldValue = Attr.get(sandbox.element(), attr);
-    Css.set(sandbox.element(), cssKey, oldValue);
-  } else {
-    Css.remove(sandbox.element(), cssKey);
-  }
+  Attribute.getOpt(sandbox.element, attr).fold(
+    () => Css.remove(sandbox.element, cssKey),
+    (oldValue) => Css.set(sandbox.element, cssKey, oldValue)
+  );
 };
 
-const cloak = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: SandboxingState) => {
+const cloak = (sandbox: AlloyComponent, sConfig: SandboxingConfig, _sState: SandboxingState) => {
   const sink = sConfig.getAttachPoint(sandbox);
   // Use the positioning mode of the sink, so that it does not interfere with the sink's positioning
   // We add it here to stop it causing layout problems.
-  Css.set(sandbox.element(), 'position', Positioning.getMode(sink));
+  Css.set(sandbox.element, 'position', Positioning.getMode(sink));
   store(sandbox, 'visibility', sConfig.cloakVisibilityAttr, 'hidden');
 };
 
-const hasPosition = (element: Element) => Arr.exists(['top', 'left', 'right', 'bottom'], (pos) => Css.getRaw(element, pos).isSome());
+const hasPosition = (element: SugarElement) => Arr.exists(
+  [ 'top', 'left', 'right', 'bottom' ],
+  (pos) => Css.getRaw(element, pos).isSome()
+);
 
-const decloak = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: SandboxingState) => {
-  if (!hasPosition(sandbox.element())) {
+const decloak = (sandbox: AlloyComponent, sConfig: SandboxingConfig, _sState: SandboxingState) => {
+  if (!hasPosition(sandbox.element)) {
     // If a position value was not added to the sandbox during cloaking, remove it
     // otherwise certain position values (absolute, relative) will impact the child that _was_ positioned
-    Css.remove(sandbox.element(), 'position');
+    Css.remove(sandbox.element, 'position');
   }
 
   restore(sandbox, 'visibility', sConfig.cloakVisibilityAttr);

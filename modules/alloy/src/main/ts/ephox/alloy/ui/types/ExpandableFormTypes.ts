@@ -1,4 +1,4 @@
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
@@ -11,8 +11,8 @@ export interface ExpandableFormDetail extends CompositeSketchDetail {
   dom: RawDomSchema;
   components: AlloySpec[ ];
   expandableBehaviours: SketchBehaviours;
-  action: Option<ExpandableFormAction>;
-  role: Option<string>;
+  action: Optional<ExpandableFormAction>;
+  role: Optional<string>;
   eventOrder: Record<string, string[]>;
 
   markers: {
@@ -52,7 +52,7 @@ export interface ExpandableFormSpec {
 
 export interface ExpandableFormApis {
   toggleForm: (component: AlloyComponent) => void;
-  getField: (component: AlloyComponent, key: string) => Option<AlloyComponent>;
+  getField: (component: AlloyComponent, key: string) => Optional<AlloyComponent>;
   collapseForm: (component: AlloyComponent) => void;
   collapseFormImmediately: (component: AlloyComponent) => void;
   expandForm: (component: AlloyComponent) => void;

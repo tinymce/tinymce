@@ -5,21 +5,21 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-const fireSkinLoaded = function (editor) {
-  const done = function () {
+import Editor from 'tinymce/core/api/Editor';
+
+const fireSkinLoaded = (editor: Editor) => (): void => {
+  const done = () => {
     editor._skinLoaded = true;
     editor.fire('SkinLoaded');
   };
 
-  return function () {
-    if (editor.initialized) {
-      done();
-    } else {
-      editor.on('init', done);
-    }
-  };
+  if (editor.initialized) {
+    done();
+  } else {
+    editor.on('init', done);
+  }
 };
 
-export default {
+export {
   fireSkinLoaded
 };

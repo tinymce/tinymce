@@ -1,38 +1,27 @@
-import { KeyboardEvent } from '@ephox/dom-globals';
 import { Arr, Fun } from '@ephox/katamari';
 import { EventArgs } from '@ephox/sugar';
 
-export type KeyMatcher = (evt: EventArgs) => boolean;
+export type KeyMatcher = (evt: EventArgs<KeyboardEvent>) => boolean;
 
-const inSet = (keys: number[]): KeyMatcher => {
-  return (event: EventArgs<KeyboardEvent>) => {
-    const raw = event.raw();
-    return Arr.contains(keys, raw.which);
-  };
+const inSet = (keys: ReadonlyArray<number>): KeyMatcher => (event: EventArgs<KeyboardEvent>) => {
+  const raw = event.raw;
+  return Arr.contains(keys, raw.which);
 };
 
-const and = (preds: KeyMatcher[]): KeyMatcher => {
-  return (event: EventArgs) => {
-    return Arr.forall(preds, (pred) => {
-      return pred(event);
-    });
-  };
-};
+const and = (preds: KeyMatcher[]): KeyMatcher => (event: EventArgs<KeyboardEvent>) => Arr.forall(preds, (pred) => pred(event));
 
-const is = (key: number): KeyMatcher => {
-  return (event: EventArgs<KeyboardEvent>) => {
-    const raw = event.raw();
-    return raw.which === key;
-  };
+const is = (key: number): KeyMatcher => (event: EventArgs<KeyboardEvent>) => {
+  const raw = event.raw;
+  return raw.which === key;
 };
 
 const isShift = (event: EventArgs<KeyboardEvent>): boolean => {
-  const raw = event.raw();
+  const raw = event.raw;
   return raw.shiftKey === true;
 };
 
 const isControl = (event: EventArgs<KeyboardEvent>): boolean => {
-  const raw = event.raw();
+  const raw = event.raw;
   return raw.ctrlKey === true;
 };
 

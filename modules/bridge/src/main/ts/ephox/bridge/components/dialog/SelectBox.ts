@@ -1,27 +1,27 @@
-import { ValueSchema, FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
+import { FieldProcessorAdt, FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
-import { FormComponentWithLabelApi, FormComponentWithLabel, formComponentWithLabelFields } from './FormComponent';
+import { FormComponentWithLabel, formComponentWithLabelFields, FormComponentWithLabelSpec } from './FormComponent';
 
-export interface ExternalSelectBoxItem {
+export interface SelectBoxItemSpec {
   text: string;
   value: string;
 }
 
-export interface SelectBoxApi extends FormComponentWithLabelApi {
+export interface SelectBoxSpec extends FormComponentWithLabelSpec {
   type: 'selectbox';
-  items: ExternalSelectBoxItem[];
+  items: SelectBoxItemSpec[];
   size?: number;
   disabled?: boolean;
 }
 
-interface InternalSelectBoxItem extends ExternalSelectBoxItem {
+export interface SelectBoxItem {
   text: string;
   value: string;
 }
 
 export interface SelectBox extends FormComponentWithLabel {
   type: 'selectbox';
-  items: InternalSelectBoxItem[];
+  items: SelectBoxItem[];
   size: number;
   disabled: boolean;
 }
@@ -39,6 +39,5 @@ export const selectBoxSchema = ValueSchema.objOf(selectBoxFields);
 
 export const selectBoxDataProcessor = ValueSchema.string;
 
-export const createSelectBox = (spec: SelectBoxApi): Result<SelectBox, ValueSchema.SchemaError<any>> => {
-  return ValueSchema.asRaw<SelectBox>('selectbox', selectBoxSchema, spec);
-};
+export const createSelectBox = (spec: SelectBoxSpec): Result<SelectBox, ValueSchema.SchemaError<any>> =>
+  ValueSchema.asRaw<SelectBox>('selectbox', selectBoxSchema, spec);

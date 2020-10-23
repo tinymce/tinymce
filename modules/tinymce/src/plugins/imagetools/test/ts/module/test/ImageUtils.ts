@@ -1,7 +1,6 @@
 import { Logger, Step, Waiter } from '@ephox/agar';
-import { Cell } from '@ephox/katamari';
-import { Image } from '@ephox/dom-globals';
 import { Assert } from '@ephox/bedrock-client';
+import { Cell } from '@ephox/katamari';
 
 const sExecCommand = function (editor, cmd, value?) {
   return Logger.t(`Execute ${cmd}`, Step.sync(function () {
@@ -66,7 +65,7 @@ const createStateContainer = function () {
   };
 };
 
-export default {
+export {
   sExecCommand,
   sLoadImage,
   sUploadImages,

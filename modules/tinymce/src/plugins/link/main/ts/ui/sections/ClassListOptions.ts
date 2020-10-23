@@ -5,20 +5,20 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Settings from '../../api/Settings';
-import { Option } from '@ephox/katamari';
-import { ListItem } from '../DialogTypes';
+import { Optional } from '@ephox/katamari';
+import * as Settings from '../../api/Settings';
 import { ListOptions } from '../../core/ListOptions';
+import { ListItem } from '../DialogTypes';
 
 // Looks like tinymce currently renders menus, but doesn't
 // let you choose from one.
 
-const getClasses = (editor): Option<ListItem[]> => {
+const getClasses = (editor): Optional<ListItem[]> => {
   const list = Settings.getLinkClassList(editor);
   if (list.length > 0) {
     return ListOptions.sanitize(list);
   }
-  return Option.none();
+  return Optional.none();
 };
 
 export const ClassListOptions = {

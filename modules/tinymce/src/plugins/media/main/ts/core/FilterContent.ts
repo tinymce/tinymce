@@ -6,10 +6,10 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
-import Node from 'tinymce/core/api/html/Node';
+import AstNode from 'tinymce/core/api/html/Node';
 import Tools from 'tinymce/core/api/util/Tools';
-import Nodes from './Nodes';
-import Sanitize from './Sanitize';
+import * as Nodes from './Nodes';
+import * as Sanitize from './Sanitize';
 
 declare let unescape: any;
 
@@ -55,7 +55,7 @@ const setup = function (editor: Editor) {
         }
 
         realElmName = node.attr(name);
-        realElm = new Node(realElmName, 1);
+        realElm = new AstNode(realElmName, 1);
 
         // Add width/height to everything but audio
         if (realElmName !== 'audio' && realElmName !== 'script') {
@@ -95,7 +95,7 @@ const setup = function (editor: Editor) {
         // Inject innerhtml
         innerHtml = node.attr('data-mce-html');
         if (innerHtml) {
-          innerNode = new Node('#text', 3);
+          innerNode = new AstNode('#text', 3);
           innerNode.raw = true;
           innerNode.value = Sanitize.sanitize(editor, unescape(innerHtml));
           realElm.append(innerNode);
@@ -119,6 +119,6 @@ const setup = function (editor: Editor) {
   });
 };
 
-export default {
+export {
   setup
 };

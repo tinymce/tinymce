@@ -7,7 +7,7 @@
 
 import { Arr, Fun } from '@ephox/katamari';
 import Promise from 'tinymce/core/api/util/Promise';
-import Utils from './Utils';
+import * as Utils from './Utils';
 
 const friendlyHttpErrors = [
   { code: 404, message: 'Could not find Image Proxy' },
@@ -56,7 +56,7 @@ const getServiceErrorMsg = function (type) {
 
 const getServiceError = function (text) {
   const serviceError = Utils.parseJson(text);
-  const errorType = Utils.traverse(serviceError, ['error', 'type']);
+  const errorType = Utils.traverse(serviceError, [ 'error', 'type' ]);
   const errorMsg = errorType ? getServiceErrorMsg(errorType) : 'Invalid JSON in service error message';
 
   return 'ImageProxy Service error: ' + errorMsg;
@@ -74,7 +74,7 @@ const handleServiceErrorResponse = function (status, blob) {
   return isServiceErrorCode(status) ? handleServiceError(status, blob) : handleHttpError(status);
 };
 
-export default {
+export {
   handleServiceErrorResponse,
   handleHttpError,
   getHttpErrorMsg,

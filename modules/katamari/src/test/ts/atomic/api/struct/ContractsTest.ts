@@ -1,6 +1,6 @@
-import * as Fun from 'ephox/katamari/api/Fun';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import * as Contracts from 'ephox/katamari/api/Contracts';
-import { UnitTest, Assert } from '@ephox/bedrock-client';
+import * as Fun from 'ephox/katamari/api/Fun';
 
 UnitTest.test('ContractsTest', () => {
   const a = Fun.constant('element');
@@ -12,7 +12,7 @@ UnitTest.test('ContractsTest', () => {
 
   const baggerMin10 = Contracts.ensureWith([ 'mustBe10', 'any' ], {
     label: '10 if mustBe10',
-    validate (v, k) {
+    validate(v, k) {
       return k === 'mustBe10' ? v === 10 : true;
     }
   });
@@ -44,7 +44,7 @@ UnitTest.test('ContractsTest', () => {
   (() => {
     const expected = 'All values need to be of type: function. Keys (element, events) were not.';
     try {
-      const bg = bagger({
+      bagger({
         element: 'element',
         destroy: b,
         events: 'events'
@@ -59,7 +59,7 @@ UnitTest.test('ContractsTest', () => {
   (() => {
     const expected = 'All values need to be of type: function. Keys (element, events) were not.';
     try {
-      const bg = baggerMin({
+      baggerMin({
         element: 'element',
         destroy: b,
         events: 'events'
@@ -74,7 +74,7 @@ UnitTest.test('ContractsTest', () => {
   (() => {
     const expected = 'Unsupported keys for object: blah';
     try {
-      const bg = bagger({
+      bagger({
         element: a,
         destroy: b,
         events: c,
@@ -104,7 +104,7 @@ UnitTest.test('ContractsTest', () => {
   (() => {
     const expected = 'All values need to be of type: 10 if mustBe10. Keys (mustBe10) were not.';
     try {
-      const bg = baggerMin10({
+      baggerMin10({
         mustBe10: 'dog',
         any: 'cat'
       });

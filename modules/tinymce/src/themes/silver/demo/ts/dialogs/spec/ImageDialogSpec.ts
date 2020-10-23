@@ -1,6 +1,4 @@
-/* tslint:disable:no-console */
-import { console } from '@ephox/dom-globals';
-
+/* eslint-disable no-console */
 export default {
   title: 'Insert/edit image',
   body: {
@@ -46,7 +44,7 @@ export default {
           },
           {
             name: 'borderstyle',
-            type: 'selectbox',
+            type: 'listbox',
             items: [
               {
                 text: 'dotted',
@@ -105,7 +103,7 @@ export default {
     } else if (details.name === 'size') {
       // Notice that the size has a more complex json output separating
       // width/height the constrain logic should be done at implementation level
-      const value = details.value as { width: string, height: string };
+      const value = details.value as { width: string; height: string };
       console.log(value.width, value.height);
     }
   },

@@ -1,11 +1,11 @@
-import { ApproxStructure, Pipeline, Waiter, Log } from '@ephox/agar';
+import { ApproxStructure, Log, Pipeline, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 
 import Plugin from 'tinymce/plugins/media/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-import Utils from '../module/test/Utils';
+import * as Utils from '../module/test/Utils';
 
 UnitTest.asynctest('browser.tinymce.plugins.media.DimensionsFalseEmbedTest', function (success, failure) {
   Plugin();
@@ -55,9 +55,9 @@ UnitTest.asynctest('browser.tinymce.plugins.media.DimensionsFalseEmbedTest', fun
           tinyApis.sAssertContentStructure(struct)
         )
       ])
-    , onSuccess, onFailure);
+      , onSuccess, onFailure);
   }, {
-    plugins: ['media'],
+    plugins: [ 'media' ],
     toolbar: 'media',
     theme: 'silver',
     media_dimensions: false,

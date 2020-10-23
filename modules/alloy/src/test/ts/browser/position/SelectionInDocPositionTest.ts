@@ -1,24 +1,24 @@
 import { Chain, Cursors, NamedChain } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Option, Result } from '@ephox/katamari';
-import { Css, Element, Html } from '@ephox/sugar';
+import { Optional, Result } from '@ephox/katamari';
+import { Css, Html, SugarElement } from '@ephox/sugar';
 
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as ChainUtils from 'ephox/alloy/test/ChainUtils';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import * as PositionTestUtils from 'ephox/alloy/test/PositionTestUtils';
 import * as Sinks from 'ephox/alloy/test/Sinks';
 
 UnitTest.asynctest('SelectionInDocPositionTest', (success, failure) => {
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((_store, _doc, _body) => {
     let content = '';
     for (let i = 0; i < 20; i++) {
       content += '<p>paragraph ' + i + '</p>';
     }
 
-    const editor = Element.fromTag('div');
+    const editor = SugarElement.fromTag('div');
     Html.set(editor, content);
 
     const inlineEditor = GuiFactory.build(
@@ -28,7 +28,7 @@ UnitTest.asynctest('SelectionInDocPositionTest', (success, failure) => {
       })
     );
 
-    Css.setAll(inlineEditor.element(), {
+    Css.setAll(inlineEditor.element, {
       'margin-top': '300px',
       'height': '200px',
       'overflow': 'scroll',
@@ -46,18 +46,16 @@ UnitTest.asynctest('SelectionInDocPositionTest', (success, failure) => {
       })
     );
 
-  }, (doc, body, gui, component, store) => {
-    const cSetupAnchor = Chain.mapper((data: any) => {
-      return {
-        anchor: 'selection',
-        root: data.inline.element(),
-        getSelection () {
-          return Option.some(
-            Cursors.calculate(data.inline.element(), data.path)
-          );
-        }
-      };
-    });
+  }, (_doc, _body, gui, _component, _store) => {
+    const cSetupAnchor = Chain.mapper((data: any) => ({
+      anchor: 'selection',
+      root: data.inline.element,
+      getSelection() {
+        return Optional.some(
+          Cursors.calculate(data.inline.element, data.path)
+        );
+      }
+    }));
 
     return [
       Chain.asStep({}, [
@@ -116,10 +114,10 @@ UnitTest.asynctest('SelectionInDocPositionTest', (success, failure) => {
                 foffset: 0
               })),
               NamedChain.bundle((data: any) => {
-                const root = data.inline.element();
+                const root = data.inline.element;
                 const path = data.path;
                 const range = Cursors.calculate(root, path);
-                range.start().dom().scrollIntoView();
+                range.start.dom.scrollIntoView();
                 return Result.value(data);
               }),
 

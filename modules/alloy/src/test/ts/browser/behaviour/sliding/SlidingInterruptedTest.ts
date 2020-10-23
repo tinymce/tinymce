@@ -1,12 +1,12 @@
-import { Assertions, Step, Log, Logger } from '@ephox/agar';
+import { Assertions, Log, Logger, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Class, Width } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Sliding } from 'ephox/alloy/api/behaviour/Sliding';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
+import { Container } from 'ephox/alloy/api/ui/Container';
 import * as PhantomSkipper from 'ephox/alloy/test/PhantomSkipper';
 
 UnitTest.asynctest('SlidingInterruptedTest', (success, failure) => {
@@ -19,55 +19,52 @@ UnitTest.asynctest('SlidingInterruptedTest', (success, failure) => {
     '.test-sliding-width-shrinking { transition: width 5.0s ease; background: green !important; }'
   ];
 
-  GuiSetup.setup((store, doc, body) => {
-    return GuiFactory.build(
-      Container.sketch({
-        dom: {
-          styles: {
-            'overflow-x': 'hidden',
-            'background': 'blue',
-            'max-width': '300px',
-            'height': '20px'
-          }
-        },
-        components: [ ],
-        containerBehaviours: Behaviour.derive([
-          Sliding.config({
-            closedClass: 'test-sliding-closed',
-            openClass: 'test-sliding-open',
-            shrinkingClass: 'test-sliding-width-shrinking',
-            growingClass: 'test-sliding-width-growing',
+  GuiSetup.setup((store, _doc, _body) => GuiFactory.build(
+    Container.sketch({
+      dom: {
+        styles: {
+          'overflow-x': 'hidden',
+          'background': 'blue',
+          'max-width': '300px',
+          'height': '20px'
+        }
+      },
+      components: [ ],
+      containerBehaviours: Behaviour.derive([
+        Sliding.config({
+          closedClass: 'test-sliding-closed',
+          openClass: 'test-sliding-open',
+          shrinkingClass: 'test-sliding-width-shrinking',
+          growingClass: 'test-sliding-width-growing',
 
-            dimension: {
-              property: 'width'
-            },
+          dimension: {
+            property: 'width'
+          },
 
-            onShrunk: store.adder('onShrunk'),
-            onStartShrink: store.adder('onStartShrink'),
-            onGrown: store.adder('onGrown'),
-            onStartGrow: store.adder('onStartGrow')
-          })
+          onShrunk: store.adder('onShrunk'),
+          onStartShrink: store.adder('onStartShrink'),
+          onGrown: store.adder('onGrown'),
+          onStartGrow: store.adder('onStartGrow')
+        })
 
-        ])
-      })
-    );
-
-  }, (doc, body, gui, component, store) => {
+      ])
+    })
+  ), (doc, _body, _gui, component, _store) => {
 
     const sIsGrowing = Step.sync(() => {
-      Assertions.assertEq('Ensuring still growing', true, Class.has(component.element(), 'test-sliding-width-growing'));
+      Assertions.assertEq('Ensuring still growing', true, Class.has(component.element, 'test-sliding-width-growing'));
     });
 
     const sIsNotGrowing = Step.sync(() => {
-      Assertions.assertEq('Ensuring stopped growing', false, Class.has(component.element(), 'test-sliding-width-growing'));
+      Assertions.assertEq('Ensuring stopped growing', false, Class.has(component.element, 'test-sliding-width-growing'));
     });
 
     const sIsShrinking = Step.sync(() => {
-      Assertions.assertEq('Ensuring still shrinking', true, Class.has(component.element(), 'test-sliding-width-shrinking'));
+      Assertions.assertEq('Ensuring still shrinking', true, Class.has(component.element, 'test-sliding-width-shrinking'));
     });
 
     const sIsNotShrinking = Step.sync(() => {
-      Assertions.assertEq('Ensuring stopped shrinking', false, Class.has(component.element(), 'test-sliding-width-shrinking'));
+      Assertions.assertEq('Ensuring stopped shrinking', false, Class.has(component.element, 'test-sliding-width-shrinking'));
     });
 
     const sGrow = Step.sync(() => Sliding.grow(component));
@@ -93,17 +90,17 @@ UnitTest.asynctest('SlidingInterruptedTest', (success, failure) => {
       Step.wait(100),
 
       Log.stepsAsStep('TBA', 'Grow while shrinking should have growing and not shrinking', [
-        Step.stateful((value, next, die) => {
+        Step.stateful((value, next, _die) => {
           next({
             ...value,
-            width: Width.get(component.element())
+            width: Width.get(component.element)
           });
         }),
         sGrow,
         Logger.t(
           'Check when the shrinking bar starts growing again, its width does not jump to either 0 or max',
-          Step.stateful((value, next, die) => {
-            const actualWidth = Width.get(component.element());
+          Step.stateful((value, next, _die) => {
+            const actualWidth = Width.get(component.element);
             Assertions.assertEq(
               `Width should stay about the same. Should have been about: ${value.width}px, was: ${actualWidth}px`,
               true,
@@ -113,7 +110,7 @@ UnitTest.asynctest('SlidingInterruptedTest', (success, failure) => {
           })
         ),
         sIsGrowing,
-        sIsNotShrinking,
+        sIsNotShrinking
       ])
     ];
   }, () => { success(); }, failure);

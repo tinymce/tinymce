@@ -1,8 +1,8 @@
 import { Logger } from '@ephox/agar';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Obj } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
-import Settings from 'tinymce/plugins/quickbars/api/Settings';
-import { Assert, UnitTest } from '@ephox/bedrock-client';
+import * as Settings from 'tinymce/plugins/quickbars/api/Settings';
 
 UnitTest.test('DialogChanges', () => {
   Logger.sync(

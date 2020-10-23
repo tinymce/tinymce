@@ -5,10 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { document, HTMLElementEventMap, Node, Window } from '@ephox/dom-globals';
+import Tools from '../util/Tools';
 import EventUtils, { EventUtilsCallback } from './EventUtils';
 import Sizzle from './Sizzle';
-import Tools from '../util/Tools';
 
 /**
  * This class mimics most of the jQuery API:
@@ -32,14 +31,18 @@ import Tools from '../util/Tools';
  * @class tinymce.dom.DomQuery
  */
 
-type DomQuerySelector<T> = string | T | T[] | DomQuery<T>;
-type DomQueryInitSelector<T> = DomQuerySelector<T> | Window;
+type DomQuerySelector<T extends Node> = string | T | T[] | DomQuery<T>;
+type DomQueryInitSelector<T extends Node> = DomQuerySelector<T> | Window;
+interface Hook {
+  get: <T extends Node>(elm: T) => string;
+  set: <T extends Node>($elm: DomQuery<T>, value: string | null) => void;
+}
 
 export interface DomQueryConstructor {
-  prototype: DomQuery;
+  readonly prototype: DomQuery;
 
-  attrHooks: Record<string, {}>;
-  cssHooks: Record<string, {}>;
+  attrHooks: Record<string, Hook>;
+  cssHooks: Record<string, Hook>;
 
   fn: DomQuery;
 
@@ -48,13 +51,13 @@ export interface DomQueryConstructor {
   expr: {
     cacheLength: number;
     createPseudo: Function;
-    match: Function;
+    match: Record<string, RegExp>;
     attrHandle: {};
-    find: {};
+    find: Record<string, Function>;
     relative: Record<string, { dir: string; first?: boolean }>;
-    preFilter: Record<string, any>
-    filter: Record<string, any>
-    pseudos: Record<string, any>
+    preFilter: Record<string, Function>;
+    filter: Record<string, Function>;
+    pseudos: Record<string, Function>;
   };
 
   // Tools
@@ -62,10 +65,10 @@ export interface DomQueryConstructor {
   isArray: Tools['isArray'];
 
   // tslint:disable-next-line:no-misused-new
-  new <T extends Node = Node>(selector?: DomQueryInitSelector<T>, context?: Node): DomQuery;
-  <T extends Node = Node>(selector?: DomQueryInitSelector<T>, context?: Node): DomQuery;
+  new <T extends Node = Node>(selector?: DomQueryInitSelector<T>, context?: Node): DomQuery<T>;
+  <T extends Node = Node>(selector?: DomQueryInitSelector<T>, context?: Node): DomQuery<T>;
 
-  overrideDefaults (callback: Function): DomQueryConstructor;
+  overrideDefaults (callback: () => { context: Node; element: Element }): DomQueryConstructor;
 
   makeArray <T>(object: T): T[];
   inArray <T>(item: {}, array: T[]): number;
@@ -79,7 +82,7 @@ export interface DomQueryConstructor {
   filter (expr: string, elems: Node[], not?: boolean);
 }
 
-interface DomQuery<T = Node> extends Iterable<T> {
+interface DomQuery<T extends Node = Node> extends ArrayLike<T> {
   init: (selector?: DomQueryInitSelector<T>, context?: Node) => void;
 
   context: T;
@@ -91,16 +94,16 @@ interface DomQuery<T = Node> extends Iterable<T> {
   after (content: DomQuerySelector<T>): this;
   append (content: DomQuerySelector<T>): this;
   appendTo (val: DomQuerySelector<T>): this;
-  attr (name: string, value: string): this;
-  attr (attrs: Record<string, string | number>): this;
+  attr (name: string, value: string | boolean | number | null): this;
+  attr (attrs: Record<string, string | boolean | number | null>): this;
   attr (name: string): string;
   before (content: DomQuerySelector<T>): this;
-  children (selector?: string): this;
+  children (selector?: string): DomQuery<ChildNode>;
   clone (): this;
   closest (selector: DomQuerySelector<T>): this;
-  contents (selector?: string): this;
-  css (name: string, value: string | number): this;
-  css (styles: Record<string, string | number>): this;
+  contents (selector?: string): DomQuery<ChildNode>;
+  css (name: string, value: string | number | null): this;
+  css (styles: Record<string, string | number | null>): this;
   css (name: string): string;
   each (callback: (i: number, value: T) => void): this;
   empty (): this;
@@ -114,26 +117,26 @@ interface DomQuery<T = Node> extends Iterable<T> {
   html (): string;
   is (selector: string | ((i: number, item) => boolean)): boolean;
   last (): this;
-  next (selector?: string): this;
-  nextUntil (selector: DomQuerySelector<T>, until?: string): this;
+  next (selector?: string): DomQuery<ChildNode>;
+  nextUntil (selector: DomQuerySelector<T>, until?: string): DomQuery<ChildNode>;
   off <K extends keyof HTMLElementEventMap>(name: K, callback?: EventUtilsCallback<HTMLElementEventMap[K]>): this;
   off <U>(name?: string, callback?: EventUtilsCallback<U>): this;
   offset (offset?: {}): {} | this;
   on <K extends keyof HTMLElementEventMap>(name: K, callback: EventUtilsCallback<HTMLElementEventMap[K]>): this;
   on <U>(name: string, callback: EventUtilsCallback<U>): this;
-  parent (selector?: string): this;
-  parents (selector?: string): this;
-  parentsUntil (selector: DomQuerySelector<T>, filter?: string): this;
+  parent (selector?: string): DomQuery<Node>;
+  parents (selector?: string): DomQuery<Node>;
+  parentsUntil (selector: DomQuerySelector<T>, filter?: string): DomQuery<Node>;
   prepend (content: DomQuerySelector<T>): this;
   prependTo (val: DomQuerySelector<T>): this;
-  prev (selector?: string): this;
-  prevUntil (selector: DomQuerySelector<T>, filter?: string): this;
+  prev (selector?: string): DomQuery<ChildNode>;
+  prevUntil (selector: DomQuerySelector<T>, filter?: string): DomQuery<ChildNode>;
   prop (name: string, value: string): this;
   prop (props: Record<string, string | number>): this;
   prop (name: string): string;
   push (...items: T[]): number;
   remove (): this;
-  removeAttr (name: string): DomQuery | string;
+  removeAttr (name: string): this;
   removeClass (className: string): this;
   replaceWith (content: DomQuerySelector<T>): this;
   show (): this;
@@ -169,13 +172,12 @@ const isWindow = function (obj): obj is Window {
 };
 
 const createFragment = function (html, fragDoc) {
-  let frag, node, container;
-
   fragDoc = fragDoc || doc;
-  container = fragDoc.createElement('div');
-  frag = fragDoc.createDocumentFragment();
+  const container = fragDoc.createElement('div');
+  const frag = fragDoc.createDocumentFragment();
   container.innerHTML = html;
 
+  let node;
   while ((node = container.firstChild)) {
     frag.appendChild(node);
   }
@@ -250,10 +252,10 @@ const cssFix = {
   float: 'cssFloat'
 };
 
-const attrHooks = {}, cssHooks = {};
+const attrHooks: Record<string, Hook> = {}, cssHooks: Record<string, Hook> = {};
 
-const DomQueryConstructor: any = function <T extends Node = Node>(selector: DomQueryInitSelector<T>, context?): DomQuery {
-  /*eslint new-cap:0 */
+const DomQueryConstructor: any = function <T extends Node = Node> (selector: DomQueryInitSelector<T>, context?: T): DomQuery<T> {
+  /* eslint new-cap:0 */
   return new DomQuery.fn.init(selector, context);
 };
 
@@ -369,7 +371,7 @@ DomQueryConstructor.fn = DomQueryConstructor.prototype = {
    * @param {String/Array/DomQuery} selector Optional CSS selector/Array or array like object or HTML string.
    * @param {Document/Element} context Optional context to search in.
    */
-  init (selector, context?) {
+  init(selector, context?) {
     const self = this;
     let match, node;
 
@@ -398,7 +400,7 @@ DomQueryConstructor.fn = DomQueryConstructor.prototype = {
       self.selector = selector;
 
       if (selector.charAt(0) === '<' && selector.charAt(selector.length - 1) === '>' && selector.length >= 3) {
-        match = [null, selector, null];
+        match = [ null, selector, null ];
       } else {
         match = rquickExpr.exec(selector);
       }
@@ -441,7 +443,7 @@ DomQueryConstructor.fn = DomQueryConstructor.prototype = {
    * @method toArray
    * @return {Array} Array of all nodes in set.
    */
-  toArray () {
+  toArray() {
     return Tools.toArray(this);
   },
 
@@ -453,7 +455,7 @@ DomQueryConstructor.fn = DomQueryConstructor.prototype = {
    * @param {Boolean} sort Optional sort flag that enables sorting of elements.
    * @return {tinymce.dom.DomQuery} New instance with nodes added.
    */
-  add (items, sort) {
+  add(items, sort) {
     const self = this;
     let nodes, i;
 
@@ -482,7 +484,7 @@ DomQueryConstructor.fn = DomQueryConstructor.prototype = {
    * @param {String} value Optional value to set.
    * @return {tinymce.dom.DomQuery/String} Current set or the specified attribute when only the name is specified.
    */
-  attr (name, value?) {
+  attr(name, value?) {
     const self = this;
     let hook;
 
@@ -539,7 +541,7 @@ DomQueryConstructor.fn = DomQueryConstructor.prototype = {
    * @param {String/Object} name Name of attribute to remove.
    * @return {tinymce.dom.DomQuery/String} Current set.
    */
-  removeAttr (name) {
+  removeAttr(name) {
     return this.attr(name, null);
   },
 
@@ -551,7 +553,7 @@ DomQueryConstructor.fn = DomQueryConstructor.prototype = {
    * @param {String} value Optional value to set.
    * @return {tinymce.dom.DomQuery/String} Current set or the specified property when only the name is specified.
    */
-  prop (name, value?) {
+  prop(name, value?) {
     const self = this;
 
     name = propFix[name] || name;
@@ -585,7 +587,7 @@ DomQueryConstructor.fn = DomQueryConstructor.prototype = {
    * @param {String} value Optional value to set.
    * @return {tinymce.dom.DomQuery/String} Current set or the specified style when only the name is specified.
    */
-  css (name, value?) {
+  css(name, value?) {
     const self = this;
     let elm, hook;
 
@@ -668,7 +670,7 @@ DomQueryConstructor.fn = DomQueryConstructor.prototype = {
    * @method remove
    * @return {tinymce.dom.DomQuery} Current set with the removed nodes.
    */
-  remove () {
+  remove() {
     const self = this;
     let node, i = this.length;
 
@@ -690,7 +692,7 @@ DomQueryConstructor.fn = DomQueryConstructor.prototype = {
    * @method empty
    * @return {tinymce.dom.DomQuery} Current set with the empty nodes.
    */
-  empty () {
+  empty() {
     const self = this;
     let node, i = this.length;
 
@@ -711,7 +713,7 @@ DomQueryConstructor.fn = DomQueryConstructor.prototype = {
    * @param {String} value Optional innerHTML value to set on each element.
    * @return {tinymce.dom.DomQuery/String} Current set or the innerHTML of the first element.
    */
-  html (value?) {
+  html(value?) {
     const self = this;
     let i;
 
@@ -740,7 +742,7 @@ DomQueryConstructor.fn = DomQueryConstructor.prototype = {
    * @param {String} value Optional innerText value to set on each element.
    * @return {tinymce.dom.DomQuery/String} Current set or the innerText of the first element.
    */
-  text (value?) {
+  text(value?) {
     const self = this;
     let i;
 
@@ -767,7 +769,7 @@ DomQueryConstructor.fn = DomQueryConstructor.prototype = {
    * @param {String/Element/Array/tinymce.dom.DomQuery} content Content to append to each element in set.
    * @return {tinymce.dom.DomQuery} Current set.
    */
-  append () {
+  append() {
     return domManipulate(this, arguments, function (node) {
       // Either element or Shadow Root
       if (this.nodeType === 1 || (this.host && this.host.nodeType === 1)) {
@@ -783,7 +785,7 @@ DomQueryConstructor.fn = DomQueryConstructor.prototype = {
    * @param {String/Element/Array/tinymce.dom.DomQuery} content Content to prepend to each element in set.
    * @return {tinymce.dom.DomQuery} Current set.
    */
-  prepend () {
+  prepend() {
     return domManipulate(this, arguments, function (node) {
       // Either element or Shadow Root
       if (this.nodeType === 1 || (this.host && this.host.nodeType === 1)) {
@@ -799,7 +801,7 @@ DomQueryConstructor.fn = DomQueryConstructor.prototype = {
    * @param {String/Element/Array/tinymce.dom.DomQuery} content Content to add before to each element in set.
    * @return {tinymce.dom.DomQuery} Current set.
    */
-  before () {
+  before() {
     const self = this;
 
     if (self[0] && self[0].parentNode) {
@@ -818,7 +820,7 @@ DomQueryConstructor.fn = DomQueryConstructor.prototype = {
    * @param {String/Element/Array/tinymce.dom.DomQuery} content Content to add after to each element in set.
    * @return {tinymce.dom.DomQuery} Current set.
    */
-  after () {
+  after() {
     const self = this;
 
     if (self[0] && self[0].parentNode) {
@@ -837,7 +839,7 @@ DomQueryConstructor.fn = DomQueryConstructor.prototype = {
    * @param {String/Element/Array/tinymce.dom.DomQuery} val Item to append the current set to.
    * @return {tinymce.dom.DomQuery} Current set with the appended nodes.
    */
-  appendTo (val) {
+  appendTo(val) {
     DomQuery(val).append(this);
 
     return this;
@@ -850,7 +852,7 @@ DomQueryConstructor.fn = DomQueryConstructor.prototype = {
    * @param {String/Element/Array/tinymce.dom.DomQuery} val Item to prepend the current set to.
    * @return {tinymce.dom.DomQuery} Current set with the prepended nodes.
    */
-  prependTo (val) {
+  prependTo(val) {
     DomQuery(val).prepend(this);
 
     return this;
@@ -863,7 +865,7 @@ DomQueryConstructor.fn = DomQueryConstructor.prototype = {
    * @param {String/Element/Array/tinymce.dom.DomQuery} content Content to replace nodes with.
    * @return {tinymce.dom.DomQuery} Set with replaced nodes.
    */
-  replaceWith (content) {
+  replaceWith(content) {
     return this.before(content).remove();
   },
 
@@ -874,7 +876,7 @@ DomQueryConstructor.fn = DomQueryConstructor.prototype = {
    * @param {String/Element/Array/tinymce.dom.DomQuery} content Content to wrap nodes with.
    * @return {tinymce.dom.DomQuery} Set with wrapped nodes.
    */
-  wrap (content) {
+  wrap(content) {
     return wrap(this, content);
   },
 
@@ -886,7 +888,7 @@ DomQueryConstructor.fn = DomQueryConstructor.prototype = {
    * @param {String/Element/Array/tinymce.dom.DomQuery} content Content to wrap nodes with.
    * @return {tinymce.dom.DomQuery} Set with wrapped nodes.
    */
-  wrapAll (content) {
+  wrapAll(content) {
     return wrap(this, content, true);
   },
 
@@ -897,7 +899,7 @@ DomQueryConstructor.fn = DomQueryConstructor.prototype = {
    * @param {String/Element/Array/tinymce.dom.DomQuery} content Content to wrap nodes with.
    * @return {tinymce.dom.DomQuery} Set with wrapped nodes.
    */
-  wrapInner (content) {
+  wrapInner(content) {
     this.each(function () {
       DomQuery(this).contents().wrapAll(content);
     });
@@ -911,7 +913,7 @@ DomQueryConstructor.fn = DomQueryConstructor.prototype = {
    * @method unwrap
    * @return {tinymce.dom.DomQuery} Set with unwrapped nodes.
    */
-  unwrap () {
+  unwrap() {
     return this.parent().each(function () {
       DomQuery(this).replaceWith(this.childNodes);
     });
@@ -923,7 +925,7 @@ DomQueryConstructor.fn = DomQueryConstructor.prototype = {
    * @method clone
    * @return {tinymce.dom.DomQuery} Set with cloned nodes.
    */
-  clone () {
+  clone() {
     const result = [];
 
     this.each(function () {
@@ -940,7 +942,7 @@ DomQueryConstructor.fn = DomQueryConstructor.prototype = {
    * @param {String} className Class name to add.
    * @return {tinymce.dom.DomQuery} Current set.
    */
-  addClass (className) {
+  addClass(className) {
     return this.toggleClass(className, true);
   },
 
@@ -951,7 +953,7 @@ DomQueryConstructor.fn = DomQueryConstructor.prototype = {
    * @param {String} className Class name to remove.
    * @return {tinymce.dom.DomQuery} Current set.
    */
-  removeClass (className) {
+  removeClass(className) {
     return this.toggleClass(className, false);
   },
 
@@ -963,7 +965,7 @@ DomQueryConstructor.fn = DomQueryConstructor.prototype = {
    * @param {Boolean} state Optional state to toggle on/off.
    * @return {tinymce.dom.DomQuery} Current set.
    */
-  toggleClass (className, state?) {
+  toggleClass(className, state?) {
     const self = this;
 
     // Functions are not supported
@@ -977,11 +979,9 @@ DomQueryConstructor.fn = DomQueryConstructor.prototype = {
       });
     } else {
       self.each(function (index, node) {
-        let existingClassName, classState;
-
-        classState = hasClass(node, className);
+        const classState = hasClass(node, className);
         if (classState !== state) {
-          existingClassName = node.className;
+          const existingClassName = node.className;
 
           if (classState) {
             node.className = trim((' ' + existingClassName + ' ').replace(' ' + className + ' ', ' '));
@@ -1005,7 +1005,7 @@ DomQueryConstructor.fn = DomQueryConstructor.prototype = {
    * // To check if the first 'a' element has the class 'anchor':
    * tinymce.dom.DomQuery('a').hasClass('anchor')
    */
-  hasClass (className) {
+  hasClass(className) {
     return hasClass(this[0], className);
   },
 
@@ -1017,7 +1017,7 @@ DomQueryConstructor.fn = DomQueryConstructor.prototype = {
    * @param {function} callback Callback function to execute for each item.
    * @return {tinymce.dom.DomQuery} Current set.
    */
-  each (callback) {
+  each(callback) {
     return each(this, callback);
   },
 
@@ -1029,7 +1029,7 @@ DomQueryConstructor.fn = DomQueryConstructor.prototype = {
    * @param {function} callback Callback function to execute when the event occurs.
    * @return {tinymce.dom.DomQuery} Current set.
    */
-  on (name, callback) {
+  on(name, callback) {
     return this.each(function () {
       Event.bind(this, name, callback);
     });
@@ -1043,7 +1043,7 @@ DomQueryConstructor.fn = DomQueryConstructor.prototype = {
    * @param {function} callback Optional callback function to execute when the event occurs.
    * @return {tinymce.dom.DomQuery} Current set.
    */
-  off (name, callback) {
+  off(name, callback) {
     return this.each(function () {
       Event.unbind(this, name, callback);
     });
@@ -1056,7 +1056,7 @@ DomQueryConstructor.fn = DomQueryConstructor.prototype = {
    * @param {String/Object} name Name of the event to trigger or event object.
    * @return {tinymce.dom.DomQuery} Current set.
    */
-  trigger (name) {
+  trigger(name) {
     return this.each(function () {
       if (typeof name === 'object') {
         Event.fire(this, name.type, name);
@@ -1072,7 +1072,7 @@ DomQueryConstructor.fn = DomQueryConstructor.prototype = {
    * @method show
    * @return {tinymce.dom.DomQuery} Current set.
    */
-  show () {
+  show() {
     return this.css('display', '');
   },
 
@@ -1082,7 +1082,7 @@ DomQueryConstructor.fn = DomQueryConstructor.prototype = {
    * @method hide
    * @return {tinymce.dom.DomQuery} Current set.
    */
-  hide () {
+  hide() {
     return this.css('display', 'none');
   },
 
@@ -1094,7 +1094,7 @@ DomQueryConstructor.fn = DomQueryConstructor.prototype = {
    * @param {Number} end Optional end index to end slice at.
    * @return {tinymce.dom.DomQuery} Sliced set.
    */
-  slice () {
+  slice() {
     return new DomQuery(slice.apply(this, arguments));
   },
 
@@ -1105,7 +1105,7 @@ DomQueryConstructor.fn = DomQueryConstructor.prototype = {
    * @param {Number} index Index to set it equal to.
    * @return {tinymce.dom.DomQuery} Single item set.
    */
-  eq (index) {
+  eq(index) {
     return index === -1 ? this.slice(index) : this.slice(index, +index + 1);
   },
 
@@ -1115,7 +1115,7 @@ DomQueryConstructor.fn = DomQueryConstructor.prototype = {
    * @method first
    * @return {tinymce.dom.DomQuery} Single item set.
    */
-  first () {
+  first() {
     return this.eq(0);
   },
 
@@ -1125,7 +1125,7 @@ DomQueryConstructor.fn = DomQueryConstructor.prototype = {
    * @method last
    * @return {tinymce.dom.DomQuery} Single item set.
    */
-  last () {
+  last() {
     return this.eq(-1);
   },
 
@@ -1136,7 +1136,7 @@ DomQueryConstructor.fn = DomQueryConstructor.prototype = {
    * @param {String} selector Selector to find elements by.
    * @return {tinymce.dom.DomQuery} Set with matches elements.
    */
-  find (selector) {
+  find(selector) {
     let i, l;
     const ret = [];
 
@@ -1154,7 +1154,7 @@ DomQueryConstructor.fn = DomQueryConstructor.prototype = {
    * @param {String/function} selector Selector to filter elements by.
    * @return {tinymce.dom.DomQuery} Set with filtered elements.
    */
-  filter (selector) {
+  filter(selector) {
     if (typeof selector === 'function') {
       return DomQuery(grep(this.toArray(), function (item, i) {
         return selector(i, item);
@@ -1171,7 +1171,7 @@ DomQueryConstructor.fn = DomQueryConstructor.prototype = {
    * @param {String/Element/tinymce.dom.DomQuery} selector Selector or element to find.
    * @return {tinymce.dom.DomQuery} Set with closest elements.
    */
-  closest (selector) {
+  closest(selector) {
     const result = [];
 
     if (selector instanceof DomQuery) {
@@ -1202,7 +1202,7 @@ DomQueryConstructor.fn = DomQueryConstructor.prototype = {
    * @param {Object} offset Optional offset object to set on each item.
    * @return {Object/tinymce.dom.DomQuery} Returns the first element offset or the current set if you specified an offset.
    */
-  offset (offset?) {
+  offset(offset?) {
     let elm, doc, docElm;
     let x = 0, y = 0, pos;
 
@@ -1255,9 +1255,9 @@ Tools.extend(DomQueryConstructor, {
    * @param {Object} object Object to convert to array.
    * @return {Array} Array produced from object.
    */
-  makeArray (object) {
+  makeArray(object) {
     if (isWindow(object) || object.nodeType) {
-      return [object];
+      return [ object ];
     }
 
     return Tools.toArray(object);
@@ -1326,7 +1326,7 @@ Tools.extend(DomQueryConstructor, {
   unique: Sizzle.uniqueSort,
   text: Sizzle.getText,
   contains: Sizzle.contains,
-  filter (expr, elems, not?) {
+  filter(expr, elems, not?) {
     let i = elems.length;
 
     if (not) {
@@ -1340,7 +1340,7 @@ Tools.extend(DomQueryConstructor, {
     }
 
     if (elems.length === 1) {
-      elems = DomQuery.find.matchesSelector(elems[0], expr) ? [elems[0]] : [];
+      elems = DomQuery.find.matchesSelector(elems[0], expr) ? [ elems[0] ] : [];
     } else {
       elems = DomQuery.find.matches(expr, elems);
     }
@@ -1424,7 +1424,7 @@ each({
    * @param {Element/tinymce.dom.DomQuery} node Node to match parents against.
    * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching parents.
    */
-  parent (node) {
+  parent(node) {
     const parent = node.parentNode;
 
     return parent && parent.nodeType !== 11 ? parent : null;
@@ -1437,7 +1437,7 @@ each({
    * @param {Element/tinymce.dom.DomQuery} node Node to match parents against.
    * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching parents.
    */
-  parents (node) {
+  parents(node) {
     return dir(node, 'parentNode');
   },
 
@@ -1448,7 +1448,7 @@ each({
    * @param {Element/tinymce.dom.DomQuery} node Node to match the next element against.
    * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching elements.
    */
-  next (node) {
+  next(node) {
     return firstSibling(node, 'nextSibling', 1);
   },
 
@@ -1459,7 +1459,7 @@ each({
    * @param {Element/tinymce.dom.DomQuery} node Node to match the previous element against.
    * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching elements.
    */
-  prev (node) {
+  prev(node) {
     return firstSibling(node, 'previousSibling', 1);
   },
 
@@ -1470,7 +1470,7 @@ each({
    * @param {Element/tinymce.dom.DomQuery} node Node to match the elements against.
    * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching elements.
    */
-  children (node) {
+  children(node) {
     return sibling(node.firstChild, 'nextSibling', 1);
   },
 
@@ -1481,7 +1481,7 @@ each({
    * @param {Element/tinymce.dom.DomQuery} node Node to get the contents of.
    * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching elements.
    */
-  contents (node) {
+  contents(node) {
     return Tools.toArray((node.nodeName === 'iframe' ? node.contentDocument || node.contentWindow.document : node).childNodes);
   }
 }, function (name, fn) {
@@ -1532,7 +1532,7 @@ each({
    * @param {String/Element/tinymce.dom.DomQuery} until Until the matching selector or element.
    * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching parents.
    */
-  parentsUntil (node, until) {
+  parentsUntil(node, until) {
     return dir(node, 'parentNode', until);
   },
 
@@ -1544,7 +1544,7 @@ each({
    * @param {String/Element/tinymce.dom.DomQuery} until Until the matching selector or element.
    * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching elements.
    */
-  nextUntil (node, until) {
+  nextUntil(node, until) {
     return sibling(node, 'nextSibling', 1, until).slice(1);
   },
 
@@ -1556,7 +1556,7 @@ each({
    * @param {String/Element/tinymce.dom.DomQuery} until Until the matching selector or element.
    * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching elements.
    */
-  prevUntil (node, until) {
+  prevUntil(node, until) {
     return sibling(node, 'previousSibling', 1, until).slice(1);
   }
 }, function (name, fn) {

@@ -1,5 +1,5 @@
 import { FieldPresence, FieldProcessorAdt, FieldSchema, Objects, ValueSchema } from '@ephox/boulder';
-import { Arr, Fun, Obj, Option, Result } from '@ephox/katamari';
+import { Arr, Fun, Obj, Optional, Result } from '@ephox/katamari';
 
 import { AlloyComponent } from '../api/component/ComponentApi';
 import { AlloySpec, SimpleOrSketchSpec, SketchSpec } from '../api/component/SpecTypes';
@@ -52,61 +52,44 @@ const generate = (owner: string, parts: PartType.PartTypeAdt[]): GeneratedParts 
 };
 
 // Does not have the config.
-const doGenerateOne = (owner: string, pname: string): UnconfiguredPart => {
-  return {
-    uiType: UiSubstitutes.placeholder(),
-    owner,
-    name: pname
-  };
-};
+const doGenerateOne = (owner: string, pname: string): UnconfiguredPart => ({
+  uiType: UiSubstitutes.placeholder(),
+  owner,
+  name: pname
+});
 
-const generateOne = (owner: string, pname: string, config: SimpleOrSketchSpec): ConfiguredPart => {
-  return {
-    uiType: UiSubstitutes.placeholder(),
-    owner,
-    name: pname,
-    config,
-    validated: { }
-  };
-};
+const generateOne = (owner: string, pname: string, config: SimpleOrSketchSpec): ConfiguredPart => ({
+  uiType: UiSubstitutes.placeholder(),
+  owner,
+  name: pname,
+  config,
+  validated: { }
+});
 
-const schemas = (parts: PartType.PartTypeAdt[]): FieldProcessorAdt[] => {
+const schemas = (parts: PartType.PartTypeAdt[]): FieldProcessorAdt[] =>
   // This actually has to change. It needs to return the schemas for things that will
   // not appear in the components list, which is only externals
-  return Arr.bind(parts, (part: PartType.PartTypeAdt) => {
-    return part.fold<Option<PartType.BasePartDetail<any, any>>>(
-      Option.none,
-      Option.some,
-      Option.none,
-      Option.none
-    ).map((data) => {
-      return FieldSchema.strictObjOf(data.name, data.schema.concat([
-        Fields.snapshot(PartType.original())
-      ]));
-    }).toArray();
-  });
-};
+  Arr.bind(parts, (part: PartType.PartTypeAdt) => part.fold<Optional<PartType.BasePartDetail<any, any>>>(
+    Optional.none,
+    Optional.some,
+    Optional.none,
+    Optional.none
+  ).map((data) => FieldSchema.strictObjOf(data.name, data.schema.concat([
+    Fields.snapshot(PartType.original())
+  ]))).toArray());
 
-const names = (parts: PartType.PartTypeAdt[]): string[] => {
-  return Arr.map(parts, PartType.name);
-};
+const names = (parts: PartType.PartTypeAdt[]): string[] => Arr.map(parts, PartType.name);
 
-const substitutes = <D extends CompositeSketchDetail>(owner: string, detail: D, parts: PartType.PartTypeAdt[]): Substitutions => {
-  return PartSubstitutes.subs(owner, detail, parts);
-};
+const substitutes = <D extends CompositeSketchDetail>(owner: string, detail: D, parts: PartType.PartTypeAdt[]): Substitutions => PartSubstitutes.subs(owner, detail, parts);
 
-const components = <D extends CompositeSketchDetail>(owner: string, detail: D, internals: Substitution): AlloySpec[] => {
-  return UiSubstitutes.substitutePlaces(Option.some(owner), detail, detail.components, internals);
-};
+const components = <D extends CompositeSketchDetail>(owner: string, detail: D, internals: Substitution): AlloySpec[] => UiSubstitutes.substitutePlaces(Optional.some(owner), detail, detail.components, internals);
 
-const getPart = <D extends CompositeSketchDetail>(component: AlloyComponent, detail: D, partKey: string): Option<AlloyComponent> => {
+const getPart = <D extends CompositeSketchDetail>(component: AlloyComponent, detail: D, partKey: string): Optional<AlloyComponent> => {
   const uid = detail.partUids[partKey];
-  return component.getSystem().getByUid(uid).toOption();
+  return component.getSystem().getByUid(uid).toOptional();
 };
 
-const getPartOrDie = <D extends CompositeSketchDetail>(component: AlloyComponent, detail: D, partKey: string): AlloyComponent => {
-  return getPart(component, detail, partKey).getOrDie('Could not find part: ' + partKey);
-};
+const getPartOrDie = <D extends CompositeSketchDetail>(component: AlloyComponent, detail: D, partKey: string): AlloyComponent => getPart(component, detail, partKey).getOrDie('Could not find part: ' + partKey);
 
 const getParts = <D extends CompositeSketchDetail>(component: AlloyComponent, detail: D, partKeys: string[]): Record<string, () => Result<AlloyComponent, Error>> => {
   const r: Record<string, () => Result<AlloyComponent, Error>> = { };
@@ -122,14 +105,10 @@ const getParts = <D extends CompositeSketchDetail>(component: AlloyComponent, de
 
 const getAllParts = <D extends CompositeSketchDetail>(component: AlloyComponent, detail: D): Record<string, () => Result<AlloyComponent, Error>> => {
   const system = component.getSystem();
-  return Obj.map(detail.partUids, (pUid, k) => {
-    return Fun.constant(system.getByUid(pUid));
-  });
+  return Obj.map(detail.partUids, (pUid, _k) => Fun.constant(system.getByUid(pUid)));
 };
 
-const getAllPartNames = <D extends CompositeSketchDetail>(detail: D) => {
-  return Obj.keys(detail.partUids);
-};
+const getAllPartNames = <D extends CompositeSketchDetail>(detail: D) => Obj.keys(detail.partUids);
 
 const getPartsOrDie = <D extends CompositeSketchDetail>(component: AlloyComponent, detail: D, partKeys: string[]): Record<string, () => AlloyComponent> => {
   const r: Record<string, () => AlloyComponent> = { };
@@ -147,22 +126,16 @@ const defaultUids = (baseUid: string, partTypes: PartType.PartTypeAdt[]): Record
   const partNames = names(partTypes);
 
   return Objects.wrapAll(
-    Arr.map(partNames, (pn) => {
-      return { key: pn, value: baseUid + '-' + pn };
-    })
+    Arr.map(partNames, (pn) => ({ key: pn, value: baseUid + '-' + pn }))
   );
 };
 
-const defaultUidsSchema = (partTypes: PartType.PartTypeAdt[]): FieldProcessorAdt => {
-  return FieldSchema.field(
-    'partUids',
-    'partUids',
-    FieldPresence.mergeWithThunk((spec: SketchSpec) => {
-      return defaultUids(spec.uid, partTypes);
-    }),
-    ValueSchema.anyValue()
-  );
-};
+const defaultUidsSchema = (partTypes: PartType.PartTypeAdt[]): FieldProcessorAdt => FieldSchema.field(
+  'partUids',
+  'partUids',
+  FieldPresence.mergeWithThunk((spec: SketchSpec) => defaultUids(spec.uid, partTypes)),
+  ValueSchema.anyValue()
+);
 
 export {
   generate,

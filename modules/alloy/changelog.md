@@ -6,6 +6,35 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+# [8.0.0] - 2020-09-29
+
+### Changed
+- Changed some public APIs (eg Components, Custom Events) to no longer be thunked.
+
+### Added
+- Added new `isOpen` API to the `SplitFloatingToolbar` and `SplitSlidingToolbar` components.
+
+### Fixed
+- Fixed `AriaOwner` not able to find the owner component when rendered within a ShadowRoot.
+- Fixed `AriaFocus` not preserving focus when the component is rendered within a ShadowRoot.
+
+# [7.0.2] - 2020-05-25
+
+### Fixed
+- Fixed `Tooltipping` behaviour failing to run due to not being listed in the default `alloy.receive` events.
+
+# [7.0.0] - 2020-05-21
+
+### Added
+- Added new `isExtraPart` property to `InlineView`. This allows the component to declare an external component as part of itself for dismissal events.
+- Added new `getModes` and `setModes` API to the docking behaviour.
+- Exposed the `AriaVoice` voice module in the API.
+
+### Changed
+- The `AriaOwner` module, `Boxes` module, `Pinching` behaviour and `SnapConfig`/`SnapOutput` specs no longer use thunked functions and instead use the variable directly.
+- All uses of `Struct.immutableBag` and `Struct.immutable` have been replaced with readonly interfaces.
+- Changed the `Disabling` behaviour to use a lazy `disabled` configuration to determine if the component should be disabled on initial load.
+
 # [6.1.0] - 2020-03-16
 
 ### Added

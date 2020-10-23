@@ -1,7 +1,7 @@
-import Binder from './../Binder';
-import { Event, EventHandler, Bindable } from './../Event';
-import Events from './../Events';
-import SourceEvent from './../SourceEvent';
+import * as Binder from '../Binder';
+import { Bindable, Event, EventHandler } from '../Event';
+import * as Events from '../Events';
+import SourceEvent from '../SourceEvent';
 
 export {
   Binder,
