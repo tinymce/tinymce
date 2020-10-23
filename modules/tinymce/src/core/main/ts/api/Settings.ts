@@ -159,6 +159,8 @@ const getPreviewStyles = (editor: Editor): string => {
   }
 };
 
+const canFormatEmptyLines = (editor: Editor) => editor.getParam('format_empty_lines', false, 'boolean');
+
 const getCustomUiSelector = (editor: Editor): string => editor.getParam('custom_ui_selector', '', 'string');
 
 const getThemeUrl = (editor: Editor): string => editor.getParam('theme_url');
@@ -242,6 +244,7 @@ export {
   isInlineBoundariesEnabled,
   getFormats,
   getPreviewStyles,
+  canFormatEmptyLines,
   getCustomUiSelector,
   getThemeUrl,
   isInline,

@@ -152,7 +152,7 @@ export default function () {
     toolbar_mode: 'floating',
     emoticons_database_url: '/src/plugins/emoticons/main/js/emojis.js',
     resize_img_proportional: true,
-    table_use_colgroups: true
+    format_empty_lines: true
   };
 
   tinymce.init(settings);
